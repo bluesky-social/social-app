@@ -1,9 +1,10 @@
-import {useCallback, useMemo, useRef, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {ScrollView, TextInput, useWindowDimensions, View} from 'react-native'
 import Animated, {
+  FadeIn,
   LayoutAnimationConfig,
-  ZoomIn,
-  ZoomOut,
+  LinearTransition,
+  ZoomInEasyDown,
 } from 'react-native-reanimated'
 import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -371,32 +372,37 @@ function DialogInner({
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
   return (
-    <Dialog.InnerFlatList
-      ref={listRef}
-      data={items}
-      renderItem={renderItems}
-      ListHeaderComponent={listHeader}
-      stickyHeaderIndices={[0]}
-      keyExtractor={(item: Item) => item.key}
-      style={[
-        web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
-        native({height: '100%'}),
-      ]}
-      webInnerContentContainerStyle={a.py_0}
-      webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
-      keyboardDismissMode="on-drag"
-      scrollIndicatorInsets={{top: headerHeight}}
-      onEndReached={onEndReached}
-      ListFooterComponent={
-        <ListFooter
-          isFetchingNextPage={isFetchingNextPage}
-          error={cleanError(error)}
-          onRetry={fetchNextPage}
-        />
-      }
-    />
+    <LayoutAnimationConfig skipEntering skipExiting>
+      <Dialog.InnerFlatList
+        ref={listRef}
+        data={items}
+        renderItem={renderItems}
+        ListHeaderComponent={listHeader}
+        stickyHeaderIndices={[0]}
+        keyExtractor={(item: Item) => item.key}
+        style={[
+          web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
+          native({height: '100%'}),
+        ]}
+        webInnerContentContainerStyle={a.py_0}
+        webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
+        keyboardDismissMode="on-drag"
+        scrollIndicatorInsets={{top: headerHeight}}
+        onEndReached={onEndReached}
+        itemLayoutAnimation={LinearTransition}
+        ListFooterComponent={
+          <ListFooter
+            isFetchingNextPage={isFetchingNextPage}
+            error={cleanError(error)}
+            onRetry={fetchNextPage}
+          />
+        }
+      />
+    </LayoutAnimationConfig>
   )
 }
+
+const seenSuggestions = new Set()
 
 function ReplacableProfileCard({
   profile,
@@ -410,30 +416,43 @@ function ReplacableProfileCard({
     did: profile.did,
     enabled: hasFollowed,
   })
-  const followupProfile = followupSuggestion.data?.suggestions?.[0]
+  const candidates = followupSuggestion.data?.suggestions
+  const followupProfiles = useMemo(
+    () =>
+      (candidates ?? []).filter(c => !seenSuggestions.has(c.did)).slice(3) ??
+      [],
+    [candidates],
+  )
+
+  useEffect(() => {
+    for (let seenProfile of followupProfiles) {
+      seenSuggestions.add(seenProfile.did)
+    }
+  }, [followupProfiles])
 
   return (
-    <LayoutAnimationConfig skipEntering skipExiting>
-      {hasFollowed && followupProfile ? (
-        <Animated.View entering={native(ZoomIn)} key="in">
-          <ReplacableProfileCard
-            profile={followupProfile}
-            moderationOpts={moderationOpts}
-          />
-        </Animated.View>
-      ) : (
-        <Animated.View
-          exiting={native(ZoomOut)}
-          key="out"
-          style={[a.pt_md, a.px_lg]}>
+    <>
+      <Animated.View entering={native(ZoomInEasyDown)}>
+        <Animated.View entering={native(FadeIn)}>
           <ReplacableProfileCardInner
             profile={profile}
             moderationOpts={moderationOpts}
             onFollow={() => setHasFollowed(true)}
           />
         </Animated.View>
+      </Animated.View>
+      {hasFollowed && followupProfiles.length > 0 && (
+        <>
+          {followupProfiles.map(followupProfile => (
+            <ReplacableProfileCard
+              key={followupProfile.did}
+              profile={followupProfile}
+              moderationOpts={moderationOpts}
+            />
+          ))}
+        </>
       )}
-    </LayoutAnimationConfig>
+    </>
   )
 }
 
