@@ -5,6 +5,7 @@ import {sha256} from 'js-sha256'
 import {Statsig, StatsigProvider} from 'statsig-react-native-expo'
 
 import {BUNDLE_DATE, BUNDLE_IDENTIFIER, IS_TESTFLIGHT} from '#/lib/app-info'
+import * as bitdrift from '#/lib/bitdrift'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
@@ -97,17 +98,36 @@ export function logEvent<E extends keyof LogEvents>(
   rawMetadata: LogEvents[E] & FlatJSONRecord,
 ) {
   try {
-    const fullMetadata = {
-      ...rawMetadata,
-    } as Record<string, string> // Statsig typings are unnecessarily strict here.
+    const fullMetadata = toStringRecord(rawMetadata)
     fullMetadata.routeName = getCurrentRouteName() ?? '(Uninitialized)'
     if (Statsig.initializeCalled()) {
       Statsig.logEvent(eventName, null, fullMetadata)
     }
+    // Intentionally bypass the logger abstraction to log rich objects.
+    console.groupCollapsed(eventName)
+    console.log(fullMetadata)
+    console.groupEnd()
+    bitdrift.info(eventName, fullMetadata)
   } catch (e) {
     // A log should never interrupt the calling code, whatever happens.
     logger.error('Failed to log an event', {message: e})
   }
+}
+
+function toStringRecord<E extends keyof LogEvents>(
+  metadata: LogEvents[E] & FlatJSONRecord,
+): Record<string, string> {
+  const record: Record<string, string> = {}
+  for (let key in metadata) {
+    if (metadata.hasOwnProperty(key)) {
+      if (typeof metadata[key] === 'string') {
+        record[key] = metadata[key]
+      } else {
+        record[key] = JSON.stringify(metadata[key])
+      }
+    }
+  }
+  return record
 }
 
 // We roll our own cache in front of Statsig because it is a singleton
