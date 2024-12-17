@@ -32,7 +32,6 @@ export function DesktopFeeds() {
   return (
     <View
       style={[
-        a.flex_1,
         web({
           gap: 10,
           /*
