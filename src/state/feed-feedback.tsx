@@ -274,7 +274,7 @@ const k = Math.round((m / n) * Math.log(2))
 let globalBloomFilter = new BloomFilter(m, k)
 
 export function markGloballySeenPost(uri: string) {
-  if (globalBloomFilter.size >= n) {
+  if (globalBloomFilter.size() >= n) {
     // If we ever get here, just restart to avoid saturation.
     globalBloomFilter = new BloomFilter(m, k)
   }
