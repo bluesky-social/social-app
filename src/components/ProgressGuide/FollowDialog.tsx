@@ -19,7 +19,10 @@ import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows
 import {useSession} from '#/state/session'
 import {Follow10ProgressGuide} from '#/state/shell/progress-guide'
 import {ListMethods} from '#/view/com/util/List'
-import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
+import {
+  popularInterests,
+  useInterestsDisplayNames,
+} from '#/screens/Onboarding/state'
 import {
   atoms as a,
   native,
@@ -69,13 +72,9 @@ export function FollowDialog({guide}: {guide: Follow10ProgressGuide}) {
   const interestsDisplayNames = useInterestsDisplayNames()
   const {data: preferences} = usePreferencesQuery()
   const personalizedInterests = preferences?.interests?.tags
-  const interests = Object.keys(interestsDisplayNames).sort((a, b) => {
-    const indexA = personalizedInterests?.indexOf(a) ?? -1
-    const indexB = personalizedInterests?.indexOf(b) ?? -1
-    const rankA = indexA === -1 ? Infinity : indexA
-    const rankB = indexB === -1 ? Infinity : indexB
-    return rankA - rankB
-  })
+  const interests = Object.keys(interestsDisplayNames)
+    .sort(boostInterests(popularInterests))
+    .sort(boostInterests(personalizedInterests))
   const [selectedInterest, setSelectedInterest] = useState(() =>
     personalizedInterests && interests.includes(personalizedInterests[0])
       ? personalizedInterests[0]
@@ -809,4 +808,14 @@ function Empty({message}: {message: string}) {
       <Text style={[a.text_xs, t.atoms.text_contrast_low]}>(╯°□°)╯︵ ┻━┻</Text>
     </View>
   )
+}
+
+function boostInterests(boosts?: string[]) {
+  return (_a: string, _b: string) => {
+    const indexA = boosts?.indexOf(_a) ?? -1
+    const indexB = boosts?.indexOf(_b) ?? -1
+    const rankA = indexA === -1 ? Infinity : indexA
+    const rankB = indexB === -1 ? Infinity : indexB
+    return rankA - rankB
+  }
 }
