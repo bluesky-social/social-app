@@ -5,8 +5,7 @@ import {useAgent} from '#/state/session'
 
 type ServiceConfig = {
   checkEmailConfirmed: boolean
-  trendingTopicsEnabled: boolean
-  trendingTopicsLangs: string[]
+  topicsEnabled: boolean
 }
 
 export function useServiceConfigQuery() {
@@ -20,14 +19,12 @@ export function useServiceConfigQuery() {
         const {data} = await agent.api.app.bsky.unspecced.getConfig()
         return {
           checkEmailConfirmed: Boolean(data.checkEmailConfirmed),
-          trendingTopicsEnabled: Boolean(data.trendingTopicsEnabled),
-          trendingTopicsLangs: (data.trendingTopicsLangs ?? []) as string[],
+          topicsEnabled: Boolean(data.topicsEnabled),
         }
       } catch (e) {
         return {
           checkEmailConfirmed: false,
-          trendingTopicsEnabled: false,
-          trendingTopicsLangs: [],
+          topicsEnabled: false,
         }
       }
     },
