@@ -245,7 +245,7 @@ function DialogInner({
   }
 
   const renderItems = useCallback(
-    ({item}: {item: Item}) => {
+    ({item, index}: {item: Item; index: number}) => {
       switch (item.type) {
         case 'profile': {
           return (
@@ -255,6 +255,7 @@ function DialogInner({
               isSuggestion={item.isSuggestion}
               moderationOpts={moderationOpts!}
               setSuggestedAccounts={setSuggestedAccounts}
+              noBorder={index === 0}
             />
           )
         }
@@ -280,13 +281,18 @@ function DialogInner({
           web(a.pt_lg),
           native(a.pt_4xl),
           a.pb_xs,
-          a.px_lg,
           a.border_b,
           t.atoms.border_contrast_low,
           t.atoms.bg,
         ]}>
         <View
-          style={[a.relative, a.flex_row, a.justify_between, a.align_center]}>
+          style={[
+            a.px_lg,
+            a.relative,
+            a.flex_row,
+            a.justify_between,
+            a.align_center,
+          ]}>
           <Text
             style={[
               a.z_10,
@@ -337,8 +343,7 @@ function DialogInner({
           />
           <ScrollView
             horizontal
-            contentContainerStyle={[a.gap_sm, a.px_xl]}
-            style={{marginHorizontal: -tokens.space.xl}}
+            contentContainerStyle={[a.gap_sm, a.px_lg]}
             showsHorizontalScrollIndicator={false}
             decelerationRate="fast"
             snapToOffsets={
@@ -419,7 +424,8 @@ function DialogInner({
       stickyHeaderIndices={[0]}
       keyExtractor={(item: Item) => item.key}
       style={[
-        web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
+        a.px_0,
+        web([a.py_0, {height: '100vh', maxHeight: 600}]),
         native({height: '100%'}),
       ]}
       webInnerContentContainerStyle={a.py_0}
@@ -444,6 +450,7 @@ function FollowProfileCard({
   moderationOpts,
   isSuggestion,
   setSuggestedAccounts,
+  noBorder,
 }: {
   profile: AppBskyActorDefs.ProfileView
   moderationOpts: ModerationOpts
@@ -453,6 +460,7 @@ function FollowProfileCard({
       v: Map<string, AppBskyActorDefs.ProfileView[]>,
     ) => Map<string, AppBskyActorDefs.ProfileView[]>,
   ) => void
+  noBorder?: boolean
 }) {
   const [hasFollowed, setHasFollowed] = useState(false)
   const followupSuggestion = useSuggestedFollowsByActorQuery({
@@ -479,6 +487,7 @@ function FollowProfileCard({
           profile={profile}
           moderationOpts={moderationOpts}
           onFollow={() => setHasFollowed(true)}
+          noBorder={noBorder}
         />
       </Animated.View>
     </LayoutAnimationConfig>
@@ -489,10 +498,12 @@ function FollowProfileCardInner({
   profile,
   moderationOpts,
   onFollow,
+  noBorder,
 }: {
   profile: AppBskyActorDefs.ProfileView
   moderationOpts: ModerationOpts
   onFollow?: () => void
+  noBorder?: boolean
 }) {
   const control = Dialog.useDialogContext()
   const t = useTheme()
@@ -505,6 +516,7 @@ function FollowProfileCardInner({
         <CardOuter
           style={[
             a.flex_1,
+            noBorder && a.border_t_0,
             (hovered || pressed) && t.atoms.border_contrast_high,
           ]}>
           <ProfileCard.Outer>
@@ -543,10 +555,9 @@ function CardOuter({
     <View
       style={[
         a.w_full,
-        a.p_lg,
-        a.rounded_md,
-        a.border,
-        t.atoms.bg,
+        a.py_md,
+        a.px_lg,
+        a.border_t,
         t.atoms.border_contrast_low,
         style,
       ]}>
@@ -582,7 +593,7 @@ function SearchInput({
         onMouseEnter,
         onMouseLeave,
       })}
-      style={[a.flex_row, a.align_center, a.gap_sm]}>
+      style={[a.flex_row, a.align_center, a.gap_sm, a.px_lg, a.py_xs]}>
       <SearchIcon
         size="md"
         fill={interacted ? t.palette.primary_500 : t.palette.contrast_300}
