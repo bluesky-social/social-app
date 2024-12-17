@@ -199,26 +199,24 @@ function DialogInner({
         if (!suggestions) {
           return item
         }
-        const candidates: {
-          type: 'profile'
-          key: string
-          profile: AppBskyActorDefs.ProfileView
-          isSuggestion: boolean
-        }[] = []
+        const itemWithSuggestions = [item]
         for (const suggested of suggestions) {
           if (seen.has(suggested.did)) {
             // Skip search results from previous step or already seen suggestions
             continue
           }
           seen.add(suggested.did)
-          candidates.push({
+          itemWithSuggestions.push({
             type: 'profile',
             key: suggested.did,
             profile: suggested,
             isSuggestion: true,
           })
+          if (itemWithSuggestions.length === 1 + 3) {
+            break
+          }
         }
-        return [item].concat(candidates.slice(3))
+        return itemWithSuggestions
       })
     } else {
       const placeholders: Item[] = Array(10)
