@@ -663,6 +663,7 @@ function FollowProfileCardInner({
                 profile={profile}
                 moderationOpts={moderationOpts}
                 logContext="PostOnboardingFindFollows"
+                shape="round"
                 onPress={onFollow}
                 colorInverted
               />
