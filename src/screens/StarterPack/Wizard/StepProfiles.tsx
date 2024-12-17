@@ -2,7 +2,7 @@ import {useState} from 'react'
 import {ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {isNative} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'

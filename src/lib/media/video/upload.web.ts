@@ -1,7 +1,7 @@
 import {AppBskyVideoDefs} from '@atproto/api'
 import {BskyAgent} from '@atproto/api'
 import {I18n} from '@lingui/core'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {nanoid} from 'nanoid/non-secure'
 
 import {AbortError} from '#/lib/async/cancelable'

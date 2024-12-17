@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {isSafari, isTouchDevice} from '#/lib/browser'

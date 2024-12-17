@@ -4,7 +4,7 @@ import {View} from 'react-native'
 import QRCode from 'react-native-qrcode-styled'
 import type ViewShot from 'react-native-view-shot'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {isWeb} from '#/platform/detection'
 import {Logo} from '#/view/icons/Logo'

@@ -1,7 +1,8 @@
 import {View} from 'react-native'
 import {ModerationCause} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {makeProfileLink} from '#/lib/routes/links'

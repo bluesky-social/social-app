@@ -3,8 +3,7 @@ import {
   launchImageLibraryAsync,
   MediaTypeOptions,
 } from 'expo-image-picker'
-// TODO: replace global i18n instance with one returned from useLingui -sfn
-import {t} from '@lingui/macro'
+import {t} from '@lingui/core/macro'
 
 import * as Toast from '#/view/com/util/Toast'
 import {getDataUriSize} from './util'

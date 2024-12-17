@@ -1,6 +1,6 @@
 import React from 'react'
 import * as MediaLibrary from 'expo-media-library'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {saveImageToMediaLibrary, shareImageModal} from '#/lib/media/manip'

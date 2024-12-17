@@ -5,8 +5,9 @@ import Animated, {
   LayoutAnimationConfig,
   LinearTransition,
 } from 'react-native-reanimated'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {IS_INTERNAL} from '#/lib/app-info'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'

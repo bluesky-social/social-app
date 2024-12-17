@@ -3,8 +3,9 @@ import {Pressable, StyleSheet, View} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {Image} from 'expo-image'
 import {ModerationUI} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {

@@ -1,6 +1,6 @@
 import React from 'react'
 import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 

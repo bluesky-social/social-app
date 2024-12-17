@@ -1,8 +1,9 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {ReportOption} from '#/lib/moderation/useReportOptions'
 import {useMyLabelersQuery} from '#/state/queries/preferences'

@@ -1,8 +1,9 @@
 import React, {ComponentProps} from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {AppBskyActorDefs, ModerationCause, ModerationUI} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'

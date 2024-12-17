@@ -3,7 +3,7 @@ import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import {MeasuredDimensions, runOnJS, runOnUI} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 

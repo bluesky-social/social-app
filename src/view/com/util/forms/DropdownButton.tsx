@@ -15,7 +15,7 @@ import Animated, {FadeIn, FadeInDown, FadeInUp} from 'react-native-reanimated'
 import RootSiblings from 'react-native-root-siblings'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'

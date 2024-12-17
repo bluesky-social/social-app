@@ -1,7 +1,7 @@
 import {Keyboard, StyleProp, ViewStyle} from 'react-native'
 import {AnimatedStyle} from 'react-native-reanimated'
 import {AppBskyFeedPostgate} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {isNative} from '#/platform/detection'

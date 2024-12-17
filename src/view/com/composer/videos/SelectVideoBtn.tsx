@@ -1,7 +1,7 @@
 import {useCallback} from 'react'
 import {Keyboard} from 'react-native'
 import {ImagePickerAsset} from 'expo-image-picker'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {SUPPORTED_MIME_TYPES, SupportedMimeTypes} from '#/lib/constants'

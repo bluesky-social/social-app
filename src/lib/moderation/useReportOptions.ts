@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 import {ComAtprotoModerationDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 export interface ReportOption {

@@ -1,8 +1,9 @@
 import {useCallback, useState} from 'react'
 import {Keyboard, StyleProp, View, ViewStyle} from 'react-native'
 import RNPickerSelect from 'react-native-picker-select'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {useEnforceMaxGraphemeCount} from '#/lib/strings/helpers'

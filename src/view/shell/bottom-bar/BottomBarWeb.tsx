@@ -1,8 +1,9 @@
 import React from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useNavigationState} from '@react-navigation/native'
 
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'

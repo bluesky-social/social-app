@@ -2,7 +2,7 @@ import React, {useRef} from 'react'
 import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
 import {AppBskyEmbedVideo} from '@atproto/api'
 import {BlueskyVideoView} from '@haileyok/bluesky-video'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_30} from '#/lib/constants'

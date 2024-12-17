@@ -1,8 +1,9 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs, AppBskyFeedGetAuthorFeed, AtUri} from '@atproto/api'
-import {msg as msgLingui, Trans} from '@lingui/macro'
+import {msg as msgLingui} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {usePalette} from '#/lib/hooks/usePalette'

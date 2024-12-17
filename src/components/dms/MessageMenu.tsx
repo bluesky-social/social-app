@@ -2,7 +2,7 @@ import React from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {ChatBskyConvoDefs, RichText} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'

@@ -4981,14 +4981,6 @@
     date-fns "^3.6.0"
     pofile "^1.1.4"
 
-"@lingui/macro@^5.1.1":
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/@lingui/macro/-/macro-5.1.1.tgz#9f2cc0c2425fc872f39ff85d29ebee1bbcb1dab9"
-  integrity sha512-/52ISD+DGv6Wy+nfwtHVVCEOnvrTiA/YSoS6hTxL/PR2aL706QVxhLNXA0T+CBqj+zWFgsDpL8LFaAv+eD7cXw==
-  dependencies:
-    "@lingui/core" "5.1.1"
-    "@lingui/react" "5.1.1"
-
 "@lingui/message-utils@5.1.1":
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/@lingui/message-utils/-/message-utils-5.1.1.tgz#0b091040b5ea6e9b4508b7128a40684f3e483349"
@@ -4997,7 +4989,7 @@
     "@messageformat/parser" "^5.0.0"
     js-sha256 "^0.10.1"
 
-"@lingui/react@5.1.1", "@lingui/react@^5.1.1":
+"@lingui/react@^5.1.1":
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/@lingui/react/-/react-5.1.1.tgz#0782955c6274d70de571abad5802657224f81c1d"
   integrity sha512-lhh2hwoCGoA50cBAHqpeTiZV+FUyNuVpLePux1MKSTuBkH8XaKk+cBghwqeDV5oNTJkjZx5ByKgq5rlsBAtBww==

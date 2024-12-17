@@ -4,7 +4,7 @@ import {
   ModerationCause,
   ModerationCauseSource,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useLabelDefinitions} from '#/state/preferences'

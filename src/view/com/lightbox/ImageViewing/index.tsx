@@ -7,7 +7,6 @@
  */
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
-
 import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {
   LayoutAnimation,
@@ -42,7 +41,7 @@ import {
 } from 'react-native-safe-area-context'
 import {StatusBar} from 'expo-status-bar'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {Dimensions} from '#/lib/media/types'
 import {colors, s} from '#/lib/styles'

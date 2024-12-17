@@ -1,6 +1,6 @@
 import {forwardRef, useEffect, useImperativeHandle, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 import {ReactRenderer} from '@tiptap/react'
 import {
   SuggestionKeyDownProps,

@@ -7,7 +7,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
 import {useFocusGuards} from '@radix-ui/react-focus-guards'

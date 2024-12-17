@@ -1,6 +1,6 @@
 import {StyleProp, TextStyle, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {Shadow} from '#/state/cache/types'

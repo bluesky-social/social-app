@@ -2,7 +2,7 @@ import React, {useCallback} from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
 import {AppBskyEmbedExternal} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
