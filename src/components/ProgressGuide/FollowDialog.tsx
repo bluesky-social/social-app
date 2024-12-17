@@ -152,7 +152,7 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
         key: 'empty',
         message: _(msg`We're having network issues, try again`),
       })
-    } else if (results?.length) {
+    } else if (results) {
       // First pass: search results
       for (const profile of results) {
         if (profile.did === currentAccount?.did) continue
