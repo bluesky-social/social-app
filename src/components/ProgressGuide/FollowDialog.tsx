@@ -9,6 +9,7 @@ import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
@@ -473,10 +474,18 @@ let Tabs = ({
   const pendingTabOffsets = useRef<{x: number; width: number}[]>([])
   const [tabOffsets, setTabOffsets] = useState<{x: number; width: number}[]>([])
 
-  function handleSelectTab(index: number) {
-    const tab = interests[index]
-    onSelectTab(tab)
+  const onInitialLayout = useNonReactiveCallback(() => {
+    const index = interests.indexOf(selectedInterest)
+    scrollIntoViewIfNeeded(index)
+  })
 
+  useEffect(() => {
+    if (tabOffsets) {
+      onInitialLayout()
+    }
+  }, [tabOffsets, onInitialLayout])
+
+  function scrollIntoViewIfNeeded(index: number) {
     const btnLayout = tabOffsets[index]
     if (!btnLayout) return
 
@@ -497,6 +506,12 @@ let Tabs = ({
         animated: true,
       })
     }
+  }
+
+  function handleSelectTab(index: number) {
+    const tab = interests[index]
+    onSelectTab(tab)
+    scrollIntoViewIfNeeded(index)
   }
 
   function handleTabLayout(index: number, x: number, width: number) {
