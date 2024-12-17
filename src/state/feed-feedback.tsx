@@ -1,6 +1,8 @@
 import React from 'react'
 import {AppState, AppStateStatus} from 'react-native'
 import {AppBskyFeedDefs} from '@atproto/api'
+// @ts-ignore
+import {BloomFilter} from 'bloomfilter'
 import throttle from 'lodash.throttle'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
@@ -93,24 +95,25 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
 
   const onItemSeen = React.useCallback(
     (feedItem: any) => {
-      if (!enabled) {
-        return
-      }
       const slice = getFeedPostSlice(feedItem)
       if (slice === null) {
         return
       }
       for (const postItem of slice.items) {
-        if (!history.current.has(postItem)) {
-          history.current.add(postItem)
-          queue.current.add(
-            toString({
-              item: postItem.uri,
-              event: 'app.bsky.feed.defs#interactionSeen',
-              feedContext: slice.feedContext,
-            }),
-          )
-          sendToFeed()
+        markGloballySeenPost(postItem.uri)
+
+        if (enabled) {
+          if (!history.current.has(postItem)) {
+            history.current.add(postItem)
+            queue.current.add(
+              toString({
+                item: postItem.uri,
+                event: 'app.bsky.feed.defs#interactionSeen',
+                feedContext: slice.feedContext,
+              }),
+            )
+            sendToFeed()
+          }
         }
       }
     },
@@ -253,4 +256,23 @@ function flushToStatsig(stats: AggregatedStats | null) {
     })
     stats.seenCount = 0
   }
+}
+
+// https://hur.st/bloomfilter/?n=50k&p=0.001&m=&k=
+const p = 0.001 // 0.1% probability of collisions...
+const n = 50_000 // ...while we stay below 50k expected items
+const m = Math.ceil((n * Math.log(p)) / Math.log(1 / Math.pow(2, Math.log(2))))
+const k = Math.round((m / n) * Math.log(2))
+let globalBloomFilter = new BloomFilter(m, k)
+
+function markGloballySeenPost(uri: string) {
+  if (globalBloomFilter.size >= n) {
+    // If we ever get here, just restart to avoid saturation.
+    globalBloomFilter = new BloomFilter(m, k)
+  }
+  globalBloomFilter.add(uri)
+}
+
+export function isLikelyGloballySeenPost(uri: string) {
+  return globalBloomFilter.test(uri)
 }
