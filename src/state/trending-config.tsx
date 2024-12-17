@@ -22,7 +22,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     /*
      * Only English during beta period
      */
-    if (!langPrefs.contentLanguages.includes('en')) {
+    if (
+      !!langPrefs.contentLanguages.length &&
+      !langPrefs.contentLanguages.includes('en')
+    ) {
       return {enabled: false}
     }
 
@@ -48,7 +51,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     /*
      * Service is enabled, but also check statsig in case we're rolling back.
      */
-    const gateEnabled = gate('trending_topics_beta')
+    const gateEnabled = __DEV__ || gate('trending_topics_beta')
     const _enabled = enabled && gateEnabled
 
     // update cache
