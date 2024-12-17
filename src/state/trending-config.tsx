@@ -19,6 +19,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   // refetches at most every minute
   const {data: config, isLoading: isInitialLoad} = useServiceConfigQuery()
   const ctx = React.useMemo<Context>(() => {
+    if (__DEV__) {
+      return {enabled: true}
+    }
+
     /*
      * Only English during beta period
      */
@@ -51,7 +55,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     /*
      * Service is enabled, but also check statsig in case we're rolling back.
      */
-    const gateEnabled = __DEV__ || gate('trending_topics_beta')
+    const gateEnabled = gate('trending_topics_beta')
     const _enabled = enabled && gateEnabled
 
     // update cache
