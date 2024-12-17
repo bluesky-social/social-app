@@ -16,6 +16,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
@@ -32,6 +33,7 @@ import {
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
 import {useSession} from '#/state/session'
+import {useProgressGuide} from '#/state/shell/progress-guide'
 import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
 import {List, ListRef} from '../util/List'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -185,12 +187,16 @@ let PostFeed = ({
     }
     try {
       if (await pollLatest(data.pages[0])) {
-        onHasNew(true)
+        if (isEmpty) {
+          refetch()
+        } else {
+          onHasNew(true)
+        }
       }
     } catch (e) {
       logger.error('Poll latest failed', {feed, message: String(e)})
     }
-  }, [feed, data, isFetching, onHasNew, enabled, disablePoll])
+  }, [feed, data, isFetching, isEmpty, onHasNew, enabled, disablePoll, refetch])
 
   const myDid = currentAccount?.did || ''
   const onPostCreated = React.useCallback(() => {
@@ -218,20 +224,15 @@ let PostFeed = ({
   React.useEffect(() => {
     if (enabled && !disablePoll) {
       const timeSinceFirstLoad = Date.now() - lastFetchRef.current
-      // DISABLED need to check if this is causing random feed refreshes -prf
-      /*if (timeSinceFirstLoad > REFRESH_AFTER) {
-        // do a full refresh
-        scrollElRef?.current?.scrollToOffset({offset: 0, animated: false})
-        queryClient.resetQueries({queryKey: RQKEY(feed)})
-      } else*/ if (
-        timeSinceFirstLoad > CHECK_LATEST_AFTER &&
+      if (
+        (isEmpty || timeSinceFirstLoad > CHECK_LATEST_AFTER) &&
         checkForNewRef.current
       ) {
         // check for new on enable (aka on focus)
         checkForNewRef.current()
       }
     }
-  }, [enabled, disablePoll, feed, queryClient, scrollElRef])
+  }, [enabled, disablePoll, feed, queryClient, scrollElRef, isEmpty])
   React.useEffect(() => {
     let cleanup1: () => void | undefined, cleanup2: () => void | undefined
     const subscription = AppState.addEventListener('change', nextAppState => {
@@ -251,6 +252,10 @@ let PostFeed = ({
       cleanup2?.()
     }
   }, [pollInterval])
+
+  const progressGuide = useProgressGuide('like-10-and-follow-7')
+  const {isDesktop} = useWebMediaQueries()
+  const showProgressIntersitial = progressGuide && !isDesktop
 
   const feedItems: FeedRow[] = React.useMemo(() => {
     let feedKind: 'following' | 'discover' | 'profile' | undefined
@@ -292,7 +297,7 @@ let PostFeed = ({
 
             if (hasSession) {
               if (feedKind === 'discover') {
-                if (sliceIndex === 0) {
+                if (sliceIndex === 0 && showProgressIntersitial) {
                   arr.push({
                     type: 'interstitialProgressGuide',
                     key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
@@ -382,6 +387,7 @@ let PostFeed = ({
     feedUri,
     feedTab,
     hasSession,
+    showProgressIntersitial,
   ])
 
   // events

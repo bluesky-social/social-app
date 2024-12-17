@@ -6,74 +6,12 @@ import {DebugContext} from '#/logger/debugContext'
 import {add} from '#/logger/logDump'
 import {Sentry} from '#/logger/sentry'
 import * as env from '#/env'
+import {createBitdriftTransport} from './bitdriftTransport'
+import {Metadata} from './types'
+import {ConsoleTransportEntry, LogLevel, Transport} from './types'
 
-export enum LogLevel {
-  Debug = 'debug',
-  Info = 'info',
-  Log = 'log',
-  Warn = 'warn',
-  Error = 'error',
-}
-
-type Transport = (
-  level: LogLevel,
-  message: string | Error,
-  metadata: Metadata,
-  timestamp: number,
-) => void
-
-/**
- * A union of some of Sentry's breadcrumb properties as well as Sentry's
- * `captureException` parameter, `CaptureContext`.
- */
-type Metadata = {
-  /**
-   * Applied as Sentry breadcrumb types. Defaults to `default`.
-   *
-   * @see https://develop.sentry.dev/sdk/event-payloads/breadcrumbs/#breadcrumb-types
-   */
-  type?:
-    | 'default'
-    | 'debug'
-    | 'error'
-    | 'navigation'
-    | 'http'
-    | 'info'
-    | 'query'
-    | 'transaction'
-    | 'ui'
-    | 'user'
-
-  /**
-   * Passed through to `Sentry.captureException`
-   *
-   * @see https://github.com/getsentry/sentry-javascript/blob/903addf9a1a1534a6cb2ba3143654b918a86f6dd/packages/types/src/misc.ts#L65
-   */
-  tags?: {
-    [key: string]:
-      | number
-      | string
-      | boolean
-      | bigint
-      | symbol
-      | null
-      | undefined
-  }
-
-  /**
-   * Any additional data, passed through to Sentry as `extra` param on
-   * exceptions, or the `data` param on breadcrumbs.
-   */
-  [key: string]: unknown
-} & Parameters<typeof Sentry.captureException>[1]
-
-export type ConsoleTransportEntry = {
-  id: string
-  timestamp: number
-  level: LogLevel
-  message: string | Error
-  metadata: Metadata
-}
+export {LogLevel}
+export type {ConsoleTransportEntry, Transport}
 
 const enabledLogLevels: {
   [key in LogLevel]: LogLevel[]
@@ -235,7 +173,7 @@ export class Logger {
   protected debugContextRegexes: RegExp[] = []
 
   constructor({
-    enabled = !env.IS_TEST,
+    enabled = process.env.NODE_ENV !== 'test',
     level = env.LOG_LEVEL as LogLevel,
     debug = env.LOG_DEBUG || '',
   }: {
@@ -328,13 +266,18 @@ export class Logger {
  */
 export const logger = new Logger()
 
-if (env.IS_DEV && !env.IS_TEST) {
-  logger.addTransport(consoleTransport)
+if (process.env.NODE_ENV !== 'test') {
+  logger.addTransport(createBitdriftTransport())
+}
 
-  /*
-   * Comment this out to disable Sentry transport in dev
-   */
-  // logger.addTransport(sentryTransport)
-} else if (env.IS_PROD) {
-  logger.addTransport(sentryTransport)
+if (process.env.NODE_ENV !== 'test') {
+  if (__DEV__) {
+    logger.addTransport(consoleTransport)
+    /*
+     * Comment this out to enable Sentry transport in dev
+     */
+    // logger.addTransport(sentryTransport)
+  } else {
+    logger.addTransport(sentryTransport)
+  }
 }
