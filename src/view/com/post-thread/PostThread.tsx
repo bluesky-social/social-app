@@ -32,11 +32,11 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
+import {List, ListMethods} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
+import {Header} from '#/components/Layout'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
-import {List, ListMethods} from '../util/List'
-import {ViewHeader} from '../util/ViewHeader'
 import {PostThreadComposePrompt} from './PostThreadComposePrompt'
 import {PostThreadItem} from './PostThreadItem'
 import {PostThreadLoadMore} from './PostThreadLoadMore'
@@ -95,6 +95,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
   const [hiddenRepliesState, setHiddenRepliesState] = React.useState(
     HiddenRepliesState.Hide,
   )
+  const headerRef = React.useRef<View | null>(null)
 
   const {data: preferences} = usePreferencesQuery()
   const {
@@ -284,17 +285,17 @@ export function PostThread({uri}: {uri: string | undefined}) {
     }
     // wait for loading to finish
     if (thread?.type === 'post' && !!thread.parent) {
-      function onMeasure(pageY: number) {
+      // Measure synchronously to avoid a layout jump.
+      const postNode = highlightedPostRef.current
+      const headerNode = headerRef.current
+      if (postNode && headerNode) {
+        let pageY = (postNode as any as Element).getBoundingClientRect().top
+        pageY -= (headerNode as any as Element).getBoundingClientRect().height
+        pageY = Math.max(0, pageY)
         ref.current?.scrollToOffset({
           animated: false,
           offset: pageY,
         })
-      }
-      // Measure synchronously to avoid a layout jump.
-      const domNode = highlightedPostRef.current
-      if (domNode) {
-        const pageY = (domNode as any as Element).getBoundingClientRect().top
-        onMeasure(pageY)
       }
       didAdjustScrollWeb.current = true
     }
@@ -367,7 +368,6 @@ export function PostThread({uri}: {uri: string | undefined}) {
     skeleton?.highlightedPost?.type === 'post' &&
     (skeleton.highlightedPost.ctx.isParentLoading ||
       Boolean(skeleton?.parents && skeleton.parents.length > 0))
-  const showHeader = isNative || !hasParents || !isFetching
 
   const renderItem = ({item, index}: {item: RowItem; index: number}) => {
     if (item === REPLY_PROMPT && hasSession) {
@@ -484,12 +484,15 @@ export function PostThread({uri}: {uri: string | undefined}) {
 
   return (
     <>
-      {showHeader && (
-        <ViewHeader
-          title={_(msg({message: `Post`, context: 'description'}))}
-          showBorder
-        />
-      )}
+      <Header.Outer sticky={true} headerRef={headerRef}>
+        <Header.BackButton />
+        <Header.Content>
+          <Header.TitleText>
+            <Trans context="description">Post</Trans>
+          </Header.TitleText>
+        </Header.Content>
+        <Header.Slot />
+      </Header.Outer>
 
       <ScrollProvider onMomentumEnd={onMomentumEnd}>
         <List
