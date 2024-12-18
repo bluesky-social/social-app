@@ -15,9 +15,7 @@ import {
 } from '#/state/queries/trending/useTrendingTopics'
 import {useTrendingConfig} from '#/state/trending-config'
 import {atoms as a, useGutters, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
 import {Hashtag_Stroke2_Corner0_Rounded} from '#/components/icons/Hashtag'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {
   TrendingTopic,
@@ -72,15 +70,6 @@ function Inner() {
             <Trans>Feeds we think you might like.</Trans>
           </Text>
         </View>
-        <Button
-          label={_(msg`Hide trending topics`)}
-          size="small"
-          variant="ghost"
-          color="secondary"
-          shape="round"
-          onPress={() => trendingPrompt.open()}>
-          <ButtonIcon icon={X} />
-        </Button>
       </View>
 
       <View style={[a.pt_md, a.pb_lg]}>
