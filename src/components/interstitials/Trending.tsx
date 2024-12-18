@@ -33,7 +33,7 @@ export function TrendingInterstitial() {
 export function Inner() {
   const t = useTheme()
   const {_} = useLingui()
-  const gutters = useGutters(['base'])
+  const gutters = useGutters(['wide', 'base'])
   const trendingPrompt = Prompt.usePromptControl()
   const {setTrendingDisabled} = useTrendingSettingsApi()
   const {data: trending, error, isLoading} = useTrendingTopics()
@@ -73,7 +73,7 @@ export function Inner() {
         </Button>
       </View>
 
-      <View style={[a.flex_row, a.flex_wrap, {gap: '8px 6px'}]}>
+      <View style={[a.flex_row, a.flex_wrap, {rowGap: 8, columnGap: 6}]}>
         {isLoading ? (
           Array(TRENDING_TOPICS_COUNT)
             .fill(0)

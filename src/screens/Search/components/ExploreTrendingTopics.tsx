@@ -69,7 +69,7 @@ function Inner() {
             a.flex_row,
             a.justify_start,
             a.flex_wrap,
-            {gap: '8px 6px'},
+            {rowGap: 8, columnGap: 6},
             gutters,
           ]}>
           {isLoading ? (
