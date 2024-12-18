@@ -2766,7 +2766,7 @@ msgstr "피드를 업데이트했습니다"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:54
 msgid "Feeds we think you might like."
-msgstr "좋아하실 만한 피드를 모아 봤습니다."
+msgstr "좋아하실 만한 피드를 모았습니다."
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:43
 msgid "File saved successfully!"
