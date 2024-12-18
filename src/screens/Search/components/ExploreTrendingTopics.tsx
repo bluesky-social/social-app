@@ -57,6 +57,15 @@ function Inner() {
           a.border_b,
           t.atoms.border_contrast_low,
         ]}>
+        <Button
+          label={_(msg`Hide trending topics`)}
+          size="small"
+          variant="ghost"
+          color="secondary"
+          shape="round"
+          onPress={() => trendingPrompt.open()}>
+          <ButtonIcon icon={X} />
+        </Button>
         <View style={[a.flex_1, a.gap_sm]}>
           <View style={[a.flex_row, a.align_center, a.gap_sm]}>
             <Trending
@@ -78,16 +87,6 @@ function Inner() {
             <Trans>What people are posting about.</Trans>
           </Text>
         </View>
-
-        <Button
-          label={_(msg`Hide trending tpoics`)}
-          size="small"
-          variant="ghost"
-          color="secondary"
-          shape="round"
-          onPress={() => trendingPrompt.open()}>
-          <ButtonIcon icon={X} />
-        </Button>
       </View>
 
       <View style={[a.pt_md, a.pb_lg]}>
