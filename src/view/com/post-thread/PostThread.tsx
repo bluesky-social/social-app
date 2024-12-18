@@ -19,7 +19,6 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useSetThreadViewPreferencesMutation} from '#/state/queries/preferences'
 import {
   fillThreadModerationCache,
   sortThread,
@@ -30,6 +29,7 @@ import {
   ThreadPost,
   usePostThreadQuery,
 } from '#/state/queries/post-thread'
+import {useSetThreadViewPreferencesMutation} from '#/state/queries/preferences'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell'
@@ -42,6 +42,7 @@ import {Header} from '#/components/Layout'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
+import {RadioCircle} from '../util/forms/RadioButton'
 import {PostThreadComposePrompt} from './PostThreadComposePrompt'
 import {PostThreadItem} from './PostThreadItem'
 import {PostThreadLoadMore} from './PostThreadLoadMore'
@@ -549,7 +550,7 @@ function SortMenu() {
   const {data: preferences} = usePreferencesQuery()
   const {mutate: setThreadViewPrefs, variables} =
     useSetThreadViewPreferencesMutation()
-  const _sortReplies = variables?.sort ?? preferences?.threadViewPrefs?.sort // TODO: Use it
+  const sortReplies = variables?.sort ?? preferences?.threadViewPrefs?.sort // TODO: Use it
   return (
     <Menu.Root>
       <Menu.Trigger label={_(msg`Account options`)}>
@@ -568,51 +569,58 @@ function SortMenu() {
         )}
       </Menu.Trigger>
       <Menu.Outer>
-        <Menu.Item
-          label={_(msg`Hot replies first`)}
-          onPress={() => {
-            setThreadViewPrefs({sort: 'hotness'})
-          }}>
-          <Menu.ItemText>
-            <Trans>Hot replies first</Trans>
-          </Menu.ItemText>
-        </Menu.Item>
-        <Menu.Item
-          label={_(msg`Oldest replies first`)}
-          onPress={() => {
-            setThreadViewPrefs({sort: 'oldest'})
-          }}>
-          <Menu.ItemText>
-            <Trans>Oldest replies first</Trans>
-          </Menu.ItemText>
-        </Menu.Item>
-        <Menu.Item
-          label={_(msg`Newest replies first`)}
-          onPress={() => {
-            setThreadViewPrefs({sort: 'newest'})
-          }}>
-          <Menu.ItemText>
-            <Trans>Newest replies first</Trans>
-          </Menu.ItemText>
-        </Menu.Item>
-        <Menu.Item
-          label={_(msg`Most-liked replies first`)}
-          onPress={() => {
-            setThreadViewPrefs({sort: 'most-likes'})
-          }}>
-          <Menu.ItemText>
-            <Trans>Most-liked replies first</Trans>
-          </Menu.ItemText>
-        </Menu.Item>
-        <Menu.Item
-          label={_(msg`Random (aka "Poster's Roulette")`)}
-          onPress={() => {
-            setThreadViewPrefs({sort: 'random'})
-          }}>
-          <Menu.ItemText>
-            <Trans>Random (aka "Poster's Roulette")</Trans>
-          </Menu.ItemText>
-        </Menu.Item>
+        <Menu.Group>
+          <Menu.Item
+            label={_(msg`Hot replies first`)}
+            onPress={() => {
+              setThreadViewPrefs({sort: 'hotness'})
+            }}>
+            <Menu.ItemText>
+              <Trans>Hot replies first</Trans>
+            </Menu.ItemText>
+            <RadioCircle isSelected={sortReplies === 'hotness'} />
+          </Menu.Item>
+          <Menu.Item
+            label={_(msg`Oldest replies first`)}
+            onPress={() => {
+              setThreadViewPrefs({sort: 'oldest'})
+            }}>
+            <Menu.ItemText>
+              <Trans>Oldest replies first</Trans>
+            </Menu.ItemText>
+            <RadioCircle isSelected={sortReplies === 'oldest'} />
+          </Menu.Item>
+          <Menu.Item
+            label={_(msg`Newest replies first`)}
+            onPress={() => {
+              setThreadViewPrefs({sort: 'newest'})
+            }}>
+            <Menu.ItemText>
+              <Trans>Newest replies first</Trans>
+            </Menu.ItemText>
+            <RadioCircle isSelected={sortReplies === 'newest'} />
+          </Menu.Item>
+          <Menu.Item
+            label={_(msg`Most-liked replies first`)}
+            onPress={() => {
+              setThreadViewPrefs({sort: 'most-likes'})
+            }}>
+            <Menu.ItemText>
+              <Trans>Most-liked replies first</Trans>
+            </Menu.ItemText>
+            <RadioCircle isSelected={sortReplies === 'most-likes'} />
+          </Menu.Item>
+          <Menu.Item
+            label={_(msg`Random (aka "Poster's Roulette")`)}
+            onPress={() => {
+              setThreadViewPrefs({sort: 'random'})
+            }}>
+            <Menu.ItemText>
+              <Trans>Random (aka "Poster's Roulette")</Trans>
+            </Menu.ItemText>
+            <RadioCircle isSelected={sortReplies === 'random'} />
+          </Menu.Item>
+        </Menu.Group>
       </Menu.Outer>
     </Menu.Root>
   )
