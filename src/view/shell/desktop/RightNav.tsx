@@ -1,6 +1,8 @@
+import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/core'
 
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -15,6 +17,24 @@ import {InlineLinkText} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {Text} from '#/components/Typography'
 
+function useWebQueryParams() {
+  const navigation = useNavigation()
+  const [params, setParams] = React.useState<Record<string, string>>({})
+
+  React.useEffect(() => {
+    return navigation.addListener('state', e => {
+      try {
+        const {state} = e.data
+        const lastRoute = state.routes[state.routes.length - 1]
+        const {params} = lastRoute
+        setParams(params)
+      } catch (e) {}
+    })
+  }, [navigation, setParams])
+
+  return params
+}
+
 export function DesktopRightNav({routeName}: {routeName: string}) {
   const t = useTheme()
   const {_} = useLingui()
@@ -22,6 +42,8 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   const kawaii = useKawaiiMode()
   const gutters = useGutters(['base', 0, 'base', 'wide'])
   const isSearchScreen = routeName === 'Search'
+  const {q: searchQuery} = useWebQueryParams()
+  const showTrending = !isSearchScreen || (isSearchScreen && !!searchQuery)
 
   const {isTablet} = useWebMediaQueries()
   if (isTablet) {
@@ -57,7 +79,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         </>
       )}
 
-      {!isSearchScreen && <SidebarTrendingTopics />}
+      {showTrending && <SidebarTrendingTopics />}
 
       <Text style={[a.leading_snug, t.atoms.text_contrast_low]}>
         {hasSession && (
