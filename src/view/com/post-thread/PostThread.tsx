@@ -113,12 +113,12 @@ export function PostThread({uri}: {uri: string | undefined}) {
     dataUpdatedAt: fetchedAt,
   } = usePostThreadQuery(uri)
 
+  const threadViewPrefs = preferences?.threadViewPrefs
   const treeView = React.useMemo(
-    () =>
-      !!preferences?.threadViewPrefs?.lab_treeViewEnabled &&
-      hasBranchingReplies(thread),
-    [preferences?.threadViewPrefs, thread],
+    () => !!threadViewPrefs?.lab_treeViewEnabled && hasBranchingReplies(thread),
+    [threadViewPrefs, thread],
   )
+
   const rootPost = thread?.type === 'post' ? thread.post : undefined
   const rootPostRecord = thread?.type === 'post' ? thread.record : undefined
   const threadgateRecord = threadgate?.record as
@@ -181,7 +181,6 @@ export function PostThread({uri}: {uri: string | undefined}) {
   const [fetchedAtCache] = React.useState(() => new Map<string, number>())
   const [randomCache] = React.useState(() => new Map<string, number>())
   const skeleton = React.useMemo(() => {
-    const threadViewPrefs = preferences?.threadViewPrefs
     if (!threadViewPrefs || !thread) return null
 
     return createThreadSkeleton(
@@ -204,7 +203,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     )
   }, [
     thread,
-    preferences?.threadViewPrefs,
+    threadViewPrefs,
     currentDid,
     treeView,
     threadModerationCache,
