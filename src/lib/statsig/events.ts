@@ -239,6 +239,6 @@ export type LogEvents = {
 
   'trendingTopics:show': {}
   'trendingTopics:hide': {
-    context: 'sidebar' | 'discover' | 'explore'
+    context: 'sidebar' | 'interstitial' | 'explore'
   }
 }
