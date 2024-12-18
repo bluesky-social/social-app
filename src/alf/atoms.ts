@@ -302,6 +302,18 @@ export const atoms = {
   border_0: {
     borderWidth: 0,
   },
+  border_t_0: {
+    borderTopWidth: 0,
+  },
+  border_b_0: {
+    borderBottomWidth: 0,
+  },
+  border_l_0: {
+    borderLeftWidth: 0,
+  },
+  border_r_0: {
+    borderRightWidth: 0,
+  },
   border: {
     borderWidth: StyleSheet.hairlineWidth,
   },

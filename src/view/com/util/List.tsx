@@ -155,7 +155,11 @@ let List = React.forwardRef<ListMethods, ListProps>(
         automaticallyAdjustsScrollIndicatorInsets={
           automaticallyAdjustsScrollIndicatorInsets
         }
-        scrollIndicatorInsets={{top: headerOffset, right: 1}}
+        scrollIndicatorInsets={{
+          top: headerOffset,
+          right: 1,
+          ...props.scrollIndicatorInsets,
+        }}
         contentOffset={contentOffset}
         refreshControl={refreshControl}
         onScroll={scrollHandler}
