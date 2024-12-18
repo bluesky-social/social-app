@@ -88,7 +88,7 @@ export function DesktopFeeds() {
               a.text_md,
               a.leading_snug,
               current
-                ? [a.font_heavy, t.atoms.text]
+                ? [a.font_bold, t.atoms.text]
                 : [t.atoms.text_contrast_medium],
             ]}
             numberOfLines={1}>
