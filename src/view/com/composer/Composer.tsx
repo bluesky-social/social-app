@@ -636,6 +636,7 @@ export const ComposePost = ({
             layout={native(LinearTransition)}
             onScroll={scrollHandler}
             style={styles.scrollView}
+            contentContainerStyle={a.flex_1}
             keyboardShouldPersistTaps="always"
             onContentSizeChange={onScrollViewContentSizeChange}
             onLayout={onScrollViewLayout}>
@@ -773,7 +774,7 @@ let ComposerPost = React.memo(function ComposerPost({
   )
 
   return (
-    <View style={[styles.post, !isActive && styles.inactivePost]}>
+    <View style={[styles.post, !isActive && styles.inactivePost, a.flex_1]}>
       <View
         style={[
           styles.textInputLayout,

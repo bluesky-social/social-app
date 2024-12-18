@@ -319,6 +319,9 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       ? ((style.lineHeight + 'px') as unknown as number)
       : undefined
     style.minHeight = webForceMinHeight ? 140 : undefined
+    style.display = 'flex'
+    style.flexDirection = 'column'
+    style.alignItems = 'stretch'
     return style
   }, [t, fonts, webForceMinHeight])
 
