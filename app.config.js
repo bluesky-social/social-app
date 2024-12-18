@@ -87,6 +87,7 @@ module.exports = function (config) {
             'id',
             'it',
             'ja',
+            'km',
             'ko',
             'nl',
             'pl',
