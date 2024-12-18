@@ -210,7 +210,6 @@ export function Component({}: {}) {
                     to="#"
                     onPress={e => {
                       e.preventDefault()
-                      closeModal()
                       deactivateAccountControl.open()
                       return false
                     }}>
