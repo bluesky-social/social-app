@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-18 12:19+0000\n"
-"PO-Revision-Date: 2024-12-18 14:01+0000\n"
+"PO-Revision-Date: 2024-12-18 14:28+0000\n"
 "Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -835,7 +835,7 @@ msgstr "Aspetto"
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 #: src/screens/Home/NoFeedsPinned.tsx:93
 msgid "Apply default recommended feeds"
-msgstr "Applica i feed raccomandati predefiniti"
+msgstr "Applica i feed consigliati predefiniti"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:835
 msgid "Archived from {0}"
@@ -3805,7 +3805,7 @@ msgstr "Ha un formato simile a XXXX-XXXXX"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:39
 msgid "Looks like you haven't saved any feeds! Use our recommendations or browse more below."
-msgstr "Sembra che tu non abbia salvato nessun feed! Usa le nostre raccomandazioni o cerca qui sotto."
+msgstr "Sembra che tu non abbia salvato nessun feed! Usa i nostri consigli o cerca qui sotto."
 
 #: src/screens/Home/NoFeedsPinned.tsx:83
 msgid "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄"
@@ -5199,7 +5199,7 @@ msgstr "Ricerche recenti"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:50
 msgid "Recommended"
-msgstr "Raccomandati"
+msgstr "Consigliati"
 
 #: src/screens/Messages/components/MessageListError.tsx:20
 msgid "Reconnect"
