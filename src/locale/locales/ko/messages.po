@@ -575,10 +575,6 @@ msgstr "성인 콘텐츠 라벨"
 msgid "Advanced"
 msgstr "고급"
 
-#: src/state/shell/progress-guide.tsx:171
-#~ msgid "Algorithm training complete!"
-#~ msgstr "알고리즘 훈련 완료!"
-
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
 msgstr "모두"
