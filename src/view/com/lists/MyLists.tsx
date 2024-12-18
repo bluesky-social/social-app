@@ -17,7 +17,6 @@ import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
 import {atoms as a, useTheme} from '#/alf'
-import {Admonition} from '#/components/Admonition'
 import {BulletList_Stroke2_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import * as ListCard from '#/components/ListCard'
 import {Text} from '#/components/Typography'
@@ -84,46 +83,42 @@ export function MyLists({
     ({item, index}: {item: any; index: number}) => {
       if (item === EMPTY) {
         return (
-          <View style={[a.gap_2xl, a.px_xl, a.pt_xl]}>
-            {filter === 'curate' && (
-              <Admonition type="info">
+          <View style={[a.flex_1, a.align_center, a.gap_sm, a.px_xl, a.pt_xl]}>
+            <View
+              style={[
+                a.align_center,
+                a.justify_center,
+                a.rounded_full,
+                t.atoms.bg_contrast_25,
+                {
+                  width: 32,
+                  height: 32,
+                },
+              ]}>
+              <ListIcon size="md" fill={t.atoms.text_contrast_low.color} />
+            </View>
+            <Text
+              style={[
+                a.text_center,
+                a.flex_1,
+                a.text_sm,
+                a.leading_snug,
+                t.atoms.text_contrast_medium,
+                {
+                  maxWidth: 200,
+                },
+              ]}>
+              {filter === 'curate' && (
                 <Trans>
                   Public, sharable lists which can be used to drive feeds.
                 </Trans>
-              </Admonition>
-            )}
-            {filter === 'mod' && (
-              <Admonition type="info">
+              )}
+              {filter === 'mod' && (
                 <Trans>
                   Public, sharable lists of users to mute or block in bulk.
                 </Trans>
-              </Admonition>
-            )}
-            <View
-              style={[
-                a.flex_row,
-                a.justify_center,
-                a.align_center,
-                a.gap_xs,
-                {marginLeft: -14},
-              ]}>
-              <View
-                style={[
-                  a.align_center,
-                  a.justify_center,
-                  a.rounded_full,
-                  t.atoms.bg_contrast_25,
-                  {
-                    width: 28,
-                    height: 28,
-                  },
-                ]}>
-                <ListIcon width={16} fill={t.atoms.text_contrast_low.color} />
-              </View>
-              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-                <Trans>You have no lists yet</Trans>
-              </Text>
-            </View>
+              )}
+            </Text>
           </View>
         )
       } else if (item === ERROR_ITEM) {
