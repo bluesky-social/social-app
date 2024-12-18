@@ -1,5 +1,6 @@
 import React from 'react'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import * as persisted from '#/state/persisted'
 
 type StateContext = {
@@ -26,7 +27,11 @@ function usePersistedBooleanValue<T extends keyof persisted.Schema>(key: T) {
     (value: Exclude<persisted.Schema[T], undefined>) => void
   >(
     hidden => {
-      _set(Boolean(hidden))
+      const hide = Boolean(hidden)
+      if (!hide) {
+        logEvent('trendingTopics:show', {})
+      }
+      _set(hide)
       persisted.write(key, hidden)
     },
     [key, _set],
