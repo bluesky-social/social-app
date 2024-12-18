@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo} from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
 import {
   AppBskyGraphDefs,
@@ -70,7 +70,9 @@ import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {ListHiddenScreen} from '#/screens/List/ListHiddenScreen'
 import {atoms as a} from '#/alf'
+import {Button as NewButton, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import * as Layout from '#/components/Layout'
 import * as Hider from '#/components/moderation/Hider'
 import * as Prompt from '#/components/Prompt'
@@ -220,6 +222,7 @@ function ProfileListScreenLoaded({
                   scrollElRef={scrollElRef as ListRef}
                   headerHeight={headerHeight}
                   isFocused={isScreenFocused && isFocused}
+                  onPressAddUser={onPressAddUser}
                 />
               )}
               {({headerHeight, scrollElRef}) => (
@@ -771,9 +774,13 @@ interface FeedSectionProps {
   headerHeight: number
   scrollElRef: ListRef
   isFocused: boolean
+  onPressAddUser: () => void
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
-  function FeedSectionImpl({feed, scrollElRef, headerHeight, isFocused}, ref) {
+  function FeedSectionImpl(
+    {feed, scrollElRef, headerHeight, isFocused, onPressAddUser},
+    ref,
+  ) {
     const queryClient = useQueryClient()
     const [hasNew, setHasNew] = React.useState(false)
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
@@ -800,8 +807,23 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     }, [onScrollToTop, isScreenFocused])
 
     const renderPostsEmpty = useCallback(() => {
-      return <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
-    }, [_])
+      return (
+        <View style={[a.gap_xl, a.align_center]}>
+          <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
+          <NewButton
+            label={_(msg`Start adding people`)}
+            onPress={onPressAddUser}
+            color="primary"
+            size="small"
+            variant="solid">
+            <ButtonIcon icon={PersonPlusIcon} />
+            <ButtonText>
+              <Trans>Start adding people!</Trans>
+            </ButtonText>
+          </NewButton>
+        </View>
+      )
+    }, [_, onPressAddUser])
 
     return (
       <View>
@@ -840,10 +862,9 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
     {list, onPressAddUser, headerHeight, scrollElRef},
     ref,
   ) {
-    const pal = usePalette('default')
     const {_} = useLingui()
-    const {isMobile} = useWebMediaQueries()
     const {currentAccount} = useSession()
+    const {isMobile} = useWebMediaQueries()
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
     const isOwner = list.creator.did === currentAccount?.did
 
@@ -862,50 +883,66 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
       if (!isOwner) {
         return <View />
       }
-      return (
-        <View style={a.pt_lg}>
-          <View
-            style={[
-              {
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingHorizontal: isMobile ? 14 : 20,
-                paddingBottom: isMobile ? 14 : 18,
-              },
-            ]}>
-            {isOwner && (
-              <Pressable
-                testID="addUserBtn"
-                accessibilityRole="button"
-                accessibilityLabel={_(msg`Add a user to this list`)}
-                accessibilityHint=""
-                onPress={onPressAddUser}
-                style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
-                <FontAwesomeIcon
-                  icon="user-plus"
-                  color={pal.colors.link}
-                  size={16}
-                />
-                <Text style={pal.link}>
-                  <Trans>Add</Trans>
-                </Text>
-              </Pressable>
-            )}
+      if (isMobile) {
+        return (
+          <View style={[a.px_sm, a.py_sm]}>
+            <NewButton
+              testID="addUserBtn"
+              label={_(msg`Add a user to this list`)}
+              onPress={onPressAddUser}
+              color="primary"
+              size="small"
+              variant="outline"
+              style={[a.py_md]}>
+              <ButtonIcon icon={PersonPlusIcon} />
+              <ButtonText>
+                <Trans>Add people</Trans>
+              </ButtonText>
+            </NewButton>
           </View>
+        )
+      }
+      return (
+        <View style={[a.px_lg, a.py_md, a.flex_row_reverse]}>
+          <NewButton
+            testID="addUserBtn"
+            label={_(msg`Add a user to this list`)}
+            onPress={onPressAddUser}
+            color="primary"
+            size="small"
+            variant="ghost"
+            style={[a.py_sm]}>
+            <ButtonIcon icon={PersonPlusIcon} />
+            <ButtonText>
+              <Trans>Add people</Trans>
+            </ButtonText>
+          </NewButton>
         </View>
       )
-    }, [isMobile, pal.colors.link, pal.link, isOwner, _, onPressAddUser])
+    }, [isOwner, _, onPressAddUser, isMobile])
 
     const renderEmptyState = useCallback(() => {
       return (
-        <EmptyState
-          icon="users-slash"
-          message={_(msg`This list is empty!`)}
-          style={{paddingTop: 40}}
-        />
+        <View style={[a.gap_xl, a.align_center]}>
+          <EmptyState
+            icon="users-slash"
+            message={_(msg`This list is empty.`)}
+          />
+          <NewButton
+            testID="emptyStateAddUserBtn"
+            label={_(msg`Start adding people`)}
+            onPress={onPressAddUser}
+            color="primary"
+            size="small"
+            variant="solid">
+            <ButtonIcon icon={PersonPlusIcon} />
+            <ButtonText>
+              <Trans>Start adding people!</Trans>
+            </ButtonText>
+          </NewButton>
+        </View>
       )
-    }, [_])
+    }, [_, onPressAddUser])
 
     return (
       <View>

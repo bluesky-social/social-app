@@ -1,11 +1,5 @@
-import React from 'react'
-import {
-  ActivityIndicator,
-  Dimensions,
-  StyleProp,
-  View,
-  ViewStyle,
-} from 'react-native'
+import React, {useCallback} from 'react'
+import {Dimensions, StyleProp, View, ViewStyle} from 'react-native'
 import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -16,6 +10,7 @@ import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
 import {useListMembersQuery} from '#/state/queries/list-members'
 import {useSession} from '#/state/session'
+import {ListFooter} from '#/components/Lists'
 import {ProfileCard} from '../profile/ProfileCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Button} from '../util/forms/Button'
@@ -66,6 +61,7 @@ export function ListMembers({
     refetch,
     fetchNextPage,
     hasNextPage,
+    isFetchingNextPage,
   } = useListMembersQuery(list)
   const isEmpty = !isFetching && !data?.pages[0].items.length
   const isOwner =
@@ -197,14 +193,17 @@ export function ListMembers({
     ],
   )
 
-  const Footer = React.useCallback(
-    () => (
-      <View style={{paddingTop: 20, paddingBottom: 400}}>
-        {isFetching && <ActivityIndicator />}
-      </View>
-    ),
-    [isFetching],
-  )
+  const renderFooter = useCallback(() => {
+    if (isEmpty) return null
+    return (
+      <ListFooter
+        hasNextPage={hasNextPage}
+        error={cleanError(error)}
+        isFetchingNextPage={isFetchingNextPage}
+        onRetry={fetchNextPage}
+      />
+    )
+  }, [hasNextPage, error, isFetchingNextPage, fetchNextPage, isEmpty])
 
   return (
     <View testID={testID} style={style}>
@@ -214,8 +213,8 @@ export function ListMembers({
         data={items}
         keyExtractor={(item: any) => item.subject?.did || item._reactKey}
         renderItem={renderItem}
-        ListHeaderComponent={renderHeader}
-        ListFooterComponent={Footer}
+        ListHeaderComponent={!isEmpty ? renderHeader : undefined}
+        ListFooterComponent={renderFooter}
         refreshing={isRefreshing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
