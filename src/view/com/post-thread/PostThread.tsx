@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, {memo, useRef} from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
@@ -498,7 +498,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
           </Header.TitleText>
         </Header.Content>
         <Header.Slot>
-          <SortMenu />
+          <ThreadMenu />
         </Header.Slot>
       </Header.Outer>
 
@@ -545,15 +545,19 @@ export function PostThread({uri}: {uri: string | undefined}) {
   )
 }
 
-function SortMenu() {
+let ThreadMenu = ({}: {}): React.ReactNode => {
   const {_} = useLingui()
   const {data: preferences} = usePreferencesQuery()
   const {mutate: setThreadViewPrefs, variables} =
     useSetThreadViewPreferencesMutation()
-  const sortReplies = variables?.sort ?? preferences?.threadViewPrefs?.sort // TODO: Use it
+  const sortReplies = variables?.sort ?? preferences?.threadViewPrefs?.sort
+  const treeViewEnabled = Boolean(
+    variables?.lab_treeViewEnabled ??
+      preferences?.threadViewPrefs?.lab_treeViewEnabled,
+  )
   return (
     <Menu.Root>
-      <Menu.Trigger label={_(msg`Account options`)}>
+      <Menu.Trigger label={_(msg`Thread options`)}>
         {({props}) => (
           <Button
             label={_(msg`Thread options`)}
@@ -562,13 +566,39 @@ function SortMenu() {
             color="secondary"
             shape="round"
             hitSlop={HITSLOP_10}
-            style={[{right: -3}]}
             {...props}>
             <ButtonIcon icon={SettingsSlider} size="md" />
           </Button>
         )}
       </Menu.Trigger>
       <Menu.Outer>
+        <Menu.Group>
+          <Menu.Item
+            label={_(msg`Show replies as a list`)}
+            onPress={() => {
+              setThreadViewPrefs({
+                lab_treeViewEnabled: false,
+              })
+            }}>
+            <Menu.ItemText>
+              <Trans>Show replies as a list</Trans>
+            </Menu.ItemText>
+            <RadioCircle isSelected={!treeViewEnabled} />
+          </Menu.Item>
+          <Menu.Item
+            label={_(msg`Show replies as a tree`)}
+            onPress={() => {
+              setThreadViewPrefs({
+                lab_treeViewEnabled: true,
+              })
+            }}>
+            <Menu.ItemText>
+              <Trans>Show replies as a tree</Trans>
+            </Menu.ItemText>
+            <RadioCircle isSelected={treeViewEnabled} />
+          </Menu.Item>
+        </Menu.Group>
+        <Menu.Divider />
         <Menu.Group>
           <Menu.Item
             label={_(msg`Hot replies first`)}
@@ -625,6 +655,7 @@ function SortMenu() {
     </Menu.Root>
   )
 }
+ThreadMenu = memo(ThreadMenu)
 
 function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
   const safeAreaInsets = useSafeAreaInsets()
