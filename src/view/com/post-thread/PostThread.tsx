@@ -496,58 +496,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
           </Header.TitleText>
         </Header.Content>
         <Header.Slot>
-          <Menu.Root>
-            <Menu.Trigger label={_(msg`Account options`)}>
-              {({props}) => (
-                <Button
-                  label={_(msg`Thread options`)}
-                  size="small"
-                  variant="ghost"
-                  color="secondary"
-                  shape="round"
-                  hitSlop={HITSLOP_10}
-                  style={[{right: -3}]}
-                  {...props}>
-                  <ButtonIcon icon={SettingsSlider} size="md" />
-                </Button>
-              )}
-            </Menu.Trigger>
-            <Menu.Outer>
-              <Menu.Item label={_(msg`Hot replies first`)} onPress={() => {}}>
-                <Menu.ItemText>
-                  <Trans>Hot replies first</Trans>
-                </Menu.ItemText>
-              </Menu.Item>
-              <Menu.Item
-                label={_(msg`Oldest replies first`)}
-                onPress={() => {}}>
-                <Menu.ItemText>
-                  <Trans>Oldest replies first</Trans>
-                </Menu.ItemText>
-              </Menu.Item>
-              <Menu.Item
-                label={_(msg`Newest replies first`)}
-                onPress={() => {}}>
-                <Menu.ItemText>
-                  <Trans>Newest replies first</Trans>
-                </Menu.ItemText>
-              </Menu.Item>
-              <Menu.Item
-                label={_(msg`Most-liked replies first`)}
-                onPress={() => {}}>
-                <Menu.ItemText>
-                  <Trans>Most-liked replies first</Trans>
-                </Menu.ItemText>
-              </Menu.Item>
-              <Menu.Item
-                label={_(msg`Random (aka "Poster's Roulette")`)}
-                onPress={() => {}}>
-                <Menu.ItemText>
-                  <Trans>Random (aka "Poster's Roulette")</Trans>
-                </Menu.ItemText>
-              </Menu.Item>
-            </Menu.Outer>
-          </Menu.Root>
+          <SortMenu />
         </Header.Slot>
       </Header.Outer>
 
@@ -591,6 +540,58 @@ export function PostThread({uri}: {uri: string | undefined}) {
         <MobileComposePrompt onPressReply={onPressReply} />
       )}
     </>
+  )
+}
+
+function SortMenu() {
+  const {_} = useLingui()
+  return (
+    <Menu.Root>
+      <Menu.Trigger label={_(msg`Account options`)}>
+        {({props}) => (
+          <Button
+            label={_(msg`Thread options`)}
+            size="small"
+            variant="ghost"
+            color="secondary"
+            shape="round"
+            hitSlop={HITSLOP_10}
+            style={[{right: -3}]}
+            {...props}>
+            <ButtonIcon icon={SettingsSlider} size="md" />
+          </Button>
+        )}
+      </Menu.Trigger>
+      <Menu.Outer>
+        <Menu.Item label={_(msg`Hot replies first`)} onPress={() => {}}>
+          <Menu.ItemText>
+            <Trans>Hot replies first</Trans>
+          </Menu.ItemText>
+        </Menu.Item>
+        <Menu.Item label={_(msg`Oldest replies first`)} onPress={() => {}}>
+          <Menu.ItemText>
+            <Trans>Oldest replies first</Trans>
+          </Menu.ItemText>
+        </Menu.Item>
+        <Menu.Item label={_(msg`Newest replies first`)} onPress={() => {}}>
+          <Menu.ItemText>
+            <Trans>Newest replies first</Trans>
+          </Menu.ItemText>
+        </Menu.Item>
+        <Menu.Item label={_(msg`Most-liked replies first`)} onPress={() => {}}>
+          <Menu.ItemText>
+            <Trans>Most-liked replies first</Trans>
+          </Menu.ItemText>
+        </Menu.Item>
+        <Menu.Item
+          label={_(msg`Random (aka "Poster's Roulette")`)}
+          onPress={() => {}}>
+          <Menu.ItemText>
+            <Trans>Random (aka "Poster's Roulette")</Trans>
+          </Menu.ItemText>
+        </Menu.Item>
+      </Menu.Outer>
+    </Menu.Root>
   )
 }
 
