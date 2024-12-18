@@ -107,34 +107,34 @@ export default function HashtagScreen({
 
   return (
     <Layout.Screen>
-      <Layout.Header.Outer noBottomBorder>
-        <Layout.Header.BackButton />
-        <Layout.Header.Content>
-          <Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>
-          {author && (
-            <Layout.Header.SubtitleText>
-              {_(msg`From @${sanitizedAuthor}`)}
-            </Layout.Header.SubtitleText>
-          )}
-        </Layout.Header.Content>
-        <Layout.Header.Slot>
-          <Button
-            label={_(msg`Share`)}
-            size="small"
-            variant="ghost"
-            color="primary"
-            shape="round"
-            onPress={onShare}
-            hitSlop={HITSLOP_10}
-            style={[{right: -3}]}>
-            <ButtonIcon icon={Share} size="md" />
-          </Button>
-        </Layout.Header.Slot>
-      </Layout.Header.Outer>
       <Pager
         onPageSelected={onPageSelected}
         renderTabBar={props => (
           <Layout.Center style={[a.z_10, web([a.sticky, {top: 0}])]}>
+            <Layout.Header.Outer noBottomBorder>
+              <Layout.Header.BackButton />
+              <Layout.Header.Content>
+                <Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>
+                {author && (
+                  <Layout.Header.SubtitleText>
+                    {_(msg`From @${sanitizedAuthor}`)}
+                  </Layout.Header.SubtitleText>
+                )}
+              </Layout.Header.Content>
+              <Layout.Header.Slot>
+                <Button
+                  label={_(msg`Share`)}
+                  size="small"
+                  variant="ghost"
+                  color="primary"
+                  shape="round"
+                  onPress={onShare}
+                  hitSlop={HITSLOP_10}
+                  style={[{right: -3}]}>
+                  <ButtonIcon icon={Share} size="md" />
+                </Button>
+              </Layout.Header.Slot>
+            </Layout.Header.Outer>
             <TabBar items={sections.map(section => section.title)} {...props} />
           </Layout.Center>
         )}
