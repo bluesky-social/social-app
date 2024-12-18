@@ -1,14 +1,7 @@
-import React from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 
-import {logEvent} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
-import {
-  useTrendingSettings,
-  useTrendingSettingsApi,
-} from '#/state/preferences/trending'
 import {
   DEFAULT_LIMIT as RECOMMENDATIONS_COUNT,
   useTrendingTopics,
@@ -16,7 +9,6 @@ import {
 import {useTrendingConfig} from '#/state/trending-config'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Hashtag_Stroke2_Corner0_Rounded} from '#/components/icons/Hashtag'
-import * as Prompt from '#/components/Prompt'
 import {
   TrendingTopic,
   TrendingTopicLink,
@@ -26,23 +18,14 @@ import {Text} from '#/components/Typography'
 
 export function ExploreRecommendations() {
   const {enabled} = useTrendingConfig()
-  const {trendingDisabled} = useTrendingSettings()
-  return enabled && !trendingDisabled ? <Inner /> : null
+  return enabled ? <Inner /> : null
 }
 
 function Inner() {
   const t = useTheme()
-  const {_} = useLingui()
   const gutters = useGutters([0, 'compact'])
   const {data: trending, error, isLoading} = useTrendingTopics()
   const noRecs = !isLoading && !error && !trending?.suggested?.length
-  const {setTrendingDisabled} = useTrendingSettingsApi()
-  const trendingPrompt = Prompt.usePromptControl()
-
-  const onConfirmHide = React.useCallback(() => {
-    logEvent('trendingTopics:hide', {context: 'explore:recommendations'})
-    setTrendingDisabled(true)
-  }, [setTrendingDisabled])
 
   return error || noRecs ? null : (
     <>
@@ -106,14 +89,6 @@ function Inner() {
           )}
         </View>
       </View>
-
-      <Prompt.Basic
-        control={trendingPrompt}
-        title={_(msg`Hide trending topics?`)}
-        description={_(msg`You can update this later from your settings.`)}
-        confirmButtonCta={_(msg`Hide`)}
-        onConfirm={onConfirmHide}
-      />
     </>
   )
 }
