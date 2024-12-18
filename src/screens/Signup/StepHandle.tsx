@@ -111,7 +111,7 @@ export function StepHandle() {
                 handleValueRef.current = val
                 setDraftValue(val)
               }}
-              label={_(msg`Input your user handle`)}
+              label={_(msg`Type your desired username`)}
               defaultValue={draftValue}
               autoCapitalize="none"
               autoCorrect={false}
@@ -122,7 +122,7 @@ export function StepHandle() {
         </View>
         {draftValue !== '' && (
           <Text style={[a.text_md]}>
-            <Trans>Your full handle will be</Trans>{' '}
+            <Trans>Your full username will be</Trans>{' '}
             <Text style={[a.text_md, a.font_bold]}>
               @{createFullHandle(draftValue, state.userDomain)}
             </Text>

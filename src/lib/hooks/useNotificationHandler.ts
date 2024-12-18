@@ -177,7 +177,14 @@ export function useNotificationsHandler() {
 
     Notifications.setNotificationHandler({
       handleNotification: async e => {
-        if (e.request.trigger.type !== 'push') return DEFAULT_HANDLER_OPTIONS
+        if (
+          e.request.trigger == null ||
+          typeof e.request.trigger !== 'object' ||
+          !('type' in e.request.trigger) ||
+          e.request.trigger.type !== 'push'
+        ) {
+          return DEFAULT_HANDLER_OPTIONS
+        }
 
         logger.debug(
           'Notifications: received',
@@ -220,6 +227,9 @@ export function useNotificationsHandler() {
 
         if (
           e.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER &&
+          e.notification.request.trigger != null &&
+          typeof e.notification.request.trigger === 'object' &&
+          'type' in e.notification.request.trigger &&
           e.notification.request.trigger.type === 'push'
         ) {
           logger.debug(
@@ -229,14 +239,21 @@ export function useNotificationsHandler() {
           )
           logEvent('notifications:openApp', {})
           invalidateCachedUnreadPage()
-          truncateAndInvalidate(queryClient, RQKEY_NOTIFS())
+          const payload = e.notification.request.trigger
+            .payload as NotificationPayload
+          truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
+          if (
+            payload.reason === 'mention' ||
+            payload.reason === 'quote' ||
+            payload.reason === 'reply'
+          ) {
+            truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
+          }
           logger.debug('Notifications: handleNotification', {
             content: e.notification.request.content,
             payload: e.notification.request.trigger.payload,
           })
-          handleNotification(
-            e.notification.request.trigger.payload as NotificationPayload,
-          )
+          handleNotification(payload)
           Notifications.dismissAllNotificationsAsync()
         }
       })

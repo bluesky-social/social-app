@@ -6,7 +6,7 @@ export type LinkFacetMatch = {
 }
 
 export function suggestLinkCardUri(
-  mayBePaste: boolean,
+  suggestLinkImmediately: boolean,
   nextDetectedUris: Map<string, LinkFacetMatch>,
   prevDetectedUris: Map<string, LinkFacetMatch>,
   pastSuggestedUris: Set<string>,
@@ -20,8 +20,8 @@ export function suggestLinkCardUri(
       // Don't suggest already added or already dismissed link cards.
       continue
     }
-    if (mayBePaste) {
-      // Immediately add the pasted link without waiting to type more.
+    if (suggestLinkImmediately) {
+      // Immediately add the pasted or intent-prefilled link without waiting to type more.
       suggestedUris.add(uri)
       continue
     }

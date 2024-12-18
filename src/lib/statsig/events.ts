@@ -80,12 +80,6 @@ export type LogEvents = {
     feedUrl: string
     feedType: string
     index: number
-    reason:
-      | 'focus'
-      | 'tabbar-click'
-      | 'pager-swipe'
-      | 'desktop-sidebar-click'
-      | 'starter-pack-initial-feed'
   }
   'feed:endReached': {
     feedUrl: string
@@ -168,6 +162,7 @@ export type LogEvents = {
       | 'StarterPackProfilesList'
       | 'FeedInterstitial'
       | 'ProfileHeaderSuggestedFollows'
+      | 'PostOnboardingFindFollows'
   }
   'profile:unfollow': {
     logContext:
@@ -183,6 +178,7 @@ export type LogEvents = {
       | 'StarterPackProfilesList'
       | 'FeedInterstitial'
       | 'ProfileHeaderSuggestedFollows'
+      | 'PostOnboardingFindFollows'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
@@ -216,6 +212,10 @@ export type LogEvents = {
   }
   'starterPack:opened': {
     starterPack: string
+  }
+  'link:clicked': {
+    url: string
+    domain: string
   }
 
   'feed:interstitial:profileCard:press': {}

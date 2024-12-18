@@ -407,6 +407,7 @@ function Header({
         isOwner={isOwn}
         avatar={undefined}
         creator={creator}
+        purpose="app.bsky.graph.defs#referencelist"
         avatarType="starter-pack">
         {hasSession ? (
           <View style={[a.flex_row, a.gap_sm, a.align_center]}>

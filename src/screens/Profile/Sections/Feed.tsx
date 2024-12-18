@@ -10,7 +10,7 @@ import {isNative} from '#/platform/detection'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {Feed} from '#/view/com/posts/Feed'
+import {PostFeed} from '#/view/com/posts/PostFeed'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
@@ -74,7 +74,7 @@ export const ProfileFeedSection = React.forwardRef<
 
   return (
     <View>
-      <Feed
+      <PostFeed
         testID="postsFeed"
         enabled={isFocused}
         feed={feed}
