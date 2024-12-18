@@ -122,6 +122,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
+import {Tooltip} from '#/components/Tooltip'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
@@ -1199,32 +1200,40 @@ function ComposerFooter({
           <VideoUploadToolbar state={video} />
         ) : (
           <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
-            <SelectPhotoBtn
-              size={images.length}
-              disabled={media?.type === 'images' ? isMaxImages : !!media}
-              onAdd={onImageAdd}
-            />
-            <SelectVideoBtn
-              onSelectVideo={asset => onSelectVideo(post.id, asset)}
-              disabled={!!media}
-              setError={onError}
-            />
+            <Tooltip tooltipText={_(msg`Image`)}>
+              <SelectPhotoBtn
+                size={images.length}
+                disabled={media?.type === 'images' ? isMaxImages : !!media}
+                onAdd={onImageAdd}
+              />
+            </Tooltip>
+            <Tooltip tooltipText={_(msg`Video`)}>
+              <SelectVideoBtn
+                onSelectVideo={asset => onSelectVideo(post.id, asset)}
+                disabled={!!media}
+                setError={onError}
+              />
+            </Tooltip>
             <OpenCameraBtn
               disabled={media?.type === 'images' ? isMaxImages : !!media}
               onAdd={onImageAdd}
             />
-            <SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
+            <Tooltip tooltipText={_(msg`GIF`)}>
+              <SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
+            </Tooltip>
             {!isMobile ? (
-              <Button
-                onPress={onEmojiButtonPress}
-                style={a.p_sm}
-                label={_(msg`Open emoji picker`)}
-                accessibilityHint={_(msg`Open emoji picker`)}
-                variant="ghost"
-                shape="round"
-                color="primary">
-                <EmojiSmile size="lg" />
-              </Button>
+              <Tooltip tooltipText={_(msg`Emoji`)}>
+                <Button
+                  onPress={onEmojiButtonPress}
+                  style={a.p_sm}
+                  label={_(msg`Open emoji picker`)}
+                  accessibilityHint={_(msg`Open emoji picker`)}
+                  variant="ghost"
+                  shape="round"
+                  color="primary">
+                  <EmojiSmile size="lg" />
+                </Button>
+              </Tooltip>
             ) : null}
           </ToolbarWrapper>
         )}
