@@ -42,7 +42,8 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   const kawaii = useKawaiiMode()
   const gutters = useGutters(['base', 0, 'base', 'wide'])
   const isSearchScreen = routeName === 'Search'
-  const {q: searchQuery} = useWebQueryParams()
+  const webqueryParams = useWebQueryParams()
+  const searchQuery = webqueryParams?.q
   const showTrending = !isSearchScreen || (isSearchScreen && !!searchQuery)
 
   const {isTablet} = useWebMediaQueries()
