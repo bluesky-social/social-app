@@ -3046,7 +3046,7 @@ msgstr "Подписаны <0>{0}</0>, <1>{1}</1> и {2, plural, one {# друг
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:403
 msgid "Followed users"
-msgstr "Пользоватей, на которых я подписан"
+msgstr "Пользователей, на которых я подписан"
 
 #: src/view/com/notifications/FeedItem.tsx:207
 #~ msgid "followed you"
