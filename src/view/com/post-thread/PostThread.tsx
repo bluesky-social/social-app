@@ -42,7 +42,6 @@ import {Header} from '#/components/Layout'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
-import {RadioCircle} from '../util/forms/RadioButton'
 import {PostThreadComposePrompt} from './PostThreadComposePrompt'
 import {PostThreadItem} from './PostThreadItem'
 import {PostThreadLoadMore} from './PostThreadLoadMore'
@@ -530,7 +529,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
 
   return (
     <>
-      <Header.Outer sticky={true} headerRef={headerRef}>
+      <Header.Outer headerRef={headerRef}>
         <Header.BackButton />
         <Header.Content>
           <Header.TitleText>
@@ -619,6 +618,9 @@ let ThreadMenu = ({
         )}
       </Menu.Trigger>
       <Menu.Outer>
+        <Menu.LabelText>
+          <Trans>Thread display</Trans>
+        </Menu.LabelText>
         <Menu.Group>
           <Menu.Item
             label={_(msg`Show replies as a list`)}
@@ -628,7 +630,7 @@ let ThreadMenu = ({
             <Menu.ItemText>
               <Trans>Show replies as a list</Trans>
             </Menu.ItemText>
-            <RadioCircle isSelected={!treeViewEnabled} />
+            <Menu.ItemRadio selected={!treeViewEnabled} />
           </Menu.Item>
           <Menu.Item
             label={_(msg`Show replies as a tree`)}
@@ -638,10 +640,13 @@ let ThreadMenu = ({
             <Menu.ItemText>
               <Trans>Show replies as a tree</Trans>
             </Menu.ItemText>
-            <RadioCircle isSelected={treeViewEnabled} />
+            <Menu.ItemRadio selected={treeViewEnabled} />
           </Menu.Item>
         </Menu.Group>
         <Menu.Divider />
+        <Menu.LabelText>
+          <Trans>Reply sorting</Trans>
+        </Menu.LabelText>
         <Menu.Group>
           <Menu.Item
             label={_(msg`Hot replies first`)}
@@ -651,7 +656,7 @@ let ThreadMenu = ({
             <Menu.ItemText>
               <Trans>Hot replies first</Trans>
             </Menu.ItemText>
-            <RadioCircle isSelected={sortReplies === 'hotness'} />
+            <Menu.ItemRadio selected={sortReplies === 'hotness'} />
           </Menu.Item>
           <Menu.Item
             label={_(msg`Oldest replies first`)}
@@ -661,7 +666,7 @@ let ThreadMenu = ({
             <Menu.ItemText>
               <Trans>Oldest replies first</Trans>
             </Menu.ItemText>
-            <RadioCircle isSelected={sortReplies === 'oldest'} />
+            <Menu.ItemRadio selected={sortReplies === 'oldest'} />
           </Menu.Item>
           <Menu.Item
             label={_(msg`Newest replies first`)}
@@ -671,7 +676,7 @@ let ThreadMenu = ({
             <Menu.ItemText>
               <Trans>Newest replies first</Trans>
             </Menu.ItemText>
-            <RadioCircle isSelected={sortReplies === 'newest'} />
+            <Menu.ItemRadio selected={sortReplies === 'newest'} />
           </Menu.Item>
           <Menu.Item
             label={_(msg`Most-liked replies first`)}
@@ -681,7 +686,7 @@ let ThreadMenu = ({
             <Menu.ItemText>
               <Trans>Most-liked replies first</Trans>
             </Menu.ItemText>
-            <RadioCircle isSelected={sortReplies === 'most-likes'} />
+            <Menu.ItemRadio selected={sortReplies === 'most-likes'} />
           </Menu.Item>
           <Menu.Item
             label={_(msg`Random (aka "Poster's Roulette")`)}
@@ -691,7 +696,7 @@ let ThreadMenu = ({
             <Menu.ItemText>
               <Trans>Random (aka "Poster's Roulette")</Trans>
             </Menu.ItemText>
-            <RadioCircle isSelected={sortReplies === 'random'} />
+            <Menu.ItemRadio selected={sortReplies === 'random'} />
           </Menu.Item>
         </Menu.Group>
       </Menu.Outer>
