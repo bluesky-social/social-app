@@ -4,13 +4,12 @@ import {Trans} from '@lingui/macro'
 import {isWeb} from '#/platform/detection'
 import {useTrendingSettings} from '#/state/preferences/trending'
 import {
-  DEFAULT_LIMIT as TRENDING_TOPICS_COUNT,
+  DEFAULT_LIMIT as RECOMMENDATIONS_COUNT,
   useTrendingTopics,
 } from '#/state/queries/trending/useTrendingTopics'
 import {useTrendingConfig} from '#/state/trending-config'
-import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
-import {GradientFill} from '#/components/GradientFill'
-import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending2'
+import {atoms as a, useGutters, useTheme} from '#/alf'
+import {Hashtag_Stroke2_Corner0_Rounded} from '#/components/icons/Hashtag'
 import {
   TrendingTopic,
   TrendingTopicLink,
@@ -18,7 +17,7 @@ import {
 } from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 
-export function ExploreTrendingTopics() {
+export function ExploreRecommendations() {
   const {enabled} = useTrendingConfig()
   const {trendingDisabled} = useTrendingSettings()
   return enabled && !trendingDisabled ? <Inner /> : null
@@ -28,9 +27,9 @@ function Inner() {
   const t = useTheme()
   const gutters = useGutters([0, 'compact'])
   const {data: trending, error, isLoading} = useTrendingTopics()
-  const noTopics = !isLoading && !error && !trending?.topics?.length
+  const noRecs = !isLoading && !error && !trending?.suggested?.length
 
-  return error || noTopics ? null : (
+  return error || noRecs ? null : (
     <>
       <View
         style={[
@@ -42,23 +41,17 @@ function Inner() {
         ]}>
         <View style={[a.flex_1, a.gap_sm]}>
           <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-            <Trending
+            <Hashtag_Stroke2_Corner0_Rounded
               size="lg"
               fill={t.palette.primary_500}
               style={{marginLeft: -2}}
             />
             <Text style={[a.text_2xl, a.font_heavy, t.atoms.text]}>
-              <Trans>Trending</Trans>
+              <Trans>Recommended</Trans>
             </Text>
-            <View style={[a.py_xs, a.px_sm, a.rounded_sm, a.overflow_hidden]}>
-              <GradientFill gradient={tokens.gradients.primary} />
-              <Text style={[a.text_sm, a.font_heavy, {color: 'white'}]}>
-                <Trans>BETA</Trans>
-              </Text>
-            </View>
           </View>
           <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
-            <Trans>What people are posting about.</Trans>
+            <Trans>Feeds we think you might like.</Trans>
           </Text>
         </View>
       </View>
@@ -73,12 +66,12 @@ function Inner() {
             gutters,
           ]}>
           {isLoading ? (
-            Array(TRENDING_TOPICS_COUNT)
+            Array(RECOMMENDATIONS_COUNT)
               .fill(0)
               .map((_, i) => <TrendingTopicSkeleton key={i} index={i} />)
-          ) : !trending?.topics ? null : (
+          ) : !trending?.suggested ? null : (
             <>
-              {trending.topics.map(topic => (
+              {trending.suggested.map(topic => (
                 <TrendingTopicLink key={topic.link} topic={topic}>
                   {({hovered}) => (
                     <TrendingTopic
