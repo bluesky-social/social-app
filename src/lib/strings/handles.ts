@@ -40,109 +40,129 @@ export function sanitizeHandle(
 }
 
 export function toSanitizedUnicodeHandle(asciiHandle: string): string {
-  return asciiHandle
+  const sanitizeHandle = asciiHandle
     .split('.')
-    .map((label: string) => {
+    .map((label, index) => {
+      const start = performance.now()
       if (!label.startsWith('xn--')) {
         return label // it's not an IDN label
       }
       const unicodeLabel = decode(label.slice(4))
-      if (isPossibleHomographAttack(unicodeLabel)) {
+      if (isHomographAttackPossible(unicodeLabel)) {
         return label
       }
+      const elapsed = performance.now() - start
+      console.log(`sanitizing IDN handle part ${index} took ${elapsed} ms`)
       return unicodeLabel
     })
     .join('.')
+  return sanitizeHandle
 }
 
-/// Checks if the given unicode domain label may be subject to an
-/// homograph attack (https://en.wikipedia.org/wiki/IDN_homograph_attack)
-function isPossibleHomographAttack(unicodeLabel: string): boolean {
-  let hasNonRFC2181Characters = false
-  // We check for characters belonging to any script that has problematic homographs,
-  // and only allow using __at most__ one of them.
-  // Detection is based on the observation that legitimate domains in the wild do not mix those scripts.
-  // Note: you can use https://symbl.cc/en/unicode-table/ as reference
-  let hasLatin = false
-  let hasIPA = false
-  let hasGreekOrCoptic = false
-  let hasCyrillic = false
-  let hasArmenian = false
-  let hasNKo = false
+const BANNED = 'BANNED'
+const MIXING_ALLOWED = 'ALL' // Common (Zyyy) or Inherited (Zinh, Qaai)
+const UNICODE_MAP = (() => {
+  // Ranges are in ascending order, where the start codepoint of a range is either
+  // - the code point 0, for the first item
+  // - the previous' item lastCodePoint + 1, for all other items
+  const partitions = [
+    // Data from https://www.unicode.org/Public/16.0.0/ucdxml/
+    // where the tag is the `sc` value of the <char>
+    // Note: you can use https://symbl.cc/en/unicode-table/ as quick reference
+    {lastCodePoint: 0x001f, tag: BANNED}, // control chars
+    {lastCodePoint: 0x0040, tag: MIXING_ALLOWED},
+    {lastCodePoint: 0x0048, tag: 'Latn'}, // [A-H]
+    {lastCodePoint: 0x0049, tag: BANNED}, // 'I' is confusable with with 'l' in many fonts
+    {lastCodePoint: 0x005a, tag: 'Latn'}, // [J-Z]
+    {lastCodePoint: 0x0060, tag: MIXING_ALLOWED},
+    {lastCodePoint: 0x007a, tag: 'Latn'}, // [a-z]
+    {lastCodePoint: 0x007e, tag: MIXING_ALLOWED},
+    {lastCodePoint: 0x00a1, tag: BANNED}, // control chars, &nbsp, inverted excl. mark
+    {lastCodePoint: 0x00ac, tag: MIXING_ALLOWED},
+    {lastCodePoint: 0x00ad, tag: BANNED}, // soft hyphen (invisible)
+    {lastCodePoint: 0x00bf, tag: MIXING_ALLOWED},
+    {lastCodePoint: 0x024f, tag: 'Latn'},
+    {lastCodePoint: 0x02ff, tag: BANNED}, // International Phonetic Alphabet
+    {lastCodePoint: 0x036f, tag: MIXING_ALLOWED}, // Combining Diacritics
+    {lastCodePoint: 0x03ff, tag: 'Grek'},
+    {lastCodePoint: 0x052f, tag: 'Cyrl'},
+    {lastCodePoint: 0x058f, tag: 'Armn'},
+    {lastCodePoint: 0x05ff, tag: 'Hebr'},
+    {lastCodePoint: 0x06ff, tag: 'Arab'},
+    {lastCodePoint: 0x074f, tag: 'Syrc'},
+    {lastCodePoint: 0x077f, tag: 'Arab'},
+    {lastCodePoint: 0x07bf, tag: 'Thaa'},
+    {lastCodePoint: 0x07ff, tag: 'Nkoo'},
+    {lastCodePoint: 0x083f, tag: 'Samr'},
+    {lastCodePoint: 0x085f, tag: 'Mand'}, // Mandaic
+    {lastCodePoint: 0x086f, tag: 'Syrc'}, // Syriac Suppl.
+    {lastCodePoint: 0x08ff, tag: 'Arab'}, // Arabic Ext. A & B
+    {lastCodePoint: 0x097f, tag: 'Deva'},
+    {lastCodePoint: 0x09ff, tag: 'Beng'},
+    // TODO : add the rest
+  ]
 
-  const iterator = unicodeLabel[Symbol.iterator]()
-  let next = iterator.next()
-  while (!next.done) {
-    const codePoint = next.value.codePointAt(0) as number
+  // "struct of arrays" for increased read performance
+  return {
+    ranges: partitions.map(({lastCodePoint}) => lastCodePoint),
+    tags: partitions.map(({tag}) => tag),
 
-    if (codePoint <= 0x007f) {
-      // Basic Latin
-      const isLowercase = codePoint >= 0x0061 && codePoint <= 0x007a
-      if (isLowercase) {
-        hasLatin = true
-      } else {
-        const isUppercase = codePoint >= 0x0041 && codePoint <= 0x005a
-        if (isUppercase) {
-          if (codePoint === 0x0049 /* 'I' */) {
-            return true // this is confusable with 'l' in many fonts
-          }
-          hasNonRFC2181Characters = true
-          hasLatin = true
-        } else {
-          const isNumeric = codePoint >= 0x0030 && codePoint <= 0x0039
-          if (!isNumeric && codePoint !== 0x002d /* '-' */) {
-            hasNonRFC2181Characters = true
-          }
+    getTag(codePoint: number): string | null {
+      for (let i = 0; i < this.ranges.length; i++) {
+        const lastCodePoint = this.ranges[i]
+        if (codePoint <= lastCodePoint) {
+          return this.tags[i]
         }
       }
-    } else {
-      hasNonRFC2181Characters = true
-
-      if (codePoint <= 0x024f) {
-        // Latin-1 Suppl., Latin Extended-A, Latin Extended-B
-        hasLatin = true
-      } else if (codePoint <= 0x02ff) {
-        // IPA Extensions, Spacing Modifier Letters
-        hasIPA = true
-      } else if (codePoint <= 0x036f) {
-        // Combining Diacritical Marks (i.e. accents)
-        // do nothing
-      } else if (codePoint <= 0x03ff) {
-        // Greek and Coptic
-        hasGreekOrCoptic = true
-      } else if (codePoint <= 0x052f) {
-        // Cyrillic, Cyrillic Suppl.
-        hasCyrillic = true
-      } else if (codePoint <= 0x058f) {
-        // Armenian
-        hasArmenian = true
-      } else if (codePoint >= 0x070c && codePoint <= 0x07ff) {
-        // NKo
-        hasNKo = true
-      } else if (codePoint >= 0xd800 && codePoint <= 0xffff) {
-        // Surrogates, Combining and other high abuse potential codepoints.
-        // These are basically never legitimate parts of a label.
-        return true
-      }
-    }
-    next = iterator.next()
+      return null
+    },
   }
+})()
 
-  if (!hasNonRFC2181Characters) {
-    // The label contains only characters in [-a-z0-9] and may be a valid domain label,
-    // therefore it did not need to be using punycode.
-    // It should be regarded as a possible attack.
+/// Checks if the given unicode domain label may be subject to an
+/// homograph attack (https://en.wikipedia.org/wiki/IDN_homograph_attack).
+///
+/// Applies a policy at least as restrictive as the Mozilla Firefox policy
+/// (https://wiki.mozilla.org/IDN_Display_Algorithm).
+///
+/// This implements the "Single Script" restriction level 2 described in
+/// https://www.unicode.org/reports/tr39/#Restriction_Level_Detection
+function isHomographAttackPossible(unicodeLabel: string): boolean {
+  // The "Highly Restrictive" restriction level 3 (which is more lenient than 2)
+  // will be implemented later.
+
+  if (unicodeLabel !== unicodeLabel.normalize('NFC')) {
+    // RFC 5895 requires that unicode domain labels are in NFC form
+    // (https://datatracker.ietf.org/doc/html/rfc5895)
+    // (https://www.unicode.org/reports/tr46/)
+    // If the given domain label is not in NFC form, it shouldn't be trusted.
     return true
   }
 
-  const scripts =
-    Number(hasLatin) +
-    Number(hasIPA) +
-    Number(hasGreekOrCoptic) +
-    Number(hasCyrillic) +
-    Number(hasArmenian) +
-    Number(hasNKo)
-  return scripts > 1 // The label uses more than one confusable script
+  // FIXME: this needs to be the "Resolved Script Set" of
+  // https://www.unicode.org/reports/tr39/#Mixed_Script_Detection
+  let uniqueScript: string | null = null
+
+  const iterator = unicodeLabel[Symbol.iterator]()
+  let next = iterator.next()
+
+  while (!next.done) {
+    const codePoint = next.value.codePointAt(0) as number
+    next = iterator.next()
+    const tag = UNICODE_MAP.getTag(codePoint)
+
+    if (tag === BANNED) {
+      return true // label isn't trusted
+    } else if (tag === null || tag === MIXING_ALLOWED) {
+      // can continue
+    } else if (uniqueScript === null) {
+      uniqueScript = tag
+    } else if (uniqueScript !== tag) {
+      return true // label isn't trusted
+    }
+  }
+
+  return false // label is trusted
 }
 
 export interface IsValidHandle {
