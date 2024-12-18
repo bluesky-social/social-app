@@ -23,7 +23,6 @@ import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
-import {useTrendingSettings} from '#/state/preferences/trending'
 import {STALE} from '#/state/queries'
 import {
   FeedDescriptor,
@@ -36,7 +35,6 @@ import {
 import {useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
 import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
-import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {List, ListRef} from '../util/List'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
@@ -90,10 +88,6 @@ type FeedRow =
     }
   | {
       type: 'interstitialProgressGuide'
-      key: string
-    }
-  | {
-      type: 'interstitialTrending'
       key: string
     }
 
@@ -265,8 +259,6 @@ let PostFeed = ({
   const showProgressIntersitial =
     (followProgressGuide || followAndLikeProgressGuide) && !isDesktop
 
-  const {trendingDisabled} = useTrendingSettings()
-
   const feedItems: FeedRow[] = React.useMemo(() => {
     let feedKind: 'following' | 'discover' | 'profile' | undefined
     if (feedType === 'following') {
@@ -312,12 +304,7 @@ let PostFeed = ({
                     type: 'interstitialProgressGuide',
                     key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                   })
-                } else if (sliceIndex === 15 && !trendingDisabled) {
-                  arr.push({
-                    type: 'interstitialTrending',
-                    key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
-                  })
-                } else if (sliceIndex === 30) {
+                } else if (sliceIndex === 20) {
                   arr.push({
                     type: 'interstitialFollows',
                     key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
@@ -403,7 +390,6 @@ let PostFeed = ({
     feedTab,
     hasSession,
     showProgressIntersitial,
-    trendingDisabled,
   ])
 
   // events
@@ -490,8 +476,6 @@ let PostFeed = ({
         return <SuggestedFollows feed={feed} />
       } else if (row.type === 'interstitialProgressGuide') {
         return <ProgressGuide />
-      } else if (row.type === 'interstitialTrending') {
-        return <TrendingInterstitial />
       } else if (row.type === 'sliceItem') {
         const slice = row.slice
         if (slice.isFallbackMarker) {
