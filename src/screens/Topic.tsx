@@ -147,7 +147,7 @@ function TopicScreenTab({
     fetchNextPage,
     hasNextPage,
   } = useSearchPostsQuery({
-    query: topic.replaceAll(' ', '+').replaceAll('%20', '+'),
+    query: decodeURIComponent(topic),
     sort,
     enabled: active,
   })
