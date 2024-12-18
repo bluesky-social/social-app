@@ -14,7 +14,7 @@ appId: xyz.blueskyweb.app
     id: "e2eGotoModeration"
 - tapOn:
     id: "moderationlistsBtn"
-- tapOn: "New"
+- tapOn: "New list"
 - tapOn:
     id: "editNameInput"
 - inputText: "Muted Users"

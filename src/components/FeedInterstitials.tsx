@@ -280,8 +280,8 @@ export function ProfileGrid({
                     profile={profile}
                     moderationOpts={moderationOpts}
                     logContext="FeedInterstitial"
-                    color="secondary_inverted"
                     shape="round"
+                    colorInverted
                   />
                 </ProfileCard.Header>
                 <ProfileCard.Description profile={profile} numberOfLines={2} />

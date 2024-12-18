@@ -6,6 +6,7 @@ export const STALE = {
   MINUTES: {
     ONE: 1e3 * 60,
     FIVE: 1e3 * 60 * 5,
+    THIRTY: 1e3 * 60 * 30,
   },
   HOURS: {
     ONE: 1e3 * 60 * 60,
