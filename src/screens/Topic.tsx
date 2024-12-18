@@ -39,7 +39,7 @@ export default function TopicScreen({
   const {_} = useLingui()
 
   const headerTitle = React.useMemo(() => {
-    return enforceLen(topic, 24, true, 'middle')
+    return enforceLen(decodeURIComponent(topic), 24, true, 'middle')
   }, [topic])
 
   const onShare = React.useCallback(() => {
