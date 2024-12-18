@@ -738,7 +738,7 @@ function SearchInput({
 
       <TextInput
         ref={inputRef}
-        placeholder={_(msg`Search`)}
+        placeholder={_(msg`Search by name or interest`)}
         defaultValue={defaultValue}
         onChangeText={onChangeText}
         onFocus={onFocus}
