@@ -196,7 +196,9 @@ function Toast({
                   />
                 </View>
                 <View style={[a.h_full, a.justify_center, a.flex_1]}>
-                  <Text style={a.text_md}>{message}</Text>
+                  <Text style={a.text_md} emoji>
+                    {message}
+                  </Text>
                 </View>
               </View>
             </GestureDetector>
