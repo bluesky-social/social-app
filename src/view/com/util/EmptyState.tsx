@@ -26,9 +26,7 @@ export function EmptyState({
   const {isTabletOrDesktop} = useWebMediaQueries()
   const iconSize = isTabletOrDesktop ? 64 : 48
   return (
-    <View
-      testID={testID}
-      style={[isTabletOrDesktop && {paddingRight: 20}, style]}>
+    <View testID={testID} style={style}>
       <View
         style={[
           styles.iconContainer,
