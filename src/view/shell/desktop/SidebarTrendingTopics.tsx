@@ -62,7 +62,7 @@ function Inner() {
           </Button>
         </View>
 
-        <View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
+        <View style={[a.flex_row, a.flex_wrap, {gap: '6px 4px'}]}>
           {isLoading ? (
             Array(TRENDING_LIMIT)
               .fill(0)

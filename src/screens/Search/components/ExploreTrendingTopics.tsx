@@ -65,7 +65,13 @@ function Inner() {
 
       <View style={[a.pt_md, a.pb_lg]}>
         <View
-          style={[a.flex_row, a.justify_start, a.flex_wrap, a.gap_sm, gutters]}>
+          style={[
+            a.flex_row,
+            a.justify_start,
+            a.flex_wrap,
+            {gap: '8px 6px'},
+            gutters,
+          ]}>
           {isLoading ? (
             Array(TRENDING_TOPICS_COUNT)
               .fill(0)

@@ -73,7 +73,7 @@ export function Inner() {
         </Button>
       </View>
 
-      <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
+      <View style={[a.flex_row, a.flex_wrap, {gap: '8px 6px'}]}>
         {isLoading ? (
           Array(TRENDING_TOPICS_COUNT)
             .fill(0)
