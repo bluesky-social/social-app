@@ -958,7 +958,7 @@ msgstr "Lire automatiquement les vidéos et les GIFs"
 #: src/screens/StarterPack/Wizard/index.tsx:304
 #: src/view/com/util/ViewHeader.tsx:87
 msgid "Back"
-msgstr "Arrière"
+msgstr "Retour"
 
 #: src/view/screens/Settings/index.tsx:442
 #~ msgid "Basics"
