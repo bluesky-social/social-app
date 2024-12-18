@@ -7,6 +7,7 @@ import {AppBskyFeedDefs, AppBskyFeedThreadgate} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {HITSLOP_10} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
@@ -34,8 +35,11 @@ import {useComposerControls} from '#/state/shell'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {List, ListMethods} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonIcon} from '#/components/Button'
+import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
 import {Header} from '#/components/Layout'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
 import {PostThreadComposePrompt} from './PostThreadComposePrompt'
 import {PostThreadItem} from './PostThreadItem'
@@ -491,7 +495,60 @@ export function PostThread({uri}: {uri: string | undefined}) {
             <Trans context="description">Post</Trans>
           </Header.TitleText>
         </Header.Content>
-        <Header.Slot />
+        <Header.Slot>
+          <Menu.Root>
+            <Menu.Trigger label={_(msg`Account options`)}>
+              {({props}) => (
+                <Button
+                  label={_(msg`Thread options`)}
+                  size="small"
+                  variant="ghost"
+                  color="secondary"
+                  shape="round"
+                  hitSlop={HITSLOP_10}
+                  style={[{right: -3}]}
+                  {...props}>
+                  <ButtonIcon icon={SettingsSlider} size="md" />
+                </Button>
+              )}
+            </Menu.Trigger>
+            <Menu.Outer>
+              <Menu.Item label={_(msg`Hot replies first`)} onPress={() => {}}>
+                <Menu.ItemText>
+                  <Trans>Hot replies first</Trans>
+                </Menu.ItemText>
+              </Menu.Item>
+              <Menu.Item
+                label={_(msg`Oldest replies first`)}
+                onPress={() => {}}>
+                <Menu.ItemText>
+                  <Trans>Oldest replies first</Trans>
+                </Menu.ItemText>
+              </Menu.Item>
+              <Menu.Item
+                label={_(msg`Newest replies first`)}
+                onPress={() => {}}>
+                <Menu.ItemText>
+                  <Trans>Newest replies first</Trans>
+                </Menu.ItemText>
+              </Menu.Item>
+              <Menu.Item
+                label={_(msg`Most-liked replies first`)}
+                onPress={() => {}}>
+                <Menu.ItemText>
+                  <Trans>Most-liked replies first</Trans>
+                </Menu.ItemText>
+              </Menu.Item>
+              <Menu.Item
+                label={_(msg`Random (aka "Poster's Roulette")`)}
+                onPress={() => {}}>
+                <Menu.ItemText>
+                  <Trans>Random (aka "Poster's Roulette")</Trans>
+                </Menu.ItemText>
+              </Menu.Item>
+            </Menu.Outer>
+          </Menu.Root>
+        </Header.Slot>
       </Header.Outer>
 
       <ScrollProvider onMomentumEnd={onMomentumEnd}>
