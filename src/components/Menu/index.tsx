@@ -231,7 +231,7 @@ export function LabelText({children}: {children: React.ReactNode}) {
         a.font_bold,
         t.atoms.text_contrast_medium,
         {
-          marginBottom: -10,
+          marginBottom: -8,
         },
       ]}>
       {children}
