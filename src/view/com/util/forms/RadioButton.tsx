@@ -21,70 +21,6 @@ export function RadioButton({
   onPress: () => void
 }) {
   const theme = useTheme()
-  const labelStyle = choose<TextStyle, Record<ButtonType, TextStyle>>(type, {
-    primary: {
-      color: theme.palette.primary.text,
-      fontWeight: theme.palette.primary.isLowContrast ? '600' : undefined,
-    },
-    secondary: {
-      color: theme.palette.secondary.text,
-      fontWeight: theme.palette.secondary.isLowContrast ? '600' : undefined,
-    },
-    inverted: {
-      color: theme.palette.inverted.text,
-      fontWeight: theme.palette.inverted.isLowContrast ? '600' : undefined,
-    },
-    'primary-outline': {
-      color: theme.palette.primary.textInverted,
-      fontWeight: theme.palette.primary.isLowContrast ? '600' : undefined,
-    },
-    'secondary-outline': {
-      color: theme.palette.secondary.textInverted,
-      fontWeight: theme.palette.secondary.isLowContrast ? '600' : undefined,
-    },
-    'primary-light': {
-      color: theme.palette.primary.textInverted,
-      fontWeight: theme.palette.primary.isLowContrast ? '600' : undefined,
-    },
-    'secondary-light': {
-      color: theme.palette.secondary.textInverted,
-      fontWeight: theme.palette.secondary.isLowContrast ? '600' : undefined,
-    },
-    default: {
-      color: theme.palette.default.text,
-      fontWeight: theme.palette.default.isLowContrast ? '600' : undefined,
-    },
-    'default-light': {
-      color: theme.palette.default.text,
-      fontWeight: theme.palette.default.isLowContrast ? '600' : undefined,
-    },
-  })
-  return (
-    <Button testID={testID} type={type} onPress={onPress} style={style}>
-      <View style={styles.outer}>
-        <RadioCircle type={type} isSelected={isSelected} marginRight={10} />
-        {typeof label === 'string' ? (
-          <Text type="button" style={[labelStyle, styles.label]}>
-            {label}
-          </Text>
-        ) : (
-          <View style={styles.label}>{label}</View>
-        )}
-      </View>
-    </Button>
-  )
-}
-
-export function RadioCircle({
-  isSelected,
-  marginRight,
-  type = 'default-light',
-}: {
-  isSelected: boolean
-  type?: ButtonType
-  marginRight?: number
-}) {
-  const theme = useTheme()
   const circleStyle = choose<TextStyle, Record<ButtonType, TextStyle>>(type, {
     primary: {
       borderColor: theme.palette.primary.text,
@@ -146,12 +82,61 @@ export function RadioCircle({
       },
     },
   )
+  const labelStyle = choose<TextStyle, Record<ButtonType, TextStyle>>(type, {
+    primary: {
+      color: theme.palette.primary.text,
+      fontWeight: theme.palette.primary.isLowContrast ? '600' : undefined,
+    },
+    secondary: {
+      color: theme.palette.secondary.text,
+      fontWeight: theme.palette.secondary.isLowContrast ? '600' : undefined,
+    },
+    inverted: {
+      color: theme.palette.inverted.text,
+      fontWeight: theme.palette.inverted.isLowContrast ? '600' : undefined,
+    },
+    'primary-outline': {
+      color: theme.palette.primary.textInverted,
+      fontWeight: theme.palette.primary.isLowContrast ? '600' : undefined,
+    },
+    'secondary-outline': {
+      color: theme.palette.secondary.textInverted,
+      fontWeight: theme.palette.secondary.isLowContrast ? '600' : undefined,
+    },
+    'primary-light': {
+      color: theme.palette.primary.textInverted,
+      fontWeight: theme.palette.primary.isLowContrast ? '600' : undefined,
+    },
+    'secondary-light': {
+      color: theme.palette.secondary.textInverted,
+      fontWeight: theme.palette.secondary.isLowContrast ? '600' : undefined,
+    },
+    default: {
+      color: theme.palette.default.text,
+      fontWeight: theme.palette.default.isLowContrast ? '600' : undefined,
+    },
+    'default-light': {
+      color: theme.palette.default.text,
+      fontWeight: theme.palette.default.isLowContrast ? '600' : undefined,
+    },
+  })
   return (
-    <View style={[circleStyle, styles.circle, {marginRight}]}>
-      {isSelected ? (
-        <View style={[circleFillStyle, styles.circleFill]} />
-      ) : undefined}
-    </View>
+    <Button testID={testID} type={type} onPress={onPress} style={style}>
+      <View style={styles.outer}>
+        <View style={[circleStyle, styles.circle]}>
+          {isSelected ? (
+            <View style={[circleFillStyle, styles.circleFill]} />
+          ) : undefined}
+        </View>
+        {typeof label === 'string' ? (
+          <Text type="button" style={[labelStyle, styles.label]}>
+            {label}
+          </Text>
+        ) : (
+          <View style={styles.label}>{label}</View>
+        )}
+      </View>
+    </Button>
   )
 }
 
@@ -166,6 +151,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 4,
     borderWidth: 1,
+    marginRight: 10,
   },
   circleFill: {
     width: 16,
