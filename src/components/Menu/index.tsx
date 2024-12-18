@@ -190,6 +190,55 @@ export function ItemIcon({icon: Comp}: ItemIconProps) {
   )
 }
 
+export function ItemRadio({selected}: {selected: boolean}) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.justify_center,
+        a.align_center,
+        a.rounded_full,
+        t.atoms.border_contrast_high,
+        {
+          borderWidth: 1,
+          height: 24,
+          width: 24,
+        },
+      ]}>
+      {selected ? (
+        <View
+          style={[
+            a.absolute,
+            a.rounded_full,
+            {height: 16, width: 16},
+            selected
+              ? {
+                  backgroundColor: t.palette.primary_500,
+                }
+              : {},
+          ]}
+        />
+      ) : null}
+    </View>
+  )
+}
+
+export function LabelText({children}: {children: React.ReactNode}) {
+  const t = useTheme()
+  return (
+    <Text
+      style={[
+        a.font_bold,
+        t.atoms.text_contrast_medium,
+        {
+          marginBottom: -8,
+        },
+      ]}>
+      {children}
+    </Text>
+  )
+}
+
 export function Group({children, style}: GroupProps) {
   const t = useTheme()
   return (

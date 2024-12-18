@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, {memo, useRef, useState} from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
@@ -7,6 +7,7 @@ import {AppBskyFeedDefs, AppBskyFeedThreadgate} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {HITSLOP_10} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
@@ -28,14 +29,18 @@ import {
   ThreadPost,
   usePostThreadQuery,
 } from '#/state/queries/post-thread'
+import {useSetThreadViewPreferencesMutation} from '#/state/queries/preferences'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {List, ListMethods} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonIcon} from '#/components/Button'
+import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
 import {Header} from '#/components/Layout'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
 import {PostThreadComposePrompt} from './PostThreadComposePrompt'
 import {PostThreadItem} from './PostThreadItem'
@@ -107,12 +112,47 @@ export function PostThread({uri}: {uri: string | undefined}) {
     dataUpdatedAt: fetchedAt,
   } = usePostThreadQuery(uri)
 
+  // The original source of truth for these are the server settings.
+  const serverPrefs = preferences?.threadViewPrefs
+  const serverPrioritizeFollowedUsers =
+    serverPrefs?.prioritizeFollowedUsers ?? true
+  const serverTreeViewEnabled = serverPrefs?.lab_treeViewEnabled ?? false
+  const serverSortReplies = serverPrefs?.sort ?? 'hotness'
+
+  // However, we also need these to work locally for PWI (without persistance).
+  // So we're mirroring them locally.
+  const prioritizeFollowedUsers = serverPrioritizeFollowedUsers
+  const [treeViewEnabled, setTreeViewEnabled] = useState(serverTreeViewEnabled)
+  const [sortReplies, setSortReplies] = useState(serverSortReplies)
+
+  // We'll reset the local state if new server state flows down to us.
+  const [prevServerPrefs, setPrevServerPrefs] = useState(serverPrefs)
+  if (prevServerPrefs !== serverPrefs) {
+    setPrevServerPrefs(serverPrefs)
+    setTreeViewEnabled(serverTreeViewEnabled)
+    setSortReplies(serverSortReplies)
+  }
+
+  // And we'll update the local state when mutating the server prefs.
+  const {mutate: mutateThreadViewPrefs} = useSetThreadViewPreferencesMutation()
+  function updateTreeViewEnabled(newTreeViewEnabled: boolean) {
+    setTreeViewEnabled(newTreeViewEnabled)
+    if (hasSession) {
+      mutateThreadViewPrefs({lab_treeViewEnabled: newTreeViewEnabled})
+    }
+  }
+  function updateSortReplies(newSortReplies: string) {
+    setSortReplies(newSortReplies)
+    if (hasSession) {
+      mutateThreadViewPrefs({sort: newSortReplies})
+    }
+  }
+
   const treeView = React.useMemo(
-    () =>
-      !!preferences?.threadViewPrefs?.lab_treeViewEnabled &&
-      hasBranchingReplies(thread),
-    [preferences?.threadViewPrefs, thread],
+    () => treeViewEnabled && hasBranchingReplies(thread),
+    [treeViewEnabled, thread],
   )
+
   const rootPost = thread?.type === 'post' ? thread.post : undefined
   const rootPostRecord = thread?.type === 'post' ? thread.record : undefined
   const threadgateRecord = threadgate?.record as
@@ -175,13 +215,16 @@ export function PostThread({uri}: {uri: string | undefined}) {
   const [fetchedAtCache] = React.useState(() => new Map<string, number>())
   const [randomCache] = React.useState(() => new Map<string, number>())
   const skeleton = React.useMemo(() => {
-    const threadViewPrefs = preferences?.threadViewPrefs
-    if (!threadViewPrefs || !thread) return null
-
+    if (!thread) return null
     return createThreadSkeleton(
       sortThread(
         thread,
-        threadViewPrefs,
+        {
+          // Prefer local state as the source of truth.
+          sort: sortReplies,
+          lab_treeViewEnabled: treeViewEnabled,
+          prioritizeFollowedUsers,
+        },
         threadModerationCache,
         currentDid,
         justPostedUris,
@@ -198,7 +241,9 @@ export function PostThread({uri}: {uri: string | undefined}) {
     )
   }, [
     thread,
-    preferences?.threadViewPrefs,
+    prioritizeFollowedUsers,
+    sortReplies,
+    treeViewEnabled,
     currentDid,
     treeView,
     threadModerationCache,
@@ -484,14 +529,21 @@ export function PostThread({uri}: {uri: string | undefined}) {
 
   return (
     <>
-      <Header.Outer sticky={true} headerRef={headerRef}>
+      <Header.Outer headerRef={headerRef}>
         <Header.BackButton />
         <Header.Content>
           <Header.TitleText>
             <Trans context="description">Post</Trans>
           </Header.TitleText>
         </Header.Content>
-        <Header.Slot />
+        <Header.Slot>
+          <ThreadMenu
+            sortReplies={sortReplies}
+            treeViewEnabled={treeViewEnabled}
+            setSortReplies={updateSortReplies}
+            setTreeViewEnabled={updateTreeViewEnabled}
+          />
+        </Header.Slot>
       </Header.Outer>
 
       <ScrollProvider onMomentumEnd={onMomentumEnd}>
@@ -536,6 +588,122 @@ export function PostThread({uri}: {uri: string | undefined}) {
     </>
   )
 }
+
+let ThreadMenu = ({
+  sortReplies,
+  treeViewEnabled,
+  setSortReplies,
+  setTreeViewEnabled,
+}: {
+  sortReplies: string
+  treeViewEnabled: boolean
+  setSortReplies: (newValue: string) => void
+  setTreeViewEnabled: (newValue: boolean) => void
+}): React.ReactNode => {
+  const {_} = useLingui()
+  return (
+    <Menu.Root>
+      <Menu.Trigger label={_(msg`Thread options`)}>
+        {({props}) => (
+          <Button
+            label={_(msg`Thread options`)}
+            size="small"
+            variant="ghost"
+            color="secondary"
+            shape="round"
+            hitSlop={HITSLOP_10}
+            {...props}>
+            <ButtonIcon icon={SettingsSlider} size="md" />
+          </Button>
+        )}
+      </Menu.Trigger>
+      <Menu.Outer>
+        <Menu.LabelText>
+          <Trans>Show replies as</Trans>
+        </Menu.LabelText>
+        <Menu.Group>
+          <Menu.Item
+            label={_(msg`Linear`)}
+            onPress={() => {
+              setTreeViewEnabled(false)
+            }}>
+            <Menu.ItemText>
+              <Trans>Linear</Trans>
+            </Menu.ItemText>
+            <Menu.ItemRadio selected={!treeViewEnabled} />
+          </Menu.Item>
+          <Menu.Item
+            label={_(msg`Threaded`)}
+            onPress={() => {
+              setTreeViewEnabled(true)
+            }}>
+            <Menu.ItemText>
+              <Trans>Threaded</Trans>
+            </Menu.ItemText>
+            <Menu.ItemRadio selected={treeViewEnabled} />
+          </Menu.Item>
+        </Menu.Group>
+        <Menu.Divider />
+        <Menu.LabelText>
+          <Trans>Reply sorting</Trans>
+        </Menu.LabelText>
+        <Menu.Group>
+          <Menu.Item
+            label={_(msg`Hot replies first`)}
+            onPress={() => {
+              setSortReplies('hotness')
+            }}>
+            <Menu.ItemText>
+              <Trans>Hot replies first</Trans>
+            </Menu.ItemText>
+            <Menu.ItemRadio selected={sortReplies === 'hotness'} />
+          </Menu.Item>
+          <Menu.Item
+            label={_(msg`Oldest replies first`)}
+            onPress={() => {
+              setSortReplies('oldest')
+            }}>
+            <Menu.ItemText>
+              <Trans>Oldest replies first</Trans>
+            </Menu.ItemText>
+            <Menu.ItemRadio selected={sortReplies === 'oldest'} />
+          </Menu.Item>
+          <Menu.Item
+            label={_(msg`Newest replies first`)}
+            onPress={() => {
+              setSortReplies('newest')
+            }}>
+            <Menu.ItemText>
+              <Trans>Newest replies first</Trans>
+            </Menu.ItemText>
+            <Menu.ItemRadio selected={sortReplies === 'newest'} />
+          </Menu.Item>
+          <Menu.Item
+            label={_(msg`Most-liked replies first`)}
+            onPress={() => {
+              setSortReplies('most-likes')
+            }}>
+            <Menu.ItemText>
+              <Trans>Most-liked replies first</Trans>
+            </Menu.ItemText>
+            <Menu.ItemRadio selected={sortReplies === 'most-likes'} />
+          </Menu.Item>
+          <Menu.Item
+            label={_(msg`Random (aka "Poster's Roulette")`)}
+            onPress={() => {
+              setSortReplies('random')
+            }}>
+            <Menu.ItemText>
+              <Trans>Random (aka "Poster's Roulette")</Trans>
+            </Menu.ItemText>
+            <Menu.ItemRadio selected={sortReplies === 'random'} />
+          </Menu.Item>
+        </Menu.Group>
+      </Menu.Outer>
+    </Menu.Root>
+  )
+}
+ThreadMenu = memo(ThreadMenu)
 
 function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
   const safeAreaInsets = useSafeAreaInsets()
