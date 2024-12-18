@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-18 09:48\n"
+"PO-Revision-Date: 2024-12-18 09:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -6522,15 +6522,15 @@ msgstr "点按以查看完整图片"
 
 #: src/state/shell/progress-guide.tsx:231
 msgid "Task complete - 10 follows!"
-msgstr "任务完成：关注 10 个人！"
+msgstr "任务完成：关注 10 个账户！"
 
 #: src/state/shell/progress-guide.tsx:221
 msgid "Task complete - 10 likes!"
-msgstr "任务完成：10 次喜欢！"
+msgstr "任务完成：喜欢 10 则帖文！"
 
 #: src/components/ProgressGuide/List.tsx:64
 msgid "Teach our algorithm what you like"
-msgstr "让我们的算法了解你喜欢什么"
+msgstr "让我们的算法了解你的喜好"
 
 #: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:114
