@@ -26,7 +26,7 @@ appId: xyz.blueskyweb.app
 - tapOn: "Save"
 - assertNotVisible:
     id: "createOrEditListModal"
-- tapOn: "About"
+- tapOn: "People"
 - assertVisible: "Good Ppl"
 - assertVisible: "They good"
 
@@ -93,10 +93,10 @@ appId: xyz.blueskyweb.app
 - tapOn: "Save"
 - assertNotVisible:
     id: "createOrEditListModal"
-- tapOn: "About"
+- tapOn: "People"
 - assertVisible: "Good Ppl"
 - assertVisible: "They good"
-- tapOn: "About"
+- tapOn: "People"
 
 - tapOn:
     label: "Adds users on curatelists from the list"
@@ -145,7 +145,7 @@ appId: xyz.blueskyweb.app
     id: "e2eGotoLists"
 - tapOn: "Good Ppl"
 
-- tapOn: "About"
+- tapOn: "People"
 - assertVisible:
     label: "Removes users on curatelists from the list"
     id: "user-bob.test"
