@@ -134,7 +134,7 @@ export function NotificationFeed({
           highlightUnread={filter === 'all'}
           item={item}
           moderationOpts={moderationOpts!}
-          hideTopBorder={index === 0 && item.notification.isRead}
+          hideTopBorder={index === 0}
         />
       )
     },

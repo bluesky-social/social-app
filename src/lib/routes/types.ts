@@ -47,6 +47,7 @@ export type CommonNavigatorParams = {
   AppIconSettings: undefined
   Search: {q?: string}
   Hashtag: {tag: string; author?: string}
+  Topic: {topic: string}
   MessagesConversation: {conversation: string; embed?: string}
   MessagesSettings: undefined
   NotificationSettings: undefined
@@ -92,6 +93,7 @@ export type FlatNavigatorParams = CommonNavigatorParams & {
   Feeds: undefined
   Notifications: undefined
   Hashtag: {tag: string; author?: string}
+  Topic: {topic: string}
   Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
 }
 
@@ -105,6 +107,7 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   Notifications: undefined
   MyProfileTab: undefined
   Hashtag: {tag: string; author?: string}
+  Topic: {topic: string}
   MessagesTab: undefined
   Messages: {animation?: 'push' | 'pop'}
   Start: {name: string; rkey: string}

@@ -100,6 +100,7 @@ import {LanguageSettingsScreen} from './screens/Settings/LanguageSettings'
 import {PrivacyAndSecuritySettingsScreen} from './screens/Settings/PrivacyAndSecuritySettings'
 import {SettingsScreen} from './screens/Settings/Settings'
 import {ThreadPreferencesScreen} from './screens/Settings/ThreadPreferences'
+import TopicScreen from './screens/Topic'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -375,6 +376,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="Hashtag"
         getComponent={() => HashtagScreen}
         options={{title: title(msg`Hashtag`)}}
+      />
+      <Stack.Screen
+        name="Topic"
+        getComponent={() => TopicScreen}
+        options={{title: title(msg`Topic`)}}
       />
       <Stack.Screen
         name="MessagesConversation"
