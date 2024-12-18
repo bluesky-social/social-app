@@ -2818,7 +2818,7 @@ msgstr "Incorpore esta postagem no seu site. Basta copiar o trecho abaixo e cola
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb.tsx:57
 msgid "Embedded video player"
-msgstr ""
+msgstr "Reprodutor interno de vídeo"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:56
 #: src/screens/Settings/components/Email2FAToggle.tsx:60
@@ -2917,7 +2917,7 @@ msgstr "Insira o código de confirmação"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:405
 msgid "Enter fullscreen"
-msgstr ""
+msgstr "Entrar em tela cheia"
 
 #: src/view/com/modals/ChangePassword.tsx:154
 msgid "Enter the code you received to change your password."
@@ -3738,7 +3738,7 @@ msgstr "As pessoas não vão achar que você é um bot se você criar um avatar 
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:127
 #~ msgid "Helps external sites estimate traffic from Bluesky."
-#~ msgstr ""
+#~ msgstr "Ajuda sites externos a estimarem tráfego originado no Bluesky."
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:140
 #~ msgid "Here are some accounts for you to follow"
@@ -3871,7 +3871,7 @@ msgstr "Provedor de hospedagem"
 #: src/screens/Settings/ThreadPreferences.tsx:59
 #: src/screens/Settings/ThreadPreferences.tsx:62
 msgid "Hot replies first"
-msgstr ""
+msgstr "Respostas em alta primeiro"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:41
 msgid "How should we open this link?"
@@ -6822,7 +6822,7 @@ msgstr "Veja o guia"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:190
 msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
-msgstr ""
+msgstr "Controle deslizante de busca. Use os botões de seta para avançar e retroceder, e espaço para pausar/continuar"
 
 #: src/view/com/util/Selector.tsx:107
 #~ msgid "Select {item}"
@@ -8355,7 +8355,7 @@ msgstr "Preferências das Threads"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/TimeIndicator.tsx:33
 msgid "Time remaining: {time} seconds"
-msgstr ""
+msgstr "Tempo restante: {time} segundos"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:99
 msgid "To disable the email 2FA method, please verify your access to the email address."
@@ -8615,11 +8615,11 @@ msgstr "Cancelada inscrição na lista"
 
 #: src/view/com/composer/Composer.tsx:759
 msgid "Unsupported video type"
-msgstr ""
+msgstr "Formato de vídeo não suportado"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:66
 msgid "Unsupported video type: {0}"
-msgstr ""
+msgstr "Formato de vídeo não suportado: {0}"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:72
 #~ msgid "Unsupported video type: {mimeType}"
