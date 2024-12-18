@@ -30,12 +30,12 @@ msgstr "{0, plural, one {# день} few {# дня} other {# дней}}"
 #. placeholder {0}: profile.followersCount ?? 0
 #: src/screens/Profile/ProfileFollowers.tsx:40
 msgid "{0, plural, one {# follower} other {# followers}}"
-msgstr ""
+msgstr "{0, plural, one {подписчик} other {подписчиков}}"
 
 #. placeholder {0}: profile.followsCount ?? 0
 #: src/screens/Profile/ProfileFollows.tsx:40
 msgid "{0, plural, one {# following} other {# following}}"
-msgstr ""
+msgstr "{0, plural, one {подписка} other {подписок}}"
 
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:146
@@ -45,17 +45,17 @@ msgstr "{0, plural, one {# час} few {# часа} other {# часов}}"
 #. placeholder {0}: labels.length
 #: src/components/moderation/LabelsOnMe.tsx:53
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this account"
-msgstr ""
+msgstr "{0, plural, one {# метка} other {# метки}} размещены на этом аккаунте"
 
 #. placeholder {0}: labels.length
 #: src/components/moderation/LabelsOnMe.tsx:62
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this content"
-msgstr ""
+msgstr "{0, plural, one {# метка} other {# метки}} размещены на этом контенте"
 
 #. placeholder {0}: likeCount ?? 0
 #: src/screens/Post/PostLikedBy.tsx:41
 msgid "{0, plural, one {# like} other {# likes}}"
-msgstr ""
+msgstr "{0, plural, one {# лайк} other {# лайков}}"
 
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:136
@@ -70,7 +70,7 @@ msgstr "{0, plural, one {# месяц} few {# месяца} other {# месяц�
 #. placeholder {0}: quoteCount ?? 0
 #: src/screens/Post/PostQuotes.tsx:41
 msgid "{0, plural, one {# quote} other {# quotes}}"
-msgstr ""
+msgstr "{0, plural, one {# цитата} other {# цитаты}}"
 
 #. placeholder {0}: quoteCount ?? 0
 #: src/screens/Post/PostRepostedBy.tsx:41
@@ -629,7 +629,7 @@ msgstr "Обучение алгоритма завершено!"
 
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
-msgstr ""
+msgstr "Все"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
@@ -651,7 +651,7 @@ msgstr "Разрешить новые сообщения от"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
 msgid "Allow quote posts"
-msgstr ""
+msgstr "Разрешить цитировать посты"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Allow replies from:"
@@ -818,7 +818,7 @@ msgstr "Любой может взаимодействовать"
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:18
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:23
 msgid "App Icon"
-msgstr ""
+msgstr "Иконка приложения"
 
 #: src/screens/Settings/LanguageSettings.tsx:80
 msgid "App Language"
@@ -1114,11 +1114,11 @@ msgstr "Bluesky не будет показывать ваш профиль и п
 
 #: src/screens/Settings/AppIconSettings/index.tsx:99
 msgid "Bluesky+"
-msgstr ""
+msgstr "Bluesky+"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:102
 msgid "Bluesky+ icons"
-msgstr ""
+msgstr "Иконки Bluesky+"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
@@ -1161,6 +1161,16 @@ msgstr "Просмотр других лент"
 #: src/view/com/auth/SplashScreen.web.tsx:168
 msgid "Business"
 msgstr "Бизнес"
+
+#. placeholder {0}: sanitizeHandle(handle, '@')
+#: src/components/LabelingServiceCard/index.tsx:62
+msgid "By {0}"
+msgstr "От {0}"
+
+#. placeholder {0}: sanitizeHandle(info.creatorHandle, '@')
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:415
+msgid "By <0>{0}</0>"
+msgstr "От <0>{0}</0>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
@@ -1268,14 +1278,14 @@ msgstr "Изменить"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:39
 msgid "Change app icon"
-msgstr ""
+msgstr "Изменить иконку приложения"
 
 #. placeholder {0}: next.name
 #. placeholder {0}: icon.name
 #: src/screens/Settings/AppIconSettings/index.tsx:38
 #: src/screens/Settings/AppIconSettings/index.tsx:221
 msgid "Change app icon to \"{0}\""
-msgstr ""
+msgstr "Изменить иконку приложения на \"{0}\""
 
 #: src/screens/Settings/AccountSettings.tsx:97
 #: src/screens/Settings/AccountSettings.tsx:101
@@ -1387,7 +1397,7 @@ msgstr "Выберите этот цвет в качестве своего ав
 #: src/view/screens/Feeds.tsx:728
 #: src/view/screens/Search/Explore.tsx:391
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
-msgstr ""
+msgstr "Выберите свою собственную временную шкалу! Ленты, созданные сообществом, помогут вам найти контент, который вы любите."
 
 #: src/screens/Signup/StepInfo/index.tsx:201
 msgid "Choose your password"
@@ -1622,7 +1632,7 @@ msgstr "Служба поддержки"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:39
 msgid "Content & Media"
-msgstr ""
+msgstr "Содержание и медиа"
 
 #: src/screens/Settings/Settings.tsx:175
 #: src/screens/Settings/Settings.tsx:178
@@ -1907,7 +1917,7 @@ msgstr "По умолчанию"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:75
 msgid "Default icons"
-msgstr ""
+msgstr "Иконки по умолчанию"
 
 #: src/view/screens/ProfileList.tsx:735
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:661
@@ -2764,7 +2774,7 @@ msgstr "Лента от {0}"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:319
 msgid "Feed menu"
-msgstr ""
+msgstr "Меню ленты"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:54
 msgid "Feed toggle"
@@ -3332,7 +3342,7 @@ msgstr "Если вы удалите этот список, вы не сможе
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:250
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
-msgstr ""
+msgstr "Если у вас есть собственный домен, вы можете использовать его в качестве своего имени. Это позволит вам самостоятельно подтвердить свою личность. <0> Узнайте больше здесь.</0>"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
 msgid "If you remove this post, you won't be able to recover it."
@@ -3636,12 +3646,12 @@ msgstr "Светлая"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:482
 msgid "Like"
-msgstr ""
+msgstr "Лайк"
 
 #. placeholder {0}: post.likeCount || 0
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:310
 msgid "Like ({0, plural, one {# like} other {# likes}})"
-msgstr ""
+msgstr "Лайк ({0, plural, one {# лайк} other {# лайков}})"
 
 #: src/components/ProgressGuide/List.tsx:47
 msgid "Like 10 posts"
@@ -3654,7 +3664,7 @@ msgstr "Лайкните 10 постов, чтобы обучить ленту D
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:469
 msgid "Like feed"
-msgstr ""
+msgstr "Лайкнутая лента"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:275
 msgid "Like this feed"
@@ -3677,14 +3687,14 @@ msgstr "Понравился пользователю"
 #: src/view/com/feeds/FeedSourceCard.tsx:303
 #: src/components/FeedCard.tsx:213
 msgid "Liked by {0, plural, one {# user} other {# users}}"
-msgstr ""
+msgstr "Понравилось {0, plural, one {# пользователю} other {# пользователям}}"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:457
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:295
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:309
 #: src/components/LabelingServiceCard/index.tsx:96
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
-msgstr ""
+msgstr "Понравилось {likeCount, plural, one {# пользователю} other {# пользователям}}"
 
 #: src/view/screens/Profile.tsx:229
 msgid "Likes"
@@ -3715,11 +3725,11 @@ msgstr "Список от {0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:156
 msgid "List by <0/>"
-msgstr ""
+msgstr "Список от <0/>"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:154
 msgid "List by you"
-msgstr ""
+msgstr "Список от вас"
 
 #: src/view/screens/ProfileList.tsx:451
 msgid "List deleted"
@@ -3815,7 +3825,7 @@ msgstr "Войти в учётную запись, которой нет в сп
 
 #: src/view/shell/desktop/RightNav.tsx:97
 msgid "Logo by @sawaratsuki.bsky.social"
-msgstr ""
+msgstr "Логотип @sawaratsuki.bsky.social"
 
 #: src/view/shell/Drawer.tsx:629
 #: src/view/shell/desktop/RightNav.tsx:94
@@ -3882,7 +3892,7 @@ msgstr "Упомянутых пользоватей"
 
 #: src/view/screens/Notifications.tsx:99
 msgid "Mentions"
-msgstr ""
+msgstr "Упоминания"
 
 #: src/view/screens/Search/Search.tsx:856
 #: src/components/Menu/index.tsx:96
@@ -4207,7 +4217,7 @@ msgstr "Новый псевдоним"
 #: src/view/screens/ModerationModlists.tsx:71
 #: src/view/screens/Lists.tsx:69
 msgid "New list"
-msgstr ""
+msgstr "Новый список"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
@@ -4586,7 +4596,7 @@ msgstr "Открыть настройки беседы"
 
 #: src/components/Layout/Header/index.tsx:148
 msgid "Open drawer menu"
-msgstr ""
+msgstr "Открыть выдвижное меню"
 
 #: src/view/com/composer/Composer.tsx:1221
 #: src/view/com/composer/Composer.tsx:1222
@@ -4596,7 +4606,7 @@ msgstr "Открыть подборщик эмодзи"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:161
 msgid "Open feed info screen"
-msgstr ""
+msgstr "Открыть экран информации о ленте"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:256
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:261
@@ -4829,15 +4839,15 @@ msgstr "Изображения, предназначенные для взрос
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:487
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:494
 msgid "Pin feed"
-msgstr ""
+msgstr "Закрепить ленту"
 
 #: src/view/screens/ProfileList.tsx:681
 msgid "Pin to home"
-msgstr "Закрепить на главной"
+msgstr "Закрепить на главной странице"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:302
 msgid "Pin to Home"
-msgstr "Закрепить на главной"
+msgstr "Закрепить на главной странице"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:380
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:387
@@ -4852,7 +4862,7 @@ msgstr "Закреплён"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:128
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:140
 msgid "Pinned {0} to Home"
-msgstr ""
+msgstr "Прикреплено {0} к главной странице"
 
 #: src/view/screens/SavedFeeds.tsx:123
 msgid "Pinned Feeds"
@@ -5408,7 +5418,7 @@ msgstr "Ответить"
 #. placeholder {0}: post.replyCount || 0
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:262
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
-msgstr ""
+msgstr "Ответить ({0, plural, one {# ответ} other {# ответы}})"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:123
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
@@ -5546,7 +5556,7 @@ msgstr "Репост"
 #. placeholder {0}: repostCount || 0
 #: src/view/com/util/post-ctrls/RepostButton.tsx:74
 msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr ""
+msgstr "Репост ({0, plural, one {# репост} other {# репосты}})"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:49
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:104
@@ -5789,7 +5799,7 @@ msgstr "Поиск"
 
 #: src/view/screens/Feeds.tsx:441
 msgid "Search feeds"
-msgstr ""
+msgstr "Поиск лент"
 
 #: src/view/shell/desktop/Search.tsx:201
 msgid "Search for \"{query}\""
@@ -6017,7 +6027,7 @@ msgstr "Адреса сервера"
 #. placeholder {0}: icon.name
 #: src/screens/Settings/AppIconSettings/index.tsx:178
 msgid "Set app icon to {0}"
-msgstr ""
+msgstr "Установите иконку приложения на {0}"
 
 #: src/screens/Moderation/index.tsx:290
 msgid "Set birthdate"
@@ -6104,7 +6114,7 @@ msgstr "Поделиться QR-кодом"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:438
 msgid "Share this feed"
-msgstr ""
+msgstr "Поделиться этой лентой"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:416
 msgid "Share this starter pack"
@@ -6359,7 +6369,7 @@ msgstr "Что-то пошло не так!"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:506
 msgid "Something wrong? Let us know."
-msgstr ""
+msgstr "Что-то не так? Сообщите нам."
 
 #: src/App.web.tsx:95
 #: src/App.native.tsx:115
@@ -6380,7 +6390,7 @@ msgstr "Выберите, как сортировать ответы к пост
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:168
 msgid "Source: "
-msgstr ""
+msgstr "Источник: "
 
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
@@ -6417,7 +6427,7 @@ msgstr "Стартовый набор от {0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:182
 msgid "Starter pack by <0/>"
-msgstr ""
+msgstr "Стартовый набор от <0/>"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:180
 #: src/components/StarterPack/StarterPackCard.tsx:80
@@ -6539,7 +6549,7 @@ msgstr "Только теги"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Tap to change app icon"
-msgstr ""
+msgstr "Нажмите, чтобы изменить иконку приложения"
 
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"
@@ -6659,7 +6669,7 @@ msgstr "Учётная запись сможет взаимодействова�
 #: src/screens/Settings/AppIconSettings/index.tsx:41
 #: src/screens/Settings/AppIconSettings/index.tsx:222
 msgid "The app will be restarted"
-msgstr ""
+msgstr "Приложение будет перезапущено"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:126
 #: src/components/moderation/ModerationDetailsDialog.tsx:117
@@ -7207,7 +7217,7 @@ msgstr "Отменить репост"
 #. placeholder {0}: repostCount || 0
 #: src/view/com/util/post-ctrls/RepostButton.tsx:68
 msgid "Undo repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr ""
+msgstr "Отменить репост ({0, plural, one {# репост} other {# репосты}})"
 
 #: src/view/com/profile/FollowButton.tsx:60
 msgctxt "action"
@@ -7226,12 +7236,12 @@ msgstr "Отписаться от учётной записи"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:482
 msgid "Unlike"
-msgstr ""
+msgstr "Дизлайк"
 
 #. placeholder {0}: post.likeCount || 0
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:304
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
-msgstr ""
+msgstr "Дизлайк ({0, plural, one {# лайк} other {# лайков}})"
 
 #: src/view/screens/ProfileList.tsx:697
 #: src/components/TagMenu/index.tsx:264
@@ -7277,7 +7287,7 @@ msgstr "Открепить"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:487
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:494
 msgid "Unpin feed"
-msgstr ""
+msgstr "Открепить ленту"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:275
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:277
@@ -7296,11 +7306,11 @@ msgstr "Открепить список модерации"
 #. placeholder {0}: info.displayName
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:130
 msgid "Unpinned {0} from Home"
-msgstr ""
+msgstr "Откреплено {0} от главной страницы"
 
 #: src/view/screens/ProfileList.tsx:348
 msgid "Unpinned from your feeds"
-msgstr "Открепленно из ваших лент"
+msgstr "Откреплено из ваших лент"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:236
 msgid "Unsubscribe"
@@ -8208,7 +8218,7 @@ msgstr "Ваш выбор будет запомнен, вы в любой мом
 #. placeholder {0}: sanitizeHandle(currentAccount?.handle || '', '@')
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:496
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
-msgstr ""
+msgstr "Ваш текущий идентификатор <0>{0}</0> будет автоматически сохранен за вами. Вы сможете вернуться к нему в любое время с этого аккаунта."
 
 #: src/view/com/modals/ChangePassword.tsx:55
 #: src/screens/Signup/state.ts:203
