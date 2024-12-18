@@ -148,7 +148,7 @@ export function ThreadPreferencesScreen({}: Props) {
               }
               style={[a.w_full, a.gap_md]}>
               <Toggle.LabelText style={[a.flex_1]}>
-                <Trans>Show replies in a threaded view</Trans>
+                <Trans>Show replies as threaded</Trans>
               </Toggle.LabelText>
               <Toggle.Platform />
             </Toggle.Item>

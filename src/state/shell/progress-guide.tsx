@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -16,20 +16,32 @@ export enum ProgressGuideAction {
   Follow = 'follow',
 }
 
-type ProgressGuideName = 'like-10-and-follow-7'
+type ProgressGuideName = 'like-10-and-follow-7' | 'follow-10'
 
+/**
+ * Progress Guides that extend this interface must specify their name in the `guide` field, so it can be used as a discriminated union
+ */
 interface BaseProgressGuide {
-  guide: string
+  guide: ProgressGuideName
   isComplete: boolean
   [key: string]: any
 }
 
-interface Like10AndFollow7ProgressGuide extends BaseProgressGuide {
+export interface Like10AndFollow7ProgressGuide extends BaseProgressGuide {
+  guide: 'like-10-and-follow-7'
   numLikes: number
   numFollows: number
 }
 
-type ProgressGuide = Like10AndFollow7ProgressGuide | undefined
+export interface Follow10ProgressGuide extends BaseProgressGuide {
+  guide: 'follow-10'
+  numFollows: number
+}
+
+export type ProgressGuide =
+  | Like10AndFollow7ProgressGuide
+  | Follow10ProgressGuide
+  | undefined
 
 const ProgressGuideContext = React.createContext<ProgressGuide>(undefined)
 
@@ -61,15 +73,28 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const {mutateAsync, variables, isPending} =
     useSetActiveProgressGuideMutation()
 
-  const activeProgressGuide = (
-    isPending ? variables : preferences?.bskyAppState?.activeProgressGuide
-  ) as ProgressGuide
+  const activeProgressGuide = useMemo(() => {
+    const rawProgressGuide = (
+      isPending ? variables : preferences?.bskyAppState?.activeProgressGuide
+    ) as ProgressGuide
 
-  // ensure the unspecced attributes have the correct types
-  if (activeProgressGuide?.guide === 'like-10-and-follow-7') {
-    activeProgressGuide.numLikes = Number(activeProgressGuide.numLikes) || 0
-    activeProgressGuide.numFollows = Number(activeProgressGuide.numFollows) || 0
-  }
+    if (!rawProgressGuide) return undefined
+
+    // ensure the unspecced attributes have the correct types
+    // clone then mutate
+    const {...maybeWronglyTypedProgressGuide} = rawProgressGuide
+    if (maybeWronglyTypedProgressGuide?.guide === 'like-10-and-follow-7') {
+      maybeWronglyTypedProgressGuide.numLikes =
+        Number(maybeWronglyTypedProgressGuide.numLikes) || 0
+      maybeWronglyTypedProgressGuide.numFollows =
+        Number(maybeWronglyTypedProgressGuide.numFollows) || 0
+    } else if (maybeWronglyTypedProgressGuide?.guide === 'follow-10') {
+      maybeWronglyTypedProgressGuide.numFollows =
+        Number(maybeWronglyTypedProgressGuide.numFollows) || 0
+    }
+
+    return maybeWronglyTypedProgressGuide
+  }, [isPending, variables, preferences])
 
   const [localGuideState, setLocalGuideState] =
     React.useState<ProgressGuide>(undefined)
@@ -82,7 +107,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const firstLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
   const fifthLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
   const tenthLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
-  const guideCompleteToastRef = React.useRef<ProgressGuideToastRef | null>(null)
+
+  const fifthFollowToastRef = React.useRef<ProgressGuideToastRef | null>(null)
+  const tenthFollowToastRef = React.useRef<ProgressGuideToastRef | null>(null)
 
   const controls = React.useMemo(() => {
     return {
@@ -93,7 +120,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             numLikes: 0,
             numFollows: 0,
             isComplete: false,
-          }
+          } satisfies ProgressGuide
+          setLocalGuideState(guideObj)
+          mutateAsync(guideObj)
+        } else if (guide === 'follow-10') {
+          const guideObj = {
+            guide: 'follow-10',
+            numFollows: 0,
+            isComplete: false,
+          } satisfies ProgressGuide
           setLocalGuideState(guideObj)
           mutateAsync(guideObj)
         }
@@ -137,6 +172,26 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
               isComplete: true,
             }
           }
+        } else if (guide?.guide === 'follow-10') {
+          if (action === ProgressGuideAction.Follow) {
+            guide = {
+              ...guide,
+              numFollows: (Number(guide.numFollows) || 0) + count,
+            }
+
+            if (guide.numFollows === 5) {
+              fifthFollowToastRef.current?.open()
+            }
+            if (guide.numFollows === 10) {
+              tenthFollowToastRef.current?.open()
+            }
+          }
+          if (Number(guide.numFollows) >= 10) {
+            guide = {
+              ...guide,
+              isComplete: true,
+            }
+          }
         }
 
         setLocalGuideState(guide)
@@ -167,9 +222,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
               subtitle={_(msg`The Discover feed now knows what you like`)}
             />
             <ProgressGuideToast
-              ref={guideCompleteToastRef}
-              title={_(msg`Algorithm training complete!`)}
-              subtitle={_(msg`The Discover feed now knows what you like`)}
+              ref={fifthFollowToastRef}
+              title={_(msg`Half way there!`)}
+              subtitle={_(msg`Follow 10 accounts`)}
+            />
+            <ProgressGuideToast
+              ref={tenthFollowToastRef}
+              title={_(msg`Task complete - 10 follows!`)}
+              subtitle={_(msg`You've found some people to follow`)}
             />
           </>
         )}

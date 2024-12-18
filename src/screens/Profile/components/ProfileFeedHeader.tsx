@@ -30,8 +30,8 @@ import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import {useRichText} from '#/components/hooks/useRichText'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
-import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
   Heart2_Stroke2_Corner0_Rounded as Heart,
@@ -91,7 +91,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
   const t = useTheme()
   const {_, i18n} = useLingui()
   const {hasSession} = useSession()
-  const {gtPhone, gtMobile} = useBreakpoints()
+  const {gtMobile} = useBreakpoints()
   const infoControl = Dialog.useDialogControl()
   const playHaptic = useHaptics()
 
@@ -191,9 +191,8 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
               style={[
                 a.justify_start,
                 {
-                  paddingVertical: isWeb ? 4 : 6,
-                  paddingHorizontal: 8,
-                  paddingRight: 12,
+                  paddingVertical: isWeb ? 2 : 4,
+                  paddingRight: 8,
                 },
               ]}
               onPress={() => {
@@ -207,10 +206,18 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                       a.absolute,
                       a.inset_0,
                       a.rounded_sm,
-                      a.transition_transform,
+                      a.transition_all,
                       t.atoms.bg_contrast_25,
-                      pressed && t.atoms.bg_contrast_50,
+                      {
+                        opacity: 0,
+                        left: isWeb ? -2 : -4,
+                        right: 0,
+                      },
+                      pressed && {
+                        opacity: 1,
+                      },
                       hovered && {
+                        opacity: 1,
                         transform: [{scaleX: 1.01}, {scaleY: 1.1}],
                       },
                     ]}
@@ -219,7 +226,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                   <View
                     style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
                     {info.avatar && (
-                      <UserAvatar size={32} type="algo" avatar={info.avatar} />
+                      <UserAvatar size={36} type="algo" avatar={info.avatar} />
                     )}
 
                     <View style={[a.flex_1]}>
@@ -237,10 +244,9 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                         <Text
                           style={[
                             a.flex_shrink,
-                            a.text_xs,
+                            a.text_sm,
                             a.leading_snug,
                             t.atoms.text_contrast_medium,
-                            gtPhone && a.text_sm,
                           ]}
                           numberOfLines={1}>
                           {sanitizeHandle(info.creatorHandle, '@')}
@@ -256,10 +262,9 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                           />
                           <Text
                             style={[
-                              a.text_xs,
+                              a.text_sm,
                               a.leading_snug,
                               t.atoms.text_contrast_medium,
-                              gtPhone && a.text_sm,
                             ]}
                             numberOfLines={1}>
                             {formatCount(i18n, likeCount)}
@@ -268,7 +273,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                       </View>
                     </View>
 
-                    <ChevronDown
+                    <Ellipsis
                       size="md"
                       fill={t.atoms.text_contrast_low.color}
                     />

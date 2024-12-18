@@ -29,10 +29,13 @@ import {messages as messagesHu} from '#/locale/locales/hu/messages'
 import {messages as messagesId} from '#/locale/locales/id/messages'
 import {messages as messagesIt} from '#/locale/locales/it/messages'
 import {messages as messagesJa} from '#/locale/locales/ja/messages'
+import {messages as messagesKm} from '#/locale/locales/km/messages'
 import {messages as messagesKo} from '#/locale/locales/ko/messages'
 import {messages as messagesNl} from '#/locale/locales/nl/messages'
+import {messages as messagesNp} from '#/locale/locales/np/messages'
 import {messages as messagesPl} from '#/locale/locales/pl/messages'
 import {messages as messagesPt_BR} from '#/locale/locales/pt-BR/messages'
+import {messages as messagesRo} from '#/locale/locales/ro/messages'
 import {messages as messagesRu} from '#/locale/locales/ru/messages'
 import {messages as messagesTh} from '#/locale/locales/th/messages'
 import {messages as messagesTr} from '#/locale/locales/tr/messages'
@@ -183,6 +186,16 @@ export async function dynamicActivate(locale: AppLanguage) {
       ])
       break
     }
+    case AppLanguage.km: {
+      i18n.loadAndActivate({locale, messages: messagesKm})
+      await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/km'),
+        import('@formatjs/intl-datetimeformat/locale-data/km'),
+        import('@formatjs/intl-pluralrules/locale-data/km'),
+        import('@formatjs/intl-numberformat/locale-data/km'),
+      ])
+      break
+    }
     case AppLanguage.ko: {
       i18n.loadAndActivate({locale, messages: messagesKo})
       await Promise.all([
@@ -201,6 +214,10 @@ export async function dynamicActivate(locale: AppLanguage) {
       ])
       break
     }
+    case AppLanguage.np: {
+      i18n.loadAndActivate({locale, messages: messagesNp})
+      break
+    }
     case AppLanguage.pl: {
       i18n.loadAndActivate({locale, messages: messagesPl})
       await Promise.all([
@@ -216,6 +233,15 @@ export async function dynamicActivate(locale: AppLanguage) {
         import('@formatjs/intl-datetimeformat/locale-data/pt'),
         import('@formatjs/intl-pluralrules/locale-data/pt'),
         import('@formatjs/intl-numberformat/locale-data/pt'),
+      ])
+      break
+    }
+    case AppLanguage.ro: {
+      i18n.loadAndActivate({locale, messages: messagesRo})
+      await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/ro'),
+        import('@formatjs/intl-pluralrules/locale-data/ro'),
+        import('@formatjs/intl-numberformat/locale-data/ro'),
       ])
       break
     }

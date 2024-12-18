@@ -24,6 +24,8 @@ import {
   ProfileCardFeedLoadingPlaceholder,
 } from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {ExploreRecommendations} from '#/screens/Search/components/ExploreRecommendations'
+import {ExploreTrendingTopics} from '#/screens/Search/components/ExploreTrendingTopics'
 import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
@@ -240,6 +242,14 @@ type ExploreScreenItems =
       icon: React.ComponentType<SVGIconProps>
     }
   | {
+      type: 'trendingTopics'
+      key: string
+    }
+  | {
+      type: 'recommendations'
+      key: string
+    }
+  | {
       type: 'profile'
       key: string
       profile: AppBskyActorDefs.ProfileView
@@ -325,17 +335,27 @@ export function Explore() {
   ])
 
   const items = React.useMemo<ExploreScreenItems[]>(() => {
-    const i: ExploreScreenItems[] = [
-      {
-        type: 'header',
-        key: 'suggested-follows-header',
-        title: _(msg`Suggested accounts`),
-        description: _(
-          msg`Follow more accounts to get connected to your interests and build your network.`,
-        ),
-        icon: Person,
-      },
-    ]
+    const i: ExploreScreenItems[] = []
+
+    i.push({
+      type: 'trendingTopics',
+      key: `trending-topics`,
+    })
+
+    i.push({
+      type: 'recommendations',
+      key: `recommendations`,
+    })
+
+    i.push({
+      type: 'header',
+      key: 'suggested-follows-header',
+      title: _(msg`Suggested accounts`),
+      description: _(
+        msg`Follow more accounts to get connected to your interests and build your network.`,
+      ),
+      icon: Person,
+    })
 
     if (profiles) {
       // Currently the responses contain duplicate items.
@@ -489,6 +509,12 @@ export function Explore() {
               icon={item.icon}
             />
           )
+        }
+        case 'trendingTopics': {
+          return <ExploreTrendingTopics />
+        }
+        case 'recommendations': {
+          return <ExploreRecommendations />
         }
         case 'profile': {
           return (

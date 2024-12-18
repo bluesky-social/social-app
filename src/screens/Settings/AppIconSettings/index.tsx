@@ -5,11 +5,11 @@ import {useLingui} from '@lingui/react'
 import * as DynamicAppIcon from '@mozzius/expo-dynamic-app-icon'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
+import {IS_INTERNAL} from '#/lib/app-info'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {CommonNavigatorParams} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {isAndroid} from '#/platform/detection'
-import {useSession} from '#/state/session'
 import {AppIconImage} from '#/screens/Settings/AppIconSettings/AppIconImage'
 import {AppIconSet} from '#/screens/Settings/AppIconSettings/types'
 import {useAppIconSets} from '#/screens/Settings/AppIconSettings/useAppIconSets'
@@ -23,7 +23,7 @@ export function AppIconSettingsScreen({}: Props) {
   const t = useTheme()
   const {_} = useLingui()
   const sets = useAppIconSets()
-  const {currentAccount} = useSession()
+  const gate = useGate()
   const [currentAppIcon, setCurrentAppIcon] = useState(() =>
     getAppIconName(DynamicAppIcon.getAppIcon()),
   )
@@ -86,7 +86,7 @@ export function AppIconSettingsScreen({}: Props) {
           ))}
         </Group>
 
-        {DISCOVER_DEBUG_DIDS[currentAccount?.did ?? ''] && (
+        {IS_INTERNAL && gate('debug_subscriptions') && (
           <>
             <Text
               style={[
