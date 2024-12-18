@@ -1,4 +1,4 @@
-import React, {memo, useRef} from 'react'
+import React, {memo, useRef, useState} from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
@@ -547,6 +547,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
 
 let ThreadMenu = ({}: {}): React.ReactNode => {
   const {_} = useLingui()
+  const {hasSession} = useSession()
   const {data: preferences} = usePreferencesQuery()
   const {mutate: setThreadViewPrefs, variables} =
     useSetThreadViewPreferencesMutation()
@@ -555,6 +556,11 @@ let ThreadMenu = ({}: {}): React.ReactNode => {
     variables?.lab_treeViewEnabled ??
       preferences?.threadViewPrefs?.lab_treeViewEnabled,
   )
+  // Prioritize these for optimistic feedback and so that PWI works.
+  // It's fine to cache the server values inside because we don't have to "respond" to pref changes.
+  const [localSortReplies, setLocalSortReplies] = useState(sortReplies)
+  const [localTreeViewEnabled, setLocalTreeViewEnabled] =
+    useState(treeViewEnabled)
   return (
     <Menu.Root>
       <Menu.Trigger label={_(msg`Thread options`)}>
@@ -576,26 +582,32 @@ let ThreadMenu = ({}: {}): React.ReactNode => {
           <Menu.Item
             label={_(msg`Show replies as a list`)}
             onPress={() => {
-              setThreadViewPrefs({
-                lab_treeViewEnabled: false,
-              })
+              setLocalTreeViewEnabled(false)
+              if (hasSession) {
+                setThreadViewPrefs({
+                  lab_treeViewEnabled: false,
+                })
+              }
             }}>
             <Menu.ItemText>
               <Trans>Show replies as a list</Trans>
             </Menu.ItemText>
-            <RadioCircle isSelected={!treeViewEnabled} />
+            <RadioCircle isSelected={!localTreeViewEnabled} />
           </Menu.Item>
           <Menu.Item
             label={_(msg`Show replies as a tree`)}
             onPress={() => {
-              setThreadViewPrefs({
-                lab_treeViewEnabled: true,
-              })
+              setLocalTreeViewEnabled(true)
+              if (hasSession) {
+                setThreadViewPrefs({
+                  lab_treeViewEnabled: true,
+                })
+              }
             }}>
             <Menu.ItemText>
               <Trans>Show replies as a tree</Trans>
             </Menu.ItemText>
-            <RadioCircle isSelected={treeViewEnabled} />
+            <RadioCircle isSelected={localTreeViewEnabled} />
           </Menu.Item>
         </Menu.Group>
         <Menu.Divider />
@@ -603,52 +615,67 @@ let ThreadMenu = ({}: {}): React.ReactNode => {
           <Menu.Item
             label={_(msg`Hot replies first`)}
             onPress={() => {
-              setThreadViewPrefs({sort: 'hotness'})
+              setLocalSortReplies('hotness')
+              if (hasSession) {
+                setThreadViewPrefs({sort: 'hotness'})
+              }
             }}>
             <Menu.ItemText>
               <Trans>Hot replies first</Trans>
             </Menu.ItemText>
-            <RadioCircle isSelected={sortReplies === 'hotness'} />
+            <RadioCircle isSelected={localSortReplies === 'hotness'} />
           </Menu.Item>
           <Menu.Item
             label={_(msg`Oldest replies first`)}
             onPress={() => {
-              setThreadViewPrefs({sort: 'oldest'})
+              setLocalSortReplies('oldest')
+              if (hasSession) {
+                setThreadViewPrefs({sort: 'oldest'})
+              }
             }}>
             <Menu.ItemText>
               <Trans>Oldest replies first</Trans>
             </Menu.ItemText>
-            <RadioCircle isSelected={sortReplies === 'oldest'} />
+            <RadioCircle isSelected={localSortReplies === 'oldest'} />
           </Menu.Item>
           <Menu.Item
             label={_(msg`Newest replies first`)}
             onPress={() => {
-              setThreadViewPrefs({sort: 'newest'})
+              setLocalSortReplies('newest')
+              if (hasSession) {
+                setThreadViewPrefs({sort: 'newest'})
+              }
             }}>
             <Menu.ItemText>
               <Trans>Newest replies first</Trans>
             </Menu.ItemText>
-            <RadioCircle isSelected={sortReplies === 'newest'} />
+            <RadioCircle isSelected={localSortReplies === 'newest'} />
           </Menu.Item>
           <Menu.Item
             label={_(msg`Most-liked replies first`)}
             onPress={() => {
-              setThreadViewPrefs({sort: 'most-likes'})
+              setLocalSortReplies('most')
+              if (hasSession) {
+                setThreadViewPrefs({sort: 'most-likes'})
+              }
             }}>
             <Menu.ItemText>
               <Trans>Most-liked replies first</Trans>
             </Menu.ItemText>
-            <RadioCircle isSelected={sortReplies === 'most-likes'} />
+            <RadioCircle isSelected={localSortReplies === 'most-likes'} />
           </Menu.Item>
           <Menu.Item
             label={_(msg`Random (aka "Poster's Roulette")`)}
             onPress={() => {
-              setThreadViewPrefs({sort: 'random'})
+              setLocalSortReplies('random')
+              if (hasSession) {
+                setThreadViewPrefs({sort: 'random'})
+              }
             }}>
             <Menu.ItemText>
               <Trans>Random (aka "Poster's Roulette")</Trans>
             </Menu.ItemText>
-            <RadioCircle isSelected={sortReplies === 'random'} />
+            <RadioCircle isSelected={localSortReplies === 'random'} />
           </Menu.Item>
         </Menu.Group>
       </Menu.Outer>
