@@ -43,7 +43,7 @@ function Inner() {
   const trendingPrompt = Prompt.usePromptControl()
 
   const onConfirmHide = React.useCallback(() => {
-    logEvent('trendingTopics:hide', {context: 'explore'})
+    logEvent('trendingTopics:hide', {context: 'explore:trending'})
     setTrendingDisabled(true)
   }, [setTrendingDisabled])
 
@@ -51,21 +51,13 @@ function Inner() {
     <>
       <View
         style={[
+          a.flex_row,
           isWeb
-            ? [a.flex_row, a.px_lg, a.py_lg, a.pt_2xl, a.gap_md]
-            : [{flexDirection: 'row-reverse'}, a.p_lg, a.pt_2xl, a.gap_md],
+            ? [a.px_lg, a.py_lg, a.pt_2xl, a.gap_md]
+            : [a.p_lg, a.pt_2xl, a.gap_md],
           a.border_b,
           t.atoms.border_contrast_low,
         ]}>
-        <Button
-          label={_(msg`Hide trending topics`)}
-          size="small"
-          variant="ghost"
-          color="secondary"
-          shape="round"
-          onPress={() => trendingPrompt.open()}>
-          <ButtonIcon icon={X} />
-        </Button>
         <View style={[a.flex_1, a.gap_sm]}>
           <View style={[a.flex_row, a.align_center, a.gap_sm]}>
             <Trending
@@ -87,6 +79,15 @@ function Inner() {
             <Trans>What people are posting about.</Trans>
           </Text>
         </View>
+        <Button
+          label={_(msg`Hide trending topics`)}
+          size="small"
+          variant="ghost"
+          color="secondary"
+          shape="round"
+          onPress={() => trendingPrompt.open()}>
+          <ButtonIcon icon={X} />
+        </Button>
       </View>
 
       <View style={[a.pt_md, a.pb_lg]}>
