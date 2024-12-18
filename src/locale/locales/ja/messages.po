@@ -8,10 +8,14 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-17 10:45+0900\n"
+"PO-Revision-Date: 2024-12-18 09:52+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
+
+#: src/components/ProgressGuide/FollowDialog.tsx:563
+msgid "(active)"
+msgstr "（アクティブ）"
 
 #: src/screens/Messages/components/ChatListItem.tsx:130
 msgid "(contains embedded content)"
@@ -571,10 +575,6 @@ msgstr "成人向けコンテンツのラベル"
 #: src/screens/Moderation/index.tsx:404
 msgid "Advanced"
 msgstr "高度な設定"
-
-#: src/state/shell/progress-guide.tsx:171
-msgid "Algorithm training complete!"
-msgstr "アルゴリズムのトレーニング完了！"
 
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
@@ -2759,6 +2759,12 @@ msgstr "最後に"
 msgid "Find accounts to follow"
 msgstr "フォローするアカウントを探す"
 
+#: src/components/ProgressGuide/FollowDialog.tsx:77
+#: src/components/ProgressGuide/FollowDialog.tsx:84
+#: src/components/ProgressGuide/FollowDialog.tsx:413
+msgid "Find people to follow"
+msgstr "フォローするユーザーを探す"
+
 #: src/view/screens/Search/Search.tsx:612
 msgid "Find posts and users on Bluesky"
 msgstr "投稿やユーザーをBlueskyで検索"
@@ -2797,6 +2803,11 @@ msgstr "{0}をフォロー"
 #: src/view/com/posts/AviFollowButton.tsx:68
 msgid "Follow {name}"
 msgstr "{name}をフォロー"
+
+#: src/components/ProgressGuide/List.tsx:52
+#: src/state/shell/progress-guide.tsx:227
+msgid "Follow 10 accounts"
+msgstr "10アカウントをフォロー"
 
 #: src/components/ProgressGuide/List.tsx:53
 msgid "Follow 7 accounts"
@@ -5688,6 +5699,10 @@ msgstr "検索"
 msgid "Search feeds"
 msgstr "フィードを検索"
 
+#: src/components/ProgressGuide/FollowDialog.tsx:571
+msgid "Search for \"{interestsDisplayName}\"{activeText}"
+msgstr "「{interestsDisplayName}」{activeText}を検索"
+
 #: src/view/shell/desktop/Search.tsx:201
 msgid "Search for \"{query}\""
 msgstr "「{query}」を検索"
@@ -6448,6 +6463,10 @@ msgstr "タップして音の切り替え"
 #: src/view/com/util/images/AutoSizedImage.tsx:221
 msgid "Tap to view full image"
 msgstr "タップして画像全体を表示"
+
+#: src/state/shell/progress-guide.tsx:231
+msgid "Task complete - 10 follows!"
+msgstr "タスク完了 - 10フォロー！"
 
 #: src/state/shell/progress-guide.tsx:166
 msgid "Task complete - 10 likes!"
@@ -8020,6 +8039,10 @@ msgstr "準備ができました！"
 msgid "You've chosen to hide a word or tag within this post."
 msgstr "この投稿でワードまたはタグを隠すことを選択しました。"
 
+#: src/state/shell/progress-guide.tsx:232
+msgid "You've found some people to follow"
+msgstr "フォローするユーザーを探せました"
+
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr "フィードはここまでです！もっとフォローするアカウントを見つけましょう。"
@@ -8130,4 +8153,3 @@ msgstr "返信を公開しました"
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "あなたの報告はBluesky Moderation Serviceに送られます"
-
