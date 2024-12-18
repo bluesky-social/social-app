@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-18 05:06\n"
+"PO-Revision-Date: 2024-12-18 08:15\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -2771,7 +2771,7 @@ msgstr "已更新动态源！"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:54
 msgid "Feeds we think you might like."
-msgstr "我们认为你可能喜欢的动态源。"
+msgstr "我们认为你可能会喜欢的动态源。"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:43
 msgid "File saved successfully!"
@@ -3134,7 +3134,7 @@ msgstr "标签：#{tag}"
 
 #: src/screens/Signup/index.tsx:173
 msgid "Having trouble?"
-msgstr "遇到问题？"
+msgstr "遇到问题了？"
 
 #: src/screens/Settings/Settings.tsx:207
 #: src/screens/Settings/Settings.tsx:211
@@ -3211,7 +3211,7 @@ msgstr "隐藏趋势话题"
 #: src/components/interstitials/Trending.tsx:104
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:96
 msgid "Hide trending topics?"
-msgstr "隐藏趋势话题？"
+msgstr "要隐藏趋势话题吗？"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:592
 msgid "Hide user list"
@@ -7750,7 +7750,7 @@ msgstr "你希望如何命名你的新手包？"
 
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:61
 msgid "What people are posting about."
-msgstr "人们正在发帖讨论的内容。"
+msgstr "正在讨论的焦点话题。"
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
@@ -7904,7 +7904,7 @@ msgstr "你可以继续登录以重新启用你的账户，其他用户将能够
 #: src/components/interstitials/Trending.tsx:105
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:97
 msgid "You can update this later from your settings."
-msgstr "你可以随时在设置中更改。"
+msgstr "你可以随时在设置里重新更改。"
 
 #: src/view/com/profile/ProfileFollowers.tsx:94
 msgid "You do not have any followers."
@@ -8122,7 +8122,7 @@ msgstr "你选择隐藏了这则帖文中的字词或标签。"
 
 #: src/state/shell/progress-guide.tsx:232
 msgid "You've found some people to follow"
-msgstr "你已经找到一些要关注的人了"
+msgstr "你找到了一些可以关注的人"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
@@ -8166,7 +8166,7 @@ msgstr "你的私信功能已被停用"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "Your choice will be saved, but can be changed later in settings."
-msgstr "你的选择将会保存，但你可以随时在设置中更改。"
+msgstr "你的选择将会保存，但你可以随时在设置里重新更改。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:496
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."

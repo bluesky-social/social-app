@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-18 05:06\n"
+"PO-Revision-Date: 2024-12-18 08:15\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -3211,7 +3211,7 @@ msgstr "隱藏熱門話題"
 #: src/components/interstitials/Trending.tsx:104
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:96
 msgid "Hide trending topics?"
-msgstr "隱藏熱門話題？"
+msgstr "要隱藏熱門話題嗎？"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:592
 msgid "Hide user list"
@@ -7750,7 +7750,7 @@ msgstr "您想怎麼命名這個新手包？"
 
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:61
 msgid "What people are posting about."
-msgstr "人們正在發貼討論的內容。"
+msgstr "正在討論的熱門話題。"
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99

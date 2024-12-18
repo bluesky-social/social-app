@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-18 05:06\n"
+"PO-Revision-Date: 2024-12-18 08:15\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -729,7 +729,7 @@ msgstr "出咗問題，唔該試多一次。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:185
 msgid "an unknown error occurred"
-msgstr "出現未知錯誤"
+msgstr "發生未知錯誤"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:157
 #: src/components/moderation/ModerationDetailsDialog.tsx:153
@@ -1056,7 +1056,7 @@ msgstr "Bluesky 係要同多啲天友玩先正！"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
-msgstr "Bluesky 會喺你網絡入邊嘅人入邊揀一組推薦嘅帳號。"
+msgstr "Bluesky 將會喺你社交網絡度揀一啲推薦嘅帳號。"
 
 #: src/screens/Settings/components/PwiOptOut.tsx:92
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
@@ -1110,7 +1110,7 @@ msgstr "瀏覽其他動態源"
 
 #: src/components/TrendingTopics.tsx:171
 msgid "Browse posts about {displayName}"
-msgstr "睇下關於 {displayName} 嘅貼文"
+msgstr "睇下同 {displayName} 有挐掕嘅貼文"
 
 #: src/components/TrendingTopics.tsx:179
 msgid "Browse posts tagged with {displayName}"
@@ -2418,7 +2418,7 @@ msgstr "只啓用呢個來源"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:121
 #: src/screens/Settings/ContentAndMediaSettings.tsx:127
 msgid "Enable trending topics"
-msgstr "啟用熱門話題"
+msgstr "啓用時下至 Hit 話題"
 
 #: src/screens/Messages/Settings.tsx:130
 #: src/screens/Messages/Settings.tsx:133
@@ -2619,7 +2619,7 @@ msgstr "外部媒體"
 #: src/components/dialogs/EmbedConsent.tsx:70
 #: src/screens/Settings/ExternalMediaPreferences.tsx:40
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
-msgstr "外部媒體可能會畀網站收集有關你同你部裝置嘅資料。喺你撳「播放」掣之前，系統唔會傳送抑或請求任何資料。"
+msgstr "外部媒體網站可能會攞你同你部裝置啲資料。除非你撳咗「播放」掣，否則唔會傳送抑或要求用任何資料去到外部媒體網站度。"
 
 #: src/Navigation.tsx:315
 #: src/screens/Settings/ExternalMediaPreferences.tsx:31
@@ -2771,7 +2771,7 @@ msgstr "動態源更新咗喇！"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:54
 msgid "Feeds we think you might like."
-msgstr "我哋覺得你可能鍾意嘅動態源。"
+msgstr "我哋覺得可能會啱你心水嘅動態源。"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:43
 msgid "File saved successfully!"
@@ -2795,7 +2795,7 @@ msgstr "搵啲帳號去跟佢"
 #: src/components/ProgressGuide/FollowDialog.tsx:84
 #: src/components/ProgressGuide/FollowDialog.tsx:413
 msgid "Find people to follow"
-msgstr "搵人跟緊"
+msgstr "睇下跟啲乜人好"
 
 #: src/view/screens/Search/Search.tsx:588
 msgid "Find posts and users on Bluesky"
@@ -2959,7 +2959,7 @@ msgstr "爲咗安全起見，你唔可以再睇返呢個密碼。若然你真係
 
 #: src/screens/Settings/AppearanceSettings.tsx:142
 msgid "For the best experience, we recommend using the theme font."
-msgstr "爲咗你得到最佳體驗，我哋建議使用主題字型。"
+msgstr "爲咗有最佳體驗，我哋建議使用主題字型。"
 
 #: src/components/dialogs/MutedWords.tsx:178
 msgid "Forever"
@@ -2984,7 +2984,7 @@ msgstr "頻繁發佈不受歡迎嘅內容"
 
 #: src/screens/Hashtag.tsx:116
 msgid "From @{sanitizedAuthor}"
-msgstr "來自 @{sanitizedAuthor}"
+msgstr "嚟自 @{sanitizedAuthor}"
 
 #: src/view/com/posts/PostFeedItem.tsx:282
 msgctxt "from-feed"
@@ -3206,12 +3206,12 @@ msgstr "係咪要隱藏呢個回覆？"
 #: src/components/interstitials/Trending.tsx:66
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:55
 msgid "Hide trending topics"
-msgstr "隱藏熱門話題"
+msgstr "隱藏時下至 Hit 話題"
 
 #: src/components/interstitials/Trending.tsx:104
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:96
 msgid "Hide trending topics?"
-msgstr "隱藏熱門話題？"
+msgstr "係咪要隱藏時下至 Hit 話題？"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:592
 msgid "Hide user list"
@@ -3343,7 +3343,7 @@ msgstr "圖片儲存咗去你嘅相簿度喇！"
 
 #: src/lib/moderation/useReportOptions.ts:49
 msgid "Impersonation or false claims about identity or affiliation"
-msgstr "冒充抑或虛假聲稱身份或是隸屬關係"
+msgstr "冒認、僞造身份抑或所隸屬關係"
 
 #: src/lib/moderation/useReportOptions.ts:68
 msgid "Impersonation, misinformation, or false claims"
@@ -5198,7 +5198,7 @@ msgstr "近排嘅搵嘢記錄"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:50
 msgid "Recommended"
-msgstr "建議"
+msgstr "推薦"
 
 #: src/screens/Messages/components/MessageListError.tsx:20
 msgid "Reconnect"
@@ -5745,7 +5745,7 @@ msgstr "搵嘢"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:741
 msgid "Search by name or interest"
-msgstr "按名稱或興趣搜尋"
+msgstr "用名稱抑或興趣去搵"
 
 #: src/view/screens/Feeds.tsx:441
 msgid "Search feeds"
@@ -6293,7 +6293,7 @@ msgstr "軟件開發"
 
 #: src/components/FeedInterstitials.tsx:445
 msgid "Some other feeds you might like"
-msgstr "你可能都會鍾意嘅動態源"
+msgstr "其他可能都會啱你心水嘅動態源"
 
 #: src/components/WhoCanReply.tsx:70
 msgid "Some people can reply"
@@ -6522,7 +6522,7 @@ msgstr "撳呢度去睇完整圖片"
 
 #: src/state/shell/progress-guide.tsx:231
 msgid "Task complete - 10 follows!"
-msgstr "攪掂晒 - 10 個跟緊！"
+msgstr "攪掂晒 - 跟咗 10 個人！"
 
 #: src/state/shell/progress-guide.tsx:221
 msgid "Task complete - 10 likes!"
@@ -7082,7 +7082,7 @@ msgstr "翻譯"
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:51
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:52
 msgid "Trending"
-msgstr "熱門"
+msgstr "時下至 Hit"
 
 #: src/view/com/util/error/ErrorScreen.tsx:103
 msgctxt "action"
@@ -7582,7 +7582,7 @@ msgstr "睇下完整嘅討論串"
 
 #: src/components/moderation/LabelsOnMe.tsx:46
 msgid "View information about these labels"
-msgstr "睇下有關呢啲標籤嘅詳細資訊"
+msgstr "睇下同呢啲標籤有挐掕嘅詳細資訊"
 
 #: src/components/ProfileHoverCard/index.web.tsx:419
 #: src/components/ProfileHoverCard/index.web.tsx:439
@@ -7648,11 +7648,11 @@ msgstr "警告內容兼且喺動態源入邊篩選"
 
 #: src/screens/Hashtag.tsx:205
 msgid "We couldn't find any results for that hashtag."
-msgstr "我哋搵唔到同呢個標籤相關嘅所有結果。"
+msgstr "我哋搵唔到同呢個標籤有挐掕嘅結果。"
 
 #: src/screens/Topic.tsx:178
 msgid "We couldn't find any results for that topic."
-msgstr "我哋搵唔到同呢個話題相關嘅所有結果。"
+msgstr "我哋搵唔到同呢個話題有挐掕嘅結果。"
 
 #: src/screens/Messages/Conversation.tsx:103
 msgid "We couldn't load this conversation"
@@ -7750,7 +7750,7 @@ msgstr "你諗住點嗌你嘅新手包？"
 
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:61
 msgid "What people are posting about."
-msgstr "人哋討論緊嘅內容。"
+msgstr "啲人出 Po 講緊啲乜。"
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
@@ -7904,7 +7904,7 @@ msgstr "你可以重新啓用你嘅帳號嚟繼續登入，你嘅個人檔案同
 #: src/components/interstitials/Trending.tsx:105
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:97
 msgid "You can update this later from your settings."
-msgstr "你可以遲啲再喺設定入邊改返。"
+msgstr "你可以遲啲喺設定入邊改返。"
 
 #: src/view/com/profile/ProfileFollowers.tsx:94
 msgid "You do not have any followers."
@@ -8122,7 +8122,7 @@ msgstr "你揀咗喺呢條帖文入邊隱藏字詞抑或標籤。"
 
 #: src/state/shell/progress-guide.tsx:232
 msgid "You've found some people to follow"
-msgstr "你搵到啲人跟緊"
+msgstr "你已經搵到你要跟邊啲人喇"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
