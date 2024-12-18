@@ -35,6 +35,7 @@ import {
 } from '#/state/queries/post-feed'
 import {useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
+import {useBreakpoints} from '#/alf'
 import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {List, ListRef} from '../util/List'
@@ -162,6 +163,7 @@ let PostFeed = ({
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
   const [feedType, feedUri, feedTab] = feed.split('|')
+  const {gtTablet} = useBreakpoints()
 
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
@@ -312,7 +314,11 @@ let PostFeed = ({
                     type: 'interstitialProgressGuide',
                     key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                   })
-                } else if (sliceIndex === 15 && !trendingDisabled) {
+                } else if (
+                  sliceIndex === 15 &&
+                  !gtTablet &&
+                  !trendingDisabled
+                ) {
                   arr.push({
                     type: 'interstitialTrending',
                     key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
@@ -404,6 +410,7 @@ let PostFeed = ({
     hasSession,
     showProgressIntersitial,
     trendingDisabled,
+    gtTablet,
   ])
 
   // events
