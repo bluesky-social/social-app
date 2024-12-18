@@ -12,7 +12,6 @@ import {
   renderChildrenWithEmoji,
   StringChild,
 } from '#/alf/typography'
-import {IS_DEV} from '#/env'
 
 export type CustomTextProps = Omit<TextProps, 'children'> & {
   type?: TypographyVariant
@@ -49,7 +48,7 @@ function Text_DEPRECATED({
   const theme = useTheme()
   const {fonts} = useAlf()
 
-  if (IS_DEV) {
+  if (__DEV__) {
     if (!emoji && childHasEmoji(children)) {
       logger.warn(
         `Text: emoji detected but emoji not enabled: "${children}"\n\nPlease add <Text emoji />'`,

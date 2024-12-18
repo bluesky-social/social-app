@@ -79,10 +79,12 @@ interface Author {
 let NotificationFeedItem = ({
   item,
   moderationOpts,
+  highlightUnread,
   hideTopBorder,
 }: {
   item: FeedNotification
   moderationOpts: ModerationOpts
+  highlightUnread: boolean
   hideTopBorder?: boolean
 }): React.ReactNode => {
   const queryClient = useQueryClient()
@@ -151,6 +153,7 @@ let NotificationFeedItem = ({
     if (!item.subject) {
       return null
     }
+    const isHighlighted = highlightUnread && !item.notification.isRead
     return (
       <Link
         testID={`feedItem-by-${item.notification.author.handle}`}
@@ -160,12 +163,10 @@ let NotificationFeedItem = ({
         <Post
           post={item.subject}
           style={
-            item.notification.isRead
-              ? undefined
-              : {
-                  backgroundColor: pal.colors.unreadNotifBg,
-                  borderColor: pal.colors.unreadNotifBorder,
-                }
+            isHighlighted && {
+              backgroundColor: pal.colors.unreadNotifBg,
+              borderColor: pal.colors.unreadNotifBorder,
+            }
           }
           hideTopBorder={hideTopBorder}
         />

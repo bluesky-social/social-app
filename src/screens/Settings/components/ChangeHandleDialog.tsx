@@ -17,6 +17,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {createFullHandle, validateHandle} from '#/lib/strings/handles'
 import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
@@ -29,7 +30,10 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import * as ToggleButton from '#/components/forms/ToggleButton'
-import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
+import {
+  ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon,
+  ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon,
+} from '#/components/icons/Arrow'
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
 import {CheckThick_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {SquareBehindSquare4_Stroke2_Corner0_Rounded as CopyIcon} from '#/components/icons/SquareBehindSquare4'
@@ -245,15 +249,14 @@ function ProvidedHandlePage({
           <Text style={[a.leading_snug]}>
             <Trans>
               If you have your own domain, you can use that as your handle. This
-              lets you self-verify your identity –{' '}
+              lets you self-verify your identity.{' '}
               <InlineLinkText
                 label={_(msg`learn more`)}
                 to="https://bsky.social/about/blog/4-28-2023-domain-handle-tutorial"
                 style={[a.font_bold]}
                 disableMismatchWarning>
-                learn more
+                Learn more here.
               </InlineLinkText>
-              .
             </Trans>
           </Text>
           <Button
@@ -265,7 +268,7 @@ function ProvidedHandlePage({
             <ButtonText>
               <Trans>I have my own domain</Trans>
             </ButtonText>
-            <ButtonIcon icon={ArrowRightIcon} />
+            <ButtonIcon icon={ArrowRightIcon} position="right" />
           </Button>
         </Animated.View>
       </View>
@@ -488,6 +491,18 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
         </Animated.View>
       )}
       <Animated.View layout={native(LinearTransition)}>
+        {currentAccount?.handle?.endsWith('.bsky.social') && (
+          <Admonition type="info" style={[a.mb_md]}>
+            <Trans>
+              Your current handle{' '}
+              <Text style={[a.font_bold]}>
+                {sanitizeHandle(currentAccount?.handle || '', '@')}
+              </Text>{' '}
+              will automatically remain reserved for you. You can switch back to
+              it at any time from this account.
+            </Trans>
+          </Admonition>
+        )}
         <Button
           label={
             isVerified
@@ -498,7 +513,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
           }
           variant="solid"
           size="large"
-          color={domain.trim().length > 0 ? 'primary' : 'secondary'}
+          color="primary"
           disabled={domain.trim().length === 0}
           onPress={() => {
             if (isVerified) {
@@ -521,14 +536,17 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
             </ButtonText>
           )}
         </Button>
-      </Animated.View>
-      <Animated.View layout={native(LinearTransition)}>
+
         <Button
           label={_(msg`Use default provider`)}
           accessibilityHint={_(msg`Go back to previous page`)}
           onPress={goToServiceHandle}
-          style={[a.p_0, a.justify_start]}>
-          <ButtonText style={[{color: t.palette.primary_500}, a.text_left]}>
+          variant="outline"
+          color="secondary"
+          size="large"
+          style={[a.mt_sm]}>
+          <ButtonIcon icon={ArrowLeftIcon} position="left" />
+          <ButtonText>
             <Trans>Nevermind, create a handle for me</Trans>
           </ButtonText>
         </Button>

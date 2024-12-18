@@ -16,12 +16,14 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {useTrendingSettings} from '#/state/preferences/trending'
 import {STALE} from '#/state/queries'
 import {
   FeedDescriptor,
@@ -32,7 +34,10 @@ import {
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
 import {useSession} from '#/state/session'
+import {useProgressGuide} from '#/state/shell/progress-guide'
+import {useBreakpoints} from '#/alf'
 import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
+import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {List, ListRef} from '../util/List'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
@@ -86,6 +91,10 @@ type FeedRow =
     }
   | {
       type: 'interstitialProgressGuide'
+      key: string
+    }
+  | {
+      type: 'interstitialTrending'
       key: string
     }
 
@@ -154,6 +163,7 @@ let PostFeed = ({
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
   const [feedType, feedUri, feedTab] = feed.split('|')
+  const {gtTablet} = useBreakpoints()
 
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
@@ -185,12 +195,16 @@ let PostFeed = ({
     }
     try {
       if (await pollLatest(data.pages[0])) {
-        onHasNew(true)
+        if (isEmpty) {
+          refetch()
+        } else {
+          onHasNew(true)
+        }
       }
     } catch (e) {
       logger.error('Poll latest failed', {feed, message: String(e)})
     }
-  }, [feed, data, isFetching, onHasNew, enabled, disablePoll])
+  }, [feed, data, isFetching, isEmpty, onHasNew, enabled, disablePoll, refetch])
 
   const myDid = currentAccount?.did || ''
   const onPostCreated = React.useCallback(() => {
@@ -218,20 +232,15 @@ let PostFeed = ({
   React.useEffect(() => {
     if (enabled && !disablePoll) {
       const timeSinceFirstLoad = Date.now() - lastFetchRef.current
-      // DISABLED need to check if this is causing random feed refreshes -prf
-      /*if (timeSinceFirstLoad > REFRESH_AFTER) {
-        // do a full refresh
-        scrollElRef?.current?.scrollToOffset({offset: 0, animated: false})
-        queryClient.resetQueries({queryKey: RQKEY(feed)})
-      } else*/ if (
-        timeSinceFirstLoad > CHECK_LATEST_AFTER &&
+      if (
+        (isEmpty || timeSinceFirstLoad > CHECK_LATEST_AFTER) &&
         checkForNewRef.current
       ) {
         // check for new on enable (aka on focus)
         checkForNewRef.current()
       }
     }
-  }, [enabled, disablePoll, feed, queryClient, scrollElRef])
+  }, [enabled, disablePoll, feed, queryClient, scrollElRef, isEmpty])
   React.useEffect(() => {
     let cleanup1: () => void | undefined, cleanup2: () => void | undefined
     const subscription = AppState.addEventListener('change', nextAppState => {
@@ -251,6 +260,14 @@ let PostFeed = ({
       cleanup2?.()
     }
   }, [pollInterval])
+
+  const followProgressGuide = useProgressGuide('follow-10')
+  const followAndLikeProgressGuide = useProgressGuide('like-10-and-follow-7')
+  const {isDesktop} = useWebMediaQueries()
+  const showProgressIntersitial =
+    (followProgressGuide || followAndLikeProgressGuide) && !isDesktop
+
+  const {trendingDisabled} = useTrendingSettings()
 
   const feedItems: FeedRow[] = React.useMemo(() => {
     let feedKind: 'following' | 'discover' | 'profile' | undefined
@@ -292,12 +309,21 @@ let PostFeed = ({
 
             if (hasSession) {
               if (feedKind === 'discover') {
-                if (sliceIndex === 0) {
+                if (sliceIndex === 0 && showProgressIntersitial) {
                   arr.push({
                     type: 'interstitialProgressGuide',
                     key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                   })
-                } else if (sliceIndex === 20) {
+                } else if (
+                  sliceIndex === 15 &&
+                  !gtTablet &&
+                  !trendingDisabled
+                ) {
+                  arr.push({
+                    type: 'interstitialTrending',
+                    key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
+                  })
+                } else if (sliceIndex === 30) {
                   arr.push({
                     type: 'interstitialFollows',
                     key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
@@ -382,6 +408,9 @@ let PostFeed = ({
     feedUri,
     feedTab,
     hasSession,
+    showProgressIntersitial,
+    trendingDisabled,
+    gtTablet,
   ])
 
   // events
@@ -468,6 +497,8 @@ let PostFeed = ({
         return <SuggestedFollows feed={feed} />
       } else if (row.type === 'interstitialProgressGuide') {
         return <ProgressGuide />
+      } else if (row.type === 'interstitialTrending') {
+        return <TrendingInterstitial />
       } else if (row.type === 'sliceItem') {
         const slice = row.slice
         if (slice.isFallbackMarker) {

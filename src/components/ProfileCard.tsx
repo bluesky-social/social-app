@@ -285,6 +285,7 @@ export type FollowButtonProps = {
   moderationOpts: ModerationOpts
   logContext: LogEvents['profile:follow']['logContext'] &
     LogEvents['profile:unfollow']['logContext']
+  colorInverted?: boolean
 } & Partial<ButtonProps>
 
 export function FollowButton(props: FollowButtonProps) {
@@ -297,6 +298,8 @@ export function FollowButtonInner({
   profile: profileUnshadowed,
   moderationOpts,
   logContext,
+  onPress: onPressProp,
+  colorInverted,
   ...rest
 }: FollowButtonProps) {
   const {_} = useLingui()
@@ -321,6 +324,7 @@ export function FollowButtonInner({
           )}`,
         ),
       )
+      onPressProp?.(e)
     } catch (err: any) {
       if (err?.name !== 'AbortError') {
         Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
@@ -341,6 +345,7 @@ export function FollowButtonInner({
           )}`,
         ),
       )
+      onPressProp?.(e)
     } catch (err: any) {
       if (err?.name !== 'AbortError') {
         Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
@@ -387,7 +392,7 @@ export function FollowButtonInner({
           label={followLabel}
           size="small"
           variant="solid"
-          color="primary"
+          color={colorInverted ? 'secondary_inverted' : 'primary'}
           {...rest}
           onPress={onPressFollow}>
           <ButtonIcon icon={Plus} position={isRound ? undefined : 'left'} />

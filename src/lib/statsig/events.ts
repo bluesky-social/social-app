@@ -162,6 +162,7 @@ export type LogEvents = {
       | 'StarterPackProfilesList'
       | 'FeedInterstitial'
       | 'ProfileHeaderSuggestedFollows'
+      | 'PostOnboardingFindFollows'
   }
   'profile:unfollow': {
     logContext:
@@ -177,6 +178,7 @@ export type LogEvents = {
       | 'StarterPackProfilesList'
       | 'FeedInterstitial'
       | 'ProfileHeaderSuggestedFollows'
+      | 'PostOnboardingFindFollows'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'

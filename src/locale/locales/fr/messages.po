@@ -3501,7 +3501,7 @@ msgstr "Entrez votre mot de passe"
 #~ msgstr "Entrez votre hébergeur préféré"
 
 #: src/screens/Signup/StepHandle.tsx:114
-msgid "Input your user handle"
+msgid "Type your desired username"
 msgstr "Entrez votre pseudo"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:49
@@ -8519,7 +8519,7 @@ msgid "Your following feed is empty! Follow more users to see what's happening."
 msgstr "Votre fil d’actu des comptes suivis est vide ! Suivez plus de comptes pour voir ce qui se passe."
 
 #: src/screens/Signup/StepHandle.tsx:125
-msgid "Your full handle will be"
+msgid "Your full username will be"
 msgstr "Votre nom complet sera"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:219
@@ -8563,5 +8563,5 @@ msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "Votre rapport sera envoyé au Service de Modération de Bluesky"
 
 #: src/screens/Signup/index.tsx:142
-msgid "Your user handle"
+msgid "Choose your username"
 msgstr "Votre pseudo"

@@ -1,4 +1,4 @@
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -7,12 +7,11 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {useTheme} from '#/lib/ThemeContext'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {Button} from '../forms/Button'
-import {Text} from '../text/Text'
-import {CenteredView} from '../Views'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon} from '#/components/icons/ArrowRotateCounterClockwise'
+import * as Layout from '#/components/Layout'
+import {Text} from '#/components/Typography'
 
 export function ErrorScreen({
   title,
@@ -29,22 +28,32 @@ export function ErrorScreen({
   testID?: string
   showHeader?: boolean
 }) {
-  const theme = useTheme()
-  const {isMobile} = useWebMediaQueries()
+  const t = useTheme()
   const pal = usePalette('default')
   const {_} = useLingui()
 
   return (
-    <>
-      {showHeader && isMobile && (
-        <ViewHeader title={_(msg`Error`)} showBorder />
+    <Layout.Center testID={testID}>
+      {showHeader && (
+        <Layout.Header.Outer>
+          <Layout.Header.BackButton />
+          <Layout.Header.Content>
+            <Layout.Header.TitleText>
+              <Trans>Error</Trans>
+            </Layout.Header.TitleText>
+          </Layout.Header.Content>
+          <Layout.Header.Slot />
+        </Layout.Header.Outer>
       )}
-      <CenteredView testID={testID} style={[styles.outer, pal.view]}>
-        <View style={styles.errorIconContainer}>
+      <View style={[a.px_xl, a.py_2xl]}>
+        <View style={[a.mb_md, a.align_center]}>
           <View
             style={[
-              styles.errorIcon,
-              {backgroundColor: theme.palette.inverted.background},
+              a.rounded_full,
+              {width: 50, height: 50},
+              a.align_center,
+              a.justify_center,
+              {backgroundColor: t.palette.contrast_950},
             ]}>
             <FontAwesomeIcon
               icon="exclamation"
@@ -53,86 +62,50 @@ export function ErrorScreen({
             />
           </View>
         </View>
-        <Text type="title-lg" style={[styles.title, pal.text]}>
+        <Text style={[a.text_center, a.font_heavy, a.text_2xl, a.mb_md]}>
           {title}
         </Text>
-        <Text style={[styles.message, pal.text]}>{message}</Text>
+        <Text style={[a.text_center, a.text_md, a.mb_xl]}>{message}</Text>
         {details && (
-          <Text
-            testID={`${testID}-details`}
-            style={[styles.details, pal.text, pal.viewLight]}>
-            {details}
-          </Text>
+          <View
+            style={[
+              a.w_full,
+              a.border,
+              t.atoms.border_contrast_medium,
+              t.atoms.bg_contrast_25,
+              a.mb_xl,
+              a.py_sm,
+              a.px_lg,
+              a.rounded_xs,
+              a.overflow_hidden,
+            ]}>
+            <Text
+              testID={`${testID}-details`}
+              style={[a.text_center, a.text_md, t.atoms.text_contrast_high]}>
+              {details}
+            </Text>
+          </View>
         )}
         {onPressTryAgain && (
-          <View style={styles.btnContainer}>
+          <View style={[a.align_center]}>
             <Button
               testID="errorScreenTryAgainButton"
-              type="default"
-              style={[styles.btn]}
               onPress={onPressTryAgain}
-              accessibilityLabel={_(msg`Retry`)}
+              variant="solid"
+              color="secondary_inverted"
+              size="small"
+              label={_(msg`Retry`)}
               accessibilityHint={_(
                 msg`Retries the last action, which errored out`,
               )}>
-              <FontAwesomeIcon
-                icon="arrows-rotate"
-                style={pal.link as FontAwesomeIconStyle}
-                size={16}
-              />
-              <Text type="button" style={[styles.btnText, pal.link]}>
+              <ButtonIcon icon={ArrowRotateCounterClockwiseIcon} />
+              <ButtonText>
                 <Trans context="action">Try again</Trans>
-              </Text>
+              </ButtonText>
             </Button>
           </View>
         )}
-      </CenteredView>
-    </>
+      </View>
+    </Layout.Center>
   )
 }
-
-const styles = StyleSheet.create({
-  outer: {
-    flex: 1,
-    paddingVertical: 30,
-    paddingHorizontal: 14,
-  },
-  title: {
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  message: {
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  details: {
-    textAlign: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    overflow: 'hidden',
-    marginBottom: 20,
-  },
-  btnContainer: {
-    alignItems: 'center',
-  },
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-  },
-  btnText: {
-    marginLeft: 5,
-  },
-  errorIconContainer: {
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  errorIcon: {
-    borderRadius: 25,
-    width: 50,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
