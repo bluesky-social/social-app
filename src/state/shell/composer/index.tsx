@@ -11,6 +11,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {postUriToRelativePath, toBskyAppUrl} from '#/lib/strings/url-helpers'
+import {DraftEntry} from '#/state/composer-drafts/database.types'
 import {purgeTemporaryImageFiles} from '#/state/gallery'
 import {precacheResolveLinkQuery} from '#/state/queries/resolve-link'
 import * as Toast from '#/view/com/util/Toast'
@@ -33,6 +34,7 @@ export interface ComposerOpts {
   text?: string
   imageUris?: {uri: string; width: number; height: number; altText?: string}[]
   videoUri?: {uri: string; width: number; height: number}
+  draft?: DraftEntry
 }
 
 type StateContext = ComposerOpts | undefined
