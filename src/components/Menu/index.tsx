@@ -4,7 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
-import {isNative} from '#/platform/detection'
+import {isAndroid, isIOS, isNative} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -122,9 +122,21 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
       onFocus={onFocus}
       onBlur={onBlur}
       onPress={async e => {
-        context.control.close(() => {
+        if (isAndroid) {
+          /**
+           * Below fix for iOS doesn't work for Android, this does.
+           */
           onPress?.(e)
-        })
+          context.control.close()
+        } else if (isIOS) {
+          /**
+           * Fixes a subtle bug on iOS
+           * {@link https://github.com/bluesky-social/social-app/pull/5849/files#diff-de516ef5e7bd9840cd639213301df38cf03acfcad5bda85a1d63efd249ba79deL124-L127}
+           */
+          context.control.close(() => {
+            onPress?.(e)
+          })
+        }
       }}
       onPressIn={e => {
         onPressIn()
