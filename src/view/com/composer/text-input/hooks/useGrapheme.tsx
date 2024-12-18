@@ -8,14 +8,9 @@ export const useGrapheme = () => {
     if (name.length > length) {
       const graphemes = [...splitGraphemes(name)]
 
-      if (name.length > length) {
-        if (graphemes.length > length) {
-          remainingCharacters = 0
-          name = `${graphemes.slice(0, length).join('')}…`
-        } else {
-          remainingCharacters = length - graphemes.length
-          name = graphemes.join('')
-        }
+      if (graphemes.length > length) {
+        remainingCharacters = 0
+        name = `${graphemes.slice(0, length).join('')}…`
       } else {
         remainingCharacters = length - graphemes.length
         name = graphemes.join('')
