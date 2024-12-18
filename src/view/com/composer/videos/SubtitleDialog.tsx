@@ -147,8 +147,8 @@ function SubtitleDialogInner({
                   setCaptions={setCaptions}
                   otherLanguages={LANGUAGES.filter(
                     lang =>
-                      langCode(lang) === subtitle.lang ||
-                      !captions.some(s => s.lang === langCode(lang)),
+                      lang.code === subtitle.lang ||
+                      !captions.some(s => s.lang === lang.code),
                   )}
                   style={[i % 2 === 0 && t.atoms.bg_contrast_25]}
                 />
@@ -195,7 +195,7 @@ function SubtitleFileRow({
 }: {
   language: string
   file: File
-  otherLanguages: {code2: string; code3: string; name: string}[]
+  otherLanguages: {code: string; name: string}[]
   setCaptions: (updater: (prev: CaptionsTrack[]) => CaptionsTrack[]) => void
   style: StyleProp<ViewStyle>
 }) {
@@ -248,8 +248,8 @@ function SubtitleFileRow({
             value={language}
             onValueChange={handleValueChange}
             items={otherLanguages.map(lang => ({
-              label: `${lang.name} (${langCode(lang)})`,
-              value: langCode(lang),
+              label: `${lang.name} (${lang.code})`,
+              value: lang.code,
             }))}
             style={{viewContainer: {maxWidth: 200, flex: 1}}}
           />
@@ -270,8 +270,4 @@ function SubtitleFileRow({
       </Button>
     </View>
   )
-}
-
-function langCode(lang: {code2: string; code3: string}) {
-  return lang.code2 || lang.code3
 }
