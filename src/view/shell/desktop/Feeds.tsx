@@ -14,7 +14,7 @@ import {createStaticClick, InlineLinkText} from '#/components/Link'
 export function DesktopFeeds() {
   const t = useTheme()
   const {_} = useLingui()
-  const {data: pinnedFeedInfos} = usePinnedFeedsInfos()
+  const {data: pinnedFeedInfos, error, isLoading} = usePinnedFeedsInfos()
   const selectedFeed = useSelectedFeed()
   const setSelectedFeed = useSetSelectedFeed()
   const navigation = useNavigation<NavigationProp>()
@@ -25,14 +25,40 @@ export function DesktopFeeds() {
     return getCurrentRoute(state)
   })
 
-  if (!pinnedFeedInfos) {
+  if (isLoading) {
+    return (
+      <View
+        style={[
+          {
+            gap: 12,
+          },
+        ]}>
+        {Array(5)
+          .fill(0)
+          .map((_, i) => (
+            <View
+              key={i}
+              style={[
+                a.rounded_sm,
+                t.atoms.bg_contrast_25,
+                {
+                  height: 16,
+                  width: i % 2 === 0 ? '60%' : '80%',
+                },
+              ]}
+            />
+          ))}
+      </View>
+    )
+  }
+
+  if (error || !pinnedFeedInfos) {
     return null
   }
 
   return (
     <View
       style={[
-        a.flex_1,
         web({
           gap: 10,
           /*
