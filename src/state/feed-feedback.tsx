@@ -273,14 +273,18 @@ const m = Math.ceil((n * Math.log(p)) / Math.log(1 / Math.pow(2, Math.log(2))))
 const k = Math.round((m / n) * Math.log(2))
 let globalBloomFilter = new BloomFilter(m, k)
 
+const salt = Math.random().toString(36).slice(2)
+
 export function markGloballySeenPost(uri: string) {
   if (globalBloomFilter.size() >= n) {
     // If we ever get here, just restart to avoid saturation.
     globalBloomFilter = new BloomFilter(m, k)
   }
-  globalBloomFilter.add(uri)
+  const key = uri + salt
+  globalBloomFilter.add(key)
 }
 
 export function isLikelyGloballySeenPost(uri: string) {
-  return globalBloomFilter.test(uri)
+  const key = uri + salt
+  return globalBloomFilter.test(key)
 }
