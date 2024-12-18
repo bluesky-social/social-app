@@ -315,8 +315,8 @@ export function ItemRadio({selected}: {selected: boolean}) {
         t.atoms.border_contrast_high,
         {
           borderWidth: 1,
-          height: 24,
-          width: 24,
+          height: 20,
+          width: 20,
         },
       ]}>
       {selected ? (
@@ -324,7 +324,7 @@ export function ItemRadio({selected}: {selected: boolean}) {
           style={[
             a.absolute,
             a.rounded_full,
-            {height: 16, width: 16},
+            {height: 14, width: 14},
             selected
               ? {
                   backgroundColor: t.palette.primary_500,
@@ -343,7 +343,7 @@ export function LabelText({children}: {children: React.ReactNode}) {
     <Text
       style={[
         a.font_bold,
-        a.pt_lg,
+        a.pt_md,
         a.pb_sm,
         t.atoms.text_contrast_low,
         {
