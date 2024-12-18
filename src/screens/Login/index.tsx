@@ -1,7 +1,7 @@
 import React from 'react'
 import {KeyboardAvoidingView} from 'react-native'
 import {LayoutAnimationConfig} from 'react-native-reanimated'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {DEFAULT_SERVICE} from '#/lib/constants'

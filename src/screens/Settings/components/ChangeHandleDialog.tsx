@@ -11,8 +11,9 @@ import Animated, {
   SlideOutRight,
 } from 'react-native-reanimated'
 import {ComAtprotoServerDescribeServer} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_10} from '#/lib/constants'

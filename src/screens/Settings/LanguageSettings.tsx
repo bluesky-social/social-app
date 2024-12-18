@@ -1,8 +1,9 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'

@@ -1,8 +1,9 @@
 import React, {memo, useRef, useState} from 'react'
 import {TextInput, View} from 'react-native'
 import {AppBskyActorDefs, AppBskyFeedPost, AtUri} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {EMBED_SCRIPT} from '#/lib/constants'
 import {niceDate} from '#/lib/strings/time'

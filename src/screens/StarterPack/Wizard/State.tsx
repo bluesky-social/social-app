@@ -5,7 +5,7 @@ import {
   AppBskyGraphStarterpack,
 } from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import {useSession} from '#/state/session'

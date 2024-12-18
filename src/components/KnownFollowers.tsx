@@ -1,8 +1,9 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -198,9 +199,8 @@ function KnownFollowersInner({
                     one="# other"
                     other="# others"
                   />
-                </Trans>
+                </Trans> // only 2
               ) : (
-                // only 2
                 <Trans>
                   Followed by{' '}
                   <Text emoji key={slice[0].profile.did} style={textStyle}>

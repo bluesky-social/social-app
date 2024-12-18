@@ -2,8 +2,9 @@ import 'react-image-crop/dist/ReactCrop.css'
 
 import React from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import ReactCrop, {PercentCrop} from 'react-image-crop'
 
 import {

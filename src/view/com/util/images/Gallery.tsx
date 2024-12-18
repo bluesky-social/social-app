@@ -2,7 +2,7 @@ import React from 'react'
 import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
 import {Image, ImageStyle} from 'expo-image'
 import {AppBskyEmbedImages} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {HandleRef} from '#/lib/hooks/useHandleRef'

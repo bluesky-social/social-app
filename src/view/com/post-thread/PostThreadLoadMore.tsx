@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {View} from 'react-native'
 import {AppBskyFeedDefs, AtUri} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {atoms as a, useTheme} from '#/alf'

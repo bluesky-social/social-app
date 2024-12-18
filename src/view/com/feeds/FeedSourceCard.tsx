@@ -9,8 +9,9 @@ import {
 } from 'react-native'
 import {AtUri} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
 import {usePalette} from '#/lib/hooks/usePalette'

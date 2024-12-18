@@ -7,7 +7,7 @@ import {
   moderateProfile,
   ModerationOpts,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {GestureActionView} from '#/lib/custom-animations/GestureActionView'

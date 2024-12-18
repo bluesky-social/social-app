@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {JSX} from 'react/jsx-runtime'
 import {i18n, MessageDescriptor} from '@lingui/core'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {
   BottomTabBarProps,
   createBottomTabNavigator,

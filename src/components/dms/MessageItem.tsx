@@ -12,7 +12,7 @@ import {
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {I18n} from '@lingui/core'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {ConvoItem} from '#/state/messages/convo/types'

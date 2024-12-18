@@ -9,8 +9,9 @@ import Animated, {
   SlideOutLeft,
 } from 'react-native-reanimated'
 import {ComAtprotoServerCreateAppPassword} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
 import {isWeb} from '#/platform/detection'

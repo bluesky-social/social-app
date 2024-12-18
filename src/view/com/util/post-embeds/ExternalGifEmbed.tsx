@@ -2,7 +2,7 @@ import React from 'react'
 import {ActivityIndicator, GestureResponderEvent, Pressable} from 'react-native'
 import {Image} from 'expo-image'
 import {AppBskyEmbedExternal} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {EmbedPlayerParams} from '#/lib/strings/embed-player'
@@ -90,7 +90,6 @@ export function ExternalGifEmbed({
         source={params.source}
         onAccept={load}
       />
-
       <Pressable
         style={[
           {height: 300},

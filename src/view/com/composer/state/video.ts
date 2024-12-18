@@ -2,7 +2,7 @@ import {ImagePickerAsset} from 'expo-image-picker'
 import {AppBskyVideoDefs, BlobRef, BskyAgent} from '@atproto/api'
 import {JobStatus} from '@atproto/api/dist/client/types/app/bsky/video/defs'
 import {I18n} from '@lingui/core'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 
 import {AbortError} from '#/lib/async/cancelable'
 import {compressVideo} from '#/lib/media/video/compress'

@@ -1,7 +1,8 @@
 import {StyleProp, View, ViewStyle} from 'react-native'
 import {AppBskyFeedDefs, ComAtprotoLabelDefs} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
