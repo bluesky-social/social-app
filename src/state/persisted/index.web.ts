@@ -24,6 +24,7 @@ const _emitter = new EventEmitter()
 
 export async function init() {
   broadcast.onmessage = onBroadcastMessage
+  window.onstorage = onStorage
   const stored = readFromStorage()
   if (stored) {
     _state = stored
@@ -89,6 +90,17 @@ export async function clearStorage() {
   }
 }
 clearStorage satisfies PersistedApi['clearStorage']
+
+function onStorage() {
+  const next = readFromStorage()
+  if (next === _state) {
+    return
+  }
+  if (next) {
+    _state = next
+    _emitter.emit('update')
+  }
+}
 
 async function onBroadcastMessage({data}: MessageEvent) {
   if (

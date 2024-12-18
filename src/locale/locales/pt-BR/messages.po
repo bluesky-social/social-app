@@ -4003,7 +4003,7 @@ msgstr "Insira sua senha"
 #~ msgstr "Insira seu provedor de hospedagem"
 
 #: src/screens/Signup/StepHandle.tsx:114
-msgid "Input your user handle"
+msgid "Type your desired username"
 msgstr "Insira o usuário"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:49
@@ -9667,7 +9667,7 @@ msgid "Your following feed is empty! Follow more users to see what's happening."
 msgstr "Seu feed inicial está vazio! Siga mais usuários para acompanhar o que está acontecendo."
 
 #: src/screens/Signup/StepHandle.tsx:125
-msgid "Your full handle will be"
+msgid "Your full username will be"
 msgstr "Seu identificador completo será"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:219
@@ -9711,5 +9711,5 @@ msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "Sua denúncia será enviada para o serviço de moderação do Bluesky"
 
 #: src/screens/Signup/index.tsx:142
-msgid "Your user handle"
+msgid "Choose your username"
 msgstr "Seu identificador de usuário"

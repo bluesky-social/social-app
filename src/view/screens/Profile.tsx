@@ -1,5 +1,6 @@
 import React, {useCallback, useMemo} from 'react'
 import {StyleSheet} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {
   AppBskyActorDefs,
   AppBskyGraphGetActorStarterPacks,
@@ -122,13 +123,15 @@ function ProfileScreenInner({route}: Props) {
   }
   if (resolveError || profileError) {
     return (
-      <ErrorScreen
-        testID="profileErrorScreen"
-        title={profileError ? _(msg`Not Found`) : _(msg`Oops!`)}
-        message={cleanError(resolveError || profileError)}
-        onPressTryAgain={onPressTryAgain}
-        showHeader
-      />
+      <SafeAreaView style={[a.flex_1]}>
+        <ErrorScreen
+          testID="profileErrorScreen"
+          title={profileError ? _(msg`Not Found`) : _(msg`Oops!`)}
+          message={cleanError(resolveError || profileError)}
+          onPressTryAgain={onPressTryAgain}
+          showHeader
+        />
+      </SafeAreaView>
     )
   }
   if (profile && moderationOpts) {
@@ -144,13 +147,15 @@ function ProfileScreenInner({route}: Props) {
   }
   // should never happen
   return (
-    <ErrorScreen
-      testID="profileErrorScreen"
-      title="Oops!"
-      message="Something went wrong and we're not sure what."
-      onPressTryAgain={onPressTryAgain}
-      showHeader
-    />
+    <SafeAreaView style={[a.flex_1]}>
+      <ErrorScreen
+        testID="profileErrorScreen"
+        title="Oops!"
+        message="Something went wrong and we're not sure what."
+        onPressTryAgain={onPressTryAgain}
+        showHeader
+      />
+    </SafeAreaView>
   )
 }
 

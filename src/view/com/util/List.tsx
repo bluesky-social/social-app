@@ -53,6 +53,7 @@ let List = React.forwardRef<ListMethods, ListProps>(
       headerOffset,
       style,
       progressViewOffset,
+      automaticallyAdjustsScrollIndicatorInsets = false,
       ...props
     },
     ref,
@@ -151,7 +152,14 @@ let List = React.forwardRef<ListMethods, ListProps>(
     return (
       <FlatList_INTERNAL
         {...props}
-        scrollIndicatorInsets={{top: headerOffset, right: 1}}
+        automaticallyAdjustsScrollIndicatorInsets={
+          automaticallyAdjustsScrollIndicatorInsets
+        }
+        scrollIndicatorInsets={{
+          top: headerOffset,
+          right: 1,
+          ...props.scrollIndicatorInsets,
+        }}
         contentOffset={contentOffset}
         refreshControl={refreshControl}
         onScroll={scrollHandler}

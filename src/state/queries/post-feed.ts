@@ -144,11 +144,8 @@ export function usePostFeedQuery(
   /**
    * The number of posts to fetch in a single request. Because we filter
    * unwanted content, we may over-fetch here to try and fill pages by
-   * `MIN_POSTS`.
+   * `MIN_POSTS`. But if you're doing this, ask @why if it's ok first.
    */
-
-  // TEMPORARILY DISABLING GATE TO PREVENT EVENT CONSUMPTION @TODO EME-GATE
-  // const fetchLimit = gate('post_feed_lang_window') ? 100 : MIN_POSTS
   const fetchLimit = MIN_POSTS
 
   // Make sure this doesn't invalidate unless really needed.

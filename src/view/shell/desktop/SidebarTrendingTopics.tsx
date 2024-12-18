@@ -6,10 +6,7 @@ import {
   useTrendingSettings,
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
-import {
-  DEFAULT_LIMIT as TRENDING_TOPICS_COUNT,
-  useTrendingTopics,
-} from '#/state/queries/trending/useTrendingTopics'
+import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
 import {useTrendingConfig} from '#/state/trending-config'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
@@ -24,23 +21,25 @@ import {
 } from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 
+const TRENDING_LIMIT = 6
+
 export function SidebarTrendingTopics() {
   const {enabled} = useTrendingConfig()
-  const {trendingSidebarHidden} = useTrendingSettings()
-  return !enabled ? null : trendingSidebarHidden ? null : <Inner />
+  const {trendingDisabled} = useTrendingSettings()
+  return !enabled ? null : trendingDisabled ? null : <Inner />
 }
 
 function Inner() {
   const t = useTheme()
   const {_} = useLingui()
   const trendingPrompt = Prompt.usePromptControl()
-  const {setTrendingSidebarHidden} = useTrendingSettingsApi()
+  const {setTrendingDisabled} = useTrendingSettingsApi()
   const {data: trending, error, isLoading} = useTrendingTopics()
   const noTopics = !isLoading && !error && !trending?.topics?.length
 
   return error || noTopics ? null : (
     <>
-      <View style={[a.gap_md]}>
+      <View style={[a.gap_sm, {paddingBottom: 2}]}>
         <View style={[a.flex_row, a.align_center, a.gap_xs]}>
           <Graph size="sm" />
           <Text
@@ -53,7 +52,7 @@ function Inner() {
             <Trans>Trending</Trans>
           </Text>
           <Button
-            label={_(msg`Hide trending topics from your sidebar`)}
+            label={_(msg`Hide trending topics`)}
             size="tiny"
             variant="ghost"
             color="secondary"
@@ -63,16 +62,16 @@ function Inner() {
           </Button>
         </View>
 
-        <View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
+        <View style={[a.flex_row, a.flex_wrap, {gap: '6px 4px'}]}>
           {isLoading ? (
-            Array(TRENDING_TOPICS_COUNT)
+            Array(TRENDING_LIMIT)
               .fill(0)
               .map((_n, i) => (
                 <TrendingTopicSkeleton key={i} size="small" index={i} />
               ))
           ) : !trending?.topics ? null : (
             <>
-              {trending.topics.map(topic => (
+              {trending.topics.slice(0, TRENDING_LIMIT).map(topic => (
                 <TrendingTopicLink key={topic.link} topic={topic}>
                   {({hovered}) => (
                     <TrendingTopic
@@ -95,11 +94,9 @@ function Inner() {
       <Prompt.Basic
         control={trendingPrompt}
         title={_(msg`Hide trending topics?`)}
-        description={_(
-          msg`This is a device setting, and will apply to all accounts on this device. You can update this later from your settings.`,
-        )}
+        description={_(msg`You can update this later from your settings.`)}
         confirmButtonCta={_(msg`Hide`)}
-        onConfirm={() => setTrendingSidebarHidden(true)}
+        onConfirm={() => setTrendingDisabled(true)}
       />
       <Divider />
     </>

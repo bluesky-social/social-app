@@ -3,31 +3,19 @@ import React from 'react'
 import * as persisted from '#/state/persisted'
 
 type StateContext = {
-  trendingSidebarHidden: Exclude<
-    persisted.Schema['trendingSidebarHidden'],
-    undefined
-  >
-  trendingDiscoverHidden: Exclude<
-    persisted.Schema['trendingDiscoverHidden'],
-    undefined
-  >
+  trendingDisabled: Exclude<persisted.Schema['trendingDisabled'], undefined>
 }
 type ApiContext = {
-  setTrendingSidebarHidden(
-    hidden: Exclude<persisted.Schema['trendingSidebarHidden'], undefined>,
-  ): void
-  setTrendingDiscoverHidden(
-    hidden: Exclude<persisted.Schema['trendingDiscoverHidden'], undefined>,
+  setTrendingDisabled(
+    hidden: Exclude<persisted.Schema['trendingDisabled'], undefined>,
   ): void
 }
 
 const StateContext = React.createContext<StateContext>({
-  trendingSidebarHidden: Boolean(persisted.defaults.trendingSidebarHidden),
-  trendingDiscoverHidden: Boolean(persisted.defaults.trendingDiscoverHidden),
+  trendingDisabled: Boolean(persisted.defaults.trendingDisabled),
 })
 const ApiContext = React.createContext<ApiContext>({
-  setTrendingSidebarHidden() {},
-  setTrendingDiscoverHidden() {},
+  setTrendingDisabled() {},
 })
 
 function usePersistedBooleanValue<T extends keyof persisted.Schema>(key: T) {
@@ -53,21 +41,16 @@ function usePersistedBooleanValue<T extends keyof persisted.Schema>(key: T) {
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [trendingSidebarHidden, setTrendingSidebarHidden] =
-    usePersistedBooleanValue('trendingSidebarHidden')
-  const [trendingDiscoverHidden, setTrendingDiscoverHidden] =
-    usePersistedBooleanValue('trendingDiscoverHidden')
+  const [trendingDisabled, setTrendingDisabled] =
+    usePersistedBooleanValue('trendingDisabled')
 
   /*
    * Context
    */
-  const state = React.useMemo(
-    () => ({trendingSidebarHidden, trendingDiscoverHidden}),
-    [trendingSidebarHidden, trendingDiscoverHidden],
-  )
+  const state = React.useMemo(() => ({trendingDisabled}), [trendingDisabled])
   const api = React.useMemo(
-    () => ({setTrendingSidebarHidden, setTrendingDiscoverHidden}),
-    [setTrendingSidebarHidden, setTrendingDiscoverHidden],
+    () => ({setTrendingDisabled}),
+    [setTrendingDisabled],
   )
 
   return (

@@ -3,8 +3,7 @@ import {
   error as bdError,
   info as bdInfo,
   warn as bdWarn,
-} from '@bitdrift/react-native'
-
+} from '../lib/bitdrift'
 import {LogLevel, Transport} from './types'
 
 export function createBitdriftTransport(): Transport {
@@ -18,6 +17,6 @@ export function createBitdriftTransport(): Transport {
 
   return (level, message) => {
     const log = logFunctions[level]
-    log(message.toString())
+    log('' + message)
   }
 }

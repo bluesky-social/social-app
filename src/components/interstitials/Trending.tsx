@@ -26,16 +26,16 @@ import {Text} from '#/components/Typography'
 
 export function TrendingInterstitial() {
   const {enabled} = useTrendingConfig()
-  const {trendingDiscoverHidden} = useTrendingSettings()
-  return !enabled ? null : trendingDiscoverHidden ? null : <Inner />
+  const {trendingDisabled} = useTrendingSettings()
+  return enabled && !trendingDisabled ? <Inner /> : null
 }
 
 export function Inner() {
   const t = useTheme()
   const {_} = useLingui()
-  const gutters = useGutters(['base'])
+  const gutters = useGutters(['wide', 'base'])
   const trendingPrompt = Prompt.usePromptControl()
-  const {setTrendingDiscoverHidden} = useTrendingSettingsApi()
+  const {setTrendingDisabled} = useTrendingSettingsApi()
   const {data: trending, error, isLoading} = useTrendingTopics()
   const noTopics = !isLoading && !error && !trending?.topics?.length
 
@@ -63,7 +63,7 @@ export function Inner() {
         </View>
 
         <Button
-          label={_(msg`Hide trending topics from your feed`)}
+          label={_(msg`Hide trending topics`)}
           size="tiny"
           variant="outline"
           color="secondary"
@@ -73,7 +73,7 @@ export function Inner() {
         </Button>
       </View>
 
-      <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
+      <View style={[a.flex_row, a.flex_wrap, {rowGap: 8, columnGap: 6}]}>
         {isLoading ? (
           Array(TRENDING_TOPICS_COUNT)
             .fill(0)
@@ -101,12 +101,10 @@ export function Inner() {
 
       <Prompt.Basic
         control={trendingPrompt}
-        title={_(msg`Hide trending topics in your feed?`)}
-        description={_(
-          msg`This is a device setting, and will apply to all accounts on this device. You can update this later from your settings.`,
-        )}
+        title={_(msg`Hide trending topics?`)}
+        description={_(msg`You can update this later from your settings.`)}
         confirmButtonCta={_(msg`Hide`)}
-        onConfirm={() => setTrendingDiscoverHidden(true)}
+        onConfirm={() => setTrendingDisabled(true)}
       />
     </View>
   )
