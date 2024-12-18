@@ -18,6 +18,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useHaptics} from '#/lib/haptics'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {ComposeIcon2} from '#/lib/icons'
 import {makeListLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
@@ -863,6 +864,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
   ) {
     const {_} = useLingui()
     const {currentAccount} = useSession()
+    const {isMobile} = useWebMediaQueries()
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
     const isOwner = list.creator.did === currentAccount?.did
 
@@ -881,23 +883,43 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
       if (!isOwner) {
         return <View />
       }
+      if (isMobile) {
+        return (
+          <View style={[a.px_sm, a.py_sm]}>
+            <NewButton
+              testID="addUserBtn"
+              label={_(msg`Add a user to this list`)}
+              onPress={onPressAddUser}
+              color="primary"
+              size="small"
+              variant="outline"
+              style={[a.py_md]}>
+              <ButtonIcon icon={PersonPlusIcon} />
+              <ButtonText>
+                <Trans>Add people</Trans>
+              </ButtonText>
+            </NewButton>
+          </View>
+        )
+      }
       return (
-        <View style={[a.px_lg, a.py_sm, a.flex_row]}>
+        <View style={[a.px_lg, a.py_md, a.flex_row_reverse]}>
           <NewButton
             testID="addUserBtn"
             label={_(msg`Add a user to this list`)}
             onPress={onPressAddUser}
             color="primary"
             size="small"
-            variant="ghost">
+            variant="ghost"
+            style={[a.py_sm]}>
             <ButtonIcon icon={PersonPlusIcon} />
             <ButtonText>
-              <Trans>Add</Trans>
+              <Trans>Add people</Trans>
             </ButtonText>
           </NewButton>
         </View>
       )
-    }, [isOwner, _, onPressAddUser])
+    }, [isOwner, _, onPressAddUser, isMobile])
 
     const renderEmptyState = useCallback(() => {
       return (
