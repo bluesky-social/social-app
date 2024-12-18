@@ -5899,7 +5899,7 @@ msgstr "생년월일을 선택하세요"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:192
 msgid "Select your interests from the options below"
-msgstr "아래 옵션에서 관심사를 선택하세요"
+msgstr "아래 옵션에서 관심 주제를 선택하세요"
 
 #: src/screens/Settings/LanguageSettings.tsx:171
 msgid "Select your preferred language for translations in your feed."
@@ -7737,7 +7737,7 @@ msgstr "잘 오셨습니다!"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:126
 msgid "What are your interests?"
-msgstr "어떤 관심사가 있으신가요?"
+msgstr "어떤 주제에 관심이 있으신가요?"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:41
 msgid "What do you want to call your starter pack?"
