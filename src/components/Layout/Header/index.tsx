@@ -30,10 +30,12 @@ import {Text} from '#/components/Typography'
 export function Outer({
   children,
   noBottomBorder,
+  headerRef,
   sticky = true,
 }: {
   children: React.ReactNode
   noBottomBorder?: boolean
+  headerRef?: React.MutableRefObject<View | null>
   sticky?: boolean
 }) {
   const t = useTheme()
@@ -43,6 +45,7 @@ export function Outer({
 
   return (
     <View
+      ref={headerRef}
       style={[
         a.w_full,
         !noBottomBorder && a.border_b,
