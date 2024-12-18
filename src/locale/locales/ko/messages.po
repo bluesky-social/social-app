@@ -5702,7 +5702,7 @@ msgstr "피드 검색"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:571
 msgid "Search for \"{interestsDisplayName}\"{activeText}"
-msgstr "\"{interestsDisplayName}\"{activeText} 검색"
+msgstr "\"{interestsDisplayName}\" 검색{activeText}"
 
 #: src/view/shell/desktop/Search.tsx:201
 msgid "Search for \"{query}\""
