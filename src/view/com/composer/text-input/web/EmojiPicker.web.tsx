@@ -10,6 +10,7 @@ import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
 
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {atoms as a} from '#/alf'
+import {Portal} from '#/components/Portal'
 
 const HEIGHT_OFFSET = 40
 const WIDTH_OFFSET = 100
@@ -125,39 +126,41 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
   }
 
   return (
-    <TouchableWithoutFeedback
-      accessibilityRole="button"
-      onPress={onPressBackdrop}
-      accessibilityViewIsModal>
-      <View
-        style={[
-          a.fixed,
-          a.w_full,
-          a.h_full,
-          a.align_center,
-          {
-            top: 0,
-            left: 0,
-            right: 0,
-          },
-        ]}>
-        {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
-        <TouchableWithoutFeedback onPress={e => e.stopPropagation()}>
-          <View style={[{position: 'absolute'}, position]}>
-            <DismissableLayer
-              onFocusOutside={evt => evt.preventDefault()}
-              onDismiss={close}>
-              <Picker
-                data={async () => {
-                  return (await import('./EmojiPickerData.json')).default
-                }}
-                onEmojiSelect={onInsert}
-                autoFocus={true}
-              />
-            </DismissableLayer>
-          </View>
-        </TouchableWithoutFeedback>
-      </View>
-    </TouchableWithoutFeedback>
+    <Portal>
+      <TouchableWithoutFeedback
+        accessibilityRole="button"
+        onPress={onPressBackdrop}
+        accessibilityViewIsModal>
+        <View
+          style={[
+            a.fixed,
+            a.w_full,
+            a.h_full,
+            a.align_center,
+            {
+              top: 0,
+              left: 0,
+              right: 0,
+            },
+          ]}>
+          {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
+          <TouchableWithoutFeedback onPress={e => e.stopPropagation()}>
+            <View style={[{position: 'absolute'}, position]}>
+              <DismissableLayer
+                onFocusOutside={evt => evt.preventDefault()}
+                onDismiss={close}>
+                <Picker
+                  data={async () => {
+                    return (await import('./EmojiPickerData.json')).default
+                  }}
+                  onEmojiSelect={onInsert}
+                  autoFocus={true}
+                />
+              </DismissableLayer>
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
+      </TouchableWithoutFeedback>
+    </Portal>
   )
 }
