@@ -136,7 +136,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
           return (
             <EmptyState
               icon="list-ul"
-              message={_(msg`No lists yet.`)}
+              message={_(msg`You have no lists.`)}
               testID="listsEmpty"
             />
           )
