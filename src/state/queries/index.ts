@@ -1,15 +1,20 @@
+const SECOND = 1e3
+const MINUTE = SECOND * 60
+const HOUR = MINUTE * 60
+
 export const STALE = {
   SECONDS: {
-    FIFTEEN: 1e3 * 15,
-    THIRTY: 1e3 * 30,
+    FIFTEEN: 15 * SECOND,
+    THIRTY: 30 * SECOND,
   },
   MINUTES: {
-    ONE: 1e3 * 60,
-    FIVE: 1e3 * 60 * 5,
-    THIRTY: 1e3 * 60 * 30,
+    ONE: MINUTE,
+    THREE: 3 * MINUTE,
+    FIVE: 5 * MINUTE,
+    THIRTY: 30 * MINUTE,
   },
   HOURS: {
-    ONE: 1e3 * 60 * 60,
+    ONE: HOUR,
   },
   INFINITY: Infinity,
 }
