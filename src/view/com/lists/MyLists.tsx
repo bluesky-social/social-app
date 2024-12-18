@@ -8,8 +8,7 @@ import {
   ViewStyle,
 } from 'react-native'
 import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {cleanError} from '#/lib/strings/errors'
@@ -17,9 +16,10 @@ import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
-import {EmptyState} from '#/view/com/util/EmptyState'
 import {atoms as a, useTheme} from '#/alf'
+import {BulletList_Stroke2_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import * as ListCard from '#/components/ListCard'
+import {Text} from '#/components/Typography'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List} from '../util/List'
 
@@ -42,7 +42,6 @@ export function MyLists({
 }) {
   const pal = usePalette('default')
   const t = useTheme()
-  const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {data, isFetching, isFetched, isError, error, refetch} =
@@ -84,11 +83,43 @@ export function MyLists({
     ({item, index}: {item: any; index: number}) => {
       if (item === EMPTY) {
         return (
-          <EmptyState
-            icon="list-ul"
-            message={_(msg`You have no lists.`)}
-            testID="listsEmpty"
-          />
+          <View style={[a.flex_1, a.align_center, a.gap_sm, a.px_xl, a.pt_xl]}>
+            <View
+              style={[
+                a.align_center,
+                a.justify_center,
+                a.rounded_full,
+                t.atoms.bg_contrast_25,
+                {
+                  width: 32,
+                  height: 32,
+                },
+              ]}>
+              <ListIcon size="md" fill={t.atoms.text_contrast_low.color} />
+            </View>
+            <Text
+              style={[
+                a.text_center,
+                a.flex_1,
+                a.text_sm,
+                a.leading_snug,
+                t.atoms.text_contrast_medium,
+                {
+                  maxWidth: 200,
+                },
+              ]}>
+              {filter === 'curate' && (
+                <Trans>
+                  Public, sharable lists which can be used to drive feeds.
+                </Trans>
+              )}
+              {filter === 'mod' && (
+                <Trans>
+                  Public, sharable lists of users to mute or block in bulk.
+                </Trans>
+              )}
+            </Text>
+          </View>
         )
       } else if (item === ERROR_ITEM) {
         return (
@@ -118,7 +149,7 @@ export function MyLists({
         </View>
       )
     },
-    [renderItem, t.atoms.border_contrast_low, _, error, onRefresh],
+    [t, renderItem, error, onRefresh, filter],
   )
 
   if (inline) {
