@@ -32,11 +32,11 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
+import {List, ListMethods} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
+import {Header} from '#/components/Layout'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
-import {List, ListMethods} from '../util/List'
-import {ViewHeader} from '../util/ViewHeader'
 import {PostThreadComposePrompt} from './PostThreadComposePrompt'
 import {PostThreadItem} from './PostThreadItem'
 import {PostThreadLoadMore} from './PostThreadLoadMore'
@@ -485,10 +485,15 @@ export function PostThread({uri}: {uri: string | undefined}) {
   return (
     <>
       {showHeader && (
-        <ViewHeader
-          title={_(msg({message: `Post`, context: 'description'}))}
-          showBorder
-        />
+        <Header.Outer sticky={false}>
+          <Header.BackButton />
+          <Header.Content>
+            <Header.TitleText>
+              <Trans context="description">Post</Trans>
+            </Header.TitleText>
+          </Header.Content>
+          <Header.Slot />
+        </Header.Outer>
       )}
 
       <ScrollProvider onMomentumEnd={onMomentumEnd}>
