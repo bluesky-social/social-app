@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {isWeb} from '#/platform/detection'
 import {useTrendingSettings} from '#/state/preferences/trending'

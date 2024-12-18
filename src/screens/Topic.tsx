@@ -1,7 +1,7 @@
 import React from 'react'
 import {ListRenderItemInfo, View} from 'react-native'
 import {PostView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
