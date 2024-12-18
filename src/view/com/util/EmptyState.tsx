@@ -8,7 +8,6 @@ import {
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {UserGroupIcon} from '#/lib/icons'
-import {isWeb} from '#/platform/detection'
 import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
 import {Text} from './text/Text'
 
@@ -25,16 +24,11 @@ export function EmptyState({
 }) {
   const pal = usePalette('default')
   const {isTabletOrDesktop} = useWebMediaQueries()
-  const iconSize = isTabletOrDesktop ? 80 : 64
+  const iconSize = isTabletOrDesktop ? 64 : 48
   return (
     <View
       testID={testID}
-      style={[
-        styles.container,
-        isWeb && pal.border,
-        isTabletOrDesktop && {paddingRight: 20},
-        style,
-      ]}>
+      style={[isTabletOrDesktop && {paddingRight: 20}, style]}>
       <View
         style={[
           styles.iconContainer,
@@ -61,23 +55,20 @@ export function EmptyState({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    borderTopWidth: isWeb ? 1 : undefined,
-  },
   iconContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 100,
-    width: 100,
+    height: 80,
+    width: 80,
     marginLeft: 'auto',
     marginRight: 'auto',
     borderRadius: 80,
     marginTop: 30,
   },
   iconContainerBig: {
-    width: 140,
-    height: 140,
+    width: 100,
+    height: 100,
     marginTop: 50,
   },
   text: {
