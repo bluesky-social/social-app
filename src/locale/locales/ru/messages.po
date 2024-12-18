@@ -1104,7 +1104,7 @@ msgstr "Bluesky лучше с друзьями!"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
-msgstr "Bluesky выберет набор рекомендуемых учётных записей из людей в вашей сети."
+msgstr "Bluesky выберет набор рекомендуемых учётных записей из вашего круга общения."
 
 #: src/screens/Settings/components/PwiOptOut.tsx:92
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
@@ -1534,7 +1534,7 @@ msgstr "Закрывает нижнюю панель навигации"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:32
 msgid "Closes password update alert"
-msgstr "Закрывает уведомление об обновлении пароля"
+msgstr "Закрывает уведомление об изменении пароля"
 
 #: src/view/com/composer/Composer.tsx:552
 #~ msgid "Closes post composer and discards post draft"
@@ -2487,7 +2487,7 @@ msgstr "Электронная почта изменена"
 
 #: src/view/com/modals/ChangeEmail.tsx:106
 msgid "Email Updated"
-msgstr "Электронная почта обновлена"
+msgstr "Электронная почта изменена"
 
 #: src/view/com/modals/VerifyEmail.tsx:85
 msgid "Email verified"
@@ -2649,7 +2649,7 @@ msgstr "Ошибка:"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:364
 msgid "Everybody"
-msgstr "Каждый"
+msgstr "Всех"
 
 #: src/components/WhoCanReply.tsx:67
 msgid "Everybody can reply"
@@ -2862,11 +2862,11 @@ msgstr "Не удалось переключить игнорирование в
 
 #: src/components/FeedCard.tsx:276
 msgid "Failed to update feeds"
-msgstr "Не удалось обновить ленты"
+msgstr "Не удалось изменить ленты"
 
 #: src/screens/Messages/Settings.tsx:36
 msgid "Failed to update settings"
-msgstr "Не удалось обновить настройки"
+msgstr "Не удалось изменить настройки"
 
 #: src/lib/media/video/upload.ts:72
 #: src/lib/media/video/upload.web.ts:74
@@ -2920,7 +2920,7 @@ msgstr "Ленты - это алгоритмы, созданные пользо�
 #: src/components/FeedCard.tsx:273
 #: src/view/screens/SavedFeeds.tsx:83
 msgid "Feeds updated!"
-msgstr "Ленты обновлены!"
+msgstr "Ленты изменены!"
 
 #: src/view/com/modals/ChangeHandle.tsx:468
 #~ msgid "File Contents"
@@ -3026,7 +3026,7 @@ msgstr "Подписаться в ответ"
 
 #: src/view/screens/Search/Explore.tsx:334
 msgid "Follow more accounts to get connected to your interests and build your network."
-msgstr "Подпишитесь на большее число учётных записей, чтобы найти связь со своими интересами и создать свою сеть."
+msgstr "Подпишитесь на большее число учётных записей, чтобы найти связь со своими интересами и построить свой круг общения."
 
 #: src/components/KnownFollowers.tsx:231
 msgid "Followed by <0>{0}</0>"
@@ -3046,7 +3046,7 @@ msgstr "Подписаны <0>{0}</0>, <1>{1}</1> и {2, plural, one {# друг
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:403
 msgid "Followed users"
-msgstr "Ваши подписки"
+msgstr "Пользоватей, на которых я подписан"
 
 #: src/view/com/notifications/FeedItem.tsx:207
 #~ msgid "followed you"
@@ -3104,11 +3104,11 @@ msgstr "Настройка ленты подписок"
 
 #: src/screens/Profile/Header/Handle.tsx:32
 msgid "Follows you"
-msgstr "Подписаны на вас"
+msgstr "Подписан на вас"
 
 #: src/components/Pills.tsx:175
 msgid "Follows You"
-msgstr "Подписаны на вас"
+msgstr "Подписан на вас"
 
 #: src/screens/Settings/AppearanceSettings.tsx:125
 msgid "Font"
@@ -4041,7 +4041,7 @@ msgstr "упомянутые пользователи"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
 msgid "Mentioned users"
-msgstr "Упомянутые пользователи"
+msgstr "Упомянутых пользоватей"
 
 #: src/components/Menu/index.tsx:95
 #: src/view/com/util/ViewHeader.tsx:87
@@ -4125,7 +4125,7 @@ msgstr "Список модерации создан"
 
 #: src/view/com/modals/CreateOrEditList.tsx:163
 msgid "Moderation list updated"
-msgstr "Список модерации обновлён"
+msgstr "Список модерации изменён"
 
 #: src/screens/Moderation/index.tsx:244
 msgid "Moderation lists"
@@ -4581,7 +4581,7 @@ msgstr "Нет, спасибо"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:375
 msgid "Nobody"
-msgstr "Никто"
+msgstr "Никого"
 
 #: src/components/LikedByList.tsx:80
 #: src/components/LikesDialog.tsx:97
@@ -4627,7 +4627,7 @@ msgstr "Примечание: Bluesky является открытой и пу�
 
 #: src/screens/Messages/ChatList.tsx:213
 msgid "Nothing here"
-msgstr "Ничего здесь нет"
+msgstr "Тут ничего нет"
 
 #: src/screens/Settings/NotificationSettings.tsx:50
 msgid "Notification filters"
@@ -5171,7 +5171,7 @@ msgstr "Пожалуйста, завершите проверку Captcha."
 
 #: src/view/com/modals/ChangeEmail.tsx:65
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
-msgstr "Пожалуйста, подтвердите ваш адрес электронной почты, прежде чем изменить его. Это временное требование при добавлении инструментов обновления электронной почты, вскоре оно будет удалено."
+msgstr "Пожалуйста, подтвердите ваш адрес электронной почты, прежде чем изменить его. Это временное требование на  время добавления инструментов изменения электронной почты, и вскоре оно будет удалено."
 
 #: src/view/com/modals/AddAppPasswords.tsx:94
 #~ msgid "Please enter a name for your app password. All spaces is not allowed."
@@ -5282,7 +5282,7 @@ msgstr "Вы скрыли этот пост"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:287
 msgid "Post interaction settings"
-msgstr "Настройки взаимодействия с постами"
+msgstr "Настройки взаимодействия с постом"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:89
 msgid "Post language"
@@ -5421,7 +5421,7 @@ msgstr "Профиль"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:191
 #: src/view/com/modals/EditProfile.tsx:124
 msgid "Profile updated"
-msgstr "Профиль обновлён"
+msgstr "Профиль изменён"
 
 #: src/view/screens/Settings/index.tsx:976
 #~ msgid "Protect your account by verifying your email."
@@ -5483,7 +5483,7 @@ msgstr "Цитирование постов отключено"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
 msgid "Quote posts enabled"
-msgstr "Цитирование постов включено"
+msgstr "Разрешить цитирование поста"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
@@ -5752,11 +5752,11 @@ msgstr "Ответ на пост"
 #: src/view/com/posts/FeedItem.tsx:550
 msgctxt "description"
 msgid "Reply to you"
-msgstr "Ответ вам"
+msgstr "Ответил вам"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:333
 msgid "Reply visibility updated"
-msgstr "Обновление видимости ответа"
+msgstr "Видимость ответа изменена"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:332
 msgid "Reply was successfully hidden"
@@ -6877,7 +6877,7 @@ msgstr "Стартовый набор недействителен"
 
 #: src/view/screens/Profile.tsx:233
 msgid "Starter Packs"
-msgstr "Стартовые наборы"
+msgstr "Наборы"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:244
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
@@ -7280,7 +7280,7 @@ msgstr "Возникла проблема с отправкой вашей жа�
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
 #: src/view/screens/ProfileFeed.tsx:211
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
-msgstr "Возникла проблема с обновлением ваших лент, проверьте подключение к Интернету и повторите попытку."
+msgstr "Возникла проблема при изменении ваших лент, проверьте подключение к Интернету и повторите попытку."
 
 #: src/view/screens/AppPasswords.tsx:75
 #~ msgid "There was an issue with fetching your app passwords"
@@ -7813,12 +7813,12 @@ msgstr "Нежелательное сексуальное содержимое"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
 msgid "Update <0>{displayName}</0> in Lists"
-msgstr "Обновить <0>{displayName}</0> в списках"
+msgstr "Изменить <0>{displayName}</0> в списках"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:494
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:515
 msgid "Update to {domain}"
-msgstr "Обновить на {domain}"
+msgstr "Изменить на {domain}"
 
 #: src/view/com/modals/ChangeHandle.tsx:495
 #~ msgid "Update to {handle}"
@@ -7826,15 +7826,15 @@ msgstr "Обновить на {domain}"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:306
 msgid "Updating quote attachment failed"
-msgstr "Не удалось обновить вложение цитаты"
+msgstr "Не удалось изменить вложение цитаты"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:336
 msgid "Updating reply visibility failed"
-msgstr "Не удалось обновить видимость ответа"
+msgstr "Не удалось изменить видимость ответа"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:180
 msgid "Updating..."
-msgstr "Обновление..."
+msgstr "Изменение..."
 
 #: src/screens/Onboarding/StepProfile/index.tsx:290
 msgid "Upload a photo instead"
@@ -7971,7 +7971,7 @@ msgstr "Список пользователей создан"
 
 #: src/view/com/modals/CreateOrEditList.tsx:162
 msgid "User list updated"
-msgstr "Список пользователей обновлён"
+msgstr "Список пользователей изменён"
 
 #: src/view/screens/Lists.tsx:78
 msgid "User Lists"
@@ -7987,7 +7987,7 @@ msgstr "Пользователи"
 
 #: src/components/WhoCanReply.tsx:258
 msgid "users followed by <0>@{0}</0>"
-msgstr "пользователи, на которых подписаны <0>@{0}</0>"
+msgstr "пользователи, на которых подписан <0>@{0}</0>"
 
 #: src/screens/Messages/Settings.tsx:86
 #: src/screens/Messages/Settings.tsx:89
@@ -8809,7 +8809,7 @@ msgstr "Ответ опубликован"
 
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
-msgstr "Ваш отчет будет отправлен в Службу Модерации Bluesky"
+msgstr "Ваша жалоба будет отправлен в Службу Модерации Bluesky"
 
 #: src/screens/Signup/index.tsx:142
 msgid "Your user handle"
