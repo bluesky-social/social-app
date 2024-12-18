@@ -53,6 +53,7 @@ export const router = new Router({
   CopyrightPolicy: '/support/copyright',
   // hashtags
   Hashtag: '/hashtag/:tag',
+  Topic: '/topic/:topic',
   // DMs
   Messages: '/messages',
   MessagesSettings: '/messages/settings',

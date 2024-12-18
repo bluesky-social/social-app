@@ -4,3 +4,4 @@ export type Gate =
   | 'debug_subscriptions'
   | 'new_postonboarding'
   | 'remove_show_latest_button'
+  | 'trending_topics_beta'

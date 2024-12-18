@@ -54,7 +54,7 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "^0.13.20",
+    "@atproto/api": "^0.13.21",
     "@bitdrift/react-native": "0.4.0",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
