@@ -1,7 +1,9 @@
+import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import {
   useTrendingSettings,
   useTrendingSettingsApi,
@@ -38,6 +40,11 @@ export function Inner() {
   const {setTrendingDisabled} = useTrendingSettingsApi()
   const {data: trending, error, isLoading} = useTrendingTopics()
   const noTopics = !isLoading && !error && !trending?.topics?.length
+
+  const onConfirmHide = React.useCallback(() => {
+    logEvent('trendingTopics:hide', {context: 'interstitial'})
+    setTrendingDisabled(true)
+  }, [setTrendingDisabled])
 
   return error || noTopics ? null : (
     <View
@@ -104,7 +111,7 @@ export function Inner() {
         title={_(msg`Hide trending topics?`)}
         description={_(msg`You can update this later from your settings.`)}
         confirmButtonCta={_(msg`Hide`)}
-        onConfirm={() => setTrendingDisabled(true)}
+        onConfirm={onConfirmHide}
       />
     </View>
   )

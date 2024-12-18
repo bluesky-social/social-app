@@ -236,4 +236,9 @@ export type LogEvents = {
   'tmd:share': {}
   'tmd:download': {}
   'tmd:post': {}
+
+  'trendingTopics:show': {}
+  'trendingTopics:hide': {
+    context: 'sidebar' | 'interstitial' | 'explore'
+  }
 }
