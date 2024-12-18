@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-18 08:15\n"
+"PO-Revision-Date: 2024-12-18 09:48\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -2418,7 +2418,7 @@ msgstr "仅启用这个来源"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:121
 #: src/screens/Settings/ContentAndMediaSettings.tsx:127
 msgid "Enable trending topics"
-msgstr "启用趋势话题"
+msgstr "启用趋势"
 
 #: src/screens/Messages/Settings.tsx:130
 #: src/screens/Messages/Settings.tsx:133
@@ -2795,7 +2795,7 @@ msgstr "寻找一些账户来关注"
 #: src/components/ProgressGuide/FollowDialog.tsx:84
 #: src/components/ProgressGuide/FollowDialog.tsx:413
 msgid "Find people to follow"
-msgstr "查看推荐关注的用户"
+msgstr "寻找一些用户关注"
 
 #: src/view/screens/Search/Search.tsx:588
 msgid "Find posts and users on Bluesky"
@@ -3206,12 +3206,12 @@ msgstr "要隐藏这则回复吗？"
 #: src/components/interstitials/Trending.tsx:66
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:55
 msgid "Hide trending topics"
-msgstr "隐藏趋势话题"
+msgstr "隐藏趋势"
 
 #: src/components/interstitials/Trending.tsx:104
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:96
 msgid "Hide trending topics?"
-msgstr "要隐藏趋势话题吗？"
+msgstr "要隐藏趋势吗？"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:592
 msgid "Hide user list"
@@ -6522,7 +6522,7 @@ msgstr "点按以查看完整图片"
 
 #: src/state/shell/progress-guide.tsx:231
 msgid "Task complete - 10 follows!"
-msgstr "任务完成：10 个关注！"
+msgstr "任务完成：关注 10 个人！"
 
 #: src/state/shell/progress-guide.tsx:221
 msgid "Task complete - 10 likes!"
@@ -7750,7 +7750,7 @@ msgstr "你希望如何命名你的新手包？"
 
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:61
 msgid "What people are posting about."
-msgstr "正在讨论的焦点话题。"
+msgstr "大家都在讨论的焦点话题。"
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
@@ -8122,7 +8122,7 @@ msgstr "你选择隐藏了这则帖文中的字词或标签。"
 
 #: src/state/shell/progress-guide.tsx:232
 msgid "You've found some people to follow"
-msgstr "你找到了一些可以关注的人"
+msgstr "你发现了一些可以关注的人"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."

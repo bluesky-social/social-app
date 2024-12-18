@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-18 08:15\n"
+"PO-Revision-Date: 2024-12-18 09:48\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: src/components/ProgressGuide/FollowDialog.tsx:563
 msgid "(active)"
-msgstr "（活躍）"
+msgstr "(活躍)"
 
 #: src/screens/Messages/components/ChatListItem.tsx:130
 msgid "(contains embedded content)"
@@ -952,7 +952,7 @@ msgstr "在向其他人傳送訊息之前，您必須先驗證您的電子信箱
 #: src/components/interstitials/Trending.tsx:60
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:56
 msgid "BETA"
-msgstr "測試"
+msgstr "BETA"
 
 #: src/components/dialogs/BirthDateSettings.tsx:106
 #: src/screens/Settings/AccountSettings.tsx:109
@@ -2418,7 +2418,7 @@ msgstr "僅啟用此來源"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:121
 #: src/screens/Settings/ContentAndMediaSettings.tsx:127
 msgid "Enable trending topics"
-msgstr "啟用熱門話題"
+msgstr "啟用流行趨勢"
 
 #: src/screens/Messages/Settings.tsx:130
 #: src/screens/Messages/Settings.tsx:133
@@ -3206,12 +3206,12 @@ msgstr "要隱藏這則回覆嗎？"
 #: src/components/interstitials/Trending.tsx:66
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:55
 msgid "Hide trending topics"
-msgstr "隱藏熱門話題"
+msgstr "隱藏流行趨勢"
 
 #: src/components/interstitials/Trending.tsx:104
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:96
 msgid "Hide trending topics?"
-msgstr "要隱藏熱門話題嗎？"
+msgstr "要隱藏流行趨勢嗎？"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:592
 msgid "Hide user list"
@@ -5753,7 +5753,7 @@ msgstr "搜尋動態源"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:571
 msgid "Search for \"{interestsDisplayName}\"{activeText}"
-msgstr "搜尋「{interestsDisplayName}」{activeText}"
+msgstr "搜尋「{interestsDisplayName}」 {activeText}"
 
 #: src/view/shell/desktop/Search.tsx:201
 msgid "Search for \"{query}\""
@@ -6522,7 +6522,7 @@ msgstr "按下以顯示完整圖片"
 
 #: src/state/shell/progress-guide.tsx:231
 msgid "Task complete - 10 follows!"
-msgstr "任務完成 - 10 個跟隨！"
+msgstr "任務完成 - 跟隨 10 個人！"
 
 #: src/state/shell/progress-guide.tsx:221
 msgid "Task complete - 10 likes!"
@@ -7082,7 +7082,7 @@ msgstr "翻譯"
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:51
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:52
 msgid "Trending"
-msgstr "熱門"
+msgstr "流行趨勢"
 
 #: src/view/com/util/error/ErrorScreen.tsx:103
 msgctxt "action"
@@ -7750,7 +7750,7 @@ msgstr "您想怎麼命名這個新手包？"
 
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:61
 msgid "What people are posting about."
-msgstr "正在討論的熱門話題。"
+msgstr "大家都在討論的熱門話題。"
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
@@ -8122,7 +8122,7 @@ msgstr "這則貼文內容中包含您的靜音字詞或標籤。"
 
 #: src/state/shell/progress-guide.tsx:232
 msgid "You've found some people to follow"
-msgstr "您找到了一些可以跟隨的人"
+msgstr "您發現了一些值得跟隨的人"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
