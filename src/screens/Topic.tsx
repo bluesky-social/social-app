@@ -146,7 +146,11 @@ function TopicScreenTab({
     refetch,
     fetchNextPage,
     hasNextPage,
-  } = useSearchPostsQuery({query: topic, sort, enabled: active})
+  } = useSearchPostsQuery({
+    query: topic.replaceAll(' ', '+').replaceAll('%20', '+'),
+    sort,
+    enabled: active,
+  })
 
   const posts = React.useMemo(() => {
     return data?.pages.flatMap(page => page.posts) || []
@@ -171,7 +175,7 @@ function TopicScreenTab({
           isError={isError}
           onRetry={refetch}
           emptyType="results"
-          emptyMessage={_(msg`We couldn't find any results for that hashtag.`)}
+          emptyMessage={_(msg`We couldn't find any results for that topic.`)}
         />
       ) : (
         <List
