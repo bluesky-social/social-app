@@ -61,11 +61,6 @@ export function ModerationModlistsScreen({}: Props) {
           <Layout.Header.TitleText>
             <Trans>Moderation Lists</Trans>
           </Layout.Header.TitleText>
-          <Layout.Header.SubtitleText>
-            <Trans>
-              Public, shareable lists of users to mute or block in bulk.
-            </Trans>
-          </Layout.Header.SubtitleText>
         </Layout.Header.Content>
         <Button
           label={_(msg`New list`)}

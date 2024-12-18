@@ -8,7 +8,7 @@ import {
   ViewStyle,
 } from 'react-native'
 import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -19,6 +19,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {atoms as a, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import * as ListCard from '#/components/ListCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List} from '../util/List'
@@ -84,11 +85,29 @@ export function MyLists({
     ({item, index}: {item: any; index: number}) => {
       if (item === EMPTY) {
         return (
-          <EmptyState
-            icon="list-ul"
-            message={_(msg`You have no lists.`)}
-            testID="listsEmpty"
-          />
+          <View style={[a.gap_4xl, a.px_xl]}>
+            <EmptyState
+              icon="list-ul"
+              message={_(msg`You have no lists yet.`)}
+              testID="listsEmpty"
+            />
+            {filter === 'curate' && (
+              <Admonition type="tip">
+                <Trans>
+                  You can make lists of users, which can be used to drive feeds.
+                  Lists are public and shareable.
+                </Trans>
+              </Admonition>
+            )}
+            {filter === 'mod' && (
+              <Admonition type="tip">
+                <Trans>
+                  You can make lists of users to mute or block in bulk.
+                  Moderation lists are public and shareable.
+                </Trans>
+              </Admonition>
+            )}
+          </View>
         )
       } else if (item === ERROR_ITEM) {
         return (
@@ -118,7 +137,7 @@ export function MyLists({
         </View>
       )
     },
-    [renderItem, t.atoms.border_contrast_low, _, error, onRefresh],
+    [renderItem, t.atoms.border_contrast_low, _, error, onRefresh, filter],
   )
 
   if (inline) {
