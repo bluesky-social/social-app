@@ -619,26 +619,26 @@ let ThreadMenu = ({
       </Menu.Trigger>
       <Menu.Outer>
         <Menu.LabelText>
-          <Trans>Thread display</Trans>
+          <Trans>Show replies as</Trans>
         </Menu.LabelText>
         <Menu.Group>
           <Menu.Item
-            label={_(msg`Show replies as a list`)}
+            label={_(msg`Linear`)}
             onPress={() => {
               setTreeViewEnabled(false)
             }}>
             <Menu.ItemText>
-              <Trans>Show replies as a list</Trans>
+              <Trans>Linear</Trans>
             </Menu.ItemText>
             <Menu.ItemRadio selected={!treeViewEnabled} />
           </Menu.Item>
           <Menu.Item
-            label={_(msg`Show replies as a tree`)}
+            label={_(msg`Threaded`)}
             onPress={() => {
               setTreeViewEnabled(true)
             }}>
             <Menu.ItemText>
-              <Trans>Show replies as a tree</Trans>
+              <Trans>Threaded</Trans>
             </Menu.ItemText>
             <Menu.ItemRadio selected={treeViewEnabled} />
           </Menu.Item>
