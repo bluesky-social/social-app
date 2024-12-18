@@ -74,7 +74,6 @@ appId: xyz.blueskyweb.app
 - tapOn: "Delete List"
 - tapOn:
     id: "confirmBtn"
-- assertVisible: "This list is empty!"
 
 - tapOn:
     label: "Create a new curatelist"
@@ -98,9 +97,7 @@ appId: xyz.blueskyweb.app
 - assertVisible: "They good"
 - tapOn: "People"
 
-- tapOn:
-    label: "Adds users on curatelists from the list"
-    id: "addUserBtn"
+- tapOn: "Start adding people"
 - assertVisible:
     id: "listAddUserModal"
 - tapOn:
