@@ -1,5 +1,6 @@
 import React, {useCallback, useMemo} from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
+import {useAnimatedRef} from 'react-native-reanimated'
 import {
   AppBskyGraphDefs,
   AtUri,
@@ -19,12 +20,11 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {ComposeIcon2} from '#/lib/icons'
-import {makeListLink, makeProfileLink} from '#/lib/routes/links'
+import {makeListLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {NavigationProp} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {cleanError} from '#/lib/strings/errors'
-import {sanitizeHandle} from '#/lib/strings/handles'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
@@ -54,7 +54,7 @@ import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {ListMembers} from '#/view/com/lists/ListMembers'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
-import {Feed} from '#/view/com/posts/Feed'
+import {PostFeed} from '#/view/com/posts/PostFeed'
 import {ProfileSubpageHeader} from '#/view/com/profile/ProfileSubpageHeader'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {FAB} from '#/view/com/util/fab/FAB'
@@ -63,24 +63,23 @@ import {
   DropdownItem,
   NativeDropdown,
 } from '#/view/com/util/forms/NativeDropdown'
-import {TextLink} from '#/view/com/util/Link'
 import {ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {LoadingScreen} from '#/view/com/util/LoadingScreen'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
-import {CenteredView} from '#/view/com/util/Views'
 import {ListHiddenScreen} from '#/screens/List/ListHiddenScreen'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
+import {Button as NewButton, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import * as Layout from '#/components/Layout'
 import * as Hider from '#/components/moderation/Hider'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {RichText} from '#/components/RichText'
 
-const SECTION_TITLES_CURATE = ['Posts', 'About']
-const SECTION_TITLES_MOD = ['About']
+const SECTION_TITLES_CURATE = ['Posts', 'People']
 
 interface SectionRef {
   scrollToTop: () => void
@@ -107,20 +106,20 @@ function ProfileListScreenInner(props: Props) {
 
   if (resolveError) {
     return (
-      <CenteredView>
+      <Layout.Content>
         <ErrorScreen
           error={_(
             msg`We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @${handleOrDid}.`,
           )}
         />
-      </CenteredView>
+      </Layout.Content>
     )
   }
   if (listError) {
     return (
-      <CenteredView>
+      <Layout.Content>
         <ErrorScreen error={cleanError(listError)} />
-      </CenteredView>
+      </Layout.Content>
     )
   }
 
@@ -162,6 +161,7 @@ function ProfileListScreenLoaded({
   const isScreenFocused = useIsFocused()
   const isHidden = list.labels?.findIndex(l => l.val === '!hide') !== -1
   const isOwner = currentAccount?.did === list.creator.did
+  const scrollElRef = useAnimatedRef()
 
   const moderation = React.useMemo(() => {
     return moderateUserList(list, moderationOpts)
@@ -222,6 +222,7 @@ function ProfileListScreenLoaded({
                   scrollElRef={scrollElRef as ListRef}
                   headerHeight={headerHeight}
                   isFocused={isScreenFocused && isFocused}
+                  onPressAddUser={onPressAddUser}
                 />
               )}
               {({headerHeight, scrollElRef}) => (
@@ -260,19 +261,13 @@ function ProfileListScreenLoaded({
       </Hider.Mask>
       <Hider.Content>
         <View style={s.hContentRegion}>
-          <PagerWithHeader
-            items={SECTION_TITLES_MOD}
-            isHeaderReady={true}
-            renderHeader={renderHeader}>
-            {({headerHeight, scrollElRef}) => (
-              <AboutSection
-                list={list}
-                scrollElRef={scrollElRef as ListRef}
-                onPressAddUser={onPressAddUser}
-                headerHeight={headerHeight}
-              />
-            )}
-          </PagerWithHeader>
+          <Layout.Center>{renderHeader()}</Layout.Center>
+          <AboutSection
+            list={list}
+            scrollElRef={scrollElRef as ListRef}
+            onPressAddUser={onPressAddUser}
+            headerHeight={0}
+          />
           <FAB
             testID="composeFAB"
             onPress={() => openComposer({})}
@@ -653,101 +648,124 @@ function Header({
     ]
   }, [_, subscribeMutePromptControl.open, subscribeBlockPromptControl.open])
 
+  const descriptionRT = useMemo(
+    () =>
+      list.description
+        ? new RichTextAPI({
+            text: list.description,
+            facets: list.descriptionFacets,
+          })
+        : undefined,
+    [list],
+  )
+
   return (
-    <ProfileSubpageHeader
-      href={makeListLink(list.creator.handle || list.creator.did || '', rkey)}
-      title={list.name}
-      avatar={list.avatar}
-      isOwner={list.creator.did === currentAccount?.did}
-      creator={list.creator}
-      avatarType="list">
-      <ReportDialog
-        control={reportDialogControl}
-        params={{
-          type: 'list',
-          uri: list.uri,
-          cid: list.cid,
-        }}
-      />
-      {isCurateList ? (
-        <Button
-          testID={isPinned ? 'unpinBtn' : 'pinBtn'}
-          type={isPinned ? 'default' : 'inverted'}
-          label={isPinned ? _(msg`Unpin`) : _(msg`Pin to home`)}
-          onPress={onTogglePinned}
-          disabled={isPending}
+    <>
+      <ProfileSubpageHeader
+        href={makeListLink(list.creator.handle || list.creator.did || '', rkey)}
+        title={list.name}
+        avatar={list.avatar}
+        isOwner={list.creator.did === currentAccount?.did}
+        creator={list.creator}
+        purpose={list.purpose}
+        avatarType="list">
+        <ReportDialog
+          control={reportDialogControl}
+          params={{
+            type: 'list',
+            uri: list.uri,
+            cid: list.cid,
+          }}
         />
-      ) : isModList ? (
-        isBlocking ? (
+        {isCurateList ? (
           <Button
-            testID="unblockBtn"
-            type="default"
-            label={_(msg`Unblock`)}
-            onPress={onUnsubscribeBlock}
+            testID={isPinned ? 'unpinBtn' : 'pinBtn'}
+            type={isPinned ? 'default' : 'inverted'}
+            label={isPinned ? _(msg`Unpin`) : _(msg`Pin to home`)}
+            onPress={onTogglePinned}
+            disabled={isPending}
           />
-        ) : isMuting ? (
-          <Button
-            testID="unmuteBtn"
-            type="default"
-            label={_(msg`Unmute`)}
-            onPress={onUnsubscribeMute}
-          />
-        ) : (
-          <NativeDropdown
-            testID="subscribeBtn"
-            items={subscribeDropdownItems}
-            accessibilityLabel={_(msg`Subscribe to this list`)}
-            accessibilityHint="">
-            <View style={[palInverted.view, styles.btn]}>
-              <Text style={palInverted.text}>
-                <Trans>Subscribe</Trans>
-              </Text>
-            </View>
-          </NativeDropdown>
-        )
-      ) : null}
-      <NativeDropdown
-        testID="headerDropdownBtn"
-        items={dropdownItems}
-        accessibilityLabel={_(msg`More options`)}
-        accessibilityHint="">
-        <View style={[pal.viewLight, styles.btn]}>
-          <FontAwesomeIcon icon="ellipsis" size={20} color={pal.colors.text} />
+        ) : isModList ? (
+          isBlocking ? (
+            <Button
+              testID="unblockBtn"
+              type="default"
+              label={_(msg`Unblock`)}
+              onPress={onUnsubscribeBlock}
+            />
+          ) : isMuting ? (
+            <Button
+              testID="unmuteBtn"
+              type="default"
+              label={_(msg`Unmute`)}
+              onPress={onUnsubscribeMute}
+            />
+          ) : (
+            <NativeDropdown
+              testID="subscribeBtn"
+              items={subscribeDropdownItems}
+              accessibilityLabel={_(msg`Subscribe to this list`)}
+              accessibilityHint="">
+              <View style={[palInverted.view, styles.btn]}>
+                <Text style={palInverted.text}>
+                  <Trans>Subscribe</Trans>
+                </Text>
+              </View>
+            </NativeDropdown>
+          )
+        ) : null}
+        <NativeDropdown
+          testID="headerDropdownBtn"
+          items={dropdownItems}
+          accessibilityLabel={_(msg`More options`)}
+          accessibilityHint="">
+          <View style={[pal.viewLight, styles.btn]}>
+            <FontAwesomeIcon
+              icon="ellipsis"
+              size={20}
+              color={pal.colors.text}
+            />
+          </View>
+        </NativeDropdown>
+
+        <Prompt.Basic
+          control={deleteListPromptControl}
+          title={_(msg`Delete this list?`)}
+          description={_(
+            msg`If you delete this list, you won't be able to recover it.`,
+          )}
+          onConfirm={onPressDelete}
+          confirmButtonCta={_(msg`Delete`)}
+          confirmButtonColor="negative"
+        />
+
+        <Prompt.Basic
+          control={subscribeMutePromptControl}
+          title={_(msg`Mute these accounts?`)}
+          description={_(
+            msg`Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them.`,
+          )}
+          onConfirm={onSubscribeMute}
+          confirmButtonCta={_(msg`Mute list`)}
+        />
+
+        <Prompt.Basic
+          control={subscribeBlockPromptControl}
+          title={_(msg`Block these accounts?`)}
+          description={_(
+            msg`Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
+          )}
+          onConfirm={onSubscribeBlock}
+          confirmButtonCta={_(msg`Block list`)}
+          confirmButtonColor="negative"
+        />
+      </ProfileSubpageHeader>
+      {descriptionRT ? (
+        <View style={[a.px_lg, a.pt_sm, a.pb_sm, a.gap_md]}>
+          <RichText value={descriptionRT} style={[a.text_md, a.leading_snug]} />
         </View>
-      </NativeDropdown>
-
-      <Prompt.Basic
-        control={deleteListPromptControl}
-        title={_(msg`Delete this list?`)}
-        description={_(
-          msg`If you delete this list, you won't be able to recover it.`,
-        )}
-        onConfirm={onPressDelete}
-        confirmButtonCta={_(msg`Delete`)}
-        confirmButtonColor="negative"
-      />
-
-      <Prompt.Basic
-        control={subscribeMutePromptControl}
-        title={_(msg`Mute these accounts?`)}
-        description={_(
-          msg`Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them.`,
-        )}
-        onConfirm={onSubscribeMute}
-        confirmButtonCta={_(msg`Mute list`)}
-      />
-
-      <Prompt.Basic
-        control={subscribeBlockPromptControl}
-        title={_(msg`Block these accounts?`)}
-        description={_(
-          msg`Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
-        )}
-        onConfirm={onSubscribeBlock}
-        confirmButtonCta={_(msg`Block list`)}
-        confirmButtonColor="negative"
-      />
-    </ProfileSubpageHeader>
+      ) : null}
+    </>
   )
 }
 
@@ -756,9 +774,13 @@ interface FeedSectionProps {
   headerHeight: number
   scrollElRef: ListRef
   isFocused: boolean
+  onPressAddUser: () => void
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
-  function FeedSectionImpl({feed, scrollElRef, headerHeight, isFocused}, ref) {
+  function FeedSectionImpl(
+    {feed, scrollElRef, headerHeight, isFocused, onPressAddUser},
+    ref,
+  ) {
     const queryClient = useQueryClient()
     const [hasNew, setHasNew] = React.useState(false)
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
@@ -785,12 +807,27 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     }, [onScrollToTop, isScreenFocused])
 
     const renderPostsEmpty = useCallback(() => {
-      return <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
-    }, [_])
+      return (
+        <View style={[a.gap_xl, a.align_center]}>
+          <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
+          <NewButton
+            label={_(msg`Start adding people`)}
+            onPress={onPressAddUser}
+            color="primary"
+            size="small"
+            variant="solid">
+            <ButtonIcon icon={PersonPlusIcon} />
+            <ButtonText>
+              <Trans>Start adding people!</Trans>
+            </ButtonText>
+          </NewButton>
+        </View>
+      )
+    }, [_, onPressAddUser])
 
     return (
       <View>
-        <Feed
+        <PostFeed
           testID="listFeed"
           enabled={isFocused}
           feed={feed}
@@ -825,25 +862,11 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
     {list, onPressAddUser, headerHeight, scrollElRef},
     ref,
   ) {
-    const pal = usePalette('default')
-    const t = useTheme()
     const {_} = useLingui()
-    const {isMobile} = useWebMediaQueries()
     const {currentAccount} = useSession()
+    const {isMobile} = useWebMediaQueries()
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
-    const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
     const isOwner = list.creator.did === currentAccount?.did
-
-    const descriptionRT = useMemo(
-      () =>
-        list.description
-          ? new RichTextAPI({
-              text: list.description,
-              facets: list.descriptionFacets,
-            })
-          : undefined,
-      [list],
-    )
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
@@ -857,117 +880,69 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
     }))
 
     const renderHeader = React.useCallback(() => {
+      if (!isOwner) {
+        return <View />
+      }
+      if (isMobile) {
+        return (
+          <View style={[a.px_sm, a.py_sm]}>
+            <NewButton
+              testID="addUserBtn"
+              label={_(msg`Add a user to this list`)}
+              onPress={onPressAddUser}
+              color="primary"
+              size="small"
+              variant="outline"
+              style={[a.py_md]}>
+              <ButtonIcon icon={PersonPlusIcon} />
+              <ButtonText>
+                <Trans>Add people</Trans>
+              </ButtonText>
+            </NewButton>
+          </View>
+        )
+      }
       return (
-        <View>
-          <View
-            style={[
-              {
-                borderTopWidth: StyleSheet.hairlineWidth,
-                padding: isMobile ? 14 : 20,
-                gap: 12,
-              },
-              pal.border,
-            ]}>
-            {descriptionRT ? (
-              <RichText
-                testID="listDescription"
-                style={[a.text_md]}
-                value={descriptionRT}
-              />
-            ) : (
-              <Text
-                testID="listDescriptionEmpty"
-                type="lg"
-                style={[{fontStyle: 'italic'}, pal.textLight]}>
-                <Trans>No description</Trans>
-              </Text>
-            )}
-            <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-              {isCurateList ? (
-                isOwner ? (
-                  <Trans>User list by you</Trans>
-                ) : (
-                  <Trans>
-                    User list by{' '}
-                    <TextLink
-                      text={sanitizeHandle(list.creator.handle || '', '@')}
-                      href={makeProfileLink(list.creator)}
-                      style={pal.textLight}
-                    />
-                  </Trans>
-                )
-              ) : isOwner ? (
-                <Trans>Moderation list by you</Trans>
-              ) : (
-                <Trans>
-                  Moderation list by{' '}
-                  <TextLink
-                    text={sanitizeHandle(list.creator.handle || '', '@')}
-                    href={makeProfileLink(list.creator)}
-                    style={pal.textLight}
-                  />
-                </Trans>
-              )}
-            </Text>
-          </View>
-          <View
-            style={[
-              {
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingHorizontal: isMobile ? 14 : 20,
-                paddingBottom: isMobile ? 14 : 18,
-              },
-            ]}>
-            <Text type="lg-bold" style={t.atoms.text}>
-              <Trans>Users</Trans>
-            </Text>
-            {isOwner && (
-              <Pressable
-                testID="addUserBtn"
-                accessibilityRole="button"
-                accessibilityLabel={_(msg`Add a user to this list`)}
-                accessibilityHint=""
-                onPress={onPressAddUser}
-                style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
-                <FontAwesomeIcon
-                  icon="user-plus"
-                  color={pal.colors.link}
-                  size={16}
-                />
-                <Text style={pal.link}>
-                  <Trans>Add</Trans>
-                </Text>
-              </Pressable>
-            )}
-          </View>
+        <View style={[a.px_lg, a.py_md, a.flex_row_reverse]}>
+          <NewButton
+            testID="addUserBtn"
+            label={_(msg`Add a user to this list`)}
+            onPress={onPressAddUser}
+            color="primary"
+            size="small"
+            variant="ghost"
+            style={[a.py_sm]}>
+            <ButtonIcon icon={PersonPlusIcon} />
+            <ButtonText>
+              <Trans>Add people</Trans>
+            </ButtonText>
+          </NewButton>
         </View>
       )
-    }, [
-      isMobile,
-      pal.border,
-      pal.textLight,
-      pal.colors.link,
-      pal.link,
-      descriptionRT,
-      isCurateList,
-      isOwner,
-      list.creator,
-      t.atoms.text,
-      _,
-      onPressAddUser,
-    ])
+    }, [isOwner, _, onPressAddUser, isMobile])
 
     const renderEmptyState = useCallback(() => {
       return (
-        <EmptyState
-          icon="users-slash"
-          message={_(msg`This list is empty!`)}
-          style={{paddingTop: 40}}
-        />
+        <View style={[a.gap_xl, a.align_center]}>
+          <EmptyState
+            icon="users-slash"
+            message={_(msg`This list is empty.`)}
+          />
+          <NewButton
+            testID="emptyStateAddUserBtn"
+            label={_(msg`Start adding people`)}
+            onPress={onPressAddUser}
+            color="primary"
+            size="small"
+            variant="solid">
+            <ButtonIcon icon={PersonPlusIcon} />
+            <ButtonText>
+              <Trans>Start adding people!</Trans>
+            </ButtonText>
+          </NewButton>
+        </View>
       )
-    }, [_])
+    }, [_, onPressAddUser])
 
     return (
       <View>
@@ -1010,7 +985,6 @@ function ErrorScreen({error}: {error: string}) {
         pal.view,
         pal.border,
         {
-          marginTop: 10,
           paddingHorizontal: 18,
           paddingVertical: 14,
           borderTopWidth: StyleSheet.hairlineWidth,

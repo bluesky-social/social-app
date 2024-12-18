@@ -11,10 +11,8 @@ appId: xyz.blueskyweb.app
 
 # Pin alice's feed
 - extendedWaitUntil:
-    visible:
-        id: "viewHeaderDrawerBtn"
-- tapOn:
-    id: "viewHeaderDrawerBtn"
+    visible: "Open drawer menu"
+- tapOn: "Open drawer menu"
 - tapOn:
     id: "profileCardButton"
 - tapOn:
@@ -32,8 +30,7 @@ appId: xyz.blueskyweb.app
     text: "alice-favs"
 
 # Set alice-favs first
-- tapOn:
-    id: "viewHeaderDrawerBtn"
+- tapOn: "Open drawer menu"
 - tapOn:
     id: "menuItemButton-Feeds"
 - tapOn:
@@ -44,8 +41,7 @@ appId: xyz.blueskyweb.app
 - tapOn:
       label: "Save button"
       id: "saveChangesBtn"
-- tapOn:
-    id: "viewHeaderDrawerBtn"
+- tapOn: "Go back"
 - assertVisible:
     id: "homeScreenFeedTabs-selector-0"
     text: "alice-favs"
@@ -54,8 +50,7 @@ appId: xyz.blueskyweb.app
     text: "Following"
 
 # Set following first
-- tapOn:
-    id: "viewHeaderDrawerBtn"
+- tapOn: "Open drawer menu"
 - tapOn:
     id: "menuItemButton-Feeds"
 - tapOn:
@@ -66,8 +61,7 @@ appId: xyz.blueskyweb.app
 - tapOn:
     label: "Save button"
     id: "saveChangesBtn"
-- tapOn:
-    id: "viewHeaderDrawerBtn"
+- tapOn: "Go back"
 - assertVisible:
     id: "homeScreenFeedTabs-selector-0"
     text: "Following"
@@ -76,8 +70,7 @@ appId: xyz.blueskyweb.app
     text: "alice-favs"
 
 # Remove following
-- tapOn:
-    id: "viewHeaderDrawerBtn"
+- tapOn: "Open drawer menu"
 - tapOn:
     id: "menuItemButton-Feeds"
 - tapOn:
@@ -88,8 +81,7 @@ appId: xyz.blueskyweb.app
 - tapOn:
       label: "Save button"
       id: "saveChangesBtn"
-- tapOn:
-    id: "viewHeaderDrawerBtn"
+- tapOn: "Go back"
 - assertVisible:
     id: "homeScreenFeedTabs-selector-0"
     text: "alice-favs"

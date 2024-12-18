@@ -1,8 +1,10 @@
 // Don't remove -force from these because detection is VERY slow on low-end Android.
 // https://github.com/formatjs/formatjs/issues/4463#issuecomment-2176070577
 import '@formatjs/intl-locale/polyfill-force'
+import '@formatjs/intl-datetimeformat/polyfill-force'
 import '@formatjs/intl-pluralrules/polyfill-force'
 import '@formatjs/intl-numberformat/polyfill-force'
+import '@formatjs/intl-datetimeformat/locale-data/en'
 import '@formatjs/intl-pluralrules/locale-data/en'
 import '@formatjs/intl-numberformat/locale-data/en'
 
@@ -31,6 +33,7 @@ import {messages as messagesKo} from '#/locale/locales/ko/messages'
 import {messages as messagesNl} from '#/locale/locales/nl/messages'
 import {messages as messagesPl} from '#/locale/locales/pl/messages'
 import {messages as messagesPt_BR} from '#/locale/locales/pt-BR/messages'
+import {messages as messagesRo} from '#/locale/locales/ro/messages'
 import {messages as messagesRu} from '#/locale/locales/ru/messages'
 import {messages as messagesTh} from '#/locale/locales/th/messages'
 import {messages as messagesTr} from '#/locale/locales/tr/messages'
@@ -49,6 +52,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.an: {
       i18n.loadAndActivate({locale, messages: messagesAn})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/es'),
         import('@formatjs/intl-pluralrules/locale-data/an'),
         import('@formatjs/intl-numberformat/locale-data/es'),
       ])
@@ -57,6 +61,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.ast: {
       i18n.loadAndActivate({locale, messages: messagesAst})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/ast'),
         import('@formatjs/intl-pluralrules/locale-data/ast'),
         import('@formatjs/intl-numberformat/locale-data/ast'),
       ])
@@ -65,6 +70,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.ca: {
       i18n.loadAndActivate({locale, messages: messagesCa})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/ca'),
         import('@formatjs/intl-pluralrules/locale-data/ca'),
         import('@formatjs/intl-numberformat/locale-data/ca'),
       ])
@@ -73,6 +79,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.de: {
       i18n.loadAndActivate({locale, messages: messagesDe})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/de'),
         import('@formatjs/intl-pluralrules/locale-data/de'),
         import('@formatjs/intl-numberformat/locale-data/de'),
       ])
@@ -81,6 +88,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.en_GB: {
       i18n.loadAndActivate({locale, messages: messagesEn_GB})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/en-GB'),
         import('@formatjs/intl-pluralrules/locale-data/en'),
         import('@formatjs/intl-numberformat/locale-data/en-GB'),
       ])
@@ -89,6 +97,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.es: {
       i18n.loadAndActivate({locale, messages: messagesEs})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/es'),
         import('@formatjs/intl-pluralrules/locale-data/es'),
         import('@formatjs/intl-numberformat/locale-data/es'),
       ])
@@ -97,6 +106,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.fi: {
       i18n.loadAndActivate({locale, messages: messagesFi})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/fi'),
         import('@formatjs/intl-pluralrules/locale-data/fi'),
         import('@formatjs/intl-numberformat/locale-data/fi'),
       ])
@@ -105,6 +115,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.fr: {
       i18n.loadAndActivate({locale, messages: messagesFr})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/fr'),
         import('@formatjs/intl-pluralrules/locale-data/fr'),
         import('@formatjs/intl-numberformat/locale-data/fr'),
       ])
@@ -113,6 +124,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.ga: {
       i18n.loadAndActivate({locale, messages: messagesGa})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/ga'),
         import('@formatjs/intl-pluralrules/locale-data/ga'),
         import('@formatjs/intl-numberformat/locale-data/ga'),
       ])
@@ -121,6 +133,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.gl: {
       i18n.loadAndActivate({locale, messages: messagesGl})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/gl'),
         import('@formatjs/intl-pluralrules/locale-data/gl'),
         import('@formatjs/intl-numberformat/locale-data/gl'),
       ])
@@ -129,6 +142,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.hi: {
       i18n.loadAndActivate({locale, messages: messagesHi})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/hi'),
         import('@formatjs/intl-pluralrules/locale-data/hi'),
         import('@formatjs/intl-numberformat/locale-data/hi'),
       ])
@@ -137,6 +151,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.hu: {
       i18n.loadAndActivate({locale, messages: messagesHu})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/hu'),
         import('@formatjs/intl-pluralrules/locale-data/hu'),
         import('@formatjs/intl-numberformat/locale-data/hu'),
       ])
@@ -145,6 +160,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.id: {
       i18n.loadAndActivate({locale, messages: messagesId})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/id'),
         import('@formatjs/intl-pluralrules/locale-data/id'),
         import('@formatjs/intl-numberformat/locale-data/id'),
       ])
@@ -153,6 +169,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.it: {
       i18n.loadAndActivate({locale, messages: messagesIt})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/it'),
         import('@formatjs/intl-pluralrules/locale-data/it'),
         import('@formatjs/intl-numberformat/locale-data/it'),
       ])
@@ -161,6 +178,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.ja: {
       i18n.loadAndActivate({locale, messages: messagesJa})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/ja'),
         import('@formatjs/intl-pluralrules/locale-data/ja'),
         import('@formatjs/intl-numberformat/locale-data/ja'),
       ])
@@ -169,6 +187,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.ko: {
       i18n.loadAndActivate({locale, messages: messagesKo})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/ko'),
         import('@formatjs/intl-pluralrules/locale-data/ko'),
         import('@formatjs/intl-numberformat/locale-data/ko'),
       ])
@@ -177,6 +196,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.nl: {
       i18n.loadAndActivate({locale, messages: messagesNl})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/nl'),
         import('@formatjs/intl-pluralrules/locale-data/nl'),
         import('@formatjs/intl-numberformat/locale-data/nl'),
       ])
@@ -185,6 +205,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.pl: {
       i18n.loadAndActivate({locale, messages: messagesPl})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/pl'),
         import('@formatjs/intl-pluralrules/locale-data/pl'),
         import('@formatjs/intl-numberformat/locale-data/pl'),
       ])
@@ -193,14 +214,25 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.pt_BR: {
       i18n.loadAndActivate({locale, messages: messagesPt_BR})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/pt'),
         import('@formatjs/intl-pluralrules/locale-data/pt'),
         import('@formatjs/intl-numberformat/locale-data/pt'),
+      ])
+      break
+    }
+    case AppLanguage.ro: {
+      i18n.loadAndActivate({locale, messages: messagesRo})
+      await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/ro'),
+        import('@formatjs/intl-pluralrules/locale-data/ro'),
+        import('@formatjs/intl-numberformat/locale-data/ro'),
       ])
       break
     }
     case AppLanguage.ru: {
       i18n.loadAndActivate({locale, messages: messagesRu})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/ru'),
         import('@formatjs/intl-pluralrules/locale-data/ru'),
         import('@formatjs/intl-numberformat/locale-data/ru'),
       ])
@@ -209,6 +241,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.th: {
       i18n.loadAndActivate({locale, messages: messagesTh})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/th'),
         import('@formatjs/intl-pluralrules/locale-data/th'),
         import('@formatjs/intl-numberformat/locale-data/th'),
       ])
@@ -217,6 +250,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.tr: {
       i18n.loadAndActivate({locale, messages: messagesTr})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/tr'),
         import('@formatjs/intl-pluralrules/locale-data/tr'),
         import('@formatjs/intl-numberformat/locale-data/tr'),
       ])
@@ -225,6 +259,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.uk: {
       i18n.loadAndActivate({locale, messages: messagesUk})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/uk'),
         import('@formatjs/intl-pluralrules/locale-data/uk'),
         import('@formatjs/intl-numberformat/locale-data/uk'),
       ])
@@ -233,6 +268,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.vi: {
       i18n.loadAndActivate({locale, messages: messagesVi})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/vi'),
         import('@formatjs/intl-pluralrules/locale-data/vi'),
         import('@formatjs/intl-numberformat/locale-data/vi'),
       ])
@@ -241,6 +277,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.zh_CN: {
       i18n.loadAndActivate({locale, messages: messagesZh_CN})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/zh-Hans'),
         import('@formatjs/intl-pluralrules/locale-data/zh'),
         import('@formatjs/intl-numberformat/locale-data/zh'),
       ])
@@ -249,6 +286,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.zh_HK: {
       i18n.loadAndActivate({locale, messages: messagesZh_HK})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/yue'),
         import('@formatjs/intl-pluralrules/locale-data/zh'),
         import('@formatjs/intl-numberformat/locale-data/zh'),
       ])
@@ -257,6 +295,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.zh_TW: {
       i18n.loadAndActivate({locale, messages: messagesZh_TW})
       await Promise.all([
+        import('@formatjs/intl-datetimeformat/locale-data/zh-Hant'),
         import('@formatjs/intl-pluralrules/locale-data/zh'),
         import('@formatjs/intl-numberformat/locale-data/zh'),
       ])

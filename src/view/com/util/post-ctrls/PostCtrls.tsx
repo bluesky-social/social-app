@@ -18,12 +18,13 @@ import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {IS_INTERNAL} from '#/lib/app-info'
-import {DISCOVER_DEBUG_DIDS, POST_CTRL_HITSLOP} from '#/lib/constants'
+import {POST_CTRL_HITSLOP} from '#/lib/constants'
 import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
 import {useHaptics} from '#/lib/haptics'
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
+import {useGate} from '#/lib/statsig/statsig'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
@@ -85,8 +86,8 @@ let PostCtrls = ({
   const {sendInteraction} = useFeedFeedbackContext()
   const {captureAction} = useProgressGuideControls()
   const playHaptic = useHaptics()
-  const isDiscoverDebugUser =
-    IS_INTERNAL || DISCOVER_DEBUG_DIDS[currentAccount?.did ?? '']
+  const gate = useGate()
+  const isDiscoverDebugUser = IS_INTERNAL || gate('debug_show_feedcontext')
   const isBlocked = Boolean(
     post.author.viewer?.blocking ||
       post.author.viewer?.blockedBy ||
@@ -258,10 +259,12 @@ let PostCtrls = ({
             }
           }}
           accessibilityRole="button"
-          accessibilityLabel={plural(post.replyCount || 0, {
-            one: 'Reply (# reply)',
-            other: 'Reply (# replies)',
-          })}
+          accessibilityLabel={_(
+            msg`Reply (${plural(post.replyCount || 0, {
+              one: '# reply',
+              other: '# replies',
+            })})`,
+          )}
           accessibilityHint=""
           hitSlop={POST_CTRL_HITSLOP}>
           <Bubble
@@ -298,14 +301,18 @@ let PostCtrls = ({
           accessibilityRole="button"
           accessibilityLabel={
             post.viewer?.like
-              ? plural(post.likeCount || 0, {
-                  one: 'Unlike (# like)',
-                  other: 'Unlike (# likes)',
-                })
-              : plural(post.likeCount || 0, {
-                  one: 'Like (# like)',
-                  other: 'Like (# likes)',
-                })
+              ? _(
+                  msg`Unlike (${plural(post.likeCount || 0, {
+                    one: '# like',
+                    other: '# likes',
+                  })})`,
+                )
+              : _(
+                  msg`Like (${plural(post.likeCount || 0, {
+                    one: '# like',
+                    other: '# likes',
+                  })})`,
+                )
           }
           accessibilityHint=""
           hitSlop={POST_CTRL_HITSLOP}>

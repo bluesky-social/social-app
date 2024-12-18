@@ -45,7 +45,8 @@ export function useNotificationSettingsMutation() {
     },
     onSettled: () => {
       invalidateCachedUnreadPage()
-      queryClient.invalidateQueries({queryKey: RQKEY_NOTIFS()})
+      queryClient.invalidateQueries({queryKey: RQKEY_NOTIFS('all')})
+      queryClient.invalidateQueries({queryKey: RQKEY_NOTIFS('mentions')})
     },
   })
 }
@@ -54,7 +55,7 @@ function eagerlySetCachedPriority(
   queryClient: ReturnType<typeof useQueryClient>,
   enabled: boolean,
 ) {
-  queryClient.setQueryData(RQKEY_NOTIFS(), (old: any) => {
+  function updateData(old: any) {
     if (!old) return old
     return {
       ...old,
@@ -65,5 +66,7 @@ function eagerlySetCachedPriority(
         }
       }),
     }
-  })
+  }
+  queryClient.setQueryData(RQKEY_NOTIFS('all'), updateData)
+  queryClient.setQueryData(RQKEY_NOTIFS('mentions'), updateData)
 }

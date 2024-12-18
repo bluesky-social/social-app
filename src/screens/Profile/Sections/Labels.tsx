@@ -15,10 +15,11 @@ import {isLabelerSubscribed, lookupLabelValueDefinition} from '#/lib/moderation'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {isNative} from '#/platform/detection'
 import {ListRef} from '#/view/com/util/List'
-import {CenteredView, ScrollView} from '#/view/com/util/Views'
+import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {LabelerLabelPreference} from '#/components/moderation/LabelPreference'
 import {Text} from '#/components/Typography'
@@ -75,7 +76,7 @@ export const ProfileLabelsSection = React.forwardRef<
   }, [isFocused, scrollElRef, setScrollViewTag])
 
   return (
-    <CenteredView style={{flex: 1, minHeight}} sideBorders>
+    <Layout.Center style={{flex: 1, minHeight}}>
       {isLabelerLoading ? (
         <View style={[a.w_full, a.align_center]}>
           <Loader size="xl" />
@@ -95,7 +96,7 @@ export const ProfileLabelsSection = React.forwardRef<
           headerHeight={headerHeight}
         />
       )}
-    </CenteredView>
+    </Layout.Center>
   )
 })
 

@@ -21,7 +21,15 @@ export function AboutSettingsScreen({}: Props) {
 
   return (
     <Layout.Screen>
-      <Layout.Header title={_(msg`About`)} />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>About</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
           <SettingsList.LinkItem

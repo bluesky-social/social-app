@@ -53,7 +53,8 @@ type OEmbedResponse struct {
 	Version      string `json:"version"`
 	AuthorName   string `json:"author_name,omitempty"`
 	AuthorURL    string `json:"author_url,omitempty"`
-	ProviderName string `json:"provider_url,omitempty"`
+	ProviderName string `json:"provider_name,omitempty"`
+	ProviderURL  string `json:"provider_url,omitempty"`
 	CacheAge     int    `json:"cache_age,omitempty"`
 	Width        *int   `json:"width"`
 	Height       *int   `json:"height"`
@@ -170,6 +171,7 @@ func (srv *Server) WebOEmbed(c echo.Context) error {
 		AuthorName:   "@" + post.Author.Handle,
 		AuthorURL:    fmt.Sprintf("https://bsky.app/profile/%s", post.Author.Handle),
 		ProviderName: "Bluesky Social",
+		ProviderURL:  "https://bsky.app",
 		CacheAge:     86400,
 		Width:        &width,
 		Height:       nil,

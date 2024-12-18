@@ -31,6 +31,7 @@ export async function fetchPage({
   queryClient,
   moderationOpts,
   fetchAdditionalData,
+  reasons,
 }: {
   agent: BskyAgent
   cursor: string | undefined
@@ -38,7 +39,7 @@ export async function fetchPage({
   queryClient: QueryClient
   moderationOpts: ModerationOpts | undefined
   fetchAdditionalData: boolean
-  priority?: boolean
+  reasons: string[]
 }): Promise<{
   page: FeedPage
   indexedAt: string | undefined
@@ -46,7 +47,7 @@ export async function fetchPage({
   const res = await agent.listNotifications({
     limit,
     cursor,
-    // priority,
+    reasons,
   })
 
   const indexedAt = res.data.notifications[0]?.indexedAt

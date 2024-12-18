@@ -6,7 +6,6 @@ import {useLingui} from '@lingui/react'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {useProfileFollowersQuery} from '#/state/queries/profile-followers'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useSession} from '#/state/session'
@@ -25,7 +24,7 @@ function renderItem({
     <ProfileCardWithFollowBtn
       key={item.did}
       profile={item}
-      noBorder={index === 0 && !isWeb}
+      noBorder={index === 0}
     />
   )
 }

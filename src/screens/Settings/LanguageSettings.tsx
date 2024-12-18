@@ -64,7 +64,15 @@ export function LanguageSettingsScreen({}: Props) {
 
   return (
     <Layout.Screen testID="PreferencesLanguagesScreen">
-      <Layout.Header title={_(msg`Languages`)} />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Languages</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
           <SettingsList.Group iconInset={false}>
