@@ -52,7 +52,7 @@ function Inner() {
             <Trans>Trending</Trans>
           </Text>
           <Button
-            label={_(msg`Hide trending topics from your sidebar`)}
+            label={_(msg`Hide trending topics`)}
             size="tiny"
             variant="ghost"
             color="secondary"
@@ -94,9 +94,7 @@ function Inner() {
       <Prompt.Basic
         control={trendingPrompt}
         title={_(msg`Hide trending topics?`)}
-        description={_(
-          msg`This will disable trending topics for all accounts on this device. You can update this later from your settings.`,
-        )}
+        description={_(msg`You can update this later from your settings.`)}
         confirmButtonCta={_(msg`Hide`)}
         onConfirm={() => setTrendingDisabled(true)}
       />

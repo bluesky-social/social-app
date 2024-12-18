@@ -63,7 +63,7 @@ export function Inner() {
         </View>
 
         <Button
-          label={_(msg`Hide trending topics from your feed`)}
+          label={_(msg`Hide trending topics`)}
           size="tiny"
           variant="outline"
           color="secondary"
@@ -102,9 +102,7 @@ export function Inner() {
       <Prompt.Basic
         control={trendingPrompt}
         title={_(msg`Hide trending topics?`)}
-        description={_(
-          msg`This will disable trending topics for all accounts on this device. You can update this later from your settings.`,
-        )}
+        description={_(msg`You can update this later from your settings.`)}
         confirmButtonCta={_(msg`Hide`)}
         onConfirm={() => setTrendingDisabled(true)}
       />
