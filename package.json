@@ -250,6 +250,7 @@
     "jest-expo": "^52.0.2",
     "jest-junit": "^16.0.0",
     "lint-staged": "^13.2.3",
+    "lockfile-lint": "^4.14.0",
     "metro-react-native-babel-preset": "^0.76.9",
     "prettier": "^2.8.3",
     "react-native-dotenv": "^3.4.11",
@@ -329,5 +330,28 @@
     "assets/icons/*.svg": [
       "svgo"
     ]
+  },
+  "lockfile-lint": {
+    "path": "yarn.lock",
+    "allowedHosts": [
+      "npm",
+      "yarn"
+    ],
+    "allowedSchemes": [
+      "https:"
+    ],
+    "allowedPackageNameAliases": [
+      "@babel/traverse--for-generate-function-map:@babel/traverse",
+      "string-width-cjs:string-width",
+      "strip-ansi-cjs:strip-ansi",
+      "wrap-ansi-cjs:wrap-ansi"
+    ],
+    "allowedUrls": [
+      "https://codeload.github.com/bluesky-social/react-native-bottom-sheet/tar.gz/28a87d1bb55e10fc355fa1455545a30734995908",
+      "https://codeload.github.com/bluesky-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4"
+    ],
+    "emptyHostname": false,
+    "validatePackageNames": true,
+    "validateIntegrity": true
   }
 }
