@@ -246,7 +246,7 @@ let PostCtrls = ({
     <View style={[a.flex_row, a.justify_between, a.align_center, style]}>
       <View
         style={[
-          big ? a.align_center : [a.flex_1, a.align_start, {marginLeft: -6}],
+          !big ? {marginLeft: -6} : undefined,
           post.viewer?.replyDisabled ? {opacity: 0.5} : undefined,
         ]}>
         <Pressable
@@ -283,7 +283,7 @@ let PostCtrls = ({
           ) : undefined}
         </Pressable>
       </View>
-      <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
+      <View>
         <RepostButton
           isReposted={!!post.viewer?.repost}
           repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
@@ -293,7 +293,7 @@ let PostCtrls = ({
           embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
         />
       </View>
-      <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
+      <View>
         <Pressable
           testID="likeBtn"
           style={btnStyle}
@@ -363,7 +363,7 @@ let PostCtrls = ({
           />
         </>
       )}
-      <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
+      <View>
         <PostDropdownBtn
           testID="postDropdownBtn"
           post={post}
