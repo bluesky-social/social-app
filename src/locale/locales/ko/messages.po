@@ -3676,7 +3676,7 @@ msgstr "이 게시물을 좋아요 표시합니다"
 #: src/view/com/post-thread/PostThread.tsx:626
 #: src/view/com/post-thread/PostThread.tsx:631
 msgid "Linear"
-msgstr ""
+msgstr "일반"
 
 #: src/Navigation.tsx:198
 msgid "List"
@@ -5414,7 +5414,7 @@ msgstr "답글 설정은 스레드 작성자가 선택합니다"
 
 #: src/view/com/post-thread/PostThread.tsx:648
 msgid "Reply sorting"
-msgstr ""
+msgstr "답글 정렬"
 
 #: src/view/com/post/Post.tsx:204
 #: src/view/com/posts/PostFeedItem.tsx:553
@@ -6193,19 +6193,15 @@ msgstr "답글 표시"
 
 #: src/view/com/post-thread/PostThread.tsx:622
 msgid "Show replies as"
-msgstr ""
+msgstr "답글 표시 형식"
 
 #: src/screens/Settings/ThreadPreferences.tsx:151
 msgid "Show replies as threaded"
-msgstr ""
+msgstr "스레드로 답글 표시"
 
 #: src/screens/Settings/ThreadPreferences.tsx:126
 msgid "Show replies by people you follow before all other replies"
 msgstr "내가 팔로우하는 사람들의 답글을 다른 모든 답글보다 먼저 표시"
-
-#: src/screens/Settings/ThreadPreferences.tsx:151
-#~ msgid "Show replies in a threaded view"
-#~ msgstr "스레드 보기로 답글 표시"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:549
@@ -7079,7 +7075,7 @@ msgstr "스레드 설정"
 #: src/view/com/post-thread/PostThread.tsx:636
 #: src/view/com/post-thread/PostThread.tsx:641
 msgid "Threaded"
-msgstr ""
+msgstr "스레드"
 
 #: src/screens/Settings/ThreadPreferences.tsx:142
 msgid "Threaded mode"
