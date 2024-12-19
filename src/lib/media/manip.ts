@@ -60,7 +60,8 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
   let appendExt = 'jpeg'
   try {
     const urip = new URL(opts.uri)
-    const ext = urip.pathname.split('.').pop()
+    const section = urip.search || urip.pathname
+    const ext = section.split('.').pop()
     if (ext === 'png') {
       appendExt = 'png'
     }
@@ -177,6 +178,7 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
     width: imageRes.width,
     height: imageRes.height,
   })
+  const isPng = /.*\.png$/.test(localUri)
 
   for (let i = 0; i < 9; i++) {
     // nearest 10th
@@ -185,7 +187,7 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
       localUri,
       [{resize: newDimensions}],
       {
-        format: SaveFormat.JPEG,
+        format: isPng ? SaveFormat.PNG : SaveFormat.JPEG,
         compress: quality,
       },
     )
