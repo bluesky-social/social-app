@@ -104,7 +104,6 @@ module.exports = {
     '*.lock',
     '.husky',
     'patches',
-    'bskyweb',
     '*.html',
     'bskyweb',
     'bskyembed',
@@ -117,5 +116,6 @@ module.exports = {
   parserOptions: {
     sourceType: 'module',
     ecmaVersion: 'latest',
+    projectSerivce: true,
   },
 }

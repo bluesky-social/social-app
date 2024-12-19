@@ -125,7 +125,7 @@ function LandingPage() {
 
       <h1 className="text-4xl font-bold text-center">Embed a Bluesky Post</h1>
 
-      <div className="flex flex-col w-full max-w-[600px] gap-4">
+      <div className="flex flex-col w-full max-w-[600px] gap-6">
         <input
           type="text"
           value={uri}
@@ -134,10 +134,8 @@ function LandingPage() {
           placeholder={DEFAULT_POST}
         />
 
-        <div>
-          <label
-            className="block pb-1.5 text-sm font-medium"
-            for="colorModeSelect">
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium" for="colorModeSelect">
             Theme
           </label>
           <select
@@ -149,7 +147,7 @@ function LandingPage() {
               }
             }}
             id="colorModeSelect"
-            className="bg-white block border w-full rounded-lg text-sm px-3 py-2 dark:bg-dimmedBg dark:border-slate-500">
+            className="appearance-none bg-white border w-full rounded-lg text-sm px-3 py-2 dark:bg-dimmedBg dark:border-slate-500">
             <option value="system">System</option>
             <option value="light">Light</option>
             <option value="dark">Dark</option>
