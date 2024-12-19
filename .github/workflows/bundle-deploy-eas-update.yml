@@ -101,6 +101,7 @@ jobs:
           echo "${{ secrets.ENV_TOKEN }}" > .env
           echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
           echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
+          echo "BITDRIFT_API_KEY=${{ secrets.BITDRIFT_API_KEY }}" >> .env
           echo "$json" > google-services.json
 
       - name: 🏗️ Create Bundle
@@ -196,6 +197,7 @@ jobs:
           echo "${{ secrets.ENV_TOKEN }}" > .env
           echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
           echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
+          echo "BITDRIFT_API_KEY=${{ secrets.BITDRIFT_API_KEY }}" >> .env
           echo "${{ secrets.GOOGLE_SERVICES_TOKEN }}" > google-services.json
 
       - name: 🏗️ EAS Build
@@ -222,7 +224,7 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-build-android
       cancel-in-progress: false
-    needs: [ bundleDeploy ]
+    needs: [bundleDeploy]
     # Gotta check if its NOT '[]' because any md5 hash in the outputs is detected as a possible secret and won't be
     # available here
     if: ${{ inputs.channel != 'production' && needs.bundleDeploy.outputs.changes-detected }}
@@ -273,6 +275,7 @@ jobs:
           echo "${{ secrets.ENV_TOKEN }}" > .env
           echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
           echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
+          echo "BITDRIFT_API_KEY=${{ secrets.BITDRIFT_API_KEY }}" >> .env
           echo "$json" > google-services.json
 
       - name: 🏗️ EAS Build
