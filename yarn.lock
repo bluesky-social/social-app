@@ -8207,6 +8207,11 @@ bl@^4.0.3, bl@^4.1.0:
     inherits "^2.0.4"
     readable-stream "^3.4.0"
 
+bloomfilter@^0.0.19:
+  version "0.0.19"
+  resolved "https://registry.yarnpkg.com/bloomfilter/-/bloomfilter-0.0.19.tgz#3d0e62ce41fc8fe402533902cd27e09e6a738d43"
+  integrity sha512-WPhd8qNG79Gnz3i3Uk/wx/Dm6ghYV5sUsTmWGbiQNV7WvnsC8OTGZSe0WNXfPPsKDdxV2g6Q7JiO6af1BOGmXA==
+
 bn.js@^4.0.0, bn.js@^4.11.8, bn.js@^4.11.9:
   version "4.12.0"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.12.0.tgz#775b3f278efbb9718eec7361f483fb36fbbfea88"
