@@ -134,7 +134,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
           styles.bottomBar,
           pal.view,
           pal.border,
-          {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
+          {paddingBottom: clamp(safeAreaInsets.bottom, 15, 60)},
           footerMinimalShellTransform,
         ]}
         onLayout={e => {
