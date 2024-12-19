@@ -225,7 +225,8 @@ module.exports = function (config) {
           },
         ],
         'react-native-compressor',
-        '@bitdrift/react-native',
+        // TODO: Reenable when the build issue is fixed.
+        // '@bitdrift/react-native',
         './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
