@@ -12,7 +12,6 @@ import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyEmbedRecord, AppBskyRichtextFacet, RichText} from '@atproto/api'
 
-import {clamp} from '#/lib/numbers'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {
@@ -238,7 +237,7 @@ export function MessagesList({
 
   // -- Keyboard animation handling
   const {bottom: bottomInset} = useSafeAreaInsets()
-  const bottomOffset = isWeb ? 0 : clamp(60 + bottomInset, 60, 75)
+  const bottomOffset = isWeb ? 0 : 60 + bottomInset
 
   const keyboardHeight = useSharedValue(0)
   const keyboardIsOpening = useSharedValue(false)

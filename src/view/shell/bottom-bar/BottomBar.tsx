@@ -13,7 +13,6 @@ import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {usePalette} from '#/lib/hooks/usePalette'
-import {clamp} from '#/lib/numbers'
 import {getTabState, TabState} from '#/lib/routes/helpers'
 import {useGate} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
@@ -125,6 +124,8 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     accountSwitchControl.open()
   }, [accountSwitchControl, playHaptic])
 
+  console.log('BottomBar render', safeAreaInsets.bottom)
+
   return (
     <>
       <SwitchAccountDialog control={accountSwitchControl} />
@@ -134,7 +135,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
           styles.bottomBar,
           pal.view,
           pal.border,
-          {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
+          {paddingBottom: safeAreaInsets.bottom},
           footerMinimalShellTransform,
         ]}
         onLayout={e => {

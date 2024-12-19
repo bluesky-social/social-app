@@ -8,7 +8,6 @@ import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {clamp} from '#/lib/numbers'
 import {gradients} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
 import {ios} from '#/alf'
@@ -29,7 +28,7 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
 
   const tabletSpacing = isTablet
     ? {right: 50, bottom: 50}
-    : {right: 24, bottom: clamp(insets.bottom, 15, 60) + 15}
+    : {right: 24, bottom: insets.bottom + 30}
 
   return (
     <Animated.View

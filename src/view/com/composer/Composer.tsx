@@ -63,7 +63,6 @@ import {
 } from '#/lib/constants'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useEmail} from '#/lib/hooks/useEmail'
-import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -170,7 +169,6 @@ export const ComposePost = ({
   const {closeAllDialogs} = useDialogStateControlContext()
   const {closeAllModals} = useModalControls()
 
-  const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishingStage, setPublishingStage] = useState('')
   const [error, setError] = useState('')
@@ -263,10 +261,9 @@ export const ComposePost = ({
   const viewStyles = useMemo(
     () => ({
       paddingTop: isAndroid ? insets.top : 0,
-      paddingBottom:
-        isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
+      paddingBottom: 0,
     }),
-    [insets, isKeyboardVisible],
+    [insets],
   )
 
   const onPressCancel = useCallback(() => {

@@ -13,7 +13,6 @@ import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
-import {clamp} from '#/lib/numbers'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
@@ -714,7 +713,7 @@ function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
         styles.prompt,
         fabMinimalShellTransform,
         {
-          bottom: clamp(safeAreaInsets.bottom, 13, 30),
+          bottom: safeAreaInsets.bottom,
         },
       ]}>
       <PostThreadComposePrompt onPressCompose={onPressReply} />

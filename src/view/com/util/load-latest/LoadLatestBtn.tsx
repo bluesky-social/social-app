@@ -8,7 +8,6 @@ import {HITSLOP_20} from '#/lib/constants'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {clamp} from '#/lib/numbers'
 import {useGate} from '#/lib/statsig/statsig'
 import {colors} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
@@ -44,9 +43,7 @@ export function LoadLatestBtn({
   // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)
   const showBottomBar = hasSession ? isMobile : isTabletOrMobile
 
-  const bottomPosition = isTablet
-    ? {bottom: 50}
-    : {bottom: clamp(insets.bottom, 15, 60) + 15}
+  const bottomPosition = isTablet ? {bottom: 50} : {bottom: insets.bottom + 30}
 
   return (
     <AnimatedTouchableOpacity
