@@ -23,13 +23,11 @@ if (!uri) {
 }
 
 const query = new URLSearchParams(window.location.search)
-const colorMode = query.get('colorMode')
 
-if (
-  colorMode != null &&
-  assertColorModeValues(colorMode) &&
-  colorMode !== 'system'
-) {
+// theme - default to light mode
+const colorMode = query.get('colorMode') ?? 'light'
+
+if (assertColorModeValues(colorMode) && colorMode !== 'system') {
   applyTheme(colorMode)
 } else {
   initColorMode()
