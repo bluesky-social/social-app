@@ -116,7 +116,7 @@ function ProfileCard() {
             )}
           </Menu.Trigger>
           <Menu.Outer>
-            {otherAccounts && (
+            {otherAccounts && otherAccounts.length > 0 && (
               <>
                 <Menu.Group>
                   {otherAccounts?.map(other => (
