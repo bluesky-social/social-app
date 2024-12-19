@@ -15,7 +15,7 @@ import {openCropper} from '#/lib/media/picker'
 import {getDataUriSize} from '#/lib/media/util'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {
   DescriptionText,
   OnboardingControls,
@@ -181,10 +181,6 @@ export function StepProfile() {
     if (!image) return
 
     if (!isWeb) {
-      if (isIOS) {
-        // https://github.com/ivpusic/react-native-image-crop-picker/issues/1631
-        await new Promise(resolve => setTimeout(resolve, 800))
-      }
       image = await openCropper({
         mediaType: 'photo',
         cropperCircleOverlay: true,
