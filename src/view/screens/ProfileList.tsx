@@ -79,8 +79,6 @@ import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {RichText} from '#/components/RichText'
 
-const SECTION_TITLES_CURATE_RAW = [msg`Posts`, msg`People`]
-
 interface SectionRef {
   scrollToTop: () => void
 }
@@ -162,7 +160,6 @@ function ProfileListScreenLoaded({
   const isHidden = list.labels?.findIndex(l => l.val === '!hide') !== -1
   const isOwner = currentAccount?.did === list.creator.did
   const scrollElRef = useAnimatedRef()
-  const SECTION_TITLES_CURATE = SECTION_TITLES_CURATE_RAW.map(title => _(title))
 
   const moderation = React.useMemo(() => {
     return moderateUserList(list, moderationOpts)
@@ -212,7 +209,7 @@ function ProfileListScreenLoaded({
         <Hider.Content>
           <View style={s.hContentRegion}>
             <PagerWithHeader
-              items={SECTION_TITLES_CURATE}
+              items={[_(msg`Posts`), _(msg`People`)]}
               isHeaderReady={true}
               renderHeader={renderHeader}
               onCurrentPageSelected={onCurrentPageSelected}>
