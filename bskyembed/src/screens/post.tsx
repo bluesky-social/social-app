@@ -34,6 +34,7 @@ switch (colorMode) {
   case 'system':
     initSystemColorMode()
     break
+  case 'light':
   default:
     applyTheme('light')
     break
