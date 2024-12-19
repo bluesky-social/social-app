@@ -29,7 +29,7 @@ msgstr "इमेल छैन"
 #: src/view/com/notifications/FeedItem.tsx:232
 #: src/view/com/notifications/FeedItem.tsx:327
 #~ msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
-#~ msgstr "{0, plural, one {{formattedCount} अन्य} अन्य {{formattedCount} अन्यहरू}}"
+#~ msgstr "{0, plural, one {{formattedCount} अन्य} other {{formattedCount} अन्यहरू}}"
 
 #: src/lib/hooks/useTimeAgo.ts:156
 msgid "{0, plural, one {# day} other {# days}}"
