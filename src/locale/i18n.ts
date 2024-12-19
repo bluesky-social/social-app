@@ -1,7 +1,6 @@
 // Don't remove -force from these because detection is VERY slow on low-end Android.
 // https://github.com/formatjs/formatjs/issues/4463#issuecomment-2176070577
 import '@formatjs/intl-locale/polyfill-force'
-import '@formatjs/intl-datetimeformat/polyfill-force'
 import '@formatjs/intl-pluralrules/polyfill-force'
 import '@formatjs/intl-numberformat/polyfill-force'
 import '@formatjs/intl-datetimeformat/locale-data/en'
@@ -9,7 +8,6 @@ import '@formatjs/intl-pluralrules/locale-data/en'
 import '@formatjs/intl-numberformat/locale-data/en'
 
 import {useEffect} from 'react'
-import {getCalendars} from 'expo-localization'
 import {i18n} from '@lingui/core'
 
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
@@ -46,20 +44,6 @@ import {messages as messagesZh_CN} from '#/locale/locales/zh-CN/messages'
 import {messages as messagesZh_HK} from '#/locale/locales/zh-HK/messages'
 import {messages as messagesZh_TW} from '#/locale/locales/zh-TW/messages'
 import {useLanguagePrefs} from '#/state/preferences'
-
-/**
- * Set default time zone for Intl.DateTimeFormat polyfill from formatjs
- * {@link https://formatjs.github.io/docs/polyfills/intl-datetimeformat/#default-timezone}
- *
- * According to docs, `getCalendars` is guaranteed to have at least one
- * calendar, and for now this ONLY returns one calendar.
- * {@link https://docs.expo.dev/versions/latest/sdk/localization/#localizationgetcalendars}
- */
-if ('__setDefaultTimeZone' in Intl.DateTimeFormat) {
-  console.log('Setting default time zone', getCalendars()[0].timeZone)
-  // @ts-ignore
-  Intl.DateTimeFormat.__setDefaultTimeZone(getCalendars()[0].timeZone)
-}
 
 /**
  * We do a dynamic import of just the catalog that we need
