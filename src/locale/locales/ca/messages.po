@@ -3159,7 +3159,7 @@ msgstr "Habilita només per aquesta font"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:121
 #: src/screens/Settings/ContentAndMediaSettings.tsx:127
 msgid "Enable trending topics"
-msgstr "Activa els temes de tendència "
+msgstr "Activa els temes del moment "
 
 #: src/screens/Messages/Settings.tsx:130
 #: src/screens/Messages/Settings.tsx:133
@@ -4175,13 +4175,13 @@ msgstr "Vols amagar aquesta resposta?"
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:83
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:62
 msgid "Hide trending topics"
-msgstr "Amaga els temes de tendència"
+msgstr "Amaga els temes del moment"
 
 #: src/components/interstitials/Trending.tsx:111
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:130
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:103
 msgid "Hide trending topics?"
-msgstr "Vols amagar els temes de tendència?"
+msgstr "Vols amagar els temes del moment?"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:592
 msgid "Hide user list"
