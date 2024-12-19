@@ -30,12 +30,12 @@ msgstr "{0, plural, one {# день} few {# дня} other {# дней}}"
 #. placeholder {0}: profile.followersCount ?? 0
 #: src/screens/Profile/ProfileFollowers.tsx:40
 msgid "{0, plural, one {# follower} other {# followers}}"
-msgstr "{0, plural, one {подписчик} other {подписчиков}}"
+msgstr "{0, plural, one {# подписчик} few {# подписчика } other {# подписчиков}}"
 
 #. placeholder {0}: profile.followsCount ?? 0
 #: src/screens/Profile/ProfileFollows.tsx:40
 msgid "{0, plural, one {# following} other {# following}}"
-msgstr "{0, plural, one {подписка} other {подписок}}"
+msgstr "{0, plural, one {# подписка} few {# подписки} other {# подписок}}"
 
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:146
@@ -45,17 +45,17 @@ msgstr "{0, plural, one {# час} few {# часа} other {# часов}}"
 #. placeholder {0}: labels.length
 #: src/components/moderation/LabelsOnMe.tsx:53
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this account"
-msgstr "{0, plural, one {# метка} other {# метки}} размещены на этом аккаунте"
+msgstr "{0, plural, one {# метка} few {# метки} other {# метки}} {0, plural, one {размещена} other {размещены}} на этой учётной записи"
 
 #. placeholder {0}: labels.length
 #: src/components/moderation/LabelsOnMe.tsx:62
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this content"
-msgstr "{0, plural, one {# метка} other {# метки}} размещены на этом контенте"
+msgstr "{0, plural, one {# метка} few {# метки} other {# метки}} {0, plural, one {размещена} other {размещены}} на этом контенте"
 
 #. placeholder {0}: likeCount ?? 0
 #: src/screens/Post/PostLikedBy.tsx:41
 msgid "{0, plural, one {# like} other {# likes}}"
-msgstr "{0, plural, one {# лайк} other {# лайков}}"
+msgstr " {0, plural, one {# лайк} few {# лайка} other {# лайков}}"
 
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:136
@@ -70,7 +70,7 @@ msgstr "{0, plural, one {# месяц} few {# месяца} other {# месяц�
 #. placeholder {0}: quoteCount ?? 0
 #: src/screens/Post/PostQuotes.tsx:41
 msgid "{0, plural, one {# quote} other {# quotes}}"
-msgstr "{0, plural, one {# цитата} other {# цитаты}}"
+msgstr "{0, plural, one {# цитирование} few {# цитирования} other {# цитирований}}"
 
 #. placeholder {0}: quoteCount ?? 0
 #: src/screens/Post/PostRepostedBy.tsx:41
@@ -212,11 +212,11 @@ msgstr "Стартовый набор {displayName}"
 
 #: src/screens/SignupQueued.tsx:219
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
-msgstr "{estimatedTimeHrs, plural, one {час} other {часов}}"
+msgstr "{estimatedTimeHrs, plural, one {час} few {часа} other {часов}}"
 
 #: src/screens/SignupQueued.tsx:225
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
-msgstr "{estimatedTimeMins, plural, one {минута} other {минуты}}"
+msgstr "{estimatedTimeMins, plural, one {минута} few {минуты} other {минут}}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:301
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
@@ -339,7 +339,7 @@ msgstr "{profileName} присоединился к Bluesky, используя 
 #: src/screens/StarterPack/Wizard/index.tsx:449
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1> и {2, plural, one {# другой} other {# другие}} включены в ваш стартовый набор"
+msgstr "<0>{0}, </0><1>{1}, </1> и {2, plural, one {# другой} other {# других}} включены в ваш стартовый набор"
 
 #. placeholder {0}: getName(items[0])
 #. placeholder {1}: getName(items[1])
@@ -347,19 +347,19 @@ msgstr "<0>{0}, </0><1>{1}, </1> и {2, plural, one {# другой} other {# д
 #: src/screens/StarterPack/Wizard/index.tsx:502
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1> и {2, plural, one {# другой} other {# другие}} включены в ваш стартовый набор"
+msgstr "<0>{0}, </0><1>{1}, </1> и {2, plural, one {# другой} other {# других}} включены в ваш стартовый набор"
 
 #. placeholder {0}: formatCount(i18n, profile?.followersCount ?? 0)
 #. placeholder {1}: profile?.followersCount || 0
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
-msgstr "<0>{0}</0> {1, plural, one {подписчик} other {подписчиков}}"
+msgstr "<0>{0}</0> {1, plural, one {подписчик} few {подписчика} other {подписчиков}}"
 
 #. placeholder {0}: formatCount(i18n, profile?.followsCount ?? 0)
 #. placeholder {1}: profile?.followsCount || 0
 #: src/view/shell/Drawer.tsx:108
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
-msgstr "<0>{0}</0> {1, plural, one {подписка} other {подписок}}"
+msgstr "<0>{0}</0> {1, plural, one {подписка} few {подписки} other {подписок}}"
 
 #. placeholder {0}: getName(items[0])
 #. placeholder {1}: getName(items[1])
@@ -1901,7 +1901,7 @@ msgstr "Дата рождения"
 #: src/screens/Settings/AccountSettings.tsx:151
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:73
 msgid "Deactivate account"
-msgstr "Деактивировать мою учётную запись"
+msgstr "Деактивировать учётную запись"
 
 #: src/screens/Settings/Settings.tsx:331
 msgid "Debug Moderation"
@@ -3342,7 +3342,7 @@ msgstr "Если вы удалите этот список, вы не сможе
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:250
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
-msgstr "Если у вас есть собственный домен, вы можете использовать его в качестве своего имени. Это позволит вам самостоятельно подтвердить свою личность. <0> Узнайте больше здесь.</0>"
+msgstr "Если у вас есть собственный домен, вы можете использовать его в качестве своего псевдонима. Это позволит вам самостоятельно подтвердить свою личность. <0> Узнайте больше здесь.</0>"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
 msgid "If you remove this post, you won't be able to recover it."
@@ -3651,7 +3651,7 @@ msgstr "Лайк"
 #. placeholder {0}: post.likeCount || 0
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:310
 msgid "Like ({0, plural, one {# like} other {# likes}})"
-msgstr "Лайк ({0, plural, one {# лайк} other {# лайков}})"
+msgstr "Лайк ({0, plural, one {# лайк} few {# лайка} other {# лайков}})"
 
 #: src/components/ProgressGuide/List.tsx:47
 msgid "Like 10 posts"
@@ -5418,7 +5418,7 @@ msgstr "Ответить"
 #. placeholder {0}: post.replyCount || 0
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:262
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
-msgstr "Ответить ({0, plural, one {# ответ} other {# ответы}})"
+msgstr "Ответить ({0, plural, one {# ответ} few {# ответа} other {# ответов}})"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:123
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
@@ -5551,12 +5551,12 @@ msgstr "Репостить"
 #: src/view/com/util/post-ctrls/RepostButton.tsx:167
 msgctxt "action"
 msgid "Repost"
-msgstr "Репост"
+msgstr "Репостнуть"
 
 #. placeholder {0}: repostCount || 0
 #: src/view/com/util/post-ctrls/RepostButton.tsx:74
 msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr "Репост ({0, plural, one {# репост} other {# репосты}})"
+msgstr "Репостнуть ({0, plural, one {# репост} few {# репоста} other {# репостов}})"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:49
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:104
@@ -7217,7 +7217,7 @@ msgstr "Отменить репост"
 #. placeholder {0}: repostCount || 0
 #: src/view/com/util/post-ctrls/RepostButton.tsx:68
 msgid "Undo repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr "Отменить репост ({0, plural, one {# репост} other {# репосты}})"
+msgstr "Отменить репост ({0, plural, one {# репост} few {# репоста} other {# репостов}})"
 
 #: src/view/com/profile/FollowButton.tsx:60
 msgctxt "action"
@@ -7241,7 +7241,7 @@ msgstr "Дизлайк"
 #. placeholder {0}: post.likeCount || 0
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:304
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
-msgstr "Дизлайк ({0, plural, one {# лайк} other {# лайков}})"
+msgstr "Дизлайк ({0, plural, one {# лайк} few {# лайка} other {# лайков}})"
 
 #: src/view/screens/ProfileList.tsx:697
 #: src/components/TagMenu/index.tsx:264
@@ -8218,7 +8218,7 @@ msgstr "Ваш выбор будет запомнен, вы в любой мом
 #. placeholder {0}: sanitizeHandle(currentAccount?.handle || '', '@')
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:496
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
-msgstr "Ваш текущий идентификатор <0>{0}</0> будет автоматически сохранен за вами. Вы сможете вернуться к нему в любое время с этого аккаунта."
+msgstr "Ваш текущий идентификатор <0>{0}</0> будет автоматически сохранен за вами. Вы сможете вернуться к нему в любое время с этой учётной записи."
 
 #: src/view/com/modals/ChangePassword.tsx:55
 #: src/screens/Signup/state.ts:203
