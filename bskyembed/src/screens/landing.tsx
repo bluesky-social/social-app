@@ -9,7 +9,7 @@ import logo from '../../assets/logo.svg'
 import {
   assertColorModeValues,
   ColorModeValues,
-  initColorMode,
+  initSystemColorMode,
 } from '../color-mode'
 import {Container} from '../components/container'
 import {Link} from '../components/link'
@@ -26,7 +26,7 @@ export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 const root = document.getElementById('app')
 if (!root) throw new Error('No root element')
 
-initColorMode()
+initSystemColorMode()
 
 const agent = new AtpAgent({
   service: 'https://public.api.bsky.app',

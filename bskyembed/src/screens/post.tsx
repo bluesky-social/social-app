@@ -4,7 +4,7 @@ import {AppBskyFeedDefs, AtpAgent} from '@atproto/api'
 import {h, render} from 'preact'
 
 import logo from '../../assets/logo.svg'
-import {applyTheme, assertColorModeValues, initColorMode} from '../color-mode'
+import {applyTheme, initSystemColorMode} from '../color-mode'
 import {Container} from '../components/container'
 import {Link} from '../components/link'
 import {Post} from '../components/post'
@@ -25,12 +25,18 @@ if (!uri) {
 const query = new URLSearchParams(window.location.search)
 
 // theme - default to light mode
-const colorMode = query.get('colorMode') ?? 'light'
+const colorMode = query.get('colorMode')
 
-if (assertColorModeValues(colorMode) && colorMode !== 'system') {
-  applyTheme(colorMode)
-} else {
-  initColorMode()
+switch (colorMode) {
+  case 'dark':
+    applyTheme('dark')
+    break
+  case 'system':
+    initSystemColorMode()
+    break
+  default:
+    applyTheme('light')
+    break
 }
 
 agent
