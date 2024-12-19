@@ -232,6 +232,7 @@ module.exports = function (config) {
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
+        './plugins/withAndroidNoJitpackPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
         './plugins/withAppDelegateReferrer.js',
