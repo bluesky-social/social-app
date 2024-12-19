@@ -1,6 +1,6 @@
 import '../index.css'
 
-import {AppBskyFeedDefs, AppBskyFeedPost, AtUri, BskyAgent} from '@atproto/api'
+import {AppBskyFeedDefs, AppBskyFeedPost, AtpAgent, AtUri} from '@atproto/api'
 import {h, render} from 'preact'
 import {useEffect, useMemo, useRef, useState} from 'preact/hooks'
 
@@ -28,7 +28,7 @@ if (!root) throw new Error('No root element')
 
 initColorMode()
 
-const agent = new BskyAgent({
+const agent = new AtpAgent({
   service: 'https://public.api.bsky.app',
 })
 
@@ -130,13 +130,13 @@ function LandingPage() {
           type="text"
           value={uri}
           onInput={e => setUri(e.currentTarget.value)}
-          className="border rounded-lg py-3  px-4 dark:bg-dimmedBg dark:border-slate-500"
+          className="border rounded-lg py-3 px-4 dark:bg-dimmedBg dark:border-slate-500"
           placeholder={DEFAULT_POST}
         />
 
         <div>
           <label
-            className="block pb-1 text-sm font-medium"
+            className="block pb-1.5 text-sm font-medium"
             for="colorModeSelect">
             Theme
           </label>
@@ -149,7 +149,7 @@ function LandingPage() {
               }
             }}
             id="colorModeSelect"
-            className="block border w-full rounded-lg text-sm px-3 py-2 dark:bg-dimmedBg dark:border-slate-500">
+            className="bg-white block border w-full rounded-lg text-sm px-3 py-2 dark:bg-dimmedBg dark:border-slate-500">
             <option value="system">System</option>
             <option value="light">Light</option>
             <option value="dark">Dark</option>
