@@ -1,4 +1,5 @@
 import {AppBskyFeedDefs} from '@atproto/api'
+import {t} from '@lingui/macro'
 
 export const CONTENT_LABELS = ['porn', 'sexual', 'nudity', 'graphic-media']
 
@@ -10,11 +11,11 @@ export function labelsToInfo(
   switch (label?.val) {
     case 'porn':
     case 'sexual':
-      return 'Adult Content'
+      return t`Adult Content`
     case 'nudity':
-      return 'Non-sexual Nudity'
+      return t`Non-sexual Nudity`
     case 'graphic-media':
-      return 'Graphic Media'
+      return t`Graphic Media`
     default:
       return undefined
   }

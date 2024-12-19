@@ -1,15 +1,20 @@
 import {AtUri} from '@atproto/api'
+import {t} from '@lingui/macro'
 
-export function niceDate(date: number | string | Date) {
-  const d = new Date(date)
-  return `${d.toLocaleDateString('en-us', {
+import {appLanguage} from './locale/i18n'
+
+export function niceDate(timestamp: number | string | Date) {
+  const d = new Date(timestamp)
+  const date = d.toLocaleDateString(appLanguage, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
-  })} at ${d.toLocaleTimeString(undefined, {
+  })
+  const time = d.toLocaleTimeString(appLanguage, {
     hour: 'numeric',
     minute: '2-digit',
-  })}`
+  })
+  return t`${date} at ${time}`
 }
 
 export function getRkey({uri}: {uri: string}): string {
@@ -17,7 +22,7 @@ export function getRkey({uri}: {uri: string}): string {
   return at.rkey
 }
 
-const formatter = new Intl.NumberFormat('en-US', {
+const formatter = new Intl.NumberFormat(appLanguage, {
   notation: 'compact',
   maximumFractionDigits: 1,
   roundingMode: 'trunc',

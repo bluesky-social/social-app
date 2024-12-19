@@ -56,6 +56,7 @@ function scan(node = document) {
 
     const embed = embeds[i]
     const aturi = embed.getAttribute('data-bluesky-uri')
+    const language = embed.closest('[lang]')?.getAttribute('lang')
 
     if (!aturi) {
       continue
@@ -65,6 +66,9 @@ function scan(node = document) {
 
     const searchParams = new URLSearchParams()
     searchParams.set('id', id)
+    if (language) {
+      searchParams.set('language', language)
+    }
     if (ref_url.startsWith('http')) {
       searchParams.set('ref_url', encodeURIComponent(ref_url))
     }

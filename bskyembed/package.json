@@ -6,6 +6,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "build-snippet": "tsc --project tsconfig.snippet.json",
+    "intl:build": "yarn intl:extract && yarn intl:compile",
+    "intl:extract": "lingui extract",
+    "intl:compile": "lingui compile --typescript",
     "lint": "eslint --cache --ext .js,.jsx,.ts,.tsx src"
   },
   "dependencies": {
@@ -16,6 +19,9 @@
     "terser": "^5.30.3"
   },
   "devDependencies": {
+    "@lingui/cli": "^5.1.2",
+    "@lingui/macro": "^5.1.2",
+    "@lingui/vite-plugin": "^5.1.2",
     "autoprefixer": "^10.4.19",
     "eslint": "^8.19.0",
     "eslint-config-preact": "^1.3.0",

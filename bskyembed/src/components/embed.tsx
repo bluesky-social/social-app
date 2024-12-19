@@ -10,6 +10,7 @@ import {
   AppBskyGraphStarterpack,
   AppBskyLabelerDefs,
 } from '@atproto/api'
+import {plural, t} from "@lingui/macro"
 import {ComponentChildren, h} from 'preact'
 import {useMemo} from 'preact/hooks'
 
@@ -60,8 +61,7 @@ export function Embed({
         if (pwiOptOut) {
           return (
             <Info>
-              The author of the quoted post has requested their posts not be
-              displayed on external sites.
+              {t`The author of the quoted post has requested their posts not be displayed on external sites.`}
             </Info>
           )
         }
@@ -115,8 +115,8 @@ export function Embed({
             href={`/profile/${record.creator.did}/lists/${getRkey(record)}`}
             subtitle={
               record.purpose === AppBskyGraphDefs.MODLIST
-                ? `Moderation list by @${record.creator.handle}`
-                : `User list by @${record.creator.handle}`
+                ? t`Moderation list by @${record.creator.handle}`
+                : t`User list by @${record.creator.handle}`
             }
             description={record.description}
           />
@@ -130,8 +130,11 @@ export function Embed({
             image={record.avatar}
             title={record.displayName}
             href={`/profile/${record.creator.did}/feed/${getRkey(record)}`}
-            subtitle={`Feed by @${record.creator.handle}`}
-            description={`Liked by ${record.likeCount ?? 0} users`}
+            subtitle={t`Feed by @${record.creator.handle}`}
+            description={plural(record.likeCount ?? 0, {
+              one: 'Liked by # user',
+              other: 'Liked by # users',
+            })}
           />
         )
       }
@@ -149,12 +152,20 @@ export function Embed({
 
       // Case 3.6: Post not found
       if (AppBskyEmbedRecord.isViewNotFound(record)) {
-        return <Info>Quoted post not found, it may have been deleted.</Info>
+        return (
+          <Info>
+            {t`Quoted post not found, it may have been deleted.`}
+          </Info>
+        )
       }
 
       // Case 3.7: Post blocked
       if (AppBskyEmbedRecord.isViewBlocked(record)) {
-        return <Info>The quoted post is blocked.</Info>
+        return (
+          <Info>
+            {t`The quoted post is blocked.`}
+          </Info>
+        )
       }
 
       // Case 3.8: Detached quote post
