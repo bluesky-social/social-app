@@ -11,19 +11,24 @@ jobs:
     name: Verify yarn.lock changes
     runs-on: ubuntu-latest
     steps:
-      - name: Check out Git repository
+      - name: Check out PR HEAD
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: Fetch base branch
+        run: git fetch origin ${{ github.base_ref }} --depth=1
+
       - name: Install node
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
+
       - name: Verify yarn.lock
         uses: Wandalen/wretry.action@master
         with:
           command: |
-            git show "${{ github.base_ref }}:yarn.lock" > yarn.lock
+            git show "origin/${{ github.base_ref }}:yarn.lock" > yarn.lock
             yarn
             git diff --quiet --exit-code || {
               echo '::error::`yarn.lock` does not match what Yarn would generate given the base `yarn.lock` and the head `package.json`.'
