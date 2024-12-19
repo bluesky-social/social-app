@@ -19149,7 +19149,7 @@ zeego@^1.6.2:
     sf-symbols-typescript "^1.0.0"
 
 zod-validation-error@^3.0.3:
-  version "3.3.0"
+  version "3.4.0"
   resolved "https://registry.yarnpkg.com/zod-validation-error/-/zod-validation-error-3.3.0.tgz#2cfe81b62d044e0453d1aa3ae7c32a2f36dde9af"
   integrity sha512-Syib9oumw1NTqEv4LT0e6U83Td9aVRk9iTXPUQr1otyV1PuXQKOvOwhMNqZIq5hluzHP2pMgnOmHEo7kPdI2mw==
 
