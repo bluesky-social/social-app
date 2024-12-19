@@ -120,7 +120,7 @@ function Label({
   const {_} = useLingui()
   const {labeler, strings} = useLabelInfo(label)
   const sourceName = labeler
-    ? sanitizeHandle(labeler.creator.handle, '@')
+    ? sanitizeHandle(labeler.creator.handle, '@', false)
     : label.src
   return (
     <View
@@ -199,7 +199,7 @@ function AppealForm({
   const isAccountReport = 'did' in subject
   const agent = useAgent()
   const sourceName = labeler
-    ? sanitizeHandle(labeler.creator.handle, '@')
+    ? sanitizeHandle(labeler.creator.handle, '@', false)
     : label.src
 
   const {mutate, isPending} = useMutation({
@@ -263,7 +263,9 @@ function AppealForm({
           label={_(msg`Text input field`)}
           placeholder={_(
             msg`Please explain why you think this label was incorrectly applied by ${
-              labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src
+              labeler
+                ? sanitizeHandle(labeler.creator.handle, '@', false)
+                : label.src
             }`,
           )}
           value={details}
