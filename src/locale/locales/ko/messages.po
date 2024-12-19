@@ -6388,7 +6388,7 @@ msgstr "사람 추가하기"
 #: src/view/screens/ProfileList.tsx:821
 #: src/view/screens/ProfileList.tsx:940
 msgid "Start adding people!"
-msgstr "사람을 추가해 보세요!"
+msgstr "사람들을 추가해 보세요!"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:353
 msgid "Start chat with {displayName}"
