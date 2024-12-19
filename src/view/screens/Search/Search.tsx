@@ -60,6 +60,7 @@ import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
 import {makeSearchQuery, parseSearchQuery} from '#/screens/Search/utils'
 import {atoms as a, useBreakpoints, useTheme as useThemeNew, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {ClearButton} from '#/components/ClearSearchHistory'
 import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
@@ -822,6 +823,17 @@ export function SearchScreen(
     [selectedProfiles],
   )
 
+  const handleRemoveAllSearches = React.useCallback(async () => {
+    setSearchHistory([])
+    setSelectedProfiles([])
+
+    await AsyncStorage.multiRemove(['searchHistory', 'selectedProfiles']).catch(
+      e => {
+        logger.error('Failed to clear search history', {message: e})
+      },
+    )
+  }, [])
+
   const onSearchInputFocus = React.useCallback(() => {
     if (isWeb) {
       // Prevent a jump on iPad by ensuring that
@@ -932,6 +944,7 @@ export function SearchScreen(
             onProfileClick={handleProfileClick}
             onRemoveItemClick={handleRemoveHistoryItem}
             onRemoveProfileClick={handleRemoveProfile}
+            onRemoveAllClick={handleRemoveAllSearches}
           />
         )}
       </View>
@@ -1012,6 +1025,7 @@ function SearchHistory({
   onProfileClick,
   onRemoveItemClick,
   onRemoveProfileClick,
+  onRemoveAllClick,
 }: {
   searchHistory: string[]
   selectedProfiles: AppBskyActorDefs.ProfileViewBasic[]
@@ -1019,6 +1033,7 @@ function SearchHistory({
   onProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
   onRemoveItemClick: (item: string) => void
   onRemoveProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
+  onRemoveAllClick: () => void
 }) {
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
@@ -1028,9 +1043,13 @@ function SearchHistory({
     <Layout.Content>
       <View style={styles.searchHistoryContainer}>
         {(searchHistory.length > 0 || selectedProfiles.length > 0) && (
-          <Text style={[pal.text, styles.searchHistoryTitle]}>
-            <Trans>Recent Searches</Trans>
-          </Text>
+          <View
+            style={[a.flex_row, a.justify_between, a.align_center, a.pr_md]}>
+            <Text style={[pal.text, styles.searchHistoryTitle]}>
+              <Trans>Recent Searches</Trans>
+            </Text>
+            <ClearButton onClear={onRemoveAllClick} />
+          </View>
         )}
         {selectedProfiles.length > 0 && (
           <View
