@@ -1,0 +1,38 @@
+name: Verify yarn.lock
+
+on:
+  pull_request:
+concurrency:
+  group: '${{ github.workflow }}-${{ github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  verify-yarn-lock:
+    name: Verify yarn.lock changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Verify yarn.lock
+        uses: Wandalen/wretry.action@master
+        with:
+          command: |
+            git show "${{ github.base_ref }}:yarn.lock" > yarn.lock
+            yarn
+            git diff --quiet --exit-code || {
+              echo '::error::`yarn.lock` does not match what Yarn would generate given the base `yarn.lock` and the head `package.json`.'
+              echo '::error::1. If this is intentional, you can ignore this check.'
+              echo '::error::2. If this is not intentional, apply the following diff:'
+              echo '```diff'
+              git --no-pager diff -R
+              echo '```'
+              exit 1
+            }
+          attempt_limit: 3
+          attempt_delay: 2000
