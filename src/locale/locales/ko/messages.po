@@ -8,9 +8,9 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-19 09:41+0900\n"
+"PO-Revision-Date: 2024-12-19 17:58+0900\n"
 "Last-Translator: quiple\n"
-"Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
+"Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade, Akamig\n"
 "Plural-Forms: \n"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:563
