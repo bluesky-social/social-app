@@ -14,7 +14,7 @@ import {
 import {colors} from '#/lib/styles'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
-import {isAndroid, isNative} from '#/platform/detection'
+import {isAndroid, isIOS, isNative} from '#/platform/detection'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import {tokens, useTheme as useAlfTheme} from '#/alf'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
@@ -68,6 +68,10 @@ export function UserBanner({
     }
 
     try {
+      if (isIOS) {
+        // https://github.com/ivpusic/react-native-image-crop-picker/issues/1631
+        await new Promise(resolve => setTimeout(resolve, 800))
+      }
       onSelectNewBanner?.(
         await openCropper({
           mediaType: 'photo',
