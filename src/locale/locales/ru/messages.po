@@ -8218,7 +8218,7 @@ msgstr "Ваш выбор будет запомнен, вы в любой мом
 #. placeholder {0}: sanitizeHandle(currentAccount?.handle || '', '@')
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:496
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
-msgstr "Ваш текущий идентификатор <0>{0}</0> будет автоматически сохранен за вами. Вы сможете вернуться к нему в любое время с этой учётной записи."
+msgstr "Ваш текущий псевдоним <0>{0}</0> будет автоматически сохранен за вами. Вы сможете вернуться к нему в любое время с этой учётной записи."
 
 #: src/view/com/modals/ChangePassword.tsx:55
 #: src/screens/Signup/state.ts:203
@@ -8282,7 +8282,7 @@ msgstr "Ответ опубликован"
 
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
-msgstr "Ваша жалоба будет отправлен в Службу Модерации Bluesky"
+msgstr "Ваша жалоба будет отправлена в Службу Модерации Bluesky"
 
 #: src/screens/Signup/index.tsx:142
 msgid "Your user handle"
