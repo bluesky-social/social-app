@@ -9,22 +9,24 @@ import {
   useNavigationState,
 } from '@react-navigation/native'
 
+import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
-import {isInvalidHandle} from '#/lib/strings/handles'
+import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
 import {useHomeBadge} from '#/state/home-badge'
 import {useFetchHandle} from '#/state/queries/handle'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
-import {useProfileQuery} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
+import {useProfilesQuery} from '#/state/queries/profile'
+import {useSession, useSessionApi} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
-import {Link} from '#/view/com/util/Link'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -62,39 +64,119 @@ import {
   UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
   UserCircle_Stroke2_Corner0_Rounded as UserCircle,
 } from '#/components/icons/UserCircle'
+import * as Menu from '#/components/Menu'
+import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {router} from '../../../routes'
 
 const NAV_ICON_WIDTH = 28
 
 function ProfileCard() {
-  const {currentAccount} = useSession()
-  const {isLoading, data: profile} = useProfileQuery({did: currentAccount!.did})
-  const {isDesktop} = useWebMediaQueries()
+  const {currentAccount, accounts} = useSession()
+  const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
+  const {logoutEveryAccount} = useSessionApi()
+  const {isLoading, data} = useProfilesQuery({
+    handles: accounts.map(a => a.did),
+  })
+  const profiles = data?.profiles
+  const signOutPromptControl = Prompt.usePromptControl()
+  const {gtTablet} = useBreakpoints()
   const {_} = useLingui()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const closeEverything = useCloseAllActiveElements()
+
   const size = 48
 
-  return !isLoading && profile ? (
-    <Link
-      href={makeProfileLink({
-        did: currentAccount!.did,
-        handle: currentAccount!.handle,
-      })}
-      style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}
-      title={_(msg`My Profile`)}
-      asAnchor>
-      <UserAvatar
-        avatar={profile.avatar}
-        size={size}
-        type={profile?.associated?.labeler ? 'labeler' : 'user'}
-      />
-    </Link>
-  ) : (
-    <View style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}>
-      <LoadingPlaceholder
-        width={size}
-        height={size}
-        style={{borderRadius: size}}
+  const onAddAnotherAccount = () => {
+    setShowLoggedOut(true)
+    closeEverything()
+  }
+
+  const profile = profiles?.find(p => p.did === currentAccount!.did)
+  const otherAccounts = accounts
+    .filter(acc => acc.did !== currentAccount!.did)
+    .map(account => ({
+      account,
+      profile: profiles?.find(p => p.did === account.did),
+    }))
+
+  return (
+    <View style={[a.my_md, gtTablet && [a.align_start, a.pl_md]]}>
+      {!isLoading && profile ? (
+        <Menu.Root>
+          <Menu.Trigger label={_(msg`Switch accounts`)}>
+            {({props}) => (
+              <Button label={props.accessibilityLabel} {...props}>
+                <UserAvatar
+                  avatar={profile.avatar}
+                  size={size}
+                  type={profile?.associated?.labeler ? 'labeler' : 'user'}
+                />
+              </Button>
+            )}
+          </Menu.Trigger>
+          <Menu.Outer>
+            {otherAccounts && (
+              <>
+                <Menu.Group>
+                  {otherAccounts?.map(other => (
+                    <Menu.Item
+                      disabled={!!pendingDid}
+                      style={[a.gap_sm, {minWidth: 150}]}
+                      key={other.account.did}
+                      label={_(
+                        msg`Switch to ${sanitizeHandle(
+                          other.profile?.handle ?? other.account.handle,
+                          '@',
+                        )}`,
+                      )}
+                      onPress={() =>
+                        onPressSwitchAccount(other.account, 'SwitchAccount')
+                      }>
+                      <UserAvatar avatar={other.profile?.avatar} size={20} />
+                      <Menu.ItemText>
+                        {sanitizeHandle(
+                          other.profile?.handle ?? other.account.handle,
+                          '@',
+                        )}
+                      </Menu.ItemText>
+                    </Menu.Item>
+                  ))}
+                </Menu.Group>
+                <Menu.Divider />
+              </>
+            )}
+            <Menu.Item
+              label={_(msg`Add another account`)}
+              onPress={onAddAnotherAccount}>
+              <Menu.ItemText>
+                <Trans>Add another account</Trans>
+              </Menu.ItemText>
+            </Menu.Item>
+            <Menu.Item
+              label={_(msg`Sign out`)}
+              onPress={signOutPromptControl.open}>
+              <Menu.ItemText>
+                <Trans>Sign out</Trans>
+              </Menu.ItemText>
+            </Menu.Item>
+          </Menu.Outer>
+        </Menu.Root>
+      ) : (
+        <LoadingPlaceholder
+          width={size}
+          height={size}
+          style={{borderRadius: size}}
+        />
+      )}
+      <Prompt.Basic
+        control={signOutPromptControl}
+        title={_(msg`Sign out?`)}
+        description={_(msg`You will be signed out of all your accounts.`)}
+        onConfirm={() => logoutEveryAccount('Settings')}
+        confirmButtonCta={_(msg`Sign out`)}
+        cancelButtonCta={_(msg`Cancel`)}
+        confirmButtonColor="negative"
       />
     </View>
   )
@@ -539,16 +621,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     transform: [],
   },
-
-  profileCard: {
-    marginVertical: 10,
-    width: 90,
-    paddingLeft: 12,
-  },
-  profileCardTablet: {
-    width: 70,
-  },
-
   backBtn: {
     position: 'absolute',
     top: 12,
