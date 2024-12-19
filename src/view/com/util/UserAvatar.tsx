@@ -16,7 +16,7 @@ import {
 import {makeProfileLink} from '#/lib/routes/links'
 import {colors} from '#/lib/styles'
 import {logger} from '#/logger'
-import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
+import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {precacheProfile} from '#/state/queries/profile'
 import {HighPriorityImage} from '#/view/com/util/images/Image'
 import {tokens, useTheme} from '#/alf'
@@ -319,10 +319,6 @@ let EditableUserAvatar = ({
     }
 
     try {
-      if (isIOS) {
-        // https://github.com/ivpusic/react-native-image-crop-picker/issues/1631
-        await new Promise(resolve => setTimeout(resolve, 800))
-      }
       const croppedImage = await openCropper({
         mediaType: 'photo',
         cropperCircleOverlay: true,
