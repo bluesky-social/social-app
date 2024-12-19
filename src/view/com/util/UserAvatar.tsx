@@ -321,7 +321,7 @@ let EditableUserAvatar = ({
     try {
       if (isIOS) {
         // https://github.com/ivpusic/react-native-image-crop-picker/issues/1631
-        await new Promise(resolve => setTimeout(resolve, 1000))
+        await new Promise(resolve => setTimeout(resolve, 800))
       }
       const croppedImage = await openCropper({
         mediaType: 'photo',
