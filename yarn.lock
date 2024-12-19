@@ -18330,6 +18330,11 @@ unicode-property-aliases-ecmascript@^2.0.0:
   resolved "https://registry.yarnpkg.com/unicode-property-aliases-ecmascript/-/unicode-property-aliases-ecmascript-2.1.0.tgz#43d41e3be698bd493ef911077c9b131f827e8ccd"
   integrity sha512-6t3foTQI9qne+OZoVQB/8x8rk2k1eVy1gRXhV3oFQ5T6R1dqQ1xtin3XqSlx3+ATBkliTaR/hHyJBm+LVPNM8w==
 
+unicode-segmenter@^0.11.3:
+  version "0.11.3"
+  resolved "https://registry.yarnpkg.com/unicode-segmenter/-/unicode-segmenter-0.11.3.tgz#5ff66a5e7b533cd2af8be0031343c4f77af20a62"
+  integrity sha512-j0NKkJjLOmwx4vvDIrgft6LgRTPNmx1sw02wG6Py7pOmVYw6juOMcCPgrSWvABCfFNHfc9Q5++/YDmqUL8SsiQ==
+
 unimodules-app-loader@~5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/unimodules-app-loader/-/unimodules-app-loader-5.0.0.tgz#2824ab4378f503a811c10a21f050bc09caf4fe41"
