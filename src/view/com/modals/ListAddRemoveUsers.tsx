@@ -248,13 +248,14 @@ function UserResult({
         <Text
           type="lg"
           style={[s.bold, pal.text]}
+          emoji
           numberOfLines={1}
           lineHeight={1.2}>
           {sanitizeDisplayName(
             profile.displayName || sanitizeHandle(profile.handle),
           )}
         </Text>
-        <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+        <Text type="md" emoji style={[pal.textLight]} numberOfLines={1}>
           {sanitizeHandle(profile.handle, '@')}
         </Text>
         {!!profile.viewer?.followedBy && <View style={s.flexRow} />}
