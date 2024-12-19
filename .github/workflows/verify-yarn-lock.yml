@@ -24,18 +24,23 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: Verify yarn.lock
+      - name: Reset yarn.lock to base
+        run: git show "origin/${{ github.base_ref }}:yarn.lock" > yarn.lock
+
+      - name: Yarn install
         uses: Wandalen/wretry.action@master
         with:
-          command: |
-            git show "origin/${{ github.base_ref }}:yarn.lock" > yarn.lock
-            yarn
-            git diff --quiet --exit-code || {
-              echo '::error::`yarn.lock` does not match what Yarn would generate given the base `yarn.lock` and the head `package.json`.'
-              echo '::error:: - If this is intentional, you can ignore this check.'
-              echo '::error:: - If this is unintentional, apply the following diff:'
-              git --no-pager diff
-              exit 1
-            }
+          # Fine to skip scripts since we don't run any code
+          command: yarn install --ignore-scripts
           attempt_limit: 3
           attempt_delay: 2000
+
+      - name: Verify yarn.lock
+        run: |
+          git diff --quiet --exit-code || {
+            echo '::error::`yarn.lock` does not match what Yarn would generate given the base `yarn.lock` and the head `package.json`.'
+            echo '::error:: - If this is intentional, you can ignore this check.'
+            echo '::error:: - If this is unintentional, apply the following diff:'
+            git --no-pager diff
+            exit 1
+          }
