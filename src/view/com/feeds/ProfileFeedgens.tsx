@@ -14,6 +14,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {cleanError} from '#/lib/strings/errors'
+import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -204,7 +205,7 @@ export const ProfileFeedgens = React.forwardRef<
         onRefresh={onRefresh}
         headerOffset={headerOffset}
         progressViewOffset={ios(0)}
-        contentContainerStyle={isMobile && {paddingBottom: headerOffset + 100}}
+        contentContainerStyle={isMobile && { minHeight: s.window.height + headerOffset }}
         indicatorStyle={t.name === 'light' ? 'black' : 'white'}
         removeClippedSubviews={true}
         // @ts-ignore our .web version only -prf

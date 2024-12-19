@@ -14,6 +14,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {cleanError} from '#/lib/strings/errors'
+import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {RQKEY, useProfileListsQuery} from '#/state/queries/profile-lists'
@@ -201,7 +202,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
           headerOffset={headerOffset}
           progressViewOffset={ios(0)}
           contentContainerStyle={
-            isMobile && {paddingBottom: headerOffset + 100}
+            isMobile && { minHeight: s.window.height + headerOffset }
           }
           indicatorStyle={t.name === 'light' ? 'black' : 'white'}
           removeClippedSubviews={true}
