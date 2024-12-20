@@ -40,8 +40,8 @@ import {
 } from '#/state/shell/progress-guide'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
+import {Link_Stroke2_Corner0_Rounded as Link} from '#/components/icons/Link'
 import * as Prompt from '#/components/Prompt'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {formatCount} from '../numeric/format'
@@ -346,9 +346,9 @@ let PostCtrls = ({
               accessibilityLabel={_(msg`Share`)}
               accessibilityHint=""
               hitSlop={POST_CTRL_HITSLOP}>
-              <ArrowOutOfBox
+              <Link
                 style={[defaultCtrlColor, {pointerEvents: 'none'}]}
-                width={22}
+                width={20}
               />
             </Pressable>
           </View>
