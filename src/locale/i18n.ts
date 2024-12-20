@@ -7,6 +7,7 @@ import '@formatjs/intl-numberformat/polyfill-force'
 import '@formatjs/intl-datetimeformat/locale-data/en'
 import '@formatjs/intl-pluralrules/locale-data/en'
 import '@formatjs/intl-numberformat/locale-data/en'
+import '@formatjs/intl-datetimeformat/add-all-tz.js'
 
 import {useEffect} from 'react'
 import {getCalendars} from 'expo-localization'
@@ -56,7 +57,6 @@ import {useLanguagePrefs} from '#/state/preferences'
  * {@link https://docs.expo.dev/versions/latest/sdk/localization/#localizationgetcalendars}
  */
 if ('__setDefaultTimeZone' in Intl.DateTimeFormat) {
-  console.log('Setting default time zone', getCalendars()[0].timeZone)
   // @ts-ignore
   Intl.DateTimeFormat.__setDefaultTimeZone(getCalendars()[0].timeZone)
 }
