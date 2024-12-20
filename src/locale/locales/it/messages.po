@@ -1,16 +1,16 @@
 # 
 # Translators:
 # arestifop, 2024
-# Michele Locati <michele@locati.it>, 2024
 # Francisco, 2024
+# Michele Locati <michele@locati.it>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-19 00:46+0000\n"
-"PO-Revision-Date: 2024-12-20 01:58+0000\n"
-"Last-Translator: Francisco, 2024\n"
+"PO-Revision-Date: 2024-12-20 07:44+0000\n"
+"Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -1028,7 +1028,7 @@ msgstr "Post bloccato."
 
 #: src/screens/Profile/Sections/Labels.tsx:174
 msgid "Blocking does not prevent this labeler from placing labels on your account."
-msgstr "Il blocco non impedisce al labeler di inserire etichette nel tuo account."
+msgstr "Il blocco non impedisce all'etichettatore di inserire etichette nel tuo account."
 
 #: src/view/screens/ProfileList.tsx:756
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
@@ -6466,11 +6466,11 @@ msgstr "Iscriviti a @{0} per utilizzare queste etichette:"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:238
 msgid "Subscribe to Labeler"
-msgstr "Iscriviti a Labeler"
+msgstr "Iscriviti all'etichettatore"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:204
 msgid "Subscribe to this labeler"
-msgstr "Iscriviti a questo labeler"
+msgstr "Iscriviti a questo etichettatore"
 
 #: src/view/screens/ProfileList.tsx:707
 msgid "Subscribe to this list"
@@ -7319,7 +7319,7 @@ msgstr "Disiscriviti dalla lista"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:203
 msgid "Unsubscribe from this labeler"
-msgstr "Disiscriviti da questo labeler"
+msgstr "Disiscriviti da questo etichettatore"
 
 #: src/screens/List/ListHiddenScreen.tsx:86
 msgid "Unsubscribed from list"
@@ -7774,7 +7774,7 @@ msgstr "Ci dispiace! Non riusciamo a trovare la pagina che stavi cercando."
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:346
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
-msgstr "Ci dispiace! Puoi iscriverti solo a venti etichettatori ed al momento hai raggiunto questo limite."
+msgstr "Ci dispiace! Puoi iscriverti solo a venti etichettatori e al momento hai raggiunto questo limite."
 
 #: src/screens/Deactivated.tsx:124
 msgid "Welcome back!"
