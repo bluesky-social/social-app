@@ -1,6 +1,6 @@
+import ReactNativeBlobUtil from 'react-native-blob-util'
 import {deleteAsync} from 'expo-file-system'
 import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
-import RNFetchBlob from 'rn-fetch-blob'
 
 import {
   downloadAndResize,
@@ -32,7 +32,7 @@ describe('downloadAndResize', () => {
   })
 
   it('should return resized image for valid URI and options', async () => {
-    const mockedFetch = RNFetchBlob.fetch as jest.Mock
+    const mockedFetch = ReactNativeBlobUtil.fetch as jest.Mock
     mockedFetch.mockResolvedValueOnce({
       path: jest.fn().mockReturnValue('file://downloaded-image.jpg'),
       info: jest.fn().mockReturnValue({status: 200}),
@@ -50,11 +50,11 @@ describe('downloadAndResize', () => {
 
     const result = await downloadAndResize(opts)
     expect(result).toEqual(mockResizedImage)
-    expect(RNFetchBlob.config).toHaveBeenCalledWith({
+    expect(ReactNativeBlobUtil.config).toHaveBeenCalledWith({
       fileCache: true,
       appendExt: 'jpeg',
     })
-    expect(RNFetchBlob.fetch).toHaveBeenCalledWith(
+    expect(ReactNativeBlobUtil.fetch).toHaveBeenCalledWith(
       'GET',
       'https://example.com/image.jpg',
     )
@@ -87,7 +87,7 @@ describe('downloadAndResize', () => {
   })
 
   it('should return undefined for non-200 response', async () => {
-    const mockedFetch = RNFetchBlob.fetch as jest.Mock
+    const mockedFetch = ReactNativeBlobUtil.fetch as jest.Mock
     mockedFetch.mockResolvedValueOnce({
       path: jest.fn().mockReturnValue('file://downloaded-image'),
       info: jest.fn().mockReturnValue({status: 400}),

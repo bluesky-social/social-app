@@ -33,7 +33,7 @@ jest.mock('react-native-safe-area-context', () => {
   }
 })
 
-jest.mock('rn-fetch-blob', () => ({
+jest.mock('react-native-blob-util', () => ({
   config: jest.fn().mockReturnThis(),
   cancel: jest.fn(),
   fetch: jest.fn(),
