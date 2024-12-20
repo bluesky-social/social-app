@@ -135,7 +135,7 @@ export function ListHiddenScreen({
             ]}>
             <Trans>
               This list - created by{' '}
-              <Text style={[a.text_md, !isOwner && a.font_bold]}>
+              <Text emoji style={[a.text_md, !isOwner && a.font_bold]}>
                 {isOwner
                   ? _(msg`you`)
                   : sanitizeHandle(list.creator.handle, '@')}
