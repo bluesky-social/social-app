@@ -157,7 +157,14 @@ export function MessageInput({
         <Button
           onPress={e => {
             e.currentTarget.measure((_fx, _fy, _width, _height, px, py) => {
-              openEmojiPicker?.({top: py, left: px, right: px, bottom: py})
+              openEmojiPicker?.({
+                top: py,
+                left: px,
+                right: px,
+                bottom: py,
+                nextFocusRef:
+                  textAreaRef as unknown as React.MutableRefObject<HTMLElement>,
+              })
             })
           }}
           style={[

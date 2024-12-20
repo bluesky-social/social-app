@@ -31,6 +31,7 @@ export interface EmojiPickerPosition {
   left: number
   right: number
   bottom: number
+  nextFocusRef: React.MutableRefObject<HTMLElement> | null
 }
 
 export interface EmojiPickerState {
@@ -120,7 +121,17 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
 
   return (
     <Portal>
-      <FocusScope loop trapped onUnmountAutoFocus={e => e.preventDefault()}>
+      <FocusScope
+        loop
+        trapped
+        onUnmountAutoFocus={e => {
+          const nextFocusRef = state.pos.nextFocusRef
+          const node = nextFocusRef?.current
+          if (node) {
+            e.preventDefault()
+            node.focus()
+          }
+        }}>
         <Pressable
           accessible
           accessibilityLabel={_(msg`Close emoji picker`)}

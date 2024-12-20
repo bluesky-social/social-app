@@ -9,6 +9,7 @@ import {useModals} from '#/state/modals'
 import {ComposerOpts, useComposerState} from '#/state/shell/composer'
 import {
   EmojiPicker,
+  EmojiPickerPosition,
   EmojiPickerState,
 } from '#/view/com/composer/text-input/web/EmojiPicker.web'
 import {useBreakpoints, useTheme} from '#/alf'
@@ -42,16 +43,19 @@ function Inner({state}: {state: ComposerOpts}) {
   const {gtMobile} = useBreakpoints()
   const [pickerState, setPickerState] = React.useState<EmojiPickerState>({
     isOpen: false,
-    pos: {top: 0, left: 0, right: 0, bottom: 0},
+    pos: {top: 0, left: 0, right: 0, bottom: 0, nextFocusRef: null},
   })
 
-  const onOpenPicker = React.useCallback((pos: DOMRect | undefined) => {
-    if (!pos) return
-    setPickerState({
-      isOpen: true,
-      pos,
-    })
-  }, [])
+  const onOpenPicker = React.useCallback(
+    (pos: EmojiPickerPosition | undefined) => {
+      if (!pos) return
+      setPickerState({
+        isOpen: true,
+        pos,
+      })
+    },
+    [],
+  )
 
   const onClosePicker = React.useCallback(() => {
     setPickerState(prev => ({

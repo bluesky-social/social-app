@@ -101,7 +101,7 @@ export function MessagesList({
   const [emojiPickerState, setEmojiPickerState] =
     React.useState<EmojiPickerState>({
       isOpen: false,
-      pos: {top: 0, left: 0, right: 0, bottom: 0},
+      pos: {top: 0, left: 0, right: 0, bottom: 0, nextFocusRef: null},
     })
 
   // We need to keep track of when the scroll offset is at the bottom of the list to know when to scroll as new items
