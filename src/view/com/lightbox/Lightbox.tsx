@@ -20,11 +20,12 @@ export function Lightbox() {
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions({
     granularPermissions: ['photo'],
   })
+
   const saveImageToAlbumWithToasts = React.useCallback(
     async (uri: string) => {
       if (!permissionResponse || permissionResponse.granted === false) {
         Toast.show(
-          _(msg`Permission to access camera roll is required.`),
+          _(msg`Permission to access media library is required.`),
           'info',
         )
         if (permissionResponse?.canAskAgain) {
@@ -32,7 +33,7 @@ export function Lightbox() {
         } else {
           Toast.show(
             _(
-              msg`Permission to access camera roll was denied. Please enable it in your system settings.`,
+              msg`Permission to access media library was denied. Please enable it in your system settings.`,
             ),
             'xmark',
           )
@@ -41,7 +42,7 @@ export function Lightbox() {
       }
       try {
         await saveImageToMediaLibrary({uri})
-        Toast.show(_(msg`Saved to your camera roll`))
+        Toast.show(_(msg`Saved to your media library`))
       } catch (e: any) {
         Toast.show(_(msg`Failed to save image: ${String(e)}`), 'xmark')
       }
