@@ -40,18 +40,19 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
+import * as NavigationBar from 'expo-navigation-bar'
 import {StatusBar} from 'expo-status-bar'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 
 import {Dimensions} from '#/lib/media/types'
 import {colors, s} from '#/lib/styles'
-import {isIOS} from '#/platform/detection'
+import {isAndroid, isIOS} from '#/platform/detection'
 import {Lightbox} from '#/state/lightbox'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
-import {ios, useTheme} from '#/alf'
+import {useTheme} from '#/alf'
 import {setNavigationBar} from '#/alf/util/navigationBar'
 import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
 import {ImageSource, Transform} from './@types'
@@ -60,11 +61,12 @@ import ImageItem from './components/ImageItem/ImageItem'
 
 type Rect = {x: number; y: number; width: number; height: number}
 
+const EDGE_TO_EDGE = !(Platform.OS === 'android' && Platform.Version < 35)
+
 const PIXEL_RATIO = PixelRatio.get()
-const EDGES =
-  Platform.OS === 'android' && Platform.Version < 35
-    ? (['top', 'bottom', 'left', 'right'] satisfies Edge[])
-    : (['left', 'right'] satisfies Edge[]) // iOS or Android 15+, so no top/bottom safe area
+const EDGES = EDGE_TO_EDGE
+  ? (['left', 'right'] satisfies Edge[]) // iOS or Android 15+, so no top/bottom safe area
+  : (['top', 'bottom', 'left', 'right'] satisfies Edge[])
 
 const SLOW_SPRING: WithSpringConfig = {
   mass: isIOS ? 1.25 : 0.75,
@@ -298,10 +300,16 @@ function ImageView({
   const t = useTheme()
   useEffect(() => {
     setNavigationBar('lightbox', t)
+    if (isAndroid && EDGE_TO_EDGE && !showControls) {
+      NavigationBar.setVisibilityAsync('hidden')
+    }
     return () => {
       setNavigationBar('theme', t)
+      if (isAndroid && EDGE_TO_EDGE && !showControls) {
+        NavigationBar.setVisibilityAsync('visible')
+      }
     }
-  }, [t])
+  }, [t, showControls])
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
@@ -310,9 +318,7 @@ function ImageView({
         style="light"
         hideTransitionAnimation="slide"
         backgroundColor="black"
-        // hiding causes layout shifts on android,
-        // so avoid until we add edge-to-edge mode
-        hidden={ios(isScaled || !showControls)}
+        hidden={EDGE_TO_EDGE ? isScaled || !showControls : false}
       />
       <Animated.View
         style={[styles.backdrop, backdropStyle]}
