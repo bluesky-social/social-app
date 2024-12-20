@@ -10,6 +10,7 @@ import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
 
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {atoms as a} from '#/alf'
+import {Portal} from '#/components/Portal'
 
 const HEIGHT_OFFSET = 40
 const WIDTH_OFFSET = 100
@@ -47,9 +48,14 @@ interface IProps {
    * the target element.
    */
   pinToTop?: boolean
+  /**
+   * If `true`, renders the picker in a portal at the document root. Useful if
+   * the positioning is getting wacky due to other wrapping elements.
+   */
+  portal?: boolean
 }
 
-export function EmojiPicker({state, close, pinToTop}: IProps) {
+export function EmojiPicker({state, close, pinToTop, portal}: IProps) {
   const {height, width} = useWindowDimensions()
 
   const isShiftDown = React.useRef(false)
@@ -124,7 +130,7 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
     close()
   }
 
-  return (
+  const picker = (
     <TouchableWithoutFeedback
       accessibilityRole="button"
       onPress={onPressBackdrop}
@@ -160,4 +166,5 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
       </View>
     </TouchableWithoutFeedback>
   )
+  return portal ? <Portal>{picker}</Portal> : picker
 }

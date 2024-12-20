@@ -38,7 +38,6 @@ import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
-import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
 
@@ -449,15 +448,12 @@ export function MessagesList({
       </Animated.View>
 
       {isWeb && (
-        <Portal>
-          <EmojiPicker
-            pinToTop
-            state={emojiPickerState}
-            close={() =>
-              setEmojiPickerState(prev => ({...prev, isOpen: false}))
-            }
-          />
-        </Portal>
+        <EmojiPicker
+          portal
+          pinToTop
+          state={emojiPickerState}
+          close={() => setEmojiPickerState(prev => ({...prev, isOpen: false}))}
+        />
       )}
 
       {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
