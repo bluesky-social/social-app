@@ -1,16 +1,16 @@
 # 
 # Translators:
 # arestifop, 2024
-# Michele Locati <michele@locati.it>, 2024
 # Francisco, 2024
+# Michele Locati <michele@locati.it>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-19 00:46+0000\n"
-"PO-Revision-Date: 2024-12-20 12:57+0000\n"
-"Last-Translator: Francisco, 2024\n"
+"PO-Revision-Date: 2024-12-20 21:16+0000\n"
+"Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -543,7 +543,7 @@ msgstr "Aggiungi feed"
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:246
 msgid "Add to Lists"
-msgstr "Aggiungi alle Liste"
+msgstr "Aggiungi alle liste"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
 msgid "Add to my feeds"
@@ -660,7 +660,7 @@ msgstr "Il testo alternativo verrà troncato. Limite: {0} caratteri."
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:93
 #: src/view/com/modals/VerifyEmail.tsx:132
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
-msgstr "È stata inviata un'e-mail a {0}. Include un codice di conferma che puoi inserire di seguito."
+msgstr "È stata inviata un'email a {0}. Include un codice di conferma che puoi inserire di seguito."
 
 #: src/view/com/modals/ChangeEmail.tsx:114
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
@@ -1323,7 +1323,7 @@ msgstr "Controlla la tua email per il codice di accesso e inseriscilo qui."
 
 #: src/view/com/modals/DeleteAccount.tsx:213
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr "Controlla la tua posta in arrivo, dovrebbe contenere un'e-mail con il codice di conferma da inserire di seguito:"
+msgstr "Controlla la tua posta in arrivo, dovrebbe contenere un'email con il codice di conferma da inserire di seguito:"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:372
 msgid "Choose domain verification method"
@@ -7077,7 +7077,7 @@ msgstr "Tempo rimanente: {time} secondi"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:99
 msgid "To disable the email 2FA method, please verify your access to the email address."
-msgstr "Per disabilitare il metodo 2FA via e-mail, verifica il tuo accesso all'indirizzo e-mail."
+msgstr "Per disabilitare il metodo 2FA via email, verifica il tuo accesso all'indirizzo email."
 
 #: src/components/dms/ReportConversationPrompt.tsx:19
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
