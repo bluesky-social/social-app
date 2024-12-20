@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-19 00:46+0000\n"
-"PO-Revision-Date: 2024-12-19 09:46+0000\n"
+"PO-Revision-Date: 2024-12-20 01:58+0000\n"
 "Last-Translator: Francisco, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -7319,7 +7319,7 @@ msgstr "Disiscriviti dalla lista"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:203
 msgid "Unsubscribe from this labeler"
-msgstr "Disiscriviti da questo/a labeler"
+msgstr "Disiscriviti da questo labeler"
 
 #: src/screens/List/ListHiddenScreen.tsx:86
 msgid "Unsubscribed from list"
@@ -7670,7 +7670,7 @@ msgstr "Vedi i tuoi account silenziati"
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
 msgid "Visit Site"
-msgstr "Visita il sito"
+msgstr "Vai al sito web"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:80
 msgid "Volume"
