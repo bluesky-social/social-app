@@ -1025,7 +1025,9 @@ function SearchHistory({
   const {_} = useLingui()
 
   return (
-    <Layout.Content>
+    <Layout.Content
+      keyboardDismissMode="interactive"
+      keyboardShouldPersistTaps="handled">
       <View style={styles.searchHistoryContainer}>
         {(searchHistory.length > 0 || selectedProfiles.length > 0) && (
           <Text style={[pal.text, styles.searchHistoryTitle]}>
