@@ -13,6 +13,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   LayoutChangeEvent,
+  Platform,
   ScrollView,
   StyleProp,
   StyleSheet,
@@ -263,8 +264,7 @@ export const ComposePost = ({
   const viewStyles = useMemo(
     () => ({
       paddingTop: isAndroid ? insets.top : 0,
-      paddingBottom:
-        isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
+      paddingBottom: isNative && !isKeyboardVisible ? insets.bottom : 0,
     }),
     [insets, isKeyboardVisible],
   )
@@ -610,6 +610,14 @@ export const ComposePost = ({
         testID="composePostView"
         behavior={isIOS ? 'padding' : 'height'}
         keyboardVerticalOffset={keyboardVerticalOffset}
+        // disable when android edge-to-edge
+        enabled={
+          !(
+            Platform.OS === 'android' &&
+            Platform.Version >= 35 &&
+            !isKeyboardVisible
+          )
+        }
         style={a.flex_1}>
         <View
           style={[a.flex_1, viewStyles]}
