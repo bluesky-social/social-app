@@ -294,15 +294,12 @@ export function QuoteX({onRemove}: {onRemove: () => void}) {
 export function LazyQuoteEmbed({uri}: {uri: string}) {
   const {data} = useResolveLinkQuery(uri)
   const moderationOpts = useModerationOpts()
-  if (
-    !data ||
-    data.type !== 'record' ||
-    data.kind !== 'post' ||
-    !moderationOpts
-  ) {
+  if (!data || data.type !== 'record' || data.kind !== 'post') {
     return null
   }
-  const moderation = moderatePost(data.view, moderationOpts)
+  const moderation = moderationOpts
+    ? moderatePost(data.view, moderationOpts)
+    : undefined
   return <QuoteEmbed quote={data.view} moderation={moderation} />
 }
 
