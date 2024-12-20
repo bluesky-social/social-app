@@ -449,7 +449,6 @@ export function MessagesList({
 
       {isWeb && (
         <EmojiPicker
-          portal
           pinToTop
           state={emojiPickerState}
           close={() => setEmojiPickerState(prev => ({...prev, isOpen: false}))}

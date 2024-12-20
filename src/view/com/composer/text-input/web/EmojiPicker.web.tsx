@@ -7,6 +7,7 @@ import {
 } from 'react-native'
 import Picker from '@emoji-mart/react'
 import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
+import {FocusScope} from '@radix-ui/react-focus-scope'
 
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {atoms as a} from '#/alf'
@@ -48,14 +49,9 @@ interface IProps {
    * the target element.
    */
   pinToTop?: boolean
-  /**
-   * If `true`, renders the picker in a portal at the document root. Useful if
-   * the positioning is getting wacky due to other wrapping elements.
-   */
-  portal?: boolean
 }
 
-export function EmojiPicker({state, close, pinToTop, portal}: IProps) {
+export function EmojiPicker({state, close, pinToTop}: IProps) {
   const {height, width} = useWindowDimensions()
 
   const isShiftDown = React.useRef(false)
@@ -130,41 +126,44 @@ export function EmojiPicker({state, close, pinToTop, portal}: IProps) {
     close()
   }
 
-  const picker = (
-    <TouchableWithoutFeedback
-      accessibilityRole="button"
-      onPress={onPressBackdrop}
-      accessibilityViewIsModal>
-      <View
-        style={[
-          a.fixed,
-          a.w_full,
-          a.h_full,
-          a.align_center,
-          {
-            top: 0,
-            left: 0,
-            right: 0,
-          },
-        ]}>
-        {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
-        <TouchableWithoutFeedback onPress={e => e.stopPropagation()}>
-          <View style={[{position: 'absolute'}, position]}>
-            <DismissableLayer
-              onFocusOutside={evt => evt.preventDefault()}
-              onDismiss={close}>
-              <Picker
-                data={async () => {
-                  return (await import('./EmojiPickerData.json')).default
-                }}
-                onEmojiSelect={onInsert}
-                autoFocus={true}
-              />
-            </DismissableLayer>
+  return (
+    <Portal>
+      <FocusScope loop asChild trapped>
+        <TouchableWithoutFeedback
+          accessibilityRole="button"
+          onPress={onPressBackdrop}
+          accessibilityViewIsModal>
+          <View
+            style={[
+              a.fixed,
+              a.w_full,
+              a.h_full,
+              a.align_center,
+              {
+                top: 0,
+                left: 0,
+                right: 0,
+              },
+            ]}>
+            {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
+            <TouchableWithoutFeedback onPress={e => e.stopPropagation()}>
+              <View style={[{position: 'absolute'}, position]}>
+                <DismissableLayer
+                  onFocusOutside={evt => evt.preventDefault()}
+                  onDismiss={close}>
+                  <Picker
+                    data={async () => {
+                      return (await import('./EmojiPickerData.json')).default
+                    }}
+                    onEmojiSelect={onInsert}
+                    autoFocus={true}
+                  />
+                </DismissableLayer>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
-      </View>
-    </TouchableWithoutFeedback>
+      </FocusScope>
+    </Portal>
   )
-  return portal ? <Portal>{picker}</Portal> : picker
 }
