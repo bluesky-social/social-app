@@ -120,7 +120,7 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
 
   return (
     <Portal>
-      <FocusScope loop trapped>
+      <FocusScope loop trapped onUnmountAutoFocus={e => e.preventDefault()}>
         <Pressable
           accessible
           accessibilityLabel={_(msg`Close emoji picker`)}
