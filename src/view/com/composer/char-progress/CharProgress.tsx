@@ -1,3 +1,4 @@
+import React, {memo} from 'react'
 import {StyleProp, TextStyle, View, ViewStyle} from 'react-native'
 // @ts-ignore no type definition -prf
 import ProgressCircle from 'react-native-progress/Circle'
@@ -9,7 +10,7 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {atoms as a} from '#/alf'
 import {Text} from '../../util/text/Text'
 
-export function CharProgress({
+export const CharProgress = () => memo(({
   count,
   max,
   style,
@@ -21,7 +22,7 @@ export function CharProgress({
   style?: StyleProp<ViewStyle>
   textStyle?: StyleProp<TextStyle>
   size?: number
-}) {
+}) => {
   const maxLength = max || MAX_GRAPHEME_LENGTH
   const pal = usePalette('default')
   const textColor = count > maxLength ? '#e60000' : pal.colors.text
@@ -57,4 +58,5 @@ export function CharProgress({
       )}
     </View>
   )
-}
+})
+
