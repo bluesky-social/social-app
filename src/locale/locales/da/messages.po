@@ -337,7 +337,7 @@ msgstr "<0>{date}</0> kl. {time}"
 
 #: src/screens/Settings/NotificationSettings.tsx:85
 msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
-msgstr "<0>Eksperimentelt:</0> Når denne indstilling er aktiveret, vil du kun modtager notifikationer om svar og citater fra brugere, du følger. Vi arbejder på at tilføje flere indstillingsmuligheder."
+msgstr "<0>Eksperimentelt:</0> Når denne indstilling er aktiveret, vil du kun modtage notifikationer om svar og citater fra brugere, du følger. Vi arbejder på at tilføje flere indstillingsmuligheder."
 
 #: src/screens/StarterPack/Wizard/index.tsx:440
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
@@ -4929,7 +4929,7 @@ msgstr "Post"
 #: src/view/com/post-thread/PostThread.tsx:536
 msgctxt "description"
 msgid "Post"
-msgstr "Publicer"
+msgstr "Post"
 
 #: src/view/com/composer/Composer.tsx:935
 msgctxt "action"
