@@ -1,16 +1,16 @@
 # 
 # Translators:
 # arestifop, 2024
-# Francisco, 2024
 # Michele Locati <michele@locati.it>, 2024
+# Francisco, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-19 00:46+0000\n"
-"PO-Revision-Date: 2024-12-20 07:44+0000\n"
-"Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
+"PO-Revision-Date: 2024-12-20 12:57+0000\n"
+"Last-Translator: Francisco, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -1028,7 +1028,7 @@ msgstr "Post bloccato."
 
 #: src/screens/Profile/Sections/Labels.tsx:174
 msgid "Blocking does not prevent this labeler from placing labels on your account."
-msgstr "Il blocco non impedisce all'etichettatore di inserire etichette nel tuo account."
+msgstr "Il blocco non impedisce all'etichettatore di inserire etichette sul tuo account."
 
 #: src/view/screens/ProfileList.tsx:756
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
@@ -2760,7 +2760,7 @@ msgstr "Feed"
 
 #: src/view/screens/SavedFeeds.tsx:198
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
-msgstr "I feed sono algoritmi personalizzati che gli utenti creano con un minimo di competenza di programmazione. Vedi <0/> per ulteriori informazioni."
+msgstr "I feed sono algoritmi personalizzati che gli utenti possono creare con una conoscenza base di programmazione. <0/> per ulteriori informazioni."
 
 #: src/components/FeedCard.tsx:272
 #: src/view/screens/SavedFeeds.tsx:82
