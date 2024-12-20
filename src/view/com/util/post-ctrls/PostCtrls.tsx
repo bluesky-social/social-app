@@ -348,7 +348,7 @@ let PostCtrls = ({
               hitSlop={POST_CTRL_HITSLOP}>
               <Link
                 style={[defaultCtrlColor, {pointerEvents: 'none'}]}
-                width={20}
+                width={21}
               />
             </Pressable>
           </View>
