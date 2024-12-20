@@ -165,7 +165,9 @@ export function MessagesScreen({navigation, route}: Props) {
                       color="secondary"
                       variant="solid"
                       onPress={() => refetch()}>
-                      <ButtonText>Retry</ButtonText>
+                      <ButtonText>
+                        <Trans>Retry</Trans>
+                      </ButtonText>
                       <ButtonIcon icon={Retry} position="right" />
                     </Button>
                   </View>
