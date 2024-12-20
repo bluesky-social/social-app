@@ -205,7 +205,6 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesKm})
       await Promise.all([
         import('@formatjs/intl-datetimeformat/locale-data/km'),
-        import('@formatjs/intl-datetimeformat/locale-data/km'),
         import('@formatjs/intl-pluralrules/locale-data/km'),
         import('@formatjs/intl-numberformat/locale-data/km'),
       ])
