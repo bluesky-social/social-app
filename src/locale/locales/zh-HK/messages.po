@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-19 01:32\n"
+"PO-Revision-Date: 2024-12-20 06:49\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -517,7 +517,7 @@ msgstr "新開帖文"
 #: src/view/screens/ProfileList.tsx:899
 #: src/view/screens/ProfileList.tsx:917
 msgid "Add people"
-msgstr "新增用戶"
+msgstr "加人"
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
@@ -843,7 +843,7 @@ msgstr "使用預設嘅推薦動態源"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:835
 msgid "Archived from {0}"
-msgstr "喺 {0} 起被封存"
+msgstr "封存於 {0}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:804
 #: src/view/com/post-thread/PostThreadItem.tsx:843
@@ -2035,15 +2035,15 @@ msgstr "棄置"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:81
 msgid "Discard changes?"
-msgstr "係咪要放棄更改？"
+msgstr "係咪要棄置變更？"
 
 #: src/view/com/composer/Composer.tsx:671
 msgid "Discard draft?"
-msgstr "係咪要棄置草稿？"
+msgstr "係咪唔想再要份草稿？"
 
 #: src/view/com/composer/Composer.tsx:845
 msgid "Discard post?"
-msgstr "係咪唔想再發嘢啦？"
+msgstr "係咪唔想再發文？"
 
 #: src/screens/Settings/components/PwiOptOut.tsx:80
 #: src/screens/Settings/components/PwiOptOut.tsx:84
@@ -3272,7 +3272,7 @@ msgstr "Hosting 供應商"
 #: src/view/com/post-thread/PostThread.tsx:652
 #: src/view/com/post-thread/PostThread.tsx:657
 msgid "Hot replies first"
-msgstr "顯示最熱門嘅回覆先"
+msgstr "熱門回覆優先"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:41
 msgid "How should we open this link?"
@@ -3668,12 +3668,12 @@ msgstr "讚好"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:217
 msgid "Likes on this post"
-msgstr "讚好呢篇帖文"
+msgstr "呢條帖文嘅讚數"
 
 #: src/view/com/post-thread/PostThread.tsx:626
 #: src/view/com/post-thread/PostThread.tsx:631
 msgid "Linear"
-msgstr "線性視圖"
+msgstr "直列模式"
 
 #: src/Navigation.tsx:198
 msgid "List"
@@ -3985,7 +3985,7 @@ msgstr "顯示最多人讚嘅回覆先"
 #: src/view/com/post-thread/PostThread.tsx:682
 #: src/view/com/post-thread/PostThread.tsx:687
 msgid "Most-liked replies first"
-msgstr "顯示最多人讚嘅回覆先"
+msgstr "最多人讚嘅回覆優先"
 
 #: src/screens/Onboarding/state.ts:105
 msgid "Movies"
@@ -4232,7 +4232,7 @@ msgstr "新用戶清單"
 #: src/view/com/post-thread/PostThread.tsx:672
 #: src/view/com/post-thread/PostThread.tsx:677
 msgid "Newest replies first"
-msgstr "顯示最新嘅回覆先"
+msgstr "最新回覆優先"
 
 #: src/screens/Onboarding/index.tsx:20
 #: src/screens/Onboarding/state.ts:108
@@ -4484,7 +4484,7 @@ msgstr "好嘅"
 #: src/view/com/post-thread/PostThread.tsx:662
 #: src/view/com/post-thread/PostThread.tsx:667
 msgid "Oldest replies first"
-msgstr "顯示最早嘅回覆先"
+msgstr "最舊嘅回覆優先"
 
 #: src/components/StarterPack/QrCode.tsx:76
 msgid "on<0><1/><2><3/></2></0>"
@@ -4930,7 +4930,7 @@ msgstr "色情"
 #: src/view/com/composer/Composer.tsx:937
 msgctxt "action"
 msgid "Post"
-msgstr "發嘢"
+msgstr "發文"
 
 #: src/view/com/post-thread/PostThread.tsx:536
 msgctxt "description"
@@ -5117,11 +5117,11 @@ msgstr "公開"
 
 #: src/view/com/lists/MyLists.tsx:117
 msgid "Public, sharable lists of users to mute or block in bulk."
-msgstr "公開兼且可以共享嘅用戶列表，可以一次過靜音抑或封鎖。"
+msgstr "公開、可分享嘅清單，可以用嚟批量靜音或封鎖帳號。"
 
 #: src/view/com/lists/MyLists.tsx:112
 msgid "Public, sharable lists which can be used to drive feeds."
-msgstr "公開兼且可以共享嘅列表，可以為動態源提供支援。"
+msgstr "公開、可分享嘅清單，可以當動態源噉用。"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:128
 msgid "QR code copied to your clipboard!"
@@ -6182,7 +6182,7 @@ msgstr "顯示回覆"
 
 #: src/view/com/post-thread/PostThread.tsx:622
 msgid "Show replies as"
-msgstr "顯示回覆為"
+msgstr "回覆顯示成"
 
 #: src/screens/Settings/ThreadPreferences.tsx:151
 msgid "Show replies as threaded"
@@ -6388,12 +6388,12 @@ msgstr "開始同人傾偈"
 #: src/view/screens/ProfileList.tsx:814
 #: src/view/screens/ProfileList.tsx:933
 msgid "Start adding people"
-msgstr "開始新增用戶"
+msgstr "搵人加入"
 
 #: src/view/screens/ProfileList.tsx:821
 #: src/view/screens/ProfileList.tsx:940
 msgid "Start adding people!"
-msgstr "開始新增用戶！"
+msgstr "搵人加入！"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:353
 msgid "Start chat with {displayName}"
@@ -6559,7 +6559,7 @@ msgstr "攪掂晒 - 跟咗 10 個人！"
 
 #: src/state/shell/progress-guide.tsx:221
 msgid "Task complete - 10 likes!"
-msgstr "攪掂晒 - 10 個讚！"
+msgstr "攪掂晒 - 讚咗 10 條帖文！"
 
 #: src/components/ProgressGuide/List.tsx:64
 msgid "Teach our algorithm what you like"
@@ -6911,7 +6911,7 @@ msgstr "呢個動態源入邊得個吉！你可能需要跟更多用戶抑或檢
 #: src/screens/Profile/ProfileFeed/index.tsx:170
 #: src/view/screens/ProfileList.tsx:812
 msgid "This feed is empty."
-msgstr "呢度得個吉。"
+msgstr "呢個動態源得個吉。"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:99
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
@@ -7060,7 +7060,7 @@ msgstr "討論串偏好設定"
 #: src/view/com/post-thread/PostThread.tsx:636
 #: src/view/com/post-thread/PostThread.tsx:641
 msgid "Threaded"
-msgstr "樹狀視圖"
+msgstr "樹狀模式"
 
 #: src/screens/Settings/ThreadPreferences.tsx:142
 msgid "Threaded mode"
