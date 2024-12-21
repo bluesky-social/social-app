@@ -14,7 +14,7 @@ type LocalWithLanguageCode = Locale & {
  * {@link https://github.com/bluesky-social/social-app/pull/4461}
  * {@link https://xml.coverpages.org/iso639a.html}
  *
- * Convert Chinese language tags for Native.
+ * Convert Chinese language tags for Web (RFC 1766 to RFC 4646).
  *
  * {@link https://datatracker.ietf.org/doc/html/rfc5646#appendix-A}
  * {@link https://developer.apple.com/documentation/packagedescription/languagetag}
@@ -41,17 +41,19 @@ export function getLocales() {
     }
 
     if (typeof locale.languageTag === 'string') {
-      if (locale.languageTag.startsWith('zh-Hans')) {
-        // Simplified Chinese to zh-CN
-        locale.languageTag = 'zh-CN'
+      if (
+        locale.languageTag === 'zh-CN' ||
+        locale.languageTag.startsWith('zh-Hans')
+      ) {
+        // Simplified Chinese to zh-Hans-CN
+        locale.languageTag = 'zh-Hans-CN'
       }
-      if (locale.languageTag.startsWith('zh-Hant')) {
-        // Traditional Chinese to zh-TW
-        locale.languageTag = 'zh-TW'
-      }
-      if (locale.languageTag.startsWith('yue')) {
-        // Cantonese (Yue) to zh-HK
-        locale.languageTag = 'zh-HK'
+      if (
+        locale.languageTag === 'zh-TW' ||
+        locale.languageTag.startsWith('zh-Hant')
+      ) {
+        // Traditional Chinese to zh-Hant-TW
+        locale.languageTag = 'zh-Hant-TW'
       }
     }
 
