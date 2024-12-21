@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-19 09:30+0900\n"
+"PO-Revision-Date: 2024-12-21 09:24+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1380,14 +1380,6 @@ msgstr "検索クエリをクリア"
 msgid "click here"
 msgstr "こちらをクリック"
 
-#: src/view/com/modals/DeleteAccount.tsx:208
-#~ msgid "Click here for more information on deactivating your account"
-#~ msgstr "アカウントの無効化について詳しくはこちらをクリック"
-
-#: src/view/com/modals/DeleteAccount.tsx:217
-#~ msgid "Click here for more information."
-#~ msgstr "詳しい情報についてはここをクリック。"
-
 #: src/components/TagMenu/index.web.tsx:152
 msgid "Click here to open tag menu for {tag}"
 msgstr "{tag}のタグメニューをクリックして表示"
@@ -1442,6 +1434,11 @@ msgstr "一番下の引き出しを閉じる"
 #: src/components/dialogs/GifSelect.tsx:275
 msgid "Close dialog"
 msgstr "ダイアログを閉じる"
+
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
+msgid "Close emoji picker"
+msgstr "絵文字選択を閉じる"
 
 #: src/components/dialogs/GifSelect.tsx:169
 msgid "Close GIF dialog"
@@ -6534,6 +6531,11 @@ msgstr "タグのみ"
 #: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Tap to change app icon"
 msgstr "タップしてアプリアイコンを変更"
+
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
+msgid "Tap to close the emoji picker"
+msgstr "タップして絵文字選択を閉じる"
 
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"
