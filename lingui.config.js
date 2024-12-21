@@ -29,9 +29,9 @@ module.exports = {
     'tr',
     'uk',
     'vi',
-    'zh-CN',
-    'zh-HK',
-    'zh-TW',
+    'yue',
+    'zh-Hans',
+    'zh-Hant',
   ],
   catalogs: [
     {
