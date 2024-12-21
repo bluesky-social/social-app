@@ -166,11 +166,7 @@ let RepostButtonDialogInner = ({
             size="large"
             variant="ghost"
             color="primary">
-            {isReposted ? (
-              <RepostBold size="lg" fill={t.palette.primary_500} />
-            ) : (
-              <Repost size="lg" fill={t.palette.primary_500} />
-            )}
+            <Repost size="lg" fill={t.palette.primary_500} />
             <Text style={[a.font_bold, a.text_xl]}>
               {isReposted ? (
                 <Trans>Remove repost</Trans>
