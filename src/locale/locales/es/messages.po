@@ -549,7 +549,7 @@ msgstr "Opciones de cuenta"
 
 #: src/screens/Settings/Settings.tsx:464
 msgid "Account removed from quick access"
-msgstr "Cuenta elimada de acceso rápido"
+msgstr "Cuenta eliminada de acceso rápido"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:137
 #: src/view/com/profile/ProfileMenu.tsx:122
@@ -2620,7 +2620,7 @@ msgstr "Descargar archivo CAR"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:342
 msgid "Drop to add images"
-msgstr "Arrastra para agregar imagenes"
+msgstr "Arrastra para agregar imágenes"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:120
 #~ msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
@@ -2767,7 +2767,7 @@ msgstr "Editar tu nombre para mostrar"
 
 #: src/view/com/modals/EditProfile.tsx:206
 msgid "Edit your profile description"
-msgstr "Edita tu descripcion de perfil"
+msgstr "Edita tu descripción de perfil"
 
 #: src/Navigation.tsx:423
 msgid "Edit your starter pack"
@@ -5608,7 +5608,7 @@ msgstr "Abre el selector de video"
 
 #: src/view/com/util/forms/DropdownButton.tsx:296
 msgid "Option {0} of {numItems}"
-msgstr "Opcion {0} de {numItems}"
+msgstr "Opción {0} de {numItems}"
 
 #: src/components/dms/ReportDialog.tsx:178
 #: src/components/ReportDialog/SubmitView.tsx:167
@@ -9635,7 +9635,7 @@ msgstr "Has muteado a esta cuenta"
 
 #: src/screens/Messages/ChatList.tsx:188
 msgid "You have no conversations yet. Start one!"
-msgstr "No tienes ninguna conversacion. ¡Comienza una!"
+msgstr "No tienes ninguna conversación. ¡Comienza una!"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:143
 msgid "You have no feeds."
