@@ -530,7 +530,14 @@ export const ComposePost = ({
   }
 
   const onEmojiButtonPress = useCallback(() => {
-    openEmojiPicker?.(textInput.current?.getCursorPosition())
+    const rect = textInput.current?.getCursorPosition()
+    if (rect) {
+      openEmojiPicker?.({
+        ...rect,
+        nextFocusRef:
+          textInput as unknown as React.MutableRefObject<HTMLElement>,
+      })
+    }
   }, [openEmojiPicker])
 
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()

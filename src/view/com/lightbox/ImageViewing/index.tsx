@@ -62,9 +62,9 @@ type Rect = {x: number; y: number; width: number; height: number}
 
 const PIXEL_RATIO = PixelRatio.get()
 const EDGES =
-  Platform.OS === 'android'
+  Platform.OS === 'android' && Platform.Version < 35
     ? (['top', 'bottom', 'left', 'right'] satisfies Edge[])
-    : (['left', 'right'] satisfies Edge[]) // iOS, so no top/bottom safe area
+    : (['left', 'right'] satisfies Edge[]) // iOS or Android 15+, so no top/bottom safe area
 
 const SLOW_SPRING: WithSpringConfig = {
   mass: isIOS ? 1.25 : 0.75,
