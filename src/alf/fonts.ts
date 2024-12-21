@@ -80,7 +80,9 @@ export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
      * Disable contextual alternates in Inter
      * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant}
      */
-    style.fontVariant = (style.fontVariant || []).concat('no-contextual')
+    style.fontVariant = (style.fontVariant || [])
+      .concat('no-contextual')
+      .concat('stylistic-two')
   } else {
     // fallback families only supported on web
     if (isWeb) {
