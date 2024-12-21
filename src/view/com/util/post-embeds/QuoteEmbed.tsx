@@ -26,7 +26,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {HITSLOP_20} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {InfoCircleIcon} from '#/lib/icons'
-import {moderatePost_wrapped} from '#/lib/moderatePost_wrapped'
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {makeProfileLink} from '#/lib/routes/links'
 import {s} from '#/lib/styles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -134,9 +134,7 @@ function QuoteEmbedModerated({
     [viewRecord],
   )
   const moderation = React.useMemo(() => {
-    return moderationOpts
-      ? moderatePost_wrapped(postView, moderationOpts)
-      : undefined
+    return moderationOpts ? moderatePost(postView, moderationOpts) : undefined
   }, [postView, moderationOpts])
 
   return (
@@ -295,10 +293,14 @@ export function QuoteX({onRemove}: {onRemove: () => void}) {
 
 export function LazyQuoteEmbed({uri}: {uri: string}) {
   const {data} = useResolveLinkQuery(uri)
+  const moderationOpts = useModerationOpts()
   if (!data || data.type !== 'record' || data.kind !== 'post') {
     return null
   }
-  return <QuoteEmbed quote={data.view} />
+  const moderation = moderationOpts
+    ? moderatePost(data.view, moderationOpts)
+    : undefined
+  return <QuoteEmbed quote={data.view} moderation={moderation} />
 }
 
 function viewRecordToPostView(
