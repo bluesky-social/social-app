@@ -8,13 +8,13 @@ type SetStateCb = (
 ) => persisted.Schema['languagePrefs']
 type StateContext = persisted.Schema['languagePrefs']
 type ApiContext = {
-  setPrimaryLanguage: (code2: string) => void
+  setPrimaryLanguage: (code: string) => void
   setPostLanguage: (commaSeparatedLangCodes: string) => void
-  setContentLanguage: (code2: string) => void
-  toggleContentLanguage: (code2: string) => void
-  togglePostLanguage: (code2: string) => void
+  setContentLanguage: (code: string) => void
+  toggleContentLanguage: (code: string) => void
+  togglePostLanguage: (code: string) => void
   savePostLanguageToHistory: () => void
-  setAppLanguage: (code2: AppLanguage) => void
+  setAppLanguage: (code: AppLanguage) => void
 }
 
 const stateContext = React.createContext<StateContext>(
@@ -50,40 +50,40 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const api = React.useMemo(
     () => ({
-      setPrimaryLanguage(code2: string) {
-        setStateWrapped(s => ({...s, primaryLanguage: code2}))
+      setPrimaryLanguage(code: string) {
+        setStateWrapped(s => ({...s, primaryLanguage: code}))
       },
       setPostLanguage(commaSeparatedLangCodes: string) {
         setStateWrapped(s => ({...s, postLanguage: commaSeparatedLangCodes}))
       },
-      setContentLanguage(code2: string) {
-        setStateWrapped(s => ({...s, contentLanguages: [code2]}))
+      setContentLanguage(code: string) {
+        setStateWrapped(s => ({...s, contentLanguages: [code]}))
       },
-      toggleContentLanguage(code2: string) {
+      toggleContentLanguage(code: string) {
         setStateWrapped(s => {
-          const exists = s.contentLanguages.includes(code2)
+          const exists = s.contentLanguages.includes(code)
           const next = exists
-            ? s.contentLanguages.filter(lang => lang !== code2)
-            : s.contentLanguages.concat(code2)
+            ? s.contentLanguages.filter(lang => lang !== code)
+            : s.contentLanguages.concat(code)
           return {
             ...s,
             contentLanguages: next,
           }
         })
       },
-      togglePostLanguage(code2: string) {
+      togglePostLanguage(code: string) {
         setStateWrapped(s => {
-          const exists = hasPostLanguage(state.postLanguage, code2)
+          const exists = hasPostLanguage(state.postLanguage, code)
           let next = s.postLanguage
 
           if (exists) {
             next = toPostLanguages(s.postLanguage)
-              .filter(lang => lang !== code2)
+              .filter(lang => lang !== code)
               .join(',')
           } else {
             // sort alphabetically for deterministic comparison in context menu
             next = toPostLanguages(s.postLanguage)
-              .concat([code2])
+              .concat([code])
               .sort((a, b) => a.localeCompare(b))
               .join(',')
           }
@@ -113,8 +113,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             .slice(0, 6),
         }))
       },
-      setAppLanguage(code2: AppLanguage) {
-        setStateWrapped(s => ({...s, appLanguage: code2}))
+      setAppLanguage(code: AppLanguage) {
+        setStateWrapped(s => ({...s, appLanguage: code}))
       },
     }),
     [state, setStateWrapped],
@@ -154,6 +154,6 @@ export function toPostLanguages(postLanguage: string): string[] {
   return postLanguage.split(',').filter(Boolean)
 }
 
-export function hasPostLanguage(postLanguage: string, code2: string): boolean {
-  return toPostLanguages(postLanguage).includes(code2)
+export function hasPostLanguage(postLanguage: string, code: string): boolean {
+  return toPostLanguages(postLanguage).includes(code)
 }
