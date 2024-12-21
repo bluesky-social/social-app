@@ -106,6 +106,7 @@ export function StarterPack(props: {
             color: 'white',
             padding: 60,
             fontSize: 40,
+            fontWeight: '700',
           }}>
           JOIN THE CONVERSATION
         </div>
@@ -134,6 +135,7 @@ export function StarterPack(props: {
             fontSize: isLongTitle ? 55 : 65,
             display: 'flex',
             textAlign: 'center',
+            fontWeight: '700',
           }}>
           {record?.name || 'Starter Pack'}
         </div>
