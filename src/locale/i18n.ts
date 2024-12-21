@@ -40,8 +40,8 @@ import {messages as messagesTr} from '#/locale/locales/tr/messages'
 import {messages as messagesUk} from '#/locale/locales/uk/messages'
 import {messages as messagesVi} from '#/locale/locales/vi/messages'
 import {messages as messagesYue} from '#/locale/locales/yue/messages'
-import {messages as messagesZh_Hans} from '#/locale/locales/zh-Hans/messages'
-import {messages as messagesZh_Hant} from '#/locale/locales/zh-Hant/messages'
+import {messages as messagesZh_Hans_CN} from '#/locale/locales/zh-Hans-CN/messages'
+import {messages as messagesZh_Hant_TW} from '#/locale/locales/zh-Hant-TW/messages'
 import {useLanguagePrefs} from '#/state/preferences'
 
 /**
@@ -269,16 +269,16 @@ export async function dynamicActivate(locale: AppLanguage) {
       ])
       break
     }
-    case AppLanguage.zh_Hans: {
-      i18n.loadAndActivate({locale, messages: messagesZh_Hans})
+    case AppLanguage.zh_Hans_CN: {
+      i18n.loadAndActivate({locale, messages: messagesZh_Hans_CN})
       await Promise.all([
         import('@formatjs/intl-pluralrules/locale-data/zh'),
         import('@formatjs/intl-numberformat/locale-data/zh'),
       ])
       break
     }
-    case AppLanguage.zh_Hant: {
-      i18n.loadAndActivate({locale, messages: messagesZh_Hant})
+    case AppLanguage.zh_Hant_TW: {
+      i18n.loadAndActivate({locale, messages: messagesZh_Hant_TW})
       await Promise.all([
         import('@formatjs/intl-pluralrules/locale-data/zh'),
         import('@formatjs/intl-numberformat/locale-data/zh'),

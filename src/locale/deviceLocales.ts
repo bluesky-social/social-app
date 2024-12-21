@@ -46,14 +46,14 @@ export function getLocales() {
         locale.languageTag.startsWith('zh-Hans')
       ) {
         // Simplified Chinese to zh-Hans
-        locale.languageTag = 'zh-Hans'
+        locale.languageTag = 'zh-Hans-CN'
       }
       if (
         locale.languageTag === 'zh-TW' ||
         locale.languageTag.startsWith('zh-Hant')
       ) {
         // Traditional Chinese to zh-Hant
-        locale.languageTag = 'zh-Hant'
+        locale.languageTag = 'zh-Hant-TW'
       }
       if (locale.languageTag.startsWith('yue')) {
         // Cantonese (Yue) to yue

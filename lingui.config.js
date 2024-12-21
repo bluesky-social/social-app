@@ -30,8 +30,8 @@ module.exports = {
     'uk',
     'vi',
     'yue',
-    'zh-Hans',
-    'zh-Hant',
+    'zh-Hans-CN',
+    'zh-Hant-TW',
   ],
   catalogs: [
     {
