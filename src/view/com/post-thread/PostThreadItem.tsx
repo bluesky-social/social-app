@@ -567,7 +567,6 @@ let PostThreadItemLoaded = ({
                 timestamp={post.indexedAt}
                 postHref={postHref}
                 showAvatar={isThreadedChild}
-                avatarModeration={moderation.ui('avatar')}
                 avatarSize={24}
                 style={[a.pb_xs]}
               />

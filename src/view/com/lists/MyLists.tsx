@@ -8,7 +8,8 @@ import {
   ViewStyle,
 } from 'react-native'
 import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {cleanError} from '#/lib/strings/errors'
@@ -42,6 +43,7 @@ export function MyLists({
 }) {
   const pal = usePalette('default')
   const t = useTheme()
+  const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {data, isFetching, isFetched, isError, error, refetch} =
@@ -62,6 +64,23 @@ export function MyLists({
     }
     return items
   }, [isError, isEmpty, isFetched, isFetching, moderationOpts, data])
+
+  let emptyText
+  switch (filter) {
+    case 'curate':
+      emptyText = _(
+        msg`Public, sharable lists which can be used to drive feeds.`,
+      )
+      break
+    case 'mod':
+      emptyText = _(
+        msg`Public, sharable lists of users to mute or block in bulk.`,
+      )
+      break
+    default:
+      emptyText = _(msg`You have no lists.`)
+      break
+  }
 
   // events
   // =
@@ -108,16 +127,7 @@ export function MyLists({
                   maxWidth: 200,
                 },
               ]}>
-              {filter === 'curate' && (
-                <Trans>
-                  Public, sharable lists which can be used to drive feeds.
-                </Trans>
-              )}
-              {filter === 'mod' && (
-                <Trans>
-                  Public, sharable lists of users to mute or block in bulk.
-                </Trans>
-              )}
+              {emptyText}
             </Text>
           </View>
         )
@@ -149,7 +159,7 @@ export function MyLists({
         </View>
       )
     },
-    [t, renderItem, error, onRefresh, filter],
+    [t, renderItem, error, onRefresh, emptyText],
   )
 
   if (inline) {

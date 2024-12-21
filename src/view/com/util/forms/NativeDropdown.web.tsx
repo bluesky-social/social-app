@@ -70,6 +70,10 @@ export function NativeDropdown({
   const menuRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
+    if (!open) {
+      return
+    }
+
     function clickHandler(e: MouseEvent) {
       const t = e.target
 
