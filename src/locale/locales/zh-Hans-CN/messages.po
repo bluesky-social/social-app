@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-20 06:48\n"
+"PO-Revision-Date: 2024-12-21 06:54\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -488,7 +488,7 @@ msgstr "添加替代文本（可选）"
 msgid "Add another account"
 msgstr "添加其他账户"
 
-#: src/view/com/composer/Composer.tsx:721
+#: src/view/com/composer/Composer.tsx:728
 msgid "Add another post"
 msgstr "添加另一则帖文"
 
@@ -510,7 +510,7 @@ msgstr "在设置中添加隐藏字词"
 msgid "Add muted words and tags"
 msgstr "添加隐藏字词和标签"
 
-#: src/view/com/composer/Composer.tsx:1235
+#: src/view/com/composer/Composer.tsx:1242
 msgid "Add new post"
 msgstr "添加新的帖文"
 
@@ -841,12 +841,12 @@ msgstr "外观"
 msgid "Apply default recommended feeds"
 msgstr "使用默认推荐的动态源"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:835
+#: src/view/com/post-thread/PostThreadItem.tsx:834
 msgid "Archived from {0}"
 msgstr "自 {0} 起被归档"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:804
-#: src/view/com/post-thread/PostThreadItem.tsx:843
+#: src/view/com/post-thread/PostThreadItem.tsx:803
+#: src/view/com/post-thread/PostThreadItem.tsx:842
 msgid "Archived post"
 msgstr "已归档的帖文"
 
@@ -878,11 +878,11 @@ msgstr "你确定要从你的动态源中删除 {0} 吗？"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "你确定要将此从你的动态源中删除吗？"
 
-#: src/view/com/composer/Composer.tsx:672
+#: src/view/com/composer/Composer.tsx:679
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "你确定要舍弃这段草稿吗？"
 
-#: src/view/com/composer/Composer.tsx:846
+#: src/view/com/composer/Composer.tsx:853
 msgid "Are you sure you'd like to discard this post?"
 msgstr "你确定要放弃发布这则帖文吗？"
 
@@ -940,7 +940,7 @@ msgstr "返回"
 msgid "Before creating a list, you must first verify your email."
 msgstr "在创建列表之前，你必须首先验证你的电子邮箱。"
 
-#: src/view/com/composer/Composer.tsx:599
+#: src/view/com/composer/Composer.tsx:606
 msgid "Before creating a post, you must first verify your email."
 msgstr "在发布帖文之前，你必须首先验证你的电子邮箱。"
 
@@ -1046,7 +1046,7 @@ msgstr "博客"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:860
+#: src/view/com/post-thread/PostThreadItem.tsx:859
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky 无法确认帖文发布时间的真实性。"
 
@@ -1165,7 +1165,7 @@ msgstr "相机"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:76
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:83
 #: src/screens/Settings/Settings.tsx:260
-#: src/view/com/composer/Composer.tsx:909
+#: src/view/com/composer/Composer.tsx:916
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:268
@@ -1221,7 +1221,7 @@ msgstr "取消搜索"
 msgid "Cancels opening the linked website"
 msgstr "取消开启网站链接"
 
-#: src/state/shell/composer/index.tsx:82
+#: src/state/shell/composer/index.tsx:83
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:117
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:158
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:194
@@ -1440,11 +1440,16 @@ msgstr "关闭底部抽屉"
 msgid "Close dialog"
 msgstr "关闭对话框"
 
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
+msgid "Close emoji picker"
+msgstr "关闭表情符号选择器"
+
 #: src/components/dialogs/GifSelect.tsx:169
 msgid "Close GIF dialog"
 msgstr "关闭 GIF 对话框"
 
-#: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:35
+#: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:31
 msgid "Close image"
 msgstr "关闭图片"
 
@@ -1469,7 +1474,7 @@ msgstr "关闭底部导航栏"
 msgid "Closes password update alert"
 msgstr "关闭密码更新警告"
 
-#: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:36
+#: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:32
 msgid "Closes viewer for header image"
 msgstr "关闭标题图片查看器"
 
@@ -1512,7 +1517,7 @@ msgstr "完成验证"
 msgid "Compose new post"
 msgstr "撰写新帖文"
 
-#: src/view/com/composer/Composer.tsx:812
+#: src/view/com/composer/Composer.tsx:819
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "帖文字数最多为 {MAX_GRAPHEME_LENGTH} 个字符"
 
@@ -1520,7 +1525,7 @@ msgstr "帖文字数最多为 {MAX_GRAPHEME_LENGTH} 个字符"
 msgid "Compose reply"
 msgstr "撰写回复"
 
-#: src/view/com/composer/Composer.tsx:1628
+#: src/view/com/composer/Composer.tsx:1635
 msgid "Compressing video..."
 msgstr "正在压缩视频……"
 
@@ -1926,7 +1931,7 @@ msgstr "仅为我删除私信"
 msgid "Delete my account"
 msgstr "删除我的账户"
 
-#: src/view/com/composer/Composer.tsx:820
+#: src/view/com/composer/Composer.tsx:827
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:642
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:644
 msgid "Delete post"
@@ -2028,8 +2033,8 @@ msgid "Disabled"
 msgstr "停用"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:674
-#: src/view/com/composer/Composer.tsx:853
+#: src/view/com/composer/Composer.tsx:681
+#: src/view/com/composer/Composer.tsx:860
 msgid "Discard"
 msgstr "舍弃"
 
@@ -2037,11 +2042,11 @@ msgstr "舍弃"
 msgid "Discard changes?"
 msgstr "要放弃更改吗？"
 
-#: src/view/com/composer/Composer.tsx:671
+#: src/view/com/composer/Composer.tsx:678
 msgid "Discard draft?"
 msgstr "要舍弃草稿吗？"
 
-#: src/view/com/composer/Composer.tsx:845
+#: src/view/com/composer/Composer.tsx:852
 msgid "Discard post?"
 msgstr "要放弃发布吗？"
 
@@ -2067,7 +2072,7 @@ msgstr "探索新的动态源"
 msgid "Dismiss"
 msgstr "跳过"
 
-#: src/view/com/composer/Composer.tsx:1552
+#: src/view/com/composer/Composer.tsx:1559
 msgid "Dismiss error"
 msgstr "跳过错误"
 
@@ -2485,7 +2490,7 @@ msgstr "请在下方输入你新的电子邮箱。"
 msgid "Enter your username and password"
 msgstr "输入你的用户名和密码"
 
-#: src/view/com/composer/Composer.tsx:1637
+#: src/view/com/composer/Composer.tsx:1644
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "错误"
@@ -3453,7 +3458,7 @@ msgstr "这是正确的电子邮箱地址"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "现在只有你一个！通过上面的列表将更多人添加到你的新手包里面。"
 
-#: src/view/com/composer/Composer.tsx:1571
+#: src/view/com/composer/Composer.tsx:1578
 msgid "Job ID: {0}"
 msgstr "Job ID: {0}"
 
@@ -3886,7 +3891,7 @@ msgid "Message input field"
 msgstr "私信输入栏"
 
 #: src/screens/Messages/components/MessageInput.tsx:78
-#: src/screens/Messages/components/MessageInput.web.tsx:59
+#: src/screens/Messages/components/MessageInput.web.tsx:60
 msgid "Message is too long"
 msgstr "私信过长"
 
@@ -3963,7 +3968,7 @@ msgstr "内容审核工具"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "内容审核服务提供方已对该内容标记一般警告。"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:633
+#: src/view/com/post-thread/PostThreadItem.tsx:632
 msgid "More"
 msgstr "更多"
 
@@ -4475,7 +4480,7 @@ msgid "OK"
 msgstr "好的"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/view/com/post-thread/PostThreadItem.tsx:865
+#: src/view/com/post-thread/PostThreadItem.tsx:864
 msgid "Okay"
 msgstr "好的"
 
@@ -4565,9 +4570,9 @@ msgstr "开启对话选项"
 msgid "Open drawer menu"
 msgstr "开启抽屉菜单"
 
-#: src/screens/Messages/components/MessageInput.web.tsx:165
-#: src/view/com/composer/Composer.tsx:1221
-#: src/view/com/composer/Composer.tsx:1222
+#: src/screens/Messages/components/MessageInput.web.tsx:181
+#: src/view/com/composer/Composer.tsx:1228
+#: src/view/com/composer/Composer.tsx:1229
 msgid "Open emoji picker"
 msgstr "开启表情符号选择器"
 
@@ -4927,7 +4932,7 @@ msgstr "政治"
 msgid "Porn"
 msgstr "色情"
 
-#: src/view/com/composer/Composer.tsx:937
+#: src/view/com/composer/Composer.tsx:944
 msgctxt "action"
 msgid "Post"
 msgstr "发布"
@@ -4937,7 +4942,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "帖文"
 
-#: src/view/com/composer/Composer.tsx:935
+#: src/view/com/composer/Composer.tsx:942
 msgctxt "action"
 msgid "Post All"
 msgstr "全部发布"
@@ -5085,7 +5090,7 @@ msgstr "隐私与安全"
 msgid "Privacy Policy"
 msgstr "隐私政策"
 
-#: src/view/com/composer/Composer.tsx:1634
+#: src/view/com/composer/Composer.tsx:1641
 msgid "Processing video..."
 msgstr "正在处理视频……"
 
@@ -5115,11 +5120,11 @@ msgstr "已更新个人资料"
 msgid "Public"
 msgstr "公开"
 
-#: src/view/com/lists/MyLists.tsx:117
+#: src/view/com/lists/MyLists.tsx:77
 msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr "公开且可对外分享的列表，可用来批量隐藏或屏蔽账户。"
 
-#: src/view/com/lists/MyLists.tsx:112
+#: src/view/com/lists/MyLists.tsx:72
 msgid "Public, sharable lists which can be used to drive feeds."
 msgstr "公开且可对外分享的列表，也可作为动态源来使用。"
 
@@ -5207,7 +5212,7 @@ msgstr "浏览 Bluesky 使用条款"
 msgid "Reason:"
 msgstr "原因："
 
-#: src/view/screens/Search/Search.tsx:1032
+#: src/view/screens/Search/Search.tsx:1034
 msgid "Recent Searches"
 msgstr "最近的搜索记录"
 
@@ -5300,15 +5305,15 @@ msgstr "删除图片"
 msgid "Remove mute word from your list"
 msgstr "从你的隐藏字词列表中删除"
 
-#: src/view/screens/Search/Search.tsx:1076
+#: src/view/screens/Search/Search.tsx:1078
 msgid "Remove profile"
 msgstr "删除个人资料"
 
-#: src/view/screens/Search/Search.tsx:1078
+#: src/view/screens/Search/Search.tsx:1080
 msgid "Remove profile from search history"
 msgstr "从搜索历史中删除个人资料"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:287
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
 msgid "Remove quote"
 msgstr "删除引用"
 
@@ -5353,7 +5358,7 @@ msgstr "已从已保存的动态源中删除"
 msgid "Removed from your feeds"
 msgstr "已从你的动态源中删除"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:288
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
 msgstr "删除引用的帖文"
 
@@ -5374,7 +5379,7 @@ msgstr "已停用回复"
 msgid "Replies to this post are disabled."
 msgstr "这则帖文的回复已被停用。"
 
-#: src/view/com/composer/Composer.tsx:933
+#: src/view/com/composer/Composer.tsx:940
 msgctxt "action"
 msgid "Reply"
 msgstr "回复"
@@ -5960,7 +5965,7 @@ msgid "Send feedback"
 msgstr "提交反馈"
 
 #: src/screens/Messages/components/MessageInput.tsx:173
-#: src/screens/Messages/components/MessageInput.web.tsx:219
+#: src/screens/Messages/components/MessageInput.web.tsx:235
 msgid "Send message"
 msgstr "发送私信"
 
@@ -6138,7 +6143,7 @@ msgstr "显示徽章并从动态源中过滤"
 msgid "Show hidden replies"
 msgstr "显示已隐藏的回复"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:806
+#: src/view/com/post-thread/PostThreadItem.tsx:805
 msgid "Show information about when this post was created"
 msgstr "显示这则帖文的创建时间"
 
@@ -6151,7 +6156,7 @@ msgstr "显示更少类似内容"
 msgid "Show list anyway"
 msgstr "仍然显示列表"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:593
+#: src/view/com/post-thread/PostThreadItem.tsx:592
 #: src/view/com/post/Post.tsx:242
 #: src/view/com/posts/PostFeedItem.tsx:509
 msgid "Show More"
@@ -6531,6 +6536,11 @@ msgstr "仅限标签"
 #: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Tap to change app icon"
 msgstr "点按以更改应用图标"
+
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
+msgid "Tap to close the emoji picker"
+msgstr "点按以关闭表情符号选择器"
 
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"
@@ -6961,7 +6971,7 @@ msgstr "这个列表是空的。"
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "该内容审核提供服务不可用，请查看下方获取更多详情。如果问题持续存在，请联系我们。"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:846
+#: src/view/com/post-thread/PostThreadItem.tsx:845
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "这则帖文声称发布于 <0>{0}</0>，但首次出现在 Bluesky 的时间为 <1>{1}</1>。"
 
@@ -7114,8 +7124,8 @@ msgstr "话题"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:771
-#: src/view/com/post-thread/PostThreadItem.tsx:774
+#: src/view/com/post-thread/PostThreadItem.tsx:770
+#: src/view/com/post-thread/PostThreadItem.tsx:773
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:404
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:406
 msgid "Translate"
@@ -7324,7 +7334,7 @@ msgstr "取消订阅这个标记者"
 msgid "Unsubscribed from list"
 msgstr "已从列表中取消订阅"
 
-#: src/view/com/composer/Composer.tsx:759
+#: src/view/com/composer/Composer.tsx:766
 msgid "Unsupported video type"
 msgstr "不支持的视频格式"
 
@@ -7394,7 +7404,7 @@ msgstr "正在上传图片……"
 msgid "Uploading link thumbnail..."
 msgstr "正在上传链接缩略图……"
 
-#: src/view/com/composer/Composer.tsx:1631
+#: src/view/com/composer/Composer.tsx:1638
 msgid "Uploading video..."
 msgstr "正在上传视频……"
 
@@ -7564,7 +7574,7 @@ msgstr "无法找到视频。"
 msgid "Video settings"
 msgstr "视频设置"
 
-#: src/view/com/composer/Composer.tsx:1641
+#: src/view/com/composer/Composer.tsx:1648
 msgid "Video uploaded"
 msgstr "已上传视频"
 
@@ -7632,8 +7642,8 @@ msgstr "查看关于这个标记的详细信息"
 #: src/components/ProfileHoverCard/index.web.tsx:466
 #: src/view/com/posts/AviFollowButton.tsx:55
 #: src/view/com/posts/PostFeedErrorMessage.tsx:175
-#: src/view/com/util/PostMeta.tsx:79
-#: src/view/com/util/PostMeta.tsx:94
+#: src/view/com/util/PostMeta.tsx:78
+#: src/view/com/util/PostMeta.tsx:93
 msgid "View profile"
 msgstr "查看个人资料"
 
@@ -7797,7 +7807,7 @@ msgstr "大家都在讨论的焦点话题。"
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:722
+#: src/view/com/composer/Composer.tsx:729
 msgid "What's up?"
 msgstr "发生了什么新鲜事？"
 
@@ -7851,15 +7861,15 @@ msgid "Why should this user be reviewed?"
 msgstr "为什么应该审核这个用户？"
 
 #: src/screens/Messages/components/MessageInput.tsx:149
-#: src/screens/Messages/components/MessageInput.web.tsx:198
+#: src/screens/Messages/components/MessageInput.web.tsx:214
 msgid "Write a message"
 msgstr "撰写私信"
 
-#: src/view/com/composer/Composer.tsx:810
+#: src/view/com/composer/Composer.tsx:817
 msgid "Write post"
 msgstr "撰写帖文"
 
-#: src/view/com/composer/Composer.tsx:720
+#: src/view/com/composer/Composer.tsx:727
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:70
 msgid "Write your reply"
 msgstr "撰写你的回复"
@@ -8016,6 +8026,7 @@ msgstr "你还没有任何私信，试着与其他人展开对话吧！"
 msgid "You have no feeds."
 msgstr "你还没有建立任何动态源。"
 
+#: src/view/com/lists/MyLists.tsx:81
 #: src/view/com/lists/ProfileLists.tsx:139
 msgid "You have no lists."
 msgstr "你还没有建立任何列表。"
