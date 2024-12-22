@@ -25,6 +25,7 @@ import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
+import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {PeopleRemove2_Stroke2_Corner0_Rounded as UserMinus} from '#/components/icons/PeopleRemove2'
 import {
@@ -36,6 +37,7 @@ import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
+import {navigate} from '#/Navigation'
 
 let ProfileMenu = ({
   profile,
@@ -210,6 +212,24 @@ let ProfileMenu = ({
           {hasSession && (
             <>
               <Menu.Divider />
+
+              {/* This group is seperated so users can use this button on their own account. */}
+              <Menu.Group>
+                <Menu.Item
+                  testID="profileHeaderDropdownSearchPostsBtn"
+                  label={_(msg`Search Posts`)}
+                  onPress={() => {
+                    navigate('Search', {
+                      q: `from:${profile.handle}`,
+                    })
+                  }}>
+                  <Menu.ItemText>
+                    <Trans>Search Posts</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={MagnifyingGlass} />
+                </Menu.Item>
+              </Menu.Group>
+
               <Menu.Group>
                 {!isSelf && (
                   <>
