@@ -27,10 +27,12 @@ export function Outer({
   control,
   testID,
   nativeOptions,
+  onCancel,
 }: React.PropsWithChildren<{
   control: Dialog.DialogControlProps
   testID?: string
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
+  onCancel?: () => void
 }>) {
   const {gtMobile} = useBreakpoints()
   const titleId = React.useId()
@@ -45,6 +47,7 @@ export function Outer({
     <Dialog.Outer
       control={control}
       testID={testID}
+      onClose={onCancel}
       nativeOptions={{preventExpansion: true, ...nativeOptions}}>
       <Dialog.Handle />
       <Context.Provider value={context}>
@@ -108,18 +111,21 @@ export function Actions({children}: React.PropsWithChildren<{}>) {
 
 export function Cancel({
   cta,
+  onCancel,
 }: {
   /**
    * Optional i18n string. If undefined, it will default to "Cancel".
    */
   cta?: string
+  onCancel?: () => void
 }) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
   const onPress = React.useCallback(() => {
+    onCancel?.()
     close()
-  }, [close])
+  }, [onCancel, close])
 
   return (
     <Button
@@ -184,6 +190,7 @@ export function Basic({
   cancelButtonCta,
   confirmButtonCta,
   onConfirm,
+  onCancel,
   confirmButtonColor,
   showCancel = true,
 }: React.PropsWithChildren<{
@@ -200,11 +207,12 @@ export function Basic({
    * should NOT close the dialog as a side effect of this method.
    */
   onConfirm: (e: GestureResponderEvent) => void
+  onCancel?: () => void
   confirmButtonColor?: ButtonColor
   showCancel?: boolean
 }>) {
   return (
-    <Outer control={control} testID="confirmModal">
+    <Outer control={control} testID="confirmModal" onCancel={onCancel}>
       <TitleText>{title}</TitleText>
       <DescriptionText>{description}</DescriptionText>
       <Actions>
@@ -214,7 +222,7 @@ export function Basic({
           color={confirmButtonColor}
           testID="confirmBtn"
         />
-        {showCancel && <Cancel cta={cancelButtonCta} />}
+        {showCancel && <Cancel onCancel={onCancel} cta={cancelButtonCta} />}
       </Actions>
     </Outer>
   )
