@@ -8746,7 +8746,7 @@ msgstr "Traduzir"
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:69
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:59
 msgid "Trending"
-msgstr "Tendência"
+msgstr "Tendências"
 
 #: src/view/com/util/error/ErrorScreen.tsx:103
 msgctxt "action"
