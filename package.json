@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.96.0",
+  "version": "1.96.2",
   "private": true,
   "engines": {
     "node": ">=20"
@@ -62,7 +62,6 @@
     "@expo/webpack-config": "^19.0.0",
     "@floating-ui/dom": "^1.6.3",
     "@floating-ui/react-dom": "^2.0.8",
-    "@formatjs/intl-datetimeformat": "^6.17.1",
     "@formatjs/intl-locale": "^4.2.8",
     "@formatjs/intl-numberformat": "^8.15.1",
     "@formatjs/intl-pluralrules": "^5.4.1",
@@ -70,7 +69,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-native-fontawesome": "^0.3.2",
-    "@haileyok/bluesky-video": "0.2.4",
+    "@haileyok/bluesky-video": "0.2.5",
     "@ipld/dag-cbor": "^9.2.0",
     "@lingui/react": "^4.14.1",
     "@mattermost/react-native-paste-input": "^0.7.1",
