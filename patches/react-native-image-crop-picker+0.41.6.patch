@@ -35,7 +35,7 @@ diff --git a/node_modules/react-native-image-crop-picker/ios/src/ImageCropPicker
 index 9f20973..68d4766 100644
 --- a/node_modules/react-native-image-crop-picker/ios/src/ImageCropPicker.m
 +++ b/node_modules/react-native-image-crop-picker/ios/src/ImageCropPicker.m
-@@ -126,7 +126,8 @@ RCT_EXPORT_MODULE();
+@@ -126,7 +126,8 @@ - (void) setConfiguration:(NSDictionary *)options
  
  - (UIViewController*) getRootVC {
      UIViewController *root = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
