@@ -41,17 +41,11 @@ export function getLocales() {
     }
 
     if (typeof locale.languageTag === 'string') {
-      if (
-        locale.languageTag === 'zh-CN' ||
-        locale.languageTag.startsWith('zh-Hans')
-      ) {
+      if (locale.languageTag === 'zh-CN') {
         // Simplified Chinese to zh-Hans-CN
         locale.languageTag = 'zh-Hans-CN'
       }
-      if (
-        locale.languageTag === 'zh-TW' ||
-        locale.languageTag.startsWith('zh-Hant')
-      ) {
+      if (locale.languageTag === 'zh-TW') {
         // Traditional Chinese to zh-Hant-TW
         locale.languageTag = 'zh-Hant-TW'
       }
