@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-21 11:56\n"
+"PO-Revision-Date: 2024-12-23 01:15\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1299,7 +1299,7 @@ msgstr "傾偈靜咗音"
 #: src/components/dms/ConvoMenu.tsx:112
 #: src/components/dms/MessageMenu.tsx:81
 #: src/Navigation.tsx:393
-#: src/screens/Messages/ChatList.tsx:244
+#: src/screens/Messages/ChatList.tsx:246
 msgid "Chat settings"
 msgstr "傾偈設定"
 
@@ -3896,8 +3896,8 @@ msgid "Message is too long"
 msgstr "訊息太長"
 
 #: src/Navigation.tsx:609
-#: src/screens/Messages/ChatList.tsx:260
-#: src/screens/Messages/ChatList.tsx:284
+#: src/screens/Messages/ChatList.tsx:262
+#: src/screens/Messages/ChatList.tsx:286
 msgid "Messages"
 msgstr "傾偈"
 
@@ -4173,8 +4173,8 @@ msgid "New"
 msgstr "新增"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:65
-#: src/screens/Messages/ChatList.tsx:267
-#: src/screens/Messages/ChatList.tsx:274
+#: src/screens/Messages/ChatList.tsx:269
+#: src/screens/Messages/ChatList.tsx:276
 msgid "New chat"
 msgstr "同人傾偈"
 
@@ -4301,7 +4301,7 @@ msgstr "唔好超過253個字元"
 msgid "No messages yet"
 msgstr "仲未有任何訊息"
 
-#: src/screens/Messages/ChatList.tsx:223
+#: src/screens/Messages/ChatList.tsx:225
 msgid "No more conversations to show"
 msgstr "冇晒傾偈喇"
 
@@ -4410,7 +4410,7 @@ msgstr "關於分享嘅注意事項"
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "註：Bluesky 係一個開放同公開嘅社羣網絡。呢個設定淨係會限制你嘅內容喺 Bluesky App 同網站上面嘅可見度，而其他 Apps 可能唔會遵守呢個設定。其他 Apps 同網站依然有可能會俾未登入嘅用戶睇你啲嘢。"
 
-#: src/screens/Messages/ChatList.tsx:178
+#: src/screens/Messages/ChatList.tsx:180
 msgid "Nothing here"
 msgstr "呢度乜都冇"
 
@@ -4616,7 +4616,7 @@ msgstr "打開新手包選單"
 #: src/screens/Settings/Settings.tsx:322
 #: src/screens/Settings/Settings.tsx:336
 msgid "Open storybook page"
-msgstr "打開故事書頁面"
+msgstr "打開故仔書頁面"
 
 #: src/screens/Settings/Settings.tsx:315
 msgid "Open system log"
@@ -5631,6 +5631,7 @@ msgstr "試多次執行上一個出錯誤嘅動作"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:336
 #: src/screens/Login/LoginForm.tsx:305
 #: src/screens/Login/LoginForm.tsx:312
+#: src/screens/Messages/ChatList.tsx:169
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Onboarding/StepInterests/index.tsx:217
 #: src/screens/Onboarding/StepInterests/index.tsx:220
@@ -6451,7 +6452,7 @@ msgstr "儲存空間已經清除，你而家需要重啓隻 App 令佢即刻生�
 #: src/Navigation.tsx:246
 #: src/screens/Settings/Settings.tsx:324
 msgid "Storybook"
-msgstr "故事書"
+msgstr "故仔書"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:299
 #: src/components/moderation/LabelsOnMeDialog.tsx:300
@@ -7349,7 +7350,7 @@ msgstr "不受歡迎嘅色情內容"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
 msgid "Update <0>{displayName}</0> in Lists"
-msgstr "喺清單入邊更新 <0>{displayName}</0>"
+msgstr "要喺邊啲清單度加入抑或刪除 <0> {displayName} </0>？"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:509
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:530
@@ -8018,7 +8019,7 @@ msgstr "你已經靜音咗呢個帳號。"
 msgid "You have muted this user"
 msgstr "你已經將呢個用戶靜音"
 
-#: src/screens/Messages/ChatList.tsx:188
+#: src/screens/Messages/ChatList.tsx:190
 msgid "You have no conversations yet. Start one!"
 msgstr "你仲未同人傾過偈，試下同其他人傾偈啦！"
 

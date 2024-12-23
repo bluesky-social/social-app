@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-21 11:57\n"
+"PO-Revision-Date: 2024-12-23 01:15\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1299,7 +1299,7 @@ msgstr "成功靜音對話"
 #: src/components/dms/ConvoMenu.tsx:112
 #: src/components/dms/MessageMenu.tsx:81
 #: src/Navigation.tsx:393
-#: src/screens/Messages/ChatList.tsx:244
+#: src/screens/Messages/ChatList.tsx:246
 msgid "Chat settings"
 msgstr "對話設定"
 
@@ -2459,7 +2459,7 @@ msgstr "進入全螢幕"
 
 #: src/view/com/modals/ChangePassword.tsx:154
 msgid "Enter the code you received to change your password."
-msgstr "輸入您收到的驗證碼以變更密碼。"
+msgstr "輸入您收到的代碼以變更密碼。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:353
 msgid "Enter the domain you want to use"
@@ -3896,8 +3896,8 @@ msgid "Message is too long"
 msgstr "訊息太長了"
 
 #: src/Navigation.tsx:609
-#: src/screens/Messages/ChatList.tsx:260
-#: src/screens/Messages/ChatList.tsx:284
+#: src/screens/Messages/ChatList.tsx:262
+#: src/screens/Messages/ChatList.tsx:286
 msgid "Messages"
 msgstr "訊息"
 
@@ -4173,8 +4173,8 @@ msgid "New"
 msgstr "新增"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:65
-#: src/screens/Messages/ChatList.tsx:267
-#: src/screens/Messages/ChatList.tsx:274
+#: src/screens/Messages/ChatList.tsx:269
+#: src/screens/Messages/ChatList.tsx:276
 msgid "New chat"
 msgstr "新對話"
 
@@ -4301,7 +4301,7 @@ msgstr "不超過 253 個字元"
 msgid "No messages yet"
 msgstr "目前還沒有訊息"
 
-#: src/screens/Messages/ChatList.tsx:223
+#: src/screens/Messages/ChatList.tsx:225
 msgid "No more conversations to show"
 msgstr "已經沒有對話啦！"
 
@@ -4410,7 +4410,7 @@ msgstr "關於分享的注意事項"
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "注意：Bluesky 是一個開放的公共社群網路。這個設定僅限制您的內容在 Bluesky 應用程式和網站上的可見度，其他應用程式可能不會遵循這個規則。您的內容仍可能被其他應用程式和網站顯示給未登入的用戶。"
 
-#: src/screens/Messages/ChatList.tsx:178
+#: src/screens/Messages/ChatList.tsx:180
 msgid "Nothing here"
 msgstr "空空如也"
 
@@ -5631,6 +5631,7 @@ msgstr "重新執行上一個出現錯誤的動作"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:336
 #: src/screens/Login/LoginForm.tsx:305
 #: src/screens/Login/LoginForm.tsx:312
+#: src/screens/Messages/ChatList.tsx:169
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Onboarding/StepInterests/index.tsx:217
 #: src/screens/Onboarding/StepInterests/index.tsx:220
@@ -6903,7 +6904,7 @@ msgstr "此對話的參與者已停用或刪除帳號。按下以檢視選項。
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:94
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
-msgstr "這項功能目前仍在測試階段。您可以閱讀<0>這篇部落格文章</0>以瞭解更多有關匯出資料的資訊。"
+msgstr "這項功能目前仍在測試階段。您可以閱讀<0>這篇部落格文章</0>以瞭解有關匯出資料的更多資訊。"
 
 #: src/lib/strings/errors.ts:21
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
@@ -7999,7 +8000,7 @@ msgstr "您封鎖了此用戶，因此無法檢視他們發布的內容。"
 #: src/view/com/modals/ChangePassword.tsx:88
 #: src/view/com/modals/ChangePassword.tsx:122
 msgid "You have entered an invalid code. It should look like XXXXX-XXXXX."
-msgstr "您輸入的邀請碼無效。它應該看起來像 XXXXX-XXXXX。"
+msgstr "您輸入的代碼無效。它應該看起來像 XXXXX-XXXXX。"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:114
 msgid "You have hidden this post"
@@ -8018,7 +8019,7 @@ msgstr "您已隱藏這個帳號。"
 msgid "You have muted this user"
 msgstr "您已靜音這個用戶"
 
-#: src/screens/Messages/ChatList.tsx:188
+#: src/screens/Messages/ChatList.tsx:190
 msgid "You have no conversations yet. Start one!"
 msgstr "您還沒有任何對話，試著與其他用戶開始對話吧！"
 
