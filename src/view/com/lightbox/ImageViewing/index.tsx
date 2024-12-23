@@ -9,7 +9,13 @@
 // https://github.com/jobtoday/react-native-image-viewing
 
 import React, {useCallback, useEffect, useMemo, useState} from 'react'
-import {LayoutAnimation, PixelRatio, StyleSheet, View} from 'react-native'
+import {
+  LayoutAnimation,
+  PixelRatio,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native'
 import {Gesture} from 'react-native-gesture-handler'
 import PagerView from 'react-native-pager-view'
 import Animated, {
@@ -29,6 +35,7 @@ import Animated, {
   WithSpringConfig,
 } from 'react-native-reanimated'
 import {
+  Edge,
   SafeAreaView,
   useSafeAreaFrame,
   useSafeAreaInsets,
@@ -55,6 +62,10 @@ import ImageItem from './components/ImageItem/ImageItem'
 type Rect = {x: number; y: number; width: number; height: number}
 
 const PIXEL_RATIO = PixelRatio.get()
+const EDGES =
+  Platform.OS === 'android' && Platform.Version < 35
+    ? (['top', 'bottom', 'left', 'right'] satisfies Edge[])
+    : ([] satisfies Edge[]) // iOS or Android 15+ bleeds into safe area
 
 const SLOW_SPRING: WithSpringConfig = {
   mass: isIOS ? 1.25 : 0.75,
@@ -150,8 +161,9 @@ export default function ImageViewRoot({
 
   return (
     // Keep it always mounted to avoid flicker on the first frame.
-    <View
+    <SafeAreaView
       style={[styles.screen, !activeLightbox && styles.screenHidden]}
+      edges={EDGES}
       aria-modal
       accessibilityViewIsModal
       aria-hidden={!activeLightbox}>
@@ -169,7 +181,7 @@ export default function ImageViewRoot({
           />
         )}
       </Animated.View>
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -560,7 +572,7 @@ function LightboxFooter({
         paddingVertical: 12,
         paddingHorizontal: 24,
       }}>
-      <SafeAreaView edges={['bottom', 'left', 'right']}>
+      <SafeAreaView edges={['bottom']}>
         {altText ? (
           <View accessibilityRole="button" style={styles.footerText}>
             <Text
