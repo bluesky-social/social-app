@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-21 00:43+0000\n"
-"PO-Revision-Date: 2024-12-21 12:53+0000\n"
+"PO-Revision-Date: 2024-12-23 12:57+0000\n"
 "Last-Translator: Francisco, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -2299,7 +2299,7 @@ msgstr "Modifica starter pack"
 
 #: src/view/com/modals/CreateOrEditList.tsx:225
 msgid "Edit User List"
-msgstr "Modifica l'elenco degli utenti"
+msgstr "Modifica lista"
 
 #: src/components/WhoCanReply.tsx:87
 msgid "Edit who can reply"
