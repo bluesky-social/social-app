@@ -119,6 +119,9 @@ function ProfileCard() {
             {otherAccounts && otherAccounts.length > 0 && (
               <>
                 <Menu.Group>
+                  <Menu.LabelText>
+                    <Trans>Switch account</Trans>
+                  </Menu.LabelText>
                   {otherAccounts?.map(other => (
                     <Menu.Item
                       disabled={!!pendingDid}
