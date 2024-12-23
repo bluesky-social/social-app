@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-23 01:15\n"
+"PO-Revision-Date: 2024-12-23 05:48\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -6904,7 +6904,7 @@ msgstr "呢個對話係同一個刪咗抑或停用咗嘅帳號傾嘅。撳呢度
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:94
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
-msgstr "呢個功能係測試版。你可以喺 <0>呢篇網誌文章</0> 度睇到更多有關存儲庫匯出嘅資訊。"
+msgstr "呢個功能仲喺測試階段。你睇 <0>呢篇網誌文章</0> 知多啲匯出資料嘅資訊。"
 
 #: src/lib/strings/errors.ts:21
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
