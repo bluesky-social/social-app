@@ -110,7 +110,6 @@ google-services.json
 # i18n
 src/locale/locales/_build/
 src/locale/locales/**/*.js
-bskyembed/src/locale/locales/**/*.ts
 
 # local builds
 *.apk
