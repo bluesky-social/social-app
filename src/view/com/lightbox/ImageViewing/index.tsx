@@ -40,6 +40,7 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
+import * as ScreenOrientation from 'expo-screen-orientation'
 import {StatusBar} from 'expo-status-bar'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
@@ -145,6 +146,18 @@ export default function ImageViewRoot({
     openProgress.set(0)
     runOnJS(onRequestClose)()
   }, [onRequestClose, openProgress])
+
+  useEffect(() => {
+    if (activeLightbox) {
+      ScreenOrientation.unlockAsync()
+      return () => {
+        // default is PORTRAIT_UP - set via config plugin in app.config.js -sfn
+        ScreenOrientation.lockAsync(
+          ScreenOrientation.OrientationLock.PORTRAIT_UP,
+        )
+      }
+    }
+  }, [activeLightbox])
 
   return (
     // Keep it always mounted to avoid flicker on the first frame.
