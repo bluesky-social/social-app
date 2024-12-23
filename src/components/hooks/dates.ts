@@ -73,8 +73,8 @@ const locales: Record<AppLanguage, Locale | undefined> = {
   tr,
   uk,
   vi,
-  ['yue']: zhHK,
   ['zh-Hans-CN']: zhCN,
+  ['zh-Hant-HK']: zhHK,
   ['zh-Hant-TW']: zhTW,
 }
 

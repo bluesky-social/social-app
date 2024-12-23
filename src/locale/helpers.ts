@@ -173,10 +173,10 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.uk
       case 'vi':
         return AppLanguage.vi
-      case 'yue':
-        return AppLanguage.yue
       case 'zh-Hans-CN':
         return AppLanguage.zh_CN
+      case 'zh-Hant-HK':
+        return AppLanguage.zh_HK
       case 'zh-Hant-TW':
         return AppLanguage.zh_TW
       default:

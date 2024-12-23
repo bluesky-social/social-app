@@ -49,6 +49,10 @@ export function getLocales() {
         // Traditional Chinese to zh-Hant-TW
         locale.languageTag = 'zh-Hant-TW'
       }
+      if (locale.languageTag === 'zh-HK') {
+        // Traditional Chinese (Hong Kong) to zh-Hant-HK
+        locale.languageTag = 'zh-Hant-HK'
+      }
     }
 
     // @ts-ignore checked above
