@@ -93,6 +93,8 @@ stats.json
 # Android & iOS folders
 /android/
 /ios/
+/modules/*/android/
+/modules/*/ios/
 
 # environment variables
 .env
