@@ -184,7 +184,7 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
                       {displayName}
                     </Text>
                   </View>
-                  <Text type="xs" style={pal.textLight} numberOfLines={1}>
+                  <Text type="xs" style={pal.textLight} emoji numberOfLines={1}>
                     {sanitizeHandle(item.handle, '@')}
                   </Text>
                 </Pressable>

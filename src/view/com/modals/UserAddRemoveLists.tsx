@@ -206,7 +206,7 @@ function ListItem({
           lineHeight={1.2}>
           {sanitizeDisplayName(list.name)}
         </Text>
-        <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+        <Text type="md" emoji style={[pal.textLight]} numberOfLines={1}>
           {list.purpose === 'app.bsky.graph.defs#curatelist' &&
             (list.creator.did === currentAccount?.did ? (
               <Trans>User list by you</Trans>
