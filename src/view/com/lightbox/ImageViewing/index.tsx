@@ -104,7 +104,9 @@ export default function ImageViewRoot({
   'use no memo'
   const ref = useAnimatedRef<View>()
   const [activeLightbox, setActiveLightbox] = useState(nextLightbox)
-  const [safeAreaRelayout, setSafeAreaRelayout] = useState(0)
+  const [orientation, setOrientation] = useState<'portrait' | 'landscape'>(
+    'portrait',
+  )
   const openProgress = useSharedValue(0)
 
   if (!activeLightbox && nextLightbox) {
@@ -163,11 +165,6 @@ export default function ImageViewRoot({
     runOnJS(onRequestClose)()
   }, [onRequestClose, openProgress])
 
-  // reset children state on relayout, most likely due to orientation change
-  // it's a counter, and 0 -> 1 is the first render. so we can let the key start at 1
-  // -sfn
-  const layoutKey = String(Math.max(safeAreaRelayout, 1))
-
   return (
     // Keep it always mounted to avoid flicker on the first frame.
     <SafeAreaView
@@ -180,13 +177,15 @@ export default function ImageViewRoot({
         ref={ref}
         style={{flex: 1}}
         collapsable={false}
-        onLayout={() => {
-          // most likely due to orientation change
-          setSafeAreaRelayout(i => i + 1)
+        onLayout={e => {
+          const layout = e.nativeEvent.layout
+          setOrientation(
+            layout.height > layout.width ? 'portrait' : 'landscape',
+          )
         }}>
         {activeLightbox && (
           <ImageView
-            key={activeLightbox.id + '-' + layoutKey}
+            key={activeLightbox.id + '-' + orientation}
             lightbox={activeLightbox}
             onRequestClose={onRequestClose}
             onPressSave={onPressSave}
