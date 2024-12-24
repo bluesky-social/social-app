@@ -16,12 +16,11 @@ import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
-import {Button} from '#/view/com/util/forms/Button'
 import {Link} from '#/view/com/util/Link'
-import {Text} from '#/view/com/util/text/Text'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
@@ -40,6 +39,7 @@ import {
   UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
   UserCircle_Stroke2_Corner0_Rounded as UserCircle,
 } from '#/components/icons/UserCircle'
+import {Text} from '#/components/Typography'
 import {styles} from './BottomBarStyles'
 
 export function BottomBarWeb() {
@@ -196,24 +196,26 @@ export function BottomBarWeb() {
               </View>
             </View>
 
-            <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
+            <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
               <Button
                 onPress={showCreateAccount}
-                accessibilityHint={_(msg`Sign up`)}
-                accessibilityLabel={_(msg`Sign up`)}>
-                <Text type="md" style={[{color: 'white'}, a.font_bold]}>
-                  <Trans>Sign up</Trans>
-                </Text>
+                label={_(msg`Create account`)}
+                size="small"
+                variant="solid"
+                color="primary">
+                <ButtonText>
+                  <Trans>Create account</Trans>
+                </ButtonText>
               </Button>
-
               <Button
-                type="default"
                 onPress={showSignIn}
-                accessibilityHint={_(msg`Sign in`)}
-                accessibilityLabel={_(msg`Sign in`)}>
-                <Text type="md" style={[t.atoms.text, a.font_bold]}>
+                label={_(msg`Sign in`)}
+                size="small"
+                variant="solid"
+                color="secondary">
+                <ButtonText>
                   <Trans>Sign in</Trans>
-                </Text>
+                </ButtonText>
               </Button>
             </View>
           </View>
