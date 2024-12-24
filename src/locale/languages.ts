@@ -33,9 +33,9 @@ export enum AppLanguage {
   tr = 'tr',
   uk = 'uk',
   vi = 'vi',
-  zh_CN = 'zh-CN',
-  zh_HK = 'zh-HK',
-  zh_TW = 'zh-TW',
+  zh_CN = 'zh-Hans-CN',
+  zh_HK = 'zh-Hant-HK',
+  zh_TW = 'zh-Hant-TW',
 }
 
 interface AppLanguageConfig {
