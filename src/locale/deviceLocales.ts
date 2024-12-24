@@ -41,17 +41,19 @@ export function getLocales() {
     }
 
     if (typeof locale.languageTag === 'string') {
-      if (locale.languageTag === 'zh-CN') {
+      if (
+        locale.languageTag.startsWith('zh-Hans') ||
+        locale.languageTag === 'zh-CN'
+      ) {
         // Simplified Chinese to zh-Hans-CN
         locale.languageTag = 'zh-Hans-CN'
       }
-      if (locale.languageTag === 'zh-TW') {
+      if (
+        locale.languageTag.startsWith('zh-Hant') ||
+        locale.languageTag === 'zh-TW'
+      ) {
         // Traditional Chinese to zh-Hant-TW
         locale.languageTag = 'zh-Hant-TW'
-      }
-      if (locale.languageTag === 'zh-HK') {
-        // Traditional Chinese (Hong Kong) to zh-Hant-HK
-        locale.languageTag = 'zh-Hant-HK'
       }
     }
 
