@@ -64,7 +64,7 @@ const locales: Record<AppLanguage, Locale | undefined> = {
   km,
   ko,
   nl,
-  np: undefined,
+  ne: undefined,
   pl,
   ['pt-BR']: ptBR,
   ro,

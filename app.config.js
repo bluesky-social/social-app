@@ -90,7 +90,7 @@ module.exports = function (config) {
             'km',
             'ko',
             'nl',
-            'np',
+            'ne',
             'pl',
             'pt-BR',
             'ro',
