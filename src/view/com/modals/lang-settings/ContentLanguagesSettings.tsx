@@ -10,7 +10,7 @@ import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
-import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
+import {LANGUAGES} from '../../../../locale/languages'
 import {Text} from '../../util/text/Text'
 import {ScrollView} from '../util'
 import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
@@ -29,19 +29,15 @@ export function Component({}: {}) {
   }, [closeModal])
 
   const languages = React.useMemo(() => {
-    const langs = LANGUAGES.filter(
-      lang =>
-        !!lang.code2.trim() &&
-        LANGUAGES_MAP_CODE2[lang.code2].code3 === lang.code3,
-    )
+    const langs = [...LANGUAGES]
     // sort so that device & selected languages are on top, then alphabetically
     langs.sort((a, b) => {
       const hasA =
-        langPrefs.contentLanguages.includes(a.code2) ||
-        deviceLanguageCodes.includes(a.code2)
+        langPrefs.contentLanguages.includes(a.code) ||
+        deviceLanguageCodes.includes(a.code)
       const hasB =
-        langPrefs.contentLanguages.includes(b.code2) ||
-        deviceLanguageCodes.includes(b.code2)
+        langPrefs.contentLanguages.includes(b.code) ||
+        deviceLanguageCodes.includes(b.code)
       if (hasA === hasB) return a.name.localeCompare(b.name)
       if (hasA) return -1
       return 1
@@ -50,8 +46,8 @@ export function Component({}: {}) {
   }, [langPrefs])
 
   const onPress = React.useCallback(
-    (code2: string) => {
-      setLangPrefs.toggleContentLanguage(code2)
+    (code: string) => {
+      setLangPrefs.toggleContentLanguage(code)
     },
     [setLangPrefs],
   )
@@ -85,12 +81,12 @@ export function Component({}: {}) {
       <ScrollView style={styles.scrollContainer}>
         {languages.map(lang => (
           <LanguageToggle
-            key={lang.code2}
-            code2={lang.code2}
+            key={lang.code}
+            code={lang.code}
             langType="contentLanguages"
             name={lang.name}
             onPress={() => {
-              onPress(lang.code2)
+              onPress(lang.code)
             }}
           />
         ))}

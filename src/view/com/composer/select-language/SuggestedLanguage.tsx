@@ -10,7 +10,8 @@ import lande from 'lande'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {s} from '#/lib/styles'
-import {code3ToCode2Strict, codeToLanguageName} from '#/locale/helpers'
+import {codeToLanguageName} from '#/locale/helpers'
+import {LANGUAGES_MAP} from '#/locale/languages'
 import {
   toPostLanguages,
   useLanguagePrefs,
@@ -112,5 +113,5 @@ function guessLanguage(text: string): string | undefined {
   if (value < 0.97) {
     return undefined
   }
-  return code3ToCode2Strict(lang)
+  return LANGUAGES_MAP[lang]?.code
 }

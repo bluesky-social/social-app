@@ -12,7 +12,7 @@ import {
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
 import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
-import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
+import {LANGUAGES} from '../../../../locale/languages'
 import {Text} from '../../util/text/Text'
 import {ScrollView} from '../util'
 import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
@@ -30,19 +30,14 @@ export function Component() {
   }, [closeModal])
 
   const languages = React.useMemo(() => {
-    const langs = LANGUAGES.filter(
-      lang =>
-        !!lang.code2.trim() &&
-        LANGUAGES_MAP_CODE2[lang.code2].code3 === lang.code3,
-    )
-    // sort so that device & selected languages are on top, then alphabetically
+    const langs = [...LANGUAGES] // sort so that device & selected languages are on top, then alphabetically
     langs.sort((a, b) => {
       const hasA =
-        hasPostLanguage(langPrefs.postLanguage, a.code2) ||
-        deviceLanguageCodes.includes(a.code2)
+        hasPostLanguage(langPrefs.postLanguage, a.code) ||
+        deviceLanguageCodes.includes(a.code)
       const hasB =
-        hasPostLanguage(langPrefs.postLanguage, b.code2) ||
-        deviceLanguageCodes.includes(b.code2)
+        hasPostLanguage(langPrefs.postLanguage, b.code) ||
+        deviceLanguageCodes.includes(b.code)
       if (hasA === hasB) return a.name.localeCompare(b.name)
       if (hasA) return -1
       return 1
@@ -51,8 +46,8 @@ export function Component() {
   }, [langPrefs])
 
   const onPress = React.useCallback(
-    (code2: string) => {
-      setLangPrefs.togglePostLanguage(code2)
+    (code: string) => {
+      setLangPrefs.togglePostLanguage(code)
     },
     [setLangPrefs],
   )
@@ -80,7 +75,7 @@ export function Component() {
       </Text>
       <ScrollView style={styles.scrollContainer}>
         {languages.map(lang => {
-          const isSelected = hasPostLanguage(langPrefs.postLanguage, lang.code2)
+          const isSelected = hasPostLanguage(langPrefs.postLanguage, lang.code)
 
           // enforce a max of 3 selections for post languages
           let isDisabled = false
@@ -90,10 +85,10 @@ export function Component() {
 
           return (
             <ToggleButton
-              key={lang.code2}
+              key={lang.code}
               label={lang.name}
               isSelected={isSelected}
-              onPress={() => (isDisabled ? undefined : onPress(lang.code2))}
+              onPress={() => (isDisabled ? undefined : onPress(lang.code))}
               style={[
                 pal.border,
                 styles.languageToggle,
