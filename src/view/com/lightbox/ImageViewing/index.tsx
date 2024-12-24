@@ -187,6 +187,7 @@ export default function ImageViewRoot({
           <ImageView
             key={activeLightbox.id + '-' + orientation}
             lightbox={activeLightbox}
+            orientation={orientation}
             onRequestClose={onRequestClose}
             onPressSave={onPressSave}
             onPressShare={onPressShare}
@@ -202,6 +203,7 @@ export default function ImageViewRoot({
 
 function ImageView({
   lightbox,
+  orientation,
   onRequestClose,
   onPressSave,
   onPressShare,
@@ -210,6 +212,7 @@ function ImageView({
   openProgress,
 }: {
   lightbox: Lightbox
+  orientation: 'portrait' | 'landscape'
   onRequestClose: () => void
   onPressSave: (uri: string) => void
   onPressShare: (uri: string) => void
@@ -249,7 +252,7 @@ function ImageView({
     const openProgressValue = openProgress.get()
     if (openProgressValue < 1) {
       opacity = Math.sqrt(openProgressValue)
-    } else if (screenSize) {
+    } else if (screenSize && orientation === 'portrait') {
       const dragProgress = Math.min(
         Math.abs(dismissSwipeTranslateY.get()) / (screenSize.height / 2),
         1,
