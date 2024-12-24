@@ -40,6 +40,7 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
+import * as ScreenOrientation from 'expo-screen-orientation'
 import {StatusBar} from 'expo-status-bar'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
@@ -60,11 +61,12 @@ import ImageItem from './components/ImageItem/ImageItem'
 
 type Rect = {x: number; y: number; width: number; height: number}
 
+const PORTRAIT_UP = ScreenOrientation.OrientationLock.PORTRAIT_UP
 const PIXEL_RATIO = PixelRatio.get()
 const EDGES =
   Platform.OS === 'android' && Platform.Version < 35
     ? (['top', 'bottom', 'left', 'right'] satisfies Edge[])
-    : (['left', 'right'] satisfies Edge[]) // iOS or Android 15+, so no top/bottom safe area
+    : ([] satisfies Edge[]) // iOS or Android 15+ bleeds into safe area
 
 const SLOW_SPRING: WithSpringConfig = {
   mass: isIOS ? 1.25 : 0.75,
@@ -102,6 +104,9 @@ export default function ImageViewRoot({
   'use no memo'
   const ref = useAnimatedRef<View>()
   const [activeLightbox, setActiveLightbox] = useState(nextLightbox)
+  const [orientation, setOrientation] = useState<'portrait' | 'landscape'>(
+    'portrait',
+  )
   const openProgress = useSharedValue(0)
 
   if (!activeLightbox && nextLightbox) {
@@ -140,6 +145,20 @@ export default function ImageViewRoot({
     },
   )
 
+  // Delay the unlock until after we've finished the scale up animation.
+  // It's complicated to do the same for locking it back so we don't attempt that.
+  useAnimatedReaction(
+    () => openProgress.get() === 1,
+    (isOpen, wasOpen) => {
+      if (isOpen && !wasOpen) {
+        runOnJS(ScreenOrientation.unlockAsync)()
+      } else if (!isOpen && wasOpen) {
+        // default is PORTRAIT_UP - set via config plugin in app.config.js -sfn
+        runOnJS(ScreenOrientation.lockAsync)(PORTRAIT_UP)
+      }
+    },
+  )
+
   const onFlyAway = React.useCallback(() => {
     'worklet'
     openProgress.set(0)
@@ -154,11 +173,21 @@ export default function ImageViewRoot({
       aria-modal
       accessibilityViewIsModal
       aria-hidden={!activeLightbox}>
-      <Animated.View ref={ref} style={{flex: 1}} collapsable={false}>
+      <Animated.View
+        ref={ref}
+        style={{flex: 1}}
+        collapsable={false}
+        onLayout={e => {
+          const layout = e.nativeEvent.layout
+          setOrientation(
+            layout.height > layout.width ? 'portrait' : 'landscape',
+          )
+        }}>
         {activeLightbox && (
           <ImageView
-            key={activeLightbox.id}
+            key={activeLightbox.id + '-' + orientation}
             lightbox={activeLightbox}
+            orientation={orientation}
             onRequestClose={onRequestClose}
             onPressSave={onPressSave}
             onPressShare={onPressShare}
@@ -174,6 +203,7 @@ export default function ImageViewRoot({
 
 function ImageView({
   lightbox,
+  orientation,
   onRequestClose,
   onPressSave,
   onPressShare,
@@ -182,6 +212,7 @@ function ImageView({
   openProgress,
 }: {
   lightbox: Lightbox
+  orientation: 'portrait' | 'landscape'
   onRequestClose: () => void
   onPressSave: (uri: string) => void
   onPressShare: (uri: string) => void
@@ -221,7 +252,7 @@ function ImageView({
     const openProgressValue = openProgress.get()
     if (openProgressValue < 1) {
       opacity = Math.sqrt(openProgressValue)
-    } else if (screenSize) {
+    } else if (screenSize && orientation === 'portrait') {
       const dragProgress = Math.min(
         Math.abs(dismissSwipeTranslateY.get()) / (screenSize.height / 2),
         1,
