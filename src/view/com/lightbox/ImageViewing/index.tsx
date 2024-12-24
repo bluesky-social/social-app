@@ -150,12 +150,14 @@ export default function ImageViewRoot({
 
   useEffect(() => {
     if (activeLightbox) {
-      ScreenOrientation.unlockAsync()
+      ScreenOrientation.unlockAsync().catch(() =>
+        console.error('Could not unlock screen orientation'),
+      )
       return () => {
         // default is PORTRAIT_UP - set via config plugin in app.config.js -sfn
         ScreenOrientation.lockAsync(
           ScreenOrientation.OrientationLock.PORTRAIT_UP,
-        )
+        ).catch(() => console.error('Could not lock screen orientation'))
       }
     }
   }, [activeLightbox])

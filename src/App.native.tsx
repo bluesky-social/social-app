@@ -80,7 +80,9 @@ if (isIOS) {
 }
 if (isAndroid) {
   // iOS is handled by the config plugin -sfn
-  ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
+  ScreenOrientation.lockAsync(
+    ScreenOrientation.OrientationLock.PORTRAIT_UP,
+  ).catch(() => console.error('Could not lock screen orientation'))
 }
 
 /**
