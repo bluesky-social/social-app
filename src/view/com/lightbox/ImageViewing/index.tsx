@@ -61,6 +61,7 @@ import ImageItem from './components/ImageItem/ImageItem'
 
 type Rect = {x: number; y: number; width: number; height: number}
 
+const PORTRAIT_UP = ScreenOrientation.OrientationLock.PORTRAIT_UP
 const PIXEL_RATIO = PixelRatio.get()
 const EDGES =
   Platform.OS === 'android' && Platform.Version < 35
@@ -142,23 +143,25 @@ export default function ImageViewRoot({
     },
   )
 
+  // Delay the unlock until after we've finished the scale up animation.
+  // It's complicated to do the same for locking it back so we don't attempt that.
+  useAnimatedReaction(
+    () => openProgress.get() === 1,
+    (isOpen, wasOpen) => {
+      if (isOpen && !wasOpen) {
+        runOnJS(ScreenOrientation.unlockAsync)()
+      } else if (!isOpen && wasOpen) {
+        // default is PORTRAIT_UP - set via config plugin in app.config.js -sfn
+        runOnJS(ScreenOrientation.lockAsync)(PORTRAIT_UP)
+      }
+    },
+  )
+
   const onFlyAway = React.useCallback(() => {
     'worklet'
     openProgress.set(0)
     runOnJS(onRequestClose)()
   }, [onRequestClose, openProgress])
-
-  useEffect(() => {
-    if (activeLightbox) {
-      ScreenOrientation.unlockAsync()
-      return () => {
-        // default is PORTRAIT_UP - set via config plugin in app.config.js -sfn
-        ScreenOrientation.lockAsync(
-          ScreenOrientation.OrientationLock.PORTRAIT_UP,
-        )
-      }
-    }
-  }, [activeLightbox])
 
   // reset children state on relayout, most likely due to orientation change
   // it's a counter, and 0 -> 1 is the first render. so we can let the key start at 1
