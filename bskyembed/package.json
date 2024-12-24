@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@lingui/cli": "^5.1.2",
-    "@lingui/macro": "^5.1.2",
+    "@lingui/core": "^5.1.2",
     "@lingui/vite-plugin": "^5.1.2",
     "autoprefixer": "^10.4.19",
     "eslint": "^8.19.0",

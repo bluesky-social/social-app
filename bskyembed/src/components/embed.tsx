@@ -10,7 +10,7 @@ import {
   AppBskyGraphStarterpack,
   AppBskyLabelerDefs,
 } from '@atproto/api'
-import {plural, t} from "@lingui/macro"
+import {plural, t} from '@lingui/core/macro'
 import {ComponentChildren, h} from 'preact'
 import {useMemo} from 'preact/hooks'
 
@@ -153,19 +153,13 @@ export function Embed({
       // Case 3.6: Post not found
       if (AppBskyEmbedRecord.isViewNotFound(record)) {
         return (
-          <Info>
-            {t`Quoted post not found, it may have been deleted.`}
-          </Info>
+          <Info>{t`Quoted post not found, it may have been deleted.`}</Info>
         )
       }
 
       // Case 3.7: Post blocked
       if (AppBskyEmbedRecord.isViewBlocked(record)) {
-        return (
-          <Info>
-            {t`The quoted post is blocked.`}
-          </Info>
-        )
+        return <Info>{t`The quoted post is blocked.`}</Info>
       }
 
       // Case 3.8: Detached quote post

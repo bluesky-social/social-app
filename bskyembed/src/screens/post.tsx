@@ -1,7 +1,7 @@
 import '../index.css'
 
 import {AppBskyFeedDefs, AtpAgent} from '@atproto/api'
-import {t} from '@lingui/macro'
+import {t} from '@lingui/core/macro'
 import {h, render} from 'preact'
 
 import logo from '../../assets/logo.svg'
@@ -40,9 +40,19 @@ agent
       label => label.val === '!no-unauthenticated',
     )
     if (pwiOptOut) {
-      render(<I18nProvider><PwiOptOut thread={data.thread} /></I18nProvider>, root)
+      render(
+        <I18nProvider>
+          <PwiOptOut thread={data.thread} />
+        </I18nProvider>,
+        root,
+      )
     } else {
-      render(<I18nProvider><Post thread={data.thread} /></I18nProvider>, root)
+      render(
+        <I18nProvider>
+          <Post thread={data.thread} />
+        </I18nProvider>,
+        root,
+      )
     }
   })
   .catch(err => {

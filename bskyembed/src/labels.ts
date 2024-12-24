@@ -1,5 +1,5 @@
 import {AppBskyFeedDefs} from '@atproto/api'
-import {t} from '@lingui/macro'
+import {t} from '@lingui/core/macro'
 
 export const CONTENT_LABELS = ['porn', 'sexual', 'nudity', 'graphic-media']
 

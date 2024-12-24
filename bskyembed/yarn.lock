@@ -1626,14 +1626,6 @@
     date-fns "^3.6.0"
     pofile "^1.1.4"
 
-"@lingui/macro@^5.1.2":
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/@lingui/macro/-/macro-5.1.2.tgz#0a5ec9be41d0f2300667ca4662cb49e184508e54"
-  integrity sha512-R6HV7XmiskkI/85JCjAtQuBPRu5AB57lOJdJE6xs2qBaeRu70v0BalTn4wyG5+r0JSkDI4gakWaXKW2KpWN6fQ==
-  dependencies:
-    "@lingui/core" "^5.1.2"
-    "@lingui/react" "^5.1.2"
-
 "@lingui/message-utils@^5.1.2":
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/@lingui/message-utils/-/message-utils-5.1.2.tgz#8142a2b9ec148a845ddc8b3b9b91a5702efaf519"
@@ -1641,14 +1633,6 @@
   dependencies:
     "@messageformat/parser" "^5.0.0"
     js-sha256 "^0.10.1"
-
-"@lingui/react@^5.1.2":
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/@lingui/react/-/react-5.1.2.tgz#0ab2976300c4fed98144b72f200653c5a14eb1af"
-  integrity sha512-YPAvbPUd+kJrmA9H1LSJ9f6+0hkOlm0w8g+7a8FtE7olamjXd7SyIgJMbeJmvKSdztrrdcLBs9YEftUKTfjiyg==
-  dependencies:
-    "@babel/runtime" "^7.20.13"
-    "@lingui/core" "^5.1.2"
 
 "@lingui/vite-plugin@^5.1.2":
   version "5.1.2"

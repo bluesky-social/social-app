@@ -4,7 +4,7 @@ import {
   AppBskyRichtextFacet,
   RichText,
 } from '@atproto/api'
-import {plural, t} from "@lingui/macro"
+import {plural, t} from '@lingui/core/macro'
 import {h} from 'preact'
 
 import replyIcon from '../../assets/bubble_filled_stroke2_corner2_rounded.svg'

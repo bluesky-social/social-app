@@ -1,7 +1,7 @@
 import '../index.css'
 
 import {AppBskyFeedDefs, AppBskyFeedPost, AtUri, BskyAgent} from '@atproto/api'
-import {t} from '@lingui/macro'
+import {t} from '@lingui/core/macro'
 import {h, render} from 'preact'
 import {useEffect, useMemo, useRef, useState} from 'preact/hooks'
 
@@ -30,7 +30,12 @@ const agent = new BskyAgent({
   service: 'https://public.api.bsky.app',
 })
 
-render(<I18nProvider><LandingPage /></I18nProvider>, root)
+render(
+  <I18nProvider>
+    <LandingPage />
+  </I18nProvider>,
+  root,
+)
 
 function LandingPage() {
   const [uri, setUri] = useState('')

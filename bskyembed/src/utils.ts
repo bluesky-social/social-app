@@ -1,5 +1,5 @@
 import {AtUri} from '@atproto/api'
-import {t} from '@lingui/macro'
+import {t} from '@lingui/core/macro'
 
 import {appLanguage} from './locale/i18n'
 
