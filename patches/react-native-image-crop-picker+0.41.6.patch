@@ -1,3 +1,36 @@
+diff --git a/node_modules/react-native-image-crop-picker/android/src/main/AndroidManifest.xml b/node_modules/react-native-image-crop-picker/android/src/main/AndroidManifest.xml
+index 391f303..8e2c3db 100644
+--- a/node_modules/react-native-image-crop-picker/android/src/main/AndroidManifest.xml
++++ b/node_modules/react-native-image-crop-picker/android/src/main/AndroidManifest.xml
+@@ -24,7 +24,7 @@
+ 
+         <activity
+             android:name="com.yalantis.ucrop.UCropActivity"
+-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
++            android:theme="@style/Theme.UCropNoEdgeToEdge" />
+     </application>
+ 
+ </manifest>
+diff --git a/node_modules/react-native-image-crop-picker/android/src/main/res/values-v35/styles.xml b/node_modules/react-native-image-crop-picker/android/src/main/res/values-v35/styles.xml
+new file mode 100644
+index 0000000..396d5a8
+--- /dev/null
++++ b/node_modules/react-native-image-crop-picker/android/src/main/res/values-v35/styles.xml
+@@ -0,0 +1,5 @@
++<resources>
++    <style name="Theme.UCropNoEdgeToEdge" parent="Theme.AppCompat.Light.NoActionBar">
++        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
++    </style>
++</resources>
+diff --git a/node_modules/react-native-image-crop-picker/android/src/main/res/values/styles.xml b/node_modules/react-native-image-crop-picker/android/src/main/res/values/styles.xml
+new file mode 100644
+index 0000000..50129b6
+--- /dev/null
++++ b/node_modules/react-native-image-crop-picker/android/src/main/res/values/styles.xml
+@@ -0,0 +1,3 @@
++<resources>
++    <style name="Theme.UCropNoEdgeToEdge" parent="Theme.AppCompat.Light.NoActionBar"/>
++</resources>
 diff --git a/node_modules/react-native-image-crop-picker/ios/src/ImageCropPicker.m b/node_modules/react-native-image-crop-picker/ios/src/ImageCropPicker.m
 index 9f20973..68d4766 100644
 --- a/node_modules/react-native-image-crop-picker/ios/src/ImageCropPicker.m
