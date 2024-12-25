@@ -278,9 +278,14 @@ export function ItemText({children, style}: ItemTextProps) {
   )
 }
 
-export function ItemIcon({icon: Comp, position = 'left'}: ItemIconProps) {
+export function ItemIcon({
+  icon: Comp,
+  position = 'left',
+  color,
+}: ItemIconProps) {
   const t = useTheme()
   const {disabled} = useMenuItemContext()
+  const fill = color ? color : t.atoms.text_contrast_medium.color
   return (
     <View
       style={[
@@ -294,11 +299,7 @@ export function ItemIcon({icon: Comp, position = 'left'}: ItemIconProps) {
       ]}>
       <Comp
         size="md"
-        fill={
-          disabled
-            ? t.atoms.text_contrast_low.color
-            : t.atoms.text_contrast_medium.color
-        }
+        fill={disabled ? t.atoms.text_contrast_low.color : fill}
       />
     </View>
   )
