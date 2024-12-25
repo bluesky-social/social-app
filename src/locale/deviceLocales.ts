@@ -14,7 +14,7 @@ type LocalWithLanguageCode = Locale & {
  * {@link https://github.com/bluesky-social/social-app/pull/4461}
  * {@link https://xml.coverpages.org/iso639a.html}
  *
- * Convert Chinese language tags for Web (RFC 1766 to RFC 4646).
+ * Convert Chinese language tags for Native.
  *
  * {@link https://datatracker.ietf.org/doc/html/rfc5646#appendix-A}
  * {@link https://developer.apple.com/documentation/packagedescription/languagetag}
