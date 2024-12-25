@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-21 00:43+0000\n"
-"PO-Revision-Date: 2024-12-23 12:57+0000\n"
+"PO-Revision-Date: 2024-12-25 01:56+0000\n"
 "Last-Translator: Francisco, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -3991,7 +3991,7 @@ msgstr "Prima le risposte con più mi piace"
 #: src/view/com/post-thread/PostThread.tsx:682
 #: src/view/com/post-thread/PostThread.tsx:687
 msgid "Most-liked replies first"
-msgstr "Dai priorità alle risposte con più mi piace"
+msgstr "Prima le risposte con più mi piace"
 
 #: src/screens/Onboarding/state.ts:105
 msgid "Movies"
@@ -7071,7 +7071,7 @@ msgstr "Preferenze delle discussioni"
 #: src/view/com/post-thread/PostThread.tsx:636
 #: src/view/com/post-thread/PostThread.tsx:641
 msgid "Threaded"
-msgstr "Come thread"
+msgstr "Thread"
 
 #: src/screens/Settings/ThreadPreferences.tsx:142
 msgid "Threaded mode"
