@@ -36,16 +36,23 @@ function getLocalizedLanguage(
   langCode: string,
   appLang: string,
 ): string | undefined {
-  const allNames = new Intl.DisplayNames([appLang], {
-    type: 'language',
-    fallback: 'none',
-    languageDisplay: 'standard',
-  })
-  const translatedName = allNames.of(langCode)
+  try {
+    const allNames = new Intl.DisplayNames([appLang], {
+      type: 'language',
+      fallback: 'none',
+      languageDisplay: 'standard',
+    })
+    const translatedName = allNames.of(langCode)
 
-  if (translatedName) {
-    // force simple title case (as languages do not always start with an uppercase in Unicode data)
-    return translatedName[0].toLocaleUpperCase() + translatedName.slice(1)
+    if (translatedName) {
+      // force simple title case (as languages do not always start with an uppercase in Unicode data)
+      return translatedName[0].toLocaleUpperCase() + translatedName.slice(1)
+    }
+  } catch (e) {
+    // ignore RangeError from Intl.DisplayNames APIs
+    if (!(e instanceof RangeError)) {
+      throw e
+    }
   }
 }
 
