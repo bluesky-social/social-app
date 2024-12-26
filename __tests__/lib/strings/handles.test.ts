@@ -62,8 +62,8 @@ describe('User handle sanitization', () => {
       sanitizeHandle('xn-----olca5bbzc5b1a.xn--p1ai', '', false),
     ).toStrictEqual(forceLTR('xn-----olca5bbzc5b1a.xn--p1ai'))
     expect(
-      sanitizeHandle('xn--___-sehg1j8a7bob1b8ea3a3i6aokv6j6f.xn--h2brj9c', '@'),
-    ).toStrictEqual(forceLTR('@वेब_डिज़ाइन_नई_दिल्ली.भारत'))
+      sanitizeHandle('xn----0tdd2fya8ala5a2eaz8g2amjt4ixf.xn--h2brj9c', '@'),
+    ).toStrictEqual(forceLTR('@वेबडिज़ाइननई-दिल्ली.भारत'))
     expect(
       sanitizeHandle(
         'xn--___-sehg1j8a7bob1b8ea3a3i6aokv6j6f.xn--h2brj9c',
@@ -82,21 +82,9 @@ describe('User handle sanitization', () => {
     ).toStrictEqual(forceLTR('example-nonprofit.xn--nqv7fs00ema'))
   })
 
-  it('accepts IDN handles that use combining diacritics (U+0300 to U+036F)', () => {
-    function verify(unicodeDomain: string) {
-      const asciiDomain = toASCII(unicodeDomain)
-      expect(asciiDomain.startsWith('xn--')).toBe(true)
-      expect(unicodeDomain).toStrictEqual(unicodeDomain.normalize('NFC'))
-      expect(sanitizeHandle(asciiDomain)).toStrictEqual(forceLTR(unicodeDomain))
-    }
-    // diacritic has Cher, Latn, and Tale scripts
-    verify('Ɛ\u030Cxample.com')
-    // diacritic has Zyyy script (Common)
-    verify('Ɛ\u0362xample.com')
-  })
-
   it('rejects IDN handles that mix combining diacritics (U+0300 to U+036F) in different scripts', () => {
-    // "hospital" in Greek, but we added a Combining Overline to the last letter (Copt Elba Glag Goth Kana Latn)
+    // "hospital" in Greek, but we added a Combining Overline to the last letter,
+    // and that combining character's scripts (Copt Elba Glag Goth Kana Latn) do not have Greek (Grek),
     const unicodeDomain = 'νοσοκομείο\u0305.tld'
     const asciiDomain = toASCII(unicodeDomain)
     expect(asciiDomain.startsWith('xn--')).toBe(true)

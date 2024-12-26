@@ -4,13 +4,63 @@
 const fs = require('node:fs')
 const readline = require('node:readline')
 
-function readIdentifierStatusFileAndBuildAllowedList(): number[] {
+type UCDTable = Map<
+  number,
+  {scx: string; isUpper?: true; isEmojiBesides0to9?: true; isReserved?: true}
+>
+
+async function readUcdFileAndBuildTable(): Promise<UCDTable> {
+  const stream = fs.createReadStream(
+    './unicode/Public/16.0.0/ucd.all.flat.xml',
+    {encoding: 'utf-8'},
+  )
+  const linesInterface = readline.createInterface({input: stream})
+
+  const charRegex = /^ *<char.* cp="(?<cp>[A-Z0-9]+)".* scx="(?<scx>[^"]+)"/
+  const reservedRangeRegex =
+    /^ *<reserved first-cp="(?<firstCP>[A-Z0-9]+)" last-cp="(?<lastCP>[A-Z0-9]+)"/
+
+  const table: UCDTable = new Map()
+
+  for await (const line of linesInterface) {
+    const charMatch = charRegex.exec(line)
+    if (charMatch) {
+      const codepoint = Number.parseInt(charMatch.groups!.cp, 16)
+      const scx = charMatch.groups!.scx
+      const isUpper = line.includes('Upper="Y"')
+      const isEmojiBesides0to9 = line.includes('Emoji="Y"') && codepoint > 0x39
+      table.set(codepoint, {scx, isUpper, isEmojiBesides0to9})
+    } else {
+      const reservedMatch = reservedRangeRegex.exec(line)
+      if (reservedMatch) {
+        const first = Number.parseInt(reservedMatch.groups!.firstCP, 16)
+        const last = Number.parseInt(reservedMatch.groups!.lastCP, 16)
+        for (let cp = first; cp <= last; cp++) {
+          table.set(cp, {scx: '', isReserved: true})
+        }
+      } else if (line.includes('<char') && !line.includes('first-cp="')) {
+        const hasSCX = line.includes('scx="')
+        const extra = hasSCX ? ' and scx property' : ''
+        throw new Error(`Couldn't parse <char> tag${extra}:\n${line}`)
+      } else if (line.includes('<reserved first-cp')) {
+        throw new Error(`Couldn't parse <reserved> range tag:\n${line}`)
+      }
+    }
+  }
+
+  return table
+}
+
+function readIdentifierStatusFileAndBuildAllowedList(
+  ucdTable: UCDTable,
+): number[] {
   const identifierStatusTxt = fs.readFileSync(
     './unicode/Public/security/16.0.0/IdentifierStatus.txt',
     {encoding: 'utf-8'},
   ) as string
 
-  const lineRegex = /^(?<start>[a-zA-Z0-9]{4,5})(?:..(?<end>[a-zA-Z0-9]{4,5}))?/
+  const lineRegex =
+    /^(?<start>[a-zA-Z0-9]{4,5})(?:..(?<end>[a-zA-Z0-9]{4,5}))? +; Allowed/
 
   let allowedCodepoints = []
 
@@ -25,7 +75,7 @@ function readIdentifierStatusFileAndBuildAllowedList(): number[] {
 
   for (let line of identifierStatusTxt.split('\n')) {
     if (line.startsWith('#')) {
-      continue
+      continue // comment line
     }
     const match = lineRegex.exec(line)
     if (match) {
@@ -37,6 +87,7 @@ function readIdentifierStatusFileAndBuildAllowedList(): number[] {
         end = start
       }
       for (let codepoint = start; codepoint <= end; codepoint++) {
+        // const isUpper = ucdTable.get(codepoint)?.isUpper
         if (!isExtraBanned(codepoint)) {
           allowedCodepoints.push(codepoint)
         }
@@ -44,51 +95,32 @@ function readIdentifierStatusFileAndBuildAllowedList(): number[] {
     }
   }
 
-  for (let extraAllowed of EXTRA_ALLOWED_CODEPOINTS) {
-    if (!allowedCodepoints.includes(extraAllowed)) {
-      allowedCodepoints.unshift(extraAllowed)
+  // Emojis are allowed in domain names,
+  // but they aren't listed in IdentifierStatus.txt,
+  // we need to add them.
+  for (const [codepoint, codepointInfo] of ucdTable) {
+    if (codepointInfo.isEmojiBesides0to9) {
+      allowedCodepoints.push(codepoint)
     }
   }
-  allowedCodepoints.sort((a, b) => a - b)
+
+  allowedCodepoints.sort((a, b) => a - b) // ascending order
+
+  checkForDuplicates(allowedCodepoints)
 
   return allowedCodepoints
 }
 
-type UCDTable = Map<number, {scx: string; isUpper: boolean}>
-
-async function readUcdFileAndBuildTable(): Promise<UCDTable> {
-  const stream = fs.createReadStream(
-    './unicode/Public/16.0.0/ucd.all.flat.xml',
-    {encoding: 'utf-8'},
-  )
-  const linesInterface = readline.createInterface({input: stream})
-
-  const charRegex = /^ *<char .*cp="(?<cp>[A-Z0-9]{4,5})".* scx="(?<scx>[^"]+)"/
-
-  const table: UCDTable = new Map()
-
-  for await (const line of linesInterface) {
-    const match = charRegex.exec(line)
-    if (match) {
-      const codepoint = Number.parseInt(match.groups!.cp, 16)
-      const scx = match.groups!.scx
-      const isUpper = line.includes('Upper="Y"')
-      table.set(codepoint, {scx, isUpper})
-    } else if (line.includes('<char')) {
-      // the line seems to have a <char> tag, but it could not be parsed
-      if (line.includes('first-cp="100000" last-cp="10FFFD"')) {
-        // this specific line can be safely be ignored
-      } else {
-        const hasSCX = line.includes('scx="')
-        const extra = hasSCX ? ' and scx property' : ''
-        throw new Error(
-          `Could not parse line with <char> tag${extra}:\n${line}`,
-        )
-      }
+function checkForDuplicates(array: number[]) {
+  let previous = array[0]
+  for (let i = 1; i < array.length; i++) {
+    if (previous === array[i]) {
+      throw new Error(
+        `Duplicate codepoint ${toUCPN(previous)} in the allow list`,
+      )
     }
+    previous = array[i]
   }
-
-  return table
 }
 
 // Unicode code point notation
@@ -195,6 +227,10 @@ function buildPartitionList(
         `The codepoint ${toUCPN(codepoint)} does not have UCD data`,
       )
     }
+    if (codepointInfo.isReserved) {
+      continue
+    }
+
     const codepointScriptSet = new Set(codepointInfo.scx.split(' '))
     checkCodepointScriptSetAllowed(codepoint, codepointScriptSet)
     if (rangeScriptSet === null) {
@@ -276,41 +312,55 @@ function buildPartitionList(
   return partitions
 }
 
-function writePartitionsToTypescriptFile(partitions: Partition[]) {
-  const fd = fs.openSync('./unicode/unicodeMap.ts', 'w')
+function writePartitionsToMapFile(partitions: Partition[]) {
+  const fd = fs.openSync('../src/lib/strings/unicode-map.ts', 'w')
+
+  const augmentations = JSON.stringify(MIXED_SCRIPTS_AUGMENTATION_RULES)
   fs.appendFileSync(
     fd,
-    `// Autogenerated by compileUnicodeMaps.ts
-// Do not modify, rerun the script instead.
+    `\
+// Autogenerated by compileUnicodeMaps.ts
+// Do not modify manually, rerun the script instead.
 
-const BANNED = 'BANNED'
-const MIXING_ALLOWED = 'ALL'
+export const BANNED = 'BANNED'
+export const MIXING_ALLOWED = 'ALL'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars 
-const _PARTITIONS_BY_SCRIPT = [
+export const MIXED_SCRIPTS_AUGMENTATIONS: {[key: string]: string[] | undefined } = ${augmentations}
 `,
   )
-  for (const partition of partitions) {
-    let literal
+
+  const literalPartitions = partitions.map(partition => {
+    let tagLiteral
     if (partition.scripts) {
       if (
         partition.scripts.size === 1 &&
         (partition.scripts.has('Zyyy') || partition.scripts.has('Zinh'))
       ) {
-        literal = `MIXING_ALLOWED`
+        tagLiteral = `MIXING_ALLOWED`
       } else {
-        literal = `'${[...partition.scripts].join(' ')}'`
+        tagLiteral = `'${[...partition.scripts].join(' ')}'`
       }
     } else {
-      literal = `BANNED`
+      tagLiteral = `BANNED`
     }
-    const line = `    {lastCodePoint: ${toHex(
-      partition.end,
-    )}, scripts: ${literal}},\n`
-    fs.appendFileSync(fd, line)
-  }
+    const endLiteral = toHex(partition.end)
+    return {endLiteral, tagLiteral}
+  })
 
-  fs.appendFileSync(fd, ']\n')
+  const endLiterals = literalPartitions.map(({endLiteral}) => endLiteral)
+  const tagLiterals = literalPartitions.map(({tagLiteral}) => tagLiteral)
+
+  fs.appendFileSync(
+    fd,
+    `
+// "struct of arrays" for increased read performance
+export const PARTITIONS_BY_SCRIPT = {
+  partitionEnds: [${endLiterals.join(', ')}],
+  tags: [${tagLiterals.join(', ')}],
+}
+`,
+  )
+
   fs.closeSync(fd)
 }
 
@@ -319,7 +369,8 @@ const _PARTITIONS_BY_SCRIPT = [
   const ucdTable = await readUcdFileAndBuildTable()
   console.log(`Found ${ucdTable.size} total codepoints`)
 
-  const allowedCodepoints = readIdentifierStatusFileAndBuildAllowedList()
+  const allowedCodepoints =
+    readIdentifierStatusFileAndBuildAllowedList(ucdTable)
   // console.log(allowedCodepoints.map(cp => toHex(cp)))
   console.log(`Found ${allowedCodepoints.length} allowed identifier codepoints`)
 
@@ -327,14 +378,21 @@ const _PARTITIONS_BY_SCRIPT = [
   // console.log(partitions.map(({start, end, scripts}) => ({ start: toHex(start), end: toHex(end), scripts })))
   console.log(`Computed ${partitions.length} partitions`)
 
-  writePartitionsToTypescriptFile(partitions)
-  console.log('Wrote output typescript file')
+  writePartitionsToMapFile(partitions)
+  console.log('Wrote output unicode map file')
 })()
 
+/*
 // Codepoints that we wish to allow regardless of what's in IdentifierStatus.txt
-const EXTRA_ALLOWED_CODEPOINTS = [
-  0x002d, // ASCII Hyphen-Minus, because RFC 1035 allows it
+const EXTRA_ALLOWED_CODEPOINT_RANGES = [
+  {start: 0x1F300, end: 0x1F5FF}, // "Miscellaneous Symbols and Pictographs" (emoji range 1)
+  {start: 0x1F600, end: 0x1F64F}, // "Emoticons (Emoji)" (emoji range 2)
+  {start: 0x1F680, end: 0x1F6FF}, // "Transport and Map Symbols" (emoji range 3)
+  {start: 0x1F7E0, end: 0x1F7EB}, // "Geometric Shapes Extended": "Colored circles" and "Colored squares" (emoji range 4)
+  {start: 0x1F90C, end: 0x1F9FF}, // "Supplemental Symbols and Pictographs" without "Typicon symbols" (emoji range 5)
+  {start: 0x1FA70, end: 0x1FAFF}, // "Symbols and Pictographs Extended-A" (emoji range 6)
 ]
+  */
 
 // Codepoint ranges that we wish to ban regardless of what's in IdentifierStatus.txt
 const EXTRA_BANNED_CODEPOINT_RANGES = [
@@ -344,6 +402,16 @@ const EXTRA_BANNED_CODEPOINT_RANGES = [
   {start: 0x003a, end: 0x0060}, // ASCII symbols, uppercase latin letters, underscore, ...
   // add more banned ranges here as needed
 ]
+
+// https://www.unicode.org/reports/tr39/#Mixed_Script_Detection
+const MIXED_SCRIPTS_AUGMENTATION_RULES: {[key: string]: string[] | undefined} =
+  {
+    Hani: ['Hanb', 'Jpan', 'Kore'],
+    Hira: ['Jpan'],
+    Kana: ['Jpan'],
+    Hang: ['Kore'],
+    Bopo: ['Hanb'],
+  }
 
 // https://www.unicode.org/reports/tr31/#Table_Candidate_Characters_for_Exclusion_from_Identifiers
 const EXCLUDED_SCRIPTS = new Set([
