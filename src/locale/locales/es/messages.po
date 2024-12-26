@@ -1706,7 +1706,7 @@ msgstr "clic aquí"
 
 #: src/components/TagMenu/index.web.tsx:152
 msgid "Click here to open tag menu for {tag}"
-msgstr "Clic aquí para abrir el menu de {tag}"
+msgstr "Clic aquí para abrir el menú de {tag}"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:307
 msgid "Click to disable quote posts of this post."
@@ -3964,7 +3964,7 @@ msgstr "Si eliminas esta lista, no podrás recuperarla."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:250
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
-msgstr ""
+msgstr "Si tienes tu propio dominio, puedes usarlo como tu nombre de usuario. Este permite auto-verificar tu identidad. <0>obtén más información</0>."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
 msgid "If you remove this post, you won't be able to recover it."
@@ -6214,7 +6214,7 @@ msgstr "Razón:"
 
 #: src/view/screens/Search/Search.tsx:1032
 msgid "Recent Searches"
-msgstr "Busquedas Recientes"
+msgstr "Búsquedas Recientes"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:49
 msgid "Recommended"
