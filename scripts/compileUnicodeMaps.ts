@@ -355,6 +355,7 @@ export const MIXED_SCRIPTS_AUGMENTATIONS: {[key: string]: string[] | undefined }
     `
 // "struct of arrays" for increased read performance
 export const PARTITIONS_BY_SCRIPT = {
+  // ${literalPartitions.length} partitions
   partitionEnds: [${endLiterals.join(', ')}],
   tags: [${tagLiterals.join(', ')}],
 }

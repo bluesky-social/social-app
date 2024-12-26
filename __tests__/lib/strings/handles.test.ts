@@ -1,7 +1,7 @@
 import {toASCII} from 'punycode'
 
 import {forceLTR} from '#/lib/strings/bidi'
-import {sanitizeHandle} from '#/lib/strings/handles'
+import {getPartitionIndex,sanitizeHandle} from '#/lib/strings/handles'
 
 describe('User handle sanitization', () => {
   it('accepts basic ascii handles', () => {
@@ -127,5 +127,27 @@ describe('User handle sanitization', () => {
     expect(sanitizeHandle(decomposedFormAscii)).toStrictEqual(
       forceLTR(decomposedFormAscii),
     )
+  })
+})
+
+describe('getPartitionIndex(array, x)', () => {
+  it('finds the index in the middle', () => {
+    let partitionsEnds = [10, 20, 30]
+    expect(getPartitionIndex(partitionsEnds, 21)).toBe(2)
+  })
+
+  it('finds the right index', () => {
+    let partitionsEnds = [10, 20, 30, 40]
+    expect(getPartitionIndex(partitionsEnds, 15)).toBe(1)
+  })
+
+  it('returns -1 when x is not in the partitions', () => {
+    let partitionsEnds = [10, 20, 30, 40]
+    expect(getPartitionIndex(partitionsEnds, 41)).toBe(-1)
+  })
+
+  it('returns 0 when x is in the first partition', () => {
+    let partitionsEnds = [10, 20, 30, 40]
+    expect(getPartitionIndex(partitionsEnds, 0)).toBe(0)
   })
 })

@@ -125,21 +125,21 @@ function isHomographAttackPossible(unicodeLabel: string): boolean {
   let next = iterator.next()
 
   while (!next.done) {
-    const codePoint = next.value.codePointAt(0) as number
+    const codepoint = next.value.codePointAt(0) as number
     next = iterator.next()
-    const sass = getScriptOrAugmentedScriptSet(codePoint)
+    const sass = getAugmentedScriptSet(codepoint)
 
     if (typeof sass === 'string') {
+      // Codepoint has a single script
       const scriptTag = sass
       if (DEBUG_ATTACK)
-        console.log(`analysing codepoint: script is "${scriptTag}"`)
+        console.log(`analysing ${toHex(codepoint)}: script is "${scriptTag}"`)
       if (scriptTag === BANNED) {
-        if (DEBUG_ATTACK)
-          console.log(
-            `"${unicodeLabel}" has a banned codepoint 0x${codePoint.toString(
-              16,
-            )} "${String.fromCodePoint(codePoint)}"`,
-          )
+        if (DEBUG_ATTACK) {
+          const ucpn = toUCPN(codepoint)
+          const char = String.fromCodePoint(codepoint)
+          console.log(`"${unicodeLabel}" has a banned ${ucpn} "${char}"`)
+        }
         return true // banned codepoint, not trusted
       } else if (scriptTag === MIXING_ALLOWED) {
         // skip this codepoint
@@ -158,7 +158,7 @@ function isHomographAttackPossible(unicodeLabel: string): boolean {
         }
       }
     } else {
-      // Codepoint has multiple scripts, we need to deal with section 5.1.1 rules
+      // Codepoint has multiple scripts
       const augmentedScriptSet = sass
       if (DEBUG_ATTACK) {
         const scripts = [...augmentedScriptSet].join(', ')
@@ -176,8 +176,8 @@ function isHomographAttackPossible(unicodeLabel: string): boolean {
           if (DEBUG_ATTACK)
             console.log(
               `"${unicodeLabel}" empty RSS from ${toUCPN(
-                codePoint,
-              )} "${String.fromCodePoint(codePoint)}"`,
+                codepoint,
+              )} "${String.fromCodePoint(codepoint)}"`,
             )
           return true
         }
@@ -200,37 +200,67 @@ function setIntersection(setToModify: Set<string>, other: Set<string>) {
   })
 }
 
-function getScriptOrAugmentedScriptSet(
-  codePoint: number,
-): string | Set<string> {
-  for (let i = 0; i < PARTITIONS_BY_SCRIPT.partitionEnds.length; i++) {
-    const lastCodePoint = PARTITIONS_BY_SCRIPT.partitionEnds[i]
-    if (codePoint <= lastCodePoint) {
-      // found the codepoint's group
-      let tag = PARTITIONS_BY_SCRIPT.tags[i]
-      if (tag.includes(' ')) {
-        // split tag into scripts, and follow augmentation rules
-        const extendedScripts = tag.split(' ')
-        const augmentedScriptSet = new Set(extendedScripts)
-        extendedScripts.forEach(script => {
-          MIXED_SCRIPTS_AUGMENTATIONS[script]?.forEach(augmentation => {
-            augmentedScriptSet.add(augmentation)
-          })
+export function getPartitionIndex(partitions: number[], x: number): number {
+  let lowestPossibleIndex = 0
+  let highestPossibleIndex = partitions.length - 1
+  // invariant: lowest <= i <= highest
+  let i = Math.floor(partitions.length / 2)
+
+  while (true) {
+    let partitionEnd = partitions[i]
+    if (x < partitionEnd) {
+      // the target partition is at i, or lower
+      highestPossibleIndex = Math.min(i, highestPossibleIndex)
+      if (lowestPossibleIndex === highestPossibleIndex) {
+        return i // found
+      }
+      // look at lower i's
+      i =
+        lowestPossibleIndex +
+        Math.floor((highestPossibleIndex - lowestPossibleIndex) / 2)
+    } else if (x === partitionEnd) {
+      return i // found
+    } /* item < codepoint */ else {
+      // the target partition is at a higher i (or x is larger than all partitions)
+      if (i + 1 >= partitions.length) {
+        return -1 // x is larger than all partitions
+      }
+      lowestPossibleIndex = Math.max(i + 1, lowestPossibleIndex)
+      // look at higher i's
+      i =
+        lowestPossibleIndex +
+        Math.ceil((highestPossibleIndex - lowestPossibleIndex) / 2)
+    }
+  }
+}
+
+function getAugmentedScriptSet(codepoint: number): string | Set<string> {
+  const index = getPartitionIndex(PARTITIONS_BY_SCRIPT.partitionEnds, codepoint)
+  if (index >= 0) {
+    // found the codepoint's group
+    let tag = PARTITIONS_BY_SCRIPT.tags[index]
+    if (tag.includes(' ')) {
+      // split tag into scripts, and follow augmentation rules
+      const extendedScripts = tag.split(' ')
+      const augmentedScriptSet = new Set(extendedScripts)
+      extendedScripts.forEach(script => {
+        MIXED_SCRIPTS_AUGMENTATIONS[script]?.forEach(augmentation => {
+          augmentedScriptSet.add(augmentation)
         })
-        return augmentedScriptSet
+      })
+      return augmentedScriptSet
+    } else {
+      const extendedScript = tag
+      const augmentations = MIXED_SCRIPTS_AUGMENTATIONS[extendedScript]
+      if (augmentations) {
+        // follow augmentation rule
+        return new Set([extendedScript, ...augmentations])
       } else {
-        const extendedScript = tag
-        const augmentations = MIXED_SCRIPTS_AUGMENTATIONS[extendedScript]
-        if (augmentations) {
-          // follow augmentation rule
-          return new Set([extendedScript, ...augmentations])
-        } else {
-          // no augmentation needed (usual case)
-          return extendedScript
-        }
+        // no augmentation needed (usual case)
+        return extendedScript
       }
     }
-    // continue looking for the codepoint's group
+  } else {
+    return BANNED // unknown codepoint
   }
-  return BANNED // unknown codepoint
 }
