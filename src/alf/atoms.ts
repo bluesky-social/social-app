@@ -158,6 +158,9 @@ export const atoms = {
   flex_wrap: {
     flexWrap: 'wrap',
   },
+  flex_nowrap: {
+    flexWrap: 'nowrap',
+  },
   flex_0: {
     flex: web('0 0 auto') || (native(0) as number),
   },
