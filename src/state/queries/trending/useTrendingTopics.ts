@@ -34,13 +34,17 @@ export function useTrendingTopics() {
         topics: topics.filter(t => {
           return !hasMutedWord({
             mutedWords,
-            text: t.topic + ' ' + t.displayName + ' ' + t.description,
+            text: [t.topic, t.displayName, t.description]
+              .filter(Boolean)
+              .join(' '),
           })
         }),
         suggested: suggested.filter(t => {
           return !hasMutedWord({
             mutedWords,
-            text: t.topic + ' ' + t.displayName + ' ' + t.description,
+            text: [t.topic, t.displayName, t.description]
+              .filter(Boolean)
+              .join(' '),
           })
         }),
       }
