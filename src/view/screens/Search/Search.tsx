@@ -341,14 +341,13 @@ function SearchLanguageDropdown({
     ].concat(
       LANGUAGES.filter(
         (lang, index, self) =>
-          Boolean(lang.code2) && // reduce to the code2 varieties
-          index === self.findIndex(t => t.code2 === lang.code2), // remove dupes (which will happen)
+          index === self.findIndex(t => t.code === lang.code), // remove dupes (which will happen)
       )
         .map(l => ({
           label: l.name,
           inputLabel: l.name,
-          value: l.code2,
-          key: l.code2 + l.code3,
+          value: l.code,
+          key: l.code,
         }))
         .sort((a, b) => {
           // prioritize user's languages
