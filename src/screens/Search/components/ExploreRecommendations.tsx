@@ -1,6 +1,7 @@
 import {View} from 'react-native'
 import {Trans} from '@lingui/macro'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import {
   DEFAULT_LIMIT as RECOMMENDATIONS_COUNT,
@@ -71,7 +72,12 @@ function Inner() {
           ) : !trending?.suggested ? null : (
             <>
               {trending.suggested.map(topic => (
-                <TrendingTopicLink key={topic.link} topic={topic}>
+                <TrendingTopicLink
+                  key={topic.link}
+                  topic={topic}
+                  onPress={() => {
+                    logEvent('recommendedTopic:click', {context: 'explore'})
+                  }}>
                   {({hovered}) => (
                     <TrendingTopic
                       topic={topic}
