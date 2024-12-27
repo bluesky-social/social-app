@@ -28,16 +28,17 @@ export function useTrendingTopics() {
       const {data} = await agent.api.app.bsky.unspecced.getTrendingTopics({
         limit: DEFAULT_LIMIT,
       })
-
-      const {topics, suggested} = data
+      return data
+    },
+    select(data) {
       return {
-        topics: topics.filter(t => {
+        topics: data.topics.filter(t => {
           return !hasMutedWord({
             mutedWords,
             text: t.topic + ' ' + t.displayName + ' ' + t.description,
           })
         }),
-        suggested: suggested.filter(t => {
+        suggested: data.suggested.filter(t => {
           return !hasMutedWord({
             mutedWords,
             text: t.topic + ' ' + t.displayName + ' ' + t.description,
