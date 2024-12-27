@@ -41,7 +41,7 @@ msgstr "{0, plural, one {# seguidor} other {# seguidores}}"
 
 #: src/screens/Profile/ProfileFollows.tsx:40
 msgid "{0, plural, one {# following} other {# following}}"
-msgstr "{0, plural, one {# siguiendo} other {# siguiendo}}" # siguiendo o seguidos
+msgstr "{0, plural, one {# siguiendo} other {# siguiendo}}"
 
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
@@ -65,11 +65,11 @@ msgstr "{0, plural, one {# hora} other {# horas}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this account"
-msgstr "{0, plural, one {# etiqueta se ha} other {# etiquetas se han}} colocado en esta cuenta" # invert sentence
+msgstr "Se {0, plural, one {ha colocado # etiqueta} other {han colocado # etiquetas}} en esta cuenta"
 
 #: src/components/moderation/LabelsOnMe.tsx:62
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this content"
-msgstr "{0, plural, one {# etiqueta se ha} other {# etiquetas se han}} colocado en esta cuenta" # invert sentence
+msgstr "Se {0, plural, one {ha colocado # etiqueta} other {han colocado # etiquetas}} en este contenido"
 
 #: src/screens/Post/PostLikedBy.tsx:41
 msgid "{0, plural, one {# like} other {# likes}}"
@@ -1564,7 +1564,7 @@ msgstr "Chat"
 
 #: src/components/dms/ConvoMenu.tsx:82
 msgid "Chat muted"
-msgstr "Chat muteado"
+msgstr "Chat silenciado"
 
 #: src/components/dms/ConvoMenu.tsx:112
 #: src/components/dms/MessageMenu.tsx:81
@@ -1579,7 +1579,7 @@ msgstr "Configuración de chat"
 
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
-msgstr "Chat demuteado"
+msgstr "Chat no silenciado"
 
 #: src/screens/SignupQueued.tsx:78
 #: src/screens/SignupQueued.tsx:82
@@ -2632,7 +2632,7 @@ msgstr "Duración:"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:213
 msgid "e.g. alice"
-msgstr "p. ej. alice"
+msgstr "p. ej. alicia"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:321
 msgid "e.g. Alice Lastname"
@@ -2640,11 +2640,11 @@ msgstr "p. ej. Alicia Apellido"
 
 #: src/view/com/modals/EditProfile.tsx:180
 msgid "e.g. Alice Roberts"
-msgstr "p. ej. Alice Roberts"
+msgstr "p. ej. Alice Rodríguez"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:359
 msgid "e.g. alice.com"
-msgstr "p. ej. alice.com"
+msgstr "p. ej. alicia.com"
 
 #: src/view/com/modals/EditProfile.tsx:198
 msgid "e.g. Artist, dog-lover, and avid reader."
@@ -2664,7 +2664,7 @@ msgstr "p. ej. Spammers"
 
 #: src/view/com/modals/CreateOrEditList.tsx:292
 msgid "e.g. The posters who never miss."
-msgstr "p. ej. Usuarios que simpre aciertan."
+msgstr "p. ej. Usuarios que siempre aciertan."
 
 #: src/view/com/modals/CreateOrEditList.tsx:293
 msgid "e.g. Users that repeatedly reply with ads."
@@ -3249,7 +3249,7 @@ msgstr "Feed por {0}"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:353
 msgid "Feed menu"
-msgstr "Menú del Feed" # menú de feeds (see context)
+msgstr "Menú del Feed"
 
 #: src/view/screens/Feeds.tsx:709
 #~ msgid "Feed offline"
@@ -4310,7 +4310,7 @@ msgstr "Claro"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Like"
-msgstr "Me gusta" # If it's the action, it should be "me gusta" or "Dar \"me gusta\""
+msgstr "Me gusta"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:311
 msgid "Like ({0, plural, one {# like} other {# likes}})"
@@ -4327,7 +4327,7 @@ msgstr "Dale \"me gusta\" a 10 publicaciones para entrenar el feed de Descubrimi
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:501
 msgid "Like feed"
-msgstr ""
+msgstr "Dar \"me gusta\" al feed"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:275
 msgid "Like this feed"
@@ -4381,7 +4381,7 @@ msgstr "Le ha gustado a {likeCount, plural, one {# usuario} other {# usuarios}}"
 
 #: src/view/screens/Profile.tsx:234
 msgid "Likes"
-msgstr "\"Me gusta\""
+msgstr "Me gusta"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:217
 msgid "Likes on this post"
@@ -4415,7 +4415,7 @@ msgstr "Lista por </0>"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:154
 msgid "List by you"
-msgstr "" # Lista por ti, Tu lista?
+msgstr "Lista hecha por ti"
 
 #: src/view/screens/ProfileList.tsx:454
 msgid "List deleted"
@@ -5073,7 +5073,7 @@ msgstr "No se encontraron feeds. Intenta buscar algo más."
 #: src/components/LikedByList.tsx:84
 #: src/view/com/post-thread/PostLikedBy.tsx:84
 msgid "No likes yet"
-msgstr "Sin \"me gusta\" aún" # lowercase
+msgstr "Sin \"me gusta\" aún"
 
 #: src/components/ProfileCard.tsx:342
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:119
@@ -5391,7 +5391,7 @@ msgstr "Abrir opciones de conversación"
 
 #: src/components/Layout/Header/index.tsx:145
 msgid "Open drawer menu"
-msgstr ""
+msgstr "Abrir menú lateral"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:165
 #: src/view/com/composer/Composer.tsx:1221
@@ -6085,11 +6085,11 @@ msgstr "Público"
 
 #: src/view/com/lists/MyLists.tsx:117
 msgid "Public, sharable lists of users to mute or block in bulk."
-msgstr ""
+msgstr "Listas públicas y compartibles de usuarios para silenciar o bloquear en lote."
 
 #: src/view/com/lists/MyLists.tsx:112
 msgid "Public, sharable lists which can be used to drive feeds."
-msgstr ""
+msgstr "Listas públicas y compartibles que pueden usarse para crear feeds."
 
 #: src/view/screens/ModerationModlists.tsx:75
 #~ msgid "Public, shareable lists of users to mute or block in bulk."
@@ -6564,7 +6564,7 @@ msgstr "Republicar"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:74
 msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr ""
+msgstr "Republicar ({0, plural, one {# republicación} other {# republicaciones}})""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:548
 #: src/view/com/util/post-ctrls/RepostButton.tsx:148
@@ -8524,7 +8524,7 @@ msgstr "Preferencias de hilos"
 #: src/view/com/post-thread/PostThread.tsx:636
 #: src/view/com/post-thread/PostThread.tsx:641
 msgid "Threaded"
-msgstr ""
+msgstr "En hilo"
 
 #: src/screens/Settings/ThreadPreferences.tsx:142
 msgid "Threaded mode"
@@ -8642,7 +8642,7 @@ msgstr "Desbloquear lista"
 
 #: src/view/screens/ProfileList.tsx:574
 msgid "Un-mute list"
-msgstr "Demutear lista"
+msgstr "Dejar de silenciar lista"
 
 #: src/lib/strings/errors.ts:11
 msgid "Unable to connect. Please check your internet connection and try again."
@@ -8734,30 +8734,30 @@ msgstr "Ya no me gusta ({0, plural, one {# \"me gusta\"} other {# \"me gusta\"}}
 #: src/components/TagMenu/index.tsx:264
 #: src/view/screens/ProfileList.tsx:700
 msgid "Unmute"
-msgstr "Demutear"
+msgstr "Dejar de silenciar"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:155
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
 msgctxt "video"
 msgid "Unmute"
-msgstr "Desmutear"
+msgstr "Dejar de silenciar"
 
 #: src/components/TagMenu/index.web.tsx:115
 msgid "Unmute {truncatedTag}"
-msgstr "Demutear {truncatedTag}"
+msgstr "Dejar de silenciar {truncatedTag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
 msgid "Unmute Account"
-msgstr "Demutear Cuenta"
+msgstr "Dejar de silenciar Cuenta"
 
 #: src/components/TagMenu/index.tsx:223
 msgid "Unmute all {displayTag} posts"
-msgstr "Demutear todas las publicaciones de {displayTag}"
+msgstr "Dejar de silenciar todas las publicaciones de {displayTag}"
 
 #: src/components/dms/ConvoMenu.tsx:176
 msgid "Unmute conversation"
-msgstr "Demutear conversación"
+msgstr "Dejar de silenciar conversación"
 
 #: src/components/dms/ConvoMenu.tsx:140
 #~ msgid "Unmute notifications"
@@ -8766,11 +8766,11 @@ msgstr "Demutear conversación"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:489
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:493
 msgid "Unmute thread"
-msgstr "Demutear hilo"
+msgstr "Dejar de silenciar hilo"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:318
 msgid "Unmute video"
-msgstr "Desmutear video"
+msgstr "Dejar de silenciar video"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
 #~ msgid "Unmuted"
@@ -8778,12 +8778,12 @@ msgstr "Desmutear video"
 
 #: src/view/screens/ProfileList.tsx:684
 msgid "Unpin"
-msgstr "Desfijar" # Dejar de fijar?
+msgstr "Desfijar"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:519
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:526
 msgid "Unpin feed"
-msgstr "Desfijar de inicio"
+msgstr "Desfijar feed"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:309
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:311
@@ -8972,7 +8972,7 @@ msgstr "Usuario bloqueado"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:53
 msgid "User Blocked by \"{0}\""
-msgstr "Usuario bloqueado por \"{0}\"" # uppercase
+msgstr "Usuario bloqueado por \"{0}\""
 
 #: src/components/dms/BlockedByListDialog.tsx:27
 msgid "User blocked by list"
@@ -9357,7 +9357,7 @@ msgstr "¡Lo sentimos! No encontramos la página que buscabas."
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:330
 #~ msgid "We're sorry! You can only subscribe to ten labelers, and you've reached your limit of ten."
-#~ msgstr "Lo sentimos. Solo puedes suscribirte a hasta 10 etiquetadores, y has alcanzado el límite."
+#~ msgstr "¡Lo sentimos! Solo puedes suscribirte a hasta 10 etiquetadores, y has alcanzado el límite."
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:346
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
@@ -9381,7 +9381,7 @@ msgstr "¿Cómo quieres llamar a tu paquete de inicio?"
 
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:79
 msgid "What people are posting about."
-msgstr ""
+msgstr "Sobre qué está publicando la gente."
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
