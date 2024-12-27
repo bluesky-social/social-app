@@ -92,7 +92,7 @@ export function Inner() {
                 key={topic.link}
                 topic={topic}
                 onPress={() => {
-                  logEvent('trendingTopics:click', {context: 'interstitial'})
+                  logEvent('trendingTopic:click', {context: 'interstitial'})
                 }}>
                 {({hovered}) => (
                   <TrendingTopic

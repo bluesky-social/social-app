@@ -237,14 +237,16 @@ export type LogEvents = {
   'tmd:download': {}
   'tmd:post': {}
 
-  'trendingTopics:show': {}
-  'trendingTopics:hide': {
-    context: 'sidebar' | 'interstitial' | 'explore:trending'
+  'trendingTopics:show': {
+    context: 'settings'
   }
-  'trendingTopics:click': {
+  'trendingTopics:hide': {
+    context: 'settings' | 'sidebar' | 'interstitial' | 'explore:trending'
+  }
+  'trendingTopic:click': {
     context: 'sidebar' | 'interstitial' | 'explore'
   }
-  'recommendedTopics:click': {
+  'recommendedTopic:click': {
     context: 'explore'
   }
 
