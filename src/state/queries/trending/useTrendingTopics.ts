@@ -28,7 +28,10 @@ export function useTrendingTopics() {
       const {data} = await agent.api.app.bsky.unspecced.getTrendingTopics({
         limit: DEFAULT_LIMIT,
       })
-      return data
+      return {
+        topics: data.topics ?? [],
+        suggested: data.suggested ?? [],
+      }
     },
     select(data) {
       return {
