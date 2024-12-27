@@ -9,6 +9,11 @@ import {useAgent} from '#/state/session'
 
 export type TrendingTopic = AppBskyUnspeccedDefs.TrendingTopic
 
+type Response = {
+  topics: TrendingTopic[]
+  suggested: TrendingTopic[]
+}
+
 export const DEFAULT_LIMIT = 14
 
 export const trendingTopicsQueryKey = ['trending-topics']
@@ -20,7 +25,7 @@ export function useTrendingTopics() {
     return preferences?.moderationPrefs?.mutedWords || []
   }, [preferences?.moderationPrefs])
 
-  return useQuery({
+  return useQuery<Response>({
     refetchOnWindowFocus: true,
     staleTime: STALE.MINUTES.THREE,
     queryKey: trendingTopicsQueryKey,
@@ -33,21 +38,24 @@ export function useTrendingTopics() {
         suggested: data.suggested ?? [],
       }
     },
-    select(data) {
-      return {
-        topics: data.topics.filter(t => {
-          return !hasMutedWord({
-            mutedWords,
-            text: t.topic + ' ' + t.displayName + ' ' + t.description,
-          })
-        }),
-        suggested: data.suggested.filter(t => {
-          return !hasMutedWord({
-            mutedWords,
-            text: t.topic + ' ' + t.displayName + ' ' + t.description,
-          })
-        }),
-      }
-    },
+    select: React.useCallback(
+      (data: Response) => {
+        return {
+          topics: data.topics.filter(t => {
+            return !hasMutedWord({
+              mutedWords,
+              text: t.topic + ' ' + t.displayName + ' ' + t.description,
+            })
+          }),
+          suggested: data.suggested.filter(t => {
+            return !hasMutedWord({
+              mutedWords,
+              text: t.topic + ' ' + t.displayName + ' ' + t.description,
+            })
+          }),
+        }
+      },
+      [mutedWords],
+    ),
   })
 }
