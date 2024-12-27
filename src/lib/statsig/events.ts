@@ -241,4 +241,10 @@ export type LogEvents = {
   'trendingTopics:hide': {
     context: 'sidebar' | 'interstitial' | 'explore:trending'
   }
+  'trendingTopics:click': {
+    context: 'sidebar' | 'interstitial' | 'explore'
+  }
+  'recommendedTopics:click': {
+    context: 'explore'
+  }
 }
