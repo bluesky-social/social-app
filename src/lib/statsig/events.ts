@@ -247,4 +247,7 @@ export type LogEvents = {
   'recommendedTopics:click': {
     context: 'explore'
   }
+
+  'progressGuide:hide': {}
+  'progressGuide:followDialog:open': {}
 }

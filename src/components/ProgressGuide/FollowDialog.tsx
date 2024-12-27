@@ -10,6 +10,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
@@ -75,7 +76,10 @@ export function FollowDialog({guide}: {guide: Follow10ProgressGuide}) {
     <>
       <Button
         label={_(msg`Find people to follow`)}
-        onPress={control.open}
+        onPress={() => {
+          control.open()
+          logEvent('progressGuide:followDialog:open', {})
+        }}
         size={gtMobile ? 'small' : 'large'}
         color="primary"
         variant="solid">
