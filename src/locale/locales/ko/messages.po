@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade, Akamig\n"
 "Plural-Forms: \n"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:563
+#: src/components/ProgressGuide/FollowDialog.tsx:567
 msgid "(active)"
 msgstr "(활성)"
 
@@ -906,8 +906,8 @@ msgstr "3자 이상"
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
 msgstr "자동 재생 옵션은 <0>콘텐츠 및 미디어 설정</0>으로 이동했습니다."
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:105
-#: src/screens/Settings/ContentAndMediaSettings.tsx:111
+#: src/screens/Settings/ContentAndMediaSettings.tsx:106
+#: src/screens/Settings/ContentAndMediaSettings.tsx:112
 msgid "Autoplay videos and GIFs"
 msgstr "동영상 및 GIF 자동 재생"
 
@@ -1409,7 +1409,7 @@ msgstr "다그닥 🐴 다그닥 🐴"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:265
 #: src/components/NewskieDialog.tsx:146
 #: src/components/NewskieDialog.tsx:153
-#: src/components/ProgressGuide/FollowDialog.tsx:425
+#: src/components/ProgressGuide/FollowDialog.tsx:429
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:117
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:123
 #: src/view/com/modals/ChangePassword.tsx:268
@@ -1589,7 +1589,7 @@ msgstr "연결 중…"
 msgid "Contact support"
 msgstr "지원에 연락하기"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:48
+#: src/screens/Settings/ContentAndMediaSettings.tsx:49
 msgid "Content & Media"
 msgstr "콘텐츠 및 미디어"
 
@@ -2412,8 +2412,8 @@ msgstr "자막 사용"
 msgid "Enable this source only"
 msgstr "이 소스에서만 사용"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:121
-#: src/screens/Settings/ContentAndMediaSettings.tsx:127
+#: src/screens/Settings/ContentAndMediaSettings.tsx:122
+#: src/screens/Settings/ContentAndMediaSettings.tsx:136
 msgid "Enable trending topics"
 msgstr "인기 주제 사용"
 
@@ -2603,8 +2603,8 @@ msgstr "내 데이터 내보내기"
 msgid "Export My Data"
 msgstr "내 데이터 내보내기"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:81
-#: src/screens/Settings/ContentAndMediaSettings.tsx:84
+#: src/screens/Settings/ContentAndMediaSettings.tsx:82
+#: src/screens/Settings/ContentAndMediaSettings.tsx:85
 msgid "External media"
 msgstr "외부 미디어"
 
@@ -2766,7 +2766,7 @@ msgstr "피드는 사용자가 약간의 코딩 전문 지식만으로 구축할
 msgid "Feeds updated!"
 msgstr "피드를 업데이트했습니다"
 
-#: src/screens/Search/components/ExploreRecommendations.tsx:53
+#: src/screens/Search/components/ExploreRecommendations.tsx:54
 msgid "Feeds we think you might like."
 msgstr "좋아하실 만한 피드를 모았습니다."
 
@@ -2788,9 +2788,9 @@ msgstr "마무리 중"
 msgid "Find accounts to follow"
 msgstr "팔로우할 계정 찾아보기"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:77
-#: src/components/ProgressGuide/FollowDialog.tsx:84
-#: src/components/ProgressGuide/FollowDialog.tsx:413
+#: src/components/ProgressGuide/FollowDialog.tsx:78
+#: src/components/ProgressGuide/FollowDialog.tsx:88
+#: src/components/ProgressGuide/FollowDialog.tsx:417
 msgid "Find people to follow"
 msgstr "팔로우할 사람 찾아보기"
 
@@ -2834,7 +2834,7 @@ msgid "Follow {name}"
 msgstr "{name} 님을 팔로우"
 
 #: src/components/ProgressGuide/List.tsx:52
-#: src/state/shell/progress-guide.tsx:227
+#: src/state/shell/progress-guide.tsx:229
 msgid "Follow 10 accounts"
 msgstr "10개 계정 팔로우하기"
 
@@ -2915,8 +2915,8 @@ msgstr "{0} 님을 팔로우했습니다"
 msgid "Following {name}"
 msgstr "{name} 님을 팔로우했습니다"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:73
-#: src/screens/Settings/ContentAndMediaSettings.tsx:76
+#: src/screens/Settings/ContentAndMediaSettings.tsx:74
+#: src/screens/Settings/ContentAndMediaSettings.tsx:77
 msgid "Following feed preferences"
 msgstr "팔로우 중 피드 설정"
 
@@ -3090,8 +3090,8 @@ msgstr "사용자의 프로필로 가기"
 msgid "Graphic Media"
 msgstr "불쾌감을 주는 미디어"
 
-#: src/state/shell/progress-guide.tsx:216
-#: src/state/shell/progress-guide.tsx:226
+#: src/state/shell/progress-guide.tsx:218
+#: src/state/shell/progress-guide.tsx:228
 msgid "Half way there!"
 msgstr "절반은 완료!"
 
@@ -3153,7 +3153,7 @@ msgstr "앱 비밀번호를 만들었습니다!"
 msgid "Hidden list"
 msgstr "숨겨진 리스트"
 
-#: src/components/interstitials/Trending.tsx:113
+#: src/components/interstitials/Trending.tsx:118
 #: src/components/moderation/ContentHider.tsx:200
 #: src/components/moderation/LabelPreference.tsx:135
 #: src/components/moderation/PostHider.tsx:122
@@ -3161,9 +3161,9 @@ msgstr "숨겨진 리스트"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:132
+#: src/screens/Search/components/ExploreTrendingTopics.tsx:137
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:672
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:105
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "Hide"
 msgstr "숨기기"
 
@@ -3207,9 +3207,9 @@ msgstr "이 답글을 숨기시겠습니까?"
 msgid "Hide trending topics"
 msgstr "인기 주제 숨기기"
 
-#: src/components/interstitials/Trending.tsx:111
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:130
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:103
+#: src/components/interstitials/Trending.tsx:116
+#: src/screens/Search/components/ExploreTrendingTopics.tsx:135
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:108
 msgid "Hide trending topics?"
 msgstr "인기 주제를 숨기시겠습니까?"
 
@@ -3625,8 +3625,8 @@ msgstr "좋아요 ({0, plural, other {#}}개)"
 msgid "Like 10 posts"
 msgstr "10개 게시물에 좋아요 누르기"
 
-#: src/state/shell/progress-guide.tsx:212
-#: src/state/shell/progress-guide.tsx:217
+#: src/state/shell/progress-guide.tsx:214
+#: src/state/shell/progress-guide.tsx:219
 msgid "Like 10 posts to train the Discover feed"
 msgstr "10개 게시물에 좋아요를 눌러 Discover 피드를 훈련시키세요"
 
@@ -3829,8 +3829,8 @@ msgstr "나를 위해 만들기"
 msgid "Make sure this is where you intend to go!"
 msgstr "이곳이 당신이 가고자 하는 곳인지 확인하세요!"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:57
-#: src/screens/Settings/ContentAndMediaSettings.tsx:60
+#: src/screens/Settings/ContentAndMediaSettings.tsx:58
+#: src/screens/Settings/ContentAndMediaSettings.tsx:61
 msgid "Manage saved feeds"
 msgstr "저장한 피드 관리"
 
@@ -4331,7 +4331,7 @@ msgid "No result"
 msgstr "결과 없음"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:200
-#: src/components/ProgressGuide/FollowDialog.tsx:231
+#: src/components/ProgressGuide/FollowDialog.tsx:235
 msgid "No results"
 msgstr "결과 없음"
 
@@ -5211,7 +5211,7 @@ msgstr "이유:"
 msgid "Recent Searches"
 msgstr "최근 검색"
 
-#: src/screens/Search/components/ExploreRecommendations.tsx:49
+#: src/screens/Search/components/ExploreRecommendations.tsx:50
 msgid "Recommended"
 msgstr "추천"
 
@@ -5673,7 +5673,7 @@ msgstr "이전 페이지로 돌아갑니다"
 msgid "Save"
 msgstr "저장"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:591
+#: src/view/com/lightbox/ImageViewing/index.tsx:622
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -5763,7 +5763,7 @@ msgstr "맨 위로 스크롤"
 msgid "Search"
 msgstr "검색"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:741
+#: src/components/ProgressGuide/FollowDialog.tsx:745
 msgid "Search by name or interest"
 msgstr "이름 또는 관심 주제로 검색"
 
@@ -5771,7 +5771,7 @@ msgstr "이름 또는 관심 주제로 검색"
 msgid "Search feeds"
 msgstr "피드 검색"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:571
+#: src/components/ProgressGuide/FollowDialog.tsx:575
 msgid "Search for \"{interestsDisplayName}\"{activeText}"
 msgstr "\"{interestsDisplayName}\" 검색{activeText}"
 
@@ -5797,8 +5797,8 @@ msgstr "GIF 검색하기"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:507
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
-#: src/components/ProgressGuide/FollowDialog.tsx:760
-#: src/components/ProgressGuide/FollowDialog.tsx:761
+#: src/components/ProgressGuide/FollowDialog.tsx:764
+#: src/components/ProgressGuide/FollowDialog.tsx:765
 msgid "Search profiles"
 msgstr "프로필 검색"
 
@@ -6047,7 +6047,7 @@ msgstr "외설적"
 msgid "Share"
 msgstr "공유"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:600
+#: src/view/com/lightbox/ImageViewing/index.tsx:631
 msgctxt "action"
 msgid "Share"
 msgstr "공유"
@@ -6347,7 +6347,7 @@ msgstr "문제가 발생했습니다!"
 msgid "Something wrong? Let us know."
 msgstr "문제가 발생했나요? 저희에게 알려주세요."
 
-#: src/App.native.tsx:117
+#: src/App.native.tsx:122
 #: src/App.web.tsx:97
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "죄송합니다. 세션이 만료되었습니다. 다시 로그인해 주세요."
@@ -6559,11 +6559,11 @@ msgstr "탭하여 소리 켜기/끄기"
 msgid "Tap to view full image"
 msgstr "탭하여 전체 이미지를 봅니다"
 
-#: src/state/shell/progress-guide.tsx:231
+#: src/state/shell/progress-guide.tsx:233
 msgid "Task complete - 10 follows!"
 msgstr "작업 완료 - 팔로우 10번!"
 
-#: src/state/shell/progress-guide.tsx:221
+#: src/state/shell/progress-guide.tsx:223
 msgid "Task complete - 10 likes!"
 msgstr "작업 완료 - 좋아요 10번!"
 
@@ -6683,7 +6683,7 @@ msgstr "저작권 정책을 <0/>(으)로 이동했습니다"
 msgid "The Discover feed"
 msgstr "Discover 피드"
 
-#: src/state/shell/progress-guide.tsx:222
+#: src/state/shell/progress-guide.tsx:224
 msgid "The Discover feed now knows what you like"
 msgstr "Discover 피드는 이제 당신이 무엇을 좋아하는지 알 테죠"
 
@@ -7054,8 +7054,8 @@ msgstr "모든 사용자의 인용 게시물에서 해당 게시물이 삭제되
 msgid "Thread options"
 msgstr "스레드 옵션"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:65
-#: src/screens/Settings/ContentAndMediaSettings.tsx:68
+#: src/screens/Settings/ContentAndMediaSettings.tsx:66
+#: src/screens/Settings/ContentAndMediaSettings.tsx:69
 msgid "Thread preferences"
 msgstr "스레드 설정"
 
@@ -7417,8 +7417,8 @@ msgstr "기본 제공자 사용"
 msgid "Use in-app browser"
 msgstr "인앱 브라우저 사용"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:91
-#: src/screens/Settings/ContentAndMediaSettings.tsx:97
+#: src/screens/Settings/ContentAndMediaSettings.tsx:92
+#: src/screens/Settings/ContentAndMediaSettings.tsx:98
 msgid "Use in-app browser to open links"
 msgstr "인앱 브라우저를 사용하여 링크 열기"
 
@@ -7748,7 +7748,7 @@ msgid "We'll use this to help customize your experience."
 msgstr "이를 통해 사용자 환경을 맞춤 설정할 수 있습니다."
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:88
-#: src/components/ProgressGuide/FollowDialog.tsx:153
+#: src/components/ProgressGuide/FollowDialog.tsx:157
 msgid "We're having network issues, try again"
 msgstr "네트워크 문제가 발생했습니다. 다시 시도해 주세요"
 
@@ -7950,9 +7950,9 @@ msgstr "이제 새 비밀번호로 로그인할 수 있습니다."
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
 msgstr "계정을 재활성화하여 로그인을 계속할 수 있습니다. 내 프로필과 글이 다른 사용자에게 표시됩니다."
 
-#: src/components/interstitials/Trending.tsx:112
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:131
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:104
+#: src/components/interstitials/Trending.tsx:117
+#: src/screens/Search/components/ExploreTrendingTopics.tsx:136
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:109
 msgid "You can update this later from your settings."
 msgstr "나중에 설정에서 변경할 수 있습니다."
 
@@ -8170,7 +8170,7 @@ msgstr "준비가 끝났습니다!"
 msgid "You've chosen to hide a word or tag within this post."
 msgstr "이 글에서 단어 또는 태그를 숨기도록 설정했습니다."
 
-#: src/state/shell/progress-guide.tsx:232
+#: src/state/shell/progress-guide.tsx:234
 msgid "You've found some people to follow"
 msgstr "팔로우할 사람들을 찾은 것 같군요"
 
@@ -8237,7 +8237,7 @@ msgstr "이메일이 변경되었지만 인증되지 않았습니다. 다음 단
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "이메일이 아직 인증되지 않았습니다. 이는 중요한 보안 단계이므로 권장하는 사항입니다."
 
-#: src/state/shell/progress-guide.tsx:211
+#: src/state/shell/progress-guide.tsx:213
 msgid "Your first like!"
 msgstr "첫 좋아요!"
 
