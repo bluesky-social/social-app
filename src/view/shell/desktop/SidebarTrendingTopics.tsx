@@ -79,7 +79,12 @@ function Inner() {
           ) : !trending?.topics ? null : (
             <>
               {trending.topics.slice(0, TRENDING_LIMIT).map(topic => (
-                <TrendingTopicLink key={topic.link} topic={topic}>
+                <TrendingTopicLink
+                  key={topic.link}
+                  topic={topic}
+                  onPress={() => {
+                    logEvent('trendingTopic:click', {context: 'sidebar'})
+                  }}>
                   {({hovered}) => (
                     <TrendingTopic
                       size="small"
