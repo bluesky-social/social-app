@@ -15,7 +15,7 @@ msgstr ""
 
 #: src/components/ProgressGuide/FollowDialog.tsx:567
 msgid "(active)"
-msgstr ""
+msgstr "(active)"
 
 #: src/screens/Messages/components/ChatListItem.tsx:130
 msgid "(contains embedded content)"
@@ -167,10 +167,6 @@ msgstr "{0}mo"
 msgid "{0}s"
 msgstr "{0}s"
 
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
-#~ msgid "{badge} unread items"
-#~ msgstr "{badge} éléments non lus"
-
 #: src/view/shell/desktop/LeftNav.tsx:189
 msgid "{count} unread items"
 msgstr "{count} éléments non lus"
@@ -287,7 +283,7 @@ msgstr "{handle} ne peut être contacté par message"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:260
 msgid "{notificationCount} unread items"
-msgstr ""
+msgstr "{notificationCount} éléments non lus"
 
 #: src/view/shell/Drawer.tsx:448
 msgid "{numUnreadNotifications} unread"
@@ -516,7 +512,7 @@ msgstr "Ajouter un post"
 #: src/view/screens/ProfileList.tsx:903
 #: src/view/screens/ProfileList.tsx:921
 msgid "Add people"
-msgstr ""
+msgstr "Ajouter des personnes"
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
@@ -583,10 +579,6 @@ msgstr "Étiquettes de contenu adulte"
 #: src/screens/Moderation/index.tsx:383
 msgid "Advanced"
 msgstr "Avancé"
-
-#: src/state/shell/progress-guide.tsx:171
-#~ msgid "Algorithm training complete!"
-#~ msgstr "Entraînement de l’algorithme terminé !"
 
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
@@ -960,7 +952,7 @@ msgstr "Veuillez vérifier votre e-mail avant d’envoyer des messages à d’au
 #: src/components/interstitials/Trending.tsx:67
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:74
 msgid "BETA"
-msgstr ""
+msgstr "BÊTA"
 
 #: src/components/dialogs/BirthDateSettings.tsx:106
 #: src/screens/Settings/AccountSettings.tsx:109
@@ -1118,15 +1110,15 @@ msgstr "Parcourir d’autres fils d’actu"
 
 #: src/components/TrendingTopics.tsx:176
 msgid "Browse posts about {displayName}"
-msgstr ""
+msgstr "Parcourir des posts qui parlent de {displayName}"
 
 #: src/components/TrendingTopics.tsx:184
 msgid "Browse posts tagged with {displayName}"
-msgstr ""
+msgstr "Parcourir des posts avec le mot-clé {displayName}"
 
 #: src/components/TrendingTopics.tsx:222
 msgid "Browse topic {displayName}"
-msgstr ""
+msgstr "Parcourir le sujet {displayName}"
 
 #: src/view/com/auth/SplashScreen.web.tsx:168
 msgid "Business"
@@ -1388,14 +1380,6 @@ msgstr "Effacer la recherche"
 msgid "click here"
 msgstr "cliquez ici"
 
-#: src/view/com/modals/DeleteAccount.tsx:208
-#~ msgid "Click here for more information on deactivating your account"
-#~ msgstr "Cliquez ici pour plus d’informations sur la désactivation de votre compte"
-
-#: src/view/com/modals/DeleteAccount.tsx:217
-#~ msgid "Click here for more information."
-#~ msgstr "Cliquez ici pour plus d’informations."
-
 #: src/components/TagMenu/index.web.tsx:152
 msgid "Click here to open tag menu for {tag}"
 msgstr "Cliquez ici pour ouvrir le menu de mot-clé pour {tag}"
@@ -1454,7 +1438,7 @@ msgstr "Fermer le dialogue"
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
 msgid "Close emoji picker"
-msgstr ""
+msgstr "Fermer le sélecteur d’emoji"
 
 #: src/components/dialogs/GifSelect.tsx:169
 msgid "Close GIF dialog"
@@ -2431,7 +2415,7 @@ msgstr "Active cette source uniquement"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:122
 #: src/screens/Settings/ContentAndMediaSettings.tsx:136
 msgid "Enable trending topics"
-msgstr ""
+msgstr "Activer les tendances"
 
 #: src/screens/Messages/Settings.tsx:130
 #: src/screens/Messages/Settings.tsx:133
@@ -2784,7 +2768,7 @@ msgstr "Fils d’actu mis à jour !"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:54
 msgid "Feeds we think you might like."
-msgstr ""
+msgstr "Fils d’actu qui pourraient vous plaire."
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:43
 msgid "File saved successfully!"
@@ -2808,7 +2792,7 @@ msgstr "Trouver des comptes à suivre"
 #: src/components/ProgressGuide/FollowDialog.tsx:88
 #: src/components/ProgressGuide/FollowDialog.tsx:417
 msgid "Find people to follow"
-msgstr ""
+msgstr "Trouver des comptes à suivre"
 
 #: src/view/screens/Search/Search.tsx:595
 msgid "Find posts and users on Bluesky"
@@ -2852,7 +2836,7 @@ msgstr "Suivre {name}"
 #: src/components/ProgressGuide/List.tsx:52
 #: src/state/shell/progress-guide.tsx:229
 msgid "Follow 10 accounts"
-msgstr ""
+msgstr "Suivre 10 comptes"
 
 #: src/components/ProgressGuide/List.tsx:69
 msgid "Follow 7 accounts"
@@ -3221,13 +3205,13 @@ msgstr "Cacher cette réponse ?"
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:83
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:62
 msgid "Hide trending topics"
-msgstr ""
+msgstr "Cacher les tendances"
 
 #: src/components/interstitials/Trending.tsx:116
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:135
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:108
 msgid "Hide trending topics?"
-msgstr ""
+msgstr "Cacher les tendances ?"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:592
 msgid "Hide user list"
@@ -3689,7 +3673,7 @@ msgstr "Mentions « J’aime » sur ce post"
 #: src/view/com/post-thread/PostThread.tsx:626
 #: src/view/com/post-thread/PostThread.tsx:631
 msgid "Linear"
-msgstr ""
+msgstr "Linéaire"
 
 #: src/Navigation.tsx:198
 msgid "List"
@@ -5133,19 +5117,11 @@ msgstr "Public"
 
 #: src/view/com/lists/MyLists.tsx:77
 msgid "Public, sharable lists of users to mute or block in bulk."
-msgstr ""
+msgstr "Listes publiques et partageables de comptes à masquer ou à bloquer."
 
 #: src/view/com/lists/MyLists.tsx:72
 msgid "Public, sharable lists which can be used to drive feeds."
-msgstr ""
-
-#: src/view/screens/ModerationModlists.tsx:65
-#~ msgid "Public, shareable lists of users to mute or block in bulk."
-#~ msgstr "Listes publiques et partageables de comptes à masquer ou à bloquer."
-
-#: src/view/screens/Lists.tsx:65
-#~ msgid "Public, shareable lists which can drive feeds."
-#~ msgstr "Les listes publiques et partageables qui peuvent alimenter les fils d’actu."
+msgstr "Listes publiques et partageables de comptes qui peuvent alimenter les fils d’actu."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:128
 msgid "QR code copied to your clipboard!"
@@ -5237,7 +5213,7 @@ msgstr "Recherches récentes"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:50
 msgid "Recommended"
-msgstr ""
+msgstr "Recommandé"
 
 #: src/screens/Messages/components/MessageListError.tsx:20
 msgid "Reconnect"
@@ -5427,7 +5403,7 @@ msgstr "Les paramètres de réponse sont choisis par l’auteur·ice du fil de d
 
 #: src/view/com/post-thread/PostThread.tsx:648
 msgid "Reply sorting"
-msgstr ""
+msgstr "Ordre des réponses"
 
 #: src/view/com/post/Post.tsx:204
 #: src/view/com/posts/PostFeedItem.tsx:553
@@ -5789,7 +5765,7 @@ msgstr "Recherche"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:745
 msgid "Search by name or interest"
-msgstr ""
+msgstr "Rechercher par nom ou intérêt"
 
 #: src/view/screens/Feeds.tsx:441
 msgid "Search feeds"
@@ -5797,7 +5773,7 @@ msgstr "Rechercher des fils d’actu"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:575
 msgid "Search for \"{interestsDisplayName}\"{activeText}"
-msgstr ""
+msgstr "Recherche de « {interestsDisplayName} »{activeText}"
 
 #: src/view/shell/desktop/Search.tsx:201
 msgid "Search for \"{query}\""
@@ -6207,19 +6183,15 @@ msgstr "Afficher les réponses"
 
 #: src/view/com/post-thread/PostThread.tsx:622
 msgid "Show replies as"
-msgstr ""
+msgstr "Type d’affichage des réponses"
 
 #: src/screens/Settings/ThreadPreferences.tsx:151
 msgid "Show replies as threaded"
-msgstr ""
+msgstr "Afficher les réponses comme des fils"
 
 #: src/screens/Settings/ThreadPreferences.tsx:126
 msgid "Show replies by people you follow before all other replies"
 msgstr "Afficher les réponses des comptes que vous suivez avant les autres réponses"
-
-#: src/screens/Settings/ThreadPreferences.tsx:151
-#~ msgid "Show replies in a threaded view"
-#~ msgstr "Afficher les réponses sous forme de fils"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:549
@@ -6417,12 +6389,12 @@ msgstr "Démarrer une nouvelle discussion"
 #: src/view/screens/ProfileList.tsx:817
 #: src/view/screens/ProfileList.tsx:938
 msgid "Start adding people"
-msgstr ""
+msgstr "Commencer à ajouter des personnes"
 
 #: src/view/screens/ProfileList.tsx:824
 #: src/view/screens/ProfileList.tsx:945
 msgid "Start adding people!"
-msgstr ""
+msgstr "Commencez à ajouter des personnes !"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:353
 msgid "Start chat with {displayName}"
@@ -6564,7 +6536,7 @@ msgstr "Appuyer pour changer l’icône de l’application"
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
 msgid "Tap to close the emoji picker"
-msgstr ""
+msgstr "Appuyer pour fermer le sélecteur d’emoji"
 
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"
@@ -6589,7 +6561,7 @@ msgstr "Appuyer pour voir l’image complète"
 
 #: src/state/shell/progress-guide.tsx:233
 msgid "Task complete - 10 follows!"
-msgstr ""
+msgstr "Tâche accomplie - 10 abonnements !"
 
 #: src/state/shell/progress-guide.tsx:223
 msgid "Task complete - 10 likes!"
@@ -6987,13 +6959,9 @@ msgstr "Ce lien vous conduit au site Web suivant :"
 msgid "This list - created by <0>{0}</0> - contains possible violations of Bluesky's community guidelines in its name or description."
 msgstr "Cette liste – créée par <0>{0}</0> – contient des violations possibles des directives communautaires de Bluesky dans son nom ou sa description."
 
-#: src/view/screens/ProfileList.tsx:904
-#~ msgid "This list is empty!"
-#~ msgstr "Cette liste est vide !"
-
 #: src/view/screens/ProfileList.tsx:933
 msgid "This list is empty."
-msgstr ""
+msgstr "Cette liste est vide."
 
 #: src/screens/Profile/ErrorState.tsx:40
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
@@ -7084,7 +7052,7 @@ msgstr "Cela retirera votre post de cette citation pour tout le monde, et le rem
 #: src/view/com/post-thread/PostThread.tsx:606
 #: src/view/com/post-thread/PostThread.tsx:609
 msgid "Thread options"
-msgstr ""
+msgstr "Options de fil de discussion"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:66
 #: src/screens/Settings/ContentAndMediaSettings.tsx:69
@@ -7098,7 +7066,7 @@ msgstr "Préférences des fils de discussion"
 #: src/view/com/post-thread/PostThread.tsx:636
 #: src/view/com/post-thread/PostThread.tsx:641
 msgid "Threaded"
-msgstr ""
+msgstr "Sous forme de fils"
 
 #: src/screens/Settings/ThreadPreferences.tsx:142
 msgid "Threaded mode"
@@ -7148,7 +7116,7 @@ msgstr "Meilleur"
 
 #: src/Navigation.tsx:383
 msgid "Topic"
-msgstr ""
+msgstr "Sujet"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
@@ -7163,7 +7131,7 @@ msgstr "Traduire"
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:69
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:59
 msgid "Trending"
-msgstr ""
+msgstr "Tendances"
 
 #: src/view/com/util/error/ErrorScreen.tsx:103
 msgctxt "action"
@@ -7733,7 +7701,7 @@ msgstr "Nous n’avons trouvé aucun résultat pour ce mot-clé."
 
 #: src/screens/Topic.tsx:178
 msgid "We couldn't find any results for that topic."
-msgstr ""
+msgstr "Nous n’avons trouvé aucun résultat pour ce sujet."
 
 #: src/screens/Messages/Conversation.tsx:103
 msgid "We couldn't load this conversation"
@@ -7831,7 +7799,7 @@ msgstr "Quel est le nom de votre kit de démarrage ?"
 
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:79
 msgid "What people are posting about."
-msgstr ""
+msgstr "Ce sur quoi les personnes postent."
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
@@ -7986,7 +7954,7 @@ msgstr "Vous pouvez réactiver votre compte pour continuer à vous connecter. Vo
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:136
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:109
 msgid "You can update this later from your settings."
-msgstr ""
+msgstr "Vous pourrez changer ça plus tard depuis vos paramètres."
 
 #: src/view/com/profile/ProfileFollowers.tsx:94
 msgid "You do not have any followers."
@@ -8204,7 +8172,7 @@ msgstr "Vous avez choisi de masquer un mot ou un mot-clé dans ce post."
 
 #: src/state/shell/progress-guide.tsx:234
 msgid "You've found some people to follow"
-msgstr ""
+msgstr "Vous avez trouvé des personnes à suivre"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
