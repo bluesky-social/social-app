@@ -106,7 +106,12 @@ function Inner() {
           ) : !trending?.topics ? null : (
             <>
               {trending.topics.map(topic => (
-                <TrendingTopicLink key={topic.link} topic={topic}>
+                <TrendingTopicLink
+                  key={topic.link}
+                  topic={topic}
+                  onPress={() => {
+                    logEvent('trendingTopic:click', {context: 'explore'})
+                  }}>
                   {({hovered}) => (
                     <TrendingTopic
                       topic={topic}
