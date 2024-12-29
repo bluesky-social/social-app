@@ -49,7 +49,7 @@ msgstr ""
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 #~ msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
-#~ msgstr "{0, plural, one {# Label wurde auf dieses Account platziert} other {# Labels wurden auf dieses Account platziert}}"
+#~ msgstr "{0, plural, one {# Label wurde auf diesen Account platziert} other {# Labels wurden auf diesen Account platziert}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:59
 #~ msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
@@ -108,7 +108,7 @@ msgstr "{0, plural, one {Like} other {Likes}}"
 #: src/components/FeedCard.tsx:213
 #: src/view/com/feeds/FeedSourceCard.tsx:303
 #~ msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
-#~ msgstr "{0, plural, one {Von # Account geliked} other {Von # Konten geliked}}"
+#~ msgstr "{0, plural, one {Von # Account geliked} other {Von # Accounts geliked}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
@@ -203,7 +203,7 @@ msgstr ""
 
 #: src/components/LabelingServiceCard/index.tsx:96
 #~ msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-#~ msgstr "{count, plural, one {Geliked von # Account} other {Geliked von # Konten}}"
+#~ msgstr "{count, plural, one {Geliked von # Account} other {Geliked von # Accounts}}"
 
 #: src/view/shell/desktop/LeftNav.tsx:189
 msgid "{count} unread items"
@@ -343,7 +343,7 @@ msgstr "{handle} kann keine Nachricht gesendet werden"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:307
 #: src/view/screens/ProfileFeed.tsx:591
 #~ msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
-#~ msgstr "{likeCount, plural, one {Geliked von # Account} other {Geliked von # Konten}}"
+#~ msgstr "{likeCount, plural, one {Geliked von # Account} other {Geliked von # Accounts}}"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:260
 msgid "{notificationCount} unread items"
@@ -682,7 +682,7 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
-msgstr "Allen Konten wurden gefolgt!"
+msgstr "Allen Accounts wurden gefolgt!"
 
 #: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
@@ -1120,7 +1120,7 @@ msgstr "Account blockieren?"
 
 #: src/view/screens/ProfileList.tsx:638
 msgid "Block accounts"
-msgstr "Konten blockieren"
+msgstr "Accounts blockieren"
 
 #: src/view/screens/ProfileList.tsx:759
 msgid "Block list"
@@ -1128,7 +1128,7 @@ msgstr "Blockliste"
 
 #: src/view/screens/ProfileList.tsx:754
 msgid "Block these accounts?"
-msgstr "Diese Konten blockieren?"
+msgstr "Diese Accounts blockieren?"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:83
 msgid "Blocked"
@@ -1136,21 +1136,21 @@ msgstr "Blockiert"
 
 #: src/screens/Moderation/index.tsx:253
 msgid "Blocked accounts"
-msgstr "Blockierte Konten"
+msgstr "Blockierte Accounts"
 
 #: src/Navigation.tsx:155
 #: src/view/screens/ModerationBlockedAccounts.tsx:101
 msgid "Blocked Accounts"
-msgstr "Blockierte Konten"
+msgstr "Blockierte Accounts"
 
 #: src/view/com/profile/ProfileMenu.tsx:336
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:741
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
-msgstr "Blockierte Konten können nicht in deinen Threads antworten, dich erwähnen oder anderweitig mit dir interagieren."
+msgstr "Blockierte Accounts können nicht in deinen Threads antworten, dich erwähnen oder anderweitig mit dir interagieren."
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:112
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
-msgstr "Blockierte Konten können nicht in deinen Threads antworten, dich erwähnen oder anderweitig mit dir interagieren. Du wirst ihre Inhalte nicht sehen und sie werden daran gehindert, deine zu sehen."
+msgstr "Blockierte Accounts können nicht in deinen Threads antworten, dich erwähnen oder anderweitig mit dir interagieren. Du wirst ihre Inhalte nicht sehen und sie werden daran gehindert, deine zu sehen."
 
 #: src/view/com/post-thread/PostThread.tsx:464
 msgid "Blocked post."
@@ -1162,11 +1162,11 @@ msgstr "Blockieren hindert diesen Kennzeichnungsdienst nicht daran, Kennzeichnun
 
 #: src/view/screens/ProfileList.tsx:756
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
-msgstr "Die Blockierung ist öffentlich. Blockierte Konten können nicht in deinen Threads antworten, dich erwähnen oder anderweitig mit dir interagieren."
+msgstr "Die Blockierung ist öffentlich. Blockierte Accounts können nicht in deinen Threads antworten, dich erwähnen oder anderweitig mit dir interagieren."
 
 #: src/view/com/profile/ProfileMenu.tsx:333
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
-msgstr "Blockieren verhindert nicht, dass Kennzeichnungen zu deinem Account hinzugefügt werden, verhindert aber, dass dieses Account in deinen Threads antworten oder interagieren kann."
+msgstr "Blockieren verhindert nicht, dass Kennzeichnungen zu deinem Account hinzugefügt werden, verhindert aber, dass dieses Accounts in deinen Threads antworten oder interagieren kann."
 
 #: src/view/com/auth/SplashScreen.web.tsx:173
 msgid "Blog"
@@ -1200,7 +1200,7 @@ msgstr "Mit Freunden ist Bluesky besser!"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
-msgstr "Bluesky wählt eine Reihe von empfohlenen Konten von Personen in deinem Netzwerk aus."
+msgstr "Bluesky wählt eine Reihe von empfohlenen Accounts von Personen in deinem Netzwerk aus."
 
 #: src/screens/Settings/components/PwiOptOut.tsx:92
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
@@ -1233,7 +1233,7 @@ msgstr "Bücher"
 
 #: src/components/FeedInterstitials.tsx:348
 msgid "Browse more accounts on the Explore page"
-msgstr "Stöbere auf der Seite „Explore” nach weiteren Konten"
+msgstr "Stöbere auf der Seite „Explore” nach weiteren Accounts"
 
 #: src/components/FeedInterstitials.tsx:481
 msgid "Browse more feeds on the Explore page"
@@ -1731,7 +1731,7 @@ msgstr "Community-Richtlinien"
 
 #: src/screens/Onboarding/StepFinished.tsx:293
 msgid "Complete onboarding and start using your account"
-msgstr "Schließe das Onboarding ab und nutze dein Account"
+msgstr "Schließe das Onboarding ab und nutze deinen Account"
 
 #: src/screens/Signup/index.tsx:144
 msgid "Complete the challenge"
@@ -2021,11 +2021,11 @@ msgstr "Erstellen"
 #: src/view/com/auth/SplashScreen.tsx:57
 #: src/view/com/auth/SplashScreen.web.tsx:106
 #~ msgid "Create a new account"
-#~ msgstr "Neues Account erstellen"
+#~ msgstr "Neuen Account erstellen"
 
 #: src/view/screens/Settings/index.tsx:403
 #~ msgid "Create a new Bluesky account"
-#~ msgstr "Neues Bluesky-Account erstellen"
+#~ msgstr "Neuen Bluesky-Account erstellen"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:153
 msgid "Create a QR code for a starter pack"
@@ -2053,7 +2053,7 @@ msgstr "Account erstellen"
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
 msgid "Create an account"
-msgstr "Ein Account erstellen"
+msgstr "Einen Account erstellen"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:292
 msgid "Create an avatar instead"
@@ -2070,7 +2070,7 @@ msgstr "Ein weiteres erstellen"
 #: src/view/com/auth/SplashScreen.tsx:47
 #: src/view/com/auth/SplashScreen.web.tsx:109
 msgid "Create new account"
-msgstr "Neues Account erstellen"
+msgstr "Neuen Account erstellen"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:101
 msgid "Create report for {0}"
@@ -2136,7 +2136,7 @@ msgstr "Account deaktivieren"
 
 #: src/view/screens/Settings/index.tsx:785
 #~ msgid "Deactivate my account"
-#~ msgstr "Mein Account deaktivieren"
+#~ msgstr "Meinen Account deaktivieren"
 
 #: src/screens/Settings/Settings.tsx:331
 msgid "Debug Moderation"
@@ -2203,11 +2203,11 @@ msgstr "Nachricht für mich löschen"
 
 #: src/view/com/modals/DeleteAccount.tsx:267
 msgid "Delete my account"
-msgstr "Mein Account löschen"
+msgstr "Meinen Account löschen"
 
 #: src/view/screens/Settings/index.tsx:807
 #~ msgid "Delete My Account…"
-#~ msgstr "Mein Account löschen…"
+#~ msgstr "Meinen Account löschen…"
 
 #: src/view/com/composer/Composer.tsx:820
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:642
@@ -2351,7 +2351,7 @@ msgstr "Post verwerfen?"
 #: src/screens/Settings/components/PwiOptOut.tsx:80
 #: src/screens/Settings/components/PwiOptOut.tsx:84
 msgid "Discourage apps from showing my account to logged-out users"
-msgstr "Apps daran hindern, abgemeldeten Nutzern mein Account zu zeigen"
+msgstr "Apps daran hindern, abgemeldeten Nutzern meinen Account zu zeigen"
 
 #: src/tours/HomeTour.tsx:70
 #~ msgid "Discover learns which posts you like as you browse."
@@ -3036,7 +3036,7 @@ msgstr "Die vorgeschlagenen Feeds konnten nicht geladen werden."
 
 #: src/view/screens/Search/Explore.tsx:398
 msgid "Failed to load suggested follows"
-msgstr "Die vorgeschlagenen Konten, denen du folgen solltest, konnten nicht geladen werden"
+msgstr "Die vorgeschlagenen Accounts, denen du folgen solltest, konnten nicht geladen werden"
 
 #: src/state/queries/pinned-post.ts:75
 msgid "Failed to pin post"
@@ -3154,11 +3154,11 @@ msgstr "Abschließen"
 #: src/view/com/posts/FollowingEmptyState.tsx:53
 #: src/view/com/posts/FollowingEndOfFeed.tsx:54
 msgid "Find accounts to follow"
-msgstr "Konten zum Folgen finden"
+msgstr "Accounts zum Folgen finden"
 
 #: src/tours/HomeTour.tsx:88
 #~ msgid "Find more feeds and accounts to follow in the Explore page."
-#~ msgstr "Finde weitere Feeds und Konten, denen du folgen kannst, auf der „Explore” Seite."
+#~ msgstr "Finde weitere Feeds und Accounts, denen du folgen kannst, auf der „Explore” Seite."
 
 #: src/components/ProgressGuide/FollowDialog.tsx:77
 #: src/components/ProgressGuide/FollowDialog.tsx:84
@@ -3233,7 +3233,7 @@ msgstr ""
 
 #: src/components/ProgressGuide/List.tsx:69
 msgid "Follow 7 accounts"
-msgstr "Folge 7 Konten"
+msgstr "Folge 7 Accounts"
 
 #: src/view/com/profile/ProfileMenu.tsx:222
 #: src/view/com/profile/ProfileMenu.tsx:233
@@ -3257,7 +3257,7 @@ msgstr ""
 
 #: src/view/screens/Search/Explore.tsx:355
 msgid "Follow more accounts to get connected to your interests and build your network."
-msgstr "Folge weiteren Konten, um dich mit deinen Interessen zu verbinden und dein Netzwerk aufzubauen."
+msgstr "Folge weiteren Accounts, um dich mit deinen Interessen zu verbinden und dein Netzwerk aufzubauen."
 
 #: src/view/com/profile/ProfileCard.tsx:190
 #~ msgid "Followed by {0}"
@@ -3594,7 +3594,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:140
 #~ msgid "Here are some accounts for you to follow"
-#~ msgstr "Hier sind einige Konten, denen du folgen könntest"
+#~ msgstr "Hier sind einige Accounts, denen du folgen könntest"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:89
 #~ msgid "Here are some popular topical feeds. You can choose to follow as many as you like."
@@ -3805,7 +3805,7 @@ msgstr "Wenn du diesen Post löschst, kannst du ihn nicht wiederherstellen."
 
 #: src/view/com/modals/ChangePassword.tsx:149
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
-msgstr "Wenn du dein Passwort ändern möchtest, senden wir dir einen Code, um zu bestätigen, dass es sich um dein Account handelt."
+msgstr "Wenn du dein Passwort ändern möchtest, senden wir dir einen Code, um zu bestätigen, dass es sich um deinen Account handelt."
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
@@ -4633,7 +4633,7 @@ msgstr "Account stummschalten"
 
 #: src/view/screens/ProfileList.tsx:626
 msgid "Mute accounts"
-msgstr "Konten stummschalten"
+msgstr "Accounts stummschalten"
 
 #: src/components/TagMenu/index.tsx:224
 msgid "Mute all {displayTag} posts"
@@ -4667,7 +4667,7 @@ msgstr "Liste stummschalten"
 
 #: src/view/screens/ProfileList.tsx:744
 msgid "Mute these accounts?"
-msgstr "Diese Konten stummschalten?"
+msgstr "Diese Accounts stummschalten?"
 
 #: src/view/screens/ProfileList.tsx:279
 #~ msgid "Mute this List"
@@ -4713,16 +4713,16 @@ msgstr "Wörter und Tags stummschalten"
 
 #: src/screens/Moderation/index.tsx:238
 msgid "Muted accounts"
-msgstr "Stummgeschaltete Konten"
+msgstr "Stummgeschaltete Accounts"
 
 #: src/Navigation.tsx:150
 #: src/view/screens/ModerationMutedAccounts.tsx:100
 msgid "Muted Accounts"
-msgstr "Stummgeschaltete Konten"
+msgstr "Stummgeschaltete Accounts"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:112
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "Bei stummgeschalteten Konten werden dazugehörige Posts aus deinem Feed und deinen Mitteilungen entfernt. Stummschaltungen sind völlig privat."
+msgstr "Bei stummgeschalteten Accounts werden dazugehörige Posts aus deinem Feed und deinen Mitteilungen entfernt. Stummschaltungen sind völlig privat."
 
 #: src/lib/moderation/useModerationCauseDescription.ts:90
 msgid "Muted by \"{0}\""
@@ -4734,7 +4734,7 @@ msgstr "Stummgeschaltete Wörter und Tags"
 
 #: src/view/screens/ProfileList.tsx:746
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
-msgstr "Stummschaltung ist privat. Stummgeschaltete Konten können mit dir interagieren, aber du siehst ihre Posts nicht und erhältst keine Mitteilungen von ihnen."
+msgstr "Stummschaltung ist privat. Stummgeschaltete Accounts können mit dir interagieren, aber du siehst ihre Posts nicht und erhältst keine Mitteilungen von ihnen."
 
 #: src/components/dialogs/BirthDateSettings.tsx:34
 #: src/components/dialogs/BirthDateSettings.tsx:37
@@ -5427,7 +5427,7 @@ msgstr "Öffnet die Gerätefotogalerie"
 #: src/view/com/auth/SplashScreen.tsx:49
 #: src/view/com/auth/SplashScreen.web.tsx:111
 msgid "Opens flow to create a new Bluesky account"
-msgstr "Öffnet den Vorgang, ein neuen Bluesky Account anzulegen"
+msgstr "Öffnet den Vorgang, einen neuen Bluesky Account anzulegen"
 
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.web.tsx:125
@@ -5577,7 +5577,7 @@ msgstr "Andere"
 
 #: src/components/AccountList.tsx:83
 msgid "Other account"
-msgstr "Anderes Account"
+msgstr "Anderer Account"
 
 #: src/view/screens/Settings/index.tsx:380
 #~ msgid "Other accounts"
@@ -6025,7 +6025,7 @@ msgstr "Profil aktualisiert"
 
 #: src/view/screens/Settings/index.tsx:976
 #~ msgid "Protect your account by verifying your email."
-#~ msgstr "Schütze dein Account, indem du deine E-Mail bestätigst."
+#~ msgstr "Schütze deinen Account, indem du deine E-Mail bestätigst."
 
 #: src/screens/Onboarding/StepFinished.tsx:246
 msgid "Public"
@@ -7003,7 +7003,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:52
 #~ msgid "Select some accounts below to follow"
-#~ msgstr "Wähle unten einige Konten aus, denen du folgen möchtest"
+#~ msgstr "Wähle unten einige Accounts aus, denen du folgen möchtest"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:66
 msgid "Select subtitle file (.vtt)"
@@ -7213,7 +7213,7 @@ msgstr "Neues Passwort festlegen"
 
 #: src/screens/Onboarding/Layout.tsx:47
 msgid "Set up your account"
-msgstr "Dein Account einrichten"
+msgstr "Deinen Account einrichten"
 
 #: src/view/com/modals/ChangeHandle.tsx:254
 #~ msgid "Sets Bluesky username"
@@ -7404,7 +7404,7 @@ msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:215
 #~ msgid "Show follows similar to {0}"
-#~ msgstr "Zeige ähnliche Konten wie {0}"
+#~ msgstr "Zeige ähnliche Accounts wie {0}"
 
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:22
 msgid "Show hidden replies"
@@ -7935,7 +7935,7 @@ msgstr "Account wechseln"
 
 #: src/view/screens/Settings/index.tsx:132
 #~ msgid "Switches the account you are logged in to"
-#~ msgstr "Wechselt das Account, in das du eingeloggt bist"
+#~ msgstr "Wechselt den Account, in das du eingeloggt bist"
 
 #: src/screens/Settings/AppearanceSettings.tsx:97
 #: src/screens/Settings/AppearanceSettings.tsx:147
@@ -8105,7 +8105,7 @@ msgstr ""
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:329
 msgid "The account will be able to interact with you after unblocking."
-msgstr "Das Account kann nach der Entblockiert mit dir interagieren."
+msgstr "Der Account kann nach der Entblockiert mit dir interagieren."
 
 #: src/screens/Settings/AppIconSettings/index.tsx:41
 #: src/screens/Settings/AppIconSettings/index.tsx:222
@@ -8327,11 +8327,11 @@ msgstr "Es gab ein unerwartetes Problem in der Anwendung. Bitte teile uns mit, w
 
 #: src/screens/SignupQueued.tsx:115
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
-msgstr "Es gab einen Ansturm neuer Nutzer auf Bluesky! Wir werden dein Account so schnell wie möglich aktivieren."
+msgstr "Es gab einen Ansturm neuer Nutzer auf Bluesky! Wir werden deinen Account so schnell wie möglich aktivieren."
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:146
 #~ msgid "These are popular accounts you might like:"
-#~ msgstr "Dies sind beliebte Konten, die dir gefallen könnten:"
+#~ msgstr "Dies sind beliebte Accounts, die dir gefallen könnten:"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:62
 msgid "These settings only apply to the Following feed."
@@ -8343,7 +8343,7 @@ msgstr "Diese {screenDescription} wurde gekennzeichnet:"
 
 #: src/components/moderation/ScreenHider.tsx:106
 msgid "This account has requested that users sign in to view their profile."
-msgstr "Dieses Account hat die Nutzer aufgefordert, sich anzumelden, um dein Profil zu sehen."
+msgstr "Dieser Account hat die Nutzer aufgefordert, sich anzumelden, um dein Profil zu sehen."
 
 #: src/components/dms/BlockedByListDialog.tsx:34
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
@@ -8388,7 +8388,7 @@ msgstr "Dieser Inhalt ist nicht verfügbar, weil einer der beteiligten Nutzer de
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:114
 msgid "This content is not viewable without a Bluesky account."
-msgstr "Dieser Inhalt ist ohne ein Bluesky-Account nicht sichtbar."
+msgstr "Dieser Inhalt ist ohne einen Bluesky-Account nicht sichtbar."
 
 #: src/screens/Messages/components/ChatListItem.tsx:266
 msgid "This conversation is with a deleted or a deactivated account. Press for options."
@@ -9404,7 +9404,7 @@ msgstr "Wir hoffen, dass du eine schöne Zeit hast. Denke daran, Bluesky ist:"
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
-msgstr "Wir haben keine Posts mehr von den Konten, denen du folgst. Hier ist das Neueste von <0/>."
+msgstr "Wir haben keine Posts mehr von den Accounts, denen du folgst. Hier ist das Neueste von <0/>."
 
 #: src/components/dialogs/MutedWords.tsx:203
 #~ msgid "We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
@@ -9788,7 +9788,7 @@ msgstr ""
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:132
 #~ msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
-#~ msgstr "Du hast noch keine Konten blockiert. Um ein Account zu blockieren, gehe auf dessen Profil und wähle \"Account blockieren\" aus dem Menü des Accounts aus."
+#~ msgstr "Du hast noch keine Accounts blockiert. Um einen Account zu blockieren, gehe auf dessen Profil und wähle \"Account blockieren\" aus dem Menü des Accounts aus."
 
 #: src/view/screens/AppPasswords.tsx:96
 #~ msgid "You have not created any app passwords yet. You can create one by pressing the button below."
@@ -9800,7 +9800,7 @@ msgstr ""
 
 #: src/view/screens/ModerationMutedAccounts.tsx:131
 #~ msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
-#~ msgstr "Du hast noch keine Konten stummgeschaltet. Um ein Account stumm zu schalten, gehe auf dessen Profil und wähle \"Account stummschalten\" aus dem Menü des Accounts aus."
+#~ msgstr "Du hast noch keine Accounts stummgeschaltet. Um einen Account stumm zu schalten, gehe auf dessen Profil und wähle \"Account stummschalten\" aus dem Menü des Accounts aus."
 
 #: src/components/Lists.tsx:52
 msgid "You have reached the end"
@@ -9963,7 +9963,7 @@ msgstr ""
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
-msgstr "Du hast das Ende deines Feeds erreicht! Finde weitere Konten, denen du folgen kannst."
+msgstr "Du hast das Ende deines Feeds erreicht! Finde weitere Accounts, denen du folgen kannst."
 
 #: src/view/com/composer/state/video.ts:421
 msgid "You've reached your daily limit for video uploads (too many bytes)"
