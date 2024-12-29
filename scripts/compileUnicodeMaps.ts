@@ -372,6 +372,13 @@ export const MIXED_SCRIPTS_AUGMENTATIONS: {[key: string]: string[] | undefined }
     } else {
       tagLiteral = `BANNED`
     }
+    if (partition.start === partition.end) {
+      tagLiteral += `  /* ${toUCPN(partition.start)} */`
+    } else {
+      tagLiteral += `  /* ${toUCPN(partition.start)}..${toUCPN(
+        partition.end,
+      )} */`
+    }
     const endLiteral = toHex(partition.end)
     return {endLiteral, tagLiteral}
   })

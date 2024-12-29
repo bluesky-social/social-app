@@ -75,7 +75,7 @@ export function toSanitizedUnicodeHandle(asciiHandle: string): string {
   const sanitizedHandle = asciiHandle
     .split('.')
     .map(label => {
-      const start = performance.now()
+      // const start = performance.now()
       if (!label.startsWith('xn--')) {
         return label // it's not an IDN label
       }
@@ -84,8 +84,8 @@ export function toSanitizedUnicodeHandle(asciiHandle: string): string {
         if (isHomographAttackPossible(unicodeLabel)) {
           return label
         }
-        const elapsed = performance.now() - start
-        console.debug(`sanitizing ${label} took ${elapsed} ms`)
+        // const elapsed = performance.now() - start
+        // console.debug(`took ${elapsed} ms to sanitize ${label}`)
         return unicodeLabel
       } catch (e) {
         // the label does not seem to be valid punycode
