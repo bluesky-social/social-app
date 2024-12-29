@@ -131,7 +131,7 @@ function readIdentifierStatusFileAndBuildAllowedList(
     // Emojis are allowed in domain names for some TLDs,
     // but they aren't listed in IdentifierStatus.txt,
     // so we need to add them.
-    if (codepointInfo.isEmojiBesides0to9) {
+    if (codepointInfo.isEmojiBesides0to9 && !isExtraBanned(codepoint)) {
       allowedCodepoints.push(codepoint)
     }
   }
@@ -407,6 +407,9 @@ const EXTRA_BANNED_CODEPOINT_RANGES = [
   {start: 0x0027, end: 0x0027}, // ASCII Apostrophe
   {start: 0x002e, end: 0x002e}, // ASCII Dot (RFC 1035 does not allow it __inside labels__)
   {start: 0x003a, end: 0x0060}, // ASCII symbols, uppercase latin letters, underscore, ...
+  {start: 0x2705, end: 0x2705}, // ✅
+  {start: 0x2713, end: 0x2714}, // ✓ (light) and ✔ (heavy)
+  {start: 0x2611, end: 0x2611}, // ☑
   // add more banned ranges here as needed
 ]
 
