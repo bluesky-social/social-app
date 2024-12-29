@@ -1,7 +1,7 @@
 import {toASCII} from 'punycode'
 
 import {forceLTR} from '#/lib/strings/bidi'
-import {getPartitionIndex,sanitizeHandle} from '#/lib/strings/handles'
+import {findPartitionIndex, sanitizeHandle} from '#/lib/strings/handles'
 
 describe('User handle sanitization', () => {
   it('accepts basic ascii handles', () => {
@@ -128,26 +128,57 @@ describe('User handle sanitization', () => {
       forceLTR(decomposedFormAscii),
     )
   })
+
+  it('rejects handles that fail to decode in punycode', () => {
+    const malformed = 'xn--7npb33534.bsky.social'
+    expect(sanitizeHandle(malformed)).toStrictEqual(forceLTR(malformed))
+  })
+
+  it('accepts handles with emoji country flags', () => {
+    const handleBelgium = '\u{1f1e7}\u{1f1ea}example.tld'
+    expect(sanitizeHandle(toASCII(handleBelgium))).toStrictEqual(
+      forceLTR(handleBelgium),
+    )
+  })
+
+  it('accepts handles with emoji with skin tones', () => {
+    const handleSkinTone = '\u{1f466}\u{1f3ff}example.tld'
+    expect(sanitizeHandle(toASCII(handleSkinTone))).toStrictEqual(
+      forceLTR(handleSkinTone),
+    )
+  })
+
+  it('rejects handles with ZWJ or variations', () => {
+    const twoWomenHeartSkinTone =
+      '\u{1f469}\u{1f3fc}\u{200d}\u{2764}\u{fe0f}\u{200d}\u{1f469}\u{1f3fd}example.tld'
+    const asciiHandle = toASCII(twoWomenHeartSkinTone)
+    expect(sanitizeHandle(asciiHandle)).toStrictEqual(forceLTR(asciiHandle))
+  })
 })
 
 describe('getPartitionIndex(array, x)', () => {
   it('finds the index in the middle', () => {
     let partitionsEnds = [10, 20, 30]
-    expect(getPartitionIndex(partitionsEnds, 21)).toBe(2)
+    expect(findPartitionIndex(partitionsEnds, 21)).toBe(2)
   })
 
   it('finds the right index', () => {
     let partitionsEnds = [10, 20, 30, 40]
-    expect(getPartitionIndex(partitionsEnds, 15)).toBe(1)
+    expect(findPartitionIndex(partitionsEnds, 15)).toBe(1)
+  })
+
+  it('finds the index when x equals a partition end', () => {
+    let partitionsEnds = [10, 20, 30, 40]
+    expect(findPartitionIndex(partitionsEnds, 40)).toBe(3)
   })
 
   it('returns -1 when x is not in the partitions', () => {
     let partitionsEnds = [10, 20, 30, 40]
-    expect(getPartitionIndex(partitionsEnds, 41)).toBe(-1)
+    expect(findPartitionIndex(partitionsEnds, 41)).toBe(-1)
   })
 
   it('returns 0 when x is in the first partition', () => {
     let partitionsEnds = [10, 20, 30, 40]
-    expect(getPartitionIndex(partitionsEnds, 0)).toBe(0)
+    expect(findPartitionIndex(partitionsEnds, 1)).toBe(0)
   })
 })

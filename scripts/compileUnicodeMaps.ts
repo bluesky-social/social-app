@@ -4,9 +4,27 @@
 const fs = require('node:fs')
 const readline = require('node:readline')
 
+;(async function main() {
+  console.log('Reading UCD file...')
+  const ucdTable = await readUcdFileAndBuildTable()
+  console.log(`Found ${ucdTable.size} total codepoints`)
+
+  const allowedCodepoints =
+    readIdentifierStatusFileAndBuildAllowedList(ucdTable)
+  // console.log(allowedCodepoints.map(cp => toHex(cp)))
+  console.log(`Found ${allowedCodepoints.length} allowed identifier codepoints`)
+
+  const partitions = buildPartitionList(allowedCodepoints, ucdTable)
+  // console.log(partitions.map(({start, end, scripts}) => ({ start: toHex(start), end: toHex(end), scripts })))
+  console.log(`Computed ${partitions.length} partitions`)
+
+  writePartitionsToMapFile(partitions)
+  console.log('Wrote output unicode map file')
+})()
+
 type UCDTable = Map<
   number,
-  {scx: string; isUpper?: true; isEmojiBesides0to9?: true; isReserved?: true}
+  {scx: string; isUpper?: true; isEmojiBesides0to9?: true}
 >
 
 async function readUcdFileAndBuildTable(): Promise<UCDTable> {
@@ -17,8 +35,8 @@ async function readUcdFileAndBuildTable(): Promise<UCDTable> {
   const linesInterface = readline.createInterface({input: stream})
 
   const charRegex = /^ *<char.* cp="(?<cp>[A-Z0-9]+)".* scx="(?<scx>[^"]+)"/
-  const reservedRangeRegex =
-    /^ *<reserved first-cp="(?<firstCP>[A-Z0-9]+)" last-cp="(?<lastCP>[A-Z0-9]+)"/
+  const charRangeRegex =
+    /^ *<char.* first-cp="(?<first>[A-Z0-9]+)" last-cp="(?<last>[A-Z0-9]+)"/
 
   const table: UCDTable = new Map()
 
@@ -30,21 +48,27 @@ async function readUcdFileAndBuildTable(): Promise<UCDTable> {
       const isUpper = line.includes('Upper="Y"')
       const isEmojiBesides0to9 = line.includes('Emoji="Y"') && codepoint > 0x39
       table.set(codepoint, {scx, isUpper, isEmojiBesides0to9})
-    } else {
-      const reservedMatch = reservedRangeRegex.exec(line)
-      if (reservedMatch) {
-        const first = Number.parseInt(reservedMatch.groups!.firstCP, 16)
-        const last = Number.parseInt(reservedMatch.groups!.lastCP, 16)
-        for (let cp = first; cp <= last; cp++) {
-          table.set(cp, {scx: '', isReserved: true})
-        }
-      } else if (line.includes('<char') && !line.includes('first-cp="')) {
-        const hasSCX = line.includes('scx="')
-        const extra = hasSCX ? ' and scx property' : ''
-        throw new Error(`Couldn't parse <char> tag${extra}:\n${line}`)
-      } else if (line.includes('<reserved first-cp')) {
-        throw new Error(`Couldn't parse <reserved> range tag:\n${line}`)
+      continue
+    }
+
+    const charRangeMatch = charRangeRegex.exec(line)
+    if (charRangeMatch) {
+      const first = Number.parseInt(charRangeMatch.groups!.first, 16)
+      const last = Number.parseInt(charRangeMatch.groups!.last, 16)
+      const scx = charRangeMatch.groups!.scx
+      const isUpper = line.includes('Upper="Y"')
+      const isEmoji = line.includes('Emoji="Y"')
+      for (let cp = first; cp <= last; cp++) {
+        const isEmojiBesides0to9 = isEmoji && cp > 0x39
+        table.set(cp, {scx, isUpper, isEmojiBesides0to9})
       }
+      continue
+    }
+
+    if (line.includes('<char')) {
+      const hasSCX = line.includes('scx="')
+      const extra = hasSCX ? ' with scx property' : ''
+      throw new Error(`Couldn't parse <char> tag${extra}:\n${line}`)
     }
   }
 
@@ -60,7 +84,7 @@ function readIdentifierStatusFileAndBuildAllowedList(
   ) as string
 
   const lineRegex =
-    /^(?<start>[a-zA-Z0-9]{4,5})(?:..(?<end>[a-zA-Z0-9]{4,5}))? +; Allowed/
+    /^(?<start>[A-Z0-9]{4,5})(?:..(?<end>[A-Z0-9]{4,5}))? +; Allowed/
 
   let allowedCodepoints = []
 
@@ -87,18 +111,26 @@ function readIdentifierStatusFileAndBuildAllowedList(
         end = start
       }
       for (let codepoint = start; codepoint <= end; codepoint++) {
-        // const isUpper = ucdTable.get(codepoint)?.isUpper
-        if (!isExtraBanned(codepoint)) {
+        // RFC 5890 to 5894 (IDNA2008) specifies that Unicode labels
+        // are supposed to be case-folded before being converted to ASCII
+        // labels (A-Labels) in order to be registered, the ASCII form being
+        // the canonical form in the DNS.
+        // Unicode codepoints can be Upper="N" or Upper="Y" or have no case.
+        // Therefore, Upper="Y" codepoints cannot be part of valid U-labels.
+        // Browsers like Safari and Firefox also treat upper case codepoints as
+        // invalid labels, so we will do the same here.
+        const isUpper = ucdTable.get(codepoint)?.isUpper
+        if (!isUpper && !isExtraBanned(codepoint)) {
           allowedCodepoints.push(codepoint)
         }
       }
     }
   }
 
-  // Emojis are allowed in domain names,
-  // but they aren't listed in IdentifierStatus.txt,
-  // we need to add them.
   for (const [codepoint, codepointInfo] of ucdTable) {
+    // Emojis are allowed in domain names for some TLDs,
+    // but they aren't listed in IdentifierStatus.txt,
+    // so we need to add them.
     if (codepointInfo.isEmojiBesides0to9) {
       allowedCodepoints.push(codepoint)
     }
@@ -167,10 +199,9 @@ function checkCodepointScriptSetAllowed(
 
   const isLimitedUse =
     hasLimitedUseScript && !hasRecommendedScriptBesidesCommonInherited
-  if (isLimitedUse)
-    throw new Error(
-      `The ${toUCPN(codepoint)} codepoint's Identifier_Type is "Limited_Use"`,
-    )
+  if (isLimitedUse) {
+    throw new Error(`${toUCPN(codepoint)} Identifier_Type is "Limited_Use"`)
+  }
 
   const hasExclusionScript =
     setIntersection(codepointScripts, EXCLUDED_SCRIPTS).size > 0
@@ -179,10 +210,9 @@ function checkCodepointScriptSetAllowed(
     hasExclusionScript &&
     !hasLimitedUseScript &&
     !hasRecommendedScriptBesidesCommonInherited
-  if (isExclusion)
-    throw new Error(
-      `The ${toUCPN(codepoint)} codepoint's Identifier_Type is "Exclusion"`,
-    )
+  if (isExclusion) {
+    throw new Error(`${toUCPN(codepoint)} Identifier_Type is "Exclusion"`)
+  }
 }
 
 // start and end are inclusive, i.e. the range is [start..=end]
@@ -226,9 +256,6 @@ function buildPartitionList(
       throw new Error(
         `The codepoint ${toUCPN(codepoint)} does not have UCD data`,
       )
-    }
-    if (codepointInfo.isReserved) {
-      continue
     }
 
     const codepointScriptSet = new Set(codepointInfo.scx.split(' '))
@@ -332,10 +359,12 @@ export const MIXED_SCRIPTS_AUGMENTATIONS: {[key: string]: string[] | undefined }
   const literalPartitions = partitions.map(partition => {
     let tagLiteral
     if (partition.scripts) {
-      if (
-        partition.scripts.size === 1 &&
-        (partition.scripts.has('Zyyy') || partition.scripts.has('Zinh'))
-      ) {
+      if (partition.scripts.has('Zyyy') || partition.scripts.has('Zinh')) {
+        if (partition.scripts.size !== 1) {
+          throw new Error(
+            'A partition cannot mix Common/Inherited and other scripts',
+          )
+        }
         tagLiteral = `MIXING_ALLOWED`
       } else {
         tagLiteral = `'${[...partition.scripts].join(' ')}'`
@@ -354,7 +383,7 @@ export const MIXED_SCRIPTS_AUGMENTATIONS: {[key: string]: string[] | undefined }
     fd,
     `
 // "struct of arrays" for increased read performance
-export const PARTITIONS_BY_SCRIPT = {
+export const PARTITIONS_BY_SCRIPTS = {
   // ${literalPartitions.length} partitions
   partitionEnds: [${endLiterals.join(', ')}],
   tags: [${tagLiterals.join(', ')}],
@@ -364,36 +393,6 @@ export const PARTITIONS_BY_SCRIPT = {
 
   fs.closeSync(fd)
 }
-
-;(async function main() {
-  console.log('Reading UCD file...')
-  const ucdTable = await readUcdFileAndBuildTable()
-  console.log(`Found ${ucdTable.size} total codepoints`)
-
-  const allowedCodepoints =
-    readIdentifierStatusFileAndBuildAllowedList(ucdTable)
-  // console.log(allowedCodepoints.map(cp => toHex(cp)))
-  console.log(`Found ${allowedCodepoints.length} allowed identifier codepoints`)
-
-  const partitions = buildPartitionList(allowedCodepoints, ucdTable)
-  // console.log(partitions.map(({start, end, scripts}) => ({ start: toHex(start), end: toHex(end), scripts })))
-  console.log(`Computed ${partitions.length} partitions`)
-
-  writePartitionsToMapFile(partitions)
-  console.log('Wrote output unicode map file')
-})()
-
-/*
-// Codepoints that we wish to allow regardless of what's in IdentifierStatus.txt
-const EXTRA_ALLOWED_CODEPOINT_RANGES = [
-  {start: 0x1F300, end: 0x1F5FF}, // "Miscellaneous Symbols and Pictographs" (emoji range 1)
-  {start: 0x1F600, end: 0x1F64F}, // "Emoticons (Emoji)" (emoji range 2)
-  {start: 0x1F680, end: 0x1F6FF}, // "Transport and Map Symbols" (emoji range 3)
-  {start: 0x1F7E0, end: 0x1F7EB}, // "Geometric Shapes Extended": "Colored circles" and "Colored squares" (emoji range 4)
-  {start: 0x1F90C, end: 0x1F9FF}, // "Supplemental Symbols and Pictographs" without "Typicon symbols" (emoji range 5)
-  {start: 0x1FA70, end: 0x1FAFF}, // "Symbols and Pictographs Extended-A" (emoji range 6)
-]
-  */
 
 // Codepoint ranges that we wish to ban regardless of what's in IdentifierStatus.txt
 const EXTRA_BANNED_CODEPOINT_RANGES = [

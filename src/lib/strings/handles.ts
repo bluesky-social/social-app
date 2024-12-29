@@ -7,7 +7,7 @@ import {
   BANNED,
   MIXED_SCRIPTS_AUGMENTATIONS,
   MIXING_ALLOWED,
-  PARTITIONS_BY_SCRIPT,
+  PARTITIONS_BY_SCRIPTS,
 } from './unicode-map'
 
 const VALIDATE_REGEX =
@@ -74,21 +74,30 @@ export function validateHandle(str: string, userDomain: string): IsValidHandle {
 export function toSanitizedUnicodeHandle(asciiHandle: string): string {
   const sanitizedHandle = asciiHandle
     .split('.')
-    .map((label, _index) => {
+    .map(label => {
       const start = performance.now()
       if (!label.startsWith('xn--')) {
         return label // it's not an IDN label
       }
-      const unicodeLabel = decode(label.slice(4))
-      if (isHomographAttackPossible(unicodeLabel)) {
+      try {
+        const unicodeLabel = decode(label.slice(4))
+        if (isHomographAttackPossible(unicodeLabel)) {
+          return label
+        }
+        const elapsed = performance.now() - start
+        console.debug(`sanitizing ${label} took ${elapsed} ms`)
+        return unicodeLabel
+      } catch (e) {
+        // the label does not seem to be valid punycode
         return label
       }
-      const elapsed = performance.now() - start
-      console.log(`sanitizing IDN handle part ${_index} took ${elapsed} ms`)
-      return unicodeLabel
     })
     .join('.')
   return sanitizedHandle
+}
+
+function toUCPN(codepoint: number): string {
+  return `U+${codepoint.toString(16).padStart(4, '0')}`
 }
 
 /// Checks if the given unicode domain label may be subject to an
@@ -100,51 +109,45 @@ export function toSanitizedUnicodeHandle(asciiHandle: string): string {
 /// Currently, it follows Restriction Level 2 (Single Script) of
 /// https://www.unicode.org/reports/tr39/#Restriction_Level_Detection
 function isHomographAttackPossible(unicodeLabel: string): boolean {
-  const DEBUG_ATTACK = false
+  const DEBUG_FUNC = false
 
-  if (DEBUG_ATTACK) console.log(`Checking "${unicodeLabel}"`)
+  if (DEBUG_FUNC) console.log(`Checking "${unicodeLabel}"`)
 
   if (unicodeLabel !== unicodeLabel.normalize('NFC')) {
     // RFC 5895 requires unicode domain labels to be in NFC form.
     // (https://datatracker.ietf.org/doc/html/rfc5895)
     // (https://www.unicode.org/reports/tr46/)
     // If the given domain label is not in NFC form, it shouldn't be trusted.
-    if (DEBUG_ATTACK) console.log(`"${unicodeLabel}" is not in NFC form`)
+    if (DEBUG_FUNC) console.log(`"${unicodeLabel}" is not in NFC form`)
     return true
   }
 
-  if (unicodeLabel !== unicodeLabel.toLowerCase()) {
-    // RFC 5895 requires domains to be lowercase.
-    if (DEBUG_ATTACK) console.log(`"${unicodeLabel}" is not lowercase`)
-    return true
-  }
+  let resolvedScriptSet: Set<string> | null = null
 
-  let resolvedScriptSet: Set<string> = new Set()
+  for (const character of unicodeLabel) {
+    const codepoint = character.codePointAt(0) as number
+    const scriptOrScriptSet = getScriptOrAugmentedScriptSet(codepoint)
 
-  const iterator = unicodeLabel[Symbol.iterator]()
-  let next = iterator.next()
-
-  while (!next.done) {
-    const codepoint = next.value.codePointAt(0) as number
-    next = iterator.next()
-    const sass = getAugmentedScriptSet(codepoint)
-
-    if (typeof sass === 'string') {
+    if (typeof scriptOrScriptSet === 'string') {
       // Codepoint has a single script
-      const scriptTag = sass
-      if (DEBUG_ATTACK)
-        console.log(`analysing ${toHex(codepoint)}: script is "${scriptTag}"`)
+      const scriptTag = scriptOrScriptSet
+      if (DEBUG_FUNC) {
+        console.debug(
+          `analysing ${toUCPN(codepoint)}: script is "${scriptTag}"`,
+        )
+      }
       if (scriptTag === BANNED) {
-        if (DEBUG_ATTACK) {
-          const ucpn = toUCPN(codepoint)
+        if (DEBUG_FUNC) {
+          const ucpn = `U+${codepoint.toString(16).padStart(4, '0')}`
           const char = String.fromCodePoint(codepoint)
-          console.log(`"${unicodeLabel}" has a banned ${ucpn} "${char}"`)
+          console.log(`"${unicodeLabel}" has banned ${ucpn} "${char}"`)
         }
         return true // banned codepoint, not trusted
       } else if (scriptTag === MIXING_ALLOWED) {
         // skip this codepoint
-      } else if (resolvedScriptSet.size === 0) {
+      } else if (resolvedScriptSet === null) {
         // this is the first tag that matches a script
+        resolvedScriptSet = new Set()
         resolvedScriptSet.add(scriptTag)
       } else {
         // perform set intersection
@@ -159,12 +162,12 @@ function isHomographAttackPossible(unicodeLabel: string): boolean {
       }
     } else {
       // Codepoint has multiple scripts
-      const augmentedScriptSet = sass
-      if (DEBUG_ATTACK) {
+      const augmentedScriptSet = scriptOrScriptSet
+      if (DEBUG_FUNC) {
         const scripts = [...augmentedScriptSet].join(', ')
         console.log(`analysing codepoint: scripts are ${scripts}`)
       }
-      if (resolvedScriptSet.size === 0) {
+      if (resolvedScriptSet === null) {
         // this is the first codepoint that has scripts
         resolvedScriptSet = augmentedScriptSet
       } else {
@@ -173,12 +176,11 @@ function isHomographAttackPossible(unicodeLabel: string): boolean {
           // The intersection of the prefix codepoints' string sets and this codepoint's script set is empty
           // so the Resolved Script Set for the string up to this codepoint is empty,
           // so the string is not Single Script and we don't need to check further.
-          if (DEBUG_ATTACK)
-            console.log(
-              `"${unicodeLabel}" empty RSS from ${toUCPN(
-                codepoint,
-              )} "${String.fromCodePoint(codepoint)}"`,
-            )
+          if (DEBUG_FUNC) {
+            const hex = codepoint.toString(16).padStart(4, '0')
+            const char = String.fromCodePoint(codepoint)
+            console.log(`"${unicodeLabel}" empty RSS from U+${hex} "${char}"`)
+          }
           return true
         }
       }
@@ -200,67 +202,83 @@ function setIntersection(setToModify: Set<string>, other: Set<string>) {
   })
 }
 
-export function getPartitionIndex(partitions: number[], x: number): number {
-  let lowestPossibleIndex = 0
-  let highestPossibleIndex = partitions.length - 1
-  // invariant: lowest <= i <= highest
+/// Finds the index of the partition that x belongs in.
+/// Retuns -1 if x does not belong to any partition.
+///
+/// Each partition is the range of nonnegative integers
+/// [partitions[i-1]+1 ..= partitions[i]]
+/// i.e. the partition at index i is the range of integers from
+/// partitions[i-1]+1 up to and including partitions[i].
+/// The partition at index 0 is the range [0 ..= partitions[0]].
+///
+/// Precondition: partitions is sorted in ascending order.
+export function findPartitionIndex(partitions: number[], x: number): number {
+  let lowestI = 0
+  let highestI = partitions.length - 1
+  // invariant: lowestI <= i <= highestI
   let i = Math.floor(partitions.length / 2)
+  // let iterations = 0
 
   while (true) {
-    let partitionEnd = partitions[i]
+    // iterations++
+    const partitionEnd = partitions[i]
     if (x < partitionEnd) {
       // the target partition is at i, or lower
-      highestPossibleIndex = Math.min(i, highestPossibleIndex)
-      if (lowestPossibleIndex === highestPossibleIndex) {
-        return i // found
+      highestI = i
+      if (lowestI === highestI) {
+        // console.debug(`findPartitionIndex: took ${iterations} iterations (exit A)`)
+        return lowestI // found
       }
       // look at lower i's
-      i =
-        lowestPossibleIndex +
-        Math.floor((highestPossibleIndex - lowestPossibleIndex) / 2)
+      i = lowestI + Math.floor((highestI - lowestI) / 2)
     } else if (x === partitionEnd) {
+      // console.debug(`findPartitionIndex: took ${iterations} iterations (exit B)`)
       return i // found
-    } /* item < codepoint */ else {
-      // the target partition is at a higher i (or x is larger than all partitions)
+    } /* partitionEnd < x */ else {
+      // the target partition is at a higher i,
+      // or x is larger than all partitions
       if (i + 1 >= partitions.length) {
+        // console.debug(`findPartitionIndex: took ${iterations} iterations (exit C)`)
         return -1 // x is larger than all partitions
       }
-      lowestPossibleIndex = Math.max(i + 1, lowestPossibleIndex)
+      lowestI = i + 1
       // look at higher i's
-      i =
-        lowestPossibleIndex +
-        Math.ceil((highestPossibleIndex - lowestPossibleIndex) / 2)
+      i = lowestI + Math.ceil((highestI - lowestI) / 2)
     }
   }
 }
 
-function getAugmentedScriptSet(codepoint: number): string | Set<string> {
-  const index = getPartitionIndex(PARTITIONS_BY_SCRIPT.partitionEnds, codepoint)
-  if (index >= 0) {
-    // found the codepoint's group
-    let tag = PARTITIONS_BY_SCRIPT.tags[index]
-    if (tag.includes(' ')) {
-      // split tag into scripts, and follow augmentation rules
-      const extendedScripts = tag.split(' ')
-      const augmentedScriptSet = new Set(extendedScripts)
-      extendedScripts.forEach(script => {
-        MIXED_SCRIPTS_AUGMENTATIONS[script]?.forEach(augmentation => {
-          augmentedScriptSet.add(augmentation)
-        })
-      })
-      return augmentedScriptSet
-    } else {
-      const extendedScript = tag
-      const augmentations = MIXED_SCRIPTS_AUGMENTATIONS[extendedScript]
-      if (augmentations) {
-        // follow augmentation rule
-        return new Set([extendedScript, ...augmentations])
-      } else {
-        // no augmentation needed (usual case)
-        return extendedScript
-      }
-    }
-  } else {
+function getScriptOrAugmentedScriptSet(
+  codepoint: number,
+): string | Set<string> {
+  const index = findPartitionIndex(
+    PARTITIONS_BY_SCRIPTS.partitionEnds,
+    codepoint,
+  )
+  if (index < 0) {
     return BANNED // unknown codepoint
+  }
+  let tag = PARTITIONS_BY_SCRIPTS.tags[index]
+  if (tag.includes(' ')) {
+    // split tag into scripts
+    const extendedScripts = tag.split(' ')
+    const augmentedScriptSet = new Set(extendedScripts)
+    extendedScripts.forEach(script => {
+      // follow augmentation rules
+      MIXED_SCRIPTS_AUGMENTATIONS[script]?.forEach(augmentation => {
+        augmentedScriptSet.add(augmentation)
+      })
+    })
+    return augmentedScriptSet
+  } else {
+    const extendedScript = tag
+    const augmentations = MIXED_SCRIPTS_AUGMENTATIONS[extendedScript]
+    if (augmentations) {
+      // follow augmentation rule
+      return new Set([extendedScript, ...augmentations])
+    } else {
+      // no augmentation needed (typical case)
+      return extendedScript
+    }
   }
 }
