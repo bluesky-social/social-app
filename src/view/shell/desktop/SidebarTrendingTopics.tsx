@@ -1,7 +1,9 @@
+import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import {
   useTrendingSettings,
   useTrendingSettingsApi,
@@ -36,6 +38,11 @@ function Inner() {
   const {setTrendingDisabled} = useTrendingSettingsApi()
   const {data: trending, error, isLoading} = useTrendingTopics()
   const noTopics = !isLoading && !error && !trending?.topics?.length
+
+  const onConfirmHide = React.useCallback(() => {
+    logEvent('trendingTopics:hide', {context: 'sidebar'})
+    setTrendingDisabled(true)
+  }, [setTrendingDisabled])
 
   return error || noTopics ? null : (
     <>
@@ -72,7 +79,12 @@ function Inner() {
           ) : !trending?.topics ? null : (
             <>
               {trending.topics.slice(0, TRENDING_LIMIT).map(topic => (
-                <TrendingTopicLink key={topic.link} topic={topic}>
+                <TrendingTopicLink
+                  key={topic.link}
+                  topic={topic}
+                  onPress={() => {
+                    logEvent('trendingTopic:click', {context: 'sidebar'})
+                  }}>
                   {({hovered}) => (
                     <TrendingTopic
                       size="small"
@@ -96,7 +108,7 @@ function Inner() {
         title={_(msg`Hide trending topics?`)}
         description={_(msg`You can update this later from your settings.`)}
         confirmButtonCta={_(msg`Hide`)}
-        onConfirm={() => setTrendingDisabled(true)}
+        onConfirm={onConfirmHide}
       />
       <Divider />
     </>

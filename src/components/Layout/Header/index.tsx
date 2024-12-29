@@ -15,6 +15,7 @@ import {
   useBreakpoints,
   useGutters,
   useTheme,
+  web,
 } from '#/alf'
 import {Button, ButtonIcon, ButtonProps} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
@@ -29,9 +30,13 @@ import {Text} from '#/components/Typography'
 export function Outer({
   children,
   noBottomBorder,
+  headerRef,
+  sticky = true,
 }: {
   children: React.ReactNode
   noBottomBorder?: boolean
+  headerRef?: React.MutableRefObject<View | null>
+  sticky?: boolean
 }) {
   const t = useTheme()
   const gutters = useGutters([0, 'base'])
@@ -40,12 +45,14 @@ export function Outer({
 
   return (
     <View
+      ref={headerRef}
       style={[
         a.w_full,
         !noBottomBorder && a.border_b,
         a.flex_row,
         a.align_center,
         a.gap_sm,
+        sticky && web([a.sticky, {top: 0}, a.z_10, t.atoms.bg]),
         gutters,
         platform({
           native: [a.pb_xs, {minHeight: 48}],
@@ -85,17 +92,7 @@ export function Content({
 }
 
 export function Slot({children}: {children?: React.ReactNode}) {
-  return (
-    <View
-      style={[
-        a.z_50,
-        {
-          width: HEADER_SLOT_SIZE,
-        },
-      ]}>
-      {children}
-    </View>
-  )
+  return <View style={[a.z_50, {width: HEADER_SLOT_SIZE}]}>{children}</View>
 }
 
 export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {

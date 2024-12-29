@@ -304,6 +304,57 @@ export function ItemIcon({icon: Comp, position = 'left'}: ItemIconProps) {
   )
 }
 
+export function ItemRadio({selected}: {selected: boolean}) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.justify_center,
+        a.align_center,
+        a.rounded_full,
+        t.atoms.border_contrast_high,
+        {
+          borderWidth: 1,
+          height: 20,
+          width: 20,
+        },
+      ]}>
+      {selected ? (
+        <View
+          style={[
+            a.absolute,
+            a.rounded_full,
+            {height: 14, width: 14},
+            selected
+              ? {
+                  backgroundColor: t.palette.primary_500,
+                }
+              : {},
+          ]}
+        />
+      ) : null}
+    </View>
+  )
+}
+
+export function LabelText({children}: {children: React.ReactNode}) {
+  const t = useTheme()
+  return (
+    <Text
+      style={[
+        a.font_bold,
+        a.pt_md,
+        a.pb_sm,
+        t.atoms.text_contrast_low,
+        {
+          paddingHorizontal: 10,
+        },
+      ]}>
+      {children}
+    </Text>
+  )
+}
+
 export function Group({children}: GroupProps) {
   return children
 }

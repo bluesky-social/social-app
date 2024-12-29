@@ -1,0 +1,46 @@
+name: Lockfile
+
+on:
+  pull_request:
+concurrency:
+  group: '${{ github.workflow }}-${{ github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  verify-yarn-lock:
+    name: No manual yarn.lock edits
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PR HEAD
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Fetch base branch
+        run: git fetch origin ${{ github.base_ref }} --depth=1
+
+      - name: Install node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Reset yarn.lock to base
+        run: git show "origin/${{ github.base_ref }}:yarn.lock" > yarn.lock
+
+      - name: Yarn install
+        uses: Wandalen/wretry.action@master
+        with:
+          # Fine to skip scripts since we don't run any code
+          command: yarn install --ignore-scripts
+          attempt_limit: 3
+          attempt_delay: 2000
+
+      - name: Verify yarn.lock
+        run: |
+          git diff --quiet --exit-code || {
+            echo '::error::`yarn.lock` does not match what Yarn would generate given the base `yarn.lock` and the head `package.json`.'
+            echo '::error:: - If this is intentional, you can ignore this check.'
+            echo '::error:: - If this is unintentional, apply the following diff:'
+            git --no-pager diff
+            exit 1
+          }
