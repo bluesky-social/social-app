@@ -211,40 +211,36 @@ function setIntersection(setToModify: Set<string>, other: Set<string>) {
 /// partitions[i-1]+1 up to and including partitions[i].
 /// The partition at index 0 is the range [0 ..= partitions[0]].
 ///
-/// Precondition: partitions is sorted in ascending order.
+/// Precondition: partitions is sorted in ascending order and not empty
 export function findPartitionIndex(partitions: number[], x: number): number {
-  let lowestI = 0
-  let highestI = partitions.length - 1
-  // invariant: lowestI <= i <= highestI
-  let i = Math.floor(partitions.length / 2)
+  let lowerBound = 0
+  let upperBound = partitions.length // after last partition
+  // invariant: lowerBound <= i <= upperBound and i < partitions.length
+  let i = (partitions.length - 1) >> 1
   // let iterations = 0
 
   while (true) {
     // iterations++
     const partitionEnd = partitions[i]
     if (x < partitionEnd) {
-      // the target partition is at i, or lower
-      highestI = i
-      if (lowestI === highestI) {
-        // console.debug(`findPartitionIndex: took ${iterations} iterations (exit A)`)
-        return lowestI // found
-      }
-      // look at lower i's
-      i = lowestI + Math.floor((highestI - lowestI) / 2)
+      // the target partition index is larger or equal to i
+      upperBound = i
     } else if (x === partitionEnd) {
-      // console.debug(`findPartitionIndex: took ${iterations} iterations (exit B)`)
+      // console.debug(`findPartitionIndex: took ${iterations} iterations (exit A)`)
       return i // found
     } /* partitionEnd < x */ else {
-      // the target partition is at a higher i,
-      // or x is larger than all partitions
       if (i + 1 >= partitions.length) {
-        // console.debug(`findPartitionIndex: took ${iterations} iterations (exit C)`)
+        // console.debug(`findPartitionIndex: took ${iterations} iterations (exit B)`)
         return -1 // x is larger than all partitions
       }
-      lowestI = i + 1
-      // look at higher i's
-      i = lowestI + Math.ceil((highestI - lowestI) / 2)
+      // the target partition index is larger than i
+      lowerBound = i + 1
     }
+    if (lowerBound === upperBound) {
+      // console.debug(`findPartitionIndex: took ${iterations} iterations (exit C)`)
+      return lowerBound // found
+    }
+    i = lowerBound + ((upperBound - lowerBound) >> 1)
   }
 }
 

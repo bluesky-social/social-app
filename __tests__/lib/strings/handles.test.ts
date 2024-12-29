@@ -157,12 +157,12 @@ describe('User handle sanitization', () => {
 })
 
 describe('getPartitionIndex(array, x)', () => {
-  it('finds the index in the middle', () => {
+  it('finds the index in the end', () => {
     let partitionsEnds = [10, 20, 30]
     expect(findPartitionIndex(partitionsEnds, 21)).toBe(2)
   })
 
-  it('finds the right index', () => {
+  it('finds the index in the middle', () => {
     let partitionsEnds = [10, 20, 30, 40]
     expect(findPartitionIndex(partitionsEnds, 15)).toBe(1)
   })
