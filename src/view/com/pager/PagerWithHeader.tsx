@@ -69,6 +69,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     const [headerOnlyHeight, setHeaderOnlyHeight] = React.useState(0)
     const scrollY = useSharedValue(0)
     const headerHeight = headerOnlyHeight + tabBarHeight
+    const [isDragging, setIsDragging] = React.useState(false)
 
     // capture the header bar sizing
     const onTabBarLayout = useNonReactiveCallback((evt: LayoutChangeEvent) => {
@@ -191,12 +192,21 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       [onPageSelected, setCurrentPage],
     )
 
+    const onPageScrollStateChanged = React.useCallback(
+      (state: 'idle' | 'dragging' | 'settling') => {
+        'worklet'
+        runOnJS(setIsDragging)(state !== 'idle')
+      },
+      [],
+    )
+
     return (
       <Pager
         ref={ref}
         testID={testID}
         initialPage={initialPage}
         onPageSelected={onPageSelectedInner}
+        onPageScrollStateChanged={onPageScrollStateChanged}
         renderTabBar={renderTabBar}>
         {toArray(children)
           .filter(Boolean)
@@ -204,7 +214,12 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
             const isReady =
               isHeaderReady && headerOnlyHeight > 0 && tabBarHeight > 0
             return (
-              <View key={i} collapsable={false}>
+              <View
+                key={i}
+                collapsable={false}
+                onMoveShouldSetResponderCapture={() =>
+                  isDragging || i !== currentPage
+                }>
                 <PagerItem
                   headerHeight={headerHeight}
                   index={i}

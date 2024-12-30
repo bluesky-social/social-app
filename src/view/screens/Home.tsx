@@ -1,5 +1,6 @@
 import React from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
+import {runOnJS} from 'react-native-reanimated'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
@@ -105,6 +106,7 @@ function HomeScreenReady({
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
   const requestNotificationsPermission = useRequestNotificationsPermission()
+  const [isDragging, setIsDragging] = React.useState(false)
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
   useOTAUpdates()
@@ -173,6 +175,7 @@ function HomeScreenReady({
       if (state === 'dragging') {
         setMinimalShellMode(false)
       }
+      runOnJS(setIsDragging)(state !== 'idle')
     },
     [setMinimalShellMode],
   )
@@ -230,6 +233,7 @@ function HomeScreenReady({
                 testID="followingFeedPage"
                 isPageFocused={selectedFeed === feed}
                 isPageAdjacent={Math.abs(selectedIndex - index) === 1}
+                isBeingDragged={isDragging}
                 feed={feed}
                 feedParams={homeFeedParams}
                 renderEmptyState={renderFollowingEmptyState}
@@ -244,6 +248,7 @@ function HomeScreenReady({
               testID="customFeedPage"
               isPageFocused={selectedFeed === feed}
               isPageAdjacent={Math.abs(selectedIndex - index) === 1}
+              isBeingDragged={isDragging}
               feed={feed}
               renderEmptyState={renderCustomFeedEmptyState}
               savedFeedConfig={savedFeedConfig}
@@ -264,6 +269,7 @@ function HomeScreenReady({
         testID="customFeedPage"
         isPageFocused
         isPageAdjacent={false}
+        isBeingDragged={isDragging}
         feed={`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`}
         renderEmptyState={renderCustomFeedEmptyState}
       />

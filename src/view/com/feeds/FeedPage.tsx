@@ -34,6 +34,7 @@ export function FeedPage({
   testID,
   isPageFocused,
   isPageAdjacent,
+  isBeingDragged = false,
   feed,
   feedParams,
   renderEmptyState,
@@ -45,6 +46,7 @@ export function FeedPage({
   feedParams?: FeedParams
   isPageFocused: boolean
   isPageAdjacent: boolean
+  isBeingDragged?: boolean
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
@@ -117,7 +119,9 @@ export function FeedPage({
 
   const shouldPrefetch = isNative && isPageAdjacent
   return (
-    <View testID={testID}>
+    <View
+      testID={testID}
+      onMoveShouldSetResponderCapture={() => isBeingDragged || !isPageFocused}>
       <MainScrollProvider>
         <FeedFeedbackProvider value={feedFeedback}>
           <PostFeed

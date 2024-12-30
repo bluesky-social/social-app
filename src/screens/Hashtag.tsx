@@ -1,5 +1,6 @@
 import React from 'react'
 import {ListRenderItemInfo, View} from 'react-native'
+import {runOnJS} from 'react-native-reanimated'
 import {PostView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -37,6 +38,7 @@ export default function HashtagScreen({
   route,
 }: NativeStackScreenProps<CommonNavigatorParams, 'Hashtag'>) {
   const {tag, author} = route.params
+  const [isDragging, setIsDragging] = React.useState(false)
   const {_} = useLingui()
 
   const fullTag = React.useMemo(() => {
@@ -78,6 +80,14 @@ export default function HashtagScreen({
     [setMinimalShellMode],
   )
 
+  const onPageScrollStateChanged = React.useCallback(
+    (state: 'idle' | 'dragging' | 'settling') => {
+      'worklet'
+      runOnJS(setIsDragging)(state !== 'idle')
+    },
+    [],
+  )
+
   const sections = React.useMemo(() => {
     return [
       {
@@ -109,6 +119,7 @@ export default function HashtagScreen({
     <Layout.Screen>
       <Pager
         onPageSelected={onPageSelected}
+        onPageScrollStateChanged={onPageScrollStateChanged}
         renderTabBar={props => (
           <Layout.Center style={[a.z_10, web([a.sticky, {top: 0}])]}>
             <Layout.Header.Outer noBottomBorder>
@@ -140,7 +151,13 @@ export default function HashtagScreen({
         )}
         initialPage={0}>
         {sections.map((section, i) => (
-          <View key={i}>{section.component}</View>
+          <View
+            key={i}
+            onMoveShouldSetResponderCapture={() =>
+              isDragging || i !== activeTab
+            }>
+            {section.component}
+          </View>
         ))}
       </Pager>
     </Layout.Screen>

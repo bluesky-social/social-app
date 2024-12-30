@@ -12,6 +12,7 @@ import {
 } from 'react-native'
 import {ScrollView as RNGHScrollView} from 'react-native-gesture-handler'
 import RNPickerSelect from 'react-native-picker-select'
+import {runOnJS} from 'react-native-reanimated'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -481,6 +482,7 @@ let SearchScreenInner = ({
   const {hasSession} = useSession()
   const {isDesktop} = useWebMediaQueries()
   const [activeTab, setActiveTab] = React.useState(0)
+  const [isDragging, setIsDragging] = React.useState(false)
   const {_} = useLingui()
 
   const onPageSelected = React.useCallback(
@@ -489,6 +491,14 @@ let SearchScreenInner = ({
       setActiveTab(index)
     },
     [setMinimalShellMode],
+  )
+
+  const onPageScrollStateChanged = React.useCallback(
+    (state: 'idle' | 'dragging' | 'settling') => {
+      'worklet'
+      runOnJS(setIsDragging)(state !== 'idle')
+    },
+    [],
   )
 
   const sections = React.useMemo(() => {
@@ -536,6 +546,7 @@ let SearchScreenInner = ({
   return queryWithParams ? (
     <Pager
       onPageSelected={onPageSelected}
+      onPageScrollStateChanged={onPageScrollStateChanged}
       renderTabBar={props => (
         <Layout.Center
           style={[
@@ -548,7 +559,11 @@ let SearchScreenInner = ({
       )}
       initialPage={0}>
       {sections.map((section, i) => (
-        <View key={i}>{section.component}</View>
+        <View
+          key={i}
+          onMoveShouldSetResponderCapture={() => isDragging || i !== activeTab}>
+          {section.component}
+        </View>
       ))}
     </Pager>
   ) : hasSession ? (
