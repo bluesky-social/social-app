@@ -60,6 +60,7 @@ interface DropdownButtonProps {
   items: MaybeDropdownItem[]
   label?: string
   menuWidth?: number
+  disabled?: boolean
   children?: React.ReactNode
   openToRight?: boolean
   openUpwards?: boolean
@@ -77,6 +78,7 @@ export function DropdownButton({
   items,
   label,
   menuWidth,
+  disabled,
   children,
   openToRight = false,
   openUpwards = false,
@@ -154,6 +156,7 @@ export function DropdownButton({
       <TouchableOpacity
         testID={testID}
         style={style}
+        disabled={disabled}
         onPress={onPress}
         hitSlop={hitSlop}
         ref={ref1}
@@ -171,6 +174,7 @@ export function DropdownButton({
       <Button
         type={type}
         testID={testID}
+        disabled={disabled}
         onPress={onPress}
         style={style}
         label={label}>
