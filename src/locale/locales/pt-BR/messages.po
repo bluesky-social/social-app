@@ -1384,11 +1384,11 @@ msgstr "Navegar por outros feeds"
 
 #: src/components/TrendingTopics.tsx:176
 msgid "Browse posts about {displayName}"
-msgstr "Navegar por mais posts sobre {displayName}"
+msgstr "Navegar por mais postagens sobre {displayName}"
 
 #: src/components/TrendingTopics.tsx:184
 msgid "Browse posts tagged with {displayName}"
-msgstr "Navegar por mais posts marcados com {displayName}"
+msgstr "Navegar por mais postagens marcadas com {displayName}"
 
 #: src/components/TrendingTopics.tsx:222
 msgid "Browse topic {displayName}"
