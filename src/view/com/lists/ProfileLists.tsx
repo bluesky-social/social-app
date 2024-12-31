@@ -51,7 +51,6 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
   ) {
     const t = useTheme()
     const {_} = useLingui()
-    const [isPTRing, setIsPTRing] = React.useState(false)
     const opts = React.useMemo(() => ({enabled}), [enabled])
     const {
       data,
@@ -63,6 +62,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       isError,
       error,
       refetch,
+      isRefetching,
     } = useProfileListsQuery(did, opts)
     const {isMobile} = useWebMediaQueries()
     const isEmpty = !isFetching && !data?.pages[0]?.lists.length
@@ -105,14 +105,12 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
     }))
 
     const onRefresh = React.useCallback(async () => {
-      setIsPTRing(true)
       try {
         await refetch()
       } catch (err) {
         logger.error('Failed to refresh lists', {message: err})
       }
-      setIsPTRing(false)
-    }, [refetch, setIsPTRing])
+    }, [refetch])
 
     const onEndReached = React.useCallback(async () => {
       if (isFetching || !hasNextPage || isError) return
@@ -196,7 +194,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
           keyExtractor={(item: any) => item._reactKey || item.uri}
           renderItem={renderItemInner}
           ListFooterComponent={ProfileListsFooter}
-          refreshing={isPTRing}
+          refreshing={isRefetching}
           onRefresh={onRefresh}
           headerOffset={headerOffset}
           progressViewOffset={ios(0)}
