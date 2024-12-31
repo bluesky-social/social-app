@@ -148,7 +148,7 @@ export function ProfileSubpageHeader({
           {isLoading || !creator ? (
             <LoadingPlaceholder width={50} height={8} />
           ) : (
-            <Text type="lg" style={[pal.textLight]} numberOfLines={1}>
+            <Text type="lg" emoji style={[pal.textLight]} numberOfLines={1}>
               {purpose === 'app.bsky.graph.defs#curatelist' ? (
                 isOwner ? (
                   <Trans>List by you</Trans>

@@ -135,7 +135,7 @@ export function WizardProfileCard({
   const moderationUi = moderateProfile(profile, moderationOpts).ui('avatar')
   const displayName = profile.displayName
     ? sanitizeDisplayName(profile.displayName)
-    : `@${sanitizeHandle(profile.handle)}`
+    : sanitizeHandle(profile.handle, '@', false)
 
   const onPress = () => {
     if (disabled) return
@@ -155,7 +155,7 @@ export function WizardProfileCard({
       type="user"
       btnType={btnType}
       displayName={displayName}
-      subtitle={`@${sanitizeHandle(profile.handle)}`}
+      subtitle={sanitizeHandle(profile.handle, '@', false)}
       onPress={onPress}
       avatar={profile.avatar}
       included={included}
@@ -201,7 +201,11 @@ export function WizardFeedCard({
       type="algo"
       btnType={btnType}
       displayName={sanitizeDisplayName(generator.displayName)}
-      subtitle={`Feed by @${sanitizeHandle(generator.creator.handle)}`}
+      subtitle={`Feed by ${sanitizeHandle(
+        generator.creator.handle,
+        '@',
+        false,
+      )}`}
       onPress={onPress}
       avatar={generator.avatar}
       included={included}

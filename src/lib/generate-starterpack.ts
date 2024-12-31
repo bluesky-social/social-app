@@ -101,7 +101,7 @@ export function useGenerateStarterPackMutation({
       const displayName = enforceLen(
         profile.displayName
           ? sanitizeDisplayName(profile.displayName)
-          : `@${sanitizeHandle(profile.handle)}`,
+          : sanitizeHandle(profile.handle, '@'),
         25,
         true,
       )
