@@ -46,7 +46,9 @@ export function Inner() {
         showsHorizontalScrollIndicator={false}
         decelerationRate="fast">
         <View style={[gutters, a.flex_row, a.align_center, a.gap_lg]}>
-          <Graph size="sm" />
+          <View style={{paddingLeft: 4, paddingRight: 2}}>
+            <Graph size="sm" />
+          </View>
           {isLoading ? (
             <View style={[a.py_lg]}>
               <Text
