@@ -18,7 +18,7 @@ msgstr ""
 "X-Crowdin-File: /main/src/locale/locales/en/messages.po\n"
 "X-Crowdin-File-ID: 238\n"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:563
+#: src/components/ProgressGuide/FollowDialog.tsx:567
 msgid "(active)"
 msgstr "（活动）"
 
@@ -911,8 +911,8 @@ msgstr "至少应含有 3 个字符"
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
 msgstr "自动播放选项已移动到<0>内容与媒体设置</0>。"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:105
-#: src/screens/Settings/ContentAndMediaSettings.tsx:111
+#: src/screens/Settings/ContentAndMediaSettings.tsx:106
+#: src/screens/Settings/ContentAndMediaSettings.tsx:112
 msgid "Autoplay videos and GIFs"
 msgstr "自动播放视频及 GIF"
 
@@ -954,7 +954,6 @@ msgstr "在创建新手包之前，你必须首先验证你的电子邮箱。"
 msgid "Before you may message another user, you must first verify your email."
 msgstr "在向其他人发送私信之前，你必须首先验证你的电子邮箱。"
 
-#: src/components/interstitials/Trending.tsx:67
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:74
 msgid "BETA"
 msgstr "测试"
@@ -1414,7 +1413,7 @@ msgstr "哒哒🐴哒哒🐴"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:265
 #: src/components/NewskieDialog.tsx:146
 #: src/components/NewskieDialog.tsx:153
-#: src/components/ProgressGuide/FollowDialog.tsx:425
+#: src/components/ProgressGuide/FollowDialog.tsx:429
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:117
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:123
 #: src/view/com/modals/ChangePassword.tsx:268
@@ -1594,7 +1593,7 @@ msgstr "连接中……"
 msgid "Contact support"
 msgstr "联系支持"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:48
+#: src/screens/Settings/ContentAndMediaSettings.tsx:49
 msgid "Content & Media"
 msgstr "内容与媒体"
 
@@ -1826,6 +1825,10 @@ msgstr "创建针对 {0} 的举报"
 #: src/screens/Settings/AppPasswords.tsx:174
 msgid "Created {0}"
 msgstr "创建于 {0}"
+
+#: src/screens/List/ListHiddenScreen.tsx:127
+msgid "Creator has been blocked"
+msgstr ""
 
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
@@ -2321,6 +2324,10 @@ msgstr "编辑你的新手包"
 msgid "Education"
 msgstr "教育"
 
+#: src/screens/List/ListHiddenScreen.tsx:141
+msgid "Either the creator of this list has blocked you or you have blocked the creator."
+msgstr ""
+
 #: src/screens/Settings/AccountSettings.tsx:60
 #: src/screens/Signup/StepInfo/index.tsx:170
 #: src/view/com/modals/ChangeEmail.tsx:136
@@ -2417,8 +2424,8 @@ msgstr "启用字幕"
 msgid "Enable this source only"
 msgstr "仅启用这个来源"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:121
-#: src/screens/Settings/ContentAndMediaSettings.tsx:127
+#: src/screens/Settings/ContentAndMediaSettings.tsx:122
+#: src/screens/Settings/ContentAndMediaSettings.tsx:136
 msgid "Enable trending topics"
 msgstr "启用趋势"
 
@@ -2608,8 +2615,8 @@ msgstr "导出账户数据"
 msgid "Export My Data"
 msgstr "导出账户数据"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:81
-#: src/screens/Settings/ContentAndMediaSettings.tsx:84
+#: src/screens/Settings/ContentAndMediaSettings.tsx:82
+#: src/screens/Settings/ContentAndMediaSettings.tsx:85
 msgid "External media"
 msgstr "外部媒体"
 
@@ -2771,7 +2778,7 @@ msgstr "动态源是一种自定义算法，用户仅需掌握一点编程知识
 msgid "Feeds updated!"
 msgstr "已更新动态源！"
 
-#: src/screens/Search/components/ExploreRecommendations.tsx:53
+#: src/screens/Search/components/ExploreRecommendations.tsx:54
 msgid "Feeds we think you might like."
 msgstr "我们认为你可能会喜欢的动态源。"
 
@@ -2793,9 +2800,9 @@ msgstr "正在完成"
 msgid "Find accounts to follow"
 msgstr "寻找一些账户来关注"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:77
-#: src/components/ProgressGuide/FollowDialog.tsx:84
-#: src/components/ProgressGuide/FollowDialog.tsx:413
+#: src/components/ProgressGuide/FollowDialog.tsx:78
+#: src/components/ProgressGuide/FollowDialog.tsx:88
+#: src/components/ProgressGuide/FollowDialog.tsx:417
 msgid "Find people to follow"
 msgstr "寻找一些用户关注"
 
@@ -2839,7 +2846,7 @@ msgid "Follow {name}"
 msgstr "关注 {name}"
 
 #: src/components/ProgressGuide/List.tsx:52
-#: src/state/shell/progress-guide.tsx:227
+#: src/state/shell/progress-guide.tsx:229
 msgid "Follow 10 accounts"
 msgstr "关注 10 个账户"
 
@@ -2920,8 +2927,8 @@ msgstr "已关注 {0}"
 msgid "Following {name}"
 msgstr "已关注 {name}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:73
-#: src/screens/Settings/ContentAndMediaSettings.tsx:76
+#: src/screens/Settings/ContentAndMediaSettings.tsx:74
+#: src/screens/Settings/ContentAndMediaSettings.tsx:77
 msgid "Following feed preferences"
 msgstr "“Following”动态源偏好"
 
@@ -3037,7 +3044,7 @@ msgid "Go back"
 msgstr "返回"
 
 #: src/components/Error.tsx:78
-#: src/screens/List/ListHiddenScreen.tsx:210
+#: src/screens/List/ListHiddenScreen.tsx:221
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
 #: src/screens/Profile/ProfileFeed/index.tsx:87
@@ -3095,8 +3102,8 @@ msgstr "转到用户个人资料"
 msgid "Graphic Media"
 msgstr "敏感/写实媒体"
 
-#: src/state/shell/progress-guide.tsx:216
-#: src/state/shell/progress-guide.tsx:226
+#: src/state/shell/progress-guide.tsx:218
+#: src/state/shell/progress-guide.tsx:228
 msgid "Half way there!"
 msgstr "已经完成一半了！"
 
@@ -3158,7 +3165,7 @@ msgstr "以下是你的应用密码！"
 msgid "Hidden list"
 msgstr "隐藏列表"
 
-#: src/components/interstitials/Trending.tsx:113
+#: src/components/interstitials/Trending.tsx:101
 #: src/components/moderation/ContentHider.tsx:200
 #: src/components/moderation/LabelPreference.tsx:135
 #: src/components/moderation/PostHider.tsx:122
@@ -3166,9 +3173,9 @@ msgstr "隐藏列表"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:132
+#: src/screens/Search/components/ExploreTrendingTopics.tsx:137
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:672
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:105
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "Hide"
 msgstr "隐藏"
 
@@ -3206,15 +3213,15 @@ msgstr "要隐藏这则帖文吗？"
 msgid "Hide this reply?"
 msgstr "要隐藏这则回复吗？"
 
-#: src/components/interstitials/Trending.tsx:73
+#: src/components/interstitials/Trending.tsx:84
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:83
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:62
 msgid "Hide trending topics"
 msgstr "隐藏趋势"
 
-#: src/components/interstitials/Trending.tsx:111
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:130
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:103
+#: src/components/interstitials/Trending.tsx:99
+#: src/screens/Search/components/ExploreTrendingTopics.tsx:135
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:108
 msgid "Hide trending topics?"
 msgstr "要隐藏趋势吗？"
 
@@ -3630,8 +3637,8 @@ msgstr "喜欢（{0, plural, one {# 次喜欢} other {# 次喜欢}}）"
 msgid "Like 10 posts"
 msgstr "喜欢 10 则帖文"
 
-#: src/state/shell/progress-guide.tsx:212
-#: src/state/shell/progress-guide.tsx:217
+#: src/state/shell/progress-guide.tsx:214
+#: src/state/shell/progress-guide.tsx:219
 msgid "Like 10 posts to train the Discover feed"
 msgstr "喜欢 10 则帖文以训练“Discover”资讯源"
 
@@ -3709,7 +3716,7 @@ msgstr "你创建的列表"
 msgid "List deleted"
 msgstr "已删除该列表"
 
-#: src/screens/List/ListHiddenScreen.tsx:126
+#: src/screens/List/ListHiddenScreen.tsx:129
 msgid "List has been hidden"
 msgstr "已隐藏该列表"
 
@@ -3834,8 +3841,8 @@ msgstr "帮我选择"
 msgid "Make sure this is where you intend to go!"
 msgstr "请确认目标页面地址是否正确！"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:57
-#: src/screens/Settings/ContentAndMediaSettings.tsx:60
+#: src/screens/Settings/ContentAndMediaSettings.tsx:58
+#: src/screens/Settings/ContentAndMediaSettings.tsx:61
 msgid "Manage saved feeds"
 msgstr "管理已保存的动态源"
 
@@ -4336,7 +4343,7 @@ msgid "No result"
 msgstr "没有结果"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:200
-#: src/components/ProgressGuide/FollowDialog.tsx:231
+#: src/components/ProgressGuide/FollowDialog.tsx:235
 msgid "No results"
 msgstr "没有结果"
 
@@ -5216,7 +5223,7 @@ msgstr "原因："
 msgid "Recent Searches"
 msgstr "最近的搜索记录"
 
-#: src/screens/Search/components/ExploreRecommendations.tsx:49
+#: src/screens/Search/components/ExploreRecommendations.tsx:50
 msgid "Recommended"
 msgstr "推荐"
 
@@ -5293,7 +5300,7 @@ msgstr "要从我的动态源中删除吗？"
 msgid "Remove from quick access?"
 msgstr "要从快速访问中移除吗？"
 
-#: src/screens/List/ListHiddenScreen.tsx:156
+#: src/screens/List/ListHiddenScreen.tsx:167
 msgid "Remove from saved feeds"
 msgstr "从已保存的动态源中删除"
 
@@ -5348,7 +5355,7 @@ msgid "Removed from my feeds"
 msgstr "已从我的动态源中删除"
 
 #: src/screens/List/ListHiddenScreen.tsx:94
-#: src/screens/List/ListHiddenScreen.tsx:160
+#: src/screens/List/ListHiddenScreen.tsx:171
 msgid "Removed from saved feeds"
 msgstr "已从已保存的动态源中删除"
 
@@ -5644,7 +5651,7 @@ msgid "Retry"
 msgstr "重试"
 
 #: src/components/Error.tsx:73
-#: src/screens/List/ListHiddenScreen.tsx:205
+#: src/screens/List/ListHiddenScreen.tsx:216
 #: src/screens/StarterPack/StarterPackScreen.tsx:752
 #: src/view/screens/ProfileList.tsx:1010
 msgid "Return to previous page"
@@ -5768,7 +5775,7 @@ msgstr "滚动到顶部"
 msgid "Search"
 msgstr "搜索"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:741
+#: src/components/ProgressGuide/FollowDialog.tsx:745
 msgid "Search by name or interest"
 msgstr "按名称或兴趣搜索"
 
@@ -5776,7 +5783,7 @@ msgstr "按名称或兴趣搜索"
 msgid "Search feeds"
 msgstr "搜索动态源"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:571
+#: src/components/ProgressGuide/FollowDialog.tsx:575
 msgid "Search for \"{interestsDisplayName}\"{activeText}"
 msgstr "搜索“{interestsDisplayName}”{activeText}"
 
@@ -5802,8 +5809,8 @@ msgstr "搜索 GIF"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:507
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
-#: src/components/ProgressGuide/FollowDialog.tsx:760
-#: src/components/ProgressGuide/FollowDialog.tsx:761
+#: src/components/ProgressGuide/FollowDialog.tsx:764
+#: src/components/ProgressGuide/FollowDialog.tsx:765
 msgid "Search profiles"
 msgstr "搜索个人资料"
 
@@ -6127,7 +6134,7 @@ msgstr "显示替代文本"
 
 #: src/components/moderation/ScreenHider.tsx:172
 #: src/components/moderation/ScreenHider.tsx:175
-#: src/screens/List/ListHiddenScreen.tsx:176
+#: src/screens/List/ListHiddenScreen.tsx:187
 msgid "Show anyway"
 msgstr "仍然显示"
 
@@ -6153,7 +6160,7 @@ msgstr "显示这则帖文的创建时间"
 msgid "Show less like this"
 msgstr "显示更少类似内容"
 
-#: src/screens/List/ListHiddenScreen.tsx:172
+#: src/screens/List/ListHiddenScreen.tsx:183
 msgid "Show list anyway"
 msgstr "仍然显示列表"
 
@@ -6564,11 +6571,11 @@ msgstr "点按以切换声音播放"
 msgid "Tap to view full image"
 msgstr "点按以查看完整图片"
 
-#: src/state/shell/progress-guide.tsx:231
+#: src/state/shell/progress-guide.tsx:233
 msgid "Task complete - 10 follows!"
 msgstr "任务完成：关注 10 个账户！"
 
-#: src/state/shell/progress-guide.tsx:221
+#: src/state/shell/progress-guide.tsx:223
 msgid "Task complete - 10 likes!"
 msgstr "任务完成：喜欢 10 则帖文！"
 
@@ -6688,7 +6695,7 @@ msgstr "版权许可已移动到 <0/>"
 msgid "The Discover feed"
 msgstr "“Discover”动态源"
 
-#: src/state/shell/progress-guide.tsx:222
+#: src/state/shell/progress-guide.tsx:224
 msgid "The Discover feed now knows what you like"
 msgstr "现在“Discover”动态源了解你的喜好内容了"
 
@@ -6778,7 +6785,7 @@ msgstr "连接服务器时出现问题"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "刷新通知时出现问题，点击重试。"
 
-#: src/view/com/posts/PostFeed.tsx:487
+#: src/view/com/posts/PostFeed.tsx:486
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "刷新帖文时出现问题，点击重试。"
 
@@ -6960,7 +6967,7 @@ msgstr "这个标记者尚未公开他发布的标记类型，也可能不再提
 msgid "This link is taking you to the following website:"
 msgstr "这条链接将带你前往以下网站："
 
-#: src/screens/List/ListHiddenScreen.tsx:136
+#: src/screens/List/ListHiddenScreen.tsx:146
 msgid "This list - created by <0>{0}</0> - contains possible violations of Bluesky's community guidelines in its name or description."
 msgstr "这个列表由 <0>{0}</0> 创建，其名称或描述可能违反了 Bluesky 社群准则。"
 
@@ -7059,8 +7066,8 @@ msgstr "你的帖文将从这则引用中删除，并替换为一个占位符。
 msgid "Thread options"
 msgstr "讨论串选项"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:65
-#: src/screens/Settings/ContentAndMediaSettings.tsx:68
+#: src/screens/Settings/ContentAndMediaSettings.tsx:66
+#: src/screens/Settings/ContentAndMediaSettings.tsx:69
 msgid "Thread preferences"
 msgstr "讨论串偏好"
 
@@ -7132,7 +7139,6 @@ msgstr "话题"
 msgid "Translate"
 msgstr "翻译"
 
-#: src/components/interstitials/Trending.tsx:62
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:69
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:59
 msgid "Trending"
@@ -7322,8 +7328,8 @@ msgstr "已从你的动态源中取消固定"
 msgid "Unsubscribe"
 msgstr "取消订阅"
 
-#: src/screens/List/ListHiddenScreen.tsx:184
-#: src/screens/List/ListHiddenScreen.tsx:194
+#: src/screens/List/ListHiddenScreen.tsx:195
+#: src/screens/List/ListHiddenScreen.tsx:205
 msgid "Unsubscribe from list"
 msgstr "从列表取消订阅"
 
@@ -7422,8 +7428,8 @@ msgstr "使用默认提供商"
 msgid "Use in-app browser"
 msgstr "使用应用内浏览器"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:91
-#: src/screens/Settings/ContentAndMediaSettings.tsx:97
+#: src/screens/Settings/ContentAndMediaSettings.tsx:92
+#: src/screens/Settings/ContentAndMediaSettings.tsx:98
 msgid "Use in-app browser to open links"
 msgstr "使用应用内浏览器开启链接"
 
@@ -7753,7 +7759,7 @@ msgid "We'll use this to help customize your experience."
 msgstr "我们将使用这些信息来帮助定制你的体验。"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:88
-#: src/components/ProgressGuide/FollowDialog.tsx:153
+#: src/components/ProgressGuide/FollowDialog.tsx:157
 msgid "We're having network issues, try again"
 msgstr "我们遇到了网络问题，请再试一次"
 
@@ -7913,7 +7919,7 @@ msgstr "确定重新启用我的账户"
 msgid "Yesterday"
 msgstr "昨天"
 
-#: src/screens/List/ListHiddenScreen.tsx:140
+#: src/screens/List/ListHiddenScreen.tsx:150
 msgid "you"
 msgstr "你"
 
@@ -7955,9 +7961,9 @@ msgstr "你现在可以使用新密码登录。"
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
 msgstr "你可以继续登录以重新启用你的账户，其他用户将能够重新看到你的个人资料和帖文。"
 
-#: src/components/interstitials/Trending.tsx:112
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:131
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:104
+#: src/components/interstitials/Trending.tsx:100
+#: src/screens/Search/components/ExploreTrendingTopics.tsx:136
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:109
 msgid "You can update this later from your settings."
 msgstr "你可以随时在设置里重新更改。"
 
@@ -8175,7 +8181,7 @@ msgstr "你已完成设置！"
 msgid "You've chosen to hide a word or tag within this post."
 msgstr "你选择隐藏了这则帖文中的字词或标签。"
 
-#: src/state/shell/progress-guide.tsx:232
+#: src/state/shell/progress-guide.tsx:234
 msgid "You've found some people to follow"
 msgstr "你发现了一些可以关注的人"
 
@@ -8242,7 +8248,7 @@ msgstr "你的电子邮箱已更新但尚未验证。接下来，请验证你的
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "你的电子邮箱尚未验证。这是一个重要的安全步骤，我们建议你完成验证。"
 
-#: src/state/shell/progress-guide.tsx:211
+#: src/state/shell/progress-guide.tsx:213
 msgid "Your first like!"
 msgstr "你的第一次喜欢！"
 
@@ -8289,4 +8295,3 @@ msgstr "已发布你的回复"
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "你的举报将发送至 Bluesky 内容审核服务"
-
