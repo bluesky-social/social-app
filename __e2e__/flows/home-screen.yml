@@ -27,7 +27,9 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "bottomBarHomeBtn"
 - tapOn:
-    id: "viewHeaderDrawerBtn"
+    id: "bottomBarHomeBtn"
+- tapOn:
+    id: "bottomBarHomeBtn"
 - assertNotVisible: "Feeds ✨"
 
 - tapOn:

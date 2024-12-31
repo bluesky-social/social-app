@@ -162,6 +162,7 @@ export type LogEvents = {
       | 'StarterPackProfilesList'
       | 'FeedInterstitial'
       | 'ProfileHeaderSuggestedFollows'
+      | 'PostOnboardingFindFollows'
   }
   'profile:unfollow': {
     logContext:
@@ -177,6 +178,7 @@ export type LogEvents = {
       | 'StarterPackProfilesList'
       | 'FeedInterstitial'
       | 'ProfileHeaderSuggestedFollows'
+      | 'PostOnboardingFindFollows'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
@@ -234,4 +236,20 @@ export type LogEvents = {
   'tmd:share': {}
   'tmd:download': {}
   'tmd:post': {}
+
+  'trendingTopics:show': {
+    context: 'settings'
+  }
+  'trendingTopics:hide': {
+    context: 'settings' | 'sidebar' | 'interstitial' | 'explore:trending'
+  }
+  'trendingTopic:click': {
+    context: 'sidebar' | 'interstitial' | 'explore'
+  }
+  'recommendedTopic:click': {
+    context: 'explore'
+  }
+
+  'progressGuide:hide': {}
+  'progressGuide:followDialog:open': {}
 }

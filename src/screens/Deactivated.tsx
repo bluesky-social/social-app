@@ -17,13 +17,13 @@ import {
 } from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {ScrollView} from '#/view/com/util/Views'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {AccountList} from '#/components/AccountList'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -104,24 +104,17 @@ export function Deactivated() {
   }, [_, agent, setPending, setError, queryClient])
 
   return (
-    <View style={[a.util_screen_outer, a.flex_1, t.atoms.bg]}>
-      <ScrollView
-        style={[
-          a.h_full,
-          a.w_full,
+    <View style={[a.util_screen_outer, a.flex_1]}>
+      <Layout.Content
+        contentContainerStyle={[
           a.px_2xl,
           {
             paddingTop: isWeb ? 64 : insets.top + 16,
             paddingBottom: isWeb ? 64 : insets.bottom,
           },
-        ]}
-        contentContainerStyle={[
-          a.w_full,
-          a.flex_row,
-          a.justify_center,
-          {borderWidth: 0},
         ]}>
-        <View style={[a.w_full, {maxWidth: COL_WIDTH}]}>
+        <View
+          style={[a.w_full, {marginHorizontal: 'auto', maxWidth: COL_WIDTH}]}>
           <View style={[a.w_full, a.justify_center, a.align_center, a.pb_5xl]}>
             <Logo width={40} />
           </View>
@@ -218,7 +211,7 @@ export function Deactivated() {
             </>
           )}
         </View>
-      </ScrollView>
+      </Layout.Content>
     </View>
   )
 }
