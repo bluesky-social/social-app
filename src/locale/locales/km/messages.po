@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:563
+#: src/components/ProgressGuide/FollowDialog.tsx:567
 msgid "(active)"
 msgstr ""
 
@@ -414,7 +414,7 @@ msgstr "៧ ថ្ងៃ"
 msgid "About"
 msgstr "អំពី"
 
-#: src/view/screens/Search/Search.tsx:858
+#: src/view/screens/Search/Search.tsx:865
 msgid "Access navigation links and settings"
 msgstr "ចូលប្រើតំណរុករក និងការកំណត់"
 
@@ -506,8 +506,8 @@ msgstr "បន្ថែម {displayName} ទៅកញ្ចប់ចាប់ផ
 msgid "Add a content warning"
 msgstr "បន្ថែមការព្រមានអំពីខ្លឹមសារ"
 
-#: src/view/screens/ProfileList.tsx:891
-#: src/view/screens/ProfileList.tsx:909
+#: src/view/screens/ProfileList.tsx:895
+#: src/view/screens/ProfileList.tsx:913
 msgid "Add a user to this list"
 msgstr "បន្ថែមអ្នកប្រើប្រាស់ទៅក្នុងបញ្ជីនេះ"
 
@@ -535,7 +535,7 @@ msgstr "បន្ថែមអត្ថបទជំនួស (ជាជម្រ�
 msgid "Add another account"
 msgstr "បន្ថែមគណនីផ្សេងទៀត"
 
-#: src/view/com/composer/Composer.tsx:721
+#: src/view/com/composer/Composer.tsx:728
 msgid "Add another post"
 msgstr "បន្ថែមប្រកាសមួយទៀត"
 
@@ -557,12 +557,12 @@ msgstr "បន្ថែមពាក្យ mute សម្រាប់ការក
 msgid "Add muted words and tags"
 msgstr "បន្ថែមពាក្យ និងស្លាកដែលបានបិទ"
 
-#: src/view/com/composer/Composer.tsx:1235
+#: src/view/com/composer/Composer.tsx:1242
 msgid "Add new post"
 msgstr "បន្ថែមប្រកាសថ្មី"
 
-#: src/view/screens/ProfileList.tsx:899
-#: src/view/screens/ProfileList.tsx:917
+#: src/view/screens/ProfileList.tsx:903
+#: src/view/screens/ProfileList.tsx:921
 msgid "Add people"
 msgstr ""
 
@@ -809,8 +809,8 @@ msgstr "GIF ដែលមានចលនា"
 msgid "Anti-Social Behavior"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:329
-#: src/view/screens/Search/Search.tsx:330
+#: src/view/screens/Search/Search.tsx:336
+#: src/view/screens/Search/Search.tsx:337
 msgid "Any language"
 msgstr "ភាសាផ្សេងៗ"
 
@@ -912,12 +912,12 @@ msgstr "រូបរាង"
 msgid "Apply default recommended feeds"
 msgstr "អនុវត្ត​មតិព័ត៌មាន​ដែល​បាន​ណែនាំ​លំនាំដើម"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:835
+#: src/view/com/post-thread/PostThreadItem.tsx:834
 msgid "Archived from {0}"
 msgstr "បានរក្សាទុកពី {0}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:804
-#: src/view/com/post-thread/PostThreadItem.tsx:843
+#: src/view/com/post-thread/PostThreadItem.tsx:803
+#: src/view/com/post-thread/PostThreadItem.tsx:842
 msgid "Archived post"
 msgstr ""
 
@@ -953,11 +953,11 @@ msgstr "តើអ្នកប្រាកដទេថាអ្នកចង់ល
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "តើអ្នកប្រាកដថាចង់លុបវាចេញពីមតិព័ត៌មានរបស់អ្នកមែនទេ"
 
-#: src/view/com/composer/Composer.tsx:672
+#: src/view/com/composer/Composer.tsx:679
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "តើ​អ្នក​ប្រាកដ​ថា​អ្នក​ចង់​បោះបង់​សេចក្តី​ព្រាង​នេះ"
 
-#: src/view/com/composer/Composer.tsx:846
+#: src/view/com/composer/Composer.tsx:853
 msgid "Are you sure you'd like to discard this post?"
 msgstr "តើអ្នកប្រាកដថាចង់បោះបង់ការបង្ហោះនេះទេ?"
 
@@ -986,8 +986,8 @@ msgstr "យ៉ាងហោចណាស់ 3 តួអក្សរ"
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
 msgstr "ជម្រើសលេងដោយស្វ័យប្រវត្តិបានផ្លាស់ទីទៅ <0>ការកំណត់មាតិកា និងមេឌៀ</0>"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:105
-#: src/screens/Settings/ContentAndMediaSettings.tsx:111
+#: src/screens/Settings/ContentAndMediaSettings.tsx:106
+#: src/screens/Settings/ContentAndMediaSettings.tsx:112
 msgid "Autoplay videos and GIFs"
 msgstr "ចាក់វីដេអូ និង GIFs ដោយស្វ័យប្រវត្តិ"
 
@@ -1019,7 +1019,7 @@ msgstr "ត្រឡប់"
 msgid "Before creating a list, you must first verify your email."
 msgstr "មុននឹងបង្កើតបញ្ជី អ្នកត្រូវតែផ្ទៀងផ្ទាត់អ៊ីមែលរបស់អ្នកជាមុនសិន"
 
-#: src/view/com/composer/Composer.tsx:599
+#: src/view/com/composer/Composer.tsx:606
 msgid "Before creating a post, you must first verify your email."
 msgstr "មុននឹងបង្កើតការបង្ហោះ អ្នកត្រូវតែផ្ទៀងផ្ទាត់អ៊ីមែលរបស់អ្នកជាមុនសិន"
 
@@ -1033,7 +1033,6 @@ msgstr "មុននឹងបង្កើតកញ្ចប់ចាប់ផ្
 msgid "Before you may message another user, you must first verify your email."
 msgstr "មុនពេលអ្នកអាចផ្ញើសារទៅកាន់អ្នកប្រើប្រាស់ផ្សេងទៀត អ្នកត្រូវតែផ្ទៀងផ្ទាត់អ៊ីមែលរបស់អ្នកជាមុនសិន"
 
-#: src/components/interstitials/Trending.tsx:67
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:74
 msgid "BETA"
 msgstr ""
@@ -1070,15 +1069,15 @@ msgstr "បិទគណនី"
 msgid "Block Account?"
 msgstr "បិទគណនី?"
 
-#: src/view/screens/ProfileList.tsx:638
+#: src/view/screens/ProfileList.tsx:639
 msgid "Block accounts"
 msgstr "បិទគណនី"
 
-#: src/view/screens/ProfileList.tsx:759
+#: src/view/screens/ProfileList.tsx:760
 msgid "Block list"
 msgstr "បញ្ជីទប់ស្កាត់"
 
-#: src/view/screens/ProfileList.tsx:754
+#: src/view/screens/ProfileList.tsx:755
 msgid "Block these accounts?"
 msgstr "ទប់ស្កាត់គណនីទាំងនេះ?"
 
@@ -1112,7 +1111,7 @@ msgstr "ទប់ស្កាត់ post"
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr "ការទប់ស្កាត់មិនរារាំងអ្នកដាក់ស្លាកនេះពីការដាក់ស្លាកនៅលើគណនីរបស់អ្នកនោះទេ"
 
-#: src/view/screens/ProfileList.tsx:756
+#: src/view/screens/ProfileList.tsx:757
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "ការទប់ស្កាត់ជាសាធារណៈ។ គណនី​ដែល​បាន​ទប់ស្កាត់​មិន​អាច​ឆ្លើយ​តប​ក្នុង​ខ្សែ​ស្រឡាយ​របស់​អ្នក លើក​ឡើង​ពី​អ្នក ឬ​ធ្វើ​អន្តរកម្ម​ជាមួយ​អ្នក"
 
@@ -1129,7 +1128,7 @@ msgstr "ប្លុក"
 msgid "Bluesky"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:860
+#: src/view/com/post-thread/PostThreadItem.tsx:859
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky មិនអាចបញ្ជាក់ពីភាពត្រឹមត្រូវនៃកាលបរិច្ឆេទដែលបានទាមទារនោះទេ"
 
@@ -1264,7 +1263,7 @@ msgstr "កាមេរ៉ា"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:76
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:83
 #: src/screens/Settings/Settings.tsx:260
-#: src/view/com/composer/Composer.tsx:909
+#: src/view/com/composer/Composer.tsx:916
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:268
@@ -1279,7 +1278,7 @@ msgstr "កាមេរ៉ា"
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:213
-#: src/view/screens/Search/Search.tsx:887
+#: src/view/screens/Search/Search.tsx:894
 msgid "Cancel"
 msgstr "បោះបង់"
 
@@ -1316,7 +1315,7 @@ msgid "Cancel reactivation and log out"
 msgstr "បោះបង់ការបើកដំណើរការឡើងវិញ ហើយចេញ"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:879
+#: src/view/screens/Search/Search.tsx:886
 msgid "Cancel search"
 msgstr "បោះបង់ការស្វែងរក"
 
@@ -1324,7 +1323,7 @@ msgstr "បោះបង់ការស្វែងរក"
 msgid "Cancels opening the linked website"
 msgstr "បោះបង់ការបើកគេហទំព័រដែលបានភ្ជាប់"
 
-#: src/state/shell/composer/index.tsx:82
+#: src/state/shell/composer/index.tsx:83
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:117
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:158
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:194
@@ -1415,7 +1414,7 @@ msgstr "បានបិទការជជែក"
 #: src/components/dms/ConvoMenu.tsx:112
 #: src/components/dms/MessageMenu.tsx:81
 #: src/Navigation.tsx:393
-#: src/screens/Messages/ChatList.tsx:244
+#: src/screens/Messages/ChatList.tsx:246
 msgid "Chat settings"
 msgstr "ការកំណត់ការជជែក"
 
@@ -1542,7 +1541,7 @@ msgstr ""
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:265
 #: src/components/NewskieDialog.tsx:146
 #: src/components/NewskieDialog.tsx:153
-#: src/components/ProgressGuide/FollowDialog.tsx:425
+#: src/components/ProgressGuide/FollowDialog.tsx:429
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:117
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:123
 #: src/view/com/modals/ChangePassword.tsx:268
@@ -1568,11 +1567,16 @@ msgstr "Close bottom drawer"
 msgid "Close dialog"
 msgstr "បិទប្រអប់"
 
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
+msgid "Close emoji picker"
+msgstr ""
+
 #: src/components/dialogs/GifSelect.tsx:169
 msgid "Close GIF dialog"
 msgstr "បិទប្រអប់ GIF"
 
-#: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:35
+#: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:31
 msgid "Close image"
 msgstr "រូបភាពបិទ"
 
@@ -1601,7 +1605,7 @@ msgstr "បិទការជូនដំណឹងអំពីការអាប
 #~ msgid "Closes post composer and discards post draft"
 #~ msgstr "បិទកម្មវិធីតែងប្រកាស ហើយបោះបង់ការបង្ហោះសេចក្តីព្រាង"
 
-#: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:36
+#: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:32
 msgid "Closes viewer for header image"
 msgstr "បិទកម្មវិធីមើលសម្រាប់រូបភាពបឋមកថា"
 
@@ -1644,7 +1648,7 @@ msgstr "បញ្ចប់ការប្រឈម"
 msgid "Compose new post"
 msgstr "សរសេរអត្ថបទថ្មី"
 
-#: src/view/com/composer/Composer.tsx:812
+#: src/view/com/composer/Composer.tsx:819
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "សរសេរការបង្ហោះរហូតដល់ {MAX_GRAPHEME_LENGTH} តួអក្សរដែលមានប្រវែង"
 
@@ -1652,7 +1656,7 @@ msgstr "សរសេរការបង្ហោះរហូតដល់ {MAX_GRA
 msgid "Compose reply"
 msgstr "សរសេរការឆ្លើយតប"
 
-#: src/view/com/composer/Composer.tsx:1628
+#: src/view/com/composer/Composer.tsx:1635
 msgid "Compressing video..."
 msgstr "កំពុង​បង្ហាប់​វីដេអូ..."
 
@@ -1721,7 +1725,7 @@ msgstr "កំពុងភ្ជាប់..."
 msgid "Contact support"
 msgstr "ទាក់ទងផ្នែកគាំទ្រ"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:48
+#: src/screens/Settings/ContentAndMediaSettings.tsx:49
 msgid "Content & Media"
 msgstr ""
 
@@ -1857,7 +1861,7 @@ msgstr "ចម្លងតំណ"
 msgid "Copy Link"
 msgstr "ចម្លងតំណ"
 
-#: src/view/screens/ProfileList.tsx:482
+#: src/view/screens/ProfileList.tsx:483
 msgid "Copy link to list"
 msgstr "ចម្លងតំណទៅបញ្ជី"
 
@@ -1897,7 +1901,7 @@ msgstr "មិនអាចចាកចេញពីការជជែកបាន
 msgid "Could not load feed"
 msgstr "មិនអាចផ្ទុកព័ត៌មានបានទេ"
 
-#: src/view/screens/ProfileList.tsx:994
+#: src/view/screens/ProfileList.tsx:1000
 msgid "Could not load list"
 msgstr "មិនអាចផ្ទុកបញ្ជីបានទេ"
 
@@ -1969,6 +1973,10 @@ msgstr "បង្កើតរបាយការណ៍សម្រាប់ {0}"
 #: src/screens/Settings/AppPasswords.tsx:174
 msgid "Created {0}"
 msgstr "បង្កើត {0}"
+
+#: src/screens/List/ListHiddenScreen.tsx:127
+msgid "Creator has been blocked"
+msgstr ""
 
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
@@ -2046,7 +2054,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:665
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:661
-#: src/view/screens/ProfileList.tsx:738
+#: src/view/screens/ProfileList.tsx:739
 msgid "Delete"
 msgstr "លុប"
 
@@ -2075,7 +2083,7 @@ msgstr "លុបកំណត់ត្រាប្រកាសការជជែ
 msgid "Delete for me"
 msgstr "លុបពីខ្ញុំ"
 
-#: src/view/screens/ProfileList.tsx:525
+#: src/view/screens/ProfileList.tsx:526
 msgid "Delete List"
 msgstr "លុបបញ្ជី"
 
@@ -2095,7 +2103,7 @@ msgstr "លុបសារពីខ្ញុំ"
 #~ msgid "Delete My Account…"
 #~ msgstr "លុបគណនីរបស់ខ្ញុំ"
 
-#: src/view/com/composer/Composer.tsx:820
+#: src/view/com/composer/Composer.tsx:827
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:642
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:644
 msgid "Delete post"
@@ -2110,7 +2118,7 @@ msgstr "លុបកញ្ចប់ចាប់ផ្តើម"
 msgid "Delete starter pack?"
 msgstr "លុបកញ្ចប់ចាប់ផ្តើម?"
 
-#: src/view/screens/ProfileList.tsx:733
+#: src/view/screens/ProfileList.tsx:734
 msgid "Delete this list?"
 msgstr "លុបបញ្ជីនេះ"
 
@@ -2209,8 +2217,8 @@ msgid "Disabled"
 msgstr "បានបិទ"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:674
-#: src/view/com/composer/Composer.tsx:853
+#: src/view/com/composer/Composer.tsx:681
+#: src/view/com/composer/Composer.tsx:860
 msgid "Discard"
 msgstr "បោះបង់"
 
@@ -2218,11 +2226,11 @@ msgstr "បោះបង់"
 msgid "Discard changes?"
 msgstr "បោះបង់ "
 
-#: src/view/com/composer/Composer.tsx:671
+#: src/view/com/composer/Composer.tsx:678
 msgid "Discard draft?"
 msgstr "បោះបង់ការផ្លាស់ប្តូរ?"
 
-#: src/view/com/composer/Composer.tsx:845
+#: src/view/com/composer/Composer.tsx:852
 msgid "Discard post?"
 msgstr "បោះបង់ការបង្ហោះ?"
 
@@ -2248,7 +2256,7 @@ msgstr "ស្វែងរកមតិព័ត៌មានថ្មី"
 msgid "Dismiss"
 msgstr "ច្រានចោល"
 
-#: src/view/com/composer/Composer.tsx:1552
+#: src/view/com/composer/Composer.tsx:1559
 msgid "Dismiss error"
 msgstr "ច្រានចោលកំហុស"
 
@@ -2442,7 +2450,7 @@ msgstr "កែរូបភាព"
 msgid "Edit interaction settings"
 msgstr "កែសម្រួលការកំណត់អន្តរកម្ម"
 
-#: src/view/screens/ProfileList.tsx:513
+#: src/view/screens/ProfileList.tsx:514
 msgid "Edit list details"
 msgstr "កែសម្រួលព័ត៌មានលម្អិតនៃបញ្ជី"
 
@@ -2508,6 +2516,10 @@ msgstr "កែសម្រួលកញ្ចប់ចាប់ផ្តើមរ
 #: src/screens/Onboarding/state.ts:101
 msgid "Education"
 msgstr "ការអប់រំ"
+
+#: src/screens/List/ListHiddenScreen.tsx:141
+msgid "Either the creator of this list has blocked you or you have blocked the creator."
+msgstr ""
 
 #: src/screens/Settings/AccountSettings.tsx:60
 #: src/screens/Signup/StepInfo/index.tsx:170
@@ -2609,8 +2621,8 @@ msgstr "បើកចំណងជើងរង"
 msgid "Enable this source only"
 msgstr "បើកដំណើរការប្រភពនេះតែប៉ុណ្ណោះ"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:121
-#: src/screens/Settings/ContentAndMediaSettings.tsx:127
+#: src/screens/Settings/ContentAndMediaSettings.tsx:122
+#: src/screens/Settings/ContentAndMediaSettings.tsx:136
 msgid "Enable trending topics"
 msgstr ""
 
@@ -2686,7 +2698,7 @@ msgstr "បញ្ចូលអាសយដ្ឋានអ៊ីមែលថ្ម
 msgid "Enter your username and password"
 msgstr "បញ្ចូលឈ្មោះអ្នកប្រើប្រាស់ និងពាក្យសម្ងាត់របស់អ្នក។"
 
-#: src/view/com/composer/Composer.tsx:1637
+#: src/view/com/composer/Composer.tsx:1644
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "កំហុស"
@@ -2700,7 +2712,7 @@ msgid "Error receiving captcha response."
 msgstr "កំហុសក្នុងការទទួលការឆ្លើយតប captcha"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:183
-#: src/view/screens/Search/Search.tsx:103
+#: src/view/screens/Search/Search.tsx:110
 msgid "Error:"
 msgstr "កំហុស"
 
@@ -2812,8 +2824,8 @@ msgstr "នាំចេញទិន្នន័យរបស់ខ្ញុំ"
 msgid "Export My Data"
 msgstr "នាំចេញទិន្នន័យរបស់ខ្ញុំ"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:81
-#: src/screens/Settings/ContentAndMediaSettings.tsx:84
+#: src/screens/Settings/ContentAndMediaSettings.tsx:82
+#: src/screens/Settings/ContentAndMediaSettings.tsx:85
 msgid "External media"
 msgstr "ប្រព័ន្ធផ្សព្វផ្សាយខាងក្រៅ"
 
@@ -2974,7 +2986,7 @@ msgstr "បានផ្ញើមតិកែលម្អ!"
 #: src/view/screens/Feeds.tsx:508
 #: src/view/screens/Profile.tsx:235
 #: src/view/screens/SavedFeeds.tsx:96
-#: src/view/screens/Search/Search.tsx:518
+#: src/view/screens/Search/Search.tsx:525
 #: src/view/shell/desktop/LeftNav.tsx:445
 #: src/view/shell/Drawer.tsx:476
 msgid "Feeds"
@@ -2989,7 +3001,7 @@ msgstr "មតិព័ត៌មានគឺជាក្បួនដោះស្
 msgid "Feeds updated!"
 msgstr "បានធ្វើបច្ចុប្បន្នភាពព័ត៌មាន!"
 
-#: src/screens/Search/components/ExploreRecommendations.tsx:53
+#: src/screens/Search/components/ExploreRecommendations.tsx:54
 msgid "Feeds we think you might like."
 msgstr ""
 
@@ -3015,13 +3027,13 @@ msgstr "បញ្ចប់"
 msgid "Find accounts to follow"
 msgstr "ស្វែងរកគណនីដើម្បីតាមដាន"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:77
-#: src/components/ProgressGuide/FollowDialog.tsx:84
-#: src/components/ProgressGuide/FollowDialog.tsx:413
+#: src/components/ProgressGuide/FollowDialog.tsx:78
+#: src/components/ProgressGuide/FollowDialog.tsx:88
+#: src/components/ProgressGuide/FollowDialog.tsx:417
 msgid "Find people to follow"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:588
+#: src/view/screens/Search/Search.tsx:595
 msgid "Find posts and users on Bluesky"
 msgstr "ស្វែងរកប្រកាស និងអ្នកប្រើប្រាស់នៅលើ Bluesky"
 
@@ -3069,7 +3081,7 @@ msgid "Follow {name}"
 msgstr "តាម {name}"
 
 #: src/components/ProgressGuide/List.tsx:52
-#: src/state/shell/progress-guide.tsx:227
+#: src/state/shell/progress-guide.tsx:229
 msgid "Follow 10 accounts"
 msgstr ""
 
@@ -3163,8 +3175,8 @@ msgstr "កំពុងតាម {0}"
 msgid "Following {name}"
 msgstr "កំពុងតាម {name}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:73
-#: src/screens/Settings/ContentAndMediaSettings.tsx:76
+#: src/screens/Settings/ContentAndMediaSettings.tsx:74
+#: src/screens/Settings/ContentAndMediaSettings.tsx:77
 msgid "Following feed preferences"
 msgstr "ធ្វើតាមចំណូលចិត្តមតិព័ត៌មាន"
 
@@ -3283,18 +3295,18 @@ msgstr "ការបំពានច្បាប់ ឬលក្ខខណ្ឌ�
 #: src/screens/Profile/ProfileFeed/index.tsx:82
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
-#: src/view/screens/ProfileList.tsx:1003
+#: src/view/screens/ProfileList.tsx:1009
 msgid "Go back"
 msgstr "ត្រឡប់ទៅវិញ"
 
 #: src/components/Error.tsx:78
-#: src/screens/List/ListHiddenScreen.tsx:210
+#: src/screens/List/ListHiddenScreen.tsx:221
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
 #: src/screens/Profile/ProfileFeed/index.tsx:87
 #: src/screens/StarterPack/StarterPackScreen.tsx:758
 #: src/view/screens/NotFound.tsx:56
-#: src/view/screens/ProfileList.tsx:1008
+#: src/view/screens/ProfileList.tsx:1014
 msgid "Go Back"
 msgstr "ត្រឡប់ទៅវិញ"
 
@@ -3346,8 +3358,8 @@ msgstr "ចូលទៅកាន់ប្រវត្តិរូបរបស់
 msgid "Graphic Media"
 msgstr "ប្រព័ន្ធផ្សព្វផ្សាយក្រាហ្វិក"
 
-#: src/state/shell/progress-guide.tsx:216
-#: src/state/shell/progress-guide.tsx:226
+#: src/state/shell/progress-guide.tsx:218
+#: src/state/shell/progress-guide.tsx:228
 msgid "Half way there!"
 msgstr "ពាក់កណ្តាលផ្លូវ"
 
@@ -3417,7 +3429,7 @@ msgstr "នេះគឺជាពាក្យសម្ងាត់កម្មវ
 msgid "Hidden list"
 msgstr "បញ្ជីដែលលាក់"
 
-#: src/components/interstitials/Trending.tsx:113
+#: src/components/interstitials/Trending.tsx:101
 #: src/components/moderation/ContentHider.tsx:200
 #: src/components/moderation/LabelPreference.tsx:135
 #: src/components/moderation/PostHider.tsx:122
@@ -3425,9 +3437,9 @@ msgstr "បញ្ជីដែលលាក់"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:132
+#: src/screens/Search/components/ExploreTrendingTopics.tsx:137
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:672
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:105
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "Hide"
 msgstr "លាក់"
 
@@ -3465,15 +3477,15 @@ msgstr "លាក់ការបង្ហោះនេះ?"
 msgid "Hide this reply?"
 msgstr "លាក់ការឆ្លើយតបនេះ?"
 
-#: src/components/interstitials/Trending.tsx:73
+#: src/components/interstitials/Trending.tsx:84
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:83
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:62
 msgid "Hide trending topics"
 msgstr ""
 
-#: src/components/interstitials/Trending.tsx:111
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:130
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:103
+#: src/components/interstitials/Trending.tsx:99
+#: src/screens/Search/components/ExploreTrendingTopics.tsx:135
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:108
 msgid "Hide trending topics?"
 msgstr ""
 
@@ -3575,7 +3587,7 @@ msgstr "ប្រសិនបើអត្ថបទ alt វែង បិទ/ប�
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "ប្រសិនបើអ្នកមិនទាន់ពេញវ័យស្របតាមច្បាប់នៃប្រទេសរបស់អ្នក ឪពុកម្តាយ ឬអាណាព្យាបាលស្របច្បាប់របស់អ្នកត្រូវតែអានលក្ខខណ្ឌទាំងនេះជំនួសអ្នក"
 
-#: src/view/screens/ProfileList.tsx:735
+#: src/view/screens/ProfileList.tsx:736
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "ប្រសិនបើអ្នកលុបបញ្ជីនេះ អ្នកនឹងមិនអាចយកវាមកវិញបានទេ"
 
@@ -3737,7 +3749,7 @@ msgstr "វាត្រឹមត្រូវ"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "មានតែអ្នកទេឥឡូវនេះ! បន្ថែមមនុស្សបន្ថែមទៀតទៅក្នុងកញ្ចប់ចាប់ផ្តើមរបស់អ្នកដោយស្វែងរកខាងលើ"
 
-#: src/view/com/composer/Composer.tsx:1571
+#: src/view/com/composer/Composer.tsx:1578
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -3815,7 +3827,7 @@ msgstr "ធំជាង"
 
 #: src/screens/Hashtag.tsx:95
 #: src/screens/Topic.tsx:77
-#: src/view/screens/Search/Search.tsx:502
+#: src/view/screens/Search/Search.tsx:509
 msgid "Latest"
 msgstr "ចុងក្រោយ"
 
@@ -3913,8 +3925,8 @@ msgstr ""
 msgid "Like 10 posts"
 msgstr "ចូលចិត្ត 10 ប្រកាស"
 
-#: src/state/shell/progress-guide.tsx:212
-#: src/state/shell/progress-guide.tsx:217
+#: src/state/shell/progress-guide.tsx:214
+#: src/state/shell/progress-guide.tsx:219
 msgid "Like 10 posts to train the Discover feed"
 msgstr "ចូលចិត្តការបង្ហោះចំនួន 10 ដើម្បីបណ្តុះបណ្តាល Discover feed"
 
@@ -3979,7 +3991,7 @@ msgstr "បញ្ជី"
 msgid "List Avatar"
 msgstr "បញ្ជី Avatar"
 
-#: src/view/screens/ProfileList.tsx:417
+#: src/view/screens/ProfileList.tsx:418
 msgid "List blocked"
 msgstr "បញ្ជីត្រូវបានរារាំង"
 
@@ -3996,11 +4008,11 @@ msgstr ""
 msgid "List by you"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:454
+#: src/view/screens/ProfileList.tsx:455
 msgid "List deleted"
 msgstr "បានលុបបញ្ជី"
 
-#: src/screens/List/ListHiddenScreen.tsx:126
+#: src/screens/List/ListHiddenScreen.tsx:129
 msgid "List has been hidden"
 msgstr "បញ្ជីត្រូវបានលាក់"
 
@@ -4008,7 +4020,7 @@ msgstr "បញ្ជីត្រូវបានលាក់"
 msgid "List Hidden"
 msgstr "បញ្ជីដែលលាក់"
 
-#: src/view/screens/ProfileList.tsx:391
+#: src/view/screens/ProfileList.tsx:392
 msgid "List muted"
 msgstr "បានបិទបញ្ជី"
 
@@ -4016,11 +4028,11 @@ msgstr "បានបិទបញ្ជី"
 msgid "List Name"
 msgstr "បញ្ជីឈ្មោះ"
 
-#: src/view/screens/ProfileList.tsx:430
+#: src/view/screens/ProfileList.tsx:431
 msgid "List unblocked"
 msgstr "បញ្ជីត្រូវបានបិទ"
 
-#: src/view/screens/ProfileList.tsx:404
+#: src/view/screens/ProfileList.tsx:405
 msgid "List unmuted"
 msgstr "បាន​បិទ​បញ្ជី"
 
@@ -4056,7 +4068,7 @@ msgstr "ផ្ទុកការជូនដំណឹងថ្មីៗ"
 #: src/screens/Profile/ProfileFeed/index.tsx:192
 #: src/screens/Profile/Sections/Feed.tsx:96
 #: src/view/com/feeds/FeedPage.tsx:143
-#: src/view/screens/ProfileList.tsx:845
+#: src/view/screens/ProfileList.tsx:849
 msgid "Load new posts"
 msgstr "ផ្ទុកប្រកាសថ្មីៗ"
 
@@ -4129,8 +4141,8 @@ msgstr "ធ្វើមួយសម្រាប់ខ្ញុំ"
 msgid "Make sure this is where you intend to go!"
 msgstr "ត្រូវប្រាកដថានេះជាកន្លែងដែលអ្នកចង់ទៅ"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:57
-#: src/screens/Settings/ContentAndMediaSettings.tsx:60
+#: src/screens/Settings/ContentAndMediaSettings.tsx:58
+#: src/screens/Settings/ContentAndMediaSettings.tsx:61
 msgid "Manage saved feeds"
 msgstr "គ្រប់គ្រងព័ត៌មានដែលបានរក្សាទុក"
 
@@ -4164,7 +4176,7 @@ msgid "Mentions"
 msgstr ""
 
 #: src/components/Menu/index.tsx:96
-#: src/view/screens/Search/Search.tsx:856
+#: src/view/screens/Search/Search.tsx:863
 msgid "Menu"
 msgstr "ម៉ឺនុយ"
 
@@ -4186,7 +4198,7 @@ msgid "Message input field"
 msgstr "វាលបញ្ចូលសារ"
 
 #: src/screens/Messages/components/MessageInput.tsx:78
-#: src/screens/Messages/components/MessageInput.web.tsx:59
+#: src/screens/Messages/components/MessageInput.web.tsx:60
 msgid "Message is too long"
 msgstr "សារវែងពេក"
 
@@ -4195,8 +4207,8 @@ msgstr "សារវែងពេក"
 #~ msgstr "ការកំណត់សារ"
 
 #: src/Navigation.tsx:609
-#: src/screens/Messages/ChatList.tsx:260
-#: src/screens/Messages/ChatList.tsx:284
+#: src/screens/Messages/ChatList.tsx:262
+#: src/screens/Messages/ChatList.tsx:286
 msgid "Messages"
 msgstr "សារ"
 
@@ -4271,7 +4283,7 @@ msgstr "ឧបករណ៍សំរបសំរួល"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "អ្នកសម្របសម្រួលបានជ្រើសរើសដើម្បីកំណត់ការព្រមានទូទៅលើខ្លឹមសារ"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:633
+#: src/view/com/post-thread/PostThreadItem.tsx:632
 msgid "More"
 msgstr "ច្រើនទៀត"
 
@@ -4281,7 +4293,7 @@ msgid "More feeds"
 msgstr "ព័ត៌មានច្រើនទៀត"
 
 #: src/view/com/profile/ProfileMenu.tsx:179
-#: src/view/screens/ProfileList.tsx:720
+#: src/view/screens/ProfileList.tsx:721
 msgid "More options"
 msgstr "ជម្រើសច្រើនទៀត"
 
@@ -4322,7 +4334,7 @@ msgstr "Mute {truncatedTag}"
 msgid "Mute Account"
 msgstr "បិទគណនី"
 
-#: src/view/screens/ProfileList.tsx:626
+#: src/view/screens/ProfileList.tsx:627
 msgid "Mute accounts"
 msgstr "បិទគណនី"
 
@@ -4339,11 +4351,11 @@ msgstr "បិទការសន្ទនា"
 msgid "Mute in:"
 msgstr "បិទសំឡេងក្នុង៖"
 
-#: src/view/screens/ProfileList.tsx:749
+#: src/view/screens/ProfileList.tsx:750
 msgid "Mute list"
 msgstr "បិទបញ្ជី"
 
-#: src/view/screens/ProfileList.tsx:744
+#: src/view/screens/ProfileList.tsx:745
 msgid "Mute these accounts?"
 msgstr "បិទសំឡេងគណនីទាំងនេះ?"
 
@@ -4402,7 +4414,7 @@ msgstr "បានបិទសំឡេងដោយ \"{0}\""
 msgid "Muted words & tags"
 msgstr "ពាក្យ និងស្លាកដែលបានបិទ"
 
-#: src/view/screens/ProfileList.tsx:746
+#: src/view/screens/ProfileList.tsx:747
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr "ការបិទសំឡេងគឺឯកជន។ គណនីដែលបានបិទអាចធ្វើអន្តរកម្មជាមួយអ្នក ប៉ុន្តែអ្នកនឹងមិនឃើញការបង្ហោះរបស់ពួកគេ ឬទទួលបានការជូនដំណឹងពីពួកគេទេ"
 
@@ -4488,8 +4500,8 @@ msgstr "ថ្មី"
 #~ msgstr "ថ្មី"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:65
-#: src/screens/Messages/ChatList.tsx:267
-#: src/screens/Messages/ChatList.tsx:274
+#: src/screens/Messages/ChatList.tsx:269
+#: src/screens/Messages/ChatList.tsx:276
 msgid "New chat"
 msgstr "ការជជែកថ្មី"
 
@@ -4528,8 +4540,8 @@ msgstr "ពាក្យសម្ងាត់ថ្មី"
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
 #: src/view/screens/Profile.tsx:495
-#: src/view/screens/ProfileList.tsx:249
-#: src/view/screens/ProfileList.tsx:282
+#: src/view/screens/ProfileList.tsx:250
+#: src/view/screens/ProfileList.tsx:283
 msgid "New post"
 msgstr "post ថ្មី"
 
@@ -4634,7 +4646,7 @@ msgstr "មិនលើសពី 253 តួអក្សរ"
 msgid "No messages yet"
 msgstr "មិនមានសារនៅឡើយទេ"
 
-#: src/screens/Messages/ChatList.tsx:223
+#: src/screens/Messages/ChatList.tsx:225
 msgid "No more conversations to show"
 msgstr "មិនមានការសន្ទនាទៀតទេដែលត្រូវបង្ហាញ"
 
@@ -4669,7 +4681,7 @@ msgid "No result"
 msgstr "គ្មានលទ្ធផល"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:200
-#: src/components/ProgressGuide/FollowDialog.tsx:231
+#: src/components/ProgressGuide/FollowDialog.tsx:235
 msgid "No results"
 msgstr "គ្មានលទ្ធផល"
 
@@ -4682,9 +4694,9 @@ msgid "No results found for \"{query}\""
 msgstr "រកមិនឃើញលទ្ធផលសម្រាប់ \"{query}\""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
-#: src/view/screens/Search/Search.tsx:221
-#: src/view/screens/Search/Search.tsx:260
-#: src/view/screens/Search/Search.tsx:306
+#: src/view/screens/Search/Search.tsx:228
+#: src/view/screens/Search/Search.tsx:267
+#: src/view/screens/Search/Search.tsx:313
 msgid "No results found for {query}"
 msgstr "រកមិនឃើញលទ្ធផលសម្រាប់ {query}"
 
@@ -4747,7 +4759,7 @@ msgstr "ចំណាំអំពីការចែករំលែក"
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "ចំណាំ៖ Bluesky គឺជាបណ្តាញបើកចំហ និងសាធារណៈ។ ការកំណត់នេះកំណត់តែការមើលឃើញខ្លឹមសាររបស់អ្នកនៅលើកម្មវិធី និងគេហទំព័រ Bluesky ហើយកម្មវិធីផ្សេងទៀតប្រហែលជាមិនគោរពការកំណត់នេះទេ។ ខ្លឹមសាររបស់អ្នកអាចនៅតែត្រូវបានបង្ហាញដល់អ្នកប្រើប្រាស់ដែលបានចេញពីគណនីដោយកម្មវិធី និងគេហទំព័រផ្សេងទៀត"
 
-#: src/screens/Messages/ChatList.tsx:178
+#: src/screens/Messages/ChatList.tsx:180
 msgid "Nothing here"
 msgstr "គ្មានអ្វីនៅទីនេះទេ"
 
@@ -4817,7 +4829,7 @@ msgid "OK"
 msgstr ""
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/view/com/post-thread/PostThreadItem.tsx:865
+#: src/view/com/post-thread/PostThreadItem.tsx:864
 msgid "Okay"
 msgstr ""
 
@@ -4907,9 +4919,9 @@ msgstr "បើកជម្រើសការសន្ទនា"
 msgid "Open drawer menu"
 msgstr ""
 
-#: src/screens/Messages/components/MessageInput.web.tsx:165
-#: src/view/com/composer/Composer.tsx:1221
-#: src/view/com/composer/Composer.tsx:1222
+#: src/screens/Messages/components/MessageInput.web.tsx:181
+#: src/view/com/composer/Composer.tsx:1228
+#: src/view/com/composer/Composer.tsx:1229
 msgid "Open emoji picker"
 msgstr "បើកកម្មវិធីជ្រើសរើសរូបអារម្មណ៍"
 
@@ -5194,7 +5206,7 @@ msgid "Pause video"
 msgstr "ផ្អាក video"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/Search/Search.tsx:512
+#: src/view/screens/Search/Search.tsx:519
 msgid "People"
 msgstr "មនុស្ស"
 
@@ -5236,7 +5248,7 @@ msgstr "រូបភាពមានន័យសម្រាប់មនុស្
 msgid "Pin feed"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:684
+#: src/view/screens/ProfileList.tsx:685
 msgid "Pin to home"
 msgstr ""
 
@@ -5262,7 +5274,7 @@ msgstr ""
 msgid "Pinned Feeds"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:350
+#: src/view/screens/ProfileList.tsx:351
 msgid "Pinned to your feeds"
 msgstr ""
 
@@ -5366,7 +5378,7 @@ msgstr "នយោបាយ"
 msgid "Porn"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:937
+#: src/view/com/composer/Composer.tsx:944
 msgctxt "action"
 msgid "Post"
 msgstr "ការបង្ហោះ"
@@ -5376,7 +5388,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "ការបង្ហោះ"
 
-#: src/view/com/composer/Composer.tsx:935
+#: src/view/com/composer/Composer.tsx:942
 msgctxt "action"
 msgid "Post All"
 msgstr "Post ទាំងអស់"
@@ -5532,7 +5544,7 @@ msgstr "ភាពឯកជន និងសុវត្ថិភាព"
 msgid "Privacy Policy"
 msgstr "គោលការណ៍ឯកជនភាព"
 
-#: src/view/com/composer/Composer.tsx:1634
+#: src/view/com/composer/Composer.tsx:1641
 msgid "Processing video..."
 msgstr "ដំណើរការវីដេអូ..."
 
@@ -5566,11 +5578,11 @@ msgstr "បានធ្វើបច្ចុប្បន្នភាពប្រ
 msgid "Public"
 msgstr "សាធារណៈ"
 
-#: src/view/com/lists/MyLists.tsx:117
+#: src/view/com/lists/MyLists.tsx:77
 msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr ""
 
-#: src/view/com/lists/MyLists.tsx:112
+#: src/view/com/lists/MyLists.tsx:72
 msgid "Public, sharable lists which can be used to drive feeds."
 msgstr ""
 
@@ -5678,11 +5690,11 @@ msgstr "អានលក្ខខណ្ឌនៃសេវាកម្ម Bluesky"
 msgid "Reason:"
 msgstr "ហេតុផល៖"
 
-#: src/view/screens/Search/Search.tsx:1032
+#: src/view/screens/Search/Search.tsx:1041
 msgid "Recent Searches"
 msgstr "ការស្វែងរកថ្មីៗ"
 
-#: src/screens/Search/components/ExploreRecommendations.tsx:49
+#: src/screens/Search/components/ExploreRecommendations.tsx:50
 msgid "Recommended"
 msgstr ""
 
@@ -5749,7 +5761,7 @@ msgstr "លុប​មតិព័ត៌មាន?"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:324
 #: src/view/com/feeds/FeedSourceCard.tsx:190
 #: src/view/com/feeds/FeedSourceCard.tsx:268
-#: src/view/screens/ProfileList.tsx:497
+#: src/view/screens/ProfileList.tsx:498
 #: src/view/screens/SavedFeeds.tsx:342
 msgid "Remove from my feeds"
 msgstr "លុបចេញពីមតិព័ត៌មានរបស់ខ្ញុំ"
@@ -5763,7 +5775,7 @@ msgstr "លុបចេញពីមតិព័ត៌មានរបស់ខ្
 msgid "Remove from quick access?"
 msgstr "ដកចេញពីការចូលប្រើរហ័ស?"
 
-#: src/screens/List/ListHiddenScreen.tsx:156
+#: src/screens/List/ListHiddenScreen.tsx:167
 msgid "Remove from saved feeds"
 msgstr "យកចេញពីព័ត៌មានដែលបានរក្សាទុក"
 
@@ -5775,15 +5787,15 @@ msgstr "លុបរូបភាព"
 msgid "Remove mute word from your list"
 msgstr "លុប​ពាក្យ​ស្ងាត់​ចេញ​ពី​បញ្ជី​របស់​អ្នក។"
 
-#: src/view/screens/Search/Search.tsx:1076
+#: src/view/screens/Search/Search.tsx:1089
 msgid "Remove profile"
 msgstr "លុបកម្រងព័ត៌មាន"
 
-#: src/view/screens/Search/Search.tsx:1078
+#: src/view/screens/Search/Search.tsx:1091
 msgid "Remove profile from search history"
 msgstr "លុបប្រវត្តិរូបចេញពីប្រវត្តិស្វែងរក"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:287
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
 msgid "Remove quote"
 msgstr "លុប quote"
 
@@ -5818,17 +5830,17 @@ msgid "Removed from my feeds"
 msgstr "បានលុបចេញពីព័ត៌មានរបស់ខ្ញុំ"
 
 #: src/screens/List/ListHiddenScreen.tsx:94
-#: src/screens/List/ListHiddenScreen.tsx:160
+#: src/screens/List/ListHiddenScreen.tsx:171
 msgid "Removed from saved feeds"
 msgstr "បានលុបចេញពីព័ត៌មានដែលបានរក្សាទុក"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:126
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
-#: src/view/screens/ProfileList.tsx:381
+#: src/view/screens/ProfileList.tsx:382
 msgid "Removed from your feeds"
 msgstr "បានលុបចេញពីមតិព័ត៌មានរបស់អ្នក"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:288
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
 msgstr "លុប quoted post"
 
@@ -5849,7 +5861,7 @@ msgstr "ការឆ្លើយតបត្រូវបានបិទ"
 msgid "Replies to this post are disabled."
 msgstr "ការឆ្លើយតបទៅនឹងការបង្ហោះនេះត្រូវបានបិទ"
 
-#: src/view/com/composer/Composer.tsx:933
+#: src/view/com/composer/Composer.tsx:940
 msgctxt "action"
 msgid "Reply"
 msgstr "ឆ្លើយតប"
@@ -5936,7 +5948,7 @@ msgstr "ប្រអប់រាយការណ៍"
 msgid "Report feed"
 msgstr "រាយការណ៍ព័ត៌មាន"
 
-#: src/view/screens/ProfileList.tsx:539
+#: src/view/screens/ProfileList.tsx:540
 msgid "Report List"
 msgstr "រាយការណ៍ពីបញ្ជី"
 
@@ -6122,6 +6134,7 @@ msgstr "ព្យាយាមម្តងទៀតនូវសកម្មភា
 #: src/components/StarterPack/ProfileStarterPacks.tsx:336
 #: src/screens/Login/LoginForm.tsx:305
 #: src/screens/Login/LoginForm.tsx:312
+#: src/screens/Messages/ChatList.tsx:169
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Onboarding/StepInterests/index.tsx:217
 #: src/screens/Onboarding/StepInterests/index.tsx:220
@@ -6134,9 +6147,9 @@ msgid "Retry"
 msgstr "ព្យាយាមម្តងទៀត"
 
 #: src/components/Error.tsx:73
-#: src/screens/List/ListHiddenScreen.tsx:205
+#: src/screens/List/ListHiddenScreen.tsx:216
 #: src/screens/StarterPack/StarterPackScreen.tsx:752
-#: src/view/screens/ProfileList.tsx:1004
+#: src/view/screens/ProfileList.tsx:1010
 msgid "Return to previous page"
 msgstr "ត្រឡប់ទៅទំព័រមុន"
 
@@ -6168,7 +6181,7 @@ msgstr "ត្រឡប់ទៅទំព័រមុនវិញ"
 msgid "Save"
 msgstr "រក្សាទុក"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:591
+#: src/view/com/lightbox/ImageViewing/index.tsx:622
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -6222,7 +6235,7 @@ msgid "Saved to your camera roll"
 msgstr "បាន​រក្សា​ទុក​នៅ​ក្នុង​ការ​វិល​របស់​កាមេរ៉ា​របស់​អ្នក​"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:135
-#: src/view/screens/ProfileList.tsx:361
+#: src/view/screens/ProfileList.tsx:362
 msgid "Saved to your feeds"
 msgstr "បានរក្សាទុកទៅក្នុងមតិព័ត៌មានរបស់អ្នក"
 
@@ -6250,7 +6263,7 @@ msgstr "និយាយថាជំរាបសួរ"
 msgid "Science"
 msgstr "វិទ្យាសាស្ត្រ"
 
-#: src/view/screens/ProfileList.tsx:961
+#: src/view/screens/ProfileList.tsx:967
 msgid "Scroll to top"
 msgstr "រំកិលទៅកំពូល"
 
@@ -6259,14 +6272,14 @@ msgstr "រំកិលទៅកំពូល"
 #: src/components/forms/SearchInput.tsx:36
 #: src/Navigation.tsx:599
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
-#: src/view/screens/Search/Search.tsx:570
+#: src/view/screens/Search/Search.tsx:577
 #: src/view/shell/bottom-bar/BottomBar.tsx:183
 #: src/view/shell/desktop/LeftNav.tsx:407
 #: src/view/shell/Drawer.tsx:365
 msgid "Search"
 msgstr "ស្វែងរក"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:741
+#: src/components/ProgressGuide/FollowDialog.tsx:745
 msgid "Search by name or interest"
 msgstr ""
 
@@ -6274,7 +6287,7 @@ msgstr ""
 msgid "Search feeds"
 msgstr ""
 
-#: src/components/ProgressGuide/FollowDialog.tsx:571
+#: src/components/ProgressGuide/FollowDialog.tsx:575
 msgid "Search for \"{interestsDisplayName}\"{activeText}"
 msgstr ""
 
@@ -6282,7 +6295,7 @@ msgstr ""
 msgid "Search for \"{query}\""
 msgstr "ស្វែងរក \"{query}\""
 
-#: src/view/screens/Search/Search.tsx:980
+#: src/view/screens/Search/Search.tsx:987
 msgid "Search for \"{searchText}\""
 msgstr "ស្វែងរក \"{searchText}\""
 
@@ -6300,8 +6313,8 @@ msgstr "ស្វែងរក GIFs"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:507
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
-#: src/components/ProgressGuide/FollowDialog.tsx:760
-#: src/components/ProgressGuide/FollowDialog.tsx:761
+#: src/components/ProgressGuide/FollowDialog.tsx:764
+#: src/components/ProgressGuide/FollowDialog.tsx:765
 msgid "Search profiles"
 msgstr "ស្វែងរកប្រវត្តិរូប"
 
@@ -6480,7 +6493,7 @@ msgid "Send feedback"
 msgstr "ផ្ញើមតិកែលម្អ"
 
 #: src/screens/Messages/components/MessageInput.tsx:173
-#: src/screens/Messages/components/MessageInput.web.tsx:219
+#: src/screens/Messages/components/MessageInput.web.tsx:235
 msgid "Send message"
 msgstr "ផ្ញើសារ"
 
@@ -6586,11 +6599,11 @@ msgstr "ចំណង់ផ្លូវភេទ"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:346
-#: src/view/screens/ProfileList.tsx:482
+#: src/view/screens/ProfileList.tsx:483
 msgid "Share"
 msgstr "ចែករំលែក"
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:600
+#: src/view/com/lightbox/ImageViewing/index.tsx:631
 msgctxt "action"
 msgid "Share"
 msgstr "ចែករំលែក"
@@ -6670,7 +6683,7 @@ msgstr "បង្ហាញអត្ថបទជំនួស"
 
 #: src/components/moderation/ScreenHider.tsx:172
 #: src/components/moderation/ScreenHider.tsx:175
-#: src/screens/List/ListHiddenScreen.tsx:176
+#: src/screens/List/ListHiddenScreen.tsx:187
 msgid "Show anyway"
 msgstr "បង្ហាញ"
 
@@ -6687,7 +6700,7 @@ msgstr "បង្ហាញផ្លាកសញ្ញា និងត្រង�
 msgid "Show hidden replies"
 msgstr "បង្ហាញការឆ្លើយតបដែលលាក់"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:806
+#: src/view/com/post-thread/PostThreadItem.tsx:805
 msgid "Show information about when this post was created"
 msgstr "បង្ហាញព័ត៌មានអំពីពេលដែលការបង្ហោះនេះត្រូវបានបង្កើត"
 
@@ -6696,11 +6709,11 @@ msgstr "បង្ហាញព័ត៌មានអំពីពេលដែលក
 msgid "Show less like this"
 msgstr "បង្ហាញបែបនេះតិច"
 
-#: src/screens/List/ListHiddenScreen.tsx:172
+#: src/screens/List/ListHiddenScreen.tsx:183
 msgid "Show list anyway"
 msgstr "ទោះយ៉ាងណាក៏ដោយ បង្ហាញបញ្ជី"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:593
+#: src/view/com/post-thread/PostThreadItem.tsx:592
 #: src/view/com/post/Post.tsx:242
 #: src/view/com/posts/PostFeedItem.tsx:509
 msgid "Show More"
@@ -6932,7 +6945,7 @@ msgstr "មានអ្វីមួយខុសប្រក្រតី"
 msgid "Something wrong? Let us know."
 msgstr ""
 
-#: src/App.native.tsx:117
+#: src/App.native.tsx:122
 #: src/App.web.tsx:97
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "សុំទោស! វគ្គរបស់អ្នកបានផុតកំណត់ហើយ។ សូមចូលម្តងទៀត"
@@ -6979,13 +6992,13 @@ msgstr "កីឡា"
 msgid "Start a new chat"
 msgstr "ចាប់ផ្តើមការជជែកថ្មី"
 
-#: src/view/screens/ProfileList.tsx:814
-#: src/view/screens/ProfileList.tsx:933
+#: src/view/screens/ProfileList.tsx:817
+#: src/view/screens/ProfileList.tsx:938
 msgid "Start adding people"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:821
-#: src/view/screens/ProfileList.tsx:940
+#: src/view/screens/ProfileList.tsx:824
+#: src/view/screens/ProfileList.tsx:945
 msgid "Start adding people!"
 msgstr ""
 
@@ -7049,7 +7062,7 @@ msgstr ""
 msgid "Submit"
 msgstr "ដាក់ស្នើ"
 
-#: src/view/screens/ProfileList.tsx:711
+#: src/view/screens/ProfileList.tsx:712
 msgid "Subscribe"
 msgstr "ជាវ"
 
@@ -7065,7 +7078,7 @@ msgstr "ជាវអ្នកដាក់ស្លាក"
 msgid "Subscribe to this labeler"
 msgstr "ជាវអ្នកដាក់ស្លាកនេះ"
 
-#: src/view/screens/ProfileList.tsx:707
+#: src/view/screens/ProfileList.tsx:708
 msgid "Subscribe to this list"
 msgstr "ជាវបញ្ជីនេះ"
 
@@ -7134,6 +7147,11 @@ msgstr "ស្លាកតែប៉ុណ្ណោះ"
 msgid "Tap to change app icon"
 msgstr "ប៉ះដើម្បីផ្លាស់ប្តូររូបតំណាងកម្មវិធី"
 
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
+msgid "Tap to close the emoji picker"
+msgstr ""
+
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"
 msgstr "ប៉ះដើម្បីច្រានចោល"
@@ -7155,11 +7173,11 @@ msgstr "ប៉ះដើម្បីបិទ/បើកសំឡេង"
 msgid "Tap to view full image"
 msgstr "ប៉ះដើម្បីមើលរូបភាពពេញ"
 
-#: src/state/shell/progress-guide.tsx:231
+#: src/state/shell/progress-guide.tsx:233
 msgid "Task complete - 10 follows!"
 msgstr ""
 
-#: src/state/shell/progress-guide.tsx:221
+#: src/state/shell/progress-guide.tsx:223
 msgid "Task complete - 10 likes!"
 msgstr "កិច្ចការបានបញ្ចប់ - 10 ចូលចិត្ត"
 
@@ -7279,7 +7297,7 @@ msgstr "គោលការណ៍រក្សាសិទ្ធិត្រូវ
 msgid "The Discover feed"
 msgstr "មតិព័ត៌មាន Discover"
 
-#: src/state/shell/progress-guide.tsx:222
+#: src/state/shell/progress-guide.tsx:224
 msgid "The Discover feed now knows what you like"
 msgstr "ឥឡូវនេះផ្ទាំងព័ត៌មាន Discover ដឹងពីអ្វីដែលអ្នកចូលចិត្ត"
 
@@ -7349,8 +7367,8 @@ msgid "There was an issue connecting to Tenor."
 msgstr "មានបញ្ហាក្នុងការភ្ជាប់ទៅ Tenor"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:177
-#: src/view/screens/ProfileList.tsx:364
-#: src/view/screens/ProfileList.tsx:383
+#: src/view/screens/ProfileList.tsx:365
+#: src/view/screens/ProfileList.tsx:384
 #: src/view/screens/SavedFeeds.tsx:85
 msgid "There was an issue contacting the server"
 msgstr "មានបញ្ហាក្នុងការទាក់ទងម៉ាស៊ីនមេ"
@@ -7369,7 +7387,7 @@ msgstr "មានបញ្ហាក្នុងការទាក់ទងម៉
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "មានបញ្ហាក្នុងការទាញយកការជូនដំណឹង។ ចុចទីនេះដើម្បីព្យាយាមម្តងទៀត"
 
-#: src/view/com/posts/PostFeed.tsx:487
+#: src/view/com/posts/PostFeed.tsx:486
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "មានបញ្ហាក្នុងការទាញយកសារបង្ហោះ។ ចុចទីនេះដើម្បីព្យាយាមម្តងទៀត"
 
@@ -7428,10 +7446,10 @@ msgstr "There was an issue! {0}"
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
-#: src/view/screens/ProfileList.tsx:395
-#: src/view/screens/ProfileList.tsx:408
-#: src/view/screens/ProfileList.tsx:421
-#: src/view/screens/ProfileList.tsx:434
+#: src/view/screens/ProfileList.tsx:396
+#: src/view/screens/ProfileList.tsx:409
+#: src/view/screens/ProfileList.tsx:422
+#: src/view/screens/ProfileList.tsx:435
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "មាន​បញ្ហា។ សូមពិនិត្យមើលការតភ្ជាប់អ៊ីនធឺណិតរបស់អ្នក ហើយព្យាយាមម្តងទៀត"
 
@@ -7515,7 +7533,7 @@ msgstr "មតិព័ត៌មាននេះទទេ! អ្នកប្រ�
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/screens/Profile/ProfileFeed/index.tsx:170
-#: src/view/screens/ProfileList.tsx:812
+#: src/view/screens/ProfileList.tsx:814
 msgid "This feed is empty."
 msgstr "មតិព័ត៌មាននេះគឺទទេ"
 
@@ -7555,7 +7573,7 @@ msgstr "អ្នកដាក់ស្លាកនេះមិនទាន់ប
 msgid "This link is taking you to the following website:"
 msgstr "តំណភ្ជាប់នេះនាំអ្នកទៅកាន់គេហទំព័រខាងក្រោម៖"
 
-#: src/screens/List/ListHiddenScreen.tsx:136
+#: src/screens/List/ListHiddenScreen.tsx:146
 msgid "This list - created by <0>{0}</0> - contains possible violations of Bluesky's community guidelines in its name or description."
 msgstr "បញ្ជីនេះ - បង្កើតឡើងដោយ <0>{0}</0> - មានការរំលោភបំពានដែលអាចកើតមាននៃគោលការណ៍ណែនាំសហគមន៍របស់ Bluesky នៅក្នុងឈ្មោះ ឬការពិពណ៌នារបស់វា"
 
@@ -7563,7 +7581,7 @@ msgstr "បញ្ជីនេះ - បង្កើតឡើងដោយ <0>{0}</
 #~ msgid "This list is empty!"
 #~ msgstr "បញ្ជីនេះគឺទទេ!"
 
-#: src/view/screens/ProfileList.tsx:929
+#: src/view/screens/ProfileList.tsx:933
 msgid "This list is empty."
 msgstr ""
 
@@ -7575,7 +7593,7 @@ msgstr "សេវាកម្មសម្របសម្រួលនេះមិ
 #~ msgid "This name is already in use"
 #~ msgstr "ឈ្មោះនេះត្រូវបានប្រើប្រាស់រួចហើយ"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:846
+#: src/view/com/post-thread/PostThreadItem.tsx:845
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "ប្រកាសនេះអះអាងថាត្រូវបានបង្កើតឡើងនៅលើ <0>{0}</0> ប៉ុន្តែត្រូវបានមើលឃើញជាលើកដំបូងដោយ Bluesky នៅលើ <1>{1}</1>"
 
@@ -7662,8 +7680,8 @@ msgstr "វានឹងលុបការបង្ហោះរបស់អ្ន
 msgid "Thread options"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:65
-#: src/screens/Settings/ContentAndMediaSettings.tsx:68
+#: src/screens/Settings/ContentAndMediaSettings.tsx:66
+#: src/screens/Settings/ContentAndMediaSettings.tsx:69
 msgid "Thread preferences"
 msgstr "ចំណូលចិត្តខ្សែស្រឡាយ"
 
@@ -7722,7 +7740,7 @@ msgstr "បិទ/បើក ដើម្បីបើក ឬបិទមាតិ
 
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
-#: src/view/screens/Search/Search.tsx:492
+#: src/view/screens/Search/Search.tsx:499
 msgid "Top"
 msgstr "កំពូល"
 
@@ -7732,14 +7750,13 @@ msgstr ""
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:771
-#: src/view/com/post-thread/PostThreadItem.tsx:774
+#: src/view/com/post-thread/PostThreadItem.tsx:770
+#: src/view/com/post-thread/PostThreadItem.tsx:773
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:404
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:406
 msgid "Translate"
 msgstr "បកប្រែ"
 
-#: src/components/interstitials/Trending.tsx:62
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:69
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:59
 msgid "Trending"
@@ -7774,11 +7791,11 @@ msgstr "វាយបញ្ចូលសាររបស់អ្នកនៅទី
 msgid "Type:"
 msgstr "ប្រភេទ៖"
 
-#: src/view/screens/ProfileList.tsx:589
+#: src/view/screens/ProfileList.tsx:590
 msgid "Un-block list"
 msgstr "បិទបញ្ជី"
 
-#: src/view/screens/ProfileList.tsx:574
+#: src/view/screens/ProfileList.tsx:575
 msgid "Un-mute list"
 msgstr "បិទបញ្ជី"
 
@@ -7806,7 +7823,7 @@ msgstr "មិនអាចលុបបានទេ"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:197
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
 #: src/view/com/profile/ProfileMenu.tsx:341
-#: src/view/screens/ProfileList.tsx:693
+#: src/view/screens/ProfileList.tsx:694
 msgid "Unblock"
 msgstr "ឈប់ទប់ស្កាត់"
 
@@ -7866,7 +7883,7 @@ msgstr ""
 #~ msgstr "មិនដូចមតិព័ត៌មាននេះទេ"
 
 #: src/components/TagMenu/index.tsx:264
-#: src/view/screens/ProfileList.tsx:700
+#: src/view/screens/ProfileList.tsx:701
 msgid "Unmute"
 msgstr "បើក​សំឡេង"
 
@@ -7902,7 +7919,7 @@ msgstr ""
 msgid "Unmute video"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:684
+#: src/view/screens/ProfileList.tsx:685
 msgid "Unpin"
 msgstr ""
 
@@ -7921,7 +7938,7 @@ msgstr ""
 msgid "Unpin from profile"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:554
+#: src/view/screens/ProfileList.tsx:555
 msgid "Unpin moderation list"
 msgstr ""
 
@@ -7929,7 +7946,7 @@ msgstr ""
 msgid "Unpinned {0} from Home"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:351
+#: src/view/screens/ProfileList.tsx:352
 msgid "Unpinned from your feeds"
 msgstr ""
 
@@ -7937,8 +7954,8 @@ msgstr ""
 msgid "Unsubscribe"
 msgstr "ឈប់ជាវ"
 
-#: src/screens/List/ListHiddenScreen.tsx:184
-#: src/screens/List/ListHiddenScreen.tsx:194
+#: src/screens/List/ListHiddenScreen.tsx:195
+#: src/screens/List/ListHiddenScreen.tsx:205
 msgid "Unsubscribe from list"
 msgstr "ឈប់ជាវពីបញ្ជី"
 
@@ -7950,7 +7967,7 @@ msgstr "ឈប់ជាវពីអ្នកដាក់ស្លាកនេះ
 msgid "Unsubscribed from list"
 msgstr "ឈប់ជាវពីបញ្ជី"
 
-#: src/view/com/composer/Composer.tsx:759
+#: src/view/com/composer/Composer.tsx:766
 msgid "Unsupported video type"
 msgstr "ប្រភេទវីដេអូដែលមិនគាំទ្រ"
 
@@ -8028,7 +8045,7 @@ msgstr "កំពុងបង្ហោះរូបភាព..."
 msgid "Uploading link thumbnail..."
 msgstr "កំពុងបង្ហោះរូបភាពតូចនៃតំណ..."
 
-#: src/view/com/composer/Composer.tsx:1631
+#: src/view/com/composer/Composer.tsx:1638
 msgid "Uploading video..."
 msgstr "កំពុងបង្ហោះវីដេអូ..."
 
@@ -8057,8 +8074,8 @@ msgstr "ប្រើអ្នកផ្តល់សេវាលំនាំដើ
 msgid "Use in-app browser"
 msgstr "ប្រើកម្មវិធីរុករកតាមអ៊ីនធឺណិត"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:91
-#: src/screens/Settings/ContentAndMediaSettings.tsx:97
+#: src/screens/Settings/ContentAndMediaSettings.tsx:92
+#: src/screens/Settings/ContentAndMediaSettings.tsx:98
 msgid "Use in-app browser to open links"
 msgstr "ប្រើកម្មវិធីរុករកតាមអ៊ីនធឺណិតក្នុងកម្មវិធីដើម្បីបើកតំណ"
 
@@ -8242,7 +8259,7 @@ msgstr "រកមិនឃើញវីដេអូ"
 msgid "Video settings"
 msgstr "ការកំណត់វីដេអូ"
 
-#: src/view/com/composer/Composer.tsx:1641
+#: src/view/com/composer/Composer.tsx:1648
 msgid "Video uploaded"
 msgstr "បង្ហោះវីដេអូ"
 
@@ -8310,8 +8327,8 @@ msgstr "មើលព័ត៌មានអំពីស្លាកទាំងន
 #: src/components/ProfileHoverCard/index.web.tsx:466
 #: src/view/com/posts/AviFollowButton.tsx:55
 #: src/view/com/posts/PostFeedErrorMessage.tsx:175
-#: src/view/com/util/PostMeta.tsx:79
-#: src/view/com/util/PostMeta.tsx:94
+#: src/view/com/util/PostMeta.tsx:78
+#: src/view/com/util/PostMeta.tsx:93
 msgid "View profile"
 msgstr "មើលប្រវត្តិរូប"
 
@@ -8420,7 +8437,7 @@ msgid "We'll use this to help customize your experience."
 msgstr "យើងនឹងប្រើវាដើម្បីជួយសម្រួលបទពិសោធន៍របស់អ្នក"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:88
-#: src/components/ProgressGuide/FollowDialog.tsx:153
+#: src/components/ProgressGuide/FollowDialog.tsx:157
 msgid "We're having network issues, try again"
 msgstr "យើងកំពុងមានបញ្ហាបណ្តាញ សូមព្យាយាមម្តងទៀត"
 
@@ -8440,7 +8457,7 @@ msgstr "យើងសុំទោស ប៉ុន្តែយើងមិនអ�
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "យើងសុំទោស ប៉ុន្តែយើងមិនអាចផ្ទុកពាក្យដែលអ្នកបានបិទសំឡេងនៅពេលនេះបានទេ។ សូមព្យាយាមម្តងទៀត"
 
-#: src/view/screens/Search/Search.tsx:194
+#: src/view/screens/Search/Search.tsx:201
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "យើងសុំទោស ប៉ុន្តែការស្វែងរករបស់អ្នកមិនអាចបញ្ចប់បានទេ។ សូមព្យាយាមម្តងទៀតក្នុងរយៈពេលពីរបីនាទីទៀត"
 
@@ -8479,7 +8496,7 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:722
+#: src/view/com/composer/Composer.tsx:729
 msgid "What's up?"
 msgstr "មានរឿងអី?"
 
@@ -8533,15 +8550,15 @@ msgid "Why should this user be reviewed?"
 msgstr "ហេតុអ្វីបានជាអ្នកប្រើប្រាស់នេះគួរត្រូវបានពិនិត្យ?"
 
 #: src/screens/Messages/components/MessageInput.tsx:149
-#: src/screens/Messages/components/MessageInput.web.tsx:198
+#: src/screens/Messages/components/MessageInput.web.tsx:214
 msgid "Write a message"
 msgstr "សរសេរសារ"
 
-#: src/view/com/composer/Composer.tsx:810
+#: src/view/com/composer/Composer.tsx:817
 msgid "Write post"
 msgstr "សរសេរសារបង្ហោះ"
 
-#: src/view/com/composer/Composer.tsx:720
+#: src/view/com/composer/Composer.tsx:727
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:70
 msgid "Write your reply"
 msgstr "សរសេរការឆ្លើយតបរបស់អ្នក"
@@ -8584,7 +8601,7 @@ msgstr "បាទ/ចាស ដំណើរការគណនីរបស់ខ�
 msgid "Yesterday"
 msgstr "ម្សិលមិញ"
 
-#: src/screens/List/ListHiddenScreen.tsx:140
+#: src/screens/List/ListHiddenScreen.tsx:150
 msgid "you"
 msgstr "អ្នក"
 
@@ -8630,9 +8647,9 @@ msgstr "ឥឡូវនេះ អ្នកអាចចូលដោយប្រ�
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
 msgstr "អ្នកអាចដំណើរការគណនីរបស់អ្នកឡើងវិញ ដើម្បីបន្តចូល។ ប្រវត្តិរូប និងការបង្ហោះរបស់អ្នកនឹងអាចមើលឃើញដោយអ្នកប្រើប្រាស់ផ្សេងទៀត"
 
-#: src/components/interstitials/Trending.tsx:112
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:131
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:104
+#: src/components/interstitials/Trending.tsx:100
+#: src/screens/Search/components/ExploreTrendingTopics.tsx:136
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:109
 msgid "You can update this later from your settings."
 msgstr ""
 
@@ -8694,7 +8711,7 @@ msgstr "អ្នកបានបិទគណនីនេះ"
 msgid "You have muted this user"
 msgstr "អ្នកបានបិទអ្នកប្រើប្រាស់នេះ"
 
-#: src/screens/Messages/ChatList.tsx:188
+#: src/screens/Messages/ChatList.tsx:190
 msgid "You have no conversations yet. Start one!"
 msgstr "អ្នកមិនទាន់មានការសន្ទនានៅឡើយទេ។ ចាប់ផ្តើមមួយ!"
 
@@ -8702,6 +8719,7 @@ msgstr "អ្នកមិនទាន់មានការសន្ទនាន
 msgid "You have no feeds."
 msgstr "អ្នកមិនមានមតិព័ត៌មានទេ"
 
+#: src/view/com/lists/MyLists.tsx:81
 #: src/view/com/lists/ProfileLists.tsx:139
 msgid "You have no lists."
 msgstr "អ្នកមិនមានបញ្ជីទេ"
@@ -8853,7 +8871,7 @@ msgstr "អ្នកត្រៀមខ្លួនរួចរាល់ហើយ
 msgid "You've chosen to hide a word or tag within this post."
 msgstr "អ្នកបានជ្រើសរើសលាក់ពាក្យ ឬស្លាកនៅក្នុងប្រកាសនេះ"
 
-#: src/state/shell/progress-guide.tsx:232
+#: src/state/shell/progress-guide.tsx:234
 msgid "You've found some people to follow"
 msgstr ""
 
@@ -8920,7 +8938,7 @@ msgstr "អ៊ីមែលរបស់អ្នកត្រូវបានធ្
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "អ៊ីមែលរបស់អ្នកមិនទាន់ត្រូវបានផ្ទៀងផ្ទាត់នៅឡើយ។ នេះគឺជាជំហានសុវត្ថិភាពដ៏សំខាន់មួយដែលយើងណែនាំ"
 
-#: src/state/shell/progress-guide.tsx:211
+#: src/state/shell/progress-guide.tsx:213
 msgid "Your first like!"
 msgstr "ចូលចិត្តដំបូងរបស់អ្នក។"
 

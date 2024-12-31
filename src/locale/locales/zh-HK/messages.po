@@ -18,7 +18,7 @@ msgstr ""
 "X-Crowdin-File: /main/src/locale/locales/en/messages.po\n"
 "X-Crowdin-File-ID: 238\n"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:563
+#: src/components/ProgressGuide/FollowDialog.tsx:567
 msgid "(active)"
 msgstr "（活躍）"
 
@@ -911,8 +911,8 @@ msgstr "至少 3 個字元"
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
 msgstr "自動播放選項擺咗去<0>內容同媒體設定</0>。"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:105
-#: src/screens/Settings/ContentAndMediaSettings.tsx:111
+#: src/screens/Settings/ContentAndMediaSettings.tsx:106
+#: src/screens/Settings/ContentAndMediaSettings.tsx:112
 msgid "Autoplay videos and GIFs"
 msgstr "自動播放影片同 GIF"
 
@@ -954,7 +954,6 @@ msgstr "喺建立新手包之前，你必須驗證你嘅電郵先。"
 msgid "Before you may message another user, you must first verify your email."
 msgstr "喺同人哋傾偈之前，你必須驗證你嘅電郵先。"
 
-#: src/components/interstitials/Trending.tsx:67
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:74
 msgid "BETA"
 msgstr "BETA"
@@ -1414,7 +1413,7 @@ msgstr "Clip 🐴 clop 🐴"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:265
 #: src/components/NewskieDialog.tsx:146
 #: src/components/NewskieDialog.tsx:153
-#: src/components/ProgressGuide/FollowDialog.tsx:425
+#: src/components/ProgressGuide/FollowDialog.tsx:429
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:117
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:123
 #: src/view/com/modals/ChangePassword.tsx:268
@@ -1594,7 +1593,7 @@ msgstr "連緊線..."
 msgid "Contact support"
 msgstr "聯絡支援"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:48
+#: src/screens/Settings/ContentAndMediaSettings.tsx:49
 msgid "Content & Media"
 msgstr "內容同媒體"
 
@@ -1826,6 +1825,10 @@ msgstr "上報 {0}"
 #: src/screens/Settings/AppPasswords.tsx:174
 msgid "Created {0}"
 msgstr "建立於 {0}"
+
+#: src/screens/List/ListHiddenScreen.tsx:127
+msgid "Creator has been blocked"
+msgstr ""
 
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
@@ -2321,6 +2324,10 @@ msgstr "編輯你嘅新手包"
 msgid "Education"
 msgstr "教育"
 
+#: src/screens/List/ListHiddenScreen.tsx:141
+msgid "Either the creator of this list has blocked you or you have blocked the creator."
+msgstr ""
+
 #: src/screens/Settings/AccountSettings.tsx:60
 #: src/screens/Signup/StepInfo/index.tsx:170
 #: src/view/com/modals/ChangeEmail.tsx:136
@@ -2417,8 +2424,8 @@ msgstr "啓用字幕"
 msgid "Enable this source only"
 msgstr "只啓用呢個來源"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:121
-#: src/screens/Settings/ContentAndMediaSettings.tsx:127
+#: src/screens/Settings/ContentAndMediaSettings.tsx:122
+#: src/screens/Settings/ContentAndMediaSettings.tsx:136
 msgid "Enable trending topics"
 msgstr "啓用時下至 Hit"
 
@@ -2608,8 +2615,8 @@ msgstr "匯出我嘅數據"
 msgid "Export My Data"
 msgstr "匯出我嘅數據"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:81
-#: src/screens/Settings/ContentAndMediaSettings.tsx:84
+#: src/screens/Settings/ContentAndMediaSettings.tsx:82
+#: src/screens/Settings/ContentAndMediaSettings.tsx:85
 msgid "External media"
 msgstr "外部媒體"
 
@@ -2771,7 +2778,7 @@ msgstr "動態源係用戶嘅自訂演算法，用戶淨係需要小小 coding �
 msgid "Feeds updated!"
 msgstr "動態源更新咗喇！"
 
-#: src/screens/Search/components/ExploreRecommendations.tsx:53
+#: src/screens/Search/components/ExploreRecommendations.tsx:54
 msgid "Feeds we think you might like."
 msgstr "我哋覺得可能會啱你心水嘅動態源。"
 
@@ -2793,9 +2800,9 @@ msgstr "幫緊你幫緊你"
 msgid "Find accounts to follow"
 msgstr "搵啲帳號去跟佢"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:77
-#: src/components/ProgressGuide/FollowDialog.tsx:84
-#: src/components/ProgressGuide/FollowDialog.tsx:413
+#: src/components/ProgressGuide/FollowDialog.tsx:78
+#: src/components/ProgressGuide/FollowDialog.tsx:88
+#: src/components/ProgressGuide/FollowDialog.tsx:417
 msgid "Find people to follow"
 msgstr "睇下跟啲乜人好"
 
@@ -2839,7 +2846,7 @@ msgid "Follow {name}"
 msgstr "跟 {name}"
 
 #: src/components/ProgressGuide/List.tsx:52
-#: src/state/shell/progress-guide.tsx:227
+#: src/state/shell/progress-guide.tsx:229
 msgid "Follow 10 accounts"
 msgstr "跟 10 個人"
 
@@ -2920,8 +2927,8 @@ msgstr "跟緊 {0}"
 msgid "Following {name}"
 msgstr "跟緊 {name}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:73
-#: src/screens/Settings/ContentAndMediaSettings.tsx:76
+#: src/screens/Settings/ContentAndMediaSettings.tsx:74
+#: src/screens/Settings/ContentAndMediaSettings.tsx:77
 msgid "Following feed preferences"
 msgstr "「Following」動態源設定"
 
@@ -3037,7 +3044,7 @@ msgid "Go back"
 msgstr "返去"
 
 #: src/components/Error.tsx:78
-#: src/screens/List/ListHiddenScreen.tsx:210
+#: src/screens/List/ListHiddenScreen.tsx:221
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
 #: src/screens/Profile/ProfileFeed/index.tsx:87
@@ -3095,8 +3102,8 @@ msgstr "去佢嘅個人檔案"
 msgid "Graphic Media"
 msgstr "敏感媒體"
 
-#: src/state/shell/progress-guide.tsx:216
-#: src/state/shell/progress-guide.tsx:226
+#: src/state/shell/progress-guide.tsx:218
+#: src/state/shell/progress-guide.tsx:228
 msgid "Half way there!"
 msgstr "攪掂一半喇！"
 
@@ -3158,7 +3165,7 @@ msgstr "呢個係你嘅 App 密碼！"
 msgid "Hidden list"
 msgstr "隱藏清單"
 
-#: src/components/interstitials/Trending.tsx:113
+#: src/components/interstitials/Trending.tsx:101
 #: src/components/moderation/ContentHider.tsx:200
 #: src/components/moderation/LabelPreference.tsx:135
 #: src/components/moderation/PostHider.tsx:122
@@ -3166,9 +3173,9 @@ msgstr "隱藏清單"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:132
+#: src/screens/Search/components/ExploreTrendingTopics.tsx:137
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:672
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:105
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "Hide"
 msgstr "隱藏"
 
@@ -3206,15 +3213,15 @@ msgstr "係咪要隱藏呢條帖文？"
 msgid "Hide this reply?"
 msgstr "係咪要隱藏呢個回覆？"
 
-#: src/components/interstitials/Trending.tsx:73
+#: src/components/interstitials/Trending.tsx:84
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:83
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:62
 msgid "Hide trending topics"
 msgstr "隱藏時下至 Hit"
 
-#: src/components/interstitials/Trending.tsx:111
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:130
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:103
+#: src/components/interstitials/Trending.tsx:99
+#: src/screens/Search/components/ExploreTrendingTopics.tsx:135
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:108
 msgid "Hide trending topics?"
 msgstr "係咪要隱藏時下至 Hit？"
 
@@ -3630,8 +3637,8 @@ msgstr "讚佢（{0, plural, one {# 人讚佢} other {# 人讚佢}}）"
 msgid "Like 10 posts"
 msgstr "讚好 10 個帖文"
 
-#: src/state/shell/progress-guide.tsx:212
-#: src/state/shell/progress-guide.tsx:217
+#: src/state/shell/progress-guide.tsx:214
+#: src/state/shell/progress-guide.tsx:219
 msgid "Like 10 posts to train the Discover feed"
 msgstr "讚夠 10 個帖文愛嚟訓練「Discover」動態源"
 
@@ -3709,7 +3716,7 @@ msgstr "你建立嘅清單"
 msgid "List deleted"
 msgstr "刪除咗嘅清單"
 
-#: src/screens/List/ListHiddenScreen.tsx:126
+#: src/screens/List/ListHiddenScreen.tsx:129
 msgid "List has been hidden"
 msgstr "清單已經隱藏咗"
 
@@ -3834,8 +3841,8 @@ msgstr "幫我整一個"
 msgid "Make sure this is where you intend to go!"
 msgstr "請確保呢度嘅地址係啱嘅！"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:57
-#: src/screens/Settings/ContentAndMediaSettings.tsx:60
+#: src/screens/Settings/ContentAndMediaSettings.tsx:58
+#: src/screens/Settings/ContentAndMediaSettings.tsx:61
 msgid "Manage saved feeds"
 msgstr "管理儲存嘅動態源"
 
@@ -4336,7 +4343,7 @@ msgid "No result"
 msgstr "冇嘢到"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:200
-#: src/components/ProgressGuide/FollowDialog.tsx:231
+#: src/components/ProgressGuide/FollowDialog.tsx:235
 msgid "No results"
 msgstr "冇嘢到"
 
@@ -5145,7 +5152,9 @@ msgstr "QR code 儲存咗去你嘅相簿度喇！"
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:85
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:92
 msgid "Quote post"
-msgstr "引用帖文\n"
+msgstr ""
+"引用帖文\n"
+""
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:303
 msgid "Quote post was re-attached"
@@ -5216,7 +5225,7 @@ msgstr "原因："
 msgid "Recent Searches"
 msgstr "近排嘅搵嘢記錄"
 
-#: src/screens/Search/components/ExploreRecommendations.tsx:49
+#: src/screens/Search/components/ExploreRecommendations.tsx:50
 msgid "Recommended"
 msgstr "推薦"
 
@@ -5293,7 +5302,7 @@ msgstr "係咪要喺我嘅動態源入邊刪除？"
 msgid "Remove from quick access?"
 msgstr "係咪要喺快速存取中刪除？"
 
-#: src/screens/List/ListHiddenScreen.tsx:156
+#: src/screens/List/ListHiddenScreen.tsx:167
 msgid "Remove from saved feeds"
 msgstr "喺儲存咗嘅動態源入邊刪除"
 
@@ -5348,7 +5357,7 @@ msgid "Removed from my feeds"
 msgstr "喺我嘅動態源入邊移除咗喇"
 
 #: src/screens/List/ListHiddenScreen.tsx:94
-#: src/screens/List/ListHiddenScreen.tsx:160
+#: src/screens/List/ListHiddenScreen.tsx:171
 msgid "Removed from saved feeds"
 msgstr "喺儲存咗嘅動態源入邊移除咗喇"
 
@@ -5644,7 +5653,7 @@ msgid "Retry"
 msgstr "試多次"
 
 #: src/components/Error.tsx:73
-#: src/screens/List/ListHiddenScreen.tsx:205
+#: src/screens/List/ListHiddenScreen.tsx:216
 #: src/screens/StarterPack/StarterPackScreen.tsx:752
 #: src/view/screens/ProfileList.tsx:1010
 msgid "Return to previous page"
@@ -5768,7 +5777,7 @@ msgstr "轆到去頂部"
 msgid "Search"
 msgstr "搵嘢"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:741
+#: src/components/ProgressGuide/FollowDialog.tsx:745
 msgid "Search by name or interest"
 msgstr "用名稱抑或興趣去搵"
 
@@ -5776,7 +5785,7 @@ msgstr "用名稱抑或興趣去搵"
 msgid "Search feeds"
 msgstr "搵動態源"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:571
+#: src/components/ProgressGuide/FollowDialog.tsx:575
 msgid "Search for \"{interestsDisplayName}\"{activeText}"
 msgstr "搵「{interestsDisplayName}」{activeText}"
 
@@ -5802,8 +5811,8 @@ msgstr "搵 GIF"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:507
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
-#: src/components/ProgressGuide/FollowDialog.tsx:760
-#: src/components/ProgressGuide/FollowDialog.tsx:761
+#: src/components/ProgressGuide/FollowDialog.tsx:764
+#: src/components/ProgressGuide/FollowDialog.tsx:765
 msgid "Search profiles"
 msgstr "搵個人檔案"
 
@@ -6127,7 +6136,7 @@ msgstr "顯示替代文字"
 
 #: src/components/moderation/ScreenHider.tsx:172
 #: src/components/moderation/ScreenHider.tsx:175
-#: src/screens/List/ListHiddenScreen.tsx:176
+#: src/screens/List/ListHiddenScreen.tsx:187
 msgid "Show anyway"
 msgstr "點都要顯示"
 
@@ -6153,7 +6162,7 @@ msgstr "顯示呢條帖文幾時建立嘅資料"
 msgid "Show less like this"
 msgstr "推少啲噉嘅嘢畀我"
 
-#: src/screens/List/ListHiddenScreen.tsx:172
+#: src/screens/List/ListHiddenScreen.tsx:183
 msgid "Show list anyway"
 msgstr "點都要顯示呢個清單"
 
@@ -6564,11 +6573,11 @@ msgstr "撳呢度切換聲音播放"
 msgid "Tap to view full image"
 msgstr "撳呢度去睇完整圖片"
 
-#: src/state/shell/progress-guide.tsx:231
+#: src/state/shell/progress-guide.tsx:233
 msgid "Task complete - 10 follows!"
 msgstr "攪掂晒 - 跟咗 10 個人！"
 
-#: src/state/shell/progress-guide.tsx:221
+#: src/state/shell/progress-guide.tsx:223
 msgid "Task complete - 10 likes!"
 msgstr "攪掂晒 - 讚咗 10 條帖文！"
 
@@ -6688,7 +6697,7 @@ msgstr "版權政策擺咗去 <0/>"
 msgid "The Discover feed"
 msgstr "「Discover」動態源"
 
-#: src/state/shell/progress-guide.tsx:222
+#: src/state/shell/progress-guide.tsx:224
 msgid "The Discover feed now knows what you like"
 msgstr "「Discover」動態源而家明你鍾意啲咩喇"
 
@@ -6778,7 +6787,7 @@ msgstr "連線到你嘅伺服器嗰陣出咗問題"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "攞緊通知嗰陣出咗問題，撳呢度試多一次。"
 
-#: src/view/com/posts/PostFeed.tsx:487
+#: src/view/com/posts/PostFeed.tsx:486
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "攞緊帖文嗰陣出咗問題，撳呢度試多一次。"
 
@@ -6960,7 +6969,7 @@ msgstr "呢個標記者仲未公開佢發佈嘅標籤類型，亦有可能唔會
 msgid "This link is taking you to the following website:"
 msgstr "呢個連結會帶你去到下低嘅網站："
 
-#: src/screens/List/ListHiddenScreen.tsx:136
+#: src/screens/List/ListHiddenScreen.tsx:146
 msgid "This list - created by <0>{0}</0> - contains possible violations of Bluesky's community guidelines in its name or description."
 msgstr "呢個清單係 <0>{0}</0> 整嘅，喺佢嘅名稱抑或描述入邊可能違反咗 Bluesky 嘅社羣守則 。"
 
@@ -7059,8 +7068,8 @@ msgstr "你嘅帖文會喺呢篇引用嘅帖文入邊刪除，兼且將佢換成
 msgid "Thread options"
 msgstr "討論串選項"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:65
-#: src/screens/Settings/ContentAndMediaSettings.tsx:68
+#: src/screens/Settings/ContentAndMediaSettings.tsx:66
+#: src/screens/Settings/ContentAndMediaSettings.tsx:69
 msgid "Thread preferences"
 msgstr "討論串偏好設定"
 
@@ -7132,7 +7141,6 @@ msgstr "話題"
 msgid "Translate"
 msgstr "翻譯"
 
-#: src/components/interstitials/Trending.tsx:62
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:69
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:59
 msgid "Trending"
@@ -7322,8 +7330,8 @@ msgstr "唔再喺你嘅動態源入邊固定"
 msgid "Unsubscribe"
 msgstr "唔再訂閱"
 
-#: src/screens/List/ListHiddenScreen.tsx:184
-#: src/screens/List/ListHiddenScreen.tsx:194
+#: src/screens/List/ListHiddenScreen.tsx:195
+#: src/screens/List/ListHiddenScreen.tsx:205
 msgid "Unsubscribe from list"
 msgstr "唔再訂閱清單"
 
@@ -7422,8 +7430,8 @@ msgstr "使用預設託管供服務應商"
 msgid "Use in-app browser"
 msgstr "使用 App 入邊嘅瀏覽器"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:91
-#: src/screens/Settings/ContentAndMediaSettings.tsx:97
+#: src/screens/Settings/ContentAndMediaSettings.tsx:92
+#: src/screens/Settings/ContentAndMediaSettings.tsx:98
 msgid "Use in-app browser to open links"
 msgstr "使用 App 入邊嘅瀏覽器打開連結"
 
@@ -7753,7 +7761,7 @@ msgid "We'll use this to help customize your experience."
 msgstr "我哋會用呢啲資料嚟幫你度身訂造體驗。"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:88
-#: src/components/ProgressGuide/FollowDialog.tsx:153
+#: src/components/ProgressGuide/FollowDialog.tsx:157
 msgid "We're having network issues, try again"
 msgstr "我哋遇到網絡問題，唔該試多一次"
 
@@ -7913,7 +7921,7 @@ msgstr "係，重新啓用我嘅帳號"
 msgid "Yesterday"
 msgstr "尋日"
 
-#: src/screens/List/ListHiddenScreen.tsx:140
+#: src/screens/List/ListHiddenScreen.tsx:150
 msgid "you"
 msgstr "你"
 
@@ -7955,9 +7963,9 @@ msgstr "你而家可以用你嘅新密碼登入。"
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
 msgstr "你可以重新啓用你嘅帳號嚟繼續登入，你嘅個人檔案同帖文會畀返其他用戶睇到。"
 
-#: src/components/interstitials/Trending.tsx:112
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:131
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:104
+#: src/components/interstitials/Trending.tsx:100
+#: src/screens/Search/components/ExploreTrendingTopics.tsx:136
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:109
 msgid "You can update this later from your settings."
 msgstr "你可以遲啲喺設定入邊改返。"
 
@@ -8175,7 +8183,7 @@ msgstr "喂，攪掂喇！"
 msgid "You've chosen to hide a word or tag within this post."
 msgstr "你揀咗喺呢條帖文入邊隱藏字詞抑或標籤。"
 
-#: src/state/shell/progress-guide.tsx:232
+#: src/state/shell/progress-guide.tsx:234
 msgid "You've found some people to follow"
 msgstr "你已經搵到你要跟邊啲人"
 
@@ -8242,7 +8250,7 @@ msgstr "你嘅電郵更新咗但係仲未驗證過。跟住落嚟，請驗證你
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "你嘅電郵仲未驗證。呢個係我哋建議嘅重要安全步驟，點都好攪掂個驗證先。"
 
-#: src/state/shell/progress-guide.tsx:211
+#: src/state/shell/progress-guide.tsx:213
 msgid "Your first like!"
 msgstr "你嘅第一個讚！"
 
@@ -8289,4 +8297,3 @@ msgstr "你嘅回覆已經發佈咗喇"
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "你嘅上報會傳送到 Bluesky 審核服務度"
-
