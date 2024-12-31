@@ -314,11 +314,7 @@ let PostFeed = ({
                     type: 'interstitialProgressGuide',
                     key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                   })
-                } else if (
-                  sliceIndex === 15 &&
-                  !gtTablet &&
-                  !trendingDisabled
-                ) {
+                } else if (sliceIndex === 1 && !gtTablet && !trendingDisabled) {
                   arr.push({
                     type: 'interstitialTrending',
                     key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
