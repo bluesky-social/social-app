@@ -11,7 +11,15 @@ import {
 
 import {HITSLOP_20} from '#/lib/constants'
 import {mergeRefs} from '#/lib/merge-refs'
-import {android, atoms as a, TextStyleProp, useTheme, web} from '#/alf'
+import {
+  android,
+  applyFonts,
+  atoms as a,
+  TextStyleProp,
+  useAlf,
+  useTheme,
+  web,
+} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
@@ -148,6 +156,7 @@ export function createInput(Component: typeof TextInput) {
     ...rest
   }: InputProps) {
     const t = useTheme()
+    const {fonts} = useAlf()
     const ctx = React.useContext(Context)
     const withinRoot = Boolean(ctx.inputRef)
 
@@ -171,6 +180,48 @@ export function createInput(Component: typeof TextInput) {
 
     const refs = mergeRefs([ctx.inputRef, inputRef!].filter(Boolean))
 
+    const flattened = StyleSheet.flatten([
+      a.relative,
+      a.z_20,
+      a.flex_1,
+      a.text_md,
+      t.atoms.text,
+      a.px_xs,
+      {
+        // paddingVertical doesn't work w/multiline - esb
+        paddingTop: 12,
+        paddingBottom: 13,
+        lineHeight: a.text_md.fontSize * 1.1875,
+        textAlignVertical: rest.multiline ? 'top' : undefined,
+        minHeight: rest.multiline ? 80 : undefined,
+        minWidth: 0,
+      },
+      // fix for autofill styles covering border
+      web({
+        paddingTop: 10,
+        paddingBottom: 11,
+        marginTop: 2,
+        marginBottom: 2,
+      }),
+      android({
+        paddingTop: 8,
+        paddingBottom: 8,
+      }),
+      style,
+    ])
+
+    applyFonts(flattened, fonts.family)
+
+    // should always be defined on `typography`
+    // @ts-ignore
+    if (flattened.fontSize) {
+      // @ts-ignore
+      flattened.fontSize = Math.round(
+        // @ts-ignore
+        flattened.fontSize * fonts.scaleMultiplier,
+      )
+    }
+
     return (
       <>
         <Component
@@ -192,35 +243,7 @@ export function createInput(Component: typeof TextInput) {
           placeholderTextColor={t.palette.contrast_500}
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
           hitSlop={HITSLOP_20}
-          style={[
-            a.relative,
-            a.z_20,
-            a.flex_1,
-            a.text_md,
-            t.atoms.text,
-            a.px_xs,
-            {
-              // paddingVertical doesn't work w/multiline - esb
-              paddingTop: 12,
-              paddingBottom: 13,
-              lineHeight: a.text_md.fontSize * 1.1875,
-              textAlignVertical: rest.multiline ? 'top' : undefined,
-              minHeight: rest.multiline ? 80 : undefined,
-              minWidth: 0,
-            },
-            // fix for autofill styles covering border
-            web({
-              paddingTop: 10,
-              paddingBottom: 11,
-              marginTop: 2,
-              marginBottom: 2,
-            }),
-            android({
-              paddingTop: 8,
-              paddingBottom: 8,
-            }),
-            style,
-          ]}
+          style={flattened}
         />
 
         <View

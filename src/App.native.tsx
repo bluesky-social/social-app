@@ -1,5 +1,6 @@
 import 'react-native-url-polyfill/auto'
 import '#/lib/sentry' // must be near top
+import '#/lib/bitdrift' // must be near top
 import '#/view/icons'
 
 import React, {useEffect, useState} from 'react'
@@ -9,20 +10,20 @@ import {
   initialWindowMetrics,
   SafeAreaProvider,
 } from 'react-native-safe-area-context'
+import * as ScreenOrientation from 'expo-screen-orientation'
 import * as SplashScreen from 'expo-splash-screen'
+import * as SystemUI from 'expo-system-ui'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {KeyboardControllerProvider} from '#/lib/hooks/useEnableKeyboardController'
 import {QueryProvider} from '#/lib/react-query'
-import {
-  initialize,
-  Provider as StatsigProvider,
-  tryFetchGates,
-} from '#/lib/statsig/statsig'
+import {Provider as StatsigProvider, tryFetchGates} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
+import {isAndroid, isIOS} from '#/platform/detection'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
@@ -32,6 +33,7 @@ import {
   ensureGeolocationResolved,
   Provider as GeolocationProvider,
 } from '#/state/geolocation'
+import {Provider as HomeBadgeProvider} from '#/state/home-badge'
 import {Provider as InvitesStateProvider} from '#/state/invites'
 import {Provider as LightboxStateProvider} from '#/state/lightbox'
 import {MessagesProvider} from '#/state/messages'
@@ -50,11 +52,13 @@ import {
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
+import {Provider as LightStatusBarProvider} from '#/state/shell/light-status-bar'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
+import {Provider as TrendingConfigProvider} from '#/state/trending-config'
 import {TestCtrls} from '#/view/com/testing/TestCtrls'
 import {Provider as VideoVolumeProvider} from '#/view/com/util/post-embeds/VideoVolumeContext'
 import * as Toast from '#/view/com/util/Toast'
@@ -65,13 +69,19 @@ import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
+import {AppProfiler} from '#/AppProfiler'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
-import {AppProfiler} from './AppProfiler'
-import {KeyboardControllerProvider} from './lib/hooks/useEnableKeyboardController'
 
 SplashScreen.preventAutoHideAsync()
+if (isIOS) {
+  SystemUI.setBackgroundColorAsync('black')
+}
+if (isAndroid) {
+  // iOS is handled by the config plugin -sfn
+  ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
+}
 
 /**
  * Begin geolocation ASAP
@@ -94,7 +104,6 @@ function InnerApp() {
         if (account) {
           await resumeSession(account)
         } else {
-          await initialize()
           await tryFetchGates(undefined, 'prefer-fresh-gates')
         }
       } catch (e) {
@@ -135,20 +144,24 @@ function InnerApp() {
                             <LoggedOutViewProvider>
                               <SelectedFeedProvider>
                                 <HiddenRepliesProvider>
-                                  <UnreadNotifsProvider>
-                                    <BackgroundNotificationPreferencesProvider>
-                                      <MutedThreadsProvider>
-                                        <ProgressGuideProvider>
-                                          <GestureHandlerRootView
-                                            style={s.h100pct}>
-                                            <TestCtrls />
-                                            <Shell />
-                                            <NuxDialogs />
-                                          </GestureHandlerRootView>
-                                        </ProgressGuideProvider>
-                                      </MutedThreadsProvider>
-                                    </BackgroundNotificationPreferencesProvider>
-                                  </UnreadNotifsProvider>
+                                  <HomeBadgeProvider>
+                                    <UnreadNotifsProvider>
+                                      <BackgroundNotificationPreferencesProvider>
+                                        <MutedThreadsProvider>
+                                          <ProgressGuideProvider>
+                                            <TrendingConfigProvider>
+                                              <GestureHandlerRootView
+                                                style={s.h100pct}>
+                                                <TestCtrls />
+                                                <Shell />
+                                                <NuxDialogs />
+                                              </GestureHandlerRootView>
+                                            </TrendingConfigProvider>
+                                          </ProgressGuideProvider>
+                                        </MutedThreadsProvider>
+                                      </BackgroundNotificationPreferencesProvider>
+                                    </UnreadNotifsProvider>
+                                  </HomeBadgeProvider>
                                 </HiddenRepliesProvider>
                               </SelectedFeedProvider>
                             </LoggedOutViewProvider>
@@ -203,7 +216,9 @@ function App() {
                                   <SafeAreaProvider
                                     initialMetrics={initialWindowMetrics}>
                                     <IntentDialogProvider>
-                                      <InnerApp />
+                                      <LightStatusBarProvider>
+                                        <InnerApp />
+                                      </LightStatusBarProvider>
                                     </IntentDialogProvider>
                                   </SafeAreaProvider>
                                 </StarterPackProvider>

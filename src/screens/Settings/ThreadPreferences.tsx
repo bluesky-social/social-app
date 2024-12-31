@@ -38,7 +38,15 @@ export function ThreadPreferencesScreen({}: Props) {
 
   return (
     <Layout.Screen testID="threadPreferencesScreen">
-      <Layout.Header title={_(msg`Thread Preferences`)} />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Thread Preferences</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
           <SettingsList.Group>
@@ -140,7 +148,7 @@ export function ThreadPreferencesScreen({}: Props) {
               }
               style={[a.w_full, a.gap_md]}>
               <Toggle.LabelText style={[a.flex_1]}>
-                <Trans>Show replies in a threaded view</Trans>
+                <Trans>Show replies as threaded</Trans>
               </Toggle.LabelText>
               <Toggle.Platform />
             </Toggle.Item>

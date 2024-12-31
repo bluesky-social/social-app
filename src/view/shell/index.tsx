@@ -18,6 +18,7 @@ import {
   useIsDrawerSwipeDisabled,
   useSetDrawerOpen,
 } from '#/state/shell'
+import {useLightStatusBar} from '#/state/shell/light-status-bar'
 import {useCloseAnyActiveElement} from '#/state/util'
 import {Lightbox} from '#/view/com/lightbox/Lightbox'
 import {ModalsContainer} from '#/view/com/modals/Modal'
@@ -90,6 +91,7 @@ function ShellInner() {
     }
   }, [dedupe, navigation])
 
+  const swipeEnabled = !canGoBack && hasSession && !isDrawerSwipeDisabled
   return (
     <>
       <View style={[a.h_full]}>
@@ -98,12 +100,35 @@ function ShellInner() {
           <Drawer
             renderDrawerContent={renderDrawerContent}
             drawerStyle={{width: Math.min(400, winDim.width * 0.8)}}
+            configureGestureHandler={handler => {
+              if (swipeEnabled) {
+                if (isDrawerOpen) {
+                  return handler.activeOffsetX([-1, 1])
+                } else {
+                  return (
+                    handler
+                      // Any movement to the left is a pager swipe
+                      // so fail the drawer gesture immediately.
+                      .failOffsetX(-1)
+                      // Don't rush declaring that a movement to the right
+                      // is a drawer swipe. It could be a vertical scroll.
+                      .activeOffsetX(5)
+                  )
+                }
+              } else {
+                // Fail the gesture immediately.
+                // This seems more reliable than the `swipeEnabled` prop.
+                // With `swipeEnabled` alone, the gesture may freeze after toggling off/on.
+                return handler.failOffsetX([0, 0]).failOffsetY([0, 0])
+              }
+            }}
             open={isDrawerOpen}
             onOpen={onOpenDrawer}
             onClose={onCloseDrawer}
-            swipeEdgeWidth={winDim.width / 2}
+            swipeEdgeWidth={winDim.width}
+            swipeMinVelocity={100}
+            swipeMinDistance={10}
             drawerType={isIOS ? 'slide' : 'front'}
-            swipeEnabled={!canGoBack && hasSession && !isDrawerSwipeDisabled}
             overlayStyle={{
               backgroundColor: select(t.name, {
                 light: 'rgba(0, 57, 117, 0.1)',
@@ -130,6 +155,7 @@ function ShellInner() {
 
 export const Shell: React.FC = function ShellImpl() {
   const {fullyExpandedCount} = useDialogStateControlContext()
+  const lightStatusBar = useLightStatusBar()
   const t = useTheme()
   useIntentHandler()
 
@@ -141,7 +167,9 @@ export const Shell: React.FC = function ShellImpl() {
     <View testID="mobileShellView" style={[a.h_full, t.atoms.bg]}>
       <StatusBar
         style={
-          t.name !== 'light' || (isIOS && fullyExpandedCount > 0)
+          t.name !== 'light' ||
+          (isIOS && fullyExpandedCount > 0) ||
+          lightStatusBar
             ? 'light'
             : 'dark'
         }

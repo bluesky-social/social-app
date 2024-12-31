@@ -15,9 +15,16 @@ export type FlatList_INTERNAL<ItemT = any> = Omit<
   FlatListComponent<ItemT, FlatListPropsWithLayout<ItemT>>,
   'CellRendererComponent'
 >
+
+/**
+ * @deprecated use `Layout` components
+ */
 export const ScrollView = Animated.ScrollView
 export type ScrollView = typeof Animated.ScrollView
 
+/**
+ * @deprecated use `Layout` components
+ */
 export const CenteredView = forwardRef<
   View,
   React.PropsWithChildren<

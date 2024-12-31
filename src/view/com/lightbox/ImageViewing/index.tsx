@@ -8,7 +8,7 @@
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
 
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {
   LayoutAnimation,
   PixelRatio,
@@ -40,6 +40,7 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
+import * as ScreenOrientation from 'expo-screen-orientation'
 import {StatusBar} from 'expo-status-bar'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
@@ -60,11 +61,12 @@ import ImageItem from './components/ImageItem/ImageItem'
 
 type Rect = {x: number; y: number; width: number; height: number}
 
+const PORTRAIT_UP = ScreenOrientation.OrientationLock.PORTRAIT_UP
 const PIXEL_RATIO = PixelRatio.get()
 const EDGES =
-  Platform.OS === 'android'
+  Platform.OS === 'android' && Platform.Version < 35
     ? (['top', 'bottom', 'left', 'right'] satisfies Edge[])
-    : (['left', 'right'] satisfies Edge[]) // iOS, so no top/bottom safe area
+    : ([] satisfies Edge[]) // iOS or Android 15+ bleeds into safe area
 
 const SLOW_SPRING: WithSpringConfig = {
   mass: isIOS ? 1.25 : 0.75,
@@ -77,6 +79,15 @@ const FAST_SPRING: WithSpringConfig = {
   damping: 150,
   stiffness: 900,
   restDisplacementThreshold: 0.01,
+}
+
+function canAnimate(lightbox: Lightbox): boolean {
+  return (
+    !PlatformInfo.getIsReducedMotionEnabled() &&
+    lightbox.images.every(
+      img => img.thumbRect && (img.dimensions || img.thumbDimensions),
+    )
+  )
 }
 
 export default function ImageViewRoot({
@@ -93,6 +104,9 @@ export default function ImageViewRoot({
   'use no memo'
   const ref = useAnimatedRef<View>()
   const [activeLightbox, setActiveLightbox] = useState(nextLightbox)
+  const [orientation, setOrientation] = useState<'portrait' | 'landscape'>(
+    'portrait',
+  )
   const openProgress = useSharedValue(0)
 
   if (!activeLightbox && nextLightbox) {
@@ -104,23 +118,19 @@ export default function ImageViewRoot({
       return
     }
 
-    const canAnimate =
-      !PlatformInfo.getIsReducedMotionEnabled() &&
-      nextLightbox.images.every(
-        img => img.thumbRect && (img.dimensions || img.thumbDimensions),
-      )
+    const isAnimated = canAnimate(nextLightbox)
 
     // https://github.com/software-mansion/react-native-reanimated/issues/6677
-    requestAnimationFrame(() => {
+    rAF_FIXED(() => {
       openProgress.set(() =>
-        canAnimate ? withClampedSpring(1, SLOW_SPRING) : 1,
+        isAnimated ? withClampedSpring(1, SLOW_SPRING) : 1,
       )
     })
     return () => {
       // https://github.com/software-mansion/react-native-reanimated/issues/6677
-      requestAnimationFrame(() => {
+      rAF_FIXED(() => {
         openProgress.set(() =>
-          canAnimate ? withClampedSpring(0, SLOW_SPRING) : 0,
+          isAnimated ? withClampedSpring(0, SLOW_SPRING) : 0,
         )
       })
     }
@@ -131,6 +141,20 @@ export default function ImageViewRoot({
     (isGone, wasGone) => {
       if (isGone && !wasGone) {
         runOnJS(setActiveLightbox)(null)
+      }
+    },
+  )
+
+  // Delay the unlock until after we've finished the scale up animation.
+  // It's complicated to do the same for locking it back so we don't attempt that.
+  useAnimatedReaction(
+    () => openProgress.get() === 1,
+    (isOpen, wasOpen) => {
+      if (isOpen && !wasOpen) {
+        runOnJS(ScreenOrientation.unlockAsync)()
+      } else if (!isOpen && wasOpen) {
+        // default is PORTRAIT_UP - set via config plugin in app.config.js -sfn
+        runOnJS(ScreenOrientation.lockAsync)(PORTRAIT_UP)
       }
     },
   )
@@ -149,11 +173,21 @@ export default function ImageViewRoot({
       aria-modal
       accessibilityViewIsModal
       aria-hidden={!activeLightbox}>
-      <Animated.View ref={ref} style={{flex: 1}} collapsable={false}>
+      <Animated.View
+        ref={ref}
+        style={{flex: 1}}
+        collapsable={false}
+        onLayout={e => {
+          const layout = e.nativeEvent.layout
+          setOrientation(
+            layout.height > layout.width ? 'portrait' : 'landscape',
+          )
+        }}>
         {activeLightbox && (
           <ImageView
-            key={activeLightbox.id}
+            key={activeLightbox.id + '-' + orientation}
             lightbox={activeLightbox}
+            orientation={orientation}
             onRequestClose={onRequestClose}
             onPressSave={onPressSave}
             onPressShare={onPressShare}
@@ -169,6 +203,7 @@ export default function ImageViewRoot({
 
 function ImageView({
   lightbox,
+  orientation,
   onRequestClose,
   onPressSave,
   onPressShare,
@@ -177,6 +212,7 @@ function ImageView({
   openProgress,
 }: {
   lightbox: Lightbox
+  orientation: 'portrait' | 'landscape'
   onRequestClose: () => void
   onPressSave: (uri: string) => void
   onPressShare: (uri: string) => void
@@ -185,6 +221,7 @@ function ImageView({
   openProgress: SharedValue<number>
 }) {
   const {images, index: initialImageIndex} = lightbox
+  const isAnimated = useMemo(() => canAnimate(lightbox), [lightbox])
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [imageIndex, setImageIndex] = useState(initialImageIndex)
@@ -194,10 +231,19 @@ function ImageView({
   const isFlyingAway = useSharedValue(false)
 
   const containerStyle = useAnimatedStyle(() => {
-    if (openProgress.get() < 1 || isFlyingAway.get()) {
-      return {pointerEvents: 'none'}
+    if (openProgress.get() < 1) {
+      return {
+        pointerEvents: 'none',
+        opacity: isAnimated ? 1 : 0,
+      }
     }
-    return {pointerEvents: 'auto'}
+    if (isFlyingAway.get()) {
+      return {
+        pointerEvents: 'none',
+        opacity: 1,
+      }
+    }
+    return {pointerEvents: 'auto', opacity: 1}
   })
 
   const backdropStyle = useAnimatedStyle(() => {
@@ -206,7 +252,7 @@ function ImageView({
     const openProgressValue = openProgress.get()
     if (openProgressValue < 1) {
       opacity = Math.sqrt(openProgressValue)
-    } else if (screenSize) {
+    } else if (screenSize && orientation === 'portrait') {
       const dragProgress = Math.min(
         Math.abs(dismissSwipeTranslateY.get()) / (screenSize.height / 2),
         1,
@@ -751,4 +797,33 @@ function interpolateTransform(
 function withClampedSpring(value: any, config: WithSpringConfig) {
   'worklet'
   return withSpring(value, {...config, overshootClamping: true})
+}
+
+// We have to do this because we can't trust RN's rAF to fire in order.
+// https://github.com/facebook/react-native/issues/48005
+let isFrameScheduled = false
+let pendingFrameCallbacks: Array<() => void> = []
+function rAF_FIXED(callback: () => void) {
+  pendingFrameCallbacks.push(callback)
+  if (!isFrameScheduled) {
+    isFrameScheduled = true
+    requestAnimationFrame(() => {
+      const callbacks = pendingFrameCallbacks.slice()
+      isFrameScheduled = false
+      pendingFrameCallbacks = []
+      let hasError = false
+      let error
+      for (let i = 0; i < callbacks.length; i++) {
+        try {
+          callbacks[i]()
+        } catch (e) {
+          hasError = true
+          error = e
+        }
+      }
+      if (hasError) {
+        throw error
+      }
+    })
+  }
 }
