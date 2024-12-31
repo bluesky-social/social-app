@@ -634,7 +634,7 @@ msgstr "Adicionar outra conta"
 
 #: src/view/com/composer/Composer.tsx:721
 msgid "Add another post"
-msgstr "Adicionar outro post"
+msgstr "Adicionar outra postagem"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:102
 msgid "Add app password"
@@ -664,7 +664,7 @@ msgstr "Adicionar palavras/tags silenciadas"
 
 #: src/view/com/composer/Composer.tsx:1235
 msgid "Add new post"
-msgstr "Adicionar novo post"
+msgstr "Adicionar nova postagem"
 
 #: src/view/screens/ProfileList.tsx:899
 #: src/view/screens/ProfileList.tsx:917
@@ -1593,7 +1593,7 @@ msgstr "Alterar Senha"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:74
 msgid "Change post language to {0}"
-msgstr "Alterar idioma do post para {0}"
+msgstr "Alterar idioma da postagem para {0}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
@@ -1906,7 +1906,7 @@ msgstr "Complete o captcha"
 
 #: src/view/shell/desktop/LeftNav.tsx:301
 msgid "Compose new post"
-msgstr "Escrever novo post"
+msgstr "Escrever nova postagem"
 
 #: src/view/com/composer/Composer.tsx:812
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
@@ -2148,7 +2148,7 @@ msgstr "Copiar link da lista"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
 msgid "Copy link to post"
-msgstr "Copiar link do post"
+msgstr "Copiar link da postagem"
 
 #: src/components/dms/MessageMenu.tsx:110
 #: src/components/dms/MessageMenu.tsx:112
@@ -3151,12 +3151,12 @@ msgstr "Mostrar ou esconder a postagem a que você está respondendo"
 
 #: src/lib/api/index.ts:400
 msgid "Expected uri to resolve to a record"
-msgstr ""
+msgstr "Esperava-se que o URI fosse resolvido para um registro"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:123
 #: src/screens/Settings/ThreadPreferences.tsx:137
 msgid "Experimental"
-msgstr ""
+msgstr "Experimental"
 
 #: src/view/screens/NotificationsSettings.tsx:78
 #~ msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
@@ -3610,12 +3610,12 @@ msgstr "Seguindo {name}"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:73
 #: src/screens/Settings/ContentAndMediaSettings.tsx:76
 msgid "Following feed preferences"
-msgstr "Configurações do feed principal"
+msgstr "Configurações do Feed Principal"
 
 #: src/Navigation.tsx:302
 #: src/screens/Settings/FollowingFeedPreferences.tsx:53
 msgid "Following Feed Preferences"
-msgstr "Configurações do feed principal"
+msgstr "Configurações do Feed Principal"
 
 #: src/tours/HomeTour.tsx:59
 #~ msgid "Following shows the latest posts from people you follow."
@@ -4005,7 +4005,7 @@ msgstr "Página Inicial"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:400
 msgid "Host:"
-msgstr "Host:"
+msgstr "Provedor:"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:83
 #: src/screens/Login/LoginForm.tsx:168
@@ -6019,7 +6019,7 @@ msgstr "Postagem excluída"
 
 #: src/lib/api/index.ts:185
 msgid "Post failed to upload. Please check your Internet connection and try again."
-msgstr "Falha ao enviar o post. Por favor verifique sua conexão de internet e tente novamente."
+msgstr "Falha ao enviar a postagem. Por favor verifique sua conexão de internet e tente novamente."
 
 #: src/view/com/post-thread/PostThread.tsx:266
 msgid "Post hidden"
