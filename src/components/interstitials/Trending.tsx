@@ -9,20 +9,14 @@ import {
   useTrendingSettings,
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
-import {
-  DEFAULT_LIMIT as TRENDING_TOPICS_COUNT,
-  useTrendingTopics,
-} from '#/state/queries/trending/useTrendingTopics'
+import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
 import {useTrendingConfig} from '#/state/trending-config'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending2'
 import * as Prompt from '#/components/Prompt'
-import {
-  TrendingTopicLink,
-  TrendingTopicSkeleton,
-} from '#/components/TrendingTopics'
+import {TrendingTopicLink} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 
 export function TrendingInterstitial() {
@@ -54,11 +48,12 @@ export function Inner() {
         <View style={[gutters, a.flex_row, a.align_center, a.gap_lg]}>
           <Graph size="sm" />
           {isLoading ? (
-            Array(TRENDING_TOPICS_COUNT)
-              .fill(0)
-              .map((_n, i) => (
-                <TrendingTopicSkeleton key={i} index={i} size="small" />
-              ))
+            <View style={[a.py_lg]}>
+              <Text
+                style={[t.atoms.text_contrast_medium, a.text_sm, a.font_bold]}>
+                {' '}
+              </Text>
+            </View>
           ) : !trending?.topics ? null : (
             <>
               {trending.topics.map(topic => (
