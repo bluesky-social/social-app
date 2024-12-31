@@ -1,16 +1,16 @@
-#
+# 
 # Translators:
 # arestifop, 2024
-# Francisco, 2024
 # Michele Locati <michele@locati.it>, 2024
-#
+# Francisco, 2024
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-18 12:19+0000\n"
-"PO-Revision-Date: 2024-12-18 14:28+0000\n"
-"Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
+"POT-Creation-Date: 2024-12-21 00:43+0000\n"
+"PO-Revision-Date: 2024-12-25 01:56+0000\n"
+"Last-Translator: Francisco, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -489,7 +489,7 @@ msgstr "Aggiungi testo alternativo (opzionale)"
 msgid "Add another account"
 msgstr "Aggiungi un altro account"
 
-#: src/view/com/composer/Composer.tsx:721
+#: src/view/com/composer/Composer.tsx:728
 msgid "Add another post"
 msgstr "Aggiungi un altro post"
 
@@ -511,14 +511,14 @@ msgstr "Aggiungi parola silenziata alle impostazioni configurate"
 msgid "Add muted words and tags"
 msgstr "Aggiungi parole e tag silenziati"
 
-#: src/view/com/composer/Composer.tsx:1235
+#: src/view/com/composer/Composer.tsx:1242
 msgid "Add new post"
 msgstr "Aggiungi nuovo post"
 
 #: src/view/screens/ProfileList.tsx:899
 #: src/view/screens/ProfileList.tsx:917
 msgid "Add people"
-msgstr ""
+msgstr "Aggiungi persone"
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
@@ -543,7 +543,7 @@ msgstr "Aggiungi feed"
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:246
 msgid "Add to Lists"
-msgstr "Aggiungi alle Liste"
+msgstr "Aggiungi alle liste"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
 msgid "Add to my feeds"
@@ -660,7 +660,7 @@ msgstr "Il testo alternativo verrà troncato. Limite: {0} caratteri."
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:93
 #: src/view/com/modals/VerifyEmail.tsx:132
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
-msgstr "È stata inviata un'e-mail a {0}. Include un codice di conferma che puoi inserire di seguito."
+msgstr "È stata inviata un'email a {0}. Include un codice di conferma che puoi inserire di seguito."
 
 #: src/view/com/modals/ChangeEmail.tsx:114
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
@@ -842,12 +842,12 @@ msgstr "Aspetto"
 msgid "Apply default recommended feeds"
 msgstr "Applica i feed consigliati predefiniti"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:835
+#: src/view/com/post-thread/PostThreadItem.tsx:834
 msgid "Archived from {0}"
 msgstr "Archiviato da {0}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:804
-#: src/view/com/post-thread/PostThreadItem.tsx:843
+#: src/view/com/post-thread/PostThreadItem.tsx:803
+#: src/view/com/post-thread/PostThreadItem.tsx:842
 msgid "Archived post"
 msgstr "Post archiviato"
 
@@ -879,11 +879,11 @@ msgstr "Confermi di voler rimuovere {0} dai tuoi feed?"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Vuoi rimuoverlo dai tuoi feed?"
 
-#: src/view/com/composer/Composer.tsx:672
+#: src/view/com/composer/Composer.tsx:679
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "Scartare questa bozza?"
 
-#: src/view/com/composer/Composer.tsx:846
+#: src/view/com/composer/Composer.tsx:853
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Scartare questo post?"
 
@@ -941,7 +941,7 @@ msgstr "Indietro"
 msgid "Before creating a list, you must first verify your email."
 msgstr "Prima di creare una lista, devi verificare il tuo indirizzo email."
 
-#: src/view/com/composer/Composer.tsx:599
+#: src/view/com/composer/Composer.tsx:606
 msgid "Before creating a post, you must first verify your email."
 msgstr "Prima di creare un post, devi verificare la tua email."
 
@@ -1028,7 +1028,7 @@ msgstr "Post bloccato."
 
 #: src/screens/Profile/Sections/Labels.tsx:174
 msgid "Blocking does not prevent this labeler from placing labels on your account."
-msgstr "Il blocco non impedisce al labeler di inserire etichette nel tuo account."
+msgstr "Il blocco non impedisce all'etichettatore di inserire etichette sul tuo account."
 
 #: src/view/screens/ProfileList.tsx:756
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
@@ -1047,7 +1047,7 @@ msgstr "Blog"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:860
+#: src/view/com/post-thread/PostThreadItem.tsx:859
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky non può confermare l'autenticità della data dichiarata."
 
@@ -1166,7 +1166,7 @@ msgstr "Fotocamera"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:76
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:83
 #: src/screens/Settings/Settings.tsx:260
-#: src/view/com/composer/Composer.tsx:909
+#: src/view/com/composer/Composer.tsx:916
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:268
@@ -1222,7 +1222,7 @@ msgstr "Annulla la ricerca"
 msgid "Cancels opening the linked website"
 msgstr "Annulla l'apertura del sito collegato"
 
-#: src/state/shell/composer/index.tsx:82
+#: src/state/shell/composer/index.tsx:83
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:117
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:158
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:194
@@ -1323,7 +1323,7 @@ msgstr "Controlla la tua email per il codice di accesso e inseriscilo qui."
 
 #: src/view/com/modals/DeleteAccount.tsx:213
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr "Controlla la tua posta in arrivo, dovrebbe contenere un'e-mail con il codice di conferma da inserire di seguito:"
+msgstr "Controlla la tua posta in arrivo, dovrebbe contenere un'email con il codice di conferma da inserire di seguito:"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:372
 msgid "Choose domain verification method"
@@ -1386,14 +1386,6 @@ msgstr "Annulla la ricerca"
 msgid "click here"
 msgstr "clicca qui"
 
-#: src/view/com/modals/DeleteAccount.tsx:208
-#~ msgid "Click here for more information on deactivating your account"
-#~ msgstr "Clicca qui per maggiori informazioni riguardo la disattivazione del tuo account"
-
-#: src/view/com/modals/DeleteAccount.tsx:217
-#~ msgid "Click here for more information."
-#~ msgstr "Clicca qui per maggiori informazioni."
-
 #: src/components/TagMenu/index.web.tsx:152
 msgid "Click here to open tag menu for {tag}"
 msgstr "Clicca qui per aprire il menu per {tag}"
@@ -1449,11 +1441,16 @@ msgstr "Chiudi menu a scomparsa inferiore"
 msgid "Close dialog"
 msgstr "Chiudi la finestra di dialogo"
 
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
+msgid "Close emoji picker"
+msgstr "Chiudi selettore emoji"
+
 #: src/components/dialogs/GifSelect.tsx:169
 msgid "Close GIF dialog"
 msgstr "Chiudi la finestra di dialogo GIF"
 
-#: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:35
+#: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:31
 msgid "Close image"
 msgstr "Chiudi l'immagine"
 
@@ -1478,7 +1475,7 @@ msgstr "Chiude la barra di navigazione in basso"
 msgid "Closes password update alert"
 msgstr "Chiude l'avviso di aggiornamento della password"
 
-#: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:36
+#: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:32
 msgid "Closes viewer for header image"
 msgstr "Chiude il visualizzatore dell'immagine di intestazione"
 
@@ -1521,7 +1518,7 @@ msgstr "Completa la challenge"
 msgid "Compose new post"
 msgstr "Scrivi un nuovo post"
 
-#: src/view/com/composer/Composer.tsx:812
+#: src/view/com/composer/Composer.tsx:819
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "Componi un post fino a {MAX_GRAPHEME_LENGTH} caratteri"
 
@@ -1529,7 +1526,7 @@ msgstr "Componi un post fino a {MAX_GRAPHEME_LENGTH} caratteri"
 msgid "Compose reply"
 msgstr "Scrivi la risposta"
 
-#: src/view/com/composer/Composer.tsx:1628
+#: src/view/com/composer/Composer.tsx:1635
 msgid "Compressing video..."
 msgstr "Compressione del video..."
 
@@ -1935,7 +1932,7 @@ msgstr "Elimina messaggio per me"
 msgid "Delete my account"
 msgstr "Elimina il mio account"
 
-#: src/view/com/composer/Composer.tsx:820
+#: src/view/com/composer/Composer.tsx:827
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:642
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:644
 msgid "Delete post"
@@ -2037,8 +2034,8 @@ msgid "Disabled"
 msgstr "Disabilitato"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:674
-#: src/view/com/composer/Composer.tsx:853
+#: src/view/com/composer/Composer.tsx:681
+#: src/view/com/composer/Composer.tsx:860
 msgid "Discard"
 msgstr "Scartare"
 
@@ -2046,11 +2043,11 @@ msgstr "Scartare"
 msgid "Discard changes?"
 msgstr "Scartare le modifiche?"
 
-#: src/view/com/composer/Composer.tsx:671
+#: src/view/com/composer/Composer.tsx:678
 msgid "Discard draft?"
 msgstr "Scartare la bozza?"
 
-#: src/view/com/composer/Composer.tsx:845
+#: src/view/com/composer/Composer.tsx:852
 msgid "Discard post?"
 msgstr "Scartare il post?"
 
@@ -2076,7 +2073,7 @@ msgstr "Scopri nuovi feed"
 msgid "Dismiss"
 msgstr "Ignora"
 
-#: src/view/com/composer/Composer.tsx:1552
+#: src/view/com/composer/Composer.tsx:1559
 msgid "Dismiss error"
 msgstr "Ignora errore"
 
@@ -2302,7 +2299,7 @@ msgstr "Modifica starter pack"
 
 #: src/view/com/modals/CreateOrEditList.tsx:225
 msgid "Edit User List"
-msgstr "Modifica l'elenco degli utenti"
+msgstr "Modifica lista"
 
 #: src/components/WhoCanReply.tsx:87
 msgid "Edit who can reply"
@@ -2494,7 +2491,7 @@ msgstr "Inserisci il tuo nuovo indirizzo email qui sotto."
 msgid "Enter your username and password"
 msgstr "Inserisci il tuo nome utente e la tua password"
 
-#: src/view/com/composer/Composer.tsx:1637
+#: src/view/com/composer/Composer.tsx:1644
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "Errore"
@@ -2768,7 +2765,7 @@ msgstr "Feed"
 
 #: src/view/screens/SavedFeeds.tsx:198
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
-msgstr "I feed sono algoritmi personalizzati che gli utenti creano con un minimo di competenza di programmazione. Vedi <0/> per ulteriori informazioni."
+msgstr "I feed sono algoritmi personalizzati che gli utenti possono creare con una conoscenza base di programmazione. <0/> per ulteriori informazioni."
 
 #: src/components/FeedCard.tsx:272
 #: src/view/screens/SavedFeeds.tsx:82
@@ -3462,7 +3459,7 @@ msgstr "È corretto"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "Sei solo tu al momento! Aggiungi altre persone al tuo starter pack cercandole qui in alto."
 
-#: src/view/com/composer/Composer.tsx:1571
+#: src/view/com/composer/Composer.tsx:1578
 msgid "Job ID: {0}"
 msgstr "ID processo: {0}"
 
@@ -3682,7 +3679,7 @@ msgstr "Mi piace in questo post"
 #: src/view/com/post-thread/PostThread.tsx:626
 #: src/view/com/post-thread/PostThread.tsx:631
 msgid "Linear"
-msgstr ""
+msgstr "Classico"
 
 #: src/Navigation.tsx:198
 msgid "List"
@@ -3895,7 +3892,7 @@ msgid "Message input field"
 msgstr "Input del messaggio"
 
 #: src/screens/Messages/components/MessageInput.tsx:78
-#: src/screens/Messages/components/MessageInput.web.tsx:59
+#: src/screens/Messages/components/MessageInput.web.tsx:60
 msgid "Message is too long"
 msgstr "Il messaggio è troppo lungo"
 
@@ -3972,7 +3969,7 @@ msgstr "Strumenti di moderazione"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "Il moderatore ha messo un avviso generale sul contenuto."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:633
+#: src/view/com/post-thread/PostThreadItem.tsx:632
 msgid "More"
 msgstr "Di più"
 
@@ -3994,7 +3991,7 @@ msgstr "Prima le risposte con più mi piace"
 #: src/view/com/post-thread/PostThread.tsx:682
 #: src/view/com/post-thread/PostThread.tsx:687
 msgid "Most-liked replies first"
-msgstr "Dai priorità alle risposte con più mi piace"
+msgstr "Prima le risposte con più mi piace"
 
 #: src/screens/Onboarding/state.ts:105
 msgid "Movies"
@@ -4320,7 +4317,7 @@ msgstr "Nessuno"
 
 #: src/components/WhoCanReply.tsx:237
 msgid "No one but the author can quote this post."
-msgstr "Nessuno ma tu potrai citare questo post."
+msgstr "Solo l'autore può citare questo post."
 
 #: src/screens/Profile/Sections/Feed.tsx:65
 msgid "No posts yet."
@@ -4484,7 +4481,7 @@ msgid "OK"
 msgstr "OK"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/view/com/post-thread/PostThreadItem.tsx:865
+#: src/view/com/post-thread/PostThreadItem.tsx:864
 msgid "Okay"
 msgstr "Va bene"
 
@@ -4521,7 +4518,7 @@ msgstr "Solo i file .jpg e .png sono supportati"
 
 #: src/components/WhoCanReply.tsx:217
 msgid "Only {0} can reply."
-msgstr "Solo {0} può rispondere."
+msgstr "Solo gli {0} possono rispondere."
 
 #: src/screens/Signup/StepHandle.tsx:152
 msgid "Only contains letters, numbers, and hyphens"
@@ -4574,9 +4571,9 @@ msgstr "Apri opzioni conversazione"
 msgid "Open drawer menu"
 msgstr "Apri il menu a scomparsa"
 
-#: src/screens/Messages/components/MessageInput.web.tsx:165
-#: src/view/com/composer/Composer.tsx:1221
-#: src/view/com/composer/Composer.tsx:1222
+#: src/screens/Messages/components/MessageInput.web.tsx:181
+#: src/view/com/composer/Composer.tsx:1228
+#: src/view/com/composer/Composer.tsx:1229
 msgid "Open emoji picker"
 msgstr "Apri il selettore emoji"
 
@@ -4936,7 +4933,7 @@ msgstr "Politica"
 msgid "Porn"
 msgstr "Porno"
 
-#: src/view/com/composer/Composer.tsx:937
+#: src/view/com/composer/Composer.tsx:944
 msgctxt "action"
 msgid "Post"
 msgstr "Post"
@@ -4946,7 +4943,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "Post"
 
-#: src/view/com/composer/Composer.tsx:935
+#: src/view/com/composer/Composer.tsx:942
 msgctxt "action"
 msgid "Post All"
 msgstr "Posta tutti"
@@ -5094,7 +5091,7 @@ msgstr "Privacy e sicurezza"
 msgid "Privacy Policy"
 msgstr "Informativa sulla privacy"
 
-#: src/view/com/composer/Composer.tsx:1634
+#: src/view/com/composer/Composer.tsx:1641
 msgid "Processing video..."
 msgstr "Elaborazione video in corso..."
 
@@ -5124,21 +5121,13 @@ msgstr "Profilo aggiornato"
 msgid "Public"
 msgstr "Pubblico"
 
-#: src/view/com/lists/MyLists.tsx:117
+#: src/view/com/lists/MyLists.tsx:77
 msgid "Public, sharable lists of users to mute or block in bulk."
-msgstr ""
+msgstr "Elenchi pubblici e condivisibili di utenti da silenziare o bloccare in massa."
 
-#: src/view/com/lists/MyLists.tsx:112
+#: src/view/com/lists/MyLists.tsx:72
 msgid "Public, sharable lists which can be used to drive feeds."
-msgstr ""
-
-#: src/view/screens/ModerationModlists.tsx:65
-#~ msgid "Public, shareable lists of users to mute or block in bulk."
-#~ msgstr "Elenchi pubblici e condivisibili di utenti da silenziare o bloccare in massa."
-
-#: src/view/screens/Lists.tsx:65
-#~ msgid "Public, shareable lists which can drive feeds."
-#~ msgstr "Liste pubbliche e condivisibili che danno impulso ai feed."
+msgstr "Liste pubbliche e condivisibili che danno impulso ai feed."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:128
 msgid "QR code copied to your clipboard!"
@@ -5224,7 +5213,7 @@ msgstr "Leggi i termini di servizio di Bluesky"
 msgid "Reason:"
 msgstr "Motivo:"
 
-#: src/view/screens/Search/Search.tsx:1032
+#: src/view/screens/Search/Search.tsx:1034
 msgid "Recent Searches"
 msgstr "Ricerche recenti"
 
@@ -5317,15 +5306,15 @@ msgstr "Rimuovi l'immagine"
 msgid "Remove mute word from your list"
 msgstr "Rimuovi parola silenziata dalla tua lista"
 
-#: src/view/screens/Search/Search.tsx:1076
+#: src/view/screens/Search/Search.tsx:1078
 msgid "Remove profile"
 msgstr "Rimuovi profilo"
 
-#: src/view/screens/Search/Search.tsx:1078
+#: src/view/screens/Search/Search.tsx:1080
 msgid "Remove profile from search history"
 msgstr "Rimuovi profilo dalla cronologia di ricerca"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:287
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
 msgid "Remove quote"
 msgstr "Rimuovi citazione"
 
@@ -5370,7 +5359,7 @@ msgstr "Rimosso dai feed salvati"
 msgid "Removed from your feeds"
 msgstr "Rimosso dai tuoi feed"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:288
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
 msgstr "Rimuovi post citato"
 
@@ -5391,7 +5380,7 @@ msgstr "Risposte disattivate"
 msgid "Replies to this post are disabled."
 msgstr "Le risposte a questo post sono disattivate."
 
-#: src/view/com/composer/Composer.tsx:933
+#: src/view/com/composer/Composer.tsx:940
 msgctxt "action"
 msgid "Reply"
 msgstr "Rispondi"
@@ -5420,7 +5409,7 @@ msgstr "Le impostazioni delle risposte sono scelte dall'autore del thread"
 
 #: src/view/com/post-thread/PostThread.tsx:648
 msgid "Reply sorting"
-msgstr ""
+msgstr "Ordine delle risposte"
 
 #: src/view/com/post/Post.tsx:204
 #: src/view/com/posts/PostFeedItem.tsx:553
@@ -5977,7 +5966,7 @@ msgid "Send feedback"
 msgstr "Invia feedback"
 
 #: src/screens/Messages/components/MessageInput.tsx:173
-#: src/screens/Messages/components/MessageInput.web.tsx:219
+#: src/screens/Messages/components/MessageInput.web.tsx:235
 msgid "Send message"
 msgstr "Invia messaggio"
 
@@ -6155,7 +6144,7 @@ msgstr "Mostra badge e filtra dai feed"
 msgid "Show hidden replies"
 msgstr "Mostra risposte nascoste"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:806
+#: src/view/com/post-thread/PostThreadItem.tsx:805
 msgid "Show information about when this post was created"
 msgstr "Mostra informazioni sulla data di creazione di questo post"
 
@@ -6168,7 +6157,7 @@ msgstr "Mostra meno come questo"
 msgid "Show list anyway"
 msgstr "Mostra comunque lista"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:593
+#: src/view/com/post-thread/PostThreadItem.tsx:592
 #: src/view/com/post/Post.tsx:242
 #: src/view/com/posts/PostFeedItem.tsx:509
 msgid "Show More"
@@ -6199,19 +6188,15 @@ msgstr "Mostra risposte"
 
 #: src/view/com/post-thread/PostThread.tsx:622
 msgid "Show replies as"
-msgstr ""
+msgstr "Mostra risposte come"
 
 #: src/screens/Settings/ThreadPreferences.tsx:151
 msgid "Show replies as threaded"
-msgstr ""
+msgstr "Mostra risposte come un thread"
 
 #: src/screens/Settings/ThreadPreferences.tsx:126
 msgid "Show replies by people you follow before all other replies"
 msgstr "Mostra risposte delle persone che segui prima delle altre risposte"
-
-#: src/screens/Settings/ThreadPreferences.tsx:151
-#~ msgid "Show replies in a threaded view"
-#~ msgstr "Mostra risposte in modalità a thread"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:549
@@ -6341,7 +6326,7 @@ msgstr "Altri feed che potrebbero piacerti"
 
 #: src/components/WhoCanReply.tsx:70
 msgid "Some people can reply"
-msgstr "Solo alcune persone possono rispondere"
+msgstr "Risposte limitate"
 
 #: src/screens/Messages/Conversation.tsx:102
 msgid "Something went wrong"
@@ -6409,12 +6394,12 @@ msgstr "Avvia una nuova conversazione"
 #: src/view/screens/ProfileList.tsx:814
 #: src/view/screens/ProfileList.tsx:933
 msgid "Start adding people"
-msgstr ""
+msgstr "Inizia ad aggiungere persone"
 
 #: src/view/screens/ProfileList.tsx:821
 #: src/view/screens/ProfileList.tsx:940
 msgid "Start adding people!"
-msgstr ""
+msgstr "Inizia ad aggiungere persone!"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:353
 msgid "Start chat with {displayName}"
@@ -6486,11 +6471,11 @@ msgstr "Iscriviti a @{0} per utilizzare queste etichette:"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:238
 msgid "Subscribe to Labeler"
-msgstr "Iscriviti a Labeler"
+msgstr "Iscriviti all'etichettatore"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:204
 msgid "Subscribe to this labeler"
-msgstr "Iscriviti a questo labeler"
+msgstr "Iscriviti a questo etichettatore"
 
 #: src/view/screens/ProfileList.tsx:707
 msgid "Subscribe to this list"
@@ -6552,6 +6537,11 @@ msgstr "Solo tag"
 #: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Tap to change app icon"
 msgstr "Tocca per cambiare l'icona dell'app"
+
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
+msgid "Tap to close the emoji picker"
+msgstr "Tocca per chiudere selettore emoji"
 
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"
@@ -6974,19 +6964,15 @@ msgstr "Questo link ti porta al seguente sito web:"
 msgid "This list - created by <0>{0}</0> - contains possible violations of Bluesky's community guidelines in its name or description."
 msgstr "Questa lista - creata da <0>{0}</0> - contiene violazioni dei termini della community di Bluesky nel nome o nella descrizione."
 
-#: src/view/screens/ProfileList.tsx:904
-#~ msgid "This list is empty!"
-#~ msgstr "Questa lista è vuota!"
-
 #: src/view/screens/ProfileList.tsx:929
 msgid "This list is empty."
-msgstr ""
+msgstr "Questa lista è vuota."
 
 #: src/screens/Profile/ErrorState.tsx:40
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "Questo servizio di moderazione non è disponibile. Vedi giù per ulteriori dettagli. Se il problema persiste, contattaci."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:846
+#: src/view/com/post-thread/PostThreadItem.tsx:845
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Questo post dichiara di essere stato creato il <0>{0}</0>, ma è stato visto per la prima volta da Bluesky il <1>{1}</1>."
 
@@ -7071,7 +7057,7 @@ msgstr "Il tuo post verrà rimosso da questa citazione per tutti gli utenti, ed 
 #: src/view/com/post-thread/PostThread.tsx:606
 #: src/view/com/post-thread/PostThread.tsx:609
 msgid "Thread options"
-msgstr ""
+msgstr "Opzioni thread"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:65
 #: src/screens/Settings/ContentAndMediaSettings.tsx:68
@@ -7085,7 +7071,7 @@ msgstr "Preferenze delle discussioni"
 #: src/view/com/post-thread/PostThread.tsx:636
 #: src/view/com/post-thread/PostThread.tsx:641
 msgid "Threaded"
-msgstr ""
+msgstr "Thread"
 
 #: src/screens/Settings/ThreadPreferences.tsx:142
 msgid "Threaded mode"
@@ -7101,7 +7087,7 @@ msgstr "Tempo rimanente: {time} secondi"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:99
 msgid "To disable the email 2FA method, please verify your access to the email address."
-msgstr "Per disabilitare il metodo 2FA via e-mail, verifica il tuo accesso all'indirizzo e-mail."
+msgstr "Per disabilitare il metodo 2FA via email, verifica il tuo accesso all'indirizzo email."
 
 #: src/components/dms/ReportConversationPrompt.tsx:19
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
@@ -7139,8 +7125,8 @@ msgstr "Argomento"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:771
-#: src/view/com/post-thread/PostThreadItem.tsx:774
+#: src/view/com/post-thread/PostThreadItem.tsx:770
+#: src/view/com/post-thread/PostThreadItem.tsx:773
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:404
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:406
 msgid "Translate"
@@ -7343,13 +7329,13 @@ msgstr "Disiscriviti dalla lista"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:203
 msgid "Unsubscribe from this labeler"
-msgstr "Disiscriviti da questo/a labeler"
+msgstr "Disiscriviti da questo etichettatore"
 
 #: src/screens/List/ListHiddenScreen.tsx:86
 msgid "Unsubscribed from list"
 msgstr "Disiscritto dalla lista"
 
-#: src/view/com/composer/Composer.tsx:759
+#: src/view/com/composer/Composer.tsx:766
 msgid "Unsupported video type"
 msgstr "Tipo di video non supportato"
 
@@ -7364,7 +7350,7 @@ msgstr "Contenuti sessuali indesiderati"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
 msgid "Update <0>{displayName}</0> in Lists"
-msgstr "Aggiorna <0>{displayName}</0> nelle Liste"
+msgstr "Aggiorna <0>{displayName}</0> nelle liste"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:509
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:530
@@ -7419,7 +7405,7 @@ msgstr "Caricamento immagini..."
 msgid "Uploading link thumbnail..."
 msgstr "Caricamento miniatura del link..."
 
-#: src/view/com/composer/Composer.tsx:1631
+#: src/view/com/composer/Composer.tsx:1638
 msgid "Uploading video..."
 msgstr "Caricamento del video..."
 
@@ -7589,7 +7575,7 @@ msgstr "Video non trovato."
 msgid "Video settings"
 msgstr "Impostazioni video"
 
-#: src/view/com/composer/Composer.tsx:1641
+#: src/view/com/composer/Composer.tsx:1648
 msgid "Video uploaded"
 msgstr "Video caricato"
 
@@ -7657,8 +7643,8 @@ msgstr "Visualizza le informazioni su queste etichette"
 #: src/components/ProfileHoverCard/index.web.tsx:466
 #: src/view/com/posts/AviFollowButton.tsx:55
 #: src/view/com/posts/PostFeedErrorMessage.tsx:175
-#: src/view/com/util/PostMeta.tsx:79
-#: src/view/com/util/PostMeta.tsx:94
+#: src/view/com/util/PostMeta.tsx:78
+#: src/view/com/util/PostMeta.tsx:93
 msgid "View profile"
 msgstr "Vedi il profilo"
 
@@ -7694,7 +7680,7 @@ msgstr "Vedi i tuoi account silenziati"
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
 msgid "Visit Site"
-msgstr "Visita il sito"
+msgstr "Vai al sito web"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:80
 msgid "Volume"
@@ -7798,7 +7784,7 @@ msgstr "Ci dispiace! Non riusciamo a trovare la pagina che stavi cercando."
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:346
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
-msgstr "Ci dispiace! Puoi iscriverti solo a venti etichettatori ed al momento hai raggiunto questo limite."
+msgstr "Ci dispiace! Puoi iscriverti solo a venti etichettatori e al momento hai raggiunto questo limite."
 
 #: src/screens/Deactivated.tsx:124
 msgid "Welcome back!"
@@ -7822,7 +7808,7 @@ msgstr "Cosa stanno postando le persone."
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:722
+#: src/view/com/composer/Composer.tsx:729
 msgid "What's up?"
 msgstr "Come va?"
 
@@ -7876,15 +7862,15 @@ msgid "Why should this user be reviewed?"
 msgstr "Perché questo utente dovrebbe essere esaminato?"
 
 #: src/screens/Messages/components/MessageInput.tsx:149
-#: src/screens/Messages/components/MessageInput.web.tsx:198
+#: src/screens/Messages/components/MessageInput.web.tsx:214
 msgid "Write a message"
 msgstr "Scrivi un messaggio"
 
-#: src/view/com/composer/Composer.tsx:810
+#: src/view/com/composer/Composer.tsx:817
 msgid "Write post"
 msgstr "Scrivi un post"
 
-#: src/view/com/composer/Composer.tsx:720
+#: src/view/com/composer/Composer.tsx:727
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:70
 msgid "Write your reply"
 msgstr "Scrivi la tua risposta"
@@ -8041,6 +8027,7 @@ msgstr "Non hai ancora nessuna conversazione. Avviane una!"
 msgid "You have no feeds."
 msgstr "Non hai feed."
 
+#: src/view/com/lists/MyLists.tsx:81
 #: src/view/com/lists/ProfileLists.tsx:139
 msgid "You have no lists."
 msgstr "Non hai liste."

@@ -4295,10 +4295,10 @@
   dependencies:
     nanoid "^3.3.1"
 
-"@haileyok/bluesky-video@0.2.5":
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/@haileyok/bluesky-video/-/bluesky-video-0.2.5.tgz#eb05f21b5eeef151045b047b39e77df8628a6b3f"
-  integrity sha512-PIH2jXLi32z56eNgQprhBC+8Czo8kogcy0TIrncMDF82e/yftqv8vL/OyMDLCifavlVtl/h5tEQzt4Q4PJyv2A==
+"@haileyok/bluesky-video@0.2.6":
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/@haileyok/bluesky-video/-/bluesky-video-0.2.6.tgz#61bb4ff908498558fd2320f06ba0f74ea03598b4"
+  integrity sha512-IlzrTATD7ci/a+ehSA7pIhOvxxNTe35zdzBYt8EmVvKKafyeFhxGfDuuP5qxfQmHurcQMIL+3HeZgnAXwQQNmQ==
 
 "@hapi/accept@^6.0.3":
   version "6.0.3"
@@ -10620,6 +10620,11 @@ expo-pwa@0.0.127:
     chalk "^4.0.0"
     commander "2.20.0"
     update-check "1.5.3"
+
+expo-screen-orientation@^8.0.2:
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/expo-screen-orientation/-/expo-screen-orientation-8.0.2.tgz#69139a1967557a331188d36b4dd615a0e220c2a0"
+  integrity sha512-YsY7Oumlv1WsHLQVgl1f+vAiMZfzUPGyVF2xc7jxmHKtM+jMzIflDl2qKLGfoB0S9Pgg6Z8V4+c+A8wlCURw4A==
 
 expo-sharing@^13.0.0:
   version "13.0.0"

@@ -19,7 +19,7 @@ msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:130
 msgid "(contains embedded content)"
-msgstr "(contiene contenido embedido)"
+msgstr "(contiene contenido embebido)"
 
 #: src/screens/Settings/AccountSettings.tsx:65
 #: src/view/com/modals/VerifyEmail.tsx:150
@@ -115,7 +115,7 @@ msgstr "{0, plural, one {siguiendo} other {siguiendo}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:447
 msgid "{0, plural, one {like} other {likes}}"
-msgstr "{0, plural, one {me gusta} other {me gusta}}"
+msgstr "{0, plural, one {\"me gusta\"} other {\"me gusta\"}}"
 
 #: src/components/FeedCard.tsx:213
 #: src/view/com/feeds/FeedSourceCard.tsx:303
@@ -149,7 +149,7 @@ msgstr "{0}"
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
 msgid "{0} <0>in <1>tags</1></0>"
-msgstr "{0} <0>en <1>tags</1></0>"
+msgstr "{0} <0>en <1>etiquetas</1></0>"
 
 #. Pattern: {wordValue} in text, tags
 #: src/components/dialogs/MutedWords.tsx:465
@@ -446,7 +446,7 @@ msgstr "<0>{date}</0> en {time}"
 
 #: src/screens/Settings/NotificationSettings.tsx:85
 msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
-msgstr "<0>Experimental:</0> Cuando esta preferencia está activaa, solo recibirás notificaciones de respuesta y citación de los usuarios que sigues. Con el tiempo iremos agregando más controles aquí."
+msgstr "<0>Experimental:</0> Cuando esta preferencia está activa, solo recibirás notificaciones de respuesta y cita de los usuarios que sigues. Con el tiempo iremos agregando más controles aquí."
 
 #: src/view/com/modals/SelfLabel.tsx:135
 #~ msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
@@ -549,7 +549,7 @@ msgstr "Opciones de cuenta"
 
 #: src/screens/Settings/Settings.tsx:464
 msgid "Account removed from quick access"
-msgstr "Cuenta elimada de acceso rápido"
+msgstr "Cuenta eliminada de acceso rápido"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:137
 #: src/view/com/profile/ProfileMenu.tsx:122
@@ -661,7 +661,7 @@ msgstr "¡Agrega algunos feeds a tu paquete de inicio!"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
-msgstr "Agregue el feed predeterminado de solo personas que sigue"
+msgstr "Agrega el feed predeterminado de solo personas que sigues"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:389
 msgid "Add the following DNS record to your domain:"
@@ -669,7 +669,7 @@ msgstr "Añade el siguiente registro DNS a tu dominio:"
 
 #: src/components/FeedCard.tsx:295
 msgid "Add this feed to your feeds"
-msgstr "Agregue este feed a sus feeds"
+msgstr "Agrega este feed a tus feeds"
 
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:246
@@ -832,15 +832,15 @@ msgstr "Se produjo un error al comprimir el video."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:333
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr "Se produjo un error al generar su paquete de inicio. ¿Quieres intentarlo de nuevo?"
+msgstr "Se produjo un error al generar tu paquete de inicio. ¿Quieres intentarlo de nuevo?"
 
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:133
 msgid "An error occurred while loading the video. Please try again later."
-msgstr "Se produjo un error al cargar el video. Por favor, inténtelo de nuevo."
+msgstr "Se produjo un error al cargar el video. Por favor, inténtalo de nuevo."
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:176
 msgid "An error occurred while loading the video. Please try again."
-msgstr "Se produjo un error mientras cargaba el video. Por favor, inténtelo de nuevo."
+msgstr "Se produjo un error mientras cargaba el video. Por favor, inténtalo de nuevo."
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:250
 #~ msgid "An error occurred while saving the image!"
@@ -857,7 +857,7 @@ msgstr "¡Se produjo un error al guardar el código QR!"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:81
 msgid "An error occurred while selecting the video"
-msgstr "Se produjo un error mientras seleccionaba el video"
+msgstr "Se produjo un error mientras seleccionabas el video"
 
 #: src/components/dms/MessageMenu.tsx:134
 #~ msgid "An error occurred while trying to delete the message. Please try again."
@@ -866,7 +866,7 @@ msgstr "Se produjo un error mientras seleccionaba el video"
 #: src/screens/StarterPack/StarterPackScreen.tsx:347
 #: src/screens/StarterPack/StarterPackScreen.tsx:369
 msgid "An error occurred while trying to follow all"
-msgstr "Se produjo un error mientras intentaba seguir a todos"
+msgstr "Se produjo un error mientras intentabas seguir a todos"
 
 #: src/view/com/composer/state/video.ts:435
 msgid "An error occurred while uploading the video."
@@ -882,7 +882,7 @@ msgstr "Se produjo un problema iniciando el chat"
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:47
 msgid "An issue occurred while trying to open the chat"
-msgstr "Se produjo un problema mientras intentaba abrir el chat."
+msgstr "Se produjo un problema mientras intentaba abrir el chat"
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
@@ -937,7 +937,7 @@ msgstr ""
 
 #: src/screens/Settings/LanguageSettings.tsx:80
 msgid "App Language"
-msgstr "Idioma de interfaz"
+msgstr "Idioma de la App"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:122
 msgid "App Password"
@@ -1053,7 +1053,7 @@ msgstr "¿Estás seguro de que quieres eliminar la contraseña de app \"{0}\"?"
 
 #: src/components/dms/MessageMenu.tsx:149
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
-msgstr "¿Estás seguro de que quieres eliminar este mensaje? El mensaje se eliminará para usted, pero no para el otro participante."
+msgstr "¿Estás seguro de que quieres eliminar este mensaje? El mensaje se eliminará para ti, pero no para el otro participante."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:634
 msgid "Are you sure you want to delete this starter pack?"
@@ -1069,7 +1069,7 @@ msgstr "¿Estás seguro de que quieres descartar tus cambios?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:47
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "¿Estás seguro de que quieres dejar esta conversación? Tus mensajes serán eliminados para tí, pero no para el otro participante."
+msgstr "¿Estás seguro de que quieres dejar esta conversación? Tus mensajes serán eliminados para ti, pero no para el otro participante."
 
 #: src/view/com/feeds/FeedSourceCard.tsx:319
 msgid "Are you sure you want to remove {0} from your feeds?"
@@ -1077,7 +1077,7 @@ msgstr "¿Seguro que quieres eliminar {0} de tus feeds?"
 
 #: src/components/FeedCard.tsx:312
 msgid "Are you sure you want to remove this from your feeds?"
-msgstr "¿Estás seguro que deseas remover esto de tus feeds?"
+msgstr "¿Estás seguro que deseas eliminar esto de tus feeds?"
 
 #: src/view/com/composer/Composer.tsx:672
 msgid "Are you sure you'd like to discard this draft?"
@@ -1110,7 +1110,7 @@ msgstr "Al menos 3 caracteres"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:105
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
-msgstr "Las opciones de reproducción automática se han mudado a <0>Ajustes de Contenido y Medios</0>."
+msgstr "Las opciones de reproducción automática se han trasladado a <0>Ajustes de Contenido y Medios</0>."
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:105
 #: src/screens/Settings/ContentAndMediaSettings.tsx:111
@@ -1269,7 +1269,7 @@ msgstr "Bluesky no puede confirmar la autenticidad de la fecha declarada."
 
 #: src/view/com/auth/server-input/index.tsx:151
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
-msgstr "Bluesky es una red abierta donde puede elegir su proveedor de alojamiento. Si eres un desarrollador, puedes alojar tu propio servidor."
+msgstr "Bluesky es una red abierta donde puedes elegir tu proveedor de alojamiento. Si eres un desarrollador, puedes alojar tu propio servidor."
 
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
@@ -1331,7 +1331,7 @@ msgstr "Explorar más sugerencias"
 #: src/components/FeedInterstitials.tsx:356
 #: src/components/FeedInterstitials.tsx:490
 msgid "Browse more suggestions on the Explore page"
-msgstr "Explorar más sugerencias"
+msgstr "Busca más sugerencias en la página Explorar"
 
 #: src/screens/Home/NoFeedsPinned.tsx:103
 #: src/screens/Home/NoFeedsPinned.tsx:109
@@ -1459,7 +1459,7 @@ msgstr "Cancelar edición de perfil"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:207
 msgid "Cancel quote post"
-msgstr "Cancelar citación"
+msgstr "Cancelar cita"
 
 #: src/screens/Deactivated.tsx:151
 msgid "Cancel reactivation and log out"
@@ -1588,11 +1588,11 @@ msgstr "Verifique mi estado"
 
 #: src/screens/Login/LoginForm.tsx:285
 msgid "Check your email for a login code and enter it here."
-msgstr "Te enviamos un código de inicio de sesión a tu correo. Introducelo aquí."
+msgstr "Te enviamos un código de inicio de sesión a tu correo. Introdúcelo aquí."
 
 #: src/view/com/modals/DeleteAccount.tsx:213
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr "Te enviamos un código de verificación a tu correo. Introducelo aquí:"
+msgstr "Te enviamos un código de verificación a tu correo. Introdúcelo aquí:"
 
 #: src/view/com/modals/Threadgate.tsx:75
 #~ msgid "Choose \"Everybody\" or \"Nobody\""
@@ -1624,7 +1624,7 @@ msgstr "Elige a la gente"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:115
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
-msgstr "Elige auto-etiquetas que apliquen a los medios que estás publicando. Si no seleccionas ninguna, esta publicación es apta para todos los públicos."
+msgstr "Elige auto-etiquetas que se apliquen a los medios que estás publicando. Si no seleccionas ninguna, esta publicación es apta para todos los públicos."
 
 #: src/view/com/auth/server-input/index.tsx:76
 msgid "Choose Service"
@@ -1706,7 +1706,7 @@ msgstr "clic aquí"
 
 #: src/components/TagMenu/index.web.tsx:152
 msgid "Click here to open tag menu for {tag}"
-msgstr "Clic aquí para abrir el menu de {tag}"
+msgstr "Clic aquí para abrir el menú de {tag}"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:307
 msgid "Click to disable quote posts of this post."
@@ -1718,7 +1718,7 @@ msgstr "Clic para habilitar las citas para esta publicación."
 
 #: src/components/dms/MessageItem.tsx:241
 msgid "Click to retry failed message"
-msgstr "Click para reintentar mensaje fallido"
+msgstr "Clic para reintentar mensaje fallido"
 
 #: src/screens/Onboarding/index.tsx:32
 msgid "Climate"
@@ -1782,7 +1782,7 @@ msgstr "Cerrar el pie de página de navegación"
 #: src/components/Menu/index.tsx:291
 #: src/components/TagMenu/index.tsx:277
 msgid "Close this dialog"
-msgstr "Cierre este diálogo"
+msgstr "Cierra este diálogo"
 
 #: src/view/shell/index.web.tsx:70
 msgid "Closes bottom navigation bar"
@@ -1802,7 +1802,7 @@ msgstr "Cierra el espectador para la imagen del encabezado"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:401
 msgid "Collapse list of users"
-msgstr "Lista de colapso de usuarios"
+msgstr "Colapsa la lista de usuarios"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:594
 msgid "Collapses list of users for a given notification"
@@ -1829,7 +1829,7 @@ msgstr "Directrices de la comunidad"
 
 #: src/screens/Onboarding/StepFinished.tsx:293
 msgid "Complete onboarding and start using your account"
-msgstr "Complete la incorporación y comience a usar su cuenta"
+msgstr "Completa la incorporación y comienza a usar tu cuenta"
 
 #: src/screens/Signup/index.tsx:144
 msgid "Complete the challenge"
@@ -1865,7 +1865,7 @@ msgstr "Configuración de filtrado de contenido para la categoría: {name}"
 
 #: src/components/moderation/LabelPreference.tsx:244
 msgid "Configured in <0>moderation settings</0>."
-msgstr "Configurado en <0>ajustes de moderación</0>"
+msgstr "Configurado en <0>ajustes de moderación</0>."
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:253
 #: src/components/dialogs/VerifyEmailDialog.tsx:260
@@ -2407,7 +2407,7 @@ msgstr "Desvincular cita"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:719
 msgid "Detach quote post?"
-msgstr "¿Desvincular publicación de la cita?"
+msgstr "¿Desvincular cita?"
 
 #: src/screens/Settings/Settings.tsx:242
 #: src/screens/Settings/Settings.tsx:245
@@ -2440,7 +2440,7 @@ msgstr "Tenue"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:89
 msgid "Disable Email 2FA"
-msgstr "Desactivar Correo 2FA"
+msgstr "Desactivar 2FA por Correo"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:91
 #: src/screens/Settings/AccessibilitySettings.tsx:96
@@ -2559,7 +2559,7 @@ msgstr "No incluye desnudez."
 
 #: src/screens/Signup/StepHandle.tsx:159
 msgid "Doesn't begin or end with a hyphen"
-msgstr "No comienza ni termina con un guion."
+msgstr "No comienza ni termina con un guion"
 
 #: src/view/com/modals/ChangeHandle.tsx:468
 #~ msgid "Domain Value"
@@ -2620,7 +2620,7 @@ msgstr "Descargar archivo CAR"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:342
 msgid "Drop to add images"
-msgstr "Arrastra para agregar imagenes"
+msgstr "Arrastra para agregar imágenes"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:120
 #~ msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
@@ -2717,7 +2717,7 @@ msgstr "Editar lista de Moderación"
 #: src/Navigation.tsx:296
 #: src/view/screens/Feeds.tsx:515
 msgid "Edit My Feeds"
-msgstr "Editar mis noticias"
+msgstr "Editar mis feeds"
 
 #: src/view/com/modals/EditProfile.tsx:147
 msgid "Edit my profile"
@@ -2759,7 +2759,7 @@ msgstr "Editar lista de Usuarios"
 
 #: src/components/WhoCanReply.tsx:87
 msgid "Edit who can reply"
-msgstr "Editar quien puede responder"
+msgstr "Editar quién puede responder"
 
 #: src/view/com/modals/EditProfile.tsx:188
 msgid "Edit your display name"
@@ -2767,7 +2767,7 @@ msgstr "Editar tu nombre para mostrar"
 
 #: src/view/com/modals/EditProfile.tsx:206
 msgid "Edit your profile description"
-msgstr "Edita tu descripcion de perfil"
+msgstr "Edita tu descripción de perfil"
 
 #: src/Navigation.tsx:423
 msgid "Edit your starter pack"
@@ -2790,11 +2790,11 @@ msgstr "Correo electrónico"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:64
 msgid "Email 2FA disabled"
-msgstr "Correo 2FA deshabilitado"
+msgstr "2FA por correo deshabilitado"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:54
 msgid "Email 2FA enabled"
-msgstr "Correo 2FA activado"
+msgstr "2FA por correo activada"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:93
 msgid "Email address"
@@ -2867,7 +2867,7 @@ msgstr "Activar contenido adulto"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:53
 msgid "Enable Email 2FA"
-msgstr "Activar Correo 2FA"
+msgstr "Activar 2FA por correo"
 
 #: src/components/dialogs/EmbedConsent.tsx:81
 #: src/components/dialogs/EmbedConsent.tsx:88
@@ -2908,7 +2908,7 @@ msgstr "Activado"
 
 #: src/screens/Profile/Sections/Feed.tsx:114
 msgid "End of feed"
-msgstr "Fin de noticias"
+msgstr "Fin del feed"
 
 #: src/components/Lists.tsx:52
 #~ msgid "End of list"
@@ -2933,7 +2933,7 @@ msgstr "Ingresa una contraseña"
 #: src/components/dialogs/MutedWords.tsx:127
 #: src/components/dialogs/MutedWords.tsx:128
 msgid "Enter a word or tag"
-msgstr "Ingresa una palabra o tag"
+msgstr "Ingresa una palabra o etiqueta"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:89
 msgid "Enter Code"
@@ -3066,7 +3066,7 @@ msgstr "Expandir lista de usuarios"
 #: src/view/com/composer/ComposerReplyTo.tsx:70
 #: src/view/com/composer/ComposerReplyTo.tsx:73
 msgid "Expand or collapse the full post you are replying to"
-msgstr "Expandir o colapsar la publicación completa a la que estás respondiendo."
+msgstr "Expandir o colapsar la publicación completa a la que estás respondiendo"
 
 #: src/lib/api/index.ts:400
 msgid "Expected uri to resolve to a record"
@@ -3124,7 +3124,7 @@ msgstr "Es posible que medios externos permitan que otros sitios recopilen datos
 #: src/Navigation.tsx:315
 #: src/screens/Settings/ExternalMediaPreferences.tsx:31
 msgid "External Media Preferences"
-msgstr "Medios externos"
+msgstr "Preferencias sobre Medios Externos"
 
 #: src/view/screens/Settings/index.tsx:637
 #~ msgid "External media settings"
@@ -3146,7 +3146,7 @@ msgstr "Error al crear contraseña de app. Por favor vuelve a intentarlo."
 #: src/screens/StarterPack/Wizard/index.tsx:233
 #: src/screens/StarterPack/Wizard/index.tsx:241
 msgid "Failed to create starter pack"
-msgstr "Error al crear el paquete de inicio."
+msgstr "Error al crear el paquete de inicio"
 
 #: src/view/com/modals/CreateOrEditList.tsx:186
 msgid "Failed to create the list. Check your internet connection and try again."
@@ -3154,7 +3154,7 @@ msgstr "Error al crear la lista. Verifica tu conexión a Internet y vuelve a int
 
 #: src/components/dms/MessageMenu.tsx:73
 msgid "Failed to delete message"
-msgstr "Error al eliminar el mensaje."
+msgstr "Error al eliminar el mensaje"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:195
 msgid "Failed to delete post, please try again"
@@ -3283,7 +3283,7 @@ msgstr "Feeds"
 
 #: src/view/screens/SavedFeeds.tsx:198
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
-msgstr "Las noticias son algoritmos personalizados que los usuarios construyen con un poco de experiencia en codificación. <0/> para más información."
+msgstr "Los Feeds son algoritmos personalizados que los usuarios construyen con un poco de experiencia en codificación. <0/> para más información."
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:80
 #~ msgid "Feeds can be topical as well!"
@@ -3445,7 +3445,7 @@ msgstr "Seguido por <0>{0}</0>"
 
 #: src/components/KnownFollowers.tsx:217
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
-msgstr "Seguido por <0>{0}</0> y {1, plural, one {# other} other {# others}}"
+msgstr "Seguido por <0>{0}</0> y {1, plural, one {# más} other {# más}}"
 
 #: src/components/KnownFollowers.tsx:204
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
@@ -3453,7 +3453,7 @@ msgstr "Seguido por <0>{0}</0> y <1>{1}</1>"
 
 #: src/components/KnownFollowers.tsx:186
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
-msgstr "Seguido por <0>{0}</0>, <1>{1}</1>, y {2, plural, one {# other} other {# others}}"
+msgstr "Seguido por <0>{0}</0>, <1>{1}</1>, y {2, plural, one {# más} other {# más}}"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:403
 msgid "Followed users"
@@ -3707,7 +3707,7 @@ msgstr "Contenido Gráfico"
 #: src/state/shell/progress-guide.tsx:216
 #: src/state/shell/progress-guide.tsx:226
 msgid "Half way there!"
-msgstr "Ya estas a mitad de camino!"
+msgstr "¡Ya estas a mitad de camino!"
 
 #: src/screens/Settings/AccountSettings.tsx:126
 #: src/screens/Settings/AccountSettings.tsx:131
@@ -3858,23 +3858,23 @@ msgstr "Ocultar lista de usuarios"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:117
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
-msgstr "Se ha producido algún problema al contactar con el servidor de noticias. Por favor, informa al propietario de la noticia sobre este problema."
+msgstr "Se ha producido algún problema al contactar con el servidor de feeds. Por favor, informa al propietario del feed sobre este problema."
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:105
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
-msgstr "Parece que el servidor de noticias está mal configurado. Por favor, informa al propietario de la noticia sobre este problema."
+msgstr "Parece que el servidor del feed está mal configurado. Por favor, informa al propietario del feed sobre este problema."
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:111
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
-msgstr "Parece que el servidor de noticias está fuera de línea. Por favor, informa al propietario de la noticia sobre este problema."
+msgstr "Parece que el servidor del feed está fuera de línea. Por favor, informa al propietario del feed sobre este problema."
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:108
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
-msgstr "El servidor de noticias ha respondido de forma incorrecta. Por favor, informa al propietario de la noticia sobre este problema."
+msgstr "El servidor del feed ha respondido de forma incorrecta. Por favor, informa al propietario del feed sobre este problema."
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:102
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
-msgstr "Tenemos problemas para encontrar esta noticia. Puede que la hayan borrado."
+msgstr "Tenemos problemas para encontrar este feed. Puede que la hayan borrado."
 
 #: src/screens/Moderation/index.tsx:53
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
@@ -3964,7 +3964,7 @@ msgstr "Si eliminas esta lista, no podrás recuperarla."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:250
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
-msgstr ""
+msgstr "Si tienes tu propio dominio, puedes usarlo como tu nombre de usuario. Este permite auto-verificar tu identidad. <0>obtén más información</0>."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
 msgid "If you remove this post, you won't be able to recover it."
@@ -4061,7 +4061,7 @@ msgstr "Interacción limitada"
 #: src/screens/Login/LoginForm.tsx:144
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
-msgstr "Código de confirmación 2FA no es válido."
+msgstr "Código de confirmación 2FA no válido."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:580
 msgid "Invalid handle. Please try a different one."
@@ -4318,12 +4318,12 @@ msgstr ""
 
 #: src/components/ProgressGuide/List.tsx:63
 msgid "Like 10 posts"
-msgstr "Dale «me gusta» a 10 posts"
+msgstr "Dale \"me gusta\" a 10 posts"
 
 #: src/state/shell/progress-guide.tsx:212
 #: src/state/shell/progress-guide.tsx:217
 msgid "Like 10 posts to train the Discover feed"
-msgstr "Dale «me gusta» a 10 publicaciones para entrenar el feed de Descubrimiento."
+msgstr "Dale \"me gusta\" a 10 publicaciones para entrenar el feed de Descubrimiento."
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:501
 msgid "Like feed"
@@ -4331,7 +4331,7 @@ msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:275
 msgid "Like this feed"
-msgstr "Dar «me gusta» a esta noticia"
+msgstr "Dar \"me gusta\" a este feed"
 
 #: src/components/LikesDialog.tsx:85
 #: src/Navigation.tsx:236
@@ -4381,18 +4381,18 @@ msgstr ""
 
 #: src/view/screens/Profile.tsx:234
 msgid "Likes"
-msgstr "Me gusta"
+msgstr "\"Me gusta\""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:217
 msgid "Likes on this post"
-msgstr "Me gusta en este post"
+msgstr "\"Me gusta\" en este post"
 
 #: src/view/com/post-thread/PostThread.tsx:626
 #: src/view/com/post-thread/PostThread.tsx:631
 msgid "Linear"
 msgstr ""
 
-#: src/Navigation.tsx:198
+#: src/Navigation.tsx:196
 msgid "List"
 msgstr "Lista"
 
@@ -4460,15 +4460,15 @@ msgstr "Listas bloqueando este usuario:"
 
 #: src/view/screens/Search/Explore.tsx:133
 msgid "Load more"
-msgstr "Cargar mas"
+msgstr "Cargar más"
 
 #: src/view/screens/Search/Explore.tsx:221
 msgid "Load more suggested feeds"
-msgstr "Cargar mas feeds sugeridos"
+msgstr "Cargar más feeds sugeridos"
 
 #: src/view/screens/Search/Explore.tsx:219
 msgid "Load more suggested follows"
-msgstr "Cargar mas seguidos sugeridos"
+msgstr "Cargar más seguidos sugeridos"
 
 #: src/view/screens/Notifications.tsx:270
 msgid "Load new notifications"
@@ -4492,7 +4492,7 @@ msgstr "Registro"
 #: src/screens/Deactivated.tsx:202
 #: src/screens/Deactivated.tsx:208
 msgid "Log in or sign up"
-msgstr "Ingresa o registrate"
+msgstr "Ingresa o regístrate"
 
 #: src/screens/SignupQueued.tsx:168
 #: src/screens/SignupQueued.tsx:171
@@ -4566,7 +4566,7 @@ msgstr "Gestiona tus palabras y etiquetas silenciadas"
 #: src/components/dms/ConvoMenu.tsx:151
 #: src/components/dms/ConvoMenu.tsx:158
 msgid "Mark as read"
-msgstr "Marcar como leido"
+msgstr "Marcar como leído"
 
 #: src/view/screens/Profile.tsx:233
 msgid "Media"
@@ -4726,7 +4726,7 @@ msgstr "Número de \"me gusta\""
 #: src/view/com/post-thread/PostThread.tsx:682
 #: src/view/com/post-thread/PostThread.tsx:687
 msgid "Most-liked replies first"
-msgstr "Respuestas mejor valoradas primero"
+msgstr "Respuestas con más \"me gusta\" primero"
 
 #: src/screens/Onboarding/state.ts:105
 msgid "Movies"
@@ -5073,7 +5073,7 @@ msgstr "No se encontraron feeds. Intenta buscar algo más."
 #: src/components/LikedByList.tsx:84
 #: src/view/com/post-thread/PostLikedBy.tsx:84
 msgid "No likes yet"
-msgstr "Sin <<Me gusta>> aún"
+msgstr "Sin \"me gusta\" aún" # lowercase
 
 #: src/components/ProfileCard.tsx:342
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:119
@@ -5207,7 +5207,7 @@ msgstr "Nota sobre compartir"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:88
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
-msgstr "Nota: Bluesky es una red abierta y pública. Esta configuración sólo limita la visibilidad de tu contenido en la aplicación y el sitio web de Bluesky, y es posible que otras aplicaciones no respeten esta configuración. Otras aplicaciones y sitios web pueden seguir mostrando tu contenido a los usuarios que hayan cerrado sesión."
+msgstr "Nota: Bluesky es una red abierta y pública. Esta configuración solo limita la visibilidad de tu contenido en la aplicación y el sitio web de Bluesky, y es posible que otras aplicaciones no respeten esta configuración. Otras aplicaciones y sitios web pueden seguir mostrando tu contenido a los usuarios que hayan cerrado sesión."
 
 #: src/screens/Messages/ChatList.tsx:178
 msgid "Nothing here"
@@ -5430,7 +5430,7 @@ msgstr "Abrir página de depuración de moderación"
 
 #: src/screens/Moderation/index.tsx:204
 msgid "Open muted words and tags settings"
-msgstr "Abrir ajustes de palabras y tags silenciados"
+msgstr "Abrir ajustes de palabras y etiquetas silenciadas"
 
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:54
 #~ msgid "Open navigation"
@@ -5608,7 +5608,7 @@ msgstr "Abre el selector de video"
 
 #: src/view/com/util/forms/DropdownButton.tsx:296
 msgid "Option {0} of {numItems}"
-msgstr "Opcion {0} de {numItems}"
+msgstr "Opción {0} de {numItems}"
 
 #: src/components/dms/ReportDialog.tsx:178
 #: src/components/ReportDialog/SubmitView.tsx:167
@@ -5715,7 +5715,7 @@ msgstr "El permiso para acceder al carrete de la cámara fue denegado. Por favor
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:54
 msgid "Person toggle"
-msgstr "Alternar persona."
+msgstr "Alternar persona"
 
 #: src/screens/Onboarding/index.tsx:28
 #: src/screens/Onboarding/state.ts:109
@@ -5809,7 +5809,7 @@ msgstr "Por favor, elige tu contraseña."
 
 #: src/screens/Signup/state.ts:231
 msgid "Please complete the verification captcha."
-msgstr "Por favor, completa la verificación CAPTCHA"
+msgstr "Por favor, completa la verificación CAPTCHA."
 
 #: src/view/com/modals/ChangeEmail.tsx:65
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
@@ -5829,7 +5829,7 @@ msgstr "Introduce un nombre único para esta contraseña de app o utiliza la que
 
 #: src/components/dialogs/MutedWords.tsx:86
 msgid "Please enter a valid word, tag, or phrase to mute"
-msgstr "Por favor, introduce una palabra, tag, o frase válida para silenciar"
+msgstr "Por favor, introduce una palabra, etiqueta, o frase válida para silenciar"
 
 #: src/screens/Signup/state.ts:196
 #: src/screens/Signup/StepInfo/index.tsx:102
@@ -5838,7 +5838,7 @@ msgstr "Introduce tu correo electrónico."
 
 #: src/screens/Signup/StepInfo/index.tsx:96
 msgid "Please enter your invite code."
-msgstr "Introduce tu código de invitación"
+msgstr "Introduce tu código de invitación."
 
 #: src/view/com/modals/DeleteAccount.tsx:235
 msgid "Please enter your password as well:"
@@ -6128,7 +6128,7 @@ msgstr "¡Código QR guardado en tu galería!"
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:85
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:92
 msgid "Quote post"
-msgstr "Citar una publicación"
+msgstr "Citar publicación"
 
 #: src/view/com/modals/Repost.tsx:71
 #~ msgctxt "action"
@@ -6137,11 +6137,11 @@ msgstr "Citar una publicación"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:303
 msgid "Quote post was re-attached"
-msgstr "La publicación citada ha sido readjuntada"
+msgstr "La cita se vinculado de nuevo"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:302
 msgid "Quote post was successfully detached"
-msgstr "La publicación citada se ha separado correctamente"
+msgstr "La cita se ha desvinculado correctamente"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:177
 #: src/view/com/util/post-ctrls/RepostButton.tsx:199
@@ -6184,7 +6184,7 @@ msgstr "Límite de velocidad excedido - has intentado cambiar tu nombre de usuar
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:565
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:575
 msgid "Re-attach quote"
-msgstr "Readjuntar cita"
+msgstr "Vincular cita de nuevo"
 
 #: src/screens/Deactivated.tsx:140
 msgid "Reactivate your account"
@@ -6214,7 +6214,7 @@ msgstr "Razón:"
 
 #: src/view/screens/Search/Search.tsx:1032
 msgid "Recent Searches"
-msgstr "Busquedas Recientes"
+msgstr "Búsquedas Recientes"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:49
 msgid "Recommended"
@@ -6255,29 +6255,29 @@ msgstr "Eliminar la cuenta"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:15
 msgid "Remove attachment"
-msgstr "Remover adjunto"
+msgstr "Eliminar adjunto"
 
 #: src/view/com/util/UserAvatar.tsx:403
 msgid "Remove Avatar"
-msgstr "Remover Avatar"
+msgstr "Eliminar Avatar"
 
 #: src/view/com/util/UserBanner.tsx:155
 msgid "Remove Banner"
-msgstr "Remover Banner"
+msgstr "Eliminar Banner"
 
 #: src/screens/Messages/components/MessageInputEmbed.tsx:206
 msgid "Remove embed"
-msgstr "Remover incrustado"
+msgstr "Eliminar incrustado"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:116
 #: src/view/com/posts/FeedShutdownMsg.tsx:120
 #: src/view/com/posts/PostFeedErrorMessage.tsx:169
 msgid "Remove feed"
-msgstr "Remover feed"
+msgstr "Eliminar feed"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:210
 msgid "Remove feed?"
-msgstr "¿Remover feed?"
+msgstr "¿Eliminar feed?"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:318
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:324
@@ -6286,24 +6286,24 @@ msgstr "¿Remover feed?"
 #: src/view/screens/ProfileList.tsx:497
 #: src/view/screens/SavedFeeds.tsx:342
 msgid "Remove from my feeds"
-msgstr "Remover de mis feeds"
+msgstr "Eliminar de mis feeds"
 
 #: src/components/FeedCard.tsx:310
 #: src/view/com/feeds/FeedSourceCard.tsx:317
 msgid "Remove from my feeds?"
-msgstr "¿Remover de mis feeds?"
+msgstr "¿Eliminar de mis feeds?"
 
 #: src/screens/Settings/Settings.tsx:458
 msgid "Remove from quick access?"
-msgstr "¿Remover del acceso rápido?"
+msgstr "¿Eliminar del acceso rápido?"
 
 #: src/screens/List/ListHiddenScreen.tsx:156
 msgid "Remove from saved feeds"
-msgstr "Remover de los feeds guardados"
+msgstr "Eliminar de los feeds guardados"
 
 #: src/view/com/composer/photos/Gallery.tsx:203
 msgid "Remove image"
-msgstr "Remover la imagen"
+msgstr "Eliminar la imagen"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:28
 #~ msgid "Remove image preview"
@@ -6311,32 +6311,32 @@ msgstr "Remover la imagen"
 
 #: src/components/dialogs/MutedWords.tsx:523
 msgid "Remove mute word from your list"
-msgstr "Remover palabra silenciada de tu lista"
+msgstr "Eliminar palabra silenciada de tu lista"
 
 #: src/view/screens/Search/Search.tsx:1076
 msgid "Remove profile"
-msgstr "Remover perfil"
+msgstr "Eliminar perfil"
 
 #: src/view/screens/Search/Search.tsx:1078
 msgid "Remove profile from search history"
-msgstr "Remover perfil del historial de búsqueda"
+msgstr "Eliminar perfil del historial de búsqueda"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:287
 msgid "Remove quote"
-msgstr "Remover cita"
+msgstr "Eliminar cita"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:155
 #: src/view/com/util/post-ctrls/RepostButton.tsx:165
 msgid "Remove repost"
-msgstr "Remover republicación"
+msgstr "Eliminar republicación"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:260
 msgid "Remove subtitle file"
-msgstr "Remover archivo de subtítulo"
+msgstr "Eliminar archivo de subtítulo"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:211
 msgid "Remove this feed from your saved feeds"
-msgstr "Remover este feed de tus feeds guardados"
+msgstr "Eliminar este feed de tus feeds guardados"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:109
 msgid "Removed by author"
@@ -6372,7 +6372,7 @@ msgstr "Eliminado de tus feeds"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:288
 msgid "Removes quoted post"
-msgstr "Remueve cita de la publicación"
+msgstr "Elimina la cita"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
 #~ msgid "Removes the attachment"
@@ -6385,7 +6385,7 @@ msgstr "Remueve cita de la publicación"
 #: src/view/com/posts/FeedShutdownMsg.tsx:129
 #: src/view/com/posts/FeedShutdownMsg.tsx:133
 msgid "Replace with Discover"
-msgstr "Reemplaza con Descubrimiento"
+msgstr "Reemplaza con Descubrir"
 
 #: src/view/screens/Profile.tsx:232
 msgid "Replies"
@@ -6401,7 +6401,7 @@ msgstr "Respuestas deshabilitadas"
 
 #: src/components/WhoCanReply.tsx:215
 msgid "Replies to this post are disabled."
-msgstr "Las respuestas en esta publicación estan deshabilitadas"
+msgstr "Las respuestas en esta publicación estan deshabilitadas."
 
 #: src/components/WhoCanReply.tsx:243
 #~ msgid "Replies to this thread are disabled"
@@ -6466,11 +6466,11 @@ msgstr "Responder a ti"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:333
 msgid "Reply visibility updated"
-msgstr "Visibilidad de la respuesta actualizada."
+msgstr "Visibilidad de la respuesta actualizada"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:332
 msgid "Reply was successfully hidden"
-msgstr "La respuesta se ha ocultado correctamente."
+msgstr "La respuesta se ha ocultado correctamente"
 
 #: src/components/dms/MessageMenu.tsx:132
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
@@ -6676,7 +6676,7 @@ msgstr "Restablecer contraseña"
 
 #: src/screens/Login/LoginForm.tsx:306
 msgid "Retries login"
-msgstr "Reintentar inicio de sesión"
+msgstr "Reintenta inicio de sesión"
 
 #: src/view/com/util/error/ErrorMessage.tsx:57
 #: src/view/com/util/error/ErrorScreen.tsx:99
@@ -7394,7 +7394,7 @@ msgstr "Mostrar otras cuentas a las que te puedes cambiar"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:104
 #: src/screens/Settings/FollowingFeedPreferences.tsx:114
 msgid "Show quote posts"
-msgstr "Mostrar publicaciones de citas"
+msgstr "Mostrar citas"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:119
 #~ msgid "Show Quote Posts"
@@ -7474,7 +7474,7 @@ msgstr "Mostrar reposts"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:129
 #: src/screens/Settings/FollowingFeedPreferences.tsx:139
 msgid "Show samples of your saved feeds in your Following feed"
-msgstr "Mostrar parte de tus feeds guardados en tu feed Following"
+msgstr "Mostrar parte de tus feeds guardados en tu feed Siguiendo"
 
 #: src/components/moderation/ContentHider.tsx:152
 #: src/components/moderation/PostHider.tsx:79
@@ -7610,7 +7610,7 @@ msgstr "Programación"
 
 #: src/components/FeedInterstitials.tsx:445
 msgid "Some other feeds you might like"
-msgstr "Algunos otros feeds que podrían gustarte"
+msgstr "Otros feeds que podrían gustarte"
 
 #: src/components/WhoCanReply.tsx:70
 msgid "Some people can reply"
@@ -7633,7 +7633,7 @@ msgstr "Se produjo un error. Por favor, inténtalo de nuevo"
 #: src/screens/Moderation/index.tsx:96
 #: src/screens/Profile/Sections/Labels.tsx:88
 msgid "Something went wrong, please try again."
-msgstr "Se produjo un error. Inténtalo de nuevo."
+msgstr "Se produjo un error. Por favor, inténtalo de nuevo"
 
 #: src/components/Lists.tsx:168
 #: src/screens/Settings/NotificationSettings.tsx:55
@@ -7750,11 +7750,11 @@ msgstr "El paquete de inicio es inválido"
 
 #: src/view/screens/Profile.tsx:236
 msgid "Starter Packs"
-msgstr "Packs de inicio"
+msgstr "Paquete de Inicio"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:244
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr "Los packs de inicio te permiten compartir fácilmente tus feeds y personas favoritas con tus amigos."
+msgstr "Los paquetes de inicio te permiten compartir fácilmente tus feeds y personas favoritas con tus amigos."
 
 #: src/screens/Settings/AboutSettings.tsx:53
 #: src/screens/Settings/AboutSettings.tsx:56
@@ -7897,7 +7897,7 @@ msgstr "Toca para descartar"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
 msgid "Tap to enter full screen"
-msgstr "Toca para entrar a pantalla completa"
+msgstr "Toca para entrar en pantalla completa"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 msgid "Tap to play or pause"
@@ -7922,7 +7922,7 @@ msgstr ""
 
 #: src/state/shell/progress-guide.tsx:221
 msgid "Task complete - 10 likes!"
-msgstr "¡Tarea completada - 10 me gusta!"
+msgstr "¡Tarea completada - 10 \"me gusta\"!"
 
 #: src/components/ProgressGuide/List.tsx:64
 msgid "Teach our algorithm what you like"
@@ -8091,7 +8091,7 @@ msgstr "Es posible que se haya borrado el post."
 
 #: src/view/screens/PrivacyPolicy.tsx:35
 msgid "The Privacy Policy has been moved to <0/>"
-msgstr "La Política de privacidad se ha trasladado a <0/>"
+msgstr "La Política de Privacidad se ha trasladado a <0/>"
 
 #: src/view/com/composer/state/video.ts:395
 msgid "The selected video is larger than 50MB."
@@ -8432,7 +8432,7 @@ msgstr "Esta publicación será ocultada de los feeds y hilos. Esto no se puede 
 
 #: src/view/com/composer/Composer.tsx:413
 msgid "This post's author has disabled quote posts."
-msgstr "El autor de esta publicación ha deshabilitado las citas de publicaciones."
+msgstr "El autor de esta publicación ha deshabilitado las citas."
 
 #: src/view/com/profile/ProfileMenu.tsx:350
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
@@ -8489,7 +8489,7 @@ msgstr "Este usuario no sigue a nadie."
 
 #: src/components/dialogs/MutedWords.tsx:435
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
-msgstr "Esto eliminará \"{0}\" de tus palabras silenciadas. Siempre puedes agregarlo de nuevo más tarde."
+msgstr "Esto eliminará \"{0}\" de tus palabras silenciadas. Siempre puedes añadirla de nuevo más tarde."
 
 #: src/components/dialogs/MutedWords.tsx:283
 #~ msgid "This will delete {0} from your muted words. You can always add it back later."
@@ -8544,7 +8544,7 @@ msgstr "Tiempo restante: {time} segundos"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:99
 msgid "To disable the email 2FA method, please verify your access to the email address."
-msgstr "Para desactivar el método de 2FA por correo electrónico. Por favor, verifica tu acceso a la dirección de correo electrónico."
+msgstr "Para desactivar el método de 2FA por correo electrónico, por favor, verifica tu acceso a la dirección de correo electrónico."
 
 #: src/components/dms/ReportConversationPrompt.tsx:19
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
@@ -8908,7 +8908,7 @@ msgstr "Subiendo imágenes..."
 #: src/lib/api/index.ts:350
 #: src/lib/api/index.ts:374
 msgid "Uploading link thumbnail..."
-msgstr "Subiendo miniatura..."
+msgstr "Subiendo miniatura del link..."
 
 #: src/view/com/composer/Composer.tsx:1631
 msgid "Uploading video..."
@@ -8972,7 +8972,7 @@ msgstr "Usuario bloqueado"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:53
 msgid "User Blocked by \"{0}\""
-msgstr "Usuario bloqueado por \"{0}\""
+msgstr "Usuario bloqueado por \"{0}\"" # uppercase
 
 #: src/components/dms/BlockedByListDialog.tsx:27
 msgid "User blocked by list"
@@ -9353,7 +9353,7 @@ msgstr "¡Lo sentimos! El post al que estás respondiendo ha sido eliminado."
 #: src/components/Lists.tsx:188
 #: src/view/screens/NotFound.tsx:50
 msgid "We're sorry! We can't find the page you were looking for."
-msgstr "Lo sentimos. No encontramos la página que buscabas."
+msgstr "¡Lo sentimos! No encontramos la página que buscabas."
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:330
 #~ msgid "We're sorry! You can only subscribe to ten labelers, and you've reached your limit of ten."
@@ -9635,7 +9635,7 @@ msgstr "Has muteado a esta cuenta"
 
 #: src/screens/Messages/ChatList.tsx:188
 msgid "You have no conversations yet. Start one!"
-msgstr "No tienes ninguna conversacion. ¡Comienza una!"
+msgstr "No tienes ninguna conversación. ¡Comienza una!"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:143
 msgid "You have no feeds."
@@ -9740,7 +9740,7 @@ msgstr "Anteriormente desactivaste a @{0}."
 
 #: src/screens/Settings/Settings.tsx:257
 msgid "You will be signed out of all your accounts."
-msgstr "Se cerrará la sesión de todas tus cuentas"
+msgstr "Se cerrará la sesión de todas tus cuentas."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:217
 msgid "You will no longer receive notifications for this thread"
@@ -9756,7 +9756,7 @@ msgstr "Enviamos un código de reseteo a tu correo. Introduce ese código aquí 
 
 #: src/screens/Messages/components/ChatListItem.tsx:124
 msgid "You: {0}"
-msgstr "Tu: {0}"
+msgstr "Tú: {0}"
 
 #: src/screens/Messages/components/ChatListItem.tsx:153
 msgid "You: {defaultEmbeddedContentMessage}"
@@ -9768,7 +9768,7 @@ msgstr "Tú: {short}"
 
 #: src/screens/Signup/index.tsx:107
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
-msgstr "Comenzarás a seguir a los usuarios y feeds sugeridos una vez que termines de crear tu cuenta."
+msgstr "¡Comenzarás a seguir a los usuarios y feeds sugeridos una vez que termines de crear tu cuenta!"
 
 #: src/screens/Signup/index.tsx:112
 msgid "You'll follow the suggested users once you finish creating your account!"
@@ -9850,7 +9850,7 @@ msgstr "Tu fecha de nacimiento"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:173
 msgid "Your browser does not support the video format. Please try a different browser."
-msgstr "Tu navegador no soporta este formato de video. Por favor, inténtalo con uno diferente"
+msgstr "Tu navegador no soporta este formato de video. Por favor, inténtalo con uno diferente."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:25
 msgid "Your chats have been disabled"
@@ -9885,7 +9885,7 @@ msgstr "Tu correo electrónico aún no ha sido verificado. Por tu seguridad, rec
 
 #: src/state/shell/progress-guide.tsx:211
 msgid "Your first like!"
-msgstr "¡Tu primer me gusta!"
+msgstr "¡Tu primer \"me gusta\"!"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
@@ -9905,7 +9905,7 @@ msgstr "Tus palabras muteadas"
 
 #: src/view/com/modals/ChangePassword.tsx:158
 msgid "Your password has been changed successfully!"
-msgstr "Tu contraseña ha sido cambiada exitosamente."
+msgstr "¡Tu contraseña ha sido cambiada exitosamente!"
 
 #: src/view/com/composer/Composer.tsx:470
 msgid "Your post has been published"
@@ -9917,7 +9917,7 @@ msgstr "Posts publicados"
 
 #: src/screens/Onboarding/StepFinished.tsx:250
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "Tus posts, a qué le das me gusta y a quién bloqueas son públicos. Nadie puede ver a quien muteas."
+msgstr "Tus posts, a qué le das \"me gusta\" y a quién bloqueas son públicos. Nadie puede ver a quien muteas."
 
 #: src/view/screens/Settings/index.tsx:119
 #~ msgid "Your profile"

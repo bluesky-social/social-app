@@ -127,6 +127,8 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.ca
       case 'de':
         return AppLanguage.de
+      case 'el':
+        return AppLanguage.el
       case 'en-GB':
         return AppLanguage.en_GB
       case 'es':
@@ -153,10 +155,10 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.km
       case 'ko':
         return AppLanguage.ko
+      case 'ne':
+        return AppLanguage.ne
       case 'nl':
         return AppLanguage.nl
-      case 'np':
-        return AppLanguage.np
       case 'pl':
         return AppLanguage.pl
       case 'pt-BR':
@@ -173,11 +175,11 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.uk
       case 'vi':
         return AppLanguage.vi
-      case 'zh-CN':
+      case 'zh-Hans-CN':
         return AppLanguage.zh_CN
-      case 'zh-HK':
+      case 'zh-Hant-HK':
         return AppLanguage.zh_HK
-      case 'zh-TW':
+      case 'zh-Hant-TW':
         return AppLanguage.zh_TW
       default:
         continue

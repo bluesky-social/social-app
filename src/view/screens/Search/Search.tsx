@@ -35,6 +35,7 @@ import {
   NativeStackScreenProps,
   SearchTabNavigatorParams,
 } from '#/lib/routes/types'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
@@ -58,7 +59,13 @@ import {Text} from '#/view/com/util/text/Text'
 import {Explore} from '#/view/screens/Search/Explore'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
 import {makeSearchQuery, parseSearchQuery} from '#/screens/Search/utils'
-import {atoms as a, useBreakpoints, useTheme as useThemeNew, web} from '#/alf'
+import {
+  atoms as a,
+  tokens,
+  useBreakpoints,
+  useTheme as useThemeNew,
+  web,
+} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
@@ -1043,10 +1050,12 @@ function SearchHistory({
             <RNGHScrollView
               keyboardShouldPersistTaps="handled"
               horizontal={true}
-              style={styles.profilesRow}
-              contentContainerStyle={{
-                borderWidth: 0,
-              }}>
+              style={[
+                a.flex_row,
+                a.flex_nowrap,
+                {marginHorizontal: -tokens.space._2xl},
+              ]}
+              contentContainerStyle={[a.px_2xl, a.border_0]}>
               {selectedProfiles.slice(0, 5).map((profile, index) => (
                 <View
                   key={index}
@@ -1070,7 +1079,9 @@ function SearchHistory({
                       emoji
                       style={[pal.text, styles.profileName]}
                       numberOfLines={1}>
-                      {profile.displayName || profile.handle}
+                      {sanitizeDisplayName(
+                        profile.displayName || profile.handle,
+                      )}
                     </Text>
                   </Link>
                   <Pressable
@@ -1180,10 +1191,6 @@ const styles = StyleSheet.create({
   },
   selectedProfilesContainerMobile: {
     height: 100,
-  },
-  profilesRow: {
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
   },
   profileItem: {
     alignItems: 'center',
