@@ -67,9 +67,10 @@ export function Inner() {
                     <View style={[a.py_lg]}>
                       <Text
                         style={[
-                          t.atoms.text_contrast_medium,
+                          t.atoms.text,
                           a.text_sm,
                           a.font_bold,
+                          {opacity: 0.7}, // NOTE: we use opacity 0.7 instead of a color to match the color of the home pager tab bar
                         ]}>
                         {topic.topic}
                       </Text>
