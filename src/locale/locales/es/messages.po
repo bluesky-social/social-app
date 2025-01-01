@@ -487,7 +487,7 @@ msgstr "7 días"
 msgid "About"
 msgstr "Acerca de"
 
-#: src/view/screens/Search/Search.tsx:865
+#: src/view/screens/Search/Search.tsx:866
 msgid "Access navigation links and settings"
 msgstr "Acceder a enlaces y configuraciones de navegación"
 
@@ -919,8 +919,8 @@ msgstr "GIF animado"
 msgid "Anti-Social Behavior"
 msgstr "Comportamiento antisocial"
 
-#: src/view/screens/Search/Search.tsx:336
 #: src/view/screens/Search/Search.tsx:337
+#: src/view/screens/Search/Search.tsx:338
 msgid "Any language"
 msgstr "Cualquier idioma"
 
@@ -1092,8 +1092,12 @@ msgid "Are you sure?"
 msgstr "¿Estás seguro?"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:61
-msgid "Are you writing in <0>{0}</0>?"
-msgstr "¿Estás escribiendo en <0>{0}</0>?"
+#~ msgid "Are you writing in <0>{0}</0>?"
+#~ msgstr "¿Estás escribiendo en <0>{0}</0>?"
+
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:69
+msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
+msgstr "¿Estás escribiendo en <0>{suggestedLanguageName}</0>?"
 
 #: src/screens/Onboarding/index.tsx:23
 #: src/screens/Onboarding/state.ts:95
@@ -1428,7 +1432,7 @@ msgstr "Cámara"
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:213
-#: src/view/screens/Search/Search.tsx:894
+#: src/view/screens/Search/Search.tsx:895
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -1465,7 +1469,7 @@ msgid "Cancel reactivation and log out"
 msgstr "Cancelar la reactivación y cerrar la sesión"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:886
+#: src/view/screens/Search/Search.tsx:887
 msgid "Cancel search"
 msgstr "Cancelar búsqueda"
 
@@ -1543,8 +1547,12 @@ msgid "Change Password"
 msgstr "Cambiar contraseña"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:74
-msgid "Change post language to {0}"
-msgstr "Cambiar idioma del post a {0}"
+#~ msgid "Change post language to {0}"
+#~ msgstr "Cambiar idioma del post a {0}"
+
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:82
+msgid "Change post language to {suggestedLanguageName}"
+msgstr "Cambiar idioma del post a {suggestedLanguageName}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
@@ -1955,7 +1963,7 @@ msgid "Content filters"
 msgstr "Filtros de contenido"
 
 #: src/screens/Settings/LanguageSettings.tsx:251
-#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:75
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
 msgid "Content Languages"
 msgstr "Idiomas de contenido"
 
@@ -3006,7 +3014,7 @@ msgid "Error receiving captcha response."
 msgstr "Error al recibir la respuesta del captcha."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:183
-#: src/view/screens/Search/Search.tsx:110
+#: src/view/screens/Search/Search.tsx:111
 msgid "Error:"
 msgstr "Error:"
 
@@ -3287,7 +3295,7 @@ msgstr "¡Comentarios enviados!"
 #: src/view/screens/Feeds.tsx:508
 #: src/view/screens/Profile.tsx:235
 #: src/view/screens/SavedFeeds.tsx:96
-#: src/view/screens/Search/Search.tsx:525
+#: src/view/screens/Search/Search.tsx:526
 #: src/view/shell/desktop/LeftNav.tsx:445
 #: src/view/shell/Drawer.tsx:476
 msgid "Feeds"
@@ -3342,7 +3350,7 @@ msgstr "Buscar cuentas para seguir"
 msgid "Find people to follow"
 msgstr "Buscar personas para seguir"
 
-#: src/view/screens/Search/Search.tsx:595
+#: src/view/screens/Search/Search.tsx:596
 msgid "Find posts and users on Bluesky"
 msgstr "Buscar publicaciones y usuarios en Bluesky"
 
@@ -4231,7 +4239,7 @@ msgstr "Más grande"
 
 #: src/screens/Hashtag.tsx:95
 #: src/screens/Topic.tsx:77
-#: src/view/screens/Search/Search.tsx:509
+#: src/view/screens/Search/Search.tsx:510
 msgid "Latest"
 msgstr "Último"
 
@@ -4288,7 +4296,7 @@ msgstr "Dejar chat"
 msgid "Leave conversation"
 msgstr "Dejar conversación"
 
-#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:83
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:84
 msgid "Leave them all unchecked to see any language."
 msgstr "Déjalos todos sin marcar para ver cualquier idioma."
 
@@ -4438,7 +4446,7 @@ msgstr "Lista de eliminados"
 msgid "List has been hidden"
 msgstr "Se ha ocultado la lista"
 
-#: src/view/screens/ProfileList.tsx:168
+#: src/view/screens/ProfileList.tsx:170
 msgid "List Hidden"
 msgstr "Lista oculta"
 
@@ -4602,7 +4610,7 @@ msgid "Mentions"
 msgstr "Menciones"
 
 #: src/components/Menu/index.tsx:96
-#: src/view/screens/Search/Search.tsx:863
+#: src/view/screens/Search/Search.tsx:864
 msgid "Menu"
 msgstr "Menú"
 
@@ -5149,9 +5157,9 @@ msgid "No results found for \"{query}\""
 msgstr "No se han encontrado resultados para \"{query}\""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
-#: src/view/screens/Search/Search.tsx:228
-#: src/view/screens/Search/Search.tsx:267
-#: src/view/screens/Search/Search.tsx:313
+#: src/view/screens/Search/Search.tsx:229
+#: src/view/screens/Search/Search.tsx:268
+#: src/view/screens/Search/Search.tsx:314
 msgid "No results found for {query}"
 msgstr "No se han encontrado resultados para {query}"
 
@@ -5706,7 +5714,7 @@ msgid "Pause video"
 msgstr "Pausar video"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/Search/Search.tsx:519
+#: src/view/screens/Search/Search.tsx:520
 msgid "People"
 msgstr "Personas"
 
@@ -5943,7 +5951,7 @@ msgstr "Ajustes de interacción de la publicación"
 msgid "Post language"
 msgstr "Lenguaje de la publicación"
 
-#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:76
+#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:77
 msgid "Post Languages"
 msgstr "Lenguajes de la publicación"
 
@@ -5966,7 +5974,6 @@ msgstr "Publicaciones"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
 #: src/view/screens/Profile.tsx:231
-#: src/view/screens/ProfileList.tsx:162
 msgid "Posts"
 msgstr "Publicaciones"
 
@@ -6226,7 +6233,7 @@ msgstr "Razón:"
 #~ msgid "Reason: {0}"
 #~ msgstr ""
 
-#: src/view/screens/Search/Search.tsx:1041
+#: src/view/screens/Search/Search.tsx:1042
 msgid "Recent Searches"
 msgstr "Búsquedas Recientes"
 
@@ -6327,11 +6334,11 @@ msgstr "Eliminar la imagen"
 msgid "Remove mute word from your list"
 msgstr "Eliminar palabra silenciada de tu lista"
 
-#: src/view/screens/Search/Search.tsx:1089
+#: src/view/screens/Search/Search.tsx:1090
 msgid "Remove profile"
 msgstr "Eliminar perfil"
 
-#: src/view/screens/Search/Search.tsx:1091
+#: src/view/screens/Search/Search.tsx:1092
 msgid "Remove profile from search history"
 msgstr "Eliminar perfil del historial de búsqueda"
 
@@ -6853,7 +6860,7 @@ msgstr "Desplazar hacia arriba"
 #: src/components/forms/SearchInput.tsx:36
 #: src/Navigation.tsx:599
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
-#: src/view/screens/Search/Search.tsx:577
+#: src/view/screens/Search/Search.tsx:578
 #: src/view/shell/bottom-bar/BottomBar.tsx:183
 #: src/view/shell/desktop/LeftNav.tsx:407
 #: src/view/shell/Drawer.tsx:365
@@ -6876,7 +6883,7 @@ msgstr "Buscar \"{interestsDisplayName}\"{activeText}"
 msgid "Search for \"{query}\""
 msgstr "Buscar \"{query}\""
 
-#: src/view/screens/Search/Search.tsx:987
+#: src/view/screens/Search/Search.tsx:988
 msgid "Search for \"{searchText}\""
 msgstr "Buscar \"{searchText}\""
 
@@ -7720,10 +7727,12 @@ msgstr "Iniciar un nuevo chat"
 
 #: src/view/screens/ProfileList.tsx:817
 #: src/view/screens/ProfileList.tsx:938
-msgid "Start adding people"
-msgstr "Empieza a añadir personas"
+#~ msgid "Start adding people"
+#~ msgstr "Empieza a añadir personas"
 
+#: src/view/screens/ProfileList.tsx:817
 #: src/view/screens/ProfileList.tsx:824
+#: src/view/screens/ProfileList.tsx:938
 #: src/view/screens/ProfileList.tsx:945
 msgid "Start adding people!"
 msgstr "¡Empieza a añadir personas!"
@@ -8600,7 +8609,7 @@ msgstr "Alternar para habilitar o deshabilitar contenido para adultos"
 
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
-#: src/view/screens/Search/Search.tsx:499
+#: src/view/screens/Search/Search.tsx:500
 msgid "Top"
 msgstr "Top"
 
@@ -9353,7 +9362,7 @@ msgstr "Estamos teniendo problemas de red, inténtalo de nuevo"
 msgid "We're so excited to have you join us!"
 msgstr "¡Es nuestro placer tenerte aquí!"
 
-#: src/view/screens/ProfileList.tsx:109
+#: src/view/screens/ProfileList.tsx:112
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
 msgstr "Lo sentimos, pero no pudimos resolver esta lista. Si esto persiste, por favor, contacta al creador de la lista, @{handleOrDid}."
 
@@ -9361,7 +9370,7 @@ msgstr "Lo sentimos, pero no pudimos resolver esta lista. Si esto persiste, por 
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "Lo sentimos, pero no pudimos cargar tus palabras silenciadas en este momento. Por favor, inténtalo de nuevo."
 
-#: src/view/screens/Search/Search.tsx:201
+#: src/view/screens/Search/Search.tsx:202
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Lo sentimos, pero no se ha podido completar tu búsqueda. Inténtalo de nuevo en unos minutos."
 
@@ -9408,11 +9417,11 @@ msgstr "Sobre qué está publicando la gente."
 msgid "What's up?"
 msgstr "¿Qué hay de nuevo?"
 
-#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:79
+#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:80
 msgid "Which languages are used in this post?"
 msgstr "¿En qué idioma está este post?"
 
-#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:78
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:79
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "¿Qué idiomas te gustaría ver en tus feeds?"
 
@@ -9497,7 +9506,7 @@ msgstr "Escritores"
 msgid "Wrong DID returned from server. Received: {0}"
 msgstr "DID equivocado devuelto por el servidor. Se recibió: {0}"
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:86
 msgid "Yes"
 msgstr "Sí"
 
