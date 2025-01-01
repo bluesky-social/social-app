@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-21 12:37+0900\n"
+"PO-Revision-Date: 2025-01-01 11:22+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade, Akamig\n"
 "Plural-Forms: \n"
@@ -370,7 +370,7 @@ msgstr "7일"
 msgid "About"
 msgstr "정보"
 
-#: src/view/screens/Search/Search.tsx:865
+#: src/view/screens/Search/Search.tsx:866
 msgid "Access navigation links and settings"
 msgstr "탐색 링크 및 설정으로 이동합니다"
 
@@ -753,8 +753,8 @@ msgstr "움직이는 GIF"
 msgid "Anti-Social Behavior"
 msgstr "반사회적 행위"
 
-#: src/view/screens/Search/Search.tsx:336
 #: src/view/screens/Search/Search.tsx:337
+#: src/view/screens/Search/Search.tsx:338
 msgid "Any language"
 msgstr "모든 언어"
 
@@ -885,9 +885,9 @@ msgstr "이 게시물을 삭제하시겠습니까?"
 msgid "Are you sure?"
 msgstr "정말인가요?"
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:61
-msgid "Are you writing in <0>{0}</0>?"
-msgstr "{0}(으)로 쓰고 있나요?"
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:69
+msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
+msgstr "<0>{suggestedLanguageName}</0>(으)로 쓰고 있나요?"
 
 #: src/screens/Onboarding/index.tsx:23
 #: src/screens/Onboarding/state.ts:95
@@ -1174,7 +1174,7 @@ msgstr "카메라"
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:213
-#: src/view/screens/Search/Search.tsx:894
+#: src/view/screens/Search/Search.tsx:895
 msgid "Cancel"
 msgstr "취소"
 
@@ -1207,7 +1207,7 @@ msgid "Cancel reactivation and log out"
 msgstr "재활성화 취소 및 로그아웃"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:886
+#: src/view/screens/Search/Search.tsx:887
 msgid "Cancel search"
 msgstr "검색 취소"
 
@@ -1267,9 +1267,9 @@ msgstr "내 이메일 변경하기"
 msgid "Change Password"
 msgstr "비밀번호 변경"
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:74
-msgid "Change post language to {0}"
-msgstr "게시물 언어를 {0}(으)로 변경"
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:82
+msgid "Change post language to {suggestedLanguageName}"
+msgstr "게시물 언어를 {suggestedLanguageName}(으)로 변경"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
@@ -1611,7 +1611,7 @@ msgid "Content filters"
 msgstr "콘텐츠 필터"
 
 #: src/screens/Settings/LanguageSettings.tsx:251
-#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:75
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
 msgid "Content Languages"
 msgstr "콘텐츠 언어"
 
@@ -1823,7 +1823,7 @@ msgstr "{0}에 생성됨"
 
 #: src/screens/List/ListHiddenScreen.tsx:127
 msgid "Creator has been blocked"
-msgstr ""
+msgstr "리스트 작성자 차단됨"
 
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
@@ -2321,7 +2321,7 @@ msgstr "교육"
 
 #: src/screens/List/ListHiddenScreen.tsx:141
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
-msgstr ""
+msgstr "이 리스트의 작성자가 나를 차단했거나 내가 작성자를 차단했습니다."
 
 #: src/screens/Settings/AccountSettings.tsx:60
 #: src/screens/Signup/StepInfo/index.tsx:170
@@ -2506,7 +2506,7 @@ msgid "Error receiving captcha response."
 msgstr "캡차 응답을 수신하는 동안 오류가 발생했습니다."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:183
-#: src/view/screens/Search/Search.tsx:110
+#: src/view/screens/Search/Search.tsx:111
 msgid "Error:"
 msgstr "오류:"
 
@@ -2758,7 +2758,7 @@ msgstr "피드백을 보냈습니다!"
 #: src/view/screens/Feeds.tsx:508
 #: src/view/screens/Profile.tsx:235
 #: src/view/screens/SavedFeeds.tsx:96
-#: src/view/screens/Search/Search.tsx:525
+#: src/view/screens/Search/Search.tsx:526
 #: src/view/shell/desktop/LeftNav.tsx:445
 #: src/view/shell/Drawer.tsx:476
 msgid "Feeds"
@@ -2801,7 +2801,7 @@ msgstr "팔로우할 계정 찾아보기"
 msgid "Find people to follow"
 msgstr "팔로우할 사람 찾아보기"
 
-#: src/view/screens/Search/Search.tsx:595
+#: src/view/screens/Search/Search.tsx:596
 msgid "Find posts and users on Bluesky"
 msgstr "Bluesky에서 게시물 및 사용자 찾기"
 
@@ -3534,7 +3534,7 @@ msgstr "큼"
 
 #: src/screens/Hashtag.tsx:95
 #: src/screens/Topic.tsx:77
-#: src/view/screens/Search/Search.tsx:509
+#: src/view/screens/Search/Search.tsx:510
 msgid "Latest"
 msgstr "최신"
 
@@ -3591,7 +3591,7 @@ msgstr "대화 떠나기"
 msgid "Leave conversation"
 msgstr "대화 나가기"
 
-#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:83
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:84
 msgid "Leave them all unchecked to see any language."
 msgstr "모든 언어를 보려면 모두 선택하지 않은 상태로 두세요."
 
@@ -3713,7 +3713,7 @@ msgstr "리스트를 삭제했습니다"
 
 #: src/screens/List/ListHiddenScreen.tsx:129
 msgid "List has been hidden"
-msgstr "리스트가 숨겨졌습니다"
+msgstr "리스트 숨겨짐"
 
 #: src/view/screens/ProfileList.tsx:170
 msgid "List Hidden"
@@ -3871,7 +3871,7 @@ msgid "Mentions"
 msgstr "멘션"
 
 #: src/components/Menu/index.tsx:96
-#: src/view/screens/Search/Search.tsx:863
+#: src/view/screens/Search/Search.tsx:864
 msgid "Menu"
 msgstr "메뉴"
 
@@ -4351,9 +4351,9 @@ msgid "No results found for \"{query}\""
 msgstr "\"{query}\"에 대한 결과를 찾을 수 없습니다"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
-#: src/view/screens/Search/Search.tsx:228
-#: src/view/screens/Search/Search.tsx:267
-#: src/view/screens/Search/Search.tsx:313
+#: src/view/screens/Search/Search.tsx:229
+#: src/view/screens/Search/Search.tsx:268
+#: src/view/screens/Search/Search.tsx:314
 msgid "No results found for {query}"
 msgstr "{query}에 대한 결과를 찾을 수 없습니다"
 
@@ -4770,7 +4770,7 @@ msgid "Pause video"
 msgstr "동영상 일시 정지"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/Search/Search.tsx:519
+#: src/view/screens/Search/Search.tsx:520
 msgid "People"
 msgstr "사람들"
 
@@ -4990,7 +4990,7 @@ msgstr "게시물 상호작용 설정"
 msgid "Post language"
 msgstr "게시물 언어"
 
-#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:76
+#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:77
 msgid "Post Languages"
 msgstr "게시물 언어"
 
@@ -5214,7 +5214,7 @@ msgstr "Bluesky 서비스 이용약관 읽기"
 msgid "Reason:"
 msgstr "이유:"
 
-#: src/view/screens/Search/Search.tsx:1041
+#: src/view/screens/Search/Search.tsx:1042
 msgid "Recent Searches"
 msgstr "최근 검색"
 
@@ -5307,11 +5307,11 @@ msgstr "이미지 제거"
 msgid "Remove mute word from your list"
 msgstr "목록에서 뮤트한 단어 제거"
 
-#: src/view/screens/Search/Search.tsx:1089
+#: src/view/screens/Search/Search.tsx:1090
 msgid "Remove profile"
 msgstr "프로필 제거"
 
-#: src/view/screens/Search/Search.tsx:1091
+#: src/view/screens/Search/Search.tsx:1092
 msgid "Remove profile from search history"
 msgstr "검색 기록에서 프로필을 제거합니다"
 
@@ -5763,7 +5763,7 @@ msgstr "맨 위로 스크롤"
 #: src/components/forms/SearchInput.tsx:36
 #: src/Navigation.tsx:599
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
-#: src/view/screens/Search/Search.tsx:577
+#: src/view/screens/Search/Search.tsx:578
 #: src/view/shell/bottom-bar/BottomBar.tsx:183
 #: src/view/shell/desktop/LeftNav.tsx:407
 #: src/view/shell/Drawer.tsx:365
@@ -5786,7 +5786,7 @@ msgstr "\"{interestsDisplayName}\" 검색{activeText}"
 msgid "Search for \"{query}\""
 msgstr "\"{query}\"에 대한 검색 결과"
 
-#: src/view/screens/Search/Search.tsx:987
+#: src/view/screens/Search/Search.tsx:988
 msgid "Search for \"{searchText}\""
 msgstr "\"{searchText}\"에 대한 검색 결과"
 
@@ -7117,7 +7117,7 @@ msgstr "성인 콘텐츠 활성화 또는 비활성화 전환"
 
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
-#: src/view/screens/Search/Search.tsx:499
+#: src/view/screens/Search/Search.tsx:500
 msgid "Top"
 msgstr "인기"
 
@@ -7770,7 +7770,7 @@ msgstr "죄송하지만 이 리스트를 불러올 수 없습니다. 이 문제�
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "죄송하지만 현재 뮤트한 단어를 불러올 수 없습니다. 다시 시도해 주세요."
 
-#: src/view/screens/Search/Search.tsx:201
+#: src/view/screens/Search/Search.tsx:202
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "죄송하지만 검색을 완료할 수 없습니다. 몇 분 후에 다시 시도해 주세요."
 
@@ -7813,11 +7813,11 @@ msgstr "사람들이 무엇에 대해 게시하고 있는지 살펴보세요."
 msgid "What's up?"
 msgstr "무슨 일이 일어나고 있나요?"
 
-#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:79
+#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:80
 msgid "Which languages are used in this post?"
 msgstr "이 게시물에 어떤 언어가 사용되나요?"
 
-#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:78
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:79
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "알고리즘 피드에 어떤 언어를 표시하시겠습니까?"
 
@@ -7885,7 +7885,7 @@ msgstr "작가"
 msgid "Wrong DID returned from server. Received: {0}"
 msgstr "서버에서 잘못된 DID를 반환했습니다. 수신됨: {0}"
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:86
 msgid "Yes"
 msgstr "예"
 
