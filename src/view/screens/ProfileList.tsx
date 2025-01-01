@@ -79,6 +79,8 @@ import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {RichText} from '#/components/RichText'
 
+const SECTION_TITLES_CURATE = ['Posts', 'People']
+
 interface SectionRef {
   scrollToTop: () => void
 }
@@ -101,6 +103,7 @@ function ProfileListScreenInner(props: Props) {
   const {data: preferences} = usePreferencesQuery()
   const {data: list, error: listError} = useListQuery(resolvedUri?.uri)
   const moderationOpts = useModerationOpts()
+
   if (resolveError) {
     return (
       <Layout.Content>
@@ -159,7 +162,6 @@ function ProfileListScreenLoaded({
   const isHidden = list.labels?.findIndex(l => l.val === '!hide') !== -1
   const isOwner = currentAccount?.did === list.creator.did
   const scrollElRef = useAnimatedRef()
-  const SECTION_TITLES_CURATE = [_(msg`Posts`), _(msg`People`)]
 
   const moderation = React.useMemo(() => {
     return moderateUserList(list, moderationOpts)
@@ -812,7 +814,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
           <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
           {isOwner && (
             <NewButton
-              label={_(msg`Start adding people!`)}
+              label={_(msg`Start adding people`)}
               onPress={onPressAddUser}
               color="primary"
               size="small"
@@ -933,7 +935,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
           {isOwner && (
             <NewButton
               testID="emptyStateAddUserBtn"
-              label={_(msg`Start adding people!`)}
+              label={_(msg`Start adding people`)}
               onPress={onPressAddUser}
               color="primary"
               size="small"

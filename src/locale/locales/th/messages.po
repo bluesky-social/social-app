@@ -595,8 +595,8 @@ msgstr "เพิ่ม {displayName} ไปยังชุดเริ่มต
 msgid "Add a content warning"
 msgstr "เพื่มคำเตือนเกี่ยวกับเนื้อหา"
 
-#: src/view/screens/ProfileList.tsx:893
-#: src/view/screens/ProfileList.tsx:911
+#: src/view/screens/ProfileList.tsx:895
+#: src/view/screens/ProfileList.tsx:913
 msgid "Add a user to this list"
 msgstr "เพิ่มผู้ใช้ไปยังลิสต์นี้"
 
@@ -662,8 +662,8 @@ msgstr "เพิ่มคำและแท็กที่ไม่ออกเ
 msgid "Add new post"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:901
-#: src/view/screens/ProfileList.tsx:919
+#: src/view/screens/ProfileList.tsx:903
+#: src/view/screens/ProfileList.tsx:921
 msgid "Add people"
 msgstr ""
 
@@ -1223,15 +1223,15 @@ msgstr "บล็อกบัญชี"
 msgid "Block Account?"
 msgstr "บล็อกบัญชี?"
 
-#: src/view/screens/ProfileList.tsx:637
+#: src/view/screens/ProfileList.tsx:639
 msgid "Block accounts"
 msgstr "บล็อกบัญชี"
 
-#: src/view/screens/ProfileList.tsx:758
+#: src/view/screens/ProfileList.tsx:760
 msgid "Block list"
 msgstr "ลิสต์บล็อก"
 
-#: src/view/screens/ProfileList.tsx:753
+#: src/view/screens/ProfileList.tsx:755
 msgid "Block these accounts?"
 msgstr "บล็อกบัญชีเหล่านี้?"
 
@@ -1265,7 +1265,7 @@ msgstr "โพสต์ที่ถูกบล็อก"
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr "การบล็อกไม่ได้ป้องกันผู้ทำเครื่องหมายนี้จากการวางป้ายบนบัญชีของคุณ"
 
-#: src/view/screens/ProfileList.tsx:755
+#: src/view/screens/ProfileList.tsx:757
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "การบล็อกเป็นสาธารณะ บัญชีที่ถูกบล็อกไม่สามารถตอบในกระทู้ของคุณ, กล่าวถึงคุณ, หรือมีปฏิสัมพันธ์กับคุณได้"
 
@@ -2140,7 +2140,7 @@ msgstr "คัดลอกลิงก์"
 msgid "Copy Link"
 msgstr "คัดลอกลิงก์"
 
-#: src/view/screens/ProfileList.tsx:481
+#: src/view/screens/ProfileList.tsx:483
 msgid "Copy link to list"
 msgstr "คัดลอกลิงก์ไปยังลิสต์"
 
@@ -2184,7 +2184,7 @@ msgstr "ไม่สามารถออกจากการสนทนาไ
 msgid "Could not load feed"
 msgstr "ไม่สามารถโหลดฟีดได้"
 
-#: src/view/screens/ProfileList.tsx:998
+#: src/view/screens/ProfileList.tsx:1000
 msgid "Could not load list"
 msgstr "ไม่สามารถโหลดลิสต์ได้"
 
@@ -2362,7 +2362,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:665
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:661
-#: src/view/screens/ProfileList.tsx:737
+#: src/view/screens/ProfileList.tsx:739
 msgid "Delete"
 msgstr "ลบ"
 
@@ -2395,7 +2395,7 @@ msgstr "ลบบันทึกการประกาศแชท"
 msgid "Delete for me"
 msgstr "ลบสำหรับฉัน"
 
-#: src/view/screens/ProfileList.tsx:524
+#: src/view/screens/ProfileList.tsx:526
 msgid "Delete List"
 msgstr "ลบลิสต์"
 
@@ -2430,7 +2430,7 @@ msgstr "ลบชุดเริ่มต้น"
 msgid "Delete starter pack?"
 msgstr "ลบชุดเริ่มต้นหรือไม่?"
 
-#: src/view/screens/ProfileList.tsx:732
+#: src/view/screens/ProfileList.tsx:734
 msgid "Delete this list?"
 msgstr "ลบลิสต์นี้หรือไม่?"
 
@@ -2782,7 +2782,7 @@ msgstr "แก้ไขรูปภาพ"
 msgid "Edit interaction settings"
 msgstr "แก้ไขการตั้งค่าการโต้ตอบ"
 
-#: src/view/screens/ProfileList.tsx:512
+#: src/view/screens/ProfileList.tsx:514
 msgid "Edit list details"
 msgstr "แก้ไขรายละเอียดลิสต์"
 
@@ -3739,7 +3739,7 @@ msgstr "การละเมิดกฎหมายหรือข้อกำ
 #: src/screens/Profile/ProfileFeed/index.tsx:82
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
-#: src/view/screens/ProfileList.tsx:1007
+#: src/view/screens/ProfileList.tsx:1009
 msgid "Go back"
 msgstr "กลับ"
 
@@ -3750,7 +3750,7 @@ msgstr "กลับ"
 #: src/screens/Profile/ProfileFeed/index.tsx:87
 #: src/screens/StarterPack/StarterPackScreen.tsx:758
 #: src/view/screens/NotFound.tsx:56
-#: src/view/screens/ProfileList.tsx:1012
+#: src/view/screens/ProfileList.tsx:1014
 msgid "Go Back"
 msgstr "กลับ"
 
@@ -4065,7 +4065,7 @@ msgstr "หากข้อความแทนภาพยาว จะทำ�
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "หากคุณยังไม่บรรลุนิติภาวะตามกฎหมายของประเทศคุณ ควรให้ผู้ปกครองหรือผู้ดูแลตามกฎหมายรับทราบแทน"
 
-#: src/view/screens/ProfileList.tsx:734
+#: src/view/screens/ProfileList.tsx:736
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "หากคุณลบลิสต์นี้ คุณจะไม่สามารถนำกลับคืนมาได้"
 
@@ -4511,7 +4511,7 @@ msgstr "ลิสต์"
 msgid "List Avatar"
 msgstr "อวาตาร์ลิสต์"
 
-#: src/view/screens/ProfileList.tsx:416
+#: src/view/screens/ProfileList.tsx:418
 msgid "List blocked"
 msgstr "ลิสต์ถูกบล็อก"
 
@@ -4528,7 +4528,7 @@ msgstr ""
 msgid "List by you"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:453
+#: src/view/screens/ProfileList.tsx:455
 msgid "List deleted"
 msgstr "ลิสต์ถูกลบ"
 
@@ -4540,7 +4540,7 @@ msgstr "ลิสต์ถูกซ่อน"
 msgid "List Hidden"
 msgstr "ลิสต์ถูกซ่อน"
 
-#: src/view/screens/ProfileList.tsx:390
+#: src/view/screens/ProfileList.tsx:392
 msgid "List muted"
 msgstr "ลิสต์ถูกปิดเสียง"
 
@@ -4548,11 +4548,11 @@ msgstr "ลิสต์ถูกปิดเสียง"
 msgid "List Name"
 msgstr "ชื่อลิสต์"
 
-#: src/view/screens/ProfileList.tsx:429
+#: src/view/screens/ProfileList.tsx:431
 msgid "List unblocked"
 msgstr "ลิสต์ถูกปลดบล็อก"
 
-#: src/view/screens/ProfileList.tsx:403
+#: src/view/screens/ProfileList.tsx:405
 msgid "List unmuted"
 msgstr "ลิสต์เปิดเสียง"
 
@@ -4588,7 +4588,7 @@ msgstr "โหลดการแจ้งเตือนใหม่"
 #: src/screens/Profile/ProfileFeed/index.tsx:192
 #: src/screens/Profile/Sections/Feed.tsx:96
 #: src/view/com/feeds/FeedPage.tsx:143
-#: src/view/screens/ProfileList.tsx:847
+#: src/view/screens/ProfileList.tsx:849
 msgid "Load new posts"
 msgstr "โหลดโพสต์ใหม่"
 
@@ -4825,7 +4825,7 @@ msgid "More feeds"
 msgstr "ฟีตเพิ่มเติม"
 
 #: src/view/com/profile/ProfileMenu.tsx:179
-#: src/view/screens/ProfileList.tsx:719
+#: src/view/screens/ProfileList.tsx:721
 msgid "More options"
 msgstr "การตั้งค่าเพิ่มเติม"
 
@@ -4866,7 +4866,7 @@ msgstr "ปิดการมองเห็น {truncatedTag}"
 msgid "Mute Account"
 msgstr "ปิดการมองเห็นการฟีดโพสต์และเรื่องราว"
 
-#: src/view/screens/ProfileList.tsx:625
+#: src/view/screens/ProfileList.tsx:627
 msgid "Mute accounts"
 msgstr "ปิดการมองเห็นการฟีดโพสต์และเรื่องราวของบัญชีต่าง ๆ"
 
@@ -4891,7 +4891,7 @@ msgstr "ปิดการมองเห็นการสนทนา"
 msgid "Mute in:"
 msgstr "ปิดการมองเห็นคำ"
 
-#: src/view/screens/ProfileList.tsx:748
+#: src/view/screens/ProfileList.tsx:750
 msgid "Mute list"
 msgstr "รายชื่อที่ปิดการมองเห็น"
 
@@ -4900,7 +4900,7 @@ msgstr "รายชื่อที่ปิดการมองเห็น"
 #~ msgid "Mute notifications"
 #~ msgstr ""
 
-#: src/view/screens/ProfileList.tsx:743
+#: src/view/screens/ProfileList.tsx:745
 msgid "Mute these accounts?"
 msgstr "ต้องการปิดการมองเห็นบัญชีนี้หรือไม่?"
 
@@ -4963,7 +4963,7 @@ msgstr "ปิดการมองเห็นโดย \"{0}\""
 msgid "Muted words & tags"
 msgstr "ปิดการมองเห็นคำและแท็ก"
 
-#: src/view/screens/ProfileList.tsx:745
+#: src/view/screens/ProfileList.tsx:747
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr "การปิดเสียงเป็นเรื่องส่วนตัว บัญชีที่ถูกปิดเสียงสามารถโต้ตอบกับคุณได้ แต่คุณจะไม่เห็นโพสต์หรือได้รับการแจ้งเตือนจากเขา"
 
@@ -5098,8 +5098,8 @@ msgstr "รหัสผ่านใหม่"
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
 #: src/view/screens/Profile.tsx:495
-#: src/view/screens/ProfileList.tsx:248
-#: src/view/screens/ProfileList.tsx:281
+#: src/view/screens/ProfileList.tsx:250
+#: src/view/screens/ProfileList.tsx:283
 msgid "New post"
 msgstr "โพสต์ใหม่"
 
@@ -5814,7 +5814,6 @@ msgid "Pause video"
 msgstr "พักวีดีโอ"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/ProfileList.tsx:162
 #: src/view/screens/Search/Search.tsx:519
 msgid "People"
 msgstr "ผู้คน"
@@ -5857,7 +5856,7 @@ msgstr "ภาพที่เหมาะสำหรับเนื้อหา
 msgid "Pin feed"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:683
+#: src/view/screens/ProfileList.tsx:685
 msgid "Pin to home"
 msgstr "ปักหมุดไปที่หน้าแรก"
 
@@ -5883,7 +5882,7 @@ msgstr ""
 msgid "Pinned Feeds"
 msgstr "ฟีตที่ปักหมุด"
 
-#: src/view/screens/ProfileList.tsx:349
+#: src/view/screens/ProfileList.tsx:351
 msgid "Pinned to your feeds"
 msgstr "ปักหมุดไปที่ฟีต"
 
@@ -6419,7 +6418,7 @@ msgstr "ลบฟีตหรือไม่?"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:324
 #: src/view/com/feeds/FeedSourceCard.tsx:190
 #: src/view/com/feeds/FeedSourceCard.tsx:268
-#: src/view/screens/ProfileList.tsx:496
+#: src/view/screens/ProfileList.tsx:498
 #: src/view/screens/SavedFeeds.tsx:342
 msgid "Remove from my feeds"
 msgstr "ลบจากฟีตของฉัน"
@@ -6498,7 +6497,7 @@ msgstr "ลบจากฟีตที่เซฟ"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:126
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
-#: src/view/screens/ProfileList.tsx:380
+#: src/view/screens/ProfileList.tsx:382
 msgid "Removed from your feeds"
 msgstr "ลบจากฟีตของคุณ"
 
@@ -6645,7 +6644,7 @@ msgstr "รายงานการสนทนา"
 msgid "Report feed"
 msgstr "รายงานฟีด"
 
-#: src/view/screens/ProfileList.tsx:538
+#: src/view/screens/ProfileList.tsx:540
 msgid "Report List"
 msgstr "รายงานลิสต์"
 
@@ -6854,7 +6853,7 @@ msgstr "ลองใหม่อีกครั้ง"
 #: src/components/Error.tsx:73
 #: src/screens/List/ListHiddenScreen.tsx:216
 #: src/screens/StarterPack/StarterPackScreen.tsx:752
-#: src/view/screens/ProfileList.tsx:1008
+#: src/view/screens/ProfileList.tsx:1010
 msgid "Return to previous page"
 msgstr "กลับไปยังหน้าก่อนหน้า"
 
@@ -6948,7 +6947,7 @@ msgstr "บันทึกไปที่แกลลอรี่"
 #~ msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:135
-#: src/view/screens/ProfileList.tsx:360
+#: src/view/screens/ProfileList.tsx:362
 msgid "Saved to your feeds"
 msgstr "บันทึกไปที่ฟีตของคุณ"
 
@@ -6976,7 +6975,7 @@ msgstr "ทักทายสิ!"
 msgid "Science"
 msgstr "วิทยาศาสตร์"
 
-#: src/view/screens/ProfileList.tsx:965
+#: src/view/screens/ProfileList.tsx:967
 msgid "Scroll to top"
 msgstr "เลื่อนไปข้างบนสุด"
 
@@ -7385,7 +7384,7 @@ msgstr "การชักชวนทางเพศ"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:346
-#: src/view/screens/ProfileList.tsx:481
+#: src/view/screens/ProfileList.tsx:483
 msgid "Share"
 msgstr "แชร์"
 
@@ -7854,15 +7853,13 @@ msgstr "กีฬา"
 msgid "Start a new chat"
 msgstr "เริ่มแชทใหม่"
 
-#: src/view/screens/ProfileList.tsx:814
-#: src/view/screens/ProfileList.tsx:933
-#~ msgid "Start adding people"
-#~ msgstr ""
+#: src/view/screens/ProfileList.tsx:817
+#: src/view/screens/ProfileList.tsx:938
+msgid "Start adding people"
+msgstr ""
 
-#: src/view/screens/ProfileList.tsx:815
-#: src/view/screens/ProfileList.tsx:822
-#: src/view/screens/ProfileList.tsx:936
-#: src/view/screens/ProfileList.tsx:943
+#: src/view/screens/ProfileList.tsx:824
+#: src/view/screens/ProfileList.tsx:945
 msgid "Start adding people!"
 msgstr ""
 
@@ -7942,7 +7939,7 @@ msgstr "Storybook"
 msgid "Submit"
 msgstr "ส่ง"
 
-#: src/view/screens/ProfileList.tsx:710
+#: src/view/screens/ProfileList.tsx:712
 msgid "Subscribe"
 msgstr "สมัครสมาชิก"
 
@@ -7963,7 +7960,7 @@ msgstr "สมัครสมาชิกผู้สร้างป้ายก
 msgid "Subscribe to this labeler"
 msgstr "สมัครสมาชิกผู้สร้างป้ายกำกับนี้"
 
-#: src/view/screens/ProfileList.tsx:706
+#: src/view/screens/ProfileList.tsx:708
 msgid "Subscribe to this list"
 msgstr "สมัครสมาชิกในลิสต์นี้"
 
@@ -8315,8 +8312,8 @@ msgstr "เกิดปัญหาในการเชื่อมต่อก
 #~ msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:177
-#: src/view/screens/ProfileList.tsx:363
-#: src/view/screens/ProfileList.tsx:382
+#: src/view/screens/ProfileList.tsx:365
+#: src/view/screens/ProfileList.tsx:384
 #: src/view/screens/SavedFeeds.tsx:85
 msgid "There was an issue contacting the server"
 msgstr "เกิดปัญหาในการติดต่อเซิร์ฟเวอร์"
@@ -8398,10 +8395,10 @@ msgstr "เกิดปัญหาที่ {0}!"
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
-#: src/view/screens/ProfileList.tsx:394
-#: src/view/screens/ProfileList.tsx:407
-#: src/view/screens/ProfileList.tsx:420
-#: src/view/screens/ProfileList.tsx:433
+#: src/view/screens/ProfileList.tsx:396
+#: src/view/screens/ProfileList.tsx:409
+#: src/view/screens/ProfileList.tsx:422
+#: src/view/screens/ProfileList.tsx:435
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "เกิดปัญหาการเชื่อมต่อ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณและลองอีกครั้ง"
 
@@ -8503,7 +8500,7 @@ msgstr ""
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/screens/Profile/ProfileFeed/index.tsx:170
-#: src/view/screens/ProfileList.tsx:812
+#: src/view/screens/ProfileList.tsx:814
 msgid "This feed is empty."
 msgstr ""
 
@@ -8559,7 +8556,7 @@ msgstr ""
 #~ msgid "This list is empty!"
 #~ msgstr ""
 
-#: src/view/screens/ProfileList.tsx:931
+#: src/view/screens/ProfileList.tsx:933
 msgid "This list is empty."
 msgstr ""
 
@@ -8797,11 +8794,11 @@ msgstr ""
 msgid "Type:"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:588
+#: src/view/screens/ProfileList.tsx:590
 msgid "Un-block list"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:573
+#: src/view/screens/ProfileList.tsx:575
 msgid "Un-mute list"
 msgstr ""
 
@@ -8829,7 +8826,7 @@ msgstr "ไม่สามารถลบได้"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:197
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
 #: src/view/com/profile/ProfileMenu.tsx:341
-#: src/view/screens/ProfileList.tsx:692
+#: src/view/screens/ProfileList.tsx:694
 msgid "Unblock"
 msgstr "ปลดบล็อก"
 
@@ -8893,7 +8890,7 @@ msgstr ""
 #~ msgstr "เลิกชอบฟีดนี้"
 
 #: src/components/TagMenu/index.tsx:264
-#: src/view/screens/ProfileList.tsx:699
+#: src/view/screens/ProfileList.tsx:701
 msgid "Unmute"
 msgstr "เปิดเสียง"
 
@@ -8937,7 +8934,7 @@ msgstr "เปิดเสียงวิดีโอ"
 #~ msgid "Unmuted"
 #~ msgstr ""
 
-#: src/view/screens/ProfileList.tsx:683
+#: src/view/screens/ProfileList.tsx:685
 msgid "Unpin"
 msgstr "เลิกปักหมุด"
 
@@ -8956,7 +8953,7 @@ msgstr "เลิกปักหมุดจากหน้าแรก"
 msgid "Unpin from profile"
 msgstr "เลิกปักหมุดจากโปรไฟล์"
 
-#: src/view/screens/ProfileList.tsx:553
+#: src/view/screens/ProfileList.tsx:555
 msgid "Unpin moderation list"
 msgstr "เลิกปักหมุดจากลิสต์การModerate"
 
@@ -8964,7 +8961,7 @@ msgstr "เลิกปักหมุดจากลิสต์การModera
 msgid "Unpinned {0} from Home"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:350
+#: src/view/screens/ProfileList.tsx:352
 msgid "Unpinned from your feeds"
 msgstr "เลิกปักหมุดจากฟีดของคุณ"
 

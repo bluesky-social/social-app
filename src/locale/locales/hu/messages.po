@@ -493,8 +493,8 @@ msgstr "{displayName} felvétele egy kezdőcsomaghoz"
 msgid "Add a content warning"
 msgstr "Tartalomfigyelmeztetés felvétele"
 
-#: src/view/screens/ProfileList.tsx:893
-#: src/view/screens/ProfileList.tsx:911
+#: src/view/screens/ProfileList.tsx:895
+#: src/view/screens/ProfileList.tsx:913
 msgid "Add a user to this list"
 msgstr "Felhasználó felvétele a listára"
 
@@ -548,8 +548,8 @@ msgstr "Elnémított szavak és címkék felvétele"
 msgid "Add new post"
 msgstr "Válaszlánc folytatása"
 
-#: src/view/screens/ProfileList.tsx:901
-#: src/view/screens/ProfileList.tsx:919
+#: src/view/screens/ProfileList.tsx:903
+#: src/view/screens/ProfileList.tsx:921
 msgid "Add people"
 msgstr "Személyek felvétele"
 
@@ -1089,7 +1089,7 @@ msgstr "Letiltott bejegyzés."
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr "A feljegyző letiltása nem akadályozza meg abban, hogy feljegyzéseket helyezzen a fiókodra."
 
-#: src/view/screens/ProfileList.tsx:755
+#: src/view/screens/ProfileList.tsx:757
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "A letiltás nyilvános. Az általad letiltott fiókok nem képesek válaszolni a bejegyzéseidre, megemlíteni Téged vagy bármilyen egyéb módon kapcsolatba lépni Veled."
 
@@ -3228,7 +3228,7 @@ msgstr "A törvény vagy a felhasználási feltételek egyértelmű megszegése"
 #: src/screens/Profile/ProfileFeed/index.tsx:82
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
-#: src/view/screens/ProfileList.tsx:1007
+#: src/view/screens/ProfileList.tsx:1009
 msgid "Go back"
 msgstr "Vissza"
 
@@ -3239,7 +3239,7 @@ msgstr "Vissza"
 #: src/screens/Profile/ProfileFeed/index.tsx:87
 #: src/screens/StarterPack/StarterPackScreen.tsx:758
 #: src/view/screens/NotFound.tsx:56
-#: src/view/screens/ProfileList.tsx:1012
+#: src/view/screens/ProfileList.tsx:1014
 msgid "Go Back"
 msgstr "Vissza"
 
@@ -3516,6 +3516,10 @@ msgstr "Hosszabb helyettesítő szövegek mutatása/levágása"
 
 #~ msgid "If none are selected, suitable for all ages."
 #~ msgstr "Ha egyet sem jelölsz ki, akkor a tartalom minden korosztály számára megtekinthető marad."
+
+#: src/screens/Signup/StepInfo/Policies.tsx:110
+msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
+msgstr "Ha még nem töltötted be az országod által meghatározott nagykorúsági életkort, akkor az alábbi feltételeket a szülődnek vagy törvényes gondviselődnek kell elolvasnia."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:110
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
@@ -3994,7 +3998,7 @@ msgstr "Új értesítések betöltése"
 #: src/screens/Profile/ProfileFeed/index.tsx:192
 #: src/screens/Profile/Sections/Feed.tsx:96
 #: src/view/com/feeds/FeedPage.tsx:143
-#: src/view/screens/ProfileList.tsx:847
+#: src/view/screens/ProfileList.tsx:849
 msgid "Load new posts"
 msgstr "Új bejegyzések betöltése"
 
@@ -4337,7 +4341,7 @@ msgstr "Némítás forrása: {0}"
 msgid "Muted words & tags"
 msgstr "Elnémított szavak és címkék"
 
-#: src/view/screens/ProfileList.tsx:745
+#: src/view/screens/ProfileList.tsx:747
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr "Egy fiók elnémítása nem nyilvános. Egy elnémított felhasználó képes a fiókoddal kapcsolatba lépni, de ezekről a történésekről nem fogsz értesítéseket kapni és az összes bejegyzésük el lesz rejtve a számodra."
 
@@ -4462,8 +4466,8 @@ msgstr "Új jelszó"
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
 #: src/view/screens/Profile.tsx:495
-#: src/view/screens/ProfileList.tsx:248
-#: src/view/screens/ProfileList.tsx:281
+#: src/view/screens/ProfileList.tsx:250
+#: src/view/screens/ProfileList.tsx:283
 msgid "New post"
 msgstr "Új bejegyzés"
 
@@ -5642,7 +5646,7 @@ msgstr "Hírfolyam eltávolítása"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:324
 #: src/view/com/feeds/FeedSourceCard.tsx:190
 #: src/view/com/feeds/FeedSourceCard.tsx:268
-#: src/view/screens/ProfileList.tsx:496
+#: src/view/screens/ProfileList.tsx:498
 #: src/view/screens/SavedFeeds.tsx:342
 msgid "Remove from my feeds"
 msgstr "Eltávolítás a hírfolyamgyűjteményből"
@@ -6855,14 +6859,13 @@ msgstr "Sport"
 msgid "Start a new chat"
 msgstr "Új csevegés indítása"
 
-#: src/view/screens/ProfileList.tsx:NaN
-#~ msgid "Start adding people"
-#~ msgstr "Személyek felvétele"
+#: src/view/screens/ProfileList.tsx:817
+#: src/view/screens/ProfileList.tsx:938
+msgid "Start adding people"
+msgstr "Személyek felvétele"
 
-#: src/view/screens/ProfileList.tsx:815
-#: src/view/screens/ProfileList.tsx:822
-#: src/view/screens/ProfileList.tsx:936
-#: src/view/screens/ProfileList.tsx:943
+#: src/view/screens/ProfileList.tsx:824
+#: src/view/screens/ProfileList.tsx:945
 msgid "Start adding people!"
 msgstr "Vegyél fel személyeket!"
 
@@ -7240,8 +7243,8 @@ msgid "There was an issue connecting to Tenor."
 msgstr "Megszakadt a kapcsolat a Tenorral."
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:177
-#: src/view/screens/ProfileList.tsx:363
-#: src/view/screens/ProfileList.tsx:382
+#: src/view/screens/ProfileList.tsx:365
+#: src/view/screens/ProfileList.tsx:384
 #: src/view/screens/SavedFeeds.tsx:85
 msgid "There was an issue contacting the server"
 msgstr "Megszakadt a kapcsolat a kiszolgálóval"
@@ -7318,10 +7321,10 @@ msgstr "Hiba történt! {0}"
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
-#: src/view/screens/ProfileList.tsx:394
-#: src/view/screens/ProfileList.tsx:407
-#: src/view/screens/ProfileList.tsx:420
-#: src/view/screens/ProfileList.tsx:433
+#: src/view/screens/ProfileList.tsx:396
+#: src/view/screens/ProfileList.tsx:409
+#: src/view/screens/ProfileList.tsx:422
+#: src/view/screens/ProfileList.tsx:435
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "Hiba történt. Ellenőrizd az internetkapcsolatot, majd próbáld újra!"
 
@@ -7448,6 +7451,9 @@ msgstr "Ez a hivatkozás az alábbi honlapra mutat:"
 #: src/screens/List/ListHiddenScreen.tsx:146
 msgid "This list - created by <0>{0}</0> - contains possible violations of Bluesky's community guidelines in its name or description."
 msgstr "Ennek a(z) <0>{0}</0> által létrehozott listának a címe vagy leírása lehetséges, hogy megsérti a Bluesky közösségi irányelveit."
+
+#~ msgid "This list is empty!"
+#~ msgstr "Ez a lista üres."
 
 #~ msgid "This list is empty!"
 #~ msgstr "Ez a lista üres."
@@ -7750,7 +7756,7 @@ msgstr "Kedvelés visszavonása ({0} kedvelés)"
 #~ msgstr "Mégse tetszik a hírfolyam"
 
 #: src/components/TagMenu/index.tsx:264
-#: src/view/screens/ProfileList.tsx:699
+#: src/view/screens/ProfileList.tsx:701
 msgid "Unmute"
 msgstr "Némítás feloldása"
 
@@ -8302,7 +8308,7 @@ msgstr "Hálózati hiba történt. Próbáld újra!"
 msgid "We're so excited to have you join us!"
 msgstr "Örvendünk, hogy megismerhetünk!"
 
-#: src/view/screens/ProfileList.tsx:109
+#: src/view/screens/ProfileList.tsx:112
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
 msgstr "Sajnáljuk, de a lista lekérése meghiúsult. Ha a probléma fennáll, vedd fel a kapcsolatot a lista szerzőjével: @{handleOrDid}"
 

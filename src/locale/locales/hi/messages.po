@@ -542,8 +542,8 @@ msgstr "स्टार्टर पैक में {displayName} को जो
 msgid "Add a content warning"
 msgstr "सामग्री चेतावनी जोड़ें"
 
-#: src/view/screens/ProfileList.tsx:893
-#: src/view/screens/ProfileList.tsx:911
+#: src/view/screens/ProfileList.tsx:895
+#: src/view/screens/ProfileList.tsx:913
 msgid "Add a user to this list"
 msgstr "इस सूची में किसी को जोड़ें"
 
@@ -618,8 +618,8 @@ msgstr "म्यूट किए गए शब्द और टैग जोड़
 msgid "Add new post"
 msgstr "नया पोस्ट जोड़ें"
 
-#: src/view/screens/ProfileList.tsx:901
-#: src/view/screens/ProfileList.tsx:919
+#: src/view/screens/ProfileList.tsx:903
+#: src/view/screens/ProfileList.tsx:921
 msgid "Add people"
 msgstr ""
 
@@ -1147,15 +1147,15 @@ msgstr "खाता अवरुद्ध करें"
 msgid "Block Account?"
 msgstr "खाता अवरुद्ध करें?"
 
-#: src/view/screens/ProfileList.tsx:637
+#: src/view/screens/ProfileList.tsx:639
 msgid "Block accounts"
 msgstr "खाता अवरुद्ध करें"
 
-#: src/view/screens/ProfileList.tsx:758
+#: src/view/screens/ProfileList.tsx:760
 msgid "Block list"
 msgstr "अवरोध की सूची"
 
-#: src/view/screens/ProfileList.tsx:753
+#: src/view/screens/ProfileList.tsx:755
 msgid "Block these accounts?"
 msgstr "खाता ब्लॉक करें?"
 
@@ -1189,7 +1189,7 @@ msgstr "अवरुद्ध पोस्ट।"
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr "अवरुद्ध करने पर भी यह लेबलकर्ता आपके खाते पर लेबल लगा सकता है।"
 
-#: src/view/screens/ProfileList.tsx:755
+#: src/view/screens/ProfileList.tsx:757
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "अवरोधन सार्वजनिक है. अवरुद्ध खाते आपके थ्रेड्स में उत्तर नहीं दे सकते, आपका उल्लेख नहीं कर सकते, या अन्यथा आपसे संपर्क नहीं कर सकते।"
 
@@ -2009,7 +2009,7 @@ msgstr "लिंक कॉपी करें"
 msgid "Copy Link"
 msgstr "लिंक कॉपी करें"
 
-#: src/view/screens/ProfileList.tsx:481
+#: src/view/screens/ProfileList.tsx:483
 msgid "Copy link to list"
 msgstr "सूची पर लिंक कॉपी करें"
 
@@ -2053,7 +2053,7 @@ msgstr "बातचीत छोड़ी नहीं जा सकी"
 msgid "Could not load feed"
 msgstr "फ़ीड लोड नहीं किया जा सका"
 
-#: src/view/screens/ProfileList.tsx:998
+#: src/view/screens/ProfileList.tsx:1000
 msgid "Could not load list"
 msgstr "सूची लोड नहीं किया जा सका"
 
@@ -2235,7 +2235,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:665
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:661
-#: src/view/screens/ProfileList.tsx:737
+#: src/view/screens/ProfileList.tsx:739
 msgid "Delete"
 msgstr "मिटाएँ"
 
@@ -2268,7 +2268,7 @@ msgstr "बातचीत घोषणा रेकॉर्ड मिटाए
 msgid "Delete for me"
 msgstr "मेरे लिए मिटाएँ"
 
-#: src/view/screens/ProfileList.tsx:524
+#: src/view/screens/ProfileList.tsx:526
 msgid "Delete List"
 msgstr "सूची मिटाएँ"
 
@@ -2307,7 +2307,7 @@ msgstr "स्टार्टर पैक मिटाएँ"
 msgid "Delete starter pack?"
 msgstr "स्टार्टर पैक मिटाएँ?"
 
-#: src/view/screens/ProfileList.tsx:732
+#: src/view/screens/ProfileList.tsx:734
 msgid "Delete this list?"
 msgstr "यह सूची मिटाएँ?"
 
@@ -2639,7 +2639,7 @@ msgstr "छवि संपादित करें"
 msgid "Edit interaction settings"
 msgstr "संपर्क सेटिंग संपादित करें"
 
-#: src/view/screens/ProfileList.tsx:512
+#: src/view/screens/ProfileList.tsx:514
 msgid "Edit list details"
 msgstr "सूची विवरण संपादित करें"
 
@@ -3538,7 +3538,7 @@ msgstr "क़ानून या सेवा की शर्तों का स
 #: src/screens/Profile/ProfileFeed/index.tsx:82
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
-#: src/view/screens/ProfileList.tsx:1007
+#: src/view/screens/ProfileList.tsx:1009
 msgid "Go back"
 msgstr "वापस जाएँ"
 
@@ -3549,7 +3549,7 @@ msgstr "वापस जाएँ"
 #: src/screens/Profile/ProfileFeed/index.tsx:87
 #: src/screens/StarterPack/StarterPackScreen.tsx:758
 #: src/view/screens/NotFound.tsx:56
-#: src/view/screens/ProfileList.tsx:1012
+#: src/view/screens/ProfileList.tsx:1014
 msgid "Go Back"
 msgstr "वापस जाएँ"
 
@@ -3850,7 +3850,7 @@ msgstr "यदि वैकल्पिक पाठ लंबा है, बड़
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "यदि आप अपने देश के क़ानून के अनुसार अभी वयस्क नहीं है, आपके माता-पिता या क़ानूनी अभिभावक को आपकी जगह इन शर्तों को पढ़ना होगा।"
 
-#: src/view/screens/ProfileList.tsx:734
+#: src/view/screens/ProfileList.tsx:736
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "यदि आप इस सूची को मिटते हैं, आप उसे वापस नहीं ला पाएँगे।"
 
@@ -4293,7 +4293,7 @@ msgstr "सूची"
 msgid "List Avatar"
 msgstr "सूची अवतार"
 
-#: src/view/screens/ProfileList.tsx:416
+#: src/view/screens/ProfileList.tsx:418
 msgid "List blocked"
 msgstr "सूची अवरुद्ध की गई"
 
@@ -4310,7 +4310,7 @@ msgstr ""
 msgid "List by you"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:453
+#: src/view/screens/ProfileList.tsx:455
 msgid "List deleted"
 msgstr "सूची मिटाई गई"
 
@@ -4322,7 +4322,7 @@ msgstr "सूची छिपा दी गई"
 msgid "List Hidden"
 msgstr "सूची छिपाई गई"
 
-#: src/view/screens/ProfileList.tsx:390
+#: src/view/screens/ProfileList.tsx:392
 msgid "List muted"
 msgstr "सूची म्यूट की गई"
 
@@ -4330,11 +4330,11 @@ msgstr "सूची म्यूट की गई"
 msgid "List Name"
 msgstr "सूची का नाम"
 
-#: src/view/screens/ProfileList.tsx:429
+#: src/view/screens/ProfileList.tsx:431
 msgid "List unblocked"
 msgstr "सूची अनअवरुद्ध की गई"
 
-#: src/view/screens/ProfileList.tsx:403
+#: src/view/screens/ProfileList.tsx:405
 msgid "List unmuted"
 msgstr "सूची अनम्यूट की गई"
 
@@ -4375,7 +4375,7 @@ msgstr "नई अधिसूचनाएँ लोड करें"
 #: src/screens/Profile/ProfileFeed/index.tsx:192
 #: src/screens/Profile/Sections/Feed.tsx:96
 #: src/view/com/feeds/FeedPage.tsx:143
-#: src/view/screens/ProfileList.tsx:847
+#: src/view/screens/ProfileList.tsx:849
 msgid "Load new posts"
 msgstr "नए पोस्ट लोड करें"
 
@@ -4604,7 +4604,7 @@ msgid "More feeds"
 msgstr "अधिक फ़ीड"
 
 #: src/view/com/profile/ProfileMenu.tsx:179
-#: src/view/screens/ProfileList.tsx:719
+#: src/view/screens/ProfileList.tsx:721
 msgid "More options"
 msgstr "अधिक विकल्प"
 
@@ -4649,7 +4649,7 @@ msgstr "{truncatedTag} म्यूट करें"
 msgid "Mute Account"
 msgstr "खाता म्यूट करें"
 
-#: src/view/screens/ProfileList.tsx:625
+#: src/view/screens/ProfileList.tsx:627
 msgid "Mute accounts"
 msgstr "खातों को म्यूट करें"
 
@@ -4666,11 +4666,11 @@ msgstr "बातचीत म्यूट करें"
 msgid "Mute in:"
 msgstr "इसमें म्यूट करें: "
 
-#: src/view/screens/ProfileList.tsx:748
+#: src/view/screens/ProfileList.tsx:750
 msgid "Mute list"
 msgstr "सूची म्यूट करें"
 
-#: src/view/screens/ProfileList.tsx:743
+#: src/view/screens/ProfileList.tsx:745
 msgid "Mute these accounts?"
 msgstr "इन खातों को म्यूट करें?"
 
@@ -4729,7 +4729,7 @@ msgstr "\"{0}\" द्वारा म्यूट किया गया"
 msgid "Muted words & tags"
 msgstr "म्यूट किए गए शब्द और टैग"
 
-#: src/view/screens/ProfileList.tsx:745
+#: src/view/screens/ProfileList.tsx:747
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr "म्यूट करना निजी है। म्यूट किए गए खाते आपसे संपर्क कर सकते हैं, लेकिन आप उनकी पोस्ट नहीं देखेंगे या उनसे अधिसूचनाएँ प्राप्त नहीं करेंगे।"
 
@@ -4860,8 +4860,8 @@ msgstr "नया पासवर्ड"
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
 #: src/view/screens/Profile.tsx:495
-#: src/view/screens/ProfileList.tsx:248
-#: src/view/screens/ProfileList.tsx:281
+#: src/view/screens/ProfileList.tsx:250
+#: src/view/screens/ProfileList.tsx:283
 msgid "New post"
 msgstr "नया पोस्ट"
 
@@ -5543,7 +5543,6 @@ msgid "Pause video"
 msgstr "वीडियो रोकें"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/ProfileList.tsx:162
 #: src/view/screens/Search/Search.tsx:519
 msgid "People"
 msgstr "लोग"
@@ -5586,7 +5585,7 @@ msgstr "वयस्कों के लिए छवि।"
 msgid "Pin feed"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:683
+#: src/view/screens/ProfileList.tsx:685
 msgid "Pin to home"
 msgstr "होम में पिन करें"
 
@@ -5612,7 +5611,7 @@ msgstr ""
 msgid "Pinned Feeds"
 msgstr "पिन किए गए फ़ीड"
 
-#: src/view/screens/ProfileList.tsx:349
+#: src/view/screens/ProfileList.tsx:351
 msgid "Pinned to your feeds"
 msgstr "आपके फ़ीड में पिन किया गया"
 
@@ -6104,7 +6103,7 @@ msgstr "फ़ीड हटाएँ?"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:324
 #: src/view/com/feeds/FeedSourceCard.tsx:190
 #: src/view/com/feeds/FeedSourceCard.tsx:268
-#: src/view/screens/ProfileList.tsx:496
+#: src/view/screens/ProfileList.tsx:498
 #: src/view/screens/SavedFeeds.tsx:342
 msgid "Remove from my feeds"
 msgstr "मेरे फ़ीड से हटाएँ"
@@ -6187,7 +6186,7 @@ msgstr "सहेजे फ़ीड से हटाया गया"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:126
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
-#: src/view/screens/ProfileList.tsx:380
+#: src/view/screens/ProfileList.tsx:382
 msgid "Removed from your feeds"
 msgstr "आपके सहेजे फ़ीड से हटाया गया"
 
@@ -6307,7 +6306,7 @@ msgstr "शिकायत डायलॉग"
 msgid "Report feed"
 msgstr "फ़ीड की शिकायत करें"
 
-#: src/view/screens/ProfileList.tsx:538
+#: src/view/screens/ProfileList.tsx:540
 msgid "Report List"
 msgstr "सूची की शिकायत करें"
 
@@ -6504,7 +6503,7 @@ msgstr "फिर प्रयास करें"
 #: src/components/Error.tsx:73
 #: src/screens/List/ListHiddenScreen.tsx:216
 #: src/screens/StarterPack/StarterPackScreen.tsx:752
-#: src/view/screens/ProfileList.tsx:1008
+#: src/view/screens/ProfileList.tsx:1010
 msgid "Return to previous page"
 msgstr "पिछले पृष्ठ पर वापस जाएँ"
 
@@ -6594,7 +6593,7 @@ msgid "Saved to your camera roll"
 msgstr "आपके कैमरा रोल में सहेजा गया"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:135
-#: src/view/screens/ProfileList.tsx:360
+#: src/view/screens/ProfileList.tsx:362
 msgid "Saved to your feeds"
 msgstr "आपके फ़ीड में सहेजा गया"
 
@@ -6622,7 +6621,7 @@ msgstr "नमस्ते कहें!"
 msgid "Science"
 msgstr "विज्ञान"
 
-#: src/view/screens/ProfileList.tsx:965
+#: src/view/screens/ProfileList.tsx:967
 msgid "Scroll to top"
 msgstr "ऊपर जाएँ"
 
@@ -6983,7 +6982,7 @@ msgstr "यौन रूप से भड़काऊ"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:346
-#: src/view/screens/ProfileList.tsx:481
+#: src/view/screens/ProfileList.tsx:483
 msgid "Share"
 msgstr "साझा करें"
 
@@ -7390,15 +7389,13 @@ msgstr "खेल"
 msgid "Start a new chat"
 msgstr "नया बातचीत शुरू करें"
 
-#: src/view/screens/ProfileList.tsx:814
-#: src/view/screens/ProfileList.tsx:933
-#~ msgid "Start adding people"
-#~ msgstr ""
+#: src/view/screens/ProfileList.tsx:817
+#: src/view/screens/ProfileList.tsx:938
+msgid "Start adding people"
+msgstr ""
 
-#: src/view/screens/ProfileList.tsx:815
-#: src/view/screens/ProfileList.tsx:822
-#: src/view/screens/ProfileList.tsx:936
-#: src/view/screens/ProfileList.tsx:943
+#: src/view/screens/ProfileList.tsx:824
+#: src/view/screens/ProfileList.tsx:945
 msgid "Start adding people!"
 msgstr ""
 
@@ -7470,7 +7467,7 @@ msgstr "कहानी की किताब"
 msgid "Submit"
 msgstr "जमा करें"
 
-#: src/view/screens/ProfileList.tsx:710
+#: src/view/screens/ProfileList.tsx:712
 msgid "Subscribe"
 msgstr "सदस्यता लें"
 
@@ -7486,7 +7483,7 @@ msgstr "लेबलकर्ता की सदस्यता लें"
 msgid "Subscribe to this labeler"
 msgstr "इस लेबलकर्ता की सदस्यता लें"
 
-#: src/view/screens/ProfileList.tsx:706
+#: src/view/screens/ProfileList.tsx:708
 msgid "Subscribe to this list"
 msgstr "इस सूची की सदस्यता लें"
 
@@ -7795,8 +7792,8 @@ msgid "There was an issue connecting to Tenor."
 msgstr "Tenor से कनेक्ट करने में समस्या हुई।"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:177
-#: src/view/screens/ProfileList.tsx:363
-#: src/view/screens/ProfileList.tsx:382
+#: src/view/screens/ProfileList.tsx:365
+#: src/view/screens/ProfileList.tsx:384
 #: src/view/screens/SavedFeeds.tsx:85
 msgid "There was an issue contacting the server"
 msgstr "सर्वर से संपर्क करने में समस्या हुई"
@@ -7874,10 +7871,10 @@ msgstr "कोई समस्या हुई! {0}"
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
-#: src/view/screens/ProfileList.tsx:394
-#: src/view/screens/ProfileList.tsx:407
-#: src/view/screens/ProfileList.tsx:420
-#: src/view/screens/ProfileList.tsx:433
+#: src/view/screens/ProfileList.tsx:396
+#: src/view/screens/ProfileList.tsx:409
+#: src/view/screens/ProfileList.tsx:422
+#: src/view/screens/ProfileList.tsx:435
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "कोई समस्या हुई! कृपया अपना इंटरनेट कनेक्शन जाँच ले और फिर प्रयास करें।"
 
@@ -7961,7 +7958,7 @@ msgstr "यह फ़ीड खाली है! आपको अधिक उप�
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/screens/Profile/ProfileFeed/index.tsx:170
-#: src/view/screens/ProfileList.tsx:812
+#: src/view/screens/ProfileList.tsx:814
 msgid "This feed is empty."
 msgstr "यह फ़ीड खाली है।"
 
@@ -8009,7 +8006,7 @@ msgstr "<0>{0}</0> द्वारा बनाई गई इस सूची �
 #~ msgid "This list is empty!"
 #~ msgstr "यह सूची खाली है!"
 
-#: src/view/screens/ProfileList.tsx:931
+#: src/view/screens/ProfileList.tsx:933
 msgid "This list is empty."
 msgstr ""
 
@@ -8227,11 +8224,11 @@ msgstr "अपना संदेश यहाँ लिखें"
 msgid "Type:"
 msgstr "प्रकार:"
 
-#: src/view/screens/ProfileList.tsx:588
+#: src/view/screens/ProfileList.tsx:590
 msgid "Un-block list"
 msgstr "सूची अनअवरुद्ध करें"
 
-#: src/view/screens/ProfileList.tsx:573
+#: src/view/screens/ProfileList.tsx:575
 msgid "Un-mute list"
 msgstr "सूची अनम्यूट करें"
 
@@ -8259,7 +8256,7 @@ msgstr "मिटाने में असमर्थ"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:197
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
 #: src/view/com/profile/ProfileMenu.tsx:341
-#: src/view/screens/ProfileList.tsx:692
+#: src/view/screens/ProfileList.tsx:694
 msgid "Unblock"
 msgstr "अनअवरुद्ध करें"
 
@@ -8323,7 +8320,7 @@ msgstr ""
 #~ msgstr "इस फ़ीड को नापसंद करें"
 
 #: src/components/TagMenu/index.tsx:264
-#: src/view/screens/ProfileList.tsx:699
+#: src/view/screens/ProfileList.tsx:701
 msgid "Unmute"
 msgstr "अनम्यूट करें"
 
@@ -8359,7 +8356,7 @@ msgstr "थ्रेड अनम्यूट करें"
 msgid "Unmute video"
 msgstr "वीडियो अनम्यूट करें"
 
-#: src/view/screens/ProfileList.tsx:683
+#: src/view/screens/ProfileList.tsx:685
 msgid "Unpin"
 msgstr "पिन से हटाएँ"
 
@@ -8378,7 +8375,7 @@ msgstr "होम से पिन से हटाएँ"
 msgid "Unpin from profile"
 msgstr "प्रोफ़ाइल से पिन से हटाएँ"
 
-#: src/view/screens/ProfileList.tsx:553
+#: src/view/screens/ProfileList.tsx:555
 msgid "Unpin moderation list"
 msgstr "मॉडरेशन सूची को पिन से हटाएँ"
 
@@ -8386,7 +8383,7 @@ msgstr "मॉडरेशन सूची को पिन से हटाए�
 msgid "Unpinned {0} from Home"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:350
+#: src/view/screens/ProfileList.tsx:352
 msgid "Unpinned from your feeds"
 msgstr "आपके फ़ीड से पिन से हटाया गया"
 

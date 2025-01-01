@@ -499,8 +499,8 @@ msgstr "{displayName} toevoegen aan het startpakket"
 msgid "Add a content warning"
 msgstr "Een inhoudswaarschuwing toevoegen"
 
-#: src/view/screens/ProfileList.tsx:893
-#: src/view/screens/ProfileList.tsx:911
+#: src/view/screens/ProfileList.tsx:895
+#: src/view/screens/ProfileList.tsx:913
 msgid "Add a user to this list"
 msgstr "Een gebruiker aan deze lijst toevoegen"
 
@@ -554,8 +554,8 @@ msgstr "Genegeerde woorden en tags toevoegen"
 msgid "Add new post"
 msgstr "Nieuw bericht toevoegen"
 
-#: src/view/screens/ProfileList.tsx:901
-#: src/view/screens/ProfileList.tsx:919
+#: src/view/screens/ProfileList.tsx:903
+#: src/view/screens/ProfileList.tsx:921
 msgid "Add people"
 msgstr ""
 
@@ -1030,15 +1030,15 @@ msgstr "Account blokkeren"
 msgid "Block Account?"
 msgstr "Account blokkeren?"
 
-#: src/view/screens/ProfileList.tsx:637
+#: src/view/screens/ProfileList.tsx:639
 msgid "Block accounts"
 msgstr "Accounts blokkeren"
 
-#: src/view/screens/ProfileList.tsx:758
+#: src/view/screens/ProfileList.tsx:760
 msgid "Block list"
 msgstr "Blokkeerlijst"
 
-#: src/view/screens/ProfileList.tsx:753
+#: src/view/screens/ProfileList.tsx:755
 msgid "Block these accounts?"
 msgstr "Deze accounts blokkeren?"
 
@@ -1072,7 +1072,7 @@ msgstr "Geblokkeerd bericht."
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr "Blokkeren voorkomt niet dat deze labeler labels op je account plaatst."
 
-#: src/view/screens/ProfileList.tsx:755
+#: src/view/screens/ProfileList.tsx:757
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Blokkeren is openbaar. Geblokkeerde accounts kunnen niet reageren op jouw gesprekken, je vermelden en niet anderszins met je communiceren."
 
@@ -1786,7 +1786,7 @@ msgstr "Link kopiëren"
 msgid "Copy Link"
 msgstr "Link kopiëren"
 
-#: src/view/screens/ProfileList.tsx:481
+#: src/view/screens/ProfileList.tsx:483
 msgid "Copy link to list"
 msgstr "Link naar lijst kopiëren"
 
@@ -1826,7 +1826,7 @@ msgstr "Kan chat niet verlaten"
 msgid "Could not load feed"
 msgstr "Kan feed niet laden"
 
-#: src/view/screens/ProfileList.tsx:998
+#: src/view/screens/ProfileList.tsx:1000
 msgid "Could not load list"
 msgstr "Kan lijst niet laden"
 
@@ -1960,7 +1960,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:665
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:661
-#: src/view/screens/ProfileList.tsx:737
+#: src/view/screens/ProfileList.tsx:739
 msgid "Delete"
 msgstr "Verwijderen"
 
@@ -1989,7 +1989,7 @@ msgstr "Chatdeclaratierecord verwijderen"
 msgid "Delete for me"
 msgstr "Voor mij verwijderen"
 
-#: src/view/screens/ProfileList.tsx:524
+#: src/view/screens/ProfileList.tsx:526
 msgid "Delete List"
 msgstr "Lijst verwijderen"
 
@@ -2020,7 +2020,7 @@ msgstr "Startpakket verwijderen"
 msgid "Delete starter pack?"
 msgstr "Startpakket verwijderen?"
 
-#: src/view/screens/ProfileList.tsx:732
+#: src/view/screens/ProfileList.tsx:734
 msgid "Delete this list?"
 msgstr "Deze lijst verwijderen?"
 
@@ -2328,7 +2328,7 @@ msgstr "Afbeelding bewerken"
 msgid "Edit interaction settings"
 msgstr "Interactie-instellingen bewerken"
 
-#: src/view/screens/ProfileList.tsx:512
+#: src/view/screens/ProfileList.tsx:514
 msgid "Edit list details"
 msgstr "Lijstdetails bewerken"
 
@@ -3119,7 +3119,7 @@ msgstr "Duidelijke overtredingen van de wet of servicevoorwaarden"
 #: src/screens/Profile/ProfileFeed/index.tsx:82
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
-#: src/view/screens/ProfileList.tsx:1007
+#: src/view/screens/ProfileList.tsx:1009
 msgid "Go back"
 msgstr "Terug"
 
@@ -3130,7 +3130,7 @@ msgstr "Terug"
 #: src/screens/Profile/ProfileFeed/index.tsx:87
 #: src/screens/StarterPack/StarterPackScreen.tsx:758
 #: src/view/screens/NotFound.tsx:56
-#: src/view/screens/ProfileList.tsx:1012
+#: src/view/screens/ProfileList.tsx:1014
 msgid "Go Back"
 msgstr "Terug"
 
@@ -3403,7 +3403,7 @@ msgstr "Als de alt-tekst lang is wordt de alt-tekst in- of uitgeklapt"
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "Als je volgens de wetten van je land nog geen volwassene bent moet jouw ouder of wettelijke voogd deze Voorwaarden namens jou lezen."
 
-#: src/view/screens/ProfileList.tsx:734
+#: src/view/screens/ProfileList.tsx:736
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "Als je deze lijst verwijdert kun je deze niet meer herstellen."
 
@@ -3779,7 +3779,7 @@ msgstr "Lijst"
 msgid "List Avatar"
 msgstr "Lijstavatar"
 
-#: src/view/screens/ProfileList.tsx:416
+#: src/view/screens/ProfileList.tsx:418
 msgid "List blocked"
 msgstr "Lijst geblokkeerd"
 
@@ -3796,7 +3796,7 @@ msgstr ""
 msgid "List by you"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:453
+#: src/view/screens/ProfileList.tsx:455
 msgid "List deleted"
 msgstr "Lijst verwijderd"
 
@@ -3808,7 +3808,7 @@ msgstr "Lijst is verborgen"
 msgid "List Hidden"
 msgstr "Lijst is verborgen"
 
-#: src/view/screens/ProfileList.tsx:390
+#: src/view/screens/ProfileList.tsx:392
 msgid "List muted"
 msgstr "Lijst genegeerd"
 
@@ -3816,11 +3816,11 @@ msgstr "Lijst genegeerd"
 msgid "List Name"
 msgstr "Lijstnaam"
 
-#: src/view/screens/ProfileList.tsx:429
+#: src/view/screens/ProfileList.tsx:431
 msgid "List unblocked"
 msgstr "Lijst gedeblokkeerd"
 
-#: src/view/screens/ProfileList.tsx:403
+#: src/view/screens/ProfileList.tsx:405
 msgid "List unmuted"
 msgstr "Lijst niet-genegeerd"
 
@@ -3856,7 +3856,7 @@ msgstr "Nieuwe meldingen laden"
 #: src/screens/Profile/ProfileFeed/index.tsx:192
 #: src/screens/Profile/Sections/Feed.tsx:96
 #: src/view/com/feeds/FeedPage.tsx:143
-#: src/view/screens/ProfileList.tsx:847
+#: src/view/screens/ProfileList.tsx:849
 msgid "Load new posts"
 msgstr "Nieuwe berichten laden"
 
@@ -4077,7 +4077,7 @@ msgid "More feeds"
 msgstr "Meer feeds"
 
 #: src/view/com/profile/ProfileMenu.tsx:179
-#: src/view/screens/ProfileList.tsx:719
+#: src/view/screens/ProfileList.tsx:721
 msgid "More options"
 msgstr "Meer opties"
 
@@ -4118,7 +4118,7 @@ msgstr "{truncatedTag} negeren"
 msgid "Mute Account"
 msgstr "Account negeren"
 
-#: src/view/screens/ProfileList.tsx:625
+#: src/view/screens/ProfileList.tsx:627
 msgid "Mute accounts"
 msgstr "Accounts negeren"
 
@@ -4135,11 +4135,11 @@ msgstr "Gesprek negeren"
 msgid "Mute in:"
 msgstr "Negeren in:"
 
-#: src/view/screens/ProfileList.tsx:748
+#: src/view/screens/ProfileList.tsx:750
 msgid "Mute list"
 msgstr "Negeerlijst"
 
-#: src/view/screens/ProfileList.tsx:743
+#: src/view/screens/ProfileList.tsx:745
 msgid "Mute these accounts?"
 msgstr "Deze accounts negeren?"
 
@@ -4198,7 +4198,7 @@ msgstr "Genegeerd door \"{0}\""
 msgid "Muted words & tags"
 msgstr "Genegeerde woorden en tags"
 
-#: src/view/screens/ProfileList.tsx:745
+#: src/view/screens/ProfileList.tsx:747
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr "Negeren is privé. Genegeerde accounts kunnen met je communiceren, maar je ziet hun berichten niet en ontvangt geen meldingen van hen."
 
@@ -4312,8 +4312,8 @@ msgstr "Nieuw wachtwoord"
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
 #: src/view/screens/Profile.tsx:495
-#: src/view/screens/ProfileList.tsx:248
-#: src/view/screens/ProfileList.tsx:281
+#: src/view/screens/ProfileList.tsx:250
+#: src/view/screens/ProfileList.tsx:283
 msgid "New post"
 msgstr "Nieuw bericht"
 
@@ -4880,7 +4880,6 @@ msgid "Pause video"
 msgstr "Video pauzeren"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/ProfileList.tsx:162
 #: src/view/screens/Search/Search.tsx:519
 msgid "People"
 msgstr "Personen"
@@ -4923,7 +4922,7 @@ msgstr "Afbeeldingen bedoeld voor volwassenen."
 msgid "Pin feed"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:683
+#: src/view/screens/ProfileList.tsx:685
 msgid "Pin to home"
 msgstr "Vastzetten op startpagina"
 
@@ -4949,7 +4948,7 @@ msgstr ""
 msgid "Pinned Feeds"
 msgstr "Vastgezette feeds"
 
-#: src/view/screens/ProfileList.tsx:349
+#: src/view/screens/ProfileList.tsx:351
 msgid "Pinned to your feeds"
 msgstr "Vastgezet aan je feeds"
 
@@ -5409,7 +5408,7 @@ msgstr "Feed verwijderen?"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:324
 #: src/view/com/feeds/FeedSourceCard.tsx:190
 #: src/view/com/feeds/FeedSourceCard.tsx:268
-#: src/view/screens/ProfileList.tsx:496
+#: src/view/screens/ProfileList.tsx:498
 #: src/view/screens/SavedFeeds.tsx:342
 msgid "Remove from my feeds"
 msgstr "Verwijderen uit mijn feeds"
@@ -5484,7 +5483,7 @@ msgstr "Verwijderd uit opgeslagen feeds"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:126
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
-#: src/view/screens/ProfileList.tsx:380
+#: src/view/screens/ProfileList.tsx:382
 msgid "Removed from your feeds"
 msgstr "Verwijderd uit je feeds"
 
@@ -5596,7 +5595,7 @@ msgstr "Dialoogvenster Melden"
 msgid "Report feed"
 msgstr "Feed melden"
 
-#: src/view/screens/ProfileList.tsx:538
+#: src/view/screens/ProfileList.tsx:540
 msgid "Report List"
 msgstr "Lijst melden"
 
@@ -5776,7 +5775,7 @@ msgstr "Opnieuw"
 #: src/components/Error.tsx:73
 #: src/screens/List/ListHiddenScreen.tsx:216
 #: src/screens/StarterPack/StarterPackScreen.tsx:752
-#: src/view/screens/ProfileList.tsx:1008
+#: src/view/screens/ProfileList.tsx:1010
 msgid "Return to previous page"
 msgstr "Terug naar vorige pagina"
 
@@ -5858,7 +5857,7 @@ msgid "Saved to your camera roll"
 msgstr "Opgeslagen in je galerij"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:135
-#: src/view/screens/ProfileList.tsx:360
+#: src/view/screens/ProfileList.tsx:362
 msgid "Saved to your feeds"
 msgstr "Opgeslagen in je feeds"
 
@@ -5882,7 +5881,7 @@ msgstr "Zeg hallo!"
 msgid "Science"
 msgstr "Wetenschap"
 
-#: src/view/screens/ProfileList.tsx:965
+#: src/view/screens/ProfileList.tsx:967
 msgid "Scroll to top"
 msgstr "Naar boven scrollen"
 
@@ -6178,7 +6177,7 @@ msgstr "Seksueel suggestief"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:346
-#: src/view/screens/ProfileList.tsx:481
+#: src/view/screens/ProfileList.tsx:483
 msgid "Share"
 msgstr "Delen"
 
@@ -6531,15 +6530,13 @@ msgstr "Sport"
 msgid "Start a new chat"
 msgstr "Een nieuwe chat starten"
 
-#: src/view/screens/ProfileList.tsx:814
-#: src/view/screens/ProfileList.tsx:933
-#~ msgid "Start adding people"
-#~ msgstr ""
+#: src/view/screens/ProfileList.tsx:817
+#: src/view/screens/ProfileList.tsx:938
+msgid "Start adding people"
+msgstr ""
 
-#: src/view/screens/ProfileList.tsx:815
-#: src/view/screens/ProfileList.tsx:822
-#: src/view/screens/ProfileList.tsx:936
-#: src/view/screens/ProfileList.tsx:943
+#: src/view/screens/ProfileList.tsx:824
+#: src/view/screens/ProfileList.tsx:945
 msgid "Start adding people!"
 msgstr ""
 
@@ -6603,7 +6600,7 @@ msgstr "Verhalenboek"
 msgid "Submit"
 msgstr "Verzenden"
 
-#: src/view/screens/ProfileList.tsx:710
+#: src/view/screens/ProfileList.tsx:712
 msgid "Subscribe"
 msgstr "Abonneren"
 
@@ -6619,7 +6616,7 @@ msgstr "Abonneren op labeler"
 msgid "Subscribe to this labeler"
 msgstr "Abonneren op deze labeler"
 
-#: src/view/screens/ProfileList.tsx:706
+#: src/view/screens/ProfileList.tsx:708
 msgid "Subscribe to this list"
 msgstr "Abonneren op deze lijst"
 
@@ -6900,8 +6897,8 @@ msgid "There was an issue connecting to Tenor."
 msgstr "Er is een probleem opgetreden bij het verbinden met Tenor."
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:177
-#: src/view/screens/ProfileList.tsx:363
-#: src/view/screens/ProfileList.tsx:382
+#: src/view/screens/ProfileList.tsx:365
+#: src/view/screens/ProfileList.tsx:384
 #: src/view/screens/SavedFeeds.tsx:85
 msgid "There was an issue contacting the server"
 msgstr "Er is een probleem opgetreden bij het verbinden met de server"
@@ -6975,10 +6972,10 @@ msgstr "Er is een probleem opgetreden! {0}"
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
-#: src/view/screens/ProfileList.tsx:394
-#: src/view/screens/ProfileList.tsx:407
-#: src/view/screens/ProfileList.tsx:420
-#: src/view/screens/ProfileList.tsx:433
+#: src/view/screens/ProfileList.tsx:396
+#: src/view/screens/ProfileList.tsx:409
+#: src/view/screens/ProfileList.tsx:422
+#: src/view/screens/ProfileList.tsx:435
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "Er is een probleem opgetreden. Controleer je internetverbinding en probeer het opnieuw."
 
@@ -7062,7 +7059,7 @@ msgstr "Deze feed is leeg! Mogelijk moet je meer gebruikers volgen of je taalins
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/screens/Profile/ProfileFeed/index.tsx:170
-#: src/view/screens/ProfileList.tsx:812
+#: src/view/screens/ProfileList.tsx:814
 msgid "This feed is empty."
 msgstr "Deze feed is leeg."
 
@@ -7110,7 +7107,7 @@ msgstr "Deze lijst - gemaakt door <0>{0}</0> - bevat mogelijke schendingen van B
 #~ msgid "This list is empty!"
 #~ msgstr "Deze lijst is leeg!"
 
-#: src/view/screens/ProfileList.tsx:931
+#: src/view/screens/ProfileList.tsx:933
 msgid "This list is empty."
 msgstr ""
 
@@ -7308,11 +7305,11 @@ msgstr "Typ hier je privébericht"
 msgid "Type:"
 msgstr "Type:"
 
-#: src/view/screens/ProfileList.tsx:588
+#: src/view/screens/ProfileList.tsx:590
 msgid "Un-block list"
 msgstr "Lijst deblokkeren"
 
-#: src/view/screens/ProfileList.tsx:573
+#: src/view/screens/ProfileList.tsx:575
 msgid "Un-mute list"
 msgstr "Lijst niet meer negeren"
 
@@ -7340,7 +7337,7 @@ msgstr "Kan niet verwijderen"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:197
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
 #: src/view/com/profile/ProfileMenu.tsx:341
-#: src/view/screens/ProfileList.tsx:692
+#: src/view/screens/ProfileList.tsx:694
 msgid "Unblock"
 msgstr "Deblokkeren"
 
@@ -7401,7 +7398,7 @@ msgstr ""
 #~ msgstr "Vind deze feed niet meer leuk"
 
 #: src/components/TagMenu/index.tsx:264
-#: src/view/screens/ProfileList.tsx:699
+#: src/view/screens/ProfileList.tsx:701
 msgid "Unmute"
 msgstr "Niet meer negeren"
 
@@ -7437,7 +7434,7 @@ msgstr "Gesprek niet meer negeren"
 msgid "Unmute video"
 msgstr "Video niet meer negeren"
 
-#: src/view/screens/ProfileList.tsx:683
+#: src/view/screens/ProfileList.tsx:685
 msgid "Unpin"
 msgstr "Losmaken"
 
@@ -7456,7 +7453,7 @@ msgstr "Losmaken van startpagina"
 msgid "Unpin from profile"
 msgstr "Losmaken van profiel"
 
-#: src/view/screens/ProfileList.tsx:553
+#: src/view/screens/ProfileList.tsx:555
 msgid "Unpin moderation list"
 msgstr "Moderatielijst losmaken"
 
@@ -7464,7 +7461,7 @@ msgstr "Moderatielijst losmaken"
 msgid "Unpinned {0} from Home"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:350
+#: src/view/screens/ProfileList.tsx:352
 msgid "Unpinned from your feeds"
 msgstr "Losgemaakt van je feeds"
 

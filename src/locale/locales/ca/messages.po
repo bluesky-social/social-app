@@ -632,8 +632,8 @@ msgstr "Afegeix {displayName} al teu starter pack"
 msgid "Add a content warning"
 msgstr "Afegeix una advertència de contingut"
 
-#: src/view/screens/ProfileList.tsx:893
-#: src/view/screens/ProfileList.tsx:911
+#: src/view/screens/ProfileList.tsx:895
+#: src/view/screens/ProfileList.tsx:913
 msgid "Add a user to this list"
 msgstr "Afegeix un usuari a aquesta llista"
 
@@ -708,8 +708,8 @@ msgstr "Afegeix les paraules i etiquetes silenciades"
 msgid "Add new post"
 msgstr "Afegeix una nova publicació"
 
-#: src/view/screens/ProfileList.tsx:901
-#: src/view/screens/ProfileList.tsx:919
+#: src/view/screens/ProfileList.tsx:903
+#: src/view/screens/ProfileList.tsx:921
 msgid "Add people"
 msgstr "Afegeix gent"
 
@@ -1298,15 +1298,15 @@ msgstr "Bloqueja el compte"
 msgid "Block Account?"
 msgstr "Vols bloquejar el compte?"
 
-#: src/view/screens/ProfileList.tsx:637
+#: src/view/screens/ProfileList.tsx:639
 msgid "Block accounts"
 msgstr "Bloqueja comptes"
 
-#: src/view/screens/ProfileList.tsx:758
+#: src/view/screens/ProfileList.tsx:760
 msgid "Block list"
 msgstr "Bloqueja una llista"
 
-#: src/view/screens/ProfileList.tsx:753
+#: src/view/screens/ProfileList.tsx:755
 msgid "Block these accounts?"
 msgstr "Vols bloquejar aquests comptes?"
 
@@ -1344,7 +1344,7 @@ msgstr "Publicació bloquejada."
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr "El bloqueig no evita que aquest etiquetador apliqui etiquetes al teu compte."
 
-#: src/view/screens/ProfileList.tsx:755
+#: src/view/screens/ProfileList.tsx:757
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "El bloqueig és públic. Els comptes bloquejats no poden respondre els teus fils, ni mencionar-te ni interactuar amb tu de cap manera."
 
@@ -2273,7 +2273,7 @@ msgstr "Copia l'enllaç"
 msgid "Copy Link"
 msgstr "Copia l'enllaç"
 
-#: src/view/screens/ProfileList.tsx:481
+#: src/view/screens/ProfileList.tsx:483
 msgid "Copy link to list"
 msgstr "Copia l'enllaç a la llista"
 
@@ -2321,7 +2321,7 @@ msgstr "No s'ha pogut sortir del xat"
 msgid "Could not load feed"
 msgstr "No s'ha pogut carregar el canal"
 
-#: src/view/screens/ProfileList.tsx:998
+#: src/view/screens/ProfileList.tsx:1000
 msgid "Could not load list"
 msgstr "No s'ha pogut carregar la llista"
 
@@ -2515,7 +2515,7 @@ msgstr "Icones per defecte"
 #: src/screens/StarterPack/StarterPackScreen.tsx:665
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:661
-#: src/view/screens/ProfileList.tsx:737
+#: src/view/screens/ProfileList.tsx:739
 msgid "Delete"
 msgstr "Elimina"
 
@@ -2548,7 +2548,7 @@ msgstr "Suprimeix el registre de declaració de xat"
 msgid "Delete for me"
 msgstr "Elimina-ho per mi"
 
-#: src/view/screens/ProfileList.tsx:524
+#: src/view/screens/ProfileList.tsx:526
 msgid "Delete List"
 msgstr "Elimina la llista"
 
@@ -2587,7 +2587,7 @@ msgstr "Elimina l'starter pack"
 msgid "Delete starter pack?"
 msgstr "Vols eliminar l'starter pack?"
 
-#: src/view/screens/ProfileList.tsx:732
+#: src/view/screens/ProfileList.tsx:734
 msgid "Delete this list?"
 msgstr "Vols eliminar aquesta llista?"
 
@@ -2971,7 +2971,7 @@ msgstr "Edita la imatge"
 msgid "Edit interaction settings"
 msgstr "Edita les preferències de les interaccions"
 
-#: src/view/screens/ProfileList.tsx:512
+#: src/view/screens/ProfileList.tsx:514
 msgid "Edit list details"
 msgstr "Edita els detalls de la llista"
 
@@ -3968,7 +3968,7 @@ msgstr "Infraccions flagrants de la llei o les condicions del servei"
 #: src/screens/Profile/ProfileFeed/index.tsx:82
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
-#: src/view/screens/ProfileList.tsx:1007
+#: src/view/screens/ProfileList.tsx:1009
 msgid "Go back"
 msgstr "Ves enrere"
 
@@ -3979,7 +3979,7 @@ msgstr "Ves enrere"
 #: src/screens/Profile/ProfileFeed/index.tsx:87
 #: src/screens/StarterPack/StarterPackScreen.tsx:758
 #: src/view/screens/NotFound.tsx:56
-#: src/view/screens/ProfileList.tsx:1012
+#: src/view/screens/ProfileList.tsx:1014
 msgid "Go Back"
 msgstr "Ves enrere"
 
@@ -4314,7 +4314,7 @@ msgstr "Si el text alternatiu és llarg, canvia l'estat expandit del text altern
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "Si encara no ets un adult segons les lleis del teu país, el teu tutor legal haurà de llegir aquests Termes en el teu lloc."
 
-#: src/view/screens/ProfileList.tsx:734
+#: src/view/screens/ProfileList.tsx:736
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "Si esborres aquesta llista no la podràs recuperar."
 
@@ -4823,7 +4823,7 @@ msgstr "Llista"
 msgid "List Avatar"
 msgstr "Avatar de la llista"
 
-#: src/view/screens/ProfileList.tsx:416
+#: src/view/screens/ProfileList.tsx:418
 msgid "List blocked"
 msgstr "Llista bloquejada"
 
@@ -4840,7 +4840,7 @@ msgstr "Llista per <0/>"
 msgid "List by you"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:453
+#: src/view/screens/ProfileList.tsx:455
 msgid "List deleted"
 msgstr "Llista eliminada"
 
@@ -4852,7 +4852,7 @@ msgstr "S'ha amagat la llista"
 msgid "List Hidden"
 msgstr "Llista amagada"
 
-#: src/view/screens/ProfileList.tsx:390
+#: src/view/screens/ProfileList.tsx:392
 msgid "List muted"
 msgstr "Llista silenciada"
 
@@ -4860,11 +4860,11 @@ msgstr "Llista silenciada"
 msgid "List Name"
 msgstr "Nom de la llista"
 
-#: src/view/screens/ProfileList.tsx:429
+#: src/view/screens/ProfileList.tsx:431
 msgid "List unblocked"
 msgstr "Llista desbloquejada"
 
-#: src/view/screens/ProfileList.tsx:403
+#: src/view/screens/ProfileList.tsx:405
 msgid "List unmuted"
 msgstr "Llista no silenciada"
 
@@ -4905,7 +4905,7 @@ msgstr "Carrega noves notificacions"
 #: src/screens/Profile/ProfileFeed/index.tsx:192
 #: src/screens/Profile/Sections/Feed.tsx:96
 #: src/view/com/feeds/FeedPage.tsx:143
-#: src/view/screens/ProfileList.tsx:847
+#: src/view/screens/ProfileList.tsx:849
 msgid "Load new posts"
 msgstr "Carrega noves publicacions"
 
@@ -5161,7 +5161,7 @@ msgid "More feeds"
 msgstr "Més canals"
 
 #: src/view/com/profile/ProfileMenu.tsx:179
-#: src/view/screens/ProfileList.tsx:719
+#: src/view/screens/ProfileList.tsx:721
 msgid "More options"
 msgstr "Més opcions"
 
@@ -5210,7 +5210,7 @@ msgstr "Silencia {truncatedTag}"
 msgid "Mute Account"
 msgstr "Silenciar el compte"
 
-#: src/view/screens/ProfileList.tsx:625
+#: src/view/screens/ProfileList.tsx:627
 msgid "Mute accounts"
 msgstr "Silencia els comptes"
 
@@ -5239,7 +5239,7 @@ msgstr "Silencia la conversa"
 msgid "Mute in:"
 msgstr "Silencia a:"
 
-#: src/view/screens/ProfileList.tsx:748
+#: src/view/screens/ProfileList.tsx:750
 msgid "Mute list"
 msgstr "Silencia la llista"
 
@@ -5248,7 +5248,7 @@ msgstr "Silencia la llista"
 #~ msgid "Mute notifications"
 #~ msgstr "Silencia les notificacions"
 
-#: src/view/screens/ProfileList.tsx:743
+#: src/view/screens/ProfileList.tsx:745
 msgid "Mute these accounts?"
 msgstr "Vols silenciar aquests comptes?"
 
@@ -5315,7 +5315,7 @@ msgstr "Silenciat per \"{0}\""
 msgid "Muted words & tags"
 msgstr "Paraules i etiquetes silenciades"
 
-#: src/view/screens/ProfileList.tsx:745
+#: src/view/screens/ProfileList.tsx:747
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr "Silenciar és privat. Els comptes silenciats poden interactuar amb tu, però tu no veuràs les seves publicacions ni rebràs notificacions seves."
 
@@ -5463,8 +5463,8 @@ msgstr "Nova contrasenya"
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
 #: src/view/screens/Profile.tsx:495
-#: src/view/screens/ProfileList.tsx:248
-#: src/view/screens/ProfileList.tsx:281
+#: src/view/screens/ProfileList.tsx:250
+#: src/view/screens/ProfileList.tsx:283
 msgid "New post"
 msgstr "Nova publicació"
 
@@ -6227,7 +6227,6 @@ msgid "Pause video"
 msgstr "Posa en pausa el vídeo"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/ProfileList.tsx:162
 #: src/view/screens/Search/Search.tsx:519
 msgid "People"
 msgstr "Gent"
@@ -6274,7 +6273,7 @@ msgstr "Imatges destinades a adults."
 msgid "Pin feed"
 msgstr "Fixa el canal"
 
-#: src/view/screens/ProfileList.tsx:683
+#: src/view/screens/ProfileList.tsx:685
 msgid "Pin to home"
 msgstr "Fixa a l'inici"
 
@@ -6300,7 +6299,7 @@ msgstr "{0} fixat a l'inici"
 msgid "Pinned Feeds"
 msgstr "Canals de notícies fixats"
 
-#: src/view/screens/ProfileList.tsx:349
+#: src/view/screens/ProfileList.tsx:351
 msgid "Pinned to your feeds"
 msgstr "Fixat als teus canals"
 
@@ -6874,7 +6873,7 @@ msgstr "Vols eliminar el canal?"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:324
 #: src/view/com/feeds/FeedSourceCard.tsx:190
 #: src/view/com/feeds/FeedSourceCard.tsx:268
-#: src/view/screens/ProfileList.tsx:496
+#: src/view/screens/ProfileList.tsx:498
 #: src/view/screens/SavedFeeds.tsx:342
 msgid "Remove from my feeds"
 msgstr "Elimina dels meus canals"
@@ -6961,7 +6960,7 @@ msgstr "Eliminat dels canals desats"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:126
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
-#: src/view/screens/ProfileList.tsx:380
+#: src/view/screens/ProfileList.tsx:382
 msgid "Removed from your feeds"
 msgstr "Eliminat dels teus canals"
 
@@ -7112,7 +7111,7 @@ msgstr "Diàleg de l'informe"
 msgid "Report feed"
 msgstr "Informa del canal"
 
-#: src/view/screens/ProfileList.tsx:538
+#: src/view/screens/ProfileList.tsx:540
 msgid "Report List"
 msgstr "Informa de la llista"
 
@@ -7341,7 +7340,7 @@ msgstr "Torna-ho a provar"
 #: src/components/Error.tsx:73
 #: src/screens/List/ListHiddenScreen.tsx:216
 #: src/screens/StarterPack/StarterPackScreen.tsx:752
-#: src/view/screens/ProfileList.tsx:1008
+#: src/view/screens/ProfileList.tsx:1010
 msgid "Return to previous page"
 msgstr "Torna a la pàgina anterior"
 
@@ -7439,7 +7438,7 @@ msgstr "S'ha desat a la teva galeria d'imatges"
 #~ msgstr "S'ha desat a la teva galeria d'imatges."
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:135
-#: src/view/screens/ProfileList.tsx:360
+#: src/view/screens/ProfileList.tsx:362
 msgid "Saved to your feeds"
 msgstr "S'ha desat als teus canals."
 
@@ -7467,7 +7466,7 @@ msgstr "Digues hola!"
 msgid "Science"
 msgstr "Ciència"
 
-#: src/view/screens/ProfileList.tsx:965
+#: src/view/screens/ProfileList.tsx:967
 msgid "Scroll to top"
 msgstr "Desplaça't cap a dalt"
 
@@ -7964,7 +7963,7 @@ msgstr "Suggerent sexualment"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:346
-#: src/view/screens/ProfileList.tsx:481
+#: src/view/screens/ProfileList.tsx:483
 msgid "Share"
 msgstr "Comparteix"
 
@@ -8471,15 +8470,13 @@ msgstr "Esports"
 msgid "Start a new chat"
 msgstr "Comença un nou xat"
 
-#: src/view/screens/ProfileList.tsx:814
-#: src/view/screens/ProfileList.tsx:933
-#~ msgid "Start adding people"
-#~ msgstr "Comença a afegir gent"
+#: src/view/screens/ProfileList.tsx:817
+#: src/view/screens/ProfileList.tsx:938
+msgid "Start adding people"
+msgstr "Comença a afegir gent"
 
-#: src/view/screens/ProfileList.tsx:815
-#: src/view/screens/ProfileList.tsx:822
-#: src/view/screens/ProfileList.tsx:936
-#: src/view/screens/ProfileList.tsx:943
+#: src/view/screens/ProfileList.tsx:824
+#: src/view/screens/ProfileList.tsx:945
 msgid "Start adding people!"
 msgstr "Comença a afegir gent"
 
@@ -8563,7 +8560,7 @@ msgstr "Historial"
 msgid "Submit"
 msgstr "Envia"
 
-#: src/view/screens/ProfileList.tsx:710
+#: src/view/screens/ProfileList.tsx:712
 msgid "Subscribe"
 msgstr "Subscriure's"
 
@@ -8584,7 +8581,7 @@ msgstr "Subscriu-te a l'etiquetador"
 msgid "Subscribe to this labeler"
 msgstr "Subscriu-te a aquest etiquetador"
 
-#: src/view/screens/ProfileList.tsx:706
+#: src/view/screens/ProfileList.tsx:708
 msgid "Subscribe to this list"
 msgstr "Subscriure's a la llista"
 
@@ -8948,8 +8945,8 @@ msgstr "Hi ha hagut un problema per a connectar amb Tenor."
 #~ msgstr "Hi ha hagut un problema per a connectar al xat."
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:177
-#: src/view/screens/ProfileList.tsx:363
-#: src/view/screens/ProfileList.tsx:382
+#: src/view/screens/ProfileList.tsx:365
+#: src/view/screens/ProfileList.tsx:384
 #: src/view/screens/SavedFeeds.tsx:85
 msgid "There was an issue contacting the server"
 msgstr "Hi ha hagut un problema per a contactar amb el servidor"
@@ -9031,10 +9028,10 @@ msgstr "Hi ha hagut un problema! {0}"
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
-#: src/view/screens/ProfileList.tsx:394
-#: src/view/screens/ProfileList.tsx:407
-#: src/view/screens/ProfileList.tsx:420
-#: src/view/screens/ProfileList.tsx:433
+#: src/view/screens/ProfileList.tsx:396
+#: src/view/screens/ProfileList.tsx:409
+#: src/view/screens/ProfileList.tsx:422
+#: src/view/screens/ProfileList.tsx:435
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "Hi ha hagut un problema. Comprova la teva connexió a internet i torna-ho a provar."
 
@@ -9147,7 +9144,7 @@ msgstr "Aquest canal està buit! Necessites seguir més usuaris o modificar la t
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/screens/Profile/ProfileFeed/index.tsx:170
-#: src/view/screens/ProfileList.tsx:812
+#: src/view/screens/ProfileList.tsx:814
 msgid "This feed is empty."
 msgstr "Aquest canal és buit."
 
@@ -9207,7 +9204,7 @@ msgstr "Aquesta llista - creada per <0>{0}</0> - conté possibles infraccions de
 #~ msgid "This list is empty!"
 #~ msgstr "Aquesta llista està buida!"
 
-#: src/view/screens/ProfileList.tsx:931
+#: src/view/screens/ProfileList.tsx:933
 msgid "This list is empty."
 msgstr "Aquesta llista està buida."
 
@@ -9465,11 +9462,11 @@ msgstr "Escriu aquí el teu missatge"
 msgid "Type:"
 msgstr "Tipus:"
 
-#: src/view/screens/ProfileList.tsx:588
+#: src/view/screens/ProfileList.tsx:590
 msgid "Un-block list"
 msgstr "Desbloqueja la llista"
 
-#: src/view/screens/ProfileList.tsx:573
+#: src/view/screens/ProfileList.tsx:575
 msgid "Un-mute list"
 msgstr "Deixa de silenciar la llista"
 
@@ -9497,7 +9494,7 @@ msgstr "No s'ha pogut eliminar"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:197
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
 #: src/view/com/profile/ProfileMenu.tsx:341
-#: src/view/screens/ProfileList.tsx:692
+#: src/view/screens/ProfileList.tsx:694
 msgid "Unblock"
 msgstr "Desbloqueja"
 
@@ -9565,7 +9562,7 @@ msgstr "Desfés els m'agrades ({0, plural, one {# m'agrada} other {# m'agrades}}
 #~ msgstr "Desfés el m'agrada a aquest canal"
 
 #: src/components/TagMenu/index.tsx:264
-#: src/view/screens/ProfileList.tsx:699
+#: src/view/screens/ProfileList.tsx:701
 msgid "Unmute"
 msgstr "Deixa de silenciar"
 
@@ -9613,7 +9610,7 @@ msgstr "Deixa de silenciar el vídeo"
 #~ msgid "Unmuted"
 #~ msgstr "Sense silenciar"
 
-#: src/view/screens/ProfileList.tsx:683
+#: src/view/screens/ProfileList.tsx:685
 msgid "Unpin"
 msgstr "Deixa de fixar"
 
@@ -9632,7 +9629,7 @@ msgstr "Deixa de fixar a l'inici"
 msgid "Unpin from profile"
 msgstr "No fixis al perfil"
 
-#: src/view/screens/ProfileList.tsx:553
+#: src/view/screens/ProfileList.tsx:555
 msgid "Unpin moderation list"
 msgstr "Desancora la llista de moderació"
 
@@ -9640,7 +9637,7 @@ msgstr "Desancora la llista de moderació"
 msgid "Unpinned {0} from Home"
 msgstr "{0} ja no està fixat a l'inici"
 
-#: src/view/screens/ProfileList.tsx:350
+#: src/view/screens/ProfileList.tsx:352
 msgid "Unpinned from your feeds"
 msgstr "Ja no està fix als teus canals"
 

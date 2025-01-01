@@ -505,8 +505,8 @@ msgstr "Cuir {displayName} leis an bpacáiste fáilte"
 msgid "Add a content warning"
 msgstr "Cuir rabhadh faoin ábhar leis"
 
-#: src/view/screens/ProfileList.tsx:893
-#: src/view/screens/ProfileList.tsx:911
+#: src/view/screens/ProfileList.tsx:895
+#: src/view/screens/ProfileList.tsx:913
 msgid "Add a user to this list"
 msgstr "Cuir cuntas leis an liosta seo"
 
@@ -560,8 +560,8 @@ msgstr "Cuir focail agus clibeanna a balbhaíodh leis seo"
 msgid "Add new post"
 msgstr "Cuir postáil nua leis"
 
-#: src/view/screens/ProfileList.tsx:901
-#: src/view/screens/ProfileList.tsx:919
+#: src/view/screens/ProfileList.tsx:903
+#: src/view/screens/ProfileList.tsx:921
 msgid "Add people"
 msgstr ""
 
@@ -1068,15 +1068,15 @@ msgstr "Blocáil an cuntas seo"
 msgid "Block Account?"
 msgstr "Blocáil an cuntas seo?"
 
-#: src/view/screens/ProfileList.tsx:637
+#: src/view/screens/ProfileList.tsx:639
 msgid "Block accounts"
 msgstr "Blocáil na cuntais seo"
 
-#: src/view/screens/ProfileList.tsx:758
+#: src/view/screens/ProfileList.tsx:760
 msgid "Block list"
 msgstr "Liosta blocála"
 
-#: src/view/screens/ProfileList.tsx:753
+#: src/view/screens/ProfileList.tsx:755
 msgid "Block these accounts?"
 msgstr "An bhfuil fonn ort na cuntais seo a bhlocáil?"
 
@@ -1110,7 +1110,7 @@ msgstr "Postáil bhlocáilte."
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr "Ní bhacann blocáil an lipéadóir seo ar lipéid a chur ar do chuntas."
 
-#: src/view/screens/ProfileList.tsx:755
+#: src/view/screens/ProfileList.tsx:757
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Tá an bhlocáil poiblí. Ní féidir leis na cuntais bhlocáilte freagra a thabhairt ar do chomhráite, tagairt a dhéanamh duit, ná aon phlé eile a bheith acu leat."
 
@@ -1860,7 +1860,7 @@ msgstr "Cóipeáil an nasc"
 msgid "Copy Link"
 msgstr "Cóipeáil an Nasc"
 
-#: src/view/screens/ProfileList.tsx:481
+#: src/view/screens/ProfileList.tsx:483
 msgid "Copy link to list"
 msgstr "Cóipeáil an nasc leis an liosta"
 
@@ -1900,7 +1900,7 @@ msgstr "Níor éiríodh ar an gcomhrá a fhágáil"
 msgid "Could not load feed"
 msgstr "Ní féidir an fotha a lódáil"
 
-#: src/view/screens/ProfileList.tsx:998
+#: src/view/screens/ProfileList.tsx:1000
 msgid "Could not load list"
 msgstr "Ní féidir an liosta a lódáil"
 
@@ -2053,7 +2053,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:665
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:661
-#: src/view/screens/ProfileList.tsx:737
+#: src/view/screens/ProfileList.tsx:739
 msgid "Delete"
 msgstr "Scrios"
 
@@ -2082,7 +2082,7 @@ msgstr "Scrios taifead dearbhaithe comhrá"
 msgid "Delete for me"
 msgstr "Scrios domsa"
 
-#: src/view/screens/ProfileList.tsx:524
+#: src/view/screens/ProfileList.tsx:526
 msgid "Delete List"
 msgstr "Scrios an liosta"
 
@@ -2117,7 +2117,7 @@ msgstr "Scrios an pacáiste fáilte"
 msgid "Delete starter pack?"
 msgstr "An bhfuil fonn ort an pacáiste fáilte seo a scriosadh?"
 
-#: src/view/screens/ProfileList.tsx:732
+#: src/view/screens/ProfileList.tsx:734
 msgid "Delete this list?"
 msgstr "An bhfuil fonn ort an liosta seo a scriosadh?"
 
@@ -2449,7 +2449,7 @@ msgstr "Cuir an íomhá seo in eagar"
 msgid "Edit interaction settings"
 msgstr "Cuir na socruithe idirghníomhaíochta in eagar"
 
-#: src/view/screens/ProfileList.tsx:512
+#: src/view/screens/ProfileList.tsx:514
 msgid "Edit list details"
 msgstr "Athraigh mionsonraí an liosta"
 
@@ -3295,7 +3295,7 @@ msgstr "Deargshárú an dlí nó na dtéarmaí seirbhíse"
 #: src/screens/Profile/ProfileFeed/index.tsx:82
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
-#: src/view/screens/ProfileList.tsx:1007
+#: src/view/screens/ProfileList.tsx:1009
 msgid "Go back"
 msgstr "Ar ais"
 
@@ -3306,7 +3306,7 @@ msgstr "Ar ais"
 #: src/screens/Profile/ProfileFeed/index.tsx:87
 #: src/screens/StarterPack/StarterPackScreen.tsx:758
 #: src/view/screens/NotFound.tsx:56
-#: src/view/screens/ProfileList.tsx:1012
+#: src/view/screens/ProfileList.tsx:1014
 msgid "Go Back"
 msgstr "Ar ais"
 
@@ -3587,7 +3587,7 @@ msgstr "Má tá an téacs malartach rófhada, athraíonn sé seo go téacs leath
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "Ní duine fásta thú de réir dhlí do thíre, tá ar do thuismitheoir nó do chaomhnóir dlíthiúil na Téarmaí seo a léamh ar do shon."
 
-#: src/view/screens/ProfileList.tsx:734
+#: src/view/screens/ProfileList.tsx:736
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "Má scriosann tú an liosta seo, ní bheidh tú in ann é a fháil ar ais."
 
@@ -3987,7 +3987,7 @@ msgstr "Liosta"
 msgid "List Avatar"
 msgstr "Abhatár an Liosta"
 
-#: src/view/screens/ProfileList.tsx:416
+#: src/view/screens/ProfileList.tsx:418
 msgid "List blocked"
 msgstr "Liosta blocáilte"
 
@@ -4004,7 +4004,7 @@ msgstr ""
 msgid "List by you"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:453
+#: src/view/screens/ProfileList.tsx:455
 msgid "List deleted"
 msgstr "Scriosadh an liosta"
 
@@ -4016,7 +4016,7 @@ msgstr "Cuireadh an liosta i bhfolach"
 msgid "List Hidden"
 msgstr "Cuireadh an liosta i bhfolach"
 
-#: src/view/screens/ProfileList.tsx:390
+#: src/view/screens/ProfileList.tsx:392
 msgid "List muted"
 msgstr "Balbhaíodh an liosta"
 
@@ -4024,11 +4024,11 @@ msgstr "Balbhaíodh an liosta"
 msgid "List Name"
 msgstr "Ainm an liosta"
 
-#: src/view/screens/ProfileList.tsx:429
+#: src/view/screens/ProfileList.tsx:431
 msgid "List unblocked"
 msgstr "Liosta díbhlocáilte"
 
-#: src/view/screens/ProfileList.tsx:403
+#: src/view/screens/ProfileList.tsx:405
 msgid "List unmuted"
 msgstr "Liosta nach bhfuil balbhaithe níos mó"
 
@@ -4064,7 +4064,7 @@ msgstr "Lódáil fógraí nua"
 #: src/screens/Profile/ProfileFeed/index.tsx:192
 #: src/screens/Profile/Sections/Feed.tsx:96
 #: src/view/com/feeds/FeedPage.tsx:143
-#: src/view/screens/ProfileList.tsx:847
+#: src/view/screens/ProfileList.tsx:849
 msgid "Load new posts"
 msgstr "Lódáil postálacha nua"
 
@@ -4289,7 +4289,7 @@ msgid "More feeds"
 msgstr "Tuilleadh fothaí"
 
 #: src/view/com/profile/ProfileMenu.tsx:179
-#: src/view/screens/ProfileList.tsx:719
+#: src/view/screens/ProfileList.tsx:721
 msgid "More options"
 msgstr "Tuilleadh roghanna"
 
@@ -4330,7 +4330,7 @@ msgstr "Balbhaigh {truncatedTag}"
 msgid "Mute Account"
 msgstr "Balbhaigh an Cuntas"
 
-#: src/view/screens/ProfileList.tsx:625
+#: src/view/screens/ProfileList.tsx:627
 msgid "Mute accounts"
 msgstr "Balbhaigh cuntais"
 
@@ -4347,11 +4347,11 @@ msgstr "Balbhaigh an comhrá"
 msgid "Mute in:"
 msgstr "Balbhaigh i:"
 
-#: src/view/screens/ProfileList.tsx:748
+#: src/view/screens/ProfileList.tsx:750
 msgid "Mute list"
 msgstr "Balbhaigh an liosta"
 
-#: src/view/screens/ProfileList.tsx:743
+#: src/view/screens/ProfileList.tsx:745
 msgid "Mute these accounts?"
 msgstr "An bhfuil fonn ort na cuntais seo a bhalbhú?"
 
@@ -4410,7 +4410,7 @@ msgstr "Curtha i bhfolach ag \"{0}\""
 msgid "Muted words & tags"
 msgstr "Focail ⁊ clibeanna a cuireadh i bhfolach"
 
-#: src/view/screens/ProfileList.tsx:745
+#: src/view/screens/ProfileList.tsx:747
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr "Tá an balbhú príobháideach. Is féidir leis na cuntais a bhalbhaigh tú do chuid postálacha a fheiceáil agus is féidir leo scríobh chugat ach ní fheicfidh tú a gcuid postálacha eile ná aon fhógraí uathu."
 
@@ -4536,8 +4536,8 @@ msgstr "Pasfhocal Nua"
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
 #: src/view/screens/Profile.tsx:495
-#: src/view/screens/ProfileList.tsx:248
-#: src/view/screens/ProfileList.tsx:281
+#: src/view/screens/ProfileList.tsx:250
+#: src/view/screens/ProfileList.tsx:283
 msgid "New post"
 msgstr "Postáil nua"
 
@@ -5202,7 +5202,6 @@ msgid "Pause video"
 msgstr "Cuir an físeán ar shos"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/ProfileList.tsx:162
 #: src/view/screens/Search/Search.tsx:519
 msgid "People"
 msgstr "Daoine"
@@ -5245,7 +5244,7 @@ msgstr "Pictiúir le haghaidh daoine fásta."
 msgid "Pin feed"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:683
+#: src/view/screens/ProfileList.tsx:685
 msgid "Pin to home"
 msgstr "Greamaigh le baile"
 
@@ -5271,7 +5270,7 @@ msgstr ""
 msgid "Pinned Feeds"
 msgstr "Fothaí greamaithe"
 
-#: src/view/screens/ProfileList.tsx:349
+#: src/view/screens/ProfileList.tsx:351
 msgid "Pinned to your feeds"
 msgstr "Greamaithe le do chuid fothaí"
 
@@ -5759,7 +5758,7 @@ msgstr "An bhfuil fonn ort an fotha a bhaint?"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:324
 #: src/view/com/feeds/FeedSourceCard.tsx:190
 #: src/view/com/feeds/FeedSourceCard.tsx:268
-#: src/view/screens/ProfileList.tsx:496
+#: src/view/screens/ProfileList.tsx:498
 #: src/view/screens/SavedFeeds.tsx:342
 msgid "Remove from my feeds"
 msgstr "Bain de mo chuid fothaí"
@@ -5834,7 +5833,7 @@ msgstr "Baineadh de do chuid fothaí sábháilte é"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:126
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
-#: src/view/screens/ProfileList.tsx:380
+#: src/view/screens/ProfileList.tsx:382
 msgid "Removed from your feeds"
 msgstr "Baineadh de do chuid fothaí é"
 
@@ -5946,7 +5945,7 @@ msgstr "Tuairiscigh comhrá"
 msgid "Report feed"
 msgstr "Déan gearán faoi fhotha"
 
-#: src/view/screens/ProfileList.tsx:538
+#: src/view/screens/ProfileList.tsx:540
 msgid "Report List"
 msgstr "Déan gearán faoi liosta"
 
@@ -6147,7 +6146,7 @@ msgstr "Bain triail eile as"
 #: src/components/Error.tsx:73
 #: src/screens/List/ListHiddenScreen.tsx:216
 #: src/screens/StarterPack/StarterPackScreen.tsx:752
-#: src/view/screens/ProfileList.tsx:1008
+#: src/view/screens/ProfileList.tsx:1010
 msgid "Return to previous page"
 msgstr "Fill ar an leathanach roimhe seo"
 
@@ -6233,7 +6232,7 @@ msgid "Saved to your camera roll"
 msgstr "Sábháladh i do rolla ceamara é"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:135
-#: src/view/screens/ProfileList.tsx:360
+#: src/view/screens/ProfileList.tsx:362
 msgid "Saved to your feeds"
 msgstr "Sábháilte le mo chuid fothaí"
 
@@ -6261,7 +6260,7 @@ msgstr "Abair heileo!"
 msgid "Science"
 msgstr "Eolaíocht"
 
-#: src/view/screens/ProfileList.tsx:965
+#: src/view/screens/ProfileList.tsx:967
 msgid "Scroll to top"
 msgstr "Fill ar an mbarr"
 
@@ -6597,7 +6596,7 @@ msgstr "Graosta"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:346
-#: src/view/screens/ProfileList.tsx:481
+#: src/view/screens/ProfileList.tsx:483
 msgid "Share"
 msgstr "Comhroinn"
 
@@ -6990,15 +6989,13 @@ msgstr "Spórt"
 msgid "Start a new chat"
 msgstr "Tosaigh comhrá nua"
 
-#: src/view/screens/ProfileList.tsx:814
-#: src/view/screens/ProfileList.tsx:933
-#~ msgid "Start adding people"
-#~ msgstr ""
+#: src/view/screens/ProfileList.tsx:817
+#: src/view/screens/ProfileList.tsx:938
+msgid "Start adding people"
+msgstr ""
 
-#: src/view/screens/ProfileList.tsx:815
-#: src/view/screens/ProfileList.tsx:822
-#: src/view/screens/ProfileList.tsx:936
-#: src/view/screens/ProfileList.tsx:943
+#: src/view/screens/ProfileList.tsx:824
+#: src/view/screens/ProfileList.tsx:945
 msgid "Start adding people!"
 msgstr ""
 
@@ -7062,7 +7059,7 @@ msgstr "Storybook"
 msgid "Submit"
 msgstr "Seol"
 
-#: src/view/screens/ProfileList.tsx:710
+#: src/view/screens/ProfileList.tsx:712
 msgid "Subscribe"
 msgstr "Liostáil"
 
@@ -7078,7 +7075,7 @@ msgstr "Glac síntiús le lipéadóir"
 msgid "Subscribe to this labeler"
 msgstr "Glac síntiús leis an lipéadóir seo"
 
-#: src/view/screens/ProfileList.tsx:706
+#: src/view/screens/ProfileList.tsx:708
 msgid "Subscribe to this list"
 msgstr "Liostáil leis an liosta seo"
 
@@ -7367,8 +7364,8 @@ msgid "There was an issue connecting to Tenor."
 msgstr "Bhí fadhb ann maidir le teagmháil a dhéanamh le Tenor."
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:177
-#: src/view/screens/ProfileList.tsx:363
-#: src/view/screens/ProfileList.tsx:382
+#: src/view/screens/ProfileList.tsx:365
+#: src/view/screens/ProfileList.tsx:384
 #: src/view/screens/SavedFeeds.tsx:85
 msgid "There was an issue contacting the server"
 msgstr "Bhí fadhb ann maidir le teagmháil a dhéanamh leis an bhfreastalaí"
@@ -7446,10 +7443,10 @@ msgstr "Bhí fadhb ann! {0}"
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
-#: src/view/screens/ProfileList.tsx:394
-#: src/view/screens/ProfileList.tsx:407
-#: src/view/screens/ProfileList.tsx:420
-#: src/view/screens/ProfileList.tsx:433
+#: src/view/screens/ProfileList.tsx:396
+#: src/view/screens/ProfileList.tsx:409
+#: src/view/screens/ProfileList.tsx:422
+#: src/view/screens/ProfileList.tsx:435
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "Bhí fadhb ann. Seiceáil do cheangal leis an idirlíon, le do thoil, agus bain triail eile as."
 
@@ -7533,7 +7530,7 @@ msgstr "Tá an fotha seo folamh! Is féidir go mbeidh ort tuilleadh úsáideoir�
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/screens/Profile/ProfileFeed/index.tsx:170
-#: src/view/screens/ProfileList.tsx:812
+#: src/view/screens/ProfileList.tsx:814
 msgid "This feed is empty."
 msgstr "Tá an fotha seo folamh."
 
@@ -7581,7 +7578,7 @@ msgstr "Seans go sáraíonn ainm nó cur síos an liosta seo (liosta a chruthaig
 #~ msgid "This list is empty!"
 #~ msgstr "Tá an liosta seo folamh!"
 
-#: src/view/screens/ProfileList.tsx:931
+#: src/view/screens/ProfileList.tsx:933
 msgid "This list is empty."
 msgstr ""
 
@@ -7791,11 +7788,11 @@ msgstr "Scríobh do theachtaireacht anseo"
 msgid "Type:"
 msgstr "Clóscríobh:"
 
-#: src/view/screens/ProfileList.tsx:588
+#: src/view/screens/ProfileList.tsx:590
 msgid "Un-block list"
 msgstr "Díbhlocáil an liosta"
 
-#: src/view/screens/ProfileList.tsx:573
+#: src/view/screens/ProfileList.tsx:575
 msgid "Un-mute list"
 msgstr "Díbhalbhaigh an liosta"
 
@@ -7823,7 +7820,7 @@ msgstr "Ní féidir é a scriosadh"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:197
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
 #: src/view/com/profile/ProfileMenu.tsx:341
-#: src/view/screens/ProfileList.tsx:692
+#: src/view/screens/ProfileList.tsx:694
 msgid "Unblock"
 msgstr "Díbhlocáil"
 
@@ -7883,7 +7880,7 @@ msgstr ""
 #~ msgstr "Dímhol an fotha seo"
 
 #: src/components/TagMenu/index.tsx:264
-#: src/view/screens/ProfileList.tsx:699
+#: src/view/screens/ProfileList.tsx:701
 msgid "Unmute"
 msgstr "Díbhalbhaigh"
 
@@ -7919,7 +7916,7 @@ msgstr "Ná balbhaigh an snáithe seo níos mó"
 msgid "Unmute video"
 msgstr "Ná balbhaigh an físeán seo níos mó"
 
-#: src/view/screens/ProfileList.tsx:683
+#: src/view/screens/ProfileList.tsx:685
 msgid "Unpin"
 msgstr "Díghreamaigh"
 
@@ -7938,7 +7935,7 @@ msgstr "Díghreamaigh ón mbaile"
 msgid "Unpin from profile"
 msgstr "Díghreamaigh ón bpróifíl"
 
-#: src/view/screens/ProfileList.tsx:553
+#: src/view/screens/ProfileList.tsx:555
 msgid "Unpin moderation list"
 msgstr "Díghreamaigh an liosta modhnóireachta"
 
@@ -7946,7 +7943,7 @@ msgstr "Díghreamaigh an liosta modhnóireachta"
 msgid "Unpinned {0} from Home"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:350
+#: src/view/screens/ProfileList.tsx:352
 msgid "Unpinned from your feeds"
 msgstr "Díghreamaithe ó do chuid fothaí"
 

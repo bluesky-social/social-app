@@ -498,8 +498,8 @@ msgstr "Προσθήκη {displayName} στο starter pack"
 msgid "Add a content warning"
 msgstr "Προσθήκη προειδοποίησης περιεχομένου"
 
-#: src/view/screens/ProfileList.tsx:893
-#: src/view/screens/ProfileList.tsx:911
+#: src/view/screens/ProfileList.tsx:895
+#: src/view/screens/ProfileList.tsx:913
 msgid "Add a user to this list"
 msgstr "Προσθήκη χρήστη σε αυτήν τη λίστα"
 
@@ -553,8 +553,8 @@ msgstr "Προσθήκη λέξεων και ετικετών που θα είν
 msgid "Add new post"
 msgstr "Προσθήκη νέας ανάρτησης"
 
-#: src/view/screens/ProfileList.tsx:901
-#: src/view/screens/ProfileList.tsx:919
+#: src/view/screens/ProfileList.tsx:903
+#: src/view/screens/ProfileList.tsx:921
 msgid "Add people"
 msgstr ""
 
@@ -1029,15 +1029,15 @@ msgstr "Αποκλεισμός λογαριασμού"
 msgid "Block Account?"
 msgstr "Αποκλεισμός λογαριασμού;"
 
-#: src/view/screens/ProfileList.tsx:637
+#: src/view/screens/ProfileList.tsx:639
 msgid "Block accounts"
 msgstr "Αποκλεισμός λογαριασμών"
 
-#: src/view/screens/ProfileList.tsx:758
+#: src/view/screens/ProfileList.tsx:760
 msgid "Block list"
 msgstr "Λίστα αποκλεισμένων"
 
-#: src/view/screens/ProfileList.tsx:753
+#: src/view/screens/ProfileList.tsx:755
 msgid "Block these accounts?"
 msgstr "Αποκλεισμός αυτών των λογαριασμών;"
 
@@ -1071,7 +1071,7 @@ msgstr "Αποκλεισμένη ανάρτηση."
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr "Ο αποκλεισμός δεν εμποδίζει αυτόν τον ετικετοποιητή από το να τοποθετεί ετικέτες στον λογαριασμό σας."
 
-#: src/view/screens/ProfileList.tsx:755
+#: src/view/screens/ProfileList.tsx:757
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Ο αποκλεισμός είναι δημόσιος. Οι αποκλεισμένοι λογαριασμοί δεν μπορούν να απαντήσουν στις συζητήσεις σας, να σας αναφέρουν ή να αλληλεπιδράσουν με άλλο τρόπο μαζί σας."
 
@@ -1784,7 +1784,7 @@ msgstr "Αντιγραφή συνδέσμου"
 msgid "Copy Link"
 msgstr "Αντιγραφή Συνδέσμου"
 
-#: src/view/screens/ProfileList.tsx:481
+#: src/view/screens/ProfileList.tsx:483
 msgid "Copy link to list"
 msgstr "Αντιγραφή συνδέσμου στη λίστα"
 
@@ -1824,7 +1824,7 @@ msgstr "Δεν ήταν δυνατή η αποχώρηση από τη συνο�
 msgid "Could not load feed"
 msgstr "Δεν ήταν δυνατή η φόρτωση της ροής"
 
-#: src/view/screens/ProfileList.tsx:998
+#: src/view/screens/ProfileList.tsx:1000
 msgid "Could not load list"
 msgstr "Δεν ήταν δυνατή η φόρτωση της λίστας"
 
@@ -1957,7 +1957,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:665
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:661
-#: src/view/screens/ProfileList.tsx:737
+#: src/view/screens/ProfileList.tsx:739
 msgid "Delete"
 msgstr "Διαγραφή"
 
@@ -1986,7 +1986,7 @@ msgstr "Διαγραφή εγγραφής δήλωσης συνομιλίας"
 msgid "Delete for me"
 msgstr "Διαγραφή για μένα"
 
-#: src/view/screens/ProfileList.tsx:524
+#: src/view/screens/ProfileList.tsx:526
 msgid "Delete List"
 msgstr "Διαγραφή Λίστας"
 
@@ -2017,7 +2017,7 @@ msgstr "Διαγραφή starter pack"
 msgid "Delete starter pack?"
 msgstr "Διαγραφή starter pack;"
 
-#: src/view/screens/ProfileList.tsx:732
+#: src/view/screens/ProfileList.tsx:734
 msgid "Delete this list?"
 msgstr "Διαγραφή αυτής της λίστας;"
 
@@ -2325,7 +2325,7 @@ msgstr "Επεξεργασία εικόνας"
 msgid "Edit interaction settings"
 msgstr "Επεξεργασία ρυθμίσεων αλληλεπίδρασης"
 
-#: src/view/screens/ProfileList.tsx:512
+#: src/view/screens/ProfileList.tsx:514
 msgid "Edit list details"
 msgstr "Επεξεργασία λεπτομερειών λίστας"
 
@@ -3117,7 +3117,7 @@ msgstr "Φανοφανείς παραβιάσεις του νόμου ή των 
 #: src/screens/Profile/ProfileFeed/index.tsx:82
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
-#: src/view/screens/ProfileList.tsx:1007
+#: src/view/screens/ProfileList.tsx:1009
 msgid "Go back"
 msgstr "Πίσω"
 
@@ -3128,7 +3128,7 @@ msgstr "Πίσω"
 #: src/screens/Profile/ProfileFeed/index.tsx:87
 #: src/screens/StarterPack/StarterPackScreen.tsx:758
 #: src/view/screens/NotFound.tsx:56
-#: src/view/screens/ProfileList.tsx:1012
+#: src/view/screens/ProfileList.tsx:1014
 msgid "Go Back"
 msgstr "Πίσω"
 
@@ -3401,7 +3401,7 @@ msgstr "Εάν το εναλλακτικό κείμενο είναι μακρύ,
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "Εάν δεν είστε ακόμη ενήλικας σύμφωνα με τους νόμους της χώρας σας, ο γονέας ή ο νόμιμος κηδεμόνας σας πρέπει να διαβάσει αυτούς τους Όρους εκ μέρους σας."
 
-#: src/view/screens/ProfileList.tsx:734
+#: src/view/screens/ProfileList.tsx:736
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "Εάν διαγράψετε αυτήν τη λίστα, δεν θα μπορείτε να την ανακτήσετε."
 
@@ -3781,7 +3781,7 @@ msgstr "Λίστα"
 msgid "List Avatar"
 msgstr "Εικόνα λίστας"
 
-#: src/view/screens/ProfileList.tsx:416
+#: src/view/screens/ProfileList.tsx:418
 msgid "List blocked"
 msgstr "Λίστα μπλοκαρισμένη"
 
@@ -3798,7 +3798,7 @@ msgstr ""
 msgid "List by you"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:453
+#: src/view/screens/ProfileList.tsx:455
 msgid "List deleted"
 msgstr "Λίστα διαγραμμένη"
 
@@ -3810,7 +3810,7 @@ msgstr "Η λίστα έχει κρυφτεί"
 msgid "List Hidden"
 msgstr "Λίστα κρυφή"
 
-#: src/view/screens/ProfileList.tsx:390
+#: src/view/screens/ProfileList.tsx:392
 msgid "List muted"
 msgstr "Λίστα σε σίγαση"
 
@@ -3818,11 +3818,11 @@ msgstr "Λίστα σε σίγαση"
 msgid "List Name"
 msgstr "Όνομα λίστας"
 
-#: src/view/screens/ProfileList.tsx:429
+#: src/view/screens/ProfileList.tsx:431
 msgid "List unblocked"
 msgstr "Λίστα ξεμπλοκαρισμένη"
 
-#: src/view/screens/ProfileList.tsx:403
+#: src/view/screens/ProfileList.tsx:405
 msgid "List unmuted"
 msgstr "Λίστα αφαίρεση σίγασης"
 
@@ -3858,7 +3858,7 @@ msgstr "Φόρτωση νέων ειδοποιήσεων"
 #: src/screens/Profile/ProfileFeed/index.tsx:192
 #: src/screens/Profile/Sections/Feed.tsx:96
 #: src/view/com/feeds/FeedPage.tsx:143
-#: src/view/screens/ProfileList.tsx:847
+#: src/view/screens/ProfileList.tsx:849
 msgid "Load new posts"
 msgstr "Φόρτωση νέων αναρτήσεων"
 
@@ -4079,7 +4079,7 @@ msgid "More feeds"
 msgstr "Περισσότερες ροές"
 
 #: src/view/com/profile/ProfileMenu.tsx:179
-#: src/view/screens/ProfileList.tsx:719
+#: src/view/screens/ProfileList.tsx:721
 msgid "More options"
 msgstr "Περισσότερες επιλογές"
 
@@ -4120,7 +4120,7 @@ msgstr "Σίγαση {truncatedTag}"
 msgid "Mute Account"
 msgstr "Σίγαση Λογαριασμού"
 
-#: src/view/screens/ProfileList.tsx:625
+#: src/view/screens/ProfileList.tsx:627
 msgid "Mute accounts"
 msgstr "Σίγαση λογαριασμών"
 
@@ -4137,11 +4137,11 @@ msgstr "Σίγαση συνομιλίας"
 msgid "Mute in:"
 msgstr "Σίγαση σε:"
 
-#: src/view/screens/ProfileList.tsx:748
+#: src/view/screens/ProfileList.tsx:750
 msgid "Mute list"
 msgstr "Λίστα σίγασης"
 
-#: src/view/screens/ProfileList.tsx:743
+#: src/view/screens/ProfileList.tsx:745
 msgid "Mute these accounts?"
 msgstr "Σίγαση αυτών των λογαριασμών;"
 
@@ -4200,7 +4200,7 @@ msgstr "Σε σίγαση από  “{0}”"
 msgid "Muted words & tags"
 msgstr "Λέξεις & ετικέτες σε σίγαση"
 
-#: src/view/screens/ProfileList.tsx:745
+#: src/view/screens/ProfileList.tsx:747
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr "Η σίγαση είναι ιδιωτική. Οι λογαριασμοί σε σίγαση μπορούν να αλληλεπιδράσουν μαζί σας, αλλά δεν θα βλέπετε τις δημοσιεύσεις τους ούτε θα λαμβάνετε ειδοποιήσεις από αυτούς."
 
@@ -4319,8 +4319,8 @@ msgstr "Νέα δημοσίευση"
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
 #: src/view/screens/Profile.tsx:495
-#: src/view/screens/ProfileList.tsx:248
-#: src/view/screens/ProfileList.tsx:281
+#: src/view/screens/ProfileList.tsx:250
+#: src/view/screens/ProfileList.tsx:283
 msgid "New post"
 msgstr "Νέα δημοσίευση"
 
@@ -4882,7 +4882,6 @@ msgid "Pause video"
 msgstr "Παύση βίντεο"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/ProfileList.tsx:162
 #: src/view/screens/Search/Search.tsx:519
 msgid "People"
 msgstr "Άτομα"
@@ -4925,7 +4924,7 @@ msgstr "Εικόνες για ενήλικες."
 msgid "Pin feed"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:683
+#: src/view/screens/ProfileList.tsx:685
 msgid "Pin to home"
 msgstr "Καρφίτσωμα στην αρχική"
 
@@ -4951,7 +4950,7 @@ msgstr ""
 msgid "Pinned Feeds"
 msgstr "Καρφιτσωμένες ροές"
 
-#: src/view/screens/ProfileList.tsx:349
+#: src/view/screens/ProfileList.tsx:351
 msgid "Pinned to your feeds"
 msgstr "Καρφιτσωμένο στις ροές σας"
 
@@ -5126,7 +5125,6 @@ msgstr "δημοσιεύσεις"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
 #: src/view/screens/Profile.tsx:231
-#: src/view/screens/ProfileList.tsx:162
 msgid "Posts"
 msgstr "Δημοσιεύσεις"
 
@@ -5411,7 +5409,7 @@ msgstr "Αφαίρεση ροής;"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:324
 #: src/view/com/feeds/FeedSourceCard.tsx:190
 #: src/view/com/feeds/FeedSourceCard.tsx:268
-#: src/view/screens/ProfileList.tsx:496
+#: src/view/screens/ProfileList.tsx:498
 #: src/view/screens/SavedFeeds.tsx:342
 msgid "Remove from my feeds"
 msgstr "Αφαίρεση από τις ροές μου"
@@ -5486,7 +5484,7 @@ msgstr "Αφαιρέθηκε από τις αποθηκευμένες ροές"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:126
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
-#: src/view/screens/ProfileList.tsx:380
+#: src/view/screens/ProfileList.tsx:382
 msgid "Removed from your feeds"
 msgstr "Αφαιρέθηκε από τις ροές σας"
 
@@ -5598,7 +5596,7 @@ msgstr "Παράθυρο αναφοράς"
 msgid "Report feed"
 msgstr "Αναφορά ροής"
 
-#: src/view/screens/ProfileList.tsx:538
+#: src/view/screens/ProfileList.tsx:540
 msgid "Report List"
 msgstr "Αναφορά Λίστας"
 
@@ -5778,7 +5776,7 @@ msgstr "Προσπαθείστε ξανά"
 #: src/components/Error.tsx:73
 #: src/screens/List/ListHiddenScreen.tsx:216
 #: src/screens/StarterPack/StarterPackScreen.tsx:752
-#: src/view/screens/ProfileList.tsx:1008
+#: src/view/screens/ProfileList.tsx:1010
 msgid "Return to previous page"
 msgstr "Επιστροφή στην προηγούμενη σελίδα"
 
@@ -5860,7 +5858,7 @@ msgid "Saved to your camera roll"
 msgstr "Αποθηκεύτηκε στο άλμπουμ της κάμεράς σας"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:135
-#: src/view/screens/ProfileList.tsx:360
+#: src/view/screens/ProfileList.tsx:362
 msgid "Saved to your feeds"
 msgstr "Αποθηκεύτηκε στις ροές σας"
 
@@ -5884,7 +5882,7 @@ msgstr "Πείτε γεια!"
 msgid "Science"
 msgstr "Επιστήμη"
 
-#: src/view/screens/ProfileList.tsx:965
+#: src/view/screens/ProfileList.tsx:967
 msgid "Scroll to top"
 msgstr "Μετακίνηση στην κορυφή"
 
@@ -6192,7 +6190,7 @@ msgstr "Σεξουαλικά προκλητικό"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:346
-#: src/view/screens/ProfileList.tsx:481
+#: src/view/screens/ProfileList.tsx:483
 msgid "Share"
 msgstr "Κοινή χρήση"
 
@@ -6544,10 +6542,13 @@ msgstr "Αθλήματα"
 msgid "Start a new chat"
 msgstr "Έναρξη νέας συνομιλίας"
 
-#: src/view/screens/ProfileList.tsx:815
-#: src/view/screens/ProfileList.tsx:822
-#: src/view/screens/ProfileList.tsx:936
-#: src/view/screens/ProfileList.tsx:943
+#: src/view/screens/ProfileList.tsx:817
+#: src/view/screens/ProfileList.tsx:938
+msgid "Start adding people"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:824
+#: src/view/screens/ProfileList.tsx:945
 msgid "Start adding people!"
 msgstr ""
 
@@ -6611,7 +6612,7 @@ msgstr "Storybook"
 msgid "Submit"
 msgstr "Υποβολή"
 
-#: src/view/screens/ProfileList.tsx:710
+#: src/view/screens/ProfileList.tsx:712
 msgid "Subscribe"
 msgstr "Εγγραφή"
 
@@ -6627,7 +6628,7 @@ msgstr "Εγγραφείτε στον ετικετογράφο"
 msgid "Subscribe to this labeler"
 msgstr "Εγγραφείτε σε αυτόν τον δημιουργό ετικετών"
 
-#: src/view/screens/ProfileList.tsx:706
+#: src/view/screens/ProfileList.tsx:708
 msgid "Subscribe to this list"
 msgstr "Εγγραφείτε σε αυτήν τη λίστα"
 
@@ -6908,8 +6909,8 @@ msgid "There was an issue connecting to Tenor."
 msgstr "Παρουσιάστηκε πρόβλημα σύνδεσης με το Tenor."
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:177
-#: src/view/screens/ProfileList.tsx:363
-#: src/view/screens/ProfileList.tsx:382
+#: src/view/screens/ProfileList.tsx:365
+#: src/view/screens/ProfileList.tsx:384
 #: src/view/screens/SavedFeeds.tsx:85
 msgid "There was an issue contacting the server"
 msgstr "Παρουσιάστηκε πρόβλημα επικοινωνίας με τον διακομιστή"
@@ -6983,10 +6984,10 @@ msgstr "Παρουσιάστηκε πρόβλημα! {0}"
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
-#: src/view/screens/ProfileList.tsx:394
-#: src/view/screens/ProfileList.tsx:407
-#: src/view/screens/ProfileList.tsx:420
-#: src/view/screens/ProfileList.tsx:433
+#: src/view/screens/ProfileList.tsx:396
+#: src/view/screens/ProfileList.tsx:409
+#: src/view/screens/ProfileList.tsx:422
+#: src/view/screens/ProfileList.tsx:435
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "Παρουσιάστηκε πρόβλημα. Παρακαλούμε ελέγξτε τη σύνδεσή σας στο internet και δοκιμάστε ξανά."
 
@@ -7070,7 +7071,7 @@ msgstr "Αυτή η ροή είναι άδεια! Ίσως χρειαστεί ν
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/screens/Profile/ProfileFeed/index.tsx:170
-#: src/view/screens/ProfileList.tsx:812
+#: src/view/screens/ProfileList.tsx:814
 msgid "This feed is empty."
 msgstr "Αυτή η ροή είναι άδεια."
 
@@ -7118,7 +7119,7 @@ msgstr "Αυτή η λίστα - δημιουργημένη από <0>{0}</0> - 
 #~ msgid "This list is empty!"
 #~ msgstr "Αυτή η λίστα είναι άδεια!"
 
-#: src/view/screens/ProfileList.tsx:931
+#: src/view/screens/ProfileList.tsx:933
 msgid "This list is empty."
 msgstr ""
 
@@ -7316,11 +7317,11 @@ msgstr "Πληκτρολογήστε το μήνυμά σας εδώ"
 msgid "Type:"
 msgstr "Τύπος:"
 
-#: src/view/screens/ProfileList.tsx:588
+#: src/view/screens/ProfileList.tsx:590
 msgid "Un-block list"
 msgstr "Ακύρωση μπλοκαρίσματος λίστας"
 
-#: src/view/screens/ProfileList.tsx:573
+#: src/view/screens/ProfileList.tsx:575
 msgid "Un-mute list"
 msgstr "Ακύρωση σίγασης λίστας"
 
@@ -7348,7 +7349,7 @@ msgstr "Αδυναμία διαγραφής"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:197
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
 #: src/view/com/profile/ProfileMenu.tsx:341
-#: src/view/screens/ProfileList.tsx:692
+#: src/view/screens/ProfileList.tsx:694
 msgid "Unblock"
 msgstr "Ξεμπλοκάρισμα"
 
@@ -7408,7 +7409,7 @@ msgstr ""
 #~ msgstr "Κατάργηση του \"Μου αρέσει\" από αυτήν την ροή"
 
 #: src/components/TagMenu/index.tsx:264
-#: src/view/screens/ProfileList.tsx:699
+#: src/view/screens/ProfileList.tsx:701
 msgid "Unmute"
 msgstr "Ακύρωση Σίγασης"
 
@@ -7444,7 +7445,7 @@ msgstr "Ακύρωση Σίγασης νήματος"
 msgid "Unmute video"
 msgstr "Ακύρωση Σίγασης βίντεο"
 
-#: src/view/screens/ProfileList.tsx:683
+#: src/view/screens/ProfileList.tsx:685
 msgid "Unpin"
 msgstr "Αφαίρεση καρφιτσωμένου"
 
@@ -7463,7 +7464,7 @@ msgstr "Αφαίρεση καρφιτσωμένου από την αρχική �
 msgid "Unpin from profile"
 msgstr "Αφαίρεση καρφιτσωμένου από το προφίλ"
 
-#: src/view/screens/ProfileList.tsx:553
+#: src/view/screens/ProfileList.tsx:555
 msgid "Unpin moderation list"
 msgstr "Αφαίρεση καρφιτσωμένου από τη λίστα διαχείρισης"
 
@@ -7471,7 +7472,7 @@ msgstr "Αφαίρεση καρφιτσωμένου από τη λίστα δι�
 msgid "Unpinned {0} from Home"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:350
+#: src/view/screens/ProfileList.tsx:352
 msgid "Unpinned from your feeds"
 msgstr "Αφαιρέθηκε το καρφιτσωμένο από τις ροές σας"
 
@@ -7934,7 +7935,7 @@ msgstr "Αντιμετωπίζουμε προβλήματα δικτύου, δο
 msgid "We're so excited to have you join us!"
 msgstr "Είμαστε τόσο ενθουσιασμένοι που θα γίνετε μέλος μας!"
 
-#: src/view/screens/ProfileList.tsx:109
+#: src/view/screens/ProfileList.tsx:112
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
 msgstr "Λυπούμαστε, αλλά δεν μπορέσαμε να επιλύσουμε αυτήν τη λίστα. Εάν αυτό συνεχιστεί, επικοινωνήστε με τον δημιουργό της λίστας, @{handleOrDid}."
 
