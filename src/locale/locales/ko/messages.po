@@ -1823,7 +1823,7 @@ msgstr "{0}에 생성됨"
 
 #: src/screens/List/ListHiddenScreen.tsx:127
 msgid "Creator has been blocked"
-msgstr "리스트 작성자 차단됨"
+msgstr "작성자 차단됨"
 
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
