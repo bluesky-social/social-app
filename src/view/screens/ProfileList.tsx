@@ -814,7 +814,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
           <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
           {isOwner && (
             <NewButton
-              label={_(msg`Start adding people`)}
+              label={_(msg`Start adding people!`)}
               onPress={onPressAddUser}
               color="primary"
               size="small"
@@ -935,7 +935,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
           {isOwner && (
             <NewButton
               testID="emptyStateAddUserBtn"
-              label={_(msg`Start adding people`)}
+              label={_(msg`Start adding people!`)}
               onPress={onPressAddUser}
               color="primary"
               size="small"
