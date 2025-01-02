@@ -68,7 +68,7 @@ msgstr "{0, plural, one {# citat} other {# citater}}"
 
 #: src/screens/Post/PostRepostedBy.tsx:41
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr "{0, plural, one {# repost} other {# reposts}}"
+msgstr "{0, plural, one {# videredeling} other {# videredelinger}}"
 
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
@@ -90,7 +90,7 @@ msgstr "{0, plural, one {like} other {likes}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "{0, plural, one {post} other {posts}}"
+msgstr "{0, plural, one {opslag} other {opslag}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:431
 msgid "{0, plural, one {quote} other {quotes}}"
@@ -98,7 +98,7 @@ msgstr "{0, plural, one {citat} other {citater}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:413
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr "{0, plural, one {repost} other {reposts}}"
+msgstr "{0, plural, one {videredeling} other {videredelinger}}"
 
 #: src/screens/Settings/Settings.tsx:422
 msgid "{0}"
@@ -194,11 +194,11 @@ msgstr "{firstAuthorLink} og <0>{additionalAuthorsCount, plural, one {{formatted
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:223
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
-msgstr "{firstAuthorLink} og <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} anden} other {{formattedAuthorsCount} andre}}</0> likede din post"
+msgstr "{firstAuthorLink} og <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} anden} other {{formattedAuthorsCount} andre}}</0> likede dit opslag"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:247
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
-msgstr "{firstAuthorLink} og <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} anden} other {{formattedAuthorsCount} andre}}</0> repostede din post"
+msgstr "{firstAuthorLink} og <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} anden} other {{formattedAuthorsCount} andre}}</0> videredelte dit opslag"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:351
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
@@ -218,11 +218,11 @@ msgstr "{firstAuthorLink} likede dit specialbyggede feed"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:235
 msgid "{firstAuthorLink} liked your post"
-msgstr "{firstAuthorLink} likede din post"
+msgstr "{firstAuthorLink} likede dit opslag"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:259
 msgid "{firstAuthorLink} reposted your post"
-msgstr "{firstAuthorLink} repostede din post"
+msgstr "{firstAuthorLink} videredelte dit opslag"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:363
 msgid "{firstAuthorLink} signed up with your starter pack"
@@ -238,11 +238,11 @@ msgstr "{firstAuthorName} og {additionalAuthorsCount, plural, one {{formattedAut
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:216
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
-msgstr "{firstAuthorName} og {additionalAuthorsCount, plural, one {{formattedAuthorsCount} anden} other {{formattedAuthorsCount} andre}} likede din post"
+msgstr "{firstAuthorName} og {additionalAuthorsCount, plural, one {{formattedAuthorsCount} anden} other {{formattedAuthorsCount} andre}} likede dit opslag"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:240
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
-msgstr "{firstAuthorName} og {additionalAuthorsCount, plural, one {{formattedAuthorsCount} anden} other {{formattedAuthorsCount} andre}} repostede din post"
+msgstr "{firstAuthorName} og {additionalAuthorsCount, plural, one {{formattedAuthorsCount} anden} other {{formattedAuthorsCount} andre}} videredelte dit opslag"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:344
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
@@ -262,11 +262,11 @@ msgstr "{firstAuthorName} likede dit specialbyggede feed"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:221
 msgid "{firstAuthorName} liked your post"
-msgstr "{firstAuthorName} likede din post"
+msgstr "{firstAuthorName} likede dit opslag"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:245
 msgid "{firstAuthorName} reposted your post"
-msgstr "{firstAuthorName} repostede din post"
+msgstr "{firstAuthorName} videredelte dit opslag"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:349
 msgid "{firstAuthorName} signed up with your starter pack"
@@ -485,7 +485,7 @@ msgstr "Tilføj endnu en konto"
 
 #: src/view/com/composer/Composer.tsx:721
 msgid "Add another post"
-msgstr "Tilføj endnu en post"
+msgstr "Tilføj endnu et opslag"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:102
 msgid "Add app password"
@@ -507,7 +507,7 @@ msgstr "Tilføj skjulte ord og tags"
 
 #: src/view/com/composer/Composer.tsx:1235
 msgid "Add new post"
-msgstr "Tilføj ny post"
+msgstr "Tilføj nyt opslag"
 
 #: src/view/screens/ProfileList.tsx:899
 #: src/view/screens/ProfileList.tsx:917
@@ -604,7 +604,7 @@ msgstr "Tillad nye beskeder fra"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
 msgid "Allow quote posts"
-msgstr "Tillad citatposts"
+msgstr "Tillad citatopslag"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Allow replies from:"
@@ -843,7 +843,7 @@ msgstr "Arkiveret fra {0}"
 #: src/view/com/post-thread/PostThreadItem.tsx:804
 #: src/view/com/post-thread/PostThreadItem.tsx:843
 msgid "Archived post"
-msgstr "Arkiveret post"
+msgstr "Arkiveret opslag"
 
 #: src/screens/Settings/AppPasswords.tsx:209
 msgid "Are you sure you want to delete the app password \"{0}\"?"
@@ -879,7 +879,7 @@ msgstr "Er du sikker på, du vil kassere dette udkast?"
 
 #: src/view/com/composer/Composer.tsx:846
 msgid "Are you sure you'd like to discard this post?"
-msgstr "Er du sikker på, du vil kassere denne post?"
+msgstr "Er du sikker på, du vil kassere dette opslag?"
 
 #: src/components/dialogs/MutedWords.tsx:433
 msgid "Are you sure?"
@@ -937,7 +937,7 @@ msgstr "Før du opretter en liste, skal du bekræfte din e-mail."
 
 #: src/view/com/composer/Composer.tsx:599
 msgid "Before creating a post, you must first verify your email."
-msgstr "Før du opretter en post, skal du bekræfte din e-mail."
+msgstr "Før du opretter et opslag, skal du bekræfte din e-mail."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:340
 msgid "Before creating a starter pack, you must first verify your email."
@@ -1018,7 +1018,7 @@ msgstr "Blokerede konti kan ikke svare i dine tråde, omtale dig eller på anden
 
 #: src/view/com/post-thread/PostThread.tsx:464
 msgid "Blocked post."
-msgstr "Blokeret post."
+msgstr "Blokeret opslag."
 
 #: src/screens/Profile/Sections/Labels.tsx:174
 msgid "Blocking does not prevent this labeler from placing labels on your account."
@@ -1060,7 +1060,7 @@ msgstr "Bluesky vil vælge et antal anbefalede konti fra personer i dit netværk
 
 #: src/screens/Settings/components/PwiOptOut.tsx:92
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr "Bluesky vil ikke vise din profil og dine posts til udloggede brugere."
+msgstr "Bluesky vil ikke vise din profil og dine opslag til udloggede brugere."
 
 #: src/screens/Settings/AppIconSettings/index.tsx:99
 msgid "Bluesky+"
@@ -1110,11 +1110,11 @@ msgstr "Se flere feeds"
 
 #: src/components/TrendingTopics.tsx:176
 msgid "Browse posts about {displayName}"
-msgstr "Se posts om {displayName}"
+msgstr "Se opslag om {displayName}"
 
 #: src/components/TrendingTopics.tsx:184
 msgid "Browse posts tagged with {displayName}"
-msgstr "Se posts tagget med {displayName}"
+msgstr "Se opslag tagget med {displayName}"
 
 #: src/components/TrendingTopics.tsx:222
 msgid "Browse topic {displayName}"
@@ -1201,7 +1201,7 @@ msgstr "Annuller profilredigering"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:207
 msgid "Cancel quote post"
-msgstr "Annuller citatpost"
+msgstr "Annuller citatopslag"
 
 #: src/screens/Deactivated.tsx:151
 msgid "Cancel reactivation and log out"
@@ -1270,7 +1270,7 @@ msgstr "Skift adgangskode"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:74
 msgid "Change post language to {0}"
-msgstr "Skift postens sprog til {0}"
+msgstr "Skift opslagets sprog til {0}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
@@ -1337,7 +1337,7 @@ msgstr "Vælg konti"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:115
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
-msgstr "Vælg mærkater, der gælder for de medier, du publicerer. Hvis ingen er valgt, er din post egnet for alle."
+msgstr "Vælg mærkater, der gælder for de medier, du publicerer. Hvis ingen er valgt, er opslaget egnet for alle."
 
 #: src/view/com/auth/server-input/index.tsx:76
 msgid "Choose Service"
@@ -1386,11 +1386,11 @@ msgstr "Klik her for at åbne menuen for {tag}"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:307
 msgid "Click to disable quote posts of this post."
-msgstr "Klik for at spærre for citater af denne post."
+msgstr "Klik for at spærre for citater af dette opslag."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:308
 msgid "Click to enable quote posts of this post."
-msgstr "Klik for et tillade citater af denne post."
+msgstr "Klik for et tillade citater af dette opslag."
 
 #: src/components/dms/MessageItem.tsx:241
 msgid "Click to retry failed message"
@@ -1505,11 +1505,11 @@ msgstr "Løs opgaven"
 
 #: src/view/shell/desktop/LeftNav.tsx:301
 msgid "Compose new post"
-msgstr "Skriv ny post"
+msgstr "Skriv nyt opslag"
 
 #: src/view/com/composer/Composer.tsx:812
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
-msgstr "Skriv posts på op til {MAX_GRAPHEME_LENGTH} tegn"
+msgstr "Skriv opslag på op til {MAX_GRAPHEME_LENGTH} tegn"
 
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:34
 msgid "Compose reply"
@@ -1719,7 +1719,7 @@ msgstr "Kopier link til liste"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
 msgid "Copy link to post"
-msgstr "Kopier link til post"
+msgstr "Kopier link til opslag"
 
 #: src/components/dms/MessageMenu.tsx:110
 #: src/components/dms/MessageMenu.tsx:112
@@ -1729,7 +1729,7 @@ msgstr "Kopier beskedtekst"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:412
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:414
 msgid "Copy post text"
-msgstr "Kopier postens tekst"
+msgstr "Kopier opslagets tekst"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:169
 msgid "Copy QR code"
@@ -1829,7 +1829,7 @@ msgstr "Tilpasset"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:292
 msgid "Customize who can interact with this post."
-msgstr "Tilpas, hvem der kan interagere med denne post."
+msgstr "Tilpas, hvem der kan interagere med dette opslag."
 
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
@@ -1925,7 +1925,7 @@ msgstr "Slet min konto"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:642
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:644
 msgid "Delete post"
-msgstr "Slet post"
+msgstr "Slet opslag"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:580
 #: src/screens/StarterPack/StarterPackScreen.tsx:736
@@ -1942,7 +1942,7 @@ msgstr "Slet denne liste?"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:656
 msgid "Delete this post?"
-msgstr "Slet denne post?"
+msgstr "Slet dette opslag?"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:93
 msgid "Deleted"
@@ -1955,7 +1955,7 @@ msgstr "Slettet konto"
 
 #: src/view/com/post-thread/PostThread.tsx:450
 msgid "Deleted post."
-msgstr "Slettet post."
+msgstr "Slettet opslag."
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:344
 #: src/view/com/modals/CreateOrEditList.tsx:280
@@ -1985,7 +1985,7 @@ msgstr "Afkobl citat"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:719
 msgid "Detach quote post?"
-msgstr "Afkobl citeret post?"
+msgstr "Afkobl citeret opslag?"
 
 #: src/screens/Settings/Settings.tsx:242
 #: src/screens/Settings/Settings.tsx:245
@@ -1994,7 +1994,7 @@ msgstr "Udviklingerindstillinger"
 
 #: src/components/WhoCanReply.tsx:175
 msgid "Dialog: adjust who can interact with this post"
-msgstr "Dialog: Tilpas, hvem der kan interagere med denne post."
+msgstr "Dialog: Tilpas, hvem der kan interagere med dette opslag."
 
 #: src/screens/Settings/AppearanceSettings.tsx:122
 msgid "Dim"
@@ -2038,7 +2038,7 @@ msgstr "Kasser udkast?"
 
 #: src/view/com/composer/Composer.tsx:845
 msgid "Discard post?"
-msgstr "Kasser post?"
+msgstr "Kasser opslag?"
 
 #: src/screens/Settings/components/PwiOptOut.tsx:80
 #: src/screens/Settings/components/PwiOptOut.tsx:84
@@ -2206,7 +2206,7 @@ msgstr "fx Profiler, der altid rammer plet."
 
 #: src/view/com/modals/CreateOrEditList.tsx:293
 msgid "e.g. Users that repeatedly reply with ads."
-msgstr "fx Brugere, som poster for mange reklamer"
+msgstr "fx Brugere, der laver for mange reklameopslag."
 
 #: src/view/com/modals/InviteCodes.tsx:97
 msgid "Each code works once. You'll receive more invite codes periodically."
@@ -2358,11 +2358,11 @@ msgstr "HTML-kode til indlejring"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:451
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
 msgid "Embed post"
-msgstr "Indlejr post"
+msgstr "Indlejr opslag"
 
 #: src/components/dialogs/Embed.tsx:101
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
-msgstr "Indlejr denne post på dit website. Kopier blot følgende kodestump og indsæt den i HTML-koden på dit website."
+msgstr "Indlejr dette opslag på dit website. Kopier blot følgende kodestump og indsæt den i HTML-koden på dit website."
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb.tsx:57
 msgid "Embedded video player"
@@ -2508,7 +2508,7 @@ msgstr "Alle kan svare"
 
 #: src/components/WhoCanReply.tsx:213
 msgid "Everybody can reply to this post."
-msgstr "Alle kan besvare denne post."
+msgstr "Alle kan besvare dette opslag."
 
 #: src/screens/Messages/Settings.tsx:83
 #: src/screens/Messages/Settings.tsx:86
@@ -2562,7 +2562,7 @@ msgstr "Udvid brugerliste"
 #: src/view/com/composer/ComposerReplyTo.tsx:70
 #: src/view/com/composer/ComposerReplyTo.tsx:73
 msgid "Expand or collapse the full post you are replying to"
-msgstr "Udvid eller sammenklap den fulde post, du besvarer"
+msgstr "Udvid eller sammenklap det fulde opslag, du besvarer"
 
 #: src/lib/api/index.ts:400
 msgid "Expected uri to resolve to a record"
@@ -2641,7 +2641,7 @@ msgstr "Sletning af besked fejlede"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:195
 msgid "Failed to delete post, please try again"
-msgstr "Sletning af post fejlede, prøv igen"
+msgstr "Sletning af opslag fejlede, prøv igen"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:699
 msgid "Failed to delete starter pack"
@@ -2671,7 +2671,7 @@ msgstr "Indlæsning af foreslåede konti fejlede"
 
 #: src/state/queries/pinned-post.ts:75
 msgid "Failed to pin post"
-msgstr "Fastgørelse af post fejlede"
+msgstr "Fastgørelse af opslag fejlede"
 
 #: src/view/com/lightbox/Lightbox.tsx:46
 msgid "Failed to save image: {0}"
@@ -2791,7 +2791,7 @@ msgstr "Find personer, du kan følge"
 
 #: src/view/screens/Search/Search.tsx:588
 msgid "Find posts and users on Bluesky"
-msgstr "Find posts og brugere på Bluesky"
+msgstr "Find opslag og brugere på Bluesky"
 
 #: src/screens/StarterPack/Wizard/index.tsx:195
 msgid "Finish"
@@ -2971,7 +2971,7 @@ msgstr "Glemt?"
 
 #: src/lib/moderation/useReportOptions.ts:54
 msgid "Frequently Posts Unwanted Content"
-msgstr "Poster tit uønsket indhold"
+msgstr "Laver tit opslag med uønsket indhold"
 
 #: src/screens/Hashtag.tsx:120
 msgid "From @{sanitizedAuthor}"
@@ -3169,7 +3169,7 @@ msgstr "Skjul"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:523
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:529
 msgid "Hide post for me"
-msgstr "Skjul post for mig"
+msgstr "Skjul opslag for mig"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:540
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:550
@@ -3188,7 +3188,7 @@ msgstr "Skjul indholdet"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
 msgid "Hide this post?"
-msgstr "Skjul denne post?"
+msgstr "Skjul dette opslag?"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:729
@@ -3315,7 +3315,7 @@ msgstr "Hvis du har dit eget domæne, kan du bruge det som handle. Dette giver d
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
 msgid "If you remove this post, you won't be able to recover it."
-msgstr "Hvis du sletter denne post, kan den ikke genskabes."
+msgstr "Hvis du sletter dette opslag, kan det ikke genskabes."
 
 #: src/view/com/modals/ChangePassword.tsx:149
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
@@ -3617,12 +3617,12 @@ msgstr "Like ({0, plural, one {# like} other {# likes}})"
 
 #: src/components/ProgressGuide/List.tsx:63
 msgid "Like 10 posts"
-msgstr "Like 10 posts"
+msgstr "Like 10 opslag"
 
 #: src/state/shell/progress-guide.tsx:212
 #: src/state/shell/progress-guide.tsx:217
 msgid "Like 10 posts to train the Discover feed"
-msgstr "Like 10 posts for at træne Discover-feedet"
+msgstr "Like 10 opslag for at træne Discover-feedet"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:501
 msgid "Like feed"
@@ -3662,7 +3662,7 @@ msgstr "Likes"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:217
 msgid "Likes on this post"
-msgstr "Likes af denne post"
+msgstr "Likes af dette opslag"
 
 #: src/view/com/post-thread/PostThread.tsx:626
 #: src/view/com/post-thread/PostThread.tsx:631
@@ -3756,7 +3756,7 @@ msgstr "Indlæs nye notifikationer"
 #: src/view/com/feeds/FeedPage.tsx:143
 #: src/view/screens/ProfileList.tsx:845
 msgid "Load new posts"
-msgstr "Indlæs nye posts"
+msgstr "Indlæs nye opslag"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:94
 msgid "Loading..."
@@ -3896,7 +3896,7 @@ msgstr "Vildledende konto"
 
 #: src/lib/moderation/useReportOptions.ts:67
 msgid "Misleading Post"
-msgstr "Vildledende post"
+msgstr "Vildledende opslag"
 
 #: src/Navigation.tsx:140
 #: src/screens/Moderation/index.tsx:88
@@ -4014,7 +4014,7 @@ msgstr "Skjul konti"
 
 #: src/components/TagMenu/index.tsx:224
 msgid "Mute all {displayTag} posts"
-msgstr "Skjul alle {displayTag} posts"
+msgstr "Skjul alle {displayTag}-opslag"
 
 #: src/components/dms/ConvoMenu.tsx:172
 #: src/components/dms/ConvoMenu.tsx:178
@@ -4078,7 +4078,7 @@ msgstr "Skjulte konti"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:112
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "Posts fra skjulte konti vil ikke optræde i dit feed og dine notifikationer. Ingen kan se, hvem du skjuler."
+msgstr "Opslag fra skjulte konti vil ikke optræde i dit feed og dine notifikationer. Ingen kan se, hvem du skjuler."
 
 #: src/lib/moderation/useModerationCauseDescription.ts:90
 msgid "Muted by \"{0}\""
@@ -4090,7 +4090,7 @@ msgstr "Skjulte ord og tags"
 
 #: src/view/screens/ProfileList.tsx:746
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
-msgstr "Ingen kan se, hvem du skjuler. Skjulte konti kan interagere med dig, men du vil ikke se deres posts eller modtage notifikationer fra dem."
+msgstr "Ingen kan se, hvem du skjuler. Skjulte konti kan interagere med dig, men du vil ikke se deres opslag eller modtage notifikationer fra dem."
 
 #: src/components/dialogs/BirthDateSettings.tsx:34
 #: src/components/dialogs/BirthDateSettings.tsx:37
@@ -4201,17 +4201,17 @@ msgstr "Ny adgangskode"
 #: src/view/screens/ProfileList.tsx:249
 #: src/view/screens/ProfileList.tsx:282
 msgid "New post"
-msgstr "Ny post"
+msgstr "Nyt opslag"
 
 #: src/view/com/feeds/FeedPage.tsx:154
 msgctxt "action"
 msgid "New post"
-msgstr "Ny post"
+msgstr "Nyt opslag"
 
 #: src/view/shell/desktop/LeftNav.tsx:309
 msgctxt "action"
 msgid "New Post"
-msgstr "Ny post"
+msgstr "Nyt opslag"
 
 #: src/components/NewskieDialog.tsx:83
 msgid "New user info dialog"
@@ -4305,11 +4305,11 @@ msgstr "Ingen"
 
 #: src/components/WhoCanReply.tsx:237
 msgid "No one but the author can quote this post."
-msgstr "Ingen udover forfatteren kan citere denne post."
+msgstr "Kun forfatteren selv kan citere dette opslag."
 
 #: src/screens/Profile/Sections/Feed.tsx:65
 msgid "No posts yet."
-msgstr "Ingen posts endnu."
+msgstr "Ingen opslag endnu."
 
 #: src/view/com/post-thread/PostQuotes.tsx:105
 msgid "No quotes yet"
@@ -4317,7 +4317,7 @@ msgstr "Ingen citater endnu"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:90
 msgid "No reposts yet"
-msgstr "Ingen reposts endnu"
+msgstr "Ingen videredelinger endnu"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:94
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
@@ -4369,7 +4369,7 @@ msgstr "Ingen har citeret denne endnu. Måske skulle du være den første!"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:92
 msgid "Nobody has reposted this yet. Maybe you should be the first!"
-msgstr "Ingen har repostet denne endnu. Måske skulle du være den første!"
+msgstr "Ingen har videredelt dette endnu. Måske skulle du være den første!"
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
@@ -4596,7 +4596,7 @@ msgstr "Åbn indstillinger for skjulte ord og tags"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:70
 msgid "Open post options menu"
-msgstr "Åbn postindstillingsmenu"
+msgstr "Åbn opslagsindstillingsmenu"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:553
 msgid "Open starter pack menu"
@@ -4617,7 +4617,7 @@ msgstr "Åbner {numItems} valgmuligheder"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:62
 msgid "Opens a dialog to add a content warning to your post"
-msgstr "Åbner en dialog, hvor du kan tilføje en indholdsadvarsel til din post"
+msgstr "Åbner en dialog, hvor du kan tilføje en indholdsadvarsel til dit opslag"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:61
 msgid "Opens a dialog to choose who can reply to this thread"
@@ -4633,7 +4633,7 @@ msgstr "Åbner enhedens kamera"
 
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:35
 msgid "Opens composer"
-msgstr "Åbner skrivefelt til ny post"
+msgstr "Åbner skrivefelt til nyt opslag"
 
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:51
 msgid "Opens device photo gallery"
@@ -4924,50 +4924,50 @@ msgstr "Porno"
 #: src/view/com/composer/Composer.tsx:937
 msgctxt "action"
 msgid "Post"
-msgstr "Send"
+msgstr "Slå op"
 
 #: src/view/com/post-thread/PostThread.tsx:536
 msgctxt "description"
 msgid "Post"
-msgstr "Post"
+msgstr "Opslag"
 
 #: src/view/com/composer/Composer.tsx:935
 msgctxt "action"
 msgid "Post All"
-msgstr "Publicer alle"
+msgstr "Slå alle op"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:209
 msgid "Post by {0}"
-msgstr "Post af {0}"
+msgstr "Opslag af {0}"
 
 #: src/Navigation.tsx:204
 #: src/Navigation.tsx:211
 #: src/Navigation.tsx:218
 #: src/Navigation.tsx:225
 msgid "Post by @{0}"
-msgstr "Post af @{0}"
+msgstr "Opslag af @{0}"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:175
 msgid "Post deleted"
-msgstr "Post slettet"
+msgstr "Opslag slettet"
 
 #: src/lib/api/index.ts:185
 msgid "Post failed to upload. Please check your Internet connection and try again."
-msgstr "Post kunne ikke publiceres. Tjek din internetforbindelse og prøv igen."
+msgstr "Opslag kunne ikke publiceres. Tjek din internetforbindelse og prøv igen."
 
 #: src/view/com/post-thread/PostThread.tsx:266
 msgid "Post hidden"
-msgstr "Post skjult"
+msgstr "Opslag skjult"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:105
 #: src/lib/moderation/useModerationCauseDescription.ts:104
 msgid "Post Hidden by Muted Word"
-msgstr "Post indeholder skjulte ord"
+msgstr "Opslag indeholder skjulte ord"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:108
 #: src/lib/moderation/useModerationCauseDescription.ts:113
 msgid "Post Hidden by You"
-msgstr "Post skjult af dig"
+msgstr "Opslag skjult af dig"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:287
 msgid "Post interaction settings"
@@ -4984,32 +4984,32 @@ msgstr "Sprog"
 #: src/view/com/post-thread/PostThread.tsx:261
 #: src/view/com/post-thread/PostThread.tsx:273
 msgid "Post not found"
-msgstr "Post ikke fundet"
+msgstr "Opslag ikke fundet"
 
 #: src/state/queries/pinned-post.ts:59
 msgid "Post pinned"
-msgstr "Post blev fastgjort"
+msgstr "Opslag blev fastgjort"
 
 #: src/state/queries/pinned-post.ts:61
 msgid "Post unpinned"
-msgstr "Post blev frigjort"
+msgstr "Opslag blev frigjort"
 
 #: src/components/TagMenu/index.tsx:268
 msgid "posts"
-msgstr "posts"
+msgstr "opslag"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
 #: src/view/screens/Profile.tsx:231
 msgid "Posts"
-msgstr "Posts"
+msgstr "Opslag"
 
 #: src/components/dialogs/MutedWords.tsx:115
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
-msgstr "Posts kan skjules baseret på deres tekst, tags eller begge dele. Vi anbefaler at undgå almindelige ord, der optræder i mange posts, da det kan medføre, at dit feed bliver næsten tomt."
+msgstr "Opslag kan skjules baseret på deres tekst, tags eller begge dele. Vi anbefaler at undgå almindelige ord, der optræder i mange opslag, da det kan medføre, at dit feed bliver næsten tomt."
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:68
 msgid "Posts hidden"
-msgstr "Posts er skjult"
+msgstr "Opslag er skjult"
 
 #: src/view/com/modals/LinkWarning.tsx:60
 msgid "Potentially Misleading Link"
@@ -5134,22 +5134,22 @@ msgstr "QR-kode blev gemt til din kamerarulle!"
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:85
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:92
 msgid "Quote post"
-msgstr "Citer post"
+msgstr "Citer opslag"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:303
 msgid "Quote post was re-attached"
-msgstr "Citatpost blev tilkoblet igen"
+msgstr "Citatopslag blev tilkoblet igen"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:302
 msgid "Quote post was successfully detached"
-msgstr "Citatpost blev afkoblet"
+msgstr "Citatopslag blev afkoblet"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:177
 #: src/view/com/util/post-ctrls/RepostButton.tsx:199
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:91
 msgid "Quote posts disabled"
-msgstr "Citatposts ikke tilladt"
+msgstr "Citatopslag ikke tilladt"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
@@ -5161,7 +5161,7 @@ msgstr "Citater"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:243
 msgid "Quotes of this post"
-msgstr "Citater af denne post"
+msgstr "Citater af dette opslag"
 
 #: src/screens/Settings/ThreadPreferences.tsx:99
 #: src/screens/Settings/ThreadPreferences.tsx:102
@@ -5309,7 +5309,7 @@ msgstr "Fjern citat"
 #: src/view/com/util/post-ctrls/RepostButton.tsx:155
 #: src/view/com/util/post-ctrls/RepostButton.tsx:165
 msgid "Remove repost"
-msgstr "Fjern repost"
+msgstr "Fjern videredeling"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:260
 msgid "Remove subtitle file"
@@ -5349,7 +5349,7 @@ msgstr "Fjernet fra dine feeds"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:288
 msgid "Removes quoted post"
-msgstr "Fjerner citeret post"
+msgstr "Fjerner citeret opslag"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:129
 #: src/view/com/posts/FeedShutdownMsg.tsx:133
@@ -5366,7 +5366,7 @@ msgstr "Svar ikke tilladt"
 
 #: src/components/WhoCanReply.tsx:215
 msgid "Replies to this post are disabled."
-msgstr "Svar til denne post er ikke tilladt."
+msgstr "Svar til dette opslag er ikke tilladt."
 
 #: src/view/com/composer/Composer.tsx:933
 msgctxt "action"
@@ -5408,12 +5408,12 @@ msgstr "Svar til <0><1/></0>"
 #: src/view/com/posts/PostFeedItem.tsx:544
 msgctxt "description"
 msgid "Reply to a blocked post"
-msgstr "Svar til en blokeret post"
+msgstr "Svar til et blokeret opslag"
 
 #: src/view/com/posts/PostFeedItem.tsx:546
 msgctxt "description"
 msgid "Reply to a post"
-msgstr "Svar til en post"
+msgstr "Svar til et opslag"
 
 #: src/view/com/post/Post.tsx:202
 #: src/view/com/posts/PostFeedItem.tsx:550
@@ -5466,7 +5466,7 @@ msgstr "Anmeld besked"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:611
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
 msgid "Report post"
-msgstr "Anmeld post"
+msgstr "Anmeld opslag"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:606
 #: src/screens/StarterPack/StarterPackScreen.tsx:609
@@ -5493,7 +5493,7 @@ msgstr "Anmeld denne besked"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:50
 msgid "Report this post"
-msgstr "Anmeld denne post"
+msgstr "Anmeld dette opslag"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:59
 msgid "Report this starter pack"
@@ -5507,44 +5507,44 @@ msgstr "Anmeld denne bruger"
 #: src/view/com/util/post-ctrls/RepostButton.tsx:167
 msgctxt "action"
 msgid "Repost"
-msgstr "Repost"
+msgstr "Videredel"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:76
 msgid "Repost"
-msgstr "Repost"
+msgstr "Videredel"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:74
 msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr "Repost ({0, plural, one {# repost} other {# reposts}})"
+msgstr "Videredel ({0, plural, one {# videredeling} other {# videredelinger}})"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:548
 #: src/view/com/util/post-ctrls/RepostButton.tsx:148
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:49
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:104
 msgid "Repost or quote post"
-msgstr "Repost eller citer"
+msgstr "Videredel eller citer"
 
 #: src/screens/Post/PostRepostedBy.tsx:38
 msgid "Reposted By"
-msgstr "Repostet af"
+msgstr "Videredelt af"
 
 #: src/view/com/posts/PostFeedItem.tsx:303
 msgid "Reposted by {0}"
-msgstr "Repostet af {0}"
+msgstr "Videredelt af {0}"
 
 #: src/view/com/posts/PostFeedItem.tsx:322
 msgid "Reposted by <0><1/></0>"
-msgstr "Reposted af <0><1/></0>"
+msgstr "Videredelt af <0><1/></0>"
 
 #: src/view/com/posts/PostFeedItem.tsx:301
 #: src/view/com/posts/PostFeedItem.tsx:320
 msgid "Reposted by you"
-msgstr "Reposted af dig"
+msgstr "Videredelt af dig"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:222
 msgid "Reposts of this post"
-msgstr "Reposts af denne post"
+msgstr "Videredelinger af dette opslag"
 
 #: src/view/com/modals/ChangeEmail.tsx:176
 #: src/view/com/modals/ChangeEmail.tsx:178
@@ -5559,7 +5559,7 @@ msgstr "Bekræftelseskode"
 #: src/screens/Settings/AccessibilitySettings.tsx:60
 #: src/screens/Settings/AccessibilitySettings.tsx:65
 msgid "Require alt text before posting"
-msgstr "Gør alt-tekst obligatorisk i dine egne posts"
+msgstr "Gør alt-tekst obligatorisk i dine egne opslag"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
 msgid "Require an email code to log in to your account."
@@ -5806,19 +5806,19 @@ msgstr "Obligatorisk sikkerhedstjek"
 
 #: src/components/TagMenu/index.web.tsx:77
 msgid "See {truncatedTag} posts"
-msgstr "Se post tagget med {truncatedTag}"
+msgstr "Se {truncatedTag}-opslag"
 
 #: src/components/TagMenu/index.web.tsx:94
 msgid "See {truncatedTag} posts by user"
-msgstr "Se brugers posts tagget med {truncatedTag}"
+msgstr "Se {truncatedTag}-opslag af bruger"
 
 #: src/components/TagMenu/index.tsx:155
 msgid "See <0>{displayTag}</0> posts"
-msgstr "Se posts tagget med <0>{displayTag}</0>"
+msgstr "Se <0>{displayTag}</0>-opslag"
 
 #: src/components/TagMenu/index.tsx:203
 msgid "See <0>{displayTag}</0> posts by this user"
-msgstr "Se denne brugers posts tagget med <0>{displayTag}</0>"
+msgstr "Se <0>{displayTag}</0>-opslag af denne bruger"
 
 #: src/view/com/auth/SplashScreen.web.tsx:176
 msgid "See jobs at Bluesky"
@@ -5906,7 +5906,7 @@ msgstr "Vælg, hvor dette ord skal skjules."
 
 #: src/screens/Settings/LanguageSettings.tsx:255
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
-msgstr "Vælg, hvilke sprog du vil se i dine feeds. Hvis ingen er valgt, vil du se posts på alle sprog."
+msgstr "Vælg, hvilke sprog du vil se i dine feeds. Hvis ingen er valgt, vil du se opslag på alle sprog."
 
 #: src/screens/Settings/LanguageSettings.tsx:84
 msgid "Select your app language for the default text to display in the app."
@@ -5961,7 +5961,7 @@ msgstr "Send besked"
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:62
 msgid "Send post to..."
-msgstr "Send post til..."
+msgstr "Send opslag til..."
 
 #: src/components/dms/ReportDialog.tsx:229
 #: src/components/dms/ReportDialog.tsx:232
@@ -6135,7 +6135,7 @@ msgstr "Vis skjulte svar"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:806
 msgid "Show information about when this post was created"
-msgstr "Vis, hvornår denne post blev oprettet"
+msgstr "Vis, hvornår dette opslag blev oprettet"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:473
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:475
@@ -6168,7 +6168,7 @@ msgstr "Vis andre konti, du kan skifte til"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:104
 #: src/screens/Settings/FollowingFeedPreferences.tsx:114
 msgid "Show quote posts"
-msgstr "Vis citatposts"
+msgstr "Vis citatopslag"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:68
 #: src/screens/Settings/FollowingFeedPreferences.tsx:78
@@ -6195,7 +6195,7 @@ msgstr "Vis svar til alle"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:86
 #: src/screens/Settings/FollowingFeedPreferences.tsx:96
 msgid "Show reposts"
-msgstr "Vis reposts"
+msgstr "Vis videredelinger"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:129
 #: src/screens/Settings/FollowingFeedPreferences.tsx:139
@@ -6356,7 +6356,7 @@ msgstr "Sorter svar efter"
 
 #: src/screens/Settings/ThreadPreferences.tsx:59
 msgid "Sort replies to the same post by:"
-msgstr "Vis svar på en post i denne rækkefølge:"
+msgstr "Vis svar på et opslag i denne rækkefølge:"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:168
 msgid "Source:"
@@ -6699,7 +6699,7 @@ msgstr "Følgende trin vil hjælpe dig med at konfigure din Bluesky-oplevelse"
 #: src/view/com/post-thread/PostThread.tsx:262
 #: src/view/com/post-thread/PostThread.tsx:274
 msgid "The post may have been deleted."
-msgstr "Posten er muligvis blevet slettet."
+msgstr "Opslaget er muligvis blevet slettet."
 
 #: src/view/screens/PrivacyPolicy.tsx:35
 msgid "The Privacy Policy has been moved to <0/>"
@@ -6764,7 +6764,7 @@ msgstr "Notifikationer kunne ikke indlæses. Tryk her for at prøve igen."
 
 #: src/view/com/posts/PostFeed.tsx:487
 msgid "There was an issue fetching posts. Tap here to try again."
-msgstr "Posts kunne ikke indlæses. Tryk her for at prøve igen."
+msgstr "Opslag kunne ikke indlæses. Tryk her for at prøve igen."
 
 #: src/view/com/lists/ListMembers.tsx:165
 msgid "There was an issue fetching the list. Tap here to try again."
@@ -6958,24 +6958,24 @@ msgstr "Denne moderationstjeneste er utilgængelig. Se herunder for flere oplysn
 
 #: src/view/com/post-thread/PostThreadItem.tsx:846
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
-msgstr "Denne post er dateret <0>{0}</0>, men den blev først oprettet på Bluesky <1>{1}</1>."
+msgstr "Dette opslag er dateret <0>{0}</0>, men det blev først oprettet på Bluesky <1>{1}</1>."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:152
 msgid "This post has been deleted."
-msgstr "Denne post er slettet."
+msgstr "Dette opslag er slettet."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:359
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
-msgstr "Denne post er kun synlig for indloggede brugere. Den vil ikke være synlg for brugere, der ikke er logget ind."
+msgstr "Dette opslag er kun synlig for indloggede brugere. Den vil ikke være synlig for brugere, der ikke er logget ind."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
-msgstr "Denne post vil blive skjult fra feeds og tråde. Denne handling kan ikke fortrydes."
+msgstr "Dette opslag vil blive skjult fra feeds og tråde. Denne handling kan ikke fortrydes."
 
 #: src/view/com/composer/Composer.tsx:413
 msgid "This post's author has disabled quote posts."
-msgstr "Denne posts forfatter har ikke tilladt citatposts."
+msgstr "Dette opslags forfatter har ikke tilladt citatopslag."
 
 #: src/view/com/profile/ProfileMenu.tsx:350
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
@@ -7036,7 +7036,7 @@ msgstr "Dette vil fjerne @{0} fra din kvikadgangsliste."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:721
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
-msgstr "Dette vil fjerne din post fra denne citatpost for alle brugere og erstatte den med en pladsholder."
+msgstr "Dette vil fjerne dit opslag fra dette citatopslag for alle brugere og erstatte det med en pladsholder."
 
 #: src/view/com/post-thread/PostThread.tsx:606
 #: src/view/com/post-thread/PostThread.tsx:609
@@ -7206,11 +7206,11 @@ msgstr "Bloker ikke længere konto?"
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:76
 msgid "Undo repost"
-msgstr "Fortryd repost"
+msgstr "Fortryd videredeling"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:68
 msgid "Undo repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr "Fortryd repost ({0, plural, one {# repost} other {# reposts}})"
+msgstr "Fortryd videredeling ({0, plural, one {# videredeling} other {# videredelinger}})"
 
 #: src/view/com/profile/FollowButton.tsx:60
 msgctxt "action"
@@ -7256,7 +7256,7 @@ msgstr "Skjul ikke længere konto"
 
 #: src/components/TagMenu/index.tsx:223
 msgid "Unmute all {displayTag} posts"
-msgstr "Skjul ikke længere alle posts med {displayTag}"
+msgstr "Skjul ikke længere alle {displayTag}-opslag"
 
 #: src/components/dms/ConvoMenu.tsx:176
 msgid "Unmute conversation"
@@ -7588,11 +7588,11 @@ msgstr "Se {displayName}s profil"
 
 #: src/components/TagMenu/index.tsx:172
 msgid "View all posts by @{authorHandle} with tag {displayTag}"
-msgstr "Vis alle posts af @{authorHandle} med tagget {displayTag}"
+msgstr "Vis alle opslag af @{authorHandle} med tagget {displayTag}"
 
 #: src/components/TagMenu/index.tsx:126
 msgid "View all posts with tag {displayTag}"
-msgstr "Vis alle posts med tagget {displayTag}"
+msgstr "Vis alle opslag med tagget {displayTag}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
@@ -7710,7 +7710,7 @@ msgstr "God fornøjelse. Husk, at Bluesky er:"
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
-msgstr "Vi løb tør for posts fra konti, du følger. Her er de seneste fra <0/>."
+msgstr "Vi løb tør for opslag fra konti, du følger. Her er de seneste fra <0/>."
 
 #: src/view/com/composer/state/video.ts:417
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
@@ -7759,7 +7759,7 @@ msgstr "Beklager, men din søgning kunne ikke gennemføres. Prøv igen om lidt."
 
 #: src/view/com/composer/Composer.tsx:410
 msgid "We're sorry! The post you are replying to has been deleted."
-msgstr "Beklager! Den post, du svarer på, er blevet slettet."
+msgstr "Beklager! Det opslag, du svarer på, er blevet slettet."
 
 #: src/components/Lists.tsx:188
 #: src/view/screens/NotFound.tsx:50
@@ -7788,7 +7788,7 @@ msgstr "Hvad vil du kalde din startpakke?"
 
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:79
 msgid "What people are posting about."
-msgstr "Hvad folk poster om."
+msgstr "Hvad folk skriver om."
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
@@ -7798,7 +7798,7 @@ msgstr "Hvad sker der?"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:79
 msgid "Which languages are used in this post?"
-msgstr "Hvilke sprog bruges i denne post?"
+msgstr "Hvilke sprog bruges i dette opslag?"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:78
 msgid "Which languages would you like to see in your algorithmic feeds?"
@@ -7806,7 +7806,7 @@ msgstr "Hvilke sprog ønsker du at se i dine algoritmiske feeds?"
 
 #: src/components/WhoCanReply.tsx:179
 msgid "Who can interact with this post?"
-msgstr "Hvem kan interagere med denne post?"
+msgstr "Hvem kan interagere med dette opslag?"
 
 #: src/components/WhoCanReply.tsx:87
 msgid "Who can reply"
@@ -7835,7 +7835,7 @@ msgstr "Hvorfor skal denne besked gennemgås?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:51
 msgid "Why should this post be reviewed?"
-msgstr "Hvorfor skal denne post gennemgås?"
+msgstr "Hvorfor skal dette opslag gennemgås?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:60
 msgid "Why should this starter pack be reviewed?"
@@ -7852,7 +7852,7 @@ msgstr "Skriv en besked"
 
 #: src/view/com/composer/Composer.tsx:810
 msgid "Write post"
-msgstr "Skriv din post"
+msgstr "Skriv dit opslag"
 
 #: src/view/com/composer/Composer.tsx:720
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:70
@@ -7937,7 +7937,7 @@ msgstr "Du kan nu logge ind med din nye adgangskode."
 
 #: src/screens/Deactivated.tsx:132
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
-msgstr "Du kan genaktivere din konto ved at logge ind. Andre brugere vil igen kunne se din profil og dine posts."
+msgstr "Du kan genaktivere din konto ved at logge ind. Andre brugere vil igen kunne se din profil og dine opslag."
 
 #: src/components/interstitials/Trending.tsx:112
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:131
@@ -7988,11 +7988,11 @@ msgstr "Du har indtastet en ugyldig kode. Den skal have formatet XXXXX-XXXXX."
 
 #: src/lib/moderation/useModerationCauseDescription.ts:114
 msgid "You have hidden this post"
-msgstr "Du har skjult denne post"
+msgstr "Du har skjult dette opslag"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:109
 msgid "You have hidden this post."
-msgstr "Du har skjult denne post."
+msgstr "Du har skjult dette opslag."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:102
 #: src/lib/moderation/useModerationCauseDescription.ts:97
@@ -8156,7 +8156,7 @@ msgstr "Så er du klar til at gå i gang!"
 #: src/components/moderation/ModerationDetailsDialog.tsx:106
 #: src/lib/moderation/useModerationCauseDescription.ts:106
 msgid "You've chosen to hide a word or tag within this post."
-msgstr "Du har valgt at skjule et ord eller tag i denne post."
+msgstr "Du har valgt at skjule et ord eller tag i dette opslag."
 
 #: src/state/shell/progress-guide.tsx:232
 msgid "You've found some people to follow"
@@ -8251,19 +8251,19 @@ msgstr "Din adgangskode blev ændret!"
 
 #: src/view/com/composer/Composer.tsx:470
 msgid "Your post has been published"
-msgstr "Din post blev publiceret"
+msgstr "Dit opslag blev publiceret"
 
 #: src/view/com/composer/Composer.tsx:467
 msgid "Your posts have been published"
-msgstr "Dine posts blev publiceret"
+msgstr "Dine opslag blev publiceret"
 
 #: src/screens/Onboarding/StepFinished.tsx:250
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "Dine posts, likes og blokeringer er offentlige. Dine skjulte ord, tags og konti er private."
+msgstr "Dine opslag, likes og blokeringer er offentlige. Dine skjulte ord, tags og konti er private."
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr "Din profil, dine posts, feeds og lister vil ikke længere kunne ses af andre Bluesky-brugere. Du kan genaktivere din konto når som helst ved at logge ind."
+msgstr "Din profil, dine opslag, feeds og lister vil ikke længere kunne ses af andre Bluesky-brugere. Du kan genaktivere din konto når som helst ved at logge ind."
 
 #: src/view/com/composer/Composer.tsx:469
 msgid "Your reply has been published"
