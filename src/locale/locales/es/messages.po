@@ -3510,7 +3510,6 @@ msgstr "Seguidores que conoces"
 #: src/components/ProfileHoverCard/index.web.tsx:448
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
-#: src/state/queries/feed.ts:475
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
 #: src/view/screens/SavedFeeds.tsx:422
@@ -7727,12 +7726,10 @@ msgstr "Iniciar un nuevo chat"
 
 #: src/view/screens/ProfileList.tsx:817
 #: src/view/screens/ProfileList.tsx:938
-#~ msgid "Start adding people"
-#~ msgstr "Empieza a añadir personas"
+msgid "Start adding people"
+msgstr "Empieza a añadir personas"
 
-#: src/view/screens/ProfileList.tsx:817
 #: src/view/screens/ProfileList.tsx:824
-#: src/view/screens/ProfileList.tsx:938
 #: src/view/screens/ProfileList.tsx:945
 msgid "Start adding people!"
 msgstr "¡Empieza a añadir personas!"
