@@ -15959,10 +15959,10 @@ react-native-dotenv@^3.4.11:
   dependencies:
     dotenv "^16.4.5"
 
-react-native-drawer-layout@^4.0.4:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/react-native-drawer-layout/-/react-native-drawer-layout-4.0.4.tgz#b1b3f2dffd3653527def1d26f4a0cf3c98b9fb5e"
-  integrity sha512-yskKj1Kxbf5w5gInNEW4YtDkTUcMsoQ0FGH0wjQ3nHPAJ3AAVnr/QgZ1Hr4LeAQR+7vgaG058DX4/32WbwvQzA==
+react-native-drawer-layout@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-drawer-layout/-/react-native-drawer-layout-4.1.1.tgz#7fce1b3d3ddd9fc5d781c73d13b814d022b90114"
+  integrity sha512-ob6O3ph7PZ3A2FpdlsSxHuMpHDXREZPR8A6S3q0dSxV7i6d+8Z6CPCTbegfN2QZyizSow9NLrKyXP93tlqZ3dA==
   dependencies:
     use-latest-callback "^0.2.1"
 

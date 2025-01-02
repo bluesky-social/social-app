@@ -171,7 +171,7 @@
     "react-native": "0.76.3",
     "react-native-compressor": "1.10.3",
     "react-native-date-picker": "^5.0.7",
-    "react-native-drawer-layout": "^4.0.4",
+    "react-native-drawer-layout": "^4.1.1",
     "react-native-gesture-handler": "2.20.2",
     "react-native-get-random-values": "~1.11.0",
     "react-native-image-crop-picker": "^0.41.6",
