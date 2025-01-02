@@ -220,7 +220,7 @@ export function useProfileUpdateMutation() {
 }
 
 export function useProfileFollowMutationQueue(
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
+  profile: Shadow<Omit<AppBskyActorDefs.ProfileViewDetailed, '$type'>>,
   logContext: LogEvents['profile:follow']['logContext'] &
     LogEvents['profile:follow']['logContext'],
 ) {
@@ -294,7 +294,7 @@ export function useProfileFollowMutationQueue(
 
 function useProfileFollowMutation(
   logContext: LogEvents['profile:follow']['logContext'],
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
+  profile: Shadow<Omit<AppBskyActorDefs.ProfileViewDetailed, '$type'>>,
 ) {
   const {currentAccount} = useSession()
   const agent = useAgent()
@@ -334,7 +334,7 @@ function useProfileUnfollowMutation(
 }
 
 export function useProfileMuteMutationQueue(
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
+  profile: Shadow<Omit<AppBskyActorDefs.ProfileViewDetailed, '$type'>>,
 ) {
   const queryClient = useQueryClient()
   const did = profile.did
@@ -409,7 +409,7 @@ function useProfileUnmuteMutation() {
 }
 
 export function useProfileBlockMutationQueue(
-  profile: Shadow<AppBskyActorDefs.ProfileViewBasic>,
+  profile: Shadow<Omit<AppBskyActorDefs.ProfileViewBasic, '$type'>>,
 ) {
   const queryClient = useQueryClient()
   const did = profile.did
