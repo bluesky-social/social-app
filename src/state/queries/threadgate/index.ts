@@ -138,7 +138,7 @@ export async function getThreadgateRecord({
         }),
     )
 
-    if (data.value && AppBskyFeedThreadgate.isRecord(data.value)) {
+    if (data.value && AppBskyFeedThreadgate.isValidRecord(data.value)) {
       return data.value
     } else {
       return null
