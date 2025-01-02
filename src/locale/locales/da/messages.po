@@ -2034,7 +2034,7 @@ msgstr "Deaktiver ændringer?"
 
 #: src/view/com/composer/Composer.tsx:671
 msgid "Discard draft?"
-msgstr "Kasser kladde?"
+msgstr "Kasser udkast?"
 
 #: src/view/com/composer/Composer.tsx:845
 msgid "Discard post?"
