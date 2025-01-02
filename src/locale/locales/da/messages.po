@@ -8263,7 +8263,7 @@ msgstr "Dine posts, likes og blokeringer er offentlige. Dine skjulte ord, tags o
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr "Din profile, dine posts, feeds og lister vil ikke længere kunne ses af andre Bluesky-brugere. Du kan genaktivere din konto når som helst ved at logge ind."
+msgstr "Din profil, dine posts, feeds og lister vil ikke længere kunne ses af andre Bluesky-brugere. Du kan genaktivere din konto når som helst ved at logge ind."
 
 #: src/view/com/composer/Composer.tsx:469
 msgid "Your reply has been published"
