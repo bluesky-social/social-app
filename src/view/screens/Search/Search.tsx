@@ -37,6 +37,7 @@ import {
 } from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
+import {languageName} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
@@ -328,7 +329,7 @@ function SearchLanguageDropdown({
 }) {
   const t = useThemeNew()
   const {_} = useLingui()
-  const {contentLanguages} = useLanguagePrefs()
+  const {appLanguage, contentLanguages} = useLanguagePrefs()
 
   const items = React.useMemo(() => {
     return [
@@ -345,8 +346,8 @@ function SearchLanguageDropdown({
           index === self.findIndex(t => t.code2 === lang.code2), // remove dupes (which will happen)
       )
         .map(l => ({
-          label: l.name,
-          inputLabel: l.name,
+          label: languageName(l, appLanguage),
+          inputLabel: languageName(l, appLanguage),
           value: l.code2,
           key: l.code2 + l.code3,
         }))
@@ -365,7 +366,7 @@ function SearchLanguageDropdown({
           return a.label.localeCompare(b.label)
         }),
     )
-  }, [_, contentLanguages])
+  }, [_, appLanguage, contentLanguages])
 
   const style = {
     backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
