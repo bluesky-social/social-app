@@ -113,7 +113,7 @@ export function usePrefetchProfileQuery() {
 }
 
 interface ProfileUpdateParams {
-  profile: AppBskyActorDefs.ProfileView
+  profile: AppBskyActorDefs.ProfileViewDetailed
   updates:
     | AppBskyActorProfile.Record
     | ((existing: AppBskyActorProfile.Record) => AppBskyActorProfile.Record)
