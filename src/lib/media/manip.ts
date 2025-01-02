@@ -1,4 +1,5 @@
 import {Image as RNImage, Share as RNShare} from 'react-native'
+import ReactNativeBlobUtil from 'react-native-blob-util'
 import {Image} from 'react-native-image-crop-picker'
 import uuid from 'react-native-uuid'
 import {
@@ -15,7 +16,6 @@ import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
 import {Buffer} from 'buffer'
-import RNFetchBlob from 'rn-fetch-blob'
 
 import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
@@ -71,7 +71,7 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
 
   let downloadRes
   try {
-    const downloadResPromise = RNFetchBlob.config({
+    const downloadResPromise = ReactNativeBlobUtil.config({
       fileCache: true,
       appendExt,
     }).fetch('GET', opts.uri)
@@ -87,7 +87,7 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
     const localUri = normalizePath(downloadRes.path(), true)
     return await doResize(localUri, opts)
   } finally {
-    // TODO Whenever we remove `rn-fetch-blob`, we will need to replace this `flush()` with a `deleteAsync()` -hailey
+    // TODO Whenever we remove `react-native-blob-util`, we will need to replace this `flush()` with a `deleteAsync()` -hailey
     if (downloadRes) {
       downloadRes.flush()
     }
@@ -99,7 +99,7 @@ export async function shareImageModal({uri}: {uri: string}) {
     // TODO might need to give an error to the user in this case -prf
     return
   }
-  const downloadResponse = await RNFetchBlob.config({
+  const downloadResponse = await ReactNativeBlobUtil.config({
     fileCache: true,
   }).fetch('GET', uri)
 
@@ -133,15 +133,41 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
   // assuming PNG
   // we're currently relying on the fact our CDN only serves pngs
   // -prf
-  const downloadResponse = await RNFetchBlob.config({
+  const downloadResponse = await ReactNativeBlobUtil.config({
     fileCache: true,
   }).fetch('GET', uri)
-  let imagePath = downloadResponse.path()
-  imagePath = normalizePath(await moveToPermanentPath(imagePath, '.png'), true)
+  let tempImagePath = downloadResponse.path()
+  tempImagePath = normalizePath(
+    await moveToPermanentPath(tempImagePath, '.png'),
+    true,
+  )
 
   // save
-  await MediaLibrary.createAssetAsync(imagePath)
-  safeDeleteAsync(imagePath)
+  if (isAndroid) {
+    // We want to save to Pictures/Bluesky for Android, which matches other typical app behaviour
+    // (see https://github.com/bluesky-social/social-app/issues/1360).
+
+    // A workaround for https://github.com/expo/expo/issues/24591 making
+    // using MediaLibrary + albums really painful to use (it requires asking the user each time
+    // to delete the image saved in DCIM).
+    let finalImagePath =
+      await ReactNativeBlobUtil.MediaCollection.createMediafile(
+        {
+          name: tempImagePath.split('/').pop(),
+          parentFolder: 'Bluesky',
+          mimeType: 'image/png',
+        },
+        'Image',
+      )
+
+    await ReactNativeBlobUtil.MediaCollection.writeToMediafile(
+      finalImagePath,
+      tempImagePath,
+    )
+  } else {
+    await MediaLibrary.createAssetAsync(tempImagePath)
+  }
+  safeDeleteAsync(tempImagePath)
 }
 
 export function getImageDim(path: string): Promise<Dimensions> {
