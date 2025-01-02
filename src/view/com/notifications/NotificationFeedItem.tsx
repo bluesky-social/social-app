@@ -269,7 +269,7 @@ let NotificationFeedItem = ({
 
     if (
       item.notification.author.viewer?.following &&
-      AppBskyGraphFollow.isRecord(item.notification.record)
+      AppBskyGraphFollow.isValidRecord(item.notification.record)
     ) {
       let followingTimestamp
       try {
