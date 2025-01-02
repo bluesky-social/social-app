@@ -1,11 +1,11 @@
 /** @type {import('@lingui/conf').LinguiConfig} */
 module.exports = {
   locales: [
-    'da',
     'en',
     'an',
     'ast',
     'ca',
+    'da',
     'de',
     'en-GB',
     'es',
