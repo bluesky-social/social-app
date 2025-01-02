@@ -6,6 +6,7 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedRecordWithMedia,
   AppBskyEmbedVideo,
+  AppBskyFeedDefs,
 } from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
@@ -22,17 +23,12 @@ export function Embed({
   embed,
   style,
 }: {
-  embed?:
-    | AppBskyEmbedImages.View
-    | AppBskyEmbedRecordWithMedia.View
-    | AppBskyEmbedExternal.View
-    | AppBskyEmbedVideo.View
-    | {[k: string]: unknown}
+  embed?: AppBskyFeedDefs.PostView['embed']
   style?: StyleProp<ViewStyle>
 }) {
   let media = AppBskyEmbedRecordWithMedia.isView(embed) ? embed.media : embed
 
-  if (AppBskyEmbedImages.isView(media)) {
+  if (AppBskyEmbedImages.isValidView(media)) {
     return (
       <Outer style={style}>
         {media.images.map(image => (
@@ -44,7 +40,7 @@ export function Embed({
         ))}
       </Outer>
     )
-  } else if (AppBskyEmbedExternal.isView(media) && media.external.thumb) {
+  } else if (AppBskyEmbedExternal.isValidView(media) && media.external.thumb) {
     let url: URL | undefined
     try {
       url = new URL(media.external.uri)
@@ -62,7 +58,7 @@ export function Embed({
         )
       }
     }
-  } else if (AppBskyEmbedVideo.isView(media)) {
+  } else if (AppBskyEmbedVideo.isValidView(media)) {
     return (
       <Outer style={style}>
         <VideoItem thumbnail={media.thumbnail} alt={media.alt} />
