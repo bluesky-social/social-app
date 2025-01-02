@@ -7827,7 +7827,7 @@ msgstr "Hvorfor skal dette feed gennemgås?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:54
 msgid "Why should this list be reviewed?"
-msgstr "Hvorfor skal denne bruger gennemgås?"
+msgstr "Hvorfor skal denne liste gennemgås?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:63
 msgid "Why should this message be reviewed?"
