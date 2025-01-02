@@ -42,35 +42,35 @@ msgstr "{0, plural, one {# izləyici} other {# izləyici}}"
 
 #: src/screens/Profile/ProfileFollows.tsx:40
 msgid "{0, plural, one {# following} other {# following}}"
-msgstr ""
+msgstr "{0, plural, one {# izləmə } other {# izləmə}}"
 
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
-msgstr ""
+msgstr "{0, plural, one {# saat} other {# saat}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 #~ msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
-#~ msgstr ""
+#~ msgstr "{0, plural, one {# bu hesabda etiket qoyulub} other {# bu hesabda etiketlər qoyulub}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:59
 #~ msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
-#~ msgstr ""
+#~ msgstr "{0, plural, one {# bu məzmunda etiket qoyulub} other {# bu məzmunda etiketlər qoyulub}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this account"
-msgstr ""
+msgstr "bu hesaba qoyulan {0, plural, one {# etiket var} other {# etiketlər var}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:62
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this content"
-msgstr ""
+msgstr "bu məzmunda qoyulan {0, plural, one {# etiket var} other {# etiketlər var}}"
 
 #: src/screens/Post/PostLikedBy.tsx:41
 msgid "{0, plural, one {# like} other {# likes}}"
-msgstr ""
+msgstr "{0, plural, one {# bəyənmə} other {# bəyənmə}}"
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr ""
+msgstr "{0, plural, one {# dəqiqə} other {# dəqiqə}}"
 
 #: src/lib/hooks/useTimeAgo.ts:167
 msgid "{0, plural, one {# month} other {# months}}"
