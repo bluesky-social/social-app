@@ -37,11 +37,11 @@ export function threadgateRecordToAllowUISetting(
   const settings: ThreadgateAllowUISetting[] = threadgate.allow
     .map(allow => {
       let setting: ThreadgateAllowUISetting | undefined
-      if (allow.$type === 'app.bsky.feed.threadgate#mentionRule') {
+      if (AppBskyFeedThreadgate.isValidMentionRule(allow)) {
         setting = {type: 'mention'}
-      } else if (allow.$type === 'app.bsky.feed.threadgate#followingRule') {
+      } else if (AppBskyFeedThreadgate.isValidFollowingRule(allow)) {
         setting = {type: 'following'}
-      } else if (allow.$type === 'app.bsky.feed.threadgate#listRule') {
+      } else if (AppBskyFeedThreadgate.isValidListRule(allow)) {
         setting = {type: 'list', list: allow.list}
       }
       return setting
@@ -65,11 +65,7 @@ export function threadgateAllowUISettingToAllowRecordValue(
     return undefined
   }
 
-  let allow: (
-    | AppBskyFeedThreadgate.MentionRule
-    | AppBskyFeedThreadgate.FollowingRule
-    | AppBskyFeedThreadgate.ListRule
-  )[] = []
+  let allow: Exclude<AppBskyFeedThreadgate.Record['allow'], undefined> = []
 
   if (!threadgate.find(v => v.type === 'nobody')) {
     for (const rule of threadgate) {
