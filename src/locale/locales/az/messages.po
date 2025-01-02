@@ -8969,20 +8969,20 @@ msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:250
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr ""
+msgstr "Elanlarınız, bəyənmələriniz və bloklarınız ictimaidir. Səssiz edilən şəxsidir."
 
 #: src/view/screens/Settings/index.tsx:119
 #~ msgid "Your profile"
-#~ msgstr ""
+#~ msgstr "Profiliniz"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr ""
+msgstr "Profiliniz, elanlarınız, axınlarınız və siyahılarınız artıq digər Bluesky istifadəçilərinə görünməyəcək. İstənilən vaxt daxil olub hesabınızı təkrar aktivləşdirə bilərsiniz."
 
 #: src/view/com/composer/Composer.tsx:469
 msgid "Your reply has been published"
-msgstr ""
+msgstr "Cavabınız dərc olunub"
 
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
-msgstr ""
+msgstr "Hesabatınız Bluesky Moderasiya Xidmətinə Göndəriləcək"
