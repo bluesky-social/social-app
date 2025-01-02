@@ -44,7 +44,7 @@ export function didOrHandleUriMatches(
 export function getEmbeddedPost(
   v: unknown,
 ): AppBskyEmbedRecord.ViewRecord | undefined {
-  if (AppBskyEmbedRecord.isView(v)) {
+  if (AppBskyEmbedRecord.isValidView(v)) {
     if (
       AppBskyEmbedRecord.isViewRecord(v.record) &&
       AppBskyFeedPost.isRecord(v.record.value)
@@ -52,7 +52,7 @@ export function getEmbeddedPost(
       return v.record
     }
   }
-  if (AppBskyEmbedRecordWithMedia.isView(v)) {
+  if (AppBskyEmbedRecordWithMedia.isValidView(v)) {
     if (
       AppBskyEmbedRecord.isViewRecord(v.record.record) &&
       AppBskyFeedPost.isRecord(v.record.record.value)
