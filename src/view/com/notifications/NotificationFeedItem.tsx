@@ -71,7 +71,7 @@ const MAX_AUTHORS = 5
 const EXPANDED_AUTHOR_EL_HEIGHT = 35
 
 interface Author {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: AppBskyActorDefs.ProfileView
   href: string
   moderation: ModerationDecision
 }
@@ -521,7 +521,7 @@ function ExpandListPressable({
   }
 }
 
-function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
+function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileView}) {
   const {_} = useLingui()
   const agent = useAgent()
   const navigation = useNavigation<NavigationProp>()
