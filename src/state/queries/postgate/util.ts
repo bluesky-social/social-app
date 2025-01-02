@@ -46,8 +46,12 @@ export function mergePostgateRecords(
   })
 }
 
-export function createEmbedViewDetachedRecord({uri}: {uri: string}) {
-  const record: AppBskyEmbedRecord.ViewDetached = {
+export function createEmbedViewDetachedRecord({
+  uri,
+}: {
+  uri: string
+}): $Typed<AppBskyEmbedRecord.View> {
+  const record: $Typed<AppBskyEmbedRecord.ViewDetached> = {
     $type: 'app.bsky.embed.record#viewDetached',
     uri,
     detached: true,
