@@ -8612,7 +8612,7 @@ msgstr "Top"
 
 #: src/Navigation.tsx:383
 msgid "Topic"
-msgstr "TemaS"
+msgstr "Tema"
 
 #: src/view/com/modals/EditImage.tsx:272
 #~ msgid "Transformations"
@@ -8630,7 +8630,7 @@ msgstr "Traducir"
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:69
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:59
 msgid "Trending"
-msgstr "Es tendencia"
+msgstr "Tendencias"
 
 #: src/view/com/util/error/ErrorScreen.tsx:103
 msgctxt "action"
@@ -8774,7 +8774,7 @@ msgstr "Dejar de silenciar {truncatedTag}"
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
 msgid "Unmute Account"
-msgstr "Dejar de silenciar Cuenta"
+msgstr "Dejar de silenciar cuenta"
 
 #: src/components/TagMenu/index.tsx:223
 msgid "Unmute all {displayTag} posts"
