@@ -721,7 +721,7 @@ function ExpandedAuthorsList({
 
 function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
   const pal = usePalette('default')
-  if (post && AppBskyFeedPost.isRecord(post?.record)) {
+  if (post && AppBskyFeedPost.isValidRecord(post?.record)) {
     const text = post.record.text
 
     return (
