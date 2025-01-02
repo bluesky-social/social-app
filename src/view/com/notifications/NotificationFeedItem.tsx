@@ -120,6 +120,11 @@ let NotificationFeedItem = ({
   }
 
   const onBeforePress = React.useCallback(() => {
+    /*
+     * Notification returns ProfileView, which has one additional field on top
+     * of `Basic`: `indexedAt`. Harmless for now, but should be fixed.
+     */
+    // @ts-expect-error TODO
     precacheProfile(queryClient, item.notification.author)
   }, [queryClient, item.notification.author])
 
