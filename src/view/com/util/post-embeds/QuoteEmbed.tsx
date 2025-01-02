@@ -171,8 +171,10 @@ export function QuoteEmbed({
   const itemTitle = `Post by ${quote.author.handle}`
 
   const richText = React.useMemo(() => {
-    const text = AppBskyFeedPost.isRecord(quote.record) ? quote.record.text : ''
-    const facets = AppBskyFeedPost.isRecord(quote.record)
+    const text = AppBskyFeedPost.isValidRecord(quote.record)
+      ? quote.record.text
+      : ''
+    const facets = AppBskyFeedPost.isValidRecord(quote.record)
       ? quote.record.facets
       : undefined
     return text.trim()
