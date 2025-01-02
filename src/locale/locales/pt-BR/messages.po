@@ -3604,7 +3604,6 @@ msgstr "Seguidores que você conhece"
 #: src/components/ProfileHoverCard/index.web.tsx:448
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
-#: src/state/queries/feed.ts:475
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
 #: src/view/screens/SavedFeeds.tsx:422
@@ -4549,7 +4548,7 @@ msgstr "Lista excluída"
 msgid "List has been hidden"
 msgstr "Lista foi ocultada"
 
-#: src/view/screens/ProfileList.tsx:168
+#: src/view/screens/ProfileList.tsx:170
 msgid "List Hidden"
 msgstr "Lista Oculta"
 
@@ -6079,7 +6078,6 @@ msgstr "postagens"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
 #: src/view/screens/Profile.tsx:231
-#: src/view/screens/ProfileList.tsx:162
 msgid "Posts"
 msgstr "Postagens"
 
@@ -9498,7 +9496,7 @@ msgstr "Estamos com problemas de rede, tente novamente"
 msgid "We're so excited to have you join us!"
 msgstr "Estamos muito felizes em recebê-lo!"
 
-#: src/view/screens/ProfileList.tsx:109
+#: src/view/screens/ProfileList.tsx:112
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
 msgstr "Tivemos um problema ao exibir esta lista. Se continuar acontecendo, contate o criador da lista: @{handleOrDid}."
 

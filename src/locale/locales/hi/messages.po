@@ -3390,7 +3390,6 @@ msgstr "फ़ॉलोअर जिन्हें आप जानते ह�
 #: src/components/ProfileHoverCard/index.web.tsx:448
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
-#: src/state/queries/feed.ts:475
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
 #: src/view/screens/SavedFeeds.tsx:422
@@ -4318,7 +4317,7 @@ msgstr "सूची मिटाई गई"
 msgid "List has been hidden"
 msgstr "सूची छिपा दी गई"
 
-#: src/view/screens/ProfileList.tsx:168
+#: src/view/screens/ProfileList.tsx:170
 msgid "List Hidden"
 msgstr "सूची छिपाई गई"
 
@@ -5794,7 +5793,6 @@ msgstr "पोस्ट"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
 #: src/view/screens/Profile.tsx:231
-#: src/view/screens/ProfileList.tsx:162
 msgid "Posts"
 msgstr "पोस्ट"
 
@@ -8898,7 +8896,7 @@ msgstr "हमें नेटवर्क समस्याएँ हो र�
 msgid "We're so excited to have you join us!"
 msgstr "हम आपके हमारे साथ जुड़ने को लेकर बहुत उत्साहित हैं!"
 
-#: src/view/screens/ProfileList.tsx:109
+#: src/view/screens/ProfileList.tsx:112
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
 msgstr "हमें क्षमा करें, पर हम इस सूची का समाधान नहीं कर पाए। यदि यह समस्या बनी रहती है, सूची के निर्माता @{handleOrDid} से संपर्क करें।"
 

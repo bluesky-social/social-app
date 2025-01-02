@@ -3159,7 +3159,6 @@ msgstr "Leantóirí a bhfuil aithne agat orthu"
 #: src/components/ProfileHoverCard/index.web.tsx:448
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
-#: src/state/queries/feed.ts:475
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
 #: src/view/screens/SavedFeeds.tsx:422
@@ -4012,7 +4011,7 @@ msgstr "Scriosadh an liosta"
 msgid "List has been hidden"
 msgstr "Cuireadh an liosta i bhfolach"
 
-#: src/view/screens/ProfileList.tsx:168
+#: src/view/screens/ProfileList.tsx:170
 msgid "List Hidden"
 msgstr "Cuireadh an liosta i bhfolach"
 
@@ -5457,7 +5456,6 @@ msgstr "postálacha"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
 #: src/view/screens/Profile.tsx:231
-#: src/view/screens/ProfileList.tsx:162
 msgid "Posts"
 msgstr "Postálacha"
 
@@ -8446,7 +8444,7 @@ msgstr "Tá fadhbanna líonra againn, bain triail as arís"
 msgid "We're so excited to have you join us!"
 msgstr "Tá muid an-sásta go bhfuil tú linn!"
 
-#: src/view/screens/ProfileList.tsx:109
+#: src/view/screens/ProfileList.tsx:112
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
 msgstr "Ár leithscéal, ach ní féidir linn an liosta seo a thaispeáint. Má mhaireann an fhadhb, déan teagmháil leis an duine a chruthaigh an liosta, @{handleOrDid}."
 

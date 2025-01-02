@@ -1047,15 +1047,15 @@ msgstr "Fiók letiltása"
 msgid "Block Account?"
 msgstr "Fiók letiltása"
 
-#: src/view/screens/ProfileList.tsx:637
+#: src/view/screens/ProfileList.tsx:639
 msgid "Block accounts"
 msgstr "Fiókok letiltása"
 
-#: src/view/screens/ProfileList.tsx:758
+#: src/view/screens/ProfileList.tsx:760
 msgid "Block list"
 msgstr "Lista letiltása"
 
-#: src/view/screens/ProfileList.tsx:753
+#: src/view/screens/ProfileList.tsx:755
 msgid "Block these accounts?"
 msgstr "Fiókok letiltása"
 
@@ -1825,7 +1825,7 @@ msgstr "Hivatkozás másolása"
 msgid "Copy Link"
 msgstr "Hivatkozás másolása"
 
-#: src/view/screens/ProfileList.tsx:481
+#: src/view/screens/ProfileList.tsx:483
 msgid "Copy link to list"
 msgstr "Lista hivatkozásának másolása"
 
@@ -1865,7 +1865,7 @@ msgstr "A csevegés elhagyása meghiúsult"
 msgid "Could not load feed"
 msgstr "A hírfolyam betöltése meghiúsult"
 
-#: src/view/screens/ProfileList.tsx:998
+#: src/view/screens/ProfileList.tsx:1000
 msgid "Could not load list"
 msgstr "A lista betöltése meghiúsult"
 
@@ -2011,7 +2011,7 @@ msgstr "Alapértelmezett ikonok"
 #: src/screens/StarterPack/StarterPackScreen.tsx:665
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:661
-#: src/view/screens/ProfileList.tsx:737
+#: src/view/screens/ProfileList.tsx:739
 msgid "Delete"
 msgstr "Törlés"
 
@@ -2040,7 +2040,7 @@ msgstr "Csevegéskijelentési jegyzőkönyv ürítése"
 msgid "Delete for me"
 msgstr "Törlés helyileg"
 
-#: src/view/screens/ProfileList.tsx:524
+#: src/view/screens/ProfileList.tsx:526
 msgid "Delete List"
 msgstr "Lista törlése"
 
@@ -2074,7 +2074,7 @@ msgstr "Kezdőcsomag törlése"
 msgid "Delete starter pack?"
 msgstr "Kezdőcsomag törlése"
 
-#: src/view/screens/ProfileList.tsx:732
+#: src/view/screens/ProfileList.tsx:734
 msgid "Delete this list?"
 msgstr "Lista törlése"
 
@@ -2400,7 +2400,7 @@ msgstr "Kép szerkesztése"
 msgid "Edit interaction settings"
 msgstr "Kapcsolatbalépési beállítások szerkesztése"
 
-#: src/view/screens/ProfileList.tsx:512
+#: src/view/screens/ProfileList.tsx:514
 msgid "Edit list details"
 msgstr "Lista szerkesztése"
 
@@ -3094,7 +3094,6 @@ msgstr "Ismert követők"
 #: src/components/ProfileHoverCard/index.web.tsx:448
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
-#: src/state/queries/feed.ts:475
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
 #: src/view/screens/SavedFeeds.tsx:422
@@ -3521,11 +3520,7 @@ msgstr "Hosszabb helyettesítő szövegek mutatása/levágása"
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "Ha még nem töltötted be az országod által meghatározott nagykorúsági életkort, akkor az alábbi feltételeket a szülődnek vagy törvényes gondviselődnek kell elolvasnia."
 
-#: src/screens/Signup/StepInfo/Policies.tsx:110
-msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
-msgstr "Ha még nem töltötted be az országod által meghatározott nagykorúsági életkort, akkor az alábbi feltételeket a szülődnek vagy törvényes gondviselődnek kell elolvasnia."
-
-#: src/view/screens/ProfileList.tsx:734
+#: src/view/screens/ProfileList.tsx:736
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "A lista törlése nem vonható vissza."
 
@@ -3921,7 +3916,7 @@ msgstr "Lista"
 msgid "List Avatar"
 msgstr "Lista profilképe"
 
-#: src/view/screens/ProfileList.tsx:416
+#: src/view/screens/ProfileList.tsx:418
 msgid "List blocked"
 msgstr "Letiltottad a listán szereplő személyeket"
 
@@ -3938,7 +3933,7 @@ msgstr "Lista – Szerző: <0/>"
 msgid "List by you"
 msgstr "Lista – Saját"
 
-#: src/view/screens/ProfileList.tsx:453
+#: src/view/screens/ProfileList.tsx:455
 msgid "List deleted"
 msgstr "Törölted a listát"
 
@@ -3946,11 +3941,11 @@ msgstr "Törölted a listát"
 msgid "List has been hidden"
 msgstr "Elrejtetted a listát"
 
-#: src/view/screens/ProfileList.tsx:168
+#: src/view/screens/ProfileList.tsx:170
 msgid "List Hidden"
 msgstr "Elrejtett lista"
 
-#: src/view/screens/ProfileList.tsx:390
+#: src/view/screens/ProfileList.tsx:392
 msgid "List muted"
 msgstr "Elnémítottad a listán szereplő személyeket"
 
@@ -3958,11 +3953,11 @@ msgstr "Elnémítottad a listán szereplő személyeket"
 msgid "List Name"
 msgstr "Listacím"
 
-#: src/view/screens/ProfileList.tsx:429
+#: src/view/screens/ProfileList.tsx:431
 msgid "List unblocked"
 msgstr "Feloldottad a listán szereplő személyek letiltását"
 
-#: src/view/screens/ProfileList.tsx:403
+#: src/view/screens/ProfileList.tsx:405
 msgid "List unmuted"
 msgstr "Feloldottad a listán szereplő személyek némítását"
 
@@ -4220,7 +4215,7 @@ msgid "More feeds"
 msgstr "További hírfolyamok"
 
 #: src/view/com/profile/ProfileMenu.tsx:179
-#: src/view/screens/ProfileList.tsx:719
+#: src/view/screens/ProfileList.tsx:721
 msgid "More options"
 msgstr "További lehetőségek"
 
@@ -4261,7 +4256,7 @@ msgstr "A(z) {truncatedTag} címke elnémítása"
 msgid "Mute Account"
 msgstr "Fiók elnémítása"
 
-#: src/view/screens/ProfileList.tsx:625
+#: src/view/screens/ProfileList.tsx:627
 msgid "Mute accounts"
 msgstr "Fiókok elnémítása"
 
@@ -4278,11 +4273,11 @@ msgstr "Beszélgetés elnémítása"
 msgid "Mute in:"
 msgstr "Hatáskör:"
 
-#: src/view/screens/ProfileList.tsx:748
+#: src/view/screens/ProfileList.tsx:750
 msgid "Mute list"
 msgstr "Lista elnémítása"
 
-#: src/view/screens/ProfileList.tsx:743
+#: src/view/screens/ProfileList.tsx:745
 msgid "Mute these accounts?"
 msgstr "Biztosan el akarod némítani az alábbi fiókokat?"
 
@@ -5100,7 +5095,6 @@ msgid "Pause video"
 msgstr "Videó szüneteltetése"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/ProfileList.tsx:162
 #: src/view/screens/Search/Search.tsx:519
 msgid "People"
 msgstr "Személyek"
@@ -5143,7 +5137,7 @@ msgstr "Felnőtteknek szánt képek."
 msgid "Pin feed"
 msgstr "Hírfolyam kitűzése"
 
-#: src/view/screens/ProfileList.tsx:683
+#: src/view/screens/ProfileList.tsx:685
 msgid "Pin to home"
 msgstr "Kitűzés a kezdőlapra"
 
@@ -5169,7 +5163,7 @@ msgstr "Kitűzted a(z) {0} hírfolyamot"
 msgid "Pinned Feeds"
 msgstr "Kitűzött hírfolyamok"
 
-#: src/view/screens/ProfileList.tsx:349
+#: src/view/screens/ProfileList.tsx:351
 msgid "Pinned to your feeds"
 msgstr "Kitűzted a hírfolyamot"
 
@@ -5353,7 +5347,6 @@ msgstr "bejegyzés"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
 #: src/view/screens/Profile.tsx:231
-#: src/view/screens/ProfileList.tsx:162
 msgid "Posts"
 msgstr "Bejegyzések"
 
@@ -5721,7 +5714,7 @@ msgstr "Eltávolítottad a hírfolyamot az elmentett hírfolyamok közül"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:126
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
-#: src/view/screens/ProfileList.tsx:380
+#: src/view/screens/ProfileList.tsx:382
 msgid "Removed from your feeds"
 msgstr "Eltávolítottad a hírfolyamot a gyűjteményedből"
 
@@ -5836,7 +5829,7 @@ msgstr "Párbeszédablak jelentése"
 msgid "Report feed"
 msgstr "Hírfolyam jelentése"
 
-#: src/view/screens/ProfileList.tsx:538
+#: src/view/screens/ProfileList.tsx:540
 msgid "Report List"
 msgstr "Lista jelentése"
 
@@ -6031,7 +6024,7 @@ msgstr "Újra"
 #: src/components/Error.tsx:73
 #: src/screens/List/ListHiddenScreen.tsx:216
 #: src/screens/StarterPack/StarterPackScreen.tsx:752
-#: src/view/screens/ProfileList.tsx:1008
+#: src/view/screens/ProfileList.tsx:1010
 msgid "Return to previous page"
 msgstr "Vissza az előző oldalra"
 
@@ -6116,7 +6109,7 @@ msgid "Saved to your camera roll"
 msgstr "Elmentetted a képet a galériába"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:135
-#: src/view/screens/ProfileList.tsx:360
+#: src/view/screens/ProfileList.tsx:362
 msgid "Saved to your feeds"
 msgstr "Elmentetted a hírfolyamot a gyűjteményedbe"
 
@@ -6143,7 +6136,7 @@ msgstr "Köszönj!"
 msgid "Science"
 msgstr "Tudomány"
 
-#: src/view/screens/ProfileList.tsx:965
+#: src/view/screens/ProfileList.tsx:967
 msgid "Scroll to top"
 msgstr "Vissza a tetejére"
 
@@ -6476,7 +6469,7 @@ msgstr "Szexuális tartalom"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:346
-#: src/view/screens/ProfileList.tsx:481
+#: src/view/screens/ProfileList.tsx:483
 msgid "Share"
 msgstr "Továbbítás"
 
@@ -6929,7 +6922,7 @@ msgstr "Mesekönyv"
 msgid "Submit"
 msgstr "Submit"
 
-#: src/view/screens/ProfileList.tsx:710
+#: src/view/screens/ProfileList.tsx:712
 msgid "Subscribe"
 msgstr "Feliratkozás"
 
@@ -6945,7 +6938,7 @@ msgstr "Feliratkozás a feljegyzőre"
 msgid "Subscribe to this labeler"
 msgstr "Feliratkozás a feljegyzőre"
 
-#: src/view/screens/ProfileList.tsx:706
+#: src/view/screens/ProfileList.tsx:708
 msgid "Subscribe to this list"
 msgstr "Feliratkozás a listára"
 
@@ -7408,7 +7401,7 @@ msgstr "Ez a hírfolyam üres. Lehetséges, hogy nem követsz elég felhasznál�
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/screens/Profile/ProfileFeed/index.tsx:170
-#: src/view/screens/ProfileList.tsx:812
+#: src/view/screens/ProfileList.tsx:814
 msgid "This feed is empty."
 msgstr "Ez a hírfolyam üres."
 
@@ -7455,10 +7448,7 @@ msgstr "Ennek a(z) <0>{0}</0> által létrehozott listának a címe vagy leírá
 #~ msgid "This list is empty!"
 #~ msgstr "Ez a lista üres."
 
-#~ msgid "This list is empty!"
-#~ msgstr "Ez a lista üres."
-
-#: src/view/screens/ProfileList.tsx:931
+#: src/view/screens/ProfileList.tsx:933
 msgid "This list is empty."
 msgstr "Ez a lista üres."
 
@@ -7665,11 +7655,11 @@ msgstr "Üzenet megadása"
 msgid "Type:"
 msgstr "Típus:"
 
-#: src/view/screens/ProfileList.tsx:588
+#: src/view/screens/ProfileList.tsx:590
 msgid "Un-block list"
 msgstr "Lista tiltásának feloldása"
 
-#: src/view/screens/ProfileList.tsx:573
+#: src/view/screens/ProfileList.tsx:575
 msgid "Un-mute list"
 msgstr "Lista némításának feloldása"
 
@@ -7697,7 +7687,7 @@ msgstr "A törlés meghiúsult"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:197
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
 #: src/view/com/profile/ProfileMenu.tsx:341
-#: src/view/screens/ProfileList.tsx:692
+#: src/view/screens/ProfileList.tsx:694
 msgid "Unblock"
 msgstr "Tiltás feloldása"
 
@@ -7792,7 +7782,7 @@ msgstr "Válaszlánc némításának feloldása"
 msgid "Unmute video"
 msgstr "Videó némításának feloldása"
 
-#: src/view/screens/ProfileList.tsx:683
+#: src/view/screens/ProfileList.tsx:685
 msgid "Unpin"
 msgstr "Kitűzés feloldása"
 
@@ -7811,7 +7801,7 @@ msgstr "Kitűzés feloldása a kezdőlapról"
 msgid "Unpin from profile"
 msgstr "Kitűzés feloldása a profilodról"
 
-#: src/view/screens/ProfileList.tsx:553
+#: src/view/screens/ProfileList.tsx:555
 msgid "Unpin moderation list"
 msgstr "Moderálólista kitűzésének feloldása"
 
@@ -7819,7 +7809,7 @@ msgstr "Moderálólista kitűzésének feloldása"
 msgid "Unpinned {0} from Home"
 msgstr "Feloldottad a(z) {0} kitűzését"
 
-#: src/view/screens/ProfileList.tsx:350
+#: src/view/screens/ProfileList.tsx:352
 msgid "Unpinned from your feeds"
 msgstr "Feloldottad a hírfolyam kitűzését"
 

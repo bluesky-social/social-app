@@ -3326,7 +3326,6 @@ msgstr "Follower, die du kennst"
 #: src/components/ProfileHoverCard/index.web.tsx:448
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
-#: src/state/queries/feed.ts:475
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
 #: src/view/screens/SavedFeeds.tsx:422
@@ -4297,7 +4296,7 @@ msgstr "Liste gelöscht"
 msgid "List has been hidden"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:168
+#: src/view/screens/ProfileList.tsx:170
 msgid "List Hidden"
 msgstr ""
 
@@ -5914,7 +5913,6 @@ msgstr "Beiträge"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
 #: src/view/screens/Profile.tsx:231
-#: src/view/screens/ProfileList.tsx:162
 msgid "Posts"
 msgstr "Beiträge"
 
@@ -9474,7 +9472,7 @@ msgstr ""
 msgid "We're so excited to have you join us!"
 msgstr "Wir freuen uns sehr, dass du dabei bist!"
 
-#: src/view/screens/ProfileList.tsx:109
+#: src/view/screens/ProfileList.tsx:112
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
 msgstr "Es tut uns leid, aber wir waren nicht in der Lage, diese Liste aufzulösen. Wenn das Problem weiterhin besteht, kontaktiere bitte den Ersteller der Liste, @{handleOrDid}."
 
