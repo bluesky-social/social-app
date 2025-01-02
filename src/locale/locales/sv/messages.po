@@ -15,11 +15,7 @@ msgstr ""
 "X-Poedit-Basepath: ../en\n"
 "X-Poedit-SearchPath-0: messages.po\n"
 
-<<<<<<< Updated upstream
-#: src/components/ProgressGuide/FollowDialog.tsx:563
-=======
 #: src/components/ProgressGuide/FollowDialog.tsx:567
->>>>>>> Stashed changes
 msgid "(active)"
 msgstr "(aktiv)"
 
@@ -351,11 +347,7 @@ msgstr "<0>Du</0> och<1> </1><2>{0} </2>ingår i ditt startpaket"
 
 #: src/screens/Profile/Header/Handle.tsx:52
 msgid "⚠Invalid Handle"
-<<<<<<< Updated upstream
-msgstr "⚠Ogiltigt användarnamn"
-=======
 msgstr "⚠ Ogiltigt användarnamn"
->>>>>>> Stashed changes
 
 #: src/components/dialogs/MutedWords.tsx:193
 msgid "24 hours"
@@ -373,14 +365,6 @@ msgstr "30 dagar"
 msgid "7 days"
 msgstr "7 dagar"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:363 src/screens/Settings/AboutSettings.tsx:28
-#: src/screens/Settings/Settings.tsx:215 src/screens/Settings/Settings.tsx:218
-msgid "About"
-msgstr "Om"
-
-#: src/view/screens/Search/Search.tsx:865
-=======
 #: src/Navigation.tsx:363
 #: src/screens/Settings/AboutSettings.tsx:28
 #: src/screens/Settings/Settings.tsx:215
@@ -389,17 +373,12 @@ msgid "About"
 msgstr "Om"
 
 #: src/view/screens/Search/Search.tsx:866
->>>>>>> Stashed changes
 msgid "Access navigation links and settings"
 msgstr "Öppna navigeringslänkar och inställningar"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:46
-<<<<<<< Updated upstream
-#: src/screens/Settings/Settings.tsx:191 src/screens/Settings/Settings.tsx:194
-=======
 #: src/screens/Settings/Settings.tsx:191
 #: src/screens/Settings/Settings.tsx:194
->>>>>>> Stashed changes
 msgid "Accessibility"
 msgstr "Tillgänglighet"
 
@@ -407,17 +386,11 @@ msgstr "Tillgänglighet"
 msgid "Accessibility Settings"
 msgstr "Tillgänglighetsinställningar"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:339 src/screens/Login/LoginForm.tsx:178
-#: src/screens/Settings/AccountSettings.tsx:45
-#: src/screens/Settings/Settings.tsx:153 src/screens/Settings/Settings.tsx:156
-=======
 #: src/Navigation.tsx:339
 #: src/screens/Login/LoginForm.tsx:178
 #: src/screens/Settings/AccountSettings.tsx:45
 #: src/screens/Settings/Settings.tsx:153
 #: src/screens/Settings/Settings.tsx:156
->>>>>>> Stashed changes
 msgid "Account"
 msgstr "Konto"
 
@@ -483,13 +456,6 @@ msgstr "Lägg till {displayName} i startpaket"
 msgid "Add a content warning"
 msgstr "Lägg till innehållsvarning"
 
-<<<<<<< Updated upstream
-#: src/view/screens/ProfileList.tsx:895 src/view/screens/ProfileList.tsx:913
-msgid "Add a user to this list"
-msgstr "Lägg till en användare i den här listan"
-
-#: src/components/dialogs/SwitchAccount.tsx:55 src/screens/Deactivated.tsx:191
-=======
 #: src/view/screens/ProfileList.tsx:895
 #: src/view/screens/ProfileList.tsx:913
 msgid "Add a user to this list"
@@ -497,7 +463,6 @@ msgstr "Lägg till en användare i den här listan"
 
 #: src/components/dialogs/SwitchAccount.tsx:55
 #: src/screens/Deactivated.tsx:191
->>>>>>> Stashed changes
 msgid "Add account"
 msgstr "Lägg till konto"
 
@@ -515,12 +480,8 @@ msgstr "Lägg till alternativtext"
 msgid "Add alt text (optional)"
 msgstr "Lägg till alternativtext (valfritt)"
 
-<<<<<<< Updated upstream
-#: src/screens/Settings/Settings.tsx:372 src/screens/Settings/Settings.tsx:375
-=======
 #: src/screens/Settings/Settings.tsx:372
 #: src/screens/Settings/Settings.tsx:375
->>>>>>> Stashed changes
 msgid "Add another account"
 msgstr "Lägg till ett annat konto"
 
@@ -550,12 +511,8 @@ msgstr "Lägg till ord och taggar att ignorera"
 msgid "Add new post"
 msgstr "Lägg till ett ytterligare inlägg"
 
-<<<<<<< Updated upstream
-#: src/view/screens/ProfileList.tsx:903 src/view/screens/ProfileList.tsx:921
-=======
 #: src/view/screens/ProfileList.tsx:903
 #: src/view/screens/ProfileList.tsx:921
->>>>>>> Stashed changes
 msgid "Add people"
 msgstr "Lägg till personer"
 
@@ -642,12 +599,8 @@ msgstr "Alla flöden du har sparat, på ett och samma ställe."
 msgid "Allow access to your direct messages"
 msgstr "Tillåt åtkomst till dina direktmeddelanden"
 
-<<<<<<< Updated upstream
-#: src/screens/Messages/Settings.tsx:70 src/screens/Messages/Settings.tsx:73
-=======
 #: src/screens/Messages/Settings.tsx:70
 #: src/screens/Messages/Settings.tsx:73
->>>>>>> Stashed changes
 msgid "Allow new messages from"
 msgstr "Tillåt nya meddelanden från"
 
@@ -769,12 +722,8 @@ msgstr "Ett problem uppstod när chatten skulle öppnas"
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
-<<<<<<< Updated upstream
-#: src/components/ProfileCard.tsx:330 src/components/ProfileCard.tsx:351
-=======
 #: src/components/ProfileCard.tsx:330
 #: src/components/ProfileCard.tsx:351
->>>>>>> Stashed changes
 #: src/view/com/profile/FollowButton.tsx:35
 #: src/view/com/profile/FollowButton.tsx:45
 msgid "An issue occurred, please try again."
@@ -787,22 +736,14 @@ msgstr "ett okänt fel uppstod"
 #: src/components/moderation/ModerationDetailsDialog.tsx:157
 #: src/components/moderation/ModerationDetailsDialog.tsx:153
 msgid "an unknown labeler"
-<<<<<<< Updated upstream
-msgstr "en okänd etiketterare"
-=======
 msgstr "en okänd etikettsättare"
->>>>>>> Stashed changes
 
 #: src/components/WhoCanReply.tsx:295
 msgid "and"
 msgstr "och"
 
-<<<<<<< Updated upstream
-#: src/screens/Onboarding/index.tsx:29 src/screens/Onboarding/state.ts:94
-=======
 #: src/screens/Onboarding/index.tsx:29
 #: src/screens/Onboarding/state.ts:94
->>>>>>> Stashed changes
 msgid "Animals"
 msgstr "Djur"
 
@@ -814,13 +755,8 @@ msgstr "Animerade gif-bilder"
 msgid "Anti-Social Behavior"
 msgstr "Antisocialt beteende"
 
-<<<<<<< Updated upstream
-#: src/view/screens/Search/Search.tsx:336
-#: src/view/screens/Search/Search.tsx:337
-=======
 #: src/view/screens/Search/Search.tsx:337
 #: src/view/screens/Search/Search.tsx:338
->>>>>>> Stashed changes
 msgid "Any language"
 msgstr "Alla språk"
 
@@ -828,12 +764,8 @@ msgstr "Alla språk"
 msgid "Anybody can interact"
 msgstr "Vem som helst kan interagera"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:371 src/screens/Settings/AppIconSettings/index.tsx:67
-=======
 #: src/Navigation.tsx:371
 #: src/screens/Settings/AppIconSettings/index.tsx:67
->>>>>>> Stashed changes
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:18
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:23
 msgid "App Icon"
@@ -868,12 +800,8 @@ msgstr "Namn på applösenord måste vara minst 4 tecken långa"
 msgid "App passwords"
 msgstr "Applösenord"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:291 src/screens/Settings/AppPasswords.tsx:51
-=======
 #: src/Navigation.tsx:291
 #: src/screens/Settings/AppPasswords.tsx:51
->>>>>>> Stashed changes
 msgid "App Passwords"
 msgstr "Applösenord"
 
@@ -898,15 +826,10 @@ msgstr "Omprövningsbegäran skickad"
 msgid "Appeal this decision"
 msgstr "Begär omprövning av beslutet"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:331 src/screens/Settings/AppearanceSettings.tsx:85
-#: src/screens/Settings/Settings.tsx:183 src/screens/Settings/Settings.tsx:186
-=======
 #: src/Navigation.tsx:331
 #: src/screens/Settings/AppearanceSettings.tsx:85
 #: src/screens/Settings/Settings.tsx:183
 #: src/screens/Settings/Settings.tsx:186
->>>>>>> Stashed changes
 msgid "Appearance"
 msgstr "Utseende"
 
@@ -964,13 +887,6 @@ msgstr "Är du säker på att du vill slänga det här inlägget?"
 msgid "Are you sure?"
 msgstr "Är du säker?"
 
-<<<<<<< Updated upstream
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:61
-msgid "Are you writing in <0>{0}</0>?"
-msgstr "Skriver du på <0>{0}</0>?"
-
-#: src/screens/Onboarding/index.tsx:23 src/screens/Onboarding/state.ts:95
-=======
 #~ msgid "Are you writing in <0>{0}</0>?"
 #~ msgstr "Skriver du på <0>{0}</0>?"
 
@@ -980,7 +896,6 @@ msgstr "Skriver du på <0>{suggestedLanguageName}</0>?"
 
 #: src/screens/Onboarding/index.tsx:23
 #: src/screens/Onboarding/state.ts:95
->>>>>>> Stashed changes
 msgid "Art"
 msgstr "Konst"
 
@@ -996,13 +911,8 @@ msgstr "Minst 3 tecken"
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
 msgstr "Inställningar för automatisk uppspelning har flyttat till <0>Innehåll och media</0>."
 
-<<<<<<< Updated upstream
-#: src/screens/Settings/ContentAndMediaSettings.tsx:105
-#: src/screens/Settings/ContentAndMediaSettings.tsx:111
-=======
 #: src/screens/Settings/ContentAndMediaSettings.tsx:106
 #: src/screens/Settings/ContentAndMediaSettings.tsx:112
->>>>>>> Stashed changes
 msgid "Autoplay videos and GIFs"
 msgstr "Spela upp videoklipp och gif-bilder automatiskt"
 
@@ -1013,12 +923,8 @@ msgstr "Spela upp videoklipp och gif-bilder automatiskt"
 #: src/screens/Login/ChooseAccountForm.tsx:95
 #: src/screens/Login/ForgotPasswordForm.tsx:123
 #: src/screens/Login/ForgotPasswordForm.tsx:129
-<<<<<<< Updated upstream
-#: src/screens/Login/LoginForm.tsx:292 src/screens/Login/LoginForm.tsx:298
-=======
 #: src/screens/Login/LoginForm.tsx:292
 #: src/screens/Login/LoginForm.tsx:298
->>>>>>> Stashed changes
 #: src/screens/Login/SetNewPasswordForm.tsx:154
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Messages/components/ChatDisabled.tsx:133
@@ -1029,12 +935,8 @@ msgstr "Spela upp videoklipp och gif-bilder automatiskt"
 msgid "Back"
 msgstr "Tillbaka"
 
-<<<<<<< Updated upstream
-#: src/view/screens/Lists.tsx:81 src/view/screens/ModerationModlists.tsx:81
-=======
 #: src/view/screens/Lists.tsx:81
 #: src/view/screens/ModerationModlists.tsx:81
->>>>>>> Stashed changes
 msgid "Before creating a list, you must first verify your email."
 msgstr "Du måste verifiera din e‑postadress innan du kan skapa en lista."
 
@@ -1052,10 +954,6 @@ msgstr "Du måste verifiera din e‑postadress innan du kan skapa ett startpaket
 msgid "Before you may message another user, you must first verify your email."
 msgstr "Du måste verifiera din e‑postadress innan du kan skicka ett meddelande till en annan användare."
 
-<<<<<<< Updated upstream
-#: src/components/interstitials/Trending.tsx:67
-=======
->>>>>>> Stashed changes
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:74
 msgid "BETA"
 msgstr "BETA"
@@ -1071,12 +969,8 @@ msgstr "Födelsedag"
 msgid "Block"
 msgstr "Blockera"
 
-<<<<<<< Updated upstream
-#: src/components/dms/ConvoMenu.tsx:188 src/components/dms/ConvoMenu.tsx:192
-=======
 #: src/components/dms/ConvoMenu.tsx:188
 #: src/components/dms/ConvoMenu.tsx:192
->>>>>>> Stashed changes
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:603
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:605
 msgid "Block account"
@@ -1112,12 +1006,8 @@ msgstr "Blockerat"
 msgid "Blocked accounts"
 msgstr "Blockerade konton"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:155 src/view/screens/ModerationBlockedAccounts.tsx:101
-=======
 #: src/Navigation.tsx:155
 #: src/view/screens/ModerationBlockedAccounts.tsx:101
->>>>>>> Stashed changes
 msgid "Blocked Accounts"
 msgstr "Blockerade konton"
 
@@ -1174,11 +1064,7 @@ msgstr "Bluesky väljer en uppsättning rekommenderade konton från personer i d
 
 #: src/screens/Settings/components/PwiOptOut.tsx:92
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-<<<<<<< Updated upstream
-msgstr "Bluesky visar inte din profil eller dina inlägg för utloggade användare. Andra appar kanske inte respekterar din begäran. Detta gör inte ditt konto privat."
-=======
 msgstr "Bluesky visar inte din profil eller dina inlägg för utloggade användare. Andra appar kanske inte respekterar din begäran. Den här inställningen gör inte ditt konto privat."
->>>>>>> Stashed changes
 
 #: src/screens/Settings/AppIconSettings/index.tsx:99
 msgid "Bluesky+"
@@ -1196,12 +1082,8 @@ msgstr "Gör bilder suddiga"
 msgid "Blur images and filter from feeds"
 msgstr "Gör bilder suddiga och filtrera bort från flöden"
 
-<<<<<<< Updated upstream
-#: src/screens/Onboarding/index.tsx:30 src/screens/Onboarding/state.ts:96
-=======
 #: src/screens/Onboarding/index.tsx:30
 #: src/screens/Onboarding/state.ts:96
->>>>>>> Stashed changes
 msgid "Books"
 msgstr "Böcker"
 
@@ -1270,15 +1152,10 @@ msgstr "Genom att skapa ett konto godkänner du våra <0>användarvillkor</0>."
 msgid "Camera"
 msgstr "Kamera"
 
-<<<<<<< Updated upstream
-#: src/components/Menu/index.tsx:297 src/components/Prompt.tsx:129
-#: src/components/Prompt.tsx:131 src/components/TagMenu/index.tsx:283
-=======
 #: src/components/Menu/index.tsx:297
 #: src/components/Prompt.tsx:129
 #: src/components/Prompt.tsx:131
 #: src/components/TagMenu/index.tsx:283
->>>>>>> Stashed changes
 #: src/screens/Deactivated.tsx:157
 #: src/screens/Profile/Header/EditProfileDialog.tsx:220
 #: src/screens/Profile/Header/EditProfileDialog.tsx:228
@@ -1286,12 +1163,8 @@ msgstr "Kamera"
 #: src/screens/Settings/AppIconSettings/index.tsx:225
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:76
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:83
-<<<<<<< Updated upstream
-#: src/screens/Settings/Settings.tsx:260 src/view/com/composer/Composer.tsx:916
-=======
 #: src/screens/Settings/Settings.tsx:260
 #: src/view/com/composer/Composer.tsx:916
->>>>>>> Stashed changes
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:268
@@ -1306,11 +1179,7 @@ msgstr "Kamera"
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:213
-<<<<<<< Updated upstream
-#: src/view/screens/Search/Search.tsx:894
-=======
 #: src/view/screens/Search/Search.tsx:895
->>>>>>> Stashed changes
 msgid "Cancel"
 msgstr "Avbryt"
 
@@ -1343,11 +1212,7 @@ msgid "Cancel reactivation and log out"
 msgstr "Avbryt återaktivering och logga ut"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-<<<<<<< Updated upstream
-#: src/view/screens/Search/Search.tsx:886
-=======
 #: src/view/screens/Search/Search.tsx:887
->>>>>>> Stashed changes
 msgid "Cancel search"
 msgstr "Avbryt sökning"
 
@@ -1407,18 +1272,12 @@ msgstr "Ändra min e-postadress"
 msgid "Change Password"
 msgstr "Ändra lösenord"
 
-<<<<<<< Updated upstream
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:74
-msgid "Change post language to {0}"
-msgstr "Ändra inläggets språk till {0}"
-=======
 #~ msgid "Change post language to {0}"
 #~ msgstr "Ändra inläggets språk till {0}"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:82
 msgid "Change post language to {suggestedLanguageName}"
 msgstr "Ändra inläggets språk till {suggestedLanguageName}"
->>>>>>> Stashed changes
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
@@ -1428,15 +1287,10 @@ msgstr "Ändra din e‑postadress"
 msgid "Change your email address"
 msgstr "Ändra din e‑postadress"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:388 src/view/shell/bottom-bar/BottomBar.tsx:205
-#: src/view/shell/desktop/LeftNav.tsx:335 src/view/shell/Drawer.tsx:417
-=======
 #: src/Navigation.tsx:388
 #: src/view/shell/bottom-bar/BottomBar.tsx:205
 #: src/view/shell/desktop/LeftNav.tsx:335
 #: src/view/shell/Drawer.tsx:417
->>>>>>> Stashed changes
 msgid "Chat"
 msgstr "Chatt"
 
@@ -1444,15 +1298,10 @@ msgstr "Chatt"
 msgid "Chat muted"
 msgstr "Chatt ignorerad"
 
-<<<<<<< Updated upstream
-#: src/components/dms/ConvoMenu.tsx:112 src/components/dms/MessageMenu.tsx:81
-#: src/Navigation.tsx:393 src/screens/Messages/ChatList.tsx:246
-=======
 #: src/components/dms/ConvoMenu.tsx:112
 #: src/components/dms/MessageMenu.tsx:81
 #: src/Navigation.tsx:393
 #: src/screens/Messages/ChatList.tsx:246
->>>>>>> Stashed changes
 msgid "Chat settings"
 msgstr "Chattinställningar"
 
@@ -1464,12 +1313,8 @@ msgstr "Chattinställningar"
 msgid "Chat unmuted"
 msgstr "Chatt inte lägre ignorerad"
 
-<<<<<<< Updated upstream
-#: src/screens/SignupQueued.tsx:78 src/screens/SignupQueued.tsx:82
-=======
 #: src/screens/SignupQueued.tsx:78
 #: src/screens/SignupQueued.tsx:82
->>>>>>> Stashed changes
 msgid "Check my status"
 msgstr "Kontrollera min status"
 
@@ -1499,11 +1344,7 @@ msgstr "Välj personer"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:115
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
-<<<<<<< Updated upstream
-msgstr ""
-=======
 msgstr "Välj självsatta etiketter som är relevanta för den media du publicerar. Om ingen väljs antas inlägget som lämpligt för alla läsare."
->>>>>>> Stashed changes
 
 #: src/view/com/auth/server-input/index.tsx:76
 msgid "Choose Service"
@@ -1517,12 +1358,8 @@ msgstr "Välj de algoritmer du vill ska styra dina anpassade flöden."
 msgid "Choose this color as your avatar"
 msgstr "Välj den här färgen som din avatar"
 
-<<<<<<< Updated upstream
-#: src/view/screens/Feeds.tsx:728 src/view/screens/Search/Explore.tsx:411
-=======
 #: src/view/screens/Feeds.tsx:728
 #: src/view/screens/Search/Explore.tsx:411
->>>>>>> Stashed changes
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr "Välj din egen tidslinje! Flöden som har skapats av andra i gemenskapen hjälper dig att hitta innehåll du gillar."
 
@@ -1564,11 +1401,7 @@ msgstr "Klicka för att tillåta citeringar av detta inlägg."
 
 #: src/components/dms/MessageItem.tsx:241
 msgid "Click to retry failed message"
-<<<<<<< Updated upstream
-msgstr ""
-=======
 msgstr "Klicka för att försöka på nytt med misslyckat meddelande"
->>>>>>> Stashed changes
 
 #: src/screens/Onboarding/index.tsx:32
 msgid "Climate"
@@ -1581,14 +1414,9 @@ msgstr "Galopp 🐴 galopp 🐴"
 #: src/components/dialogs/GifSelect.tsx:281
 #: src/components/dialogs/VerifyEmailDialog.tsx:289
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:265
-<<<<<<< Updated upstream
-#: src/components/NewskieDialog.tsx:146 src/components/NewskieDialog.tsx:153
-#: src/components/ProgressGuide/FollowDialog.tsx:425
-=======
 #: src/components/NewskieDialog.tsx:146
 #: src/components/NewskieDialog.tsx:153
 #: src/components/ProgressGuide/FollowDialog.tsx:429
->>>>>>> Stashed changes
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:117
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:123
 #: src/view/com/modals/ChangePassword.tsx:268
@@ -1635,12 +1463,8 @@ msgstr "Stäng bildvisare"
 msgid "Close navigation footer"
 msgstr "Stäng sidfot med navigering"
 
-<<<<<<< Updated upstream
-#: src/components/Menu/index.tsx:291 src/components/TagMenu/index.tsx:277
-=======
 #: src/components/Menu/index.tsx:291
 #: src/components/TagMenu/index.tsx:277
->>>>>>> Stashed changes
 msgid "Close this dialog"
 msgstr "Stäng den här dialogrutan"
 
@@ -1668,19 +1492,6 @@ msgstr "Fäller ihop användarlista för berörd notis"
 msgid "Color mode"
 msgstr "Färgläge"
 
-<<<<<<< Updated upstream
-#: src/screens/Onboarding/index.tsx:38 src/screens/Onboarding/state.ts:97
-msgid "Comedy"
-msgstr "Komedi"
-
-#: src/screens/Onboarding/index.tsx:24 src/screens/Onboarding/state.ts:98
-msgid "Comics"
-msgstr "Serierutor"
-
-#: src/Navigation.tsx:281 src/view/screens/CommunityGuidelines.tsx:34
-msgid "Community Guidelines"
-msgstr ""
-=======
 #: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:97
 msgid "Comedy"
@@ -1695,7 +1506,6 @@ msgstr "Serierutor"
 #: src/view/screens/CommunityGuidelines.tsx:34
 msgid "Community Guidelines"
 msgstr "Gemenskapens riktlinjer"
->>>>>>> Stashed changes
 
 #: src/screens/Onboarding/StepFinished.tsx:293
 msgid "Complete onboarding and start using your account"
@@ -1732,12 +1542,8 @@ msgstr "Konfigurerad i <0>modereringsinställningar</0>."
 #: src/components/dialogs/VerifyEmailDialog.tsx:253
 #: src/components/dialogs/VerifyEmailDialog.tsx:260
 #: src/components/dialogs/VerifyEmailDialog.tsx:283
-<<<<<<< Updated upstream
-#: src/components/Prompt.tsx:172 src/components/Prompt.tsx:175
-=======
 #: src/components/Prompt.tsx:172
 #: src/components/Prompt.tsx:175
->>>>>>> Stashed changes
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:185
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:188
 #: src/view/com/modals/VerifyEmail.tsx:239
@@ -1785,30 +1591,18 @@ msgstr "Bekräftelsekod"
 msgid "Connecting..."
 msgstr "Ansluter…"
 
-<<<<<<< Updated upstream
-#: src/screens/Signup/index.tsx:175 src/screens/Signup/index.tsx:178
-msgid "Contact support"
-msgstr "Kontakta supporten"
-
-#: src/screens/Settings/ContentAndMediaSettings.tsx:48
-=======
 #: src/screens/Signup/index.tsx:175
 #: src/screens/Signup/index.tsx:178
 msgid "Contact support"
 msgstr "Kontakta supporten"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:49
->>>>>>> Stashed changes
 msgid "Content & Media"
 msgstr "Innehåll och media"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:109
-<<<<<<< Updated upstream
-#: src/screens/Settings/Settings.tsx:175 src/screens/Settings/Settings.tsx:178
-=======
 #: src/screens/Settings/Settings.tsx:175
 #: src/screens/Settings/Settings.tsx:178
->>>>>>> Stashed changes
 msgid "Content and media"
 msgstr "Innehåll och media"
 
@@ -1825,11 +1619,7 @@ msgid "Content filters"
 msgstr "Innehållsfilter"
 
 #: src/screens/Settings/LanguageSettings.tsx:251
-<<<<<<< Updated upstream
-#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:75
-=======
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
->>>>>>> Stashed changes
 msgid "Content Languages"
 msgstr "Språk för innehåll"
 
@@ -1888,12 +1678,8 @@ msgstr "Kopierat"
 msgid "Copied build version to clipboard"
 msgstr "Byggversion kopierad till urklipp"
 
-<<<<<<< Updated upstream
-#: src/components/dms/MessageMenu.tsx:57 src/lib/sharing.ts:25
-=======
 #: src/components/dms/MessageMenu.tsx:57
 #: src/lib/sharing.ts:25
->>>>>>> Stashed changes
 #: src/view/com/modals/InviteCodes.tsx:153
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:235
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:393
@@ -1917,12 +1703,8 @@ msgstr "Kopiera applösenord"
 msgid "Copy build version to clipboard"
 msgstr "Kopiera byggversion till urklipp"
 
-<<<<<<< Updated upstream
-#: src/components/dialogs/Embed.tsx:122 src/components/dialogs/Embed.tsx:141
-=======
 #: src/components/dialogs/Embed.tsx:122
 #: src/components/dialogs/Embed.tsx:141
->>>>>>> Stashed changes
 msgid "Copy code"
 msgstr "Kopiera kod"
 
@@ -1969,12 +1751,8 @@ msgstr "Kopiera QR-kod"
 msgid "Copy TXT record value"
 msgstr "Kopiera värde för TXT-post"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:286 src/view/screens/CopyrightPolicy.tsx:31
-=======
 #: src/Navigation.tsx:286
 #: src/view/screens/CopyrightPolicy.tsx:31
->>>>>>> Stashed changes
 msgid "Copyright Policy"
 msgstr "Upphovsrättspolicy"
 
@@ -2025,12 +1803,8 @@ msgstr "Skapa konto"
 msgid "Create Account"
 msgstr "Skapa konto"
 
-<<<<<<< Updated upstream
-#: src/components/dialogs/Signin.tsx:86 src/components/dialogs/Signin.tsx:88
-=======
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
->>>>>>> Stashed changes
 msgid "Create an account"
 msgstr "Skapa ett konto"
 
@@ -2055,16 +1829,12 @@ msgstr "Skapa rapport för {0}"
 msgid "Created {0}"
 msgstr "Skapade {0}"
 
-<<<<<<< Updated upstream
-#: src/screens/Onboarding/index.tsx:26 src/screens/Onboarding/state.ts:99
-=======
 #: src/screens/List/ListHiddenScreen.tsx:127
 msgid "Creator has been blocked"
 msgstr "Skaparen har blockerats"
 
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
->>>>>>> Stashed changes
 msgid "Culture"
 msgstr "Kultur"
 
@@ -2233,12 +2003,8 @@ msgstr "Avskilj citat"
 msgid "Detach quote post?"
 msgstr "Avskilj citatinlägg?"
 
-<<<<<<< Updated upstream
-#: src/screens/Settings/Settings.tsx:242 src/screens/Settings/Settings.tsx:245
-=======
 #: src/screens/Settings/Settings.tsx:242
 #: src/screens/Settings/Settings.tsx:245
->>>>>>> Stashed changes
 msgid "Developer options"
 msgstr "Utvecklaralternativ"
 
@@ -2266,12 +2032,8 @@ msgstr "Stäng av undertexter"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
 #: src/lib/moderation/useLabelBehaviorDescription.ts:68
-<<<<<<< Updated upstream
-#: src/screens/Messages/Settings.tsx:139 src/screens/Messages/Settings.tsx:142
-=======
 #: src/screens/Messages/Settings.tsx:139
 #: src/screens/Messages/Settings.tsx:142
->>>>>>> Stashed changes
 #: src/screens/Moderation/index.tsx:329
 msgid "Disabled"
 msgstr "Inaktiverat"
@@ -2478,12 +2240,8 @@ msgctxt "action"
 msgid "Edit"
 msgstr "Ändra"
 
-<<<<<<< Updated upstream
-#: src/view/com/util/UserAvatar.tsx:347 src/view/com/util/UserBanner.tsx:95
-=======
 #: src/view/com/util/UserAvatar.tsx:347
 #: src/view/com/util/UserBanner.tsx:95
->>>>>>> Stashed changes
 msgid "Edit avatar"
 msgstr "Ändra avatar"
 
@@ -2510,12 +2268,8 @@ msgstr "Ändra listdetaljer"
 msgid "Edit Moderation List"
 msgstr "Ändra modereringslista"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:296 src/view/screens/Feeds.tsx:515
-=======
 #: src/Navigation.tsx:296
 #: src/view/screens/Feeds.tsx:515
->>>>>>> Stashed changes
 msgid "Edit My Feeds"
 msgstr "Ändra mina flöden"
 
@@ -2568,12 +2322,6 @@ msgstr "Ändra din profilbeskrivning"
 msgid "Edit your starter pack"
 msgstr "Ändra ditt startpaket"
 
-<<<<<<< Updated upstream
-#: src/screens/Onboarding/index.tsx:31 src/screens/Onboarding/state.ts:101
-msgid "Education"
-msgstr "Utbildning"
-
-=======
 #: src/screens/Onboarding/index.tsx:31
 #: src/screens/Onboarding/state.ts:101
 msgid "Education"
@@ -2583,7 +2331,6 @@ msgstr "Utbildning"
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
 msgstr "Antingen har skaparen av den här listan blockerat dig, eller så har du blockerat skaparen."
 
->>>>>>> Stashed changes
 #: src/screens/Settings/AccountSettings.tsx:60
 #: src/screens/Signup/StepInfo/index.tsx:170
 #: src/view/com/modals/ChangeEmail.tsx:136
@@ -2661,11 +2408,7 @@ msgstr "Aktivera 2FA via e-post"
 #: src/components/dialogs/EmbedConsent.tsx:81
 #: src/components/dialogs/EmbedConsent.tsx:88
 msgid "Enable external media"
-<<<<<<< Updated upstream
-msgstr "Tillåt externt medieinnehåll"
-=======
 msgstr "Tillåt extern media"
->>>>>>> Stashed changes
 
 #: src/screens/Settings/ExternalMediaPreferences.tsx:49
 msgid "Enable media players for"
@@ -2684,14 +2427,6 @@ msgstr "Aktivera undertexter"
 msgid "Enable this source only"
 msgstr "Aktivera endast denna källa"
 
-<<<<<<< Updated upstream
-#: src/screens/Settings/ContentAndMediaSettings.tsx:121
-#: src/screens/Settings/ContentAndMediaSettings.tsx:127
-msgid "Enable trending topics"
-msgstr "Aktivera trendande ämnen"
-
-#: src/screens/Messages/Settings.tsx:130 src/screens/Messages/Settings.tsx:133
-=======
 #: src/screens/Settings/ContentAndMediaSettings.tsx:122
 #: src/screens/Settings/ContentAndMediaSettings.tsx:136
 msgid "Enable trending topics"
@@ -2699,7 +2434,6 @@ msgstr "Aktivera trendande ämnen"
 
 #: src/screens/Messages/Settings.tsx:130
 #: src/screens/Messages/Settings.tsx:133
->>>>>>> Stashed changes
 #: src/screens/Moderation/index.tsx:327
 msgid "Enabled"
 msgstr "Aktiverat"
@@ -2780,11 +2514,7 @@ msgid "Error receiving captcha response."
 msgstr "Fel vid mottagning av captcha-svar."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:183
-<<<<<<< Updated upstream
-#: src/view/screens/Search/Search.tsx:110
-=======
 #: src/view/screens/Search/Search.tsx:111
->>>>>>> Stashed changes
 msgid "Error:"
 msgstr "Fel:"
 
@@ -2800,12 +2530,8 @@ msgstr "Alla kan svara"
 msgid "Everybody can reply to this post."
 msgstr "Alla kan svara på det här inlägget."
 
-<<<<<<< Updated upstream
-#: src/screens/Messages/Settings.tsx:83 src/screens/Messages/Settings.tsx:86
-=======
 #: src/screens/Messages/Settings.tsx:83
 #: src/screens/Messages/Settings.tsx:86
->>>>>>> Stashed changes
 msgid "Everyone"
 msgstr "Alla"
 
@@ -2860,11 +2586,7 @@ msgstr "Utöka eller fäll ihop det inlägg som du svarar på i sin helhet"
 
 #: src/lib/api/index.ts:400
 msgid "Expected uri to resolve to a record"
-<<<<<<< Updated upstream
-msgstr ""
-=======
 msgstr "Förväntade att URI:n skulle lösa till en post"
->>>>>>> Stashed changes
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:123
 #: src/screens/Settings/ThreadPreferences.tsx:137
@@ -2896,44 +2618,25 @@ msgstr "Exportera min data"
 msgid "Export My Data"
 msgstr "Exportera min data"
 
-<<<<<<< Updated upstream
-#: src/screens/Settings/ContentAndMediaSettings.tsx:81
-#: src/screens/Settings/ContentAndMediaSettings.tsx:84
-msgid "External media"
-msgstr "Externt medieinnehåll"
-=======
 #: src/screens/Settings/ContentAndMediaSettings.tsx:82
 #: src/screens/Settings/ContentAndMediaSettings.tsx:85
 msgid "External media"
 msgstr "Extern media"
->>>>>>> Stashed changes
 
 #: src/components/dialogs/EmbedConsent.tsx:54
 #: src/components/dialogs/EmbedConsent.tsx:58
 msgid "External Media"
-<<<<<<< Updated upstream
-msgstr "Externt medieinnehåll"
-=======
 msgstr "Extern media"
->>>>>>> Stashed changes
 
 #: src/components/dialogs/EmbedConsent.tsx:70
 #: src/screens/Settings/ExternalMediaPreferences.tsx:40
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
-<<<<<<< Updated upstream
-msgstr "Externa medier möjliggöra för webbplatser att samla in information om dig och din enhet. Ingen information skickas eller begärs förrän du trycker på spelaknappen."
-
-#: src/Navigation.tsx:315 src/screens/Settings/ExternalMediaPreferences.tsx:31
-msgid "External Media Preferences"
-msgstr "Inställningar för externt medieinnehåll"
-=======
 msgstr "Extern media kan göra det möjligt för webbplatser att samla in information om dig och din enhet. Ingen information skickas eller begärs förrän du trycker på spelaknappen."
 
 #: src/Navigation.tsx:315
 #: src/screens/Settings/ExternalMediaPreferences.tsx:31
 msgid "External Media Preferences"
 msgstr "Inställningar för extern media"
->>>>>>> Stashed changes
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:570
 msgid "Failed to change handle. Please try again."
@@ -3009,11 +2712,7 @@ msgstr "Det gick inte att skicka omprövningsbegäran. Försök igen."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:224
 msgid "Failed to toggle thread mute, please try again"
-<<<<<<< Updated upstream
-msgstr ""
-=======
 msgstr "Det gick inte att ignorera tråden. Försök igen"
->>>>>>> Stashed changes
 
 #: src/components/FeedCard.tsx:275
 msgid "Failed to update feeds"
@@ -3023,15 +2722,10 @@ msgstr "Det gick inte att uppdatera flödena"
 msgid "Failed to update settings"
 msgstr "Det gick inte att uppdatera inställningarna"
 
-<<<<<<< Updated upstream
-#: src/lib/media/video/upload.ts:72 src/lib/media/video/upload.web.ts:74
-#: src/lib/media/video/upload.web.ts:78 src/lib/media/video/upload.web.ts:88
-=======
 #: src/lib/media/video/upload.ts:72
 #: src/lib/media/video/upload.web.ts:74
 #: src/lib/media/video/upload.web.ts:78
 #: src/lib/media/video/upload.web.ts:88
->>>>>>> Stashed changes
 msgid "Failed to upload video"
 msgstr "Det gick inte att ladda upp videoklippet"
 
@@ -3043,12 +2737,8 @@ msgstr "Det gick inte att verifiera användarnamnet. Försök igen."
 msgid "Feed"
 msgstr "Flöde"
 
-<<<<<<< Updated upstream
-#: src/components/FeedCard.tsx:134 src/view/com/feeds/FeedSourceCard.tsx:253
-=======
 #: src/components/FeedCard.tsx:134
 #: src/view/com/feeds/FeedSourceCard.tsx:253
->>>>>>> Stashed changes
 msgid "Feed by {0}"
 msgstr "Flöde av {0}"
 
@@ -3058,18 +2748,11 @@ msgstr "Meny för flöde"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:54
 msgid "Feed toggle"
-<<<<<<< Updated upstream
-msgstr ""
-
-#: src/view/shell/desktop/RightNav.tsx:93
-#: src/view/shell/desktop/RightNav.tsx:94 src/view/shell/Drawer.tsx:319
-=======
 msgstr "Växla läge på flöde"
 
 #: src/view/shell/desktop/RightNav.tsx:93
 #: src/view/shell/desktop/RightNav.tsx:94
 #: src/view/shell/Drawer.tsx:319
->>>>>>> Stashed changes
 msgid "Feedback"
 msgstr "Feedback"
 
@@ -3078,12 +2761,6 @@ msgstr "Feedback"
 msgid "Feedback sent!"
 msgstr "Feedback skickat!"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:403 src/screens/StarterPack/StarterPackScreen.tsx:183
-#: src/view/screens/Feeds.tsx:508 src/view/screens/Profile.tsx:235
-#: src/view/screens/SavedFeeds.tsx:96 src/view/screens/Search/Search.tsx:525
-#: src/view/shell/desktop/LeftNav.tsx:445 src/view/shell/Drawer.tsx:476
-=======
 #: src/Navigation.tsx:403
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
 #: src/view/screens/Feeds.tsx:508
@@ -3092,7 +2769,6 @@ msgstr "Feedback skickat!"
 #: src/view/screens/Search/Search.tsx:526
 #: src/view/shell/desktop/LeftNav.tsx:445
 #: src/view/shell/Drawer.tsx:476
->>>>>>> Stashed changes
 msgid "Feeds"
 msgstr "Flöden"
 
@@ -3100,20 +2776,12 @@ msgstr "Flöden"
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "Flöden är anpassade algoritmer som användare kan bygga med hjälp av lite kodningskunskap. <0/> för mer information."
 
-<<<<<<< Updated upstream
-#: src/components/FeedCard.tsx:272 src/view/screens/SavedFeeds.tsx:82
-msgid "Feeds updated!"
-msgstr "Flöden uppdaterade!"
-
-#: src/screens/Search/components/ExploreRecommendations.tsx:53
-=======
 #: src/components/FeedCard.tsx:272
 #: src/view/screens/SavedFeeds.tsx:82
 msgid "Feeds updated!"
 msgstr "Flöden uppdaterade!"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:54
->>>>>>> Stashed changes
 msgid "Feeds we think you might like."
 msgstr "Flöden som vi tror du kan gilla."
 
@@ -3135,15 +2803,6 @@ msgstr "Slutför"
 msgid "Find accounts to follow"
 msgstr "Hitta konton att följa"
 
-<<<<<<< Updated upstream
-#: src/components/ProgressGuide/FollowDialog.tsx:77
-#: src/components/ProgressGuide/FollowDialog.tsx:84
-#: src/components/ProgressGuide/FollowDialog.tsx:413
-msgid "Find people to follow"
-msgstr "Hitta personer att följa"
-
-#: src/view/screens/Search/Search.tsx:595
-=======
 #: src/components/ProgressGuide/FollowDialog.tsx:78
 #: src/components/ProgressGuide/FollowDialog.tsx:88
 #: src/components/ProgressGuide/FollowDialog.tsx:417
@@ -3151,7 +2810,6 @@ msgid "Find people to follow"
 msgstr "Hitta personer att följa"
 
 #: src/view/screens/Search/Search.tsx:596
->>>>>>> Stashed changes
 msgid "Find posts and users on Bluesky"
 msgstr "Hitta inlägg och användare på Bluesky"
 
@@ -3191,11 +2849,7 @@ msgid "Follow {name}"
 msgstr "Följ {name}"
 
 #: src/components/ProgressGuide/List.tsx:52
-<<<<<<< Updated upstream
-#: src/state/shell/progress-guide.tsx:227
-=======
 #: src/state/shell/progress-guide.tsx:229
->>>>>>> Stashed changes
 msgid "Follow 10 accounts"
 msgstr "Följ 10 konton"
 
@@ -3262,12 +2916,8 @@ msgstr "Följare som du känner"
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
-<<<<<<< Updated upstream
-#: src/view/screens/Feeds.tsx:599 src/view/screens/SavedFeeds.tsx:422
-=======
 #: src/view/screens/Feeds.tsx:599
 #: src/view/screens/SavedFeeds.tsx:422
->>>>>>> Stashed changes
 msgid "Following"
 msgstr "Följer"
 
@@ -3280,14 +2930,6 @@ msgstr "Följer {0}"
 msgid "Following {name}"
 msgstr "Följer {name}"
 
-<<<<<<< Updated upstream
-#: src/screens/Settings/ContentAndMediaSettings.tsx:73
-#: src/screens/Settings/ContentAndMediaSettings.tsx:76
-msgid "Following feed preferences"
-msgstr "Inställningar för Följer-flödet"
-
-#: src/Navigation.tsx:302 src/screens/Settings/FollowingFeedPreferences.tsx:53
-=======
 #: src/screens/Settings/ContentAndMediaSettings.tsx:74
 #: src/screens/Settings/ContentAndMediaSettings.tsx:77
 msgid "Following feed preferences"
@@ -3295,7 +2937,6 @@ msgstr "Inställningar för Följer-flödet"
 
 #: src/Navigation.tsx:302
 #: src/screens/Settings/FollowingFeedPreferences.tsx:53
->>>>>>> Stashed changes
 msgid "Following Feed Preferences"
 msgstr "Inställningar för Följer-flödet"
 
@@ -3315,12 +2956,8 @@ msgstr "Typsnitt"
 msgid "Font size"
 msgstr "Teckenstorlek"
 
-<<<<<<< Updated upstream
-#: src/screens/Onboarding/index.tsx:40 src/screens/Onboarding/state.ts:102
-=======
 #: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:102
->>>>>>> Stashed changes
 msgid "Food"
 msgstr "Mat"
 
@@ -3340,12 +2977,8 @@ msgstr "Vi rekommenderar att använda tematypsnittet för bästa upplevelse."
 msgid "Forever"
 msgstr "Obegränsad"
 
-<<<<<<< Updated upstream
-#: src/screens/Login/index.tsx:126 src/screens/Login/index.tsx:141
-=======
 #: src/screens/Login/index.tsx:126
 #: src/screens/Login/index.tsx:141
->>>>>>> Stashed changes
 msgid "Forgot Password"
 msgstr "Glömt lösenord"
 
@@ -3407,23 +3040,12 @@ msgstr "Uppenbara överträdelser av lagar eller användarvillkor"
 #: src/components/moderation/ScreenHider.tsx:154
 #: src/components/moderation/ScreenHider.tsx:163
 #: src/screens/Profile/ProfileFeed/index.tsx:82
-<<<<<<< Updated upstream
-#: src/view/com/auth/LoggedOut.tsx:72 src/view/screens/NotFound.tsx:57
-=======
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
->>>>>>> Stashed changes
 #: src/view/screens/ProfileList.tsx:1009
 msgid "Go back"
 msgstr "Gå tillbaka"
 
-<<<<<<< Updated upstream
-#: src/components/Error.tsx:78 src/screens/List/ListHiddenScreen.tsx:210
-#: src/screens/Profile/ErrorState.tsx:62 src/screens/Profile/ErrorState.tsx:66
-#: src/screens/Profile/ProfileFeed/index.tsx:87
-#: src/screens/StarterPack/StarterPackScreen.tsx:758
-#: src/view/screens/NotFound.tsx:56 src/view/screens/ProfileList.tsx:1014
-=======
 #: src/components/Error.tsx:78
 #: src/screens/List/ListHiddenScreen.tsx:221
 #: src/screens/Profile/ErrorState.tsx:62
@@ -3432,7 +3054,6 @@ msgstr "Gå tillbaka"
 #: src/screens/StarterPack/StarterPackScreen.tsx:758
 #: src/view/screens/NotFound.tsx:56
 #: src/view/screens/ProfileList.tsx:1014
->>>>>>> Stashed changes
 msgid "Go Back"
 msgstr "Gå tillbaka"
 
@@ -3443,12 +3064,8 @@ msgstr "Gå tillbaka till föregående sida"
 #: src/components/dms/ReportDialog.tsx:149
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
 #: src/components/ReportDialog/SubmitView.tsx:109
-<<<<<<< Updated upstream
-#: src/screens/Onboarding/Layout.tsx:101 src/screens/Onboarding/Layout.tsx:190
-=======
 #: src/screens/Onboarding/Layout.tsx:101
 #: src/screens/Onboarding/Layout.tsx:190
->>>>>>> Stashed changes
 #: src/screens/Signup/BackNextButtons.tsx:35
 msgid "Go back to previous step"
 msgstr "Gå tillbaka till föregående steg"
@@ -3488,13 +3105,8 @@ msgstr "Gå till användarens profil"
 msgid "Graphic Media"
 msgstr "Grafiska medier"
 
-<<<<<<< Updated upstream
-#: src/state/shell/progress-guide.tsx:216
-#: src/state/shell/progress-guide.tsx:226
-=======
 #: src/state/shell/progress-guide.tsx:218
 #: src/state/shell/progress-guide.tsx:228
->>>>>>> Stashed changes
 msgid "Half way there!"
 msgstr "Halvvägs där!"
 
@@ -3536,17 +3148,11 @@ msgstr "Hashtagg: #{tag}"
 msgid "Having trouble?"
 msgstr "Har du problem?"
 
-<<<<<<< Updated upstream
-#: src/screens/Settings/Settings.tsx:207 src/screens/Settings/Settings.tsx:211
-#: src/view/shell/desktop/RightNav.tsx:111
-#: src/view/shell/desktop/RightNav.tsx:112 src/view/shell/Drawer.tsx:332
-=======
 #: src/screens/Settings/Settings.tsx:207
 #: src/screens/Settings/Settings.tsx:211
 #: src/view/shell/desktop/RightNav.tsx:111
 #: src/view/shell/desktop/RightNav.tsx:112
 #: src/view/shell/Drawer.tsx:332
->>>>>>> Stashed changes
 msgid "Help"
 msgstr "Hjälp"
 
@@ -3562,11 +3168,7 @@ msgstr "Är är ditt applösenord!"
 msgid "Hidden list"
 msgstr "Dold lista"
 
-<<<<<<< Updated upstream
-#: src/components/interstitials/Trending.tsx:113
-=======
 #: src/components/interstitials/Trending.tsx:101
->>>>>>> Stashed changes
 #: src/components/moderation/ContentHider.tsx:200
 #: src/components/moderation/LabelPreference.tsx:135
 #: src/components/moderation/PostHider.tsx:122
@@ -3574,15 +3176,9 @@ msgstr "Dold lista"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
-<<<<<<< Updated upstream
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:132
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:672
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:105
-=======
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:137
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:672
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
->>>>>>> Stashed changes
 msgid "Hide"
 msgstr "Dölj"
 
@@ -3620,25 +3216,15 @@ msgstr "Dölj det här inlägget?"
 msgid "Hide this reply?"
 msgstr "Dölj det här svaret?"
 
-<<<<<<< Updated upstream
-#: src/components/interstitials/Trending.tsx:73
-=======
 #: src/components/interstitials/Trending.tsx:84
->>>>>>> Stashed changes
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:83
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:62
 msgid "Hide trending topics"
 msgstr "Dölj trendande ämnen"
 
-<<<<<<< Updated upstream
-#: src/components/interstitials/Trending.tsx:111
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:130
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:103
-=======
 #: src/components/interstitials/Trending.tsx:99
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:135
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:108
->>>>>>> Stashed changes
 msgid "Hide trending topics?"
 msgstr "Dölj trendande ämnen?"
 
@@ -3648,21 +3234,6 @@ msgstr "Dölj användarlista"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:117
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
-<<<<<<< Updated upstream
-msgstr "Hmm, något gick snett med anslutningen till flödesservern. Meddela gärna flödets ägare om det här problemet."
-
-#: src/view/com/posts/PostFeedErrorMessage.tsx:105
-msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
-msgstr "Hmm, flödesservern verkar vara felkonfiguerad. Meddela gärna flödets ägare om det här problemet."
-
-#: src/view/com/posts/PostFeedErrorMessage.tsx:111
-msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
-msgstr "Hmm, flödesservern verkar vara offline. Meddela gärna flödets ägare om det här problemet."
-
-#: src/view/com/posts/PostFeedErrorMessage.tsx:108
-msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
-msgstr ""
-=======
 msgstr "Hmm, något gick snett med anslutningen till flödets server. Meddela gärna flödets ägare om det här problemet."
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:105
@@ -3676,7 +3247,6 @@ msgstr "Hmm, flödets server verkar vara offline. Meddela gärna flödets ägare
 #: src/view/com/posts/PostFeedErrorMessage.tsx:108
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
 msgstr "Hmm, flödets server svarade med ett fel. Meddela gärna flödets ägare om det här problemet."
->>>>>>> Stashed changes
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:102
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
@@ -3694,17 +3264,11 @@ msgstr "Hmmmm, vi kunde inte ladda den modereringstjänsten."
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "Vänta lite! Vi ger gradvis tillgång till videoklipp till fler användare, och du står fortfarande i kön. Kom tillbaka och försök snart igen!"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:594 src/Navigation.tsx:614
-#: src/view/shell/bottom-bar/BottomBar.tsx:163
-#: src/view/shell/desktop/LeftNav.tsx:389 src/view/shell/Drawer.tsx:391
-=======
 #: src/Navigation.tsx:594
 #: src/Navigation.tsx:614
 #: src/view/shell/bottom-bar/BottomBar.tsx:163
 #: src/view/shell/desktop/LeftNav.tsx:389
 #: src/view/shell/Drawer.tsx:391
->>>>>>> Stashed changes
 msgid "Home"
 msgstr "Hem"
 
@@ -3851,12 +3415,8 @@ msgstr "Ogiltigt användarnamn. Försök med ett annat."
 msgid "Invalid or unsupported post record"
 msgstr "Ogiltig eller icke stödd inläggspost"
 
-<<<<<<< Updated upstream
-#: src/screens/Login/LoginForm.tsx:90 src/screens/Login/LoginForm.tsx:149
-=======
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
->>>>>>> Stashed changes
 msgid "Invalid username or password"
 msgstr "Ogiltigt användarnamn eller lösenord"
 
@@ -3923,13 +3483,6 @@ msgstr "Jobb"
 msgid "Join Bluesky"
 msgstr "Gå med i Bluesky"
 
-<<<<<<< Updated upstream
-#: src/components/StarterPack/QrCode.tsx:62 src/view/shell/NavSignupCard.tsx:40
-msgid "Join the conversation"
-msgstr "Delta i konversationen"
-
-#: src/screens/Onboarding/index.tsx:21 src/screens/Onboarding/state.ts:104
-=======
 #: src/components/StarterPack/QrCode.tsx:62
 #: src/view/shell/NavSignupCard.tsx:40
 msgid "Join the conversation"
@@ -3937,7 +3490,6 @@ msgstr "Delta i konversationen"
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:104
->>>>>>> Stashed changes
 msgid "Journalism"
 msgstr "Journalistik"
 
@@ -3979,12 +3531,8 @@ msgid "Language Settings"
 msgstr "Språkinställningar"
 
 #: src/screens/Settings/LanguageSettings.tsx:71
-<<<<<<< Updated upstream
-#: src/screens/Settings/Settings.tsx:199 src/screens/Settings/Settings.tsx:202
-=======
 #: src/screens/Settings/Settings.tsx:199
 #: src/screens/Settings/Settings.tsx:202
->>>>>>> Stashed changes
 msgid "Languages"
 msgstr "Språk"
 
@@ -3992,14 +3540,9 @@ msgstr "Språk"
 msgid "Larger"
 msgstr "Större"
 
-<<<<<<< Updated upstream
-#: src/screens/Hashtag.tsx:95 src/screens/Topic.tsx:77
-#: src/view/screens/Search/Search.tsx:509
-=======
 #: src/screens/Hashtag.tsx:95
 #: src/screens/Topic.tsx:77
 #: src/view/screens/Search/Search.tsx:510
->>>>>>> Stashed changes
 msgid "Latest"
 msgstr "Senaste"
 
@@ -4048,24 +3591,15 @@ msgstr "Lämna"
 msgid "Leave chat"
 msgstr "Lämna chatt"
 
-<<<<<<< Updated upstream
-#: src/components/dms/ConvoMenu.tsx:138 src/components/dms/ConvoMenu.tsx:141
-#: src/components/dms/ConvoMenu.tsx:208 src/components/dms/ConvoMenu.tsx:211
-=======
 #: src/components/dms/ConvoMenu.tsx:138
 #: src/components/dms/ConvoMenu.tsx:141
 #: src/components/dms/ConvoMenu.tsx:208
 #: src/components/dms/ConvoMenu.tsx:211
->>>>>>> Stashed changes
 #: src/components/dms/LeaveConvoPrompt.tsx:45
 msgid "Leave conversation"
 msgstr "Lämna konversation"
 
-<<<<<<< Updated upstream
-#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:83
-=======
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:84
->>>>>>> Stashed changes
 msgid "Leave them all unchecked to see any language."
 msgstr "Lämna alla alternativ omarkerade för att se alla språk."
 
@@ -4081,12 +3615,8 @@ msgstr "kvar."
 msgid "Let me choose"
 msgstr "Låt mig välja"
 
-<<<<<<< Updated upstream
-#: src/screens/Login/index.tsx:127 src/screens/Login/index.tsx:142
-=======
 #: src/screens/Login/index.tsx:127
 #: src/screens/Login/index.tsx:142
->>>>>>> Stashed changes
 msgid "Let's get your password reset!"
 msgstr "Låt oss få ditt lösenord återställt!"
 
@@ -4110,13 +3640,8 @@ msgstr "Gilla ({0, plural, one {# gillamarkering} other {# gillamarkeringar}})"
 msgid "Like 10 posts"
 msgstr "Gilla 10 inlägg"
 
-<<<<<<< Updated upstream
-#: src/state/shell/progress-guide.tsx:212
-#: src/state/shell/progress-guide.tsx:217
-=======
 #: src/state/shell/progress-guide.tsx:214
 #: src/state/shell/progress-guide.tsx:219
->>>>>>> Stashed changes
 msgid "Like 10 posts to train the Discover feed"
 msgstr "Gilla 10 inlägg för att träna Upptäck-flödet"
 
@@ -4128,12 +3653,8 @@ msgstr "Gilla flöde"
 msgid "Like this feed"
 msgstr "Gilla det här flödet"
 
-<<<<<<< Updated upstream
-#: src/components/LikesDialog.tsx:85 src/Navigation.tsx:236
-=======
 #: src/components/LikesDialog.tsx:85
 #: src/Navigation.tsx:236
->>>>>>> Stashed changes
 #: src/Navigation.tsx:241
 msgid "Liked by"
 msgstr "Gillat av"
@@ -4144,12 +3665,8 @@ msgstr "Gillat av"
 msgid "Liked By"
 msgstr "Gillat av"
 
-<<<<<<< Updated upstream
-#: src/components/FeedCard.tsx:213 src/view/com/feeds/FeedSourceCard.tsx:303
-=======
 #: src/components/FeedCard.tsx:213
 #: src/view/com/feeds/FeedSourceCard.tsx:303
->>>>>>> Stashed changes
 msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr "Gillat av {0, plural, one {# användare} other {# användare}}"
 
@@ -4185,12 +3702,8 @@ msgstr "Listavatar"
 msgid "List blocked"
 msgstr "Lista blockerad"
 
-<<<<<<< Updated upstream
-#: src/components/ListCard.tsx:150 src/view/com/feeds/FeedSourceCard.tsx:255
-=======
 #: src/components/ListCard.tsx:150
 #: src/view/com/feeds/FeedSourceCard.tsx:255
->>>>>>> Stashed changes
 msgid "List by {0}"
 msgstr "Lista av {0}"
 
@@ -4206,11 +3719,7 @@ msgstr "Lista av dig"
 msgid "List deleted"
 msgstr "Lista borttagen"
 
-<<<<<<< Updated upstream
-#: src/screens/List/ListHiddenScreen.tsx:126
-=======
 #: src/screens/List/ListHiddenScreen.tsx:129
->>>>>>> Stashed changes
 msgid "List has been hidden"
 msgstr "Listan har dolts"
 
@@ -4234,18 +3743,12 @@ msgstr "Blockeringen av listan har hävts"
 msgid "List unmuted"
 msgstr "Listan ignoreras inte mer"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:135 src/view/screens/Lists.tsx:62
-#: src/view/screens/Profile.tsx:230 src/view/screens/Profile.tsx:237
-#: src/view/shell/desktop/LeftNav.tsx:463 src/view/shell/Drawer.tsx:491
-=======
 #: src/Navigation.tsx:135
 #: src/view/screens/Lists.tsx:62
 #: src/view/screens/Profile.tsx:230
 #: src/view/screens/Profile.tsx:237
 #: src/view/shell/desktop/LeftNav.tsx:463
 #: src/view/shell/Drawer.tsx:491
->>>>>>> Stashed changes
 msgid "Lists"
 msgstr "Listor"
 
@@ -4270,12 +3773,8 @@ msgid "Load new notifications"
 msgstr "Läs in nya notiser"
 
 #: src/screens/Profile/ProfileFeed/index.tsx:192
-<<<<<<< Updated upstream
-#: src/screens/Profile/Sections/Feed.tsx:96 src/view/com/feeds/FeedPage.tsx:143
-=======
 #: src/screens/Profile/Sections/Feed.tsx:96
 #: src/view/com/feeds/FeedPage.tsx:143
->>>>>>> Stashed changes
 #: src/view/screens/ProfileList.tsx:849
 msgid "Load new posts"
 msgstr "Läs in nya inlägg"
@@ -4288,14 +3787,6 @@ msgstr "Laddar…"
 msgid "Log"
 msgstr "Logg"
 
-<<<<<<< Updated upstream
-#: src/screens/Deactivated.tsx:202 src/screens/Deactivated.tsx:208
-msgid "Log in or sign up"
-msgstr "Logga in eller registrera dig"
-
-#: src/screens/SignupQueued.tsx:168 src/screens/SignupQueued.tsx:171
-#: src/screens/SignupQueued.tsx:196 src/screens/SignupQueued.tsx:199
-=======
 #: src/screens/Deactivated.tsx:202
 #: src/screens/Deactivated.tsx:208
 msgid "Log in or sign up"
@@ -4305,7 +3796,6 @@ msgstr "Logga in eller registrera dig"
 #: src/screens/SignupQueued.tsx:171
 #: src/screens/SignupQueued.tsx:196
 #: src/screens/SignupQueued.tsx:199
->>>>>>> Stashed changes
 msgid "Log out"
 msgstr "Logga ut"
 
@@ -4321,12 +3811,8 @@ msgstr "Logga in på ett olistat konto"
 msgid "Logo by @sawaratsuki.bsky.social"
 msgstr "Logotyp av @sawaratsuki.bsky.social"
 
-<<<<<<< Updated upstream
-#: src/view/shell/desktop/RightNav.tsx:118 src/view/shell/Drawer.tsx:629
-=======
 #: src/view/shell/desktop/RightNav.tsx:118
 #: src/view/shell/Drawer.tsx:629
->>>>>>> Stashed changes
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr "Logotyp av <0>@sawaratsuki.bsky.social</0>"
 
@@ -4356,17 +3842,10 @@ msgstr "Gör en åt mig"
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
-<<<<<<< Updated upstream
-msgstr ""
-
-#: src/screens/Settings/ContentAndMediaSettings.tsx:57
-#: src/screens/Settings/ContentAndMediaSettings.tsx:60
-=======
 msgstr "Se till att du är säker på att du navigeras dit du har tänkt!"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:58
 #: src/screens/Settings/ContentAndMediaSettings.tsx:61
->>>>>>> Stashed changes
 msgid "Manage saved feeds"
 msgstr "Hantera sparade flöden"
 
@@ -4374,12 +3853,8 @@ msgstr "Hantera sparade flöden"
 msgid "Manage your muted words and tags"
 msgstr "Hantera dina ignorerade ord och taggar"
 
-<<<<<<< Updated upstream
-#: src/components/dms/ConvoMenu.tsx:151 src/components/dms/ConvoMenu.tsx:158
-=======
 #: src/components/dms/ConvoMenu.tsx:151
 #: src/components/dms/ConvoMenu.tsx:158
->>>>>>> Stashed changes
 msgid "Mark as read"
 msgstr "Markera som läst"
 
@@ -4403,12 +3878,8 @@ msgstr "Omnämnda användare"
 msgid "Mentions"
 msgstr "Omnämnanden"
 
-<<<<<<< Updated upstream
-#: src/components/Menu/index.tsx:96 src/view/screens/Search/Search.tsx:863
-=======
 #: src/components/Menu/index.tsx:96
 #: src/view/screens/Search/Search.tsx:864
->>>>>>> Stashed changes
 msgid "Menu"
 msgstr "Meny"
 
@@ -4434,12 +3905,8 @@ msgstr "Inmatningsfält för meddelande"
 msgid "Message is too long"
 msgstr "Meddelandet är för långt"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:609 src/screens/Messages/ChatList.tsx:262
-=======
 #: src/Navigation.tsx:609
 #: src/screens/Messages/ChatList.tsx:262
->>>>>>> Stashed changes
 #: src/screens/Messages/ChatList.tsx:286
 msgid "Messages"
 msgstr "Meddelanden"
@@ -4452,15 +3919,10 @@ msgstr "Vilseledande konto"
 msgid "Misleading Post"
 msgstr "Vilseledande inlägg"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:140 src/screens/Moderation/index.tsx:88
-#: src/screens/Settings/Settings.tsx:167 src/screens/Settings/Settings.tsx:170
-=======
 #: src/Navigation.tsx:140
 #: src/screens/Moderation/index.tsx:88
 #: src/screens/Settings/Settings.tsx:167
 #: src/screens/Settings/Settings.tsx:170
->>>>>>> Stashed changes
 msgid "Moderation"
 msgstr "Moderering"
 
@@ -4494,12 +3956,8 @@ msgstr "Modereringslista uppdaterad"
 msgid "Moderation lists"
 msgstr "Modereringslistor"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:145 src/view/screens/ModerationModlists.tsx:62
-=======
 #: src/Navigation.tsx:145
 #: src/view/screens/ModerationModlists.tsx:62
->>>>>>> Stashed changes
 msgid "Moderation Lists"
 msgstr "Modereringslistor"
 
@@ -4524,12 +3982,8 @@ msgstr "En moderator har valt att sätta en allmän varning på innehållet."
 msgid "More"
 msgstr "Mer"
 
-<<<<<<< Updated upstream
-#: src/view/shell/desktop/Feeds.tsx:102 src/view/shell/desktop/Feeds.tsx:105
-=======
 #: src/view/shell/desktop/Feeds.tsx:102
 #: src/view/shell/desktop/Feeds.tsx:105
->>>>>>> Stashed changes
 msgid "More feeds"
 msgstr "Fler flöden"
 
@@ -4564,11 +4018,7 @@ msgstr "Stäng av ljud"
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:95
 msgctxt "video"
 msgid "Mute"
-<<<<<<< Updated upstream
-msgstr "Ignorera"
-=======
 msgstr "Stäng av ljud"
->>>>>>> Stashed changes
 
 #: src/components/TagMenu/index.web.tsx:116
 msgid "Mute {truncatedTag}"
@@ -4587,12 +4037,8 @@ msgstr "Ignorera konton"
 msgid "Mute all {displayTag} posts"
 msgstr "Ignorera {displayTag}-inlögg"
 
-<<<<<<< Updated upstream
-#: src/components/dms/ConvoMenu.tsx:172 src/components/dms/ConvoMenu.tsx:178
-=======
 #: src/components/dms/ConvoMenu.tsx:172
 #: src/components/dms/ConvoMenu.tsx:178
->>>>>>> Stashed changes
 msgid "Mute conversation"
 msgstr "Ignorera konversation"
 
@@ -4646,12 +4092,8 @@ msgstr "Ignorera ord och taggar"
 msgid "Muted accounts"
 msgstr "Ignorerade konton"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:150 src/view/screens/ModerationMutedAccounts.tsx:100
-=======
 #: src/Navigation.tsx:150
 #: src/view/screens/ModerationMutedAccounts.tsx:100
->>>>>>> Stashed changes
 msgid "Muted Accounts"
 msgstr "Ignorerade konton"
 
@@ -4697,16 +4139,10 @@ msgstr "Namn är obligatoriskt"
 #: src/lib/moderation/useReportOptions.ts:106
 #: src/lib/moderation/useReportOptions.ts:114
 msgid "Name or Description Violates Community Standards"
-<<<<<<< Updated upstream
-msgstr ""
-
-#: src/screens/Onboarding/index.tsx:22 src/screens/Onboarding/state.ts:107
-=======
 msgstr "Namn eller beskrivning bryter mot gemenskapens riktlinjer"
 
 #: src/screens/Onboarding/index.tsx:22
 #: src/screens/Onboarding/state.ts:107
->>>>>>> Stashed changes
 msgid "Nature"
 msgstr "Natur"
 
@@ -4740,23 +4176,15 @@ msgstr "Förlora aldrig åtkomsten till dina följare eller din data."
 msgid "Nevermind, create a handle for me"
 msgstr "Det var inget. Skapa ett användarnamn åt mig"
 
-<<<<<<< Updated upstream
-#: src/view/screens/Lists.tsx:74 src/view/screens/ModerationModlists.tsx:74
-=======
 #: src/view/screens/Lists.tsx:74
 #: src/view/screens/ModerationModlists.tsx:74
->>>>>>> Stashed changes
 msgctxt "action"
 msgid "New"
 msgstr "Ny"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:65
-<<<<<<< Updated upstream
-#: src/screens/Messages/ChatList.tsx:269 src/screens/Messages/ChatList.tsx:276
-=======
 #: src/screens/Messages/ChatList.tsx:269
 #: src/screens/Messages/ChatList.tsx:276
->>>>>>> Stashed changes
 msgid "New chat"
 msgstr "Ny chatt"
 
@@ -4766,12 +4194,8 @@ msgstr "Ny chatt"
 msgid "New handle"
 msgstr "Nytt användarnamn"
 
-<<<<<<< Updated upstream
-#: src/view/screens/Lists.tsx:66 src/view/screens/ModerationModlists.tsx:66
-=======
 #: src/view/screens/Lists.tsx:66
 #: src/view/screens/ModerationModlists.tsx:66
->>>>>>> Stashed changes
 msgid "New list"
 msgstr "Ny lista"
 
@@ -4791,18 +4215,12 @@ msgstr "Nytt lösenord"
 msgid "New Password"
 msgstr "Nytt lösenord"
 
-<<<<<<< Updated upstream
-#: src/screens/Profile/ProfileFeed/index.tsx:209 src/view/screens/Feeds.tsx:549
-#: src/view/screens/Notifications.tsx:165 src/view/screens/Profile.tsx:495
-#: src/view/screens/ProfileList.tsx:250 src/view/screens/ProfileList.tsx:283
-=======
 #: src/screens/Profile/ProfileFeed/index.tsx:209
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
 #: src/view/screens/Profile.tsx:495
 #: src/view/screens/ProfileList.tsx:250
 #: src/view/screens/ProfileList.tsx:283
->>>>>>> Stashed changes
 msgid "New post"
 msgstr "Nytt inlägg"
 
@@ -4831,23 +4249,15 @@ msgstr "Ny användarlista"
 msgid "Newest replies first"
 msgstr "Senaste svar först"
 
-<<<<<<< Updated upstream
-#: src/screens/Onboarding/index.tsx:20 src/screens/Onboarding/state.ts:108
-=======
 #: src/screens/Onboarding/index.tsx:20
 #: src/screens/Onboarding/state.ts:108
->>>>>>> Stashed changes
 msgid "News"
 msgstr "Nyheter"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:137
 #: src/screens/Login/ForgotPasswordForm.tsx:143
-<<<<<<< Updated upstream
-#: src/screens/Login/LoginForm.tsx:325 src/screens/Login/LoginForm.tsx:332
-=======
 #: src/screens/Login/LoginForm.tsx:325
 #: src/screens/Login/LoginForm.tsx:332
->>>>>>> Stashed changes
 #: src/screens/Login/SetNewPasswordForm.tsx:168
 #: src/screens/Login/SetNewPasswordForm.tsx:174
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
@@ -4909,12 +4319,8 @@ msgstr "Inga fler konversationer att visa"
 msgid "No notifications yet!"
 msgstr "Inga notiser ännu!"
 
-<<<<<<< Updated upstream
-#: src/screens/Messages/Settings.tsx:101 src/screens/Messages/Settings.tsx:104
-=======
 #: src/screens/Messages/Settings.tsx:101
 #: src/screens/Messages/Settings.tsx:104
->>>>>>> Stashed changes
 msgid "No one"
 msgstr "Ingen"
 
@@ -4940,11 +4346,7 @@ msgid "No result"
 msgstr "Inga resultat"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:200
-<<<<<<< Updated upstream
-#: src/components/ProgressGuide/FollowDialog.tsx:231
-=======
 #: src/components/ProgressGuide/FollowDialog.tsx:235
->>>>>>> Stashed changes
 msgid "No results"
 msgstr "Inga resultat"
 
@@ -4957,15 +4359,9 @@ msgid "No results found for \"{query}\""
 msgstr "Inget resultat hittades för \"{query}\""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
-<<<<<<< Updated upstream
-#: src/view/screens/Search/Search.tsx:228
-#: src/view/screens/Search/Search.tsx:267
-#: src/view/screens/Search/Search.tsx:313
-=======
 #: src/view/screens/Search/Search.tsx:229
 #: src/view/screens/Search/Search.tsx:268
 #: src/view/screens/Search/Search.tsx:314
->>>>>>> Stashed changes
 msgid "No results found for {query}"
 msgstr "Inget resultat hittades för {query}"
 
@@ -4982,12 +4378,8 @@ msgstr "Nej tack"
 msgid "Nobody"
 msgstr "Ingen"
 
-<<<<<<< Updated upstream
-#: src/components/LikedByList.tsx:86 src/components/LikesDialog.tsx:97
-=======
 #: src/components/LikedByList.tsx:86
 #: src/components/LikesDialog.tsx:97
->>>>>>> Stashed changes
 #: src/view/com/post-thread/PostLikedBy.tsx:86
 msgid "Nobody has liked this yet. Maybe you should be the first!"
 msgstr "Ingen har gillat det här ännu. Du kanske kan bli den första!"
@@ -5008,12 +4400,8 @@ msgstr "Ingen hittades. Försök med att söka efter någon annan."
 msgid "Non-sexual Nudity"
 msgstr "Icke-sexuell nakenhet"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:130 src/view/screens/Profile.tsx:129
-=======
 #: src/Navigation.tsx:130
 #: src/view/screens/Profile.tsx:129
->>>>>>> Stashed changes
 msgid "Not Found"
 msgstr "Hittades inte"
 
@@ -5030,11 +4418,7 @@ msgstr "Anmärkning om delning"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:88
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
-<<<<<<< Updated upstream
-msgstr "Obs: Bluesky är ett öppet och offentligt nätverk. Den här inställningen begränsar bara ditt kontos synlighet på Blueskys app samt webbplats. Andra appar kanske inte respekterar den här inställningen. Ditt innehåll kan fortfarande visas för utloggade användare genom andra appar och webbplatser."
-=======
 msgstr "Obs: Bluesky är ett öppet och offentligt nätverk. Den här inställningen begränsar endast ditt kontos synlighet på Blueskys app och webbplats. Andra appar kanske inte respekterar den här inställningen. Ditt innehåll kan fortfarande visas för utloggade användare genom andra appar och webbplatser."
->>>>>>> Stashed changes
 
 #: src/screens/Messages/ChatList.tsx:180
 msgid "Nothing here"
@@ -5044,12 +4428,8 @@ msgstr "Här var det tomt"
 msgid "Notification filters"
 msgstr "Notisfilter"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:398 src/view/screens/Notifications.tsx:134
-=======
 #: src/Navigation.tsx:398
 #: src/view/screens/Notifications.tsx:134
->>>>>>> Stashed changes
 msgid "Notification settings"
 msgstr "Notisinställningar"
 
@@ -5065,17 +4445,11 @@ msgstr "Notisljud"
 msgid "Notification Sounds"
 msgstr "Notisljud"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:604 src/view/screens/Notifications.tsx:128
-#: src/view/shell/bottom-bar/BottomBar.tsx:231
-#: src/view/shell/desktop/LeftNav.tsx:426 src/view/shell/Drawer.tsx:444
-=======
 #: src/Navigation.tsx:604
 #: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:231
 #: src/view/shell/desktop/LeftNav.tsx:426
 #: src/view/shell/Drawer.tsx:444
->>>>>>> Stashed changes
 msgid "Notifications"
 msgstr "Notiser"
 
@@ -5249,12 +4623,8 @@ msgstr "Öppna meny för inläggsalternativ"
 msgid "Open starter pack menu"
 msgstr "Öppna startpaketsmeny"
 
-<<<<<<< Updated upstream
-#: src/screens/Settings/Settings.tsx:322 src/screens/Settings/Settings.tsx:336
-=======
 #: src/screens/Settings/Settings.tsx:322
 #: src/screens/Settings/Settings.tsx:336
->>>>>>> Stashed changes
 msgid "Open storybook page"
 msgstr "Öppna Storybook-sida"
 
@@ -5276,11 +4646,7 @@ msgstr "Öppnar en dialogruta där du kan välja vilka som får svara i den här
 
 #: src/view/screens/Log.tsx:59
 msgid "Opens additional details for a debug entry"
-<<<<<<< Updated upstream
-msgstr ""
-=======
 msgstr "Öppnar ytterligare detaljer för en loggpost"
->>>>>>> Stashed changes
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:73
 msgid "Opens camera on device"
@@ -5371,12 +4737,8 @@ msgstr "Annat…"
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr "Våra moderatorer har granskat anmälningarna och beslutat att ta bort din åtkomst till chattar på Bluesky."
 
-<<<<<<< Updated upstream
-#: src/components/Lists.tsx:184 src/view/screens/NotFound.tsx:47
-=======
 #: src/components/Lists.tsx:184
 #: src/view/screens/NotFound.tsx:47
->>>>>>> Stashed changes
 msgid "Page not found"
 msgstr "Sidan hittades inte"
 
@@ -5416,11 +4778,7 @@ msgid "Pause video"
 msgstr "Pausa video"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-<<<<<<< Updated upstream
-#: src/view/screens/Search/Search.tsx:519
-=======
 #: src/view/screens/Search/Search.tsx:520
->>>>>>> Stashed changes
 msgid "People"
 msgstr "Personer"
 
@@ -5442,16 +4800,10 @@ msgstr "Åtkomst till kamerarullen nekades. Vänligen åtgärda det i dina syste
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:54
 msgid "Person toggle"
-<<<<<<< Updated upstream
-msgstr ""
-
-#: src/screens/Onboarding/index.tsx:28 src/screens/Onboarding/state.ts:109
-=======
 msgstr "Växla läge på person"
 
 #: src/screens/Onboarding/index.tsx:28
 #: src/screens/Onboarding/state.ts:109
->>>>>>> Stashed changes
 msgid "Pets"
 msgstr "Husdjur"
 
@@ -5530,12 +4882,8 @@ msgstr "Spelar upp gif-bilden"
 msgid "Please choose your handle."
 msgstr "Välj ditt användarnamn."
 
-<<<<<<< Updated upstream
-#: src/screens/Signup/state.ts:210 src/screens/Signup/StepInfo/index.tsx:114
-=======
 #: src/screens/Signup/state.ts:210
 #: src/screens/Signup/StepInfo/index.tsx:114
->>>>>>> Stashed changes
 msgid "Please choose your password."
 msgstr "Välj ditt lösenord."
 
@@ -5555,12 +4903,8 @@ msgstr "Ange ett unikt namn för applösenordet eller använd ett slumpmässigt 
 msgid "Please enter a valid word, tag, or phrase to mute"
 msgstr "Ange ett giltigt ord, en tagg eller en fras att ignorera"
 
-<<<<<<< Updated upstream
-#: src/screens/Signup/state.ts:196 src/screens/Signup/StepInfo/index.tsx:102
-=======
 #: src/screens/Signup/state.ts:196
 #: src/screens/Signup/StepInfo/index.tsx:102
->>>>>>> Stashed changes
 msgid "Please enter your email."
 msgstr "Ange din e-postadress."
 
@@ -5589,12 +4933,8 @@ msgstr "Logga in som @{0}"
 msgid "Please Verify Your Email"
 msgstr "Verifiera din e-post"
 
-<<<<<<< Updated upstream
-#: src/screens/Onboarding/index.tsx:34 src/screens/Onboarding/state.ts:111
-=======
 #: src/screens/Onboarding/index.tsx:34
 #: src/screens/Onboarding/state.ts:111
->>>>>>> Stashed changes
 msgid "Politics"
 msgstr "Politik"
 
@@ -5621,13 +4961,9 @@ msgstr "Publicera alla"
 msgid "Post by {0}"
 msgstr "Inlägg av {0}"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:204 src/Navigation.tsx:211 src/Navigation.tsx:218
-=======
 #: src/Navigation.tsx:204
 #: src/Navigation.tsx:211
 #: src/Navigation.tsx:218
->>>>>>> Stashed changes
 #: src/Navigation.tsx:225
 msgid "Post by @{0}"
 msgstr "Inlägg av @{0}"
@@ -5662,11 +4998,7 @@ msgstr "Interaktionsinställningar för inlägg"
 msgid "Post language"
 msgstr "Inläggsspråk"
 
-<<<<<<< Updated upstream
-#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:76
-=======
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:77
->>>>>>> Stashed changes
 msgid "Post Languages"
 msgstr "Inläggsspråk"
 
@@ -5716,12 +5048,8 @@ msgstr "Tryck för att försöka återansluta"
 msgid "Press to change hosting provider"
 msgstr "Tryck för att byta världleverantör"
 
-<<<<<<< Updated upstream
-#: src/components/Error.tsx:60 src/components/Lists.tsx:93
-=======
 #: src/components/Error.tsx:60
 #: src/components/Lists.tsx:93
->>>>>>> Stashed changes
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Signup/BackNextButtons.tsx:47
 msgid "Press to retry"
@@ -5753,12 +5081,8 @@ msgstr "Prioriterade notiser"
 msgid "Privacy"
 msgstr "Integritet"
 
-<<<<<<< Updated upstream
-#: src/screens/Settings/Settings.tsx:161 src/screens/Settings/Settings.tsx:164
-=======
 #: src/screens/Settings/Settings.tsx:161
 #: src/screens/Settings/Settings.tsx:164
->>>>>>> Stashed changes
 msgid "Privacy and security"
 msgstr "Integritet och säkerhet"
 
@@ -5767,17 +5091,11 @@ msgstr "Integritet och säkerhet"
 msgid "Privacy and Security"
 msgstr "Integritet och säkerhet"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:271 src/screens/Settings/AboutSettings.tsx:45
-#: src/screens/Settings/AboutSettings.tsx:48
-#: src/view/screens/PrivacyPolicy.tsx:31 src/view/shell/Drawer.tsx:624
-=======
 #: src/Navigation.tsx:271
 #: src/screens/Settings/AboutSettings.tsx:45
 #: src/screens/Settings/AboutSettings.tsx:48
 #: src/view/screens/PrivacyPolicy.tsx:31
 #: src/view/shell/Drawer.tsx:624
->>>>>>> Stashed changes
 #: src/view/shell/Drawer.tsx:625
 msgid "Privacy Policy"
 msgstr "Integritetspolicy"
@@ -5786,13 +5104,6 @@ msgstr "Integritetspolicy"
 msgid "Processing video..."
 msgstr "Bearbetar videoklipp…"
 
-<<<<<<< Updated upstream
-#: src/lib/api/index.ts:59 src/screens/Login/ForgotPasswordForm.tsx:149
-msgid "Processing..."
-msgstr "Bearbetar…"
-
-#: src/view/screens/DebugMod.tsx:919 src/view/screens/Profile.tsx:362
-=======
 #: src/lib/api/index.ts:59
 #: src/screens/Login/ForgotPasswordForm.tsx:149
 msgid "Processing..."
@@ -5800,17 +5111,12 @@ msgstr "Bearbetar…"
 
 #: src/view/screens/DebugMod.tsx:919
 #: src/view/screens/Profile.tsx:362
->>>>>>> Stashed changes
 msgid "profile"
 msgstr "profil"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:276
-<<<<<<< Updated upstream
-#: src/view/shell/desktop/LeftNav.tsx:481 src/view/shell/Drawer.tsx:71
-=======
 #: src/view/shell/desktop/LeftNav.tsx:481
 #: src/view/shell/Drawer.tsx:71
->>>>>>> Stashed changes
 #: src/view/shell/Drawer.tsx:516
 msgid "Profile"
 msgstr "Profil"
@@ -5853,11 +5159,7 @@ msgstr "Citera inlägg"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:303
 msgid "Quote post was re-attached"
-<<<<<<< Updated upstream
-msgstr "Citatinlägget har fästs på nytt"
-=======
 msgstr "Citatinlägget länkades samman på nytt"
->>>>>>> Stashed changes
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:302
 msgid "Quote post was successfully detached"
@@ -5920,19 +5222,11 @@ msgstr "Läs Blueskys användarvillkor"
 msgid "Reason:"
 msgstr "Anledning:"
 
-<<<<<<< Updated upstream
-#: src/view/screens/Search/Search.tsx:1041
-msgid "Recent Searches"
-msgstr "Senaste sökningar"
-
-#: src/screens/Search/components/ExploreRecommendations.tsx:49
-=======
 #: src/view/screens/Search/Search.tsx:1042
 msgid "Recent Searches"
 msgstr "Senaste sökningar"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:50
->>>>>>> Stashed changes
 msgid "Recommended"
 msgstr "Rekommenderat"
 
@@ -5944,12 +5238,8 @@ msgstr "Återanslut"
 msgid "Reload conversations"
 msgstr "Ladda om konversationer"
 
-<<<<<<< Updated upstream
-#: src/components/dialogs/MutedWords.tsx:438 src/components/FeedCard.tsx:315
-=======
 #: src/components/dialogs/MutedWords.tsx:438
 #: src/components/FeedCard.tsx:315
->>>>>>> Stashed changes
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:101
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:108
 #: src/screens/Settings/Settings.tsx:466
@@ -5964,12 +5254,8 @@ msgstr "Ta bort"
 msgid "Remove {displayName} from starter pack"
 msgstr "Ta bort {displayName} från startpaketet"
 
-<<<<<<< Updated upstream
-#: src/screens/Settings/Settings.tsx:445 src/screens/Settings/Settings.tsx:448
-=======
 #: src/screens/Settings/Settings.tsx:445
 #: src/screens/Settings/Settings.tsx:448
->>>>>>> Stashed changes
 msgid "Remove account"
 msgstr "Ta bort konto"
 
@@ -6003,13 +5289,6 @@ msgstr "Ta bort flöde?"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:324
 #: src/view/com/feeds/FeedSourceCard.tsx:190
 #: src/view/com/feeds/FeedSourceCard.tsx:268
-<<<<<<< Updated upstream
-#: src/view/screens/ProfileList.tsx:498 src/view/screens/SavedFeeds.tsx:342
-msgid "Remove from my feeds"
-msgstr "Ta bort från mina flöden"
-
-#: src/components/FeedCard.tsx:310 src/view/com/feeds/FeedSourceCard.tsx:317
-=======
 #: src/view/screens/ProfileList.tsx:498
 #: src/view/screens/SavedFeeds.tsx:342
 msgid "Remove from my feeds"
@@ -6017,7 +5296,6 @@ msgstr "Ta bort från mina flöden"
 
 #: src/components/FeedCard.tsx:310
 #: src/view/com/feeds/FeedSourceCard.tsx:317
->>>>>>> Stashed changes
 msgid "Remove from my feeds?"
 msgstr "Ta bort från mina flöden?"
 
@@ -6025,11 +5303,7 @@ msgstr "Ta bort från mina flöden?"
 msgid "Remove from quick access?"
 msgstr "Ta bort från snabbåtkomst?"
 
-<<<<<<< Updated upstream
-#: src/screens/List/ListHiddenScreen.tsx:156
-=======
 #: src/screens/List/ListHiddenScreen.tsx:167
->>>>>>> Stashed changes
 msgid "Remove from saved feeds"
 msgstr "Ta bort från sparade flöden"
 
@@ -6041,19 +5315,11 @@ msgstr "Ta bort bild"
 msgid "Remove mute word from your list"
 msgstr "Ta bort ignorerat ord från din lista"
 
-<<<<<<< Updated upstream
-#: src/view/screens/Search/Search.tsx:1089
-msgid "Remove profile"
-msgstr "Ta bort profil"
-
-#: src/view/screens/Search/Search.tsx:1091
-=======
 #: src/view/screens/Search/Search.tsx:1090
 msgid "Remove profile"
 msgstr "Ta bort profil"
 
 #: src/view/screens/Search/Search.tsx:1092
->>>>>>> Stashed changes
 msgid "Remove profile from search history"
 msgstr "Ta bort profil från sökhistoriken"
 
@@ -6092,11 +5358,7 @@ msgid "Removed from my feeds"
 msgstr "Borttaget från mina flöden"
 
 #: src/screens/List/ListHiddenScreen.tsx:94
-<<<<<<< Updated upstream
-#: src/screens/List/ListHiddenScreen.tsx:160
-=======
 #: src/screens/List/ListHiddenScreen.tsx:171
->>>>>>> Stashed changes
 msgid "Removed from saved feeds"
 msgstr "Borttaget från sparade flöden"
 
@@ -6158,41 +5420,24 @@ msgstr "Svarsinställningarna sätts av trådens författare"
 msgid "Reply sorting"
 msgstr "Sortera svar"
 
-<<<<<<< Updated upstream
-#: src/view/com/post/Post.tsx:204 src/view/com/posts/PostFeedItem.tsx:553
-msgctxt "description"
-msgid "Reply to <0><1/></0>"
-msgstr "Svara på <0><1/></0>"
-=======
 #: src/view/com/post/Post.tsx:204
 #: src/view/com/posts/PostFeedItem.tsx:553
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
 msgstr "Svar till <0><1/></0>"
->>>>>>> Stashed changes
 
 #: src/view/com/posts/PostFeedItem.tsx:544
 msgctxt "description"
 msgid "Reply to a blocked post"
-<<<<<<< Updated upstream
-msgstr "Svara på ett blockerat inlägg"
-=======
 msgstr "Svar till ett blockerat inlägg"
->>>>>>> Stashed changes
 
 #: src/view/com/posts/PostFeedItem.tsx:546
 msgctxt "description"
 msgid "Reply to a post"
-<<<<<<< Updated upstream
-msgstr "Svara på ett inlägg"
-
-#: src/view/com/post/Post.tsx:202 src/view/com/posts/PostFeedItem.tsx:550
-=======
 msgstr "Svar till ett inlägg"
 
 #: src/view/com/post/Post.tsx:202
 #: src/view/com/posts/PostFeedItem.tsx:550
->>>>>>> Stashed changes
 msgctxt "description"
 msgid "Reply to you"
 msgstr "Svar till dig"
@@ -6216,12 +5461,8 @@ msgstr "Anmäl"
 msgid "Report Account"
 msgstr "Anmäl konto"
 
-<<<<<<< Updated upstream
-#: src/components/dms/ConvoMenu.tsx:197 src/components/dms/ConvoMenu.tsx:200
-=======
 #: src/components/dms/ConvoMenu.tsx:197
 #: src/components/dms/ConvoMenu.tsx:200
->>>>>>> Stashed changes
 #: src/components/dms/ReportConversationPrompt.tsx:17
 msgid "Report conversation"
 msgstr "Anmäl konversation"
@@ -6376,12 +5617,8 @@ msgstr "Återställningskod"
 msgid "Reset Code"
 msgstr "Återställningskod"
 
-<<<<<<< Updated upstream
-#: src/screens/Settings/Settings.tsx:343 src/screens/Settings/Settings.tsx:345
-=======
 #: src/screens/Settings/Settings.tsx:343
 #: src/screens/Settings/Settings.tsx:345
->>>>>>> Stashed changes
 msgid "Reset onboarding state"
 msgstr "Återställ status för kom-igång-guide"
 
@@ -6396,14 +5633,6 @@ msgstr "Försöker logga in på nytt"
 #: src/view/com/util/error/ErrorMessage.tsx:57
 #: src/view/com/util/error/ErrorScreen.tsx:99
 msgid "Retries the last action, which errored out"
-<<<<<<< Updated upstream
-msgstr ""
-
-#: src/components/dms/MessageItem.tsx:245 src/components/Error.tsx:65
-#: src/components/Lists.tsx:104
-#: src/components/StarterPack/ProfileStarterPacks.tsx:336
-#: src/screens/Login/LoginForm.tsx:305 src/screens/Login/LoginForm.tsx:312
-=======
 msgstr "Försöker igen med den senaste misslyckade åtgärden"
 
 #: src/components/dms/MessageItem.tsx:245
@@ -6412,7 +5641,6 @@ msgstr "Försöker igen med den senaste misslyckade åtgärden"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:336
 #: src/screens/Login/LoginForm.tsx:305
 #: src/screens/Login/LoginForm.tsx:312
->>>>>>> Stashed changes
 #: src/screens/Messages/ChatList.tsx:169
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Onboarding/StepInterests/index.tsx:217
@@ -6425,12 +5653,8 @@ msgstr "Försöker igen med den senaste misslyckade åtgärden"
 msgid "Retry"
 msgstr "Försök igen"
 
-<<<<<<< Updated upstream
-#: src/components/Error.tsx:73 src/screens/List/ListHiddenScreen.tsx:205
-=======
 #: src/components/Error.tsx:73
 #: src/screens/List/ListHiddenScreen.tsx:216
->>>>>>> Stashed changes
 #: src/screens/StarterPack/StarterPackScreen.tsx:752
 #: src/view/screens/ProfileList.tsx:1010
 msgid "Return to previous page"
@@ -6459,20 +5683,12 @@ msgstr "Går tillbaka till föregående sida"
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:150
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:160
 #: src/view/com/modals/CreateOrEditList.tsx:317
-<<<<<<< Updated upstream
-#: src/view/com/modals/EditProfile.tsx:219 src/view/screens/SavedFeeds.tsx:109
-msgid "Save"
-msgstr "Spara"
-
-#: src/view/com/lightbox/ImageViewing/index.tsx:591
-=======
 #: src/view/com/modals/EditProfile.tsx:219
 #: src/view/screens/SavedFeeds.tsx:109
 msgid "Save"
 msgstr "Spara"
 
 #: src/view/com/lightbox/ImageViewing/index.tsx:622
->>>>>>> Stashed changes
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -6482,12 +5698,8 @@ msgstr "Spara"
 msgid "Save birthday"
 msgstr "Spara födelsedag"
 
-<<<<<<< Updated upstream
-#: src/view/screens/SavedFeeds.tsx:105 src/view/screens/SavedFeeds.tsx:109
-=======
 #: src/view/screens/SavedFeeds.tsx:105
 #: src/view/screens/SavedFeeds.tsx:109
->>>>>>> Stashed changes
 msgid "Save changes"
 msgstr "Spara ändringar"
 
@@ -6538,23 +5750,15 @@ msgstr "Sparar alla ändringar till din profil"
 msgid "Saves image crop settings"
 msgstr "Sparar inställningar för bildbeskärning"
 
-<<<<<<< Updated upstream
-#: src/components/dms/ChatEmptyPill.tsx:33 src/components/NewskieDialog.tsx:105
-=======
 #: src/components/dms/ChatEmptyPill.tsx:33
 #: src/components/NewskieDialog.tsx:105
->>>>>>> Stashed changes
 #: src/view/com/notifications/NotificationFeedItem.tsx:540
 #: src/view/com/notifications/NotificationFeedItem.tsx:565
 msgid "Say hello!"
 msgstr "Säg hej!"
 
-<<<<<<< Updated upstream
-#: src/screens/Onboarding/index.tsx:33 src/screens/Onboarding/state.ts:112
-=======
 #: src/screens/Onboarding/index.tsx:33
 #: src/screens/Onboarding/state.ts:112
->>>>>>> Stashed changes
 msgid "Science"
 msgstr "Vetenskap"
 
@@ -6564,17 +5768,6 @@ msgstr "Gå till toppen"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:487
 #: src/components/forms/SearchInput.tsx:34
-<<<<<<< Updated upstream
-#: src/components/forms/SearchInput.tsx:36 src/Navigation.tsx:599
-#: src/view/com/modals/ListAddRemoveUsers.tsx:76
-#: src/view/screens/Search/Search.tsx:577
-#: src/view/shell/bottom-bar/BottomBar.tsx:183
-#: src/view/shell/desktop/LeftNav.tsx:407 src/view/shell/Drawer.tsx:365
-msgid "Search"
-msgstr "Sök"
-
-#: src/components/ProgressGuide/FollowDialog.tsx:741
-=======
 #: src/components/forms/SearchInput.tsx:36
 #: src/Navigation.tsx:599
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
@@ -6586,7 +5779,6 @@ msgid "Search"
 msgstr "Sök"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:745
->>>>>>> Stashed changes
 msgid "Search by name or interest"
 msgstr "Sök efter namn eller intresse"
 
@@ -6594,11 +5786,7 @@ msgstr "Sök efter namn eller intresse"
 msgid "Search feeds"
 msgstr "Sök flöden"
 
-<<<<<<< Updated upstream
-#: src/components/ProgressGuide/FollowDialog.tsx:571
-=======
 #: src/components/ProgressGuide/FollowDialog.tsx:575
->>>>>>> Stashed changes
 msgid "Search for \"{interestsDisplayName}\"{activeText}"
 msgstr "Sök efter \"{interestsDisplayName}\"{activeText}"
 
@@ -6606,11 +5794,7 @@ msgstr "Sök efter \"{interestsDisplayName}\"{activeText}"
 msgid "Search for \"{query}\""
 msgstr "Sök efter ”{query}”"
 
-<<<<<<< Updated upstream
-#: src/view/screens/Search/Search.tsx:987
-=======
 #: src/view/screens/Search/Search.tsx:988
->>>>>>> Stashed changes
 msgid "Search for \"{searchText}\""
 msgstr "Sök efter ”{searchText}”"
 
@@ -6628,13 +5812,8 @@ msgstr "Sök gif-bilder"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:507
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
-<<<<<<< Updated upstream
-#: src/components/ProgressGuide/FollowDialog.tsx:760
-#: src/components/ProgressGuide/FollowDialog.tsx:761
-=======
 #: src/components/ProgressGuide/FollowDialog.tsx:764
 #: src/components/ProgressGuide/FollowDialog.tsx:765
->>>>>>> Stashed changes
 msgid "Search profiles"
 msgstr "Sök profiler"
 
@@ -6854,15 +6033,10 @@ msgstr "Konfigurera ditt konto"
 msgid "Sets email for password reset"
 msgstr "Ställer in e-postadress för återställning av lösenord"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:160 src/screens/Settings/Settings.tsx:80
-#: src/view/shell/desktop/LeftNav.tsx:499 src/view/shell/Drawer.tsx:529
-=======
 #: src/Navigation.tsx:160
 #: src/screens/Settings/Settings.tsx:80
 #: src/view/shell/desktop/LeftNav.tsx:499
 #: src/view/shell/Drawer.tsx:529
->>>>>>> Stashed changes
 msgid "Settings"
 msgstr "Inställningar"
 
@@ -6874,17 +6048,11 @@ msgstr "Sexuell aktivitet eller erotisk nakenhet."
 msgid "Sexually Suggestive"
 msgstr "Sexuellt suggestiv"
 
-<<<<<<< Updated upstream
-#: src/components/StarterPack/QrCodeDialog.tsx:175 src/screens/Hashtag.tsx:126
-#: src/screens/StarterPack/StarterPackScreen.tsx:423
-#: src/screens/StarterPack/StarterPackScreen.tsx:595 src/screens/Topic.tsx:102
-=======
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 #: src/screens/Hashtag.tsx:126
 #: src/screens/StarterPack/StarterPackScreen.tsx:423
 #: src/screens/StarterPack/StarterPackScreen.tsx:595
 #: src/screens/Topic.tsx:102
->>>>>>> Stashed changes
 #: src/view/com/profile/ProfileMenu.tsx:195
 #: src/view/com/profile/ProfileMenu.tsx:204
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
@@ -6894,11 +6062,7 @@ msgstr "Sexuellt suggestiv"
 msgid "Share"
 msgstr "Dela"
 
-<<<<<<< Updated upstream
-#: src/view/com/lightbox/ImageViewing/index.tsx:600
-=======
 #: src/view/com/lightbox/ImageViewing/index.tsx:631
->>>>>>> Stashed changes
 msgctxt "action"
 msgid "Share"
 msgstr "Dela"
@@ -6973,11 +6137,7 @@ msgstr "Visa alternativtext"
 
 #: src/components/moderation/ScreenHider.tsx:172
 #: src/components/moderation/ScreenHider.tsx:175
-<<<<<<< Updated upstream
-#: src/screens/List/ListHiddenScreen.tsx:176
-=======
 #: src/screens/List/ListHiddenScreen.tsx:187
->>>>>>> Stashed changes
 msgid "Show anyway"
 msgstr "Visa ändå"
 
@@ -7003,21 +6163,13 @@ msgstr "Visa information om när detta inlägg skapades"
 msgid "Show less like this"
 msgstr "Visa mindre av sånt här"
 
-<<<<<<< Updated upstream
-#: src/screens/List/ListHiddenScreen.tsx:172
-=======
 #: src/screens/List/ListHiddenScreen.tsx:183
->>>>>>> Stashed changes
 msgid "Show list anyway"
 msgstr "Visa listan ändå"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:592
-<<<<<<< Updated upstream
-#: src/view/com/post/Post.tsx:242 src/view/com/posts/PostFeedItem.tsx:509
-=======
 #: src/view/com/post/Post.tsx:242
 #: src/view/com/posts/PostFeedItem.tsx:509
->>>>>>> Stashed changes
 msgid "Show More"
 msgstr "Visa mer"
 
@@ -7084,18 +6236,12 @@ msgstr "Visa varning"
 msgid "Show warning and filter from feeds"
 msgstr "Visa varning och filtrera från flöden"
 
-<<<<<<< Updated upstream
-#: src/components/dialogs/Signin.tsx:97 src/components/dialogs/Signin.tsx:99
-#: src/screens/Login/index.tsx:97 src/screens/Login/index.tsx:116
-#: src/screens/Login/LoginForm.tsx:165 src/view/com/auth/SplashScreen.tsx:61
-=======
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
 #: src/screens/Login/index.tsx:97
 #: src/screens/Login/index.tsx:116
 #: src/screens/Login/LoginForm.tsx:165
 #: src/view/com/auth/SplashScreen.tsx:61
->>>>>>> Stashed changes
 #: src/view/com/auth/SplashScreen.tsx:69
 #: src/view/com/auth/SplashScreen.web.tsx:123
 #: src/view/com/auth/SplashScreen.web.tsx:131
@@ -7105,12 +6251,8 @@ msgstr "Visa varning och filtrera från flöden"
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:212
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:213
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:215
-<<<<<<< Updated upstream
-#: src/view/shell/NavSignupCard.tsx:57 src/view/shell/NavSignupCard.tsx:62
-=======
 #: src/view/shell/NavSignupCard.tsx:57
 #: src/view/shell/NavSignupCard.tsx:62
->>>>>>> Stashed changes
 msgid "Sign in"
 msgstr "Logga in"
 
@@ -7130,12 +6272,8 @@ msgstr "Logga in eller skapa ett konto för att delta i konversationen!"
 msgid "Sign into Bluesky or create a new account"
 msgstr "Logga in på Bluesky eller skapa ett nytt konto"
 
-<<<<<<< Updated upstream
-#: src/screens/Settings/Settings.tsx:225 src/screens/Settings/Settings.tsx:227
-=======
 #: src/screens/Settings/Settings.tsx:225
 #: src/screens/Settings/Settings.tsx:227
->>>>>>> Stashed changes
 #: src/screens/Settings/Settings.tsx:259
 msgid "Sign out"
 msgstr "Logga ut"
@@ -7150,12 +6288,8 @@ msgstr "Logga ut?"
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:202
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:203
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:205
-<<<<<<< Updated upstream
-#: src/view/shell/NavSignupCard.tsx:47 src/view/shell/NavSignupCard.tsx:52
-=======
 #: src/view/shell/NavSignupCard.tsx:47
 #: src/view/shell/NavSignupCard.tsx:52
->>>>>>> Stashed changes
 msgid "Sign up"
 msgstr "Registrera dig"
 
@@ -7191,12 +6325,8 @@ msgstr "Hoppa över den här guiden"
 msgid "Smaller"
 msgstr "Mindre"
 
-<<<<<<< Updated upstream
-#: src/screens/Onboarding/index.tsx:37 src/screens/Onboarding/state.ts:100
-=======
 #: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:100
->>>>>>> Stashed changes
 msgid "Software Dev"
 msgstr "Mjukvaruutveckling"
 
@@ -7217,12 +6347,8 @@ msgstr "Något gick fel"
 msgid "Something went wrong, please try again"
 msgstr "Något gick fel. Försök igen"
 
-<<<<<<< Updated upstream
-#: src/components/ReportDialog/index.tsx:54 src/screens/Moderation/index.tsx:96
-=======
 #: src/components/ReportDialog/index.tsx:54
 #: src/screens/Moderation/index.tsx:96
->>>>>>> Stashed changes
 #: src/screens/Profile/Sections/Labels.tsx:88
 msgid "Something went wrong, please try again."
 msgstr "Något gick fel. Försök igen."
@@ -7236,12 +6362,8 @@ msgstr "Något gick fel!"
 msgid "Something wrong? Let us know."
 msgstr "Är något på tok? Hör av dig till oss."
 
-<<<<<<< Updated upstream
-#: src/App.native.tsx:117 src/App.web.tsx:97
-=======
 #: src/App.native.tsx:122
 #: src/App.web.tsx:97
->>>>>>> Stashed changes
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "Beklagar! Din session har löpt ut. Vänligen logga in igen."
 
@@ -7270,12 +6392,8 @@ msgstr "Spam"
 msgid "Spam; excessive mentions or replies"
 msgstr "Spam; överdrivet många omnämnanden eller svar"
 
-<<<<<<< Updated upstream
-#: src/screens/Onboarding/index.tsx:27 src/screens/Onboarding/state.ts:113
-=======
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:113
->>>>>>> Stashed changes
 msgid "Sports"
 msgstr "Sport"
 
@@ -7283,13 +6401,6 @@ msgstr "Sport"
 msgid "Start a new chat"
 msgstr "Starta en ny chatt"
 
-<<<<<<< Updated upstream
-#: src/view/screens/ProfileList.tsx:817 src/view/screens/ProfileList.tsx:938
-msgid "Start adding people"
-msgstr "Börja med att lägga till personer"
-
-#: src/view/screens/ProfileList.tsx:824 src/view/screens/ProfileList.tsx:945
-=======
 #: src/view/screens/ProfileList.tsx:817
 #: src/view/screens/ProfileList.tsx:938
 msgid "Start adding people"
@@ -7297,7 +6408,6 @@ msgstr "Börja med att lägga till personer"
 
 #: src/view/screens/ProfileList.tsx:824
 #: src/view/screens/ProfileList.tsx:945
->>>>>>> Stashed changes
 msgid "Start adding people!"
 msgstr "Börja med att lägga till personer!"
 
@@ -7305,12 +6415,8 @@ msgstr "Börja med att lägga till personer!"
 msgid "Start chat with {displayName}"
 msgstr "Starta chatt med {displayName}"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:408 src/Navigation.tsx:413
-=======
 #: src/Navigation.tsx:408
 #: src/Navigation.tsx:413
->>>>>>> Stashed changes
 #: src/screens/StarterPack/Wizard/index.tsx:186
 msgid "Starter Pack"
 msgstr "Startpaket"
@@ -7353,12 +6459,8 @@ msgstr "Steg {0} av {1}"
 msgid "Storage cleared, you need to restart the app now."
 msgstr "Datan har rensats. Starta om appen nu."
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:246 src/screens/Settings/Settings.tsx:324
-=======
 #: src/Navigation.tsx:246
 #: src/screens/Settings/Settings.tsx:324
->>>>>>> Stashed changes
 msgid "Storybook"
 msgstr "Storybook"
 
@@ -7406,22 +6508,14 @@ msgstr "Föreslaget åt dig"
 msgid "Suggestive"
 msgstr "Suggestivt"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:266 src/view/screens/Support.tsx:31
-=======
 #: src/Navigation.tsx:266
 #: src/view/screens/Support.tsx:31
->>>>>>> Stashed changes
 #: src/view/screens/Support.tsx:34
 msgid "Support"
 msgstr "Support"
 
-<<<<<<< Updated upstream
-#: src/screens/Settings/Settings.tsx:102 src/screens/Settings/Settings.tsx:116
-=======
 #: src/screens/Settings/Settings.tsx:102
 #: src/screens/Settings/Settings.tsx:116
->>>>>>> Stashed changes
 #: src/screens/Settings/Settings.tsx:411
 msgid "Switch account"
 msgstr "Växla konto"
@@ -7480,19 +6574,11 @@ msgstr "Tryck för att växla mellan ljud av/på"
 msgid "Tap to view full image"
 msgstr "Tryck för att visa hela bilden"
 
-<<<<<<< Updated upstream
-#: src/state/shell/progress-guide.tsx:231
-msgid "Task complete - 10 follows!"
-msgstr "Uppgiften slutförd - Du följer 10 stycken!"
-
-#: src/state/shell/progress-guide.tsx:221
-=======
 #: src/state/shell/progress-guide.tsx:233
 msgid "Task complete - 10 follows!"
 msgstr "Uppgiften slutförd - Du följer 10 stycken!"
 
 #: src/state/shell/progress-guide.tsx:223
->>>>>>> Stashed changes
 msgid "Task complete - 10 likes!"
 msgstr "Uppgiften slutförd - 10 gillamarkeringar!"
 
@@ -7500,12 +6586,8 @@ msgstr "Uppgiften slutförd - 10 gillamarkeringar!"
 msgid "Teach our algorithm what you like"
 msgstr "Lär vår algoritm vad du vill"
 
-<<<<<<< Updated upstream
-#: src/screens/Onboarding/index.tsx:36 src/screens/Onboarding/state.ts:114
-=======
 #: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:114
->>>>>>> Stashed changes
 msgid "Tech"
 msgstr "Teknik"
 
@@ -7526,17 +6608,11 @@ msgstr "Berätta lite mer"
 msgid "Terms"
 msgstr "Villkor"
 
-<<<<<<< Updated upstream
-#: src/Navigation.tsx:276 src/screens/Settings/AboutSettings.tsx:37
-#: src/screens/Settings/AboutSettings.tsx:40
-#: src/view/screens/TermsOfService.tsx:31 src/view/shell/Drawer.tsx:617
-=======
 #: src/Navigation.tsx:276
 #: src/screens/Settings/AboutSettings.tsx:37
 #: src/screens/Settings/AboutSettings.tsx:40
 #: src/view/screens/TermsOfService.tsx:31
 #: src/view/shell/Drawer.tsx:617
->>>>>>> Stashed changes
 #: src/view/shell/Drawer.tsx:619
 msgid "Terms of Service"
 msgstr "Användarvillkor"
@@ -7546,11 +6622,7 @@ msgstr "Användarvillkor"
 #: src/lib/moderation/useReportOptions.ts:107
 #: src/lib/moderation/useReportOptions.ts:115
 msgid "Terms used violate community standards"
-<<<<<<< Updated upstream
-msgstr ""
-=======
 msgstr "Termer som används bryter mot gemenskapens riktlinjer"
->>>>>>> Stashed changes
 
 #: src/components/dialogs/MutedWords.tsx:266
 msgid "Text & tags"
@@ -7616,11 +6688,7 @@ msgstr "Blueskys webbapplikation"
 
 #: src/view/screens/CommunityGuidelines.tsx:38
 msgid "The Community Guidelines have been moved to <0/>"
-<<<<<<< Updated upstream
-msgstr ""
-=======
 msgstr "Gemenskapens riktlinjer har flyttats till <0/>"
->>>>>>> Stashed changes
 
 #: src/view/screens/CopyrightPolicy.tsx:35
 msgid "The Copyright Policy has been moved to <0/>"
@@ -7630,11 +6698,7 @@ msgstr "Upphovsrättspolicyn har flyttats till <0/>"
 msgid "The Discover feed"
 msgstr "Upptäck-flödet"
 
-<<<<<<< Updated upstream
-#: src/state/shell/progress-guide.tsx:222
-=======
 #: src/state/shell/progress-guide.tsx:224
->>>>>>> Stashed changes
 msgid "The Discover feed now knows what you like"
 msgstr "Nu vet Upptäck-flödet vad du gillar"
 
@@ -7704,12 +6768,8 @@ msgid "There was an issue connecting to Tenor."
 msgstr "Ett problem uppstod med anslutningen till Tenor."
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:177
-<<<<<<< Updated upstream
-#: src/view/screens/ProfileList.tsx:365 src/view/screens/ProfileList.tsx:384
-=======
 #: src/view/screens/ProfileList.tsx:365
 #: src/view/screens/ProfileList.tsx:384
->>>>>>> Stashed changes
 #: src/view/screens/SavedFeeds.tsx:85
 msgid "There was an issue contacting the server"
 msgstr "Ett problem uppstod med anslutningen till servern"
@@ -7728,11 +6788,7 @@ msgstr "Ett problem uppstod med anslutningen till din server"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Ett problem uppstod med att hämta notiser. Tryck här för att försöka igen."
 
-<<<<<<< Updated upstream
-#: src/view/com/posts/PostFeed.tsx:487
-=======
 #: src/view/com/posts/PostFeed.tsx:486
->>>>>>> Stashed changes
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "Ett problem uppstod med att hämta inlägg. Tryck här för att försöka igen."
 
@@ -7787,15 +6843,10 @@ msgstr "Ett problem uppstod! {0}"
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
-<<<<<<< Updated upstream
-#: src/view/screens/ProfileList.tsx:396 src/view/screens/ProfileList.tsx:409
-#: src/view/screens/ProfileList.tsx:422 src/view/screens/ProfileList.tsx:435
-=======
 #: src/view/screens/ProfileList.tsx:396
 #: src/view/screens/ProfileList.tsx:409
 #: src/view/screens/ProfileList.tsx:422
 #: src/view/screens/ProfileList.tsx:435
->>>>>>> Stashed changes
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "Ett problem uppstod! Kontrollera din internetanslutning och försök igen."
 
@@ -7846,11 +6897,7 @@ msgstr "Det här innehållet har fått en allmän varning från moderatorerna."
 
 #: src/components/dialogs/EmbedConsent.tsx:63
 msgid "This content is hosted by {0}. Do you want to enable external media?"
-<<<<<<< Updated upstream
-msgstr "{0} står som värd för det här innehållet. Vill du aktivera externa medier?"
-=======
 msgstr "{0} står som värd för det här innehållet. Vill du aktivera extern media?"
->>>>>>> Stashed changes
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:82
 #: src/lib/moderation/useModerationCauseDescription.ts:82
@@ -7917,25 +6964,15 @@ msgstr "Den här etiketten sattes på av dig."
 
 #: src/screens/Profile/Sections/Labels.tsx:189
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
-<<<<<<< Updated upstream
-msgstr ""
-=======
 msgstr "Den här etikettsättaren har inte lämnat någon information om dess etiketter, och är kanske inte aktiv."
->>>>>>> Stashed changes
 
 #: src/view/com/modals/LinkWarning.tsx:72
 msgid "This link is taking you to the following website:"
 msgstr "Den här länken tar dig till följande webbplats:"
 
-<<<<<<< Updated upstream
-#: src/screens/List/ListHiddenScreen.tsx:136
-msgid "This list - created by <0>{0}</0> - contains possible violations of Bluesky's community guidelines in its name or description."
-msgstr ""
-=======
 #: src/screens/List/ListHiddenScreen.tsx:146
 msgid "This list - created by <0>{0}</0> - contains possible violations of Bluesky's community guidelines in its name or description."
 msgstr "Den här listan – skapad av <0>{0}</0> – innehåller potentiella överträdelser av Blueskys gemenskapsriktlinjer i dess namn eller beskrivning."
->>>>>>> Stashed changes
 
 #: src/view/screens/ProfileList.tsx:933
 msgid "This list is empty."
@@ -8032,13 +7069,8 @@ msgstr "Det här tar bort ditt inlägg från citatinlägget för alla användare
 msgid "Thread options"
 msgstr "Trådalternativ"
 
-<<<<<<< Updated upstream
-#: src/screens/Settings/ContentAndMediaSettings.tsx:65
-#: src/screens/Settings/ContentAndMediaSettings.tsx:68
-=======
 #: src/screens/Settings/ContentAndMediaSettings.tsx:66
 #: src/screens/Settings/ContentAndMediaSettings.tsx:69
->>>>>>> Stashed changes
 msgid "Thread preferences"
 msgstr "Trådinställningar"
 
@@ -8085,24 +7117,15 @@ msgstr "Idag"
 
 #: src/view/com/util/forms/DropdownButton.tsx:258
 msgid "Toggle dropdown"
-<<<<<<< Updated upstream
-msgstr ""
-=======
 msgstr "Öppna/stäng rullgardinsmeny"
->>>>>>> Stashed changes
 
 #: src/screens/Moderation/index.tsx:319
 msgid "Toggle to enable or disable adult content"
 msgstr "Växla mellan att tillåta eller inaktivera vuxet innehåll"
 
-<<<<<<< Updated upstream
-#: src/screens/Hashtag.tsx:84 src/screens/Topic.tsx:71
-#: src/view/screens/Search/Search.tsx:499
-=======
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
 #: src/view/screens/Search/Search.tsx:500
->>>>>>> Stashed changes
 msgid "Top"
 msgstr "Topp"
 
@@ -8119,10 +7142,6 @@ msgstr "Ämne"
 msgid "Translate"
 msgstr "Översätt"
 
-<<<<<<< Updated upstream
-#: src/components/interstitials/Trending.tsx:62
-=======
->>>>>>> Stashed changes
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:69
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:59
 msgid "Trending"
@@ -8165,17 +7184,11 @@ msgstr "Sluta ignorera lista"
 msgid "Unable to connect. Please check your internet connection and try again."
 msgstr "Det gick inte att ansluta. Kontrollera din internetanslutning och försök igen."
 
-<<<<<<< Updated upstream
-#: src/screens/Login/ForgotPasswordForm.tsx:68 src/screens/Login/index.tsx:76
-#: src/screens/Login/LoginForm.tsx:154
-#: src/screens/Login/SetNewPasswordForm.tsx:71 src/screens/Signup/index.tsx:71
-=======
 #: src/screens/Login/ForgotPasswordForm.tsx:68
 #: src/screens/Login/index.tsx:76
 #: src/screens/Login/LoginForm.tsx:154
 #: src/screens/Login/SetNewPasswordForm.tsx:71
 #: src/screens/Signup/index.tsx:71
->>>>>>> Stashed changes
 #: src/view/com/modals/ChangePassword.tsx:71
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "Det gick inte att ansluta till din tjänst. Kontrollera din internetanslutning."
@@ -8200,12 +7213,8 @@ msgctxt "action"
 msgid "Unblock"
 msgstr "Häv blockering"
 
-<<<<<<< Updated upstream
-#: src/components/dms/ConvoMenu.tsx:188 src/components/dms/ConvoMenu.tsx:192
-=======
 #: src/components/dms/ConvoMenu.tsx:188
 #: src/components/dms/ConvoMenu.tsx:192
->>>>>>> Stashed changes
 msgid "Unblock account"
 msgstr "Häv blockering av konto"
 
@@ -8250,12 +7259,8 @@ msgstr "Sluta gilla"
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "Ta bort gillamarkering ({0, plural, one {# gillamarkering} other {# gillamarkeringar}})"
 
-<<<<<<< Updated upstream
-#: src/components/TagMenu/index.tsx:264 src/view/screens/ProfileList.tsx:701
-=======
 #: src/components/TagMenu/index.tsx:264
 #: src/view/screens/ProfileList.tsx:701
->>>>>>> Stashed changes
 msgid "Unmute"
 msgstr "Sätt på ljud"
 
@@ -8326,13 +7331,8 @@ msgstr "Lossat från dina flöden"
 msgid "Unsubscribe"
 msgstr "Sluta prenumerera"
 
-<<<<<<< Updated upstream
-#: src/screens/List/ListHiddenScreen.tsx:184
-#: src/screens/List/ListHiddenScreen.tsx:194
-=======
 #: src/screens/List/ListHiddenScreen.tsx:195
 #: src/screens/List/ListHiddenScreen.tsx:205
->>>>>>> Stashed changes
 msgid "Unsubscribe from list"
 msgstr "Sluta prenumerera på lista"
 
@@ -8368,19 +7368,11 @@ msgstr "Uppdatera till {domain}"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:306
 msgid "Updating quote attachment failed"
-<<<<<<< Updated upstream
-msgstr ""
-
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:336
-msgid "Updating reply visibility failed"
-msgstr ""
-=======
 msgstr "Det gick inte att uppdatera citatets sammanlänkning"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:336
 msgid "Updating reply visibility failed"
 msgstr "Det gick inte att uppdatera synlighet för svar"
->>>>>>> Stashed changes
 
 #: src/screens/Login/SetNewPasswordForm.tsx:180
 msgid "Updating..."
@@ -8394,19 +7386,6 @@ msgstr "Ladda upp ett foto istället"
 msgid "Upload a text file to:"
 msgstr "Ladda upp en textfil till:"
 
-<<<<<<< Updated upstream
-#: src/view/com/util/UserAvatar.tsx:371 src/view/com/util/UserAvatar.tsx:374
-#: src/view/com/util/UserBanner.tsx:123 src/view/com/util/UserBanner.tsx:126
-msgid "Upload from Camera"
-msgstr "Ladda upp från Kamera"
-
-#: src/view/com/util/UserAvatar.tsx:388 src/view/com/util/UserBanner.tsx:140
-msgid "Upload from Files"
-msgstr "Ladda upp från Filer"
-
-#: src/view/com/util/UserAvatar.tsx:382 src/view/com/util/UserAvatar.tsx:386
-#: src/view/com/util/UserBanner.tsx:134 src/view/com/util/UserBanner.tsx:138
-=======
 #: src/view/com/util/UserAvatar.tsx:371
 #: src/view/com/util/UserAvatar.tsx:374
 #: src/view/com/util/UserBanner.tsx:123
@@ -8423,7 +7402,6 @@ msgstr "Ladda upp från Filer"
 #: src/view/com/util/UserAvatar.tsx:386
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
->>>>>>> Stashed changes
 msgid "Upload from Library"
 msgstr "Ladda upp från Bibliotek"
 
@@ -8431,12 +7409,8 @@ msgstr "Ladda upp från Bibliotek"
 msgid "Uploading images..."
 msgstr "Laddar upp bilder…"
 
-<<<<<<< Updated upstream
-#: src/lib/api/index.ts:350 src/lib/api/index.ts:374
-=======
 #: src/lib/api/index.ts:350
 #: src/lib/api/index.ts:374
->>>>>>> Stashed changes
 msgid "Uploading link thumbnail..."
 msgstr "Laddar upp miniatyrbild av länk…"
 
@@ -8457,13 +7431,8 @@ msgstr "Använd förvald leverantör"
 msgid "Use in-app browser"
 msgstr "Använd appens inbyggda webbläsare"
 
-<<<<<<< Updated upstream
-#: src/screens/Settings/ContentAndMediaSettings.tsx:91
-#: src/screens/Settings/ContentAndMediaSettings.tsx:97
-=======
 #: src/screens/Settings/ContentAndMediaSettings.tsx:92
 #: src/screens/Settings/ContentAndMediaSettings.tsx:98
->>>>>>> Stashed changes
 msgid "Use in-app browser to open links"
 msgstr "Öppna länkar i appens inbyggda webbläsare"
 
@@ -8533,12 +7502,8 @@ msgstr "Användarnamn eller e-postadress"
 msgid "users followed by <0>@{0}</0>"
 msgstr "användare som <0>@{0}</0> följer"
 
-<<<<<<< Updated upstream
-#: src/screens/Messages/Settings.tsx:92 src/screens/Messages/Settings.tsx:95
-=======
 #: src/screens/Messages/Settings.tsx:92
 #: src/screens/Messages/Settings.tsx:95
->>>>>>> Stashed changes
 msgid "Users I follow"
 msgstr "Användare som jag följer"
 
@@ -8606,12 +7571,8 @@ msgstr "Videoklipp"
 msgid "Video failed to process"
 msgstr "Bearbetning av videoklipp misslyckades"
 
-<<<<<<< Updated upstream
-#: src/screens/Onboarding/index.tsx:39 src/screens/Onboarding/state.ts:103
-=======
 #: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
->>>>>>> Stashed changes
 msgid "Video Games"
 msgstr "TV-spel"
 
@@ -8668,11 +7629,7 @@ msgstr "Se blogginlägget för mer information"
 
 #: src/view/screens/Log.tsx:57
 msgid "View debug entry"
-<<<<<<< Updated upstream
-msgstr ""
-=======
 msgstr "Visa loggpost"
->>>>>>> Stashed changes
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:139
 msgid "View details"
@@ -8695,12 +7652,8 @@ msgstr "Visa information om de här etiketterna"
 #: src/components/ProfileHoverCard/index.web.tsx:466
 #: src/view/com/posts/AviFollowButton.tsx:55
 #: src/view/com/posts/PostFeedErrorMessage.tsx:175
-<<<<<<< Updated upstream
-#: src/view/com/util/PostMeta.tsx:78 src/view/com/util/PostMeta.tsx:93
-=======
 #: src/view/com/util/PostMeta.tsx:78
 #: src/view/com/util/PostMeta.tsx:93
->>>>>>> Stashed changes
 msgid "View profile"
 msgstr "Visa profil"
 
@@ -8710,11 +7663,7 @@ msgstr "Visa avataren"
 
 #: src/components/LabelingServiceCard/index.tsx:164
 msgid "View the labeling service provided by @{0}"
-<<<<<<< Updated upstream
-msgstr ""
-=======
 msgstr "Visa etiketteringstjänsten från @{0}"
->>>>>>> Stashed changes
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:485
 msgid "View users who like this feed"
@@ -8798,11 +7747,7 @@ msgstr "Vi kunde inte läsa in dina inställningar för födelsedatum. Försök 
 
 #: src/screens/Moderation/index.tsx:393
 msgid "We were unable to load your configured labelers at this time."
-<<<<<<< Updated upstream
-msgstr ""
-=======
 msgstr "Vi kunde inte läsa in dina konfigurerade etikettsättare just nu."
->>>>>>> Stashed changes
 
 #: src/screens/Onboarding/StepInterests/index.tsx:129
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
@@ -8817,11 +7762,7 @@ msgid "We'll use this to help customize your experience."
 msgstr "Vi använder det här för att anpassa din upplevelse."
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:88
-<<<<<<< Updated upstream
-#: src/components/ProgressGuide/FollowDialog.tsx:153
-=======
 #: src/components/ProgressGuide/FollowDialog.tsx:157
->>>>>>> Stashed changes
 msgid "We're having network issues, try again"
 msgstr "Vi har nätverksproblem, försök igen"
 
@@ -8831,21 +7772,13 @@ msgstr "Vi är så glada över att ha dig med oss!"
 
 #: src/view/screens/ProfileList.tsx:112
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
-<<<<<<< Updated upstream
-msgstr ""
-=======
 msgstr "Vi beklagar, men vi kunde inte läsa in den här listan. Om det här kvarstår, kontakta gärna listans skapare, @{handleOrDid}."
->>>>>>> Stashed changes
 
 #: src/components/dialogs/MutedWords.tsx:378
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "Vi beklagar, men vi kunde inte läsa in dina ignorerade ord just nu. Försök igen."
 
-<<<<<<< Updated upstream
-#: src/view/screens/Search/Search.tsx:201
-=======
 #: src/view/screens/Search/Search.tsx:202
->>>>>>> Stashed changes
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Vi beklagar, men din sökning kunde inte slutföras. Försök igen om några minuter."
 
@@ -8853,22 +7786,14 @@ msgstr "Vi beklagar, men din sökning kunde inte slutföras. Försök igen om n�
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "Vi beklagar! Inlägget som du vill svara på har tagits bort."
 
-<<<<<<< Updated upstream
-#: src/components/Lists.tsx:188 src/view/screens/NotFound.tsx:50
-=======
 #: src/components/Lists.tsx:188
 #: src/view/screens/NotFound.tsx:50
->>>>>>> Stashed changes
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "Vi beklagar! Vi kan inte hitta den sida du letade efter."
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:346
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
-<<<<<<< Updated upstream
-msgstr ""
-=======
 msgstr "Vi beklagar! Du kan inte prenumerera på fler än 20 etikettsättare, och du har nått den övre gränsen."
->>>>>>> Stashed changes
 
 #: src/screens/Deactivated.tsx:124
 msgid "Welcome back!"
@@ -8896,19 +7821,11 @@ msgstr "Vad folk skriver inlägg om."
 msgid "What's up?"
 msgstr "Vad händer?"
 
-<<<<<<< Updated upstream
-#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:79
-msgid "Which languages are used in this post?"
-msgstr "Vilka språk används i det här inlägget?"
-
-#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:78
-=======
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:80
 msgid "Which languages are used in this post?"
 msgstr "Vilka språk används i det här inlägget?"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:79
->>>>>>> Stashed changes
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "Vilka språk skulle du vilja se i dina algoritmiska flöden?"
 
@@ -8920,12 +7837,8 @@ msgstr "Vem kan interagera med det här inlägget?"
 msgid "Who can reply"
 msgstr "Vem kan svara"
 
-<<<<<<< Updated upstream
-#: src/screens/Home/NoFeedsPinned.tsx:79 src/screens/Messages/ChatList.tsx:148
-=======
 #: src/screens/Home/NoFeedsPinned.tsx:79
 #: src/screens/Messages/ChatList.tsx:148
->>>>>>> Stashed changes
 msgid "Whoops!"
 msgstr "Hoppsan!"
 
@@ -8971,12 +7884,8 @@ msgstr "Skriv inlägg"
 msgid "Write your reply"
 msgstr "Skriv ditt svar"
 
-<<<<<<< Updated upstream
-#: src/screens/Onboarding/index.tsx:25 src/screens/Onboarding/state.ts:116
-=======
 #: src/screens/Onboarding/index.tsx:25
 #: src/screens/Onboarding/state.ts:116
->>>>>>> Stashed changes
 msgid "Writers"
 msgstr "Författare"
 
@@ -8984,11 +7893,7 @@ msgstr "Författare"
 msgid "Wrong DID returned from server. Received: {0}"
 msgstr "Fel DID returnerades från servern. Mottaget: {0}"
 
-<<<<<<< Updated upstream
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
-=======
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:86
->>>>>>> Stashed changes
 msgid "Yes"
 msgstr "Ja"
 
@@ -9017,11 +7922,7 @@ msgstr "Ja, återaktivera mitt konto"
 msgid "Yesterday"
 msgstr "Igår"
 
-<<<<<<< Updated upstream
-#: src/screens/List/ListHiddenScreen.tsx:140
-=======
 #: src/screens/List/ListHiddenScreen.tsx:150
->>>>>>> Stashed changes
 msgid "you"
 msgstr "du"
 
@@ -9054,12 +7955,8 @@ msgstr "Om du vill kan du göra en tillfällig inaktivering av kontot istället,
 msgid "You can continue ongoing conversations regardless of which setting you choose."
 msgstr "Du kan fortsätta pågående konversationer oavsett vilken inställning du väljer."
 
-<<<<<<< Updated upstream
-#: src/screens/Login/index.tsx:155 src/screens/Login/PasswordUpdatedForm.tsx:26
-=======
 #: src/screens/Login/index.tsx:155
 #: src/screens/Login/PasswordUpdatedForm.tsx:26
->>>>>>> Stashed changes
 msgid "You can now sign in with your new password."
 msgstr "Du kan nu logga in med ditt nya lösenord."
 
@@ -9067,15 +7964,9 @@ msgstr "Du kan nu logga in med ditt nya lösenord."
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
 msgstr "Du kan återaktivera ditt konto för att fortsätta logga in. Din profil och dina inlägg kommer att vara synliga för andra användare."
 
-<<<<<<< Updated upstream
-#: src/components/interstitials/Trending.tsx:112
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:131
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:104
-=======
 #: src/components/interstitials/Trending.tsx:100
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:136
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:109
->>>>>>> Stashed changes
 msgid "You can update this later from your settings."
 msgstr "Du kan ändra det här senare i dina inställningar."
 
@@ -9145,12 +8036,8 @@ msgstr "Du har inga konversationer ännu. Starta en!"
 msgid "You have no feeds."
 msgstr "Du har inga flöden."
 
-<<<<<<< Updated upstream
-#: src/view/com/lists/MyLists.tsx:81 src/view/com/lists/ProfileLists.tsx:139
-=======
 #: src/view/com/lists/MyLists.tsx:81
 #: src/view/com/lists/ProfileLists.tsx:139
->>>>>>> Stashed changes
 msgid "You have no lists."
 msgstr "Du har inga listor."
 
@@ -9221,11 +8108,7 @@ msgstr "Du måste ge åtkomst till ditt fotobibliotek för att kunna spara bilde
 
 #: src/components/ReportDialog/SubmitView.tsx:210
 msgid "You must select at least one labeler for a report"
-<<<<<<< Updated upstream
-msgstr ""
-=======
 msgstr "Du måste välja minst en etikettsättare för att göra en anmälan"
->>>>>>> Stashed changes
 
 #: src/screens/Deactivated.tsx:127
 msgid "You previously deactivated @{0}."
@@ -9301,11 +8184,7 @@ msgstr "Du är redo att köra!"
 msgid "You've chosen to hide a word or tag within this post."
 msgstr "Du har valt att dölja ett ord eller en tagg i det här inlägget."
 
-<<<<<<< Updated upstream
-#: src/state/shell/progress-guide.tsx:232
-=======
 #: src/state/shell/progress-guide.tsx:234
->>>>>>> Stashed changes
 msgid "You've found some people to follow"
 msgstr "Du har hittat några personer att följa"
 
@@ -9357,12 +8236,8 @@ msgstr "Ditt val sparas, och kan ändras senare i inställningar."
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
 msgstr "Ditt nuvarande användarnamn <0>{0}</0> kommer automatiskt att förbli reserverat för dig. Du kan när som helst byta tillbaka till det med det här kontot."
 
-<<<<<<< Updated upstream
-#: src/screens/Login/ForgotPasswordForm.tsx:51 src/screens/Signup/state.ts:203
-=======
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Signup/state.ts:203
->>>>>>> Stashed changes
 #: src/screens/Signup/StepInfo/index.tsx:108
 #: src/view/com/modals/ChangePassword.tsx:55
 msgid "Your email appears to be invalid."
@@ -9376,11 +8251,7 @@ msgstr "Din e-postadress har uppdaterats men inte verifierats. Som ett nästa st
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "Din e-post har inte verifierats än. Det är en viktig säkerhetsåtgärd som vi rekommenderar."
 
-<<<<<<< Updated upstream
-#: src/state/shell/progress-guide.tsx:211
-=======
 #: src/state/shell/progress-guide.tsx:213
->>>>>>> Stashed changes
 msgid "Your first like!"
 msgstr "Din första gillamarkering!"
 
