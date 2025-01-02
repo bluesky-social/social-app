@@ -6,9 +6,7 @@ export function threadgateViewToAllowUISetting(
   threadgateView: AppBskyFeedDefs.ThreadgateView | undefined,
 ): ThreadgateAllowUISetting[] {
   const threadgate =
-    threadgateView &&
-    AppBskyFeedThreadgate.isRecord(threadgateView.record) &&
-    AppBskyFeedThreadgate.validateRecord(threadgateView.record).success
+    threadgateView && AppBskyFeedThreadgate.isValidRecord(threadgateView.record)
       ? threadgateView.record
       : undefined
   return threadgateRecordToAllowUISetting(threadgate)
