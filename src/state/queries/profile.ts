@@ -73,7 +73,7 @@ export function useProfileQuery({
     placeholderData: () => {
       if (!did) return
 
-      return queryClient.getQueryData<AppBskyActorDefs.ProfileViewBasic>(
+      return queryClient.getQueryData<AppBskyActorDefs.ProfileViewDetailed>(
         profileBasicQueryKey(did),
       )
     },
