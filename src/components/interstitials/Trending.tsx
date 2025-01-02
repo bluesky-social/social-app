@@ -11,6 +11,7 @@ import {
 } from '#/state/preferences/trending'
 import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
 import {useTrendingConfig} from '#/state/trending-config'
+import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
@@ -50,7 +51,32 @@ export function Inner() {
             <Graph size="sm" />
           </View>
           {isLoading ? (
-            <View style={[a.py_lg]}>
+            <View style={[a.py_lg, a.flex_row, a.gap_lg, a.align_center]}>
+              <LoadingPlaceholder
+                width={80}
+                height={undefined}
+                style={{alignSelf: 'stretch'}}
+              />
+              <LoadingPlaceholder
+                width={50}
+                height={undefined}
+                style={{alignSelf: 'stretch'}}
+              />
+              <LoadingPlaceholder
+                width={120}
+                height={undefined}
+                style={{alignSelf: 'stretch'}}
+              />
+              <LoadingPlaceholder
+                width={30}
+                height={undefined}
+                style={{alignSelf: 'stretch'}}
+              />
+              <LoadingPlaceholder
+                width={180}
+                height={undefined}
+                style={{alignSelf: 'stretch'}}
+              />
               <Text
                 style={[t.atoms.text_contrast_medium, a.text_sm, a.font_bold]}>
                 {' '}
