@@ -232,7 +232,7 @@ let FeedItemInner = ({
    * If `post[0]` in this slice is the actual root post (not an orphan thread),
    * then we may have a threadgate record to reference
    */
-  const threadgateRecord = AppBskyFeedThreadgate.isRecord(
+  const threadgateRecord = AppBskyFeedThreadgate.isValidRecord(
     rootPost.threadgate?.record,
   )
     ? rootPost.threadgate.record
@@ -461,7 +461,7 @@ let PostContent = ({
   })
   const additionalPostAlerts: AppModerationCause[] = React.useMemo(() => {
     const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri)
-    const rootPostUri = AppBskyFeedPost.isRecord(post.record)
+    const rootPostUri = AppBskyFeedPost.isValidRecord(post.record)
       ? post.record?.reply?.root?.uri || post.uri
       : undefined
     const isControlledByViewer =
