@@ -8,8 +8,6 @@ import {
   moderateFeedGenerator,
   RichText,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import {
   InfiniteData,
   keepPreviousData,
@@ -410,7 +408,6 @@ export function usePinnedFeedsInfos() {
   const agent = useAgent()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
   const pinnedItems = preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
-  const {_} = useLingui()
 
   return useQuery({
     staleTime: STALE.INFINITY,
@@ -472,7 +469,7 @@ export function usePinnedFeedsInfos() {
         } else if (pinnedItem.type === 'timeline') {
           result.push({
             type: 'feed',
-            displayName: _(msg`Following`),
+            displayName: 'Following',
             uri: pinnedItem.value,
             feedDescriptor: 'following',
             route: {
