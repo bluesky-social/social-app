@@ -317,7 +317,7 @@ msgstr "<0>{0}</0> {1, plural, one {følger} other {følgere}}"
 
 #: src/view/shell/Drawer.tsx:108
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
-msgstr "<0>{0}</0> {1, plural, one {følger} other {følger}}\""
+msgstr "<0>{0}</0> {1, plural, one {følger} other {følger}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:490
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
