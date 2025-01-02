@@ -368,7 +368,7 @@ msgstr "7 dage"
 #: src/screens/Settings/Settings.tsx:215
 #: src/screens/Settings/Settings.tsx:218
 msgid "About"
-msgstr "Andet"
+msgstr "Om"
 
 #: src/view/screens/Search/Search.tsx:858
 msgid "Access navigation links and settings"
