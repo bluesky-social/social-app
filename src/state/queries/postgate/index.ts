@@ -60,7 +60,7 @@ export async function getPostgateRecord({
         }),
     )
 
-    if (data.value && AppBskyFeedPostgate.isRecord(data.value)) {
+    if (data.value && AppBskyFeedPostgate.isValidRecord(data.value)) {
       return data.value
     } else {
       return undefined
