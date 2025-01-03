@@ -1202,6 +1202,7 @@ const styles = StyleSheet.create({
     width: 70,
   },
   profilePressable: {
+    width: '100%',
     alignItems: 'center',
     width: '100%',
   },
@@ -1211,7 +1212,6 @@ const styles = StyleSheet.create({
     borderRadius: 45,
   },
   profileName: {
-    width: 78,
     fontSize: 12,
     textAlign: 'center',
     marginTop: 5,
