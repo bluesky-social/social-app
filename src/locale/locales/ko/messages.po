@@ -1521,7 +1521,7 @@ msgstr "답글 작성하기"
 
 #: src/view/com/composer/Composer.tsx:1635
 msgid "Compressing video..."
-msgstr "동영상 압축 중..."
+msgstr "동영상 압축 중…"
 
 #: src/components/moderation/LabelPreference.tsx:82
 msgid "Configure content filtering setting for category: {name}"
@@ -1646,7 +1646,7 @@ msgstr "{0}(으)로 계속하기 (현재 로그인)"
 
 #: src/view/com/post-thread/PostThreadLoadMore.tsx:52
 msgid "Continue thread..."
-msgstr "스레드 더 보기..."
+msgstr "스레드 더 보기…"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:241
 #: src/screens/Onboarding/StepProfile/index.tsx:275
@@ -5094,7 +5094,7 @@ msgstr "개인정보 처리방침"
 
 #: src/view/com/composer/Composer.tsx:1641
 msgid "Processing video..."
-msgstr "동영상 처리 중..."
+msgstr "동영상 처리 중…"
 
 #: src/lib/api/index.ts:59
 #: src/screens/Login/ForgotPasswordForm.tsx:149
@@ -5883,7 +5883,7 @@ msgstr "이 단어를 음소거할 기간 선택하기"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:245
 msgid "Select language..."
-msgstr "언어 선택..."
+msgstr "언어 선택…"
 
 #: src/screens/Settings/LanguageSettings.tsx:276
 msgid "Select languages"
@@ -7399,16 +7399,16 @@ msgstr "라이브러리에서 업로드"
 
 #: src/lib/api/index.ts:296
 msgid "Uploading images..."
-msgstr "이미지 업로드 중..."
+msgstr "이미지 업로드 중…"
 
 #: src/lib/api/index.ts:350
 #: src/lib/api/index.ts:374
 msgid "Uploading link thumbnail..."
-msgstr "링크 미리보기 업로드 중..."
+msgstr "링크 미리보기 업로드 중…"
 
 #: src/view/com/composer/Composer.tsx:1638
 msgid "Uploading video..."
-msgstr "동영상 업로드 중..."
+msgstr "동영상 업로드 중…"
 
 #: src/screens/Settings/AppPasswords.tsx:67
 msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
