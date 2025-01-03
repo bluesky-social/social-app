@@ -1,0 +1,97 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2024-12-13 22:40+0100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#. placeholder {0}: record.likeCount ?? 0
+#: src/components/embed.tsx:134
+msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
+msgstr ""
+
+#. placeholder {0}: post.replyCount
+#: src/components/post.tsx:103
+msgid "{0, plural, one {Read # reply on Bluesky} other {Read # replies on Bluesky}}"
+msgstr ""
+
+#: src/utils.ts:17
+msgid "{date} at {time}"
+msgstr ""
+
+#: src/labels.ts:14
+msgid "Adult Content"
+msgstr ""
+
+#: src/screens/landing.tsx:247
+msgid "Copied!"
+msgstr ""
+
+#: src/screens/landing.tsx:247
+msgid "Copy code"
+msgstr ""
+
+#: src/screens/landing.tsx:124
+msgid "Embed a Bluesky Post"
+msgstr ""
+
+#. placeholder {0}: record.creator.handle
+#: src/components/embed.tsx:133
+msgid "Feed by @{0}"
+msgstr ""
+
+#: src/labels.ts:18
+msgid "Graphic Media"
+msgstr ""
+
+#. placeholder {0}: record.creator.handle
+#: src/components/embed.tsx:118
+msgid "Moderation list by @{0}"
+msgstr ""
+
+#: src/labels.ts:16
+msgid "Non-sexual Nudity"
+msgstr ""
+
+#: src/screens/post.tsx:87
+msgid "Post not found, it may have been deleted."
+msgstr ""
+
+#: src/components/embed.tsx:157
+msgid "Quoted post not found, it may have been deleted."
+msgstr ""
+
+#: src/components/post.tsx:97
+msgid "Reply"
+msgstr ""
+
+#: src/components/embed.tsx:64
+msgid "The author of the quoted post has requested their posts not be displayed on external sites."
+msgstr ""
+
+#: src/screens/post.tsx:66
+#: src/screens/landing.tsx:102
+msgid "The author of this post has requested their posts not be displayed on external sites."
+msgstr ""
+
+#: src/components/embed.tsx:166
+msgid "The quoted post is blocked."
+msgstr ""
+
+#. placeholder {0}: record.creator.handle
+#: src/components/embed.tsx:119
+msgid "User list by @{0}"
+msgstr ""
+
+#: src/screens/post.tsx:71
+#: src/components/post.tsx:107
+msgid "View on Bluesky"
+msgstr ""
