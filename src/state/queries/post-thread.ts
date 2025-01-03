@@ -493,7 +493,10 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<
+  AppBskyActorDefs.ProfileView | AppBskyActorDefs.ProfileViewBasic,
+  void
+> {
   const queryDatas = queryClient.getQueriesData<PostThreadQueryData>({
     queryKey: [RQKEY_ROOT],
   })
