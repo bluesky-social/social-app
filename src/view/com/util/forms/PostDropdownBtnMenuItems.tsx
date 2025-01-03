@@ -53,7 +53,6 @@ import {
   usePrefetchPostInteractionSettings,
 } from '#/components/dialogs/PostInteractionSettingsDialog'
 import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBrackets} from '#/components/icons/CodeBrackets'
@@ -64,6 +63,7 @@ import {
 import {Eye_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/Eye'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
+import {Link_Stroke2_Corner0_Rounded as Link} from '#/components/icons/Link'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
 import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/Person'
@@ -442,7 +442,7 @@ let PostDropdownMenuItems = ({
             <Menu.ItemText>
               {isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
             </Menu.ItemText>
-            <Menu.ItemIcon icon={Share} position="right" />
+            <Menu.ItemIcon icon={Link} position="right" />
           </Menu.Item>
 
           {canEmbed && (
