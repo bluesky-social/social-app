@@ -1,5 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
+import {runOnJS} from 'react-native-reanimated'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
@@ -58,6 +59,7 @@ export function NotificationsScreen({}: Props) {
   const initialActiveTab = lastActiveTab
   const [activeTab, setActiveTab] = React.useState(initialActiveTab)
   const isLoading = activeTab === 0 ? isLoadingAll : isLoadingMentions
+  const [isDragging, setIsDragging] = React.useState(false)
 
   const onPageSelected = React.useCallback(
     (index: number) => {
@@ -65,6 +67,14 @@ export function NotificationsScreen({}: Props) {
       lastActiveTab = index
     },
     [setActiveTab],
+  )
+
+  const onPageScrollStateChanged = React.useCallback(
+    (state: 'idle' | 'dragging' | 'settling') => {
+      'worklet'
+      runOnJS(setIsDragging)(state !== 'idle')
+    },
+    [],
   )
 
   const queryClient = useQueryClient()
@@ -143,6 +153,7 @@ export function NotificationsScreen({}: Props) {
       </Layout.Header.Outer>
       <Pager
         onPageSelected={onPageSelected}
+        onPageScrollStateChanged={onPageScrollStateChanged}
         renderTabBar={props => (
           <Layout.Center style={[a.z_10, web([a.sticky, {top: 0}])]}>
             <TabBar
@@ -154,7 +165,13 @@ export function NotificationsScreen({}: Props) {
         )}
         initialPage={initialActiveTab}>
         {sections.map((section, i) => (
-          <View key={i}>{section.component}</View>
+          <View
+            key={i}
+            onMoveShouldSetResponderCapture={() =>
+              isDragging || i !== activeTab
+            }>
+            {section.component}
+          </View>
         ))}
       </Pager>
       <FAB
