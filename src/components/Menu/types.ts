@@ -102,6 +102,7 @@ export type ItemTextProps = React.PropsWithChildren<TextStyleProp & {}>
 export type ItemIconProps = React.PropsWithChildren<{
   icon: React.ComponentType<SVGIconProps>
   position?: 'left' | 'right'
+  color?: string
 }>
 
 export type GroupProps = React.PropsWithChildren<ViewStyleProp & {}>
