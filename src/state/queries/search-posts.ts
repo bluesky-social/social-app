@@ -4,6 +4,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedSearchPosts,
   AtUri,
+  moderatePost,
 } from '@atproto/api'
 import {
   InfiniteData,
@@ -12,7 +13,6 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent} from '#/state/session'
 import {

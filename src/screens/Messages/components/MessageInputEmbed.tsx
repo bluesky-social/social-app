@@ -4,13 +4,13 @@ import {
   AppBskyFeedPost,
   AppBskyRichtextFacet,
   AtUri,
+  moderatePost,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {
