@@ -329,8 +329,7 @@ function responseToThreadNodes(
 ): ThreadNode {
   if (
     AppBskyFeedDefs.isThreadViewPost(node) &&
-    AppBskyFeedPost.isRecord(node.post.record) &&
-    AppBskyFeedPost.validateRecord(node.post.record).success
+    AppBskyFeedPost.isValidRecord(node.post.record)
   ) {
     const post = node.post
     // These should normally be present. They're missing only for
@@ -360,7 +359,7 @@ function responseToThreadNodes(
         depth,
         isHighlightedPost: depth === 0,
         hasMore:
-          direction === 'down' && !node.replies?.length && !!node.replyCount,
+          direction === 'down' && !node.replies?.length && !!post.replyCount,
         isSelfThread: false, // populated `annotateSelfThread`
         hasMoreSelfThread: false, // populated in `annotateSelfThread`
       },
