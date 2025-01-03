@@ -1,6 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {ComAtprotoLabelDefs} from '@atproto/api'
+import {$Typed} from '@atproto/api/dist/client/util'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -33,31 +34,35 @@ export function PwiOptOut() {
       profile,
       updates: existing => {
         // create labels attr if needed
-        existing.labels = ComAtprotoLabelDefs.isSelfLabels(existing.labels)
-          ? existing.labels
-          : {
-              $type: 'com.atproto.label.defs#selfLabels',
-              values: [],
-            }
+        const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> =
+          ComAtprotoLabelDefs.isValidSelfLabels(existing.labels)
+            ? existing.labels
+            : {
+                $type: 'com.atproto.label.defs#selfLabels',
+                values: [],
+              }
 
         // toggle the label
-        const hasLabel = existing.labels.values.some(
+        const hasLabel = labels.values.some(
           l => l.val === '!no-unauthenticated',
         )
         if (hasLabel) {
           wasAdded = false
-          existing.labels.values = existing.labels.values.filter(
+          labels.values = labels.values.filter(
             l => l.val !== '!no-unauthenticated',
           )
         } else {
           wasAdded = true
-          existing.labels.values.push({val: '!no-unauthenticated'})
+          labels.values.push({val: '!no-unauthenticated'})
         }
 
         // delete if no longer needed
-        if (existing.labels.values.length === 0) {
+        if (labels.values.length === 0) {
           delete existing.labels
+        } else {
+          existing.labels = labels
         }
+
         return existing
       },
       checkCommitted: res => {
