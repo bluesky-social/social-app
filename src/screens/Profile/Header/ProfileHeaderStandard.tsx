@@ -9,6 +9,7 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useHaptics} from '#/lib/haptics'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
@@ -74,6 +75,7 @@ let ProfileHeaderStandard = ({
     profile.viewer?.blocking ||
     profile.viewer?.blockedBy ||
     profile.viewer?.blockingByList
+  const playHaptic = useHaptics()
 
   const {openModal} = useModalControls()
   const editProfileControl = useDialogControl()
@@ -90,6 +92,7 @@ let ProfileHeaderStandard = ({
   }, [editProfileControl, openModal, profile])
 
   const onPressFollow = () => {
+    playHaptic()
     requireAuth(async () => {
       try {
         await queueFollow()
@@ -111,6 +114,7 @@ let ProfileHeaderStandard = ({
   }
 
   const onPressUnfollow = () => {
+    playHaptic()
     requireAuth(async () => {
       try {
         await queueUnfollow()
@@ -132,6 +136,7 @@ let ProfileHeaderStandard = ({
   }
 
   const unblockAccount = React.useCallback(async () => {
+    playHaptic()
     try {
       await queueUnblock()
       Toast.show(_(msg`Account unblocked`))
@@ -141,7 +146,7 @@ let ProfileHeaderStandard = ({
         Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
       }
     }
-  }, [_, queueUnblock])
+  }, [_, queueUnblock, playHaptic])
 
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,
