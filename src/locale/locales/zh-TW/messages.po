@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-26 01:24\n"
+"PO-Revision-Date: 2025-01-03 01:20\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -375,7 +375,7 @@ msgstr "7 天"
 msgid "About"
 msgstr "關於"
 
-#: src/view/screens/Search/Search.tsx:865
+#: src/view/screens/Search/Search.tsx:866
 msgid "Access navigation links and settings"
 msgstr "檢視導覽連結和設定"
 
@@ -758,8 +758,8 @@ msgstr "GIF 動畫"
 msgid "Anti-Social Behavior"
 msgstr "反社會行為"
 
-#: src/view/screens/Search/Search.tsx:336
 #: src/view/screens/Search/Search.tsx:337
+#: src/view/screens/Search/Search.tsx:338
 msgid "Any language"
 msgstr "任何語言"
 
@@ -890,9 +890,9 @@ msgstr "您確定要放棄發布這則貼文嗎？"
 msgid "Are you sure?"
 msgstr "您確定嗎？"
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:61
-msgid "Are you writing in <0>{0}</0>?"
-msgstr "您正在使用 <0>{0}</0> 撰寫嗎？"
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:69
+msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
+msgstr "您正在使用 <0>{suggestedLanguageName}</0> 撰寫嗎？"
 
 #: src/screens/Onboarding/index.tsx:23
 #: src/screens/Onboarding/state.ts:95
@@ -1179,7 +1179,7 @@ msgstr "相機"
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:213
-#: src/view/screens/Search/Search.tsx:894
+#: src/view/screens/Search/Search.tsx:895
 msgid "Cancel"
 msgstr "取消"
 
@@ -1212,7 +1212,7 @@ msgid "Cancel reactivation and log out"
 msgstr "取消重新啟用並登出"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:886
+#: src/view/screens/Search/Search.tsx:887
 msgid "Cancel search"
 msgstr "放棄搜尋"
 
@@ -1272,9 +1272,9 @@ msgstr "變更我的電子郵件地址"
 msgid "Change Password"
 msgstr "變更密碼"
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:74
-msgid "Change post language to {0}"
-msgstr "變更貼文的發布語言為 {0}"
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:82
+msgid "Change post language to {suggestedLanguageName}"
+msgstr "變更貼文的發布語言為 {suggestedLanguageName}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
@@ -1616,7 +1616,7 @@ msgid "Content filters"
 msgstr "內容篩選"
 
 #: src/screens/Settings/LanguageSettings.tsx:251
-#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:75
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
 msgid "Content Languages"
 msgstr "內容語言"
 
@@ -1828,7 +1828,7 @@ msgstr "建立於 {0}"
 
 #: src/screens/List/ListHiddenScreen.tsx:127
 msgid "Creator has been blocked"
-msgstr ""
+msgstr "已封鎖該清單的建立者"
 
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
@@ -2326,7 +2326,7 @@ msgstr "教育"
 
 #: src/screens/List/ListHiddenScreen.tsx:141
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
-msgstr ""
+msgstr "該清單的建立者已封鎖您，或者您已封鎖該建立者。"
 
 #: src/screens/Settings/AccountSettings.tsx:60
 #: src/screens/Signup/StepInfo/index.tsx:170
@@ -2511,7 +2511,7 @@ msgid "Error receiving captcha response."
 msgstr "接收驗證碼回應時發生錯誤。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:183
-#: src/view/screens/Search/Search.tsx:110
+#: src/view/screens/Search/Search.tsx:111
 msgid "Error:"
 msgstr "錯誤："
 
@@ -2763,7 +2763,7 @@ msgstr "已送出意見回饋！"
 #: src/view/screens/Feeds.tsx:508
 #: src/view/screens/Profile.tsx:235
 #: src/view/screens/SavedFeeds.tsx:96
-#: src/view/screens/Search/Search.tsx:525
+#: src/view/screens/Search/Search.tsx:526
 #: src/view/shell/desktop/LeftNav.tsx:445
 #: src/view/shell/Drawer.tsx:476
 msgid "Feeds"
@@ -2806,7 +2806,7 @@ msgstr "尋找更多帳號來跟隨"
 msgid "Find people to follow"
 msgstr "尋找一些人來跟隨"
 
-#: src/view/screens/Search/Search.tsx:595
+#: src/view/screens/Search/Search.tsx:596
 msgid "Find posts and users on Bluesky"
 msgstr "在 Bluesky 上尋找貼文和用戶"
 
@@ -3165,7 +3165,7 @@ msgstr "以下是您的應用程式專用密碼！"
 msgid "Hidden list"
 msgstr "隱藏列表"
 
-#: src/components/interstitials/Trending.tsx:101
+#: src/components/interstitials/Trending.tsx:125
 #: src/components/moderation/ContentHider.tsx:200
 #: src/components/moderation/LabelPreference.tsx:135
 #: src/components/moderation/PostHider.tsx:122
@@ -3213,13 +3213,13 @@ msgstr "要隱藏這則貼文嗎？"
 msgid "Hide this reply?"
 msgstr "要隱藏這則回覆嗎？"
 
-#: src/components/interstitials/Trending.tsx:84
+#: src/components/interstitials/Trending.tsx:108
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:83
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:62
 msgid "Hide trending topics"
 msgstr "隱藏流行趨勢"
 
-#: src/components/interstitials/Trending.tsx:99
+#: src/components/interstitials/Trending.tsx:123
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:135
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:108
 msgid "Hide trending topics?"
@@ -3539,7 +3539,7 @@ msgstr "更大"
 
 #: src/screens/Hashtag.tsx:95
 #: src/screens/Topic.tsx:77
-#: src/view/screens/Search/Search.tsx:509
+#: src/view/screens/Search/Search.tsx:510
 msgid "Latest"
 msgstr "最新"
 
@@ -3596,7 +3596,7 @@ msgstr "離開對話"
 msgid "Leave conversation"
 msgstr "離開對話"
 
-#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:83
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:84
 msgid "Leave them all unchecked to see any language."
 msgstr "全部留空以顯示所有語言的貼文。"
 
@@ -3876,7 +3876,7 @@ msgid "Mentions"
 msgstr "提及"
 
 #: src/components/Menu/index.tsx:96
-#: src/view/screens/Search/Search.tsx:863
+#: src/view/screens/Search/Search.tsx:864
 msgid "Menu"
 msgstr "選單"
 
@@ -4356,9 +4356,9 @@ msgid "No results found for \"{query}\""
 msgstr "找不到符合「{query}」的結果"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
-#: src/view/screens/Search/Search.tsx:228
-#: src/view/screens/Search/Search.tsx:267
-#: src/view/screens/Search/Search.tsx:313
+#: src/view/screens/Search/Search.tsx:229
+#: src/view/screens/Search/Search.tsx:268
+#: src/view/screens/Search/Search.tsx:314
 msgid "No results found for {query}"
 msgstr "找不到符合 {query} 的結果"
 
@@ -4775,7 +4775,7 @@ msgid "Pause video"
 msgstr "暫停影片"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/Search/Search.tsx:519
+#: src/view/screens/Search/Search.tsx:520
 msgid "People"
 msgstr "用戶"
 
@@ -4995,7 +4995,7 @@ msgstr "貼文互動設定"
 msgid "Post language"
 msgstr "貼文語言"
 
-#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:76
+#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:77
 msgid "Post Languages"
 msgstr "貼文語言"
 
@@ -5219,7 +5219,7 @@ msgstr "閱讀 Bluesky 服務條款"
 msgid "Reason:"
 msgstr "原因："
 
-#: src/view/screens/Search/Search.tsx:1041
+#: src/view/screens/Search/Search.tsx:1042
 msgid "Recent Searches"
 msgstr "最近的搜尋記錄"
 
@@ -5312,11 +5312,11 @@ msgstr "刪除圖片"
 msgid "Remove mute word from your list"
 msgstr "從您的列表中刪除靜音字詞"
 
-#: src/view/screens/Search/Search.tsx:1089
+#: src/view/screens/Search/Search.tsx:1090
 msgid "Remove profile"
 msgstr "刪除個人檔案"
 
-#: src/view/screens/Search/Search.tsx:1091
+#: src/view/screens/Search/Search.tsx:1092
 msgid "Remove profile from search history"
 msgstr "刪除搜尋紀錄中的個人檔案"
 
@@ -5768,7 +5768,7 @@ msgstr "捲動到頂部"
 #: src/components/forms/SearchInput.tsx:36
 #: src/Navigation.tsx:599
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
-#: src/view/screens/Search/Search.tsx:577
+#: src/view/screens/Search/Search.tsx:578
 #: src/view/shell/bottom-bar/BottomBar.tsx:183
 #: src/view/shell/desktop/LeftNav.tsx:407
 #: src/view/shell/Drawer.tsx:365
@@ -5791,7 +5791,7 @@ msgstr "搜尋「{interestsDisplayName}」 {activeText}"
 msgid "Search for \"{query}\""
 msgstr "搜尋「{query}」"
 
-#: src/view/screens/Search/Search.tsx:987
+#: src/view/screens/Search/Search.tsx:988
 msgid "Search for \"{searchText}\""
 msgstr "搜尋「{searchText}」"
 
@@ -7122,7 +7122,7 @@ msgstr "切換以啟用或停用成人內容"
 
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
-#: src/view/screens/Search/Search.tsx:499
+#: src/view/screens/Search/Search.tsx:500
 msgid "Top"
 msgstr "熱門"
 
@@ -7775,7 +7775,7 @@ msgstr "很抱歉，我們無法解析此列表。如果問題持續發生，請
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "很抱歉，我們目前無法載入您的靜音字詞。請稍後再試。"
 
-#: src/view/screens/Search/Search.tsx:201
+#: src/view/screens/Search/Search.tsx:202
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "很抱歉，無法完成您的搜尋請求。請稍後再試。"
 
@@ -7818,11 +7818,11 @@ msgstr "大家都在討論的熱門話題。"
 msgid "What's up?"
 msgstr "發生了什麼新鮮事？"
 
-#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:79
+#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:80
 msgid "Which languages are used in this post?"
 msgstr "這則貼文使用了哪些語言？"
 
-#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:78
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:79
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "您想在演算法動態源中看到哪些語言？"
 
@@ -7890,7 +7890,7 @@ msgstr "作家"
 msgid "Wrong DID returned from server. Received: {0}"
 msgstr "伺服器返回了錯誤的 DID。接收到的 DID: {0}"
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:86
 msgid "Yes"
 msgstr "是"
 
@@ -7961,7 +7961,7 @@ msgstr "您可以使用新密碼登入了。"
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
 msgstr "您可以登入以重新啟用帳號。其他用戶將可以重新看到您的個人檔案和貼文。"
 
-#: src/components/interstitials/Trending.tsx:100
+#: src/components/interstitials/Trending.tsx:124
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:136
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:109
 msgid "You can update this later from your settings."
@@ -8295,3 +8295,4 @@ msgstr "成功發布您的回覆"
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "您的檢舉將傳送至 Bluesky 內容管理服務"
+
