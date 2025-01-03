@@ -41,7 +41,7 @@ export function ProfileCard({
   showKnownFollowers,
 }: {
   testID?: string
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: Omit<AppBskyActorDefs.ProfileViewBasic, '$type'>
   noModFilter?: boolean
   noBg?: boolean
   noBorder?: boolean

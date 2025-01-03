@@ -17,7 +17,7 @@ function renderItem({
   item,
   index,
 }: {
-  item: ActorDefs.ProfileViewBasic
+  item: ActorDefs.ProfileView
   index: number
 }) {
   return (

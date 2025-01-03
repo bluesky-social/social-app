@@ -53,10 +53,7 @@ export function Post({
   const moderationOpts = useModerationOpts()
   const record = useMemo<AppBskyFeedPost.Record | undefined>(
     () =>
-      AppBskyFeedPost.isRecord(post.record) &&
-      AppBskyFeedPost.validateRecord(post.record).success
-        ? post.record
-        : undefined,
+      AppBskyFeedPost.isValidRecord(post.record) ? post.record : undefined,
     [post],
   )
   const postShadowed = usePostShadow(post)

@@ -126,7 +126,10 @@ export function Provider({
   const {currentAccount} = useSession()
 
   const createInitialState = (): State => {
-    if (starterPack && AppBskyGraphStarterpack.isRecord(starterPack.record)) {
+    if (
+      starterPack &&
+      AppBskyGraphStarterpack.isValidRecord(starterPack.record)
+    ) {
       return {
         canNext: true,
         currentStep: 'Details',

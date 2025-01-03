@@ -54,7 +54,7 @@ interface EditableUserAvatarProps extends BaseUserAvatarProps {
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: Omit<AppBskyActorDefs.ProfileViewBasic, '$type'>
   disableHoverCard?: boolean
   onBeforePress?: () => void
 }

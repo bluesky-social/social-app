@@ -131,7 +131,7 @@ export function useCreateStarterPackMutation({
 
       return await agent.app.bsky.graph.starterpack.create(
         {
-          repo: agent.session?.did,
+          repo: agent.session?.did!,
         },
         {
           name,
@@ -366,7 +366,10 @@ export async function precacheStarterPack(
   let starterPackView: AppBskyGraphDefs.StarterPackView | undefined
   if (AppBskyGraphDefs.isStarterPackView(starterPack)) {
     starterPackView = starterPack
-  } else if (AppBskyGraphDefs.isStarterPackViewBasic(starterPack)) {
+  } else if (
+    AppBskyGraphDefs.isStarterPackViewBasic(starterPack) &&
+    AppBskyGraphStarterpack.isValidRecord(starterPack.record)
+  ) {
     const listView: AppBskyGraphDefs.ListViewBasic = {
       uri: starterPack.record.list,
       // This will be populated once the data from server is fetched

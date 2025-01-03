@@ -71,7 +71,7 @@ const MAX_AUTHORS = 5
 const EXPANDED_AUTHOR_EL_HEIGHT = 35
 
 interface Author {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: AppBskyActorDefs.ProfileView
   href: string
   moderation: ModerationDecision
 }
@@ -120,6 +120,11 @@ let NotificationFeedItem = ({
   }
 
   const onBeforePress = React.useCallback(() => {
+    /*
+     * Notification returns ProfileView, which has one additional field on top
+     * of `Basic`: `indexedAt`. Harmless for now, but should be fixed.
+     */
+    // @ts-expect-error TODO
     precacheProfile(queryClient, item.notification.author)
   }, [queryClient, item.notification.author])
 
@@ -264,7 +269,7 @@ let NotificationFeedItem = ({
 
     if (
       item.notification.author.viewer?.following &&
-      AppBskyGraphFollow.isRecord(item.notification.record)
+      AppBskyGraphFollow.isValidRecord(item.notification.record)
     ) {
       let followingTimestamp
       try {
@@ -521,7 +526,7 @@ function ExpandListPressable({
   }
 }
 
-function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
+function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileView}) {
   const {_} = useLingui()
   const agent = useAgent()
   const navigation = useNavigation<NavigationProp>()
@@ -716,7 +721,7 @@ function ExpandedAuthorsList({
 
 function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
   const pal = usePalette('default')
-  if (post && AppBskyFeedPost.isRecord(post?.record)) {
+  if (post && AppBskyFeedPost.isValidRecord(post?.record)) {
     const text = post.record.text
 
     return (

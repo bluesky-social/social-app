@@ -35,7 +35,7 @@ const shadows: WeakMap<
 const emitter = new EventEmitter()
 
 export function useProfileShadow<
-  TProfileView extends AppBskyActorDefs.ProfileView,
+  TProfileView extends Omit<AppBskyActorDefs.ProfileView, '$type'>,
 >(profile: TProfileView): Shadow<TProfileView> {
   const [shadow, setShadow] = useState(() => shadows.get(profile))
   const [prevPost, setPrevPost] = useState(profile)
