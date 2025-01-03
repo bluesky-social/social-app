@@ -60,7 +60,7 @@ msgstr "{0, plural, one {# minut} other {# minutter}}"
 
 #: src/lib/hooks/useTimeAgo.ts:167
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr "{0, plural, one {# måneder} other {# måneder}}"
+msgstr "{0, plural, one {# måned} other {# måneder}}"
 
 #: src/screens/Post/PostQuotes.tsx:41
 msgid "{0, plural, one {# quote} other {# quotes}}"
@@ -2566,7 +2566,7 @@ msgstr "Udvid eller sammenklap det fulde opslag, du besvarer"
 
 #: src/lib/api/index.ts:400
 msgid "Expected uri to resolve to a record"
-msgstr "Forventede URI at henvise til et dataelement"
+msgstr "Forventede, at URI henviste til et dataelement"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:123
 #: src/screens/Settings/ThreadPreferences.tsx:137
@@ -3592,7 +3592,7 @@ msgstr "foran dig i køen."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:313
 msgid "Let me choose"
-msgstr "Lad mig vlge"
+msgstr "Lad mig vælge"
 
 #: src/screens/Login/index.tsx:127
 #: src/screens/Login/index.tsx:142
@@ -4039,7 +4039,7 @@ msgstr "Skjul dette ord i 24 timer"
 
 #: src/components/dialogs/MutedWords.tsx:224
 msgid "Mute this word for 30 days"
-msgstr "Skjul dette ord i 30 daage"
+msgstr "Skjul dette ord i 30 dage"
 
 #: src/components/dialogs/MutedWords.tsx:209
 msgid "Mute this word for 7 days"
@@ -4767,7 +4767,7 @@ msgstr "Personer, som følges af @{0}"
 
 #: src/Navigation.tsx:178
 msgid "People following @{0}"
-msgstr "People, som @{0} følger"
+msgstr "Personer, som @{0} følger"
 
 #: src/view/com/lightbox/Lightbox.tsx:27
 msgid "Permission to access camera roll is required."
@@ -4897,7 +4897,7 @@ msgstr "Indtast også din adgangskode:"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 msgid "Please explain why you think this label was incorrectly applied by {0}"
-msgstr "Forklar, hvorfor du mener, at denne mærket er anvendt fejlagtigt af {0}"
+msgstr "Forklar, hvorfor du mener, at denne mærkat er anvendt fejlagtigt af {0}"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
@@ -7095,7 +7095,7 @@ msgstr "Åbn/luk rullemenu"
 
 #: src/screens/Moderation/index.tsx:319
 msgid "Toggle to enable or disable adult content"
-msgstr "Tryk for at aktivere eller deaktiver voksenindhold"
+msgstr "Tryk for at aktivere eller deaktivere voksenindhold"
 
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
@@ -8271,4 +8271,4 @@ msgstr "Dit svar blev publiceret"
 
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
-msgstr "Din anmeldelse vil blive sendt til Blusky Moderationstjeneste"
+msgstr "Din anmeldelse vil blive sendt til Bluesky Moderationstjeneste"
