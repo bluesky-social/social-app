@@ -1,5 +1,5 @@
 import React, {memo, useMemo} from 'react'
-import {View} from 'react-native'
+import {Modal, Pressable,View} from 'react-native'
 // @ts-expect-error missing types
 import QRCodeStyled from 'react-native-qrcode-styled'
 import {
@@ -148,7 +148,11 @@ let ProfileHeaderStandard = ({
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )
+  const [qrModalVisible, setQRModalVisible] = React.useState(false)
 
+  const setQRModalVisibleTrue = () => {
+    setQRModalVisible(true)
+  }
   return (
     <ProfileHeaderShell
       profile={profile}
@@ -240,23 +244,33 @@ let ProfileHeaderStandard = ({
           ) : null}
           <ProfileMenu profile={profile} />
         </View>
+
         <View
           style={{
             alignSelf: 'flex-end', // Align the view to the end of its parent container
             borderWidth: 2,
             padding: 0, // Ensure no extra padding
             margin: 0, // Ensure no extra margin
-            backgroundColor: 'white', // Set the background color
-            position: 'absolute', // Position the view
-            top: 50, // Position the top edge of the view
           }}>
-          <QRCodeStyled
-            data={`https://bsky.app/${makeProfileLink(profile)}`}
-            style={{width: 100, height: 100}}
-            padding={20}
-            pieceSize={8}
-          />
+          <Button
+            label={'Generate QR'}
+            onPress={setQRModalVisibleTrue}
+            size="small" // Add size if needed
+            color="secondary" // Add color
+            variant="solid" // Add variant
+            style={[a.rounded_full]} // Apply the same rounded style
+          >
+            <ButtonText>
+              <Trans>Generate QR</Trans>
+            </ButtonText>
+          </Button>
         </View>
+
+        <QRCodeModal
+          profile_={profile}
+          visible={qrModalVisible}
+          setVisible={setQRModalVisible}
+        />
 
         <View style={[a.flex_col, a.gap_2xs, a.pt_2xs, a.pb_sm]}>
           <ProfileHeaderDisplayName profile={profile} moderation={moderation} />
@@ -308,3 +322,64 @@ let ProfileHeaderStandard = ({
 }
 ProfileHeaderStandard = memo(ProfileHeaderStandard)
 export {ProfileHeaderStandard}
+
+interface QRCodeModalProps {
+  profile_: AppBskyActorDefs.ProfileViewDetailed // Define the type of profile
+  visible: boolean // Receive the visibility status as a prop
+  setVisible: (visible: boolean) => void // Receive the function to set visibility as a prop
+}
+
+const QRCodeModal: React.FC<QRCodeModalProps> = ({
+  profile_,
+  visible,
+  setVisible,
+}) => {
+  return (
+    <Modal
+      visible={visible}
+      animationType="fade"
+      transparent={true}
+      onRequestClose={() => setVisible(false)} // Close modal when back button is pressed (for Android)
+    >
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+        }}>
+        <View
+          style={{
+            justifyContent: 'center', // Center QR code horizontally
+            alignItems: 'center', // Center QR code vertically
+            backgroundColor: 'white', // Set the background color
+            padding: 20, // Add padding to give space around QR code
+            borderRadius: 10, // Optional: round the corners of the modal content
+          }}>
+          <QRCodeStyled
+            data={`https://bsky.app/${makeProfileLink(profile_)}`}
+            style={{width: 200, height: 200}} // Larger QR code
+            padding={20}
+            pieceSize={10} // Larger pieces for clearer QR code
+          />
+        </View>
+
+        {/* Pressable to close the modal */}
+        <Pressable accessibilityRole="button"
+          onPress={() => setVisible(false)}
+          style={{
+            marginTop: 20,
+            backgroundColor: 'transparent',
+            padding: 10,
+            borderRadius: 5,
+            borderColor: 'white',
+            borderWidth: 1,
+          }}>
+          <ButtonText>
+            <Trans style={{color: 'white', fontSize: 16}}>Close</Trans>
+          </ButtonText>
+        </Pressable>
+      </View>
+    </Modal>
+  )
+}
