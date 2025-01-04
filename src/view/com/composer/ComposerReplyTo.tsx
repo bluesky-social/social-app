@@ -90,6 +90,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
               type="post-text"
               style={t.atoms.text}
               numberOfLines={!showFull ? 6 : undefined}
+              selectable={true}
               emoji>
               {replyTo.text}
             </Text>
