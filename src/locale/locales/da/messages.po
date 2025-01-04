@@ -7488,7 +7488,7 @@ msgstr "Brugere i \"{0}\""
 
 #: src/components/LikesDialog.tsx:83
 msgid "Users that have liked this content or profile"
-msgstr "Bruger, som har liket indholdet/profilen"
+msgstr "Brugere, som har liket indholdet/profilen"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:421
 msgid "Value:"
