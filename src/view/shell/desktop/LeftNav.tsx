@@ -36,6 +36,10 @@ import {
   Bell_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell'
 import {
+  Bookmark_Filled_Corner0_Rounded as BookmarkFilled,
+  Bookmark_Stroke2_Corner0_Rounded as Bookmark,
+} from '#/components/icons/Bookmark'
+import {
   BulletList_Filled_Corner0_Rounded as ListFilled,
   BulletList_Stroke2_Corner0_Rounded as List,
 } from '#/components/icons/BulletList'
@@ -424,6 +428,24 @@ export function DesktopLeftNav() {
               />
             }
             label={_(msg`Notifications`)}
+          />
+          <NavItem
+            href="/bookmarks"
+            icon={
+              <Bookmark
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+                style={pal.text}
+              />
+            }
+            iconFilled={
+              <BookmarkFilled
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+                style={pal.text}
+              />
+            }
+            label={_(msg`Bookmarks`)}
           />
           <ChatNavItem />
           <NavItem

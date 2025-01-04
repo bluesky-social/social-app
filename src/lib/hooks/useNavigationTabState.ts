@@ -11,6 +11,7 @@ export function useNavigationTabState() {
       isAtFeeds: getTabState(state, 'Feeds') !== TabState.Outside,
       isAtNotifications:
         getTabState(state, 'Notifications') !== TabState.Outside,
+      isAtBookmarks: getTabState(state, 'Bookmarks') !== TabState.Outside,
       isAtMyProfile: getTabState(state, 'MyProfile') !== TabState.Outside,
       isAtMessages: getTabState(state, 'Messages') !== TabState.Outside,
     }

@@ -29,6 +29,10 @@ import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell'
+import {
+  Bookmark_Filled_Corner0_Rounded as BookmarkFilled,
+  Bookmark_Stroke2_Corner0_Rounded as Bookmark,
+} from '#/components/icons/Bookmark'
 import {BulletList_Stroke2_Corner0_Rounded as List} from '#/components/icons/BulletList'
 import {
   Hashtag_Filled_Corner0_Rounded as HashtagFilled,
@@ -132,6 +136,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
     isAtSearch,
     isAtFeeds,
     isAtNotifications,
+    isAtBookmarks,
     isAtMyProfile,
     isAtMessages,
   } = useNavigationTabState()
@@ -181,6 +186,11 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
 
   const onPressNotifications = React.useCallback(
     () => onPressTab('Notifications'),
+    [onPressTab],
+  )
+
+  const onPressBookmarks = React.useCallback(
+    () => onPressTab('Bookmarks'),
     [onPressTab],
   )
 
@@ -256,6 +266,10 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
             <NotificationsMenuItem
               isActive={isAtNotifications}
               onPress={onPressNotifications}
+            />
+            <BookmarksMenuItem
+              isActive={isAtBookmarks}
+              onPress={onPressBookmarks}
             />
             <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
             <ListsMenuItem onPress={onPressLists} />
@@ -454,6 +468,32 @@ let NotificationsMenuItem = ({
   )
 }
 NotificationsMenuItem = React.memo(NotificationsMenuItem)
+
+let BookmarksMenuItem = ({
+  isActive,
+  onPress,
+}: {
+  isActive: boolean
+  onPress: () => void
+}): React.ReactNode => {
+  const {_} = useLingui()
+  const t = useTheme()
+  return (
+    <MenuItem
+      icon={
+        isActive ? (
+          <BookmarkFilled width={iconWidth} style={[t.atoms.text]} />
+        ) : (
+          <Bookmark width={iconWidth} style={[t.atoms.text]} />
+        )
+      }
+      label={_(msg`Bookmarks`)}
+      bold={isActive}
+      onPress={onPress}
+    />
+  )
+}
+BookmarksMenuItem = React.memo(BookmarksMenuItem)
 
 let FeedsMenuItem = ({
   isActive,
