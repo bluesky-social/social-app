@@ -1,5 +1,7 @@
 import React, {memo, useMemo} from 'react'
 import {View} from 'react-native'
+// @ts-expect-error missing types
+import QRCodeStyled from 'react-native-qrcode-styled'
 import {
   AppBskyActorDefs,
   moderateProfile,
@@ -9,6 +11,7 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
@@ -39,7 +42,6 @@ import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
 import {ProfileHeaderShell} from './Shell'
-
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
   descriptionRT: RichTextAPI | null
@@ -47,7 +49,6 @@ interface Props {
   hideBackButton?: boolean
   isPlaceholderProfile?: boolean
 }
-
 let ProfileHeaderStandard = ({
   profile: profileUnshadowed,
   descriptionRT,
@@ -170,22 +171,24 @@ let ProfileHeaderStandard = ({
           pointerEvents={isIOS ? 'auto' : 'box-none'}>
           {isMe ? (
             <>
-              <Button
-                testID="profileHeaderEditProfileButton"
-                size="small"
-                color="secondary"
-                variant="solid"
-                onPress={onPressEditProfile}
-                label={_(msg`Edit profile`)}
-                style={[a.rounded_full]}>
-                <ButtonText>
-                  <Trans>Edit Profile</Trans>
-                </ButtonText>
-              </Button>
-              <EditProfileDialog
-                profile={profile}
-                control={editProfileControl}
-              />
+              <View style={{flexDirection: 'row'}}>
+                <Button
+                  testID="profileHeaderEditProfileButton"
+                  size="small"
+                  color="secondary"
+                  variant="solid"
+                  onPress={onPressEditProfile}
+                  label={_(msg`Edit profile`)}
+                  style={[a.rounded_full]}>
+                  <ButtonText>
+                    <Trans>Edit Profile</Trans>
+                  </ButtonText>
+                </Button>
+                <EditProfileDialog
+                  profile={profile}
+                  control={editProfileControl}
+                />
+              </View>
             </>
           ) : profile.viewer?.blocking ? (
             profile.viewer?.blockingByList ? null : (
@@ -239,6 +242,22 @@ let ProfileHeaderStandard = ({
           ) : null}
           <ProfileMenu profile={profile} />
         </View>
+        <View
+          style={{
+            alignSelf: 'flex-end', // Align the view to the end of its parent container
+            borderWidth: 2,
+            padding: 0, // Ensure no extra padding
+            margin: 0, // Ensure no extra margin
+            backgroundColor: 'white', // Set the background color
+          }}>
+          <QRCodeStyled
+            data={`https://bsky.app/${makeProfileLink(profile)}`}
+            style={{width: 100, height: 100}}
+            padding={20}
+            pieceSize={8}
+          />
+        </View>
+
         <View style={[a.flex_col, a.gap_2xs, a.pt_2xs, a.pb_sm]}>
           <ProfileHeaderDisplayName profile={profile} moderation={moderation} />
           <ProfileHeaderHandle profile={profile} />
