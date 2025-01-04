@@ -68,7 +68,7 @@ msgstr "{0, plural, one {# citat} other {# citater}}"
 
 #: src/screens/Post/PostRepostedBy.tsx:41
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr "{0, plural, one {# videredeling} other {# videredelinger}}"
+msgstr "{0, plural, one {# deling} other {# delinger}}"
 
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
@@ -98,7 +98,7 @@ msgstr "{0, plural, one {citat} other {citater}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:413
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr "{0, plural, one {videredeling} other {videredelinger}}"
+msgstr "{0, plural, one {deling} other {delinger}}"
 
 #: src/screens/Settings/Settings.tsx:422
 msgid "{0}"
@@ -4317,7 +4317,7 @@ msgstr "Ingen citater endnu"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:90
 msgid "No reposts yet"
-msgstr "Ingen videredelinger endnu"
+msgstr "Ingen delinger endnu"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:94
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
@@ -5309,7 +5309,7 @@ msgstr "Fjern citat"
 #: src/view/com/util/post-ctrls/RepostButton.tsx:155
 #: src/view/com/util/post-ctrls/RepostButton.tsx:165
 msgid "Remove repost"
-msgstr "Fjern videredeling"
+msgstr "Fjern deling"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:260
 msgid "Remove subtitle file"
@@ -5516,7 +5516,7 @@ msgstr "Videredel"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:74
 msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr "Videredel ({0, plural, one {# videredeling} other {# videredelinger}})"
+msgstr "Videredel ({0, plural, one {# deling} other {# delinger}})"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:548
 #: src/view/com/util/post-ctrls/RepostButton.tsx:148
@@ -6195,7 +6195,7 @@ msgstr "Vis svar til alle"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:86
 #: src/screens/Settings/FollowingFeedPreferences.tsx:96
 msgid "Show reposts"
-msgstr "Vis videredelinger"
+msgstr "Vis delinger"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:129
 #: src/screens/Settings/FollowingFeedPreferences.tsx:139
@@ -7206,11 +7206,11 @@ msgstr "Bloker ikke længere konto?"
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:76
 msgid "Undo repost"
-msgstr "Fortryd videredeling"
+msgstr "Fortryd deling"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:68
 msgid "Undo repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr "Fortryd videredeling ({0, plural, one {# videredeling} other {# videredelinger}})"
+msgstr "Fortryd deling ({0, plural, one {# deling} other {# delinger}})"
 
 #: src/view/com/profile/FollowButton.tsx:60
 msgctxt "action"
