@@ -4510,7 +4510,7 @@ msgstr "Kun {0} kan svare."
 
 #: src/screens/Signup/StepHandle.tsx:152
 msgid "Only contains letters, numbers, and hyphens"
-msgstr "Kun indeholder bogstaver, tal og bindestreger"
+msgstr "Indeholder kun bogstaver (a-z), tal og bindestreger"
 
 #: src/lib/media/picker.shared.ts:29
 msgid "Only image files are supported"
