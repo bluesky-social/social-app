@@ -4361,11 +4361,11 @@ msgstr "Ingen"
 #: src/components/LikesDialog.tsx:97
 #: src/view/com/post-thread/PostLikedBy.tsx:86
 msgid "Nobody has liked this yet. Maybe you should be the first!"
-msgstr "Ingen har liket denne endnu. Måske skulle du være den første!"
+msgstr "Ingen har liket dette endnu. Måske skulle du være den første!"
 
 #: src/view/com/post-thread/PostQuotes.tsx:107
 msgid "Nobody has quoted this yet. Maybe you should be the first!"
-msgstr "Ingen har citeret denne endnu. Måske skulle du være den første!"
+msgstr "Ingen har citeret dette endnu. Måske skulle du være den første!"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:92
 msgid "Nobody has reposted this yet. Maybe you should be the first!"
