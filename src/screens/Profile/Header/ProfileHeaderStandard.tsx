@@ -171,24 +171,22 @@ let ProfileHeaderStandard = ({
           pointerEvents={isIOS ? 'auto' : 'box-none'}>
           {isMe ? (
             <>
-              <View style={{flexDirection: 'row'}}>
-                <Button
-                  testID="profileHeaderEditProfileButton"
-                  size="small"
-                  color="secondary"
-                  variant="solid"
-                  onPress={onPressEditProfile}
-                  label={_(msg`Edit profile`)}
-                  style={[a.rounded_full]}>
-                  <ButtonText>
-                    <Trans>Edit Profile</Trans>
-                  </ButtonText>
-                </Button>
-                <EditProfileDialog
-                  profile={profile}
-                  control={editProfileControl}
-                />
-              </View>
+              <Button
+                testID="profileHeaderEditProfileButton"
+                size="small"
+                color="secondary"
+                variant="solid"
+                onPress={onPressEditProfile}
+                label={_(msg`Edit profile`)}
+                style={[a.rounded_full]}>
+                <ButtonText>
+                  <Trans>Edit Profile</Trans>
+                </ButtonText>
+              </Button>
+              <EditProfileDialog
+                profile={profile}
+                control={editProfileControl}
+              />
             </>
           ) : profile.viewer?.blocking ? (
             profile.viewer?.blockingByList ? null : (
