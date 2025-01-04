@@ -1,5 +1,5 @@
 import React, {memo, useMemo} from 'react'
-import {Modal, Pressable,View} from 'react-native'
+import {Modal, Pressable, View} from 'react-native'
 // @ts-expect-error missing types
 import QRCodeStyled from 'react-native-qrcode-styled'
 import {
@@ -248,7 +248,6 @@ let ProfileHeaderStandard = ({
         <View
           style={{
             alignSelf: 'flex-end', // Align the view to the end of its parent container
-            borderWidth: 2,
             padding: 0, // Ensure no extra padding
             margin: 0, // Ensure no extra margin
           }}>
@@ -365,7 +364,8 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({
         </View>
 
         {/* Pressable to close the modal */}
-        <Pressable accessibilityRole="button"
+        <Pressable
+          accessibilityRole="button"
           onPress={() => setVisible(false)}
           style={{
             marginTop: 20,
