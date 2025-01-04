@@ -247,6 +247,8 @@ let ProfileHeaderStandard = ({
             padding: 0, // Ensure no extra padding
             margin: 0, // Ensure no extra margin
             backgroundColor: 'white', // Set the background color
+            position: 'absolute', // Position the view
+            top: 50, // Position the top edge of the view
           }}>
           <QRCodeStyled
             data={`https://bsky.app/${makeProfileLink(profile)}`}
