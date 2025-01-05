@@ -173,13 +173,13 @@ function StarterPackScreenLoaded({
   routeParams: StarterPackScreeProps['route']['params']
   moderationOpts: ModerationOpts
 }) {
-  const showPeopleTab = Boolean(starterPack.list)
+  const showAccountsTab = Boolean(starterPack.list)
   const showFeedsTab = Boolean(starterPack.feeds?.length)
   const showPostsTab = Boolean(starterPack.list)
   const {_} = useLingui()
 
   const tabs = [
-    ...(showPeopleTab ? [_(msg`People`)] : []),
+    ...(showAccountsTab ? [_(msg`Accounts`)] : []),
     ...(showFeedsTab ? [_(msg`Feeds`)] : []),
     ...(showPostsTab ? [_(msg`Posts`)] : []),
   ]
