@@ -133,6 +133,9 @@ export type LogEvents = {
     postClout: number | undefined
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }
+  'post:bookmark': {
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+  }
   'post:repost': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }

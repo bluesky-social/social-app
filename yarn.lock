@@ -4892,6 +4892,13 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
+"@lexicon-community/types@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@lexicon-community/types/-/types-1.0.0.tgz#e86f37b58c08ac5def1fd34845ab9c12be41f88e"
+  integrity sha512-y7zNrgjzgeKfhoG9K5DfN+mFG7G/vBUHus1OKe4pj4rc/XKO/15cI+slfzzNRYEZ3b9+9BE1Jl6/HVH/odARsg==
+  dependencies:
+    "@atproto/xrpc" "^0.6.5"
+
 "@lingui/babel-plugin-extract-messages@4.14.1":
   version "4.14.1"
   resolved "https://registry.yarnpkg.com/@lingui/babel-plugin-extract-messages/-/babel-plugin-extract-messages-4.14.1.tgz#12f5a83bad1f9fef65fc22b8136ebd1052a31add"

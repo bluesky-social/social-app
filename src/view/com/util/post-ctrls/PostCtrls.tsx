@@ -28,6 +28,7 @@ import {useGate} from '#/lib/statsig/statsig'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {usePostBookmarkMutationQueue} from '#/state/queries/bookmark'
 import {
   usePostLikeMutationQueue,
   usePostRepostMutationQueue,
@@ -47,6 +48,7 @@ import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {formatCount} from '../numeric/format'
 import {Text} from '../text/Text'
 import * as Toast from '../Toast'
+import {BookmarkButton} from './BookmarkButton'
 import {RepostButton} from './RepostButton'
 
 let PostCtrls = ({
@@ -77,6 +79,7 @@ let PostCtrls = ({
   const {openComposer} = useComposerControls()
   const {currentAccount} = useSession()
   const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, logContext)
+  const [queueBookmark] = usePostBookmarkMutationQueue(post, logContext)
   const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(
     post,
     logContext,
@@ -151,6 +154,40 @@ let PostCtrls = ({
     feedContext,
     isBlocked,
   ])
+
+  const [hasBookmarkIconBeenToggled, setHasBookmarkIconBeenToggled] =
+    React.useState(false)
+
+  const onPressToggleBookmark = React.useCallback(async () => {
+    if (isBlocked) {
+      Toast.show(
+        _(msg`Cannot interact with a blocked user`),
+        'exclamation-circle',
+      )
+      return
+    }
+
+    try {
+      setHasBookmarkIconBeenToggled(true)
+      await queueBookmark()
+      // if (!post.viewer?.like) {
+      //   playHaptic('Light')
+      //   sendInteraction({
+      //     item: post.uri,
+      //     event: 'app.bsky.feed.defs#interactionLike',
+      //     feedContext,
+      //   })
+      //   // captureAction(ProgressGuideAction.Like)
+
+      // } else {
+      //   await queueUnlike()
+      // }
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') {
+        throw e
+      }
+    }
+  }, [isBlocked, _, queueBookmark])
 
   const onRepost = useCallback(async () => {
     if (isBlocked) {
@@ -291,6 +328,13 @@ let PostCtrls = ({
           onQuote={onQuote}
           big={big}
           embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
+        />
+      </View>
+      <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
+        <BookmarkButton
+          isBookmarked={hasBookmarkIconBeenToggled}
+          onBookmark={onPressToggleBookmark}
+          big={big}
         />
       </View>
       <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
