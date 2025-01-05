@@ -47,7 +47,7 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
-import {InlineLinkText} from '#/components/Link'
+import {InlineLinkText, WebOnlyInlineLinkText} from '#/components/Link'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -383,6 +383,7 @@ let PostThreadItemLoaded = ({
             </ContentHider>
             <ExpandedPostDetails
               post={post}
+              postHref={postHref}
               isThreadAuthor={isThreadAuthor}
               translatorUrl={translatorUrl}
               needsTranslation={needsTranslation}
@@ -725,11 +726,13 @@ function PostOuterWrapper({
 
 function ExpandedPostDetails({
   post,
+  postHref,
   isThreadAuthor,
   needsTranslation,
   translatorUrl,
 }: {
   post: AppBskyFeedDefs.PostView
+  postHref: string
   isThreadAuthor: boolean
   needsTranslation: boolean
   translatorUrl: string
@@ -749,13 +752,18 @@ function ExpandedPostDetails({
     [openLink, translatorUrl],
   )
 
+  const timestampLabel = niceDate(i18n, post.indexedAt)
+
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
       <BackdatedPostIndicator post={post} />
       <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
-        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          {niceDate(i18n, post.indexedAt)}
-        </Text>
+        <WebOnlyInlineLinkText
+          to={postHref}
+          label={timestampLabel}
+          style={[a.text_sm, t.atoms.text_contrast_medium]}>
+          {timestampLabel}
+        </WebOnlyInlineLinkText>
         {isRootPost && (
           <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
         )}
