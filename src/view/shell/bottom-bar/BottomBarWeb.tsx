@@ -27,6 +27,10 @@ import {
   Bell_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell'
 import {
+  Bookmark_Filled_Corner0_Rounded as BookmarkFilled,
+  Bookmark_Stroke2_Corner0_Rounded as Bookmark,
+} from '#/components/icons/Bookmark'
+import {
   HomeOpen_Filled_Corner0_Rounded as HomeFilled,
   HomeOpen_Stoke2_Corner0_Rounded as Home,
 } from '#/components/icons/HomeOpen'
@@ -138,6 +142,18 @@ export function BottomBarWeb() {
                 notificationCount={notificationCountStr}>
                 {({isActive}) => {
                   const Icon = isActive ? BellFilled : Bell
+                  return (
+                    <Icon
+                      aria-hidden={true}
+                      width={iconWidth}
+                      style={[styles.ctrlIcon, t.atoms.text, styles.bellIcon]}
+                    />
+                  )
+                }}
+              </NavItem>
+              <NavItem routeName="Bookmarks" href="/bookmarks">
+                {({isActive}) => {
+                  const Icon = isActive ? BookmarkFilled : Bookmark
                   return (
                     <Icon
                       aria-hidden={true}

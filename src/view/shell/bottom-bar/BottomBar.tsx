@@ -251,7 +251,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               }
             />
             <Btn
-              testID="bottomBarNotificationsBtn"
+              testID="bottomBarBookmarksBtn"
               icon={
                 isAtBookmarks ? (
                   <BookmarkFilled
