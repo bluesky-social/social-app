@@ -255,11 +255,14 @@ function getSubjectUri(
     return notif.uri
   } else if (type === 'post-like' || type === 'repost') {
     if (
-      AppBskyFeedRepost.isValidRecord(notif.record) ||
-      AppBskyFeedLike.isValidRecord(notif.record)
+      AppBskyFeedRepost.isRecord(notif.record) ||
+      AppBskyFeedLike.isRecord(notif.record)
     ) {
-      return typeof notif.record.subject?.uri === 'string'
-        ? notif.record.subject?.uri
+      const record = notif.record as
+        | AppBskyFeedRepost.Record
+        | AppBskyFeedLike.Record
+      return typeof record.subject?.uri === 'string'
+        ? record.subject?.uri
         : undefined
     }
   } else if (type === 'feedgen-like') {
