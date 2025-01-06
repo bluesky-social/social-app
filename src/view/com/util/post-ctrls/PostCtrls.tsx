@@ -180,9 +180,11 @@ let PostCtrls = ({
 
       if (hasBeenToggled) {
         unQueueBookmark()
+        post.bookmarkUri = undefined
       } else {
         playHaptic('Light')
-        await queueBookmark()
+        const newBookmarkUri = await queueBookmark()
+        post.bookmarkUri = newBookmarkUri
       }
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
@@ -194,6 +196,7 @@ let PostCtrls = ({
     _,
     hasBookmarkIconBeenToggled,
     unQueueBookmark,
+    post,
     playHaptic,
     queueBookmark,
   ])

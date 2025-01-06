@@ -84,7 +84,7 @@ export function MyBookmarks({
         const fetchedPosts = await Promise.all(
           validData!.map(async d => {
             const post = await getPost({uri: d.subject})
-            const p = structuredClone(post)
+            const p = JSON.parse(JSON.stringify(post))
             p.bookmarkUri = d.uri
             console.log('post after getPost:', p) // Debugging line
             console.log('post.bookmarkUri after getPost:', p.bookmarkUri) // Debugging line
@@ -175,7 +175,6 @@ export function MyBookmarks({
   )
 
   if (inline) {
-    console.log('posts:', posts.length)
     return (
       <View testID={testID} style={style}>
         {posts.length > 0 ? (
