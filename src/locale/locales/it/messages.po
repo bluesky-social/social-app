@@ -1,16 +1,16 @@
 # 
 # Translators:
 # arestifop, 2024
-# Francisco, 2024
 # Michele Locati <michele@locati.it>, 2025
+# Francisco, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-01 00:48+0000\n"
-"PO-Revision-Date: 2025-01-02 12:13+0000\n"
-"Last-Translator: Michele Locati <michele@locati.it>, 2025\n"
+"PO-Revision-Date: 2025-01-06 12:58+0000\n"
+"Last-Translator: Francisco, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -1275,7 +1275,7 @@ msgstr "Modifica la password"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:82
 msgid "Change post language to {suggestedLanguageName}"
-msgstr "Cambia la lingua del post a {suggestedLanguageName}"
+msgstr "Cambia la lingua del post in {suggestedLanguageName}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
@@ -5168,7 +5168,7 @@ msgstr "Citazione post scollegata con successo"
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:91
 msgid "Quote posts disabled"
-msgstr "Citazioni post disattivate"
+msgstr "Citazioni disattivate"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
