@@ -174,10 +174,7 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<
-  AppBskyActorDefs.ProfileView | AppBskyActorDefs.ProfileViewBasic,
-  undefined
-> {
+): Generator<AppBskyActorDefs.ProfileViewBasic, undefined> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyFeedSearchPosts.OutputSchema>
   >({
