@@ -1,5 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
+import {AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -23,7 +24,7 @@ import {useFetchHandle} from '#/state/queries/handle'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfilesQuery} from '#/state/queries/profile'
-import {useSession, useSessionApi} from '#/state/session'
+import {SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -33,6 +34,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {DialogControlProps} from '#/components/Dialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
@@ -77,7 +79,6 @@ const NAV_ICON_WIDTH = 28
 
 function ProfileCard() {
   const {currentAccount, accounts} = useSession()
-  const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {logoutEveryAccount} = useSessionApi()
   const {isLoading, data} = useProfilesQuery({
     handles: accounts.map(acc => acc.did),
@@ -86,16 +87,9 @@ function ProfileCard() {
   const signOutPromptControl = Prompt.usePromptControl()
   const {gtTablet} = useBreakpoints()
   const {_} = useLingui()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
-  const closeEverything = useCloseAllActiveElements()
   const t = useTheme()
 
   const size = 48
-
-  const onAddAnotherAccount = () => {
-    setShowLoggedOut(true)
-    closeEverything()
-  }
 
   const profile = profiles?.find(p => p.did === currentAccount!.did)
   const otherAccounts = accounts
@@ -162,67 +156,10 @@ function ProfileCard() {
               )
             }}
           </Menu.Trigger>
-          <Menu.Outer>
-            {otherAccounts && otherAccounts.length > 0 && (
-              <>
-                <Menu.Group>
-                  <Menu.LabelText>
-                    <Trans>Switch account</Trans>
-                  </Menu.LabelText>
-                  {otherAccounts?.map(other => (
-                    <Menu.Item
-                      disabled={!!pendingDid}
-                      style={[{minWidth: 150}]}
-                      key={other.account.did}
-                      label={_(
-                        msg`Switch to ${sanitizeHandle(
-                          other.profile?.handle ?? other.account.handle,
-                          '@',
-                        )}`,
-                      )}
-                      onPress={() =>
-                        onPressSwitchAccount(other.account, 'SwitchAccount')
-                      }>
-                      <View style={[{marginLeft: tokens.space._2xs * -1}]}>
-                        <UserAvatar
-                          avatar={other.profile?.avatar}
-                          size={20}
-                          type={
-                            other.profile?.associated?.labeler
-                              ? 'labeler'
-                              : 'user'
-                          }
-                        />
-                      </View>
-                      <Menu.ItemText>
-                        {sanitizeHandle(
-                          other.profile?.handle ?? other.account.handle,
-                          '@',
-                        )}
-                      </Menu.ItemText>
-                    </Menu.Item>
-                  ))}
-                </Menu.Group>
-                <Menu.Divider />
-              </>
-            )}
-            <Menu.Item
-              label={_(msg`Add another account`)}
-              onPress={onAddAnotherAccount}>
-              <Menu.ItemIcon icon={PlusIcon} />
-              <Menu.ItemText>
-                <Trans>Add another account</Trans>
-              </Menu.ItemText>
-            </Menu.Item>
-            <Menu.Item
-              label={_(msg`Sign out`)}
-              onPress={signOutPromptControl.open}>
-              <Menu.ItemIcon icon={LeaveIcon} />
-              <Menu.ItemText>
-                <Trans>Sign out</Trans>
-              </Menu.ItemText>
-            </Menu.Item>
-          </Menu.Outer>
+          <SwitchMenuItems
+            accounts={otherAccounts}
+            signOutPromptControl={signOutPromptControl}
+          />
         </Menu.Root>
       ) : (
         <LoadingPlaceholder
@@ -241,6 +178,88 @@ function ProfileCard() {
         confirmButtonColor="negative"
       />
     </View>
+  )
+}
+
+function SwitchMenuItems({
+  accounts,
+  signOutPromptControl,
+}: {
+  accounts:
+    | {
+        account: SessionAccount
+        profile?: AppBskyActorDefs.ProfileView
+      }[]
+    | undefined
+  signOutPromptControl: DialogControlProps
+}) {
+  const {_} = useLingui()
+  const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const closeEverything = useCloseAllActiveElements()
+
+  const onAddAnotherAccount = () => {
+    setShowLoggedOut(true)
+    closeEverything()
+  }
+  return (
+    <Menu.Outer>
+      {accounts && accounts.length > 0 && (
+        <>
+          <Menu.Group>
+            <Menu.LabelText>
+              <Trans>Switch account</Trans>
+            </Menu.LabelText>
+            {accounts.map(other => (
+              <Menu.Item
+                disabled={!!pendingDid}
+                style={[{minWidth: 150}]}
+                key={other.account.did}
+                label={_(
+                  msg`Switch to ${sanitizeHandle(
+                    other.profile?.handle ?? other.account.handle,
+                    '@',
+                  )}`,
+                )}
+                onPress={() =>
+                  onPressSwitchAccount(other.account, 'SwitchAccount')
+                }>
+                <View style={[{marginLeft: tokens.space._2xs * -1}]}>
+                  <UserAvatar
+                    avatar={other.profile?.avatar}
+                    size={20}
+                    type={
+                      other.profile?.associated?.labeler ? 'labeler' : 'user'
+                    }
+                  />
+                </View>
+                <Menu.ItemText>
+                  {sanitizeHandle(
+                    other.profile?.handle ?? other.account.handle,
+                    '@',
+                  )}
+                </Menu.ItemText>
+              </Menu.Item>
+            ))}
+          </Menu.Group>
+          <Menu.Divider />
+        </>
+      )}
+      <Menu.Item
+        label={_(msg`Add another account`)}
+        onPress={onAddAnotherAccount}>
+        <Menu.ItemIcon icon={PlusIcon} />
+        <Menu.ItemText>
+          <Trans>Add another account</Trans>
+        </Menu.ItemText>
+      </Menu.Item>
+      <Menu.Item label={_(msg`Sign out`)} onPress={signOutPromptControl.open}>
+        <Menu.ItemIcon icon={LeaveIcon} />
+        <Menu.ItemText>
+          <Trans>Sign out</Trans>
+        </Menu.ItemText>
+      </Menu.Item>
+    </Menu.Outer>
   )
 }
 
