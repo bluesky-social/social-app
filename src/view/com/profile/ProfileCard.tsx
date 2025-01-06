@@ -24,7 +24,7 @@ import {
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
 import * as Pills from '#/components/Pills'
-import * as Profile from '#/types/profile'
+import * as atp from '#/types/atproto'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
@@ -42,11 +42,13 @@ export function ProfileCard({
   showKnownFollowers,
 }: {
   testID?: string
-  profile: Profile.AnyView
+  profile: atp.profile.AnyProfileView
   noModFilter?: boolean
   noBg?: boolean
   noBorder?: boolean
-  renderButton?: (profile: Shadow<Profile.AnyView>) => React.ReactNode
+  renderButton?: (
+    profile: Shadow<atp.profile.AnyProfileView>,
+  ) => React.ReactNode
   onPress?: () => void
   style?: StyleProp<ViewStyle>
   showKnownFollowers?: boolean
@@ -59,7 +61,7 @@ export function ProfileCard({
 
   const onBeforePress = React.useCallback(() => {
     onPress?.()
-    precacheProfile(queryClient, Profile.anyToBasic(profile))
+    precacheProfile(queryClient, atp.profile.anyToBasic(profile))
   }, [onPress, profile, queryClient])
 
   if (!moderationOpts) {
@@ -125,7 +127,7 @@ export function ProfileCard({
           <View style={styles.layoutButton}>{renderButton(profile)}</View>
         ) : undefined}
       </View>
-      {Profile.isView(profile) || Profile.isDetailedView(profile) ? (
+      {atp.profile.isView(profile) || atp.profile.isDetailedView(profile) ? (
         <>
           {profile.description || knownFollowersVisible ? (
             <View style={styles.details}>
@@ -142,7 +144,7 @@ export function ProfileCard({
                     a.gap_sm,
                     !!profile.description && a.mt_md,
                   ]}>
-                  {Profile.isDetailedView(profile) && (
+                  {atp.profile.isDetailedView(profile) && (
                     <KnownFollowers
                       minimal
                       profile={profile}

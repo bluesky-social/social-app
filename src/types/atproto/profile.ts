@@ -21,15 +21,17 @@ export {
 /**
  * Matches any profile view exported by our SDK
  */
-export type AnyView =
+export type AnyProfileView =
   | AppBskyActorDefs.ProfileViewBasic
   | AppBskyActorDefs.ProfileView
   | AppBskyActorDefs.ProfileViewDetailed
 
 /**
- * Downgrades any profile view to the most basic form.
+ * Maps any profile view type to `ProfileViewBasic`.
  */
-export function anyToBasic(view: AnyView): AppBskyActorDefs.ProfileViewBasic {
+export function anyToBasic(
+  view: AnyProfileView,
+): AppBskyActorDefs.ProfileViewBasic {
   return {
     $type: 'app.bsky.actor.defs#profileViewBasic',
     did: view.did,
@@ -44,7 +46,7 @@ export function anyToBasic(view: AnyView): AppBskyActorDefs.ProfileViewBasic {
 }
 
 /**
- * Downgrades a detailed profile view to the `ProfileView` form.
+ * Maps `ProfileViewDetailed` to `ProfileView`.
  */
 export function detailedToView(
   view: AppBskyActorDefs.ProfileViewDetailed,
