@@ -78,10 +78,13 @@ export class Convo {
 
   private emitter = new EventEmitter<{event: [ConvoEvent]}>()
 
+  private onMarkAsRead: () => void
+
   convoId: string
   convo: ChatBskyConvoDefs.ConvoView | undefined
   sender: AppBskyActorDefs.ProfileViewBasic | undefined
   recipients: AppBskyActorDefs.ProfileViewBasic[] | undefined = undefined
+  pendingAcceptance: boolean | undefined
   snapshot: ConvoState | undefined
 
   constructor(params: ConvoParams) {
@@ -89,7 +92,8 @@ export class Convo {
     this.convoId = params.convoId
     this.agent = params.agent
     this.events = params.events
-    this.senderUserDid = params.agent.session?.did!
+    this.senderUserDid = params.agent.session!.did
+    this.onMarkAsRead = params.onMarkAsRead
 
     this.subscribe = this.subscribe.bind(this)
     this.getSnapshot = this.getSnapshot.bind(this)
@@ -139,6 +143,7 @@ export class Convo {
           deleteMessage: undefined,
           sendMessage: undefined,
           fetchMessageHistory: undefined,
+          pendingAcceptance: undefined,
         }
       }
       case ConvoStatus.Disabled:
@@ -156,6 +161,7 @@ export class Convo {
           deleteMessage: this.deleteMessage,
           sendMessage: this.sendMessage,
           fetchMessageHistory: this.fetchMessageHistory,
+          pendingAcceptance: this.pendingAcceptance,
         }
       }
       case ConvoStatus.Error: {
@@ -170,6 +176,7 @@ export class Convo {
           deleteMessage: undefined,
           sendMessage: undefined,
           fetchMessageHistory: undefined,
+          pendingAcceptance: undefined,
         }
       }
       default: {
@@ -184,6 +191,7 @@ export class Convo {
           deleteMessage: undefined,
           sendMessage: undefined,
           fetchMessageHistory: undefined,
+          pendingAcceptance: undefined,
         }
       }
     }
@@ -246,11 +254,13 @@ export class Convo {
           case ConvoDispatchEvent.Resume: {
             this.refreshConvo()
             this.requestPollInterval(ACTIVE_POLL_INTERVAL)
+            this.markAsRead()
             break
           }
           case ConvoDispatchEvent.Background: {
             this.status = ConvoStatus.Backgrounded
             this.requestPollInterval(BACKGROUND_POLL_INTERVAL)
+            this.markAsRead()
             break
           }
           case ConvoDispatchEvent.Suspend: {
@@ -513,6 +523,7 @@ export class Convo {
         convo: ChatBskyConvoDefs.ConvoView
         sender: AppBskyActorDefs.ProfileViewBasic | undefined
         recipients: AppBskyActorDefs.ProfileViewBasic[]
+        pendingAcceptance: boolean
       }>
     | undefined
   async fetchConvo() {
@@ -522,10 +533,11 @@ export class Convo {
       convo: ChatBskyConvoDefs.ConvoView
       sender: AppBskyActorDefs.ProfileViewBasic | undefined
       recipients: AppBskyActorDefs.ProfileViewBasic[]
+      pendingAcceptance: boolean
     }>(async (resolve, reject) => {
       try {
         const response = await networkRetry(2, () => {
-          return this.agent.api.chat.bsky.convo.getConvo(
+          return this.agent.chat.bsky.convo.getConvo(
             {
               convoId: this.convoId,
             },
@@ -539,6 +551,7 @@ export class Convo {
           convo,
           sender: convo.members.find(m => m.did === this.senderUserDid),
           recipients: convo.members.filter(m => m.did !== this.senderUserDid),
+          pendingAcceptance: !convo.opened,
         })
       } catch (e) {
         reject(e)
@@ -552,11 +565,13 @@ export class Convo {
 
   async refreshConvo() {
     try {
-      const {convo, sender, recipients} = await this.fetchConvo()
+      const {convo, sender, recipients, pendingAcceptance} =
+        await this.fetchConvo()
       // throw new Error('UNCOMMENT TO TEST REFRESH FAILURE')
       this.convo = convo || this.convo
       this.sender = sender || this.sender
       this.recipients = recipients || this.recipients
+      this.pendingAcceptance = pendingAcceptance ?? this.pendingAcceptance
     } catch (e: any) {
       logger.error(e, {context: `Convo: failed to refresh convo`})
     }
@@ -592,7 +607,7 @@ export class Convo {
 
       const nextCursor = this.oldestRev // for TS
       const response = await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.getMessages(
+        return this.agent.chat.bsky.convo.getMessages(
           {
             cursor: nextCursor,
             convoId: this.convoId,
@@ -793,7 +808,7 @@ export class Convo {
 
       const {id, message} = pendingMessage
 
-      const response = await this.agent.api.chat.bsky.convo.sendMessage(
+      const response = await this.agent.chat.bsky.convo.sendMessage(
         {
           convoId: this.convoId,
           message,
@@ -888,7 +903,7 @@ export class Convo {
     )
 
     try {
-      const {data} = await this.agent.api.chat.bsky.convo.sendMessageBatch(
+      const {data} = await this.agent.chat.bsky.convo.sendMessageBatch(
         {
           items: messageArray.map(({message}) => ({
             convoId: this.convoId,
@@ -935,7 +950,7 @@ export class Convo {
 
     try {
       await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.deleteMessageForSelf(
+        return this.agent.chat.bsky.convo.deleteMessageForSelf(
           {
             convoId: this.convoId,
             messageId,
@@ -1103,5 +1118,22 @@ export class Convo {
 
         return item
       })
+  }
+
+  async acceptChat() {
+    await this.agent.chat.bsky.convo.updateRead({
+      convoId: this.convoId,
+    })
+    this.pendingAcceptance = false
+    this.onMarkAsRead()
+  }
+
+  markAsRead() {
+    if (!this.pendingAcceptance) {
+      this.agent.chat.bsky.convo.updateRead({
+        convoId: this.convoId,
+      })
+      this.onMarkAsRead()
+    }
   }
 }

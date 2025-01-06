@@ -23,9 +23,11 @@ import {useDialogControl} from '#/components/Dialog'
 import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {MessagesListBlockedFooter} from '#/components/dms/MessagesListBlockedFooter'
 import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
+import {MessagesListPendingAcceptFooter} from '#/components/dms/MessagesListPendingAcceptFooter'
 import {Error} from '#/components/Error'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import {ChatDisabled} from './components/ChatDisabled'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -193,14 +195,23 @@ function InnerReady({
         <MessagesList
           hasScrolled={hasScrolled}
           setHasScrolled={setHasScrolled}
-          blocked={moderation?.blocked}
           footer={
-            <MessagesListBlockedFooter
-              recipient={recipient}
-              convoId={convoState.convo.id}
-              hasMessages={convoState.items.length > 0}
-              blockInfo={blockInfo}
-            />
+            convoState.status === ConvoStatus.Disabled ? (
+              <ChatDisabled />
+            ) : moderation?.blocked ? (
+              <MessagesListBlockedFooter
+                recipient={recipient}
+                convoId={convoState.convo.id}
+                hasMessages={convoState.items.length > 0}
+                blockInfo={blockInfo}
+              />
+            ) : convoState.pendingAcceptance ? (
+              <MessagesListPendingAcceptFooter
+                recipient={recipient}
+                convoId={convoState.convo.id}
+                hasMessages={convoState.items.length > 0}
+              />
+            ) : null
           }
         />
       )}

@@ -11,6 +11,7 @@ export type ConvoParams = {
   convoId: string
   agent: BskyAgent
   events: MessagesEventBus
+  onMarkAsRead: () => void
 }
 
 export enum ConvoStatus {
@@ -150,6 +151,7 @@ export type ConvoStateUninitialized = {
   deleteMessage: undefined
   sendMessage: undefined
   fetchMessageHistory: undefined
+  pendingAcceptance: undefined
 }
 export type ConvoStateInitializing = {
   status: ConvoStatus.Initializing
@@ -162,6 +164,7 @@ export type ConvoStateInitializing = {
   deleteMessage: undefined
   sendMessage: undefined
   fetchMessageHistory: undefined
+  pendingAcceptance: undefined
 }
 export type ConvoStateReady = {
   status: ConvoStatus.Ready
@@ -174,6 +177,7 @@ export type ConvoStateReady = {
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
+  pendingAcceptance: boolean | undefined
 }
 export type ConvoStateBackgrounded = {
   status: ConvoStatus.Backgrounded
@@ -186,6 +190,7 @@ export type ConvoStateBackgrounded = {
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
+  pendingAcceptance: boolean | undefined
 }
 export type ConvoStateSuspended = {
   status: ConvoStatus.Suspended
@@ -198,6 +203,7 @@ export type ConvoStateSuspended = {
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
+  pendingAcceptance: boolean | undefined
 }
 export type ConvoStateError = {
   status: ConvoStatus.Error
@@ -210,6 +216,7 @@ export type ConvoStateError = {
   deleteMessage: undefined
   sendMessage: undefined
   fetchMessageHistory: undefined
+  pendingAcceptance: undefined
 }
 export type ConvoStateDisabled = {
   status: ConvoStatus.Disabled
@@ -222,6 +229,7 @@ export type ConvoStateDisabled = {
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
+  pendingAcceptance: boolean | undefined
 }
 export type ConvoState =
   | ConvoStateUninitialized

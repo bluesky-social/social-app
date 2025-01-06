@@ -31,7 +31,6 @@ import {
   EmojiPickerState,
 } from '#/view/com/composer/text-input/web/EmojiPicker.web'
 import {List, ListMethods} from '#/view/com/util/List'
-import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
@@ -78,13 +77,11 @@ function onScrollToIndexFailed() {
 export function MessagesList({
   hasScrolled,
   setHasScrolled,
-  blocked,
   footer,
 }: {
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
-  blocked?: boolean
-  footer?: React.ReactNode
+  footer: React.ReactNode | null
 }) {
   const convoState = useConvoActive()
   const agent = useAgent()
@@ -427,11 +424,7 @@ export function MessagesList({
         />
       </ScrollProvider>
       <Animated.View style={animatedStickyViewStyle}>
-        {convoState.status === ConvoStatus.Disabled ? (
-          <ChatDisabled />
-        ) : blocked ? (
-          footer
-        ) : (
+        {footer || (
           <>
             {isConvoActive(convoState) &&
               !convoState.isFetchingHistory &&

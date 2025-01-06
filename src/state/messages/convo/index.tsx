@@ -3,6 +3,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAppState} from '#/lib/hooks/useAppState'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {Convo} from '#/state/messages/convo/agent'
 import {
   ConvoParams,
@@ -14,8 +15,10 @@ import {
 } from '#/state/messages/convo/types'
 import {isConvoActive} from '#/state/messages/convo/util'
 import {useMessagesEventBus} from '#/state/messages/events'
-import {useMarkAsReadMutation} from '#/state/queries/messages/conversation'
-import {RQKEY as ListConvosQueryKey} from '#/state/queries/messages/list-conversations'
+import {
+  RQKEY as ListConvosQueryKey,
+  useOnMarkAsRead,
+} from '#/state/queries/messages/list-conversations'
 import {RQKEY as createProfileQueryKey} from '#/state/queries/profile'
 import {useAgent} from '#/state/session'
 
@@ -60,16 +63,20 @@ export function ConvoProvider({
   const queryClient = useQueryClient()
   const agent = useAgent()
   const events = useMessagesEventBus()
+  const onMarkAsRead = useOnMarkAsRead()
+  const stableMAR = useNonReactiveCallback(() => {
+    onMarkAsRead(convoId)
+  })
   const [convo] = useState(
     () =>
       new Convo({
         convoId,
         agent,
         events,
+        onMarkAsRead: stableMAR,
       }),
   )
   const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot)
-  const {mutate: markAsRead} = useMarkAsReadMutation()
 
   const appState = useAppState()
   const isActive = appState === 'active'
@@ -77,14 +84,12 @@ export function ConvoProvider({
     React.useCallback(() => {
       if (isActive) {
         convo.resume()
-        markAsRead({convoId})
 
         return () => {
           convo.background()
-          markAsRead({convoId})
         }
       }
-    }, [isActive, convo, convoId, markAsRead]),
+    }, [isActive, convo]),
   )
 
   React.useEffect(() => {
