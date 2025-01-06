@@ -31,8 +31,9 @@ import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
@@ -57,6 +58,7 @@ import {
   Message_Stroke2_Corner0_Rounded as Message,
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {
   SettingsGear2_Filled_Corner0_Rounded as SettingsFilled,
   SettingsGear2_Stroke2_Corner0_Rounded as Settings,
@@ -168,7 +170,7 @@ function ProfileCard() {
                   {otherAccounts?.map(other => (
                     <Menu.Item
                       disabled={!!pendingDid}
-                      style={[a.gap_sm, {minWidth: 150}]}
+                      style={[{minWidth: 150}]}
                       key={other.account.did}
                       label={_(
                         msg`Switch to ${sanitizeHandle(
@@ -179,15 +181,17 @@ function ProfileCard() {
                       onPress={() =>
                         onPressSwitchAccount(other.account, 'SwitchAccount')
                       }>
-                      <UserAvatar
-                        avatar={other.profile?.avatar}
-                        size={20}
-                        type={
-                          other.profile?.associated?.labeler
-                            ? 'labeler'
-                            : 'user'
-                        }
-                      />
+                      <View style={[{marginLeft: tokens.space._2xs * -1}]}>
+                        <UserAvatar
+                          avatar={other.profile?.avatar}
+                          size={20}
+                          type={
+                            other.profile?.associated?.labeler
+                              ? 'labeler'
+                              : 'user'
+                          }
+                        />
+                      </View>
                       <Menu.ItemText>
                         {sanitizeHandle(
                           other.profile?.handle ?? other.account.handle,
@@ -203,6 +207,7 @@ function ProfileCard() {
             <Menu.Item
               label={_(msg`Add another account`)}
               onPress={onAddAnotherAccount}>
+              <Menu.ItemIcon icon={PlusIcon} />
               <Menu.ItemText>
                 <Trans>Add another account</Trans>
               </Menu.ItemText>
@@ -210,6 +215,7 @@ function ProfileCard() {
             <Menu.Item
               label={_(msg`Sign out`)}
               onPress={signOutPromptControl.open}>
+              <Menu.ItemIcon icon={LeaveIcon} />
               <Menu.ItemText>
                 <Trans>Sign out</Trans>
               </Menu.ItemText>
