@@ -70,6 +70,7 @@ import {
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
 import {router} from '../../../routes'
 
 const NAV_ICON_WIDTH = 28
@@ -132,12 +133,12 @@ function ProfileCard() {
                   ]}>
                   <View
                     style={[
-                      a.transition_transform,
-                      {
-                        transitionDuration: '250ms',
-                        transformOrigin: 'center left',
+                      !PlatformInfo.getIsReducedMotionEnabled() &&
+                        a.transition_transform,
+                      {transitionDuration: '250ms'},
+                      active && {
+                        transform: [{scale: 2 / 3}, {translateX: -22}],
                       },
-                      active && {transform: [{scale: 0.5}]},
                     ]}>
                     <UserAvatar
                       avatar={profile.avatar}
