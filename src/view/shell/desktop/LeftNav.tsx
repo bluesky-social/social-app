@@ -133,9 +133,10 @@ function ProfileCard() {
                   ]}>
                   <View
                     style={[
-                      !PlatformInfo.getIsReducedMotionEnabled() &&
+                      !PlatformInfo.getIsReducedMotionEnabled() && [
                         a.transition_transform,
-                      {transitionDuration: '250ms'},
+                        {transitionDuration: '250ms'},
+                      ],
                       active && {
                         transform: [{scale: 2 / 3}, {translateX: -22}],
                       },
