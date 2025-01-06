@@ -228,7 +228,7 @@ function ProfileCard() {
         <LoadingPlaceholder
           width={size}
           height={size}
-          style={{borderRadius: size}}
+          style={[{borderRadius: size}, gtTablet && a.ml_lg]}
         />
       )}
       <Prompt.Basic
