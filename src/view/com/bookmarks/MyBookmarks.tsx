@@ -10,6 +10,7 @@ import {
 import {ensureValidAtUri} from '@atproto/syntax'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {cloneDeep} from 'lodash'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {cleanError} from '#/lib/strings/errors'
@@ -84,10 +85,8 @@ export function MyBookmarks({
         const fetchedPosts = await Promise.all(
           validData!.map(async d => {
             const post = await getPost({uri: d.subject})
-            const p = JSON.parse(JSON.stringify(post))
+            const p = cloneDeep(post)
             p.bookmarkUri = d.uri
-            console.log('post after getPost:', p) // Debugging line
-            console.log('post.bookmarkUri after getPost:', p.bookmarkUri) // Debugging line
             return p
           }),
         )
