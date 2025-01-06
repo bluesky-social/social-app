@@ -136,6 +136,9 @@ export type LogEvents = {
   'post:bookmark': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }
+  'post:unbookmark': {
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+  }
   'post:repost': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }

@@ -5,7 +5,6 @@ import {useHaptics} from '#/lib/haptics'
 import {useRequireAuth} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
-import * as Dialog from '#/components/Dialog'
 import {Bookmark_Stroke2_Corner0_Rounded as Bookmark} from '#/components/icons/Bookmark'
 
 interface Props {
@@ -21,7 +20,6 @@ let BookmarkButton = ({
 }: Props): React.ReactNode => {
   const t = useTheme()
   const requireAuth = useRequireAuth()
-  const dialogControl = Dialog.useDialogControl()
   const playHaptic = useHaptics()
   const color = React.useMemo(
     () => ({
@@ -35,7 +33,7 @@ let BookmarkButton = ({
         testID="bookmarkBtn"
         onPress={() => {
           playHaptic('Light')
-          requireAuth(() => dialogControl.open())
+          requireAuth(() => onBookmark())
         }}
         onLongPress={() => {
           playHaptic('Heavy')

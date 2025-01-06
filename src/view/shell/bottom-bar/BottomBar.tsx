@@ -39,6 +39,10 @@ import {
   Bell_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell'
 import {
+  Bookmark_Filled_Corner0_Rounded as BookmarkFilled,
+  Bookmark_Stroke2_Corner0_Rounded as Bookmark,
+} from '#/components/icons/Bookmark'
+import {
   HomeOpen_Filled_Corner0_Rounded as HomeFilled,
   HomeOpen_Stoke2_Corner0_Rounded as Home,
 } from '#/components/icons/HomeOpen'
@@ -54,6 +58,7 @@ type TabOptions =
   | 'Home'
   | 'Search'
   | 'Notifications'
+  | 'Bookmarks'
   | 'MyProfile'
   | 'Feeds'
   | 'Messages'
@@ -64,8 +69,14 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const {_} = useLingui()
   const safeAreaInsets = useSafeAreaInsets()
   const {footerHeight} = useShellLayout()
-  const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile, isAtMessages} =
-    useNavigationTabState()
+  const {
+    isAtHome,
+    isAtSearch,
+    isAtNotifications,
+    isAtBookmarks,
+    isAtMyProfile,
+    isAtMessages,
+  } = useNavigationTabState()
   const numUnreadNotifications = useUnreadNotifications()
   const numUnreadMessages = useUnreadMessageCount()
   const footerMinimalShellTransform = useMinimalShellFooterTransform()
@@ -111,6 +122,10 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   )
   const onPressNotifications = React.useCallback(
     () => onPressTab('Notifications'),
+    [onPressTab],
+  )
+  const onPressBookmarks = React.useCallback(
+    () => onPressTab('Bookmarks'),
     [onPressTab],
   )
   const onPressProfile = React.useCallback(() => {
@@ -234,6 +249,27 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   ? ''
                   : _(msg`${numUnreadNotifications} unread items`)
               }
+            />
+            <Btn
+              testID="bottomBarNotificationsBtn"
+              icon={
+                isAtBookmarks ? (
+                  <BookmarkFilled
+                    width={iconWidth}
+                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+                  />
+                ) : (
+                  <Bookmark
+                    width={iconWidth}
+                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+                  />
+                )
+              }
+              onPress={onPressBookmarks}
+              accessible={true}
+              accessibilityRole="tab"
+              accessibilityLabel={_(msg`Bookmarks`)}
+              accessibilityHint=""
             />
             <Btn
               testID="bottomBarProfileBtn"

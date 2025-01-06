@@ -1,6 +1,6 @@
 import {useCallback} from 'react'
 import {AppBskyFeedDefs, ComAtprotoRepoPutRecord} from '@atproto/api'
-import {TID} from '@atproto/common'
+import {TID} from '@atproto/common-web'
 import {useMutation} from '@tanstack/react-query'
 
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
@@ -34,6 +34,10 @@ export function usePostBookmarkMutationQueue(
   const queueBookmark = useCallback(() => {
     return queueToggle(true)
   }, [queueToggle])
+
+  // const queueunbookmark = useCallback(() => {
+  //   return queueToggle(true)
+  // }, [queueToggle])
   return [queueBookmark]
 }
 
@@ -64,3 +68,20 @@ function usePostBookmarkMutation(
     },
   })
 }
+
+// function usePostUnBookmarkMutation(
+//   logContext: LogEvents['post:unbookmark']['logContext'],
+// ) {
+//   const agent = useAgent()
+//   return useMutation<void, Error, {postUri: string; likeUri: string}>({
+//     mutationFn: ({likeUri}) => {
+//       logEvent('post:unbookmark', {logContext})
+//       return agent.com.atproto.repo.deleteRecord({
+//         repo: agent.assertDid,
+//         collection: 'community.lexicon.bookmarks.bookmark',
+//         rkey: '3ldrdnt4eys2p',
+//       })
+//       return agent.deleteLike(likeUri)
+//     },
+//   })
+// }

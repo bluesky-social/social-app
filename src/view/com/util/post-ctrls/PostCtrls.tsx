@@ -54,6 +54,7 @@ import {RepostButton} from './RepostButton'
 let PostCtrls = ({
   big,
   post,
+  isBookmarked = false,
   record,
   richText,
   feedContext,
@@ -65,6 +66,7 @@ let PostCtrls = ({
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
+  isBookmarked: boolean
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
   feedContext?: string | undefined
@@ -156,7 +158,7 @@ let PostCtrls = ({
   ])
 
   const [hasBookmarkIconBeenToggled, setHasBookmarkIconBeenToggled] =
-    React.useState(false)
+    React.useState(isBookmarked)
 
   const onPressToggleBookmark = React.useCallback(async () => {
     if (isBlocked) {
@@ -168,26 +170,23 @@ let PostCtrls = ({
     }
 
     try {
-      setHasBookmarkIconBeenToggled(true)
-      await queueBookmark()
-      // if (!post.viewer?.like) {
-      //   playHaptic('Light')
-      //   sendInteraction({
-      //     item: post.uri,
-      //     event: 'app.bsky.feed.defs#interactionLike',
-      //     feedContext,
-      //   })
-      //   // captureAction(ProgressGuideAction.Like)
+      const hasBeenToggled = hasBookmarkIconBeenToggled
+      setHasBookmarkIconBeenToggled(!hasBookmarkIconBeenToggled)
 
-      // } else {
-      //   await queueUnlike()
-      // }
+      if (hasBeenToggled) {
+        playHaptic('Light')
+        console.log('queueBookmark')
+        const bookmarkUri = await queueBookmark()
+        console.log('bookmarkUri', bookmarkUri)
+      } else {
+        // await queueUnbookmark()
+      }
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         throw e
       }
     }
-  }, [isBlocked, _, queueBookmark])
+  }, [isBlocked, _, hasBookmarkIconBeenToggled, playHaptic, queueBookmark])
 
   const onRepost = useCallback(async () => {
     if (isBlocked) {

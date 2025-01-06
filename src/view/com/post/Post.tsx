@@ -41,11 +41,13 @@ import {UserInfoText} from '../util/UserInfoText'
 
 export function Post({
   post,
+  isBookmarked = false,
   showReplyLine,
   hideTopBorder,
   style,
 }: {
   post: AppBskyFeedDefs.PostView
+  isBookmarked?: boolean
   showReplyLine?: boolean
   hideTopBorder?: boolean
   style?: StyleProp<ViewStyle>
@@ -81,6 +83,7 @@ export function Post({
     return (
       <PostInner
         post={postShadowed}
+        isBookmarked={isBookmarked}
         record={record}
         richText={richText}
         moderation={moderation}
@@ -95,6 +98,7 @@ export function Post({
 
 function PostInner({
   post,
+  isBookmarked,
   record,
   richText,
   moderation,
@@ -103,6 +107,7 @@ function PostInner({
   style,
 }: {
   post: Shadow<AppBskyFeedDefs.PostView>
+  isBookmarked?: boolean
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
   moderation: ModerationDecision
@@ -255,6 +260,7 @@ function PostInner({
           </ContentHider>
           <PostCtrls
             post={post}
+            isBookmarked={isBookmarked ?? false}
             record={record}
             richText={richText}
             onPressReply={onPressReply}

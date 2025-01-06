@@ -109,7 +109,6 @@ export function MyBookmarks({
 
   const renderItemInner = React.useCallback(
     ({item}: {item: any}) => {
-      console.log('ETHAN item:', item)
       if (item === EMPTY) {
         return (
           <View style={[a.flex_1, a.align_center, a.gap_sm, a.px_xl, a.pt_xl]}>
@@ -153,7 +152,7 @@ export function MyBookmarks({
           </View>
         )
       }
-      return <Post post={item} />
+      return <Post isBookmarked={true} post={item} />
     },
     [
       t.atoms.bg_contrast_25,
