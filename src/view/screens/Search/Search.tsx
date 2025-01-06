@@ -856,7 +856,7 @@ export function SearchScreen(
         <Layout.Center>
           <View style={[a.p_md, a.pb_sm, a.gap_sm, t.atoms.bg]}>
             <View style={[a.flex_row, a.gap_sm]}>
-              {!gtMobile && (
+              {!gtMobile && !showAutocomplete && (
                 <Button
                   testID="viewHeaderBackOrMenuBtn"
                   onPress={onPressMenu}
