@@ -1,5 +1,5 @@
 import {CommunityLexiconBookmarksBookmark} from '@lexicon-community/types'
-import {QueryClient, useQuery} from '@tanstack/react-query'
+import {QueryClient, useQuery, UseQueryResult} from '@tanstack/react-query'
 
 import {accumulate} from '#/lib/async/accumulate'
 import {STALE} from '#/state/queries'
@@ -8,7 +8,10 @@ import {useAgent, useSession} from '#/state/session'
 const RQKEY_ROOT = 'my-bookmarks'
 export const RQKEY = () => [RQKEY_ROOT]
 
-export function useMyBookmarksQuery() {
+export function useMyBookmarksQuery(): UseQueryResult<
+  CommunityLexiconBookmarksBookmark.Record[],
+  Error
+> {
   const {currentAccount} = useSession()
   const agent = useAgent()
   return useQuery<CommunityLexiconBookmarksBookmark.Record[]>({
@@ -22,7 +25,6 @@ export function useMyBookmarksQuery() {
             .listRecords({
               repo: agent!.did ?? '',
               collection: 'community.lexicon.bookmarks.bookmark',
-              limit: 2,
               cursor,
             })
             .then(res => ({
@@ -42,6 +44,7 @@ export function useMyBookmarksQuery() {
           if (isValid) {
             const recordVal =
               bookmark.value as CommunityLexiconBookmarksBookmark.Record
+            recordVal.uri = bookmark.uri
             bookmarks.push(recordVal)
           }
         }

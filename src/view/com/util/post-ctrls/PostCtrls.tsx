@@ -54,7 +54,7 @@ import {RepostButton} from './RepostButton'
 let PostCtrls = ({
   big,
   post,
-  isBookmarked = false,
+  bookmarkUri,
   record,
   richText,
   feedContext,
@@ -66,7 +66,7 @@ let PostCtrls = ({
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
-  isBookmarked: boolean
+  bookmarkUri?: string | undefined
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
   feedContext?: string | undefined
@@ -81,7 +81,10 @@ let PostCtrls = ({
   const {openComposer} = useComposerControls()
   const {currentAccount} = useSession()
   const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, logContext)
-  const [queueBookmark] = usePostBookmarkMutationQueue(post, logContext)
+  const [queueBookmark, unQueueBookmark] = usePostBookmarkMutationQueue(
+    post,
+    logContext,
+  )
   const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(
     post,
     logContext,
@@ -158,7 +161,9 @@ let PostCtrls = ({
   ])
 
   const [hasBookmarkIconBeenToggled, setHasBookmarkIconBeenToggled] =
-    React.useState(isBookmarked)
+    React.useState(
+      bookmarkUri !== undefined && bookmarkUri !== null && bookmarkUri !== '',
+    )
 
   const onPressToggleBookmark = React.useCallback(async () => {
     if (isBlocked) {
@@ -174,19 +179,24 @@ let PostCtrls = ({
       setHasBookmarkIconBeenToggled(!hasBookmarkIconBeenToggled)
 
       if (hasBeenToggled) {
-        playHaptic('Light')
-        console.log('queueBookmark')
-        const bookmarkUri = await queueBookmark()
-        console.log('bookmarkUri', bookmarkUri)
+        unQueueBookmark()
       } else {
-        // await queueUnbookmark()
+        playHaptic('Light')
+        await queueBookmark()
       }
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         throw e
       }
     }
-  }, [isBlocked, _, hasBookmarkIconBeenToggled, playHaptic, queueBookmark])
+  }, [
+    isBlocked,
+    _,
+    hasBookmarkIconBeenToggled,
+    unQueueBookmark,
+    playHaptic,
+    queueBookmark,
+  ])
 
   const onRepost = useCallback(async () => {
     if (isBlocked) {

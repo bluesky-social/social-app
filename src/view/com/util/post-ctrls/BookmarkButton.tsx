@@ -23,9 +23,9 @@ let BookmarkButton = ({
   const playHaptic = useHaptics()
   const color = React.useMemo(
     () => ({
-      color: isBookmarked ? t.palette.positive_600 : t.palette.contrast_500,
+      color: isBookmarked ? t.palette.primary_500 : t.palette.contrast_500,
     }),
-    [isBookmarked, t.palette.positive_600, t.palette.contrast_500],
+    [isBookmarked, t.palette.primary_500, t.palette.contrast_500],
   )
   return (
     <>

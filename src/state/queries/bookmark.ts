@@ -1,6 +1,10 @@
 import {useCallback} from 'react'
-import {AppBskyFeedDefs, ComAtprotoRepoPutRecord} from '@atproto/api'
-import {TID} from '@atproto/common-web'
+import {
+  AppBskyFeedDefs,
+  AtUri,
+  ComAtprotoRepoDeleteRecord,
+  ComAtprotoRepoPutRecord,
+} from '@atproto/api'
 import {useMutation} from '@tanstack/react-query'
 
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
@@ -13,18 +17,24 @@ export function usePostBookmarkMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
   logContext: LogEvents['post:bookmark']['logContext'],
 ) {
-  const bookmarkUri = 'someuri'
+  const initialBookmarkUri = post.bookmarkUri as string | undefined
   const bookmarkMutation = usePostBookmarkMutation(logContext, post)
+  const unBookmarkMutation = usePostUnBookmarkMutation(logContext)
 
   const queueToggle = useToggleMutationQueue({
-    initialState: bookmarkUri,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    runMutation: async (prev, shouldBookmark = true) => {
-      const {data, success} = await bookmarkMutation.mutateAsync()
-      if (!success) {
-        throw new Error('Failed to toggle bookmark')
+    initialState: initialBookmarkUri,
+    runMutation: async (prevBookmarkUri, shouldBookmark) => {
+      if (shouldBookmark) {
+        const {data} = await bookmarkMutation.mutateAsync()
+        return data.uri
+      } else {
+        if (prevBookmarkUri) {
+          await unBookmarkMutation.mutateAsync({
+            bookmarkUri: prevBookmarkUri,
+          })
+        }
+        return undefined
       }
-      return data.uri
     },
     onSuccess(finalBookmarkUri) {
       console.log('onSuccess', finalBookmarkUri)
@@ -35,10 +45,10 @@ export function usePostBookmarkMutationQueue(
     return queueToggle(true)
   }, [queueToggle])
 
-  // const queueunbookmark = useCallback(() => {
-  //   return queueToggle(true)
-  // }, [queueToggle])
-  return [queueBookmark]
+  const unQueueBookmark = useCallback(() => {
+    return queueToggle(false)
+  }, [queueToggle])
+  return [queueBookmark, unQueueBookmark]
 }
 
 function usePostBookmarkMutation(
@@ -52,16 +62,14 @@ function usePostBookmarkMutation(
         logContext,
       })
 
-      const rkey = TID.nextStr()
       const record = {
         $type: 'community.lexicon.bookmarks.bookmark',
         subject: post.uri,
         createdAt: new Date().toISOString(),
       }
-      return agent.com.atproto.repo.putRecord({
+      return agent.com.atproto.repo.createRecord({
         repo: agent.assertDid,
         collection: 'community.lexicon.bookmarks.bookmark',
-        rkey,
         record,
         validate: false,
       })
@@ -69,19 +77,24 @@ function usePostBookmarkMutation(
   })
 }
 
-// function usePostUnBookmarkMutation(
-//   logContext: LogEvents['post:unbookmark']['logContext'],
-// ) {
-//   const agent = useAgent()
-//   return useMutation<void, Error, {postUri: string; likeUri: string}>({
-//     mutationFn: ({likeUri}) => {
-//       logEvent('post:unbookmark', {logContext})
-//       return agent.com.atproto.repo.deleteRecord({
-//         repo: agent.assertDid,
-//         collection: 'community.lexicon.bookmarks.bookmark',
-//         rkey: '3ldrdnt4eys2p',
-//       })
-//       return agent.deleteLike(likeUri)
-//     },
-//   })
-// }
+function usePostUnBookmarkMutation(
+  logContext: LogEvents['post:unbookmark']['logContext'],
+) {
+  const agent = useAgent()
+  return useMutation<
+    ComAtprotoRepoDeleteRecord.Response,
+    Error,
+    {bookmarkUri: string}
+  >({
+    mutationFn: ({bookmarkUri}) => {
+      logEvent('post:unbookmark', {logContext})
+      console.log('unbookmark', bookmarkUri)
+      const bookmarkUrip = new AtUri(bookmarkUri)
+      return agent.com.atproto.repo.deleteRecord({
+        repo: agent.assertDid,
+        collection: 'community.lexicon.bookmarks.bookmark',
+        rkey: bookmarkUrip.rkey,
+      })
+    },
+  })
+}

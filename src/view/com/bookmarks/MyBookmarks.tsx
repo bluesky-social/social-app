@@ -22,6 +22,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {BulletList_Stroke2_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import {Text} from '#/components/Typography'
 import {Post} from '../post/Post'
+import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List} from '../util/List'
 
@@ -76,17 +77,21 @@ export function MyBookmarks({
       } else if (isEmpty) {
         items = items.concat([EMPTY])
       } else {
-        const validData = data
-          ?.map(d => convertAtUriToBlueskyUrl(d.subject))
-          .filter(d => d != null)
-
-        const fetchedPosts = await Promise.all(
-          validData!.map(async uri => {
-            const post = await getPost({uri})
-            return post
-          }),
+        const validData = data?.filter(
+          d => convertAtUriToBlueskyUrl(d.subject) != null,
         )
 
+        const fetchedPosts = await Promise.all(
+          validData!.map(async d => {
+            const post = await getPost({uri: d.subject})
+            const p = structuredClone(post)
+            p.bookmarkUri = d.uri
+            console.log('post after getPost:', p) // Debugging line
+            console.log('post.bookmarkUri after getPost:', p.bookmarkUri) // Debugging line
+            return p
+          }),
+        )
+        console.log('fetchedPosts:', fetchedPosts)
         items = items.concat(fetchedPosts)
       }
       setPosts(items)
@@ -106,6 +111,11 @@ export function MyBookmarks({
     }
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
+
+  const keyExtractor = (item: any, index: number) => {
+    console.log('keyextractor:', item.bookmarkUri, index)
+    return item.bookmarkUri ? item.bookmarkUri.toString() : index.toString()
+  }
 
   const renderItemInner = React.useCallback(
     ({item}: {item: any}) => {
@@ -152,7 +162,7 @@ export function MyBookmarks({
           </View>
         )
       }
-      return <Post isBookmarked={true} post={item} />
+      return <Post post={item} />
     },
     [
       t.atoms.bg_contrast_25,
@@ -165,13 +175,14 @@ export function MyBookmarks({
   )
 
   if (inline) {
+    console.log('posts:', posts.length)
     return (
       <View testID={testID} style={style}>
-        {posts.length > 0 && (
+        {posts.length > 0 ? (
           <RNFlatList
             testID={testID ? `${testID}-flatlist` : undefined}
             data={posts}
-            keyExtractor={item => (item.uri ? item.uri : item._reactKey)}
+            keyExtractor={keyExtractor}
             renderItem={renderItemInner}
             refreshControl={
               <RefreshControl
@@ -184,17 +195,19 @@ export function MyBookmarks({
             contentContainerStyle={[s.contentContainer]}
             removeClippedSubviews={true}
           />
+        ) : (
+          <EmptyState icon="bookmark" message={_(msg`No bookmarks yet!`)} />
         )}
       </View>
     )
   } else {
     return (
       <View testID={testID} style={style}>
-        {posts.length > 0 && (
+        {posts.length > 0 ? (
           <List
             testID={testID ? `${testID}-flatlist` : undefined}
             data={posts}
-            keyExtractor={item => (item.uri ? item.uri : item._reactKey)}
+            keyExtractor={keyExtractor}
             renderItem={renderItemInner}
             refreshing={isPTRing}
             onRefresh={onRefresh}
@@ -203,6 +216,8 @@ export function MyBookmarks({
             desktopFixedHeight
             sideBorders={false}
           />
+        ) : (
+          <EmptyState icon="bookmark" message={_(msg`No bookmarks yet!`)} />
         )}
       </View>
     )
