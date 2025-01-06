@@ -41,7 +41,7 @@ import {
   BulletList_Filled_Corner0_Rounded as ListFilled,
   BulletList_Stroke2_Corner0_Rounded as List,
 } from '#/components/icons/BulletList'
-import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
+import {DotGrid_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {EditBig_Stroke2_Corner0_Rounded as EditBig} from '#/components/icons/EditBig'
 import {
   Hashtag_Filled_Corner0_Rounded as HashtagFilled,
@@ -103,34 +103,60 @@ function ProfileCard() {
     }))
 
   return (
-    <View style={[a.my_md, gtTablet && [a.align_start, a.pl_md]]}>
+    <View style={[a.my_md, gtTablet && [a.w_full, a.align_start]]}>
       {!isLoading && profile ? (
         <Menu.Root>
           <Menu.Trigger label={_(msg`Switch accounts`)}>
-            {({props, state}) => (
-              <Button label={props.accessibilityLabel} {...props}>
-                <UserAvatar
-                  avatar={profile.avatar}
-                  size={size}
-                  type={profile?.associated?.labeler ? 'labeler' : 'user'}
-                />
-                <View
+            {({props, state, control}) => {
+              const active =
+                gtTablet && // desktop only
+                (state.hovered ||
+                  state.focused ||
+                  state.pressed ||
+                  control.isOpen)
+              return (
+                <Button
+                  label={props.accessibilityLabel}
+                  {...props}
                   style={[
-                    a.absolute,
-                    a.inset_0,
-                    a.transition_opacity,
-                    {opacity: state.hovered ? 0.6 : 0},
-                    a.justify_center,
+                    a.w_full,
+                    a.transition_color,
+                    active && t.atoms.bg_contrast_25,
+                    a.rounded_full,
+                    a.justify_between,
                     a.align_center,
-                    t.atoms.bg,
+                    a.flex_row,
+                    gtTablet && a.px_lg,
                   ]}>
-                  <ChevronDownIcon
-                    style={[t.atoms.text_contrast_high]}
-                    size="sm"
-                  />
-                </View>
-              </Button>
-            )}
+                  <View
+                    style={[
+                      a.transition_transform,
+                      {
+                        transitionDuration: '250ms',
+                        transformOrigin: 'center left',
+                      },
+                      active && {transform: [{scale: 0.5}]},
+                    ]}>
+                    <UserAvatar
+                      avatar={profile.avatar}
+                      size={size}
+                      type={profile?.associated?.labeler ? 'labeler' : 'user'}
+                    />
+                  </View>
+                  {gtTablet && (
+                    <EllipsisIcon
+                      aria-hidden={true}
+                      style={[
+                        t.atoms.text_contrast_medium,
+                        a.transition_opacity,
+                        {opacity: active ? 1 : 0},
+                      ]}
+                      size="sm"
+                    />
+                  )}
+                </Button>
+              )
+            }}
           </Menu.Trigger>
           <Menu.Outer>
             {otherAccounts && otherAccounts.length > 0 && (
