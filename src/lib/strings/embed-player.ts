@@ -25,6 +25,7 @@ export const embedPlayerSources = [
   'giphy',
   'tenor',
   'flickr',
+  'riverside',
 ] as const
 
 export type EmbedPlayerSource = (typeof embedPlayerSources)[number]
@@ -45,6 +46,7 @@ export type EmbedPlayerType =
   | 'giphy_gif'
   | 'tenor_gif'
   | 'flickr_album'
+  | 'riverside'
 
 export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   youtube: 'YouTube',
@@ -57,6 +59,7 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   appleMusic: 'Apple Music',
   soundcloud: 'SoundCloud',
   flickr: 'Flickr',
+  riverside: 'Riverside',
 }
 
 export interface EmbedPlayerParams {
@@ -85,6 +88,13 @@ export function parseEmbedPlayerFromUrl(
     return undefined
   }
 
+  if (urlp.hostname.endsWith('riverside.fm')) {
+    return {
+      type: 'riverside',
+      source: 'riverside',
+      playerUri: urlp.href,
+    }
+  }
   // youtube
   if (urlp.hostname === 'youtu.be') {
     const videoId = urlp.pathname.split('/')[1]
