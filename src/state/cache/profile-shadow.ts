@@ -1,9 +1,9 @@
 import {useEffect, useMemo, useState} from 'react'
-import {AppBskyActorDefs} from '@atproto/api'
 import {QueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
+import * as atp from '#/types/atproto'
 import {findAllProfilesInQueryData as findAllProfilesInActorSearchQueryData} from '../queries/actor-search'
 import {findAllProfilesInQueryData as findAllProfilesInKnownFollowersQueryData} from '../queries/known-followers'
 import {findAllProfilesInQueryData as findAllProfilesInListMembersQueryData} from '../queries/list-members'
@@ -20,6 +20,7 @@ import {findAllProfilesInQueryData as findAllProfilesInProfileFollowersQueryData
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowsQueryData} from '../queries/profile-follows'
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedFollowsQueryData} from '../queries/suggested-follows'
 import {castAsShadow, Shadow} from './types'
+
 export type {Shadow} from './types'
 
 export interface ProfileShadow {
@@ -29,13 +30,13 @@ export interface ProfileShadow {
 }
 
 const shadows: WeakMap<
-  AppBskyActorDefs.ProfileView,
+  atp.profile.AnyProfileView,
   Partial<ProfileShadow>
 > = new WeakMap()
 const emitter = new EventEmitter()
 
 export function useProfileShadow<
-  TProfileView extends Omit<AppBskyActorDefs.ProfileView, '$type'>,
+  TProfileView extends atp.profile.AnyProfileView,
 >(profile: TProfileView): Shadow<TProfileView> {
   const [shadow, setShadow] = useState(() => shadows.get(profile))
   const [prevPost, setPrevPost] = useState(profile)
@@ -77,7 +78,7 @@ export function updateProfileShadow(
   })
 }
 
-function mergeShadow<TProfileView extends AppBskyActorDefs.ProfileView>(
+function mergeShadow<TProfileView extends atp.profile.AnyProfileView>(
   profile: TProfileView,
   shadow: Partial<ProfileShadow>,
 ): Shadow<TProfileView> {
@@ -99,7 +100,7 @@ function mergeShadow<TProfileView extends AppBskyActorDefs.ProfileView>(
 function* findProfilesInCache(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<atp.profile.AnyProfileView, void> {
   yield* findAllProfilesInListMembersQueryData(queryClient, did)
   yield* findAllProfilesInMyBlockedAccountsQueryData(queryClient, did)
   yield* findAllProfilesInMyMutedAccountsQueryData(queryClient, did)
