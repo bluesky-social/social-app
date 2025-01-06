@@ -41,6 +41,7 @@ import {
   BulletList_Filled_Corner0_Rounded as ListFilled,
   BulletList_Stroke2_Corner0_Rounded as List,
 } from '#/components/icons/BulletList'
+import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
 import {EditBig_Stroke2_Corner0_Rounded as EditBig} from '#/components/icons/EditBig'
 import {
   Hashtag_Filled_Corner0_Rounded as HashtagFilled,
@@ -76,7 +77,7 @@ function ProfileCard() {
   const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {logoutEveryAccount} = useSessionApi()
   const {isLoading, data} = useProfilesQuery({
-    handles: accounts.map(a => a.did),
+    handles: accounts.map(acc => acc.did),
   })
   const profiles = data?.profiles
   const signOutPromptControl = Prompt.usePromptControl()
@@ -84,6 +85,7 @@ function ProfileCard() {
   const {_} = useLingui()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeEverything = useCloseAllActiveElements()
+  const t = useTheme()
 
   const size = 48
 
@@ -105,13 +107,28 @@ function ProfileCard() {
       {!isLoading && profile ? (
         <Menu.Root>
           <Menu.Trigger label={_(msg`Switch accounts`)}>
-            {({props}) => (
+            {({props, state}) => (
               <Button label={props.accessibilityLabel} {...props}>
                 <UserAvatar
                   avatar={profile.avatar}
                   size={size}
                   type={profile?.associated?.labeler ? 'labeler' : 'user'}
                 />
+                <View
+                  style={[
+                    a.absolute,
+                    a.inset_0,
+                    a.transition_opacity,
+                    {opacity: state.hovered ? 0.6 : 0},
+                    a.justify_center,
+                    a.align_center,
+                    t.atoms.bg,
+                  ]}>
+                  <ChevronDownIcon
+                    style={[t.atoms.text_contrast_high]}
+                    size="sm"
+                  />
+                </View>
               </Button>
             )}
           </Menu.Trigger>
@@ -136,7 +153,15 @@ function ProfileCard() {
                       onPress={() =>
                         onPressSwitchAccount(other.account, 'SwitchAccount')
                       }>
-                      <UserAvatar avatar={other.profile?.avatar} size={20} />
+                      <UserAvatar
+                        avatar={other.profile?.avatar}
+                        size={20}
+                        type={
+                          other.profile?.associated?.labeler
+                            ? 'labeler'
+                            : 'user'
+                        }
+                      />
                       <Menu.ItemText>
                         {sanitizeHandle(
                           other.profile?.handle ?? other.account.handle,
