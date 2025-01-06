@@ -1,4 +1,4 @@
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppBskyActorDefs, ChatBskyActorDefs} from '@atproto/api'
 
 export {
   /**
@@ -25,6 +25,7 @@ export type AnyProfileView =
   | AppBskyActorDefs.ProfileViewBasic
   | AppBskyActorDefs.ProfileView
   | AppBskyActorDefs.ProfileViewDetailed
+  | ChatBskyActorDefs.ProfileViewBasic
 
 /**
  * Maps any profile view type to `ProfileViewBasic`.
@@ -41,7 +42,10 @@ export function anyToBasic(
     associated: view.associated,
     viewer: view.viewer,
     labels: view.labels,
-    createdAt: view.createdAt,
+    // @ts-expect-error `createdAt` doesn't exist on chat view
+    createdAt: ChatBskyActorDefs.isProfileViewBasic(view)
+      ? undefined
+      : view.createdAt,
   }
 }
 
