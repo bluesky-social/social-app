@@ -5837,7 +5837,7 @@ msgstr "Porno"
 #: src/view/com/composer/Composer.tsx:944
 msgctxt "action"
 msgid "Post"
-msgstr "Beitrag"
+msgstr "Posten"
 
 #: src/view/com/post-thread/PostThread.tsx:536
 msgctxt "description"
