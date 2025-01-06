@@ -18,6 +18,7 @@ import {
   findAllProfilesInQueryData as findAllProfilesInSearchQueryData,
 } from '#/state/queries/search-posts'
 import {useAgent} from '#/state/session'
+import * as atp from '#/types/atproto'
 import {
   findAllPostsInQueryData as findAllPostsInNotifsQueryData,
   findAllProfilesInQueryData as findAllProfilesInNotifsQueryData,
@@ -329,7 +330,10 @@ function responseToThreadNodes(
 ): ThreadNode {
   if (
     AppBskyFeedDefs.isThreadViewPost(node) &&
-    AppBskyFeedPost.isValidRecord(node.post.record)
+    atp.fastIsType<AppBskyFeedPost.Record>(
+      node.post.record,
+      AppBskyFeedPost.isRecord,
+    )
   ) {
     const post = node.post
     // These should normally be present. They're missing only for

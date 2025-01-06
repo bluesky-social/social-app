@@ -14,6 +14,7 @@ import {QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
 import {labelIsHideableOffense} from '#/lib/moderation'
+import * as atp from '#/types/atproto'
 import {precacheProfile} from '../profile'
 import {FeedNotification, FeedPage, NotificationType} from './types'
 
@@ -255,14 +256,17 @@ function getSubjectUri(
     return notif.uri
   } else if (type === 'post-like' || type === 'repost') {
     if (
-      AppBskyFeedRepost.isRecord(notif.record) ||
-      AppBskyFeedLike.isRecord(notif.record)
+      atp.fastIsType<AppBskyFeedRepost.Record>(
+        notif.record,
+        AppBskyFeedRepost.isRecord,
+      ) ||
+      atp.fastIsType<AppBskyFeedLike.Record>(
+        notif.record,
+        AppBskyFeedLike.isRecord,
+      )
     ) {
-      const record = notif.record as
-        | AppBskyFeedRepost.Record
-        | AppBskyFeedLike.Record
-      return typeof record.subject?.uri === 'string'
-        ? record.subject?.uri
+      return typeof notif.record.subject?.uri === 'string'
+        ? notif.record.subject?.uri
         : undefined
     }
   } else if (type === 'feedgen-like') {
