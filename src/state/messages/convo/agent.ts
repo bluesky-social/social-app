@@ -1031,7 +1031,10 @@ export class Convo {
            * `getItems` is only run in "active" status states, where
            * `this.sender` is defined
            */
-          sender: this.sender!,
+          sender: {
+            $type: 'chat.bsky.convo.defs#messageViewSender',
+            did: this.sender!.did,
+          },
         },
         nextMessage: null,
         prevMessage: null,
