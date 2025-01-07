@@ -427,7 +427,7 @@ let PreviewableUserAvatar = ({
 
   const onPress = React.useCallback(() => {
     onBeforePress?.()
-    precacheProfile(queryClient, profile)
+    precacheProfile(queryClient, atp.profile.anyToBasic(profile))
   }, [profile, queryClient, onBeforePress])
 
   return (
