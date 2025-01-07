@@ -1,8 +1,8 @@
 diff --git a/node_modules/@mattermost/react-native-paste-input/ios/PasteInputView.m b/node_modules/@mattermost/react-native-paste-input/ios/PasteInputView.m
-index e916023..811574c 100644
+index e916023..c8208d8 100644
 --- a/node_modules/@mattermost/react-native-paste-input/ios/PasteInputView.m
 +++ b/node_modules/@mattermost/react-native-paste-input/ios/PasteInputView.m
-@@ -22,6 +22,11 @@
+@@ -22,14 +22,29 @@
      _backedTextInputView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
      _backedTextInputView.textInputDelegate = self;
  
@@ -13,4 +13,22 @@ index e916023..811574c 100644
 +
      [self addSubview:_backedTextInputView];
    }
+ 
+   return self;
+ }
+ 
++
+ - (id<RCTBackedTextInputViewProtocol>)backedTextInputView
+ {
++  if (!_backedTextInputView) {
++    // Provide our own custom text view instead of letting
++    // RCTMultilineTextInputView allocate a RCTUITextView
++    _backedTextInputView = [[PasteInputTextView alloc] initWithFrame:self.bounds];
++    _backedTextInputView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
++    _backedTextInputView.textInputDelegate = self;
++
++    [self addSubview:_backedTextInputView];
++  }
+   return _backedTextInputView;
+ }
  
