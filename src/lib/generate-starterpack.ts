@@ -24,7 +24,7 @@ export const createStarterPackList = async ({
   name: string
   description?: string
   descriptionFacets?: Facet[]
-  profiles: AppBskyActorDefs.ProfileViewBasic[]
+  profiles: AppBskyActorDefs.ProfileView[]
   agent: BskyAgent
 }): Promise<{uri: string; cid: string}> => {
   if (profiles.length === 0) throw new Error('No profiles given')
@@ -68,8 +68,8 @@ export function useGenerateStarterPackMutation({
 
   return useMutation<{uri: string; cid: string}, Error, void>({
     mutationFn: async () => {
-      let profile: AppBskyActorDefs.ProfileViewBasic | undefined
-      let profiles: AppBskyActorDefs.ProfileViewBasic[] | undefined
+      let profile: AppBskyActorDefs.ProfileViewDetailed | undefined
+      let profiles: AppBskyActorDefs.ProfileView[] | undefined
 
       await Promise.all([
         (async () => {

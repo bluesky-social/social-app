@@ -93,7 +93,7 @@ export async function invalidateStarterPack({
 interface UseCreateStarterPackMutationParams {
   name: string
   description?: string
-  profiles: AppBskyActorDefs.ProfileViewBasic[]
+  profiles: AppBskyActorDefs.ProfileView[]
   feeds?: AppBskyFeedDefs.GeneratorView[]
 }
 
