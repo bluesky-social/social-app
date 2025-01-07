@@ -23,6 +23,10 @@ import {logEvent, LogEvents, toClout} from '#/lib/statsig/statsig'
 import {Shadow} from '#/state/cache/types'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
+import {
+  unstableCacheProfileView,
+  useUnstableProfileViewCache,
+} from '#/state/queries/unstable-profile-cache'
 import * as userActionHistory from '#/state/userActionHistory'
 import * as atp from '#/types/atproto'
 import {updateProfileShadow} from '../cache/profile-shadow'
@@ -35,6 +39,12 @@ import {RQKEY as RQKEY_LIST_CONVOS} from './messages/list-conversations'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 
+export * from '#/state/queries/unstable-profile-cache'
+/**
+ * @deprecated use {@link unstableCacheProfileView} instead
+ */
+export const precacheProfile = unstableCacheProfileView
+
 const RQKEY_ROOT = 'profile'
 export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
@@ -44,16 +54,6 @@ export const profilesQueryKey = (handles: string[]) => [
   handles,
 ]
 
-const unstableProfileViewCacheQueryKeyRoot = 'unstableProfileViewCache'
-/**
- * We cache multiple profile view types by this query key. If object shapes are
- * important, you should validate the type when accessing the data.
- */
-export const unstableProfileViewCacheQueryKey = (didOrHandle: string) => [
-  unstableProfileViewCacheQueryKeyRoot,
-  didOrHandle,
-]
-
 export function useProfileQuery({
   did,
   staleTime = STALE.SECONDS.FIFTEEN,
@@ -61,8 +61,8 @@ export function useProfileQuery({
   did: string | undefined
   staleTime?: number
 }) {
-  const queryClient = useQueryClient()
   const agent = useAgent()
+  const {getUnstableProfile} = useUnstableProfileViewCache()
   return useQuery<AppBskyActorDefs.ProfileViewDetailed>({
     // WARNING
     // this staleTime is load-bearing
@@ -77,11 +77,7 @@ export function useProfileQuery({
     },
     placeholderData: () => {
       if (!did) return
-
-      // This can return any profile view type
-      return queryClient.getQueryData<atp.profile.AnyProfileView>(
-        unstableProfileViewCacheQueryKey(did),
-      ) as AppBskyActorDefs.ProfileViewDetailed
+      return getUnstableProfile(did) as AppBskyActorDefs.ProfileViewDetailed
     },
     enabled: !!did,
   })
@@ -510,25 +506,6 @@ function useProfileUnblockMutation() {
       resetProfilePostsQueries(queryClient, did, 1000)
     },
   })
-}
-
-/**
- * This function is used to precache a profile view in the query client. Any
- * profile view type is accepted, so you should validate the type when
- * accessing the data.
- */
-export function precacheProfile(
-  queryClient: QueryClient,
-  profile: atp.profile.AnyProfileView,
-) {
-  queryClient.setQueryData(
-    unstableProfileViewCacheQueryKey(profile.handle),
-    profile,
-  )
-  queryClient.setQueryData(
-    unstableProfileViewCacheQueryKey(profile.did),
-    profile,
-  )
 }
 
 async function whenAppViewReady(
