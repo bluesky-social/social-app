@@ -4,7 +4,7 @@ import {Image} from 'expo-image'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
-import {parseTenorGif} from '#/lib/strings/embed-player'
+import {isTenorGifUri} from '#/lib/strings/embed-player'
 import {atoms as a, useTheme} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
@@ -37,24 +37,17 @@ export function Embed({
         ))}
       </Outer>
     )
-  } else if (e.type === 'link' && e.view.external.thumb) {
-    let url: URL | undefined
-    try {
-      url = new URL(e.view.external.uri)
-    } catch {}
-    if (url) {
-      const {success} = parseTenorGif(url)
-      if (success) {
-        return (
-          <Outer style={style}>
-            <GifItem
-              thumbnail={e.view.external.thumb}
-              alt={e.view.external.title}
-            />
-          </Outer>
-        )
-      }
-    }
+  } else if (e.type === 'link') {
+    if (!e.view.external.thumb) return null
+    if (!isTenorGifUri(e.view.external.uri)) return null
+    return (
+      <Outer style={style}>
+        <GifItem
+          thumbnail={e.view.external.thumb}
+          alt={e.view.external.title}
+        />
+      </Outer>
+    )
   } else if (e.type === 'video') {
     return (
       <Outer style={style}>
