@@ -44,9 +44,13 @@ export const profilesQueryKey = (handles: string[]) => [
   handles,
 ]
 
-const profileBasicQueryKeyRoot = 'profileBasic'
-export const profileBasicQueryKey = (didOrHandle: string) => [
-  profileBasicQueryKeyRoot,
+const unstableProfileViewCacheQueryKeyRoot = 'unstableProfileViewCache'
+/**
+ * We cache multiple profile view types by this query key. If object shapes are
+ * important, you should validate the type when accessing the data.
+ */
+export const unstableProfileViewCacheQueryKey = (didOrHandle: string) => [
+  unstableProfileViewCacheQueryKeyRoot,
   didOrHandle,
 ]
 
@@ -74,9 +78,10 @@ export function useProfileQuery({
     placeholderData: () => {
       if (!did) return
 
-      return queryClient.getQueryData<AppBskyActorDefs.ProfileViewDetailed>(
-        profileBasicQueryKey(did),
-      )
+      // This can return any profile view type
+      return queryClient.getQueryData<atp.profile.AnyProfileView>(
+        unstableProfileViewCacheQueryKey(did),
+      ) as AppBskyActorDefs.ProfileViewDetailed
     },
     enabled: !!did,
   })
@@ -507,12 +512,23 @@ function useProfileUnblockMutation() {
   })
 }
 
+/**
+ * This function is used to precache a profile view in the query client. Any
+ * profile view type is accepted, so you should validate the type when
+ * accessing the data.
+ */
 export function precacheProfile(
   queryClient: QueryClient,
-  profile: AppBskyActorDefs.ProfileViewBasic,
+  profile: atp.profile.AnyProfileView,
 ) {
-  queryClient.setQueryData(profileBasicQueryKey(profile.handle), profile)
-  queryClient.setQueryData(profileBasicQueryKey(profile.did), profile)
+  queryClient.setQueryData(
+    unstableProfileViewCacheQueryKey(profile.handle),
+    profile,
+  )
+  queryClient.setQueryData(
+    unstableProfileViewCacheQueryKey(profile.did),
+    profile,
+  )
 }
 
 async function whenAppViewReady(

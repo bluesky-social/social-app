@@ -61,7 +61,7 @@ export function ProfileCard({
 
   const onBeforePress = React.useCallback(() => {
     onPress?.()
-    precacheProfile(queryClient, atp.profile.anyToBasic(profile))
+    precacheProfile(queryClient, profile)
   }, [onPress, profile, queryClient])
 
   if (!moderationOpts) {

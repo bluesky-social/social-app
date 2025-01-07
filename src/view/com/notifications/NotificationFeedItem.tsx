@@ -121,14 +121,7 @@ let NotificationFeedItem = ({
   }
 
   const onBeforePress = React.useCallback(() => {
-    /*
-     * Notification returns ProfileView, which has one additional field on top
-     * of `Basic`: `indexedAt`. Harmless for now, but should be fixed.
-     */
-    precacheProfile(
-      queryClient,
-      atp.profile.anyToBasic(item.notification.author),
-    )
+    precacheProfile(queryClient, item.notification.author)
   }, [queryClient, item.notification.author])
 
   const authors: Author[] = useMemo(() => {

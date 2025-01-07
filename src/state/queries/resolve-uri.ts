@@ -1,4 +1,4 @@
-import {AppBskyActorDefs, AtUri} from '@atproto/api'
+import {AtUri} from '@atproto/api'
 import {
   QueryClient,
   useQuery,
@@ -8,7 +8,8 @@ import {
 
 import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
-import {profileBasicQueryKey as RQKEY_PROFILE_BASIC} from './profile'
+import * as atp from '#/types/atproto'
+import {unstableProfileViewCacheQueryKey} from './profile'
 
 const RQKEY_ROOT = 'resolved-did'
 export const RQKEY = (didOrHandle: string) => [RQKEY_ROOT, didOrHandle]
@@ -46,10 +47,10 @@ export function useResolveDidQuery(didOrHandle: string | undefined) {
       // Return undefined if no did or handle
       if (!didOrHandle) return
 
-      const profile =
-        queryClient.getQueryData<AppBskyActorDefs.ProfileViewBasic>(
-          RQKEY_PROFILE_BASIC(didOrHandle),
-        )
+      // This can return any profile view type
+      const profile = queryClient.getQueryData<atp.profile.AnyProfileView>(
+        unstableProfileViewCacheQueryKey(didOrHandle),
+      )
       return profile?.did
     },
     enabled: !!didOrHandle,
