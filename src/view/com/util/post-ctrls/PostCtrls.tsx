@@ -36,6 +36,7 @@ import {
   invalidate,
   removeBookmark,
   RQKEY,
+  useMyBookmarksQuery,
 } from '#/state/queries/my-bookmarks'
 import {
   usePostLikeMutationQueue,
@@ -82,6 +83,7 @@ let PostCtrls = ({
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
+  const {isFetching} = useMyBookmarksQuery()
   const t = useTheme()
   const {_, i18n} = useLingui()
   const {openComposer} = useComposerControls()
@@ -166,10 +168,18 @@ let PostCtrls = ({
     feedContext,
     isBlocked,
   ])
-  const bookmarkUri = getBookmarkUri(post.uri)
 
+  const bookmarkUri = getBookmarkUri(post.uri) // Fetches the bookmark URI for the post
   const [hasBookmarkIconBeenToggled, setHasBookmarkIconBeenToggled] =
     React.useState(bookmarkUri !== undefined)
+
+  // Update the state when bookmarkUri or isFetching changes
+  React.useEffect(() => {
+    if (!isFetching) {
+      const b = getBookmarkUri(post.uri)
+      setHasBookmarkIconBeenToggled(b !== undefined)
+    }
+  }, [bookmarkUri, isFetching, post.uri])
 
   const onPressToggleBookmark = React.useCallback(async () => {
     if (isBlocked) {

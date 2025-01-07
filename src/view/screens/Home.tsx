@@ -15,7 +15,6 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {SavedFeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
-import {useMyBookmarksQuery} from '#/state/queries/my-bookmarks'
 import {FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
@@ -36,7 +35,6 @@ type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
 export function HomeScreen(props: Props) {
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const {data: preferences} = usePreferencesQuery()
-  const {} = useMyBookmarksQuery()
   const {currentAccount} = useSession()
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()

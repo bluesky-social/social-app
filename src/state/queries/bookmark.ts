@@ -87,7 +87,6 @@ function usePostUnBookmarkMutation(
   >({
     mutationFn: ({bookmarkUri}) => {
       logEvent('post:unbookmark', {logContext})
-      console.log('unbookmark', bookmarkUri)
       const bookmarkUrip = new AtUri(bookmarkUri)
       return agent.com.atproto.repo.deleteRecord({
         repo: agent.assertDid,
