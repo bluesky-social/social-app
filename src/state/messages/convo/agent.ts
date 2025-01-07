@@ -686,7 +686,7 @@ export class Convo {
        * If there's a rev, we should handle it. If there's not a rev, we don't
        * know what it is.
        */
-      if (typeof ev.rev === 'string') {
+      if ('rev' in ev) {
         const isUninitialized = !this.latestRev
         const isNewEvent = this.latestRev && ev.rev > this.latestRev
 
