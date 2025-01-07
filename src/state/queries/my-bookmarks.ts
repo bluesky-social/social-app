@@ -68,6 +68,15 @@ export function invalidate(qc: QueryClient) {
   qc.invalidateQueries({queryKey: [RQKEY_ROOT]})
 }
 
+export function addBookmark(postUri: string, bookmarkUri: string): void {
+  bookmarkMap.set(postUri, bookmarkUri)
+}
+
+// Function to remove a bookmark from the map
+export function removeBookmark(postUri: string): void {
+  bookmarkMap.delete(postUri)
+}
+
 export const convertAtUriToBlueskyUrl = (subject: string): string | null => {
   try {
     ensureValidAtUri(subject)

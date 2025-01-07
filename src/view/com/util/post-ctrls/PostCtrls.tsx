@@ -16,6 +16,7 @@ import {
 } from '@atproto/api'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {IS_INTERNAL} from '#/lib/app-info'
 import {POST_CTRL_HITSLOP} from '#/lib/constants'
@@ -29,7 +30,13 @@ import {toShareUrl} from '#/lib/strings/url-helpers'
 import {Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {usePostBookmarkMutationQueue} from '#/state/queries/bookmark'
-import {getBookmarkUri} from '#/state/queries/my-bookmarks'
+import {
+  addBookmark,
+  getBookmarkUri,
+  invalidate,
+  removeBookmark,
+  RQKEY,
+} from '#/state/queries/my-bookmarks'
 import {
   usePostLikeMutationQueue,
   usePostRepostMutationQueue,
@@ -90,6 +97,7 @@ let PostCtrls = ({
   )
   const requireAuth = useRequireAuth()
   const loggedOutWarningPromptControl = useDialogControl()
+  const queryClient = useQueryClient()
   const {sendInteraction} = useFeedFeedbackContext()
   const {captureAction} = useProgressGuideControls()
   const playHaptic = useHaptics()
@@ -158,7 +166,6 @@ let PostCtrls = ({
     feedContext,
     isBlocked,
   ])
-
   const bookmarkUri = getBookmarkUri(post.uri)
 
   const [hasBookmarkIconBeenToggled, setHasBookmarkIconBeenToggled] =
@@ -178,10 +185,16 @@ let PostCtrls = ({
       setHasBookmarkIconBeenToggled(!hasBookmarkIconBeenToggled)
 
       if (hasBeenToggled) {
-        await unQueueBookmark()
+        unQueueBookmark()
+        removeBookmark(post.uri)
+        invalidate(queryClient)
+        queryClient.invalidateQueries({queryKey: RQKEY()})
       } else {
         playHaptic('Light')
-        await queueBookmark()
+        const newBookmarkUri = await queueBookmark()
+        addBookmark(post.uri, newBookmarkUri ?? '')
+        invalidate(queryClient)
+        queryClient.invalidateQueries({queryKey: RQKEY()})
       }
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
@@ -193,6 +206,8 @@ let PostCtrls = ({
     _,
     hasBookmarkIconBeenToggled,
     unQueueBookmark,
+    post.uri,
+    queryClient,
     playHaptic,
     queueBookmark,
   ])
