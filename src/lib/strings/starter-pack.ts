@@ -1,4 +1,6 @@
-import {AppBskyGraphDefs, AtUri} from '@atproto/api'
+import {AtUri} from '@atproto/api'
+
+import * as atp from '#/types/atproto'
 
 export function createStarterPackLinkFromAndroidReferrer(
   referrerQueryString: string,
@@ -79,7 +81,7 @@ export function httpStarterPackUriToAtUri(httpUri?: string): string | null {
 }
 
 export function getStarterPackOgCard(
-  didOrStarterPack: AppBskyGraphDefs.StarterPackView | string,
+  didOrStarterPack: atp.starterPack.AnyStarterPackView | string,
   rkey?: string,
 ) {
   if (typeof didOrStarterPack === 'string') {

@@ -1,4 +1,5 @@
 export * as profile from '#/types/atproto/profile'
+export * as starterPack from '#/types/atproto/starterPack'
 
 /**
  * Use sparingly, and only when you know it's safe to do so.
