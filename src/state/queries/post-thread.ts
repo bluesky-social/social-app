@@ -330,7 +330,7 @@ function responseToThreadNodes(
 ): ThreadNode {
   if (
     AppBskyFeedDefs.isThreadViewPost(node) &&
-    atp.fastIsType<AppBskyFeedPost.Record>(
+    atp.dangerousIsType<AppBskyFeedPost.Record>(
       node.post.record,
       AppBskyFeedPost.isRecord,
     )
