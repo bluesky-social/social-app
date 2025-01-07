@@ -272,7 +272,10 @@ let NotificationFeedItem = ({
 
     if (
       item.notification.author.viewer?.following &&
-      AppBskyGraphFollow.isValidRecord(item.notification.record)
+      atp.dangerousIsType<AppBskyGraphFollow.Record>(
+        item.notification.record,
+        AppBskyGraphFollow.isRecord,
+      )
     ) {
       let followingTimestamp
       try {
@@ -724,7 +727,13 @@ function ExpandedAuthorsList({
 
 function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
   const pal = usePalette('default')
-  if (post && AppBskyFeedPost.isValidRecord(post?.record)) {
+  if (
+    post &&
+    atp.dangerousIsType<AppBskyFeedPost.Record>(
+      post?.record,
+      AppBskyFeedPost.isRecord,
+    )
+  ) {
     const text = post.record.text
 
     return (
