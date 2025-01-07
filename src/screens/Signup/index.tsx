@@ -26,6 +26,7 @@ import {Divider} from '#/components/Divider'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import * as atp from '#/types/atproto'
 
 export function Signup({onPressBack}: {onPressBack: () => void}) {
   const {_} = useLingui()
@@ -95,7 +96,10 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
         scrollable>
         <View testID="createAccount" style={a.flex_1}>
           {showStarterPackCard &&
-          AppBskyGraphStarterpack.isRecord(starterPack.record) ? (
+          atp.dangerousIsType<AppBskyGraphStarterpack.Record>(
+            starterPack.record,
+            AppBskyGraphStarterpack.isRecord,
+          ) ? (
             <Animated.View entering={!isFetchedAtMount ? FadeIn : undefined}>
               <LinearGradientBackground
                 style={[a.mx_lg, a.p_lg, a.gap_sm, a.rounded_sm]}>
