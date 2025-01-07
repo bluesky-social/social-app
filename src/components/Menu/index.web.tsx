@@ -119,6 +119,11 @@ export function Trigger({children, label, role = 'button'}: TriggerProps) {
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
 
+  const prevControlIsOpen = React.useRef(control.isOpen)
+  const open = prevControlIsOpen.current || control.isOpen
+  const activated = Boolean(hovered || focused || open)
+  prevControlIsOpen.current = control.isOpen
+
   return (
     <DropdownMenu.Trigger asChild>
       <RadixTriggerPassThrough>
@@ -127,6 +132,7 @@ export function Trigger({children, label, role = 'button'}: TriggerProps) {
             isNative: false,
             control,
             state: {
+              activated,
               hovered,
               focused,
               pressed: false,
