@@ -7,7 +7,6 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {ensureValidAtUri} from '@atproto/syntax'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {cloneDeep} from 'lodash'
@@ -30,21 +29,6 @@ import {List} from '../util/List'
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
-
-const convertAtUriToBlueskyUrl = (subject: string): string | null => {
-  try {
-    ensureValidAtUri(subject)
-    const uriWithoutPrefix = subject.slice(5)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [handle, collection, id] = uriWithoutPrefix.split('/')
-    if (collection !== 'app.bsky.feed.post') {
-      return null
-    }
-    return subject
-  } catch (error) {
-    return null
-  }
-}
 
 export function MyBookmarks({
   inline,
@@ -78,19 +62,14 @@ export function MyBookmarks({
       } else if (isEmpty) {
         items = items.concat([EMPTY])
       } else {
-        const validData = data?.filter(
-          d => convertAtUriToBlueskyUrl(d.subject) != null,
-        )
-
         const fetchedPosts = await Promise.all(
-          validData!.map(async d => {
+          data!.map(async d => {
             const post = await getPost({uri: d.subject})
             const p = cloneDeep(post)
             p.bookmarkUri = d.uri
             return p
           }),
         )
-        console.log('fetchedPosts:', fetchedPosts)
         items = items.concat(fetchedPosts)
       }
       setPosts(items)
@@ -112,7 +91,6 @@ export function MyBookmarks({
   }, [refetch, setIsPTRing])
 
   const keyExtractor = (item: any, index: number) => {
-    console.log('keyextractor:', item.bookmarkUri, index)
     return item.bookmarkUri ? item.bookmarkUri.toString() : index.toString()
   }
 

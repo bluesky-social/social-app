@@ -7,6 +7,7 @@ import {
   NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {s} from '#/lib/styles'
+import {useMyBookmarksQuery} from '#/state/queries/my-bookmarks'
 import {useComposerControls} from '#/state/shell/composer'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {atoms as a} from '#/alf'
@@ -17,6 +18,7 @@ type Props = NativeStackScreenProps<BookmarksTabNavigatorParams, 'Bookmarks'>
 export function BookmarksScreen({}: Props) {
   const {_} = useLingui()
   const {openComposer} = useComposerControls()
+  const {} = useMyBookmarksQuery()
 
   return (
     <Layout.Screen testID="bookmarksScreen">

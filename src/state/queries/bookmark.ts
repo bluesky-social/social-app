@@ -5,34 +5,41 @@ import {
   ComAtprotoRepoDeleteRecord,
   ComAtprotoRepoPutRecord,
 } from '@atproto/api'
-import {useMutation} from '@tanstack/react-query'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {LogEvents} from '#/lib/statsig/events'
 import {logEvent} from '#/lib/statsig/statsig'
 import {Shadow} from '../cache/types'
 import {useAgent} from '../session'
+import {getBookmarkUri, invalidate, RQKEY} from './my-bookmarks'
 
 export function usePostBookmarkMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
   logContext: LogEvents['post:bookmark']['logContext'],
 ) {
-  const initialBookmarkUri = post.bookmarkUri as string | undefined
+  const initialBookmarkUri = getBookmarkUri(post.uri)
   const bookmarkMutation = usePostBookmarkMutation(logContext, post)
   const unBookmarkMutation = usePostUnBookmarkMutation(logContext)
+  const queryClient = useQueryClient()
 
   const queueToggle = useToggleMutationQueue({
     initialState: initialBookmarkUri,
     runMutation: async (prevBookmarkUri, shouldBookmark) => {
       if (shouldBookmark) {
         const {data} = await bookmarkMutation.mutateAsync()
+        invalidate(queryClient)
+        queryClient.invalidateQueries({queryKey: RQKEY()})
         return data.uri
       } else {
         if (prevBookmarkUri) {
+          console.log('unbookmarking', prevBookmarkUri)
           await unBookmarkMutation.mutateAsync({
             bookmarkUri: prevBookmarkUri,
           })
         }
+        invalidate(queryClient)
+        queryClient.invalidateQueries({queryKey: RQKEY()})
         return undefined
       }
     },

@@ -51,6 +51,7 @@ export function Post({
   style?: StyleProp<ViewStyle>
 }) {
   const moderationOpts = useModerationOpts()
+
   const record = useMemo<AppBskyFeedPost.Record | undefined>(
     () =>
       AppBskyFeedPost.isRecord(post.record) &&
@@ -255,7 +256,6 @@ function PostInner({
           </ContentHider>
           <PostCtrls
             post={post}
-            bookmarkUri={post.bookmarkUri as string | undefined}
             record={record}
             richText={richText}
             onPressReply={onPressReply}

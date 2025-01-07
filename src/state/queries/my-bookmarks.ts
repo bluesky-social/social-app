@@ -1,3 +1,4 @@
+import {ensureValidAtUri} from '@atproto/syntax'
 import {CommunityLexiconBookmarksBookmark} from '@lexicon-community/types'
 import {QueryClient, useQuery, UseQueryResult} from '@tanstack/react-query'
 
@@ -7,6 +8,8 @@ import {useAgent, useSession} from '#/state/session'
 
 const RQKEY_ROOT = 'my-bookmarks'
 export const RQKEY = () => [RQKEY_ROOT]
+
+const bookmarkMap = new Map<string, string>()
 
 export function useMyBookmarksQuery(): UseQueryResult<
   CommunityLexiconBookmarksBookmark.Record[],
@@ -44,8 +47,11 @@ export function useMyBookmarksQuery(): UseQueryResult<
           if (isValid) {
             const recordVal =
               bookmark.value as CommunityLexiconBookmarksBookmark.Record
-            recordVal.uri = bookmark.uri
-            bookmarks.push(recordVal)
+            if (convertAtUriToBlueskyUrl(recordVal.subject) !== null) {
+              recordVal.uri = bookmark.uri
+              bookmarks.push(recordVal)
+              bookmarkMap.set(recordVal.subject, bookmark.uri)
+            }
           }
         }
       }
@@ -54,7 +60,25 @@ export function useMyBookmarksQuery(): UseQueryResult<
     enabled: !!currentAccount,
   })
 }
+export function getBookmarkUri(postUri: string): string | undefined {
+  return bookmarkMap.get(postUri)
+}
 
 export function invalidate(qc: QueryClient) {
   qc.invalidateQueries({queryKey: [RQKEY_ROOT]})
+}
+
+export const convertAtUriToBlueskyUrl = (subject: string): string | null => {
+  try {
+    ensureValidAtUri(subject)
+    const uriWithoutPrefix = subject.slice(5)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [handle, collection, id] = uriWithoutPrefix.split('/')
+    if (collection !== 'app.bsky.feed.post') {
+      return null
+    }
+    return subject
+  } catch (error) {
+    return null
+  }
 }

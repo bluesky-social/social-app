@@ -29,6 +29,7 @@ import {toShareUrl} from '#/lib/strings/url-helpers'
 import {Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {usePostBookmarkMutationQueue} from '#/state/queries/bookmark'
+import {getBookmarkUri} from '#/state/queries/my-bookmarks'
 import {
   usePostLikeMutationQueue,
   usePostRepostMutationQueue,
@@ -54,7 +55,6 @@ import {RepostButton} from './RepostButton'
 let PostCtrls = ({
   big,
   post,
-  bookmarkUri,
   record,
   richText,
   feedContext,
@@ -66,7 +66,6 @@ let PostCtrls = ({
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
-  bookmarkUri?: string | undefined
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
   feedContext?: string | undefined
@@ -160,10 +159,10 @@ let PostCtrls = ({
     isBlocked,
   ])
 
+  const bookmarkUri = getBookmarkUri(post.uri)
+
   const [hasBookmarkIconBeenToggled, setHasBookmarkIconBeenToggled] =
-    React.useState(
-      bookmarkUri !== undefined && bookmarkUri !== null && bookmarkUri !== '',
-    )
+    React.useState(bookmarkUri !== undefined)
 
   const onPressToggleBookmark = React.useCallback(async () => {
     if (isBlocked) {
@@ -179,12 +178,10 @@ let PostCtrls = ({
       setHasBookmarkIconBeenToggled(!hasBookmarkIconBeenToggled)
 
       if (hasBeenToggled) {
-        unQueueBookmark()
-        post.bookmarkUri = undefined
+        await unQueueBookmark()
       } else {
         playHaptic('Light')
-        const newBookmarkUri = await queueBookmark()
-        post.bookmarkUri = newBookmarkUri
+        await queueBookmark()
       }
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
@@ -196,7 +193,6 @@ let PostCtrls = ({
     _,
     hasBookmarkIconBeenToggled,
     unQueueBookmark,
-    post,
     playHaptic,
     queueBookmark,
   ])
