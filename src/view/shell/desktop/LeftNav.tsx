@@ -17,6 +17,7 @@ import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
 import {useHomeBadge} from '#/state/home-badge'
@@ -120,7 +121,8 @@ function ProfileCard() {
                     a.justify_between,
                     a.align_center,
                     a.flex_row,
-                    gtTablet && a.px_lg,
+                    {gap: 6},
+                    gtTablet && [a.pl_lg, a.pr_md],
                   ]}>
                   <View
                     style={[
@@ -128,6 +130,8 @@ function ProfileCard() {
                         a.transition_transform,
                         {transitionDuration: '250ms'},
                       ],
+                      a.relative,
+                      a.z_10,
                       active && {
                         transform: [{scale: 2 / 3}, {translateX: -22}],
                       },
@@ -137,6 +141,32 @@ function ProfileCard() {
                       size={size}
                       type={profile?.associated?.labeler ? 'labeler' : 'user'}
                     />
+                  </View>
+                  <View
+                    style={[
+                      a.flex_1,
+                      a.transition_opacity,
+                      {
+                        marginLeft: tokens.space.xl * -1,
+                        opacity: active ? 1 : 0,
+                      },
+                    ]}>
+                    <Text
+                      style={[a.font_heavy, a.text_sm, a.leading_snug]}
+                      numberOfLines={1}>
+                      {sanitizeDisplayName(
+                        profile.displayName || profile.handle,
+                      )}
+                    </Text>
+                    <Text
+                      style={[
+                        a.text_xs,
+                        a.leading_snug,
+                        t.atoms.text_contrast_medium,
+                      ]}
+                      numberOfLines={1}>
+                      {sanitizeHandle(profile.handle, '@')}
+                    </Text>
                   </View>
                   {gtTablet && (
                     <EllipsisIcon
