@@ -24,6 +24,7 @@ import {Shadow} from '#/state/cache/types'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import * as userActionHistory from '#/state/userActionHistory'
+import * as atp from '#/types/atproto'
 import {updateProfileShadow} from '../cache/profile-shadow'
 import {useAgent, useSession} from '../session'
 import {
@@ -220,7 +221,7 @@ export function useProfileUpdateMutation() {
 }
 
 export function useProfileFollowMutationQueue(
-  profile: Shadow<Omit<AppBskyActorDefs.ProfileViewDetailed, '$type'>>,
+  profile: Shadow<atp.profile.AnyProfileView>,
   logContext: LogEvents['profile:follow']['logContext'] &
     LogEvents['profile:follow']['logContext'],
 ) {
@@ -294,7 +295,7 @@ export function useProfileFollowMutationQueue(
 
 function useProfileFollowMutation(
   logContext: LogEvents['profile:follow']['logContext'],
-  profile: Shadow<Omit<AppBskyActorDefs.ProfileViewDetailed, '$type'>>,
+  profile: Shadow<atp.profile.AnyProfileView>,
 ) {
   const {currentAccount} = useSession()
   const agent = useAgent()
@@ -313,7 +314,8 @@ function useProfileFollowMutation(
         didBecomeMutual: profile.viewer
           ? Boolean(profile.viewer.followedBy)
           : undefined,
-        followeeClout: toClout(profile.followersCount),
+        // @ts-expect-error — this is optional
+        followeeClout: toClout(profile?.followersCount),
         followerClout: toClout(ownProfile?.followersCount),
       })
       return await agent.follow(did)
@@ -334,7 +336,7 @@ function useProfileUnfollowMutation(
 }
 
 export function useProfileMuteMutationQueue(
-  profile: Shadow<Omit<AppBskyActorDefs.ProfileViewDetailed, '$type'>>,
+  profile: Shadow<atp.profile.AnyProfileView>,
 ) {
   const queryClient = useQueryClient()
   const did = profile.did
@@ -409,7 +411,7 @@ function useProfileUnmuteMutation() {
 }
 
 export function useProfileBlockMutationQueue(
-  profile: Shadow<Omit<AppBskyActorDefs.ProfileViewBasic, '$type'>>,
+  profile: Shadow<atp.profile.AnyProfileView>,
 ) {
   const queryClient = useQueryClient()
   const did = profile.did
