@@ -58,6 +58,7 @@ import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
+import * as atp from '#/types/atproto'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
 import {Post} from '../post/Post'
 import {Link, TextLink} from '../util/Link'
@@ -124,8 +125,10 @@ let NotificationFeedItem = ({
      * Notification returns ProfileView, which has one additional field on top
      * of `Basic`: `indexedAt`. Harmless for now, but should be fixed.
      */
-    // @ts-expect-error TODO
-    precacheProfile(queryClient, item.notification.author)
+    precacheProfile(
+      queryClient,
+      atp.profile.anyToBasic(item.notification.author),
+    )
   }, [queryClient, item.notification.author])
 
   const authors: Author[] = useMemo(() => {
