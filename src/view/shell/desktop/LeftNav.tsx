@@ -104,13 +104,10 @@ function ProfileCard() {
       {!isLoading && profile ? (
         <Menu.Root>
           <Menu.Trigger label={_(msg`Switch accounts`)}>
-            {({props, state, control}) => {
+            {({props, state}) => {
               const active =
                 gtTablet && // desktop only
-                (state.hovered ||
-                  state.focused ||
-                  state.pressed ||
-                  control.isOpen)
+                state.activated
               return (
                 <Button
                   label={props.accessibilityLabel}

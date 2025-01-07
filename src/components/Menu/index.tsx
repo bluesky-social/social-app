@@ -56,10 +56,16 @@ export function Trigger({children, label, role = 'button'}: TriggerProps) {
     onOut: onPressOut,
   } = useInteractionState()
 
+  const prevControlIsOpen = React.useRef(context.control.isOpen)
+  const open = prevControlIsOpen.current || context.control.isOpen
+  const activated = Boolean(pressed || focused || open)
+  prevControlIsOpen.current = context.control.isOpen
+
   return children({
     isNative: true,
     control: context.control,
     state: {
+      activated,
       hovered: false,
       focused,
       pressed,
