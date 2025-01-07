@@ -5,6 +5,7 @@ import {ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
 export function threadgateViewToAllowUISetting(
   threadgateView: AppBskyFeedDefs.ThreadgateView | undefined,
 ): ThreadgateAllowUISetting[] {
+  // Validate the record for clarity, since backwards compat code is a little confusing
   const threadgate =
     threadgateView && AppBskyFeedThreadgate.isValidRecord(threadgateView.record)
       ? threadgateView.record
@@ -37,11 +38,11 @@ export function threadgateRecordToAllowUISetting(
   const settings: ThreadgateAllowUISetting[] = threadgate.allow
     .map(allow => {
       let setting: ThreadgateAllowUISetting | undefined
-      if (AppBskyFeedThreadgate.isValidMentionRule(allow)) {
+      if (AppBskyFeedThreadgate.isMentionRule(allow)) {
         setting = {type: 'mention'}
-      } else if (AppBskyFeedThreadgate.isValidFollowingRule(allow)) {
+      } else if (AppBskyFeedThreadgate.isFollowingRule(allow)) {
         setting = {type: 'following'}
-      } else if (AppBskyFeedThreadgate.isValidListRule(allow)) {
+      } else if (AppBskyFeedThreadgate.isListRule(allow)) {
         setting = {type: 'list', list: allow.list}
       }
       return setting
