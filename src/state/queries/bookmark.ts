@@ -37,9 +37,7 @@ export function usePostBookmarkMutationQueue(
         return undefined
       }
     },
-    onSuccess(finalBookmarkUri) {
-      console.log('onSuccess', finalBookmarkUri)
-    },
+    onSuccess() {},
   })
 
   const queueBookmark = useCallback(() => {
