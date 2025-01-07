@@ -2,8 +2,10 @@ import {
   AppBskyActorDefs,
   AppBskyGraphGetStarterPack,
   BskyAgent,
+  ComAtprotoRepoApplyWrites,
   Facet,
 } from '@atproto/api'
+import {$Typed} from '@atproto/api/dist/client/util'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
@@ -136,7 +138,13 @@ export function useGenerateStarterPackMutation({
   })
 }
 
-function createListItem({did, listUri}: {did: string; listUri: string}) {
+function createListItem({
+  did,
+  listUri,
+}: {
+  did: string
+  listUri: string
+}): $Typed<ComAtprotoRepoApplyWrites.Create> {
   return {
     $type: 'com.atproto.repo.applyWrites#create',
     collection: 'app.bsky.graph.listitem',
