@@ -16,9 +16,9 @@ export * as profile from '#/types/atproto/profile'
  * }
  * ```
  */
-export function fastIsType<R>(
+export function fastIsType<R extends {$type?: string}>(
   record: unknown,
-  identity: <V>(v: V) => boolean,
+  identity: <V>(v: V) => v is V & {$type: NonNullable<R['$type']>},
 ): record is R {
   return identity(record)
 }

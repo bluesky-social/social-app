@@ -111,11 +111,7 @@ export function MessageInputEmbed({
   )
 
   const {rt, record} = useMemo(() => {
-    if (
-      post &&
-      AppBskyFeedPost.isRecord(post.record) &&
-      AppBskyFeedPost.validateRecord(post.record).success
-    ) {
+    if (post && AppBskyFeedPost.isValidRecord(post.record)) {
       return {
         rt: new RichTextAPI({
           text: post.record.text,

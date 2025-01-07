@@ -59,26 +59,24 @@ export function Inner() {
           ) : !trending?.topics ? null : (
             <>
               {trending.topics.map(topic => (
-                <>
-                  <TrendingTopicLink
-                    key={topic.link}
-                    topic={topic}
-                    onPress={() => {
-                      logEvent('trendingTopic:click', {context: 'interstitial'})
-                    }}>
-                    <View style={[a.py_lg]}>
-                      <Text
-                        style={[
-                          t.atoms.text,
-                          a.text_sm,
-                          a.font_bold,
-                          {opacity: 0.7}, // NOTE: we use opacity 0.7 instead of a color to match the color of the home pager tab bar
-                        ]}>
-                        {topic.topic}
-                      </Text>
-                    </View>
-                  </TrendingTopicLink>
-                </>
+                <TrendingTopicLink
+                  key={topic.link}
+                  topic={topic}
+                  onPress={() => {
+                    logEvent('trendingTopic:click', {context: 'interstitial'})
+                  }}>
+                  <View style={[a.py_lg]}>
+                    <Text
+                      style={[
+                        t.atoms.text,
+                        a.text_sm,
+                        a.font_bold,
+                        {opacity: 0.7}, // NOTE: we use opacity 0.7 instead of a color to match the color of the home pager tab bar
+                      ]}>
+                      {topic.topic}
+                    </Text>
+                  </View>
+                </TrendingTopicLink>
               ))}
               <Button
                 label={_(msg`Hide trending topics`)}

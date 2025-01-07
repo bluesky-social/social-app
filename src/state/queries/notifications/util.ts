@@ -14,7 +14,6 @@ import {QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
 import {labelIsHideableOffense} from '#/lib/moderation'
-import * as atp from '#/types/atproto'
 import {precacheProfile} from '../profile'
 import {FeedNotification, FeedPage, NotificationType} from './types'
 
@@ -256,18 +255,17 @@ function getSubjectUri(
     return notif.uri
   } else if (type === 'post-like' || type === 'repost') {
     if (
-      atp.fastIsType<AppBskyFeedRepost.Record>(
-        notif.record,
-        AppBskyFeedRepost.isRecord,
-      ) ||
-      atp.fastIsType<AppBskyFeedLike.Record>(
-        notif.record,
-        AppBskyFeedLike.isRecord,
-      )
+      AppBskyFeedRepost.isRecord(notif.record) ||
+      AppBskyFeedLike.isRecord(notif.record)
     ) {
-      return typeof notif.record.subject?.uri === 'string'
-        ? notif.record.subject?.uri
-        : undefined
+      // Type casting here is actually safe because here we check for the
+      // actual type bellow
+      const record = notif.record as
+        | AppBskyFeedRepost.Record
+        | AppBskyFeedLike.Record
+
+      const uri = record.subject?.uri
+      return typeof uri === 'string' ? uri : undefined
     }
   } else if (type === 'feedgen-like') {
     return notif.reasonSubject
