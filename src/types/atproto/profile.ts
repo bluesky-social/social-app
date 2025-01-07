@@ -42,10 +42,8 @@ export function anyToBasic(
     associated: view.associated,
     viewer: view.viewer,
     labels: view.labels,
-    // @ts-expect-error `createdAt` doesn't exist on chat view
-    createdAt: ChatBskyActorDefs.isProfileViewBasic(view)
-      ? undefined
-      : view.createdAt,
+    // `createdAt` doesn't exist in ChatBskyActorDefs.ProfileViewBasic
+    createdAt: 'createdAt' in view ? view.createdAt : undefined,
   }
 }
 
