@@ -5,8 +5,10 @@ import {
   AppBskyGraphList,
   AtUri,
   BskyAgent,
+  ComAtprotoRepoApplyWrites,
   Facet,
 } from '@atproto/api'
+import {$Typed} from '@atproto/api/dist/client/util'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
@@ -212,7 +214,9 @@ export function useListDeleteMutation() {
       }
 
       // batch delete the list and listitem records
-      const createDel = (uri: string) => {
+      const createDel = (
+        uri: string,
+      ): $Typed<ComAtprotoRepoApplyWrites.Delete> => {
         const urip = new AtUri(uri)
         return {
           $type: 'com.atproto.repo.applyWrites#delete',
