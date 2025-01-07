@@ -7,7 +7,7 @@ import {
   moderateProfile,
   ModerationOpts,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {GestureActionView} from '#/lib/custom-animations/GestureActionView'
@@ -27,7 +27,7 @@ import {useMarkAsReadMutation} from '#/state/queries/messages/conversation'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
 import * as tokens from '#/alf/tokens'
 import {useDialogControl} from '#/components/Dialog'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
@@ -294,7 +294,14 @@ function ChatListItemReady({
 
               <View
                 style={[a.flex_1, a.justify_center, web({paddingRight: 45})]}>
-                <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
+                <View
+                  style={[
+                    a.w_full,
+                    a.flex_row,
+                    a.align_end,
+                    a.pb_2xs,
+                    convo.opened === false && a.pr_4xl,
+                  ]}>
                   <Text
                     numberOfLines={1}
                     style={[{maxWidth: '85%'}, web([a.leading_normal])]}>
@@ -373,22 +380,50 @@ function ChatListItemReady({
                 />
               </View>
 
-              {convo.unreadCount > 0 && (
+              {convo.opened === false &&
+              (isNative || !(showActions || menuControl.isOpen)) ? (
                 <View
                   style={[
                     a.absolute,
-                    a.rounded_full,
+                    a.rounded_sm,
+                    a.px_sm,
+                    native(a.py_2xs),
                     {
                       backgroundColor: isDimStyle
                         ? t.palette.contrast_200
                         : t.palette.primary_500,
-                      height: 7,
-                      width: 7,
-                      top: 15,
-                      right: 12,
+                      top: 12,
+                      right: 10,
                     },
-                  ]}
-                />
+                  ]}>
+                  <Text
+                    style={[
+                      {color: 'white'},
+                      a.text_xs,
+                      a.font_heavy,
+                      web(a.leading_normal),
+                    ]}>
+                    <Trans>NEW</Trans>
+                  </Text>
+                </View>
+              ) : (
+                convo.unreadCount > 0 && (
+                  <View
+                    style={[
+                      a.absolute,
+                      a.rounded_full,
+                      {
+                        backgroundColor: isDimStyle
+                          ? t.palette.contrast_200
+                          : t.palette.primary_500,
+                        height: 7,
+                        width: 7,
+                        top: 15,
+                        right: 12,
+                      },
+                    ]}
+                  />
+                )
               )}
             </View>
           )}
