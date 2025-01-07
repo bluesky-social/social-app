@@ -32,9 +32,7 @@ interface State {
   currentStep: Step
   name?: string
   description?: string
-  profiles: Array<
-    AppBskyActorDefs.ProfileViewBasic | AppBskyActorDefs.ProfileView
-  >
+  profiles: AppBskyActorDefs.ProfileViewBasic[]
   feeds: GeneratorView[]
   processing: boolean
   error?: string

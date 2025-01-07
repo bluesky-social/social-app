@@ -6,8 +6,9 @@ import {
   AppBskyFeedPost,
   AtUri,
 } from '@atproto/api'
-import {$Typed} from '@atproto/api/dist/client/util'
 import {InfiniteData, QueryClient, QueryKey} from '@tanstack/react-query'
+
+import * as atp from '#/types/atproto'
 
 export async function truncateAndInvalidate<T = any>(
   queryClient: QueryClient,
@@ -43,20 +44,22 @@ export function didOrHandleUriMatches(
 }
 
 export function getEmbeddedPost(
-  v:
-    | undefined
-    | $Typed<AppBskyEmbedRecord.View>
-    | $Typed<AppBskyEmbedRecordWithMedia.View>
-    | {$type: string},
+  v: unknown,
 ): AppBskyEmbedRecord.ViewRecord | undefined {
-  if (AppBskyEmbedRecord.isView(v)) {
+  if (atp.fastIsType<AppBskyEmbedRecord.View>(v, AppBskyEmbedRecord.isView)) {
     if (
       AppBskyEmbedRecord.isViewRecord(v.record) &&
       AppBskyFeedPost.isRecord(v.record.value)
     ) {
       return v.record
     }
-  } else if (AppBskyEmbedRecordWithMedia.isView(v)) {
+  }
+  if (
+    atp.fastIsType<AppBskyEmbedRecordWithMedia.View>(
+      v,
+      AppBskyEmbedRecordWithMedia.isView,
+    )
+  ) {
     if (
       AppBskyEmbedRecord.isViewRecord(v.record.record) &&
       AppBskyFeedPost.isRecord(v.record.record.value)
