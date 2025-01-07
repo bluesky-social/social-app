@@ -20,7 +20,7 @@ type Action =
   | {type: 'SetCanNext'; canNext: boolean}
   | {type: 'SetName'; name: string}
   | {type: 'SetDescription'; description: string}
-  | {type: 'AddProfile'; profile: AppBskyActorDefs.ProfileViewBasic}
+  | {type: 'AddProfile'; profile: AppBskyActorDefs.ProfileView}
   | {type: 'RemoveProfile'; profileDid: string}
   | {type: 'AddFeed'; feed: GeneratorView}
   | {type: 'RemoveFeed'; feedUri: string}
@@ -32,7 +32,7 @@ interface State {
   currentStep: Step
   name?: string
   description?: string
-  profiles: AppBskyActorDefs.ProfileViewBasic[]
+  profiles: AppBskyActorDefs.ProfileView[]
   feeds: GeneratorView[]
   processing: boolean
   error?: string
@@ -113,7 +113,6 @@ function reducer(state: State, action: Action): State {
   return updatedState
 }
 
-// TODO supply the initial state to this component
 export function Provider({
   starterPack,
   listItems,
