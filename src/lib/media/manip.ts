@@ -215,7 +215,7 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
   )
 }
 
-async function moveToPermanentPath(path: string, ext = '.jpg'): Promise<string> {
+async function moveToPermanentPath(path: string, ext: string): Promise<string> {
   /*
   Since this package stores images in a temp directory, we need to move the file to a permanent location.
   Relevant: IOS bug when trying to open a second time:
