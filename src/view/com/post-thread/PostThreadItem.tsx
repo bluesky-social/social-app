@@ -58,6 +58,7 @@ import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text} from '#/components/Typography'
 import {WhoCanReply} from '#/components/WhoCanReply'
+import * as atp from '#/types/atproto'
 
 export function PostThreadItem({
   post,
@@ -785,7 +786,10 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
   const control = Prompt.usePromptControl()
 
   const indexedAt = new Date(post.indexedAt)
-  const createdAt = AppBskyFeedPost.isValidRecord(post.record)
+  const createdAt = atp.dangerousIsType<AppBskyFeedPost.Record>(
+    post.record,
+    AppBskyFeedPost.isRecord,
+  )
     ? new Date(post.record.createdAt)
     : new Date(post.indexedAt)
 
