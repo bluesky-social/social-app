@@ -1,15 +1,12 @@
 import React from 'react'
-import {
-  AppBskyActorDefs,
-  AppBskyGraphDefs,
-  AppBskyGraphStarterpack,
-} from '@atproto/api'
+import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg} from '@lingui/macro'
 
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
+import * as atp from '#/types/atproto'
 
 const steps = ['Details', 'Profiles', 'Feeds'] as const
 type Step = (typeof steps)[number]
@@ -20,7 +17,7 @@ type Action =
   | {type: 'SetCanNext'; canNext: boolean}
   | {type: 'SetName'; name: string}
   | {type: 'SetDescription'; description: string}
-  | {type: 'AddProfile'; profile: AppBskyActorDefs.ProfileView}
+  | {type: 'AddProfile'; profile: atp.profile.AnyProfileView}
   | {type: 'RemoveProfile'; profileDid: string}
   | {type: 'AddFeed'; feed: GeneratorView}
   | {type: 'RemoveFeed'; feedUri: string}
@@ -32,7 +29,7 @@ interface State {
   currentStep: Step
   name?: string
   description?: string
-  profiles: AppBskyActorDefs.ProfileView[]
+  profiles: atp.profile.AnyProfileView[]
   feeds: GeneratorView[]
   processing: boolean
   error?: string

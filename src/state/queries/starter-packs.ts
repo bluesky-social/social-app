@@ -1,5 +1,4 @@
 import {
-  AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
   AppBskyGraphGetStarterPack,
@@ -29,6 +28,7 @@ import {invalidateActorStarterPacksQuery} from '#/state/queries/actor-starter-pa
 import {STALE} from '#/state/queries/index'
 import {invalidateListMembersQuery} from '#/state/queries/list-members'
 import {useAgent} from '#/state/session'
+import * as atp from '#/types/atproto'
 
 const RQKEY_ROOT = 'starter-pack'
 const RQKEY = ({
@@ -93,7 +93,7 @@ export async function invalidateStarterPack({
 interface UseCreateStarterPackMutationParams {
   name: string
   description?: string
-  profiles: AppBskyActorDefs.ProfileView[]
+  profiles: atp.profile.AnyProfileView[]
   feeds?: AppBskyFeedDefs.GeneratorView[]
 }
 
