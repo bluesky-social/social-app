@@ -106,9 +106,7 @@ function ProfileCard() {
         <Menu.Root>
           <Menu.Trigger label={_(msg`Switch accounts`)}>
             {({props, state}) => {
-              const active =
-                gtTablet && // desktop only
-                state.activated
+              const active = state.activated
               return (
                 <Button
                   label={props.accessibilityLabel}
@@ -133,7 +131,10 @@ function ProfileCard() {
                       a.relative,
                       a.z_10,
                       active && {
-                        transform: [{scale: 2 / 3}, {translateX: -22}],
+                        transform: [
+                          {scale: gtTablet ? 2 / 3 : 0.8},
+                          {translateX: gtTablet ? -22 : 0},
+                        ],
                       },
                     ]}>
                     <UserAvatar
@@ -142,42 +143,44 @@ function ProfileCard() {
                       type={profile?.associated?.labeler ? 'labeler' : 'user'}
                     />
                   </View>
-                  <View
-                    style={[
-                      a.flex_1,
-                      a.transition_opacity,
-                      {
-                        marginLeft: tokens.space.xl * -1,
-                        opacity: active ? 1 : 0,
-                      },
-                    ]}>
-                    <Text
-                      style={[a.font_heavy, a.text_sm, a.leading_snug]}
-                      numberOfLines={1}>
-                      {sanitizeDisplayName(
-                        profile.displayName || profile.handle,
-                      )}
-                    </Text>
-                    <Text
-                      style={[
-                        a.text_xs,
-                        a.leading_snug,
-                        t.atoms.text_contrast_medium,
-                      ]}
-                      numberOfLines={1}>
-                      {sanitizeHandle(profile.handle, '@')}
-                    </Text>
-                  </View>
                   {gtTablet && (
-                    <EllipsisIcon
-                      aria-hidden={true}
-                      style={[
-                        t.atoms.text_contrast_medium,
-                        a.transition_opacity,
-                        {opacity: active ? 1 : 0},
-                      ]}
-                      size="sm"
-                    />
+                    <>
+                      <View
+                        style={[
+                          a.flex_1,
+                          a.transition_opacity,
+                          {
+                            marginLeft: tokens.space.xl * -1,
+                            opacity: active ? 1 : 0,
+                          },
+                        ]}>
+                        <Text
+                          style={[a.font_heavy, a.text_sm, a.leading_snug]}
+                          numberOfLines={1}>
+                          {sanitizeDisplayName(
+                            profile.displayName || profile.handle,
+                          )}
+                        </Text>
+                        <Text
+                          style={[
+                            a.text_xs,
+                            a.leading_snug,
+                            t.atoms.text_contrast_medium,
+                          ]}
+                          numberOfLines={1}>
+                          {sanitizeHandle(profile.handle, '@')}
+                        </Text>
+                      </View>
+                      <EllipsisIcon
+                        aria-hidden={true}
+                        style={[
+                          t.atoms.text_contrast_medium,
+                          a.transition_opacity,
+                          {opacity: active ? 1 : 0},
+                        ]}
+                        size="sm"
+                      />
+                    </>
                   )}
                 </Button>
               )
