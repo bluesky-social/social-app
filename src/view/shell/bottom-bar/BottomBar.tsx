@@ -16,7 +16,6 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {clamp} from '#/lib/numbers'
 import {getTabState, TabState} from '#/lib/routes/helpers'
 import {useGate} from '#/lib/statsig/statsig'
-import {s} from '#/lib/styles'
 import {emitSoftReset} from '#/state/events'
 import {useHomeBadge} from '#/state/home-badge'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
@@ -26,12 +25,12 @@ import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useCloseAllActiveElements} from '#/state/util'
-import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {
@@ -299,25 +298,26 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 </View>
               </View>
 
-              <View
-                style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
+              <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
                 <Button
                   onPress={showCreateAccount}
-                  accessibilityHint={_(msg`Sign up`)}
-                  accessibilityLabel={_(msg`Sign up`)}>
-                  <Text type="md" style={[{color: 'white'}, s.bold]}>
-                    <Trans>Sign up</Trans>
-                  </Text>
+                  label={_(msg`Create account`)}
+                  size="small"
+                  variant="solid"
+                  color="primary">
+                  <ButtonText>
+                    <Trans>Create account</Trans>
+                  </ButtonText>
                 </Button>
-
                 <Button
-                  type="default"
                   onPress={showSignIn}
-                  accessibilityHint={_(msg`Sign in`)}
-                  accessibilityLabel={_(msg`Sign in`)}>
-                  <Text type="md" style={[pal.text, s.bold]}>
+                  label={_(msg`Sign in`)}
+                  size="small"
+                  variant="solid"
+                  color="secondary">
+                  <ButtonText>
                     <Trans>Sign in</Trans>
-                  </Text>
+                  </ButtonText>
                 </Button>
               </View>
             </View>
