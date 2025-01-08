@@ -5,6 +5,7 @@ import {
   ComAtprotoModerationCreateReport,
   RichText as RichTextAPI,
 } from '@atproto/api'
+import {$Typed} from '@atproto/api/dist/client/util'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
@@ -109,15 +110,16 @@ function SubmitStep({
     mutationFn: async () => {
       if (params.type === 'convoMessage') {
         const {convoId, message} = params
+        const subject: $Typed<ChatBskyConvoDefs.MessageRef> = {
+          $type: 'chat.bsky.convo.defs#messageRef',
+          messageId: message.id,
+          convoId,
+          did: message.sender.did,
+        }
 
         const report = {
           reasonType: reportOption.reason,
-          subject: {
-            $type: 'chat.bsky.convo.defs#messageRef',
-            messageId: message.id,
-            convoId,
-            did: message.sender.did,
-          } satisfies ChatBskyConvoDefs.MessageRef,
+          subject,
           reason: details,
         } satisfies ComAtprotoModerationCreateReport.InputSchema
 
