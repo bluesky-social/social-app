@@ -60,7 +60,7 @@ export type View =
       media: View | undefined
     }
 
-export function parseEmbedView({
+export function parseEmbedRecordView({
   record,
 }: AppBskyEmbedRecord.View): View | undefined {
   if (AppBskyEmbedRecord.isViewRecord(record)) {
@@ -125,11 +125,11 @@ export function parseEmbed(
       view: embed,
     }
   } else if (AppBskyEmbedRecord.isView(embed)) {
-    return parseEmbedView(embed)
+    return parseEmbedRecordView(embed)
   } else if (AppBskyEmbedRecordWithMedia.isView(embed)) {
     return {
       type: 'post_with_media',
-      view: parseEmbedView(embed.record),
+      view: parseEmbedRecordView(embed.record),
       media: parseEmbed(embed.media),
     }
   }
