@@ -110,6 +110,8 @@ const RadixTriggerPassThrough = React.forwardRef(
 )
 RadixTriggerPassThrough.displayName = 'RadixTriggerPassThrough'
 
+let prevControlIsOpen = false
+
 export function Trigger({children, label, role = 'button'}: TriggerProps) {
   const {control} = useMenuContext()
   const {
@@ -119,10 +121,13 @@ export function Trigger({children, label, role = 'button'}: TriggerProps) {
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
 
-  const prevControlIsOpen = React.useRef(control.isOpen)
-  const open = prevControlIsOpen.current || control.isOpen
+  const open = Boolean(prevControlIsOpen || control.isOpen)
   const activated = Boolean(hovered || focused || open)
-  prevControlIsOpen.current = control.isOpen
+  prevControlIsOpen = !!control.isOpen
+
+  React.useEffect(() => {
+    prevControlIsOpen = false
+  }, [])
 
   return (
     <DropdownMenu.Trigger asChild>
