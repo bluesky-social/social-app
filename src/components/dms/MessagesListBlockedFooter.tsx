@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, ModerationCause} from '@atproto/api'
+import {ModerationCause} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -14,6 +14,7 @@ import {BlockedByListDialog} from '#/components/dms/BlockedByListDialog'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
 import {Text} from '#/components/Typography'
+import * as atp from '#/types/atproto'
 
 export function MessagesListBlockedFooter({
   recipient: initialRecipient,
@@ -21,7 +22,7 @@ export function MessagesListBlockedFooter({
   hasMessages,
   blockInfo,
 }: {
-  recipient: AppBskyActorDefs.ProfileViewBasic
+  recipient: atp.profile.AnyProfileView
   convoId: string
   hasMessages: boolean
   blockInfo: {

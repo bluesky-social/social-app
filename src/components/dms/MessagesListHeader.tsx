@@ -1,10 +1,6 @@
 import React, {useCallback} from 'react'
 import {TouchableOpacity, View} from 'react-native'
-import {
-  AppBskyActorDefs,
-  ModerationCause,
-  ModerationDecision,
-} from '@atproto/api'
+import {ModerationCause, ModerationDecision} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -24,6 +20,7 @@ import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/
 import {Link} from '#/components/Link'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
+import * as atp from '#/types/atproto'
 
 const PFP_SIZE = isWeb ? 40 : 34
 
@@ -32,7 +29,7 @@ export let MessagesListHeader = ({
   moderation,
   blockInfo,
 }: {
-  profile?: AppBskyActorDefs.ProfileViewBasic
+  profile?: atp.profile.AnyProfileView
   moderation?: ModerationDecision
   blockInfo?: {
     listBlocks: ModerationCause[]
@@ -131,7 +128,7 @@ function HeaderReady({
   moderation,
   blockInfo,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: atp.profile.AnyProfileView
   moderation: ModerationDecision
   blockInfo: {
     listBlocks: ModerationCause[]

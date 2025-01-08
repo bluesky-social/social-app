@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
+import {moderateProfile, ModerationOpts} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
@@ -26,6 +26,7 @@ import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
 import {Error} from '#/components/Error'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import * as atp from '#/types/atproto'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -150,7 +151,7 @@ function InnerReady({
   setHasScrolled,
 }: {
   moderationOpts: ModerationOpts
-  recipient: AppBskyActorDefs.ProfileViewBasic
+  recipient: atp.profile.AnyProfileView
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
 }) {
