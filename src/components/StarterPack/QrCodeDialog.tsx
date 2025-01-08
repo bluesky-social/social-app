@@ -77,7 +77,7 @@ export function QrCodeDialog({
       } else {
         setIsProcessing(true)
 
-        if (!AppBskyGraphStarterpack.isRecord(starterPack.record)) {
+        if (!AppBskyGraphStarterpack.isValidRecord(starterPack.record)) {
           return
         }
 
