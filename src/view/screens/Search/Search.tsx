@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   Image,
   ImageStyle,
-  Platform,
   Pressable,
   StyleProp,
   StyleSheet,
@@ -221,7 +220,6 @@ let SearchScreenPostResults = ({
               refreshing={isPTR}
               onRefresh={onPullToRefresh}
               onEndReached={onEndReached}
-              // @ts-ignore web only -prf
               desktopFixedHeight
               contentContainerStyle={{paddingBottom: 100}}
             />
@@ -260,7 +258,6 @@ let SearchScreenUserResults = ({
             <ProfileCardWithFollowBtn profile={item} noBg />
           )}
           keyExtractor={item => item.did}
-          // @ts-ignore web only -prf
           desktopFixedHeight
           contentContainerStyle={{paddingBottom: 100}}
         />
@@ -306,7 +303,6 @@ let SearchScreenFeedsResults = ({
             </View>
           )}
           keyExtractor={item => item.uri}
-          // @ts-ignore web only -prf
           desktopFixedHeight
           contentContainerStyle={{paddingBottom: 100}}
         />
@@ -556,11 +552,7 @@ let SearchScreenInner = ({
     <Explore />
   ) : (
     <Layout.Center>
-      <View
-        // @ts-ignore web only -esb
-        style={{
-          height: Platform.select({web: '100vh'}),
-        }}>
+      <View style={web({height: '100vh'})}>
         {isDesktop && (
           <Text
             type="title"
@@ -856,7 +848,7 @@ export function SearchScreen(
         <Layout.Center>
           <View style={[a.p_md, a.pb_sm, a.gap_sm, t.atoms.bg]}>
             <View style={[a.flex_row, a.gap_sm]}>
-              {!gtMobile && (
+              {!gtMobile && !showAutocomplete && (
                 <Button
                   testID="viewHeaderBackOrMenuBtn"
                   onPress={onPressMenu}
