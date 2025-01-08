@@ -61,47 +61,47 @@ export type View =
     }
 
 export function parseEmbedView(
-  view: AppBskyEmbedRecord.View,
+  { record }: AppBskyEmbedRecord.View,
 ): View | undefined {
-  if (AppBskyEmbedRecord.isViewRecord(view.record)) {
+  if (AppBskyEmbedRecord.isViewRecord(record)) {
     return {
       type: 'post',
-      view: view.record,
+      view: record,
     }
-  } else if (AppBskyEmbedRecord.isViewNotFound(view.record)) {
+  } else if (AppBskyEmbedRecord.isViewNotFound(record)) {
     return {
       type: 'post_not_found',
-      view: view.record,
+      view: record,
     }
-  } else if (AppBskyEmbedRecord.isViewBlocked(view.record)) {
+  } else if (AppBskyEmbedRecord.isViewBlocked(record)) {
     return {
       type: 'post_blocked',
-      view: view.record,
+      view: record,
     }
-  } else if (AppBskyEmbedRecord.isViewDetached(view.record)) {
+  } else if (AppBskyEmbedRecord.isViewDetached(record)) {
     return {
       type: 'post_detached',
-      view: view.record,
+      view: record,
     }
-  } else if (AppBskyFeedDefs.isGeneratorView(view.record)) {
+  } else if (AppBskyFeedDefs.isGeneratorView(record)) {
     return {
       type: 'feed',
-      view: view.record,
+      view: record,
     }
-  } else if (AppBskyGraphDefs.isListView(view.record)) {
+  } else if (AppBskyGraphDefs.isListView(record)) {
     return {
       type: 'list',
-      view: view.record,
+      view: record,
     }
-  } else if (AppBskyLabelerDefs.isLabelerView(view.record)) {
+  } else if (AppBskyLabelerDefs.isLabelerView(record)) {
     return {
       type: 'labeler',
-      view: view.record,
+      view: record,
     }
-  } else if (AppBskyGraphDefs.isStarterPackViewBasic(view.record)) {
+  } else if (AppBskyGraphDefs.isStarterPackViewBasic(record)) {
     return {
       type: 'starter_pack',
-      view: view.record,
+      view: record,
     }
   }
 }
