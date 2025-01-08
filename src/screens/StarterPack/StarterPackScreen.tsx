@@ -51,6 +51,7 @@ import {useDialogControl} from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
+import {Link_Stroke2_Corner0_Rounded as Link} from '#/components/icons/Link'
 import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
@@ -598,7 +599,10 @@ function OverflowMenu({
                   <Menu.ItemText>
                     <Trans>Share link</Trans>
                   </Menu.ItemText>
-                  <Menu.ItemIcon icon={ArrowOutOfBox} position="right" />
+                  <Menu.ItemIcon
+                    icon={isWeb ? Link : ArrowOutOfBox}
+                    position="right"
+                  />
                 </Menu.Item>
               </Menu.Group>
 

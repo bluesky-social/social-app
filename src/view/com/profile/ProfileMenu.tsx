@@ -9,6 +9,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
 import {
@@ -24,6 +25,7 @@ import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
+import {Link_Stroke2_Corner0_Rounded as Link} from '#/components/icons/Link'
 import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {PeopleRemove2_Stroke2_Corner0_Rounded as UserMinus} from '#/components/icons/PeopleRemove2'
@@ -203,7 +205,7 @@ let ProfileMenu = ({
               <Menu.ItemText>
                 <Trans>Share</Trans>
               </Menu.ItemText>
-              <Menu.ItemIcon icon={Share} />
+              <Menu.ItemIcon icon={isWeb ? Link : Share} />
             </Menu.Item>
           </Menu.Group>
 

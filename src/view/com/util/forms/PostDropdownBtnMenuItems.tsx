@@ -53,6 +53,7 @@ import {
   usePrefetchPostInteractionSettings,
 } from '#/components/dialogs/PostInteractionSettingsDialog'
 import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBrackets} from '#/components/icons/CodeBrackets'
@@ -442,7 +443,10 @@ let PostDropdownMenuItems = ({
             <Menu.ItemText>
               {isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
             </Menu.ItemText>
-            <Menu.ItemIcon icon={Link} position="right" />
+            <Menu.ItemIcon
+              icon={isWeb ? Link : ArrowOutOfBox}
+              position="right"
+            />
           </Menu.Item>
 
           {canEmbed && (

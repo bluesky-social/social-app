@@ -36,6 +36,7 @@ import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
   Heart2_Stroke2_Corner0_Rounded as Heart,
 } from '#/components/icons/Heart2'
+import {Link_Stroke2_Corner0_Rounded as Link} from '#/components/icons/Link'
 import {
   Pin_Filled_Corner0_Rounded as PinFilled,
   Pin_Stroke2_Corner0_Rounded as Pin,
@@ -473,7 +474,7 @@ function DialogInner({
           color="secondary"
           shape="round"
           onPress={onPressShare}>
-          <ButtonIcon icon={Share} size="lg" />
+          <ButtonIcon icon={isWeb ? Link : Share} size="lg" />
         </Button>
       </View>
 
