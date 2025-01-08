@@ -1,11 +1,11 @@
 import {
+  $Typed,
   AppBskyActorDefs,
   AppBskyGraphGetStarterPack,
   BskyAgent,
   ComAtprotoRepoApplyWrites,
   Facet,
 } from '@atproto/api'
-import {$Typed} from '@atproto/api/dist/client/util'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'

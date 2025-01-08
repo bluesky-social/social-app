@@ -1,5 +1,6 @@
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {
+  $Typed,
   AppBskyGraphDefs,
   AppBskyGraphGetList,
   AppBskyGraphList,
@@ -8,7 +9,6 @@ import {
   ComAtprotoRepoApplyWrites,
   Facet,
 } from '@atproto/api'
-import {$Typed} from '@atproto/api/dist/client/util'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 

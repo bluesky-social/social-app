@@ -1,10 +1,10 @@
 import {
+  $Typed,
   AppBskyGraphFollow,
   AppBskyGraphGetFollows,
   BskyAgent,
   ComAtprotoRepoApplyWrites,
 } from '@atproto/api'
-import {$Typed} from '@atproto/api/dist/client/util'
 import {TID} from '@atproto/common-web'
 import chunk from 'lodash.chunk'
 

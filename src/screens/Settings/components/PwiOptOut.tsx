@@ -1,7 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {ComAtprotoLabelDefs} from '@atproto/api'
-import {$Typed} from '@atproto/api/dist/client/util'
+import {$Typed,ComAtprotoLabelDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

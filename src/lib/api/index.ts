@@ -1,4 +1,5 @@
 import {
+  $Typed,
   AppBskyEmbedExternal,
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
@@ -13,7 +14,6 @@ import {
   ComAtprotoRepoStrongRef,
   RichText,
 } from '@atproto/api'
-import {$Typed} from '@atproto/api/dist/client/util'
 import {TID} from '@atproto/common-web'
 import * as dcbor from '@ipld/dag-cbor'
 import {t} from '@lingui/macro'

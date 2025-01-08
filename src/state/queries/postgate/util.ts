@@ -1,11 +1,11 @@
 import {
+  $Typed,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPostgate,
   AtUri,
 } from '@atproto/api'
-import {$Typed} from '@atproto/api/dist/client/util'
 
 export const POSTGATE_COLLECTION = 'app.bsky.feed.postgate'
 
