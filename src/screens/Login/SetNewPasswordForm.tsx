@@ -41,7 +41,7 @@ export const SetNewPasswordForm = ({
     // Check that the code is correct. We do this again just incase the user enters the code after their pw and we
     // don't get to call onBlur first
     const formattedCode = checkAndFormatResetCode(resetCode)
-    
+
     if (!formattedCode) {
       setError(
         _(
@@ -50,14 +50,10 @@ export const SetNewPasswordForm = ({
       )
       return
     }
-    
+
     // TODO Better password strength check
     if (!password) {
-      setError(
-        _(
-          msg`Please enter a password.`,
-        ),
-      )
+      setError(_(msg`Please enter a password.`))
       return
     }
 
