@@ -132,6 +132,7 @@ let List = React.forwardRef<ListMethods, ListProps>(
     if (refreshing !== undefined || onRefresh !== undefined) {
       refreshControl = (
         <RefreshControl
+          key={t.atoms.text.color}
           refreshing={refreshing ?? false}
           onRefresh={onRefresh}
           tintColor={t.atoms.text.color}
