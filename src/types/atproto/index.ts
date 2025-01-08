@@ -13,7 +13,8 @@ export * as starterPack from '#/types/atproto/starterPack'
  * ```ts
  * import * as atp from '#/types/atproto'
  *
- * if (atp.dangerousIsType<AppBskyFeedPost.Record>(node.post.record, AppBskyFeedPost.isRecord)) {
+ * if (atp.dangerousIsType<AppBskyFeedPost.Record>(item, AppBskyFeedPost.isRecord)) {
+ *   // `item` has type `$Typed<AppBskyFeedPost.Record>` here
  * }
  * ```
  */
