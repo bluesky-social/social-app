@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-03 01:20\n"
+"PO-Revision-Date: 2025-01-08 02:24\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -375,7 +375,7 @@ msgstr "7 日"
 msgid "About"
 msgstr "關於"
 
-#: src/view/screens/Search/Search.tsx:866
+#: src/view/screens/Search/Search.tsx:858
 msgid "Access navigation links and settings"
 msgstr "檢視導覽連結同設定"
 
@@ -595,7 +595,7 @@ msgstr "你跟晒所有帳號喇！"
 
 #: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
-msgstr "下低係你儲存嘅動態源。"
+msgstr "下低係你儲存咗嘅動態源。"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:146
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:153
@@ -758,8 +758,8 @@ msgstr "GIF 動畫"
 msgid "Anti-Social Behavior"
 msgstr "反社會行爲"
 
-#: src/view/screens/Search/Search.tsx:337
-#: src/view/screens/Search/Search.tsx:338
+#: src/view/screens/Search/Search.tsx:333
+#: src/view/screens/Search/Search.tsx:334
 msgid "Any language"
 msgstr "任何語言"
 
@@ -1179,7 +1179,7 @@ msgstr "相機"
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:213
-#: src/view/screens/Search/Search.tsx:895
+#: src/view/screens/Search/Search.tsx:887
 msgid "Cancel"
 msgstr "咪喇"
 
@@ -1212,7 +1212,7 @@ msgid "Cancel reactivation and log out"
 msgstr "取消重新啓動兼登出"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:887
+#: src/view/screens/Search/Search.tsx:879
 msgid "Cancel search"
 msgstr "唔再搵嘢"
 
@@ -2511,7 +2511,7 @@ msgid "Error receiving captcha response."
 msgstr "接收 CAPTCHA 回應嗰陣發生錯誤。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:183
-#: src/view/screens/Search/Search.tsx:111
+#: src/view/screens/Search/Search.tsx:110
 msgid "Error:"
 msgstr "錯誤："
 
@@ -2756,14 +2756,14 @@ msgstr "意見"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:266
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:275
 msgid "Feedback sent!"
-msgstr "意見送出咗喇！"
+msgstr "意見交咗喇！"
 
 #: src/Navigation.tsx:403
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
 #: src/view/screens/Feeds.tsx:508
 #: src/view/screens/Profile.tsx:235
 #: src/view/screens/SavedFeeds.tsx:96
-#: src/view/screens/Search/Search.tsx:526
+#: src/view/screens/Search/Search.tsx:522
 #: src/view/shell/desktop/LeftNav.tsx:445
 #: src/view/shell/Drawer.tsx:476
 msgid "Feeds"
@@ -2806,7 +2806,7 @@ msgstr "搵啲帳號去跟佢"
 msgid "Find people to follow"
 msgstr "睇下跟啲乜人好"
 
-#: src/view/screens/Search/Search.tsx:596
+#: src/view/screens/Search/Search.tsx:588
 msgid "Find posts and users on Bluesky"
 msgstr "喺 Bluesky 上面搵帖文同用戶"
 
@@ -3353,7 +3353,7 @@ msgstr "圖片"
 
 #: src/components/StarterPack/ShareDialog.tsx:76
 msgid "Image saved to your camera roll!"
-msgstr "圖片儲存咗去你嘅相簿度喇！"
+msgstr "圖片存咗去你嘅相簿度喇！"
 
 #: src/lib/moderation/useReportOptions.ts:49
 msgid "Impersonation or false claims about identity or affiliation"
@@ -3539,7 +3539,7 @@ msgstr "大啲"
 
 #: src/screens/Hashtag.tsx:95
 #: src/screens/Topic.tsx:77
-#: src/view/screens/Search/Search.tsx:510
+#: src/view/screens/Search/Search.tsx:506
 msgid "Latest"
 msgstr "最新"
 
@@ -3844,7 +3844,7 @@ msgstr "請確保呢度嘅地址係啱嘅！"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:58
 #: src/screens/Settings/ContentAndMediaSettings.tsx:61
 msgid "Manage saved feeds"
-msgstr "管理儲存嘅動態源"
+msgstr "管理儲存咗嘅動態源"
 
 #: src/components/dialogs/MutedWords.tsx:108
 msgid "Manage your muted words and tags"
@@ -3876,7 +3876,7 @@ msgid "Mentions"
 msgstr "提及"
 
 #: src/components/Menu/index.tsx:96
-#: src/view/screens/Search/Search.tsx:864
+#: src/view/screens/Search/Search.tsx:856
 msgid "Menu"
 msgstr "選單"
 
@@ -4356,9 +4356,9 @@ msgid "No results found for \"{query}\""
 msgstr "搵唔到「{query}」嘅結果。"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
-#: src/view/screens/Search/Search.tsx:229
-#: src/view/screens/Search/Search.tsx:268
-#: src/view/screens/Search/Search.tsx:314
+#: src/view/screens/Search/Search.tsx:227
+#: src/view/screens/Search/Search.tsx:265
+#: src/view/screens/Search/Search.tsx:310
 msgid "No results found for {query}"
 msgstr "搵唔到 {query} 嘅結果"
 
@@ -4775,7 +4775,7 @@ msgid "Pause video"
 msgstr "暫停影片"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/Search/Search.tsx:520
+#: src/view/screens/Search/Search.tsx:516
 msgid "People"
 msgstr "用戶"
 
@@ -5145,14 +5145,14 @@ msgstr "QR code 下載咗喇！"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:107
 msgid "QR code saved to your camera roll!"
-msgstr "QR code 儲存咗去你嘅相簿度喇！"
+msgstr "QR code 存咗去你嘅相簿度喇！"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:178
 #: src/view/com/util/post-ctrls/RepostButton.tsx:201
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:85
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:92
 msgid "Quote post"
-msgstr "引用帖文\n"
+msgstr "引用帖文"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:303
 msgid "Quote post was re-attached"
@@ -5219,7 +5219,7 @@ msgstr "睇下 Bluesky 服務條款"
 msgid "Reason:"
 msgstr "原因："
 
-#: src/view/screens/Search/Search.tsx:1042
+#: src/view/screens/Search/Search.tsx:1034
 msgid "Recent Searches"
 msgstr "近排嘅搵嘢記錄"
 
@@ -5312,11 +5312,11 @@ msgstr "刪除圖片"
 msgid "Remove mute word from your list"
 msgstr "喺你嘅清單入邊刪除靜音字詞"
 
-#: src/view/screens/Search/Search.tsx:1090
+#: src/view/screens/Search/Search.tsx:1082
 msgid "Remove profile"
 msgstr "刪除個人檔案"
 
-#: src/view/screens/Search/Search.tsx:1092
+#: src/view/screens/Search/Search.tsx:1084
 msgid "Remove profile from search history"
 msgstr "喺搵嘢記錄入邊移除個人檔案"
 
@@ -5768,7 +5768,7 @@ msgstr "轆到去頂部"
 #: src/components/forms/SearchInput.tsx:36
 #: src/Navigation.tsx:599
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
-#: src/view/screens/Search/Search.tsx:578
+#: src/view/screens/Search/Search.tsx:570
 #: src/view/shell/bottom-bar/BottomBar.tsx:183
 #: src/view/shell/desktop/LeftNav.tsx:407
 #: src/view/shell/Drawer.tsx:365
@@ -5791,7 +5791,7 @@ msgstr "搵「{interestsDisplayName}」{activeText}"
 msgid "Search for \"{query}\""
 msgstr "搵「{query}」"
 
-#: src/view/screens/Search/Search.tsx:988
+#: src/view/screens/Search/Search.tsx:980
 msgid "Search for \"{searchText}\""
 msgstr "搵「{searchText}」"
 
@@ -7122,7 +7122,7 @@ msgstr "切換控制啓用抑或停用成人內容"
 
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
-#: src/view/screens/Search/Search.tsx:500
+#: src/view/screens/Search/Search.tsx:496
 msgid "Top"
 msgstr "至 Hit"
 
@@ -7775,7 +7775,7 @@ msgstr "對唔住，但係我哋解析唔到呢份清單。若然呢個問題仲
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "對唔住，我哋而家撈唔到你啲靜音字詞。唔該試多一次。"
 
-#: src/view/screens/Search/Search.tsx:202
+#: src/view/screens/Search/Search.tsx:201
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "對唔住，你嘅搵嘢任務未攪得掂。唔該等多幾分鐘試下。"
 
@@ -8274,11 +8274,11 @@ msgstr "你個密碼已經改好咗喇！"
 
 #: src/view/com/composer/Composer.tsx:470
 msgid "Your post has been published"
-msgstr "你嘅帖文已經發佈咗喇"
+msgstr "你嘅帖文發佈咗喇"
 
 #: src/view/com/composer/Composer.tsx:467
 msgid "Your posts have been published"
-msgstr "你嘅帖文已經發佈咗喇"
+msgstr "你嘅帖文發佈咗喇"
 
 #: src/screens/Onboarding/StepFinished.tsx:250
 msgid "Your posts, likes, and blocks are public. Mutes are private."

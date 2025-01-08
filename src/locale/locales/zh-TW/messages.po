@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-03 01:20\n"
+"PO-Revision-Date: 2025-01-08 02:23\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -375,7 +375,7 @@ msgstr "7 天"
 msgid "About"
 msgstr "關於"
 
-#: src/view/screens/Search/Search.tsx:866
+#: src/view/screens/Search/Search.tsx:858
 msgid "Access navigation links and settings"
 msgstr "檢視導覽連結和設定"
 
@@ -758,8 +758,8 @@ msgstr "GIF 動畫"
 msgid "Anti-Social Behavior"
 msgstr "反社會行為"
 
-#: src/view/screens/Search/Search.tsx:337
-#: src/view/screens/Search/Search.tsx:338
+#: src/view/screens/Search/Search.tsx:333
+#: src/view/screens/Search/Search.tsx:334
 msgid "Any language"
 msgstr "任何語言"
 
@@ -1179,7 +1179,7 @@ msgstr "相機"
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:213
-#: src/view/screens/Search/Search.tsx:895
+#: src/view/screens/Search/Search.tsx:887
 msgid "Cancel"
 msgstr "取消"
 
@@ -1212,7 +1212,7 @@ msgid "Cancel reactivation and log out"
 msgstr "取消重新啟用並登出"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:887
+#: src/view/screens/Search/Search.tsx:879
 msgid "Cancel search"
 msgstr "放棄搜尋"
 
@@ -1274,7 +1274,7 @@ msgstr "變更密碼"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:82
 msgid "Change post language to {suggestedLanguageName}"
-msgstr "變更貼文的發布語言為 {suggestedLanguageName}"
+msgstr "將貼文的發布語言變更為 {suggestedLanguageName}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
@@ -1828,7 +1828,7 @@ msgstr "建立於 {0}"
 
 #: src/screens/List/ListHiddenScreen.tsx:127
 msgid "Creator has been blocked"
-msgstr "已封鎖該清單的建立者"
+msgstr "已封鎖此列表的建立者"
 
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
@@ -2326,7 +2326,7 @@ msgstr "教育"
 
 #: src/screens/List/ListHiddenScreen.tsx:141
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
-msgstr "該清單的建立者已封鎖您，或者您已封鎖該建立者。"
+msgstr "此列表的建立者已封鎖您，或您已封鎖了對方。"
 
 #: src/screens/Settings/AccountSettings.tsx:60
 #: src/screens/Signup/StepInfo/index.tsx:170
@@ -2511,7 +2511,7 @@ msgid "Error receiving captcha response."
 msgstr "接收驗證碼回應時發生錯誤。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:183
-#: src/view/screens/Search/Search.tsx:111
+#: src/view/screens/Search/Search.tsx:110
 msgid "Error:"
 msgstr "錯誤："
 
@@ -2763,7 +2763,7 @@ msgstr "已送出意見回饋！"
 #: src/view/screens/Feeds.tsx:508
 #: src/view/screens/Profile.tsx:235
 #: src/view/screens/SavedFeeds.tsx:96
-#: src/view/screens/Search/Search.tsx:526
+#: src/view/screens/Search/Search.tsx:522
 #: src/view/shell/desktop/LeftNav.tsx:445
 #: src/view/shell/Drawer.tsx:476
 msgid "Feeds"
@@ -2806,7 +2806,7 @@ msgstr "尋找更多帳號來跟隨"
 msgid "Find people to follow"
 msgstr "尋找一些人來跟隨"
 
-#: src/view/screens/Search/Search.tsx:596
+#: src/view/screens/Search/Search.tsx:588
 msgid "Find posts and users on Bluesky"
 msgstr "在 Bluesky 上尋找貼文和用戶"
 
@@ -3539,7 +3539,7 @@ msgstr "更大"
 
 #: src/screens/Hashtag.tsx:95
 #: src/screens/Topic.tsx:77
-#: src/view/screens/Search/Search.tsx:510
+#: src/view/screens/Search/Search.tsx:506
 msgid "Latest"
 msgstr "最新"
 
@@ -3876,7 +3876,7 @@ msgid "Mentions"
 msgstr "提及"
 
 #: src/components/Menu/index.tsx:96
-#: src/view/screens/Search/Search.tsx:864
+#: src/view/screens/Search/Search.tsx:856
 msgid "Menu"
 msgstr "選單"
 
@@ -4356,9 +4356,9 @@ msgid "No results found for \"{query}\""
 msgstr "找不到符合「{query}」的結果"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
-#: src/view/screens/Search/Search.tsx:229
-#: src/view/screens/Search/Search.tsx:268
-#: src/view/screens/Search/Search.tsx:314
+#: src/view/screens/Search/Search.tsx:227
+#: src/view/screens/Search/Search.tsx:265
+#: src/view/screens/Search/Search.tsx:310
 msgid "No results found for {query}"
 msgstr "找不到符合 {query} 的結果"
 
@@ -4775,7 +4775,7 @@ msgid "Pause video"
 msgstr "暫停影片"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/Search/Search.tsx:520
+#: src/view/screens/Search/Search.tsx:516
 msgid "People"
 msgstr "用戶"
 
@@ -5219,7 +5219,7 @@ msgstr "閱讀 Bluesky 服務條款"
 msgid "Reason:"
 msgstr "原因："
 
-#: src/view/screens/Search/Search.tsx:1042
+#: src/view/screens/Search/Search.tsx:1034
 msgid "Recent Searches"
 msgstr "最近的搜尋記錄"
 
@@ -5312,11 +5312,11 @@ msgstr "刪除圖片"
 msgid "Remove mute word from your list"
 msgstr "從您的列表中刪除靜音字詞"
 
-#: src/view/screens/Search/Search.tsx:1090
+#: src/view/screens/Search/Search.tsx:1082
 msgid "Remove profile"
 msgstr "刪除個人檔案"
 
-#: src/view/screens/Search/Search.tsx:1092
+#: src/view/screens/Search/Search.tsx:1084
 msgid "Remove profile from search history"
 msgstr "刪除搜尋紀錄中的個人檔案"
 
@@ -5585,7 +5585,7 @@ msgstr "登入時要求電子郵件驗證碼。"
 
 #: src/screens/Signup/StepInfo/index.tsx:159
 msgid "Required for this provider"
-msgstr "該服務提供者要求必填"
+msgstr "此服務提供者要求必填"
 
 #: src/components/LabelingServiceCard/index.tsx:80
 msgid "Required in your region"
@@ -5768,7 +5768,7 @@ msgstr "捲動到頂部"
 #: src/components/forms/SearchInput.tsx:36
 #: src/Navigation.tsx:599
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
-#: src/view/screens/Search/Search.tsx:578
+#: src/view/screens/Search/Search.tsx:570
 #: src/view/shell/bottom-bar/BottomBar.tsx:183
 #: src/view/shell/desktop/LeftNav.tsx:407
 #: src/view/shell/Drawer.tsx:365
@@ -5791,7 +5791,7 @@ msgstr "搜尋「{interestsDisplayName}」 {activeText}"
 msgid "Search for \"{query}\""
 msgstr "搜尋「{query}」"
 
-#: src/view/screens/Search/Search.tsx:988
+#: src/view/screens/Search/Search.tsx:980
 msgid "Search for \"{searchText}\""
 msgstr "搜尋「{searchText}」"
 
@@ -7122,7 +7122,7 @@ msgstr "切換以啟用或停用成人內容"
 
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
-#: src/view/screens/Search/Search.tsx:500
+#: src/view/screens/Search/Search.tsx:496
 msgid "Top"
 msgstr "熱門"
 
@@ -7775,7 +7775,7 @@ msgstr "很抱歉，我們無法解析此列表。如果問題持續發生，請
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "很抱歉，我們目前無法載入您的靜音字詞。請稍後再試。"
 
-#: src/view/screens/Search/Search.tsx:202
+#: src/view/screens/Search/Search.tsx:201
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "很抱歉，無法完成您的搜尋請求。請稍後再試。"
 
@@ -8211,7 +8211,7 @@ msgstr "您的帳號註冊時間太短，以致於無法上傳影片。請稍後
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
-msgstr "您可以將帳號的所有公開資料匯出為一個「CAR」檔案。但請注意，這不包括嵌入媒體 (如圖片和影片) 或私人資料 (如對話紀錄)，這些資料需要單獨擷取。"
+msgstr "您可以將帳號的所有公開資料匯出為一個「CAR」檔案。但請注意，這不包括嵌入媒體 (如圖片和影片) 或私人資料 (如對話紀錄)，這些資料需要另外擷取。"
 
 #: src/screens/Signup/StepInfo/index.tsx:211
 msgid "Your birth date"
