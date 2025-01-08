@@ -86,16 +86,19 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   // listen for broadcasts
   React.useEffect(() => {
     const listener = ({data}: MessageEvent) => {
+      const unreadCount = data.event === '30+'
+            ? 30
+            : data.event === ''
+            ? 0
+            : parseInt(data.event, 10) || 1;
       cacheRef.current = {
         usableInFeed: false,
         syncedAt: new Date(),
         data: undefined,
-        unreadCount:
-          data.event === '30+'
-            ? 30
-            : data.event === ''
-            ? 0
-            : parseInt(data.event, 10) || 1,
+        unreadCount,
+      }
+      if ('setAppBadge' in navigator) {
+        navigator.setAppBadge(unreadCount)
       }
       setNumUnread(data.event)
     }
