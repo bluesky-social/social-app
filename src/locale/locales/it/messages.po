@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-01 00:48+0000\n"
-"PO-Revision-Date: 2025-01-06 12:58+0000\n"
+"PO-Revision-Date: 2025-01-08 12:58+0000\n"
 "Last-Translator: Francisco, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -5825,11 +5825,11 @@ msgstr "Passaggio di sicurezza obbligatorio"
 
 #: src/components/TagMenu/index.web.tsx:77
 msgid "See {truncatedTag} posts"
-msgstr "Vedi {truncatedTag} post"
+msgstr "Vedi post su {truncatedTag}"
 
 #: src/components/TagMenu/index.web.tsx:94
 msgid "See {truncatedTag} posts by user"
-msgstr "Visualizza i post {truncatedTag} per utente"
+msgstr "Vedi post su {truncatedTag} dell'utente"
 
 #: src/components/TagMenu/index.tsx:155
 msgid "See <0>{displayTag}</0> posts"
