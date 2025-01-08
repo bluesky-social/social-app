@@ -9594,7 +9594,7 @@ msgstr "Puedes reactivar tu cuenta para continuar iniciando sesión. Tu perfil y
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:136
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:109
 msgid "You can update this later from your settings."
-msgstr "Puedes actualizar esto más tarde desde tus ajustas."
+msgstr "Puedes actualizar esto más tarde desde tus ajustes."
 
 #: src/view/com/profile/ProfileFollowers.tsx:94
 msgid "You do not have any followers."
