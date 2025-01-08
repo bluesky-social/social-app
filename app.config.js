@@ -39,6 +39,15 @@ module.exports = function (config) {
   const SENTRY_DIST = `${PLATFORM}.${VERSION}.${IS_TESTFLIGHT ? 'tf' : ''}${
     IS_DEV ? 'dev' : ''
   }`
+  const fs = require('node:fs')
+
+  fs.writeFile('./test.txt', process.env.EXPO_PUBLIC_ENV, err => {
+    if (err) {
+      console.error(err)
+    } else {
+      // file written successfully
+    }
+  })
 
   return {
     expo: {
