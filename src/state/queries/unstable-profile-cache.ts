@@ -1,5 +1,5 @@
 import {useCallback} from 'react'
-import {QueryClient,useQueryClient} from '@tanstack/react-query'
+import {QueryClient, useQueryClient} from '@tanstack/react-query'
 
 import * as atp from '#/types/atproto'
 
