@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-21 09:24+0900\n"
+"PO-Revision-Date: 2025-01-08 10:43+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -886,8 +886,8 @@ msgid "Are you sure?"
 msgstr "本当によろしいですか？"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:61
-msgid "Are you writing in <0>{0}</0>?"
-msgstr "<0>{0}</0>で書かれた投稿ですか？"
+msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
+msgstr "<0>{suggestedLanguageName}</0>で書かれた投稿ですか？"
 
 #: src/screens/Onboarding/index.tsx:23
 #: src/screens/Onboarding/state.ts:95
@@ -1268,8 +1268,8 @@ msgid "Change Password"
 msgstr "パスワードを変更"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:74
-msgid "Change post language to {0}"
-msgstr "投稿の言語を{0}に変更します"
+msgid "Change post language to {suggestedLanguageName}"
+msgstr "投稿の言語を{suggestedLanguageName}に変更します"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
@@ -1823,7 +1823,7 @@ msgstr "{0}に作成"
 
 #: src/screens/List/ListHiddenScreen.tsx:127
 msgid "Creator has been blocked"
-msgstr ""
+msgstr "作者はブロック中です"
 
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
@@ -2321,7 +2321,7 @@ msgstr "教育"
 
 #: src/screens/List/ListHiddenScreen.tsx:141
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
-msgstr ""
+msgstr "リストの作者にブロックされているか、作者をブロックしています。"
 
 #: src/screens/Settings/AccountSettings.tsx:60
 #: src/screens/Signup/StepInfo/index.tsx:170
