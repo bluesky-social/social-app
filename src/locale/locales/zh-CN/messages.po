@@ -6287,7 +6287,7 @@ msgstr "确定要登出吗？"
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:205
 #: src/view/shell/NavSignupCard.tsx:47
 #: src/view/shell/NavSignupCard.tsx:52
-msgid "Sign up"
+msgid "Create account"
 msgstr "注册"
 
 #: src/components/moderation/ScreenHider.tsx:91
