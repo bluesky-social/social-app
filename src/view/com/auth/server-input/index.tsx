@@ -1,5 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
+import {useWindowDimensions} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -25,6 +26,7 @@ export function ServerInputDialog({
 }) {
   const {_} = useLingui()
   const t = useTheme()
+  const {height} = useWindowDimensions()
   const {gtMobile} = useBreakpoints()
   const [pdsAddressHistory, setPdsAddressHistory] = React.useState<string[]>(
     persisted.get('pdsAddressHistory') || [],
@@ -71,19 +73,18 @@ export function ServerInputDialog({
   ])
 
   return (
-    <Dialog.Outer control={control} onClose={onClose}>
+    <Dialog.Outer
+      control={control}
+      onClose={onClose}
+      nativeOptions={{minHeight: height / 2}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
         accessibilityDescribedBy="dialog-description"
         accessibilityLabelledBy="dialog-title">
         <View style={[a.relative, a.gap_md, a.w_full]}>
           <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
-            <Trans>Choose Service</Trans>
+            <Trans>Choose your account provider</Trans>
           </Text>
-          <P nativeID="dialog-description" style={[a.text_sm]}>
-            <Trans>Select the service that hosts your data.</Trans>
-          </P>
-
           <ToggleButton.Group
             label="Preferences"
             values={fixedOption}
@@ -106,8 +107,9 @@ export function ServerInputDialog({
           {fixedOption[0] === BSKY_SERVICE && isFirstTimeUser && (
             <Admonition type="tip">
               <Trans>
-                If you're new to Bluesky, we recommend using Bluesky Social as
-                your account host. You can always change this later.
+                Bluesky is an open network where you can choose your own
+                provider. If you're new here, we recommend sticking with the
+                default Bluesky Social option.
               </Trans>
             </Admonition>
           )}
@@ -162,10 +164,16 @@ export function ServerInputDialog({
                 a.leading_snug,
                 a.flex_1,
               ]}>
-              <Trans>
-                Bluesky is an open network where you can choose your hosting
-                provider. If you're a developer, you can host your own server.
-              </Trans>{' '}
+              {isFirstTimeUser ? (
+                <Trans>
+                  If you're a developer, you can host your own server.
+                </Trans>
+              ) : (
+                <Trans>
+                  Bluesky is an open network where you can choose your hosting
+                  provider. If you're a developer, you can host your own server.
+                </Trans>
+              )}{' '}
               <InlineLinkText
                 label={_(msg`Learn more about self hosting your PDS.`)}
                 to="https://atproto.com/guides/self-hosting">
