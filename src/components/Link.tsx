@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import {GestureResponderEvent} from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions, useLinkProps} from '@react-navigation/native'
@@ -17,6 +17,7 @@ import {
 import {isNative, isWeb} from '#/platform/detection'
 import {shouldClickOpenNewTab} from '#/platform/urls'
 import {useModalControls} from '#/state/modals'
+import {ComposerContext} from '#/view/com/composer/Composer'
 import {atoms as a, flatten, TextStyleProp, useTheme, web} from '#/alf'
 import {Button, ButtonProps} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -84,9 +85,10 @@ export function useLink({
   const isExternal = isExternalUrl(href)
   const {openModal, closeModal} = useModalControls()
   const openLink = useOpenLink()
+  const composerContext = useContext(ComposerContext)
 
   const onPress = React.useCallback(
-    (e: GestureResponderEvent) => {
+    async (e: GestureResponderEvent) => {
       const exitEarlyIfFalse = outerOnPress?.(e)
 
       if (exitEarlyIfFalse === false) return
@@ -100,6 +102,10 @@ export function useLink({
 
       if (isWeb) {
         e.preventDefault()
+      }
+
+      if (composerContext) {
+        await composerContext.attemptNavigation()
       }
 
       if (requiresWarning) {
@@ -152,6 +158,7 @@ export function useLink({
       closeModal,
       action,
       navigation,
+      composerContext,
     ],
   )
 
