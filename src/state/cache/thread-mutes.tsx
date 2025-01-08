@@ -69,7 +69,9 @@ function useMigrateMutes(setThreadMute: SetStateContext) {
         while (!cancelled) {
           const threads = persisted.get('mutedThreads')
 
-          const root = threads.findLast(uri => uri.includes(currentAccount.did))
+          const root = threads
+            .reverse()
+            .find(uri => uri.includes(currentAccount.did))
 
           if (!root) break
 
