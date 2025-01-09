@@ -4,3 +4,7 @@ export const LOG_LEVEL = (process.env.EXPO_PUBLIC_LOG_LEVEL || 'info') as
   | 'info'
   | 'warn'
   | 'error'
+
+export const APPVIEW_PROXY = process.env.APPVIEW_PROXY || ''
+
+console.log({APPVIEW_PROXY})

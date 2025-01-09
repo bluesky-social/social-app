@@ -13,4 +13,4 @@ RUN yarn
 COPY . /app
 
 CMD ["pwd"]
-CMD ["yarn", "web"]
+CMD ["$APPVIEW_PROXY", "yarn", "web"]
