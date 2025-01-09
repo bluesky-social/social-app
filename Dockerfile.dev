@@ -12,5 +12,6 @@ RUN yarn
 
 COPY . /app
 
-CMD ["pwd"]
-CMD ["$APPVIEW_PROXY", "yarn", "web"]
+ENV APPVIEW_PROXY=${APPVIEW_PROXY}
+
+CMD ["yarn", "web"]
