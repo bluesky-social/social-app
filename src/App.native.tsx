@@ -151,9 +151,11 @@ function InnerApp() {
                                             <TrendingConfigProvider>
                                               <GestureHandlerRootView
                                                 style={s.h100pct}>
-                                                <TestCtrls />
-                                                <Shell />
-                                                <NuxDialogs />
+                                                <IntentDialogProvider>
+                                                  <TestCtrls />
+                                                  <Shell />
+                                                  <NuxDialogs />
+                                                </IntentDialogProvider>
                                               </GestureHandlerRootView>
                                             </TrendingConfigProvider>
                                           </ProgressGuideProvider>
@@ -213,11 +215,9 @@ function App() {
                               <StarterPackProvider>
                                 <SafeAreaProvider
                                   initialMetrics={initialWindowMetrics}>
-                                  <IntentDialogProvider>
-                                    <LightStatusBarProvider>
-                                      <InnerApp />
-                                    </LightStatusBarProvider>
-                                  </IntentDialogProvider>
+                                  <LightStatusBarProvider>
+                                    <InnerApp />
+                                  </LightStatusBarProvider>
                                 </SafeAreaProvider>
                               </StarterPackProvider>
                             </BottomSheetProvider>
