@@ -8752,7 +8752,7 @@ msgstr "Увімкнути або вимкнути вміст для дорос�
 #: src/screens/Topic.tsx:71
 #: src/view/screens/Search/Search.tsx:499
 msgid "Top"
-msgstr "Верх"
+msgstr "Топ"
 
 #: src/Navigation.tsx:383
 msgid "Topic"
