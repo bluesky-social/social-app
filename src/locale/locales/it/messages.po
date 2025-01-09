@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-09 00:43+0000\n"
-"PO-Revision-Date: 2025-01-09 09:28+0000\n"
+"PO-Revision-Date: 2025-01-09 09:33+0000\n"
 "Last-Translator: Michele Locati <michele@locati.it>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -1511,7 +1511,7 @@ msgstr "Linee guida della community"
 
 #: src/screens/Onboarding/StepFinished.tsx:293
 msgid "Complete onboarding and start using your account"
-msgstr "Completa l'incorporazione e inizia a utilizzare il tuo account"
+msgstr "Completa l'incorporazione e inizia a usare il tuo account"
 
 #: src/screens/Signup/index.tsx:144
 msgid "Complete the challenge"
@@ -2481,11 +2481,11 @@ msgstr "Inserisci il codice che hai ricevuto per modificare la tua password."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:353
 msgid "Enter the domain you want to use"
-msgstr "Inserisci il dominio che vuoi utilizzare"
+msgstr "Inserisci il dominio che vuoi usare"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:113
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "Inserisci l'email che hai utilizzato per creare il tuo account. Ti invieremo un codice in modo che tu possa scegliere una nuova password."
+msgstr "Inserisci l'email che hai usato per creare il tuo account. Ti invieremo un codice in modo che tu possa scegliere una nuova password."
 
 #: src/components/dialogs/BirthDateSettings.tsx:107
 msgid "Enter your birth date"
@@ -3403,7 +3403,7 @@ msgstr "Inserisci il codice che ti è stato inviato via email"
 
 #: src/screens/Login/LoginForm.tsx:202
 msgid "Input the username or email address you used at signup"
-msgstr "Inserisci il nome utente o l'indirizzo email che hai utilizzato al momento della registrazione"
+msgstr "Inserisci il nome utente o l'indirizzo email che hai usato al momento della registrazione"
 
 #: src/screens/Login/LoginForm.tsx:227
 msgid "Input your password"
@@ -3523,7 +3523,7 @@ msgstr "Etichette aggiunte"
 
 #: src/screens/Profile/Sections/Labels.tsx:164
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
-msgstr "Le etichette sono annotazioni su utenti e contenuti. Possono essere utilizzate per nascondere, apporre avvisi e classificare il network."
+msgstr "Le etichette sono annotazioni su utenti e contenuti. Possono essere usate per nascondere, apporre avvisi e classificare il network."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:71
 msgid "Labels on your account"
@@ -4908,7 +4908,7 @@ msgstr "Conferma la tua email prima di cambiarla. Si tratta di un requisito temp
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:114
 msgid "Please enter a unique name for this app password or use our randomly generated one."
-msgstr "Inserisci un nome univoco per questa password per app o utilizza quello generato casualmente."
+msgstr "Inserisci un nome univoco per questa password per app o usa quello generato casualmente."
 
 #: src/components/dialogs/MutedWords.tsx:86
 msgid "Please enter a valid word, tag, or phrase to mute"
@@ -5863,7 +5863,7 @@ msgstr "Consulta questa guida"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:194
 msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
-msgstr "Cursore di ricerca. Utilizza i tasti freccia per cercare avanti e indietro, lo spazio per riprodurre/mettere in pausa"
+msgstr "Cursore di ricerca. Usa i tasti freccia per cercare avanti e indietro, lo spazio per riprodurre/mettere in pausa"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -6472,7 +6472,7 @@ msgstr "Iscriviti"
 
 #: src/screens/Profile/Sections/Labels.tsx:202
 msgid "Subscribe to @{0} to use these labels:"
-msgstr "Iscriviti a @{0} per utilizzare queste etichette:"
+msgstr "Iscriviti a @{0} per usare queste etichette:"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:238
 msgid "Subscribe to Labeler"
@@ -6617,7 +6617,7 @@ msgstr "Termini di servizio"
 #: src/lib/moderation/useReportOptions.ts:107
 #: src/lib/moderation/useReportOptions.ts:115
 msgid "Terms used violate community standards"
-msgstr "I termini utilizzati violano gli standard della comunità"
+msgstr "I termini usati violano gli standard della comunità"
 
 #: src/components/dialogs/MutedWords.tsx:266
 msgid "Text & tags"
@@ -7419,22 +7419,22 @@ msgstr "Puoi generare una password per app di terze parti per accedere ad altri 
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:541
 msgid "Use default provider"
-msgstr "Utilizza il fornitore predefinito"
+msgstr "Usa il fornitore predefinito"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:53
 #: src/view/com/modals/InAppBrowserConsent.tsx:55
 msgid "Use in-app browser"
-msgstr "Utilizza il browser dell'app"
+msgstr "Usa il browser dell'app"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:92
 #: src/screens/Settings/ContentAndMediaSettings.tsx:98
 msgid "Use in-app browser to open links"
-msgstr "Utilizza il browser dell'app per aprire i link"
+msgstr "Usa il browser dell'app per aprire i link"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:63
 #: src/view/com/modals/InAppBrowserConsent.tsx:65
 msgid "Use my default browser"
-msgstr "Utilizza il mio browser predefinito"
+msgstr "Usa il mio browser predefinito"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:53
 msgid "Use recommended"
@@ -7818,7 +7818,7 @@ msgstr "Come va?"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:80
 msgid "Which languages are used in this post?"
-msgstr "Che lingue sono utilizzate in questo post?"
+msgstr "In quali lingue è scritto questo post?"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:79
 msgid "Which languages would you like to see in your algorithmic feeds?"
@@ -8229,7 +8229,7 @@ msgstr "La tua scelta verrà salvata, ma potrà essere modificata successivament
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:496
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
-msgstr "Il tuo attuale nome utente <0>{0}</0> rimarrà automaticamente riservato per te. Puoi tornare a utilizzarlo in qualsiasi momento da questo account."
+msgstr "Il tuo attuale nome utente <0>{0}</0> rimarrà automaticamente riservato per te. Puoi tornare a usarlo in qualsiasi momento da questo account."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Signup/state.ts:203
