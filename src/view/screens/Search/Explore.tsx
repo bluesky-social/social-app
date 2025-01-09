@@ -194,6 +194,7 @@ function LoadMore({
                             size={28}
                             avatar={_item.avatar}
                             moderation={_item.moderation.ui('avatar')}
+                            type="user"
                           />
                         ) : _item.type === 'feed' ? (
                           <UserAvatar
