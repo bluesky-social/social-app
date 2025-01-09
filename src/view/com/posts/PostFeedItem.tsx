@@ -33,11 +33,12 @@ import {useComposerControls} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {FeedNameText} from '#/view/com/util/FeedInfoText'
 import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
-import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
+import {PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {Text} from '#/view/com/util/text/Text'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a} from '#/alf'
+import {PostEmbed} from '#/components/embeds/PostEmbed'
 import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {ContentHider} from '#/components/moderation/ContentHider'
@@ -520,7 +521,7 @@ let PostContent = ({
       ) : undefined}
       {postEmbed ? (
         <View style={[a.pb_xs]}>
-          <PostEmbeds
+          <PostEmbed
             embed={postEmbed}
             moderation={moderation}
             onOpen={onOpenEmbed}
