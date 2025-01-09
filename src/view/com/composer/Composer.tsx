@@ -264,7 +264,12 @@ export const ComposePost = ({
     () => ({
       paddingTop: isAndroid ? insets.top : 0,
       paddingBottom:
-        (isIOS && !isKeyboardVisible) || (isAndroid && isKeyboardVisible)
+        // iOS - when keyboard is closed, keep the bottom bar in the safe area
+        (isIOS && !isKeyboardVisible) ||
+        // Android - Android >=35 KeyboardAvoidingView adds double padding when
+        // keyboard is closed, so we subtract that in the offset and add it back
+        // here when the keyboard is open
+        (isAndroid && isKeyboardVisible)
           ? insets.bottom
           : 0,
     }),
