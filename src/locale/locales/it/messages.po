@@ -1,16 +1,16 @@
 # 
 # Translators:
 # arestifop, 2024
-# Francisco, 2025
 # Michele Locati <michele@locati.it>, 2025
+# Francisco, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-09 00:43+0000\n"
-"PO-Revision-Date: 2025-01-09 09:33+0000\n"
-"Last-Translator: Michele Locati <michele@locati.it>, 2025\n"
+"PO-Revision-Date: 2025-01-09 13:00+0000\n"
+"Last-Translator: Francisco, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -1052,11 +1052,11 @@ msgstr "Bluesky non può confermare l'autenticità della data dichiarata."
 
 #: src/view/com/auth/server-input/index.tsx:172
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
-msgstr "Bluesky è una rete aperta dove puoi scegliere il fornitore di hosting. Se sei uno sviluppatore, puoi ospitare il tuo server."
+msgstr "Bluesky è una rete aperta dove puoi scegliere il fornitore che ospita i tuoi dati. Se sei uno sviluppatore, puoi utilizzare il tuo server."
 
 #: src/view/com/auth/server-input/index.tsx:109
 msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
-msgstr "Bluesky è una rete aperta che ti permette di scegliere il tuo fornitore. Se sei un nuovo utente ti consigliamo di iniziare con l'opzione predefinita Bluesky Social."
+msgstr "Bluesky è una rete aperta che ti permette di scegliere il fornitore dei tuoi dati. Se sei un nuovo utente, ti consigliamo di iniziare con l'opzione predefinita Bluesky Social."
 
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
@@ -1358,7 +1358,7 @@ msgstr "Scegli questo colore per il tuo avatar"
 
 #: src/view/com/auth/server-input/index.tsx:86
 msgid "Choose your account provider"
-msgstr "Seleziona il tuo fornitore di account"
+msgstr "Seleziona il fornitore del tuo account"
 
 #: src/view/screens/Feeds.tsx:728
 #: src/view/screens/Search/Explore.tsx:412
@@ -3351,7 +3351,7 @@ msgstr "Se vuoi modificare la password, ti invieremo un codice per verificare ch
 
 #: src/view/com/auth/server-input/index.tsx:168
 msgid "If you're a developer, you can host your own server."
-msgstr "Se sei uno sviluppatore puoi ospitare un tuo server."
+msgstr "Se sei uno sviluppatore, puoi utilizzare il tuo server."
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
@@ -3571,7 +3571,7 @@ msgstr "Scopri di più su Bluesky"
 
 #: src/view/com/auth/server-input/index.tsx:178
 msgid "Learn more about self hosting your PDS."
-msgstr "Maggiori informazioni sull'ospitare il tuo PDS."
+msgstr "Informazioni su come ospitare il tuo server in autonomia."
 
 #: src/components/moderation/ContentHider.tsx:149
 #: src/components/moderation/ContentHider.tsx:215
