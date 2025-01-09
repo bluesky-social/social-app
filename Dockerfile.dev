@@ -1,0 +1,16 @@
+FROM node:22.13-alpine3.20
+
+WORKDIR /app
+
+COPY package.json /app/package.json
+COPY yarn.lock /app/yarn.lock
+COPY /patches /app/patches
+
+RUN pwd
+RUN cd /app
+RUN yarn
+
+COPY . /app
+
+CMD ["pwd"]
+CMD ["yarn", "web"]
