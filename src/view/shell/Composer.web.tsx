@@ -25,7 +25,7 @@ export function Composer({}: {winHeight: number}) {
   // =
 
   if (!isActive) {
-    return <View />
+    return null
   }
 
   return (
