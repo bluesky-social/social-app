@@ -1,5 +1,4 @@
 /* eslint-disable bsky-internal/avoid-unwrapped-text */
-import React from 'react'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 
 import {Butterfly} from './Butterfly.js'
@@ -18,7 +17,7 @@ export function StarterPack(props: {
   images: Map<string, Buffer>
 }) {
   const {starterPack, images} = props
-  const record = AppBskyGraphStarterpack.isRecord(starterPack.record)
+  const record = AppBskyGraphStarterpack.isValidRecord(starterPack.record)
     ? starterPack.record
     : null
   const imagesArray = [...images.values()]

@@ -1,7 +1,6 @@
 import assert from 'node:assert'
 
-import React from 'react'
-import {AppBskyGraphDefs, AtUri} from '@atproto/api'
+import {AppBskyActorDefs,AppBskyGraphDefs, AtUri} from '@atproto/api'
 import resvg from '@resvg/resvg-js'
 import {Express} from 'express'
 import satori from 'satori'
@@ -37,7 +36,13 @@ export default function (ctx: AppContext, app: Express) {
         return res.status(404).end('not found')
       }
       const imageEntries = await Promise.all(
-        [starterPack.creator]
+        (
+          [] as (
+            | AppBskyActorDefs.ProfileViewBasic
+            | AppBskyActorDefs.ProfileView
+          )[]
+        )
+          .concat([starterPack.creator])
           .concat(starterPack.listItemsSample.map(li => li.subject))
           // has avatar
           .filter(p => p.avatar)

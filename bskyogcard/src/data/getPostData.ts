@@ -1,14 +1,8 @@
-import {
-  AppBskyEmbedExternal,
-  AppBskyEmbedImages,
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-  AppBskyFeedDefs,
-  AppBskyGraphDefs,
-} from '@atproto/api'
+import {AppBskyFeedDefs} from '@atproto/api'
 
 import {httpLogger} from '../logger.js'
 import {getStarterPackImageUri} from '../util/getStarterPackImageUri.js'
+import {Embed,parseEmbed} from '../util/parseEmbed.js'
 import {getImage} from './getImage.js'
 
 export type Metadata = {
@@ -39,12 +33,98 @@ function normalizeAspectRatio(aspectRatio?: {
   return aspectRatio
 }
 
+export function getEmbedData(embed: Embed, images: Map<string, Metadata>) {
+  switch (embed.type) {
+    case 'images': {
+      for (const image of embed.view.images) {
+        images.set(image.fullsize, {
+          aspectRatio: normalizeAspectRatio(image.aspectRatio),
+        })
+      }
+      break
+    }
+    case 'link': {
+      if (embed.view.external.thumb) {
+        images.set(embed.view.external.thumb, {
+          aspectRatio: {
+            width: 1200,
+            height: 630,
+          },
+        })
+      }
+      break
+    }
+    case 'video': {
+      if (embed.view.thumbnail) {
+        images.set(embed.view.thumbnail, {
+          aspectRatio: normalizeAspectRatio(embed.view.aspectRatio),
+        })
+      }
+      break
+    }
+    case 'feed': {
+      if (embed.view.avatar) {
+        images.set(embed.view.avatar, {
+          aspectRatio: {
+            width: 1000,
+            height: 1000,
+          },
+        })
+      }
+      break
+    }
+    case 'list': {
+      if (embed.view.avatar) {
+        images.set(embed.view.avatar, {
+          aspectRatio: {
+            width: 1000,
+            height: 1000,
+          },
+        })
+      }
+      break
+    }
+    case 'starter_pack': {
+      const uri = getStarterPackImageUri(embed.view)
+      images.set(uri, {
+        aspectRatio: {
+          width: 1200,
+          height: 630,
+        },
+      })
+      break
+    }
+    case 'post': {
+      if (embed.view.author.avatar) {
+        images.set(embed.view.author.avatar, {
+          aspectRatio: {
+            width: 1000,
+            height: 1000,
+          },
+        })
+      }
+      for (const _e of embed.view.embeds) {
+        getEmbedData(parseEmbed(_e), images)
+      }
+      break
+    }
+    case 'post_with_media': {
+      getEmbedData(embed.view, images)
+      getEmbedData(embed.media, images)
+      break
+    }
+    case 'post_blocked':
+    case 'post_detached':
+    case 'post_not_found':
+    default:
+      break
+  }
+}
+
 export async function getPostData(
   post: AppBskyFeedDefs.PostView,
 ): Promise<PostData> {
   const images: Map<string, Metadata> = new Map()
-
-  // console.log(JSON.stringify(post, null, 2))
 
   if (post.author.avatar) {
     images.set(post.author.avatar, {
@@ -56,203 +136,7 @@ export async function getPostData(
   }
 
   if (post.embed) {
-    if (AppBskyEmbedImages.isView(post.embed)) {
-      // get OPs media
-      for (const image of post.embed.images) {
-        images.set(image.fullsize, {
-          aspectRatio: normalizeAspectRatio(image.aspectRatio),
-        })
-      }
-    }
-
-    if (AppBskyEmbedExternal.isView(post.embed)) {
-      if (post.embed.external.thumb) {
-        images.set(post.embed.external.thumb, {
-          aspectRatio: {
-            width: 1200,
-            height: 630,
-          },
-        })
-      }
-    }
-
-    if (AppBskyEmbedRecord.isView(post.embed)) {
-      if (AppBskyEmbedRecord.isViewRecord(post.embed.record)) {
-        if (post.embed.record.author.avatar) {
-          images.set(post.embed.record.author.avatar, {
-            aspectRatio: {
-              width: 1000,
-              height: 1000,
-            },
-          })
-        }
-
-        for (const embed of post.embed.record.embeds) {
-          if (AppBskyEmbedImages.isView(embed)) {
-            for (const image of embed.images) {
-              images.set(image.fullsize, {
-                aspectRatio: normalizeAspectRatio(image.aspectRatio),
-              })
-            }
-          }
-          if (AppBskyEmbedExternal.isView(embed)) {
-            if (embed.external.thumb) {
-              images.set(embed.external.thumb, {
-                aspectRatio: {
-                  width: 1200,
-                  height: 630,
-                },
-              })
-            }
-          }
-          if (AppBskyEmbedRecordWithMedia.isView(embed)) {
-            if (AppBskyEmbedImages.isView(embed.media)) {
-              for (const image of embed.media.images) {
-                images.set(image.fullsize, {
-                  aspectRatio: normalizeAspectRatio(image.aspectRatio),
-                })
-              }
-            } else if (AppBskyEmbedExternal.isView(embed.media)) {
-              if (embed.media.external.thumb) {
-                images.set(embed.media.external.thumb, {
-                  aspectRatio: {
-                    width: 1200,
-                    height: 630,
-                  },
-                })
-              }
-            }
-          }
-
-          if (AppBskyGraphDefs.isListView(embed.record)) {
-            if (embed.record.avatar) {
-              images.set(embed.record.avatar, {
-                aspectRatio: {
-                  width: 1000,
-                  height: 1000,
-                },
-              })
-            }
-          }
-
-          if (AppBskyFeedDefs.isGeneratorView(embed.record)) {
-            if (embed.record.avatar) {
-              images.set(embed.record.avatar, {
-                aspectRatio: {
-                  width: 1000,
-                  height: 1000,
-                },
-              })
-            }
-          }
-
-          if (AppBskyGraphDefs.isStarterPackViewBasic(embed.record)) {
-            const uri = getStarterPackImageUri(embed.record)
-            images.set(uri, {
-              aspectRatio: {
-                width: 1200,
-                height: 630,
-              },
-            })
-          }
-        }
-      }
-
-      if (AppBskyGraphDefs.isListView(post.embed.record)) {
-        if (post.embed.record.avatar) {
-          images.set(post.embed.record.avatar, {
-            aspectRatio: {
-              width: 1000,
-              height: 1000,
-            },
-          })
-        }
-      }
-
-      if (AppBskyFeedDefs.isGeneratorView(post.embed.record)) {
-        if (post.embed.record.avatar) {
-          images.set(post.embed.record.avatar, {
-            aspectRatio: {
-              width: 1000,
-              height: 1000,
-            },
-          })
-        }
-      }
-
-      if (AppBskyGraphDefs.isStarterPackViewBasic(post.embed.record)) {
-        const uri = getStarterPackImageUri(post.embed.record)
-        images.set(uri, {
-          aspectRatio: {
-            width: 1200,
-            height: 630,
-          },
-        })
-      }
-    }
-
-    if (AppBskyEmbedRecordWithMedia.isView(post.embed)) {
-      // get OPs media
-      if (AppBskyEmbedImages.isView(post.embed.media)) {
-        for (const image of post.embed.media.images) {
-          images.set(image.fullsize, {
-            aspectRatio: normalizeAspectRatio(image.aspectRatio),
-          })
-        }
-      }
-
-      if (AppBskyEmbedExternal.isView(post.embed.media)) {
-        if (post.embed.media.external.thumb) {
-          images.set(post.embed.media.external.thumb, {
-            aspectRatio: {
-              width: 1200,
-              height: 630,
-            },
-          })
-        }
-      }
-
-      // get media from embedded post
-      if (AppBskyEmbedRecord.isViewRecord(post.embed.record.record)) {
-        for (const embed of post.embed.record.record.embeds) {
-          if (AppBskyEmbedImages.isView(embed)) {
-            for (const image of embed.images) {
-              images.set(image.fullsize, {
-                aspectRatio: normalizeAspectRatio(image.aspectRatio),
-              })
-            }
-          }
-          if (AppBskyEmbedExternal.isView(embed)) {
-            if (embed.external.thumb) {
-              images.set(embed.external.thumb, {
-                aspectRatio: {
-                  width: 1200,
-                  height: 630,
-                },
-              })
-            }
-          }
-          if (AppBskyEmbedRecordWithMedia.isView(embed)) {
-            if (AppBskyEmbedImages.isView(embed.media)) {
-              for (const image of embed.media.images) {
-                images.set(image.fullsize, {
-                  aspectRatio: normalizeAspectRatio(image.aspectRatio),
-                })
-              }
-            } else if (AppBskyEmbedExternal.isView(embed.media)) {
-              if (embed.media.external.thumb) {
-                images.set(embed.media.external.thumb, {
-                  aspectRatio: {
-                    width: 1200,
-                    height: 630,
-                  },
-                })
-              }
-            }
-          }
-        }
-      }
-    }
+    getEmbedData(parseEmbed(post.embed), images)
   }
 
   const deduped = Array.from(images.entries())

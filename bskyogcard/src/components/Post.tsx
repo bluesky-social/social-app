@@ -49,7 +49,7 @@ export function Post({
   data: PostData
   moderatorData: ModeratorData
 }) {
-  if (AppBskyFeedPost.isRecord(post.record)) {
+  if (AppBskyFeedPost.isValidRecord(post.record)) {
     const avatar = data.images.get(post.author.avatar)
     const rt = post.record.text
       ? new RichTextApi({
@@ -325,8 +325,8 @@ export function Embeds({
     }
 
     if (
-      AppBskyGraphDefs.isStarterPackViewBasic(embed.record) &&
-      AppBskyGraphStarterpack.isRecord(embed.record.record)
+      AppBskyGraphDefs.isValidStarterPackViewBasic(embed.record) &&
+      AppBskyGraphStarterpack.isValidRecord(embed.record.record)
     ) {
       const uri = getStarterPackImageUri(embed.record)
       const {name, description} = embed.record.record
@@ -550,9 +550,8 @@ export function QuoteEmbed({
   moderatorData: ModeratorData
 }) {
   if (
-    AppBskyEmbedRecord.isViewRecord(embed.record) &&
-    AppBskyFeedPost.isRecord(embed.record.value) &&
-    AppBskyFeedPost.validateRecord(embed.record.value).success
+    AppBskyEmbedRecord.isValidViewRecord(embed.record) &&
+    AppBskyFeedPost.isValidRecord(embed.record.value)
   ) {
     const {author, value: post, embeds} = embed.record
     const avatar = data.images.get(author.avatar)
