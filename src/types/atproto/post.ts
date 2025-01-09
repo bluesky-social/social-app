@@ -9,7 +9,7 @@ import {
   AppBskyLabelerDefs,
 } from '@atproto/api'
 
-export type View =
+export type Embed =
   | {
       type: 'post'
       view: AppBskyEmbedRecord.ViewRecord
@@ -56,13 +56,17 @@ export type View =
     }
   | {
       type: 'post_with_media'
-      view: View | undefined
-      media: View | undefined
+      view: Embed
+      media: Embed
+    }
+  | {
+      type: 'unknown'
+      view: null
     }
 
-export function parseEmbedRecordView({
-  record,
-}: AppBskyEmbedRecord.View): View | undefined {
+export type EmbedType<T extends Embed['type']> = Extract<Embed, {type: T}>
+
+export function parseEmbedRecordView({record}: AppBskyEmbedRecord.View): Embed {
   if (AppBskyEmbedRecord.isViewRecord(record)) {
     return {
       type: 'post',
@@ -103,12 +107,15 @@ export function parseEmbedRecordView({
       type: 'starter_pack',
       view: record,
     }
+  } else {
+    return {
+      type: 'unknown',
+      view: null,
+    }
   }
 }
 
-export function parseEmbed(
-  embed: AppBskyFeedDefs.PostView['embed'],
-): View | undefined {
+export function parseEmbed(embed: AppBskyFeedDefs.PostView['embed']): Embed {
   if (AppBskyEmbedImages.isView(embed)) {
     return {
       type: 'images',
@@ -131,6 +138,11 @@ export function parseEmbed(
       type: 'post_with_media',
       view: parseEmbedRecordView(embed.record),
       media: parseEmbed(embed.media),
+    }
+  } else {
+    return {
+      type: 'unknown',
+      view: null,
     }
   }
 }
