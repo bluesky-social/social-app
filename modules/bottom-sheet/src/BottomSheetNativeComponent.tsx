@@ -125,7 +125,7 @@ export class BottomSheetNativeComponent extends React.Component<
               onLayout={e => {
                 const {height} = e.nativeEvent.layout
                 this.setState({viewHeight: height})
-                this.updateLayout()
+                setTimeout(() => this.updateLayout())
               }}>
               <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
             </View>
