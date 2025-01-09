@@ -6860,7 +6860,7 @@ msgstr "Logáil amach?"
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:205
 #: src/view/shell/NavSignupCard.tsx:47
 #: src/view/shell/NavSignupCard.tsx:52
-msgid "Sign up"
+msgid "Create account"
 msgstr "Cláraigh"
 
 #: src/components/moderation/ScreenHider.tsx:91
