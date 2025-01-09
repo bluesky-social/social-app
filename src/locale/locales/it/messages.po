@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-09 00:43+0000\n"
-"PO-Revision-Date: 2025-01-09 09:22+0000\n"
+"PO-Revision-Date: 2025-01-09 09:28+0000\n"
 "Last-Translator: Michele Locati <michele@locati.it>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -1056,7 +1056,7 @@ msgstr "Bluesky è una rete aperta dove puoi scegliere il fornitore di hosting. 
 
 #: src/view/com/auth/server-input/index.tsx:109
 msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
-msgstr "Bluesky è una rete aperta che ti permette di scegliere il tuo provider. Se sei un nuovo utente ti consigliamo di iniziare con l'opzione predefinita Bluesky Social."
+msgstr "Bluesky è una rete aperta che ti permette di scegliere il tuo fornitore. Se sei un nuovo utente ti consigliamo di iniziare con l'opzione predefinita Bluesky Social."
 
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
@@ -3287,7 +3287,7 @@ msgstr "Hosting:"
 #: src/screens/Login/ForgotPasswordForm.tsx:83
 #: src/screens/Login/LoginForm.tsx:168
 msgid "Hosting provider"
-msgstr "Servizio di hosting"
+msgstr "Fornitore di hosting"
 
 #: src/screens/Settings/ThreadPreferences.tsx:67
 #: src/screens/Settings/ThreadPreferences.tsx:70
@@ -5058,7 +5058,7 @@ msgstr "Premere per tentare di riconnetterti"
 #: src/components/forms/HostingProvider.tsx:50
 #: src/components/forms/HostingProvider.tsx:66
 msgid "Press to change hosting provider"
-msgstr "Premi per cambiare provider di hosting"
+msgstr "Premi per cambiare fornitore di hosting"
 
 #: src/components/Error.tsx:60
 #: src/components/Lists.tsx:93
@@ -5600,7 +5600,7 @@ msgstr "Richiedi un codice via email per accedere al tuo account."
 
 #: src/screens/Signup/StepInfo/index.tsx:153
 msgid "Required for this provider"
-msgstr "Obbligatorio per questo operatore"
+msgstr "Obbligatorio per questo fornitore"
 
 #: src/components/LabelingServiceCard/index.tsx:80
 msgid "Required in your region"
@@ -7419,7 +7419,7 @@ msgstr "Puoi generare una password per app di terze parti per accedere ad altri 
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:541
 msgid "Use default provider"
-msgstr "Utilizza il tuo provider predefinito"
+msgstr "Utilizza il fornitore predefinito"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:53
 #: src/view/com/modals/InAppBrowserConsent.tsx:55
