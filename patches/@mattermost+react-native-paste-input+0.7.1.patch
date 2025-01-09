@@ -1,19 +1,16 @@
 diff --git a/node_modules/@mattermost/react-native-paste-input/ios/PasteInputView.m b/node_modules/@mattermost/react-native-paste-input/ios/PasteInputView.m
-index e916023..9968f3c 100644
+index e916023..5049c33 100644
 --- a/node_modules/@mattermost/react-native-paste-input/ios/PasteInputView.m
 +++ b/node_modules/@mattermost/react-native-paste-input/ios/PasteInputView.m
-@@ -3,58 +3,87 @@
- //  PasteInput
+@@ -4,6 +4,7 @@
  //
  //  Created by Elias Nahum on 04-11-20.
--//  Copyright © 2020 Facebook. All rights reserved.
+ //  Copyright © 2020 Facebook. All rights reserved.
 +//  Updated to remove parent’s default text view
  //
  
  #import "PasteInputView.h"
- #import "PasteInputTextView.h"
--#import <React/RCTUtils.h>
-+#import <React/RCTUtils.h> // for RCTDirectEventBlock, etc.
+@@ -12,49 +13,78 @@
  
  @implementation PasteInputView
  {
@@ -117,7 +114,7 @@ index e916023..9968f3c 100644
  }
  
  #pragma mark - UIScrollViewDelegate
-@@ -62,7 +91,6 @@
+@@ -62,7 +92,6 @@
  - (void)scrollViewDidScroll:(UIScrollView *)scrollView
  {
    RCTDirectEventBlock onScroll = self.onScroll;
@@ -125,7 +122,7 @@ index e916023..9968f3c 100644
    if (onScroll) {
      CGPoint contentOffset = scrollView.contentOffset;
      CGSize contentSize = scrollView.contentSize;
-@@ -71,22 +99,22 @@
+@@ -71,22 +100,22 @@
  
      onScroll(@{
        @"contentOffset": @{
