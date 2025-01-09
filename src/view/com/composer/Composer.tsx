@@ -264,7 +264,9 @@ export const ComposePost = ({
     () => ({
       paddingTop: isAndroid ? insets.top : 0,
       paddingBottom:
-        isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
+        (isIOS && !isKeyboardVisible) || (isAndroid && isKeyboardVisible)
+          ? insets.bottom
+          : 0,
     }),
     [insets, isKeyboardVisible],
   )
@@ -642,7 +644,7 @@ export const ComposePost = ({
             ref={scrollViewRef}
             layout={native(LinearTransition)}
             onScroll={scrollHandler}
-            style={styles.scrollView}
+            style={a.flex_1}
             keyboardShouldPersistTaps="always"
             onContentSizeChange={onScrollViewContentSizeChange}
             onLayout={onScrollViewLayout}>
@@ -1396,10 +1398,14 @@ function useScrollTracker({
 }
 
 function useKeyboardVerticalOffset() {
-  const {top} = useSafeAreaInsets()
+  const {top, bottom} = useSafeAreaInsets()
 
   // Android etc
-  if (!isIOS) return 0
+  if (!isIOS) {
+    // if Android <35 or web, bottom is 0 anyway. if >=35, this is needed to account
+    // for the edge-to-edge nav bar
+    return bottom * -1
+  }
 
   // iPhone SE
   if (top === 20) return 40
@@ -1488,9 +1494,6 @@ const styles = StyleSheet.create({
   },
   inactivePost: {
     opacity: 0.5,
-  },
-  scrollView: {
-    flex: 1,
   },
   textInputLayout: {
     flexDirection: 'row',
