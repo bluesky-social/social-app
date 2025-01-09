@@ -120,6 +120,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         )
 
         // update & broadcast
+        if ('setAppBadge' in navigator) {
+          navigator.setAppBadge(0)
+        }
         setNumUnread('')
         broadcast.postMessage({event: ''})
         resetBadgeCount()
@@ -184,6 +187,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           }
 
           // update & broadcast
+          if ('setAppBadge' in navigator) {
+            navigator.setAppBadge(unreadCount)
+          }
           setNumUnread(unreadCountStr)
           if (invalidate) {
             truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
