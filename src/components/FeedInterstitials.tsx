@@ -9,6 +9,7 @@ import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {FeedDescriptor} from '#/state/queries/post-feed'
@@ -347,7 +348,11 @@ export function ProfileGrid({
             <Button
               label={_(msg`Browse more accounts on the Explore page`)}
               onPress={() => {
-                navigation.navigate('SearchTab')
+                if (isWeb) {
+                  navigation.navigate('Search', {})
+                } else {
+                  navigation.navigate('SearchTab')
+                }
               }}>
               <CardOuter style={[a.flex_1, {borderWidth: 0}]}>
                 <View style={[a.flex_1, a.justify_center]}>
@@ -480,7 +485,11 @@ export function SuggestedFeeds() {
             <Button
               label={_(msg`Browse more feeds on the Explore page`)}
               onPress={() => {
-                navigation.navigate('SearchTab')
+                if (isWeb) {
+                  navigation.navigate('Search', {})
+                } else {
+                  navigation.navigate('SearchTab')
+                }
               }}
               style={[a.flex_col]}>
               <CardOuter style={[a.flex_1]}>
