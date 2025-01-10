@@ -18,10 +18,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const langPrefs = useLanguagePrefs()
   const {data: config, isLoading: isInitialLoad} = useServiceConfigQuery()
   const ctx = React.useMemo<Context>(() => {
-    if (__DEV__) {
-      return {enabled: true}
-    }
-
     /*
      * Only English during beta period
      */
