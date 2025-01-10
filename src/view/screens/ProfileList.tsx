@@ -486,7 +486,7 @@ function Header({
             name: 'square.and.arrow.up',
           },
           android: '',
-          web: 'share',
+          web: 'link',
         },
       },
     ]
