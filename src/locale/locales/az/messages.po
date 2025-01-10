@@ -8918,54 +8918,54 @@ msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:496
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
-msgstr ""
+msgstr "Cari dəstəyiniz <0>{0}</0> birbaşa sizin üçün qorunur. İstənilən vaxt bu hesabdan ona geri keçə  bilərsiniz."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Signup/state.ts:203
 #: src/screens/Signup/StepInfo/index.tsx:108
 #: src/view/com/modals/ChangePassword.tsx:55
 msgid "Your email appears to be invalid."
-msgstr ""
+msgstr "E-poçtunuz etibarsız görünür."
 
 #: src/view/com/modals/ChangeEmail.tsx:120
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
-msgstr ""
+msgstr "E-poçtunuz yeniləndi, lakin təsdiqlənmədi. Növbəti addımda,lütfən, yeni e-poçtunuzu təsdiqləyin."
 
 #: src/view/com/modals/VerifyEmail.tsx:122
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
-msgstr ""
+msgstr "E-poçtunuz hələ təsdiqlənmədi. Bu, təklif etdiyimiz vacib təhlükəsizlik təşəbbüsüdür."
 
 #: src/state/shell/progress-guide.tsx:213
 msgid "Your first like!"
-msgstr ""
+msgstr "İlk bəyənməniz!"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr ""
+msgstr "Aşağıdakı axınınız boşdur! Nə baş verdiyini görmək üçün daha çox istifadəçi izləyin."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:223
 msgid "Your full handle will be <0>@{0}</0>"
-msgstr ""
+msgstr "Tam dəstəyiniz <0>@{0} olacaq</0>"
 
 #: src/screens/Signup/StepHandle.tsx:125
 msgid "Your full username will be"
-msgstr ""
+msgstr "Tam istifadəçi adınız olacaq"
 
 #: src/components/dialogs/MutedWords.tsx:369
 msgid "Your muted words"
-msgstr ""
+msgstr "Səssiz edilən yazılarınız"
 
 #: src/view/com/modals/ChangePassword.tsx:158
 msgid "Your password has been changed successfully!"
-msgstr ""
+msgstr "Parolunuz uğurla dəyişdirildi!"
 
 #: src/view/com/composer/Composer.tsx:470
 msgid "Your post has been published"
-msgstr ""
+msgstr "Elanınız dərc olundu"
 
 #: src/view/com/composer/Composer.tsx:467
 msgid "Your posts have been published"
-msgstr ""
+msgstr "Elanlarınız dərc olundu"
 
 #: src/screens/Onboarding/StepFinished.tsx:250
 msgid "Your posts, likes, and blocks are public. Mutes are private."
