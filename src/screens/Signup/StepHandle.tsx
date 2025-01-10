@@ -139,8 +139,8 @@ export function StepHandle() {
           isFirstTimeUser && (
             <Admonition type="tip">
               <Trans>
-                Also known as a "username", this is the unique name for your
-                account. Pick something memorable!
+                This is the unique name for your account. Pick something
+                memorable!
               </Trans>
             </Admonition>
           )
