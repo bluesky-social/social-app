@@ -232,7 +232,6 @@ let ConvoMenu = ({
             convoId: convo.id,
             message: latestReportableMessage,
           }}
-          showConversationWarning
           control={reportControl}
         />
       ) : (
