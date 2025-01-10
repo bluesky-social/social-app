@@ -33,16 +33,21 @@ type ReportDialogParams = {
 let ReportDialog = ({
   control,
   params,
+  showConversationWarning,
 }: {
   control: Dialog.DialogControlProps
   params: ReportDialogParams
+  showConversationWarning: boolean
 }): React.ReactNode => {
   const {_} = useLingui()
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
       <Dialog.ScrollableInner label={_(msg`Report this message`)}>
-        <DialogInner params={params} />
+        <DialogInner
+          params={params}
+          showConversationWarning={showConversationWarning}
+        />
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
@@ -51,7 +56,13 @@ let ReportDialog = ({
 ReportDialog = memo(ReportDialog)
 export {ReportDialog}
 
-function DialogInner({params}: {params: ReportDialogParams}) {
+function DialogInner({
+  params,
+  showConversationWarning,
+}: {
+  params: ReportDialogParams
+  showConversationWarning: boolean
+}) {
   const [reportOption, setReportOption] = useState<ReportOption | null>(null)
 
   return reportOption ? (
@@ -61,15 +72,21 @@ function DialogInner({params}: {params: ReportDialogParams}) {
       goBack={() => setReportOption(null)}
     />
   ) : (
-    <ReasonStep params={params} setReportOption={setReportOption} />
+    <ReasonStep
+      params={params}
+      setReportOption={setReportOption}
+      showConversationWarning={showConversationWarning}
+    />
   )
 }
 
 function ReasonStep({
   setReportOption,
+  showConversationWarning,
 }: {
   setReportOption: (reportOption: ReportOption) => void
   params: ReportDialogParams
+  showConversationWarning?: boolean
 }) {
   const control = Dialog.useDialogContext()
 
@@ -81,6 +98,7 @@ function ReasonStep({
         type: 'convoMessage',
       }}
       onSelectReportOption={setReportOption}
+      showConversationWarning={showConversationWarning}
     />
   )
 }

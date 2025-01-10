@@ -151,6 +151,13 @@ function HeaderReady({
         moderation.ui('displayName'),
       )
 
+  const latestMessage = convoState.items.at(-1)
+  const latestReportableMessage =
+    latestMessage?.type === 'message' &&
+    latestMessage.message.sender?.did === profile.did
+      ? latestMessage.message
+      : undefined
+
   return (
     <View style={[a.flex_1]}>
       <View style={[a.w_full, a.flex_row, a.align_center, a.justify_between]}>
@@ -208,6 +215,7 @@ function HeaderReady({
             profile={profile}
             currentScreen="conversation"
             blockInfo={blockInfo}
+            latestReportableMessage={latestReportableMessage}
           />
         )}
       </View>

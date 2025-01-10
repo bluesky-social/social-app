@@ -23,15 +23,18 @@ import {
 } from '#/components/icons/Chevron'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight} from '#/components/icons/SquareArrowTopRight'
 import {Text} from '#/components/Typography'
+import {Admonition} from '../Admonition'
 import {ReportDialogProps} from './types'
 
 export function SelectReportOptionView({
+  showConversationWarning,
   ...props
 }: {
   params: ReportDialogProps['params']
   labelers: AppBskyLabelerDefs.LabelerViewDetailed[]
   onSelectReportOption: (reportOption: ReportOption) => void
   goBack: () => void
+  showConversationWarning?: boolean
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -88,6 +91,14 @@ export function SelectReportOptionView({
         <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
           {i18n.description}
         </Text>
+        {showConversationWarning && (
+          <Admonition type="info" style={a.mt_xs}>
+            <Trans>
+              Note: Only the most recent messages in this conversation will be
+              reported.
+            </Trans>
+          </Admonition>
+        )}
       </View>
 
       <Divider />
