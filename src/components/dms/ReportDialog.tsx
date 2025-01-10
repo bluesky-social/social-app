@@ -37,7 +37,7 @@ let ReportDialog = ({
 }: {
   control: Dialog.DialogControlProps
   params: ReportDialogParams
-  showConversationWarning: boolean
+  showConversationWarning?: boolean
 }): React.ReactNode => {
   const {_} = useLingui()
   return (
@@ -61,7 +61,7 @@ function DialogInner({
   showConversationWarning,
 }: {
   params: ReportDialogParams
-  showConversationWarning: boolean
+  showConversationWarning?: boolean
 }) {
   const [reportOption, setReportOption] = useState<ReportOption | null>(null)
 
