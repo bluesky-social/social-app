@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-09 01:28\n"
+"PO-Revision-Date: 2025-01-10 01:17\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1051,11 +1051,11 @@ msgstr "Bluesky 无法确认帖文发布时间的真实性。"
 
 #: src/view/com/auth/server-input/index.tsx:172
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
-msgstr "Bluesky 是一个开放的社交网络，你可以自由选择托管服务提供商。如果你是开发者，你还可以托管自己的服务器。"
+msgstr "Bluesky 是一个开放的社交网络，你可以自行选择托管服务提供商。如果你是开发者，你还可以托管自己的服务器。"
 
 #: src/view/com/auth/server-input/index.tsx:109
 msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
-msgstr "Bluesky 是一个开放的社交网络，你可以选择自行托管服务提供商。但如果你是新用户，我们建议你选择默认的 Bluesky Social 选项。"
+msgstr "Bluesky 是一个开放的社交网络，你可以自行选择托管服务提供商。但如果你是新用户，我们建议你选择默认的 Bluesky Social 选项。"
 
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
@@ -1251,7 +1251,7 @@ msgstr "更改应用图标"
 #: src/screens/Settings/AppIconSettings/index.tsx:38
 #: src/screens/Settings/AppIconSettings/index.tsx:221
 msgid "Change app icon to \"{0}\""
-msgstr "将应用图标更改为“{0}”"
+msgstr "更改应用图标为“{0}”"
 
 #: src/screens/Settings/AccountSettings.tsx:97
 #: src/screens/Settings/AccountSettings.tsx:101
@@ -1278,7 +1278,7 @@ msgstr "更改密码"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:82
 msgid "Change post language to {suggestedLanguageName}"
-msgstr "将帖文的发布语言更改为 {suggestedLanguageName}"
+msgstr "更改帖文发布语言为 {suggestedLanguageName}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
@@ -1357,7 +1357,7 @@ msgstr "选择这个颜色作为你的头像背景"
 
 #: src/view/com/auth/server-input/index.tsx:86
 msgid "Choose your account provider"
-msgstr "选择你的账户提供商"
+msgstr "选择你的服务提供商"
 
 #: src/view/screens/Feeds.tsx:728
 #: src/view/screens/Search/Explore.tsx:412
@@ -2336,7 +2336,7 @@ msgstr "教育"
 
 #: src/screens/List/ListHiddenScreen.tsx:141
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
-msgstr "此列表的创建者屏蔽了你，或你已屏蔽该创建者。"
+msgstr "此列表的创建者屏蔽了你，或你已屏蔽了对方。"
 
 #: src/screens/Settings/AccountSettings.tsx:60
 #: src/screens/Signup/StepInfo/index.tsx:164
@@ -3350,7 +3350,7 @@ msgstr "如果你需要更改密码，我们将向你的电子邮箱发送一个
 
 #: src/view/com/auth/server-input/index.tsx:168
 msgid "If you're a developer, you can host your own server."
-msgstr "如果你是开发者，你可以托管自己的服务器。"
+msgstr "如果你是开发者，你可以自行托管服务器。"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
@@ -6205,7 +6205,7 @@ msgstr "显示回复"
 
 #: src/view/com/post-thread/PostThread.tsx:622
 msgid "Show replies as"
-msgstr "回复显示为"
+msgstr "将回复显示为"
 
 #: src/screens/Settings/ThreadPreferences.tsx:151
 msgid "Show replies as threaded"
@@ -6920,13 +6920,13 @@ msgstr "目前这个动态源的使用人数较多，服务暂时不可用。请
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:38
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
-msgstr "这个动态源是空的！你或许需要先关注更多的用户，或检查你的语言设置。"
+msgstr "这个动态源没有任何动静。你或许需要先关注更多的用户，或检查你的语言设置。"
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/screens/Profile/ProfileFeed/index.tsx:170
 #: src/view/screens/ProfileList.tsx:814
 msgid "This feed is empty."
-msgstr "这个动态源是空的。"
+msgstr "这个动态源空空如也。"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:99
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
@@ -6970,7 +6970,7 @@ msgstr "这个列表由 <0>{0}</0> 创建，其名称或描述可能违反了 Bl
 
 #: src/view/screens/ProfileList.tsx:933
 msgid "This list is empty."
-msgstr "这个列表是空的。"
+msgstr "这个列表空空如也。"
 
 #: src/screens/Profile/ErrorState.tsx:40
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
@@ -8251,7 +8251,7 @@ msgstr "你的第一次喜欢！"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "你的“Following”动态源是空的！关注更多用户去看看他们发了什么。"
+msgstr "你的“Following”动态源看起来空荡荡的。快去关注更多用户，看看发生了什么新鲜事吧。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:223
 msgid "Your full handle will be <0>@{0}</0>"

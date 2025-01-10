@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-09 01:29\n"
+"PO-Revision-Date: 2025-01-10 01:17\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1051,11 +1051,11 @@ msgstr "Bluesky 無法確認貼文發佈日期嘅真實性。"
 
 #: src/view/com/auth/server-input/index.tsx:172
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
-msgstr "Bluesky 係一個開放嘅網絡，你可以去揀你嘅託管服務供應者。若然你係開發人員，仲可以托管你自己嘅伺服器。"
+msgstr "Bluesky 係一個開放嘅網絡，你可以去揀其他託管服務提供者。若然你係開發人員，仲可以自己托管伺服器。"
 
 #: src/view/com/auth/server-input/index.tsx:109
 msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
-msgstr "Bluesky 係一個開放嘅網絡，你可以去揀你自己嘅託管服務供應者。如果你係新手，我哋建議你揀預設嘅 Bluesky Social 選項。"
+msgstr "Bluesky 係一個開放嘅網絡，你可以去揀其他託管服務提供者。若果你係新手，我哋建議你用住預設嘅 Bluesky Social 先。"
 
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
@@ -1357,7 +1357,7 @@ msgstr "用呢隻顏色作爲你嘅頭像"
 
 #: src/view/com/auth/server-input/index.tsx:86
 msgid "Choose your account provider"
-msgstr "設定你帳號嘅服務供應者"
+msgstr "揀選你嘅服務提供者"
 
 #: src/view/screens/Feeds.tsx:728
 #: src/view/screens/Search/Explore.tsx:412
@@ -3286,7 +3286,7 @@ msgstr "Host:"
 #: src/screens/Login/ForgotPasswordForm.tsx:83
 #: src/screens/Login/LoginForm.tsx:168
 msgid "Hosting provider"
-msgstr "託管服務供應者"
+msgstr "託管服務提供者"
 
 #: src/screens/Settings/ThreadPreferences.tsx:67
 #: src/screens/Settings/ThreadPreferences.tsx:70
@@ -3350,7 +3350,7 @@ msgstr "若然你想改你嘅密碼，我哋會就會傳送一個驗證碼畀你
 
 #: src/view/com/auth/server-input/index.tsx:168
 msgid "If you're a developer, you can host your own server."
-msgstr "若然你係開發人員，你可以托管你自己嘅伺服器。"
+msgstr "若然你係開發人員，你可以自己托管伺服器。"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
@@ -5057,7 +5057,7 @@ msgstr "撳呢度試下重新連線"
 #: src/components/forms/HostingProvider.tsx:50
 #: src/components/forms/HostingProvider.tsx:66
 msgid "Press to change hosting provider"
-msgstr "撳呢度變更託管服務供應者"
+msgstr "撳呢度變更託管服務提供者"
 
 #: src/components/Error.tsx:60
 #: src/components/Lists.tsx:93
@@ -5599,7 +5599,7 @@ msgstr "登入嗰陣要用埋電郵驗證碼先至得。"
 
 #: src/screens/Signup/StepInfo/index.tsx:153
 msgid "Required for this provider"
-msgstr "服務供應者要求此必填"
+msgstr "服務提供者要求此必填"
 
 #: src/components/LabelingServiceCard/index.tsx:80
 msgid "Required in your region"
@@ -6398,12 +6398,12 @@ msgstr "開始同人傾偈"
 #: src/view/screens/ProfileList.tsx:817
 #: src/view/screens/ProfileList.tsx:938
 msgid "Start adding people"
-msgstr "搵人加入"
+msgstr "開始搵人加入"
 
 #: src/view/screens/ProfileList.tsx:824
 #: src/view/screens/ProfileList.tsx:945
 msgid "Start adding people!"
-msgstr "搵人加入！"
+msgstr "開始搵人加入！"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:353
 msgid "Start chat with {displayName}"
@@ -7040,7 +7040,7 @@ msgstr "呢個用戶喺你已靜音嘅 <0>{0}</0> 清單入邊。"
 
 #: src/components/NewskieDialog.tsx:65
 msgid "This user is new here. Press for more info about when they joined."
-msgstr "呢個用户啱嚟冇耐，撳呢度知多啲佢哋幾時入嚟嘅資訊。"
+msgstr "呢個用戶啱嚟冇耐，撳呢度睇佢幾時入嚟嘅具體時間。"
 
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "This user isn't following anyone."
@@ -7418,7 +7418,7 @@ msgstr "使用 App 密碼登入其他 Bluesky 用戶端，就唔使提供完整�
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:541
 msgid "Use default provider"
-msgstr "使用預設託管供服務應者"
+msgstr "使用預設服務提供者"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:53
 #: src/view/com/modals/InAppBrowserConsent.tsx:55
