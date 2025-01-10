@@ -19,6 +19,10 @@ export function createFullHandle(name: string, domain: string): string {
   return `${name}.${domain}`
 }
 
+export function maxServiceHandleLength(domain: string): number {
+  return 30 - `.${(domain || '').replace(/^[.]+/, '')}`.length
+}
+
 export function isInvalidHandle(handle: string): boolean {
   return handle === 'handle.invalid'
 }
@@ -38,7 +42,11 @@ export interface IsValidHandle {
 }
 
 // More checks from https://github.com/bluesky-social/atproto/blob/main/packages/pds/src/handle/index.ts#L72
-export function validateHandle(str: string, userDomain: string): IsValidHandle {
+export function validateHandle(
+  str: string,
+  userDomain: string,
+  isServiceHandle?: boolean,
+): IsValidHandle {
   const fullHandle = createFullHandle(str, userDomain)
 
   const results = {
@@ -46,7 +54,7 @@ export function validateHandle(str: string, userDomain: string): IsValidHandle {
       !str || (VALIDATE_REGEX.test(fullHandle) && !str.includes('.')),
     hyphenStartOrEnd: !str.startsWith('-') && !str.endsWith('-'),
     frontLength: str.length >= 3,
-    totalLength: fullHandle.length <= 253,
+    totalLength: fullHandle.length <= (isServiceHandle ? 30 : 253),
   }
 
   return {
