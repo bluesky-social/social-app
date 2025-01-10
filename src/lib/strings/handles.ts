@@ -45,7 +45,7 @@ export interface IsValidHandle {
 export function validateHandle(
   str: string,
   userDomain: string,
-  serviceHandle?: boolean,
+  isServiceHandle?: boolean,
 ): IsValidHandle {
   const fullHandle = createFullHandle(str, userDomain)
 
@@ -54,7 +54,7 @@ export function validateHandle(
       !str || (VALIDATE_REGEX.test(fullHandle) && !str.includes('.')),
     hyphenStartOrEnd: !str.startsWith('-') && !str.endsWith('-'),
     frontLength: str.length >= 3,
-    totalLength: fullHandle.length <= (serviceHandle ? 30 : 253),
+    totalLength: fullHandle.length <= (isServiceHandle ? 30 : 253),
   }
 
   return {
