@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-09 00:43+0000\n"
-"PO-Revision-Date: 2025-01-09 13:00+0000\n"
+"PO-Revision-Date: 2025-01-10 12:58+0000\n"
 "Last-Translator: Francisco, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -3571,7 +3571,7 @@ msgstr "Scopri di più su Bluesky"
 
 #: src/view/com/auth/server-input/index.tsx:178
 msgid "Learn more about self hosting your PDS."
-msgstr "Informazioni su come ospitare il tuo server in autonomia."
+msgstr "Maggiori informazioni su come ospitare il tuo server."
 
 #: src/components/moderation/ContentHider.tsx:149
 #: src/components/moderation/ContentHider.tsx:215
