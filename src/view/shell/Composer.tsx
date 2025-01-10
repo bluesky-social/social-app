@@ -1,14 +1,14 @@
 import {useEffect} from 'react'
-import {Animated, Easing, StyleSheet, View} from 'react-native'
+import {Animated, Easing} from 'react-native'
 
 import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useComposerState} from '#/state/shell/composer'
+import {atoms as a, useTheme} from '#/alf'
 import {ComposePost} from '../com/composer/Composer'
 
 export function Composer({winHeight}: {winHeight: number}) {
   const state = useComposerState()
-  const pal = usePalette('default')
+  const t = useTheme()
   const initInterp = useAnimatedValue(0)
 
   useEffect(() => {
@@ -38,12 +38,12 @@ export function Composer({winHeight}: {winHeight: number}) {
   // =
 
   if (!state) {
-    return <View />
+    return null
   }
 
   return (
     <Animated.View
-      style={[styles.wrapper, pal.view, wrapperAnimStyle]}
+      style={[a.absolute, a.inset_0, t.atoms.bg, wrapperAnimStyle]}
       aria-modal
       accessibilityViewIsModal>
       <ComposePost
@@ -58,12 +58,3 @@ export function Composer({winHeight}: {winHeight: number}) {
     </Animated.View>
   )
 }
-
-const styles = StyleSheet.create({
-  wrapper: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    width: '100%',
-  },
-})
