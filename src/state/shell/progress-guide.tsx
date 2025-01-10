@@ -2,6 +2,7 @@ import React, {useMemo} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import {
   ProgressGuideToast,
   ProgressGuideToastRef,
@@ -137,6 +138,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       endProgressGuide() {
         setLocalGuideState(undefined)
         mutateAsync(undefined)
+        logEvent('progressGuide:hide', {})
       },
 
       captureAction(action: ProgressGuideAction, count = 1) {

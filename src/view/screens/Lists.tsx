@@ -61,9 +61,6 @@ export function ListsScreen({}: Props) {
           <Layout.Header.TitleText>
             <Trans>Lists</Trans>
           </Layout.Header.TitleText>
-          <Layout.Header.SubtitleText>
-            <Trans>Public, shareable lists which can drive feeds.</Trans>
-          </Layout.Header.SubtitleText>
         </Layout.Header.Content>
         <Button
           label={_(msg`New list`)}

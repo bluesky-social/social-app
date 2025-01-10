@@ -1,16 +1,25 @@
+import React from 'react'
 import {View} from 'react-native'
-import {Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
-import {useTrendingSettings} from '#/state/preferences/trending'
+import {
+  useTrendingSettings,
+  useTrendingSettingsApi,
+} from '#/state/preferences/trending'
 import {
   DEFAULT_LIMIT as TRENDING_TOPICS_COUNT,
   useTrendingTopics,
 } from '#/state/queries/trending/useTrendingTopics'
 import {useTrendingConfig} from '#/state/trending-config'
 import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
+import {Button, ButtonIcon} from '#/components/Button'
 import {GradientFill} from '#/components/GradientFill'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending2'
+import * as Prompt from '#/components/Prompt'
 import {
   TrendingTopic,
   TrendingTopicLink,
@@ -26,17 +35,26 @@ export function ExploreTrendingTopics() {
 
 function Inner() {
   const t = useTheme()
+  const {_} = useLingui()
   const gutters = useGutters([0, 'compact'])
   const {data: trending, error, isLoading} = useTrendingTopics()
   const noTopics = !isLoading && !error && !trending?.topics?.length
+  const {setTrendingDisabled} = useTrendingSettingsApi()
+  const trendingPrompt = Prompt.usePromptControl()
+
+  const onConfirmHide = React.useCallback(() => {
+    logEvent('trendingTopics:hide', {context: 'explore:trending'})
+    setTrendingDisabled(true)
+  }, [setTrendingDisabled])
 
   return error || noTopics ? null : (
     <>
       <View
         style={[
+          a.flex_row,
           isWeb
-            ? [a.flex_row, a.px_lg, a.py_lg, a.pt_2xl, a.gap_md]
-            : [{flexDirection: 'row-reverse'}, a.p_lg, a.pt_2xl, a.gap_md],
+            ? [a.px_lg, a.py_lg, a.pt_2xl, a.gap_md]
+            : [a.p_lg, a.pt_2xl, a.gap_md],
           a.border_b,
           t.atoms.border_contrast_low,
         ]}>
@@ -61,6 +79,15 @@ function Inner() {
             <Trans>What people are posting about.</Trans>
           </Text>
         </View>
+        <Button
+          label={_(msg`Hide trending topics`)}
+          size="small"
+          variant="ghost"
+          color="secondary"
+          shape="round"
+          onPress={() => trendingPrompt.open()}>
+          <ButtonIcon icon={X} />
+        </Button>
       </View>
 
       <View style={[a.pt_md, a.pb_lg]}>
@@ -79,7 +106,12 @@ function Inner() {
           ) : !trending?.topics ? null : (
             <>
               {trending.topics.map(topic => (
-                <TrendingTopicLink key={topic.link} topic={topic}>
+                <TrendingTopicLink
+                  key={topic.link}
+                  topic={topic}
+                  onPress={() => {
+                    logEvent('trendingTopic:click', {context: 'explore'})
+                  }}>
                   {({hovered}) => (
                     <TrendingTopic
                       topic={topic}
@@ -97,6 +129,14 @@ function Inner() {
           )}
         </View>
       </View>
+
+      <Prompt.Basic
+        control={trendingPrompt}
+        title={_(msg`Hide trending topics?`)}
+        description={_(msg`You can update this later from your settings.`)}
+        confirmButtonCta={_(msg`Hide`)}
+        onConfirm={onConfirmHide}
+      />
     </>
   )
 }
