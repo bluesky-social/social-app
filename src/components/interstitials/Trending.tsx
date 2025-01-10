@@ -1,6 +1,7 @@
 import React, {useContext} from 'react'
 import {ScrollView, View} from 'react-native'
-import {GestureDetector} from 'react-native-gesture-handler'
+import {DrawerGestureContext} from 'react-native-drawer-layout'
+import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -12,7 +13,6 @@ import {
 import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
 import {useTrendingConfig} from '#/state/trending-config'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {TrendingGestureContext} from '#/view/shell/TrendingGestureContext'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
@@ -41,8 +41,9 @@ export function Inner() {
     setTrendingDisabled(true)
   }, [setTrendingDisabled])
 
-  // This is coordinated to take precedence over the drawer pan gesture.
-  const trendingScrollGesture = useContext(TrendingGestureContext)
+  const drawerGesture = useContext(DrawerGestureContext)!
+  const trendingScrollGesture =
+    Gesture.Native().blocksExternalGesture(drawerGesture)
 
   return error || noTopics ? null : (
     <View style={[t.atoms.border_contrast_low, a.border_t]}>
