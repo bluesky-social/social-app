@@ -8,7 +8,7 @@
   "packageManager": "yarn@1.22.19",
   "scripts": {
     "prepare": "is-ci || husky install",
-    "postinstall": "patch-package",
+    "postinstall": "patch-package && yarn intl:compile",
     "prebuild": "expo prebuild --clean",
     "android": "expo run:android",
     "android:prod": "expo run:android --variant release",

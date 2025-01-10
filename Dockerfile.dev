@@ -5,6 +5,8 @@ WORKDIR /app
 COPY package.json /app/package.json
 COPY yarn.lock /app/yarn.lock
 COPY /patches /app/patches
+COPY /lingui.config.js /app/lingui.config.js
+COPY /src/locale/locales /app/src/locale/locales
 
 RUN pwd
 RUN cd /app
