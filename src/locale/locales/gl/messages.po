@@ -4085,7 +4085,7 @@ msgstr "Rexistro de chío inválido ou non compatíbel"
 
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
-msgid "Invalid username or password"
+msgid "Incorrect username or password"
 msgstr "Alcume ou contrasinal incorrectos"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91

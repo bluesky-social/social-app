@@ -3497,7 +3497,7 @@ msgstr "Rechistro de publicación invalido u no compatible"
 
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
-msgid "Invalid username or password"
+msgid "Incorrect username or password"
 msgstr "Nombre d'usuario u clau no validos"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91

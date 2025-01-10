@@ -3694,7 +3694,7 @@ msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
-msgid "Invalid username or password"
+msgid "Incorrect username or password"
 msgstr ""
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91

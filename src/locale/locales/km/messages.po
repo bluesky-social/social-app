@@ -3698,7 +3698,7 @@ msgstr "កំណត់ត្រាប្រកាសមិនត្រឹមត
 
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
-msgid "Invalid username or password"
+msgid "Incorrect username or password"
 msgstr "ឈ្មោះអ្នកប្រើ ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91

@@ -87,7 +87,7 @@ export const LoginForm = ({
     const authFactorToken = authFactorTokenValueRef.current
 
     if (!identifier || !password) {
-      setError(_(msg`Invalid username or password`))
+      setError(_(msg`Incorrect username or password`))
       return
     }
 
@@ -146,7 +146,7 @@ export const LoginForm = ({
         logger.debug('Failed to login due to invalid credentials', {
           error: errMsg,
         })
-        setError(_(msg`Invalid username or password`))
+        setError(_(msg`Incorrect username or password`))
       } else if (isNetworkError(e)) {
         logger.warn('Failed to login due to network error', {error: errMsg})
         setError(

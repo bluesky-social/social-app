@@ -3490,7 +3490,7 @@ msgstr "Bản ghi bài đăng không hợp lệ hoặc không được hỗ tr�
 
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
-msgid "Invalid username or password"
+msgid "Incorrect username or password"
 msgstr "Tên người dùng hoặc mật khẩu không hợp lệ"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91

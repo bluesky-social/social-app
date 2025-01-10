@@ -3414,7 +3414,7 @@ msgstr "無效抑或唔支援嘅帖文記錄"
 
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
-msgid "Invalid username or password"
+msgid "Incorrect username or password"
 msgstr "無效嘅用戶名抑或密碼"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91
