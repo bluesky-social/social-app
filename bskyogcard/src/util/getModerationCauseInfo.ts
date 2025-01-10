@@ -50,7 +50,7 @@ export function getModerationCauseInfo({
   cause,
   moderatorData,
 }: {
-  cause: ModerationCause
+  cause?: ModerationCause
   moderatorData: ModeratorData
 }): ModerationCauseInfo | undefined {
   if (!cause) return undefined

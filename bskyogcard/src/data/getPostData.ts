@@ -2,7 +2,7 @@ import {AppBskyFeedDefs} from '@atproto/api'
 
 import {httpLogger} from '../logger.js'
 import {getStarterPackImageUri} from '../util/getStarterPackImageUri.js'
-import {Embed,parseEmbed} from '../util/parseEmbed.js'
+import {Embed, parseEmbed} from '../util/parseEmbed.js'
 import {getImage} from './getImage.js'
 
 export type Metadata = {
@@ -103,8 +103,10 @@ export function getEmbedData(embed: Embed, images: Map<string, Metadata>) {
           },
         })
       }
-      for (const _e of embed.view.embeds) {
-        getEmbedData(parseEmbed(_e), images)
+      if (embed.view.embeds) {
+        for (const _e of embed.view.embeds) {
+          getEmbedData(parseEmbed(_e), images)
+        }
       }
       break
     }
@@ -125,6 +127,7 @@ export async function getPostData(
   post: AppBskyFeedDefs.PostView,
 ): Promise<PostData> {
   const images: Map<string, Metadata> = new Map()
+  console.log(JSON.stringify(post, null, 2))
 
   if (post.author.avatar) {
     images.set(post.author.avatar, {
