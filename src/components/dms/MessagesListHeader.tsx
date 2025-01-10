@@ -151,11 +151,13 @@ function HeaderReady({
         moderation.ui('displayName'),
       )
 
-  const latestMessage = convoState.items.at(-1)
+  const latestMessageFromOther = convoState.items.findLast(
+    item => item.type === 'message' && item.message.sender.did === profile.did,
+  )
+
   const latestReportableMessage =
-    latestMessage?.type === 'message' &&
-    latestMessage.message.sender?.did === profile.did
-      ? latestMessage.message
+    latestMessageFromOther?.type === 'message'
+      ? latestMessageFromOther.message
       : undefined
 
   return (
