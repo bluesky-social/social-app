@@ -3965,7 +3965,7 @@ msgstr "अमान्य या असमर्थित पोस्ट र�
 
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
-msgid "Invalid username or password"
+msgid "Incorrect username or password"
 msgstr "अमान्य उपयोगकर्ता नाम या पासवर्ड"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91
