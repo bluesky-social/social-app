@@ -6583,7 +6583,7 @@ msgstr "攪掂晒 - 讚咗 10 條帖文！"
 
 #: src/components/ProgressGuide/List.tsx:64
 msgid "Teach our algorithm what you like"
-msgstr "敎下我地嘅演算法去估你鍾意啲乜"
+msgstr "敎下我哋嘅演算法去估你鍾意啲乜"
 
 #: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:114
