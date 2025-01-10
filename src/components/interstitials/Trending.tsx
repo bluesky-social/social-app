@@ -41,7 +41,7 @@ export function Inner() {
     setTrendingDisabled(true)
   }, [setTrendingDisabled])
 
-  const drawerGesture = useContext(DrawerGestureContext)!
+  const drawerGesture = useContext(DrawerGestureContext) ?? Gesture.Native() // noop for web
   const trendingScrollGesture =
     Gesture.Native().blocksExternalGesture(drawerGesture)
 
