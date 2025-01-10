@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-09 10:09+0900\n"
+"PO-Revision-Date: 2025-01-10 09:44+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1048,6 +1048,10 @@ msgstr "Blueskyでは、この投稿日時の信憑性を確認できません�
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
 msgstr "Bluesky は、ホスティング プロバイダーを選択できるオープン ネットワークです。 あなたが開発者であれば、自分のサーバーをホストできます。"
 
+#: src/view/com/auth/server-input/index.tsx:109
+msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
+msgstr "Blueskyはオープンなネットワークで、自分自身でプロバイダーを選ぶことができます。初めて利用するのであれば、デフォルトのオプションであるBluesky Socialのままにしておくのをお勧めします。"
+
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
 msgid "Bluesky is better with friends!"
@@ -1338,10 +1342,6 @@ msgstr "ユーザーの選択"
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
 msgstr "投稿しようとしているメディアに適した自己ラベルを選んでください。何も選択しない場合は、この投稿はすべての閲覧者へ適したものとします。"
 
-#: src/view/com/auth/server-input/index.tsx:76
-msgid "Choose Service"
-msgstr "サービスを選択"
-
 #: src/screens/Onboarding/StepFinished.tsx:280
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "カスタムフィードのアルゴリズムを選択できます。"
@@ -1349,6 +1349,10 @@ msgstr "カスタムフィードのアルゴリズムを選択できます。"
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
 msgstr "この色をアバターとして選択"
+
+#: src/view/com/auth/server-input/index.tsx:86
+msgid "Choose your account provider"
+msgstr "アカウントプロバイダーを選んでください"
 
 #: src/view/screens/Feeds.tsx:728
 #: src/view/screens/Search/Explore.tsx:411
@@ -1786,8 +1790,14 @@ msgstr "スターターパックを作成"
 msgid "Create a starter pack for me"
 msgstr "私向けのスターターパックを作成"
 
-#: src/view/com/auth/SplashScreen.tsx:55
-#: src/view/com/auth/SplashScreen.web.tsx:117
+#: src/view/shell/bottom-bar/BottomBar.tsx:306
+#: src/view/shell/bottom-bar/BottomBar.tsx:307
+#: src/view/shell/bottom-bar/BottomBar.tsx:309
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:202
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:203
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:205
+#: src/view/shell/NavSignupCard.tsx:47
+#: src/view/shell/NavSignupCard.tsx:52
 msgid "Create account"
 msgstr "アカウントを作成"
 
@@ -3333,6 +3343,10 @@ msgstr "この投稿を削除すると、復元できなくなります。"
 #: src/view/com/modals/ChangePassword.tsx:149
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
 msgstr "パスワードを変更する場合は、あなたのアカウントであることを確認するためのコードをお送りします。"
+
+#: src/view/com/auth/server-input/index.tsx:168
+msgid "If you're a developer, you can host your own server."
+msgstr "あなたが開発者ならば、自分でサーバーをホストできます。"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
@@ -5905,10 +5919,6 @@ msgstr "絵文字{emojiName}をアバターとして選択"
 msgid "Select the moderation service(s) to report to"
 msgstr "報告先のモデレーションサービスを選んでください"
 
-#: src/view/com/auth/server-input/index.tsx:79
-msgid "Select the service that hosts your data."
-msgstr "データをホストするサービスを選択します。"
-
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:100
 msgid "Select video"
 msgstr "ビデオを選択"
@@ -6273,17 +6283,6 @@ msgstr "サインアウト"
 #: src/screens/Settings/Settings.tsx:256
 msgid "Sign out?"
 msgstr "サインアウトしますか？"
-
-#: src/view/shell/bottom-bar/BottomBar.tsx:306
-#: src/view/shell/bottom-bar/BottomBar.tsx:307
-#: src/view/shell/bottom-bar/BottomBar.tsx:309
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:202
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:203
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:205
-#: src/view/shell/NavSignupCard.tsx:47
-#: src/view/shell/NavSignupCard.tsx:52
-msgid "Create account"
-msgstr "アカウントを作成"
 
 #: src/components/moderation/ScreenHider.tsx:91
 #: src/lib/moderation/useGlobalLabelStrings.ts:28
