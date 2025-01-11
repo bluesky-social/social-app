@@ -50,11 +50,11 @@ msgstr "{0, plural, one {# saat} other {# saat}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 #~ msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
-#~ msgstr "{0, plural, one {# bu hesabda etiket qoyulub} other {# bu hesabda etiketlər qoyulub}}"
+#~ msgstr ""
 
 #: src/components/moderation/LabelsOnMe.tsx:59
 #~ msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
-#~ msgstr "{0, plural, one {# bu məzmunda etiket qoyulub} other {# bu məzmunda etiketlər qoyulub}}"
+#~ msgstr ""
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this account"
@@ -8973,7 +8973,7 @@ msgstr "Elanlarınız, bəyənmələriniz və bloklarınız ictimaidir. Səssiz 
 
 #: src/view/screens/Settings/index.tsx:119
 #~ msgid "Your profile"
-#~ msgstr "Profiliniz"
+#~ msgstr ""
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
