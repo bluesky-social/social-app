@@ -1,5 +1,6 @@
-import React, {useCallback, useMemo} from 'react'
+import React, {useCallback, useEffect, useMemo} from 'react'
 import {StyleSheet} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {
   AppBskyActorDefs,
   AppBskyGraphGetActorStarterPacks,
@@ -19,6 +20,7 @@ import {
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {ComposeIcon2} from '#/lib/icons'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {combinedDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {isInvalidHandle} from '#/lib/strings/handles'
@@ -32,7 +34,7 @@ import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useAgent, useSession} from '#/state/session'
-import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {ProfileFeedgens} from '#/view/com/feeds/ProfileFeedgens'
 import {ProfileLists} from '#/view/com/lists/ProfileLists'
@@ -40,11 +42,10 @@ import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {ListRef} from '#/view/com/util/List'
-import {CenteredView} from '#/view/com/util/Views'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
-import {web} from '#/alf'
+import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
@@ -58,7 +59,7 @@ interface SectionRef {
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export function ProfileScreen(props: Props) {
   return (
-    <Layout.Screen testID="profileScreen">
+    <Layout.Screen testID="profileScreen" style={[a.pt_0]}>
       <ProfileScreenInner {...props} />
     </Layout.Screen>
   )
@@ -116,20 +117,22 @@ function ProfileScreenInner({route}: Props) {
   // Most pushes will happen here, since we will have only placeholder data
   if (isLoadingDid || isLoadingProfile || starterPacksQuery.isLoading) {
     return (
-      <CenteredView sideBorders style={web({height: '100vh'})}>
+      <Layout.Content>
         <ProfileHeaderLoading />
-      </CenteredView>
+      </Layout.Content>
     )
   }
   if (resolveError || profileError) {
     return (
-      <ErrorScreen
-        testID="profileErrorScreen"
-        title={profileError ? _(msg`Not Found`) : _(msg`Oops!`)}
-        message={cleanError(resolveError || profileError)}
-        onPressTryAgain={onPressTryAgain}
-        showHeader
-      />
+      <SafeAreaView style={[a.flex_1]}>
+        <ErrorScreen
+          testID="profileErrorScreen"
+          title={profileError ? _(msg`Not Found`) : _(msg`Oops!`)}
+          message={cleanError(resolveError || profileError)}
+          onPressTryAgain={onPressTryAgain}
+          showHeader
+        />
+      </SafeAreaView>
     )
   }
   if (profile && moderationOpts) {
@@ -145,13 +148,15 @@ function ProfileScreenInner({route}: Props) {
   }
   // should never happen
   return (
-    <ErrorScreen
-      testID="profileErrorScreen"
-      title="Oops!"
-      message="Something went wrong and we're not sure what."
-      onPressTryAgain={onPressTryAgain}
-      showHeader
-    />
+    <SafeAreaView style={[a.flex_1]}>
+      <ErrorScreen
+        testID="profileErrorScreen"
+        title="Oops!"
+        message="Something went wrong and we're not sure what."
+        onPressTryAgain={onPressTryAgain}
+        showHeader
+      />
+    </SafeAreaView>
   )
 }
 
@@ -185,7 +190,6 @@ function ProfileScreenLoaded({
   })
   const [currentPage, setCurrentPage] = React.useState(0)
   const {_} = useLingui()
-  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
 
   const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
 
@@ -309,15 +313,6 @@ function ProfileScreenLoaded({
     }, [setMinimalShellMode, currentPage, scrollSectionToTop]),
   )
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setDrawerSwipeDisabled(currentPage > 0)
-      return () => {
-        setDrawerSwipeDisabled(false)
-      }
-    }, [setDrawerSwipeDisabled, currentPage]),
-  )
-
   // events
   // =
 
@@ -341,7 +336,11 @@ function ProfileScreenLoaded({
   // rendering
   // =
 
-  const renderHeader = () => {
+  const renderHeader = ({
+    setMinimumHeight,
+  }: {
+    setMinimumHeight: (height: number) => void
+  }) => {
     return (
       <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
         <ProfileHeader
@@ -351,6 +350,7 @@ function ProfileScreenLoaded({
           moderationOpts={moderationOpts}
           hideBackButton={hideBackButton}
           isPlaceholderProfile={showPlaceholder}
+          setMinimumHeight={setMinimumHeight}
         />
       </ExpoScrollForwarderView>
     )
@@ -497,6 +497,7 @@ function ProfileScreenLoaded({
           accessibilityHint=""
         />
       )}
+      <TestGates />
     </ScreenHider>
   )
 }
@@ -555,3 +556,77 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 })
+
+const shouldExposeToGate2 = Math.random() < 0.2
+
+// --- Temporary: we're testing our Statsig setup ---
+let TestGates = React.memo(function TestGates() {
+  const gate = useGate()
+
+  useEffect(() => {
+    logEvent('test:all:always', {})
+    if (Math.random() < 0.2) {
+      logEvent('test:all:sometimes', {})
+    }
+    if (Math.random() < 0.1) {
+      logEvent('test:all:boosted_by_gate1', {
+        reason: 'base',
+      })
+    }
+    if (Math.random() < 0.1) {
+      logEvent('test:all:boosted_by_gate2', {
+        reason: 'base',
+      })
+    }
+    if (Math.random() < 0.1) {
+      logEvent('test:all:boosted_by_both', {
+        reason: 'base',
+      })
+    }
+  }, [])
+
+  return [
+    gate('test_gate_1') ? <TestGate1 /> : null,
+    shouldExposeToGate2 && gate('test_gate_2') ? <TestGate2 /> : null,
+  ]
+})
+
+function TestGate1() {
+  useEffect(() => {
+    logEvent('test:gate1:always', {})
+    if (Math.random() < 0.2) {
+      logEvent('test:gate1:sometimes', {})
+    }
+    if (Math.random() < 0.5) {
+      logEvent('test:all:boosted_by_gate1', {
+        reason: 'gate1',
+      })
+    }
+    if (Math.random() < 0.5) {
+      logEvent('test:all:boosted_by_both', {
+        reason: 'gate1',
+      })
+    }
+  }, [])
+  return null
+}
+
+function TestGate2() {
+  useEffect(() => {
+    logEvent('test:gate2:always', {})
+    if (Math.random() < 0.2) {
+      logEvent('test:gate2:sometimes', {})
+    }
+    if (Math.random() < 0.5) {
+      logEvent('test:all:boosted_by_gate2', {
+        reason: 'gate2',
+      })
+    }
+    if (Math.random() < 0.5) {
+      logEvent('test:all:boosted_by_both', {
+        reason: 'gate2',
+      })
+    }
+  }, [])
+  return null
+}

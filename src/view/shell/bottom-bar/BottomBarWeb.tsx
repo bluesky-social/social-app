@@ -1,28 +1,26 @@
 import React from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigationState} from '@react-navigation/native'
 
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {clamp} from '#/lib/numbers'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams} from '#/lib/routes/types'
-import {s} from '#/lib/styles'
-import {useUnreadMessageCount} from '#/state/queries/messages/list-converations'
+import {useGate} from '#/lib/statsig/statsig'
+import {useHomeBadge} from '#/state/home-badge'
+import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
-import {Button} from '#/view/com/util/forms/Button'
 import {Link} from '#/view/com/util/Link'
-import {Text} from '#/view/com/util/text/Text'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
@@ -41,13 +39,13 @@ import {
   UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
   UserCircle_Stroke2_Corner0_Rounded as UserCircle,
 } from '#/components/icons/UserCircle'
+import {Text} from '#/components/Typography'
 import {styles} from './BottomBarStyles'
 
 export function BottomBarWeb() {
   const {_} = useLingui()
   const {hasSession, currentAccount} = useSession()
-  const pal = usePalette('default')
-  const safeAreaInsets = useSafeAreaInsets()
+  const t = useTheme()
   const footerMinimalShellTransform = useMinimalShellFooterTransform()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
@@ -55,6 +53,8 @@ export function BottomBarWeb() {
 
   const unreadMessageCount = useUnreadMessageCount()
   const notificationCountStr = useUnreadNotifications()
+  const hasHomeBadge = useHomeBadge()
+  const gate = useGate()
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
@@ -69,23 +69,27 @@ export function BottomBarWeb() {
 
   return (
     <Animated.View
+      role="navigation"
       style={[
         styles.bottomBar,
         styles.bottomBarWeb,
-        pal.view,
-        pal.border,
-        {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
+        t.atoms.bg,
+        t.atoms.border_contrast_low,
         footerMinimalShellTransform,
       ]}>
       {hasSession ? (
         <>
-          <NavItem routeName="Home" href="/">
+          <NavItem
+            routeName="Home"
+            href="/"
+            hasNew={hasHomeBadge && gate('remove_show_latest_button')}>
             {({isActive}) => {
               const Icon = isActive ? HomeFilled : Home
               return (
                 <Icon
+                  aria-hidden={true}
                   width={iconWidth + 1}
-                  style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
+                  style={[styles.ctrlIcon, t.atoms.text, styles.homeIcon]}
                 />
               )
             }}
@@ -95,8 +99,9 @@ export function BottomBarWeb() {
               const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass
               return (
                 <Icon
+                  aria-hidden={true}
                   width={iconWidth + 2}
-                  style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                  style={[styles.ctrlIcon, t.atoms.text, styles.searchIcon]}
                 />
               )
             }}
@@ -104,43 +109,41 @@ export function BottomBarWeb() {
 
           {hasSession && (
             <>
-              <NavItem routeName="Messages" href="/messages">
+              <NavItem
+                routeName="Messages"
+                href="/messages"
+                notificationCount={
+                  unreadMessageCount.count > 0
+                    ? unreadMessageCount.numUnread
+                    : undefined
+                }>
                 {({isActive}) => {
                   const Icon = isActive ? MessageFilled : Message
                   return (
-                    <>
-                      <Icon
-                        width={iconWidth - 1}
-                        style={[styles.ctrlIcon, pal.text, styles.messagesIcon]}
-                      />
-                      {unreadMessageCount.count > 0 && (
-                        <View style={styles.notificationCount}>
-                          <Text style={styles.notificationCountLabel}>
-                            {unreadMessageCount.numUnread}
-                          </Text>
-                        </View>
-                      )}
-                    </>
+                    <Icon
+                      aria-hidden={true}
+                      width={iconWidth - 1}
+                      style={[
+                        styles.ctrlIcon,
+                        t.atoms.text,
+                        styles.messagesIcon,
+                      ]}
+                    />
                   )
                 }}
               </NavItem>
-              <NavItem routeName="Notifications" href="/notifications">
+              <NavItem
+                routeName="Notifications"
+                href="/notifications"
+                notificationCount={notificationCountStr}>
                 {({isActive}) => {
                   const Icon = isActive ? BellFilled : Bell
                   return (
-                    <>
-                      <Icon
-                        width={iconWidth}
-                        style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-                      />
-                      {notificationCountStr !== '' && (
-                        <View style={styles.notificationCount}>
-                          <Text style={styles.notificationCountLabel}>
-                            {notificationCountStr}
-                          </Text>
-                        </View>
-                      )}
-                    </>
+                    <Icon
+                      aria-hidden={true}
+                      width={iconWidth}
+                      style={[styles.ctrlIcon, t.atoms.text, styles.bellIcon]}
+                    />
                   )
                 }}
               </NavItem>
@@ -158,8 +161,13 @@ export function BottomBarWeb() {
                   const Icon = isActive ? UserCircleFilled : UserCircle
                   return (
                     <Icon
+                      aria-hidden={true}
                       width={iconWidth}
-                      style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
+                      style={[
+                        styles.ctrlIcon,
+                        t.atoms.text,
+                        styles.profileIcon,
+                      ]}
                     />
                   )
                 }}
@@ -176,7 +184,7 @@ export function BottomBarWeb() {
               alignItems: 'center',
               justifyContent: 'space-between',
               paddingTop: 14,
-              paddingBottom: 2,
+              paddingBottom: 14,
               paddingLeft: 14,
               paddingRight: 6,
               gap: 8,
@@ -184,28 +192,30 @@ export function BottomBarWeb() {
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 12}}>
               <Logo width={32} />
               <View style={{paddingTop: 4}}>
-                <Logotype width={80} fill={pal.text.color} />
+                <Logotype width={80} fill={t.atoms.text.color} />
               </View>
             </View>
 
-            <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
+            <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
               <Button
                 onPress={showCreateAccount}
-                accessibilityHint={_(msg`Sign up`)}
-                accessibilityLabel={_(msg`Sign up`)}>
-                <Text type="md" style={[{color: 'white'}, s.bold]}>
-                  <Trans>Sign up</Trans>
-                </Text>
+                label={_(msg`Create account`)}
+                size="small"
+                variant="solid"
+                color="primary">
+                <ButtonText>
+                  <Trans>Create account</Trans>
+                </ButtonText>
               </Button>
-
               <Button
-                type="default"
                 onPress={showSignIn}
-                accessibilityHint={_(msg`Sign in`)}
-                accessibilityLabel={_(msg`Sign in`)}>
-                <Text type="md" style={[pal.text, s.bold]}>
+                label={_(msg`Sign in`)}
+                size="small"
+                variant="solid"
+                color="secondary">
+                <ButtonText>
                   <Trans>Sign in</Trans>
-                </Text>
+                </ButtonText>
               </Button>
             </View>
           </View>
@@ -219,7 +229,10 @@ const NavItem: React.FC<{
   children: (props: {isActive: boolean}) => React.ReactChild
   href: string
   routeName: string
-}> = ({children, href, routeName}) => {
+  hasNew?: boolean
+  notificationCount?: string
+}> = ({children, href, routeName, hasNew, notificationCount}) => {
+  const {_} = useLingui()
   const {currentAccount} = useSession()
   const currentRoute = useNavigationState(state => {
     if (!state) {
@@ -235,8 +248,23 @@ const NavItem: React.FC<{
       : isTab(currentRoute.name, routeName)
 
   return (
-    <Link href={href} style={styles.ctrl} navigationAction="navigate">
+    <Link
+      href={href}
+      style={[styles.ctrl, a.pb_lg]}
+      navigationAction="navigate"
+      aria-role="link"
+      aria-label={routeName}
+      accessible={true}>
       {children({isActive})}
+      {notificationCount ? (
+        <View
+          style={styles.notificationCount}
+          aria-label={_(msg`${notificationCount} unread items`)}>
+          <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
+        </View>
+      ) : hasNew ? (
+        <View style={styles.hasNewBadge} />
+      ) : null}
     </Link>
   )
 }

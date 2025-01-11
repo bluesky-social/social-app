@@ -15,7 +15,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
-import {useListConvosQuery} from '#/state/queries/messages/list-converations'
+import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {ListMethods} from '#/view/com/util/List'
@@ -63,6 +63,7 @@ export function SearchablePeopleList({
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const control = Dialog.useDialogContext()
+  const [headerHeight, setHeaderHeight] = useState(0)
   const listRef = useRef<ListMethods>(null)
   const {currentAccount} = useSession()
   const inputRef = useRef<TextInput>(null)
@@ -237,6 +238,7 @@ export function SearchablePeopleList({
   const listHeader = useMemo(() => {
     return (
       <View
+        onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}
         style={[
           a.relative,
           web(a.pt_lg),
@@ -278,7 +280,7 @@ export function SearchablePeopleList({
           ) : null}
         </View>
 
-        <View style={[, web([a.pt_xs])]}>
+        <View style={web([a.pt_xs])}>
           <SearchInput
             inputRef={inputRef}
             value={searchText}
@@ -313,7 +315,9 @@ export function SearchablePeopleList({
         web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
         native({height: '100%'}),
       ]}
+      webInnerContentContainerStyle={a.py_0}
       webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
+      scrollIndicatorInsets={{top: headerHeight}}
       keyboardDismissMode="on-drag"
     />
   )

@@ -237,7 +237,9 @@ export function Link({
 }
 
 export type InlineLinkProps = React.PropsWithChildren<
-  BaseLinkProps & TextStyleProp & Pick<TextProps, 'selectable'>
+  BaseLinkProps &
+    TextStyleProp &
+    Pick<TextProps, 'selectable' | 'numberOfLines'>
 > &
   Pick<ButtonProps, 'label'> & {
     disableUnderline?: boolean
@@ -273,12 +275,6 @@ export function InlineLinkText({
     onIn: onHoverIn,
     onOut: onHoverOut,
   } = useInteractionState()
-  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
-  const {
-    state: pressed,
-    onIn: onPressIn,
-    onOut: onPressOut,
-  } = useInteractionState()
   const flattenedStyle = flatten(style) || {}
 
   return (
@@ -289,21 +285,20 @@ export function InlineLinkText({
       {...rest}
       style={[
         {color: t.palette.primary_500},
-        (hovered || focused || pressed) &&
+        hovered &&
           !disableUnderline && {
-            ...web({outline: 0}),
-            textDecorationLine: 'underline',
-            textDecorationColor: flattenedStyle.color ?? t.palette.primary_500,
+            ...web({
+              outline: 0,
+              textDecorationLine: 'underline',
+              textDecorationColor:
+                flattenedStyle.color ?? t.palette.primary_500,
+            }),
           },
         flattenedStyle,
       ]}
       role="link"
       onPress={download ? undefined : onPress}
       onLongPress={onLongPress}
-      onPressIn={onPressIn}
-      onPressOut={onPressOut}
-      onFocus={onFocus}
-      onBlur={onBlur}
       onMouseEnter={onHoverIn}
       onMouseLeave={onHoverOut}
       accessibilityRole="link"

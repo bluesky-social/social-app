@@ -1,5 +1,6 @@
 import {ImagePickerAsset} from 'expo-image-picker'
-import {AppBskyFeedPostgate, RichText} from '@atproto/api'
+import {AppBskyFeedPostgate, AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {nanoid} from 'nanoid/non-secure'
 
 import {SelfLabel} from '#/lib/moderation'
 import {insertMentionAt} from '#/lib/strings/mention-manip'
@@ -15,6 +16,10 @@ import {Gif} from '#/state/queries/tenor'
 import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {ComposerOpts} from '#/state/shell/composer'
+import {
+  LinkFacetMatch,
+  suggestLinkCardUri,
+} from '#/view/com/composer/text-input/text-input-util'
 import {createVideoState, VideoAction, videoReducer, VideoState} from './video'
 
 type ImagesMedia = {
@@ -49,6 +54,7 @@ export type EmbedDraft = {
 }
 
 export type PostDraft = {
+  id: string
   richtext: RichText
   labels: SelfLabel[]
   embed: EmbedDraft
@@ -83,13 +89,29 @@ export type ThreadDraft = {
 
 export type ComposerState = {
   thread: ThreadDraft
-  activePostIndex: number // TODO: Add actions to update this.
+  activePostIndex: number
+  mutableNeedsFocusActive: boolean
 }
 
 export type ComposerAction =
   | {type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record}
   | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
-  | {type: 'update_post'; postAction: PostAction}
+  | {
+      type: 'update_post'
+      postId: string
+      postAction: PostAction
+    }
+  | {
+      type: 'add_post'
+    }
+  | {
+      type: 'remove_post'
+      postId: string
+    }
+  | {
+      type: 'focus_post'
+      postId: string
+    }
 
 export const MAX_IMAGES = 4
 
@@ -117,17 +139,84 @@ export function composerReducer(
       }
     }
     case 'update_post': {
-      const nextPosts = [...state.thread.posts]
-      nextPosts[state.activePostIndex] = postReducer(
-        state.thread.posts[state.activePostIndex],
-        action.postAction,
+      let nextPosts = state.thread.posts
+      const postIndex = state.thread.posts.findIndex(
+        p => p.id === action.postId,
       )
+      if (postIndex !== -1) {
+        nextPosts = state.thread.posts.slice()
+        nextPosts[postIndex] = postReducer(
+          state.thread.posts[postIndex],
+          action.postAction,
+        )
+      }
       return {
         ...state,
         thread: {
           ...state.thread,
           posts: nextPosts,
         },
+      }
+    }
+    case 'add_post': {
+      const activePostIndex = state.activePostIndex
+      const nextPosts = [...state.thread.posts]
+      nextPosts.splice(activePostIndex + 1, 0, {
+        id: nanoid(),
+        richtext: new RichText({text: ''}),
+        shortenedGraphemeLength: 0,
+        labels: [],
+        embed: {
+          quote: undefined,
+          media: undefined,
+          link: undefined,
+        },
+      })
+      return {
+        ...state,
+        thread: {
+          ...state.thread,
+          posts: nextPosts,
+        },
+      }
+    }
+    case 'remove_post': {
+      if (state.thread.posts.length < 2) {
+        return state
+      }
+      let nextActivePostIndex = state.activePostIndex
+      const indexToRemove = state.thread.posts.findIndex(
+        p => p.id === action.postId,
+      )
+      let nextPosts = [...state.thread.posts]
+      if (indexToRemove !== -1) {
+        const postToRemove = state.thread.posts[indexToRemove]
+        if (postToRemove.embed.media?.type === 'video') {
+          postToRemove.embed.media.video.abortController.abort()
+        }
+        nextPosts.splice(indexToRemove, 1)
+        nextActivePostIndex = Math.max(0, indexToRemove - 1)
+      }
+      return {
+        ...state,
+        activePostIndex: nextActivePostIndex,
+        mutableNeedsFocusActive: true,
+        thread: {
+          ...state.thread,
+          posts: nextPosts,
+        },
+      }
+    }
+    case 'focus_post': {
+      const nextActivePostIndex = state.thread.posts.findIndex(
+        p => p.id === action.postId,
+      )
+      if (nextActivePostIndex === -1) {
+        return state
+      }
+      return {
+        ...state,
+        activePostIndex: nextActivePostIndex,
       }
     }
   }
@@ -139,7 +228,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
       return {
         ...state,
         richtext: action.richtext,
-        shortenedGraphemeLength: shortenLinks(action.richtext).graphemeLength,
+        shortenedGraphemeLength: getShortenedLength(action.richtext),
       }
     }
     case 'update_labels': {
@@ -263,6 +352,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
       const prevMedia = state.embed.media
       let nextMedia = prevMedia
       if (prevMedia?.type === 'video') {
+        prevMedia.video.abortController.abort()
         nextMedia = undefined
       }
       let nextLabels = state.labels
@@ -422,18 +512,82 @@ export function createComposerState({
         )
       : '',
   })
+
+  let link: Link | undefined
+
+  /**
+   * `initText` atm is only used for compose intents, meaning share links from
+   * external sources. If `initText` is defined, we want to extract links/posts
+   * from `initText` and suggest them as embeds.
+   *
+   * This checks for posts separately from other types of links so that posts
+   * can become quotes. The util `suggestLinkCardUri` is then applied to ensure
+   * we suggest at most 1 of each.
+   */
+  if (initText) {
+    initRichText.detectFacetsWithoutResolution()
+    const detectedExtUris = new Map<string, LinkFacetMatch>()
+    const detectedPostUris = new Map<string, LinkFacetMatch>()
+    if (initRichText.facets) {
+      for (const facet of initRichText.facets) {
+        for (const feature of facet.features) {
+          if (AppBskyRichtextFacet.isLink(feature)) {
+            if (isBskyPostUrl(feature.uri)) {
+              detectedPostUris.set(feature.uri, {facet, rt: initRichText})
+            } else {
+              detectedExtUris.set(feature.uri, {facet, rt: initRichText})
+            }
+          }
+        }
+      }
+    }
+    const pastSuggestedUris = new Set<string>()
+    const suggestedExtUri = suggestLinkCardUri(
+      true,
+      detectedExtUris,
+      new Map(),
+      pastSuggestedUris,
+    )
+    if (suggestedExtUri) {
+      link = {
+        type: 'link',
+        uri: suggestedExtUri,
+      }
+    }
+    const suggestedPostUri = suggestLinkCardUri(
+      true,
+      detectedPostUris,
+      new Map(),
+      pastSuggestedUris,
+    )
+    if (suggestedPostUri) {
+      /*
+       * `initQuote` is only populated via in-app user action, but we're being
+       * future-defensive here.
+       */
+      if (!quote) {
+        quote = {
+          type: 'link',
+          uri: suggestedPostUri,
+        }
+      }
+    }
+  }
+
   return {
     activePostIndex: 0,
+    mutableNeedsFocusActive: false,
     thread: {
       posts: [
         {
+          id: nanoid(),
           richtext: initRichText,
-          shortenedGraphemeLength: 0,
+          shortenedGraphemeLength: getShortenedLength(initRichText),
           labels: [],
           embed: {
             quote,
             media,
-            link: undefined,
+            link,
           },
         },
       ],
@@ -441,4 +595,8 @@ export function createComposerState({
       threadgate: threadgateViewToAllowUISetting(undefined),
     },
   }
+}
+
+function getShortenedLength(rt: RichText) {
+  return shortenLinks(rt).graphemeLength
 }

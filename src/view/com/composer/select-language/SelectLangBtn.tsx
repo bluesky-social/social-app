@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react'
+import {useCallback, useMemo} from 'react'
 import {Keyboard, StyleSheet} from 'react-native'
 import {
   FontAwesomeIcon,
@@ -7,6 +7,7 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {LANG_DROPDOWN_HITSLOP} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
@@ -47,7 +48,7 @@ export function SelectLangBtn() {
     function add(commaSeparatedLangCodes: string) {
       const langCodes = commaSeparatedLangCodes.split(',')
       const langName = langCodes
-        .map(code => codeToLanguageName(code))
+        .map(code => codeToLanguageName(code, langPrefs.appLanguage))
         .join(' + ')
 
       /*
@@ -102,11 +103,14 @@ export function SelectLangBtn() {
       items={items}
       openUpwards
       style={styles.button}
+      hitSlop={LANG_DROPDOWN_HITSLOP}
       accessibilityLabel={_(msg`Language selection`)}
       accessibilityHint="">
       {postLanguagesPref.length > 0 ? (
         <Text type="lg-bold" style={[pal.link, styles.label]} numberOfLines={1}>
-          {postLanguagesPref.map(lang => codeToLanguageName(lang)).join(', ')}
+          {postLanguagesPref
+            .map(lang => codeToLanguageName(lang, langPrefs.appLanguage))
+            .join(', ')}
         </Text>
       ) : (
         <FontAwesomeIcon
@@ -121,7 +125,7 @@ export function SelectLangBtn() {
 
 const styles = StyleSheet.create({
   button: {
-    paddingHorizontal: 15,
+    marginHorizontal: 15,
   },
   label: {
     maxWidth: 100,

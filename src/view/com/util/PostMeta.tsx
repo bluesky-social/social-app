@@ -1,6 +1,6 @@
 import React, {memo, useCallback} from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
-import {AppBskyActorDefs, ModerationDecision, ModerationUI} from '@atproto/api'
+import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -26,7 +26,6 @@ interface PostMetaOpts {
   postHref: string
   timestamp: string
   showAvatar?: boolean
-  avatarModeration?: ModerationUI
   avatarSize?: number
   onOpenAuthor?: () => void
   style?: StyleProp<ViewStyle>
@@ -49,6 +48,8 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
     precacheProfile(queryClient, opts.author)
   }, [queryClient, opts.author])
 
+  const timestampLabel = niceDate(i18n, opts.timestamp)
+
   return (
     <View
       style={[
@@ -65,7 +66,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           <PreviewableUserAvatar
             size={opts.avatarSize || 16}
             profile={opts.author}
-            moderation={opts.avatarModeration}
+            moderation={opts.moderation?.ui('avatar')}
             type={opts.author.associated?.labeler ? 'labeler' : 'user'}
           />
         </View>
@@ -115,8 +116,8 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         {({timeElapsed}) => (
           <WebOnlyInlineLinkText
             to={opts.postHref}
-            label={niceDate(i18n, opts.timestamp)}
-            title={niceDate(i18n, opts.timestamp)}
+            label={timestampLabel}
+            title={timestampLabel}
             disableMismatchWarning
             disableUnderline
             onPress={onBeforePressPost}

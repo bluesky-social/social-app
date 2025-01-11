@@ -60,6 +60,8 @@ export const LoginForm = ({
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] =
     useState<boolean>(false)
+  const [isAuthFactorTokenValueEmpty, setIsAuthFactorTokenValueEmpty] =
+    useState<boolean>(true)
   const identifierValueRef = useRef<string>(initialHandle || '')
   const passwordValueRef = useRef<string>('')
   const authFactorTokenValueRef = useRef<string>('')
@@ -84,8 +86,13 @@ export const LoginForm = ({
     const password = passwordValueRef.current
     const authFactorToken = authFactorTokenValueRef.current
 
-    if (!identifier || !password) {
-      setError(_(msg`Invalid username or password`))
+    if (!identifier) {
+      setError(_(msg`Please enter your username`))
+      return
+    }
+
+    if (!password) {
+      setError(_(msg`Please enter your password`))
       return
     }
 
@@ -140,11 +147,14 @@ export const LoginForm = ({
           error: errMsg,
         })
         setError(_(msg`Invalid 2FA confirmation code.`))
-      } else if (errMsg.includes('Authentication Required')) {
+      } else if (
+        errMsg.includes('Authentication Required') ||
+        errMsg.includes('Invalid identifier or password')
+      ) {
         logger.debug('Failed to login due to invalid credentials', {
           error: errMsg,
         })
-        setError(_(msg`Invalid username or password`))
+        setError(_(msg`Incorrect username or password`))
       } else if (isNetworkError(e)) {
         logger.warn('Failed to login due to network error', {error: errMsg})
         setError(
@@ -257,11 +267,12 @@ export const LoginForm = ({
               autoCapitalize="none"
               autoFocus
               autoCorrect={false}
-              autoComplete="off"
+              autoComplete="one-time-code"
               returnKeyType="done"
               textContentType="username"
               blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
               onChangeText={v => {
+                setIsAuthFactorTokenValueEmpty(v === '')
                 authFactorTokenValueRef.current = v
               }}
               onSubmitEditing={onPressNext}
@@ -269,6 +280,13 @@ export const LoginForm = ({
               accessibilityHint={_(
                 msg`Input the code which has been emailed to you`,
               )}
+              style={[
+                {
+                  textTransform: isAuthFactorTokenValueEmpty
+                    ? 'none'
+                    : 'uppercase',
+                },
+              ]}
             />
           </TextField.Root>
           <Text style={[a.text_sm, t.atoms.text_contrast_medium, a.mt_sm]}>

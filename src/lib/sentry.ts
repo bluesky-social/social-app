@@ -7,7 +7,7 @@ import {Platform} from 'react-native'
 import {nativeApplicationVersion, nativeBuildVersion} from 'expo-application'
 import {init} from '@sentry/react-native'
 
-import {BUILD_ENV, IS_DEV, IS_TESTFLIGHT} from '#/lib/app-info'
+import {IS_TESTFLIGHT} from '#/lib/app-info'
 
 /**
  * Examples:
@@ -27,14 +27,14 @@ const release = nativeApplicationVersion ?? 'dev'
  */
 const dist = `${Platform.OS}.${nativeBuildVersion}.${
   IS_TESTFLIGHT ? 'tf' : ''
-}${IS_DEV ? 'dev' : ''}`
+}${__DEV__ ? 'dev' : ''}`
 
 init({
   enabled: !__DEV__,
   autoSessionTracking: false,
   dsn: 'https://05bc3789bf994b81bd7ce20c86ccd3ae@o4505071687041024.ingest.sentry.io/4505071690514432',
   debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
-  environment: BUILD_ENV ?? 'development',
+  environment: process.env.NODE_ENV,
   dist,
   release,
 })

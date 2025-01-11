@@ -21,7 +21,7 @@ export const STARTER_PACK_MAX_SIZE = 150
 // code and update this number with each release until we can get the
 // server route done.
 // -prf
-export const JOINED_THIS_WEEK = 650000 // estimate as of 10/28/24
+export const JOINED_THIS_WEEK = 560000 // estimate as of 12/18/24
 
 const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
 export function FEEDBACK_FORM_URL({
@@ -95,6 +95,7 @@ export const HITSLOP_10 = createHitslop(10)
 export const HITSLOP_20 = createHitslop(20)
 export const HITSLOP_30 = createHitslop(30)
 export const POST_CTRL_HITSLOP = {top: 5, bottom: 10, left: 10, right: 10}
+export const LANG_DROPDOWN_HITSLOP = {top: 10, bottom: 10, left: 4, right: 4}
 export const BACK_HITSLOP = HITSLOP_30
 export const MAX_POST_LINES = 25
 
@@ -145,6 +146,7 @@ export const SUPPORTED_MIME_TYPES = [
   'video/mpeg',
   'video/webm',
   'video/quicktime',
+  'image/gif',
 ] as const
 
 export type SupportedMimeTypes = (typeof SUPPORTED_MIME_TYPES)[number]

@@ -34,6 +34,7 @@ import {LoggedOut} from '#/view/com/auth/LoggedOut'
 import {Deactivated} from '#/screens/Deactivated'
 import {Onboarding} from '#/screens/Onboarding'
 import {SignupQueued} from '#/screens/SignupQueued'
+import {atoms as a} from '#/alf'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
@@ -137,12 +138,14 @@ function NativeStackNavigator({
 
   return (
     <NavigationContent>
-      <NativeStackView
-        {...rest}
-        state={state}
-        navigation={navigation}
-        descriptors={newDescriptors}
-      />
+      <View role="main" style={a.flex_1}>
+        <NativeStackView
+          {...rest}
+          state={state}
+          navigation={navigation}
+          descriptors={newDescriptors}
+        />
+      </View>
       {isWeb && showBottomBar && <BottomBarWeb />}
       {isWeb && !showBottomBar && (
         <>

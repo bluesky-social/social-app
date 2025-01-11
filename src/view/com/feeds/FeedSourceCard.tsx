@@ -162,7 +162,10 @@ export function FeedSourceCardLoaded({
         style={[
           pal.border,
           {
-            borderTopWidth: showMinimalPlaceholder || hideTopBorder ? 0 : 1,
+            borderTopWidth:
+              showMinimalPlaceholder || hideTopBorder
+                ? 0
+                : StyleSheet.hairlineWidth,
             flexDirection: 'row',
             alignItems: 'center',
             flex: 1,
@@ -297,11 +300,14 @@ export function FeedSourceCardLoaded({
 
         {showLikes && feed.type === 'feed' ? (
           <Text type="sm-medium" style={[pal.text, pal.textLight]}>
-            <Plural
-              value={feed.likeCount || 0}
-              one="Liked by # user"
-              other="Liked by # users"
-            />
+            <Trans>
+              Liked by{' '}
+              <Plural
+                value={feed.likeCount || 0}
+                one="# user"
+                other="# users"
+              />
+            </Trans>
           </Text>
         ) : null}
       </Pressable>

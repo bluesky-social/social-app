@@ -11,6 +11,7 @@ import {Paragraph} from '@tiptap/extension-paragraph'
 import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text as TiptapText} from '@tiptap/extension-text'
 import {generateJSON} from '@tiptap/html'
+import {Fragment, Node, Slice} from '@tiptap/pm/model'
 import {EditorContent, JSONContent, useEditor} from '@tiptap/react'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
@@ -23,8 +24,8 @@ import {
 } from '#/view/com/composer/text-input/text-input-util'
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {atoms as a, useAlf} from '#/alf'
+import {normalizeTextStyles} from '#/alf/typography'
 import {Portal} from '#/components/Portal'
-import {normalizeTextStyles} from '#/components/Typography'
 import {Text} from '../../util/text/Text'
 import {createSuggestion} from './web/Autocomplete'
 import {Emoji} from './web/EmojiPicker.web'
@@ -42,11 +43,14 @@ interface TextInputProps {
   placeholder: string
   suggestedLinks: Set<string>
   webForceMinHeight: boolean
+  hasRightPadding: boolean
+  isActive: boolean
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
   onPressPublish: (richtext: RichText) => void
   onNewLink: (uri: string) => void
   onError: (err: string) => void
+  onFocus: () => void
 }
 
 export const TextInput = React.forwardRef(function TextInputImpl(
@@ -54,10 +58,13 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     richtext,
     placeholder,
     webForceMinHeight,
+    hasRightPadding,
+    isActive,
     setRichText,
     onPhotoPasted,
     onPressPublish,
     onNewLink,
+    onFocus,
   }: // onError, TODO
   TextInputProps,
   ref,
@@ -92,19 +99,30 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   )
 
   React.useEffect(() => {
+    if (!isActive) {
+      return
+    }
     textInputWebEmitter.addListener('publish', onPressPublish)
     return () => {
       textInputWebEmitter.removeListener('publish', onPressPublish)
     }
-  }, [onPressPublish])
+  }, [onPressPublish, isActive])
+
   React.useEffect(() => {
+    if (!isActive) {
+      return
+    }
     textInputWebEmitter.addListener('media-pasted', onPhotoPasted)
     return () => {
       textInputWebEmitter.removeListener('media-pasted', onPhotoPasted)
     }
-  }, [onPhotoPasted])
+  }, [isActive, onPhotoPasted])
 
   React.useEffect(() => {
+    if (!isActive) {
+      return
+    }
+
     const handleDrop = (event: DragEvent) => {
       const transfer = event.dataTransfer
       if (transfer) {
@@ -142,16 +160,38 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       document.body.removeEventListener('dragover', handleDragEnter)
       document.body.removeEventListener('dragleave', handleDragLeave)
     }
-  }, [setIsDropping])
+  }, [setIsDropping, isActive])
 
   const pastSuggestedUris = useRef(new Set<string>())
   const prevDetectedUris = useRef(new Map<string, LinkFacetMatch>())
   const editor = useEditor(
     {
       extensions,
+      coreExtensionOptions: {
+        clipboardTextSerializer: {
+          blockSeparator: '\n',
+        },
+      },
+      onFocus() {
+        onFocus?.()
+      },
       editorProps: {
         attributes: {
           class: modeClass,
+        },
+        clipboardTextParser: (text, context) => {
+          const blocks = text.split(/(?:\r\n?|\n)/)
+          const nodes: Node[] = blocks.map(line => {
+            return Node.fromJSON(
+              context.doc.type.schema,
+              line.length > 0
+                ? {type: 'paragraph', content: [{type: 'text', text: line}]}
+                : {type: 'paragraph', content: []},
+            )
+          })
+
+          const fragment = Fragment.fromArray(nodes)
+          return Slice.maxOpen(fragment)
         },
         handlePaste: (view, event) => {
           const clipboardData = event.clipboardData
@@ -185,6 +225,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       autofocus: 'end',
       editable: true,
       injectCSS: true,
+      shouldRerenderOnTransaction: false,
       onCreate({editor: editorProp}) {
         // HACK
         // the 'enter' animation sometimes causes autofocus to fail
@@ -237,15 +278,22 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     [editor],
   )
   React.useEffect(() => {
+    if (!isActive) {
+      return
+    }
     textInputWebEmitter.addListener('emoji-inserted', onEmojiInserted)
     return () => {
       textInputWebEmitter.removeListener('emoji-inserted', onEmojiInserted)
     }
-  }, [onEmojiInserted])
+  }, [onEmojiInserted, isActive])
 
   React.useImperativeHandle(ref, () => ({
-    focus: () => {}, // TODO
-    blur: () => {}, // TODO
+    focus: () => {
+      editor?.chain().focus()
+    },
+    blur: () => {
+      editor?.chain().blur()
+    },
     getCursorPosition: () => {
       const pos = editor?.state.selection.$anchor.pos
       return pos ? editor?.view.coordsAtPos(pos) : undefined
@@ -270,19 +318,13 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     style.lineHeight = style.lineHeight
       ? ((style.lineHeight + 'px') as unknown as number)
       : undefined
+    style.minHeight = webForceMinHeight ? 140 : undefined
     return style
-  }, [t, fonts])
-
-  React.useLayoutEffect(() => {
-    let node = editor?.view.dom
-    if (node) {
-      node.style.minHeight = webForceMinHeight ? '140px' : ''
-    }
-  }, [editor, webForceMinHeight])
+  }, [t, fonts, webForceMinHeight])
 
   return (
     <>
-      <View style={styles.container}>
+      <View style={[styles.container, hasRightPadding && styles.rightPadding]}>
         {/* @ts-ignore inputStyle is fine */}
         <EditorContent editor={editor} style={inputStyle} />
       </View>
@@ -347,6 +389,9 @@ const styles = StyleSheet.create({
     padding: 5,
     marginLeft: 8,
     marginBottom: 10,
+  },
+  rightPadding: {
+    paddingRight: 32,
   },
   dropContainer: {
     backgroundColor: '#0007',

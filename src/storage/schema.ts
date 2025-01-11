@@ -8,4 +8,5 @@ export type Device = {
   geolocation?: {
     countryCode: string | undefined
   }
+  trendingBetaEnabled: boolean
 }

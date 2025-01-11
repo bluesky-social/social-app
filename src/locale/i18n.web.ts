@@ -12,12 +12,24 @@ export async function dynamicActivate(locale: AppLanguage) {
   let mod: any
 
   switch (locale) {
+    case AppLanguage.an: {
+      mod = await import(`./locales/an/messages`)
+      break
+    }
+    case AppLanguage.ast: {
+      mod = await import(`./locales/ast/messages`)
+      break
+    }
     case AppLanguage.ca: {
       mod = await import(`./locales/ca/messages`)
       break
     }
     case AppLanguage.de: {
       mod = await import(`./locales/de/messages`)
+      break
+    }
+    case AppLanguage.el: {
+      mod = await import(`./locales/el/messages`)
       break
     }
     case AppLanguage.en_GB: {
@@ -40,6 +52,10 @@ export async function dynamicActivate(locale: AppLanguage) {
       mod = await import(`./locales/ga/messages`)
       break
     }
+    case AppLanguage.gl: {
+      mod = await import(`./locales/gl/messages`)
+      break
+    }
     case AppLanguage.hi: {
       mod = await import(`./locales/hi/messages`)
       break
@@ -60,12 +76,32 @@ export async function dynamicActivate(locale: AppLanguage) {
       mod = await import(`./locales/ja/messages`)
       break
     }
+    case AppLanguage.km: {
+      mod = await import(`./locales/km/messages`)
+      break
+    }
     case AppLanguage.ko: {
       mod = await import(`./locales/ko/messages`)
       break
     }
+    case AppLanguage.ne: {
+      mod = await import(`./locales/ne/messages`)
+      break
+    }
+    case AppLanguage.nl: {
+      mod = await import(`./locales/nl/messages`)
+      break
+    }
+    case AppLanguage.pl: {
+      mod = await import(`./locales/pl/messages`)
+      break
+    }
     case AppLanguage.pt_BR: {
       mod = await import(`./locales/pt-BR/messages`)
+      break
+    }
+    case AppLanguage.ro: {
+      mod = await import(`./locales/ro/messages`)
       break
     }
     case AppLanguage.ru: {
@@ -82,6 +118,10 @@ export async function dynamicActivate(locale: AppLanguage) {
     }
     case AppLanguage.uk: {
       mod = await import(`./locales/uk/messages`)
+      break
+    }
+    case AppLanguage.vi: {
+      mod = await import(`./locales/vi/messages`)
       break
     }
     case AppLanguage.zh_CN: {

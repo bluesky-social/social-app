@@ -1,4 +1,3 @@
-import React from 'react'
 import {View} from 'react-native'
 import * as Progress from 'react-native-progress'
 
@@ -11,11 +10,13 @@ export function ProgressGuideTask({
   total,
   title,
   subtitle,
+  tabularNumsTitle,
 }: {
   current: number
   total: number
   title: string
   subtitle?: string
+  tabularNumsTitle?: boolean
 }) {
   const t = useTheme()
 
@@ -34,8 +35,16 @@ export function ProgressGuideTask({
         />
       )}
 
-      <View style={[a.flex_col, a.gap_2xs, {marginTop: -2}]}>
-        <Text style={[a.text_sm, a.font_bold, a.leading_tight]}>{title}</Text>
+      <View style={[a.flex_col, a.gap_2xs, subtitle && {marginTop: -2}]}>
+        <Text
+          style={[
+            a.text_sm,
+            a.font_bold,
+            a.leading_tight,
+            tabularNumsTitle && {fontVariant: ['tabular-nums']},
+          ]}>
+          {title}
+        </Text>
         {subtitle && (
           <Text
             style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_tight]}>

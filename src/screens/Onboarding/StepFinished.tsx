@@ -14,7 +14,7 @@ import {
   TIMELINE_SAVED_FEED,
 } from '#/lib/constants'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {getAllListMembers} from '#/state/queries/list-members'
@@ -57,6 +57,7 @@ export function StepFinished() {
   const setActiveStarterPack = useSetActiveStarterPack()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
   const {startProgressGuide} = useProgressGuideControls()
+  const gate = useGate()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
@@ -127,31 +128,36 @@ export function StepFinished() {
         })(),
         (async () => {
           const {imageUri, imageMime} = profileStepResults
-          if (imageUri && imageMime) {
-            const blobPromise = uploadBlob(agent, imageUri, imageMime)
-            await agent.upsertProfile(async existing => {
-              existing = existing ?? {}
+          const blobPromise =
+            imageUri && imageMime
+              ? uploadBlob(agent, imageUri, imageMime)
+              : undefined
+
+          await agent.upsertProfile(async existing => {
+            existing = existing ?? {}
+
+            if (blobPromise) {
               const res = await blobPromise
               if (res.data.blob) {
                 existing.avatar = res.data.blob
               }
+            }
 
-              if (starterPack) {
-                existing.joinedViaStarterPack = {
-                  uri: starterPack.uri,
-                  cid: starterPack.cid,
-                }
+            if (starterPack) {
+              existing.joinedViaStarterPack = {
+                uri: starterPack.uri,
+                cid: starterPack.cid,
               }
+            }
 
-              existing.displayName = ''
-              // HACKFIX
-              // creating a bunch of identical profile objects is breaking the relay
-              // tossing this unspecced field onto it to reduce the size of the problem
-              // -prf
-              existing.createdAt = new Date().toISOString()
-              return existing
-            })
-          }
+            existing.displayName = ''
+            // HACKFIX
+            // creating a bunch of identical profile objects is breaking the relay
+            // tossing this unspecced field onto it to reduce the size of the problem
+            // -prf
+            existing.createdAt = new Date().toISOString()
+            return existing
+          })
 
           logEvent('onboarding:finished:avatarResult', {
             avatarResult: profileStepResults.isCreatedAvatar
@@ -185,7 +191,9 @@ export function StepFinished() {
     setSaving(false)
     setActiveStarterPack(undefined)
     setHasCheckedForStarterPack(true)
-    startProgressGuide('like-10-and-follow-7')
+    startProgressGuide(
+      gate('new_postonboarding') ? 'follow-10' : 'like-10-and-follow-7',
+    )
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
     logEvent('onboarding:finished:nextPressed', {
@@ -216,6 +224,7 @@ export function StepFinished() {
     setActiveStarterPack,
     setHasCheckedForStarterPack,
     startProgressGuide,
+    gate,
   ])
 
   return (

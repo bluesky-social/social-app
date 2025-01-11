@@ -24,6 +24,8 @@ import {
   ProfileCardFeedLoadingPlaceholder,
 } from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {ExploreRecommendations} from '#/screens/Search/components/ExploreRecommendations'
+import {ExploreTrendingTopics} from '#/screens/Search/components/ExploreTrendingTopics'
 import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
@@ -192,6 +194,7 @@ function LoadMore({
                             size={28}
                             avatar={_item.avatar}
                             moderation={_item.moderation.ui('avatar')}
+                            type="user"
                           />
                         ) : _item.type === 'feed' ? (
                           <UserAvatar
@@ -238,6 +241,14 @@ type ExploreScreenItems =
       description: string
       style?: ViewStyleProp['style']
       icon: React.ComponentType<SVGIconProps>
+    }
+  | {
+      type: 'trendingTopics'
+      key: string
+    }
+  | {
+      type: 'recommendations'
+      key: string
     }
   | {
       type: 'profile'
@@ -325,17 +336,27 @@ export function Explore() {
   ])
 
   const items = React.useMemo<ExploreScreenItems[]>(() => {
-    const i: ExploreScreenItems[] = [
-      {
-        type: 'header',
-        key: 'suggested-follows-header',
-        title: _(msg`Suggested accounts`),
-        description: _(
-          msg`Follow more accounts to get connected to your interests and build your network.`,
-        ),
-        icon: Person,
-      },
-    ]
+    const i: ExploreScreenItems[] = []
+
+    i.push({
+      type: 'trendingTopics',
+      key: `trending-topics`,
+    })
+
+    i.push({
+      type: 'recommendations',
+      key: `recommendations`,
+    })
+
+    i.push({
+      type: 'header',
+      key: 'suggested-follows-header',
+      title: _(msg`Suggested accounts`),
+      description: _(
+        msg`Follow more accounts to get connected to your interests and build your network.`,
+      ),
+      icon: Person,
+    })
 
     if (profiles) {
       // Currently the responses contain duplicate items.
@@ -388,7 +409,7 @@ export function Explore() {
       key: 'suggested-feeds-header',
       title: _(msg`Discover new feeds`),
       description: _(
-        msg`Custom feeds built by the community bring you new experiences and help you find the content you love.`,
+        msg`Choose your own timeline! Feeds built by the community help you find content you love.`,
       ),
       style: [a.pt_5xl],
       icon: ListSparkle,
@@ -489,6 +510,12 @@ export function Explore() {
               icon={item.icon}
             />
           )
+        }
+        case 'trendingTopics': {
+          return <ExploreTrendingTopics />
+        }
+        case 'recommendations': {
+          return <ExploreRecommendations />
         }
         case 'profile': {
           return (

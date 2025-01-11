@@ -1,13 +1,12 @@
 import React, {isValidElement, memo, startTransition, useRef} from 'react'
 import {FlatListProps, StyleSheet, View, ViewProps} from 'react-native'
-import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
+import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
+import * as Layout from '#/components/Layout'
 
 export type ListMethods = any // TODO: Better types.
 export type ListProps<ItemT> = Omit<
@@ -24,11 +23,14 @@ export type ListProps<ItemT> = Omit<
   desktopFixedHeight?: number | boolean
   // Web only prop to contain the scroll to the container rather than the window
   disableFullWindowScroll?: boolean
+  /**
+   * @deprecated Should be using Layout components
+   */
   sideBorders?: boolean
 }
 export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
 
-const ON_ITEM_SEEN_WAIT_DURATION = 1.5e3 // when we consider post to  be "seen"
+const ON_ITEM_SEEN_WAIT_DURATION = 0.5e3 // when we consider post to  be "seen"
 const ON_ITEM_SEEN_INTERSECTION_OPTS = {
   rootMargin: '-200px 0px -200px 0px',
 } // post must be 200px visible to be "seen"
@@ -46,9 +48,9 @@ function ListImpl<ItemT>(
     keyExtractor,
     refreshing: _unsupportedRefreshing,
     onStartReached,
-    onStartReachedThreshold = 0,
+    onStartReachedThreshold = 2,
     onEndReached,
-    onEndReachedThreshold = 0,
+    onEndReachedThreshold = 2,
     onRefresh: _unsupportedOnRefresh,
     onScrolledDownChange,
     onContentSizeChange,
@@ -56,20 +58,11 @@ function ListImpl<ItemT>(
     renderItem,
     extraData,
     style,
-    sideBorders = true,
     ...props
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
 ) {
   const contextScrollHandlers = useScrollHandlers()
-  const pal = usePalette('default')
-  const {isMobile} = useWebMediaQueries()
-  if (!isMobile) {
-    contentContainerStyle = addStyle(
-      contentContainerStyle,
-      styles.containerScroll,
-    )
-  }
 
   const isEmpty = !data || data.length === 0
 
@@ -326,53 +319,53 @@ function ListImpl<ItemT>(
           styles.parentTreeVisibilityDetector
         }
       />
-      <View
-        ref={containerRef}
-        style={[
-          !isMobile && sideBorders && styles.sideBorders,
-          contentContainerStyle,
-          desktopFixedHeight ? styles.minHeightViewport : null,
-          pal.border,
-        ]}>
-        <Visibility
-          root={disableFullWindowScroll ? nativeRef : null}
-          onVisibleChange={handleAboveTheFoldVisibleChange}
-          style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
-        />
-        {onStartReached && !isEmpty && (
-          <EdgeVisibility
+      <Layout.Center>
+        <View
+          ref={containerRef}
+          style={[
+            contentContainerStyle,
+            desktopFixedHeight ? styles.minHeightViewport : null,
+          ]}>
+          <Visibility
             root={disableFullWindowScroll ? nativeRef : null}
-            onVisibleChange={onHeadVisibilityChange}
-            topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
-            containerRef={containerRef}
+            onVisibleChange={handleAboveTheFoldVisibleChange}
+            style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
           />
-        )}
-        {headerComponent}
-        {isEmpty
-          ? emptyComponent
-          : (data as Array<ItemT>)?.map((item, index) => {
-              const key = keyExtractor!(item, index)
-              return (
-                <Row<ItemT>
-                  key={key}
-                  item={item}
-                  index={index}
-                  renderItem={renderItem}
-                  extraData={extraData}
-                  onItemSeen={onItemSeen}
-                />
-              )
-            })}
-        {onEndReached && !isEmpty && (
-          <EdgeVisibility
-            root={disableFullWindowScroll ? nativeRef : null}
-            onVisibleChange={onTailVisibilityChange}
-            bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
-            containerRef={containerRef}
-          />
-        )}
-        {footerComponent}
-      </View>
+          {onStartReached && !isEmpty && (
+            <EdgeVisibility
+              root={disableFullWindowScroll ? nativeRef : null}
+              onVisibleChange={onHeadVisibilityChange}
+              topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
+              containerRef={containerRef}
+            />
+          )}
+          {headerComponent}
+          {isEmpty
+            ? emptyComponent
+            : (data as Array<ItemT>)?.map((item, index) => {
+                const key = keyExtractor!(item, index)
+                return (
+                  <Row<ItemT>
+                    key={key}
+                    item={item}
+                    index={index}
+                    renderItem={renderItem}
+                    extraData={extraData}
+                    onItemSeen={onItemSeen}
+                  />
+                )
+              })}
+          {onEndReached && !isEmpty && (
+            <EdgeVisibility
+              root={disableFullWindowScroll ? nativeRef : null}
+              onVisibleChange={onTailVisibilityChange}
+              bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
+              containerRef={containerRef}
+            />
+          )}
+          {footerComponent}
+        </View>
+      </Layout.Center>
     </View>
   )
 }
@@ -448,7 +441,9 @@ let Row = function RowImpl<ItemT>({
   onItemSeen: ((item: any) => void) | undefined
 }): React.ReactNode {
   const rowRef = React.useRef(null)
-  const intersectionTimeout = React.useRef<NodeJS.Timer | undefined>(undefined)
+  const intersectionTimeout = React.useRef<
+    ReturnType<typeof setTimeout> | undefined
+  >(undefined)
 
   const handleIntersection = useNonReactiveCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -466,7 +461,7 @@ let Row = function RowImpl<ItemT>({
             }
           } else {
             if (intersectionTimeout.current) {
-              clearTimeout(intersectionTimeout.current)
+              clearTimeout(intersectionTimeout.current as NodeJS.Timeout)
               intersectionTimeout.current = undefined
             }
           }
@@ -556,16 +551,6 @@ export const List = memo(React.forwardRef(ListImpl)) as <ItemT>(
 // https://stackoverflow.com/questions/7944460/detect-safari-browser
 
 const styles = StyleSheet.create({
-  sideBorders: {
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-  },
-  containerScroll: {
-    width: '100%',
-    maxWidth: 600,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-  },
   minHeightViewport: {
     // @ts-ignore web only
     minHeight: '100vh',
