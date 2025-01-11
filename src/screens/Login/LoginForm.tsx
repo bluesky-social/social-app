@@ -86,8 +86,13 @@ export const LoginForm = ({
     const password = passwordValueRef.current
     const authFactorToken = authFactorTokenValueRef.current
 
-    if (!identifier || !password) {
-      setError(_(msg`Invalid username or password`))
+    if (!identifier) {
+      setError(_(msg`Please enter your username`))
+      return
+    }
+
+    if (!password) {
+      setError(_(msg`Please enter your password`))
       return
     }
 
@@ -142,11 +147,14 @@ export const LoginForm = ({
           error: errMsg,
         })
         setError(_(msg`Invalid 2FA confirmation code.`))
-      } else if (errMsg.includes('Authentication Required')) {
+      } else if (
+        errMsg.includes('Authentication Required') ||
+        errMsg.includes('Invalid identifier or password')
+      ) {
         logger.debug('Failed to login due to invalid credentials', {
           error: errMsg,
         })
-        setError(_(msg`Invalid username or password`))
+        setError(_(msg`Incorrect username or password`))
       } else if (isNetworkError(e)) {
         logger.warn('Failed to login due to network error', {error: errMsg})
         setError(

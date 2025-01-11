@@ -3499,7 +3499,7 @@ msgstr "Μη έγκυρη ή μη υποστηριζόμενη εγγραφή α
 
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
-msgid "Invalid username or password"
+msgid "Incorrect username or password"
 msgstr "Μη έγκυρο όνομα χρήστη ή κωδικός πρόσβασης"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91

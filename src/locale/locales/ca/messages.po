@@ -4457,7 +4457,7 @@ msgstr "Registre de publicació no vàlid o no admès"
 
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
-msgid "Invalid username or password"
+msgid "Incorrect username or password"
 msgstr "Nom d'usuari o contrasenya incorrectes"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91
