@@ -3409,7 +3409,7 @@ msgstr "無効またはサポートされていない投稿のレコード"
 
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
-msgid "Invalid username or password"
+msgid "Incorrect username or password"
 msgstr "無効なユーザー名またはパスワード"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91

@@ -4400,7 +4400,7 @@ msgstr "Geçersiz veya desteklenmeyen gönderi kaydı"
 
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
-msgid "Invalid username or password"
+msgid "Incorrect username or password"
 msgstr "Geçersiz kullanıcı adı veya şifre"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91
