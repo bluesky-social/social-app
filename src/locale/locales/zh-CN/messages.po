@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-10 01:17\n"
+"PO-Revision-Date: 2025-01-12 14:23\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -2598,7 +2598,7 @@ msgstr "URL 应解析为记录"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:123
 #: src/screens/Settings/ThreadPreferences.tsx:137
 msgid "Experimental"
-msgstr "实验性"
+msgstr "实验性功能"
 
 #: src/components/dialogs/MutedWords.tsx:500
 msgid "Expired"
@@ -4607,7 +4607,7 @@ msgstr "开启动态源选项菜单"
 
 #: src/screens/Settings/Settings.tsx:208
 msgid "Open helpdesk in browser"
-msgstr "在浏览器中开启说明中心"
+msgstr "在浏览器中打开说明中心"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:71
 msgid "Open link to {niceUrl}"

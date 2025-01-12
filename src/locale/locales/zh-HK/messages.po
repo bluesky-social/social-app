@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-10 01:17\n"
+"PO-Revision-Date: 2025-01-12 14:25\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -309,12 +309,12 @@ msgstr "{profileName} 喺 {0}前用新手包加入咗 Bluesky"
 #: src/screens/StarterPack/Wizard/index.tsx:449
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}、</0><1>{1}</1> 同{2, plural, one {另外 # } other {另外 # }}人已經喺你嘅新手包入邊"
+msgstr "<0>{0}、</0><1>{1}</1> 同{2, plural, one {另外 # } other {另外 # }}人經已喺你嘅新手包入邊"
 
 #: src/screens/StarterPack/Wizard/index.tsx:502
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}、</0><1>{1}</1> 同{2, plural, one {另外 # } other {另外 # }}個動態源已經喺你嘅新手包入邊"
+msgstr "<0>{0}、</0><1>{1}</1> 同{2, plural, one {另外 # } other {另外 # }}個動態源經已喺你嘅新手包入邊"
 
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
@@ -326,11 +326,11 @@ msgstr "<0>{0}</0> {1, plural, one {個跟緊} other {個跟緊}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:490
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
-msgstr "<0>{0}</0> 同<1> </1><2>{1} </2>已經喺你嘅新手包入邊"
+msgstr "<0>{0}</0> 同<1> </1><2>{1} </2>經已喺你嘅新手包入邊"
 
 #: src/screens/StarterPack/Wizard/index.tsx:483
 msgid "<0>{0}</0> is included in your starter pack"
-msgstr "<0>{0}</0> 已經喺你嘅新手包入邊"
+msgstr "<0>{0}</0> 經已喺你嘅新手包入邊"
 
 #: src/components/WhoCanReply.tsx:274
 msgid "<0>{0}</0> members"
@@ -346,7 +346,7 @@ msgstr "<0>實驗性選項：</0>啓用呢個設定之後，你淨係會收到�
 
 #: src/screens/StarterPack/Wizard/index.tsx:440
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
-msgstr "<0>你</0> 同<1> </1><2>{0} </2>已經喺你嘅新手包入邊"
+msgstr "<0>你</0> 同<1> </1><2>{0} </2>經已喺你嘅新手包入邊"
 
 #: src/screens/Profile/Header/Handle.tsx:52
 msgid "⚠Invalid Handle"
@@ -533,7 +533,7 @@ msgstr "加入預設嘅動態源 (淨係顯示你跟嘅人)"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:389
 msgid "Add the following DNS record to your domain:"
-msgstr "將以下 DNS 記錄新增到你嘅網域："
+msgstr "將下低嘅 DNS 記錄新增到你嘅網域："
 
 #: src/components/FeedCard.tsx:295
 msgid "Add this feed to your feeds"
@@ -574,7 +574,7 @@ msgstr "淨係可以喺網頁版 (<0>bsky.app</0>) 啓用成人內容顯示。"
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
-msgstr "成人內容已經停用。"
+msgstr "成人內容經已停用。"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:139
 #: src/view/com/composer/labels/LabelsBtn.tsx:197
@@ -667,7 +667,7 @@ msgstr "電郵送咗去你之前嘅電郵地址度 {0}。你可以抄低郵件�
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:91
 msgid "An email has been sent! Please enter the confirmation code included in the email below."
-msgstr "電郵已經送出！請你抄低郵件入邊個驗證碼跟住喺下低用咗佢。"
+msgstr "電郵經已送出！請你抄低郵件入邊個驗證碼跟住喺下低用咗佢。"
 
 #: src/components/dialogs/GifSelect.tsx:265
 msgid "An error has occurred"
@@ -820,7 +820,7 @@ msgstr "上訴「{0}」標籤"
 #: src/components/moderation/LabelsOnMeDialog.tsx:233
 #: src/screens/Messages/components/ChatDisabled.tsx:91
 msgid "Appeal submitted"
-msgstr "上訴提交咗喇"
+msgstr "上訴經已提交"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:51
 #: src/screens/Messages/components/ChatDisabled.tsx:53
@@ -1838,7 +1838,7 @@ msgstr "建立於 {0}"
 
 #: src/screens/List/ListHiddenScreen.tsx:127
 msgid "Creator has been blocked"
-msgstr "已封鎖此清單建立者"
+msgstr "經已封鎖此清單建立者"
 
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
@@ -2136,7 +2136,7 @@ msgstr "唔得用連字號（-）開頭抑或結尾"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:490
 msgid "Domain verified!"
-msgstr "網域驗證咗喇！"
+msgstr "網域經已驗證！"
 
 #: src/components/dialogs/BirthDateSettings.tsx:118
 #: src/components/dialogs/BirthDateSettings.tsx:124
@@ -2363,19 +2363,19 @@ msgstr "重新傳送電郵"
 #: src/view/com/modals/ChangeEmail.tsx:54
 #: src/view/com/modals/ChangeEmail.tsx:83
 msgid "Email updated"
-msgstr "電郵更新咗喇"
+msgstr "電郵經已更新"
 
 #: src/view/com/modals/ChangeEmail.tsx:106
 msgid "Email Updated"
-msgstr "電郵更新咗喇"
+msgstr "電郵經已更新"
 
 #: src/view/com/modals/VerifyEmail.tsx:85
 msgid "Email verified"
-msgstr "電郵驗證咗喇"
+msgstr "電郵經已驗證"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:79
 msgid "Email Verified"
-msgstr "電郵驗證咗喇"
+msgstr "電郵經已驗證"
 
 #: src/components/dialogs/Embed.tsx:113
 msgid "Embed HTML code"
@@ -2610,11 +2610,11 @@ msgstr "過期時間 {0}"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
-msgstr "打大尺嘞抑或可能令人不安嘅媒體內容。"
+msgstr "血腥、暴露抑或獵奇等其他可能令人反感嘅媒體內容。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:35
 msgid "Explicit sexual images."
-msgstr "打大尺嘞嘅鹹溼相。"
+msgstr "打大赤肋嘅鹹溼相。"
 
 #: src/screens/Settings/AccountSettings.tsx:137
 #: src/screens/Settings/AccountSettings.tsx:141
@@ -2766,7 +2766,7 @@ msgstr "意見"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:266
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:275
 msgid "Feedback sent!"
-msgstr "意見交咗喇！"
+msgstr "意見經已提交！"
 
 #: src/Navigation.tsx:403
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
@@ -2786,7 +2786,7 @@ msgstr "動態源係用戶嘅自訂演算法，用戶淨係需要小小 coding �
 #: src/components/FeedCard.tsx:272
 #: src/view/screens/SavedFeeds.tsx:82
 msgid "Feeds updated!"
-msgstr "動態源更新咗喇！"
+msgstr "動態源經已更新！"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:54
 msgid "Feeds we think you might like."
@@ -3129,7 +3129,7 @@ msgstr "呢個帳號頭銜俾人用咗，唔該試下用第個。"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:191
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:327
 msgid "Handle changed!"
-msgstr "帳號頭銜變更咗喇！"
+msgstr "帳號頭銜經已改好！"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:578
 msgid "Handle too long. Please try a shorter one."
@@ -3257,7 +3257,7 @@ msgstr "唔好意思，動態源伺服器畀咗個錯誤嘅回應，請話畀動
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:102
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
-msgstr "唔好意思，我哋搵唔到呢個動態源。佢可能已經刪咗。"
+msgstr "唔好意思，我哋搵唔到呢個動態源。佢可能經已刪咗。"
 
 #: src/screens/Moderation/index.tsx:53
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
@@ -3297,7 +3297,7 @@ msgstr "熱門回覆優先"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:41
 msgid "How should we open this link?"
-msgstr "我哋應該點樣打開呢個連結？"
+msgstr "我哋應該點樣打開呢條連結？"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:133
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:136
@@ -3731,7 +3731,7 @@ msgstr "刪除咗嘅清單"
 
 #: src/screens/List/ListHiddenScreen.tsx:129
 msgid "List has been hidden"
-msgstr "清單已經隱藏咗"
+msgstr "清單經已隱藏"
 
 #: src/view/screens/ProfileList.tsx:170
 msgid "List Hidden"
@@ -3960,7 +3960,7 @@ msgstr "建立咗審核清單喇"
 
 #: src/view/com/modals/CreateOrEditList.tsx:163
 msgid "Moderation list updated"
-msgstr "審核清單更新咗喇"
+msgstr "審核清單經已更新"
 
 #: src/screens/Moderation/index.tsx:223
 msgid "Moderation lists"
@@ -4648,7 +4648,7 @@ msgstr "打開 {numItems} 個選項"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:62
 msgid "Opens a dialog to add a content warning to your post"
-msgstr "打開對話框去到你嘅帖文度加入內容警告"
+msgstr "打開對話框嚟喺你嘅帖文度加入內容警告"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:61
 msgid "Opens a dialog to choose who can reply to this thread"
@@ -4767,15 +4767,15 @@ msgstr "密碼"
 
 #: src/view/com/modals/ChangePassword.tsx:143
 msgid "Password Changed"
-msgstr "已變更密碼"
+msgstr "密碼經已變更"
 
 #: src/screens/Login/index.tsx:154
 msgid "Password updated"
-msgstr "密碼更新咗喇"
+msgstr "密碼經已更新"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:23
 msgid "Password updated!"
-msgstr "密碼更新咗喇！"
+msgstr "密碼經已更新！"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:43
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:140
@@ -5019,11 +5019,11 @@ msgstr "搵唔到帖文"
 
 #: src/state/queries/pinned-post.ts:59
 msgid "Post pinned"
-msgstr "帖文固定咗喇"
+msgstr "帖文經已固定"
 
 #: src/state/queries/pinned-post.ts:61
 msgid "Post unpinned"
-msgstr "已唔再固定帖文"
+msgstr "經已唔再固定帖文"
 
 #: src/components/TagMenu/index.tsx:268
 msgid "posts"
@@ -5048,7 +5048,7 @@ msgstr "潛在誤導性嘅連結"
 
 #: src/state/queries/notifications/settings.ts:44
 msgid "Preference saved"
-msgstr "偏好設定儲存咗喇"
+msgstr "偏好設定經已儲存"
 
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
@@ -5135,7 +5135,7 @@ msgstr "個人檔案"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:191
 #: src/view/com/modals/EditProfile.tsx:124
 msgid "Profile updated"
-msgstr "個人檔案更新咗喇"
+msgstr "個人檔案經已更新"
 
 #: src/screens/Onboarding/StepFinished.tsx:246
 msgid "Public"
@@ -5174,14 +5174,14 @@ msgstr "已重新連結引用帖文"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:302
 msgid "Quote post was successfully detached"
-msgstr "引用帖文已經成功拆開"
+msgstr "引用帖文經已成功拆開"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:177
 #: src/view/com/util/post-ctrls/RepostButton.tsx:199
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:91
 msgid "Quote posts disabled"
-msgstr "引用帖文已經停用"
+msgstr "引用帖文經已停用"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
@@ -5362,22 +5362,22 @@ msgstr "俾你剷咗"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:200
 #: src/view/com/modals/UserAddRemoveLists.tsx:170
 msgid "Removed from list"
-msgstr "喺清單入邊移除咗喇"
+msgstr "經已喺清單入邊移除"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:138
 msgid "Removed from my feeds"
-msgstr "喺我嘅動態源入邊移除咗喇"
+msgstr "經已喺我嘅動態源入邊移除"
 
 #: src/screens/List/ListHiddenScreen.tsx:94
 #: src/screens/List/ListHiddenScreen.tsx:171
 msgid "Removed from saved feeds"
-msgstr "喺儲存咗嘅動態源入邊移除咗喇"
+msgstr "經已喺儲存咗嘅動態源入邊移除"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:126
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileList.tsx:382
 msgid "Removed from your feeds"
-msgstr "喺你嘅動態源入邊移除咗喇"
+msgstr "經已喺你嘅動態源入邊移除"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
@@ -5394,11 +5394,11 @@ msgstr "回覆"
 
 #: src/components/WhoCanReply.tsx:69
 msgid "Replies disabled"
-msgstr "回覆已經停用"
+msgstr "回覆經已停用"
 
 #: src/components/WhoCanReply.tsx:215
 msgid "Replies to this post are disabled."
-msgstr "呢篇帖文嘅回覆已經停用。"
+msgstr "呢條帖文嘅回覆經已關閉。"
 
 #: src/view/com/composer/Composer.tsx:940
 msgctxt "action"
@@ -5455,11 +5455,11 @@ msgstr "覆你"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:333
 msgid "Reply visibility updated"
-msgstr "回覆可見度更新咗喇"
+msgstr "回覆可見度經已更新"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:332
 msgid "Reply was successfully hidden"
-msgstr "回覆成功隱藏咗喇"
+msgstr "回覆經已成功隱藏"
 
 #: src/components/dms/MessageMenu.tsx:132
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
@@ -6451,7 +6451,7 @@ msgstr "第 {0} 步（共 {1} 步）"
 
 #: src/screens/Settings/Settings.tsx:309
 msgid "Storage cleared, you need to restart the app now."
-msgstr "儲存空間已經清除，你而家需要重啓隻 App 令佢即刻生效。"
+msgstr "儲存資料經已清除，你而家需要重啓隻 App 令佢即刻生效。"
 
 #: src/Navigation.tsx:246
 #: src/screens/Settings/Settings.tsx:325
@@ -6578,7 +6578,7 @@ msgstr "攪掂晒 - 讚咗 10 條帖文！"
 
 #: src/components/ProgressGuide/List.tsx:64
 msgid "Teach our algorithm what you like"
-msgstr "敎下我地嘅演算法去估你鍾意啲乜"
+msgstr "敎下我哋嘅演算法去估你鍾意啲乜"
 
 #: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:114
@@ -6629,16 +6629,16 @@ msgstr "文字輸入欄位"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:96
 msgid "Thank you! Your email has been successfully verified."
-msgstr "多謝！你嘅電郵已經成功驗證。"
+msgstr "多謝！你嘅電郵經已成功驗證。"
 
 #: src/components/dms/ReportDialog.tsx:129
 #: src/components/ReportDialog/SubmitView.tsx:82
 msgid "Thank you. Your report has been sent."
-msgstr "多謝，你嘅上報已經寄出。"
+msgstr "多謝，你嘅上報經已寄出。"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
-msgstr "多謝，你已經成功驗證咗你嘅電郵地址。而家你可以閂咗呢個對話框去。"
+msgstr "多謝，你經已成功驗證咗你嘅電郵地址。而家你可以閂咗呢個對話框去。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:470
 msgid "That contains the following:"
@@ -6702,15 +6702,15 @@ msgstr "用 App 嘅話體驗會更加好。即刻下載 Bluesky ，我哋會喺�
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:67
 msgid "The feed has been replaced with Discover."
-msgstr "呢個動態源已經俾「Discover」取代。"
+msgstr "呢個動態源經已俾「Discover」取代。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:58
 msgid "The following labels were applied to your account."
-msgstr "以下標籤已經套用到你嘅帳號度。"
+msgstr "以下標籤經已套用到你嘅帳號度。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:59
 msgid "The following labels were applied to your content."
-msgstr "以下標籤已經套用到你嘅內容度。"
+msgstr "以下標籤經已套用到你嘅內容度。"
 
 #: src/screens/Onboarding/Layout.tsx:57
 msgid "The following steps will help customize your Bluesky experience."
@@ -6719,7 +6719,7 @@ msgstr "以下步驟會幫你自訂你嘅 Bluesky 體驗。"
 #: src/view/com/post-thread/PostThread.tsx:262
 #: src/view/com/post-thread/PostThread.tsx:274
 msgid "The post may have been deleted."
-msgstr "呢條帖文可能已經刪咗。"
+msgstr "呢條帖文可能經已刪咗。"
 
 #: src/view/screens/PrivacyPolicy.tsx:35
 msgid "The Privacy Policy has been moved to <0/>"
@@ -6859,7 +6859,7 @@ msgstr "呢啲設定淨係俾「Following」動態源用。"
 
 #: src/components/moderation/ScreenHider.tsx:111
 msgid "This {screenDescription} has been flagged:"
-msgstr "{screenDescription} 已經被標記："
+msgstr "{screenDescription} 經已被標記："
 
 #: src/components/moderation/ScreenHider.tsx:106
 msgid "This account has requested that users sign in to view their profile."
@@ -6867,7 +6867,7 @@ msgstr "呢個帳號要求用戶登入之後先至畀睇佢嘅個人檔案。"
 
 #: src/components/dms/BlockedByListDialog.tsx:34
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
-msgstr "呢個帳號已經俾你一個抑或多個審核清單封鎖。要解除封鎖嘅話，請檢查清單兼且從中移除呢個用戶。"
+msgstr "呢個帳號經已俾你一個抑或多個審核清單封鎖。要解除封鎖嘅話，請檢查清單兼且從中移除呢個用戶。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:246
 msgid "This appeal will be sent to <0>{sourceName}</0>."
@@ -6879,11 +6879,11 @@ msgstr "呢份上訴會提交到 Bluesky 嘅審核服務度。"
 
 #: src/screens/Messages/components/MessageListError.tsx:18
 msgid "This chat was disconnected"
-msgstr "呢度嘅傾偈中斷咗連線"
+msgstr "傾偈經已中斷連線"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
-msgstr "呢個內容已經俾審核服務提供者隱藏。"
+msgstr "呢個內容經已俾審核服務提供者隱藏。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:24
 msgid "This content has received a general warning from moderators."
@@ -6982,7 +6982,7 @@ msgstr "呢條帖文話係話喺 <0>{0}</0> 發佈嘅，但係最先出現喺 Bl
 
 #: src/view/com/post-thread/PostThreadItem.tsx:152
 msgid "This post has been deleted."
-msgstr "呢條帖文已經刪咗。"
+msgstr "呢條帖文經已刪咗。"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:359
@@ -7032,15 +7032,15 @@ msgstr "呢個用戶淨係畀登入咗嘅用戶睇佢發嘅內容。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:57
 msgid "This user is included in the <0>{0}</0> list which you have blocked."
-msgstr "呢個用戶喺你已封鎖嘅 <0>{0}</0> 清單入邊。"
+msgstr "呢個用戶喺你封鎖咗嘅 <0>{0}</0> 清單入邊。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:89
 msgid "This user is included in the <0>{0}</0> list which you have muted."
-msgstr "呢個用戶喺你已靜音嘅 <0>{0}</0> 清單入邊。"
+msgstr "呢個用戶喺你靜音咗嘅 <0>{0}</0> 清單入邊。"
 
 #: src/components/NewskieDialog.tsx:65
 msgid "This user is new here. Press for more info about when they joined."
-msgstr "呢個用戶啱嚟冇耐，撳呢度睇佢幾時入嚟嘅具體時間。"
+msgstr "呢個用戶啱嚟冇耐，撳呢度睇佢具體幾時入嚟嘅時間。"
 
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "This user isn't following anyone."
@@ -7450,7 +7450,7 @@ msgstr "用戶："
 #: src/components/moderation/ModerationDetailsDialog.tsx:69
 #: src/lib/moderation/useModerationCauseDescription.ts:61
 msgid "User Blocked"
-msgstr "用戶已被封鎖"
+msgstr "該用戶經已封鎖"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:53
 msgid "User Blocked by \"{0}\""
@@ -7482,11 +7482,11 @@ msgstr "你嘅用戶清單"
 
 #: src/view/com/modals/CreateOrEditList.tsx:176
 msgid "User list created"
-msgstr "用戶清單建立咗喇"
+msgstr "用戶清單經已建立"
 
 #: src/view/com/modals/CreateOrEditList.tsx:162
 msgid "User list updated"
-msgstr "用戶清單更新咗喇"
+msgstr "用戶清單經已更新"
 
 #: src/screens/Login/LoginForm.tsx:185
 msgid "Username or email address"
@@ -7580,7 +7580,7 @@ msgstr "影片設定"
 
 #: src/view/com/composer/Composer.tsx:1648
 msgid "Video uploaded"
-msgstr "影片上載咗喇"
+msgstr "影片上載成功"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:83
 msgid "Video: {0}"
@@ -7729,7 +7729,7 @@ msgstr "我哋希望你玩得開心。唔好忘記，Bluesky 係："
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
-msgstr "你已經睇晒你跟緊啲人嘅帖文。呢個係 <0/> 嘅最新消息。"
+msgstr "你經已睇晒你跟緊啲人嘅帖文。呢個係 <0/> 嘅最新消息。"
 
 #: src/view/com/composer/state/video.ts:417
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
@@ -7778,7 +7778,7 @@ msgstr "對唔住，你嘅搵嘢任務未攪得掂。唔該等多幾分鐘試下
 
 #: src/view/com/composer/Composer.tsx:410
 msgid "We're sorry! The post you are replying to has been deleted."
-msgstr "對唔住！你覆緊嘅帖文已經俾人刪咗。"
+msgstr "對唔住！你覆緊嘅帖文經已俾人刪咗。"
 
 #: src/components/Lists.tsx:188
 #: src/view/screens/NotFound.tsx:50
@@ -7787,7 +7787,7 @@ msgstr "對唔住！我哋搵唔到你搵緊嘅頁面。"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:346
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
-msgstr "對唔住！你淨係可以訂閱 20 個標籤者，而你已經達到上限。"
+msgstr "對唔住！你淨係可以訂閱 20 個標籤者，而你經已達到上限。"
 
 #: src/screens/Deactivated.tsx:124
 msgid "Welcome back!"
@@ -7926,7 +7926,7 @@ msgstr "你"
 
 #: src/screens/SignupQueued.tsx:142
 msgid "You are in line."
-msgstr "你而家已經喺度等緊。"
+msgstr "你而家喺等待名單度。"
 
 #: src/view/com/composer/state/video.ts:410
 msgid "You are not allowed to upload videos."
@@ -7986,17 +7986,17 @@ msgstr "你仲未有任何儲存咗嘅動態源。"
 
 #: src/view/com/post-thread/PostThread.tsx:268
 msgid "You have blocked the author or you have been blocked by the author."
-msgstr "你已經封鎖咗個發佈者，抑或你俾個發佈者封鎖咗。"
+msgstr "你經已封鎖咗個發佈者，抑或你俾個發佈者封鎖咗。"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:58
 msgid "You have blocked this user"
-msgstr "你已經封鎖咗呢個用戶"
+msgstr "你經已封鎖呢個用戶"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:71
 #: src/lib/moderation/useModerationCauseDescription.ts:55
 #: src/lib/moderation/useModerationCauseDescription.ts:63
 msgid "You have blocked this user. You cannot view their content."
-msgstr "你已經封鎖咗呢個用戶，你冇得睇佢哋嘅內容。"
+msgstr "你經已封鎖咗呢個用戶，你冇得睇佢哋嘅內容。"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:48
 #: src/screens/Login/SetNewPasswordForm.tsx:85
@@ -8007,20 +8007,20 @@ msgstr "你輸入嘅驗證碼唔啱。格式應該係 XXXXX-XXXXX。"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:114
 msgid "You have hidden this post"
-msgstr "你已經隱藏咗呢條帖文"
+msgstr "你經已隱藏咗呢條帖文"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:109
 msgid "You have hidden this post."
-msgstr "你已經隱藏咗呢條帖文。"
+msgstr "你經已隱藏咗呢條帖文。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:102
 #: src/lib/moderation/useModerationCauseDescription.ts:97
 msgid "You have muted this account."
-msgstr "你已經靜音咗呢個帳號。"
+msgstr "你經已靜音咗呢個帳號。"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:91
 msgid "You have muted this user"
-msgstr "你已經將呢個用戶靜音"
+msgstr "你經已將呢個用戶靜音"
 
 #: src/screens/Messages/ChatList.tsx:190
 msgid "You have no conversations yet. Start one!"
@@ -8045,11 +8045,11 @@ msgstr "你仲未有靜音過任何帳號。若然想靜音帳號，去到佢個
 
 #: src/components/Lists.tsx:52
 msgid "You have reached the end"
-msgstr "你睇晒所有嘢喇"
+msgstr "你經已睇晒所有嘢喇"
 
 #: src/lib/media/video/upload.shared.ts:56
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
-msgstr "你暫時已經達到上載影片嘅上限，唔該遲啲試多一次。"
+msgstr "你暫時經已達到上載影片嘅上限，唔該遲啲試多一次。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:241
 msgid "You haven't created a starter pack yet!"
@@ -8180,19 +8180,19 @@ msgstr "你揀咗喺呢條帖文入邊隱藏字詞抑或標籤。"
 
 #: src/state/shell/progress-guide.tsx:234
 msgid "You've found some people to follow"
-msgstr "你已經搵到你要跟邊啲人"
+msgstr "你經已搵到你要跟邊啲人"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
-msgstr "你已經睇晒你嘅動態源喇！去搵更多人嚟跟住佢哋啦。"
+msgstr "你經已睇晒你嘅動態源喇！去搵更多人嚟跟住佢哋啦。"
 
 #: src/view/com/composer/state/video.ts:421
 msgid "You've reached your daily limit for video uploads (too many bytes)"
-msgstr "你已經達到每日上載影片嘅上限（總計影片大細過大）"
+msgstr "你經已達到每日上載影片嘅上限（總計影片大細過大）"
 
 #: src/view/com/composer/state/video.ts:425
 msgid "You've reached your daily limit for video uploads (too many videos)"
-msgstr "你已經達到每日上載影片嘅上限（影片數量過多）"
+msgstr "你經已達到每日上載影片嘅上限（影片數量過多）"
 
 #: src/screens/Signup/index.tsx:140
 msgid "Your account"
@@ -8200,7 +8200,7 @@ msgstr "你嘅帳號"
 
 #: src/view/com/modals/DeleteAccount.tsx:84
 msgid "Your account has been deleted"
-msgstr "你個帳號已經刪咗"
+msgstr "你個帳號經已刪咗"
 
 #: src/view/com/composer/state/video.ts:429
 msgid "Your account is not yet old enough to upload videos. Please try again later."
@@ -8220,7 +8220,7 @@ msgstr "你個瀏覽器唔支援呢種影片格式，請試下用唔同嘅瀏覽
 
 #: src/screens/Messages/components/ChatDisabled.tsx:25
 msgid "Your chats have been disabled"
-msgstr "你嘅傾偈俾人停用咗"
+msgstr "你傾偈功能俾人停用咗"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "Your choice will be saved, but can be changed later in settings."
@@ -8267,15 +8267,15 @@ msgstr "你設定咗嘅靜音字"
 
 #: src/view/com/modals/ChangePassword.tsx:158
 msgid "Your password has been changed successfully!"
-msgstr "你個密碼已經改好咗喇！"
+msgstr "你嘅密碼經已改好！"
 
 #: src/view/com/composer/Composer.tsx:470
 msgid "Your post has been published"
-msgstr "你嘅帖文發佈咗喇"
+msgstr "你嘅帖文經已發佈"
 
 #: src/view/com/composer/Composer.tsx:467
 msgid "Your posts have been published"
-msgstr "你嘅帖文發佈咗喇"
+msgstr "你嘅帖文經已發佈"
 
 #: src/screens/Onboarding/StepFinished.tsx:250
 msgid "Your posts, likes, and blocks are public. Mutes are private."
@@ -8287,7 +8287,7 @@ msgstr "你嘅個人檔案、帖文、動態源同埋清單唔會再畀其他 Bl
 
 #: src/view/com/composer/Composer.tsx:469
 msgid "Your reply has been published"
-msgstr "你嘅回覆已經發佈咗喇"
+msgstr "你嘅回覆經已發佈"
 
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
