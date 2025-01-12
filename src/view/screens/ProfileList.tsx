@@ -754,7 +754,7 @@ function Header({
           control={subscribeBlockPromptControl}
           title={_(msg`Block these accounts?`)}
           description={_(
-            msg`Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
+            msg`Blocked accounts will be prevented from seeing your content and they cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content. The accounts that you have blocked are publicly available information. Bluesky does not provide a way for others to view in the app who you have blocked, however third-party services may do so. Learn more.`,
           )}
           onConfirm={onSubscribeBlock}
           confirmButtonCta={_(msg`Block list`)}
