@@ -5,18 +5,20 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
+import {isAndroidWeb} from '#/lib/browser'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {NavigationProp} from '#/lib/routes/types'
 import {colors} from '#/lib/styles'
+import {isIPhoneWeb} from '#/platform/detection'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useComposerKeyboardShortcut} from '#/state/shell/composer/useComposerKeyboardShortcut'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Lightbox} from '#/view/com/lightbox/Lightbox'
 import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {atoms as a, select, useTheme} from '#/alf'
+import {atoms as a, select, useTheme, web} from '#/alf'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {Outlet as PortalOutlet} from '#/components/Portal'
@@ -92,8 +94,18 @@ function ShellInner() {
 
 export const Shell: React.FC = function ShellImpl() {
   const pageBg = useColorSchemeStyle(styles.bgLight, styles.bgDark)
+  const isMessagesRoute =
+    isAndroidWeb || isIPhoneWeb
+      ? window?.location?.pathname.includes('/messages/')
+      : false
+
   return (
-    <View style={[a.util_screen_outer, pageBg]}>
+    <View
+      style={[
+        a.util_screen_outer,
+        pageBg,
+        web(isMessagesRoute && a.util_screen_message_outer),
+      ]}>
       <RoutesContainer>
         <ShellInner />
       </RoutesContainer>

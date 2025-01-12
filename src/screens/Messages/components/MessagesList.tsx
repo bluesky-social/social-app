@@ -12,6 +12,7 @@ import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyEmbedRecord, AppBskyRichtextFacet, RichText} from '@atproto/api'
 
+import {isAndroidWeb} from '#/lib/browser'
 import {clamp} from '#/lib/numbers'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
@@ -22,6 +23,7 @@ import {
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {isWeb} from '#/platform/detection'
+import {isIPhoneWeb} from '#/platform/detection'
 import {isConvoActive, useConvoActive} from '#/state/messages/convo'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
 import {useGetPost} from '#/state/queries/post'
@@ -34,6 +36,7 @@ import {List, ListMethods} from '#/view/com/util/List'
 import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
+import {atoms as a, web} from '#/alf'
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
@@ -405,7 +408,10 @@ export function MessagesList({
           keyExtractor={keyExtractor}
           disableFullWindowScroll={true}
           disableVirtualization={true}
-          style={animatedListStyle}
+          style={[
+            animatedListStyle,
+            web((isIPhoneWeb || isAndroidWeb) && a.util_screen_message_outer),
+          ]}
           // The extra two items account for the header and the footer components
           initialNumToRender={isNative ? 32 : 62}
           maxToRenderPerBatch={isWeb ? 32 : 62}
