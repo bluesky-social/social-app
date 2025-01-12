@@ -167,36 +167,36 @@ msgstr "{0} avatarı"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:67
 msgid "{0}'s favorite feeds and people - join me!"
-msgstr ""
+msgstr "{0} sevimli axınları və şəxsləri - mənimlə birlikdə!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:46
 msgid "{0}'s starter pack"
-msgstr ""
+msgstr "{0} başlatma paketi"
 
 #. How many days have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:158
 msgid "{0}d"
-msgstr ""
+msgstr "{0}g"
 
 #. How many hours have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:148
 msgid "{0}h"
-msgstr ""
+msgstr "{0}s"
 
 #. How many minutes have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:138
 msgid "{0}m"
-msgstr ""
+msgstr "{0}d"
 
 #. How many months have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:169
 msgid "{0}mo"
-msgstr ""
+msgstr "{0}ay"
 
 #. How many seconds have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:128
 msgid "{0}s"
-msgstr ""
+msgstr "{0}san"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
 #~ msgid "{badge} unread items"
@@ -208,7 +208,7 @@ msgstr ""
 
 #: src/view/shell/desktop/LeftNav.tsx:189
 msgid "{count} unread items"
-msgstr ""
+msgstr "{count} oxunmayan element"
 
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:178
