@@ -1,17 +1,28 @@
 import React, {memo, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
+  AppBskyActorDefs,
   ChatBskyConvoDefs,
   ComAtprotoModerationCreateReport,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {StackActions, useNavigation} from '@react-navigation/native'
 import {useMutation} from '@tanstack/react-query'
 
 import {ReportOption} from '#/lib/moderation/useReportOptions'
+import {NavigationProp} from '#/lib/routes/types'
+import {isNative} from '#/platform/detection'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
+import {
+  useProfileBlockMutationQueue,
+  useProfileQuery,
+} from '#/state/queries/profile'
 import {useAgent} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
+import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, platform, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -34,16 +45,18 @@ type ReportDialogParams = {
 let ReportDialog = ({
   control,
   params,
+  currentScreen,
 }: {
   control: Dialog.DialogControlProps
   params: ReportDialogParams
+  currentScreen: 'list' | 'conversation'
 }): React.ReactNode => {
   const {_} = useLingui()
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
       <Dialog.ScrollableInner label={_(msg`Report this message`)}>
-        <DialogInner params={params} />
+        <DialogInner params={params} currentScreen={currentScreen} />
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
@@ -52,18 +65,38 @@ let ReportDialog = ({
 ReportDialog = memo(ReportDialog)
 export {ReportDialog}
 
-function DialogInner({params}: {params: ReportDialogParams}) {
+function DialogInner({
+  params,
+  currentScreen,
+}: {
+  params: ReportDialogParams
+  currentScreen: 'list' | 'conversation'
+}) {
+  const {data: profile, isError} = useProfileQuery({
+    did: params.message.sender.did,
+  })
   const [reportOption, setReportOption] = useState<ReportOption | null>(null)
   const [done, setDone] = useState(false)
+  const control = Dialog.useDialogContext()
 
   return done ? (
-    <DoneStep />
+    profile ? (
+      <DoneStep
+        convoId={params.convoId}
+        currentScreen={currentScreen}
+        profile={profile}
+      />
+    ) : (
+      <View style={[a.w_full, a.py_5xl, a.align_center]}>
+        <Loader />
+      </View>
+    )
   ) : reportOption ? (
     <SubmitStep
       params={params}
       reportOption={reportOption}
       goBack={() => setReportOption(null)}
-      onComplete={() => setDone(true)}
+      onComplete={() => (isError ? control.close() : setDone(true))}
     />
   ) : (
     <ReasonStep params={params} setReportOption={setReportOption} />
@@ -183,11 +216,11 @@ function SubmitStep({
         <View style={[a.relative, a.w_full]}>
           <Dialog.Input
             multiline
-            value={details}
+            defaultValue={details}
             onChangeText={setDetails}
             label="Text field"
             style={{paddingRight: 60}}
-            numberOfLines={6}
+            numberOfLines={5}
           />
 
           <View
@@ -240,12 +273,48 @@ function SubmitStep({
   )
 }
 
-function DoneStep() {
+function DoneStep({
+  convoId,
+  currentScreen,
+  profile,
+}: {
+  convoId: string
+  currentScreen: 'list' | 'conversation'
+  profile: AppBskyActorDefs.ProfileViewBasic
+}) {
   const {_} = useLingui()
+  const navigation = useNavigation<NavigationProp>()
   const control = Dialog.useDialogContext()
   const {gtMobile} = useBreakpoints()
   const t = useTheme()
   const [actions, setActions] = useState<string[]>(['block', 'leave'])
+  const shadow = useProfileShadow(profile)
+  const [queueBlock] = useProfileBlockMutationQueue(shadow)
+
+  const {mutate: leaveConvo, isPending: isLeaving} = useLeaveConvo(convoId, {
+    onSuccess: () => {
+      if (currentScreen === 'conversation') {
+        navigation.dispatch(
+          StackActions.replace('Messages', isNative ? {animation: 'pop'} : {}),
+        )
+      }
+    },
+    onError: () => {
+      Toast.show(_(msg`Could not leave chat`), 'xmark')
+    },
+  })
+
+  const onPressPrimaryAction = () => {
+    control.close(() => {
+      if (actions.includes('block')) {
+        queueBlock()
+      }
+
+      if (actions.includes('leave')) {
+        leaveConvo()
+      }
+    })
+  }
 
   let btnText = _(msg`Done`)
   if (actions.includes('leave') && actions.includes('block')) {
@@ -269,7 +338,8 @@ function DoneStep() {
       <Toggle.Group
         label={_(msg`Block and/or delete this conversation`)}
         values={actions}
-        onChange={setActions}>
+        onChange={setActions}
+        disabled={isLeaving}>
         <View style={[a.gap_md]}>
           <Toggle.Item name="block" label={_(msg`Block user`)}>
             <Toggle.Checkbox />
@@ -289,10 +359,11 @@ function DoneStep() {
       <View style={[a.gap_md, web([a.flex_row_reverse])]}>
         <Button
           label={btnText}
-          onPress={() => control.close()}
+          onPress={onPressPrimaryAction}
           size="large"
           variant="solid"
-          color={actions.length > 0 ? 'negative' : 'primary'}>
+          color={actions.length > 0 ? 'negative' : 'primary'}
+          disabled={isLeaving}>
           <ButtonText>{btnText}</ButtonText>
         </Button>
         <Button
