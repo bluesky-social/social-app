@@ -13,15 +13,16 @@ import {ReportOption} from '#/lib/moderation/useReportOptions'
 import {useAgent} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {atoms as a, platform, useBreakpoints, useTheme, web} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
-import {Button, ButtonIcon, ButtonText} from '../Button'
-import {Divider} from '../Divider'
-import {ChevronLeft_Stroke2_Corner0_Rounded as Chevron} from '../icons/Chevron'
-import {Loader} from '../Loader'
-import {SelectReportOptionView} from '../ReportDialog/SelectReportOptionView'
-import {RichText} from '../RichText'
-import {Text} from '../Typography'
+import {ChevronLeft_Stroke2_Corner0_Rounded as Chevron} from '#/components/icons/Chevron'
+import {PaperPlane_Stroke2_Corner0_Rounded as SendIcon} from '#/components/icons/PaperPlane'
+import {Loader} from '#/components/Loader'
+import {SelectReportOptionView} from '#/components/ReportDialog/SelectReportOptionView'
+import {RichText} from '#/components/RichText'
+import {Text} from '#/components/Typography'
 import {MessageItemMetadata} from './MessageItem'
 
 type ReportDialogParams = {
@@ -232,7 +233,7 @@ function SubmitStep({
           <ButtonText>
             <Trans>Send report</Trans>
           </ButtonText>
-          {submitting && <ButtonIcon icon={Loader} />}
+          <ButtonIcon icon={submitting ? Loader : SendIcon} />
         </Button>
       </View>
     </View>
