@@ -114,7 +114,7 @@ function ProfileCard() {
                   style={[
                     a.w_full,
                     a.transition_color,
-                    active && t.atoms.bg_contrast_25,
+                    active ? t.atoms.bg_contrast_25 : a.transition_delay_50ms,
                     a.rounded_full,
                     a.justify_between,
                     a.align_center,
@@ -127,9 +127,7 @@ function ProfileCard() {
                       !PlatformInfo.getIsReducedMotionEnabled() && [
                         a.transition_transform,
                         {transitionDuration: '250ms'},
-                        !active && {
-                          transitionDelay: '50ms',
-                        },
+                        !active && a.transition_delay_50ms,
                       ],
                       a.relative,
                       a.z_10,
@@ -152,6 +150,7 @@ function ProfileCard() {
                         style={[
                           a.flex_1,
                           a.transition_opacity,
+                          !active && a.transition_delay_50ms,
                           {
                             marginLeft: tokens.space.xl * -1,
                             opacity: active ? 1 : 0,
