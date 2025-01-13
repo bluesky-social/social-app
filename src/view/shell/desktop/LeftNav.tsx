@@ -127,8 +127,8 @@ function ProfileCard() {
                       !PlatformInfo.getIsReducedMotionEnabled() && [
                         a.transition_transform,
                         {transitionDuration: '250ms'},
-                        state.direction === 'closing' && {
-                          transitionDelay: '100ms',
+                        !active && {
+                          transitionDelay: '50ms',
                         },
                       ],
                       a.relative,

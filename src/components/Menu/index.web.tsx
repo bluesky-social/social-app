@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -119,23 +119,6 @@ export function Trigger({children, label, role = 'button'}: TriggerProps) {
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
 
-  const [prevControlIsOpen, setPrevControlIsOpen] = useState(control.isOpen)
-  const [direction, setDirection] = useState<'opening' | 'closing' | null>(null)
-
-  if (prevControlIsOpen !== control.isOpen) {
-    setPrevControlIsOpen(control.isOpen)
-    setDirection(control.isOpen ? 'opening' : 'closing')
-  }
-
-  useEffect(() => {
-    if (direction !== null) {
-      const timeout = setTimeout(() => {
-        setDirection(null)
-      }, 100)
-      return () => clearTimeout(timeout)
-    }
-  }, [direction])
-
   return (
     <DropdownMenu.Trigger asChild>
       <RadixTriggerPassThrough>
@@ -147,7 +130,6 @@ export function Trigger({children, label, role = 'button'}: TriggerProps) {
               hovered,
               focused,
               pressed: false,
-              direction,
             },
             props: {
               ...props,

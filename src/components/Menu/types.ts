@@ -50,7 +50,6 @@ export type TriggerChildProps =
         hovered: false
         focused: boolean
         pressed: boolean
-        direction: 'opening' | 'closing' | null
       }
       /**
        * We don't necessarily know what these will be spread on to, so we
@@ -79,7 +78,6 @@ export type TriggerChildProps =
          * Native only, `false` on web
          */
         pressed: false
-        direction: 'opening' | 'closing' | null
       }
       props: RadixPassThroughTriggerProps & {
         onPress: () => void

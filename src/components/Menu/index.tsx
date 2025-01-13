@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -56,30 +56,10 @@ export function Trigger({children, label, role = 'button'}: TriggerProps) {
     onOut: onPressOut,
   } = useInteractionState()
 
-  const [prevControlIsOpen, setPrevControlIsOpen] = useState(
-    context.control.isOpen,
-  )
-  const [direction, setDirection] = useState<'opening' | 'closing' | null>(null)
-
-  if (prevControlIsOpen !== context.control.isOpen) {
-    setPrevControlIsOpen(context.control.isOpen)
-    setDirection(context.control.isOpen ? 'opening' : 'closing')
-  }
-
-  useEffect(() => {
-    if (direction !== null) {
-      const timeout = setTimeout(() => {
-        setDirection(null)
-      }, 100)
-      return () => clearTimeout(timeout)
-    }
-  }, [direction])
-
   return children({
     isNative: true,
     control: context.control,
     state: {
-      direction,
       hovered: false,
       focused,
       pressed,
