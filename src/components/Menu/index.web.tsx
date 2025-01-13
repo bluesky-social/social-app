@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -119,10 +119,22 @@ export function Trigger({children, label, role = 'button'}: TriggerProps) {
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
 
-  const prevControlIsOpen = React.useRef(control.isOpen)
-  const open = prevControlIsOpen.current || control.isOpen
-  const activated = Boolean(hovered || focused || open)
-  prevControlIsOpen.current = control.isOpen
+  const [prevControlIsOpen, setPrevControlIsOpen] = useState(control.isOpen)
+  const [direction, setDirection] = useState<'opening' | 'closing' | null>(null)
+
+  if (prevControlIsOpen !== control.isOpen) {
+    setPrevControlIsOpen(control.isOpen)
+    setDirection(control.isOpen ? 'opening' : 'closing')
+  }
+
+  useEffect(() => {
+    if (direction !== null) {
+      const timeout = setTimeout(() => {
+        setDirection(null)
+      }, 100)
+      return () => clearTimeout(timeout)
+    }
+  }, [direction])
 
   return (
     <DropdownMenu.Trigger asChild>
@@ -132,10 +144,10 @@ export function Trigger({children, label, role = 'button'}: TriggerProps) {
             isNative: false,
             control,
             state: {
-              activated,
               hovered,
               focused,
               pressed: false,
+              direction,
             },
             props: {
               ...props,

@@ -105,8 +105,8 @@ function ProfileCard() {
       {!isLoading && profile ? (
         <Menu.Root>
           <Menu.Trigger label={_(msg`Switch accounts`)}>
-            {({props, state}) => {
-              const active = state.activated
+            {({props, state, control}) => {
+              const active = state.hovered || state.focused || control.isOpen
               return (
                 <Button
                   label={props.accessibilityLabel}
@@ -127,6 +127,9 @@ function ProfileCard() {
                       !PlatformInfo.getIsReducedMotionEnabled() && [
                         a.transition_transform,
                         {transitionDuration: '250ms'},
+                        state.direction === 'closing' && {
+                          transitionDelay: '100ms',
+                        },
                       ],
                       a.relative,
                       a.z_10,
