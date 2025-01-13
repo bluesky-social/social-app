@@ -10,6 +10,7 @@ import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
 import {ReportOption} from '#/lib/moderation/useReportOptions'
+import {useAgent} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
@@ -103,6 +104,7 @@ function SubmitStep({
   const {gtMobile} = useBreakpoints()
   const t = useTheme()
   const [details, setDetails] = useState('')
+  const agent = useAgent()
 
   const {
     mutate: submit,
