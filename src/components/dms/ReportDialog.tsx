@@ -10,11 +10,10 @@ import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
 import {ReportOption} from '#/lib/moderation/useReportOptions'
-import {useAgent} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
+import * as Toggle from '#/components/forms/Toggle'
 import {Button, ButtonIcon, ButtonText} from '../Button'
 import {Divider} from '../Divider'
 import {ChevronLeft_Stroke2_Corner0_Rounded as Chevron} from '../icons/Chevron'
@@ -53,12 +52,16 @@ export {ReportDialog}
 
 function DialogInner({params}: {params: ReportDialogParams}) {
   const [reportOption, setReportOption] = useState<ReportOption | null>(null)
+  const [done, setDone] = useState(false)
 
-  return reportOption ? (
+  return done ? (
+    <DoneStep />
+  ) : reportOption ? (
     <SubmitStep
       params={params}
       reportOption={reportOption}
       goBack={() => setReportOption(null)}
+      onComplete={() => setDone(true)}
     />
   ) : (
     <ReasonStep params={params} setReportOption={setReportOption} />
@@ -89,17 +92,17 @@ function SubmitStep({
   params,
   reportOption,
   goBack,
+  onComplete,
 }: {
   params: ReportDialogParams
   reportOption: ReportOption
   goBack: () => void
+  onComplete: () => void
 }) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const t = useTheme()
   const [details, setDetails] = useState('')
-  const control = Dialog.useDialogContext()
-  const agent = useAgent()
 
   const {
     mutate: submit,
@@ -124,11 +127,7 @@ function SubmitStep({
         await agent.createModerationReport(report)
       }
     },
-    onSuccess: () => {
-      control.close(() => {
-        Toast.show(_(msg`Thank you. Your report has been sent.`))
-      })
-    },
+    onSuccess: onComplete,
   })
 
   const copy = useMemo(() => {
@@ -234,6 +233,64 @@ function SubmitStep({
           {submitting && <ButtonIcon icon={Loader} />}
         </Button>
       </View>
+    </View>
+  )
+}
+
+function DoneStep() {
+  const {_} = useLingui()
+  const control = Dialog.useDialogContext()
+  const {gtMobile} = useBreakpoints()
+  const t = useTheme()
+  const [actions, setActions] = useState<string[]>([])
+
+  let btnText = _(msg`Done`)
+  if (actions.includes('leave') && actions.includes('block')) {
+    btnText = _(msg`Block & delete`)
+  } else if (actions.includes('leave')) {
+    btnText = _(msg`Delete`)
+  } else if (actions.includes('block')) {
+    btnText = _(msg`Block`)
+  }
+
+  return (
+    <View style={a.gap_lg}>
+      <View style={[a.justify_center, gtMobile ? a.gap_sm : a.gap_xs]}>
+        <Text style={[a.text_2xl, a.font_bold]}>
+          <Trans>Report submitted</Trans>
+        </Text>
+        <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+          <Trans>Our moderation team has recieved your report.</Trans>
+        </Text>
+      </View>
+      <Toggle.Group
+        label={_(msg`Block and/or delete this conversation`)}
+        values={actions}
+        onChange={setActions}>
+        <View style={[a.gap_md]}>
+          <Toggle.Item name="block" label={_(msg`Block user`)}>
+            <Toggle.Checkbox />
+            <Toggle.LabelText style={[a.text_md]}>
+              <Trans>Block user</Trans>
+            </Toggle.LabelText>
+          </Toggle.Item>
+          <Toggle.Item name="leave" label={_(msg`Delete coversation`)}>
+            <Toggle.Checkbox />
+            <Toggle.LabelText style={[a.text_md]}>
+              <Trans>Delete conversation</Trans>
+            </Toggle.LabelText>
+          </Toggle.Item>
+        </View>
+      </Toggle.Group>
+
+      <Button
+        label={btnText}
+        onPress={() => control.close()}
+        size="large"
+        variant="solid"
+        color={actions.length > 0 ? 'negative' : 'primary'}>
+        <ButtonText>{btnText}</ButtonText>
+      </Button>
     </View>
   )
 }
