@@ -12,7 +12,7 @@ import {useMutation} from '@tanstack/react-query'
 import {ReportOption} from '#/lib/moderation/useReportOptions'
 import {useAgent} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, platform, useBreakpoints, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
 import {Button, ButtonIcon, ButtonText} from '../Button'
@@ -256,7 +256,7 @@ function DoneStep() {
   }
 
   return (
-    <View style={a.gap_lg}>
+    <View style={a.gap_2xl}>
       <View style={[a.justify_center, gtMobile ? a.gap_sm : a.gap_xs]}>
         <Text style={[a.text_2xl, a.font_bold]}>
           <Trans>Report submitted</Trans>
@@ -285,14 +285,29 @@ function DoneStep() {
         </View>
       </Toggle.Group>
 
-      <Button
-        label={btnText}
-        onPress={() => control.close()}
-        size="large"
-        variant="solid"
-        color={actions.length > 0 ? 'negative' : 'primary'}>
-        <ButtonText>{btnText}</ButtonText>
-      </Button>
+      <View style={[a.gap_md, web([a.flex_row_reverse])]}>
+        <Button
+          label={btnText}
+          onPress={() => control.close()}
+          size="large"
+          variant="solid"
+          color={actions.length > 0 ? 'negative' : 'primary'}>
+          <ButtonText>{btnText}</ButtonText>
+        </Button>
+        <Button
+          label={_(msg`Close`)}
+          onPress={() => control.close()}
+          size={platform({native: 'small', web: 'large'})}
+          variant={platform({
+            native: 'ghost',
+            web: 'solid',
+          })}
+          color="secondary">
+          <ButtonText>
+            <Trans>Close</Trans>
+          </ButtonText>
+        </Button>
+      </View>
     </View>
   )
 }
