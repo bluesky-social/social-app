@@ -244,15 +244,15 @@ function DoneStep() {
   const control = Dialog.useDialogContext()
   const {gtMobile} = useBreakpoints()
   const t = useTheme()
-  const [actions, setActions] = useState<string[]>([])
+  const [actions, setActions] = useState<string[]>(['block', 'leave'])
 
   let btnText = _(msg`Done`)
   if (actions.includes('leave') && actions.includes('block')) {
     btnText = _(msg`Block & delete`)
   } else if (actions.includes('leave')) {
-    btnText = _(msg`Delete`)
+    btnText = _(msg`Delete conversation`)
   } else if (actions.includes('block')) {
-    btnText = _(msg`Block`)
+    btnText = _(msg`Block user`)
   }
 
   return (
