@@ -291,8 +291,8 @@ function DoneStep({
   const shadow = useProfileShadow(profile)
   const [queueBlock] = useProfileBlockMutationQueue(shadow)
 
-  const {mutate: leaveConvo, isPending: isLeaving} = useLeaveConvo(convoId, {
-    onSuccess: () => {
+  const {mutate: leaveConvo} = useLeaveConvo(convoId, {
+    onMutate: () => {
       if (currentScreen === 'conversation') {
         navigation.dispatch(
           StackActions.replace('Messages', isNative ? {animation: 'pop'} : {}),
@@ -309,7 +309,6 @@ function DoneStep({
       if (actions.includes('block')) {
         queueBlock()
       }
-
       if (actions.includes('leave')) {
         leaveConvo()
       }
@@ -338,8 +337,7 @@ function DoneStep({
       <Toggle.Group
         label={_(msg`Block and/or delete this conversation`)}
         values={actions}
-        onChange={setActions}
-        disabled={isLeaving}>
+        onChange={setActions}>
         <View style={[a.gap_md]}>
           <Toggle.Item name="block" label={_(msg`Block user`)}>
             <Toggle.Checkbox />
@@ -362,8 +360,7 @@ function DoneStep({
           onPress={onPressPrimaryAction}
           size="large"
           variant="solid"
-          color={actions.length > 0 ? 'negative' : 'primary'}
-          disabled={isLeaving}>
+          color={actions.length > 0 ? 'negative' : 'primary'}>
           <ButtonText>{btnText}</ButtonText>
         </Button>
         <Button

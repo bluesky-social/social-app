@@ -10,8 +10,10 @@ export function useLeaveConvo(
   convoId: string | undefined,
   {
     onSuccess,
+    onMutate,
     onError,
   }: {
+    onMutate?: () => void
     onSuccess?: (data: ChatBskyConvoLeaveConvo.OutputSchema) => void
     onError?: (error: Error) => void
   },
@@ -51,6 +53,7 @@ export function useLeaveConvo(
           }
         },
       )
+      onMutate?.()
       return {prevPages}
     },
     onSuccess: data => {

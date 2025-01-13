@@ -22,7 +22,7 @@ export function LeaveConvoPrompt({
   const navigation = useNavigation<NavigationProp>()
 
   const {mutate: leaveConvo} = useLeaveConvo(convoId, {
-    onSuccess: () => {
+    onMutate: () => {
       if (currentScreen === 'conversation') {
         navigation.dispatch(
           StackActions.replace('Messages', isNative ? {animation: 'pop'} : {}),
