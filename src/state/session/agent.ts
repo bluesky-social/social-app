@@ -13,7 +13,7 @@ import {tryFetchGates} from '#/lib/statsig/statsig'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
-import {APPVIEW_PROXY} from '#/env'
+import {APPVIEW_DID} from '#/env'
 import {emitNetworkConfirmed, emitNetworkLost} from '../events'
 import {addSessionErrorLog} from './logging'
 import {
@@ -38,7 +38,7 @@ export async function createAgentAndResume(
   ) => void,
 ) {
   const agent = new BskyAppAgent({service: storedAccount.service})
-  agent.configureProxy(`did:web:${APPVIEW_PROXY}#bsky_appview`)
+  agent.configureProxy(`${APPVIEW_DID}#bsky_appview`)
   if (storedAccount.pdsUrl) {
     agent.sessionManager.pdsUrl = new URL(storedAccount.pdsUrl)
   }
@@ -86,7 +86,7 @@ export async function createAgentAndLogin(
   ) => void,
 ) {
   const agent = new BskyAppAgent({service})
-  agent.configureProxy(`did:web:${APPVIEW_PROXY}#bsky_appview`)
+  agent.configureProxy(`${APPVIEW_DID}#bsky_appview`)
   await agent.login({identifier, password, authFactorToken})
 
   const account = agentToSessionAccountOrThrow(agent)
@@ -122,7 +122,7 @@ export async function createAgentAndCreateAccount(
   ) => void,
 ) {
   const agent = new BskyAppAgent({service})
-  agent.configureProxy(`did:web:${APPVIEW_PROXY}#bsky_appview`)
+  agent.configureProxy(`${APPVIEW_DID}#bsky_appview`)
   await agent.createAccount({
     email,
     password,
