@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-10 09:44+0900\n"
+"PO-Revision-Date: 2025-01-13 14:31+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -3376,6 +3376,11 @@ msgstr "なりすまし、偽情報、あるいは虚偽の主張"
 msgid "Inappropriate messages or explicit links"
 msgstr "不適切なメッセージ、または露骨なコンテンツへのリンク"
 
+#: src/screens/Login/LoginForm.tsx:90
+#: src/screens/Login/LoginForm.tsx:149
+msgid "Incorrect username or password"
+msgstr "無効なユーザー名またはパスワード"
+
 #: src/screens/Login/SetNewPasswordForm.tsx:121
 msgid "Input code sent to your email for password reset"
 msgstr "パスワードをリセットするためにあなたのメールアドレスに送られたコードを入力"
@@ -3420,11 +3425,6 @@ msgstr "無効なハンドルです。他のものを試してください。"
 #: src/view/com/post-thread/PostThreadItem.tsx:277
 msgid "Invalid or unsupported post record"
 msgstr "無効またはサポートされていない投稿のレコード"
-
-#: src/screens/Login/LoginForm.tsx:90
-#: src/screens/Login/LoginForm.tsx:149
-msgid "Incorrect username or password"
-msgstr "無効なユーザー名またはパスワード"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91
 msgid "Invalid Verification Code"
@@ -4309,9 +4309,9 @@ msgstr "いいねはありません"
 msgid "No longer following {0}"
 msgstr "{0}のフォローを解除しました"
 
-#: src/screens/Signup/StepHandle.tsx:169
-msgid "No longer than 253 characters"
-msgstr "253文字まで"
+#: src/screens/Signup/StepHandle.tsx:173
+msgid "No longer than {0} characters"
+msgstr "{0}文字まで"
 
 #: src/screens/Messages/components/ChatListItem.tsx:116
 msgid "No messages yet"
@@ -4918,9 +4918,17 @@ msgstr "メールアドレスを入力してください。"
 msgid "Please enter your invite code."
 msgstr "招待コードを入力してください。"
 
+#: src/screens/Login/LoginForm.tsx:95
+msgid "Please enter your password"
+msgstr "パスワードを入力してください"
+
 #: src/view/com/modals/DeleteAccount.tsx:235
 msgid "Please enter your password as well:"
 msgstr "パスワードも入力してください："
+
+#: src/screens/Login/LoginForm.tsx:90
+msgid "Please enter your username"
+msgstr "ユーザー名を入力してください"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 msgid "Please explain why you think this label was incorrectly applied by {0}"
