@@ -14,7 +14,11 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
+import {
+  DISCOVER_FEED_URI,
+  KNOWN_SHUTDOWN_FEEDS,
+  THEVIDS_FEED_URI,
+} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
@@ -35,12 +39,16 @@ import {
 } from '#/state/queries/post-feed'
 import {useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
+import {List, ListRef} from '#/view/com/util/List'
+import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {useBreakpoints} from '#/alf'
-import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
+import {
+  ProgressGuide,
+  SuggestedFollows,
+  VideoModeEntranceInterstitial,
+} from '#/components/FeedInterstitials'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
-import {List, ListRef} from '../util/List'
-import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
 import {PostFeedErrorMessage} from './PostFeedErrorMessage'
@@ -95,6 +103,10 @@ type FeedRow =
     }
   | {
       type: 'interstitialTrending'
+      key: string
+    }
+  | {
+      type: 'videoModeEntrance'
       key: string
     }
 
@@ -270,11 +282,13 @@ let PostFeed = ({
   const {trendingDisabled} = useTrendingSettings()
 
   const feedItems: FeedRow[] = React.useMemo(() => {
-    let feedKind: 'following' | 'discover' | 'profile' | undefined
+    let feedKind: 'following' | 'discover' | 'profile' | 'thevids' | undefined
     if (feedType === 'following') {
       feedKind = 'following'
     } else if (feedUri === DISCOVER_FEED_URI) {
       feedKind = 'discover'
+    } else if (feedUri === THEVIDS_FEED_URI) {
+      feedKind = 'thevids'
     } else if (
       feedType === 'author' &&
       (feedTab === 'posts_and_author_threads' ||
@@ -333,6 +347,14 @@ let PostFeed = ({
                   arr.push({
                     type: 'interstitialFollows',
                     key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
+                  })
+                }
+              } else if (feedKind === 'thevids') {
+                if (sliceIndex === 0) {
+                  arr.push({
+                    type: 'videoModeEntrance',
+                    key:
+                      'videoModeEntrance-' + sliceIndex + '-' + lastFetchedAt,
                   })
                 }
               }
@@ -498,6 +520,8 @@ let PostFeed = ({
         return <ProgressGuide />
       } else if (row.type === 'interstitialTrending') {
         return <TrendingInterstitial />
+      } else if (row.type === 'videoModeEntrance') {
+        return <VideoModeEntranceInterstitial />
       } else if (row.type === 'sliceItem') {
         const slice = row.slice
         if (slice.isFallbackMarker) {
