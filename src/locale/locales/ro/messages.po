@@ -3698,7 +3698,7 @@ msgstr "Înregistrare postare invalidă sau nesuportată"
 
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
-msgid "Invalid username or password"
+msgid "Incorrect username or password"
 msgstr "Nume de utilizator sau parolă invalidă"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91
