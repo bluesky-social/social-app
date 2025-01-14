@@ -89,6 +89,7 @@ import {Wizard} from '#/screens/StarterPack/Wizard'
 import {useTheme} from '#/alf'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import {YoloScreen} from './screens/Feeds/YoloScreen'
 import {AboutSettingsScreen} from './screens/Settings/AboutSettings'
 import {AccessibilitySettingsScreen} from './screens/Settings/AccessibilitySettings'
 import {AccountSettingsScreen} from './screens/Settings/AccountSettings'
@@ -421,6 +422,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="StarterPackEdit"
         getComponent={() => Wizard}
         options={{title: title(msg`Edit your starter pack`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="TempYolo"
+        getComponent={() => YoloScreen}
+        options={{title: title(msg`Yolo mode`), requireAuth: true}}
       />
     </>
   )
