@@ -33,7 +33,14 @@ export function SuggestedLanguage({text}: {text: string}) {
   const {_} = useLingui()
 
   useEffect(() => {
-    const textTrimmed = text.trim()
+    let textTrimmed = text.trim()
+
+    // remove the last word before guessing to prevent a half-written word 
+    // from botching the confidence of language detection.
+    const lastSpace = textTrimmed.lastIndexOf(' ')
+    if (lastSpace > 0) {
+      textTrimmed = textTrimmed.slice(0, lastSpace)
+    }
 
     // Don't run the language model on small posts, the results are likely
     // to be inaccurate anyway.
