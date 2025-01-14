@@ -73,7 +73,7 @@ msgstr "Se {0, plural, one {ha colocado # etiqueta} other {han colocado # etique
 
 #: src/screens/Post/PostLikedBy.tsx:41
 msgid "{0, plural, one {# like} other {# likes}}"
-msgstr "{0, plural, one {# \"me gusta\"} other {# \"me gusta\"}}"
+msgstr "{0, plural, one {# me gusta} other {# me gusta}}"
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
