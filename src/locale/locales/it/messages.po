@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-11 00:43+0000\n"
-"PO-Revision-Date: 2025-01-11 09:20+0000\n"
+"POT-Creation-Date: 2025-01-14 00:41+0000\n"
+"PO-Revision-Date: 2025-01-14 08:08+0000\n"
 "Last-Translator: Michele Locati <michele@locati.it>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -926,8 +926,8 @@ msgstr "Riproduci automaticamente video e GIF"
 #: src/screens/Login/ForgotPasswordForm.tsx:129
 #: src/screens/Login/LoginForm.tsx:300
 #: src/screens/Login/LoginForm.tsx:306
-#: src/screens/Login/SetNewPasswordForm.tsx:154
 #: src/screens/Login/SetNewPasswordForm.tsx:160
+#: src/screens/Login/SetNewPasswordForm.tsx:166
 #: src/screens/Messages/components/ChatDisabled.tsx:133
 #: src/screens/Messages/components/ChatDisabled.tsx:134
 #: src/screens/Profile/Header/Shell.tsx:115
@@ -2454,7 +2454,7 @@ msgstr "Fine del feed"
 msgid "Ensure you have selected a language for each subtitle file."
 msgstr "Assicurati di aver selezionato una lingua per ogni file dei sottotitoli."
 
-#: src/screens/Login/SetNewPasswordForm.tsx:133
+#: src/screens/Login/SetNewPasswordForm.tsx:139
 msgid "Enter a password"
 msgstr "Inserisci una password"
 
@@ -3385,7 +3385,7 @@ msgstr "Messaggi inappropriati o link espliciti"
 msgid "Incorrect username or password"
 msgstr "Nome utente o password errati"
 
-#: src/screens/Login/SetNewPasswordForm.tsx:121
+#: src/screens/Login/SetNewPasswordForm.tsx:127
 msgid "Input code sent to your email for password reset"
 msgstr "Inserisci il codice inviato alla tua email per reimpostare la password"
 
@@ -3393,7 +3393,7 @@ msgstr "Inserisci il codice inviato alla tua email per reimpostare la password"
 msgid "Input confirmation code for account deletion"
 msgstr "Inserisci il codice di conferma per l'eliminazione dell'account"
 
-#: src/screens/Login/SetNewPasswordForm.tsx:145
+#: src/screens/Login/SetNewPasswordForm.tsx:151
 msgid "Input new password"
 msgstr "Inserisci la nuova password"
 
@@ -3830,7 +3830,7 @@ msgstr "Logo di <0>@sawaratsuki.bsky.social</0>"
 msgid "Long press to open tag menu for #{tag}"
 msgstr "Tieni premuto per aprire il menu dei tag per #{tag}"
 
-#: src/screens/Login/SetNewPasswordForm.tsx:110
+#: src/screens/Login/SetNewPasswordForm.tsx:116
 msgid "Looks like XXXXX-XXXXX"
 msgstr "Ha un formato simile a XXXX-XXXXX"
 
@@ -4268,8 +4268,8 @@ msgstr "Notizie"
 #: src/screens/Login/ForgotPasswordForm.tsx:143
 #: src/screens/Login/LoginForm.tsx:333
 #: src/screens/Login/LoginForm.tsx:340
-#: src/screens/Login/SetNewPasswordForm.tsx:168
 #: src/screens/Login/SetNewPasswordForm.tsx:174
+#: src/screens/Login/SetNewPasswordForm.tsx:180
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
@@ -4904,6 +4904,10 @@ msgstr "Si prega di completare il captcha di verifica."
 #: src/view/com/modals/ChangeEmail.tsx:65
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
 msgstr "Conferma la tua email prima di cambiarla. Si tratta di un requisito temporaneo durante l'aggiunta degli strumenti di aggiornamento della posta elettronica e verrà presto rimosso."
+
+#: src/screens/Login/SetNewPasswordForm.tsx:56
+msgid "Please enter a password."
+msgstr "Inserisci una password."
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:114
 msgid "Please enter a unique name for this app password or use our randomly generated one."
@@ -6036,7 +6040,7 @@ msgstr "Imposta icona app su {0}"
 msgid "Set birthdate"
 msgstr "Imposta la data di nascita"
 
-#: src/screens/Login/SetNewPasswordForm.tsx:96
+#: src/screens/Login/SetNewPasswordForm.tsx:102
 msgid "Set new password"
 msgstr "Imposta una nuova password"
 
@@ -7189,7 +7193,7 @@ msgstr "Impossibile connettersi. Verifica la tua connessione a internet e riprov
 #: src/screens/Login/ForgotPasswordForm.tsx:68
 #: src/screens/Login/index.tsx:76
 #: src/screens/Login/LoginForm.tsx:162
-#: src/screens/Login/SetNewPasswordForm.tsx:71
+#: src/screens/Login/SetNewPasswordForm.tsx:77
 #: src/screens/Signup/index.tsx:71
 #: src/view/com/modals/ChangePassword.tsx:71
 msgid "Unable to contact your service. Please check your Internet connection."
@@ -7376,7 +7380,7 @@ msgstr "Impossibile aggiornare allegato"
 msgid "Updating reply visibility failed"
 msgstr "Impossibile aggiornare visibilità risposte"
 
-#: src/screens/Login/SetNewPasswordForm.tsx:180
+#: src/screens/Login/SetNewPasswordForm.tsx:186
 msgid "Updating..."
 msgstr "Aggiornamento..."
 
@@ -8007,7 +8011,7 @@ msgid "You have blocked this user. You cannot view their content."
 msgstr "Hai bloccato questo utente. Non è possibile visualizzare il contenuto."
 
 #: src/screens/Login/SetNewPasswordForm.tsx:48
-#: src/screens/Login/SetNewPasswordForm.tsx:85
+#: src/screens/Login/SetNewPasswordForm.tsx:91
 #: src/view/com/modals/ChangePassword.tsx:88
 #: src/view/com/modals/ChangePassword.tsx:122
 msgid "You have entered an invalid code. It should look like XXXXX-XXXXX."
@@ -8128,7 +8132,7 @@ msgstr "Non riceverai più notifiche relative a questo thread"
 msgid "You will now receive notifications for this thread"
 msgstr "Riceverai le notifiche per questo thread"
 
-#: src/screens/Login/SetNewPasswordForm.tsx:98
+#: src/screens/Login/SetNewPasswordForm.tsx:104
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "Riceverai un'email con un codice di recupero. Inserisci il codice qui, poi inserisci la tua nuova password."
 
