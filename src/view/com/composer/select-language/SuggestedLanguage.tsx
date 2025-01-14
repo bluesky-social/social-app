@@ -35,8 +35,16 @@ export function SuggestedLanguage({text}: {text: string}) {
   useEffect(() => {
     let textTrimmed = text.trim()
 
-    // remove the last word before guessing to prevent a half-written word 
+    // Remove the last word before guessing to prevent a half-written word 
     // from botching the confidence of language detection.
+    // There are two gotchas with this approach:
+    // First, it might increase the practical minimum length for the language
+    // detection because removing the last word would eat away from the 
+    // 40 character min limit. I think it's worth it though. 
+    // Second, this will also discard the last word that has been typed fully 
+    // which might affect the outcome. One might consider detecting punctuation 
+    // at the end of the last word to include it in the language detection, 
+    // but it's quite hard to do that for all languages correctly.
     const lastSpace = textTrimmed.lastIndexOf(' ')
     if (lastSpace > 0) {
       textTrimmed = textTrimmed.slice(0, lastSpace)
