@@ -262,15 +262,16 @@ function VibeOverlay({player}: {player: VideoPlayer}) {
 
   const gesture = useMemo(() => {
     const dragLeftGesture = Gesture.Pan()
+      .activeOffsetX([0, 10])
+      .failOffsetX([-10, 0])
+      .failOffsetY([-10, 10])
+      .maxPointers(1)
       .onEnd(evt => {
         'worklet'
-        if (evt.translationX < -100) {
+        if (evt.translationX < -50) {
           runOnJS(pushToProfile)()
         }
       })
-      .activeOffsetX([-10, 10])
-      .failOffsetY([-10, 10])
-      .maxPointers(1)
 
     return dragLeftGesture
   }, [pushToProfile])
