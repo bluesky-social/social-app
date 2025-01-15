@@ -17,7 +17,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {
   DISCOVER_FEED_URI,
   KNOWN_SHUTDOWN_FEEDS,
-  THEVIDS_FEED_URI,
+  VIBES_FEED_URI,
 } from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -287,7 +287,7 @@ let PostFeed = ({
       feedKind = 'following'
     } else if (feedUri === DISCOVER_FEED_URI) {
       feedKind = 'discover'
-    } else if (feedUri === THEVIDS_FEED_URI) {
+    } else if (feedUri === VIBES_FEED_URI) {
       feedKind = 'thevids'
     } else if (
       feedType === 'author' &&

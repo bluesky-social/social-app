@@ -273,7 +273,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/messages/:conversation", server.WebGeneric)
 
 	// temp
-	e.GET("/temp-yolo", server.WebGeneric)
+	e.GET("/temp-vibe", server.WebGeneric)
 
 	// profile endpoints; only first populates info
 	e.GET("/profile/:handleOrDID", server.WebProfile)

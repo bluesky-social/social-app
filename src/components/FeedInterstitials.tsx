@@ -538,7 +538,7 @@ export function VideoModeEntranceInterstitial() {
         </Text>
         <Link
           label={_(msg`Start watching`)}
-          to="/temp-yolo"
+          to="/temp-vibe"
           size="small"
           // why don't the gradient ones work?
           color="secondary_inverted"

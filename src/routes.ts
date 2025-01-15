@@ -65,5 +65,5 @@ export const router = new Router({
   StarterPackShort: '/starter-pack-short/:code',
   StarterPackWizard: '/starter-pack/create',
   // temp
-  TempYolo: '/temp-yolo',
+  TempVibe: '/temp-vibe',
 })

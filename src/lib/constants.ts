@@ -109,7 +109,7 @@ export const BSKY_FEED_OWNER_DIDS = [
 
 export const DISCOVER_FEED_URI =
   'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'
-export const THEVIDS_FEED_URI =
+export const VIBES_FEED_URI =
   'at://did:plc:yofh3kx63drvfljkibw5zuxo/app.bsky.feed.generator/thevids'
 export const DISCOVER_SAVED_FEED = {
   type: 'feed',
