@@ -158,6 +158,9 @@ export const atoms = {
   flex_wrap: {
     flexWrap: 'wrap',
   },
+  flex_nowrap: {
+    flexWrap: 'nowrap',
+  },
   flex_0: {
     flex: web('0 0 auto') || (native(0) as number),
   },
@@ -957,6 +960,9 @@ export const atoms = {
     transitionProperty: 'transform',
     transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
     transitionDuration: '100ms',
+  }),
+  transition_delay_50ms: web({
+    transitionDelay: '50ms',
   }),
 
   /**

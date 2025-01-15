@@ -30,6 +30,9 @@ module.exports = async function (env, argv) {
     config.plugins.push(new ReactRefreshWebpackPlugin())
   }
 
+  // Support static CDN for chunks
+  config.output.publicPath = 'auto'
+
   if (GENERATE_STATS || OPEN_ANALYZER) {
     config.plugins.push(
       new BundleAnalyzerPlugin({

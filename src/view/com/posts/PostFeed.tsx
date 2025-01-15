@@ -309,20 +309,19 @@ let PostFeed = ({
 
             if (hasSession) {
               if (feedKind === 'discover') {
-                if (sliceIndex === 0 && showProgressIntersitial) {
-                  arr.push({
-                    type: 'interstitialProgressGuide',
-                    key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
-                  })
-                } else if (
-                  sliceIndex === 15 &&
-                  !gtTablet &&
-                  !trendingDisabled
-                ) {
-                  arr.push({
-                    type: 'interstitialTrending',
-                    key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
-                  })
+                if (sliceIndex === 0) {
+                  if (showProgressIntersitial) {
+                    arr.push({
+                      type: 'interstitialProgressGuide',
+                      key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
+                    })
+                  }
+                  if (!gtTablet && !trendingDisabled) {
+                    arr.push({
+                      type: 'interstitialTrending',
+                      key: 'interstitial2-' + sliceIndex + '-' + lastFetchedAt,
+                    })
+                  }
                 } else if (sliceIndex === 30) {
                   arr.push({
                     type: 'interstitialFollows',

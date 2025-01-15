@@ -1,4 +1,4 @@
-interface Language {
+export interface Language {
   code3: string
   code2: string
   name: string
@@ -11,6 +11,7 @@ export enum AppLanguage {
   ca = 'ca',
   da = 'da',
   de = 'de',
+  el = 'el',
   en_GB = 'en-GB',
   es = 'es',
   fi = 'fi',
@@ -24,8 +25,8 @@ export enum AppLanguage {
   ja = 'ja',
   km = 'km',
   ko = 'ko',
+  ne = 'ne',
   nl = 'nl',
-  np = 'np',
   pl = 'pl',
   pt_BR = 'pt-BR',
   ro = 'ro',
@@ -34,9 +35,9 @@ export enum AppLanguage {
   tr = 'tr',
   uk = 'uk',
   vi = 'vi',
-  zh_CN = 'zh-CN',
-  zh_HK = 'zh-HK',
-  zh_TW = 'zh-TW',
+  zh_CN = 'zh-Hans-CN',
+  zh_HK = 'zh-Hant-HK',
+  zh_TW = 'zh-Hant-TW',
 }
 
 interface AppLanguageConfig {
@@ -51,6 +52,7 @@ export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.ca, name: 'Català – Catalan'},
   {code2: AppLanguage.da, name: 'Dansk – Danish'},
   {code2: AppLanguage.de, name: 'Deutsch – German'},
+  {code2: AppLanguage.el, name: 'Ελληνικά – Greek'},
   {code2: AppLanguage.en_GB, name: 'English (UK)'},
   {code2: AppLanguage.es, name: 'Español – Spanish'},
   {code2: AppLanguage.fi, name: 'Suomi – Finnish'},
@@ -64,8 +66,8 @@ export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.ja, name: '日本語 – Japanese'},
   {code2: AppLanguage.km, name: 'ភាសាខ្មែរ – Khmer'},
   {code2: AppLanguage.ko, name: '한국어 – Korean'},
+  {code2: AppLanguage.ne, name: 'नेपाली – Nepali'},
   {code2: AppLanguage.nl, name: 'Nederlands – Dutch'},
-  {code2: AppLanguage.np, name: 'नेपाली – Nepali'},
   {code2: AppLanguage.pl, name: 'Polski – Polish'},
   {code2: AppLanguage.pt_BR, name: 'Português (BR) – Portuguese (BR)'},
   {code2: AppLanguage.ro, name: 'Română – Romanian'},

@@ -33,7 +33,11 @@ export function PostThreadLoadMore({post}: {post: AppBskyFeedDefs.PostView}) {
             backgroundColor: t.atoms.bg.backgroundColor,
             marginRight: -20,
           }}>
-          <UserAvatar avatar={post.author.avatar} size={30} />
+          <UserAvatar
+            avatar={post.author.avatar}
+            size={30}
+            type={post.author.associated?.labeler ? 'labeler' : 'user'}
+          />
         </View>
         <View
           style={{
@@ -44,7 +48,11 @@ export function PostThreadLoadMore({post}: {post: AppBskyFeedDefs.PostView}) {
             borderRadius: 18,
             backgroundColor: t.atoms.bg.backgroundColor,
           }}>
-          <UserAvatar avatar={post.author.avatar} size={30} />
+          <UserAvatar
+            avatar={post.author.avatar}
+            size={30}
+            type={post.author.associated?.labeler ? 'labeler' : 'user'}
+          />
         </View>
       </View>
       <View style={[a.px_sm]}>

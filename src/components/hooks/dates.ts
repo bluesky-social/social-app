@@ -13,6 +13,7 @@ import {
   ca,
   da,
   de,
+  el,
   enGB,
   es,
   fi,
@@ -52,6 +53,7 @@ const locales: Record<AppLanguage, Locale | undefined> = {
   ca,
   da,
   de,
+  el,
   ['en-GB']: enGB,
   es,
   fi,
@@ -65,8 +67,8 @@ const locales: Record<AppLanguage, Locale | undefined> = {
   ja,
   km,
   ko,
+  ne: undefined,
   nl,
-  np: undefined,
   pl,
   ['pt-BR']: ptBR,
   ro,
@@ -75,9 +77,9 @@ const locales: Record<AppLanguage, Locale | undefined> = {
   tr,
   uk,
   vi,
-  ['zh-CN']: zhCN,
-  ['zh-HK']: zhHK,
-  ['zh-TW']: zhTW,
+  ['zh-Hans-CN']: zhCN,
+  ['zh-Hant-HK']: zhHK,
+  ['zh-Hant-TW']: zhTW,
 }
 
 /**

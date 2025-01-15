@@ -50,7 +50,6 @@ module.exports = function (config) {
       runtimeVersion: {
         policy: 'appVersion',
       },
-      orientation: 'portrait',
       icon: './assets/app-icons/ios_icon_default_light.png',
       userInterfaceStyle: 'automatic',
       primaryColor: '#1083fe',
@@ -78,6 +77,7 @@ module.exports = function (config) {
             'ca',
             'da',
             'de',
+            'el',
             'es',
             'fi',
             'fr',
@@ -90,8 +90,8 @@ module.exports = function (config) {
             'ja',
             'km',
             'ko',
+            'ne',
             'nl',
-            'np',
             'pl',
             'pt-BR',
             'ro',
@@ -347,6 +347,7 @@ module.exports = function (config) {
             },
           },
         ],
+        ['expo-screen-orientation', {initialOrientation: 'PORTRAIT_UP'}],
       ].filter(Boolean),
       extra: {
         eas: {

@@ -222,6 +222,7 @@ function ProfileListScreenLoaded({
                   scrollElRef={scrollElRef as ListRef}
                   headerHeight={headerHeight}
                   isFocused={isScreenFocused && isFocused}
+                  isOwner={isOwner}
                   onPressAddUser={onPressAddUser}
                 />
               )}
@@ -774,11 +775,12 @@ interface FeedSectionProps {
   headerHeight: number
   scrollElRef: ListRef
   isFocused: boolean
+  isOwner: boolean
   onPressAddUser: () => void
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
-    {feed, scrollElRef, headerHeight, isFocused, onPressAddUser},
+    {feed, scrollElRef, headerHeight, isFocused, isOwner, onPressAddUser},
     ref,
   ) {
     const queryClient = useQueryClient()
@@ -810,20 +812,22 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
       return (
         <View style={[a.gap_xl, a.align_center]}>
           <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
-          <NewButton
-            label={_(msg`Start adding people`)}
-            onPress={onPressAddUser}
-            color="primary"
-            size="small"
-            variant="solid">
-            <ButtonIcon icon={PersonPlusIcon} />
-            <ButtonText>
-              <Trans>Start adding people!</Trans>
-            </ButtonText>
-          </NewButton>
+          {isOwner && (
+            <NewButton
+              label={_(msg`Start adding people`)}
+              onPress={onPressAddUser}
+              color="primary"
+              size="small"
+              variant="solid">
+              <ButtonIcon icon={PersonPlusIcon} />
+              <ButtonText>
+                <Trans>Start adding people!</Trans>
+              </ButtonText>
+            </NewButton>
+          )}
         </View>
       )
-    }, [_, onPressAddUser])
+    }, [_, onPressAddUser, isOwner])
 
     return (
       <View>
@@ -928,21 +932,23 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
             icon="users-slash"
             message={_(msg`This list is empty.`)}
           />
-          <NewButton
-            testID="emptyStateAddUserBtn"
-            label={_(msg`Start adding people`)}
-            onPress={onPressAddUser}
-            color="primary"
-            size="small"
-            variant="solid">
-            <ButtonIcon icon={PersonPlusIcon} />
-            <ButtonText>
-              <Trans>Start adding people!</Trans>
-            </ButtonText>
-          </NewButton>
+          {isOwner && (
+            <NewButton
+              testID="emptyStateAddUserBtn"
+              label={_(msg`Start adding people`)}
+              onPress={onPressAddUser}
+              color="primary"
+              size="small"
+              variant="solid">
+              <ButtonIcon icon={PersonPlusIcon} />
+              <ButtonText>
+                <Trans>Start adding people!</Trans>
+              </ButtonText>
+            </NewButton>
+          )}
         </View>
       )
-    }, [_, onPressAddUser])
+    }, [_, onPressAddUser, isOwner])
 
     return (
       <View>

@@ -23,7 +23,7 @@ export function LoadingPlaceholder({
   style,
 }: {
   width: DimensionValue
-  height: DimensionValue
+  height: DimensionValue | undefined
   style?: StyleProp<ViewStyle>
 }) {
   const theme = useTheme()
