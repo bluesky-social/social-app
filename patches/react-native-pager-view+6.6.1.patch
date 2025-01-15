@@ -1,0 +1,51 @@
+diff --git a/node_modules/react-native-pager-view/android/src/main/java/com/reactnativepagerview/NestedScrollableHost.kt b/node_modules/react-native-pager-view/android/src/main/java/com/reactnativepagerview/NestedScrollableHost.kt
+index 91d9946..7c00ade 100644
+--- a/node_modules/react-native-pager-view/android/src/main/java/com/reactnativepagerview/NestedScrollableHost.kt
++++ b/node_modules/react-native-pager-view/android/src/main/java/com/reactnativepagerview/NestedScrollableHost.kt
+@@ -8,6 +8,8 @@ import android.view.ViewConfiguration
+ import android.widget.FrameLayout
+ import androidx.viewpager2.widget.ViewPager2
+ import androidx.viewpager2.widget.ViewPager2.ORIENTATION_HORIZONTAL
++import androidx.viewpager2.widget.ViewPager2.ORIENTATION_VERTICAL
++import com.facebook.react.uimanager.events.NativeGestureUtil
+ import kotlin.math.absoluteValue
+ import kotlin.math.sign
+ 
+@@ -57,17 +59,12 @@ class NestedScrollableHost : FrameLayout {
+   }
+ 
+   private fun handleInterceptTouchEvent(e: MotionEvent) {
+-    val orientation = parentViewPager?.orientation ?: return
+-
+-    // Early return if child can't scroll in same direction as parent
+-    if (!canChildScroll(orientation, -1f) && !canChildScroll(orientation, 1f)) {
+-      return
+-    }
++    if(child == null) return
++    val orientation = parentViewPager?.orientation ?: ORIENTATION_VERTICAL
+ 
+     if (e.action == MotionEvent.ACTION_DOWN) {
+       initialX = e.x
+       initialY = e.y
+-      parent.requestDisallowInterceptTouchEvent(true)
+     } else if (e.action == MotionEvent.ACTION_MOVE) {
+       val dx = e.x - initialX
+       val dy = e.y - initialY
+@@ -80,15 +77,14 @@ class NestedScrollableHost : FrameLayout {
+       if (scaledDx > touchSlop || scaledDy > touchSlop) {
+         if (isVpHorizontal == (scaledDy > scaledDx)) {
+           // Gesture is perpendicular, allow all parents to intercept
+-          parent.requestDisallowInterceptTouchEvent(false)
++          NativeGestureUtil.notifyNativeGestureStarted(child!!, e)
+         } else {
+           // Gesture is parallel, query child if movement in that direction is possible
+           if (canChildScroll(orientation, if (isVpHorizontal) dx else dy)) {
+             // Child can scroll, disallow all parents to intercept
+-            parent.requestDisallowInterceptTouchEvent(true)
+           } else {
+             // Child cannot scroll, allow all parents to intercept
+-            parent.requestDisallowInterceptTouchEvent(false)
++            NativeGestureUtil.notifyNativeGestureStarted(child!!, e)
+           }
+         }
+       }
