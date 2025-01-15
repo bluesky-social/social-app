@@ -131,16 +131,16 @@ export type LogEvents = {
     doesPosterFollowLiker: boolean | undefined
     likerClout: number | undefined
     postClout: number | undefined
-    logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'Vibe'
   }
   'post:repost': {
-    logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'Vibe'
   }
   'post:unlike': {
-    logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'Vibe'
   }
   'post:unrepost': {
-    logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'Vibe'
   }
   'post:mute': {}
   'post:unmute': {}
