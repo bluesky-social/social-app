@@ -736,7 +736,7 @@ function ExpandedPostDetails({
 }) {
   const t = useTheme()
   const pal = usePalette('default')
-  const {_, i18n} = useLingui()
+  const {_} = useLingui()
   const openLink = useOpenLink()
   const isRootPost = !('reply' in post.record)
 
@@ -749,13 +749,23 @@ function ExpandedPostDetails({
     [openLink, translatorUrl],
   )
 
+  const indexedAt = new Date(post.indexedAt)
+  const createdAt = AppBskyFeedPost.isRecord(post.record)
+      ? new Date(post.record.createdAt)
+      : new Date(post.indexedAt)
+
+  // backdated if createdAt is 24 hours or more before indexedAt
+  const isBackdated =
+      indexedAt.getTime() - createdAt.getTime() > 24 * 60 * 60 * 1000
+
+  let dateEl = <DateNotBackdated post={post} />
+  if(isBackdated){
+    dateEl = <DateBackdated post={post} />
+  }
+
   return (
-    <View style={[a.gap_md, a.pt_md, a.align_start]}>
-      <BackdatedPostIndicator post={post} />
-      <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
-        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          {niceDate(i18n, post.indexedAt)}
-        </Text>
+    <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm, a.pt_md]}>
+        {dateEl}
         {isRootPost && (
           <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
         )}
@@ -774,12 +784,23 @@ function ExpandedPostDetails({
             </InlineLinkText>
           </>
         )}
-      </View>
     </View>
   )
 }
 
-function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
+function DateNotBackdated({post}: {post: AppBskyFeedDefs.PostView}) {
+  const t = useTheme()
+  const {i18n} = useLingui()
+
+  const indexedAt = new Date(post.indexedAt)
+  return (
+    <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+      {niceDate(i18n, indexedAt)}
+    </Text>
+  )
+}
+
+function DateBackdated({post}: {post: AppBskyFeedDefs.PostView}) {
   const t = useTheme()
   const {_, i18n} = useLingui()
   const control = Prompt.usePromptControl()
@@ -789,13 +810,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
     ? new Date(post.record.createdAt)
     : new Date(post.indexedAt)
 
-  // backdated if createdAt is 24 hours or more before indexedAt
-  const isBackdated =
-    indexedAt.getTime() - createdAt.getTime() > 24 * 60 * 60 * 1000
-
-  if (!isBackdated) return null
-
-  const orange = t.name === 'light' ? colors.warning.dark : colors.warning.light
+  const danger = t.name === 'light' ? colors.danger.dark : colors.danger.light
 
   return (
     <>
@@ -823,15 +838,9 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
                 paddingVertical: 3,
               },
             ]}>
-            <CalendarClockIcon fill={orange} size="sm" aria-hidden />
-            <Text
-              style={[
-                a.text_xs,
-                a.font_bold,
-                a.leading_tight,
-                t.atoms.text_contrast_medium,
-              ]}>
-              <Trans>Archived from {niceDate(i18n, createdAt)}</Trans>
+            <CalendarClockIcon fill={danger} size="sm" aria-hidden />
+            <Text>
+              {niceDate(i18n, createdAt)}
             </Text>
           </View>
         )}
