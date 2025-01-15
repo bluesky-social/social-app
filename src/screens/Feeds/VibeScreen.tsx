@@ -11,7 +11,6 @@ import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import {runOnJS} from 'react-native-reanimated'
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useEvent} from 'expo'
-import {BlurView} from 'expo-blur'
 import {LinearGradient} from 'expo-linear-gradient'
 import {useVideoPlayer, VideoPlayer, VideoView} from 'expo-video'
 import {
@@ -52,7 +51,6 @@ import {Text} from '#/components/Typography'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'TempVibe'>
 export function VibeScreen({}: Props) {
   const {top} = useSafeAreaInsets()
-  const [headerHeight, setHeaderHeight] = useState(0)
 
   const setMinShellMode = useSetMinimalShellMode()
   useFocusEffect(
@@ -69,18 +67,13 @@ export function VibeScreen({}: Props) {
   return (
     <ThemeProvider theme="dark">
       <Layout.Screen noInsetTop style={{backgroundColor: 'black'}}>
-        <BlurView
-          intensity={25}
-          tint="systemThinMaterialDark"
+        <View
           style={[
             a.absolute,
             a.z_10,
             {top: 0, left: 0, right: 0, paddingTop: top},
-          ]}
-          onLayout={({nativeEvent}) =>
-            setHeaderHeight(nativeEvent.layout.height)
-          }>
-          <Layout.Header.Outer>
+          ]}>
+          <Layout.Header.Outer noBottomBorder>
             <Layout.Header.BackButton />
             <Layout.Header.Content>
               <Layout.Header.TitleText>
@@ -90,14 +83,14 @@ export function VibeScreen({}: Props) {
             </Layout.Header.Content>
             <Layout.Header.Slot />
           </Layout.Header.Outer>
-        </BlurView>
-        <YoloFeed headerHeight={headerHeight} />
+        </View>
+        <YoloFeed />
       </Layout.Screen>
     </ThemeProvider>
   )
 }
 
-function YoloFeed({headerHeight}: {headerHeight: number}) {
+function YoloFeed() {
   const isFocused = useIsFocused()
   const {
     data,
@@ -140,11 +133,10 @@ function YoloFeed({headerHeight}: {headerHeight: number}) {
           embed={post.embed}
           loaded={isFocused && Math.abs(index - currentIndex) < 2}
           active={isFocused && index === currentIndex}
-          headerHeight={headerHeight}
         />
       )
     },
-    [player1, player2, player3, currentIndex, headerHeight, isFocused],
+    [player1, player2, player3, currentIndex, isFocused],
   )
 
   const onViewableItemsChanged = useCallback(
@@ -193,16 +185,15 @@ function VibeItem({
   embed,
   active,
   loaded,
-  headerHeight,
 }: {
   player: VideoPlayer
   post: AppBskyFeedDefs.PostView
   embed: AppBskyEmbedVideo.View
   active: boolean
   loaded: boolean
-  headerHeight: number
 }) {
   const {height, width} = useWindowDimensions()
+  const insets = useSafeAreaInsets()
   const source = embed.playlist
   const sourceChangeEvent = useEvent(player, 'sourceChange') as {
     // incorrect types
@@ -214,7 +205,6 @@ function VibeItem({
   // videos have a chance to preload
   const maybePlay = useNonReactiveCallback(() => {
     if (active && !player.playing) {
-      console.log('play (nonreactive)')
       player.play()
     }
   })
@@ -234,7 +224,6 @@ function VibeItem({
 
   useEffect(() => {
     if (active) {
-      console.log('play (effect)')
       player.play()
     } else {
       // should be a cleanup function, but that causes a crash
@@ -242,20 +231,29 @@ function VibeItem({
     }
   }, [active, player])
 
+  const screenAspectRatio =
+    (width - insets.left - insets.right) / (height - insets.bottom)
+
+  const videoAspectRatio =
+    (embed.aspectRatio?.width ?? 1) / (embed.aspectRatio?.height ?? 1)
+
+  // if the video is either taller, on only 20% shorter than the screen,
+  // set the video to be cover rather than contain
+  const isCloseEnough = videoAspectRatio < screenAspectRatio * 1.2
+
   return (
     <View
       style={{
         height,
         width,
       }}>
-      <SafeAreaView
-        edges={['left', 'right', 'bottom']}
-        style={[a.flex_1, {paddingTop: headerHeight}]}>
-        {active && (
+      <SafeAreaView edges={['left', 'right', 'bottom']} style={[a.flex_1]}>
+        {loaded && (
           <VideoView
             style={[a.flex_1]}
             player={player}
             nativeControls={false}
+            contentFit={isCloseEnough ? 'cover' : 'contain'}
           />
         )}
         <VibeOverlay player={player} post={post} />
