@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-14 01:26\n"
+"PO-Revision-Date: 2025-01-15 02:38\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -172,7 +172,7 @@ msgstr "{0} 個月前"
 msgid "{0}s"
 msgstr "{0} 秒前"
 
-#: src/view/shell/desktop/LeftNav.tsx:189
+#: src/view/shell/desktop/LeftNav.tsx:384
 msgid "{count} unread items"
 msgstr "{count} 則未讀通知"
 
@@ -485,6 +485,8 @@ msgstr "新增替代文字 (可選)"
 
 #: src/screens/Settings/Settings.tsx:373
 #: src/screens/Settings/Settings.tsx:376
+#: src/view/shell/desktop/LeftNav.tsx:281
+#: src/view/shell/desktop/LeftNav.tsx:285
 msgid "Add another account"
 msgstr "新增其他帳號"
 
@@ -1184,6 +1186,7 @@ msgstr "相機"
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:213
 #: src/view/screens/Search/Search.tsx:887
+#: src/view/shell/desktop/LeftNav.tsx:209
 msgid "Cancel"
 msgstr "取消"
 
@@ -1290,7 +1293,7 @@ msgstr "變更您的電子郵件地址"
 
 #: src/Navigation.tsx:388
 #: src/view/shell/bottom-bar/BottomBar.tsx:204
-#: src/view/shell/desktop/LeftNav.tsx:335
+#: src/view/shell/desktop/LeftNav.tsx:530
 #: src/view/shell/Drawer.tsx:422
 msgid "Chat"
 msgstr "對話"
@@ -1516,7 +1519,7 @@ msgstr "完成入門引導以開始使用您的帳號"
 msgid "Complete the challenge"
 msgstr "完成驗證"
 
-#: src/view/shell/desktop/LeftNav.tsx:301
+#: src/view/shell/desktop/LeftNav.tsx:496
 msgid "Compose new post"
 msgstr "撰寫新貼文"
 
@@ -2774,7 +2777,7 @@ msgstr "已送出意見回饋！"
 #: src/view/screens/Profile.tsx:236
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/screens/Search/Search.tsx:522
-#: src/view/shell/desktop/LeftNav.tsx:445
+#: src/view/shell/desktop/LeftNav.tsx:640
 #: src/view/shell/Drawer.tsx:481
 msgid "Feeds"
 msgstr "動態源"
@@ -2940,7 +2943,7 @@ msgstr "成功跟隨 {name}"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:74
 #: src/screens/Settings/ContentAndMediaSettings.tsx:77
 msgid "Following feed preferences"
-msgstr "「Following」(跟隨中) 動態源"
+msgstr "「Following」(跟隨中) 動態源選項"
 
 #: src/Navigation.tsx:302
 #: src/screens/Settings/FollowingFeedPreferences.tsx:53
@@ -3274,7 +3277,7 @@ msgstr "等一下！我們正在逐步開放上傳影片功能。您還在等候
 #: src/Navigation.tsx:594
 #: src/Navigation.tsx:614
 #: src/view/shell/bottom-bar/BottomBar.tsx:162
-#: src/view/shell/desktop/LeftNav.tsx:389
+#: src/view/shell/desktop/LeftNav.tsx:584
 #: src/view/shell/Drawer.tsx:396
 msgid "Home"
 msgstr "首頁"
@@ -3382,7 +3385,7 @@ msgstr "低俗言論或敏感內容連結"
 
 #: src/screens/Login/LoginForm.tsx:157
 msgid "Incorrect username or password"
-msgstr "用戶名稱或密碼不正確"
+msgstr "用戶名稱或密碼錯誤"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:127
 msgid "Input code sent to your email for password reset"
@@ -3756,7 +3759,7 @@ msgstr "成功取消靜音列表"
 #: src/view/screens/Lists.tsx:62
 #: src/view/screens/Profile.tsx:231
 #: src/view/screens/Profile.tsx:238
-#: src/view/shell/desktop/LeftNav.tsx:463
+#: src/view/shell/desktop/LeftNav.tsx:658
 #: src/view/shell/Drawer.tsx:496
 msgid "Lists"
 msgstr "列表"
@@ -4131,10 +4134,6 @@ msgstr "我的生日"
 msgid "My Feeds"
 msgstr "我的動態源"
 
-#: src/view/shell/desktop/LeftNav.tsx:84
-msgid "My Profile"
-msgstr "我的個人檔案"
-
 #: src/view/com/modals/CreateOrEditList.tsx:270
 msgid "Name"
 msgstr "名稱"
@@ -4238,7 +4237,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "新貼文"
 
-#: src/view/shell/desktop/LeftNav.tsx:309
+#: src/view/shell/desktop/LeftNav.tsx:504
 msgctxt "action"
 msgid "New Post"
 msgstr "新貼文"
@@ -4457,7 +4456,7 @@ msgstr "通知音效"
 #: src/Navigation.tsx:604
 #: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:230
-#: src/view/shell/desktop/LeftNav.tsx:426
+#: src/view/shell/desktop/LeftNav.tsx:621
 #: src/view/shell/Drawer.tsx:449
 msgid "Notifications"
 msgstr "通知"
@@ -5137,7 +5136,7 @@ msgid "profile"
 msgstr "個人檔案"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:275
-#: src/view/shell/desktop/LeftNav.tsx:481
+#: src/view/shell/desktop/LeftNav.tsx:676
 #: src/view/shell/Drawer.tsx:71
 #: src/view/shell/Drawer.tsx:521
 msgid "Profile"
@@ -5795,7 +5794,7 @@ msgstr "捲動到頂部"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
 #: src/view/screens/Search/Search.tsx:570
 #: src/view/shell/bottom-bar/BottomBar.tsx:182
-#: src/view/shell/desktop/LeftNav.tsx:407
+#: src/view/shell/desktop/LeftNav.tsx:602
 #: src/view/shell/Drawer.tsx:370
 msgid "Search"
 msgstr "搜尋"
@@ -6053,7 +6052,7 @@ msgstr "設定用於重設密碼的電子郵件"
 
 #: src/Navigation.tsx:160
 #: src/screens/Settings/Settings.tsx:80
-#: src/view/shell/desktop/LeftNav.tsx:499
+#: src/view/shell/desktop/LeftNav.tsx:694
 #: src/view/shell/Drawer.tsx:534
 msgid "Settings"
 msgstr "設定"
@@ -6291,10 +6290,14 @@ msgstr "登入 Bluesky 或建立新帳號"
 #: src/screens/Settings/Settings.tsx:225
 #: src/screens/Settings/Settings.tsx:227
 #: src/screens/Settings/Settings.tsx:259
+#: src/view/shell/desktop/LeftNav.tsx:208
+#: src/view/shell/desktop/LeftNav.tsx:288
+#: src/view/shell/desktop/LeftNav.tsx:291
 msgid "Sign out"
 msgstr "登出"
 
 #: src/screens/Settings/Settings.tsx:256
+#: src/view/shell/desktop/LeftNav.tsx:205
 msgid "Sign out?"
 msgstr "確定要登出嗎？"
 
@@ -6522,6 +6525,7 @@ msgstr "支援"
 #: src/screens/Settings/Settings.tsx:102
 #: src/screens/Settings/Settings.tsx:116
 #: src/screens/Settings/Settings.tsx:412
+#: src/view/shell/desktop/LeftNav.tsx:243
 msgid "Switch account"
 msgstr "切換帳號"
 
@@ -6529,6 +6533,14 @@ msgstr "切換帳號"
 #: src/components/dialogs/SwitchAccount.tsx:49
 msgid "Switch Account"
 msgstr "切換帳號"
+
+#: src/view/shell/desktop/LeftNav.tsx:107
+msgid "Switch accounts"
+msgstr "切換帳號"
+
+#: src/view/shell/desktop/LeftNav.tsx:251
+msgid "Switch to {0}"
+msgstr "切換到 {0}"
 
 #: src/screens/Settings/AppearanceSettings.tsx:97
 #: src/screens/Settings/AppearanceSettings.tsx:147
@@ -7077,7 +7089,7 @@ msgstr "討論串選項"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:66
 #: src/screens/Settings/ContentAndMediaSettings.tsx:69
 msgid "Thread preferences"
-msgstr "討論串"
+msgstr "討論串選項"
 
 #: src/screens/Settings/ThreadPreferences.tsx:45
 msgid "Thread Preferences"
@@ -8120,6 +8132,7 @@ msgid "You previously deactivated @{0}."
 msgstr "您之前停用了 @{0}。"
 
 #: src/screens/Settings/Settings.tsx:257
+#: src/view/shell/desktop/LeftNav.tsx:206
 msgid "You will be signed out of all your accounts."
 msgstr "您即將登出所有帳號。"
 

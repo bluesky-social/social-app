@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-14 01:25\n"
+"PO-Revision-Date: 2025-01-15 02:38\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -172,7 +172,7 @@ msgstr "{0} 个月前"
 msgid "{0}s"
 msgstr "{0} 秒前"
 
-#: src/view/shell/desktop/LeftNav.tsx:189
+#: src/view/shell/desktop/LeftNav.tsx:384
 msgid "{count} unread items"
 msgstr "{count} 条未读"
 
@@ -485,6 +485,8 @@ msgstr "添加替代文本（可选）"
 
 #: src/screens/Settings/Settings.tsx:373
 #: src/screens/Settings/Settings.tsx:376
+#: src/view/shell/desktop/LeftNav.tsx:281
+#: src/view/shell/desktop/LeftNav.tsx:285
 msgid "Add another account"
 msgstr "添加其他账户"
 
@@ -1184,6 +1186,7 @@ msgstr "相机"
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:213
 #: src/view/screens/Search/Search.tsx:887
+#: src/view/shell/desktop/LeftNav.tsx:209
 msgid "Cancel"
 msgstr "取消"
 
@@ -1290,7 +1293,7 @@ msgstr "更改你的电子邮箱地址"
 
 #: src/Navigation.tsx:388
 #: src/view/shell/bottom-bar/BottomBar.tsx:204
-#: src/view/shell/desktop/LeftNav.tsx:335
+#: src/view/shell/desktop/LeftNav.tsx:530
 #: src/view/shell/Drawer.tsx:422
 msgid "Chat"
 msgstr "私信"
@@ -1516,7 +1519,7 @@ msgstr "完成入门引导并开始使用你的账户"
 msgid "Complete the challenge"
 msgstr "完成验证"
 
-#: src/view/shell/desktop/LeftNav.tsx:301
+#: src/view/shell/desktop/LeftNav.tsx:496
 msgid "Compose new post"
 msgstr "撰写新帖文"
 
@@ -2774,7 +2777,7 @@ msgstr "已发送反馈！"
 #: src/view/screens/Profile.tsx:236
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/screens/Search/Search.tsx:522
-#: src/view/shell/desktop/LeftNav.tsx:445
+#: src/view/shell/desktop/LeftNav.tsx:640
 #: src/view/shell/Drawer.tsx:481
 msgid "Feeds"
 msgstr "动态源"
@@ -3274,7 +3277,7 @@ msgstr "请稍等！我们正在逐步开放上传视频的权限。你目前仍
 #: src/Navigation.tsx:594
 #: src/Navigation.tsx:614
 #: src/view/shell/bottom-bar/BottomBar.tsx:162
-#: src/view/shell/desktop/LeftNav.tsx:389
+#: src/view/shell/desktop/LeftNav.tsx:584
 #: src/view/shell/Drawer.tsx:396
 msgid "Home"
 msgstr "主页"
@@ -3756,7 +3759,7 @@ msgstr "已取消隐藏列表"
 #: src/view/screens/Lists.tsx:62
 #: src/view/screens/Profile.tsx:231
 #: src/view/screens/Profile.tsx:238
-#: src/view/shell/desktop/LeftNav.tsx:463
+#: src/view/shell/desktop/LeftNav.tsx:658
 #: src/view/shell/Drawer.tsx:496
 msgid "Lists"
 msgstr "列表"
@@ -4131,10 +4134,6 @@ msgstr "我的生日"
 msgid "My Feeds"
 msgstr "我的动态源"
 
-#: src/view/shell/desktop/LeftNav.tsx:84
-msgid "My Profile"
-msgstr "我的个人资料"
-
 #: src/view/com/modals/CreateOrEditList.tsx:270
 msgid "Name"
 msgstr "名称"
@@ -4238,7 +4237,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "新帖文"
 
-#: src/view/shell/desktop/LeftNav.tsx:309
+#: src/view/shell/desktop/LeftNav.tsx:504
 msgctxt "action"
 msgid "New Post"
 msgstr "新帖文"
@@ -4457,7 +4456,7 @@ msgstr "通知提示音"
 #: src/Navigation.tsx:604
 #: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:230
-#: src/view/shell/desktop/LeftNav.tsx:426
+#: src/view/shell/desktop/LeftNav.tsx:621
 #: src/view/shell/Drawer.tsx:449
 msgid "Notifications"
 msgstr "通知"
@@ -5137,7 +5136,7 @@ msgid "profile"
 msgstr "个人资料"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:275
-#: src/view/shell/desktop/LeftNav.tsx:481
+#: src/view/shell/desktop/LeftNav.tsx:676
 #: src/view/shell/Drawer.tsx:71
 #: src/view/shell/Drawer.tsx:521
 msgid "Profile"
@@ -5795,7 +5794,7 @@ msgstr "滚动到顶部"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
 #: src/view/screens/Search/Search.tsx:570
 #: src/view/shell/bottom-bar/BottomBar.tsx:182
-#: src/view/shell/desktop/LeftNav.tsx:407
+#: src/view/shell/desktop/LeftNav.tsx:602
 #: src/view/shell/Drawer.tsx:370
 msgid "Search"
 msgstr "搜索"
@@ -6053,7 +6052,7 @@ msgstr "设置用于重置密码的电子邮箱"
 
 #: src/Navigation.tsx:160
 #: src/screens/Settings/Settings.tsx:80
-#: src/view/shell/desktop/LeftNav.tsx:499
+#: src/view/shell/desktop/LeftNav.tsx:694
 #: src/view/shell/Drawer.tsx:534
 msgid "Settings"
 msgstr "设置"
@@ -6291,10 +6290,14 @@ msgstr "登录 Bluesky 或创建新账户"
 #: src/screens/Settings/Settings.tsx:225
 #: src/screens/Settings/Settings.tsx:227
 #: src/screens/Settings/Settings.tsx:259
+#: src/view/shell/desktop/LeftNav.tsx:208
+#: src/view/shell/desktop/LeftNav.tsx:288
+#: src/view/shell/desktop/LeftNav.tsx:291
 msgid "Sign out"
 msgstr "登出"
 
 #: src/screens/Settings/Settings.tsx:256
+#: src/view/shell/desktop/LeftNav.tsx:205
 msgid "Sign out?"
 msgstr "确定要登出吗？"
 
@@ -6522,6 +6525,7 @@ msgstr "支持"
 #: src/screens/Settings/Settings.tsx:102
 #: src/screens/Settings/Settings.tsx:116
 #: src/screens/Settings/Settings.tsx:412
+#: src/view/shell/desktop/LeftNav.tsx:243
 msgid "Switch account"
 msgstr "切换账户"
 
@@ -6529,6 +6533,14 @@ msgstr "切换账户"
 #: src/components/dialogs/SwitchAccount.tsx:49
 msgid "Switch Account"
 msgstr "切换账户"
+
+#: src/view/shell/desktop/LeftNav.tsx:107
+msgid "Switch accounts"
+msgstr "切换账户"
+
+#: src/view/shell/desktop/LeftNav.tsx:251
+msgid "Switch to {0}"
+msgstr "切换到 {0}"
 
 #: src/screens/Settings/AppearanceSettings.tsx:97
 #: src/screens/Settings/AppearanceSettings.tsx:147
@@ -8120,6 +8132,7 @@ msgid "You previously deactivated @{0}."
 msgstr "你之前停用了 @{0}。"
 
 #: src/screens/Settings/Settings.tsx:257
+#: src/view/shell/desktop/LeftNav.tsx:206
 msgid "You will be signed out of all your accounts."
 msgstr "你将登出所有账户。"
 
