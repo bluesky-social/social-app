@@ -1,6 +1,8 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {
+  LayoutAnimation,
   ListRenderItem,
+  ScrollView,
   useWindowDimensions,
   View,
   ViewToken,
@@ -19,7 +21,8 @@ import {
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {
   useFocusEffect,
   useIsFocused,
@@ -27,7 +30,7 @@ import {
 } from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {VIBES_FEED_URI} from '#/lib/constants'
+import {HITSLOP_20, VIBES_FEED_URI} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -40,7 +43,7 @@ import {List} from '#/view/com/util/List'
 import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, ThemeProvider, useTheme} from '#/alf'
-import {Button} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {RichText} from '#/components/RichText'
@@ -272,6 +275,8 @@ function VibeOverlay({
   const insets = useSafeAreaInsets()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
+  const [expanded, setExpanded] = useState(false)
+
   const pushToProfile = useNonReactiveCallback(() => {
     navigation.navigate('Profile', {name: post.author.did})
   })
@@ -288,7 +293,7 @@ function VibeOverlay({
     const dragLeftGesture = Gesture.Pan()
       .activeOffsetX([0, 10])
       .failOffsetX([-10, 0])
-      .failOffsetY([-10, 10])
+      .failOffsetY([-5, 5])
       .maxPointers(1)
       .onEnd(evt => {
         'worklet'
@@ -317,12 +322,16 @@ function VibeOverlay({
           <View />
         </Button>
         <LinearGradient
-          colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']}
+          colors={
+            expanded
+              ? ['rgba(0,0,0,0)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.8)']
+              : ['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']
+          }
           style={[a.w_full, a.px_xl, a.py_sm, a.gap_sm]}>
           <View style={[a.flex_row, a.gap_md, a.align_center]}>
             <PreviewableUserAvatar profile={post.author} size={32} />
             <View>
-              <Text style={[a.text_md, a.font_heavy]} numberOfLines={1}>
+              <Text style={[a.text_md, a.font_heavy]} emoji numberOfLines={1}>
                 {sanitizeDisplayName(
                   post.author.displayName || post.author.handle,
                 )}
@@ -334,12 +343,14 @@ function VibeOverlay({
               </Text>
             </View>
           </View>
-          <RichText
-            value={richText}
-            style={[a.text_sm]}
-            authorHandle={post.author.handle}
-            enableTags
-          />
+          {record?.text?.trim() && (
+            <ExpandableRichTextView
+              expanded={expanded}
+              setExpanded={setExpanded}
+              value={richText}
+              authorHandle={post.author.handle}
+            />
+          )}
           {postShadow !== POST_TOMBSTONE && record && (
             <PostCtrls
               richText={richText}
@@ -355,5 +366,65 @@ function VibeOverlay({
         </LinearGradient>
       </View>
     </GestureDetector>
+  )
+}
+
+function ExpandableRichTextView({
+  value,
+  authorHandle,
+  expanded,
+  setExpanded,
+}: {
+  value: RichTextAPI
+  authorHandle?: string
+  expanded: boolean
+  setExpanded: React.Dispatch<React.SetStateAction<boolean>>
+}) {
+  const {height: screenHeight} = useWindowDimensions()
+  const [constrained, setConstrained] = useState(false)
+  const [contentHeight, setContentHeight] = useState(0)
+  const {_} = useLingui()
+
+  return (
+    <ScrollView
+      scrollEnabled={expanded}
+      onContentSizeChange={(_w, h) => {
+        LayoutAnimation.configureNext({
+          duration: 500,
+          update: {type: 'spring', springDamping: 0.6},
+        })
+        setContentHeight(h)
+      }}
+      style={{height: Math.min(contentHeight, screenHeight * 0.5)}}
+      contentContainerStyle={[
+        a.gap_xs,
+        expanded ? [a.align_start] : a.flex_row,
+      ]}>
+      <RichText
+        value={value}
+        style={[a.text_sm, a.flex_1]}
+        authorHandle={authorHandle}
+        enableTags
+        numberOfLines={expanded ? undefined : constrained ? 1 : 2}
+        onTextLayout={evt => {
+          if (!constrained && evt.nativeEvent.lines.length > 1) {
+            setConstrained(true)
+          }
+        }}
+      />
+      {constrained && (
+        <Button
+          label={expanded ? _(msg`Read less`) : _(msg`Read more`)}
+          hitSlop={HITSLOP_20}
+          onPress={() => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+            setExpanded(prev => !prev)
+          }}>
+          <ButtonText>
+            {expanded ? <Trans>Read less</Trans> : <Trans>Read more</Trans>}
+          </ButtonText>
+        </Button>
+      )}
+    </ScrollView>
   )
 }
