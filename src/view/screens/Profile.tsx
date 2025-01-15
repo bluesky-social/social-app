@@ -586,8 +586,10 @@ let TestGates = React.memo(function TestGates() {
   }, [])
 
   return [
-    gate('test_gate_1') ? <TestGate1 /> : null,
-    shouldExposeToGate2 && gate('test_gate_2') ? <TestGate2 /> : null,
+    gate('test_gate_1') ? <TestGate1 key="test_gate_1" /> : null,
+    shouldExposeToGate2 && gate('test_gate_2') ? (
+      <TestGate2 key="test_gate_2" />
+    ) : null,
   ]
 })
 
