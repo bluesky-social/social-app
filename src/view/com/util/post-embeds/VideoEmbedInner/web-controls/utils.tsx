@@ -149,9 +149,6 @@ export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
     ref.current.addEventListener('ended', handleEnded, {
       signal: abortController.signal,
     })
-    ref.current.addEventListener('volumechange', handleVolumeChange, {
-      signal: abortController.signal,
-    })
 
     return () => {
       abortController.abort()
