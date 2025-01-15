@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {
   LayoutAnimation,
   ListRenderItem,
@@ -10,7 +10,6 @@ import {
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import {runOnJS} from 'react-native-reanimated'
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
-import {useEvent} from 'expo'
 import {LinearGradient} from 'expo-linear-gradient'
 import {useVideoPlayer, VideoPlayer, VideoView} from 'expo-video'
 import {
@@ -101,6 +100,10 @@ function YoloFeed() {
     fetchNextPage,
   } = usePostFeedQuery(`feedgen|${VIBES_FEED_URI}`)
 
+  const [currentSources, setCurrentSources] = useState<
+    [string | null, string | null, string | null]
+  >([null, null, null])
+
   const player1 = useVideoPlayer('', p => {
     p.loop = true
   })
@@ -125,27 +128,89 @@ function YoloFeed() {
       }
 
       const player = [player1, player2, player3][index % 3]
+      const currentSource = currentSources[index % 3]
 
       return (
         <VibeItem
           player={player}
           post={post}
           embed={post.embed}
-          loaded={isFocused && Math.abs(index - currentIndex) < 2}
+          loaded={
+            isFocused &&
+            Math.abs(index - currentIndex) < 2 &&
+            currentSource === post.embed.playlist
+          }
           active={isFocused && index === currentIndex}
         />
       )
     },
-    [player1, player2, player3, currentIndex, isFocused],
+    [player1, player2, player3, currentIndex, isFocused, currentSources],
   )
+
+  const updateVideoState = useNonReactiveCallback((index: number) => {
+    if (!videos) return
+    setCurrentIndex(index)
+    setCurrentSources(oldSources => {
+      const currentSources = [...oldSources] as [
+        string | null,
+        string | null,
+        string | null,
+      ]
+
+      const prevEmbed = videos[index - 1]?.post.embed
+      const prevVideo =
+        prevEmbed && AppBskyEmbedVideo.isView(prevEmbed)
+          ? prevEmbed.playlist
+          : null
+      const currEmbed = videos[index]?.post.embed
+      const currVideo =
+        currEmbed && AppBskyEmbedVideo.isView(currEmbed)
+          ? currEmbed.playlist
+          : null
+      const nextEmbed = videos[index + 1]?.post.embed
+      const nextVideo =
+        nextEmbed && AppBskyEmbedVideo.isView(nextEmbed)
+          ? nextEmbed.playlist
+          : null
+
+      const prevPlayer = [player1, player2, player3][(index + 2) % 3]
+      const prevPlayerCurrentSource = currentSources[(index + 2) % 3]
+      const currPlayer = [player1, player2, player3][index % 3]
+      const currPlayerCurrentSource = currentSources[index % 3]
+      const nextPlayer = [player1, player2, player3][(index + 1) % 3]
+      const nextPlayerCurrentSource = currentSources[(index + 1) % 3]
+
+      if (prevVideo && prevVideo !== prevPlayerCurrentSource) {
+        prevPlayer.replace(prevVideo)
+        currentSources[index + (2 % 3)] = prevVideo
+      }
+      prevPlayer.pause()
+
+      if (currVideo) {
+        if (currVideo !== currPlayerCurrentSource) {
+          currPlayer.replace(currVideo)
+          currentSources[index % 3] = currVideo
+        }
+        currPlayer.play()
+      }
+
+      if (nextVideo && nextVideo !== nextPlayerCurrentSource) {
+        nextPlayer.replace(nextVideo)
+        currentSources[(index + 1) % 3] = nextVideo
+      }
+      nextPlayer.pause()
+
+      return currentSources
+    })
+  })
 
   const onViewableItemsChanged = useCallback(
     ({viewableItems}: {viewableItems: ViewToken[]; changed: ViewToken[]}) => {
       if (viewableItems[0] && viewableItems[0].index !== null) {
-        setCurrentIndex(viewableItems[0].index)
+        updateVideoState(viewableItems[0].index)
       }
     },
-    [],
+    [updateVideoState],
   )
 
   return (
@@ -170,7 +235,7 @@ function YoloFeed() {
       }}
       showsVerticalScrollIndicator={false}
       onViewableItemsChanged={onViewableItemsChanged}
-      viewabilityConfig={{itemVisiblePercentThreshold: 75}}
+      viewabilityConfig={{itemVisiblePercentThreshold: 95}}
     />
   )
 }
@@ -183,7 +248,6 @@ function VibeItem({
   player,
   post,
   embed,
-  active,
   loaded,
 }: {
   player: VideoPlayer
@@ -194,42 +258,6 @@ function VibeItem({
 }) {
   const {height, width} = useWindowDimensions()
   const insets = useSafeAreaInsets()
-  const source = embed.playlist
-  const sourceChangeEvent = useEvent(player, 'sourceChange') as {
-    // incorrect types
-    source: {uri?: string}
-    oldSource: {uri?: string}
-  }
-
-  // for initial video - useEffect will handle the typical case where
-  // videos have a chance to preload
-  const maybePlay = useNonReactiveCallback(() => {
-    if (active && !player.playing) {
-      player.play()
-    }
-  })
-
-  useEffect(() => {
-    if (loaded && sourceChangeEvent?.source?.uri !== source) {
-      player.replace(source)
-      // play next tick
-      const timeout = setTimeout(() => {
-        maybePlay()
-      }, 0)
-      return () => {
-        clearTimeout(timeout)
-      }
-    }
-  }, [sourceChangeEvent?.source?.uri, loaded, source, player, maybePlay])
-
-  useEffect(() => {
-    if (active) {
-      player.play()
-    } else {
-      // should be a cleanup function, but that causes a crash
-      player.pause()
-    }
-  }, [active, player])
 
   const screenAspectRatio =
     (width - insets.left - insets.right) / (height - insets.bottom)
@@ -387,10 +415,12 @@ function ExpandableRichTextView({
     <ScrollView
       scrollEnabled={expanded}
       onContentSizeChange={(_w, h) => {
-        LayoutAnimation.configureNext({
-          duration: 500,
-          update: {type: 'spring', springDamping: 0.6},
-        })
+        if (contentHeight !== 0) {
+          LayoutAnimation.configureNext({
+            duration: 500,
+            update: {type: 'spring', springDamping: 0.6},
+          })
+        }
         setContentHeight(h)
       }}
       style={{height: Math.min(contentHeight, screenHeight * 0.5)}}
