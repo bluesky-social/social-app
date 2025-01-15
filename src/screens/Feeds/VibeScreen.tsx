@@ -10,8 +10,15 @@ import {runOnJS} from 'react-native-reanimated'
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useEvent} from 'expo'
 import {BlurView} from 'expo-blur'
+import {LinearGradient} from 'expo-linear-gradient'
 import {useVideoPlayer, VideoPlayer, VideoView} from 'expo-video'
-import {AppBskyEmbedVideo, AppBskyFeedDefs} from '@atproto/api'
+import {
+  AppBskyEmbedVideo,
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  AtUri,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 import {
   useFocusEffect,
@@ -23,14 +30,21 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {VIBES_FEED_URI} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {POST_TOMBSTONE, usePostShadow} from '#/state/cache/post-shadow'
 import {FeedPostSliceItem, usePostFeedQuery} from '#/state/queries/post-feed'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {List} from '#/view/com/util/List'
-import {atoms as a, ThemeProvider} from '#/alf'
+import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
+import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {atoms as a, ThemeProvider, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
+import {RichText} from '#/components/RichText'
+import {Text} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'TempVibe'>
 export function VibeScreen({}: Props) {
@@ -121,7 +135,7 @@ function YoloFeed({headerHeight}: {headerHeight: number}) {
           player={player}
           post={post}
           embed={post.embed}
-          loaded={Math.abs(index - currentIndex) < 2}
+          loaded={isFocused && Math.abs(index - currentIndex) < 2}
           active={isFocused && index === currentIndex}
           headerHeight={headerHeight}
         />
@@ -172,6 +186,7 @@ function keyExtractor(item: FeedPostSliceItem) {
 
 function VibeItem({
   player,
+  post,
   embed,
   active,
   loaded,
@@ -240,16 +255,25 @@ function VibeItem({
             nativeControls={false}
           />
         )}
-        <VibeOverlay player={player} />
+        <VibeOverlay player={player} post={post} />
       </SafeAreaView>
     </View>
   )
 }
 
-function VibeOverlay({player}: {player: VideoPlayer}) {
+function VibeOverlay({
+  player,
+  post,
+}: {
+  player: VideoPlayer
+  post: AppBskyFeedDefs.PostView
+}) {
+  const postShadow = usePostShadow(post)
+  const insets = useSafeAreaInsets()
+  const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
   const pushToProfile = useNonReactiveCallback(() => {
-    navigation.navigate('Profile', {name: 'lulaoficial.bsky.social'})
+    navigation.navigate('Profile', {name: post.author.did})
   })
 
   const togglePlayPause = () => {
@@ -276,16 +300,60 @@ function VibeOverlay({player}: {player: VideoPlayer}) {
     return dragLeftGesture
   }, [pushToProfile])
 
+  const rkey = new AtUri(post.uri).rkey
+  const record = AppBskyFeedPost.isRecord(post.record) ? post.record : undefined
+  const richText = new RichTextAPI({
+    text: record?.text || '',
+    facets: record?.facets,
+  })
+
   return (
-    <View style={[a.absolute, a.inset_0]}>
-      <GestureDetector gesture={gesture}>
+    <GestureDetector gesture={gesture}>
+      <View style={[a.absolute, a.inset_0, {bottom: insets.bottom}]}>
         <Button
           label="Toggle play/pause"
           onPress={togglePlayPause}
           style={[a.flex_1]}>
           <View />
         </Button>
-      </GestureDetector>
-    </View>
+        <LinearGradient
+          colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']}
+          style={[a.w_full, a.px_xl, a.py_sm, a.gap_sm]}>
+          <View style={[a.flex_row, a.gap_md, a.align_center]}>
+            <PreviewableUserAvatar profile={post.author} size={32} />
+            <View>
+              <Text style={[a.text_md, a.font_heavy]} numberOfLines={1}>
+                {sanitizeDisplayName(
+                  post.author.displayName || post.author.handle,
+                )}
+              </Text>
+              <Text
+                style={[a.text_sm, t.atoms.text_contrast_high]}
+                numberOfLines={1}>
+                {sanitizeHandle(post.author.handle, '@')}
+              </Text>
+            </View>
+          </View>
+          <RichText
+            value={richText}
+            style={[a.text_sm]}
+            authorHandle={post.author.handle}
+            enableTags
+          />
+          {postShadow !== POST_TOMBSTONE && record && (
+            <PostCtrls
+              richText={richText}
+              post={postShadow}
+              record={record}
+              logContext="FeedItem"
+              onPressReply={() =>
+                navigation.navigate('PostThread', {name: post.author.did, rkey})
+              }
+              big
+            />
+          )}
+        </LinearGradient>
+      </View>
+    </GestureDetector>
   )
 }
