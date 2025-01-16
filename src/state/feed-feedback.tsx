@@ -3,7 +3,7 @@ import {AppState, AppStateStatus} from 'react-native'
 import {AppBskyFeedDefs} from '@atproto/api'
 import throttle from 'lodash.throttle'
 
-import {PROD_DEFAULT_FEED} from '#/lib/constants'
+import {PROD_DEFAULT_FEED, STAGING_DEFAULT_FEED} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {FeedDescriptor, FeedPostSliceItem} from '#/state/queries/post-feed'
@@ -54,7 +54,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
           encoding: 'application/json',
           headers: {
             // TODO when we start sending to other feeds, we need to grab their DID -prf
-            'atproto-proxy': 'did:web:discover.bsky.app#bsky_fg',
+            'atproto-proxy': 'did:web:algo.pop2.bsky.app#bsky_fg',
           },
         },
       )
@@ -155,7 +155,10 @@ export function useFeedFeedbackContext() {
 // place, we're hardcoding it to the discover feed.
 // -prf
 function isDiscoverFeed(feed: FeedDescriptor) {
-  return feed === `feedgen|${PROD_DEFAULT_FEED('whats-hot')}`
+  return (
+    feed === `feedgen|${PROD_DEFAULT_FEED('whats-hot')}` ||
+    feed === `feedgen|${STAGING_DEFAULT_FEED('thevids')}`
+  )
 }
 
 function toString(interaction: AppBskyFeedDefs.Interaction): string {

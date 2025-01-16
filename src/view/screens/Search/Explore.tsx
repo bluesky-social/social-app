@@ -10,6 +10,7 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
@@ -253,6 +254,7 @@ type ExploreScreenItems =
       type: 'profile'
       key: string
       profile: AppBskyActorDefs.ProfileView
+      recId?: number
     }
   | {
       type: 'feed'
@@ -370,6 +372,7 @@ export function Explore() {
               type: 'profile',
               key: actor.did,
               profile: actor,
+              recId: page.recId,
             })
           }
         }
@@ -498,7 +501,7 @@ export function Explore() {
   ])
 
   const renderItem = React.useCallback(
-    ({item}: {item: ExploreScreenItems}) => {
+    ({item, index}: {item: ExploreScreenItems; index: number}) => {
       switch (item.type) {
         case 'header': {
           return (
@@ -524,6 +527,21 @@ export function Explore() {
                 noBg
                 noBorder
                 showKnownFollowers
+                onPress={() => {
+                  logEvent('suggestedUser:press', {
+                    logContext: 'Explore',
+                    recId: item.recId,
+                    position: index,
+                  })
+                }}
+                onFollow={() => {
+                  logEvent('suggestedUser:follow', {
+                    logContext: 'Explore',
+                    location: 'Card',
+                    recId: item.recId,
+                    position: index,
+                  })
+                }}
               />
             </View>
           )
