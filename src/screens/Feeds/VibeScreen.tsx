@@ -258,10 +258,12 @@ function YoloFeed() {
   useFocusEffect(
     useCallback(() => {
       if (!players) {
+        // create players, set sources, start playing
         updateVideoState()
       }
       return () => {
         if (players) {
+          // manually release players when offscreen
           players.forEach(p => p.release())
           setPlayers(null)
         }
@@ -365,7 +367,13 @@ function VibeItem({
               {backgroundColor: 'rgba(0, 0, 0, 0.8)'},
             ]}>
             <Text
-              style={[a.text_2xl, a.font_bold, a.text_center, a.leading_tight]}>
+              style={[
+                a.text_2xl,
+                a.font_heavy,
+                a.text_center,
+                a.leading_tight,
+                a.mx_xl,
+              ]}>
               <Trans>Post has been deleted</Trans>
             </Text>
           </View>
@@ -582,15 +590,11 @@ function ExpandableRichTextView({
     <ScrollView
       scrollEnabled={expanded}
       onContentSizeChange={(_w, h) => {
-        if (contentHeight !== 0) {
-          LayoutAnimation.configureNext(
-            h > contentHeight
-              ? {
-                  duration: 500,
-                  update: {type: 'spring', springDamping: 0.6},
-                }
-              : LayoutAnimation.Presets.easeInEaseOut,
-          )
+        if (expanded) {
+          LayoutAnimation.configureNext({
+            duration: 500,
+            update: {type: 'spring', springDamping: 0.6},
+          })
         }
         setContentHeight(h)
       }}
