@@ -228,6 +228,10 @@ let FeedItemInner = ({
     AppBskyFeedDefs.isReasonRepost(reason) &&
     reason.by.did === currentAccount?.did
 
+  const createdAt = AppBskyFeedPost.isRecord(post.record)
+      ? post.record.createdAt
+      : post.indexedAt
+
   /**
    * If `post[0]` in this slice is the actual root post (not an orphan thread),
    * then we may have a threadgate record to reference
@@ -395,7 +399,7 @@ let FeedItemInner = ({
           <PostMeta
             author={post.author}
             moderation={moderation}
-            timestamp={post.indexedAt}
+            timestamp={createdAt}
             postHref={href}
             onOpenAuthor={onOpenAuthor}
           />
