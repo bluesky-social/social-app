@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useState} from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 import {
   LayoutAnimation,
   ListRenderItem,
@@ -13,12 +13,7 @@ import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useEvent} from 'expo'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
-import {
-  useVideoPlayer,
-  VideoPlayer,
-  VideoPlayerStatus,
-  VideoView,
-} from 'expo-video'
+import {createVideoPlayer, VideoPlayer, VideoView} from 'expo-video'
 import {
   AppBskyEmbedVideo,
   AppBskyFeedDefs,
@@ -41,7 +36,8 @@ import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isAndroid} from '#/platform/detection'
-import {POST_TOMBSTONE, usePostShadow} from '#/state/cache/post-shadow'
+import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {usePostLikeMutationQueue} from '#/state/queries/post'
 import {FeedPostSliceItem, usePostFeedQuery} from '#/state/queries/post-feed'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
@@ -55,6 +51,18 @@ import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+
+function createThreeVideoPlayers(
+  sources?: [string, string, string],
+): [VideoPlayer, VideoPlayer, VideoPlayer] {
+  const p1 = createVideoPlayer(sources?.[0] ?? '')
+  p1.loop = true
+  const p2 = createVideoPlayer(sources?.[1] ?? '')
+  p2.loop = true
+  const p3 = createVideoPlayer(sources?.[2] ?? '')
+  p3.loop = true
+  return [p1, p2, p3]
+}
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'TempVibe'>
 export function VibeScreen({}: Props) {
@@ -78,7 +86,7 @@ export function VibeScreen({}: Props) {
         <View
           style={[
             a.absolute,
-            a.z_10,
+            a.z_30,
             {top: 0, left: 0, right: 0, paddingTop: top},
           ]}>
           <Layout.Header.Outer noBottomBorder>
@@ -109,23 +117,17 @@ function YoloFeed() {
     fetchNextPage,
   } = usePostFeedQuery(`feedgen|${VIBES_FEED_URI}`)
 
+  const videos = data?.pages.flatMap(page =>
+    page.slices.flatMap(slice => slice.items),
+  )
+
   const [currentSources, setCurrentSources] = useState<
     [string | null, string | null, string | null]
   >([null, null, null])
 
-  const player1 = useVideoPlayer('', p => {
-    p.loop = true
-  })
-  const player2 = useVideoPlayer('', p => {
-    p.loop = true
-  })
-  const player3 = useVideoPlayer('', p => {
-    p.loop = true
-  })
-
-  const videos = data?.pages.flatMap(page =>
-    page.slices.flatMap(slice => slice.items),
-  )
+  const [players, setPlayers] = useState<
+    [VideoPlayer, VideoPlayer, VideoPlayer] | null
+  >(createThreeVideoPlayers)
 
   const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -136,7 +138,7 @@ function YoloFeed() {
         return null
       }
 
-      const player = [player1, player2, player3][index % 3]
+      const player = players?.[index % 3]
       const currentSource = currentSources[index % 3]
 
       return (
@@ -152,12 +154,18 @@ function YoloFeed() {
         />
       )
     },
-    [player1, player2, player3, currentIndex, isFocused, currentSources],
+    [players, currentIndex, isFocused, currentSources],
   )
 
-  const updateVideoState = useNonReactiveCallback((index: number) => {
+  const updateVideoState = useNonReactiveCallback((index?: number) => {
     if (!videos) return
-    setCurrentIndex(index)
+
+    if (index === undefined) {
+      index = currentIndex
+    } else {
+      setCurrentIndex(index)
+    }
+
     setCurrentSources(oldSources => {
       const currentSources = [...oldSources] as [
         string | null,
@@ -181,32 +189,59 @@ function YoloFeed() {
           ? nextEmbed.playlist
           : null
 
-      const prevPlayer = [player1, player2, player3][(index + 2) % 3]
       const prevPlayerCurrentSource = currentSources[(index + 2) % 3]
-      const currPlayer = [player1, player2, player3][index % 3]
       const currPlayerCurrentSource = currentSources[index % 3]
-      const nextPlayer = [player1, player2, player3][(index + 1) % 3]
       const nextPlayerCurrentSource = currentSources[(index + 1) % 3]
 
+      if (!players) {
+        const args = ['', '', ''] satisfies [string, string, string]
+        if (prevVideo) args[(index + 2) % 3] = prevVideo
+        if (currVideo) args[index % 3] = currVideo
+        if (nextVideo) args[(index + 1) % 3] = nextVideo
+        const [player1, player2, player3] = createThreeVideoPlayers(args)
+
+        setPlayers([player1, player2, player3])
+
+        if (currVideo) {
+          const currPlayer = [player1, player2, player3][index % 3]
+          currPlayer.play()
+        }
+      } else {
+        const [player1, player2, player3] = players
+
+        const prevPlayer = [player1, player2, player3][(index + 2) % 3]
+        const currPlayer = [player1, player2, player3][index % 3]
+        const nextPlayer = [player1, player2, player3][(index + 1) % 3]
+
+        if (prevVideo && prevVideo !== prevPlayerCurrentSource) {
+          prevPlayer.replace(prevVideo)
+        }
+        prevPlayer.pause()
+
+        if (currVideo) {
+          if (currVideo !== currPlayerCurrentSource) {
+            currPlayer.replace(currVideo)
+          }
+          currPlayer.play()
+        }
+
+        if (nextVideo && nextVideo !== nextPlayerCurrentSource) {
+          nextPlayer.replace(nextVideo)
+        }
+        nextPlayer.pause()
+      }
+
       if (prevVideo && prevVideo !== prevPlayerCurrentSource) {
-        prevPlayer.replace(prevVideo)
         currentSources[(index + 2) % 3] = prevVideo
       }
-      prevPlayer.pause()
 
-      if (currVideo) {
-        if (currVideo !== currPlayerCurrentSource) {
-          currPlayer.replace(currVideo)
-          currentSources[index % 3] = currVideo
-        }
-        currPlayer.play()
+      if (currVideo && currVideo !== currPlayerCurrentSource) {
+        currentSources[index % 3] = currVideo
       }
 
       if (nextVideo && nextVideo !== nextPlayerCurrentSource) {
-        nextPlayer.replace(nextVideo)
         currentSources[(index + 1) % 3] = nextVideo
       }
-      nextPlayer.pause()
 
       // use old array if no changes
       if (
@@ -219,6 +254,20 @@ function YoloFeed() {
       return currentSources
     })
   })
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!players) {
+        updateVideoState()
+      }
+      return () => {
+        if (players) {
+          players.forEach(p => p.release())
+          setPlayers(null)
+        }
+      }
+    }, [players, updateVideoState]),
+  )
 
   const onViewableItemsChanged = useCallback(
     ({viewableItems}: {viewableItems: ViewToken[]; changed: ViewToken[]}) => {
@@ -266,21 +315,14 @@ function VibeItem({
   embed,
   active,
 }: {
-  player: VideoPlayer
+  player?: VideoPlayer
   post: AppBskyFeedDefs.PostView
   embed: AppBskyEmbedVideo.View
   active: boolean
 }) {
+  const postShadow = usePostShadow(post)
   const {height, width} = useWindowDimensions()
   const insets = useSafeAreaInsets()
-
-  const videoAspectRatio =
-    (embed.aspectRatio?.width ?? 1) / (embed.aspectRatio?.height ?? 1)
-
-  // if the video tall enough (tiktok/reels are 9:16) go cover mode
-  const isCloseEnough = videoAspectRatio <= 9 / 16
-
-  const {status} = useEvent(player, 'statusChange', {status: player.status})
 
   return (
     <View
@@ -289,53 +331,115 @@ function VibeItem({
         width,
       }}>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={[a.flex_1]}>
-        {active && (
-          <VideoView
-            style={[a.flex_1]}
-            player={player}
-            nativeControls={false}
-            contentFit={isCloseEnough ? 'cover' : 'contain'}
-            accessibilityIgnoresInvertColors
-          />
+        {player ? (
+          <VibeItemInner player={player} embed={embed} active={active} />
+        ) : (
+          embed.thumbnail && (
+            <Image
+              accessibilityIgnoresInvertColors
+              source={{uri: embed.thumbnail}}
+              style={[
+                a.flex_1,
+                a.absolute,
+                {
+                  top: 0,
+                  left: insets.left,
+                  right: insets.right,
+                  bottom: insets.bottom,
+                },
+              ]}
+              contentFit="contain"
+            />
+          )
         )}
-        {embed.thumbnail && (
-          <Image
-            accessibilityIgnoresInvertColors
-            source={{uri: embed.thumbnail}}
+        {postShadow !== POST_TOMBSTONE ? (
+          player && <VibeOverlay player={player} post={postShadow} />
+        ) : (
+          <View
             style={[
-              a.flex_1,
               a.absolute,
-              {
-                zIndex: status === 'loading' ? 1 : -1,
-                top: 0,
-                left: insets.left,
-                right: insets.right,
-                bottom: insets.bottom,
-              },
-            ]}
-            contentFit={isCloseEnough ? 'cover' : 'contain'}
-          />
+              a.inset_0,
+              a.z_20,
+              a.align_center,
+              a.justify_center,
+              {backgroundColor: 'rgba(0, 0, 0, 0.8)'},
+            ]}>
+            <Text
+              style={[a.text_2xl, a.font_bold, a.text_center, a.leading_tight]}>
+              <Trans>Post has been deleted</Trans>
+            </Text>
+          </View>
         )}
-        <VibeOverlay player={player} post={post} status={status} />
       </SafeAreaView>
     </View>
+  )
+}
+
+function VibeItemInner({
+  player,
+  embed,
+  active,
+}: {
+  player: VideoPlayer
+  embed: AppBskyEmbedVideo.View
+  active: boolean
+}) {
+  const insets = useSafeAreaInsets()
+  const {status} = useEvent(player, 'statusChange', {status: player.status})
+
+  const videoAspectRatio =
+    (embed.aspectRatio?.width ?? 1) / (embed.aspectRatio?.height ?? 1)
+
+  // if the video tall enough (tiktok/reels are 9:16) go cover mode
+  const isCloseEnough = videoAspectRatio <= 9 / 16
+
+  return (
+    <>
+      {active && player && (
+        <VideoView
+          style={[a.flex_1]}
+          player={player}
+          nativeControls={false}
+          contentFit={isCloseEnough ? 'cover' : 'contain'}
+          accessibilityIgnoresInvertColors
+        />
+      )}
+      {embed.thumbnail && (
+        <Image
+          accessibilityIgnoresInvertColors
+          source={{uri: embed.thumbnail}}
+          style={[
+            a.flex_1,
+            a.absolute,
+            {
+              zIndex: status === 'loading' && isAndroid ? 1 : -1,
+              top: 0,
+              left: insets.left,
+              right: insets.right,
+              bottom: insets.bottom,
+            },
+          ]}
+          contentFit={isCloseEnough ? 'cover' : 'contain'}
+        />
+      )}
+    </>
   )
 }
 
 function VibeOverlay({
   player,
   post,
-  status,
 }: {
   player: VideoPlayer
-  post: AppBskyFeedDefs.PostView
-  status: VideoPlayerStatus
+  post: Shadow<AppBskyFeedDefs.PostView>
 }) {
-  const postShadow = usePostShadow(post)
   const insets = useSafeAreaInsets()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
   const [expanded, setExpanded] = useState(false)
+  const {status} = useEvent(player, 'statusChange', {status: player.status})
+  const doubleTapRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [queueLike] = usePostLikeMutationQueue(post, 'Vibe')
 
   const pushToProfile = useNonReactiveCallback(() => {
     navigation.navigate('Profile', {name: post.author.did})
@@ -346,6 +450,16 @@ function VibeOverlay({
       player.pause()
     } else {
       player.play()
+    }
+  }
+
+  const onPress = () => {
+    if (doubleTapRef.current) {
+      clearTimeout(doubleTapRef.current)
+      doubleTapRef.current = null
+      queueLike()
+    } else {
+      doubleTapRef.current = setTimeout(togglePlayPause, 300)
     }
   }
 
@@ -375,10 +489,11 @@ function VibeOverlay({
   return (
     <>
       <GestureDetector gesture={gesture}>
-        <View style={[a.absolute, a.inset_0, {bottom: insets.bottom}]}>
+        <View style={[a.absolute, a.inset_0, a.z_20, {bottom: insets.bottom}]}>
           <Button
             label="Toggle play/pause"
-            onPress={togglePlayPause}
+            accessibilityHint="Double tap to like"
+            onPress={onPress}
             style={[a.flex_1]}>
             <View />
           </Button>
@@ -412,10 +527,10 @@ function VibeOverlay({
                 authorHandle={post.author.handle}
               />
             )}
-            {postShadow !== POST_TOMBSTONE && record && (
+            {record && (
               <PostCtrls
                 richText={richText}
-                post={postShadow}
+                post={post}
                 record={record}
                 logContext="FeedItem"
                 onPressReply={() =>
