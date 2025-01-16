@@ -10,6 +10,7 @@ import {
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import {runOnJS} from 'react-native-reanimated'
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
+import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {useVideoPlayer, VideoPlayer, VideoView} from 'expo-video'
 import {
@@ -135,12 +136,11 @@ function YoloFeed() {
           player={player}
           post={post}
           embed={post.embed}
-          loaded={
+          active={
             isFocused &&
-            Math.abs(index - currentIndex) < 2 &&
+            index === currentIndex &&
             currentSource === post.embed.playlist
           }
-          active={isFocused && index === currentIndex}
         />
       )
     },
@@ -248,13 +248,12 @@ function VibeItem({
   player,
   post,
   embed,
-  loaded,
+  active,
 }: {
   player: VideoPlayer
   post: AppBskyFeedDefs.PostView
   embed: AppBskyEmbedVideo.View
   active: boolean
-  loaded: boolean
 }) {
   const {height, width} = useWindowDimensions()
   const insets = useSafeAreaInsets()
@@ -276,11 +275,30 @@ function VibeItem({
         width,
       }}>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={[a.flex_1]}>
-        {loaded && (
+        {active && (
           <VideoView
             style={[a.flex_1]}
             player={player}
             nativeControls={false}
+            contentFit={isCloseEnough ? 'cover' : 'contain'}
+            accessibilityIgnoresInvertColors
+          />
+        )}
+        {embed.thumbnail && (
+          <Image
+            accessibilityIgnoresInvertColors
+            source={{uri: embed.thumbnail}}
+            style={[
+              a.flex_1,
+              a.absolute,
+              {
+                zIndex: -1,
+                top: 0,
+                left: insets.left,
+                right: insets.right,
+                bottom: insets.bottom,
+              },
+            ]}
             contentFit={isCloseEnough ? 'cover' : 'contain'}
           />
         )}
