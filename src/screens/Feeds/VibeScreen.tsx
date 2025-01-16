@@ -66,7 +66,7 @@ function createThreeVideoPlayers(
   return [p1, p2, p3]
 }
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'TempVibe'>
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'VideoFeed'>
 export function VibeScreen({}: Props) {
   const {top} = useSafeAreaInsets()
 
@@ -109,7 +109,7 @@ export function VibeScreen({}: Props) {
 }
 
 function YoloFeed() {
-  const {params} = useRoute<RouteProp<CommonNavigatorParams, 'TempVibe'>>()
+  const {params} = useRoute<RouteProp<CommonNavigatorParams, 'VideoFeed'>>()
   const isFocused = useIsFocused()
   const {
     data,

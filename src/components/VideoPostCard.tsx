@@ -55,7 +55,7 @@ export function VideoPostCard({
     <Link
       label={_(msg`View video`)}
       to={{
-        screen: 'TempVibe',
+        screen: 'VideoFeed',
         params: {
           feedUri: sourceFeedUri,
           postUri: post.uri,

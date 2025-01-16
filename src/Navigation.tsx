@@ -424,10 +424,10 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title(msg`Edit your starter pack`), requireAuth: true}}
       />
       <Stack.Screen
-        name="TempVibe"
+        name="VideoFeed"
         getComponent={() => VibeScreen}
         options={{
-          title: title(msg`Vibe`),
+          title: title(msg`Video Feed`),
           requireAuth: true,
         }}
       />
