@@ -138,7 +138,6 @@ export function VideoPostCard({
             style={[
               a.flex_1,
               a.text_sm,
-              a.font_bold,
               a.leading_tight,
               t.atoms.text_contrast_medium,
             ]}
