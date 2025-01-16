@@ -111,6 +111,16 @@ export function VibeScreen({}: Props) {
 function YoloFeed() {
   const {params} = useRoute<RouteProp<CommonNavigatorParams, 'VideoFeed'>>()
   const isFocused = useIsFocused()
+  const feedDesc = useMemo(() => {
+    switch (params.type) {
+      case 'feedgen':
+        return `feedgen|${params.uri}` as const
+      case 'author':
+        return `author|${params.did}|${params.filter}` as const
+      default:
+        throw new Error(`Invalid video feed params ${JSON.stringify(params)}`)
+    }
+  }, [params])
   const {
     data,
     isFetching,
@@ -118,13 +128,13 @@ function YoloFeed() {
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = usePostFeedQuery(`feedgen|${params.feedUri}`)
+  } = usePostFeedQuery(feedDesc)
 
   let videos = data?.pages.flatMap(page =>
     page.slices.flatMap(slice => slice.items),
   )
   const startingVideoIndex = videos?.findIndex(video => {
-    return video.post.uri === params.postUri
+    return video.post.uri === params.initialPostUri
   })
   if (videos && startingVideoIndex && startingVideoIndex > -1) {
     videos = videos.slice(startingVideoIndex)
