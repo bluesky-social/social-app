@@ -25,7 +25,7 @@ export function PostFeedVideoGridRow({
 
   return (
     <View style={[gutters]}>
-      <View style={[a.flex_row, a.gap_lg]}>
+      <View style={[a.flex_row, a.gap_sm]}>
         {posts.map(post => (
           <View key={post.uri} style={[a.flex_1]}>
             <VideoPostCard post={post} sourceFeedUri={sourceFeedUri} />

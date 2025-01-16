@@ -18,16 +18,14 @@ import * as userActionHistory from '#/state/userActionHistory'
 import {SeenPost} from '#/state/userActionHistory'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, useBreakpoints, useTheme, ViewStyleProp, web} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
-import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {ArrowRight_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {PersonPlus_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
-import {InlineLinkText, Link} from '#/components/Link'
+import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import {LinearGradientBackground} from './LinearGradientBackground'
 import {ProgressGuideList} from './ProgressGuide/List'
 
 const MOBILE_CARD_WIDTH = 300
@@ -518,45 +516,5 @@ export function ProgressGuide() {
     <View style={[t.atoms.border_contrast_low, a.px_lg, a.py_lg, a.pb_lg]}>
       <ProgressGuideList />
     </View>
-  )
-}
-
-export function VideoModeEntranceInterstitial() {
-  const {_} = useLingui()
-  const t = useTheme()
-
-  return (
-    <LinearGradientBackground gradient="bonfire" start={[0, 0]} end={[1, 1]}>
-      <View
-        style={[
-          t.atoms.border_contrast_low,
-          a.border_t,
-          a.flex_row,
-          a.align_center,
-          a.gap_lg,
-          a.px_lg,
-          a.py_sm,
-          a.relative,
-        ]}>
-        <Text style={[a.text_md, a.flex_1, {color: t.palette.white}]}>
-          <Text style={[a.text_md, a.font_bold, {color: t.palette.white}]}>
-            NEW!
-          </Text>{' '}
-          Scroll this feed in video mode
-        </Text>
-        <Link
-          label={_(msg`Start watching`)}
-          to="/temp-vibe"
-          size="small"
-          // why don't the gradient ones work?
-          color="secondary_inverted"
-          variant="solid">
-          <ButtonText>
-            <Trans>Start watching</Trans>
-          </ButtonText>
-          <ButtonIcon icon={ArrowRightIcon} />
-        </Link>
-      </View>
-    </LinearGradientBackground>
   )
 }
