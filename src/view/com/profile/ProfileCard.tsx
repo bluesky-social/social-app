@@ -24,6 +24,7 @@ import {
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
 import * as Pills from '#/components/Pills'
+import * as atp from '#/types/atproto'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
@@ -41,12 +42,12 @@ export function ProfileCard({
   showKnownFollowers,
 }: {
   testID?: string
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: atp.profile.AnyProfileView
   noModFilter?: boolean
   noBg?: boolean
   noBorder?: boolean
   renderButton?: (
-    profile: Shadow<AppBskyActorDefs.ProfileViewBasic>,
+    profile: Shadow<atp.profile.AnyProfileView>,
   ) => React.ReactNode
   onPress?: () => void
   style?: StyleProp<ViewStyle>
@@ -126,29 +127,35 @@ export function ProfileCard({
           <View style={styles.layoutButton}>{renderButton(profile)}</View>
         ) : undefined}
       </View>
-      {profile.description || knownFollowersVisible ? (
-        <View style={styles.details}>
-          {profile.description ? (
-            <Text emoji style={pal.text} numberOfLines={4}>
-              {profile.description as string}
-            </Text>
-          ) : null}
-          {knownFollowersVisible ? (
-            <View
-              style={[
-                a.flex_row,
-                a.align_center,
-                a.gap_sm,
-                !!profile.description && a.mt_md,
-              ]}>
-              <KnownFollowers
-                minimal
-                profile={profile}
-                moderationOpts={moderationOpts}
-              />
+      {atp.profile.isView(profile) || atp.profile.isDetailedView(profile) ? (
+        <>
+          {profile.description || knownFollowersVisible ? (
+            <View style={styles.details}>
+              {profile.description ? (
+                <Text emoji style={pal.text} numberOfLines={4}>
+                  {profile.description as string}
+                </Text>
+              ) : null}
+              {knownFollowersVisible ? (
+                <View
+                  style={[
+                    a.flex_row,
+                    a.align_center,
+                    a.gap_sm,
+                    !!profile.description && a.mt_md,
+                  ]}>
+                  {atp.profile.isDetailedView(profile) && (
+                    <KnownFollowers
+                      minimal
+                      profile={profile}
+                      moderationOpts={moderationOpts}
+                    />
+                  )}
+                </View>
+              ) : null}
             </View>
           ) : null}
-        </View>
+        </>
       ) : null}
     </Link>
   )

@@ -23,7 +23,12 @@ import {logEvent, LogEvents, toClout} from '#/lib/statsig/statsig'
 import {Shadow} from '#/state/cache/types'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
+import {
+  unstableCacheProfileView,
+  useUnstableProfileViewCache,
+} from '#/state/queries/unstable-profile-cache'
 import * as userActionHistory from '#/state/userActionHistory'
+import * as atp from '#/types/atproto'
 import {updateProfileShadow} from '../cache/profile-shadow'
 import {useAgent, useSession} from '../session'
 import {
@@ -34,6 +39,12 @@ import {RQKEY as RQKEY_LIST_CONVOS} from './messages/list-conversations'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 
+export * from '#/state/queries/unstable-profile-cache'
+/**
+ * @deprecated use {@link unstableCacheProfileView} instead
+ */
+export const precacheProfile = unstableCacheProfileView
+
 const RQKEY_ROOT = 'profile'
 export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
@@ -43,12 +54,6 @@ export const profilesQueryKey = (handles: string[]) => [
   handles,
 ]
 
-const profileBasicQueryKeyRoot = 'profileBasic'
-export const profileBasicQueryKey = (didOrHandle: string) => [
-  profileBasicQueryKeyRoot,
-  didOrHandle,
-]
-
 export function useProfileQuery({
   did,
   staleTime = STALE.SECONDS.FIFTEEN,
@@ -56,8 +61,8 @@ export function useProfileQuery({
   did: string | undefined
   staleTime?: number
 }) {
-  const queryClient = useQueryClient()
   const agent = useAgent()
+  const {getUnstableProfile} = useUnstableProfileViewCache()
   return useQuery<AppBskyActorDefs.ProfileViewDetailed>({
     // WARNING
     // this staleTime is load-bearing
@@ -72,10 +77,7 @@ export function useProfileQuery({
     },
     placeholderData: () => {
       if (!did) return
-
-      return queryClient.getQueryData<AppBskyActorDefs.ProfileViewBasic>(
-        profileBasicQueryKey(did),
-      )
+      return getUnstableProfile(did) as AppBskyActorDefs.ProfileViewDetailed
     },
     enabled: !!did,
   })
@@ -113,7 +115,7 @@ export function usePrefetchProfileQuery() {
 }
 
 interface ProfileUpdateParams {
-  profile: AppBskyActorDefs.ProfileView
+  profile: AppBskyActorDefs.ProfileViewDetailed
   updates:
     | AppBskyActorProfile.Record
     | ((existing: AppBskyActorProfile.Record) => AppBskyActorProfile.Record)
@@ -220,7 +222,7 @@ export function useProfileUpdateMutation() {
 }
 
 export function useProfileFollowMutationQueue(
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
+  profile: Shadow<atp.profile.AnyProfileView>,
   logContext: LogEvents['profile:follow']['logContext'] &
     LogEvents['profile:follow']['logContext'],
 ) {
@@ -294,7 +296,7 @@ export function useProfileFollowMutationQueue(
 
 function useProfileFollowMutation(
   logContext: LogEvents['profile:follow']['logContext'],
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
+  profile: Shadow<atp.profile.AnyProfileView>,
 ) {
   const {currentAccount} = useSession()
   const agent = useAgent()
@@ -313,7 +315,8 @@ function useProfileFollowMutation(
         didBecomeMutual: profile.viewer
           ? Boolean(profile.viewer.followedBy)
           : undefined,
-        followeeClout: toClout(profile.followersCount),
+        // @ts-expect-error — this is optional
+        followeeClout: toClout(profile?.followersCount),
         followerClout: toClout(ownProfile?.followersCount),
       })
       return await agent.follow(did)
@@ -334,7 +337,7 @@ function useProfileUnfollowMutation(
 }
 
 export function useProfileMuteMutationQueue(
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
+  profile: Shadow<atp.profile.AnyProfileView>,
 ) {
   const queryClient = useQueryClient()
   const did = profile.did
@@ -409,7 +412,7 @@ function useProfileUnmuteMutation() {
 }
 
 export function useProfileBlockMutationQueue(
-  profile: Shadow<AppBskyActorDefs.ProfileViewBasic>,
+  profile: Shadow<atp.profile.AnyProfileView>,
 ) {
   const queryClient = useQueryClient()
   const did = profile.did
@@ -503,14 +506,6 @@ function useProfileUnblockMutation() {
       resetProfilePostsQueries(queryClient, did, 1000)
     },
   })
-}
-
-export function precacheProfile(
-  queryClient: QueryClient,
-  profile: AppBskyActorDefs.ProfileViewBasic,
-) {
-  queryClient.setQueryData(profileBasicQueryKey(profile.handle), profile)
-  queryClient.setQueryData(profileBasicQueryKey(profile.did), profile)
 }
 
 async function whenAppViewReady(

@@ -1,6 +1,6 @@
 import {
-  AppBskyActorDefs,
   BskyAgent,
+  ChatBskyActorDefs,
   ChatBskyConvoDefs,
   ChatBskyConvoSendMessage,
 } from '@atproto/api'
@@ -168,8 +168,8 @@ export type ConvoStateReady = {
   items: ConvoItem[]
   convo: ChatBskyConvoDefs.ConvoView
   error: undefined
-  sender: AppBskyActorDefs.ProfileViewBasic
-  recipients: AppBskyActorDefs.ProfileViewBasic[]
+  sender: ChatBskyActorDefs.ProfileViewBasic
+  recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
@@ -180,8 +180,8 @@ export type ConvoStateBackgrounded = {
   items: ConvoItem[]
   convo: ChatBskyConvoDefs.ConvoView
   error: undefined
-  sender: AppBskyActorDefs.ProfileViewBasic
-  recipients: AppBskyActorDefs.ProfileViewBasic[]
+  sender: ChatBskyActorDefs.ProfileViewBasic
+  recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
@@ -192,8 +192,8 @@ export type ConvoStateSuspended = {
   items: ConvoItem[]
   convo: ChatBskyConvoDefs.ConvoView
   error: undefined
-  sender: AppBskyActorDefs.ProfileViewBasic
-  recipients: AppBskyActorDefs.ProfileViewBasic[]
+  sender: ChatBskyActorDefs.ProfileViewBasic
+  recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
@@ -216,8 +216,8 @@ export type ConvoStateDisabled = {
   items: ConvoItem[]
   convo: ChatBskyConvoDefs.ConvoView
   error: undefined
-  sender: AppBskyActorDefs.ProfileViewBasic
-  recipients: AppBskyActorDefs.ProfileViewBasic[]
+  sender: ChatBskyActorDefs.ProfileViewBasic
+  recipients: ChatBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
   deleteMessage: DeleteMessage
   sendMessage: SendMessage

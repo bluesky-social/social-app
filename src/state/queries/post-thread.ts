@@ -18,6 +18,7 @@ import {
   findAllProfilesInQueryData as findAllProfilesInSearchQueryData,
 } from '#/state/queries/search-posts'
 import {useAgent} from '#/state/session'
+import * as atp from '#/types/atproto'
 import {
   findAllPostsInQueryData as findAllPostsInNotifsQueryData,
   findAllProfilesInQueryData as findAllProfilesInNotifsQueryData,
@@ -329,8 +330,10 @@ function responseToThreadNodes(
 ): ThreadNode {
   if (
     AppBskyFeedDefs.isThreadViewPost(node) &&
-    AppBskyFeedPost.isRecord(node.post.record) &&
-    AppBskyFeedPost.validateRecord(node.post.record).success
+    atp.dangerousIsType<AppBskyFeedPost.Record>(
+      node.post.record,
+      AppBskyFeedPost.isRecord,
+    )
   ) {
     const post = node.post
     // These should normally be present. They're missing only for
@@ -360,7 +363,7 @@ function responseToThreadNodes(
         depth,
         isHighlightedPost: depth === 0,
         hasMore:
-          direction === 'down' && !node.replies?.length && !!node.replyCount,
+          direction === 'down' && !node.replies?.length && !!post.replyCount,
         isSelfThread: false, // populated `annotateSelfThread`
         hasMoreSelfThread: false, // populated in `annotateSelfThread`
       },
@@ -493,7 +496,7 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<AppBskyActorDefs.ProfileViewBasic, void> {
   const queryDatas = queryClient.getQueriesData<PostThreadQueryData>({
     queryKey: [RQKEY_ROOT],
   })

@@ -311,6 +311,7 @@ class MergeFeedSource_Custom extends MergeFeedSource {
       )
       // attach source info
       for (const post of res.data.feed) {
+        // @ts-ignore
         post.__source = this.sourceInfo
       }
       return res

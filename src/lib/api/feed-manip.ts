@@ -55,16 +55,15 @@ export class FeedViewPostsSlice {
     }
     this._feedPost = feedPost
     this._reactKey = `slice-${post.uri}-${
-      feedPost.reason?.indexedAt || post.indexedAt
+      feedPost.reason && 'indexedAt' in feedPost.reason
+        ? feedPost.reason.indexedAt
+        : post.indexedAt
     }`
     if (feedPost.post.uri === FALLBACK_MARKER_POST.post.uri) {
       this.isFallbackMarker = true
       return
     }
-    if (
-      !AppBskyFeedPost.isRecord(post.record) ||
-      !AppBskyFeedPost.validateRecord(post.record).success
-    ) {
+    if (!AppBskyFeedPost.isValidRecord(post.record)) {
       return
     }
     const parent = reply?.parent
@@ -94,8 +93,7 @@ export class FeedViewPostsSlice {
     }
     if (
       !AppBskyFeedDefs.isPostView(parent) ||
-      !AppBskyFeedPost.isRecord(parent.record) ||
-      !AppBskyFeedPost.validateRecord(parent.record).success
+      !AppBskyFeedPost.isValidRecord(parent.record)
     ) {
       this.isOrphan = true
       return
@@ -136,8 +134,7 @@ export class FeedViewPostsSlice {
     }
     if (
       !AppBskyFeedDefs.isPostView(root) ||
-      !AppBskyFeedPost.isRecord(root.record) ||
-      !AppBskyFeedPost.validateRecord(root.record).success
+      !AppBskyFeedPost.isValidRecord(root.record)
     ) {
       this.isOrphan = true
       return

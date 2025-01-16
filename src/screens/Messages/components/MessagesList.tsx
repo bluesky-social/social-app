@@ -10,7 +10,12 @@ import Animated, {
 } from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {AppBskyEmbedRecord, AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {
+  $Typed,
+  AppBskyEmbedRecord,
+  AppBskyRichtextFacet,
+  RichText,
+} from '@atproto/api'
 
 import {clamp} from '#/lib/numbers'
 import {ScrollProvider} from '#/lib/ScrollContext'
@@ -297,7 +302,7 @@ export function MessagesList({
       // we want to remove the post link from the text, re-trim, then detect facets
       rt.detectFacetsWithoutResolution()
 
-      let embed: AppBskyEmbedRecord.Main | undefined
+      let embed: $Typed<AppBskyEmbedRecord.Main> | undefined
 
       if (embedUri) {
         try {

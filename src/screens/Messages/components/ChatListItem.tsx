@@ -1,7 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react'
 import {GestureResponderEvent, View} from 'react-native'
 import {
-  AppBskyActorDefs,
   AppBskyEmbedRecord,
   ChatBskyConvoDefs,
   moderateProfile,
@@ -39,6 +38,7 @@ import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
+import * as atp from '#/types/atproto'
 
 export let ChatListItem = ({
   convo,
@@ -73,7 +73,7 @@ function ChatListItemReady({
   moderationOpts,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: atp.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()

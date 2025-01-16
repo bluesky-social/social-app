@@ -5,10 +5,9 @@ import {ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
 export function threadgateViewToAllowUISetting(
   threadgateView: AppBskyFeedDefs.ThreadgateView | undefined,
 ): ThreadgateAllowUISetting[] {
+  // Validate the record for clarity, since backwards compat code is a little confusing
   const threadgate =
-    threadgateView &&
-    AppBskyFeedThreadgate.isRecord(threadgateView.record) &&
-    AppBskyFeedThreadgate.validateRecord(threadgateView.record).success
+    threadgateView && AppBskyFeedThreadgate.isValidRecord(threadgateView.record)
       ? threadgateView.record
       : undefined
   return threadgateRecordToAllowUISetting(threadgate)
@@ -39,11 +38,11 @@ export function threadgateRecordToAllowUISetting(
   const settings: ThreadgateAllowUISetting[] = threadgate.allow
     .map(allow => {
       let setting: ThreadgateAllowUISetting | undefined
-      if (allow.$type === 'app.bsky.feed.threadgate#mentionRule') {
+      if (AppBskyFeedThreadgate.isMentionRule(allow)) {
         setting = {type: 'mention'}
-      } else if (allow.$type === 'app.bsky.feed.threadgate#followingRule') {
+      } else if (AppBskyFeedThreadgate.isFollowingRule(allow)) {
         setting = {type: 'following'}
-      } else if (allow.$type === 'app.bsky.feed.threadgate#listRule') {
+      } else if (AppBskyFeedThreadgate.isListRule(allow)) {
         setting = {type: 'list', list: allow.list}
       }
       return setting
@@ -67,11 +66,7 @@ export function threadgateAllowUISettingToAllowRecordValue(
     return undefined
   }
 
-  let allow: (
-    | AppBskyFeedThreadgate.MentionRule
-    | AppBskyFeedThreadgate.FollowingRule
-    | AppBskyFeedThreadgate.ListRule
-  )[] = []
+  let allow: Exclude<AppBskyFeedThreadgate.Record['allow'], undefined> = []
 
   if (!threadgate.find(v => v.type === 'nobody')) {
     for (const rule of threadgate) {
