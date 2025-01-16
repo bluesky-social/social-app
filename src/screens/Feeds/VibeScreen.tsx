@@ -468,10 +468,14 @@ function ExpandableRichTextView({
       scrollEnabled={expanded}
       onContentSizeChange={(_w, h) => {
         if (contentHeight !== 0) {
-          LayoutAnimation.configureNext({
-            duration: 500,
-            update: {type: 'spring', springDamping: 0.6},
-          })
+          LayoutAnimation.configureNext(
+            h > contentHeight
+              ? {
+                  duration: 500,
+                  update: {type: 'spring', springDamping: 0.6},
+                }
+              : LayoutAnimation.Presets.easeInEaseOut,
+          )
         }
         setContentHeight(h)
       }}
