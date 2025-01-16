@@ -44,11 +44,7 @@ import {List, ListRef} from '#/view/com/util/List'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {useBreakpoints} from '#/alf'
-import {
-  ProgressGuide,
-  SuggestedFollows,
-  VideoModeEntranceInterstitial,
-} from '#/components/FeedInterstitials'
+import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
 import {PostFeedVideoGridRow} from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
@@ -111,10 +107,6 @@ type FeedRow =
     }
   | {
       type: 'interstitialTrending'
-      key: string
-    }
-  | {
-      type: 'videoModeEntrance'
       key: string
     }
 
@@ -327,13 +319,6 @@ let PostFeed = ({
         let sliceIndex = -1
         for (const page of data?.pages) {
           if (feedKind === 'thevids' && isNative) {
-            if (sliceIndex === -1) {
-              arr.push({
-                type: 'videoModeEntrance',
-                key: 'videoModeEntrance',
-              })
-            }
-
             const rows: FeedPostSliceItem[][] = []
             for (let i = 0; i < page.slices.length; i++) {
               const slice = page.slices[i]
@@ -560,8 +545,6 @@ let PostFeed = ({
         return <ProgressGuide />
       } else if (row.type === 'interstitialTrending') {
         return <TrendingInterstitial />
-      } else if (row.type === 'videoModeEntrance') {
-        return <VideoModeEntranceInterstitial />
       } else if (row.type === 'sliceItem') {
         const slice = row.slice
         if (slice.isFallbackMarker) {
