@@ -24,13 +24,15 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
+  RouteProp,
   useFocusEffect,
   useIsFocused,
   useNavigation,
+  useRoute,
 } from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {HITSLOP_20, VIBES_FEED_URI} from '#/lib/constants'
+import {HITSLOP_20} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -107,6 +109,7 @@ export function VibeScreen({}: Props) {
 }
 
 function YoloFeed() {
+  const {params} = useRoute<RouteProp<CommonNavigatorParams, 'TempVibe'>>()
   const isFocused = useIsFocused()
   const {
     data,
@@ -115,7 +118,9 @@ function YoloFeed() {
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = usePostFeedQuery(`feedgen|${VIBES_FEED_URI}`)
+  } = usePostFeedQuery(`feedgen|${params.feedUri}`, {
+    initialCursor: params.cursor,
+  })
 
   const videos = data?.pages.flatMap(page =>
     page.slices.flatMap(slice => slice.items),
