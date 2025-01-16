@@ -207,6 +207,14 @@ function YoloFeed() {
       }
       nextPlayer.pause()
 
+      // use old array if no changes
+      if (
+        oldSources[0] === currentSources[0] &&
+        oldSources[1] === currentSources[1] &&
+        oldSources[2] === currentSources[2]
+      ) {
+        return oldSources
+      }
       return currentSources
     })
   })
