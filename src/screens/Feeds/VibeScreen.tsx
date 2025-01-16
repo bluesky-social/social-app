@@ -444,7 +444,6 @@ function VibeOverlay({
   const insets = useSafeAreaInsets()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
-  const [expanded, setExpanded] = useState(false)
   const {status} = useEvent(player, 'statusChange', {status: player.status})
   const doubleTapRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [queueLike] = usePostLikeMutationQueue(post, 'Vibe')
@@ -454,6 +453,7 @@ function VibeOverlay({
   })
 
   const togglePlayPause = () => {
+    doubleTapRef.current = null
     if (player.playing) {
       player.pause()
     } else {
@@ -467,7 +467,7 @@ function VibeOverlay({
       doubleTapRef.current = null
       queueLike()
     } else {
-      doubleTapRef.current = setTimeout(togglePlayPause, 300)
+      doubleTapRef.current = setTimeout(togglePlayPause, 200)
     }
   }
 
@@ -506,11 +506,7 @@ function VibeOverlay({
             <View />
           </Button>
           <LinearGradient
-            colors={
-              expanded
-                ? ['rgba(0,0,0,0)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.8)']
-                : ['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']
-            }
+            colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)', 'rgba(0,0,0,0.95)']}
             style={[a.w_full, a.px_xl, a.py_sm, a.gap_md]}>
             <View style={[a.flex_row, a.gap_md, a.align_center]}>
               <PreviewableUserAvatar profile={post.author} size={32} />
@@ -529,8 +525,6 @@ function VibeOverlay({
             </View>
             {record?.text?.trim() && (
               <ExpandableRichTextView
-                expanded={expanded}
-                setExpanded={setExpanded}
                 value={richText}
                 authorHandle={post.author.handle}
               />
@@ -573,15 +567,12 @@ function VibeOverlay({
 function ExpandableRichTextView({
   value,
   authorHandle,
-  expanded,
-  setExpanded,
 }: {
   value: RichTextAPI
   authorHandle?: string
-  expanded: boolean
-  setExpanded: React.Dispatch<React.SetStateAction<boolean>>
 }) {
   const {height: screenHeight} = useWindowDimensions()
+  const [expanded, setExpanded] = useState(false)
   const [constrained, setConstrained] = useState(false)
   const [contentHeight, setContentHeight] = useState(0)
   const {_} = useLingui()
