@@ -164,6 +164,26 @@ export type LogEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'PostOnboardingFindFollows'
   }
+  'suggestedUser:follow': {
+    logContext:
+      | 'Explore'
+      | 'InterstitialDiscover'
+      | 'InterstitialProfile'
+      | 'Profile'
+    location: 'Card' | 'Profile'
+    recId?: number
+    position: number
+  }
+  'suggestedUser:press': {
+    logContext: 'Explore' | 'InterstitialDiscover' | 'InterstitialProfile'
+    recId?: number
+    position: number
+  }
+  'suggestedUser:seen': {
+    logContext: 'Explore' | 'InterstitialDiscover' | 'InterstitialProfile'
+    recId?: number
+    position: number
+  }
   'profile:unfollow': {
     logContext:
       | 'RecommendedFollowsItem'

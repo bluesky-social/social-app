@@ -63,6 +63,9 @@ export function IS_PROD_SERVICE(url?: string) {
 export const PROD_DEFAULT_FEED = (rkey: string) =>
   `at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/${rkey}`
 
+export const STAGING_DEFAULT_FEED = (rkey: string) =>
+  `at://did:plc:yofh3kx63drvfljkibw5zuxo/app.bsky.feed.generator/${rkey}`
+
 export const POST_IMG_MAX = {
   width: 2000,
   height: 2000,
