@@ -57,7 +57,7 @@ export type CommonNavigatorParams = {
   StarterPackShort: {code: string}
   StarterPackWizard: undefined
   StarterPackEdit: {rkey?: string}
-  TempVibe: {feedUri: string; postUri?: string}
+  VideoFeed: {feedUri: string; postUri?: string}
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
