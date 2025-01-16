@@ -5,7 +5,13 @@ import {FeedPostSliceItem} from '#/state/queries/post-feed'
 import {atoms as a, useGutters} from '#/alf'
 import {VideoPostCard} from '#/components/VideoPostCard'
 
-export function PostFeedVideoGridRow({slices}: {slices: FeedPostSliceItem[]}) {
+export function PostFeedVideoGridRow({
+  slices,
+  sourceFeedUri,
+}: {
+  slices: FeedPostSliceItem[]
+  sourceFeedUri: string
+}) {
   const gutters = useGutters(['base', 'base', 0, 'base'])
   const posts = slices
     .filter(slice => AppBskyEmbedVideo.isView(slice.post.embed))
@@ -22,7 +28,7 @@ export function PostFeedVideoGridRow({slices}: {slices: FeedPostSliceItem[]}) {
       <View style={[a.flex_row, a.gap_lg]}>
         {posts.map(post => (
           <View key={post.uri} style={[a.flex_1]}>
-            <VideoPostCard post={post} />
+            <VideoPostCard post={post} sourceFeedUri={sourceFeedUri} />
           </View>
         ))}
       </View>

@@ -1,10 +1,11 @@
-import {Pressable, View} from 'react-native'
+import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
-import {AppBskyEmbedVideo,AppBskyFeedDefs} from '@atproto/api'
+import {AppBskyEmbedVideo, AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {VIBES_FEED_URI} from '#/lib/constants'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
@@ -14,9 +15,16 @@ import {select} from '#/alf/util/themeSelector'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Heart2_Stroke2_Corner0_Rounded as Heart} from '#/components/icons/Heart2'
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
+import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
-export function VideoPostCard({post}: {post: AppBskyFeedDefs.PostView}) {
+export function VideoPostCard({
+  post,
+  sourceFeedUri = VIBES_FEED_URI,
+}: {
+  post: AppBskyFeedDefs.PostView
+  sourceFeedUri?: string
+}) {
   const t = useTheme()
   const {_, i18n} = useLingui()
   const embed = post.embed
@@ -40,11 +48,24 @@ export function VideoPostCard({post}: {post: AppBskyFeedDefs.PostView}) {
   })
 
   return (
-    <Pressable
-      accessibilityHint={_(msg`View video`)} // TODO
-      accessibilityLabel={_(msg`View video`)}
+    <Link
+      label={_(msg`View video`)}
+      to={{
+        screen: 'TempVibe',
+        params: {
+          feedUri: sourceFeedUri,
+          cursor: post.cid,
+        },
+      }}
       onHoverIn={onHoverIn}
-      onHoverOut={onHoverOut}>
+      onHoverOut={onHoverOut}
+      style={[
+        a.flex_col,
+        {
+          alignItems: undefined,
+          justifyContent: undefined,
+        },
+      ]}>
       <View
         style={[
           a.justify_center,
@@ -122,6 +143,6 @@ export function VideoPostCard({post}: {post: AppBskyFeedDefs.PostView}) {
           {sanitizeHandle(post.author.handle, '@')}
         </Text>
       </View>
-    </Pressable>
+    </Link>
   )
 }
