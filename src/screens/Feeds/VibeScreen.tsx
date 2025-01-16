@@ -278,7 +278,7 @@ function VibeItem({
     (embed.aspectRatio?.width ?? 1) / (embed.aspectRatio?.height ?? 1)
 
   // if the video tall enough (tiktok/reels are 9:16) go cover mode
-  const isCloseEnough = false && videoAspectRatio <= 9 / 16
+  const isCloseEnough = videoAspectRatio <= 9 / 16
 
   const {status} = useEvent(player, 'statusChange', {status: player.status})
 
