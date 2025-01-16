@@ -10,9 +10,15 @@ import {
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import {runOnJS} from 'react-native-reanimated'
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
+import {useEvent} from 'expo'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
-import {useVideoPlayer, VideoPlayer, VideoView} from 'expo-video'
+import {
+  useVideoPlayer,
+  VideoPlayer,
+  VideoPlayerStatus,
+  VideoView,
+} from 'expo-video'
 import {
   AppBskyEmbedVideo,
   AppBskyFeedDefs,
@@ -45,6 +51,7 @@ import {atoms as a, ThemeProvider, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
+import {Loader} from '#/components/Loader'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 
@@ -268,6 +275,8 @@ function VibeItem({
   // set the video to be cover rather than contain
   const isCloseEnough = videoAspectRatio < screenAspectRatio * 1.2
 
+  const {status} = useEvent(player, 'statusChange', {status: player.status})
+
   return (
     <View
       style={{
@@ -292,7 +301,7 @@ function VibeItem({
               a.flex_1,
               a.absolute,
               {
-                zIndex: -1,
+                zIndex: status === 'loading' ? 1 : -1,
                 top: 0,
                 left: insets.left,
                 right: insets.right,
@@ -302,7 +311,7 @@ function VibeItem({
             contentFit={isCloseEnough ? 'cover' : 'contain'}
           />
         )}
-        <VibeOverlay player={player} post={post} />
+        <VibeOverlay player={player} post={post} status={status} />
       </SafeAreaView>
     </View>
   )
@@ -311,9 +320,11 @@ function VibeItem({
 function VibeOverlay({
   player,
   post,
+  status,
 }: {
   player: VideoPlayer
   post: AppBskyFeedDefs.PostView
+  status: VideoPlayerStatus
 }) {
   const postShadow = usePostShadow(post)
   const insets = useSafeAreaInsets()
@@ -357,59 +368,77 @@ function VibeOverlay({
   })
 
   return (
-    <GestureDetector gesture={gesture}>
-      <View style={[a.absolute, a.inset_0, {bottom: insets.bottom}]}>
-        <Button
-          label="Toggle play/pause"
-          onPress={togglePlayPause}
-          style={[a.flex_1]}>
-          <View />
-        </Button>
-        <LinearGradient
-          colors={
-            expanded
-              ? ['rgba(0,0,0,0)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.8)']
-              : ['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']
-          }
-          style={[a.w_full, a.px_xl, a.py_sm, a.gap_sm]}>
-          <View style={[a.flex_row, a.gap_md, a.align_center]}>
-            <PreviewableUserAvatar profile={post.author} size={32} />
-            <View>
-              <Text style={[a.text_md, a.font_heavy]} emoji numberOfLines={1}>
-                {sanitizeDisplayName(
-                  post.author.displayName || post.author.handle,
-                )}
-              </Text>
-              <Text
-                style={[a.text_sm, t.atoms.text_contrast_high]}
-                numberOfLines={1}>
-                {sanitizeHandle(post.author.handle, '@')}
-              </Text>
+    <>
+      <GestureDetector gesture={gesture}>
+        <View style={[a.absolute, a.inset_0, {bottom: insets.bottom}]}>
+          <Button
+            label="Toggle play/pause"
+            onPress={togglePlayPause}
+            style={[a.flex_1]}>
+            <View />
+          </Button>
+          <LinearGradient
+            colors={
+              expanded
+                ? ['rgba(0,0,0,0)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.8)']
+                : ['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']
+            }
+            style={[a.w_full, a.px_xl, a.py_sm, a.gap_sm]}>
+            <View style={[a.flex_row, a.gap_md, a.align_center]}>
+              <PreviewableUserAvatar profile={post.author} size={32} />
+              <View>
+                <Text style={[a.text_md, a.font_heavy]} emoji numberOfLines={1}>
+                  {sanitizeDisplayName(
+                    post.author.displayName || post.author.handle,
+                  )}
+                </Text>
+                <Text
+                  style={[a.text_sm, t.atoms.text_contrast_high]}
+                  numberOfLines={1}>
+                  {sanitizeHandle(post.author.handle, '@')}
+                </Text>
+              </View>
             </View>
-          </View>
-          {record?.text?.trim() && (
-            <ExpandableRichTextView
-              expanded={expanded}
-              setExpanded={setExpanded}
-              value={richText}
-              authorHandle={post.author.handle}
-            />
-          )}
-          {postShadow !== POST_TOMBSTONE && record && (
-            <PostCtrls
-              richText={richText}
-              post={postShadow}
-              record={record}
-              logContext="FeedItem"
-              onPressReply={() =>
-                navigation.navigate('PostThread', {name: post.author.did, rkey})
-              }
-              big
-            />
-          )}
-        </LinearGradient>
-      </View>
-    </GestureDetector>
+            {record?.text?.trim() && (
+              <ExpandableRichTextView
+                expanded={expanded}
+                setExpanded={setExpanded}
+                value={richText}
+                authorHandle={post.author.handle}
+              />
+            )}
+            {postShadow !== POST_TOMBSTONE && record && (
+              <PostCtrls
+                richText={richText}
+                post={postShadow}
+                record={record}
+                logContext="FeedItem"
+                onPressReply={() =>
+                  navigation.navigate('PostThread', {
+                    name: post.author.did,
+                    rkey,
+                  })
+                }
+                big
+              />
+            )}
+          </LinearGradient>
+        </View>
+      </GestureDetector>
+      {status === 'loading' && (
+        <View
+          style={[
+            a.absolute,
+            a.inset_0,
+            a.align_center,
+            a.justify_center,
+            a.z_10,
+          ]}
+          pointerEvents="none">
+          <Loader size="2xl" />
+        </View>
+      )}
+    </>
   )
 }
 
