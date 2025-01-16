@@ -61,10 +61,9 @@ export type FeedDescriptor =
 export interface FeedParams {
   mergeFeedEnabled?: boolean
   mergeFeedSources?: string[]
-  initialCursor?: string
 }
 
-type RQPageParam = {cursor: string | undefined; api?: FeedAPI} | undefined
+type RQPageParam = {cursor: string | undefined; api: FeedAPI} | undefined
 
 export const RQKEY_ROOT = 'post-feed'
 export function RQKEY(feedDesc: FeedDescriptor, params?: FeedParams) {
@@ -172,24 +171,24 @@ export function usePostFeedQuery(
     queryKey: RQKEY(feedDesc, params),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       logger.debug('usePostFeedQuery', {feedDesc, cursor: pageParam?.cursor})
-      console.log('PAGE', feedDesc, pageParam?.cursor)
-      const cursor = pageParam?.cursor
-      let api = pageParam?.api
-      if (!api) {
-        api = createApi({
-          feedDesc,
-          feedParams: params || {},
-          feedTuners,
-          agent,
-          // Not in the query key because they don't change:
-          userInterests,
-          // Not in the query key. Reacting to it switching isn't important:
-          enableFollowingToDiscoverFallback,
-        })
-      }
+      const {api, cursor} = pageParam
+        ? pageParam
+        : {
+            api: createApi({
+              feedDesc,
+              feedParams: params || {},
+              feedTuners,
+              agent,
+              // Not in the query key because they don't change:
+              userInterests,
+              // Not in the query key. Reacting to it switching isn't important:
+              enableFollowingToDiscoverFallback,
+            }),
+            cursor: undefined,
+          }
 
       try {
-        const res = await api!.fetch({cursor, limit: fetchLimit})
+        const res = await api.fetch({cursor, limit: fetchLimit})
 
         /*
          * If this is a public view, we need to check if posts fail moderation.
@@ -224,7 +223,7 @@ export function usePostFeedQuery(
         throw e
       }
     },
-    initialPageParam: {api: undefined, cursor: params?.initialCursor},
+    initialPageParam: undefined,
     getNextPageParam: lastPage =>
       lastPage.cursor
         ? {
