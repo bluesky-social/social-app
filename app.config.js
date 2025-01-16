@@ -191,6 +191,7 @@ module.exports = function (config) {
         channel: UPDATES_CHANNEL,
       },
       plugins: [
+        'expo-video',
         'expo-localization',
         USE_SENTRY && [
           '@sentry/react-native/expo',
