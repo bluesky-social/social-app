@@ -54,7 +54,7 @@ export function VideoPostCard({
         screen: 'TempVibe',
         params: {
           feedUri: sourceFeedUri,
-          cursor: post.cid,
+          postUri: post.uri,
         },
       }}
       onHoverIn={onHoverIn}

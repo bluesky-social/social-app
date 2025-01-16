@@ -118,13 +118,17 @@ function YoloFeed() {
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = usePostFeedQuery(`feedgen|${params.feedUri}`, {
-    initialCursor: params.cursor,
-  })
+  } = usePostFeedQuery(`feedgen|${params.feedUri}`)
 
-  const videos = data?.pages.flatMap(page =>
+  let videos = data?.pages.flatMap(page =>
     page.slices.flatMap(slice => slice.items),
   )
+  const startingVideoIndex = videos?.findIndex(video => {
+    return video.post.uri === params.postUri
+  })
+  if (videos && startingVideoIndex && startingVideoIndex > -1) {
+    videos = videos.slice(startingVideoIndex)
+  }
 
   const [currentSources, setCurrentSources] = useState<
     [string | null, string | null, string | null]
