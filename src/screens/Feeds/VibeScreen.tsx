@@ -265,15 +265,11 @@ function VibeItem({
   const {height, width} = useWindowDimensions()
   const insets = useSafeAreaInsets()
 
-  const screenAspectRatio =
-    (width - insets.left - insets.right) / (height - insets.bottom)
-
   const videoAspectRatio =
     (embed.aspectRatio?.width ?? 1) / (embed.aspectRatio?.height ?? 1)
 
-  // if the video is either taller, on only 20% shorter than the screen,
-  // set the video to be cover rather than contain
-  const isCloseEnough = videoAspectRatio < screenAspectRatio * 1.2
+  // if the video tall enough (tiktok/reels are 9:16) go cover mode
+  const isCloseEnough = false && videoAspectRatio <= 9 / 16
 
   const {status} = useEvent(player, 'statusChange', {status: player.status})
 
@@ -491,10 +487,7 @@ function ExpandableRichTextView({
         <Button
           label={expanded ? _(msg`Read less`) : _(msg`Read more`)}
           hitSlop={HITSLOP_20}
-          onPress={() => {
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-            setExpanded(prev => !prev)
-          }}>
+          onPress={() => setExpanded(prev => !prev)}>
           <ButtonText>
             {expanded ? <Trans>Read less</Trans> : <Trans>Read more</Trans>}
           </ButtonText>
