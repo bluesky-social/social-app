@@ -351,6 +351,7 @@ module.exports = function (config) {
         [
           'react-native-vision-camera',
           {
+            enableLocation: false,
             cameraPermissionText: 'Bluesky needs access to your camera.',
             enableMicrophonePermission: true,
             microphonePermissionText:
