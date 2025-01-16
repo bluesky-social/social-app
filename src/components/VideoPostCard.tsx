@@ -5,7 +5,7 @@ import {AppBskyEmbedVideo, AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {VIBES_FEED_URI} from '#/lib/constants'
+import {VIDEO_FEED_URI} from '#/lib/constants'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
@@ -21,7 +21,7 @@ import {Text} from '#/components/Typography'
 
 export function VideoPostCard({
   post,
-  sourceFeedUri = VIBES_FEED_URI,
+  sourceFeedUri = VIDEO_FEED_URI,
 }: {
   post: AppBskyFeedDefs.PostView
   sourceFeedUri?: string
