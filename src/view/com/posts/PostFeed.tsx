@@ -24,7 +24,7 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
-import {isIOS, isNative,isWeb} from '#/platform/detection'
+import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useTrendingSettings} from '#/state/preferences/trending'
@@ -94,6 +94,7 @@ type FeedRow =
       type: 'videoGridRow'
       key: string
       slices: FeedPostSliceItem[]
+      sourceFeedUri: string
     }
   | {
       type: 'sliceViewFullThread'
@@ -358,6 +359,7 @@ let PostFeed = ({
                 type: 'videoGridRow',
                 key: row.map(r => r._reactKey).join('-'),
                 slices: row,
+                sourceFeedUri: feedUri,
               })
             }
           } else {
@@ -595,7 +597,12 @@ let PostFeed = ({
       } else if (row.type === 'sliceViewFullThread') {
         return <ViewFullThread uri={row.uri} />
       } else if (row.type === 'videoGridRow') {
-        return <PostFeedVideoGridRow slices={row.slices} />
+        return (
+          <PostFeedVideoGridRow
+            slices={row.slices}
+            sourceFeedUri={row.sourceFeedUri}
+          />
+        )
       } else {
         return null
       }
