@@ -190,7 +190,7 @@ function YoloFeed() {
 
       if (prevVideo && prevVideo !== prevPlayerCurrentSource) {
         prevPlayer.replace(prevVideo)
-        currentSources[index + (2 % 3)] = prevVideo
+        currentSources[(index + 2) % 3] = prevVideo
       }
       prevPlayer.pause()
 
