@@ -9,7 +9,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -93,7 +93,7 @@ type FeedRow =
   | {
       type: 'videoGridRow'
       key: string
-      posts: FeedPostSliceItem[]
+      slices: FeedPostSliceItem[]
     }
   | {
       type: 'sliceViewFullThread'
@@ -338,6 +338,11 @@ let PostFeed = ({
               const slice = page.slices[i]
               const root = slice.items.at(0)
               if (!root) continue
+              // TODO test this
+              if (!AppBskyEmbedVideo.isView(root.post.embed)) {
+                i--
+                continue
+              }
               const cols = gtMobile ? 3 : 2
               if (i % cols === 0) {
                 rows.push([root])
@@ -352,7 +357,7 @@ let PostFeed = ({
               arr.push({
                 type: 'videoGridRow',
                 key: row.map(r => r._reactKey).join('-'),
-                posts: row,
+                slices: row,
               })
             }
           } else {
@@ -590,7 +595,7 @@ let PostFeed = ({
       } else if (row.type === 'sliceViewFullThread') {
         return <ViewFullThread uri={row.uri} />
       } else if (row.type === 'videoGridRow') {
-        return <PostFeedVideoGridRow posts={row.posts} />
+        return <PostFeedVideoGridRow slices={row.slices} />
       } else {
         return null
       }
