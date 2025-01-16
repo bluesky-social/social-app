@@ -33,6 +33,7 @@ import {
   FeedDescriptor,
   FeedParams,
   FeedPostSlice,
+  FeedPostSliceItem,
   pollLatest,
   RQKEY,
   usePostFeedQuery,
@@ -48,6 +49,7 @@ import {
   SuggestedFollows,
   VideoModeEntranceInterstitial,
 } from '#/components/FeedInterstitials'
+import {PostFeedVideoGridRow} from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
@@ -77,7 +79,7 @@ type FeedRow =
       key: string
     }
   | {
-      type: 'slice'
+      type: 'slice' // TODO can we remove?
       key: string
       slice: FeedPostSlice
     }
@@ -87,6 +89,11 @@ type FeedRow =
       slice: FeedPostSlice
       indexInSlice: number
       showReplyTo: boolean
+    }
+  | {
+      type: 'videoGridRow'
+      key: string
+      posts: FeedPostSliceItem[]
     }
   | {
       type: 'sliceViewFullThread'
@@ -175,7 +182,7 @@ let PostFeed = ({
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
   const [feedType, feedUri, feedTab] = feed.split('|')
-  const {gtTablet} = useBreakpoints()
+  const {gtMobile, gtTablet} = useBreakpoints()
 
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
@@ -318,88 +325,113 @@ let PostFeed = ({
       } else if (data) {
         let sliceIndex = -1
         for (const page of data?.pages) {
-          for (const slice of page.slices) {
-            sliceIndex++
+          if (feedKind === 'thevids') {
+            if (sliceIndex === -1) {
+              arr.push({
+                type: 'videoModeEntrance',
+                key: 'videoModeEntrance',
+              })
+            }
 
-            if (hasSession) {
-              if (feedKind === 'discover') {
-                if (sliceIndex === 0) {
-                  if (showProgressIntersitial) {
-                    arr.push({
-                      type: 'interstitialProgressGuide',
-                      key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
-                    })
-                  }
-                  if (!gtTablet && !trendingDisabled) {
-                    arr.push({
-                      type: 'interstitialTrending',
-                      key: 'interstitial2-' + sliceIndex + '-' + lastFetchedAt,
-                    })
-                  }
-                } else if (sliceIndex === 30) {
-                  arr.push({
-                    type: 'interstitialFollows',
-                    key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
-                  })
-                }
-              } else if (feedKind === 'profile') {
-                if (sliceIndex === 5) {
-                  arr.push({
-                    type: 'interstitialFollows',
-                    key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
-                  })
-                }
-              } else if (feedKind === 'thevids') {
-                if (sliceIndex === 0) {
-                  arr.push({
-                    type: 'videoModeEntrance',
-                    key:
-                      'videoModeEntrance-' + sliceIndex + '-' + lastFetchedAt,
-                  })
-                }
+            const rows: FeedPostSliceItem[][] = []
+            for (let i = 0; i < page.slices.length; i++) {
+              const slice = page.slices[i]
+              const root = slice.items.at(0)
+              if (!root) continue
+              const cols = gtMobile ? 3 : 2
+              if (i % cols === 0) {
+                rows.push([root])
+              } else {
+                rows[rows.length - 1].push(root)
               }
             }
 
-            if (slice.isIncompleteThread && slice.items.length >= 3) {
-              const beforeLast = slice.items.length - 2
-              const last = slice.items.length - 1
+            for (const row of rows) {
+              sliceIndex++
+
               arr.push({
-                type: 'sliceItem',
-                key: slice.items[0]._reactKey,
-                slice: slice,
-                indexInSlice: 0,
-                showReplyTo: false,
+                type: 'videoGridRow',
+                key: row.map(r => r._reactKey).join('-'),
+                posts: row,
               })
-              arr.push({
-                type: 'sliceViewFullThread',
-                key: slice._reactKey + '-viewFullThread',
-                uri: slice.items[0].uri,
-              })
-              arr.push({
-                type: 'sliceItem',
-                key: slice.items[beforeLast]._reactKey,
-                slice: slice,
-                indexInSlice: beforeLast,
-                showReplyTo:
-                  slice.items[beforeLast].parentAuthor?.did !==
-                  slice.items[beforeLast].post.author.did,
-              })
-              arr.push({
-                type: 'sliceItem',
-                key: slice.items[last]._reactKey,
-                slice: slice,
-                indexInSlice: last,
-                showReplyTo: false,
-              })
-            } else {
-              for (let i = 0; i < slice.items.length; i++) {
+            }
+          } else {
+            for (const slice of page.slices) {
+              sliceIndex++
+
+              if (hasSession) {
+                if (feedKind === 'discover') {
+                  if (sliceIndex === 0) {
+                    if (showProgressIntersitial) {
+                      arr.push({
+                        type: 'interstitialProgressGuide',
+                        key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
+                      })
+                    }
+                    if (!gtTablet && !trendingDisabled) {
+                      arr.push({
+                        type: 'interstitialTrending',
+                        key:
+                          'interstitial2-' + sliceIndex + '-' + lastFetchedAt,
+                      })
+                    }
+                  } else if (sliceIndex === 30) {
+                    arr.push({
+                      type: 'interstitialFollows',
+                      key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
+                    })
+                  }
+                } else if (feedKind === 'profile') {
+                  if (sliceIndex === 5) {
+                    arr.push({
+                      type: 'interstitialFollows',
+                      key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
+                    })
+                  }
+                }
+              }
+
+              if (slice.isIncompleteThread && slice.items.length >= 3) {
+                const beforeLast = slice.items.length - 2
+                const last = slice.items.length - 1
                 arr.push({
                   type: 'sliceItem',
-                  key: slice.items[i]._reactKey,
+                  key: slice.items[0]._reactKey,
                   slice: slice,
-                  indexInSlice: i,
-                  showReplyTo: i === 0,
+                  indexInSlice: 0,
+                  showReplyTo: false,
                 })
+                arr.push({
+                  type: 'sliceViewFullThread',
+                  key: slice._reactKey + '-viewFullThread',
+                  uri: slice.items[0].uri,
+                })
+                arr.push({
+                  type: 'sliceItem',
+                  key: slice.items[beforeLast]._reactKey,
+                  slice: slice,
+                  indexInSlice: beforeLast,
+                  showReplyTo:
+                    slice.items[beforeLast].parentAuthor?.did !==
+                    slice.items[beforeLast].post.author.did,
+                })
+                arr.push({
+                  type: 'sliceItem',
+                  key: slice.items[last]._reactKey,
+                  slice: slice,
+                  indexInSlice: last,
+                  showReplyTo: false,
+                })
+              } else {
+                for (let i = 0; i < slice.items.length; i++) {
+                  arr.push({
+                    type: 'sliceItem',
+                    key: slice.items[i]._reactKey,
+                    slice: slice,
+                    indexInSlice: i,
+                    showReplyTo: i === 0,
+                  })
+                }
               }
             }
           }
@@ -432,6 +464,7 @@ let PostFeed = ({
     showProgressIntersitial,
     trendingDisabled,
     gtTablet,
+    gtMobile,
   ])
 
   // events
@@ -556,6 +589,8 @@ let PostFeed = ({
         )
       } else if (row.type === 'sliceViewFullThread') {
         return <ViewFullThread uri={row.uri} />
+      } else if (row.type === 'videoGridRow') {
+        return <PostFeedVideoGridRow posts={row.posts} />
       } else {
         return null
       }
