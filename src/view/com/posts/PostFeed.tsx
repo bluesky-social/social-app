@@ -24,7 +24,7 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
-import {isIOS, isWeb} from '#/platform/detection'
+import {isIOS, isNative,isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useTrendingSettings} from '#/state/preferences/trending'
@@ -325,7 +325,7 @@ let PostFeed = ({
       } else if (data) {
         let sliceIndex = -1
         for (const page of data?.pages) {
-          if (feedKind === 'thevids') {
+          if (feedKind === 'thevids' && isNative) {
             if (sliceIndex === -1) {
               arr.push({
                 type: 'videoModeEntrance',
