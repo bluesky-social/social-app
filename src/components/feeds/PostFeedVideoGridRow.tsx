@@ -3,14 +3,14 @@ import {AppBskyEmbedVideo} from '@atproto/api'
 
 import {FeedPostSliceItem} from '#/state/queries/post-feed'
 import {atoms as a, useGutters} from '#/alf'
-import {VideoPostCard} from '#/components/VideoPostCard'
+import {SourceContext,VideoPostCard} from '#/components/VideoPostCard'
 
 export function PostFeedVideoGridRow({
   slices,
-  sourceFeedUri,
+  sourceContext,
 }: {
   slices: FeedPostSliceItem[]
-  sourceFeedUri: string
+  sourceContext: SourceContext
 }) {
   const gutters = useGutters(['base', 'base', 0, 'base'])
   const posts = slices
@@ -28,7 +28,7 @@ export function PostFeedVideoGridRow({
       <View style={[a.flex_row, a.gap_sm]}>
         {posts.map(post => (
           <View key={post.uri} style={[a.flex_1]}>
-            <VideoPostCard post={post} sourceFeedUri={sourceFeedUri} />
+            <VideoPostCard post={post} sourceContext={sourceContext} />
           </View>
         ))}
       </View>

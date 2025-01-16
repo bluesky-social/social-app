@@ -1,6 +1,8 @@
 import {NavigationState, PartialState} from '@react-navigation/native'
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack'
 
+import {SourceContext as VideoFeedSourceContext} from '#/components/VideoPostCard'
+
 export type {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 export type CommonNavigatorParams = {
@@ -57,7 +59,7 @@ export type CommonNavigatorParams = {
   StarterPackShort: {code: string}
   StarterPackWizard: undefined
   StarterPackEdit: {rkey?: string}
-  VideoFeed: {feedUri: string; postUri?: string}
+  VideoFeed: VideoFeedSourceContext
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {

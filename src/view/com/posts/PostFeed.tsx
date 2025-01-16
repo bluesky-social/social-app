@@ -583,7 +583,10 @@ let PostFeed = ({
         return (
           <PostFeedVideoGridRow
             slices={row.slices}
-            sourceFeedUri={row.sourceFeedUri}
+            sourceContext={{
+              type: 'feedgen',
+              uri: row.sourceFeedUri,
+            }}
           />
         )
       } else {

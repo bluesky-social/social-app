@@ -5,8 +5,8 @@ import {AppBskyEmbedVideo, AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {VIDEO_FEED_URI} from '#/lib/constants'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {AuthorFilter} from '#/state/queries/post-feed'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
@@ -19,12 +19,24 @@ import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 
+/**
+ * Kind of like `FeedDescriptor` but not
+ */
+export type SourceContext =
+  | {type: 'feedgen'; uri: string; initialPostUri?: string}
+  | {
+      type: 'author'
+      did: string
+      filter: AuthorFilter
+      initialPostUri?: string
+    }
+
 export function VideoPostCard({
   post,
-  sourceFeedUri = VIDEO_FEED_URI,
+  sourceContext,
 }: {
   post: AppBskyFeedDefs.PostView
-  sourceFeedUri?: string
+  sourceContext: SourceContext
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
@@ -57,8 +69,8 @@ export function VideoPostCard({
       to={{
         screen: 'VideoFeed',
         params: {
-          feedUri: sourceFeedUri,
-          postUri: post.uri,
+          ...sourceContext,
+          initialPostUri: post.uri,
         },
       }}
       onPressIn={onPressIn}
