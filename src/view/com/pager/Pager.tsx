@@ -1,4 +1,4 @@
-import React, {forwardRef, useCallback, useContext} from 'react'
+import React, {Children, forwardRef, useCallback, useContext} from 'react'
 import {View} from 'react-native'
 import {DrawerGestureContext} from 'react-native-drawer-layout'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
@@ -17,6 +17,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {isAndroid} from '#/platform/detection'
 import {useSetDrawerSwipeDisabled} from '#/state/shell'
 import {atoms as a, native} from '#/alf'
 
@@ -148,13 +149,50 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
             style={[a.flex_1]}
             initialPage={initialPage}
             onPageScroll={handlePageScroll}>
-            {children}
+            {isAndroid
+              ? Children.map(children, child => (
+                  <CaptureSwipesAndroid>{child}</CaptureSwipesAndroid>
+                ))
+              : children}
           </AnimatedPagerView>
         </GestureDetector>
       </View>
     )
   },
 )
+
+// HACK.
+// This works around https://github.com/callstack/react-native-pager-view/issues/960.
+// It appears that the Pressables inside the pager get confused if there's enough work
+// happening on the JS thread, and mistakingly interpret a pager swipe as a tap.
+// We can prevent this by stealing all horizontal movements from the tree inside.
+function CaptureSwipesAndroid({children}: {children: React.ReactNode}) {
+  const lastTouchStart = React.useRef<{x: number; y: number} | null>(null)
+  return (
+    <View
+      onTouchStart={e => {
+        lastTouchStart.current = {
+          x: e.nativeEvent.pageX,
+          y: e.nativeEvent.pageY,
+        }
+      }}
+      onMoveShouldSetResponderCapture={e => {
+        const coords = lastTouchStart.current
+        if (!coords) {
+          return false
+        }
+        const dx = Math.abs(e.nativeEvent.pageX - coords.x)
+        if (dx > 0) {
+          // This is a horizontal movement and will result in a swipe.
+          // Prevent pager children from receiving this touch.
+          return true
+        }
+        return false
+      }}>
+      {children}
+    </View>
+  )
+}
 
 function usePagerHandlers(
   handlers: {
