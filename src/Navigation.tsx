@@ -89,7 +89,7 @@ import {Wizard} from '#/screens/StarterPack/Wizard'
 import {useTheme} from '#/alf'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
-import {VibeScreen} from './screens/Feeds/VibeScreen'
+import {VideoFeed} from './screens/Feeds/VibeScreen'
 import {AboutSettingsScreen} from './screens/Settings/AboutSettings'
 import {AccessibilitySettingsScreen} from './screens/Settings/AccessibilitySettings'
 import {AccountSettingsScreen} from './screens/Settings/AccountSettings'
@@ -425,7 +425,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       />
       <Stack.Screen
         name="VideoFeed"
-        getComponent={() => VibeScreen}
+        getComponent={() => VideoFeed}
         options={{
           title: title(msg`Video Feed`),
           requireAuth: true,

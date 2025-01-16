@@ -66,8 +66,10 @@ function createThreeVideoPlayers(
   return [p1, p2, p3]
 }
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'VideoFeed'>
-export function VibeScreen({}: Props) {
+export function VideoFeed({}: NativeStackScreenProps<
+  CommonNavigatorParams,
+  'VideoFeed'
+>) {
   const {top} = useSafeAreaInsets()
 
   const setMinShellMode = useSetMinimalShellMode()
@@ -96,19 +98,19 @@ export function VibeScreen({}: Props) {
             <Layout.Header.Content>
               <Layout.Header.TitleText>
                 {/* TODO: needs to be feed name */}
-                <Trans>Vibes (wip)</Trans>
+                <Trans>Videos</Trans>
               </Layout.Header.TitleText>
             </Layout.Header.Content>
             <Layout.Header.Slot />
           </Layout.Header.Outer>
         </View>
-        <YoloFeed />
+        <Inner />
       </Layout.Screen>
     </ThemeProvider>
   )
 }
 
-function YoloFeed() {
+function Inner() {
   const {params} = useRoute<RouteProp<CommonNavigatorParams, 'VideoFeed'>>()
   const isFocused = useIsFocused()
   const feedDesc = useMemo(() => {
@@ -161,7 +163,7 @@ function YoloFeed() {
       const currentSource = currentSources[index % 3]
 
       return (
-        <VibeItem
+        <VideoItem
           player={player}
           post={post}
           embed={post.embed}
@@ -330,7 +332,7 @@ function keyExtractor(item: FeedPostSliceItem) {
   return item._reactKey
 }
 
-function VibeItem({
+function VideoItem({
   player,
   post,
   embed,
@@ -353,7 +355,7 @@ function VibeItem({
       }}>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={[a.flex_1]}>
         {player ? (
-          <VibeItemInner player={player} embed={embed} active={active} />
+          <VideoItemInner player={player} embed={embed} active={active} />
         ) : (
           embed.thumbnail && (
             <Image
@@ -374,7 +376,7 @@ function VibeItem({
           )
         )}
         {postShadow !== POST_TOMBSTONE ? (
-          player && <VibeOverlay player={player} post={postShadow} />
+          player && <Overlay player={player} post={postShadow} />
         ) : (
           <View
             style={[
@@ -402,7 +404,7 @@ function VibeItem({
   )
 }
 
-function VibeItemInner({
+function VideoItemInner({
   player,
   embed,
   active,
@@ -453,7 +455,7 @@ function VibeItemInner({
   )
 }
 
-function VibeOverlay({
+function Overlay({
   player,
   post,
 }: {
@@ -465,7 +467,7 @@ function VibeOverlay({
   const navigation = useNavigation<NavigationProp>()
   const {status} = useEvent(player, 'statusChange', {status: player.status})
   const doubleTapRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const [queueLike] = usePostLikeMutationQueue(post, 'Vibe')
+  const [queueLike] = usePostLikeMutationQueue(post, 'ImmersiveVideo')
 
   const pushToProfile = useNonReactiveCallback(() => {
     navigation.navigate('Profile', {name: post.author.did})
