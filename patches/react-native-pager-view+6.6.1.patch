@@ -1,0 +1,72 @@
+diff --git a/node_modules/react-native-pager-view/android/build/tmp/kotlin-classes/debug/com/reactnativepagerview/NestedScrollableHost.class b/node_modules/react-native-pager-view/android/build/tmp/kotlin-classes/debug/com/reactnativepagerview/NestedScrollableHost.class
+new file mode 100644
+index 0000000..b64fccc
+Binary files /dev/null and b/node_modules/react-native-pager-view/android/build/tmp/kotlin-classes/debug/com/reactnativepagerview/NestedScrollableHost.class differ
+diff --git a/node_modules/react-native-pager-view/android/src/main/java/com/reactnativepagerview/NestedScrollableHost.kt b/node_modules/react-native-pager-view/android/src/main/java/com/reactnativepagerview/NestedScrollableHost.kt
+index 91d9946..87b58d0 100644
+--- a/node_modules/react-native-pager-view/android/src/main/java/com/reactnativepagerview/NestedScrollableHost.kt
++++ b/node_modules/react-native-pager-view/android/src/main/java/com/reactnativepagerview/NestedScrollableHost.kt
+@@ -8,6 +8,7 @@ import android.view.ViewConfiguration
+ import android.widget.FrameLayout
+ import androidx.viewpager2.widget.ViewPager2
+ import androidx.viewpager2.widget.ViewPager2.ORIENTATION_HORIZONTAL
++import com.facebook.react.uimanager.events.NativeGestureUtil
+ import kotlin.math.absoluteValue
+ import kotlin.math.sign
+ 
+@@ -27,6 +28,7 @@ class NestedScrollableHost : FrameLayout {
+   private var touchSlop = 0
+   private var initialX = 0f
+   private var initialY = 0f
++  private var nativeGestureStarted: Boolean = false
+   private val parentViewPager: ViewPager2?
+     get() {
+       var v: View? = parent as? View
+@@ -57,17 +59,14 @@ class NestedScrollableHost : FrameLayout {
+   }
+ 
+   private fun handleInterceptTouchEvent(e: MotionEvent) {
+-    val orientation = parentViewPager?.orientation ?: return
+-
+-    // Early return if child can't scroll in same direction as parent
+-    if (!canChildScroll(orientation, -1f) && !canChildScroll(orientation, 1f)) {
+-      return
+-    }
++    val orientation = parentViewPager?.orientation
+ 
+     if (e.action == MotionEvent.ACTION_DOWN) {
+       initialX = e.x
+       initialY = e.y
+-      parent.requestDisallowInterceptTouchEvent(true)
++      if (orientation != null) {
++        parent.requestDisallowInterceptTouchEvent(true)
++      }
+     } else if (e.action == MotionEvent.ACTION_MOVE) {
+       val dx = e.x - initialX
+       val dy = e.y - initialY
+@@ -78,6 +77,10 @@ class NestedScrollableHost : FrameLayout {
+       val scaledDy = dy.absoluteValue * if (isVpHorizontal) 1f else .5f
+ 
+       if (scaledDx > touchSlop || scaledDy > touchSlop) {
++        NativeGestureUtil.notifyNativeGestureStarted(this, e)
++        nativeGestureStarted = true
++
++        if (orientation == null) return
+         if (isVpHorizontal == (scaledDy > scaledDx)) {
+           // Gesture is perpendicular, allow all parents to intercept
+           parent.requestDisallowInterceptTouchEvent(false)
+@@ -94,4 +97,14 @@ class NestedScrollableHost : FrameLayout {
+       }
+     }
+   }
++
++  override fun onTouchEvent(e: MotionEvent): Boolean {
++    if (e.actionMasked == MotionEvent.ACTION_UP) {
++      if (nativeGestureStarted) {
++        NativeGestureUtil.notifyNativeGestureEnded(this, e)
++        nativeGestureStarted = false
++      }
++    }
++    return super.onTouchEvent(e)
++  }
+ }
