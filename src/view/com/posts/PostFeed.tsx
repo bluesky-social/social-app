@@ -21,6 +21,7 @@ import {
 } from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {useGate} from '#/lib/statsig/statsig'
 import {logEvent} from '#/lib/statsig/statsig'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
@@ -188,7 +189,13 @@ let PostFeed = ({
   const lastFetchRef = React.useRef<number>(Date.now())
   const [feedType, feedUri, feedTab] = feed.split('|')
   const {gtMobile, gtTablet} = useBreakpoints()
-  const isVideoFeed = feedUri === VIDEO_FEED_URI
+  const gate = useGate()
+  const areVideoFeedsEnabled = React.useMemo(() => {
+    return isNative && gate('yolo')
+  }, [gate])
+  const isVideoFeedAndIsEnabled = React.useMemo(() => {
+    return feedUri === VIDEO_FEED_URI && areVideoFeedsEnabled
+  }, [feedUri, areVideoFeedsEnabled])
 
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
@@ -329,7 +336,7 @@ let PostFeed = ({
       } else if (data) {
         let sliceIndex = -1
 
-        if (isVideoFeed && isNative) {
+        if (isVideoFeedAndIsEnabled) {
           const rows: FeedPostSliceItem[][] = []
           let slices: {slice: FeedPostSlice; index: number}[] = []
           for (const page of data.pages) {
@@ -386,7 +393,7 @@ let PostFeed = ({
                       })
                     }
                   } else if (sliceIndex === 15) {
-                    if (isNative && !trendingVideoDisabled) {
+                    if (areVideoFeedsEnabled && !trendingVideoDisabled) {
                       arr.push({
                         type: 'interstitialTrendingVideos',
                         key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
@@ -461,7 +468,7 @@ let PostFeed = ({
         })
       }
     } else {
-      if (isVideoFeed && isNative) {
+      if (isVideoFeedAndIsEnabled) {
         arr.push({
           type: 'videoGridRowPlaceholder',
           key: 'videoGridRowPlaceholder',
@@ -490,7 +497,8 @@ let PostFeed = ({
     trendingVideoDisabled,
     gtTablet,
     gtMobile,
-    isVideoFeed,
+    isVideoFeedAndIsEnabled,
+    areVideoFeedsEnabled,
   ])
 
   // events
