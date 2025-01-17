@@ -27,14 +27,23 @@ import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
 
+type DisplayVariant = 'default' | 'compact'
+
 export function VideoPostCard({
   post,
   sourceContext,
   moderation,
+  variant = 'default',
+  onInteract,
 }: {
   post: AppBskyFeedDefs.PostView
   sourceContext: VideoFeedSourceContext
   moderation: ModerationDecision
+  variant?: DisplayVariant
+  /**
+   * Callback for metrics and stuff
+   */
+  onInteract: () => void
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
@@ -51,6 +60,7 @@ export function VideoPostCard({
    */
   if (!AppBskyEmbedVideo.isView(embed)) return null
 
+  const isCompact = variant === 'compact'
   const text = AppBskyFeedPost.isRecord(post.record) ? post.record?.text : ''
   const likeCount = post?.likeCount ?? 0
   const repostCount = post?.repostCount ?? 0
@@ -70,6 +80,9 @@ export function VideoPostCard({
           ...sourceContext,
           initialPostUri: post.uri,
         },
+      }}
+      onPress={() => {
+        onInteract()
       }}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
@@ -169,7 +182,7 @@ export function VideoPostCard({
                       </Text>
                     </View>
                   )}
-                  {repostCount > 0 && (
+                  {!isCompact && repostCount > 0 && (
                     <View style={[a.flex_row, a.align_center, a.gap_xs]}>
                       <Repost size="sm" fill="white" />
                       <Text style={[a.text_sm, a.font_bold, {color: 'white'}]}>
@@ -182,7 +195,7 @@ export function VideoPostCard({
             </View>
           </View>
           <View style={[a.pr_xs, {paddingTop: 6, gap: 4}]}>
-            {text && (
+            {!isCompact && text && (
               <Text style={[a.text_md, a.leading_snug]} numberOfLines={2} emoji>
                 {text}
               </Text>
@@ -207,7 +220,11 @@ export function VideoPostCard({
   )
 }
 
-export function VideoPostCardPlaceholder() {
+export function VideoPostCardPlaceholder({
+  variant = 'default',
+}: {
+  variant?: DisplayVariant
+}) {
   const t = useTheme()
   const black = select(t.name, {
     light: t.palette.black,
@@ -228,42 +245,49 @@ export function VideoPostCardPlaceholder() {
         ]}>
         <MediaInsetBorder />
       </View>
-      <VideoPostCardTextPlaceholder />
+      <VideoPostCardTextPlaceholder variant={variant} />
     </View>
   )
 }
 
 export function VideoPostCardTextPlaceholder({
   author,
+  variant,
 }: {
   author?: AppBskyActorDefs.ProfileViewBasic
+  variant?: DisplayVariant
 }) {
   const t = useTheme()
+  const isCompact = variant === 'compact'
 
   return (
     <View style={[a.flex_1]}>
       <View style={[a.pr_xs, {paddingTop: 8, gap: 6}]}>
-        <View
-          style={[
-            a.w_full,
-            a.rounded_xs,
-            t.atoms.bg_contrast_50,
-            {
-              height: 14,
-            },
-          ]}
-        />
-        <View
-          style={[
-            a.w_full,
-            a.rounded_xs,
-            t.atoms.bg_contrast_50,
-            {
-              height: 14,
-              width: '70%',
-            },
-          ]}
-        />
+        {!isCompact && (
+          <>
+            <View
+              style={[
+                a.w_full,
+                a.rounded_xs,
+                t.atoms.bg_contrast_50,
+                {
+                  height: 14,
+                },
+              ]}
+            />
+            <View
+              style={[
+                a.w_full,
+                a.rounded_xs,
+                t.atoms.bg_contrast_50,
+                {
+                  height: 14,
+                  width: '70%',
+                },
+              ]}
+            />
+          </>
+        )}
         {author ? (
           <View style={[a.flex_row, a.gap_xs, a.align_center]}>
             <UserAvatar type="user" size={20} avatar={author.avatar} />
@@ -298,8 +322,9 @@ export function VideoPostCardTextPlaceholder({
                   height: 12,
                   width: '75%',
                 },
-              ]}
-            />
+              ]}>
+              <MediaInsetBorder />
+            </View>
           </View>
         )}
       </View>

@@ -249,6 +249,15 @@ export type LogEvents = {
   'recommendedTopic:click': {
     context: 'explore'
   }
+  'trendingVideos:show': {
+    context: 'settings'
+  }
+  'trendingVideos:hide': {
+    context: 'settings' | 'interstitial' | 'explore'
+  }
+  'trendingVideo:click': {
+    context: 'interstitial' | 'explore'
+  }
 
   'progressGuide:hide': {}
   'progressGuide:followDialog:open': {}
