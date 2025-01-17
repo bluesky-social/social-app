@@ -8,7 +8,7 @@ import {VIDEO_FEED_URI} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {useTrendingSettingsApi} from '#/state/preferences/trending'
 import {usePostFeedQuery} from '#/state/queries/post-feed'
-import {atoms as a, useGutters, useTheme} from '#/alf'
+import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending2'
@@ -75,7 +75,8 @@ export function TrendingVideos() {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        snapToInterval={(CARD_WIDTH + a.gap_sm.gap) * 2}>
+        decelerationRate="fast"
+        snapToInterval={CARD_WIDTH + tokens.space.sm}>
         <View
           style={[
             a.flex_row,
