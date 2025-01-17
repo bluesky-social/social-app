@@ -10,7 +10,7 @@ import {isWeb} from '#/platform/detection'
 import {useSavedFeeds} from '#/state/queries/feed'
 import {usePostFeedQuery} from '#/state/queries/post-feed'
 import {useAddSavedFeedsMutation} from '#/state/queries/preferences'
-import {atoms as a, tokens,useGutters, useTheme} from '#/alf'
+import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {GradientFill} from '#/components/GradientFill'
 import {Pin_Stroke2_Corner0_Rounded as Pin} from '#/components/icons/Pin'
@@ -134,7 +134,9 @@ export function ExploreTrendingVideos() {
                       uri: VIDEO_FEED_URI,
                     }}
                     onInteract={() => {
-                      logEvent('trendingVideo:click', {context: 'interstitial'})
+                      logEvent('videoCard:click', {
+                        context: 'interstitial:explore',
+                      })
                     }}
                   />
                 </View>

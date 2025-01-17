@@ -31,7 +31,7 @@ export function TrendingVideos() {
 
   const onConfirmHide = React.useCallback(() => {
     setTrendingVideoDisabled(true)
-    logEvent('trendingVideos:hide', {context: 'interstitial'})
+    logEvent('trendingVideos:hide', {context: 'interstitial:discover'})
   }, [setTrendingVideoDisabled])
 
   if (error) {
@@ -113,7 +113,9 @@ export function TrendingVideos() {
                       uri: VIDEO_FEED_URI,
                     }}
                     onInteract={() => {
-                      logEvent('trendingVideo:click', {context: 'interstitial'})
+                      logEvent('videoCard:click', {
+                        context: 'interstitial:discover',
+                      })
                     }}
                   />
                 </View>
