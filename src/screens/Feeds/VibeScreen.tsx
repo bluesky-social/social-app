@@ -53,6 +53,7 @@ import {useSetMinimalShellMode} from '#/state/shell'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {List} from '#/view/com/util/List'
 import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
+import {formatTime} from '#/view/com/util/post-embeds/VideoEmbedInner/web-controls/utils'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {Header} from '#/screens/VideoFeed/Header'
 import {atoms as a, ThemeProvider, tokens, useTheme} from '#/alf'
@@ -775,7 +776,7 @@ function Scrubber({
       : currentTimeSV.get()
     const progress = currentTime === 0 ? 0 : currentTime / durationSV.get()
     return {
-      height: seekingAnimationSV.get() * 3 + 2,
+      height: seekingAnimationSV.get() * 3 + 1,
       width: `${progress * 100}%`,
     }
   })
@@ -795,7 +796,7 @@ function Scrubber({
         pointerEvents="none">
         <Text style={[a.text_center, a.font_bold]}>
           <Text style={[a.text_5xl, {fontVariant: ['tabular-nums']}]}>
-            {String(currentSeekTime).padStart(2, '0')}
+            {formatTime(currentSeekTime)}
           </Text>
           <Text style={[a.text_2xl, t.atoms.text_contrast_medium]}>
             {'  /  '}
@@ -806,7 +807,7 @@ function Scrubber({
               t.atoms.text_contrast_medium,
               {fontVariant: ['tabular-nums']},
             ]}>
-            {String(duration).padStart(2, '0')}
+            {formatTime(duration)}
           </Text>
         </Text>
       </Animated.View>
