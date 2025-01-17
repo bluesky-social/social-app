@@ -8,9 +8,17 @@ import {
   ViewToken,
 } from 'react-native'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
-import {runOnJS} from 'react-native-reanimated'
+import Animated, {
+  runOnJS,
+  runOnUI,
+  SharedValue,
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
-import {useEvent} from 'expo'
+import {useEvent, useEventListener} from 'expo'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {createVideoPlayer, VideoPlayer, VideoView} from 'expo-video'
@@ -45,9 +53,10 @@ import {useSetMinimalShellMode} from '#/state/shell'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {List} from '#/view/com/util/List'
 import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
+import {formatTime} from '#/view/com/util/post-embeds/VideoEmbedInner/web-controls/utils'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {Header} from '#/screens/VideoFeed/Header'
-import {atoms as a, ThemeProvider, useTheme} from '#/alf'
+import {atoms as a, ThemeProvider, tokens, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
@@ -60,10 +69,13 @@ function createThreeVideoPlayers(
 ): [VideoPlayer, VideoPlayer, VideoPlayer] {
   const p1 = createVideoPlayer(sources?.[0] ?? '')
   p1.loop = true
+  p1.timeUpdateEventInterval = 0.1
   const p2 = createVideoPlayer(sources?.[1] ?? '')
   p2.loop = true
+  p2.timeUpdateEventInterval = 0.1
   const p3 = createVideoPlayer(sources?.[2] ?? '')
   p3.loop = true
+  p3.timeUpdateEventInterval = 0.1
   return [p1, p2, p3]
 }
 
@@ -369,7 +381,9 @@ function VideoItem({
           )
         )}
         {postShadow !== POST_TOMBSTONE ? (
-          player && <Overlay player={player} post={postShadow} />
+          player && (
+            <Overlay player={player} post={postShadow} active={active} />
+          )
         ) : (
           <View
             style={[
@@ -451,9 +465,11 @@ function VideoItemInner({
 function Overlay({
   player,
   post,
+  active,
 }: {
   player: VideoPlayer
   post: Shadow<AppBskyFeedDefs.PostView>
+  active: boolean
 }) {
   const insets = useSafeAreaInsets()
   const t = useTheme()
@@ -461,6 +477,7 @@ function Overlay({
   const {status} = useEvent(player, 'statusChange', {status: player.status})
   const doubleTapRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [queueLike] = usePostLikeMutationQueue(post, 'ImmersiveVideo')
+  const seekingAnimationSV = useSharedValue(0)
 
   const pushToProfile = useNonReactiveCallback(() => {
     navigation.navigate('Profile', {name: post.author.did})
@@ -508,59 +525,86 @@ function Overlay({
     facets: record?.facets,
   })
 
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: 1 - seekingAnimationSV.get(),
+  }))
+
   return (
     <>
-      <GestureDetector gesture={gesture}>
-        <View style={[a.absolute, a.inset_0, a.z_20, {bottom: insets.bottom}]}>
-          <Button
-            label="Toggle play/pause"
-            accessibilityHint="Double tap to like"
-            onPress={onPress}
-            style={[a.flex_1]}>
-            <View />
-          </Button>
-          <LinearGradient
-            colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)', 'rgba(0,0,0,0.95)']}
-            style={[a.w_full, a.px_xl, a.py_sm, a.gap_md]}>
-            <View style={[a.flex_row, a.gap_md, a.align_center]}>
-              <PreviewableUserAvatar profile={post.author} size={32} />
-              <View>
-                <Text style={[a.text_md, a.font_heavy]} emoji numberOfLines={1}>
-                  {sanitizeDisplayName(
-                    post.author.displayName || post.author.handle,
-                  )}
-                </Text>
-                <Text
-                  style={[a.text_sm, t.atoms.text_contrast_high]}
-                  numberOfLines={1}>
-                  {sanitizeHandle(post.author.handle, '@')}
-                </Text>
+      <View style={[a.absolute, a.inset_0, a.z_20]}>
+        <GestureDetector gesture={gesture}>
+          <Animated.View style={[a.flex_1, animatedStyle]}>
+            <Button
+              label="Toggle play/pause"
+              accessibilityHint="Double tap to like"
+              onPress={onPress}
+              style={[a.flex_1]}>
+              <View />
+            </Button>
+            <LinearGradient
+              colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)', 'rgba(0,0,0,0.95)']}
+              style={[
+                a.w_full,
+                a.px_xl,
+                a.py_sm,
+                a.gap_md,
+                a.pb_3xl,
+                {marginBottom: tokens.space.xl * -1},
+              ]}>
+              <View style={[a.flex_row, a.gap_md, a.align_center]}>
+                <PreviewableUserAvatar profile={post.author} size={32} />
+                <View>
+                  <Text
+                    style={[a.text_md, a.font_heavy]}
+                    emoji
+                    numberOfLines={1}>
+                    {sanitizeDisplayName(
+                      post.author.displayName || post.author.handle,
+                    )}
+                  </Text>
+                  <Text
+                    style={[a.text_sm, t.atoms.text_contrast_high]}
+                    numberOfLines={1}>
+                    {sanitizeHandle(post.author.handle, '@')}
+                  </Text>
+                </View>
               </View>
-            </View>
-            {record?.text?.trim() && (
-              <ExpandableRichTextView
-                value={richText}
-                authorHandle={post.author.handle}
-              />
-            )}
-            {record && (
-              <PostCtrls
-                richText={richText}
-                post={post}
-                record={record}
-                logContext="FeedItem"
-                onPressReply={() =>
-                  navigation.navigate('PostThread', {
-                    name: post.author.did,
-                    rkey,
-                  })
-                }
-                big
-              />
-            )}
-          </LinearGradient>
-        </View>
-      </GestureDetector>
+              {record?.text?.trim() && (
+                <ExpandableRichTextView
+                  value={richText}
+                  authorHandle={post.author.handle}
+                />
+              )}
+              {record && (
+                <PostCtrls
+                  richText={richText}
+                  post={post}
+                  record={record}
+                  logContext="FeedItem"
+                  onPressReply={() =>
+                    navigation.navigate('PostThread', {
+                      name: post.author.did,
+                      rkey,
+                    })
+                  }
+                  big
+                />
+              )}
+            </LinearGradient>
+          </Animated.View>
+        </GestureDetector>
+        {player && active ? (
+          <Scrubber player={player} seekingAnimationSV={seekingAnimationSV} />
+        ) : (
+          <View
+            style={[
+              {height: tokens.space.xl},
+              a.w_full,
+              {paddingBottom: insets.bottom},
+            ]}
+          />
+        )}
+      </View>
       {isAndroid && status === 'loading' && (
         <View
           style={[
@@ -632,4 +676,169 @@ function ExpandableRichTextView({
       )}
     </ScrollView>
   )
+}
+
+function Scrubber({
+  player,
+  seekingAnimationSV,
+}: {
+  player: VideoPlayer
+  seekingAnimationSV: SharedValue<number>
+}) {
+  const {width: screenWidth} = useWindowDimensions()
+  const t = useTheme()
+  const insets = useSafeAreaInsets()
+  const currentTimeSV = useSharedValue(0)
+  const durationSV = useSharedValue(0)
+  const [currentSeekTime, setCurrentSeekTime] = useState(0)
+  const [duration, setDuration] = useState(0)
+
+  const updateTime = (currentTime: number, duration: number) => {
+    'worklet'
+    currentTimeSV.set(currentTime)
+    durationSV.set(duration)
+  }
+
+  useEventListener(player, 'timeUpdate', evt => {
+    runOnUI(updateTime)(evt.currentTime, player.duration)
+  })
+
+  const isSeekingSV = useSharedValue(false)
+  const seekProgressSV = useSharedValue(0)
+
+  useAnimatedReaction(
+    () => Math.round(seekProgressSV.get()),
+    (progress, prevProgress) => {
+      if (progress !== prevProgress) {
+        runOnJS(setCurrentSeekTime)(progress)
+      }
+    },
+  )
+
+  useAnimatedReaction(
+    () => Math.round(durationSV.get()),
+    (duration, prevDuration) => {
+      if (duration !== prevDuration) {
+        runOnJS(setDuration)(duration)
+      }
+    },
+  )
+
+  const seekBy = useCallback(
+    (time: number) => {
+      player.seekBy(time)
+    },
+    [player],
+  )
+
+  const gesture = useMemo(() => {
+    return Gesture.Pan()
+      .failOffsetY([-10, 10])
+      .onStart(() => {
+        'worklet'
+        seekProgressSV.set(currentTimeSV.get())
+        isSeekingSV.set(true)
+        seekingAnimationSV.set(withTiming(1, {duration: 500}))
+      })
+      .onUpdate(evt => {
+        'worklet'
+        const progress = evt.x / screenWidth
+        seekProgressSV.set(
+          clamp(progress * durationSV.get(), 0, durationSV.get()),
+        )
+      })
+      .onEnd(evt => {
+        'worklet'
+        isSeekingSV.get()
+
+        const progress = evt.x / screenWidth
+        const newTime = clamp(progress * durationSV.get(), 0, durationSV.get())
+
+        // it's seek by, so offset by the current time
+        runOnJS(seekBy)(newTime - currentTimeSV.get())
+
+        isSeekingSV.set(false)
+        seekingAnimationSV.set(withTiming(0, {duration: 500}))
+      })
+  }, [
+    seekingAnimationSV,
+    seekBy,
+    screenWidth,
+    currentTimeSV,
+    durationSV,
+    isSeekingSV,
+    seekProgressSV,
+  ])
+
+  const timeStyle = useAnimatedStyle(() => {
+    return {
+      display: seekingAnimationSV.get() === 0 ? 'none' : 'flex',
+      opacity: seekingAnimationSV.get(),
+    }
+  })
+
+  const barStyle = useAnimatedStyle(() => {
+    const currentTime = isSeekingSV.get()
+      ? seekProgressSV.get()
+      : currentTimeSV.get()
+    const progress = currentTime === 0 ? 0 : currentTime / durationSV.get()
+    return {
+      height: seekingAnimationSV.get() * 3 + 1,
+      width: `${progress * 100}%`,
+    }
+  })
+
+  return (
+    <>
+      <Animated.View
+        style={[
+          a.absolute,
+          {
+            left: 0,
+            right: 0,
+            bottom: tokens.space.xl + tokens.space._4xl + insets.bottom,
+          },
+          timeStyle,
+        ]}
+        pointerEvents="none">
+        <Text style={[a.text_center, a.font_bold]}>
+          <Text style={[a.text_5xl, {fontVariant: ['tabular-nums']}]}>
+            {formatTime(currentSeekTime)}
+          </Text>
+          <Text style={[a.text_2xl, t.atoms.text_contrast_medium]}>
+            {'  /  '}
+          </Text>
+          <Text
+            style={[
+              a.text_5xl,
+              t.atoms.text_contrast_medium,
+              {fontVariant: ['tabular-nums']},
+            ]}>
+            {formatTime(duration)}
+          </Text>
+        </Text>
+      </Animated.View>
+      <GestureDetector gesture={gesture}>
+        <View
+          style={[
+            a.w_full,
+            {height: tokens.space.md},
+            a.pt_sm,
+            a.justify_end,
+            {paddingBottom: insets.bottom},
+            a.relative,
+            a.z_10,
+          ]}>
+          <Animated.View
+            style={[{backgroundColor: 'white'}, a.h_full, a.w_full, barStyle]}
+          />
+        </View>
+      </GestureDetector>
+    </>
+  )
+}
+
+function clamp(num: number, min: number, max: number) {
+  'worklet'
+  return Math.min(Math.max(num, min), max)
 }
