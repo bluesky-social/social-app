@@ -10,9 +10,10 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isNative,isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -308,6 +309,7 @@ export function Explore() {
     error: feedsError,
     fetchNextPage: fetchNextFeedsPage,
   } = useGetPopularFeedsQuery({limit: 10})
+  const gate = useGate()
 
   const isLoadingMoreProfiles = isFetchingNextProfilesPage && !isLoadingProfiles
   const onLoadMoreProfiles = React.useCallback(async () => {
@@ -348,7 +350,7 @@ export function Explore() {
       key: `trending-topics`,
     })
 
-    if (isNative) {
+    if (isNative && gate('yolo')) {
       i.push({
         type: 'trendingVideos',
         key: `trending-videos`,
@@ -508,6 +510,7 @@ export function Explore() {
     preferencesError,
     hasNextProfilesPage,
     hasNextFeedsPage,
+    gate,
   ])
 
   const renderItem = React.useCallback(
