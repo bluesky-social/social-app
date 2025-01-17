@@ -95,7 +95,8 @@ export function ExploreTrendingVideos() {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        snapToInterval={(CARD_WIDTH + a.gap_sm.gap) * 2}>
+        decelerationRate="fast"
+        snapToInterval={CARD_WIDTH + tokens.space.sm}>
         <View
           style={[
             a.pt_lg,
