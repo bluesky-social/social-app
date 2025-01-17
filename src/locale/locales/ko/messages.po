@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-15 17:32+0900\n"
+"PO-Revision-Date: 2025-01-17 18:17+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade, Akamig\n"
 "Plural-Forms: \n"
@@ -1088,23 +1088,23 @@ msgstr "이미지 흐리게 및 피드에서 필터링"
 msgid "Books"
 msgstr "책"
 
-#: src/components/FeedInterstitials.tsx:348
+#: src/components/FeedInterstitials.tsx:349
 msgid "Browse more accounts on the Explore page"
 msgstr "탐색 페이지에서 더 많은 계정 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:481
+#: src/components/FeedInterstitials.tsx:486
 msgid "Browse more feeds on the Explore page"
 msgstr "탐색 페이지에서 더 많은 피드 찾아보기"
 
 #: src/components/FeedInterstitials.tsx:330
 #: src/components/FeedInterstitials.tsx:333
-#: src/components/FeedInterstitials.tsx:463
-#: src/components/FeedInterstitials.tsx:466
+#: src/components/FeedInterstitials.tsx:467
+#: src/components/FeedInterstitials.tsx:470
 msgid "Browse more suggestions"
 msgstr "더 많은 추천 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:356
-#: src/components/FeedInterstitials.tsx:490
+#: src/components/FeedInterstitials.tsx:357
+#: src/components/FeedInterstitials.tsx:495
 msgid "Browse more suggestions on the Explore page"
 msgstr "탐색 페이지에서 더 많은 추천 찾아보기"
 
@@ -3173,7 +3173,7 @@ msgstr "앱 비밀번호를 만들었습니다!"
 msgid "Hidden list"
 msgstr "숨겨진 리스트"
 
-#: src/components/interstitials/Trending.tsx:136
+#: src/components/interstitials/Trending.tsx:131
 #: src/components/moderation/ContentHider.tsx:200
 #: src/components/moderation/LabelPreference.tsx:135
 #: src/components/moderation/PostHider.tsx:122
@@ -3221,13 +3221,13 @@ msgstr "이 게시물을 숨기시겠습니까?"
 msgid "Hide this reply?"
 msgstr "이 답글을 숨기시겠습니까?"
 
-#: src/components/interstitials/Trending.tsx:118
+#: src/components/interstitials/Trending.tsx:113
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:83
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:62
 msgid "Hide trending topics"
 msgstr "인기 주제 숨기기"
 
-#: src/components/interstitials/Trending.tsx:134
+#: src/components/interstitials/Trending.tsx:129
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:135
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:108
 msgid "Hide trending topics?"
@@ -6333,7 +6333,7 @@ msgstr "작음"
 msgid "Software Dev"
 msgstr "소프트웨어 개발"
 
-#: src/components/FeedInterstitials.tsx:445
+#: src/components/FeedInterstitials.tsx:449
 msgid "Some other feeds you might like"
 msgstr "좋아할 만한 다른 피드"
 
@@ -7976,7 +7976,7 @@ msgstr "이제 새 비밀번호로 로그인할 수 있습니다."
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
 msgstr "계정을 재활성화하여 로그인을 계속할 수 있습니다. 내 프로필과 글이 다른 사용자에게 표시됩니다."
 
-#: src/components/interstitials/Trending.tsx:135
+#: src/components/interstitials/Trending.tsx:130
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:136
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:109
 msgid "You can update this later from your settings."
