@@ -567,7 +567,7 @@ msgstr "Az alapértelmezett hírfolyamban az általad követett személyek bejeg
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:389
 msgid "Add the following DNS record to your domain:"
-msgstr "Vedd fel az alábbi DNS-rekordot a tartományodhoz:"
+msgstr "Add hozzá az alábbi DNS-rekordot a domainedhez:"
 
 #: src/components/FeedCard.tsx:295
 msgid "Add this feed to your feeds"
@@ -613,14 +613,14 @@ msgstr "A felnőtt tartalmak le vannak tiltva."
 #: src/view/com/composer/labels/LabelsBtn.tsx:139
 #: src/view/com/composer/labels/LabelsBtn.tsx:197
 msgid "Adult Content labels"
-msgstr "Felnőtt tartalmi feljegyzések"
+msgstr "Felnőtt tartalmú feljegyzések"
 
 #: src/screens/Moderation/index.tsx:383
 msgid "Advanced"
 msgstr "Haladó beállítások"
 
 #~ msgid "Algorithm training complete!"
-#~ msgstr "Az algoritmus idomítása befejeződött!"
+#~ msgstr "Az algoritmus betanítás befejeződött!"
 
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
