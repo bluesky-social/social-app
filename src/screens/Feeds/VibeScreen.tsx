@@ -73,13 +73,13 @@ function createThreeVideoPlayers(
 ): [VideoPlayer, VideoPlayer, VideoPlayer] {
   const p1 = createVideoPlayer(sources?.[0] ?? '')
   p1.loop = true
-  p1.timeUpdateEventInterval = 0.1
+  p1.timeUpdateEventInterval = 0.25
   const p2 = createVideoPlayer(sources?.[1] ?? '')
   p2.loop = true
-  p2.timeUpdateEventInterval = 0.1
+  p2.timeUpdateEventInterval = 0.25
   const p3 = createVideoPlayer(sources?.[2] ?? '')
   p3.loop = true
-  p3.timeUpdateEventInterval = 0.1
+  p3.timeUpdateEventInterval = 0.25
   return [p1, p2, p3]
 }
 
