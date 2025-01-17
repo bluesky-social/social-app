@@ -738,7 +738,7 @@ function Scrubber({
         'worklet'
         seekProgressSV.set(currentTimeSV.get())
         isSeekingSV.set(true)
-        seekingAnimationSV.set(withTiming(1, {duration: 100}))
+        seekingAnimationSV.set(withTiming(1, {duration: 500}))
       })
       .onUpdate(evt => {
         'worklet'
@@ -758,7 +758,7 @@ function Scrubber({
         runOnJS(seekBy)(newTime - currentTimeSV.get())
 
         isSeekingSV.set(false)
-        seekingAnimationSV.set(withTiming(0, {duration: 100}))
+        seekingAnimationSV.set(withTiming(0, {duration: 500}))
       })
   }, [
     seekingAnimationSV,
