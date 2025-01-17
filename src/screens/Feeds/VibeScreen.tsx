@@ -7,7 +7,11 @@ import {
   View,
   ViewToken,
 } from 'react-native'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
+import {
+  Gesture,
+  GestureDetector,
+  NativeGesture,
+} from 'react-native-gesture-handler'
 import Animated, {
   runOnJS,
   runOnUI,
@@ -157,6 +161,8 @@ function Inner() {
 
   const [currentIndex, setCurrentIndex] = useState(0)
 
+  const scrollGesture = useMemo(() => Gesture.Native(), [])
+
   const renderItem: ListRenderItem<FeedPostSliceItem> = useCallback(
     ({item, index}) => {
       const {post} = item
@@ -177,10 +183,11 @@ function Inner() {
             index === currentIndex &&
             currentSource === post.embed.playlist
           }
+          scrollGesture={scrollGesture}
         />
       )
     },
-    [players, currentIndex, isFocused, currentSources],
+    [players, currentIndex, isFocused, currentSources, scrollGesture],
   )
 
   const updateVideoState = useNonReactiveCallback((index?: number) => {
@@ -307,29 +314,31 @@ function Inner() {
   )
 
   return (
-    <List
-      data={videos}
-      renderItem={renderItem}
-      keyExtractor={keyExtractor}
-      pagingEnabled={true}
-      refreshing={isFetching}
-      onRefresh={refetch}
-      ListFooterComponent={
-        <ListFooter
-          hasNextPage={hasNextPage}
-          isFetchingNextPage={isFetchingNextPage}
-          onRetry={refetch}
-        />
-      }
-      onEndReached={() => {
-        if (hasNextPage && !isFetchingNextPage) {
-          fetchNextPage()
+    <GestureDetector gesture={scrollGesture}>
+      <List
+        data={videos}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        pagingEnabled={true}
+        refreshing={isFetching}
+        onRefresh={refetch}
+        ListFooterComponent={
+          <ListFooter
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+            onRetry={refetch}
+          />
         }
-      }}
-      showsVerticalScrollIndicator={false}
-      onViewableItemsChanged={onViewableItemsChanged}
-      viewabilityConfig={{itemVisiblePercentThreshold: 95}}
-    />
+        onEndReached={() => {
+          if (hasNextPage && !isFetchingNextPage) {
+            fetchNextPage()
+          }
+        }}
+        showsVerticalScrollIndicator={false}
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={{itemVisiblePercentThreshold: 95}}
+      />
+    </GestureDetector>
   )
 }
 
@@ -342,11 +351,13 @@ function VideoItem({
   post,
   embed,
   active,
+  scrollGesture,
 }: {
   player?: VideoPlayer
   post: AppBskyFeedDefs.PostView
   embed: AppBskyEmbedVideo.View
   active: boolean
+  scrollGesture: NativeGesture
 }) {
   const postShadow = usePostShadow(post)
   const {height, width} = useWindowDimensions()
@@ -382,7 +393,12 @@ function VideoItem({
         )}
         {postShadow !== POST_TOMBSTONE ? (
           player && (
-            <Overlay player={player} post={postShadow} active={active} />
+            <Overlay
+              player={player}
+              post={postShadow}
+              active={active}
+              scrollGesture={scrollGesture}
+            />
           )
         ) : (
           <View
@@ -466,10 +482,12 @@ function Overlay({
   player,
   post,
   active,
+  scrollGesture,
 }: {
   player: VideoPlayer
   post: Shadow<AppBskyFeedDefs.PostView>
   active: boolean
+  scrollGesture: NativeGesture
 }) {
   const insets = useSafeAreaInsets()
   const t = useTheme()
@@ -504,19 +522,20 @@ function Overlay({
 
   const gesture = useMemo(() => {
     const dragLeftGesture = Gesture.Pan()
+      .simultaneousWithExternalGesture(scrollGesture)
       .activeOffsetX([0, 10])
       .failOffsetX([-10, 0])
       .failOffsetY([-5, 5])
       .maxPointers(1)
       .onEnd(evt => {
         'worklet'
-        if (evt.translationX < -50) {
+        if (evt.translationX < -50 && evt.velocityX < -300) {
           runOnJS(pushToProfile)()
         }
       })
 
     return dragLeftGesture
-  }, [pushToProfile])
+  }, [pushToProfile, scrollGesture])
 
   const rkey = new AtUri(post.uri).rkey
   const record = AppBskyFeedPost.isRecord(post.record) ? post.record : undefined
