@@ -453,7 +453,6 @@ function Overlay({
   const {_} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
-  // const {status} = useEvent(player, 'statusChange', {status: player.status})
   const seekingAnimationSV = useSharedValue(0)
 
   const pushToProfile = useNonReactiveCallback(() => {
@@ -583,7 +582,18 @@ function Overlay({
  * Magic number that matches the Scrubber height
  */
 function ScrubberPlaceholder() {
-  return <View style={[a.w_full, {height: 62}]} />
+  const {bottom} = useSafeAreaInsets()
+  return (
+    <View
+      style={[
+        a.w_full,
+        {
+          // same as Scrubber
+          height: bottom + tokens.space.md + tokens.space.md + tokens.space.lg,
+        },
+      ]}
+    />
+  )
 }
 
 function Scrubber({
@@ -732,14 +742,19 @@ function Scrubber({
             a.pt_lg,
             a.justify_end,
             {
-              height: tokens.space.md,
-              paddingBottom: insets.bottom + 12,
+              paddingBottom: insets.bottom + tokens.space.md,
+              height:
+                // bottom padding
+                insets.bottom +
+                tokens.space.md +
+                // actual height
+                tokens.space.md +
+                // top padding
+                tokens.space.lg,
             },
             a.z_10,
           ]}>
-          <Animated.View
-            style={[{backgroundColor: 'white'}, a.h_full, a.w_full, barStyle]}
-          />
+          <Animated.View style={[{backgroundColor: 'white'}, barStyle]} />
         </View>
       </GestureDetector>
     </>
