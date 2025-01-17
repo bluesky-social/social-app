@@ -6,9 +6,9 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {AuthorFilter} from '#/state/queries/post-feed'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 import {atoms as a, useTheme} from '#/alf'
 import {BLUE_HUE} from '#/alf/util/colorGeneration'
 import {select} from '#/alf/util/themeSelector'
@@ -19,24 +19,12 @@ import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 
-/**
- * Kind of like `FeedDescriptor` but not
- */
-export type SourceContext =
-  | {type: 'feedgen'; uri: string; initialPostUri?: string}
-  | {
-      type: 'author'
-      did: string
-      filter: AuthorFilter
-      initialPostUri?: string
-    }
-
 export function VideoPostCard({
   post,
   sourceContext,
 }: {
   post: AppBskyFeedDefs.PostView
-  sourceContext: SourceContext
+  sourceContext: VideoFeedSourceContext
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
