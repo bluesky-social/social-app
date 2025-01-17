@@ -45,7 +45,10 @@ import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {useBreakpoints} from '#/alf'
 import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
-import {PostFeedVideoGridRow} from '#/components/feeds/PostFeedVideoGridRow'
+import {
+  PostFeedVideoGridRow,
+  PostFeedVideoGridRowPlaceholder,
+} from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
@@ -85,6 +88,10 @@ type FeedRow =
       slice: FeedPostSlice
       indexInSlice: number
       showReplyTo: boolean
+    }
+  | {
+      type: 'videoGridRowPlaceholder'
+      key: string
     }
   | {
       type: 'videoGridRow'
@@ -176,6 +183,7 @@ let PostFeed = ({
   const lastFetchRef = React.useRef<number>(Date.now())
   const [feedType, feedUri, feedTab] = feed.split('|')
   const {gtMobile, gtTablet} = useBreakpoints()
+  const isVideoFeed = feedUri === VIDEO_FEED_URI
 
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
@@ -287,8 +295,6 @@ let PostFeed = ({
       feedKind = 'following'
     } else if (feedUri === DISCOVER_FEED_URI) {
       feedKind = 'discover'
-    } else if (feedUri === VIDEO_FEED_URI) {
-      feedKind = 'thevids'
     } else if (
       feedType === 'author' &&
       (feedTab === 'posts_and_author_threads' ||
@@ -318,7 +324,7 @@ let PostFeed = ({
       } else if (data) {
         let sliceIndex = -1
         for (const page of data?.pages) {
-          if (feedKind === 'thevids' && isNative) {
+          if (isVideoFeed && isNative) {
             const rows: FeedPostSliceItem[][] = []
             for (let i = 0; i < page.slices.length; i++) {
               const slice = page.slices[i]
@@ -436,10 +442,17 @@ let PostFeed = ({
         })
       }
     } else {
-      arr.push({
-        type: 'loading',
-        key: 'loading',
-      })
+      if (isVideoFeed) {
+        arr.push({
+          type: 'videoGridRowPlaceholder',
+          key: 'videoGridRowPlaceholder',
+        })
+      } else {
+        arr.push({
+          type: 'loading',
+          key: 'loading',
+        })
+      }
     }
 
     return arr
@@ -457,6 +470,7 @@ let PostFeed = ({
     trendingDisabled,
     gtTablet,
     gtMobile,
+    isVideoFeed,
   ])
 
   // events
@@ -579,6 +593,14 @@ let PostFeed = ({
         )
       } else if (row.type === 'sliceViewFullThread') {
         return <ViewFullThread uri={row.uri} />
+      } else if (row.type === 'videoGridRowPlaceholder') {
+        return (
+          <View>
+            <PostFeedVideoGridRowPlaceholder />
+            <PostFeedVideoGridRowPlaceholder />
+            <PostFeedVideoGridRowPlaceholder />
+          </View>
+        )
       } else if (row.type === 'videoGridRow') {
         return (
           <PostFeedVideoGridRow
