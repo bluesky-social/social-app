@@ -19,7 +19,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useEvent, useEventListener} from 'expo'
-import {Image} from 'expo-image'
+import {Image, ImageStyle} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {createVideoPlayer, VideoPlayer, VideoView} from 'expo-video'
 import {
@@ -54,7 +54,7 @@ import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {List} from '#/view/com/util/List'
 import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {formatTime} from '#/view/com/util/post-embeds/VideoEmbedInner/web-controls/utils'
-import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Header} from '#/screens/VideoFeed/Header'
 import {atoms as a, ThemeProvider, tokens, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -350,41 +350,12 @@ function VideoItem({
 }) {
   const postShadow = usePostShadow(post)
   const {height, width} = useWindowDimensions()
-  const insets = useSafeAreaInsets()
 
   return (
     <View
-      style={{
-        height,
-        width,
-      }}>
+      style={[a.relative, {height, width}]}>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={[a.flex_1]}>
-        {player ? (
-          <VideoItemInner player={player} embed={embed} active={active} />
-        ) : (
-          embed.thumbnail && (
-            <Image
-              accessibilityIgnoresInvertColors
-              source={{uri: embed.thumbnail}}
-              style={[
-                a.flex_1,
-                a.absolute,
-                {
-                  top: 0,
-                  left: insets.left,
-                  right: insets.right,
-                  bottom: insets.bottom,
-                },
-              ]}
-              contentFit="contain"
-            />
-          )
-        )}
-        {postShadow !== POST_TOMBSTONE ? (
-          player && (
-            <Overlay player={player} post={postShadow} active={active} />
-          )
-        ) : (
+        {postShadow === POST_TOMBSTONE ? (
           <View
             style={[
               a.absolute,
@@ -405,12 +376,21 @@ function VideoItem({
               <Trans>Post has been deleted</Trans>
             </Text>
           </View>
+        ) : (
+          <>
+            <VideoItemPlaceholder embed={embed} />
+            {player && (
+              <VideoItemInner player={player} embed={embed} active={active} />
+            )}
+            <Overlay player={player} post={postShadow} active={active} />
+          </>
         )}
       </SafeAreaView>
     </View>
   )
 }
 
+// TODO maybe unused
 function VideoItemInner({
   player,
   embed,
@@ -420,42 +400,23 @@ function VideoItemInner({
   embed: AppBskyEmbedVideo.View
   active: boolean
 }) {
-  const insets = useSafeAreaInsets()
-  const {status} = useEvent(player, 'statusChange', {status: player.status})
-
-  const videoAspectRatio =
-    (embed.aspectRatio?.width ?? 1) / (embed.aspectRatio?.height ?? 1)
-
-  // if the video tall enough (tiktok/reels are 9:16) go cover mode
-  const isCloseEnough = videoAspectRatio <= 9 / 16
+  // const {status} = useEvent(player, 'statusChange', {status: player.status})
 
   return (
     <>
+      {/*
+      <VideoItemPlaceholder embed={embed} style={{
+        zIndex: status === 'loading' && isAndroid ? 1 : -1,
+      }} />
+        */}
+
       {active && player && (
         <VideoView
-          style={[a.flex_1]}
+          style={[a.absolute, a.inset_0]}
           player={player}
           nativeControls={false}
-          contentFit={isCloseEnough ? 'cover' : 'contain'}
+          contentFit={isTallAspectRatio(embed.aspectRatio) ? 'cover' : 'contain'}
           accessibilityIgnoresInvertColors
-        />
-      )}
-      {embed.thumbnail && (
-        <Image
-          accessibilityIgnoresInvertColors
-          source={{uri: embed.thumbnail}}
-          style={[
-            a.flex_1,
-            a.absolute,
-            {
-              zIndex: status === 'loading' && isAndroid ? 1 : -1,
-              top: 0,
-              left: insets.left,
-              right: insets.right,
-              bottom: insets.bottom,
-            },
-          ]}
-          contentFit={isCloseEnough ? 'cover' : 'contain'}
         />
       )}
     </>
@@ -467,40 +428,18 @@ function Overlay({
   post,
   active,
 }: {
-  player: VideoPlayer
+  player?: VideoPlayer
   post: Shadow<AppBskyFeedDefs.PostView>
   active: boolean
 }) {
-  const insets = useSafeAreaInsets()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
-  const {status} = useEvent(player, 'statusChange', {status: player.status})
-  const doubleTapRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const [queueLike] = usePostLikeMutationQueue(post, 'ImmersiveVideo')
+  // const {status} = useEvent(player, 'statusChange', {status: player.status})
   const seekingAnimationSV = useSharedValue(0)
 
   const pushToProfile = useNonReactiveCallback(() => {
     navigation.navigate('Profile', {name: post.author.did})
   })
-
-  const togglePlayPause = () => {
-    doubleTapRef.current = null
-    if (player.playing) {
-      player.pause()
-    } else {
-      player.play()
-    }
-  }
-
-  const onPress = () => {
-    if (doubleTapRef.current) {
-      clearTimeout(doubleTapRef.current)
-      doubleTapRef.current = null
-      queueLike()
-    } else {
-      doubleTapRef.current = setTimeout(togglePlayPause, 200)
-    }
-  }
 
   const gesture = useMemo(() => {
     const dragLeftGesture = Gesture.Pan()
@@ -533,49 +472,43 @@ function Overlay({
     <>
       <View style={[a.absolute, a.inset_0, a.z_20]}>
         <GestureDetector gesture={gesture}>
-          <Animated.View style={[a.flex_1, animatedStyle]}>
-            <Button
-              label="Toggle play/pause"
-              accessibilityHint="Double tap to like"
-              onPress={onPress}
-              style={[a.flex_1]}>
-              <View />
-            </Button>
-            <LinearGradient
-              colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)', 'rgba(0,0,0,0.95)']}
-              style={[
-                a.w_full,
-                a.px_xl,
-                a.py_sm,
-                a.gap_md,
-                a.pb_3xl,
-                {marginBottom: tokens.space.xl * -1},
-              ]}>
-              <View style={[a.flex_row, a.gap_md, a.align_center]}>
-                <PreviewableUserAvatar profile={post.author} size={32} />
-                <View>
-                  <Text
-                    style={[a.text_md, a.font_heavy]}
-                    emoji
-                    numberOfLines={1}>
-                    {sanitizeDisplayName(
-                      post.author.displayName || post.author.handle,
-                    )}
-                  </Text>
-                  <Text
-                    style={[a.text_sm, t.atoms.text_contrast_high]}
-                    numberOfLines={1}>
-                    {sanitizeHandle(post.author.handle, '@')}
-                  </Text>
-                </View>
+          <View style={[a.flex_1]}>
+            <PlayPauseTapArea player={player} post={post} />
+          </View>
+        </GestureDetector>
+
+        <LinearGradient
+          colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)', 'rgba(0,0,0,0.95)']}
+          style={[a.w_full, a.pt_md]}>
+          <Animated.View style={[a.px_xl, animatedStyle]}>
+            <View style={[a.flex_row, a.gap_md, a.pb_sm, a.align_center]}>
+              <UserAvatar type='user' avatar={post.author.avatar} size={32} />
+              <View>
+                <Text
+                  style={[a.text_md, a.font_heavy]}
+                  emoji
+                  numberOfLines={1}>
+                  {sanitizeDisplayName(
+                    post.author.displayName || post.author.handle,
+                  )}
+                </Text>
+                <Text
+                  style={[a.text_sm, t.atoms.text_contrast_high]}
+                  numberOfLines={1}>
+                  {sanitizeHandle(post.author.handle, '@')}
+                </Text>
               </View>
-              {record?.text?.trim() && (
+            </View>
+            {record?.text?.trim() && (
+              <View style={[a.pb_sm]}>
                 <ExpandableRichTextView
                   value={richText}
                   authorHandle={post.author.handle}
                 />
-              )}
-              {record && (
+              </View>
+            )}
+            {record && (
+              <View style={[{left: -5}]}>
                 <PostCtrls
                   richText={richText}
                   post={post}
@@ -589,22 +522,18 @@ function Overlay({
                   }
                   big
                 />
-              )}
-            </LinearGradient>
+              </View>
+            )}
           </Animated.View>
-        </GestureDetector>
-        {player && active ? (
-          <Scrubber player={player} seekingAnimationSV={seekingAnimationSV} />
-        ) : (
-          <View
-            style={[
-              {height: tokens.space.xl},
-              a.w_full,
-              {paddingBottom: insets.bottom},
-            ]}
-          />
-        )}
+
+          {player && active ? (
+            <Scrubber player={player} seekingAnimationSV={seekingAnimationSV} />
+          ) : (
+            <ScrubberPlaceholder />
+          )}
+        </LinearGradient>
       </View>
+      {/*
       {isAndroid && status === 'loading' && (
         <View
           style={[
@@ -618,64 +547,16 @@ function Overlay({
           <Loader size="2xl" />
         </View>
       )}
+        */}
     </>
   )
 }
 
-function ExpandableRichTextView({
-  value,
-  authorHandle,
-}: {
-  value: RichTextAPI
-  authorHandle?: string
-}) {
-  const {height: screenHeight} = useWindowDimensions()
-  const [expanded, setExpanded] = useState(false)
-  const [constrained, setConstrained] = useState(false)
-  const [contentHeight, setContentHeight] = useState(0)
-  const {_} = useLingui()
-
-  return (
-    <ScrollView
-      scrollEnabled={expanded}
-      onContentSizeChange={(_w, h) => {
-        if (expanded) {
-          LayoutAnimation.configureNext({
-            duration: 500,
-            update: {type: 'spring', springDamping: 0.6},
-          })
-        }
-        setContentHeight(h)
-      }}
-      style={{height: Math.min(contentHeight, screenHeight * 0.5)}}
-      contentContainerStyle={[
-        a.gap_xs,
-        expanded ? [a.align_start] : a.flex_row,
-      ]}>
-      <RichText
-        value={value}
-        style={[a.text_sm, a.flex_1]}
-        authorHandle={authorHandle}
-        enableTags
-        numberOfLines={expanded ? undefined : constrained ? 1 : 2}
-        onTextLayout={evt => {
-          if (!constrained && evt.nativeEvent.lines.length > 1) {
-            setConstrained(true)
-          }
-        }}
-      />
-      {constrained && (
-        <Button
-          label={expanded ? _(msg`Read less`) : _(msg`Read more`)}
-          hitSlop={HITSLOP_20}
-          onPress={() => setExpanded(prev => !prev)}>
-          <ButtonText>
-            {expanded ? <Trans>Read less</Trans> : <Trans>Read more</Trans>}
-          </ButtonText>
-        </Button>
-      )}
-    </ScrollView>
-  )
+/**
+ * Magic number that matches the Scrubber height
+ */
+function ScrubberPlaceholder() {
+  return <View style={[a.w_full, {height: 62}]} />
 }
 
 function Scrubber({
@@ -796,7 +677,7 @@ function Scrubber({
           {
             left: 0,
             right: 0,
-            bottom: tokens.space.xl + tokens.space._4xl + insets.bottom,
+            bottom: insets.bottom + 48,
           },
           timeStyle,
         ]}
@@ -818,15 +699,18 @@ function Scrubber({
           </Text>
         </Text>
       </Animated.View>
+
       <GestureDetector gesture={gesture}>
         <View
           style={[
-            a.w_full,
-            {height: tokens.space.md},
-            a.pt_sm,
-            a.justify_end,
-            {paddingBottom: insets.bottom},
             a.relative,
+            a.w_full,
+            a.pt_lg,
+            a.justify_end,
+            {
+              height: tokens.space.md,
+              paddingBottom: insets.bottom + 12,
+            },
             a.z_10,
           ]}>
           <Animated.View
@@ -838,7 +722,136 @@ function Scrubber({
   )
 }
 
+function ExpandableRichTextView({
+  value,
+  authorHandle,
+}: {
+  value: RichTextAPI
+  authorHandle?: string
+}) {
+  const {height: screenHeight} = useWindowDimensions()
+  const [expanded, setExpanded] = useState(false)
+  const [constrained, setConstrained] = useState(false)
+  const [contentHeight, setContentHeight] = useState(0)
+  const {_} = useLingui()
+
+  return (
+    <ScrollView
+      scrollEnabled={expanded}
+      onContentSizeChange={(_w, h) => {
+        if (expanded) {
+          LayoutAnimation.configureNext({
+            duration: 500,
+            update: {type: 'spring', springDamping: 0.6},
+          })
+        }
+        setContentHeight(h)
+      }}
+      style={{height: Math.min(contentHeight, screenHeight * 0.5)}}
+      contentContainerStyle={[
+        a.gap_xs,
+        expanded ? [a.align_start] : a.flex_row,
+      ]}>
+      <RichText
+        value={value}
+        style={[a.text_sm, a.flex_1]}
+        authorHandle={authorHandle}
+        enableTags
+        numberOfLines={expanded ? undefined : constrained ? 1 : 2}
+        onTextLayout={evt => {
+          if (!constrained && evt.nativeEvent.lines.length > 1) {
+            setConstrained(true)
+          }
+        }}
+      />
+      {constrained && (
+        <Button
+          label={expanded ? _(msg`Read less`) : _(msg`Read more`)}
+          hitSlop={HITSLOP_20}
+          onPress={() => setExpanded(prev => !prev)}>
+          <ButtonText>
+            {expanded ? <Trans>Read less</Trans> : <Trans>Read more</Trans>}
+          </ButtonText>
+        </Button>
+      )}
+    </ScrollView>
+  )
+}
+
+function VideoItemPlaceholder({
+  embed,
+  style,
+}: {
+  embed: AppBskyEmbedVideo.View
+  style?: ImageStyle
+}) {
+  const src = embed.thumbnail
+  return src ? (
+    <Image
+      accessibilityIgnoresInvertColors
+      source={{uri: src}}
+      style={[
+        a.absolute,
+        a.inset_0,
+        style,
+      ]}
+      contentFit={isTallAspectRatio(embed.aspectRatio) ? 'cover' : 'contain'}
+    />
+  ) : null
+}
+
+function PlayPauseTapArea({
+  player,
+  post,
+}: {
+  player?: VideoPlayer
+  post: Shadow<AppBskyFeedDefs.PostView>
+}) {
+  const doubleTapRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [queueLike] = usePostLikeMutationQueue(post, 'ImmersiveVideo')
+  const togglePlayPause = () => {
+    if (!player) return
+    doubleTapRef.current = null
+    if (player.playing) {
+      player.pause()
+    } else {
+      player.play()
+    }
+  }
+
+  const onPress = () => {
+    if (doubleTapRef.current) {
+      clearTimeout(doubleTapRef.current)
+      doubleTapRef.current = null
+      queueLike()
+    } else {
+      doubleTapRef.current = setTimeout(togglePlayPause, 200)
+    }
+  }
+
+  return (
+    <Button
+      disabled={!player}
+      label="Toggle play/pause"
+      accessibilityHint="Double tap to like"
+      onPress={onPress}
+      style={[a.absolute, a.inset_0]}
+    >
+      <View />
+    </Button>
+  )
+}
+
 function clamp(num: number, min: number, max: number) {
   'worklet'
   return Math.min(Math.max(num, min), max)
+}
+
+/*
+ * If the video is taller than 9:16
+ */
+function isTallAspectRatio(aspectRatio: AppBskyEmbedVideo.View['aspectRatio']) {
+  const videoAspectRatio =
+    (aspectRatio?.width ?? 1) / (aspectRatio?.height ?? 1)
+  return videoAspectRatio <= 9 / 16
 }
