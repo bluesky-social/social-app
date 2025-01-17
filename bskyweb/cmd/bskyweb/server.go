@@ -218,6 +218,8 @@ func serve(cctx *cli.Context) error {
 			if err := next(c); err != nil {
 				c.Error(err)
 				return nil
+			} else if c.Response() != nil && c.Response().Status >= 300 {
+				return nil
 			}
 
 			path := c.Request().URL.Path
