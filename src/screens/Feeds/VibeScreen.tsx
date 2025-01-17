@@ -22,7 +22,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
-import {useEventListener} from 'expo'
+import {useEvent, useEventListener} from 'expo'
 import {Image, ImageStyle} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {createVideoPlayer, VideoPlayer, VideoView} from 'expo-video'
@@ -49,6 +49,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {isAndroid} from '#/platform/detection'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {usePostLikeMutationQueue} from '#/state/queries/post'
 import {FeedPostSliceItem, usePostFeedQuery} from '#/state/queries/post-feed'
@@ -404,7 +405,6 @@ function VideoItem({
   )
 }
 
-// TODO maybe unused
 function VideoItemInner({
   player,
   embed,
@@ -414,19 +414,17 @@ function VideoItemInner({
   embed: AppBskyEmbedVideo.View
   active: boolean
 }) {
-  // const {status} = useEvent(player, 'statusChange', {status: player.status})
+  const {status} = useEvent(player, 'statusChange', {status: player.status})
 
   return (
     <>
-      {/*
-      <VideoItemPlaceholder embed={embed} style={{
-        zIndex: status === 'loading' && isAndroid ? 1 : -1,
-      }} />
-        */}
-
       {active && player && (
         <VideoView
-          style={[a.absolute, a.inset_0]}
+          style={[
+            a.absolute,
+            a.inset_0,
+            isAndroid && status === 'loading' && {opacity: 0},
+          ]}
           player={player}
           nativeControls={false}
           contentFit={
