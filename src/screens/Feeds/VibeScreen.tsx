@@ -46,6 +46,7 @@ import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {List} from '#/view/com/util/List'
 import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {Header} from '#/screens/VideoFeed/Header'
 import {atoms as a, ThemeProvider, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Layout from '#/components/Layout'
@@ -71,6 +72,7 @@ export function VideoFeed({}: NativeStackScreenProps<
   'VideoFeed'
 >) {
   const {top} = useSafeAreaInsets()
+  const {params} = useRoute<RouteProp<CommonNavigatorParams, 'VideoFeed'>>()
 
   const setMinShellMode = useSetMinimalShellMode()
   useFocusEffect(
@@ -93,16 +95,7 @@ export function VideoFeed({}: NativeStackScreenProps<
             a.z_30,
             {top: 0, left: 0, right: 0, paddingTop: top},
           ]}>
-          <Layout.Header.Outer noBottomBorder>
-            <Layout.Header.BackButton />
-            <Layout.Header.Content>
-              <Layout.Header.TitleText>
-                {/* TODO: needs to be feed name */}
-                <Trans>Videos</Trans>
-              </Layout.Header.TitleText>
-            </Layout.Header.Content>
-            <Layout.Header.Slot />
-          </Layout.Header.Outer>
+          <Header sourceContext={params} />
         </View>
         <Inner />
       </Layout.Screen>
