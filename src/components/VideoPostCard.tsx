@@ -161,3 +161,73 @@ export function VideoPostCard({
     </Link>
   )
 }
+
+export function VideoPostCardPlaceholder() {
+  const t = useTheme()
+  const black = select(t.name, {
+    light: t.palette.black,
+    dark: t.atoms.bg_contrast_25.backgroundColor,
+    dim: `hsl(${BLUE_HUE}, 28%, 6%)`,
+  })
+
+  return (
+    <View style={[a.flex_1]}>
+      <View
+        style={[
+          a.rounded_md,
+          a.overflow_hidden,
+          {
+            backgroundColor: black,
+            aspectRatio: 9 / 16,
+          },
+        ]}>
+        <MediaInsetBorder />
+      </View>
+      <View style={[a.pr_xs, {paddingTop: 8, gap: 6}]}>
+        <View
+          style={[
+            a.w_full,
+            a.rounded_xs,
+            t.atoms.bg_contrast_50,
+            {
+              height: 14,
+            },
+          ]}
+        />
+        <View
+          style={[
+            a.w_full,
+            a.rounded_xs,
+            t.atoms.bg_contrast_50,
+            {
+              height: 14,
+              width: '70%',
+            },
+          ]}
+        />
+        <View style={[a.flex_row, a.gap_xs, a.align_center]}>
+          <View
+            style={[
+              a.rounded_full,
+              t.atoms.bg_contrast_50,
+              {
+                width: 20,
+                height: 20,
+              },
+            ]}
+          />
+          <View
+            style={[
+              a.rounded_xs,
+              t.atoms.bg_contrast_25,
+              {
+                height: 12,
+                width: '75%',
+              },
+            ]}
+          />
+        </View>
+      </View>
+    </View>
+  )
+}
