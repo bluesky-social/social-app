@@ -60,11 +60,13 @@ export function IS_PROD_SERVICE(url?: string) {
   return url && url !== STAGING_SERVICE && !url.startsWith(LOCAL_DEV_SERVICE)
 }
 
+export const PROD_DEFAULT_FEED_DID = 'did:plc:z72i7hdynmk6r22z27h6tvur'
 export const PROD_DEFAULT_FEED = (rkey: string) =>
-  `at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/${rkey}`
+  `at://${PROD_DEFAULT_FEED_DID}/app.bsky.feed.generator/${rkey}`
 
+export const STAGING_DEFAULT_FEED_DID = 'did:plc:yofh3kx63drvfljkibw5zuxo'
 export const STAGING_DEFAULT_FEED = (rkey: string) =>
-  `at://did:plc:yofh3kx63drvfljkibw5zuxo/app.bsky.feed.generator/${rkey}`
+  `at://${STAGING_DEFAULT_FEED_DID}/app.bsky.feed.generator/${rkey}`
 
 export const POST_IMG_MAX = {
   width: 2000,
