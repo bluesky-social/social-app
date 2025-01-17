@@ -686,7 +686,6 @@ function Scrubber({
   seekingAnimationSV: SharedValue<number>
 }) {
   const {width: screenWidth} = useWindowDimensions()
-  const t = useTheme()
   const insets = useSafeAreaInsets()
   const currentTimeSV = useSharedValue(0)
   const durationSV = useSharedValue(0)
@@ -805,13 +804,11 @@ function Scrubber({
           <Text style={[a.text_5xl, {fontVariant: ['tabular-nums']}]}>
             {formatTime(currentSeekTime)}
           </Text>
-          <Text style={[a.text_2xl, t.atoms.text_contrast_medium]}>
-            {'  /  '}
-          </Text>
+          <Text style={[a.text_2xl, {opacity: 0.8}]}>{'  /  '}</Text>
           <Text
             style={[
               a.text_5xl,
-              t.atoms.text_contrast_medium,
+              {opacity: 0.8},
               {fontVariant: ['tabular-nums']},
             ]}>
             {formatTime(duration)}
