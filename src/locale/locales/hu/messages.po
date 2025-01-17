@@ -620,7 +620,7 @@ msgid "Advanced"
 msgstr "Haladó beállítások"
 
 #~ msgid "Algorithm training complete!"
-#~ msgstr "Az algoritmus betanítás befejeződött!"
+#~ msgstr "Az algoritmus betanítása befejeződött!"
 
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
