@@ -62,6 +62,7 @@ import {Header} from '#/screens/VideoFeed/Header'
 import {atoms as a, ThemeProvider, tokens, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Layout from '#/components/Layout'
+import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
@@ -449,6 +450,7 @@ function Overlay({
   active: boolean
   scrollGesture: NativeGesture
 }) {
+  const {_} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
   // const {status} = useEvent(player, 'statusChange', {status: player.status})
@@ -499,7 +501,17 @@ function Overlay({
           colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)', 'rgba(0,0,0,0.95)']}
           style={[a.w_full, a.pt_md]}>
           <Animated.View style={[a.px_xl, animatedStyle]}>
-            <View style={[a.flex_row, a.gap_md, a.pb_sm, a.align_center]}>
+            <Link
+              label={_(
+                msg`View ${sanitizeDisplayName(
+                  post.author.displayName || post.author.handle,
+                )}'s profile`,
+              )}
+              to={{
+                screen: 'Profile',
+                params: {name: post.author.did},
+              }}
+              style={[a.flex_row, a.gap_md, a.pb_sm, a.align_center]}>
               <UserAvatar type="user" avatar={post.author.avatar} size={32} />
               <View>
                 <Text style={[a.text_md, a.font_heavy]} emoji numberOfLines={1}>
@@ -513,7 +525,7 @@ function Overlay({
                   {sanitizeHandle(post.author.handle, '@')}
                 </Text>
               </View>
-            </View>
+            </Link>
             {record?.text?.trim() && (
               <View style={[a.pb_sm]}>
                 <ExpandableRichTextView
