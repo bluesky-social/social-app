@@ -1,10 +1,11 @@
 import React from 'react'
 import {ScrollView, View} from 'react-native'
-import {AppBskyEmbedVideo} from '@atproto/api'
+import {AppBskyEmbedVideo, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {VIDEO_FEED_URI} from '#/lib/constants'
+import {makeCustomFeedLink} from '#/lib/routes/links'
 import {logEvent} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import {useSavedFeeds} from '#/state/queries/feed'
@@ -13,8 +14,10 @@ import {useAddSavedFeedsMutation} from '#/state/queries/preferences'
 import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {GradientFill} from '#/components/GradientFill'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {Pin_Stroke2_Corner0_Rounded as Pin} from '#/components/icons/Pin'
 import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending2'
+import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {
   CompactVideoPostCard,
@@ -120,28 +123,7 @@ export function ExploreTrendingVideos() {
               <Trans>Whoops! Trending videos failed to load.</Trans>
             </Text>
           ) : (
-            data.pages
-              .flatMap(page => page.slices)
-              .map(slice => slice.items[0])
-              .filter(Boolean)
-              .filter(item => AppBskyEmbedVideo.isView(item.post.embed))
-              .map(item => (
-                <View key={item.post.uri} style={[{width: CARD_WIDTH}]}>
-                  <CompactVideoPostCard
-                    post={item.post}
-                    moderation={item.moderation}
-                    sourceContext={{
-                      type: 'feedgen',
-                      uri: VIDEO_FEED_URI,
-                    }}
-                    onInteract={() => {
-                      logEvent('videoCard:click', {
-                        context: 'interstitial:explore',
-                      })
-                    }}
-                  />
-                </View>
-              ))
+            <VideoCards data={data} />
           )}
         </View>
       </ScrollView>
@@ -174,5 +156,80 @@ export function ExploreTrendingVideos() {
         </View>
       )}
     </View>
+  )
+}
+
+function VideoCards({
+  data,
+}: {
+  data: Exclude<ReturnType<typeof usePostFeedQuery>['data'], undefined>
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const items = React.useMemo(() => {
+    return data.pages
+      .flatMap(page => page.slices)
+      .map(slice => slice.items[0])
+      .filter(Boolean)
+      .filter(item => AppBskyEmbedVideo.isView(item.post.embed))
+      .slice(0, 8)
+  }, [data])
+  const href = React.useMemo(() => {
+    const urip = new AtUri(VIDEO_FEED_URI)
+    return makeCustomFeedLink(urip.host, urip.rkey)
+  }, [])
+
+  return (
+    <>
+      {items.map(item => (
+        <View key={item.post.uri} style={[{width: CARD_WIDTH}]}>
+          <CompactVideoPostCard
+            post={item.post}
+            moderation={item.moderation}
+            sourceContext={{
+              type: 'feedgen',
+              uri: VIDEO_FEED_URI,
+            }}
+            onInteract={() => {
+              logEvent('videoCard:click', {
+                context: 'interstitial:discover',
+              })
+            }}
+          />
+        </View>
+      ))}
+
+      <View style={[{width: CARD_WIDTH * 2}]}>
+        <Link
+          to={href}
+          label={_(msg`View more`)}
+          style={[
+            a.justify_center,
+            a.align_center,
+            a.flex_1,
+            a.rounded_md,
+            t.atoms.bg_contrast_25,
+          ]}>
+          <View style={[a.flex_row, a.align_center, a.gap_md]}>
+            <Text style={[a.text_md]}>
+              <Trans>View more</Trans>
+            </Text>
+            <View
+              style={[
+                a.align_center,
+                a.justify_center,
+                a.rounded_full,
+                {
+                  width: 34,
+                  height: 34,
+                  backgroundColor: t.palette.primary_500,
+                },
+              ]}>
+              <ButtonIcon icon={ChevronRight} />
+            </View>
+          </View>
+        </Link>
+      </View>
+    </>
   )
 }
