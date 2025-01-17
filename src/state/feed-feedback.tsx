@@ -167,7 +167,7 @@ export function useFeedFeedbackContext() {
 function isDiscoverFeed(feed: FeedDescriptor) {
   return (
     feed === `feedgen|${PROD_DEFAULT_FEED('whats-hot')}` ||
-    feed === `feedgen|${PROD_DEFAULT_FEED('thevides')}` ||
+    feed === `feedgen|${PROD_DEFAULT_FEED('thevids')}` ||
     feed === `feedgen|${STAGING_DEFAULT_FEED('thevids')}`
   )
 }
