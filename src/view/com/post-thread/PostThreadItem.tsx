@@ -758,9 +758,9 @@ function ExpandedPostDetails({
   const isBackdated =
       indexedAt.getTime() - createdAt.getTime() > 24 * 60 * 60 * 1000
 
-  let dateEl = <DateNotBackdated post={post} />
+  let dateEl = <PostDate post={post} />
   if(isBackdated){
-    dateEl = <DateBackdated post={post} />
+    dateEl = <PostDateArchived post={post} />
   }
 
   return (
@@ -788,7 +788,7 @@ function ExpandedPostDetails({
   )
 }
 
-function DateNotBackdated({post}: {post: AppBskyFeedDefs.PostView}) {
+function PostDate({post}: {post: AppBskyFeedDefs.PostView}) {
   const t = useTheme()
   const {i18n} = useLingui()
 
@@ -800,7 +800,7 @@ function DateNotBackdated({post}: {post: AppBskyFeedDefs.PostView}) {
   )
 }
 
-function DateBackdated({post}: {post: AppBskyFeedDefs.PostView}) {
+function PostDateArchived({post}: {post: AppBskyFeedDefs.PostView}) {
   const t = useTheme()
   const {_, i18n} = useLingui()
   const control = Prompt.usePromptControl()
@@ -840,7 +840,7 @@ function DateBackdated({post}: {post: AppBskyFeedDefs.PostView}) {
             ]}>
             <CalendarClockIcon fill={danger} size="sm" aria-hidden />
             <Text>
-              {niceDate(i18n, createdAt)}
+              Archived from {niceDate(i18n, createdAt)}
             </Text>
           </View>
         )}
