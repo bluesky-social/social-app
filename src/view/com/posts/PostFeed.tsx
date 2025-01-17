@@ -323,37 +323,44 @@ let PostFeed = ({
         })
       } else if (data) {
         let sliceIndex = -1
-        for (const page of data?.pages) {
-          if (isVideoFeed && isNative) {
-            const rows: FeedPostSliceItem[][] = []
-            for (let i = 0; i < page.slices.length; i++) {
-              const slice = page.slices[i]
-              const root = slice.items.at(0)
-              if (!root) continue
-              // TODO test this
-              if (!AppBskyEmbedVideo.isView(root.post.embed)) {
-                i--
-                continue
-              }
-              const cols = gtMobile ? 3 : 2
-              if (i % cols === 0) {
-                rows.push([root])
-              } else {
-                rows[rows.length - 1].push(root)
-              }
-            }
 
-            for (const row of rows) {
-              sliceIndex++
-
-              arr.push({
-                type: 'videoGridRow',
-                key: row.map(r => r._reactKey).join('-'),
-                slices: row,
-                sourceFeedUri: feedUri,
-              })
+        if (isVideoFeed && isNative) {
+          const rows: FeedPostSliceItem[][] = []
+          let slices: {slice: FeedPostSlice; index: number}[] = []
+          for (const page of data.pages) {
+            for (const slice of page.slices) {
+              slices.push({slice, index: sliceIndex++})
             }
-          } else {
+          }
+
+          for (let i = 0; i < slices.length; i++) {
+            const slice = slices[i]
+            const root = slice.slice.items.at(0)
+            if (!root) continue
+            // TODO test this
+            if (!AppBskyEmbedVideo.isView(root.post.embed)) {
+              i--
+              continue
+            }
+            const cols = gtMobile ? 3 : 2
+            if (i % cols === 0) {
+              rows.push([root])
+            } else {
+              rows[rows.length - 1].push(root)
+            }
+          }
+
+          for (const row of rows) {
+            sliceIndex++
+            arr.push({
+              type: 'videoGridRow',
+              key: row.map(r => r._reactKey).join('-'),
+              slices: row,
+              sourceFeedUri: feedUri,
+            })
+          }
+        } else {
+          for (const page of data?.pages) {
             for (const slice of page.slices) {
               sliceIndex++
 
