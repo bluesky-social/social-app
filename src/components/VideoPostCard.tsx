@@ -183,7 +183,7 @@ export function VideoPostCard({
           </View>
           <View style={[a.pr_xs, {paddingTop: 6, gap: 4}]}>
             {text && (
-              <Text style={[a.text_md, a.leading_snug]} numberOfLines={2}>
+              <Text style={[a.text_md, a.leading_snug]} numberOfLines={2} emoji>
                 {text}
               </Text>
             )}
