@@ -3,7 +3,6 @@ import {
   LayoutAnimation,
   ListRenderItem,
   ScrollView,
-  useWindowDimensions,
   View,
   ViewToken,
 } from 'react-native'
@@ -21,7 +20,11 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
+import {
+  SafeAreaView,
+  useSafeAreaFrame,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
 import {useEvent, useEventListener} from 'expo'
 import {Image, ImageStyle} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
@@ -64,7 +67,8 @@ import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {formatTime} from '#/view/com/util/post-embeds/VideoEmbedInner/web-controls/utils'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Header} from '#/screens/VideoFeed/Header'
-import {atoms as a, ThemeProvider, tokens, useTheme} from '#/alf'
+import {atoms as a, platform, ThemeProvider, tokens, useTheme} from '#/alf'
+import {setNavigationBar} from '#/alf/util/navigationBar'
 import {Button, ButtonText} from '#/components/Button'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
@@ -75,15 +79,21 @@ import {Text} from '#/components/Typography'
 function createThreeVideoPlayers(
   sources?: [string, string, string],
 ): [VideoPlayer, VideoPlayer, VideoPlayer] {
+  // android is typically slower and can't keep up with a 0.1 interval
+  const eventInterval = platform({
+    ios: 0.2,
+    android: 0.5,
+    default: 0,
+  })
   const p1 = createVideoPlayer(sources?.[0] ?? '')
   p1.loop = true
-  p1.timeUpdateEventInterval = 0.25
+  p1.timeUpdateEventInterval = eventInterval
   const p2 = createVideoPlayer(sources?.[1] ?? '')
   p2.loop = true
-  p2.timeUpdateEventInterval = 0.25
+  p2.timeUpdateEventInterval = eventInterval
   const p3 = createVideoPlayer(sources?.[2] ?? '')
   p3.loop = true
-  p3.timeUpdateEventInterval = 0.25
+  p3.timeUpdateEventInterval = eventInterval
   return [p1, p2, p3]
 }
 
@@ -94,14 +104,17 @@ export function VideoFeed({}: NativeStackScreenProps<
   const {top} = useSafeAreaInsets()
   const {params} = useRoute<RouteProp<CommonNavigatorParams, 'VideoFeed'>>()
 
+  const t = useTheme()
   const setMinShellMode = useSetMinimalShellMode()
   useFocusEffect(
     useCallback(() => {
       setMinShellMode(true)
+      setNavigationBar('lightbox', t)
       return () => {
         setMinShellMode(false)
+        setNavigationBar('theme', t)
       }
-    }, [setMinShellMode]),
+    }, [setMinShellMode, t]),
   )
 
   useSetLightStatusBar(true)
@@ -366,7 +379,7 @@ function VideoItem({
   scrollGesture: NativeGesture
 }) {
   const postShadow = usePostShadow(post)
-  const {height, width} = useWindowDimensions()
+  const {width, height} = useSafeAreaFrame()
 
   return (
     <View style={[a.relative, {height, width}]}>
@@ -593,7 +606,7 @@ function ScrubberPlaceholder() {
         a.w_full,
         {
           // same as Scrubber
-          height: bottom + tokens.space.md + tokens.space.md + tokens.space.lg,
+          height: bottom + tokens.space.xl,
         },
       ]}
     />
@@ -607,7 +620,7 @@ function Scrubber({
   player: VideoPlayer
   seekingAnimationSV: SharedValue<number>
 }) {
-  const {width: screenWidth} = useWindowDimensions()
+  const {width: screenWidth} = useSafeAreaFrame()
   const insets = useSafeAreaInsets()
   const currentTimeSV = useSharedValue(0)
   const durationSV = useSharedValue(0)
@@ -743,18 +756,14 @@ function Scrubber({
           style={[
             a.relative,
             a.w_full,
-            a.pt_lg,
             a.justify_end,
             {
-              paddingBottom: insets.bottom + tokens.space.md,
+              paddingBottom: insets.bottom,
               height:
                 // bottom padding
                 insets.bottom +
-                tokens.space.md +
                 // actual height
-                tokens.space.md +
-                // top padding
-                tokens.space.lg,
+                tokens.space.xl,
             },
             a.z_10,
           ]}>
@@ -772,7 +781,7 @@ function ExpandableRichTextView({
   value: RichTextAPI
   authorHandle?: string
 }) {
-  const {height: screenHeight} = useWindowDimensions()
+  const {height: screenHeight} = useSafeAreaFrame()
   const [expanded, setExpanded] = useState(false)
   const [constrained, setConstrained] = useState(false)
   const [contentHeight, setContentHeight] = useState(0)
