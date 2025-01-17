@@ -54,12 +54,14 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isAndroid} from '#/platform/detection'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {usePostLikeMutationQueue} from '#/state/queries/post'
 import {
   AuthorFilter,
   FeedPostSliceItem,
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
+import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {List} from '#/view/com/util/List'
@@ -69,7 +71,8 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Header} from '#/screens/VideoFeed/Header'
 import {atoms as a, platform, ThemeProvider, tokens, useTheme} from '#/alf'
 import {setNavigationBar} from '#/alf/util/navigationBar'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
@@ -472,6 +475,12 @@ function Overlay({
   const navigation = useNavigation<NavigationProp>()
   const seekingAnimationSV = useSharedValue(0)
 
+  const profile = useProfileShadow(post.author)
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
+    profile,
+    'ImmersiveVideo',
+  )
+
   const pushToProfile = useNonReactiveCallback(() => {
     navigation.navigate('Profile', {name: post.author.did})
   })
@@ -517,31 +526,73 @@ function Overlay({
           colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)', 'rgba(0,0,0,0.95)']}
           style={[a.w_full, a.pt_md]}>
           <Animated.View style={[a.px_xl, animatedStyle]}>
-            <Link
-              label={_(
-                msg`View ${sanitizeDisplayName(
-                  post.author.displayName || post.author.handle,
-                )}'s profile`,
-              )}
-              to={{
-                screen: 'Profile',
-                params: {name: post.author.did},
-              }}
-              style={[a.flex_row, a.gap_md, a.pb_sm, a.align_center]}>
-              <UserAvatar type="user" avatar={post.author.avatar} size={32} />
-              <View>
-                <Text style={[a.text_md, a.font_heavy]} emoji numberOfLines={1}>
-                  {sanitizeDisplayName(
+            <View style={[a.w_full, a.flex_row, a.align_center, a.gap_md]}>
+              <Link
+                label={_(
+                  msg`View ${sanitizeDisplayName(
                     post.author.displayName || post.author.handle,
+                  )}'s profile`,
+                )}
+                to={{
+                  screen: 'Profile',
+                  params: {name: post.author.did},
+                }}
+                style={[
+                  a.flex_1,
+                  a.flex_row,
+                  a.gap_md,
+                  a.pb_sm,
+                  a.align_center,
+                ]}>
+                <UserAvatar type="user" avatar={post.author.avatar} size={32} />
+                <View style={[a.flex_1]}>
+                  <Text
+                    style={[a.text_md, a.font_heavy]}
+                    emoji
+                    numberOfLines={1}>
+                    {sanitizeDisplayName(
+                      post.author.displayName || post.author.handle,
+                    )}
+                  </Text>
+                  <Text
+                    style={[a.text_sm, t.atoms.text_contrast_high]}
+                    numberOfLines={1}>
+                    {sanitizeHandle(post.author.handle, '@')}
+                  </Text>
+                </View>
+              </Link>
+              {/* show button based on non-reactive version, so it doesn't hide on press */}
+              {!post.author.viewer?.following && (
+                <Button
+                  label={
+                    profile.viewer?.following
+                      ? _(msg`Following`)
+                      : _(msg`Follow`)
+                  }
+                  accessibilityHint={
+                    profile.viewer?.following ? _(msg`Unfollow user`) : ''
+                  }
+                  size="small"
+                  variant="outline"
+                  color="secondary_inverted"
+                  style={[a.mb_xs, a.bg_transparent]}
+                  hoverStyle={[]}
+                  onPress={() =>
+                    profile.viewer?.following ? queueUnfollow() : queueFollow()
+                  }>
+                  {!!profile.viewer?.following && (
+                    <ButtonIcon icon={CheckIcon} />
                   )}
-                </Text>
-                <Text
-                  style={[a.text_sm, t.atoms.text_contrast_high]}
-                  numberOfLines={1}>
-                  {sanitizeHandle(post.author.handle, '@')}
-                </Text>
-              </View>
-            </Link>
+                  <ButtonText>
+                    {profile.viewer?.following ? (
+                      <Trans>Following</Trans>
+                    ) : (
+                      <Trans>Follow</Trans>
+                    )}
+                  </ButtonText>
+                </Button>
+              )}
+            </View>
             {record?.text?.trim() && (
               <View style={[a.pb_sm]}>
                 <ExpandableRichTextView
