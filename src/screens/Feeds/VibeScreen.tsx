@@ -334,7 +334,7 @@ function Inner() {
         }}
         showsVerticalScrollIndicator={false}
         onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={{itemVisiblePercentThreshold: 95}}
+        viewabilityConfig={{itemVisiblePercentThreshold: 100}}
       />
     </GestureDetector>
   )
