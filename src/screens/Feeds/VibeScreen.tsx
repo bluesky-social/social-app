@@ -570,7 +570,11 @@ function Overlay({
           </Animated.View>
 
           {player && active ? (
-            <Scrubber player={player} seekingAnimationSV={seekingAnimationSV} />
+            <Scrubber
+              player={player}
+              seekingAnimationSV={seekingAnimationSV}
+              scrollGesture={scrollGesture}
+            />
           ) : (
             <ScrubberPlaceholder />
           )}
@@ -616,9 +620,11 @@ function ScrubberPlaceholder() {
 function Scrubber({
   player,
   seekingAnimationSV,
+  scrollGesture,
 }: {
   player: VideoPlayer
   seekingAnimationSV: SharedValue<number>
+  scrollGesture: NativeGesture
 }) {
   const {width: screenWidth} = useSafeAreaFrame()
   const insets = useSafeAreaInsets()
@@ -667,9 +673,15 @@ function Scrubber({
 
   const gesture = useMemo(() => {
     return Gesture.Pan()
+      .blocksExternalGesture(scrollGesture)
       .failOffsetY([-10, 10])
+      .onBegin(() => {
+        'worklet'
+        console.log('begin')
+      })
       .onStart(() => {
         'worklet'
+        console.log('start')
         seekProgressSV.set(currentTimeSV.get())
         isSeekingSV.set(true)
         seekingAnimationSV.set(withTiming(1, {duration: 500}))
@@ -695,6 +707,7 @@ function Scrubber({
         seekingAnimationSV.set(withTiming(0, {duration: 500}))
       })
   }, [
+    scrollGesture,
     seekingAnimationSV,
     seekBy,
     screenWidth,
