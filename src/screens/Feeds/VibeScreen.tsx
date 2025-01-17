@@ -52,7 +52,11 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {isAndroid} from '#/platform/detection'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {usePostLikeMutationQueue} from '#/state/queries/post'
-import {FeedPostSliceItem, usePostFeedQuery} from '#/state/queries/post-feed'
+import {
+  AuthorFilter,
+  FeedPostSliceItem,
+  usePostFeedQuery,
+} from '#/state/queries/post-feed'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {List} from '#/view/com/util/List'
@@ -125,9 +129,11 @@ function Inner() {
   const feedDesc = useMemo(() => {
     switch (params.type) {
       case 'feedgen':
-        return `feedgen|${params.uri}` as const
+        return `feedgen|${params.uri as string}` as const
       case 'author':
-        return `author|${params.did}|${params.filter}` as const
+        return `author|${params.did as string}|${
+          params.filter as AuthorFilter
+        }` as const
       default:
         throw new Error(`Invalid video feed params ${JSON.stringify(params)}`)
     }
