@@ -696,7 +696,6 @@ function Scrubber({
   })
 
   const isSeekingSV = useSharedValue(false)
-  const currentTimeAtStartSV = useSharedValue(0)
   const seekProgressSV = useSharedValue(0)
 
   useAnimatedReaction(
@@ -729,9 +728,7 @@ function Scrubber({
       .failOffsetY([-10, 10])
       .onStart(() => {
         'worklet'
-        const currentTime = currentTimeSV.get()
-        currentTimeAtStartSV.set(currentTime)
-        seekProgressSV.set(currentTime)
+        seekProgressSV.set(currentTimeSV.get())
         isSeekingSV.set(true)
         seekingAnimationSV.set(withTiming(1, {duration: 100}))
       })
@@ -761,7 +758,6 @@ function Scrubber({
     screenWidth,
     currentTimeSV,
     durationSV,
-    currentTimeAtStartSV,
     isSeekingSV,
     seekProgressSV,
   ])
