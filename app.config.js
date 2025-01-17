@@ -191,6 +191,7 @@ module.exports = function (config) {
         channel: UPDATES_CHANNEL,
       },
       plugins: [
+        'expo-video',
         'expo-localization',
         USE_SENTRY && [
           '@sentry/react-native/expo',
@@ -347,6 +348,16 @@ module.exports = function (config) {
           },
         ],
         ['expo-screen-orientation', {initialOrientation: 'PORTRAIT_UP'}],
+        [
+          'react-native-vision-camera',
+          {
+            enableLocation: false,
+            cameraPermissionText: 'Bluesky needs access to your camera.',
+            enableMicrophonePermission: true,
+            microphonePermissionText:
+              'Bluesky needs access to your microphone.',
+          },
+        ],
       ].filter(Boolean),
       extra: {
         eas: {
