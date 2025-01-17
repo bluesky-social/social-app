@@ -54,6 +54,7 @@ const locales: Record<AppLanguage, Locale | undefined> = {
   el,
   ['en-GB']: enGB,
   es,
+  eu,
   fi,
   fr,
   ga: undefined,
