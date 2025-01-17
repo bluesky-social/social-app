@@ -19,7 +19,10 @@ export function PostFeedVideoGridRow({
   const gutters = useGutters(['base', 'base', 0, 'base'])
   const posts = slices
     .filter(slice => AppBskyEmbedVideo.isView(slice.post.embed))
-    .map(slice => slice.post)
+    .map(slice => ({
+      post: slice.post,
+      moderation: slice.moderation,
+    }))
 
   /**
    * This should not happen because we should be filtering out posts without
@@ -31,8 +34,12 @@ export function PostFeedVideoGridRow({
     <View style={[gutters]}>
       <View style={[a.flex_row, a.gap_sm]}>
         {posts.map(post => (
-          <View key={post.uri} style={[a.flex_1]}>
-            <VideoPostCard post={post} sourceContext={sourceContext} />
+          <View key={post.post.uri} style={[a.flex_1]}>
+            <VideoPostCard
+              post={post.post}
+              sourceContext={sourceContext}
+              moderation={post.moderation}
+            />
           </View>
         ))}
       </View>
