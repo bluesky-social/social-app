@@ -24,7 +24,6 @@ import {
   ProfileCardFeedLoadingPlaceholder,
 } from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {ExploreRecommendations} from '#/screens/Search/components/ExploreRecommendations'
 import {ExploreTrendingTopics} from '#/screens/Search/components/ExploreTrendingTopics'
 import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
@@ -247,10 +246,6 @@ type ExploreScreenItems =
       key: string
     }
   | {
-      type: 'recommendations'
-      key: string
-    }
-  | {
       type: 'profile'
       key: string
       profile: AppBskyActorDefs.ProfileView
@@ -341,11 +336,6 @@ export function Explore() {
     i.push({
       type: 'trendingTopics',
       key: `trending-topics`,
-    })
-
-    i.push({
-      type: 'recommendations',
-      key: `recommendations`,
     })
 
     i.push({
@@ -513,9 +503,6 @@ export function Explore() {
         }
         case 'trendingTopics': {
           return <ExploreTrendingTopics />
-        }
-        case 'recommendations': {
-          return <ExploreRecommendations />
         }
         case 'profile': {
           return (
