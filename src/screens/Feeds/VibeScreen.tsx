@@ -543,7 +543,14 @@ function Overlay({
             </Button>
             <LinearGradient
               colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)', 'rgba(0,0,0,0.95)']}
-              style={[a.w_full, a.px_xl, a.py_sm, a.gap_md]}>
+              style={[
+                a.w_full,
+                a.px_xl,
+                a.py_sm,
+                a.gap_md,
+                a.pb_3xl,
+                {marginBottom: tokens.space.xl * -1},
+              ]}>
               <View style={[a.flex_row, a.gap_md, a.align_center]}>
                 <PreviewableUserAvatar profile={post.author} size={32} />
                 <View>
@@ -819,6 +826,8 @@ function Scrubber({
             a.pt_sm,
             a.justify_end,
             {paddingBottom: insets.bottom},
+            a.relative,
+            a.z_10,
           ]}>
           <Animated.View
             style={[{backgroundColor: 'white'}, a.h_full, a.w_full, barStyle]}
