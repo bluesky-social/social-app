@@ -1,6 +1,7 @@
 import {View} from 'react-native'
 import {AppBskyEmbedVideo} from '@atproto/api'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import {FeedPostSliceItem} from '#/state/queries/post-feed'
 import {VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 import {atoms as a, useGutters} from '#/alf'
@@ -41,6 +42,9 @@ export function PostFeedVideoGridRow({
                 post={post.post}
                 sourceContext={sourceContext}
                 moderation={post.moderation}
+                onInteract={() => {
+                  logEvent('videoCard:click', {context: 'feed'})
+                }}
               />
             </Grid.Col>
           ))}

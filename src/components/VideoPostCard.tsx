@@ -47,7 +47,7 @@ export function VideoPostCard({
   /**
    * Callback for metrics etc
    */
-  onInteract: () => void
+  onInteract?: () => void
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
@@ -81,7 +81,7 @@ export function VideoPostCard({
         },
       }}
       onPress={() => {
-        onInteract()
+        onInteract?.()
       }}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
@@ -334,7 +334,7 @@ export function CompactVideoPostCard({
   /**
    * Callback for metrics etc
    */
-  onInteract: () => void
+  onInteract?: () => void
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
@@ -366,7 +366,7 @@ export function CompactVideoPostCard({
         },
       }}
       onPress={() => {
-        onInteract()
+        onInteract?.()
       }}
       onPressIn={onPressIn}
       onPressOut={onPressOut}

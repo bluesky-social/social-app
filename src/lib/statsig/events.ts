@@ -253,10 +253,10 @@ export type LogEvents = {
     context: 'settings'
   }
   'trendingVideos:hide': {
-    context: 'settings' | 'interstitial' | 'explore'
+    context: 'settings' | 'interstitial:discover' | 'interstitial:explore'
   }
-  'trendingVideo:click': {
-    context: 'interstitial' | 'explore'
+  'videoCard:click': {
+    context: 'interstitial:discover' | 'interstitial:explore' | 'feed'
   }
 
   'progressGuide:hide': {}
