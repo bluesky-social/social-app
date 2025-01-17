@@ -461,7 +461,7 @@ let PostFeed = ({
         })
       }
     } else {
-      if (isVideoFeed) {
+      if (isVideoFeed && isNative) {
         arr.push({
           type: 'videoGridRowPlaceholder',
           key: 'videoGridRowPlaceholder',
