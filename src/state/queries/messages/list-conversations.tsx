@@ -110,15 +110,24 @@ export function ListConvosProviderInner({
             )
           } else if (ChatBskyConvoDefs.isLogDeleteMessage(log)) {
             queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) =>
-              optimisticUpdate(log.convoId, old, convo =>
-                log.message.id === convo.lastMessage?.id
-                  ? {
-                      ...convo,
-                      rev: log.rev,
-                      lastMessage: log.message,
-                    }
-                  : convo,
-              ),
+              optimisticUpdate(log.convoId, old, convo => {
+                if (
+                  (ChatBskyConvoDefs.isDeletedMessageView(log.message) ||
+                    ChatBskyConvoDefs.isMessageView(log.message)) &&
+                  (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage) ||
+                    ChatBskyConvoDefs.isMessageView(convo.lastMessage))
+                ) {
+                  return log.message.id === convo.lastMessage.id
+                    ? {
+                        ...convo,
+                        rev: log.rev,
+                        lastMessage: log.message,
+                      }
+                    : convo
+                } else {
+                  return convo
+                }
+              }),
             )
           } else if (ChatBskyConvoDefs.isLogCreateMessage(log)) {
             queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) => {
@@ -152,7 +161,11 @@ export function ListConvosProviderInner({
               function filterConvoFromPage(
                 convo: ChatBskyConvoDefs.ConvoView[],
               ) {
-                return convo.filter(c => c.id !== log.convoId)
+                return convo.filter(
+                  c =>
+                    c.id !==
+                    (log as ChatBskyConvoDefs.LogCreateMessage).convoId,
+                )
               }
 
               const existingConvo = getConvoFromQueryData(log.convoId, old)

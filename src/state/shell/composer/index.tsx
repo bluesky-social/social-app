@@ -1,7 +1,6 @@
 import React from 'react'
 import {
   AppBskyActorDefs,
-  AppBskyEmbedRecord,
   AppBskyFeedDefs,
   ModerationDecision,
 } from '@atproto/api'
@@ -21,7 +20,7 @@ export interface ComposerOptsPostRef {
   cid: string
   text: string
   author: AppBskyActorDefs.ProfileViewBasic
-  embed?: AppBskyEmbedRecord.ViewRecord['embed']
+  embed?: AppBskyFeedDefs.PostView['embed']
   moderation?: ModerationDecision
 }
 

@@ -1,5 +1,4 @@
 /* eslint-disable bsky-internal/avoid-unwrapped-text */
-import React from 'react'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 
 import {Butterfly} from './Butterfly.js'
@@ -18,7 +17,7 @@ export function StarterPack(props: {
   images: Map<string, Buffer>
 }) {
   const {starterPack, images} = props
-  const record = AppBskyGraphStarterpack.isRecord(starterPack.record)
+  const record = AppBskyGraphStarterpack.isValidRecord(starterPack.record)
     ? starterPack.record
     : null
   const imagesArray = [...images.values()]
@@ -106,6 +105,7 @@ export function StarterPack(props: {
             color: 'white',
             padding: 60,
             fontSize: 40,
+            fontWeight: '700',
           }}>
           JOIN THE CONVERSATION
         </div>
@@ -134,6 +134,7 @@ export function StarterPack(props: {
             fontSize: isLongTitle ? 55 : 65,
             display: 'flex',
             textAlign: 'center',
+            fontWeight: '700',
           }}>
           {record?.name || 'Starter Pack'}
         </div>

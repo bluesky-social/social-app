@@ -43,6 +43,7 @@ import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
 import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending2'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import * as atp from '#/types/atproto'
 
 export function StepFinished() {
   const {_} = useLingui()
@@ -198,9 +199,14 @@ export function StepFinished() {
     onboardDispatch({type: 'finish'})
     logEvent('onboarding:finished:nextPressed', {
       usedStarterPack: Boolean(starterPack),
-      starterPackName: AppBskyGraphStarterpack.isRecord(starterPack?.record)
-        ? starterPack.record.name
-        : undefined,
+      starterPackName:
+        starterPack &&
+        atp.dangerousIsType<AppBskyGraphStarterpack.Record>(
+          starterPack.record,
+          AppBskyGraphStarterpack.isRecord,
+        )
+          ? starterPack.record.name
+          : undefined,
       starterPackCreator: starterPack?.creator.did,
       starterPackUri: starterPack?.uri,
       profilesFollowed: listItems?.length ?? 0,

@@ -1,6 +1,7 @@
 import React, {memo, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
+  $Typed,
   ChatBskyConvoDefs,
   ComAtprotoModerationCreateReport,
   RichText as RichTextAPI,
@@ -109,15 +110,16 @@ function SubmitStep({
     mutationFn: async () => {
       if (params.type === 'convoMessage') {
         const {convoId, message} = params
+        const subject: $Typed<ChatBskyConvoDefs.MessageRef> = {
+          $type: 'chat.bsky.convo.defs#messageRef',
+          messageId: message.id,
+          convoId,
+          did: message.sender.did,
+        }
 
         const report = {
           reasonType: reportOption.reason,
-          subject: {
-            $type: 'chat.bsky.convo.defs#messageRef',
-            messageId: message.id,
-            convoId,
-            did: message.sender.did,
-          } satisfies ChatBskyConvoDefs.MessageRef,
+          subject,
           reason: details,
         } satisfies ComAtprotoModerationCreateReport.InputSchema
 
