@@ -27,21 +27,25 @@ import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
 
-type DisplayVariant = 'default' | 'compact'
+function getBlackColor(t: ReturnType<typeof useTheme>) {
+  return select(t.name, {
+    light: t.palette.black,
+    dark: t.atoms.bg_contrast_25.backgroundColor,
+    dim: `hsl(${BLUE_HUE}, 28%, 6%)`,
+  })
+}
 
 export function VideoPostCard({
   post,
   sourceContext,
   moderation,
-  variant = 'default',
   onInteract,
 }: {
   post: AppBskyFeedDefs.PostView
   sourceContext: VideoFeedSourceContext
   moderation: ModerationDecision
-  variant?: DisplayVariant
   /**
-   * Callback for metrics and stuff
+   * Callback for metrics etc
    */
   onInteract: () => void
 }) {
@@ -60,16 +64,11 @@ export function VideoPostCard({
    */
   if (!AppBskyEmbedVideo.isView(embed)) return null
 
-  const isCompact = variant === 'compact'
   const text = AppBskyFeedPost.isRecord(post.record) ? post.record?.text : ''
   const likeCount = post?.likeCount ?? 0
   const repostCount = post?.repostCount ?? 0
   const {thumbnail} = embed
-  const black = select(t.name, {
-    light: t.palette.black,
-    dark: t.atoms.bg_contrast_25.backgroundColor,
-    dim: `hsl(${BLUE_HUE}, 28%, 6%)`,
-  })
+  const black = getBlackColor(t)
 
   return (
     <Link
@@ -165,7 +164,7 @@ export function VideoPostCard({
                   },
                 ]}>
                 <LinearGradient
-                  colors={[black, 'rgba(22, 24, 35, 0)']}
+                  colors={[black, 'rgba(0, 0, 0, 0)']}
                   locations={[0.02, 1]}
                   start={{x: 0, y: 1}}
                   end={{x: 0, y: 0}}
@@ -182,7 +181,7 @@ export function VideoPostCard({
                       </Text>
                     </View>
                   )}
-                  {!isCompact && repostCount > 0 && (
+                  {repostCount > 0 && (
                     <View style={[a.flex_row, a.align_center, a.gap_xs]}>
                       <Repost size="sm" fill="white" />
                       <Text style={[a.text_sm, a.font_bold, {color: 'white'}]}>
@@ -195,13 +194,17 @@ export function VideoPostCard({
             </View>
           </View>
           <View style={[a.pr_xs, {paddingTop: 6, gap: 4}]}>
-            {!isCompact && text && (
+            {text && (
               <Text style={[a.text_md, a.leading_snug]} numberOfLines={2} emoji>
                 {text}
               </Text>
             )}
             <View style={[a.flex_row, a.gap_xs, a.align_center]}>
-              <UserAvatar type="user" size={20} avatar={post.author.avatar} />
+              <View
+                style={[a.relative, a.rounded_full, {width: 20, height: 20}]}>
+                <UserAvatar type="user" size={20} avatar={post.author.avatar} />
+                <MediaInsetBorder />
+              </View>
               <Text
                 style={[
                   a.flex_1,
@@ -220,17 +223,9 @@ export function VideoPostCard({
   )
 }
 
-export function VideoPostCardPlaceholder({
-  variant = 'default',
-}: {
-  variant?: DisplayVariant
-}) {
+export function VideoPostCardPlaceholder() {
   const t = useTheme()
-  const black = select(t.name, {
-    light: t.palette.black,
-    dark: t.atoms.bg_contrast_25.backgroundColor,
-    dim: `hsl(${BLUE_HUE}, 28%, 6%)`,
-  })
+  const black = getBlackColor(t)
 
   return (
     <View style={[a.flex_1]}>
@@ -245,52 +240,48 @@ export function VideoPostCardPlaceholder({
         ]}>
         <MediaInsetBorder />
       </View>
-      <VideoPostCardTextPlaceholder variant={variant} />
+      <VideoPostCardTextPlaceholder />
     </View>
   )
 }
 
 export function VideoPostCardTextPlaceholder({
   author,
-  variant,
 }: {
   author?: AppBskyActorDefs.ProfileViewBasic
-  variant?: DisplayVariant
 }) {
   const t = useTheme()
-  const isCompact = variant === 'compact'
 
   return (
     <View style={[a.flex_1]}>
       <View style={[a.pr_xs, {paddingTop: 8, gap: 6}]}>
-        {!isCompact && (
-          <>
-            <View
-              style={[
-                a.w_full,
-                a.rounded_xs,
-                t.atoms.bg_contrast_50,
-                {
-                  height: 14,
-                },
-              ]}
-            />
-            <View
-              style={[
-                a.w_full,
-                a.rounded_xs,
-                t.atoms.bg_contrast_50,
-                {
-                  height: 14,
-                  width: '70%',
-                },
-              ]}
-            />
-          </>
-        )}
+        <View
+          style={[
+            a.w_full,
+            a.rounded_xs,
+            t.atoms.bg_contrast_50,
+            {
+              height: 14,
+            },
+          ]}
+        />
+        <View
+          style={[
+            a.w_full,
+            a.rounded_xs,
+            t.atoms.bg_contrast_50,
+            {
+              height: 14,
+              width: '70%',
+            },
+          ]}
+        />
         {author ? (
           <View style={[a.flex_row, a.gap_xs, a.align_center]}>
-            <UserAvatar type="user" size={20} avatar={author.avatar} />
+            <View style={[a.relative, a.rounded_full, {width: 20, height: 20}]}>
+              <UserAvatar type="user" size={20} avatar={author.avatar} />
+              <MediaInsetBorder />
+            </View>
             <Text
               style={[
                 a.flex_1,
@@ -322,11 +313,196 @@ export function VideoPostCardTextPlaceholder({
                   height: 12,
                   width: '75%',
                 },
-              ]}>
-              <MediaInsetBorder />
-            </View>
+              ]}
+            />
           </View>
         )}
+      </View>
+    </View>
+  )
+}
+
+export function CompactVideoPostCard({
+  post,
+  sourceContext,
+  moderation,
+  onInteract,
+}: {
+  post: AppBskyFeedDefs.PostView
+  sourceContext: VideoFeedSourceContext
+  moderation: ModerationDecision
+  /**
+   * Callback for metrics etc
+   */
+  onInteract: () => void
+}) {
+  const t = useTheme()
+  const {_, i18n} = useLingui()
+  const embed = post.embed
+  const {
+    state: pressed,
+    onIn: onPressIn,
+    onOut: onPressOut,
+  } = useInteractionState()
+
+  /**
+   * Filtering should be done at a higher level, such as `PostFeed` or
+   * `PostFeedVideoGridRow`, but we need to protect here as well.
+   */
+  if (!AppBskyEmbedVideo.isView(embed)) return null
+
+  const likeCount = post?.likeCount ?? 0
+  const {thumbnail} = embed
+  const black = getBlackColor(t)
+
+  return (
+    <Link
+      label={_(msg`View video`)}
+      to={{
+        screen: 'VideoFeed',
+        params: {
+          ...sourceContext,
+          initialPostUri: post.uri,
+        },
+      }}
+      onPress={() => {
+        onInteract()
+      }}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
+      style={[
+        a.flex_col,
+        {
+          alignItems: undefined,
+          justifyContent: undefined,
+        },
+      ]}>
+      <Hider.Outer modui={moderation.ui('contentList')}>
+        <Hider.Mask>
+          <View
+            style={[
+              a.justify_center,
+              a.rounded_md,
+              a.overflow_hidden,
+              {
+                backgroundColor: black,
+                aspectRatio: 9 / 16,
+              },
+            ]}>
+            <Image
+              source={{uri: thumbnail}}
+              style={[a.w_full, a.h_full, {opacity: pressed ? 0.8 : 1}]}
+              accessibilityIgnoresInvertColors
+              blurRadius={40}
+            />
+            <MediaInsetBorder />
+            <View
+              style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
+              <View
+                style={[
+                  a.absolute,
+                  a.inset_0,
+                  a.justify_center,
+                  a.align_center,
+                  {
+                    backgroundColor: 'black',
+                    opacity: 0.2,
+                  },
+                ]}
+              />
+              <View style={[a.align_center, a.gap_xs]}>
+                <Eye size="lg" fill="white" />
+                <Text style={[a.text_sm, {color: 'white'}]}>
+                  {_(msg`Hidden`)}
+                </Text>
+              </View>
+            </View>
+          </View>
+          <VideoPostCardTextPlaceholder author={post.author} />
+        </Hider.Mask>
+        <Hider.Content>
+          <View
+            style={[
+              a.justify_center,
+              a.rounded_md,
+              a.overflow_hidden,
+              {
+                backgroundColor: black,
+                aspectRatio: 9 / 16,
+              },
+            ]}>
+            <Image
+              source={{uri: thumbnail}}
+              style={[a.w_full, a.h_full, {opacity: pressed ? 0.8 : 1}]}
+              accessibilityIgnoresInvertColors
+            />
+            <MediaInsetBorder />
+
+            <View style={[a.absolute, a.inset_0]}>
+              <View style={[a.absolute, a.inset_0, a.p_sm, {bottom: 'auto'}]}>
+                <View
+                  style={[a.relative, a.rounded_full, {width: 20, height: 20}]}>
+                  <UserAvatar
+                    type="user"
+                    size={20}
+                    avatar={post.author.avatar}
+                  />
+                  <MediaInsetBorder />
+                </View>
+              </View>
+              <View
+                style={[
+                  a.absolute,
+                  a.inset_0,
+                  a.pt_2xl,
+                  {
+                    top: 'auto',
+                  },
+                ]}>
+                <LinearGradient
+                  colors={[black, 'rgba(0, 0, 0, 0)']}
+                  locations={[0.02, 1]}
+                  start={{x: 0, y: 1}}
+                  end={{x: 0, y: 0}}
+                  style={[a.absolute, a.inset_0, {opacity: 0.9}]}
+                />
+
+                <View
+                  style={[a.relative, a.z_10, a.p_sm, a.flex_row, a.gap_md]}>
+                  {likeCount > 0 && (
+                    <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                      <Heart size="sm" fill="white" />
+                      <Text style={[a.text_sm, a.font_bold, {color: 'white'}]}>
+                        {formatCount(i18n, likeCount)}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              </View>
+            </View>
+          </View>
+        </Hider.Content>
+      </Hider.Outer>
+    </Link>
+  )
+}
+
+export function CompactVideoPostCardPlaceholder() {
+  const t = useTheme()
+  const black = getBlackColor(t)
+
+  return (
+    <View style={[a.flex_1]}>
+      <View
+        style={[
+          a.rounded_md,
+          a.overflow_hidden,
+          {
+            backgroundColor: black,
+            aspectRatio: 9 / 16,
+          },
+        ]}>
+        <MediaInsetBorder />
       </View>
     </View>
   )
