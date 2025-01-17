@@ -214,6 +214,12 @@ func serve(cctx *cli.Context) error {
 	e.GET("/iframe/youtube.html", echo.WrapHandler(staticHandler))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)), func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
+			// Don't set cache headers for errors
+			if err := next(c); err != nil {
+				c.Error(err)
+				return nil
+			}
+
 			path := c.Request().URL.Path
 			maxAge := 1 * (60 * 60) // default is 1 hour
 
@@ -223,7 +229,7 @@ func serve(cctx *cli.Context) error {
 			}
 
 			c.Response().Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%d", maxAge))
-			return next(c)
+			return nil
 		}
 	})
 
