@@ -50,6 +50,7 @@ import {
   PostFeedVideoGridRowPlaceholder,
 } from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
+import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
 import {PostFeedErrorMessage} from './PostFeedErrorMessage'
@@ -114,6 +115,10 @@ type FeedRow =
     }
   | {
       type: 'interstitialTrending'
+      key: string
+    }
+  | {
+      type: 'interstitialTrendingVideos'
       key: string
     }
 
@@ -287,7 +292,7 @@ let PostFeed = ({
   const showProgressIntersitial =
     (followProgressGuide || followAndLikeProgressGuide) && !isDesktop
 
-  const {trendingDisabled} = useTrendingSettings()
+  const {trendingDisabled, trendingVideoDisabled} = useTrendingSettings()
 
   const feedItems: FeedRow[] = React.useMemo(() => {
     let feedKind: 'following' | 'discover' | 'profile' | 'thevids' | undefined
@@ -378,6 +383,13 @@ let PostFeed = ({
                         type: 'interstitialTrending',
                         key:
                           'interstitial2-' + sliceIndex + '-' + lastFetchedAt,
+                      })
+                    }
+                  } else if (sliceIndex === 15) {
+                    if (isNative && !trendingVideoDisabled) {
+                      arr.push({
+                        type: 'interstitialTrendingVideos',
+                        key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                       })
                     }
                   } else if (sliceIndex === 30) {
@@ -475,6 +487,7 @@ let PostFeed = ({
     hasSession,
     showProgressIntersitial,
     trendingDisabled,
+    trendingVideoDisabled,
     gtTablet,
     gtMobile,
     isVideoFeed,
@@ -566,6 +579,8 @@ let PostFeed = ({
         return <ProgressGuide />
       } else if (row.type === 'interstitialTrending') {
         return <TrendingInterstitial />
+      } else if (row.type === 'interstitialTrendingVideos') {
+        return <TrendingVideosInterstitial />
       } else if (row.type === 'sliceItem') {
         const slice = row.slice
         if (slice.isFallbackMarker) {
