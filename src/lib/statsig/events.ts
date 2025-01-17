@@ -163,6 +163,7 @@ export type LogEvents = {
       | 'FeedInterstitial'
       | 'ProfileHeaderSuggestedFollows'
       | 'PostOnboardingFindFollows'
+      | 'ImmersiveVideo'
   }
   'profile:unfollow': {
     logContext:
@@ -179,6 +180,7 @@ export type LogEvents = {
       | 'FeedInterstitial'
       | 'ProfileHeaderSuggestedFollows'
       | 'PostOnboardingFindFollows'
+      | 'ImmersiveVideo'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
