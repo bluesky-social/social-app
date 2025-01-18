@@ -124,18 +124,23 @@ type FeedRow =
       key: string
     }
 
-export function getFeedPostSlice(feedRow: FeedRow): {
-  items: FeedPostSliceItem[]
-  type: 'sliceItem' | 'videoGridRow'
-  feedContext?: string | undefined
-  feedContexts?: (string | undefined)[]
-} | null {
+export function getItemsForFeedback(feedRow: FeedRow):
+  | {
+      item: FeedPostSliceItem
+      feedContext: string | undefined
+    }[] {
   if (feedRow.type === 'sliceItem') {
-    return {...feedRow.slice, type: 'sliceItem'}
+    return feedRow.slice.items.map(item => ({
+      item,
+      feedContext: feedRow.slice.feedContext,
+    }))
   } else if (feedRow.type === 'videoGridRow') {
-    return feedRow
+    return feedRow.items.map((item, i) => ({
+      item,
+      feedContext: feedRow.feedContexts[i],
+    }))
   } else {
-    return null
+    return []
   }
 }
 
