@@ -12,10 +12,10 @@ import {
 } from '#/components/VideoPostCard'
 
 export function PostFeedVideoGridRow({
-  slices,
+  items: slices,
   sourceContext,
 }: {
-  slices: FeedPostSliceItem[]
+  items: FeedPostSliceItem[]
   sourceContext: VideoFeedSourceContext
 }) {
   const gutters = useGutters(['base', 'base', 0, 'base'])

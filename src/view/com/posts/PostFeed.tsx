@@ -647,7 +647,7 @@ let PostFeed = ({
       } else if (row.type === 'videoGridRow') {
         return (
           <PostFeedVideoGridRow
-            slices={row.items}
+            items={row.items}
             sourceContext={{
               type: 'feedgen',
               uri: row.sourceFeedUri,
