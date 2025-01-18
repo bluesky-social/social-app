@@ -140,15 +140,16 @@ export function VideoFeed({}: NativeStackScreenProps<
           ]}>
           <Header sourceContext={params} />
         </View>
-        <Inner />
+        <Feed />
       </Layout.Screen>
     </ThemeProvider>
   )
 }
 
-function Inner() {
+function Feed() {
   const {params} = useRoute<RouteProp<CommonNavigatorParams, 'VideoFeed'>>()
   const isFocused = useIsFocused()
+  const {hasSession} = useSession()
   const feedDesc = useMemo(() => {
     switch (params.type) {
       case 'feedgen':
@@ -161,7 +162,7 @@ function Inner() {
         throw new Error(`Invalid video feed params ${JSON.stringify(params)}`)
     }
   }, [params])
-
+  const feedFeedback = useFeedFeedback(feedDesc, hasSession)
   const {
     data,
     isFetching,
@@ -170,18 +171,19 @@ function Inner() {
     isFetchingNextPage,
     fetchNextPage,
   } = usePostFeedQuery(feedDesc)
-  const {hasSession} = useSession()
-  const feedFeedback = useFeedFeedback(feedDesc, hasSession)
-
-  let videos = data?.pages.flatMap(page =>
-    page.slices.flatMap(slice => slice.items),
-  )
-  const startingVideoIndex = videos?.findIndex(video => {
-    return video.post.uri === params.initialPostUri
-  })
-  if (videos && startingVideoIndex && startingVideoIndex > -1) {
-    videos = videos.slice(startingVideoIndex)
-  }
+  const videos = React.useMemo(() => {
+    let vids =
+      data?.pages
+        .flatMap(page => page.slices.flatMap(slice => slice.items))
+        .filter(item => AppBskyEmbedVideo.isView(item.post.embed)) || []
+    const startingVideoIndex = vids?.findIndex(video => {
+      return video.post.uri === params.initialPostUri
+    })
+    if (vids && startingVideoIndex && startingVideoIndex > -1) {
+      vids = vids.slice(startingVideoIndex)
+    }
+    return vids
+  }, [data, params.initialPostUri])
 
   const [currentSources, setCurrentSources] = useState<
     [string | null, string | null, string | null]
