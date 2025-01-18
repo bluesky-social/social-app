@@ -122,7 +122,11 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
         shape="square"
         onPress={onPressBack}
         hitSlop={HITSLOP_30}
-        style={[{marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET}, style]}
+        style={[
+          {marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET},
+          a.bg_transparent,
+          style,
+        ]}
         {...props}>
         <ButtonIcon icon={ArrowLeft} size="lg" />
       </Button>

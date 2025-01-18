@@ -10,9 +10,10 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -26,6 +27,7 @@ import {
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ExploreRecommendations} from '#/screens/Search/components/ExploreRecommendations'
 import {ExploreTrendingTopics} from '#/screens/Search/components/ExploreTrendingTopics'
+import {ExploreTrendingVideos} from '#/screens/Search/components/ExploreTrendingVideos'
 import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
@@ -247,6 +249,10 @@ type ExploreScreenItems =
       key: string
     }
   | {
+      type: 'trendingVideos'
+      key: string
+    }
+  | {
       type: 'recommendations'
       key: string
     }
@@ -303,6 +309,7 @@ export function Explore() {
     error: feedsError,
     fetchNextPage: fetchNextFeedsPage,
   } = useGetPopularFeedsQuery({limit: 10})
+  const gate = useGate()
 
   const isLoadingMoreProfiles = isFetchingNextProfilesPage && !isLoadingProfiles
   const onLoadMoreProfiles = React.useCallback(async () => {
@@ -342,6 +349,13 @@ export function Explore() {
       type: 'trendingTopics',
       key: `trending-topics`,
     })
+
+    if (isNative && gate('yolo')) {
+      i.push({
+        type: 'trendingVideos',
+        key: `trending-videos`,
+      })
+    }
 
     i.push({
       type: 'recommendations',
@@ -496,6 +510,7 @@ export function Explore() {
     preferencesError,
     hasNextProfilesPage,
     hasNextFeedsPage,
+    gate,
   ])
 
   const renderItem = React.useCallback(
@@ -513,6 +528,9 @@ export function Explore() {
         }
         case 'trendingTopics': {
           return <ExploreTrendingTopics />
+        }
+        case 'trendingVideos': {
+          return <ExploreTrendingVideos />
         }
         case 'recommendations': {
           return <ExploreRecommendations />

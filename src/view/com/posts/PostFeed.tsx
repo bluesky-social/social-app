@@ -9,18 +9,23 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
+import {
+  DISCOVER_FEED_URI,
+  KNOWN_SHUTDOWN_FEEDS,
+  VIDEO_FEED_URI,
+} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {useGate} from '#/lib/statsig/statsig'
 import {logEvent} from '#/lib/statsig/statsig'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
-import {isIOS, isWeb} from '#/platform/detection'
+import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useTrendingSettings} from '#/state/preferences/trending'
@@ -29,18 +34,24 @@ import {
   FeedDescriptor,
   FeedParams,
   FeedPostSlice,
+  FeedPostSliceItem,
   pollLatest,
   RQKEY,
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
 import {useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
+import {List, ListRef} from '#/view/com/util/List'
+import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {useBreakpoints} from '#/alf'
 import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
+import {
+  PostFeedVideoGridRow,
+  PostFeedVideoGridRowPlaceholder,
+} from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
-import {List, ListRef} from '../util/List'
-import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
+import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
 import {PostFeedErrorMessage} from './PostFeedErrorMessage'
@@ -69,7 +80,7 @@ type FeedRow =
       key: string
     }
   | {
-      type: 'slice'
+      type: 'slice' // TODO can we remove?
       key: string
       slice: FeedPostSlice
     }
@@ -79,6 +90,16 @@ type FeedRow =
       slice: FeedPostSlice
       indexInSlice: number
       showReplyTo: boolean
+    }
+  | {
+      type: 'videoGridRowPlaceholder'
+      key: string
+    }
+  | {
+      type: 'videoGridRow'
+      key: string
+      slices: FeedPostSliceItem[]
+      sourceFeedUri: string
     }
   | {
       type: 'sliceViewFullThread'
@@ -95,6 +116,10 @@ type FeedRow =
     }
   | {
       type: 'interstitialTrending'
+      key: string
+    }
+  | {
+      type: 'interstitialTrendingVideos'
       key: string
     }
 
@@ -163,7 +188,14 @@ let PostFeed = ({
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
   const [feedType, feedUri, feedTab] = feed.split('|')
-  const {gtTablet} = useBreakpoints()
+  const {gtMobile, gtTablet} = useBreakpoints()
+  const gate = useGate()
+  const areVideoFeedsEnabled = React.useMemo(() => {
+    return isNative && gate('yolo')
+  }, [gate])
+  const isVideoFeedAndIsEnabled = React.useMemo(() => {
+    return feedUri === VIDEO_FEED_URI && areVideoFeedsEnabled
+  }, [feedUri, areVideoFeedsEnabled])
 
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
@@ -267,10 +299,10 @@ let PostFeed = ({
   const showProgressIntersitial =
     (followProgressGuide || followAndLikeProgressGuide) && !isDesktop
 
-  const {trendingDisabled} = useTrendingSettings()
+  const {trendingDisabled, trendingVideoDisabled} = useTrendingSettings()
 
   const feedItems: FeedRow[] = React.useMemo(() => {
-    let feedKind: 'following' | 'discover' | 'profile' | undefined
+    let feedKind: 'following' | 'discover' | 'profile' | 'thevids' | undefined
     if (feedType === 'following') {
       feedKind = 'following'
     } else if (feedUri === DISCOVER_FEED_URI) {
@@ -303,81 +335,127 @@ let PostFeed = ({
         })
       } else if (data) {
         let sliceIndex = -1
-        for (const page of data?.pages) {
-          for (const slice of page.slices) {
-            sliceIndex++
 
-            if (hasSession) {
-              if (feedKind === 'discover') {
-                if (sliceIndex === 0) {
-                  if (showProgressIntersitial) {
+        if (isVideoFeedAndIsEnabled) {
+          const rows: FeedPostSliceItem[][] = []
+          let slices: {slice: FeedPostSlice; index: number}[] = []
+          for (const page of data.pages) {
+            for (const slice of page.slices) {
+              slices.push({slice, index: sliceIndex++})
+            }
+          }
+
+          for (let i = 0; i < slices.length; i++) {
+            const slice = slices[i]
+            const root = slice.slice.items.at(0)
+            if (!root) continue
+            // TODO test this
+            if (!AppBskyEmbedVideo.isView(root.post.embed)) {
+              i--
+              continue
+            }
+            const cols = gtMobile ? 3 : 2
+            if (i % cols === 0) {
+              rows.push([root])
+            } else {
+              rows[rows.length - 1].push(root)
+            }
+          }
+
+          for (const row of rows) {
+            sliceIndex++
+            arr.push({
+              type: 'videoGridRow',
+              key: row.map(r => r._reactKey).join('-'),
+              slices: row,
+              sourceFeedUri: feedUri,
+            })
+          }
+        } else {
+          for (const page of data?.pages) {
+            for (const slice of page.slices) {
+              sliceIndex++
+
+              if (hasSession) {
+                if (feedKind === 'discover') {
+                  if (sliceIndex === 0) {
+                    if (showProgressIntersitial) {
+                      arr.push({
+                        type: 'interstitialProgressGuide',
+                        key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
+                      })
+                    }
+                    if (!gtTablet && !trendingDisabled) {
+                      arr.push({
+                        type: 'interstitialTrending',
+                        key:
+                          'interstitial2-' + sliceIndex + '-' + lastFetchedAt,
+                      })
+                    }
+                  } else if (sliceIndex === 15) {
+                    if (areVideoFeedsEnabled && !trendingVideoDisabled) {
+                      arr.push({
+                        type: 'interstitialTrendingVideos',
+                        key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
+                      })
+                    }
+                  } else if (sliceIndex === 30) {
                     arr.push({
-                      type: 'interstitialProgressGuide',
+                      type: 'interstitialFollows',
                       key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                     })
                   }
-                  if (!gtTablet && !trendingDisabled) {
+                } else if (feedKind === 'profile') {
+                  if (sliceIndex === 5) {
                     arr.push({
-                      type: 'interstitialTrending',
-                      key: 'interstitial2-' + sliceIndex + '-' + lastFetchedAt,
+                      type: 'interstitialFollows',
+                      key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                     })
                   }
-                } else if (sliceIndex === 30) {
-                  arr.push({
-                    type: 'interstitialFollows',
-                    key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
-                  })
-                }
-              } else if (feedKind === 'profile') {
-                if (sliceIndex === 5) {
-                  arr.push({
-                    type: 'interstitialFollows',
-                    key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
-                  })
                 }
               }
-            }
 
-            if (slice.isIncompleteThread && slice.items.length >= 3) {
-              const beforeLast = slice.items.length - 2
-              const last = slice.items.length - 1
-              arr.push({
-                type: 'sliceItem',
-                key: slice.items[0]._reactKey,
-                slice: slice,
-                indexInSlice: 0,
-                showReplyTo: false,
-              })
-              arr.push({
-                type: 'sliceViewFullThread',
-                key: slice._reactKey + '-viewFullThread',
-                uri: slice.items[0].uri,
-              })
-              arr.push({
-                type: 'sliceItem',
-                key: slice.items[beforeLast]._reactKey,
-                slice: slice,
-                indexInSlice: beforeLast,
-                showReplyTo:
-                  slice.items[beforeLast].parentAuthor?.did !==
-                  slice.items[beforeLast].post.author.did,
-              })
-              arr.push({
-                type: 'sliceItem',
-                key: slice.items[last]._reactKey,
-                slice: slice,
-                indexInSlice: last,
-                showReplyTo: false,
-              })
-            } else {
-              for (let i = 0; i < slice.items.length; i++) {
+              if (slice.isIncompleteThread && slice.items.length >= 3) {
+                const beforeLast = slice.items.length - 2
+                const last = slice.items.length - 1
                 arr.push({
                   type: 'sliceItem',
-                  key: slice.items[i]._reactKey,
+                  key: slice.items[0]._reactKey,
                   slice: slice,
-                  indexInSlice: i,
-                  showReplyTo: i === 0,
+                  indexInSlice: 0,
+                  showReplyTo: false,
                 })
+                arr.push({
+                  type: 'sliceViewFullThread',
+                  key: slice._reactKey + '-viewFullThread',
+                  uri: slice.items[0].uri,
+                })
+                arr.push({
+                  type: 'sliceItem',
+                  key: slice.items[beforeLast]._reactKey,
+                  slice: slice,
+                  indexInSlice: beforeLast,
+                  showReplyTo:
+                    slice.items[beforeLast].parentAuthor?.did !==
+                    slice.items[beforeLast].post.author.did,
+                })
+                arr.push({
+                  type: 'sliceItem',
+                  key: slice.items[last]._reactKey,
+                  slice: slice,
+                  indexInSlice: last,
+                  showReplyTo: false,
+                })
+              } else {
+                for (let i = 0; i < slice.items.length; i++) {
+                  arr.push({
+                    type: 'sliceItem',
+                    key: slice.items[i]._reactKey,
+                    slice: slice,
+                    indexInSlice: i,
+                    showReplyTo: i === 0,
+                  })
+                }
               }
             }
           }
@@ -390,10 +468,17 @@ let PostFeed = ({
         })
       }
     } else {
-      arr.push({
-        type: 'loading',
-        key: 'loading',
-      })
+      if (isVideoFeedAndIsEnabled) {
+        arr.push({
+          type: 'videoGridRowPlaceholder',
+          key: 'videoGridRowPlaceholder',
+        })
+      } else {
+        arr.push({
+          type: 'loading',
+          key: 'loading',
+        })
+      }
     }
 
     return arr
@@ -409,7 +494,11 @@ let PostFeed = ({
     hasSession,
     showProgressIntersitial,
     trendingDisabled,
+    trendingVideoDisabled,
     gtTablet,
+    gtMobile,
+    isVideoFeedAndIsEnabled,
+    areVideoFeedsEnabled,
   ])
 
   // events
@@ -498,6 +587,8 @@ let PostFeed = ({
         return <ProgressGuide />
       } else if (row.type === 'interstitialTrending') {
         return <TrendingInterstitial />
+      } else if (row.type === 'interstitialTrendingVideos') {
+        return <TrendingVideosInterstitial />
       } else if (row.type === 'sliceItem') {
         const slice = row.slice
         if (slice.isFallbackMarker) {
@@ -532,6 +623,24 @@ let PostFeed = ({
         )
       } else if (row.type === 'sliceViewFullThread') {
         return <ViewFullThread uri={row.uri} />
+      } else if (row.type === 'videoGridRowPlaceholder') {
+        return (
+          <View>
+            <PostFeedVideoGridRowPlaceholder />
+            <PostFeedVideoGridRowPlaceholder />
+            <PostFeedVideoGridRowPlaceholder />
+          </View>
+        )
+      } else if (row.type === 'videoGridRow') {
+        return (
+          <PostFeedVideoGridRow
+            slices={row.slices}
+            sourceContext={{
+              type: 'feedgen',
+              uri: row.sourceFeedUri,
+            }}
+          />
+        )
       } else {
         return null
       }

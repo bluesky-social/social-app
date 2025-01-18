@@ -497,7 +497,7 @@ export function createThemes({
         color: dimPalette.contrast_400,
       },
       text_contrast_medium: {
-        color: dimPalette.contrast_700,
+        color: dimPalette.contrast_600,
       },
       text_contrast_high: {
         color: dimPalette.contrast_900,
