@@ -9,6 +9,7 @@ import {makeCustomFeedLink} from '#/lib/routes/links'
 import {logEvent} from '#/lib/statsig/statsig'
 import {useTrendingSettingsApi} from '#/state/preferences/trending'
 import {usePostFeedQuery} from '#/state/queries/post-feed'
+import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
@@ -75,37 +76,39 @@ export function TrendingVideos() {
         </Button>
       </View>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        decelerationRate="fast"
-        snapToInterval={CARD_WIDTH + a.gap_sm.gap}>
-        <View
-          style={[
-            a.flex_row,
-            a.gap_sm,
-            {
-              paddingLeft: gutters.paddingLeft,
-              paddingRight: gutters.paddingRight,
-            },
-          ]}>
-          {isLoading ? (
-            Array(10)
-              .fill(0)
-              .map((_, i) => (
-                <View key={i} style={[{width: CARD_WIDTH}]}>
-                  <CompactVideoPostCardPlaceholder />
-                </View>
-              ))
-          ) : error || !data ? (
-            <Text>
-              <Trans>Whoops! Trending videos failed to load.</Trans>
-            </Text>
-          ) : (
-            <VideoCards data={data} />
-          )}
-        </View>
-      </ScrollView>
+      <BlockDrawerGesture>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          decelerationRate="fast"
+          snapToInterval={CARD_WIDTH + a.gap_sm.gap}>
+          <View
+            style={[
+              a.flex_row,
+              a.gap_sm,
+              {
+                paddingLeft: gutters.paddingLeft,
+                paddingRight: gutters.paddingRight,
+              },
+            ]}>
+            {isLoading ? (
+              Array(10)
+                .fill(0)
+                .map((_, i) => (
+                  <View key={i} style={[{width: CARD_WIDTH}]}>
+                    <CompactVideoPostCardPlaceholder />
+                  </View>
+                ))
+            ) : error || !data ? (
+              <Text>
+                <Trans>Whoops! Trending videos failed to load.</Trans>
+              </Text>
+            ) : (
+              <VideoCards data={data} />
+            )}
+          </View>
+        </ScrollView>
+      </BlockDrawerGesture>
 
       <Prompt.Basic
         control={trendingPrompt}

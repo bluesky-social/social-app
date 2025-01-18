@@ -11,6 +11,7 @@ import {isWeb} from '#/platform/detection'
 import {useSavedFeeds} from '#/state/queries/feed'
 import {usePostFeedQuery} from '#/state/queries/post-feed'
 import {useAddSavedFeedsMutation} from '#/state/queries/preferences'
+import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {GradientFill} from '#/components/GradientFill'
@@ -95,38 +96,40 @@ export function ExploreTrendingVideos() {
         </View>
       </View>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        decelerationRate="fast"
-        snapToInterval={CARD_WIDTH + tokens.space.sm}>
-        <View
-          style={[
-            a.pt_lg,
-            a.flex_row,
-            a.gap_sm,
-            {
-              paddingLeft: gutters.paddingLeft,
-              paddingRight: gutters.paddingRight,
-            },
-          ]}>
-          {isLoading ? (
-            Array(10)
-              .fill(0)
-              .map((_, i) => (
-                <View key={i} style={[{width: CARD_WIDTH}]}>
-                  <CompactVideoPostCardPlaceholder />
-                </View>
-              ))
-          ) : error || !data ? (
-            <Text>
-              <Trans>Whoops! Trending videos failed to load.</Trans>
-            </Text>
-          ) : (
-            <VideoCards data={data} />
-          )}
-        </View>
-      </ScrollView>
+      <BlockDrawerGesture>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          decelerationRate="fast"
+          snapToInterval={CARD_WIDTH + tokens.space.sm}>
+          <View
+            style={[
+              a.pt_lg,
+              a.flex_row,
+              a.gap_sm,
+              {
+                paddingLeft: gutters.paddingLeft,
+                paddingRight: gutters.paddingRight,
+              },
+            ]}>
+            {isLoading ? (
+              Array(10)
+                .fill(0)
+                .map((_, i) => (
+                  <View key={i} style={[{width: CARD_WIDTH}]}>
+                    <CompactVideoPostCardPlaceholder />
+                  </View>
+                ))
+            ) : error || !data ? (
+              <Text>
+                <Trans>Whoops! Trending videos failed to load.</Trans>
+              </Text>
+            ) : (
+              <VideoCards data={data} />
+            )}
+          </View>
+        </ScrollView>
+      </BlockDrawerGesture>
 
       {!isSavedAlready && (
         <View
