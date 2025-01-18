@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
   LayoutAnimation,
   ListRenderItem,
@@ -45,6 +45,7 @@ import {
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_20} from '#/lib/constants'
+import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -173,7 +174,7 @@ function Feed() {
   const {data, error, hasNextPage, isFetchingNextPage, fetchNextPage} =
     usePostFeedQuery(feedDesc)
 
-  const videos = React.useMemo(() => {
+  const videos = useMemo(() => {
     let vids =
       data?.pages
         .flatMap(page => page.slices.flatMap(slice => slice.items))
@@ -406,7 +407,7 @@ function VideoItem({
   const {width, height} = useSafeAreaFrame()
   const {onItemSeen} = useFeedFeedbackContext()
 
-  React.useEffect(() => {
+  useEffect(() => {
     let to: NodeJS.Timeout | null = null
     if (active) {
       to = setTimeout(() => {
@@ -733,6 +734,7 @@ function PlayPauseTapArea({
   post: Shadow<AppBskyFeedDefs.PostView>
 }) {
   const doubleTapRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const playHaptic = useHaptics()
   const [queueLike] = usePostLikeMutationQueue(post, 'ImmersiveVideo')
 
   const {sendInteraction} = useFeedFeedbackContext()
@@ -751,6 +753,7 @@ function PlayPauseTapArea({
     if (doubleTapRef.current) {
       clearTimeout(doubleTapRef.current)
       doubleTapRef.current = null
+      playHaptic('Light')
       queueLike()
       sendInteraction({
         item: post.uri,
