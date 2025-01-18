@@ -123,7 +123,8 @@ export function VideoFeed({}: NativeStackScreenProps<
     }, [setMinShellMode, t]),
   )
 
-  useSetLightStatusBar(true)
+  const isFocused = useIsFocused()
+  useSetLightStatusBar(isFocused)
 
   return (
     <ThemeProvider theme="dark">
