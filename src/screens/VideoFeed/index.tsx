@@ -550,8 +550,9 @@ function ModerationOverlay({
   embed: AppBskyEmbedVideo.View
   onPressShow: () => void
 }) {
-  const hider = Hider.useHider()
   const {_} = useLingui()
+  const hider = Hider.useHider()
+  const {bottom} = useSafeAreaInsets()
 
   const onShow = useCallback(() => {
     hider.setIsContentVisible(true)
@@ -594,13 +595,14 @@ function ModerationOverlay({
             a.pt_4xl,
             {
               top: 'auto',
+              paddingBottom: bottom,
             },
           ]}>
           <LinearGradient
             colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.4)']}
             style={[a.absolute, a.inset_0]}
           />
-          <Divider style={{backgroundColor: 'white'}} />
+          <Divider style={{borderColor: 'white'}} />
           <View style={[]}>
             <Button
               label={_(msg`View details`)}
