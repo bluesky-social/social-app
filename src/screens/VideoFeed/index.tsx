@@ -409,11 +409,11 @@ function VideoItem({
 
   useEffect(() => {
     let to: NodeJS.Timeout | null = null
-    if (active) {
+    if (active && !to) {
       to = setTimeout(() => {
         onItemSeen(post)
       }, 1000)
-    } else if (to) {
+    } else if (!active && to) {
       clearTimeout(to)
     }
   }, [active, post, onItemSeen])
