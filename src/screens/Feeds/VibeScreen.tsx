@@ -485,8 +485,8 @@ function Overlay({
     navigation.navigate('Profile', {name: post.author.did})
   })
 
-  const gesture = useMemo(() => {
-    const dragLeftGesture = Gesture.Pan()
+  const dragLeftGesture = useMemo(() => {
+    return Gesture.Pan()
       .simultaneousWithExternalGesture(scrollGesture)
       .activeOffsetX([0, 10])
       .failOffsetX([-10, 0])
@@ -498,8 +498,6 @@ function Overlay({
           runOnJS(pushToProfile)()
         }
       })
-
-    return dragLeftGesture
   }, [pushToProfile, scrollGesture])
 
   const rkey = new AtUri(post.uri).rkey
@@ -516,7 +514,7 @@ function Overlay({
   return (
     <>
       <View style={[a.absolute, a.inset_0, a.z_20]}>
-        <GestureDetector gesture={gesture}>
+        <GestureDetector gesture={dragLeftGesture}>
           <View style={[a.flex_1]}>
             <PlayPauseTapArea player={player} post={post} />
           </View>
@@ -722,7 +720,7 @@ function Scrubber({
     [player],
   )
 
-  const gesture = useMemo(() => {
+  const scrubPanGesture = useMemo(() => {
     return Gesture.Pan()
       .blocksExternalGesture(scrollGesture)
       .failOffsetY([-10, 10])
@@ -815,7 +813,7 @@ function Scrubber({
         </Text>
       </Animated.View>
 
-      <GestureDetector gesture={gesture}>
+      <GestureDetector gesture={scrubPanGesture}>
         <View
           style={[
             a.relative,
