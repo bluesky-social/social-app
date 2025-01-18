@@ -5,6 +5,7 @@ import {
   Pressable,
   ScrollView,
   View,
+  ViewabilityConfig,
   ViewToken,
 } from 'react-native'
 import {
@@ -144,6 +145,11 @@ export function VideoFeed({}: NativeStackScreenProps<
     </ThemeProvider>
   )
 }
+
+const viewabilityConfig = {
+  itemVisiblePercentThreshold: 100,
+  minimumViewTime: 0,
+} satisfies ViewabilityConfig
 
 function Feed() {
   const {params} = useRoute<RouteProp<CommonNavigatorParams, 'VideoFeed'>>()
@@ -372,7 +378,7 @@ function Feed() {
           }}
           showsVerticalScrollIndicator={false}
           onViewableItemsChanged={onViewableItemsChanged}
-          viewabilityConfig={{itemVisiblePercentThreshold: 100}}
+          viewabilityConfig={viewabilityConfig}
         />
       </GestureDetector>
     </FeedFeedbackProvider>
