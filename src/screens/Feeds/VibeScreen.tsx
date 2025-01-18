@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useRef, useState} from 'react'
+import React, {useCallback, useMemo, useRef, useState} from 'react'
 import {
   LayoutAnimation,
   ListRenderItem,
@@ -55,7 +55,10 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {isAndroid} from '#/platform/detection'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {FeedFeedbackProvider} from '#/state/feed-feedback'
+import {
+  FeedFeedbackProvider,
+  useFeedFeedbackContext,
+} from '#/state/feed-feedback'
 import {useFeedFeedback} from '#/state/feed-feedback'
 import {usePostLikeMutationQueue} from '#/state/queries/post'
 import {
@@ -392,6 +395,18 @@ function VideoItem({
 }) {
   const postShadow = usePostShadow(post)
   const {width, height} = useSafeAreaFrame()
+  const {onItemSeen} = useFeedFeedbackContext()
+
+  React.useEffect(() => {
+    let to: NodeJS.Timeout | null = null
+    if (active) {
+      to = setTimeout(() => {
+        onItemSeen(post)
+      }, 1000)
+    } else if (to) {
+      clearTimeout(to)
+    }
+  }, [active, post, onItemSeen])
 
   return (
     <View style={[a.relative, {height, width}]}>
@@ -906,6 +921,9 @@ function PlayPauseTapArea({
 }) {
   const doubleTapRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [queueLike] = usePostLikeMutationQueue(post, 'ImmersiveVideo')
+
+  const {sendInteraction} = useFeedFeedbackContext()
+
   const togglePlayPause = () => {
     if (!player) return
     doubleTapRef.current = null
@@ -921,6 +939,10 @@ function PlayPauseTapArea({
       clearTimeout(doubleTapRef.current)
       doubleTapRef.current = null
       queueLike()
+      sendInteraction({
+        item: post.uri,
+        event: 'app.bsky.feed.defs#interactionLike',
+      })
     } else {
       doubleTapRef.current = setTimeout(togglePlayPause, 200)
     }
