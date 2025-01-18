@@ -47,6 +47,7 @@ import {HITSLOP_20} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isAndroid} from '#/platform/detection'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
@@ -73,6 +74,7 @@ import {Header} from '#/screens/VideoFeed/components/Header'
 import {atoms as a, platform, ThemeProvider, useTheme} from '#/alf'
 import {setNavigationBar} from '#/alf/util/navigationBar'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
@@ -146,6 +148,8 @@ function Feed() {
   const {params} = useRoute<RouteProp<CommonNavigatorParams, 'VideoFeed'>>()
   const isFocused = useIsFocused()
   const {hasSession} = useSession()
+  const {height} = useSafeAreaFrame()
+
   const feedDesc = useMemo(() => {
     switch (params.type) {
       case 'feedgen':
@@ -159,14 +163,9 @@ function Feed() {
     }
   }, [params])
   const feedFeedback = useFeedFeedback(feedDesc, hasSession)
-  const {
-    data,
-    isFetching,
-    refetch,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-  } = usePostFeedQuery(feedDesc)
+  const {data, error, hasNextPage, isFetchingNextPage, fetchNextPage} =
+    usePostFeedQuery(feedDesc)
+
   const videos = React.useMemo(() => {
     let vids =
       data?.pages
@@ -343,6 +342,8 @@ function Feed() {
     [updateVideoState],
   )
 
+  const renderEndMessage = useCallback(() => <EndMessage />, [])
+
   return (
     <FeedFeedbackProvider value={feedFeedback}>
       <GestureDetector gesture={scrollGesture}>
@@ -351,13 +352,16 @@ function Feed() {
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           pagingEnabled={true}
-          refreshing={isFetching}
-          onRefresh={refetch}
           ListFooterComponent={
             <ListFooter
               hasNextPage={hasNextPage}
               isFetchingNextPage={isFetchingNextPage}
-              onRetry={refetch}
+              error={cleanError(error)}
+              onRetry={fetchNextPage}
+              height={height}
+              showEndMessage
+              renderEndMessage={renderEndMessage}
+              style={[a.justify_center]}
             />
           }
           onEndReached={() => {
@@ -759,6 +763,60 @@ function PlayPauseTapArea({
       style={[a.absolute, a.inset_0]}>
       <View />
     </Button>
+  )
+}
+
+function EndMessage() {
+  const navigation = useNavigation<NavigationProp>()
+  const {_} = useLingui()
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.w_full,
+        a.gap_2xl,
+        a.px_lg,
+        a.mx_auto,
+        a.align_center,
+        {maxWidth: 350},
+      ]}>
+      <View style={[a.w_full, a.gap_md]}>
+        <Text style={[a.text_3xl, a.text_center, a.font_heavy]}>
+          <Trans>That's everything!</Trans>
+        </Text>
+        <Text
+          style={[
+            a.text_lg,
+            a.text_center,
+            t.atoms.text_contrast_high,
+            a.leading_snug,
+          ]}>
+          <Trans>
+            You've run out of videos to watch. Maybe it's a good time to take a
+            break?
+          </Trans>
+        </Text>
+      </View>
+      <Button
+        testID="videoFeedGoBackButton"
+        onPress={() => {
+          if (navigation.canGoBack()) {
+            navigation.goBack()
+          } else {
+            navigation.navigate('Home')
+          }
+        }}
+        variant="solid"
+        color="secondary_inverted"
+        size="small"
+        label={_(msg`Go back`)}
+        accessibilityHint={_(msg`Returns to previous page`)}>
+        <ButtonIcon icon={ArrowLeftIcon} />
+        <ButtonText>
+          <Trans>Go back</Trans>
+        </ButtonText>
+      </Button>
+    </View>
   )
 }
 
