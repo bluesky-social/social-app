@@ -8660,6 +8660,10 @@ msgstr "นี่จะลบ @{0} ออกจากลิสต์เข้า
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "นี่จะลบโพสต์ของคุณออกจากโพสต์อ้างอิงนี้สำหรับผู้ใช้ทุกคน และแทนที่ด้วยข้อความแทน"
 
+#: src/components/dialogs/MutedWords.tsx:98
+msgid "This word has already been muted"
+msgstr ""
+
 #: src/view/com/post-thread/PostThread.tsx:606
 #: src/view/com/post-thread/PostThread.tsx:609
 msgid "Thread options"

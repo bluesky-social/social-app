@@ -7670,6 +7670,10 @@ msgstr "Leis seo, bainfear @{0} den mhearliosta."
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "Leis seo, bainfear do phostáil seo den phostáil athluaite seo do gach úsáideoir, agus cuirfear ionadchoinneálaí ina háit."
 
+#: src/components/dialogs/MutedWords.tsx:98
+msgid "This word has already been muted"
+msgstr ""
+
 #: src/view/com/post-thread/PostThread.tsx:606
 #: src/view/com/post-thread/PostThread.tsx:609
 msgid "Thread options"

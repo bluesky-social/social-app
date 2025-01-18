@@ -61,6 +61,12 @@ function MutedWordsInner() {
   const [durations, setDurations] = React.useState(['forever'])
   const [excludeFollowing, setExcludeFollowing] = React.useState(false)
 
+  const isDuplicated = (value: string) => Boolean(
+    (preferences?.moderationPrefs.mutedWords?.find(
+      m => m.value === value,
+    )
+  ))
+
   const submit = React.useCallback(async () => {
     const sanitizedValue = sanitizeMutedWordValue(field)
     const surfaces = ['tag', targets.includes('content') && 'content'].filter(
@@ -84,6 +90,12 @@ function MutedWordsInner() {
     if (!sanitizedValue || !surfaces.length) {
       setField('')
       setError(_(msg`Please enter a valid word, tag, or phrase to mute`))
+      return
+    }
+
+    if (isDuplicated(sanitizedValue)) {
+      setField('')
+      setError(_(msg`This word has already been muted`))
       return
     }
 
