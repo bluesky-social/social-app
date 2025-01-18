@@ -76,6 +76,7 @@ import {setNavigationBar} from '#/alf/util/navigationBar'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
+import {Leaf_Stroke2_Corner0_Rounded as LeafIcon} from '#/components/icons/Leaf'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
@@ -774,12 +775,22 @@ function EndMessage() {
     <View
       style={[
         a.w_full,
-        a.gap_2xl,
+        a.gap_3xl,
         a.px_lg,
         a.mx_auto,
         a.align_center,
         {maxWidth: 350},
       ]}>
+      <View
+        style={[
+          {height: 100, width: 100},
+          a.rounded_full,
+          t.atoms.bg_contrast_700,
+          a.align_center,
+          a.justify_center,
+        ]}>
+        <LeafIcon width={64} fill="black" />
+      </View>
       <View style={[a.w_full, a.gap_md]}>
         <Text style={[a.text_3xl, a.text_center, a.font_heavy]}>
           <Trans>That's everything!</Trans>
