@@ -50,7 +50,6 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -62,7 +61,6 @@ import {
   useFeedFeedbackContext,
 } from '#/state/feed-feedback'
 import {useFeedFeedback} from '#/state/feed-feedback'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePostLikeMutationQueue} from '#/state/queries/post'
 import {
   AuthorFilter,
@@ -154,7 +152,7 @@ export function VideoFeed({}: NativeStackScreenProps<
 
 type CurrentSource = {
   source: string
-  moderation: ModerationDecision
+  moderation?: ModerationDecision
 } | null
 
 function Feed() {
@@ -242,10 +240,8 @@ function Feed() {
     [players, currentIndex, isFocused, currentSources, scrollGesture],
   )
 
-  const moderationOpts = useModerationOpts()
-
   const updateVideoState = useNonReactiveCallback((index?: number) => {
-    if (!videos) return
+    if (!videos.length) return
 
     if (index === undefined) {
       index = currentIndex
@@ -260,32 +256,34 @@ function Feed() {
         CurrentSource,
       ]
 
-      const prevPost = videos[index - 1]?.post
+      const prevSlice = videos.at(index - 1)
+      const prevPost = prevSlice?.post
       const prevEmbed = prevPost?.embed
       const prevVideo =
         prevEmbed && AppBskyEmbedVideo.isView(prevEmbed)
           ? prevEmbed.playlist
           : null
-      const currPost = videos[index]?.post
+      const prevVideoModeration = prevSlice?.moderation
+      const currSlice = videos.at(index)
+      const currPost = currSlice?.post
       const currEmbed = currPost?.embed
       const currVideo =
         currEmbed && AppBskyEmbedVideo.isView(currEmbed)
           ? currEmbed.playlist
           : null
-      const nextPost = videos[index + 1]?.post
+      const currVideoModeration = currSlice?.moderation
+      const nextSlice = videos.at(index + 1)
+      const nextPost = nextSlice?.post
       const nextEmbed = nextPost?.embed
       const nextVideo =
         nextEmbed && AppBskyEmbedVideo.isView(nextEmbed)
           ? nextEmbed.playlist
           : null
+      const nextVideoModeration = nextSlice?.moderation
 
       const prevPlayerCurrentSource = currentSources[(index + 2) % 3]
       const currPlayerCurrentSource = currentSources[index % 3]
       const nextPlayerCurrentSource = currentSources[(index + 1) % 3]
-
-      let prevVideoModeration: ModerationDecision | undefined
-      let currVideoModeration: ModerationDecision | undefined
-      let nextVideoModeration: ModerationDecision | undefined
 
       if (!players) {
         const args = ['', '', ''] satisfies [string, string, string]
@@ -297,9 +295,6 @@ function Feed() {
         setPlayers([player1, player2, player3])
 
         if (currVideo) {
-          if (currPost && moderationOpts) {
-            currVideoModeration = moderatePost(currPost, moderationOpts)
-          }
           const currPlayer = [player1, player2, player3][index % 3]
           currPlayer.play()
         }
@@ -319,12 +314,9 @@ function Feed() {
           if (currVideo !== currPlayerCurrentSource?.source) {
             currPlayer.replace(currVideo)
           }
-          if (currPost && moderationOpts) {
-            currVideoModeration = moderatePost(currPost, moderationOpts)
-          }
           if (
             currVideoModeration &&
-            currVideoModeration.ui('contentMedia').blur
+            currVideoModeration.ui('contentView').blur
           ) {
             currPlayer.pause()
           } else {
@@ -339,9 +331,6 @@ function Feed() {
       }
 
       if (prevVideo && prevVideo !== prevPlayerCurrentSource?.source) {
-        if (prevPost && moderationOpts) {
-          prevVideoModeration = moderatePost(prevPost, moderationOpts)
-        }
         currentSources[(index + 2) % 3] = {
           source: prevVideo,
           moderation: prevVideoModeration,
@@ -349,10 +338,10 @@ function Feed() {
       }
 
       if (currVideo && currVideo !== currPlayerCurrentSource?.source) {
-        // should already been calculated, but just in case
-        if (!nextVideoModeration && nextPost && moderationOpts) {
-          nextVideoModeration = moderatePost(nextPost, moderationOpts)
-        }
+        // TODO should already been calculated, but just in case
+        // if (!nextVideoModeration && nextPost && moderationOpts) {
+        //   nextVideoModeration = moderatePost(nextPost, moderationOpts)
+        // }
         currentSources[index % 3] = {
           source: currVideo,
           moderation: currVideoModeration,
@@ -360,9 +349,6 @@ function Feed() {
       }
 
       if (nextVideo && nextVideo !== nextPlayerCurrentSource?.source) {
-        if (nextPost && moderationOpts) {
-          nextVideoModeration = moderatePost(nextPost, moderationOpts)
-        }
         currentSources[(index + 1) % 3] = {
           source: nextVideo,
           moderation: nextVideoModeration,
@@ -454,7 +440,7 @@ function VideoItem({
   embed: AppBskyEmbedVideo.View
   active: boolean
   scrollGesture: NativeGesture
-  moderation: ModerationDecision
+  moderation?: ModerationDecision
 }) {
   const postShadow = usePostShadow(post)
   const {width, height} = useSafeAreaFrame()
@@ -501,14 +487,16 @@ function VideoItem({
             {player && (
               <VideoItemInner player={player} embed={embed} active={active} />
             )}
-            <Overlay
-              player={player}
-              post={postShadow}
-              embed={embed}
-              active={active}
-              scrollGesture={scrollGesture}
-              moderation={moderation}
-            />
+            {moderation && (
+              <Overlay
+                player={player}
+                post={postShadow}
+                embed={embed}
+                active={active}
+                scrollGesture={scrollGesture}
+                moderation={moderation}
+              />
+            )}
           </>
         )}
       </SafeAreaView>
@@ -1077,9 +1065,11 @@ function VideoItemPlaceholder({
   blur?: boolean
 }) {
   const src = embed.thumbnail
-  let contentFit = isTallAspectRatio(embed.aspectRatio) ? 'cover' : 'contain'
+  let contentFit = isTallAspectRatio(embed.aspectRatio)
+    ? ('cover' as const)
+    : ('contain' as const)
   if (blur) {
-    contentFit = 'cover'
+    contentFit = 'cover' as const
   }
   return src ? (
     <Image
