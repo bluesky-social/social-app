@@ -55,6 +55,8 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {isAndroid} from '#/platform/detection'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {FeedFeedbackProvider} from '#/state/feed-feedback'
+import {useFeedFeedback} from '#/state/feed-feedback'
 import {usePostLikeMutationQueue} from '#/state/queries/post'
 import {
   AuthorFilter,
@@ -62,6 +64,7 @@ import {
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
+import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {List} from '#/view/com/util/List'
@@ -154,6 +157,7 @@ function Inner() {
         throw new Error(`Invalid video feed params ${JSON.stringify(params)}`)
     }
   }, [params])
+
   const {
     data,
     isFetching,
@@ -162,6 +166,8 @@ function Inner() {
     isFetchingNextPage,
     fetchNextPage,
   } = usePostFeedQuery(feedDesc)
+  const {hasSession} = useSession()
+  const feedFeedback = useFeedFeedback(feedDesc, hasSession)
 
   let videos = data?.pages.flatMap(page =>
     page.slices.flatMap(slice => slice.items),
@@ -336,31 +342,33 @@ function Inner() {
   )
 
   return (
-    <GestureDetector gesture={scrollGesture}>
-      <List
-        data={videos}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        pagingEnabled={true}
-        refreshing={isFetching}
-        onRefresh={refetch}
-        ListFooterComponent={
-          <ListFooter
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
-            onRetry={refetch}
-          />
-        }
-        onEndReached={() => {
-          if (hasNextPage && !isFetchingNextPage) {
-            fetchNextPage()
+    <FeedFeedbackProvider value={feedFeedback}>
+      <GestureDetector gesture={scrollGesture}>
+        <List
+          data={videos}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          pagingEnabled={true}
+          refreshing={isFetching}
+          onRefresh={refetch}
+          ListFooterComponent={
+            <ListFooter
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              onRetry={refetch}
+            />
           }
-        }}
-        showsVerticalScrollIndicator={false}
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={{itemVisiblePercentThreshold: 100}}
-      />
-    </GestureDetector>
+          onEndReached={() => {
+            if (hasNextPage && !isFetchingNextPage) {
+              fetchNextPage()
+            }
+          }}
+          showsVerticalScrollIndicator={false}
+          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfig={{itemVisiblePercentThreshold: 100}}
+        />
+      </GestureDetector>
+    </FeedFeedbackProvider>
   )
 }
 
