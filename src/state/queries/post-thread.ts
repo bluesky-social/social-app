@@ -5,12 +5,12 @@ import {
   AppBskyFeedGetPostThread,
   AppBskyFeedPost,
   AtUri,
+  moderatePost,
   ModerationDecision,
   ModerationOpts,
 } from '@atproto/api'
 import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {

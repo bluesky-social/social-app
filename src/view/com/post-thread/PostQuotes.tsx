@@ -2,13 +2,13 @@ import {useCallback, useState} from 'react'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  moderatePost,
   ModerationDecision,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
