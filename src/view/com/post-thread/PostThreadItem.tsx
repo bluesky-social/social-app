@@ -17,7 +17,6 @@ import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {MAX_POST_LINES} from '#/lib/constants'
-import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -515,6 +514,9 @@ let PostThreadItemLoaded = ({
           <PostHider
             testID={`postThreadItem-by-${post.author.handle}`}
             href={postHref}
+            onLongPress={() => {
+              onCollapse(post.cid)
+            }}
             disabled={overrideBlur}
             modui={moderation.ui('contentList')}
             iconSize={isThreadedChild ? 24 : 42}
@@ -525,21 +527,16 @@ let PostThreadItemLoaded = ({
             }
             profile={post.author}
             interpretFilterAsBlur>
-            <PressableScale
-              onLongPress={() => {
-                onCollapse(post.cid)
-              }}>
-              <View style={[a.flex_row, a.py_xs, a.px_sm]}>
-                <PostMeta
-                  author={post.author}
-                  moderation={moderation}
-                  timestamp={post.indexedAt}
-                  postHref={postHref}
-                  showAvatar={isThreadedChild}
-                  avatarSize={24}
-                />
-              </View>
-            </PressableScale>
+            <View style={[a.flex_row, a.py_xs, a.px_sm]}>
+              <PostMeta
+                author={post.author}
+                moderation={moderation}
+                timestamp={post.indexedAt}
+                postHref={postHref}
+                showAvatar={isThreadedChild}
+                avatarSize={24}
+              />
+            </View>
           </PostHider>
         </PostOuterWrapper>
       )
@@ -556,6 +553,9 @@ let PostThreadItemLoaded = ({
         <PostHider
           testID={`postThreadItem-by-${post.author.handle}`}
           href={postHref}
+          onLongPress={() => {
+            onCollapse(post.cid)
+          }}
           disabled={overrideBlur}
           modui={moderation.ui('contentList')}
           iconSize={isThreadedChild ? 24 : 42}
@@ -644,15 +644,16 @@ let PostThreadItemLoaded = ({
               />
               {richText?.text ? (
                 <View style={[a.pb_2xs, a.pr_sm]}>
-                  <PressableScale onLongPress={() => onCollapse(post.cid)}>
-                    <RichText
-                      enableTags
-                      value={richText}
-                      style={[a.flex_1, a.text_md]}
-                      numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-                      authorHandle={post.author.handle}
-                    />
-                  </PressableScale>
+                  <RichText
+                    enableTags
+                    value={richText}
+                    onLinkLongPress={() => {
+                      onCollapse(post.cid)
+                    }}
+                    style={[a.flex_1, a.text_md]}
+                    numberOfLines={limitLines ? MAX_POST_LINES : undefined}
+                    authorHandle={post.author.handle}
+                  />
                 </View>
               ) : undefined}
               {limitLines ? (

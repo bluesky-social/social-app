@@ -74,6 +74,7 @@ export function PostHider({
           setOverride(v => !v)
         }
       }}
+      onLongPress={props.onLongPress}
       accessibilityRole="button"
       accessibilityHint={
         override ? _(msg`Hides the content`) : _(msg`Shows the content`)
