@@ -31,6 +31,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
+  ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -76,12 +77,15 @@ import {Header} from '#/screens/VideoFeed/components/Header'
 import {atoms as a, platform, ThemeProvider, useTheme} from '#/alf'
 import {setNavigationBar} from '#/alf/util/navigationBar'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Divider} from '#/components/Divider'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
+import {EyeSlash_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/EyeSlash'
 import {Leaf_Stroke2_Corner0_Rounded as LeafIcon} from '#/components/icons/Leaf'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
+import * as Hider from '#/components/moderation/Hider'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {Scrubber, ScrubberPlaceholder} from './components/Scrubber'
@@ -152,6 +156,11 @@ const viewabilityConfig = {
   minimumViewTime: 0,
 } satisfies ViewabilityConfig
 
+type CurrentSource = {
+  source: string
+  moderation?: ModerationDecision
+} | null
+
 function Feed() {
   const {params} = useRoute<RouteProp<CommonNavigatorParams, 'VideoFeed'>>()
   const isFocused = useIsFocused()
@@ -189,12 +198,12 @@ function Feed() {
   }, [data, params.initialPostUri])
 
   const [currentSources, setCurrentSources] = useState<
-    [string | null, string | null, string | null]
+    [CurrentSource, CurrentSource, CurrentSource]
   >([null, null, null])
 
   const [players, setPlayers] = useState<
     [VideoPlayer, VideoPlayer, VideoPlayer] | null
-  >(createThreeVideoPlayers)
+  >(null)
 
   const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -203,12 +212,18 @@ function Feed() {
   const renderItem: ListRenderItem<FeedPostSliceItem> = useCallback(
     ({item, index}) => {
       const {post} = item
+
+      // filtered above, here for TS
       if (!post.embed || !AppBskyEmbedVideo.isView(post.embed)) {
         return null
       }
 
       const player = players?.[index % 3]
       const currentSource = currentSources[index % 3]
+
+      if (!currentSource?.moderation) {
+        return null
+      }
 
       return (
         <VideoItem
@@ -218,8 +233,9 @@ function Feed() {
           active={
             isFocused &&
             index === currentIndex &&
-            currentSource === post.embed.playlist
+            currentSource?.source === post.embed.playlist
           }
+          moderation={currentSource.moderation}
           scrollGesture={scrollGesture}
         />
       )
@@ -228,7 +244,7 @@ function Feed() {
   )
 
   const updateVideoState = useNonReactiveCallback((index?: number) => {
-    if (!videos) return
+    if (!videos.length) return
 
     if (index === undefined) {
       index = currentIndex
@@ -238,26 +254,35 @@ function Feed() {
 
     setCurrentSources(oldSources => {
       const currentSources = [...oldSources] as [
-        string | null,
-        string | null,
-        string | null,
+        CurrentSource,
+        CurrentSource,
+        CurrentSource,
       ]
 
-      const prevEmbed = videos[index - 1]?.post.embed
+      const prevSlice = videos.at(index - 1)
+      const prevPost = prevSlice?.post
+      const prevEmbed = prevPost?.embed
       const prevVideo =
         prevEmbed && AppBskyEmbedVideo.isView(prevEmbed)
           ? prevEmbed.playlist
           : null
-      const currEmbed = videos[index]?.post.embed
+      const prevVideoModeration = prevSlice?.moderation
+      const currSlice = videos.at(index)
+      const currPost = currSlice?.post
+      const currEmbed = currPost?.embed
       const currVideo =
         currEmbed && AppBskyEmbedVideo.isView(currEmbed)
           ? currEmbed.playlist
           : null
-      const nextEmbed = videos[index + 1]?.post.embed
+      const currVideoModeration = currSlice?.moderation
+      const nextSlice = videos.at(index + 1)
+      const nextPost = nextSlice?.post
+      const nextEmbed = nextPost?.embed
       const nextVideo =
         nextEmbed && AppBskyEmbedVideo.isView(nextEmbed)
           ? nextEmbed.playlist
           : null
+      const nextVideoModeration = nextSlice?.moderation
 
       const prevPlayerCurrentSource = currentSources[(index + 2) % 3]
       const currPlayerCurrentSource = currentSources[index % 3]
@@ -283,41 +308,61 @@ function Feed() {
         const currPlayer = [player1, player2, player3][index % 3]
         const nextPlayer = [player1, player2, player3][(index + 1) % 3]
 
-        if (prevVideo && prevVideo !== prevPlayerCurrentSource) {
+        if (prevVideo && prevVideo !== prevPlayerCurrentSource?.source) {
           prevPlayer.replace(prevVideo)
         }
         prevPlayer.pause()
 
         if (currVideo) {
-          if (currVideo !== currPlayerCurrentSource) {
+          if (currVideo !== currPlayerCurrentSource?.source) {
             currPlayer.replace(currVideo)
           }
-          currPlayer.play()
+          if (
+            currVideoModeration &&
+            currVideoModeration.ui('contentView').blur
+          ) {
+            currPlayer.pause()
+          } else {
+            currPlayer.play()
+          }
         }
 
-        if (nextVideo && nextVideo !== nextPlayerCurrentSource) {
+        if (nextVideo && nextVideo !== nextPlayerCurrentSource?.source) {
           nextPlayer.replace(nextVideo)
         }
         nextPlayer.pause()
       }
 
-      if (prevVideo && prevVideo !== prevPlayerCurrentSource) {
-        currentSources[(index + 2) % 3] = prevVideo
+      if (prevVideo && prevVideo !== prevPlayerCurrentSource?.source) {
+        currentSources[(index + 2) % 3] = {
+          source: prevVideo,
+          moderation: prevVideoModeration,
+        }
       }
 
-      if (currVideo && currVideo !== currPlayerCurrentSource) {
-        currentSources[index % 3] = currVideo
+      if (currVideo && currVideo !== currPlayerCurrentSource?.source) {
+        // TODO should already been calculated, but just in case
+        // if (!nextVideoModeration && nextPost && moderationOpts) {
+        //   nextVideoModeration = moderatePost(nextPost, moderationOpts)
+        // }
+        currentSources[index % 3] = {
+          source: currVideo,
+          moderation: currVideoModeration,
+        }
       }
 
-      if (nextVideo && nextVideo !== nextPlayerCurrentSource) {
-        currentSources[(index + 1) % 3] = nextVideo
+      if (nextVideo && nextVideo !== nextPlayerCurrentSource?.source) {
+        currentSources[(index + 1) % 3] = {
+          source: nextVideo,
+          moderation: nextVideoModeration,
+        }
       }
 
       // use old array if no changes
       if (
-        oldSources[0] === currentSources[0] &&
-        oldSources[1] === currentSources[1] &&
-        oldSources[2] === currentSources[2]
+        oldSources[0]?.source === currentSources[0]?.source &&
+        oldSources[1]?.source === currentSources[1]?.source &&
+        oldSources[2]?.source === currentSources[2]?.source
       ) {
         return oldSources
       }
@@ -396,12 +441,14 @@ function VideoItem({
   embed,
   active,
   scrollGesture,
+  moderation,
 }: {
   player?: VideoPlayer
   post: AppBskyFeedDefs.PostView
   embed: AppBskyEmbedVideo.View
   active: boolean
   scrollGesture: NativeGesture
+  moderation?: ModerationDecision
 }) {
   const postShadow = usePostShadow(post)
   const {width, height} = useSafeAreaFrame()
@@ -451,12 +498,16 @@ function VideoItem({
             {player && (
               <VideoItemInner player={player} embed={embed} active={active} />
             )}
-            <Overlay
-              player={player}
-              post={postShadow}
-              active={active}
-              scrollGesture={scrollGesture}
-            />
+            {moderation && (
+              <Overlay
+                player={player}
+                post={postShadow}
+                embed={embed}
+                active={active}
+                scrollGesture={scrollGesture}
+                moderation={moderation}
+              />
+            )}
           </>
         )}
       </SafeAreaView>
@@ -496,16 +547,109 @@ function VideoItemInner({
   )
 }
 
+function ModerationOverlay({
+  embed,
+  onPressShow,
+}: {
+  embed: AppBskyEmbedVideo.View
+  onPressShow: () => void
+}) {
+  const hider = Hider.useHider()
+  const {_} = useLingui()
+
+  const onShow = useCallback(() => {
+    hider.setIsContentVisible(true)
+    onPressShow()
+  }, [hider, onPressShow])
+
+  return (
+    <View style={[a.absolute, a.inset_0, a.z_20]}>
+      <VideoItemPlaceholder blur embed={embed} />
+      <View
+        style={[
+          a.absolute,
+          a.inset_0,
+          a.z_20,
+          a.justify_center,
+          a.align_center,
+        ]}>
+        <View style={[a.align_center, a.gap_sm]}>
+          <Eye width={36} fill="white" />
+          <Text style={[a.text_center, a.leading_snug, a.pb_xs]}>
+            <Trans>Hidden by your moderation settings.</Trans>
+          </Text>
+          <Button
+            label={_(msg`Show anyway`)}
+            size="small"
+            variant="solid"
+            color="secondary_inverted"
+            onPress={onShow}>
+            <ButtonText>
+              <Trans>Show anyway</Trans>
+            </ButtonText>
+          </Button>
+        </View>
+
+        <View
+          style={[
+            a.absolute,
+            a.inset_0,
+            a.px_xl,
+            a.pt_4xl,
+            {
+              top: 'auto',
+            },
+          ]}>
+          <LinearGradient
+            colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.4)']}
+            style={[a.absolute, a.inset_0]}
+          />
+          <Divider style={{backgroundColor: 'white'}} />
+          <View style={[]}>
+            <Button
+              label={_(msg`View details`)}
+              onPress={() => {
+                hider.showInfoDialog()
+              }}
+              style={[
+                a.w_full,
+                {
+                  height: 60,
+                },
+              ]}>
+              {({pressed}) => (
+                <Text
+                  style={[
+                    a.text_sm,
+                    a.font_bold,
+                    a.text_center,
+                    {opacity: pressed ? 0.5 : 1},
+                  ]}>
+                  <Trans>View details</Trans>
+                </Text>
+              )}
+            </Button>
+          </View>
+        </View>
+      </View>
+    </View>
+  )
+}
+
 function Overlay({
   player,
   post,
+  embed,
   active,
   scrollGesture,
+  moderation,
 }: {
   player?: VideoPlayer
   post: Shadow<AppBskyFeedDefs.PostView>
+  embed: AppBskyEmbedVideo.View
   active: boolean
   scrollGesture: NativeGesture
+  moderation: ModerationDecision
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -529,129 +673,144 @@ function Overlay({
     opacity: 1 - seekingAnimationSV.get(),
   }))
 
+  const onPressShow = useCallback(() => {
+    player?.play()
+  }, [player])
+
   return (
-    <>
-      <View style={[a.absolute, a.inset_0, a.z_20]}>
-        <View style={[a.flex_1]}>
-          <PlayPauseTapArea player={player} post={post} />
-        </View>
+    <Hider.Outer modui={moderation.ui('contentView')}>
+      <Hider.Mask>
+        <ModerationOverlay embed={embed} onPressShow={onPressShow} />
+      </Hider.Mask>
+      <Hider.Content>
+        <View style={[a.absolute, a.inset_0, a.z_20]}>
+          <View style={[a.flex_1]}>
+            <PlayPauseTapArea player={player} post={post} />
+          </View>
 
-        <LinearGradient
-          colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)', 'rgba(0,0,0,0.95)']}
-          style={[a.w_full, a.pt_md]}>
-          <Animated.View style={[a.px_xl, animatedStyle]}>
-            <View style={[a.w_full, a.flex_row, a.align_center, a.gap_md]}>
-              <Link
-                label={_(
-                  msg`View ${sanitizeDisplayName(
-                    post.author.displayName || post.author.handle,
-                  )}'s profile`,
-                )}
-                to={{
-                  screen: 'Profile',
-                  params: {name: post.author.did},
-                }}
-                style={[a.flex_1, a.flex_row, a.gap_md, a.align_center]}>
-                <UserAvatar type="user" avatar={post.author.avatar} size={32} />
-                <View style={[a.flex_1]}>
-                  <Text
-                    style={[a.text_md, a.font_heavy]}
-                    emoji
-                    numberOfLines={1}>
-                    {sanitizeDisplayName(
+          <LinearGradient
+            colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)', 'rgba(0,0,0,0.95)']}
+            style={[a.w_full, a.pt_md]}>
+            <Animated.View style={[a.px_xl, animatedStyle]}>
+              <View style={[a.w_full, a.flex_row, a.align_center, a.gap_md]}>
+                <Link
+                  label={_(
+                    msg`View ${sanitizeDisplayName(
                       post.author.displayName || post.author.handle,
-                    )}
-                  </Text>
-                  <Text
-                    style={[a.text_sm, t.atoms.text_contrast_high]}
-                    numberOfLines={1}>
-                    {sanitizeHandle(post.author.handle, '@')}
-                  </Text>
-                </View>
-              </Link>
-              {/* show button based on non-reactive version, so it doesn't hide on press */}
-              {!post.author.viewer?.following && (
-                <Button
-                  label={
-                    profile.viewer?.following
-                      ? _(msg`Following`)
-                      : _(msg`Follow`)
-                  }
-                  accessibilityHint={
-                    profile.viewer?.following ? _(msg`Unfollow user`) : ''
-                  }
-                  size="small"
-                  variant="outline"
-                  color="secondary_inverted"
-                  style={[a.mb_xs, a.bg_transparent]}
-                  onPress={() =>
-                    profile.viewer?.following ? queueUnfollow() : queueFollow()
-                  }>
-                  {!!profile.viewer?.following && (
-                    <ButtonIcon icon={CheckIcon} />
+                    )}'s profile`,
                   )}
-                  <ButtonText>
-                    {profile.viewer?.following ? (
-                      <Trans>Following</Trans>
-                    ) : (
-                      <Trans>Follow</Trans>
+                  to={{
+                    screen: 'Profile',
+                    params: {name: post.author.did},
+                  }}
+                  style={[a.flex_1, a.flex_row, a.gap_md, a.align_center]}>
+                  <UserAvatar
+                    type="user"
+                    avatar={post.author.avatar}
+                    size={32}
+                  />
+                  <View style={[a.flex_1]}>
+                    <Text
+                      style={[a.text_md, a.font_heavy]}
+                      emoji
+                      numberOfLines={1}>
+                      {sanitizeDisplayName(
+                        post.author.displayName || post.author.handle,
+                      )}
+                    </Text>
+                    <Text
+                      style={[a.text_sm, t.atoms.text_contrast_high]}
+                      numberOfLines={1}>
+                      {sanitizeHandle(post.author.handle, '@')}
+                    </Text>
+                  </View>
+                </Link>
+                {/* show button based on non-reactive version, so it doesn't hide on press */}
+                {!post.author.viewer?.following && (
+                  <Button
+                    label={
+                      profile.viewer?.following
+                        ? _(msg`Following`)
+                        : _(msg`Follow`)
+                    }
+                    accessibilityHint={
+                      profile.viewer?.following ? _(msg`Unfollow user`) : ''
+                    }
+                    size="small"
+                    variant="outline"
+                    color="secondary_inverted"
+                    style={[a.mb_xs, a.bg_transparent]}
+                    onPress={() =>
+                      profile.viewer?.following
+                        ? queueUnfollow()
+                        : queueFollow()
+                    }>
+                    {!!profile.viewer?.following && (
+                      <ButtonIcon icon={CheckIcon} />
                     )}
-                  </ButtonText>
-                </Button>
-              )}
-            </View>
-            {record?.text?.trim() && (
-              <ExpandableRichTextView
-                value={richText}
-                authorHandle={post.author.handle}
-              />
-            )}
-            {record && (
-              <View style={[{left: -5}]}>
-                <PostCtrls
-                  richText={richText}
-                  post={post}
-                  record={record}
-                  logContext="FeedItem"
-                  onPressReply={() =>
-                    navigation.navigate('PostThread', {
-                      name: post.author.did,
-                      rkey,
-                    })
-                  }
-                  big
-                />
+                    <ButtonText>
+                      {profile.viewer?.following ? (
+                        <Trans>Following</Trans>
+                      ) : (
+                        <Trans>Follow</Trans>
+                      )}
+                    </ButtonText>
+                  </Button>
+                )}
               </View>
-            )}
-          </Animated.View>
+              {record?.text?.trim() && (
+                <ExpandableRichTextView
+                  value={richText}
+                  authorHandle={post.author.handle}
+                />
+              )}
+              {record && (
+                <View style={[{left: -5}]}>
+                  <PostCtrls
+                    richText={richText}
+                    post={post}
+                    record={record}
+                    logContext="FeedItem"
+                    onPressReply={() =>
+                      navigation.navigate('PostThread', {
+                        name: post.author.did,
+                        rkey,
+                      })
+                    }
+                    big
+                  />
+                </View>
+              )}
+            </Animated.View>
 
-          {player && active ? (
-            <Scrubber
-              player={player}
-              seekingAnimationSV={seekingAnimationSV}
-              scrollGesture={scrollGesture}
-            />
-          ) : (
-            <ScrubberPlaceholder />
-          )}
-        </LinearGradient>
-      </View>
-      {/*
-      {isAndroid && status === 'loading' && (
-        <View
-          style={[
-            a.absolute,
-            a.inset_0,
-            a.align_center,
-            a.justify_center,
-            a.z_10,
-          ]}
-          pointerEvents="none">
-          <Loader size="2xl" />
+            {player && active ? (
+              <Scrubber
+                player={player}
+                seekingAnimationSV={seekingAnimationSV}
+                scrollGesture={scrollGesture}
+              />
+            ) : (
+              <ScrubberPlaceholder />
+            )}
+          </LinearGradient>
         </View>
-      )}
-        */}
-    </>
+        {/*
+        {isAndroid && status === 'loading' && (
+          <View
+            style={[
+              a.absolute,
+              a.inset_0,
+              a.align_center,
+              a.justify_center,
+              a.z_10,
+            ]}
+            pointerEvents="none">
+            <Loader size="2xl" />
+          </View>
+        )}
+          */}
+      </Hider.Content>
+    </Hider.Outer>
   )
 }
 
@@ -714,17 +873,26 @@ function ExpandableRichTextView({
 function VideoItemPlaceholder({
   embed,
   style,
+  blur,
 }: {
   embed: AppBskyEmbedVideo.View
   style?: ImageStyle
+  blur?: boolean
 }) {
   const src = embed.thumbnail
+  let contentFit = isTallAspectRatio(embed.aspectRatio)
+    ? ('cover' as const)
+    : ('contain' as const)
+  if (blur) {
+    contentFit = 'cover' as const
+  }
   return src ? (
     <Image
       accessibilityIgnoresInvertColors
       source={{uri: src}}
       style={[a.absolute, a.inset_0, style]}
-      contentFit={isTallAspectRatio(embed.aspectRatio) ? 'cover' : 'contain'}
+      contentFit={contentFit}
+      blurRadius={blur ? 40 : 0}
     />
   ) : null
 }
