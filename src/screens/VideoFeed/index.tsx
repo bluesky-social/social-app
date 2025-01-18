@@ -48,6 +48,8 @@ import {
 } from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {EyeSlash_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/EyeSlash'
+import * as Hider from '#/components/moderation/Hider'
 import {HITSLOP_20} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
@@ -151,7 +153,7 @@ export function VideoFeed({}: NativeStackScreenProps<
 
 type CurrentSource = {
   source: string
-  moderation?: ModerationDecision
+  moderation: ModerationDecision
 } | null
 
 function Feed() {
@@ -208,12 +210,18 @@ function Feed() {
   const renderItem: ListRenderItem<FeedPostSliceItem> = useCallback(
     ({item, index}) => {
       const {post} = item
+
+      // filtered above, here for TS
       if (!post.embed || !AppBskyEmbedVideo.isView(post.embed)) {
         return null
       }
 
       const player = players?.[index % 3]
       const currentSource = currentSources[index % 3]
+
+      if (!currentSource?.moderation) {
+        return null
+      }
 
       return (
         <VideoItem
@@ -225,7 +233,7 @@ function Feed() {
             index === currentIndex &&
             currentSource?.source === post.embed.playlist
           }
-          moderation={currentSource?.moderation}
+          moderation={currentSource.moderation}
           scrollGesture={scrollGesture}
         />
       )
@@ -445,7 +453,7 @@ function VideoItem({
   embed: AppBskyEmbedVideo.View
   active: boolean
   scrollGesture: NativeGesture
-  moderation?: ModerationDecision
+  moderation: ModerationDecision
 }) {
   const postShadow = usePostShadow(post)
   const {width, height} = useSafeAreaFrame()
@@ -495,6 +503,7 @@ function VideoItem({
             <Overlay
               player={player}
               post={postShadow}
+              embed={embed}
               active={active}
               scrollGesture={scrollGesture}
               moderation={moderation}
@@ -538,18 +547,67 @@ function VideoItemInner({
   )
 }
 
+function ModerationOverlay({
+  embed,
+  onPressShow,
+}: {
+  embed: AppBskyEmbedVideo.View
+  onPressShow: () => void
+}) {
+  const hider = Hider.useHider()
+  const {_} = useLingui()
+
+  const onShow = React.useCallback(() => {
+    hider.setIsContentVisible(true)
+    onPressShow()
+  }, [hider])
+
+  return (
+    <View style={[a.absolute, a.inset_0, a.z_20]}>
+      <VideoItemPlaceholder blur embed={embed} />
+      <View
+        style={[
+          a.absolute,
+          a.inset_0,
+          a.z_20,
+          a.justify_center,
+          a.align_center,
+        ]}>
+        <View style={[a.align_center, a.gap_sm]}>
+          <Eye width={36} fill="white" />
+          <Text style={[a.text_center, a.leading_snug, a.pb_xs]}>
+            <Trans>Hidden by your moderation settings.</Trans>
+          </Text>
+          <Button
+            label={_(msg`Show anyway`)}
+            size="small"
+            variant="solid"
+            color="secondary_inverted"
+            onPress={onShow}>
+            <ButtonText>
+              <Trans>Show anyway</Trans>
+            </ButtonText>
+          </Button>
+        </View>
+      </View>
+    </View>
+  )
+}
+
 function Overlay({
   player,
   post,
+  embed,
   active,
   scrollGesture,
-}: // moderation
-{
+  moderation,
+}: {
   player?: VideoPlayer
   post: Shadow<AppBskyFeedDefs.PostView>
+  embed: AppBskyEmbedVideo.View
   active: boolean
   scrollGesture: NativeGesture
-  moderation?: ModerationDecision
+  moderation: ModerationDecision
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -574,122 +632,137 @@ function Overlay({
   }))
 
   return (
-    <>
-      <View style={[a.absolute, a.inset_0, a.z_20]}>
-        <View style={[a.flex_1]}>
-          <PlayPauseTapArea player={player} post={post} />
-        </View>
+    <Hider.Outer modui={moderation.ui('contentView')}>
+      <Hider.Mask>
+        <ModerationOverlay
+          embed={embed}
+          onPressShow={() => {
+            player?.play()
+          }}
+        />
+      </Hider.Mask>
+      <Hider.Content>
+        <View style={[a.absolute, a.inset_0, a.z_20]}>
+          <View style={[a.flex_1]}>
+            <PlayPauseTapArea player={player} post={post} />
+          </View>
 
-        <LinearGradient
-          colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)', 'rgba(0,0,0,0.95)']}
-          style={[a.w_full, a.pt_md]}>
-          <Animated.View style={[a.px_xl, animatedStyle]}>
-            <View style={[a.w_full, a.flex_row, a.align_center, a.gap_md]}>
-              <Link
-                label={_(
-                  msg`View ${sanitizeDisplayName(
-                    post.author.displayName || post.author.handle,
-                  )}'s profile`,
-                )}
-                to={{
-                  screen: 'Profile',
-                  params: {name: post.author.did},
-                }}
-                style={[
-                  a.flex_1,
-                  a.flex_row,
-                  a.gap_md,
-                  a.pb_sm,
-                  a.align_center,
-                ]}>
-                <UserAvatar type="user" avatar={post.author.avatar} size={32} />
-                <View style={[a.flex_1]}>
-                  <Text
-                    style={[a.text_md, a.font_heavy]}
-                    emoji
-                    numberOfLines={1}>
-                    {sanitizeDisplayName(
+          <LinearGradient
+            colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)', 'rgba(0,0,0,0.95)']}
+            style={[a.w_full, a.pt_md]}>
+            <Animated.View style={[a.px_xl, animatedStyle]}>
+              <View style={[a.w_full, a.flex_row, a.align_center, a.gap_md]}>
+                <Link
+                  label={_(
+                    msg`View ${sanitizeDisplayName(
                       post.author.displayName || post.author.handle,
-                    )}
-                  </Text>
-                  <Text
-                    style={[a.text_sm, t.atoms.text_contrast_high]}
-                    numberOfLines={1}>
-                    {sanitizeHandle(post.author.handle, '@')}
-                  </Text>
-                </View>
-              </Link>
-              {/* show button based on non-reactive version, so it doesn't hide on press */}
-              {!post.author.viewer?.following && (
-                <Button
-                  label={
-                    profile.viewer?.following
-                      ? _(msg`Following`)
-                      : _(msg`Follow`)
-                  }
-                  accessibilityHint={
-                    profile.viewer?.following ? _(msg`Unfollow user`) : ''
-                  }
-                  size="small"
-                  variant="outline"
-                  color="secondary_inverted"
-                  style={[a.mb_xs, a.bg_transparent]}
-                  hoverStyle={[]}
-                  onPress={() =>
-                    profile.viewer?.following ? queueUnfollow() : queueFollow()
-                  }>
-                  {!!profile.viewer?.following && (
-                    <ButtonIcon icon={CheckIcon} />
+                    )}'s profile`,
                   )}
-                  <ButtonText>
-                    {profile.viewer?.following ? (
-                      <Trans>Following</Trans>
-                    ) : (
-                      <Trans>Follow</Trans>
+                  to={{
+                    screen: 'Profile',
+                    params: {name: post.author.did},
+                  }}
+                  style={[
+                    a.flex_1,
+                    a.flex_row,
+                    a.gap_md,
+                    a.pb_sm,
+                    a.align_center,
+                  ]}>
+                  <UserAvatar
+                    type="user"
+                    avatar={post.author.avatar}
+                    size={32}
+                  />
+                  <View style={[a.flex_1]}>
+                    <Text
+                      style={[a.text_md, a.font_heavy]}
+                      emoji
+                      numberOfLines={1}>
+                      {sanitizeDisplayName(
+                        post.author.displayName || post.author.handle,
+                      )}
+                    </Text>
+                    <Text
+                      style={[a.text_sm, t.atoms.text_contrast_high]}
+                      numberOfLines={1}>
+                      {sanitizeHandle(post.author.handle, '@')}
+                    </Text>
+                  </View>
+                </Link>
+                {/* show button based on non-reactive version, so it doesn't hide on press */}
+                {!post.author.viewer?.following && (
+                  <Button
+                    label={
+                      profile.viewer?.following
+                        ? _(msg`Following`)
+                        : _(msg`Follow`)
+                    }
+                    accessibilityHint={
+                      profile.viewer?.following ? _(msg`Unfollow user`) : ''
+                    }
+                    size="small"
+                    variant="outline"
+                    color="secondary_inverted"
+                    style={[a.mb_xs, a.bg_transparent]}
+                    hoverStyle={[]}
+                    onPress={() =>
+                      profile.viewer?.following
+                        ? queueUnfollow()
+                        : queueFollow()
+                    }>
+                    {!!profile.viewer?.following && (
+                      <ButtonIcon icon={CheckIcon} />
                     )}
-                  </ButtonText>
-                </Button>
+                    <ButtonText>
+                      {profile.viewer?.following ? (
+                        <Trans>Following</Trans>
+                      ) : (
+                        <Trans>Follow</Trans>
+                      )}
+                    </ButtonText>
+                  </Button>
+                )}
+              </View>
+              {record?.text?.trim() && (
+                <View style={[a.pb_sm]}>
+                  <ExpandableRichTextView
+                    value={richText}
+                    authorHandle={post.author.handle}
+                  />
+                </View>
               )}
-            </View>
-            {record?.text?.trim() && (
-              <View style={[a.pb_sm]}>
-                <ExpandableRichTextView
-                  value={richText}
-                  authorHandle={post.author.handle}
-                />
-              </View>
-            )}
-            {record && (
-              <View style={[{left: -5}]}>
-                <PostCtrls
-                  richText={richText}
-                  post={post}
-                  record={record}
-                  logContext="FeedItem"
-                  onPressReply={() =>
-                    navigation.navigate('PostThread', {
-                      name: post.author.did,
-                      rkey,
-                    })
-                  }
-                  big
-                />
-              </View>
-            )}
-          </Animated.View>
+              {record && (
+                <View style={[{left: -5}]}>
+                  <PostCtrls
+                    richText={richText}
+                    post={post}
+                    record={record}
+                    logContext="FeedItem"
+                    onPressReply={() =>
+                      navigation.navigate('PostThread', {
+                        name: post.author.did,
+                        rkey,
+                      })
+                    }
+                    big
+                  />
+                </View>
+              )}
+            </Animated.View>
 
-          {player && active ? (
-            <Scrubber
-              player={player}
-              seekingAnimationSV={seekingAnimationSV}
-              scrollGesture={scrollGesture}
-            />
-          ) : (
-            <ScrubberPlaceholder />
-          )}
-        </LinearGradient>
-      </View>
-      {/*
+            {player && active ? (
+              <Scrubber
+                player={player}
+                seekingAnimationSV={seekingAnimationSV}
+                scrollGesture={scrollGesture}
+              />
+            ) : (
+              <ScrubberPlaceholder />
+            )}
+          </LinearGradient>
+        </View>
+        {/*
       {isAndroid && status === 'loading' && (
         <View
           style={[
@@ -704,7 +777,8 @@ function Overlay({
         </View>
       )}
         */}
-    </>
+      </Hider.Content>
+    </Hider.Outer>
   )
 }
 
@@ -954,17 +1028,24 @@ function ExpandableRichTextView({
 function VideoItemPlaceholder({
   embed,
   style,
+  blur,
 }: {
   embed: AppBskyEmbedVideo.View
   style?: ImageStyle
+  blur?: boolean
 }) {
   const src = embed.thumbnail
+  let contentFit = isTallAspectRatio(embed.aspectRatio) ? 'cover' : 'contain'
+  if (blur) {
+    contentFit = 'cover'
+  }
   return src ? (
     <Image
       accessibilityIgnoresInvertColors
       source={{uri: src}}
       style={[a.absolute, a.inset_0, style]}
-      contentFit={isTallAspectRatio(embed.aspectRatio) ? 'cover' : 'contain'}
+      contentFit={contentFit}
+      blurRadius={blur ? 40 : 0}
     />
   ) : null
 }
