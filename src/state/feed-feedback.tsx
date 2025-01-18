@@ -106,14 +106,17 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
       if (slice === null) {
         return
       }
-      for (const postItem of slice.items) {
+      for (const [i, postItem] of slice.items.entries()) {
         if (!history.current.has(postItem)) {
           history.current.add(postItem)
           queue.current.add(
             toString({
               item: postItem.uri,
               event: 'app.bsky.feed.defs#interactionSeen',
-              feedContext: slice.feedContext,
+              feedContext:
+                slice.type === 'videoGridRow'
+                  ? slice.feedContexts?.[i]
+                  : slice.feedContext,
             }),
           )
           sendToFeed()

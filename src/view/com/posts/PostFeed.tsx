@@ -98,8 +98,9 @@ type FeedRow =
   | {
       type: 'videoGridRow'
       key: string
-      slices: FeedPostSliceItem[]
+      items: FeedPostSliceItem[]
       sourceFeedUri: string
+      feedContexts: (string | undefined)[]
     }
   | {
       type: 'sliceViewFullThread'
@@ -123,9 +124,16 @@ type FeedRow =
       key: string
     }
 
-export function getFeedPostSlice(feedRow: FeedRow): FeedPostSlice | null {
+export function getFeedPostSlice(feedRow: FeedRow): {
+  items: FeedPostSliceItem[]
+  type: 'sliceItem' | 'videoGridRow'
+  feedContext?: string | undefined
+  feedContexts?: (string | undefined)[]
+} | null {
   if (feedRow.type === 'sliceItem') {
-    return feedRow.slice
+    return {...feedRow.slice, type: 'sliceItem'}
+  } else if (feedRow.type === 'videoGridRow') {
+    return feedRow
   } else {
     return null
   }
@@ -337,7 +345,10 @@ let PostFeed = ({
         let sliceIndex = -1
 
         if (isVideoFeedAndIsEnabled) {
-          const rows: FeedPostSliceItem[][] = []
+          const rows: {
+            item: FeedPostSliceItem
+            feedContext: string | undefined
+          }[][] = []
           let slices: {slice: FeedPostSlice; index: number}[] = []
           for (const page of data.pages) {
             for (const slice of page.slices) {
@@ -355,10 +366,11 @@ let PostFeed = ({
               continue
             }
             const cols = gtMobile ? 3 : 2
+            const rowItem = {item: root, feedContext: slice.slice.feedContext}
             if (i % cols === 0) {
-              rows.push([root])
+              rows.push([rowItem])
             } else {
-              rows[rows.length - 1].push(root)
+              rows[rows.length - 1].push(rowItem)
             }
           }
 
@@ -366,9 +378,10 @@ let PostFeed = ({
             sliceIndex++
             arr.push({
               type: 'videoGridRow',
-              key: row.map(r => r._reactKey).join('-'),
-              slices: row,
+              key: row.map(r => r.item._reactKey).join('-'),
+              items: row.map(r => r.item),
               sourceFeedUri: feedUri,
+              feedContexts: row.map(r => r.feedContext),
             })
           }
         } else {
@@ -634,7 +647,7 @@ let PostFeed = ({
       } else if (row.type === 'videoGridRow') {
         return (
           <PostFeedVideoGridRow
-            slices={row.slices}
+            slices={row.items}
             sourceContext={{
               type: 'feedgen',
               uri: row.sourceFeedUri,
