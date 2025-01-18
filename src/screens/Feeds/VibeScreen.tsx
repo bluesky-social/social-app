@@ -723,14 +723,13 @@ function Scrubber({
   const scrubPanGesture = useMemo(() => {
     return Gesture.Pan()
       .blocksExternalGesture(scrollGesture)
+      .activeOffsetX([-1, 1])
       .failOffsetY([-10, 10])
       .onBegin(() => {
         'worklet'
-        console.log('begin')
       })
       .onStart(() => {
         'worklet'
-        console.log('start')
         seekProgressSV.set(currentTimeSV.get())
         isSeekingSV.set(true)
         seekingAnimationSV.set(withTiming(1, {duration: 500}))
