@@ -8659,7 +8659,7 @@ msgstr "Isso removerá sua postagem desta postagem de citação para todos os us
 
 #: src/components/dialogs/MutedWords.tsx:98
 msgid "This word has already been muted"
-msgstr ""
+msgstr "Essa palavra já foi silenciada"
 
 #: src/view/com/post-thread/PostThread.tsx:606
 #: src/view/com/post-thread/PostThread.tsx:609

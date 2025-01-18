@@ -8616,7 +8616,7 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:98
 msgid "This word has already been muted"
-msgstr ""
+msgstr "Dieses Wort wurde bereits stummgeschaltet"
 
 #: src/view/com/post-thread/PostThread.tsx:606
 #: src/view/com/post-thread/PostThread.tsx:609
