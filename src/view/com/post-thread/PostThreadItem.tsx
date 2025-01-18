@@ -600,7 +600,8 @@ let PostThreadItemLoaded = ({
                   href="#"
                 />
               ) : undefined}
-              {post.embed && (
+              {/* Never expand embeds for thread-view replies */}
+              {post.embed && shouldRenderEmbed(isThreadedChild, post.embed) && (
                 <View style={[a.pb_xs]}>
                   <PostEmbeds
                     embed={post.embed}
@@ -885,6 +886,16 @@ function getThreadAuthor(
   } catch {
     return ''
   }
+}
+
+function shouldRenderEmbed(
+  isThreadChild: boolean,
+  embed: AppBskyFeedDefs.PostView['embed'],
+) {
+  if (isThreadChild) {
+    return !embed?.external
+  }
+  return true
 }
 
 const styles = StyleSheet.create({
