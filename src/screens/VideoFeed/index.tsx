@@ -2,6 +2,7 @@ import React, {useCallback, useMemo, useRef, useState} from 'react'
 import {
   LayoutAnimation,
   ListRenderItem,
+  Pressable,
   ScrollView,
   View,
   ViewToken,
@@ -540,13 +541,7 @@ function Overlay({
                   screen: 'Profile',
                   params: {name: post.author.did},
                 }}
-                style={[
-                  a.flex_1,
-                  a.flex_row,
-                  a.gap_md,
-                  a.pb_sm,
-                  a.align_center,
-                ]}>
+                style={[a.flex_1, a.flex_row, a.gap_md, a.align_center]}>
                 <UserAvatar type="user" avatar={post.author.avatar} size={32} />
                 <View style={[a.flex_1]}>
                   <Text
@@ -597,12 +592,10 @@ function Overlay({
               )}
             </View>
             {record?.text?.trim() && (
-              <View style={[a.pb_sm]}>
-                <ExpandableRichTextView
-                  value={richText}
-                  authorHandle={post.author.handle}
-                />
-              </View>
+              <ExpandableRichTextView
+                value={richText}
+                authorHandle={post.author.handle}
+              />
             )}
             {record && (
               <View style={[{left: -5}]}>
@@ -867,15 +860,16 @@ function ExpandableRichTextView({
       }}
       style={{height: Math.min(contentHeight, screenHeight * 0.5)}}
       contentContainerStyle={[
+        a.py_sm,
         a.gap_xs,
         expanded ? [a.align_start] : a.flex_row,
       ]}>
       <RichText
         value={value}
-        style={[a.text_sm, a.flex_1]}
+        style={[a.text_sm, a.flex_1, a.leading_normal]}
         authorHandle={authorHandle}
         enableTags
-        numberOfLines={expanded ? undefined : constrained ? 1 : 2}
+        numberOfLines={expanded ? undefined : constrained ? 2 : 2}
         onTextLayout={evt => {
           if (!constrained && evt.nativeEvent.lines.length > 1) {
             setConstrained(true)
@@ -883,14 +877,13 @@ function ExpandableRichTextView({
         }}
       />
       {constrained && (
-        <Button
-          label={expanded ? _(msg`Read less`) : _(msg`Read more`)}
+        <Pressable
+          accessibilityHint={_(msg`Tap to expand or collapse post text.`)}
+          accessibilityLabel={expanded ? _(msg`Read less`) : _(msg`Read more`)}
           hitSlop={HITSLOP_20}
-          onPress={() => setExpanded(prev => !prev)}>
-          <ButtonText>
-            {expanded ? <Trans>Read less</Trans> : <Trans>Read more</Trans>}
-          </ButtonText>
-        </Button>
+          onPress={() => setExpanded(prev => !prev)}
+          style={[a.absolute, a.inset_0]}
+        />
       )}
     </ScrollView>
   )
