@@ -27,6 +27,7 @@ export type RichTextProps = TextStyleProp &
     enableTags?: boolean
     authorHandle?: string
     onLinkPress?: LinkProps['onPress']
+    onLinkLongPress?: LinkProps['onLongPress']
     interactiveStyle?: TextStyle
     emojiMultiplier?: number
   }
@@ -41,6 +42,7 @@ export function RichText({
   enableTags = false,
   authorHandle,
   onLinkPress,
+  onLinkLongPress,
   interactiveStyle,
   emojiMultiplier = 1.85,
   onLayout,
@@ -116,7 +118,8 @@ export function RichText({
             style={interactiveStyles}
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
-            onPress={onLinkPress}>
+            onPress={onLinkPress}
+            onLongPress={onLinkLongPress}>
             {segment.text}
           </InlineLinkText>
         </ProfileHoverCard>,
