@@ -489,25 +489,6 @@ function Overlay({
     'ImmersiveVideo',
   )
 
-  const pushToProfile = useNonReactiveCallback(() => {
-    navigation.navigate('Profile', {name: post.author.did})
-  })
-
-  const dragLeftGesture = useMemo(() => {
-    return Gesture.Pan()
-      .simultaneousWithExternalGesture(scrollGesture)
-      .activeOffsetX([0, 10])
-      .failOffsetX([-10, 0])
-      .failOffsetY([-5, 5])
-      .maxPointers(1)
-      .onEnd(evt => {
-        'worklet'
-        if (evt.translationX < -50 && evt.velocityX < -300) {
-          runOnJS(pushToProfile)()
-        }
-      })
-  }, [pushToProfile, scrollGesture])
-
   const rkey = new AtUri(post.uri).rkey
   const record = AppBskyFeedPost.isRecord(post.record) ? post.record : undefined
   const richText = new RichTextAPI({
@@ -522,11 +503,9 @@ function Overlay({
   return (
     <>
       <View style={[a.absolute, a.inset_0, a.z_20]}>
-        <GestureDetector gesture={dragLeftGesture}>
-          <View style={[a.flex_1]}>
-            <PlayPauseTapArea player={player} post={post} />
-          </View>
-        </GestureDetector>
+        <View style={[a.flex_1]}>
+          <PlayPauseTapArea player={player} post={post} />
+        </View>
 
         <LinearGradient
           colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)', 'rgba(0,0,0,0.95)']}
