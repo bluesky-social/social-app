@@ -221,10 +221,6 @@ function Feed() {
       const player = players?.[index % 3]
       const currentSource = currentSources[index % 3]
 
-      if (!currentSource?.moderation) {
-        return null
-      }
-
       return (
         <VideoItem
           player={player}
@@ -235,7 +231,7 @@ function Feed() {
             index === currentIndex &&
             currentSource?.source === post.embed.playlist
           }
-          moderation={currentSource.moderation}
+          moderation={currentSource?.moderation}
           scrollGesture={scrollGesture}
         />
       )
