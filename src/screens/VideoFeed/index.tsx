@@ -48,8 +48,6 @@ import {
 } from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {EyeSlash_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/EyeSlash'
-import * as Hider from '#/components/moderation/Hider'
 import {HITSLOP_20} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
@@ -83,10 +81,13 @@ import {Header} from '#/screens/VideoFeed/components/Header'
 import {atoms as a, platform, ThemeProvider, tokens, useTheme} from '#/alf'
 import {setNavigationBar} from '#/alf/util/navigationBar'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Divider} from '#/components/Divider'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
+import {EyeSlash_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/EyeSlash'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
+import * as Hider from '#/components/moderation/Hider'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 
@@ -560,7 +561,7 @@ function ModerationOverlay({
   const onShow = React.useCallback(() => {
     hider.setIsContentVisible(true)
     onPressShow()
-  }, [hider])
+  }, [hider, onPressShow])
 
   return (
     <View style={[a.absolute, a.inset_0, a.z_20]}>
@@ -588,6 +589,48 @@ function ModerationOverlay({
               <Trans>Show anyway</Trans>
             </ButtonText>
           </Button>
+        </View>
+
+        <View
+          style={[
+            a.absolute,
+            a.inset_0,
+            a.px_xl,
+            a.pt_4xl,
+            {
+              top: 'auto',
+            },
+          ]}>
+          <LinearGradient
+            colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.4)']}
+            style={[a.absolute, a.inset_0]}
+          />
+          <Divider style={{backgroundColor: 'white'}} />
+          <View style={[]}>
+            <Button
+              label={_(msg`View details`)}
+              onPress={() => {
+                hider.showInfoDialog()
+              }}
+              style={[
+                a.w_full,
+                {
+                  height: 60,
+                },
+              ]}>
+              {({pressed}) => (
+                <Text
+                  style={[
+                    a.text_sm,
+                    a.font_bold,
+                    a.text_center,
+                    {opacity: pressed ? 0.5 : 1},
+                  ]}>
+                  <Trans>View details</Trans>
+                </Text>
+              )}
+            </Button>
+          </View>
         </View>
       </View>
     </View>
@@ -631,15 +674,14 @@ function Overlay({
     opacity: 1 - seekingAnimationSV.get(),
   }))
 
+  const onPressShow = React.useCallback(() => {
+    player?.play()
+  }, [player])
+
   return (
     <Hider.Outer modui={moderation.ui('contentView')}>
       <Hider.Mask>
-        <ModerationOverlay
-          embed={embed}
-          onPressShow={() => {
-            player?.play()
-          }}
-        />
+        <ModerationOverlay embed={embed} onPressShow={onPressShow} />
       </Hider.Mask>
       <Hider.Content>
         <View style={[a.absolute, a.inset_0, a.z_20]}>
