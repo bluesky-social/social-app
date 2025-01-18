@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.96.5",
+  "version": "1.96.6",
   "private": true,
   "engines": {
     "node": ">=20"
