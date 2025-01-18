@@ -405,18 +405,21 @@ function VideoItem({
 }) {
   const postShadow = usePostShadow(post)
   const {width, height} = useSafeAreaFrame()
-  const {onItemSeen} = useFeedFeedbackContext()
+  const {sendInteraction} = useFeedFeedbackContext()
 
   useEffect(() => {
     let to: NodeJS.Timeout | null = null
     if (active && !to) {
       to = setTimeout(() => {
-        onItemSeen(post)
+        sendInteraction({
+          item: post.uri,
+          event: 'app.bsky.feed.defs#interactionSeen',
+        })
       }, 1000)
     } else if (!active && to) {
       clearTimeout(to)
     }
-  }, [active, post, onItemSeen])
+  }, [active, post, sendInteraction])
 
   return (
     <View style={[a.relative, {height, width}]}>
