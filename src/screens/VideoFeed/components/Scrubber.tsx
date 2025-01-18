@@ -175,8 +175,9 @@ export function Scrubber({
             a.relative,
             a.w_full,
             a.justify_end,
+            a.py_lg,
             {
-              paddingBottom: insets.bottom,
+              paddingBottom: insets.bottom + a.py_md.paddingBottom,
               height:
                 // bottom padding
                 insets.bottom +
