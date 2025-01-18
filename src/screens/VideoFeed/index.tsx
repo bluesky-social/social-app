@@ -34,6 +34,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
+  ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -49,6 +50,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -60,6 +62,7 @@ import {
   useFeedFeedbackContext,
 } from '#/state/feed-feedback'
 import {useFeedFeedback} from '#/state/feed-feedback'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePostLikeMutationQueue} from '#/state/queries/post'
 import {
   AuthorFilter,
@@ -146,6 +149,11 @@ export function VideoFeed({}: NativeStackScreenProps<
   )
 }
 
+type CurrentSource = {
+  source: string
+  moderation?: ModerationDecision
+} | null
+
 function Feed() {
   const {params} = useRoute<RouteProp<CommonNavigatorParams, 'VideoFeed'>>()
   const isFocused = useIsFocused()
@@ -186,12 +194,12 @@ function Feed() {
   }, [data, params.initialPostUri])
 
   const [currentSources, setCurrentSources] = useState<
-    [string | null, string | null, string | null]
+    [CurrentSource, CurrentSource, CurrentSource]
   >([null, null, null])
 
   const [players, setPlayers] = useState<
     [VideoPlayer, VideoPlayer, VideoPlayer] | null
-  >(createThreeVideoPlayers)
+  >(null)
 
   const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -215,14 +223,17 @@ function Feed() {
           active={
             isFocused &&
             index === currentIndex &&
-            currentSource === post.embed.playlist
+            currentSource?.source === post.embed.playlist
           }
+          moderation={currentSource?.moderation}
           scrollGesture={scrollGesture}
         />
       )
     },
     [players, currentIndex, isFocused, currentSources, scrollGesture],
   )
+
+  const moderationOpts = useModerationOpts()
 
   const updateVideoState = useNonReactiveCallback((index?: number) => {
     if (!videos) return
@@ -235,22 +246,25 @@ function Feed() {
 
     setCurrentSources(oldSources => {
       const currentSources = [...oldSources] as [
-        string | null,
-        string | null,
-        string | null,
+        CurrentSource,
+        CurrentSource,
+        CurrentSource,
       ]
 
-      const prevEmbed = videos[index - 1]?.post.embed
+      const prevPost = videos[index - 1]?.post
+      const prevEmbed = prevPost?.embed
       const prevVideo =
         prevEmbed && AppBskyEmbedVideo.isView(prevEmbed)
           ? prevEmbed.playlist
           : null
-      const currEmbed = videos[index]?.post.embed
+      const currPost = videos[index]?.post
+      const currEmbed = currPost?.embed
       const currVideo =
         currEmbed && AppBskyEmbedVideo.isView(currEmbed)
           ? currEmbed.playlist
           : null
-      const nextEmbed = videos[index + 1]?.post.embed
+      const nextPost = videos[index + 1]?.post
+      const nextEmbed = nextPost?.embed
       const nextVideo =
         nextEmbed && AppBskyEmbedVideo.isView(nextEmbed)
           ? nextEmbed.playlist
@@ -259,6 +273,10 @@ function Feed() {
       const prevPlayerCurrentSource = currentSources[(index + 2) % 3]
       const currPlayerCurrentSource = currentSources[index % 3]
       const nextPlayerCurrentSource = currentSources[(index + 1) % 3]
+
+      let prevVideoModeration: ModerationDecision | undefined
+      let currVideoModeration: ModerationDecision | undefined
+      let nextVideoModeration: ModerationDecision | undefined
 
       if (!players) {
         const args = ['', '', ''] satisfies [string, string, string]
@@ -270,6 +288,9 @@ function Feed() {
         setPlayers([player1, player2, player3])
 
         if (currVideo) {
+          if (currPost && moderationOpts) {
+            currVideoModeration = moderatePost(currPost, moderationOpts)
+          }
           const currPlayer = [player1, player2, player3][index % 3]
           currPlayer.play()
         }
@@ -280,41 +301,70 @@ function Feed() {
         const currPlayer = [player1, player2, player3][index % 3]
         const nextPlayer = [player1, player2, player3][(index + 1) % 3]
 
-        if (prevVideo && prevVideo !== prevPlayerCurrentSource) {
+        if (prevVideo && prevVideo !== prevPlayerCurrentSource?.source) {
           prevPlayer.replace(prevVideo)
         }
         prevPlayer.pause()
 
         if (currVideo) {
-          if (currVideo !== currPlayerCurrentSource) {
+          if (currVideo !== currPlayerCurrentSource?.source) {
             currPlayer.replace(currVideo)
           }
-          currPlayer.play()
+          if (currPost && moderationOpts) {
+            currVideoModeration = moderatePost(currPost, moderationOpts)
+          }
+          if (
+            currVideoModeration &&
+            currVideoModeration.ui('contentMedia').blur
+          ) {
+            currPlayer.pause()
+          } else {
+            currPlayer.play()
+          }
         }
 
-        if (nextVideo && nextVideo !== nextPlayerCurrentSource) {
+        if (nextVideo && nextVideo !== nextPlayerCurrentSource?.source) {
           nextPlayer.replace(nextVideo)
         }
         nextPlayer.pause()
       }
 
-      if (prevVideo && prevVideo !== prevPlayerCurrentSource) {
-        currentSources[(index + 2) % 3] = prevVideo
+      if (prevVideo && prevVideo !== prevPlayerCurrentSource?.source) {
+        if (prevPost && moderationOpts) {
+          prevVideoModeration = moderatePost(prevPost, moderationOpts)
+        }
+        currentSources[(index + 2) % 3] = {
+          source: prevVideo,
+          moderation: prevVideoModeration,
+        }
       }
 
-      if (currVideo && currVideo !== currPlayerCurrentSource) {
-        currentSources[index % 3] = currVideo
+      if (currVideo && currVideo !== currPlayerCurrentSource?.source) {
+        // should already been calculated, but just in case
+        if (!nextVideoModeration && nextPost && moderationOpts) {
+          nextVideoModeration = moderatePost(nextPost, moderationOpts)
+        }
+        currentSources[index % 3] = {
+          source: currVideo,
+          moderation: currVideoModeration,
+        }
       }
 
-      if (nextVideo && nextVideo !== nextPlayerCurrentSource) {
-        currentSources[(index + 1) % 3] = nextVideo
+      if (nextVideo && nextVideo !== nextPlayerCurrentSource?.source) {
+        if (nextPost && moderationOpts) {
+          nextVideoModeration = moderatePost(nextPost, moderationOpts)
+        }
+        currentSources[(index + 1) % 3] = {
+          source: nextVideo,
+          moderation: nextVideoModeration,
+        }
       }
 
       // use old array if no changes
       if (
-        oldSources[0] === currentSources[0] &&
-        oldSources[1] === currentSources[1] &&
-        oldSources[2] === currentSources[2]
+        oldSources[0]?.source === currentSources[0]?.source &&
+        oldSources[1]?.source === currentSources[1]?.source &&
+        oldSources[2]?.source === currentSources[2]?.source
       ) {
         return oldSources
       }
@@ -388,12 +438,14 @@ function VideoItem({
   embed,
   active,
   scrollGesture,
+  moderation,
 }: {
   player?: VideoPlayer
   post: AppBskyFeedDefs.PostView
   embed: AppBskyEmbedVideo.View
   active: boolean
   scrollGesture: NativeGesture
+  moderation?: ModerationDecision
 }) {
   const postShadow = usePostShadow(post)
   const {width, height} = useSafeAreaFrame()
@@ -445,6 +497,7 @@ function VideoItem({
               post={postShadow}
               active={active}
               scrollGesture={scrollGesture}
+              moderation={moderation}
             />
           </>
         )}
@@ -490,11 +543,13 @@ function Overlay({
   post,
   active,
   scrollGesture,
-}: {
+}: // moderation
+{
   player?: VideoPlayer
   post: Shadow<AppBskyFeedDefs.PostView>
   active: boolean
   scrollGesture: NativeGesture
+  moderation?: ModerationDecision
 }) {
   const {_} = useLingui()
   const t = useTheme()
