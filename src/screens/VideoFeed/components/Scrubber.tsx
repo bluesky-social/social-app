@@ -184,12 +184,13 @@ export function Scrubber({
             a.justify_end,
             a.py_lg,
             {
-              paddingBottom: insets.bottom + a.py_md.paddingBottom,
+              paddingBottom: insets.bottom + tokens.space.md,
               height:
                 // bottom padding
                 insets.bottom +
                 // actual height
-                tokens.space.xl,
+                tokens.space.xl +
+                tokens.space.md,
             },
             a.z_10,
           ]}>
@@ -226,7 +227,7 @@ export function ScrubberPlaceholder() {
         a.w_full,
         {
           // same as Scrubber
-          height: bottom + tokens.space.xl,
+          height: bottom + tokens.space.xl + tokens.space.md,
         },
       ]}
     />
