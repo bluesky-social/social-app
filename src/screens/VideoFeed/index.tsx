@@ -862,15 +862,20 @@ function ExpandableRichTextView({
 }) {
   const {height: screenHeight} = useSafeAreaFrame()
   const [expanded, setExpanded] = useState(false)
+  const [hasBeenExpanded, setHasBeenExpanded] = useState(false)
   const [constrained, setConstrained] = useState(false)
   const [contentHeight, setContentHeight] = useState(0)
   const {_} = useLingui()
+
+  if (expanded && !hasBeenExpanded) {
+    setHasBeenExpanded(true)
+  }
 
   return (
     <ScrollView
       scrollEnabled={expanded}
       onContentSizeChange={(_w, h) => {
-        if (expanded) {
+        if (hasBeenExpanded) {
           LayoutAnimation.configureNext({
             duration: 500,
             update: {type: 'spring', springDamping: 0.6},
