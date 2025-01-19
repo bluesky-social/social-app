@@ -413,6 +413,12 @@ function Feed() {
           data={videos}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
+          initialNumToRender={3}
+          getItemLayout={(_, index) => ({
+            index,
+            length: height,
+            offset: index * height,
+          })}
           pagingEnabled={true}
           ListFooterComponent={
             <ListFooter
