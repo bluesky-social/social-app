@@ -18,7 +18,6 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 import {
-  SafeAreaView,
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
@@ -495,48 +494,46 @@ function VideoItem({
 
   return (
     <View style={[a.relative, {height, width}]}>
-      <SafeAreaView edges={['left', 'right', 'bottom']} style={[a.flex_1]}>
-        {postShadow === POST_TOMBSTONE ? (
-          <View
+      {postShadow === POST_TOMBSTONE ? (
+        <View
+          style={[
+            a.absolute,
+            a.inset_0,
+            a.z_20,
+            a.align_center,
+            a.justify_center,
+            {backgroundColor: 'rgba(0, 0, 0, 0.8)'},
+          ]}>
+          <Text
             style={[
-              a.absolute,
-              a.inset_0,
-              a.z_20,
-              a.align_center,
-              a.justify_center,
-              {backgroundColor: 'rgba(0, 0, 0, 0.8)'},
+              a.text_2xl,
+              a.font_heavy,
+              a.text_center,
+              a.leading_tight,
+              a.mx_xl,
             ]}>
-            <Text
-              style={[
-                a.text_2xl,
-                a.font_heavy,
-                a.text_center,
-                a.leading_tight,
-                a.mx_xl,
-              ]}>
-              <Trans>Post has been deleted</Trans>
-            </Text>
-          </View>
-        ) : (
-          <>
-            <VideoItemPlaceholder embed={embed} />
-            {player && (
-              <VideoItemInner player={player} embed={embed} active={active} />
-            )}
-            {moderation && (
-              <Overlay
-                player={player}
-                post={postShadow}
-                embed={embed}
-                active={active}
-                scrollGesture={scrollGesture}
-                moderation={moderation}
-                feedContext={feedContext}
-              />
-            )}
-          </>
-        )}
-      </SafeAreaView>
+            <Trans>Post has been deleted</Trans>
+          </Text>
+        </View>
+      ) : (
+        <>
+          <VideoItemPlaceholder embed={embed} />
+          {player && (
+            <VideoItemInner player={player} embed={embed} active={active} />
+          )}
+          {moderation && (
+            <Overlay
+              player={player}
+              post={postShadow}
+              embed={embed}
+              active={active}
+              scrollGesture={scrollGesture}
+              moderation={moderation}
+              feedContext={feedContext}
+            />
+          )}
+        </>
+      )}
     </View>
   )
 }
@@ -550,6 +547,7 @@ function VideoItemInner({
   embed: AppBskyEmbedVideo.View
   active: boolean
 }) {
+  const {bottom} = useSafeAreaInsets()
   const {status} = useEvent(player, 'statusChange', {status: player.status})
 
   return (
@@ -559,7 +557,7 @@ function VideoItemInner({
           accessible={false}
           style={[
             a.absolute,
-            a.inset_0,
+            {top: 0, left: 0, right: 0, bottom},
             isAndroid && status === 'loading' && {opacity: 0},
           ]}
           player={player}
@@ -914,6 +912,7 @@ function VideoItemPlaceholder({
   style?: ImageStyle
   blur?: boolean
 }) {
+  const {bottom} = useSafeAreaInsets()
   const src = embed.thumbnail
   let contentFit = isTallAspectRatio(embed.aspectRatio)
     ? ('cover' as const)
@@ -925,7 +924,7 @@ function VideoItemPlaceholder({
     <Image
       accessibilityIgnoresInvertColors
       source={{uri: src}}
-      style={[a.absolute, a.inset_0, style]}
+      style={[a.absolute, {top: 0, left: 0, right: 0, bottom}, style]}
       contentFit={contentFit}
       blurRadius={blur ? 40 : 0}
     />

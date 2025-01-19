@@ -191,12 +191,14 @@ export function Scrubber({
             a.justify_end,
             a.py_lg,
             {
-              paddingBottom: insets.bottom + tokens.space.md,
+              paddingBottom: insets.bottom,
+              paddingTop: tokens.space.md,
               height:
                 // bottom padding
                 insets.bottom +
                 // actual height
                 tokens.space.xl +
+                // top padding
                 tokens.space.md,
             },
             a.z_10,
