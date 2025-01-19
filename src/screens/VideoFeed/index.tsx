@@ -940,10 +940,10 @@ function PlayPauseTapArea({
   post: Shadow<AppBskyFeedDefs.PostView>
   feedContext: string | undefined
 }) {
+  const {_} = useLingui()
   const doubleTapRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const playHaptic = useHaptics()
   const [queueLike] = usePostLikeMutationQueue(post, 'ImmersiveVideo')
-
   const {sendInteraction} = useFeedFeedbackContext()
 
   const togglePlayPause = () => {
@@ -975,8 +975,8 @@ function PlayPauseTapArea({
   return (
     <Button
       disabled={!player}
-      label="Toggle play/pause"
-      accessibilityHint="Double tap to like"
+      label={_(`Tap to play or pause the video`)}
+      accessibilityHint={_(msg`Double tap to like`)}
       onPress={onPress}
       style={[a.absolute, a.inset_0]}>
       <View />
