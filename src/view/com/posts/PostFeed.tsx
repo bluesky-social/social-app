@@ -354,22 +354,19 @@ let PostFeed = ({
             item: FeedPostSliceItem
             feedContext: string | undefined
           }[][] = []
-          let slices: {slice: FeedPostSlice}[] = []
+          let slices: {slice: FeedPostSlice; root: FeedPostSliceItem}[] = []
           for (const page of data.pages) {
             for (const slice of page.slices) {
-              slices.push({slice})
+              const root = slice.items.at(0)
+              if (root && AppBskyEmbedVideo.isView(root.post.embed)) {
+                slices.push({slice, root})
+              }
             }
           }
 
           for (let i = 0; i < slices.length; i++) {
             const slice = slices[i]
-            const root = slice.slice.items.at(0)
-            if (!root) continue
-            // TODO test this
-            if (!AppBskyEmbedVideo.isView(root.post.embed)) {
-              i--
-              continue
-            }
+            const root = slice.root
             const cols = gtMobile ? 3 : 2
             const rowItem = {item: root, feedContext: slice.slice.feedContext}
             if (i % cols === 0) {
