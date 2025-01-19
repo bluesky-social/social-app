@@ -193,16 +193,14 @@ function Feed() {
     usePostFeedQuery(
       feedDesc,
       params.type === 'feedgen' && params.sourceInterstitial !== 'none'
-        ? {
-            feedCacheKey: params.sourceInterstitial,
-          }
+        ? {feedCacheKey: params.sourceInterstitial}
         : undefined,
     )
 
   const videos = useMemo(() => {
     let vids =
       data?.pages
-        .map(page => {
+        .flatMap(page => {
           const items: {
             _reactKey: string
             moderation: ModerationDecision
@@ -221,7 +219,6 @@ function Feed() {
           }
           return items
         })
-        .flatMap(items => items)
         .filter(item => AppBskyEmbedVideo.isView(item.post.embed)) || []
     const startingVideoIndex = vids?.findIndex(video => {
       return video.post.uri === params.initialPostUri
