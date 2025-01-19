@@ -90,6 +90,8 @@ const keyExtractor = (item: RowItem) => {
   return item._reactKey
 }
 
+const NO_OP = () => {}
+
 export function PostThread({uri}: {uri: string | undefined}) {
   const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
@@ -254,6 +256,28 @@ export function PostThread({uri}: {uri: string | undefined}) {
     fetchedAt,
     randomCache,
   ])
+
+  const [collapsedCIDs, setCollapsedCIDs] = React.useState(new Set())
+  const descendantsOfCollapsedCIDs = React.useMemo(() => {
+    const set = new Set<string>()
+    if (!skeleton) return set
+
+    for (let val of skeleton.replies) {
+      if (!isThreadPost(val)) continue
+      if (collapsedCIDs.has(val.post.cid) || set.has(val.post.cid)) {
+        val.replies?.forEach(r => {
+          isThreadPost(r) && set.add(r.post.cid)
+        })
+      }
+    }
+    return set
+  }, [collapsedCIDs, skeleton])
+  const toggleCollapse = React.useCallback((cid: string) => {
+    setCollapsedCIDs(x => {
+      x.has(cid) ? x.delete(cid) : x.add(cid)
+      return new Set(x)
+    })
+  }, [])
 
   const error = React.useMemo(() => {
     if (AppBskyFeedDefs.isNotFoundPost(thread)) {
@@ -487,6 +511,9 @@ export function PostThread({uri}: {uri: string | undefined}) {
           ref={item.ctx.isHighlightedPost ? highlightedPostRef : undefined}
           onLayout={deferParents ? () => setDeferParents(false) : undefined}>
           <PostThreadItem
+            isCollapsed={collapsedCIDs.has(item.post.cid)}
+            isUnderCollapsed={descendantsOfCollapsedCIDs.has(item.post.cid)}
+            onCollapse={treeView ? toggleCollapse : NO_OP}
             post={item.post}
             record={item.record}
             threadgateRecord={threadgateRecord ?? undefined}
