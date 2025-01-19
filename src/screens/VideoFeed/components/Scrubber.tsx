@@ -134,9 +134,16 @@ export function Scrubber({
       ? seekProgressSV.get()
       : currentTimeSV.get()
     const progress = currentTime === 0 ? 0 : currentTime / durationSV.get()
+    const isSeeking = seekingAnimationSV.get()
+    return {
+      height: isSeeking * 3 + 1,
+      opacity: isSeeking ? 0.6 : 0.4,
+      width: `${progress * 100}%`,
+    }
+  })
+  const trackStyle = useAnimatedStyle(() => {
     return {
       height: seekingAnimationSV.get() * 3 + 1,
-      width: `${progress * 100}%`,
     }
   })
 
@@ -186,7 +193,22 @@ export function Scrubber({
             },
             a.z_10,
           ]}>
-          <Animated.View style={[{backgroundColor: 'white'}, barStyle]} />
+          <View style={[a.w_full, a.relative]}>
+            <Animated.View
+              style={[
+                a.w_full,
+                {backgroundColor: 'white', opacity: 0.2},
+                trackStyle,
+              ]}
+            />
+            <Animated.View
+              style={[
+                a.absolute,
+                {top: 0, left: 0, backgroundColor: 'white'},
+                barStyle,
+              ]}
+            />
+          </View>
         </View>
       </GestureDetector>
     </>
