@@ -924,7 +924,11 @@ function VideoItemPlaceholder({
     <Image
       accessibilityIgnoresInvertColors
       source={{uri: src}}
-      style={[a.absolute, {top: 0, left: 0, right: 0, bottom}, style]}
+      style={[
+        a.absolute,
+        blur ? a.inset_0 : {top: 0, left: 0, right: 0, bottom},
+        style,
+      ]}
       contentFit={contentFit}
       blurRadius={blur ? 40 : 0}
     />
