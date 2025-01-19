@@ -27,14 +27,20 @@ import {tokens} from '#/alf'
 import {atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 
+// magic number that is roughly the min height of the write reply button
+// we inset the video by this amount
+export const VIDEO_PLAYER_BOTTOM_INSET = 57
+
 export function Scrubber({
   player,
   seekingAnimationSV,
   scrollGesture,
+  children,
 }: {
   player: VideoPlayer
   seekingAnimationSV: SharedValue<number>
   scrollGesture: NativeGesture
+  children?: React.ReactNode
 }) {
   const {width: screenWidth} = useSafeAreaFrame()
   const insets = useSafeAreaInsets()
@@ -153,6 +159,11 @@ export function Scrubber({
       height: seekingAnimationSV.get() * 3 + 1,
     }
   })
+  const childrenStyle = useAnimatedStyle(() => {
+    return {
+      opacity: 1 - seekingAnimationSV.get(),
+    }
+  })
 
   return (
     <>
@@ -162,7 +173,7 @@ export function Scrubber({
           {
             left: 0,
             right: 0,
-            bottom: insets.bottom + 48,
+            bottom: insets.bottom + 80,
           },
           timeStyle,
         ]}
@@ -189,17 +200,15 @@ export function Scrubber({
             a.relative,
             a.w_full,
             a.justify_end,
-            a.py_lg,
             {
               paddingBottom: insets.bottom,
-              paddingTop: tokens.space.md,
-              height:
+              minHeight:
                 // bottom padding
                 insets.bottom +
-                // actual height
-                tokens.space.xl +
-                // top padding
-                tokens.space.md,
+                // scrubber height
+                tokens.space.lg +
+                // write reply height
+                VIDEO_PLAYER_BOTTOM_INSET,
             },
             a.z_10,
           ]}>
@@ -219,6 +228,10 @@ export function Scrubber({
               ]}
             />
           </View>
+          <Animated.View
+            style={[{minHeight: VIDEO_PLAYER_BOTTOM_INSET}, childrenStyle]}>
+            {children}
+          </Animated.View>
         </View>
       </GestureDetector>
     </>
@@ -228,18 +241,24 @@ export function Scrubber({
 /**
  * Magic number that matches the Scrubber height
  */
-export function ScrubberPlaceholder() {
+export function ScrubberPlaceholder({children}: {children?: React.ReactNode}) {
   const {bottom} = useSafeAreaInsets()
   return (
     <View
+      onLayout={evt =>
+        console.log('placeholder', evt.nativeEvent.layout.height)
+      }
       style={[
         a.w_full,
+        a.justify_end,
         {
           // same as Scrubber
-          height: bottom + tokens.space.xl + tokens.space.md,
+          minHeight: bottom + tokens.space.lg + VIDEO_PLAYER_BOTTOM_INSET,
+          paddingBottom: bottom,
         },
-      ]}
-    />
+      ]}>
+      {children}
+    </View>
   )
 }
 

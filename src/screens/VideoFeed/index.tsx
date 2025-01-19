@@ -67,8 +67,9 @@ import {
 } from '#/state/queries/post-feed'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
+import {useComposerControls, useSetMinimalShellMode} from '#/state/shell'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
+import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
 import {List} from '#/view/com/util/List'
 import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -87,7 +88,11 @@ import {ListFooter} from '#/components/Lists'
 import * as Hider from '#/components/moderation/Hider'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {Scrubber, ScrubberPlaceholder} from './components/Scrubber'
+import {
+  Scrubber,
+  ScrubberPlaceholder,
+  VIDEO_PLAYER_BOTTOM_INSET,
+} from './components/Scrubber'
 
 function createThreeVideoPlayers(
   sources?: [string, string, string],
@@ -553,7 +558,12 @@ function VideoItemInner({
           accessible={false}
           style={[
             a.absolute,
-            {top: 0, left: 0, right: 0, bottom},
+            {
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: bottom + VIDEO_PLAYER_BOTTOM_INSET,
+            },
             isAndroid && status === 'loading' && {opacity: 0},
           ]}
           player={player}
@@ -678,6 +688,7 @@ function Overlay({
 }) {
   const {_} = useLingui()
   const t = useTheme()
+  const {openComposer} = useComposerControls()
   const navigation = useNavigation<NavigationProp>()
   const seekingAnimationSV = useSharedValue(0)
 
@@ -711,6 +722,18 @@ function Overlay({
     modui.informs = [...modui.informs, ...mediaModui.informs]
     return modui
   }, [moderation])
+
+  const onPressReply = useCallback(() => {
+    openComposer({
+      replyTo: {
+        uri: post.uri,
+        cid: post.cid,
+        text: record?.text || '',
+        author: post.author,
+        embed: post.embed,
+      },
+    })
+  }, [openComposer, post, record])
 
   return (
     <Hider.Outer modui={mergedModui}>
@@ -826,10 +849,13 @@ function Overlay({
               <Scrubber
                 player={player}
                 seekingAnimationSV={seekingAnimationSV}
-                scrollGesture={scrollGesture}
-              />
+                scrollGesture={scrollGesture}>
+                <PostThreadComposePrompt onPressCompose={onPressReply} />
+              </Scrubber>
             ) : (
-              <ScrubberPlaceholder />
+              <ScrubberPlaceholder>
+                <PostThreadComposePrompt onPressCompose={onPressReply} />
+              </ScrubberPlaceholder>
             )}
           </LinearGradient>
         </View>
@@ -937,7 +963,14 @@ function VideoItemPlaceholder({
       source={{uri: src}}
       style={[
         a.absolute,
-        blur ? a.inset_0 : {top: 0, left: 0, right: 0, bottom},
+        blur
+          ? a.inset_0
+          : {
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: bottom + VIDEO_PLAYER_BOTTOM_INSET,
+            },
         style,
       ]}
       contentFit={contentFit}
