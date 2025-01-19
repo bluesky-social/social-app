@@ -272,21 +272,15 @@ function Feed() {
     [players, currentIndex, isFocused, currentSources, scrollGesture],
   )
 
-  const updateVideoState = useNonReactiveCallback((index?: number) => {
-    if (!videos.length) return
+  const updateVideoState = useCallback(
+    (index?: number) => {
+      if (!videos.length) return
 
-    if (index === undefined) {
-      index = currentIndex
-    } else {
-      setCurrentIndex(index)
-    }
-
-    setCurrentSources(oldSources => {
-      const currentSources = [...oldSources] as [
-        CurrentSource,
-        CurrentSource,
-        CurrentSource,
-      ]
+      if (index === undefined) {
+        index = currentIndex
+      } else {
+        setCurrentIndex(index)
+      }
 
       const prevSlice = videos.at(index - 1)
       const prevPost = prevSlice?.post
@@ -361,39 +355,45 @@ function Feed() {
         nextPlayer.pause()
       }
 
+      const updatedSources: [CurrentSource, CurrentSource, CurrentSource] = [
+        ...currentSources,
+      ]
       if (prevVideo && prevVideo !== prevPlayerCurrentSource?.source) {
-        currentSources[(index + 2) % 3] = {
+        updatedSources[(index + 2) % 3] = {
           source: prevVideo,
         }
       }
       if (currVideo && currVideo !== currPlayerCurrentSource?.source) {
-        currentSources[index % 3] = {
+        updatedSources[index % 3] = {
           source: currVideo,
         }
       }
       if (nextVideo && nextVideo !== nextPlayerCurrentSource?.source) {
-        currentSources[(index + 1) % 3] = {
+        updatedSources[(index + 1) % 3] = {
           source: nextVideo,
         }
       }
 
-      // use old array if no changes
       if (
-        oldSources[0]?.source === currentSources[0]?.source &&
-        oldSources[1]?.source === currentSources[1]?.source &&
-        oldSources[2]?.source === currentSources[2]?.source
+        updatedSources[0]?.source !== currentSources[0]?.source ||
+        updatedSources[1]?.source !== currentSources[1]?.source ||
+        updatedSources[2]?.source !== currentSources[2]?.source
       ) {
-        return oldSources
+        setCurrentSources(updatedSources)
       }
-      return currentSources
-    })
+    },
+    [videos, currentSources, currentIndex, players],
+  )
+
+  const updateVideoStateInitially = useNonReactiveCallback(() => {
+    updateVideoState()
   })
 
   useFocusEffect(
     useCallback(() => {
       if (!players) {
         // create players, set sources, start playing
-        updateVideoState()
+        updateVideoStateInitially()
       }
       return () => {
         if (players) {
@@ -402,7 +402,7 @@ function Feed() {
           setPlayers(null)
         }
       }
-    }, [players, updateVideoState]),
+    }, [players, updateVideoStateInitially]),
   )
 
   const onViewableItemsChanged = useCallback(
