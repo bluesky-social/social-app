@@ -337,7 +337,8 @@ function Feed() {
           }
           if (
             currVideoModeration &&
-            currVideoModeration.ui('contentView').blur
+            (currVideoModeration.ui('contentView').blur ||
+              currVideoModeration.ui('contentMedia').blur)
           ) {
             currPlayer.pause()
           } else {
@@ -701,8 +702,18 @@ function Overlay({
     player?.play()
   }, [player])
 
+  const mergedModui = useMemo(() => {
+    const modui = moderation.ui('contentView')
+    const mediaModui = moderation.ui('contentMedia')
+    modui.alerts = [...modui.alerts, ...mediaModui.alerts]
+    modui.blurs = [...modui.blurs, ...mediaModui.blurs]
+    modui.filters = [...modui.filters, ...mediaModui.filters]
+    modui.informs = [...modui.informs, ...mediaModui.informs]
+    return modui
+  }, [moderation])
+
   return (
-    <Hider.Outer modui={moderation.ui('contentView')}>
+    <Hider.Outer modui={mergedModui}>
       <Hider.Mask>
         <ModerationOverlay embed={embed} onPressShow={onPressShow} />
       </Hider.Mask>

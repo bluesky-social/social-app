@@ -1,3 +1,4 @@
+import {useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
@@ -58,6 +59,16 @@ export function VideoPostCard({
     onOut: onPressOut,
   } = useInteractionState()
 
+  const mergedModui = useMemo(() => {
+    const modui = moderation.ui('contentList')
+    const mediaModui = moderation.ui('contentMedia')
+    modui.alerts = [...modui.alerts, ...mediaModui.alerts]
+    modui.blurs = [...modui.blurs, ...mediaModui.blurs]
+    modui.filters = [...modui.filters, ...mediaModui.filters]
+    modui.informs = [...modui.informs, ...mediaModui.informs]
+    return modui
+  }, [moderation])
+
   /**
    * Filtering should be done at a higher level, such as `PostFeed` or
    * `PostFeedVideoGridRow`, but we need to protect here as well.
@@ -94,7 +105,7 @@ export function VideoPostCard({
           justifyContent: undefined,
         },
       ]}>
-      <Hider.Outer modui={moderation.ui('contentList')}>
+      <Hider.Outer modui={mergedModui}>
         <Hider.Mask>
           <View
             style={[
@@ -347,6 +358,16 @@ export function CompactVideoPostCard({
     onOut: onPressOut,
   } = useInteractionState()
 
+  const mergedModui = useMemo(() => {
+    const modui = moderation.ui('contentList')
+    const mediaModui = moderation.ui('contentMedia')
+    modui.alerts = [...modui.alerts, ...mediaModui.alerts]
+    modui.blurs = [...modui.blurs, ...mediaModui.blurs]
+    modui.filters = [...modui.filters, ...mediaModui.filters]
+    modui.informs = [...modui.informs, ...mediaModui.informs]
+    return modui
+  }, [moderation])
+
   /**
    * Filtering should be done at a higher level, such as `PostFeed` or
    * `PostFeedVideoGridRow`, but we need to protect here as well.
@@ -379,7 +400,7 @@ export function CompactVideoPostCard({
           justifyContent: undefined,
         },
       ]}>
-      <Hider.Outer modui={moderation.ui('contentList')}>
+      <Hider.Outer modui={mergedModui}>
         <Hider.Mask>
           <View
             style={[
@@ -420,7 +441,6 @@ export function CompactVideoPostCard({
               </View>
             </View>
           </View>
-          <VideoPostCardTextPlaceholder author={post.author} />
         </Hider.Mask>
         <Hider.Content>
           <View
