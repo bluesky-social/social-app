@@ -91,7 +91,7 @@ export function ExploreTrendingVideos() {
             </View>
           </View>
           <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
-            <Trans>A new way to experience video on Bluesky</Trans>
+            <Trans>Popular videos in your network.</Trans>
           </Text>
         </View>
       </View>
