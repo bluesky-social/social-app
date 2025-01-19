@@ -7,4 +7,3 @@ export type Gate =
   | 'test_gate_1'
   | 'test_gate_2'
   | 'trending_topics_beta'
-  | 'yolo'

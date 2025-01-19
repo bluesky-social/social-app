@@ -17,7 +17,6 @@ import {useQueryClient} from '@tanstack/react-query'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {useGate} from '#/lib/statsig/statsig'
 import {logEvent} from '#/lib/statsig/statsig'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
@@ -200,10 +199,7 @@ let PostFeed = ({
   const lastFetchRef = React.useRef<number>(Date.now())
   const [feedType, feedUri, feedTab] = feed.split('|')
   const {gtMobile, gtTablet} = useBreakpoints()
-  const gate = useGate()
-  const areVideoFeedsEnabled = React.useMemo(() => {
-    return isNative && gate('yolo')
-  }, [gate])
+  const areVideoFeedsEnabled = isNative
 
   const feedCacheKey = feedParams?.feedCacheKey
   const opts = React.useMemo(

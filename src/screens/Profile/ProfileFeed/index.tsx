@@ -14,7 +14,6 @@ import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {ComposeIcon2} from '#/lib/icons'
 import {CommonNavigatorParams} from '#/lib/routes/types'
 import {NavigationProp} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
 import {s} from '#/lib/styles'
 import {isNative} from '#/platform/detection'
@@ -190,15 +189,13 @@ export function ProfileFeedScreenInner({
     return <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
   }, [_])
 
-  const gate = useGate()
   const isVideoFeed = React.useMemo(() => {
     const isBskyVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
     const feedIsVideoMode =
       feedInfo.contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
-    const isFeatureEnabled = gate('yolo')
     const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
-    return isFeatureEnabled && isNative && _isVideoFeed
-  }, [gate, feedInfo])
+    return isNative && _isVideoFeed
+  }, [feedInfo])
 
   return (
     <>

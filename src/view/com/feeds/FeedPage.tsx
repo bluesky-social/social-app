@@ -11,7 +11,6 @@ import {ComposeIcon2} from '#/lib/icons'
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
 import {AllNavigatorParams} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
-import {useGate} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
@@ -66,15 +65,13 @@ export function FeedPage({
   const scrollElRef = React.useRef<ListMethods>(null)
   const [hasNew, setHasNew] = React.useState(false)
   const setHomeBadge = useSetHomeBadge()
-  const gate = useGate()
   const isVideoFeed = React.useMemo(() => {
     const isBskyVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
     const feedIsVideoMode =
       feedInfo.contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
-    const isFeatureEnabled = gate('yolo')
     const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
-    return isFeatureEnabled && isNative && _isVideoFeed
-  }, [gate, feedInfo])
+    return isNative && _isVideoFeed
+  }, [feedInfo])
 
   React.useEffect(() => {
     if (isPageFocused) {
