@@ -3,13 +3,15 @@ import {ScrollView, View} from 'react-native'
 import {AppBskyEmbedVideo, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useFocusEffect} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {VIDEO_FEED_URI} from '#/lib/constants'
 import {makeCustomFeedLink} from '#/lib/routes/links'
 import {logEvent} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import {useSavedFeeds} from '#/state/queries/feed'
-import {usePostFeedQuery} from '#/state/queries/post-feed'
+import {RQKEY, usePostFeedQuery} from '#/state/queries/post-feed'
 import {useAddSavedFeedsMutation} from '#/state/queries/preferences'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
@@ -27,11 +29,31 @@ import {
 
 const CARD_WIDTH = 100
 
+const FEED_DESC = `feedgen|${VIDEO_FEED_URI}`
+const FEED_PARAMS: {
+  feedCacheKey: 'explore'
+} = {
+  feedCacheKey: 'explore',
+}
+
 export function ExploreTrendingVideos() {
   const t = useTheme()
   const {_} = useLingui()
   const gutters = useGutters([0, 'base'])
-  const {data, isLoading, error} = usePostFeedQuery(`feedgen|${VIDEO_FEED_URI}`)
+  const {data, isLoading, error} = usePostFeedQuery(FEED_DESC, FEED_PARAMS)
+
+  // Refetch on tab change if nothing else is using this query.
+  const queryClient = useQueryClient()
+  useFocusEffect(() => {
+    return () => {
+      const query = queryClient
+        .getQueryCache()
+        .find({queryKey: RQKEY(FEED_DESC, FEED_PARAMS)})
+      if (query && query.getObserversCount() <= 1) {
+        query.fetch()
+      }
+    }
+  })
 
   const {data: saved} = useSavedFeeds()
   const isSavedAlready = React.useMemo(() => {
@@ -179,7 +201,7 @@ function VideoCards({
   }, [data])
   const href = React.useMemo(() => {
     const urip = new AtUri(VIDEO_FEED_URI)
-    return makeCustomFeedLink(urip.host, urip.rkey)
+    return makeCustomFeedLink(urip.host, urip.rkey, undefined, 'explore')
   }, [])
 
   return (
@@ -192,6 +214,7 @@ function VideoCards({
             sourceContext={{
               type: 'feedgen',
               uri: VIDEO_FEED_URI,
+              feedCacheKey: 'explore',
             }}
             onInteract={() => {
               logEvent('videoCard:click', {

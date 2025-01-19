@@ -208,6 +208,7 @@ let PostFeed = ({
     return isNative && gate('yolo')
   }, [gate])
 
+  const feedCacheKey = feedParams?.feedCacheKey
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
     [enabled, ignoreFilterFor],
@@ -654,6 +655,7 @@ let PostFeed = ({
             sourceContext={{
               type: 'feedgen',
               uri: row.sourceFeedUri,
+              feedCacheKey: feedCacheKey,
             }}
           />
         )
@@ -670,6 +672,7 @@ let PostFeed = ({
       _,
       onPressRetryLoadMore,
       feedUri,
+      feedCacheKey,
     ],
   )
 

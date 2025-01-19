@@ -190,7 +190,14 @@ function Feed() {
   }, [params])
   const feedFeedback = useFeedFeedback(feedDesc, hasSession)
   const {data, error, hasNextPage, isFetchingNextPage, fetchNextPage} =
-    usePostFeedQuery(feedDesc)
+    usePostFeedQuery(
+      feedDesc,
+      params.type === 'feedgen' && params.feedCacheKey !== undefined
+        ? {
+            feedCacheKey: params.feedCacheKey,
+          }
+        : undefined,
+    )
 
   const videos = useMemo(() => {
     let vids =

@@ -1,14 +1,16 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {ScrollView, View} from 'react-native'
 import {AppBskyEmbedVideo, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {VIDEO_FEED_URI} from '#/lib/constants'
 import {makeCustomFeedLink} from '#/lib/routes/links'
 import {logEvent} from '#/lib/statsig/statsig'
 import {useTrendingSettingsApi} from '#/state/preferences/trending'
 import {usePostFeedQuery} from '#/state/queries/post-feed'
+import {RQKEY} from '#/state/queries/post-feed'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
@@ -25,11 +27,32 @@ import {
 
 const CARD_WIDTH = 100
 
+const FEED_DESC = `feedgen|${VIDEO_FEED_URI}`
+const FEED_PARAMS: {
+  feedCacheKey: 'discover'
+} = {
+  feedCacheKey: 'discover',
+}
+
 export function TrendingVideos() {
   const t = useTheme()
   const {_} = useLingui()
   const gutters = useGutters([0, 'base'])
-  const {data, isLoading, error} = usePostFeedQuery(`feedgen|${VIDEO_FEED_URI}`)
+  const {data, isLoading, error} = usePostFeedQuery(FEED_DESC, FEED_PARAMS)
+
+  // Refetch on unmount if nothing else is using this query.
+  const queryClient = useQueryClient()
+  useEffect(() => {
+    return () => {
+      const query = queryClient
+        .getQueryCache()
+        .find({queryKey: RQKEY(FEED_DESC, FEED_PARAMS)})
+      if (query && query.getObserversCount() <= 1) {
+        query.fetch()
+      }
+    }
+  }, [queryClient])
+
   const {setTrendingVideoDisabled} = useTrendingSettingsApi()
   const trendingPrompt = Prompt.usePromptControl()
 
@@ -138,7 +161,7 @@ function VideoCards({
   }, [data])
   const href = React.useMemo(() => {
     const urip = new AtUri(VIDEO_FEED_URI)
-    return makeCustomFeedLink(urip.host, urip.rkey)
+    return makeCustomFeedLink(urip.host, urip.rkey, undefined, 'discover')
   }, [])
 
   return (
@@ -151,6 +174,7 @@ function VideoCards({
             sourceContext={{
               type: 'feedgen',
               uri: VIDEO_FEED_URI,
+              feedCacheKey: 'discover',
             }}
             onInteract={() => {
               logEvent('videoCard:click', {

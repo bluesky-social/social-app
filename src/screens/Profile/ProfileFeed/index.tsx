@@ -21,7 +21,7 @@ import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {FeedSourceFeedInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
-import {FeedDescriptor} from '#/state/queries/post-feed'
+import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {
   usePreferencesQuery,
@@ -49,6 +49,11 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
 export function ProfileFeedScreen(props: Props) {
   const {rkey, name: handleOrDid} = props.route.params
 
+  const feedParams: FeedParams | undefined = props.route.params.feedCacheKey
+    ? {
+        feedCacheKey: props.route.params.feedCacheKey,
+      }
+    : undefined
   const pal = usePalette('default')
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
@@ -99,7 +104,10 @@ export function ProfileFeedScreen(props: Props) {
 
   return resolvedUri ? (
     <Layout.Screen>
-      <ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} />
+      <ProfileFeedScreenIntermediate
+        feedUri={resolvedUri.uri}
+        feedParams={feedParams}
+      />
     </Layout.Screen>
   ) : (
     <Layout.Screen>
@@ -111,7 +119,13 @@ export function ProfileFeedScreen(props: Props) {
   )
 }
 
-function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
+function ProfileFeedScreenIntermediate({
+  feedUri,
+  feedParams,
+}: {
+  feedUri: string
+  feedParams: FeedParams | undefined
+}) {
   const {data: preferences} = usePreferencesQuery()
   const {data: info} = useFeedSourceInfoQuery({uri: feedUri})
 
@@ -128,15 +142,18 @@ function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
     <ProfileFeedScreenInner
       preferences={preferences}
       feedInfo={info as FeedSourceFeedInfo}
+      feedParams={feedParams}
     />
   )
 }
 
 export function ProfileFeedScreenInner({
   feedInfo,
+  feedParams,
 }: {
   preferences: UsePreferencesQueryResponse
   feedInfo: FeedSourceFeedInfo
+  feedParams: FeedParams | undefined
 }) {
   const {_} = useLingui()
   const {hasSession} = useSession()
@@ -190,6 +207,7 @@ export function ProfileFeedScreenInner({
       <FeedFeedbackProvider value={feedFeedback}>
         <PostFeed
           feed={feed}
+          feedParams={feedParams}
           pollInterval={60e3}
           disablePoll={hasNew}
           onHasNew={setHasNew}
