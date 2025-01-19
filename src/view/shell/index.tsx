@@ -1,9 +1,9 @@
 import {useCallback, useEffect, useState} from 'react'
 import {BackHandler, useWindowDimensions, View} from 'react-native'
 import {Drawer} from 'react-native-drawer-layout'
+import {SystemBars} from 'react-native-edge-to-edge'
 import {Gesture} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {StatusBar} from 'expo-status-bar'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
 import {useDedupe} from '#/lib/hooks/useDedupe'
@@ -171,7 +171,7 @@ export const Shell: React.FC = function ShellImpl() {
 
   return (
     <View testID="mobileShellView" style={[a.h_full, t.atoms.bg]}>
-      <StatusBar
+      <SystemBars
         style={
           t.name !== 'light' ||
           (isIOS && fullyExpandedCount > 0) ||
@@ -179,7 +179,6 @@ export const Shell: React.FC = function ShellImpl() {
             ? 'light'
             : 'dark'
         }
-        animated
       />
       <RoutesContainer>
         <ShellInner />

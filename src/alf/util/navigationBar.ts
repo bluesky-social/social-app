@@ -1,4 +1,4 @@
-import * as NavigationBar from 'expo-navigation-bar'
+import {SystemBars} from 'react-native-edge-to-edge'
 import * as SystemUI from 'expo-system-ui'
 
 import {isAndroid} from '#/platform/detection'
@@ -7,14 +7,11 @@ import {Theme} from '../types'
 export function setNavigationBar(themeType: 'theme' | 'lightbox', t: Theme) {
   if (isAndroid) {
     if (themeType === 'theme') {
-      NavigationBar.setBackgroundColorAsync(t.atoms.bg.backgroundColor)
-      NavigationBar.setBorderColorAsync(t.atoms.bg.backgroundColor)
-      NavigationBar.setButtonStyleAsync(t.name !== 'light' ? 'light' : 'dark')
+      const navigationBar = t.name !== 'light' ? 'light' : 'dark'
+      SystemBars.pushStackEntry({style: {navigationBar}})
       SystemUI.setBackgroundColorAsync(t.atoms.bg.backgroundColor)
     } else {
-      NavigationBar.setBackgroundColorAsync('black')
-      NavigationBar.setBorderColorAsync('black')
-      NavigationBar.setButtonStyleAsync('light')
+      SystemBars.pushStackEntry({style: {navigationBar: 'light'}})
       SystemUI.setBackgroundColorAsync('black')
     }
   }
