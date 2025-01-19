@@ -6,6 +6,7 @@ import {
   NativeGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
+  interpolate,
   runOnJS,
   runOnUI,
   SharedValue,
@@ -76,8 +77,16 @@ export function Scrubber({
   const seekBy = useCallback(
     (time: number) => {
       player.seekBy(time)
+
+      setTimeout(() => {
+        runOnUI(() => {
+          'worklet'
+          isSeekingSV.set(false)
+          seekingAnimationSV.set(withTiming(0, {duration: 500}))
+        })()
+      }, 50)
     },
-    [player],
+    [player, isSeekingSV, seekingAnimationSV],
   )
 
   const scrubPanGesture = useMemo(() => {
@@ -106,10 +115,8 @@ export function Scrubber({
         const newTime = clamp(progress * durationSV.get(), 0, durationSV.get())
 
         // it's seek by, so offset by the current time
+        // seekBy sets isSeekingSV back to false, so no need to do that here
         runOnJS(seekBy)(newTime - currentTimeSV.get())
-
-        isSeekingSV.set(false)
-        seekingAnimationSV.set(withTiming(0, {duration: 500}))
       })
   }, [
     scrollGesture,
@@ -137,7 +144,7 @@ export function Scrubber({
     const isSeeking = seekingAnimationSV.get()
     return {
       height: isSeeking * 3 + 1,
-      opacity: isSeeking ? 0.6 : 0.4,
+      opacity: interpolate(isSeeking, [0, 1], [0.4, 0.6]),
       width: `${progress * 100}%`,
     }
   })
