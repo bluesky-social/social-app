@@ -1,11 +1,20 @@
-import {View} from 'react-native'
+import {useCallback} from 'react'
+import {GestureResponderEvent, View} from 'react-native'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
+import {HITSLOP_30} from '#/lib/constants'
+import {NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 import {atoms as a, useBreakpoints} from '#/alf'
+import {Button, ButtonProps} from '#/components/Button'
+import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import * as Layout from '#/components/Layout'
+import {BUTTON_VISUAL_ALIGNMENT_OFFSET} from '#/components/Layout/const'
 import {Text} from '#/components/Typography'
 
 export function HeaderPlaceholder() {
@@ -73,7 +82,7 @@ export function Header({
 
   return (
     <Layout.Header.Outer noBottomBorder>
-      <Layout.Header.BackButton />
+      <BackButton />
       <Layout.Header.Content align="left">{content}</Layout.Header.Content>
     </Layout.Header.Outer>
   )
@@ -122,5 +131,45 @@ export function FeedHeader({
         </View>
       </View>
     </View>
+  )
+}
+
+// TODO: This customization should be a part of the layout component
+export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
+  const {_} = useLingui()
+  const navigation = useNavigation<NavigationProp>()
+
+  const onPressBack = useCallback(
+    (evt: GestureResponderEvent) => {
+      onPress?.(evt)
+      if (evt.defaultPrevented) return
+      if (navigation.canGoBack()) {
+        navigation.goBack()
+      } else {
+        navigation.navigate('Home')
+      }
+    },
+    [onPress, navigation],
+  )
+
+  return (
+    <Layout.Header.Slot>
+      <Button
+        label={_(msg`Go back`)}
+        size="small"
+        variant="ghost"
+        color="secondary"
+        shape="round"
+        onPress={onPressBack}
+        hitSlop={HITSLOP_30}
+        style={[
+          {marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET},
+          a.bg_transparent,
+          style,
+        ]}
+        {...props}>
+        <ArrowLeft size="lg" fill="white" />
+      </Button>
+    </Layout.Header.Slot>
   )
 }
