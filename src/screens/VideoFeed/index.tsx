@@ -479,19 +479,19 @@ let VideoItem = ({
   const {sendInteraction} = useFeedFeedbackContext()
 
   useEffect(() => {
-    let to: NodeJS.Timeout | null = null
-    if (active && !to) {
-      to = setTimeout(() => {
+    if (active) {
+      const to = setTimeout(() => {
         sendInteraction({
           item: post.uri,
           event: 'app.bsky.feed.defs#interactionSeen',
           feedContext,
         })
       }, 1000)
-    } else if (!active && to) {
-      clearTimeout(to)
+      return () => {
+        clearTimeout(to)
+      }
     }
-  }, [active, post, feedContext, sendInteraction])
+  }, [active, post.uri, feedContext, sendInteraction])
 
   return (
     <View style={[a.relative, {height, width}]}>
