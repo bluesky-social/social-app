@@ -88,11 +88,7 @@ import {ListFooter} from '#/components/Lists'
 import * as Hider from '#/components/moderation/Hider'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {
-  Scrubber,
-  ScrubberPlaceholder,
-  VIDEO_PLAYER_BOTTOM_INSET,
-} from './components/Scrubber'
+import {Scrubber, VIDEO_PLAYER_BOTTOM_INSET} from './components/Scrubber'
 
 function createThreeVideoPlayers(
   sources?: [string, string, string],
@@ -845,19 +841,13 @@ function Overlay({
                 </View>
               )}
             </Animated.View>
-
-            {player && active ? (
-              <Scrubber
-                player={player}
-                seekingAnimationSV={seekingAnimationSV}
-                scrollGesture={scrollGesture}>
-                <PostThreadComposePrompt onPressCompose={onPressReply} />
-              </Scrubber>
-            ) : (
-              <ScrubberPlaceholder>
-                <PostThreadComposePrompt onPressCompose={onPressReply} />
-              </ScrubberPlaceholder>
-            )}
+            <Scrubber
+              active={active}
+              player={player}
+              seekingAnimationSV={seekingAnimationSV}
+              scrollGesture={scrollGesture}>
+              <PostThreadComposePrompt onPressCompose={onPressReply} />
+            </Scrubber>
           </LinearGradient>
         </View>
         {/*

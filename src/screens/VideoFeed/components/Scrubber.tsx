@@ -32,12 +32,14 @@ import {Text} from '#/components/Typography'
 export const VIDEO_PLAYER_BOTTOM_INSET = 57
 
 export function Scrubber({
+  active,
   player,
   seekingAnimationSV,
   scrollGesture,
   children,
 }: {
-  player: VideoPlayer
+  active: boolean
+  player?: VideoPlayer
   seekingAnimationSV: SharedValue<number>
   scrollGesture: NativeGesture
   children?: React.ReactNode
@@ -57,14 +59,6 @@ export function Scrubber({
     }
   }
 
-  useEventListener(player, 'timeUpdate', evt => {
-    const duration = player.duration
-    if (duration !== 0) {
-      setDuration(Math.round(duration))
-    }
-    runOnUI(updateTime)(evt.currentTime, duration)
-  })
-
   const isSeekingSV = useSharedValue(false)
   const seekProgressSV = useSharedValue(0)
 
@@ -79,7 +73,7 @@ export function Scrubber({
 
   const seekBy = useCallback(
     (time: number) => {
-      player.seekBy(time)
+      player?.seekBy(time)
 
       setTimeout(() => {
         runOnUI(() => {
@@ -167,6 +161,13 @@ export function Scrubber({
 
   return (
     <>
+      {player && active && (
+        <PlayerListener
+          player={player}
+          setDuration={setDuration}
+          updateTime={updateTime}
+        />
+      )}
       <Animated.View
         style={[
           a.absolute,
@@ -238,25 +239,24 @@ export function Scrubber({
   )
 }
 
-/**
- * Magic number that matches the Scrubber height
- */
-export function ScrubberPlaceholder({children}: {children?: React.ReactNode}) {
-  const {bottom} = useSafeAreaInsets()
-  return (
-    <View
-      style={[
-        a.w_full,
-        a.justify_end,
-        {
-          // same as Scrubber
-          minHeight: bottom + tokens.space.lg + VIDEO_PLAYER_BOTTOM_INSET,
-          paddingBottom: bottom,
-        },
-      ]}>
-      {children}
-    </View>
-  )
+function PlayerListener({
+  player,
+  setDuration,
+  updateTime,
+}: {
+  player: VideoPlayer
+  setDuration: (duration: number) => void
+  updateTime: (currentTime: number, duration: number) => void
+}) {
+  useEventListener(player, 'timeUpdate', evt => {
+    const duration = player.duration
+    if (duration !== 0) {
+      setDuration(Math.round(duration))
+    }
+    runOnUI(updateTime)(evt.currentTime, duration)
+  })
+
+  return null
 }
 
 function clamp(num: number, min: number, max: number) {
