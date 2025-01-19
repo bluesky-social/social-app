@@ -35,18 +35,18 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
 import * as ScreenOrientation from 'expo-screen-orientation'
+import * as SystemUI from 'expo-system-ui'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 
 import {Dimensions} from '#/lib/media/types'
 import {colors, s} from '#/lib/styles'
-import {isIOS} from '#/platform/detection'
+import {isAndroid, isIOS} from '#/platform/detection'
 import {Lightbox} from '#/state/lightbox'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
 import {ios, useTheme} from '#/alf'
-import {setNavigationBar} from '#/alf/util/navigationBar'
 import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
 import {ImageSource, Transform} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
@@ -312,18 +312,25 @@ function ImageView({
     },
   )
 
-  // style nav bar on android
+  // style system ui on android
   const t = useTheme()
   useEffect(() => {
-    setNavigationBar('lightbox', t)
-    return () => {
-      setNavigationBar('theme', t)
+    if (isAndroid) {
+      SystemUI.setBackgroundColorAsync('black')
+
+      return () => {
+        SystemUI.setBackgroundColorAsync(t.atoms.bg.backgroundColor)
+      }
     }
   }, [t])
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
-      <SystemBars style="light" hidden={ios(isScaled || !showControls)} />
+      <SystemBars
+        style="light"
+        // hiding causes layout shifts on android
+        hidden={ios(isScaled || !showControls)}
+      />
       <Animated.View
         style={[styles.backdrop, backdropStyle]}
         renderToHardwareTextureAndroid

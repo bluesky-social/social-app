@@ -16748,10 +16748,10 @@ react-native-drawer-layout@^4.1.1:
   dependencies:
     use-latest-callback "^0.2.1"
 
-react-native-edge-to-edge@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/react-native-edge-to-edge/-/react-native-edge-to-edge-1.4.0.tgz#1c99145ac118b7f5d0374cc1c00fc3cb745a2410"
-  integrity sha512-+KyXEBsDhCz9jARPsrrdpCSXxw43j99LfHBDns34qYhYp6feI9GeLIUYytlKusO5duXIHD0BIx7IqBp0J5JduQ==
+react-native-edge-to-edge@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/react-native-edge-to-edge/-/react-native-edge-to-edge-1.4.2.tgz#8e922f9c89b445603778279da6383a5576319a90"
+  integrity sha512-qs1V5BzL+vyawUqe8ogHQahigKdClp0PP4ihHYvjtDdbLFb6F837shIIacL72Zz1zu5dwI1eO3SYe2PSjqlk6g==
 
 react-native-emoji-popup@^0.1.2:
   version "0.1.2"
