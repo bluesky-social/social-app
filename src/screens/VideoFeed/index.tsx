@@ -435,7 +435,7 @@ function Feed() {
               height={height}
               showEndMessage
               renderEndMessage={renderEndMessage}
-              style={[a.justify_center]}
+              style={[a.justify_center, a.border_0]}
             />
           }
           onEndReached={() => {
