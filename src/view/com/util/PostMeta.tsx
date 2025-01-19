@@ -26,6 +26,7 @@ interface PostMetaOpts {
   postHref: string
   timestamp: string
   showAvatar?: boolean
+  showHoverCard?: boolean
   avatarSize?: number
   onOpenAuthor?: () => void
   style?: StyleProp<ViewStyle>
@@ -71,7 +72,10 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           />
         </View>
       )}
-      <ProfileHoverCard inline did={opts.author.did}>
+      <ProfileHoverCard
+        disable={opts.showHoverCard === false}
+        inline
+        did={opts.author.did}>
         <Text numberOfLines={1} style={[isAndroid ? a.flex_1 : a.flex_shrink]}>
           <WebOnlyInlineLinkText
             to={profileLink}

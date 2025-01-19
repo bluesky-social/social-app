@@ -533,7 +533,7 @@ let PostThreadItemLoaded = ({
                 moderation={moderation}
                 timestamp={post.indexedAt}
                 postHref={postHref}
-                showAvatar={isThreadedChild}
+                showHoverCard={false}
                 avatarSize={24}
               />
             </View>
