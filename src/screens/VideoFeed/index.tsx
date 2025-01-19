@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
   LayoutAnimation,
   ListRenderItem,
@@ -444,7 +444,7 @@ function keyExtractor(item: FeedPostSliceItem) {
   return item._reactKey
 }
 
-function VideoItem({
+let VideoItem = ({
   player,
   post,
   embed,
@@ -460,7 +460,7 @@ function VideoItem({
   scrollGesture: NativeGesture
   moderation?: ModerationDecision
   feedContext: string | undefined
-}) {
+}): React.ReactNode => {
   const postShadow = usePostShadow(post)
   const {width, height} = useSafeAreaFrame()
   const {sendInteraction} = useFeedFeedbackContext()
@@ -525,6 +525,7 @@ function VideoItem({
     </View>
   )
 }
+VideoItem = memo(VideoItem)
 
 function VideoItemInner({
   player,
