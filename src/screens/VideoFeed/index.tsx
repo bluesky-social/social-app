@@ -157,7 +157,6 @@ const viewabilityConfig = {
 
 type CurrentSource = {
   source: string
-  moderation?: ModerationDecision
 } | null
 
 type VideoItem = {
@@ -255,7 +254,7 @@ function Feed() {
             index === currentIndex &&
             currentSource?.source === post.embed.playlist
           }
-          moderation={currentSource?.moderation}
+          moderation={item.moderation}
           scrollGesture={scrollGesture}
           feedContext={item.feedContext}
         />
@@ -287,7 +286,6 @@ function Feed() {
         prevEmbed && AppBskyEmbedVideo.isView(prevEmbed)
           ? prevEmbed.playlist
           : null
-      const prevVideoModeration = prevSlice?.moderation
       const currSlice = videos.at(index)
       const currPost = currSlice?.post
       const currEmbed = currPost?.embed
@@ -303,7 +301,6 @@ function Feed() {
         nextEmbed && AppBskyEmbedVideo.isView(nextEmbed)
           ? nextEmbed.playlist
           : null
-      const nextVideoModeration = nextSlice?.moderation
 
       const prevPlayerCurrentSource = currentSources[(index + 2) % 3]
       const currPlayerCurrentSource = currentSources[index % 3]
@@ -357,25 +354,16 @@ function Feed() {
       if (prevVideo && prevVideo !== prevPlayerCurrentSource?.source) {
         currentSources[(index + 2) % 3] = {
           source: prevVideo,
-          moderation: prevVideoModeration,
         }
       }
-
       if (currVideo && currVideo !== currPlayerCurrentSource?.source) {
-        // TODO should already been calculated, but just in case
-        // if (!nextVideoModeration && nextPost && moderationOpts) {
-        //   nextVideoModeration = moderatePost(nextPost, moderationOpts)
-        // }
         currentSources[index % 3] = {
           source: currVideo,
-          moderation: currVideoModeration,
         }
       }
-
       if (nextVideo && nextVideo !== nextPlayerCurrentSource?.source) {
         currentSources[(index + 1) % 3] = {
           source: nextVideo,
-          moderation: nextVideoModeration,
         }
       }
 
@@ -707,13 +695,7 @@ function Overlay({
   }, [player])
 
   return (
-    <Hider.Outer
-      // HACK - Hider.Outer is not reactive, it sets it's initial state
-      // based on the modui but then doesn't update if it changes.
-      // TODO: Better fix - Hider.Outer should be reactive, and modui shouldn't
-      // even be changing here anyway (this overlay is conditional based on moderation) -sfn
-      key={moderation.ui('contentView').blurs[0] ? 'blur' : 'none'}
-      modui={moderation.ui('contentView')}>
+    <Hider.Outer modui={moderation.ui('contentView')}>
       <Hider.Mask>
         <ModerationOverlay embed={embed} onPressShow={onPressShow} />
       </Hider.Mask>
