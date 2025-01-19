@@ -615,7 +615,6 @@ function ModerationOverlay({
             </ButtonText>
           </Button>
         </View>
-
         <View
           style={[
             a.absolute,
@@ -632,7 +631,7 @@ function ModerationOverlay({
             style={[a.absolute, a.inset_0]}
           />
           <Divider style={{borderColor: 'white'}} />
-          <View style={[]}>
+          <View>
             <Button
               label={_(msg`View details`)}
               onPress={() => {
@@ -707,7 +706,13 @@ function Overlay({
   }, [player])
 
   return (
-    <Hider.Outer modui={moderation.ui('contentView')}>
+    <Hider.Outer
+      // HACK - Hider.Outer is not reactive, it sets it's initial state
+      // based on the modui but then doesn't update if it changes.
+      // TODO: Better fix - Hider.Outer should be reactive, and modui shouldn't
+      // even be changing here anyway (this overlay is conditional based on moderation) -sfn
+      key={moderation.ui('contentView').blurs[0] ? 'blur' : 'none'}
+      modui={moderation.ui('contentView')}>
       <Hider.Mask>
         <ModerationOverlay embed={embed} onPressShow={onPressShow} />
       </Hider.Mask>
