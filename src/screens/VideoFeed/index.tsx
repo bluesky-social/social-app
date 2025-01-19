@@ -751,7 +751,12 @@ function Overlay({
           </View>
 
           <LinearGradient
-            colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)', 'rgba(0,0,0,0.95)']}
+            colors={[
+              'rgba(0,0,0,0)',
+              'rgba(0,0,0,0.7)',
+              'rgba(0,0,0,0.95)',
+              'rgba(0,0,0,0.95)',
+            ]}
             style={[a.w_full, a.pt_md]}>
             <Animated.View style={[a.px_xl, animatedStyle]}>
               <View style={[a.w_full, a.flex_row, a.align_center, a.gap_md]}>
