@@ -234,6 +234,7 @@ function HomeScreenReady({
                 feedParams={homeFeedParams}
                 renderEmptyState={renderFollowingEmptyState}
                 renderEndOfFeed={FollowingEndOfFeed}
+                feedInfo={feedInfo}
               />
             )
           }
@@ -247,6 +248,7 @@ function HomeScreenReady({
               feed={feed}
               renderEmptyState={renderCustomFeedEmptyState}
               savedFeedConfig={savedFeedConfig}
+              feedInfo={feedInfo}
             />
           )
         })

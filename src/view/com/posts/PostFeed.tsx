@@ -17,7 +17,6 @@ import {useQueryClient} from '@tanstack/react-query'
 import {
   DISCOVER_FEED_URI,
   KNOWN_SHUTDOWN_FEEDS,
-  VIDEO_FEED_URI,
 } from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -169,6 +168,7 @@ let PostFeed = ({
   extraData,
   savedFeedConfig,
   initialNumToRender: initialNumToRenderOverride,
+  isVideoFeed = false,
 }: {
   feed: FeedDescriptor
   feedParams?: FeedParams
@@ -190,6 +190,7 @@ let PostFeed = ({
   extraData?: any
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
   initialNumToRender?: number
+  isVideoFeed?: boolean
 }): React.ReactNode => {
   const theme = useTheme()
   const {_} = useLingui()
@@ -206,9 +207,6 @@ let PostFeed = ({
   const areVideoFeedsEnabled = React.useMemo(() => {
     return isNative && gate('yolo')
   }, [gate])
-  const isVideoFeedAndIsEnabled = React.useMemo(() => {
-    return feedUri === VIDEO_FEED_URI && areVideoFeedsEnabled
-  }, [feedUri, areVideoFeedsEnabled])
 
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
@@ -349,7 +347,7 @@ let PostFeed = ({
       } else if (data) {
         let sliceIndex = -1
 
-        if (isVideoFeedAndIsEnabled) {
+        if (isVideoFeed) {
           const videos: {
             item: FeedPostSliceItem
             feedContext: string | undefined
@@ -486,7 +484,7 @@ let PostFeed = ({
         })
       }
     } else {
-      if (isVideoFeedAndIsEnabled) {
+      if (isVideoFeed) {
         arr.push({
           type: 'videoGridRowPlaceholder',
           key: 'videoGridRowPlaceholder',
@@ -515,7 +513,7 @@ let PostFeed = ({
     trendingVideoDisabled,
     gtTablet,
     gtMobile,
-    isVideoFeedAndIsEnabled,
+    isVideoFeed,
     areVideoFeedsEnabled,
   ])
 
