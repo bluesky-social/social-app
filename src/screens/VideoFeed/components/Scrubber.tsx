@@ -52,11 +52,17 @@ export function Scrubber({
   const updateTime = (currentTime: number, duration: number) => {
     'worklet'
     currentTimeSV.set(currentTime)
-    durationSV.set(duration)
+    if (duration !== 0) {
+      durationSV.set(duration)
+    }
   }
 
   useEventListener(player, 'timeUpdate', evt => {
-    runOnUI(updateTime)(evt.currentTime, player.duration)
+    const duration = player.duration
+    if (duration !== 0) {
+      setDuration(Math.round(duration))
+    }
+    runOnUI(updateTime)(evt.currentTime, duration)
   })
 
   const isSeekingSV = useSharedValue(false)
@@ -67,15 +73,6 @@ export function Scrubber({
     (progress, prevProgress) => {
       if (progress !== prevProgress) {
         runOnJS(setCurrentSeekTime)(progress)
-      }
-    },
-  )
-
-  useAnimatedReaction(
-    () => Math.round(durationSV.get()),
-    (duration, prevDuration) => {
-      if (duration !== prevDuration) {
-        runOnJS(setDuration)(duration)
       }
     },
   )
@@ -98,7 +95,7 @@ export function Scrubber({
   const scrubPanGesture = useMemo(() => {
     return Gesture.Pan()
       .blocksExternalGesture(scrollGesture)
-      .activeOffsetX([-1, 1])
+      .activeOffsetX([-10, 10])
       .failOffsetY([-10, 10])
       .onStart(() => {
         'worklet'
@@ -119,6 +116,9 @@ export function Scrubber({
 
         const progress = evt.x / screenWidth
         const newTime = clamp(progress * durationSV.get(), 0, durationSV.get())
+
+        // optimisically set the progress bar
+        seekProgressSV.set(newTime)
 
         // it's seek by, so offset by the current time
         // seekBy sets isSeekingSV back to false, so no need to do that here
