@@ -7,8 +7,8 @@ export type VideoFeedSourceContext =
   | {
       type: 'feedgen'
       uri: string
+      sourceInterstitial: 'discover' | 'explore' | 'none'
       initialPostUri?: string
-      feedCacheKey?: 'discover' | 'explore' | undefined
     }
   | {
       type: 'author'

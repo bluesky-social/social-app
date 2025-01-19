@@ -14,10 +14,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {
-  DISCOVER_FEED_URI,
-  KNOWN_SHUTDOWN_FEEDS,
-} from '#/lib/constants'
+import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useGate} from '#/lib/statsig/statsig'
@@ -655,7 +652,7 @@ let PostFeed = ({
             sourceContext={{
               type: 'feedgen',
               uri: row.sourceFeedUri,
-              feedCacheKey: feedCacheKey,
+              sourceInterstitial: feedCacheKey ?? 'none',
             }}
           />
         )

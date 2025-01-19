@@ -214,7 +214,7 @@ function VideoCards({
             sourceContext={{
               type: 'feedgen',
               uri: VIDEO_FEED_URI,
-              feedCacheKey: 'explore',
+              sourceInterstitial: 'explore',
             }}
             onInteract={() => {
               logEvent('videoCard:click', {

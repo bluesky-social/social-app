@@ -107,6 +107,11 @@ export function FeedHeader({
     return null
   }
 
+  if (sourceContext.sourceInterstitial !== undefined) {
+    // For now, don't show the header if coming from an interstitial.
+    return null
+  }
+
   return (
     <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
       {info.avatar && <UserAvatar size={36} type="algo" avatar={info.avatar} />}

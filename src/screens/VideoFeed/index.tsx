@@ -192,9 +192,9 @@ function Feed() {
   const {data, error, hasNextPage, isFetchingNextPage, fetchNextPage} =
     usePostFeedQuery(
       feedDesc,
-      params.type === 'feedgen' && params.feedCacheKey !== undefined
+      params.type === 'feedgen' && params.sourceInterstitial !== 'none'
         ? {
-            feedCacheKey: params.feedCacheKey,
+            feedCacheKey: params.sourceInterstitial,
           }
         : undefined,
     )
