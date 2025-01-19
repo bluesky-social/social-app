@@ -1,17 +1,20 @@
 import React, {useCallback, useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
+import {AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useIsFocused, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {VIDEO_FEED_URIS} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {ComposeIcon2} from '#/lib/icons'
 import {CommonNavigatorParams} from '#/lib/routes/types'
 import {NavigationProp} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
 import {s} from '#/lib/styles'
 import {isNative} from '#/platform/detection'
@@ -170,6 +173,16 @@ export function ProfileFeedScreenInner({
     return <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
   }, [_])
 
+  const gate = useGate()
+  const isVideoFeed = React.useMemo(() => {
+    const isBskyVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
+    const feedIsVideoMode =
+      feedInfo.contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
+    const isFeatureEnabled = gate('yolo')
+    const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
+    return isFeatureEnabled && isNative && _isVideoFeed
+  }, [gate, feedInfo])
+
   return (
     <>
       <ProfileFeedHeader info={feedInfo} />
@@ -183,6 +196,7 @@ export function ProfileFeedScreenInner({
           scrollElRef={scrollElRef}
           onScrolledDownChange={setIsScrolledDown}
           renderEmptyState={renderPostsEmpty}
+          isVideoFeed={isVideoFeed}
         />
       </FeedFeedbackProvider>
 

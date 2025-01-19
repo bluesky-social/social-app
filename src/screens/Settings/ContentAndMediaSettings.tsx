@@ -148,7 +148,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
               {areVideoFeedsEnabled && (
                 <Toggle.Item
                   name="show_trending_videos"
-                  label={_(msg`Enable trending videos`)}
+                  label={_(msg`Enable trending videos in your Discover feed.`)}
                   value={!trendingVideoDisabled}
                   onChange={value => {
                     const hide = Boolean(!value)
@@ -162,7 +162,9 @@ export function ContentAndMediaSettingsScreen({}: Props) {
                   <SettingsList.Item>
                     <SettingsList.ItemIcon icon={Graph} />
                     <SettingsList.ItemText>
-                      <Trans>Enable trending videos</Trans>
+                      <Trans>
+                        Enable trending videos in your Discover feed
+                      </Trans>
                     </SettingsList.ItemText>
                     <Toggle.Platform />
                   </SettingsList.Item>

@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 import {NavigationProp, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {VIDEO_FEED_URI} from '#/lib/constants'
+import {VIDEO_FEED_URIS} from '#/lib/constants'
 import {ComposeIcon2} from '#/lib/icons'
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
 import {AllNavigatorParams} from '#/lib/routes/types'
@@ -68,7 +68,7 @@ export function FeedPage({
   const setHomeBadge = useSetHomeBadge()
   const gate = useGate()
   const isVideoFeed = React.useMemo(() => {
-    const isBskyVideoFeed = [VIDEO_FEED_URI].includes(feedInfo.uri)
+    const isBskyVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
     const feedIsVideoMode =
       feedInfo.contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
     const isFeatureEnabled = gate('yolo')
