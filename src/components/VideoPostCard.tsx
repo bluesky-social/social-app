@@ -59,6 +59,8 @@ export function VideoPostCard({
     onOut: onPressOut,
   } = useInteractionState()
 
+  const listModUi = moderation.ui('contentList')
+
   const mergedModui = useMemo(() => {
     const modui = moderation.ui('contentList')
     const mediaModui = moderation.ui('contentMedia')
@@ -81,6 +83,32 @@ export function VideoPostCard({
   const repostCount = post?.repostCount ?? 0
   const {thumbnail} = embed
   const black = getBlackColor(t)
+
+  const textAndAuthor = (
+    <View style={[a.pr_xs, {paddingTop: 6, gap: 4}]}>
+      {text && (
+        <Text style={[a.text_md, a.leading_snug]} numberOfLines={2} emoji>
+          {text}
+        </Text>
+      )}
+      <View style={[a.flex_row, a.gap_xs, a.align_center]}>
+        <View style={[a.relative, a.rounded_full, {width: 20, height: 20}]}>
+          <UserAvatar type="user" size={20} avatar={post.author.avatar} />
+          <MediaInsetBorder />
+        </View>
+        <Text
+          style={[
+            a.flex_1,
+            a.text_sm,
+            a.leading_tight,
+            t.atoms.text_contrast_medium,
+          ]}
+          numberOfLines={1}>
+          {sanitizeHandle(post.author.handle, '@')}
+        </Text>
+      </View>
+    </View>
+  )
 
   return (
     <Link
@@ -146,7 +174,11 @@ export function VideoPostCard({
               </View>
             </View>
           </View>
-          <VideoPostCardTextPlaceholder author={post.author} />
+          {listModUi.blur ? (
+            <VideoPostCardTextPlaceholder author={post.author} />
+          ) : (
+            textAndAuthor
+          )}
         </Hider.Mask>
         <Hider.Content>
           <View
@@ -206,30 +238,7 @@ export function VideoPostCard({
               </View>
             </View>
           </View>
-          <View style={[a.pr_xs, {paddingTop: 6, gap: 4}]}>
-            {text && (
-              <Text style={[a.text_md, a.leading_snug]} numberOfLines={2} emoji>
-                {text}
-              </Text>
-            )}
-            <View style={[a.flex_row, a.gap_xs, a.align_center]}>
-              <View
-                style={[a.relative, a.rounded_full, {width: 20, height: 20}]}>
-                <UserAvatar type="user" size={20} avatar={post.author.avatar} />
-                <MediaInsetBorder />
-              </View>
-              <Text
-                style={[
-                  a.flex_1,
-                  a.text_sm,
-                  a.leading_tight,
-                  t.atoms.text_contrast_medium,
-                ]}
-                numberOfLines={1}>
-                {sanitizeHandle(post.author.handle, '@')}
-              </Text>
-            </View>
-          </View>
+          {textAndAuthor}
         </Hider.Content>
       </Hider.Outer>
     </Link>
