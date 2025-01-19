@@ -354,10 +354,10 @@ let PostFeed = ({
             item: FeedPostSliceItem
             feedContext: string | undefined
           }[][] = []
-          let slices: {slice: FeedPostSlice; index: number}[] = []
+          let slices: {slice: FeedPostSlice}[] = []
           for (const page of data.pages) {
             for (const slice of page.slices) {
-              slices.push({slice, index: sliceIndex++})
+              slices.push({slice})
             }
           }
 
