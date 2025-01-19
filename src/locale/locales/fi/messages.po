@@ -4549,7 +4549,7 @@ msgstr "Hups!"
 
 #: src/screens/Onboarding/StepFinished.tsx:260
 msgid "Open"
-msgstr "Avaa"
+msgstr "Avoin"
 
 #: src/view/com/posts/AviFollowButton.tsx:86
 msgid "Open {name} profile shortcut menu"
