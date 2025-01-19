@@ -427,11 +427,8 @@ function Feed() {
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           initialNumToRender={3}
-          getItemLayout={(_, index) => ({
-            index,
-            length: height,
-            offset: index * height,
-          })}
+          maxToRenderPerBatch={3}
+          windowSize={6}
           pagingEnabled={true}
           ListFooterComponent={
             <ListFooter
