@@ -771,9 +771,9 @@ function Overlay({
                       profile.viewer?.following ? _(msg`Unfollow user`) : ''
                     }
                     size="small"
-                    variant="outline"
+                    variant="solid"
                     color="secondary_inverted"
-                    style={[a.mb_xs, a.bg_transparent]}
+                    style={[a.mb_xs]}
                     onPress={() =>
                       profile.viewer?.following
                         ? queueUnfollow()
