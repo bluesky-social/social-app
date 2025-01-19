@@ -350,25 +350,28 @@ let PostFeed = ({
         let sliceIndex = -1
 
         if (isVideoFeedAndIsEnabled) {
-          const rows: {
+          const videos: {
             item: FeedPostSliceItem
             feedContext: string | undefined
-          }[][] = []
-          let slices: {slice: FeedPostSlice; root: FeedPostSliceItem}[] = []
+          }[] = []
           for (const page of data.pages) {
             for (const slice of page.slices) {
-              const root = slice.items.at(0)
-              if (root && AppBskyEmbedVideo.isView(root.post.embed)) {
-                slices.push({slice, root})
+              const item = slice.items.at(0)
+              if (item && AppBskyEmbedVideo.isView(item.post.embed)) {
+                videos.push({item, feedContext: slice.feedContext})
               }
             }
           }
 
-          for (let i = 0; i < slices.length; i++) {
-            const slice = slices[i]
-            const root = slice.root
+          const rows: {
+            item: FeedPostSliceItem
+            feedContext: string | undefined
+          }[][] = []
+          for (let i = 0; i < videos.length; i++) {
+            const video = videos[i]
+            const item = video.item
             const cols = gtMobile ? 3 : 2
-            const rowItem = {item: root, feedContext: slice.slice.feedContext}
+            const rowItem = {item, feedContext: video.feedContext}
             if (i % cols === 0) {
               rows.push([rowItem])
             } else {
