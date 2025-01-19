@@ -245,9 +245,6 @@ export function ScrubberPlaceholder({children}: {children?: React.ReactNode}) {
   const {bottom} = useSafeAreaInsets()
   return (
     <View
-      onLayout={evt =>
-        console.log('placeholder', evt.nativeEvent.layout.height)
-      }
       style={[
         a.w_full,
         a.justify_end,
