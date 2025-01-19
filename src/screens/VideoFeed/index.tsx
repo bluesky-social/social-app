@@ -193,10 +193,16 @@ function Feed() {
     let vids =
       data?.pages
         .map(page => {
-          const items = []
+          const items: {
+            _reactKey: string
+            moderation: ModerationDecision
+            post: AppBskyFeedDefs.PostView
+            feedContext: string | undefined
+          }[] = []
           for (const slice of page.slices) {
             for (const i of slice.items) {
               items.push({
+                _reactKey: i._reactKey,
                 moderation: i.moderation,
                 post: i.post,
                 feedContext: slice.feedContext,
