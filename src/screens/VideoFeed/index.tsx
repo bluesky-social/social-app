@@ -161,6 +161,12 @@ type CurrentSource = {
   moderation?: ModerationDecision
 } | null
 
+type VideoItem = {
+  moderation: ModerationDecision
+  post: AppBskyFeedDefs.PostView
+  feedContext: string | undefined
+}
+
 function Feed() {
   const {params} = useRoute<RouteProp<CommonNavigatorParams, 'VideoFeed'>>()
   const isFocused = useIsFocused()
@@ -186,7 +192,20 @@ function Feed() {
   const videos = useMemo(() => {
     let vids =
       data?.pages
-        .flatMap(page => page.slices.flatMap(slice => slice.items))
+        .map(page => {
+          const items = []
+          for (const slice of page.slices) {
+            for (const i of slice.items) {
+              items.push({
+                moderation: i.moderation,
+                post: i.post,
+                feedContext: slice.feedContext,
+              })
+            }
+          }
+          return items
+        })
+        .flatMap(items => items)
         .filter(item => AppBskyEmbedVideo.isView(item.post.embed)) || []
     const startingVideoIndex = vids?.findIndex(video => {
       return video.post.uri === params.initialPostUri
@@ -209,7 +228,7 @@ function Feed() {
 
   const scrollGesture = useMemo(() => Gesture.Native(), [])
 
-  const renderItem: ListRenderItem<FeedPostSliceItem> = useCallback(
+  const renderItem: ListRenderItem<VideoItem> = useCallback(
     ({item, index}) => {
       const {post} = item
 
@@ -233,6 +252,7 @@ function Feed() {
           }
           moderation={currentSource?.moderation}
           scrollGesture={scrollGesture}
+          feedContext={item.feedContext}
         />
       )
     },
@@ -438,6 +458,7 @@ function VideoItem({
   active,
   scrollGesture,
   moderation,
+  feedContext,
 }: {
   player?: VideoPlayer
   post: AppBskyFeedDefs.PostView
@@ -445,6 +466,7 @@ function VideoItem({
   active: boolean
   scrollGesture: NativeGesture
   moderation?: ModerationDecision
+  feedContext: string | undefined
 }) {
   const postShadow = usePostShadow(post)
   const {width, height} = useSafeAreaFrame()
@@ -457,12 +479,13 @@ function VideoItem({
         sendInteraction({
           item: post.uri,
           event: 'app.bsky.feed.defs#interactionSeen',
+          feedContext,
         })
       }, 1000)
     } else if (!active && to) {
       clearTimeout(to)
     }
-  }, [active, post, sendInteraction])
+  }, [active, post, feedContext, sendInteraction])
 
   return (
     <View style={[a.relative, {height, width}]}>
@@ -502,6 +525,7 @@ function VideoItem({
                 active={active}
                 scrollGesture={scrollGesture}
                 moderation={moderation}
+                feedContext={feedContext}
               />
             )}
           </>
@@ -641,6 +665,7 @@ function Overlay({
   active,
   scrollGesture,
   moderation,
+  feedContext,
 }: {
   player?: VideoPlayer
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -648,6 +673,7 @@ function Overlay({
   active: boolean
   scrollGesture: NativeGesture
   moderation: ModerationDecision
+  feedContext: string | undefined
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -683,7 +709,11 @@ function Overlay({
       <Hider.Content>
         <View style={[a.absolute, a.inset_0, a.z_20]}>
           <View style={[a.flex_1]}>
-            <PlayPauseTapArea player={player} post={post} />
+            <PlayPauseTapArea
+              player={player}
+              post={post}
+              feedContext={feedContext}
+            />
           </View>
 
           <LinearGradient
@@ -898,9 +928,11 @@ function VideoItemPlaceholder({
 function PlayPauseTapArea({
   player,
   post,
+  feedContext,
 }: {
   player?: VideoPlayer
   post: Shadow<AppBskyFeedDefs.PostView>
+  feedContext: string | undefined
 }) {
   const doubleTapRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const playHaptic = useHaptics()
@@ -927,6 +959,7 @@ function PlayPauseTapArea({
       sendInteraction({
         item: post.uri,
         event: 'app.bsky.feed.defs#interactionLike',
+        feedContext,
       })
     } else {
       doubleTapRef.current = setTimeout(togglePlayPause, 200)
