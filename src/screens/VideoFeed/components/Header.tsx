@@ -101,14 +101,14 @@ export function FeedHeader({
     error,
   } = useFeedSourceInfoQuery({uri: sourceContext.uri})
 
-  if (isLoading) {
-    return <HeaderPlaceholder />
-  } else if (error || !info) {
+  if (sourceContext.sourceInterstitial !== undefined) {
+    // For now, don't show the header if coming from an interstitial.
     return null
   }
 
-  if (sourceContext.sourceInterstitial !== undefined) {
-    // For now, don't show the header if coming from an interstitial.
+  if (isLoading) {
+    return <HeaderPlaceholder />
+  } else if (error || !info) {
     return null
   }
 
