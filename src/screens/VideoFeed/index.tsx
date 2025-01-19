@@ -480,16 +480,11 @@ let VideoItem = ({
 
   useEffect(() => {
     if (active) {
-      const to = setTimeout(() => {
-        sendInteraction({
-          item: post.uri,
-          event: 'app.bsky.feed.defs#interactionSeen',
-          feedContext,
-        })
-      }, 1000)
-      return () => {
-        clearTimeout(to)
-      }
+      sendInteraction({
+        item: post.uri,
+        event: 'app.bsky.feed.defs#interactionSeen',
+        feedContext,
+      })
     }
   }, [active, post.uri, feedContext, sendInteraction])
 
