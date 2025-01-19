@@ -556,6 +556,7 @@ function VideoItemInner({
     <>
       {active && player && (
         <VideoView
+          accessible={false}
           style={[
             a.absolute,
             a.inset_0,
