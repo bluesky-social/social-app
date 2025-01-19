@@ -64,6 +64,7 @@ export function VideoPostCard({
    */
   if (!AppBskyEmbedVideo.isView(embed)) return null
 
+  const author = post.author
   const text = AppBskyFeedPost.isRecord(post.record) ? post.record?.text : ''
   const likeCount = post?.likeCount ?? 0
   const repostCount = post?.repostCount ?? 0
@@ -72,7 +73,8 @@ export function VideoPostCard({
 
   return (
     <Link
-      label={_(msg`View video`)}
+      accessibilityHint={_(msg`Tap to view video in immersive mode.`)}
+      label={_(msg`Video from ${author.handle}: ${text}`)}
       to={{
         screen: 'VideoFeed',
         params: {
