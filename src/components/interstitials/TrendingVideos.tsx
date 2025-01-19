@@ -196,24 +196,34 @@ function VideoCards({
             a.rounded_md,
             t.atoms.bg,
           ]}>
-          <View style={[a.flex_row, a.align_center, a.gap_md]}>
-            <Text style={[a.text_md]}>
-              <Trans>View more</Trans>
-            </Text>
+          {({pressed}) => (
             <View
               style={[
+                a.flex_row,
                 a.align_center,
-                a.justify_center,
-                a.rounded_full,
+                a.gap_md,
                 {
-                  width: 34,
-                  height: 34,
-                  backgroundColor: t.palette.primary_500,
+                  opacity: pressed ? 0.6 : 1,
                 },
               ]}>
-              <ButtonIcon icon={ChevronRight} />
+              <Text style={[a.text_md]}>
+                <Trans>View more</Trans>
+              </Text>
+              <View
+                style={[
+                  a.align_center,
+                  a.justify_center,
+                  a.rounded_full,
+                  {
+                    width: 34,
+                    height: 34,
+                    backgroundColor: t.palette.primary_500,
+                  },
+                ]}>
+                <ButtonIcon icon={ChevronRight} />
+              </View>
             </View>
-          </View>
+          )}
         </Link>
       </View>
     </>
