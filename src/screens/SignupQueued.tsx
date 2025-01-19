@@ -106,7 +106,7 @@ export function SignupQueued() {
       animationType={native('slide')}
       presentationStyle="formSheet"
       style={[web(a.util_screen_outer)]}>
-      {isIOS && <SystemBars style="light" />}
+      {isIOS && <SystemBars style={{statusBar: 'light'}} />}
       <ScrollView
         style={[a.flex_1, t.atoms.bg]}
         contentContainerStyle={{borderWidth: 0}}

@@ -175,13 +175,16 @@ export const Shell: React.FC = function ShellImpl() {
   return (
     <View testID="mobileShellView" style={[a.h_full, t.atoms.bg]}>
       <SystemBars
-        style={
-          t.name !== 'light' ||
-          (isIOS && fullyExpandedCount > 0) ||
-          lightStatusBar
-            ? 'light'
-            : 'dark'
-        }
+        style={{
+          statusBar:
+            t.name !== 'light' ||
+            (isIOS && fullyExpandedCount > 0) ||
+            lightStatusBar
+              ? 'light'
+              : 'dark',
+
+          navigationBar: t.name !== 'light' ? 'light' : 'dark',
+        }}
       />
       <RoutesContainer>
         <ShellInner />

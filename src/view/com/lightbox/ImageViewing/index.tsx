@@ -327,7 +327,7 @@ function ImageView({
   return (
     <Animated.View style={[styles.container, containerStyle]}>
       <SystemBars
-        style="light"
+        style={{statusBar: 'light', navigationBar: 'light'}}
         // hiding causes layout shifts on android
         hidden={ios(isScaled || !showControls)}
       />
