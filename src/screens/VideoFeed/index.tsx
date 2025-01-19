@@ -546,6 +546,13 @@ function VideoItemInner({
 }) {
   const {bottom} = useSafeAreaInsets()
   const {status} = useEvent(player, 'statusChange', {status: player.status})
+  const [ready, setReady] = useState(false)
+  const readyToPlay = status === 'readyToPlay'
+  const canPlay = active && readyToPlay
+
+  if (canPlay && !ready) {
+    setTimeout(() => setReady(true), 1000)
+  }
 
   return (
     <>
@@ -559,8 +566,9 @@ function VideoItemInner({
               left: 0,
               right: 0,
               bottom: bottom + VIDEO_PLAYER_BOTTOM_INSET,
+              opacity: 0,
             },
-            isAndroid && status === 'loading' && {opacity: 0},
+            isAndroid && ready && {opacity: 1},
           ]}
           player={player}
           nativeControls={false}
