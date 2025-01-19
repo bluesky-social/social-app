@@ -51,6 +51,29 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
 
   const timestampLabel = niceDate(i18n, opts.timestamp)
 
+  const renderedName = (
+    <Text
+      emoji
+      style={[
+        a.text_md,
+        opts.showHoverCard === false
+          ? t.atoms.text_contrast_medium
+          : a.font_bold,
+        a.leading_snug,
+      ]}>
+      {forceLTR(
+        sanitizeDisplayName(displayName, opts.moderation?.ui('displayName')),
+      )}
+    </Text>
+  )
+  const renderedHandle = (
+    <Text
+      emoji
+      style={[a.text_md, t.atoms.text_contrast_medium, a.leading_snug]}>
+      {NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
+    </Text>
+  )
+
   return (
     <View
       style={[
@@ -77,34 +100,36 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         inline
         did={opts.author.did}>
         <Text numberOfLines={1} style={[isAndroid ? a.flex_1 : a.flex_shrink]}>
-          <WebOnlyInlineLinkText
-            to={profileLink}
-            label={_(msg`View profile`)}
-            disableMismatchWarning
-            onPress={onBeforePressAuthor}
-            style={[t.atoms.text]}>
-            <Text emoji style={[a.text_md, a.font_bold, a.leading_snug]}>
-              {forceLTR(
-                sanitizeDisplayName(
-                  displayName,
-                  opts.moderation?.ui('displayName'),
-                ),
-              )}
-            </Text>
-          </WebOnlyInlineLinkText>
-          <WebOnlyInlineLinkText
-            to={profileLink}
-            label={_(msg`View profile`)}
-            disableMismatchWarning
-            disableUnderline
-            onPress={onBeforePressAuthor}
-            style={[a.text_md, t.atoms.text_contrast_medium, a.leading_snug]}>
-            <Text
-              emoji
-              style={[a.text_md, t.atoms.text_contrast_medium, a.leading_snug]}>
-              {NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
-            </Text>
-          </WebOnlyInlineLinkText>
+          {opts.showHoverCard === false ? (
+            <>
+              {renderedName}
+              {renderedHandle}
+            </>
+          ) : (
+            <>
+              <WebOnlyInlineLinkText
+                to={profileLink}
+                label={_(msg`View profile`)}
+                disableMismatchWarning
+                onPress={onBeforePressAuthor}
+                style={[t.atoms.text]}>
+                {renderedName}
+              </WebOnlyInlineLinkText>
+              <WebOnlyInlineLinkText
+                to={profileLink}
+                label={_(msg`View profile`)}
+                disableMismatchWarning
+                disableUnderline
+                onPress={onBeforePressAuthor}
+                style={[
+                  a.text_md,
+                  t.atoms.text_contrast_medium,
+                  a.leading_snug,
+                ]}>
+                {renderedHandle}
+              </WebOnlyInlineLinkText>
+            </>
+          )}
         </Text>
       </ProfileHoverCard>
 
