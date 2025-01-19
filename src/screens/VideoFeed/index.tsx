@@ -598,6 +598,7 @@ function ModerationOverlay({
           a.z_20,
           a.justify_center,
           a.align_center,
+          {backgroundColor: 'rgba(0, 0, 0, 0.8)'},
         ]}>
         <View style={[a.align_center, a.gap_sm]}>
           <Eye width={36} fill="white" />
