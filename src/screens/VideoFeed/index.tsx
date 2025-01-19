@@ -936,7 +936,7 @@ function VideoItemPlaceholder({
         style,
       ]}
       contentFit={contentFit}
-      blurRadius={blur ? 40 : 0}
+      blurRadius={blur ? 100 : 0}
     />
   ) : null
 }

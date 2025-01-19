@@ -149,7 +149,7 @@ export function VideoPostCard({
               source={{uri: thumbnail}}
               style={[a.w_full, a.h_full, {opacity: pressed ? 0.8 : 1}]}
               accessibilityIgnoresInvertColors
-              blurRadius={40}
+              blurRadius={100}
             />
             <MediaInsetBorder />
             <View
@@ -425,7 +425,7 @@ export function CompactVideoPostCard({
               source={{uri: thumbnail}}
               style={[a.w_full, a.h_full, {opacity: pressed ? 0.8 : 1}]}
               accessibilityIgnoresInvertColors
-              blurRadius={40}
+              blurRadius={100}
             />
             <MediaInsetBorder />
             <View
