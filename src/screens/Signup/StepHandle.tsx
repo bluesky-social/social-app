@@ -4,7 +4,11 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logEvent} from '#/lib/statsig/statsig'
-import {createFullHandle, validateHandle} from '#/lib/strings/handles'
+import {
+  createFullHandle,
+  maxServiceHandleLength,
+  validateHandle,
+} from '#/lib/strings/handles'
 import {useAgent} from '#/state/session'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
@@ -93,7 +97,7 @@ export function StepHandle() {
     })
   }, [dispatch, state.activeStep])
 
-  const validCheck = validateHandle(draftValue, state.userDomain)
+  const validCheck = validateHandle(draftValue, state.userDomain, true)
   return (
     <ScreenTransition>
       <View style={[a.gap_lg]}>
@@ -166,7 +170,10 @@ export function StepHandle() {
               />
               {!validCheck.totalLength ? (
                 <Text style={[a.text_md, a.flex_1]}>
-                  <Trans>No longer than 253 characters</Trans>
+                  <Trans>
+                    No longer than {maxServiceHandleLength(state.userDomain)}{' '}
+                    characters
+                  </Trans>
                 </Text>
               ) : (
                 <Text style={[a.text_md, a.flex_1]}>

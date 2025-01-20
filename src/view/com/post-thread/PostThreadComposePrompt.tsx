@@ -40,7 +40,6 @@ export function PostThreadComposePrompt({
         t.atoms.border_contrast_low,
         t.atoms.bg,
       ]}
-      onPressIn={ios(() => playHaptic('Light'))}
       onPress={() => {
         onPressCompose()
         playHaptic('Light')

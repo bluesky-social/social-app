@@ -202,7 +202,7 @@ export function Outer({
   )
 }
 
-export function Item({children, label, onPress, ...rest}: ItemProps) {
+export function Item({children, label, onPress, style, ...rest}: ItemProps) {
   const t = useTheme()
   const {control} = useMenuContext()
   const {
@@ -248,6 +248,7 @@ export function Item({children, label, onPress, ...rest}: ItemProps) {
                 ? t.atoms.bg_contrast_25
                 : t.atoms.bg_contrast_50,
             ],
+          style,
         ])}
         {...web({
           onMouseEnter,
