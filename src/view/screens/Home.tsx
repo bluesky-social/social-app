@@ -234,6 +234,7 @@ function HomeScreenReady({
                 feedParams={homeFeedParams}
                 renderEmptyState={renderFollowingEmptyState}
                 renderEndOfFeed={FollowingEndOfFeed}
+                feedInfo={feedInfo}
               />
             )
           }
@@ -247,6 +248,7 @@ function HomeScreenReady({
               feed={feed}
               renderEmptyState={renderCustomFeedEmptyState}
               savedFeedConfig={savedFeedConfig}
+              feedInfo={feedInfo}
             />
           )
         })
@@ -266,6 +268,7 @@ function HomeScreenReady({
         isPageAdjacent={false}
         feed={`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`}
         renderEmptyState={renderCustomFeedEmptyState}
+        feedInfo={pinnedFeedInfos[0]}
       />
     </Pager>
   )

@@ -3,11 +3,11 @@ import {AppState, AppStateStatus} from 'react-native'
 import {AppBskyFeedDefs} from '@atproto/api'
 import throttle from 'lodash.throttle'
 
-import {PROD_DEFAULT_FEED} from '#/lib/constants'
+import {FEEDBACK_FEEDS, STAGING_FEEDS} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {FeedDescriptor, FeedPostSliceItem} from '#/state/queries/post-feed'
-import {getFeedPostSlice} from '#/view/com/posts/PostFeed'
+import {getItemsForFeedback} from '#/view/com/posts/PostFeed'
 import {useAgent} from './session'
 
 type StateContext = {
@@ -25,6 +25,7 @@ const stateContext = React.createContext<StateContext>({
 export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
   const agent = useAgent()
   const enabled = isDiscoverFeed(feed) && hasSession
+
   const queue = React.useRef<Set<string>>(new Set())
   const history = React.useRef<
     // Use a WeakSet so that we don't need to clear it.
@@ -46,6 +47,11 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
     const interactions = Array.from(queue.current).map(toInteraction)
     queue.current.clear()
 
+    let proxyDid = 'did:web:discover.bsky.app'
+    if (STAGING_FEEDS.includes(feed)) {
+      proxyDid = 'did:web:algo.pop2.bsky.app'
+    }
+
     // Send to the feed
     agent.app.bsky.feed
       .sendInteractions(
@@ -54,7 +60,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
           encoding: 'application/json',
           headers: {
             // TODO when we start sending to other feeds, we need to grab their DID -prf
-            'atproto-proxy': 'did:web:discover.bsky.app#bsky_fg',
+            'atproto-proxy': `${proxyDid}#bsky_fg`,
           },
         },
       )
@@ -68,7 +74,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
     }
     sendOrAggregateInteractionsForStats(aggregatedStats.current, interactions)
     throttledFlushAggregatedStats()
-  }, [agent, throttledFlushAggregatedStats])
+  }, [agent, throttledFlushAggregatedStats, feed])
 
   const sendToFeed = React.useMemo(
     () =>
@@ -96,18 +102,15 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
       if (!enabled) {
         return
       }
-      const slice = getFeedPostSlice(feedItem)
-      if (slice === null) {
-        return
-      }
-      for (const postItem of slice.items) {
+      const items = getItemsForFeedback(feedItem)
+      for (const {item: postItem, feedContext} of items) {
         if (!history.current.has(postItem)) {
           history.current.add(postItem)
           queue.current.add(
             toString({
               item: postItem.uri,
               event: 'app.bsky.feed.defs#interactionSeen',
-              feedContext: slice.feedContext,
+              feedContext,
             }),
           )
           sendToFeed()
@@ -155,7 +158,7 @@ export function useFeedFeedbackContext() {
 // place, we're hardcoding it to the discover feed.
 // -prf
 function isDiscoverFeed(feed: FeedDescriptor) {
-  return feed === `feedgen|${PROD_DEFAULT_FEED('whats-hot')}`
+  return FEEDBACK_FEEDS.includes(feed)
 }
 
 function toString(interaction: AppBskyFeedDefs.Interaction): string {
