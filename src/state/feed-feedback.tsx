@@ -7,7 +7,7 @@ import {FEEDBACK_FEEDS, STAGING_FEEDS} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {FeedDescriptor, FeedPostSliceItem} from '#/state/queries/post-feed'
-import {getFeedPostSlice} from '#/view/com/posts/PostFeed'
+import {getItemsForFeedback} from '#/view/com/posts/PostFeed'
 import {useAgent} from './session'
 
 type StateContext = {
@@ -102,18 +102,15 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
       if (!enabled) {
         return
       }
-      const slice = getFeedPostSlice(feedItem)
-      if (slice === null) {
-        return
-      }
-      for (const postItem of slice.items) {
+      const items = getItemsForFeedback(feedItem)
+      for (const {item: postItem, feedContext} of items) {
         if (!history.current.has(postItem)) {
           history.current.add(postItem)
           queue.current.add(
             toString({
               item: postItem.uri,
               event: 'app.bsky.feed.defs#interactionSeen',
-              feedContext: slice.feedContext,
+              feedContext,
             }),
           )
           sendToFeed()

@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.96.5",
+  "version": "1.96.6",
   "private": true,
   "engines": {
     "node": ">=20"
@@ -54,7 +54,7 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "^0.13.21",
+    "@atproto/api": "^0.13.28",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
     "@emoji-mart/react": "^1.1.1",
