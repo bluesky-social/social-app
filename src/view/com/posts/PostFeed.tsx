@@ -347,7 +347,9 @@ let PostFeed = ({
           }[] = []
           for (const page of data.pages) {
             for (const slice of page.slices) {
-              const item = slice.items.at(0)
+              const item = slice.items.find(
+                item => item.uri === slice.feedPostUri,
+              )
               if (item && AppBskyEmbedVideo.isView(item.post.embed)) {
                 videos.push({item, feedContext: slice.feedContext})
               }
