@@ -556,7 +556,7 @@ function VideoItemInner({
               right: 0,
               bottom: bottom + VIDEO_PLAYER_BOTTOM_INSET,
             },
-            isAndroid && status === 'loading' && {opacity: 0},
+            // isAndroid && status === 'loading' && {opacity: 0},
           ]}
           player={player}
           nativeControls={false}
