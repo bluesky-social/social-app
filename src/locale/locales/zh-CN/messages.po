@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-15 02:38\n"
+"PO-Revision-Date: 2025-01-20 10:43\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -368,7 +368,7 @@ msgstr "30 天"
 msgid "7 days"
 msgstr "7 天"
 
-#: src/Navigation.tsx:363
+#: src/Navigation.tsx:364
 #: src/screens/Settings/AboutSettings.tsx:28
 #: src/screens/Settings/Settings.tsx:215
 #: src/screens/Settings/Settings.tsx:218
@@ -385,11 +385,11 @@ msgstr "访问导航链接及设置"
 msgid "Accessibility"
 msgstr "无障碍"
 
-#: src/Navigation.tsx:323
+#: src/Navigation.tsx:324
 msgid "Accessibility Settings"
 msgstr "无障碍设置"
 
-#: src/Navigation.tsx:339
+#: src/Navigation.tsx:340
 #: src/screens/Login/LoginForm.tsx:186
 #: src/screens/Settings/AccountSettings.tsx:45
 #: src/screens/Settings/Settings.tsx:153
@@ -687,11 +687,11 @@ msgstr "压缩视频时发生错误。"
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "创建新手包时发生错误，要再试一次吗？"
 
-#: src/view/com/util/post-embeds/VideoEmbed.tsx:133
+#: src/view/com/util/post-embeds/VideoEmbed.tsx:160
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "播放视频时发生错误，请重试。"
 
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:176
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:198
 msgid "An error occurred while loading the video. Please try again."
 msgstr "播放视频时发生错误，请重试。"
 
@@ -769,7 +769,7 @@ msgstr "任何发布语言"
 msgid "Anybody can interact"
 msgstr "任何人都可以参与互动"
 
-#: src/Navigation.tsx:371
+#: src/Navigation.tsx:372
 #: src/screens/Settings/AppIconSettings/index.tsx:67
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:18
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:23
@@ -805,7 +805,7 @@ msgstr "应用密码至少应含有 4 个字符"
 msgid "App passwords"
 msgstr "应用密码"
 
-#: src/Navigation.tsx:291
+#: src/Navigation.tsx:292
 #: src/screens/Settings/AppPasswords.tsx:51
 msgid "App Passwords"
 msgstr "应用密码"
@@ -831,7 +831,7 @@ msgstr "已提交申诉"
 msgid "Appeal this decision"
 msgstr "对此决定提出申诉"
 
-#: src/Navigation.tsx:331
+#: src/Navigation.tsx:332
 #: src/screens/Settings/AppearanceSettings.tsx:85
 #: src/screens/Settings/Settings.tsx:183
 #: src/screens/Settings/Settings.tsx:186
@@ -913,8 +913,8 @@ msgstr "至少应含有 3 个字符"
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
 msgstr "自动播放选项已移动到<0>内容与媒体设置</0>。"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:106
-#: src/screens/Settings/ContentAndMediaSettings.tsx:112
+#: src/screens/Settings/ContentAndMediaSettings.tsx:107
+#: src/screens/Settings/ContentAndMediaSettings.tsx:113
 msgid "Autoplay videos and GIFs"
 msgstr "自动播放视频及 GIF"
 
@@ -957,6 +957,7 @@ msgid "Before you may message another user, you must first verify your email."
 msgstr "在向其他人发送私信之前，你必须首先验证你的电子邮箱。"
 
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:74
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:111
 msgid "BETA"
 msgstr "测试"
 
@@ -1008,7 +1009,7 @@ msgstr "已被屏蔽"
 msgid "Blocked accounts"
 msgstr "已屏蔽账户"
 
-#: src/Navigation.tsx:155
+#: src/Navigation.tsx:156
 #: src/view/screens/ModerationBlockedAccounts.tsx:101
 msgid "Blocked Accounts"
 msgstr "已屏蔽账户"
@@ -1093,23 +1094,23 @@ msgstr "模糊化图片并从动态源中过滤"
 msgid "Books"
 msgstr "书籍"
 
-#: src/components/FeedInterstitials.tsx:348
+#: src/components/FeedInterstitials.tsx:349
 msgid "Browse more accounts on the Explore page"
 msgstr "在探索页面浏览更多账户"
 
-#: src/components/FeedInterstitials.tsx:481
+#: src/components/FeedInterstitials.tsx:486
 msgid "Browse more feeds on the Explore page"
 msgstr "在探索页面浏览更多动态源"
 
 #: src/components/FeedInterstitials.tsx:330
 #: src/components/FeedInterstitials.tsx:333
-#: src/components/FeedInterstitials.tsx:463
-#: src/components/FeedInterstitials.tsx:466
+#: src/components/FeedInterstitials.tsx:467
+#: src/components/FeedInterstitials.tsx:470
 msgid "Browse more suggestions"
 msgstr "浏览更多建议"
 
-#: src/components/FeedInterstitials.tsx:356
-#: src/components/FeedInterstitials.tsx:490
+#: src/components/FeedInterstitials.tsx:357
+#: src/components/FeedInterstitials.tsx:495
 msgid "Browse more suggestions on the Explore page"
 msgstr "在探索页面浏览更多建议"
 
@@ -1291,7 +1292,7 @@ msgstr "更改你的电子邮箱地址"
 msgid "Change your email address"
 msgstr "更改你的电子邮箱地址"
 
-#: src/Navigation.tsx:388
+#: src/Navigation.tsx:389
 #: src/view/shell/bottom-bar/BottomBar.tsx:204
 #: src/view/shell/desktop/LeftNav.tsx:530
 #: src/view/shell/Drawer.tsx:422
@@ -1304,7 +1305,7 @@ msgstr "已隐藏对话"
 
 #: src/components/dms/ConvoMenu.tsx:115
 #: src/components/dms/MessageMenu.tsx:81
-#: src/Navigation.tsx:393
+#: src/Navigation.tsx:394
 #: src/screens/Messages/ChatList.tsx:246
 msgid "Chat settings"
 msgstr "私信设置"
@@ -1363,7 +1364,7 @@ msgid "Choose your account provider"
 msgstr "选择你的服务提供商"
 
 #: src/view/screens/Feeds.tsx:728
-#: src/view/screens/Search/Explore.tsx:412
+#: src/view/screens/Search/Explore.tsx:424
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr "自定义专属于你的时间线！由社群打造的动态源能帮助你找到喜欢的内容。"
 
@@ -1506,7 +1507,7 @@ msgstr "喜剧"
 msgid "Comics"
 msgstr "漫画"
 
-#: src/Navigation.tsx:281
+#: src/Navigation.tsx:282
 #: src/view/screens/CommunityGuidelines.tsx:34
 msgid "Community Guidelines"
 msgstr "社群准则"
@@ -1600,7 +1601,7 @@ msgstr "连接中……"
 msgid "Contact support"
 msgstr "联系支持"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:49
+#: src/screens/Settings/ContentAndMediaSettings.tsx:50
 msgid "Content & Media"
 msgstr "内容与媒体"
 
@@ -1610,7 +1611,7 @@ msgstr "内容与媒体"
 msgid "Content and media"
 msgstr "内容与媒体"
 
-#: src/Navigation.tsx:355
+#: src/Navigation.tsx:356
 msgid "Content and Media"
 msgstr "内容与媒体"
 
@@ -1755,7 +1756,7 @@ msgstr "复制二维码"
 msgid "Copy TXT record value"
 msgstr "复制 TXT 记录值"
 
-#: src/Navigation.tsx:286
+#: src/Navigation.tsx:287
 #: src/view/screens/CopyrightPolicy.tsx:31
 msgid "Copyright Policy"
 msgstr "版权许可"
@@ -1764,7 +1765,7 @@ msgstr "版权许可"
 msgid "Could not leave chat"
 msgstr "无法离开对话"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:73
+#: src/screens/Profile/ProfileFeed/index.tsx:80
 msgid "Could not load feed"
 msgstr "无法加载动态源"
 
@@ -1790,7 +1791,7 @@ msgstr "为新手包创建分享二维码"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:168
 #: src/components/StarterPack/ProfileStarterPacks.tsx:271
-#: src/Navigation.tsx:418
+#: src/Navigation.tsx:419
 msgid "Create a starter pack"
 msgstr "创建新手包"
 
@@ -2076,7 +2077,7 @@ msgstr "阻止平台向未登录用户显示我的账户"
 msgid "Discover new custom feeds"
 msgstr "探索新的自定义动态源"
 
-#: src/view/screens/Search/Explore.tsx:410
+#: src/view/screens/Search/Explore.tsx:422
 msgid "Discover new feeds"
 msgstr "探索新的动态源"
 
@@ -2084,7 +2085,7 @@ msgstr "探索新的动态源"
 msgid "Discover New Feeds"
 msgstr "探索新的动态源"
 
-#: src/components/Dialog/index.tsx:311
+#: src/components/Dialog/index.tsx:313
 msgid "Dismiss"
 msgstr "跳过"
 
@@ -2095,6 +2096,10 @@ msgstr "跳过错误"
 #: src/components/ProgressGuide/List.tsx:42
 msgid "Dismiss getting started guide"
 msgstr "跳过入门指南"
+
+#: src/components/interstitials/TrendingVideos.tsx:92
+msgid "Dismiss this section"
+msgstr "忽略此部分"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:71
 #: src/screens/Settings/AccessibilitySettings.tsx:76
@@ -2173,9 +2178,13 @@ msgstr "完成"
 msgid "Done{extraText}"
 msgstr "完成{extraText}"
 
-#: src/components/Dialog/index.tsx:312
+#: src/components/Dialog/index.tsx:314
 msgid "Double tap to close the dialog"
 msgstr "双击以关闭对话框"
+
+#: src/screens/VideoFeed/index.tsx:1014
+msgid "Double tap to like"
+msgstr "双击点赞"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:317
 msgid "Download Bluesky"
@@ -2278,7 +2287,7 @@ msgstr "编辑列表详情"
 msgid "Edit Moderation List"
 msgstr "编辑内容审核列表"
 
-#: src/Navigation.tsx:296
+#: src/Navigation.tsx:297
 #: src/view/screens/Feeds.tsx:515
 msgid "Edit My Feeds"
 msgstr "编辑我的动态源"
@@ -2328,7 +2337,7 @@ msgstr "编辑你的名称"
 msgid "Edit your profile description"
 msgstr "编辑你的描述"
 
-#: src/Navigation.tsx:423
+#: src/Navigation.tsx:424
 msgid "Edit your starter pack"
 msgstr "编辑你的新手包"
 
@@ -2437,10 +2446,18 @@ msgstr "启用字幕"
 msgid "Enable this source only"
 msgstr "仅启用这个来源"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:122
-#: src/screens/Settings/ContentAndMediaSettings.tsx:136
+#: src/screens/Settings/ContentAndMediaSettings.tsx:123
+#: src/screens/Settings/ContentAndMediaSettings.tsx:137
 msgid "Enable trending topics"
 msgstr "启用趋势"
+
+#: src/screens/Settings/ContentAndMediaSettings.tsx:158
+msgid "Enable trending videos in your Discover feed"
+msgstr "在你的“Discover”动态源中启用趋势视频"
+
+#: src/screens/Settings/ContentAndMediaSettings.tsx:144
+msgid "Enable trending videos in your Discover feed."
+msgstr "在你的“Discover”动态源中启用趋势视频。"
 
 #: src/screens/Messages/Settings.tsx:130
 #: src/screens/Messages/Settings.tsx:133
@@ -2628,8 +2645,8 @@ msgstr "导出账户数据"
 msgid "Export My Data"
 msgstr "导出账户数据"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:82
-#: src/screens/Settings/ContentAndMediaSettings.tsx:85
+#: src/screens/Settings/ContentAndMediaSettings.tsx:83
+#: src/screens/Settings/ContentAndMediaSettings.tsx:86
 msgid "External media"
 msgstr "外部媒体"
 
@@ -2643,7 +2660,7 @@ msgstr "外部媒体"
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
 msgstr "外部媒体可能会收集你或设备储存的个人信息。在你按下“播放”按钮之前，平台将不会发送任何请求给外部媒体。"
 
-#: src/Navigation.tsx:315
+#: src/Navigation.tsx:316
 #: src/screens/Settings/ExternalMediaPreferences.tsx:31
 msgid "External Media Preferences"
 msgstr "外部媒体偏好"
@@ -2677,8 +2694,8 @@ msgstr "无法删除帖文，请重试"
 msgid "Failed to delete starter pack"
 msgstr "无法删除新手包"
 
-#: src/view/screens/Search/Explore.tsx:448
-#: src/view/screens/Search/Explore.tsx:476
+#: src/view/screens/Search/Explore.tsx:460
+#: src/view/screens/Search/Explore.tsx:488
 msgid "Failed to load feeds preferences"
 msgstr "无法加载动态源偏好设置"
 
@@ -2690,12 +2707,12 @@ msgstr "无法加载 GIF"
 msgid "Failed to load past messages"
 msgstr "无法加载过去的私信"
 
-#: src/view/screens/Search/Explore.tsx:441
-#: src/view/screens/Search/Explore.tsx:469
+#: src/view/screens/Search/Explore.tsx:453
+#: src/view/screens/Search/Explore.tsx:481
 msgid "Failed to load suggested feeds"
 msgstr "无法加载建议的动态源"
 
-#: src/view/screens/Search/Explore.tsx:399
+#: src/view/screens/Search/Explore.tsx:411
 msgid "Failed to load suggested follows"
 msgstr "无法加载建议关注"
 
@@ -2743,7 +2760,7 @@ msgstr "无法上传视频"
 msgid "Failed to verify handle. Please try again."
 msgstr "无法验证账户代码，请重试。"
 
-#: src/Navigation.tsx:231
+#: src/Navigation.tsx:232
 msgid "Feed"
 msgstr "动态源"
 
@@ -2771,10 +2788,10 @@ msgstr "反馈"
 msgid "Feedback sent!"
 msgstr "已发送反馈！"
 
-#: src/Navigation.tsx:403
+#: src/Navigation.tsx:404
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
 #: src/view/screens/Feeds.tsx:508
-#: src/view/screens/Profile.tsx:236
+#: src/view/screens/Profile.tsx:235
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/screens/Search/Search.tsx:522
 #: src/view/shell/desktop/LeftNav.tsx:640
@@ -2840,6 +2857,8 @@ msgstr "灵活"
 #: src/components/ProfileHoverCard/index.web.tsx:449
 #: src/components/ProfileHoverCard/index.web.tsx:460
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:234
+#: src/screens/VideoFeed/index.tsx:789
+#: src/screens/VideoFeed/index.tsx:810
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:132
 msgid "Follow"
 msgstr "关注"
@@ -2887,7 +2906,7 @@ msgctxt "action"
 msgid "Follow Back"
 msgstr "回关"
 
-#: src/view/screens/Search/Explore.tsx:356
+#: src/view/screens/Search/Explore.tsx:368
 msgid "Follow more accounts to get connected to your interests and build your network."
 msgstr "关注更多账户以找到你的兴趣，并逐步建立属于你的关系网。"
 
@@ -2911,7 +2930,7 @@ msgstr "已被你认识的<0>{0}</0>、<1>{1}</1> 及{2, plural, one {其他#人
 msgid "Followed users"
 msgstr "已关注的用户"
 
-#: src/Navigation.tsx:192
+#: src/Navigation.tsx:193
 msgid "Followers of @{0} that you know"
 msgstr "已被你认识的 @{0} 关注"
 
@@ -2925,6 +2944,8 @@ msgstr "你认识的关注者"
 #: src/components/ProfileHoverCard/index.web.tsx:448
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
+#: src/screens/VideoFeed/index.tsx:788
+#: src/screens/VideoFeed/index.tsx:808
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
 #: src/view/screens/SavedFeeds.tsx:422
@@ -2940,12 +2961,12 @@ msgstr "已关注 {0}"
 msgid "Following {name}"
 msgstr "已关注 {name}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:74
-#: src/screens/Settings/ContentAndMediaSettings.tsx:77
+#: src/screens/Settings/ContentAndMediaSettings.tsx:75
+#: src/screens/Settings/ContentAndMediaSettings.tsx:78
 msgid "Following feed preferences"
 msgstr "“Following”动态源偏好"
 
-#: src/Navigation.tsx:302
+#: src/Navigation.tsx:303
 #: src/screens/Settings/FollowingFeedPreferences.tsx:53
 msgid "Following Feed Preferences"
 msgstr "“Following”动态源偏好"
@@ -3049,7 +3070,10 @@ msgstr "明显违反法规或服务条款"
 #: src/components/Layout/Header/index.tsx:118
 #: src/components/moderation/ScreenHider.tsx:154
 #: src/components/moderation/ScreenHider.tsx:163
-#: src/screens/Profile/ProfileFeed/index.tsx:82
+#: src/screens/Profile/ProfileFeed/index.tsx:89
+#: src/screens/VideoFeed/components/Header.tsx:163
+#: src/screens/VideoFeed/index.tsx:1075
+#: src/screens/VideoFeed/index.tsx:1079
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
 #: src/view/screens/ProfileList.tsx:1009
@@ -3060,7 +3084,7 @@ msgstr "返回"
 #: src/screens/List/ListHiddenScreen.tsx:221
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
-#: src/screens/Profile/ProfileFeed/index.tsx:87
+#: src/screens/Profile/ProfileFeed/index.tsx:94
 #: src/screens/StarterPack/StarterPackScreen.tsx:758
 #: src/view/screens/NotFound.tsx:56
 #: src/view/screens/ProfileList.tsx:1014
@@ -3146,11 +3170,11 @@ msgstr "触感"
 msgid "Harassment, trolling, or intolerance"
 msgstr "骚扰、恶作剧或歧视行为"
 
-#: src/Navigation.tsx:378
+#: src/Navigation.tsx:379
 msgid "Hashtag"
 msgstr "标签"
 
-#: src/components/RichText.tsx:218
+#: src/components/RichText.tsx:226
 msgid "Hashtag: #{tag}"
 msgstr "标签：#{tag}"
 
@@ -3174,11 +3198,21 @@ msgstr "通过上传图片或生成头像，来让大家知道你不是机器人
 msgid "Here is your app password!"
 msgstr "以下是你的应用密码！"
 
+#: src/components/VideoPostCard.tsx:172
+#: src/components/VideoPostCard.tsx:448
+msgid "Hidden"
+msgstr "隐藏"
+
+#: src/screens/VideoFeed/index.tsx:600
+msgid "Hidden by your moderation settings."
+msgstr "由你的内容审核设置所隐藏。"
+
 #: src/components/ListCard.tsx:130
 msgid "Hidden list"
 msgstr "隐藏列表"
 
-#: src/components/interstitials/Trending.tsx:136
+#: src/components/interstitials/Trending.tsx:131
+#: src/components/interstitials/TrendingVideos.tsx:140
 #: src/components/moderation/ContentHider.tsx:200
 #: src/components/moderation/LabelPreference.tsx:135
 #: src/components/moderation/PostHider.tsx:122
@@ -3226,17 +3260,21 @@ msgstr "要隐藏这则帖文吗？"
 msgid "Hide this reply?"
 msgstr "要隐藏这则回复吗？"
 
-#: src/components/interstitials/Trending.tsx:118
+#: src/components/interstitials/Trending.tsx:113
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:83
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:62
 msgid "Hide trending topics"
 msgstr "隐藏趋势"
 
-#: src/components/interstitials/Trending.tsx:134
+#: src/components/interstitials/Trending.tsx:129
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:135
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:108
 msgid "Hide trending topics?"
 msgstr "要隐藏趋势吗？"
+
+#: src/components/interstitials/TrendingVideos.tsx:138
+msgid "Hide trending videos?"
+msgstr "要隐藏趋势视频吗？"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:592
 msgid "Hide user list"
@@ -3274,8 +3312,8 @@ msgstr "抱歉，我们无法加载该内容审核提供服务。"
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "请稍等！我们正在逐步开放上传视频的权限。你目前仍在等待队伍中，请稍后再回来查看！"
 
-#: src/Navigation.tsx:594
-#: src/Navigation.tsx:614
+#: src/Navigation.tsx:603
+#: src/Navigation.tsx:623
 #: src/view/shell/bottom-bar/BottomBar.tsx:162
 #: src/view/shell/desktop/LeftNav.tsx:584
 #: src/view/shell/Drawer.tsx:396
@@ -3514,7 +3552,7 @@ msgid "Labeled by the author."
 msgstr "由发布者标记。"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:75
-#: src/view/screens/Profile.tsx:230
+#: src/view/screens/Profile.tsx:229
 msgid "Labels"
 msgstr "标记"
 
@@ -3538,7 +3576,7 @@ msgstr "你内容上的标记"
 msgid "Language selection"
 msgstr "语言选择"
 
-#: src/Navigation.tsx:165
+#: src/Navigation.tsx:166
 msgid "Language Settings"
 msgstr "语言设置"
 
@@ -3666,8 +3704,8 @@ msgid "Like this feed"
 msgstr "喜欢这个动态源"
 
 #: src/components/LikesDialog.tsx:85
-#: src/Navigation.tsx:236
-#: src/Navigation.tsx:241
+#: src/Navigation.tsx:237
+#: src/Navigation.tsx:242
 msgid "Liked by"
 msgstr "喜欢的用户"
 
@@ -3689,7 +3727,7 @@ msgstr "{0, plural, one {# 位用户} other {# 位用户}}喜欢"
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr "{likeCount, plural, one {# 位用户} other {# 位用户}}喜欢"
 
-#: src/view/screens/Profile.tsx:235
+#: src/view/screens/Profile.tsx:234
 msgid "Likes"
 msgstr "喜欢"
 
@@ -3702,7 +3740,7 @@ msgstr "这则帖文的喜欢数"
 msgid "Linear"
 msgstr "线性视图"
 
-#: src/Navigation.tsx:198
+#: src/Navigation.tsx:199
 msgid "List"
 msgstr "列表"
 
@@ -3755,10 +3793,10 @@ msgstr "已取消屏蔽列表"
 msgid "List unmuted"
 msgstr "已取消隐藏列表"
 
-#: src/Navigation.tsx:135
+#: src/Navigation.tsx:136
 #: src/view/screens/Lists.tsx:62
-#: src/view/screens/Profile.tsx:231
-#: src/view/screens/Profile.tsx:238
+#: src/view/screens/Profile.tsx:230
+#: src/view/screens/Profile.tsx:237
 #: src/view/shell/desktop/LeftNav.tsx:658
 #: src/view/shell/Drawer.tsx:496
 msgid "Lists"
@@ -3768,15 +3806,15 @@ msgstr "列表"
 msgid "Lists blocking this user:"
 msgstr "屏蔽该用户的列表："
 
-#: src/view/screens/Search/Explore.tsx:133
+#: src/view/screens/Search/Explore.tsx:134
 msgid "Load more"
 msgstr "加载更多"
 
-#: src/view/screens/Search/Explore.tsx:222
+#: src/view/screens/Search/Explore.tsx:223
 msgid "Load more suggested feeds"
 msgstr "加载更多建议的动态源"
 
-#: src/view/screens/Search/Explore.tsx:220
+#: src/view/screens/Search/Explore.tsx:221
 msgid "Load more suggested follows"
 msgstr "加载更多建议关注"
 
@@ -3784,9 +3822,9 @@ msgstr "加载更多建议关注"
 msgid "Load new notifications"
 msgstr "加载新的通知"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:192
+#: src/screens/Profile/ProfileFeed/index.tsx:221
 #: src/screens/Profile/Sections/Feed.tsx:96
-#: src/view/com/feeds/FeedPage.tsx:143
+#: src/view/com/feeds/FeedPage.tsx:155
 #: src/view/screens/ProfileList.tsx:849
 msgid "Load new posts"
 msgstr "加载新的帖文"
@@ -3795,7 +3833,7 @@ msgstr "加载新的帖文"
 msgid "Loading..."
 msgstr "加载中……"
 
-#: src/Navigation.tsx:261
+#: src/Navigation.tsx:262
 msgid "Log"
 msgstr "日志"
 
@@ -3828,7 +3866,7 @@ msgstr "网站标志由 @sawaratsuki.bsky.social 绘制"
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr "网站标志由 <0>@sawaratsuki.bsky.social</0> 绘制"
 
-#: src/components/RichText.tsx:219
+#: src/components/RichText.tsx:227
 msgid "Long press to open tag menu for #{tag}"
 msgstr "长按开启 #{tag} 标签菜单"
 
@@ -3856,8 +3894,8 @@ msgstr "帮我选择"
 msgid "Make sure this is where you intend to go!"
 msgstr "请确认目标页面地址是否正确！"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:58
-#: src/screens/Settings/ContentAndMediaSettings.tsx:61
+#: src/screens/Settings/ContentAndMediaSettings.tsx:59
+#: src/screens/Settings/ContentAndMediaSettings.tsx:62
 msgid "Manage saved feeds"
 msgstr "管理已保存的动态源"
 
@@ -3870,7 +3908,7 @@ msgstr "管理你的隐藏字词和标签"
 msgid "Mark as read"
 msgstr "标记为已读"
 
-#: src/view/screens/Profile.tsx:234
+#: src/view/screens/Profile.tsx:233
 msgid "Media"
 msgstr "媒体"
 
@@ -3917,7 +3955,7 @@ msgstr "私信输入栏"
 msgid "Message is too long"
 msgstr "私信过长"
 
-#: src/Navigation.tsx:609
+#: src/Navigation.tsx:618
 #: src/screens/Messages/ChatList.tsx:262
 #: src/screens/Messages/ChatList.tsx:286
 msgid "Messages"
@@ -3931,7 +3969,7 @@ msgstr "误导性账户"
 msgid "Misleading Post"
 msgstr "误导性帖文"
 
-#: src/Navigation.tsx:140
+#: src/Navigation.tsx:141
 #: src/screens/Moderation/index.tsx:88
 #: src/screens/Settings/Settings.tsx:167
 #: src/screens/Settings/Settings.tsx:170
@@ -3968,7 +4006,7 @@ msgstr "已更新内容审核列表"
 msgid "Moderation lists"
 msgstr "内容审核列表"
 
-#: src/Navigation.tsx:145
+#: src/Navigation.tsx:146
 #: src/view/screens/ModerationModlists.tsx:62
 msgid "Moderation Lists"
 msgstr "内容审核列表"
@@ -3977,7 +4015,7 @@ msgstr "内容审核列表"
 msgid "moderation settings"
 msgstr "内容审核设置"
 
-#: src/Navigation.tsx:251
+#: src/Navigation.tsx:252
 msgid "Moderation states"
 msgstr "内容审核状态"
 
@@ -4104,7 +4142,7 @@ msgstr "隐藏字词和标签"
 msgid "Muted accounts"
 msgstr "已隐藏账户"
 
-#: src/Navigation.tsx:150
+#: src/Navigation.tsx:151
 #: src/view/screens/ModerationMutedAccounts.tsx:100
 msgid "Muted Accounts"
 msgstr "已隐藏账户"
@@ -4223,16 +4261,16 @@ msgstr "新密码"
 msgid "New Password"
 msgstr "新密码"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:209
+#: src/screens/Profile/ProfileFeed/index.tsx:238
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
-#: src/view/screens/Profile.tsx:496
+#: src/view/screens/Profile.tsx:495
 #: src/view/screens/ProfileList.tsx:250
 #: src/view/screens/ProfileList.tsx:283
 msgid "New post"
 msgstr "新帖文"
 
-#: src/view/com/feeds/FeedPage.tsx:154
+#: src/view/com/feeds/FeedPage.tsx:166
 msgctxt "action"
 msgid "New post"
 msgstr "新帖文"
@@ -4358,7 +4396,7 @@ msgstr "没有结果"
 msgid "No results"
 msgstr "没有结果"
 
-#: src/components/Lists.tsx:183
+#: src/components/Lists.tsx:189
 msgid "No results found"
 msgstr "未找到结果"
 
@@ -4408,8 +4446,8 @@ msgstr "找不到任何人，试试搜点其他关键字。"
 msgid "Non-sexual Nudity"
 msgstr "非色情裸露"
 
-#: src/Navigation.tsx:130
-#: src/view/screens/Profile.tsx:130
+#: src/Navigation.tsx:131
+#: src/view/screens/Profile.tsx:129
 msgid "Not Found"
 msgstr "未找到"
 
@@ -4436,7 +4474,7 @@ msgstr "这里什么也没有"
 msgid "Notification filters"
 msgstr "通知过滤器"
 
-#: src/Navigation.tsx:398
+#: src/Navigation.tsx:399
 #: src/view/screens/Notifications.tsx:134
 msgid "Notification settings"
 msgstr "通知设置"
@@ -4453,7 +4491,7 @@ msgstr "通知提示音"
 msgid "Notification Sounds"
 msgstr "通知提示音"
 
-#: src/Navigation.tsx:604
+#: src/Navigation.tsx:613
 #: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:230
 #: src/view/shell/desktop/LeftNav.tsx:621
@@ -4549,17 +4587,17 @@ msgstr "仅支持图片文件"
 msgid "Only WebVTT (.vtt) files are supported"
 msgstr "仅支持 WebVTT（.vtt）格式"
 
-#: src/components/Lists.tsx:88
+#: src/components/Lists.tsx:94
 msgid "Oops, something went wrong!"
 msgstr "糟糕，出了点问题！"
 
-#: src/components/Lists.tsx:167
+#: src/components/Lists.tsx:173
 #: src/components/StarterPack/ProfileStarterPacks.tsx:322
 #: src/components/StarterPack/ProfileStarterPacks.tsx:331
 #: src/screens/Settings/AppPasswords.tsx:59
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:104
 #: src/screens/Settings/NotificationSettings.tsx:54
-#: src/view/screens/Profile.tsx:130
+#: src/view/screens/Profile.tsx:129
 msgid "Oops!"
 msgstr "糟糕！"
 
@@ -4584,7 +4622,7 @@ msgstr "开启更改账户代码对话框"
 msgid "Open conversation options"
 msgstr "开启对话选项"
 
-#: src/components/Layout/Header/index.tsx:145
+#: src/components/Layout/Header/index.tsx:149
 msgid "Open drawer menu"
 msgstr "开启抽屉菜单"
 
@@ -4745,7 +4783,7 @@ msgstr "其他……"
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr "内容审核服务提供方已收到相关举报，并决定停用你的 Bluesky 私信功能。"
 
-#: src/components/Lists.tsx:184
+#: src/components/Lists.tsx:190
 #: src/view/screens/NotFound.tsx:47
 msgid "Page not found"
 msgstr "无法找到这个页面"
@@ -4790,11 +4828,11 @@ msgstr "暂停视频"
 msgid "People"
 msgstr "用户"
 
-#: src/Navigation.tsx:185
+#: src/Navigation.tsx:186
 msgid "People followed by @{0}"
 msgstr "被 @{0} 关注的用户"
 
-#: src/Navigation.tsx:178
+#: src/Navigation.tsx:179
 msgid "People following @{0}"
 msgstr "关注 @{0} 的用户"
 
@@ -4823,10 +4861,19 @@ msgstr "摄影"
 msgid "Pictures meant for adults."
 msgstr "不适合未成年人的图片。"
 
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:173
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:178
+msgid "Pin"
+msgstr "置顶"
+
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:519
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:526
 msgid "Pin feed"
 msgstr "固定动态源"
+
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:167
+msgid "Pin the trending videos feed to your home screen for easy access"
+msgstr "置顶趋势视频到你的主页以便访问"
 
 #: src/view/screens/ProfileList.tsx:685
 msgid "Pin to home"
@@ -4872,7 +4919,7 @@ msgstr "播放 {0}"
 msgid "Play or pause the GIF"
 msgstr "播放或暂停 GIF"
 
-#: src/view/com/util/post-embeds/VideoEmbed.tsx:107
+#: src/view/com/util/post-embeds/VideoEmbed.tsx:134
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:321
 msgid "Play video"
 msgstr "播放视频"
@@ -4958,6 +5005,10 @@ msgstr "请验证你的电子邮箱"
 msgid "Politics"
 msgstr "政治"
 
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:116
+msgid "Popular videos in your network."
+msgstr "来自你社交网络的热门视频。"
+
 #: src/view/com/composer/labels/LabelsBtn.tsx:157
 msgid "Porn"
 msgstr "色情"
@@ -4981,10 +5032,10 @@ msgstr "全部发布"
 msgid "Post by {0}"
 msgstr "{0} 的帖文"
 
-#: src/Navigation.tsx:204
-#: src/Navigation.tsx:211
-#: src/Navigation.tsx:218
-#: src/Navigation.tsx:225
+#: src/Navigation.tsx:205
+#: src/Navigation.tsx:212
+#: src/Navigation.tsx:219
+#: src/Navigation.tsx:226
 msgid "Post by @{0}"
 msgstr "@{0} 的帖文"
 
@@ -4995,6 +5046,10 @@ msgstr "已删除帖文"
 #: src/lib/api/index.ts:185
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr "帖文发布失败，请检查你的网络连接并重试。"
+
+#: src/screens/VideoFeed/index.tsx:507
+msgid "Post has been deleted"
+msgstr "帖文已被删除"
 
 #: src/view/com/post-thread/PostThread.tsx:266
 msgid "Post hidden"
@@ -5040,7 +5095,7 @@ msgid "posts"
 msgstr "帖文"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
-#: src/view/screens/Profile.tsx:232
+#: src/view/screens/Profile.tsx:231
 msgid "Posts"
 msgstr "帖文"
 
@@ -5070,7 +5125,7 @@ msgid "Press to change hosting provider"
 msgstr "点按此处以变更托管提供商"
 
 #: src/components/Error.tsx:60
-#: src/components/Lists.tsx:93
+#: src/components/Lists.tsx:99
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Signup/BackNextButtons.tsx:47
 msgid "Press to retry"
@@ -5107,12 +5162,12 @@ msgstr "隐私"
 msgid "Privacy and security"
 msgstr "隐私与安全"
 
-#: src/Navigation.tsx:347
+#: src/Navigation.tsx:348
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:36
 msgid "Privacy and Security"
 msgstr "隐私与安全"
 
-#: src/Navigation.tsx:271
+#: src/Navigation.tsx:272
 #: src/screens/Settings/AboutSettings.tsx:45
 #: src/screens/Settings/AboutSettings.tsx:48
 #: src/view/screens/PrivacyPolicy.tsx:31
@@ -5131,7 +5186,7 @@ msgid "Processing..."
 msgstr "处理中……"
 
 #: src/view/screens/DebugMod.tsx:919
-#: src/view/screens/Profile.tsx:363
+#: src/view/screens/Profile.tsx:362
 msgid "profile"
 msgstr "个人资料"
 
@@ -5224,6 +5279,14 @@ msgstr "重新关联引用帖文"
 #: src/screens/Deactivated.tsx:140
 msgid "Reactivate your account"
 msgstr "重新启用你的账户"
+
+#: src/screens/VideoFeed/index.tsx:920
+msgid "Read less"
+msgstr "查看更少"
+
+#: src/screens/VideoFeed/index.tsx:920
+msgid "Read more"
+msgstr "查看更多"
 
 #: src/view/com/auth/SplashScreen.web.tsx:171
 msgid "Read the Bluesky blog"
@@ -5398,7 +5461,7 @@ msgstr "删除引用的帖文"
 msgid "Replace with Discover"
 msgstr "替换为“Discover”"
 
-#: src/view/screens/Profile.tsx:233
+#: src/view/screens/Profile.tsx:232
 msgid "Replies"
 msgstr "回复"
 
@@ -5658,7 +5721,7 @@ msgstr "重试上次出错的操作"
 
 #: src/components/dms/MessageItem.tsx:245
 #: src/components/Error.tsx:65
-#: src/components/Lists.tsx:104
+#: src/components/Lists.tsx:110
 #: src/components/StarterPack/ProfileStarterPacks.tsx:336
 #: src/screens/Login/LoginForm.tsx:313
 #: src/screens/Login/LoginForm.tsx:320
@@ -5685,7 +5748,8 @@ msgstr "返回上一页"
 msgid "Returns to home page"
 msgstr "返回主页"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:83
+#: src/screens/Profile/ProfileFeed/index.tsx:90
+#: src/screens/VideoFeed/index.tsx:1076
 #: src/view/screens/NotFound.tsx:60
 msgid "Returns to previous page"
 msgstr "返回上一页"
@@ -5790,7 +5854,7 @@ msgstr "滚动到顶部"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:487
 #: src/components/forms/SearchInput.tsx:34
 #: src/components/forms/SearchInput.tsx:36
-#: src/Navigation.tsx:599
+#: src/Navigation.tsx:608
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
 #: src/view/screens/Search/Search.tsx:570
 #: src/view/shell/bottom-bar/BottomBar.tsx:182
@@ -6050,7 +6114,7 @@ msgstr "设置你的账户"
 msgid "Sets email for password reset"
 msgstr "设置用于重置密码的电子邮箱"
 
-#: src/Navigation.tsx:160
+#: src/Navigation.tsx:161
 #: src/screens/Settings/Settings.tsx:80
 #: src/view/shell/desktop/LeftNav.tsx:694
 #: src/view/shell/Drawer.tsx:534
@@ -6134,7 +6198,7 @@ msgstr "分享这个新手包，以帮助其他人更快融入你在 Bluesky 上
 msgid "Share your favorite feed!"
 msgstr "分享你最喜欢的动态源吧！"
 
-#: src/Navigation.tsx:256
+#: src/Navigation.tsx:257
 msgid "Shared Preferences Tester"
 msgstr "共享偏好测试器"
 
@@ -6155,6 +6219,8 @@ msgstr "显示替代文本"
 #: src/components/moderation/ScreenHider.tsx:172
 #: src/components/moderation/ScreenHider.tsx:175
 #: src/screens/List/ListHiddenScreen.tsx:187
+#: src/screens/VideoFeed/index.tsx:603
+#: src/screens/VideoFeed/index.tsx:609
 msgid "Show anyway"
 msgstr "仍然显示"
 
@@ -6338,7 +6404,7 @@ msgstr "更小"
 msgid "Software Dev"
 msgstr "程序开发"
 
-#: src/components/FeedInterstitials.tsx:445
+#: src/components/FeedInterstitials.tsx:449
 msgid "Some other feeds you might like"
 msgstr "其他你可能喜欢的动态源"
 
@@ -6361,7 +6427,7 @@ msgstr "出了点问题，请重试"
 msgid "Something went wrong, please try again."
 msgstr "出了点问题，请重试。"
 
-#: src/components/Lists.tsx:168
+#: src/components/Lists.tsx:174
 #: src/screens/Settings/NotificationSettings.tsx:55
 msgid "Something went wrong!"
 msgstr "出了点问题！"
@@ -6423,8 +6489,8 @@ msgstr "开始添加用户！"
 msgid "Start chat with {displayName}"
 msgstr "与 {displayName} 开始私信"
 
-#: src/Navigation.tsx:408
-#: src/Navigation.tsx:413
+#: src/Navigation.tsx:409
+#: src/Navigation.tsx:414
 #: src/screens/StarterPack/Wizard/index.tsx:186
 msgid "Starter Pack"
 msgstr "新手包"
@@ -6446,7 +6512,7 @@ msgstr "你创建的新手包"
 msgid "Starter pack is invalid"
 msgstr "无效的新手包"
 
-#: src/view/screens/Profile.tsx:237
+#: src/view/screens/Profile.tsx:236
 msgid "Starter Packs"
 msgstr "新手包"
 
@@ -6467,7 +6533,7 @@ msgstr "第 {0} 步（共 {1} 步）"
 msgid "Storage cleared, you need to restart the app now."
 msgstr "已清除数据，请立即重新启动应用。"
 
-#: src/Navigation.tsx:246
+#: src/Navigation.tsx:247
 #: src/screens/Settings/Settings.tsx:325
 msgid "Storybook"
 msgstr "故事书"
@@ -6503,7 +6569,7 @@ msgstr "订阅这个列表"
 msgid "Success!"
 msgstr "完成！"
 
-#: src/view/screens/Search/Explore.tsx:354
+#: src/view/screens/Search/Explore.tsx:366
 msgid "Suggested accounts"
 msgstr "建议的账户"
 
@@ -6516,7 +6582,7 @@ msgstr "为你推荐"
 msgid "Suggestive"
 msgstr "性暗示"
 
-#: src/Navigation.tsx:266
+#: src/Navigation.tsx:267
 #: src/view/screens/Support.tsx:31
 #: src/view/screens/Support.tsx:34
 msgid "Support"
@@ -6578,6 +6644,10 @@ msgstr "点按以跳过"
 msgid "Tap to enter full screen"
 msgstr "点按以进入全屏模式"
 
+#: src/screens/VideoFeed/index.tsx:919
+msgid "Tap to expand or collapse post text."
+msgstr "点按以展开或折叠帖文文本。"
+
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 msgid "Tap to play or pause"
 msgstr "点按以播放或静音"
@@ -6590,6 +6660,10 @@ msgstr "点按以切换声音播放"
 #: src/view/com/util/images/AutoSizedImage.tsx:221
 msgid "Tap to view full image"
 msgstr "点按以查看完整图片"
+
+#: src/components/VideoPostCard.tsx:115
+msgid "Tap to view video in immersive mode."
+msgstr "点按以沉浸模式观看视频。"
 
 #: src/state/shell/progress-guide.tsx:233
 msgid "Task complete - 10 follows!"
@@ -6625,7 +6699,7 @@ msgstr "告诉我们更多"
 msgid "Terms"
 msgstr "条款"
 
-#: src/Navigation.tsx:276
+#: src/Navigation.tsx:277
 #: src/screens/Settings/AboutSettings.tsx:37
 #: src/screens/Settings/AboutSettings.tsx:40
 #: src/view/screens/TermsOfService.tsx:31
@@ -6683,6 +6757,10 @@ msgstr "找不到那个新手包。"
 #: src/view/com/post-thread/PostQuotes.tsx:132
 msgid "That's all, folks!"
 msgstr "就这些，完毕！"
+
+#: src/screens/VideoFeed/index.tsx:1048
+msgid "That's everything!"
+msgstr "这就是全部了！"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:329
@@ -6805,7 +6883,7 @@ msgstr "连接服务器时出现问题"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "刷新通知时出现问题，点击重试。"
 
-#: src/view/com/posts/PostFeed.tsx:486
+#: src/view/com/posts/PostFeed.tsx:590
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "刷新帖文时出现问题，点击重试。"
 
@@ -6946,7 +7024,7 @@ msgid "This feed is empty! You may need to follow more users or tune your langua
 msgstr "这个动态源没有任何动静。你或许需要先关注更多的用户，或检查你的语言设置。"
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
-#: src/screens/Profile/ProfileFeed/index.tsx:170
+#: src/screens/Profile/ProfileFeed/index.tsx:189
 #: src/view/screens/ProfileList.tsx:814
 msgid "This feed is empty."
 msgstr "这个动态源空空如也。"
@@ -7086,8 +7164,8 @@ msgstr "你的帖文将从这则引用中删除，并替换为一个占位符。
 msgid "Thread options"
 msgstr "讨论串选项"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:66
-#: src/screens/Settings/ContentAndMediaSettings.tsx:69
+#: src/screens/Settings/ContentAndMediaSettings.tsx:67
+#: src/screens/Settings/ContentAndMediaSettings.tsx:70
 msgid "Thread preferences"
 msgstr "讨论串偏好"
 
@@ -7104,7 +7182,7 @@ msgstr "树形视图"
 msgid "Threaded mode"
 msgstr "树形显示模式"
 
-#: src/Navigation.tsx:309
+#: src/Navigation.tsx:310
 msgid "Threads Preferences"
 msgstr "讨论串偏好"
 
@@ -7146,7 +7224,7 @@ msgstr "切换以启用或停用成人内容"
 msgid "Top"
 msgstr "热门"
 
-#: src/Navigation.tsx:383
+#: src/Navigation.tsx:384
 msgid "Topic"
 msgstr "话题"
 
@@ -7163,6 +7241,11 @@ msgstr "翻译"
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:59
 msgid "Trending"
 msgstr "趋势"
+
+#: src/components/interstitials/TrendingVideos.tsx:88
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:106
+msgid "Trending Videos"
+msgstr "趋势视频"
 
 #: src/view/com/util/error/ErrorScreen.tsx:103
 msgctxt "action"
@@ -7267,6 +7350,10 @@ msgstr "取消关注 {0}"
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Unfollow Account"
 msgstr "取消关注账户"
+
+#: src/screens/VideoFeed/index.tsx:792
+msgid "Unfollow user"
+msgstr "取消关注用户"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Unlike"
@@ -7448,8 +7535,8 @@ msgstr "使用默认提供商"
 msgid "Use in-app browser"
 msgstr "使用应用内浏览器"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:92
-#: src/screens/Settings/ContentAndMediaSettings.tsx:98
+#: src/screens/Settings/ContentAndMediaSettings.tsx:93
+#: src/screens/Settings/ContentAndMediaSettings.tsx:99
 msgid "Use in-app browser to open links"
 msgstr "使用应用内浏览器开启链接"
 
@@ -7588,12 +7675,20 @@ msgstr "视频"
 msgid "Video failed to process"
 msgstr "视频处理失败"
 
+#: src/Navigation.tsx:430
+msgid "Video Feed"
+msgstr "视频动态源"
+
+#: src/components/VideoPostCard.tsx:116
+msgid "Video from {0}: {text}"
+msgstr "视频来自{0}：{text}"
+
 #: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
 msgid "Video Games"
 msgstr "电子游戏"
 
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:169
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:191
 msgid "Video not found."
 msgstr "无法找到视频。"
 
@@ -7620,6 +7715,7 @@ msgstr "查看 {0} 的头像"
 
 #: src/components/ProfileCard.tsx:110
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:450
+#: src/screens/VideoFeed/index.tsx:753
 #: src/view/com/notifications/NotificationFeedItem.tsx:409
 msgid "View {0}'s profile"
 msgstr "查看 {0} 的个人资料"
@@ -7649,6 +7745,8 @@ msgid "View debug entry"
 msgstr "查看调试项目"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:137
+#: src/screens/VideoFeed/index.tsx:631
+#: src/screens/VideoFeed/index.tsx:649
 msgid "View details"
 msgstr "查看详情"
 
@@ -7663,6 +7761,13 @@ msgstr "查看完整讨论串"
 #: src/components/moderation/LabelsOnMe.tsx:46
 msgid "View information about these labels"
 msgstr "查看关于这个标记的详细信息"
+
+#: src/components/interstitials/TrendingVideos.tsx:191
+#: src/components/interstitials/TrendingVideos.tsx:210
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:231
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:250
+msgid "View more"
+msgstr "查看更多"
 
 #: src/components/ProfileHoverCard/index.web.tsx:419
 #: src/components/ProfileHoverCard/index.web.tsx:439
@@ -7685,6 +7790,10 @@ msgstr "查看由 @{0} 提供的标记服务。"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:485
 msgid "View users who like this feed"
 msgstr "查看这个动态源被谁喜欢"
+
+#: src/components/VideoPostCard.tsx:392
+msgid "View video"
+msgstr "查看视频"
 
 #: src/screens/Moderation/index.tsx:248
 msgid "View your blocked accounts"
@@ -7803,7 +7912,7 @@ msgstr "很抱歉，无法完成你的搜索。请重试。"
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "很抱歉！你回复的帖文已被删除。"
 
-#: src/components/Lists.tsx:188
+#: src/components/Lists.tsx:194
 #: src/view/screens/NotFound.tsx:50
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "很抱歉！我们找不到你正在寻找的页面。"
@@ -7859,6 +7968,11 @@ msgstr "哪些人可以回复"
 msgid "Whoops!"
 msgstr "糟糕！"
 
+#: src/components/interstitials/TrendingVideos.tsx:127
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:147
+msgid "Whoops! Trending videos failed to load."
+msgstr "糟糕！无法加载趋势视频。"
+
 #: src/components/ReportDialog/SelectReportOptionView.tsx:42
 msgid "Why should this content be reviewed?"
 msgstr "为什么应该审核这项内容？"
@@ -7897,7 +8011,7 @@ msgid "Write post"
 msgstr "撰写帖文"
 
 #: src/view/com/composer/Composer.tsx:734
-#: src/view/com/post-thread/PostThreadComposePrompt.tsx:70
+#: src/view/com/post-thread/PostThreadComposePrompt.tsx:69
 msgid "Write your reply"
 msgstr "撰写你的回复"
 
@@ -7981,7 +8095,8 @@ msgstr "你现在可以使用新密码登录。"
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
 msgstr "你可以继续登录以重新启用你的账户，其他用户将能够重新看到你的个人资料和帖文。"
 
-#: src/components/interstitials/Trending.tsx:135
+#: src/components/interstitials/Trending.tsx:130
+#: src/components/interstitials/TrendingVideos.tsx:139
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:136
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:109
 msgid "You can update this later from your settings."
@@ -8066,7 +8181,7 @@ msgstr "你还没有屏蔽任何账户。要屏蔽账户，请转到其个人资
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr "你还没有隐藏任何账户。要隐藏账户，请转到其个人资料，并在账户上的菜单中选择“隐藏账户”。"
 
-#: src/components/Lists.tsx:52
+#: src/components/Lists.tsx:57
 msgid "You have reached the end"
 msgstr "你已经浏览到末尾了"
 
@@ -8218,6 +8333,10 @@ msgstr "你已达到每日上传视频上限（文件太大）"
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "你已达到每日上传视频上限（数量太多）"
 
+#: src/screens/VideoFeed/index.tsx:1057
+msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
+msgstr "你已经看完了所有视频，或许是时候休息一下了？"
+
 #: src/screens/Signup/index.tsx:140
 msgid "Your account"
 msgstr "你的账户"
@@ -8238,7 +8357,7 @@ msgstr "你可以将你的账户数据导出为一个“CAR”文件，该文件
 msgid "Your birth date"
 msgstr "你的生日"
 
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:173
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:195
 msgid "Your browser does not support the video format. Please try a different browser."
 msgstr "你的浏览器不支持此视频格式，请试试其他浏览器。"
 
