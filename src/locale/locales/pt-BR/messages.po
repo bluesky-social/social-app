@@ -1292,12 +1292,12 @@ msgstr "O Bluesky não pode confirmar a autenticidade da data alegada."
 
 #: src/view/com/auth/server-input/index.tsx:151
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
-msgstr "Bluesky é uma rede aberta onde você pode escolher seu provedor de hospedagem. Se você é um desenvolvedor, você pode hospedar seu próprio servidor"
+msgstr "O Bluesky é uma rede aberta onde você pode escolher seu provedor de hospedagem. Se você é um desenvolvedor, você pode hospedar seu próprio servidor"
 
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
 msgid "Bluesky is better with friends!"
-msgstr "Bluesky é melhor com amigos!"
+msgstr "O Bluesky é melhor com amigos!"
 
 #: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:43
 #: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:59
@@ -1830,7 +1830,7 @@ msgstr "Fechar janela"
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
 msgid "Close emoji picker"
-msgstr ""
+msgstr "Fechar seletor de emojis"
 
 #: src/components/dialogs/GifSelect.tsx:169
 msgid "Close GIF dialog"
@@ -2281,11 +2281,11 @@ msgstr "{0} criada"
 
 #: src/view/com/composer/Composer.tsx:469
 #~ msgid "Creates a card with a thumbnail. The card links to {url}"
-#~ msgstr "Cria uma prévia com miniatura. A prévia faz um link para {url}"
+#~ msgstr "Cria uma prévia com miniatura. A prévia leva para {url}"
 
 #: src/screens/List/ListHiddenScreen.tsx:127
 msgid "Creator has been blocked"
-msgstr ""
+msgstr "O criador foi bloqueado"
 
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
@@ -2873,7 +2873,7 @@ msgstr "Educação"
 
 #: src/screens/List/ListHiddenScreen.tsx:141
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
-msgstr ""
+msgstr "Você bloqueou o criador desta lista ou o criador desta lista bloqueou você."
 
 #: src/screens/Settings/AccountSettings.tsx:60
 #: src/screens/Signup/StepInfo/index.tsx:170
@@ -4193,7 +4193,7 @@ msgstr "Postagem inválida"
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
 msgid "Incorrect username or password"
-msgstr "Credenciais inválidas"
+msgstr "Credenciais incorretas"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91
 msgid "Invalid Verification Code"
@@ -4437,7 +4437,7 @@ msgstr "Curtir"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:311
 msgid "Like ({0, plural, one {# like} other {# likes}})"
-msgstr ""
+msgstr "Curtida ({0, plural, one {# curtida} other {# curtidas}})"
 
 #: src/components/ProgressGuide/List.tsx:63
 msgid "Like 10 posts"
@@ -6552,7 +6552,7 @@ msgstr "Responder"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:263
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
-msgstr ""
+msgstr "Resposta ({0, plural, one {# resposta} other {# respostas}})"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:142
 #~ msgid "Reply Filters"
@@ -6708,7 +6708,7 @@ msgstr "Repostar"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:74
 msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr ""
+msgstr "Repostagem ({0, plural, one {# repostagem} other {# repostagens}})"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:548
 #: src/view/com/util/post-ctrls/RepostButton.tsx:148
@@ -7710,7 +7710,7 @@ msgstr "Sair?"
 #: src/view/shell/NavSignupCard.tsx:47
 #: src/view/shell/NavSignupCard.tsx:52
 msgid "Create account"
-msgstr "Inscrever-se"
+msgstr "Criar conta"
 
 #: src/view/shell/NavSignupCard.tsx:47
 #~ msgid "Sign up or sign in to join the conversation"
@@ -8043,7 +8043,7 @@ msgstr "Toque para alterar o ícone do app"
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
 msgid "Tap to close the emoji picker"
-msgstr ""
+msgstr "Toque para fechar o seletor de emojis"
 
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"
@@ -8857,7 +8857,7 @@ msgstr "Desfazer repostagem"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:68
 msgid "Undo repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr ""
+msgstr "Desfazer repostagem ({0, plural, one {# repostagem} other {# repostagens}})"
 
 #: src/view/com/profile/FollowButton.tsx:60
 msgctxt "action"
