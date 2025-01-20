@@ -45,6 +45,7 @@ export const ProfileFeedSection = React.forwardRef<
   const [hasNew, setHasNew] = React.useState(false)
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
   const shouldUseAdjustedNumToRender = feed.endsWith('posts_and_author_threads')
+  const isVideoFeed = isNative && feed.endsWith('posts_with_video')
   const adjustedInitialNumToRender = useInitialNumToRender({
     screenHeightOffset: headerHeight,
   })
@@ -89,6 +90,7 @@ export const ProfileFeedSection = React.forwardRef<
         initialNumToRender={
           shouldUseAdjustedNumToRender ? adjustedInitialNumToRender : undefined
         }
+        isVideoFeed={isVideoFeed}
       />
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
