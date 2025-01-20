@@ -9,7 +9,11 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {AppBskyActorDefs, AppBskyEmbedVideo} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  AppBskyEmbedVideo,
+  AppBskyFeedDefs,
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -618,7 +622,13 @@ let PostFeed = ({
           <PostFeedItem
             post={item.post}
             record={item.record}
-            reason={indexInSlice === 0 ? slice.reason : undefined}
+            reason={
+              (indexInSlice === 0 &&
+                AppBskyFeedDefs.isReasonPin(slice.reason)) ||
+              AppBskyFeedDefs.isReasonSponsored(slice.reason)
+                ? slice.reason
+                : undefined
+            }
             feedContext={slice.feedContext}
             moderation={item.moderation}
             parentAuthor={item.parentAuthor}

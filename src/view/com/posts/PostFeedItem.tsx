@@ -39,6 +39,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a} from '#/alf'
 import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
+import {Zap_Stroke2_Corner0_Rounded as SponsoredIcon} from '#/components/icons/Zap'
 import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
@@ -55,6 +56,7 @@ interface FeedItemProps {
   reason:
     | AppBskyFeedDefs.ReasonRepost
     | AppBskyFeedDefs.ReasonPin
+    | AppBskyFeedDefs.ReasonSponsored
     | ReasonFeedSource
     | {[k: string]: unknown; $type: string}
     | undefined
@@ -228,6 +230,8 @@ let FeedItemInner = ({
     AppBskyFeedDefs.isReasonRepost(reason) &&
     reason.by.did === currentAccount?.did
 
+  const isSponsored = AppBskyFeedDefs.isReasonSponsored(reason)
+
   /**
    * If `post[0]` in this slice is the actual root post (not an orphan thread),
    * then we may have a threadgate record to reference
@@ -361,6 +365,21 @@ let FeedItemInner = ({
                 lineHeight={1.2}
                 numberOfLines={1}>
                 <Trans>Pinned</Trans>
+              </Text>
+            </View>
+          ) : AppBskyFeedDefs.isReasonSponsored(reason) ? (
+            <View style={styles.includeReason}>
+              <SponsoredIcon
+                style={{color: pal.colors.textLight, marginRight: 3}}
+                width={13}
+                height={13}
+              />
+              <Text
+                type="sm-bold"
+                style={pal.textLight}
+                lineHeight={1.2}
+                numberOfLines={1}>
+                <Trans>Sponsored</Trans>
               </Text>
             </View>
           ) : null}
