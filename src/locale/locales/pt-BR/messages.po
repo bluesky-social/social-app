@@ -1251,11 +1251,11 @@ msgstr "Contas Bloqueadas"
 #: src/view/com/profile/ProfileMenu.tsx:336
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:741
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
-msgstr "Contas bloqueadas não podem te responder, mencionar ou interagir com você."
+msgstr "Contas bloqueadas não podem te responder, te mencionar ou interagir com você."
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:112
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
-msgstr "Contas bloqueadas não podem responder, mencionar ou interagir com você. Você não verá o conteúdo deles e eles serão impedidos de ver o seu."
+msgstr "Contas bloqueadas não podem te responder, te mencionar ou interagir com você. Você não verá o conteúdo deles e eles serão impedidos de ver o seu."
 
 #: src/view/com/post-thread/PostThread.tsx:464
 msgid "Blocked post."
@@ -1267,7 +1267,7 @@ msgstr "Bloquear não previne este rotulador de rotular a sua conta."
 
 #: src/view/screens/ProfileList.tsx:757
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
-msgstr "Bloqueios são públicos. Contas bloqueadas não podem responder, mencionar ou interagir com você."
+msgstr "Bloqueios são públicos. Contas bloqueadas não podem te responder, te mencionar ou interagir com você."
 
 #: src/view/com/profile/ProfileMenu.tsx:333
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
@@ -3315,7 +3315,7 @@ msgstr "Falha ao enviar o recurso, tente novamente."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:224
 msgid "Failed to toggle thread mute, please try again"
-msgstr "Falha ao alternar o silenciamento do tópico, tente novamente"
+msgstr "Falha ao alterar o silenciamento do tópico, tente novamente"
 
 #: src/components/FeedCard.tsx:275
 msgid "Failed to update feeds"
@@ -3454,7 +3454,7 @@ msgstr "Encontre postagens e usuários no Bluesky"
 
 #: src/view/screens/PreferencesThreads.tsx:55
 #~ msgid "Fine-tune the discussion threads."
-#~ msgstr "Ajuste as threads."
+#~ msgstr "Ajuste fino dos tópicos."
 
 #: src/screens/StarterPack/Wizard/index.tsx:195
 msgid "Finish"
@@ -4943,7 +4943,7 @@ msgstr "Silenciar esta palavra até que você a reative"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:489
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:493
 msgid "Mute thread"
-msgstr "Silenciar thread"
+msgstr "Silenciar tópico"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:505
@@ -5300,15 +5300,15 @@ msgstr "Ninguém"
 #: src/components/LikesDialog.tsx:97
 #: src/view/com/post-thread/PostLikedBy.tsx:86
 msgid "Nobody has liked this yet. Maybe you should be the first!"
-msgstr "Ninguém curtiu isso ainda. Você pode ser o primeiro!"
+msgstr "Ninguém curtiu isso ainda. Você pode se tornar o primeiro!"
 
 #: src/view/com/post-thread/PostQuotes.tsx:107
 msgid "Nobody has quoted this yet. Maybe you should be the first!"
-msgstr "Ninguém citou isso ainda. Talvez você devesse ser o primeiro!"
+msgstr "Ninguém citou isso ainda. Você pode se tornar o primeiro!"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:92
 msgid "Nobody has reposted this yet. Maybe you should be the first!"
-msgstr "Ninguém repostou isso ainda. Talvez você devesse ser o primeiro!"
+msgstr "Ninguém repostou isso ainda. Você pode se tornar o primeiro!"
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
@@ -6136,7 +6136,7 @@ msgstr "Idioma Principal"
 #: src/screens/Settings/ThreadPreferences.tsx:112
 #: src/screens/Settings/ThreadPreferences.tsx:117
 msgid "Prioritize your Follows"
-msgstr "Priorizar seus Seguidores"
+msgstr "Priorizar quem você segue"
 
 #: src/view/screens/PreferencesThreads.tsx:92
 #~ msgid "Prioritize Your Follows"
@@ -6561,7 +6561,7 @@ msgstr "Resposta ({0, plural, one {# resposta} other {# respostas}})"
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:123
 msgid "Reply Hidden by Thread Author"
-msgstr "Resposta Oculta pelo Autor da Thread"
+msgstr "Resposta Oculta pelo Autor do Tópico"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:113
 #: src/lib/moderation/useModerationCauseDescription.ts:122
@@ -6574,7 +6574,7 @@ msgstr "Configurações de resposta"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:340
 msgid "Reply settings are chosen by the author of the thread"
-msgstr "Configurações de resposta são escolhidas pelo autor da thread"
+msgstr "Configurações de resposta são escolhidas pelo autor do tópico"
 
 #: src/view/com/post-thread/PostThread.tsx:648
 msgid "Reply sorting"
@@ -7580,7 +7580,7 @@ msgstr "Mostrar respostas como"
 
 #: src/screens/Settings/ThreadPreferences.tsx:151
 msgid "Show replies as threaded"
-msgstr "Mostrar respostas como threads"
+msgstr "Mostrar respostas como fios"
 
 #: src/screens/Settings/ThreadPreferences.tsx:126
 msgid "Show replies by people you follow before all other replies"
@@ -8177,7 +8177,7 @@ msgstr "Esse pacote inicial não pôde ser encontrado."
 
 #: src/view/com/post-thread/PostQuotes.tsx:132
 msgid "That's all, folks!"
-msgstr "É isso, pessoal!"
+msgstr "Isso é tudo, pessoal!"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:329
@@ -8578,7 +8578,7 @@ msgstr "Esta postagem só pode ser vista por usuários autenticados e não apare
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
-msgstr "Esta postagem será ocultada de feeds e threads. Isso não pode ser desfeito."
+msgstr "Esta postagem será ocultada dos feeds e tópicos. Isso não pode ser desfeito."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:443
 #~ msgid "This post will be hidden from feeds."
@@ -8660,16 +8660,16 @@ msgstr "Isso removerá sua postagem desta postagem de citação para todos os us
 #: src/view/com/post-thread/PostThread.tsx:606
 #: src/view/com/post-thread/PostThread.tsx:609
 msgid "Thread options"
-msgstr "Opções de threads"
+msgstr "Opções de tópicos"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:66
 #: src/screens/Settings/ContentAndMediaSettings.tsx:69
 msgid "Thread preferences"
-msgstr "Preferências das Threads"
+msgstr "Preferências dos tópicos"
 
 #: src/screens/Settings/ThreadPreferences.tsx:45
 msgid "Thread Preferences"
-msgstr "Preferências das Threads"
+msgstr "Preferências dos Tópicos"
 
 #: src/components/WhoCanReply.tsx:109
 #~ msgid "Thread settings updated"
@@ -8678,11 +8678,11 @@ msgstr "Preferências das Threads"
 #: src/view/com/post-thread/PostThread.tsx:636
 #: src/view/com/post-thread/PostThread.tsx:641
 msgid "Threaded"
-msgstr ""
+msgstr "Em árvore"
 
 #: src/screens/Settings/ThreadPreferences.tsx:142
 msgid "Threaded mode"
-msgstr "Visualização de threads"
+msgstr "Visualização de tópicos"
 
 #: src/view/screens/PreferencesThreads.tsx:114
 #~ msgid "Threaded Mode"
@@ -8690,7 +8690,7 @@ msgstr "Visualização de threads"
 
 #: src/Navigation.tsx:309
 msgid "Threads Preferences"
-msgstr "Preferências das Threads"
+msgstr "Preferências dos Tópicos"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/TimeIndicator.tsx:33
 msgid "Time remaining: {time} seconds"
@@ -9351,7 +9351,7 @@ msgstr "Ver detalhes para denunciar uma violação de copyright"
 
 #: src/view/com/posts/ViewFullThread.tsx:56
 msgid "View full thread"
-msgstr "Ver thread completa"
+msgstr "Ver tópico completo"
 
 #: src/components/moderation/LabelsOnMe.tsx:46
 msgid "View information about these labels"
@@ -9911,11 +9911,11 @@ msgstr "Você será desconectado de todas as suas contas."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:217
 msgid "You will no longer receive notifications for this thread"
-msgstr "Você não vai mais receber notificações desta thread"
+msgstr "Você não vai mais receber notificações deste tópico"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:213
 msgid "You will now receive notifications for this thread"
-msgstr "Você vai receber notificações desta thread"
+msgstr "Você vai receber notificações deste tópico"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:98
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
