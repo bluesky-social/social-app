@@ -5,6 +5,8 @@ import {
   jsonStringToLex,
 } from '@atproto/api'
 
+import {DISCOVER_FEED_URI} from '#/lib/constants'
+import {isLikelyGloballySeenPost} from '#/state/feed-feedback'
 import {
   getAppLanguageAsContentLanguage,
   getContentLanguages,
@@ -72,6 +74,35 @@ export class CustomFeedAPI implements FeedAPI {
         )
       : await loggedOutFetch({...this.params, cursor, limit})
     if (res.success) {
+      if (this.params.feed === DISCOVER_FEED_URI) {
+        // Try not to show a post in Discover if you've seen it elsewhere in the app.
+        // A proper way to do this might be to let a feed declare it wants client-side filtering.
+        // I'm hacking this in here because it needs to be consistent for re-renders so
+        // the decision on what got included or not for this page needs to happen once.
+        const candidateFeed = res.data.feed.filter(post => {
+          if (isLikelyGloballySeenPost(post.post.uri)) {
+            return false
+          }
+          if (post.reply) {
+            if (
+              AppBskyFeedDefs.isPostView(post.reply.parent) &&
+              isLikelyGloballySeenPost(post.reply.parent.uri)
+            ) {
+              return false
+            }
+            if (
+              AppBskyFeedDefs.isPostView(post.reply.root) &&
+              isLikelyGloballySeenPost(post.reply.root.uri)
+            ) {
+              return false
+            }
+          }
+          return true
+        })
+        if (candidateFeed.length >= res.data.feed.length / 2) {
+          res.data.feed = candidateFeed
+        }
+      }
       // NOTE
       // some custom feeds fail to enforce the pagination limit
       // so we manually truncate here
