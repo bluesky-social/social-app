@@ -510,9 +510,7 @@ let VideoItem = ({
       ) : (
         <>
           <VideoItemPlaceholder embed={embed} />
-          {player && (
-            <VideoItemInner player={player} embed={embed} active={active} />
-          )}
+          {active && player && <VideoItemInner player={player} embed={embed} />}
           {moderation && (
             <Overlay
               player={player}
@@ -534,39 +532,31 @@ VideoItem = memo(VideoItem)
 function VideoItemInner({
   player,
   embed,
-  active,
 }: {
   player: VideoPlayer
   embed: AppBskyEmbedVideo.View
-  active: boolean
 }) {
   const {bottom} = useSafeAreaInsets()
   const {status} = useEvent(player, 'statusChange', {status: player.status})
 
   return (
-    <>
-      {active && player && (
-        <VideoView
-          accessible={false}
-          style={[
-            a.absolute,
-            {
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: bottom + VIDEO_PLAYER_BOTTOM_INSET,
-            },
-            // isAndroid && status === 'loading' && {opacity: 0},
-          ]}
-          player={player}
-          nativeControls={false}
-          contentFit={
-            isTallAspectRatio(embed.aspectRatio) ? 'cover' : 'contain'
-          }
-          accessibilityIgnoresInvertColors
-        />
-      )}
-    </>
+    <VideoView
+      accessible={false}
+      style={[
+        a.absolute,
+        {
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: bottom + VIDEO_PLAYER_BOTTOM_INSET,
+        },
+        // isAndroid && status === 'loading' && {opacity: 0},
+      ]}
+      player={player}
+      nativeControls={false}
+      contentFit={isTallAspectRatio(embed.aspectRatio) ? 'cover' : 'contain'}
+      accessibilityIgnoresInvertColors
+    />
   )
 }
 
