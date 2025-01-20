@@ -9,7 +9,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -20,7 +20,7 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
-import {isIOS, isWeb} from '#/platform/detection'
+import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useTrendingSettings} from '#/state/preferences/trending'
@@ -29,18 +29,24 @@ import {
   FeedDescriptor,
   FeedParams,
   FeedPostSlice,
+  FeedPostSliceItem,
   pollLatest,
   RQKEY,
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
 import {useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
+import {List, ListRef} from '#/view/com/util/List'
+import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {useBreakpoints} from '#/alf'
 import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
+import {
+  PostFeedVideoGridRow,
+  PostFeedVideoGridRowPlaceholder,
+} from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
-import {List, ListRef} from '../util/List'
-import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
+import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
 import {PostFeedErrorMessage} from './PostFeedErrorMessage'
@@ -69,7 +75,7 @@ type FeedRow =
       key: string
     }
   | {
-      type: 'slice'
+      type: 'slice' // TODO can we remove?
       key: string
       slice: FeedPostSlice
     }
@@ -79,6 +85,17 @@ type FeedRow =
       slice: FeedPostSlice
       indexInSlice: number
       showReplyTo: boolean
+    }
+  | {
+      type: 'videoGridRowPlaceholder'
+      key: string
+    }
+  | {
+      type: 'videoGridRow'
+      key: string
+      items: FeedPostSliceItem[]
+      sourceFeedUri: string
+      feedContexts: (string | undefined)[]
     }
   | {
       type: 'sliceViewFullThread'
@@ -97,12 +114,28 @@ type FeedRow =
       type: 'interstitialTrending'
       key: string
     }
+  | {
+      type: 'interstitialTrendingVideos'
+      key: string
+    }
 
-export function getFeedPostSlice(feedRow: FeedRow): FeedPostSlice | null {
+export function getItemsForFeedback(feedRow: FeedRow):
+  | {
+      item: FeedPostSliceItem
+      feedContext: string | undefined
+    }[] {
   if (feedRow.type === 'sliceItem') {
-    return feedRow.slice
+    return feedRow.slice.items.map(item => ({
+      item,
+      feedContext: feedRow.slice.feedContext,
+    }))
+  } else if (feedRow.type === 'videoGridRow') {
+    return feedRow.items.map((item, i) => ({
+      item,
+      feedContext: feedRow.feedContexts[i],
+    }))
   } else {
-    return null
+    return []
   }
 }
 
@@ -131,6 +164,7 @@ let PostFeed = ({
   extraData,
   savedFeedConfig,
   initialNumToRender: initialNumToRenderOverride,
+  isVideoFeed = false,
 }: {
   feed: FeedDescriptor
   feedParams?: FeedParams
@@ -152,6 +186,7 @@ let PostFeed = ({
   extraData?: any
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
   initialNumToRender?: number
+  isVideoFeed?: boolean
 }): React.ReactNode => {
   const theme = useTheme()
   const {_} = useLingui()
@@ -163,8 +198,10 @@ let PostFeed = ({
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
   const [feedType, feedUri, feedTab] = feed.split('|')
-  const {gtTablet} = useBreakpoints()
+  const {gtMobile, gtTablet} = useBreakpoints()
+  const areVideoFeedsEnabled = isNative
 
+  const feedCacheKey = feedParams?.feedCacheKey
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
     [enabled, ignoreFilterFor],
@@ -267,10 +304,10 @@ let PostFeed = ({
   const showProgressIntersitial =
     (followProgressGuide || followAndLikeProgressGuide) && !isDesktop
 
-  const {trendingDisabled} = useTrendingSettings()
+  const {trendingDisabled, trendingVideoDisabled} = useTrendingSettings()
 
   const feedItems: FeedRow[] = React.useMemo(() => {
-    let feedKind: 'following' | 'discover' | 'profile' | undefined
+    let feedKind: 'following' | 'discover' | 'profile' | 'thevids' | undefined
     if (feedType === 'following') {
       feedKind = 'following'
     } else if (feedUri === DISCOVER_FEED_URI) {
@@ -303,81 +340,132 @@ let PostFeed = ({
         })
       } else if (data) {
         let sliceIndex = -1
-        for (const page of data?.pages) {
-          for (const slice of page.slices) {
-            sliceIndex++
 
-            if (hasSession) {
-              if (feedKind === 'discover') {
-                if (sliceIndex === 0) {
-                  if (showProgressIntersitial) {
+        if (isVideoFeed) {
+          const videos: {
+            item: FeedPostSliceItem
+            feedContext: string | undefined
+          }[] = []
+          for (const page of data.pages) {
+            for (const slice of page.slices) {
+              const item = slice.items.at(0)
+              if (item && AppBskyEmbedVideo.isView(item.post.embed)) {
+                videos.push({item, feedContext: slice.feedContext})
+              }
+            }
+          }
+
+          const rows: {
+            item: FeedPostSliceItem
+            feedContext: string | undefined
+          }[][] = []
+          for (let i = 0; i < videos.length; i++) {
+            const video = videos[i]
+            const item = video.item
+            const cols = gtMobile ? 3 : 2
+            const rowItem = {item, feedContext: video.feedContext}
+            if (i % cols === 0) {
+              rows.push([rowItem])
+            } else {
+              rows[rows.length - 1].push(rowItem)
+            }
+          }
+
+          for (const row of rows) {
+            sliceIndex++
+            arr.push({
+              type: 'videoGridRow',
+              key: row.map(r => r.item._reactKey).join('-'),
+              items: row.map(r => r.item),
+              sourceFeedUri: feedUri,
+              feedContexts: row.map(r => r.feedContext),
+            })
+          }
+        } else {
+          for (const page of data?.pages) {
+            for (const slice of page.slices) {
+              sliceIndex++
+
+              if (hasSession) {
+                if (feedKind === 'discover') {
+                  if (sliceIndex === 0) {
+                    if (showProgressIntersitial) {
+                      arr.push({
+                        type: 'interstitialProgressGuide',
+                        key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
+                      })
+                    }
+                    if (!gtTablet && !trendingDisabled) {
+                      arr.push({
+                        type: 'interstitialTrending',
+                        key:
+                          'interstitial2-' + sliceIndex + '-' + lastFetchedAt,
+                      })
+                    }
+                  } else if (sliceIndex === 15) {
+                    if (areVideoFeedsEnabled && !trendingVideoDisabled) {
+                      arr.push({
+                        type: 'interstitialTrendingVideos',
+                        key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
+                      })
+                    }
+                  } else if (sliceIndex === 30) {
                     arr.push({
-                      type: 'interstitialProgressGuide',
+                      type: 'interstitialFollows',
                       key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                     })
                   }
-                  if (!gtTablet && !trendingDisabled) {
+                } else if (feedKind === 'profile') {
+                  if (sliceIndex === 5) {
                     arr.push({
-                      type: 'interstitialTrending',
-                      key: 'interstitial2-' + sliceIndex + '-' + lastFetchedAt,
+                      type: 'interstitialFollows',
+                      key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                     })
                   }
-                } else if (sliceIndex === 30) {
-                  arr.push({
-                    type: 'interstitialFollows',
-                    key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
-                  })
-                }
-              } else if (feedKind === 'profile') {
-                if (sliceIndex === 5) {
-                  arr.push({
-                    type: 'interstitialFollows',
-                    key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
-                  })
                 }
               }
-            }
 
-            if (slice.isIncompleteThread && slice.items.length >= 3) {
-              const beforeLast = slice.items.length - 2
-              const last = slice.items.length - 1
-              arr.push({
-                type: 'sliceItem',
-                key: slice.items[0]._reactKey,
-                slice: slice,
-                indexInSlice: 0,
-                showReplyTo: false,
-              })
-              arr.push({
-                type: 'sliceViewFullThread',
-                key: slice._reactKey + '-viewFullThread',
-                uri: slice.items[0].uri,
-              })
-              arr.push({
-                type: 'sliceItem',
-                key: slice.items[beforeLast]._reactKey,
-                slice: slice,
-                indexInSlice: beforeLast,
-                showReplyTo:
-                  slice.items[beforeLast].parentAuthor?.did !==
-                  slice.items[beforeLast].post.author.did,
-              })
-              arr.push({
-                type: 'sliceItem',
-                key: slice.items[last]._reactKey,
-                slice: slice,
-                indexInSlice: last,
-                showReplyTo: false,
-              })
-            } else {
-              for (let i = 0; i < slice.items.length; i++) {
+              if (slice.isIncompleteThread && slice.items.length >= 3) {
+                const beforeLast = slice.items.length - 2
+                const last = slice.items.length - 1
                 arr.push({
                   type: 'sliceItem',
-                  key: slice.items[i]._reactKey,
+                  key: slice.items[0]._reactKey,
                   slice: slice,
-                  indexInSlice: i,
-                  showReplyTo: i === 0,
+                  indexInSlice: 0,
+                  showReplyTo: false,
                 })
+                arr.push({
+                  type: 'sliceViewFullThread',
+                  key: slice._reactKey + '-viewFullThread',
+                  uri: slice.items[0].uri,
+                })
+                arr.push({
+                  type: 'sliceItem',
+                  key: slice.items[beforeLast]._reactKey,
+                  slice: slice,
+                  indexInSlice: beforeLast,
+                  showReplyTo:
+                    slice.items[beforeLast].parentAuthor?.did !==
+                    slice.items[beforeLast].post.author.did,
+                })
+                arr.push({
+                  type: 'sliceItem',
+                  key: slice.items[last]._reactKey,
+                  slice: slice,
+                  indexInSlice: last,
+                  showReplyTo: false,
+                })
+              } else {
+                for (let i = 0; i < slice.items.length; i++) {
+                  arr.push({
+                    type: 'sliceItem',
+                    key: slice.items[i]._reactKey,
+                    slice: slice,
+                    indexInSlice: i,
+                    showReplyTo: i === 0,
+                  })
+                }
               }
             }
           }
@@ -390,10 +478,17 @@ let PostFeed = ({
         })
       }
     } else {
-      arr.push({
-        type: 'loading',
-        key: 'loading',
-      })
+      if (isVideoFeed) {
+        arr.push({
+          type: 'videoGridRowPlaceholder',
+          key: 'videoGridRowPlaceholder',
+        })
+      } else {
+        arr.push({
+          type: 'loading',
+          key: 'loading',
+        })
+      }
     }
 
     return arr
@@ -409,7 +504,11 @@ let PostFeed = ({
     hasSession,
     showProgressIntersitial,
     trendingDisabled,
+    trendingVideoDisabled,
     gtTablet,
+    gtMobile,
+    isVideoFeed,
+    areVideoFeedsEnabled,
   ])
 
   // events
@@ -498,6 +597,8 @@ let PostFeed = ({
         return <ProgressGuide />
       } else if (row.type === 'interstitialTrending') {
         return <TrendingInterstitial />
+      } else if (row.type === 'interstitialTrendingVideos') {
+        return <TrendingVideosInterstitial />
       } else if (row.type === 'sliceItem') {
         const slice = row.slice
         if (slice.isFallbackMarker) {
@@ -532,6 +633,25 @@ let PostFeed = ({
         )
       } else if (row.type === 'sliceViewFullThread') {
         return <ViewFullThread uri={row.uri} />
+      } else if (row.type === 'videoGridRowPlaceholder') {
+        return (
+          <View>
+            <PostFeedVideoGridRowPlaceholder />
+            <PostFeedVideoGridRowPlaceholder />
+            <PostFeedVideoGridRowPlaceholder />
+          </View>
+        )
+      } else if (row.type === 'videoGridRow') {
+        return (
+          <PostFeedVideoGridRow
+            items={row.items}
+            sourceContext={{
+              type: 'feedgen',
+              uri: row.sourceFeedUri,
+              sourceInterstitial: feedCacheKey ?? 'none',
+            }}
+          />
+        )
       } else {
         return null
       }
@@ -545,6 +665,7 @@ let PostFeed = ({
       _,
       onPressRetryLoadMore,
       feedUri,
+      feedCacheKey,
     ],
   )
 

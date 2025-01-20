@@ -72,15 +72,15 @@
     tlds "^1.234.0"
     zod "^3.23.8"
 
-"@atproto/api@^0.13.21":
-  version "0.13.21"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.21.tgz#8ee27a07e5a024b5bf32408d9bd623dd598ad1cc"
-  integrity sha512-iOxSj2YS3Fx9IPz1NivKrSsdYPNbBgpnUH7+WhKYAMvDFDUe2PZe7taau8wsUjJAu/H3S0Mk2TDh5e/7tCRwHA==
+"@atproto/api@^0.13.28":
+  version "0.13.28"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.28.tgz#b36d4ad9485724ec030e7292599f048ab62a9fcc"
+  integrity sha512-qBuEI5aNe2/KjmtmtLMilnpZc+FRAsAM3/5nFOQPEudUk388ctNsmKdz2Nti4OvCebn+50EB6V3lju596CTUNA==
   dependencies:
-    "@atproto/common-web" "^0.3.1"
-    "@atproto/lexicon" "^0.4.4"
+    "@atproto/common-web" "^0.3.2"
+    "@atproto/lexicon" "^0.4.5"
     "@atproto/syntax" "^0.3.1"
-    "@atproto/xrpc" "^0.6.5"
+    "@atproto/xrpc" "^0.6.6"
     await-lock "^2.2.2"
     multiformats "^9.9.0"
     tlds "^1.234.0"
@@ -163,6 +163,16 @@
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/@atproto/common-web/-/common-web-0.3.1.tgz#86f8efb10a4b9073839cee914c6c08a664917cc4"
   integrity sha512-N7wiTnus5vAr+lT//0y8m/FaHHLJ9LpGuEwkwDAeV3LCiPif4m/FS8x/QOYrx1PdZQwKso95RAPzCGWQBH5j6Q==
+  dependencies:
+    graphemer "^1.4.0"
+    multiformats "^9.9.0"
+    uint8arrays "3.0.0"
+    zod "^3.23.8"
+
+"@atproto/common-web@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@atproto/common-web/-/common-web-0.3.2.tgz#4cf78ad4d24fed801882f3d35afc39bceccdff51"
+  integrity sha512-Vx0JtL1/CssJbFAb0UOdvTrkbUautsDfHNOXNTcX2vyPIxH9xOameSqLLunM1hZnOQbJwyjmQCt6TV+bhnanDg==
   dependencies:
     graphemer "^1.4.0"
     multiformats "^9.9.0"
@@ -278,6 +288,17 @@
   integrity sha512-QFEmr3rpj/RoAmfX9ALU/asBG/rsVtQZnw+9nOB1/AuIwoxXd+ZyndR6lVUc2+DL4GEjl6W2yvBru5xbQIZWyA==
   dependencies:
     "@atproto/common-web" "^0.3.1"
+    "@atproto/syntax" "^0.3.1"
+    iso-datestring-validator "^2.2.2"
+    multiformats "^9.9.0"
+    zod "^3.23.8"
+
+"@atproto/lexicon@^0.4.5":
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.4.5.tgz#4fcf3731193c674286e9e8d677bbab5dd530b817"
+  integrity sha512-fljWqMGKn+XWtTprBcS3F1hGBREnQYh6qYHv2sjENucc7REms1gtmZXSerB9N6pVeHVNOnXiILdukeAcic5OEw==
+  dependencies:
+    "@atproto/common-web" "^0.3.2"
     "@atproto/syntax" "^0.3.1"
     iso-datestring-validator "^2.2.2"
     multiformats "^9.9.0"
@@ -450,6 +471,14 @@
   integrity sha512-t6u8iPEVbWge5RhzKZDahSzNDYIAxUtop6Q/X/apAZY1rgreVU0/1sSvvRoRFH19d3UIKjYdLuwFqMi9w8nY3Q==
   dependencies:
     "@atproto/lexicon" "^0.4.4"
+    zod "^3.23.8"
+
+"@atproto/xrpc@^0.6.6":
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.6.6.tgz#28f58270ef4a8056f7f718bd52512e74bcd3702f"
+  integrity sha512-umXEYVMo9/pyIBoKmIAIi64RXDW9tSXY+wqztlQ6I2GZtjLfNZqmAWU+wADk3SxUe54mvjxxGyA4TtyGtDMfhA==
+  dependencies:
+    "@atproto/lexicon" "^0.4.5"
     zod "^3.23.8"
 
 "@aws-crypto/crc32@3.0.0":

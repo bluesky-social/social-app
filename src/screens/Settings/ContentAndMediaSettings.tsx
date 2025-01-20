@@ -37,8 +37,9 @@ export function ContentAndMediaSettingsScreen({}: Props) {
   const inAppBrowserPref = useInAppBrowser()
   const setUseInAppBrowser = useSetInAppBrowser()
   const {enabled: trendingEnabled} = useTrendingConfig()
-  const {trendingDisabled} = useTrendingSettings()
-  const {setTrendingDisabled} = useTrendingSettingsApi()
+  const {trendingDisabled, trendingVideoDisabled} = useTrendingSettings()
+  const {setTrendingDisabled, setTrendingVideoDisabled} =
+    useTrendingSettingsApi()
 
   return (
     <Layout.Screen>
@@ -134,6 +135,27 @@ export function ContentAndMediaSettingsScreen({}: Props) {
                   <SettingsList.ItemIcon icon={Graph} />
                   <SettingsList.ItemText>
                     <Trans>Enable trending topics</Trans>
+                  </SettingsList.ItemText>
+                  <Toggle.Platform />
+                </SettingsList.Item>
+              </Toggle.Item>
+              <Toggle.Item
+                name="show_trending_videos"
+                label={_(msg`Enable trending videos in your Discover feed.`)}
+                value={!trendingVideoDisabled}
+                onChange={value => {
+                  const hide = Boolean(!value)
+                  if (hide) {
+                    logEvent('trendingVideos:hide', {context: 'settings'})
+                  } else {
+                    logEvent('trendingVideos:show', {context: 'settings'})
+                  }
+                  setTrendingVideoDisabled(hide)
+                }}>
+                <SettingsList.Item>
+                  <SettingsList.ItemIcon icon={Graph} />
+                  <SettingsList.ItemText>
+                    <Trans>Enable trending videos in your Discover feed</Trans>
                   </SettingsList.ItemText>
                   <Toggle.Platform />
                 </SettingsList.Item>
