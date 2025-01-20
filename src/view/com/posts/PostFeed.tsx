@@ -75,9 +75,8 @@ type FeedRow =
       key: string
     }
   | {
-      type: 'slice' // TODO can we remove?
+      type: 'fallbackMarker'
       key: string
-      slice: FeedPostSlice
     }
   | {
       type: 'sliceItem'
@@ -425,7 +424,13 @@ let PostFeed = ({
                 }
               }
 
-              if (slice.isIncompleteThread && slice.items.length >= 3) {
+              if (slice.isFallbackMarker) {
+                arr.push({
+                  type: 'fallbackMarker',
+                  key:
+                    'sliceFallbackMarker-' + sliceIndex + '-' + lastFetchedAt,
+                })
+              } else if (slice.isIncompleteThread && slice.items.length >= 3) {
                 const beforeLast = slice.items.length - 2
                 const last = slice.items.length - 1
                 arr.push({
@@ -599,15 +604,14 @@ let PostFeed = ({
         return <TrendingInterstitial />
       } else if (row.type === 'interstitialTrendingVideos') {
         return <TrendingVideosInterstitial />
+      } else if (row.type === 'fallbackMarker') {
+        // HACK
+        // tell the user we fell back to discover
+        // see home.ts (feed api) for more info
+        // -prf
+        return <DiscoverFallbackHeader />
       } else if (row.type === 'sliceItem') {
         const slice = row.slice
-        if (slice.isFallbackMarker) {
-          // HACK
-          // tell the user we fell back to discover
-          // see home.ts (feed api) for more info
-          // -prf
-          return <DiscoverFallbackHeader />
-        }
         const indexInSlice = row.indexInSlice
         const item = slice.items[indexInSlice]
         return (
