@@ -21,7 +21,7 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
-import {useEvent} from 'expo'
+import {useEventListener} from 'expo'
 import {Image, ImageStyle} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {createVideoPlayer, VideoPlayer, VideoView} from 'expo-video'
@@ -537,7 +537,13 @@ function VideoItemInner({
   embed: AppBskyEmbedVideo.View
 }) {
   const {bottom} = useSafeAreaInsets()
-  const {status} = useEvent(player, 'statusChange', {status: player.status})
+  const [isReady, setIsReady] = useState(!isAndroid)
+
+  useEventListener(player, 'timeUpdate', evt => {
+    if (isAndroid && !isReady && evt.currentTime >= 0.05) {
+      setIsReady(true)
+    }
+  })
 
   return (
     <VideoView
@@ -550,7 +556,7 @@ function VideoItemInner({
           right: 0,
           bottom: bottom + VIDEO_PLAYER_BOTTOM_INSET,
         },
-        // isAndroid && status === 'loading' && {opacity: 0},
+        !isReady && {opacity: 0},
       ]}
       player={player}
       nativeControls={false}
