@@ -15,7 +15,7 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {SavedFeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
-import {FeedParams} from '#/state/queries/post-feed'
+import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
@@ -99,11 +99,12 @@ function HomeScreenReady({
     () => pinnedFeedInfos.map(f => f.feedDescriptor),
     [pinnedFeedInfos],
   )
-  const rawSelectedFeed = useSelectedFeed() ?? allFeeds[0]
+  const maybeRawSelectedFeed: FeedDescriptor | undefined =
+    useSelectedFeed() ?? allFeeds[0]
   const setSelectedFeed = useSetSelectedFeed()
-  const maybeFoundIndex = allFeeds.indexOf(rawSelectedFeed)
+  const maybeFoundIndex = allFeeds.indexOf(maybeRawSelectedFeed)
   const selectedIndex = Math.max(0, maybeFoundIndex)
-  const selectedFeed = allFeeds[selectedIndex]
+  const maybeSelectedFeed: FeedDescriptor | undefined = allFeeds[selectedIndex]
   const requestNotificationsPermission = useRequestNotificationsPermission()
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
@@ -135,11 +136,11 @@ function HomeScreenReady({
 
   useFocusEffect(
     useNonReactiveCallback(() => {
-      if (selectedFeed) {
+      if (maybeSelectedFeed) {
         logEvent('home:feedDisplayed', {
           index: selectedIndex,
-          feedType: selectedFeed.split('|')[0],
-          feedUrl: selectedFeed,
+          feedType: maybeSelectedFeed.split('|')[0],
+          feedUrl: maybeSelectedFeed,
           reason: 'focus',
         })
       }
@@ -149,16 +150,20 @@ function HomeScreenReady({
   const onPageSelected = React.useCallback(
     (index: number) => {
       setMinimalShellMode(false)
-      const feed = allFeeds[index]
+      const maybeFeed = allFeeds[index]
+
       // Mutate the ref before setting state to avoid the imperative syncing effect
       // above from starting a loop on Android when swiping back and forth.
       lastPagerReportedIndexRef.current = index
-      setSelectedFeed(feed)
-      logEvent('home:feedDisplayed', {
-        index,
-        feedType: feed.split('|')[0],
-        feedUrl: feed,
-      })
+      setSelectedFeed(maybeFeed)
+
+      if (maybeFeed) {
+        logEvent('home:feedDisplayed', {
+          index,
+          feedType: maybeFeed.split('|')[0],
+          feedUrl: maybeFeed,
+        })
+      }
     },
     [setSelectedFeed, setMinimalShellMode, allFeeds],
   )
@@ -228,7 +233,7 @@ function HomeScreenReady({
               <FeedPage
                 key={feed}
                 testID="followingFeedPage"
-                isPageFocused={selectedFeed === feed}
+                isPageFocused={maybeSelectedFeed === feed}
                 isPageAdjacent={Math.abs(selectedIndex - index) === 1}
                 feed={feed}
                 feedParams={homeFeedParams}
@@ -243,7 +248,7 @@ function HomeScreenReady({
             <FeedPage
               key={feed}
               testID="customFeedPage"
-              isPageFocused={selectedFeed === feed}
+              isPageFocused={maybeSelectedFeed === feed}
               isPageAdjacent={Math.abs(selectedIndex - index) === 1}
               feed={feed}
               renderEmptyState={renderCustomFeedEmptyState}
