@@ -3,7 +3,6 @@ import EventEmitter from 'eventemitter3'
 
 import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
-import {IS_DEV} from '#/env'
 import {Device, device} from '#/storage'
 
 const events = new EventEmitter()
@@ -65,7 +64,7 @@ export function beginResolveGeolocation() {
    * In dev, IP server is unavailable, so we just set the default geolocation
    * and fail closed.
    */
-  if (IS_DEV) {
+  if (__DEV__) {
     geolocationResolution = new Promise(y => y())
     device.set(['geolocation'], DEFAULT_GEOLOCATION)
     return

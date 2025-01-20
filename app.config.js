@@ -15,9 +15,9 @@ module.exports = function (config) {
    */
   const PLATFORM = process.env.EAS_BUILD_PLATFORM
 
-  const IS_DEV = process.env.EXPO_PUBLIC_ENV === 'development'
   const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
   const IS_PRODUCTION = process.env.EXPO_PUBLIC_ENV === 'production'
+  const IS_DEV = !IS_TESTFLIGHT || !IS_PRODUCTION
 
   const ASSOCIATED_DOMAINS = [
     'applinks:bsky.app',
@@ -50,7 +50,6 @@ module.exports = function (config) {
       runtimeVersion: {
         policy: 'appVersion',
       },
-      orientation: 'portrait',
       icon: './assets/app-icons/ios_icon_default_light.png',
       userInterfaceStyle: 'automatic',
       primaryColor: '#1083fe',
@@ -77,6 +76,7 @@ module.exports = function (config) {
             'ast',
             'ca',
             'de',
+            'el',
             'es',
             'fi',
             'fr',
@@ -87,10 +87,13 @@ module.exports = function (config) {
             'id',
             'it',
             'ja',
+            'km',
             'ko',
+            'ne',
             'nl',
             'pl',
             'pt-BR',
+            'ro',
             'ru',
             'th',
             'tr',
@@ -188,6 +191,7 @@ module.exports = function (config) {
         channel: UPDATES_CHANNEL,
       },
       plugins: [
+        'expo-video',
         'expo-localization',
         USE_SENTRY && [
           '@sentry/react-native/expo',
@@ -222,11 +226,14 @@ module.exports = function (config) {
           },
         ],
         'react-native-compressor',
+        // TODO: Reenable when the build issue is fixed.
+        // '@bitdrift/react-native',
         './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
+        './plugins/withAndroidNoJitpackPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
         './plugins/withAppDelegateReferrer.js',
@@ -234,8 +241,8 @@ module.exports = function (config) {
           'expo-font',
           {
             fonts: [
-              './assets/fonts/inter/InterVariable.ttf',
-              './assets/fonts/inter/InterVariable-Italic.ttf',
+              './assets/fonts/inter/InterVariable.woff2',
+              './assets/fonts/inter/InterVariable-Italic.woff2',
               // Android only
               './assets/fonts/inter/Inter-Regular.otf',
               './assets/fonts/inter/Inter-Italic.otf',
@@ -338,6 +345,17 @@ module.exports = function (config) {
               android: './assets/app-icons/android_icon_core_classic.png',
               prerendered: true,
             },
+          },
+        ],
+        ['expo-screen-orientation', {initialOrientation: 'PORTRAIT_UP'}],
+        [
+          'react-native-vision-camera',
+          {
+            enableLocation: false,
+            cameraPermissionText: 'Bluesky needs access to your camera.',
+            enableMicrophonePermission: true,
+            microphonePermissionText:
+              'Bluesky needs access to your microphone.',
           },
         ],
       ].filter(Boolean),

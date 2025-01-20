@@ -228,7 +228,7 @@ function Empty() {
         a.justify_between,
         a.gap_lg,
         a.shadow_lg,
-        {marginTop: 2},
+        {marginTop: 1},
       ]}>
       <View style={[a.gap_xs]}>
         <Text

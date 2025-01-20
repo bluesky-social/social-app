@@ -14,7 +14,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {enforceLen} from '#/lib/strings/helpers'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
-import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
@@ -63,7 +63,6 @@ export default function HashtagScreen({
 
   const [activeTab, setActiveTab] = React.useState(0)
   const setMinimalShellMode = useSetMinimalShellMode()
-  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -74,10 +73,9 @@ export default function HashtagScreen({
   const onPageSelected = React.useCallback(
     (index: number) => {
       setMinimalShellMode(false)
-      setDrawerSwipeDisabled(index > 0)
       setActiveTab(index)
     },
-    [setDrawerSwipeDisabled, setMinimalShellMode],
+    [setMinimalShellMode],
   )
 
   const sections = React.useMemo(() => {
@@ -109,34 +107,34 @@ export default function HashtagScreen({
 
   return (
     <Layout.Screen>
-      <Layout.Header.Outer>
-        <Layout.Header.BackButton />
-        <Layout.Header.Content>
-          <Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>
-          {author && (
-            <Layout.Header.SubtitleText>
-              {_(msg`From @${sanitizedAuthor}`)}
-            </Layout.Header.SubtitleText>
-          )}
-        </Layout.Header.Content>
-        <Layout.Header.Slot>
-          <Button
-            label={_(msg`Share`)}
-            size="small"
-            variant="ghost"
-            color="primary"
-            shape="round"
-            onPress={onShare}
-            hitSlop={HITSLOP_10}
-            style={[{right: -3}]}>
-            <ButtonIcon icon={Share} size="md" />
-          </Button>
-        </Layout.Header.Slot>
-      </Layout.Header.Outer>
       <Pager
         onPageSelected={onPageSelected}
         renderTabBar={props => (
-          <Layout.Center style={web([a.sticky, a.z_10, {top: 0}])}>
+          <Layout.Center style={[a.z_10, web([a.sticky, {top: 0}])]}>
+            <Layout.Header.Outer noBottomBorder>
+              <Layout.Header.BackButton />
+              <Layout.Header.Content>
+                <Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>
+                {author && (
+                  <Layout.Header.SubtitleText>
+                    {_(msg`From @${sanitizedAuthor}`)}
+                  </Layout.Header.SubtitleText>
+                )}
+              </Layout.Header.Content>
+              <Layout.Header.Slot>
+                <Button
+                  label={_(msg`Share`)}
+                  size="small"
+                  variant="ghost"
+                  color="primary"
+                  shape="round"
+                  onPress={onShare}
+                  hitSlop={HITSLOP_10}
+                  style={[{right: -3}]}>
+                  <ButtonIcon icon={Share} size="md" />
+                </Button>
+              </Layout.Header.Slot>
+            </Layout.Header.Outer>
             <TabBar items={sections.map(section => section.title)} {...props} />
           </Layout.Center>
         )}

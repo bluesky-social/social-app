@@ -1,5 +1,6 @@
 import React, {useCallback, useMemo} from 'react'
 import {StyleSheet} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {
   AppBskyActorDefs,
   AppBskyGraphGetActorStarterPacks,
@@ -32,7 +33,7 @@ import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useAgent, useSession} from '#/state/session'
-import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {ProfileFeedgens} from '#/view/com/feeds/ProfileFeedgens'
 import {ProfileLists} from '#/view/com/lists/ProfileLists'
@@ -43,6 +44,7 @@ import {ListRef} from '#/view/com/util/List'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
+import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
@@ -56,7 +58,7 @@ interface SectionRef {
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export function ProfileScreen(props: Props) {
   return (
-    <Layout.Screen testID="profileScreen">
+    <Layout.Screen testID="profileScreen" style={[a.pt_0]}>
       <ProfileScreenInner {...props} />
     </Layout.Screen>
   )
@@ -121,13 +123,15 @@ function ProfileScreenInner({route}: Props) {
   }
   if (resolveError || profileError) {
     return (
-      <ErrorScreen
-        testID="profileErrorScreen"
-        title={profileError ? _(msg`Not Found`) : _(msg`Oops!`)}
-        message={cleanError(resolveError || profileError)}
-        onPressTryAgain={onPressTryAgain}
-        showHeader
-      />
+      <SafeAreaView style={[a.flex_1]}>
+        <ErrorScreen
+          testID="profileErrorScreen"
+          title={profileError ? _(msg`Not Found`) : _(msg`Oops!`)}
+          message={cleanError(resolveError || profileError)}
+          onPressTryAgain={onPressTryAgain}
+          showHeader
+        />
+      </SafeAreaView>
     )
   }
   if (profile && moderationOpts) {
@@ -143,13 +147,15 @@ function ProfileScreenInner({route}: Props) {
   }
   // should never happen
   return (
-    <ErrorScreen
-      testID="profileErrorScreen"
-      title="Oops!"
-      message="Something went wrong and we're not sure what."
-      onPressTryAgain={onPressTryAgain}
-      showHeader
-    />
+    <SafeAreaView style={[a.flex_1]}>
+      <ErrorScreen
+        testID="profileErrorScreen"
+        title="Oops!"
+        message="Something went wrong and we're not sure what."
+        onPressTryAgain={onPressTryAgain}
+        showHeader
+      />
+    </SafeAreaView>
   )
 }
 
@@ -183,7 +189,6 @@ function ProfileScreenLoaded({
   })
   const [currentPage, setCurrentPage] = React.useState(0)
   const {_} = useLingui()
-  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
 
   const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
 
@@ -307,15 +312,6 @@ function ProfileScreenLoaded({
     }, [setMinimalShellMode, currentPage, scrollSectionToTop]),
   )
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setDrawerSwipeDisabled(currentPage > 0)
-      return () => {
-        setDrawerSwipeDisabled(false)
-      }
-    }, [setDrawerSwipeDisabled, currentPage]),
-  )
-
   // events
   // =
 
@@ -339,7 +335,11 @@ function ProfileScreenLoaded({
   // rendering
   // =
 
-  const renderHeader = () => {
+  const renderHeader = ({
+    setMinimumHeight,
+  }: {
+    setMinimumHeight: (height: number) => void
+  }) => {
     return (
       <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
         <ProfileHeader
@@ -349,6 +349,7 @@ function ProfileScreenLoaded({
           moderationOpts={moderationOpts}
           hideBackButton={hideBackButton}
           isPlaceholderProfile={showPlaceholder}
+          setMinimumHeight={setMinimumHeight}
         />
       </ExpoScrollForwarderView>
     )

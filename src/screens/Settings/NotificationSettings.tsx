@@ -18,7 +18,13 @@ type Props = NativeStackScreenProps<AllNavigatorParams, 'NotificationSettings'>
 export function NotificationSettingsScreen({}: Props) {
   const {_} = useLingui()
 
-  const {data, isError: isQueryError, refetch} = useNotificationFeedQuery()
+  const {
+    data,
+    isError: isQueryError,
+    refetch,
+  } = useNotificationFeedQuery({
+    filter: 'all',
+  })
   const serverPriority = data?.pages.at(0)?.priority
 
   const {

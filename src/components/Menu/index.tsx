@@ -4,12 +4,17 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
-import {isNative} from '#/platform/detection'
+import {isAndroid, isIOS, isNative} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Context, ItemContext} from '#/components/Menu/context'
+import {
+  Context,
+  ItemContext,
+  useMenuContext,
+  useMenuItemContext,
+} from '#/components/Menu/context'
 import {
   ContextType,
   GroupProps,
@@ -24,10 +29,6 @@ export {
   type DialogControlProps as MenuControlProps,
   useDialogControl as useMenuControl,
 } from '#/components/Dialog'
-
-export function useMemoControlContext() {
-  return React.useContext(Context)
-}
 
 export function Root({
   children,
@@ -47,7 +48,7 @@ export function Root({
 }
 
 export function Trigger({children, label, role = 'button'}: TriggerProps) {
-  const {control} = React.useContext(Context)
+  const context = useMenuContext()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
     state: pressed,
@@ -57,14 +58,14 @@ export function Trigger({children, label, role = 'button'}: TriggerProps) {
 
   return children({
     isNative: true,
-    control,
+    control: context.control,
     state: {
       hovered: false,
       focused,
       pressed,
     },
     props: {
-      onPress: control.open,
+      onPress: context.control.open,
       onFocus,
       onBlur,
       onPressIn,
@@ -82,7 +83,7 @@ export function Outer({
   showCancel?: boolean
   style?: StyleProp<ViewStyle>
 }>) {
-  const context = React.useContext(Context)
+  const context = useMenuContext()
   const {_} = useLingui()
 
   return (
@@ -105,7 +106,7 @@ export function Outer({
 
 export function Item({children, label, style, onPress, ...rest}: ItemProps) {
   const t = useTheme()
-  const {control} = React.useContext(Context)
+  const context = useMenuContext()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
     state: pressed,
@@ -121,9 +122,20 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
       onFocus={onFocus}
       onBlur={onBlur}
       onPress={async e => {
-        await onPress(e)
-        if (!e.defaultPrevented) {
-          control?.close()
+        if (isAndroid) {
+          /**
+           * Below fix for iOS doesn't work for Android, this does.
+           */
+          onPress?.(e)
+          context.control.close()
+        } else if (isIOS) {
+          /**
+           * Fixes a subtle bug on iOS
+           * {@link https://github.com/bluesky-social/social-app/pull/5849/files#diff-de516ef5e7bd9840cd639213301df38cf03acfcad5bda85a1d63efd249ba79deL124-L127}
+           */
+          context.control.close(() => {
+            onPress?.(e)
+          })
         }
       }}
       onPressIn={e => {
@@ -156,7 +168,7 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
 
 export function ItemText({children, style}: ItemTextProps) {
   const t = useTheme()
-  const {disabled} = React.useContext(ItemContext)
+  const {disabled} = useMenuItemContext()
   return (
     <Text
       numberOfLines={1}
@@ -177,7 +189,7 @@ export function ItemText({children, style}: ItemTextProps) {
 
 export function ItemIcon({icon: Comp}: ItemIconProps) {
   const t = useTheme()
-  const {disabled} = React.useContext(ItemContext)
+  const {disabled} = useMenuItemContext()
   return (
     <Comp
       size="lg"
@@ -187,6 +199,55 @@ export function ItemIcon({icon: Comp}: ItemIconProps) {
           : t.atoms.text_contrast_medium.color
       }
     />
+  )
+}
+
+export function ItemRadio({selected}: {selected: boolean}) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.justify_center,
+        a.align_center,
+        a.rounded_full,
+        t.atoms.border_contrast_high,
+        {
+          borderWidth: 1,
+          height: 20,
+          width: 20,
+        },
+      ]}>
+      {selected ? (
+        <View
+          style={[
+            a.absolute,
+            a.rounded_full,
+            {height: 14, width: 14},
+            selected
+              ? {
+                  backgroundColor: t.palette.primary_500,
+                }
+              : {},
+          ]}
+        />
+      ) : null}
+    </View>
+  )
+}
+
+export function LabelText({children}: {children: React.ReactNode}) {
+  const t = useTheme()
+  return (
+    <Text
+      style={[
+        a.font_bold,
+        t.atoms.text_contrast_medium,
+        {
+          marginBottom: -8,
+        },
+      ]}>
+      {children}
+    </Text>
   )
 }
 
@@ -223,7 +284,7 @@ export function Group({children, style}: GroupProps) {
 
 function Cancel() {
   const {_} = useLingui()
-  const {control} = React.useContext(Context)
+  const context = useMenuContext()
 
   return (
     <Button
@@ -231,7 +292,7 @@ function Cancel() {
       size="small"
       variant="ghost"
       color="secondary"
-      onPress={() => control.close()}>
+      onPress={() => context.control.close()}>
       <ButtonText>
         <Trans>Cancel</Trans>
       </ButtonText>

@@ -33,7 +33,7 @@ import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {useAgent} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
-import {KnownError} from '#/view/com/posts/FeedErrorMessage'
+import {KnownError} from '#/view/com/posts/PostFeedErrorMessage'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from '../preferences/moderation-opts'
 import {usePreferencesQuery} from './preferences'
@@ -44,7 +44,7 @@ import {
 } from './util'
 
 type ActorDid = string
-type AuthorFilter =
+export type AuthorFilter =
   | 'posts_with_replies'
   | 'posts_no_replies'
   | 'posts_and_author_threads'
@@ -61,6 +61,7 @@ export type FeedDescriptor =
 export interface FeedParams {
   mergeFeedEnabled?: boolean
   mergeFeedSources?: string[]
+  feedCacheKey?: 'discover' | 'explore' | undefined
 }
 
 type RQPageParam = {cursor: string | undefined; api: FeedAPI} | undefined
@@ -144,11 +145,8 @@ export function usePostFeedQuery(
   /**
    * The number of posts to fetch in a single request. Because we filter
    * unwanted content, we may over-fetch here to try and fill pages by
-   * `MIN_POSTS`.
+   * `MIN_POSTS`. But if you're doing this, ask @why if it's ok first.
    */
-
-  // TEMPORARILY DISABLING GATE TO PREVENT EVENT CONSUMPTION @TODO EME-GATE
-  // const fetchLimit = gate('post_feed_lang_window') ? 100 : MIN_POSTS
   const fetchLimit = MIN_POSTS
 
   // Make sure this doesn't invalidate unless really needed.

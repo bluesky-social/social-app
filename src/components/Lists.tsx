@@ -20,6 +20,7 @@ export function ListFooter({
   style,
   showEndMessage = false,
   endMessageText,
+  renderEndMessage,
 }: {
   isFetchingNextPage?: boolean
   hasNextPage?: boolean
@@ -29,6 +30,7 @@ export function ListFooter({
   style?: StyleProp<ViewStyle>
   showEndMessage?: boolean
   endMessageText?: string
+  renderEndMessage?: () => React.ReactNode
 }) {
   const t = useTheme()
 
@@ -48,9 +50,13 @@ export function ListFooter({
       ) : error ? (
         <ListFooterMaybeError error={error} onRetry={onRetry} />
       ) : !hasNextPage && showEndMessage ? (
-        <Text style={[a.text_sm, t.atoms.text_contrast_low]}>
-          {endMessageText ?? <Trans>You have reached the end</Trans>}
-        </Text>
+        renderEndMessage ? (
+          renderEndMessage()
+        ) : (
+          <Text style={[a.text_sm, t.atoms.text_contrast_low]}>
+            {endMessageText ?? <Trans>You have reached the end</Trans>}
+          </Text>
+        )
       ) : null}
     </View>
   )

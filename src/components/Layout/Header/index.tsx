@@ -13,8 +13,9 @@ import {
   platform,
   TextStyleProp,
   useBreakpoints,
-  useGutterStyles,
+  useGutters,
   useTheme,
+  web,
 } from '#/alf'
 import {Button, ButtonIcon, ButtonProps} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
@@ -29,27 +30,33 @@ import {Text} from '#/components/Typography'
 export function Outer({
   children,
   noBottomBorder,
+  headerRef,
+  sticky = true,
 }: {
   children: React.ReactNode
   noBottomBorder?: boolean
+  headerRef?: React.MutableRefObject<View | null>
+  sticky?: boolean
 }) {
   const t = useTheme()
-  const gutter = useGutterStyles()
+  const gutters = useGutters([0, 'base'])
   const {gtMobile} = useBreakpoints()
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
 
   return (
     <View
+      ref={headerRef}
       style={[
         a.w_full,
         !noBottomBorder && a.border_b,
         a.flex_row,
         a.align_center,
         a.gap_sm,
-        gutter,
+        sticky && web([a.sticky, {top: 0}, a.z_10, t.atoms.bg]),
+        gutters,
         platform({
-          native: [a.pb_sm, a.pt_xs],
-          web: [a.py_sm],
+          native: [a.pb_xs, {minHeight: 48}],
+          web: [a.py_xs, {minHeight: 52}],
         }),
         t.atoms.border_contrast_low,
         gtMobile && [a.mx_auto, {maxWidth: 600}],
@@ -85,17 +92,7 @@ export function Content({
 }
 
 export function Slot({children}: {children?: React.ReactNode}) {
-  return (
-    <View
-      style={[
-        a.z_50,
-        {
-          width: HEADER_SLOT_SIZE,
-        },
-      ]}>
-      {children}
-    </View>
-  )
+  return <View style={[a.z_50, {width: HEADER_SLOT_SIZE}]}>{children}</View>
 }
 
 export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
@@ -125,7 +122,11 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
         shape="square"
         onPress={onPressBack}
         hitSlop={HITSLOP_30}
-        style={[{marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET}, style]}
+        style={[
+          {marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET},
+          a.bg_transparent,
+          style,
+        ]}
         {...props}>
         <ButtonIcon icon={ArrowLeft} size="lg" />
       </Button>
@@ -175,7 +176,8 @@ export function TitleText({
         gtMobile && a.text_xl,
         style,
       ]}
-      numberOfLines={2}>
+      numberOfLines={2}
+      emoji>
       {children}
     </Text>
   )

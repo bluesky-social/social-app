@@ -12,7 +12,7 @@ import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -24,6 +24,9 @@ import {
   ProfileCardFeedLoadingPlaceholder,
 } from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {ExploreRecommendations} from '#/screens/Search/components/ExploreRecommendations'
+import {ExploreTrendingTopics} from '#/screens/Search/components/ExploreTrendingTopics'
+import {ExploreTrendingVideos} from '#/screens/Search/components/ExploreTrendingVideos'
 import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
@@ -192,6 +195,7 @@ function LoadMore({
                             size={28}
                             avatar={_item.avatar}
                             moderation={_item.moderation.ui('avatar')}
+                            type="user"
                           />
                         ) : _item.type === 'feed' ? (
                           <UserAvatar
@@ -238,6 +242,18 @@ type ExploreScreenItems =
       description: string
       style?: ViewStyleProp['style']
       icon: React.ComponentType<SVGIconProps>
+    }
+  | {
+      type: 'trendingTopics'
+      key: string
+    }
+  | {
+      type: 'trendingVideos'
+      key: string
+    }
+  | {
+      type: 'recommendations'
+      key: string
     }
   | {
       type: 'profile'
@@ -325,17 +341,34 @@ export function Explore() {
   ])
 
   const items = React.useMemo<ExploreScreenItems[]>(() => {
-    const i: ExploreScreenItems[] = [
-      {
-        type: 'header',
-        key: 'suggested-follows-header',
-        title: _(msg`Suggested accounts`),
-        description: _(
-          msg`Follow more accounts to get connected to your interests and build your network.`,
-        ),
-        icon: Person,
-      },
-    ]
+    const i: ExploreScreenItems[] = []
+
+    i.push({
+      type: 'trendingTopics',
+      key: `trending-topics`,
+    })
+
+    if (isNative) {
+      i.push({
+        type: 'trendingVideos',
+        key: `trending-videos`,
+      })
+    }
+
+    i.push({
+      type: 'recommendations',
+      key: `recommendations`,
+    })
+
+    i.push({
+      type: 'header',
+      key: 'suggested-follows-header',
+      title: _(msg`Suggested accounts`),
+      description: _(
+        msg`Follow more accounts to get connected to your interests and build your network.`,
+      ),
+      icon: Person,
+    })
 
     if (profiles) {
       // Currently the responses contain duplicate items.
@@ -489,6 +522,15 @@ export function Explore() {
               icon={item.icon}
             />
           )
+        }
+        case 'trendingTopics': {
+          return <ExploreTrendingTopics />
+        }
+        case 'trendingVideos': {
+          return <ExploreTrendingVideos />
+        }
+        case 'recommendations': {
+          return <ExploreRecommendations />
         }
         case 'profile': {
           return (

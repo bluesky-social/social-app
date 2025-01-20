@@ -1,12 +1,10 @@
 import React from 'react'
-import {View} from 'react-native'
-import {ScrollView} from 'react-native-gesture-handler'
+import {ScrollView, View} from 'react-native'
 import {AppBskyActorDefs, AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
@@ -16,9 +14,9 @@ import {FeedDescriptor} from '#/state/queries/post-feed'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
-import {useProgressGuide} from '#/state/shell/progress-guide'
 import * as userActionHistory from '#/state/userActionHistory'
 import {SeenPost} from '#/state/userActionHistory'
+import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, useBreakpoints, useTheme, ViewStyleProp, web} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
@@ -282,8 +280,8 @@ export function ProfileGrid({
                     profile={profile}
                     moderationOpts={moderationOpts}
                     logContext="FeedInterstitial"
-                    color="secondary_inverted"
                     shape="round"
+                    colorInverted
                   />
                 </ProfileCard.Header>
                 <ProfileCard.Description profile={profile} numberOfLines={2} />
@@ -338,33 +336,37 @@ export function ProfileGrid({
           </View>
         </View>
       ) : (
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
-          decelerationRate="fast">
-          <View style={[a.px_lg, a.pt_sm, a.pb_lg, a.flex_row, a.gap_md]}>
-            {content}
+        <BlockDrawerGesture>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
+            decelerationRate="fast">
+            <View style={[a.px_lg, a.pt_sm, a.pb_lg, a.flex_row, a.gap_md]}>
+              {content}
 
-            <Button
-              label={_(msg`Browse more accounts on the Explore page`)}
-              onPress={() => {
-                navigation.navigate('SearchTab')
-              }}>
-              <CardOuter style={[a.flex_1, {borderWidth: 0}]}>
-                <View style={[a.flex_1, a.justify_center]}>
-                  <View style={[a.flex_row, a.px_lg]}>
-                    <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
-                      <Trans>Browse more suggestions on the Explore page</Trans>
-                    </Text>
+              <Button
+                label={_(msg`Browse more accounts on the Explore page`)}
+                onPress={() => {
+                  navigation.navigate('SearchTab')
+                }}>
+                <CardOuter style={[a.flex_1, {borderWidth: 0}]}>
+                  <View style={[a.flex_1, a.justify_center]}>
+                    <View style={[a.flex_row, a.px_lg]}>
+                      <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
+                        <Trans>
+                          Browse more suggestions on the Explore page
+                        </Trans>
+                      </Text>
 
-                    <Arrow size="xl" />
+                      <Arrow size="xl" />
+                    </View>
                   </View>
-                </View>
-              </CardOuter>
-            </Button>
-          </View>
-        </ScrollView>
+                </CardOuter>
+              </Button>
+            </View>
+          </ScrollView>
+        </BlockDrawerGesture>
       )}
     </View>
   )
@@ -471,34 +473,38 @@ export function SuggestedFeeds() {
           </View>
         </View>
       ) : (
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
-          decelerationRate="fast">
-          <View style={[a.px_lg, a.pt_md, a.pb_xl, a.flex_row, a.gap_md]}>
-            {content}
+        <BlockDrawerGesture>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
+            decelerationRate="fast">
+            <View style={[a.px_lg, a.pt_md, a.pb_xl, a.flex_row, a.gap_md]}>
+              {content}
 
-            <Button
-              label={_(msg`Browse more feeds on the Explore page`)}
-              onPress={() => {
-                navigation.navigate('SearchTab')
-              }}
-              style={[a.flex_col]}>
-              <CardOuter style={[a.flex_1]}>
-                <View style={[a.flex_1, a.justify_center]}>
-                  <View style={[a.flex_row, a.px_lg]}>
-                    <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
-                      <Trans>Browse more suggestions on the Explore page</Trans>
-                    </Text>
+              <Button
+                label={_(msg`Browse more feeds on the Explore page`)}
+                onPress={() => {
+                  navigation.navigate('SearchTab')
+                }}
+                style={[a.flex_col]}>
+                <CardOuter style={[a.flex_1]}>
+                  <View style={[a.flex_1, a.justify_center]}>
+                    <View style={[a.flex_row, a.px_lg]}>
+                      <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
+                        <Trans>
+                          Browse more suggestions on the Explore page
+                        </Trans>
+                      </Text>
 
-                    <Arrow size="xl" />
+                      <Arrow size="xl" />
+                    </View>
                   </View>
-                </View>
-              </CardOuter>
-            </Button>
-          </View>
-        </ScrollView>
+                </CardOuter>
+              </Button>
+            </View>
+          </ScrollView>
+        </BlockDrawerGesture>
       )}
     </View>
   )
@@ -506,23 +512,9 @@ export function SuggestedFeeds() {
 
 export function ProgressGuide() {
   const t = useTheme()
-  const {isDesktop} = useWebMediaQueries()
-  const guide = useProgressGuide('like-10-and-follow-7')
-
-  if (isDesktop) {
-    return null
-  }
-
-  return guide ? (
-    <View
-      style={[
-        a.border_t,
-        t.atoms.border_contrast_low,
-        a.px_lg,
-        a.py_lg,
-        a.pb_lg,
-      ]}>
+  return (
+    <View style={[t.atoms.border_contrast_low, a.px_lg, a.py_lg, a.pb_lg]}>
       <ProgressGuideList />
     </View>
-  ) : null
+  )
 }

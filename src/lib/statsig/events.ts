@@ -131,16 +131,16 @@ export type LogEvents = {
     doesPosterFollowLiker: boolean | undefined
     likerClout: number | undefined
     postClout: number | undefined
-    logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   }
   'post:repost': {
-    logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   }
   'post:unlike': {
-    logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   }
   'post:unrepost': {
-    logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   }
   'post:mute': {}
   'post:unmute': {}
@@ -162,6 +162,8 @@ export type LogEvents = {
       | 'StarterPackProfilesList'
       | 'FeedInterstitial'
       | 'ProfileHeaderSuggestedFollows'
+      | 'PostOnboardingFindFollows'
+      | 'ImmersiveVideo'
   }
   'profile:unfollow': {
     logContext:
@@ -177,6 +179,8 @@ export type LogEvents = {
       | 'StarterPackProfilesList'
       | 'FeedInterstitial'
       | 'ProfileHeaderSuggestedFollows'
+      | 'PostOnboardingFindFollows'
+      | 'ImmersiveVideo'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
@@ -234,4 +238,29 @@ export type LogEvents = {
   'tmd:share': {}
   'tmd:download': {}
   'tmd:post': {}
+
+  'trendingTopics:show': {
+    context: 'settings'
+  }
+  'trendingTopics:hide': {
+    context: 'settings' | 'sidebar' | 'interstitial' | 'explore:trending'
+  }
+  'trendingTopic:click': {
+    context: 'sidebar' | 'interstitial' | 'explore'
+  }
+  'recommendedTopic:click': {
+    context: 'explore'
+  }
+  'trendingVideos:show': {
+    context: 'settings'
+  }
+  'trendingVideos:hide': {
+    context: 'settings' | 'interstitial:discover' | 'interstitial:explore'
+  }
+  'videoCard:click': {
+    context: 'interstitial:discover' | 'interstitial:explore' | 'feed'
+  }
+
+  'progressGuide:hide': {}
+  'progressGuide:followDialog:open': {}
 }
