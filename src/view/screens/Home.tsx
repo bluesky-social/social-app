@@ -268,6 +268,7 @@ function HomeScreenReady({
         isPageAdjacent={false}
         feed={`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`}
         renderEmptyState={renderCustomFeedEmptyState}
+        feedInfo={pinnedFeedInfos[0]}
       />
     </Pager>
   )
