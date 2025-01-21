@@ -21,6 +21,7 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
+import {useEvent} from 'expo'
 import {useEventListener} from 'expo'
 import {Image, ImageStyle} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
@@ -140,7 +141,7 @@ export function VideoFeed({}: NativeStackScreenProps<
         <View
           style={[
             a.absolute,
-            a.z_30,
+            a.z_50,
             {top: 0, left: 0, right: 0, paddingTop: top},
           ]}>
           <Header sourceContext={params} />
@@ -731,11 +732,13 @@ function Overlay({
       <Hider.Content>
         <View style={[a.absolute, a.inset_0, a.z_20]}>
           <View style={[a.flex_1]}>
-            <PlayPauseTapArea
-              player={player}
-              post={post}
-              feedContext={feedContext}
-            />
+            {player && (
+              <PlayPauseTapArea
+                player={player}
+                post={post}
+                feedContext={feedContext}
+              />
+            )}
           </View>
 
           <LinearGradient
@@ -971,7 +974,7 @@ function PlayPauseTapArea({
   post,
   feedContext,
 }: {
-  player?: VideoPlayer
+  player: VideoPlayer
   post: Shadow<AppBskyFeedDefs.PostView>
   feedContext: string | undefined
 }) {
@@ -980,6 +983,9 @@ function PlayPauseTapArea({
   const playHaptic = useHaptics()
   const [queueLike] = usePostLikeMutationQueue(post, 'ImmersiveVideo')
   const {sendInteraction} = useFeedFeedbackContext()
+  const {isPlaying} = useEvent(player, 'playingChange', {
+    isPlaying: player.playing,
+  })
 
   const togglePlayPause = () => {
     if (!player) return
@@ -1010,10 +1016,15 @@ function PlayPauseTapArea({
   return (
     <Button
       disabled={!player}
-      label={_(`Tap to play or pause the video`)}
+      aria-valuetext={
+        isPlaying ? _(msg`Video is playing`) : _(msg`Video is paused`)
+      }
+      label={_(
+        `Video from ${post.author.handle}. Tap to play or pause the video`,
+      )}
       accessibilityHint={_(msg`Double tap to like`)}
       onPress={onPress}
-      style={[a.absolute, a.inset_0]}>
+      style={[a.absolute, a.inset_0, a.z_10]}>
       <View />
     </Button>
   )
