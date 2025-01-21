@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleProp, Text as RNText,TextStyle} from 'react-native'
+import {StyleProp, Text as RNText, TextStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -15,7 +15,11 @@ import {
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
-import {createStaticClickIfUnmodified,InlineLinkText} from '#/components/Link'
+import {
+  createStaticClick,
+  createStaticClickIfUnmodified,
+  InlineLinkText,
+} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 
@@ -75,7 +79,7 @@ export function RichTextTag({
             : _(msg`Click to view all posts with hashtag ${tag}`)
         }
         label={_(msg`Hashtag ${tag}`)}>
-        {({isNative, props: menuProps}) => (
+        {({props: menuProps}) => (
           <InlineLinkText
             to={{
               screen: 'Hashtag',
@@ -91,8 +95,7 @@ export function RichTextTag({
                 }).onPress(e)
               }
             }}
-            shareOnLongPress={false}
-            onLongPress={menuProps.onPress}
+            onLongPress={createStaticClick(menuProps.onPress).onPress}
             accessibilityHint={
               isNative
                 ? _(msg`Long press to open tag menu for #${tag}`)
@@ -103,7 +106,7 @@ export function RichTextTag({
             {isNative ? (
               display
             ) : (
-              <RNText ref={!isNative ? menuProps.ref : null}>{display}</RNText>
+              <RNText ref={menuProps.ref}>{display}</RNText>
             )}
           </InlineLinkText>
         )}

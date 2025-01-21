@@ -55,6 +55,12 @@ type BaseLinkProps = Pick<
   onPress?: (e: GestureResponderEvent) => void | false
 
   /**
+   * Callback for when the link is long pressed (on native). Prevent default
+   * and return `false` to exit early and prevent default long press hander.
+   */
+  onLongPress?: (e: GestureResponderEvent) => void | false
+
+  /**
    * Web-only attribute. Sets `download` attr on web.
    */
   download?: string
@@ -71,6 +77,7 @@ export function useLink({
   action = 'push',
   disableMismatchWarning,
   onPress: outerOnPress,
+  onLongPress: outerOnLongPress,
   shareOnLongPress,
 }: BaseLinkProps & {
   displayText: string
@@ -174,8 +181,14 @@ export function useLink({
     }
   }, [disableMismatchWarning, displayText, href, isExternal, openModal])
 
-  const onLongPress =
-    isNative && isExternal && shareOnLongPress ? handleLongPress : undefined
+  const onLongPress = React.useCallback(
+    (e: GestureResponderEvent) => {
+      const exitEarlyIfFalse = outerOnLongPress?.(e)
+      if (exitEarlyIfFalse === false) return
+      return isNative && shareOnLongPress ? handleLongPress : undefined
+    },
+    [outerOnLongPress, handleLongPress, shareOnLongPress],
+  )
 
   return {
     isExternal,
@@ -201,14 +214,16 @@ export function Link({
   to,
   action = 'push',
   onPress: outerOnPress,
+  onLongPress: outerOnLongPress,
   download,
   ...rest
 }: LinkProps) {
-  const {href, isExternal, onPress} = useLink({
+  const {href, isExternal, onPress, onLongPress} = useLink({
     to,
     displayText: typeof children === 'string' ? children : '',
     action,
     onPress: outerOnPress,
+    onLongPress: outerOnLongPress,
   })
 
   return (
@@ -219,6 +234,7 @@ export function Link({
       accessibilityRole="link"
       href={href}
       onPress={download ? undefined : onPress}
+      onLongPress={onLongPress}
       {...web({
         hrefAttrs: {
           target: download ? undefined : isExternal ? 'blank' : undefined,
@@ -240,7 +256,7 @@ export type InlineLinkProps = React.PropsWithChildren<
     TextStyleProp &
     Pick<TextProps, 'selectable' | 'numberOfLines'>
 > &
-  Pick<ButtonProps, 'label' | 'accessibilityHint' | 'onLongPress'> & {
+  Pick<ButtonProps, 'label' | 'accessibilityHint'> & {
     disableUnderline?: boolean
     title?: TextProps['title']
   }
@@ -252,6 +268,7 @@ export function InlineLinkText({
   disableMismatchWarning,
   style,
   onPress: outerOnPress,
+  onLongPress: outerOnLongPress,
   download,
   selectable,
   label,
@@ -267,6 +284,7 @@ export function InlineLinkText({
     action,
     disableMismatchWarning,
     onPress: outerOnPress,
+    onLongPress: outerOnLongPress,
     shareOnLongPress,
   })
   const {
@@ -297,7 +315,7 @@ export function InlineLinkText({
       ]}
       role="link"
       onPress={download ? undefined : onPress}
-      onLongPress={rest.onLongPress ?? onLongPress}
+      onLongPress={onLongPress}
       onMouseEnter={onHoverIn}
       onMouseLeave={onHoverOut}
       accessibilityRole="link"
@@ -419,6 +437,7 @@ export function isModifiedClickEvent(e: GestureResponderEvent): boolean {
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button}
  */
 export function shouldClickOpenNewTab(e: GestureResponderEvent) {
+  if (!isWeb) return false
   const event = e as unknown as MouseEvent
   const isMiddleClick = isWeb && event.button === 1
   return isClickEventWithMetaKey(e) || isClickTargetExternal(e) || isMiddleClick

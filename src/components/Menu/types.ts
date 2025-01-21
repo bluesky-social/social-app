@@ -61,6 +61,7 @@ export type TriggerChildProps =
        * object is empty.
        */
       props: {
+        ref: null
         onPress: () => void
         onFocus: () => void
         onBlur: () => void
