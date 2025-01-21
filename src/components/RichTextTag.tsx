@@ -73,12 +73,12 @@ export function RichTextTag({
   return (
     <Menu.Root>
       <Menu.Trigger
-        accessibilityHint={
+        label={_(msg`Hashtag ${tag}`)}
+        hint={
           isNative
             ? _(msg`Long press to open tag menu for #${tag}`)
             : _(msg`Click to view all posts with hashtag ${tag}`)
-        }
-        label={_(msg`Hashtag ${tag}`)}>
+        }>
         {({props: menuProps}) => (
           <InlineLinkText
             to={{

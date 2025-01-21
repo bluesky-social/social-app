@@ -38,7 +38,7 @@ export type RadixPassThroughTriggerProps = {
 export type TriggerProps = {
   children(props: TriggerChildProps): React.ReactNode
   label: string
-  accessibilityHint?: string
+  hint?: string
   role?: AccessibilityRole
 }
 export type TriggerChildProps =
@@ -67,6 +67,7 @@ export type TriggerChildProps =
         onBlur: () => void
         onPressIn: () => void
         onPressOut: () => void
+        accessibilityHint?: string
         accessibilityLabel: string
         accessibilityRole: AccessibilityRole
       }
@@ -88,6 +89,7 @@ export type TriggerChildProps =
         onBlur: () => void
         onMouseEnter: () => void
         onMouseLeave: () => void
+        accessibilityHint?: string
         accessibilityLabel: string
         accessibilityRole: AccessibilityRole
       }
