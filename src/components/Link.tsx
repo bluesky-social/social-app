@@ -185,7 +185,7 @@ export function useLink({
     (e: GestureResponderEvent) => {
       const exitEarlyIfFalse = outerOnLongPress?.(e)
       if (exitEarlyIfFalse === false) return
-      return isNative && shareOnLongPress ? handleLongPress : undefined
+      return isNative && shareOnLongPress ? handleLongPress() : undefined
     },
     [outerOnLongPress, handleLongPress, shareOnLongPress],
   )
