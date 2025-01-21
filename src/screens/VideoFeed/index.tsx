@@ -53,6 +53,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isAndroid} from '#/platform/detection'
+import {useA11y} from '#/state/a11y'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {
@@ -882,6 +883,7 @@ function ExpandableRichTextView({
   const [constrained, setConstrained] = useState(false)
   const [contentHeight, setContentHeight] = useState(0)
   const {_} = useLingui()
+  const {screenReaderEnabled} = useA11y()
 
   if (expanded && !hasBeenExpanded) {
     setHasBeenExpanded(true)
@@ -910,14 +912,16 @@ function ExpandableRichTextView({
         style={[a.text_sm, a.flex_1, a.leading_normal]}
         authorHandle={authorHandle}
         enableTags
-        numberOfLines={expanded ? undefined : constrained ? 2 : 2}
+        numberOfLines={
+          expanded || screenReaderEnabled ? undefined : constrained ? 2 : 2
+        }
         onTextLayout={evt => {
           if (!constrained && evt.nativeEvent.lines.length > 1) {
             setConstrained(true)
           }
         }}
       />
-      {constrained && (
+      {constrained && !screenReaderEnabled && (
         <Pressable
           accessibilityHint={_(msg`Tap to expand or collapse post text.`)}
           accessibilityLabel={expanded ? _(msg`Read less`) : _(msg`Read more`)}
