@@ -38,6 +38,7 @@ import {useProgressGuide} from '#/state/shell/progress-guide'
 import {List, ListRef} from '#/view/com/util/List'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
+import {VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 import {useBreakpoints} from '#/alf'
 import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
 import {
@@ -646,14 +647,25 @@ let PostFeed = ({
           </View>
         )
       } else if (row.type === 'videoGridRow') {
+        let sourceContext: VideoFeedSourceContext = {
+          type: 'feedgen',
+          uri: row.sourceFeedUri,
+          sourceInterstitial: feedCacheKey ?? 'none',
+        }
+
+        if (feedType === 'author') {
+          sourceContext = {
+            type: 'author',
+            did: feedUri,
+            filter: feedTab as any,
+            sourceInterstitial: 'none',
+          }
+        }
+
         return (
           <PostFeedVideoGridRow
             items={row.items}
-            sourceContext={{
-              type: 'feedgen',
-              uri: row.sourceFeedUri,
-              sourceInterstitial: feedCacheKey ?? 'none',
-            }}
+            sourceContext={sourceContext}
           />
         )
       } else {
@@ -668,7 +680,9 @@ let PostFeed = ({
       savedFeedConfig,
       _,
       onPressRetryLoadMore,
+      feedType,
       feedUri,
+      feedTab,
       feedCacheKey,
     ],
   )
