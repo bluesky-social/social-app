@@ -206,11 +206,14 @@ function Feed() {
             feedContext: string | undefined
           }[] = []
           for (const slice of page.slices) {
-            for (const i of slice.items) {
+            const feedPost = slice.items.find(
+              item => item.uri === slice.feedPostUri,
+            )
+            if (feedPost) {
               items.push({
-                _reactKey: i._reactKey,
-                moderation: i.moderation,
-                post: i.post,
+                _reactKey: feedPost._reactKey,
+                moderation: feedPost.moderation,
+                post: feedPost.post,
                 feedContext: slice.feedContext,
               })
             }
