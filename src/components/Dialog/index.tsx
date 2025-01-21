@@ -27,6 +27,7 @@ import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, ListMethods, ListProps} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
+import {useThemeName} from '#/alf/util/useColorModeTheme'
 import {Context, useDialogContext} from '#/components/Dialog/context'
 import {
   DialogControlProps,
@@ -55,7 +56,8 @@ export function Outer({
   nativeOptions,
   testID,
 }: React.PropsWithChildren<DialogOuterProps>) {
-  const t = useTheme()
+  const themeName = useThemeName()
+  const t = useTheme(themeName)
   const ref = React.useRef<BottomSheetNativeComponent>(null)
   const closeCallbacks = React.useRef<(() => void)[]>([])
   const {setDialogIsOpen, setFullyExpandedCount} =

@@ -69,7 +69,7 @@ let PostCtrls = ({
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
   onPostReply?: (postUri: string | undefined) => void
-  logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+  logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const t = useTheme()

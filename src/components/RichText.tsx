@@ -19,7 +19,7 @@ import {Text, TextProps} from '#/components/Typography'
 const WORD_WRAP = {wordWrap: 1}
 
 export type RichTextProps = TextStyleProp &
-  Pick<TextProps, 'selectable'> & {
+  Pick<TextProps, 'selectable' | 'onLayout' | 'onTextLayout'> & {
     value: RichTextAPI | string
     testID?: string
     numberOfLines?: number
@@ -43,6 +43,8 @@ export function RichText({
   onLinkPress,
   interactiveStyle,
   emojiMultiplier = 1.85,
+  onLayout,
+  onTextLayout,
 }: RichTextProps) {
   const richText = React.useMemo(
     () =>
@@ -70,6 +72,8 @@ export function RichText({
           selectable={selectable}
           testID={testID}
           style={[plainStyles, {fontSize}]}
+          onLayout={onLayout}
+          onTextLayout={onTextLayout}
           // @ts-ignore web only -prf
           dataSet={WORD_WRAP}>
           {text}
@@ -83,6 +87,8 @@ export function RichText({
         testID={testID}
         style={plainStyles}
         numberOfLines={numberOfLines}
+        onLayout={onLayout}
+        onTextLayout={onTextLayout}
         // @ts-ignore web only -prf
         dataSet={WORD_WRAP}>
         {text}
@@ -163,6 +169,8 @@ export function RichText({
       testID={testID}
       style={plainStyles}
       numberOfLines={numberOfLines}
+      onLayout={onLayout}
+      onTextLayout={onTextLayout}
       // @ts-ignore web only -prf
       dataSet={WORD_WRAP}>
       {els}
