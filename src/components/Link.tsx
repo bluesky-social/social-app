@@ -187,7 +187,10 @@ export function useLink({
 }
 
 export type LinkProps = Omit<BaseLinkProps, 'disableMismatchWarning'> &
-  Omit<ButtonProps, 'onPress' | 'disabled'>
+  Omit<
+    ButtonProps,
+    'onPress' | 'disabled' | 'accessibilityHint' | 'onLongPress'
+  >
 
 /**
  * A interactive element that renders as a `<a>` tag on the web. On mobile it
@@ -241,7 +244,7 @@ export type InlineLinkProps = React.PropsWithChildren<
     TextStyleProp &
     Pick<TextProps, 'selectable' | 'numberOfLines'>
 > &
-  Pick<ButtonProps, 'label'> & {
+  Pick<ButtonProps, 'label' | 'accessibilityHint' | 'onLongPress'> & {
     disableUnderline?: boolean
     title?: TextProps['title']
   }
@@ -298,7 +301,7 @@ export function InlineLinkText({
       ]}
       role="link"
       onPress={download ? undefined : onPress}
-      onLongPress={onLongPress}
+      onLongPress={rest.onLongPress ?? onLongPress}
       onMouseEnter={onHoverIn}
       onMouseLeave={onHoverOut}
       accessibilityRole="link"

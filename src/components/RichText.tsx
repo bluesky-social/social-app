@@ -3,14 +3,11 @@ import {TextStyle} from 'react-native'
 import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
 import {toShortUrl} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
-import {atoms as a, flatten, native, TextStyleProp, useTheme, web} from '#/alf'
+import {atoms as a, flatten, TextStyleProp} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {InlineLinkText, LinkProps} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
@@ -152,7 +149,6 @@ export function RichText({
           text={segment.text}
           tag={tag.tag}
           style={interactiveStyles}
-          selectable={selectable}
           authorHandle={authorHandle}
         />,
       )
@@ -182,77 +178,37 @@ function RichTextTag({
   text,
   tag,
   style,
-  selectable,
   authorHandle,
 }: {
   text: string
   tag: string
-  selectable?: boolean
   authorHandle?: string
 } & TextStyleProp) {
-  const t = useTheme()
   const {_} = useLingui()
   const control = useTagMenuControl()
-  const {
-    state: hovered,
-    onIn: onHoverIn,
-    onOut: onHoverOut,
-  } = useInteractionState()
-  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
-  const navigation = useNavigation<NavigationProp>()
-
-  const navigateToPage = React.useCallback(() => {
-    navigation.push('Hashtag', {
-      tag: encodeURIComponent(tag),
-    })
-  }, [navigation, tag])
 
   const openDialog = React.useCallback(() => {
     control.open()
   }, [control])
 
-  /*
-   * N.B. On web, this is wrapped in another pressable comopnent with a11y
-   * labels, etc. That's why only some of these props are applied here.
-   */
-
   return (
-    <React.Fragment>
-      <TagMenu control={control} tag={tag} authorHandle={authorHandle}>
-        <Text
-          emoji
-          selectable={selectable}
-          {...native({
-            accessibilityLabel: _(msg`Hashtag: #${tag}`),
-            accessibilityHint: _(msg`Long press to open tag menu for #${tag}`),
-            accessibilityRole: isNative ? 'button' : undefined,
-            onPress: navigateToPage,
-            onLongPress: openDialog,
-          })}
-          {...web({
-            onMouseEnter: onHoverIn,
-            onMouseLeave: onHoverOut,
-          })}
-          // @ts-ignore
-          onFocus={onFocus}
-          onBlur={onBlur}
-          style={[
-            web({
-              cursor: 'pointer',
-            }),
-            {color: t.palette.primary_500},
-            (hovered || focused) && {
-              ...web({
-                outline: 0,
-                textDecorationLine: 'underline',
-                textDecorationColor: t.palette.primary_500,
-              }),
-            },
-            style,
-          ]}>
-          {text}
-        </Text>
-      </TagMenu>
-    </React.Fragment>
+    <TagMenu control={control} tag={tag} authorHandle={authorHandle}>
+      <InlineLinkText
+        to={{
+          screen: 'Hashtag',
+          params: {tag: encodeURIComponent(tag)},
+        }}
+        shareOnLongPress={false}
+        onLongPress={openDialog}
+        accessibilityHint={
+          isNative
+            ? _(msg`Long press to open tag menu for #${tag}`)
+            : _(msg`Click to view all posts with hashtag ${tag}`)
+        }
+        label={_(msg`Hashtag ${tag}`)}
+        style={style}>
+        {text}
+      </InlineLinkText>
+    </TagMenu>
   )
 }
