@@ -99,7 +99,7 @@ module.exports = function (config) {
             'tr',
             'uk',
             'vi',
-            'yue-Hant',
+            'yue',
             'zh-Hans',
             'zh-Hant',
           ],
