@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-20 16:54+0900\n"
+"PO-Revision-Date: 2025-01-22 07:22+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade, Akamig\n"
 "Plural-Forms: \n"
@@ -678,7 +678,7 @@ msgstr "오류 발생"
 msgid "An error occurred while compressing the video."
 msgstr "동영상을 압축하는 동안 오류가 발생했습니다."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:333
+#: src/components/StarterPack/ProfileStarterPacks.tsx:332
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "스타터 팩을 만드는 동안 오류가 발생했습니다. 다시 시도하시겠습니까?"
 
@@ -941,7 +941,7 @@ msgstr "목록을 만들기 전에 먼저 이메일을 인증해야 합니다."
 msgid "Before creating a post, you must first verify your email."
 msgstr "게시물을 작성하기 전에 먼저 이메일을 인증해야 합니다."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:340
+#: src/components/StarterPack/ProfileStarterPacks.tsx:339
 msgid "Before creating a starter pack, you must first verify your email."
 msgstr "스타터 팩을 만들기 전에 먼저 이메일을 인증해야 합니다."
 
@@ -1060,7 +1060,7 @@ msgstr "Bluesky는 직접 제공자를 선택할 수 있는 개방형 네트워�
 msgid "Bluesky is better with friends!"
 msgstr "Bluesky는 친구와 함께하면 더 좋답니다!"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:300
+#: src/components/StarterPack/ProfileStarterPacks.tsx:299
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr "Bluesky가 네트워크에 있는 사람들 중에서 임의로 추천 계정 세트를 선택합니다."
 
@@ -1154,10 +1154,9 @@ msgstr "계정을 만들면 <0>서비스 이용약관</0>에 동의하는 것입
 msgid "Camera"
 msgstr "카메라"
 
-#: src/components/Menu/index.tsx:297
+#: src/components/Menu/index.tsx:304
 #: src/components/Prompt.tsx:129
 #: src/components/Prompt.tsx:131
-#: src/components/TagMenu/index.tsx:283
 #: src/screens/Deactivated.tsx:157
 #: src/screens/Profile/Header/EditProfileDialog.tsx:220
 #: src/screens/Profile/Header/EditProfileDialog.tsx:228
@@ -1334,7 +1333,7 @@ msgstr "도메인 인증 방법 선택"
 msgid "Choose Feeds"
 msgstr "피드 선택"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:308
+#: src/components/StarterPack/ProfileStarterPacks.tsx:307
 msgid "Choose for me"
 msgstr "임의로 선택하기"
 
@@ -1346,7 +1345,7 @@ msgstr "사람들 선택"
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
 msgstr "게시하는 미디어에 적용할 자체 라벨을 선택하세요. 아무것도 선택하지 않으면 이 게시물이 모든 대상에게 적합하다는 것입니다."
 
-#: src/screens/Onboarding/StepFinished.tsx:280
+#: src/screens/Onboarding/StepFinished.tsx:287
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "맞춤 피드를 구동할 알고리즘을 선택하세요."
 
@@ -1387,10 +1386,6 @@ msgstr "검색어 지우기"
 msgid "click here"
 msgstr "이곳을 클릭"
 
-#: src/components/TagMenu/index.web.tsx:152
-msgid "Click here to open tag menu for {tag}"
-msgstr "이곳을 클릭하여 {tag}의 태그 메뉴 열기"
-
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:307
 msgid "Click to disable quote posts of this post."
 msgstr "이 게시물의 인용 게시물을 비활성화하려면 클릭하세요."
@@ -1398,6 +1393,10 @@ msgstr "이 게시물의 인용 게시물을 비활성화하려면 클릭하세�
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:308
 msgid "Click to enable quote posts of this post."
 msgstr "이 게시물의 인용 게시물을 활성화하려면 클릭하세요."
+
+#: src/components/RichTextTag.tsx:54
+msgid "Click to open tag menu for {tag}"
+msgstr "클릭하여 {tag}에 대한 태그 메뉴를 엽니다"
 
 #: src/components/dms/MessageItem.tsx:241
 msgid "Click to retry failed message"
@@ -1463,8 +1462,7 @@ msgstr "이미지 뷰어 닫기"
 msgid "Close navigation footer"
 msgstr "탐색 푸터 닫기"
 
-#: src/components/Menu/index.tsx:291
-#: src/components/TagMenu/index.tsx:277
+#: src/components/Menu/index.tsx:298
 msgid "Close this dialog"
 msgstr "이 대화 상자 닫기"
 
@@ -1507,7 +1505,7 @@ msgstr "만화"
 msgid "Community Guidelines"
 msgstr "커뮤니티 가이드라인"
 
-#: src/screens/Onboarding/StepFinished.tsx:293
+#: src/screens/Onboarding/StepFinished.tsx:300
 msgid "Complete onboarding and start using your account"
 msgstr "온보딩 완료 후 계정 사용 시작"
 
@@ -1776,7 +1774,7 @@ msgstr "대화를 뮤트할 수 없습니다"
 msgid "Could not process your video"
 msgstr "동영상을 처리할 수 없습니다"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:290
+#: src/components/StarterPack/ProfileStarterPacks.tsx:289
 msgid "Create"
 msgstr "만들기"
 
@@ -1784,13 +1782,13 @@ msgstr "만들기"
 msgid "Create a QR code for a starter pack"
 msgstr "스타터 팩 QR 코드 만들기"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:168
-#: src/components/StarterPack/ProfileStarterPacks.tsx:271
+#: src/components/StarterPack/ProfileStarterPacks.tsx:167
+#: src/components/StarterPack/ProfileStarterPacks.tsx:270
 #: src/Navigation.tsx:419
 msgid "Create a starter pack"
 msgstr "스타터 팩 만들기"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:252
+#: src/components/StarterPack/ProfileStarterPacks.tsx:251
 msgid "Create a starter pack for me"
 msgstr "나를 위한 스타터 팩 만들기"
 
@@ -1818,7 +1816,7 @@ msgstr "계정 만들기"
 msgid "Create an avatar instead"
 msgstr "대신 아바타 만들기"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:175
+#: src/components/StarterPack/ProfileStarterPacks.tsx:174
 msgid "Create another"
 msgstr "다른 스타터 팩 만들기"
 
@@ -2177,7 +2175,7 @@ msgstr "완료{extraText}"
 msgid "Double tap to close the dialog"
 msgstr "두 번 탭하여 대화 상자를 닫습니다"
 
-#: src/screens/VideoFeed/index.tsx:1014
+#: src/screens/VideoFeed/index.tsx:1046
 msgid "Double tap to like"
 msgstr "두 번 탭하여 좋아요 표시합니다"
 
@@ -2815,7 +2813,7 @@ msgstr "파일을 성공적으로 저장했습니다!"
 msgid "Filter from feeds"
 msgstr "피드에서 필터링"
 
-#: src/screens/Onboarding/StepFinished.tsx:296
+#: src/screens/Onboarding/StepFinished.tsx:303
 msgid "Finalizing"
 msgstr "마무리 중"
 
@@ -2843,7 +2841,7 @@ msgstr "완료"
 msgid "Fitness"
 msgstr "건강"
 
-#: src/screens/Onboarding/StepFinished.tsx:276
+#: src/screens/Onboarding/StepFinished.tsx:283
 msgid "Flexible"
 msgstr "유연성"
 
@@ -2852,8 +2850,7 @@ msgstr "유연성"
 #: src/components/ProfileHoverCard/index.web.tsx:449
 #: src/components/ProfileHoverCard/index.web.tsx:460
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:234
-#: src/screens/VideoFeed/index.tsx:789
-#: src/screens/VideoFeed/index.tsx:810
+#: src/screens/VideoFeed/index.tsx:828
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:132
 msgid "Follow"
 msgstr "팔로우"
@@ -2867,6 +2864,10 @@ msgstr "팔로우"
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:114
 msgid "Follow {0}"
 msgstr "{0} 님을 팔로우"
+
+#: src/screens/VideoFeed/index.tsx:807
+msgid "Follow {handle}"
+msgstr "{handle} 님을 팔로우"
 
 #: src/view/com/posts/AviFollowButton.tsx:68
 msgid "Follow {name}"
@@ -2939,8 +2940,7 @@ msgstr "내가 아는 팔로워"
 #: src/components/ProfileHoverCard/index.web.tsx:448
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
-#: src/screens/VideoFeed/index.tsx:788
-#: src/screens/VideoFeed/index.tsx:808
+#: src/screens/VideoFeed/index.tsx:826
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
 #: src/view/screens/SavedFeeds.tsx:422
@@ -2951,6 +2951,10 @@ msgstr "팔로우 중"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
 msgid "Following {0}"
 msgstr "{0} 님을 팔로우했습니다"
+
+#: src/screens/VideoFeed/index.tsx:806
+msgid "Following {handle}"
+msgstr "{handle} 님을 팔로우 중"
 
 #: src/view/com/posts/AviFollowButton.tsx:50
 msgid "Following {name}"
@@ -3033,7 +3037,7 @@ msgstr "<0/>에서"
 msgid "Gallery"
 msgstr "갤러리"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:297
+#: src/components/StarterPack/ProfileStarterPacks.tsx:296
 msgid "Generate a starter pack"
 msgstr "스타터 팩 만들기"
 
@@ -3067,8 +3071,8 @@ msgstr "명백한 법률 또는 서비스 이용약관 위반 행위"
 #: src/components/moderation/ScreenHider.tsx:163
 #: src/screens/Profile/ProfileFeed/index.tsx:89
 #: src/screens/VideoFeed/components/Header.tsx:163
-#: src/screens/VideoFeed/index.tsx:1075
-#: src/screens/VideoFeed/index.tsx:1079
+#: src/screens/VideoFeed/index.tsx:1107
+#: src/screens/VideoFeed/index.tsx:1111
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
 #: src/view/screens/ProfileList.tsx:1009
@@ -3169,9 +3173,9 @@ msgstr "괴롭힘, 분쟁 유발 또는 차별"
 msgid "Hashtag"
 msgstr "해시태그"
 
-#: src/components/RichText.tsx:226
-msgid "Hashtag: #{tag}"
-msgstr "해시태그: #{tag}"
+#: src/components/RichTextTag.tsx:51
+msgid "Hashtag {tag}"
+msgstr "해시태그 #{tag}"
 
 #: src/screens/Signup/index.tsx:173
 msgid "Having trouble?"
@@ -3198,7 +3202,7 @@ msgstr "앱 비밀번호를 만들었습니다!"
 msgid "Hidden"
 msgstr "숨겨짐"
 
-#: src/screens/VideoFeed/index.tsx:600
+#: src/screens/VideoFeed/index.tsx:615
 msgid "Hidden by your moderation settings."
 msgstr "검토 설정에 의해 숨겨졌습니다."
 
@@ -3656,7 +3660,7 @@ msgstr "Bluesky 떠나기"
 msgid "left to go."
 msgstr "명 남았습니다."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:313
+#: src/components/StarterPack/ProfileStarterPacks.tsx:312
 msgid "Let me choose"
 msgstr "직접 선택하기"
 
@@ -3665,7 +3669,7 @@ msgstr "직접 선택하기"
 msgid "Let's get your password reset!"
 msgstr "비밀번호를 재설정해 봅시다!"
 
-#: src/screens/Onboarding/StepFinished.tsx:296
+#: src/screens/Onboarding/StepFinished.tsx:303
 msgid "Let's go!"
 msgstr "출발!"
 
@@ -3861,7 +3865,7 @@ msgstr "@sawaratsuki.bsky.social 님의 로고"
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr "<0>@sawaratsuki.bsky.social</0> 님의 로고"
 
-#: src/components/RichText.tsx:227
+#: src/components/RichTextTag.tsx:53
 msgid "Long press to open tag menu for #{tag}"
 msgstr "길게 눌러 #{tag}에 대한 태그 메뉴를 엽니다"
 
@@ -3881,7 +3885,7 @@ msgstr "모든 피드를 고정 해제했군요. 하지만 걱정하지 마세�
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
 msgstr "팔로우 중 피드가 누락된 것 같습니다. <0>이곳을 클릭해 하나 추가하세요.</0>"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:266
+#: src/components/StarterPack/ProfileStarterPacks.tsx:265
 msgid "Make one for me"
 msgstr "나를 위해 만들기"
 
@@ -3923,7 +3927,7 @@ msgstr "멘션한 사용자"
 msgid "Mentions"
 msgstr "멘션"
 
-#: src/components/Menu/index.tsx:96
+#: src/components/Menu/index.tsx:103
 #: src/view/screens/Search/Search.tsx:856
 msgid "Menu"
 msgstr "메뉴"
@@ -4055,19 +4059,16 @@ msgstr "영화"
 msgid "Music"
 msgstr "음악"
 
-#: src/components/TagMenu/index.tsx:264
-msgid "Mute"
-msgstr "뮤트"
-
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:156
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:95
 msgctxt "video"
 msgid "Mute"
 msgstr "음소거"
 
-#: src/components/TagMenu/index.web.tsx:116
-msgid "Mute {truncatedTag}"
-msgstr "{truncatedTag} 뮤트"
+#: src/components/RichTextTag.tsx:140
+#: src/components/RichTextTag.tsx:153
+msgid "Mute {tag}"
+msgstr "{tag} 뮤트"
 
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
@@ -4077,10 +4078,6 @@ msgstr "계정 뮤트"
 #: src/view/screens/ProfileList.tsx:627
 msgid "Mute accounts"
 msgstr "계정 뮤트"
-
-#: src/components/TagMenu/index.tsx:224
-msgid "Mute all {displayTag} posts"
-msgstr "모든 {displayTag} 게시물 뮤트"
 
 #: src/components/dms/ConvoMenu.tsx:175
 #: src/components/dms/ConvoMenu.tsx:181
@@ -4209,7 +4206,7 @@ msgstr "이메일을 변경하시겠어요?"
 msgid "Need to report a copyright violation?"
 msgstr "저작권 위반을 신고해야 하나요?"
 
-#: src/screens/Onboarding/StepFinished.tsx:264
+#: src/screens/Onboarding/StepFinished.tsx:271
 msgid "Never lose access to your followers or data."
 msgstr "팔로워 또는 데이터에 대한 접근 권한을 잃지 않습니다."
 
@@ -4587,8 +4584,8 @@ msgid "Oops, something went wrong!"
 msgstr "이런, 뭔가 잘못되었습니다!"
 
 #: src/components/Lists.tsx:173
-#: src/components/StarterPack/ProfileStarterPacks.tsx:322
-#: src/components/StarterPack/ProfileStarterPacks.tsx:331
+#: src/components/StarterPack/ProfileStarterPacks.tsx:321
+#: src/components/StarterPack/ProfileStarterPacks.tsx:330
 #: src/screens/Settings/AppPasswords.tsx:59
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:104
 #: src/screens/Settings/NotificationSettings.tsx:54
@@ -4596,7 +4593,7 @@ msgstr "이런, 뭔가 잘못되었습니다!"
 msgid "Oops!"
 msgstr "이런!"
 
-#: src/screens/Onboarding/StepFinished.tsx:260
+#: src/screens/Onboarding/StepFinished.tsx:267
 msgid "Open"
 msgstr "공개성"
 
@@ -5042,7 +5039,7 @@ msgstr "게시물을 삭제했습니다"
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr "게시물을 업로드하지 못했습니다. 인터넷 연결을 확인한 후 다시 시도해 주세요."
 
-#: src/screens/VideoFeed/index.tsx:507
+#: src/screens/VideoFeed/index.tsx:520
 msgid "Post has been deleted"
 msgstr "게시물 삭제됨"
 
@@ -5084,10 +5081,6 @@ msgstr "게시물을 고정했습니다"
 #: src/state/queries/pinned-post.ts:61
 msgid "Post unpinned"
 msgstr "게시물을 고정 해제했습니다"
-
-#: src/components/TagMenu/index.tsx:268
-msgid "posts"
-msgstr "게시물"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
 #: src/view/screens/Profile.tsx:231
@@ -5197,7 +5190,7 @@ msgstr "프로필"
 msgid "Profile updated"
 msgstr "프로필을 업데이트했습니다"
 
-#: src/screens/Onboarding/StepFinished.tsx:246
+#: src/screens/Onboarding/StepFinished.tsx:253
 msgid "Public"
 msgstr "공공성"
 
@@ -5275,11 +5268,11 @@ msgstr "인용 다시 연결"
 msgid "Reactivate your account"
 msgstr "계정 재활성화"
 
-#: src/screens/VideoFeed/index.tsx:920
+#: src/screens/VideoFeed/index.tsx:941
 msgid "Read less"
 msgstr "접기"
 
-#: src/screens/VideoFeed/index.tsx:920
+#: src/screens/VideoFeed/index.tsx:941
 msgid "Read more"
 msgstr "펼치기"
 
@@ -5717,7 +5710,7 @@ msgstr "오류가 발생한 마지막 작업을 다시 시도합니다"
 #: src/components/dms/MessageItem.tsx:245
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:110
-#: src/components/StarterPack/ProfileStarterPacks.tsx:336
+#: src/components/StarterPack/ProfileStarterPacks.tsx:335
 #: src/screens/Login/LoginForm.tsx:313
 #: src/screens/Login/LoginForm.tsx:320
 #: src/screens/Messages/ChatList.tsx:169
@@ -5744,7 +5737,7 @@ msgid "Returns to home page"
 msgstr "홈 페이지로 돌아갑니다"
 
 #: src/screens/Profile/ProfileFeed/index.tsx:90
-#: src/screens/VideoFeed/index.tsx:1076
+#: src/screens/VideoFeed/index.tsx:1108
 #: src/view/screens/NotFound.tsx:60
 msgid "Returns to previous page"
 msgstr "이전 페이지로 돌아갑니다"
@@ -5905,21 +5898,21 @@ msgstr "Tenor 검색"
 msgid "Security Step Required"
 msgstr "보안 단계 필요"
 
-#: src/components/TagMenu/index.web.tsx:77
-msgid "See {truncatedTag} posts"
-msgstr "{truncatedTag} 게시물 보기"
+#: src/components/RichTextTag.tsx:111
+msgid "See {tag} posts"
+msgstr "{tag} 게시물 보기"
 
-#: src/components/TagMenu/index.web.tsx:94
-msgid "See {truncatedTag} posts by user"
-msgstr "이 사용자의 {truncatedTag} 게시물 보기"
+#: src/components/RichTextTag.tsx:124
+msgid "See {tag} posts by user"
+msgstr "이 사용자의 {tag} 게시물 보기"
 
-#: src/components/TagMenu/index.tsx:155
-msgid "See <0>{displayTag}</0> posts"
-msgstr "<0>{displayTag}</0> 게시물 보기"
+#: src/components/RichTextTag.tsx:118
+msgid "See #{tag} posts"
+msgstr "#{tag} 게시물 보기"
 
-#: src/components/TagMenu/index.tsx:203
-msgid "See <0>{displayTag}</0> posts by this user"
-msgstr "이 사용자의 <0>{displayTag}</0> 게시물 보기"
+#: src/components/RichTextTag.tsx:132
+msgid "See #{tag} posts by user"
+msgstr "사용자의 #{tag} 게시물 보기"
 
 #: src/view/com/auth/SplashScreen.web.tsx:176
 msgid "See jobs at Bluesky"
@@ -6214,8 +6207,8 @@ msgstr "대체 텍스트 표시"
 #: src/components/moderation/ScreenHider.tsx:172
 #: src/components/moderation/ScreenHider.tsx:175
 #: src/screens/List/ListHiddenScreen.tsx:187
-#: src/screens/VideoFeed/index.tsx:603
-#: src/screens/VideoFeed/index.tsx:609
+#: src/screens/VideoFeed/index.tsx:618
+#: src/screens/VideoFeed/index.tsx:624
 msgid "Show anyway"
 msgstr "무시하고 표시"
 
@@ -6511,7 +6504,7 @@ msgstr "스타터 팩이 유효하지 않음"
 msgid "Starter Packs"
 msgstr "스타터 팩"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:244
+#: src/components/StarterPack/ProfileStarterPacks.tsx:243
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "스타터 팩을 사용하면 좋아하는 피드와 사람들을 친구들과 쉽게 공유할 수 있습니다."
 
@@ -6614,10 +6607,6 @@ msgstr "시스템"
 msgid "System log"
 msgstr "시스템 로그"
 
-#: src/components/TagMenu/index.tsx:110
-msgid "Tag menu: {displayTag}"
-msgstr "태그 메뉴: {displayTag}"
-
 #: src/components/dialogs/MutedWords.tsx:282
 msgid "Tags only"
 msgstr "태그만"
@@ -6639,7 +6628,7 @@ msgstr "탭하여 닫기"
 msgid "Tap to enter full screen"
 msgstr "탭하여 전체화면으로 보기"
 
-#: src/screens/VideoFeed/index.tsx:919
+#: src/screens/VideoFeed/index.tsx:940
 msgid "Tap to expand or collapse post text."
 msgstr "탭하여 게시물 텍스트를 펼치거나 접습니다"
 
@@ -6753,7 +6742,7 @@ msgstr "스타터 팩을 찾을 수 없습니다."
 msgid "That's all, folks!"
 msgstr "이상입니다, 여러분!"
 
-#: src/screens/VideoFeed/index.tsx:1048
+#: src/screens/VideoFeed/index.tsx:1080
 msgid "That's everything!"
 msgstr "그게 다예요!"
 
@@ -7346,7 +7335,7 @@ msgstr "{0} 님을 언팔로우"
 msgid "Unfollow Account"
 msgstr "계정 언팔로우"
 
-#: src/screens/VideoFeed/index.tsx:792
+#: src/screens/VideoFeed/index.tsx:810
 msgid "Unfollow user"
 msgstr "사용자를 언팔로우합니다"
 
@@ -7358,29 +7347,25 @@ msgstr "좋아요 취소"
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "좋아요 취소 ({0, plural, other {#}}개)"
 
-#: src/components/TagMenu/index.tsx:264
-#: src/view/screens/ProfileList.tsx:701
-msgid "Unmute"
-msgstr "언뮤트"
-
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:155
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
 msgctxt "video"
 msgid "Unmute"
 msgstr "음소거 해제"
 
-#: src/components/TagMenu/index.web.tsx:115
-msgid "Unmute {truncatedTag}"
-msgstr "{truncatedTag} 언뮤트"
+#: src/view/screens/ProfileList.tsx:701
+msgid "Unmute"
+msgstr "언뮤트"
+
+#: src/components/RichTextTag.tsx:140
+#: src/components/RichTextTag.tsx:153
+msgid "Unmute {tag}"
+msgstr "{tag} 언뮤트"
 
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
 msgid "Unmute Account"
 msgstr "계정 언뮤트"
-
-#: src/components/TagMenu/index.tsx:223
-msgid "Unmute all {displayTag} posts"
-msgstr "모든 {tag} 게시물 언뮤트"
 
 #: src/components/dms/ConvoMenu.tsx:179
 msgid "Unmute conversation"
@@ -7683,6 +7668,14 @@ msgstr "{0} 님의 동영상: {text}"
 msgid "Video Games"
 msgstr "비디오 게임"
 
+#: src/screens/VideoFeed/index.tsx:1038
+msgid "Video is paused"
+msgstr "동영상 일시 정지됨"
+
+#: src/screens/VideoFeed/index.tsx:1038
+msgid "Video is playing"
+msgstr "동영상 재생 중"
+
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:191
 msgid "Video not found."
 msgstr "동영상을 찾을 수 없습니다."
@@ -7710,7 +7703,7 @@ msgstr "{0} 님의 아바타 보기"
 
 #: src/components/ProfileCard.tsx:110
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:450
-#: src/screens/VideoFeed/index.tsx:753
+#: src/screens/VideoFeed/index.tsx:771
 #: src/view/com/notifications/NotificationFeedItem.tsx:409
 msgid "View {0}'s profile"
 msgstr "{0} 님의 프로필 보기"
@@ -7718,14 +7711,6 @@ msgstr "{0} 님의 프로필 보기"
 #: src/components/dms/MessagesListHeader.tsx:167
 msgid "View {displayName}'s profile"
 msgstr "{displayName} 님의 프로필 보기"
-
-#: src/components/TagMenu/index.tsx:172
-msgid "View all posts by @{authorHandle} with tag {displayTag}"
-msgstr "{displayTag} 태그를 사용한 @{authorHandle} 님의 모든 게시물 보기"
-
-#: src/components/TagMenu/index.tsx:126
-msgid "View all posts with tag {displayTag}"
-msgstr "{displayTag} 태그를 사용한 모든 게시물 보기"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
@@ -7740,8 +7725,8 @@ msgid "View debug entry"
 msgstr "디버그 항목 보기"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:137
-#: src/screens/VideoFeed/index.tsx:631
-#: src/screens/VideoFeed/index.tsx:649
+#: src/screens/VideoFeed/index.tsx:646
+#: src/screens/VideoFeed/index.tsx:664
 msgid "View details"
 msgstr "세부 정보 보기"
 
@@ -7850,7 +7835,7 @@ msgstr "계정이 준비될 때까지 {estimatedTime}이(가) 걸릴 것으로 �
 msgid "We have sent another verification email to <0>{0}</0>."
 msgstr "<0>{0}</0>(으)로 또 다른 인증 이메일을 보냈습니다."
 
-#: src/screens/Onboarding/StepFinished.tsx:238
+#: src/screens/Onboarding/StepFinished.tsx:245
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
 msgstr "즐거운 시간 되시기 바랍니다. Bluesky의 다음 특징을 기억하세요."
 
@@ -8184,7 +8169,7 @@ msgstr "끝에 도달했습니다"
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "일시적으로 동영상 업로드 한도에 도달했습니다. 나중에 다시 시도해 주세요."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:241
+#: src/components/StarterPack/ProfileStarterPacks.tsx:240
 msgid "You haven't created a starter pack yet!"
 msgstr "아직 스타터 팩을 만들지 않았습니다."
 
@@ -8221,7 +8206,7 @@ msgstr "이미지는 최대 4개까지 선택할 수 있습니다"
 msgid "You must be 13 years of age or older to sign up."
 msgstr "가입하려면 만 13세 이상이어야 합니다."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:324
+#: src/components/StarterPack/ProfileStarterPacks.tsx:323
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr "스타터 팩을 만들려면 다른 사람을 최소 7명 이상 팔로우해야 합니다."
 
@@ -8303,7 +8288,7 @@ msgstr "대기 중입니다"
 msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
 msgstr "앱 비밀번호로 로그인했습니다. 계정 비활성화를 계속하려면 원래 비밀번호로 로그인하세요."
 
-#: src/screens/Onboarding/StepFinished.tsx:235
+#: src/screens/Onboarding/StepFinished.tsx:242
 msgid "You're ready to go!"
 msgstr "준비가 끝났습니다!"
 
@@ -8328,7 +8313,7 @@ msgstr "동영상 업로드 일일 한도에 도달했습니다 (용량이 너�
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "동영상 업로드 일일 한도에 도달했습니다 (동영상 수가 너무 많음)"
 
-#: src/screens/VideoFeed/index.tsx:1057
+#: src/screens/VideoFeed/index.tsx:1089
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "시청할 동영상이 부족합니다. 잠시 쉬는 건 어떠신가요?"
 
@@ -8415,7 +8400,7 @@ msgstr "게시물을 게시했습니다"
 msgid "Your posts have been published"
 msgstr "게시물을 게시했습니다"
 
-#: src/screens/Onboarding/StepFinished.tsx:250
+#: src/screens/Onboarding/StepFinished.tsx:257
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "게시물, 좋아요, 차단 목록은 공개됩니다. 뮤트 목록은 공개되지 않습니다."
 
