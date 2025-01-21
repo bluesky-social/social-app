@@ -55,6 +55,7 @@
   },
   "dependencies": {
     "@atproto/api": "^0.13.28",
+    "@bitdrift/react-native": "^0.6.2",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
     "@emoji-mart/react": "^1.1.1",
