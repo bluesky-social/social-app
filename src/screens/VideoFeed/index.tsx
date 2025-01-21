@@ -694,6 +694,7 @@ function Overlay({
     text: record?.text || '',
     facets: record?.facets,
   })
+  const handle = sanitizeHandle(post.author.handle, '@')
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: 1 - seekingAnimationSV.get(),
@@ -780,7 +781,7 @@ function Overlay({
                     <Text
                       style={[a.text_sm, t.atoms.text_contrast_high]}
                       numberOfLines={1}>
-                      {sanitizeHandle(post.author.handle, '@')}
+                      {handle}
                     </Text>
                   </View>
                 </Link>
@@ -789,18 +790,8 @@ function Overlay({
                   <Button
                     label={
                       profile.viewer?.following
-                        ? _(
-                            msg`Following ${sanitizeHandle(
-                              post.author.handle,
-                              '@',
-                            )}`,
-                          )
-                        : _(
-                            msg`Follow ${sanitizeHandle(
-                              post.author.handle,
-                              '@',
-                            )}`,
-                          )
+                        ? _(msg`Following ${handle}`)
+                        : _(msg`Follow ${handle}`)
                     }
                     accessibilityHint={
                       profile.viewer?.following ? _(msg`Unfollow user`) : ''
