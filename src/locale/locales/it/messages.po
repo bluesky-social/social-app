@@ -1,16 +1,16 @@
 # 
 # Translators:
 # arestifop, 2024
-# Francisco, 2025
 # Michele Locati <michele@locati.it>, 2025
+# Francisco, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 12:18+0000\n"
-"PO-Revision-Date: 2025-01-20 15:34+0000\n"
-"Last-Translator: Michele Locati <michele@locati.it>, 2025\n"
+"PO-Revision-Date: 2025-01-21 12:56+0000\n"
+"Last-Translator: Francisco, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -2185,7 +2185,7 @@ msgstr "Tocca due volte per chiudere la finestra"
 
 #: src/screens/VideoFeed/index.tsx:1014
 msgid "Double tap to like"
-msgstr "Tocca due volte per mettere un mi piace"
+msgstr "Tocca due volte per mettere mi piace"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:317
 msgid "Download Bluesky"
@@ -2454,11 +2454,11 @@ msgstr "Abilita gli argomenti di tendenza"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:158
 msgid "Enable trending videos in your Discover feed"
-msgstr "Attiva i video di tendenza nel tuo feed Discover"
+msgstr "Attiva i video di tendenza nel feed Discover"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:144
 msgid "Enable trending videos in your Discover feed."
-msgstr "Attiva i video di tendenza nel tuo feed Discover."
+msgstr "Attiva i video di tendenza nel feed Discover."
 
 #: src/screens/Messages/Settings.tsx:130
 #: src/screens/Messages/Settings.tsx:133
@@ -4874,7 +4874,7 @@ msgstr "Fissa feed"
 
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:167
 msgid "Pin the trending videos feed to your home screen for easy access"
-msgstr "Aggiungi il feed dei video di tendenza alla tua schermata iniziale per accedervi rapidamente."
+msgstr "Aggiungi il feed dei video di tendenza alla schermata iniziale per accedervi rapidamente"
 
 #: src/view/screens/ProfileList.tsx:685
 msgid "Pin to home"
@@ -5283,7 +5283,7 @@ msgstr "Riattiva account"
 
 #: src/screens/VideoFeed/index.tsx:920
 msgid "Read less"
-msgstr "Leggi meno"
+msgstr "Leggi di meno"
 
 #: src/screens/VideoFeed/index.tsx:920
 msgid "Read more"
@@ -7354,7 +7354,7 @@ msgstr "Smetti di seguire questo account"
 
 #: src/screens/VideoFeed/index.tsx:792
 msgid "Unfollow user"
-msgstr "Non seguire più l'utente"
+msgstr "Smetti di seguire"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Unlike"
