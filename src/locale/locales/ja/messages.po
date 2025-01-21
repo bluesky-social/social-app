@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-16 10:20+0900\n"
+"PO-Revision-Date: 2025-01-21 09:57+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -2088,6 +2088,10 @@ msgstr "エラーを消す"
 msgid "Dismiss getting started guide"
 msgstr "入門ガイドを消す"
 
+#: src/components/interstitials/TrendingVideos.tsx:92
+msgid "Dismiss this section"
+msgstr "このセクションを消す"
+
 #: src/screens/Settings/AccessibilitySettings.tsx:71
 #: src/screens/Settings/AccessibilitySettings.tsx:76
 msgid "Display larger alt text badges"
@@ -2168,6 +2172,10 @@ msgstr "完了{extraText}"
 #: src/components/Dialog/index.tsx:312
 msgid "Double tap to close the dialog"
 msgstr "ダブルタップでダイアログを閉じる"
+
+#: src/screens/VideoFeed/index.tsx:1014
+msgid "Double tap to like"
+msgstr "ダブルタップでいいね"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:317
 msgid "Download Bluesky"
@@ -2433,6 +2441,14 @@ msgstr "このソースのみ有効にする"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:136
 msgid "Enable trending topics"
 msgstr "トレンド・トピックを有効にする"
+
+#: src/screens/Settings/ContentAndMediaSettings.tsx:158
+msgid "Enable trending videos in your Discover feed"
+msgstr "Discoverフィードでトレンド・ビデオを有効にする"
+
+#: src/screens/Settings/ContentAndMediaSettings.tsx:144
+msgid "Enable trending videos in your Discover feed."
+msgstr "Discoverフィードでトレンド・ビデオを有効にする。"
 
 #: src/screens/Messages/Settings.tsx:130
 #: src/screens/Messages/Settings.tsx:133
@@ -3166,6 +3182,15 @@ msgstr "画像をアップロードするかアバターを作ってあなたが
 msgid "Here is your app password!"
 msgstr "アプリパスワードをお知らせします！"
 
+#: src/components/VideoPostCard.tsx:172
+#: src/components/VideoPostCard.tsx:448
+msgid "Hidden"
+msgstr "非表示"
+
+#: src/screens/VideoFeed/index.tsx:600
+msgid "Hidden by your moderation settings."
+msgstr "あなたのモデレーションの設定で非表示になっています。"
+
 #: src/components/ListCard.tsx:130
 msgid "Hidden list"
 msgstr "非表示のリスト"
@@ -3229,6 +3254,10 @@ msgstr "トレンド・トピックを隠す"
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:108
 msgid "Hide trending topics?"
 msgstr "トレンド・トピックを非表示にしますか？"
+
+#: src/components/interstitials/TrendingVideos.tsx:138
+msgid "Hide trending videos?"
+msgstr "トレンド・ビデオを非表示にしますか？"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:592
 msgid "Hide user list"
@@ -4817,10 +4846,19 @@ msgstr "写真"
 msgid "Pictures meant for adults."
 msgstr "成人向けの画像です。"
 
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:173
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:178
+msgid "Pin"
+msgstr "ピン"
+
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:519
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:526
 msgid "Pin feed"
 msgstr "フィードをピン留め"
+
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:167
+msgid "Pin the trending videos feed to your home screen for easy access"
+msgstr "簡単にアクセスできるようにトレンド・ビデオのフィードをホーム画面にピン留め"
 
 #: src/view/screens/ProfileList.tsx:685
 msgid "Pin to home"
@@ -4952,6 +4990,10 @@ msgstr "メールアドレスを確認してください"
 msgid "Politics"
 msgstr "政治"
 
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:116
+msgid "Popular videos in your network."
+msgstr "あなたのネットワークで流行っているビデオ"
+
 #: src/view/com/composer/labels/LabelsBtn.tsx:157
 msgid "Porn"
 msgstr "ポルノ"
@@ -4989,6 +5031,10 @@ msgstr "投稿を削除"
 #: src/lib/api/index.ts:185
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr "投稿のアップロードに失敗しました。インターネット接続を確認し、再度試してください。"
+
+#: src/screens/VideoFeed/index.tsx:507
+msgid "Post has been deleted"
+msgstr "投稿は削除されました"
 
 #: src/view/com/post-thread/PostThread.tsx:266
 msgid "Post hidden"
@@ -5217,6 +5263,14 @@ msgstr "引用を再度関連付ける"
 #: src/screens/Deactivated.tsx:140
 msgid "Reactivate your account"
 msgstr "あなたのアカウントを再有効化"
+
+#: src/screens/VideoFeed/index.tsx:920
+msgid "Read less"
+msgstr "文字を減らす"
+
+#: src/screens/VideoFeed/index.tsx:920
+msgid "Read more"
+msgstr "もっと読む"
 
 #: src/view/com/auth/SplashScreen.web.tsx:171
 msgid "Read the Bluesky blog"
@@ -6568,6 +6622,10 @@ msgstr "タップして消す"
 msgid "Tap to enter full screen"
 msgstr "タップしてフルスクリーンに"
 
+#: src/screens/VideoFeed/index.tsx:919
+msgid "Tap to expand or collapse post text."
+msgstr "タップして投稿のテキストを表示したり隠したりする。"
+
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 msgid "Tap to play or pause"
 msgstr "タップして再生または一時停止"
@@ -6580,6 +6638,10 @@ msgstr "タップして音の切り替え"
 #: src/view/com/util/images/AutoSizedImage.tsx:221
 msgid "Tap to view full image"
 msgstr "タップして画像全体を表示"
+
+#: src/components/VideoPostCard.tsx:115
+msgid "Tap to view video in immersive mode."
+msgstr "タップしてビデオを没入モードで表示。"
 
 #: src/state/shell/progress-guide.tsx:233
 msgid "Task complete - 10 follows!"
@@ -6673,6 +6735,10 @@ msgstr "そのスターターパックが見つかりませんでした。"
 #: src/view/com/post-thread/PostQuotes.tsx:132
 msgid "That's all, folks!"
 msgstr "以上です、皆さん！"
+
+#: src/screens/VideoFeed/index.tsx:1048
+msgid "That's everything!"
+msgstr "これで全部です！"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:329
@@ -7154,6 +7220,11 @@ msgstr "翻訳"
 msgid "Trending"
 msgstr "トレンド"
 
+#: src/components/interstitials/TrendingVideos.tsx:88
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:106
+msgid "Trending Videos"
+msgstr "トレンド・ビデオ"
+
 #: src/view/com/util/error/ErrorScreen.tsx:103
 msgctxt "action"
 msgid "Try again"
@@ -7257,6 +7328,10 @@ msgstr "{0}のフォローを解除"
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Unfollow Account"
 msgstr "アカウントのフォローを解除"
+
+#: src/screens/VideoFeed/index.tsx:792
+msgid "Unfollow user"
+msgstr "ユーザーのフォローを解除"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Unlike"
@@ -7578,6 +7653,14 @@ msgstr "ビデオ"
 msgid "Video failed to process"
 msgstr "ビデオの処理に失敗"
 
+#: src/Navigation.tsx:430
+msgid "Video Feed"
+msgstr "ビデオフィード"
+
+#: src/components/VideoPostCard.tsx:116
+msgid "Video from {0}: {text}"
+msgstr "{0}からのビデオ: {text}"
+
 #: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
 msgid "Video Games"
@@ -7654,6 +7737,13 @@ msgstr "スレッドをすべて表示"
 msgid "View information about these labels"
 msgstr "これらのラベルに関する情報を見る"
 
+#: src/components/interstitials/TrendingVideos.tsx:191
+#: src/components/interstitials/TrendingVideos.tsx:210
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:231
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:250
+msgid "View more"
+msgstr "もっと表示"
+
 #: src/components/ProfileHoverCard/index.web.tsx:419
 #: src/components/ProfileHoverCard/index.web.tsx:439
 #: src/components/ProfileHoverCard/index.web.tsx:466
@@ -7675,6 +7765,10 @@ msgstr "@{0}によって提供されるラベリングサービスを見る"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:485
 msgid "View users who like this feed"
 msgstr "このフィードにいいねしたユーザーを見る"
+
+#: src/components/VideoPostCard.tsx:392
+msgid "View video"
+msgstr "ビデオを表示"
 
 #: src/screens/Moderation/index.tsx:248
 msgid "View your blocked accounts"
@@ -7848,6 +7942,11 @@ msgstr "返信できるユーザー"
 #: src/screens/Messages/ChatList.tsx:148
 msgid "Whoops!"
 msgstr "おっと！"
+
+#: src/components/interstitials/TrendingVideos.tsx:127
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:147
+msgid "Whoops! Trending videos failed to load."
+msgstr "おっと！トレンドビデオの読み込みに失敗しました。"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:44
 msgid "Why should this content be reviewed?"
@@ -8206,6 +8305,10 @@ msgstr "ビデオのアップロードの一日の上限に到達しました（
 #: src/view/com/composer/state/video.ts:425
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "ビデオのアップロードの一日の上限に到達しました（ビデオの数が多すぎます）"
+
+#: src/screens/VideoFeed/index.tsx:1057
+msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
+msgstr "見るべきビデオがなくなりました。休憩を取ってもいい時間かも？"
 
 #: src/screens/Signup/index.tsx:140
 msgid "Your account"
