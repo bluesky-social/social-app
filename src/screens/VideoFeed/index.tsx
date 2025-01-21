@@ -21,6 +21,7 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
+import {useEvent} from 'expo'
 import {useEventListener} from 'expo'
 import {Image, ImageStyle} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
@@ -52,6 +53,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isAndroid} from '#/platform/detection'
+import {useA11y} from '#/state/a11y'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {
@@ -140,7 +142,7 @@ export function VideoFeed({}: NativeStackScreenProps<
         <View
           style={[
             a.absolute,
-            a.z_30,
+            a.z_50,
             {top: 0, left: 0, right: 0, paddingTop: top},
           ]}>
           <Header sourceContext={params} />
@@ -692,6 +694,7 @@ function Overlay({
     text: record?.text || '',
     facets: record?.facets,
   })
+  const handle = sanitizeHandle(post.author.handle, '@')
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: 1 - seekingAnimationSV.get(),
@@ -731,11 +734,13 @@ function Overlay({
       <Hider.Content>
         <View style={[a.absolute, a.inset_0, a.z_20]}>
           <View style={[a.flex_1]}>
-            <PlayPauseTapArea
-              player={player}
-              post={post}
-              feedContext={feedContext}
-            />
+            {player && (
+              <PlayPauseTapArea
+                player={player}
+                post={post}
+                feedContext={feedContext}
+              />
+            )}
           </View>
 
           <LinearGradient
@@ -776,7 +781,7 @@ function Overlay({
                     <Text
                       style={[a.text_sm, t.atoms.text_contrast_high]}
                       numberOfLines={1}>
-                      {sanitizeHandle(post.author.handle, '@')}
+                      {handle}
                     </Text>
                   </View>
                 </Link>
@@ -785,8 +790,8 @@ function Overlay({
                   <Button
                     label={
                       profile.viewer?.following
-                        ? _(msg`Following`)
-                        : _(msg`Follow`)
+                        ? _(msg`Following ${handle}`)
+                        : _(msg`Follow ${handle}`)
                     }
                     accessibilityHint={
                       profile.viewer?.following ? _(msg`Unfollow user`) : ''
@@ -879,6 +884,7 @@ function ExpandableRichTextView({
   const [constrained, setConstrained] = useState(false)
   const [contentHeight, setContentHeight] = useState(0)
   const {_} = useLingui()
+  const {screenReaderEnabled} = useA11y()
 
   if (expanded && !hasBeenExpanded) {
     setHasBeenExpanded(true)
@@ -907,14 +913,16 @@ function ExpandableRichTextView({
         style={[a.text_sm, a.flex_1, a.leading_normal]}
         authorHandle={authorHandle}
         enableTags
-        numberOfLines={expanded ? undefined : constrained ? 2 : 2}
+        numberOfLines={
+          expanded || screenReaderEnabled ? undefined : constrained ? 2 : 2
+        }
         onTextLayout={evt => {
           if (!constrained && evt.nativeEvent.lines.length > 1) {
             setConstrained(true)
           }
         }}
       />
-      {constrained && (
+      {constrained && !screenReaderEnabled && (
         <Pressable
           accessibilityHint={_(msg`Tap to expand or collapse post text.`)}
           accessibilityLabel={expanded ? _(msg`Read less`) : _(msg`Read more`)}
@@ -971,7 +979,7 @@ function PlayPauseTapArea({
   post,
   feedContext,
 }: {
-  player?: VideoPlayer
+  player: VideoPlayer
   post: Shadow<AppBskyFeedDefs.PostView>
   feedContext: string | undefined
 }) {
@@ -980,6 +988,9 @@ function PlayPauseTapArea({
   const playHaptic = useHaptics()
   const [queueLike] = usePostLikeMutationQueue(post, 'ImmersiveVideo')
   const {sendInteraction} = useFeedFeedbackContext()
+  const {isPlaying} = useEvent(player, 'playingChange', {
+    isPlaying: player.playing,
+  })
 
   const togglePlayPause = () => {
     if (!player) return
@@ -1010,10 +1021,18 @@ function PlayPauseTapArea({
   return (
     <Button
       disabled={!player}
-      label={_(`Tap to play or pause the video`)}
+      aria-valuetext={
+        isPlaying ? _(msg`Video is playing`) : _(msg`Video is paused`)
+      }
+      label={_(
+        `Video from ${sanitizeHandle(
+          post.author.handle,
+          '@',
+        )}. Tap to play or pause the video`,
+      )}
       accessibilityHint={_(msg`Double tap to like`)}
       onPress={onPress}
-      style={[a.absolute, a.inset_0]}>
+      style={[a.absolute, a.inset_0, a.z_10]}>
       <View />
     </Button>
   )
