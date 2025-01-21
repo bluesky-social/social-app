@@ -18,7 +18,6 @@ import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
-import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
@@ -187,7 +186,6 @@ let PostFeed = ({
   initialNumToRender?: number
   isVideoFeed?: boolean
 }): React.ReactNode => {
-  const theme = useTheme()
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount, hasSession} = useSession()
@@ -347,7 +345,9 @@ let PostFeed = ({
           }[] = []
           for (const page of data.pages) {
             for (const slice of page.slices) {
-              const item = slice.items.at(0)
+              const item = slice.items.find(
+                item => item.uri === slice.feedPostUri,
+              )
               if (item && AppBskyEmbedVideo.isView(item.post.embed)) {
                 videos.push({item, feedContext: slice.feedContext})
               }
@@ -713,7 +713,6 @@ let PostFeed = ({
           minHeight: Dimensions.get('window').height * 1.5,
         }}
         onScrolledDownChange={onScrolledDownChange}
-        indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
         onEndReached={onEndReached}
         onEndReachedThreshold={2} // number of posts left to trigger load more
         removeClippedSubviews={true}

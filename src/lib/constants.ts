@@ -139,6 +139,11 @@ export const TIMELINE_SAVED_FEED = {
   value: 'following',
   pinned: true,
 }
+export const VIDEO_SAVED_FEED = {
+  type: 'feed',
+  value: VIDEO_FEED_URI,
+  pinned: true,
+}
 
 export const RECOMMENDED_SAVED_FEEDS: Pick<
   AppBskyActorDefs.SavedFeed,
