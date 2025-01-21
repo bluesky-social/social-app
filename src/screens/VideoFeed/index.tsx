@@ -789,8 +789,18 @@ function Overlay({
                   <Button
                     label={
                       profile.viewer?.following
-                        ? _(msg`Following`)
-                        : _(msg`Follow`)
+                        ? _(
+                            msg`Following ${sanitizeHandle(
+                              post.author.handle,
+                              '@',
+                            )}`,
+                          )
+                        : _(
+                            msg`Follow ${sanitizeHandle(
+                              post.author.handle,
+                              '@',
+                            )}`,
+                          )
                     }
                     accessibilityHint={
                       profile.viewer?.following ? _(msg`Unfollow user`) : ''
@@ -1024,7 +1034,10 @@ function PlayPauseTapArea({
         isPlaying ? _(msg`Video is playing`) : _(msg`Video is paused`)
       }
       label={_(
-        `Video from ${post.author.handle}. Tap to play or pause the video`,
+        `Video from ${sanitizeHandle(
+          post.author.handle,
+          '@',
+        )}. Tap to play or pause the video`,
       )}
       accessibilityHint={_(msg`Double tap to like`)}
       onPress={onPress}
