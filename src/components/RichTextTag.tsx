@@ -48,6 +48,10 @@ export function RichTextTag({
     reset: resetRemove,
   } = useRemoveMutedWordsMutation()
   const navigation = useNavigation<NavigationProp>()
+  const label = _(msg`Hashtag ${tag}`)
+  const hint = isNative
+    ? _(msg`Long press to open tag menu for #${tag}`)
+    : _(msg`Click to open tag menu for ${tag}`)
 
   const isMuted = Boolean(
     (preferences?.moderationPrefs.mutedWords?.find(
@@ -72,13 +76,7 @@ export function RichTextTag({
 
   return (
     <Menu.Root>
-      <Menu.Trigger
-        label={_(msg`Hashtag ${tag}`)}
-        hint={
-          isNative
-            ? _(msg`Long press to open tag menu for #${tag}`)
-            : _(msg`Click to view all posts with hashtag ${tag}`)
-        }>
+      <Menu.Trigger label={label} hint={hint}>
         {({props: menuProps}) => (
           <InlineLinkText
             to={{
@@ -96,12 +94,8 @@ export function RichTextTag({
               }
             }}
             onLongPress={createStaticClick(menuProps.onPress).onPress}
-            accessibilityHint={
-              isNative
-                ? _(msg`Long press to open tag menu for #${tag}`)
-                : _(msg`Click to view all posts with hashtag ${tag}`)
-            }
-            label={_(msg`Hashtag ${tag}`)}
+            accessibilityHint={hint}
+            label={label}
             style={textStyle}>
             {isNative ? (
               display
