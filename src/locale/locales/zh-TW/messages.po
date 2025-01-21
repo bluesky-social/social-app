@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-20 10:43\n"
+"PO-Revision-Date: 2025-01-21 01:07\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -2065,7 +2065,7 @@ msgstr "要捨棄草稿嗎？"
 
 #: src/view/com/composer/Composer.tsx:859
 msgid "Discard post?"
-msgstr "放棄發布？"
+msgstr "要放棄發布嗎？"
 
 #: src/screens/Settings/components/PwiOptOut.tsx:80
 #: src/screens/Settings/components/PwiOptOut.tsx:84
@@ -2099,7 +2099,7 @@ msgstr "跳過入門指南"
 
 #: src/components/interstitials/TrendingVideos.tsx:92
 msgid "Dismiss this section"
-msgstr ""
+msgstr "忽略這部分"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:71
 #: src/screens/Settings/AccessibilitySettings.tsx:76
@@ -2184,7 +2184,7 @@ msgstr "按兩下關閉對話框"
 
 #: src/screens/VideoFeed/index.tsx:1014
 msgid "Double tap to like"
-msgstr ""
+msgstr "點兩下以表示喜歡"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:317
 msgid "Download Bluesky"
@@ -2453,11 +2453,11 @@ msgstr "啟用流行趨勢"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:158
 msgid "Enable trending videos in your Discover feed"
-msgstr ""
+msgstr "在您的「Discover」動態源中啟用熱門影片"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:144
 msgid "Enable trending videos in your Discover feed."
-msgstr ""
+msgstr "在您的「Discover」動態源中啟用熱門影片。"
 
 #: src/screens/Messages/Settings.tsx:130
 #: src/screens/Messages/Settings.tsx:133
@@ -3201,11 +3201,11 @@ msgstr "以下是您的應用程式專用密碼！"
 #: src/components/VideoPostCard.tsx:172
 #: src/components/VideoPostCard.tsx:448
 msgid "Hidden"
-msgstr ""
+msgstr "隱藏"
 
 #: src/screens/VideoFeed/index.tsx:600
 msgid "Hidden by your moderation settings."
-msgstr ""
+msgstr "由您的內容篩選設定所隱藏"
 
 #: src/components/ListCard.tsx:130
 msgid "Hidden list"
@@ -3274,7 +3274,7 @@ msgstr "要隱藏流行趨勢嗎？"
 
 #: src/components/interstitials/TrendingVideos.tsx:138
 msgid "Hide trending videos?"
-msgstr ""
+msgstr "要隱藏熱門影片嗎？"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:592
 msgid "Hide user list"
@@ -4864,7 +4864,7 @@ msgstr "可能會引發性聯想的內容。"
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:173
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:178
 msgid "Pin"
-msgstr ""
+msgstr "釘選"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:519
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:526
@@ -4873,7 +4873,7 @@ msgstr "釘選動態源"
 
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:167
 msgid "Pin the trending videos feed to your home screen for easy access"
-msgstr ""
+msgstr "釘選熱門影片至首頁以方便存取"
 
 #: src/view/screens/ProfileList.tsx:685
 msgid "Pin to home"
@@ -5007,7 +5007,7 @@ msgstr "政治"
 
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:116
 msgid "Popular videos in your network."
-msgstr ""
+msgstr "來自您社交網路的熱門影片。"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:157
 msgid "Porn"
@@ -5049,7 +5049,7 @@ msgstr "貼文發布失敗。請檢查您的網路連線，然後再試一次。
 
 #: src/screens/VideoFeed/index.tsx:507
 msgid "Post has been deleted"
-msgstr ""
+msgstr "貼文已被刪除"
 
 #: src/view/com/post-thread/PostThread.tsx:266
 msgid "Post hidden"
@@ -5282,11 +5282,11 @@ msgstr "重新啟用您的帳號"
 
 #: src/screens/VideoFeed/index.tsx:920
 msgid "Read less"
-msgstr ""
+msgstr "閱讀更少"
 
 #: src/screens/VideoFeed/index.tsx:920
 msgid "Read more"
-msgstr ""
+msgstr "閱讀更多"
 
 #: src/view/com/auth/SplashScreen.web.tsx:171
 msgid "Read the Bluesky blog"
@@ -6646,7 +6646,7 @@ msgstr "按下以進入全螢幕"
 
 #: src/screens/VideoFeed/index.tsx:919
 msgid "Tap to expand or collapse post text."
-msgstr ""
+msgstr "按下以展開或摺疊貼文。"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 msgid "Tap to play or pause"
@@ -6663,7 +6663,7 @@ msgstr "按下以顯示完整圖片"
 
 #: src/components/VideoPostCard.tsx:115
 msgid "Tap to view video in immersive mode."
-msgstr ""
+msgstr "按下以進入沉浸模式觀看影片。"
 
 #: src/state/shell/progress-guide.tsx:233
 msgid "Task complete - 10 follows!"
@@ -6760,7 +6760,7 @@ msgstr "就這些，完畢！"
 
 #: src/screens/VideoFeed/index.tsx:1048
 msgid "That's everything!"
-msgstr ""
+msgstr "就這些了！"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:329
@@ -7245,7 +7245,7 @@ msgstr "流行趨勢"
 #: src/components/interstitials/TrendingVideos.tsx:88
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:106
 msgid "Trending Videos"
-msgstr ""
+msgstr "熱門影片"
 
 #: src/view/com/util/error/ErrorScreen.tsx:103
 msgctxt "action"
@@ -7353,7 +7353,7 @@ msgstr "取消跟隨"
 
 #: src/screens/VideoFeed/index.tsx:792
 msgid "Unfollow user"
-msgstr ""
+msgstr "取消跟隨用戶"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Unlike"
@@ -7677,11 +7677,11 @@ msgstr "影片處理失敗"
 
 #: src/Navigation.tsx:430
 msgid "Video Feed"
-msgstr ""
+msgstr "影片動態源"
 
 #: src/components/VideoPostCard.tsx:116
 msgid "Video from {0}: {text}"
-msgstr ""
+msgstr "影片來自 {0}：{text}"
 
 #: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
@@ -7767,7 +7767,7 @@ msgstr "檢視有關這些標記的詳細資訊"
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:231
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:250
 msgid "View more"
-msgstr ""
+msgstr "檢視更多"
 
 #: src/components/ProfileHoverCard/index.web.tsx:419
 #: src/components/ProfileHoverCard/index.web.tsx:439
@@ -7793,7 +7793,7 @@ msgstr "檢視喜歡這個動態源的用戶"
 
 #: src/components/VideoPostCard.tsx:392
 msgid "View video"
-msgstr ""
+msgstr "觀看影片"
 
 #: src/screens/Moderation/index.tsx:248
 msgid "View your blocked accounts"
@@ -7971,7 +7971,7 @@ msgstr "咦？"
 #: src/components/interstitials/TrendingVideos.tsx:127
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:147
 msgid "Whoops! Trending videos failed to load."
-msgstr ""
+msgstr "唉呀！無法載入熱門影片。"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:42
 msgid "Why should this content be reviewed?"
@@ -8335,7 +8335,7 @@ msgstr "您已達到每日影片上傳限制 (影片數過多)"
 
 #: src/screens/VideoFeed/index.tsx:1057
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
-msgstr ""
+msgstr "您已經看完了所有影片。也許是時候休息一下？"
 
 #: src/screens/Signup/index.tsx:140
 msgid "Your account"
