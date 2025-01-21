@@ -74,7 +74,7 @@ import {List} from '#/view/com/util/List'
 import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Header} from '#/screens/VideoFeed/components/Header'
-import {atoms as a, platform, ThemeProvider, useTheme} from '#/alf'
+import {atoms as a, ios, platform, ThemeProvider, useTheme} from '#/alf'
 import {setNavigationBar} from '#/alf/util/navigationBar'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
@@ -259,6 +259,7 @@ function Feed() {
             index === currentIndex &&
             currentSource?.source === post.embed.playlist
           }
+          adjacent={index === currentIndex - 1 || index === currentIndex + 1}
           moderation={item.moderation}
           scrollGesture={scrollGesture}
           feedContext={item.feedContext}
@@ -458,6 +459,7 @@ let VideoItem = ({
   post,
   embed,
   active,
+  adjacent,
   scrollGesture,
   moderation,
   feedContext,
@@ -466,6 +468,7 @@ let VideoItem = ({
   post: AppBskyFeedDefs.PostView
   embed: AppBskyEmbedVideo.View
   active: boolean
+  adjacent: boolean
   scrollGesture: NativeGesture
   moderation?: ModerationDecision
   feedContext: string | undefined
@@ -483,6 +486,11 @@ let VideoItem = ({
       })
     }
   }, [active, post.uri, feedContext, sendInteraction])
+
+  // TODO: high-performance android phones should also
+  // be capable of rendering 3 video players, but currently
+  // we can't distinguish between them
+  const shouldRenderVideo = active || ios(adjacent)
 
   return (
     <View style={[a.relative, {height, width}]}>
@@ -510,7 +518,9 @@ let VideoItem = ({
       ) : (
         <>
           <VideoItemPlaceholder embed={embed} />
-          {active && player && <VideoItemInner player={player} embed={embed} />}
+          {shouldRenderVideo && player && (
+            <VideoItemInner player={player} embed={embed} />
+          )}
           {moderation && (
             <Overlay
               player={player}
