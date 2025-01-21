@@ -15,7 +15,6 @@ import {
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
 import {isNative, isWeb} from '#/platform/detection'
-import {shouldClickOpenNewTab} from '#/platform/urls'
 import {useModalControls} from '#/state/modals'
 import {atoms as a, flatten, TextStyleProp, useTheme, web} from '#/alf'
 import {Button, ButtonProps} from '#/components/Button'
@@ -187,10 +186,7 @@ export function useLink({
 }
 
 export type LinkProps = Omit<BaseLinkProps, 'disableMismatchWarning'> &
-  Omit<
-    ButtonProps,
-    'onPress' | 'disabled' | 'accessibilityHint' | 'onLongPress'
-  >
+  Omit<ButtonProps, 'onPress' | 'disabled'>
 
 /**
  * A interactive element that renders as a `<a>` tag on the web. On mobile it
@@ -322,6 +318,21 @@ export function InlineLinkText({
   )
 }
 
+export function WebOnlyInlineLinkText({
+  children,
+  to,
+  onPress,
+  ...props
+}: Omit<InlineLinkProps, 'onLongPress'>) {
+  return isWeb ? (
+    <InlineLinkText {...props} to={to} onPress={onPress}>
+      {children}
+    </InlineLinkText>
+  ) : (
+    <Text {...props}>{children}</Text>
+  )
+}
+
 /**
  * Utility to create a static `onPress` handler for a `Link` that would otherwise link to a URI
  *
@@ -330,7 +341,10 @@ export function InlineLinkText({
  */
 export function createStaticClick(
   onPressHandler: Exclude<BaseLinkProps['onPress'], undefined>,
-): Pick<BaseLinkProps, 'to' | 'onPress'> {
+): {
+  to: BaseLinkProps['to']
+  onPress: Exclude<BaseLinkProps['onPress'], undefined>
+} {
   return {
     to: '#',
     onPress(e: GestureResponderEvent) {
@@ -341,17 +355,71 @@ export function createStaticClick(
   }
 }
 
-export function WebOnlyInlineLinkText({
-  children,
-  to,
-  onPress,
-  ...props
-}: InlineLinkProps) {
-  return isWeb ? (
-    <InlineLinkText {...props} to={to} onPress={onPress}>
-      {children}
-    </InlineLinkText>
-  ) : (
-    <Text {...props}>{children}</Text>
+/**
+ * Utility to create a static `onPress` handler for a `Link`, but only if the
+ * click was not modified in some way e.g. `Cmd` or a middle click.
+ *
+ * On native, this behaves the same as `createStaticClick` because there are no
+ * options to "modify" the click in this sense.
+ *
+ * Example:
+ *   `<Link {...createStaticClick(e => {...})} />`
+ */
+export function createStaticClickIfUnmodified(
+  onPressHandler: Exclude<BaseLinkProps['onPress'], undefined>,
+): {onPress: Exclude<BaseLinkProps['onPress'], undefined>} {
+  return {
+    onPress(e: GestureResponderEvent) {
+      if (!isWeb || !isModifiedClickEvent(e)) {
+        e.preventDefault()
+        onPressHandler(e)
+        return false
+      }
+    },
+  }
+}
+
+/**
+ * Determines if the click event has a meta key pressed, indicating the user
+ * intends to deviate from default behavior.
+ */
+export function isClickEventWithMetaKey(e: GestureResponderEvent) {
+  if (!isWeb) return false
+  const event = e as unknown as MouseEvent
+  return event.metaKey || event.altKey || event.ctrlKey || event.shiftKey
+}
+
+/**
+ * Determines if the web click target is anything other than `_self`
+ */
+export function isClickTargetExternal(e: GestureResponderEvent) {
+  if (!isWeb) return false
+  const event = e as unknown as MouseEvent
+  const el = event.currentTarget as HTMLAnchorElement
+  return el && el.target && el.target !== '_self'
+}
+
+/**
+ * Determines if a click event has been modified in some way from its default
+ * behavior, e.g. `Cmd` or a middle click.
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button}
+ */
+export function isModifiedClickEvent(e: GestureResponderEvent): boolean {
+  if (!isWeb) return false
+  const event = e as unknown as MouseEvent
+  const isPrimaryButton = event.button === 0
+  return (
+    isClickEventWithMetaKey(e) || isClickTargetExternal(e) || !isPrimaryButton
   )
+}
+
+/**
+ * Determines if a click event has been modified in a way that should indiciate
+ * that the user intends to open a new tab.
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button}
+ */
+export function shouldClickOpenNewTab(e: GestureResponderEvent) {
+  const event = e as unknown as MouseEvent
+  const isMiddleClick = isWeb && event.button === 1
+  return isClickEventWithMetaKey(e) || isClickTargetExternal(e) || isMiddleClick
 }

@@ -19,6 +19,7 @@ export type ItemContextType = {
 }
 
 export type RadixPassThroughTriggerProps = {
+  ref: React.RefObject<any>
   id: string
   type: 'button'
   disabled: boolean
@@ -37,6 +38,7 @@ export type RadixPassThroughTriggerProps = {
 export type TriggerProps = {
   children(props: TriggerChildProps): React.ReactNode
   label: string
+  accessibilityHint?: string
   role?: AccessibilityRole
 }
 export type TriggerChildProps =

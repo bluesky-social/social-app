@@ -1,16 +1,13 @@
 import React from 'react'
 import {TextStyle} from 'react-native'
 import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 
 import {toShortUrl} from '#/lib/strings/url-helpers'
-import {isNative} from '#/platform/detection'
 import {atoms as a, flatten, TextStyleProp} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {InlineLinkText, LinkProps} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
+import {RichTextTag} from '#/components/RichTextTag'
 import {Text, TextProps} from '#/components/Typography'
 
 const WORD_WRAP = {wordWrap: 1}
@@ -146,9 +143,9 @@ export function RichText({
       els.push(
         <RichTextTag
           key={key}
-          text={segment.text}
+          display={segment.text}
           tag={tag.tag}
-          style={interactiveStyles}
+          textStyle={interactiveStyles}
           authorHandle={authorHandle}
         />,
       )
@@ -171,44 +168,5 @@ export function RichText({
       dataSet={WORD_WRAP}>
       {els}
     </Text>
-  )
-}
-
-function RichTextTag({
-  text,
-  tag,
-  style,
-  authorHandle,
-}: {
-  text: string
-  tag: string
-  authorHandle?: string
-} & TextStyleProp) {
-  const {_} = useLingui()
-  const control = useTagMenuControl()
-
-  const openDialog = React.useCallback(() => {
-    control.open()
-  }, [control])
-
-  return (
-    <TagMenu control={control} tag={tag} authorHandle={authorHandle}>
-      <InlineLinkText
-        to={{
-          screen: 'Hashtag',
-          params: {tag: encodeURIComponent(tag)},
-        }}
-        shareOnLongPress={false}
-        onLongPress={openDialog}
-        accessibilityHint={
-          isNative
-            ? _(msg`Long press to open tag menu for #${tag}`)
-            : _(msg`Click to view all posts with hashtag ${tag}`)
-        }
-        label={_(msg`Hashtag ${tag}`)}
-        style={style}>
-        {text}
-      </InlineLinkText>
-    </TagMenu>
   )
 }
