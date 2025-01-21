@@ -179,7 +179,7 @@
     "react-native-ios-context-menu": "^1.15.3",
     "react-native-keyboard-controller": "^1.14.5",
     "react-native-mmkv": "^2.12.2",
-    "react-native-pager-view": "6.6.1",
+    "react-native-pager-view": "6.7.0",
     "react-native-picker-select": "^9.3.1",
     "react-native-progress": "bluesky-social/react-native-progress",
     "react-native-qrcode-styled": "^0.3.3",
