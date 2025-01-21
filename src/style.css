@@ -97,10 +97,6 @@ a[role='link'][data-no-underline='1']:hover {
 }
 .ProseMirror-dark {
   color: white;
-  flex: 1;
-}
-.ProseMirror-light {
-  flex: 1;
 }
 .ProseMirror p {
   margin: 0;
