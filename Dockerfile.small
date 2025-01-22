@@ -47,16 +47,21 @@ RUN find ./bskyweb/static && find ./web-build/static
 #
 # Generate the bskyweb Go binary.
 #
+ENV APPVIEW_DID=${APPVIEW_DID}
 RUN cd bskyweb/ && \
   go mod download && \
-  go mod verify
+  go mod verify && \
+  echo "GOLOG_LOG_LEVEL=info" >> .env && \
+  echo "ATP_APPVIEW_HOST=$APPVIEW_DID" >> .env
+
+RUN cat ./bskyweb/.env
 
 RUN cd bskyweb/ && \
   go build \
     -v  \
     -trimpath \
     -tags timetzdata \
-    -o /bskyweb \
+    -o ./bskyweb \
     ./cmd/bskyweb
 
 FROM debian:bullseye-slim
