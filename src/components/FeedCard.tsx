@@ -184,28 +184,6 @@ export function Description({
   return <RichText value={rt} style={[a.leading_snug]} disableLinks {...rest} />
 }
 
-function DescriptionPlaceholder() {
-  const t = useTheme()
-  return (
-    <View style={[a.gap_xs]}>
-      <View
-        style={[a.rounded_xs, a.w_full, t.atoms.bg_contrast_50, {height: 12}]}
-      />
-      <View
-        style={[a.rounded_xs, a.w_full, t.atoms.bg_contrast_50, {height: 12}]}
-      />
-      <View
-        style={[
-          a.rounded_xs,
-          a.w_full,
-          t.atoms.bg_contrast_50,
-          {height: 12, width: 100},
-        ]}
-      />
-    </View>
-  )
-}
-
 function Likes({count}: {count: number}) {
   const t = useTheme()
   return (
@@ -319,11 +297,7 @@ function SaveButtonInner({
   )
 }
 
-function createProfileFeedHref({
-  feed,
-}: {
-  feed: AppBskyFeedDefs.GeneratorView
-}) {
+function createProfileFeedHref({feed}: {feed: AppBskyFeedDefs.GeneratorView}) {
   const urip = new AtUri(feed.uri)
   const handleOrDid = feed.creator.handle || feed.creator.did
   return `/profile/${handleOrDid}/feed/${urip.rkey}`
