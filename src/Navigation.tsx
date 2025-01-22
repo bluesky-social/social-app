@@ -808,12 +808,4 @@ function logModuleInitTime() {
   }
 }
 
-export {
-  FlatNavigator,
-  
-  navigate,
-  
-  resetToTab,
-  RoutesContainer,
-  TabsNavigator,
-}
+export {FlatNavigator, navigate, resetToTab, RoutesContainer, TabsNavigator}
