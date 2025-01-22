@@ -1,16 +1,16 @@
 # 
 # Translators:
 # arestifop, 2024
-# Michele Locati <michele@locati.it>, 2025
 # Francisco, 2025
+# Michele Locati <michele@locati.it>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 12:18+0000\n"
-"PO-Revision-Date: 2025-01-21 12:56+0000\n"
-"Last-Translator: Francisco, 2025\n"
+"POT-Creation-Date: 2025-01-22 00:44+0000\n"
+"PO-Revision-Date: 2025-01-22 09:30+0000\n"
+"Last-Translator: Michele Locati <michele@locati.it>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -684,7 +684,7 @@ msgstr "Si è verificato un errore"
 msgid "An error occurred while compressing the video."
 msgstr "Si è verificato un errore durante la compressione del video."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:333
+#: src/components/StarterPack/ProfileStarterPacks.tsx:332
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "Si è verificato un errore nel creare il tuo starter pack. Vuoi riprovare?"
 
@@ -947,7 +947,7 @@ msgstr "Prima di creare una lista, devi verificare il tuo indirizzo email."
 msgid "Before creating a post, you must first verify your email."
 msgstr "Prima di creare un post, devi verificare la tua email."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:340
+#: src/components/StarterPack/ProfileStarterPacks.tsx:339
 msgid "Before creating a starter pack, you must first verify your email."
 msgstr "Prima di creare uno starter pack, devi verificare la tua email."
 
@@ -1066,7 +1066,7 @@ msgstr "Bluesky è una rete aperta che ti permette di scegliere il fornitore dei
 msgid "Bluesky is better with friends!"
 msgstr "Bluesky è meglio con gli amici!"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:300
+#: src/components/StarterPack/ProfileStarterPacks.tsx:299
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr "Bluesky sceglierà un set di account consigliati dal tuo network."
 
@@ -1160,10 +1160,9 @@ msgstr "Iscrivendoti accetti i <0>Termini di servizio</0>."
 msgid "Camera"
 msgstr "Fotocamera"
 
-#: src/components/Menu/index.tsx:297
+#: src/components/Menu/index.tsx:304
 #: src/components/Prompt.tsx:129
 #: src/components/Prompt.tsx:131
-#: src/components/TagMenu/index.tsx:283
 #: src/screens/Deactivated.tsx:157
 #: src/screens/Profile/Header/EditProfileDialog.tsx:220
 #: src/screens/Profile/Header/EditProfileDialog.tsx:228
@@ -1340,7 +1339,7 @@ msgstr "Scegli il metodo di verifica del dominio"
 msgid "Choose Feeds"
 msgstr "Scegli feed"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:308
+#: src/components/StarterPack/ProfileStarterPacks.tsx:307
 msgid "Choose for me"
 msgstr "Scegli per me"
 
@@ -1352,7 +1351,7 @@ msgstr "Scegli utenti"
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
 msgstr "Scegli le etichette che si adattano meglio ai media che stai pubblicando. Se non ne viene selezionata nessuna, questo post è adatto a tutti i tipi di pubblico."
 
-#: src/screens/Onboarding/StepFinished.tsx:280
+#: src/screens/Onboarding/StepFinished.tsx:287
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "Scegli gli algoritmi che compilano i tuoi feed personalizzati."
 
@@ -1393,10 +1392,6 @@ msgstr "Annulla la ricerca"
 msgid "click here"
 msgstr "clicca qui"
 
-#: src/components/TagMenu/index.web.tsx:152
-msgid "Click here to open tag menu for {tag}"
-msgstr "Clicca qui per aprire il menu per {tag}"
-
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:307
 msgid "Click to disable quote posts of this post."
 msgstr "Clicca per disattivare le citazioni di questo post."
@@ -1404,6 +1399,10 @@ msgstr "Clicca per disattivare le citazioni di questo post."
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:308
 msgid "Click to enable quote posts of this post."
 msgstr "Clicca per attivare le citazioni di questo post."
+
+#: src/components/RichTextTag.tsx:54
+msgid "Click to open tag menu for {tag}"
+msgstr "Clicca per aprire il menu per {tag}"
 
 #: src/components/dms/MessageItem.tsx:241
 msgid "Click to retry failed message"
@@ -1469,8 +1468,7 @@ msgstr "Chiudi il visualizzatore di immagini"
 msgid "Close navigation footer"
 msgstr "Chiudi la navigazione del footer"
 
-#: src/components/Menu/index.tsx:291
-#: src/components/TagMenu/index.tsx:277
+#: src/components/Menu/index.tsx:298
 msgid "Close this dialog"
 msgstr "Chiudi la finestra"
 
@@ -1513,7 +1511,7 @@ msgstr "Fumetti"
 msgid "Community Guidelines"
 msgstr "Linee guida della community"
 
-#: src/screens/Onboarding/StepFinished.tsx:293
+#: src/screens/Onboarding/StepFinished.tsx:300
 msgid "Complete onboarding and start using your account"
 msgstr "Completa l'incorporazione e inizia a usare il tuo account"
 
@@ -1782,7 +1780,7 @@ msgstr "Errore nel silenziare la conversazione"
 msgid "Could not process your video"
 msgstr "Impossibile processare il tuo video"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:290
+#: src/components/StarterPack/ProfileStarterPacks.tsx:289
 msgid "Create"
 msgstr "Crea"
 
@@ -1790,13 +1788,13 @@ msgstr "Crea"
 msgid "Create a QR code for a starter pack"
 msgstr "Crea un codice QR per uno starter pack"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:168
-#: src/components/StarterPack/ProfileStarterPacks.tsx:271
+#: src/components/StarterPack/ProfileStarterPacks.tsx:167
+#: src/components/StarterPack/ProfileStarterPacks.tsx:270
 #: src/Navigation.tsx:419
 msgid "Create a starter pack"
 msgstr "Crea uno starter pack"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:252
+#: src/components/StarterPack/ProfileStarterPacks.tsx:251
 msgid "Create a starter pack for me"
 msgstr "Crea uno starter pack per me"
 
@@ -1824,7 +1822,7 @@ msgstr "Crea un account"
 msgid "Create an avatar instead"
 msgstr "In alternativa crea un avatar"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:175
+#: src/components/StarterPack/ProfileStarterPacks.tsx:174
 msgid "Create another"
 msgstr "Creane un altro"
 
@@ -2183,7 +2181,7 @@ msgstr "Fatto{extraText}"
 msgid "Double tap to close the dialog"
 msgstr "Tocca due volte per chiudere la finestra"
 
-#: src/screens/VideoFeed/index.tsx:1014
+#: src/screens/VideoFeed/index.tsx:1046
 msgid "Double tap to like"
 msgstr "Tocca due volte per mettere mi piace"
 
@@ -2821,7 +2819,7 @@ msgstr "File salvato con successo!"
 msgid "Filter from feeds"
 msgstr "Filtra dai feed"
 
-#: src/screens/Onboarding/StepFinished.tsx:296
+#: src/screens/Onboarding/StepFinished.tsx:303
 msgid "Finalizing"
 msgstr "Finalizzando"
 
@@ -2849,7 +2847,7 @@ msgstr "Finalizza"
 msgid "Fitness"
 msgstr "Fitness"
 
-#: src/screens/Onboarding/StepFinished.tsx:276
+#: src/screens/Onboarding/StepFinished.tsx:283
 msgid "Flexible"
 msgstr "Flessibile"
 
@@ -2858,8 +2856,7 @@ msgstr "Flessibile"
 #: src/components/ProfileHoverCard/index.web.tsx:449
 #: src/components/ProfileHoverCard/index.web.tsx:460
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:234
-#: src/screens/VideoFeed/index.tsx:789
-#: src/screens/VideoFeed/index.tsx:810
+#: src/screens/VideoFeed/index.tsx:828
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:132
 msgid "Follow"
 msgstr "Segui"
@@ -2873,6 +2870,10 @@ msgstr "Segui"
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:114
 msgid "Follow {0}"
 msgstr "Segui {0}"
+
+#: src/screens/VideoFeed/index.tsx:807
+msgid "Follow {handle}"
+msgstr "Segui {handle}"
 
 #: src/view/com/posts/AviFollowButton.tsx:68
 msgid "Follow {name}"
@@ -2945,8 +2946,7 @@ msgstr "Follower che conosci"
 #: src/components/ProfileHoverCard/index.web.tsx:448
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
-#: src/screens/VideoFeed/index.tsx:788
-#: src/screens/VideoFeed/index.tsx:808
+#: src/screens/VideoFeed/index.tsx:826
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
 #: src/view/screens/SavedFeeds.tsx:422
@@ -2957,6 +2957,10 @@ msgstr "Following"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
 msgid "Following {0}"
 msgstr "Stai seguendo {0}"
+
+#: src/screens/VideoFeed/index.tsx:806
+msgid "Following {handle}"
+msgstr "Stai seguendo {handle}"
 
 #: src/view/com/posts/AviFollowButton.tsx:50
 msgid "Following {name}"
@@ -3039,7 +3043,7 @@ msgstr "Da <0/>"
 msgid "Gallery"
 msgstr "Galleria"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:297
+#: src/components/StarterPack/ProfileStarterPacks.tsx:296
 msgid "Generate a starter pack"
 msgstr "Genera uno starter pack"
 
@@ -3073,8 +3077,8 @@ msgstr "Evidenti violazioni della legge o dei termini di servizio"
 #: src/components/moderation/ScreenHider.tsx:163
 #: src/screens/Profile/ProfileFeed/index.tsx:89
 #: src/screens/VideoFeed/components/Header.tsx:163
-#: src/screens/VideoFeed/index.tsx:1075
-#: src/screens/VideoFeed/index.tsx:1079
+#: src/screens/VideoFeed/index.tsx:1107
+#: src/screens/VideoFeed/index.tsx:1111
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
 #: src/view/screens/ProfileList.tsx:1009
@@ -3175,9 +3179,9 @@ msgstr "Molestie, trolling o intolleranza"
 msgid "Hashtag"
 msgstr "Hashtag"
 
-#: src/components/RichText.tsx:226
-msgid "Hashtag: #{tag}"
-msgstr "Hashtag: #{tag}"
+#: src/components/RichTextTag.tsx:51
+msgid "Hashtag {tag}"
+msgstr "Hashtag {tag}"
 
 #: src/screens/Signup/index.tsx:173
 msgid "Having trouble?"
@@ -3204,7 +3208,7 @@ msgstr "Ecco la tua password per app!"
 msgid "Hidden"
 msgstr "Nascosto"
 
-#: src/screens/VideoFeed/index.tsx:600
+#: src/screens/VideoFeed/index.tsx:615
 msgid "Hidden by your moderation settings."
 msgstr "Nascosto dalle tue impostazioni di moderazione."
 
@@ -3662,7 +3666,7 @@ msgstr "Stai lasciando Bluesky"
 msgid "left to go."
 msgstr "mancanti."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:313
+#: src/components/StarterPack/ProfileStarterPacks.tsx:312
 msgid "Let me choose"
 msgstr "Lascia scegliere a me"
 
@@ -3671,7 +3675,7 @@ msgstr "Lascia scegliere a me"
 msgid "Let's get your password reset!"
 msgstr "Reimpostiamo la tua password!"
 
-#: src/screens/Onboarding/StepFinished.tsx:296
+#: src/screens/Onboarding/StepFinished.tsx:303
 msgid "Let's go!"
 msgstr "Andiamo!"
 
@@ -3867,7 +3871,7 @@ msgstr "Logo di @sawaratsuki.bsky.social"
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr "Logo di <0>@sawaratsuki.bsky.social</0>"
 
-#: src/components/RichText.tsx:227
+#: src/components/RichTextTag.tsx:53
 msgid "Long press to open tag menu for #{tag}"
 msgstr "Tieni premuto per aprire il menu dei tag per #{tag}"
 
@@ -3887,7 +3891,7 @@ msgstr "Sembra che tu non abbia più feed fissati. Ma non ti preoccupare, puoi a
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
 msgstr "Sembra che ti manchi un feed di chi segui. <0>Clicca qui per aggiungere uno.</0>"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:266
+#: src/components/StarterPack/ProfileStarterPacks.tsx:265
 msgid "Make one for me"
 msgstr "Creane uno per me"
 
@@ -3929,7 +3933,7 @@ msgstr "Utenti menzionati"
 msgid "Mentions"
 msgstr "Menzioni"
 
-#: src/components/Menu/index.tsx:96
+#: src/components/Menu/index.tsx:103
 #: src/view/screens/Search/Search.tsx:856
 msgid "Menu"
 msgstr "Menu"
@@ -4061,19 +4065,16 @@ msgstr "Film"
 msgid "Music"
 msgstr "Musica"
 
-#: src/components/TagMenu/index.tsx:264
-msgid "Mute"
-msgstr "Silenzia"
-
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:156
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:95
 msgctxt "video"
 msgid "Mute"
 msgstr "Silenzia"
 
-#: src/components/TagMenu/index.web.tsx:116
-msgid "Mute {truncatedTag}"
-msgstr "Silenzia {truncatedTag}"
+#: src/components/RichTextTag.tsx:140
+#: src/components/RichTextTag.tsx:153
+msgid "Mute {tag}"
+msgstr "Silenzia {tag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
@@ -4083,10 +4084,6 @@ msgstr "Silenzia account"
 #: src/view/screens/ProfileList.tsx:627
 msgid "Mute accounts"
 msgstr "Silenzia account"
-
-#: src/components/TagMenu/index.tsx:224
-msgid "Mute all {displayTag} posts"
-msgstr "Silenzia tutti i post su {displayTag}"
 
 #: src/components/dms/ConvoMenu.tsx:175
 #: src/components/dms/ConvoMenu.tsx:181
@@ -4215,7 +4212,7 @@ msgstr "Hai bisogno di modificarla?"
 msgid "Need to report a copyright violation?"
 msgstr "Hai bisogno di segnalare una violazione del copyright?"
 
-#: src/screens/Onboarding/StepFinished.tsx:264
+#: src/screens/Onboarding/StepFinished.tsx:271
 msgid "Never lose access to your followers or data."
 msgstr "Non perdere mai l'accesso ai tuoi follower o ai tuoi dati."
 
@@ -4593,8 +4590,8 @@ msgid "Oops, something went wrong!"
 msgstr "Ops, c'è stato qualche problema!"
 
 #: src/components/Lists.tsx:173
-#: src/components/StarterPack/ProfileStarterPacks.tsx:322
-#: src/components/StarterPack/ProfileStarterPacks.tsx:331
+#: src/components/StarterPack/ProfileStarterPacks.tsx:321
+#: src/components/StarterPack/ProfileStarterPacks.tsx:330
 #: src/screens/Settings/AppPasswords.tsx:59
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:104
 #: src/screens/Settings/NotificationSettings.tsx:54
@@ -4602,7 +4599,7 @@ msgstr "Ops, c'è stato qualche problema!"
 msgid "Oops!"
 msgstr "Ops!"
 
-#: src/screens/Onboarding/StepFinished.tsx:260
+#: src/screens/Onboarding/StepFinished.tsx:267
 msgid "Open"
 msgstr "Aperto"
 
@@ -5048,7 +5045,7 @@ msgstr "Post eliminato"
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr "Non è stato possibile inviare il post. Verifica la tua connessione a internet e riprova."
 
-#: src/screens/VideoFeed/index.tsx:507
+#: src/screens/VideoFeed/index.tsx:520
 msgid "Post has been deleted"
 msgstr "Il post è stato eliminato"
 
@@ -5090,10 +5087,6 @@ msgstr "Post fissato"
 #: src/state/queries/pinned-post.ts:61
 msgid "Post unpinned"
 msgstr "Post non più fissato"
-
-#: src/components/TagMenu/index.tsx:268
-msgid "posts"
-msgstr "post"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
 #: src/view/screens/Profile.tsx:231
@@ -5203,7 +5196,7 @@ msgstr "Profilo"
 msgid "Profile updated"
 msgstr "Profilo aggiornato"
 
-#: src/screens/Onboarding/StepFinished.tsx:246
+#: src/screens/Onboarding/StepFinished.tsx:253
 msgid "Public"
 msgstr "Pubblico"
 
@@ -5281,11 +5274,11 @@ msgstr "Riattacca citazione"
 msgid "Reactivate your account"
 msgstr "Riattiva account"
 
-#: src/screens/VideoFeed/index.tsx:920
+#: src/screens/VideoFeed/index.tsx:941
 msgid "Read less"
 msgstr "Leggi di meno"
 
-#: src/screens/VideoFeed/index.tsx:920
+#: src/screens/VideoFeed/index.tsx:941
 msgid "Read more"
 msgstr "Leggi di più"
 
@@ -5723,7 +5716,7 @@ msgstr "Ritenta l'ultima azione che ha generato un errore"
 #: src/components/dms/MessageItem.tsx:245
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:110
-#: src/components/StarterPack/ProfileStarterPacks.tsx:336
+#: src/components/StarterPack/ProfileStarterPacks.tsx:335
 #: src/screens/Login/LoginForm.tsx:313
 #: src/screens/Login/LoginForm.tsx:320
 #: src/screens/Messages/ChatList.tsx:169
@@ -5750,7 +5743,7 @@ msgid "Returns to home page"
 msgstr "Ritorna alla home"
 
 #: src/screens/Profile/ProfileFeed/index.tsx:90
-#: src/screens/VideoFeed/index.tsx:1076
+#: src/screens/VideoFeed/index.tsx:1108
 #: src/view/screens/NotFound.tsx:60
 msgid "Returns to previous page"
 msgstr "Ritorna alla pagina precedente"
@@ -5911,21 +5904,21 @@ msgstr "Cerca Tenor"
 msgid "Security Step Required"
 msgstr "Passaggio di sicurezza obbligatorio"
 
-#: src/components/TagMenu/index.web.tsx:77
-msgid "See {truncatedTag} posts"
-msgstr "Vedi post su {truncatedTag}"
+#: src/components/RichTextTag.tsx:111
+msgid "See {tag} posts"
+msgstr "Vedi post su {tag}"
 
-#: src/components/TagMenu/index.web.tsx:94
-msgid "See {truncatedTag} posts by user"
-msgstr "Vedi post su {truncatedTag} dell'utente"
+#: src/components/RichTextTag.tsx:124
+msgid "See {tag} posts by user"
+msgstr "Vedi post su {tag} dell'utente"
 
-#: src/components/TagMenu/index.tsx:155
-msgid "See <0>{displayTag}</0> posts"
-msgstr "Vedi post su <0>{displayTag}</0>"
+#: src/components/RichTextTag.tsx:118
+msgid "See #{tag} posts"
+msgstr "Vedi post su #{tag}"
 
-#: src/components/TagMenu/index.tsx:203
-msgid "See <0>{displayTag}</0> posts by this user"
-msgstr "Vedi post su <0>{displayTag}</0> di questo utente"
+#: src/components/RichTextTag.tsx:132
+msgid "See #{tag} posts by user"
+msgstr "Vedi post su #{tag} dell'utente"
 
 #: src/view/com/auth/SplashScreen.web.tsx:176
 msgid "See jobs at Bluesky"
@@ -6220,8 +6213,8 @@ msgstr "Mostra testo alternativo"
 #: src/components/moderation/ScreenHider.tsx:172
 #: src/components/moderation/ScreenHider.tsx:175
 #: src/screens/List/ListHiddenScreen.tsx:187
-#: src/screens/VideoFeed/index.tsx:603
-#: src/screens/VideoFeed/index.tsx:609
+#: src/screens/VideoFeed/index.tsx:618
+#: src/screens/VideoFeed/index.tsx:624
 msgid "Show anyway"
 msgstr "Mostra comunque"
 
@@ -6517,7 +6510,7 @@ msgstr "Lo starter pack non è valido"
 msgid "Starter Packs"
 msgstr "Starter pack"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:244
+#: src/components/StarterPack/ProfileStarterPacks.tsx:243
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "Gli starter pack ti permettono di condividere utenti e feed preferiti con i tuoi amici."
 
@@ -6620,10 +6613,6 @@ msgstr "Sistema"
 msgid "System log"
 msgstr "Registro di sistema"
 
-#: src/components/TagMenu/index.tsx:110
-msgid "Tag menu: {displayTag}"
-msgstr "Tag menu: {displayTag}"
-
 #: src/components/dialogs/MutedWords.tsx:282
 msgid "Tags only"
 msgstr "Solo tag"
@@ -6645,7 +6634,7 @@ msgstr "Tocca per ignorare"
 msgid "Tap to enter full screen"
 msgstr "Tocca per entrare in modalità a schermo intero"
 
-#: src/screens/VideoFeed/index.tsx:919
+#: src/screens/VideoFeed/index.tsx:940
 msgid "Tap to expand or collapse post text."
 msgstr "Tocca per espandere o comprimere il testo del post."
 
@@ -6759,7 +6748,7 @@ msgstr "Impossibile trovare starter pack."
 msgid "That's all, folks!"
 msgstr "Questo è tutto, gente!"
 
-#: src/screens/VideoFeed/index.tsx:1048
+#: src/screens/VideoFeed/index.tsx:1080
 msgid "That's everything!"
 msgstr "È tutto!"
 
@@ -7352,7 +7341,7 @@ msgstr "Smetti di seguire {0}"
 msgid "Unfollow Account"
 msgstr "Smetti di seguire questo account"
 
-#: src/screens/VideoFeed/index.tsx:792
+#: src/screens/VideoFeed/index.tsx:810
 msgid "Unfollow user"
 msgstr "Smetti di seguire"
 
@@ -7364,29 +7353,25 @@ msgstr "Non mi piace più"
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "Non mi piace più ({0, plural, one {# mi piace} other {# mi piace}})"
 
-#: src/components/TagMenu/index.tsx:264
-#: src/view/screens/ProfileList.tsx:701
-msgid "Unmute"
-msgstr "Riattiva"
-
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:155
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
 msgctxt "video"
 msgid "Unmute"
 msgstr "Attiva il suono"
 
-#: src/components/TagMenu/index.web.tsx:115
-msgid "Unmute {truncatedTag}"
-msgstr "Riattiva {truncatedTag}"
+#: src/view/screens/ProfileList.tsx:701
+msgid "Unmute"
+msgstr "Riattiva"
+
+#: src/components/RichTextTag.tsx:140
+#: src/components/RichTextTag.tsx:153
+msgid "Unmute {tag}"
+msgstr "Riattiva {tag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
 msgid "Unmute Account"
 msgstr "Riattiva questo account"
-
-#: src/components/TagMenu/index.tsx:223
-msgid "Unmute all {displayTag} posts"
-msgstr "Riattiva tutti i post di {displayTag}"
 
 #: src/components/dms/ConvoMenu.tsx:179
 msgid "Unmute conversation"
@@ -7689,6 +7674,14 @@ msgstr "Video da {0}: {text}"
 msgid "Video Games"
 msgstr "Videogiochi"
 
+#: src/screens/VideoFeed/index.tsx:1038
+msgid "Video is paused"
+msgstr "Video in pausa"
+
+#: src/screens/VideoFeed/index.tsx:1038
+msgid "Video is playing"
+msgstr "Video in riproduzione"
+
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:191
 msgid "Video not found."
 msgstr "Video non trovato."
@@ -7716,7 +7709,7 @@ msgstr "Vedi l'avatar di {0}"
 
 #: src/components/ProfileCard.tsx:110
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:450
-#: src/screens/VideoFeed/index.tsx:753
+#: src/screens/VideoFeed/index.tsx:771
 #: src/view/com/notifications/NotificationFeedItem.tsx:409
 msgid "View {0}'s profile"
 msgstr "Vedi il profilo di {0}"
@@ -7724,14 +7717,6 @@ msgstr "Vedi il profilo di {0}"
 #: src/components/dms/MessagesListHeader.tsx:167
 msgid "View {displayName}'s profile"
 msgstr "Vedi il profilo di {displayName}"
-
-#: src/components/TagMenu/index.tsx:172
-msgid "View all posts by @{authorHandle} with tag {displayTag}"
-msgstr "Mostra tutti i post di @{authorHandle} con tag {displayTag}"
-
-#: src/components/TagMenu/index.tsx:126
-msgid "View all posts with tag {displayTag}"
-msgstr "Mostra tutti i post con tag {displayTag}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
@@ -7746,8 +7731,8 @@ msgid "View debug entry"
 msgstr "Vedi le informazioni del debug"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:137
-#: src/screens/VideoFeed/index.tsx:631
-#: src/screens/VideoFeed/index.tsx:649
+#: src/screens/VideoFeed/index.tsx:646
+#: src/screens/VideoFeed/index.tsx:664
 msgid "View details"
 msgstr "Vedi dettagli"
 
@@ -7856,7 +7841,7 @@ msgstr "Stimiamo {estimatedTime} prima che il tuo account sia pronto."
 msgid "We have sent another verification email to <0>{0}</0>."
 msgstr "Ti abbiamo inviato un'altra email di verifica a <0>{0}</0>."
 
-#: src/screens/Onboarding/StepFinished.tsx:238
+#: src/screens/Onboarding/StepFinished.tsx:245
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
 msgstr "Speriamo di regalarti dei bei momenti. Ricorda, Bluesky è:"
 
@@ -8190,7 +8175,7 @@ msgstr "Hai raggiunto la fine"
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "Hai raggiunto il limite temporaneo dei video caricati. Riprova più tardi."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:241
+#: src/components/StarterPack/ProfileStarterPacks.tsx:240
 msgid "You haven't created a starter pack yet!"
 msgstr "Non hai ancora creato uno starter pack!"
 
@@ -8227,7 +8212,7 @@ msgstr "È possibile selezionare fino a 4 immagini"
 msgid "You must be 13 years of age or older to sign up."
 msgstr "Per iscriverti devi avere almeno 13 anni."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:324
+#: src/components/StarterPack/ProfileStarterPacks.tsx:323
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr "Devi seguire almeno altri 7 utenti per creare uno starter pack."
 
@@ -8309,7 +8294,7 @@ msgstr "Sei in fila"
 msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
 msgstr "Hai effettuato l'accesso con una password per app. Accedi con la tua password personale per disattivare il tuo account."
 
-#: src/screens/Onboarding/StepFinished.tsx:235
+#: src/screens/Onboarding/StepFinished.tsx:242
 msgid "You're ready to go!"
 msgstr "Sei pronto per iniziare!"
 
@@ -8334,7 +8319,7 @@ msgstr "Hai raggiunto il limite giornaliero di video caricati (troppi byte)"
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "Hai raggiunto il limite giornaliero di video caricati (troppi video)"
 
-#: src/screens/VideoFeed/index.tsx:1057
+#: src/screens/VideoFeed/index.tsx:1089
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "Non ci sono altri video da guardare. Forse è il momento giusto per fare una pausa?"
 
@@ -8421,7 +8406,7 @@ msgstr "Il tuo post è stato pubblicato"
 msgid "Your posts have been published"
 msgstr "I tuoi post sono stati pubblicati"
 
-#: src/screens/Onboarding/StepFinished.tsx:250
+#: src/screens/Onboarding/StepFinished.tsx:257
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "I tuoi post, i tuoi mi piace e gli account bloccati sono pubblici. Gli account silenziati sono privati."
 
