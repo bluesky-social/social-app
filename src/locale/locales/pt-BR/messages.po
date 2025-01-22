@@ -9527,7 +9527,7 @@ msgstr "Sentimos muito! Você só pode se inscrever em até vinte rotuladores, e
 
 #: src/screens/Deactivated.tsx:124
 msgid "Welcome back!"
-msgstr "Bem vindo de volta!"
+msgstr "Olá novamente!"
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:48
 #~ msgid "Welcome to <0>Bluesky</0>"
@@ -9535,7 +9535,7 @@ msgstr "Bem vindo de volta!"
 
 #: src/components/NewskieDialog.tsx:103
 msgid "Welcome, friend!"
-msgstr "Bem-vindo, amigo!"
+msgstr "Olá e boas vindas!"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:126
 msgid "What are your interests?"
