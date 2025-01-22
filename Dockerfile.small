@@ -61,7 +61,7 @@ RUN cd bskyweb/ && \
     -v  \
     -trimpath \
     -tags timetzdata \
-    -o ./bskyweb \
+    -o /bskyweb \
     ./cmd/bskyweb
 
 FROM debian:bullseye-slim
