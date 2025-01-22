@@ -648,18 +648,18 @@ let PostFeed = ({
           </View>
         )
       } else if (row.type === 'videoGridRow') {
-        let sourceContext: VideoFeedSourceContext = {
-          type: 'feedgen',
-          uri: row.sourceFeedUri,
-          sourceInterstitial: feedCacheKey ?? 'none',
-        }
-
+        let sourceContext: VideoFeedSourceContext
         if (feedType === 'author') {
           sourceContext = {
             type: 'author',
             did: feedUriOrActorDid,
             filter: feedTab as AuthorFilter,
-            sourceInterstitial: 'none',
+          }
+        } else {
+          sourceContext = {
+            type: 'feedgen',
+            uri: row.sourceFeedUri,
+            sourceInterstitial: feedCacheKey ?? 'none',
           }
         }
 
