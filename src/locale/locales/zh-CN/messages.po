@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-20 10:43\n"
+"PO-Revision-Date: 2025-01-22 02:53\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -683,7 +683,7 @@ msgstr "发生错误"
 msgid "An error occurred while compressing the video."
 msgstr "压缩视频时发生错误。"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:333
+#: src/components/StarterPack/ProfileStarterPacks.tsx:332
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "创建新手包时发生错误，要再试一次吗？"
 
@@ -946,7 +946,7 @@ msgstr "在创建列表之前，你必须首先验证你的电子邮箱。"
 msgid "Before creating a post, you must first verify your email."
 msgstr "在发布帖文之前，你必须首先验证你的电子邮箱。"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:340
+#: src/components/StarterPack/ProfileStarterPacks.tsx:339
 msgid "Before creating a starter pack, you must first verify your email."
 msgstr "在创建新手包之前，你必须首先验证你的电子邮箱。"
 
@@ -1065,7 +1065,7 @@ msgstr "Bluesky 是一个开放的社交网络，你可以自行选择托管服�
 msgid "Bluesky is better with friends!"
 msgstr "与天友们一起，Bluesky 更美好！"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:300
+#: src/components/StarterPack/ProfileStarterPacks.tsx:299
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr "Bluesky 将从你的关系网中选择一组推荐关注的账户。"
 
@@ -1159,10 +1159,9 @@ msgstr "继续创建账户即代表你同意我们的<0>服务条款</0>。"
 msgid "Camera"
 msgstr "相机"
 
-#: src/components/Menu/index.tsx:297
+#: src/components/Menu/index.tsx:304
 #: src/components/Prompt.tsx:129
 #: src/components/Prompt.tsx:131
-#: src/components/TagMenu/index.tsx:283
 #: src/screens/Deactivated.tsx:157
 #: src/screens/Profile/Header/EditProfileDialog.tsx:220
 #: src/screens/Profile/Header/EditProfileDialog.tsx:228
@@ -1339,7 +1338,7 @@ msgstr "选择验证域名的方式"
 msgid "Choose Feeds"
 msgstr "选择动态源"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:308
+#: src/components/StarterPack/ProfileStarterPacks.tsx:307
 msgid "Choose for me"
 msgstr "帮我选择"
 
@@ -1351,7 +1350,7 @@ msgstr "选择用户"
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
 msgstr "请为这个媒体内容勾选合适的标记。若不勾选，则默认为全年龄向。"
 
-#: src/screens/Onboarding/StepFinished.tsx:280
+#: src/screens/Onboarding/StepFinished.tsx:287
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "在动态源中自由挑选适合你的自定义算法"
 
@@ -1392,10 +1391,6 @@ msgstr "清除搜索历史记录"
 msgid "click here"
 msgstr "点击这里"
 
-#: src/components/TagMenu/index.web.tsx:152
-msgid "Click here to open tag menu for {tag}"
-msgstr "点按此处来开启 {tag} 的标签菜单"
-
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:307
 msgid "Click to disable quote posts of this post."
 msgstr "点击来停用这则帖文的引用功能。"
@@ -1403,6 +1398,10 @@ msgstr "点击来停用这则帖文的引用功能。"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:308
 msgid "Click to enable quote posts of this post."
 msgstr "点击来允许其他人引用这则帖文。"
+
+#: src/components/RichTextTag.tsx:54
+msgid "Click to open tag menu for {tag}"
+msgstr "点按来开启 {tag} 的标签菜单"
 
 #: src/components/dms/MessageItem.tsx:241
 msgid "Click to retry failed message"
@@ -1468,8 +1467,7 @@ msgstr "关闭图片查看器"
 msgid "Close navigation footer"
 msgstr "关闭导航页脚"
 
-#: src/components/Menu/index.tsx:291
-#: src/components/TagMenu/index.tsx:277
+#: src/components/Menu/index.tsx:298
 msgid "Close this dialog"
 msgstr "关闭这个窗口"
 
@@ -1512,7 +1510,7 @@ msgstr "漫画"
 msgid "Community Guidelines"
 msgstr "社群准则"
 
-#: src/screens/Onboarding/StepFinished.tsx:293
+#: src/screens/Onboarding/StepFinished.tsx:300
 msgid "Complete onboarding and start using your account"
 msgstr "完成入门引导并开始使用你的账户"
 
@@ -1781,7 +1779,7 @@ msgstr "无法隐藏对话"
 msgid "Could not process your video"
 msgstr "无法处理你的视频"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:290
+#: src/components/StarterPack/ProfileStarterPacks.tsx:289
 msgid "Create"
 msgstr "创建"
 
@@ -1789,13 +1787,13 @@ msgstr "创建"
 msgid "Create a QR code for a starter pack"
 msgstr "为新手包创建分享二维码"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:168
-#: src/components/StarterPack/ProfileStarterPacks.tsx:271
+#: src/components/StarterPack/ProfileStarterPacks.tsx:167
+#: src/components/StarterPack/ProfileStarterPacks.tsx:270
 #: src/Navigation.tsx:419
 msgid "Create a starter pack"
 msgstr "创建新手包"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:252
+#: src/components/StarterPack/ProfileStarterPacks.tsx:251
 msgid "Create a starter pack for me"
 msgstr "为我创建新手包"
 
@@ -1823,7 +1821,7 @@ msgstr "创建一个账户"
 msgid "Create an avatar instead"
 msgstr "创建一个头像"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:175
+#: src/components/StarterPack/ProfileStarterPacks.tsx:174
 msgid "Create another"
 msgstr "再创建一个"
 
@@ -2182,7 +2180,7 @@ msgstr "完成{extraText}"
 msgid "Double tap to close the dialog"
 msgstr "双击以关闭对话框"
 
-#: src/screens/VideoFeed/index.tsx:1014
+#: src/screens/VideoFeed/index.tsx:1046
 msgid "Double tap to like"
 msgstr "双击点赞"
 
@@ -2465,7 +2463,7 @@ msgstr "在你的“Discover”动态源中启用趋势视频。"
 msgid "Enabled"
 msgstr "启用"
 
-#: src/screens/Profile/Sections/Feed.tsx:114
+#: src/screens/Profile/Sections/Feed.tsx:116
 msgid "End of feed"
 msgstr "已浏览到末尾"
 
@@ -2791,7 +2789,7 @@ msgstr "已发送反馈！"
 #: src/Navigation.tsx:404
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
 #: src/view/screens/Feeds.tsx:508
-#: src/view/screens/Profile.tsx:235
+#: src/view/screens/Profile.tsx:238
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/screens/Search/Search.tsx:522
 #: src/view/shell/desktop/LeftNav.tsx:640
@@ -2820,7 +2818,7 @@ msgstr "已成功保存文件！"
 msgid "Filter from feeds"
 msgstr "从动态源中过滤"
 
-#: src/screens/Onboarding/StepFinished.tsx:296
+#: src/screens/Onboarding/StepFinished.tsx:303
 msgid "Finalizing"
 msgstr "正在完成"
 
@@ -2848,7 +2846,7 @@ msgstr "完成"
 msgid "Fitness"
 msgstr "健康"
 
-#: src/screens/Onboarding/StepFinished.tsx:276
+#: src/screens/Onboarding/StepFinished.tsx:283
 msgid "Flexible"
 msgstr "灵活"
 
@@ -2857,8 +2855,7 @@ msgstr "灵活"
 #: src/components/ProfileHoverCard/index.web.tsx:449
 #: src/components/ProfileHoverCard/index.web.tsx:460
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:234
-#: src/screens/VideoFeed/index.tsx:789
-#: src/screens/VideoFeed/index.tsx:810
+#: src/screens/VideoFeed/index.tsx:828
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:132
 msgid "Follow"
 msgstr "关注"
@@ -2872,6 +2869,10 @@ msgstr "关注"
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:114
 msgid "Follow {0}"
 msgstr "关注 {0}"
+
+#: src/screens/VideoFeed/index.tsx:807
+msgid "Follow {handle}"
+msgstr "关注 {handle}"
 
 #: src/view/com/posts/AviFollowButton.tsx:68
 msgid "Follow {name}"
@@ -2944,8 +2945,7 @@ msgstr "你认识的关注者"
 #: src/components/ProfileHoverCard/index.web.tsx:448
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
-#: src/screens/VideoFeed/index.tsx:788
-#: src/screens/VideoFeed/index.tsx:808
+#: src/screens/VideoFeed/index.tsx:826
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
 #: src/view/screens/SavedFeeds.tsx:422
@@ -2956,6 +2956,10 @@ msgstr "正在关注"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
 msgid "Following {0}"
 msgstr "已关注 {0}"
+
+#: src/screens/VideoFeed/index.tsx:806
+msgid "Following {handle}"
+msgstr "已关注 {handle}"
 
 #: src/view/com/posts/AviFollowButton.tsx:50
 msgid "Following {name}"
@@ -3038,7 +3042,7 @@ msgstr "来自 <0/>"
 msgid "Gallery"
 msgstr "相册"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:297
+#: src/components/StarterPack/ProfileStarterPacks.tsx:296
 msgid "Generate a starter pack"
 msgstr "创建一个新手包"
 
@@ -3072,8 +3076,8 @@ msgstr "明显违反法规或服务条款"
 #: src/components/moderation/ScreenHider.tsx:163
 #: src/screens/Profile/ProfileFeed/index.tsx:89
 #: src/screens/VideoFeed/components/Header.tsx:163
-#: src/screens/VideoFeed/index.tsx:1075
-#: src/screens/VideoFeed/index.tsx:1079
+#: src/screens/VideoFeed/index.tsx:1107
+#: src/screens/VideoFeed/index.tsx:1111
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
 #: src/view/screens/ProfileList.tsx:1009
@@ -3174,9 +3178,9 @@ msgstr "骚扰、恶作剧或歧视行为"
 msgid "Hashtag"
 msgstr "标签"
 
-#: src/components/RichText.tsx:226
-msgid "Hashtag: #{tag}"
-msgstr "标签：#{tag}"
+#: src/components/RichTextTag.tsx:51
+msgid "Hashtag {tag}"
+msgstr "标签 {tag}"
 
 #: src/screens/Signup/index.tsx:173
 msgid "Having trouble?"
@@ -3203,7 +3207,7 @@ msgstr "以下是你的应用密码！"
 msgid "Hidden"
 msgstr "隐藏"
 
-#: src/screens/VideoFeed/index.tsx:600
+#: src/screens/VideoFeed/index.tsx:615
 msgid "Hidden by your moderation settings."
 msgstr "由你的内容审核设置所隐藏。"
 
@@ -3552,7 +3556,7 @@ msgid "Labeled by the author."
 msgstr "由发布者标记。"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:75
-#: src/view/screens/Profile.tsx:229
+#: src/view/screens/Profile.tsx:231
 msgid "Labels"
 msgstr "标记"
 
@@ -3661,7 +3665,7 @@ msgstr "离开 Bluesky"
 msgid "left to go."
 msgstr "个人排在你前面。"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:313
+#: src/components/StarterPack/ProfileStarterPacks.tsx:312
 msgid "Let me choose"
 msgstr "自定义"
 
@@ -3670,7 +3674,7 @@ msgstr "自定义"
 msgid "Let's get your password reset!"
 msgstr "让我们来重置你的密码吧！"
 
-#: src/screens/Onboarding/StepFinished.tsx:296
+#: src/screens/Onboarding/StepFinished.tsx:303
 msgid "Let's go!"
 msgstr "让我们开始吧！"
 
@@ -3727,7 +3731,7 @@ msgstr "{0, plural, one {# 位用户} other {# 位用户}}喜欢"
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr "{likeCount, plural, one {# 位用户} other {# 位用户}}喜欢"
 
-#: src/view/screens/Profile.tsx:234
+#: src/view/screens/Profile.tsx:237
 msgid "Likes"
 msgstr "喜欢"
 
@@ -3795,8 +3799,8 @@ msgstr "已取消隐藏列表"
 
 #: src/Navigation.tsx:136
 #: src/view/screens/Lists.tsx:62
-#: src/view/screens/Profile.tsx:230
-#: src/view/screens/Profile.tsx:237
+#: src/view/screens/Profile.tsx:232
+#: src/view/screens/Profile.tsx:240
 #: src/view/shell/desktop/LeftNav.tsx:658
 #: src/view/shell/Drawer.tsx:496
 msgid "Lists"
@@ -3823,7 +3827,7 @@ msgid "Load new notifications"
 msgstr "加载新的通知"
 
 #: src/screens/Profile/ProfileFeed/index.tsx:221
-#: src/screens/Profile/Sections/Feed.tsx:96
+#: src/screens/Profile/Sections/Feed.tsx:98
 #: src/view/com/feeds/FeedPage.tsx:155
 #: src/view/screens/ProfileList.tsx:849
 msgid "Load new posts"
@@ -3866,7 +3870,7 @@ msgstr "网站标志由 @sawaratsuki.bsky.social 绘制"
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr "网站标志由 <0>@sawaratsuki.bsky.social</0> 绘制"
 
-#: src/components/RichText.tsx:227
+#: src/components/RichTextTag.tsx:53
 msgid "Long press to open tag menu for #{tag}"
 msgstr "长按开启 #{tag} 标签菜单"
 
@@ -3886,7 +3890,7 @@ msgstr "看起来你已取消固定所有动态源。不过别担心，你可以
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
 msgstr "看起来你似乎缺少“Following”动态源。<0>点击这里来重新添加它。</0>"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:266
+#: src/components/StarterPack/ProfileStarterPacks.tsx:265
 msgid "Make one for me"
 msgstr "帮我选择"
 
@@ -3908,7 +3912,7 @@ msgstr "管理你的隐藏字词和标签"
 msgid "Mark as read"
 msgstr "标记为已读"
 
-#: src/view/screens/Profile.tsx:233
+#: src/view/screens/Profile.tsx:235
 msgid "Media"
 msgstr "媒体"
 
@@ -3928,7 +3932,7 @@ msgstr "被提及的用户"
 msgid "Mentions"
 msgstr "提及"
 
-#: src/components/Menu/index.tsx:96
+#: src/components/Menu/index.tsx:103
 #: src/view/screens/Search/Search.tsx:856
 msgid "Menu"
 msgstr "菜单"
@@ -4060,19 +4064,16 @@ msgstr "电影"
 msgid "Music"
 msgstr "音乐"
 
-#: src/components/TagMenu/index.tsx:264
-msgid "Mute"
-msgstr "隐藏"
-
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:156
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:95
 msgctxt "video"
 msgid "Mute"
 msgstr "隐藏"
 
-#: src/components/TagMenu/index.web.tsx:116
-msgid "Mute {truncatedTag}"
-msgstr "隐藏 {truncatedTag}"
+#: src/components/RichTextTag.tsx:140
+#: src/components/RichTextTag.tsx:153
+msgid "Mute {tag}"
+msgstr "隐藏 {tag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
@@ -4082,10 +4083,6 @@ msgstr "隐藏账户"
 #: src/view/screens/ProfileList.tsx:627
 msgid "Mute accounts"
 msgstr "隐藏账户"
-
-#: src/components/TagMenu/index.tsx:224
-msgid "Mute all {displayTag} posts"
-msgstr "将所有 {displayTag} 的帖文隐藏"
 
 #: src/components/dms/ConvoMenu.tsx:175
 #: src/components/dms/ConvoMenu.tsx:181
@@ -4214,7 +4211,7 @@ msgstr "需要更改吗？"
 msgid "Need to report a copyright violation?"
 msgstr "需要举报侵权行为吗？"
 
-#: src/screens/Onboarding/StepFinished.tsx:264
+#: src/screens/Onboarding/StepFinished.tsx:271
 msgid "Never lose access to your followers or data."
 msgstr "你永远不会失去对关注者或个人数据的掌控权。"
 
@@ -4264,7 +4261,7 @@ msgstr "新密码"
 #: src/screens/Profile/ProfileFeed/index.tsx:238
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
-#: src/view/screens/Profile.tsx:495
+#: src/view/screens/Profile.tsx:518
 #: src/view/screens/ProfileList.tsx:250
 #: src/view/screens/ProfileList.tsx:283
 msgid "New post"
@@ -4374,7 +4371,7 @@ msgstr "仅限自己"
 msgid "No one but the author can quote this post."
 msgstr "仅限发布者可以引用这则帖文。"
 
-#: src/screens/Profile/Sections/Feed.tsx:65
+#: src/screens/Profile/Sections/Feed.tsx:66
 msgid "No posts yet."
 msgstr "目前还没有帖文。"
 
@@ -4592,8 +4589,8 @@ msgid "Oops, something went wrong!"
 msgstr "糟糕，出了点问题！"
 
 #: src/components/Lists.tsx:173
-#: src/components/StarterPack/ProfileStarterPacks.tsx:322
-#: src/components/StarterPack/ProfileStarterPacks.tsx:331
+#: src/components/StarterPack/ProfileStarterPacks.tsx:321
+#: src/components/StarterPack/ProfileStarterPacks.tsx:330
 #: src/screens/Settings/AppPasswords.tsx:59
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:104
 #: src/screens/Settings/NotificationSettings.tsx:54
@@ -4601,7 +4598,7 @@ msgstr "糟糕，出了点问题！"
 msgid "Oops!"
 msgstr "糟糕！"
 
-#: src/screens/Onboarding/StepFinished.tsx:260
+#: src/screens/Onboarding/StepFinished.tsx:267
 msgid "Open"
 msgstr "开放"
 
@@ -5047,7 +5044,7 @@ msgstr "已删除帖文"
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr "帖文发布失败，请检查你的网络连接并重试。"
 
-#: src/screens/VideoFeed/index.tsx:507
+#: src/screens/VideoFeed/index.tsx:520
 msgid "Post has been deleted"
 msgstr "帖文已被删除"
 
@@ -5090,12 +5087,8 @@ msgstr "已固定帖文"
 msgid "Post unpinned"
 msgstr "已取消固定帖文"
 
-#: src/components/TagMenu/index.tsx:268
-msgid "posts"
-msgstr "帖文"
-
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
-#: src/view/screens/Profile.tsx:231
+#: src/view/screens/Profile.tsx:233
 msgid "Posts"
 msgstr "帖文"
 
@@ -5186,7 +5179,7 @@ msgid "Processing..."
 msgstr "处理中……"
 
 #: src/view/screens/DebugMod.tsx:919
-#: src/view/screens/Profile.tsx:362
+#: src/view/screens/Profile.tsx:372
 msgid "profile"
 msgstr "个人资料"
 
@@ -5202,7 +5195,7 @@ msgstr "个人资料"
 msgid "Profile updated"
 msgstr "已更新个人资料"
 
-#: src/screens/Onboarding/StepFinished.tsx:246
+#: src/screens/Onboarding/StepFinished.tsx:253
 msgid "Public"
 msgstr "公开"
 
@@ -5280,11 +5273,11 @@ msgstr "重新关联引用帖文"
 msgid "Reactivate your account"
 msgstr "重新启用你的账户"
 
-#: src/screens/VideoFeed/index.tsx:920
+#: src/screens/VideoFeed/index.tsx:941
 msgid "Read less"
 msgstr "查看更少"
 
-#: src/screens/VideoFeed/index.tsx:920
+#: src/screens/VideoFeed/index.tsx:941
 msgid "Read more"
 msgstr "查看更多"
 
@@ -5461,7 +5454,7 @@ msgstr "删除引用的帖文"
 msgid "Replace with Discover"
 msgstr "替换为“Discover”"
 
-#: src/view/screens/Profile.tsx:232
+#: src/view/screens/Profile.tsx:234
 msgid "Replies"
 msgstr "回复"
 
@@ -5722,7 +5715,7 @@ msgstr "重试上次出错的操作"
 #: src/components/dms/MessageItem.tsx:245
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:110
-#: src/components/StarterPack/ProfileStarterPacks.tsx:336
+#: src/components/StarterPack/ProfileStarterPacks.tsx:335
 #: src/screens/Login/LoginForm.tsx:313
 #: src/screens/Login/LoginForm.tsx:320
 #: src/screens/Messages/ChatList.tsx:169
@@ -5749,7 +5742,7 @@ msgid "Returns to home page"
 msgstr "返回主页"
 
 #: src/screens/Profile/ProfileFeed/index.tsx:90
-#: src/screens/VideoFeed/index.tsx:1076
+#: src/screens/VideoFeed/index.tsx:1108
 #: src/view/screens/NotFound.tsx:60
 msgid "Returns to previous page"
 msgstr "返回上一页"
@@ -5910,21 +5903,21 @@ msgstr "搜索 Tenor"
 msgid "Security Step Required"
 msgstr "所需的安全步骤"
 
-#: src/components/TagMenu/index.web.tsx:77
-msgid "See {truncatedTag} posts"
-msgstr "查看 {truncatedTag} 的帖文"
+#: src/components/RichTextTag.tsx:111
+msgid "See {tag} posts"
+msgstr "查看 {tag} 的帖文"
 
-#: src/components/TagMenu/index.web.tsx:94
-msgid "See {truncatedTag} posts by user"
-msgstr "查看该用户包含 {truncatedTag} 的帖文"
+#: src/components/RichTextTag.tsx:124
+msgid "See {tag} posts by user"
+msgstr "查看该用户包含 {tag} 的帖文"
 
-#: src/components/TagMenu/index.tsx:155
-msgid "See <0>{displayTag}</0> posts"
-msgstr "查看 <0>{displayTag}</0> 的帖文"
+#: src/components/RichTextTag.tsx:118
+msgid "See #{tag} posts"
+msgstr "查看 #{tag} 的帖文"
 
-#: src/components/TagMenu/index.tsx:203
-msgid "See <0>{displayTag}</0> posts by this user"
-msgstr "查看该用户 <0>{displayTag}</0> 的帖文"
+#: src/components/RichTextTag.tsx:132
+msgid "See #{tag} posts by user"
+msgstr "查看该用户包含 #{tag} 的帖文"
 
 #: src/view/com/auth/SplashScreen.web.tsx:176
 msgid "See jobs at Bluesky"
@@ -6219,8 +6212,8 @@ msgstr "显示替代文本"
 #: src/components/moderation/ScreenHider.tsx:172
 #: src/components/moderation/ScreenHider.tsx:175
 #: src/screens/List/ListHiddenScreen.tsx:187
-#: src/screens/VideoFeed/index.tsx:603
-#: src/screens/VideoFeed/index.tsx:609
+#: src/screens/VideoFeed/index.tsx:618
+#: src/screens/VideoFeed/index.tsx:624
 msgid "Show anyway"
 msgstr "仍然显示"
 
@@ -6512,11 +6505,11 @@ msgstr "你创建的新手包"
 msgid "Starter pack is invalid"
 msgstr "无效的新手包"
 
-#: src/view/screens/Profile.tsx:236
+#: src/view/screens/Profile.tsx:239
 msgid "Starter Packs"
 msgstr "新手包"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:244
+#: src/components/StarterPack/ProfileStarterPacks.tsx:243
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "新手包能使你轻松与朋友分享你喜欢的用户和动态源。"
 
@@ -6619,10 +6612,6 @@ msgstr "系统"
 msgid "System log"
 msgstr "系统日志"
 
-#: src/components/TagMenu/index.tsx:110
-msgid "Tag menu: {displayTag}"
-msgstr "标签菜单：{displayTag}"
-
 #: src/components/dialogs/MutedWords.tsx:282
 msgid "Tags only"
 msgstr "仅限标签"
@@ -6644,7 +6633,7 @@ msgstr "点按以跳过"
 msgid "Tap to enter full screen"
 msgstr "点按以进入全屏模式"
 
-#: src/screens/VideoFeed/index.tsx:919
+#: src/screens/VideoFeed/index.tsx:940
 msgid "Tap to expand or collapse post text."
 msgstr "点按以展开或折叠帖文文本。"
 
@@ -6758,9 +6747,9 @@ msgstr "找不到那个新手包。"
 msgid "That's all, folks!"
 msgstr "就这些，完毕！"
 
-#: src/screens/VideoFeed/index.tsx:1048
+#: src/screens/VideoFeed/index.tsx:1080
 msgid "That's everything!"
-msgstr "这就是全部了！"
+msgstr "就这些了！"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:329
@@ -6883,7 +6872,7 @@ msgstr "连接服务器时出现问题"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "刷新通知时出现问题，点击重试。"
 
-#: src/view/com/posts/PostFeed.tsx:590
+#: src/view/com/posts/PostFeed.tsx:592
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "刷新帖文时出现问题，点击重试。"
 
@@ -7351,7 +7340,7 @@ msgstr "取消关注 {0}"
 msgid "Unfollow Account"
 msgstr "取消关注账户"
 
-#: src/screens/VideoFeed/index.tsx:792
+#: src/screens/VideoFeed/index.tsx:810
 msgid "Unfollow user"
 msgstr "取消关注用户"
 
@@ -7363,29 +7352,25 @@ msgstr "取消喜欢"
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "取消喜欢（{0, plural, one {# 次喜欢} other {# 次喜欢}}）"
 
-#: src/components/TagMenu/index.tsx:264
-#: src/view/screens/ProfileList.tsx:701
-msgid "Unmute"
-msgstr "取消隐藏"
-
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:155
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
 msgctxt "video"
 msgid "Unmute"
 msgstr "取消隐藏"
 
-#: src/components/TagMenu/index.web.tsx:115
-msgid "Unmute {truncatedTag}"
-msgstr "取消隐藏 {truncatedTag}"
+#: src/view/screens/ProfileList.tsx:701
+msgid "Unmute"
+msgstr "取消隐藏"
+
+#: src/components/RichTextTag.tsx:140
+#: src/components/RichTextTag.tsx:153
+msgid "Unmute {tag}"
+msgstr "取消隐藏 {tag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
 msgid "Unmute Account"
 msgstr "取消隐藏账户"
-
-#: src/components/TagMenu/index.tsx:223
-msgid "Unmute all {displayTag} posts"
-msgstr "取消隐藏所有 {displayTag} 帖文"
 
 #: src/components/dms/ConvoMenu.tsx:179
 msgid "Unmute conversation"
@@ -7688,6 +7673,14 @@ msgstr "视频来自{0}：{text}"
 msgid "Video Games"
 msgstr "电子游戏"
 
+#: src/screens/VideoFeed/index.tsx:1038
+msgid "Video is paused"
+msgstr "视频已暂停"
+
+#: src/screens/VideoFeed/index.tsx:1038
+msgid "Video is playing"
+msgstr "正在播放视频"
+
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:191
 msgid "Video not found."
 msgstr "无法找到视频。"
@@ -7704,6 +7697,10 @@ msgstr "已上传视频"
 msgid "Video: {0}"
 msgstr "视频：{0}"
 
+#: src/view/screens/Profile.tsx:236
+msgid "Videos"
+msgstr "视频"
+
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:58
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:73
 msgid "Videos must be less than 60 seconds long"
@@ -7715,7 +7712,7 @@ msgstr "查看 {0} 的头像"
 
 #: src/components/ProfileCard.tsx:110
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:450
-#: src/screens/VideoFeed/index.tsx:753
+#: src/screens/VideoFeed/index.tsx:771
 #: src/view/com/notifications/NotificationFeedItem.tsx:409
 msgid "View {0}'s profile"
 msgstr "查看 {0} 的个人资料"
@@ -7723,14 +7720,6 @@ msgstr "查看 {0} 的个人资料"
 #: src/components/dms/MessagesListHeader.tsx:167
 msgid "View {displayName}'s profile"
 msgstr "查看 {displayName} 的个人资料"
-
-#: src/components/TagMenu/index.tsx:172
-msgid "View all posts by @{authorHandle} with tag {displayTag}"
-msgstr "查看 @{authorHandle} 所有带有标签 {displayTag} 的帖文"
-
-#: src/components/TagMenu/index.tsx:126
-msgid "View all posts with tag {displayTag}"
-msgstr "查看所有带有标签 {displayTag} 的帖文"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
@@ -7745,8 +7734,8 @@ msgid "View debug entry"
 msgstr "查看调试项目"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:137
-#: src/screens/VideoFeed/index.tsx:631
-#: src/screens/VideoFeed/index.tsx:649
+#: src/screens/VideoFeed/index.tsx:646
+#: src/screens/VideoFeed/index.tsx:664
 msgid "View details"
 msgstr "查看详情"
 
@@ -7855,7 +7844,7 @@ msgstr "我们估计还需要 {estimatedTime} 才能完成你的账户准备。"
 msgid "We have sent another verification email to <0>{0}</0>."
 msgstr "我们将发送另一封验证邮件至 <0>{0}</0>。"
 
-#: src/screens/Onboarding/StepFinished.tsx:238
+#: src/screens/Onboarding/StepFinished.tsx:245
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
 msgstr "我们希望你在此度过愉快的时光。请记住，Bluesky 是："
 
@@ -8189,7 +8178,7 @@ msgstr "你已经浏览到末尾了"
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "你已暂时达到视频上传的限制，请稍后再试。"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:241
+#: src/components/StarterPack/ProfileStarterPacks.tsx:240
 msgid "You haven't created a starter pack yet!"
 msgstr "你还没有创建任何新手包！"
 
@@ -8226,7 +8215,7 @@ msgstr "你最多只能选择 4 张图片"
 msgid "You must be 13 years of age or older to sign up."
 msgstr "你必须年满 13 岁及以上才能注册。"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:324
+#: src/components/StarterPack/ProfileStarterPacks.tsx:323
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr "你必须至少关注 7 个人以创建新手包。"
 
@@ -8308,7 +8297,7 @@ msgstr "轮到你了"
 msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
 msgstr "你正在使用应用密码登录账户，请改用你的主密码登录以继续停用你的账户。"
 
-#: src/screens/Onboarding/StepFinished.tsx:235
+#: src/screens/Onboarding/StepFinished.tsx:242
 msgid "You're ready to go!"
 msgstr "你已完成设置！"
 
@@ -8333,7 +8322,7 @@ msgstr "你已达到每日上传视频上限（文件太大）"
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "你已达到每日上传视频上限（数量太多）"
 
-#: src/screens/VideoFeed/index.tsx:1057
+#: src/screens/VideoFeed/index.tsx:1089
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "你已经看完了所有视频，或许是时候休息一下了？"
 
@@ -8420,7 +8409,7 @@ msgstr "已发布你的帖文"
 msgid "Your posts have been published"
 msgstr "已发布你的帖文"
 
-#: src/screens/Onboarding/StepFinished.tsx:250
+#: src/screens/Onboarding/StepFinished.tsx:257
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "你发布的帖文、喜欢的内容和屏蔽列表都是公开可见的，而隐藏列表仅对你自己可见。"
 
