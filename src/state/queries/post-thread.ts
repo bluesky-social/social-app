@@ -359,7 +359,6 @@ function responseToThreadNodes(
               // do not show blocked posts in replies
               .filter(node => node.type !== 'blocked')
           : undefined,
-      // @ts-ignore TODO: Update API package.
       hasOPLike: Boolean(node?.threadContext?.rootAuthorLike),
       ctx: {
         depth,
