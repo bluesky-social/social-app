@@ -153,10 +153,6 @@ function getFeedTypeFromUri(uri: string) {
   return pathname.includes(feedSourceNSIDs.feed) ? 'feed' : 'list'
 }
 
-function getAvatarTypeFromUri(uri: string) {
-  return getFeedTypeFromUri(uri) === 'feed' ? 'algo' : 'list'
-}
-
 export function useFeedSourceInfoQuery({uri}: {uri: string}) {
   const type = getFeedTypeFromUri(uri)
   const agent = useAgent()

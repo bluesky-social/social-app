@@ -771,63 +771,6 @@ function resetToTab(tabName: 'HomeTab' | 'SearchTab' | 'NotificationsTab') {
   }
 }
 
-// returns a promise that resolves after the state reset is complete
-function reset(): Promise<void> {
-  if (navigationRef.isReady()) {
-    navigationRef.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{name: isNative ? 'HomeTab' : 'Home'}],
-      }),
-    )
-    return Promise.race([
-      timeout(1e3),
-      new Promise<void>(resolve => {
-        const handler = () => {
-          resolve()
-          navigationRef.removeListener('state', handler)
-        }
-        navigationRef.addListener('state', handler)
-      }),
-    ])
-  } else {
-    return Promise.resolve()
-  }
-}
-
-function handleLink(url: string) {
-  let path
-  if (url.startsWith('/')) {
-    path = url
-  } else if (url.startsWith('http')) {
-    try {
-      path = new URL(url).pathname
-    } catch (e) {
-      console.error('Invalid url', url, e)
-      return
-    }
-  } else {
-    console.error('Invalid url', url)
-    return
-  }
-
-  const [name, params] = router.matchPath(path)
-  if (isNative) {
-    if (name === 'Search') {
-      resetToTab('SearchTab')
-    } else if (name === 'Notifications') {
-      resetToTab('NotificationsTab')
-    } else {
-      resetToTab('HomeTab')
-      // @ts-ignore matchPath doesnt give us type-checked output -prf
-      navigate(name, params)
-    }
-  } else {
-    // @ts-ignore matchPath doesnt give us type-checked output -prf
-    navigate(name, params)
-  }
-}
-
 let didInit = false
 function logModuleInitTime() {
   if (didInit) {

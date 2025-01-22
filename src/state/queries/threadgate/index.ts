@@ -30,29 +30,6 @@ const createThreadgateRecordQueryKey = (uri: string) => [
   uri,
 ]
 
-function useThreadgateRecordQuery({
-  postUri,
-  initialData,
-}: {
-  postUri?: string
-  initialData?: AppBskyFeedThreadgate.Record
-} = {}) {
-  const agent = useAgent()
-
-  return useQuery({
-    enabled: !!postUri,
-    queryKey: createThreadgateRecordQueryKey(postUri || ''),
-    placeholderData: initialData,
-    staleTime: STALE.MINUTES.ONE,
-    async queryFn() {
-      return getThreadgateRecord({
-        agent,
-        postUri: postUri!,
-      })
-    },
-  })
-}
-
 const threadgateViewQueryKeyRoot = 'threadgate-view'
 export const createThreadgateViewQueryKey = (uri: string) => [
   threadgateViewQueryKeyRoot,
@@ -205,33 +182,6 @@ async function upsertThreadgate(
     agent,
     postUri,
     threadgate: next,
-  })
-}
-
-/**
- * Update the allow list for a threadgate record.
- */
-async function updateThreadgateAllow({
-  agent,
-  postUri,
-  allow,
-}: {
-  agent: BskyAgent
-  postUri: string
-  allow: ThreadgateAllowUISetting[]
-}) {
-  return upsertThreadgate({agent, postUri}, async prev => {
-    if (prev) {
-      return {
-        ...prev,
-        allow: threadgateAllowUISettingToAllowRecordValue(allow),
-      }
-    } else {
-      return createThreadgateRecord({
-        post: postUri,
-        allow: threadgateAllowUISettingToAllowRecordValue(allow),
-      })
-    }
   })
 }
 

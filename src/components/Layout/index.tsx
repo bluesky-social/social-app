@@ -108,31 +108,6 @@ type KeyboardAwareContentProps = KeyboardAwareScrollViewProps & {
 }
 
 /**
- * Default scroll view for simple pages.
- *
- * BE SURE TO TEST THIS WHEN USING, it's untested as of writing this comment.
- */
-const KeyboardAwareContent = React.memo(function LayoutScrollView({
-  children,
-  style,
-  contentContainerStyle,
-  ...props
-}: KeyboardAwareContentProps) {
-  return (
-    <KeyboardAwareScrollView
-      style={[scrollViewStyles.common, style]}
-      contentContainerStyle={[
-        scrollViewStyles.contentContainer,
-        contentContainerStyle,
-      ]}
-      keyboardShouldPersistTaps="handled"
-      {...props}>
-      {isWeb ? <Center>{children}</Center> : children}
-    </KeyboardAwareScrollView>
-  )
-})
-
-/**
  * Utility component to center content within the screen
  */
 export const Center = React.memo(function LayoutContent({

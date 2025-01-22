@@ -10,13 +10,6 @@ import {
   LANGUAGES_MAP_CODE3,
 } from './languages'
 
-function code2ToCode3(lang: string): string {
-  if (lang.length === 2) {
-    return LANGUAGES_MAP_CODE2[lang]?.code3 || lang
-  }
-  return lang
-}
-
 function code3ToCode2(lang: string): string {
   if (lang.length === 3) {
     return LANGUAGES_MAP_CODE3[lang]?.code2 || lang

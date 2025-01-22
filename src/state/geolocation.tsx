@@ -162,7 +162,3 @@ export function Provider({children}: {children: React.ReactNode}) {
 
   return <context.Provider value={ctx}>{children}</context.Provider>
 }
-
-function useGeolocation() {
-  return React.useContext(context)
-}

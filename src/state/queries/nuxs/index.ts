@@ -46,41 +46,6 @@ export function useNuxs():
   }
 }
 
-function useNux<T extends Nux>(
-  id: T,
-):
-  | {
-      nux: Extract<AppNux, {id: T}> | undefined
-      status: 'ready'
-    }
-  | {
-      nux: undefined
-      status: 'loading' | 'error'
-    } {
-  const {nuxs, status} = useNuxs()
-
-  if (status === 'ready') {
-    const nux = nuxs.find(nux => nux.id === id)
-
-    if (nux) {
-      return {
-        nux: nux as Extract<AppNux, {id: T}>,
-        status,
-      }
-    } else {
-      return {
-        nux: undefined,
-        status,
-      }
-    }
-  }
-
-  return {
-    nux: undefined,
-    status,
-  }
-}
-
 export function useSaveNux() {
   const queryClient = useQueryClient()
   const agent = useAgent()

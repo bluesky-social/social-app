@@ -495,19 +495,6 @@ export function getPlayerAspect({
   }
 }
 
-function getGifDims(
-  originalHeight: number,
-  originalWidth: number,
-  viewWidth: number,
-) {
-  const scaledHeight = (originalHeight / originalWidth) * viewWidth
-
-  return {
-    height: scaledHeight > 250 ? 250 : scaledHeight,
-    width: (250 / scaledHeight) * viewWidth,
-  }
-}
-
 export function getGiphyMetaUri(url: URL) {
   if (giphyRegex.test(url.hostname) || url.hostname === 'i.giphy.com') {
     const params = parseEmbedPlayerFromUrl(url.toString())

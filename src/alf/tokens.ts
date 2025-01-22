@@ -33,12 +33,6 @@ export const fontSize = {
   _5xl: 40,
 } as const
 
-const lineHeight = {
-  none: 1,
-  normal: 1.5,
-  relaxed: 1.625,
-} as const
-
 export const borderRadius = {
   _2xs: 2,
   xs: 4,

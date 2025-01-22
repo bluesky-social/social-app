@@ -36,10 +36,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-function useMutedThreads() {
-  return React.useContext(stateContext)
-}
-
 export function useIsThreadMuted(uri: string, defaultValue = false) {
   const state = React.useContext(stateContext)
   return state.get(uri) ?? defaultValue

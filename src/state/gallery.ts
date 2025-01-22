@@ -196,16 +196,6 @@ export async function manipulateImage(
   }
 }
 
-function resetImageManipulation(
-  img: ComposerImage,
-): ComposerImageWithoutTransformation {
-  if (img.transformed !== undefined) {
-    return {alt: img.alt, source: img.source}
-  }
-
-  return img
-}
-
 export async function compressImage(img: ComposerImage): Promise<ImageMeta> {
   const source = img.transformed || img.source
 

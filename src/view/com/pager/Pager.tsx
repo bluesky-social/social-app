@@ -20,8 +20,6 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useSetDrawerSwipeDisabled} from '#/state/shell'
 import {atoms as a, native} from '#/alf'
 
-type PageSelectedEvent = PagerViewOnPageSelectedEvent
-
 export interface PagerRef {
   setPage: (index: number) => void
 }

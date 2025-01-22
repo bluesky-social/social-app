@@ -257,39 +257,3 @@ export function useToggleQuoteDetachmentMutation() {
     },
   })
 }
-
-function useToggleQuotepostEnabledMutation() {
-  const agent = useAgent()
-
-  return useMutation({
-    mutationFn: async ({
-      postUri,
-      action,
-    }: {
-      postUri: string
-      action: 'enable' | 'disable'
-    }) => {
-      await upsertPostgate({agent, postUri: postUri}, async prev => {
-        if (prev) {
-          if (action === 'disable') {
-            return mergePostgateRecords(prev, {
-              embeddingRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
-            })
-          } else if (action === 'enable') {
-            return {
-              ...prev,
-              embeddingRules: [],
-            }
-          }
-        } else {
-          if (action === 'disable') {
-            return createPostgateRecord({
-              post: postUri,
-              embeddingRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
-            })
-          }
-        }
-      })
-    },
-  })
-}

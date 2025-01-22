@@ -119,33 +119,6 @@ export function Content({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-/**
- * The canonical view for a labeling service. Use this or compose your own.
- */
-function Default({
-  labeler,
-  style,
-}: LabelingServiceProps & ViewStyleProp) {
-  return (
-    <Outer style={style}>
-      <Avatar avatar={labeler.creator.avatar} />
-      <Content>
-        <Title
-          value={getLabelingServiceTitle({
-            displayName: labeler.creator.displayName,
-            handle: labeler.creator.handle,
-          })}
-        />
-        <Description
-          value={labeler.creator.description}
-          handle={labeler.creator.handle}
-        />
-        {labeler.likeCount ? <LikeCount likeCount={labeler.likeCount} /> : null}
-      </Content>
-    </Outer>
-  )
-}
-
 export function Link({
   children,
   labeler,
@@ -174,33 +147,5 @@ function DefaultSkeleton() {
     <View>
       <Text>Loading</Text>
     </View>
-  )
-}
-
-function Loader({
-  did,
-  loading: LoadingComponent = DefaultSkeleton,
-  error: ErrorComponent,
-  component: Component,
-}: {
-  did: string
-  loading?: React.ComponentType<{}>
-  error?: React.ComponentType<{error: string}>
-  component: React.ComponentType<{
-    labeler: AppBskyLabelerDefs.LabelerViewDetailed
-  }>
-}) {
-  const {isLoading, data, error} = useLabelerInfoQuery({did})
-
-  return isLoading ? (
-    LoadingComponent ? (
-      <LoadingComponent />
-    ) : null
-  ) : error || !data ? (
-    ErrorComponent ? (
-      <ErrorComponent error={error?.message || 'Unknown error'} />
-    ) : null
-  ) : (
-    <Component labeler={data} />
   )
 }

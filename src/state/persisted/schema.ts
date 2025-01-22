@@ -44,7 +44,6 @@ const currentAccountSchema = accountSchema.extend({
   service: z.string().optional(),
   handle: z.string().optional(),
 })
-type PersistedCurrentAccount = z.infer<typeof currentAccountSchema>
 
 const schema = z.object({
   colorMode: z.enum(['system', 'light', 'dark']),
