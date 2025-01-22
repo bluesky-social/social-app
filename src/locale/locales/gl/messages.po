@@ -4085,7 +4085,7 @@ msgstr "Rexistro de chío inválido ou non compatíbel"
 
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
-msgid "Invalid username or password"
+msgid "Incorrect username or password"
 msgstr "Alcume ou contrasinal incorrectos"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91
@@ -7574,7 +7574,7 @@ msgstr ""
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:205
 #: src/view/shell/NavSignupCard.tsx:47
 #: src/view/shell/NavSignupCard.tsx:52
-msgid "Sign up"
+msgid "Create account"
 msgstr "Crear conta"
 
 #: src/view/shell/NavSignupCard.tsx:47

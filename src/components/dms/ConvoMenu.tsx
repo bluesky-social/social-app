@@ -35,6 +35,7 @@ import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '../icons/Bubble'
+import {ReportDialog} from './ReportDialog'
 
 let ConvoMenu = ({
   convo: initialConvo,
@@ -44,6 +45,7 @@ let ConvoMenu = ({
   showMarkAsRead,
   hideTrigger,
   blockInfo,
+  latestReportableMessage,
   style,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
@@ -56,6 +58,7 @@ let ConvoMenu = ({
     listBlocks: ModerationCause[]
     userBlock?: ModerationCause
   }
+  latestReportableMessage?: ChatBskyConvoDefs.MessageView
   style?: ViewStyleProp['style']
 }): React.ReactNode => {
   const navigation = useNavigation<NavigationProp>()
@@ -222,7 +225,19 @@ let ConvoMenu = ({
         convoId={convo.id}
         currentScreen={currentScreen}
       />
-      <ReportConversationPrompt control={reportControl} />
+      {latestReportableMessage ? (
+        <ReportDialog
+          params={{
+            type: 'convoMessage',
+            convoId: convo.id,
+            message: latestReportableMessage,
+          }}
+          control={reportControl}
+        />
+      ) : (
+        <ReportConversationPrompt control={reportControl} />
+      )}
+
       <BlockedByListDialog
         control={blockedByListControl}
         listBlocks={listBlocks}

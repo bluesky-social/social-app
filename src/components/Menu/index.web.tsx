@@ -110,7 +110,12 @@ const RadixTriggerPassThrough = React.forwardRef(
 )
 RadixTriggerPassThrough.displayName = 'RadixTriggerPassThrough'
 
-export function Trigger({children, label, role = 'button'}: TriggerProps) {
+export function Trigger({
+  children,
+  label,
+  role = 'button',
+  hint,
+}: TriggerProps) {
   const {control} = useMenuContext()
   const {
     state: hovered,
@@ -153,6 +158,7 @@ export function Trigger({children, label, role = 'button'}: TriggerProps) {
               onBlur: onBlur,
               onMouseEnter,
               onMouseLeave,
+              accessibilityHint: hint,
               accessibilityLabel: label,
               accessibilityRole: role,
             },
@@ -202,7 +208,7 @@ export function Outer({
   )
 }
 
-export function Item({children, label, onPress, ...rest}: ItemProps) {
+export function Item({children, label, onPress, style, ...rest}: ItemProps) {
   const t = useTheme()
   const {control} = useMenuContext()
   const {
@@ -248,6 +254,7 @@ export function Item({children, label, onPress, ...rest}: ItemProps) {
                 ? t.atoms.bg_contrast_25
                 : t.atoms.bg_contrast_50,
             ],
+          style,
         ])}
         {...web({
           onMouseEnter,

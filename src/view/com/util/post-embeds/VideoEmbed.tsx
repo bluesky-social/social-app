@@ -5,9 +5,9 @@ import {AppBskyEmbedVideo} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {clamp} from '#/lib/numbers'
+import {ConstrainedImage} from '#/view/com/util/images/AutoSizedImage'
 import {VideoEmbedInnerNative} from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
@@ -16,9 +16,11 @@ import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 interface Props {
   embed: AppBskyEmbedVideo.View
+  crop?: 'none' | 'square' | 'constrained'
 }
 
-export function VideoEmbed({embed}: Props) {
+export function VideoEmbed({embed, crop}: Props) {
+  const t = useTheme()
   const [key, setKey] = useState(0)
 
   const renderError = useCallback(
@@ -28,26 +30,51 @@ export function VideoEmbed({embed}: Props) {
     [key],
   )
 
-  let aspectRatio = 16 / 9
-  if (embed.aspectRatio) {
-    const {width, height} = embed.aspectRatio
-    aspectRatio = width / height
-    aspectRatio = clamp(aspectRatio, 1 / 1, 3 / 1)
+  let aspectRatio: number | undefined
+  const dims = embed.aspectRatio
+  if (dims) {
+    aspectRatio = dims.width / dims.height
+    if (Number.isNaN(aspectRatio)) {
+      aspectRatio = undefined
+    }
   }
 
+  let constrained: number | undefined
+  let max: number | undefined
+  if (aspectRatio !== undefined) {
+    const ratio = 1 / 2 // max of 1:2 ratio in feeds
+    constrained = Math.max(aspectRatio, ratio)
+    max = Math.max(aspectRatio, 0.25) // max of 1:4 in thread
+  }
+  const cropDisabled = crop === 'none'
+
+  const contents = (
+    <ErrorBoundary renderError={renderError} key={key}>
+      <InnerWrapper embed={embed} />
+    </ErrorBoundary>
+  )
+
   return (
-    <View
-      style={[
-        a.w_full,
-        a.rounded_md,
-        a.overflow_hidden,
-        {aspectRatio},
-        {backgroundColor: 'black'},
-        a.mt_xs,
-      ]}>
-      <ErrorBoundary renderError={renderError} key={key}>
-        <InnerWrapper embed={embed} />
-      </ErrorBoundary>
+    <View style={[a.pt_xs]}>
+      {cropDisabled ? (
+        <View
+          style={[
+            a.w_full,
+            a.overflow_hidden,
+            {aspectRatio: max ?? 1},
+            a.rounded_md,
+            a.overflow_hidden,
+            t.atoms.bg_contrast_25,
+          ]}>
+          {contents}
+        </View>
+      ) : (
+        <ConstrainedImage
+          fullBleed={crop === 'square'}
+          aspectRatio={constrained || 1}>
+          {contents}
+        </ConstrainedImage>
+      )}
     </View>
   )
 }
