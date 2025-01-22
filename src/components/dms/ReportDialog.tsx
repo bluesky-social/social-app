@@ -317,11 +317,11 @@ function DoneStep({
 
   let btnText = _(msg`Done`)
   if (actions.includes('leave') && actions.includes('block')) {
-    btnText = _(msg`Block & delete`)
+    btnText = _(msg`Block and Delete`)
   } else if (actions.includes('leave')) {
-    btnText = _(msg`Delete conversation`)
+    btnText = _(msg`Delete Conversation`)
   } else if (actions.includes('block')) {
-    btnText = _(msg`Block user`)
+    btnText = _(msg`Block User`)
   }
 
   return (
