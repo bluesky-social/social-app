@@ -19,6 +19,7 @@ ENV GOEXPERIMENT="loopvar"
 ARG EXPO_PUBLIC_BUNDLE_IDENTIFIER
 ENV EXPO_PUBLIC_BUNDLE_IDENTIFIER=${EXPO_PUBLIC_BUNDLE_IDENTIFIER:-dev}
 ENV APPVIEW_DID=${APPVIEW_DID}
+ENV APPVIEW_HOST=${APPVIEW_HOST}
 
 COPY . .
 
@@ -52,7 +53,7 @@ RUN cd bskyweb/ && \
   go mod download && \
   go mod verify && \
   echo "GOLOG_LOG_LEVEL=info" >> .env && \
-  echo "ATP_APPVIEW_HOST=$APPVIEW_DID" >> .env
+  echo "ATP_APPVIEW_HOST=$APPVIEW_HOST" >> .env
 
 RUN cat ./bskyweb/.env
 
