@@ -147,6 +147,7 @@ export let unstable__openModal: (modal: Modal) => void = () => {
 
 /**
  * @deprecated DO NOT USE THIS unless you have no other choice.
+ * @lintignore
  */
 export let unstable__closeModal: () => boolean = () => {
   throw new Error(`ModalContext is not initialized`)
