@@ -18,6 +18,7 @@ ENV GOEXPERIMENT="loopvar"
 # Expo
 ARG EXPO_PUBLIC_BUNDLE_IDENTIFIER
 ENV EXPO_PUBLIC_BUNDLE_IDENTIFIER=${EXPO_PUBLIC_BUNDLE_IDENTIFIER:-dev}
+ENV APPVIEW_DID=${APPVIEW_DID}
 
 COPY . .
 
@@ -39,7 +40,7 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   npm install --global yarn && \
   yarn && \
   yarn intl:build && \
-  EXPO_PUBLIC_BUNDLE_IDENTIFIER=$EXPO_PUBLIC_BUNDLE_IDENTIFIER EXPO_PUBLIC_BUNDLE_DATE=$() yarn build-web
+  APPVIEW_DID=$APPVIEW_DID EXPO_PUBLIC_BUNDLE_IDENTIFIER=$EXPO_PUBLIC_BUNDLE_IDENTIFIER EXPO_PUBLIC_BUNDLE_DATE=$() yarn build-web
 
 # DEBUG
 RUN find ./bskyweb/static && find ./web-build/static
@@ -47,7 +48,6 @@ RUN find ./bskyweb/static && find ./web-build/static
 #
 # Generate the bskyweb Go binary.
 #
-ENV APPVIEW_DID=${APPVIEW_DID}
 RUN cd bskyweb/ && \
   go mod download && \
   go mod verify && \
