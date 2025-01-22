@@ -32,11 +32,11 @@ export function makeListLink(did: string, rkey: string, ...segments: string[]) {
   return [`/profile`, did, 'lists', rkey, ...segments].join('/')
 }
 
-export function makeTagLink(did: string) {
+function makeTagLink(did: string) {
   return `/search?q=${encodeURIComponent(did)}`
 }
 
-export function makeSearchLink(props: {query: string; from?: 'me' | string}) {
+function makeSearchLink(props: {query: string; from?: 'me' | string}) {
   return `/search?q=${encodeURIComponent(
     props.query + (props.from ? ` from:${props.from}` : ''),
   )}`

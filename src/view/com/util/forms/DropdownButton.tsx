@@ -38,10 +38,10 @@ export interface DropdownItemButton {
   label: string
   onPress: () => void
 }
-export interface DropdownItemSeparator {
+interface DropdownItemSeparator {
   sep: true
 }
-export interface DropdownItemHeading {
+interface DropdownItemHeading {
   heading: true
   label: string
 }
@@ -51,7 +51,7 @@ export type DropdownItem =
   | DropdownItemHeading
 type MaybeDropdownItem = DropdownItem | false | undefined
 
-export type DropdownButtonType = ButtonType | 'bare'
+type DropdownButtonType = ButtonType | 'bare'
 
 interface DropdownButtonProps {
   testID?: string

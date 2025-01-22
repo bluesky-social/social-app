@@ -11,7 +11,7 @@ export function getIsReducedMotionEnabled(): boolean {
  * @param mixWithOthers
  * @see https://developer.apple.com/documentation/avfaudio/avaudiosession/setactiveoptions/1616603-notifyothersondeactivation
  */
-export function setAudioActive(active: boolean): void {
+function setAudioActive(active: boolean): void {
   throw new NotImplementedError({active})
 }
 
@@ -20,6 +20,6 @@ export function setAudioActive(active: boolean): void {
  * @param audioCategory
  * @platform ios
  */
-export function setAudioCategory(audioCategory: AudioCategory): void {
+function setAudioCategory(audioCategory: AudioCategory): void {
   throw new NotImplementedError({audioCategory})
 }

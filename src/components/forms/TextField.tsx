@@ -44,7 +44,7 @@ const Context = React.createContext<{
   onBlur: () => {},
 })
 
-export type RootProps = React.PropsWithChildren<{isInvalid?: boolean}>
+type RootProps = React.PropsWithChildren<{isInvalid?: boolean}>
 
 export function Root({children, isInvalid = false}: RootProps) {
   const inputRef = React.useRef<TextInput>(null)

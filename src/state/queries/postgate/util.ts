@@ -45,7 +45,7 @@ export function mergePostgateRecords(
   })
 }
 
-export function createEmbedViewDetachedRecord({uri}: {uri: string}) {
+function createEmbedViewDetachedRecord({uri}: {uri: string}) {
   const record: AppBskyEmbedRecord.ViewDetached = {
     $type: 'app.bsky.embed.record#viewDetached',
     uri,
@@ -93,7 +93,7 @@ export function createMaybeDetachedQuoteEmbed({
   }
 }
 
-export function createEmbedViewRecordFromPost(
+function createEmbedViewRecordFromPost(
   post: AppBskyFeedDefs.PostView,
 ): AppBskyEmbedRecord.ViewRecord {
   return {
@@ -111,7 +111,7 @@ export function createEmbedViewRecordFromPost(
   }
 }
 
-export function createEmbedRecordView({
+function createEmbedRecordView({
   post,
 }: {
   post: AppBskyFeedDefs.PostView
@@ -122,7 +122,7 @@ export function createEmbedRecordView({
   }
 }
 
-export function createEmbedRecordWithMediaView({
+function createEmbedRecordWithMediaView({
   post,
   quote,
 }: {

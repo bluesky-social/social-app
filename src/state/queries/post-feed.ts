@@ -98,14 +98,14 @@ export interface FeedPostSlice {
     | {[k: string]: unknown; $type: string}
 }
 
-export interface FeedPageUnselected {
+interface FeedPageUnselected {
   api: FeedAPI
   cursor: string | undefined
   feed: AppBskyFeedDefs.FeedViewPost[]
   fetchedAt: number
 }
 
-export interface FeedPage {
+interface FeedPage {
   api: FeedAPI
   tuner: FeedTuner
   cursor: string | undefined
@@ -631,7 +631,7 @@ export function resetProfilePostsQueries(
   }, timeout)
 }
 
-export function isFeedPostSlice(v: any): v is FeedPostSlice {
+function isFeedPostSlice(v: any): v is FeedPostSlice {
   return (
     v && typeof v === 'object' && '_isFeedPostSlice' in v && v._isFeedPostSlice
   )

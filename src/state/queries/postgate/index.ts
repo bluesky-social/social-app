@@ -79,7 +79,7 @@ export async function getPostgateRecord({
   }
 }
 
-export async function writePostgateRecord({
+async function writePostgateRecord({
   agent,
   postUri,
   postgate,
@@ -100,7 +100,7 @@ export async function writePostgateRecord({
   )
 }
 
-export async function upsertPostgate(
+async function upsertPostgate(
   {
     agent,
     postUri,
@@ -258,7 +258,7 @@ export function useToggleQuoteDetachmentMutation() {
   })
 }
 
-export function useToggleQuotepostEnabledMutation() {
+function useToggleQuotepostEnabledMutation() {
   const agent = useAgent()
 
   return useMutation({

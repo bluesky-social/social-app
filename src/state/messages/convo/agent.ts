@@ -34,7 +34,7 @@ import {MessagesEventBus} from '#/state/messages/events/agent'
 import {MessagesEventBusError} from '#/state/messages/events/types'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 
-export function isConvoItemMessage(
+function isConvoItemMessage(
   item: ConvoItem,
 ): item is ConvoItem & {type: 'message'} {
   if (!item) return false

@@ -73,7 +73,7 @@ export function Embed({
   return null
 }
 
-export function Outer({
+function Outer({
   children,
   style,
 }: {
@@ -83,7 +83,7 @@ export function Outer({
   return <View style={[a.flex_row, a.gap_xs, style]}>{children}</View>
 }
 
-export function ImageItem({
+function ImageItem({
   thumbnail,
   alt,
   children,
@@ -111,7 +111,7 @@ export function ImageItem({
   )
 }
 
-export function GifItem({thumbnail, alt}: {thumbnail: string; alt?: string}) {
+function GifItem({thumbnail, alt}: {thumbnail: string; alt?: string}) {
   return (
     <ImageItem thumbnail={thumbnail} alt={alt}>
       <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
@@ -126,7 +126,7 @@ export function GifItem({thumbnail, alt}: {thumbnail: string; alt?: string}) {
   )
 }
 
-export function VideoItem({
+function VideoItem({
   thumbnail,
   alt,
 }: {

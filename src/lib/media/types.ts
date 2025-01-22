@@ -5,7 +5,7 @@ export interface Dimensions {
   height: number
 }
 
-export interface PickerOpts {
+interface PickerOpts {
   mediaType?: string
   multiple?: boolean
   maxFiles?: number

@@ -1,4 +1,4 @@
-export function extractDataUriMime(uri: string): string {
+function extractDataUriMime(uri: string): string {
   return uri.substring(uri.indexOf(':') + 1, uri.indexOf(';'))
 }
 

@@ -17,7 +17,7 @@ import {Text} from '#/components/Typography'
 
 export {useDialogControl as useModerationDetailsDialogControl} from '#/components/Dialog'
 
-export interface ModerationDetailsDialogProps {
+interface ModerationDetailsDialogProps {
   control: Dialog.DialogOuterProps['control']
   modcause?: ModerationCause | AppModerationCause
 }

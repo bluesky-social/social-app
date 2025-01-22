@@ -23,7 +23,7 @@ import {Loader} from '../Loader'
 
 export {useDialogControl as useLabelsOnMeDialogControl} from '#/components/Dialog'
 
-export interface LabelsOnMeDialogProps {
+interface LabelsOnMeDialogProps {
   control: Dialog.DialogOuterProps['control']
   labels: ComAtprotoLabelDefs.Label[]
   type: 'account' | 'content'

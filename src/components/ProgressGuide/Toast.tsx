@@ -22,7 +22,7 @@ export interface ProgressGuideToastRef {
   close(): void
 }
 
-export interface ProgressGuideToastProps {
+interface ProgressGuideToastProps {
   title: string
   subtitle?: string
   visibleDuration?: number // default 5s

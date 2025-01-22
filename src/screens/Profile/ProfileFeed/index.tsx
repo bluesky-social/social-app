@@ -146,7 +146,7 @@ function ProfileFeedScreenIntermediate({
   )
 }
 
-export function ProfileFeedScreenInner({
+function ProfileFeedScreenInner({
   feedInfo,
   feedParams,
 }: {

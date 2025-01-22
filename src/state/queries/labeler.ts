@@ -12,18 +12,18 @@ import {
 import {useAgent} from '#/state/session'
 
 const labelerInfoQueryKeyRoot = 'labeler-info'
-export const labelerInfoQueryKey = (did: string) => [
+const labelerInfoQueryKey = (did: string) => [
   labelerInfoQueryKeyRoot,
   did,
 ]
 
 const labelersInfoQueryKeyRoot = 'labelers-info'
-export const labelersInfoQueryKey = (dids: string[]) => [
+const labelersInfoQueryKey = (dids: string[]) => [
   labelersInfoQueryKeyRoot,
   dids.slice().sort(),
 ]
 
-export const labelersDetailedInfoQueryKey = (dids: string[]) => [
+const labelersDetailedInfoQueryKey = (dids: string[]) => [
   labelersDetailedInfoQueryKeyRoot,
   dids,
 ]
@@ -49,7 +49,7 @@ export function useLabelerInfoQuery({
   })
 }
 
-export function useLabelersInfoQuery({dids}: {dids: string[]}) {
+function useLabelersInfoQuery({dids}: {dids: string[]}) {
   const agent = useAgent()
   return useQuery({
     enabled: !!dids.length,

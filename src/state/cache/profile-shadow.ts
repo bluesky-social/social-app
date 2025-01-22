@@ -22,7 +22,7 @@ import {findAllProfilesInQueryData as findAllProfilesInSuggestedFollowsQueryData
 import {castAsShadow, Shadow} from './types'
 export type {Shadow} from './types'
 
-export interface ProfileShadow {
+interface ProfileShadow {
   followingUri: string | undefined
   muted: boolean | undefined
   blockingUri: string | undefined

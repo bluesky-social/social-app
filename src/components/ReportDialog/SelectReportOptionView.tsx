@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 import {ReportOption, useReportOptions} from '#/lib/moderation/useReportOptions'
 import {Link} from '#/components/Link'
 import {DMCA_LINK} from '#/components/ReportDialog/const'
-export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
+
 
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {

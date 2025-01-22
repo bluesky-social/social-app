@@ -22,7 +22,7 @@ export type ImageTransformation = {
   crop?: ActionCrop['crop']
 }
 
-export type ImageMeta = {
+type ImageMeta = {
   path: string
   width: number
   height: number
@@ -75,7 +75,7 @@ export async function createComposerImage(
   }
 }
 
-export type InitialImage = {
+type InitialImage = {
   uri: string
   width: number
   height: number
@@ -196,7 +196,7 @@ export async function manipulateImage(
   }
 }
 
-export function resetImageManipulation(
+function resetImageManipulation(
   img: ComposerImage,
 ): ComposerImageWithoutTransformation {
   if (img.transformed !== undefined) {

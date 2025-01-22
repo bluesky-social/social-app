@@ -48,7 +48,7 @@ import {useLanguagePrefs} from '#/state/preferences'
 /**
  * We do a dynamic import of just the catalog that we need
  */
-export async function dynamicActivate(locale: AppLanguage) {
+async function dynamicActivate(locale: AppLanguage) {
   switch (locale) {
     case AppLanguage.an: {
       i18n.loadAndActivate({locale, messages: messagesAn})

@@ -29,7 +29,7 @@ export const embedPlayerSources = [
 
 export type EmbedPlayerSource = (typeof embedPlayerSources)[number]
 
-export type EmbedPlayerType =
+type EmbedPlayerType =
   | 'youtube_video'
   | 'youtube_short'
   | 'twitch_video'
@@ -495,7 +495,7 @@ export function getPlayerAspect({
   }
 }
 
-export function getGifDims(
+function getGifDims(
   originalHeight: number,
   originalWidth: number,
   viewWidth: number,

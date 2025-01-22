@@ -34,8 +34,8 @@ export type ButtonColor =
   | 'gradient_nordic'
   | 'gradient_bonfire'
 export type ButtonSize = 'tiny' | 'small' | 'large'
-export type ButtonShape = 'round' | 'square' | 'default'
-export type VariantProps = {
+type ButtonShape = 'round' | 'square' | 'default'
+type VariantProps = {
   /**
    * The style variation of the button
    */
@@ -54,14 +54,14 @@ export type VariantProps = {
   shape?: ButtonShape
 }
 
-export type ButtonState = {
+type ButtonState = {
   hovered: boolean
   focused: boolean
   pressed: boolean
   disabled: boolean
 }
 
-export type ButtonContext = VariantProps & ButtonState
+type ButtonContext = VariantProps & ButtonState
 
 type NonTextElements =
   | React.ReactElement
@@ -94,7 +94,7 @@ export type ButtonProps = Pick<
     PressableComponent?: React.ComponentType<PressableProps>
   }
 
-export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
+type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
 
 const Context = React.createContext<VariantProps & ButtonState>({
   hovered: false,
@@ -533,7 +533,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
 )
 Button.displayName = 'Button'
 
-export function useSharedButtonTextStyles() {
+function useSharedButtonTextStyles() {
   const t = useTheme()
   const {color, variant, disabled, size} = useButtonContext()
   return React.useMemo(() => {

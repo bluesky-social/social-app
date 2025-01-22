@@ -100,7 +100,7 @@ export const ProfileLabelsSection = React.forwardRef<
   )
 })
 
-export function ProfileLabelsSectionInner({
+function ProfileLabelsSectionInner({
   moderationOpts,
   labelerInfo,
   scrollElRef,

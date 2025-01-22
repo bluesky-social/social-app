@@ -6,7 +6,7 @@ import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 
-export interface BackNextButtonsProps {
+interface BackNextButtonsProps {
   hideNext?: boolean
   showRetry?: boolean
   isLoading: boolean

@@ -6,7 +6,7 @@ import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/
 import {useSession} from '#/state/session'
 import {usePreferencesQuery} from '../queries/preferences'
 
-export const moderationOptsContext = createContext<ModerationOpts | undefined>(
+const moderationOptsContext = createContext<ModerationOpts | undefined>(
   undefined,
 )
 

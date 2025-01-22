@@ -6,7 +6,7 @@ type PortalContext = React.ElementType<{children: React.ReactNode}>
 
 export const Context = React.createContext({} as PortalContext)
 
-export const useBottomSheetPortal_INTERNAL = () => React.useContext(Context)
+const useBottomSheetPortal_INTERNAL = () => React.useContext(Context)
 
 export function BottomSheetPortalProvider({
   children,

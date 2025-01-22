@@ -19,7 +19,7 @@ import {ScrollbarOffsetContext} from '#/components/Layout/context'
 export * from '#/components/Layout/const'
 export * as Header from '#/components/Layout/Header'
 
-export type ScreenProps = React.ComponentProps<typeof View> & {
+type ScreenProps = React.ComponentProps<typeof View> & {
   style?: StyleProp<ViewStyle>
   noInsetTop?: boolean
 }
@@ -44,7 +44,7 @@ export const Screen = React.memo(function Screen({
   )
 })
 
-export type ContentProps = AnimatedScrollViewProps & {
+type ContentProps = AnimatedScrollViewProps & {
   style?: StyleProp<ViewStyle>
   contentContainerStyle?: StyleProp<ViewStyle>
 }
@@ -102,7 +102,7 @@ const scrollViewStyles = StyleSheet.create({
   },
 })
 
-export type KeyboardAwareContentProps = KeyboardAwareScrollViewProps & {
+type KeyboardAwareContentProps = KeyboardAwareScrollViewProps & {
   children: React.ReactNode
   contentContainerStyle?: StyleProp<ViewStyle>
 }
@@ -112,7 +112,7 @@ export type KeyboardAwareContentProps = KeyboardAwareScrollViewProps & {
  *
  * BE SURE TO TEST THIS WHEN USING, it's untested as of writing this comment.
  */
-export const KeyboardAwareContent = React.memo(function LayoutScrollView({
+const KeyboardAwareContent = React.memo(function LayoutScrollView({
   children,
   style,
   contentContainerStyle,

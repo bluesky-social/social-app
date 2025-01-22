@@ -5,7 +5,7 @@ import {STALE} from '#/state/queries'
 import {useAgent} from '../session'
 
 const RQKEY_ROOT = 'app-passwords'
-export const RQKEY = () => [RQKEY_ROOT]
+const RQKEY = () => [RQKEY_ROOT]
 
 export function useAppPasswordsQuery() {
   const agent = useAgent()

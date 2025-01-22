@@ -27,7 +27,7 @@ const PAGE_SIZE = 100
 // ...which comes 100,000k list members
 
 const RQKEY_ROOT = 'list-memberships'
-export const RQKEY = () => [RQKEY_ROOT]
+const RQKEY = () => [RQKEY_ROOT]
 
 export interface ListMembersip {
   membershipUri: string

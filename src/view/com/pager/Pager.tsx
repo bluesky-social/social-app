@@ -20,7 +20,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useSetDrawerSwipeDisabled} from '#/state/shell'
 import {atoms as a, native} from '#/alf'
 
-export type PageSelectedEvent = PagerViewOnPageSelectedEvent
+type PageSelectedEvent = PagerViewOnPageSelectedEvent
 
 export interface PagerRef {
   setPage: (index: number) => void
@@ -33,7 +33,7 @@ export interface RenderTabBarFnProps {
   dragProgress: SharedValue<number> // Ignored on web.
   dragState: SharedValue<'idle' | 'dragging' | 'settling'> // Ignored on web.
 }
-export type RenderTabBarFn = (props: RenderTabBarFnProps) => JSX.Element
+type RenderTabBarFn = (props: RenderTabBarFnProps) => JSX.Element
 
 interface Props {
   initialPage?: number

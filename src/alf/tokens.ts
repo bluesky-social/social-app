@@ -33,7 +33,7 @@ export const fontSize = {
   _5xl: 40,
 } as const
 
-export const lineHeight = {
+const lineHeight = {
   none: 1,
   normal: 1.5,
   relaxed: 1.625,

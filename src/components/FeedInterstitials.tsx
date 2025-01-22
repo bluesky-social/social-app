@@ -55,7 +55,7 @@ function CardOuter({
   )
 }
 
-export function SuggestedFollowPlaceholder() {
+function SuggestedFollowPlaceholder() {
   const t = useTheme()
   return (
     <CardOuter style={[a.gap_md, t.atoms.border_contrast_low]}>
@@ -69,7 +69,7 @@ export function SuggestedFollowPlaceholder() {
   )
 }
 
-export function SuggestedFeedsCardPlaceholder() {
+function SuggestedFeedsCardPlaceholder() {
   const t = useTheme()
   return (
     <CardOuter style={[a.gap_sm, t.atoms.border_contrast_low]}>
@@ -184,7 +184,7 @@ export function SuggestedFollows({feed}: {feed: FeedDescriptor}) {
   }
 }
 
-export function SuggestedFollowsProfile({did}: {did: string}) {
+function SuggestedFollowsProfile({did}: {did: string}) {
   const {
     isLoading: isSuggestionsLoading,
     data,
@@ -202,7 +202,7 @@ export function SuggestedFollowsProfile({did}: {did: string}) {
   )
 }
 
-export function SuggestedFollowsHome() {
+function SuggestedFollowsHome() {
   const {
     isLoading: isSuggestionsLoading,
     profiles,
@@ -218,7 +218,7 @@ export function SuggestedFollowsHome() {
   )
 }
 
-export function ProfileGrid({
+function ProfileGrid({
   isSuggestionsLoading,
   error,
   profiles,
@@ -372,7 +372,7 @@ export function ProfileGrid({
   )
 }
 
-export function SuggestedFeeds() {
+function SuggestedFeeds() {
   const numFeedsToDisplay = 3
   const t = useTheme()
   const {_} = useLingui()

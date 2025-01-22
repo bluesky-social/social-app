@@ -16,7 +16,7 @@ type Response = {
 
 export const DEFAULT_LIMIT = 14
 
-export const trendingTopicsQueryKey = ['trending-topics']
+const trendingTopicsQueryKey = ['trending-topics']
 
 export function useTrendingTopics() {
   const agent = useAgent()

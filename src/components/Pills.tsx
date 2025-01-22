@@ -48,7 +48,7 @@ export function Row({
   )
 }
 
-export type LabelProps = {
+type LabelProps = {
   cause: AppModerationCause
   disableDetailsDialog?: boolean
   noBg?: boolean

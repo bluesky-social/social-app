@@ -51,7 +51,7 @@ export function GifAltTextDialog({
   )
 }
 
-export function GifAltTextDialogLoaded({
+function GifAltTextDialogLoaded({
   vendorAltText,
   altText,
   onSubmit,

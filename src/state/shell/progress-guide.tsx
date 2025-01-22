@@ -28,7 +28,7 @@ interface BaseProgressGuide {
   [key: string]: any
 }
 
-export interface Like10AndFollow7ProgressGuide extends BaseProgressGuide {
+interface Like10AndFollow7ProgressGuide extends BaseProgressGuide {
   guide: 'like-10-and-follow-7'
   numLikes: number
   numFollows: number
@@ -39,7 +39,7 @@ export interface Follow10ProgressGuide extends BaseProgressGuide {
   numFollows: number
 }
 
-export type ProgressGuide =
+type ProgressGuide =
   | Like10AndFollow7ProgressGuide
   | Follow10ProgressGuide
   | undefined

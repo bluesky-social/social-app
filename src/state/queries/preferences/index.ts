@@ -70,7 +70,7 @@ export function usePreferencesQuery() {
   })
 }
 
-export function useClearPreferencesMutation() {
+function useClearPreferencesMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
@@ -104,7 +104,7 @@ export function usePreferencesSetContentLabelMutation() {
   })
 }
 
-export function useSetContentLabelMutation() {
+function useSetContentLabelMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
@@ -310,7 +310,7 @@ export function useUpsertMutedWordsMutation() {
   })
 }
 
-export function useUpdateMutedWordMutation() {
+function useUpdateMutedWordMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
@@ -355,7 +355,7 @@ export function useRemoveMutedWordsMutation() {
   })
 }
 
-export function useQueueNudgesMutation() {
+function useQueueNudgesMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
@@ -370,7 +370,7 @@ export function useQueueNudgesMutation() {
   })
 }
 
-export function useDismissNudgesMutation() {
+function useDismissNudgesMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 

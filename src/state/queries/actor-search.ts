@@ -12,10 +12,10 @@ import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
 
 const RQKEY_ROOT = 'actor-search'
-export const RQKEY = (query: string) => [RQKEY_ROOT, query]
+const RQKEY = (query: string) => [RQKEY_ROOT, query]
 
 const RQKEY_ROOT_PAGINATED = `${RQKEY_ROOT}_paginated`
-export const RQKEY_PAGINATED = (query: string) => [RQKEY_ROOT_PAGINATED, query]
+const RQKEY_PAGINATED = (query: string) => [RQKEY_ROOT_PAGINATED, query]
 
 export function useActorSearch({
   query,

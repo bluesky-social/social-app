@@ -30,7 +30,7 @@ export function MagnifyingGlassIcon({
   )
 }
 
-export function MagnifyingGlassIcon2({
+function MagnifyingGlassIcon2({
   style,
   size,
   strokeWidth = 2,
@@ -54,7 +54,7 @@ export function MagnifyingGlassIcon2({
   )
 }
 
-export function CogIcon({
+function CogIcon({
   style,
   size,
   strokeWidth = 1.5,
@@ -113,7 +113,7 @@ export function UserGroupIcon({
   )
 }
 
-export function SquareIcon({
+function SquareIcon({
   style,
   size,
   strokeWidth = 1.3,
@@ -136,7 +136,7 @@ export function SquareIcon({
   )
 }
 
-export function RectWideIcon({
+function RectWideIcon({
   style,
   size,
   strokeWidth = 1.3,
@@ -159,7 +159,7 @@ export function RectWideIcon({
   )
 }
 
-export function RectTallIcon({
+function RectTallIcon({
   style,
   size,
   strokeWidth = 1.3,
@@ -250,7 +250,7 @@ export function InfoCircleIcon({
   )
 }
 
-export function HandIcon({
+function HandIcon({
   style,
   size,
   strokeWidth = 1.5,
@@ -276,7 +276,7 @@ export function HandIcon({
   )
 }
 
-export function HashtagIcon({
+function HashtagIcon({
   style,
   size,
   strokeWidth = 1.5,
@@ -304,7 +304,7 @@ export function HashtagIcon({
 
 // Copyright (c) 2020 Refactoring UI Inc.
 // https://github.com/tailwindlabs/heroicons/blob/master/LICENSE
-export function ShieldExclamation({
+function ShieldExclamation({
   style,
   size,
   strokeWidth = 1.5,

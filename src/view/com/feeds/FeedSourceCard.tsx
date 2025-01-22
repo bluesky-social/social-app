@@ -72,7 +72,7 @@ export function FeedSourceCard({
   )
 }
 
-export function FeedSourceCardLoaded({
+function FeedSourceCardLoaded({
   feedUri,
   feed,
   preferences,

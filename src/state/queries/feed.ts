@@ -51,7 +51,7 @@ export type FeedSourceFeedInfo = {
   contentMode: AppBskyFeedDefs.GeneratorView['contentMode']
 }
 
-export type FeedSourceListInfo = {
+type FeedSourceListInfo = {
   type: 'list'
   uri: string
   feedDescriptor: FeedDescriptor
@@ -72,7 +72,7 @@ export type FeedSourceListInfo = {
 export type FeedSourceInfo = FeedSourceFeedInfo | FeedSourceListInfo
 
 const feedSourceInfoQueryKeyRoot = 'getFeedSourceInfo'
-export const feedSourceInfoQueryKey = ({uri}: {uri: string}) => [
+const feedSourceInfoQueryKey = ({uri}: {uri: string}) => [
   feedSourceInfoQueryKeyRoot,
   uri,
 ]
@@ -82,7 +82,7 @@ const feedSourceNSIDs = {
   list: 'app.bsky.graph.list',
 }
 
-export function hydrateFeedGenerator(
+function hydrateFeedGenerator(
   view: AppBskyFeedDefs.GeneratorView,
 ): FeedSourceInfo {
   const urip = new AtUri(view.uri)
@@ -117,7 +117,7 @@ export function hydrateFeedGenerator(
   }
 }
 
-export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
+function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
     urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists'
@@ -148,12 +148,12 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
   }
 }
 
-export function getFeedTypeFromUri(uri: string) {
+function getFeedTypeFromUri(uri: string) {
   const {pathname} = new AtUri(uri)
   return pathname.includes(feedSourceNSIDs.feed) ? 'feed' : 'list'
 }
 
-export function getAvatarTypeFromUri(uri: string) {
+function getAvatarTypeFromUri(uri: string) {
   return getFeedTypeFromUri(uri) === 'feed' ? 'algo' : 'list'
 }
 
@@ -188,7 +188,7 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
 // this list is used to filter out feed recommendations from logged out users
 // for the ones we know need it
 // -prf
-export const KNOWN_AUTHED_ONLY_FEEDS = [
+const KNOWN_AUTHED_ONLY_FEEDS = [
   'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/with-friends', // popular with friends, by bsky.app
   'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.bsky.feed.generator/mutuals', // mutuals, by skyfeed
   'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.bsky.feed.generator/only-posts', // only posts, by skyfeed
@@ -201,7 +201,7 @@ export const KNOWN_AUTHED_ONLY_FEEDS = [
 
 type GetPopularFeedsOptions = {limit?: number}
 
-export function createGetPopularFeedsQueryKey(
+function createGetPopularFeedsQueryKey(
   options?: GetPopularFeedsOptions,
 ) {
   return ['getPopularFeeds', options]
@@ -340,7 +340,7 @@ export function useSearchPopularFeedsMutation() {
 }
 
 const popularFeedsSearchQueryKeyRoot = 'popularFeedsSearch'
-export const createPopularFeedsSearchQueryKey = (query: string) => [
+const createPopularFeedsSearchQueryKey = (query: string) => [
   popularFeedsSearchQueryKeyRoot,
   query,
 ]

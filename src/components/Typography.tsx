@@ -68,11 +68,11 @@ function createHeadingElement({level}: {level: number}) {
  * Use semantic components when it's beneficial to the user or to a web scraper
  */
 export const H1 = createHeadingElement({level: 1})
-export const H2 = createHeadingElement({level: 2})
+const H2 = createHeadingElement({level: 2})
 export const H3 = createHeadingElement({level: 3})
-export const H4 = createHeadingElement({level: 4})
-export const H5 = createHeadingElement({level: 5})
-export const H6 = createHeadingElement({level: 6})
+const H4 = createHeadingElement({level: 4})
+const H5 = createHeadingElement({level: 5})
+const H6 = createHeadingElement({level: 6})
 export function P({style, ...rest}: TextProps) {
   const attr =
     web({

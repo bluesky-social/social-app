@@ -3,7 +3,7 @@ import Svg, {Path} from 'react-native-svg'
 
 import {Props, useCommonSVGProps} from '#/components/icons/common'
 
-export const IconTemplate_Stroke2_Corner0_Rounded = React.forwardRef(
+const IconTemplate_Stroke2_Corner0_Rounded = React.forwardRef(
   function LogoImpl(props: Props, ref) {
     const {fill, size, style, ...rest} = useCommonSVGProps(props)
 

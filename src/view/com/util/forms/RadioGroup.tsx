@@ -5,7 +5,7 @@ import {s} from '#/lib/styles'
 import {ButtonType} from './Button'
 import {RadioButton} from './RadioButton'
 
-export interface RadioGroupItem {
+interface RadioGroupItem {
   label: string | JSX.Element
   key: string
 }

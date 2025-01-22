@@ -13,7 +13,7 @@ import {
   StringChild,
 } from '#/alf/typography'
 
-export type CustomTextProps = Omit<TextProps, 'children'> & {
+type CustomTextProps = Omit<TextProps, 'children'> & {
   type?: TypographyVariant
   lineHeight?: number
   title?: string

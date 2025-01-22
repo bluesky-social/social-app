@@ -3,7 +3,7 @@ import {SharedValue} from 'react-native-reanimated'
 
 import {isNative} from '#/platform/detection'
 
-export const PagerHeaderContext = React.createContext<{
+const PagerHeaderContext = React.createContext<{
   scrollY: SharedValue<number>
   headerHeight: number
 } | null>(null)

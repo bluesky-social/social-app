@@ -4,4 +4,4 @@ import * as Referrer from './src/Referrer'
 import * as SharedPrefs from './src/SharedPrefs'
 import VisibilityView from './src/VisibilityView'
 
-export {AudioCategory, PlatformInfo, Referrer, SharedPrefs, VisibilityView}
+export { PlatformInfo, Referrer, SharedPrefs, }

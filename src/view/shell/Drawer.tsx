@@ -120,7 +120,7 @@ let DrawerProfileCard = ({
   )
 }
 DrawerProfileCard = React.memo(DrawerProfileCard)
-export {DrawerProfileCard}
+
 
 let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   const t = useTheme()

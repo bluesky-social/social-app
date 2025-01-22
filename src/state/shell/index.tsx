@@ -9,7 +9,7 @@ import {Provider as ShellLayoutProvder} from './shell-layout'
 import {Provider as TickEveryMinuteProvider} from './tick-every-minute'
 
 export {useSetThemePrefs, useThemePrefs} from './color-mode'
-export {useComposerControls, useComposerState} from './composer'
+export {useComposerControls, } from './composer'
 export {useIsDrawerOpen, useSetDrawerOpen} from './drawer-open'
 export {
   useIsDrawerSwipeDisabled,

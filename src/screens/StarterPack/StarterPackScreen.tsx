@@ -113,7 +113,7 @@ export function StarterPackScreenShort({route}: StarterPackScreenShortProps) {
   )
 }
 
-export function StarterPackScreenInner({
+function StarterPackScreenInner({
   routeParams,
 }: {
   routeParams: StarterPackScreeProps['route']['params']

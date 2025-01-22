@@ -1,15 +1,15 @@
 import {Insets, Platform} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 
-export const LOCAL_DEV_SERVICE =
+const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
-export const STAGING_SERVICE = 'https://staging.bsky.dev'
+const STAGING_SERVICE = 'https://staging.bsky.dev'
 export const BSKY_SERVICE = 'https://bsky.social'
 export const PUBLIC_BSKY_SERVICE = 'https://public.api.bsky.app'
 export const DEFAULT_SERVICE = BSKY_SERVICE
 const HELP_DESK_LANG = 'en-us'
 export const HELP_DESK_URL = `https://blueskyweb.zendesk.com/hc/${HELP_DESK_LANG}`
-export const EMBED_SERVICE = 'https://embed.bsky.app'
+const EMBED_SERVICE = 'https://embed.bsky.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
 export const STARTER_PACK_MAX_SIZE = 150
@@ -63,10 +63,10 @@ export function IS_PROD_SERVICE(url?: string) {
 export const PROD_DEFAULT_FEED = (rkey: string) =>
   `at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/${rkey}`
 
-export const STAGING_DEFAULT_FEED = (rkey: string) =>
+const STAGING_DEFAULT_FEED = (rkey: string) =>
   `at://did:plc:yofh3kx63drvfljkibw5zuxo/app.bsky.feed.generator/${rkey}`
 
-export const PROD_FEEDS = [
+const PROD_FEEDS = [
   `feedgen|${PROD_DEFAULT_FEED('whats-hot')}`,
   `feedgen|${PROD_DEFAULT_FEED('thevids')}`,
 ]
@@ -84,10 +84,10 @@ export const POST_IMG_MAX = {
   size: 1000000,
 }
 
-export const STAGING_LINK_META_PROXY =
+const STAGING_LINK_META_PROXY =
   'https://cardyb.staging.bsky.dev/v1/extract?url='
 
-export const PROD_LINK_META_PROXY = 'https://cardyb.bsky.app/v1/extract?url='
+const PROD_LINK_META_PROXY = 'https://cardyb.bsky.app/v1/extract?url='
 
 export function LINK_META_PROXY(serviceUrl: string) {
   if (IS_PROD_SERVICE(serviceUrl)) {
@@ -126,7 +126,7 @@ export const DISCOVER_FEED_URI =
   'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'
 export const VIDEO_FEED_URI =
   'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/thevids'
-export const STAGING_VIDEO_FEED_URI =
+const STAGING_VIDEO_FEED_URI =
   'at://did:plc:yofh3kx63drvfljkibw5zuxo/app.bsky.feed.generator/thevids'
 export const VIDEO_FEED_URIS = [VIDEO_FEED_URI, STAGING_VIDEO_FEED_URI]
 export const DISCOVER_SAVED_FEED = {
@@ -154,7 +154,7 @@ export const KNOWN_SHUTDOWN_FEEDS = [
   'at://did:plc:wqowuobffl66jv3kpsvo7ak4/app.bsky.feed.generator/the-algorithm', // for you by skygaze
 ]
 
-export const GIF_SERVICE = 'https://gifs.bsky.app'
+const GIF_SERVICE = 'https://gifs.bsky.app'
 
 export const GIF_SEARCH = (params: string) =>
   `${GIF_SERVICE}/tenor/v2/search?${params}`

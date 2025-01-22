@@ -24,13 +24,13 @@ import {useThreadgateHiddenReplyUrisAPI} from '#/state/threadgate-hidden-replies
 export * from '#/state/queries/threadgate/types'
 export * from '#/state/queries/threadgate/util'
 
-export const threadgateRecordQueryKeyRoot = 'threadgate-record'
-export const createThreadgateRecordQueryKey = (uri: string) => [
+const threadgateRecordQueryKeyRoot = 'threadgate-record'
+const createThreadgateRecordQueryKey = (uri: string) => [
   threadgateRecordQueryKeyRoot,
   uri,
 ]
 
-export function useThreadgateRecordQuery({
+function useThreadgateRecordQuery({
   postUri,
   initialData,
 }: {
@@ -53,7 +53,7 @@ export function useThreadgateRecordQuery({
   })
 }
 
-export const threadgateViewQueryKeyRoot = 'threadgate-view'
+const threadgateViewQueryKeyRoot = 'threadgate-view'
 export const createThreadgateViewQueryKey = (uri: string) => [
   threadgateViewQueryKeyRoot,
   uri,
@@ -100,7 +100,7 @@ export async function getThreadgateView({
   return null
 }
 
-export async function getThreadgateRecord({
+async function getThreadgateRecord({
   agent,
   postUri,
 }: {
@@ -157,7 +157,7 @@ export async function getThreadgateRecord({
   }
 }
 
-export async function writeThreadgateRecord({
+async function writeThreadgateRecord({
   agent,
   postUri,
   threadgate,
@@ -183,7 +183,7 @@ export async function writeThreadgateRecord({
   )
 }
 
-export async function upsertThreadgate(
+async function upsertThreadgate(
   {
     agent,
     postUri,
@@ -211,7 +211,7 @@ export async function upsertThreadgate(
 /**
  * Update the allow list for a threadgate record.
  */
-export async function updateThreadgateAllow({
+async function updateThreadgateAllow({
   agent,
   postUri,
   allow,

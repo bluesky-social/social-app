@@ -58,7 +58,7 @@ export function VerifyEmailDialog({
   )
 }
 
-export function Inner({
+function Inner({
   control,
   setDidVerify,
   reasonText,

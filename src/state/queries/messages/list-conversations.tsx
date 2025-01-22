@@ -54,7 +54,7 @@ const ListConvosContext = createContext<ChatBskyConvoDefs.ConvoView[] | null>(
   null,
 )
 
-export function useListConvos() {
+function useListConvos() {
   const ctx = useContext(ListConvosContext)
   if (!ctx) {
     throw new Error('useListConvos must be used within a ListConvosProvider')
@@ -76,7 +76,7 @@ export function ListConvosProvider({children}: {children: React.ReactNode}) {
   return <ListConvosProviderInner>{children}</ListConvosProviderInner>
 }
 
-export function ListConvosProviderInner({
+function ListConvosProviderInner({
   children,
 }: {
   children: React.ReactNode

@@ -12,7 +12,7 @@ import {useIsThreadMuted, useSetThreadMute} from '../cache/thread-mutes'
 import {findProfileQueryData} from './profile'
 
 const RQKEY_ROOT = 'post'
-export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri]
+const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri]
 
 export function usePostQuery(uri: string | undefined) {
   const agent = useAgent()

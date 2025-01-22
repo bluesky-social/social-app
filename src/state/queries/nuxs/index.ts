@@ -46,7 +46,7 @@ export function useNuxs():
   }
 }
 
-export function useNux<T extends Nux>(
+function useNux<T extends Nux>(
   id: T,
 ):
   | {

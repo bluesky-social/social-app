@@ -9,7 +9,7 @@ import {
 import {useAgent} from '#/state/session'
 
 export const RQKEY_ROOT = 'actor-starter-packs'
-export const RQKEY = (did?: string) => [RQKEY_ROOT, did]
+const RQKEY = (did?: string) => [RQKEY_ROOT, did]
 
 export function useActorStarterPacksQuery({did}: {did?: string}) {
   const agent = useAgent()

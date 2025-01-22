@@ -4,7 +4,7 @@ export type DbSchema = {
   link: Link
 }
 
-export interface Link {
+interface Link {
   id: string
   type: LinkType
   path: string
@@ -14,4 +14,4 @@ export enum LinkType {
   StarterPack = 1,
 }
 
-export type LinkEntry = Selectable<Link>
+type LinkEntry = Selectable<Link>

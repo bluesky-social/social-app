@@ -165,7 +165,7 @@ type ParsedTrendingTopic =
       uri: AtUri
     }
 
-export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
+function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
   const {_} = useLingui()
   return React.useMemo(() => {
     const {topic: displayName, link} = raw

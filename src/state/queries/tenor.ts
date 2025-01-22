@@ -4,9 +4,9 @@ import {keepPreviousData, useInfiniteQuery} from '@tanstack/react-query'
 
 import {GIF_FEATURED, GIF_SEARCH} from '#/lib/constants'
 
-export const RQKEY_ROOT = 'gif-service'
-export const RQKEY_FEATURED = [RQKEY_ROOT, 'featured']
-export const RQKEY_SEARCH = (query: string) => [RQKEY_ROOT, 'search', query]
+const RQKEY_ROOT = 'gif-service'
+const RQKEY_FEATURED = [RQKEY_ROOT, 'featured']
+const RQKEY_SEARCH = (query: string) => [RQKEY_ROOT, 'search', query]
 
 const getTrendingGifs = createTenorApi(GIF_FEATURED)
 

@@ -3,7 +3,7 @@ import {TextStyle, ViewStyle} from 'react-native'
 
 import {PaletteColor, PaletteColorName, useTheme} from '../ThemeContext'
 
-export interface UsePaletteValue {
+interface UsePaletteValue {
   colors: PaletteColor
   view: ViewStyle
   viewLight: ViewStyle

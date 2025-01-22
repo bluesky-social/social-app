@@ -42,13 +42,13 @@ export function readTransform(t: TransformMatrix): [number, number, number] {
   return [translateX, translateY, scale]
 }
 
-export function prependTranslate(t: TransformMatrix, x: number, y: number) {
+function prependTranslate(t: TransformMatrix, x: number, y: number) {
   'worklet'
   t[2] += t[0] * x + t[1] * y
   t[5] += t[3] * x + t[4] * y
 }
 
-export function prependScale(t: TransformMatrix, value: number) {
+function prependScale(t: TransformMatrix, value: number) {
   'worklet'
   t[0] *= value
   t[1] *= value

@@ -83,7 +83,7 @@ export function RegionalNotice() {
   )
 }
 
-export function LikeCount({likeCount}: {likeCount: number}) {
+function LikeCount({likeCount}: {likeCount: number}) {
   const t = useTheme()
   return (
     <Text
@@ -122,7 +122,7 @@ export function Content({children}: React.PropsWithChildren<{}>) {
 /**
  * The canonical view for a labeling service. Use this or compose your own.
  */
-export function Default({
+function Default({
   labeler,
   style,
 }: LabelingServiceProps & ViewStyleProp) {
@@ -169,7 +169,7 @@ export function Link({
 }
 
 // TODO not finished yet
-export function DefaultSkeleton() {
+function DefaultSkeleton() {
   return (
     <View>
       <Text>Loading</Text>
@@ -177,7 +177,7 @@ export function DefaultSkeleton() {
   )
 }
 
-export function Loader({
+function Loader({
   did,
   loading: LoadingComponent = DefaultSkeleton,
   error: ErrorComponent,

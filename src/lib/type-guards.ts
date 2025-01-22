@@ -1,4 +1,4 @@
-export function isObj(v: unknown): v is Record<string, unknown> {
+function isObj(v: unknown): v is Record<string, unknown> {
   return !!v && typeof v === 'object'
 }
 
@@ -9,6 +9,6 @@ export function hasProp<K extends PropertyKey>(
   return prop in data
 }
 
-export function isStrArray(v: unknown): v is string[] {
+function isStrArray(v: unknown): v is string[] {
   return Array.isArray(v) && v.every(item => typeof item === 'string')
 }

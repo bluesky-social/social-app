@@ -285,7 +285,7 @@ function DialogError({details}: {details?: string}) {
   )
 }
 
-export function GifPreview({
+function GifPreview({
   gif,
   onSelectGif,
 }: {

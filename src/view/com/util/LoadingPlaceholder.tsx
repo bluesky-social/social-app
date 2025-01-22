@@ -178,7 +178,7 @@ export function NotificationFeedLoadingPlaceholder() {
   )
 }
 
-export function ProfileCardLoadingPlaceholder({
+function ProfileCardLoadingPlaceholder({
   style,
 }: {
   style?: StyleProp<ViewStyle>

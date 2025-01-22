@@ -38,7 +38,7 @@ export function MessagesEventBusProvider({
   )
 }
 
-export function MessagesEventBusProviderInner({
+function MessagesEventBusProviderInner({
   children,
 }: {
   children: React.ReactNode

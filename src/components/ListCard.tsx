@@ -34,12 +34,12 @@ import {Text} from '#/components/Typography'
 
 export {
   Avatar,
-  AvatarPlaceholder,
-  Description,
+  
+  
   Header,
-  Outer,
-  SaveButton,
-  TitleAndBylinePlaceholder,
+  
+  
+  
 } from '#/components/FeedCard'
 
 const CURATELIST = 'app.bsky.graph.defs#curatelist'
@@ -154,7 +154,7 @@ export function TitleAndByline({
   )
 }
 
-export function createProfileListHref({
+function createProfileListHref({
   list,
 }: {
   list: AppBskyGraphDefs.ListView

@@ -33,7 +33,7 @@ export function useLabelBehaviorDescription(
   }
 }
 
-export function useLabelLongBehaviorDescription(
+function useLabelLongBehaviorDescription(
   labelValueDef: InterpretedLabelValueDefinition,
   pref: LabelPreference,
 ) {

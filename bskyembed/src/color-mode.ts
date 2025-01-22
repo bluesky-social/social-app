@@ -1,4 +1,4 @@
-export function applyTheme(theme: 'light' | 'dark') {
+function applyTheme(theme: 'light' | 'dark') {
   document.documentElement.classList.remove('light', 'dark')
   document.documentElement.classList.add(theme)
 }

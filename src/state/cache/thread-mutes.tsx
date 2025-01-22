@@ -36,7 +36,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function useMutedThreads() {
+function useMutedThreads() {
   return React.useContext(stateContext)
 }
 

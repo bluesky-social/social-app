@@ -131,7 +131,7 @@ export class Database {
   }
 }
 
-export type PgConfig = {
+type PgConfig = {
   pool: Pg.Pool
   url: string
   schema?: string

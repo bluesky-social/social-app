@@ -62,12 +62,12 @@ export function replaceEqualDeep(a: any, b: any): any {
   return b
 }
 
-export function isPlainArray(value: unknown) {
+function isPlainArray(value: unknown) {
   return Array.isArray(value) && value.length === Object.keys(value).length
 }
 
 // Copied from: https://github.com/jonschlinkert/is-plain-object
-export function isPlainObject(o: any): o is Object {
+function isPlainObject(o: any): o is Object {
   if (!hasObjectPrototype(o)) {
     return false
   }

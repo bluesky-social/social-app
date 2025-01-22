@@ -1,4 +1,4 @@
-export function cancelable<A, T>(
+function cancelable<A, T>(
   f: (args: A) => Promise<T>,
   signal: AbortSignal,
 ) {

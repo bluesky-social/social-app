@@ -46,7 +46,7 @@ export function Default({
   )
 }
 
-export function Card({
+function Card({
   profile,
   moderationOpts,
   logContext = 'ProfileCard',
@@ -280,7 +280,7 @@ export function DescriptionPlaceholder({
   )
 }
 
-export type FollowButtonProps = {
+type FollowButtonProps = {
   profile: AppBskyActorDefs.ProfileViewBasic
   moderationOpts: ModerationOpts
   logContext: LogEvents['profile:follow']['logContext'] &
@@ -294,7 +294,7 @@ export function FollowButton(props: FollowButtonProps) {
   return hasSession && !isMe ? <FollowButtonInner {...props} /> : null
 }
 
-export function FollowButtonInner({
+function FollowButtonInner({
   profile: profileUnshadowed,
   moderationOpts,
   logContext,

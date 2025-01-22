@@ -36,7 +36,7 @@ const Context = React.createContext<Context>({
   dismissActiveNux: () => {},
 })
 
-export function useNuxDialogContext() {
+function useNuxDialogContext() {
   return React.useContext(Context)
 }
 

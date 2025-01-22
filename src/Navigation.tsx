@@ -868,9 +868,9 @@ function logModuleInitTime() {
 
 export {
   FlatNavigator,
-  handleLink,
+  
   navigate,
-  reset,
+  
   resetToTab,
   RoutesContainer,
   TabsNavigator,

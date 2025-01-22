@@ -17,7 +17,7 @@ import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
-export interface TabBarProps {
+interface TabBarProps {
   testID?: string
   selectedPage: number
   items: string[]

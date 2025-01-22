@@ -88,7 +88,7 @@ export function Header({children}: {children: React.ReactNode}) {
   return <View style={[a.flex_row, a.align_center, a.gap_md]}>{children}</View>
 }
 
-export type AvatarProps = {src: string | undefined; size?: number}
+type AvatarProps = {src: string | undefined; size?: number}
 
 export function Avatar({src, size = 40}: AvatarProps) {
   return <UserAvatar type="algo" size={size} avatar={src} />
@@ -206,7 +206,7 @@ export function DescriptionPlaceholder() {
   )
 }
 
-export function Likes({count}: {count: number}) {
+function Likes({count}: {count: number}) {
   const t = useTheme()
   return (
     <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
@@ -319,7 +319,7 @@ function SaveButtonInner({
   )
 }
 
-export function createProfileFeedHref({
+function createProfileFeedHref({
   feed,
 }: {
   feed: AppBskyFeedDefs.GeneratorView

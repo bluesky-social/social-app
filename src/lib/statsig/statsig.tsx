@@ -169,7 +169,7 @@ export function useGate(): (gateName: Gate, options?: GateOptions) => boolean {
 /**
  * Debugging tool to override a gate. USE ONLY IN E2E TESTS!
  */
-export function useDangerousSetGate(): (
+function useDangerousSetGate(): (
   gateName: Gate,
   value: boolean,
 ) => void {
@@ -253,7 +253,7 @@ export async function tryFetchGates(
   }
 }
 
-export function initialize() {
+function initialize() {
   return Statsig.initialize(SDK_KEY, null, createStatsigOptions([]))
 }
 

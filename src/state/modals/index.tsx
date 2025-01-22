@@ -4,20 +4,20 @@ import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
-export interface EditProfileModal {
+interface EditProfileModal {
   name: 'edit-profile'
   profile: AppBskyActorDefs.ProfileViewDetailed
   onUpdate?: () => void
 }
 
-export interface CreateOrEditListModal {
+interface CreateOrEditListModal {
   name: 'create-or-edit-list'
   purpose?: string
   list?: AppBskyGraphDefs.ListView
   onSave?: (uri: string) => void
 }
 
-export interface UserAddRemoveListsModal {
+interface UserAddRemoveListsModal {
   name: 'user-add-remove-lists'
   subject: string
   handle: string
@@ -26,7 +26,7 @@ export interface UserAddRemoveListsModal {
   onRemove?: (listUri: string) => void
 }
 
-export interface ListAddRemoveUsersModal {
+interface ListAddRemoveUsersModal {
   name: 'list-add-remove-users'
   list: AppBskyGraphDefs.ListView
   onChange?: (
@@ -35,7 +35,7 @@ export interface ListAddRemoveUsersModal {
   ) => void
 }
 
-export interface CropImageModal {
+interface CropImageModal {
   name: 'crop-image'
   uri: string
   dimensions?: {width: number; height: number}
@@ -44,48 +44,48 @@ export interface CropImageModal {
   onSelect: (img?: RNImage) => void
 }
 
-export interface DeleteAccountModal {
+interface DeleteAccountModal {
   name: 'delete-account'
 }
 
-export interface WaitlistModal {
+interface WaitlistModal {
   name: 'waitlist'
 }
 
-export interface InviteCodesModal {
+interface InviteCodesModal {
   name: 'invite-codes'
 }
 
-export interface ContentLanguagesSettingsModal {
+interface ContentLanguagesSettingsModal {
   name: 'content-languages-settings'
 }
 
-export interface PostLanguagesSettingsModal {
+interface PostLanguagesSettingsModal {
   name: 'post-languages-settings'
 }
 
-export interface VerifyEmailModal {
+interface VerifyEmailModal {
   name: 'verify-email'
   showReminder?: boolean
   onSuccess?: () => void
 }
 
-export interface ChangeEmailModal {
+interface ChangeEmailModal {
   name: 'change-email'
 }
 
-export interface ChangePasswordModal {
+interface ChangePasswordModal {
   name: 'change-password'
 }
 
-export interface LinkWarningModal {
+interface LinkWarningModal {
   name: 'link-warning'
   text: string
   href: string
   share?: boolean
 }
 
-export interface InAppBrowserConsentModal {
+interface InAppBrowserConsentModal {
   name: 'in-app-browser-consent'
   href: string
 }
