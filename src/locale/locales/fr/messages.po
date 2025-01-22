@@ -887,10 +887,6 @@ msgstr "Êtes-vous sûr de vouloir abandonner ce post ?"
 msgid "Are you sure?"
 msgstr "Vous confirmez ?"
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:61
-#~ msgid "Are you writing in <0>{0}</0>?"
-#~ msgstr "Écrivez-vous en <0>{0}</0> ?"
-
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:69
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
 msgstr "Écrivez-vous en <0>{suggestedLanguageName}</0> ?"
@@ -1278,10 +1274,6 @@ msgstr "Modifier mon e-mail"
 msgid "Change Password"
 msgstr "Modifier le mot de passe"
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:74
-#~ msgid "Change post language to {0}"
-#~ msgstr "Modifier la langue de post en {0}"
-
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:82
 msgid "Change post language to {suggestedLanguageName}"
 msgstr "Modifier la langue du post en {suggestedLanguageName}"
@@ -1353,10 +1345,6 @@ msgstr "Choisissez des personnes"
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
 msgstr "Choisissez les auto-étiquettes qui sont pertinentes pour les médias que vous postez. Si aucune n’est sélectionnée, le post est adapté à tous les publics."
 
-#: src/view/com/auth/server-input/index.tsx:76
-#~ msgid "Choose Service"
-#~ msgstr "Choisir un service"
-
 #: src/screens/Onboarding/StepFinished.tsx:287
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "Choisissez les algorithmes qui alimentent vos fils d’actu personnalisés."
@@ -1397,10 +1385,6 @@ msgstr "Effacer la recherche"
 #: src/view/screens/Support.tsx:41
 msgid "click here"
 msgstr "cliquez ici"
-
-#: src/components/TagMenu/index.web.tsx:152
-#~ msgid "Click here to open tag menu for {tag}"
-#~ msgstr "Cliquez ici pour ouvrir le menu de mot-clé pour {tag}"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:307
 msgid "Click to disable quote posts of this post."
@@ -3193,10 +3177,6 @@ msgstr "Mot-clé"
 msgid "Hashtag {tag}"
 msgstr "Mot-clé : {tag}"
 
-#: src/components/RichText.tsx:218
-#~ msgid "Hashtag: #{tag}"
-#~ msgstr "Mot-clé : #{tag}"
-
 #: src/screens/Signup/index.tsx:173
 msgid "Having trouble?"
 msgstr "Un souci ?"
@@ -4085,18 +4065,10 @@ msgctxt "video"
 msgid "Mute"
 msgstr "Désactiver le son"
 
-#: src/components/TagMenu/index.tsx:264
-#~ msgid "Mute"
-#~ msgstr "Masquer"
-
 #: src/components/RichTextTag.tsx:140
 #: src/components/RichTextTag.tsx:153
 msgid "Mute {tag}"
 msgstr "Masquer {tag}"
-
-#: src/components/TagMenu/index.web.tsx:116
-#~ msgid "Mute {truncatedTag}"
-#~ msgstr "Masquer {truncatedTag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
@@ -4106,10 +4078,6 @@ msgstr "Masquer le compte"
 #: src/view/screens/ProfileList.tsx:627
 msgid "Mute accounts"
 msgstr "Masquer les comptes"
-
-#: src/components/TagMenu/index.tsx:224
-#~ msgid "Mute all {displayTag} posts"
-#~ msgstr "Masquer tous les posts {displayTag}"
 
 #: src/components/dms/ConvoMenu.tsx:175
 #: src/components/dms/ConvoMenu.tsx:181
@@ -4195,10 +4163,6 @@ msgstr "Ma date de naissance"
 #: src/view/screens/Feeds.tsx:699
 msgid "My Feeds"
 msgstr "Mes fils d’actu"
-
-#: src/view/shell/desktop/LeftNav.tsx:84
-#~ msgid "My Profile"
-#~ msgstr "Mon profil"
 
 #: src/view/com/modals/CreateOrEditList.tsx:270
 msgid "Name"
@@ -4380,10 +4344,6 @@ msgstr "Ne suit plus {0}"
 #: src/screens/Signup/StepHandle.tsx:173
 msgid "No longer than {0} characters"
 msgstr "Pas plus de {0} caractères"
-
-#: src/screens/Signup/StepHandle.tsx:169
-#~ msgid "No longer than 253 characters"
-#~ msgstr "Pas plus de 253 caractères"
 
 #: src/screens/Messages/components/ChatListItem.tsx:118
 msgid "No messages yet"
@@ -5121,10 +5081,6 @@ msgstr "Post épinglé"
 #: src/state/queries/pinned-post.ts:61
 msgid "Post unpinned"
 msgstr "Post désépinglé"
-
-#: src/components/TagMenu/index.tsx:268
-#~ msgid "posts"
-#~ msgstr "posts"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
 #: src/view/screens/Profile.tsx:233
@@ -5950,14 +5906,6 @@ msgstr "Voir les posts {tag}"
 msgid "See {tag} posts by user"
 msgstr "Voir les posts {tag} de ce compte"
 
-#: src/components/TagMenu/index.web.tsx:77
-#~ msgid "See {truncatedTag} posts"
-#~ msgstr "Voir les posts {truncatedTag}"
-
-#: src/components/TagMenu/index.web.tsx:94
-#~ msgid "See {truncatedTag} posts by user"
-#~ msgstr "Voir les posts {truncatedTag} de ce compte"
-
 #: src/components/RichTextTag.tsx:118
 msgid "See #{tag} posts"
 msgstr "Voir les posts #{tag}"
@@ -5965,14 +5913,6 @@ msgstr "Voir les posts #{tag}"
 #: src/components/RichTextTag.tsx:132
 msgid "See #{tag} posts by user"
 msgstr "Voir les posts #{tag} de ce compte"
-
-#: src/components/TagMenu/index.tsx:155
-#~ msgid "See <0>{displayTag}</0> posts"
-#~ msgstr "Voir les posts <0>{displayTag}</0>"
-
-#: src/components/TagMenu/index.tsx:203
-#~ msgid "See <0>{displayTag}</0> posts by this user"
-#~ msgstr "Voir les posts <0>{displayTag}</0> de ce compte"
 
 #: src/view/com/auth/SplashScreen.web.tsx:176
 msgid "See jobs at Bluesky"
@@ -6045,10 +5985,6 @@ msgstr "Sélectionner l’emoji {emojiName} comme avatar"
 #: src/components/ReportDialog/SubmitView.tsx:140
 msgid "Select the moderation service(s) to report to"
 msgstr "Sélectionnez le(s) service(s) de modération destinataires du signalement"
-
-#: src/view/com/auth/server-input/index.tsx:79
-#~ msgid "Select the service that hosts your data."
-#~ msgstr "Sélectionnez le service qui héberge vos données."
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:100
 msgid "Select video"
@@ -6670,10 +6606,6 @@ msgstr "Système"
 #: src/screens/Settings/Settings.tsx:318
 msgid "System log"
 msgstr "Journal système"
-
-#: src/components/TagMenu/index.tsx:110
-#~ msgid "Tag menu: {displayTag}"
-#~ msgstr "Menu de mot-clé : {displayTag}"
 
 #: src/components/dialogs/MutedWords.tsx:282
 msgid "Tags only"
@@ -7430,18 +7362,10 @@ msgstr "Réafficher"
 msgid "Unmute {tag}"
 msgstr "Réafficher {tag}"
 
-#: src/components/TagMenu/index.web.tsx:115
-#~ msgid "Unmute {truncatedTag}"
-#~ msgstr "Réafficher {truncatedTag}"
-
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
 msgid "Unmute Account"
 msgstr "Réafficher ce compte"
-
-#: src/components/TagMenu/index.tsx:223
-#~ msgid "Unmute all {displayTag} posts"
-#~ msgstr "Réafficher tous les posts {displayTag}"
 
 #: src/components/dms/ConvoMenu.tsx:179
 msgid "Unmute conversation"
@@ -7791,14 +7715,6 @@ msgstr "Voir le profil de {0}"
 #: src/components/dms/MessagesListHeader.tsx:167
 msgid "View {displayName}'s profile"
 msgstr "Voir le profil de {displayName}"
-
-#: src/components/TagMenu/index.tsx:172
-#~ msgid "View all posts by @{authorHandle} with tag {displayTag}"
-#~ msgstr "Voir tous les posts de @{authorHandle} avec le mot-clé {displayTag}"
-
-#: src/components/TagMenu/index.tsx:126
-#~ msgid "View all posts with tag {displayTag}"
-#~ msgstr "Voir tous les posts avec le mot-clé {displayTag}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
