@@ -351,7 +351,7 @@ function DoneStep({
               <Trans>Block user</Trans>
             </Toggle.LabelText>
           </Toggle.Item>
-          <Toggle.Item name="leave" label={_(msg`Delete coversation`)}>
+          <Toggle.Item name="leave" label={_(msg`Delete conversation`)}>
             <Toggle.Checkbox />
             <Toggle.LabelText style={[a.text_md]}>
               <Trans>Delete conversation</Trans>
