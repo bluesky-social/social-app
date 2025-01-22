@@ -7,7 +7,6 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import {
-  CommonActions,
   createNavigationContainerRef,
   DarkTheme,
   DefaultTheme,

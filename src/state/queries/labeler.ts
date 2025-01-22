@@ -18,10 +18,6 @@ const labelerInfoQueryKey = (did: string) => [
 ]
 
 const labelersInfoQueryKeyRoot = 'labelers-info'
-const labelersInfoQueryKey = (dids: string[]) => [
-  labelersInfoQueryKeyRoot,
-  dids.slice().sort(),
-]
 
 const labelersDetailedInfoQueryKey = (dids: string[]) => [
   labelersDetailedInfoQueryKeyRoot,

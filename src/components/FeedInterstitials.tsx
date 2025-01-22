@@ -1,6 +1,6 @@
 import React from 'react'
 import {ScrollView, View} from 'react-native'
-import {AppBskyActorDefs, AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {AppBskyActorDefs, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -9,7 +9,6 @@ import {NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
@@ -21,7 +20,6 @@ import {atoms as a, useBreakpoints, useTheme, ViewStyleProp, web} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {ArrowRight_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
-import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {PersonPlus_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -65,20 +63,6 @@ function SuggestedFollowPlaceholder() {
       </ProfileCard.Header>
 
       <ProfileCard.DescriptionPlaceholder numberOfLines={2} />
-    </CardOuter>
-  )
-}
-
-function SuggestedFeedsCardPlaceholder() {
-  const t = useTheme()
-  return (
-    <CardOuter style={[a.gap_sm, t.atoms.border_contrast_low]}>
-      <FeedCard.Header>
-        <FeedCard.AvatarPlaceholder />
-        <FeedCard.TitleAndBylinePlaceholder creator />
-      </FeedCard.Header>
-
-      <FeedCard.DescriptionPlaceholder />
     </CardOuter>
   )
 }

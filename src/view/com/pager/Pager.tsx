@@ -4,7 +4,6 @@ import {DrawerGestureContext} from 'react-native-drawer-layout'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import PagerView, {
   PagerViewOnPageScrollEventData,
-  PagerViewOnPageSelectedEvent,
   PagerViewOnPageSelectedEventData,
   PageScrollStateChangedNativeEventData,
 } from 'react-native-pager-view'

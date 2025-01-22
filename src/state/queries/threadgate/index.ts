@@ -25,10 +25,6 @@ export * from '#/state/queries/threadgate/types'
 export * from '#/state/queries/threadgate/util'
 
 const threadgateRecordQueryKeyRoot = 'threadgate-record'
-const createThreadgateRecordQueryKey = (uri: string) => [
-  threadgateRecordQueryKeyRoot,
-  uri,
-]
 
 const threadgateViewQueryKeyRoot = 'threadgate-view'
 export const createThreadgateViewQueryKey = (uri: string) => [

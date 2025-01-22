@@ -3,10 +3,7 @@ import {View} from 'react-native'
 import {AppBskyLabelerDefs} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-
-import {getLabelingServiceTitle} from '#/lib/moderation'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {useLabelerInfoQuery} from '#/state/queries/labeler'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
@@ -83,23 +80,6 @@ export function RegionalNotice() {
   )
 }
 
-function LikeCount({likeCount}: {likeCount: number}) {
-  const t = useTheme()
-  return (
-    <Text
-      style={[
-        a.mt_sm,
-        a.text_sm,
-        t.atoms.text_contrast_medium,
-        {fontWeight: '600'},
-      ]}>
-      <Trans>
-        Liked by <Plural value={likeCount} one="# user" other="# users" />
-      </Trans>
-    </Text>
-  )
-}
-
 export function Content({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
 
@@ -138,14 +118,5 @@ export function Link({
       )}>
       {children}
     </InternalLink>
-  )
-}
-
-// TODO not finished yet
-function DefaultSkeleton() {
-  return (
-    <View>
-      <Text>Loading</Text>
-    </View>
   )
 }

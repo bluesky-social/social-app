@@ -1,5 +1,5 @@
 import {StyleProp, TextStyle, ViewStyle} from 'react-native'
-import Svg, {Ellipse, Line, Path, Rect} from 'react-native-svg'
+import Svg, { Line, Path,} from 'react-native-svg'
 
 // Copyright (c) 2020 Refactoring UI Inc.
 // https://github.com/tailwindlabs/heroicons/blob/master/LICENSE

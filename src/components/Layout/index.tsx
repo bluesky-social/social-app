@@ -2,7 +2,6 @@ import React, {useContext, useMemo} from 'react'
 import {StyleSheet, View, ViewProps, ViewStyle} from 'react-native'
 import {StyleProp} from 'react-native'
 import {
-  KeyboardAwareScrollView,
   KeyboardAwareScrollViewProps,
 } from 'react-native-keyboard-controller'
 import Animated, {
@@ -101,11 +100,6 @@ const scrollViewStyles = StyleSheet.create({
     paddingBottom: 100,
   },
 })
-
-type KeyboardAwareContentProps = KeyboardAwareScrollViewProps & {
-  children: React.ReactNode
-  contentContainerStyle?: StyleProp<ViewStyle>
-}
 
 /**
  * Utility component to center content within the screen
