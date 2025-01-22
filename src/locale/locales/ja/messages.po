@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-22 10:38+0900\n"
+"PO-Revision-Date: 2025-01-22 23:31+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -4993,7 +4993,7 @@ msgstr "政治"
 
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:116
 msgid "Popular videos in your network."
-msgstr "あなたのネットワークで流行っているビデオ"
+msgstr "あなたのネットワークで流行っているビデオ。"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:157
 msgid "Porn"
