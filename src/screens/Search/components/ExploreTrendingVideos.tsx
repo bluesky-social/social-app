@@ -218,7 +218,7 @@ function VideoCards({
             }}
             onInteract={() => {
               logEvent('videoCard:click', {
-                context: 'interstitial:discover',
+                context: 'interstitial:explore',
               })
             }}
           />
