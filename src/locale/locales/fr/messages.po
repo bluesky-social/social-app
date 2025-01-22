@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-12-14 17:17+0100\n"
+"PO-Revision-Date: 2025-01-22 20:43+0100\n"
 "Last-Translator: Stanislas Signoud (@signez.fr)\n"
 "Language-Team: Stanislas Signoud (@signez.fr), surfdude29, Cereza Auclair (@cereza.zone)\n"
 "Plural-Forms: \n"
@@ -893,7 +893,7 @@ msgstr "Vous confirmez ?"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:69
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
-msgstr ""
+msgstr "Écrivez-vous en <0>{suggestedLanguageName}</0> ?"
 
 #: src/screens/Onboarding/index.tsx:23
 #: src/screens/Onboarding/state.ts:95
@@ -1057,7 +1057,7 @@ msgstr "Bluesky est un réseau ouvert où vous pouvez choisir votre hébergeur. 
 
 #: src/view/com/auth/server-input/index.tsx:109
 msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
-msgstr ""
+msgstr "Bluesky est un réseau ouvert où vous pouvez choisir votre propre hébergeur. Si tout cela est nouveau pour vous, nous vous recommandons de rester sur le choix par défaut Bluesky Social."
 
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
@@ -1284,7 +1284,7 @@ msgstr "Modifier le mot de passe"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:82
 msgid "Change post language to {suggestedLanguageName}"
-msgstr ""
+msgstr "Modifier la langue du post en {suggestedLanguageName}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
@@ -1367,7 +1367,7 @@ msgstr "Choisir cette couleur comme avatar"
 
 #: src/view/com/auth/server-input/index.tsx:86
 msgid "Choose your account provider"
-msgstr ""
+msgstr "Choisir votre hébergeur"
 
 #: src/view/screens/Feeds.tsx:728
 #: src/view/screens/Search/Explore.tsx:424
@@ -1412,7 +1412,7 @@ msgstr "Cliquez pour activer les citations de ce post."
 
 #: src/components/RichTextTag.tsx:54
 msgid "Click to open tag menu for {tag}"
-msgstr ""
+msgstr "Cliquez pour ouvrir le menu de mot-clé pour {tag}"
 
 #: src/components/dms/MessageItem.tsx:241
 msgid "Click to retry failed message"
@@ -1851,7 +1851,7 @@ msgstr "{0} créé"
 
 #: src/screens/List/ListHiddenScreen.tsx:127
 msgid "Creator has been blocked"
-msgstr ""
+msgstr "L’auteur·ice a été bloqué·e"
 
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
@@ -2108,7 +2108,7 @@ msgstr "Annuler le guide de démarrage"
 
 #: src/components/interstitials/TrendingVideos.tsx:92
 msgid "Dismiss this section"
-msgstr ""
+msgstr "Ignorer cette section"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:71
 #: src/screens/Settings/AccessibilitySettings.tsx:76
@@ -2193,7 +2193,7 @@ msgstr "Tapez deux fois pour fermer cette boîte de dialogue"
 
 #: src/screens/VideoFeed/index.tsx:1037
 msgid "Double tap to like"
-msgstr ""
+msgstr "Tapez deux fois pour aimer"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:317
 msgid "Download Bluesky"
@@ -2357,7 +2357,7 @@ msgstr "Éducation"
 
 #: src/screens/List/ListHiddenScreen.tsx:141
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
-msgstr ""
+msgstr "Soit l’auteur·ice de cette liste vous a bloqué soit vous en avez bloqué l’auteur·ice."
 
 #: src/screens/Settings/AccountSettings.tsx:60
 #: src/screens/Signup/StepInfo/index.tsx:164
@@ -2462,11 +2462,11 @@ msgstr "Activer les tendances"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:158
 msgid "Enable trending videos in your Discover feed"
-msgstr ""
+msgstr "Activer les vidéos tendances dans votre flux Discover"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:144
 msgid "Enable trending videos in your Discover feed."
-msgstr ""
+msgstr "Activer les vidéos tendances dans votre flux Discover."
 
 #: src/screens/Messages/Settings.tsx:130
 #: src/screens/Messages/Settings.tsx:133
@@ -2883,7 +2883,7 @@ msgstr "Suivre {0}"
 
 #: src/screens/VideoFeed/index.tsx:798
 msgid "Follow {handle}"
-msgstr ""
+msgstr "Suivre {handle}"
 
 #: src/view/com/posts/AviFollowButton.tsx:68
 msgid "Follow {name}"
@@ -2970,7 +2970,7 @@ msgstr "Suit {0}"
 
 #: src/screens/VideoFeed/index.tsx:797
 msgid "Following {handle}"
-msgstr ""
+msgstr "Suit {handle}"
 
 #: src/view/com/posts/AviFollowButton.tsx:50
 msgid "Following {name}"
@@ -3191,7 +3191,7 @@ msgstr "Mot-clé"
 
 #: src/components/RichTextTag.tsx:51
 msgid "Hashtag {tag}"
-msgstr ""
+msgstr "Mot-clé : {tag}"
 
 #: src/components/RichText.tsx:218
 #~ msgid "Hashtag: #{tag}"
@@ -3220,11 +3220,11 @@ msgstr "Voici votre mot de passe d’application !"
 #: src/components/VideoPostCard.tsx:172
 #: src/components/VideoPostCard.tsx:448
 msgid "Hidden"
-msgstr ""
+msgstr "Masqué"
 
 #: src/screens/VideoFeed/index.tsx:606
 msgid "Hidden by your moderation settings."
-msgstr ""
+msgstr "Masqué par vos paramètres de modération."
 
 #: src/components/ListCard.tsx:130
 msgid "Hidden list"
@@ -3293,7 +3293,7 @@ msgstr "Cacher les tendances ?"
 
 #: src/components/interstitials/TrendingVideos.tsx:138
 msgid "Hide trending videos?"
-msgstr ""
+msgstr "Cacher les vidéos tendances ?"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:592
 msgid "Hide user list"
@@ -3410,7 +3410,7 @@ msgstr "Si vous souhaitez modifier votre mot de passe, nous vous enverrons un co
 
 #: src/view/com/auth/server-input/index.tsx:168
 msgid "If you're a developer, you can host your own server."
-msgstr ""
+msgstr "Si vous êtes développeur, vous pouvez héberger votre propre serveur."
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
@@ -4092,7 +4092,7 @@ msgstr "Désactiver le son"
 #: src/components/RichTextTag.tsx:140
 #: src/components/RichTextTag.tsx:153
 msgid "Mute {tag}"
-msgstr ""
+msgstr "Masquer {tag}"
 
 #: src/components/TagMenu/index.web.tsx:116
 #~ msgid "Mute {truncatedTag}"
@@ -4379,7 +4379,7 @@ msgstr "Ne suit plus {0}"
 
 #: src/screens/Signup/StepHandle.tsx:173
 msgid "No longer than {0} characters"
-msgstr ""
+msgstr "Pas plus de {0} caractères"
 
 #: src/screens/Signup/StepHandle.tsx:169
 #~ msgid "No longer than 253 characters"
@@ -4896,7 +4896,7 @@ msgstr "Images destinées aux adultes."
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:173
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:178
 msgid "Pin"
-msgstr ""
+msgstr "Épingler"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:519
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:526
@@ -4905,7 +4905,7 @@ msgstr "Épingler le fil d’actu"
 
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:167
 msgid "Pin the trending videos feed to your home screen for easy access"
-msgstr ""
+msgstr "Épinglez le fil des vidéos tendances à votre page d’accueil pour un accès facile"
 
 #: src/view/screens/ProfileList.tsx:685
 msgid "Pin to home"
@@ -4984,7 +4984,7 @@ msgstr "Veuillez confirmer votre e-mail avant de le modifier. Ceci est temporair
 
 #: src/screens/Login/SetNewPasswordForm.tsx:56
 msgid "Please enter a password."
-msgstr ""
+msgstr "Veuillez entrer un mot de passe."
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:114
 msgid "Please enter a unique name for this app password or use our randomly generated one."
@@ -5005,7 +5005,7 @@ msgstr "Veuillez saisir votre code d’invitation."
 
 #: src/screens/Login/LoginForm.tsx:95
 msgid "Please enter your password"
-msgstr ""
+msgstr "Veuillez entrer votre mot de passe"
 
 #: src/view/com/modals/DeleteAccount.tsx:235
 msgid "Please enter your password as well:"
@@ -5013,7 +5013,7 @@ msgstr "Veuillez également entrer votre mot de passe :"
 
 #: src/screens/Login/LoginForm.tsx:90
 msgid "Please enter your username"
-msgstr ""
+msgstr "Veuillez entrer votre pseudo"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 msgid "Please explain why you think this label was incorrectly applied by {0}"
@@ -5039,7 +5039,7 @@ msgstr "Politique"
 
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:116
 msgid "Popular videos in your network."
-msgstr ""
+msgstr "Vidéos populaires dans votre réseau."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:157
 msgid "Porn"
@@ -5081,7 +5081,7 @@ msgstr "Échec de l’envoi du post. Vérifiez votre connexion Internet et rées
 
 #: src/screens/VideoFeed/index.tsx:511
 msgid "Post has been deleted"
-msgstr ""
+msgstr "Post supprimé"
 
 #: src/view/com/post-thread/PostThread.tsx:266
 msgid "Post hidden"
@@ -5314,11 +5314,11 @@ msgstr "Réactiver votre compte"
 
 #: src/screens/VideoFeed/index.tsx:932
 msgid "Read less"
-msgstr ""
+msgstr "Lire moins"
 
 #: src/screens/VideoFeed/index.tsx:932
 msgid "Read more"
-msgstr ""
+msgstr "Lire plus"
 
 #: src/view/com/auth/SplashScreen.web.tsx:171
 msgid "Read the Bluesky blog"
@@ -5944,11 +5944,11 @@ msgstr "Étape de sécurité requise"
 
 #: src/components/RichTextTag.tsx:111
 msgid "See {tag} posts"
-msgstr ""
+msgstr "Voir les posts {tag}"
 
 #: src/components/RichTextTag.tsx:124
 msgid "See {tag} posts by user"
-msgstr ""
+msgstr "Voir les posts {tag} de ce compte"
 
 #: src/components/TagMenu/index.web.tsx:77
 #~ msgid "See {truncatedTag} posts"
@@ -5960,11 +5960,11 @@ msgstr ""
 
 #: src/components/RichTextTag.tsx:118
 msgid "See #{tag} posts"
-msgstr ""
+msgstr "Voir les posts #{tag}"
 
 #: src/components/RichTextTag.tsx:132
 msgid "See #{tag} posts by user"
-msgstr ""
+msgstr "Voir les posts #{tag} de ce compte"
 
 #: src/components/TagMenu/index.tsx:155
 #~ msgid "See <0>{displayTag}</0> posts"
@@ -6654,11 +6654,11 @@ msgstr "Changer de compte"
 
 #: src/view/shell/desktop/LeftNav.tsx:107
 msgid "Switch accounts"
-msgstr ""
+msgstr "Changer de compte"
 
 #: src/view/shell/desktop/LeftNav.tsx:251
 msgid "Switch to {0}"
-msgstr ""
+msgstr "Basculer vers {0}"
 
 #: src/screens/Settings/AppearanceSettings.tsx:97
 #: src/screens/Settings/AppearanceSettings.tsx:147
@@ -6698,7 +6698,7 @@ msgstr "Appuyer pour accéder au plein écran"
 
 #: src/screens/VideoFeed/index.tsx:931
 msgid "Tap to expand or collapse post text."
-msgstr ""
+msgstr "Appuyer pour développer ou réduire le texte du post."
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 msgid "Tap to play or pause"
@@ -6715,7 +6715,7 @@ msgstr "Appuyer pour voir l’image complète"
 
 #: src/components/VideoPostCard.tsx:115
 msgid "Tap to view video in immersive mode."
-msgstr ""
+msgstr "Appuyer pour voir la vidéo en mode immersif."
 
 #: src/state/shell/progress-guide.tsx:233
 msgid "Task complete - 10 follows!"
@@ -6812,7 +6812,7 @@ msgstr "Et voilà, c’est tout !"
 
 #: src/screens/VideoFeed/index.tsx:1071
 msgid "That's everything!"
-msgstr ""
+msgstr "C’est tout !"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:329
@@ -7297,7 +7297,7 @@ msgstr "Tendances"
 #: src/components/interstitials/TrendingVideos.tsx:88
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:106
 msgid "Trending Videos"
-msgstr ""
+msgstr "Vidéos tendances"
 
 #: src/view/com/util/error/ErrorScreen.tsx:103
 msgctxt "action"
@@ -7405,7 +7405,7 @@ msgstr "Se désabonner du compte"
 
 #: src/screens/VideoFeed/index.tsx:801
 msgid "Unfollow user"
-msgstr ""
+msgstr "Se désabonner du compte"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Unlike"
@@ -7428,7 +7428,7 @@ msgstr "Réafficher"
 #: src/components/RichTextTag.tsx:140
 #: src/components/RichTextTag.tsx:153
 msgid "Unmute {tag}"
-msgstr ""
+msgstr "Réafficher {tag}"
 
 #: src/components/TagMenu/index.web.tsx:115
 #~ msgid "Unmute {truncatedTag}"
@@ -7733,11 +7733,11 @@ msgstr "Le traitement de la vidéo a échoué"
 
 #: src/Navigation.tsx:430
 msgid "Video Feed"
-msgstr ""
+msgstr "Fil de vidéos"
 
 #: src/components/VideoPostCard.tsx:116
 msgid "Video from {0}: {text}"
-msgstr ""
+msgstr "Vidéo de {0} : {text}"
 
 #: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
@@ -7746,11 +7746,11 @@ msgstr "Jeux vidéo"
 
 #: src/screens/VideoFeed/index.tsx:1029
 msgid "Video is paused"
-msgstr ""
+msgstr "Vidéo en pause"
 
 #: src/screens/VideoFeed/index.tsx:1029
 msgid "Video is playing"
-msgstr ""
+msgstr "Vidéo en cours de lecture"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:191
 msgid "Video not found."
@@ -7770,7 +7770,7 @@ msgstr "Vidéo : {0}"
 
 #: src/view/screens/Profile.tsx:236
 msgid "Videos"
-msgstr ""
+msgstr "Vidéos"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:58
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:73
@@ -7835,7 +7835,7 @@ msgstr "Voir les informations sur ces étiquettes"
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:231
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:250
 msgid "View more"
-msgstr ""
+msgstr "Voir plus"
 
 #: src/components/ProfileHoverCard/index.web.tsx:419
 #: src/components/ProfileHoverCard/index.web.tsx:439
@@ -7861,7 +7861,7 @@ msgstr "Voir les comptes qui ont aimé ce fil d’actu"
 
 #: src/components/VideoPostCard.tsx:392
 msgid "View video"
-msgstr ""
+msgstr "Voir la vidéo"
 
 #: src/screens/Moderation/index.tsx:248
 msgid "View your blocked accounts"
@@ -8039,7 +8039,7 @@ msgstr "Oups !"
 #: src/components/interstitials/TrendingVideos.tsx:127
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:147
 msgid "Whoops! Trending videos failed to load."
-msgstr ""
+msgstr "Oups ! Les vidéos tendances n’ont pas réussi à se charger."
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:42
 msgid "Why should this content be reviewed?"
@@ -8403,7 +8403,7 @@ msgstr "Vous avez atteint votre limite quotidienne d’envoi de vidéos (trop de
 
 #: src/screens/VideoFeed/index.tsx:1080
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
-msgstr ""
+msgstr "Vous êtes venus à bout de vidéos à regarder. Peut-être est-ce un bon moment pour prendre une pause ?"
 
 #: src/screens/Signup/index.tsx:140
 msgid "Your account"
