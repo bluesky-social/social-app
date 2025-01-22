@@ -96,7 +96,13 @@ function DialogInner({
       params={params}
       reportOption={reportOption}
       goBack={() => setReportOption(null)}
-      onComplete={() => (isError ? control.close() : setDone(true))}
+      onComplete={() => {
+        if (isError) {
+          control.close()
+        } else {
+          setDone(true)
+        }
+      }}
     />
   ) : (
     <ReasonStep params={params} setReportOption={setReportOption} />
