@@ -318,9 +318,9 @@ function getHotness(threadPost: ThreadPost, fetchedAt: number) {
       (1000 * 60 * 60),
   )
   const likeCount = post.likeCount ?? 0
-  const likeOrder = Math.log(3 + likeCount)
+  const likeOrder = Math.log(3 + likeCount) * (hasOPLike ? 1.45 : 1.0)
   const timePenaltyExponent = 1.5 + 1.5 / (1 + Math.log(1 + likeCount))
-  const opLikeBoost = hasOPLike ? 0.85 : 1.0
+  const opLikeBoost = hasOPLike ? 0.8 : 1.0
   const timePenalty = Math.pow(hoursAgo + 2, timePenaltyExponent * opLikeBoost)
   return likeOrder / timePenalty
 }
@@ -359,7 +359,6 @@ function responseToThreadNodes(
               // do not show blocked posts in replies
               .filter(node => node.type !== 'blocked')
           : undefined,
-      // @ts-ignore TODO: Update API package.
       hasOPLike: Boolean(node?.threadContext?.rootAuthorLike),
       ctx: {
         depth,
