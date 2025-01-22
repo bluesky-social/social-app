@@ -195,6 +195,7 @@ function ProfileScreenLoaded({
   const postsSectionRef = React.useRef<SectionRef>(null)
   const repliesSectionRef = React.useRef<SectionRef>(null)
   const mediaSectionRef = React.useRef<SectionRef>(null)
+  const videosSectionRef = React.useRef<SectionRef>(null)
   const likesSectionRef = React.useRef<SectionRef>(null)
   const feedsSectionRef = React.useRef<SectionRef>(null)
   const listsSectionRef = React.useRef<SectionRef>(null)
@@ -218,6 +219,7 @@ function ProfileScreenLoaded({
   const showPostsTab = true
   const showRepliesTab = hasSession
   const showMediaTab = !hasLabeler
+  const showVideosTab = !hasLabeler
   const showLikesTab = isMe
   const showFeedsTab = isMe || (profile.associated?.feedgens || 0) > 0
   const showStarterPacksTab =
@@ -231,6 +233,7 @@ function ProfileScreenLoaded({
     showPostsTab ? _(msg`Posts`) : undefined,
     showRepliesTab ? _(msg`Replies`) : undefined,
     showMediaTab ? _(msg`Media`) : undefined,
+    showVideosTab ? _(msg`Videos`) : undefined,
     showLikesTab ? _(msg`Likes`) : undefined,
     showFeedsTab ? _(msg`Feeds`) : undefined,
     showStarterPacksTab ? _(msg`Starter Packs`) : undefined,
@@ -242,6 +245,7 @@ function ProfileScreenLoaded({
   let postsIndex: number | null = null
   let repliesIndex: number | null = null
   let mediaIndex: number | null = null
+  let videosIndex: number | null = null
   let likesIndex: number | null = null
   let feedsIndex: number | null = null
   let starterPacksIndex: number | null = null
@@ -257,6 +261,9 @@ function ProfileScreenLoaded({
   }
   if (showMediaTab) {
     mediaIndex = nextIndex++
+  }
+  if (showVideosTab) {
+    videosIndex = nextIndex++
   }
   if (showLikesTab) {
     likesIndex = nextIndex++
@@ -281,6 +288,8 @@ function ProfileScreenLoaded({
         repliesSectionRef.current?.scrollToTop()
       } else if (index === mediaIndex) {
         mediaSectionRef.current?.scrollToTop()
+      } else if (index === videosIndex) {
+        videosSectionRef.current?.scrollToTop()
       } else if (index === likesIndex) {
         likesSectionRef.current?.scrollToTop()
       } else if (index === feedsIndex) {
@@ -296,6 +305,7 @@ function ProfileScreenLoaded({
       postsIndex,
       repliesIndex,
       mediaIndex,
+      videosIndex,
       likesIndex,
       feedsIndex,
       listsIndex,
@@ -427,6 +437,19 @@ function ProfileScreenLoaded({
               <ProfileFeedSection
                 ref={mediaSectionRef}
                 feed={`author|${profile.did}|posts_with_media`}
+                headerHeight={headerHeight}
+                isFocused={isFocused}
+                scrollElRef={scrollElRef as ListRef}
+                ignoreFilterFor={profile.did}
+                setScrollViewTag={setScrollViewTag}
+              />
+            )
+          : null}
+        {showVideosTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <ProfileFeedSection
+                ref={videosSectionRef}
+                feed={`author|${profile.did}|posts_with_video`}
                 headerHeight={headerHeight}
                 isFocused={isFocused}
                 scrollElRef={scrollElRef as ListRef}

@@ -164,6 +164,7 @@ let List = React.forwardRef<ListMethods, ListProps>(
           right: 1,
           ...props.scrollIndicatorInsets,
         }}
+        indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
         contentOffset={contentOffset}
         refreshControl={refreshControl}
         onScroll={scrollHandler}

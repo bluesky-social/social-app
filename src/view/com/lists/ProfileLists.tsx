@@ -203,9 +203,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
           contentContainerStyle={
             isMobile && {paddingBottom: headerOffset + 100}
           }
-          indicatorStyle={t.name === 'light' ? 'black' : 'white'}
           removeClippedSubviews={true}
-          // @ts-ignore our .web version only -prf
           desktopFixedHeight
           onEndReached={onEndReached}
         />

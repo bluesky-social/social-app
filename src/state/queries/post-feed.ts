@@ -49,6 +49,7 @@ export type AuthorFilter =
   | 'posts_no_replies'
   | 'posts_and_author_threads'
   | 'posts_with_media'
+  | 'posts_with_video'
 type FeedUri = string
 type ListUri = string
 
@@ -89,6 +90,7 @@ export interface FeedPostSlice {
   isIncompleteThread: boolean
   isFallbackMarker: boolean
   feedContext: string | undefined
+  feedPostUri: string
   reason?:
     | AppBskyFeedDefs.ReasonRepost
     | AppBskyFeedDefs.ReasonPin
@@ -330,6 +332,7 @@ export function usePostFeedQuery(
                     isFallbackMarker: slice.isFallbackMarker,
                     feedContext: slice.feedContext,
                     reason: slice.reason,
+                    feedPostUri: slice.feedPostUri,
                     items: slice.items.map((item, i) => {
                       const feedPostSliceItem: FeedPostSliceItem = {
                         _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
