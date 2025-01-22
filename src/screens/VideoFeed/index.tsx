@@ -270,14 +270,8 @@ function Feed() {
   )
 
   const updateVideoState = useCallback(
-    (index?: number) => {
+    (index: number) => {
       if (!videos.length) return
-
-      if (index === undefined) {
-        index = currentIndex
-      } else {
-        setCurrentIndex(index)
-      }
 
       const prevSlice = videos.at(index - 1)
       const prevPost = prevSlice?.post
@@ -379,11 +373,11 @@ function Feed() {
         setCurrentSources(updatedSources)
       }
     },
-    [videos, currentSources, currentIndex, players],
+    [videos, currentSources, players],
   )
 
   const updateVideoStateInitially = useNonReactiveCallback(() => {
-    updateVideoState()
+    updateVideoState(currentIndex)
   })
 
   useFocusEffect(
@@ -405,7 +399,9 @@ function Feed() {
   const onViewableItemsChanged = useCallback(
     ({viewableItems}: {viewableItems: ViewToken[]; changed: ViewToken[]}) => {
       if (viewableItems[0] && viewableItems[0].index !== null) {
-        updateVideoState(viewableItems[0].index)
+        const newIndex = viewableItems[0].index
+        setCurrentIndex(newIndex)
+        updateVideoState(newIndex)
       }
     },
     [updateVideoState],
