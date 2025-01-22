@@ -33,15 +33,9 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   nvm install $NODE_VERSION && \
   nvm use $NODE_VERSION && \
   npm install --global yarn && \
-  yarn
-
-# Debug
-RUN \
+  yarn && \
   echo "Using bundle identifier: $EXPO_PUBLIC_BUNDLE_IDENTIFIER" && \
-  echo "Using appview did: $EXPO_PUBLIC_APPVIEW_DID"
-
-# Build the app
-RUN \
+  echo "Using appview did: $EXPO_PUBLIC_APPVIEW_DID" && \
   yarn intl:build && \
   EXPO_PUBLIC_ENV=production \
   EXPO_PUBLIC_APPVIEW_DID=$EXPO_PUBLIC_APPVIEW_DID \
