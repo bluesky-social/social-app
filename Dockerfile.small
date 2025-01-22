@@ -7,55 +7,57 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Node
 ENV NODE_VERSION=20
 ENV NVM_DIR=/usr/share/nvm
-
 # Go
 ENV GODEBUG="netdns=go"
 ENV GOOS="linux"
 ENV GOARCH="amd64"
 ENV CGO_ENABLED=1
 ENV GOEXPERIMENT="loopvar"
-
-# Expo
+# App
 ARG EXPO_PUBLIC_BUNDLE_IDENTIFIER
 ENV EXPO_PUBLIC_BUNDLE_IDENTIFIER=${EXPO_PUBLIC_BUNDLE_IDENTIFIER:-dev}
 ENV EXPO_PUBLIC_APPVIEW_DID=${APPVIEW_DID}
-ENV APPVIEW_HOST=${APPVIEW_HOST}
+ENV EXPO_PUBLIC_APPVIEW_DID=${APPVIEW_HOST}
 
 COPY . .
 
-#
-# Generate the JavaScript webpack.
-#
+# Install NVM
 RUN mkdir --parents $NVM_DIR && \
   wget \
     --output-document=/tmp/nvm-install.sh \
     https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh && \
   bash /tmp/nvm-install.sh
 
+# Install Node and dependencies
 RUN \. "$NVM_DIR/nvm.sh" && \
   nvm install $NODE_VERSION && \
   nvm use $NODE_VERSION && \
-  echo "Using bundle identifier: $EXPO_PUBLIC_BUNDLE_IDENTIFIER" && \
-  echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$EXPO_PUBLIC_BUNDLE_IDENTIFIER" >> .env && \
-  echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env && \
   npm install --global yarn && \
-  yarn && \
-  yarn intl:build && \
-  EXPO_PUBLIC_APPVIEW_DID=$APPVIEW_DID EXPO_PUBLIC_BUNDLE_IDENTIFIER=$EXPO_PUBLIC_BUNDLE_IDENTIFIER EXPO_PUBLIC_BUNDLE_DATE=$() yarn build-web
+  yarn
 
-# DEBUG
+# Debug
+RUN \
+  echo "Using bundle identifier: $EXPO_PUBLIC_BUNDLE_IDENTIFIER" && \
+  echo "Using appview did: $EXPO_PUBLIC_APPVIEW_DID"
+
+# Build the app
+RUN \
+  yarn intl:build && \
+  EXPO_PUBLIC_ENV=production \
+  EXPO_PUBLIC_APPVIEW_DID=$EXPO_PUBLIC_APPVIEW_DID \
+  EXPO_PUBLIC_BUNDLE_IDENTIFIER=$EXPO_PUBLIC_BUNDLE_IDENTIFIER \
+  EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H") \
+  yarn build-web
+
+# Debug
 RUN find ./bskyweb/static && find ./web-build/static
 
-#
 # Generate the bskyweb Go binary.
-#
 RUN cd bskyweb/ && \
   go mod download && \
   go mod verify && \
   echo "GOLOG_LOG_LEVEL=info" >> .env && \
   echo "ATP_APPVIEW_HOST=$APPVIEW_HOST" >> .env
-
-RUN cat ./bskyweb/.env
 
 RUN cd bskyweb/ && \
   go build \
@@ -64,6 +66,10 @@ RUN cd bskyweb/ && \
     -tags timetzdata \
     -o /bskyweb \
     ./cmd/bskyweb
+
+#
+# Build the final image.
+#
 
 FROM debian:bullseye-slim
 
@@ -83,7 +89,5 @@ COPY --from=build-env /bskyweb /usr/bin/bskyweb
 CMD ["/usr/bin/bskyweb", "serve"]
 
 LABEL org.opencontainers.image.source=https://github.com/bluesky-social/social-app
-LABEL org.opencontainers.image.description="bsky.app Web App"
+LABEL org.opencontainers.image.description="Self-hosted Bluesky web app"
 LABEL org.opencontainers.image.licenses=MIT
-
-# NOOP
