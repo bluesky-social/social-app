@@ -9523,7 +9523,7 @@ msgstr "Sentimos muito! Não conseguimos encontrar a página que você estava pr
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:346
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
-msgstr "Sentimos muito! Você só pode assinar vinte rotuladores, e você atingiu seu limite de vinte."
+msgstr "Sentimos muito! Você só pode se inscrever em até vinte rotuladores, e você atingiu seu limite de vinte."
 
 #: src/screens/Deactivated.tsx:124
 msgid "Welcome back!"
