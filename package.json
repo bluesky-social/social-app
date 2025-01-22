@@ -22,7 +22,7 @@
     "build-ios": "yarn use-build-number-with-bump eas build -p ios",
     "build-android": "yarn use-build-number-with-bump eas build -p android",
     "build": "yarn use-build-number-with-bump eas build",
-    "build-embed": "cd bskyembed && yarn build && yarn build-snippet && cd .. && node ./scripts/post-embed-build.js",
+    "build-embed": "yarn --cwd bskyembed run build && yarn --cwd bskyembed run build-snippet && node ./scripts/post-embed-build.js",
     "start": "expo start --dev-client",
     "start:prod": "expo start --dev-client --no-dev --minify",
     "test": "NODE_ENV=test jest --forceExit --testTimeout=20000 --bail",
