@@ -28,7 +28,7 @@
       "webpack": true, // Enabled manually as `webpack` isn't listed in package.json
       "ignore": ["webpack.config.js", "metro.config.js"], // Both Metro + Webpack configs extend from other packages, resulting in some false positives
       "ignoreBinaries": ["swiftlint", "ktlint", "maestro", "flashlight"],
-      "ignoreDependencies": ["xcode", "react-native-web-webview"],
+      "ignoreDependencies": ["xcode", "react-native-web-webview", "ts-node"],
       "ignoreUnresolved": ["#/.*"], // Knip does not have Metro's module resolution and a few false positives slip through
     },
     "bskyembed": {

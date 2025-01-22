@@ -4,6 +4,13 @@
  * potential future use.
  * @see https://developer.apple.com/documentation/avfoundation/avaudiosession/category
  * @platform ios
+ * @lintignore
  */
 export enum AudioCategory {
-  }
+  Ambient = 'AVAudioSessionCategoryAmbient',
+  Playback = 'AVAudioSessionCategoryPlayback',
+  _SoloAmbient = 'AVAudioSessionCategorySoloAmbient',
+  _Record = 'AVAudioSessionCategoryRecord',
+  _PlayAndRecord = 'AVAudioSessionCategoryPlayAndRecord',
+  _MultiRoute = 'AVAudioSessionCategoryMultiRoute',
+}
