@@ -1,8 +1,9 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyLabelerDefs} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, ViewStyleProp} from '#/alf'

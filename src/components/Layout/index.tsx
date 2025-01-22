@@ -1,9 +1,6 @@
 import React, {useContext, useMemo} from 'react'
 import {StyleSheet, View, ViewProps, ViewStyle} from 'react-native'
 import {StyleProp} from 'react-native'
-import {
-  KeyboardAwareScrollViewProps,
-} from 'react-native-keyboard-controller'
 import Animated, {
   AnimatedScrollViewProps,
   useAnimatedProps,

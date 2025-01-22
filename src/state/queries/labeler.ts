@@ -12,12 +12,7 @@ import {
 import {useAgent} from '#/state/session'
 
 const labelerInfoQueryKeyRoot = 'labeler-info'
-const labelerInfoQueryKey = (did: string) => [
-  labelerInfoQueryKeyRoot,
-  did,
-]
-
-const labelersInfoQueryKeyRoot = 'labelers-info'
+const labelerInfoQueryKey = (did: string) => [labelerInfoQueryKeyRoot, did]
 
 const labelersDetailedInfoQueryKey = (dids: string[]) => [
   labelersDetailedInfoQueryKeyRoot,
