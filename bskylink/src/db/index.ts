@@ -131,8 +131,6 @@ export class Database {
   }
 }
 
-export default Database
-
 export type PgConfig = {
   pool: Pg.Pool
   url: string
