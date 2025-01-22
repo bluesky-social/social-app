@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-21 09:57+0900\n"
+"PO-Revision-Date: 2025-01-22 10:38+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1383,10 +1383,6 @@ msgstr "検索クエリをクリア"
 msgid "click here"
 msgstr "こちらをクリック"
 
-#: src/components/TagMenu/index.web.tsx:152
-msgid "Click here to open tag menu for {tag}"
-msgstr "{tag}のタグメニューをクリックして表示"
-
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:307
 msgid "Click to disable quote posts of this post."
 msgstr "クリックしてこの投稿の引用投稿を無効に。"
@@ -1394,6 +1390,10 @@ msgstr "クリックしてこの投稿の引用投稿を無効に。"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:308
 msgid "Click to enable quote posts of this post."
 msgstr "クリックしてこの投稿の引用投稿を有効に。"
+
+#: src/components/RichTextTag.tsx:54
+msgid "Click to open tag menu for {tag}"
+msgstr "クリックして {tag} のタグメニューを表示"
 
 #: src/components/dms/MessageItem.tsx:241
 msgid "Click to retry failed message"
@@ -2862,6 +2862,10 @@ msgstr "フォロー"
 msgid "Follow {0}"
 msgstr "{0}をフォロー"
 
+#: src/screens/VideoFeed/index.tsx:807
+msgid "Follow {handle}"
+msgstr "{handle}をフォロー"
+
 #: src/view/com/posts/AviFollowButton.tsx:68
 msgid "Follow {name}"
 msgstr "{name}をフォロー"
@@ -2943,6 +2947,10 @@ msgstr "フォロー中"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
 msgid "Following {0}"
 msgstr "{0}をフォローしています"
+
+#: src/screens/VideoFeed/index.tsx:806
+msgid "Following {handle}"
+msgstr "{handle}をフォローしています"
 
 #: src/view/com/posts/AviFollowButton.tsx:50
 msgid "Following {name}"
@@ -3158,9 +3166,9 @@ msgstr "嫌がらせ、荒らし、不寛容"
 msgid "Hashtag"
 msgstr "ハッシュタグ"
 
-#: src/components/RichText.tsx:218
-msgid "Hashtag: #{tag}"
-msgstr "ハッシュタグ：#{tag}"
+#: src/components/RichTextTag.tsx:51
+msgid "Hashtag {tag}"
+msgstr "ハッシュタグ {tag}"
 
 #: src/screens/Signup/index.tsx:173
 msgid "Having trouble?"
@@ -4045,19 +4053,16 @@ msgstr "映画"
 msgid "Music"
 msgstr "音楽"
 
-#: src/components/TagMenu/index.tsx:264
-msgid "Mute"
-msgstr "ミュート"
-
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:156
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:95
 msgctxt "video"
 msgid "Mute"
 msgstr "ミュート"
 
-#: src/components/TagMenu/index.web.tsx:116
-msgid "Mute {truncatedTag}"
-msgstr "{truncatedTag}をミュート"
+#: src/components/RichTextTag.tsx:140
+#: src/components/RichTextTag.tsx:153
+msgid "Mute {tag}"
+msgstr "{tag} をミュート"
 
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
@@ -4067,10 +4072,6 @@ msgstr "アカウントをミュート"
 #: src/view/screens/ProfileList.tsx:627
 msgid "Mute accounts"
 msgstr "アカウントをミュート"
-
-#: src/components/TagMenu/index.tsx:224
-msgid "Mute all {displayTag} posts"
-msgstr "{displayTag}のすべての投稿をミュート"
 
 #: src/components/dms/ConvoMenu.tsx:172
 #: src/components/dms/ConvoMenu.tsx:178
@@ -5075,10 +5076,6 @@ msgstr "投稿を固定しました"
 msgid "Post unpinned"
 msgstr "投稿の固定を解除しました"
 
-#: src/components/TagMenu/index.tsx:268
-msgid "posts"
-msgstr "投稿"
-
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
 #: src/view/screens/Profile.tsx:231
 msgid "Posts"
@@ -5893,21 +5890,21 @@ msgstr "Tenorを検索"
 msgid "Security Step Required"
 msgstr "必要なセキュリティの手順"
 
-#: src/components/TagMenu/index.web.tsx:77
-msgid "See {truncatedTag} posts"
-msgstr "{truncatedTag}の投稿を表示（すべてのユーザー）"
+#: src/components/RichTextTag.tsx:111
+msgid "See {tag} posts"
+msgstr "{tag} の投稿を表示（すべてのユーザー）"
 
-#: src/components/TagMenu/index.web.tsx:94
-msgid "See {truncatedTag} posts by user"
-msgstr "{truncatedTag}の投稿を表示（このユーザーのみ）"
+#: src/components/RichTextTag.tsx:124
+msgid "See {tag} posts by user"
+msgstr "{tag} の投稿を表示（このユーザーのみ）"
 
-#: src/components/TagMenu/index.tsx:155
-msgid "See <0>{displayTag}</0> posts"
-msgstr "<0>{displayTag}</0>の投稿を表示（すべてのユーザー）"
+#: src/components/RichTextTag.tsx:118
+msgid "See #{tag} posts"
+msgstr "#{tag} の投稿を表示（すべてのユーザー）"
 
-#: src/components/TagMenu/index.tsx:203
-msgid "See <0>{displayTag}</0> posts by this user"
-msgstr "<0>{displayTag}</0>の投稿を表示（このユーザーのみ）"
+#: src/components/RichTextTag.tsx:132
+msgid "See #{tag} posts by user"
+msgstr "#{tag} の投稿を表示（このユーザーのみ）"
 
 #: src/view/com/auth/SplashScreen.web.tsx:176
 msgid "See jobs at Bluesky"
@@ -6596,10 +6593,6 @@ msgstr "システム"
 #: src/screens/Settings/Settings.tsx:317
 msgid "System log"
 msgstr "システムログ"
-
-#: src/components/TagMenu/index.tsx:110
-msgid "Tag menu: {displayTag}"
-msgstr "タグメニュー：{displayTag}"
 
 #: src/components/dialogs/MutedWords.tsx:282
 msgid "Tags only"
@@ -7341,29 +7334,26 @@ msgstr "いいねを外す"
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "いいねを外す（{0, plural, other {#個のいいね}}）"
 
-#: src/components/TagMenu/index.tsx:264
-#: src/view/screens/ProfileList.tsx:701
-msgid "Unmute"
-msgstr "ミュートを解除"
-
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:155
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
 msgctxt "video"
 msgid "Unmute"
 msgstr "ミュートを解除"
 
-#: src/components/TagMenu/index.web.tsx:115
-msgid "Unmute {truncatedTag}"
-msgstr "{truncatedTag}のミュートを解除"
+#: src/components/TagMenu/index.tsx:264
+#: src/view/screens/ProfileList.tsx:701
+msgid "Unmute"
+msgstr "ミュートを解除"
+
+#: src/components/RichTextTag.tsx:140
+#: src/components/RichTextTag.tsx:153
+msgid "Unmute {tag}"
+msgstr "{tag} のミュートを解除"
 
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
 msgid "Unmute Account"
 msgstr "アカウントのミュートを解除"
-
-#: src/components/TagMenu/index.tsx:223
-msgid "Unmute all {displayTag} posts"
-msgstr "{displayTag}のすべての投稿のミュートを解除"
 
 #: src/components/dms/ConvoMenu.tsx:176
 msgid "Unmute conversation"
@@ -7666,6 +7656,14 @@ msgstr "{0}からのビデオ: {text}"
 msgid "Video Games"
 msgstr "ビデオゲーム"
 
+#: src/screens/VideoFeed/index.tsx:1038
+msgid "Video is paused"
+msgstr "ビデオは一時停止中"
+
+#: src/screens/VideoFeed/index.tsx:1038
+msgid "Video is playing"
+msgstr "ビデオは再生中"
+
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:169
 msgid "Video not found."
 msgstr "ビデオが見つかりません。"
@@ -7681,6 +7679,10 @@ msgstr "ビデオをアップロードしました"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:83
 msgid "Video: {0}"
 msgstr "ビデオ：{0}"
+
+#: src/view/screens/Profile.tsx:236
+msgid "Videos"
+msgstr "ビデオ"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:58
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:73
@@ -7700,14 +7702,6 @@ msgstr "{0}のプロフィールを表示"
 #: src/components/dms/MessagesListHeader.tsx:158
 msgid "View {displayName}'s profile"
 msgstr "{displayName}のプロフィールを表示"
-
-#: src/components/TagMenu/index.tsx:172
-msgid "View all posts by @{authorHandle} with tag {displayTag}"
-msgstr "{displayTag}の投稿をすべて表示（@{authorHandle}のみ）"
-
-#: src/components/TagMenu/index.tsx:126
-msgid "View all posts with tag {displayTag}"
-msgstr "{displayTag}の投稿をすべて表示（すべてのユーザー）"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
