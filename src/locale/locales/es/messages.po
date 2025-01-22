@@ -115,7 +115,7 @@ msgstr "{0, plural, one {siguiendo} other {siguiendo}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:447
 msgid "{0, plural, one {like} other {likes}}"
-msgstr "{0, plural, one {\"me gusta\"} other {\"me gusta\"}}"
+msgstr "{0, plural, one {me gusta} other {me gusta}}"
 
 #: src/components/FeedCard.tsx:213
 #: src/view/com/feeds/FeedSourceCard.tsx:303
@@ -4334,7 +4334,7 @@ msgstr "Me gusta"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:311
 msgid "Like ({0, plural, one {# like} other {# likes}})"
-msgstr "Me gusta ({0, plural, one {# \"me gusta\"} other {# \"me gusta\"}})"
+msgstr "Me gusta ({0, plural, one {# me gusta} other {# me gusta}})"
 
 #: src/components/ProgressGuide/List.tsx:63
 msgid "Like 10 posts"
@@ -8750,7 +8750,7 @@ msgstr "No me gusta"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:305
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
-msgstr "Ya no me gusta ({0, plural, one {# \"me gusta\"} other {# \"me gusta\"}})"
+msgstr "Ya no me gusta ({0, plural, one {# me gusta} other {# me gusta}})"
 
 #: src/view/screens/ProfileFeed.tsx:576
 #~ msgid "Unlike this feed"
