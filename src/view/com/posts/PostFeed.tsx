@@ -25,6 +25,7 @@ import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useTrendingSettings} from '#/state/preferences/trending'
 import {STALE} from '#/state/queries'
 import {
+  AuthorFilter,
   FeedDescriptor,
   FeedParams,
   FeedPostSlice,
@@ -38,6 +39,7 @@ import {useProgressGuide} from '#/state/shell/progress-guide'
 import {List, ListRef} from '#/view/com/util/List'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
+import {VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 import {useBreakpoints} from '#/alf'
 import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
 import {
@@ -194,7 +196,7 @@ let PostFeed = ({
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
-  const [feedType, feedUri, feedTab] = feed.split('|')
+  const [feedType, feedUriOrActorDid, feedTab] = feed.split('|')
   const {gtMobile, gtTablet} = useBreakpoints()
   const areVideoFeedsEnabled = isNative
 
@@ -307,7 +309,7 @@ let PostFeed = ({
     let feedKind: 'following' | 'discover' | 'profile' | 'thevids' | undefined
     if (feedType === 'following') {
       feedKind = 'following'
-    } else if (feedUri === DISCOVER_FEED_URI) {
+    } else if (feedUriOrActorDid === DISCOVER_FEED_URI) {
       feedKind = 'discover'
     } else if (
       feedType === 'author' &&
@@ -318,7 +320,7 @@ let PostFeed = ({
     }
 
     let arr: FeedRow[] = []
-    if (KNOWN_SHUTDOWN_FEEDS.includes(feedUri)) {
+    if (KNOWN_SHUTDOWN_FEEDS.includes(feedUriOrActorDid)) {
       arr.push({
         type: 'feedShutdownMsg',
         key: 'feedShutdownMsg',
@@ -376,7 +378,7 @@ let PostFeed = ({
               type: 'videoGridRow',
               key: row.map(r => r.item._reactKey).join('-'),
               items: row.map(r => r.item),
-              sourceFeedUri: feedUri,
+              sourceFeedUri: feedUriOrActorDid,
               feedContexts: row.map(r => r.feedContext),
             })
           }
@@ -504,7 +506,7 @@ let PostFeed = ({
     lastFetchedAt,
     data,
     feedType,
-    feedUri,
+    feedUriOrActorDid,
     feedTab,
     hasSession,
     showProgressIntersitial,
@@ -595,7 +597,7 @@ let PostFeed = ({
       } else if (row.type === 'loading') {
         return <PostFeedLoadingPlaceholder />
       } else if (row.type === 'feedShutdownMsg') {
-        return <FeedShutdownMsg feedUri={feedUri} />
+        return <FeedShutdownMsg feedUri={feedUriOrActorDid} />
       } else if (row.type === 'interstitialFollows') {
         return <SuggestedFollows feed={feed} />
       } else if (row.type === 'interstitialProgressGuide') {
@@ -646,14 +648,25 @@ let PostFeed = ({
           </View>
         )
       } else if (row.type === 'videoGridRow') {
+        let sourceContext: VideoFeedSourceContext
+        if (feedType === 'author') {
+          sourceContext = {
+            type: 'author',
+            did: feedUriOrActorDid,
+            filter: feedTab as AuthorFilter,
+          }
+        } else {
+          sourceContext = {
+            type: 'feedgen',
+            uri: row.sourceFeedUri,
+            sourceInterstitial: feedCacheKey ?? 'none',
+          }
+        }
+
         return (
           <PostFeedVideoGridRow
             items={row.items}
-            sourceContext={{
-              type: 'feedgen',
-              uri: row.sourceFeedUri,
-              sourceInterstitial: feedCacheKey ?? 'none',
-            }}
+            sourceContext={sourceContext}
           />
         )
       } else {
@@ -668,7 +681,9 @@ let PostFeed = ({
       savedFeedConfig,
       _,
       onPressRetryLoadMore,
-      feedUri,
+      feedType,
+      feedUriOrActorDid,
+      feedTab,
       feedCacheKey,
     ],
   )
