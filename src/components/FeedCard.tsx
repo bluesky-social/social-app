@@ -184,7 +184,7 @@ export function Description({
   return <RichText value={rt} style={[a.leading_snug]} disableLinks {...rest} />
 }
 
-export function DescriptionPlaceholder() {
+function DescriptionPlaceholder() {
   const t = useTheme()
   return (
     <View style={[a.gap_xs]}>
