@@ -2458,7 +2458,7 @@ msgstr "Discover 피드에서 인기 동영상 사용"
 msgid "Enabled"
 msgstr "사용"
 
-#: src/screens/Profile/Sections/Feed.tsx:114
+#: src/screens/Profile/Sections/Feed.tsx:116
 msgid "End of feed"
 msgstr "피드 끝"
 
@@ -2784,7 +2784,7 @@ msgstr "피드백을 보냈습니다!"
 #: src/Navigation.tsx:404
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
 #: src/view/screens/Feeds.tsx:508
-#: src/view/screens/Profile.tsx:235
+#: src/view/screens/Profile.tsx:238
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/screens/Search/Search.tsx:522
 #: src/view/shell/desktop/LeftNav.tsx:640
@@ -3551,7 +3551,7 @@ msgid "Labeled by the author."
 msgstr "작성자가 라벨 지정함."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:75
-#: src/view/screens/Profile.tsx:229
+#: src/view/screens/Profile.tsx:231
 msgid "Labels"
 msgstr "라벨"
 
@@ -3726,7 +3726,7 @@ msgstr "{0, plural, other {#}}명의 사용자가 좋아함"
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr "{likeCount, plural, other {#}}명의 사용자가 좋아함"
 
-#: src/view/screens/Profile.tsx:234
+#: src/view/screens/Profile.tsx:237
 msgid "Likes"
 msgstr "좋아요"
 
@@ -3794,8 +3794,8 @@ msgstr "리스트를 언뮤트했습니다"
 
 #: src/Navigation.tsx:136
 #: src/view/screens/Lists.tsx:62
-#: src/view/screens/Profile.tsx:230
-#: src/view/screens/Profile.tsx:237
+#: src/view/screens/Profile.tsx:232
+#: src/view/screens/Profile.tsx:240
 #: src/view/shell/desktop/LeftNav.tsx:658
 #: src/view/shell/Drawer.tsx:496
 msgid "Lists"
@@ -3822,7 +3822,7 @@ msgid "Load new notifications"
 msgstr "새 알림 불러오기"
 
 #: src/screens/Profile/ProfileFeed/index.tsx:221
-#: src/screens/Profile/Sections/Feed.tsx:96
+#: src/screens/Profile/Sections/Feed.tsx:98
 #: src/view/com/feeds/FeedPage.tsx:155
 #: src/view/screens/ProfileList.tsx:849
 msgid "Load new posts"
@@ -3907,7 +3907,7 @@ msgstr "뮤트한 단어 및 태그 관리"
 msgid "Mark as read"
 msgstr "읽음으로 표시"
 
-#: src/view/screens/Profile.tsx:233
+#: src/view/screens/Profile.tsx:235
 msgid "Media"
 msgstr "미디어"
 
@@ -4256,7 +4256,7 @@ msgstr "새 비밀번호"
 #: src/screens/Profile/ProfileFeed/index.tsx:238
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
-#: src/view/screens/Profile.tsx:495
+#: src/view/screens/Profile.tsx:518
 #: src/view/screens/ProfileList.tsx:250
 #: src/view/screens/ProfileList.tsx:283
 msgid "New post"
@@ -4366,7 +4366,7 @@ msgstr "없음"
 msgid "No one but the author can quote this post."
 msgstr "이 게시물은 작성자 외에는 누구도 인용할 수 없습니다."
 
-#: src/screens/Profile/Sections/Feed.tsx:65
+#: src/screens/Profile/Sections/Feed.tsx:66
 msgid "No posts yet."
 msgstr "아직 게시물이 없습니다."
 
@@ -5083,7 +5083,7 @@ msgid "Post unpinned"
 msgstr "게시물을 고정 해제했습니다"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
-#: src/view/screens/Profile.tsx:231
+#: src/view/screens/Profile.tsx:233
 msgid "Posts"
 msgstr "게시물"
 
@@ -5174,7 +5174,7 @@ msgid "Processing..."
 msgstr "처리 중…"
 
 #: src/view/screens/DebugMod.tsx:919
-#: src/view/screens/Profile.tsx:362
+#: src/view/screens/Profile.tsx:372
 msgid "profile"
 msgstr "프로필"
 
@@ -5449,7 +5449,7 @@ msgstr "인용된 게시물을 제거합니다"
 msgid "Replace with Discover"
 msgstr "Discover로 교체"
 
-#: src/view/screens/Profile.tsx:232
+#: src/view/screens/Profile.tsx:234
 msgid "Replies"
 msgstr "답글"
 
@@ -6500,7 +6500,7 @@ msgstr "내 스타터 팩"
 msgid "Starter pack is invalid"
 msgstr "스타터 팩이 유효하지 않음"
 
-#: src/view/screens/Profile.tsx:236
+#: src/view/screens/Profile.tsx:239
 msgid "Starter Packs"
 msgstr "스타터 팩"
 
@@ -6867,7 +6867,7 @@ msgstr "서버에 연결하는 동안 문제가 발생했습니다"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "알림을 가져오는 동안 문제가 발생했습니다. 다시 시도하려면 이곳을 탭하세요."
 
-#: src/view/com/posts/PostFeed.tsx:590
+#: src/view/com/posts/PostFeed.tsx:592
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "게시물을 가져오는 동안 문제가 발생했습니다. 다시 시도하려면 이곳을 탭하세요."
 
@@ -7691,6 +7691,10 @@ msgstr "동영상 업로드됨"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:83
 msgid "Video: {0}"
 msgstr "동영상: {0}"
+
+#: src/view/screens/Profile.tsx:236
+msgid "Videos"
+msgstr "동영상"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:58
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:73
