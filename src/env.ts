@@ -14,7 +14,8 @@ export const IS_INTERNAL = __DEV__ || IS_TESTFLIGHT
  * The DID of the appview service to proxy to. If undefined, use Bluesky's
  * default app view.
  */
-export const APPVIEW_DID: Did | undefined = process.env.EXPO_PUBLIC_APPVIEW_DID
+export const APPVIEW_DID: Did | undefined =
+  process.env.EXPO_PUBLIC_APPVIEW_PROXY_DID
 
 /**
  * The DID of the chat service to proxy to. If undefined, chat should be
