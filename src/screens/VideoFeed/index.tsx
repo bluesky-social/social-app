@@ -165,6 +165,7 @@ type CurrentSource = {
 type VideoItem = {
   moderation: ModerationDecision
   post: AppBskyFeedDefs.PostView
+  video: AppBskyEmbedVideo.View
   feedContext: string | undefined
 }
 
@@ -197,30 +198,30 @@ function Feed() {
 
   const videos = useMemo(() => {
     let vids =
-      data?.pages
-        .flatMap(page => {
-          const items: {
-            _reactKey: string
-            moderation: ModerationDecision
-            post: AppBskyFeedDefs.PostView
-            feedContext: string | undefined
-          }[] = []
-          for (const slice of page.slices) {
-            const feedPost = slice.items.find(
-              item => item.uri === slice.feedPostUri,
-            )
-            if (feedPost) {
-              items.push({
-                _reactKey: feedPost._reactKey,
-                moderation: feedPost.moderation,
-                post: feedPost.post,
-                feedContext: slice.feedContext,
-              })
-            }
+      data?.pages.flatMap(page => {
+        const items: {
+          _reactKey: string
+          moderation: ModerationDecision
+          post: AppBskyFeedDefs.PostView
+          video: AppBskyEmbedVideo.View
+          feedContext: string | undefined
+        }[] = []
+        for (const slice of page.slices) {
+          const feedPost = slice.items.find(
+            item => item.uri === slice.feedPostUri,
+          )
+          if (feedPost && AppBskyEmbedVideo.isView(feedPost.post.embed)) {
+            items.push({
+              _reactKey: feedPost._reactKey,
+              moderation: feedPost.moderation,
+              post: feedPost.post,
+              video: feedPost.post.embed,
+              feedContext: slice.feedContext,
+            })
           }
-          return items
-        })
-        .filter(item => AppBskyEmbedVideo.isView(item.post.embed)) || []
+        }
+        return items
+      }) ?? []
     const startingVideoIndex = vids?.findIndex(video => {
       return video.post.uri === params.initialPostUri
     })
@@ -244,13 +245,7 @@ function Feed() {
 
   const renderItem: ListRenderItem<VideoItem> = useCallback(
     ({item, index}) => {
-      const {post} = item
-
-      // filtered above, here for TS
-      if (!post.embed || !AppBskyEmbedVideo.isView(post.embed)) {
-        return null
-      }
-
+      const {post, video} = item
       const player = players?.[index % 3]
       const currentSource = currentSources[index % 3]
 
@@ -258,11 +253,11 @@ function Feed() {
         <VideoItem
           player={player}
           post={post}
-          embed={post.embed}
+          embed={video}
           active={
             isFocused &&
             index === currentIndex &&
-            currentSource?.source === post.embed.playlist
+            currentSource?.source === video.playlist
           }
           adjacent={index === currentIndex - 1 || index === currentIndex + 1}
           moderation={item.moderation}
@@ -275,14 +270,8 @@ function Feed() {
   )
 
   const updateVideoState = useCallback(
-    (index?: number) => {
+    (index: number) => {
       if (!videos.length) return
-
-      if (index === undefined) {
-        index = currentIndex
-      } else {
-        setCurrentIndex(index)
-      }
 
       const prevSlice = videos.at(index - 1)
       const prevPost = prevSlice?.post
@@ -384,11 +373,11 @@ function Feed() {
         setCurrentSources(updatedSources)
       }
     },
-    [videos, currentSources, currentIndex, players],
+    [videos, currentSources, players],
   )
 
   const updateVideoStateInitially = useNonReactiveCallback(() => {
-    updateVideoState()
+    updateVideoState(currentIndex)
   })
 
   useFocusEffect(
@@ -410,7 +399,9 @@ function Feed() {
   const onViewableItemsChanged = useCallback(
     ({viewableItems}: {viewableItems: ViewToken[]; changed: ViewToken[]}) => {
       if (viewableItems[0] && viewableItems[0].index !== null) {
-        updateVideoState(viewableItems[0].index)
+        const newIndex = viewableItems[0].index
+        setCurrentIndex(newIndex)
+        updateVideoState(newIndex)
       }
     },
     [updateVideoState],
