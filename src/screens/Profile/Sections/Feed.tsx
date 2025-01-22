@@ -85,7 +85,7 @@ export const ProfileFeedSection = React.forwardRef<
         renderEmptyState={renderPostsEmpty}
         headerOffset={headerHeight}
         progressViewOffset={ios(0)}
-        renderEndOfFeed={ProfileEndOfFeed}
+        renderEndOfFeed={isVideoFeed ? undefined : ProfileEndOfFeed}
         ignoreFilterFor={ignoreFilterFor}
         initialNumToRender={
           shouldUseAdjustedNumToRender ? adjustedInitialNumToRender : undefined
