@@ -41,7 +41,7 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   npm install --global yarn && \
   yarn && \
   yarn intl:build && \
-  APPVIEW_DID=$APPVIEW_DID EXPO_PUBLIC_BUNDLE_IDENTIFIER=$EXPO_PUBLIC_BUNDLE_IDENTIFIER EXPO_PUBLIC_BUNDLE_DATE=$() yarn build-web
+  EXPO_PUBLIC_APPVIEW_DID=$APPVIEW_DID EXPO_PUBLIC_BUNDLE_IDENTIFIER=$EXPO_PUBLIC_BUNDLE_IDENTIFIER EXPO_PUBLIC_BUNDLE_DATE=$() yarn build-web
 
 # DEBUG
 RUN find ./bskyweb/static && find ./web-build/static
