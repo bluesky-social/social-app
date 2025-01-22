@@ -15,9 +15,10 @@ ENV CGO_ENABLED=1
 ENV GOEXPERIMENT="loopvar"
 # App
 ARG EXPO_PUBLIC_BUNDLE_IDENTIFIER
+ARG EXPO_PUBLIC_APPVIEW_DID
+ARG BSKYWEB_APPVIEW_HOST
 ENV EXPO_PUBLIC_BUNDLE_IDENTIFIER=${EXPO_PUBLIC_BUNDLE_IDENTIFIER:-dev}
-ENV EXPO_PUBLIC_APPVIEW_DID=${APPVIEW_DID}
-ENV EXPO_PUBLIC_APPVIEW_DID=${APPVIEW_HOST}
+ENV BSKYWEB_APPVIEW_HOST=${BSKYWEB_APPVIEW_HOST:-https://public.api.bsky.app}
 
 COPY . .
 
@@ -34,8 +35,6 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   nvm use $NODE_VERSION && \
   npm install --global yarn && \
   yarn && \
-  echo "Using bundle identifier: $EXPO_PUBLIC_BUNDLE_IDENTIFIER" && \
-  echo "Using appview did: $EXPO_PUBLIC_APPVIEW_DID" && \
   yarn intl:build && \
   EXPO_PUBLIC_ENV=production \
   EXPO_PUBLIC_APPVIEW_DID=$EXPO_PUBLIC_APPVIEW_DID \
@@ -51,7 +50,7 @@ RUN cd bskyweb/ && \
   go mod download && \
   go mod verify && \
   echo "GOLOG_LOG_LEVEL=info" >> .env && \
-  echo "ATP_APPVIEW_HOST=$APPVIEW_HOST" >> .env
+  echo "ATP_APPVIEW_HOST=$BSKYWEB_APPVIEW_HOST" >> .env
 
 RUN cd bskyweb/ && \
   go build \
