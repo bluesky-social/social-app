@@ -3,7 +3,7 @@ import {Modal, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {StatusBar} from 'expo-status-bar'
-import {ComAtprotoAdminDefs} from '@atproto/api'
+import {ComAtprotoAdminDefs, ComAtprotoModerationDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
@@ -50,7 +50,7 @@ export function Takendown() {
     mutationFn: async (appealText: string) => {
       if (!currentAccount) throw new Error('No session')
       await agent.com.atproto.moderation.createReport({
-        reasonType: 'com.atproto.moderation.defs#reasonAppeal',
+        reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
         subject: {
           $type: 'com.atproto.admin.defs#repoRef',
           did: currentAccount.did,
