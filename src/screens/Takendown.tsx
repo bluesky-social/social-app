@@ -1,5 +1,5 @@
 import {useMemo, useState} from 'react'
-import {Modal, View} from 'react-native'
+import {LayoutAnimation, Modal, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {StatusBar} from 'expo-status-bar'
@@ -19,7 +19,6 @@ import {Logo} from '#/view/icons/Logo'
 import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
@@ -34,11 +33,6 @@ export function Takendown() {
   const {currentAccount} = useSession()
   const {logoutCurrentAccount} = useSessionApi()
   const agent = useAgent()
-  const {
-    state: hovered,
-    onIn: onHoverIn,
-    onOut: onHoverOut,
-  } = useInteractionState()
   const [isAppealling, setIsAppealling] = useState(false)
   const [reason, setReason] = useState('')
   const graphemer = useMemo(() => new Graphemer(), [])
@@ -84,26 +78,10 @@ export function Takendown() {
         {isPending && <ButtonIcon icon={Loader} />}
       </Button>
     ) : (
-      <View />
-    )
-
-  const secondaryBtn =
-    isAppealling && !isSuccess ? (
-      <Button
-        variant="ghost"
-        size="large"
-        color="secondary"
-        label={_(msg`Cancel`)}
-        onPress={() => setIsAppealling(false)}>
-        <ButtonText>
-          <Trans>Cancel</Trans>
-        </ButtonText>
-      </Button>
-    ) : (
       <Button
         variant="solid"
         size="large"
-        color="secondary"
+        color="secondary_inverted"
         label={_(msg`Log out`)}
         onPress={() => logoutCurrentAccount('Takendown')}>
         <ButtonText>
@@ -111,6 +89,38 @@ export function Takendown() {
         </ButtonText>
       </Button>
     )
+
+  const secondaryBtn = isAppealling ? (
+    !isSuccess && (
+      <Button
+        variant="ghost"
+        size="large"
+        color="secondary"
+        label={_(msg`Cancel`)}
+        onPress={() => {
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+          setIsAppealling(false)
+        }}>
+        <ButtonText>
+          <Trans>Cancel</Trans>
+        </ButtonText>
+      </Button>
+    )
+  ) : (
+    <Button
+      variant="ghost"
+      size="large"
+      color="secondary"
+      label={_(msg`Appeal suspension`)}
+      onPress={() => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        setIsAppealling(true)
+      }}>
+      <ButtonText>
+        <Trans>Appeal suspension</Trans>
+      </ButtonText>
+    </Button>
+  )
 
   const webLayout = isWeb && gtMobile
 
@@ -146,9 +156,12 @@ export function Takendown() {
             {isAppealling ? (
               <View style={[a.relative, a.w_full, a.mt_xl]}>
                 {isSuccess ? (
-                  <Text style={[t.atoms.text_contrast_medium, a.text_center]}>
-                    <Trans>Your appeal has been submitted.</Trans>
-                  </Text>
+                  <P style={[t.atoms.text_contrast_medium, a.text_center]}>
+                    <Trans>
+                      Your appeal has been submitted. If your appeal succeeds,
+                      you receive an email.
+                    </Trans>
+                  </P>
                 ) : (
                   <>
                     <TextField.LabelText>
@@ -212,26 +225,9 @@ export function Takendown() {
                     style={[a.text_md, a.leading_normal]}>
                     Bluesky Social Terms of Service
                   </InlineLinkText>
-                  . You can{' '}
-                  <Text
-                    style={[
-                      a.text_md,
-                      a.leading_normal,
-                      {color: t.palette.primary_500},
-                      hovered &&
-                        web({
-                          outline: 0,
-                          textDecorationLine: 'underline',
-                          textDecorationColor: t.palette.primary_500,
-                        }),
-                    ]}
-                    // @ts-expect-error web only -sfn
-                    onMouseEnter={onHoverIn}
-                    onMouseLeave={onHoverOut}
-                    onPress={() => setIsAppealling(true)}>
-                    appeal
-                  </Text>{' '}
-                  this decision if you believe it was made in error.
+                  . You have been sent an email outlining the specific violation
+                  and suspension period, if applicable. You can appeal this
+                  decision if you believe it was made in error.
                 </Trans>
               </P>
             )}
