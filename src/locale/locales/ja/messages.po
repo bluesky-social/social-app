@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-22 23:31+0900\n"
+"PO-Revision-Date: 2025-01-23 09:31+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -985,6 +985,14 @@ msgstr "アカウントをブロックしますか？"
 msgid "Block accounts"
 msgstr "アカウントをブロック"
 
+#: src/components/dms/ReportDialog.tsx:326
+msgid "Block and Delete"
+msgstr "ブロックと削除"
+
+#: src/components/dms/ReportDialog.tsx:344
+msgid "Block and/or delete this conversation"
+msgstr "この会話をブロックして削除（あるいはどちらか）"
+
 #: src/view/screens/ProfileList.tsx:760
 msgid "Block list"
 msgstr "リストをブロック"
@@ -992,6 +1000,15 @@ msgstr "リストをブロック"
 #: src/view/screens/ProfileList.tsx:755
 msgid "Block these accounts?"
 msgstr "これらのアカウントをブロックしますか？"
+
+#: src/components/dms/ReportDialog.tsx:348
+#: src/components/dms/ReportDialog.tsx:351
+msgid "Block user"
+msgstr "ユーザーをブロック"
+
+#: src/components/dms/ReportDialog.tsx:330
+msgid "Block User"
+msgstr "ユーザーをブロック"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:83
 msgid "Blocked"
@@ -1918,6 +1935,15 @@ msgstr "アプリパスワードを削除しますか？"
 #: src/screens/Settings/Settings.tsx:338
 msgid "Delete chat declaration record"
 msgstr "チャットの宣言レコードを削除"
+
+#: src/components/dms/ReportDialog.tsx:354
+#: src/components/dms/ReportDialog.tsx:357
+msgid "Delete conversation"
+msgstr "会話を削除"
+
+#: src/components/dms/ReportDialog.tsx:328
+msgid "Delete Conversation"
+msgstr "会話を削除"
 
 #: src/components/dms/MessageMenu.tsx:124
 msgid "Delete for me"
@@ -4765,6 +4791,10 @@ msgstr "その他のアカウント"
 msgid "Other..."
 msgstr "その他…"
 
+#: src/components/dms/ReportDialog.tsx:340
+msgid "Our moderation team has recieved your report."
+msgstr "あなたの報告をモデレーションチームが受け付けました。"
+
 #: src/screens/Messages/components/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr "モデレーターが報告をレビューし、Blueskyであなたがチャットにアクセスできないようにしました。"
@@ -5558,6 +5588,10 @@ msgstr "投稿を報告"
 #: src/screens/StarterPack/StarterPackScreen.tsx:609
 msgid "Report starter pack"
 msgstr "スタータパックを報告"
+
+#: src/components/dms/ReportDialog.tsx:337
+msgid "Report submitted"
+msgstr "報告を送信しました"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Report this content"
