@@ -1,5 +1,5 @@
 import {useMemo, useState} from 'react'
-import {LayoutAnimation, Modal, View} from 'react-native'
+import {Modal, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {StatusBar} from 'expo-status-bar'
@@ -73,7 +73,7 @@ export function Takendown() {
           isPending || reasonGraphemeLength > MAX_REPORT_REASON_GRAPHEME_LENGTH
         }>
         <ButtonText>
-          <Trans>Submit appeal</Trans>
+          <Trans>Submit Appeal</Trans>
         </ButtonText>
         {isPending && <ButtonIcon icon={Loader} />}
       </Button>
@@ -85,7 +85,7 @@ export function Takendown() {
         label={_(msg`Log out`)}
         onPress={() => logoutCurrentAccount('Takendown')}>
         <ButtonText>
-          <Trans>Log out</Trans>
+          <Trans>Log Out</Trans>
         </ButtonText>
       </Button>
     )
@@ -97,10 +97,7 @@ export function Takendown() {
         size="large"
         color="secondary"
         label={_(msg`Cancel`)}
-        onPress={() => {
-          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-          setIsAppealling(false)
-        }}>
+        onPress={() => setIsAppealling(false)}>
         <ButtonText>
           <Trans>Cancel</Trans>
         </ButtonText>
@@ -112,12 +109,9 @@ export function Takendown() {
       size="large"
       color="secondary"
       label={_(msg`Appeal suspension`)}
-      onPress={() => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-        setIsAppealling(true)
-      }}>
+      onPress={() => setIsAppealling(true)}>
       <ButtonText>
-        <Trans>Appeal suspension</Trans>
+        <Trans>Appeal Suspension</Trans>
       </ButtonText>
     </Button>
   )
@@ -159,7 +153,7 @@ export function Takendown() {
                   <P style={[t.atoms.text_contrast_medium, a.text_center]}>
                     <Trans>
                       Your appeal has been submitted. If your appeal succeeds,
-                      you receive an email.
+                      you will receive an email.
                     </Trans>
                   </P>
                 ) : (
@@ -222,7 +216,8 @@ export function Takendown() {
                   <InlineLinkText
                     label={_(msg`Bluesky Social Terms of Service`)}
                     to="https://bsky.social/about/support/tos"
-                    style={[a.text_md, a.leading_normal]}>
+                    style={[a.text_md, a.leading_normal]}
+                    overridePresentation>
                     Bluesky Social Terms of Service
                   </InlineLinkText>
                   . You have been sent an email outlining the specific violation
