@@ -4196,7 +4196,7 @@ msgstr "Catatan postingan tidak valid atau tidak didukung"
 
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
-msgid "Invalid username or password"
+msgid "Incorrect username or password"
 msgstr "Nama pengguna atau kata sandi salah"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91

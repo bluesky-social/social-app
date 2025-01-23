@@ -138,6 +138,7 @@ export let MessageMenu = ({
       </Menu.Root>
 
       <ReportDialog
+        currentScreen="conversation"
         params={{type: 'convoMessage', convoId: convo.convo.id, message}}
         control={reportControl}
       />

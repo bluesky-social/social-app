@@ -34,7 +34,6 @@ import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
 import {updateActiveViewAsync} from '../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
 import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
-import {TrendingGestureContext} from './TrendingGestureContext'
 
 function ShellInner() {
   const t = useTheme()
@@ -145,9 +144,7 @@ function ShellInner() {
                 dim: 'rgba(10, 13, 16, 0.8)',
               }),
             }}>
-            <TrendingGestureContext.Provider value={trendingScrollGesture}>
-              <TabsNavigator />
-            </TrendingGestureContext.Provider>
+            <TabsNavigator />
           </Drawer>
         </ErrorBoundary>
       </View>

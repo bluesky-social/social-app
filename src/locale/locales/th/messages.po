@@ -4183,7 +4183,7 @@ msgstr "ระเบียนโพสต์ไม่ถูกต้องหร
 
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
-msgid "Invalid username or password"
+msgid "Incorrect username or password"
 msgstr "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91
