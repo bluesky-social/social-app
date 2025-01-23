@@ -11,6 +11,7 @@ import Graphemer from 'graphemer'
 
 import {MAX_REPORT_REASON_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useEnableKeyboardController} from '#/lib/hooks/useEnableKeyboardController'
+import {cleanError} from '#/lib/strings/errors'
 import {isIOS, isWeb} from '#/platform/detection'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
@@ -186,6 +187,17 @@ export function Takendown() {
                       />
                     </View>
                   </>
+                )}
+                {error && (
+                  <Text
+                    style={[
+                      a.text_md,
+                      a.leading_normal,
+                      {color: t.palette.negative_500},
+                      a.mt_lg,
+                    ]}>
+                    {cleanError(error)}
+                  </Text>
                 )}
               </View>
             ) : (
