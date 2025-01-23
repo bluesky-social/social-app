@@ -855,7 +855,7 @@ export function SearchScreen(
                   hitSlop={HITSLOP_10}
                   label={_(msg`Menu`)}
                   accessibilityHint={_(
-                    msg`Accesses to navigation links and settings`,
+                    msg`Provides access to navigation links and settings`,
                   )}
                   size="large"
                   variant="solid"
