@@ -2446,11 +2446,11 @@ msgstr "Activer les tendances"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:158
 msgid "Enable trending videos in your Discover feed"
-msgstr "Activer les vidéos tendances dans votre flux Discover"
+msgstr "Activer les vidéos tendances dans votre fil Discover"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:144
 msgid "Enable trending videos in your Discover feed."
-msgstr "Activer les vidéos tendances dans votre flux Discover."
+msgstr "Activer les vidéos tendances dans votre fil Discover."
 
 #: src/screens/Messages/Settings.tsx:130
 #: src/screens/Messages/Settings.tsx:133
