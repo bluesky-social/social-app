@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-22 07:22+0900\n"
+"PO-Revision-Date: 2025-01-23 09:16+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade, Akamig\n"
 "Plural-Forms: \n"
@@ -1941,16 +1941,13 @@ msgstr "앱 비밀번호를 삭제하시겠습니까?"
 msgid "Delete chat declaration record"
 msgstr "대화 신고 기록 삭제"
 
+#: src/components/dms/ReportDialog.tsx:354
 #: src/components/dms/ReportDialog.tsx:357
 msgid "Delete conversation"
 msgstr "대화 삭제"
 
 #: src/components/dms/ReportDialog.tsx:328
 msgid "Delete Conversation"
-msgstr "대화 삭제"
-
-#: src/components/dms/ReportDialog.tsx:354
-msgid "Delete coversation"
 msgstr "대화 삭제"
 
 #: src/components/dms/MessageMenu.tsx:124
