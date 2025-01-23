@@ -79,8 +79,10 @@ export function useLink({
   onPress: outerOnPress,
   onLongPress: outerOnLongPress,
   shareOnLongPress,
+  overridePresentation,
 }: BaseLinkProps & {
   displayText: string
+  overridePresentation?: boolean
 }) {
   const navigation = useNavigationDeduped()
   const {href} = useLinkProps<AllNavigatorParams>({
@@ -116,7 +118,7 @@ export function useLink({
         })
       } else {
         if (isExternal) {
-          openLink(href)
+          openLink(href, overridePresentation)
         } else {
           const shouldOpenInNewTab = shouldClickOpenNewTab(e)
 
@@ -158,6 +160,7 @@ export function useLink({
       closeModal,
       action,
       navigation,
+      overridePresentation,
     ],
   )
 
@@ -254,12 +257,13 @@ export function Link({
 export type InlineLinkProps = React.PropsWithChildren<
   BaseLinkProps &
     TextStyleProp &
-    Pick<TextProps, 'selectable' | 'numberOfLines'>
-> &
-  Pick<ButtonProps, 'label' | 'accessibilityHint'> & {
-    disableUnderline?: boolean
-    title?: TextProps['title']
-  }
+    Pick<TextProps, 'selectable' | 'numberOfLines'> &
+    Pick<ButtonProps, 'label' | 'accessibilityHint'> & {
+      disableUnderline?: boolean
+      title?: TextProps['title']
+      overridePresentation?: boolean
+    }
+>
 
 export function InlineLinkText({
   children,
@@ -274,6 +278,7 @@ export function InlineLinkText({
   label,
   shareOnLongPress,
   disableUnderline,
+  overridePresentation,
   ...rest
 }: InlineLinkProps) {
   const t = useTheme()
@@ -286,6 +291,7 @@ export function InlineLinkText({
     onPress: outerOnPress,
     onLongPress: outerOnLongPress,
     shareOnLongPress,
+    overridePresentation,
   })
   const {
     state: hovered,
