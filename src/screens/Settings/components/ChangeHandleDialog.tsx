@@ -537,7 +537,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
 
         <Button
           label={_(msg`Use default provider`)}
-          accessibilityHint={_(msg`Go back to previous page`)}
+          accessibilityHint={_(msg`Returns to previous page`)}
           onPress={goToServiceHandle}
           variant="outline"
           color="secondary"

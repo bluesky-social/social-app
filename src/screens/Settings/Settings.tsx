@@ -101,7 +101,7 @@ export function SettingsScreen({}: Props) {
               <SettingsList.PressableItem
                 label={_(msg`Switch account`)}
                 accessibilityHint={_(
-                  msg`Show other accounts you can switch to`,
+                  msg`Shows other accounts you can switch to`,
                 )}
                 onPress={() => {
                   if (!reducedMotion) {
@@ -205,7 +205,7 @@ export function SettingsScreen({}: Props) {
           <SettingsList.PressableItem
             onPress={() => Linking.openURL(HELP_DESK_URL)}
             label={_(msg`Help`)}
-            accessibilityHint={_(msg`Open helpdesk in browser`)}>
+            accessibilityHint={_(msg`Opens helpdesk in browser`)}>
             <SettingsList.ItemIcon icon={CircleQuestionIcon} />
             <SettingsList.ItemText>
               <Trans>Help</Trans>

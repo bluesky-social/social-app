@@ -70,7 +70,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         msg`Expand or collapse the full post you are replying to`,
       )}
       accessibilityHint={_(
-        msg`Expand or collapse the full post you are replying to`,
+        msg`Expands or collapses the full post you are replying to`,
       )}>
       <PreviewableUserAvatar
         size={50}
