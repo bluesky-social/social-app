@@ -1,11 +1,12 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NavigationProp, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {VIDEO_FEED_URIS} from '#/lib/constants'
 import {ComposeIcon2} from '#/lib/icons'
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
 import {AllNavigatorParams} from '#/lib/routes/types'
@@ -15,6 +16,7 @@ import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {useSetHomeBadge} from '#/state/home-badge'
+import {SavedFeedSourceInfo} from '#/state/queries/feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
@@ -39,6 +41,7 @@ export function FeedPage({
   renderEmptyState,
   renderEndOfFeed,
   savedFeedConfig,
+  feedInfo,
 }: {
   testID?: string
   feed: FeedDescriptor
@@ -48,6 +51,7 @@ export function FeedPage({
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  feedInfo: SavedFeedSourceInfo
 }) {
   const {hasSession} = useSession()
   const {_} = useLingui()
@@ -61,6 +65,13 @@ export function FeedPage({
   const scrollElRef = React.useRef<ListMethods>(null)
   const [hasNew, setHasNew] = React.useState(false)
   const setHomeBadge = useSetHomeBadge()
+  const isVideoFeed = React.useMemo(() => {
+    const isBskyVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
+    const feedIsVideoMode =
+      feedInfo.contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
+    const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
+    return isNative && _isVideoFeed
+  }, [feedInfo])
 
   React.useEffect(() => {
     if (isPageFocused) {
@@ -134,6 +145,7 @@ export function FeedPage({
             renderEndOfFeed={renderEndOfFeed}
             headerOffset={headerOffset}
             savedFeedConfig={savedFeedConfig}
+            isVideoFeed={isVideoFeed}
           />
         </FeedFeedbackProvider>
       </MainScrollProvider>

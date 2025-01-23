@@ -1,6 +1,7 @@
-import {useCallback, useEffect} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {BackHandler, useWindowDimensions, View} from 'react-native'
 import {Drawer} from 'react-native-drawer-layout'
+import {Gesture} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {StatusBar} from 'expo-status-bar'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
@@ -92,6 +93,7 @@ function ShellInner() {
   }, [dedupe, navigation])
 
   const swipeEnabled = !canGoBack && hasSession && !isDrawerSwipeDisabled
+  const [trendingScrollGesture] = useState(() => Gesture.Native())
   return (
     <>
       <View style={[a.h_full]}>
@@ -101,6 +103,10 @@ function ShellInner() {
             renderDrawerContent={renderDrawerContent}
             drawerStyle={{width: Math.min(400, winDim.width * 0.8)}}
             configureGestureHandler={handler => {
+              handler = handler.requireExternalGestureToFail(
+                trendingScrollGesture,
+              )
+
               if (swipeEnabled) {
                 if (isDrawerOpen) {
                   return handler.activeOffsetX([-1, 1])
