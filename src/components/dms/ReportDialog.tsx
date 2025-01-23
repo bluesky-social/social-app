@@ -224,11 +224,10 @@ function SubmitStep({
             multiline
             defaultValue={details}
             onChangeText={setDetails}
-            label="Text field"
+            label={_(msg`Text field`)}
             style={{paddingRight: 60}}
             numberOfLines={5}
           />
-
           <View
             style={[
               a.absolute,
