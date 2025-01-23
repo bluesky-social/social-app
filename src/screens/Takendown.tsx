@@ -75,7 +75,9 @@ export function Takendown() {
         size="large"
         label={_(msg`Submit appeal`)}
         onPress={() => submitAppeal(reason)}
-        disabled={isPending}>
+        disabled={
+          isPending || reasonGraphemeLength > MAX_REPORT_REASON_GRAPHEME_LENGTH
+        }>
         <ButtonText>
           <Trans>Submit appeal</Trans>
         </ButtonText>
