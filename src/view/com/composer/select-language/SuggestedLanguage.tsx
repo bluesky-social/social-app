@@ -49,37 +49,48 @@ export function SuggestedLanguage({text}: {text: string}) {
     return () => cancelIdle(idle)
   }, [text])
 
-  return suggestedLanguage &&
-    !toPostLanguages(langPrefs.postLanguage).includes(suggestedLanguage) ? (
-    <View style={[pal.border, styles.infoBar]}>
-      <FontAwesomeIcon
-        icon="language"
-        style={pal.text as FontAwesomeIconStyle}
-        size={24}
-      />
-      <Text style={[pal.text, s.flex1]}>
-        <Trans>
-          Are you writing in{' '}
-          <Text type="sm-bold" style={pal.text}>
-            {codeToLanguageName(suggestedLanguage)}
-          </Text>
-          ?
-        </Trans>
-      </Text>
+  if (
+    suggestedLanguage &&
+    !toPostLanguages(langPrefs.postLanguage).includes(suggestedLanguage)
+  ) {
+    const suggestedLanguageName = codeToLanguageName(
+      suggestedLanguage,
+      langPrefs.appLanguage,
+    )
 
-      <Button
-        type="default"
-        onPress={() => setLangPrefs.setPostLanguage(suggestedLanguage)}
-        accessibilityLabel={_(
-          msg`Change post language to ${codeToLanguageName(suggestedLanguage)}`,
-        )}
-        accessibilityHint="">
-        <Text type="button" style={[pal.link, s.fw600]}>
-          <Trans>Yes</Trans>
+    return (
+      <View style={[pal.border, styles.infoBar]}>
+        <FontAwesomeIcon
+          icon="language"
+          style={pal.text as FontAwesomeIconStyle}
+          size={24}
+        />
+        <Text style={[pal.text, s.flex1]}>
+          <Trans>
+            Are you writing in{' '}
+            <Text type="sm-bold" style={pal.text}>
+              {suggestedLanguageName}
+            </Text>
+            ?
+          </Trans>
         </Text>
-      </Button>
-    </View>
-  ) : null
+
+        <Button
+          type="default"
+          onPress={() => setLangPrefs.setPostLanguage(suggestedLanguage)}
+          accessibilityLabel={_(
+            msg`Change post language to ${suggestedLanguageName}`,
+          )}
+          accessibilityHint="">
+          <Text type="button" style={[pal.link, s.fw600]}>
+            <Trans>Yes</Trans>
+          </Text>
+        </Button>
+      </View>
+    )
+  } else {
+    return null
+  }
 }
 
 const styles = StyleSheet.create({

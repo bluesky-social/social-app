@@ -6,7 +6,6 @@ import {useLingui} from '@lingui/react'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {useLikedByQuery} from '#/state/queries/post-liked-by'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
@@ -18,7 +17,7 @@ function renderItem({item, index}: {item: GetLikes.Like; index: number}) {
     <ProfileCardWithFollowBtn
       key={item.actor.did}
       profile={item.actor}
-      noBorder={index === 0 && !isWeb}
+      noBorder={index === 0}
     />
   )
 }
@@ -88,6 +87,7 @@ export function PostLikedBy({uri}: {uri: string}) {
         )}
         errorMessage={cleanError(resolveError || error)}
         sideBorders={false}
+        topBorder={false}
       />
     )
   }
@@ -108,7 +108,6 @@ export function PostLikedBy({uri}: {uri: string}) {
           onRetry={fetchNextPage}
         />
       }
-      // @ts-ignore our .web version only -prf
       desktopFixedHeight
       initialNumToRender={initialNumToRender}
       windowSize={11}
