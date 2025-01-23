@@ -170,7 +170,7 @@
     "react-dom": "^18.2.0",
     "react-image-crop": "^11.0.7",
     "react-keyed-flatten-children": "^3.0.0",
-    "react-native": "0.76.3",
+    "react-native": "0.76.6",
     "react-native-compressor": "1.10.3",
     "react-native-date-picker": "^5.0.7",
     "react-native-drawer-layout": "^4.1.1",
