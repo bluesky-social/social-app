@@ -93,6 +93,7 @@ module.exports = {
         ],
       },
     ],
+    '@typescript-eslint/ban-ts-comment': 'warn',
   },
   ignorePatterns: [
     '**/__mocks__/*.ts',
