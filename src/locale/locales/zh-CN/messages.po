@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-22 02:53\n"
+"PO-Revision-Date: 2025-01-23 03:40\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -856,7 +856,7 @@ msgstr "已归档的帖文"
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr "你确定要删除这个应用密码“{0}”吗？"
 
-#: src/components/dms/MessageMenu.tsx:149
+#: src/components/dms/MessageMenu.tsx:150
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr "你确定要删除这条私信吗？此操作将仅为你删除私信，而不会为其他参与者删除。"
 
@@ -868,7 +868,7 @@ msgstr "你确定要删除这个新手包吗？"
 msgid "Are you sure you want to discard your changes?"
 msgstr "你确定要放弃更改吗？"
 
-#: src/components/dms/LeaveConvoPrompt.tsx:47
+#: src/components/dms/LeaveConvoPrompt.tsx:42
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
 msgstr "你确定要离开这个对话吗？此操作将仅为你删除对话，而不会为其他参与者删除。"
 
@@ -993,6 +993,14 @@ msgstr "要屏蔽账户吗？"
 msgid "Block accounts"
 msgstr "屏蔽账户"
 
+#: src/components/dms/ReportDialog.tsx:326
+msgid "Block and Delete"
+msgstr "屏蔽并删除"
+
+#: src/components/dms/ReportDialog.tsx:344
+msgid "Block and/or delete this conversation"
+msgstr "屏蔽并删除这个对话"
+
 #: src/view/screens/ProfileList.tsx:760
 msgid "Block list"
 msgstr "屏蔽列表"
@@ -1000,6 +1008,15 @@ msgstr "屏蔽列表"
 #: src/view/screens/ProfileList.tsx:755
 msgid "Block these accounts?"
 msgstr "要屏蔽这些账户吗？"
+
+#: src/components/dms/ReportDialog.tsx:348
+#: src/components/dms/ReportDialog.tsx:351
+msgid "Block user"
+msgstr "屏蔽用户"
+
+#: src/components/dms/ReportDialog.tsx:330
+msgid "Block User"
+msgstr "屏蔽用户"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:83
 msgid "Blocked"
@@ -1305,7 +1322,7 @@ msgstr "已隐藏对话"
 #: src/components/dms/ConvoMenu.tsx:115
 #: src/components/dms/MessageMenu.tsx:81
 #: src/Navigation.tsx:394
-#: src/screens/Messages/ChatList.tsx:246
+#: src/screens/Messages/ChatList.tsx:254
 msgid "Chat settings"
 msgstr "私信设置"
 
@@ -1418,6 +1435,8 @@ msgstr "哒哒🐴哒哒🐴"
 #: src/components/dialogs/GifSelect.tsx:281
 #: src/components/dialogs/VerifyEmailDialog.tsx:289
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:265
+#: src/components/dms/ReportDialog.tsx:373
+#: src/components/dms/ReportDialog.tsx:382
 #: src/components/NewskieDialog.tsx:146
 #: src/components/NewskieDialog.tsx:153
 #: src/components/ProgressGuide/FollowDialog.tsx:429
@@ -1759,7 +1778,8 @@ msgstr "复制 TXT 记录值"
 msgid "Copyright Policy"
 msgstr "版权许可"
 
-#: src/components/dms/LeaveConvoPrompt.tsx:38
+#: src/components/dms/LeaveConvoPrompt.tsx:33
+#: src/components/dms/ReportDialog.tsx:309
 msgid "Could not leave chat"
 msgstr "无法离开对话"
 
@@ -1895,7 +1915,7 @@ msgstr "默认"
 msgid "Default icons"
 msgstr "默认图标"
 
-#: src/components/dms/MessageMenu.tsx:151
+#: src/components/dms/MessageMenu.tsx:152
 #: src/screens/Settings/AppPasswords.tsx:212
 #: src/screens/StarterPack/StarterPackScreen.tsx:586
 #: src/screens/StarterPack/StarterPackScreen.tsx:665
@@ -1926,6 +1946,15 @@ msgstr "要删除这个应用密码吗？"
 msgid "Delete chat declaration record"
 msgstr "删除聊天记录"
 
+#: src/components/dms/ReportDialog.tsx:354
+#: src/components/dms/ReportDialog.tsx:357
+msgid "Delete conversation"
+msgstr "删除对话"
+
+#: src/components/dms/ReportDialog.tsx:328
+msgid "Delete Conversation"
+msgstr "删除对话"
+
 #: src/components/dms/MessageMenu.tsx:124
 msgid "Delete for me"
 msgstr "仅为我删除"
@@ -1934,7 +1963,7 @@ msgstr "仅为我删除"
 msgid "Delete List"
 msgstr "删除列表"
 
-#: src/components/dms/MessageMenu.tsx:147
+#: src/components/dms/MessageMenu.tsx:148
 msgid "Delete message"
 msgstr "删除私信"
 
@@ -2146,6 +2175,7 @@ msgstr "域名已通过验证！"
 
 #: src/components/dialogs/BirthDateSettings.tsx:118
 #: src/components/dialogs/BirthDateSettings.tsx:124
+#: src/components/dms/ReportDialog.tsx:324
 #: src/components/forms/DateField/index.tsx:77
 #: src/components/forms/DateField/index.tsx:83
 #: src/screens/Onboarding/StepProfile/index.tsx:330
@@ -2180,9 +2210,9 @@ msgstr "完成{extraText}"
 msgid "Double tap to close the dialog"
 msgstr "双击以关闭对话框"
 
-#: src/screens/VideoFeed/index.tsx:1046
+#: src/screens/VideoFeed/index.tsx:1037
 msgid "Double tap to like"
-msgstr "双击点赞"
+msgstr "双击以点赞"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:317
 msgid "Download Bluesky"
@@ -2855,7 +2885,7 @@ msgstr "灵活"
 #: src/components/ProfileHoverCard/index.web.tsx:449
 #: src/components/ProfileHoverCard/index.web.tsx:460
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:234
-#: src/screens/VideoFeed/index.tsx:828
+#: src/screens/VideoFeed/index.tsx:819
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:132
 msgid "Follow"
 msgstr "关注"
@@ -2870,7 +2900,7 @@ msgstr "关注"
 msgid "Follow {0}"
 msgstr "关注 {0}"
 
-#: src/screens/VideoFeed/index.tsx:807
+#: src/screens/VideoFeed/index.tsx:798
 msgid "Follow {handle}"
 msgstr "关注 {handle}"
 
@@ -2945,7 +2975,7 @@ msgstr "你认识的关注者"
 #: src/components/ProfileHoverCard/index.web.tsx:448
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
-#: src/screens/VideoFeed/index.tsx:826
+#: src/screens/VideoFeed/index.tsx:817
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
 #: src/view/screens/SavedFeeds.tsx:422
@@ -2957,7 +2987,7 @@ msgstr "正在关注"
 msgid "Following {0}"
 msgstr "已关注 {0}"
 
-#: src/screens/VideoFeed/index.tsx:806
+#: src/screens/VideoFeed/index.tsx:797
 msgid "Following {handle}"
 msgstr "已关注 {handle}"
 
@@ -3076,8 +3106,8 @@ msgstr "明显违反法规或服务条款"
 #: src/components/moderation/ScreenHider.tsx:163
 #: src/screens/Profile/ProfileFeed/index.tsx:89
 #: src/screens/VideoFeed/components/Header.tsx:163
-#: src/screens/VideoFeed/index.tsx:1107
-#: src/screens/VideoFeed/index.tsx:1111
+#: src/screens/VideoFeed/index.tsx:1098
+#: src/screens/VideoFeed/index.tsx:1102
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
 #: src/view/screens/ProfileList.tsx:1009
@@ -3099,9 +3129,9 @@ msgstr "返回"
 msgid "Go back to previous page"
 msgstr "返回上一步"
 
-#: src/components/dms/ReportDialog.tsx:149
+#: src/components/dms/ReportDialog.tsx:190
 #: src/components/ReportDialog/SelectReportOptionView.tsx:78
-#: src/components/ReportDialog/SubmitView.tsx:109
+#: src/components/ReportDialog/SubmitView.tsx:110
 #: src/screens/Onboarding/Layout.tsx:101
 #: src/screens/Onboarding/Layout.tsx:190
 #: src/screens/Signup/BackNextButtons.tsx:35
@@ -3207,7 +3237,7 @@ msgstr "以下是你的应用密码！"
 msgid "Hidden"
 msgstr "隐藏"
 
-#: src/screens/VideoFeed/index.tsx:615
+#: src/screens/VideoFeed/index.tsx:606
 msgid "Hidden by your moderation settings."
 msgstr "由你的内容审核设置所隐藏。"
 
@@ -3636,7 +3666,7 @@ msgstr "深入了解有关 Bluesky 公开内容的信息。"
 msgid "Learn more."
 msgstr "了解详情。"
 
-#: src/components/dms/LeaveConvoPrompt.tsx:49
+#: src/components/dms/LeaveConvoPrompt.tsx:44
 msgid "Leave"
 msgstr "离开"
 
@@ -3649,7 +3679,7 @@ msgstr "离开对话"
 #: src/components/dms/ConvoMenu.tsx:144
 #: src/components/dms/ConvoMenu.tsx:211
 #: src/components/dms/ConvoMenu.tsx:214
-#: src/components/dms/LeaveConvoPrompt.tsx:45
+#: src/components/dms/LeaveConvoPrompt.tsx:40
 msgid "Leave conversation"
 msgstr "离开对话"
 
@@ -3960,8 +3990,8 @@ msgid "Message is too long"
 msgstr "私信过长"
 
 #: src/Navigation.tsx:618
-#: src/screens/Messages/ChatList.tsx:262
-#: src/screens/Messages/ChatList.tsx:286
+#: src/screens/Messages/ChatList.tsx:270
+#: src/screens/Messages/ChatList.tsx:294
 msgid "Messages"
 msgstr "私信"
 
@@ -4226,8 +4256,8 @@ msgid "New"
 msgstr "新建"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:65
-#: src/screens/Messages/ChatList.tsx:269
-#: src/screens/Messages/ChatList.tsx:276
+#: src/screens/Messages/ChatList.tsx:277
+#: src/screens/Messages/ChatList.tsx:284
 msgid "New chat"
 msgstr "新私信"
 
@@ -4354,7 +4384,7 @@ msgstr "不超过 {0} 个字符"
 msgid "No messages yet"
 msgstr "目前还没有私信"
 
-#: src/screens/Messages/ChatList.tsx:225
+#: src/screens/Messages/ChatList.tsx:233
 msgid "No more conversations to show"
 msgstr "没有更多对话可显示"
 
@@ -4463,7 +4493,7 @@ msgstr "分享注意事项"
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "注意：Bluesky 是一个开放的社交网络。该设置项仅限制发布内容在 Bluesky 应用及网页上的可见性，但第三方应用未必会遵从该请求，仍可能会向未登录的用户显示你发布的内容。"
 
-#: src/screens/Messages/ChatList.tsx:180
+#: src/screens/Messages/ChatList.tsx:188
 msgid "Nothing here"
 msgstr "这里什么也没有"
 
@@ -4742,8 +4772,8 @@ msgstr "开启视频选择器"
 msgid "Option {0} of {numItems}"
 msgstr "第 {0} 个选项，共 {numItems} 个"
 
-#: src/components/dms/ReportDialog.tsx:178
-#: src/components/ReportDialog/SubmitView.tsx:167
+#: src/components/dms/ReportDialog.tsx:219
+#: src/components/ReportDialog/SubmitView.tsx:168
 msgid "Optionally provide additional information below:"
 msgstr "在下方提供额外信息（可选）："
 
@@ -4775,6 +4805,10 @@ msgstr "其他账户"
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:93
 msgid "Other..."
 msgstr "其他……"
+
+#: src/components/dms/ReportDialog.tsx:340
+msgid "Our moderation team has recieved your report."
+msgstr "我们的审核团队已收到你的举报。"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
@@ -5044,7 +5078,7 @@ msgstr "已删除帖文"
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr "帖文发布失败，请检查你的网络连接并重试。"
 
-#: src/screens/VideoFeed/index.tsx:520
+#: src/screens/VideoFeed/index.tsx:511
 msgid "Post has been deleted"
 msgstr "帖文已被删除"
 
@@ -5273,11 +5307,11 @@ msgstr "重新关联引用帖文"
 msgid "Reactivate your account"
 msgstr "重新启用你的账户"
 
-#: src/screens/VideoFeed/index.tsx:941
+#: src/screens/VideoFeed/index.tsx:932
 msgid "Read less"
 msgstr "查看更少"
 
-#: src/screens/VideoFeed/index.tsx:941
+#: src/screens/VideoFeed/index.tsx:932
 msgid "Read more"
 msgstr "查看更多"
 
@@ -5295,7 +5329,7 @@ msgstr "浏览 Bluesky 隐私设置"
 msgid "Read the Bluesky Terms of Service"
 msgstr "浏览 Bluesky 使用条款"
 
-#: src/components/dms/ReportDialog.tsx:169
+#: src/components/dms/ReportDialog.tsx:210
 msgid "Reason:"
 msgstr "原因："
 
@@ -5311,7 +5345,7 @@ msgstr "推荐"
 msgid "Reconnect"
 msgstr "重新连接"
 
-#: src/screens/Messages/ChatList.tsx:163
+#: src/screens/Messages/ChatList.tsx:171
 msgid "Reload conversations"
 msgstr "重新加载对话"
 
@@ -5571,6 +5605,10 @@ msgstr "举报帖文"
 msgid "Report starter pack"
 msgstr "举报新手包"
 
+#: src/components/dms/ReportDialog.tsx:337
+msgid "Report submitted"
+msgstr "已提交举报"
+
 #: src/components/ReportDialog/SelectReportOptionView.tsx:41
 msgid "Report this content"
 msgstr "举报这项内容"
@@ -5583,8 +5621,8 @@ msgstr "举报这个动态源"
 msgid "Report this list"
 msgstr "举报这个列表"
 
-#: src/components/dms/ReportDialog.tsx:44
-#: src/components/dms/ReportDialog.tsx:137
+#: src/components/dms/ReportDialog.tsx:58
+#: src/components/dms/ReportDialog.tsx:178
 #: src/components/ReportDialog/SelectReportOptionView.tsx:60
 msgid "Report this message"
 msgstr "举报这条私信"
@@ -5718,7 +5756,7 @@ msgstr "重试上次出错的操作"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:335
 #: src/screens/Login/LoginForm.tsx:313
 #: src/screens/Login/LoginForm.tsx:320
-#: src/screens/Messages/ChatList.tsx:169
+#: src/screens/Messages/ChatList.tsx:177
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Onboarding/StepInterests/index.tsx:217
 #: src/screens/Onboarding/StepInterests/index.tsx:220
@@ -5742,7 +5780,7 @@ msgid "Returns to home page"
 msgstr "返回主页"
 
 #: src/screens/Profile/ProfileFeed/index.tsx:90
-#: src/screens/VideoFeed/index.tsx:1108
+#: src/screens/VideoFeed/index.tsx:1099
 #: src/view/screens/NotFound.tsx:60
 msgid "Returns to previous page"
 msgstr "返回上一页"
@@ -5987,7 +6025,7 @@ msgstr "选择字幕文件（.vtt）"
 msgid "Select the {emojiName} emoji as your avatar"
 msgstr "选择 {emojiName} 表情符号作为你的头像"
 
-#: src/components/ReportDialog/SubmitView.tsx:140
+#: src/components/ReportDialog/SubmitView.tsx:141
 msgid "Select the moderation service(s) to report to"
 msgstr "请选择你要向哪个内容审核服务提供方提交这个举报"
 
@@ -6058,10 +6096,10 @@ msgstr "发送私信"
 msgid "Send post to..."
 msgstr "发送私信给……"
 
-#: src/components/dms/ReportDialog.tsx:229
-#: src/components/dms/ReportDialog.tsx:232
-#: src/components/ReportDialog/SubmitView.tsx:220
-#: src/components/ReportDialog/SubmitView.tsx:224
+#: src/components/dms/ReportDialog.tsx:270
+#: src/components/dms/ReportDialog.tsx:273
+#: src/components/ReportDialog/SubmitView.tsx:221
+#: src/components/ReportDialog/SubmitView.tsx:225
 msgid "Send report"
 msgstr "提交举报"
 
@@ -6212,8 +6250,8 @@ msgstr "显示替代文本"
 #: src/components/moderation/ScreenHider.tsx:172
 #: src/components/moderation/ScreenHider.tsx:175
 #: src/screens/List/ListHiddenScreen.tsx:187
-#: src/screens/VideoFeed/index.tsx:618
-#: src/screens/VideoFeed/index.tsx:624
+#: src/screens/VideoFeed/index.tsx:609
+#: src/screens/VideoFeed/index.tsx:615
 msgid "Show anyway"
 msgstr "仍然显示"
 
@@ -6633,7 +6671,7 @@ msgstr "点按以跳过"
 msgid "Tap to enter full screen"
 msgstr "点按以进入全屏模式"
 
-#: src/screens/VideoFeed/index.tsx:940
+#: src/screens/VideoFeed/index.tsx:931
 msgid "Tap to expand or collapse post text."
 msgstr "点按以展开或折叠帖文文本。"
 
@@ -6652,7 +6690,7 @@ msgstr "点按以查看完整图片"
 
 #: src/components/VideoPostCard.tsx:115
 msgid "Tap to view video in immersive mode."
-msgstr "点按以沉浸模式观看视频。"
+msgstr "点按以进入沉浸模式观看视频。"
 
 #: src/state/shell/progress-guide.tsx:233
 msgid "Task complete - 10 follows!"
@@ -6717,8 +6755,7 @@ msgstr "文本输入框"
 msgid "Thank you! Your email has been successfully verified."
 msgstr "谢谢！你的电子邮箱已成功验证。"
 
-#: src/components/dms/ReportDialog.tsx:129
-#: src/components/ReportDialog/SubmitView.tsx:82
+#: src/components/ReportDialog/SubmitView.tsx:83
 msgid "Thank you. Your report has been sent."
 msgstr "谢谢，你的举报已提交。"
 
@@ -6747,7 +6784,7 @@ msgstr "找不到那个新手包。"
 msgid "That's all, folks!"
 msgstr "就这些，完毕！"
 
-#: src/screens/VideoFeed/index.tsx:1080
+#: src/screens/VideoFeed/index.tsx:1071
 msgid "That's everything!"
 msgstr "就这些了！"
 
@@ -6897,8 +6934,8 @@ msgstr "获取你的服务信息时出现问题"
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
 msgstr "更新动态源时出现问题，请检查你的网络连接并重试。"
 
-#: src/components/dms/ReportDialog.tsx:217
-#: src/components/ReportDialog/SubmitView.tsx:87
+#: src/components/dms/ReportDialog.tsx:258
+#: src/components/ReportDialog/SubmitView.tsx:88
 msgid "There was an issue sending your report. Please check your internet connection."
 msgstr "提交举报时出现问题，请检查你的网络连接。"
 
@@ -7340,7 +7377,7 @@ msgstr "取消关注 {0}"
 msgid "Unfollow Account"
 msgstr "取消关注账户"
 
-#: src/screens/VideoFeed/index.tsx:810
+#: src/screens/VideoFeed/index.tsx:801
 msgid "Unfollow user"
 msgstr "取消关注用户"
 
@@ -7673,13 +7710,13 @@ msgstr "视频来自{0}：{text}"
 msgid "Video Games"
 msgstr "电子游戏"
 
-#: src/screens/VideoFeed/index.tsx:1038
+#: src/screens/VideoFeed/index.tsx:1029
 msgid "Video is paused"
 msgstr "视频已暂停"
 
-#: src/screens/VideoFeed/index.tsx:1038
+#: src/screens/VideoFeed/index.tsx:1029
 msgid "Video is playing"
-msgstr "正在播放视频"
+msgstr "视频正在播放"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:191
 msgid "Video not found."
@@ -7712,7 +7749,7 @@ msgstr "查看 {0} 的头像"
 
 #: src/components/ProfileCard.tsx:110
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:450
-#: src/screens/VideoFeed/index.tsx:771
+#: src/screens/VideoFeed/index.tsx:762
 #: src/view/com/notifications/NotificationFeedItem.tsx:409
 msgid "View {0}'s profile"
 msgstr "查看 {0} 的个人资料"
@@ -7734,8 +7771,8 @@ msgid "View debug entry"
 msgstr "查看调试项目"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:137
-#: src/screens/VideoFeed/index.tsx:646
-#: src/screens/VideoFeed/index.tsx:664
+#: src/screens/VideoFeed/index.tsx:637
+#: src/screens/VideoFeed/index.tsx:655
 msgid "View details"
 msgstr "查看详情"
 
@@ -7953,7 +7990,7 @@ msgid "Who can reply"
 msgstr "哪些人可以回复"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
-#: src/screens/Messages/ChatList.tsx:148
+#: src/screens/Messages/ChatList.tsx:156
 msgid "Whoops!"
 msgstr "糟糕！"
 
@@ -8149,7 +8186,7 @@ msgstr "你已隐藏该账户。"
 msgid "You have muted this user"
 msgstr "你已隐藏该用户"
 
-#: src/screens/Messages/ChatList.tsx:190
+#: src/screens/Messages/ChatList.tsx:198
 msgid "You have no conversations yet. Start one!"
 msgstr "你还没有任何私信，试着与其他人展开对话吧！"
 
@@ -8227,7 +8264,7 @@ msgstr "你必须授权访问照片图库以保存二维码"
 msgid "You must grant access to your photo library to save the image."
 msgstr "你必须授权访问照片图库以保存图片。"
 
-#: src/components/ReportDialog/SubmitView.tsx:210
+#: src/components/ReportDialog/SubmitView.tsx:211
 msgid "You must select at least one labeler for a report"
 msgstr "你必须选择至少一个标记者来进行举报"
 
@@ -8322,9 +8359,9 @@ msgstr "你已达到每日上传视频上限（文件太大）"
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "你已达到每日上传视频上限（数量太多）"
 
-#: src/screens/VideoFeed/index.tsx:1089
+#: src/screens/VideoFeed/index.tsx:1080
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
-msgstr "你已经看完了所有视频，或许是时候休息一下了？"
+msgstr "你已经看完了所有视频，或许是时候休息一下？"
 
 #: src/screens/Signup/index.tsx:140
 msgid "Your account"
@@ -8421,7 +8458,7 @@ msgstr "其他 Bluesky 用户将无法看到你的个人资料、帖文、列表
 msgid "Your reply has been published"
 msgstr "已发布你的回复"
 
-#: src/components/dms/ReportDialog.tsx:157
+#: src/components/dms/ReportDialog.tsx:198
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "你的举报将发送至 Bluesky 内容审核服务"
 
