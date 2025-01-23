@@ -211,6 +211,7 @@ export function Takendown() {
                           textDecorationColor: t.palette.primary_500,
                         }),
                     ]}
+                    // @ts-expect-error web only -sfn
                     onMouseEnter={onHoverIn}
                     onMouseLeave={onHoverOut}
                     onPress={() => setIsAppealling(true)}>
