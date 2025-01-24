@@ -176,11 +176,11 @@ msgstr "읽지 않은 항목 {count}개"
 msgid "{displayName}'s Starter Pack"
 msgstr "{displayName} 님의 스타터 팩"
 
-#: src/screens/SignupQueued.tsx:219
+#: src/screens/SignupQueued.tsx:216
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
 msgstr "시간"
 
-#: src/screens/SignupQueued.tsx:225
+#: src/screens/SignupQueued.tsx:222
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr "분"
 
@@ -819,6 +819,15 @@ msgstr "\"{0}\" 라벨 이의신청"
 msgid "Appeal submitted"
 msgstr "이의신청을 제출했습니다"
 
+#: src/screens/Takendown.tsx:111
+#: src/screens/Takendown.tsx:144
+msgid "Appeal suspension"
+msgstr "게시 중단 이의신청"
+
+#: src/screens/Takendown.tsx:114
+msgid "Appeal Suspension"
+msgstr "게시 중단 이의신청"
+
 #: src/screens/Messages/components/ChatDisabled.tsx:51
 #: src/screens/Messages/components/ChatDisabled.tsx:53
 #: src/screens/Messages/components/ChatDisabled.tsx:99
@@ -988,11 +997,11 @@ msgstr "계정을 차단하시겠습니까?"
 msgid "Block accounts"
 msgstr "계정 차단"
 
-#: src/components/dms/ReportDialog.tsx:326
+#: src/components/dms/ReportDialog.tsx:325
 msgid "Block and Delete"
 msgstr "차단 및 삭제"
 
-#: src/components/dms/ReportDialog.tsx:344
+#: src/components/dms/ReportDialog.tsx:343
 msgid "Block and/or delete this conversation"
 msgstr "이 대화를 차단 또는 삭제합니다"
 
@@ -1004,12 +1013,12 @@ msgstr "리스트 차단"
 msgid "Block these accounts?"
 msgstr "이 계정들을 차단하시겠습니까?"
 
-#: src/components/dms/ReportDialog.tsx:348
-#: src/components/dms/ReportDialog.tsx:351
+#: src/components/dms/ReportDialog.tsx:347
+#: src/components/dms/ReportDialog.tsx:350
 msgid "Block user"
 msgstr "사용자 차단"
 
-#: src/components/dms/ReportDialog.tsx:330
+#: src/components/dms/ReportDialog.tsx:329
 msgid "Block User"
 msgstr "사용자 차단"
 
@@ -1076,6 +1085,10 @@ msgstr "Bluesky는 직접 제공자를 선택할 수 있는 개방형 네트워�
 #: src/components/ProgressGuide/List.tsx:70
 msgid "Bluesky is better with friends!"
 msgstr "Bluesky는 친구와 함께하면 더 좋답니다!"
+
+#: src/screens/Takendown.tsx:217
+msgid "Bluesky Social Terms of Service"
+msgstr "Bluesky Social 서비스 이용약관"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:299
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -1182,6 +1195,8 @@ msgstr "카메라"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:76
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:83
 #: src/screens/Settings/Settings.tsx:260
+#: src/screens/Takendown.tsx:99
+#: src/screens/Takendown.tsx:102
 #: src/view/com/composer/Composer.tsx:923
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
@@ -1430,8 +1445,8 @@ msgstr "다그닥 🐴 다그닥 🐴"
 #: src/components/dialogs/GifSelect.tsx:281
 #: src/components/dialogs/VerifyEmailDialog.tsx:289
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:265
-#: src/components/dms/ReportDialog.tsx:373
-#: src/components/dms/ReportDialog.tsx:382
+#: src/components/dms/ReportDialog.tsx:372
+#: src/components/dms/ReportDialog.tsx:381
 #: src/components/NewskieDialog.tsx:146
 #: src/components/NewskieDialog.tsx:153
 #: src/components/ProgressGuide/FollowDialog.tsx:429
@@ -1774,7 +1789,7 @@ msgid "Copyright Policy"
 msgstr "저작권 정책"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:33
-#: src/components/dms/ReportDialog.tsx:309
+#: src/components/dms/ReportDialog.tsx:308
 msgid "Could not leave chat"
 msgstr "대화에서 나갈 수 없습니다"
 
@@ -1941,12 +1956,12 @@ msgstr "앱 비밀번호를 삭제하시겠습니까?"
 msgid "Delete chat declaration record"
 msgstr "대화 신고 기록 삭제"
 
-#: src/components/dms/ReportDialog.tsx:354
-#: src/components/dms/ReportDialog.tsx:357
+#: src/components/dms/ReportDialog.tsx:353
+#: src/components/dms/ReportDialog.tsx:356
 msgid "Delete conversation"
 msgstr "대화 삭제"
 
-#: src/components/dms/ReportDialog.tsx:328
+#: src/components/dms/ReportDialog.tsx:327
 msgid "Delete Conversation"
 msgstr "대화 삭제"
 
@@ -2170,7 +2185,7 @@ msgstr "도메인을 확인했습니다."
 
 #: src/components/dialogs/BirthDateSettings.tsx:118
 #: src/components/dialogs/BirthDateSettings.tsx:124
-#: src/components/dms/ReportDialog.tsx:324
+#: src/components/dms/ReportDialog.tsx:323
 #: src/components/forms/DateField/index.tsx:77
 #: src/components/forms/DateField/index.tsx:83
 #: src/screens/Onboarding/StepProfile/index.tsx:330
@@ -2634,7 +2649,7 @@ msgstr "사용자 목록 펼치기"
 msgid "Expand or collapse the full post you are replying to"
 msgstr "답글을 달고 있는 전체 게시물을 펼치거나 접습니다"
 
-#: src/lib/api/index.ts:400
+#: src/lib/api/index.ts:405
 msgid "Expected uri to resolve to a record"
 msgstr "레코드로 확인될 것으로 예상되는 URI"
 
@@ -3686,7 +3701,7 @@ msgstr "모든 언어를 보려면 모두 선택하지 않은 상태로 두세�
 msgid "Leaving Bluesky"
 msgstr "Bluesky 떠나기"
 
-#: src/screens/SignupQueued.tsx:140
+#: src/screens/SignupQueued.tsx:155
 msgid "left to go."
 msgstr "명 남았습니다."
 
@@ -3871,11 +3886,14 @@ msgstr "로그"
 msgid "Log in or sign up"
 msgstr "로그인 또는 가입"
 
-#: src/screens/SignupQueued.tsx:168
-#: src/screens/SignupQueued.tsx:171
-#: src/screens/SignupQueued.tsx:196
-#: src/screens/SignupQueued.tsx:199
+#: src/screens/SignupQueued.tsx:93
+#: src/screens/SignupQueued.tsx:96
+#: src/screens/Takendown.tsx:85
 msgid "Log out"
+msgstr "로그아웃"
+
+#: src/screens/Takendown.tsx:88
+msgid "Log Out"
 msgstr "로그아웃"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:78
@@ -4801,7 +4819,7 @@ msgstr "다른 계정"
 msgid "Other..."
 msgstr "기타…"
 
-#: src/components/dms/ReportDialog.tsx:340
+#: src/components/dms/ReportDialog.tsx:339
 msgid "Our moderation team has recieved your report."
 msgstr "Bluesky 검토 팀에서 신고를 접수했습니다."
 
@@ -5324,6 +5342,11 @@ msgstr "Bluesky 개인정보 처리방침 읽기"
 msgid "Read the Bluesky Terms of Service"
 msgstr "Bluesky 서비스 이용약관 읽기"
 
+#: src/screens/Takendown.tsx:162
+#: src/screens/Takendown.tsx:170
+msgid "Reason for appeal"
+msgstr "이의신청 이유"
+
 #: src/components/dms/ReportDialog.tsx:210
 msgid "Reason:"
 msgstr "이유:"
@@ -5600,7 +5623,7 @@ msgstr "게시물 신고"
 msgid "Report starter pack"
 msgstr "스타터 팩 신고"
 
-#: src/components/dms/ReportDialog.tsx:337
+#: src/components/dms/ReportDialog.tsx:336
 msgid "Report submitted"
 msgstr "신고 제출됨"
 
@@ -6091,8 +6114,8 @@ msgstr "메시지 보내기"
 msgid "Send post to..."
 msgstr "게시물을 다음으로 보내기"
 
-#: src/components/dms/ReportDialog.tsx:270
-#: src/components/dms/ReportDialog.tsx:273
+#: src/components/dms/ReportDialog.tsx:269
+#: src/components/dms/ReportDialog.tsx:272
 #: src/components/ReportDialog/SubmitView.tsx:221
 #: src/components/ReportDialog/SubmitView.tsx:225
 msgid "Send report"
@@ -6569,7 +6592,15 @@ msgstr "스토리북"
 #: src/screens/Messages/components/ChatDisabled.tsx:142
 #: src/screens/Messages/components/ChatDisabled.tsx:143
 msgid "Submit"
-msgstr "확인"
+msgstr "제출"
+
+#: src/screens/Takendown.tsx:70
+msgid "Submit appeal"
+msgstr "이의신청 제출"
+
+#: src/screens/Takendown.tsx:76
+msgid "Submit Appeal"
+msgstr "이의신청 제출"
 
 #: src/view/screens/ProfileList.tsx:712
 msgid "Subscribe"
@@ -6740,6 +6771,10 @@ msgstr "커뮤니티 기준을 위반하는 용어 사용"
 #: src/components/dialogs/MutedWords.tsx:266
 msgid "Text & tags"
 msgstr "텍스트 및 태그"
+
+#: src/components/dms/ReportDialog.tsx:227
+msgid "Text field"
+msgstr "텍스트 필드"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:263
 #: src/screens/Messages/components/ChatDisabled.tsx:108
@@ -6929,7 +6964,7 @@ msgstr "내 서비스 정보를 가져오는 동안 문제가 발생했습니다
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
 msgstr "이 피드를 삭제하는 동안 문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 시도해 주세요."
 
-#: src/components/dms/ReportDialog.tsx:258
+#: src/components/dms/ReportDialog.tsx:257
 #: src/components/ReportDialog/SubmitView.tsx:88
 msgid "There was an issue sending your report. Please check your internet connection."
 msgstr "신고를 전송하는 동안 문제가 발생했습니다. 인터넷 연결을 확인해 주세요."
@@ -6971,7 +7006,7 @@ msgstr "문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 �
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr "애플리케이션에 예기치 않은 문제가 발생했습니다. 이런 일이 발생하면 저희에게 알려주세요!"
 
-#: src/screens/SignupQueued.tsx:115
+#: src/screens/SignupQueued.tsx:130
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "Bluesky에 신규 사용자가 몰리고 있습니다! 최대한 빨리 계정을 활성화하겠습니다."
 
@@ -7526,12 +7561,12 @@ msgstr "파일에서 업로드"
 msgid "Upload from Library"
 msgstr "라이브러리에서 업로드"
 
-#: src/lib/api/index.ts:296
+#: src/lib/api/index.ts:301
 msgid "Uploading images..."
 msgstr "이미지 업로드 중…"
 
-#: src/lib/api/index.ts:350
-#: src/lib/api/index.ts:374
+#: src/lib/api/index.ts:355
+#: src/lib/api/index.ts:379
 msgid "Uploading link thumbnail..."
 msgstr "링크 미리보기 업로드 중…"
 
@@ -7868,7 +7903,7 @@ msgstr "해당 주제에 대한 결과를 찾을 수 없습니다."
 msgid "We couldn't load this conversation"
 msgstr "이 대화를 불러올 수 없습니다"
 
-#: src/screens/SignupQueued.tsx:145
+#: src/screens/SignupQueued.tsx:160
 msgid "We estimate {estimatedTime} until your account is ready."
 msgstr "계정이 준비될 때까지 {estimatedTime}이(가) 걸릴 것으로 예상됩니다."
 
@@ -7900,7 +7935,7 @@ msgstr "현재 구성된 라벨러를 불러올 수 없습니다."
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
 msgstr "연결하지 못했습니다. 계정 설정을 계속하려면 다시 시도해 주세요. 계속 실패하면 이 과정을 건너뛸 수 있습니다."
 
-#: src/screens/SignupQueued.tsx:149
+#: src/screens/SignupQueued.tsx:164
 msgid "We will let you know when your account is ready."
 msgstr "계정이 준비되면 알려드리겠습니다."
 
@@ -7994,6 +8029,10 @@ msgstr "이런!"
 msgid "Whoops! Trending videos failed to load."
 msgstr "이런! 인기 동영상을 불러오지 못했습니다."
 
+#: src/screens/Takendown.tsx:173
+msgid "Why are you appealing?"
+msgstr "이의신청하는 이유가 무엇인가요?"
+
 #: src/components/ReportDialog/SelectReportOptionView.tsx:42
 msgid "Why should this content be reviewed?"
 msgstr "이 콘텐츠를 검토해야 하는 이유는 무엇인가요?"
@@ -8082,7 +8121,7 @@ msgstr "나"
 msgid "You"
 msgstr "나"
 
-#: src/screens/SignupQueued.tsx:142
+#: src/screens/SignupQueued.tsx:157
 msgid "You are in line."
 msgstr "대기 중입니다."
 
@@ -8320,7 +8359,7 @@ msgstr "본인 인증을 위해 <0>{0}</0>(으)로 이메일을 보냅니다."
 msgid "You'll stay updated with these feeds"
 msgstr "다음 피드를 구독하게 됩니다"
 
-#: src/screens/SignupQueued.tsx:112
+#: src/screens/SignupQueued.tsx:127
 msgid "You're in line"
 msgstr "대기 중입니다"
 
@@ -8366,6 +8405,10 @@ msgstr "내 계정"
 msgid "Your account has been deleted"
 msgstr "계정을 삭제했습니다"
 
+#: src/screens/Takendown.tsx:146
+msgid "Your account has been suspended"
+msgstr "계정 일시 정지됨"
+
 #: src/view/com/composer/state/video.ts:429
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "내 계정은 아직 동영상을 업로드할 수 없습니다. 나중에 다시 시도해 주세요."
@@ -8373,6 +8416,14 @@ msgstr "내 계정은 아직 동영상을 업로드할 수 없습니다. 나중�
 #: src/screens/Settings/components/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "모든 공개 데이터 레코드가 포함된 계정 저장소를 \"CAR\" 파일로 다운로드할 수 있습니다. 이 파일에는 이미지와 같은 미디어 임베드나 별도로 가져와야 하는 비공개 데이터는 포함되지 않습니다."
+
+#: src/screens/Takendown.tsx:214
+msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
+msgstr "귀하의 계정이 <0>Bluesky Social 서비스 이용약관</0>을 위반한 것으로 확인되었습니다. 구체적인 위반 사항과 정지 기간(해당하는 경우)이 명시된 이메일을 보내드렸습니다. 이 결정이 잘못되었다고 생각되면 이의를 신청할 수 있습니다."
+
+#: src/screens/Takendown.tsx:154
+msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
+msgstr "이의신청이 제출되었습니다. 이의신청이 받아들여지면 이메일을 보내드립니다."
 
 #: src/screens/Signup/StepInfo/index.tsx:205
 msgid "Your birth date"
