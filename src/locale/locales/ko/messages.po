@@ -8407,7 +8407,7 @@ msgstr "계정을 삭제했습니다"
 
 #: src/screens/Takendown.tsx:146
 msgid "Your account has been suspended"
-msgstr "계정 일시 정지됨"
+msgstr "계정이 일시 정지되었습니다"
 
 #: src/view/com/composer/state/video.ts:429
 msgid "Your account is not yet old enough to upload videos. Please try again later."
