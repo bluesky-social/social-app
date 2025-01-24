@@ -205,6 +205,8 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.ro
       case 'ru':
         return AppLanguage.ru
+      case 'sv':
+        return AppLanguage.sv
       case 'th':
         return AppLanguage.th
       case 'tr':
