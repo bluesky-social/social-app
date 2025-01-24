@@ -5,7 +5,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isFirefox} from '#/lib/browser'
-import {clamp} from '#/lib/numbers'
+import {ConstrainedImage} from '#/view/com/util/images/AutoSizedImage'
 import {
   HLSUnsupportedError,
   VideoEmbedInnerWeb,
@@ -18,7 +18,13 @@ import {ErrorBoundary} from '../ErrorBoundary'
 import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
-export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
+export function VideoEmbed({
+  embed,
+  crop,
+}: {
+  embed: AppBskyEmbedVideo.View
+  crop?: 'none' | 'square' | 'constrained'
+}) {
   const ref = useRef<HTMLDivElement>(null)
   const {active, setActive, sendPosition, currentActiveView} =
     useActiveVideoWeb()
@@ -52,42 +58,58 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     [key],
   )
 
-  let aspectRatio = 16 / 9
-
-  if (embed.aspectRatio) {
-    const {width, height} = embed.aspectRatio
-    // min: 3/1, max: square
-    aspectRatio = clamp(width / height, 1 / 1, 3 / 1)
+  let aspectRatio: number | undefined
+  const dims = embed.aspectRatio
+  if (dims) {
+    aspectRatio = dims.width / dims.height
+    if (Number.isNaN(aspectRatio)) {
+      aspectRatio = undefined
+    }
   }
 
+  let constrained: number | undefined
+  let max: number | undefined
+  if (aspectRatio !== undefined) {
+    const ratio = 1 / 2 // max of 1:2 ratio in feeds
+    constrained = Math.max(aspectRatio, ratio)
+    max = Math.max(aspectRatio, 0.25) // max of 1:4 in thread
+  }
+  const cropDisabled = crop === 'none'
+
+  const contents = (
+    <div
+      ref={ref}
+      style={{display: 'flex', flex: 1, cursor: 'default'}}
+      onClick={evt => evt.stopPropagation()}>
+      <ErrorBoundary renderError={renderError} key={key}>
+        <ViewportObserver
+          sendPosition={sendPosition}
+          isAnyViewActive={currentActiveView !== null}>
+          <VideoEmbedInnerWeb
+            embed={embed}
+            active={active}
+            setActive={setActive}
+            onScreen={onScreen}
+            lastKnownTime={lastKnownTime}
+          />
+        </ViewportObserver>
+      </ErrorBoundary>
+    </div>
+  )
+
   return (
-    <View
-      style={[
-        a.w_full,
-        {aspectRatio},
-        {backgroundColor: 'black'},
-        a.relative,
-        a.rounded_md,
-        a.mt_xs,
-      ]}>
-      <div
-        ref={ref}
-        style={{display: 'flex', flex: 1, cursor: 'default'}}
-        onClick={evt => evt.stopPropagation()}>
-        <ErrorBoundary renderError={renderError} key={key}>
-          <ViewportObserver
-            sendPosition={sendPosition}
-            isAnyViewActive={currentActiveView !== null}>
-            <VideoEmbedInnerWeb
-              embed={embed}
-              active={active}
-              setActive={setActive}
-              onScreen={onScreen}
-              lastKnownTime={lastKnownTime}
-            />
-          </ViewportObserver>
-        </ErrorBoundary>
-      </div>
+    <View style={[a.pt_xs]}>
+      {cropDisabled ? (
+        <View style={[a.w_full, a.overflow_hidden, {aspectRatio: max ?? 1}]}>
+          {contents}
+        </View>
+      ) : (
+        <ConstrainedImage
+          fullBleed={crop === 'square'}
+          aspectRatio={constrained || 1}>
+          {contents}
+        </ConstrainedImage>
+      )}
     </View>
   )
 }

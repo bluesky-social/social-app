@@ -227,6 +227,7 @@ let ConvoMenu = ({
       />
       {latestReportableMessage ? (
         <ReportDialog
+          currentScreen={currentScreen}
           params={{
             type: 'convoMessage',
             convoId: convo.id,

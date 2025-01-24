@@ -1,7 +1,5 @@
-import React, {useContext} from 'react'
+import React from 'react'
 import {ScrollView, View} from 'react-native'
-import {DrawerGestureContext} from 'react-native-drawer-layout'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -13,6 +11,7 @@ import {
 import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
 import {useTrendingConfig} from '#/state/trending-config'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
@@ -41,13 +40,9 @@ export function Inner() {
     setTrendingDisabled(true)
   }, [setTrendingDisabled])
 
-  const drawerGesture = useContext(DrawerGestureContext) ?? Gesture.Native() // noop for web
-  const trendingScrollGesture =
-    Gesture.Native().blocksExternalGesture(drawerGesture)
-
   return error || noTopics ? null : (
     <View style={[t.atoms.border_contrast_low, a.border_t]}>
-      <GestureDetector gesture={trendingScrollGesture}>
+      <BlockDrawerGesture>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -127,7 +122,7 @@ export function Inner() {
             )}
           </View>
         </ScrollView>
-      </GestureDetector>
+      </BlockDrawerGesture>
 
       <Prompt.Basic
         control={trendingPrompt}

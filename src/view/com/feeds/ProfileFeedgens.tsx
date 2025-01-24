@@ -205,9 +205,7 @@ export const ProfileFeedgens = React.forwardRef<
         headerOffset={headerOffset}
         progressViewOffset={ios(0)}
         contentContainerStyle={isMobile && {paddingBottom: headerOffset + 100}}
-        indicatorStyle={t.name === 'light' ? 'black' : 'white'}
         removeClippedSubviews={true}
-        // @ts-ignore our .web version only -prf
         desktopFixedHeight
         onEndReached={onEndReached}
       />

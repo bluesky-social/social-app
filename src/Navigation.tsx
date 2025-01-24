@@ -86,6 +86,7 @@ import {
   StarterPackScreenShort,
 } from '#/screens/StarterPack/StarterPackScreen'
 import {Wizard} from '#/screens/StarterPack/Wizard'
+import {VideoFeed} from '#/screens/VideoFeed'
 import {useTheme} from '#/alf'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
@@ -421,6 +422,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="StarterPackEdit"
         getComponent={() => Wizard}
         options={{title: title(msg`Edit your starter pack`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="VideoFeed"
+        getComponent={() => VideoFeed}
+        options={{
+          title: title(msg`Video Feed`),
+          requireAuth: true,
+        }}
       />
     </>
   )

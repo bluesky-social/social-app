@@ -170,7 +170,7 @@ export function UserBanner({
         styles.bannerImage,
         {backgroundColor: theme.palette.default.backgroundLight},
       ]}
-      resizeMode="cover"
+      contentFit="cover"
       source={{uri: banner}}
       blurRadius={moderation?.blur ? 100 : 0}
       accessible={true}

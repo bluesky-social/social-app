@@ -214,15 +214,21 @@ func serve(cctx *cli.Context) error {
 	e.GET("/iframe/youtube.html", echo.WrapHandler(staticHandler))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)), func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			path := c.Request().URL.Path
-			maxAge := 1 * (60 * 60) // default is 1 hour
+			c.Response().Before(func() {
+				if c.Response().Status >= 300 {
+					return
+				}
 
-			// all assets in /static/js, /static/css, /static/media are content-hashed and can be cached for a long time
-			if strings.HasPrefix(path, "/static/js/") || strings.HasPrefix(path, "/static/css/") || strings.HasPrefix(path, "/static/media/") {
-				maxAge = 365 * (60 * 60 * 24) // 1 year
-			}
+				path := c.Request().URL.Path
+				maxAge := 1 * (60 * 60) // default is 1 hour
 
-			c.Response().Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%d", maxAge))
+				// all assets in /static/js, /static/css, /static/media are content-hashed and can be cached for a long time
+				if strings.HasPrefix(path, "/static/js/") || strings.HasPrefix(path, "/static/css/") || strings.HasPrefix(path, "/static/media/") {
+					maxAge = 365 * (60 * 60 * 24) // 1 year
+				}
+
+				c.Response().Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%d", maxAge))
+			})
 			return next(c)
 		}
 	})

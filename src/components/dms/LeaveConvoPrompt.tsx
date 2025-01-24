@@ -1,6 +1,6 @@
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
+import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {NavigationProp} from '#/lib/routes/types'
 import {isNative} from '#/platform/detection'
@@ -22,15 +22,10 @@ export function LeaveConvoPrompt({
   const navigation = useNavigation<NavigationProp>()
 
   const {mutate: leaveConvo} = useLeaveConvo(convoId, {
-    onSuccess: () => {
+    onMutate: () => {
       if (currentScreen === 'conversation') {
-        navigation.replace(
-          'Messages',
-          isNative
-            ? {
-                animation: 'pop',
-              }
-            : {},
+        navigation.dispatch(
+          StackActions.replace('Messages', isNative ? {animation: 'pop'} : {}),
         )
       }
     },

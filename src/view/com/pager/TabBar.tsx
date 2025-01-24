@@ -13,6 +13,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
+import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
@@ -297,57 +298,59 @@ export function TabBar({
       testID={testID}
       style={[t.atoms.bg, a.flex_row]}
       accessibilityRole="tablist">
-      <ScrollView
-        testID={`${testID}-selector`}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        ref={scrollElRef}
-        contentContainerStyle={styles.contentContainer}
-        onLayout={e => {
-          containerSize.set(e.nativeEvent.layout.width)
-        }}
-        onScrollBeginDrag={() => {
-          // Remember that you've manually messed with the tabbar scroll.
-          // This will disable auto-adjustment until after next pager swipe or item tap.
-          syncScrollState.set('unsynced')
-        }}
-        onScroll={e => {
-          scrollX.value = Math.round(e.nativeEvent.contentOffset.x)
-        }}>
-        <Animated.View
+      <BlockDrawerGesture>
+        <ScrollView
+          testID={`${testID}-selector`}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          ref={scrollElRef}
+          contentContainerStyle={styles.contentContainer}
           onLayout={e => {
-            contentSize.set(e.nativeEvent.layout.width)
+            containerSize.set(e.nativeEvent.layout.width)
           }}
-          style={{flexDirection: 'row', flexGrow: 1}}>
-          {items.map((item, i) => {
-            return (
-              <TabBarItem
-                key={i}
-                index={i}
-                testID={testID}
-                dragProgress={dragProgress}
-                item={item}
-                onPressItem={onPressItem}
-                onItemLayout={onItemLayout}
-                onTextLayout={onTextLayout}
-              />
-            )
-          })}
+          onScrollBeginDrag={() => {
+            // Remember that you've manually messed with the tabbar scroll.
+            // This will disable auto-adjustment until after next pager swipe or item tap.
+            syncScrollState.set('unsynced')
+          }}
+          onScroll={e => {
+            scrollX.value = Math.round(e.nativeEvent.contentOffset.x)
+          }}>
           <Animated.View
-            style={[
-              indicatorStyle,
-              {
-                position: 'absolute',
-                left: 0,
-                bottom: 0,
-                right: 0,
-                borderBottomWidth: 2,
-                borderColor: t.palette.primary_500,
-              },
-            ]}
-          />
-        </Animated.View>
-      </ScrollView>
+            onLayout={e => {
+              contentSize.set(e.nativeEvent.layout.width)
+            }}
+            style={{flexDirection: 'row', flexGrow: 1}}>
+            {items.map((item, i) => {
+              return (
+                <TabBarItem
+                  key={i}
+                  index={i}
+                  testID={testID}
+                  dragProgress={dragProgress}
+                  item={item}
+                  onPressItem={onPressItem}
+                  onItemLayout={onItemLayout}
+                  onTextLayout={onTextLayout}
+                />
+              )
+            })}
+            <Animated.View
+              style={[
+                indicatorStyle,
+                {
+                  position: 'absolute',
+                  left: 0,
+                  bottom: 0,
+                  right: 0,
+                  borderBottomWidth: 2,
+                  borderColor: t.palette.primary_500,
+                },
+              ]}
+            />
+          </Animated.View>
+        </ScrollView>
+      </BlockDrawerGesture>
       <View style={[t.atoms.border_contrast_low, styles.outerBottomBorder]} />
     </View>
   )

@@ -4,18 +4,27 @@ import * as persisted from '#/state/persisted'
 
 type StateContext = {
   trendingDisabled: Exclude<persisted.Schema['trendingDisabled'], undefined>
+  trendingVideoDisabled: Exclude<
+    persisted.Schema['trendingVideoDisabled'],
+    undefined
+  >
 }
 type ApiContext = {
   setTrendingDisabled(
     hidden: Exclude<persisted.Schema['trendingDisabled'], undefined>,
   ): void
+  setTrendingVideoDisabled(
+    hidden: Exclude<persisted.Schema['trendingVideoDisabled'], undefined>,
+  ): void
 }
 
 const StateContext = React.createContext<StateContext>({
   trendingDisabled: Boolean(persisted.defaults.trendingDisabled),
+  trendingVideoDisabled: Boolean(persisted.defaults.trendingVideoDisabled),
 })
 const ApiContext = React.createContext<ApiContext>({
   setTrendingDisabled() {},
+  setTrendingVideoDisabled() {},
 })
 
 function usePersistedBooleanValue<T extends keyof persisted.Schema>(key: T) {
@@ -43,14 +52,19 @@ function usePersistedBooleanValue<T extends keyof persisted.Schema>(key: T) {
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [trendingDisabled, setTrendingDisabled] =
     usePersistedBooleanValue('trendingDisabled')
+  const [trendingVideoDisabled, setTrendingVideoDisabled] =
+    usePersistedBooleanValue('trendingVideoDisabled')
 
   /*
    * Context
    */
-  const state = React.useMemo(() => ({trendingDisabled}), [trendingDisabled])
+  const state = React.useMemo(
+    () => ({trendingDisabled, trendingVideoDisabled}),
+    [trendingDisabled, trendingVideoDisabled],
+  )
   const api = React.useMemo(
-    () => ({setTrendingDisabled}),
-    [setTrendingDisabled],
+    () => ({setTrendingDisabled, setTrendingVideoDisabled}),
+    [setTrendingDisabled, setTrendingVideoDisabled],
   )
 
   return (

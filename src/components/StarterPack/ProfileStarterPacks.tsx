@@ -136,7 +136,6 @@ export const ProfileStarterPacks = React.forwardRef<
         headerOffset={headerOffset}
         progressViewOffset={ios(0)}
         contentContainerStyle={{paddingBottom: headerOffset + bottomBarOffset}}
-        indicatorStyle={t.name === 'light' ? 'black' : 'white'}
         removeClippedSubviews={true}
         desktopFixedHeight
         onEndReached={onEndReached}

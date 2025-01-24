@@ -1,17 +1,28 @@
 import {ChatBskyConvoLeaveConvo, ChatBskyConvoListConvos} from '@atproto/api'
-import {useMutation, useQueryClient} from '@tanstack/react-query'
+import {
+  useMutation,
+  useMutationState,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useAgent} from '#/state/session'
 import {RQKEY as CONVO_LIST_KEY} from './list-conversations'
 
+const RQKEY_ROOT = 'leave-convo'
+export function RQKEY(convoId: string | undefined) {
+  return [RQKEY_ROOT, convoId]
+}
+
 export function useLeaveConvo(
   convoId: string | undefined,
   {
     onSuccess,
+    onMutate,
     onError,
   }: {
+    onMutate?: () => void
     onSuccess?: (data: ChatBskyConvoLeaveConvo.OutputSchema) => void
     onError?: (error: Error) => void
   },
@@ -20,6 +31,7 @@ export function useLeaveConvo(
   const agent = useAgent()
 
   return useMutation({
+    mutationKey: RQKEY(convoId),
     mutationFn: async () => {
       if (!convoId) throw new Error('No convoId provided')
 
@@ -51,6 +63,7 @@ export function useLeaveConvo(
           }
         },
       )
+      onMutate?.()
       return {prevPages}
     },
     onSuccess: data => {
@@ -76,4 +89,21 @@ export function useLeaveConvo(
       onError?.(error)
     },
   })
+}
+
+/**
+ * Gets currently pending and successful leave convo mutations
+ *
+ * @returns Array of `convoId`
+ */
+export function useLeftConvos() {
+  const pending = useMutationState({
+    filters: {mutationKey: [RQKEY_ROOT], status: 'pending'},
+    select: mutation => mutation.options.mutationKey?.[1] as string | undefined,
+  })
+  const success = useMutationState({
+    filters: {mutationKey: [RQKEY_ROOT], status: 'success'},
+    select: mutation => mutation.options.mutationKey?.[1] as string | undefined,
+  })
+  return [...pending, ...success].filter(id => id !== undefined)
 }

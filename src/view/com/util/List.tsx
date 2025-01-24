@@ -152,6 +152,9 @@ let List = React.forwardRef<ListMethods, ListProps>(
 
     return (
       <FlatList_INTERNAL
+        showsVerticalScrollIndicator={!isAndroid} // overridable
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
         {...props}
         automaticallyAdjustsScrollIndicatorInsets={
           automaticallyAdjustsScrollIndicatorInsets
@@ -161,14 +164,12 @@ let List = React.forwardRef<ListMethods, ListProps>(
           right: 1,
           ...props.scrollIndicatorInsets,
         }}
+        indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
         contentOffset={contentOffset}
         refreshControl={refreshControl}
         onScroll={scrollHandler}
         scrollsToTop={!activeLightbox}
         scrollEventThrottle={1}
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
-        showsVerticalScrollIndicator={!isAndroid}
         style={style}
         // @ts-expect-error FlatList_INTERNAL ref type is wrong -sfn
         ref={ref}

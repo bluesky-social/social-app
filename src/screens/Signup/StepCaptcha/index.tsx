@@ -80,9 +80,8 @@ export function StepCaptcha() {
         <View
           style={[
             a.w_full,
-            a.pb_xl,
             a.overflow_hidden,
-            {minHeight: 500},
+            {minHeight: 510},
             completed && [a.align_center, a.justify_center],
           ]}>
           {!completed ? (

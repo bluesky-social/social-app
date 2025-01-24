@@ -14,6 +14,7 @@ import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
+import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {List} from '#/view/com/util/List'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
@@ -94,12 +95,19 @@ export function MessagesScreen({navigation, route}: Props) {
 
   useRefreshOnFocus(refetch)
 
+  const leftConvos = useLeftConvos()
+
   const conversations = useMemo(() => {
     if (data?.pages) {
-      return data.pages.flatMap(page => page.convos)
+      return (
+        data.pages
+          .flatMap(page => page.convos)
+          // filter out convos that are actively being left
+          .filter(convo => !leftConvos.includes(convo.id))
+      )
     }
     return []
-  }, [data])
+  }, [data, leftConvos])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)

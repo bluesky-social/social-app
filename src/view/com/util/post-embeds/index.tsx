@@ -237,7 +237,16 @@ export function PostEmbeds({
   if (AppBskyEmbedVideo.isView(embed)) {
     return (
       <ContentHider modui={moderation?.ui('contentMedia')}>
-        <VideoEmbed embed={embed} />
+        <VideoEmbed
+          embed={embed}
+          crop={
+            viewContext === PostEmbedViewContext.ThreadHighlighted
+              ? 'none'
+              : viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
+              ? 'square'
+              : 'constrained'
+          }
+        />
       </ContentHider>
     )
   }

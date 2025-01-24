@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo} from 'react'
+import React, {useCallback, useMemo} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {
@@ -20,7 +20,6 @@ import {
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {ComposeIcon2} from '#/lib/icons'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {combinedDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {isInvalidHandle} from '#/lib/strings/handles'
@@ -196,6 +195,7 @@ function ProfileScreenLoaded({
   const postsSectionRef = React.useRef<SectionRef>(null)
   const repliesSectionRef = React.useRef<SectionRef>(null)
   const mediaSectionRef = React.useRef<SectionRef>(null)
+  const videosSectionRef = React.useRef<SectionRef>(null)
   const likesSectionRef = React.useRef<SectionRef>(null)
   const feedsSectionRef = React.useRef<SectionRef>(null)
   const listsSectionRef = React.useRef<SectionRef>(null)
@@ -219,6 +219,7 @@ function ProfileScreenLoaded({
   const showPostsTab = true
   const showRepliesTab = hasSession
   const showMediaTab = !hasLabeler
+  const showVideosTab = !hasLabeler
   const showLikesTab = isMe
   const showFeedsTab = isMe || (profile.associated?.feedgens || 0) > 0
   const showStarterPacksTab =
@@ -232,6 +233,7 @@ function ProfileScreenLoaded({
     showPostsTab ? _(msg`Posts`) : undefined,
     showRepliesTab ? _(msg`Replies`) : undefined,
     showMediaTab ? _(msg`Media`) : undefined,
+    showVideosTab ? _(msg`Videos`) : undefined,
     showLikesTab ? _(msg`Likes`) : undefined,
     showFeedsTab ? _(msg`Feeds`) : undefined,
     showStarterPacksTab ? _(msg`Starter Packs`) : undefined,
@@ -243,6 +245,7 @@ function ProfileScreenLoaded({
   let postsIndex: number | null = null
   let repliesIndex: number | null = null
   let mediaIndex: number | null = null
+  let videosIndex: number | null = null
   let likesIndex: number | null = null
   let feedsIndex: number | null = null
   let starterPacksIndex: number | null = null
@@ -258,6 +261,9 @@ function ProfileScreenLoaded({
   }
   if (showMediaTab) {
     mediaIndex = nextIndex++
+  }
+  if (showVideosTab) {
+    videosIndex = nextIndex++
   }
   if (showLikesTab) {
     likesIndex = nextIndex++
@@ -282,6 +288,8 @@ function ProfileScreenLoaded({
         repliesSectionRef.current?.scrollToTop()
       } else if (index === mediaIndex) {
         mediaSectionRef.current?.scrollToTop()
+      } else if (index === videosIndex) {
+        videosSectionRef.current?.scrollToTop()
       } else if (index === likesIndex) {
         likesSectionRef.current?.scrollToTop()
       } else if (index === feedsIndex) {
@@ -297,6 +305,7 @@ function ProfileScreenLoaded({
       postsIndex,
       repliesIndex,
       mediaIndex,
+      videosIndex,
       likesIndex,
       feedsIndex,
       listsIndex,
@@ -436,6 +445,19 @@ function ProfileScreenLoaded({
               />
             )
           : null}
+        {showVideosTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <ProfileFeedSection
+                ref={videosSectionRef}
+                feed={`author|${profile.did}|posts_with_video`}
+                headerHeight={headerHeight}
+                isFocused={isFocused}
+                scrollElRef={scrollElRef as ListRef}
+                ignoreFilterFor={profile.did}
+                setScrollViewTag={setScrollViewTag}
+              />
+            )
+          : null}
         {showLikesTab
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileFeedSection
@@ -497,7 +519,6 @@ function ProfileScreenLoaded({
           accessibilityHint=""
         />
       )}
-      <TestGates />
     </ScreenHider>
   )
 }
@@ -556,77 +577,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 })
-
-const shouldExposeToGate2 = Math.random() < 0.2
-
-// --- Temporary: we're testing our Statsig setup ---
-let TestGates = React.memo(function TestGates() {
-  const gate = useGate()
-
-  useEffect(() => {
-    logEvent('test:all:always', {})
-    if (Math.random() < 0.2) {
-      logEvent('test:all:sometimes', {})
-    }
-    if (Math.random() < 0.1) {
-      logEvent('test:all:boosted_by_gate1', {
-        reason: 'base',
-      })
-    }
-    if (Math.random() < 0.1) {
-      logEvent('test:all:boosted_by_gate2', {
-        reason: 'base',
-      })
-    }
-    if (Math.random() < 0.1) {
-      logEvent('test:all:boosted_by_both', {
-        reason: 'base',
-      })
-    }
-  }, [])
-
-  return [
-    gate('test_gate_1') ? <TestGate1 /> : null,
-    shouldExposeToGate2 && gate('test_gate_2') ? <TestGate2 /> : null,
-  ]
-})
-
-function TestGate1() {
-  useEffect(() => {
-    logEvent('test:gate1:always', {})
-    if (Math.random() < 0.2) {
-      logEvent('test:gate1:sometimes', {})
-    }
-    if (Math.random() < 0.5) {
-      logEvent('test:all:boosted_by_gate1', {
-        reason: 'gate1',
-      })
-    }
-    if (Math.random() < 0.5) {
-      logEvent('test:all:boosted_by_both', {
-        reason: 'gate1',
-      })
-    }
-  }, [])
-  return null
-}
-
-function TestGate2() {
-  useEffect(() => {
-    logEvent('test:gate2:always', {})
-    if (Math.random() < 0.2) {
-      logEvent('test:gate2:sometimes', {})
-    }
-    if (Math.random() < 0.5) {
-      logEvent('test:all:boosted_by_gate2', {
-        reason: 'gate2',
-      })
-    }
-    if (Math.random() < 0.5) {
-      logEvent('test:all:boosted_by_both', {
-        reason: 'gate2',
-      })
-    }
-  }, [])
-  return null
-}

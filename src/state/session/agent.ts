@@ -83,7 +83,12 @@ export async function createAgentAndLogin(
   ) => void,
 ) {
   const agent = new BskyAppAgent({service})
-  await agent.login({identifier, password, authFactorToken})
+  await agent.login({
+    identifier,
+    password,
+    authFactorToken,
+    allowTakendown: true,
+  })
 
   const account = agentToSessionAccountOrThrow(agent)
   const gates = tryFetchGates(account.did, 'prefer-fresh-gates')

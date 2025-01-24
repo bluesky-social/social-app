@@ -45,6 +45,7 @@ export const ProfileFeedSection = React.forwardRef<
   const [hasNew, setHasNew] = React.useState(false)
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
   const shouldUseAdjustedNumToRender = feed.endsWith('posts_and_author_threads')
+  const isVideoFeed = isNative && feed.endsWith('posts_with_video')
   const adjustedInitialNumToRender = useInitialNumToRender({
     screenHeightOffset: headerHeight,
   })
@@ -84,11 +85,12 @@ export const ProfileFeedSection = React.forwardRef<
         renderEmptyState={renderPostsEmpty}
         headerOffset={headerHeight}
         progressViewOffset={ios(0)}
-        renderEndOfFeed={ProfileEndOfFeed}
+        renderEndOfFeed={isVideoFeed ? undefined : ProfileEndOfFeed}
         ignoreFilterFor={ignoreFilterFor}
         initialNumToRender={
           shouldUseAdjustedNumToRender ? adjustedInitialNumToRender : undefined
         }
+        isVideoFeed={isVideoFeed}
       />
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn

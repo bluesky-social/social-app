@@ -58,6 +58,7 @@ export const Content = React.memo(function Content({
   contentContainerStyle,
   ...props
 }: ContentProps) {
+  const t = useTheme()
   const {footerHeight} = useShellLayout()
   const animatedProps = useAnimatedProps(() => {
     return {
@@ -73,6 +74,7 @@ export const Content = React.memo(function Content({
     <Animated.ScrollView
       id="content"
       automaticallyAdjustsScrollIndicatorInsets={false}
+      indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
       // sets the scroll inset to the height of the footer
       animatedProps={animatedProps}
       style={[scrollViewStyles.common, style]}
