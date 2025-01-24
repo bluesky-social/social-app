@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-23 00:43+0000\n"
-"PO-Revision-Date: 2025-01-23 08:11+0000\n"
+"POT-Creation-Date: 2025-01-24 00:43+0000\n"
+"PO-Revision-Date: 2025-01-24 07:40+0000\n"
 "Last-Translator: Michele Locati <michele@locati.it>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -182,11 +182,11 @@ msgstr "{count} elementi non letti"
 msgid "{displayName}'s Starter Pack"
 msgstr "Starter Pack di {displayName}"
 
-#: src/screens/SignupQueued.tsx:219
+#: src/screens/SignupQueued.tsx:216
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
 msgstr "{estimatedTimeHrs, plural, one {ora} other {ore}}"
 
-#: src/screens/SignupQueued.tsx:225
+#: src/screens/SignupQueued.tsx:222
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr "{estimatedTimeMins, plural, one {minuto} other {minuti}}"
 
@@ -825,6 +825,15 @@ msgstr "Etichetta \"{0}\" del ricorso"
 msgid "Appeal submitted"
 msgstr "Appello inviato"
 
+#: src/screens/Takendown.tsx:111
+#: src/screens/Takendown.tsx:144
+msgid "Appeal suspension"
+msgstr "Revisione sospensione"
+
+#: src/screens/Takendown.tsx:114
+msgid "Appeal Suspension"
+msgstr "Revisione sospensione"
+
 #: src/screens/Messages/components/ChatDisabled.tsx:51
 #: src/screens/Messages/components/ChatDisabled.tsx:53
 #: src/screens/Messages/components/ChatDisabled.tsx:99
@@ -994,11 +1003,11 @@ msgstr "Bloccare account?"
 msgid "Block accounts"
 msgstr "Blocca gli account"
 
-#: src/components/dms/ReportDialog.tsx:326
+#: src/components/dms/ReportDialog.tsx:325
 msgid "Block and Delete"
 msgstr "Blocca ed elimina"
 
-#: src/components/dms/ReportDialog.tsx:344
+#: src/components/dms/ReportDialog.tsx:343
 msgid "Block and/or delete this conversation"
 msgstr "Blocca e/o elimina questa conversazione"
 
@@ -1010,12 +1019,12 @@ msgstr "Lista di account bloccati"
 msgid "Block these accounts?"
 msgstr "Vuoi bloccare questi account?"
 
-#: src/components/dms/ReportDialog.tsx:348
-#: src/components/dms/ReportDialog.tsx:351
+#: src/components/dms/ReportDialog.tsx:347
+#: src/components/dms/ReportDialog.tsx:350
 msgid "Block user"
 msgstr "Blocca utente"
 
-#: src/components/dms/ReportDialog.tsx:330
+#: src/components/dms/ReportDialog.tsx:329
 msgid "Block User"
 msgstr "Blocca utente"
 
@@ -1082,6 +1091,10 @@ msgstr "Bluesky è una rete aperta che ti permette di scegliere il fornitore dei
 #: src/components/ProgressGuide/List.tsx:70
 msgid "Bluesky is better with friends!"
 msgstr "Bluesky è meglio con gli amici!"
+
+#: src/screens/Takendown.tsx:217
+msgid "Bluesky Social Terms of Service"
+msgstr "Termini di servizio di Bluesky Social"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:299
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -1188,6 +1201,8 @@ msgstr "Fotocamera"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:76
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:83
 #: src/screens/Settings/Settings.tsx:260
+#: src/screens/Takendown.tsx:99
+#: src/screens/Takendown.tsx:102
 #: src/view/com/composer/Composer.tsx:923
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
@@ -1436,8 +1451,8 @@ msgstr "Clop 🐴 clop 🐴"
 #: src/components/dialogs/GifSelect.tsx:281
 #: src/components/dialogs/VerifyEmailDialog.tsx:289
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:265
-#: src/components/dms/ReportDialog.tsx:373
-#: src/components/dms/ReportDialog.tsx:382
+#: src/components/dms/ReportDialog.tsx:372
+#: src/components/dms/ReportDialog.tsx:381
 #: src/components/NewskieDialog.tsx:146
 #: src/components/NewskieDialog.tsx:153
 #: src/components/ProgressGuide/FollowDialog.tsx:429
@@ -1780,7 +1795,7 @@ msgid "Copyright Policy"
 msgstr "Politica sul diritto d'autore"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:33
-#: src/components/dms/ReportDialog.tsx:309
+#: src/components/dms/ReportDialog.tsx:308
 msgid "Could not leave chat"
 msgstr "Errore nell'abbandonare la conversazione"
 
@@ -1947,12 +1962,12 @@ msgstr "Eliminare la password per app?"
 msgid "Delete chat declaration record"
 msgstr "Elimina il record della dichiarazione della chat"
 
-#: src/components/dms/ReportDialog.tsx:354
-#: src/components/dms/ReportDialog.tsx:357
+#: src/components/dms/ReportDialog.tsx:353
+#: src/components/dms/ReportDialog.tsx:356
 msgid "Delete conversation"
 msgstr "Elimina conversazione"
 
-#: src/components/dms/ReportDialog.tsx:328
+#: src/components/dms/ReportDialog.tsx:327
 msgid "Delete Conversation"
 msgstr "Elimina conversazione"
 
@@ -2176,7 +2191,7 @@ msgstr "Dominio verificato!"
 
 #: src/components/dialogs/BirthDateSettings.tsx:118
 #: src/components/dialogs/BirthDateSettings.tsx:124
-#: src/components/dms/ReportDialog.tsx:324
+#: src/components/dms/ReportDialog.tsx:323
 #: src/components/forms/DateField/index.tsx:77
 #: src/components/forms/DateField/index.tsx:83
 #: src/screens/Onboarding/StepProfile/index.tsx:330
@@ -2640,7 +2655,7 @@ msgstr "Espandi la lista di utenti"
 msgid "Expand or collapse the full post you are replying to"
 msgstr "Espandi o comprimi il post a cui stai rispondendo"
 
-#: src/lib/api/index.ts:400
+#: src/lib/api/index.ts:405
 msgid "Expected uri to resolve to a record"
 msgstr "L'URI dovrebbe risolvere in un record"
 
@@ -3692,7 +3707,7 @@ msgstr "Deseleziona tutte per vedere qualsiasi lingua."
 msgid "Leaving Bluesky"
 msgstr "Stai lasciando Bluesky"
 
-#: src/screens/SignupQueued.tsx:140
+#: src/screens/SignupQueued.tsx:155
 msgid "left to go."
 msgstr "mancanti."
 
@@ -3877,11 +3892,14 @@ msgstr "Log"
 msgid "Log in or sign up"
 msgstr "Accedi o Iscriviti"
 
-#: src/screens/SignupQueued.tsx:168
-#: src/screens/SignupQueued.tsx:171
-#: src/screens/SignupQueued.tsx:196
-#: src/screens/SignupQueued.tsx:199
+#: src/screens/SignupQueued.tsx:93
+#: src/screens/SignupQueued.tsx:96
+#: src/screens/Takendown.tsx:85
 msgid "Log out"
+msgstr "Esci"
+
+#: src/screens/Takendown.tsx:88
+msgid "Log Out"
 msgstr "Esci"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:78
@@ -4807,7 +4825,7 @@ msgstr "Altro account"
 msgid "Other..."
 msgstr "Altro..."
 
-#: src/components/dms/ReportDialog.tsx:340
+#: src/components/dms/ReportDialog.tsx:339
 msgid "Our moderation team has recieved your report."
 msgstr "Il nostro team di moderazione ha ricevuto la segnalazione."
 
@@ -5330,6 +5348,11 @@ msgstr "Leggi l'informativa sulla privacy di Bluesky"
 msgid "Read the Bluesky Terms of Service"
 msgstr "Leggi i termini di servizio di Bluesky"
 
+#: src/screens/Takendown.tsx:162
+#: src/screens/Takendown.tsx:170
+msgid "Reason for appeal"
+msgstr "Motivo della richiesta di revisione della sospensione"
+
 #: src/components/dms/ReportDialog.tsx:210
 msgid "Reason:"
 msgstr "Motivo:"
@@ -5606,7 +5629,7 @@ msgstr "Segnala post"
 msgid "Report starter pack"
 msgstr "Segnala starter pack"
 
-#: src/components/dms/ReportDialog.tsx:337
+#: src/components/dms/ReportDialog.tsx:336
 msgid "Report submitted"
 msgstr "Segnalazione inviata"
 
@@ -6097,8 +6120,8 @@ msgstr "Invia messaggio"
 msgid "Send post to..."
 msgstr "Invia post a..."
 
-#: src/components/dms/ReportDialog.tsx:270
-#: src/components/dms/ReportDialog.tsx:273
+#: src/components/dms/ReportDialog.tsx:269
+#: src/components/dms/ReportDialog.tsx:272
 #: src/components/ReportDialog/SubmitView.tsx:221
 #: src/components/ReportDialog/SubmitView.tsx:225
 msgid "Send report"
@@ -6577,6 +6600,14 @@ msgstr "Cronologia"
 msgid "Submit"
 msgstr "Invia"
 
+#: src/screens/Takendown.tsx:70
+msgid "Submit appeal"
+msgstr "Invia richiesta"
+
+#: src/screens/Takendown.tsx:76
+msgid "Submit Appeal"
+msgstr "Invia richiesta"
+
 #: src/view/screens/ProfileList.tsx:712
 msgid "Subscribe"
 msgstr "Iscriviti"
@@ -6746,6 +6777,10 @@ msgstr "I termini usati violano gli standard della comunità"
 #: src/components/dialogs/MutedWords.tsx:266
 msgid "Text & tags"
 msgstr "Testo e tag"
+
+#: src/components/dms/ReportDialog.tsx:227
+msgid "Text field"
+msgstr "Campo di testo"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:263
 #: src/screens/Messages/components/ChatDisabled.tsx:108
@@ -6935,7 +6970,7 @@ msgstr "Si è verificato un problema durante il recupero delle tue informazioni 
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
 msgstr "Si è verificato un problema durante la rimozione di questo feed. Verifica la tua connessione a internet e riprova."
 
-#: src/components/dms/ReportDialog.tsx:258
+#: src/components/dms/ReportDialog.tsx:257
 #: src/components/ReportDialog/SubmitView.tsx:88
 msgid "There was an issue sending your report. Please check your internet connection."
 msgstr "Si è verificato un problema durante l'invio della segnalazione. Verifica la tua connessione a internet."
@@ -6977,7 +7012,7 @@ msgstr "Si è verificato un problema. Verifica la tua connessione a internet e p
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr "Si è verificato un problema imprevisto nell'applicazione. Facci sapere se ti è successo!"
 
-#: src/screens/SignupQueued.tsx:115
+#: src/screens/SignupQueued.tsx:130
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "C'è stata un'ondata di nuovi utenti su Bluesky! Attiveremo il tuo account il prima possibile."
 
@@ -7532,12 +7567,12 @@ msgstr "Carica dai file"
 msgid "Upload from Library"
 msgstr "Carica dalla galleria"
 
-#: src/lib/api/index.ts:296
+#: src/lib/api/index.ts:301
 msgid "Uploading images..."
 msgstr "Caricamento immagini..."
 
-#: src/lib/api/index.ts:350
-#: src/lib/api/index.ts:374
+#: src/lib/api/index.ts:355
+#: src/lib/api/index.ts:379
 msgid "Uploading link thumbnail..."
 msgstr "Caricamento miniatura del link..."
 
@@ -7874,7 +7909,7 @@ msgstr "Nessun risultato per questo argomento."
 msgid "We couldn't load this conversation"
 msgstr "Non riusciamo a caricare questa conversazione"
 
-#: src/screens/SignupQueued.tsx:145
+#: src/screens/SignupQueued.tsx:160
 msgid "We estimate {estimatedTime} until your account is ready."
 msgstr "Stimiamo {estimatedTime} prima che il tuo account sia pronto."
 
@@ -7906,7 +7941,7 @@ msgstr "Al momento non è stato possibile caricare gli etichettatori configurati
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
 msgstr "Non siamo riusciti a connetterci. Riprova per continuare a configurare il tuo account. Se il problema persiste, puoi ignorare questo passaggio."
 
-#: src/screens/SignupQueued.tsx:149
+#: src/screens/SignupQueued.tsx:164
 msgid "We will let you know when your account is ready."
 msgstr "Ti faremo sapere quando il tuo account sarà pronto."
 
@@ -8000,6 +8035,10 @@ msgstr "Ops!"
 msgid "Whoops! Trending videos failed to load."
 msgstr "Ops! Non è stato possibile caricare i video di tendenza."
 
+#: src/screens/Takendown.tsx:173
+msgid "Why are you appealing?"
+msgstr "Perché richiedi la revisione?"
+
 #: src/components/ReportDialog/SelectReportOptionView.tsx:42
 msgid "Why should this content be reviewed?"
 msgstr "Perché questo contenuto dovrebbe essere esaminato?"
@@ -8088,7 +8127,7 @@ msgstr "io"
 msgid "You"
 msgstr "Io"
 
-#: src/screens/SignupQueued.tsx:142
+#: src/screens/SignupQueued.tsx:157
 msgid "You are in line."
 msgstr "Sei nella lista."
 
@@ -8326,7 +8365,7 @@ msgstr "Riceverai un'email all'indirizzo <0>{0}</0> per verificare la tua identi
 msgid "You'll stay updated with these feeds"
 msgstr "Resterai aggiornato su questi feed"
 
-#: src/screens/SignupQueued.tsx:112
+#: src/screens/SignupQueued.tsx:127
 msgid "You're in line"
 msgstr "Sei in fila"
 
@@ -8372,6 +8411,10 @@ msgstr "Il tuo account"
 msgid "Your account has been deleted"
 msgstr "Il tuo account è stato eliminato"
 
+#: src/screens/Takendown.tsx:146
+msgid "Your account has been suspended"
+msgstr "Il tuo account è stato sospeso"
+
 #: src/view/com/composer/state/video.ts:429
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Il tuo account è troppo recente per caricare video. Riprova più tardi."
@@ -8379,6 +8422,14 @@ msgstr "Il tuo account è troppo recente per caricare video. Riprova più tardi.
 #: src/screens/Settings/components/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "L'archivio del tuo account, che contiene tutti i record di dati pubblici, può essere scaricato come file \"CAR\". Questo file non include elementi multimediali incorporati, come immagini o dati privati, che devono essere recuperati separatamente."
+
+#: src/screens/Takendown.tsx:214
+msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
+msgstr "Abbiamo riscontrato che il tuo account viola i <0>termini di servizio di Bluesky Social</0>. Ti abbiamo inviato un'email che descrive la violazione e il periodo di sospensione, se applicabile. Se ritieni che questa decisione sia stata presa per errore, puoi richiedere una revisione della sospensione."
+
+#: src/screens/Takendown.tsx:154
+msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
+msgstr "La tua richiesta di revisione è stata inviata. Riceverai un'email se la revisione avrà esito positivo."
 
 #: src/screens/Signup/StepInfo/index.tsx:205
 msgid "Your birth date"
