@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-22 20:43+0100\n"
+"PO-Revision-Date: 2025-01-24 14:48+0100\n"
 "Last-Translator: Stanislas Signoud (@signez.fr)\n"
 "Language-Team: Stanislas Signoud (@signez.fr), surfdude29, Cereza Auclair (@cereza.zone)\n"
 "Plural-Forms: \n"
@@ -822,11 +822,11 @@ msgstr "Appel soumis"
 #: src/screens/Takendown.tsx:111
 #: src/screens/Takendown.tsx:144
 msgid "Appeal suspension"
-msgstr ""
+msgstr "Faire appel de la suspension"
 
 #: src/screens/Takendown.tsx:114
 msgid "Appeal Suspension"
-msgstr ""
+msgstr "Faire appel de la suspension"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:51
 #: src/screens/Messages/components/ChatDisabled.tsx:53
@@ -999,11 +999,11 @@ msgstr "Bloquer ces comptes"
 
 #: src/components/dms/ReportDialog.tsx:325
 msgid "Block and Delete"
-msgstr ""
+msgstr "Bloquer et supprimer"
 
 #: src/components/dms/ReportDialog.tsx:343
 msgid "Block and/or delete this conversation"
-msgstr ""
+msgstr "Bloquer et/ou supprimer cette conversation"
 
 #: src/view/screens/ProfileList.tsx:760
 msgid "Block list"
@@ -1016,11 +1016,11 @@ msgstr "Bloquer ces comptes ?"
 #: src/components/dms/ReportDialog.tsx:347
 #: src/components/dms/ReportDialog.tsx:350
 msgid "Block user"
-msgstr ""
+msgstr "Bloquer le compte"
 
 #: src/components/dms/ReportDialog.tsx:329
 msgid "Block User"
-msgstr ""
+msgstr "Bloquer le compte"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:83
 msgid "Blocked"
@@ -1088,7 +1088,7 @@ msgstr "Bluesky est meilleur entre ami·e·s !"
 
 #: src/screens/Takendown.tsx:217
 msgid "Bluesky Social Terms of Service"
-msgstr ""
+msgstr "Conditions générales de Bluesky Social"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:299
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -1959,11 +1959,11 @@ msgstr "Supprimer la déclaration d’ouverture aux discussions"
 #: src/components/dms/ReportDialog.tsx:353
 #: src/components/dms/ReportDialog.tsx:356
 msgid "Delete conversation"
-msgstr ""
+msgstr "Supprimer la conversation"
 
 #: src/components/dms/ReportDialog.tsx:327
 msgid "Delete Conversation"
-msgstr ""
+msgstr "Supprimer la conversation"
 
 #: src/components/dms/MessageMenu.tsx:124
 msgid "Delete for me"
@@ -3890,11 +3890,11 @@ msgstr "Se connecter ou s’inscrire"
 #: src/screens/SignupQueued.tsx:96
 #: src/screens/Takendown.tsx:85
 msgid "Log out"
-msgstr "Déconnexion"
+msgstr "Se déconnecter"
 
 #: src/screens/Takendown.tsx:88
 msgid "Log Out"
-msgstr ""
+msgstr "Se déconnecter"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:78
 msgid "Logged-out visibility"
@@ -4821,7 +4821,7 @@ msgstr "Autre…"
 
 #: src/components/dms/ReportDialog.tsx:339
 msgid "Our moderation team has recieved your report."
-msgstr ""
+msgstr "Notre équipe de modération a reçu votre signalement."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
@@ -5345,7 +5345,7 @@ msgstr "Lire les conditions d’utilisation de Bluesky"
 #: src/screens/Takendown.tsx:162
 #: src/screens/Takendown.tsx:170
 msgid "Reason for appeal"
-msgstr ""
+msgstr "Raison de l’appel"
 
 #: src/components/dms/ReportDialog.tsx:210
 msgid "Reason:"
@@ -5625,7 +5625,7 @@ msgstr "Signaler le kit de démarrage"
 
 #: src/components/dms/ReportDialog.tsx:336
 msgid "Report submitted"
-msgstr ""
+msgstr "Signalement envoyé"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:41
 msgid "Report this content"
@@ -6596,11 +6596,11 @@ msgstr "Envoyer"
 
 #: src/screens/Takendown.tsx:70
 msgid "Submit appeal"
-msgstr ""
+msgstr "Faire appel"
 
 #: src/screens/Takendown.tsx:76
 msgid "Submit Appeal"
-msgstr ""
+msgstr "Faire appel"
 
 #: src/view/screens/ProfileList.tsx:712
 msgid "Subscribe"
@@ -6774,7 +6774,7 @@ msgstr "Texte et mots-clés"
 
 #: src/components/dms/ReportDialog.tsx:227
 msgid "Text field"
-msgstr ""
+msgstr "Champ de texte"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:263
 #: src/screens/Messages/components/ChatDisabled.tsx:108
@@ -8031,7 +8031,7 @@ msgstr "Oups ! Les vidéos tendances n’ont pas réussi à se charger."
 
 #: src/screens/Takendown.tsx:173
 msgid "Why are you appealing?"
-msgstr ""
+msgstr "Pourquoi faites-vous appel ?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:42
 msgid "Why should this content be reviewed?"
@@ -8407,7 +8407,7 @@ msgstr "Votre compte a été supprimé"
 
 #: src/screens/Takendown.tsx:146
 msgid "Your account has been suspended"
-msgstr ""
+msgstr "Votre compte a été suspendu"
 
 #: src/view/com/composer/state/video.ts:429
 msgid "Your account is not yet old enough to upload videos. Please try again later."
@@ -8419,11 +8419,11 @@ msgstr "Le dépôt de votre compte, qui contient toutes les données publiques, 
 
 #: src/screens/Takendown.tsx:214
 msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
-msgstr ""
+msgstr "Votre compte a été considéré comme violant les <0>Conditions générales de Bluesky Social</0>. Un e-mail vous a été envoyé résumant les violations spécifiques et la période de suspension, le cas échéant. Vous pouvez faire appel de cette décision si vous pensez qu’elle a été prise par erreur."
 
 #: src/screens/Takendown.tsx:154
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
-msgstr ""
+msgstr "Votre appel a été envoyé. Si votre appel est réussi, vous recevrez un e-mail."
 
 #: src/screens/Signup/StepInfo/index.tsx:205
 msgid "Your birth date"
