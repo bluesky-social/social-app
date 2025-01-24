@@ -75,6 +75,7 @@ module.exports = function (config) {
             'an',
             'ast',
             'ca',
+            'da',
             'de',
             'el',
             'es',
