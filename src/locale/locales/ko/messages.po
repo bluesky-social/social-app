@@ -822,11 +822,11 @@ msgstr "이의신청을 제출했습니다"
 #: src/screens/Takendown.tsx:111
 #: src/screens/Takendown.tsx:144
 msgid "Appeal suspension"
-msgstr "게시 중단 이의신청"
+msgstr "일시 정지 이의신청"
 
 #: src/screens/Takendown.tsx:114
 msgid "Appeal Suspension"
-msgstr "게시 중단 이의신청"
+msgstr "일시 정지 이의신청"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:51
 #: src/screens/Messages/components/ChatDisabled.tsx:53
