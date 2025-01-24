@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-24 05:36\n"
+"PO-Revision-Date: 2025-01-24 05:41\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -6779,7 +6779,7 @@ msgstr "文本及标签"
 
 #: src/components/dms/ReportDialog.tsx:227
 msgid "Text field"
-msgstr "文字框"
+msgstr "文本框"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:263
 #: src/screens/Messages/components/ChatDisabled.tsx:108
