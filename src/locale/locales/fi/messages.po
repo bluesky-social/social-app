@@ -1437,7 +1437,7 @@ msgstr "Sulje valintaikkuna"
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
 msgid "Close emoji picker"
-msgstr ""
+msgstr "Sulje emojinvalitsin"
 
 #: src/components/dialogs/GifSelect.tsx:169
 msgid "Close GIF dialog"
@@ -1823,7 +1823,7 @@ msgstr "Luotu {0}"
 
 #: src/screens/List/ListHiddenScreen.tsx:127
 msgid "Creator has been blocked"
-msgstr ""
+msgstr "Tekijä on estetty"
 
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
@@ -2321,7 +2321,7 @@ msgstr "Koulutus"
 
 #: src/screens/List/ListHiddenScreen.tsx:141
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
-msgstr ""
+msgstr "Joko listan tekijä on estänyt sinut tai sitten sinä olet estänyt listan tekijän."
 
 #: src/screens/Settings/AccountSettings.tsx:60
 #: src/screens/Signup/StepInfo/index.tsx:170
@@ -3410,7 +3410,7 @@ msgstr "Virheellinen tai ei-tuettu julkaisutietue"
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
 msgid "Incorrect username or password"
-msgstr "Virheellinen käyttäjätunnus tai salasana"
+msgstr "Väärä käyttäjätunnus tai salasana"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91
 msgid "Invalid Verification Code"
@@ -4576,7 +4576,7 @@ msgstr "Avaa alavalikko"
 #: src/view/com/composer/Composer.tsx:1228
 #: src/view/com/composer/Composer.tsx:1229
 msgid "Open emoji picker"
-msgstr "Avaa emoji-valitsin"
+msgstr "Avaa emojinvalitsin"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:190
 msgid "Open feed info screen"
@@ -6283,7 +6283,7 @@ msgstr "Kirjaudutaanko ulos?"
 #: src/view/shell/NavSignupCard.tsx:47
 #: src/view/shell/NavSignupCard.tsx:52
 msgid "Create account"
-msgstr "Rekisteröidy"
+msgstr "Luo tili"
 
 #: src/components/moderation/ScreenHider.tsx:91
 #: src/lib/moderation/useGlobalLabelStrings.ts:28
@@ -6543,7 +6543,7 @@ msgstr "Napauta vaihtaaksesi sovelluskuvakkeen"
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
 msgid "Tap to close the emoji picker"
-msgstr ""
+msgstr "Napauta sulkeaksesi emojinvalitsimen"
 
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"
