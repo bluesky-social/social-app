@@ -15,6 +15,7 @@ import {
   el,
   enGB,
   es,
+  eu,
   fi,
   fr,
   gl,
