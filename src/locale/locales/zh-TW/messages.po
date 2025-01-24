@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-zh\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-23 03:41\n"
+"PO-Revision-Date: 2025-01-24 05:37\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -181,11 +181,11 @@ msgstr "{count} 則未讀通知"
 msgid "{displayName}'s Starter Pack"
 msgstr "「{displayName}」的新手包"
 
-#: src/screens/SignupQueued.tsx:219
+#: src/screens/SignupQueued.tsx:216
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
 msgstr "{estimatedTimeHrs, plural, one {時} other {時}}"
 
-#: src/screens/SignupQueued.tsx:225
+#: src/screens/SignupQueued.tsx:222
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr "{estimatedTimeMins, plural, one {分} other {分}}"
 
@@ -824,6 +824,15 @@ msgstr "申訴「{0}」標記"
 msgid "Appeal submitted"
 msgstr "成功提交申訴"
 
+#: src/screens/Takendown.tsx:111
+#: src/screens/Takendown.tsx:144
+msgid "Appeal suspension"
+msgstr "申請解除停權"
+
+#: src/screens/Takendown.tsx:114
+msgid "Appeal Suspension"
+msgstr "申請解除停權"
+
 #: src/screens/Messages/components/ChatDisabled.tsx:51
 #: src/screens/Messages/components/ChatDisabled.tsx:53
 #: src/screens/Messages/components/ChatDisabled.tsx:99
@@ -993,11 +1002,11 @@ msgstr "要封鎖帳號嗎？"
 msgid "Block accounts"
 msgstr "封鎖帳號"
 
-#: src/components/dms/ReportDialog.tsx:326
+#: src/components/dms/ReportDialog.tsx:325
 msgid "Block and Delete"
 msgstr "封鎖並刪除"
 
-#: src/components/dms/ReportDialog.tsx:344
+#: src/components/dms/ReportDialog.tsx:343
 msgid "Block and/or delete this conversation"
 msgstr "封鎖並刪除對話"
 
@@ -1009,12 +1018,12 @@ msgstr "封鎖列表"
 msgid "Block these accounts?"
 msgstr "要封鎖這些帳號嗎？"
 
-#: src/components/dms/ReportDialog.tsx:348
-#: src/components/dms/ReportDialog.tsx:351
+#: src/components/dms/ReportDialog.tsx:347
+#: src/components/dms/ReportDialog.tsx:350
 msgid "Block user"
 msgstr "封鎖用戶"
 
-#: src/components/dms/ReportDialog.tsx:330
+#: src/components/dms/ReportDialog.tsx:329
 msgid "Block User"
 msgstr "封鎖用戶"
 
@@ -1081,6 +1090,10 @@ msgstr "Bluesky 是一個開放的網路，您可以自行挑選託管服務提�
 #: src/components/ProgressGuide/List.tsx:70
 msgid "Bluesky is better with friends!"
 msgstr "Bluesky 因朋友而更好！"
+
+#: src/screens/Takendown.tsx:217
+msgid "Bluesky Social Terms of Service"
+msgstr "Bluesky Social 服務條款"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:299
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -1187,6 +1200,8 @@ msgstr "相機"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:76
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:83
 #: src/screens/Settings/Settings.tsx:260
+#: src/screens/Takendown.tsx:99
+#: src/screens/Takendown.tsx:102
 #: src/view/com/composer/Composer.tsx:923
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
@@ -1435,8 +1450,8 @@ msgstr "達達的馬蹄🐴是美麗的錯誤🐴"
 #: src/components/dialogs/GifSelect.tsx:281
 #: src/components/dialogs/VerifyEmailDialog.tsx:289
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:265
-#: src/components/dms/ReportDialog.tsx:373
-#: src/components/dms/ReportDialog.tsx:382
+#: src/components/dms/ReportDialog.tsx:372
+#: src/components/dms/ReportDialog.tsx:381
 #: src/components/NewskieDialog.tsx:146
 #: src/components/NewskieDialog.tsx:153
 #: src/components/ProgressGuide/FollowDialog.tsx:429
@@ -1779,7 +1794,7 @@ msgid "Copyright Policy"
 msgstr "著作權政策"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:33
-#: src/components/dms/ReportDialog.tsx:309
+#: src/components/dms/ReportDialog.tsx:308
 msgid "Could not leave chat"
 msgstr "無法離開對話"
 
@@ -1946,12 +1961,12 @@ msgstr "要刪除應用程式專用密碼嗎？"
 msgid "Delete chat declaration record"
 msgstr "刪除對話聲明紀錄"
 
-#: src/components/dms/ReportDialog.tsx:354
-#: src/components/dms/ReportDialog.tsx:357
+#: src/components/dms/ReportDialog.tsx:353
+#: src/components/dms/ReportDialog.tsx:356
 msgid "Delete conversation"
 msgstr "刪除對話"
 
-#: src/components/dms/ReportDialog.tsx:328
+#: src/components/dms/ReportDialog.tsx:327
 msgid "Delete Conversation"
 msgstr "刪除對話"
 
@@ -2175,7 +2190,7 @@ msgstr "成功驗證網域！"
 
 #: src/components/dialogs/BirthDateSettings.tsx:118
 #: src/components/dialogs/BirthDateSettings.tsx:124
-#: src/components/dms/ReportDialog.tsx:324
+#: src/components/dms/ReportDialog.tsx:323
 #: src/components/forms/DateField/index.tsx:77
 #: src/components/forms/DateField/index.tsx:83
 #: src/screens/Onboarding/StepProfile/index.tsx:330
@@ -2639,7 +2654,7 @@ msgstr "展開用戶列表"
 msgid "Expand or collapse the full post you are replying to"
 msgstr "展開或摺疊您正在回覆的完整貼文"
 
-#: src/lib/api/index.ts:400
+#: src/lib/api/index.ts:405
 msgid "Expected uri to resolve to a record"
 msgstr "URI 應解析為記錄"
 
@@ -3691,7 +3706,7 @@ msgstr "全部留空以顯示所有語言的貼文。"
 msgid "Leaving Bluesky"
 msgstr "離開 Bluesky"
 
-#: src/screens/SignupQueued.tsx:140
+#: src/screens/SignupQueued.tsx:155
 msgid "left to go."
 msgstr "個人在排在您前面。"
 
@@ -3876,11 +3891,14 @@ msgstr "記錄檔"
 msgid "Log in or sign up"
 msgstr "登入或註冊"
 
-#: src/screens/SignupQueued.tsx:168
-#: src/screens/SignupQueued.tsx:171
-#: src/screens/SignupQueued.tsx:196
-#: src/screens/SignupQueued.tsx:199
+#: src/screens/SignupQueued.tsx:93
+#: src/screens/SignupQueued.tsx:96
+#: src/screens/Takendown.tsx:85
 msgid "Log out"
+msgstr "登出"
+
+#: src/screens/Takendown.tsx:88
+msgid "Log Out"
 msgstr "登出"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:78
@@ -4806,9 +4824,9 @@ msgstr "其他帳號"
 msgid "Other..."
 msgstr "其他…"
 
-#: src/components/dms/ReportDialog.tsx:340
+#: src/components/dms/ReportDialog.tsx:339
 msgid "Our moderation team has recieved your report."
-msgstr "我們的內容管理團隊已收到您的檢舉。"
+msgstr "我們的內容審查團隊已收到您的檢舉。"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
@@ -5309,7 +5327,7 @@ msgstr "重新啟用您的帳號"
 
 #: src/screens/VideoFeed/index.tsx:932
 msgid "Read less"
-msgstr "閱讀更少"
+msgstr "閱讀較少"
 
 #: src/screens/VideoFeed/index.tsx:932
 msgid "Read more"
@@ -5328,6 +5346,11 @@ msgstr "閱讀 Bluesky 隱私權政策"
 #: src/screens/Signup/StepInfo/Policies.tsx:71
 msgid "Read the Bluesky Terms of Service"
 msgstr "閱讀 Bluesky 服務條款"
+
+#: src/screens/Takendown.tsx:162
+#: src/screens/Takendown.tsx:170
+msgid "Reason for appeal"
+msgstr "申訴理由"
 
 #: src/components/dms/ReportDialog.tsx:210
 msgid "Reason:"
@@ -5605,7 +5628,7 @@ msgstr "檢舉貼文"
 msgid "Report starter pack"
 msgstr "檢舉新手包"
 
-#: src/components/dms/ReportDialog.tsx:337
+#: src/components/dms/ReportDialog.tsx:336
 msgid "Report submitted"
 msgstr "已提交檢舉"
 
@@ -6096,8 +6119,8 @@ msgstr "重送訊息"
 msgid "Send post to..."
 msgstr "傳送貼文給…"
 
-#: src/components/dms/ReportDialog.tsx:270
-#: src/components/dms/ReportDialog.tsx:273
+#: src/components/dms/ReportDialog.tsx:269
+#: src/components/dms/ReportDialog.tsx:272
 #: src/components/ReportDialog/SubmitView.tsx:221
 #: src/components/ReportDialog/SubmitView.tsx:225
 msgid "Send report"
@@ -6576,6 +6599,14 @@ msgstr "故事書"
 msgid "Submit"
 msgstr "提交"
 
+#: src/screens/Takendown.tsx:70
+msgid "Submit appeal"
+msgstr "提交申訴"
+
+#: src/screens/Takendown.tsx:76
+msgid "Submit Appeal"
+msgstr "提交申訴"
+
 #: src/view/screens/ProfileList.tsx:712
 msgid "Subscribe"
 msgstr "套用"
@@ -6745,6 +6776,10 @@ msgstr "所使用的文字違反了社群準則"
 #: src/components/dialogs/MutedWords.tsx:266
 msgid "Text & tags"
 msgstr "文字和標籤"
+
+#: src/components/dms/ReportDialog.tsx:227
+msgid "Text field"
+msgstr "文字欄位"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:263
 #: src/screens/Messages/components/ChatDisabled.tsx:108
@@ -6934,7 +6969,7 @@ msgstr "取得您的服務資訊時發生問題"
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
 msgstr "刪除動態源時發生問題，請檢查您的網路連線，然後再試一次。"
 
-#: src/components/dms/ReportDialog.tsx:258
+#: src/components/dms/ReportDialog.tsx:257
 #: src/components/ReportDialog/SubmitView.tsx:88
 msgid "There was an issue sending your report. Please check your internet connection."
 msgstr "提交您的檢舉時發生問題，請檢查您的網路連線。"
@@ -6976,7 +7011,7 @@ msgstr "發生問題了。請檢查您的網路連線，然後再試一次。"
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr "應用程式中發生了意外問題。請告訴我們發生了什麼事！"
 
-#: src/screens/SignupQueued.tsx:115
+#: src/screens/SignupQueued.tsx:130
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "目前有眾多新用戶湧入 Bluesky！我們會盡快啟用您的帳號。"
 
@@ -7531,12 +7566,12 @@ msgstr "從檔案上傳"
 msgid "Upload from Library"
 msgstr "從相簿上傳"
 
-#: src/lib/api/index.ts:296
+#: src/lib/api/index.ts:301
 msgid "Uploading images..."
 msgstr "正在上傳圖片..."
 
-#: src/lib/api/index.ts:350
-#: src/lib/api/index.ts:374
+#: src/lib/api/index.ts:355
+#: src/lib/api/index.ts:379
 msgid "Uploading link thumbnail..."
 msgstr "正在上傳連結縮圖..."
 
@@ -7873,7 +7908,7 @@ msgstr "我們找不到任何與該話題相關的結果。"
 msgid "We couldn't load this conversation"
 msgstr "我們無法載入這個對話"
 
-#: src/screens/SignupQueued.tsx:145
+#: src/screens/SignupQueued.tsx:160
 msgid "We estimate {estimatedTime} until your account is ready."
 msgstr "我們預計還需要 {estimatedTime} 才能把您的帳號準備好。"
 
@@ -7905,7 +7940,7 @@ msgstr "我們目前無法載入您訂閱的標記服務。"
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
 msgstr "我們無法連線到網路，請重試以繼續設定您的帳號。如果問題無法解決，可以選擇跳過此流程。"
 
-#: src/screens/SignupQueued.tsx:149
+#: src/screens/SignupQueued.tsx:164
 msgid "We will let you know when your account is ready."
 msgstr "我們會在您的帳號準備好時通知您。"
 
@@ -7999,6 +8034,10 @@ msgstr "咦？"
 msgid "Whoops! Trending videos failed to load."
 msgstr "唉呀！無法載入熱門影片。"
 
+#: src/screens/Takendown.tsx:173
+msgid "Why are you appealing?"
+msgstr "為什麼您要申請上訴？"
+
 #: src/components/ReportDialog/SelectReportOptionView.tsx:42
 msgid "Why should this content be reviewed?"
 msgstr "為什麼應該審查這項內容？"
@@ -8087,7 +8126,7 @@ msgstr "您"
 msgid "You"
 msgstr "您"
 
-#: src/screens/SignupQueued.tsx:142
+#: src/screens/SignupQueued.tsx:157
 msgid "You are in line."
 msgstr "您已在等待名單中。"
 
@@ -8325,7 +8364,7 @@ msgstr "您將在 <0>{0}</0> 收到一封電子郵件，以驗證您的身分。
 msgid "You'll stay updated with these feeds"
 msgstr "您將透過這些動態源接收最新動態"
 
-#: src/screens/SignupQueued.tsx:112
+#: src/screens/SignupQueued.tsx:127
 msgid "You're in line"
 msgstr "輪到您了"
 
@@ -8371,6 +8410,10 @@ msgstr "您的帳號"
 msgid "Your account has been deleted"
 msgstr "您的帳號已刪除"
 
+#: src/screens/Takendown.tsx:146
+msgid "Your account has been suspended"
+msgstr "您的帳號已被停權"
+
 #: src/view/com/composer/state/video.ts:429
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "您的帳號註冊時間太短，以致於無法上傳影片。請稍後再試。"
@@ -8378,6 +8421,14 @@ msgstr "您的帳號註冊時間太短，以致於無法上傳影片。請稍後
 #: src/screens/Settings/components/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "您可以將帳號的所有公開資料匯出為一個「CAR」檔案。但請注意，這不包括嵌入媒體 (如圖片和影片) 或私人資料 (如對話紀錄)，這些資料需要另外擷取。"
+
+#: src/screens/Takendown.tsx:214
+msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
+msgstr "您的帳號被判定違反了 <0>Bluesky Social 服務條款</0>。您應該已收到一封電子郵件，其中包含具體的違規事項和停權期限。 如果您對此決策有異議，可以隨時提出上訴。"
+
+#: src/screens/Takendown.tsx:154
+msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
+msgstr "已提交您的上訴。如果上訴成功，我們會透過電子郵件通知您。"
 
 #: src/screens/Signup/StepInfo/index.tsx:205
 msgid "Your birth date"
