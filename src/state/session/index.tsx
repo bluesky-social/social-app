@@ -258,7 +258,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     ],
   )
 
-  // @ts-ignore
+  // @ts-expect-error window type is not declared, debug only
   if (__DEV__ && isWeb) window.agent = state.currentAgentState.agent
 
   const agent = state.currentAgentState.agent as BskyAppAgent
