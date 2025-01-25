@@ -226,6 +226,7 @@ export function createInput(Component: typeof TextInput) {
       <>
         <Component
           accessibilityHint={undefined}
+          hitSlop={HITSLOP_20}
           {...rest}
           accessibilityLabel={label}
           ref={refs}
@@ -242,7 +243,6 @@ export function createInput(Component: typeof TextInput) {
           placeholder={placeholder || label}
           placeholderTextColor={t.palette.contrast_500}
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
-          hitSlop={HITSLOP_20}
           style={flattened}
         />
 
