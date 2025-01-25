@@ -18,6 +18,7 @@ initPromise.then(() => {
   if (isEnabled && BITDRIFT_API_KEY) {
     init(BITDRIFT_API_KEY, SessionStrategy.Activity, {
       url: 'https://api-bsky.bitdrift.io',
+      enableNetworkInstrumentation: true,
     })
   }
 })

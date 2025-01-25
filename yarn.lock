@@ -3422,10 +3422,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bitdrift/react-native@^0.6.2":
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/@bitdrift/react-native/-/react-native-0.6.2.tgz#8e75d45a63fccad38b310fdea8069fa929cb97c3"
-  integrity sha512-4DIsZwAr9/Q1RI7lsnUphRoMuOuLWWESNXI759niSmU8XHTJISwwOQzUm7qWn7waBJGhxaq+jn+vlTV5Fai6zw==
+"@bitdrift/react-native@^0.6.5":
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/@bitdrift/react-native/-/react-native-0.6.5.tgz#bfeca68aca7895c96854b9972bca843f74d17b0f"
+  integrity sha512-W32GaA5e1Q6rtFnVSg9mk/zO3ZLqCpB7CcNShSd0oD6HVPE38sMm9LfkMCNm0ZqcwXrq1h3SPBX2dPdT1al9kw==
   dependencies:
     "@expo/config-plugins" "^9.0.14"
     fast-json-stringify "^6.0.0"
