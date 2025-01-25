@@ -136,8 +136,6 @@ function guessLanguage(text: string): string | undefined {
   // representative of modern English, but it's English regardless.
   const scores = lande(text).filter(([_lang, value]) => value >= 0.9)
 
-  console.debug(scores)
-
   // If there are more than one language with a high score, we don't want to make a suggestion
   if (scores.length !== 1) {
     return undefined
