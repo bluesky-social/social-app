@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback, useEffect} from 'react'
 import {
   ActivityIndicator,
   Image,
@@ -20,6 +20,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
 import {createHitslop} from '#/lib/constants'
@@ -604,6 +605,8 @@ export function SearchScreen(
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
   const setMinimalShellMode = useSetMinimalShellMode()
+  const {currentAccount} = useSession()
+  const queryClient = useQueryClient()
 
   // Query terms
   const queryParam = props.route?.params?.q ?? ''
@@ -612,10 +615,93 @@ export function SearchScreen(
     useActorAutocompleteQuery(searchText, true)
 
   const [showAutocomplete, setShowAutocomplete] = React.useState(false)
-  const [searchHistory, setSearchHistory] = React.useState<string[]>([])
-  const [selectedProfiles, setSelectedProfiles] = React.useState<
-    AppBskyActorDefs.ProfileViewBasic[]
-  >([])
+
+  const searchHistoryKey = `searchHistory#${currentAccount?.did ?? 'pwi'}`
+  const profileHistoryKey = `profileHistory#${currentAccount?.did ?? 'pwi'}`
+
+  const {data: history, error: historyError} = useQuery({
+    queryKey: ['search-history', currentAccount?.did ?? 'pwi'],
+    queryFn: async () => {
+      const [[, searchHistory], [, profileHistory]] =
+        await AsyncStorage.multiGet([searchHistoryKey, profileHistoryKey])
+      return {
+        searchHistory: JSON.parse(searchHistory ?? '[]') as string[],
+        profileHistory: JSON.parse(
+          profileHistory ?? '[]',
+        ) as AppBskyActorDefs.ProfileViewBasic[],
+      }
+    },
+    initialData: {
+      searchHistory: [],
+      profileHistory: [],
+    },
+  })
+
+  useEffect(() => {
+    if (historyError) {
+      logger.error('Could not fetch history', {safeMessage: historyError})
+    }
+  }, [historyError])
+
+  const setHistory = useCallback(
+    async (partialNewHistory: Partial<typeof history>) => {
+      const newHistory = {...history, ...partialNewHistory}
+      queryClient.setQueryData(
+        ['search-history', currentAccount?.did ?? 'pwi'],
+        newHistory,
+      )
+      await AsyncStorage.setItem(
+        searchHistoryKey,
+        JSON.stringify(newHistory),
+      ).catch(error =>
+        logger.error('Failed to save search history update', {
+          safeMessage: error,
+        }),
+      )
+    },
+    [currentAccount?.did, searchHistoryKey, history, queryClient],
+  )
+
+  const updateSearchHistory = useCallback(
+    async (item: string) => {
+      const newSearchHistory = [
+        item,
+        ...history.searchHistory.filter(search => search !== item),
+      ]
+      await setHistory({searchHistory: newSearchHistory})
+    },
+    [history, setHistory],
+  )
+
+  const updateProfileHistory = useCallback(
+    async (item: AppBskyActorDefs.ProfileViewBasic) => {
+      const newProfileHistory = [
+        item,
+        ...history.profileHistory.filter(p => p.did !== item.did),
+      ]
+      await setHistory({profileHistory: newProfileHistory})
+    },
+    [history, setHistory],
+  )
+
+  const deleteSearchHistoryItem = useCallback(
+    async (item: string) => {
+      const newSearchHistory = history.searchHistory.filter(
+        search => search !== item,
+      )
+      await setHistory({searchHistory: newSearchHistory})
+    },
+    [history, setHistory],
+  )
+  const deleteProfileHistoryItem = useCallback(
+    async (item: AppBskyActorDefs.ProfileViewBasic) => {
+      const newProfileHistory = history.profileHistory.filter(
+        p => p.did !== item.did,
+      )
+      await setHistory({profileHistory: newProfileHistory})
+    },
+    [history, setHistory],
+  )
 
   const {params, query, queryWithParams} = useQueryManager({
     initialQuery: queryParam,
@@ -635,25 +721,6 @@ export function SearchScreen(
     }),
   )
 
-  React.useEffect(() => {
-    const loadSearchHistory = async () => {
-      try {
-        const history = await AsyncStorage.getItem('searchHistory')
-        if (history !== null) {
-          setSearchHistory(JSON.parse(history))
-        }
-        const profiles = await AsyncStorage.getItem('selectedProfiles')
-        if (profiles !== null) {
-          setSelectedProfiles(JSON.parse(profiles))
-        }
-      } catch (e: any) {
-        logger.error('Failed to load search history', {message: e})
-      }
-    }
-
-    loadSearchHistory()
-  }, [])
-
   const onPressMenu = React.useCallback(() => {
     textInput.current?.blur()
     setDrawerOpen(true)
@@ -669,57 +736,6 @@ export function SearchScreen(
     scrollToTopWeb()
     setSearchText(text)
   }, [])
-
-  const updateSearchHistory = React.useCallback(
-    async (newQuery: string) => {
-      newQuery = newQuery.trim()
-      if (newQuery) {
-        let newHistory = [
-          newQuery,
-          ...searchHistory.filter(q => q !== newQuery),
-        ]
-
-        if (newHistory.length > 5) {
-          newHistory = newHistory.slice(0, 5)
-        }
-
-        setSearchHistory(newHistory)
-        try {
-          await AsyncStorage.setItem(
-            'searchHistory',
-            JSON.stringify(newHistory),
-          )
-        } catch (e: any) {
-          logger.error('Failed to save search history', {message: e})
-        }
-      }
-    },
-    [searchHistory, setSearchHistory],
-  )
-
-  const updateSelectedProfiles = React.useCallback(
-    async (profile: AppBskyActorDefs.ProfileViewBasic) => {
-      let newProfiles = [
-        profile,
-        ...selectedProfiles.filter(p => p.did !== profile.did),
-      ]
-
-      if (newProfiles.length > 5) {
-        newProfiles = newProfiles.slice(0, 5)
-      }
-
-      setSelectedProfiles(newProfiles)
-      try {
-        await AsyncStorage.setItem(
-          'selectedProfiles',
-          JSON.stringify(newProfiles),
-        )
-      } catch (e: any) {
-        logger.error('Failed to save selected profiles', {message: e})
-      }
-    },
-    [selectedProfiles, setSelectedProfiles],
-  )
 
   const navigateToItem = React.useCallback(
     (item: string) => {
@@ -774,10 +790,10 @@ export function SearchScreen(
     (profile: AppBskyActorDefs.ProfileViewBasic) => {
       // Slight delay to avoid updating during push nav animation.
       setTimeout(() => {
-        updateSelectedProfiles(profile)
+        updateProfileHistory(profile)
       }, 400)
     },
-    [updateSelectedProfiles],
+    [updateProfileHistory],
   )
 
   const onSoftReset = React.useCallback(() => {
@@ -796,36 +812,6 @@ export function SearchScreen(
       setMinimalShellMode(false)
       return listenSoftReset(onSoftReset)
     }, [onSoftReset, setMinimalShellMode]),
-  )
-
-  const handleRemoveHistoryItem = React.useCallback(
-    (itemToRemove: string) => {
-      const updatedHistory = searchHistory.filter(item => item !== itemToRemove)
-      setSearchHistory(updatedHistory)
-      AsyncStorage.setItem(
-        'searchHistory',
-        JSON.stringify(updatedHistory),
-      ).catch(e => {
-        logger.error('Failed to update search history', {message: e})
-      })
-    },
-    [searchHistory],
-  )
-
-  const handleRemoveProfile = React.useCallback(
-    (profileToRemove: AppBskyActorDefs.ProfileViewBasic) => {
-      const updatedProfiles = selectedProfiles.filter(
-        profile => profile.did !== profileToRemove.did,
-      )
-      setSelectedProfiles(updatedProfiles)
-      AsyncStorage.setItem(
-        'selectedProfiles',
-        JSON.stringify(updatedProfiles),
-      ).catch(e => {
-        logger.error('Failed to update selected profiles', {message: e})
-      })
-    },
-    [selectedProfiles],
   )
 
   const onSearchInputFocus = React.useCallback(() => {
@@ -932,12 +918,12 @@ export function SearchScreen(
           />
         ) : (
           <SearchHistory
-            searchHistory={searchHistory}
-            selectedProfiles={selectedProfiles}
+            searchHistory={history.searchHistory}
+            selectedProfiles={history.profileHistory}
             onItemClick={handleHistoryItemClick}
             onProfileClick={handleProfileClick}
-            onRemoveItemClick={handleRemoveHistoryItem}
-            onRemoveProfileClick={handleRemoveProfile}
+            onRemoveItemClick={deleteSearchHistoryItem}
+            onRemoveProfileClick={deleteProfileHistoryItem}
           />
         )}
       </View>
