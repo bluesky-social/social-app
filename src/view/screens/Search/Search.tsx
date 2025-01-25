@@ -61,14 +61,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {Explore} from '#/view/screens/Search/Explore'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
 import {makeSearchQuery, parseSearchQuery} from '#/screens/Search/utils'
-import {
-  atoms as a,
-  native,
-  tokens,
-  useBreakpoints,
-  useTheme as useThemeNew,
-  web,
-} from '#/alf'
+import {atoms as a, native, tokens, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
@@ -281,7 +274,7 @@ let SearchScreenFeedsResults = ({
   query: string
   active: boolean
 }): React.ReactNode => {
-  const t = useThemeNew()
+  const t = useTheme()
   const {_} = useLingui()
 
   const {data: results, isFetched} = usePopularFeedsSearch({
@@ -326,7 +319,7 @@ function SearchLanguageDropdown({
   value: string
   onChange(value: string): void
 }) {
-  const t = useThemeNew()
+  const t = useTheme()
   const {_} = useLingui()
   const {appLanguage, contentLanguages} = useLanguagePrefs()
 
@@ -595,7 +588,7 @@ SearchScreenInner = React.memo(SearchScreenInner)
 export function SearchScreen(
   props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
 ) {
-  const t = useThemeNew()
+  const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
   const textInput = React.useRef<TextInput>(null)
