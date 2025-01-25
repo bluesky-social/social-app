@@ -631,6 +631,7 @@ export function SearchScreen(
     useNonReactiveCallback(() => {
       if (isWeb) {
         setSearchText(queryParam)
+        textInput.current?.setNativeProps({text: queryParam})
       }
     }),
   )
@@ -662,6 +663,7 @@ export function SearchScreen(
   const onPressClearQuery = React.useCallback(() => {
     scrollToTopWeb()
     setSearchText('')
+    textInput.current?.clear()
     textInput.current?.focus()
   }, [])
 
@@ -741,6 +743,7 @@ export function SearchScreen(
     scrollToTopWeb()
     textInput.current?.blur()
     setShowAutocomplete(false)
+    textInput.current?.setNativeProps({text: queryParam})
     setSearchText(queryParam)
   }, [setShowAutocomplete, setSearchText, queryParam])
 
@@ -758,6 +761,7 @@ export function SearchScreen(
 
   const handleHistoryItemClick = React.useCallback(
     (item: string) => {
+      textInput.current?.setNativeProps({text: item})
       setSearchText(item)
       navigateToItem(item)
     },
@@ -781,6 +785,7 @@ export function SearchScreen(
     } else {
       setSearchText('')
       navigation.setParams({q: ''})
+      textInput.current?.clear()
       textInput.current?.focus()
     }
   }, [navigation])
@@ -867,7 +872,7 @@ export function SearchScreen(
               <View style={[a.flex_1]}>
                 <SearchInput
                   ref={textInput}
-                  value={searchText}
+                  defaultValue={searchText}
                   onFocus={onSearchInputFocus}
                   onChangeText={onChangeText}
                   onClearText={onPressClearQuery}
