@@ -35,19 +35,20 @@ export function SuggestedLanguage({text}: {text: string}) {
   useEffect(() => {
     let textTrimmed = text.trim()
 
-    // Remove the last word before guessing to prevent a half-written word 
-    // from botching the confidence of language detection.
+    // Remove the last word before guessing to prevent a half-written word
+    // or typos from affecting the confidence of language detection.
     // There are two gotchas with this approach:
     // First, it might increase the practical minimum length for the language
-    // detection because removing the last word would eat away from the 
-    // 40 character min limit. I think it's worth it though. 
-    // Second, this will also discard the last word that has been typed fully 
-    // which might affect the outcome. One might consider detecting punctuation 
-    // at the end of the last word to include it in the language detection, 
-    // but it's quite hard to do that for all languages correctly.
+    // detection because removing the last word would eat away from the
+    // 40 character min limit. I think it's worth it though.
+    // Second, this will also discard the last word that has been typed fully
+    // which might affect the outcome towards a positive result. One might
+    // consider detecting punctuation at the end of the last word to include
+    // it in the language detection, but it's quite hard to do that for all
+    // languages correctly.
     const lastSpace = textTrimmed.lastIndexOf(' ')
     if (lastSpace > 0) {
-      textTrimmed = textTrimmed.slice(0, lastSpace)
+      textTrimmed = textTrimmed.slice(0, lastSpace).trim()
     }
 
     // Don't run the language model on small posts, the results are likely
@@ -128,8 +129,9 @@ const styles = StyleSheet.create({
  * The magic numbers are based on debugging sessions against some test strings
  */
 function guessLanguage(text: string): string | undefined {
-  const scores = lande(text).filter(([_lang, value]) => value >= 0.0002)
-  // if the model has multiple items with a score higher than 0.0002, it isn't certain enough
+  const scores = lande(text).filter(([_lang, value]) => value > 0.02)
+
+  // if the model has multiple items with a score higher than 0.02, it isn't certain enough
   if (scores.length !== 1) {
     return undefined
   }
