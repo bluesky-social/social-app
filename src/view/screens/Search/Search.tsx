@@ -537,12 +537,7 @@ let SearchScreenInner = ({
     <Pager
       onPageSelected={onPageSelected}
       renderTabBar={props => (
-        <Layout.Center
-          style={[
-            a.z_10,
-            web([a.sticky]),
-            {top: isWeb ? headerHeight : undefined},
-          ]}>
+        <Layout.Center style={[a.z_10, web([a.sticky, {top: headerHeight}])]}>
           <TabBar items={sections.map(section => section.title)} {...props} />
         </Layout.Center>
       )}
@@ -797,14 +792,13 @@ export function SearchScreen(
           if (isWeb) setHeaderHeight(evt.nativeEvent.layout.height)
         }}
         style={[
-          t.atoms.bg,
           web({
             position: 'sticky',
             top: 0,
             zIndex: 1,
           }),
         ]}>
-        <Layout.Center>
+        <Layout.Center style={t.atoms.bg}>
           {!gtMobile && !showAutocomplete && (
             <Animated.View
               layout={native(FadingTransition)}
@@ -834,7 +828,7 @@ export function SearchScreen(
             </Animated.View>
           )}
           <Animated.View
-            style={[a.px_md, a.pt_md, a.pb_sm]}
+            style={[a.px_md, a.pt_md, a.pb_sm, a.gap_sm]}
             layout={native(LinearTransition)}>
             <View style={[a.flex_row, a.gap_sm]}>
               <View style={[a.flex_1]}>
@@ -864,6 +858,23 @@ export function SearchScreen(
                 </Button>
               )}
             </View>
+
+            {showFilters && gtMobile && (
+              <View
+                style={[
+                  a.flex_row,
+                  a.align_center,
+                  a.justify_between,
+                  a.gap_sm,
+                ]}>
+                <View style={[{width: 140}]}>
+                  <SearchLanguageDropdown
+                    value={params.lang}
+                    onChange={params.setLang}
+                  />
+                </View>
+              </View>
+            )}
           </Animated.View>
         </Layout.Center>
       </View>
