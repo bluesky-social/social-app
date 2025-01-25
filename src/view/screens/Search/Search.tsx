@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useLayoutEffect} from 'react'
 import {
   ActivityIndicator,
   Image,
@@ -11,6 +11,10 @@ import {
 } from 'react-native'
 import {ScrollView as RNGHScrollView} from 'react-native-gesture-handler'
 import RNPickerSelect from 'react-native-picker-select'
+import Animated, {
+  FadingTransition,
+  LinearTransition,
+} from 'react-native-reanimated'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -22,7 +26,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
 import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
-import {createHitslop} from '#/lib/constants'
+import {createHitslop, HITSLOP_20} from '#/lib/constants'
 import {HITSLOP_10} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -47,7 +51,6 @@ import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSession} from '#/state/session'
-import {useSetDrawerOpen} from '#/state/shell'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
@@ -61,16 +64,16 @@ import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
 import {makeSearchQuery, parseSearchQuery} from '#/screens/Search/utils'
 import {
   atoms as a,
+  native,
   tokens,
   useBreakpoints,
   useTheme as useThemeNew,
   web,
 } from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
-import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import * as Layout from '#/components/Layout'
 
 function Loader() {
@@ -602,7 +605,6 @@ export function SearchScreen(
   const navigation = useNavigation<NavigationProp>()
   const textInput = React.useRef<TextInput>(null)
   const {_} = useLingui()
-  const setDrawerOpen = useSetDrawerOpen()
   const setMinimalShellMode = useSetMinimalShellMode()
 
   // Query terms
@@ -621,11 +623,17 @@ export function SearchScreen(
     initialQuery: queryParam,
   })
   const showFilters = Boolean(queryWithParams && !showAutocomplete)
-  /*
-   * Arbitrary sizing, so guess and check, used for sticky header alignment and
-   * sizing.
-   */
-  const headerHeight = 60 + (showFilters ? 40 : 0)
+
+  // web only - measure header height for sticky positioning
+  const [headerHeight, setHeaderHeight] = React.useState(0)
+  const headerRef = React.useRef(null)
+  useLayoutEffect(() => {
+    if (isWeb) {
+      if (!headerRef.current) return
+      const measurement = (headerRef.current as Element).getBoundingClientRect()
+      setHeaderHeight(measurement.height)
+    }
+  }, [])
 
   useFocusEffect(
     useNonReactiveCallback(() => {
@@ -653,11 +661,6 @@ export function SearchScreen(
 
     loadSearchHistory()
   }, [])
-
-  const onPressMenu = React.useCallback(() => {
-    textInput.current?.blur()
-    setDrawerOpen(true)
-  }, [setDrawerOpen])
 
   const onPressClearQuery = React.useCallback(() => {
     scrollToTopWeb()
@@ -843,33 +846,51 @@ export function SearchScreen(
   return (
     <Layout.Screen testID="searchScreen">
       <View
+        ref={headerRef}
+        onLayout={evt => {
+          if (isWeb) setHeaderHeight(evt.nativeEvent.layout.height)
+        }}
         style={[
+          t.atoms.bg,
           web({
-            height: headerHeight,
             position: 'sticky',
             top: 0,
             zIndex: 1,
           }),
         ]}>
         <Layout.Center>
-          <View style={[a.p_md, a.pb_sm, a.gap_sm, t.atoms.bg]}>
+          {!gtMobile && !showAutocomplete && (
+            <Animated.View
+              layout={native(FadingTransition)}
+              // HACK: shift up search input. we can't remove the top padding
+              // on the search input because it messes up the layout animation
+              // if we add it only when the header is hidden
+              style={{marginBottom: tokens.space.md * -1}}>
+              <Layout.Header.Outer noBottomBorder>
+                <Layout.Header.MenuButton />
+                <Layout.Header.Content
+                  align={showFilters ? 'left' : 'platform'}>
+                  <Layout.Header.TitleText>
+                    <Trans>Search</Trans>
+                  </Layout.Header.TitleText>
+                </Layout.Header.Content>
+                {showFilters ? (
+                  <View style={[{minWidth: 140}]}>
+                    <SearchLanguageDropdown
+                      value={params.lang}
+                      onChange={params.setLang}
+                    />
+                  </View>
+                ) : (
+                  <Layout.Header.Slot />
+                )}
+              </Layout.Header.Outer>
+            </Animated.View>
+          )}
+          <Animated.View
+            style={[a.px_md, a.pt_md, a.pb_sm]}
+            layout={native(LinearTransition)}>
             <View style={[a.flex_row, a.gap_sm]}>
-              {!gtMobile && !showAutocomplete && (
-                <Button
-                  testID="viewHeaderBackOrMenuBtn"
-                  onPress={onPressMenu}
-                  hitSlop={HITSLOP_10}
-                  label={_(msg`Menu`)}
-                  accessibilityHint={_(
-                    msg`Access navigation links and settings`,
-                  )}
-                  size="large"
-                  variant="solid"
-                  color="secondary"
-                  shape="square">
-                  <ButtonIcon icon={Menu} size="lg" />
-                </Button>
-              )}
               <View style={[a.flex_1]}>
                 <SearchInput
                   ref={textInput}
@@ -878,6 +899,8 @@ export function SearchScreen(
                   onChangeText={onChangeText}
                   onClearText={onPressClearQuery}
                   onSubmitEditing={onSubmit}
+                  placeholder={_(msg`Search for posts, users, or feeds`)}
+                  hitSlop={{...HITSLOP_20, top: 0}}
                 />
               </View>
               {showAutocomplete && (
@@ -895,24 +918,7 @@ export function SearchScreen(
                 </Button>
               )}
             </View>
-
-            {showFilters && (
-              <View
-                style={[
-                  a.flex_row,
-                  a.align_center,
-                  a.justify_between,
-                  a.gap_sm,
-                ]}>
-                <View style={[{width: 140}]}>
-                  <SearchLanguageDropdown
-                    value={params.lang}
-                    onChange={params.setLang}
-                  />
-                </View>
-              </View>
-            )}
-          </View>
+          </Animated.View>
         </Layout.Center>
       </View>
 
