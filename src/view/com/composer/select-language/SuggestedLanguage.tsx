@@ -129,16 +129,19 @@ const styles = StyleSheet.create({
  * The magic numbers are based on debugging sessions against some test strings
  */
 function guessLanguage(text: string): string | undefined {
-  const scores = lande(text).filter(([_lang, value]) => value > 0.02)
+  // William Wordsworth's "Composed upon Westminster Bridge, September 3, 1802" poem's
+  // last sestet gets a 0.93 confidence score by this model. I find that 90% is a good threshold
+  // if we only have only one language detected at that level. I understand that a carefully
+  // picked portion of an English sonnet from 223 years ago isn't a perfect
+  // representative of modern English, but it's English regardless.
+  const scores = lande(text).filter(([_lang, value]) => value >= 0.9)
 
-  // if the model has multiple items with a score higher than 0.02, it isn't certain enough
+  console.debug(scores)
+
+  // If there are more than one language with a high score, we don't want to make a suggestion
   if (scores.length !== 1) {
     return undefined
   }
-  const [lang, value] = scores[0]
-  // if the model doesn't give a score of 0.97 or above, it isn't certain enough
-  if (value < 0.97) {
-    return undefined
-  }
+  const [lang, _] = scores[0]
   return code3ToCode2Strict(lang)
 }
