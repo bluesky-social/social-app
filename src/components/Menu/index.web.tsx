@@ -195,6 +195,7 @@ export function Outer({
             t.name === 'light' ? t.atoms.bg : t.atoms.bg_contrast_25,
             t.atoms.shadow_md,
             t.atoms.border_contrast_low,
+            a.overflow_auto,
             !reduceMotionEnabled && a.zoom_fade_in,
             style,
           ]}>
