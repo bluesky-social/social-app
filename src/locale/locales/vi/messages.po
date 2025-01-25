@@ -8,14 +8,14 @@ msgstr ""
 "Language: vi\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-20T08:45:59.857Z\n"
-"Last-Translator: vnphanquang\n"
+"PO-Revision-Date: 2025-01-22T08:45:59.857Z\n"
+"Last-Translator: vinhphm\n"
 "Language-Team: Translators in PR #2524, ManhNguyen98, vinhphm, vnphanquang\n"
 "Plural-Forms: \n"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:567
 msgid "(active)"
-msgstr ""
+msgstr "(hoạt động)"
 
 #: src/screens/Messages/components/ChatListItem.tsx:130
 msgid "(contains embedded content)"
@@ -32,11 +32,11 @@ msgstr "{0, plural, one {# ngày} other {# ngày}}"
 
 #: src/screens/Profile/ProfileFollowers.tsx:40
 msgid "{0, plural, one {# follower} other {# followers}}"
-msgstr ""
+msgstr "{0, plural, one {# người theo dõi} other {# người theo dõi}}"
 
 #: src/screens/Profile/ProfileFollows.tsx:40
 msgid "{0, plural, one {# following} other {# following}}"
-msgstr ""
+msgstr "{0, plural, one {# đang theo dõi} other {# đang theo dõi}}"
 
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
@@ -52,15 +52,15 @@ msgstr "{0, plural, one {# giờ} other {# giờ}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this account"
-msgstr ""
+msgstr "{0, plural, one {# nhãn} other {# nhãn}} được gắn lên tài khoản này"
 
 #: src/components/moderation/LabelsOnMe.tsx:62
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this content"
-msgstr ""
+msgstr "{0, plural, one {# nhãn} other {# nhãn}} được gắn lên nội dung này"
 
 #: src/screens/Post/PostLikedBy.tsx:41
 msgid "{0, plural, one {# like} other {# likes}}"
-msgstr ""
+msgstr "{0, plural, one {# lượt thích} other {# lượt thích}}"
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
@@ -72,7 +72,7 @@ msgstr "{0, plural, one {# tháng} other {# tháng}}"
 
 #: src/screens/Post/PostQuotes.tsx:41
 msgid "{0, plural, one {# quote} other {# quotes}}"
-msgstr ""
+msgstr "{0, plural, one {# trích dẫn} other {# trích dẫn}}"
 
 #: src/screens/Post/PostRepostedBy.tsx:41
 msgid "{0, plural, one {# repost} other {# reposts}}"
@@ -322,7 +322,7 @@ msgstr "không thể nhắn tin cho {handle}"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:260
 msgid "{notificationCount} unread items"
-msgstr ""
+msgstr "{notificationCount} mục chưa đọc"
 
 #: src/view/shell/Drawer.tsx:448
 msgid "{numUnreadNotifications} unread"
@@ -555,7 +555,7 @@ msgstr "Thêm bài mới"
 #: src/view/screens/ProfileList.tsx:903
 #: src/view/screens/ProfileList.tsx:921
 msgid "Add people"
-msgstr ""
+msgstr "Thêm người"
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
@@ -629,7 +629,7 @@ msgstr "Nâng cao"
 
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
-msgstr ""
+msgstr "Tất cả"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
@@ -651,7 +651,7 @@ msgstr "Cho phép tin nhắn mới từ"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
 msgid "Allow quote posts"
-msgstr ""
+msgstr "Cho phép trích dẫn bài đăng"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Allow replies from:"
@@ -998,7 +998,7 @@ msgstr "Bạn cần xác minh email trước khi có thể nhắn tin với ngư
 
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:74
 msgid "BETA"
-msgstr ""
+msgstr "Thử nghiệm"
 
 #: src/components/dialogs/BirthDateSettings.tsx:106
 #: src/screens/Settings/AccountSettings.tsx:109
@@ -1114,7 +1114,7 @@ msgstr ""
 
 #: src/screens/Settings/AppIconSettings/index.tsx:102
 msgid "Bluesky+ icons"
-msgstr ""
+msgstr "Biểu tượng Bluesky+"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
@@ -1156,15 +1156,15 @@ msgstr "Xem các bảng tin khác"
 
 #: src/components/TrendingTopics.tsx:176
 msgid "Browse posts about {displayName}"
-msgstr ""
+msgstr "Tìm bài đăng về {displayName}"
 
 #: src/components/TrendingTopics.tsx:184
 msgid "Browse posts tagged with {displayName}"
-msgstr ""
+msgstr "Tìm bài đăng được gắn thẻ với {displayName}"
 
 #: src/components/TrendingTopics.tsx:222
 msgid "Browse topic {displayName}"
-msgstr ""
+msgstr "Tìm chủ đề {displayName}"
 
 #: src/view/com/auth/SplashScreen.web.tsx:168
 msgid "Business"
@@ -1184,7 +1184,7 @@ msgstr "Bởi {0}"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:447
 msgid "By <0>{0}</0>"
-msgstr ""
+msgstr "Bởi <0>{0}</0>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
@@ -1296,7 +1296,7 @@ msgstr "Thay đổi"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:39
 msgid "Change app icon"
-msgstr ""
+msgstr "Thay đổi biểu tượng ứng dụng"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:38
 #: src/screens/Settings/AppIconSettings/index.tsx:221
@@ -1412,7 +1412,7 @@ msgstr "Chọn màu này làm hình đại diện của bạn"
 #: src/view/screens/Feeds.tsx:728
 #: src/view/screens/Search/Explore.tsx:411
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
-msgstr ""
+msgstr "Chọn bảng tin của riêng bạn! Các bảng tin được xây dựng bởi cộng đồng giúp bạn tìm nội dung bạn yêu thích."
 
 #: src/screens/Signup/StepInfo/index.tsx:201
 msgid "Choose your password"
@@ -1468,7 +1468,7 @@ msgstr "Khí hậu"
 
 #: src/components/dms/ChatEmptyPill.tsx:39
 msgid "Clip 🐴 clop 🐴"
-msgstr "Cộp 🐴 cộp 🐴"
+msgstr "Lộp 🐴 cộp 🐴"
 
 #: src/components/dialogs/GifSelect.tsx:281
 #: src/components/dialogs/VerifyEmailDialog.tsx:289
@@ -1504,7 +1504,7 @@ msgstr "Đóng hộp thoại"
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
 msgid "Close emoji picker"
-msgstr ""
+msgstr "Đóng bảng chọn emoji"
 
 #: src/components/dialogs/GifSelect.tsx:169
 msgid "Close GIF dialog"
@@ -1657,7 +1657,7 @@ msgstr "Liên hệ hỗ trợ"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:49
 msgid "Content & Media"
-msgstr ""
+msgstr "Nội dung & phương tiện"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:109
 #: src/screens/Settings/Settings.tsx:175
@@ -1890,7 +1890,7 @@ msgstr "Đã tạo {0}"
 
 #: src/screens/List/ListHiddenScreen.tsx:127
 msgid "Creator has been blocked"
-msgstr ""
+msgstr "Người tạo đã bị chặn"
 
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
@@ -1948,7 +1948,7 @@ msgstr "Mặc định"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:75
 msgid "Default icons"
-msgstr ""
+msgstr "Biểu tượng mặc định"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/Settings/AppPasswords.tsx:212
@@ -2246,7 +2246,7 @@ msgstr "Thả vào để thêm hình ảnh"
 
 #: src/components/dialogs/MutedWords.tsx:153
 msgid "Duration:"
-msgstr "Thời gian:"
+msgstr "Thời hạn:"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:213
 msgid "e.g. alice"
@@ -2393,7 +2393,7 @@ msgstr "Giáo dục"
 
 #: src/screens/List/ListHiddenScreen.tsx:141
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
-msgstr ""
+msgstr "Người tạo danh sách này đã chặn bạn hoặc bạn đã chặn người đó."
 
 #: src/screens/Settings/AccountSettings.tsx:60
 #: src/screens/Signup/StepInfo/index.tsx:170
@@ -2494,7 +2494,7 @@ msgstr "Chỉ bật nguồn này"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:122
 #: src/screens/Settings/ContentAndMediaSettings.tsx:136
 msgid "Enable trending topics"
-msgstr ""
+msgstr "Mở chủ đề nổi trội"
 
 #: src/screens/Messages/Settings.tsx:130
 #: src/screens/Messages/Settings.tsx:133
@@ -2808,7 +2808,7 @@ msgstr "Bảng tin bởi {0}"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:353
 msgid "Feed menu"
-msgstr ""
+msgstr "Menu bảng tin"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:54
 msgid "Feed toggle"
@@ -2847,7 +2847,7 @@ msgstr "Đã cập nhật bảng tin"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:54
 msgid "Feeds we think you might like."
-msgstr ""
+msgstr "Bảng tin mà bạn có thể thích."
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:43
 msgid "File saved successfully!"
@@ -2871,7 +2871,7 @@ msgstr "Tìm tài khoản đề theo dõi"
 #: src/components/ProgressGuide/FollowDialog.tsx:88
 #: src/components/ProgressGuide/FollowDialog.tsx:417
 msgid "Find people to follow"
-msgstr ""
+msgstr "Tìm người để theo dõi"
 
 #: src/view/screens/Search/Search.tsx:595
 msgid "Find posts and users on Bluesky"
@@ -2915,7 +2915,7 @@ msgstr "Theo dõi {name}"
 #: src/components/ProgressGuide/List.tsx:52
 #: src/state/shell/progress-guide.tsx:229
 msgid "Follow 10 accounts"
-msgstr ""
+msgstr "Theo dõi 10 tài khoản"
 
 #: src/components/ProgressGuide/List.tsx:69
 msgid "Follow 7 accounts"
@@ -3289,13 +3289,13 @@ msgstr "Ẩn trả lời này?"
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:83
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:62
 msgid "Hide trending topics"
-msgstr ""
+msgstr "Ẩn chủ đề nổi trội"
 
 #: src/components/interstitials/Trending.tsx:99
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:135
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:108
 msgid "Hide trending topics?"
-msgstr ""
+msgstr "Ẩn chủ đề nổi trội?"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:592
 msgid "Hide user list"
@@ -3356,7 +3356,7 @@ msgstr "Nhà cung cấp lưu trữ"
 #: src/view/com/post-thread/PostThread.tsx:652
 #: src/view/com/post-thread/PostThread.tsx:657
 msgid "Hot replies first"
-msgstr "Trở lời nổi bật trước"
+msgstr "Trả lời nổi bật trước"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:41
 msgid "How should we open this link?"
@@ -3405,7 +3405,7 @@ msgstr "Danh sách không thể được khôi phục sau khi đã bị xóa."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:250
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
-msgstr ""
+msgstr "Nếu bạn có tên miền riêng, bạn có thể sử dụng nó làm tên người dùng. Điều này giúp bạn tự xác minh danh tính của mình. <0>Tìm hiểu thêm tại đây.</0>"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
 msgid "If you remove this post, you won't be able to recover it."
@@ -3703,11 +3703,11 @@ msgstr "Sáng"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Like"
-msgstr ""
+msgstr "Thích"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:311
 msgid "Like ({0, plural, one {# like} other {# likes}})"
-msgstr ""
+msgstr "Thích ({0, plural, one {# lượt thích} other {# lượt thích}})"
 
 #: src/components/ProgressGuide/List.tsx:63
 msgid "Like 10 posts"
@@ -3720,7 +3720,7 @@ msgstr "Thích 10 bài để dạy cho bảng tin Khám phá"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:501
 msgid "Like feed"
-msgstr ""
+msgstr "Thích bảng tin"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:275
 msgid "Like this feed"
@@ -3741,14 +3741,14 @@ msgstr "Thích bởi"
 #: src/components/FeedCard.tsx:213
 #: src/view/com/feeds/FeedSourceCard.tsx:303
 msgid "Liked by {0, plural, one {# user} other {# users}}"
-msgstr ""
+msgstr "Thích bởi {0, plural, one {# người dùng} other {# người dùng}}"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:489
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:295
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:309
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
-msgstr ""
+msgstr "Thích bởi {likeCount, plural, one {# người dùng} other {# người dùng}}"
 
 #: src/view/screens/Profile.tsx:234
 msgid "Likes"
@@ -3761,7 +3761,7 @@ msgstr "Lượt thích cho bài đăng này"
 #: src/view/com/post-thread/PostThread.tsx:626
 #: src/view/com/post-thread/PostThread.tsx:631
 msgid "Linear"
-msgstr ""
+msgstr "Ngang hàng"
 
 #: src/Navigation.tsx:198
 msgid "List"
@@ -3782,11 +3782,11 @@ msgstr "Danh sách bởi {0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:156
 msgid "List by <0/>"
-msgstr ""
+msgstr "Danh sách tạo bởi <0/>"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:154
 msgid "List by you"
-msgstr ""
+msgstr "Danh sách của bạn"
 
 #: src/view/screens/ProfileList.tsx:455
 msgid "List deleted"
@@ -3882,7 +3882,7 @@ msgstr "Đăng nhập vào tải khoản chưa được liệt kê"
 
 #: src/view/shell/desktop/RightNav.tsx:121
 msgid "Logo by @sawaratsuki.bsky.social"
-msgstr ""
+msgstr "Logo bởi @sawaratsuki.bsky.social"
 
 #: src/view/shell/desktop/RightNav.tsx:103
 #~ msgid "Logo by <0/>"
@@ -3953,7 +3953,7 @@ msgstr "Người dùng được đề cập"
 
 #: src/view/screens/Notifications.tsx:99
 msgid "Mentions"
-msgstr ""
+msgstr "Nhắc đến"
 
 #: src/components/Menu/index.tsx:96
 #: src/view/screens/Search/Search.tsx:863
@@ -4282,7 +4282,7 @@ msgstr "Tên người dùng mới"
 #: src/view/screens/Lists.tsx:66
 #: src/view/screens/ModerationModlists.tsx:66
 msgid "New list"
-msgstr ""
+msgstr "Danh sách mới"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
@@ -4668,7 +4668,7 @@ msgstr "Mở tùy chọn hội thoại"
 
 #: src/components/Layout/Header/index.tsx:145
 msgid "Open drawer menu"
-msgstr ""
+msgstr "Mở trình đơn"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
 #: src/view/com/composer/Composer.tsx:1228
@@ -4678,7 +4678,7 @@ msgstr "Mở trình chọn biểu tượng cảm xúc"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:190
 msgid "Open feed info screen"
-msgstr ""
+msgstr "Mở màn hình thông tin bảng tin"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:290
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:295
@@ -4912,7 +4912,7 @@ msgstr "Hình ảnh cho người lớn"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:519
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:526
 msgid "Pin feed"
-msgstr ""
+msgstr "Ghim bảng tin"
 
 #: src/view/screens/ProfileList.tsx:685
 msgid "Pin to home"
@@ -4934,7 +4934,7 @@ msgstr "Đã ghim"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:162
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:174
 msgid "Pinned {0} to Home"
-msgstr ""
+msgstr "Đã ghim {0} vào trang chủ"
 
 #: src/view/screens/SavedFeeds.tsx:123
 msgid "Pinned Feeds"
@@ -5226,11 +5226,11 @@ msgstr "Công khai"
 
 #: src/view/com/lists/MyLists.tsx:77
 msgid "Public, sharable lists of users to mute or block in bulk."
-msgstr ""
+msgstr "Danh sách công khai, chia sẻ được của người dùng để cho việc ẩn hoặc chặn hàng loạt."
 
 #: src/view/com/lists/MyLists.tsx:72
 msgid "Public, sharable lists which can be used to drive feeds."
-msgstr ""
+msgstr "Danh sách công khai và chia sẻ được có thể thúc đẩy bảng tin."
 
 #: src/view/screens/ModerationModlists.tsx:75
 #~ msgid "Public, shareable lists of users to mute or block in bulk."
@@ -5334,7 +5334,7 @@ msgstr "Tìm kiếm gần đây"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:50
 msgid "Recommended"
-msgstr ""
+msgstr "Đề xuất"
 
 #: src/screens/Messages/components/MessageListError.tsx:20
 msgid "Reconnect"
@@ -5506,7 +5506,7 @@ msgstr "Trả lời"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:263
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
-msgstr ""
+msgstr "Trả lời ({0, plural, one {# trả lời} other {# trả lời}})"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:123
@@ -5528,7 +5528,7 @@ msgstr "Cài đặt trả lời được chọn bởi tác giả của thảo lu
 
 #: src/view/com/post-thread/PostThread.tsx:648
 msgid "Reply sorting"
-msgstr ""
+msgstr "Sắp xếp trả lời"
 
 #: src/view/com/post/Post.tsx:204
 #: src/view/com/posts/PostFeedItem.tsx:553
@@ -5647,7 +5647,7 @@ msgstr "Đăng lại"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:74
 msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr ""
+msgstr "Đăng lại ({0, plural, one {# đăng lại} other {# đăng lại}})"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:548
 #: src/view/com/util/post-ctrls/RepostButton.tsx:148
@@ -5890,15 +5890,15 @@ msgstr "Tìm kiếm"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:745
 msgid "Search by name or interest"
-msgstr ""
+msgstr "Tìm theo tên hoặc sở thích"
 
 #: src/view/screens/Feeds.tsx:441
 msgid "Search feeds"
-msgstr ""
+msgstr "Tìm bảng tin"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:575
 msgid "Search for \"{interestsDisplayName}\"{activeText}"
-msgstr ""
+msgstr "Tìm kiếm \"{interestsDisplayName}\"{activeText}"
 
 #: src/view/shell/desktop/Search.tsx:201
 msgid "Search for \"{query}\""
@@ -5961,7 +5961,7 @@ msgstr "Xem hướng dẫn này"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:194
 msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
-msgstr ""
+msgstr "Thanh trượt. Sử dụng các phím mũi tên để tìm kiếm về phía trước và phía sau, và phím cách để phát / tạm dừng"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -6125,7 +6125,7 @@ msgstr "Địa chỉ máy chủ"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:178
 msgid "Set app icon to {0}"
-msgstr ""
+msgstr "Đặt biểu tượng ứng dụng thành {0}"
 
 #: src/screens/Moderation/index.tsx:290
 msgid "Set birthdate"
@@ -6218,7 +6218,7 @@ msgstr "Chia sẻ mã QR"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:470
 msgid "Share this feed"
-msgstr ""
+msgstr "Chia sẻ bảng tin này"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:416
 msgid "Share this starter pack"
@@ -6313,11 +6313,11 @@ msgstr "Hiển thị trả lời"
 
 #: src/view/com/post-thread/PostThread.tsx:622
 msgid "Show replies as"
-msgstr ""
+msgstr "Hiển thị trả lời dưới dạng"
 
 #: src/screens/Settings/ThreadPreferences.tsx:151
 msgid "Show replies as threaded"
-msgstr ""
+msgstr "Hiển thị trả lời dưới dạng phân luồng"
 
 #: src/screens/Settings/ThreadPreferences.tsx:126
 msgid "Show replies by people you follow before all other replies"
@@ -6479,7 +6479,7 @@ msgstr "Có gì đó không đúng!"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:538
 msgid "Something wrong? Let us know."
-msgstr ""
+msgstr "Có gì không đúng? Hãy cho chúng tôi biết."
 
 #: src/App.native.tsx:122
 #: src/App.web.tsx:97
@@ -6523,12 +6523,12 @@ msgstr "Bắt đầu cuộc trò chuyện mới"
 #: src/view/screens/ProfileList.tsx:817
 #: src/view/screens/ProfileList.tsx:938
 msgid "Start adding people"
-msgstr ""
+msgstr "Bắt đầu thêm người"
 
 #: src/view/screens/ProfileList.tsx:824
 #: src/view/screens/ProfileList.tsx:945
 msgid "Start adding people!"
-msgstr ""
+msgstr "Bắt đầu thêm người!"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:353
 msgid "Start chat with {displayName}"
@@ -6546,7 +6546,7 @@ msgstr "Gói khởi đầu bởi {0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:182
 msgid "Starter pack by <0/>"
-msgstr ""
+msgstr "Gói khởi đầu bởi <0/>"
 
 #: src/components/StarterPack/StarterPackCard.tsx:80
 #: src/view/com/profile/ProfileSubpageHeader.tsx:180
@@ -6670,7 +6670,7 @@ msgstr "Chạm để thay đổi biểu tượng ứng dụng"
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
 msgid "Tap to close the emoji picker"
-msgstr ""
+msgstr "Chạm để đóng bảng chọn biểu tượng cảm xúc"
 
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"
@@ -6695,7 +6695,7 @@ msgstr "Nhấn để xem ảnh đầy đủ"
 
 #: src/state/shell/progress-guide.tsx:233
 msgid "Task complete - 10 follows!"
-msgstr ""
+msgstr "Hoàn thành nhiệm vụ - 10 người theo dõi!"
 
 #: src/state/shell/progress-guide.tsx:223
 msgid "Task complete - 10 likes!"
@@ -7099,7 +7099,7 @@ msgstr "Danh sách này - tạo bởi <0>{0}</0> - có thể chứa các vi ph�
 
 #: src/view/screens/ProfileList.tsx:933
 msgid "This list is empty."
-msgstr ""
+msgstr "Danh sách này đang trống."
 
 #: src/screens/Profile/ErrorState.tsx:40
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
@@ -7190,7 +7190,7 @@ msgstr "Tác vụ này sẽ xóa bài đăng của bạn khỏi bài đăng trí
 #: src/view/com/post-thread/PostThread.tsx:606
 #: src/view/com/post-thread/PostThread.tsx:609
 msgid "Thread options"
-msgstr ""
+msgstr "Tùy chọn thảo luận"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:66
 #: src/screens/Settings/ContentAndMediaSettings.tsx:69
@@ -7204,7 +7204,7 @@ msgstr "Cài đặt thảo luận"
 #: src/view/com/post-thread/PostThread.tsx:636
 #: src/view/com/post-thread/PostThread.tsx:641
 msgid "Threaded"
-msgstr ""
+msgstr "Phân luồng"
 
 #: src/screens/Settings/ThreadPreferences.tsx:142
 msgid "Threaded mode"
@@ -7254,7 +7254,7 @@ msgstr "Hàng đầu"
 
 #: src/Navigation.tsx:383
 msgid "Topic"
-msgstr ""
+msgstr "Chủ đề"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
@@ -7268,7 +7268,7 @@ msgstr "Dịch"
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:69
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:59
 msgid "Trending"
-msgstr ""
+msgstr "Chủ đề nổi trội"
 
 #: src/view/com/util/error/ErrorScreen.tsx:103
 msgctxt "action"
@@ -7293,7 +7293,7 @@ msgstr "Gõ tin nhắn của bạn ở đây"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:415
 msgid "Type:"
-msgstr "Type:"
+msgstr "Loại:"
 
 #: src/view/screens/ProfileList.tsx:590
 msgid "Un-block list"
@@ -7358,7 +7358,7 @@ msgstr "Bỏ chặn bài đăng lại"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:68
 msgid "Undo repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr ""
+msgstr "Huỷ đăng lại ({0, plural, one {# đăng lại} other {# đăng lại}})"
 
 #: src/view/com/profile/FollowButton.tsx:60
 msgctxt "action"
@@ -7376,11 +7376,11 @@ msgstr "Bỏ theo dõi tài khoản"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Unlike"
-msgstr ""
+msgstr "Bỏ thích"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:305
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
-msgstr ""
+msgstr "Bỏ thích ({0, plural, one {# thích} other {# thích}})"
 
 #: src/view/screens/ProfileFeed.tsx:576
 #~ msgid "Unlike this feed"
@@ -7430,7 +7430,7 @@ msgstr "Bỏ ghim"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:519
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:526
 msgid "Unpin feed"
-msgstr ""
+msgstr "Bỏ ghim bảng tin"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:309
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:311
@@ -7448,7 +7448,7 @@ msgstr "Bỏ ghim khỏi danh sách kiểm duyệt"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:164
 msgid "Unpinned {0} from Home"
-msgstr ""
+msgstr "Đã bỏ ghim {0} khỏi Trang chủ"
 
 #: src/view/screens/ProfileList.tsx:352
 msgid "Unpinned from your feeds"
@@ -7854,7 +7854,7 @@ msgstr "Không tìm thấy nội dung nào cho hashtag."
 
 #: src/screens/Topic.tsx:178
 msgid "We couldn't find any results for that topic."
-msgstr ""
+msgstr "Chúng tôi không tìm thấy kết quả nào cho chủ đề đó."
 
 #: src/screens/Messages/Conversation.tsx:103
 msgid "We couldn't load this conversation"
@@ -7952,7 +7952,7 @@ msgstr "Bạn muốn gọi gói khởi đầu của mình là gì?"
 
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:79
 msgid "What people are posting about."
-msgstr ""
+msgstr "Chủ đề mà mọi người đang bàn luận."
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
@@ -8107,7 +8107,7 @@ msgstr "Bạn có thể kích hoạt lại tài khoản của mình để tiếp
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:136
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:109
 msgid "You can update this later from your settings."
-msgstr ""
+msgstr "Bạn có thể cập nhật lại sau trong phần cài đặt."
 
 #: src/view/com/profile/ProfileFollowers.tsx:94
 msgid "You do not have any followers."
@@ -8325,7 +8325,7 @@ msgstr "Bạn đã chọn ẩn một từ hoặc thẻ trong bài đăng này."
 
 #: src/state/shell/progress-guide.tsx:234
 msgid "You've found some people to follow"
-msgstr ""
+msgstr "Bạn đã tìm thấy một số người để theo dõi"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
@@ -8373,7 +8373,7 @@ msgstr "Lựa chọn của bạn sẽ được lưu, nhưng có thể được t
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:496
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
-msgstr ""
+msgstr "Tên người dùng hiện tại của bạn <0>{0}</0> sẽ tự động được giữ lại cho bạn. Bạn có thể chuyển lại vào bất kỳ lúc nào từ tài khoản này."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Signup/state.ts:203
