@@ -184,6 +184,7 @@ export function ProfileCardWithFollowBtn({
   noBg,
   noBorder,
   onPress,
+  onFollow,
   logContext = 'ProfileCard',
   showKnownFollowers,
 }: {
@@ -191,6 +192,7 @@ export function ProfileCardWithFollowBtn({
   noBg?: boolean
   noBorder?: boolean
   onPress?: () => void
+  onFollow?: () => void
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
   showKnownFollowers?: boolean
 }) {
@@ -206,7 +208,11 @@ export function ProfileCardWithFollowBtn({
         isMe
           ? undefined
           : profileShadow => (
-              <FollowButton profile={profileShadow} logContext={logContext} />
+              <FollowButton
+                profile={profileShadow}
+                logContext={logContext}
+                onFollow={onFollow}
+              />
             )
       }
       onPress={onPress}
