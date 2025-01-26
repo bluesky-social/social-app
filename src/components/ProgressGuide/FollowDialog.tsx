@@ -762,7 +762,7 @@ function SearchInput({
         autoComplete="off"
         autoCapitalize="none"
         accessibilityLabel={_(msg`Search profiles`)}
-        accessibilityHint={_(msg`Search profiles`)}
+        accessibilityHint={_(msg`Searches for profiles`)}
       />
     </View>
   )

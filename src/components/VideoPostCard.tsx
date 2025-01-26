@@ -112,7 +112,7 @@ export function VideoPostCard({
 
   return (
     <Link
-      accessibilityHint={_(msg`Tap to view video in immersive mode.`)}
+      accessibilityHint={_(msg`Views video in immersive mode`)}
       label={_(msg`Video from ${author.handle}: ${text}`)}
       to={{
         screen: 'VideoFeed',

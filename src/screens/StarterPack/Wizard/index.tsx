@@ -284,7 +284,7 @@ function WizardInner({
       <Layout.Header.Outer>
         <Layout.Header.BackButton
           label={_(msg`Back`)}
-          accessibilityHint={_(msg`Go back to the previous step`)}
+          accessibilityHint={_(msg`Returns to the previous step`)}
           onPress={evt => {
             if (state.currentStep !== 'Details') {
               evt.preventDefault()

@@ -293,7 +293,9 @@ const DropdownItems = ({
                 onPress={() => onPressItem(index)}
                 accessibilityRole="button"
                 accessibilityLabel={item.label}
-                accessibilityHint={_(msg`Option ${index + 1} of ${numItems}`)}>
+                accessibilityHint={_(
+                  msg`Selects option ${index + 1} of ${numItems}`,
+                )}>
                 {item.icon && (
                   <FontAwesomeIcon
                     style={styles.icon}

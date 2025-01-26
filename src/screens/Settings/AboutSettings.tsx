@@ -65,7 +65,7 @@ export function AboutSettingsScreen({}: Props) {
           </SettingsList.LinkItem>
           <SettingsList.PressableItem
             label={_(msg`Version ${appVersion}`)}
-            accessibilityHint={_(msg`Copy build version to clipboard`)}
+            accessibilityHint={_(msg`Copies build version to clipboard`)}
             onPress={() => {
               setStringAsync(
                 `Build version: ${appVersion}; Bundle info: ${bundleInfo}; Bundle date: ${BUNDLE_DATE}; Platform: ${Platform.OS}; Platform version: ${Platform.Version}`,

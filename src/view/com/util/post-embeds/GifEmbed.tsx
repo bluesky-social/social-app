@@ -39,7 +39,7 @@ function PlaybackControls({
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityHint={_(msg`Play or pause the GIF`)}
+      accessibilityHint={_(msg`Plays or pauses the GIF`)}
       accessibilityLabel={isPlaying ? _(msg`Pause`) : _(msg`Play`)}
       style={[
         a.absolute,

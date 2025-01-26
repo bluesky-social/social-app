@@ -56,7 +56,7 @@ function PlaceholderOverlay({
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={_(msg`Play Video`)}
-        accessibilityHint={_(msg`Play Video`)}
+        accessibilityHint={_(msg`Plays the video`)}
         onPress={onPress}
         style={[styles.overlayContainer]}>
         {!isPlayerActive ? (
