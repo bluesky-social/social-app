@@ -245,7 +245,6 @@ export type LogEvents = {
     domain: string
   }
 
-  'feed:interstitial:profileCard:press': {}
   'feed:interstitial:feedCard:press': {}
 
   'profile:header:suggestedFollowsCard:press': {}

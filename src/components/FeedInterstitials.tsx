@@ -257,7 +257,6 @@ export function ProfileGrid({
           key={profile.did}
           profile={profile}
           onPress={() => {
-            logEvent('feed:interstitial:profileCard:press', {})
             logEvent('suggestedUser:press', {
               logContext:
                 viewContext === 'feed'
