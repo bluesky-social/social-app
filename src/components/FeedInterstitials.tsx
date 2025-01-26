@@ -196,6 +196,7 @@ export function SuggestedFollowsProfile({did}: {did: string}) {
     <ProfileGrid
       isSuggestionsLoading={isSuggestionsLoading}
       profiles={data?.suggestions ?? []}
+      recId={data?.recId}
       error={error}
       viewContext="profile"
     />
@@ -222,10 +223,12 @@ export function ProfileGrid({
   isSuggestionsLoading,
   error,
   profiles,
+  recId,
   viewContext = 'feed',
 }: {
   isSuggestionsLoading: boolean
   profiles: AppBskyActorDefs.ProfileViewDetailed[]
+  recId?: number
   error: Error | null
   viewContext: 'profile' | 'feed'
 }) {
@@ -249,12 +252,19 @@ export function ProfileGrid({
       ))
   ) : error || !profiles.length ? null : (
     <>
-      {profiles.slice(0, maxLength).map(profile => (
+      {profiles.slice(0, maxLength).map((profile, index) => (
         <ProfileCard.Link
           key={profile.did}
           profile={profile}
           onPress={() => {
-            logEvent('feed:interstitial:profileCard:press', {})
+            logEvent('suggestedUser:press', {
+              logContext:
+                viewContext === 'feed'
+                  ? 'InterstitialDiscover'
+                  : 'InterstitialProfile',
+              recId,
+              position: index,
+            })
           }}
           style={[
             a.flex_1,
@@ -282,6 +292,17 @@ export function ProfileGrid({
                     logContext="FeedInterstitial"
                     shape="round"
                     colorInverted
+                    onFollow={() => {
+                      logEvent('suggestedUser:follow', {
+                        logContext:
+                          viewContext === 'feed'
+                            ? 'InterstitialDiscover'
+                            : 'InterstitialProfile',
+                        location: 'Card',
+                        recId,
+                        position: index,
+                      })
+                    }}
                   />
                 </ProfileCard.Header>
                 <ProfileCard.Description profile={profile} numberOfLines={2} />
