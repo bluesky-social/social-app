@@ -8062,7 +8062,7 @@ msgstr "Вы включили игнорирование этого пользо
 
 #: src/screens/Messages/ChatList.tsx:190
 msgid "You have no conversations yet. Start one!"
-msgstr "У вас ещё нет бесед. Начните одну!"
+msgstr "У вас ещё нет бесед. Создайте первую!"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:143
 msgid "You have no feeds."
