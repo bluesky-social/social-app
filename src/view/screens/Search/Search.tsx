@@ -67,7 +67,10 @@ import {
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
-import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
+import {
+  ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
+  ChevronTopBottom_Stroke2_Corner0_Rounded as ChevronUpDownIcon,
+} from '#/components/icons/Chevron'
 import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Globe'
 import * as Layout from '#/components/Layout'
 import * as Menu from '#/components/Menu'
@@ -373,7 +376,7 @@ function SearchLanguageDropdown({
             <ButtonText>{currentLanguageLabel}</ButtonText>
             <ButtonIcon
               icon={platform({
-                native: ChevronDownIcon,
+                native: ChevronUpDownIcon,
                 default: ChevronDownIcon,
               })}
             />
