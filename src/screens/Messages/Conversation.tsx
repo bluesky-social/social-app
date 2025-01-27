@@ -1,6 +1,10 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  moderateProfile,
+  ModerationDecision,
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
@@ -76,6 +80,11 @@ function Inner() {
     did: convoState.recipients?.[0].did,
   })
 
+  const moderation = React.useMemo(() => {
+    if (!recipient || !moderationOpts) return null
+    return moderateProfile(recipient, moderationOpts)
+  }, [recipient, moderationOpts])
+
   // Because we want to give the list a chance to asynchronously scroll to the end before it is visible to the user,
   // we use `hasScrolled` to determine when to render. With that said however, there is a chance that the chat will be
   // empty. So, we also check for that possible state as well and render once we can.
@@ -110,11 +119,16 @@ function Inner() {
 
   return (
     <Layout.Center style={[a.flex_1]}>
-      {!readyToShow && <MessagesListHeader />}
+      {!readyToShow &&
+        (moderation ? (
+          <MessagesListHeader moderation={moderation} profile={recipient} />
+        ) : (
+          <MessagesListHeader />
+        ))}
       <View style={[a.flex_1]}>
-        {moderationOpts && recipient ? (
+        {moderation && recipient ? (
           <InnerReady
-            moderationOpts={moderationOpts}
+            moderation={moderation}
             recipient={recipient}
             hasScrolled={hasScrolled}
             setHasScrolled={setHasScrolled}
@@ -144,12 +158,12 @@ function Inner() {
 }
 
 function InnerReady({
-  moderationOpts,
+  moderation,
   recipient: recipientUnshadowed,
   hasScrolled,
   setHasScrolled,
 }: {
-  moderationOpts: ModerationOpts
+  moderation: ModerationDecision
   recipient: AppBskyActorDefs.ProfileViewBasic
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
@@ -161,21 +175,6 @@ function InnerReady({
   const verifyEmailControl = useDialogControl()
   const {needsEmailVerification} = useEmail()
 
-  const moderation = React.useMemo(() => {
-    return moderateProfile(recipient, moderationOpts)
-  }, [recipient, moderationOpts])
-
-  const blockInfo = React.useMemo(() => {
-    const modui = moderation.ui('profileView')
-    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
-    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
-    const userBlock = blocks.find(alert => alert.source.type === 'user')
-    return {
-      listBlocks,
-      userBlock,
-    }
-  }, [moderation])
-
   React.useEffect(() => {
     if (needsEmailVerification) {
       verifyEmailControl.open()
@@ -184,11 +183,7 @@ function InnerReady({
 
   return (
     <>
-      <MessagesListHeader
-        profile={recipient}
-        moderation={moderation}
-        blockInfo={blockInfo}
-      />
+      <MessagesListHeader profile={recipient} moderation={moderation} />
       {isConvoActive(convoState) && (
         <MessagesList
           hasScrolled={hasScrolled}
@@ -199,7 +194,7 @@ function InnerReady({
               recipient={recipient}
               convoId={convoState.convo.id}
               hasMessages={convoState.items.length > 0}
-              blockInfo={blockInfo}
+              moderation={moderation}
             />
           }
         />

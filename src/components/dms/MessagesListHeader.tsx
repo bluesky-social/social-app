@@ -30,19 +30,26 @@ const PFP_SIZE = isWeb ? 40 : 34
 export let MessagesListHeader = ({
   profile,
   moderation,
-  blockInfo,
 }: {
   profile?: AppBskyActorDefs.ProfileViewBasic
   moderation?: ModerationDecision
-  blockInfo?: {
-    listBlocks: ModerationCause[]
-    userBlock?: ModerationCause
-  }
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
+
+  const blockInfo = React.useMemo(() => {
+    if (!moderation) return
+    const modui = moderation.ui('profileView')
+    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
+    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
+    const userBlock = blocks.find(alert => alert.source.type === 'user')
+    return {
+      listBlocks,
+      userBlock,
+    }
+  }, [moderation])
 
   const onPressBack = useCallback(() => {
     if (isWeb) {
