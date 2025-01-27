@@ -194,18 +194,12 @@ export function ItemText({children, style}: ItemTextProps) {
   )
 }
 
-export function ItemIcon({icon: Comp}: ItemIconProps) {
+export function ItemIcon({icon: Comp, color}: ItemIconProps) {
   const t = useTheme()
   const {disabled} = useMenuItemContext()
+  const fill = color ? color : t.atoms.text_contrast_medium.color
   return (
-    <Comp
-      size="lg"
-      fill={
-        disabled
-          ? t.atoms.text_contrast_low.color
-          : t.atoms.text_contrast_medium.color
-      }
-    />
+    <Comp size="lg" fill={disabled ? t.atoms.text_contrast_low.color : fill} />
   )
 }
 
