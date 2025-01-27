@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {memo} from 'react'
 import {
   ImageStyle,
   Keyboard,
@@ -57,7 +57,7 @@ interface GalleryInnerProps extends GalleryProps {
   containerInfo: Dimensions
 }
 
-const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
+const GalleryInner = memo(({images, containerInfo, dispatch}: GalleryInnerProps) => {
   const {isMobile} = useWebMediaQueries()
 
   const {altTextControlStyle, imageControlsStyle, imageStyle} =
@@ -244,7 +244,7 @@ const GalleryItem = ({
   )
 }
 
-export function AltTextReminder() {
+export const AltTextReminder = memo(() => {
   const t = useTheme()
   return (
     <View style={[styles.reminder]}>
@@ -259,7 +259,7 @@ export function AltTextReminder() {
       </Text>
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   gallery: {
