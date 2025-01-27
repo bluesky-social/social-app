@@ -4225,7 +4225,7 @@ msgstr "Navn er obligatorisk"
 #: src/lib/moderation/useReportOptions.ts:106
 #: src/lib/moderation/useReportOptions.ts:114
 msgid "Name or Description Violates Community Standards"
-msgstr "Navn eller beskrivelse overtræder retningslinjer"
+msgstr "Navn eller beskrivelse overtræder fælleskabsreglerne"
 
 #: src/screens/Onboarding/index.tsx:22
 #: src/screens/Onboarding/state.ts:107
@@ -6766,7 +6766,7 @@ msgstr "Vilkår"
 #: src/lib/moderation/useReportOptions.ts:107
 #: src/lib/moderation/useReportOptions.ts:115
 msgid "Terms used violate community standards"
-msgstr "Sprogbrug overtræder retningslinjer"
+msgstr "Sprogbrug overtræder fælleskabsreglerne"
 
 #: src/components/dialogs/MutedWords.tsx:266
 msgid "Text & tags"
@@ -6839,7 +6839,7 @@ msgstr "Bluesky-webapplikationen"
 
 #: src/view/screens/CommunityGuidelines.tsx:38
 msgid "The Community Guidelines have been moved to <0/>"
-msgstr "Retningslinjerne er flyttet til <0/>"
+msgstr "Fælleskabsreglerne er flyttet til <0/>"
 
 #: src/view/screens/CopyrightPolicy.tsx:35
 msgid "The Copyright Policy has been moved to <0/>"
@@ -7123,7 +7123,7 @@ msgstr "Dette link fører dig til følgende website:"
 
 #: src/screens/List/ListHiddenScreen.tsx:146
 msgid "This list - created by <0>{0}</0> - contains possible violations of Bluesky's community guidelines in its name or description."
-msgstr "Denne list - oprettet af <0>{0}</0> - overtræder muligvis Blueskys retningslinjer med sit navn eller sin beskrivelse"
+msgstr "Denne list - oprettet af <0>{0}</0> - overtræder muligvis Blueskys fælleskabsregler med sit navn eller sin beskrivelse"
 
 #: src/view/screens/ProfileList.tsx:933
 msgid "This list is empty."
