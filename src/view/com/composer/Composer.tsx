@@ -48,6 +48,7 @@ import {
   BskyAgent,
   RichText,
 } from '@atproto/api'
+import {TID} from '@atproto/common-web'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -73,6 +74,9 @@ import {cleanError} from '#/lib/strings/errors'
 import {colors, s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
+import {putDraft, removeDraft} from '#/state/composer-drafts/database'
+import {DraftEntry} from '#/state/composer-drafts/database.types'
+import {serializeThread} from '#/state/composer-drafts/schema'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
 import {ComposerImage, pasteImage} from '#/state/gallery'
@@ -124,6 +128,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
+import {DiscardDraftPrompt} from './drafts/DiscardDraftPrompt'
 import {
   ComposerAction,
   composerReducer,
@@ -152,6 +157,7 @@ export const ComposePost = ({
   text: initText,
   imageUris: initImageUris,
   videoUri: initVideoUri,
+  draft: initDraftEntry,
   cancelRef,
 }: Props & {
   cancelRef?: React.RefObject<CancelRef>
@@ -166,7 +172,10 @@ export const ComposePost = ({
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
   const textInput = useRef<TextInputRef>(null)
+
   const discardPromptControl = Prompt.usePromptControl()
+  const draftPromptControl = Prompt.usePromptControl()
+
   const {closeAllDialogs} = useDialogStateControlContext()
   const {closeAllModals} = useModalControls()
 
@@ -177,7 +186,13 @@ export const ComposePost = ({
 
   const [composerState, composerDispatch] = useReducer(
     composerReducer,
-    {initImageUris, initQuoteUri: initQuote?.uri, initText, initMention},
+    {
+      initImageUris,
+      initQuoteUri: initQuote?.uri,
+      initText,
+      initMention,
+      initDraftEntry: initDraftEntry,
+    },
     createComposerState,
   )
 
@@ -287,11 +302,29 @@ export const ComposePost = ({
     ) {
       closeAllDialogs()
       Keyboard.dismiss()
-      discardPromptControl.open()
+
+      // Drafts can't include videos or GIFs for now.
+      if (
+        !replyTo &&
+        thread.posts.every(
+          post => !post.embed.media || post.embed.media.type === 'images',
+        )
+      ) {
+        draftPromptControl.open()
+      } else {
+        discardPromptControl.open()
+      }
     } else {
       onClose()
     }
-  }, [thread, closeAllDialogs, discardPromptControl, onClose])
+  }, [
+    thread,
+    replyTo,
+    closeAllDialogs,
+    discardPromptControl,
+    draftPromptControl,
+    onClose,
+  ])
 
   useImperativeHandle(cancelRef, () => ({onPressCancel}))
 
@@ -448,6 +481,9 @@ export const ComposePost = ({
         })
       }
     }
+    if (composerState.draftEntryId) {
+      removeDraft(composerState.draftEntryId)
+    }
     if (postUri && !replyTo) {
       emitPostCreated()
     }
@@ -479,6 +515,7 @@ export const ComposePost = ({
   }, [
     _,
     agent,
+    composerState,
     thread,
     canPost,
     isPublishing,
@@ -687,6 +724,24 @@ export const ComposePost = ({
           onConfirm={onClose}
           confirmButtonCta={_(msg`Discard`)}
           confirmButtonColor="negative"
+        />
+
+        <DiscardDraftPrompt
+          control={draftPromptControl}
+          onConfirm={async () => {
+            onClose()
+
+            const entry: DraftEntry = {
+              id: TID.nextStr(),
+              createdAt: Date.now(),
+              state: await serializeThread(composerState.thread),
+            }
+
+            await putDraft(entry)
+
+            Toast.show(_(msg`Your draft has been saved`))
+          }}
+          onDiscard={onClose}
         />
       </KeyboardAvoidingView>
     </BottomSheetPortalProvider>
