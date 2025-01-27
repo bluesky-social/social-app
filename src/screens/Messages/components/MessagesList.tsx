@@ -263,7 +263,11 @@ export function MessagesList({
       onMove: e => {
         'worklet'
         keyboardHeight.set(e.height)
-        if (isIOS || e.height > footerHeight.get() + messageInputHeight.get()) {
+        if (
+          isIOS
+            ? isAtBottom.get()
+            : e.height > footerHeight.get() + messageInputHeight.get()
+        ) {
           scrollTo(flatListRef, 0, 1e7, false)
         }
       },
@@ -274,7 +278,11 @@ export function MessagesList({
       onEnd: e => {
         'worklet'
         keyboardHeight.set(e.height)
-        if (isIOS || e.height > footerHeight.get() + messageInputHeight.get()) {
+        if (
+          isIOS
+            ? isAtBottom.get()
+            : e.height > footerHeight.get() + messageInputHeight.get()
+        ) {
           scrollTo(flatListRef, 0, 1e7, false)
         }
         keyboardIsOpening.set(false)
