@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-24 00:43+0000\n"
-"PO-Revision-Date: 2025-01-24 17:53+0000\n"
+"PO-Revision-Date: 2025-01-27 09:16+0000\n"
 "Last-Translator: Michele Locati <michele@locati.it>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/mlocati/teams/201833/it/)\n"
 "Language: it\n"
@@ -1547,7 +1547,7 @@ msgstr "Linee guida della community"
 
 #: src/screens/Onboarding/StepFinished.tsx:300
 msgid "Complete onboarding and start using your account"
-msgstr "Completa l'incorporazione e inizia a usare il tuo account"
+msgstr "Completa la registrazione e inizia a usare il tuo account"
 
 #: src/screens/Signup/index.tsx:144
 msgid "Complete the challenge"
@@ -4599,7 +4599,7 @@ msgstr "su<0><1/><2><3/></2></0>"
 
 #: src/screens/Settings/Settings.tsx:304
 msgid "Onboarding reset"
-msgstr "Reimpostazione dell'onboarding"
+msgstr "Reimposta account"
 
 #: src/view/com/composer/Composer.tsx:338
 msgid "One or more GIFs is missing alt text."
@@ -5759,7 +5759,7 @@ msgstr "Reimposta il codice"
 #: src/screens/Settings/Settings.tsx:344
 #: src/screens/Settings/Settings.tsx:346
 msgid "Reset onboarding state"
-msgstr "Reimposta lo stato dell'incorporazione"
+msgstr "Ripristina lo stato di registrazione"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:80
 msgid "Reset password"
