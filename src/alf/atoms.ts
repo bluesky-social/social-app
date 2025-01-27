@@ -52,6 +52,16 @@ export const atoms = {
   },
 
   /*
+   * Extra space
+   */
+  inset_outer_md: {
+    top: tokens.outerInset.md,
+    left: tokens.outerInset.md,
+    right: tokens.outerInset.md,
+    bottom: tokens.outerInset.md,
+  },
+
+  /*
    * Width
    */
   w_full: {
