@@ -683,6 +683,7 @@ function Overlay({
   const {_} = useLingui()
   const t = useTheme()
   const {openComposer} = useComposerControls()
+  const {currentAccount} = useSession()
   const navigation = useNavigation<NavigationProp>()
   const seekingAnimationSV = useSharedValue(0)
 
@@ -790,37 +791,38 @@ function Overlay({
                   </View>
                 </Link>
                 {/* show button based on non-reactive version, so it doesn't hide on press */}
-                {!post.author.viewer?.following && (
-                  <Button
-                    label={
-                      profile.viewer?.following
-                        ? _(msg`Following ${handle}`)
-                        : _(msg`Follow ${handle}`)
-                    }
-                    accessibilityHint={
-                      profile.viewer?.following ? _(msg`Unfollow user`) : ''
-                    }
-                    size="small"
-                    variant="solid"
-                    color="secondary_inverted"
-                    style={[a.mb_xs]}
-                    onPress={() =>
-                      profile.viewer?.following
-                        ? queueUnfollow()
-                        : queueFollow()
-                    }>
-                    {!!profile.viewer?.following && (
-                      <ButtonIcon icon={CheckIcon} />
-                    )}
-                    <ButtonText>
-                      {profile.viewer?.following ? (
-                        <Trans>Following</Trans>
-                      ) : (
-                        <Trans>Follow</Trans>
+                {post.author.did !== currentAccount?.did &&
+                  !post.author.viewer?.following && (
+                    <Button
+                      label={
+                        profile.viewer?.following
+                          ? _(msg`Following ${handle}`)
+                          : _(msg`Follow ${handle}`)
+                      }
+                      accessibilityHint={
+                        profile.viewer?.following ? _(msg`Unfollow user`) : ''
+                      }
+                      size="small"
+                      variant="solid"
+                      color="secondary_inverted"
+                      style={[a.mb_xs]}
+                      onPress={() =>
+                        profile.viewer?.following
+                          ? queueUnfollow()
+                          : queueFollow()
+                      }>
+                      {!!profile.viewer?.following && (
+                        <ButtonIcon icon={CheckIcon} />
                       )}
-                    </ButtonText>
-                  </Button>
-                )}
+                      <ButtonText>
+                        {profile.viewer?.following ? (
+                          <Trans>Following</Trans>
+                        ) : (
+                          <Trans>Follow</Trans>
+                        )}
+                      </ButtonText>
+                    </Button>
+                  )}
               </View>
               {record?.text?.trim() && (
                 <ExpandableRichTextView
