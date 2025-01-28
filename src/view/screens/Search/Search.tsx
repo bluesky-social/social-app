@@ -12,7 +12,9 @@ import {
 import {ScrollView as RNGHScrollView} from 'react-native-gesture-handler'
 import RNPickerSelect from 'react-native-picker-select'
 import Animated, {
-  FadingTransition,
+  FadeIn,
+  FadeOut,
+  LayoutAnimationConfig,
   LinearTransition,
 } from 'react-native-reanimated'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
@@ -847,38 +849,41 @@ export function SearchScreen(
           }),
         ]}>
         <Layout.Center style={t.atoms.bg}>
-          {!gtMobile && !showAutocomplete && (
-            <Animated.View
-              layout={native(FadingTransition)}
-              // HACK: shift up search input. we can't remove the top padding
-              // on the search input because it messes up the layout animation
-              // if we add it only when the header is hidden
-              style={{marginBottom: tokens.space.md * -1}}>
-              <Layout.Header.Outer noBottomBorder>
-                <Layout.Header.MenuButton />
-                <Layout.Header.Content
-                  align={showFilters ? 'left' : 'platform'}>
-                  <Layout.Header.TitleText>
-                    <Trans>Search</Trans>
-                  </Layout.Header.TitleText>
-                </Layout.Header.Content>
-                {showFilters ? (
-                  <View style={[{minWidth: 140}]}>
-                    <SearchLanguageDropdown
-                      value={params.lang}
-                      onChange={params.setLang}
-                    />
-                  </View>
-                ) : (
-                  <Layout.Header.Slot />
-                )}
-              </Layout.Header.Outer>
-            </Animated.View>
-          )}
+          <LayoutAnimationConfig skipEntering skipExiting>
+            {!gtMobile && !showAutocomplete && (
+              <Animated.View
+                entering={FadeIn.delay(100).duration(200)}
+                exiting={FadeOut.duration(200)}
+                // HACK: shift up search input. we can't remove the top padding
+                // on the search input because it messes up the layout animation
+                // if we add it only when the header is hidden
+                style={{marginBottom: tokens.space.md * -1}}>
+                <Layout.Header.Outer noBottomBorder>
+                  <Layout.Header.MenuButton />
+                  <Layout.Header.Content
+                    align={showFilters ? 'left' : 'platform'}>
+                    <Layout.Header.TitleText>
+                      <Trans>Search</Trans>
+                    </Layout.Header.TitleText>
+                  </Layout.Header.Content>
+                  {showFilters ? (
+                    <View style={[{minWidth: 140}]}>
+                      <SearchLanguageDropdown
+                        value={params.lang}
+                        onChange={params.setLang}
+                      />
+                    </View>
+                  ) : (
+                    <Layout.Header.Slot />
+                  )}
+                </Layout.Header.Outer>
+              </Animated.View>
+            )}
+          </LayoutAnimationConfig>
           <Animated.View
             style={[a.px_md, a.pt_md, a.pb_sm, a.gap_sm]}
             layout={native(LinearTransition)}>
-            <View style={[a.flex_row, a.gap_sm]}>
+            <View style={[a.flex_row, a.gap_xs]}>
               <View style={[a.flex_1]}>
                 <SearchInput
                   ref={textInput}
@@ -892,18 +897,20 @@ export function SearchScreen(
                 />
               </View>
               {showAutocomplete && (
-                <Button
-                  label={_(msg`Cancel search`)}
-                  size="large"
-                  variant="ghost"
-                  color="secondary"
-                  style={[a.px_sm]}
-                  onPress={onPressCancelSearch}
-                  hitSlop={HITSLOP_10}>
-                  <ButtonText>
-                    <Trans>Cancel</Trans>
-                  </ButtonText>
-                </Button>
+                <Animated.View entering={FadeIn} exiting={FadeOut}>
+                  <Button
+                    label={_(msg`Cancel search`)}
+                    size="large"
+                    variant="ghost"
+                    color="secondary"
+                    style={[a.px_sm]}
+                    onPress={onPressCancelSearch}
+                    hitSlop={HITSLOP_10}>
+                    <ButtonText>
+                      <Trans>Cancel</Trans>
+                    </ButtonText>
+                  </Button>
+                </Animated.View>
               )}
             </View>
 
