@@ -3208,7 +3208,7 @@ msgstr "Handle er for langt. Prøv med et kortere."
 
 #: src/screens/Settings/AccessibilitySettings.tsx:87
 msgid "Haptics"
-msgstr "Haptisk feedbadk"
+msgstr "Haptisk feedback"
 
 #: src/lib/moderation/useReportOptions.ts:34
 msgid "Harassment, trolling, or intolerance"
