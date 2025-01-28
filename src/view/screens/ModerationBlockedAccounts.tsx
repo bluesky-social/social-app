@@ -110,9 +110,9 @@ export function ModerationBlockedAccounts({}: Props) {
             },
           ]}>
           <Trans>
-            Blocked accounts cannot reply in your threads, mention you, or
-            otherwise interact with you. You will not see their content and they
-            will be prevented from seeing yours.
+            Blocked accounts will be prevented from seeing your content and they
+            cannot reply in your threads, mention you, or otherwise interact
+            with you. You will not see their content.
           </Trans>
         </Text>
         {isEmpty ? (
