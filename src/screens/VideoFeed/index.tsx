@@ -756,7 +756,7 @@ function Overlay({
               'rgba(0,0,0,0.95)',
             ]}
             style={[a.w_full, a.pt_md]}>
-            <Animated.View style={[a.px_xl, animatedStyle]}>
+            <Animated.View style={[a.px_md, animatedStyle]}>
               <View style={[a.w_full, a.flex_row, a.align_center, a.gap_md]}>
                 <Link
                   label={_(
