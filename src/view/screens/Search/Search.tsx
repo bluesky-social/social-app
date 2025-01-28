@@ -803,7 +803,7 @@ export function SearchScreen(
                 // HACK: shift up search input. we can't remove the top padding
                 // on the search input because it messes up the layout animation
                 // if we add it only when the header is hidden
-                style={{marginBottom: tokens.space.md * -1}}>
+                style={{marginBottom: tokens.space.sm * -1}}>
                 <Layout.Header.Outer noBottomBorder>
                   <Layout.Header.MenuButton />
                   <Layout.Header.Content
@@ -827,7 +827,7 @@ export function SearchScreen(
             )}
           </LayoutAnimationConfig>
           <Animated.View
-            style={[a.px_md, a.pt_md, a.pb_sm, a.gap_sm]}
+            style={[a.px_md, a.pt_sm, a.pb_sm, a.gap_sm]}
             layout={native(LinearTransition)}>
             <View style={[a.flex_row, a.gap_xs]}>
               <View style={[a.flex_1]}>
