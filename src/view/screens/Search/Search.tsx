@@ -785,10 +785,11 @@ export function SearchScreen(
           if (isWeb) setHeaderHeight(evt.nativeEvent.layout.height)
         }}
         style={[
+          a.relative,
+          a.z_10,
           web({
             position: 'sticky',
             top: 0,
-            zIndex: 1,
           }),
         ]}>
         <Layout.Center style={t.atoms.bg}>
