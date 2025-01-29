@@ -10,9 +10,10 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -26,6 +27,7 @@ import {
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ExploreRecommendations} from '#/screens/Search/components/ExploreRecommendations'
 import {ExploreTrendingTopics} from '#/screens/Search/components/ExploreTrendingTopics'
+import {ExploreTrendingVideos} from '#/screens/Search/components/ExploreTrendingVideos'
 import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
@@ -247,6 +249,10 @@ type ExploreScreenItems =
       key: string
     }
   | {
+      type: 'trendingVideos'
+      key: string
+    }
+  | {
       type: 'recommendations'
       key: string
     }
@@ -254,6 +260,7 @@ type ExploreScreenItems =
       type: 'profile'
       key: string
       profile: AppBskyActorDefs.ProfileView
+      recId?: number
     }
   | {
       type: 'feed'
@@ -343,6 +350,13 @@ export function Explore() {
       key: `trending-topics`,
     })
 
+    if (isNative) {
+      i.push({
+        type: 'trendingVideos',
+        key: `trending-videos`,
+      })
+    }
+
     i.push({
       type: 'recommendations',
       key: `recommendations`,
@@ -371,6 +385,7 @@ export function Explore() {
               type: 'profile',
               key: actor.did,
               profile: actor,
+              recId: page.recId,
             })
           }
         }
@@ -499,7 +514,7 @@ export function Explore() {
   ])
 
   const renderItem = React.useCallback(
-    ({item}: {item: ExploreScreenItems}) => {
+    ({item, index}: {item: ExploreScreenItems; index: number}) => {
       switch (item.type) {
         case 'header': {
           return (
@@ -514,6 +529,9 @@ export function Explore() {
         case 'trendingTopics': {
           return <ExploreTrendingTopics />
         }
+        case 'trendingVideos': {
+          return <ExploreTrendingVideos />
+        }
         case 'recommendations': {
           return <ExploreRecommendations />
         }
@@ -525,6 +543,21 @@ export function Explore() {
                 noBg
                 noBorder
                 showKnownFollowers
+                onPress={() => {
+                  logEvent('suggestedUser:press', {
+                    logContext: 'Explore',
+                    recId: item.recId,
+                    position: index,
+                  })
+                }}
+                onFollow={() => {
+                  logEvent('suggestedUser:follow', {
+                    logContext: 'Explore',
+                    location: 'Card',
+                    recId: item.recId,
+                    position: index,
+                  })
+                }}
               />
             </View>
           )
