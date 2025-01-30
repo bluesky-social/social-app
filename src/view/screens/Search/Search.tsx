@@ -741,8 +741,14 @@ export function SearchScreen(
     scrollToTopWeb()
     textInput.current?.blur()
     setShowAutocomplete(false)
-    setSearchText(queryParam)
-  }, [setShowAutocomplete, setSearchText, queryParam])
+    if (isWeb) {
+      // Empty params resets the URL to be /search rather than /search?q=
+      navigation.replace('Search', {})
+    } else {
+      setSearchText('')
+      navigation.setParams({q: ''})
+    }
+  }, [setShowAutocomplete, setSearchText, navigation])
 
   const onSubmit = React.useCallback(() => {
     navigateToItem(searchText)
