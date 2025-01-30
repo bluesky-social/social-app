@@ -5,12 +5,14 @@ import {useLingui} from '@lingui/react'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
+import {useSession} from '#/state/session'
 import {SearchScreenShell} from '#/view/screens/Search/Search'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileSearch'>
 export const ProfileSearchScreen = ({route}: Props) => {
   const {name, q: queryParam = ''} = route.params
   const {_} = useLingui()
+  const {currentAccount} = useSession()
 
   const {data: resolvedDid} = useResolveDidQuery(name)
   const {data: profile} = useProfileQuery({did: resolvedDid})
@@ -26,7 +28,11 @@ export const ProfileSearchScreen = ({route}: Props) => {
     <SearchScreenShell
       navButton="back"
       inputPlaceholder={
-        profile ? _(msg`Search @${profile.handle}'s posts`) : _(msg`Search...`)
+        profile
+          ? currentAccount?.did === profile.did
+            ? _(msg`Search my posts`)
+            : _(msg`Search @${profile.handle}'s posts`)
+          : _(msg`Search...`)
       }
       fixedParams={fixedParams}
       queryParam={queryParam}
