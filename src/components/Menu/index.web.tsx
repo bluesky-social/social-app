@@ -381,9 +381,8 @@ export function Divider() {
       style={flatten([
         a.my_xs,
         t.atoms.bg_contrast_100,
-        {
-          height: 1,
-        },
+        a.flex_shrink_0,
+        {height: 1},
       ])}
     />
   )
