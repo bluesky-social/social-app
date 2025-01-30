@@ -1,4 +1,4 @@
-import React, {useCallback, useLayoutEffect} from 'react'
+import React, {useCallback, useEffect, useLayoutEffect} from 'react'
 import {
   ActivityIndicator,
   Image,
@@ -16,6 +16,9 @@ import Animated, {
   FadeOut,
   LayoutAnimationConfig,
   LinearTransition,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
 } from 'react-native-reanimated'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {
@@ -779,6 +782,26 @@ export function SearchScreen(
     }
   }, [setShowAutocomplete])
 
+  const cancelWidth = useSharedValue(70)
+  const showCancelBtnAnimation = useSharedValue(0)
+
+  useEffect(() => {
+    if (showAutocomplete) {
+      showCancelBtnAnimation.set(withTiming(1))
+    } else {
+      showCancelBtnAnimation.set(withTiming(0))
+    }
+  }, [showAutocomplete, showCancelBtnAnimation])
+
+  const animatedInputContainerStyle = useAnimatedStyle(() => ({
+    marginRight: showCancelBtnAnimation.get() * cancelWidth.get(),
+  }))
+
+  const animatedCancelBtnStyle = useAnimatedStyle(() => ({
+    opacity: showCancelBtnAnimation.get(),
+    right: cancelWidth.get() * -1,
+  }))
+
   return (
     <Layout.Screen testID="searchScreen">
       <View
@@ -798,8 +821,8 @@ export function SearchScreen(
           <LayoutAnimationConfig skipEntering skipExiting>
             {!gtMobile && !showAutocomplete && (
               <Animated.View
-                entering={FadeIn.delay(100).duration(200)}
-                exiting={FadeOut.duration(200)}
+                entering={native(FadeIn.delay(100).duration(200))}
+                exiting={native(FadeOut.duration(200))}
                 // HACK: shift up search input. we can't remove the top padding
                 // on the search input because it messes up the layout animation
                 // if we add it only when the header is hidden
@@ -827,10 +850,11 @@ export function SearchScreen(
             )}
           </LayoutAnimationConfig>
           <Animated.View
-            style={[a.px_md, a.pt_sm, a.pb_sm, a.gap_sm]}
+            style={[a.px_md, a.pt_sm, a.pb_sm, a.overflow_hidden]}
             layout={native(LinearTransition)}>
-            <View style={[a.flex_row, a.gap_xs]}>
-              <View style={[a.flex_1]}>
+            <Animated.View
+              style={[a.gap_sm, a.relative, animatedInputContainerStyle]}>
+              <View style={[a.w_full]}>
                 <SearchInput
                   ref={textInput}
                   value={searchText}
@@ -842,40 +866,47 @@ export function SearchScreen(
                   hitSlop={{...HITSLOP_20, top: 0}}
                 />
               </View>
-              {showAutocomplete && (
-                <Animated.View entering={FadeIn} exiting={FadeOut}>
-                  <Button
-                    label={_(msg`Cancel search`)}
-                    size="large"
-                    variant="ghost"
-                    color="secondary"
-                    style={[a.px_sm]}
-                    onPress={onPressCancelSearch}
-                    hitSlop={HITSLOP_10}>
-                    <ButtonText>
-                      <Trans>Cancel</Trans>
-                    </ButtonText>
-                  </Button>
-                </Animated.View>
-              )}
-            </View>
-
-            {showFilters && gtMobile && (
-              <View
+              <Animated.View
                 style={[
-                  a.flex_row,
-                  a.align_center,
-                  a.justify_between,
-                  a.gap_sm,
-                ]}>
-                <View style={[{width: 140}]}>
-                  <SearchLanguageDropdown
-                    value={params.lang}
-                    onChange={params.setLang}
-                  />
+                  a.absolute,
+                  {top: 0, bottom: 0},
+                  a.pl_xs,
+                  animatedCancelBtnStyle,
+                  !showAutocomplete && a.pointer_events_none,
+                ]}
+                onLayout={evt => cancelWidth.set(evt.nativeEvent.layout.width)}
+                aria-hidden={!showAutocomplete}>
+                <Button
+                  label={_(msg`Cancel search`)}
+                  size="large"
+                  variant="ghost"
+                  color="secondary"
+                  style={[a.px_sm]}
+                  onPress={onPressCancelSearch}
+                  hitSlop={HITSLOP_10}>
+                  <ButtonText>
+                    <Trans>Cancel</Trans>
+                  </ButtonText>
+                </Button>
+              </Animated.View>
+
+              {showFilters && gtMobile && (
+                <View
+                  style={[
+                    a.flex_row,
+                    a.align_center,
+                    a.justify_between,
+                    a.gap_sm,
+                  ]}>
+                  <View style={[{width: 140}]}>
+                    <SearchLanguageDropdown
+                      value={params.lang}
+                      onChange={params.setLang}
+                    />
+                  </View>
                 </View>
-              </View>
-            )}
+              )}
+            </Animated.View>
           </Animated.View>
         </Layout.Center>
       </View>
