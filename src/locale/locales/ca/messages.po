@@ -739,7 +739,7 @@ msgstr "Afegeix aquest canal als teus canals"
 
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:246
-msgid "Add to Lists"
+msgid "Add to lists"
 msgstr "Afegeix a les llistes"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
@@ -1290,12 +1290,12 @@ msgstr "Bloqueja el compte"
 
 #: src/view/com/profile/ProfileMenu.tsx:280
 #: src/view/com/profile/ProfileMenu.tsx:287
-msgid "Block Account"
+msgid "Block account"
 msgstr "Bloqueja el compte"
 
 #: src/view/com/profile/ProfileMenu.tsx:324
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:739
-msgid "Block Account?"
+msgid "Block account?"
 msgstr "Vols bloquejar el compte?"
 
 #: src/view/screens/ProfileList.tsx:639
@@ -3719,7 +3719,7 @@ msgstr "Segueix 7 comptes"
 
 #: src/view/com/profile/ProfileMenu.tsx:222
 #: src/view/com/profile/ProfileMenu.tsx:233
-msgid "Follow Account"
+msgid "Follow account"
 msgstr "Segueix el compte"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:428
@@ -5206,7 +5206,7 @@ msgstr "Silencia {truncatedTag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
-msgid "Mute Account"
+msgid "Mute account"
 msgstr "Silenciar el compte"
 
 #: src/view/screens/ProfileList.tsx:627
@@ -7091,7 +7091,7 @@ msgstr "Informa"
 
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:302
-msgid "Report Account"
+msgid "Report account"
 msgstr "Informa del compte"
 
 #: src/components/dms/ConvoMenu.tsx:197
@@ -9508,12 +9508,12 @@ msgstr "Desbloqueja el compte"
 
 #: src/view/com/profile/ProfileMenu.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:285
-msgid "Unblock Account"
+msgid "Unblock account"
 msgstr "Desbloqueja el compte"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
 #: src/view/com/profile/ProfileMenu.tsx:323
-msgid "Unblock Account?"
+msgid "Unblock account?"
 msgstr "Vols desbloquejar el compte?"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
@@ -9540,7 +9540,7 @@ msgstr "Deixa de seguir a {0}"
 
 #: src/view/com/profile/ProfileMenu.tsx:221
 #: src/view/com/profile/ProfileMenu.tsx:231
-msgid "Unfollow Account"
+msgid "Unfollow account"
 msgstr "Deixa de seguir el compte"
 
 #: src/view/com/auth/create/state.ts:262
@@ -9576,7 +9576,7 @@ msgstr "Deixa de silenciar {truncatedTag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
-msgid "Unmute Account"
+msgid "Unmute account"
 msgstr "Deixa de silenciar el compte"
 
 #: src/components/TagMenu/index.tsx:223

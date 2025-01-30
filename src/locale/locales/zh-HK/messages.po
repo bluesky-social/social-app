@@ -543,7 +543,7 @@ msgstr "將佢加入到你嘅動態源"
 
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:246
-msgid "Add to Lists"
+msgid "Add to lists"
 msgstr "加入到清單"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
@@ -990,12 +990,12 @@ msgstr "封鎖帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:280
 #: src/view/com/profile/ProfileMenu.tsx:287
-msgid "Block Account"
+msgid "Block account"
 msgstr "封鎖帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:324
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:739
-msgid "Block Account?"
+msgid "Block account?"
 msgstr "封鎖帳號？"
 
 #: src/view/screens/ProfileList.tsx:639
@@ -2934,7 +2934,7 @@ msgstr "跟 7 個人"
 
 #: src/view/com/profile/ProfileMenu.tsx:222
 #: src/view/com/profile/ProfileMenu.tsx:233
-msgid "Follow Account"
+msgid "Follow account"
 msgstr "跟佢"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:428
@@ -4125,7 +4125,7 @@ msgstr "靜音 {tag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
-msgid "Mute Account"
+msgid "Mute account"
 msgstr "靜音帳號"
 
 #: src/view/screens/ProfileList.tsx:627
@@ -5592,7 +5592,7 @@ msgstr "上報"
 
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:302
-msgid "Report Account"
+msgid "Report account"
 msgstr "上報帳號"
 
 #: src/components/dms/ConvoMenu.tsx:200
@@ -7381,12 +7381,12 @@ msgstr "解除封鎖帳號"
 
 #: src/view/com/profile/ProfileMenu.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:285
-msgid "Unblock Account"
+msgid "Unblock account"
 msgstr "解除封鎖帳號"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
 #: src/view/com/profile/ProfileMenu.tsx:323
-msgid "Unblock Account?"
+msgid "Unblock account?"
 msgstr "係咪要解除封鎖帳號？"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
@@ -7409,7 +7409,7 @@ msgstr "唔再跟 {0}"
 
 #: src/view/com/profile/ProfileMenu.tsx:221
 #: src/view/com/profile/ProfileMenu.tsx:231
-msgid "Unfollow Account"
+msgid "Unfollow account"
 msgstr "唔再跟佢"
 
 #: src/screens/VideoFeed/index.tsx:801
@@ -7441,7 +7441,7 @@ msgstr "唔再靜音 {tag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
-msgid "Unmute Account"
+msgid "Unmute account"
 msgstr "唔再靜音帳號"
 
 #: src/components/dms/ConvoMenu.tsx:179
@@ -8512,4 +8512,3 @@ msgstr "你嘅回覆經已發佈"
 #: src/components/dms/ReportDialog.tsx:198
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "你嘅上報會提交到 Bluesky 內容審核服務度"
-

@@ -583,7 +583,7 @@ msgstr "Gehitu feed hau zure feedetara"
 
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:246
-msgid "Add to Lists"
+msgid "Add to lists"
 msgstr "Gehitu Zerrendetara"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
@@ -1011,12 +1011,12 @@ msgstr "Kontua blokeatu"
 
 #: src/view/com/profile/ProfileMenu.tsx:280
 #: src/view/com/profile/ProfileMenu.tsx:287
-msgid "Block Account"
+msgid "Block account"
 msgstr "Kontua Blokeatu"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:739
 #: src/view/com/profile/ProfileMenu.tsx:324
-msgid "Block Account?"
+msgid "Block account?"
 msgstr "Kontua Blokeatu?"
 
 #: src/view/screens/ProfileList.tsx:642
@@ -2805,7 +2805,7 @@ msgstr "Jarraitu 7 kontu"
 
 #: src/view/com/profile/ProfileMenu.tsx:222
 #: src/view/com/profile/ProfileMenu.tsx:233
-msgid "Follow Account"
+msgid "Follow account"
 msgstr "Jarraitu Kontua"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:427
@@ -3900,7 +3900,7 @@ msgstr "Mututu {truncatedTag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
-msgid "Mute Account"
+msgid "Mute account"
 msgstr "Mututu Kontua"
 
 #: src/view/screens/ProfileList.tsx:630
@@ -5283,7 +5283,7 @@ msgstr "Salatu"
 
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:302
-msgid "Report Account"
+msgid "Report account"
 msgstr "Salatu kontua"
 
 #: src/components/dms/ReportConversationPrompt.tsx:17
@@ -6941,12 +6941,12 @@ msgstr "Desblokeatu kontua"
 
 #: src/view/com/profile/ProfileMenu.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:285
-msgid "Unblock Account"
+msgid "Unblock account"
 msgstr "Desblokeatu Kontua"
 
 #: src/view/com/profile/ProfileMenu.tsx:323
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
-msgid "Unblock Account?"
+msgid "Unblock account?"
 msgstr "Kontua Desblokeatu?"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
@@ -6967,7 +6967,7 @@ msgstr "{0} jarraitzen utzi"
 
 #: src/view/com/profile/ProfileMenu.tsx:221
 #: src/view/com/profile/ProfileMenu.tsx:231
-msgid "Unfollow Account"
+msgid "Unfollow account"
 msgstr "Jarraitzen utzi Kontua"
 
 #: src/view/screens/ProfileFeed.tsx:575
@@ -6990,7 +6990,7 @@ msgstr "{truncatedTag} ez mututu"
 
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
-msgid "Unmute Account"
+msgid "Unmute account"
 msgstr "Ez mututu kontua"
 
 #: src/components/TagMenu/index.tsx:223

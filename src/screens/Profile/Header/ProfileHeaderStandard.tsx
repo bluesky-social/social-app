@@ -274,7 +274,7 @@ let ProfileHeaderStandard = ({
       </View>
       <Prompt.Basic
         control={unblockPromptControl}
-        title={_(msg`Unblock Account?`)}
+        title={_(msg`Unblock account?`)}
         description={_(
           msg`The account will be able to interact with you after unblocking.`,
         )}

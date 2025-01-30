@@ -581,7 +581,7 @@ msgstr "Deze feed toevoegen aan je feeds"
 
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:246
-msgid "Add to Lists"
+msgid "Add to lists"
 msgstr "Toevoegen aan lijsten"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
@@ -1022,12 +1022,12 @@ msgstr "Account blokkeren"
 
 #: src/view/com/profile/ProfileMenu.tsx:280
 #: src/view/com/profile/ProfileMenu.tsx:287
-msgid "Block Account"
+msgid "Block account"
 msgstr "Account blokkeren"
 
 #: src/view/com/profile/ProfileMenu.tsx:324
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:739
-msgid "Block Account?"
+msgid "Block account?"
 msgstr "Account blokkeren?"
 
 #: src/view/screens/ProfileList.tsx:639
@@ -2927,7 +2927,7 @@ msgstr "Volg 7 accounts"
 
 #: src/view/com/profile/ProfileMenu.tsx:222
 #: src/view/com/profile/ProfileMenu.tsx:233
-msgid "Follow Account"
+msgid "Follow account"
 msgstr "Account volgen"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:428
@@ -4114,7 +4114,7 @@ msgstr "{truncatedTag} negeren"
 
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
-msgid "Mute Account"
+msgid "Mute account"
 msgstr "Account negeren"
 
 #: src/view/screens/ProfileList.tsx:627
@@ -5575,7 +5575,7 @@ msgstr "Melden"
 
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:302
-msgid "Report Account"
+msgid "Report account"
 msgstr "Account melden"
 
 #: src/components/dms/ConvoMenu.tsx:197
@@ -7351,12 +7351,12 @@ msgstr "Account deblokkeren"
 
 #: src/view/com/profile/ProfileMenu.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:285
-msgid "Unblock Account"
+msgid "Unblock account"
 msgstr "Account deblokkeren"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
 #: src/view/com/profile/ProfileMenu.tsx:323
-msgid "Unblock Account?"
+msgid "Unblock account?"
 msgstr "Account deblokkeren?"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
@@ -7379,7 +7379,7 @@ msgstr "{0} ontvolgen"
 
 #: src/view/com/profile/ProfileMenu.tsx:221
 #: src/view/com/profile/ProfileMenu.tsx:231
-msgid "Unfollow Account"
+msgid "Unfollow account"
 msgstr "Account ontvolgen"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
@@ -7412,7 +7412,7 @@ msgstr "{truncatedTag} niet meer negeren"
 
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
-msgid "Unmute Account"
+msgid "Unmute account"
 msgstr "Account niet meer negeren"
 
 #: src/components/TagMenu/index.tsx:223

@@ -645,7 +645,7 @@ msgstr "आपके फ़ीड मे यह फ़ीड जोड़ें"
 
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:246
-msgid "Add to Lists"
+msgid "Add to lists"
 msgstr "सूचियों में जोड़ें"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
@@ -1139,12 +1139,12 @@ msgstr "खाता अवरुद्ध करें"
 
 #: src/view/com/profile/ProfileMenu.tsx:280
 #: src/view/com/profile/ProfileMenu.tsx:287
-msgid "Block Account"
+msgid "Block account"
 msgstr "खाता अवरुद्ध करें"
 
 #: src/view/com/profile/ProfileMenu.tsx:324
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:739
-msgid "Block Account?"
+msgid "Block account?"
 msgstr "खाता अवरुद्ध करें?"
 
 #: src/view/screens/ProfileList.tsx:639
@@ -3313,7 +3313,7 @@ msgstr "7 खातों को फ़ॉलो करें"
 
 #: src/view/com/profile/ProfileMenu.tsx:222
 #: src/view/com/profile/ProfileMenu.tsx:233
-msgid "Follow Account"
+msgid "Follow account"
 msgstr "खाता फ़ॉलो करें"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:428
@@ -4645,7 +4645,7 @@ msgstr "{truncatedTag} म्यूट करें"
 
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
-msgid "Mute Account"
+msgid "Mute account"
 msgstr "खाता म्यूट करें"
 
 #: src/view/screens/ProfileList.tsx:627
@@ -6286,7 +6286,7 @@ msgstr "शिकायत करें"
 
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:302
-msgid "Report Account"
+msgid "Report account"
 msgstr "खाते की शिकायत करें"
 
 #: src/components/dms/ConvoMenu.tsx:197
@@ -8270,12 +8270,12 @@ msgstr "खाता अनअवरुद्ध करें"
 
 #: src/view/com/profile/ProfileMenu.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:285
-msgid "Unblock Account"
+msgid "Unblock account"
 msgstr "खाता अनअवरुद्ध करें"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
 #: src/view/com/profile/ProfileMenu.tsx:323
-msgid "Unblock Account?"
+msgid "Unblock account?"
 msgstr "खाता अनअवरुद्ध करें?"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
@@ -8302,7 +8302,7 @@ msgstr "{0} को अनफ़ॉलो करें"
 
 #: src/view/com/profile/ProfileMenu.tsx:221
 #: src/view/com/profile/ProfileMenu.tsx:231
-msgid "Unfollow Account"
+msgid "Unfollow account"
 msgstr "खाता अनफ़ॉलो करें"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
@@ -8334,7 +8334,7 @@ msgstr "{truncatedTag} को अनम्यूट करें"
 
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
-msgid "Unmute Account"
+msgid "Unmute account"
 msgstr "खाता अनम्यूट करें"
 
 #: src/components/TagMenu/index.tsx:223

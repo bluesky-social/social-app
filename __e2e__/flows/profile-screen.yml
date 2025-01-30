@@ -31,9 +31,9 @@ appId: xyz.blueskyweb.app
 # Can mute/unmute another user
 - tapOn:
     id: "profileHeaderDropdownBtn"
-- tapOn: "Mute Account"
+- tapOn: "Mute account"
 - assertVisible: "Account Muted"
 - tapOn:
     id: "profileHeaderDropdownBtn"
-- tapOn: "Unmute Account"
+- tapOn: "Unmute account"
 - assertNotVisible: "Account Muted"

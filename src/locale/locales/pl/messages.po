@@ -538,7 +538,7 @@ msgstr "Dodaj do swoich kanałów"
 
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:246
-msgid "Add to Lists"
+msgid "Add to lists"
 msgstr "Dodaj do swoich list"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
@@ -976,12 +976,12 @@ msgstr "Blokuj konto"
 
 #: src/view/com/profile/ProfileMenu.tsx:280
 #: src/view/com/profile/ProfileMenu.tsx:287
-msgid "Block Account"
+msgid "Block account"
 msgstr "Blokuj konto"
 
 #: src/view/com/profile/ProfileMenu.tsx:324
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:739
-msgid "Block Account?"
+msgid "Block account?"
 msgstr "Zablokować konto?"
 
 #: src/view/screens/ProfileList.tsx:639
@@ -2884,7 +2884,7 @@ msgstr "Obserwuj 7 kont"
 
 #: src/view/com/profile/ProfileMenu.tsx:222
 #: src/view/com/profile/ProfileMenu.tsx:233
-msgid "Follow Account"
+msgid "Follow account"
 msgstr "Obserwuj konto"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:428
@@ -4072,7 +4072,7 @@ msgstr "Wycisz {tag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
-msgid "Mute Account"
+msgid "Mute account"
 msgstr "Wycisz konto"
 
 #: src/view/screens/ProfileList.tsx:627
@@ -5530,7 +5530,7 @@ msgstr "Zgłoś"
 
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:302
-msgid "Report Account"
+msgid "Report account"
 msgstr "Zgłoś konto"
 
 #: src/components/dms/ConvoMenu.tsx:200
@@ -7304,12 +7304,12 @@ msgstr "Odblokuj konto"
 
 #: src/view/com/profile/ProfileMenu.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:285
-msgid "Unblock Account"
+msgid "Unblock account"
 msgstr "Odblokuj konto"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
 #: src/view/com/profile/ProfileMenu.tsx:323
-msgid "Unblock Account?"
+msgid "Unblock account?"
 msgstr "Odblokować konto?"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
@@ -7332,7 +7332,7 @@ msgstr "Nie obserwuj {0}"
 
 #: src/view/com/profile/ProfileMenu.tsx:221
 #: src/view/com/profile/ProfileMenu.tsx:231
-msgid "Unfollow Account"
+msgid "Unfollow account"
 msgstr "Nie obserwuj"
 
 #: src/screens/VideoFeed/index.tsx:801
@@ -7364,7 +7364,7 @@ msgstr "Anuluj wyciszenie {tag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
-msgid "Unmute Account"
+msgid "Unmute account"
 msgstr "Anuluj wyciszenie"
 
 #: src/components/dms/ConvoMenu.tsx:179
