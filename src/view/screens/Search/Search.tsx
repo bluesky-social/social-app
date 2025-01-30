@@ -1,17 +1,19 @@
 import React from 'react'
 import {
   ActivityIndicator,
-  Image,
-  ImageStyle,
   Pressable,
-  StyleProp,
   StyleSheet,
   TextInput,
   View,
 } from 'react-native'
 import {ScrollView as RNGHScrollView} from 'react-native-gesture-handler'
 import RNPickerSelect from 'react-native-picker-select'
-import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  AppBskyFeedDefs,
+  moderateProfile,
+  ModerationOpts,
+} from '@atproto/api'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -56,6 +58,7 @@ import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {Link} from '#/view/com/util/Link'
 import {List} from '#/view/com/util/List'
 import {Text} from '#/view/com/util/text/Text'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Explore} from '#/view/screens/Search/Explore'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
 import {makeSearchQuery, parseSearchQuery} from '#/screens/Search/utils'
@@ -834,6 +837,8 @@ export function SearchScreen(
     }
   }, [setShowAutocomplete])
 
+  const moderationOpts = useModerationOpts()
+
   return (
     <Layout.Screen testID="searchScreen">
       <View
@@ -915,7 +920,9 @@ export function SearchScreen(
           display: showAutocomplete ? 'flex' : 'none',
           flex: 1,
         }}>
-        {searchText.length > 0 ? (
+        {!moderationOpts ? (
+          <Loader />
+        ) : searchText.length > 0 ? (
           <AutocompleteResults
             isAutocompleteFetching={isAutocompleteFetching}
             autocompleteData={autocompleteData}
@@ -923,6 +930,7 @@ export function SearchScreen(
             onSubmit={onSubmit}
             onResultPress={onAutocompleteResultPress}
             onProfileClick={handleProfileClick}
+            moderationOpts={moderationOpts}
           />
         ) : (
           <SearchHistory
@@ -932,6 +940,7 @@ export function SearchScreen(
             onProfileClick={handleProfileClick}
             onRemoveItemClick={handleRemoveHistoryItem}
             onRemoveProfileClick={handleRemoveProfile}
+            moderationOpts={moderationOpts}
           />
         )}
       </View>
@@ -957,6 +966,7 @@ let AutocompleteResults = ({
   onSubmit,
   onResultPress,
   onProfileClick,
+  moderationOpts,
 }: {
   isAutocompleteFetching: boolean
   autocompleteData: AppBskyActorDefs.ProfileViewBasic[] | undefined
@@ -964,13 +974,12 @@ let AutocompleteResults = ({
   onSubmit: () => void
   onResultPress: () => void
   onProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
+  moderationOpts: ModerationOpts
 }): React.ReactNode => {
-  const moderationOpts = useModerationOpts()
   const {_} = useLingui()
   return (
     <>
-      {(isAutocompleteFetching && !autocompleteData?.length) ||
-      !moderationOpts ? (
+      {isAutocompleteFetching && !autocompleteData?.length ? (
         <Loader />
       ) : (
         <Layout.Content
@@ -1012,6 +1021,7 @@ function SearchHistory({
   onProfileClick,
   onRemoveItemClick,
   onRemoveProfileClick,
+  moderationOpts,
 }: {
   searchHistory: string[]
   selectedProfiles: AppBskyActorDefs.ProfileViewBasic[]
@@ -1019,6 +1029,7 @@ function SearchHistory({
   onProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
   onRemoveItemClick: (item: string) => void
   onRemoveProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
+  moderationOpts: ModerationOpts
 }) {
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
@@ -1063,10 +1074,14 @@ function SearchHistory({
                     anchorNoUnderline
                     onBeforePress={() => onProfileClick(profile)}
                     style={styles.profilePressable}>
-                    <Image
-                      source={{uri: profile.avatar}}
-                      style={styles.profileAvatar as StyleProp<ImageStyle>}
-                      accessibilityIgnoresInvertColors
+                    <UserAvatar
+                      avatar={profile.avatar}
+                      moderation={moderateProfile(profile, moderationOpts).ui(
+                        'avatar',
+                      )}
+                      type="user"
+                      size={60}
+                      usePlainRNImage
                     />
                     <Text
                       emoji
@@ -1196,11 +1211,6 @@ const styles = StyleSheet.create({
   profilePressable: {
     alignItems: 'center',
     width: '100%',
-  },
-  profileAvatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 45,
   },
   profileName: {
     width: 78,
