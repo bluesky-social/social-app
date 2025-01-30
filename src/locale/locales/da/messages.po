@@ -1875,7 +1875,7 @@ msgstr "Skaber er blokeret"
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
 msgid "Culture"
-msgstr "Kutlur"
+msgstr "Kultur"
 
 #: src/view/com/auth/server-input/index.tsx:100
 #: src/view/com/auth/server-input/index.tsx:102
