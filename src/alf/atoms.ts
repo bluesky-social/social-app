@@ -78,6 +78,15 @@ export const atoms = {
     }),
   ] as ViewStyle,
 
+  util_screen_message_outer: [
+    web({
+      minHeight: 'calc(100vh - 200px)',
+    }),
+    native({
+      height: '100%',
+    }),
+  ],
+
   /*
    * Theme-independent bg colors
    */

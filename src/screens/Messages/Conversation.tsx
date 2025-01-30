@@ -6,10 +6,12 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {isAndroidWeb} from '#/lib/browser'
 import {useEmail} from '#/lib/hooks/useEmail'
 import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {isWeb} from '#/platform/detection'
+import {isIPhoneWeb} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
@@ -58,7 +60,13 @@ export function MessagesConversationScreen({route}: Props) {
   )
 
   return (
-    <Layout.Screen testID="convoScreen" style={web([{minHeight: 0}, a.flex_1])}>
+    <Layout.Screen
+      testID="convoScreen"
+      style={web([
+        {minHeight: 0},
+        a.flex_1,
+        (isAndroidWeb || isIPhoneWeb) && a.util_screen_message_outer,
+      ])}>
       <ConvoProvider key={convoId} convoId={convoId}>
         <Inner />
       </ConvoProvider>
