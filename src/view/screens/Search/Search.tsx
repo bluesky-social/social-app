@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect,useMemo} from 'react'
+import React, {useEffect, useLayoutEffect, useMemo} from 'react'
 import {
   ActivityIndicator,
   Image,
@@ -883,10 +883,10 @@ export function SearchScreen(
                     </Layout.Header.TitleText>
                   </Layout.Header.Content>
                   {showFilters ? (
-                      <SearchLanguageDropdown
-                        value={params.lang}
-                        onChange={params.setLang}
-                      />
+                    <SearchLanguageDropdown
+                      value={params.lang}
+                      onChange={params.setLang}
+                    />
                   ) : (
                     <Layout.Header.Slot />
                   )}
@@ -895,10 +895,9 @@ export function SearchScreen(
             )}
           </LayoutAnimationConfig>
           <Animated.View
-            style={[a.px_md, a.pt_sm, a.pb_sm, a.overflow_hidden]}
+            style={[a.px_md, a.pt_sm, a.pb_sm, a.overflow_hidden, a.gap_sm]}
             layout={native(LinearTransition)}>
-            <Animated.View
-              style={[a.gap_sm, a.relative, animatedInputContainerStyle]}>
+            <Animated.View style={[a.relative, animatedInputContainerStyle]}>
               <View style={[a.w_full]}>
                 <SearchInput
                   ref={textInput}
@@ -934,6 +933,7 @@ export function SearchScreen(
                   </ButtonText>
                 </Button>
               </Animated.View>
+            </Animated.View>
 
             {showFilters && gtMobile && (
               <View
