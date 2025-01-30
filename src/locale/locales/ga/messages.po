@@ -535,7 +535,7 @@ msgstr "Cuir an fotha seo le do chuid fothaí"
 
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:246
-msgid "Add to Lists"
+msgid "Add to lists"
 msgstr "Cuir le liostaí"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
@@ -972,12 +972,12 @@ msgstr "Blocáil an cuntas seo"
 
 #: src/view/com/profile/ProfileMenu.tsx:280
 #: src/view/com/profile/ProfileMenu.tsx:287
-msgid "Block Account"
+msgid "Block account"
 msgstr "Blocáil an cuntas seo"
 
 #: src/view/com/profile/ProfileMenu.tsx:324
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:739
-msgid "Block Account?"
+msgid "Block account?"
 msgstr "Blocáil an cuntas seo?"
 
 #: src/view/screens/ProfileList.tsx:639
@@ -2850,7 +2850,7 @@ msgstr "Lean 7 gcuntas"
 
 #: src/view/com/profile/ProfileMenu.tsx:222
 #: src/view/com/profile/ProfileMenu.tsx:233
-msgid "Follow Account"
+msgid "Follow account"
 msgstr "Lean an cuntas seo"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:428
@@ -4017,7 +4017,7 @@ msgstr "Balbhaigh {truncatedTag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
-msgid "Mute Account"
+msgid "Mute account"
 msgstr "Balbhaigh an Cuntas"
 
 #: src/view/screens/ProfileList.tsx:627
@@ -5449,7 +5449,7 @@ msgstr "Tuairiscigh"
 
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:302
-msgid "Report Account"
+msgid "Report account"
 msgstr "Déan gearán faoi chuntas"
 
 #: src/components/dms/ConvoMenu.tsx:197
@@ -7211,12 +7211,12 @@ msgstr "Díbhlocáil an cuntas"
 
 #: src/view/com/profile/ProfileMenu.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:285
-msgid "Unblock Account"
+msgid "Unblock account"
 msgstr "Díbhlocáil an cuntas"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
 #: src/view/com/profile/ProfileMenu.tsx:323
-msgid "Unblock Account?"
+msgid "Unblock account?"
 msgstr "An bhfuil fonn ort an cuntas seo a dhíbhlocáil?"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
@@ -7239,7 +7239,7 @@ msgstr "Dílean {0}"
 
 #: src/view/com/profile/ProfileMenu.tsx:221
 #: src/view/com/profile/ProfileMenu.tsx:231
-msgid "Unfollow Account"
+msgid "Unfollow account"
 msgstr "Dílean an cuntas seo"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
@@ -7267,7 +7267,7 @@ msgstr "Ná balbhaigh {truncatedTag} níos mó"
 
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
-msgid "Unmute Account"
+msgid "Unmute account"
 msgstr "Ná balbhaigh an cuntas seo níos mó"
 
 #: src/components/TagMenu/index.tsx:223

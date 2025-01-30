@@ -580,7 +580,7 @@ msgstr "Προσθήκη αυτού της ροής στις ροές σας"
 
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:246
-msgid "Add to Lists"
+msgid "Add to lists"
 msgstr "Προσθήκη σε λίστες"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
@@ -1021,12 +1021,12 @@ msgstr "Αποκλεισμός λογαριασμού"
 
 #: src/view/com/profile/ProfileMenu.tsx:280
 #: src/view/com/profile/ProfileMenu.tsx:287
-msgid "Block Account"
+msgid "Block account"
 msgstr "Αποκλεισμός λογαριασμού"
 
 #: src/view/com/profile/ProfileMenu.tsx:324
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:739
-msgid "Block Account?"
+msgid "Block account?"
 msgstr "Αποκλεισμός λογαριασμού;"
 
 #: src/view/screens/ProfileList.tsx:639
@@ -2924,7 +2924,7 @@ msgstr "Ακολουθήστε 7 λογαριασμούς"
 
 #: src/view/com/profile/ProfileMenu.tsx:222
 #: src/view/com/profile/ProfileMenu.tsx:233
-msgid "Follow Account"
+msgid "Follow account"
 msgstr "Ακολουθήστε Λογαριασμό"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:428
@@ -4116,7 +4116,7 @@ msgstr "Σίγαση {truncatedTag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
-msgid "Mute Account"
+msgid "Mute account"
 msgstr "Σίγαση Λογαριασμού"
 
 #: src/view/screens/ProfileList.tsx:627
@@ -5577,7 +5577,7 @@ msgstr "Αναφορά"
 
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:302
-msgid "Report Account"
+msgid "Report account"
 msgstr "Αναφορά Λογαριασμού"
 
 #: src/components/dms/ConvoMenu.tsx:197
@@ -7364,12 +7364,12 @@ msgstr "Ξεμπλοκάρισμα λογαριασμού"
 
 #: src/view/com/profile/ProfileMenu.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:285
-msgid "Unblock Account"
+msgid "Unblock account"
 msgstr "Ξεμπλοκάρισμα Λογαριασμού"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
 #: src/view/com/profile/ProfileMenu.tsx:323
-msgid "Unblock Account?"
+msgid "Unblock account?"
 msgstr "Ξεμπλοκάρισμα Λογαριασμού;"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
@@ -7392,7 +7392,7 @@ msgstr "Διακοπή παρακολούθησης {0}"
 
 #: src/view/com/profile/ProfileMenu.tsx:221
 #: src/view/com/profile/ProfileMenu.tsx:231
-msgid "Unfollow Account"
+msgid "Unfollow account"
 msgstr "Διακοπή παρακολούθησης Λογαριασμού"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
@@ -7424,7 +7424,7 @@ msgstr "Ακύρωση Σίγασης {truncatedTag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
-msgid "Unmute Account"
+msgid "Unmute account"
 msgstr "Ακύρωση Σίγασης Λογαριασμού"
 
 #: src/components/TagMenu/index.tsx:223

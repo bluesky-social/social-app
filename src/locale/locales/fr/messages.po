@@ -538,7 +538,7 @@ msgstr "Ajouter ce fil à vos fils d’actu"
 
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:246
-msgid "Add to Lists"
+msgid "Add to lists"
 msgstr "Ajouter aux listes"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
@@ -985,12 +985,12 @@ msgstr "Bloquer le compte"
 
 #: src/view/com/profile/ProfileMenu.tsx:280
 #: src/view/com/profile/ProfileMenu.tsx:287
-msgid "Block Account"
+msgid "Block account"
 msgstr "Bloquer ce compte"
 
 #: src/view/com/profile/ProfileMenu.tsx:324
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:739
-msgid "Block Account?"
+msgid "Block account?"
 msgstr "Bloquer ce compte ?"
 
 #: src/view/screens/ProfileList.tsx:639
@@ -2929,7 +2929,7 @@ msgstr "Suivre 7 comptes"
 
 #: src/view/com/profile/ProfileMenu.tsx:222
 #: src/view/com/profile/ProfileMenu.tsx:233
-msgid "Follow Account"
+msgid "Follow account"
 msgstr "Suivre le compte"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:428
@@ -4120,7 +4120,7 @@ msgstr "Masquer {tag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
-msgid "Mute Account"
+msgid "Mute account"
 msgstr "Masquer le compte"
 
 #: src/view/screens/ProfileList.tsx:627
@@ -5587,7 +5587,7 @@ msgstr "Signaler"
 
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:302
-msgid "Report Account"
+msgid "Report account"
 msgstr "Signaler le compte"
 
 #: src/components/dms/ConvoMenu.tsx:200
@@ -7376,12 +7376,12 @@ msgstr "Débloquer le compte"
 
 #: src/view/com/profile/ProfileMenu.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:285
-msgid "Unblock Account"
+msgid "Unblock account"
 msgstr "Débloquer le compte"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
 #: src/view/com/profile/ProfileMenu.tsx:323
-msgid "Unblock Account?"
+msgid "Unblock account?"
 msgstr "Débloquer le compte ?"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
@@ -7404,7 +7404,7 @@ msgstr "Se désabonner de {0}"
 
 #: src/view/com/profile/ProfileMenu.tsx:221
 #: src/view/com/profile/ProfileMenu.tsx:231
-msgid "Unfollow Account"
+msgid "Unfollow account"
 msgstr "Se désabonner du compte"
 
 #: src/screens/VideoFeed/index.tsx:801
@@ -7436,7 +7436,7 @@ msgstr "Réafficher {tag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
-msgid "Unmute Account"
+msgid "Unmute account"
 msgstr "Réafficher ce compte"
 
 #: src/components/dms/ConvoMenu.tsx:179

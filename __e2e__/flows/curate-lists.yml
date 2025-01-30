@@ -168,7 +168,7 @@ appId: xyz.blueskyweb.app
     id: "profileView"
 - tapOn:
     id: "profileHeaderDropdownBtn"
-- tapOn: "Add to Lists"
+- tapOn: "Add to lists"
 - assertVisible:
     id: "userAddRemoveListsModal"
 - tapOn:
@@ -179,7 +179,7 @@ appId: xyz.blueskyweb.app
     id: "userAddRemoveListsModal"
 - tapOn:
     id: "profileHeaderDropdownBtn"
-- tapOn: "Add to Lists"
+- tapOn: "Add to lists"
 - assertVisible:
     id: "userAddRemoveListsModal"
 - tapOn:

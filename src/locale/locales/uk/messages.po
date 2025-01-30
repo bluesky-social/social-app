@@ -593,7 +593,7 @@ msgstr "Додати цю стрічку до вашої стрічки"
 
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:246
-msgid "Add to Lists"
+msgid "Add to lists"
 msgstr "Додати до списку"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
@@ -1066,12 +1066,12 @@ msgstr "Заблокувати обліковий запис"
 
 #: src/view/com/profile/ProfileMenu.tsx:280
 #: src/view/com/profile/ProfileMenu.tsx:287
-msgid "Block Account"
+msgid "Block account"
 msgstr "Заблокувати"
 
 #: src/view/com/profile/ProfileMenu.tsx:324
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:739
-msgid "Block Account?"
+msgid "Block account?"
 msgstr "Заблокувати обліковий запис?"
 
 #: src/view/screens/ProfileList.tsx:639
@@ -3096,7 +3096,7 @@ msgstr "Читати 7 облікових записів"
 
 #: src/view/com/profile/ProfileMenu.tsx:222
 #: src/view/com/profile/ProfileMenu.tsx:233
-msgid "Follow Account"
+msgid "Follow account"
 msgstr "Підписатися на обліковий запис"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:428
@@ -4332,7 +4332,7 @@ msgstr "Ігнорувати {truncatedTag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
-msgid "Mute Account"
+msgid "Mute account"
 msgstr "Ігнорувати обліковий запис"
 
 #: src/view/screens/ProfileList.tsx:627
@@ -5931,7 +5931,7 @@ msgstr "Поскаржитися"
 
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:302
-msgid "Report Account"
+msgid "Report account"
 msgstr "Поскаржитись на обліковий запис"
 
 #: src/components/dms/ConvoMenu.tsx:197
@@ -7840,12 +7840,12 @@ msgstr "Розблокувати обліковий запис"
 
 #: src/view/com/profile/ProfileMenu.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:285
-msgid "Unblock Account"
+msgid "Unblock account"
 msgstr "Розблокувати обліковий запис"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
 #: src/view/com/profile/ProfileMenu.tsx:323
-msgid "Unblock Account?"
+msgid "Unblock account?"
 msgstr "Розблокувати обліковий запис?"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
@@ -7868,7 +7868,7 @@ msgstr "Відписатися від {0}"
 
 #: src/view/com/profile/ProfileMenu.tsx:221
 #: src/view/com/profile/ProfileMenu.tsx:231
-msgid "Unfollow Account"
+msgid "Unfollow account"
 msgstr "Відписатися від облікового запису"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
@@ -7900,7 +7900,7 @@ msgstr "Не ігнорувати {truncatedTag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
-msgid "Unmute Account"
+msgid "Unmute account"
 msgstr "Перестати ігнорувати"
 
 #: src/components/TagMenu/index.tsx:223
@@ -8990,4 +8990,3 @@ msgstr "Відповідь опубліковано"
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "Вашу скаргу буде надіслано до Служби модерації Bluesky"
-

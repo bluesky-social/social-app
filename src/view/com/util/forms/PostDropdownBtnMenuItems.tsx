@@ -736,7 +736,7 @@ let PostDropdownMenuItems = ({
 
       <Prompt.Basic
         control={blockPromptControl}
-        title={_(msg`Block Account?`)}
+        title={_(msg`Block account?`)}
         description={_(
           msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
         )}
