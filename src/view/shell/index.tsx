@@ -4,7 +4,6 @@ import {Drawer} from 'react-native-drawer-layout'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {Gesture} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import * as SystemUI from 'expo-system-ui'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
 import {useDedupe} from '#/lib/hooks/useDedupe'
@@ -26,6 +25,7 @@ import {Lightbox} from '#/view/com/lightbox/Lightbox'
 import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, select, useTheme} from '#/alf'
+import {setSystemUITheme} from '#/alf/util/systemUI'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {Outlet as PortalOutlet} from '#/components/Portal'
@@ -165,11 +165,8 @@ export const Shell: React.FC = function ShellImpl() {
   const t = useTheme()
   useIntentHandler()
 
-  // style system ui on android
   useEffect(() => {
-    if (isAndroid) {
-      SystemUI.setBackgroundColorAsync(t.atoms.bg.backgroundColor)
-    }
+    setSystemUITheme('theme', t)
   }, [t])
 
   return (
