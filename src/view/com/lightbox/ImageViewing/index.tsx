@@ -155,6 +155,7 @@ export default function ImageViewRoot({
   }, [onRequestClose, openProgress])
 
   return (
+    // Keep it always mounted to avoid flicker on the first frame.
     <View
       style={[styles.screen, !activeLightbox && styles.screenHidden]}
       aria-modal

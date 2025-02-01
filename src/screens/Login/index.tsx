@@ -1,5 +1,5 @@
 import React, {useRef} from 'react'
-import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
+import {KeyboardAvoidingView} from 'react-native'
 import {LayoutAnimationConfig} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'

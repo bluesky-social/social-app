@@ -19,6 +19,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useEnableKeyboardController} from '#/lib/hooks/useEnableKeyboardController'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
@@ -203,6 +204,8 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
   ) {
     const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
     const insets = useSafeAreaInsets()
+
+    useEnableKeyboardController(isIOS)
 
     const [keyboardHeight, setKeyboardHeight] = React.useState(0)
 

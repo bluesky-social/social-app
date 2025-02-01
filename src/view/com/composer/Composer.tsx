@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   BackHandler,
   Keyboard,
+  KeyboardAvoidingView,
   type LayoutChangeEvent,
   ScrollView,
   type StyleProp,
@@ -18,7 +19,6 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle'
 import Animated, {
