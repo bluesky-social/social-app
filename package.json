@@ -176,7 +176,7 @@
     "react-native-compressor": "1.10.3",
     "react-native-date-picker": "^5.0.7",
     "react-native-drawer-layout": "^4.1.1",
-    "react-native-edge-to-edge": "^1.4.2",
+    "react-native-edge-to-edge": "^1.4.3",
     "react-native-emoji-popup": "^0.1.2",
     "react-native-gesture-handler": "2.20.2",
     "react-native-get-random-values": "~1.11.0",
