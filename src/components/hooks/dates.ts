@@ -10,6 +10,7 @@
 import React from 'react'
 import {formatDistance, Locale} from 'date-fns'
 import {
+  az,
   ca,
   da,
   de,
@@ -52,6 +53,7 @@ const locales: Record<AppLanguage, Locale | undefined> = {
   en: undefined,
   an: undefined,
   ast: undefined,
+  az,
   ca,
   da,
   de,
