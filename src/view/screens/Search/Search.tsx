@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react'
+import React, {useCallback} from 'react'
 import {
   ActivityIndicator,
   Image,
@@ -18,9 +18,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
 import {createHitslop} from '#/lib/constants'
@@ -38,7 +36,6 @@ import {
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {languageName} from '#/locale/helpers'
-import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {useLanguagePrefs} from '#/state/preferences/languages'
@@ -46,6 +43,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
+import {useProfilesQuery} from '#/state/queries/profile'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
@@ -73,6 +71,7 @@ import {SearchInput} from '#/components/forms/SearchInput'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import * as Layout from '#/components/Layout'
+import {account, useStorage} from '#/storage'
 
 function Loader() {
   return (
@@ -428,12 +427,12 @@ function useQueryManager({initialQuery}: {initialQuery: string}) {
   const {query, params: initialParams} = React.useMemo(() => {
     return parseSearchQuery(initialQuery || '')
   }, [initialQuery])
-  const [prevInitialQuery, setPrevInitialQuery] = React.useState(initialQuery)
+  const prevInitialQuery = React.useRef(initialQuery)
   const [lang, setLang] = React.useState(initialParams.lang || '')
 
-  if (initialQuery !== prevInitialQuery) {
+  if (initialQuery !== prevInitialQuery.current) {
     // handle new queryParam change (from manual search entry)
-    setPrevInitialQuery(initialQuery)
+    prevInitialQuery.current = initialQuery
     setLang(initialParams.lang || '')
   }
 
@@ -606,7 +605,6 @@ export function SearchScreen(
   const setDrawerOpen = useSetDrawerOpen()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {currentAccount} = useSession()
-  const queryClient = useQueryClient()
 
   // Query terms
   const queryParam = props.route?.params?.q ?? ''
@@ -616,91 +614,53 @@ export function SearchScreen(
 
   const [showAutocomplete, setShowAutocomplete] = React.useState(false)
 
-  const searchHistoryKey = `searchHistory#${currentAccount?.did ?? 'pwi'}`
-  const profileHistoryKey = `profileHistory#${currentAccount?.did ?? 'pwi'}`
+  const [termHistory = [], setTermHistory] = useStorage(account, [
+    currentAccount?.did ?? 'pwi',
+    'searchTermHistory',
+  ] as const)
+  const [accountHistory = [], setAccountHistory] = useStorage(account, [
+    currentAccount?.did ?? 'pwi',
+    'searchAccountHistory',
+  ])
 
-  const {data: history, error: historyError} = useQuery({
-    queryKey: ['search-history', currentAccount?.did ?? 'pwi'],
-    queryFn: async () => {
-      const [[, searchHistory], [, profileHistory]] =
-        await AsyncStorage.multiGet([searchHistoryKey, profileHistoryKey])
-      return {
-        searchHistory: JSON.parse(searchHistory ?? '[]') as string[],
-        profileHistory: JSON.parse(
-          profileHistory ?? '[]',
-        ) as AppBskyActorDefs.ProfileViewBasic[],
-      }
-    },
-    initialData: {
-      searchHistory: [],
-      profileHistory: [],
-    },
+  const {data: accountHistoryProfiles} = useProfilesQuery({
+    handles: accountHistory,
+    maintainData: true,
   })
-
-  useEffect(() => {
-    if (historyError) {
-      logger.error('Could not fetch history', {safeMessage: historyError})
-    }
-  }, [historyError])
-
-  const setHistory = useCallback(
-    async (partialNewHistory: Partial<typeof history>) => {
-      const newHistory = {...history, ...partialNewHistory}
-      queryClient.setQueryData(
-        ['search-history', currentAccount?.did ?? 'pwi'],
-        newHistory,
-      )
-      await AsyncStorage.setItem(
-        searchHistoryKey,
-        JSON.stringify(newHistory),
-      ).catch(error =>
-        logger.error('Failed to save search history update', {
-          safeMessage: error,
-        }),
-      )
-    },
-    [currentAccount?.did, searchHistoryKey, history, queryClient],
-  )
 
   const updateSearchHistory = useCallback(
     async (item: string) => {
       const newSearchHistory = [
         item,
-        ...history.searchHistory.filter(search => search !== item),
+        ...termHistory.filter(search => search !== item),
       ]
-      await setHistory({searchHistory: newSearchHistory})
+      setTermHistory(newSearchHistory)
     },
-    [history, setHistory],
+    [termHistory, setTermHistory],
   )
 
   const updateProfileHistory = useCallback(
     async (item: AppBskyActorDefs.ProfileViewBasic) => {
-      const newProfileHistory = [
-        item,
-        ...history.profileHistory.filter(p => p.did !== item.did),
+      const newAccountHistory = [
+        item.did,
+        ...accountHistory.filter(p => p !== item.did),
       ]
-      await setHistory({profileHistory: newProfileHistory})
+      setAccountHistory(newAccountHistory)
     },
-    [history, setHistory],
+    [accountHistory, setAccountHistory],
   )
 
   const deleteSearchHistoryItem = useCallback(
     async (item: string) => {
-      const newSearchHistory = history.searchHistory.filter(
-        search => search !== item,
-      )
-      await setHistory({searchHistory: newSearchHistory})
+      setTermHistory(termHistory.filter(search => search !== item))
     },
-    [history, setHistory],
+    [termHistory, setTermHistory],
   )
   const deleteProfileHistoryItem = useCallback(
     async (item: AppBskyActorDefs.ProfileViewBasic) => {
-      const newProfileHistory = history.profileHistory.filter(
-        p => p.did !== item.did,
-      )
-      await setHistory({profileHistory: newProfileHistory})
+      setAccountHistory(accountHistory.filter(p => p !== item.did))
     },
-    [history, setHistory],
+    [accountHistory, setAccountHistory],
   )
 
   const {params, query, queryWithParams} = useQueryManager({
@@ -757,14 +717,8 @@ export function SearchScreen(
     scrollToTopWeb()
     textInput.current?.blur()
     setShowAutocomplete(false)
-    if (isWeb) {
-      // Empty params resets the URL to be /search rather than /search?q=
-      navigation.replace('Search', {})
-    } else {
-      setSearchText('')
-      navigation.setParams({q: ''})
-    }
-  }, [setShowAutocomplete, setSearchText, navigation])
+    setSearchText(queryParam)
+  }, [setShowAutocomplete, setSearchText, queryParam])
 
   const onSubmit = React.useCallback(() => {
     navigateToItem(searchText)
@@ -918,8 +872,8 @@ export function SearchScreen(
           />
         ) : (
           <SearchHistory
-            searchHistory={history.searchHistory}
-            selectedProfiles={history.profileHistory}
+            searchHistory={termHistory}
+            selectedProfiles={accountHistoryProfiles?.profiles || []}
             onItemClick={handleHistoryItemClick}
             onProfileClick={handleProfileClick}
             onRemoveItemClick={deleteSearchHistoryItem}

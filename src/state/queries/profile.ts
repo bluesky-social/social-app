@@ -10,6 +10,7 @@ import {
   ComAtprotoRepoUploadBlob,
 } from '@atproto/api'
 import {
+  keepPreviousData,
   QueryClient,
   useMutation,
   useQuery,
@@ -81,7 +82,13 @@ export function useProfileQuery({
   })
 }
 
-export function useProfilesQuery({handles}: {handles: string[]}) {
+export function useProfilesQuery({
+  handles,
+  maintainData,
+}: {
+  handles: string[]
+  maintainData?: boolean
+}) {
   const agent = useAgent()
   return useQuery({
     staleTime: STALE.MINUTES.FIVE,
@@ -90,6 +97,7 @@ export function useProfilesQuery({handles}: {handles: string[]}) {
       const res = await agent.getProfiles({actors: handles})
       return res.data
     },
+    placeholderData: maintainData ? keepPreviousData : undefined,
   })
 }
 
