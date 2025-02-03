@@ -427,12 +427,12 @@ function useQueryManager({initialQuery}: {initialQuery: string}) {
   const {query, params: initialParams} = React.useMemo(() => {
     return parseSearchQuery(initialQuery || '')
   }, [initialQuery])
-  const prevInitialQuery = React.useRef(initialQuery)
+  const [prevInitialQuery, setPrevInitialQuery] = React.useState(initialQuery)
   const [lang, setLang] = React.useState(initialParams.lang || '')
 
-  if (initialQuery !== prevInitialQuery.current) {
+  if (initialQuery !== prevInitialQuery) {
     // handle new queryParam change (from manual search entry)
-    prevInitialQuery.current = initialQuery
+    setPrevInitialQuery(initialQuery)
     setLang(initialParams.lang || '')
   }
 
