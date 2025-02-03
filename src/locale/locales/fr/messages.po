@@ -4820,7 +4820,7 @@ msgid "Other..."
 msgstr "Autre…"
 
 #: src/components/dms/ReportDialog.tsx:339
-msgid "Our moderation team has recieved your report."
+msgid "Our moderation team has received your report."
 msgstr "Notre équipe de modération a reçu votre signalement."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:28
