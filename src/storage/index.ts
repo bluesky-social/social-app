@@ -1,7 +1,7 @@
 import {MMKV} from 'react-native-mmkv'
 import {Did} from '@atproto/api'
 
-import {Account,Device} from '#/storage/schema'
+import {Account, Device} from '#/storage/schema'
 
 export * from '#/storage/schema'
 
