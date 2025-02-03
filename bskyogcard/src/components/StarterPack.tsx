@@ -7,7 +7,7 @@ import {Img} from './Img.js'
 
 export const STARTERPACK_HEIGHT = 630
 export const STARTERPACK_WIDTH = 1200
-export const TILE_SIZE = STARTERPACK_HEIGHT / 3
+const TILE_SIZE = STARTERPACK_HEIGHT / 3
 
 const GRADIENT_TOP = '#0A7AFF'
 const GRADIENT_BOTTOM = '#59B9FF'

@@ -8,7 +8,7 @@ import {STALE} from '..'
 import {RQKEY as CONVO_KEY} from './conversation'
 
 const RQKEY_ROOT = 'convo-for-user'
-export const RQKEY = (did: string) => [RQKEY_ROOT, did]
+const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
 export function useGetConvoForMembers({
   onSuccess,

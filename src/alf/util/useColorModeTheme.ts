@@ -54,7 +54,7 @@ function updateDocument(theme: ThemeName) {
   }
 }
 
-export function getBackgroundColor(theme: ThemeName): string {
+function getBackgroundColor(theme: ThemeName): string {
   switch (theme) {
     case 'light':
       return light.atoms.bg.backgroundColor

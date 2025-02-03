@@ -24,36 +24,9 @@ import {useThreadgateHiddenReplyUrisAPI} from '#/state/threadgate-hidden-replies
 export * from '#/state/queries/threadgate/types'
 export * from '#/state/queries/threadgate/util'
 
-export const threadgateRecordQueryKeyRoot = 'threadgate-record'
-export const createThreadgateRecordQueryKey = (uri: string) => [
-  threadgateRecordQueryKeyRoot,
-  uri,
-]
+const threadgateRecordQueryKeyRoot = 'threadgate-record'
 
-export function useThreadgateRecordQuery({
-  postUri,
-  initialData,
-}: {
-  postUri?: string
-  initialData?: AppBskyFeedThreadgate.Record
-} = {}) {
-  const agent = useAgent()
-
-  return useQuery({
-    enabled: !!postUri,
-    queryKey: createThreadgateRecordQueryKey(postUri || ''),
-    placeholderData: initialData,
-    staleTime: STALE.MINUTES.ONE,
-    async queryFn() {
-      return getThreadgateRecord({
-        agent,
-        postUri: postUri!,
-      })
-    },
-  })
-}
-
-export const threadgateViewQueryKeyRoot = 'threadgate-view'
+const threadgateViewQueryKeyRoot = 'threadgate-view'
 export const createThreadgateViewQueryKey = (uri: string) => [
   threadgateViewQueryKeyRoot,
   uri,
@@ -100,7 +73,7 @@ export async function getThreadgateView({
   return null
 }
 
-export async function getThreadgateRecord({
+async function getThreadgateRecord({
   agent,
   postUri,
 }: {
@@ -157,7 +130,7 @@ export async function getThreadgateRecord({
   }
 }
 
-export async function writeThreadgateRecord({
+async function writeThreadgateRecord({
   agent,
   postUri,
   threadgate,
@@ -183,7 +156,7 @@ export async function writeThreadgateRecord({
   )
 }
 
-export async function upsertThreadgate(
+async function upsertThreadgate(
   {
     agent,
     postUri,
@@ -205,33 +178,6 @@ export async function upsertThreadgate(
     agent,
     postUri,
     threadgate: next,
-  })
-}
-
-/**
- * Update the allow list for a threadgate record.
- */
-export async function updateThreadgateAllow({
-  agent,
-  postUri,
-  allow,
-}: {
-  agent: BskyAgent
-  postUri: string
-  allow: ThreadgateAllowUISetting[]
-}) {
-  return upsertThreadgate({agent, postUri}, async prev => {
-    if (prev) {
-      return {
-        ...prev,
-        allow: threadgateAllowUISettingToAllowRecordValue(allow),
-      }
-    } else {
-      return createThreadgateRecord({
-        post: postUri,
-        allow: threadgateAllowUISettingToAllowRecordValue(allow),
-      })
-    }
   })
 }
 

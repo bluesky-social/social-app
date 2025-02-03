@@ -267,7 +267,7 @@ export function VideoPostCardPlaceholder() {
   )
 }
 
-export function VideoPostCardTextPlaceholder({
+function VideoPostCardTextPlaceholder({
   author,
 }: {
   author?: AppBskyActorDefs.ProfileViewBasic

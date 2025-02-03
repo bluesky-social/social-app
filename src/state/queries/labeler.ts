@@ -12,18 +12,9 @@ import {
 import {useAgent} from '#/state/session'
 
 const labelerInfoQueryKeyRoot = 'labeler-info'
-export const labelerInfoQueryKey = (did: string) => [
-  labelerInfoQueryKeyRoot,
-  did,
-]
+const labelerInfoQueryKey = (did: string) => [labelerInfoQueryKeyRoot, did]
 
-const labelersInfoQueryKeyRoot = 'labelers-info'
-export const labelersInfoQueryKey = (dids: string[]) => [
-  labelersInfoQueryKeyRoot,
-  dids.slice().sort(),
-]
-
-export const labelersDetailedInfoQueryKey = (dids: string[]) => [
+const labelersDetailedInfoQueryKey = (dids: string[]) => [
   labelersDetailedInfoQueryKeyRoot,
   dids,
 ]
@@ -45,18 +36,6 @@ export function useLabelerInfoQuery({
         detailed: true,
       })
       return res.data.views[0] as AppBskyLabelerDefs.LabelerViewDetailed
-    },
-  })
-}
-
-export function useLabelersInfoQuery({dids}: {dids: string[]}) {
-  const agent = useAgent()
-  return useQuery({
-    enabled: !!dids.length,
-    queryKey: labelersInfoQueryKey(dids),
-    queryFn: async () => {
-      const res = await agent.app.bsky.labeler.getServices({dids})
-      return res.data.views as AppBskyLabelerDefs.LabelerView[]
     },
   })
 }

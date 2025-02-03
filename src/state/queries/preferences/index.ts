@@ -70,21 +70,6 @@ export function usePreferencesQuery() {
   })
 }
 
-export function useClearPreferencesMutation() {
-  const queryClient = useQueryClient()
-  const agent = useAgent()
-
-  return useMutation({
-    mutationFn: async () => {
-      await agent.app.bsky.actor.putPreferences({preferences: []})
-      // triggers a refetch
-      await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
-      })
-    },
-  })
-}
-
 export function usePreferencesSetContentLabelMutation() {
   const agent = useAgent()
   const queryClient = useQueryClient()
@@ -95,29 +80,6 @@ export function usePreferencesSetContentLabelMutation() {
     {label: string; visibility: LabelPreference; labelerDid: string | undefined}
   >({
     mutationFn: async ({label, visibility, labelerDid}) => {
-      await agent.setContentLabelPref(label, visibility, labelerDid)
-      // triggers a refetch
-      await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
-      })
-    },
-  })
-}
-
-export function useSetContentLabelMutation() {
-  const queryClient = useQueryClient()
-  const agent = useAgent()
-
-  return useMutation({
-    mutationFn: async ({
-      label,
-      visibility,
-      labelerDid,
-    }: {
-      label: string
-      visibility: LabelPreference
-      labelerDid?: string
-    }) => {
       await agent.setContentLabelPref(label, visibility, labelerDid)
       // triggers a refetch
       await queryClient.invalidateQueries({
@@ -310,21 +272,6 @@ export function useUpsertMutedWordsMutation() {
   })
 }
 
-export function useUpdateMutedWordMutation() {
-  const queryClient = useQueryClient()
-  const agent = useAgent()
-
-  return useMutation({
-    mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
-      await agent.updateMutedWord(mutedWord)
-      // triggers a refetch
-      await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
-      })
-    },
-  })
-}
-
 export function useRemoveMutedWordMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
@@ -347,36 +294,6 @@ export function useRemoveMutedWordsMutation() {
   return useMutation({
     mutationFn: async (mutedWords: AppBskyActorDefs.MutedWord[]) => {
       await agent.removeMutedWords(mutedWords)
-      // triggers a refetch
-      await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
-      })
-    },
-  })
-}
-
-export function useQueueNudgesMutation() {
-  const queryClient = useQueryClient()
-  const agent = useAgent()
-
-  return useMutation({
-    mutationFn: async (nudges: string | string[]) => {
-      await agent.bskyAppQueueNudges(nudges)
-      // triggers a refetch
-      await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
-      })
-    },
-  })
-}
-
-export function useDismissNudgesMutation() {
-  const queryClient = useQueryClient()
-  const agent = useAgent()
-
-  return useMutation({
-    mutationFn: async (nudges: string | string[]) => {
-      await agent.bskyAppDismissNudges(nudges)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,

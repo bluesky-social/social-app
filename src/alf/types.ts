@@ -70,7 +70,7 @@ export type Palette = {
   negative_950: string
   negative_975: string
 }
-export type ThemedAtoms = {
+type ThemedAtoms = {
   text: {
     color: string
   }

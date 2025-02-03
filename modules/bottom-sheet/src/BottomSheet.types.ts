@@ -9,7 +9,7 @@ export enum BottomSheetSnapPoint {
   Full,
 }
 
-export type BottomSheetAttemptDismissEvent = NativeSyntheticEvent<object>
+type BottomSheetAttemptDismissEvent = NativeSyntheticEvent<object>
 export type BottomSheetSnapPointChangeEvent = NativeSyntheticEvent<{
   snapPoint: BottomSheetSnapPoint
 }>

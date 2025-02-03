@@ -4,10 +4,10 @@ import {STALE} from '#/state/queries/index'
 import {useAgent} from '../session'
 
 const RQKEY_LINK_ROOT = 'resolve-link'
-export const RQKEY_LINK = (url: string) => [RQKEY_LINK_ROOT, url]
+const RQKEY_LINK = (url: string) => [RQKEY_LINK_ROOT, url]
 
 const RQKEY_GIF_ROOT = 'resolve-gif'
-export const RQKEY_GIF = (url: string) => [RQKEY_GIF_ROOT, url]
+const RQKEY_GIF = (url: string) => [RQKEY_GIF_ROOT, url]
 
 import {BskyAgent} from '@atproto/api'
 

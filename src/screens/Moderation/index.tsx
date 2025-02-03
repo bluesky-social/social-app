@@ -136,7 +136,7 @@ function SubItem({
   )
 }
 
-export function ModerationScreenInner({
+function ModerationScreenInner({
   preferences,
 }: {
   preferences: UsePreferencesQueryResponse

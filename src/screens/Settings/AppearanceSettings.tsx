@@ -191,7 +191,7 @@ export function AppearanceSettingsScreen({}: Props) {
   )
 }
 
-export function AppearanceToggleButtonGroup({
+function AppearanceToggleButtonGroup({
   title,
   description,
   icon: Icon,

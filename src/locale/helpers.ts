@@ -10,14 +10,7 @@ import {
   LANGUAGES_MAP_CODE3,
 } from './languages'
 
-export function code2ToCode3(lang: string): string {
-  if (lang.length === 2) {
-    return LANGUAGES_MAP_CODE2[lang]?.code3 || lang
-  }
-  return lang
-}
-
-export function code3ToCode2(lang: string): string {
+function code3ToCode2(lang: string): string {
   if (lang.length === 3) {
     return LANGUAGES_MAP_CODE3[lang]?.code2 || lang
   }
@@ -72,7 +65,7 @@ export function codeToLanguageName(lang2or3: string, appLang: string): string {
   return knownLanguage ? languageName(knownLanguage, appLang) : code2
 }
 
-export function getPostLanguage(
+function getPostLanguage(
   post: AppBskyFeedDefs.PostView,
 ): string | undefined {
   let candidates: string[] = []
@@ -236,7 +229,7 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
  * {@link https://github.com/bluesky-social/social-app/pull/4461}
  * {@link https://xml.coverpages.org/iso639a.html}
  */
-export function fixLegacyLanguageCode(code: string | null): string | null {
+function fixLegacyLanguageCode(code: string | null): string | null {
   if (code === 'in') {
     // indonesian
     return 'id'

@@ -4,7 +4,7 @@ import {TextStyle, ViewStyle} from 'react-native'
 import {ThemeName} from '#/alf/types'
 import {darkTheme, defaultTheme, dimTheme} from './themes'
 
-export type ColorScheme = 'light' | 'dark'
+type ColorScheme = 'light' | 'dark'
 
 export type PaletteColorName =
   | 'default'
@@ -24,10 +24,10 @@ export type PaletteColor = {
   icon: string
   [k: string]: string
 }
-export type Palette = Record<PaletteColorName, PaletteColor>
+type Palette = Record<PaletteColorName, PaletteColor>
 
-export type ShapeName = 'button' | 'bigButton' | 'smallButton'
-export type Shapes = Record<ShapeName, ViewStyle>
+type ShapeName = 'button' | 'bigButton' | 'smallButton'
+type Shapes = Record<ShapeName, ViewStyle>
 
 export type TypographyVariant =
   | '2xl-thin'
@@ -70,7 +70,7 @@ export type TypographyVariant =
   | 'button'
   | 'button-lg'
   | 'mono'
-export type Typography = Record<TypographyVariant, TextStyle>
+type Typography = Record<TypographyVariant, TextStyle>
 
 export interface Theme {
   colorScheme: ColorScheme
@@ -79,12 +79,12 @@ export interface Theme {
   typography: Typography
 }
 
-export interface ThemeProviderProps {
+interface ThemeProviderProps {
   children?: ReactNode
   theme: ThemeName
 }
 
-export const ThemeContext = createContext<Theme>(defaultTheme)
+const ThemeContext = createContext<Theme>(defaultTheme)
 
 export const useTheme = () => useContext(ThemeContext)
 

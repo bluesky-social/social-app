@@ -36,10 +36,6 @@ const Context = React.createContext<Context>({
   dismissActiveNux: () => {},
 })
 
-export function useNuxDialogContext() {
-  return React.useContext(Context)
-}
-
 export function NuxDialogs() {
   const {currentAccount} = useSession()
   const {data: preferences} = usePreferencesQuery()

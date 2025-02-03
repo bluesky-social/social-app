@@ -16,7 +16,7 @@ import {logger} from '#/logger'
 import {useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 
-export type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
+type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
 const DEFAULT_DATE = new Date(Date.now() - 60e3 * 60 * 24 * 365 * 20) // default to 20 years ago
 
@@ -50,7 +50,7 @@ export type SignupState = {
   pendingSubmit: null | SubmitTask
 }
 
-export type SignupAction =
+type SignupAction =
   | {type: 'prev'}
   | {type: 'next'}
   | {type: 'finish'}

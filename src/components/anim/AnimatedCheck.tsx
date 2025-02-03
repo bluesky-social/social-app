@@ -19,7 +19,7 @@ export interface AnimatedCheckRef {
   play(cb?: () => void): void
 }
 
-export interface AnimatedCheckProps extends Props {
+interface AnimatedCheckProps extends Props {
   playOnMount?: boolean
 }
 

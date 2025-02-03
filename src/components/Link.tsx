@@ -26,7 +26,7 @@ import {router} from '#/routes'
  * Only available within a `Link`, since that inherits from `Button`.
  * `InlineLink` provides no context.
  */
-export {useButtonContext as useLinkContext} from '#/components/Button'
+
 
 type BaseLinkProps = Pick<
   Parameters<typeof useLinkProps<AllNavigatorParams>>[0],
@@ -71,7 +71,7 @@ type BaseLinkProps = Pick<
   shareOnLongPress?: boolean
 }
 
-export function useLink({
+function useLink({
   to,
   displayText,
   action = 'push',
@@ -254,7 +254,7 @@ export function Link({
   )
 }
 
-export type InlineLinkProps = React.PropsWithChildren<
+type InlineLinkProps = React.PropsWithChildren<
   BaseLinkProps &
     TextStyleProp &
     Pick<TextProps, 'selectable' | 'numberOfLines'> &
@@ -407,7 +407,7 @@ export function createStaticClickIfUnmodified(
  * Determines if the click event has a meta key pressed, indicating the user
  * intends to deviate from default behavior.
  */
-export function isClickEventWithMetaKey(e: GestureResponderEvent) {
+function isClickEventWithMetaKey(e: GestureResponderEvent) {
   if (!isWeb) return false
   const event = e as unknown as MouseEvent
   return event.metaKey || event.altKey || event.ctrlKey || event.shiftKey
@@ -416,7 +416,7 @@ export function isClickEventWithMetaKey(e: GestureResponderEvent) {
 /**
  * Determines if the web click target is anything other than `_self`
  */
-export function isClickTargetExternal(e: GestureResponderEvent) {
+function isClickTargetExternal(e: GestureResponderEvent) {
   if (!isWeb) return false
   const event = e as unknown as MouseEvent
   const el = event.currentTarget as HTMLAnchorElement
@@ -428,7 +428,7 @@ export function isClickTargetExternal(e: GestureResponderEvent) {
  * behavior, e.g. `Cmd` or a middle click.
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button}
  */
-export function isModifiedClickEvent(e: GestureResponderEvent): boolean {
+function isModifiedClickEvent(e: GestureResponderEvent): boolean {
   if (!isWeb) return false
   const event = e as unknown as MouseEvent
   const isPrimaryButton = event.button === 0

@@ -34,10 +34,10 @@ import {
 
 const REPLY_TREE_DEPTH = 10
 export const RQKEY_ROOT = 'post-thread'
-export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
+const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
 type ThreadViewNode = AppBskyFeedGetPostThread.OutputSchema['thread']
 
-export interface ThreadCtx {
+interface ThreadCtx {
   depth: number
   isHighlightedPost?: boolean
   hasMore?: boolean
@@ -73,7 +73,7 @@ export type ThreadBlocked = {
   ctx: ThreadCtx
 }
 
-export type ThreadUnknown = {
+type ThreadUnknown = {
   type: 'unknown'
   uri: string
 }
@@ -86,7 +86,7 @@ export type ThreadNode =
 
 export type ThreadModerationCache = WeakMap<ThreadNode, ModerationDecision>
 
-export type PostThreadQueryData = {
+type PostThreadQueryData = {
   thread: ThreadNode
   threadgate?: AppBskyFeedDefs.ThreadgateView
 }

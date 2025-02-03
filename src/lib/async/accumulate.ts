@@ -1,9 +1,9 @@
-export interface AccumulateResponse<T> {
+interface AccumulateResponse<T> {
   cursor?: string
   items: T[]
 }
 
-export type AccumulateFetchFn<T> = (
+type AccumulateFetchFn<T> = (
   cursor: string | undefined,
 ) => Promise<AccumulateResponse<T>>
 

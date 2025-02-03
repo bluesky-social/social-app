@@ -33,7 +33,7 @@ export function sanitizeHandle(handle: string, prefix = ''): string {
     : forceLTR(`${prefix}${handle}`)
 }
 
-export interface IsValidHandle {
+interface IsValidHandle {
   handleChars: boolean
   hyphenStartOrEnd: boolean
   frontLength: boolean

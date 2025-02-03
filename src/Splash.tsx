@@ -29,7 +29,7 @@ const darkSplashImageUri = RNImage.resolveAssetSource(
   darkSplashImagePointer,
 ).uri
 
-export const Logo = React.forwardRef(function LogoImpl(props: SvgProps, ref) {
+const Logo = React.forwardRef(function LogoImpl(props: SvgProps, ref) {
   const width = 1000
   const height = width * (67 / 64)
   return (

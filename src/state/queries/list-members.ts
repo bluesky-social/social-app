@@ -21,7 +21,7 @@ type RQPageParam = string | undefined
 const RQKEY_ROOT = 'list-members'
 const RQKEY_ROOT_ALL = 'list-members-all'
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
-export const RQKEY_ALL = (uri: string) => [RQKEY_ROOT_ALL, uri]
+const RQKEY_ALL = (uri: string) => [RQKEY_ROOT_ALL, uri]
 
 export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
   const agent = useAgent()

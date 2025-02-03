@@ -39,7 +39,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
-export type PostInteractionSettingsFormProps = {
+type PostInteractionSettingsFormProps = {
   onSave: () => void
   isSaving?: boolean
 
@@ -72,7 +72,7 @@ export function PostInteractionSettingsControlledDialog({
   )
 }
 
-export type PostInteractionSettingsDialogProps = {
+type PostInteractionSettingsDialogProps = {
   control: Dialog.DialogControlProps
   /**
    * URI of the post to edit the interaction settings for. Could be a root post
@@ -102,7 +102,7 @@ export function PostInteractionSettingsDialog(
   )
 }
 
-export function PostInteractionSettingsDialogControlledInner(
+function PostInteractionSettingsDialogControlledInner(
   props: PostInteractionSettingsDialogProps,
 ) {
   const {_} = useLingui()
@@ -222,7 +222,7 @@ export function PostInteractionSettingsDialogControlledInner(
   )
 }
 
-export function PostInteractionSettingsForm({
+function PostInteractionSettingsForm({
   onSave,
   isSaving,
   postgate,

@@ -12,9 +12,9 @@ import {Portal} from '#/components/Portal'
 
 // Custom Dropdown Menu Components
 // ==
-export const DropdownMenuRoot = DropdownMenu.Root
+const DropdownMenuRoot = DropdownMenu.Root
 // export const DropdownMenuTrigger = DropdownMenu.Trigger
-export const DropdownMenuContent = DropdownMenu.Content
+const DropdownMenuContent = DropdownMenu.Content
 
 type TriggerProps = Omit<
   React.ComponentProps<(typeof DropdownMenu)['Trigger']>,
@@ -25,7 +25,7 @@ type TriggerProps = Omit<
     accessibilityLabel?: string
     accessibilityHint?: string
   }>
-export const DropdownMenuTrigger = DropdownMenu.create(
+const DropdownMenuTrigger = DropdownMenu.create(
   (props: TriggerProps) => {
     const theme = useTheme()
     const defaultCtrlColor = theme.palette.default.postCtrl
@@ -59,7 +59,7 @@ export const DropdownMenuTrigger = DropdownMenu.create(
 )
 
 type ItemProps = React.ComponentProps<(typeof DropdownMenu)['Item']>
-export const DropdownMenuItem = DropdownMenu.create(
+const DropdownMenuItem = DropdownMenu.create(
   (props: ItemProps & {testID?: string}) => {
     const theme = useTheme()
     const [focused, setFocused] = React.useState(false)
@@ -84,7 +84,7 @@ export const DropdownMenuItem = DropdownMenu.create(
 )
 
 type TitleProps = React.ComponentProps<(typeof DropdownMenu)['ItemTitle']>
-export const DropdownMenuItemTitle = DropdownMenu.create(
+const DropdownMenuItemTitle = DropdownMenu.create(
   (props: TitleProps) => {
     const pal = usePalette('default')
     return (
@@ -98,12 +98,12 @@ export const DropdownMenuItemTitle = DropdownMenu.create(
 )
 
 type IconProps = React.ComponentProps<(typeof DropdownMenu)['ItemIcon']>
-export const DropdownMenuItemIcon = DropdownMenu.create((props: IconProps) => {
+const DropdownMenuItemIcon = DropdownMenu.create((props: IconProps) => {
   return <DropdownMenu.ItemIcon {...props} />
 }, 'ItemIcon')
 
 type SeparatorProps = React.ComponentProps<(typeof DropdownMenu)['Separator']>
-export const DropdownMenuSeparator = DropdownMenu.create(
+const DropdownMenuSeparator = DropdownMenu.create(
   (props: SeparatorProps) => {
     const pal = usePalette('default')
     const theme = useTheme()

@@ -38,7 +38,7 @@ const RQKEY_ROOT = 'profile'
 export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
 const profilesQueryKeyRoot = 'profiles'
-export const profilesQueryKey = (handles: string[]) => [
+const profilesQueryKey = (handles: string[]) => [
   profilesQueryKeyRoot,
   handles,
 ]

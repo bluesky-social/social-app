@@ -17,7 +17,7 @@ import * as Layout from '#/components/Layout'
 import {BUTTON_VISUAL_ALIGNMENT_OFFSET} from '#/components/Layout/const'
 import {Text} from '#/components/Typography'
 
-export function HeaderPlaceholder() {
+function HeaderPlaceholder() {
   return (
     <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
       <View
@@ -88,7 +88,7 @@ export function Header({
   )
 }
 
-export function FeedHeader({
+function FeedHeader({
   sourceContext,
 }: {
   sourceContext: Exclude<VideoFeedSourceContext, {type: 'author'}>
@@ -140,7 +140,7 @@ export function FeedHeader({
 }
 
 // TODO: This customization should be a part of the layout component
-export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
+function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
 

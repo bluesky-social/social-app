@@ -1,4 +1,4 @@
-export type Params = Record<string, string>
+type Params = Record<string, string>
 
 export function parseSearchQuery(rawQuery: string) {
   let base = rawQuery

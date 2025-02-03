@@ -26,13 +26,13 @@ import {ListMethods} from '../util/List'
 import {PagerHeaderProvider} from './PagerHeaderContext'
 import {TabBar} from './TabBar'
 
-export interface PagerWithHeaderChildParams {
+interface PagerWithHeaderChildParams {
   headerHeight: number
   isFocused: boolean
   scrollElRef: React.MutableRefObject<ListMethods | ScrollView | null>
 }
 
-export interface PagerWithHeaderProps {
+interface PagerWithHeaderProps {
   testID?: string
   children:
     | (((props: PagerWithHeaderChildParams) => JSX.Element) | null)[]

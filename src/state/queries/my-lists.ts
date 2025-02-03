@@ -12,7 +12,7 @@ export type MyListsFilter =
   | 'all-including-subscribed'
 
 const RQKEY_ROOT = 'my-lists'
-export const RQKEY = (filter: MyListsFilter) => [RQKEY_ROOT, filter]
+const RQKEY = (filter: MyListsFilter) => [RQKEY_ROOT, filter]
 
 export function useMyListsQuery(filter: MyListsFilter) {
   const {currentAccount} = useSession()

@@ -13,7 +13,7 @@ type RQPageParam = string | undefined
 
 // TODO refactor invalidate on mutate?
 const RQKEY_ROOT = 'post-reposted-by'
-export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
+const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 
 export function usePostRepostedByQuery(resolvedUri: string | undefined) {
   const agent = useAgent()

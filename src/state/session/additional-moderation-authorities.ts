@@ -3,18 +3,18 @@ import {BskyAgent} from '@atproto/api'
 import {logger} from '#/logger'
 import {device} from '#/storage'
 
-export const BR_LABELER = 'did:plc:ekitcvx7uwnauoqy5oest3hm'
-export const DE_LABELER = 'did:plc:r55ow3tocux5kafs5dq445fy'
-export const ADDITIONAL_LABELERS_MAP: {
+const BR_LABELER = 'did:plc:ekitcvx7uwnauoqy5oest3hm'
+const DE_LABELER = 'did:plc:r55ow3tocux5kafs5dq445fy'
+const ADDITIONAL_LABELERS_MAP: {
   [countryCode: string]: string[]
 } = {
   BR: [BR_LABELER],
   DE: [DE_LABELER],
 }
-export const ALL_ADDITIONAL_LABELERS = Object.values(
+const ALL_ADDITIONAL_LABELERS = Object.values(
   ADDITIONAL_LABELERS_MAP,
 ).flat()
-export const NON_CONFIGURABLE_LABELERS = [BR_LABELER, DE_LABELER]
+const NON_CONFIGURABLE_LABELERS = [BR_LABELER, DE_LABELER]
 
 export function isNonConfigurableModerationAuthority(did: string) {
   return NON_CONFIGURABLE_LABELERS.includes(did)

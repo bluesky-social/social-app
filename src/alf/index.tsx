@@ -42,7 +42,7 @@ export type Alf = {
 /*
  * Context
  */
-export const Context = React.createContext<Alf>({
+const Context = React.createContext<Alf>({
   themeName: 'light',
   theme: defaultTheme,
   themes: createThemes({

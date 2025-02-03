@@ -79,7 +79,7 @@ export async function getPostgateRecord({
   }
 }
 
-export async function writePostgateRecord({
+async function writePostgateRecord({
   agent,
   postUri,
   postgate,
@@ -100,7 +100,7 @@ export async function writePostgateRecord({
   )
 }
 
-export async function upsertPostgate(
+async function upsertPostgate(
   {
     agent,
     postUri,
@@ -254,42 +254,6 @@ export function useToggleQuoteDetachmentMutation() {
     },
     onSettled() {
       prevEmbed.current = undefined
-    },
-  })
-}
-
-export function useToggleQuotepostEnabledMutation() {
-  const agent = useAgent()
-
-  return useMutation({
-    mutationFn: async ({
-      postUri,
-      action,
-    }: {
-      postUri: string
-      action: 'enable' | 'disable'
-    }) => {
-      await upsertPostgate({agent, postUri: postUri}, async prev => {
-        if (prev) {
-          if (action === 'disable') {
-            return mergePostgateRecords(prev, {
-              embeddingRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
-            })
-          } else if (action === 'enable') {
-            return {
-              ...prev,
-              embeddingRules: [],
-            }
-          }
-        } else {
-          if (action === 'disable') {
-            return createPostgateRecord({
-              post: postUri,
-              embeddingRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
-            })
-          }
-        }
-      })
     },
   })
 }

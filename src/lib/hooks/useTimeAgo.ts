@@ -4,7 +4,7 @@ import {defineMessage, msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {differenceInSeconds} from 'date-fns'
 
-export type DateDiffFormat = 'long' | 'short'
+type DateDiffFormat = 'long' | 'short'
 
 type DateDiff = {
   value: number
@@ -106,7 +106,7 @@ export function dateDiff(
  * - Differences >= 360 days are returned as the "M/D/YYYY" string
  * - All values round down
  */
-export function formatDateDiff({
+function formatDateDiff({
   diff,
   format = 'short',
   i18n,

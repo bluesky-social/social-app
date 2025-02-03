@@ -11,7 +11,7 @@ import {Metadata} from './types'
 import {ConsoleTransportEntry, LogLevel, Transport} from './types'
 
 export {LogLevel}
-export type {ConsoleTransportEntry, Transport}
+export type {ConsoleTransportEntry, }
 
 const enabledLogLevels: {
   [key in LogLevel]: LogLevel[]
@@ -29,7 +29,7 @@ const enabledLogLevels: {
   [LogLevel.Error]: [LogLevel.Error],
 }
 
-export function prepareMetadata(metadata: Metadata): Metadata {
+function prepareMetadata(metadata: Metadata): Metadata {
   return Object.keys(metadata).reduce((acc, key) => {
     let value = metadata[key]
     if (value instanceof Error) {
@@ -42,7 +42,7 @@ export function prepareMetadata(metadata: Metadata): Metadata {
 /**
  * Used in dev mode to nicely log to the console
  */
-export const consoleTransport: Transport = (
+const consoleTransport: Transport = (
   level,
   message,
   metadata,

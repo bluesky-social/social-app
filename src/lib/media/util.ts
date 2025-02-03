@@ -1,6 +1,4 @@
-export function extractDataUriMime(uri: string): string {
-  return uri.substring(uri.indexOf(':') + 1, uri.indexOf(';'))
-}
+
 
 // Fairly accurate estimate that is more performant
 // than decoding and checking length of URI

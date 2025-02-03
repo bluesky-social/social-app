@@ -89,7 +89,7 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
   )
 })
 
-export function QrCodeInner({link}: {link: string}) {
+function QrCodeInner({link}: {link: string}) {
   const t = useTheme()
 
   return (

@@ -4,6 +4,7 @@
  * potential future use.
  * @see https://developer.apple.com/documentation/avfoundation/avaudiosession/category
  * @platform ios
+ * @lintignore
  */
 export enum AudioCategory {
   Ambient = 'AVAudioSessionCategoryAmbient',

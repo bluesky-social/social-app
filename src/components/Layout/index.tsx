@@ -1,10 +1,6 @@
 import React, {useContext, useMemo} from 'react'
 import {StyleSheet, View, ViewProps, ViewStyle} from 'react-native'
 import {StyleProp} from 'react-native'
-import {
-  KeyboardAwareScrollView,
-  KeyboardAwareScrollViewProps,
-} from 'react-native-keyboard-controller'
 import Animated, {
   AnimatedScrollViewProps,
   useAnimatedProps,
@@ -19,7 +15,7 @@ import {ScrollbarOffsetContext} from '#/components/Layout/context'
 export * from '#/components/Layout/const'
 export * as Header from '#/components/Layout/Header'
 
-export type ScreenProps = React.ComponentProps<typeof View> & {
+type ScreenProps = React.ComponentProps<typeof View> & {
   style?: StyleProp<ViewStyle>
   noInsetTop?: boolean
 }
@@ -44,7 +40,7 @@ export const Screen = React.memo(function Screen({
   )
 })
 
-export type ContentProps = AnimatedScrollViewProps & {
+type ContentProps = AnimatedScrollViewProps & {
   style?: StyleProp<ViewStyle>
   contentContainerStyle?: StyleProp<ViewStyle>
 }
@@ -100,36 +96,6 @@ const scrollViewStyles = StyleSheet.create({
   contentContainer: {
     paddingBottom: 100,
   },
-})
-
-export type KeyboardAwareContentProps = KeyboardAwareScrollViewProps & {
-  children: React.ReactNode
-  contentContainerStyle?: StyleProp<ViewStyle>
-}
-
-/**
- * Default scroll view for simple pages.
- *
- * BE SURE TO TEST THIS WHEN USING, it's untested as of writing this comment.
- */
-export const KeyboardAwareContent = React.memo(function LayoutScrollView({
-  children,
-  style,
-  contentContainerStyle,
-  ...props
-}: KeyboardAwareContentProps) {
-  return (
-    <KeyboardAwareScrollView
-      style={[scrollViewStyles.common, style]}
-      contentContainerStyle={[
-        scrollViewStyles.contentContainer,
-        contentContainerStyle,
-      ]}
-      keyboardShouldPersistTaps="handled"
-      {...props}>
-      {isWeb ? <Center>{children}</Center> : children}
-    </KeyboardAwareScrollView>
-  )
 })
 
 /**

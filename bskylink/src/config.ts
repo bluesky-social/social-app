@@ -5,27 +5,27 @@ export type Config = {
   db: DbConfig
 }
 
-export type ServiceConfig = {
+type ServiceConfig = {
   port: number
   version?: string
   hostnames: string[]
   appHostname: string
 }
 
-export type DbConfig = {
+type DbConfig = {
   url: string
   migrationUrl?: string
   pool: DbPoolConfig
   schema?: string
 }
 
-export type DbPoolConfig = {
+type DbPoolConfig = {
   size: number
   maxUses: number
   idleTimeoutMs: number
 }
 
-export type Environment = {
+type Environment = {
   port?: number
   version?: string
   hostnames: string[]

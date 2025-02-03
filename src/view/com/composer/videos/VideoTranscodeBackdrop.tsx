@@ -5,7 +5,7 @@ import {QueryClient, useQuery} from '@tanstack/react-query'
 
 import {atoms as a} from '#/alf'
 
-export const RQKEY = 'video-thumbnail'
+const RQKEY = 'video-thumbnail'
 
 export function clearThumbnailCache(queryClient: QueryClient) {
   clearCache()

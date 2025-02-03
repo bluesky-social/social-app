@@ -23,7 +23,7 @@ const onGeolocationUpdate = (
  * Default geolocation value. IF undefined, we fail closed and apply all
  * additional mod authorities.
  */
-export const DEFAULT_GEOLOCATION: Device['geolocation'] = {
+const DEFAULT_GEOLOCATION: Device['geolocation'] = {
   countryCode: undefined,
 }
 
@@ -161,8 +161,4 @@ export function Provider({children}: {children: React.ReactNode}) {
   }, [geolocation])
 
   return <context.Provider value={ctx}>{children}</context.Provider>
-}
-
-export function useGeolocation() {
-  return React.useContext(context)
 }

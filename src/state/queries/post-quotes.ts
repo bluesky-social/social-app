@@ -23,7 +23,7 @@ const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
 const RQKEY_ROOT = 'post-quotes'
-export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
+const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 
 export function usePostQuotesQuery(resolvedUri: string | undefined) {
   const agent = useAgent()

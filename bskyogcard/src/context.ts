@@ -8,7 +8,7 @@ import {Config} from './config.js'
 
 const __DIRNAME = path.dirname(fileURLToPath(import.meta.url))
 
-export type AppContextOptions = {
+type AppContextOptions = {
   cfg: Config
   appviewAgent: AtpAgent
   fonts: {name: string; data: Buffer}[]

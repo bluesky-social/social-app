@@ -14,7 +14,7 @@ import {
 } from '#/lib/moderation/useGlobalLabelStrings'
 import {useLabelDefinitions} from '#/state/preferences'
 
-export interface LabelInfo {
+interface LabelInfo {
   label: ComAtprotoLabelDefs.Label
   def: InterpretedLabelValueDefinition
   strings: ComAtprotoLabelDefs.LabelValueDefinitionStrings

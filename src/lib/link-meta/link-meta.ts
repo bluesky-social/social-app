@@ -15,7 +15,7 @@ export enum LikelyType {
   Other,
 }
 
-export interface LinkMeta {
+interface LinkMeta {
   error?: string
   likelyType: LikelyType
   url: string

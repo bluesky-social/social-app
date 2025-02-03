@@ -88,7 +88,7 @@ export function Header({children}: {children: React.ReactNode}) {
   return <View style={[a.flex_row, a.align_center, a.gap_md]}>{children}</View>
 }
 
-export type AvatarProps = {src: string | undefined; size?: number}
+type AvatarProps = {src: string | undefined; size?: number}
 
 export function Avatar({src, size = 40}: AvatarProps) {
   return <UserAvatar type="algo" size={size} avatar={src} />
@@ -184,29 +184,7 @@ export function Description({
   return <RichText value={rt} style={[a.leading_snug]} disableLinks {...rest} />
 }
 
-export function DescriptionPlaceholder() {
-  const t = useTheme()
-  return (
-    <View style={[a.gap_xs]}>
-      <View
-        style={[a.rounded_xs, a.w_full, t.atoms.bg_contrast_50, {height: 12}]}
-      />
-      <View
-        style={[a.rounded_xs, a.w_full, t.atoms.bg_contrast_50, {height: 12}]}
-      />
-      <View
-        style={[
-          a.rounded_xs,
-          a.w_full,
-          t.atoms.bg_contrast_50,
-          {height: 12, width: 100},
-        ]}
-      />
-    </View>
-  )
-}
-
-export function Likes({count}: {count: number}) {
+function Likes({count}: {count: number}) {
   const t = useTheme()
   return (
     <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
@@ -319,11 +297,7 @@ function SaveButtonInner({
   )
 }
 
-export function createProfileFeedHref({
-  feed,
-}: {
-  feed: AppBskyFeedDefs.GeneratorView
-}) {
+function createProfileFeedHref({feed}: {feed: AppBskyFeedDefs.GeneratorView}) {
   const urip = new AtUri(feed.uri)
   const handleOrDid = feed.creator.handle || feed.creator.did
   return `/profile/${handleOrDid}/feed/${urip.rkey}`

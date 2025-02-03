@@ -20,7 +20,7 @@ type LocalWithLanguageCode = Locale & {
  * {@link https://developer.apple.com/documentation/packagedescription/languagetag}
  * {@link https://gist.github.com/amake/0ac7724681ac1c178c6f95a5b09f03ce#new-locales-vs-old-locales-chinese}
  */
-export function getLocales() {
+function getLocales() {
   const locales = defaultGetLocales?.() ?? []
   const output: LocalWithLanguageCode[] = []
 

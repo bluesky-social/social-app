@@ -7,7 +7,7 @@ import {isInvalidHandle} from '#/lib/strings/handles'
 import {startUriToStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 
-export const BSKY_APP_HOST = 'https://bsky.app'
+const BSKY_APP_HOST = 'https://bsky.app'
 const BSKY_TRUSTED_HOSTS = [
   'bsky\\.app',
   'bsky\\.social',
@@ -278,7 +278,7 @@ export function linkRequiresWarning(uri: string, label: string) {
  * Hosts are case-insensitive, so should be lowercase for comparison.
  * @see https://www.rfc-editor.org/rfc/rfc3986#section-3.2.2
  */
-export function labelToDomain(label: string): string | undefined {
+function labelToDomain(label: string): string | undefined {
   // any spaces just immediately consider the label a non-url
   if (/\s/.test(label)) {
     return undefined
@@ -324,7 +324,7 @@ export function isShortLink(url: string): boolean {
   return url.startsWith('https://go.bsky.app/')
 }
 
-export function shortLinkToHref(url: string): string {
+function shortLinkToHref(url: string): string {
   try {
     const urlp = new URL(url)
 

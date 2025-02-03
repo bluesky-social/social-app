@@ -26,7 +26,7 @@ export function TrendingInterstitial() {
   return enabled && !trendingDisabled ? <Inner /> : null
 }
 
-export function Inner() {
+function Inner() {
   const t = useTheme()
   const {_} = useLingui()
   const gutters = useGutters([0, 'base', 0, 'base'])

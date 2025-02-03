@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 import {logger} from '#/logger'
 import {AvatarColor, Emoji} from '#/screens/Onboarding/StepProfile/types'
 
-export type OnboardingState = {
+type OnboardingState = {
   hasPrev: boolean
   totalSteps: number
   activeStep: 'profile' | 'interests' | 'finished'
@@ -33,7 +33,7 @@ export type OnboardingState = {
   }
 }
 
-export type OnboardingAction =
+type OnboardingAction =
   | {
       type: 'next'
     }

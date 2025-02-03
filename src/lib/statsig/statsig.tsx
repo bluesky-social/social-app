@@ -166,28 +166,6 @@ export function useGate(): (gateName: Gate, options?: GateOptions) => boolean {
   return gate
 }
 
-/**
- * Debugging tool to override a gate. USE ONLY IN E2E TESTS!
- */
-export function useDangerousSetGate(): (
-  gateName: Gate,
-  value: boolean,
-) => void {
-  const cache = React.useContext(GateCache)
-  if (!cache) {
-    throw Error(
-      'useDangerousSetGate() cannot be called outside StatsigProvider.',
-    )
-  }
-  const dangerousSetGate = React.useCallback(
-    (gateName: Gate, value: boolean) => {
-      cache.set(gateName, value)
-    },
-    [cache],
-  )
-  return dangerousSetGate
-}
-
 function toStatsigUser(did: string | undefined): StatsigUser {
   let userID: string | undefined
   if (did) {
@@ -253,7 +231,7 @@ export async function tryFetchGates(
   }
 }
 
-export function initialize() {
+function initialize() {
   return Statsig.initialize(SDK_KEY, null, createStatsigOptions([]))
 }
 

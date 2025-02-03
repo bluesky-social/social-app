@@ -149,7 +149,7 @@ function QuoteEmbedModerated({
   )
 }
 
-export function QuoteEmbed({
+function QuoteEmbed({
   quote,
   moderation,
   onOpen,

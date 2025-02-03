@@ -18,6 +18,6 @@ export {
   BottomSheetPortalProvider,
   BottomSheetProvider,
   BottomSheetSnapPoint,
-  type BottomSheetState,
+  
   type BottomSheetViewProps,
 }

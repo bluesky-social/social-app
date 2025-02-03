@@ -14,7 +14,7 @@ type RQPageParam = string | undefined
 
 // TODO refactor invalidate on mutate?
 const RQKEY_ROOT = 'profile-follows'
-export const RQKEY = (did: string) => [RQKEY_ROOT, did]
+const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
 export function useProfileFollowsQuery(
   did: string | undefined,

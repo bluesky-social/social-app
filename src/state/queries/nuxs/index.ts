@@ -1,6 +1,6 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {AppNux, Nux} from '#/state/queries/nuxs/definitions'
+import {AppNux,} from '#/state/queries/nuxs/definitions'
 import {parseAppNux, serializeAppNux} from '#/state/queries/nuxs/util'
 import {
   preferencesQueryKey,
@@ -42,41 +42,6 @@ export function useNuxs():
 
   return {
     nuxs: undefined,
-    status,
-  }
-}
-
-export function useNux<T extends Nux>(
-  id: T,
-):
-  | {
-      nux: Extract<AppNux, {id: T}> | undefined
-      status: 'ready'
-    }
-  | {
-      nux: undefined
-      status: 'loading' | 'error'
-    } {
-  const {nuxs, status} = useNuxs()
-
-  if (status === 'ready') {
-    const nux = nuxs.find(nux => nux.id === id)
-
-    if (nux) {
-      return {
-        nux: nux as Extract<AppNux, {id: T}>,
-        status,
-      }
-    } else {
-      return {
-        nux: undefined,
-        status,
-      }
-    }
-  }
-
-  return {
-    nux: undefined,
     status,
   }
 }

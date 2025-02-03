@@ -169,7 +169,7 @@ let DefaultAvatar = ({
   )
 }
 DefaultAvatar = memo(DefaultAvatar)
-export {DefaultAvatar}
+
 
 let UserAvatar = ({
   type = 'user',

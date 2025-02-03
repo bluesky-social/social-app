@@ -1,0 +1,43 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "workspaces": {
+    ".": {
+      "entry": [
+        // Custom entry points for missing plugins and various project-specific locations
+        "lingui.config.js",
+        "plugins/**/*.js",
+        "postHooks/uploadSentrySourcemapsPostHook.js",
+        "scripts/bundleUpdate.js",
+        "src/alf/util/unusedUseFonts.ts",
+        "src/platform/crypto.ts",
+        "src/view/screens/Debug.tsx",
+        "__e2e__/*.{js,ts}",
+        "src/**/*.e2e.{ts,tsx}",
+      ],
+      "project": ["**/*.{js,ts,tsx}", "!bskyweb", "!eslint", "!__mocks__"],
+      "eslint": [".eslintrc.js", "eslint/index.js"], // That "link:./eslint" is a bridge too far
+      "metro": {
+        "entry": [
+          // Knip doesn't have Metro's module resolution (would make Knip complicated and slow as we'd have to lint once
+          // per platform). We can consider platform-specific files to be entry points. Though now Knip won't catch
+          // unused platform-specific files (which in turn might contain unused dependencies).
+          "index*.js",
+          "{modules,src}/**/*.{ios,android,web,native}.{ts,tsx,js,json}",
+        ],
+      },
+      "webpack": true, // Enabled manually as `webpack` isn't listed in package.json
+      "ignore": ["webpack.config.js", "metro.config.js"], // Both Metro + Webpack configs extend from other packages, resulting in some false positives
+      "ignoreBinaries": ["swiftlint", "ktlint", "maestro", "flashlight"],
+      "ignoreDependencies": ["xcode", "react-native-web-webview", "ts-node"],
+      "ignoreUnresolved": ["#/.*"], // Knip does not have Metro's module resolution and a few false positives slip through
+    },
+    "bskyembed": {
+      "entry": ["snippet/embed.ts", "src/bin.ts", "src/screens/*.tsx"],
+    },
+    "bskylink": {
+      "entry": ["src/bin.ts", "tests/**/*.ts"],
+    },
+    // An empty object is enough to include a workspace (we do it here manually since there's no package.json#workspaces)
+    "bskyogcard": {},
+  },
+}

@@ -45,7 +45,7 @@ import {FeedPage} from './types'
 import {useUnreadNotificationsApi} from './unread'
 import {fetchPage} from './util'
 
-export type {FeedNotification, FeedPage, NotificationType} from './types'
+export type {FeedNotification,  } from './types'
 
 const PAGE_SIZE = 30
 

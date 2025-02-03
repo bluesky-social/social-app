@@ -45,7 +45,7 @@ export function normalizeData(data: Schema) {
   return next
 }
 
-export function normalizeLanguageTagToTwoLetterCode(lang: string) {
+function normalizeLanguageTagToTwoLetterCode(lang: string) {
   const result = parse(lang).language
   return result ?? lang
 }

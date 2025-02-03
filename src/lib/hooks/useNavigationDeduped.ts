@@ -1,7 +1,7 @@
 import React from 'react'
-import {useNavigation} from '@react-navigation/core'
+import type {NavigationAction} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {NavigationState} from '@react-navigation/native'
-import type {NavigationAction} from '@react-navigation/routers'
 
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {AllNavigatorParams, NavigationProp} from '#/lib/routes/types'

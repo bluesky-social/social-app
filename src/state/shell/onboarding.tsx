@@ -2,7 +2,7 @@ import React from 'react'
 
 import * as persisted from '#/state/persisted'
 
-export const OnboardingScreenSteps = {
+const OnboardingScreenSteps = {
   Welcome: 'Welcome',
   RecommendedFeeds: 'RecommendedFeeds',
   RecommendedFollows: 'RecommendedFollows',
@@ -20,11 +20,11 @@ type Action =
   | {type: 'finish'}
   | {type: 'skip'}
 
-export type StateContext = persisted.Schema['onboarding'] & {
+type StateContext = persisted.Schema['onboarding'] & {
   isComplete: boolean
   isActive: boolean
 }
-export type DispatchContext = (action: Action) => void
+type DispatchContext = (action: Action) => void
 
 const stateContext = React.createContext<StateContext>(
   compute(persisted.defaults.onboarding),

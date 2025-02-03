@@ -16,7 +16,7 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {CheckThick_Stroke2_Corner0_Rounded as Checkmark} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
 
-export type ItemState = {
+type ItemState = {
   name: string
   selected: boolean
   disabled: boolean
@@ -264,7 +264,7 @@ export function LabelText({
 }
 
 // TODO(eric) refactor to memoize styles without knowledge of state
-export function createSharedToggleStyles({
+function createSharedToggleStyles({
   theme: t,
   hovered,
   selected,

@@ -78,7 +78,7 @@ export function useStarterPackQuery({
   })
 }
 
-export async function invalidateStarterPack({
+async function invalidateStarterPack({
   queryClient,
   did,
   rkey,

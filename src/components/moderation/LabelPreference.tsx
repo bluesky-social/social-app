@@ -17,7 +17,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '../icons/CircleInfo'
 
-export function Outer({children}: React.PropsWithChildren<{}>) {
+function Outer({children}: React.PropsWithChildren<{}>) {
   return (
     <View
       style={[
@@ -33,7 +33,7 @@ export function Outer({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function Content({
+function Content({
   children,
   name,
   description,
@@ -58,7 +58,7 @@ export function Content({
   )
 }
 
-export function Buttons({
+function Buttons({
   name,
   values,
   onChange,

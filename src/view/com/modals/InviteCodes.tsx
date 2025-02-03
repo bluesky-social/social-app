@@ -49,7 +49,7 @@ export function Component() {
   )
 }
 
-export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
+function Inner({invites}: {invites: InviteCodesQueryResponse}) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const {closeModal} = useModalControls()

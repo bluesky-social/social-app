@@ -39,7 +39,7 @@ export function useListQuery(uri?: string) {
   })
 }
 
-export interface ListCreateMutateParams {
+interface ListCreateMutateParams {
   purpose: string
   name: string
   description: string
@@ -107,7 +107,7 @@ export function useListCreateMutation() {
   )
 }
 
-export interface ListMetadataMutateParams {
+interface ListMetadataMutateParams {
   uri: string
   name: string
   description: string

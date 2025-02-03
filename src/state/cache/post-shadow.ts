@@ -16,7 +16,7 @@ import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '../queri
 import {castAsShadow, Shadow} from './types'
 export type {Shadow} from './types'
 
-export interface PostShadow {
+interface PostShadow {
   likeUri: string | undefined
   repostUri: string | undefined
   isDeleted: boolean

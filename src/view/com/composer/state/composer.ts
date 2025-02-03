@@ -87,7 +87,7 @@ export type ThreadDraft = {
   threadgate: ThreadgateAllowUISetting[]
 }
 
-export type ComposerState = {
+type ComposerState = {
   thread: ThreadDraft
   activePostIndex: number
   mutableNeedsFocusActive: boolean

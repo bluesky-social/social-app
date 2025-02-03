@@ -18,7 +18,7 @@ export function threadgateViewToAllowUISetting(
  * Converts a full {@link AppBskyFeedThreadgate.Record} to a list of
  * {@link ThreadgateAllowUISetting}, for use by app UI.
  */
-export function threadgateRecordToAllowUISetting(
+function threadgateRecordToAllowUISetting(
   threadgate: AppBskyFeedThreadgate.Record | undefined,
 ): ThreadgateAllowUISetting[] {
   /*

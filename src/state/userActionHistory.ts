@@ -14,7 +14,7 @@ export type SeenPost = {
   feedContext: string | undefined
 }
 
-export type UserActionHistory = {
+type UserActionHistory = {
   /**
    * The last 100 post URIs the user has liked
    */
@@ -40,7 +40,7 @@ const userActionHistory: UserActionHistory = {
   seen: [],
 }
 
-export function getActionHistory() {
+function getActionHistory() {
   return userActionHistory
 }
 

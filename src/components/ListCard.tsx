@@ -32,15 +32,7 @@ import {Text} from '#/components/Typography'
  * component. Please refer to `FeedCard` for more context.
  */
 
-export {
-  Avatar,
-  AvatarPlaceholder,
-  Description,
-  Header,
-  Outer,
-  SaveButton,
-  TitleAndBylinePlaceholder,
-} from '#/components/FeedCard'
+export {Avatar, Header} from '#/components/FeedCard'
 
 const CURATELIST = 'app.bsky.graph.defs#curatelist'
 const MODLIST = 'app.bsky.graph.defs#modlist'
@@ -154,11 +146,7 @@ export function TitleAndByline({
   )
 }
 
-export function createProfileListHref({
-  list,
-}: {
-  list: AppBskyGraphDefs.ListView
-}) {
+function createProfileListHref({list}: {list: AppBskyGraphDefs.ListView}) {
   const urip = new AtUri(list.uri)
   const handleOrDid = list.creator.handle || list.creator.did
   return `/profile/${handleOrDid}/lists/${urip.rkey}`

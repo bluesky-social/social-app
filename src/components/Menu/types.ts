@@ -41,7 +41,7 @@ export type TriggerProps = {
   hint?: string
   role?: AccessibilityRole
 }
-export type TriggerChildProps =
+type TriggerChildProps =
   | {
       isNative: true
       control: Dialog.DialogOuterProps['control']

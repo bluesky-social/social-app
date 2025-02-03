@@ -139,7 +139,7 @@ type SendMessage = (
 ) => void
 type FetchMessageHistory = () => Promise<void>
 
-export type ConvoStateUninitialized = {
+type ConvoStateUninitialized = {
   status: ConvoStatus.Uninitialized
   items: []
   convo: undefined
@@ -151,7 +151,7 @@ export type ConvoStateUninitialized = {
   sendMessage: undefined
   fetchMessageHistory: undefined
 }
-export type ConvoStateInitializing = {
+type ConvoStateInitializing = {
   status: ConvoStatus.Initializing
   items: []
   convo: undefined
@@ -199,7 +199,7 @@ export type ConvoStateSuspended = {
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
 }
-export type ConvoStateError = {
+type ConvoStateError = {
   status: ConvoStatus.Error
   items: []
   convo: undefined

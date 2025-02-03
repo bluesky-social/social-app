@@ -15,7 +15,7 @@ const DEFAULT_MOD_OPTS = {
 }
 
 const RQKEY_ROOT = 'actor-autocomplete'
-export const RQKEY = (prefix: string) => [RQKEY_ROOT, prefix]
+const RQKEY = (prefix: string) => [RQKEY_ROOT, prefix]
 
 export function useActorAutocompleteQuery(
   prefix: string,

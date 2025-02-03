@@ -274,7 +274,7 @@ export async function saveBytesToDisk(
   return await saveToDevice(filename, encoded, type)
 }
 
-export async function saveToDevice(
+async function saveToDevice(
   filename: string,
   encoded: string,
   type: string,
