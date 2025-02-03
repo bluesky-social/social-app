@@ -80,36 +80,40 @@ function DialogInner({
     persisted.get('pdsAddressHistory') || [],
   )
 
-  useImperativeHandle(formRef, () => ({
-    getFormState: () => {
-      let url
-      if (fixedOption === 'custom') {
-        url = customAddress.trim().toLowerCase()
-        if (!url) {
-          return null
-        }
-      } else {
-        url = fixedOption
-      }
-      if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        if (url === 'localhost' || url.startsWith('localhost:')) {
-          url = `http://${url}`
+  useImperativeHandle(
+    formRef,
+    () => ({
+      getFormState: () => {
+        let url
+        if (fixedOption === 'custom') {
+          url = customAddress.trim().toLowerCase()
+          if (!url) {
+            return null
+          }
         } else {
-          url = `https://${url}`
+          url = fixedOption
         }
-      }
-
-      if (fixedOption === 'custom') {
-        if (!pdsAddressHistory.includes(url)) {
-          const newHistory = [url, ...pdsAddressHistory.slice(0, 4)]
-          setPdsAddressHistory(newHistory)
-          persisted.write('pdsAddressHistory', newHistory)
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+          if (url === 'localhost' || url.startsWith('localhost:')) {
+            url = `http://${url}`
+          } else {
+            url = `https://${url}`
+          }
         }
-      }
 
-      return url
-    },
-  }))
+        if (fixedOption === 'custom') {
+          if (!pdsAddressHistory.includes(url)) {
+            const newHistory = [url, ...pdsAddressHistory.slice(0, 4)]
+            setPdsAddressHistory(newHistory)
+            persisted.write('pdsAddressHistory', newHistory)
+          }
+        }
+
+        return url
+      },
+    }),
+    [customAddress, fixedOption, pdsAddressHistory],
+  )
 
   const isFirstTimeUser = accounts.length === 0
 
