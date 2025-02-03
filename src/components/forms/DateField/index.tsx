@@ -16,10 +16,11 @@ export * as utils from '#/components/forms/DateField/utils'
 export const LabelText = TextField.LabelText
 
 /**
- * Date-only input. Accepts a date in the format YYYY-MM-DD, and reports date
- * changes in the same format.
+ * Date-only input. Accepts a string in the format YYYY-MM-DD, or a Date object.
+ * Date objects are converted to strings in the format YYYY-MM-DD.
+ * Returns a string in the format YYYY-MM-DD.
  *
- * For dates of unknown format, convert with the
+ * To generate a string in the format YYYY-MM-DD from a Date object, use the
  * `utils.toSimpleDateString(Date)` export of this file.
  */
 export function DateField({
