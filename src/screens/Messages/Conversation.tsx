@@ -14,7 +14,7 @@ import {useEmail} from '#/lib/hooks/useEmail'
 import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {isWeb} from '#/platform/detection'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {Shadow, useMaybeProfileShadow} from '#/state/cache/profile-shadow'
 import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
@@ -76,9 +76,10 @@ function Inner() {
   const {_} = useLingui()
 
   const moderationOpts = useModerationOpts()
-  const {data: recipient} = useProfileQuery({
+  const {data: recipientUnshadowed} = useProfileQuery({
     did: convoState.recipients?.[0].did,
   })
+  const recipient = useMaybeProfileShadow(recipientUnshadowed)
 
   const moderation = React.useMemo(() => {
     if (!recipient || !moderationOpts) return null
@@ -159,19 +160,18 @@ function Inner() {
 
 function InnerReady({
   moderation,
-  recipient: recipientUnshadowed,
+  recipient,
   hasScrolled,
   setHasScrolled,
 }: {
   moderation: ModerationDecision
-  recipient: AppBskyActorDefs.ProfileViewBasic
+  recipient: Shadow<AppBskyActorDefs.ProfileViewBasic>
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
 }) {
   const {_} = useLingui()
   const convoState = useConvo()
   const navigation = useNavigation<NavigationProp>()
-  const recipient = useProfileShadow(recipientUnshadowed)
   const verifyEmailControl = useDialogControl()
   const {needsEmailVerification} = useEmail()
 

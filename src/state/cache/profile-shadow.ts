@@ -63,6 +63,44 @@ export function useProfileShadow<
   }, [profile, shadow])
 }
 
+/**
+ * Same as useProfileShadow, but allows for the profile to be undefined.
+ * This is useful for when the profile is not guaranteed to be loaded yet.
+ */
+export function useMaybeProfileShadow<
+  TProfileView extends AppBskyActorDefs.ProfileView,
+>(profile?: TProfileView): Shadow<TProfileView> | undefined {
+  const [shadow, setShadow] = useState(() =>
+    profile ? shadows.get(profile) : undefined,
+  )
+  const [prevPost, setPrevPost] = useState(profile)
+  if (profile !== prevPost) {
+    setPrevPost(profile)
+    setShadow(profile ? shadows.get(profile) : undefined)
+  }
+
+  useEffect(() => {
+    if (!profile) return
+    function onUpdate() {
+      if (!profile) return
+      setShadow(shadows.get(profile))
+    }
+    emitter.addListener(profile.did, onUpdate)
+    return () => {
+      emitter.removeListener(profile.did, onUpdate)
+    }
+  }, [profile])
+
+  return useMemo(() => {
+    if (!profile) return undefined
+    if (shadow) {
+      return mergeShadow(profile, shadow)
+    } else {
+      return castAsShadow(profile)
+    }
+  }, [profile, shadow])
+}
+
 export function updateProfileShadow(
   queryClient: QueryClient,
   did: string,
