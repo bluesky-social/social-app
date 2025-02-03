@@ -633,7 +633,7 @@ export function SearchScreen(
       const newSearchHistory = [
         item,
         ...termHistory.filter(search => search !== item),
-      ]
+      ].slice(0, 6)
       setTermHistory(newSearchHistory)
     },
     [termHistory, setTermHistory],
@@ -644,7 +644,7 @@ export function SearchScreen(
       const newAccountHistory = [
         item.did,
         ...accountHistory.filter(p => p !== item.did),
-      ]
+      ].slice(0, 5)
       setAccountHistory(newAccountHistory)
     },
     [accountHistory, setAccountHistory],
