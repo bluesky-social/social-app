@@ -71,8 +71,8 @@ export const ProfileStarterPacks = React.forwardRef<
 ) {
   const t = useTheme()
   const bottomBarOffset = useBottomBarOffset(100)
-  const [isPTRing, setIsPTRing] = React.useState(false)
-  const {data, refetch, isFetching, hasNextPage, fetchNextPage} = query
+  const {data, refetch, isFetching, hasNextPage, fetchNextPage, isRefetching} =
+    query
   const {isTabletOrDesktop} = useWebMediaQueries()
 
   const items = data?.pages.flatMap(page => page.starterPacks)
@@ -82,14 +82,12 @@ export const ProfileStarterPacks = React.forwardRef<
   }))
 
   const onRefresh = React.useCallback(async () => {
-    setIsPTRing(true)
     try {
       await refetch()
     } catch (err) {
       logger.error('Failed to refresh starter packs', {message: err})
     }
-    setIsPTRing(false)
-  }, [refetch, setIsPTRing])
+  }, [refetch])
 
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage) return
@@ -132,7 +130,7 @@ export const ProfileStarterPacks = React.forwardRef<
         data={items}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
-        refreshing={isPTRing}
+        refreshing={isRefetching}
         headerOffset={headerOffset}
         progressViewOffset={ios(0)}
         contentContainerStyle={{paddingBottom: headerOffset + bottomBarOffset}}

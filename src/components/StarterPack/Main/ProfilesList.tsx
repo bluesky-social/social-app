@@ -11,6 +11,7 @@ import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
+import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {useAllListMembersQuery} from '#/state/queries/list-members'
 import {useSession} from '#/state/session'
@@ -43,9 +44,16 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     const bottomBarOffset = useBottomBarOffset(headerHeight)
     const initialNumToRender = useInitialNumToRender()
     const {currentAccount} = useSession()
-    const {data, refetch, isError} = useAllListMembersQuery(listUri)
+    const {data, refetch, isError, isRefetching} =
+      useAllListMembersQuery(listUri)
 
-    const [isPTRing, setIsPTRing] = React.useState(false)
+    const onRefresh = React.useCallback(async () => {
+      try {
+        await refetch()
+      } catch (err) {
+        logger.error('Failed to refresh all list members', {message: err})
+      }
+    }, [refetch])
 
     // The server returns these sorted by descending creation date, so we want to invert
 
@@ -133,12 +141,8 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
           showsVerticalScrollIndicator={false}
           desktopFixedHeight
           initialNumToRender={initialNumToRender}
-          refreshing={isPTRing}
-          onRefresh={async () => {
-            setIsPTRing(true)
-            await refetch()
-            setIsPTRing(false)
-          }}
+          refreshing={isRefetching}
+          onRefresh={onRefresh}
         />
       )
   },

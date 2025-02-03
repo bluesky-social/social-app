@@ -36,7 +36,6 @@ export function ModerationBlockedAccounts({}: Props) {
   const setMinimalShellMode = useSetMinimalShellMode()
   const {isTabletOrDesktop} = useWebMediaQueries()
 
-  const [isPTRing, setIsPTRing] = React.useState(false)
   const {
     data,
     isFetching,
@@ -46,6 +45,7 @@ export function ModerationBlockedAccounts({}: Props) {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    isRefetching,
   } = useMyBlockedAccountsQuery()
   const isEmpty = !isFetching && !data?.pages[0]?.blocks.length
   const profiles = React.useMemo(() => {
@@ -62,14 +62,12 @@ export function ModerationBlockedAccounts({}: Props) {
   )
 
   const onRefresh = React.useCallback(async () => {
-    setIsPTRing(true)
     try {
       await refetch()
     } catch (err) {
       logger.error('Failed to refresh my muted accounts', {message: err})
     }
-    setIsPTRing(false)
-  }, [refetch, setIsPTRing])
+  }, [refetch])
 
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
@@ -142,7 +140,7 @@ export function ModerationBlockedAccounts({}: Props) {
             keyExtractor={(item: ActorDefs.ProfileView) => item.did}
             refreshControl={
               <RefreshControl
-                refreshing={isPTRing}
+                refreshing={isRefetching}
                 onRefresh={onRefresh}
                 tintColor={pal.colors.text}
                 titleColor={pal.colors.text}

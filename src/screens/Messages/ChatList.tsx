@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useState} from 'react'
+import {useCallback, useEffect, useMemo} from 'react'
 import {View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -80,7 +80,6 @@ export function MessagesScreen({navigation, route}: Props) {
   )
 
   const initialNumToRender = useInitialNumToRender({minItemHeight: 80})
-  const [isPTRing, setIsPTRing] = useState(false)
 
   const {
     data,
@@ -91,6 +90,7 @@ export function MessagesScreen({navigation, route}: Props) {
     isError,
     error,
     refetch,
+    isRefetching,
   } = useListConvosQuery()
 
   useRefreshOnFocus(refetch)
@@ -110,14 +110,12 @@ export function MessagesScreen({navigation, route}: Props) {
   }, [data, leftConvos])
 
   const onRefresh = useCallback(async () => {
-    setIsPTRing(true)
     try {
       await refetch()
     } catch (err) {
       logger.error('Failed to refresh conversations', {message: err})
     }
-    setIsPTRing(false)
-  }, [refetch, setIsPTRing])
+  }, [refetch])
 
   const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
@@ -219,7 +217,7 @@ export function MessagesScreen({navigation, route}: Props) {
         data={conversations}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
-        refreshing={isPTRing}
+        refreshing={isRefetching}
         onRefresh={onRefresh}
         onEndReached={onEndReached}
         ListFooterComponent={
