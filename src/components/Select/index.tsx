@@ -23,8 +23,6 @@ import {
 
 type ContextType = {
   control: Dialog.DialogControlProps
-  valueLabel: string
-  setValueLabel: (value: string) => void
 } & Pick<RootProps, 'value' | 'onValueChange' | 'disabled'>
 
 const Context = React.createContext<ContextType | null>(null)
@@ -39,17 +37,14 @@ function useSelectContext() {
 
 export function Root({children, value, onValueChange, disabled}: RootProps) {
   const control = Dialog.useDialogControl()
-  const [valueLabel, setValueLabel] = useState('')
   const ctx = useMemo(
     () => ({
       control,
       value,
       onValueChange,
       disabled,
-      valueLabel,
-      setValueLabel,
     }),
-    [control, value, onValueChange, disabled, valueLabel, setValueLabel],
+    [control, value, onValueChange, disabled],
   )
   return <Context.Provider value={ctx}>{children}</Context.Provider>
 }
@@ -96,10 +91,11 @@ export function Trigger({children, label}: TriggerProps) {
   }
 }
 
-export function Value({placeholder}: ValueProps) {
-  const {value} = useSelectContext()
+export function ValueText({placeholder, children}: ValueProps) {
   const t = useTheme()
-  return <ButtonText style={[t.atoms.text]}>{value || placeholder}</ButtonText>
+  return (
+    <ButtonText style={[t.atoms.text]}>{children || placeholder}</ButtonText>
+  )
 }
 
 export function Icon() {
@@ -111,7 +107,7 @@ export function Content<T>(props: ContentProps<T>) {
 
   return (
     <Dialog.Outer control={control}>
-      <ContentInner {...props} {...context} />
+      <ContentInner control={control} {...props} {...context} />
     </Dialog.Outer>
   )
 }
@@ -123,6 +119,7 @@ function ContentInner<T>({
 }: ContentProps<T> & ContextType) {
   const control = Dialog.useDialogContext()
   const {_} = useLingui()
+  const [headerHeight, setHeaderHeight] = useState(50)
 
   const render = React.useCallback(
     ({item, index}: {item: T; index: number}) => {
@@ -150,12 +147,19 @@ function ContentInner<T>({
 
   return (
     <Context.Provider value={context}>
-      <Dialog.Header renderRight={doneButton}>
+      <Dialog.Header
+        renderRight={doneButton}
+        onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}
+        style={[a.absolute, a.top_0, a.left_0, a.right_0, a.z_10]}>
         <Dialog.HeaderText>
           <Trans>Select an option</Trans>
         </Dialog.HeaderText>
       </Dialog.Header>
-      <Dialog.InnerFlatList data={items} renderItem={render} />
+      <Dialog.InnerFlatList
+        headerOffset={headerHeight}
+        data={items}
+        renderItem={render}
+      />
     </Context.Provider>
   )
 }
@@ -180,6 +184,7 @@ export function Item({children, value, label}: ItemProps) {
   const t = useTheme()
   const control = Dialog.useDialogContext()
   const {value: selected, onValueChange} = useSelectContext()
+
   return (
     <Button
       role="listitem"

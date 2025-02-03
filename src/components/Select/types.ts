@@ -104,6 +104,12 @@ export type TriggerChildProps =
     }
 
 export type ValueProps = {
+  /*
+   * Workaround for native limitation. Not needed on web
+   *
+   * @platform ios, android
+   */
+  children?: React.ReactNode
   placeholder?: string
 }
 
@@ -123,5 +129,5 @@ export type ItemTextProps = {
 }
 
 export type ItemIndicatorProps = {
-  icon: React.ComponentType<SVGIconProps>
+  icon?: React.ComponentType<SVGIconProps>
 }

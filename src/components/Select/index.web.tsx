@@ -41,7 +41,7 @@ const RadixTriggerPassThrough = React.forwardRef(
     ref,
   ) => {
     // @ts-expect-error Radix provides no types of this stuff
-    // eslint-disable-next-line react/prop-types
+
     return props.children?.({...props, ref})
   },
 )
@@ -117,7 +117,7 @@ export function Trigger({children, label}: TriggerProps) {
   }
 }
 
-export function Value(props: ValueProps) {
+export function ValueText(props: ValueProps) {
   return <RadixSelect.Value {...props} />
 }
 

@@ -90,14 +90,21 @@ export function LanguageSettingsScreen({}: Props) {
                 value={sanitizeAppLanguageSetting(langPrefs.appLanguage)}
                 onValueChange={onChangeAppLanguage}>
                 <Select.Trigger label={_(msg`Select app language`)}>
-                  <Select.Value
-                    placeholder={_(msg`Select an app language...`)}
-                  />
+                  <Select.ValueText
+                    placeholder={_(msg`Select an app language...`)}>
+                    {
+                      APP_LANGUAGES.find(
+                        l =>
+                          l.code2 ===
+                          sanitizeAppLanguageSetting(langPrefs.appLanguage),
+                      )?.name
+                    }
+                  </Select.ValueText>
                   <Select.Icon />
                 </Select.Trigger>
                 <Select.Content
                   renderItem={({label, value}) => (
-                    <Select.Item key={value} value={value}>
+                    <Select.Item key={value} value={value} label={label}>
                       <Select.ItemText>{label}</Select.ItemText>
                       <Select.ItemIndicator />
                     </Select.Item>
@@ -105,7 +112,6 @@ export function LanguageSettingsScreen({}: Props) {
                   items={APP_LANGUAGES.filter(l => Boolean(l.code2)).map(l => ({
                     label: l.name,
                     value: l.code2,
-                    key: l.code2,
                   }))}
                 />
               </Select.Root>
