@@ -6,7 +6,6 @@ import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
-import {IS_DEV} from '#/env'
 import {emitSessionDropped} from '../events'
 import {
   agentToSessionAccount,
@@ -259,8 +258,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     ],
   )
 
-  // @ts-ignore
-  if (IS_DEV && isWeb) window.agent = state.currentAgentState.agent
+  // @ts-expect-error window type is not declared, debug only
+  if (__DEV__ && isWeb) window.agent = state.currentAgentState.agent
 
   const agent = state.currentAgentState.agent as BskyAppAgent
   const currentAgentRef = React.useRef(agent)

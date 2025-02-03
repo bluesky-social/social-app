@@ -1,4 +1,4 @@
-interface Language {
+export interface Language {
   code3: string
   code2: string
   name: string
@@ -6,10 +6,15 @@ interface Language {
 
 export enum AppLanguage {
   en = 'en',
+  an = 'an',
+  ast = 'ast',
   ca = 'ca',
+  da = 'da',
   de = 'de',
+  el = 'el',
   en_GB = 'en-GB',
   es = 'es',
+  eu = 'eu',
   fi = 'fi',
   fr = 'fr',
   ga = 'ga',
@@ -19,18 +24,22 @@ export enum AppLanguage {
   id = 'id',
   it = 'it',
   ja = 'ja',
+  km = 'km',
   ko = 'ko',
+  ne = 'ne',
   nl = 'nl',
   pl = 'pl',
   pt_BR = 'pt-BR',
+  ro = 'ro',
   ru = 'ru',
+  sv = 'sv',
   th = 'th',
   tr = 'tr',
   uk = 'uk',
   vi = 'vi',
-  zh_CN = 'zh-CN',
-  zh_HK = 'zh-HK',
-  zh_TW = 'zh-TW',
+  zh_CN = 'zh-Hans-CN',
+  zh_HK = 'zh-Hant-HK',
+  zh_TW = 'zh-Hant-TW',
 }
 
 interface AppLanguageConfig {
@@ -40,24 +49,33 @@ interface AppLanguageConfig {
 
 export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.en, name: 'English'},
+  {code2: AppLanguage.an, name: 'Aragonés – Aragonese'},
+  {code2: AppLanguage.ast, name: 'Asturianu – Asturian'},
   {code2: AppLanguage.ca, name: 'Català – Catalan'},
+  {code2: AppLanguage.da, name: 'Dansk – Danish'},
   {code2: AppLanguage.de, name: 'Deutsch – German'},
+  {code2: AppLanguage.el, name: 'Ελληνικά – Greek'},
   {code2: AppLanguage.en_GB, name: 'English (UK)'},
   {code2: AppLanguage.es, name: 'Español – Spanish'},
+  {code2: AppLanguage.eu, name: 'Euskera – Basque'},
   {code2: AppLanguage.fi, name: 'Suomi – Finnish'},
   {code2: AppLanguage.fr, name: 'Français – French'},
   {code2: AppLanguage.ga, name: 'Gaeilge – Irish'},
-  {code2: AppLanguage.gl, name: 'Galego - Galician'},
+  {code2: AppLanguage.gl, name: 'Galego – Galician'},
   {code2: AppLanguage.hi, name: 'हिंदी – Hindi'},
   {code2: AppLanguage.hu, name: 'magyar – Hungarian'},
   {code2: AppLanguage.id, name: 'Bahasa Indonesia – Indonesian'},
   {code2: AppLanguage.it, name: 'Italiano – Italian'},
   {code2: AppLanguage.ja, name: '日本語 – Japanese'},
+  {code2: AppLanguage.km, name: 'ភាសាខ្មែរ – Khmer'},
   {code2: AppLanguage.ko, name: '한국어 – Korean'},
+  {code2: AppLanguage.ne, name: 'नेपाली – Nepali'},
   {code2: AppLanguage.nl, name: 'Nederlands – Dutch'},
   {code2: AppLanguage.pl, name: 'Polski – Polish'},
   {code2: AppLanguage.pt_BR, name: 'Português (BR) – Portuguese (BR)'},
+  {code2: AppLanguage.ro, name: 'Română – Romanian'},
   {code2: AppLanguage.ru, name: 'Русский – Russian'},
+  {code2: AppLanguage.sv, name: 'Svenska – Swedish'},
   {code2: AppLanguage.th, name: 'ภาษาไทย – Thai'},
   {code2: AppLanguage.tr, name: 'Türkçe – Turkish'},
   {code2: AppLanguage.uk, name: 'Українська – Ukrainian'},

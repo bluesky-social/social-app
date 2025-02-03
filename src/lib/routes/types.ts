@@ -1,6 +1,8 @@
 import {NavigationState, PartialState} from '@react-navigation/native'
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack'
 
+import {VideoFeedSourceContext} from '#/screens/VideoFeed/types'
+
 export type {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 export type CommonNavigatorParams = {
@@ -20,7 +22,11 @@ export type CommonNavigatorParams = {
   PostLikedBy: {name: string; rkey: string}
   PostRepostedBy: {name: string; rkey: string}
   PostQuotes: {name: string; rkey: string}
-  ProfileFeed: {name: string; rkey: string}
+  ProfileFeed: {
+    name: string
+    rkey: string
+    feedCacheKey?: 'discover' | 'explore' | undefined
+  }
   ProfileFeedLikedBy: {name: string; rkey: string}
   ProfileLabelerLikedBy: {name: string}
   Debug: undefined
@@ -44,8 +50,10 @@ export type CommonNavigatorParams = {
   PrivacyAndSecuritySettings: undefined
   ContentAndMediaSettings: undefined
   AboutSettings: undefined
+  AppIconSettings: undefined
   Search: {q?: string}
   Hashtag: {tag: string; author?: string}
+  Topic: {topic: string}
   MessagesConversation: {conversation: string; embed?: string}
   MessagesSettings: undefined
   NotificationSettings: undefined
@@ -55,6 +63,7 @@ export type CommonNavigatorParams = {
   StarterPackShort: {code: string}
   StarterPackWizard: undefined
   StarterPackEdit: {rkey?: string}
+  VideoFeed: VideoFeedSourceContext
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
@@ -74,7 +83,7 @@ export type SearchTabNavigatorParams = CommonNavigatorParams & {
 }
 
 export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
-  Notifications: {show?: 'all'}
+  Notifications: undefined
 }
 
 export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
@@ -89,8 +98,9 @@ export type FlatNavigatorParams = CommonNavigatorParams & {
   Home: undefined
   Search: {q?: string}
   Feeds: undefined
-  Notifications: {show?: 'all'}
+  Notifications: undefined
   Hashtag: {tag: string; author?: string}
+  Topic: {topic: string}
   Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
 }
 
@@ -101,9 +111,10 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   Search: {q?: string}
   Feeds: undefined
   NotificationsTab: undefined
-  Notifications: {show?: 'all'}
+  Notifications: undefined
   MyProfileTab: undefined
   Hashtag: {tag: string; author?: string}
+  Topic: {topic: string}
   MessagesTab: undefined
   Messages: {animation?: 'push' | 'pop'}
   Start: {name: string; rkey: string}

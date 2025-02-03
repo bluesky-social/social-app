@@ -48,6 +48,7 @@ export type FeedSourceFeedInfo = {
   creatorHandle: string
   likeCount: number | undefined
   likeUri: string | undefined
+  contentMode: AppBskyFeedDefs.GeneratorView['contentMode']
 }
 
 export type FeedSourceListInfo = {
@@ -65,6 +66,7 @@ export type FeedSourceListInfo = {
   description: RichText
   creatorDid: string
   creatorHandle: string
+  contentMode: undefined
 }
 
 export type FeedSourceInfo = FeedSourceFeedInfo | FeedSourceListInfo
@@ -111,6 +113,7 @@ export function hydrateFeedGenerator(
     creatorHandle: view.creator.handle,
     likeCount: view.likeCount,
     likeUri: view.viewer?.like,
+    contentMode: view.contentMode,
   }
 }
 
@@ -141,6 +144,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
     displayName: view.name
       ? sanitizeDisplayName(view.name)
       : `User List by ${sanitizeHandle(view.creator.handle, '@')}`,
+    contentMode: undefined,
   }
 }
 
@@ -399,6 +403,7 @@ const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
     id: 'pwi-discover',
     ...DISCOVER_SAVED_FEED,
   },
+  contentMode: undefined,
 }
 
 const pinnedFeedInfosQueryKeyRoot = 'pinnedFeedsInfos'
@@ -485,6 +490,7 @@ export function usePinnedFeedsInfos() {
             likeCount: 0,
             likeUri: '',
             savedFeed: pinnedItem,
+            contentMode: undefined,
           })
         }
       }

@@ -65,25 +65,23 @@ export let MessagesListHeader = ({
         a.pr_lg,
         a.py_sm,
       ]}>
-      {!gtTablet && (
-        <TouchableOpacity
-          testID="conversationHeaderBackBtn"
-          onPress={onPressBack}
-          hitSlop={BACK_HITSLOP}
-          style={{width: 30, height: 30, marginTop: isWeb ? 6 : 4}}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Back`)}
-          accessibilityHint="">
-          <FontAwesomeIcon
-            size={18}
-            icon="angle-left"
-            style={{
-              marginTop: 6,
-            }}
-            color={t.atoms.text.color}
-          />
-        </TouchableOpacity>
-      )}
+      <TouchableOpacity
+        testID="conversationHeaderBackBtn"
+        onPress={onPressBack}
+        hitSlop={BACK_HITSLOP}
+        style={{width: 30, height: 30, marginTop: isWeb ? 6 : 4}}
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`Back`)}
+        accessibilityHint="">
+        <FontAwesomeIcon
+          size={18}
+          icon="angle-left"
+          style={{
+            marginTop: 6,
+          }}
+          color={t.atoms.text.color}
+        />
+      </TouchableOpacity>
 
       {profile && moderation && blockInfo ? (
         <HeaderReady
@@ -153,6 +151,15 @@ function HeaderReady({
         moderation.ui('displayName'),
       )
 
+  const latestMessageFromOther = convoState.items.findLast(
+    item => item.type === 'message' && item.message.sender.did === profile.did,
+  )
+
+  const latestReportableMessage =
+    latestMessageFromOther?.type === 'message'
+      ? latestMessageFromOther.message
+      : undefined
+
   return (
     <View style={[a.flex_1]}>
       <View style={[a.w_full, a.flex_row, a.align_center, a.justify_between]}>
@@ -210,6 +217,7 @@ function HeaderReady({
             profile={profile}
             currentScreen="conversation"
             blockInfo={blockInfo}
+            latestReportableMessage={latestReportableMessage}
           />
         )}
       </View>

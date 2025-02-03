@@ -1,7 +1,8 @@
 import {Platform, StyleProp, StyleSheet, ViewStyle} from 'react-native'
 
 import * as tokens from '#/alf/tokens'
-import {native, web} from '#/alf/util/platform'
+import {ios, native, platform, web} from '#/alf/util/platform'
+import * as Layout from '#/components/Layout'
 
 export const atoms = {
   debug: {
@@ -21,6 +22,9 @@ export const atoms = {
   relative: {
     position: 'relative',
   },
+  sticky: web({
+    position: 'sticky',
+  }),
   inset_0: {
     top: 0,
     left: 0,
@@ -64,6 +68,7 @@ export const atoms = {
    * Used for the outermost components on screens, to ensure that they can fill
    * the screen and extend beyond.
    */
+  // @ts-ignore - web only minHeight string
   util_screen_outer: [
     web({
       minHeight: '100vh',
@@ -152,6 +157,9 @@ export const atoms = {
   },
   flex_wrap: {
     flexWrap: 'wrap',
+  },
+  flex_nowrap: {
+    flexWrap: 'nowrap',
   },
   flex_0: {
     flex: web('0 0 auto') || (native(0) as number),
@@ -297,6 +305,18 @@ export const atoms = {
   border_0: {
     borderWidth: 0,
   },
+  border_t_0: {
+    borderTopWidth: 0,
+  },
+  border_b_0: {
+    borderBottomWidth: 0,
+  },
+  border_l_0: {
+    borderLeftWidth: 0,
+  },
+  border_r_0: {
+    borderRightWidth: 0,
+  },
   border: {
     borderWidth: StyleSheet.hairlineWidth,
   },
@@ -312,6 +332,12 @@ export const atoms = {
   border_r: {
     borderRightWidth: StyleSheet.hairlineWidth,
   },
+  curve_circular: ios({
+    borderCurve: 'circular',
+  }),
+  curve_continuous: ios({
+    borderCurve: 'continuous',
+  }),
 
   /*
    * Shadow
@@ -935,4 +961,23 @@ export const atoms = {
     transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
     transitionDuration: '100ms',
   }),
+  transition_delay_50ms: web({
+    transitionDelay: '50ms',
+  }),
+
+  /**
+   * {@link Layout.SCROLLBAR_OFFSET}
+   */
+  scrollbar_offset: platform({
+    web: {
+      transform: [
+        {
+          translateX: Layout.SCROLLBAR_OFFSET,
+        },
+      ],
+    },
+    native: {
+      transform: [],
+    },
+  }) as {transform: Exclude<ViewStyle['transform'], string | undefined>},
 } as const

@@ -3,6 +3,7 @@ import {TID} from '@atproto/common-web'
 
 import {networkRetry} from '#/lib/async/retry'
 import {
+  BSKY_SERVICE,
   DISCOVER_SAVED_FEED,
   IS_PROD_SERVICE,
   PUBLIC_BSKY_SERVICE,
@@ -82,7 +83,12 @@ export async function createAgentAndLogin(
   ) => void,
 ) {
   const agent = new BskyAppAgent({service})
-  await agent.login({identifier, password, authFactorToken})
+  await agent.login({
+    identifier,
+    password,
+    authFactorToken,
+    allowTakendown: true,
+  })
 
   const account = agentToSessionAccountOrThrow(agent)
   const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
@@ -204,6 +210,7 @@ export function agentToSessionAccount(
     active: agent.session.active,
     status: agent.session.status as SessionAccount['status'],
     pdsUrl: agent.pdsUrl?.toString(),
+    isSelfHosted: !agent.serviceUrl.toString().startsWith(BSKY_SERVICE),
   }
 }
 

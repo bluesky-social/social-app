@@ -113,6 +113,7 @@ export const ViewSelector = React.forwardRef<
   )
   return (
     <FlatList_INTERNAL
+      // @ts-expect-error FlatList_INTERNAL ref type is wrong -sfn
       ref={flatListRef}
       data={data}
       keyExtractor={keyExtractor}

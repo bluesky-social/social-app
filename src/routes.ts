@@ -44,6 +44,7 @@ export const router = new Router({
   PrivacyAndSecuritySettings: '/settings/privacy-and-security',
   ContentAndMediaSettings: '/settings/content-and-media',
   AboutSettings: '/settings/about',
+  AppIconSettings: '/settings/app-icon',
   // support
   Support: '/support',
   PrivacyPolicy: '/support/privacy',
@@ -52,6 +53,7 @@ export const router = new Router({
   CopyrightPolicy: '/support/copyright',
   // hashtags
   Hashtag: '/hashtag/:tag',
+  Topic: '/topic/:topic',
   // DMs
   Messages: '/messages',
   MessagesSettings: '/messages/settings',
@@ -62,4 +64,5 @@ export const router = new Router({
   StarterPack: '/starter-pack/:name/:rkey',
   StarterPackShort: '/starter-pack-short/:code',
   StarterPackWizard: '/starter-pack/create',
+  VideoFeed: '/video-feed',
 })

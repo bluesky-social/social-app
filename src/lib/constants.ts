@@ -21,15 +21,7 @@ export const STARTER_PACK_MAX_SIZE = 150
 // code and update this number with each release until we can get the
 // server route done.
 // -prf
-export const JOINED_THIS_WEEK = 3500000 // estimate as of 11/16/24
-
-export const DISCOVER_DEBUG_DIDS: Record<string, true> = {
-  'did:plc:oisofpd7lj26yvgiivf3lxsi': true, // hailey.at
-  'did:plc:fpruhuo22xkm5o7ttr2ktxdo': true, // danabra.mov
-  'did:plc:p2cp5gopk7mgjegy6wadk3ep': true, // samuel.bsky.team
-  'did:plc:ragtjsm2j2vknwkz3zp4oxrd': true, // pfrazee.com
-  'did:plc:vpkhqolt662uhesyj6nxm7ys': true, // why.bsky.team
-}
+export const JOINED_THIS_WEEK = 560000 // estimate as of 12/18/24
 
 const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
 export function FEEDBACK_FORM_URL({
@@ -60,6 +52,8 @@ export const MAX_DM_GRAPHEME_LENGTH = 1000
 // but increasing limit per user feedback
 export const MAX_ALT_TEXT = 2000
 
+export const MAX_REPORT_REASON_GRAPHEME_LENGTH = 2000
+
 export function IS_TEST_USER(handle?: string) {
   return handle && handle?.endsWith('.test')
 }
@@ -70,6 +64,21 @@ export function IS_PROD_SERVICE(url?: string) {
 
 export const PROD_DEFAULT_FEED = (rkey: string) =>
   `at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/${rkey}`
+
+export const STAGING_DEFAULT_FEED = (rkey: string) =>
+  `at://did:plc:yofh3kx63drvfljkibw5zuxo/app.bsky.feed.generator/${rkey}`
+
+export const PROD_FEEDS = [
+  `feedgen|${PROD_DEFAULT_FEED('whats-hot')}`,
+  `feedgen|${PROD_DEFAULT_FEED('thevids')}`,
+]
+
+export const STAGING_FEEDS = [
+  `feedgen|${STAGING_DEFAULT_FEED('whats-hot')}`,
+  `feedgen|${STAGING_DEFAULT_FEED('thevids')}`,
+]
+
+export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
 
 export const POST_IMG_MAX = {
   width: 2000,
@@ -117,6 +126,11 @@ export const BSKY_FEED_OWNER_DIDS = [
 
 export const DISCOVER_FEED_URI =
   'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'
+export const VIDEO_FEED_URI =
+  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/thevids'
+export const STAGING_VIDEO_FEED_URI =
+  'at://did:plc:yofh3kx63drvfljkibw5zuxo/app.bsky.feed.generator/thevids'
+export const VIDEO_FEED_URIS = [VIDEO_FEED_URI, STAGING_VIDEO_FEED_URI]
 export const DISCOVER_SAVED_FEED = {
   type: 'feed',
   value: DISCOVER_FEED_URI,
@@ -125,6 +139,11 @@ export const DISCOVER_SAVED_FEED = {
 export const TIMELINE_SAVED_FEED = {
   type: 'timeline',
   value: 'following',
+  pinned: true,
+}
+export const VIDEO_SAVED_FEED = {
+  type: 'feed',
+  value: VIDEO_FEED_URI,
   pinned: true,
 }
 

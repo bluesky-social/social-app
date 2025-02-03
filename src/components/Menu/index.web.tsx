@@ -7,7 +7,12 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import {atoms as a, flatten, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Context, ItemContext} from '#/components/Menu/context'
+import {
+  Context,
+  ItemContext,
+  useMenuContext,
+  useMenuItemContext,
+} from '#/components/Menu/context'
 import {
   ContextType,
   GroupProps,
@@ -38,10 +43,6 @@ export function useMenuControl(): Dialog.DialogControlProps {
     }),
     [id, isOpen, setIsOpen],
   )
-}
-
-export function useMemoControlContext() {
-  return React.useContext(Context)
 }
 
 export function Root({
@@ -109,8 +110,13 @@ const RadixTriggerPassThrough = React.forwardRef(
 )
 RadixTriggerPassThrough.displayName = 'RadixTriggerPassThrough'
 
-export function Trigger({children, label, role = 'button'}: TriggerProps) {
-  const {control} = React.useContext(Context)
+export function Trigger({
+  children,
+  label,
+  role = 'button',
+  hint,
+}: TriggerProps) {
+  const {control} = useMenuContext()
   const {
     state: hovered,
     onIn: onMouseEnter,
@@ -152,6 +158,7 @@ export function Trigger({children, label, role = 'button'}: TriggerProps) {
               onBlur: onBlur,
               onMouseEnter,
               onMouseLeave,
+              accessibilityHint: hint,
               accessibilityLabel: label,
               accessibilityRole: role,
             },
@@ -201,9 +208,9 @@ export function Outer({
   )
 }
 
-export function Item({children, label, onPress, ...rest}: ItemProps) {
+export function Item({children, label, onPress, style, ...rest}: ItemProps) {
   const t = useTheme()
-  const {control} = React.useContext(Context)
+  const {control} = useMenuContext()
   const {
     state: hovered,
     onIn: onMouseEnter,
@@ -247,6 +254,7 @@ export function Item({children, label, onPress, ...rest}: ItemProps) {
                 ? t.atoms.bg_contrast_25
                 : t.atoms.bg_contrast_50,
             ],
+          style,
         ])}
         {...web({
           onMouseEnter,
@@ -262,7 +270,7 @@ export function Item({children, label, onPress, ...rest}: ItemProps) {
 
 export function ItemText({children, style}: ItemTextProps) {
   const t = useTheme()
-  const {disabled} = React.useContext(ItemContext)
+  const {disabled} = useMenuItemContext()
   return (
     <Text
       style={[
@@ -279,7 +287,7 @@ export function ItemText({children, style}: ItemTextProps) {
 
 export function ItemIcon({icon: Comp, position = 'left'}: ItemIconProps) {
   const t = useTheme()
-  const {disabled} = React.useContext(ItemContext)
+  const {disabled} = useMenuItemContext()
   return (
     <View
       style={[
@@ -300,6 +308,57 @@ export function ItemIcon({icon: Comp, position = 'left'}: ItemIconProps) {
         }
       />
     </View>
+  )
+}
+
+export function ItemRadio({selected}: {selected: boolean}) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.justify_center,
+        a.align_center,
+        a.rounded_full,
+        t.atoms.border_contrast_high,
+        {
+          borderWidth: 1,
+          height: 20,
+          width: 20,
+        },
+      ]}>
+      {selected ? (
+        <View
+          style={[
+            a.absolute,
+            a.rounded_full,
+            {height: 14, width: 14},
+            selected
+              ? {
+                  backgroundColor: t.palette.primary_500,
+                }
+              : {},
+          ]}
+        />
+      ) : null}
+    </View>
+  )
+}
+
+export function LabelText({children}: {children: React.ReactNode}) {
+  const t = useTheme()
+  return (
+    <Text
+      style={[
+        a.font_bold,
+        a.pt_md,
+        a.pb_sm,
+        t.atoms.text_contrast_low,
+        {
+          paddingHorizontal: 10,
+        },
+      ]}>
+      {children}
+    </Text>
   )
 }
 

@@ -13,7 +13,12 @@ export type LogEvents = {
     withPassword: boolean
   }
   'account:loggedOut': {
-    logContext: 'SwitchAccount' | 'Settings' | 'SignupQueued' | 'Deactivated'
+    logContext:
+      | 'SwitchAccount'
+      | 'Settings'
+      | 'SignupQueued'
+      | 'Deactivated'
+      | 'Takendown'
     scope: 'current' | 'every'
   }
   'notifications:openApp': {}
@@ -80,12 +85,6 @@ export type LogEvents = {
     feedUrl: string
     feedType: string
     index: number
-    reason:
-      | 'focus'
-      | 'tabbar-click'
-      | 'pager-swipe'
-      | 'desktop-sidebar-click'
-      | 'starter-pack-initial-feed'
   }
   'feed:endReached': {
     feedUrl: string
@@ -137,16 +136,16 @@ export type LogEvents = {
     doesPosterFollowLiker: boolean | undefined
     likerClout: number | undefined
     postClout: number | undefined
-    logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   }
   'post:repost': {
-    logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   }
   'post:unlike': {
-    logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   }
   'post:unrepost': {
-    logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   }
   'post:mute': {}
   'post:unmute': {}
@@ -168,6 +167,28 @@ export type LogEvents = {
       | 'StarterPackProfilesList'
       | 'FeedInterstitial'
       | 'ProfileHeaderSuggestedFollows'
+      | 'PostOnboardingFindFollows'
+      | 'ImmersiveVideo'
+  }
+  'suggestedUser:follow': {
+    logContext:
+      | 'Explore'
+      | 'InterstitialDiscover'
+      | 'InterstitialProfile'
+      | 'Profile'
+    location: 'Card' | 'Profile'
+    recId?: number
+    position: number
+  }
+  'suggestedUser:press': {
+    logContext: 'Explore' | 'InterstitialDiscover' | 'InterstitialProfile'
+    recId?: number
+    position: number
+  }
+  'suggestedUser:seen': {
+    logContext: 'Explore' | 'InterstitialDiscover' | 'InterstitialProfile'
+    recId?: number
+    position: number
   }
   'profile:unfollow': {
     logContext:
@@ -183,6 +204,8 @@ export type LogEvents = {
       | 'StarterPackProfilesList'
       | 'FeedInterstitial'
       | 'ProfileHeaderSuggestedFollows'
+      | 'PostOnboardingFindFollows'
+      | 'ImmersiveVideo'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
@@ -217,8 +240,11 @@ export type LogEvents = {
   'starterPack:opened': {
     starterPack: string
   }
+  'link:clicked': {
+    url: string
+    domain: string
+  }
 
-  'feed:interstitial:profileCard:press': {}
   'feed:interstitial:feedCard:press': {}
 
   'profile:header:suggestedFollowsCard:press': {}
@@ -236,4 +262,29 @@ export type LogEvents = {
   'tmd:share': {}
   'tmd:download': {}
   'tmd:post': {}
+
+  'trendingTopics:show': {
+    context: 'settings'
+  }
+  'trendingTopics:hide': {
+    context: 'settings' | 'sidebar' | 'interstitial' | 'explore:trending'
+  }
+  'trendingTopic:click': {
+    context: 'sidebar' | 'interstitial' | 'explore'
+  }
+  'recommendedTopic:click': {
+    context: 'explore'
+  }
+  'trendingVideos:show': {
+    context: 'settings'
+  }
+  'trendingVideos:hide': {
+    context: 'settings' | 'interstitial:discover' | 'interstitial:explore'
+  }
+  'videoCard:click': {
+    context: 'interstitial:discover' | 'interstitial:explore' | 'feed'
+  }
+
+  'progressGuide:hide': {}
+  'progressGuide:followDialog:open': {}
 }

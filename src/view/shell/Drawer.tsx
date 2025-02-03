@@ -22,7 +22,7 @@ import {useSetDrawerOpen} from '#/state/shell'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, tokens, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {
@@ -306,7 +306,12 @@ let DrawerFooter = ({
         a.flex_wrap,
         a.pl_xl,
         a.pt_md,
-        {paddingBottom: Math.max(insets.bottom, a.pb_xl.paddingBottom)},
+        {
+          paddingBottom: Math.max(
+            insets.bottom + tokens.space.xs,
+            tokens.space.xl,
+          ),
+        },
       ]}>
       <Button
         label={_(msg`Send feedback`)}

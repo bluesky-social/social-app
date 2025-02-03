@@ -10,9 +10,10 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -24,6 +25,9 @@ import {
   ProfileCardFeedLoadingPlaceholder,
 } from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {ExploreRecommendations} from '#/screens/Search/components/ExploreRecommendations'
+import {ExploreTrendingTopics} from '#/screens/Search/components/ExploreTrendingTopics'
+import {ExploreTrendingVideos} from '#/screens/Search/components/ExploreTrendingVideos'
 import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
@@ -192,6 +196,7 @@ function LoadMore({
                             size={28}
                             avatar={_item.avatar}
                             moderation={_item.moderation.ui('avatar')}
+                            type="user"
                           />
                         ) : _item.type === 'feed' ? (
                           <UserAvatar
@@ -240,9 +245,22 @@ type ExploreScreenItems =
       icon: React.ComponentType<SVGIconProps>
     }
   | {
+      type: 'trendingTopics'
+      key: string
+    }
+  | {
+      type: 'trendingVideos'
+      key: string
+    }
+  | {
+      type: 'recommendations'
+      key: string
+    }
+  | {
       type: 'profile'
       key: string
       profile: AppBskyActorDefs.ProfileView
+      recId?: number
     }
   | {
       type: 'feed'
@@ -325,17 +343,34 @@ export function Explore() {
   ])
 
   const items = React.useMemo<ExploreScreenItems[]>(() => {
-    const i: ExploreScreenItems[] = [
-      {
-        type: 'header',
-        key: 'suggested-follows-header',
-        title: _(msg`Suggested accounts`),
-        description: _(
-          msg`Follow more accounts to get connected to your interests and build your network.`,
-        ),
-        icon: Person,
-      },
-    ]
+    const i: ExploreScreenItems[] = []
+
+    i.push({
+      type: 'trendingTopics',
+      key: `trending-topics`,
+    })
+
+    if (isNative) {
+      i.push({
+        type: 'trendingVideos',
+        key: `trending-videos`,
+      })
+    }
+
+    i.push({
+      type: 'recommendations',
+      key: `recommendations`,
+    })
+
+    i.push({
+      type: 'header',
+      key: 'suggested-follows-header',
+      title: _(msg`Suggested accounts`),
+      description: _(
+        msg`Follow more accounts to get connected to your interests and build your network.`,
+      ),
+      icon: Person,
+    })
 
     if (profiles) {
       // Currently the responses contain duplicate items.
@@ -350,6 +385,7 @@ export function Explore() {
               type: 'profile',
               key: actor.did,
               profile: actor,
+              recId: page.recId,
             })
           }
         }
@@ -388,7 +424,7 @@ export function Explore() {
       key: 'suggested-feeds-header',
       title: _(msg`Discover new feeds`),
       description: _(
-        msg`Custom feeds built by the community bring you new experiences and help you find the content you love.`,
+        msg`Choose your own timeline! Feeds built by the community help you find content you love.`,
       ),
       style: [a.pt_5xl],
       icon: ListSparkle,
@@ -478,7 +514,7 @@ export function Explore() {
   ])
 
   const renderItem = React.useCallback(
-    ({item}: {item: ExploreScreenItems}) => {
+    ({item, index}: {item: ExploreScreenItems; index: number}) => {
       switch (item.type) {
         case 'header': {
           return (
@@ -490,6 +526,15 @@ export function Explore() {
             />
           )
         }
+        case 'trendingTopics': {
+          return <ExploreTrendingTopics />
+        }
+        case 'trendingVideos': {
+          return <ExploreTrendingVideos />
+        }
+        case 'recommendations': {
+          return <ExploreRecommendations />
+        }
         case 'profile': {
           return (
             <View style={[a.border_b, t.atoms.border_contrast_low]}>
@@ -498,6 +543,21 @@ export function Explore() {
                 noBg
                 noBorder
                 showKnownFollowers
+                onPress={() => {
+                  logEvent('suggestedUser:press', {
+                    logContext: 'Explore',
+                    recId: item.recId,
+                    position: index,
+                  })
+                }}
+                onFollow={() => {
+                  logEvent('suggestedUser:follow', {
+                    logContext: 'Explore',
+                    location: 'Card',
+                    recId: item.recId,
+                    position: index,
+                  })
+                }}
               />
             </View>
           )

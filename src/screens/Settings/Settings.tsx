@@ -73,7 +73,15 @@ export function SettingsScreen({}: Props) {
 
   return (
     <Layout.Screen>
-      <Layout.Header title={_(msg`Settings`)} />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Settings</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
           <View
@@ -276,6 +284,7 @@ function ProfilePreview({
         size={80}
         avatar={shadow.avatar}
         moderation={moderation.ui('avatar')}
+        type={shadow.associated?.labeler ? 'labeler' : 'user'}
       />
       <ProfileHeaderDisplayName profile={shadow} moderation={moderation} />
       <ProfileHeaderHandle profile={shadow} />
@@ -406,6 +415,7 @@ function AccountRow({
             size={28}
             avatar={profile.avatar}
             moderation={moderateProfile(profile, moderationOpts).ui('avatar')}
+            type={profile.associated?.labeler ? 'labeler' : 'user'}
           />
         ) : (
           <View style={[{width: 28}]} />

@@ -20,6 +20,7 @@ export function ListFooter({
   style,
   showEndMessage = false,
   endMessageText,
+  renderEndMessage,
 }: {
   isFetchingNextPage?: boolean
   hasNextPage?: boolean
@@ -29,6 +30,7 @@ export function ListFooter({
   style?: StyleProp<ViewStyle>
   showEndMessage?: boolean
   endMessageText?: string
+  renderEndMessage?: () => React.ReactNode
 }) {
   const t = useTheme()
 
@@ -48,9 +50,13 @@ export function ListFooter({
       ) : error ? (
         <ListFooterMaybeError error={error} onRetry={onRetry} />
       ) : !hasNextPage && showEndMessage ? (
-        <Text style={[a.text_sm, t.atoms.text_contrast_low]}>
-          {endMessageText ?? <Trans>You have reached the end</Trans>}
-        </Text>
+        renderEndMessage ? (
+          renderEndMessage()
+        ) : (
+          <Text style={[a.text_sm, t.atoms.text_contrast_low]}>
+            {endMessageText ?? <Trans>You have reached the end</Trans>}
+          </Text>
+        )
       ) : null}
     </View>
   )
@@ -109,38 +115,6 @@ function ListFooterMaybeError({
   )
 }
 
-export function ListHeaderDesktop({
-  title,
-  subtitle,
-}: {
-  title: string
-  subtitle?: string
-}) {
-  const {gtTablet} = useBreakpoints()
-  const t = useTheme()
-
-  if (!gtTablet) return null
-
-  return (
-    <View
-      style={[
-        a.w_full,
-        a.py_sm,
-        a.px_xl,
-        a.gap_xs,
-        a.justify_center,
-        {minHeight: 50},
-      ]}>
-      <Text style={[a.text_2xl, a.font_bold]}>{title}</Text>
-      {subtitle ? (
-        <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-          {subtitle}
-        </Text>
-      ) : undefined}
-    </View>
-  )
-}
-
 let ListMaybePlaceholder = ({
   isLoading,
   noEmpty,
@@ -154,7 +128,7 @@ let ListMaybePlaceholder = ({
   onGoBack,
   hideBackButton,
   sideBorders,
-  topBorder = true,
+  topBorder = false,
 }: {
   isLoading: boolean
   noEmpty?: boolean

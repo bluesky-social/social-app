@@ -103,7 +103,13 @@ export function useSuggestedFollowsQuery(options?: SuggestedFollowsOptions) {
   })
 }
 
-export function useSuggestedFollowsByActorQuery({did}: {did: string}) {
+export function useSuggestedFollowsByActorQuery({
+  did,
+  enabled,
+}: {
+  did: string
+  enabled?: boolean
+}) {
   const agent = useAgent()
   return useQuery({
     queryKey: suggestedFollowsByActorQueryKey(did),
@@ -114,8 +120,9 @@ export function useSuggestedFollowsByActorQuery({did}: {did: string}) {
       const suggestions = res.data.isFallback
         ? []
         : res.data.suggestions.filter(profile => !profile.viewer?.following)
-      return {suggestions}
+      return {suggestions, recId: res.data.recId}
     },
+    enabled,
   })
 }
 
