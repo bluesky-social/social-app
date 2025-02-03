@@ -29,6 +29,7 @@ export function DateField({
   label,
   isInvalid,
   accessibilityHint,
+  maximumDate,
 }: DateFieldProps) {
   const {_} = useLingui()
   const t = useTheme()
@@ -56,9 +57,12 @@ export function DateField({
         isInvalid={isInvalid}
         accessibilityHint={accessibilityHint}
       />
-      <Dialog.Outer control={control} testID={testID}>
+      <Dialog.Outer
+        control={control}
+        testID={testID}
+        nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
-        <Dialog.Inner label={label}>
+        <Dialog.ScrollableInner label={label}>
           <View style={a.gap_lg}>
             <View style={[a.relative, a.w_full, a.align_center]}>
               <DatePicker
@@ -71,6 +75,7 @@ export function DateField({
                 aria-label={label}
                 accessibilityLabel={label}
                 accessibilityHint={accessibilityHint}
+                maximumDate={maximumDate}
               />
             </View>
             <Button
@@ -84,7 +89,7 @@ export function DateField({
               </ButtonText>
             </Button>
           </View>
-        </Dialog.Inner>
+        </Dialog.ScrollableInner>
       </Dialog.Outer>
     </>
   )

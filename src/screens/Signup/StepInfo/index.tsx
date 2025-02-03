@@ -215,6 +215,7 @@ export function StepInfo({
                 }}
                 label={_(msg`Date of birth`)}
                 accessibilityHint={_(msg`Select your date of birth`)}
+                maximumDate={new Date()}
               />
             </View>
             <Policies

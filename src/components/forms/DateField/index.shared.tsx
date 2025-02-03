@@ -19,7 +19,7 @@ export function DateFieldButton({
   accessibilityHint,
 }: {
   label: string
-  value: string
+  value: string | Date
   onPress: () => void
   isInvalid?: boolean
   accessibilityHint?: string
