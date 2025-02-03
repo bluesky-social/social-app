@@ -19,17 +19,14 @@ import {
 const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
 
-export function useConvoQuery(
-  convoId: string,
-  convo?: ChatBskyConvoDefs.ConvoView,
-) {
+export function useConvoQuery(convo: ChatBskyConvoDefs.ConvoView) {
   const agent = useAgent()
 
   return useQuery({
-    queryKey: RQKEY(convoId),
+    queryKey: RQKEY(convo.id),
     queryFn: async () => {
       const {data} = await agent.chat.bsky.convo.getConvo(
-        {convoId: convoId},
+        {convoId: convo.id},
         {headers: DM_SERVICE_HEADERS},
       )
       return data.convo

@@ -74,7 +74,7 @@ let ConvoMenu = ({
   const isDeletedAccount = profile.handle === 'missing.invalid'
 
   const convoId = initialConvo.id
-  const {data: convo} = useConvoQuery(convoId, initialConvo)
+  const {data: convo} = useConvoQuery(initialConvo)
 
   const onNavigateToProfile = useCallback(() => {
     navigation.navigate('Profile', {name: profile.did})
