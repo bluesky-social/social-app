@@ -73,13 +73,14 @@ let ConvoMenu = ({
   const isBlocking = userBlock || !!listBlocks.length
   const isDeletedAccount = profile.handle === 'missing.invalid'
 
+  const convoId = initialConvo.id
   const {data: convo} = useConvoQuery(initialConvo)
 
   const onNavigateToProfile = useCallback(() => {
     navigation.navigate('Profile', {name: profile.did})
   }, [navigation, profile.did])
 
-  const {mutate: muteConvo} = useMuteConvo(convo?.id, {
+  const {mutate: muteConvo} = useMuteConvo(convoId, {
     onSuccess: data => {
       if (data.convo.muted) {
         Toast.show(_(msg`Chat muted`))
@@ -152,11 +153,7 @@ let ConvoMenu = ({
               {showMarkAsRead && (
                 <Menu.Item
                   label={_(msg`Mark as read`)}
-                  onPress={() =>
-                    markAsRead({
-                      convoId: convo?.id,
-                    })
-                  }>
+                  onPress={() => markAsRead({convoId})}>
                   <Menu.ItemText>
                     <Trans>Mark as read</Trans>
                   </Menu.ItemText>
@@ -222,7 +219,7 @@ let ConvoMenu = ({
 
       <LeaveConvoPrompt
         control={leaveConvoControl}
-        convoId={convo.id}
+        convoId={convoId}
         currentScreen={currentScreen}
       />
       {latestReportableMessage ? (
@@ -230,7 +227,7 @@ let ConvoMenu = ({
           currentScreen={currentScreen}
           params={{
             type: 'convoMessage',
-            convoId: convo.id,
+            convoId: convoId,
             message: latestReportableMessage,
           }}
           control={reportControl}
