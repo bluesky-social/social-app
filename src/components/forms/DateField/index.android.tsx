@@ -68,7 +68,9 @@ export function DateField({
           aria-label={label}
           accessibilityLabel={label}
           accessibilityHint={accessibilityHint}
-          maximumDate={maximumDate}
+          maximumDate={
+            maximumDate ? new Date(toSimpleDateString(maximumDate)) : undefined
+          }
         />
       )}
     </>

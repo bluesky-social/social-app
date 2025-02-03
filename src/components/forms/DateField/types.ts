@@ -5,5 +5,5 @@ export type DateFieldProps = {
   isInvalid?: boolean
   testID?: string
   accessibilityHint?: string
-  maximumDate?: Date
+  maximumDate?: string | Date
 }

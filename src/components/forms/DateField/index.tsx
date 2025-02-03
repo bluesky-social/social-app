@@ -68,14 +68,18 @@ export function DateField({
               <DatePicker
                 timeZoneOffsetInMinutes={0}
                 theme={t.name === 'light' ? 'light' : 'dark'}
-                date={new Date(value)}
+                date={new Date(toSimpleDateString(value))}
                 onDateChange={onChangeInternal}
                 mode="date"
                 testID={`${testID}-datepicker`}
                 aria-label={label}
                 accessibilityLabel={label}
                 accessibilityHint={accessibilityHint}
-                maximumDate={maximumDate}
+                maximumDate={
+                  maximumDate
+                    ? new Date(toSimpleDateString(maximumDate))
+                    : undefined
+                }
               />
             </View>
             <Button

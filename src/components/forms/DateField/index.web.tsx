@@ -57,7 +57,7 @@ export function DateField({
     <TextField.Root isInvalid={isInvalid}>
       <TextField.Icon icon={CalendarDays} />
       <Input
-        value={value instanceof Date ? toSimpleDateString(value) : value}
+        value={toSimpleDateString(value)}
         label={label}
         onChange={handleOnChange}
         onChangeText={() => {}}

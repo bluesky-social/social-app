@@ -206,7 +206,7 @@ export function StepInfo({
               </DateField.LabelText>
               <DateField.DateField
                 testID="date"
-                value={DateField.utils.toSimpleDateString(state.dateOfBirth)}
+                value={state.dateOfBirth}
                 onChangeDate={date => {
                   dispatch({
                     type: 'setDateOfBirth',
