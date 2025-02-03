@@ -1079,7 +1079,7 @@ function SearchHistory({
                       moderation={moderateProfile(profile, moderationOpts).ui(
                         'avatar',
                       )}
-                      type="user"
+                      type={profile?.associated?.labeler ? 'labeler' : 'user'}
                       size={60}
                       usePlainRNImage
                     />
