@@ -29,6 +29,7 @@ import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {useSharedInputStyles} from '#/components/forms/TextField'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
+import {MessageInputBackground} from './MessageInputBackground'
 import {useExtractEmbedFromFacets} from './MessageInputEmbed'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
@@ -127,7 +128,7 @@ export function MessageInput({
   }))
 
   return (
-    <View style={[a.px_md, a.pb_sm, a.pt_xs]}>
+    <MessageInputBackground style={[a.px_md, a.py_xs]}>
       {children}
       <View
         style={[
@@ -160,7 +161,7 @@ export function MessageInput({
             animatedStyle,
           ]}
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
-          blurOnSubmit={false}
+          submitBehavior="submit"
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           ref={inputRef}
@@ -184,6 +185,6 @@ export function MessageInput({
           <PaperPlane fill={t.palette.white} style={[a.relative, {left: 1}]} />
         </Pressable>
       </View>
-    </View>
+    </MessageInputBackground>
   )
 }
