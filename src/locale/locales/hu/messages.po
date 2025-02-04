@@ -7464,6 +7464,10 @@ msgstr ""
 "Ezzel el fogod távolítani a bejegyzést az idézésből mindenki számára, ami "
 "egy helyőrzővel lesz helyettesítve."
 
+#: src/components/dialogs/MutedWords.tsx:98
+msgid "This word has already been muted"
+msgstr ""
+
 #: src/view/com/post-thread/PostThread.tsx:606
 #: src/view/com/post-thread/PostThread.tsx:609
 msgid "Thread options"

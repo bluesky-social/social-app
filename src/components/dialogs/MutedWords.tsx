@@ -45,6 +45,12 @@ export function MutedWordsDialog() {
   )
 }
 
+type MutedWordsWarning = {
+  message: string
+  shouldShow: boolean
+  isNegative?: boolean
+}
+
 function MutedWordsInner() {
   const t = useTheme()
   const {_} = useLingui()
@@ -57,9 +63,19 @@ function MutedWordsInner() {
   const {isPending, mutateAsync: addMutedWord} = useUpsertMutedWordsMutation()
   const [field, setField] = React.useState('')
   const [targets, setTargets] = React.useState(['content'])
-  const [error, setError] = React.useState('')
+  const [warning, setWarning] = React.useState<MutedWordsWarning>({
+    message: '',
+    shouldShow:  false,
+    isNegative: undefined,
+  })
   const [durations, setDurations] = React.useState(['forever'])
   const [excludeFollowing, setExcludeFollowing] = React.useState(false)
+
+  const isDuplicated = (value: string) => Boolean(
+    (preferences?.moderationPrefs.mutedWords?.find(
+      m => m.value === value,
+    )
+  ))
 
   const submit = React.useCallback(async () => {
     const sanitizedValue = sanitizeMutedWordValue(field)
@@ -83,7 +99,21 @@ function MutedWordsInner() {
 
     if (!sanitizedValue || !surfaces.length) {
       setField('')
-      setError(_(msg`Please enter a valid word, tag, or phrase to mute`))
+      setWarning({
+        message: _(msg`Please select a valid duration and target`),
+        shouldShow: true,
+        isNegative: true,
+      });
+      return
+    }
+
+    if (isDuplicated(sanitizedValue)) {
+      setField('')
+      setWarning({
+        message: _(msg`This word has already been muted`),
+        shouldShow:  true,
+        isNegative: false,
+      });
       return
     }
 
@@ -100,7 +130,11 @@ function MutedWordsInner() {
       setField('')
     } catch (e: any) {
       logger.error(`Failed to save muted word`, {message: e.message})
-      setError(e.message)
+      setWarning({
+        message: e.message,
+        shouldShow: true,
+        isNegative: true,
+      });
     }
   }, [_, field, targets, addMutedWord, setField, durations, excludeFollowing])
 
@@ -128,8 +162,12 @@ function MutedWordsInner() {
             placeholder={_(msg`Enter a word or tag`)}
             value={field}
             onChangeText={value => {
-              if (error) {
-                setError('')
+              if (warning.message || warning.shouldShow) {
+                setWarning({
+                  message: '',
+                  shouldShow: false,
+                  isNegative: undefined,
+                });
               }
               setField(value)
             }}
@@ -331,7 +369,7 @@ function MutedWordsInner() {
             </Button>
           </View>
 
-          {error && (
+          { warning.shouldShow && (
             <View
               style={[
                 a.mb_lg,
@@ -341,7 +379,7 @@ function MutedWordsInner() {
                 a.mb_xs,
                 t.atoms.bg_contrast_25,
                 {
-                  backgroundColor: t.palette.negative_400,
+                  backgroundColor: warning.isNegative ? t.palette.negative_400 : t.palette.positive_200,
                 },
               ]}>
               <Text
@@ -350,7 +388,7 @@ function MutedWordsInner() {
                   {color: t.palette.white},
                   native({marginTop: 2}),
                 ]}>
-                {error}
+                {warning.message}
               </Text>
             </View>
           )}
