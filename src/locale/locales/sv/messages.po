@@ -1,11 +1,11 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: Bluesky 1.97.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-11-05 16:01-0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
-"Language-Team: \n"
+"Language-Team: @nilaallj.se\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -554,7 +554,7 @@ msgstr "Tillagd i listan"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Added to my feeds"
-msgstr "Tillagd i mina flöden"
+msgstr "Tillagt i mina flöden"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:160
 msgid "Adult"
@@ -586,7 +586,7 @@ msgstr "Avancerat"
 
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
-msgstr "Allt"
+msgstr "Alla"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
@@ -814,7 +814,7 @@ msgstr "Begär omprövning"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:243
 msgid "Appeal \"{0}\" label"
-msgstr "Begär omprövning för etiketten ”{0}”"
+msgstr "Begär omprövning av etiketten ”{0}”"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:233
 #: src/screens/Messages/components/ChatDisabled.tsx:91
@@ -1076,7 +1076,7 @@ msgstr "Bluesky"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:859
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
-msgstr "Bluesky kan inte bekräfta äktheten av det påstådda datumet."
+msgstr "Bluesky kan inte bekräfta äktheten av det angivna datumet."
 
 #: src/view/com/auth/server-input/index.tsx:172
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
@@ -1555,7 +1555,7 @@ msgstr "Gemenskapens riktlinjer"
 
 #: src/screens/Onboarding/StepFinished.tsx:300
 msgid "Complete onboarding and start using your account"
-msgstr "Slutför introduktion och börja använda ditt konto"
+msgstr "Slutför introduktionen och börja använda ditt konto"
 
 #: src/screens/Signup/index.tsx:144
 msgid "Complete the challenge"
@@ -1700,7 +1700,7 @@ msgstr "Fortsätt som {0} (nuvarande inloggad)"
 
 #: src/view/com/post-thread/PostThreadLoadMore.tsx:60
 msgid "Continue thread..."
-msgstr "Fortsätt på tråd…"
+msgstr "Utöka tråd…"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:241
 #: src/screens/Onboarding/StepProfile/index.tsx:275
@@ -1756,7 +1756,7 @@ msgstr "Kopiera kod"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:472
 msgid "Copy DID"
-msgstr "Kopia DID"
+msgstr "Kopiera DID"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:405
 msgid "Copy host"
@@ -1894,7 +1894,7 @@ msgstr "Kultur"
 #: src/view/com/auth/server-input/index.tsx:100
 #: src/view/com/auth/server-input/index.tsx:102
 msgid "Custom"
-msgstr "Anpassat"
+msgstr "Anpassad"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:292
 msgid "Customize who can interact with this post."
@@ -3060,7 +3060,7 @@ msgstr "Av säkerhetsskäl kommer du inte kunna se det här igen. Om du tappar b
 
 #: src/screens/Settings/AppearanceSettings.tsx:142
 msgid "For the best experience, we recommend using the theme font."
-msgstr "Vi rekommenderar att använda tematypsnittet för bästa upplevelse."
+msgstr "Vi rekommenderar tematypsnittet för bästa upplevelse."
 
 #: src/components/dialogs/MutedWords.tsx:178
 msgid "Forever"
@@ -3600,7 +3600,7 @@ msgstr "Gå med i Bluesky"
 #: src/components/StarterPack/QrCode.tsx:62
 #: src/view/shell/NavSignupCard.tsx:40
 msgid "Join the conversation"
-msgstr "Delta i konversationen"
+msgstr "Delta i samtalen"
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:104
@@ -7194,7 +7194,7 @@ msgstr "Den här modereringstjänsten är inte tillgänglig. Se nedan för mer i
 
 #: src/view/com/post-thread/PostThreadItem.tsx:845
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
-msgstr "Det här inlägget påstås ha skapats den <0>{0}</0>, men sågs inte på Bluesky förrän den <1>{1}</1>."
+msgstr "Det här inlägget har <0>{0}</0> som angivet skapelsedatum, men registrerades på Bluesky först den <1>{1}</1>."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:152
 msgid "This post has been deleted."
