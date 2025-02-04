@@ -65,10 +65,27 @@ export function PostInteractionSettingsControlledDialog({
       <Dialog.ScrollableInner
         label={_(msg`Edit post interaction settings`)}
         style={[{maxWidth: 500}, a.w_full]}>
-        <PostInteractionSettingsForm {...rest} />
+        <View style={[a.gap_md]}>
+          <Header />
+          <PostInteractionSettingsForm {...rest} />
+        </View>
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
+  )
+}
+
+export function Header() {
+  return (
+    <View style={[a.gap_md, a.pb_sm]}>
+      <Text style={[a.text_2xl, a.font_bold]}>
+        <Trans>Post interaction settings</Trans>
+      </Text>
+      <Text style={[a.text_md, a.pb_xs]}>
+        <Trans>Customize who can interact with this post.</Trans>
+      </Text>
+      <Divider />
+    </View>
   )
 }
 
@@ -203,21 +220,25 @@ export function PostInteractionSettingsDialogControlledInner(
     <Dialog.ScrollableInner
       label={_(msg`Edit post interaction settings`)}
       style={[{maxWidth: 500}, a.w_full]}>
-      {isLoading ? (
-        <View style={[a.flex_1, a.py_4xl, a.align_center, a.justify_center]}>
-          <Loader size="xl" />
-        </View>
-      ) : (
-        <PostInteractionSettingsForm
-          replySettingsDisabled={!isThreadgateOwnedByViewer}
-          isSaving={isSaving}
-          onSave={onSave}
-          postgate={postgateValue}
-          onChangePostgate={setEditedPostgate}
-          threadgateAllowUISettings={allowUIValue}
-          onChangeThreadgateAllowUISettings={setEditedAllowUISettings}
-        />
-      )}
+      <View style={[a.gap_md]}>
+        <Header />
+
+        {isLoading ? (
+          <View style={[a.flex_1, a.py_4xl, a.align_center, a.justify_center]}>
+            <Loader size="xl" />
+          </View>
+        ) : (
+          <PostInteractionSettingsForm
+            replySettingsDisabled={!isThreadgateOwnedByViewer}
+            isSaving={isSaving}
+            onSave={onSave}
+            postgate={postgateValue}
+            onChangePostgate={setEditedPostgate}
+            threadgateAllowUISettings={allowUIValue}
+            onChangeThreadgateAllowUISettings={setEditedAllowUISettings}
+          />
+        )}
+      </View>
     </Dialog.ScrollableInner>
   )
 }
@@ -283,17 +304,7 @@ export function PostInteractionSettingsForm({
   return (
     <View>
       <View style={[a.flex_1, a.gap_md]}>
-        <Text style={[a.text_2xl, a.font_bold]}>
-          <Trans>Post interaction settings</Trans>
-        </Text>
-
         <View style={[a.gap_lg]}>
-          <Text style={[a.text_md]}>
-            <Trans>Customize who can interact with this post.</Trans>
-          </Text>
-
-          <Divider />
-
           <View style={[a.gap_sm]}>
             <Text style={[a.font_bold, a.text_lg]}>
               <Trans>Quote settings</Trans>
