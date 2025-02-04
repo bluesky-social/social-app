@@ -174,7 +174,7 @@ export async function resolveLink(
     throw new Error('getPost: post not found')
   }
 
-  // Forked from useFetchDid. TODO: move into RQ.
+  // TODO: move into RQ.
   async function fetchDid(handleOrDid: string) {
     let identifier = handleOrDid
     if (!identifier.startsWith('did:')) {
