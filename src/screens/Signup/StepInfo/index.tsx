@@ -206,7 +206,7 @@ export function StepInfo({
               </DateField.LabelText>
               <DateField.DateField
                 testID="date"
-                value={DateField.utils.toSimpleDateString(state.dateOfBirth)}
+                value={state.dateOfBirth}
                 onChangeDate={date => {
                   dispatch({
                     type: 'setDateOfBirth',
@@ -215,6 +215,7 @@ export function StepInfo({
                 }}
                 label={_(msg`Date of birth`)}
                 accessibilityHint={_(msg`Select your date of birth`)}
+                maximumDate={new Date()}
               />
             </View>
             <Policies

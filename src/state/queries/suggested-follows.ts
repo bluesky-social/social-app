@@ -120,7 +120,7 @@ export function useSuggestedFollowsByActorQuery({
       const suggestions = res.data.isFallback
         ? []
         : res.data.suggestions.filter(profile => !profile.viewer?.following)
-      return {suggestions}
+      return {suggestions, recId: res.data.recId}
     },
     enabled,
   })
