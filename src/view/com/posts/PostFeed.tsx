@@ -9,12 +9,13 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {AppBskyActorDefs, AppBskyEmbedVideo} from '@atproto/api'
+import {AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
+import {isVideoView} from '#/lib/embeds'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
@@ -350,7 +351,7 @@ let PostFeed = ({
               const item = slice.items.find(
                 item => item.uri === slice.feedPostUri,
               )
-              if (item && AppBskyEmbedVideo.isView(item.post.embed)) {
+              if (item && isVideoView(item.post.embed)) {
                 videos.push({item, feedContext: slice.feedContext})
               }
             }

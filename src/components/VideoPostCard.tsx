@@ -12,6 +12,7 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {getVideoEmbed} from '#/lib/embeds'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -52,7 +53,7 @@ export function VideoPostCard({
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
-  const embed = post.embed
+  const embed = getVideoEmbed(post.embed)
   const {
     state: pressed,
     onIn: onPressIn,
