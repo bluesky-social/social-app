@@ -120,6 +120,7 @@ export function ModalsContainer() {
         }
         handleIndicatorStyle={{backgroundColor: pal.text.color}}
         handleStyle={[styles.handle, pal.view]}
+        backgroundStyle={pal.view}
         onChange={onBottomSheetChange}>
         {element}
       </BottomSheet>
