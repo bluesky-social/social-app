@@ -12,6 +12,10 @@ export function isUriImage(uri: string) {
   return /\.(jpg|jpeg|png).*$/.test(uri)
 }
 
+export function isPngDataUrl(dataUrl: string) {
+  return /data:image\/png;.*$/.test(dataUrl)
+}
+
 export function blobToDataUri(blob: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
