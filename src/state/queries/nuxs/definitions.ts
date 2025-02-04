@@ -7,7 +7,6 @@ export enum Nux {
   ExploreInterestsCard = 'ExploreInterestsCard',
   InitialVerificationAnnouncement = 'InitialVerificationAnnouncement',
 }
-
 export const nuxNames = new Set(Object.values(Nux))
 
 export type AppNux = BaseNux<
@@ -24,6 +23,14 @@ export type AppNux = BaseNux<
       data: undefined
     }
 >
+
+/**
+ * Nuxes that have been retired and should be cleared from storage.
+ */
+export enum RetiredNux {
+  NeueTypography = 'NeueTypography',
+}
+export const retiredNuxNames = Object.values(RetiredNux)
 
 export const NuxSchemas: Record<Nux, zod.ZodObject<any> | undefined> = {
   [Nux.NeueTypography]: undefined,
