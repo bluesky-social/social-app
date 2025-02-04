@@ -236,7 +236,6 @@ export function MessagesScreen({navigation, route}: Props) {
         onEndReachedThreshold={isNative ? 1.5 : 0}
         initialNumToRender={initialNumToRender}
         windowSize={11}
-        // @ts-ignore our .web version only -sfn
         desktopFixedHeight
         sideBorders={false}
       />

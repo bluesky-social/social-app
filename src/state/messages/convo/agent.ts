@@ -81,7 +81,7 @@ export class Convo {
   convoId: string
   convo: ChatBskyConvoDefs.ConvoView | undefined
   sender: AppBskyActorDefs.ProfileViewBasic | undefined
-  recipients: AppBskyActorDefs.ProfileViewBasic[] | undefined = undefined
+  recipients: AppBskyActorDefs.ProfileViewBasic[] | undefined
   snapshot: ConvoState | undefined
 
   constructor(params: ConvoParams) {
@@ -90,6 +90,10 @@ export class Convo {
     this.agent = params.agent
     this.events = params.events
     this.senderUserDid = params.agent.session?.did!
+
+    if (params.placeholderData) {
+      this.setupPlaceholderData(params.placeholderData)
+    }
 
     this.subscribe = this.subscribe.bind(this)
     this.getSnapshot = this.getSnapshot.bind(this)
@@ -131,10 +135,10 @@ export class Convo {
         return {
           status: ConvoStatus.Initializing,
           items: [],
-          convo: undefined,
+          convo: this.convo,
           error: undefined,
-          sender: undefined,
-          recipients: undefined,
+          sender: this.sender,
+          recipients: this.recipients,
           isFetchingHistory: this.isFetchingHistory,
           deleteMessage: undefined,
           sendMessage: undefined,
@@ -176,10 +180,10 @@ export class Convo {
         return {
           status: ConvoStatus.Uninitialized,
           items: [],
-          convo: undefined,
+          convo: this.convo,
           error: undefined,
-          sender: undefined,
-          recipients: undefined,
+          sender: this.sender,
+          recipients: this.recipients,
           isFetchingHistory: false,
           deleteMessage: undefined,
           sendMessage: undefined,
@@ -422,6 +426,20 @@ export class Convo {
       this.fetchMessageHistoryError = undefined
       this.commit()
     }
+  }
+
+  /**
+   * Initialises the convo with placeholder data, if provided. We still refetch it before rendering the convo,
+   * but this allows us to render the convo header immediately.
+   */
+  private setupPlaceholderData(
+    data: NonNullable<ConvoParams['placeholderData']>,
+  ) {
+    this.convo = data.convo
+    this.sender = data.convo.members.find(m => m.did === this.senderUserDid)
+    this.recipients = data.convo.members.filter(
+      m => m.did !== this.senderUserDid,
+    )
   }
 
   private async setup() {

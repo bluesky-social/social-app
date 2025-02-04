@@ -1,6 +1,7 @@
 import {MMKV} from 'react-native-mmkv'
+import {Did} from '@atproto/api'
 
-import {Device} from '#/storage/schema'
+import {Account, Device} from '#/storage/schema'
 
 export * from '#/storage/schema'
 
@@ -73,9 +74,15 @@ export class Storage<Scopes extends unknown[], Schema> {
  */
 export const device = new Storage<[], Device>({id: 'bsky_device'})
 
+/**
+ * Account data that's specific to the account on this device
+ */
+export const account = new Storage<[Did], Account>({id: 'bsky_account'})
+
 if (__DEV__ && typeof window !== 'undefined') {
   // @ts-ignore
   window.bsky_storage = {
     device,
+    account,
   }
 }
