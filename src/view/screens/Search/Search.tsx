@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {
   ActivityIndicator,
   Image,
@@ -18,7 +18,6 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
 import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
@@ -37,7 +36,6 @@ import {
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {languageName} from '#/locale/helpers'
-import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {useLanguagePrefs} from '#/state/preferences/languages'
@@ -45,6 +43,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
+import {useProfilesQuery} from '#/state/queries/profile'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
@@ -72,6 +71,7 @@ import {SearchInput} from '#/components/forms/SearchInput'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import * as Layout from '#/components/Layout'
+import {account, useStorage} from '#/storage'
 
 function Loader() {
   return (
@@ -604,6 +604,7 @@ export function SearchScreen(
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
   const setMinimalShellMode = useSetMinimalShellMode()
+  const {currentAccount} = useSession()
 
   // Query terms
   const queryParam = props.route?.params?.q ?? ''
@@ -612,10 +613,55 @@ export function SearchScreen(
     useActorAutocompleteQuery(searchText, true)
 
   const [showAutocomplete, setShowAutocomplete] = React.useState(false)
-  const [searchHistory, setSearchHistory] = React.useState<string[]>([])
-  const [selectedProfiles, setSelectedProfiles] = React.useState<
-    AppBskyActorDefs.ProfileViewBasic[]
-  >([])
+
+  const [termHistory = [], setTermHistory] = useStorage(account, [
+    currentAccount?.did ?? 'pwi',
+    'searchTermHistory',
+  ] as const)
+  const [accountHistory = [], setAccountHistory] = useStorage(account, [
+    currentAccount?.did ?? 'pwi',
+    'searchAccountHistory',
+  ])
+
+  const {data: accountHistoryProfiles} = useProfilesQuery({
+    handles: accountHistory,
+    maintainData: true,
+  })
+
+  const updateSearchHistory = useCallback(
+    async (item: string) => {
+      const newSearchHistory = [
+        item,
+        ...termHistory.filter(search => search !== item),
+      ].slice(0, 6)
+      setTermHistory(newSearchHistory)
+    },
+    [termHistory, setTermHistory],
+  )
+
+  const updateProfileHistory = useCallback(
+    async (item: AppBskyActorDefs.ProfileViewBasic) => {
+      const newAccountHistory = [
+        item.did,
+        ...accountHistory.filter(p => p !== item.did),
+      ].slice(0, 5)
+      setAccountHistory(newAccountHistory)
+    },
+    [accountHistory, setAccountHistory],
+  )
+
+  const deleteSearchHistoryItem = useCallback(
+    async (item: string) => {
+      setTermHistory(termHistory.filter(search => search !== item))
+    },
+    [termHistory, setTermHistory],
+  )
+  const deleteProfileHistoryItem = useCallback(
+    async (item: AppBskyActorDefs.ProfileViewBasic) => {
+      setAccountHistory(accountHistory.filter(p => p !== item.did))
+    },
+    [accountHistory, setAccountHistory],
+  )
 
   const {params, query, queryWithParams} = useQueryManager({
     initialQuery: queryParam,
@@ -635,25 +681,6 @@ export function SearchScreen(
     }),
   )
 
-  React.useEffect(() => {
-    const loadSearchHistory = async () => {
-      try {
-        const history = await AsyncStorage.getItem('searchHistory')
-        if (history !== null) {
-          setSearchHistory(JSON.parse(history))
-        }
-        const profiles = await AsyncStorage.getItem('selectedProfiles')
-        if (profiles !== null) {
-          setSelectedProfiles(JSON.parse(profiles))
-        }
-      } catch (e: any) {
-        logger.error('Failed to load search history', {message: e})
-      }
-    }
-
-    loadSearchHistory()
-  }, [])
-
   const onPressMenu = React.useCallback(() => {
     textInput.current?.blur()
     setDrawerOpen(true)
@@ -669,57 +696,6 @@ export function SearchScreen(
     scrollToTopWeb()
     setSearchText(text)
   }, [])
-
-  const updateSearchHistory = React.useCallback(
-    async (newQuery: string) => {
-      newQuery = newQuery.trim()
-      if (newQuery) {
-        let newHistory = [
-          newQuery,
-          ...searchHistory.filter(q => q !== newQuery),
-        ]
-
-        if (newHistory.length > 5) {
-          newHistory = newHistory.slice(0, 5)
-        }
-
-        setSearchHistory(newHistory)
-        try {
-          await AsyncStorage.setItem(
-            'searchHistory',
-            JSON.stringify(newHistory),
-          )
-        } catch (e: any) {
-          logger.error('Failed to save search history', {message: e})
-        }
-      }
-    },
-    [searchHistory, setSearchHistory],
-  )
-
-  const updateSelectedProfiles = React.useCallback(
-    async (profile: AppBskyActorDefs.ProfileViewBasic) => {
-      let newProfiles = [
-        profile,
-        ...selectedProfiles.filter(p => p.did !== profile.did),
-      ]
-
-      if (newProfiles.length > 5) {
-        newProfiles = newProfiles.slice(0, 5)
-      }
-
-      setSelectedProfiles(newProfiles)
-      try {
-        await AsyncStorage.setItem(
-          'selectedProfiles',
-          JSON.stringify(newProfiles),
-        )
-      } catch (e: any) {
-        logger.error('Failed to save selected profiles', {message: e})
-      }
-    },
-    [selectedProfiles, setSelectedProfiles],
-  )
 
   const navigateToItem = React.useCallback(
     (item: string) => {
@@ -774,10 +750,10 @@ export function SearchScreen(
     (profile: AppBskyActorDefs.ProfileViewBasic) => {
       // Slight delay to avoid updating during push nav animation.
       setTimeout(() => {
-        updateSelectedProfiles(profile)
+        updateProfileHistory(profile)
       }, 400)
     },
-    [updateSelectedProfiles],
+    [updateProfileHistory],
   )
 
   const onSoftReset = React.useCallback(() => {
@@ -796,36 +772,6 @@ export function SearchScreen(
       setMinimalShellMode(false)
       return listenSoftReset(onSoftReset)
     }, [onSoftReset, setMinimalShellMode]),
-  )
-
-  const handleRemoveHistoryItem = React.useCallback(
-    (itemToRemove: string) => {
-      const updatedHistory = searchHistory.filter(item => item !== itemToRemove)
-      setSearchHistory(updatedHistory)
-      AsyncStorage.setItem(
-        'searchHistory',
-        JSON.stringify(updatedHistory),
-      ).catch(e => {
-        logger.error('Failed to update search history', {message: e})
-      })
-    },
-    [searchHistory],
-  )
-
-  const handleRemoveProfile = React.useCallback(
-    (profileToRemove: AppBskyActorDefs.ProfileViewBasic) => {
-      const updatedProfiles = selectedProfiles.filter(
-        profile => profile.did !== profileToRemove.did,
-      )
-      setSelectedProfiles(updatedProfiles)
-      AsyncStorage.setItem(
-        'selectedProfiles',
-        JSON.stringify(updatedProfiles),
-      ).catch(e => {
-        logger.error('Failed to update selected profiles', {message: e})
-      })
-    },
-    [selectedProfiles],
   )
 
   const onSearchInputFocus = React.useCallback(() => {
@@ -932,12 +878,12 @@ export function SearchScreen(
           />
         ) : (
           <SearchHistory
-            searchHistory={searchHistory}
-            selectedProfiles={selectedProfiles}
+            searchHistory={termHistory}
+            selectedProfiles={accountHistoryProfiles?.profiles || []}
             onItemClick={handleHistoryItemClick}
             onProfileClick={handleProfileClick}
-            onRemoveItemClick={handleRemoveHistoryItem}
-            onRemoveProfileClick={handleRemoveProfile}
+            onRemoveItemClick={deleteSearchHistoryItem}
+            onRemoveProfileClick={deleteProfileHistoryItem}
           />
         )}
       </View>
