@@ -5,13 +5,18 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/core'
 
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
 import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
 import {DesktopSearch} from '#/view/shell/desktop/Search'
 import {SidebarTrendingTopics} from '#/view/shell/desktop/SidebarTrendingTopics'
-import {atoms as a, useGutters, useTheme, web} from '#/alf'
+import {
+  atoms as a,
+  useGutters,
+  useLayoutBreakpoints,
+  useTheme,
+  web,
+} from '#/alf'
 import {Divider} from '#/components/Divider'
 import {InlineLinkText} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
@@ -45,9 +50,9 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   const webqueryParams = useWebQueryParams()
   const searchQuery = webqueryParams?.q
   const showTrending = !isSearchScreen || (isSearchScreen && !!searchQuery)
+  const {rightNavVisible, centerColumnOffset} = useLayoutBreakpoints()
 
-  const {isTablet} = useWebMediaQueries()
-  if (isTablet) {
+  if (!rightNavVisible) {
     return null
   }
 
@@ -60,9 +65,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           position: 'fixed',
           left: '50%',
           transform: [
-            {
-              translateX: 300,
-            },
+            {translateX: centerColumnOffset ? 150 : 300},
             ...a.scrollbar_offset.transform,
           ],
           width: 300 + gutters.paddingLeft,
