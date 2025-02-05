@@ -1,15 +1,14 @@
 import {init, SessionStrategy} from '@bitdrift/react-native'
-import {Statsig} from 'statsig-react-native-expo'
 export {debug, error, info, warn} from '@bitdrift/react-native'
 
-import {initPromise} from './statsig/statsig'
+import {StatsigClient} from './statsig/statsig'
 
 const BITDRIFT_API_KEY = process.env.BITDRIFT_API_KEY
 
 initPromise.then(() => {
   let isEnabled = false
   try {
-    if (Statsig.checkGate('enable_bitdrift')) {
+    if (StatsigClient.checkGate('enable_bitdrift')) {
       isEnabled = true
     }
   } catch (e) {

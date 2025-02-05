@@ -5650,13 +5650,6 @@
   dependencies:
     merge-options "^3.0.4"
 
-"@react-native-async-storage/async-storage@^1.15.2":
-  version "1.22.0"
-  resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.22.0.tgz#202a9afd15a5b829c39b709d0ca3942612441efc"
-  integrity sha512-b5KD010iiZnot86RbAaHpLuHwmPW2qA3SSN/OSZhd1kBoINEQEVBuv+uFtcaTxAhX27bT0wd13GOb2IOSDUXSA==
-  dependencies:
-    merge-options "^3.0.4"
-
 "@react-native-menu/menu@^1.1.7":
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/@react-native-menu/menu/-/menu-1.1.7.tgz#47c345038951712fd61f2bbb7d591c181c7e9742"
@@ -6589,6 +6582,43 @@
     "@smithy/abort-controller" "^2.0.14"
     "@smithy/types" "^2.6.0"
     tslib "^2.5.0"
+
+"@statsig/client-core@3.11.1":
+  version "3.11.1"
+  resolved "https://registry.yarnpkg.com/@statsig/client-core/-/client-core-3.11.1.tgz#c0a7a254021b3e9b647a04a2f1c9ce71e34fe65f"
+  integrity sha512-Ds2jw7nCmAtxEsTIp8x9SbjUYcJjF7nq9XGSzN9mLk3yJPZCz6Mknwq+9CvFjfTkK5zBWO46P0z9z4SDg0tNKQ==
+
+"@statsig/expo-bindings@^3.11.1":
+  version "3.11.1"
+  resolved "https://registry.yarnpkg.com/@statsig/expo-bindings/-/expo-bindings-3.11.1.tgz#9307caed4415cda2950fdfd0678e0ca5c79d593f"
+  integrity sha512-VX+pUJLLH1OtgePKU7FLx1AtqoSB0yP3qyIKKmdcNXfAk2ZmCRvsrjau/fnHwNwyhjUpHuj/11+DIag4xv3TIA==
+  dependencies:
+    "@statsig/client-core" "3.11.1"
+    "@statsig/js-client" "3.11.1"
+    "@statsig/react-bindings" "3.11.1"
+    "@statsig/react-native-core" "3.11.1"
+
+"@statsig/js-client@3.11.1", "@statsig/js-client@^3.11.1":
+  version "3.11.1"
+  resolved "https://registry.yarnpkg.com/@statsig/js-client/-/js-client-3.11.1.tgz#6877738b803d01573593ad0704261c30731339e7"
+  integrity sha512-eblEQfpPfqDbkF1a5l1rLGb+vCjhpcAwzvDUClNpLSs1KF23DLbvs1eJZpolHwZ2CiAFHgtZL7uhUJlzKi4nBA==
+  dependencies:
+    "@statsig/client-core" "3.11.1"
+
+"@statsig/react-bindings@3.11.1":
+  version "3.11.1"
+  resolved "https://registry.yarnpkg.com/@statsig/react-bindings/-/react-bindings-3.11.1.tgz#56461365b6c021a39f986dfc992c41151c4893c8"
+  integrity sha512-9/Ay87RGO1b5A+UCV2Z3saRwZi97rrkXQLNRkozAi7IVKGDTfuZXBOQsQvnNRlH3H8Q1LXo+nEHS9g9YtbfXgQ==
+  dependencies:
+    "@statsig/client-core" "3.11.1"
+    "@statsig/js-client" "3.11.1"
+
+"@statsig/react-native-core@3.11.1":
+  version "3.11.1"
+  resolved "https://registry.yarnpkg.com/@statsig/react-native-core/-/react-native-core-3.11.1.tgz#c6ca69e9355ab5291ab8c26e4cb8532d7f3132fb"
+  integrity sha512-fdJc5Da4dnln6ldId8jxKzvfbc5mmRBXReAERATZuVKCvrlsu2S5U49+V54E7sJelfBLjJSEaLXAYaiOSDPBFw==
+  dependencies:
+    "@statsig/client-core" "3.11.1"
 
 "@tanstack/query-async-storage-persister@^5.25.0":
   version "5.25.0"
@@ -10532,7 +10562,7 @@ expo-clipboard@^7.0.0:
   resolved "https://registry.yarnpkg.com/expo-clipboard/-/expo-clipboard-7.0.0.tgz#066b1a781fdaf05e30f282522d3a58f2e651e4cf"
   integrity sha512-4Vuv1zZPTOiKzIeC0BIGUN8nyzkXlE6jKchtLxcoksBjHPdG5W2eH05B+hppTrK9N3+Xh02z4j3h1cFRqPJ1fw==
 
-expo-constants@17.0.3, expo-constants@^13.0.2, expo-constants@~17.0.0, expo-constants@~17.0.3:
+expo-constants@17.0.3, expo-constants@~17.0.0, expo-constants@~17.0.3:
   version "17.0.3"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-17.0.3.tgz#a05b38e0417d59759ece1642b4d483889e04dbda"
   integrity sha512-lnbcX2sAu8SucHXEXxSkhiEpqH+jGrf+TF+MO6sHWIESjwOUVVYlT8qYdjR9xbxWmqFtrI4KV44FkeJf2DaFjQ==
@@ -10573,7 +10603,7 @@ expo-dev-menu@6.0.11:
   dependencies:
     expo-dev-menu-interface "1.9.2"
 
-expo-device@7.0.1, expo-device@~4.1.1, expo-device@~7.0.1:
+expo-device@7.0.1, expo-device@~7.0.1:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/expo-device/-/expo-device-7.0.1.tgz#3702fe8b4475eac63ed27f9d580ec8a78546e0d1"
   integrity sha512-/3lk0f9wvle+6svHqWSCBC1B5NYFmXp1D7hmIyecJJVYRLwzrwwTDyNs76oG/UDU5Appdu8QyDKycsx2hqv71w==
@@ -16114,13 +16144,6 @@ react-native-gesture-handler@2.20.2:
     invariant "^2.2.4"
     prop-types "^15.7.2"
 
-react-native-get-random-values@^1.6.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/react-native-get-random-values/-/react-native-get-random-values-1.10.0.tgz#c2c5f12a4ef8b1175145347b4a4b9f9a40d9ffc8"
-  integrity sha512-gZ1zbXhbb8+Jy9qYTV8c4Nf45/VB4g1jmXuavY5rPfUn7x3ok9Vl3FTl0dnE92Z4FFtfbUNNwtSfcmomdtWg+A==
-  dependencies:
-    fast-base64-decode "^1.0.0"
-
 react-native-get-random-values@~1.11.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/react-native-get-random-values/-/react-native-get-random-values-1.11.0.tgz#1ca70d1271f4b08af92958803b89dccbda78728d"
@@ -17560,14 +17583,6 @@ standard-as-callback@^2.1.0:
   resolved "https://registry.yarnpkg.com/standard-as-callback/-/standard-as-callback-2.1.0.tgz#8953fc05359868a77b5b9739a665c5977bb7df45"
   integrity sha512-qoRRSyROncaz1z0mvYqIE4lCd9p2R90i6GxW3uZv5ucSu8tU7B5HXUP1gG8pVZsYNVaXjk8ClXHPttLyxAL48A==
 
-statsig-js@4.45.1:
-  version "4.45.1"
-  resolved "https://registry.yarnpkg.com/statsig-js/-/statsig-js-4.45.1.tgz#b1f5b9c52adc4a8aece376fb011416c89227932f"
-  integrity sha512-h94RzFQsJCQCNwQXpZ9OBXcvCxDnkXF6OrCekd81ySvY2l4JSowpxMWX3Iw6IDFzfTfKdER9JQzFLhMSQbT+YQ==
-  dependencies:
-    js-sha256 "^0.10.1"
-    uuid "^8.3.2"
-
 statsig-node@^5.23.1:
   version "5.25.1"
   resolved "https://registry.yarnpkg.com/statsig-node/-/statsig-node-5.25.1.tgz#6d8ea9ecaad6c09250e5ff7d33eda9fd0f9c05f4"
@@ -17577,26 +17592,6 @@ statsig-node@^5.23.1:
     node-fetch "^2.6.13"
     ua-parser-js "^1.0.2"
     uuid "^8.3.2"
-
-statsig-react-native-expo@^4.6.1:
-  version "4.6.1"
-  resolved "https://registry.yarnpkg.com/statsig-react-native-expo/-/statsig-react-native-expo-4.6.1.tgz#0bdf49fee7112f7f28bff2405f4ba0c1727bb3d6"
-  integrity sha512-rB60c+WSrQPmjW9j75d+acUtwSOe38PE2KTDHiOv1Mf+0TCcFtGYlJmKCibWvbeXR7ZAyjjGeroh23bCSEZauQ==
-  dependencies:
-    "@react-native-async-storage/async-storage" "^1.15.2"
-    expo-constants "^13.0.2"
-    expo-device "~4.1.1"
-    js-sha256 "^0.9.0"
-    react-native-get-random-values "^1.6.0"
-    statsig-react "^1.21.1"
-    uuid "^8.3.2"
-
-statsig-react@^1.21.1:
-  version "1.35.0"
-  resolved "https://registry.yarnpkg.com/statsig-react/-/statsig-react-1.35.0.tgz#ad5730b83f564c640623e954fcbcbe848e939946"
-  integrity sha512-KLN7dhq6FvAl25Z0QN6IINFBgM3yn0GMafoE698tYZqRf911xvevFaR7qUXiTz3W9vmFYrmFRouqVMfCv7DW0A==
-  dependencies:
-    statsig-js "4.45.1"
 
 statuses@2.0.1:
   version "2.0.1"

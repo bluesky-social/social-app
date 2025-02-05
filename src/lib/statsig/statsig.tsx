@@ -1,7 +1,7 @@
 import React from 'react'
 import {Platform} from 'react-native'
 import {AppState, AppStateStatus} from 'react-native'
-import {Statsig, StatsigProvider} from 'statsig-react-native-expo'
+import {StatsigClientExpo, StatsigProviderExpo} from '@statsig/expo-bindings'
 
 import {BUNDLE_DATE, BUNDLE_IDENTIFIER, IS_TESTFLIGHT} from '#/lib/app-info'
 import * as bitdrift from '#/lib/bitdrift'
@@ -17,6 +17,12 @@ import {Gate} from './gates'
 const SDK_KEY = 'client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV'
 
 export const initPromise = initialize()
+
+export const StatsigClient = new StatsigClientExpo(
+  SDK_KEY,
+  {},
+  createStatsigOptions([]),
+)
 
 type StatsigUser = {
   userID: string | undefined
@@ -99,8 +105,8 @@ export function logEvent<E extends keyof LogEvents>(
   try {
     const fullMetadata = toStringRecord(rawMetadata)
     fullMetadata.routeName = getCurrentRouteName() ?? '(Uninitialized)'
-    if (Statsig.initializeCalled()) {
-      Statsig.logEvent(eventName, null, fullMetadata)
+    if (isStatsigInitialized()) {
+      StatsigClient.logEvent(eventName, undefined, fullMetadata)
     }
     // Intentionally bypass the logger abstraction to log rich objects.
     console.groupCollapsed(eventName)
@@ -150,12 +156,10 @@ export function useGate(): (gateName: Gate, options?: GateOptions) => boolean {
         return cachedValue
       }
       let value = false
-      if (Statsig.initializeCalled()) {
-        if (options.dangerouslyDisableExposureLogging) {
-          value = Statsig.checkGateWithExposureLoggingDisabled(gateName)
-        } else {
-          value = Statsig.checkGate(gateName)
-        }
+      if (isStatsigInitialized()) {
+        value = StatsigClient.checkGate(gateName, {
+          disableExposureLog: !!options?.dangerouslyDisableExposureLogging,
+        })
       }
       cache.set(gateName, value)
       return value
@@ -236,10 +240,11 @@ export async function tryFetchGates(
       // Use this for less common operations where the user would be OK with a delay.
       timeoutMs = 1500
     }
-    if (Statsig.initializeCalled()) {
+
+    if (isStatsigInitialized()) {
       await Promise.race([
         timeout(timeoutMs),
-        Statsig.prefetchUsers([toStatsigUser(did)]),
+        StatsigClient.dataAdapter.prefetchData(toStatsigUser(did)),
       ])
     }
   } catch (e) {
@@ -249,7 +254,15 @@ export async function tryFetchGates(
 }
 
 export function initialize() {
-  return Statsig.initialize(SDK_KEY, null, createStatsigOptions([]))
+  StatsigClient.initializeAsync()
+}
+
+export function isStatsigInitialized() {
+  return StatsigClient.loadingStatus === 'Ready'
+}
+
+export function getStableID() {
+  return StatsigClient.getContext().stableID
 }
 
 export function Provider({children}: {children: React.ReactNode}) {
@@ -283,9 +296,13 @@ export function Provider({children}: {children: React.ReactNode}) {
   // These changes are prefetched and stored, but don't get applied until the active DID changes.
   // This ensures that when you switch an account, it already has fresh results by then.
   const handleIntervalTick = useNonReactiveCallback(() => {
-    if (Statsig.initializeCalled()) {
+    if (isStatsigInitialized()) {
       // Note: Only first five will be taken into account by Statsig.
-      Statsig.prefetchUsers([currentStatsigUser, ...otherStatsigUsers])
+      //
+      StatsigClient.dataAdapter.prefetchData(currentStatsigUser)
+      for (const user of otherStatsigUsers) {
+        StatsigClient.dataAdapter.prefetchData(user)
+      }
     }
   })
   React.useEffect(() => {
@@ -295,17 +312,13 @@ export function Provider({children}: {children: React.ReactNode}) {
 
   return (
     <GateCache.Provider value={gateCache}>
-      <StatsigProvider
+      <StatsigProviderExpo
         key={did}
         sdkKey={SDK_KEY}
-        mountKey={currentStatsigUser.userID}
         user={currentStatsigUser}
-        // This isn't really blocking due to short initTimeoutMs above.
-        // However, it ensures `isLoading` is always `false`.
-        waitForInitialization={true}
         options={statsigOptions}>
         {children}
-      </StatsigProvider>
+      </StatsigProviderExpo>
     </GateCache.Provider>
   )
 }

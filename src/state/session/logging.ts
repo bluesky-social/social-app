@@ -1,8 +1,12 @@
 import {AtpSessionData, AtpSessionEvent} from '@atproto/api'
 import {sha256} from 'js-sha256'
-import {Statsig} from 'statsig-react-native-expo'
 
 import {IS_INTERNAL} from '#/lib/app-info'
+import {
+  getStableID,
+  isStatsigInitialized,
+  StatsigClient,
+} from '#/lib/statsig/statsig'
 import {Schema} from '../persisted'
 import {Action, State} from './reducer'
 import {SessionAccount} from './types'
@@ -74,11 +78,12 @@ const MAX_SLICE_LENGTH = 1000
 // Not gated.
 export function addSessionErrorLog(did: string, event: AtpSessionEvent) {
   try {
-    if (!Statsig.initializeCalled() || !Statsig.getStableID()) {
+    const stableID = getStableID()
+    if (!isStatsigInitialized() || !stableID) {
       return
     }
     const stack = (new Error().stack ?? '').slice(0, MAX_SLICE_LENGTH)
-    Statsig.logEvent('session:error', null, {
+    StatsigClient.logEvent('session:error', undefined, {
       did,
       event,
       stack,
@@ -90,7 +95,8 @@ export function addSessionErrorLog(did: string, event: AtpSessionEvent) {
 
 export function addSessionDebugLog(log: Log) {
   try {
-    if (!Statsig.initializeCalled() || !Statsig.getStableID()) {
+    const stableID = getStableID()
+    if (!isStatsigInitialized() || !stableID) {
       // Drop these logs for now.
       return
     }
@@ -110,7 +116,7 @@ export function addSessionDebugLog(log: Log) {
       const sliceIndex = nextSliceIndex++
       const slice = payload.slice(0, MAX_SLICE_LENGTH)
       payload = payload.slice(MAX_SLICE_LENGTH)
-      Statsig.logEvent('session:debug', null, {
+      StatsigClient.logEvent('session:debug', undefined, {
         realmId,
         messageIndex: String(messageIndex),
         messageType: type,
