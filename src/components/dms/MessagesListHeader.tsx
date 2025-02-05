@@ -31,7 +31,7 @@ export let MessagesListHeader = ({
   profile,
   moderation,
 }: {
-  profile?: Shadow<AppBskyActorDefs.ProfileViewBasic>
+  profile?: Shadow<AppBskyActorDefs.ProfileViewDetailed>
   moderation?: ModerationDecision
 }): React.ReactNode => {
   const t = useTheme()
@@ -138,7 +138,7 @@ function HeaderReady({
   moderation,
   blockInfo,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
   moderation: ModerationDecision
   blockInfo: {
     listBlocks: ModerationCause[]
