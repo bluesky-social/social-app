@@ -14,6 +14,7 @@ import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useTheme} from '#/lib/ThemeContext'
+import {Portal} from '#/components/Portal'
 import {Text} from '../text/Text'
 
 export function ErrorMessage({
@@ -31,44 +32,51 @@ export function ErrorMessage({
   const pal = usePalette('error')
   const {_} = useLingui()
   return (
-    <View testID="errorMessageView" style={[styles.outer, pal.view, style]}>
-      <View
-        style={[styles.errorIcon, {backgroundColor: theme.palette.error.icon}]}>
-        <FontAwesomeIcon
-          icon="exclamation"
-          style={pal.text as FontAwesomeIconStyle}
-          size={16}
-        />
-      </View>
-      <Text
-        type="sm-medium"
-        style={[styles.message, pal.text]}
-        numberOfLines={numberOfLines}>
-        {message}
-      </Text>
-      {onPressTryAgain && (
-        <TouchableOpacity
-          testID="errorMessageTryAgainButton"
-          style={styles.btn}
-          onPress={onPressTryAgain}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Retry`)}
-          accessibilityHint={_(
-            msg`Retries the last action, which errored out`,
-          )}>
+    <Portal>
+      <View testID="errorMessageView" style={[styles.outer, pal.view, style]}>
+        <View
+          style={[
+            styles.errorIcon,
+            {backgroundColor: theme.palette.error.icon},
+          ]}>
           <FontAwesomeIcon
-            icon="arrows-rotate"
-            style={{color: theme.palette.error.icon}}
-            size={18}
+            icon="exclamation"
+            style={pal.text as FontAwesomeIconStyle}
+            size={16}
           />
-        </TouchableOpacity>
-      )}
-    </View>
+        </View>
+        <Text
+          type="sm-medium"
+          style={[styles.message, pal.text]}
+          numberOfLines={numberOfLines}>
+          {message}
+        </Text>
+        {onPressTryAgain && (
+          <TouchableOpacity
+            testID="errorMessageTryAgainButton"
+            style={styles.btn}
+            onPress={onPressTryAgain}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Retry`)}
+            accessibilityHint={_(
+              msg`Retries the last action, which errored out`,
+            )}>
+            <FontAwesomeIcon
+              icon="arrows-rotate"
+              style={{color: theme.palette.error.icon}}
+              size={18}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
+    </Portal>
   )
 }
 
 const styles = StyleSheet.create({
   outer: {
+    position: 'fixed',
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 8,
