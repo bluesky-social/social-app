@@ -285,6 +285,7 @@ export type FollowButtonProps = {
   logContext: LogEvents['profile:follow']['logContext'] &
     LogEvents['profile:unfollow']['logContext']
   colorInverted?: boolean
+  onFollow?: () => void
 } & Partial<ButtonProps>
 
 export function FollowButton(props: FollowButtonProps) {
@@ -298,6 +299,7 @@ export function FollowButtonInner({
   moderationOpts,
   logContext,
   onPress: onPressProp,
+  onFollow,
   colorInverted,
   ...rest
 }: FollowButtonProps) {
@@ -324,6 +326,7 @@ export function FollowButtonInner({
         ),
       )
       onPressProp?.(e)
+      onFollow?.()
     } catch (err: any) {
       if (err?.name !== 'AbortError') {
         Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')

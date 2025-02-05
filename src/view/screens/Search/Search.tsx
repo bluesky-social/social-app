@@ -427,12 +427,12 @@ function useQueryManager({initialQuery}: {initialQuery: string}) {
   const {query, params: initialParams} = React.useMemo(() => {
     return parseSearchQuery(initialQuery || '')
   }, [initialQuery])
-  const prevInitialQuery = React.useRef(initialQuery)
+  const [prevInitialQuery, setPrevInitialQuery] = React.useState(initialQuery)
   const [lang, setLang] = React.useState(initialParams.lang || '')
 
-  if (initialQuery !== prevInitialQuery.current) {
+  if (initialQuery !== prevInitialQuery) {
     // handle new queryParam change (from manual search entry)
-    prevInitialQuery.current = initialQuery
+    setPrevInitialQuery(initialQuery)
     setLang(initialParams.lang || '')
   }
 
@@ -741,8 +741,14 @@ export function SearchScreen(
     scrollToTopWeb()
     textInput.current?.blur()
     setShowAutocomplete(false)
-    setSearchText(queryParam)
-  }, [setShowAutocomplete, setSearchText, queryParam])
+    if (isWeb) {
+      // Empty params resets the URL to be /search rather than /search?q=
+      navigation.replace('Search', {})
+    } else {
+      setSearchText('')
+      navigation.setParams({q: ''})
+    }
+  }, [setShowAutocomplete, setSearchText, navigation])
 
   const onSubmit = React.useCallback(() => {
     navigateToItem(searchText)

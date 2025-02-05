@@ -3698,7 +3698,7 @@ msgstr "កំណត់ត្រាប្រកាសមិនត្រឹមត
 
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
-msgid "Invalid username or password"
+msgid "Incorrect username or password"
 msgstr "ឈ្មោះអ្នកប្រើ ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91
@@ -6865,7 +6865,7 @@ msgstr "ចេញ?"
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:205
 #: src/view/shell/NavSignupCard.tsx:47
 #: src/view/shell/NavSignupCard.tsx:52
-msgid "Sign up"
+msgid "Create account"
 msgstr "ចុះឈ្មោះ"
 
 #: src/components/moderation/ScreenHider.tsx:91

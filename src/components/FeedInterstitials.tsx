@@ -17,6 +17,7 @@ import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows
 import {useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {SeenPost} from '#/state/userActionHistory'
+import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, useBreakpoints, useTheme, ViewStyleProp, web} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
@@ -197,6 +198,7 @@ export function SuggestedFollowsProfile({did}: {did: string}) {
     <ProfileGrid
       isSuggestionsLoading={isSuggestionsLoading}
       profiles={data?.suggestions ?? []}
+      recId={data?.recId}
       error={error}
       viewContext="profile"
     />
@@ -223,10 +225,12 @@ export function ProfileGrid({
   isSuggestionsLoading,
   error,
   profiles,
+  recId,
   viewContext = 'feed',
 }: {
   isSuggestionsLoading: boolean
   profiles: atp.profile.AnyProfileView[]
+  recId?: number
   error: Error | null
   viewContext: 'profile' | 'feed'
 }) {
@@ -250,12 +254,19 @@ export function ProfileGrid({
       ))
   ) : error || !profiles.length ? null : (
     <>
-      {profiles.slice(0, maxLength).map(profile => (
+      {profiles.slice(0, maxLength).map((profile, index) => (
         <ProfileCard.Link
           key={profile.did}
           profile={profile}
           onPress={() => {
-            logEvent('feed:interstitial:profileCard:press', {})
+            logEvent('suggestedUser:press', {
+              logContext:
+                viewContext === 'feed'
+                  ? 'InterstitialDiscover'
+                  : 'InterstitialProfile',
+              recId,
+              position: index,
+            })
           }}
           style={[
             a.flex_1,
@@ -283,6 +294,17 @@ export function ProfileGrid({
                     logContext="FeedInterstitial"
                     shape="round"
                     colorInverted
+                    onFollow={() => {
+                      logEvent('suggestedUser:follow', {
+                        logContext:
+                          viewContext === 'feed'
+                            ? 'InterstitialDiscover'
+                            : 'InterstitialProfile',
+                        location: 'Card',
+                        recId,
+                        position: index,
+                      })
+                    }}
                   />
                 </ProfileCard.Header>
                 <ProfileCard.Description profile={profile} numberOfLines={2} />
@@ -337,33 +359,37 @@ export function ProfileGrid({
           </View>
         </View>
       ) : (
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
-          decelerationRate="fast">
-          <View style={[a.px_lg, a.pt_sm, a.pb_lg, a.flex_row, a.gap_md]}>
-            {content}
+        <BlockDrawerGesture>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
+            decelerationRate="fast">
+            <View style={[a.px_lg, a.pt_sm, a.pb_lg, a.flex_row, a.gap_md]}>
+              {content}
 
-            <Button
-              label={_(msg`Browse more accounts on the Explore page`)}
-              onPress={() => {
-                navigation.navigate('SearchTab')
-              }}>
-              <CardOuter style={[a.flex_1, {borderWidth: 0}]}>
-                <View style={[a.flex_1, a.justify_center]}>
-                  <View style={[a.flex_row, a.px_lg]}>
-                    <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
-                      <Trans>Browse more suggestions on the Explore page</Trans>
-                    </Text>
+              <Button
+                label={_(msg`Browse more accounts on the Explore page`)}
+                onPress={() => {
+                  navigation.navigate('SearchTab')
+                }}>
+                <CardOuter style={[a.flex_1, {borderWidth: 0}]}>
+                  <View style={[a.flex_1, a.justify_center]}>
+                    <View style={[a.flex_row, a.px_lg]}>
+                      <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
+                        <Trans>
+                          Browse more suggestions on the Explore page
+                        </Trans>
+                      </Text>
 
-                    <Arrow size="xl" />
+                      <Arrow size="xl" />
+                    </View>
                   </View>
-                </View>
-              </CardOuter>
-            </Button>
-          </View>
-        </ScrollView>
+                </CardOuter>
+              </Button>
+            </View>
+          </ScrollView>
+        </BlockDrawerGesture>
       )}
     </View>
   )
@@ -470,34 +496,38 @@ export function SuggestedFeeds() {
           </View>
         </View>
       ) : (
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
-          decelerationRate="fast">
-          <View style={[a.px_lg, a.pt_md, a.pb_xl, a.flex_row, a.gap_md]}>
-            {content}
+        <BlockDrawerGesture>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
+            decelerationRate="fast">
+            <View style={[a.px_lg, a.pt_md, a.pb_xl, a.flex_row, a.gap_md]}>
+              {content}
 
-            <Button
-              label={_(msg`Browse more feeds on the Explore page`)}
-              onPress={() => {
-                navigation.navigate('SearchTab')
-              }}
-              style={[a.flex_col]}>
-              <CardOuter style={[a.flex_1]}>
-                <View style={[a.flex_1, a.justify_center]}>
-                  <View style={[a.flex_row, a.px_lg]}>
-                    <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
-                      <Trans>Browse more suggestions on the Explore page</Trans>
-                    </Text>
+              <Button
+                label={_(msg`Browse more feeds on the Explore page`)}
+                onPress={() => {
+                  navigation.navigate('SearchTab')
+                }}
+                style={[a.flex_col]}>
+                <CardOuter style={[a.flex_1]}>
+                  <View style={[a.flex_1, a.justify_center]}>
+                    <View style={[a.flex_row, a.px_lg]}>
+                      <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
+                        <Trans>
+                          Browse more suggestions on the Explore page
+                        </Trans>
+                      </Text>
 
-                    <Arrow size="xl" />
+                      <Arrow size="xl" />
+                    </View>
                   </View>
-                </View>
-              </CardOuter>
-            </Button>
-          </View>
-        </ScrollView>
+                </CardOuter>
+              </Button>
+            </View>
+          </ScrollView>
+        </BlockDrawerGesture>
       )}
     </View>
   )

@@ -194,7 +194,12 @@ export async function post(
 }
 
 async function resolveRT(agent: BskyAgent, richtext: RichText) {
-  let rt = new RichText({text: richtext.text.trimEnd()}, {cleanNewlines: true})
+  const trimmedText = richtext.text
+    // Trim leading whitespace-only lines (but don't break ASCII art).
+    .replace(/^(\s*\n)+/, '')
+    // Trim any trailing whitespace.
+    .trimEnd()
+  let rt = new RichText({text: trimmedText}, {cleanNewlines: true})
   await rt.detectFacets(agent)
 
   rt = shortenLinks(rt)

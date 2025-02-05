@@ -8,6 +8,7 @@ import {
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {GestureActionView} from '#/lib/custom-animations/GestureActionView'
 import {useHaptics} from '#/lib/haptics'
@@ -22,7 +23,11 @@ import {
 import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useMarkAsReadMutation} from '#/state/queries/messages/conversation'
+import {
+  precacheConvoQuery,
+  useMarkAsReadMutation,
+} from '#/state/queries/messages/conversation'
+import {precacheProfile} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
@@ -89,6 +94,7 @@ function ChatListItemReady({
     [profile, moderationOpts],
   )
   const playHaptic = useHaptics()
+  const queryClient = useQueryClient()
   const isUnread = convo.unreadCount > 0
 
   const blockInfo = useMemo(() => {
@@ -112,64 +118,74 @@ function ChatListItemReady({
 
   const isDimStyle = convo.muted || moderation.blocked || isDeletedAccount
 
-  const {lastMessage, lastMessageSentAt} = useMemo(() => {
-    let lastMessage = _(msg`No messages yet`)
-    let lastMessageSentAt: string | null = null
+  const {lastMessage, lastMessageSentAt, latestReportableMessage} =
+    useMemo(() => {
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      let lastMessage = _(msg`No messages yet`)
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      let lastMessageSentAt: string | null = null
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      let latestReportableMessage: ChatBskyConvoDefs.MessageView | undefined
 
-    if (ChatBskyConvoDefs.isMessageView(convo.lastMessage)) {
-      const isFromMe = convo.lastMessage.sender?.did === currentAccount?.did
+      if (ChatBskyConvoDefs.isMessageView(convo.lastMessage)) {
+        const isFromMe = convo.lastMessage.sender?.did === currentAccount?.did
 
-      if (convo.lastMessage.text) {
-        if (isFromMe) {
-          lastMessage = _(msg`You: ${convo.lastMessage.text}`)
-        } else {
-          lastMessage = convo.lastMessage.text
+        if (!isFromMe) {
+          latestReportableMessage = convo.lastMessage
         }
-      } else if (convo.lastMessage.embed) {
-        const defaultEmbeddedContentMessage = _(
-          msg`(contains embedded content)`,
-        )
 
-        if (AppBskyEmbedRecord.isView(convo.lastMessage.embed)) {
-          const embed = convo.lastMessage.embed
+        if (convo.lastMessage.text) {
+          if (isFromMe) {
+            lastMessage = _(msg`You: ${convo.lastMessage.text}`)
+          } else {
+            lastMessage = convo.lastMessage.text
+          }
+        } else if (convo.lastMessage.embed) {
+          const defaultEmbeddedContentMessage = _(
+            msg`(contains embedded content)`,
+          )
 
-          if (AppBskyEmbedRecord.isViewRecord(embed.record)) {
-            const record = embed.record
-            const path = postUriToRelativePath(record.uri, {
-              handle: record.author.handle,
-            })
-            const href = path ? toBskyAppUrl(path) : undefined
-            const short = href
-              ? toShortUrl(href)
-              : defaultEmbeddedContentMessage
+          if (AppBskyEmbedRecord.isView(convo.lastMessage.embed)) {
+            const embed = convo.lastMessage.embed
+
+            if (AppBskyEmbedRecord.isViewRecord(embed.record)) {
+              const record = embed.record
+              const path = postUriToRelativePath(record.uri, {
+                handle: record.author.handle,
+              })
+              const href = path ? toBskyAppUrl(path) : undefined
+              const short = href
+                ? toShortUrl(href)
+                : defaultEmbeddedContentMessage
+              if (isFromMe) {
+                lastMessage = _(msg`You: ${short}`)
+              } else {
+                lastMessage = short
+              }
+            }
+          } else {
             if (isFromMe) {
-              lastMessage = _(msg`You: ${short}`)
+              lastMessage = _(msg`You: ${defaultEmbeddedContentMessage}`)
             } else {
-              lastMessage = short
+              lastMessage = defaultEmbeddedContentMessage
             }
           }
-        } else {
-          if (isFromMe) {
-            lastMessage = _(msg`You: ${defaultEmbeddedContentMessage}`)
-          } else {
-            lastMessage = defaultEmbeddedContentMessage
-          }
         }
+
+        lastMessageSentAt = convo.lastMessage.sentAt
+      }
+      if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
+        lastMessage = isDeletedAccount
+          ? _(msg`Conversation deleted`)
+          : _(msg`Message deleted`)
       }
 
-      lastMessageSentAt = convo.lastMessage.sentAt
-    }
-    if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
-      lastMessage = isDeletedAccount
-        ? _(msg`Conversation deleted`)
-        : _(msg`Message deleted`)
-    }
-
-    return {
-      lastMessage,
-      lastMessageSentAt,
-    }
-  }, [_, convo.lastMessage, currentAccount?.did, isDeletedAccount])
+      return {
+        lastMessage,
+        lastMessageSentAt,
+        latestReportableMessage,
+      }
+    }, [_, convo.lastMessage, currentAccount?.did, isDeletedAccount])
 
   const [showActions, setShowActions] = useState(false)
 
@@ -188,6 +204,8 @@ function ChatListItemReady({
 
   const onPress = useCallback(
     (e: GestureResponderEvent) => {
+      precacheProfile(queryClient, profile)
+      precacheConvoQuery(queryClient, convo)
       decrementBadgeCount(convo.unreadCount)
       if (isDeletedAccount) {
         e.preventDefault()
@@ -197,7 +215,7 @@ function ChatListItemReady({
         logEvent('chat:open', {logContext: 'ChatsList'})
       }
     },
-    [convo.unreadCount, isDeletedAccount, menuControl],
+    [isDeletedAccount, menuControl, queryClient, profile, convo],
   )
 
   const onLongPress = useCallback(() => {
@@ -412,6 +430,7 @@ function ChatListItemReady({
               opacity: !gtMobile || showActions || menuControl.isOpen ? 1 : 0,
             },
           ]}
+          latestReportableMessage={latestReportableMessage}
         />
         <LeaveConvoPrompt
           control={leaveConvoControl}

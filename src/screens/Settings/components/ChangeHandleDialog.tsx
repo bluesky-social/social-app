@@ -172,13 +172,11 @@ function ProvidedHandlePage({
   const host = serviceInfo.availableUserDomains[0]
 
   const validation = useMemo(
-    () => validateHandle(subdomain, host),
+    () => validateHandle(subdomain, host, true),
     [subdomain, host],
   )
 
-  const isTooLong = subdomain.length > 18
   const isInvalid =
-    isTooLong ||
     !validation.handleChars ||
     !validation.hyphenStartOrEnd ||
     !validation.totalLength
@@ -231,10 +229,10 @@ function ProvidedHandlePage({
             label={_(msg`Save new handle`)}
             variant="solid"
             size="large"
-            color={validation.overall && !isTooLong ? 'primary' : 'secondary'}
-            disabled={!validation.overall && !isTooLong}
+            color={validation.overall ? 'primary' : 'secondary'}
+            disabled={!validation.overall}
             onPress={() => {
-              if (validation.overall && !isTooLong) {
+              if (validation.overall) {
                 changeHandle({handle: createFullHandle(subdomain, host)})
               }
             }}>

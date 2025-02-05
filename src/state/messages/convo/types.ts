@@ -11,6 +11,9 @@ export type ConvoParams = {
   convoId: string
   agent: BskyAgent
   events: MessagesEventBus
+  placeholderData?: {
+    convo: ChatBskyConvoDefs.ConvoView
+  }
 }
 
 export enum ConvoStatus {
@@ -142,10 +145,10 @@ type FetchMessageHistory = () => Promise<void>
 export type ConvoStateUninitialized = {
   status: ConvoStatus.Uninitialized
   items: []
-  convo: undefined
+  convo: ChatBskyConvoDefs.ConvoView | undefined
   error: undefined
-  sender: undefined
-  recipients: undefined
+  sender: AppBskyActorDefs.ProfileViewBasic | undefined
+  recipients: AppBskyActorDefs.ProfileViewBasic[] | undefined
   isFetchingHistory: false
   deleteMessage: undefined
   sendMessage: undefined
@@ -154,10 +157,10 @@ export type ConvoStateUninitialized = {
 export type ConvoStateInitializing = {
   status: ConvoStatus.Initializing
   items: []
-  convo: undefined
+  convo: ChatBskyConvoDefs.ConvoView | undefined
   error: undefined
-  sender: undefined
-  recipients: undefined
+  sender: AppBskyActorDefs.ProfileViewBasic | undefined
+  recipients: AppBskyActorDefs.ProfileViewBasic[] | undefined
   isFetchingHistory: boolean
   deleteMessage: undefined
   sendMessage: undefined

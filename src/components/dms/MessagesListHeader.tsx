@@ -1,6 +1,10 @@
 import React, {useCallback} from 'react'
 import {TouchableOpacity, View} from 'react-native'
-import {ModerationCause, ModerationDecision} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  ModerationCause,
+  ModerationDecision,
+} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -11,7 +15,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {isWeb} from '#/platform/detection'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {Shadow} from '#/state/cache/profile-shadow'
 import {isConvoActive, useConvo} from '#/state/messages/convo'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
@@ -20,26 +24,32 @@ import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/
 import {Link} from '#/components/Link'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
-import * as atp from '#/types/atproto'
 
 const PFP_SIZE = isWeb ? 40 : 34
 
 export let MessagesListHeader = ({
   profile,
   moderation,
-  blockInfo,
 }: {
-  profile?: atp.profile.AnyProfileView
+  profile?: Shadow<AppBskyActorDefs.ProfileViewBasic>
   moderation?: ModerationDecision
-  blockInfo?: {
-    listBlocks: ModerationCause[]
-    userBlock?: ModerationCause
-  }
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
+
+  const blockInfo = React.useMemo(() => {
+    if (!moderation) return
+    const modui = moderation.ui('profileView')
+    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
+    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
+    const userBlock = blocks.find(alert => alert.source.type === 'user')
+    return {
+      listBlocks,
+      userBlock,
+    }
+  }, [moderation])
 
   const onPressBack = useCallback(() => {
     if (isWeb) {
@@ -124,11 +134,11 @@ export let MessagesListHeader = ({
 MessagesListHeader = React.memo(MessagesListHeader)
 
 function HeaderReady({
-  profile: profileUnshadowed,
+  profile,
   moderation,
   blockInfo,
 }: {
-  profile: atp.profile.AnyProfileView
+  profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
   moderation: ModerationDecision
   blockInfo: {
     listBlocks: ModerationCause[]
@@ -138,7 +148,6 @@ function HeaderReady({
   const {_} = useLingui()
   const t = useTheme()
   const convoState = useConvo()
-  const profile = useProfileShadow(profileUnshadowed)
 
   const isDeletedAccount = profile?.handle === 'missing.invalid'
   const displayName = isDeletedAccount
@@ -147,6 +156,15 @@ function HeaderReady({
         profile.displayName || profile.handle,
         moderation.ui('displayName'),
       )
+
+  const latestMessageFromOther = convoState.items.findLast(
+    item => item.type === 'message' && item.message.sender.did === profile.did,
+  )
+
+  const latestReportableMessage =
+    latestMessageFromOther?.type === 'message'
+      ? latestMessageFromOther.message
+      : undefined
 
   return (
     <View style={[a.flex_1]}>
@@ -205,6 +223,7 @@ function HeaderReady({
             profile={profile}
             currentScreen="conversation"
             blockInfo={blockInfo}
+            latestReportableMessage={latestReportableMessage}
           />
         )}
       </View>

@@ -284,6 +284,7 @@ function ProfilePreview({
         size={80}
         avatar={shadow.avatar}
         moderation={moderation.ui('avatar')}
+        type={shadow.associated?.labeler ? 'labeler' : 'user'}
       />
       <ProfileHeaderDisplayName profile={shadow} moderation={moderation} />
       <ProfileHeaderHandle profile={shadow} />
@@ -414,6 +415,7 @@ function AccountRow({
             size={28}
             avatar={profile.avatar}
             moderation={moderateProfile(profile, moderationOpts).ui('avatar')}
+            type={profile.associated?.labeler ? 'labeler' : 'user'}
           />
         ) : (
           <View style={[{width: 28}]} />

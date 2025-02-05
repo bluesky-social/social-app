@@ -44,6 +44,7 @@ interface BaseUserAvatarProps {
 }
 
 interface UserAvatarProps extends BaseUserAvatarProps {
+  type: UserAvatarType
   moderation?: ModerationUI
   usePlainRNImage?: boolean
   onLoad?: () => void
@@ -440,7 +441,12 @@ let PreviewableUserAvatar = ({
           handle: profile.handle,
         })}
         onPress={onPress}>
-        <UserAvatar avatar={profile.avatar} moderation={moderation} {...rest} />
+        <UserAvatar
+          avatar={profile.avatar}
+          moderation={moderation}
+          type={profile.associated?.labeler ? 'labeler' : 'user'}
+          {...rest}
+        />
       </Link>
     </ProfileHoverCard>
   )

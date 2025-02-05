@@ -41,6 +41,7 @@ export class FeedViewPostsSlice {
   isFallbackMarker: boolean
   isOrphan: boolean
   rootUri: string
+  feedPostUri: string
 
   constructor(feedPost: FeedViewPost) {
     const {post, reply, reason} = feedPost
@@ -48,6 +49,7 @@ export class FeedViewPostsSlice {
     this.isIncompleteThread = false
     this.isFallbackMarker = false
     this.isOrphan = false
+    this.feedPostUri = post.uri
     if (AppBskyFeedDefs.isPostView(reply?.root)) {
       this.rootUri = reply.root.uri
     } else {
