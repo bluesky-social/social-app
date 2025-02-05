@@ -145,7 +145,7 @@ function MenuContent({
   blockedByListControl,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
-  profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
+  profile: Shadow<atp.profile.AnyProfileView>
   showMarkAsRead?: boolean
   blockInfo: {
     listBlocks: ModerationCause[]
