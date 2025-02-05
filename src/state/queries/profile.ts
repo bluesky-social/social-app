@@ -158,29 +158,29 @@ export function useProfileUpdateMutation() {
         )
       }
       await agent.upsertProfile(async existing => {
-        existing = existing || {}
+        let next: Un$Typed<AppBskyActorProfile.Record> = existing || {}
         if (typeof updates === 'function') {
-          existing = updates(existing)
+          next = updates(next)
         } else {
-          existing.displayName = updates.displayName
-          existing.description = updates.description
+          next.displayName = updates.displayName
+          next.description = updates.description
           if ('pinnedPost' in updates) {
-            existing.pinnedPost = updates.pinnedPost
+            next.pinnedPost = updates.pinnedPost
           }
         }
         if (newUserAvatarPromise) {
           const res = await newUserAvatarPromise
-          existing.avatar = res.data.blob
+          next.avatar = res.data.blob
         } else if (newUserAvatar === null) {
-          existing.avatar = undefined
+          next.avatar = undefined
         }
         if (newUserBannerPromise) {
           const res = await newUserBannerPromise
-          existing.banner = res.data.blob
+          next.banner = res.data.blob
         } else if (newUserBanner === null) {
-          existing.banner = undefined
+          next.banner = undefined
         }
-        return existing
+        return next
       })
       await whenAppViewReady(
         agent,
