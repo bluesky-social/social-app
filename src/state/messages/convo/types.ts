@@ -147,8 +147,8 @@ export type ConvoStateUninitialized = {
   items: []
   convo: ChatBskyConvoDefs.ConvoView | undefined
   error: undefined
-  sender: AppBskyActorDefs.ProfileViewBasic | undefined
-  recipients: AppBskyActorDefs.ProfileViewBasic[] | undefined
+  sender: ChatBskyActorDefs.ProfileViewBasic | undefined
+  recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
   isFetchingHistory: false
   deleteMessage: undefined
   sendMessage: undefined
@@ -159,8 +159,8 @@ export type ConvoStateInitializing = {
   items: []
   convo: ChatBskyConvoDefs.ConvoView | undefined
   error: undefined
-  sender: AppBskyActorDefs.ProfileViewBasic | undefined
-  recipients: AppBskyActorDefs.ProfileViewBasic[] | undefined
+  sender: ChatBskyActorDefs.ProfileViewBasic | undefined
+  recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
   isFetchingHistory: boolean
   deleteMessage: undefined
   sendMessage: undefined
