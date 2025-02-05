@@ -1,5 +1,9 @@
 import React from 'react'
-import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
+import {
+  AppBskyGraphDefs,
+  AppBskyGraphStarterpack,
+  asPredicate,
+} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg} from '@lingui/macro'
 
@@ -124,7 +128,7 @@ export function Provider({
   const createInitialState = (): State => {
     if (
       starterPack &&
-      AppBskyGraphStarterpack.isValidRecord(starterPack.record)
+      asPredicate(AppBskyGraphStarterpack.validateRecord)(starterPack.record)
     ) {
       return {
         canNext: true,
