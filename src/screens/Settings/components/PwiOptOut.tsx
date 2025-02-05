@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {$Typed, ComAtprotoLabelDefs} from '@atproto/api'
+import {$Typed, asPredicate,ComAtprotoLabelDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -33,13 +33,14 @@ export function PwiOptOut() {
       profile,
       updates: existing => {
         // create labels attr if needed
-        const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> =
-          ComAtprotoLabelDefs.isValidSelfLabels(existing.labels)
-            ? existing.labels
-            : {
-                $type: 'com.atproto.label.defs#selfLabels',
-                values: [],
-              }
+        const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = asPredicate(
+          ComAtprotoLabelDefs.validateSelfLabels,
+        )(existing.labels)
+          ? existing.labels
+          : {
+              $type: 'com.atproto.label.defs#selfLabels',
+              values: [],
+            }
 
         // toggle the label
         const hasLabel = labels.values.some(
