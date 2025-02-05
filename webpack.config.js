@@ -1,3 +1,5 @@
+const fs = require('fs')
+const path = require('path')
 const createExpoWebpackConfigAsync = require('@expo/webpack-config')
 const {withAlias} = require('@expo/webpack-config/addons')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
@@ -22,6 +24,25 @@ module.exports = async function (env, argv) {
     'react-native$': 'react-native-web',
     'react-native-webview': 'react-native-web-webview',
   })
+
+  if (process.env.ATPROTO_ROOT) {
+    const atprotoRoot = path.resolve(process.cwd(), process.env.ATPROTO_ROOT)
+    const atprotoPackages = path.join(atprotoRoot, 'packages')
+
+    config = withAlias(
+      config,
+      Object.fromEntries(
+        fs
+          .readdirSync(atprotoPackages)
+          .map(pkgName => [pkgName, path.join(atprotoPackages, pkgName)])
+          .filter(([_, pkgPath]) =>
+            fs.existsSync(path.join(pkgPath, 'package.json')),
+          )
+          .map(([pkgName, pkgPath]) => [`@atproto/${pkgName}`, pkgPath]),
+      ),
+    )
+  }
+
   config.module.rules = [
     ...(config.module.rules || []),
     reactNativeWebWebviewConfiguration,
