@@ -8,6 +8,7 @@ import {
   BskyAgent,
   ComAtprotoRepoApplyWrites,
   Facet,
+  Un$Typed,
 } from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
@@ -70,7 +71,7 @@ export function useListCreateMutation() {
         ) {
           throw new Error('Invalid list purpose: must be curatelist or modlist')
         }
-        const record: AppBskyGraphList.Record = {
+        const record: Un$Typed<AppBskyGraphList.Record> = {
           purpose,
           name,
           description,
