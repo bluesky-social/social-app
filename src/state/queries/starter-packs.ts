@@ -4,6 +4,7 @@ import {
   AppBskyGraphGetStarterPack,
   AppBskyGraphStarterpack,
   AppBskyRichtextFacet,
+  asPredicate,
   AtUri,
   BskyAgent,
   RichText,
@@ -368,7 +369,7 @@ export async function precacheStarterPack(
     starterPackView = starterPack
   } else if (
     AppBskyGraphDefs.isStarterPackViewBasic(starterPack) &&
-    AppBskyGraphStarterpack.isValidRecord(starterPack.record)
+    asPredicate(AppBskyGraphStarterpack.validateRecord)(starterPack.record)
   ) {
     const listView: AppBskyGraphDefs.ListViewBasic = {
       uri: starterPack.record.list,
