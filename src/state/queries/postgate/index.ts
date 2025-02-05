@@ -4,6 +4,7 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPostgate,
+  asPredicate,
   AtUri,
   BskyAgent,
 } from '@atproto/api'
@@ -60,7 +61,10 @@ export async function getPostgateRecord({
         }),
     )
 
-    if (data.value && AppBskyFeedPostgate.isValidRecord(data.value)) {
+    if (
+      data.value &&
+      asPredicate(AppBskyFeedPostgate.validateRecord)(data.value)
+    ) {
       return data.value
     } else {
       return undefined
