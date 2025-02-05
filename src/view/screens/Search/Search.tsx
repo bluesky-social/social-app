@@ -513,7 +513,7 @@ let SearchScreenInner = ({
         ),
       },
       noParams && {
-        title: _(msg`People`),
+        title: _(msg`Accounts`),
         component: (
           <SearchScreenUserResults query={query} active={activeTab === 2} />
         ),
