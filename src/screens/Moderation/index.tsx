@@ -206,7 +206,7 @@ export function ModerationScreenInner({
           to="/moderation/interaction-settings">
           {state => (
             <SubItem
-              title={_(msg`Interaction Settings`)}
+              title={_(msg`Interaction settings`)}
               icon={EditBig}
               style={[
                 (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
