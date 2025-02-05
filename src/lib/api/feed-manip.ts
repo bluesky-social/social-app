@@ -4,6 +4,7 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  asPredicate,
 } from '@atproto/api'
 
 import {isPostInLanguage} from '../../locale/helpers'
@@ -65,7 +66,10 @@ export class FeedViewPostsSlice {
       this.isFallbackMarker = true
       return
     }
-    if (!AppBskyFeedPost.isValidRecord(post.record)) {
+    if (
+      !AppBskyFeedPost.isRecord(post.record) ||
+      !asPredicate(AppBskyFeedPost.validateRecord)(post.record)
+    ) {
       return
     }
     const parent = reply?.parent
@@ -95,7 +99,8 @@ export class FeedViewPostsSlice {
     }
     if (
       !AppBskyFeedDefs.isPostView(parent) ||
-      !AppBskyFeedPost.isValidRecord(parent.record)
+      !AppBskyFeedPost.isRecord(parent.record) ||
+      !asPredicate(AppBskyFeedPost.validateRecord)(parent.record)
     ) {
       this.isOrphan = true
       return
@@ -136,7 +141,8 @@ export class FeedViewPostsSlice {
     }
     if (
       !AppBskyFeedDefs.isPostView(root) ||
-      !AppBskyFeedPost.isValidRecord(root.record)
+      !AppBskyFeedPost.isRecord(root.record) ||
+      !asPredicate(AppBskyFeedPost.validateRecord)(root.record)
     ) {
       this.isOrphan = true
       return
