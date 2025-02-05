@@ -2,34 +2,24 @@ import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {AppBskyFeedDefs, AppBskyFeedPostgate, AtUri} from '@atproto/api'
 
 import {logger} from '#/logger'
-import {useAgent, useSession} from '#/state/session'
-import {atoms as a, useGutters} from '#/alf'
-import {PostInteractionSettingsForm} from '#/components/dialogs/PostInteractionSettingsDialog'
-import * as Layout from '#/components/Layout'
-import {Admonition} from '#/components/Admonition'
+import {usePostInteractionSettingsMutation} from '#/state/queries/post-interaction-settings'
+import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {
-  createPostgateQueryKey,
-  getPostgateRecord,
-  usePostgateQuery,
-  useWritePostgateMutation,
-} from '#/state/queries/postgate'
+  usePreferencesQuery,
+  UsePreferencesQueryResponse,
+} from '#/state/queries/preferences'
 import {
-  createPostgateRecord,
-  embeddingRules,
-} from '#/state/queries/postgate/util'
-import {
-  createThreadgateViewQueryKey,
-  getThreadgateView,
   ThreadgateAllowUISetting,
-  threadgateViewToAllowUISetting,
-  useSetThreadgateAllowMutation,
-  useThreadgateViewQuery,
+  threadgateAllowUISettingToAllowRecordValue,
   threadgateRecordToAllowUISetting,
 } from '#/state/queries/threadgate'
-import {usePreferencesQuery, UsePreferencesQueryResponse} from '#/state/queries/preferences'
+import * as Toast from '#/view/com/util/Toast'
+import {atoms as a, useGutters} from '#/alf'
+import {Admonition} from '#/components/Admonition'
+import {PostInteractionSettingsForm} from '#/components/dialogs/PostInteractionSettingsDialog'
+import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 
 export function Screen() {
@@ -58,7 +48,7 @@ export function Screen() {
             <Inner preferences={preferences} />
           ) : (
             <View style={[gutters, a.justify_center, a.align_center]}>
-              <Loader size='xl' />
+              <Loader size="xl" />
             </View>
           )}
         </View>
@@ -69,63 +59,59 @@ export function Screen() {
 
 function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
   const {_} = useLingui()
-  const {currentAccount} = useSession()
-  const [isSaving, setIsSaving] = React.useState(false)
-  console.log(preferences)
+  const {mutateAsync: setPostInteractionSettings, isPending} =
+    usePostInteractionSettingsMutation()
+  const [error, setError] = React.useState<string | undefined>(undefined)
 
   const [postgate, setPostgate] = React.useState(() => {
     return createPostgateRecord({
       post: '',
-      embeddingRules: preferences.postInteractionSettings.postgateEmbeddingRules
+      embeddingRules:
+        preferences.postInteractionSettings.postgateEmbeddingRules,
     })
   })
-  const [allowUISettings, setAllowUISettings] = React.useState<ThreadgateAllowUISetting[]>(() => {
+  const [allowUISettings, setAllowUISettings] = React.useState<
+    ThreadgateAllowUISetting[]
+  >(() => {
     return threadgateRecordToAllowUISetting({
       $type: 'app.bsky.feed.threadgate',
       post: '',
       createdAt: new Date().toString(),
-      allow: preferences.postInteractionSettings.threadgateAllowRules
+      allow: preferences.postInteractionSettings.threadgateAllowRules,
     })
   })
 
   const onSave = React.useCallback(async () => {
-    setIsSaving(true)
+    setError('')
 
     try {
-      const requests = []
-
-      if (postgate) {
-        // TODO
-      }
-
-      if (allowUISettings) {
-        // TODO
-      }
+      await setPostInteractionSettings({
+        threadgateAllowRules:
+          threadgateAllowUISettingToAllowRecordValue(allowUISettings),
+        postgateEmbeddingRules: postgate.embeddingRules ?? [],
+      })
+      Toast.show(_(msg`Settings saved`))
     } catch (e: any) {
       logger.error(`Failed to save post interaction settings`, {
         context: 'PostInteractionSettingsDialogControlledInner',
         safeMessage: e.message,
       })
-    } finally {
-      setIsSaving(false)
+      setError(_(msg`Failed to save settings. Please try again.`))
     }
-  }, [
-    _,
-    postgate,
-    allowUISettings,
-    setIsSaving,
-  ])
+  }, [_, postgate, allowUISettings, setPostInteractionSettings])
 
   return (
     <>
       <PostInteractionSettingsForm
-        isSaving={isSaving}
+        isSaving={isPending}
         onSave={onSave}
         postgate={postgate}
         onChangePostgate={setPostgate}
         threadgateAllowUISettings={allowUISettings}
         onChangeThreadgateAllowUISettings={setAllowUISettings}
       />
+
+      {error && <Admonition type="error">{error}</Admonition>}
     </>
   )
 }
