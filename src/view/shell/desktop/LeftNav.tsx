@@ -33,7 +33,7 @@ import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps} from '#/components/Dialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
@@ -235,7 +235,10 @@ function SwitchMenuItems({
     closeEverything()
   }
   return (
-    <Menu.Outer>
+    <Menu.Outer
+      // HACKFIX: Currently there is no height limit for Radix dropdowns,
+      // so if it's too tall it just goes off screen. TODO: fix internally -sfn
+      style={web({maxHeight: '70vh'})}>
       {accounts && accounts.length > 0 && (
         <>
           <Menu.Group>
