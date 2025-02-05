@@ -21,6 +21,7 @@ import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
 import {buildStateObject} from '#/lib/routes/helpers'
 import {
   AllNavigatorParams,
+  BookmarksTabNavigatorParams,
   BottomTabNavigatorParams,
   FlatNavigatorParams,
   HomeTabNavigatorParams,
@@ -40,6 +41,7 @@ import {
   shouldRequestEmailConfirmation,
   snoozeEmailConfirmationPrompt,
 } from '#/state/shell/reminders'
+import {BookmarksScreen} from '#/view/screens/Bookmarks'
 import {CommunityGuidelinesScreen} from '#/view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from '#/view/screens/CopyrightPolicy'
 import {DebugModScreen} from '#/view/screens/DebugMod'
@@ -109,6 +111,8 @@ const HomeTab = createNativeStackNavigatorWithAuth<HomeTabNavigatorParams>()
 const SearchTab = createNativeStackNavigatorWithAuth<SearchTabNavigatorParams>()
 const NotificationsTab =
   createNativeStackNavigatorWithAuth<NotificationsTabNavigatorParams>()
+const BookmarksTab =
+  createNativeStackNavigatorWithAuth<BookmarksTabNavigatorParams>()
 const MyProfileTab =
   createNativeStackNavigatorWithAuth<MyProfileTabNavigatorParams>()
 const MessagesTab =
@@ -129,6 +133,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="NotFound"
         getComponent={() => NotFoundScreen}
         options={{title: title(msg`Not Found`)}}
+      />
+      <Stack.Screen
+        name="Bookmarks"
+        getComponent={() => BookmarksScreen}
+        options={{title: title(msg`Bookmarks`), requireAuth: true}}
       />
       <Stack.Screen
         name="Lists"
@@ -460,6 +469,10 @@ function TabsNavigator() {
         getComponent={() => NotificationsTabNavigator}
       />
       <Tab.Screen
+        name="BookmarksTab"
+        getComponent={() => BookmarksTabNavigator}
+      />
+      <Tab.Screen
         name="MyProfileTab"
         getComponent={() => MyProfileTabNavigator}
       />
@@ -525,6 +538,27 @@ function NotificationsTabNavigator() {
       />
       {commonScreens(NotificationsTab as typeof HomeTab)}
     </NotificationsTab.Navigator>
+  )
+}
+
+function BookmarksTabNavigator() {
+  const t = useTheme()
+  return (
+    <BookmarksTab.Navigator
+      screenOptions={{
+        animationDuration: 285,
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
+        headerShown: false,
+        contentStyle: t.atoms.bg,
+      }}>
+      <BookmarksTab.Screen
+        name="Bookmarks"
+        getComponent={() => BookmarksScreen}
+        options={{requireAuth: true}}
+      />
+      {commonScreens(BookmarksTab as typeof HomeTab)}
+    </BookmarksTab.Navigator>
   )
 }
 

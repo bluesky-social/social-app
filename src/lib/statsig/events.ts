@@ -138,6 +138,12 @@ export type LogEvents = {
     postClout: number | undefined
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   }
+  'post:bookmark': {
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+  }
+  'post:unbookmark': {
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+  }
   'post:repost': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   }

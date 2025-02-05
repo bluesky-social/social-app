@@ -16,6 +16,7 @@ import {
 } from '@atproto/api'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {IS_INTERNAL} from '#/lib/app-info'
 import {POST_CTRL_HITSLOP} from '#/lib/constants'
@@ -28,6 +29,15 @@ import {useGate} from '#/lib/statsig/statsig'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {usePostBookmarkMutationQueue} from '#/state/queries/bookmark'
+import {
+  addBookmark,
+  getBookmarkUri,
+  invalidate,
+  removeBookmark,
+  RQKEY,
+  useMyBookmarksQuery,
+} from '#/state/queries/my-bookmarks'
 import {
   usePostLikeMutationQueue,
   usePostRepostMutationQueue,
@@ -47,6 +57,7 @@ import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {formatCount} from '../numeric/format'
 import {Text} from '../text/Text'
 import * as Toast from '../Toast'
+import {BookmarkButton} from './BookmarkButton'
 import {RepostButton} from './RepostButton'
 
 let PostCtrls = ({
@@ -72,17 +83,23 @@ let PostCtrls = ({
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
+  const {isFetching} = useMyBookmarksQuery()
   const t = useTheme()
   const {_, i18n} = useLingui()
   const {openComposer} = useComposerControls()
   const {currentAccount} = useSession()
   const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, logContext)
+  const [queueBookmark, unQueueBookmark] = usePostBookmarkMutationQueue(
+    post,
+    logContext,
+  )
   const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(
     post,
     logContext,
   )
   const requireAuth = useRequireAuth()
   const loggedOutWarningPromptControl = useDialogControl()
+  const queryClient = useQueryClient()
   const {sendInteraction} = useFeedFeedbackContext()
   const {captureAction} = useProgressGuideControls()
   const playHaptic = useHaptics()
@@ -150,6 +167,59 @@ let PostCtrls = ({
     captureAction,
     feedContext,
     isBlocked,
+  ])
+
+  const bookmarkUri = getBookmarkUri(post.uri) // Fetches the bookmark URI for the post
+  const [hasBookmarkIconBeenToggled, setHasBookmarkIconBeenToggled] =
+    React.useState(bookmarkUri !== undefined)
+
+  // Update the state when bookmarkUri or isFetching changes
+  React.useEffect(() => {
+    if (!isFetching) {
+      const b = getBookmarkUri(post.uri)
+      setHasBookmarkIconBeenToggled(b !== undefined)
+    }
+  }, [bookmarkUri, isFetching, post.uri])
+
+  const onPressToggleBookmark = React.useCallback(async () => {
+    if (isBlocked) {
+      Toast.show(
+        _(msg`Cannot interact with a blocked user`),
+        'exclamation-circle',
+      )
+      return
+    }
+
+    try {
+      const hasBeenToggled = hasBookmarkIconBeenToggled
+      setHasBookmarkIconBeenToggled(!hasBookmarkIconBeenToggled)
+
+      if (hasBeenToggled) {
+        unQueueBookmark()
+        removeBookmark(post.uri)
+        invalidate(queryClient)
+        queryClient.invalidateQueries({queryKey: RQKEY()})
+      } else {
+        playHaptic('Light')
+        const newBookmarkUri = await queueBookmark()
+        addBookmark(post.uri, newBookmarkUri ?? '')
+        invalidate(queryClient)
+        queryClient.invalidateQueries({queryKey: RQKEY()})
+      }
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') {
+        throw e
+      }
+    }
+  }, [
+    isBlocked,
+    _,
+    hasBookmarkIconBeenToggled,
+    unQueueBookmark,
+    post.uri,
+    queryClient,
+    playHaptic,
+    queueBookmark,
   ])
 
   const onRepost = useCallback(async () => {
@@ -291,6 +361,13 @@ let PostCtrls = ({
           onQuote={onQuote}
           big={big}
           embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
+        />
+      </View>
+      <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
+        <BookmarkButton
+          isBookmarked={hasBookmarkIconBeenToggled}
+          onBookmark={onPressToggleBookmark}
+          big={big}
         />
       </View>
       <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
