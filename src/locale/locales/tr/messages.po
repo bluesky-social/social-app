@@ -1,17 +1,22 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-11-05 16:01-0800\n"
-"PO-Revision-Date: 2024-11-16 01:00+0300\n"
-"Last-Translator: mertssmnoglu\n"
-"Language-Team: atiksoftware,mertssmnoglu\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: \n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: @lingui/cli\n"
+"Language: tr\n"
+"Project-Id-Version: bluesky-social\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2025-02-05 20:24\n"
+"Last-Translator: \n"
+"Language-Team: Turkish\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: bluesky-social\n"
+"X-Crowdin-Project-ID: 664276\n"
+"X-Crowdin-Language: tr\n"
+"X-Crowdin-File: /main/src/locale/locales/en/messages.po\n"
+"X-Crowdin-File-ID: 12\n"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:567
 msgid "(active)"
@@ -47,20 +52,8 @@ msgstr ""
 msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr "{0, plural, one {# saat} other {# saat}}"
 
-#: src/view/shell/desktop/RightNav.tsx:168
-#~ msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
-#~ msgstr "{0, plural, one {# davet kodu mevcut} other {# davet kodları mevcut}}"
-
-#: src/components/moderation/LabelsOnMe.tsx:55
-#~ msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
-#~ msgstr ""
-
 #: src/components/moderation/LabelsOnMe.tsx:53
 #~ msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
-#~ msgstr ""
-
-#: src/components/moderation/LabelsOnMe.tsx:61
-#~ msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
 #~ msgstr ""
 
 #: src/components/moderation/LabelsOnMe.tsx:59
@@ -98,10 +91,6 @@ msgstr ""
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
 msgstr ""
-
-#: src/components/KnownFollowers.tsx:179
-#~ msgid "{0, plural, one {and # other} other {and # others}}"
-#~ msgstr ""
 
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:22
@@ -148,7 +137,7 @@ msgstr ""
 
 #: src/screens/Settings/Settings.tsx:422
 msgid "{0}"
-msgstr "{0}"
+msgstr ""
 
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
@@ -175,10 +164,6 @@ msgstr "{0} kişi bu başlangıç paketini kullandı!"
 #: src/view/shell/bottom-bar/BottomBar.tsx:208
 msgid "{0} unread items"
 msgstr "{0} okunmamış mesaj"
-
-#: src/view/screens/ProfileList.tsx:286
-#~ msgid "{0} your feeds"
-#~ msgstr ""
 
 #: src/view/com/util/UserAvatar.tsx:435
 msgid "{0}'s avatar"
@@ -219,7 +204,7 @@ msgstr "{0}sn"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
 #~ msgid "{badge} unread items"
-#~ msgstr "{badge} okunmamış öğe"
+#~ msgstr ""
 
 #: src/components/LabelingServiceCard/index.tsx:96
 #~ msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -228,26 +213,6 @@ msgstr "{0}sn"
 #: src/view/shell/desktop/LeftNav.tsx:189
 msgid "{count} unread items"
 msgstr "{count} okunmamış öğe"
-
-#: src/lib/hooks/useTimeAgo.ts:69
-#~ msgid "{diff, plural, one {day} other {days}}"
-#~ msgstr ""
-
-#: src/lib/hooks/useTimeAgo.ts:64
-#~ msgid "{diff, plural, one {hour} other {hours}}"
-#~ msgstr ""
-
-#: src/lib/hooks/useTimeAgo.ts:59
-#~ msgid "{diff, plural, one {minute} other {minutes}}"
-#~ msgstr ""
-
-#: src/lib/hooks/useTimeAgo.ts:75
-#~ msgid "{diff, plural, one {month} other {months}}"
-#~ msgstr ""
-
-#: src/lib/hooks/useTimeAgo.ts:54
-#~ msgid "{diffSeconds, plural, one {second} other {seconds}}"
-#~ msgstr ""
 
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:178
@@ -359,18 +324,6 @@ msgstr "{following} takip ediliyor"
 msgid "{handle} can't be messaged"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:151
-#~ msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
-#~ msgstr "{invitesAvailable, plural, one {Davet kodları: # mevcut} other {Davet kodları: # mevcut}}"
-
-#: src/view/screens/Settings.tsx:NaN
-#~ msgid "{invitesAvailable} invite code available"
-#~ msgstr "{invitesAvailable} davet kodu mevcut"
-
-#: src/view/screens/Settings.tsx:NaN
-#~ msgid "{invitesAvailable} invite codes available"
-#~ msgstr "{invitesAvailable} davet kodları mevcut"
-
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:294
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:307
 #: src/view/screens/ProfileFeed.tsx:591
@@ -397,18 +350,6 @@ msgstr "{profileName} Bluesky'a {0} önce katıldı"
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
 msgstr "{profileName} Bluesky'a başlangıç paketi kullanarak {0} önce katıldı"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:67
-#~ msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
-#~ msgstr ""
-
-#: src/components/WhoCanReply.tsx:296
-#~ msgid "<0/> members"
-#~ msgstr "<0/> üyeleri"
-
-#: src/screens/StarterPack/Wizard/index.tsx:485
-#~ msgid "<0>{0} </0>and<1> </1><2>{1} </2>are included in your starter pack"
-#~ msgstr ""
-
 #: src/screens/StarterPack/Wizard/index.tsx:449
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
@@ -418,10 +359,6 @@ msgstr ""
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr ""
-
-#: src/screens/StarterPack/Wizard/index.tsx:497
-#~ msgid "<0>{0}, </0><1>{1}, </1>and {2} {3, plural, one {other} other {others}} are included in your starter pack"
-#~ msgstr ""
 
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
@@ -435,10 +372,6 @@ msgstr ""
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:96
-#~ msgid "<0>{0}</0> following"
-#~ msgstr ""
-
 #: src/screens/StarterPack/Wizard/index.tsx:483
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr ""
@@ -451,34 +384,9 @@ msgstr ""
 msgid "<0>{date}</0> at {time}"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.web.tsx:437
-#~ msgid "<0>{followers} </0><1>{pluralizedFollowers}</1>"
-#~ msgstr ""
-
-#: src/components/ProfileHoverCard/index.web.tsx:449
-#: src/screens/Profile/Header/Metrics.tsx:45
-#~ msgid "<0>{following} </0><1>following</1>"
-#~ msgstr "<0>{following} </0><1>takip ediliyor</1>"
-
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:31
-#~ msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
-#~ msgstr "<0>Önerilen</0><1>Feeds</1><2>Seç</2>"
-
 #: src/screens/Settings/NotificationSettings.tsx:85
 msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
 msgstr ""
-
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:38
-#~ msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
-#~ msgstr "<0>Önerilen</0><1>Kullanıcıları Takip Et</1><2>Seç</2>"
-
-#: src/view/com/modals/SelfLabel.tsx:135
-#~ msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
-#~ msgstr ""
-
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:21
-#~ msgid "<0>Welcome to</0><1>Bluesky</1>"
-#~ msgstr "<0>Bluesky'e</0><1>Hoşgeldiniz</1>"
 
 #: src/screens/StarterPack/Wizard/index.tsx:440
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
@@ -504,18 +412,6 @@ msgstr "30 gün"
 msgid "7 days"
 msgstr "7 gün"
 
-#: src/view/com/util/moderation/LabelInfo.tsx:45
-#~ msgid "A content warning has been applied to this {0}."
-#~ msgstr "Bu {0} için bir içerik uyarısı uygulandı."
-
-#: src/tours/Tooltip.tsx:70
-#~ msgid "A help tooltip"
-#~ msgstr ""
-
-#: src/lib/hooks/useOTAUpdate.ts:16
-#~ msgid "A new version of the app is available. Please update to continue using the app."
-#~ msgstr "Uygulamanın yeni bir sürümü mevcut. Devam etmek için güncelleyin."
-
 #: src/Navigation.tsx:363
 #: src/screens/Settings/AboutSettings.tsx:28
 #: src/screens/Settings/Settings.tsx:215
@@ -529,7 +425,7 @@ msgstr "Gezinme bağlantılarına ve ayarlara erişin"
 
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:56
 #~ msgid "Access profile and other navigation links"
-#~ msgstr "Profil ve diğer gezinme bağlantılarına erişin"
+#~ msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:46
 #: src/screens/Settings/Settings.tsx:191
@@ -544,10 +440,6 @@ msgstr "Erişilebilirlik"
 #: src/Navigation.tsx:323
 msgid "Accessibility Settings"
 msgstr "Erişilebilirlik Ayarları"
-
-#: src/components/moderation/LabelsOnMe.tsx:42
-#~ msgid "account"
-#~ msgstr ""
 
 #: src/Navigation.tsx:339
 #: src/screens/Login/LoginForm.tsx:178
@@ -639,10 +531,6 @@ msgstr "Hesap ekle"
 msgid "Add alt text"
 msgstr "Alternatif metin ekle"
 
-#: src/view/com/composer/GifAltText.tsx:175
-#~ msgid "Add ALT text"
-#~ msgstr ""
-
 #: src/view/com/composer/videos/SubtitleDialog.tsx:107
 msgid "Add alt text (optional)"
 msgstr "Alternatif metin ekle (isteğe bağlı)"
@@ -666,23 +554,6 @@ msgstr "Uygulama şifresi ekle"
 msgid "Add App Password"
 msgstr "Uygulama Şifresi Ekle"
 
-#: src/view/com/modals/report/InputIssueDetails.tsx:41
-#: src/view/com/modals/report/Modal.tsx:191
-#~ msgid "Add details"
-#~ msgstr "Detaylar ekle"
-
-#: src/view/com/modals/report/Modal.tsx:194
-#~ msgid "Add details to report"
-#~ msgstr "Rapor için detaylar ekleyin"
-
-#: src/view/com/composer/Composer.tsx:467
-#~ msgid "Add link card"
-#~ msgstr "Bağlantı kartı ekle"
-
-#: src/view/com/composer/Composer.tsx:472
-#~ msgid "Add link card:"
-#~ msgstr "Bağlantı kartı ekle:"
-
 #: src/components/dialogs/MutedWords.tsx:321
 msgid "Add mute word for configured settings"
 msgstr ""
@@ -699,10 +570,6 @@ msgstr "Yeni gönderi ekle"
 #: src/view/screens/ProfileList.tsx:921
 msgid "Add people"
 msgstr ""
-
-#: src/screens/StarterPack/Wizard/index.tsx:197
-#~ msgid "Add people to your starter pack that you think others will enjoy following"
-#~ msgstr ""
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
@@ -733,10 +600,6 @@ msgstr "Listelere Ekle"
 msgid "Add to my feeds"
 msgstr "Beslemelerime ekle"
 
-#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:139
-#~ msgid "Added"
-#~ msgstr "Eklendi"
-
 #: src/view/com/modals/ListAddRemoveUsers.tsx:192
 #: src/view/com/modals/UserAddRemoveLists.tsx:162
 msgid "Added to list"
@@ -745,10 +608,6 @@ msgstr "Listeye eklendi"
 #: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Added to my feeds"
 msgstr "Beslemelerime eklendi"
-
-#: src/view/screens/PreferencesFollowingFeed.tsx:171
-#~ msgid "Adjust the number of likes a reply must have to be shown in your feed."
-#~ msgstr "Bir yanıtın beslemenizde gösterilmesi için sahip olması gereken beğeni sayısını ayarlayın."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:160
 msgid "Adult"
@@ -760,10 +619,6 @@ msgstr ""
 #: src/view/com/composer/labels/LabelsBtn.tsx:128
 msgid "Adult Content"
 msgstr "Yetişkin İçerik"
-
-#: src/view/com/modals/ContentFilteringSettings.tsx:137
-#~ msgid "Adult content can only be enabled via the Web at <0/>."
-#~ msgstr "Yetişkin içeriği yalnızca Web üzerinden <0/> etkinleştirilebilir."
 
 #: src/screens/Moderation/index.tsx:339
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
@@ -784,7 +639,7 @@ msgstr "Gelişmiş"
 
 #: src/state/shell/progress-guide.tsx:171
 #~ msgid "Algorithm training complete!"
-#~ msgstr "Algoritma eğitimi tamamlandı!"
+#~ msgstr ""
 
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
@@ -802,11 +657,6 @@ msgstr ""
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:153
 msgid "Allow access to your direct messages"
 msgstr "Doğrudan mesajlarınıza erişime izin verin"
-
-#: src/screens/Messages/Settings.tsx:61
-#: src/screens/Messages/Settings.tsx:64
-#~ msgid "Allow messages from"
-#~ msgstr ""
 
 #: src/screens/Messages/Settings.tsx:70
 #: src/screens/Messages/Settings.tsx:73
@@ -838,7 +688,7 @@ msgstr "Zaten @{0} olarak oturum açıldı"
 #: src/view/com/composer/photos/Gallery.tsx:187
 #: src/view/com/util/post-embeds/GifEmbed.tsx:186
 msgid "ALT"
-msgstr "ALT"
+msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:56
 #: src/view/com/composer/GifAltText.tsx:154
@@ -879,10 +729,6 @@ msgstr "E-posta gönderildi! Lütfen e-postanızda yer alan onay kodunu girin."
 msgid "An error has occurred"
 msgstr "Bir hata oluştu"
 
-#: src/components/dialogs/GifSelect.tsx:252
-#~ msgid "An error occured"
-#~ msgstr ""
-
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:420
 msgid "An error occurred"
 msgstr "Bir hata oluştu"
@@ -903,14 +749,6 @@ msgstr "Video yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin."
 msgid "An error occurred while loading the video. Please try again."
 msgstr "Video yüklenirken bir hata oluştu. Lütfen tekrar deneyin."
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:250
-#~ msgid "An error occurred while saving the image!"
-#~ msgstr ""
-
-#: src/components/StarterPack/ShareDialog.tsx:79
-#~ msgid "An error occurred while saving the image."
-#~ msgstr ""
-
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
 msgid "An error occurred while saving the QR code!"
@@ -919,10 +757,6 @@ msgstr "QR kod kaydedilirken bir hata oluştu!"
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:81
 msgid "An error occurred while selecting the video"
 msgstr "Video seçilirken bir hata oluştu"
-
-#: src/components/dms/MessageMenu.tsx:134
-#~ msgid "An error occurred while trying to delete the message. Please try again."
-#~ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:347
 #: src/screens/StarterPack/StarterPackScreen.tsx:369
@@ -1018,7 +852,7 @@ msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:138
 #~ msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
-#~ msgstr "Uygulama Şifre adları yalnızca harfler, sayılar, boşluklar, tireler ve alt çizgiler içerebilir."
+#~ msgstr ""
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:80
 msgid "App password names must be at least 4 characters long"
@@ -1026,11 +860,11 @@ msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:103
 #~ msgid "App Password names must be at least 4 characters long."
-#~ msgstr "Uygulama Şifre adları en az 4 karakter uzunluğunda olmalıdır."
+#~ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:664
 #~ msgid "App password settings"
-#~ msgstr "Uygulama şifresi ayarları"
+#~ msgstr ""
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:63
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:66
@@ -1051,22 +885,10 @@ msgstr ""
 msgid "Appeal \"{0}\" label"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:250
-#~ msgid "Appeal content warning"
-#~ msgstr "İçerik uyarısını itiraz et"
-
-#: src/view/com/modals/AppealLabel.tsx:65
-#~ msgid "Appeal Content Warning"
-#~ msgstr "İçerik Uyarısını İtiraz Et"
-
 #: src/components/moderation/LabelsOnMeDialog.tsx:233
 #: src/screens/Messages/components/ChatDisabled.tsx:91
 msgid "Appeal submitted"
 msgstr ""
-
-#: src/components/moderation/LabelsOnMeDialog.tsx:193
-#~ msgid "Appeal submitted."
-#~ msgstr ""
 
 #: src/screens/Messages/components/ChatDisabled.tsx:51
 #: src/screens/Messages/components/ChatDisabled.tsx:53
@@ -1074,10 +896,6 @@ msgstr ""
 #: src/screens/Messages/components/ChatDisabled.tsx:101
 msgid "Appeal this decision"
 msgstr "Bu karara itiraz et"
-
-#: src/view/com/util/moderation/LabelInfo.tsx:56
-#~ msgid "Appeal this decision."
-#~ msgstr "Bu karara itiraz et."
 
 #: src/Navigation.tsx:331
 #: src/screens/Settings/AppearanceSettings.tsx:85
@@ -1108,21 +926,13 @@ msgstr ""
 msgid "Archived post"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:610
-#~ msgid "Are you sure you want delete this starter pack?"
-#~ msgstr "Bu başlangıç paketini silmek istediğinize emin misiniz?"
-
 #: src/screens/Settings/AppPasswords.tsx:209
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr ""
 
 #: src/view/screens/AppPasswords.tsx:283
 #~ msgid "Are you sure you want to delete the app password \"{name}\"?"
-#~ msgstr "\"{name}\" uygulama şifresini silmek istediğinizden emin misiniz?"
-
-#: src/components/dms/MessageMenu.tsx:123
-#~ msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for other participants."
-#~ msgstr "Bu mesajı silmek istediğinize emin misiniz? Mesajınız sizin için silinecektir, ancak diğer katılımcılar için silinmeyecektir."
+#~ msgstr ""
 
 #: src/components/dms/MessageMenu.tsx:149
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
@@ -1135,10 +945,6 @@ msgstr "Bu başlangıç paketini silmek istediğinize emin misiniz?"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:82
 msgid "Are you sure you want to discard your changes?"
 msgstr ""
-
-#: src/components/dms/ConvoMenu.tsx:189
-#~ msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for other participants."
-#~ msgstr "Bu görüşmeden ayrılmak istediğinize emin misiniz? Mesajlarınız sizin için silinecektir, ancak diğer katılımcılar için silinmeyecektir."
 
 #: src/components/dms/LeaveConvoPrompt.tsx:47
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
@@ -1163,10 +969,6 @@ msgstr ""
 #: src/components/dialogs/MutedWords.tsx:433
 msgid "Are you sure?"
 msgstr "Emin misiniz?"
-
-#: src/view/com/util/forms/PostDropdownBtn.tsx:233
-#~ msgid "Are you sure? This cannot be undone."
-#~ msgstr "Emin misiniz? Bu geri alınamaz."
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:61
 msgid "Are you writing in <0>{0}</0>?"
@@ -1213,18 +1015,9 @@ msgstr "Videoları ve GIFleri otomatik oynat"
 msgid "Back"
 msgstr "Geri"
 
-#: src/view/com/post-thread/PostThread.tsx:421
-#~ msgctxt "action"
-#~ msgid "Back"
-#~ msgstr "Geri"
-
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:144
-#~ msgid "Based on your interest in {interestsText}"
-#~ msgstr "{interestsText} ilginize dayalı"
-
 #: src/view/screens/Settings/index.tsx:442
 #~ msgid "Basics"
-#~ msgstr "Temel"
+#~ msgstr ""
 
 #: src/view/screens/Lists.tsx:81
 #: src/view/screens/ModerationModlists.tsx:81
@@ -1256,7 +1049,7 @@ msgstr "Doğum günü"
 
 #: src/view/screens/Settings/index.tsx:348
 #~ msgid "Birthday:"
-#~ msgstr "Doğum günü:"
+#~ msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
 #: src/view/com/profile/ProfileMenu.tsx:341
@@ -1292,10 +1085,6 @@ msgstr "Listeyi engelle"
 #: src/view/screens/ProfileList.tsx:755
 msgid "Block these accounts?"
 msgstr "Bu hesapları engelle?"
-
-#: src/view/screens/ProfileList.tsx:319
-#~ msgid "Block this List"
-#~ msgstr "Bu Listeyi Engelle"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:83
 msgid "Blocked"
@@ -1337,20 +1126,16 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.web.tsx:173
 msgid "Blog"
-msgstr "Blog"
+msgstr ""
 
 #: src/view/com/auth/server-input/index.tsx:86
 #: src/view/com/auth/server-input/index.tsx:88
 msgid "Bluesky"
-msgstr "Bluesky"
+msgstr ""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:859
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
-
-#: src/view/com/auth/server-input/index.tsx:154
-#~ msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
-#~ msgstr ""
 
 #: src/view/com/auth/server-input/index.tsx:151
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
@@ -1361,29 +1146,6 @@ msgstr "Bluesky, barındırma sağlayıcınızı seçebileceğiniz açık bir a�
 msgid "Bluesky is better with friends!"
 msgstr "Bluesky arkadaşlarla daha güzel!"
 
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:82
-#~ msgid "Bluesky is flexible."
-#~ msgstr "Bluesky esnek."
-
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:69
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:71
-#~ msgid "Bluesky is open."
-#~ msgstr "Bluesky açık."
-
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:56
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:58
-#~ msgid "Bluesky is public."
-#~ msgstr "Bluesky kamusal."
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:206
-#~ msgid "Bluesky now has over 10 million users, and I was #{0}!"
-#~ msgstr ""
-
-#: src/view/com/modals/Waitlist.tsx:70
-#~ msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
-#~ msgstr "Bluesky, daha sağlıklı bir topluluk oluşturmak için davetleri kullanır. Bir daveti olan kimseyi tanımıyorsanız, bekleme listesine kaydolabilir ve yakında bir tane göndereceğiz."
-
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr "Bluesky, ağınızdaki kişilerden bir dizi önerilen hesap seçecektir."
@@ -1391,10 +1153,6 @@ msgstr "Bluesky, ağınızdaki kişilerden bir dizi önerilen hesap seçecektir.
 #: src/screens/Settings/components/PwiOptOut.tsx:92
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "Bluesky, profilinizi ve gönderilerinizi oturum açmamış kullanıcılara göstermeyecektir. Diğer uygulamalar bu isteği yerine getirmeyebilir. Bu, hesabınızı özel yapmaz."
-
-#: src/view/com/modals/ServerInput.tsx:78
-#~ msgid "Bluesky.Social"
-#~ msgstr "Bluesky.Social"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:99
 msgid "Bluesky+"
@@ -1416,10 +1174,6 @@ msgstr "Akışlardaki görüntüleri bulanıklaştır ve filtrele"
 #: src/screens/Onboarding/state.ts:96
 msgid "Books"
 msgstr "Kitaplar"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:614
-#~ msgid "Brag a little!"
-#~ msgstr ""
 
 #: src/components/FeedInterstitials.tsx:348
 msgid "Browse more accounts on the Explore page"
@@ -1458,45 +1212,25 @@ msgstr ""
 msgid "Browse topic {displayName}"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:841
-#~ msgid "Build version {0} {1}"
-#~ msgstr "Sürüm {0} {1}"
-
 #: src/view/com/auth/SplashScreen.web.tsx:168
 msgid "Business"
 msgstr "İş"
 
-#: src/view/com/modals/ServerInput.tsx:115
-#~ msgid "Button disabled. Input custom domain to proceed."
-#~ msgstr "Button devre dışı. Devam etmek için özel alan adını girin."
-
 #: src/view/com/profile/ProfileSubpageHeader.tsx:193
 #~ msgid "by —"
-#~ msgstr "tarafından —"
-
-#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:100
-#~ msgid "by {0}"
-#~ msgstr "tarafından {0}"
+#~ msgstr ""
 
 #: src/components/LabelingServiceCard/index.tsx:62
 msgid "By {0}"
 msgstr ""
 
-#: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:112
-#~ msgid "by @{0}"
-#~ msgstr ""
-
 #: src/view/com/profile/ProfileSubpageHeader.tsx:197
 #~ msgid "by <0/>"
-#~ msgstr "<0/> tarafından"
+#~ msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:447
 msgid "By <0>{0}</0>"
 msgstr ""
-
-#: src/screens/Signup/StepInfo/Policies.tsx:80
-#~ msgid "By creating an account you agree to the {els}."
-#~ msgstr ""
 
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
@@ -1512,7 +1246,7 @@ msgstr ""
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:195
 #~ msgid "by you"
-#~ msgstr "siz tarafından"
+#~ msgstr ""
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:72
 msgid "Camera"
@@ -1520,7 +1254,7 @@ msgstr "Kamera"
 
 #: src/view/com/modals/AddAppPasswords.tsx:180
 #~ msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
-#~ msgstr "Yalnızca harfler, sayılar, boşluklar, tireler ve alt çizgiler içerebilir. En az 4 karakter uzunluğunda, ancak 32 karakterden fazla olmamalıdır."
+#~ msgstr ""
 
 #: src/components/Menu/index.tsx:297
 #: src/components/Prompt.tsx:129
@@ -1567,7 +1301,7 @@ msgstr "Hesap silmeyi iptal et"
 
 #: src/view/com/modals/ChangeHandle.tsx:137
 #~ msgid "Cancel change handle"
-#~ msgstr "Kullanıcı adı değişikliğini iptal et"
+#~ msgstr ""
 
 #: src/view/com/modals/CropImage.web.tsx:94
 msgid "Cancel image crop"
@@ -1590,10 +1324,6 @@ msgstr ""
 msgid "Cancel search"
 msgstr "Aramayı iptal et"
 
-#: src/view/com/modals/Waitlist.tsx:136
-#~ msgid "Cancel waitlist signup"
-#~ msgstr "Bekleme listesi kaydını iptal et"
-
 #: src/view/com/modals/LinkWarning.tsx:106
 msgid "Cancels opening the linked website"
 msgstr ""
@@ -1613,10 +1343,6 @@ msgstr "Altyazılar (.vtt)"
 msgid "Captions & alt text"
 msgstr "Altyazılar ve alternatif metin"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:368
-#~ msgid "Celebrating {0} users"
-#~ msgstr ""
-
 #: src/screens/Settings/components/Email2FAToggle.tsx:60
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -1625,7 +1351,7 @@ msgstr "Değiştir"
 #: src/view/screens/Settings/index.tsx:342
 #~ msgctxt "action"
 #~ msgid "Change"
-#~ msgstr "Değiştir"
+#~ msgstr ""
 
 #: src/screens/Settings/AppIconSettings/index.tsx:39
 msgid "Change app icon"
@@ -1648,7 +1374,7 @@ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:685
 #~ msgid "Change handle"
-#~ msgstr "Kullanıcı adını değiştir"
+#~ msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:92
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:96
@@ -1661,7 +1387,7 @@ msgstr "E-postamı değiştir"
 
 #: src/view/screens/Settings/index.tsx:730
 #~ msgid "Change password"
-#~ msgstr "Şifre değiştir"
+#~ msgstr ""
 
 #: src/view/com/modals/ChangePassword.tsx:142
 msgid "Change Password"
@@ -1670,10 +1396,6 @@ msgstr "Şifre Değiştir"
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:74
 msgid "Change post language to {0}"
 msgstr "Gönderi dilini {0} olarak değiştir"
-
-#: src/view/screens/Settings.tsx:727
-#~ msgid "Change your Bluesky password"
-#~ msgstr "Bluesky şifrenizi değiştirin"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
@@ -1709,22 +1431,10 @@ msgstr "Mesajlaşma Ayarları"
 msgid "Chat unmuted"
 msgstr ""
 
-#: src/screens/Messages/Conversation/index.tsx:26
-#~ msgid "Chat with {chatId}"
-#~ msgstr ""
-
 #: src/screens/SignupQueued.tsx:78
 #: src/screens/SignupQueued.tsx:82
 msgid "Check my status"
 msgstr "Durumumu kontrol et"
-
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:122
-#~ msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
-#~ msgstr "Bazı önerilen beslemelere göz atın. Eklemek için + simgesine dokunun."
-
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:186
-#~ msgid "Check out some recommended users. Follow them to see similar users."
-#~ msgstr "Bazı önerilen kullanıcılara göz atın. Benzer kullanıcıları görmek için onları takip edin."
 
 #: src/screens/Login/LoginForm.tsx:285
 msgid "Check your email for a login code and enter it here."
@@ -1733,22 +1443,6 @@ msgstr "Giriş kodu için e-postanızı kontrol edin ve kodu buraya girin."
 #: src/view/com/modals/DeleteAccount.tsx:213
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "Aşağıya gireceğiniz onay kodu içeren bir e-posta için gelen kutunuzu kontrol edin:"
-
-#: src/view/com/modals/Threadgate.tsx:75
-#~ msgid "Choose \"Everybody\" or \"Nobody\""
-#~ msgstr "\"Herkes\" veya \"Hiç kimse\" seçin"
-
-#: src/screens/Onboarding/StepInterests/index.tsx:191
-#~ msgid "Choose 3 or more:"
-#~ msgstr "3 veya daha fazla seçin:"
-
-#: src/view/screens/Settings.tsx:691
-#~ msgid "Choose a new Bluesky username or create"
-#~ msgstr "Yeni bir Bluesky kullanıcı adı seçin veya oluşturun"
-
-#: src/screens/Onboarding/StepInterests/index.tsx:326
-#~ msgid "Choose at least {0} more"
-#~ msgstr "En az {0} tane daha seçin"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:372
 msgid "Choose domain verification method"
@@ -1778,23 +1472,9 @@ msgstr "Hizmet Seç"
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "Özel beslemelerinizi destekleyen algoritmaları seçin."
 
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:85
-#~ msgid "Choose the algorithms that power your experience with custom feeds."
-#~ msgstr "Özel beslemelerle deneyiminizi destekleyen algoritmaları seçin."
-
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
 msgstr "Bu rengi avatar olarak seç"
-
-#: src/components/dialogs/ThreadgateEditor.tsx:91
-#: src/components/dialogs/ThreadgateEditor.tsx:95
-#~ msgid "Choose who can reply"
-#~ msgstr ""
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:104
-#~ msgid "Choose your main feeds"
-#~ msgstr "Ana beslemelerinizi seçin"
 
 #: src/view/screens/Feeds.tsx:728
 #: src/view/screens/Search/Explore.tsx:411
@@ -1809,14 +1489,6 @@ msgstr "Şifrenizi seçin"
 msgid "Choose your username"
 msgstr "Kullanıcı adınız"
 
-#: src/view/screens/Settings/index.tsx:912
-#~ msgid "Clear all legacy storage data"
-#~ msgstr "Tüm eski depolama verilerini temizle"
-
-#: src/view/screens/Settings/index.tsx:915
-#~ msgid "Clear all legacy storage data (restart after this)"
-#~ msgstr "Tüm eski depolama verilerini temizle (bundan sonra yeniden başlat)"
-
 #: src/screens/Settings/Settings.tsx:350
 msgid "Clear all storage data"
 msgstr "Tüm depolama verilerini temizle"
@@ -1828,10 +1500,6 @@ msgstr "Tüm depolama verilerini temizle (bundan sonra yeniden başlat)"
 #: src/components/forms/SearchInput.tsx:70
 msgid "Clear search query"
 msgstr "Arama sorgusunu temizle"
-
-#: src/view/screens/Settings/index.tsx:913
-#~ msgid "Clears all legacy storage data"
-#~ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:878
 #~ msgid "Clears all storage data"
@@ -1847,19 +1515,11 @@ msgstr "buraya tıklayın"
 
 #: src/view/com/modals/DeleteAccount.tsx:217
 #~ msgid "Click here for more information."
-#~ msgstr "Daha fazla bilgi için buraya tıklayın."
-
-#: src/screens/Feeds/NoFollowingFeed.tsx:46
-#~ msgid "Click here to add one."
 #~ msgstr ""
 
 #: src/components/TagMenu/index.web.tsx:152
 msgid "Click here to open tag menu for {tag}"
 msgstr ""
-
-#: src/components/RichText.tsx:198
-#~ msgid "Click here to open tag menu for #{tag}"
-#~ msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:307
 msgid "Click to disable quote posts of this post."
@@ -1929,10 +1589,6 @@ msgstr "Resmi kapat"
 msgid "Close image viewer"
 msgstr "Resim görüntüleyiciyi kapat"
 
-#: src/components/dms/MessagesNUX.tsx:162
-#~ msgid "Close modal"
-#~ msgstr ""
-
 #: src/view/shell/index.web.tsx:69
 msgid "Close navigation footer"
 msgstr "Gezinme altbilgisini kapat"
@@ -1952,7 +1608,7 @@ msgstr "Şifre güncelleme uyarısını kapatır"
 
 #: src/view/com/composer/Composer.tsx:552
 #~ msgid "Closes post composer and discards post draft"
-#~ msgstr "Gönderi bestecisini kapatır ve gönderi taslağını siler"
+#~ msgstr ""
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:32
 msgid "Closes viewer for header image"
@@ -2009,14 +1665,6 @@ msgstr "Yanıt oluştur"
 msgid "Compressing video..."
 msgstr ""
 
-#: src/view/com/composer/videos/VideoTranscodeProgress.tsx:51
-#~ msgid "Compressing..."
-#~ msgstr ""
-
-#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:81
-#~ msgid "Configure content filtering setting for category: {0}"
-#~ msgstr "Kategori için içerik filtreleme ayarlarını yapılandır: {0}"
-
 #: src/components/moderation/LabelPreference.tsx:82
 msgid "Configure content filtering setting for category: {name}"
 msgstr ""
@@ -2037,11 +1685,6 @@ msgstr ""
 msgid "Confirm"
 msgstr "Onayla"
 
-#: src/view/com/modals/Confirm.tsx:NaN
-#~ msgctxt "action"
-#~ msgid "Confirm"
-#~ msgstr "Onayla"
-
 #: src/view/com/modals/ChangeEmail.tsx:188
 #: src/view/com/modals/ChangeEmail.tsx:190
 msgid "Confirm Change"
@@ -2054,10 +1697,6 @@ msgstr "İçerik dil ayarlarını onayla"
 #: src/view/com/modals/DeleteAccount.tsx:264
 msgid "Confirm delete account"
 msgstr "Hesabı silmeyi onayla"
-
-#: src/view/com/modals/ContentFilteringSettings.tsx:151
-#~ msgid "Confirm your age to enable adult content."
-#~ msgstr "Yetişkin içeriği etkinleştirmek için yaşınızı onaylayın."
 
 #: src/screens/Moderation/index.tsx:287
 msgid "Confirm your age:"
@@ -2082,10 +1721,6 @@ msgstr "Onay kodu"
 msgid "Confirmation Code"
 msgstr "Onay Kodu"
 
-#: src/view/com/modals/Waitlist.tsx:120
-#~ msgid "Confirms signing up {email} to the waitlist"
-#~ msgstr "{email} adresinin bekleme listesine kaydını onaylar"
-
 #: src/screens/Login/LoginForm.tsx:319
 msgid "Connecting..."
 msgstr "Bağlanıyor..."
@@ -2094,10 +1729,6 @@ msgstr "Bağlanıyor..."
 #: src/screens/Signup/index.tsx:178
 msgid "Contact support"
 msgstr "Destek ile iletişime geçin"
-
-#: src/components/moderation/LabelsOnMe.tsx:42
-#~ msgid "content"
-#~ msgstr "içerik"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:49
 msgid "Content & Media"
@@ -2116,14 +1747,6 @@ msgstr "İçerik ve Medya"
 #: src/lib/moderation/useGlobalLabelStrings.ts:18
 msgid "Content Blocked"
 msgstr ""
-
-#: src/view/screens/Moderation.tsx:81
-#~ msgid "Content filtering"
-#~ msgstr "İçerik filtreleme"
-
-#: src/view/com/modals/ContentFilteringSettings.tsx:44
-#~ msgid "Content Filtering"
-#~ msgstr "İçerik Filtreleme"
 
 #: src/screens/Moderation/index.tsx:271
 msgid "Content filters"
@@ -2173,14 +1796,6 @@ msgstr ""
 msgid "Continue to next step"
 msgstr "Sonraki adıma devam et"
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:158
-#~ msgid "Continue to the next step"
-#~ msgstr "Sonraki adıma devam et"
-
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:199
-#~ msgid "Continue to the next step without following any accounts"
-#~ msgstr "Herhangi bir hesabı takip etmeden sonraki adıma devam et"
-
 #: src/screens/Messages/components/ChatListItem.tsx:164
 msgid "Conversation deleted"
 msgstr "Görüşme silindi"
@@ -2212,7 +1827,7 @@ msgstr "Kopyalandı!"
 
 #: src/view/com/modals/AddAppPasswords.tsx:215
 #~ msgid "Copies app password"
-#~ msgstr "Uygulama şifresini kopyalar"
+#~ msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 msgid "Copy"
@@ -2260,10 +1875,6 @@ msgstr "Liste bağlantısını kopyala"
 msgid "Copy link to post"
 msgstr "Gönderi bağlantısını kopyala"
 
-#: src/view/com/profile/ProfileHeader.tsx:342
-#~ msgid "Copy link to profile"
-#~ msgstr "Profili bağlantısını kopyala"
-
 #: src/components/dms/MessageMenu.tsx:110
 #: src/components/dms/MessageMenu.tsx:112
 msgid "Copy message text"
@@ -2287,10 +1898,6 @@ msgstr "TXT kayıt değerini kopyala"
 msgid "Copyright Policy"
 msgstr "Telif Hakkı Politikası"
 
-#: src/view/com/composer/videos/state.ts:31
-#~ msgid "Could not compress video"
-#~ msgstr ""
-
 #: src/components/dms/LeaveConvoPrompt.tsx:38
 msgid "Could not leave chat"
 msgstr "Sohbetten ayrılınamadı"
@@ -2303,10 +1910,6 @@ msgstr "Besleme yüklenemedi"
 msgid "Could not load list"
 msgstr "Liste yüklenemedi"
 
-#: src/components/dms/NewChat.tsx:241
-#~ msgid "Could not load profiles. Please try again later."
-#~ msgstr ""
-
 #: src/components/dms/ConvoMenu.tsx:88
 msgid "Could not mute chat"
 msgstr "Sohbet sessize alınamadı"
@@ -2315,26 +1918,13 @@ msgstr "Sohbet sessize alınamadı"
 msgid "Could not process your video"
 msgstr "Videonuz işlenemedi"
 
-#: src/components/dms/ConvoMenu.tsx:68
-#~ msgid "Could not unmute chat"
-#~ msgstr ""
-
-#: src/view/com/auth/create/Step2.tsx:91
-#~ msgid "Country"
-#~ msgstr "Ülke"
-
 #: src/components/StarterPack/ProfileStarterPacks.tsx:290
 msgid "Create"
 msgstr "Oluştur"
 
-#: src/view/com/auth/SplashScreen.tsx:57
-#: src/view/com/auth/SplashScreen.web.tsx:106
-#~ msgid "Create a new account"
-#~ msgstr "Yeni bir hesap oluştur"
-
 #: src/view/screens/Settings/index.tsx:403
 #~ msgid "Create a new Bluesky account"
-#~ msgstr "Yeni bir Bluesky hesabı oluştur"
+#~ msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:153
 msgid "Create a QR code for a starter pack"
@@ -2353,7 +1943,7 @@ msgstr "Benim için bir başlangıç paketi oluştur"
 #: src/view/com/auth/SplashScreen.tsx:55
 #: src/view/com/auth/SplashScreen.web.tsx:117
 msgid "Create account"
-msgstr "Hesap oluştur"
+msgstr "Kaydol"
 
 #: src/screens/Signup/index.tsx:93
 msgid "Create Account"
@@ -2374,16 +1964,12 @@ msgstr "Bir tane daha oluştur"
 
 #: src/view/com/modals/AddAppPasswords.tsx:243
 #~ msgid "Create App Password"
-#~ msgstr "Uygulama Şifresi Oluştur"
+#~ msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:47
 #: src/view/com/auth/SplashScreen.web.tsx:109
 msgid "Create new account"
 msgstr "Yeni hesap oluştur"
-
-#: src/components/StarterPack/ShareDialog.tsx:158
-#~ msgid "Create QR code"
-#~ msgstr ""
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:101
 msgid "Create report for {0}"
@@ -2392,18 +1978,6 @@ msgstr ""
 #: src/screens/Settings/AppPasswords.tsx:174
 msgid "Created {0}"
 msgstr "{0} oluşturuldu"
-
-#: src/view/screens/ProfileFeed.tsx:616
-#~ msgid "Created by <0/>"
-#~ msgstr "<0/> tarafından oluşturuldu"
-
-#: src/view/screens/ProfileFeed.tsx:614
-#~ msgid "Created by you"
-#~ msgstr "Siz tarafından oluşturuldu"
-
-#: src/view/com/composer/Composer.tsx:469
-#~ msgid "Creates a card with a thumbnail. The card links to {url}"
-#~ msgstr "Küçük resimli bir kart oluşturur. Kart, {url} bağlantısına gider"
 
 #: src/screens/List/ListHiddenScreen.tsx:127
 msgid "Creator has been blocked"
@@ -2421,16 +1995,16 @@ msgstr "Özel"
 
 #: src/view/com/modals/ChangeHandle.tsx:375
 #~ msgid "Custom domain"
-#~ msgstr "Özel alan adı"
+#~ msgstr ""
 
 #: src/view/screens/Feeds.tsx:761
 #: src/view/screens/Search/Explore.tsx:391
 #~ msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-#~ msgstr "Topluluk tarafından oluşturulan özel beslemeler size yeni deneyimler sunar ve sevdiğiniz içeriği bulmanıza yardımcı olur."
+#~ msgstr ""
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:54
 #~ msgid "Customize media from external sites."
-#~ msgstr "Harici sitelerden medyayı özelleştirin."
+#~ msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:292
 msgid "Customize who can interact with this post."
@@ -2448,10 +2022,6 @@ msgstr "Karanlık mod"
 #: src/screens/Settings/AppearanceSettings.tsx:118
 msgid "Dark theme"
 msgstr "Karanlık tema"
-
-#: src/view/screens/Settings/index.tsx:473
-#~ msgid "Dark Theme"
-#~ msgstr "Karanlık Tema"
 
 #: src/screens/Signup/StepInfo/index.tsx:222
 msgid "Date of birth"
@@ -2498,10 +2068,6 @@ msgstr ""
 msgid "Delete account"
 msgstr "Hesabı sil"
 
-#: src/view/com/modals/DeleteAccount.tsx:87
-#~ msgid "Delete Account"
-#~ msgstr "Hesabı Sil"
-
 #: src/view/com/modals/DeleteAccount.tsx:101
 msgid "Delete Account <0>\"</0><1>{0}</1><2>\"</2>"
 msgstr ""
@@ -2540,7 +2106,7 @@ msgstr "Hesabımı sil"
 
 #: src/view/screens/Settings/index.tsx:807
 #~ msgid "Delete My Account…"
-#~ msgstr "Hesabımı Sil…"
+#~ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:827
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:642
@@ -2617,29 +2183,17 @@ msgstr ""
 msgid "Developer options"
 msgstr "Geliştirici seçenekleri"
 
-#: src/view/screens/Settings.tsx:760
-#~ msgid "Developer Tools"
-#~ msgstr "Geliştirici Araçları"
-
 #: src/components/WhoCanReply.tsx:175
 msgid "Dialog: adjust who can interact with this post"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:325
 #~ msgid "Did you want to say anything?"
-#~ msgstr "Bir şey söylemek istediniz mi?"
+#~ msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:122
 msgid "Dim"
 msgstr "Karart"
-
-#: src/components/dms/MessagesNUX.tsx:88
-#~ msgid "Direct messages are here!"
-#~ msgstr ""
-
-#: src/view/screens/AccessibilitySettings.tsx:111
-#~ msgid "Disable autoplay for GIFs"
-#~ msgstr "GIF'lerin otomatik oynatılmasını devre dışı bırak"
 
 #: src/view/screens/AccessibilitySettings.tsx:109
 #~ msgid "Disable autoplay for videos and GIFs"
@@ -2654,17 +2208,9 @@ msgstr ""
 msgid "Disable haptic feedback"
 msgstr "Dokunsal geri bildirimi devre dışı bırak"
 
-#: src/view/screens/Settings/index.tsx:697
-#~ msgid "Disable haptics"
-#~ msgstr "Dokunuşları devre dışı bırak"
-
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:386
 msgid "Disable subtitles"
 msgstr ""
-
-#: src/view/screens/Settings/index.tsx:697
-#~ msgid "Disable vibrations"
-#~ msgstr ""
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
@@ -2685,10 +2231,6 @@ msgstr "Sil"
 msgid "Discard changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:138
-#~ msgid "Discard draft"
-#~ msgstr "Taslağı sil"
-
 #: src/view/com/composer/Composer.tsx:678
 msgid "Discard draft?"
 msgstr ""
@@ -2701,10 +2243,6 @@ msgstr ""
 #: src/screens/Settings/components/PwiOptOut.tsx:84
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr "Uygulamaların hesabımı oturum açmamış kullanıcılara göstermesini engelle"
-
-#: src/tours/HomeTour.tsx:70
-#~ msgid "Discover learns which posts you like as you browse."
-#~ msgstr ""
 
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
@@ -2788,10 +2326,6 @@ msgstr "Kısa çizgi ile başlayamaz veya bitemez"
 msgid "Domain verified!"
 msgstr "Alan adı doğrulandı!"
 
-#: src/view/com/auth/create/Step1.tsx:114
-#~ msgid "Don't have an invite code?"
-#~ msgstr "Davet kodunuz yok mu?"
-
 #: src/components/dialogs/BirthDateSettings.tsx:118
 #: src/components/dialogs/BirthDateSettings.tsx:124
 #: src/components/forms/DateField/index.tsx:77
@@ -2828,10 +2362,6 @@ msgstr "Tamam{extraText}"
 msgid "Double tap to close the dialog"
 msgstr ""
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:45
-#~ msgid "Double tap to sign in"
-#~ msgstr "Oturum açmak için çift dokunun"
-
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:317
 msgid "Download Bluesky"
 msgstr "Bluesky'ı İndir"
@@ -2841,17 +2371,9 @@ msgstr "Bluesky'ı İndir"
 msgid "Download CAR file"
 msgstr ""
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:622
-#~ msgid "Download image"
-#~ msgstr ""
-
 #: src/view/com/composer/text-input/TextInput.web.tsx:342
 msgid "Drop to add images"
 msgstr "Resim eklemek için bırakın"
-
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:120
-#~ msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
-#~ msgstr "Apple politikaları gereği, yetişkin içeriği yalnızca kaydı tamamladıktan sonra web üzerinde etkinleştirilebilir."
 
 #: src/components/dialogs/MutedWords.tsx:153
 msgid "Duration:"
@@ -2971,11 +2493,6 @@ msgstr "Profil düzenle"
 msgid "Edit Profile"
 msgstr "Profil Düzenle"
 
-#: src/view/com/home/HomeHeaderLayout.web.tsx:76
-#: src/view/screens/Feeds.tsx:416
-#~ msgid "Edit Saved Feeds"
-#~ msgstr "Kayıtlı Beslemeleri Düzenle"
-
 #: src/screens/StarterPack/StarterPackScreen.tsx:567
 msgid "Edit starter pack"
 msgstr "Başlangıç paketini düzenle"
@@ -3004,10 +2521,6 @@ msgstr "Başlangıç paketini düzenle"
 #: src/screens/Onboarding/state.ts:101
 msgid "Education"
 msgstr "Eğitim"
-
-#: src/components/dialogs/ThreadgateEditor.tsx:98
-#~ msgid "Either choose \"Everybody\" or \"Nobody\""
-#~ msgstr ""
 
 #: src/screens/List/ListHiddenScreen.tsx:141
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
@@ -3054,7 +2567,7 @@ msgstr "E-posta Doğrulandı"
 
 #: src/view/screens/Settings/index.tsx:320
 #~ msgid "Email:"
-#~ msgstr "E-posta:"
+#~ msgstr ""
 
 #: src/components/dialogs/Embed.tsx:113
 msgid "Embed HTML code"
@@ -3087,15 +2600,6 @@ msgstr "Yalnızca {0} etkinleştir"
 msgid "Enable adult content"
 msgstr "Yetişkin içeriği etkinleştirin"
 
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:94
-#~ msgid "Enable Adult Content"
-#~ msgstr "Yetişkin İçeriği Etkinleştir"
-
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:78
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:79
-#~ msgid "Enable adult content in your feeds"
-#~ msgstr "Beslemelerinizde yetişkin içeriği etkinleştirin"
-
 #: src/screens/Settings/components/Email2FAToggle.tsx:53
 msgid "Enable Email 2FA"
 msgstr ""
@@ -3104,10 +2608,6 @@ msgstr ""
 #: src/components/dialogs/EmbedConsent.tsx:88
 msgid "Enable external media"
 msgstr "Harici medyayı etkinleştirin"
-
-#: src/view/com/modals/EmbedConsent.tsx:97
-#~ msgid "Enable External Media"
-#~ msgstr "Harici Medyayı Etkinleştir"
 
 #: src/screens/Settings/ExternalMediaPreferences.tsx:49
 msgid "Enable media players for"
@@ -3121,10 +2621,6 @@ msgstr "Öncelikli bildirimleri etkinleştirin"
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:387
 msgid "Enable subtitles"
 msgstr "Altyazıları etkinleştir"
-
-#: src/view/screens/PreferencesFollowingFeed.tsx:145
-#~ msgid "Enable this setting to only see replies between people you follow."
-#~ msgstr "Bu ayarı yalnızca takip ettiğiniz kişiler arasındaki yanıtları görmek için etkinleştirin."
 
 #: src/components/dialogs/EmbedConsent.tsx:93
 msgid "Enable this source only"
@@ -3145,21 +2641,13 @@ msgstr "Etkinleştirildi"
 msgid "End of feed"
 msgstr "Beslemenin sonu"
 
-#: src/components/Lists.tsx:52
-#~ msgid "End of list"
-#~ msgstr ""
-
-#: src/tours/Tooltip.tsx:159
-#~ msgid "End of onboarding tour window. Do not move forward. Instead, go backward for more options, or press to skip."
-#~ msgstr ""
-
 #: src/view/com/composer/videos/SubtitleDialog.tsx:159
 msgid "Ensure you have selected a language for each subtitle file."
 msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:161
 #~ msgid "Enter a name for this App Password"
-#~ msgstr "Bu Uygulama Şifresi için bir ad girin"
+#~ msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:133
 msgid "Enter a password"
@@ -3198,10 +2686,6 @@ msgstr "Hesabınızı oluşturmak için kullandığınız e-postayı girin. Size
 msgid "Enter your birth date"
 msgstr "Doğum tarihinizi girin"
 
-#: src/view/com/modals/Waitlist.tsx:78
-#~ msgid "Enter your email"
-#~ msgstr "E-posta adresinizi girin"
-
 #: src/screens/Login/ForgotPasswordForm.tsx:99
 #: src/screens/Signup/StepInfo/index.tsx:182
 msgid "Enter your email address"
@@ -3214,10 +2698,6 @@ msgstr "Yeni e-postanızı yukarıya girin"
 #: src/view/com/modals/ChangeEmail.tsx:112
 msgid "Enter your new email address below."
 msgstr "Yeni e-posta adresinizi aşağıya girin."
-
-#: src/view/com/auth/create/Step2.tsx:188
-#~ msgid "Enter your phone number"
-#~ msgstr "Telefon numaranızı girin"
 
 #: src/screens/Login/index.tsx:98
 msgid "Enter your username and password"
@@ -3284,7 +2764,7 @@ msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:138
 #~ msgid "Exits handle change process"
-#~ msgstr "Kullanıcı adı değişikliği sürecinden çıkar"
+#~ msgstr ""
 
 #: src/view/com/modals/CropImage.web.tsx:95
 msgid "Exits image cropping process"
@@ -3297,10 +2777,6 @@ msgstr "Resim görünümünden çıkar"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:89
 msgid "Exits inputting search query"
 msgstr "Arama sorgusu girişinden çıkar"
-
-#: src/view/com/modals/Waitlist.tsx:138
-#~ msgid "Exits signing up for waitlist with {email}"
-#~ msgstr "{email} adresiyle bekleme listesine kaydolma işleminden çıkar"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:184
 msgid "Expand alt text"
@@ -3375,7 +2851,7 @@ msgstr "Harici Medya Tercihleri"
 
 #: src/view/screens/Settings/index.tsx:637
 #~ msgid "External media settings"
-#~ msgstr "Harici medya ayarları"
+#~ msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:570
 msgid "Failed to change handle. Please try again."
@@ -3384,7 +2860,7 @@ msgstr ""
 #: src/view/com/modals/AddAppPasswords.tsx:119
 #: src/view/com/modals/AddAppPasswords.tsx:123
 #~ msgid "Failed to create app password."
-#~ msgstr "Uygulama şifresi oluşturulamadı."
+#~ msgstr ""
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:173
 msgid "Failed to create app password. Please try again."
@@ -3424,15 +2900,6 @@ msgstr "GIFler yüklenemedi"
 msgid "Failed to load past messages"
 msgstr "Eski mesajlar yüklenemedi"
 
-#: src/screens/Messages/Conversation/MessageListError.tsx:28
-#~ msgid "Failed to load past messages."
-#~ msgstr "Geçmiş mesajlar yüklenemedi."
-
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:110
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:143
-#~ msgid "Failed to load recommended feeds"
-#~ msgstr "Önerilen beslemeler yüklenemedi"
-
 #: src/view/screens/Search/Explore.tsx:440
 #: src/view/screens/Search/Explore.tsx:468
 msgid "Failed to load suggested feeds"
@@ -3454,13 +2921,14 @@ msgstr "Görsel kaydedilemedi: {0}"
 msgid "Failed to save notification preferences, please try again"
 msgstr "Bildirim tercihleri kaydedilemedi, lütfen tekrar deneyin"
 
+#: src/lib/api/index.ts:145
+#: src/lib/api/index.ts:170
+#~ msgid "Failed to save post interaction settings. Your post was created but users may be able to interact with it."
+#~ msgstr ""
+
 #: src/components/dms/MessageItem.tsx:234
 msgid "Failed to send"
 msgstr "Gönderilemedi"
-
-#: src/screens/Messages/Conversation/MessageListError.tsx:29
-#~ msgid "Failed to send message(s)."
-#~ msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:229
 #: src/screens/Messages/components/ChatDisabled.tsx:87
@@ -3503,14 +2971,6 @@ msgstr "{0} tarafından besleme"
 msgid "Feed menu"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:709
-#~ msgid "Feed offline"
-#~ msgstr "Besleme çevrimdışı"
-
-#: src/view/com/feeds/FeedPage.tsx:143
-#~ msgid "Feed Preferences"
-#~ msgstr "Besleme Tercihleri"
-
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:54
 msgid "Feed toggle"
 msgstr ""
@@ -3537,17 +2997,9 @@ msgstr "Geri bildirim gönderildi!"
 msgid "Feeds"
 msgstr "Beslemeler"
 
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:58
-#~ msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
-#~ msgstr "Beslemeler, içerikleri düzenlemek için kullanıcılar tarafından oluşturulur. İlginizi çeken bazı beslemeler seçin."
-
 #: src/view/screens/SavedFeeds.tsx:198
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "Beslemeler, kullanıcıların biraz kodlama uzmanlığı ile oluşturduğu özel algoritmalardır. Daha fazla bilgi için <0/>."
-
-#: src/screens/Onboarding/StepTopicalFeeds.tsx:80
-#~ msgid "Feeds can be topical as well!"
-#~ msgstr "Beslemeler aynı zamanda konusal olabilir!"
 
 #: src/components/FeedCard.tsx:272
 #: src/view/screens/SavedFeeds.tsx:82
@@ -3580,10 +3032,6 @@ msgstr "Tamamlanıyor"
 msgid "Find accounts to follow"
 msgstr "Takip edilecek hesaplar bul"
 
-#: src/tours/HomeTour.tsx:88
-#~ msgid "Find more feeds and accounts to follow in the Explore page."
-#~ msgstr ""
-
 #: src/components/ProgressGuide/FollowDialog.tsx:78
 #: src/components/ProgressGuide/FollowDialog.tsx:88
 #: src/components/ProgressGuide/FollowDialog.tsx:417
@@ -3594,54 +3042,25 @@ msgstr ""
 msgid "Find posts and users on Bluesky"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:589
-#~ msgid "Find users on Bluesky"
-#~ msgstr "Bluesky'da kullanıcı bul"
-
-#: src/view/screens/Search/Search.tsx:587
-#~ msgid "Find users with the search tool on the right"
-#~ msgstr "Sağdaki arama aracıyla kullanıcı bul"
-
-#: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:155
-#~ msgid "Finding similar accounts..."
-#~ msgstr "Benzer hesaplar bulunuyor..."
-
 #: src/view/screens/PreferencesFollowingFeed.tsx:52
 #~ msgid "Fine-tune the content you see on your Following feed."
 #~ msgstr ""
 
-#: src/view/screens/PreferencesHomeFeed.tsx:111
-#~ msgid "Fine-tune the content you see on your home screen."
-#~ msgstr "Ana ekranınızda gördüğünüz içeriği ayarlayın."
-
 #: src/view/screens/PreferencesThreads.tsx:55
 #~ msgid "Fine-tune the discussion threads."
-#~ msgstr "Tartışma konularını ayarlayın."
+#~ msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:195
 msgid "Finish"
 msgstr ""
 
-#: src/tours/Tooltip.tsx:149
-#~ msgid "Finish tour and begin using the application"
-#~ msgstr ""
-
 #: src/screens/Onboarding/index.tsx:35
 msgid "Fitness"
-msgstr "Fitness"
+msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:276
 msgid "Flexible"
 msgstr "Esnek"
-
-#: src/view/com/modals/EditImage.tsx:116
-#~ msgid "Flip horizontal"
-#~ msgstr "Yatay çevir"
-
-#: src/view/com/modals/EditImage.tsx:121
-#: src/view/com/modals/EditImage.tsx:288
-#~ msgid "Flip vertically"
-#~ msgstr "Dikey çevir"
 
 #. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:363
@@ -3685,10 +3104,6 @@ msgstr ""
 msgid "Follow all"
 msgstr "Hepsini takip et"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:187
-#~ msgid "Follow All"
-#~ msgstr "Hepsini Takip Et"
-
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:232
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:130
 msgid "Follow Back"
@@ -3702,22 +3117,6 @@ msgstr "Geri Takip Et"
 #: src/view/screens/Search/Explore.tsx:355
 msgid "Follow more accounts to get connected to your interests and build your network."
 msgstr ""
-
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
-#~ msgid "Follow selected accounts and continue to the next step"
-#~ msgstr "Seçili hesapları takip edin ve sonraki adıma devam edin"
-
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:65
-#~ msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
-#~ msgstr "Başlamak için bazı kullanıcıları takip edin. Sizi ilginç bulduğunuz kişilere dayanarak size daha fazla kullanıcı önerebiliriz."
-
-#: src/components/KnownFollowers.tsx:169
-#~ msgid "Followed by"
-#~ msgstr ""
-
-#: src/view/com/profile/ProfileCard.tsx:190
-#~ msgid "Followed by {0}"
-#~ msgstr "{0} tarafından takip ediliyor"
 
 #: src/components/KnownFollowers.tsx:231
 msgid "Followed by <0>{0}</0>"
@@ -3739,13 +3138,9 @@ msgstr ""
 msgid "Followed users"
 msgstr "Takip edilen kullanıcılar"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:152
-#~ msgid "Followed users only"
-#~ msgstr "Yalnızca takip edilen kullanıcılar"
-
 #: src/view/com/notifications/FeedItem.tsx:207
 #~ msgid "followed you"
-#~ msgstr "sizi takip etti"
+#~ msgstr ""
 
 #: src/view/com/notifications/FeedItem.tsx:205
 #~ msgid "followed you back"
@@ -3754,7 +3149,7 @@ msgstr "Takip edilen kullanıcılar"
 #: src/view/screens/ProfileFollowers.tsx:30
 #: src/view/screens/ProfileFollowers.tsx:31
 #~ msgid "Followers"
-#~ msgstr "Takipçiler"
+#~ msgstr ""
 
 #: src/Navigation.tsx:192
 msgid "Followers of @{0} that you know"
@@ -3795,10 +3190,6 @@ msgstr ""
 msgid "Following Feed Preferences"
 msgstr ""
 
-#: src/tours/HomeTour.tsx:59
-#~ msgid "Following shows the latest posts from people you follow."
-#~ msgstr ""
-
 #: src/screens/Profile/Header/Handle.tsx:32
 msgid "Follows you"
 msgstr "Sizi takip ediyor"
@@ -3830,7 +3221,7 @@ msgstr "Güvenlik nedeniyle, bunu bir daha görüntüleyemeyeceksiniz. Eğer bu 
 
 #: src/view/com/modals/AddAppPasswords.tsx:233
 #~ msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
-#~ msgstr "Güvenlik nedeniyle, bunu tekrar göremezsiniz. Bu şifreyi kaybederseniz, yeni bir tane oluşturmanız gerekecek."
+#~ msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:142
 msgid "For the best experience, we recommend using the theme font."
@@ -3839,14 +3230,6 @@ msgstr "En iyi deneyim için, tema yazı tipini kullanmanızı öneriyoruz."
 #: src/components/dialogs/MutedWords.tsx:178
 msgid "Forever"
 msgstr "Sonsuza kadar"
-
-#: src/view/com/auth/login/LoginForm.tsx:238
-#~ msgid "Forgot"
-#~ msgstr "Unuttum"
-
-#: src/view/com/auth/login/LoginForm.tsx:235
-#~ msgid "Forgot password"
-#~ msgstr "Şifremi unuttum"
 
 #: src/screens/Login/index.tsx:126
 #: src/screens/Login/index.tsx:141
@@ -3890,10 +3273,6 @@ msgstr ""
 msgid "Get help"
 msgstr "Yardım al"
 
-#: src/components/dms/MessagesNUX.tsx:168
-#~ msgid "Get started"
-#~ msgstr ""
-
 #: src/view/com/modals/VerifyEmail.tsx:197
 #: src/view/com/modals/VerifyEmail.tsx:199
 msgid "Get Started"
@@ -3905,7 +3284,7 @@ msgstr "Başlarken"
 
 #: src/components/MediaPreview.tsx:122
 msgid "GIF"
-msgstr "GIF"
+msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:234
 msgid "Give your profile a face"
@@ -3940,10 +3319,6 @@ msgstr "Geri Git"
 msgid "Go back to previous page"
 msgstr "Önceki sayfaya git"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:189
-#~ msgid "Go back to previous screen"
-#~ msgstr ""
-
 #: src/components/dms/ReportDialog.tsx:149
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
 #: src/components/ReportDialog/SubmitView.tsx:109
@@ -3965,11 +3340,6 @@ msgstr ""
 msgid "Go Home"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:827
-#: src/view/shell/desktop/Search.tsx:263
-#~ msgid "Go to @{queryMaybeHandle}"
-#~ msgstr "@{queryMaybeHandle} adresine git"
-
 #: src/screens/Messages/components/ChatListItem.tsx:264
 msgid "Go to conversation with {0}"
 msgstr ""
@@ -3982,10 +3352,6 @@ msgstr "Sonrakine git"
 #: src/components/dms/ConvoMenu.tsx:167
 msgid "Go to profile"
 msgstr ""
-
-#: src/tours/Tooltip.tsx:138
-#~ msgid "Go to the next step of the tour"
-#~ msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:164
 msgid "Go to user's profile"
@@ -4056,25 +3422,13 @@ msgstr ""
 #~ msgid "Helps external sites estimate traffic from Bluesky."
 #~ msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:140
-#~ msgid "Here are some accounts for you to follow"
-#~ msgstr "Takip etmeniz için size bazı hesaplar"
-
-#: src/screens/Onboarding/StepTopicalFeeds.tsx:89
-#~ msgid "Here are some popular topical feeds. You can choose to follow as many as you like."
-#~ msgstr "İşte bazı popüler konusal beslemeler. İstediğiniz kadar takip etmeyi seçebilirsiniz."
-
-#: src/screens/Onboarding/StepTopicalFeeds.tsx:84
-#~ msgid "Here are some topical feeds based on your interests: {interestsText}. You can choose to follow as many as you like."
-#~ msgstr "İlgi alanlarınıza dayalı olarak bazı konusal beslemeler: {interestsText}. İstediğiniz kadar takip etmeyi seçebilirsiniz."
-
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
 msgid "Here is your app password!"
 msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:204
 #~ msgid "Here is your app password."
-#~ msgstr "İşte uygulama şifreniz."
+#~ msgstr ""
 
 #: src/components/ListCard.tsx:130
 msgid "Hidden list"
@@ -4098,11 +3452,6 @@ msgstr "Gizle"
 msgctxt "action"
 msgid "Hide"
 msgstr "Gizle"
-
-#: src/view/com/util/forms/PostDropdownBtn.tsx:390
-#: src/view/com/util/forms/PostDropdownBtn.tsx:392
-#~ msgid "Hide post"
-#~ msgstr "Gönderiyi gizle"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:523
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:529
@@ -4149,10 +3498,6 @@ msgstr ""
 msgid "Hide user list"
 msgstr "Kullanıcı listesini gizle"
 
-#: src/view/com/profile/ProfileHeader.tsx:526
-#~ msgid "Hides posts from {0} in your feed"
-#~ msgstr "Beslemenizdeki {0} gönderilerini gizler"
-
 #: src/view/com/posts/PostFeedErrorMessage.tsx:117
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
 msgstr "Hmm, besleme sunucusuna ulaşırken bir tür sorun oluştu. Lütfen bu konuda besleme sahibini bilgilendirin."
@@ -4192,12 +3537,6 @@ msgstr ""
 #: src/view/shell/Drawer.tsx:391
 msgid "Home"
 msgstr "Ana Sayfa"
-
-#: src/Navigation.tsx:NaN
-#: src/view/screens/PreferencesHomeFeed.tsx:104
-#: src/view/screens/Settings.tsx:537
-#~ msgid "Home Feed Preferences"
-#~ msgstr "Ana Sayfa Besleme Tercihleri"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:400
 msgid "Host:"
@@ -4249,10 +3588,6 @@ msgstr "Anladım"
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "Alternatif metin uzunsa, alternatif metin genişletme durumunu değiştirir"
 
-#: src/view/com/modals/SelfLabel.tsx:128
-#~ msgid "If none are selected, suitable for all ages."
-#~ msgstr "Hiçbiri seçilmezse, tüm yaşlar için uygun."
-
 #: src/screens/Signup/StepInfo/Policies.tsx:110
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr ""
@@ -4289,14 +3624,6 @@ msgstr ""
 msgid "Image"
 msgstr "Resim"
 
-#: src/view/com/modals/AltImage.tsx:122
-#~ msgid "Image alt text"
-#~ msgstr "Resim alternatif metni"
-
-#: src/view/com/util/UserAvatar.tsx:NaN
-#~ msgid "Image options"
-#~ msgstr "Resim seçenekleri"
-
 #: src/components/StarterPack/ShareDialog.tsx:76
 msgid "Image saved to your camera roll!"
 msgstr ""
@@ -4321,17 +3648,9 @@ msgstr "Şifre sıfırlama için e-postanıza gönderilen kodu girin"
 msgid "Input confirmation code for account deletion"
 msgstr "Hesap silme için onay kodunu girin"
 
-#: src/view/com/auth/create/Step1.tsx:144
-#~ msgid "Input email for Bluesky account"
-#~ msgstr "Bluesky hesabı için e-posta girin"
-
-#: src/view/com/auth/create/Step1.tsx:102
-#~ msgid "Input invite code to proceed"
-#~ msgstr "Devam etmek için davet kodunu girin"
-
 #: src/view/com/modals/AddAppPasswords.tsx:175
 #~ msgid "Input name for app password"
-#~ msgstr "Uygulama şifresi için ad girin"
+#~ msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:145
 msgid "Input new password"
@@ -4341,29 +3660,13 @@ msgstr "Yeni şifre girin"
 msgid "Input password for account deletion"
 msgstr "Hesap silme için şifre girin"
 
-#: src/view/com/auth/create/Step2.tsx:196
-#~ msgid "Input phone number for SMS verification"
-#~ msgstr "SMS doğrulaması için telefon numarası girin"
-
 #: src/screens/Login/LoginForm.tsx:273
 msgid "Input the code which has been emailed to you"
 msgstr "Size e-posta olarak gönderilen kodu girin"
 
-#: src/screens/Login/LoginForm.tsx:221
-#~ msgid "Input the password tied to {identifier}"
-#~ msgstr "{identifier} ile ilişkili şifreyi girin"
-
 #: src/screens/Login/LoginForm.tsx:202
 msgid "Input the username or email address you used at signup"
 msgstr "Kaydolurken kullandığınız kullanıcı adını veya e-posta adresini girin"
-
-#: src/view/com/auth/create/Step2.tsx:271
-#~ msgid "Input the verification code we have texted to you"
-#~ msgstr "Size mesaj attığımız doğrulama kodunu girin"
-
-#: src/view/com/modals/Waitlist.tsx:90
-#~ msgid "Input your email to get on the Bluesky waitlist"
-#~ msgstr "Bluesky bekleme listesine girmek için e-postanızı girin"
 
 #: src/screens/Login/LoginForm.tsx:227
 msgid "Input your password"
@@ -4376,10 +3679,6 @@ msgstr "Şifrenizi girin"
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:49
 msgid "Interaction limited"
 msgstr "Etkileşim sınırlandırıldı"
-
-#: src/components/dms/MessagesNUX.tsx:82
-#~ msgid "Introducing Direct Messages"
-#~ msgstr ""
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:47
 #~ msgid "Introducing new font settings"
@@ -4407,10 +3706,6 @@ msgstr "Geçersiz kullanıcı adı veya şifre"
 msgid "Invalid Verification Code"
 msgstr "Geçersiz Doğrulama Kodu"
 
-#: src/view/screens/Settings.tsx:411
-#~ msgid "Invite"
-#~ msgstr "Davet et"
-
 #: src/view/com/modals/InviteCodes.tsx:94
 msgid "Invite a Friend"
 msgstr "Arkadaşını Davet Et"
@@ -4426,10 +3721,6 @@ msgstr "Davet kodu kabul edilmedi. Doğru girdiğinizden emin olun ve tekrar den
 #: src/view/com/modals/InviteCodes.tsx:171
 msgid "Invite codes: {0} available"
 msgstr "Davet kodları: {0} kullanılabilir"
-
-#: src/view/shell/Drawer.tsx:645
-#~ msgid "Invite codes: {invitesAvailable} available"
-#~ msgstr "Davet kodları: {invitesAvailable} kullanılabilir"
 
 #: src/view/com/modals/InviteCodes.tsx:170
 msgid "Invite codes: 1 available"
@@ -4450,10 +3741,6 @@ msgstr ""
 #: src/screens/Signup/StepInfo/index.tsx:80
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
 msgstr "Görünüşe göre e-posta adresinizi yanlış girdiniz. Doğru olduğuna emin misiniz?"
-
-#: src/screens/Onboarding/StepFollowingFeed.tsx:65
-#~ msgid "It shows posts from the people you follow as they happen."
-#~ msgstr "Takip ettiğiniz kişilerin gönderilerini olduğu gibi gösterir."
 
 #: src/screens/Signup/StepInfo/index.tsx:241
 msgid "It's correct"
@@ -4483,31 +3770,10 @@ msgstr "Bluesky'a Katıl"
 msgid "Join the conversation"
 msgstr "Görüşmeye katıl"
 
-#: src/view/com/modals/Waitlist.tsx:67
-#~ msgid "Join the waitlist"
-#~ msgstr "Bekleme listesine katıl"
-
-#: src/view/com/auth/create/Step1.tsx:118
-#: src/view/com/auth/create/Step1.tsx:122
-#~ msgid "Join the waitlist."
-#~ msgstr "Bekleme listesine katıl."
-
-#: src/view/com/modals/Waitlist.tsx:128
-#~ msgid "Join Waitlist"
-#~ msgstr "Bekleme Listesine Katıl"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:492
-#~ msgid "Joined {0}"
-#~ msgstr ""
-
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:104
 msgid "Journalism"
 msgstr "Gazetecilik"
-
-#: src/components/moderation/LabelsOnMe.tsx:59
-#~ msgid "label has been placed on this {labelTarget}"
-#~ msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:231
 msgid "Labeled by {0}."
@@ -4530,10 +3796,6 @@ msgstr ""
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr ""
 
-#: src/components/moderation/LabelsOnMe.tsx:61
-#~ msgid "labels have been placed on this {labelTarget}"
-#~ msgstr ""
-
 #: src/components/moderation/LabelsOnMeDialog.tsx:71
 msgid "Labels on your account"
 msgstr ""
@@ -4548,7 +3810,7 @@ msgstr "Dil seçimi"
 
 #: src/view/screens/Settings/index.tsx:497
 #~ msgid "Language settings"
-#~ msgstr "Dil ayarları"
+#~ msgstr ""
 
 #: src/Navigation.tsx:165
 msgid "Language Settings"
@@ -4564,10 +3826,6 @@ msgstr "Diller"
 msgid "Larger"
 msgstr "Daha büyük"
 
-#: src/view/com/auth/create/StepHeader.tsx:20
-#~ msgid "Last step!"
-#~ msgstr "Son adım!"
-
 #: src/screens/Hashtag.tsx:95
 #: src/screens/Topic.tsx:77
 #: src/view/screens/Search/Search.tsx:509
@@ -4577,10 +3835,6 @@ msgstr "En son"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:254
 msgid "learn more"
 msgstr "daha fazla öğren"
-
-#: src/view/com/util/moderation/ContentHider.tsx:103
-#~ msgid "Learn more"
-#~ msgstr "Daha fazla bilgi edinin"
 
 #: src/components/moderation/ScreenHider.tsx:140
 msgid "Learn More"
@@ -4643,10 +3897,6 @@ msgstr "Bluesky'dan ayrılıyor"
 msgid "left to go."
 msgstr "kaldı."
 
-#: src/view/screens/Settings/index.tsx:310
-#~ msgid "Legacy storage cleared, you need to restart the app now."
-#~ msgstr "Eski depolama temizlendi, şimdi uygulamayı yeniden başlatmanız gerekiyor."
-
 #: src/components/StarterPack/ProfileStarterPacks.tsx:313
 msgid "Let me choose"
 msgstr "Bana seçtir"
@@ -4659,10 +3909,6 @@ msgstr "Şifrenizi sıfırlamaya başlayalım!"
 #: src/screens/Onboarding/StepFinished.tsx:296
 msgid "Let's go!"
 msgstr "Hadi gidelim!"
-
-#: src/view/com/util/UserAvatar.tsx:NaN
-#~ msgid "Library"
-#~ msgstr "Kütüphane"
 
 #: src/screens/Settings/AppearanceSettings.tsx:101
 msgid "Light"
@@ -4710,14 +3956,6 @@ msgstr "Beğenenler"
 msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr ""
 
-#: src/view/com/feeds/FeedSourceCard.tsx:268
-#~ msgid "Liked by {0} {1}"
-#~ msgstr "{0} {1} tarafından beğenildi"
-
-#: src/components/LabelingServiceCard/index.tsx:72
-#~ msgid "Liked by {count} {0}"
-#~ msgstr ""
-
 #: src/components/LabelingServiceCard/index.tsx:96
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:489
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:295
@@ -4725,19 +3963,13 @@ msgstr ""
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:287
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:301
-#: src/view/screens/ProfileFeed.tsx:600
-#~ msgid "Liked by {likeCount} {0}"
-#~ msgstr "{likeCount} {0} tarafından beğenildi"
-
 #: src/view/com/notifications/FeedItem.tsx:211
 #~ msgid "liked your custom feed"
-#~ msgstr "özel beslemenizi beğendi"
+#~ msgstr ""
 
 #: src/view/com/notifications/FeedItem.tsx:178
 #~ msgid "liked your post"
-#~ msgstr "gönderinizi beğendi"
+#~ msgstr ""
 
 #: src/view/screens/Profile.tsx:234
 msgid "Likes"
@@ -4822,11 +4054,6 @@ msgstr ""
 msgid "Load more"
 msgstr "Daha fazlasını yükle"
 
-#: src/view/com/post-thread/PostThread.tsx:281
-#: src/view/com/post-thread/PostThread.tsx:289
-#~ msgid "Load more posts"
-#~ msgstr "Daha fazla gönderi yükle"
-
 #: src/view/screens/Search/Explore.tsx:221
 msgid "Load more suggested feeds"
 msgstr ""
@@ -4850,13 +4077,9 @@ msgstr "Yeni gönderileri yükle"
 msgid "Loading..."
 msgstr "Yükleniyor..."
 
-#: src/view/com/modals/ServerInput.tsx:50
-#~ msgid "Local dev server"
-#~ msgstr "Yerel geliştirme sunucusu"
-
 #: src/Navigation.tsx:261
 msgid "Log"
-msgstr "Log"
+msgstr ""
 
 #: src/screens/Deactivated.tsx:202
 #: src/screens/Deactivated.tsx:208
@@ -4906,10 +4129,6 @@ msgstr ""
 #: src/screens/Home/NoFeedsPinned.tsx:83
 msgid "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄"
 msgstr ""
-
-#: src/screens/Feeds/NoFollowingFeed.tsx:38
-#~ msgid "Looks like you're missing a following feed."
-#~ msgstr ""
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:37
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
@@ -4986,17 +4205,13 @@ msgstr "Mesaj çok uzun"
 
 #: src/screens/Messages/ChatList.tsx:318
 #~ msgid "Message settings"
-#~ msgstr "Mesaj ayarları"
+#~ msgstr ""
 
 #: src/Navigation.tsx:609
 #: src/screens/Messages/ChatList.tsx:262
 #: src/screens/Messages/ChatList.tsx:286
 msgid "Messages"
 msgstr "Mesajlar"
-
-#: src/Navigation.tsx:307
-#~ msgid "Messaging settings"
-#~ msgstr ""
 
 #: src/lib/moderation/useReportOptions.ts:47
 msgid "Misleading Account"
@@ -5005,10 +4220,6 @@ msgstr "Yanıltıcı Hesap"
 #: src/lib/moderation/useReportOptions.ts:67
 msgid "Misleading Post"
 msgstr "Yanıltıcı Gönderi"
-
-#: src/screens/Settings/AppearanceSettings.tsx:78
-#~ msgid "Mode"
-#~ msgstr ""
 
 #: src/Navigation.tsx:140
 #: src/screens/Moderation/index.tsx:88
@@ -5058,7 +4269,7 @@ msgstr "moderasyon araçları"
 
 #: src/view/screens/Settings/index.tsx:522
 #~ msgid "Moderation settings"
-#~ msgstr "Moderasyon ayarları"
+#~ msgstr ""
 
 #: src/Navigation.tsx:251
 msgid "Moderation states"
@@ -5087,10 +4298,6 @@ msgstr "Daha fazla besleme"
 msgid "More options"
 msgstr "Daha fazla seçenek"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:270
-#~ msgid "More post options"
-#~ msgstr "Daha fazla gönderi seçeneği"
-
 #: src/screens/Settings/ThreadPreferences.tsx:94
 msgid "Most-liked first"
 msgstr "Önce en çok beğenilen"
@@ -5117,7 +4324,7 @@ msgstr "Sessize al"
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:95
 msgctxt "video"
 msgid "Mute"
-msgstr ""
+msgstr "Sessize al"
 
 #: src/components/TagMenu/index.web.tsx:116
 msgid "Mute {truncatedTag}"
@@ -5141,14 +4348,6 @@ msgstr "Tüm {displayTag} gönderilerini sessize al"
 msgid "Mute conversation"
 msgstr "Görüşmeyi sustur"
 
-#: src/components/dialogs/MutedWords.tsx:148
-#~ msgid "Mute in tags only"
-#~ msgstr ""
-
-#: src/components/dialogs/MutedWords.tsx:133
-#~ msgid "Mute in text & tags"
-#~ msgstr ""
-
 #: src/components/dialogs/MutedWords.tsx:253
 msgid "Mute in:"
 msgstr "Sessize al:"
@@ -5157,18 +4356,9 @@ msgstr "Sessize al:"
 msgid "Mute list"
 msgstr "Listeyi sessize al"
 
-#: src/components/dms/ConvoMenu.tsx:136
-#: src/components/dms/ConvoMenu.tsx:142
-#~ msgid "Mute notifications"
-#~ msgstr "Bildirimleri sustur"
-
 #: src/view/screens/ProfileList.tsx:745
 msgid "Mute these accounts?"
 msgstr "Bu hesapları sessize al?"
-
-#: src/view/screens/ProfileList.tsx:278
-#~ msgid "Mute this List"
-#~ msgstr "Bu Listeyi Sessize Al"
 
 #: src/components/dialogs/MutedWords.tsx:185
 msgid "Mute this word for 24 hours"
@@ -5203,10 +4393,6 @@ msgstr "Konuyu sessize al"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:505
 msgid "Mute words & tags"
 msgstr "Kelimeleri ve etiketleri sustur"
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#~ msgid "Muted"
-#~ msgstr "Sessize alındı"
 
 #: src/screens/Moderation/index.tsx:238
 msgid "Muted accounts"
@@ -5252,7 +4438,7 @@ msgstr "Profilim"
 
 #: src/view/screens/Settings/index.tsx:589
 #~ msgid "My Saved Feeds"
-#~ msgstr "Kayıtlı Beslemelerim"
+#~ msgstr ""
 
 #: src/view/com/modals/CreateOrEditList.tsx:270
 msgid "Name"
@@ -5278,10 +4464,6 @@ msgstr "Doğa"
 msgid "Navigate to {0}"
 msgstr ""
 
-#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:86
-#~ msgid "Navigate to starter pack"
-#~ msgstr ""
-
 #: src/screens/Login/ForgotPasswordForm.tsx:166
 #: src/screens/Login/LoginForm.tsx:326
 #: src/view/com/modals/ChangePassword.tsx:169
@@ -5300,16 +4482,6 @@ msgstr ""
 msgid "Need to report a copyright violation?"
 msgstr ""
 
-#: src/view/com/modals/EmbedConsent.tsx:107
-#: src/view/com/modals/EmbedConsent.tsx:123
-#~ msgid "Never load embeds from {0}"
-#~ msgstr "{0} adresinden gömülü içerikleri asla yükleme"
-
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:74
-#~ msgid "Never lose access to your followers and data."
-#~ msgstr "Takipçilerinize ve verilerinize asla erişimi kaybetmeyin."
-
 #: src/screens/Onboarding/StepFinished.tsx:264
 msgid "Never lose access to your followers or data."
 msgstr "Takipçilerinize veya verilerinize asla erişimi kaybetmeyin."
@@ -5326,7 +4498,7 @@ msgstr "Yeni"
 
 #: src/view/screens/ModerationModlists.tsx:92
 #~ msgid "New"
-#~ msgstr "Yeni"
+#~ msgstr ""
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:65
 #: src/screens/Messages/ChatList.tsx:269
@@ -5422,11 +4594,6 @@ msgstr "Haberler"
 msgid "Next"
 msgstr "İleri"
 
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:103
-#~ msgctxt "action"
-#~ msgid "Next"
-#~ msgstr "İleri"
-
 #: src/view/com/lightbox/Lightbox.web.tsx:169
 msgid "Next image"
 msgstr "Sonraki resim"
@@ -5438,7 +4605,7 @@ msgstr "Sonraki resim"
 #: src/view/screens/PreferencesThreads.tsx:101
 #: src/view/screens/PreferencesThreads.tsx:124
 #~ msgid "No"
-#~ msgstr "Hayır"
+#~ msgstr ""
 
 #: src/screens/Settings/AppPasswords.tsx:108
 msgid "No app passwords yet"
@@ -5447,7 +4614,7 @@ msgstr ""
 #: src/view/screens/ProfileFeed.tsx:565
 #: src/view/screens/ProfileList.tsx:882
 #~ msgid "No description"
-#~ msgstr "Açıklama yok"
+#~ msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:380
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:382
@@ -5538,8 +4705,8 @@ msgstr "{query} için sonuç bulunamadı"
 msgid "No search results found for \"{search}\"."
 msgstr "\"{search}\" aramanız için sonuç bulunamadı."
 
-#: src/components/dms/NewChat.tsx:240
-#~ msgid "No search results found for \"{searchText}\"."
+#: src/view/com/composer/labels/LabelsBtn.tsx:129
+#~ msgid "No self-labels can be applied to this post because it contains no media."
 #~ msgstr ""
 
 #: src/components/dialogs/EmbedConsent.tsx:104
@@ -5550,10 +4717,6 @@ msgstr "Teşekkürler"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:375
 msgid "Nobody"
 msgstr "Hiç kimse"
-
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:46
-#~ msgid "Nobody can reply"
-#~ msgstr ""
 
 #: src/components/LikedByList.tsx:86
 #: src/components/LikesDialog.tsx:97
@@ -5576,10 +4739,6 @@ msgstr "Kimse bulunamadı. Başka birini aramayı deneyin."
 #: src/lib/moderation/useGlobalLabelStrings.ts:42
 msgid "Non-sexual Nudity"
 msgstr "Cinsel olmayan çıplaklık"
-
-#: src/view/com/modals/SelfLabel.tsx:135
-#~ msgid "Not Applicable."
-#~ msgstr "Uygulanamaz."
 
 #: src/Navigation.tsx:130
 #: src/view/screens/Profile.tsx:129
@@ -5651,10 +4810,6 @@ msgstr "Çıplaklık"
 msgid "Nudity or adult content not labeled as such"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:145
-#~ msgid "of"
-#~ msgstr ""
-
 #: src/lib/moderation/useLabelBehaviorDescription.ts:11
 msgid "Off"
 msgstr ""
@@ -5667,10 +4822,6 @@ msgstr "Oh hayır!"
 #: src/screens/Onboarding/StepInterests/index.tsx:124
 msgid "Oh no! Something went wrong."
 msgstr "Oh hayır! Bir şeyler yanlış gitti."
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:175
-#~ msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
-#~ msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:352
 #: src/screens/Settings/AppIconSettings/index.tsx:48
@@ -5690,14 +4841,6 @@ msgstr "Tamam"
 msgid "Oldest replies first"
 msgstr "En eski yanıtlar önce"
 
-#: src/components/StarterPack/QrCode.tsx:69
-#~ msgid "on"
-#~ msgstr ""
-
-#: src/lib/hooks/useTimeAgo.ts:81
-#~ msgid "on {str}"
-#~ msgstr ""
-
 #: src/components/StarterPack/QrCode.tsx:76
 msgid "on<0><1/><2><3/></2></0>"
 msgstr ""
@@ -5705,10 +4848,6 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:303
 msgid "Onboarding reset"
 msgstr "Onboarding sıfırlama"
-
-#: src/tours/Tooltip.tsx:118
-#~ msgid "Onboarding tour step {0}: {1}"
-#~ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:331
 msgid "One or more GIFs is missing alt text."
@@ -5725,10 +4864,6 @@ msgstr "Bir veya daha fazla videoda alternatif metin eksik."
 #: src/screens/Onboarding/StepProfile/index.tsx:115
 msgid "Only .jpg and .png files are supported"
 msgstr "Yalnızca .jpg ve .png dosyaları desteklenmektedir"
-
-#: src/components/WhoCanReply.tsx:245
-#~ msgid "Only {0} can reply"
-#~ msgstr ""
 
 #: src/components/WhoCanReply.tsx:217
 msgid "Only {0} can reply."
@@ -5810,7 +4945,7 @@ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:703
 #~ msgid "Open links with in-app browser"
-#~ msgstr "Uygulama içi tarayıcıda bağlantıları aç"
+#~ msgstr ""
 
 #: src/components/dms/ActionsWrapper.tsx:90
 msgid "Open message options"
@@ -5826,7 +4961,7 @@ msgstr ""
 
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:54
 #~ msgid "Open navigation"
-#~ msgstr "Navigasyonu aç"
+#~ msgstr ""
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:70
 msgid "Open post options menu"
@@ -5865,10 +5000,6 @@ msgstr ""
 msgid "Opens additional details for a debug entry"
 msgstr "Hata ayıklama girişi için ek ayrıntıları açar"
 
-#: src/view/com/notifications/FeedItem.tsx:349
-#~ msgid "Opens an expanded list of users in this notification"
-#~ msgstr "Bu bildirimdeki kullanıcıların genişletilmiş bir listesini açar"
-
 #: src/view/screens/Settings/index.tsx:477
 #~ msgid "Opens appearance settings"
 #~ msgstr ""
@@ -5887,19 +5018,15 @@ msgstr "Besteciyi açar"
 
 #: src/view/screens/Settings/index.tsx:498
 #~ msgid "Opens configurable language settings"
-#~ msgstr "Yapılandırılabilir dil ayarlarını açar"
+#~ msgstr ""
 
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:51
 msgid "Opens device photo gallery"
 msgstr "Cihaz fotoğraf galerisini açar"
 
-#: src/view/com/profile/ProfileHeader.tsx:459
-#~ msgid "Opens editor for profile display name, avatar, background image, and description"
-#~ msgstr "Profil görüntü adı, avatar, arka plan resmi ve açıklama için düzenleyiciyi açar"
-
 #: src/view/screens/Settings/index.tsx:638
 #~ msgid "Opens external embeds settings"
-#~ msgstr "Harici gömülü ayarları açar"
+#~ msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:49
 #: src/view/com/auth/SplashScreen.web.tsx:111
@@ -5911,21 +5038,9 @@ msgstr ""
 msgid "Opens flow to sign into your existing Bluesky account"
 msgstr ""
 
-#: src/view/com/profile/ProfileHeader.tsx:614
-#~ msgid "Opens followers list"
-#~ msgstr "Takipçi listesini açar"
-
-#: src/view/com/profile/ProfileHeader.tsx:633
-#~ msgid "Opens following list"
-#~ msgstr "Takip listesini açar"
-
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Opens GIF select dialog"
 msgstr ""
-
-#: src/view/screens/Settings.tsx:412
-#~ msgid "Opens invite code list"
-#~ msgstr "Davet kodu listesini açar"
 
 #: src/view/com/modals/InviteCodes.tsx:173
 msgid "Opens list of invite codes"
@@ -5938,10 +5053,6 @@ msgstr "Davet kodu listesini açar"
 #: src/view/screens/Settings/index.tsx:797
 #~ msgid "Opens modal for account deletion confirmation. Requires email code"
 #~ msgstr ""
-
-#: src/view/screens/Settings.tsx:745
-#~ msgid "Opens modal for account deletion confirmation. Requires email code."
-#~ msgstr "Hesap silme onayı için modalı açar. E-posta kodu gerektirir."
 
 #: src/view/screens/Settings/index.tsx:732
 #~ msgid "Opens modal for changing your Bluesky password"
@@ -5961,61 +5072,44 @@ msgstr "Davet kodu listesini açar"
 
 #: src/view/com/modals/ChangeHandle.tsx:269
 #~ msgid "Opens modal for using custom domain"
-#~ msgstr "Özel alan adı kullanımı için modalı açar"
+#~ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:523
 #~ msgid "Opens moderation settings"
-#~ msgstr "Moderasyon ayarlarını açar"
+#~ msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:233
 msgid "Opens password reset form"
 msgstr "Şifre sıfırlama formunu açar"
 
-#: src/view/com/home/HomeHeaderLayout.web.tsx:77
-#: src/view/screens/Feeds.tsx:417
-#~ msgid "Opens screen to edit Saved Feeds"
-#~ msgstr "Kayıtlı Beslemeleri düzenlemek için ekranı açar"
-
 #: src/view/screens/Settings/index.tsx:584
 #~ msgid "Opens screen with all saved feeds"
-#~ msgstr "Tüm kayıtlı beslemeleri içeren ekrana açar"
+#~ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:665
 #~ msgid "Opens the app password settings"
 #~ msgstr ""
 
-#: src/view/screens/Settings.tsx:670
-#~ msgid "Opens the app password settings page"
-#~ msgstr "Uygulama şifre ayarları sayfasını açar"
-
 #: src/view/screens/Settings/index.tsx:541
 #~ msgid "Opens the Following feed preferences"
 #~ msgstr ""
-
-#: src/view/screens/Settings.tsx:529
-#~ msgid "Opens the home feed preferences"
-#~ msgstr "Ana besleme tercihlerini açar"
 
 #: src/view/com/modals/LinkWarning.tsx:93
 msgid "Opens the linked website"
 msgstr ""
 
-#: src/screens/Messages/List/index.tsx:86
-#~ msgid "Opens the message settings page"
-#~ msgstr ""
-
 #: src/view/screens/Settings/index.tsx:828
 #: src/view/screens/Settings/index.tsx:838
 #~ msgid "Opens the storybook page"
-#~ msgstr "Storybook sayfasını açar"
+#~ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:816
 #~ msgid "Opens the system log page"
-#~ msgstr "Sistem log sayfasını açar"
+#~ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:562
 #~ msgid "Opens the threads preferences"
-#~ msgstr "Konu tercihlerini açar"
+#~ msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:679
 #: src/view/com/util/UserAvatar.tsx:436
@@ -6062,11 +5156,7 @@ msgstr "Diğer hesap"
 
 #: src/view/screens/Settings/index.tsx:380
 #~ msgid "Other accounts"
-#~ msgstr "Diğer hesaplar"
-
-#: src/view/com/modals/ServerInput.tsx:88
-#~ msgid "Other service"
-#~ msgstr "Diğer servis"
+#~ msgstr ""
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:93
 msgid "Other..."
@@ -6146,10 +5236,6 @@ msgstr ""
 msgid "Pets"
 msgstr "Evcil Hayvanlar"
 
-#: src/view/com/auth/create/Step2.tsx:183
-#~ msgid "Phone number"
-#~ msgstr "Telefon numarası"
-
 #: src/screens/Onboarding/state.ts:110
 msgid "Photography"
 msgstr ""
@@ -6203,11 +5289,6 @@ msgstr "Oynat"
 msgid "Play {0}"
 msgstr "{0} oynat"
 
-#: src/screens/Messages/Settings.tsx:97
-#: src/screens/Messages/Settings.tsx:104
-#~ msgid "Play notification sounds"
-#~ msgstr ""
-
 #: src/view/com/util/post-embeds/GifEmbed.tsx:42
 msgid "Play or pause the GIF"
 msgstr ""
@@ -6245,11 +5326,7 @@ msgstr "E-postanızı değiştirmeden önce onaylayın. Bu, e-posta güncelleme 
 
 #: src/view/com/modals/AddAppPasswords.tsx:94
 #~ msgid "Please enter a name for your app password. All spaces is not allowed."
-#~ msgstr "Uygulama şifreniz için bir ad girin. Tüm boşluklar izin verilmez."
-
-#: src/view/com/auth/create/Step2.tsx:206
-#~ msgid "Please enter a phone number that can receive SMS text messages."
-#~ msgstr "SMS metin mesajları alabilen bir telefon numarası girin."
+#~ msgstr ""
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:114
 msgid "Please enter a unique name for this app password or use our randomly generated one."
@@ -6257,19 +5334,11 @@ msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:151
 #~ msgid "Please enter a unique name for this App Password or use our randomly generated one."
-#~ msgstr "Bu Uygulama Şifresi için benzersiz bir ad girin veya rastgele oluşturulanı kullanın."
+#~ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:86
 msgid "Please enter a valid word, tag, or phrase to mute"
 msgstr "Lütfen sessize almak istediğiniz geçerli bir kelime, etiket veya ifade giriniz"
-
-#: src/view/com/auth/create/state.ts:170
-#~ msgid "Please enter the code you received by SMS."
-#~ msgstr "SMS ile aldığınız kodu girin."
-
-#: src/view/com/auth/create/Step2.tsx:282
-#~ msgid "Please enter the verification code sent to {phoneNumberFormatted}."
-#~ msgstr "{phoneNumberFormatted} numarasına gönderilen doğrulama kodunu girin."
 
 #: src/screens/Signup/state.ts:196
 #: src/screens/Signup/StepInfo/index.tsx:102
@@ -6297,18 +5366,9 @@ msgstr ""
 msgid "Please sign in as @{0}"
 msgstr ""
 
-#: src/view/com/modals/AppealLabel.tsx:72
-#: src/view/com/modals/AppealLabel.tsx:75
-#~ msgid "Please tell us why you think this content warning was incorrectly applied!"
-#~ msgstr "Lütfen bu içerik uyarısının yanlış uygulandığını düşündüğünüz nedeni bize bildirin!"
-
 #: src/view/com/modals/VerifyEmail.tsx:109
 msgid "Please Verify Your Email"
 msgstr "Lütfen E-postanızı Doğrulayın"
-
-#: src/view/com/composer/Composer.tsx:359
-#~ msgid "Please wait for your link card to finish loading"
-#~ msgstr "Bağlantı kartınızın yüklenmesini bekleyin"
 
 #: src/screens/Onboarding/index.tsx:34
 #: src/screens/Onboarding/state.ts:111
@@ -6327,7 +5387,7 @@ msgstr "Gönder"
 #: src/view/com/post-thread/PostThread.tsx:536
 msgctxt "description"
 msgid "Post"
-msgstr "Gönderi"
+msgstr "Gönder"
 
 #: src/view/com/composer/Composer.tsx:942
 msgctxt "action"
@@ -6392,6 +5452,10 @@ msgstr "Gönderi sabitlendi"
 msgid "Post unpinned"
 msgstr "Gönderi sabitlemesi kaldırıldı"
 
+#: src/lib/api/index.ts:106
+#~ msgid "Posting..."
+#~ msgstr ""
+
 #: src/components/TagMenu/index.tsx:268
 msgid "posts"
 msgstr "gönderiler"
@@ -6400,10 +5464,6 @@ msgstr "gönderiler"
 #: src/view/screens/Profile.tsx:231
 msgid "Posts"
 msgstr "Gönderiler"
-
-#: src/components/dialogs/MutedWords.tsx:89
-#~ msgid "Posts can be muted based on their text, their tags, or both."
-#~ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:115
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
@@ -6436,11 +5496,6 @@ msgstr ""
 msgid "Press to retry"
 msgstr ""
 
-#: src/screens/Messages/Conversation/MessagesList.tsx:47
-#: src/screens/Messages/Conversation/MessagesList.tsx:53
-#~ msgid "Press to Retry"
-#~ msgstr "Yeniden denemek için basınız"
-
 #: src/components/KnownFollowers.tsx:124
 msgid "Press to view followers of this account that you also follow"
 msgstr ""
@@ -6460,7 +5515,7 @@ msgstr ""
 
 #: src/view/screens/PreferencesThreads.tsx:92
 #~ msgid "Prioritize Your Follows"
-#~ msgstr "Takipçilerinizi Önceliklendirin"
+#~ msgstr ""
 
 #: src/screens/Settings/NotificationSettings.tsx:67
 msgid "Priority notifications"
@@ -6490,10 +5545,6 @@ msgstr ""
 msgid "Privacy Policy"
 msgstr "Gizlilik Politikası"
 
-#: src/components/dms/MessagesNUX.tsx:91
-#~ msgid "Privately chat with other users."
-#~ msgstr ""
-
 #: src/view/com/composer/Composer.tsx:1641
 msgid "Processing video..."
 msgstr "Video işleniyor..."
@@ -6522,7 +5573,7 @@ msgstr "Profil güncellendi"
 
 #: src/view/screens/Settings/index.tsx:976
 #~ msgid "Protect your account by verifying your email."
-#~ msgstr "E-postanızı doğrulayarak hesabınızı koruyun."
+#~ msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:246
 msgid "Public"
@@ -6538,19 +5589,19 @@ msgstr ""
 
 #: src/view/screens/ModerationModlists.tsx:75
 #~ msgid "Public, shareable lists of users to mute or block in bulk."
-#~ msgstr "Toplu olarak sessize almak veya engellemek için herkese açık, paylaşılabilir kullanıcı listeleri."
+#~ msgstr ""
 
 #: src/view/screens/Lists.tsx:81
 #~ msgid "Public, shareable lists which can drive feeds."
-#~ msgstr "Beslemeleri yönlendirebilen herkese açık, paylaşılabilir listeler."
+#~ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:579
 #~ msgid "Publish post"
-#~ msgstr "Gönderiyi yayınla"
+#~ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:579
 #~ msgid "Publish reply"
-#~ msgstr "Yanıtı yayınla"
+#~ msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:128
 msgid "QR code copied to your clipboard!"
@@ -6564,26 +5615,12 @@ msgstr ""
 msgid "QR code saved to your camera roll!"
 msgstr ""
 
-#: src/tours/Tooltip.tsx:111
-#~ msgid "Quick tip"
-#~ msgstr ""
-
 #: src/view/com/util/post-ctrls/RepostButton.tsx:178
 #: src/view/com/util/post-ctrls/RepostButton.tsx:201
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:85
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:92
 msgid "Quote post"
 msgstr "Gönderiyi alıntıla"
-
-#: src/view/com/modals/Repost.tsx:66
-#~ msgctxt "action"
-#~ msgid "Quote post"
-#~ msgstr "Gönderiyi alıntıla"
-
-#: src/view/com/modals/Repost.tsx:71
-#~ msgctxt "action"
-#~ msgid "Quote Post"
-#~ msgstr "Gönderiyi Alıntıla"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:303
 msgid "Quote post was re-attached"
@@ -6602,7 +5639,7 @@ msgstr "Alıntı gönderilen devre dışı bırakıldı"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
 #~ msgid "Quote posts enabled"
-#~ msgstr "Alıntı gönderilen etkinleştirildi"
+#~ msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
@@ -6626,10 +5663,6 @@ msgstr "Rastgele (yani \"Gönderenin Ruleti\")"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:583
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr ""
-
-#: src/view/com/modals/EditImage.tsx:237
-#~ msgid "Ratios"
-#~ msgstr "Oranlar"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:565
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:575
@@ -6658,10 +5691,6 @@ msgstr ""
 msgid "Reason:"
 msgstr "Sebep:"
 
-#: src/components/dms/MessageReportDialog.tsx:149
-#~ msgid "Reason: {0}"
-#~ msgstr "Sebep: {0}"
-
 #: src/view/screens/Search/Search.tsx:1041
 msgid "Recent Searches"
 msgstr ""
@@ -6670,21 +5699,13 @@ msgstr ""
 msgid "Recommended"
 msgstr ""
 
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:117
-#~ msgid "Recommended Feeds"
-#~ msgstr "Önerilen Beslemeler"
-
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:181
-#~ msgid "Recommended Users"
-#~ msgstr "Önerilen Kullanıcılar"
-
 #: src/screens/Messages/components/MessageListError.tsx:20
 msgid "Reconnect"
 msgstr "Yeniden bağlan"
 
 #: src/view/screens/Notifications.tsx:144
 #~ msgid "Refresh notifications"
-#~ msgstr "Bildirimleri yenile"
+#~ msgstr ""
 
 #: src/screens/Messages/ChatList.tsx:163
 msgid "Reload conversations"
@@ -6701,10 +5722,6 @@ msgstr "Görüşmeleri yeniden yükle"
 #: src/view/com/posts/PostFeedErrorMessage.tsx:213
 msgid "Remove"
 msgstr "Kaldır"
-
-#: src/view/com/feeds/FeedSourceCard.tsx:106
-#~ msgid "Remove {0} from my feeds?"
-#~ msgstr "{0} beslemelerimden kaldırılsın mı?"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:57
 msgid "Remove {displayName} from starter pack"
@@ -6767,10 +5784,6 @@ msgstr ""
 msgid "Remove image"
 msgstr "Resmi kaldır"
 
-#: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:28
-#~ msgid "Remove image preview"
-#~ msgstr "Resim önizlemesini kaldır"
-
 #: src/components/dialogs/MutedWords.tsx:523
 msgid "Remove mute word from your list"
 msgstr ""
@@ -6796,17 +5809,9 @@ msgstr "Yeniden göndermeyi kaldır"
 msgid "Remove subtitle file"
 msgstr "Altyazı dosyasını kaldır"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:173
-#~ msgid "Remove this feed from my feeds?"
-#~ msgstr "Bu beslemeyi beslemelerimden kaldırsın mı?"
-
 #: src/view/com/posts/PostFeedErrorMessage.tsx:211
 msgid "Remove this feed from your saved feeds"
 msgstr ""
-
-#: src/view/com/posts/FeedErrorMessage.tsx:132
-#~ msgid "Remove this feed from your saved feeds?"
-#~ msgstr "Bu beslemeyi kayıtlı beslemelerinizden kaldırsın mı?"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:109
 msgid "Removed by author"
@@ -6836,21 +5841,9 @@ msgstr ""
 msgid "Removed from your feeds"
 msgstr ""
 
-#: src/view/com/composer/ExternalEmbed.tsx:88
-#~ msgid "Removes default thumbnail from {0}"
-#~ msgstr "{0} adresinden varsayılan küçük resmi kaldırır"
-
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
 msgstr ""
-
-#: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
-#~ msgid "Removes the attachment"
-#~ msgstr ""
-
-#: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
-#~ msgid "Removes the image preview"
-#~ msgstr ""
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:129
 #: src/view/com/posts/FeedShutdownMsg.tsx:133
@@ -6865,17 +5858,9 @@ msgstr "Yanıtlar"
 msgid "Replies disabled"
 msgstr ""
 
-#: src/view/com/threadgate/WhoCanReply.tsx:123
-#~ msgid "Replies on this thread are disabled"
-#~ msgstr ""
-
 #: src/components/WhoCanReply.tsx:215
 msgid "Replies to this post are disabled."
 msgstr ""
-
-#: src/components/WhoCanReply.tsx:243
-#~ msgid "Replies to this thread are disabled"
-#~ msgstr "Bu konuya yanıtlar devre dışı bırakıldı"
 
 #: src/view/com/composer/Composer.tsx:940
 msgctxt "action"
@@ -6885,10 +5870,6 @@ msgstr "Yanıtla"
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:263
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr ""
-
-#: src/view/screens/PreferencesFollowingFeed.tsx:142
-#~ msgid "Reply Filters"
-#~ msgstr "Yanıt Filtreleri"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:123
@@ -6911,12 +5892,6 @@ msgstr ""
 #: src/view/com/post-thread/PostThread.tsx:648
 msgid "Reply sorting"
 msgstr ""
-
-#: src/view/com/post/Post.tsx:177
-#: src/view/com/posts/FeedItem.tsx:285
-#~ msgctxt "description"
-#~ msgid "Reply to <0/>"
-#~ msgstr "<0/>'a yanıt"
 
 #: src/view/com/post/Post.tsx:204
 #: src/view/com/posts/PostFeedItem.tsx:553
@@ -6953,15 +5928,6 @@ msgstr ""
 #: src/components/dms/MessagesListBlockedFooter.tsx:84
 msgid "Report"
 msgstr ""
-
-#: src/view/com/modals/report/Modal.tsx:166
-#~ msgid "Report {collectionName}"
-#~ msgstr "{collectionName} raporla"
-
-#: src/components/dms/ConvoMenu.tsx:146
-#: src/components/dms/ConvoMenu.tsx:150
-#~ msgid "Report account"
-#~ msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:302
@@ -7061,10 +6027,6 @@ msgstr "Yeniden Gönderen"
 msgid "Reposted by {0}"
 msgstr "{0} tarafından yeniden gönderildi"
 
-#: src/view/com/posts/FeedItem.tsx:214
-#~ msgid "Reposted by <0/>"
-#~ msgstr "<0/>'a yeniden gönderildi"
-
 #: src/view/com/posts/PostFeedItem.tsx:322
 msgid "Reposted by <0><1/></0>"
 msgstr ""
@@ -7076,7 +6038,7 @@ msgstr ""
 
 #: src/view/com/notifications/FeedItem.tsx:180
 #~ msgid "reposted your post"
-#~ msgstr "gönderinizi yeniden gönderdi"
+#~ msgstr ""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:222
 msgid "Reposts of this post"
@@ -7086,10 +6048,6 @@ msgstr "Bu gönderinin yeniden gönderilmesi"
 #: src/view/com/modals/ChangeEmail.tsx:178
 msgid "Request Change"
 msgstr "Değişiklik İste"
-
-#: src/view/com/auth/create/Step2.tsx:219
-#~ msgid "Request code"
-#~ msgstr "Kod iste"
 
 #: src/view/com/modals/ChangePassword.tsx:242
 #: src/view/com/modals/ChangePassword.tsx:244
@@ -7140,10 +6098,6 @@ msgstr "Sıfırlama kodu"
 msgid "Reset Code"
 msgstr "Sıfırlama Kodu"
 
-#: src/view/screens/Settings.tsx:806
-#~ msgid "Reset onboarding"
-#~ msgstr "Onboarding sıfırla"
-
 #: src/screens/Settings/Settings.tsx:343
 #: src/screens/Settings/Settings.tsx:345
 msgid "Reset onboarding state"
@@ -7153,22 +6107,18 @@ msgstr "Onboarding durumunu sıfırla"
 msgid "Reset password"
 msgstr "Şifreyi sıfırla"
 
-#: src/view/screens/Settings.tsx:796
-#~ msgid "Reset preferences"
-#~ msgstr "Tercihleri sıfırla"
-
 #: src/view/screens/Settings/index.tsx:847
 #: src/view/screens/Settings/index.tsx:850
 #~ msgid "Reset preferences state"
-#~ msgstr "Tercih durumunu sıfırla"
+#~ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:868
 #~ msgid "Resets the onboarding state"
-#~ msgstr "Onboarding durumunu sıfırlar"
+#~ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:848
 #~ msgid "Resets the preferences state"
-#~ msgstr "Tercih durumunu sıfırlar"
+#~ msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:306
 msgid "Retries login"
@@ -7197,10 +6147,6 @@ msgstr "Son hataya neden olan son eylemi tekrarlar"
 msgid "Retry"
 msgstr "Tekrar dene"
 
-#: src/screens/Messages/Conversation/MessageListError.tsx:54
-#~ msgid "Retry."
-#~ msgstr "Tekrar dene."
-
 #: src/components/Error.tsx:73
 #: src/screens/List/ListHiddenScreen.tsx:216
 #: src/screens/StarterPack/StarterPackScreen.tsx:752
@@ -7216,10 +6162,6 @@ msgstr ""
 #: src/view/screens/NotFound.tsx:60
 msgid "Returns to previous page"
 msgstr ""
-
-#: src/view/shell/desktop/RightNav.tsx:59
-#~ msgid "SANDBOX. Posts and accounts are not permanent."
-#~ msgstr "KUM KUTUSU. Gönderiler ve hesaplar kalıcı değildir."
 
 #: src/components/dialogs/BirthDateSettings.tsx:124
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:438
@@ -7246,10 +6188,6 @@ msgctxt "action"
 msgid "Save"
 msgstr "Kaydet"
 
-#: src/view/com/modals/AltImage.tsx:132
-#~ msgid "Save alt text"
-#~ msgstr "Alternatif metni kaydet"
-
 #: src/components/dialogs/BirthDateSettings.tsx:118
 msgid "Save birthday"
 msgstr ""
@@ -7265,7 +6203,7 @@ msgstr "Değişiklikleri Kaydet"
 
 #: src/view/com/modals/ChangeHandle.tsx:158
 #~ msgid "Save handle change"
-#~ msgstr "Kullanıcı adı değişikliğini kaydet"
+#~ msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:150
 #: src/components/StarterPack/ShareDialog.tsx:157
@@ -7297,10 +6235,6 @@ msgstr "Kayıtlı Beslemeler"
 msgid "Saved to your camera roll"
 msgstr ""
 
-#: src/view/com/lightbox/Lightbox.tsx:81
-#~ msgid "Saved to your camera roll."
-#~ msgstr ""
-
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:135
 #: src/view/screens/ProfileList.tsx:362
 msgid "Saved to your feeds"
@@ -7312,7 +6246,7 @@ msgstr "Profilinizdeki herhangi bir değişikliği kaydeder"
 
 #: src/view/com/modals/ChangeHandle.tsx:159
 #~ msgid "Saves handle change to {handle}"
-#~ msgstr "{handle} kullanıcı adı değişikliğini kaydeder"
+#~ msgstr ""
 
 #: src/view/com/modals/CropImage.web.tsx:105
 msgid "Saves image crop settings"
@@ -7366,21 +6300,9 @@ msgstr "\"{query}\" için ara"
 msgid "Search for \"{searchText}\""
 msgstr ""
 
-#: src/components/TagMenu/index.tsx:155
-#~ msgid "Search for all posts by @{authorHandle} with tag {displayTag}"
-#~ msgstr ""
-
-#: src/components/TagMenu/index.tsx:104
-#~ msgid "Search for all posts with tag {displayTag}"
-#~ msgstr ""
-
 #: src/screens/StarterPack/Wizard/index.tsx:474
 msgid "Search for feeds that you want to suggest to others."
 msgstr ""
-
-#: src/components/dms/NewChat.tsx:226
-#~ msgid "Search for someone to start a conversation with."
-#~ msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
 msgid "Search for users"
@@ -7425,18 +6347,9 @@ msgstr ""
 msgid "See jobs at Bluesky"
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:411
-#: src/view/com/util/UserAvatar.tsx:402
-#~ msgid "See profile"
-#~ msgstr ""
-
 #: src/view/screens/SavedFeeds.tsx:205
 msgid "See this guide"
 msgstr "Bu kılavuzu gör"
-
-#: src/view/com/auth/HomeLoggedOutCTA.tsx:40
-#~ msgid "See what's next"
-#~ msgstr "Ne olduğunu gör"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:189
 #~ msgid "Seek slider"
@@ -7448,7 +6361,7 @@ msgstr ""
 
 #: src/view/com/util/Selector.tsx:107
 #~ msgid "Select {item}"
-#~ msgstr "{item} seç"
+#~ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -7465,10 +6378,6 @@ msgstr "Bir avatar seç"
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:65
 msgid "Select an emoji"
 msgstr "Emoji seç"
-
-#: src/view/com/modals/ServerInput.tsx:75
-#~ msgid "Select Bluesky Social"
-#~ msgstr "Bluesky Social seç"
 
 #: src/screens/Settings/LanguageSettings.tsx:262
 msgid "Select content languages"
@@ -7504,16 +6413,7 @@ msgstr "Moderatör seç"
 
 #: src/view/com/util/Selector.tsx:108
 #~ msgid "Select option {i} of {numItems}"
-#~ msgstr "{i} seçeneği, {numItems} seçenekten"
-
-#: src/view/com/auth/create/Step1.tsx:77
-#: src/view/com/auth/login/LoginForm.tsx:147
-#~ msgid "Select service"
-#~ msgstr "Servis seç"
-
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:52
-#~ msgid "Select some accounts below to follow"
-#~ msgstr "Aşağıdaki hesaplardan bazılarını takip et"
+#~ msgstr ""
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:66
 msgid "Select subtitle file (.vtt)"
@@ -7531,10 +6431,6 @@ msgstr ""
 msgid "Select the service that hosts your data."
 msgstr ""
 
-#: src/screens/Onboarding/StepTopicalFeeds.tsx:100
-#~ msgid "Select topical feeds to follow from the list below"
-#~ msgstr "Aşağıdaki listeden takip edilecek konu beslemelerini seçin"
-
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:100
 msgid "Select video"
 msgstr "Video seç"
@@ -7543,17 +6439,9 @@ msgstr "Video seç"
 msgid "Select what content this mute word should apply to."
 msgstr "Sessize alınan bu kelimenin hangi içeriğe uygulanacağını seçin."
 
-#: src/screens/Onboarding/StepModeration/index.tsx:63
-#~ msgid "Select what you want to see (or not see), and we’ll handle the rest."
-#~ msgstr "Görmek istediğinizi (veya görmek istemediğinizi) seçin, gerisini biz hallederiz."
-
 #: src/screens/Settings/LanguageSettings.tsx:255
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr "Abone olduğunuz beslemelerin hangi dilleri içermesini istediğinizi seçin. Hiçbiri seçilmezse, tüm diller gösterilir."
-
-#: src/view/screens/LanguageSettings.tsx:98
-#~ msgid "Select your app language for the default text to display in the app"
-#~ msgstr "Uygulama dilinizi seçin, uygulamada görüntülenecek varsayılan metin"
 
 #: src/screens/Settings/LanguageSettings.tsx:84
 msgid "Select your app language for the default text to display in the app."
@@ -7567,21 +6455,9 @@ msgstr ""
 msgid "Select your interests from the options below"
 msgstr "Aşağıdaki seçeneklerden ilgi alanlarınızı seçin"
 
-#: src/view/com/auth/create/Step2.tsx:155
-#~ msgid "Select your phone's country"
-#~ msgstr "Telefonunuzun ülkesini seçin"
-
 #: src/screens/Settings/LanguageSettings.tsx:171
 msgid "Select your preferred language for translations in your feed."
 msgstr "Beslemenizdeki çeviriler için tercih ettiğiniz dili seçin."
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:117
-#~ msgid "Select your primary algorithmic feeds"
-#~ msgstr "Birincil algoritmik beslemelerinizi seçin"
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:133
-#~ msgid "Select your secondary algorithmic feeds"
-#~ msgstr "İkincil algoritmik beslemelerinizi seçin"
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
@@ -7633,10 +6509,6 @@ msgstr "Şuraya gönder..."
 msgid "Send report"
 msgstr "Rapor gönder"
 
-#: src/view/com/modals/report/SendReportButton.tsx:45
-#~ msgid "Send Report"
-#~ msgstr "Rapor Gönder"
-
 #: src/components/ReportDialog/SelectLabelerView.tsx:42
 msgid "Send report to {0}"
 msgstr ""
@@ -7659,16 +6531,6 @@ msgstr "Hesap silme için onay kodu içeren e-posta gönderir"
 msgid "Server address"
 msgstr "Sunucu Adresi"
 
-#: src/view/com/modals/ContentFilteringSettings.tsx:306
-#~ msgid "Set {value} for {labelGroup} content moderation policy"
-#~ msgstr "{labelGroup} içerik düzenleme politikası için {value} ayarla"
-
-#: src/view/com/modals/ContentFilteringSettings.tsx:155
-#: src/view/com/modals/ContentFilteringSettings.tsx:174
-#~ msgctxt "action"
-#~ msgid "Set Age"
-#~ msgstr "Yaş Ayarla"
-
 #: src/screens/Settings/AppIconSettings/index.tsx:178
 msgid "Set app icon to {0}"
 msgstr ""
@@ -7677,53 +6539,25 @@ msgstr ""
 msgid "Set birthdate"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:482
-#~ msgid "Set color theme to dark"
-#~ msgstr "Renk temasını koyu olarak ayarla"
-
-#: src/view/screens/Settings.tsx:475
-#~ msgid "Set color theme to light"
-#~ msgstr "Renk temasını açık olarak ayarla"
-
-#: src/view/screens/Settings.tsx:469
-#~ msgid "Set color theme to system setting"
-#~ msgstr "Renk temasını sistem ayarına ayarla"
-
-#: src/view/screens/Settings.tsx:508
-#~ msgid "Set dark theme to the dark theme"
-#~ msgstr "Koyu teması koyu temaya ayarla"
-
-#: src/view/screens/Settings.tsx:501
-#~ msgid "Set dark theme to the dim theme"
-#~ msgstr "Koyu teması loş temaya ayarla"
-
 #: src/screens/Login/SetNewPasswordForm.tsx:96
 msgid "Set new password"
 msgstr "Yeni şifre ayarla"
 
-#: src/view/com/auth/create/Step1.tsx:169
-#~ msgid "Set password"
-#~ msgstr "Şifre ayarla"
-
 #: src/view/screens/PreferencesFollowingFeed.tsx:122
 #~ msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-#~ msgstr "Bu ayarı \"Hayır\" olarak ayarlayarak beslemenizden tüm alıntı gönderileri gizleyebilirsiniz. Yeniden göndermeler hala görünür olacaktır."
+#~ msgstr ""
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:64
 #~ msgid "Set this setting to \"No\" to hide all replies from your feed."
-#~ msgstr "Bu ayarı \"Hayır\" olarak ayarlayarak beslemenizden tüm yanıtları gizleyebilirsiniz."
+#~ msgstr ""
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:88
 #~ msgid "Set this setting to \"No\" to hide all reposts from your feed."
-#~ msgstr "Bu ayarı \"Hayır\" olarak ayarlayarak beslemenizden tüm yeniden göndermeleri gizleyebilirsiniz."
+#~ msgstr ""
 
 #: src/view/screens/PreferencesThreads.tsx:117
 #~ msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
-#~ msgstr "Bu ayarı \"Evet\" olarak ayarlayarak yanıtları konu tabanlı görüntülemek için ayarlayın. Bu deneysel bir özelliktir."
-
-#: src/view/screens/PreferencesHomeFeed.tsx:261
-#~ msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
-#~ msgstr "Bu ayarı \"Evet\" olarak ayarlayarak kayıtlı beslemelerinizin örneklerini takip ettiğiniz beslemede göstermek için ayarlayın. Bu deneysel bir özelliktir."
+#~ msgstr ""
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:158
 #~ msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
@@ -7735,52 +6569,11 @@ msgstr "Hesabınızı ayarlayın"
 
 #: src/view/com/modals/ChangeHandle.tsx:254
 #~ msgid "Sets Bluesky username"
-#~ msgstr "Bluesky kullanıcı adını ayarlar"
-
-#: src/view/screens/Settings/index.tsx:463
-#~ msgid "Sets color theme to dark"
-#~ msgstr ""
-
-#: src/view/screens/Settings/index.tsx:456
-#~ msgid "Sets color theme to light"
-#~ msgstr ""
-
-#: src/view/screens/Settings/index.tsx:450
-#~ msgid "Sets color theme to system setting"
-#~ msgstr ""
-
-#: src/view/screens/Settings/index.tsx:489
-#~ msgid "Sets dark theme to the dark theme"
-#~ msgstr ""
-
-#: src/view/screens/Settings/index.tsx:482
-#~ msgid "Sets dark theme to the dim theme"
 #~ msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:107
 msgid "Sets email for password reset"
 msgstr "Şifre sıfırlama için e-posta ayarlar"
-
-#: src/view/com/auth/login/ForgotPasswordForm.tsx:118
-#~ msgid "Sets hosting provider for password reset"
-#~ msgstr "Şifre sıfırlama için barındırma sağlayıcısını ayarlar"
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:146
-#~ msgid "Sets image aspect ratio to square"
-#~ msgstr ""
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:136
-#~ msgid "Sets image aspect ratio to tall"
-#~ msgstr ""
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:126
-#~ msgid "Sets image aspect ratio to wide"
-#~ msgstr ""
-
-#: src/view/com/auth/create/Step1.tsx:78
-#: src/view/com/auth/login/LoginForm.tsx:148
-#~ msgid "Sets server for the Bluesky client"
-#~ msgstr "Bluesky istemcisi için sunucuyu ayarlar"
 
 #: src/Navigation.tsx:160
 #: src/screens/Settings/Settings.tsx:80
@@ -7833,14 +6626,6 @@ msgstr "Yine de paylaş"
 #: src/view/screens/ProfileFeed.tsx:364
 #: src/view/screens/ProfileFeed.tsx:366
 #~ msgid "Share feed"
-#~ msgstr "Beslemeyi paylaş"
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:621
-#~ msgid "Share image externally"
-#~ msgstr ""
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:639
-#~ msgid "Share image in post"
 #~ msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:123
@@ -7893,14 +6678,6 @@ msgstr ""
 msgid "Show"
 msgstr "Göster"
 
-#: src/view/screens/Search/Search.tsx:889
-#~ msgid "Show advanced filters"
-#~ msgstr ""
-
-#: src/view/screens/PreferencesFollowingFeed.tsx:68
-#~ msgid "Show all replies"
-#~ msgstr "Tüm yanıtları göster"
-
 #: src/view/com/util/post-embeds/GifEmbed.tsx:178
 msgid "Show alt text"
 msgstr ""
@@ -7919,14 +6696,6 @@ msgstr ""
 #: src/lib/moderation/useLabelBehaviorDescription.ts:61
 msgid "Show badge and filter from feeds"
 msgstr ""
-
-#: src/view/com/modals/EmbedConsent.tsx:87
-#~ msgid "Show embeds from {0}"
-#~ msgstr "{0} adresinden gömülü öğeleri göster"
-
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:215
-#~ msgid "Show follows similar to {0}"
-#~ msgstr "{0} adresine benzer takipçileri göster"
 
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:22
 msgid "Show hidden replies"
@@ -7966,7 +6735,7 @@ msgstr ""
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:155
 #~ msgid "Show Posts from My Feeds"
-#~ msgstr "Beslemelerimden Gönderileri Göster"
+#~ msgstr ""
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:104
 #: src/screens/Settings/FollowingFeedPreferences.tsx:114
@@ -7975,19 +6744,7 @@ msgstr "Alıntı gönderileri göster"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:119
 #~ msgid "Show Quote Posts"
-#~ msgstr "Alıntı Gönderileri Göster"
-
-#: src/screens/Onboarding/StepFollowingFeed.tsx:119
-#~ msgid "Show quote-posts in Following feed"
-#~ msgstr "Alıntı gönderileri takip etme beslemesinde göster"
-
-#: src/screens/Onboarding/StepFollowingFeed.tsx:135
-#~ msgid "Show quotes in Following"
-#~ msgstr "Takip etme beslemesinde alıntıları göster"
-
-#: src/screens/Onboarding/StepFollowingFeed.tsx:95
-#~ msgid "Show re-posts in Following feed"
-#~ msgstr "Yeniden göndermeleri takip etme beslemesinde göster"
+#~ msgstr ""
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:68
 #: src/screens/Settings/FollowingFeedPreferences.tsx:78
@@ -7996,7 +6753,7 @@ msgstr "Yanıtları göster"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:61
 #~ msgid "Show Replies"
-#~ msgstr "Yanıtları Göster"
+#~ msgstr ""
 
 #: src/view/com/post-thread/PostThread.tsx:622
 msgid "Show replies as"
@@ -8012,23 +6769,11 @@ msgstr ""
 
 #: src/view/screens/PreferencesThreads.tsx:95
 #~ msgid "Show replies by people you follow before all other replies."
-#~ msgstr "Takip ettiğiniz kişilerin yanıtlarını diğer tüm yanıtlardan önce göster."
+#~ msgstr ""
 
 #: src/screens/Settings/ThreadPreferences.tsx:143
 #~ msgid "Show replies in a threaded view"
 #~ msgstr ""
-
-#: src/screens/Onboarding/StepFollowingFeed.tsx:87
-#~ msgid "Show replies in Following"
-#~ msgstr "Takip etme beslemesinde yanıtları göster"
-
-#: src/screens/Onboarding/StepFollowingFeed.tsx:71
-#~ msgid "Show replies in Following feed"
-#~ msgstr "Takip etme beslemesinde yanıtları göster"
-
-#: src/view/screens/PreferencesFollowingFeed.tsx:70
-#~ msgid "Show replies with at least {value} {0}"
-#~ msgstr "En az {value} {0} olan yanıtları göster"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:549
@@ -8042,11 +6787,7 @@ msgstr ""
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:85
 #~ msgid "Show Reposts"
-#~ msgstr "Yeniden Göndermeleri Göster"
-
-#: src/screens/Onboarding/StepFollowingFeed.tsx:111
-#~ msgid "Show reposts in Following"
-#~ msgstr "Takip etme beslemesinde yeniden göndermeleri göster"
+#~ msgstr ""
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:129
 #: src/screens/Settings/FollowingFeedPreferences.tsx:139
@@ -8058,10 +6799,6 @@ msgstr ""
 msgid "Show the content"
 msgstr "İçeriği göster"
 
-#: src/view/com/notifications/FeedItem.tsx:347
-#~ msgid "Show users"
-#~ msgstr "Kullanıcıları göster"
-
 #: src/lib/moderation/useLabelBehaviorDescription.ts:58
 msgid "Show warning"
 msgstr "Uyarı göster"
@@ -8069,14 +6806,6 @@ msgstr "Uyarı göster"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:56
 msgid "Show warning and filter from feeds"
 msgstr "Uyarı göster ve beslemelerden filtrele"
-
-#: src/view/com/profile/ProfileHeader.tsx:501
-#~ msgid "Shows a list of users similar to this user."
-#~ msgstr "Bu kullanıcıya benzer kullanıcıların listesini gösterir."
-
-#: src/view/com/post-thread/PostThreadFollowBtn.tsx:128
-#~ msgid "Shows posts from {0} in your feed"
-#~ msgstr "Beslemenizde {0} adresinden gönderileri gösterir"
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
@@ -8098,12 +6827,6 @@ msgstr "Uyarı göster ve beslemelerden filtrele"
 msgid "Sign in"
 msgstr "Giriş yap"
 
-#: src/view/com/auth/HomeLoggedOutCTA.tsx:78
-#: src/view/com/auth/SplashScreen.tsx:57
-#: src/view/com/auth/SplashScreen.web.tsx:87
-#~ msgid "Sign In"
-#~ msgstr "Giriş Yap"
-
 #: src/components/AccountList.tsx:122
 msgid "Sign in as {0}"
 msgstr "{0} olarak giriş yap"
@@ -8115,10 +6838,6 @@ msgstr "Olarak giriş yap..."
 #: src/components/dialogs/Signin.tsx:75
 msgid "Sign in or create your account to join the conversation!"
 msgstr "Görüşmeye katılmak için giriş yapın veya hesabınızı oluşturun!"
-
-#: src/view/com/auth/login/LoginForm.tsx:134
-#~ msgid "Sign into"
-#~ msgstr "Olarak giriş yap"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign into Bluesky or create a new account"
@@ -8150,10 +6869,6 @@ msgstr "Çıkış yap?"
 msgid "Create account"
 msgstr "Kaydol"
 
-#: src/view/shell/NavSignupCard.tsx:47
-#~ msgid "Sign up or sign in to join the conversation"
-#~ msgstr "Görüşmeye katılmak için kaydolun veya giriş yapın"
-
 #: src/components/moderation/ScreenHider.tsx:91
 #: src/lib/moderation/useGlobalLabelStrings.ts:28
 msgid "Sign-in Required"
@@ -8161,7 +6876,7 @@ msgstr "Giriş Yapılması Gerekiyor"
 
 #: src/view/screens/Settings/index.tsx:362
 #~ msgid "Signed in as"
-#~ msgstr "Olarak giriş yapıldı"
+#~ msgstr ""
 
 #: src/lib/hooks/useAccountSwitcher.ts:41
 #: src/screens/Login/ChooseAccountForm.tsx:53
@@ -8171,10 +6886,6 @@ msgstr "@{0} olarak giriş yapıldı"
 #: src/view/com/notifications/FeedItem.tsx:218
 #~ msgid "signed up with your starter pack"
 #~ msgstr ""
-
-#: src/view/com/modals/SwitchAccount.tsx:66
-#~ msgid "Signs {0} out of Bluesky"
-#~ msgstr "{0} adresini Bluesky'den çıkarır"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:299
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:306
@@ -8198,10 +6909,6 @@ msgstr "Bu akışı atla"
 msgid "Smaller"
 msgstr "Daha küçük"
 
-#: src/view/com/auth/create/Step2.tsx:82
-#~ msgid "SMS verification"
-#~ msgstr "SMS doğrulama"
-
 #: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:100
 msgid "Software Dev"
@@ -8215,17 +6922,9 @@ msgstr "Beğenebileceğiniz diğer beslemeler"
 msgid "Some people can reply"
 msgstr "Bazı kişiler yanıtlayabilir"
 
-#: src/screens/StarterPack/Wizard/index.tsx:203
-#~ msgid "Some subtitle"
-#~ msgstr ""
-
 #: src/screens/Messages/Conversation.tsx:102
 msgid "Something went wrong"
 msgstr "Bir şeyler ters gitti"
-
-#: src/view/com/modals/ProfilePreview.tsx:62
-#~ msgid "Something went wrong and we're not sure what."
-#~ msgstr "Bir şeyler yanlış gitti ve ne olduğundan emin değiliz."
 
 #: src/screens/Deactivated.tsx:94
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
@@ -8243,10 +6942,6 @@ msgstr "Bir şeyler ters gitti, lütfen tekrar deneyin."
 msgid "Something went wrong!"
 msgstr "Bir şeyler ters gitti!"
 
-#: src/view/com/modals/Waitlist.tsx:51
-#~ msgid "Something went wrong. Check your email and try again."
-#~ msgstr "Bir şeyler yanlış gitti. E-postanızı kontrol edin ve tekrar deneyin."
-
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:538
 msgid "Something wrong? Let us know."
 msgstr ""
@@ -8262,7 +6957,7 @@ msgstr "Yanıtları sırala"
 
 #: src/view/screens/PreferencesThreads.tsx:64
 #~ msgid "Sort Replies"
-#~ msgstr "Yanıtları Sırala"
+#~ msgstr ""
 
 #: src/screens/Settings/ThreadPreferences.tsx:62
 msgid "Sort replies by"
@@ -8275,14 +6970,6 @@ msgstr "Aynı gönderiye verilen yanıtları şuna göre sırala:"
 #: src/components/moderation/LabelsOnMeDialog.tsx:168
 msgid "Source:"
 msgstr "Kaynak:"
-
-#: src/components/moderation/LabelsOnMeDialog.tsx:169
-#~ msgid "Source: <0>{0}</0>"
-#~ msgstr ""
-
-#: src/components/moderation/LabelsOnMeDialog.tsx:163
-#~ msgid "Source: <0>{sourceName}</0>"
-#~ msgstr ""
 
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
@@ -8302,14 +6989,6 @@ msgstr ""
 msgid "Sports"
 msgstr "Spor"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:145
-#~ msgid "Square"
-#~ msgstr "Kare"
-
-#: src/view/com/modals/ServerInput.tsx:62
-#~ msgid "Staging"
-#~ msgstr "Staging"
-
 #: src/components/dms/dialogs/NewChatDialog.tsx:72
 msgid "Start a new chat"
 msgstr ""
@@ -8327,14 +7006,6 @@ msgstr ""
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:353
 msgid "Start chat with {displayName}"
 msgstr ""
-
-#: src/components/dms/MessagesNUX.tsx:161
-#~ msgid "Start chatting"
-#~ msgstr ""
-
-#: src/tours/Tooltip.tsx:99
-#~ msgid "Start of onboarding tour window. Do not move backward. Instead, go forward for more options, or press to skip."
-#~ msgstr ""
 
 #: src/Navigation.tsx:408
 #: src/Navigation.tsx:413
@@ -8367,26 +7038,14 @@ msgstr "Başlangıç Paketleri"
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "Başlangıç paketleri favori kişilerinizi ve beslemelerinizi arkadaşlarınızla kolaylıkla paylaşmanızı sağlar."
 
-#: src/view/screens/Settings/index.tsx:862
-#~ msgid "Status page"
-#~ msgstr "Durum sayfası"
-
 #: src/screens/Settings/AboutSettings.tsx:53
 #: src/screens/Settings/AboutSettings.tsx:56
 msgid "Status Page"
 msgstr "Durum Sayfası"
 
-#: src/screens/Signup/index.tsx:145
-#~ msgid "Step"
-#~ msgstr ""
-
 #: src/screens/Signup/index.tsx:130
 msgid "Step {0} of {1}"
 msgstr ""
-
-#: src/view/com/auth/create/StepHeader.tsx:22
-#~ msgid "Step {0} of {numSteps}"
-#~ msgstr "{numSteps} adımdan {0}. adım"
 
 #: src/screens/Settings/Settings.tsx:308
 msgid "Storage cleared, you need to restart the app now."
@@ -8395,14 +7054,14 @@ msgstr "Depolama temizlendi, şimdi uygulamayı yeniden başlatmanız gerekiyor.
 #: src/Navigation.tsx:246
 #: src/screens/Settings/Settings.tsx:324
 msgid "Storybook"
-msgstr "Storybook"
+msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:299
 #: src/components/moderation/LabelsOnMeDialog.tsx:300
 #: src/screens/Messages/components/ChatDisabled.tsx:142
 #: src/screens/Messages/components/ChatDisabled.tsx:143
 msgid "Submit"
-msgstr "Submit"
+msgstr ""
 
 #: src/view/screens/ProfileList.tsx:712
 msgid "Subscribe"
@@ -8415,11 +7074,6 @@ msgstr ""
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:238
 msgid "Subscribe to Labeler"
 msgstr ""
-
-#: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:172
-#: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:307
-#~ msgid "Subscribe to the {0} feed"
-#~ msgstr "{0} beslemesine abone ol"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:204
 msgid "Subscribe to this labeler"
@@ -8437,10 +7091,6 @@ msgstr ""
 msgid "Suggested accounts"
 msgstr "Önerilen hesaplar"
 
-#: src/view/screens/Search/Search.tsx:425
-#~ msgid "Suggested Follows"
-#~ msgstr "Önerilen Takipçiler"
-
 #: src/components/FeedInterstitials.tsx:316
 msgid "Suggested for you"
 msgstr "Sana önerilenler"
@@ -8456,10 +7106,6 @@ msgstr "Tehlikeli"
 msgid "Support"
 msgstr "Destek"
 
-#: src/view/com/modals/ProfilePreview.tsx:110
-#~ msgid "Swipe up to see more"
-#~ msgstr "Daha fazlasını görmek için yukarı kaydır"
-
 #: src/screens/Settings/Settings.tsx:102
 #: src/screens/Settings/Settings.tsx:116
 #: src/screens/Settings/Settings.tsx:411
@@ -8471,17 +7117,13 @@ msgstr "Hesap değiştir"
 msgid "Switch Account"
 msgstr "Hesap Değiştir"
 
-#: src/tours/HomeTour.tsx:48
-#~ msgid "Switch between feeds to control your experience."
-#~ msgstr ""
-
 #: src/view/screens/Settings/index.tsx:131
 #~ msgid "Switch to {0}"
-#~ msgstr "{0} adresine geç"
+#~ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:132
 #~ msgid "Switches the account you are logged in to"
-#~ msgstr "Giriş yaptığınız hesabı değiştirir"
+#~ msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:97
 #: src/screens/Settings/AppearanceSettings.tsx:147
@@ -8494,10 +7136,6 @@ msgstr "Sistem"
 msgid "System log"
 msgstr "Sistem günlüğü"
 
-#: src/components/dialogs/MutedWords.tsx:323
-#~ msgid "tag"
-#~ msgstr ""
-
 #: src/components/TagMenu/index.tsx:110
 msgid "Tag menu: {displayTag}"
 msgstr ""
@@ -8505,10 +7143,6 @@ msgstr ""
 #: src/components/dialogs/MutedWords.tsx:282
 msgid "Tags only"
 msgstr ""
-
-#: src/view/com/modals/crop-image/CropImage.web.tsx:135
-#~ msgid "Tall"
-#~ msgstr "Uzun"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Tap to change app icon"
@@ -8540,10 +7174,6 @@ msgstr ""
 msgid "Tap to view full image"
 msgstr ""
 
-#: src/view/com/util/images/AutoSizedImage.tsx:70
-#~ msgid "Tap to view fully"
-#~ msgstr "Tamamen görüntülemek için dokunun"
-
 #: src/state/shell/progress-guide.tsx:233
 msgid "Task complete - 10 follows!"
 msgstr ""
@@ -8573,10 +7203,6 @@ msgstr "Bize biraz kendinden bahset"
 msgid "Tell us a little more"
 msgstr ""
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:518
-#~ msgid "Ten Million"
-#~ msgstr ""
-
 #: src/view/shell/desktop/RightNav.tsx:107
 #: src/view/shell/desktop/RightNav.tsx:108
 msgid "Terms"
@@ -8598,10 +7224,6 @@ msgstr "Hizmet Şartları"
 msgid "Terms used violate community standards"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:323
-#~ msgid "text"
-#~ msgstr ""
-
 #: src/components/dialogs/MutedWords.tsx:266
 msgid "Text & tags"
 msgstr ""
@@ -8619,14 +7241,6 @@ msgstr "Teşekkür ederiz! E-posta adresiniz başarıyla doğrulandı."
 #: src/components/ReportDialog/SubmitView.tsx:82
 msgid "Thank you. Your report has been sent."
 msgstr ""
-
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:593
-#~ msgid "Thanks for being one of our first 10 million users."
-#~ msgstr ""
-
-#: src/components/intents/VerifyEmailIntentDialog.tsx:74
-#~ msgid "Thanks, you have successfully verified your email address."
-#~ msgstr ""
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
@@ -8662,10 +7276,6 @@ msgstr "Hesap, engeli kaldırdıktan sonra sizinle etkileşime geçebilecek."
 #: src/screens/Settings/AppIconSettings/index.tsx:222
 msgid "The app will be restarted"
 msgstr ""
-
-#: src/components/moderation/ModerationDetailsDialog.tsx:127
-#~ msgid "the author"
-#~ msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:117
 #: src/lib/moderation/useModerationCauseDescription.ts:126
@@ -8749,36 +7359,13 @@ msgstr ""
 msgid "Theme"
 msgstr "Tema"
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:141
-#~ msgid "There are many feeds to try:"
-#~ msgstr "Denemek için birçok besleme var:"
-
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:112
-#: src/view/screens/ProfileFeed.tsx:539
-#~ msgid "There was an an issue contacting the server, please check your internet connection and try again."
-#~ msgstr "Sunucuya ulaşma konusunda bir sorun oluştu, lütfen internet bağlantınızı kontrol edin ve tekrar deneyin."
-
-#: src/view/com/posts/FeedErrorMessage.tsx:145
-#~ msgid "There was an an issue removing this feed. Please check your internet connection and try again."
-#~ msgstr "Bu beslemeyi kaldırma konusunda bir sorun oluştu. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin."
-
-#: src/view/com/posts/FeedShutdownMsg.tsx:52
-#: src/view/com/posts/FeedShutdownMsg.tsx:71
-#: src/view/screens/ProfileFeed.tsx:204
-#~ msgid "There was an an issue updating your feeds, please check your internet connection and try again."
-#~ msgstr "Beslemelerinizi güncelleme konusunda bir sorun oluştu, lütfen internet bağlantınızı kontrol edin ve tekrar deneyin."
-
 #: src/components/dialogs/GifSelect.tsx:226
 msgid "There was an issue connecting to Tenor."
 msgstr ""
-
-#: src/screens/Messages/Conversation/MessageListError.tsx:23
-#~ msgid "There was an issue connecting to the chat."
-#~ msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:177
 #: src/view/screens/ProfileList.tsx:365
@@ -8831,10 +7418,6 @@ msgstr ""
 msgid "There was an issue sending your report. Please check your internet connection."
 msgstr ""
 
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:65
-#~ msgid "There was an issue syncing your preferences with the server"
-#~ msgstr "Tercihlerinizi sunucuyla senkronize etme konusunda bir sorun oluştu"
-
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:140
 #: src/view/com/posts/FeedShutdownMsg.tsx:52
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
@@ -8843,7 +7426,7 @@ msgstr ""
 
 #: src/view/screens/AppPasswords.tsx:75
 #~ msgid "There was an issue with fetching your app passwords"
-#~ msgstr "Uygulama şifrelerinizi almakta bir sorun oluştu"
+#~ msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:107
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:128
@@ -8880,14 +7463,6 @@ msgstr "Uygulamada beklenmeyen bir sorun oluştu. Bu size de olduysa lütfen biz
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "Bluesky'e bir dizi yeni kullanıcı geldi! Hesabınızı en kısa sürede etkinleştireceğiz."
 
-#: src/view/com/auth/create/Step2.tsx:55
-#~ msgid "There's something wrong with this number. Please choose your country and enter your full phone number!"
-#~ msgstr "Bu numarada bir sorun var. Lütfen ülkenizi seçin ve tam telefon numaranızı girin!"
-
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:146
-#~ msgid "These are popular accounts you might like:"
-#~ msgstr "Bunlar, beğenebileceğiniz popüler hesaplar:"
-
 #: src/screens/Settings/FollowingFeedPreferences.tsx:62
 msgid "These settings only apply to the Following feed."
 msgstr ""
@@ -8904,10 +7479,6 @@ msgstr "Bu hesap, kullanıcıların profilini görüntülemek için giriş yapma
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:260
-#~ msgid "This appeal will be sent to <0>{0}</0>."
-#~ msgstr ""
-
 #: src/components/moderation/LabelsOnMeDialog.tsx:246
 msgid "This appeal will be sent to <0>{sourceName}</0>."
 msgstr ""
@@ -8919,10 +7490,6 @@ msgstr ""
 #: src/screens/Messages/components/MessageListError.tsx:18
 msgid "This chat was disconnected"
 msgstr ""
-
-#: src/screens/Messages/Conversation/MessageListError.tsx:26
-#~ msgid "This chat was disconnected due to a network error."
-#~ msgstr ""
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
@@ -8961,12 +7528,6 @@ msgstr ""
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr "Bu besleme şu anda yüksek trafik alıyor ve geçici olarak kullanılamıyor. Lütfen daha sonra tekrar deneyin."
 
-#: src/screens/Profile/Sections/Feed.tsx:59
-#: src/view/screens/ProfileFeed.tsx:471
-#: src/view/screens/ProfileList.tsx:729
-#~ msgid "This feed is empty!"
-#~ msgstr "Bu besleme boş!"
-
 #: src/view/com/posts/CustomFeedEmptyState.tsx:38
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
 msgstr "Bu besleme boş! Daha fazla kullanıcı takip etmeniz veya dil ayarlarınızı ayarlamanız gerekebilir."
@@ -8993,10 +7554,6 @@ msgstr "Bu bilgi diğer kullanıcılarla paylaşılmaz."
 msgid "This is important in case you ever need to change your email or reset your password."
 msgstr "Bu, e-postanızı değiştirmeniz veya şifrenizi sıfırlamanız gerektiğinde önemlidir."
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:124
-#~ msgid "This label was applied by {0}."
-#~ msgstr ""
-
 #: src/components/moderation/ModerationDetailsDialog.tsx:150
 msgid "This label was applied by <0>{0}</0>."
 msgstr ""
@@ -9004,10 +7561,6 @@ msgstr ""
 #: src/components/moderation/ModerationDetailsDialog.tsx:145
 msgid "This label was applied by the author."
 msgstr ""
-
-#: src/components/moderation/LabelsOnMeDialog.tsx:165
-#~ msgid "This label was applied by you"
-#~ msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:163
 msgid "This label was applied by you."
@@ -9027,7 +7580,7 @@ msgstr ""
 
 #: src/view/screens/ProfileList.tsx:966
 #~ msgid "This list is empty!"
-#~ msgstr "Bu liste boş!"
+#~ msgstr ""
 
 #: src/view/screens/ProfileList.tsx:933
 msgid "This list is empty."
@@ -9039,7 +7592,7 @@ msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:110
 #~ msgid "This name is already in use"
-#~ msgstr "Bu isim zaten kullanılıyor"
+#~ msgstr ""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:845
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
@@ -9057,10 +7610,6 @@ msgstr ""
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr ""
-
-#: src/view/com/util/forms/PostDropdownBtn.tsx:443
-#~ msgid "This post will be hidden from feeds."
-#~ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:413
 msgid "This post's author has disabled quote posts."
@@ -9099,14 +7648,6 @@ msgstr "Bu kullanıcı sizi engelledi. İçeriklerini göremezsiniz."
 msgid "This user has requested that their content only be shown to signed-in users."
 msgstr ""
 
-#: src/view/com/modals/ModerationDetails.tsx:42
-#~ msgid "This user is included in the <0/> list which you have blocked."
-#~ msgstr "Bu kullanıcı, engellediğiniz <0/> listesinde bulunuyor."
-
-#: src/view/com/modals/ModerationDetails.tsx:74
-#~ msgid "This user is included in the <0/> list which you have muted."
-#~ msgstr "Bu kullanıcı, sessize aldığınız <0/> listesinde bulunuyor."
-
 #: src/components/moderation/ModerationDetailsDialog.tsx:57
 msgid "This user is included in the <0>{0}</0> list which you have blocked."
 msgstr ""
@@ -9123,21 +7664,9 @@ msgstr ""
 msgid "This user isn't following anyone."
 msgstr ""
 
-#: src/view/com/modals/SelfLabel.tsx:137
-#~ msgid "This warning is only available for posts with media attached."
-#~ msgstr "Bu uyarı yalnızca medya ekli gönderiler için mevcuttur."
-
 #: src/components/dialogs/MutedWords.tsx:435
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr ""
-
-#: src/components/dialogs/MutedWords.tsx:283
-#~ msgid "This will delete {0} from your muted words. You can always add it back later."
-#~ msgstr ""
-
-#: src/view/com/util/forms/PostDropdownBtn.tsx:192
-#~ msgid "This will hide this post from your feeds."
-#~ msgstr "Bu, bu gönderiyi beslemelerinizden gizleyecektir."
 
 #: src/screens/Settings/Settings.tsx:460
 msgid "This will remove @{0} from the quick access list."
@@ -9161,10 +7690,6 @@ msgstr ""
 msgid "Thread Preferences"
 msgstr "Konu Tercihleri"
 
-#: src/components/WhoCanReply.tsx:109
-#~ msgid "Thread settings updated"
-#~ msgstr ""
-
 #: src/view/com/post-thread/PostThread.tsx:636
 #: src/view/com/post-thread/PostThread.tsx:641
 msgid "Threaded"
@@ -9176,7 +7701,7 @@ msgstr ""
 
 #: src/view/screens/PreferencesThreads.tsx:114
 #~ msgid "Threaded Mode"
-#~ msgstr "Konu Tabanlı Mod"
+#~ msgstr ""
 
 #: src/Navigation.tsx:309
 msgid "Threads Preferences"
@@ -9206,14 +7731,6 @@ msgstr ""
 msgid "Today"
 msgstr "Bugün"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:597
-#~ msgid "Together, we're rebuilding the social internet. We're glad you're here."
-#~ msgstr ""
-
-#: src/components/dialogs/MutedWords.tsx:112
-#~ msgid "Toggle between muted word options."
-#~ msgstr ""
-
 #: src/view/com/util/forms/DropdownButton.tsx:258
 msgid "Toggle dropdown"
 msgstr "Açılır menüyü aç/kapat"
@@ -9231,10 +7748,6 @@ msgstr ""
 #: src/Navigation.tsx:383
 msgid "Topic"
 msgstr ""
-
-#: src/view/com/modals/EditImage.tsx:272
-#~ msgid "Transformations"
-#~ msgstr "Dönüşümler"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
@@ -9349,10 +7862,6 @@ msgctxt "action"
 msgid "Unfollow"
 msgstr "Takibi bırak"
 
-#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:247
-#~ msgid "Unfollow"
-#~ msgstr ""
-
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:217
 msgid "Unfollow {0}"
 msgstr "{0} adresini takibi bırak"
@@ -9361,10 +7870,6 @@ msgstr "{0} adresini takibi bırak"
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Unfollow Account"
 msgstr "Hesabı Takibi Bırak"
-
-#: src/view/com/auth/create/state.ts:300
-#~ msgid "Unfortunately, you do not meet the requirements to create an account."
-#~ msgstr "Üzgünüz, bir hesap oluşturmak için gerekleri karşılamıyorsunuz."
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Unlike"
@@ -9387,7 +7892,7 @@ msgstr "Sessizden çıkar"
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
 msgctxt "video"
 msgid "Unmute"
-msgstr ""
+msgstr "Sessizden çıkar"
 
 #: src/components/TagMenu/index.web.tsx:115
 msgid "Unmute {truncatedTag}"
@@ -9406,10 +7911,6 @@ msgstr ""
 msgid "Unmute conversation"
 msgstr "Görüşmeyi sessizden çıkar"
 
-#: src/components/dms/ConvoMenu.tsx:140
-#~ msgid "Unmute notifications"
-#~ msgstr ""
-
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:489
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:493
 msgid "Unmute thread"
@@ -9418,10 +7919,6 @@ msgstr "Konunun sessizliğini kaldır"
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:318
 msgid "Unmute video"
 msgstr ""
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#~ msgid "Unmuted"
-#~ msgstr ""
 
 #: src/view/screens/ProfileList.tsx:685
 msgid "Unpin"
@@ -9454,10 +7951,6 @@ msgstr ""
 msgid "Unpinned from your feeds"
 msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:345
-#~ msgid "Unsave"
-#~ msgstr "Kaydedilenlerden kaldır"
-
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:236
 msgid "Unsubscribe"
 msgstr ""
@@ -9487,26 +7980,14 @@ msgstr ""
 #~ msgid "Unsupported video type: {mimeType}"
 #~ msgstr ""
 
-#: src/lib/moderation/useReportOptions.ts:85
-#~ msgid "Unwanted sexual content"
-#~ msgstr ""
-
 #: src/lib/moderation/useReportOptions.ts:77
 #: src/lib/moderation/useReportOptions.ts:90
 msgid "Unwanted Sexual Content"
 msgstr "İstenmeyen Cinsel İçerik"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
-#~ msgid "Update {displayName} in Lists"
-#~ msgstr "Listelerde {displayName} güncelle"
-
-#: src/view/com/modals/UserAddRemoveLists.tsx:82
 msgid "Update <0>{displayName}</0> in Lists"
 msgstr ""
-
-#: src/lib/hooks/useOTAUpdate.ts:15
-#~ msgid "Update Available"
-#~ msgstr "Güncelleme Mevcut"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:509
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:530
@@ -9575,7 +8056,7 @@ msgstr "Video yükleniyor..."
 
 #: src/view/screens/AppPasswords.tsx:205
 #~ msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
-#~ msgstr "Uygulama şifrelerini kullanarak hesabınızın veya şifrenizin tam erişimini vermeden diğer Bluesky istemcilerine giriş yapın."
+#~ msgstr ""
 
 #: src/screens/Settings/AppPasswords.tsx:67
 msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
@@ -9616,10 +8097,6 @@ msgstr "Önerileni kullan"
 msgid "Use this to sign into the other app along with your handle."
 msgstr "Bunu, kullanıcı adınızla birlikte diğer uygulamaya giriş yapmak için kullanın."
 
-#: src/view/com/modals/ServerInput.tsx:105
-#~ msgid "Use your domain as your Bluesky client service provider"
-#~ msgstr "Alan adınızı Bluesky istemci sağlayıcınız olarak kullanın"
-
 #: src/view/com/modals/InviteCodes.tsx:201
 msgid "Used by:"
 msgstr "Kullanıcı:"
@@ -9649,17 +8126,13 @@ msgstr ""
 msgid "User Blocks You"
 msgstr "Kullanıcı Sizi Engelledi"
 
-#: src/view/com/auth/create/Step3.tsx:41
-#~ msgid "User handle"
-#~ msgstr "Kullanıcı adı"
-
 #: src/view/com/modals/UserAddRemoveLists.tsx:214
 msgid "User list by {0}"
 msgstr "{0} tarafından oluşturulan kullanıcı listesi"
 
 #: src/view/screens/ProfileList.tsx:890
 #~ msgid "User list by <0/>"
-#~ msgstr "<0/> tarafından oluşturulan kullanıcı listesi"
+#~ msgstr ""
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:212
 msgid "User list by you"
@@ -9675,7 +8148,7 @@ msgstr "Kullanıcı listesi güncellendi"
 
 #: src/view/screens/Lists.tsx:78
 #~ msgid "User Lists"
-#~ msgstr "Kullanıcı Listeleri"
+#~ msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:185
 msgid "Username or email address"
@@ -9683,11 +8156,7 @@ msgstr "Kullanıcı adı veya e-posta adresi"
 
 #: src/view/screens/ProfileList.tsx:924
 #~ msgid "Users"
-#~ msgstr "Kullanıcılar"
-
-#: src/components/WhoCanReply.tsx:280
-#~ msgid "users followed by <0/>"
-#~ msgstr "<0/> tarafından takip edilen kullanıcılar"
+#~ msgstr ""
 
 #: src/components/WhoCanReply.tsx:258
 msgid "users followed by <0>@{0}</0>"
@@ -9710,17 +8179,9 @@ msgstr ""
 msgid "Value:"
 msgstr ""
 
-#: src/view/com/auth/create/Step2.tsx:243
-#~ msgid "Verification code"
-#~ msgstr "Doğrulama kodu"
-
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:125
 msgid "Verified email required"
 msgstr ""
-
-#: src/view/com/modals/ChangeHandle.tsx:510
-#~ msgid "Verify {0}"
-#~ msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:511
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:532
@@ -9729,7 +8190,7 @@ msgstr "DNS Kaydını Doğrula"
 
 #: src/view/screens/Settings/index.tsx:937
 #~ msgid "Verify email"
-#~ msgstr "E-postayı doğrula"
+#~ msgstr ""
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:134
 #: src/components/intents/VerifyEmailIntentDialog.tsx:67
@@ -9738,11 +8199,11 @@ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:962
 #~ msgid "Verify my email"
-#~ msgstr "E-postamı doğrula"
+#~ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:971
 #~ msgid "Verify My Email"
-#~ msgstr "E-postamı Doğrula"
+#~ msgstr ""
 
 #: src/view/com/modals/ChangeEmail.tsx:200
 #: src/view/com/modals/ChangeEmail.tsx:202
@@ -9768,10 +8229,6 @@ msgstr ""
 msgid "Verify Your Email"
 msgstr "E-postanızı Doğrulayın"
 
-#: src/view/screens/Settings/index.tsx:852
-#~ msgid "Version {0}"
-#~ msgstr ""
-
 #: src/screens/Settings/AboutSettings.tsx:67
 #: src/screens/Settings/AboutSettings.tsx:77
 msgid "Version {appVersion}"
@@ -9784,7 +8241,7 @@ msgstr "Versiyon {appVersion}"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:83
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:134
 msgid "Video"
-msgstr "Video"
+msgstr ""
 
 #: src/view/com/composer/state/video.ts:358
 msgid "Video failed to process"
@@ -9809,11 +8266,7 @@ msgstr "Video yüklendi"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:83
 msgid "Video: {0}"
-msgstr "Video: {0}"
-
-#: src/view/com/composer/videos/state.ts:27
-#~ msgid "Videos cannot be larger than 50MB"
-#~ msgstr ""
+msgstr ""
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:58
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:73
@@ -9932,10 +8385,6 @@ msgstr ""
 msgid "Warn content and filter from feeds"
 msgstr ""
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:124
-#~ msgid "We also think you'll like \"For You\" by Skygaze:"
-#~ msgstr "Ayrıca Skygaze tarafından \"Sana Özel\" beslemesini de beğeneceğinizi düşünüyoruz:"
-
 #: src/screens/Hashtag.tsx:205
 msgid "We couldn't find any results for that hashtag."
 msgstr ""
@@ -9964,14 +8413,6 @@ msgstr "Harika vakit geçirmenizi umuyoruz. Unutmayın, Bluesky:"
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr "Takipçilerinizden gönderi kalmadı. İşte <0/>'den en son gönderiler."
 
-#: src/components/dialogs/MutedWords.tsx:203
-#~ msgid "We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
-#~ msgstr ""
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:125
-#~ msgid "We recommend our \"Discover\" feed:"
-#~ msgstr "\"Keşfet\" beslememizi öneririz:"
-
 #: src/view/com/composer/state/video.ts:417
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "Video yüklemenize izin verilip verilmediğini belirleyemedik. Lütfen tekrar deneyin."
@@ -9991,10 +8432,6 @@ msgstr "Bağlantı kuramadık. Hesabınızı kurmaya devam etmek için tekrar de
 #: src/screens/SignupQueued.tsx:149
 msgid "We will let you know when your account is ready."
 msgstr "Hesabınız hazır olduğunda size bildireceğiz."
-
-#: src/view/com/modals/AppealLabel.tsx:48
-#~ msgid "We'll look into your appeal promptly."
-#~ msgstr "İtirazınıza hızlı bir şekilde bakacağız."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:134
 msgid "We'll use this to help customize your experience."
@@ -10034,10 +8471,6 @@ msgstr ""
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "Üzgünüz! Aradığınız sayfayı bulamıyoruz."
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:330
-#~ msgid "We're sorry! You can only subscribe to ten labelers, and you've reached your limit of ten."
-#~ msgstr ""
-
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:346
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
 msgstr ""
@@ -10045,10 +8478,6 @@ msgstr ""
 #: src/screens/Deactivated.tsx:124
 msgid "Welcome back!"
 msgstr "Tekrar hoş geldiniz!"
-
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:48
-#~ msgid "Welcome to <0>Bluesky</0>"
-#~ msgstr "<0>Bluesky</0>'e hoş geldiniz"
 
 #: src/components/NewskieDialog.tsx:103
 msgid "Welcome, friend!"
@@ -10061,10 +8490,6 @@ msgstr "İlgi alanlarınız nelerdir?"
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:41
 msgid "What do you want to call your starter pack?"
 msgstr "Başlangıç ​​paketinize ne ad vermek istersiniz?"
-
-#: src/view/com/modals/report/Modal.tsx:169
-#~ msgid "What is the issue with this {collectionName}?"
-#~ msgstr "Bu {collectionName} ile ilgili sorun nedir?"
 
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:79
 msgid "What people are posting about."
@@ -10088,22 +8513,9 @@ msgstr "Algoritmik beslemelerinizde hangi dilleri görmek istersiniz?"
 msgid "Who can interact with this post?"
 msgstr "Bu gönderiyle kim etkileşime geçebilir?"
 
-#: src/components/dms/MessagesNUX.tsx:110
-#: src/components/dms/MessagesNUX.tsx:124
-#~ msgid "Who can message you?"
-#~ msgstr ""
-
 #: src/components/WhoCanReply.tsx:87
 msgid "Who can reply"
 msgstr "Kimler yanıtlayabilir"
-
-#: src/components/WhoCanReply.tsx:212
-#~ msgid "Who can reply dialog"
-#~ msgstr ""
-
-#: src/components/WhoCanReply.tsx:216
-#~ msgid "Who can reply?"
-#~ msgstr ""
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
 #: src/screens/Messages/ChatList.tsx:148
@@ -10138,10 +8550,6 @@ msgstr ""
 msgid "Why should this user be reviewed?"
 msgstr ""
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:125
-#~ msgid "Wide"
-#~ msgstr "Geniş"
-
 #: src/screens/Messages/components/MessageInput.tsx:149
 #: src/screens/Messages/components/MessageInput.web.tsx:214
 msgid "Write a message"
@@ -10164,10 +8572,6 @@ msgstr "Yazarlar"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:339
 msgid "Wrong DID returned from server. Received: {0}"
 msgstr ""
-
-#: src/view/com/auth/create/Step2.tsx:263
-#~ msgid "XXXXXX"
-#~ msgstr "XXXXXX"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
 msgid "Yes"
@@ -10197,10 +8601,6 @@ msgstr ""
 #: src/components/dms/DateDivider.tsx:46
 msgid "Yesterday"
 msgstr ""
-
-#: src/components/dms/MessageItem.tsx:183
-#~ msgid "Yesterday, {time}"
-#~ msgstr ""
 
 #: src/screens/List/ListHiddenScreen.tsx:150
 msgid "you"
@@ -10234,14 +8634,6 @@ msgstr "Ayrıca takip edebileceğiniz yeni Özel Beslemeler keşfedebilirsiniz."
 #: src/view/com/modals/DeleteAccount.tsx:198
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
 msgstr ""
-
-#: src/screens/Onboarding/StepFollowingFeed.tsx:143
-#~ msgid "You can change these settings later."
-#~ msgstr "Bu ayarları daha sonra değiştirebilirsiniz."
-
-#: src/components/dms/MessagesNUX.tsx:119
-#~ msgid "You can change this at any time."
-#~ msgstr "Bunu istediğiniz zaman değiştirebilirsiniz."
 
 #: src/screens/Messages/Settings.tsx:111
 msgid "You can continue ongoing conversations regardless of which setting you choose."
@@ -10277,10 +8669,6 @@ msgstr "Henüz hiç davet kodunuz yok! Bluesky'de biraz daha uzun süre kaldıkt
 #: src/view/screens/SavedFeeds.tsx:137
 msgid "You don't have any pinned feeds."
 msgstr "Sabitlemiş beslemeniz yok."
-
-#: src/view/screens/Feeds.tsx:477
-#~ msgid "You don't have any saved feeds!"
-#~ msgstr "Kaydedilmiş beslemeniz yok!"
 
 #: src/view/screens/SavedFeeds.tsx:177
 msgid "You don't have any saved feeds."
@@ -10324,10 +8712,6 @@ msgstr ""
 msgid "You have muted this user"
 msgstr ""
 
-#: src/view/com/modals/ModerationDetails.tsx:87
-#~ msgid "You have muted this user."
-#~ msgstr "Bu kullanıcıyı sessize aldınız."
-
 #: src/screens/Messages/ChatList.tsx:190
 msgid "You have no conversations yet. Start one!"
 msgstr "Henüz hiç görüşmeniz yok. Bir tane başlatın!"
@@ -10341,29 +8725,17 @@ msgstr "Beslemeniz yok."
 msgid "You have no lists."
 msgstr "Listeniz yok."
 
-#: src/screens/Messages/List/index.tsx:200
-#~ msgid "You have no messages yet. Start a conversation with someone!"
-#~ msgstr "Henüz hiç mesajınız yok. Birisiyle görüşme başlatın!"
-
 #: src/view/screens/ModerationBlockedAccounts.tsx:129
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
 msgstr ""
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:132
-#~ msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
-#~ msgstr "Henüz hiçbir hesabı engellemediniz. Bir hesabı engellemek için, profilinize gidin ve hesaplarının menüsünden \"Hesabı engelle\" seçeneğini seçin."
-
 #: src/view/screens/AppPasswords.tsx:96
 #~ msgid "You have not created any app passwords yet. You can create one by pressing the button below."
-#~ msgstr "Henüz hiçbir uygulama şifresi oluşturmadınız. Aşağıdaki düğmeye basarak bir tane oluşturabilirsiniz."
+#~ msgstr ""
 
 #: src/view/screens/ModerationMutedAccounts.tsx:128
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr ""
-
-#: src/view/screens/ModerationMutedAccounts.tsx:131
-#~ msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
-#~ msgstr "Henüz hiçbir hesabı sessize almadınız. Bir hesabı sessize almak için, profilinize gidin ve hesaplarının menüsünden \"Hesabı sessize al\" seçeneğini seçin."
 
 #: src/components/Lists.tsx:52
 msgid "You have reached the end"
@@ -10402,14 +8774,6 @@ msgstr "En fazla {STARTER_PACK_MAX_SIZE} tane profil ekleyebilirsiniz"
 msgid "You may only add up to 3 feeds"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/State.tsx:95
-#~ msgid "You may only add up to 50 feeds"
-#~ msgstr ""
-
-#: src/screens/StarterPack/Wizard/State.tsx:78
-#~ msgid "You may only add up to 50 profiles"
-#~ msgstr ""
-
 #: src/lib/media/picker.shared.ts:22
 msgid "You may only select up to 4 images"
 msgstr ""
@@ -10417,14 +8781,6 @@ msgstr ""
 #: src/screens/Signup/StepInfo/Policies.tsx:106
 msgid "You must be 13 years of age or older to sign up."
 msgstr "Kaydolmak için 13 yaşında veya daha büyük olmalısınız."
-
-#: src/view/com/modals/ContentFilteringSettings.tsx:170
-#~ msgid "You must be 18 or older to enable adult content."
-#~ msgstr "Yetişkin içeriği etkinleştirmek için 18 yaşında veya daha büyük olmalısınız."
-
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:110
-#~ msgid "You must be 18 years or older to enable adult content"
-#~ msgstr "Yetişkin içeriğini etkinleştirmek için 18 yaşında veya daha büyük olmalısınız"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:324
 msgid "You must be following at least seven other people to generate a starter pack."
@@ -10498,10 +8854,6 @@ msgstr ""
 msgid "You'll stay updated with these feeds"
 msgstr "Bu beslemelerden haberdar edileceksiniz"
 
-#: src/screens/Onboarding/StepModeration/index.tsx:60
-#~ msgid "You're in control"
-#~ msgstr "Siz kontrol ediyorsunuz"
-
 #: src/screens/SignupQueued.tsx:112
 msgid "You're in line"
 msgstr "Sıradasınız"
@@ -10572,20 +8924,12 @@ msgstr "Seçiminiz kaydedilecek, ancak daha sonra ayarlarda değiştirilebilir."
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
 msgstr ""
 
-#: src/screens/Onboarding/StepFollowingFeed.tsx:62
-#~ msgid "Your default feed is \"Following\""
-#~ msgstr "Varsayılan beslemeniz \"Takip Edilenler\""
-
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Signup/state.ts:203
 #: src/screens/Signup/StepInfo/index.tsx:108
 #: src/view/com/modals/ChangePassword.tsx:55
 msgid "Your email appears to be invalid."
 msgstr "E-postanız geçersiz gibi görünüyor."
-
-#: src/view/com/modals/Waitlist.tsx:109
-#~ msgid "Your email has been saved! We'll be in touch soon."
-#~ msgstr "E-postanız kaydedildi! Yakında sizinle iletişime geçeceğiz."
 
 #: src/view/com/modals/ChangeEmail.tsx:120
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
@@ -10611,11 +8955,6 @@ msgstr "Tam kullanıcı adınız <0>@{0}</0> olacak"
 msgid "Your full username will be"
 msgstr "Tam kullanıcı adınız"
 
-#: src/view/screens/Settings.tsx:NaN
-#: src/view/shell/Drawer.tsx:660
-#~ msgid "Your invite codes are hidden when logged in using an App Password"
-#~ msgstr "Uygulama Şifresi kullanarak giriş yaptığınızda davet kodlarınız gizlenir"
-
 #: src/components/dialogs/MutedWords.tsx:369
 msgid "Your muted words"
 msgstr "Sessize aldığınız kelimeler"
@@ -10638,7 +8977,7 @@ msgstr "Gönderileriniz, beğenileriniz ve engellemeleriniz herkese açıktır. 
 
 #: src/view/screens/Settings/index.tsx:119
 #~ msgid "Your profile"
-#~ msgstr "Profiliniz"
+#~ msgstr ""
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
@@ -10651,3 +8990,4 @@ msgstr "Yanıtınız yayınlandı"
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "Raporunuz Bluesky Moderasyon Hizmetine gönderilecektir"
+
