@@ -41,7 +41,8 @@ export function Screen() {
           <Admonition type="tip">
             <Trans>
               The following settings will be used as your defaults when creating
-              new posts. They can be edited from the composer before you post.
+              new posts. You can edit these for a specific post from the
+              composer.
             </Trans>
           </Admonition>
           {preferences ? (
