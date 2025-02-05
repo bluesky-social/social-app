@@ -58,15 +58,15 @@
   resolved "https://registry.yarnpkg.com/@atproto-labs/simple-store/-/simple-store-0.1.1.tgz#e743a2722b5d8732166f0a72aca8bd10e9bff106"
   integrity sha512-WKILW2b3QbAYKh+w5U2x6p5FqqLl0nAeLwGeDY+KjX01K4Dq3vQTR9b/qNp0jZm48CabPQVrqCv0PPU9LgRRRg==
 
-"@atproto/api@0.14.0-next.2":
-  version "0.14.0-next.2"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.14.0-next.2.tgz#c42313217dc5cbbd81438706018963d4232a4ba6"
-  integrity sha512-1FADZQAklDozrGDxrb6ydkrlBBES4sKP7wJZTtwzqb1bSUOqRD8vjuvVvklt2ahhAQvslsBUC1wBrMa7VGS6hA==
+"@atproto/api@0.14.0-next.6":
+  version "0.14.0-next.6"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.14.0-next.6.tgz#bdd3999cce9389c2068b591eb34ac8147adb7628"
+  integrity sha512-qVUn2iAIkZi8nrNX0nrWXLpqXlTGQ4mt0NX0wxKQ248B2ibi8Baneo/zJrtoTcb3cPTH3MJGNnfRNoYHVSOs+A==
   dependencies:
     "@atproto/common-web" "^0.3.2"
-    "@atproto/lexicon" "^0.4.5"
+    "@atproto/lexicon" "^0.4.6-next.5"
     "@atproto/syntax" "^0.3.1"
-    "@atproto/xrpc" "^0.6.6"
+    "@atproto/xrpc" "^0.6.7"
     await-lock "^2.2.2"
     multiformats "^9.9.0"
     tlds "^1.234.0"
@@ -304,6 +304,17 @@
     multiformats "^9.9.0"
     zod "^3.23.8"
 
+"@atproto/lexicon@^0.4.6-next.5":
+  version "0.4.6-next.5"
+  resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.4.6-next.5.tgz#433a941cf8902afec15135f70cf2cbed37c35406"
+  integrity sha512-Id1atQ1rZ3dUGAUyBcauD+zs5lGHSmoAlC1Kwb2DEvkaWMv3oTXUjtdQxyb0/Kz4YaFI+nxLLRH9NBO+BipG+w==
+  dependencies:
+    "@atproto/common-web" "^0.3.2"
+    "@atproto/syntax" "^0.3.1"
+    iso-datestring-validator "^2.2.2"
+    multiformats "^9.9.0"
+    zod "^3.23.8"
+
 "@atproto/oauth-provider@^0.2.10":
   version "0.2.10"
   resolved "https://registry.yarnpkg.com/@atproto/oauth-provider/-/oauth-provider-0.2.10.tgz#f9820d7f82c33d3b74e81a75873f50e1e654b901"
@@ -473,10 +484,10 @@
     "@atproto/lexicon" "^0.4.4"
     zod "^3.23.8"
 
-"@atproto/xrpc@^0.6.6":
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.6.6.tgz#28f58270ef4a8056f7f718bd52512e74bcd3702f"
-  integrity sha512-umXEYVMo9/pyIBoKmIAIi64RXDW9tSXY+wqztlQ6I2GZtjLfNZqmAWU+wADk3SxUe54mvjxxGyA4TtyGtDMfhA==
+"@atproto/xrpc@^0.6.7":
+  version "0.6.7"
+  resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.6.7.tgz#e72ac2009390ecf80cb075004d6160c92f38d33c"
+  integrity sha512-pbzZIONIskyGKxxG3s2wB7rQ2W1xu3ycfeYhKwk/E/ippeJFVxcof64iSC7f22+7JSKUJcxBeZ1piBB82vLj7g==
   dependencies:
     "@atproto/lexicon" "^0.4.5"
     zod "^3.23.8"
