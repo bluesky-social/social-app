@@ -30,6 +30,7 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import * as atp from '#/types/atproto'
 
 export function useMessageEmbed() {
   const route =
@@ -111,7 +112,13 @@ export function MessageInputEmbed({
   )
 
   const {rt, record} = useMemo(() => {
-    if (post && AppBskyFeedPost.isValidRecord(post.record)) {
+    if (
+      post &&
+      atp.dangerousIsType<AppBskyFeedPost.Record>(
+        post.record,
+        AppBskyFeedPost.isRecord,
+      )
+    ) {
       return {
         rt: new RichTextAPI({
           text: post.record.text,
