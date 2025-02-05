@@ -128,17 +128,11 @@ export function StepInfo({
     <ScreenTransition>
       <View style={[a.gap_md]}>
         <FormError error={state.error} />
-        <View>
-          <TextField.LabelText>
-            <Trans>Hosting provider</Trans>
-          </TextField.LabelText>
-          <HostingProvider
-            serviceUrl={state.serviceUrl}
-            onSelectServiceUrl={v =>
-              dispatch({type: 'setServiceUrl', value: v})
-            }
-          />
-        </View>
+        <HostingProvider
+          minimal
+          serviceUrl={state.serviceUrl}
+          onSelectServiceUrl={v => dispatch({type: 'setServiceUrl', value: v})}
+        />
         {state.isLoading || isLoadingStarterPack ? (
           <View style={[a.align_center]}>
             <Loader size="xl" />
@@ -212,7 +206,7 @@ export function StepInfo({
               </DateField.LabelText>
               <DateField.DateField
                 testID="date"
-                value={DateField.utils.toSimpleDateString(state.dateOfBirth)}
+                value={state.dateOfBirth}
                 onChangeDate={date => {
                   dispatch({
                     type: 'setDateOfBirth',
@@ -221,6 +215,7 @@ export function StepInfo({
                 }}
                 label={_(msg`Date of birth`)}
                 accessibilityHint={_(msg`Select your date of birth`)}
+                maximumDate={new Date()}
               />
             </View>
             <Policies

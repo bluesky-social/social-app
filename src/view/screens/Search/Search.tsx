@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   Image,
   ImageStyle,
-  Platform,
   Pressable,
   StyleProp,
   StyleSheet,
@@ -37,6 +36,7 @@ import {
 } from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
+import {languageName} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
@@ -220,7 +220,6 @@ let SearchScreenPostResults = ({
               refreshing={isPTR}
               onRefresh={onPullToRefresh}
               onEndReached={onEndReached}
-              // @ts-ignore web only -prf
               desktopFixedHeight
               contentContainerStyle={{paddingBottom: 100}}
             />
@@ -259,7 +258,6 @@ let SearchScreenUserResults = ({
             <ProfileCardWithFollowBtn profile={item} noBg />
           )}
           keyExtractor={item => item.did}
-          // @ts-ignore web only -prf
           desktopFixedHeight
           contentContainerStyle={{paddingBottom: 100}}
         />
@@ -305,7 +303,6 @@ let SearchScreenFeedsResults = ({
             </View>
           )}
           keyExtractor={item => item.uri}
-          // @ts-ignore web only -prf
           desktopFixedHeight
           contentContainerStyle={{paddingBottom: 100}}
         />
@@ -328,7 +325,7 @@ function SearchLanguageDropdown({
 }) {
   const t = useThemeNew()
   const {_} = useLingui()
-  const {contentLanguages} = useLanguagePrefs()
+  const {appLanguage, contentLanguages} = useLanguagePrefs()
 
   const items = React.useMemo(() => {
     return [
@@ -345,8 +342,8 @@ function SearchLanguageDropdown({
           index === self.findIndex(t => t.code2 === lang.code2), // remove dupes (which will happen)
       )
         .map(l => ({
-          label: l.name,
-          inputLabel: l.name,
+          label: languageName(l, appLanguage),
+          inputLabel: languageName(l, appLanguage),
           value: l.code2,
           key: l.code2 + l.code3,
         }))
@@ -365,7 +362,7 @@ function SearchLanguageDropdown({
           return a.label.localeCompare(b.label)
         }),
     )
-  }, [_, contentLanguages])
+  }, [_, appLanguage, contentLanguages])
 
   const style = {
     backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
@@ -430,12 +427,12 @@ function useQueryManager({initialQuery}: {initialQuery: string}) {
   const {query, params: initialParams} = React.useMemo(() => {
     return parseSearchQuery(initialQuery || '')
   }, [initialQuery])
-  const prevInitialQuery = React.useRef(initialQuery)
+  const [prevInitialQuery, setPrevInitialQuery] = React.useState(initialQuery)
   const [lang, setLang] = React.useState(initialParams.lang || '')
 
-  if (initialQuery !== prevInitialQuery.current) {
+  if (initialQuery !== prevInitialQuery) {
     // handle new queryParam change (from manual search entry)
-    prevInitialQuery.current = initialQuery
+    setPrevInitialQuery(initialQuery)
     setLang(initialParams.lang || '')
   }
 
@@ -555,11 +552,7 @@ let SearchScreenInner = ({
     <Explore />
   ) : (
     <Layout.Center>
-      <View
-        // @ts-ignore web only -esb
-        style={{
-          height: Platform.select({web: '100vh'}),
-        }}>
+      <View style={web({height: '100vh'})}>
         {isDesktop && (
           <Text
             type="title"
@@ -748,8 +741,14 @@ export function SearchScreen(
     scrollToTopWeb()
     textInput.current?.blur()
     setShowAutocomplete(false)
-    setSearchText(queryParam)
-  }, [setShowAutocomplete, setSearchText, queryParam])
+    if (isWeb) {
+      // Empty params resets the URL to be /search rather than /search?q=
+      navigation.replace('Search', {})
+    } else {
+      setSearchText('')
+      navigation.setParams({q: ''})
+    }
+  }, [setShowAutocomplete, setSearchText, navigation])
 
   const onSubmit = React.useCallback(() => {
     navigateToItem(searchText)
@@ -855,7 +854,7 @@ export function SearchScreen(
         <Layout.Center>
           <View style={[a.p_md, a.pb_sm, a.gap_sm, t.atoms.bg]}>
             <View style={[a.flex_row, a.gap_sm]}>
-              {!gtMobile && (
+              {!gtMobile && !showAutocomplete && (
                 <Button
                   testID="viewHeaderBackOrMenuBtn"
                   onPress={onPressMenu}

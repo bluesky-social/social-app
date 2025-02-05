@@ -10,3 +10,7 @@ export type Device = {
   }
   trendingBetaEnabled: boolean
 }
+
+export type Account = {
+  searchTermHistory?: string[]
+}

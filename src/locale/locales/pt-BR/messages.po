@@ -4192,8 +4192,8 @@ msgstr "Postagem inválida"
 
 #: src/screens/Login/LoginForm.tsx:90
 #: src/screens/Login/LoginForm.tsx:149
-msgid "Invalid username or password"
-msgstr "Usuário ou senha inválidos"
+msgid "Incorrect username or password"
+msgstr "Credenciais inválidas"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91
 msgid "Invalid Verification Code"
@@ -7010,7 +7010,7 @@ msgstr "Pesquisar por \"{interestsDisplayName}\"{activeText}"
 msgid "Search for \"{query}\""
 msgstr "Pesquisar por \"{query}\""
 
-#: src/view/screens/Search/Search.tsx:980
+#: src/view/screens/Search/Search.tsx:987
 msgid "Search for \"{searchText}\""
 msgstr "Pesquisar por \"{searchText}\""
 
@@ -8044,6 +8044,11 @@ msgstr "Toque para alterar o ícone do aplicativo"
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
 msgid "Tap to close the emoji picker"
 msgstr "Toque para fechar o selecionador de emoji"
+
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
+msgid "Tap to close the emoji picker"
+msgstr ""
 
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"

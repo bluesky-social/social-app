@@ -3,5 +3,8 @@ export type Gate =
   | 'debug_show_feedcontext'
   | 'debug_subscriptions'
   | 'new_postonboarding'
+  | 'onboarding_add_video_feed'
   | 'remove_show_latest_button'
+  | 'test_gate_1'
+  | 'test_gate_2'
   | 'trending_topics_beta'

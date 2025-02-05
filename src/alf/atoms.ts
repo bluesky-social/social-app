@@ -961,6 +961,9 @@ export const atoms = {
     transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
     transitionDuration: '100ms',
   }),
+  transition_delay_50ms: web({
+    transitionDelay: '50ms',
+  }),
 
   /**
    * {@link Layout.SCROLLBAR_OFFSET}
