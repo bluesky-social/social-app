@@ -13,7 +13,14 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {isWeb} from '#/platform/detection'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {
+  atoms as a,
+  useBreakpoints,
+  useLayoutBreakpoints,
+  useTheme,
+  web,
+} from '#/alf'
+import {SCROLLBAR_OFFSET} from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 
 export * from '#/components/Layout/const'
@@ -84,7 +91,7 @@ export const Content = React.memo(function Content({
       ]}
       {...props}>
       {isWeb ? (
-        // @ts-ignore web only -esb
+        // @ts-expect-error web only -esb
         <Center>{children}</Center>
       ) : (
         children
@@ -142,6 +149,7 @@ export const Center = React.memo(function LayoutContent({
 }: ViewProps) {
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
   const {gtMobile} = useBreakpoints()
+  const {centerColumnOffset} = useLayoutBreakpoints()
   const ctx = useMemo(() => ({isWithinOffsetView: true}), [])
   return (
     <View
@@ -151,8 +159,13 @@ export const Center = React.memo(function LayoutContent({
         gtMobile && {
           maxWidth: 600,
         },
+        !isWithinOffsetView && {
+          transform: [
+            {translateX: centerColumnOffset ? -150 : 0},
+            {translateX: web(SCROLLBAR_OFFSET) ?? 0},
+          ],
+        },
         style,
-        !isWithinOffsetView && a.scrollbar_offset,
       ]}
       {...props}>
       <ScrollbarOffsetContext.Provider value={ctx}>
@@ -168,6 +181,7 @@ export const Center = React.memo(function LayoutContent({
 const WebCenterBorders = React.memo(function LayoutContent() {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
+  const {centerColumnOffset} = useLayoutBreakpoints()
   return gtMobile ? (
     <View
       style={[
@@ -180,9 +194,8 @@ const WebCenterBorders = React.memo(function LayoutContent() {
           width: 602,
           left: '50%',
           transform: [
-            {
-              translateX: '-50%',
-            },
+            {translateX: '-50%'},
+            {translateX: centerColumnOffset ? -150 : 0},
             ...a.scrollbar_offset.transform,
           ],
         }),
