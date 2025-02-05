@@ -7,6 +7,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import isEqual from 'lodash.isequal'
 
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {STALE} from '#/state/queries'
 import {useMyListsQuery} from '#/state/queries/my-lists'
 import {
@@ -73,14 +74,23 @@ export function PostInteractionSettingsControlledDialog({
           <Header />
           <PostInteractionSettingsForm {...rest} />
           <Admonition type="tip" style={[a.mt_sm]}>
-            <Trans>
-              You can configure defaults for these settings from within your{' '}
-              <InlineLinkText
-                label={_(msg`Configure default interaction settings`)}
-                to="/moderation/interaction-settings">
-                moderation settings screen.
-              </InlineLinkText>
-            </Trans>
+            {isWeb ? (
+              <Trans>
+                You can configure defaults for these settings from within your{' '}
+                <InlineLinkText
+                  label={_(msg`Configure default interaction settings`)}
+                  to="/moderation/interaction-settings">
+                  moderation settings screen.
+                </InlineLinkText>
+              </Trans>
+            ) : (
+              <Trans>
+                You can configure defaults for these settings from within{' '}
+                <Text style={[a.font_bold]}>
+                  Settings &rarr; Moderation &rarr; Interaction settings
+                </Text>
+              </Trans>
+            )}
           </Admonition>
         </View>
         <Dialog.Close />
