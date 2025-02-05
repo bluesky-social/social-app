@@ -16,13 +16,13 @@ import {Gate} from './gates'
 
 const SDK_KEY = 'client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV'
 
-export const initPromise = initialize()
-
 export const StatsigClient = new StatsigClientExpo(
   SDK_KEY,
   {},
   createStatsigOptions([]),
 )
+
+export const initPromise = initialize()
 
 type StatsigUser = {
   userID: string | undefined
@@ -67,7 +67,10 @@ function createStatsigOptions(prefetchUsers: StatsigUser[]) {
     initTimeoutMs: 1,
     // Get fresh flags for other accounts as well, if any.
     prefetchUsers,
-    api: 'https://events.bsky.app/v2',
+    loggingBufferMaxSize: 3,
+    networkConfig: {
+      //api: 'https://events.bsky.app/v3',
+    },
   }
 }
 
@@ -254,7 +257,7 @@ export async function tryFetchGates(
 }
 
 export function initialize() {
-  StatsigClient.initializeAsync()
+  return StatsigClient.initializeAsync()
 }
 
 export function isStatsigInitialized() {
