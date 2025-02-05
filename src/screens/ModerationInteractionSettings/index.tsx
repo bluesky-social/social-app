@@ -26,7 +26,7 @@ export function Screen() {
   const gutters = useGutters(['base'])
   const {data: preferences} = usePreferencesQuery()
   return (
-    <Layout.Screen testID="moderationInteractionSettingsScreen">
+    <Layout.Screen testID="ModerationInteractionSettingsScreen">
       <Layout.Header.Outer>
         <Layout.Header.BackButton />
         <Layout.Header.Content>
@@ -93,7 +93,7 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
       Toast.show(_(msg`Settings saved`))
     } catch (e: any) {
       logger.error(`Failed to save post interaction settings`, {
-        context: 'PostInteractionSettingsDialogControlledInner',
+        context: 'ModerationInteractionSettingsScreen',
         safeMessage: e.message,
       })
       setError(_(msg`Failed to save settings. Please try again.`))
