@@ -1,6 +1,11 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
+import {
+  AppBskyActorProfile,
+  AppBskyGraphDefs,
+  AppBskyGraphStarterpack,
+  Un$Typed,
+} from '@atproto/api'
 import {SavedFeed} from '@atproto/api/dist/client/types/app/bsky/actor/defs'
 import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
@@ -142,29 +147,29 @@ export function StepFinished() {
               : undefined
 
           await agent.upsertProfile(async existing => {
-            existing = existing ?? {}
+            let next: Un$Typed<AppBskyActorProfile.Record> = existing ?? {}
 
             if (blobPromise) {
               const res = await blobPromise
               if (res.data.blob) {
-                existing.avatar = res.data.blob
+                next.avatar = res.data.blob
               }
             }
 
             if (starterPack) {
-              existing.joinedViaStarterPack = {
+              next.joinedViaStarterPack = {
                 uri: starterPack.uri,
                 cid: starterPack.cid,
               }
             }
 
-            existing.displayName = ''
+            next.displayName = ''
             // HACKFIX
             // creating a bunch of identical profile objects is breaking the relay
             // tossing this unspecced field onto it to reduce the size of the problem
             // -prf
-            existing.createdAt = new Date().toISOString()
-            return existing
+            next.createdAt = new Date().toISOString()
+            return next
           })
 
           logEvent('onboarding:finished:avatarResult', {
