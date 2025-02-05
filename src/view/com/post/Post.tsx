@@ -3,6 +3,7 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  asPredicate,
   AtUri,
   ModerationDecision,
   RichText as RichTextAPI,
@@ -53,7 +54,9 @@ export function Post({
   const moderationOpts = useModerationOpts()
   const record = useMemo<AppBskyFeedPost.Record | undefined>(
     () =>
-      AppBskyFeedPost.isValidRecord(post.record) ? post.record : undefined,
+      asPredicate(AppBskyFeedPost.validateRecord)(post.record)
+        ? post.record
+        : undefined,
     [post],
   )
   const postShadowed = usePostShadow(post)
