@@ -6,12 +6,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: ast\n"
-"Project-Id-Version: \n"
+"Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-11-16 14:24\n"
+"PO-Revision-Date: 2025-02-05 20:52\n"
 "Last-Translator: \n"
 "Language-Team: Asturian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: bluesky-social\n"
+"X-Crowdin-Project-ID: 664276\n"
+"X-Crowdin-Language: ast\n"
+"X-Crowdin-File: /main/src/locale/locales/en/messages.po\n"
+"X-Crowdin-File-ID: 12\n"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:567
 msgid "(active)"
@@ -49,11 +54,11 @@ msgstr "{0, plural, one {# hora} other {# hores}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 #~ msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
-#~ msgstr "{0, plural, one {Aplicóse # etiqueta a esta cuenta} other {Aplicáronse # etiquetes a esta cuenta}}"
+#~ msgstr ""
 
 #: src/components/moderation/LabelsOnMe.tsx:59
 #~ msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
-#~ msgstr "{0, plural, one {Aplicóse # etiqueta a esti conteníu} other {Aplicáronse # etiquetes a esti conteníu}}"
+#~ msgstr ""
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this account"
@@ -99,7 +104,7 @@ msgstr ""
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:305
 #~ msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-#~ msgstr "{0, plural, one {Dar préstame (# préstame)} other {Dar préstame (# préstames)}}"
+#~ msgstr ""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:447
 msgid "{0, plural, one {like} other {likes}}"
@@ -108,7 +113,7 @@ msgstr "{0, plural, one {préstame} other {préstames}}"
 #: src/components/FeedCard.tsx:213
 #: src/view/com/feeds/FeedSourceCard.tsx:303
 #~ msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
-#~ msgstr "{0, plural, one {Prestó-y a # usuariu} other {Prestó-yos a # usuarios}}"
+#~ msgstr ""
 
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
@@ -120,7 +125,7 @@ msgstr "{0, plural, one {cita} other {cites}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:261
 #~ msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
-#~ msgstr "{0, plural, one {Reply (# rempuesta)} other {Reply (# rempuestes)}}"
+#~ msgstr ""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:413
 msgid "{0, plural, one {repost} other {reposts}}"
@@ -128,11 +133,11 @@ msgstr "{0, plural, one {republicación} other {republicaciones}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:301
 #~ msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-#~ msgstr "{0, plural, one {Quitar el préstame (# préstames)} other {Quitar el préstame (# préstames)}}"
+#~ msgstr ""
 
 #: src/screens/Settings/Settings.tsx:422
 msgid "{0}"
-msgstr "{0}"
+msgstr ""
 
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
@@ -199,11 +204,11 @@ msgstr "{0} s"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:252
 #~ msgid "{badge} unread items"
-#~ msgstr "{badge} elementos ensin lleer"
+#~ msgstr ""
 
 #: src/components/LabelingServiceCard/index.tsx:96
 #~ msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-#~ msgstr "{count, plural, one {Prestó-y a # usuariu} other {Prestó-yos a # usuarios}}"
+#~ msgstr ""
 
 #: src/view/shell/desktop/LeftNav.tsx:189
 msgid "{count} unread items"
@@ -323,7 +328,7 @@ msgstr "Nun se puen unviar mensaxes a {handle}"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:307
 #: src/view/screens/ProfileFeed.tsx:591
 #~ msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
-#~ msgstr "{likeCount, plural, one {Prestó-y a # usuariu} other {Prestó-yos a # usuarios}}"
+#~ msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:260
 msgid "{notificationCount} unread items"
@@ -634,7 +639,7 @@ msgstr "Opciones avanzaes"
 
 #: src/state/shell/progress-guide.tsx:171
 #~ msgid "Algorithm training complete!"
-#~ msgstr "¡Completóse l'entrenamientu del algoritmu!"
+#~ msgstr ""
 
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
@@ -683,7 +688,7 @@ msgstr "Yá aniciesti la sesión como @{0}"
 #: src/view/com/composer/photos/Gallery.tsx:187
 #: src/view/com/util/post-embeds/GifEmbed.tsx:186
 msgid "ALT"
-msgstr "ALT"
+msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:56
 #: src/view/com/composer/GifAltText.tsx:154
@@ -1126,7 +1131,7 @@ msgstr "Blogue"
 #: src/view/com/auth/server-input/index.tsx:86
 #: src/view/com/auth/server-input/index.tsx:88
 msgid "Bluesky"
-msgstr "Bluesky"
+msgstr ""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:859
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
@@ -1221,7 +1226,7 @@ msgstr "Por «{0}»"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:197
 #~ msgid "by <0/>"
-#~ msgstr "por «<0/>»"
+#~ msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:447
 msgid "By <0>{0}</0>"
@@ -1241,7 +1246,7 @@ msgstr "Al crear una cuenta aceptes los <0>términos del serviciu</0>."
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:195
 #~ msgid "by you"
-#~ msgstr "por ti"
+#~ msgstr ""
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:72
 msgid "Camera"
@@ -1506,11 +1511,11 @@ msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:208
 #~ msgid "Click here for more information on deactivating your account"
-#~ msgstr "Calca equí pa consiguir más información tocante a la desactivación de la cuenta"
+#~ msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:217
 #~ msgid "Click here for more information."
-#~ msgstr "Calca equí pa consiguir más información."
+#~ msgstr ""
 
 #: src/components/TagMenu/index.web.tsx:152
 msgid "Click here to open tag menu for {tag}"
@@ -1938,7 +1943,7 @@ msgstr ""
 #: src/view/com/auth/SplashScreen.tsx:55
 #: src/view/com/auth/SplashScreen.web.tsx:117
 msgid "Create account"
-msgstr "Crear una cuenta"
+msgstr "Rexistrase"
 
 #: src/screens/Signup/index.tsx:93
 msgid "Create Account"
@@ -1995,7 +2000,7 @@ msgstr ""
 #: src/view/screens/Feeds.tsx:761
 #: src/view/screens/Search/Explore.tsx:391
 #~ msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-#~ msgstr "Los feeds personalizaos que crea la comunidá úfrente esperiencies nueves y ayúdente a atopar el conteníu que te presta pola vida."
+#~ msgstr ""
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:54
 #~ msgid "Customize media from external sites."
@@ -2701,7 +2706,7 @@ msgstr "Introduz l'identificador y la contraseña de to"
 #: src/view/com/composer/Composer.tsx:1644
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
-msgstr "Error"
+msgstr ""
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:47
 msgid "Error occurred while saving file"
@@ -2714,7 +2719,7 @@ msgstr ""
 #: src/screens/Onboarding/StepInterests/index.tsx:183
 #: src/view/screens/Search/Search.tsx:110
 msgid "Error:"
-msgstr "Error:"
+msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:364
 msgid "Everybody"
@@ -2955,7 +2960,7 @@ msgstr "La verificación del identificador falló. Volvi tentalo."
 
 #: src/Navigation.tsx:231
 msgid "Feed"
-msgstr "Feed"
+msgstr ""
 
 #: src/components/FeedCard.tsx:134
 #: src/view/com/feeds/FeedSourceCard.tsx:253
@@ -2990,7 +2995,7 @@ msgstr "¡Unvióse la opinión!"
 #: src/view/shell/desktop/LeftNav.tsx:445
 #: src/view/shell/Drawer.tsx:476
 msgid "Feeds"
-msgstr "Feeds"
+msgstr ""
 
 #: src/view/screens/SavedFeeds.tsx:198
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
@@ -3055,7 +3060,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:276
 msgid "Flexible"
-msgstr "Flexible"
+msgstr ""
 
 #. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:363
@@ -3144,7 +3149,7 @@ msgstr "Usuarios siguíos"
 #: src/view/screens/ProfileFollowers.tsx:30
 #: src/view/screens/ProfileFollowers.tsx:31
 #~ msgid "Followers"
-#~ msgstr "Siguidores"
+#~ msgstr ""
 
 #: src/Navigation.tsx:192
 msgid "Followers of @{0} that you know"
@@ -3279,7 +3284,7 @@ msgstr "Comienzu"
 
 #: src/components/MediaPreview.tsx:122
 msgid "GIF"
-msgstr "GIF"
+msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:234
 msgid "Give your profile a face"
@@ -3446,7 +3451,7 @@ msgstr "Esconder"
 #: src/view/com/notifications/NotificationFeedItem.tsx:601
 msgctxt "action"
 msgid "Hide"
-msgstr ""
+msgstr "Esconder"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:523
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:529
@@ -3593,7 +3598,7 @@ msgstr "Si desanicies esta llista, nun vas ser a recuperala."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:246
 #~ msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity – <0>learn more</0>."
-#~ msgstr "Si tienes un dominiu propiu, pues usalu como identificador. Esto permítete verificar la to identidá. <0>Saber más</0>."
+#~ msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:250
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
@@ -4102,7 +4107,7 @@ msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:103
 #~ msgid "Logo by <0/>"
-#~ msgstr "Logotipu de: <0/>"
+#~ msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:118
 #: src/view/shell/Drawer.tsx:629
@@ -4319,7 +4324,7 @@ msgstr ""
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:95
 msgctxt "video"
 msgid "Mute"
-msgstr "Desactivar el volume"
+msgstr ""
 
 #: src/components/TagMenu/index.web.tsx:116
 msgid "Mute {truncatedTag}"
@@ -4956,7 +4961,7 @@ msgstr ""
 
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:54
 #~ msgid "Open navigation"
-#~ msgstr "Abrir la navegación"
+#~ msgstr ""
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:70
 msgid "Open post options menu"
@@ -5382,7 +5387,7 @@ msgstr "Publicar"
 #: src/view/com/post-thread/PostThread.tsx:536
 msgctxt "description"
 msgid "Post"
-msgstr "Publicación"
+msgstr "Publicar"
 
 #: src/view/com/composer/Composer.tsx:942
 msgctxt "action"
@@ -5634,7 +5639,7 @@ msgstr "Desactiváronse les cites"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
 #~ msgid "Quote posts enabled"
-#~ msgstr "Activáronse les cites"
+#~ msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
 msgid "Quote settings"
@@ -6181,7 +6186,7 @@ msgstr "Guardar"
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
-msgstr ""
+msgstr "Guardar"
 
 #: src/components/dialogs/BirthDateSettings.tsx:118
 msgid "Save birthday"
@@ -6621,7 +6626,7 @@ msgstr "Compartir de toes toes"
 #: src/view/screens/ProfileFeed.tsx:364
 #: src/view/screens/ProfileFeed.tsx:366
 #~ msgid "Share feed"
-#~ msgstr "Compartir el feed"
+#~ msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:123
 #: src/components/StarterPack/ShareDialog.tsx:130
@@ -6969,7 +6974,7 @@ msgstr ""
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
 msgid "Spam"
-msgstr "Spam"
+msgstr ""
 
 #: src/lib/moderation/useReportOptions.ts:55
 msgid "Spam; excessive mentions or replies"
@@ -7575,7 +7580,7 @@ msgstr ""
 
 #: src/view/screens/ProfileList.tsx:966
 #~ msgid "This list is empty!"
-#~ msgstr "¡Esta llista ta balera!"
+#~ msgstr ""
 
 #: src/view/screens/ProfileList.tsx:933
 msgid "This list is empty."
@@ -7765,7 +7770,7 @@ msgstr "Retentar"
 
 #: src/screens/Onboarding/state.ts:115
 msgid "TV"
-msgstr "TV"
+msgstr ""
 
 #: src/view/screens/Settings/index.tsx:712
 #~ msgid "Two-factor authentication"
@@ -7826,7 +7831,7 @@ msgstr ""
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:202
 msgctxt "action"
 msgid "Unblock"
-msgstr "Desbloquiar"
+msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:188
 #: src/components/dms/ConvoMenu.tsx:192
@@ -7887,7 +7892,7 @@ msgstr ""
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
 msgctxt "video"
 msgid "Unmute"
-msgstr "Activar el volume"
+msgstr ""
 
 #: src/components/TagMenu/index.web.tsx:115
 msgid "Unmute {truncatedTag}"
@@ -8143,7 +8148,7 @@ msgstr "Anovóse la llista d'usuarios"
 
 #: src/view/screens/Lists.tsx:78
 #~ msgid "User Lists"
-#~ msgstr "Llistes d'usuarios"
+#~ msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:185
 msgid "Username or email address"
@@ -8151,7 +8156,7 @@ msgstr ""
 
 #: src/view/screens/ProfileList.tsx:924
 #~ msgid "Users"
-#~ msgstr "Usuarios"
+#~ msgstr ""
 
 #: src/components/WhoCanReply.tsx:258
 msgid "users followed by <0>@{0}</0>"
@@ -8364,7 +8369,7 @@ msgstr ""
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:80
 msgid "Volume"
-msgstr "Volume"
+msgstr ""
 
 #: src/components/moderation/LabelPreference.tsx:136
 #: src/lib/moderation/useLabelBehaviorDescription.ts:17
@@ -8985,3 +8990,4 @@ msgstr "Publicóse la rempuesta"
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "L'informe va unviase al serviciu de moderación de Bluesky"
+
