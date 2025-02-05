@@ -14,7 +14,7 @@ import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useTheme} from '#/lib/ThemeContext'
-import {Portal} from '#/components/Portal'
+import * as Layout from '#/components/Layout'
 import {Text} from '../text/Text'
 
 export function ErrorMessage({
@@ -32,7 +32,7 @@ export function ErrorMessage({
   const pal = usePalette('error')
   const {_} = useLingui()
   return (
-    <Portal>
+    <Layout.Center>
       <View testID="errorMessageView" style={[styles.outer, pal.view, style]}>
         <View
           style={[
@@ -69,14 +69,12 @@ export function ErrorMessage({
           </TouchableOpacity>
         )}
       </View>
-    </Portal>
+    </Layout.Center>
   )
 }
 
 const styles = StyleSheet.create({
   outer: {
-    position: 'fixed',
-    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 8,
