@@ -4,7 +4,11 @@ import type ViewShot from 'react-native-view-shot'
 import {requestMediaLibraryPermissionsAsync} from 'expo-image-picker'
 import {createAssetAsync} from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
-import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
+import {
+  AppBskyGraphDefs,
+  AppBskyGraphStarterpack,
+  asPredicate,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -77,7 +81,11 @@ export function QrCodeDialog({
       } else {
         setIsProcessing(true)
 
-        if (!AppBskyGraphStarterpack.isValidRecord(starterPack.record)) {
+        if (
+          !asPredicate(AppBskyGraphStarterpack.validateRecord)(
+            starterPack.record,
+          )
+        ) {
           return
         }
 
