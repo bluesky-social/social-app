@@ -2,16 +2,21 @@ msgid ""
 msgstr ""
 "POT-Creation-Date: 2023-11-05 16:01-0800\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: en-GB\n"
-"Project-Id-Version: \n"
+"Language: en_GB\n"
+"Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-10-26 18:30+0000\n"
-"Last-Translator: surfdude29 (@surfdude29.ispost.ing)\n"
-"Language-Team: surfdude29\n"
-"Plural-Forms: \n"
+"PO-Revision-Date: 2025-02-05 20:25\n"
+"Last-Translator: \n"
+"Language-Team: English, United Kingdom\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: bluesky-social\n"
+"X-Crowdin-Project-ID: 664276\n"
+"X-Crowdin-Language: en-GB\n"
+"X-Crowdin-File: /main/src/locale/locales/en/messages.po\n"
+"X-Crowdin-File-ID: 12\n"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:567
 msgid "(active)"
@@ -166,7 +171,7 @@ msgstr ""
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:67
 msgid "{0}'s favorite feeds and people - join me!"
-msgstr "{0}'s favourite feeds and people – join me!"
+msgstr ""
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:46
 msgid "{0}'s starter pack"
@@ -790,7 +795,7 @@ msgstr ""
 #: src/components/moderation/ModerationDetailsDialog.tsx:157
 #: src/components/moderation/ModerationDetailsDialog.tsx:153
 msgid "an unknown labeler"
-msgstr "an unknown labeller"
+msgstr ""
 
 #: src/components/WhoCanReply.tsx:295
 msgid "and"
@@ -807,7 +812,7 @@ msgstr ""
 
 #: src/lib/moderation/useReportOptions.ts:33
 msgid "Anti-Social Behavior"
-msgstr "Anti-Social Behaviour"
+msgstr ""
 
 #: src/view/screens/Search/Search.tsx:336
 #: src/view/screens/Search/Search.tsx:337
@@ -1109,7 +1114,7 @@ msgstr ""
 
 #: src/screens/Profile/Sections/Labels.tsx:174
 msgid "Blocking does not prevent this labeler from placing labels on your account."
-msgstr "Blocking does not prevent this labeller from placing labels on your account."
+msgstr ""
 
 #: src/view/screens/ProfileList.tsx:757
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
@@ -1147,7 +1152,7 @@ msgstr ""
 
 #: src/screens/Settings/components/PwiOptOut.tsx:92
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr "Bluesky will not show your profile and posts to logged-out users. Other apps may not honour this request. This does not make your account private."
+msgstr ""
 
 #: src/screens/Settings/AppIconSettings/index.tsx:99
 msgid "Bluesky+"
@@ -1332,11 +1337,11 @@ msgstr ""
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:133
 msgid "Captions (.vtt)"
-msgstr "Subtitles (.vtt)"
+msgstr ""
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:56
 msgid "Captions & alt text"
-msgstr "Subtitles & alt text"
+msgstr ""
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:60
 #: src/view/com/modals/VerifyEmail.tsx:160
@@ -1619,7 +1624,7 @@ msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:93
 msgid "Color mode"
-msgstr "Colour mode"
+msgstr ""
 
 #: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:97
@@ -1999,11 +2004,11 @@ msgstr ""
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:54
 #~ msgid "Customize media from external sites."
-#~ msgstr "Customise media from external sites."
+#~ msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:292
 msgid "Customize who can interact with this post."
-msgstr "Customise who can interact with this post."
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
@@ -3019,7 +3024,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:296
 msgid "Finalizing"
-msgstr "Finalising"
+msgstr ""
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:48
 #: src/view/com/posts/FollowingEmptyState.tsx:53
@@ -3727,7 +3732,7 @@ msgstr ""
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:34
 msgid "Invite your friends to follow your favorite feeds and people"
-msgstr "Invite your friends to follow your favourite feeds and people"
+msgstr ""
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:31
 msgid "Invites, but personal"
@@ -3772,11 +3777,11 @@ msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:231
 msgid "Labeled by {0}."
-msgstr "Labelled by {0}."
+msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:229
 msgid "Labeled by the author."
-msgstr "Labelled by the author."
+msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:75
 #: src/view/screens/Profile.tsx:229
@@ -4305,7 +4310,7 @@ msgstr ""
 
 #: src/screens/Onboarding/state.ts:105
 msgid "Movies"
-msgstr "Films"
+msgstr ""
 
 #: src/screens/Onboarding/state.ts:106
 msgid "Music"
@@ -4803,7 +4808,7 @@ msgstr ""
 
 #: src/lib/moderation/useReportOptions.ts:78
 msgid "Nudity or adult content not labeled as such"
-msgstr "Nudity or adult content not labelled as such"
+msgstr ""
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:11
 msgid "Off"
@@ -5510,7 +5515,7 @@ msgstr ""
 
 #: src/view/screens/PreferencesThreads.tsx:92
 #~ msgid "Prioritize Your Follows"
-#~ msgstr "Prioritise Your Follows"
+#~ msgstr ""
 
 #: src/screens/Settings/NotificationSettings.tsx:67
 msgid "Priority notifications"
@@ -6360,7 +6365,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
-msgstr "Select a colour"
+msgstr ""
 
 #: src/screens/Login/ChooseAccountForm.tsx:77
 msgid "Select account"
@@ -6657,7 +6662,7 @@ msgstr ""
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
-msgstr "Share your favourite feed!"
+msgstr ""
 
 #: src/Navigation.tsx:256
 msgid "Shared Preferences Tester"
@@ -7031,7 +7036,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:244
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr "Starter packs let you easily share your favourite feeds and people with your friends."
+msgstr ""
 
 #: src/screens/Settings/AboutSettings.tsx:53
 #: src/screens/Settings/AboutSettings.tsx:56
@@ -7068,7 +7073,7 @@ msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:238
 msgid "Subscribe to Labeler"
-msgstr "Subscribe to Labeller"
+msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:204
 msgid "Subscribe to this labeler"
@@ -7315,7 +7320,7 @@ msgstr ""
 
 #: src/screens/Onboarding/Layout.tsx:57
 msgid "The following steps will help customize your Bluesky experience."
-msgstr "The following steps will help customise your Bluesky experience."
+msgstr ""
 
 #: src/view/com/post-thread/PostThread.tsx:262
 #: src/view/com/post-thread/PostThread.tsx:274
@@ -7563,7 +7568,7 @@ msgstr ""
 
 #: src/screens/Profile/Sections/Labels.tsx:189
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
-msgstr "This labeller hasn't declared what labels it publishes, and may not be active."
+msgstr ""
 
 #: src/view/com/modals/LinkWarning.tsx:72
 msgid "This link is taking you to the following website:"
@@ -8418,7 +8423,7 @@ msgstr ""
 
 #: src/screens/Moderation/index.tsx:393
 msgid "We were unable to load your configured labelers at this time."
-msgstr "We were unable to load your configured labellers at this time."
+msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:129
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
@@ -8430,7 +8435,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:134
 msgid "We'll use this to help customize your experience."
-msgstr "We'll use this to help customise your experience."
+msgstr ""
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:88
 #: src/components/ProgressGuide/FollowDialog.tsx:157
@@ -8468,7 +8473,7 @@ msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:346
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
-msgstr "We're sorry! You can only subscribe to twenty labellers, and you've reached your limit of twenty."
+msgstr ""
 
 #: src/screens/Deactivated.tsx:124
 msgid "Welcome back!"
@@ -8791,7 +8796,7 @@ msgstr ""
 
 #: src/components/ReportDialog/SubmitView.tsx:210
 msgid "You must select at least one labeler for a report"
-msgstr "You must select at least one labeller for a report"
+msgstr ""
 
 #: src/screens/Deactivated.tsx:127
 msgid "You previously deactivated @{0}."
@@ -8985,3 +8990,4 @@ msgstr ""
 #: src/components/dms/ReportDialog.tsx:157
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr ""
+
