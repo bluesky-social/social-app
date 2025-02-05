@@ -2,6 +2,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedGetPostThread,
   AppBskyFeedThreadgate,
+  asPredicate,
   AtUri,
   BskyAgent,
 } from '@atproto/api'
@@ -138,7 +139,10 @@ export async function getThreadgateRecord({
         }),
     )
 
-    if (data.value && AppBskyFeedThreadgate.isValidRecord(data.value)) {
+    if (
+      data.value &&
+      asPredicate(AppBskyFeedThreadgate.validateRecord)(data.value)
+    ) {
       return data.value
     } else {
       return null
