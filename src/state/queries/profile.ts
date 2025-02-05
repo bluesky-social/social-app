@@ -8,6 +8,7 @@ import {
   AtUri,
   BskyAgent,
   ComAtprotoRepoUploadBlob,
+  Un$Typed,
 } from '@atproto/api'
 import {
   QueryClient,
@@ -117,8 +118,10 @@ export function usePrefetchProfileQuery() {
 interface ProfileUpdateParams {
   profile: AppBskyActorDefs.ProfileViewDetailed
   updates:
-    | AppBskyActorProfile.Record
-    | ((existing: AppBskyActorProfile.Record) => AppBskyActorProfile.Record)
+    | Un$Typed<AppBskyActorProfile.Record>
+    | ((
+        existing: Un$Typed<AppBskyActorProfile.Record>,
+      ) => Un$Typed<AppBskyActorProfile.Record>)
   newUserAvatar?: RNImage | undefined | null
   newUserBanner?: RNImage | undefined | null
   checkCommitted?: (res: AppBskyActorGetProfile.Response) => boolean
