@@ -69,7 +69,7 @@ export function useProfileShadow<
  * This is useful for when the profile is not guaranteed to be loaded yet.
  */
 export function useMaybeProfileShadow<
-  TProfileView extends AppBskyActorDefs.ProfileView,
+  TProfileView extends atp.profile.AnyProfileView,
 >(profile?: TProfileView): Shadow<TProfileView> | undefined {
   const [shadow, setShadow] = useState(() =>
     profile ? shadows.get(profile) : undefined,
