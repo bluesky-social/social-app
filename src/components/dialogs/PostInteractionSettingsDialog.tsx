@@ -30,16 +30,19 @@ import {
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
 export type PostInteractionSettingsFormProps = {
+  canSave?: boolean
   onSave: () => void
   isSaving?: boolean
 
@@ -59,6 +62,7 @@ export function PostInteractionSettingsControlledDialog({
   control: Dialog.DialogControlProps
 }) {
   const {_} = useLingui()
+
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
@@ -68,6 +72,16 @@ export function PostInteractionSettingsControlledDialog({
         <View style={[a.gap_md]}>
           <Header />
           <PostInteractionSettingsForm {...rest} />
+          <Admonition type="tip" style={[a.mt_sm]}>
+            <Trans>
+              You can configure defaults for these settings from within your{' '}
+              <InlineLinkText
+                label={_(msg`Configure default interaction settings`)}
+                to="/moderation/interaction-settings">
+                moderation settings screen.
+              </InlineLinkText>
+            </Trans>
+          </Admonition>
         </View>
         <Dialog.Close />
       </Dialog.ScrollableInner>
@@ -244,6 +258,7 @@ export function PostInteractionSettingsDialogControlledInner(
 }
 
 export function PostInteractionSettingsForm({
+  canSave = true,
   onSave,
   isSaving,
   postgate,
@@ -446,6 +461,7 @@ export function PostInteractionSettingsForm({
       </View>
 
       <Button
+        disabled={!canSave || isSaving}
         label={_(msg`Save`)}
         onPress={onSave}
         color="primary"

@@ -83,10 +83,7 @@ import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
-import {
-  preferencesQueryKey,
-  UsePreferencesQueryResponse,
-} from '#/state/queries/preferences'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
 import {useAgent, useSession} from '#/state/session'
@@ -173,11 +170,7 @@ export const ComposePost = ({
   const discardPromptControl = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
   const {closeAllModals} = useModalControls()
-  const initInteractionSettings = useMemo(() => {
-    const prefs =
-      queryClient.getQueryData<UsePreferencesQueryResponse>(preferencesQueryKey)
-    return prefs?.postInteractionSettings
-  }, [queryClient])
+  const {data: preferences} = usePreferencesQuery()
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isPublishing, setIsPublishing] = useState(false)
@@ -191,7 +184,7 @@ export const ComposePost = ({
       initQuoteUri: initQuote?.uri,
       initText,
       initMention,
-      initInteractionSettings,
+      initInteractionSettings: preferences?.postInteractionSettings,
     },
     createComposerState,
   )

@@ -2,6 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import deepEqual from 'fast-deep-equal'
 
 import {logger} from '#/logger'
 import {usePostInteractionSettingsMutation} from '#/state/queries/post-interaction-settings'
@@ -11,7 +12,6 @@ import {
   UsePreferencesQueryResponse,
 } from '#/state/queries/preferences'
 import {
-  ThreadgateAllowUISetting,
   threadgateAllowUISettingToAllowRecordValue,
   threadgateRecordToAllowUISetting,
 } from '#/state/queries/threadgate'
@@ -40,8 +40,8 @@ export function Screen() {
         <View style={[gutters, a.gap_xl]}>
           <Admonition type="tip">
             <Trans>
-              The following settings will be applied automatically to all new
-              posts you create.
+              The following settings will be used as your defaults when creating
+              new posts. They can be edited from the composer before you post.
             </Trans>
           </Admonition>
           {preferences ? (
@@ -63,23 +63,31 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
     usePostInteractionSettingsMutation()
   const [error, setError] = React.useState<string | undefined>(undefined)
 
-  const [postgate, setPostgate] = React.useState(() => {
-    return createPostgateRecord({
-      post: '',
-      embeddingRules:
-        preferences.postInteractionSettings.postgateEmbeddingRules,
-    })
-  })
-  const [allowUISettings, setAllowUISettings] = React.useState<
-    ThreadgateAllowUISetting[]
-  >(() => {
+  const allowUI = React.useMemo(() => {
     return threadgateRecordToAllowUISetting({
       $type: 'app.bsky.feed.threadgate',
       post: '',
       createdAt: new Date().toString(),
       allow: preferences.postInteractionSettings.threadgateAllowRules,
     })
-  })
+  }, [preferences.postInteractionSettings.threadgateAllowRules])
+  const postgate = React.useMemo(() => {
+    return createPostgateRecord({
+      post: '',
+      embeddingRules:
+        preferences.postInteractionSettings.postgateEmbeddingRules,
+    })
+  }, [preferences.postInteractionSettings.postgateEmbeddingRules])
+
+  const [maybeEditedAllowUI, setAllowUI] = React.useState(allowUI)
+  const [maybeEditedPostgate, setEditedPostgate] = React.useState(postgate)
+
+  const wasEdited = React.useMemo(() => {
+    return (
+      !deepEqual(allowUI, maybeEditedAllowUI) ||
+      !deepEqual(postgate.embeddingRules, maybeEditedPostgate.embeddingRules)
+    )
+  }, [postgate, allowUI, maybeEditedAllowUI, maybeEditedPostgate])
 
   const onSave = React.useCallback(async () => {
     setError('')
@@ -87,8 +95,8 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
     try {
       await setPostInteractionSettings({
         threadgateAllowRules:
-          threadgateAllowUISettingToAllowRecordValue(allowUISettings),
-        postgateEmbeddingRules: postgate.embeddingRules ?? [],
+          threadgateAllowUISettingToAllowRecordValue(maybeEditedAllowUI),
+        postgateEmbeddingRules: maybeEditedPostgate.embeddingRules ?? [],
       })
       Toast.show(_(msg`Settings saved`))
     } catch (e: any) {
@@ -98,17 +106,18 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
       })
       setError(_(msg`Failed to save settings. Please try again.`))
     }
-  }, [_, postgate, allowUISettings, setPostInteractionSettings])
+  }, [_, maybeEditedPostgate, maybeEditedAllowUI, setPostInteractionSettings])
 
   return (
     <>
       <PostInteractionSettingsForm
+        canSave={wasEdited}
         isSaving={isPending}
         onSave={onSave}
-        postgate={postgate}
-        onChangePostgate={setPostgate}
-        threadgateAllowUISettings={allowUISettings}
-        onChangeThreadgateAllowUISettings={setAllowUISettings}
+        postgate={maybeEditedPostgate}
+        onChangePostgate={setEditedPostgate}
+        threadgateAllowUISettings={maybeEditedAllowUI}
+        onChangeThreadgateAllowUISettings={setAllowUI}
       />
 
       {error && <Admonition type="error">{error}</Admonition>}
