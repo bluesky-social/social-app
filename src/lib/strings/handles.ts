@@ -42,10 +42,9 @@ export interface IsValidHandle {
 }
 
 // More checks from https://github.com/bluesky-social/atproto/blob/main/packages/pds/src/handle/index.ts#L72
-export function validateHandle(
+export function validateServiceHandle(
   str: string,
   userDomain: string,
-  isServiceHandle?: boolean,
 ): IsValidHandle {
   const fullHandle = createFullHandle(str, userDomain)
 
@@ -53,8 +52,8 @@ export function validateHandle(
     handleChars:
       !str || (VALIDATE_REGEX.test(fullHandle) && !str.includes('.')),
     hyphenStartOrEnd: !str.startsWith('-') && !str.endsWith('-'),
-    frontLength: str.length >= 3,
-    totalLength: fullHandle.length <= (isServiceHandle ? 30 : 253),
+    frontLength: str.length >= 3 && str.length <= 18,
+    totalLength: fullHandle.length <= 253,
   }
 
   return {

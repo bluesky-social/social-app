@@ -7,7 +7,7 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {
   createFullHandle,
   maxServiceHandleLength,
-  validateHandle,
+  validateServiceHandle,
 } from '#/lib/strings/handles'
 import {useAgent} from '#/state/session'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
@@ -37,7 +37,7 @@ export function StepHandle() {
       value: handle,
     })
 
-    const newValidCheck = validateHandle(handle, state.userDomain)
+    const newValidCheck = validateServiceHandle(handle, state.userDomain)
     if (!newValidCheck.overall) {
       return
     }
@@ -97,7 +97,7 @@ export function StepHandle() {
     })
   }, [dispatch, state.activeStep])
 
-  const validCheck = validateHandle(draftValue, state.userDomain, true)
+  const validCheck = validateServiceHandle(draftValue, state.userDomain)
   return (
     <ScreenTransition>
       <View style={[a.gap_lg]}>
