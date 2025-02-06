@@ -79,7 +79,7 @@ export function PostInteractionSettingsControlledDialog({
               t.atoms.text_contrast_medium,
             ]}>
             <Trans>
-              You can configure defaults for these settings in{' '}
+              You can set default interaction settings in{' '}
               <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
                 Settings &rarr; Moderation &rarr; Interaction settings.
               </Text>
