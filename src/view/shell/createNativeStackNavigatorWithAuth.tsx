@@ -151,12 +151,8 @@ function NativeStackNavigator({
         />
       </View>
       {isWeb && showBottomBar && <BottomBarWeb />}
-      {isWeb && !showBottomBar && (
-        <>
-          <DesktopLeftNav />
-          <DesktopRightNav routeName={activeRoute.name} />
-        </>
-      )}
+      {isWeb && !showBottomBar && <DesktopLeftNav />}
+      {isWeb && !isMobile && <DesktopRightNav routeName={activeRoute.name} />}
     </NavigationContent>
   )
 }
