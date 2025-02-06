@@ -54,6 +54,7 @@ export const Screen = React.memo(function Screen({
 export type ContentProps = AnimatedScrollViewProps & {
   style?: StyleProp<ViewStyle>
   contentContainerStyle?: StyleProp<ViewStyle>
+  ignoreTabletLayoutOffset?: boolean
 }
 
 /**
@@ -63,6 +64,7 @@ export const Content = React.memo(function Content({
   children,
   style,
   contentContainerStyle,
+  ignoreTabletLayoutOffset,
   ...props
 }: ContentProps) {
   const t = useTheme()
@@ -92,7 +94,9 @@ export const Content = React.memo(function Content({
       {...props}>
       {isWeb ? (
         // @ts-expect-error web only -esb
-        <Center>{children}</Center>
+        <Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>
+          {children}
+        </Center>
       ) : (
         children
       )}
@@ -145,8 +149,9 @@ export const KeyboardAwareContent = React.memo(function LayoutScrollView({
 export const Center = React.memo(function LayoutContent({
   children,
   style,
+  ignoreTabletLayoutOffset,
   ...props
-}: ViewProps) {
+}: ViewProps & {ignoreTabletLayoutOffset?: boolean}) {
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
   const {gtMobile} = useBreakpoints()
   const {centerColumnOffset} = useLayoutBreakpoints()
@@ -161,7 +166,10 @@ export const Center = React.memo(function LayoutContent({
         },
         !isWithinOffsetView && {
           transform: [
-            {translateX: centerColumnOffset ? -150 : 0},
+            {
+              translateX:
+                centerColumnOffset && !ignoreTabletLayoutOffset ? -150 : 0,
+            },
             {translateX: web(SCROLLBAR_OFFSET) ?? 0},
           ],
         },
