@@ -438,6 +438,16 @@ export function PostInteractionSettingsForm({
                     onPress={() => onPressAudience({type: 'following'})}
                     disabled={replySettingsDisabled}
                   />
+                  <Selectable
+                    label={_(msg`Your followers`)}
+                    isSelected={
+                      !!threadgateAllowUISettings.find(
+                        v => v.type === 'followers',
+                      )
+                    }
+                    onPress={() => onPressAudience({type: 'followers'})}
+                    disabled={replySettingsDisabled}
+                  />
                   {lists && lists.length > 0
                     ? lists.map(list => (
                         <Selectable

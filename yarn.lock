@@ -72,10 +72,10 @@
     tlds "^1.234.0"
     zod "^3.23.8"
 
-"@atproto/api@^0.13.33":
-  version "0.13.33"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.33.tgz#01d31a1cfd1be311e11324b810b8a83fe4cbf9b0"
-  integrity sha512-d8AOvtxo2J2zrmcakJTUtLdz2ns+pAqywNXhPxPzHrHcw79D6MKBLHR0vr8oxkGwhDBQTsHiQWTk4gSo8PF7YA==
+"@atproto/api@^0.13.34":
+  version "0.13.34"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.34.tgz#8bdb5795f65dc8c78cb631cce4e7217ec7dcdb14"
+  integrity sha512-GQT47fkeozMjWyERaMflIphk+t5g1oMN7IuHaNskS41PFdmDhtEvMt42/gEPyy+anY/iCaAsl+uo89fOPHQXhQ==
   dependencies:
     "@atproto/common-web" "^0.4.0"
     "@atproto/lexicon" "^0.4.6"
