@@ -52,6 +52,7 @@ import {
 import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
+import * as Toast from '#/view/com/util/Toast'
 import {useBreakpoints} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
@@ -92,7 +93,6 @@ import {
 import * as Prompt from '#/components/Prompt'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import * as bsky from '#/types/bsky'
-import * as Toast from '../Toast'
 
 let PostDropdownMenuItems = ({
   post,
