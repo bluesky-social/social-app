@@ -157,12 +157,10 @@ function HeaderReady({
         moderation.ui('displayName'),
       )
 
-  const latestMessageFromOther = convoState.items
-    .reverse()
-    .find(
-      item =>
-        item.type === 'message' && item.message.sender.did === profile.did,
-    )
+  // @ts-ignore findLast is polyfilled - esb
+  const latestMessageFromOther = convoState.items.findLast(
+    item => item.type === 'message' && item.message.sender.did === profile.did,
+  )
 
   const latestReportableMessage =
     latestMessageFromOther?.type === 'message'

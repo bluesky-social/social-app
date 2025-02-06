@@ -69,9 +69,8 @@ function useMigrateMutes(setThreadMute: SetStateContext) {
         while (!cancelled) {
           const threads = persisted.get('mutedThreads')
 
-          const root = threads
-            .reverse()
-            .find(uri => uri.includes(currentAccount.did))
+          // @ts-ignore findLast is polyfilled - esb
+          const root = threads.findLast(uri => uri.includes(currentAccount.did))
 
           if (!root) break
 
