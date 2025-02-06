@@ -93,8 +93,8 @@ export const Content = React.memo(function Content({
       ]}
       {...props}>
       {isWeb ? (
-        // @ts-expect-error web only -esb
         <Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>
+          {/* @ts-expect-error web only -esb */}
           {children}
         </Center>
       ) : (
