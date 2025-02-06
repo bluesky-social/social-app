@@ -555,7 +555,6 @@ export function DesktopLeftNav() {
         a.px_xl,
         styles.leftNav,
         leftNavMinimal && styles.leftNavMinimal,
-        leftNavMinimal && !centerColumnOffset && {width: 76},
         {
           transform: [
             {translateX: centerColumnOffset ? -450 : -300},
