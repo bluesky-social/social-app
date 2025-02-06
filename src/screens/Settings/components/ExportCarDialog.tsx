@@ -36,7 +36,7 @@ export function ExportCarDialog({
       const saveRes = await saveBytesToDisk(
         'repo.car',
         downloadRes.data,
-        downloadRes.headers['content-type'],
+        downloadRes.headers['content-type'] || 'application/vnd.ipld.car',
       )
 
       if (saveRes) {
