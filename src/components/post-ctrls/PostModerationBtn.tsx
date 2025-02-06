@@ -18,12 +18,12 @@ import {useTheme} from '#/lib/ThemeContext'
 import {Shadow} from '#/state/cache/post-shadow'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import {atoms as a, useTheme as useAlf} from '#/alf'
-import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
+import {ThumbsDown_Stroke2_Corner0_Rounded as ThumbsDownIcon} from '#/components/icons/ThumbsDown'
 import {useMenuControl} from '#/components/Menu'
 import * as Menu from '#/components/Menu'
-import {PostDropdownMenuItems} from './PostDropdownBtnMenuItems'
+import {PostModerationMenuItems} from './PostModerationBtnMenuItems'
 
-let PostDropdownBtn = ({
+let PostModerationBtn = ({
   testID,
   post,
   postFeedContext,
@@ -67,7 +67,7 @@ let PostDropdownBtn = ({
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root control={lazyMenuControl}>
-        <Menu.Trigger label={_(msg`Open post options menu`)}>
+        <Menu.Trigger label={_(msg`Open post moderation menu`)}>
           {({props, state}) => {
             return (
               <Pressable
@@ -81,7 +81,7 @@ let PostDropdownBtn = ({
                     alf.atoms.bg_contrast_25,
                   ],
                 ]}>
-                <DotsHorizontal
+                <ThumbsDownIcon
                   fill={defaultCtrlColor}
                   style={{pointerEvents: 'none'}}
                   width={size}
@@ -92,7 +92,7 @@ let PostDropdownBtn = ({
         </Menu.Trigger>
         {hasBeenOpen && (
           // Lazily initialized. Once mounted, they stay mounted.
-          <PostDropdownMenuItems
+          <PostModerationMenuItems
             testID={testID}
             post={post}
             postFeedContext={postFeedContext}
@@ -107,5 +107,5 @@ let PostDropdownBtn = ({
   )
 }
 
-PostDropdownBtn = memo(PostDropdownBtn)
-export {PostDropdownBtn}
+PostModerationBtn = memo(PostModerationBtn)
+export {PostModerationBtn}

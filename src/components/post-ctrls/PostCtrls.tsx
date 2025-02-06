@@ -18,7 +18,7 @@ import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {IS_INTERNAL} from '#/lib/app-info'
-import {POST_CTRL_HITSLOP} from '#/lib/constants'
+import {HITSLOP_10, POST_CTRL_HITSLOP} from '#/lib/constants'
 import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
 import {useHaptics} from '#/lib/haptics'
@@ -47,6 +47,7 @@ import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/componen
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
 import * as Prompt from '#/components/Prompt'
 import {PostDropdownBtn} from './PostDropdownBtn'
+import {PostModerationBtn} from './PostModerationBtn'
 import {RepostButton} from './RepostButton'
 
 let PostCtrls = ({
@@ -246,7 +247,7 @@ let PostCtrls = ({
     <View style={[a.flex_row, a.justify_between, a.align_center, style]}>
       <View
         style={[
-          big ? a.align_center : [a.flex_1, a.align_start, {marginLeft: -6}],
+          !big && [a.flex_1, a.align_start, {marginLeft: -6}],
           post.viewer?.replyDisabled ? {opacity: 0.5} : undefined,
         ]}>
         <Pressable
@@ -283,7 +284,7 @@ let PostCtrls = ({
           ) : undefined}
         </Pressable>
       </View>
-      <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
+      <View style={!big && [a.flex_1, a.align_start]}>
         <RepostButton
           isReposted={!!post.viewer?.repost}
           repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
@@ -293,7 +294,7 @@ let PostCtrls = ({
           embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
         />
       </View>
-      <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
+      <View style={!big && [a.flex_1, a.align_start]}>
         <Pressable
           testID="likeBtn"
           style={btnStyle}
@@ -331,27 +332,25 @@ let PostCtrls = ({
       </View>
       {big && (
         <>
-          <View style={a.align_center}>
-            <Pressable
-              testID="shareBtn"
-              style={btnStyle}
-              onPress={() => {
-                if (shouldShowLoggedOutWarning) {
-                  loggedOutWarningPromptControl.open()
-                } else {
-                  onShare()
-                }
-              }}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Share`)}
-              accessibilityHint=""
-              hitSlop={POST_CTRL_HITSLOP}>
-              <ArrowOutOfBox
-                style={[defaultCtrlColor, {pointerEvents: 'none'}]}
-                width={22}
-              />
-            </Pressable>
-          </View>
+          <Pressable
+            testID="shareBtn"
+            style={btnStyle}
+            onPress={() => {
+              if (shouldShowLoggedOutWarning) {
+                loggedOutWarningPromptControl.open()
+              } else {
+                onShare()
+              }
+            }}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Share`)}
+            accessibilityHint=""
+            hitSlop={POST_CTRL_HITSLOP}>
+            <ArrowOutOfBox
+              style={[defaultCtrlColor, {pointerEvents: 'none'}]}
+              width={22}
+            />
+          </Pressable>
           <Prompt.Basic
             control={loggedOutWarningPromptControl}
             title={_(msg`Note about sharing`)}
@@ -363,30 +362,73 @@ let PostCtrls = ({
           />
         </>
       )}
-      <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
-        <PostDropdownBtn
-          testID="postDropdownBtn"
-          post={post}
-          postFeedContext={feedContext}
-          record={record}
-          richText={richText}
-          style={{padding: 5}}
-          hitSlop={POST_CTRL_HITSLOP}
-          timestamp={post.indexedAt}
-          threadgateRecord={threadgateRecord}
-        />
-      </View>
+      {big ? (
+        <>
+          <PostModerationBtn
+            testID="postModerationBtn"
+            post={post}
+            postFeedContext={feedContext}
+            record={record}
+            richText={richText}
+            style={{padding: 5}}
+            hitSlop={POST_CTRL_HITSLOP}
+            timestamp={post.indexedAt}
+            threadgateRecord={threadgateRecord}
+            size={22}
+          />
+          <PostDropdownBtn
+            testID="postDropdownBtn"
+            post={post}
+            postFeedContext={feedContext}
+            record={record}
+            richText={richText}
+            style={{padding: 5}}
+            hitSlop={POST_CTRL_HITSLOP}
+            timestamp={post.indexedAt}
+            threadgateRecord={threadgateRecord}
+            size={22}
+          />
+        </>
+      ) : (
+        <View style={[a.flex_1, a.flex_row, a.justify_center, a.gap_xs]}>
+          <PostModerationBtn
+            testID="postModerationBtn"
+            post={post}
+            postFeedContext={feedContext}
+            record={record}
+            richText={richText}
+            style={{padding: 5}}
+            hitSlop={POST_CTRL_HITSLOP}
+            timestamp={post.indexedAt}
+            threadgateRecord={threadgateRecord}
+            size={18}
+          />
+          <PostDropdownBtn
+            testID="postDropdownBtn"
+            post={post}
+            postFeedContext={feedContext}
+            record={record}
+            richText={richText}
+            style={{padding: 5}}
+            hitSlop={POST_CTRL_HITSLOP}
+            timestamp={post.indexedAt}
+            threadgateRecord={threadgateRecord}
+            size={18}
+          />
+        </View>
+      )}
       {isDiscoverDebugUser && feedContext && (
         <Pressable
           accessible={false}
           style={{
             position: 'absolute',
-            top: 0,
-            bottom: 0,
-            right: 0,
+            top: '95%',
+            right: -12,
             display: 'flex',
             justifyContent: 'center',
+            height: 10,
           }}
+          hitSlop={HITSLOP_10}
           onPress={e => {
             e.stopPropagation()
             Clipboard.setStringAsync(feedContext)
