@@ -44,7 +44,7 @@ import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {useBreakpoints} from '#/alf'
+import {useBreakpoints, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {EmbedDialog} from '#/components/dialogs/Embed'
@@ -122,10 +122,10 @@ let PostDropdownMenuItems = ({
   const hideReplyConfirmControl = useDialogControl()
   const {mutateAsync: toggleReplyVisibility} =
     useToggleReplyVisibilityMutation()
-
   const postUri = post.uri
   const postCid = post.cid
   const postAuthor = useProfileShadow(post.author)
+  const t = useTheme()
   const quoteEmbed = React.useMemo(() => {
     if (!currentAccount || !post.embed) return
     return getMaybeDetachedQuoteEmbed({
@@ -641,8 +641,14 @@ let PostDropdownMenuItems = ({
                     testID="postDropdownDeleteBtn"
                     label={_(msg`Delete post`)}
                     onPress={() => deletePromptControl.open()}>
-                    <Menu.ItemText>{_(msg`Delete post`)}</Menu.ItemText>
-                    <Menu.ItemIcon icon={Trash} position="right" />
+                    <Menu.ItemText style={{color: t.palette.negative_500}}>
+                      {_(msg`Delete post`)}
+                    </Menu.ItemText>
+                    <Menu.ItemIcon
+                      icon={Trash}
+                      position="right"
+                      color={t.palette.negative_500}
+                    />
                   </Menu.Item>
                 </>
               )}
