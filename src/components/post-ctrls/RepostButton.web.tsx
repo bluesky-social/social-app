@@ -5,14 +5,14 @@ import {useLingui} from '@lingui/react'
 
 import {useRequireAuth} from '#/state/session'
 import {useSession} from '#/state/session'
+import {EventStopper} from '#/view/com/util/EventStopper'
+import {formatCount} from '#/view/com/util/numeric/format'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
-import {EventStopper} from '../EventStopper'
-import {formatCount} from '../numeric/format'
 
 interface Props {
   isReposted: boolean

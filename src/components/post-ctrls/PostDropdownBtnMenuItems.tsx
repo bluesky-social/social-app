@@ -48,6 +48,7 @@ import {
 import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
+import * as Toast from '#/view/com/util/Toast'
 import {useBreakpoints} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
@@ -82,7 +83,6 @@ import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
-import * as Toast from '../Toast'
 
 let PostDropdownMenuItems = ({
   post,

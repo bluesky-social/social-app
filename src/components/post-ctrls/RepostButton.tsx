@@ -6,13 +6,13 @@ import {useLingui} from '@lingui/react'
 import {POST_CTRL_HITSLOP} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useRequireAuth} from '#/state/session'
+import {formatCount} from '#/view/com/util/numeric/format'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 import {Text} from '#/components/Typography'
-import {formatCount} from '../numeric/format'
 
 interface Props {
   isReposted: boolean
