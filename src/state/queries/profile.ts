@@ -29,7 +29,7 @@ import {
   useUnstableProfileViewCache,
 } from '#/state/queries/unstable-profile-cache'
 import * as userActionHistory from '#/state/userActionHistory'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 import {updateProfileShadow} from '../cache/profile-shadow'
 import {useAgent, useSession} from '../session'
 import {
@@ -225,7 +225,7 @@ export function useProfileUpdateMutation() {
 }
 
 export function useProfileFollowMutationQueue(
-  profile: Shadow<atp.profile.AnyProfileView>,
+  profile: Shadow<bsky.profile.AnyProfileView>,
   logContext: LogEvents['profile:follow']['logContext'] &
     LogEvents['profile:follow']['logContext'],
 ) {
@@ -299,7 +299,7 @@ export function useProfileFollowMutationQueue(
 
 function useProfileFollowMutation(
   logContext: LogEvents['profile:follow']['logContext'],
-  profile: Shadow<atp.profile.AnyProfileView>,
+  profile: Shadow<bsky.profile.AnyProfileView>,
 ) {
   const {currentAccount} = useSession()
   const agent = useAgent()
@@ -340,7 +340,7 @@ function useProfileUnfollowMutation(
 }
 
 export function useProfileMuteMutationQueue(
-  profile: Shadow<atp.profile.AnyProfileView>,
+  profile: Shadow<bsky.profile.AnyProfileView>,
 ) {
   const queryClient = useQueryClient()
   const did = profile.did
@@ -415,7 +415,7 @@ function useProfileUnmuteMutation() {
 }
 
 export function useProfileBlockMutationQueue(
-  profile: Shadow<atp.profile.AnyProfileView>,
+  profile: Shadow<bsky.profile.AnyProfileView>,
 ) {
   const queryClient = useQueryClient()
   const did = profile.did

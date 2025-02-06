@@ -14,7 +14,7 @@ import {QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
 import {labelIsHideableOffense} from '#/lib/moderation'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 import {precacheProfile} from '../profile'
 import {FeedNotification, FeedPage, NotificationType} from './types'
 
@@ -253,11 +253,11 @@ function getSubjectUri(
     return notif.uri
   } else if (type === 'post-like' || type === 'repost') {
     if (
-      atp.dangerousIsType<AppBskyFeedRepost.Record>(
+      bsky.dangerousIsType<AppBskyFeedRepost.Record>(
         notif.record,
         AppBskyFeedRepost.isRecord,
       ) ||
-      atp.dangerousIsType<AppBskyFeedLike.Record>(
+      bsky.dangerousIsType<AppBskyFeedLike.Record>(
         notif.record,
         AppBskyFeedLike.isRecord,
       )

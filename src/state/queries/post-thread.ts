@@ -18,7 +18,7 @@ import {
   findAllProfilesInQueryData as findAllProfilesInSearchQueryData,
 } from '#/state/queries/search-posts'
 import {useAgent} from '#/state/session'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 import {
   findAllPostsInQueryData as findAllPostsInNotifsQueryData,
   findAllProfilesInQueryData as findAllProfilesInNotifsQueryData,
@@ -333,7 +333,7 @@ function responseToThreadNodes(
 ): ThreadNode {
   if (
     AppBskyFeedDefs.isThreadViewPost(node) &&
-    atp.dangerousIsType<AppBskyFeedPost.Record>(
+    bsky.dangerousIsType<AppBskyFeedPost.Record>(
       node.post.record,
       AppBskyFeedPost.isRecord,
     )

@@ -1,5 +1,5 @@
-export * as profile from '#/types/atproto/profile'
-export * as starterPack from '#/types/atproto/starterPack'
+export * as profile from '#/types/bsky/profile'
+export * as starterPack from '#/types/bsky/starterPack'
 
 /**
  * Use sparingly, and only when you know it's safe to do so.

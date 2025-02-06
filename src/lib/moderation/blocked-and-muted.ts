@@ -1,4 +1,4 @@
-import * as atp from '#/types/atproto'
+import * as atp from '#/types/bsky'
 
 export function isBlockedOrBlocking(profile: atp.profile.AnyProfileView) {
   return profile.viewer?.blockedBy || profile.viewer?.blocking

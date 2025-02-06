@@ -58,7 +58,7 @@ import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
 import {Post} from '../post/Post'
 import {Link, TextLink} from '../util/Link'
@@ -265,7 +265,7 @@ let NotificationFeedItem = ({
 
     if (
       item.notification.author.viewer?.following &&
-      atp.dangerousIsType<AppBskyGraphFollow.Record>(
+      bsky.dangerousIsType<AppBskyGraphFollow.Record>(
         item.notification.record,
         AppBskyGraphFollow.isRecord,
       )
@@ -722,7 +722,7 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
   const pal = usePalette('default')
   if (
     post &&
-    atp.dangerousIsType<AppBskyFeedPost.Record>(
+    bsky.dangerousIsType<AppBskyFeedPost.Record>(
       post?.record,
       AppBskyFeedPost.isRecord,
     )

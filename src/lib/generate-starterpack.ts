@@ -15,7 +15,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {enforceLen} from '#/lib/strings/helpers'
 import {useAgent} from '#/state/session'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 
 export const createStarterPackList = async ({
   name,
@@ -27,7 +27,7 @@ export const createStarterPackList = async ({
   name: string
   description?: string
   descriptionFacets?: Facet[]
-  profiles: atp.profile.AnyProfileView[]
+  profiles: bsky.profile.AnyProfileView[]
   agent: BskyAgent
 }): Promise<{uri: string; cid: string}> => {
   if (profiles.length === 0) throw new Error('No profiles given')

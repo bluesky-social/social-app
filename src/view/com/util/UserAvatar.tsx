@@ -31,7 +31,7 @@ import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
 
 export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
@@ -56,7 +56,7 @@ interface EditableUserAvatarProps extends BaseUserAvatarProps {
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
-  profile: atp.profile.AnyProfileView
+  profile: bsky.profile.AnyProfileView
   disableHoverCard?: boolean
   onBeforePress?: () => void
 }

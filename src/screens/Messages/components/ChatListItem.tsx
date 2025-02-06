@@ -43,7 +43,7 @@ import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 
 export let ChatListItem = ({
   convo,
@@ -78,7 +78,7 @@ function ChatListItemReady({
   moderationOpts,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
-  profile: atp.profile.AnyProfileView
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()

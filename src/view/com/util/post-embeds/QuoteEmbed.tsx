@@ -36,7 +36,7 @@ import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
 import {PostAlerts} from '../../../../components/moderation/PostAlerts'
 import {Link} from '../Link'
@@ -173,7 +173,7 @@ export function QuoteEmbed({
 
   const richText = React.useMemo(() => {
     if (
-      !atp.dangerousIsType<AppBskyFeedPost.Record>(
+      !bsky.dangerousIsType<AppBskyFeedPost.Record>(
         quote.record,
         AppBskyFeedPost.isRecord,
       )

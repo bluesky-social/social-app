@@ -31,7 +31,7 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {RichText, RichTextProps} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 
 type Props = {
   view: AppBskyFeedDefs.GeneratorView
@@ -115,7 +115,7 @@ export function TitleAndByline({
   creator,
 }: {
   title: string
-  creator?: atp.profile.AnyProfileView
+  creator?: bsky.profile.AnyProfileView
 }) {
   const t = useTheme()
 

@@ -15,12 +15,12 @@ import {atoms as a, useTheme} from '#/alf'
 import {StarterPack} from '#/components/icons/StarterPack'
 import {Link as BaseLink, LinkProps as BaseLinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 
 export function Default({
   starterPack,
 }: {
-  starterPack?: atp.starterPack.AnyStarterPackView
+  starterPack?: bsky.starterPack.AnyStarterPackView
 }) {
   if (!starterPack) return null
   return (
@@ -33,7 +33,7 @@ export function Default({
 export function Notification({
   starterPack,
 }: {
-  starterPack?: atp.starterPack.AnyStarterPackView
+  starterPack?: bsky.starterPack.AnyStarterPackView
 }) {
   if (!starterPack) return null
   return (
@@ -48,7 +48,7 @@ export function Card({
   noIcon,
   noDescription,
 }: {
-  starterPack: atp.starterPack.AnyStarterPackView
+  starterPack: bsky.starterPack.AnyStarterPackView
   noIcon?: boolean
   noDescription?: boolean
 }) {
@@ -59,7 +59,7 @@ export function Card({
   const {currentAccount} = useSession()
 
   if (
-    !atp.dangerousIsType<AppBskyGraphStarterpack.Record>(
+    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
       record,
       AppBskyGraphStarterpack.isRecord,
     )
@@ -106,7 +106,7 @@ export function Link({
   starterPack,
   children,
 }: {
-  starterPack: atp.starterPack.AnyStarterPackView
+  starterPack: bsky.starterPack.AnyStarterPackView
   onPress?: () => void
   children: BaseLinkProps['children']
 }) {
@@ -145,7 +145,7 @@ export function Link({
 export function Embed({
   starterPack,
 }: {
-  starterPack: atp.starterPack.AnyStarterPackView
+  starterPack: bsky.starterPack.AnyStarterPackView
 }) {
   const t = useTheme()
   const imageUri = getStarterPackOgCard(starterPack)

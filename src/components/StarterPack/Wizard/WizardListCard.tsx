@@ -22,7 +22,7 @@ import {Button, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {Checkbox} from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 
 function WizardListCard({
   type,
@@ -124,7 +124,7 @@ export function WizardProfileCard({
   btnType: 'checkbox' | 'remove'
   state: WizardState
   dispatch: (action: WizardAction) => void
-  profile: atp.profile.AnyProfileView
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
   const {currentAccount} = useSession()

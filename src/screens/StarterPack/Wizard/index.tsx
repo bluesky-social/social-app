@@ -54,7 +54,7 @@ import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditListDialog'
 import {Text} from '#/components/Typography'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 import {Provider} from './State'
 
 export function Wizard({
@@ -578,7 +578,7 @@ function Footer({
   )
 }
 
-function getName(item: atp.profile.AnyProfileView | GeneratorView) {
+function getName(item: bsky.profile.AnyProfileView | GeneratorView) {
   if (typeof item.displayName === 'string') {
     return enforceLen(sanitizeDisplayName(item.displayName), 28, true)
   } else if ('handle' in item) {

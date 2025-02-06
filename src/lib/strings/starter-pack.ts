@@ -1,6 +1,6 @@
 import {AtUri} from '@atproto/api'
 
-import * as atp from '#/types/atproto'
+import * as atp from '#/types/bsky'
 
 export function createStarterPackLinkFromAndroidReferrer(
   referrerQueryString: string,

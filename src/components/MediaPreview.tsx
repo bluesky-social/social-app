@@ -9,7 +9,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
-import {parseEmbed} from '#/types/atproto/post'
+import {parseEmbed} from '#/types/bsky/post'
 
 /**
  * Streamlined MediaPreview component which just handles images, gifs, and videos

@@ -49,7 +49,7 @@ import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
 import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending2'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 
 export function StepFinished() {
   const {_} = useLingui()
@@ -213,7 +213,7 @@ export function StepFinished() {
       usedStarterPack: Boolean(starterPack),
       starterPackName:
         starterPack &&
-        atp.dangerousIsType<AppBskyGraphStarterpack.Record>(
+        bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
           starterPack.record,
           AppBskyGraphStarterpack.isRecord,
         )

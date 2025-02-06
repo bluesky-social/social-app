@@ -1,6 +1,6 @@
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 
-export function canBeMessaged(profile: atp.profile.AnyProfileView) {
+export function canBeMessaged(profile: bsky.profile.AnyProfileView) {
   switch (profile.associated?.chat?.allowIncoming) {
     case 'none':
       return false

@@ -3,7 +3,7 @@ import {QueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 import {findAllProfilesInQueryData as findAllProfilesInActorSearchQueryData} from '../queries/actor-search'
 import {findAllProfilesInQueryData as findAllProfilesInKnownFollowersQueryData} from '../queries/known-followers'
 import {findAllProfilesInQueryData as findAllProfilesInListMembersQueryData} from '../queries/list-members'
@@ -30,13 +30,13 @@ export interface ProfileShadow {
 }
 
 const shadows: WeakMap<
-  atp.profile.AnyProfileView,
+  bsky.profile.AnyProfileView,
   Partial<ProfileShadow>
 > = new WeakMap()
 const emitter = new EventEmitter()
 
 export function useProfileShadow<
-  TProfileView extends atp.profile.AnyProfileView,
+  TProfileView extends bsky.profile.AnyProfileView,
 >(profile: TProfileView): Shadow<TProfileView> {
   const [shadow, setShadow] = useState(() => shadows.get(profile))
   const [prevPost, setPrevPost] = useState(profile)
@@ -69,7 +69,7 @@ export function useProfileShadow<
  * This is useful for when the profile is not guaranteed to be loaded yet.
  */
 export function useMaybeProfileShadow<
-  TProfileView extends atp.profile.AnyProfileView,
+  TProfileView extends bsky.profile.AnyProfileView,
 >(profile?: TProfileView): Shadow<TProfileView> | undefined {
   const [shadow, setShadow] = useState(() =>
     profile ? shadows.get(profile) : undefined,
@@ -116,7 +116,7 @@ export function updateProfileShadow(
   })
 }
 
-function mergeShadow<TProfileView extends atp.profile.AnyProfileView>(
+function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
   profile: TProfileView,
   shadow: Partial<ProfileShadow>,
 ): Shadow<TProfileView> {
@@ -138,7 +138,7 @@ function mergeShadow<TProfileView extends atp.profile.AnyProfileView>(
 function* findProfilesInCache(
   queryClient: QueryClient,
   did: string,
-): Generator<atp.profile.AnyProfileView, void> {
+): Generator<bsky.profile.AnyProfileView, void> {
   yield* findAllProfilesInListMembersQueryData(queryClient, did)
   yield* findAllProfilesInMyBlockedAccountsQueryData(queryClient, did)
   yield* findAllProfilesInMyMutedAccountsQueryData(queryClient, did)

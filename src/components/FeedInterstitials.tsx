@@ -27,7 +27,7 @@ import {PersonPlus_Stroke2_Corner0_Rounded as Person} from '#/components/icons/P
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 import {ProgressGuideList} from './ProgressGuide/List'
 
 const MOBILE_CARD_WIDTH = 300
@@ -229,7 +229,7 @@ export function ProfileGrid({
   viewContext = 'feed',
 }: {
   isSuggestionsLoading: boolean
-  profiles: atp.profile.AnyProfileView[]
+  profiles: bsky.profile.AnyProfileView[]
   recId?: number
   error: Error | null
   viewContext: 'profile' | 'feed'

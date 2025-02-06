@@ -66,7 +66,7 @@ import {ProfilesList} from '#/components/StarterPack/Main/ProfilesList'
 import {QrCodeDialog} from '#/components/StarterPack/QrCodeDialog'
 import {ShareDialog} from '#/components/StarterPack/ShareDialog'
 import {Text} from '#/components/Typography'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 
 type StarterPackScreeProps = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -389,7 +389,7 @@ function Header({
   }
 
   if (
-    !atp.dangerousIsType<AppBskyGraphStarterpack.Record>(
+    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
       record,
       AppBskyGraphStarterpack.isRecord,
     )

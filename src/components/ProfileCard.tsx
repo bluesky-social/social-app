@@ -24,14 +24,14 @@ import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus
 import {Link as InternalLink, LinkProps} from '#/components/Link'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 
 export function Default({
   profile,
   moderationOpts,
   logContext = 'ProfileCard',
 }: {
-  profile: atp.profile.AnyProfileView
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
 }) {
@@ -51,7 +51,7 @@ export function Card({
   moderationOpts,
   logContext = 'ProfileCard',
 }: {
-  profile: atp.profile.AnyProfileView
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
 }) {
@@ -101,7 +101,7 @@ export function Link({
   style,
   ...rest
 }: {
-  profile: atp.profile.AnyProfileView
+  profile: bsky.profile.AnyProfileView
 } & Omit<LinkProps, 'to' | 'label'>) {
   const {_} = useLingui()
   return (
@@ -126,7 +126,7 @@ export function Avatar({
   profile,
   moderationOpts,
 }: {
-  profile: atp.profile.AnyProfileView
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
   const moderation = moderateProfile(profile, moderationOpts)
@@ -161,7 +161,7 @@ export function NameAndHandle({
   profile,
   moderationOpts,
 }: {
-  profile: atp.profile.AnyProfileView
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
@@ -224,7 +224,7 @@ export function Description({
   profile: profileUnshadowed,
   numberOfLines = 3,
 }: {
-  profile: atp.profile.AnyProfileView
+  profile: bsky.profile.AnyProfileView
   numberOfLines?: number
 }) {
   const profile = useProfileShadow(profileUnshadowed)
@@ -280,7 +280,7 @@ export function DescriptionPlaceholder({
 }
 
 export type FollowButtonProps = {
-  profile: atp.profile.AnyProfileView
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   logContext: LogEvents['profile:follow']['logContext'] &
     LogEvents['profile:unfollow']['logContext']

@@ -11,7 +11,7 @@ import {useModalControls} from '#/state/modals'
 import {useListMembersQuery} from '#/state/queries/list-members'
 import {useSession} from '#/state/session'
 import {ListFooter} from '#/components/Lists'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 import {ProfileCard} from '../profile/ProfileCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Button} from '../util/forms/Button'
@@ -117,7 +117,7 @@ export function ListMembers({
   }, [fetchNextPage])
 
   const onPressEditMembership = React.useCallback(
-    (profile: atp.profile.AnyProfileView) => {
+    (profile: bsky.profile.AnyProfileView) => {
       openModal({
         name: 'user-add-remove-lists',
         subject: profile.did,
@@ -132,7 +132,7 @@ export function ListMembers({
   // =
 
   const renderMemberButton = React.useCallback(
-    (profile: atp.profile.AnyProfileView) => {
+    (profile: bsky.profile.AnyProfileView) => {
       if (!isOwner) {
         return null
       }

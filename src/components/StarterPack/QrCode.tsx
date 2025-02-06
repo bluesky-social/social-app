@@ -13,7 +13,7 @@ import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Text} from '#/components/Typography'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 
 const LazyViewShot = React.lazy(
   // @ts-expect-error dynamic import
@@ -32,7 +32,7 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
   const {record} = starterPack
 
   if (
-    !atp.dangerousIsType<AppBskyGraphStarterpack.Record>(
+    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
       record,
       AppBskyGraphStarterpack.isRecord,
     )

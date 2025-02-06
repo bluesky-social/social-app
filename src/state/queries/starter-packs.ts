@@ -29,7 +29,7 @@ import {invalidateActorStarterPacksQuery} from '#/state/queries/actor-starter-pa
 import {STALE} from '#/state/queries/index'
 import {invalidateListMembersQuery} from '#/state/queries/list-members'
 import {useAgent} from '#/state/session'
-import * as atp from '#/types/atproto'
+import * as bsky from '#/types/bsky'
 
 const RQKEY_ROOT = 'starter-pack'
 const RQKEY = ({
@@ -94,7 +94,7 @@ export async function invalidateStarterPack({
 interface UseCreateStarterPackMutationParams {
   name: string
   description?: string
-  profiles: atp.profile.AnyProfileView[]
+  profiles: bsky.profile.AnyProfileView[]
   feeds?: AppBskyFeedDefs.GeneratorView[]
 }
 
