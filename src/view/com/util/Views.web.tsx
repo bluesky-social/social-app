@@ -27,6 +27,7 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {addStyle} from '#/lib/styles'
 import {useLayoutBreakpoints} from '#/alf'
+import {useDialogContext} from '#/components/Dialog'
 
 interface AddedProps {
   desktopFixedHeight?: boolean | number
@@ -48,10 +49,11 @@ export const CenteredView = React.forwardRef(function CenteredView(
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const {centerColumnOffset} = useLayoutBreakpoints()
+  const {isWithinDialog} = useDialogContext()
   if (!isMobile) {
     style = addStyle(style, styles.container)
   }
-  if (centerColumnOffset) {
+  if (centerColumnOffset && !isWithinDialog) {
     style = addStyle(style, styles.containerOffset)
   }
   if (topBorder) {
@@ -77,13 +79,14 @@ export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
 ) {
   const {isMobile} = useWebMediaQueries()
   const {centerColumnOffset} = useLayoutBreakpoints()
+  const {isWithinDialog} = useDialogContext()
   if (!isMobile) {
     contentContainerStyle = addStyle(
       contentContainerStyle,
       styles.containerScroll,
     )
   }
-  if (centerColumnOffset) {
+  if (centerColumnOffset && !isWithinDialog) {
     style = addStyle(style, styles.containerOffset)
   }
   if (contentOffset && contentOffset?.y !== 0) {
