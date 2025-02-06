@@ -51,7 +51,7 @@ import {
 } from '#/components/icons/Chevron'
 import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled} from '#/components/icons/Heart2'
 import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
-import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
+import {Repost_Stroke2_Corner3_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {StarterPack} from '#/components/icons/StarterPack'
 import {Link as NewLink} from '#/components/Link'
 import * as MediaPreview from '#/components/MediaPreview'
