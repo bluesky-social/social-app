@@ -34,8 +34,8 @@ export function Screen() {
             <Trans>Post Interaction Settings</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
+        <Layout.Header.Slot />
       </Layout.Header.Outer>
-
       <Layout.Content>
         <View style={[gutters, a.gap_xl]}>
           <Admonition type="tip">
