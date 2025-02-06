@@ -4,10 +4,15 @@ import preact from '@preact/preset-vite'
 import legacy from '@vitejs/plugin-legacy'
 import type {UserConfig} from 'vite'
 import paths from 'vite-tsconfig-paths'
+import react from "@vitejs/plugin-legacy"
 
 const config: UserConfig = {
   plugins: [
-    preact(),
+    preact({
+      babel: {
+        plugins: ['@lingui/babel-plugin-lingui-macro'],
+      },
+    }),
     paths(),
     legacy({
       targets: ['defaults', 'not IE 11'],

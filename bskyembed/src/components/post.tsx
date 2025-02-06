@@ -4,6 +4,7 @@ import {
   AppBskyRichtextFacet,
   RichText,
 } from '@atproto/api'
+import {plural, t} from '@lingui/core/macro'
 import {h} from 'preact'
 
 import replyIcon from '../../assets/bubble_filled_stroke2_corner2_rounded.svg'
@@ -93,16 +94,17 @@ export function Post({thread}: Props) {
           <div className="flex items-center gap-2 cursor-pointer">
             <img src={replyIcon} className="w-5 h-5" />
             <p className="font-bold text-neutral-500 dark:text-neutral-300 mb-px">
-              Reply
+              {t`Reply`}
             </p>
           </div>
           <div className="flex-1" />
           <p className="cursor-pointer text-brand dark:text-brandLighten font-bold hover:underline hidden min-[450px]:inline">
             {post.replyCount
-              ? `Read ${prettyNumber(post.replyCount)} ${
-                  post.replyCount > 1 ? 'replies' : 'reply'
-                } on Bluesky`
-              : `View on Bluesky`}
+              ? plural(post.replyCount, {
+                  one: 'Read # reply on Bluesky',
+                  other: 'Read # replies on Bluesky',
+                })
+              : t`View on Bluesky`}
           </p>
           <p className="cursor-pointer text-brand font-bold hover:underline min-[450px]:hidden">
             <span className="hidden min-[380px]:inline">View on </span>Bluesky
