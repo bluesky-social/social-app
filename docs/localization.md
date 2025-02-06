@@ -38,7 +38,7 @@ Please only request a new language when you are certain you will be able to cont
 
 ## Maintainers
 
-Install the [Crowdin CLI](https://crowdin.github.io/crowdin-cli/).
+Install the [Crowdin CLI](https://crowdin.github.io/crowdin-cli/). You will need to [configure your API token](https://crowdin.github.io/crowdin-cli/configuration) to access the project.
 
 ### Release process
 
