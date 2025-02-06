@@ -50,7 +50,9 @@ function updateDocument(theme: ThemeName) {
     html.className = html.className.replace(/(theme)--\w+/g, '')
     html.classList.add(`theme--${theme}`)
     // set color to 'theme-color' meta tag
-    meta?.setAttribute('content', getBackgroundColor(theme))
+    setTimeout(() => {
+      meta?.setAttribute('content', getBackgroundColor(theme))
+    }, 500)
   }
 }
 
