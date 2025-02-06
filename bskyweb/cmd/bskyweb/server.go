@@ -251,6 +251,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/moderation/modlists", server.WebGeneric)
 	e.GET("/moderation/muted-accounts", server.WebGeneric)
 	e.GET("/moderation/blocked-accounts", server.WebGeneric)
+	e.GET("/moderation/interaction-settings", server.WebGeneric)
 	e.GET("/settings", server.WebGeneric)
 	e.GET("/settings/language", server.WebGeneric)
 	e.GET("/settings/app-passwords", server.WebGeneric)
