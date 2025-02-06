@@ -72,6 +72,7 @@ import {SearchInput} from '#/components/forms/SearchInput'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import * as Layout from '#/components/Layout'
+import {sortProfiles} from '../../../lib/functions'
 
 function Loader() {
   return (
@@ -992,7 +993,7 @@ let AutocompleteResults = ({
             }
             style={{borderBottomWidth: 1}}
           />
-          {autocompleteData?.map(item => (
+          {autocompleteData?.sort(sortProfiles).map(item => (
             <SearchProfileCard
               key={item.did}
               profile={item}

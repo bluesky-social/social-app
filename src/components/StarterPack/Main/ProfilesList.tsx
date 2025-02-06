@@ -19,6 +19,7 @@ import {SectionRef} from '#/screens/Profile/Sections/types'
 import {atoms as a, useTheme} from '#/alf'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCard} from '#/components/ProfileCard'
+import {sortProfiles} from '../../../lib/functions'
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic, index: number) {
   return `${item.did}-${index}`
@@ -54,6 +55,7 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
         p => !isBlockedOrBlocking(p.subject) && !p.subject.associated?.labeler,
       )
       .map(p => p.subject)
+      .sort(sortProfiles)
       .reverse()
     const isOwn = new AtUri(listUri).host === currentAccount?.did
 
