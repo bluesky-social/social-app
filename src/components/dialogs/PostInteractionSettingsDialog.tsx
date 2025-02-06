@@ -7,7 +7,6 @@ import {useQueryClient} from '@tanstack/react-query'
 import isEqual from 'lodash.isequal'
 
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {STALE} from '#/state/queries'
 import {useMyListsQuery} from '#/state/queries/my-lists'
 import {
@@ -31,14 +30,12 @@ import {
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
-import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -62,6 +59,7 @@ export function PostInteractionSettingsControlledDialog({
 }: PostInteractionSettingsFormProps & {
   control: Dialog.DialogControlProps
 }) {
+  const t = useTheme()
   const {_} = useLingui()
 
   return (
@@ -73,25 +71,20 @@ export function PostInteractionSettingsControlledDialog({
         <View style={[a.gap_md]}>
           <Header />
           <PostInteractionSettingsForm {...rest} />
-          <Admonition type="tip" style={[a.mt_sm]}>
-            {isWeb ? (
-              <Trans>
-                You can configure defaults for these settings from within your{' '}
-                <InlineLinkText
-                  label={_(msg`Configure default interaction settings`)}
-                  to="/moderation/interaction-settings">
-                  moderation settings screen.
-                </InlineLinkText>
-              </Trans>
-            ) : (
-              <Trans>
-                You can configure defaults for these settings from within{' '}
-                <Text style={[a.font_bold]}>
-                  Settings &rarr; Moderation &rarr; Interaction settings
-                </Text>
-              </Trans>
-            )}
-          </Admonition>
+          <Text
+            style={[
+              a.pt_sm,
+              a.text_sm,
+              a.leading_snug,
+              t.atoms.text_contrast_medium,
+            ]}>
+            <Trans>
+              You can configure defaults for these settings in{' '}
+              <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+                Settings &rarr; Moderation &rarr; Interaction settings.
+              </Text>
+            </Trans>
+          </Text>
         </View>
         <Dialog.Close />
       </Dialog.ScrollableInner>
