@@ -40,7 +40,7 @@ import {List, ListRef} from '#/view/com/util/List'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {VideoFeedSourceContext} from '#/screens/VideoFeed/types'
-import {useBreakpoints} from '#/alf'
+import {useBreakpoints, useLayoutBreakpoints} from '#/alf'
 import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
 import {
   PostFeedVideoGridRow,
@@ -197,7 +197,8 @@ let PostFeed = ({
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
   const [feedType, feedUriOrActorDid, feedTab] = feed.split('|')
-  const {gtMobile, gtTablet} = useBreakpoints()
+  const {gtMobile} = useBreakpoints()
+  const {rightNavVisible} = useLayoutBreakpoints()
   const areVideoFeedsEnabled = isNative
 
   const feedCacheKey = feedParams?.feedCacheKey
@@ -396,7 +397,7 @@ let PostFeed = ({
                         key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                       })
                     }
-                    if (!gtTablet && !trendingDisabled) {
+                    if (!rightNavVisible && !trendingDisabled) {
                       arr.push({
                         type: 'interstitialTrending',
                         key:
@@ -512,7 +513,7 @@ let PostFeed = ({
     showProgressIntersitial,
     trendingDisabled,
     trendingVideoDisabled,
-    gtTablet,
+    rightNavVisible,
     gtMobile,
     isVideoFeed,
     areVideoFeedsEnabled,
