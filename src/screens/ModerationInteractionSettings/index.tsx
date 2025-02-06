@@ -2,7 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import deepEqual from 'fast-deep-equal'
+import deepEqual from 'lodash.isequal'
 
 import {logger} from '#/logger'
 import {usePostInteractionSettingsMutation} from '#/state/queries/post-interaction-settings'
