@@ -20,7 +20,7 @@ import {atoms as a, useTheme as useAlf} from '#/alf'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {useMenuControl} from '#/components/Menu'
 import * as Menu from '#/components/Menu'
-import {EventStopper} from '../EventStopper'
+import {EventStopper} from '../../view/com/util/EventStopper'
 import {PostDropdownMenuItems} from './PostDropdownBtnMenuItems'
 
 let PostDropdownBtn = ({

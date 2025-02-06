@@ -38,15 +38,15 @@ import {
   ProgressGuideAction,
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
+import {formatCount} from '#/view/com/util/numeric/format'
+import {Text} from '#/view/com/util/text/Text'
+import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
 import * as Prompt from '#/components/Prompt'
-import {PostDropdownBtn} from '../forms/PostDropdownBtn'
-import {formatCount} from '../numeric/format'
-import {Text} from '../text/Text'
-import * as Toast from '../Toast'
+import {PostDropdownBtn} from './PostDropdownBtn'
 import {RepostButton} from './RepostButton'
 
 let PostCtrls = ({
