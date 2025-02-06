@@ -3,7 +3,6 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
-  asPredicate,
   AtUri,
   ModerationDecision,
   RichText as RichTextAPI,
@@ -29,6 +28,7 @@ import {atoms as a} from '#/alf'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
+import * as bsky from '#/types/bsky'
 import {ContentHider} from '../../../components/moderation/ContentHider'
 import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
 import {PostAlerts} from '../../../components/moderation/PostAlerts'
@@ -54,7 +54,7 @@ export function Post({
   const moderationOpts = useModerationOpts()
   const record = useMemo<AppBskyFeedPost.Record | undefined>(
     () =>
-      asPredicate(AppBskyFeedPost.validateRecord)(post.record)
+      bsky.validate(post.record, AppBskyFeedPost.validateRecord)
         ? post.record
         : undefined,
     [post],

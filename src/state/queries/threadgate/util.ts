@@ -1,6 +1,7 @@
-import {AppBskyFeedDefs, AppBskyFeedThreadgate, asPredicate} from '@atproto/api'
+import {AppBskyFeedDefs, AppBskyFeedThreadgate} from '@atproto/api'
 
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
+import * as bsky from '#/types/bsky'
 
 export function threadgateViewToAllowUISetting(
   threadgateView: AppBskyFeedDefs.ThreadgateView | undefined,
@@ -8,7 +9,7 @@ export function threadgateViewToAllowUISetting(
   // Validate the record for clarity, since backwards compat code is a little confusing
   const threadgate =
     threadgateView &&
-    asPredicate(AppBskyFeedThreadgate.validateRecord)(threadgateView.record)
+    bsky.validate(threadgateView.record, AppBskyFeedThreadgate.validateRecord)
       ? threadgateView.record
       : undefined
   return threadgateRecordToAllowUISetting(threadgate)

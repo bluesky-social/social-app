@@ -4,9 +4,9 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
-  asPredicate,
 } from '@atproto/api'
 
+import * as bsky from '#/types/bsky'
 import {isPostInLanguage} from '../../locale/helpers'
 import {FALLBACK_MARKER_POST} from './feed/home'
 import {ReasonFeedSource} from './feed/types'
@@ -68,7 +68,7 @@ export class FeedViewPostsSlice {
     }
     if (
       !AppBskyFeedPost.isRecord(post.record) ||
-      !asPredicate(AppBskyFeedPost.validateRecord)(post.record)
+      !bsky.validate(post.record, AppBskyFeedPost.validateRecord)
     ) {
       return
     }
@@ -100,7 +100,7 @@ export class FeedViewPostsSlice {
     if (
       !AppBskyFeedDefs.isPostView(parent) ||
       !AppBskyFeedPost.isRecord(parent.record) ||
-      !asPredicate(AppBskyFeedPost.validateRecord)(parent.record)
+      !bsky.validate(parent.record, AppBskyFeedPost.validateRecord)
     ) {
       this.isOrphan = true
       return
@@ -142,7 +142,7 @@ export class FeedViewPostsSlice {
     if (
       !AppBskyFeedDefs.isPostView(root) ||
       !AppBskyFeedPost.isRecord(root.record) ||
-      !asPredicate(AppBskyFeedPost.validateRecord)(root.record)
+      !bsky.validate(root.record, AppBskyFeedPost.validateRecord)
     ) {
       this.isOrphan = true
       return

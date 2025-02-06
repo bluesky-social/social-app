@@ -4,7 +4,6 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPostgate,
-  asPredicate,
   AtUri,
   BskyAgent,
 } from '@atproto/api'
@@ -22,6 +21,7 @@ import {
   POSTGATE_COLLECTION,
 } from '#/state/queries/postgate/util'
 import {useAgent} from '#/state/session'
+import * as bsky from '#/types/bsky'
 
 export async function getPostgateRecord({
   agent,
@@ -63,7 +63,7 @@ export async function getPostgateRecord({
 
     if (
       data.value &&
-      asPredicate(AppBskyFeedPostgate.validateRecord)(data.value)
+      bsky.validate(data.value, AppBskyFeedPostgate.validateRecord)
     ) {
       return data.value
     } else {

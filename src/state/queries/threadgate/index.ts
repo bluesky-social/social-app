@@ -2,7 +2,6 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedGetPostThread,
   AppBskyFeedThreadgate,
-  asPredicate,
   AtUri,
   BskyAgent,
 } from '@atproto/api'
@@ -21,6 +20,7 @@ import {
 } from '#/state/queries/threadgate/util'
 import {useAgent} from '#/state/session'
 import {useThreadgateHiddenReplyUrisAPI} from '#/state/threadgate-hidden-replies'
+import * as bsky from '#/types/bsky'
 
 export * from '#/state/queries/threadgate/types'
 export * from '#/state/queries/threadgate/util'
@@ -141,7 +141,7 @@ export async function getThreadgateRecord({
 
     if (
       data.value &&
-      asPredicate(AppBskyFeedThreadgate.validateRecord)(data.value)
+      bsky.validate(data.value, AppBskyFeedThreadgate.validateRecord)
     ) {
       return data.value
     } else {
