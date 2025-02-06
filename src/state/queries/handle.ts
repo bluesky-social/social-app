@@ -3,6 +3,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
+import {createPublicAgent} from '#/state/session/agent'
 
 const handleQueryKeyRoot = 'handle'
 const fetchHandleQueryKey = (handleOrDid: string) => [
@@ -10,7 +11,7 @@ const fetchHandleQueryKey = (handleOrDid: string) => [
   handleOrDid,
 ]
 const didQueryKeyRoot = 'did'
-const fetchDidQueryKey = (handleOrDid: string) => [didQueryKeyRoot, handleOrDid]
+const fetchDidQueryKey = (handle: string) => [didQueryKeyRoot, handle]
 
 export function useFetchHandle() {
   const queryClient = useQueryClient()
@@ -51,25 +52,29 @@ export function useUpdateHandleMutation(opts?: {
   })
 }
 
-export function useFetchDid() {
+export function useResolveHandle() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+
+  // @NOTE: We are *not* using the logged in agent (from `useAgent()`) here.
+  // Using the public API rather than the user's PDS ensures that the handle
+  // properly resolves.
+  const publicAgent = React.useMemo(() => createPublicAgent(), [])
 
   return React.useCallback(
-    async (handleOrDid: string) => {
+    async (handle: string) => {
       return queryClient.fetchQuery({
-        staleTime: STALE.INFINITY,
-        queryKey: fetchDidQueryKey(handleOrDid),
-        queryFn: async () => {
-          let identifier = handleOrDid
-          if (!identifier.startsWith('did:')) {
-            const res = await agent.resolveHandle({handle: identifier})
-            identifier = res.data.did
-          }
-          return identifier
+        staleTime: STALE.MINUTES.ONE,
+        queryKey: fetchDidQueryKey(handle),
+        queryFn: async ({signal}) => {
+          const res = await publicAgent.resolveHandle(
+            {handle},
+            // Retries should force a fresh resolution; avoid cache.
+            {signal, headers: {'cache-control': 'no-cache'}},
+          )
+          return res.data.did
         },
       })
     },
-    [queryClient, agent],
+    [queryClient, publicAgent],
   )
 }

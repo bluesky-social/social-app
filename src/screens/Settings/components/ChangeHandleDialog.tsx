@@ -19,7 +19,7 @@ import {HITSLOP_10} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {createFullHandle, validateHandle} from '#/lib/strings/handles'
-import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
+import {useResolveHandle, useUpdateHandleMutation} from '#/state/queries/handle'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useServiceQuery} from '#/state/queries/service'
 import {useAgent, useSession} from '#/state/session'
@@ -282,7 +282,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
   const [domain, setDomain] = useState('')
   const agent = useAgent()
   const control = Dialog.useDialogContext()
-  const fetchDid = useFetchDid()
+  const resolveHandle = useResolveHandle()
   const queryClient = useQueryClient()
 
   const {
@@ -307,10 +307,10 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
     isSuccess: isVerified,
     error: verifyError,
     reset: resetVerification,
-  } = useMutation<true, Error | DidMismatchError>({
+  } = useMutation<true>({
     mutationKey: ['verify-handle', domain],
     mutationFn: async () => {
-      const did = await fetchDid(domain)
+      const did = await resolveHandle(domain)
       if (did !== currentAccount?.did) {
         throw new DidMismatchError(did)
       }
