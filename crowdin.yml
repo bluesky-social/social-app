@@ -1,3 +1,20 @@
-files:
-  - source: /src/locale/locales/en/messages.po
-    translation: /src/locale/locales/%two_letters_code%/messages.po
+{
+  "project_id": "664276",
+  "base_path": ".",
+  "preserve_hierarchy": true,
+  "files": [
+    {
+      "source": "/src/locale/locales/en/messages.po",
+      "translation": "/src/locale/locales/%two_letters_code%/messages.po",
+      "languages_mapping": {
+          "two_letters_code": {
+            "pt-BR": "pt-BR",
+            "en-GB": "en-GB",
+            "zh-CN": "zh-CN",
+            "zh-TW": "zh-TW",
+            "zh-HK": "zh-HK"
+          }
+      }
+    }
+  ]
+}
