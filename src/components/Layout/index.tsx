@@ -20,6 +20,7 @@ import {
   useTheme,
   web,
 } from '#/alf'
+import {useDialogContext} from '#/components/Dialog'
 import {SCROLLBAR_OFFSET} from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 
@@ -155,6 +156,7 @@ export const Center = React.memo(function LayoutContent({
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
   const {gtMobile} = useBreakpoints()
   const {centerColumnOffset} = useLayoutBreakpoints()
+  const {isWithinDialog} = useDialogContext()
   const ctx = useMemo(() => ({isWithinOffsetView: true}), [])
   return (
     <View
@@ -168,7 +170,11 @@ export const Center = React.memo(function LayoutContent({
           transform: [
             {
               translateX:
-                centerColumnOffset && !ignoreTabletLayoutOffset ? -150 : 0,
+                centerColumnOffset &&
+                !ignoreTabletLayoutOffset &&
+                !isWithinDialog
+                  ? -150
+                  : 0,
             },
             {translateX: web(SCROLLBAR_OFFSET) ?? 0},
           ],
