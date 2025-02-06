@@ -555,7 +555,7 @@ export function DesktopLeftNav() {
         a.px_xl,
         styles.leftNav,
         leftNavMinimal && styles.leftNavMinimal,
-        leftNavMinimal && !centerColumnOffset && [a.px_0, {width: 76}],
+        leftNavMinimal && !centerColumnOffset && {width: 76},
         {
           transform: [
             {translateX: centerColumnOffset ? -450 : -300},
@@ -723,6 +723,8 @@ const styles = StyleSheet.create({
   },
   leftNavMinimal: {
     top: 0,
+    paddingLeft: 0,
+    paddingRight: 0,
     height: '100%',
     width: 86,
     alignItems: 'center',
