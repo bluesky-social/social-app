@@ -57,11 +57,13 @@ export function LoadLatestBtn({
             (isTallViewport
               ? styles.loadLatestOutOfLine
               : styles.loadLatestInline),
-          isTablet && styles.loadLatestInline,
+          isTablet &&
+            (centerColumnOffset
+              ? styles.loadLatestInlineOffset
+              : styles.loadLatestInline),
           pal.borderDark,
           pal.view,
           bottomPosition,
-          centerColumnOffset && styles.centerColumnOffset,
         ]}
         onPress={onPress}
         hitSlop={HITSLOP_20}
@@ -92,13 +94,13 @@ const styles = StyleSheet.create({
     // @ts-expect-error web only
     left: 'calc(50vw - 282px)',
   },
+  loadLatestInlineOffset: {
+    // @ts-expect-error web only
+    left: 'calc(50vw - 432px)',
+  },
   loadLatestOutOfLine: {
     // @ts-expect-error web only
     left: 'calc(50vw - 382px)',
-  },
-  loadLatestOutOfLineClose: {
-    // @ts-expect-error web only
-    left: 'calc(50vw - 362px)',
   },
   indicator: {
     position: 'absolute',
@@ -109,8 +111,5 @@ const styles = StyleSheet.create({
     height: 12,
     borderRadius: 6,
     borderWidth: 1,
-  },
-  centerColumnOffset: {
-    transform: [{translateX: -150}],
   },
 })
