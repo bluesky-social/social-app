@@ -1,11 +1,11 @@
 {
   "name": "bsky.app",
-  "version": "1.97.0",
+  "version": "1.98.0",
   "private": true,
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "yarn@1.22.19",
+  "packageManager": "yarn@1.22.22",
   "scripts": {
     "prepare": "is-ci || husky install",
     "postinstall": "patch-package && yarn intl:compile",
@@ -43,8 +43,10 @@
     "perf:test:results": "NODE_ENV=test flashlight report .perf/results.json",
     "perf:measure": "NODE_ENV=test flashlight measure",
     "intl:build": "yarn intl:extract && yarn intl:compile",
-    "intl:extract": "lingui extract",
+    "intl:extract": "lingui extract --clean",
     "intl:compile": "lingui compile",
+    "intl:pull": "crowdin download translations --verbose -b main",
+    "intl:push": "crowdin push translations --verbose -b main",
     "nuke": "rm -rf ./node_modules && rm -rf ./ios && rm -rf ./android",
     "update-extensions": "bash scripts/updateExtensions.sh",
     "export": "npx expo export",
@@ -54,7 +56,7 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "^0.13.30",
+    "@atproto/api": "^0.13.33",
     "@bitdrift/react-native": "^0.6.2",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
@@ -121,7 +123,7 @@
     "eventemitter3": "^5.0.1",
     "expo": "~52.0.19",
     "expo-application": "^6.0.1",
-    "expo-blur": "^14.0.1",
+    "expo-blur": "^14.0.3",
     "expo-build-properties": "^0.13.1",
     "expo-camera": "~16.0.7",
     "expo-clipboard": "^7.0.0",
@@ -170,7 +172,7 @@
     "react-dom": "^18.2.0",
     "react-image-crop": "^11.0.7",
     "react-keyed-flatten-children": "^3.0.0",
-    "react-native": "0.76.3",
+    "react-native": "0.76.6",
     "react-native-compressor": "1.10.3",
     "react-native-date-picker": "^5.0.7",
     "react-native-drawer-layout": "^4.1.1",

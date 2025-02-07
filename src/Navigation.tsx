@@ -70,6 +70,7 @@ import {MessagesScreen} from '#/screens/Messages/ChatList'
 import {MessagesConversationScreen} from '#/screens/Messages/Conversation'
 import {MessagesSettingsScreen} from '#/screens/Messages/Settings'
 import {ModerationScreen} from '#/screens/Moderation'
+import {Screen as ModerationInteractionSettings} from '#/screens/ModerationInteractionSettings'
 import {PostLikedByScreen} from '#/screens/Post/PostLikedBy'
 import {PostQuotesScreen} from '#/screens/Post/PostQuotes'
 import {PostRepostedByScreen} from '#/screens/Post/PostRepostedBy'
@@ -154,6 +155,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="ModerationBlockedAccounts"
         getComponent={() => ModerationBlockedAccounts}
         options={{title: title(msg`Blocked Accounts`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="ModerationInteractionSettings"
+        getComponent={() => ModerationInteractionSettings}
+        options={{
+          title: title(msg`Post Interaction Settings`),
+          requireAuth: true,
+        }}
       />
       <Stack.Screen
         name="Settings"

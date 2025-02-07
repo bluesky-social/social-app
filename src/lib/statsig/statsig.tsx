@@ -1,7 +1,6 @@
 import React from 'react'
 import {Platform} from 'react-native'
 import {AppState, AppStateStatus} from 'react-native'
-import {sha256} from 'js-sha256'
 import {Statsig, StatsigProvider} from 'statsig-react-native-expo'
 
 import {BUNDLE_DATE, BUNDLE_IDENTIFIER, IS_TESTFLIGHT} from '#/lib/app-info'
@@ -189,13 +188,9 @@ export function useDangerousSetGate(): (
 }
 
 function toStatsigUser(did: string | undefined): StatsigUser {
-  let userID: string | undefined
-  if (did) {
-    userID = sha256(did)
-  }
   const languagePrefs = persisted.get('languagePrefs')
   return {
-    userID,
+    userID: did,
     platform: Platform.OS as 'ios' | 'android' | 'web',
     custom: {
       refSrc,

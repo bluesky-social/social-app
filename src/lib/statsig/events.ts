@@ -13,7 +13,12 @@ export type LogEvents = {
     withPassword: boolean
   }
   'account:loggedOut': {
-    logContext: 'SwitchAccount' | 'Settings' | 'SignupQueued' | 'Deactivated'
+    logContext:
+      | 'SwitchAccount'
+      | 'Settings'
+      | 'SignupQueued'
+      | 'Deactivated'
+      | 'Takendown'
     scope: 'current' | 'every'
   }
   'notifications:openApp': {}
@@ -165,6 +170,26 @@ export type LogEvents = {
       | 'PostOnboardingFindFollows'
       | 'ImmersiveVideo'
   }
+  'suggestedUser:follow': {
+    logContext:
+      | 'Explore'
+      | 'InterstitialDiscover'
+      | 'InterstitialProfile'
+      | 'Profile'
+    location: 'Card' | 'Profile'
+    recId?: number
+    position: number
+  }
+  'suggestedUser:press': {
+    logContext: 'Explore' | 'InterstitialDiscover' | 'InterstitialProfile'
+    recId?: number
+    position: number
+  }
+  'suggestedUser:seen': {
+    logContext: 'Explore' | 'InterstitialDiscover' | 'InterstitialProfile'
+    recId?: number
+    position: number
+  }
   'profile:unfollow': {
     logContext:
       | 'RecommendedFollowsItem'
@@ -220,7 +245,6 @@ export type LogEvents = {
     domain: string
   }
 
-  'feed:interstitial:profileCard:press': {}
   'feed:interstitial:feedCard:press': {}
 
   'profile:header:suggestedFollowsCard:press': {}

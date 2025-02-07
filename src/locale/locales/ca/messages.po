@@ -1936,7 +1936,7 @@ msgstr "Tanca el diàleg"
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
 msgid "Close emoji picker"
-msgstr ""
+msgstr "Tanca el selector d'emojis"
 
 #: src/components/dialogs/GifSelect.tsx:169
 msgid "Close GIF dialog"
@@ -2429,7 +2429,7 @@ msgstr "Creat {0}"
 
 #: src/screens/List/ListHiddenScreen.tsx:127
 msgid "Creator has been blocked"
-msgstr ""
+msgstr "S'ha bloquejat al creador"
 
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
@@ -3049,7 +3049,7 @@ msgstr "Ensenyament"
 
 #: src/screens/List/ListHiddenScreen.tsx:141
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
-msgstr ""
+msgstr "El creador d'aquesta llista t'ha bloquejat o l'has bloquejat tu."
 
 #: src/screens/Settings/AccountSettings.tsx:60
 #: src/screens/Signup/StepInfo/index.tsx:170
@@ -4837,7 +4837,7 @@ msgstr "Llista per <0/>"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:154
 msgid "List by you"
-msgstr ""
+msgstr "Llista teva"
 
 #: src/view/screens/ProfileList.tsx:455
 msgid "List deleted"
@@ -8675,7 +8675,7 @@ msgstr "Toca per canviar la icona de l'aplicació"
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
 msgid "Tap to close the emoji picker"
-msgstr ""
+msgstr "Toca per a tancar el selector d'emojis"
 
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"

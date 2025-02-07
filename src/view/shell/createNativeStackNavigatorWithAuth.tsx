@@ -34,6 +34,7 @@ import {LoggedOut} from '#/view/com/auth/LoggedOut'
 import {Deactivated} from '#/screens/Deactivated'
 import {Onboarding} from '#/screens/Onboarding'
 import {SignupQueued} from '#/screens/SignupQueued'
+import {Takendown} from '#/screens/Takendown'
 import {atoms as a} from '#/alf'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {DesktopLeftNav} from './desktop/LeftNav'
@@ -106,6 +107,9 @@ function NativeStackNavigator({
   }
   if (hasSession && currentAccount?.signupQueued) {
     return <SignupQueued />
+  }
+  if (hasSession && currentAccount?.status === 'takendown') {
+    return <Takendown />
   }
   if (showLoggedOut) {
     return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />

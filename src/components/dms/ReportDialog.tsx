@@ -224,11 +224,10 @@ function SubmitStep({
             multiline
             defaultValue={details}
             onChangeText={setDetails}
-            label="Text field"
+            label={_(msg`Text field`)}
             style={{paddingRight: 60}}
             numberOfLines={5}
           />
-
           <View
             style={[
               a.absolute,
@@ -337,7 +336,7 @@ function DoneStep({
           <Trans>Report submitted</Trans>
         </Text>
         <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-          <Trans>Our moderation team has recieved your report.</Trans>
+          <Trans>Our moderation team has received your report.</Trans>
         </Text>
       </View>
       <Toggle.Group

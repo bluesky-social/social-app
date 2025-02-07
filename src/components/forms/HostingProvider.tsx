@@ -71,10 +71,10 @@ export function HostingProvider({
             a.flex_row,
             a.align_center,
             a.rounded_sm,
-            a.px_md,
+            a.pl_md,
             a.pr_sm,
             a.gap_xs,
-            {paddingVertical: isAndroid ? 14 : 9},
+            {paddingVertical: isAndroid ? 14 : 8},
           ]}
           onPress={onPressSelectService}>
           {({hovered, pressed}) => {
