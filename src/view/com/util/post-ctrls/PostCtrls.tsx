@@ -26,6 +26,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
 import {useGate} from '#/lib/statsig/statsig'
 import {toShareUrl} from '#/lib/strings/url-helpers'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {
@@ -93,6 +94,15 @@ let PostCtrls = ({
       post.author.viewer?.blockedBy ||
       post.author.viewer?.blockingByList,
   )
+
+  const shadowedAuthor = useProfileShadow(post.author)
+  const followersCanReply = !!threadgateRecord?.allow?.find(
+    rule => rule.$type === 'app.bsky.feed.threadgate#followerRule',
+  )
+  const canOverrideReplyDisabled =
+    followersCanReply &&
+    shadowedAuthor.viewer?.following?.startsWith('at://did')
+  const replyDisabled = post.viewer?.replyDisabled && !canOverrideReplyDisabled
 
   const shouldShowLoggedOutWarning = React.useMemo(() => {
     return (
@@ -247,13 +257,13 @@ let PostCtrls = ({
       <View
         style={[
           big ? a.align_center : [a.flex_1, a.align_start, {marginLeft: -6}],
-          post.viewer?.replyDisabled ? {opacity: 0.5} : undefined,
+          replyDisabled ? {opacity: 0.5} : undefined,
         ]}>
         <Pressable
           testID="replyBtn"
           style={btnStyle}
           onPress={() => {
-            if (!post.viewer?.replyDisabled) {
+            if (!replyDisabled) {
               playHaptic('Light')
               requireAuth(() => onPressReply())
             }
