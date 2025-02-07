@@ -429,7 +429,7 @@ export function PostInteractionSettingsForm({
                     disabled={replySettingsDisabled}
                   />
                   <Selectable
-                    label={_(msg`Followed users`)}
+                    label={_(msg`Users you follow`)}
                     isSelected={
                       !!threadgateAllowUISettings.find(
                         v => v.type === 'following',
