@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -17,6 +17,7 @@ import {
   useTheme,
   web,
 } from '#/alf'
+import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Divider} from '#/components/Divider'
 import {InlineLinkText} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
@@ -24,16 +25,15 @@ import {Text} from '#/components/Typography'
 
 function useWebQueryParams() {
   const navigation = useNavigation()
-  const [params, setParams] = React.useState<Record<string, string>>({})
+  const [params, setParams] = useState<Record<string, string>>({})
 
-  React.useEffect(() => {
+  useEffect(() => {
     return navigation.addListener('state', e => {
       try {
         const {state} = e.data
         const lastRoute = state.routes[state.routes.length - 1]
-        const {params} = lastRoute
-        setParams(params)
-      } catch (e) {}
+        setParams(lastRoute.params)
+      } catch (err) {}
     })
   }, [navigation, setParams])
 
@@ -50,7 +50,8 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   const webqueryParams = useWebQueryParams()
   const searchQuery = webqueryParams?.q
   const showTrending = !isSearchScreen || (isSearchScreen && !!searchQuery)
-  const {rightNavVisible, centerColumnOffset} = useLayoutBreakpoints()
+  const {rightNavVisible, centerColumnOffset, leftNavMinimal} =
+    useLayoutBreakpoints()
 
   if (!rightNavVisible) {
     return null
@@ -127,6 +128,12 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
             </InlineLinkText>
           </Trans>
         </Text>
+      )}
+
+      {!hasSession && leftNavMinimal && (
+        <View style={[a.w_full, {height: 32}]}>
+          <AppLanguageDropdown style={{marginTop: 0}} />
+        </View>
       )}
     </View>
   )
