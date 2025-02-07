@@ -421,7 +421,7 @@ function AccountRow({
           <View style={[{width: 28}]} />
         )}
         <SettingsList.ItemText>
-          <Trans>{sanitizeHandle(account.handle, '@')}</Trans>
+          {sanitizeHandle(account.handle, '@')}
         </SettingsList.ItemText>
         {pendingDid === account.did && <SettingsList.ItemIcon icon={Loader} />}
       </SettingsList.PressableItem>
