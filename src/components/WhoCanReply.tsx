@@ -204,12 +204,17 @@ function Rules({
     <>
       <Text
         style={[
-          a.text_sm,
+          a.text_md,
           a.leading_snug,
           a.flex_wrap,
-          t.atoms.text_contrast_medium,
+          t.atoms.text_contrast_high,
         ]}>
-        {settings[0].type === 'everybody' ? (
+        {settings.length === 0 ? (
+          <Trans>
+            This post has an unknown type of threadgate on it. Your app may be
+            out of date.
+          </Trans>
+        ) : settings[0].type === 'everybody' ? (
           <Trans>Everybody can reply to this post.</Trans>
         ) : settings[0].type === 'nobody' ? (
           <Trans>Replies to this post are disabled.</Trans>
@@ -229,10 +234,10 @@ function Rules({
       {embeddingDisabled && (
         <Text
           style={[
-            a.text_sm,
+            a.text_md,
             a.leading_snug,
             a.flex_wrap,
-            t.atoms.text_contrast_medium,
+            t.atoms.text_contrast_high,
           ]}>
           <Trans>No one but the author can quote this post.</Trans>
         </Text>
