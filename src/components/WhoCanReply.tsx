@@ -204,10 +204,10 @@ function Rules({
     <>
       <Text
         style={[
-          a.text_md,
+          a.text_sm,
           a.leading_snug,
           a.flex_wrap,
-          t.atoms.text_contrast_high,
+          t.atoms.text_contrast_medium,
         ]}>
         {settings.length === 0 ? (
           <Trans>
@@ -234,10 +234,10 @@ function Rules({
       {embeddingDisabled && (
         <Text
           style={[
-            a.text_md,
+            a.text_sm,
             a.leading_snug,
             a.flex_wrap,
-            t.atoms.text_contrast_high,
+            t.atoms.text_contrast_medium,
           ]}>
           <Trans>No one but the author can quote this post.</Trans>
         </Text>
