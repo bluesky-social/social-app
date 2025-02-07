@@ -209,7 +209,12 @@ function Rules({
           a.flex_wrap,
           t.atoms.text_contrast_medium,
         ]}>
-        {settings[0].type === 'everybody' ? (
+        {settings.length === 0 ? (
+          <Trans>
+            This post has an unknown type of threadgate on it. Your app may be
+            out of date.
+          </Trans>
+        ) : settings[0].type === 'everybody' ? (
           <Trans>Everybody can reply to this post.</Trans>
         ) : settings[0].type === 'nobody' ? (
           <Trans>Replies to this post are disabled.</Trans>
