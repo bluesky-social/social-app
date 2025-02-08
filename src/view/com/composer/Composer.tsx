@@ -494,7 +494,7 @@ export const ComposePost = ({
         : _(msg`Your post has been published`),
       undefined,
       () => {
-        window.location.replace(postUrl)
+        window.location.href = postUrl
       },
     )
   }, [
