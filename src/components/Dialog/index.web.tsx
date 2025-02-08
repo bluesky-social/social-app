@@ -15,6 +15,7 @@ import {FocusScope} from '@radix-ui/react-focus-scope'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {logger} from '#/logger'
+import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
@@ -152,6 +153,7 @@ export function Inner({
   const t = useTheme()
   const {close} = React.useContext(Context)
   const {gtMobile} = useBreakpoints()
+  const {reduceMotionEnabled} = useA11y()
   useFocusGuards()
   return (
     <FocusScope loop asChild trapped>
@@ -178,7 +180,7 @@ export function Inner({
             shadowOpacity: t.name === 'light' ? 0.1 : 0.4,
             shadowRadius: 30,
           },
-          a.delayed_zoom_fade_in,
+          !reduceMotionEnabled && a.delayed_zoom_fade_in,
           style,
         ])}>
         <DismissableLayer
@@ -261,17 +263,15 @@ export function Handle() {
 
 function Backdrop() {
   const t = useTheme()
+  const {reduceMotionEnabled} = useA11y()
   return (
-    <View
-      style={{
-        opacity: 0.8,
-      }}>
+    <View style={{opacity: 0.8}}>
       <View
         style={[
           a.fixed,
           a.inset_0,
           {backgroundColor: t.palette.black},
-          a.fade_in,
+          !reduceMotionEnabled && a.fade_in,
         ]}
       />
     </View>

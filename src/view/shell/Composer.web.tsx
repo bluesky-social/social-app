@@ -5,6 +5,7 @@ import {useFocusGuards} from '@radix-ui/react-focus-guards'
 import {FocusScope} from '@radix-ui/react-focus-scope'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
+import {useA11y} from '#/state/a11y'
 import {useModals} from '#/state/modals'
 import {ComposerOpts, useComposerState} from '#/state/shell/composer'
 import {
@@ -41,6 +42,7 @@ function Inner({state}: {state: ComposerOpts}) {
   const {isModalActive} = useModals()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
+  const {reduceMotionEnabled} = useA11y()
   const [pickerState, setPickerState] = React.useState<EmojiPickerState>({
     isOpen: false,
     pos: {top: 0, left: 0, right: 0, bottom: 0, nextFocusRef: null},
@@ -78,7 +80,7 @@ function Inner({state}: {state: ComposerOpts}) {
           a.flex,
           a.flex_col,
           a.align_center,
-          a.fade_in,
+          !reduceMotionEnabled && a.fade_in,
         ])}
         onFocusOutside={evt => evt.preventDefault()}
         onInteractOutside={evt => evt.preventDefault()}
@@ -94,7 +96,7 @@ function Inner({state}: {state: ComposerOpts}) {
             !gtMobile && styles.containerMobile,
             t.atoms.bg,
             t.atoms.border_contrast_medium,
-            a.delayed_zoom_fade_in,
+            !reduceMotionEnabled && a.delayed_zoom_fade_in,
           ]}>
           <ComposePost
             cancelRef={ref}
