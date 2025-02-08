@@ -12,7 +12,7 @@ import {
   EmojiPickerPosition,
   EmojiPickerState,
 } from '#/view/com/composer/text-input/web/EmojiPicker.web'
-import {useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, flatten, useBreakpoints, useTheme} from '#/alf'
 import {ComposePost, useComposerCancelRef} from '../com/composer/Composer'
 
 const BOTTOM_BAR_HEIGHT = 61
@@ -71,17 +71,15 @@ function Inner({state}: {state: ComposerOpts}) {
       <DismissableLayer
         role="dialog"
         aria-modal
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: '#000c',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
+        style={flatten([
+          {position: 'fixed'},
+          a.inset_0,
+          {backgroundColor: '#000c'},
+          a.flex,
+          a.flex_col,
+          a.align_center,
+          a.fade_in,
+        ])}
         onFocusOutside={evt => evt.preventDefault()}
         onInteractOutside={evt => evt.preventDefault()}
         onDismiss={() => {
@@ -96,6 +94,7 @@ function Inner({state}: {state: ComposerOpts}) {
             !gtMobile && styles.containerMobile,
             t.atoms.bg,
             t.atoms.border_contrast_medium,
+            a.delayed_zoom_fade_in,
           ]}>
           <ComposePost
             cancelRef={ref}
@@ -123,14 +122,14 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 0,
     borderWidth: 1,
-    // @ts-ignore web only
+    // @ts-expect-error web only
     maxHeight: 'calc(100% - (40px * 2))',
     overflow: 'hidden',
   },
   containerMobile: {
     borderRadius: 0,
     marginBottom: BOTTOM_BAR_HEIGHT,
-    // @ts-ignore web only
+    // @ts-expect-error web only
     maxHeight: `calc(100% - ${BOTTOM_BAR_HEIGHT}px)`,
   },
 })

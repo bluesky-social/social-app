@@ -205,6 +205,15 @@ input:focus {
   }
 }
 
+@keyframes zoomIn {
+  from {
+    transform: scale(0.95);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
 .force-no-clicks > *,
 .force-no-clicks * {
   pointer-events: none !important;

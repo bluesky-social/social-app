@@ -965,6 +965,27 @@ export const atoms = {
     transitionDelay: '50ms',
   }),
 
+  /*
+   * Animaations
+   */
+  fade_in: web({
+    animate: 'fadeIn ease-out 0.15s',
+  }),
+  fade_out: web({
+    animate: 'fadeOut ease-out 0.15s',
+  }),
+  zoom_in: web({
+    animate: 'zoomIn ease-out 0.1s',
+  }),
+  zoom_out: web({
+    animate: 'zoomOut ease-out 0.1s',
+  }),
+  // special composite animation for dialogs
+  delayed_zoom_fade_in: web({
+    animation:
+      'zoomIn ease-out 0.1s 0.1s backwards, fadeIn ease-out 0.1s 0.1s backwards',
+  }),
+
   /**
    * {@link Layout.SCROLLBAR_OFFSET}
    */

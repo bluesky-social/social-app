@@ -161,7 +161,7 @@ export function Inner({
         aria-label={label}
         aria-labelledby={accessibilityLabelledBy}
         aria-describedby={accessibilityDescribedBy}
-        // @ts-ignore web only -prf
+        // @ts-expect-error web only -prf
         onClick={stopPropagation}
         onStartShouldSetResponder={_ => true}
         onTouchEnd={stopPropagation}
@@ -177,10 +177,9 @@ export function Inner({
             shadowColor: t.palette.black,
             shadowOpacity: t.name === 'light' ? 0.1 : 0.4,
             shadowRadius: 30,
-            // @ts-ignore web only
-            animation: 'fadeIn ease-out 0.1s',
           },
-          flatten(style),
+          a.delayed_zoom_fade_in,
+          style,
         ])}>
         <DismissableLayer
           onInteractOutside={preventDefault}
@@ -216,7 +215,7 @@ export const InnerFlatList = React.forwardRef<
       style={[
         a.overflow_hidden,
         a.px_0,
-        // @ts-ignore web only -sfn
+        // @ts-expect-error web only -sfn
         {maxHeight: 'calc(-36px + 100vh)'},
         webInnerStyle,
       ]}
@@ -271,11 +270,8 @@ function Backdrop() {
         style={[
           a.fixed,
           a.inset_0,
-          {
-            backgroundColor: t.palette.black,
-            // @ts-ignore web only
-            animation: 'fadeIn ease-out 0.15s',
-          },
+          {backgroundColor: t.palette.black},
+          a.fade_in,
         ]}
       />
     </View>
