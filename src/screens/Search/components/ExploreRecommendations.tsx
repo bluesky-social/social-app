@@ -1,4 +1,5 @@
 import {View} from 'react-native'
+import {AppBskyUnspeccedDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {logEvent} from '#/lib/statsig/statsig'
@@ -27,6 +28,7 @@ function Inner() {
   const gutters = useGutters([0, 'compact'])
   const {data: trending, error, isLoading} = useTrendingTopics()
   const noRecs = !isLoading && !error && !trending?.suggested?.length
+  const allFeeds = trending?.suggested && isAllFeeds(trending.suggested)
 
   return error || noRecs ? null : (
     <>
@@ -50,9 +52,17 @@ function Inner() {
               <Trans>Recommended</Trans>
             </Text>
           </View>
-          <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
-            <Trans>Feeds we think you might like.</Trans>
-          </Text>
+          {!allFeeds ? (
+            <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
+              <Trans>
+                Content from across the network we think you might like.
+              </Trans>
+            </Text>
+          ) : (
+            <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
+              <Trans>Feeds we think you might like.</Trans>
+            </Text>
+          )}
         </View>
       </View>
 
@@ -97,4 +107,11 @@ function Inner() {
       </View>
     </>
   )
+}
+
+function isAllFeeds(topics: AppBskyUnspeccedDefs.TrendingTopic[]) {
+  return topics.every(topic => {
+    const segments = topic.link.split('/').slice(1)
+    return segments[0] === 'profile' && segments[2] === 'feed'
+  })
 }
