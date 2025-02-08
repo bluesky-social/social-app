@@ -15,6 +15,7 @@ const DURATION = 3500
 interface ActiveToast {
   text: string
   icon: FontAwesomeProps['icon']
+  onClick?: () => void
 }
 type GlobalSetActiveToast = (_activeToast: ActiveToast | undefined) => void
 
@@ -48,6 +49,8 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
             accessibilityLabel="Dismiss"
             accessibilityHint=""
             onPress={() => {
+              console.log('Toast clicked')
+              activeToast.onClick?.()
               setActiveToast(undefined)
             }}
           />
@@ -60,11 +63,15 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
 // methods
 // =
 
-export function show(text: string, icon: FontAwesomeProps['icon'] = 'check') {
+export function show(
+  text: string,
+  icon: FontAwesomeProps['icon'] = 'check',
+  onClick?: () => void,
+) {
   if (toastTimeout) {
     clearTimeout(toastTimeout)
   }
-  globalSetActiveToast?.({text, icon})
+  globalSetActiveToast?.({text, icon, onClick})
   toastTimeout = setTimeout(() => {
     globalSetActiveToast?.(undefined)
   }, DURATION)

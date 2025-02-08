@@ -477,12 +477,25 @@ export const ComposePost = ({
       onPost?.(postUri)
     }
     onClose()
+
+    const baseUrl =
+      typeof window !== 'undefined'
+        ? window.location.origin
+        : 'https://bsky.app' // fallback if window is not defined
+    const postUrl = `${baseUrl}/profile/${currentAccount?.handle}/post/${postUri
+      .split('/')
+      .pop()}`
+
     Toast.show(
       thread.posts.length > 1
         ? _(msg`Your posts have been published`)
         : replyTo
         ? _(msg`Your reply has been published`)
         : _(msg`Your post has been published`),
+      undefined,
+      () => {
+        window.location.replace(postUrl)
+      },
     )
   }, [
     _,
@@ -497,6 +510,7 @@ export const ComposePost = ({
     replyTo,
     setLangPrefs,
     queryClient,
+    currentAccount?.handle,
   ])
 
   // Preserves the referential identity passed to each post item.
