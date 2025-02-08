@@ -214,6 +214,29 @@ input:focus {
   }
 }
 
+@keyframes slideInTop {
+  from {
+    transform: translateY(-0.5rem);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInBottom {
+  from {
+    transform: translateY(0.5rem);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* animating radix dropdowns requires knowing the data attributes */
+.dropdown-menu-transform-origin > * {
+  transform-origin: var(--radix-dropdown-menu-content-transform-origin);
+}
+
 .force-no-clicks > *,
 .force-no-clicks * {
   pointer-events: none !important;
