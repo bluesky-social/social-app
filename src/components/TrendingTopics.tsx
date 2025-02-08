@@ -52,7 +52,7 @@ export function TrendingTopic({
         <StarterPackIcon
           gradient="sky"
           width={iconSize}
-          style={{marginLeft: -3}}
+          style={{marginLeft: -3, marginVertical: -1}}
         />
       )}
 
