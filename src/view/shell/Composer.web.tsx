@@ -96,7 +96,11 @@ function Inner({state}: {state: ComposerOpts}) {
             !gtMobile && styles.containerMobile,
             t.atoms.bg,
             t.atoms.border_contrast_medium,
-            !reduceMotionEnabled && a.delayed_zoom_fade_in,
+            !reduceMotionEnabled && [
+              a.zoom_fade_in,
+              {animationDelay: 0.1},
+              {animationFillMode: 'backwards'},
+            ],
           ]}>
           <ComposePost
             cancelRef={ref}

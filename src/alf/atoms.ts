@@ -981,9 +981,8 @@ export const atoms = {
     animate: 'zoomOut ease-out 0.1s',
   }),
   // special composite animation for dialogs
-  delayed_zoom_fade_in: web({
-    animation:
-      'zoomIn ease-out 0.1s 0.1s backwards, fadeIn ease-out 0.1s 0.1s backwards',
+  zoom_fade_in: web({
+    animation: 'zoomIn ease-out 0.1s, fadeIn ease-out 0.1s',
   }),
 
   /**

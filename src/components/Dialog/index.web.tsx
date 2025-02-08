@@ -180,7 +180,7 @@ export function Inner({
             shadowOpacity: t.name === 'light' ? 0.1 : 0.4,
             shadowRadius: 30,
           },
-          !reduceMotionEnabled && a.delayed_zoom_fade_in,
+          !reduceMotionEnabled && a.zoom_fade_in,
           style,
         ])}>
         <DismissableLayer
