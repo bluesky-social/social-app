@@ -86,6 +86,7 @@ module.exports = function (config) {
             'gl',
             'hi',
             'hu',
+            'ia',
             'id',
             'it',
             'ja',
