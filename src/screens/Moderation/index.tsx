@@ -28,6 +28,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {Props as SVGIconProps} from '#/components/icons/common'
+import {EditBig_Stroke2_Corner0_Rounded as EditBig} from '#/components/icons/EditBig'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
@@ -199,6 +200,21 @@ export function ModerationScreenInner({
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
         ]}>
+        <Link
+          label={_(msg`View your default post interaction settings`)}
+          testID="interactionSettingsBtn"
+          to="/moderation/interaction-settings">
+          {state => (
+            <SubItem
+              title={_(msg`Interaction settings`)}
+              icon={EditBig}
+              style={[
+                (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
+              ]}
+            />
+          )}
+        </Link>
+        <Divider />
         <Button
           testID="mutedWordsBtn"
           label={_(msg`Open muted words and tags settings`)}

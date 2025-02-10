@@ -1,5 +1,10 @@
 import {ChatBskyConvoDefs} from '@atproto/api'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
@@ -20,7 +25,7 @@ export function useConvoQuery(convo: ChatBskyConvoDefs.ConvoView) {
   return useQuery({
     queryKey: RQKEY(convo.id),
     queryFn: async () => {
-      const {data} = await agent.api.chat.bsky.convo.getConvo(
+      const {data} = await agent.chat.bsky.convo.getConvo(
         {convoId: convo.id},
         {headers: DM_SERVICE_HEADERS},
       )
@@ -29,6 +34,13 @@ export function useConvoQuery(convo: ChatBskyConvoDefs.ConvoView) {
     initialData: convo,
     staleTime: STALE.INFINITY,
   })
+}
+
+export function precacheConvoQuery(
+  queryClient: QueryClient,
+  convo: ChatBskyConvoDefs.ConvoView,
+) {
+  queryClient.setQueryData(RQKEY(convo.id), convo)
 }
 
 export function useMarkAsReadMutation() {

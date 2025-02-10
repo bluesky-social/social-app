@@ -1,11 +1,11 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: Bluesky 1.97.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-11-05 16:01-0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
-"Language-Team: \n"
+"Language-Team: @nilaallj.se\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,7 +19,7 @@ msgstr ""
 msgid "(active)"
 msgstr "(aktiv)"
 
-#: src/screens/Messages/components/ChatListItem.tsx:130
+#: src/screens/Messages/components/ChatListItem.tsx:139
 msgid "(contains embedded content)"
 msgstr "(innehåller inbäddat innehåll)"
 
@@ -102,7 +102,7 @@ msgstr "{0, plural, one {citat} other {citat}}"
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {återpublicering} other {återpubliceringar}}"
 
-#: src/screens/Settings/Settings.tsx:422
+#: src/screens/Settings/Settings.tsx:424
 msgid "{0}"
 msgstr "{0}"
 
@@ -128,11 +128,11 @@ msgstr "{0} av {1}"
 msgid "{0} people have used this starter pack!"
 msgstr "{0} personer har använt det här startpaketet"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:208
+#: src/view/shell/bottom-bar/BottomBar.tsx:207
 msgid "{0} unread items"
 msgstr "{0} olästa poster"
 
-#: src/view/com/util/UserAvatar.tsx:435
+#: src/view/com/util/UserAvatar.tsx:436
 msgid "{0}'s avatar"
 msgstr "{0}s avatar"
 
@@ -169,7 +169,7 @@ msgstr "{0}må"
 msgid "{0}s"
 msgstr "{0}s"
 
-#: src/view/shell/desktop/LeftNav.tsx:189
+#: src/view/shell/desktop/LeftNav.tsx:384
 msgid "{count} unread items"
 msgstr "{count} olästa poster"
 
@@ -178,11 +178,11 @@ msgstr "{count} olästa poster"
 msgid "{displayName}'s Starter Pack"
 msgstr "{displayName}s startpaket"
 
-#: src/screens/SignupQueued.tsx:219
+#: src/screens/SignupQueued.tsx:216
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
 msgstr "{estimatedTimeHrs, plural, one {timme} other {timmar}}"
 
-#: src/screens/SignupQueued.tsx:225
+#: src/screens/SignupQueued.tsx:222
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr "{estimatedTimeMins, plural, one {minut} other {minuter}}"
 
@@ -283,15 +283,15 @@ msgstr "{following} följda"
 msgid "{handle} can't be messaged"
 msgstr "Det går inte att skicka meddelanden till {handle}"
 
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:260
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:262
 msgid "{notificationCount} unread items"
 msgstr "{notificationCount} olästa poster"
 
-#: src/view/shell/Drawer.tsx:448
+#: src/view/shell/Drawer.tsx:453
 msgid "{numUnreadNotifications} unread"
 msgstr "{numUnreadNotifications} oläst"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:235
+#: src/view/shell/bottom-bar/BottomBar.tsx:234
 msgid "{numUnreadNotifications} unread items"
 msgstr "{numUnreadNotifications} olästa poster"
 
@@ -353,7 +353,7 @@ msgstr "⚠ Ogiltigt användarnamn"
 msgid "24 hours"
 msgstr "24 timmar"
 
-#: src/screens/Login/LoginForm.tsx:252
+#: src/screens/Login/LoginForm.tsx:260
 msgid "2FA Confirmation"
 msgstr "2FA-bekräftelse"
 
@@ -365,14 +365,14 @@ msgstr "30 dagar"
 msgid "7 days"
 msgstr "7 dagar"
 
-#: src/Navigation.tsx:363
+#: src/Navigation.tsx:364
 #: src/screens/Settings/AboutSettings.tsx:28
 #: src/screens/Settings/Settings.tsx:215
 #: src/screens/Settings/Settings.tsx:218
 msgid "About"
 msgstr "Om"
 
-#: src/view/screens/Search/Search.tsx:866
+#: src/view/screens/Search/Search.tsx:858
 msgid "Access navigation links and settings"
 msgstr "Öppna navigeringslänkar och inställningar"
 
@@ -382,12 +382,12 @@ msgstr "Öppna navigeringslänkar och inställningar"
 msgid "Accessibility"
 msgstr "Tillgänglighet"
 
-#: src/Navigation.tsx:323
+#: src/Navigation.tsx:324
 msgid "Accessibility Settings"
 msgstr "Tillgänglighetsinställningar"
 
-#: src/Navigation.tsx:339
-#: src/screens/Login/LoginForm.tsx:178
+#: src/Navigation.tsx:340
+#: src/screens/Login/LoginForm.tsx:186
 #: src/screens/Settings/AccountSettings.tsx:45
 #: src/screens/Settings/Settings.tsx:153
 #: src/screens/Settings/Settings.tsx:156
@@ -416,11 +416,11 @@ msgstr "Konto ignorerat"
 msgid "Account Muted by List"
 msgstr "Konto ignorerat av lista"
 
-#: src/screens/Settings/Settings.tsx:428
+#: src/screens/Settings/Settings.tsx:430
 msgid "Account options"
 msgstr "Kontoalternativ"
 
-#: src/screens/Settings/Settings.tsx:464
+#: src/screens/Settings/Settings.tsx:466
 msgid "Account removed from quick access"
 msgstr "Konto borttaget från snabbåtkomst"
 
@@ -480,12 +480,14 @@ msgstr "Lägg till alternativtext"
 msgid "Add alt text (optional)"
 msgstr "Lägg till alternativtext (valfritt)"
 
-#: src/screens/Settings/Settings.tsx:372
-#: src/screens/Settings/Settings.tsx:375
+#: src/screens/Settings/Settings.tsx:373
+#: src/screens/Settings/Settings.tsx:376
+#: src/view/shell/desktop/LeftNav.tsx:281
+#: src/view/shell/desktop/LeftNav.tsx:285
 msgid "Add another account"
 msgstr "Lägg till ett annat konto"
 
-#: src/view/com/composer/Composer.tsx:728
+#: src/view/com/composer/Composer.tsx:735
 msgid "Add another post"
 msgstr "Lägg till ett ytterligare inlägg"
 
@@ -507,7 +509,7 @@ msgstr "Lägg till ignorerat ord för konfigurerade inställningar"
 msgid "Add muted words and tags"
 msgstr "Lägg till ord och taggar att ignorera"
 
-#: src/view/com/composer/Composer.tsx:1242
+#: src/view/com/composer/Composer.tsx:1249
 msgid "Add new post"
 msgstr "Lägg till ett ytterligare inlägg"
 
@@ -528,7 +530,7 @@ msgstr "Lägg till några flöden i ditt startpaket!"
 msgid "Add the default feed of only people you follow"
 msgstr "Lägg till standardflödet med bara personer du följer"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:389
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:387
 msgid "Add the following DNS record to your domain:"
 msgstr "Lägg till följande DNS-post i din domän:"
 
@@ -552,7 +554,7 @@ msgstr "Tillagd i listan"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Added to my feeds"
-msgstr "Tillagd i mina flöden"
+msgstr "Tillagt i mina flöden"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:160
 msgid "Adult"
@@ -584,7 +586,7 @@ msgstr "Avancerat"
 
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
-msgstr "Allt"
+msgstr "Alla"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
@@ -678,15 +680,15 @@ msgstr "Ett fel uppstod"
 msgid "An error occurred while compressing the video."
 msgstr "Ett fel uppstod under komprimeringen av videoklippet."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:333
+#: src/components/StarterPack/ProfileStarterPacks.tsx:332
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "Ett fel uppstod när ditt startpaket skulle genereras. Vill du försöka igen?"
 
-#: src/view/com/util/post-embeds/VideoEmbed.tsx:133
+#: src/view/com/util/post-embeds/VideoEmbed.tsx:160
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "Ett fel uppstod under inläsningen av videoklippet. Försök igen senare."
 
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:176
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:198
 msgid "An error occurred while loading the video. Please try again."
 msgstr "Ett fel uppstod under inläsningen av videoklippet. Försök igen."
 
@@ -755,8 +757,8 @@ msgstr "Animerade gif-bilder"
 msgid "Anti-Social Behavior"
 msgstr "Antisocialt beteende"
 
-#: src/view/screens/Search/Search.tsx:337
-#: src/view/screens/Search/Search.tsx:338
+#: src/view/screens/Search/Search.tsx:333
+#: src/view/screens/Search/Search.tsx:334
 msgid "Any language"
 msgstr "Alla språk"
 
@@ -764,7 +766,7 @@ msgstr "Alla språk"
 msgid "Anybody can interact"
 msgstr "Vem som helst kan interagera"
 
-#: src/Navigation.tsx:371
+#: src/Navigation.tsx:372
 #: src/screens/Settings/AppIconSettings/index.tsx:67
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:18
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:23
@@ -800,7 +802,7 @@ msgstr "Namn på applösenord måste vara minst 4 tecken långa"
 msgid "App passwords"
 msgstr "Applösenord"
 
-#: src/Navigation.tsx:291
+#: src/Navigation.tsx:292
 #: src/screens/Settings/AppPasswords.tsx:51
 msgid "App Passwords"
 msgstr "Applösenord"
@@ -812,12 +814,21 @@ msgstr "Begär omprövning"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:243
 msgid "Appeal \"{0}\" label"
-msgstr "Begär omprövning för etiketten ”{0}”"
+msgstr "Begär omprövning av etiketten ”{0}”"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:233
 #: src/screens/Messages/components/ChatDisabled.tsx:91
 msgid "Appeal submitted"
 msgstr "Omprövningsbegäran skickad"
+
+#: src/screens/Takendown.tsx:111
+#: src/screens/Takendown.tsx:144
+msgid "Appeal suspension"
+msgstr "Begär omprövning av avstängning"
+
+#: src/screens/Takendown.tsx:114
+msgid "Appeal Suspension"
+msgstr "Begär omprövning av avstängning"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:51
 #: src/screens/Messages/components/ChatDisabled.tsx:53
@@ -826,7 +837,7 @@ msgstr "Omprövningsbegäran skickad"
 msgid "Appeal this decision"
 msgstr "Begär omprövning av beslutet"
 
-#: src/Navigation.tsx:331
+#: src/Navigation.tsx:332
 #: src/screens/Settings/AppearanceSettings.tsx:85
 #: src/screens/Settings/Settings.tsx:183
 #: src/screens/Settings/Settings.tsx:186
@@ -851,7 +862,7 @@ msgstr "Arkiverat inlägg"
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr "Är du säker på att du vill ta bort applösenordet ”{0}”?"
 
-#: src/components/dms/MessageMenu.tsx:149
+#: src/components/dms/MessageMenu.tsx:150
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr "Är du säker på att du vill ta bort det här meddelandet? Meddelandet kommer att tas bort för dig, men inte för den andra deltagaren."
 
@@ -863,7 +874,7 @@ msgstr "Är du säker på att du vill ta bort det här startpaketet?"
 msgid "Are you sure you want to discard your changes?"
 msgstr "Är du säker på att du vill slänga dina ändringar?"
 
-#: src/components/dms/LeaveConvoPrompt.tsx:47
+#: src/components/dms/LeaveConvoPrompt.tsx:42
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
 msgstr "Är du säker på att du vill lämna den här konversationen? Dina meddelanden kommer att tas bort för dig, men inte för den andra deltagaren."
 
@@ -875,11 +886,11 @@ msgstr "Är du säker på att du vill ta bort {0} från dina flöden?"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Är du säker på att du vill ta bort det här från dina flöden?"
 
-#: src/view/com/composer/Composer.tsx:679
+#: src/view/com/composer/Composer.tsx:686
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "Är du säker på att du vill slänga det här utkastet?"
 
-#: src/view/com/composer/Composer.tsx:853
+#: src/view/com/composer/Composer.tsx:860
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Är du säker på att du vill slänga det här inlägget?"
 
@@ -903,7 +914,7 @@ msgstr "Konst"
 msgid "Artistic or non-erotic nudity."
 msgstr "Konstnärlig eller icke-erotisk nakenhet."
 
-#: src/screens/Signup/StepHandle.tsx:173
+#: src/screens/Signup/StepHandle.tsx:180
 msgid "At least 3 characters"
 msgstr "Minst 3 tecken"
 
@@ -911,8 +922,8 @@ msgstr "Minst 3 tecken"
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
 msgstr "Inställningar för automatisk uppspelning har flyttat till <0>Innehåll och media</0>."
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:106
-#: src/screens/Settings/ContentAndMediaSettings.tsx:112
+#: src/screens/Settings/ContentAndMediaSettings.tsx:107
+#: src/screens/Settings/ContentAndMediaSettings.tsx:113
 msgid "Autoplay videos and GIFs"
 msgstr "Spela upp videoklipp och gif-bilder automatiskt"
 
@@ -923,10 +934,10 @@ msgstr "Spela upp videoklipp och gif-bilder automatiskt"
 #: src/screens/Login/ChooseAccountForm.tsx:95
 #: src/screens/Login/ForgotPasswordForm.tsx:123
 #: src/screens/Login/ForgotPasswordForm.tsx:129
-#: src/screens/Login/LoginForm.tsx:292
-#: src/screens/Login/LoginForm.tsx:298
-#: src/screens/Login/SetNewPasswordForm.tsx:154
+#: src/screens/Login/LoginForm.tsx:300
+#: src/screens/Login/LoginForm.tsx:306
 #: src/screens/Login/SetNewPasswordForm.tsx:160
+#: src/screens/Login/SetNewPasswordForm.tsx:166
 #: src/screens/Messages/components/ChatDisabled.tsx:133
 #: src/screens/Messages/components/ChatDisabled.tsx:134
 #: src/screens/Profile/Header/Shell.tsx:115
@@ -940,11 +951,11 @@ msgstr "Tillbaka"
 msgid "Before creating a list, you must first verify your email."
 msgstr "Du måste verifiera din e‑postadress innan du kan skapa en lista."
 
-#: src/view/com/composer/Composer.tsx:606
+#: src/view/com/composer/Composer.tsx:613
 msgid "Before creating a post, you must first verify your email."
 msgstr "Du måste verifiera din e‑postadress innan du kan skriva ett inlägg."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:340
+#: src/components/StarterPack/ProfileStarterPacks.tsx:339
 msgid "Before creating a starter pack, you must first verify your email."
 msgstr "Du måste verifiera din e‑postadress innan du kan skapa ett startpaket."
 
@@ -955,6 +966,7 @@ msgid "Before you may message another user, you must first verify your email."
 msgstr "Du måste verifiera din e‑postadress innan du kan skicka ett meddelande till en annan användare."
 
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:74
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:111
 msgid "BETA"
 msgstr "BETA"
 
@@ -969,8 +981,8 @@ msgstr "Födelsedag"
 msgid "Block"
 msgstr "Blockera"
 
-#: src/components/dms/ConvoMenu.tsx:188
-#: src/components/dms/ConvoMenu.tsx:192
+#: src/components/dms/ConvoMenu.tsx:191
+#: src/components/dms/ConvoMenu.tsx:195
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:603
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:605
 msgid "Block account"
@@ -990,6 +1002,14 @@ msgstr "Blockera konto?"
 msgid "Block accounts"
 msgstr "Blockera konton"
 
+#: src/components/dms/ReportDialog.tsx:325
+msgid "Block and Delete"
+msgstr "Blockera och ta bort"
+
+#: src/components/dms/ReportDialog.tsx:343
+msgid "Block and/or delete this conversation"
+msgstr "Blockera och/eller ta bort den här konversationen"
+
 #: src/view/screens/ProfileList.tsx:760
 msgid "Block list"
 msgstr "Blockeringslista"
@@ -997,6 +1017,15 @@ msgstr "Blockeringslista"
 #: src/view/screens/ProfileList.tsx:755
 msgid "Block these accounts?"
 msgstr "Blockera dessa konton?"
+
+#: src/components/dms/ReportDialog.tsx:347
+#: src/components/dms/ReportDialog.tsx:350
+msgid "Block user"
+msgstr "Blockera användare"
+
+#: src/components/dms/ReportDialog.tsx:329
+msgid "Block User"
+msgstr "Blockera användare"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:83
 msgid "Blocked"
@@ -1006,7 +1035,7 @@ msgstr "Blockerat"
 msgid "Blocked accounts"
 msgstr "Blockerade konton"
 
-#: src/Navigation.tsx:155
+#: src/Navigation.tsx:156
 #: src/view/screens/ModerationBlockedAccounts.tsx:101
 msgid "Blocked Accounts"
 msgstr "Blockerade konton"
@@ -1018,7 +1047,7 @@ msgstr "Blockerade konton kan inte svara i dina trådar, nämna dig eller på an
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:112
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
-msgstr "Blockerade konton kan inte svara i dina trådar, nämna dig eller på annat sätt interagera med dig. Du kan inte se deras innehåll, och de hindras från att se ditt."
+msgstr "Blockerade konton kan inte svara i dina trådar, nämna dig eller på annat sätt interagera med dig. Du kan inte se deras innehåll, och de kan inte se ditt."
 
 #: src/view/com/post-thread/PostThread.tsx:464
 msgid "Blocked post."
@@ -1040,25 +1069,33 @@ msgstr "Blockering hindrar inte att etiketter sätts på ditt konto, men det hin
 msgid "Blog"
 msgstr "Blogg"
 
-#: src/view/com/auth/server-input/index.tsx:86
-#: src/view/com/auth/server-input/index.tsx:88
+#: src/view/com/auth/server-input/index.tsx:92
+#: src/view/com/auth/server-input/index.tsx:94
 msgid "Bluesky"
 msgstr "Bluesky"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:859
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
-msgstr "Bluesky kan inte bekräfta äktheten av det påstådda datumet."
+msgstr "Bluesky kan inte bekräfta äktheten av det angivna datumet."
 
-#: src/view/com/auth/server-input/index.tsx:151
+#: src/view/com/auth/server-input/index.tsx:172
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
 msgstr "Bluesky är ett öppet nätverk där du kan välja din värdleverantör. Om du är en utvecklare kan du vara värd för din egen server."
+
+#: src/view/com/auth/server-input/index.tsx:109
+msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
+msgstr "Bluesky är ett öppet nätverk där du kan välja din leverantör. Om du är ny här rekommenderar vi att du håller dig till standardalternativet Bluesky Social."
 
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
 msgid "Bluesky is better with friends!"
 msgstr "Bluesky är bättre med vänner!"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:300
+#: src/screens/Takendown.tsx:217
+msgid "Bluesky Social Terms of Service"
+msgstr "Användarvillkor för Bluesky Social"
+
+#: src/components/StarterPack/ProfileStarterPacks.tsx:299
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr "Bluesky väljer en uppsättning rekommenderade konton från personer i ditt nätverk."
 
@@ -1087,23 +1124,23 @@ msgstr "Gör bilder suddiga och filtrera bort från flöden"
 msgid "Books"
 msgstr "Böcker"
 
-#: src/components/FeedInterstitials.tsx:348
+#: src/components/FeedInterstitials.tsx:349
 msgid "Browse more accounts on the Explore page"
 msgstr "Bläddra bland fler konton på sidan Utforska"
 
-#: src/components/FeedInterstitials.tsx:481
+#: src/components/FeedInterstitials.tsx:486
 msgid "Browse more feeds on the Explore page"
 msgstr "Bläddra bland fler flöden på sidan Utforska"
 
 #: src/components/FeedInterstitials.tsx:330
 #: src/components/FeedInterstitials.tsx:333
-#: src/components/FeedInterstitials.tsx:463
-#: src/components/FeedInterstitials.tsx:466
+#: src/components/FeedInterstitials.tsx:467
+#: src/components/FeedInterstitials.tsx:470
 msgid "Browse more suggestions"
 msgstr "Bläddra bland fler förslag"
 
-#: src/components/FeedInterstitials.tsx:356
-#: src/components/FeedInterstitials.tsx:490
+#: src/components/FeedInterstitials.tsx:357
+#: src/components/FeedInterstitials.tsx:495
 msgid "Browse more suggestions on the Explore page"
 msgstr "Bläddra bland fler förslag på sidan Utforska"
 
@@ -1152,10 +1189,9 @@ msgstr "Genom att skapa ett konto godkänner du våra <0>användarvillkor</0>."
 msgid "Camera"
 msgstr "Kamera"
 
-#: src/components/Menu/index.tsx:297
+#: src/components/Menu/index.tsx:304
 #: src/components/Prompt.tsx:129
 #: src/components/Prompt.tsx:131
-#: src/components/TagMenu/index.tsx:283
 #: src/screens/Deactivated.tsx:157
 #: src/screens/Profile/Header/EditProfileDialog.tsx:220
 #: src/screens/Profile/Header/EditProfileDialog.tsx:228
@@ -1164,7 +1200,9 @@ msgstr "Kamera"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:76
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:83
 #: src/screens/Settings/Settings.tsx:260
-#: src/view/com/composer/Composer.tsx:916
+#: src/screens/Takendown.tsx:99
+#: src/screens/Takendown.tsx:102
+#: src/view/com/composer/Composer.tsx:923
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:268
@@ -1179,7 +1217,8 @@ msgstr "Kamera"
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:213
-#: src/view/screens/Search/Search.tsx:895
+#: src/view/screens/Search/Search.tsx:887
+#: src/view/shell/desktop/LeftNav.tsx:209
 msgid "Cancel"
 msgstr "Avbryt"
 
@@ -1212,7 +1251,7 @@ msgid "Cancel reactivation and log out"
 msgstr "Avbryt återaktivering och logga ut"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:887
+#: src/view/screens/Search/Search.tsx:879
 msgid "Cancel search"
 msgstr "Avbryt sökning"
 
@@ -1287,21 +1326,21 @@ msgstr "Ändra din e‑postadress"
 msgid "Change your email address"
 msgstr "Ändra din e‑postadress"
 
-#: src/Navigation.tsx:388
-#: src/view/shell/bottom-bar/BottomBar.tsx:205
-#: src/view/shell/desktop/LeftNav.tsx:335
-#: src/view/shell/Drawer.tsx:417
+#: src/Navigation.tsx:389
+#: src/view/shell/bottom-bar/BottomBar.tsx:204
+#: src/view/shell/desktop/LeftNav.tsx:530
+#: src/view/shell/Drawer.tsx:422
 msgid "Chat"
 msgstr "Chatt"
 
-#: src/components/dms/ConvoMenu.tsx:82
+#: src/components/dms/ConvoMenu.tsx:85
 msgid "Chat muted"
 msgstr "Chatt ignorerad"
 
-#: src/components/dms/ConvoMenu.tsx:112
+#: src/components/dms/ConvoMenu.tsx:115
 #: src/components/dms/MessageMenu.tsx:81
-#: src/Navigation.tsx:393
-#: src/screens/Messages/ChatList.tsx:246
+#: src/Navigation.tsx:394
+#: src/screens/Messages/ChatList.tsx:254
 msgid "Chat settings"
 msgstr "Chattinställningar"
 
@@ -1309,7 +1348,7 @@ msgstr "Chattinställningar"
 msgid "Chat Settings"
 msgstr "Chattinställningar"
 
-#: src/components/dms/ConvoMenu.tsx:84
+#: src/components/dms/ConvoMenu.tsx:87
 msgid "Chat unmuted"
 msgstr "Chatt inte lägre ignorerad"
 
@@ -1318,7 +1357,7 @@ msgstr "Chatt inte lägre ignorerad"
 msgid "Check my status"
 msgstr "Kontrollera min status"
 
-#: src/screens/Login/LoginForm.tsx:285
+#: src/screens/Login/LoginForm.tsx:293
 msgid "Check your email for a login code and enter it here."
 msgstr "Titta i din e‑post efter en inloggningskod och ange den här."
 
@@ -1326,7 +1365,7 @@ msgstr "Titta i din e‑post efter en inloggningskod och ange den här."
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "Titta i din inkorg efter ett e‑postmeddelande med den bekräftelsekod som ska anges nedan:"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:372
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:370
 msgid "Choose domain verification method"
 msgstr "Välj metod för att verifiera din domän"
 
@@ -1334,7 +1373,7 @@ msgstr "Välj metod för att verifiera din domän"
 msgid "Choose Feeds"
 msgstr "Välj flöden"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:308
+#: src/components/StarterPack/ProfileStarterPacks.tsx:307
 msgid "Choose for me"
 msgstr "Välj åt mig"
 
@@ -1346,11 +1385,10 @@ msgstr "Välj personer"
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
 msgstr "Välj självsatta etiketter som är relevanta för den media du publicerar. Om ingen väljs antas inlägget som lämpligt för alla läsare."
 
-#: src/view/com/auth/server-input/index.tsx:76
-msgid "Choose Service"
-msgstr "Välj tjänst"
+#~ msgid "Choose Service"
+#~ msgstr "Välj tjänst"
 
-#: src/screens/Onboarding/StepFinished.tsx:280
+#: src/screens/Onboarding/StepFinished.tsx:287
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "Välj de algoritmer du vill ska styra dina anpassade flöden."
 
@@ -1358,12 +1396,16 @@ msgstr "Välj de algoritmer du vill ska styra dina anpassade flöden."
 msgid "Choose this color as your avatar"
 msgstr "Välj den här färgen som din avatar"
 
+#: src/view/com/auth/server-input/index.tsx:86
+msgid "Choose your account provider"
+msgstr "Välj din kontoleverantör"
+
 #: src/view/screens/Feeds.tsx:728
-#: src/view/screens/Search/Explore.tsx:411
+#: src/view/screens/Search/Explore.tsx:424
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr "Välj din egen tidslinje! Flöden som har skapats av andra i gemenskapen hjälper dig att hitta innehåll du gillar."
 
-#: src/screens/Signup/StepInfo/index.tsx:201
+#: src/screens/Signup/StepInfo/index.tsx:195
 msgid "Choose your password"
 msgstr "Välj ditt lösenord"
 
@@ -1371,11 +1413,11 @@ msgstr "Välj ditt lösenord"
 msgid "Choose your username"
 msgstr "Välj ditt användarnamn"
 
-#: src/screens/Settings/Settings.tsx:350
+#: src/screens/Settings/Settings.tsx:351
 msgid "Clear all storage data"
 msgstr "Rensa all lagrad data"
 
-#: src/screens/Settings/Settings.tsx:352
+#: src/screens/Settings/Settings.tsx:353
 msgid "Clear all storage data (restart after this)"
 msgstr "Rensa all lagrad data (starta om efter detta)"
 
@@ -1387,9 +1429,8 @@ msgstr "Rensa sökfrågan"
 msgid "click here"
 msgstr "klicka här"
 
-#: src/components/TagMenu/index.web.tsx:152
-msgid "Click here to open tag menu for {tag}"
-msgstr "Klicka här för att öppna taggmenyn för {tag}"
+#~ msgid "Click here to open tag menu for {tag}"
+#~ msgstr "Klicka här för att öppna taggmenyn för {tag}"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:307
 msgid "Click to disable quote posts of this post."
@@ -1398,6 +1439,10 @@ msgstr "Klicka för att inaktivera citeringar av detta inlägg."
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:308
 msgid "Click to enable quote posts of this post."
 msgstr "Klicka för att tillåta citeringar av detta inlägg."
+
+#: src/components/RichTextTag.tsx:54
+msgid "Click to open tag menu for {tag}"
+msgstr "Klicka för att öppna taggmenyn för {tag}"
 
 #: src/components/dms/MessageItem.tsx:241
 msgid "Click to retry failed message"
@@ -1414,6 +1459,8 @@ msgstr "Galopp 🐴 galopp 🐴"
 #: src/components/dialogs/GifSelect.tsx:281
 #: src/components/dialogs/VerifyEmailDialog.tsx:289
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:265
+#: src/components/dms/ReportDialog.tsx:372
+#: src/components/dms/ReportDialog.tsx:381
 #: src/components/NewskieDialog.tsx:146
 #: src/components/NewskieDialog.tsx:153
 #: src/components/ProgressGuide/FollowDialog.tsx:429
@@ -1463,8 +1510,7 @@ msgstr "Stäng bildvisare"
 msgid "Close navigation footer"
 msgstr "Stäng sidfot med navigering"
 
-#: src/components/Menu/index.tsx:291
-#: src/components/TagMenu/index.tsx:277
+#: src/components/Menu/index.tsx:298
 msgid "Close this dialog"
 msgstr "Stäng den här dialogrutan"
 
@@ -1502,24 +1548,24 @@ msgstr "Komedi"
 msgid "Comics"
 msgstr "Serierutor"
 
-#: src/Navigation.tsx:281
+#: src/Navigation.tsx:282
 #: src/view/screens/CommunityGuidelines.tsx:34
 msgid "Community Guidelines"
 msgstr "Gemenskapens riktlinjer"
 
-#: src/screens/Onboarding/StepFinished.tsx:293
+#: src/screens/Onboarding/StepFinished.tsx:300
 msgid "Complete onboarding and start using your account"
-msgstr "Slutför introduktion och börja använda ditt konto"
+msgstr "Slutför introduktionen och börja använda ditt konto"
 
 #: src/screens/Signup/index.tsx:144
 msgid "Complete the challenge"
 msgstr "Slutför kontrollen"
 
-#: src/view/shell/desktop/LeftNav.tsx:301
+#: src/view/shell/desktop/LeftNav.tsx:496
 msgid "Compose new post"
 msgstr "Skriv ett nytt inlägg"
 
-#: src/view/com/composer/Composer.tsx:819
+#: src/view/com/composer/Composer.tsx:826
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "Skriv inlägg som är upp till {MAX_GRAPHEME_LENGTH} tecken långa"
 
@@ -1527,7 +1573,7 @@ msgstr "Skriv inlägg som är upp till {MAX_GRAPHEME_LENGTH} tecken långa"
 msgid "Compose reply"
 msgstr "Skriv svar"
 
-#: src/view/com/composer/Composer.tsx:1635
+#: src/view/com/composer/Composer.tsx:1643
 msgid "Compressing video..."
 msgstr "Komprimerar videoklipp…"
 
@@ -1573,7 +1619,7 @@ msgid "Confirm your birthdate"
 msgstr "Bekräfta ditt födelsedatum"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:214
-#: src/screens/Login/LoginForm.tsx:258
+#: src/screens/Login/LoginForm.tsx:266
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:144
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:150
 #: src/view/com/modals/ChangeEmail.tsx:152
@@ -1587,7 +1633,7 @@ msgstr "Bekräftelsekod"
 msgid "Confirmation Code"
 msgstr "Bekräftelsekod"
 
-#: src/screens/Login/LoginForm.tsx:319
+#: src/screens/Login/LoginForm.tsx:327
 msgid "Connecting..."
 msgstr "Ansluter…"
 
@@ -1596,7 +1642,7 @@ msgstr "Ansluter…"
 msgid "Contact support"
 msgstr "Kontakta supporten"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:49
+#: src/screens/Settings/ContentAndMediaSettings.tsx:50
 msgid "Content & Media"
 msgstr "Innehåll och media"
 
@@ -1606,7 +1652,7 @@ msgstr "Innehåll och media"
 msgid "Content and media"
 msgstr "Innehåll och media"
 
-#: src/Navigation.tsx:355
+#: src/Navigation.tsx:356
 msgid "Content and Media"
 msgstr "Innehåll och media"
 
@@ -1652,9 +1698,9 @@ msgstr "Fortsätt"
 msgid "Continue as {0} (currently signed in)"
 msgstr "Fortsätt som {0} (nuvarande inloggad)"
 
-#: src/view/com/post-thread/PostThreadLoadMore.tsx:52
+#: src/view/com/post-thread/PostThreadLoadMore.tsx:60
 msgid "Continue thread..."
-msgstr "Fortsätt på tråd…"
+msgstr "Utöka tråd…"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:241
 #: src/screens/Onboarding/StepProfile/index.tsx:275
@@ -1662,7 +1708,7 @@ msgstr "Fortsätt på tråd…"
 msgid "Continue to next step"
 msgstr "Fortsätt till nästa steg"
 
-#: src/screens/Messages/components/ChatListItem.tsx:164
+#: src/screens/Messages/components/ChatListItem.tsx:173
 msgid "Conversation deleted"
 msgstr "Konversation borttagen"
 
@@ -1708,11 +1754,11 @@ msgstr "Kopiera byggversion till urklipp"
 msgid "Copy code"
 msgstr "Kopiera kod"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:474
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:472
 msgid "Copy DID"
-msgstr "Kopia DID"
+msgstr "Kopiera DID"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:407
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:405
 msgid "Copy host"
 msgstr "Kopiera värd"
 
@@ -1747,20 +1793,21 @@ msgstr "Kopiera inläggstext"
 msgid "Copy QR code"
 msgstr "Kopiera QR-kod"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:428
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:426
 msgid "Copy TXT record value"
 msgstr "Kopiera värde för TXT-post"
 
-#: src/Navigation.tsx:286
+#: src/Navigation.tsx:287
 #: src/view/screens/CopyrightPolicy.tsx:31
 msgid "Copyright Policy"
 msgstr "Upphovsrättspolicy"
 
-#: src/components/dms/LeaveConvoPrompt.tsx:38
+#: src/components/dms/LeaveConvoPrompt.tsx:33
+#: src/components/dms/ReportDialog.tsx:308
 msgid "Could not leave chat"
 msgstr "Det gick inte att lämna chatten"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:73
+#: src/screens/Profile/ProfileFeed/index.tsx:80
 msgid "Could not load feed"
 msgstr "Det gick inte att läsa in flödet"
 
@@ -1768,7 +1815,7 @@ msgstr "Det gick inte att läsa in flödet"
 msgid "Could not load list"
 msgstr "Det gick inte att läsa in listan"
 
-#: src/components/dms/ConvoMenu.tsx:88
+#: src/components/dms/ConvoMenu.tsx:91
 msgid "Could not mute chat"
 msgstr "Det gick inte att ignorera chatten"
 
@@ -1776,7 +1823,7 @@ msgstr "Det gick inte att ignorera chatten"
 msgid "Could not process your video"
 msgstr "Kunde inte bearbeta ditt videoklipp"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:290
+#: src/components/StarterPack/ProfileStarterPacks.tsx:289
 msgid "Create"
 msgstr "Skapa"
 
@@ -1784,18 +1831,24 @@ msgstr "Skapa"
 msgid "Create a QR code for a starter pack"
 msgstr "Skapa en QR-kod för ett startpaket"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:168
-#: src/components/StarterPack/ProfileStarterPacks.tsx:271
-#: src/Navigation.tsx:418
+#: src/components/StarterPack/ProfileStarterPacks.tsx:167
+#: src/components/StarterPack/ProfileStarterPacks.tsx:270
+#: src/Navigation.tsx:419
 msgid "Create a starter pack"
 msgstr "Skapa ett startpaket"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:252
+#: src/components/StarterPack/ProfileStarterPacks.tsx:251
 msgid "Create a starter pack for me"
 msgstr "Skapa ett startpaket åt mig"
 
 #: src/view/com/auth/SplashScreen.tsx:55
 #: src/view/com/auth/SplashScreen.web.tsx:117
+#: src/view/shell/bottom-bar/BottomBar.tsx:304
+#: src/view/shell/bottom-bar/BottomBar.tsx:309
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:202
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:207
+#: src/view/shell/NavSignupCard.tsx:47
+#: src/view/shell/NavSignupCard.tsx:52
 msgid "Create account"
 msgstr "Skapa konto"
 
@@ -1812,7 +1865,7 @@ msgstr "Skapa ett konto"
 msgid "Create an avatar instead"
 msgstr "Skapa en avatar istället"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:175
+#: src/components/StarterPack/ProfileStarterPacks.tsx:174
 msgid "Create another"
 msgstr "Skapa en annan"
 
@@ -1821,7 +1874,7 @@ msgstr "Skapa en annan"
 msgid "Create new account"
 msgstr "Skapa nytt konto"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:101
+#: src/components/ReportDialog/SelectReportOptionView.tsx:99
 msgid "Create report for {0}"
 msgstr "Skapa rapport för {0}"
 
@@ -1838,10 +1891,10 @@ msgstr "Skaparen har blockerats"
 msgid "Culture"
 msgstr "Kultur"
 
-#: src/view/com/auth/server-input/index.tsx:94
-#: src/view/com/auth/server-input/index.tsx:96
+#: src/view/com/auth/server-input/index.tsx:100
+#: src/view/com/auth/server-input/index.tsx:102
 msgid "Custom"
-msgstr "Anpassat"
+msgstr "Anpassad"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:292
 msgid "Customize who can interact with this post."
@@ -1860,7 +1913,7 @@ msgstr "Mörkt läge"
 msgid "Dark theme"
 msgstr "Mörkt tema"
 
-#: src/screens/Signup/StepInfo/index.tsx:222
+#: src/screens/Signup/StepInfo/index.tsx:216
 msgid "Date of birth"
 msgstr "Födelsedatum"
 
@@ -1870,7 +1923,7 @@ msgstr "Födelsedatum"
 msgid "Deactivate account"
 msgstr "Inaktivera konto"
 
-#: src/screens/Settings/Settings.tsx:331
+#: src/screens/Settings/Settings.tsx:332
 msgid "Debug Moderation"
 msgstr "Felsök moderering"
 
@@ -1886,7 +1939,7 @@ msgstr "Förvald"
 msgid "Default icons"
 msgstr "Förvalda ikoner"
 
-#: src/components/dms/MessageMenu.tsx:151
+#: src/components/dms/MessageMenu.tsx:152
 #: src/screens/Settings/AppPasswords.tsx:212
 #: src/screens/StarterPack/StarterPackScreen.tsx:586
 #: src/screens/StarterPack/StarterPackScreen.tsx:665
@@ -1913,9 +1966,18 @@ msgstr "Ta bort applösenord"
 msgid "Delete app password?"
 msgstr "Ta bort applösenord?"
 
-#: src/screens/Settings/Settings.tsx:338
+#: src/screens/Settings/Settings.tsx:339
 msgid "Delete chat declaration record"
 msgstr "Ta bort chattdeklarationsposten"
+
+#: src/components/dms/ReportDialog.tsx:353
+#: src/components/dms/ReportDialog.tsx:356
+msgid "Delete conversation"
+msgstr "Ta bort konversation"
+
+#: src/components/dms/ReportDialog.tsx:327
+msgid "Delete Conversation"
+msgstr "Ta bort konversation"
 
 #: src/components/dms/MessageMenu.tsx:124
 msgid "Delete for me"
@@ -1925,7 +1987,7 @@ msgstr "Ta bort för mig"
 msgid "Delete List"
 msgstr "Ta bort lista"
 
-#: src/components/dms/MessageMenu.tsx:147
+#: src/components/dms/MessageMenu.tsx:148
 msgid "Delete message"
 msgstr "Ta bort meddelande"
 
@@ -1937,7 +1999,7 @@ msgstr "Ta bort meddelandet för mig"
 msgid "Delete my account"
 msgstr "Ta bort mitt konto"
 
-#: src/view/com/composer/Composer.tsx:827
+#: src/view/com/composer/Composer.tsx:834
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:642
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:644
 msgid "Delete post"
@@ -2039,8 +2101,8 @@ msgid "Disabled"
 msgstr "Inaktiverat"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:681
-#: src/view/com/composer/Composer.tsx:860
+#: src/view/com/composer/Composer.tsx:688
+#: src/view/com/composer/Composer.tsx:867
 msgid "Discard"
 msgstr "Släng"
 
@@ -2048,11 +2110,11 @@ msgstr "Släng"
 msgid "Discard changes?"
 msgstr "Vill du slänga ändringarna?"
 
-#: src/view/com/composer/Composer.tsx:678
+#: src/view/com/composer/Composer.tsx:685
 msgid "Discard draft?"
 msgstr "Vill du slänga utkastet?"
 
-#: src/view/com/composer/Composer.tsx:852
+#: src/view/com/composer/Composer.tsx:859
 msgid "Discard post?"
 msgstr "Vill du slänga inlägget?"
 
@@ -2066,7 +2128,7 @@ msgstr "Be appar att inte visa mitt innehåll för utloggade användare"
 msgid "Discover new custom feeds"
 msgstr "Upptäck nya anpassade flöden"
 
-#: src/view/screens/Search/Explore.tsx:409
+#: src/view/screens/Search/Explore.tsx:422
 msgid "Discover new feeds"
 msgstr "Upptäck nya flöden"
 
@@ -2074,17 +2136,21 @@ msgstr "Upptäck nya flöden"
 msgid "Discover New Feeds"
 msgstr "Upptäck nya flöden"
 
-#: src/components/Dialog/index.tsx:311
+#: src/components/Dialog/index.tsx:313
 msgid "Dismiss"
 msgstr "Avfärda"
 
-#: src/view/com/composer/Composer.tsx:1559
+#: src/view/com/composer/Composer.tsx:1567
 msgid "Dismiss error"
 msgstr "Avvisa fel"
 
 #: src/components/ProgressGuide/List.tsx:42
 msgid "Dismiss getting started guide"
 msgstr "Avfärda kom-igång-guide"
+
+#: src/components/interstitials/TrendingVideos.tsx:92
+msgid "Dismiss this section"
+msgstr "Avfärda den här sektionen"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:71
 #: src/screens/Settings/AccessibilitySettings.tsx:76
@@ -2110,8 +2176,8 @@ msgstr "Visningsnamnet är för långt"
 msgid "Display name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
 msgstr "Visningsnamnet är för långt. Det maximala antalet tecken är {DISPLAY_NAME_MAX_GRAPHEMES}."
 
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:373
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:375
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:377
 msgid "DNS Panel"
 msgstr "DNS-panel"
 
@@ -2123,24 +2189,25 @@ msgstr "Undanta användare som du följer från att ignoreras genom det här ord
 msgid "Does not include nudity."
 msgstr "Innehåller ingen nakenhet."
 
-#: src/screens/Signup/StepHandle.tsx:159
+#: src/screens/Signup/StepHandle.tsx:163
 msgid "Doesn't begin or end with a hyphen"
 msgstr "Börjar eller slutar inte med ett bindestreck"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:490
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:488
 msgid "Domain verified!"
 msgstr "Domän verifierad!"
 
 #: src/components/dialogs/BirthDateSettings.tsx:118
 #: src/components/dialogs/BirthDateSettings.tsx:124
+#: src/components/dms/ReportDialog.tsx:323
 #: src/components/forms/DateField/index.tsx:77
 #: src/components/forms/DateField/index.tsx:83
 #: src/screens/Onboarding/StepProfile/index.tsx:330
 #: src/screens/Onboarding/StepProfile/index.tsx:333
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
-#: src/view/com/auth/server-input/index.tsx:170
-#: src/view/com/auth/server-input/index.tsx:171
+#: src/view/com/auth/server-input/index.tsx:192
+#: src/view/com/auth/server-input/index.tsx:193
 #: src/view/com/composer/labels/LabelsBtn.tsx:224
 #: src/view/com/composer/labels/LabelsBtn.tsx:231
 #: src/view/com/composer/videos/SubtitleDialog.tsx:169
@@ -2163,9 +2230,13 @@ msgstr "Klar"
 msgid "Done{extraText}"
 msgstr "Klar{extraText}"
 
-#: src/components/Dialog/index.tsx:312
+#: src/components/Dialog/index.tsx:314
 msgid "Double tap to close the dialog"
 msgstr "Dubbeltryck för att stänga dialogrutan"
+
+#: src/screens/VideoFeed/index.tsx:1037
+msgid "Double tap to like"
+msgstr "Dubbeltryck för att gilla"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:317
 msgid "Download Bluesky"
@@ -2184,7 +2255,7 @@ msgstr "Släpp för att lägga till bilder"
 msgid "Duration:"
 msgstr "Varaktighet:"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:213
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:211
 msgid "e.g. alice"
 msgstr "t.ex. alice"
 
@@ -2196,7 +2267,7 @@ msgstr "t.ex. Alice Efternamn"
 msgid "e.g. Alice Roberts"
 msgstr "t.ex. Alice Roberts"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:359
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:357
 msgid "e.g. alice.com"
 msgstr "t.ex. alice.com"
 
@@ -2240,7 +2311,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "Ändra"
 
-#: src/view/com/util/UserAvatar.tsx:347
+#: src/view/com/util/UserAvatar.tsx:348
 #: src/view/com/util/UserBanner.tsx:95
 msgid "Edit avatar"
 msgstr "Ändra avatar"
@@ -2268,7 +2339,7 @@ msgstr "Ändra listdetaljer"
 msgid "Edit Moderation List"
 msgstr "Ändra modereringslista"
 
-#: src/Navigation.tsx:296
+#: src/Navigation.tsx:297
 #: src/view/screens/Feeds.tsx:515
 msgid "Edit My Feeds"
 msgstr "Ändra mina flöden"
@@ -2318,7 +2389,7 @@ msgstr "Ändra ditt visningsnamn"
 msgid "Edit your profile description"
 msgstr "Ändra din profilbeskrivning"
 
-#: src/Navigation.tsx:423
+#: src/Navigation.tsx:424
 msgid "Edit your starter pack"
 msgstr "Ändra ditt startpaket"
 
@@ -2332,7 +2403,7 @@ msgid "Either the creator of this list has blocked you or you have blocked the c
 msgstr "Antingen har skaparen av den här listan blockerat dig, eller så har du blockerat skaparen."
 
 #: src/screens/Settings/AccountSettings.tsx:60
-#: src/screens/Signup/StepInfo/index.tsx:170
+#: src/screens/Signup/StepInfo/index.tsx:164
 #: src/view/com/modals/ChangeEmail.tsx:136
 msgid "Email"
 msgstr "E-post"
@@ -2427,10 +2498,18 @@ msgstr "Aktivera undertexter"
 msgid "Enable this source only"
 msgstr "Aktivera endast denna källa"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:122
-#: src/screens/Settings/ContentAndMediaSettings.tsx:136
+#: src/screens/Settings/ContentAndMediaSettings.tsx:123
+#: src/screens/Settings/ContentAndMediaSettings.tsx:137
 msgid "Enable trending topics"
 msgstr "Aktivera trendande ämnen"
+
+#: src/screens/Settings/ContentAndMediaSettings.tsx:158
+msgid "Enable trending videos in your Discover feed"
+msgstr "Visa trendande videoklipp i ditt Upptäck-flöde"
+
+#: src/screens/Settings/ContentAndMediaSettings.tsx:144
+msgid "Enable trending videos in your Discover feed."
+msgstr "Visa trendande videoklipp i ditt Upptäck-flöde."
 
 #: src/screens/Messages/Settings.tsx:130
 #: src/screens/Messages/Settings.tsx:133
@@ -2438,7 +2517,7 @@ msgstr "Aktivera trendande ämnen"
 msgid "Enabled"
 msgstr "Aktiverat"
 
-#: src/screens/Profile/Sections/Feed.tsx:114
+#: src/screens/Profile/Sections/Feed.tsx:116
 msgid "End of feed"
 msgstr "Slut på flödet"
 
@@ -2446,7 +2525,7 @@ msgstr "Slut på flödet"
 msgid "Ensure you have selected a language for each subtitle file."
 msgstr "Se till att du har valt ett språk för varje undertextfil."
 
-#: src/screens/Login/SetNewPasswordForm.tsx:133
+#: src/screens/Login/SetNewPasswordForm.tsx:139
 msgid "Enter a password"
 msgstr "Ange ett lösenord"
 
@@ -2471,7 +2550,7 @@ msgstr "Öppna helskärm"
 msgid "Enter the code you received to change your password."
 msgstr "Ange den kod du fick för att ändra ditt lösenord."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:353
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:351
 msgid "Enter the domain you want to use"
 msgstr "Ange den domän du vill använda"
 
@@ -2484,7 +2563,7 @@ msgid "Enter your birth date"
 msgstr "Ange ditt födelsedatum"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
-#: src/screens/Signup/StepInfo/index.tsx:182
+#: src/screens/Signup/StepInfo/index.tsx:176
 msgid "Enter your email address"
 msgstr "Ange din e-postadress"
 
@@ -2500,7 +2579,7 @@ msgstr "Ange din nya e-postadress nedan."
 msgid "Enter your username and password"
 msgstr "Ange ditt användarnamn och lösenord"
 
-#: src/view/com/composer/Composer.tsx:1644
+#: src/view/com/composer/Composer.tsx:1652
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "Fel"
@@ -2514,7 +2593,7 @@ msgid "Error receiving captcha response."
 msgstr "Fel vid mottagning av captcha-svar."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:183
-#: src/view/screens/Search/Search.tsx:111
+#: src/view/screens/Search/Search.tsx:110
 msgid "Error:"
 msgstr "Fel:"
 
@@ -2584,7 +2663,7 @@ msgstr "Utöka lista över användare"
 msgid "Expand or collapse the full post you are replying to"
 msgstr "Utöka eller fäll ihop det inlägg som du svarar på i sin helhet"
 
-#: src/lib/api/index.ts:400
+#: src/lib/api/index.ts:405
 msgid "Expected uri to resolve to a record"
 msgstr "Förväntade att URI:n skulle lösa till en post"
 
@@ -2618,8 +2697,8 @@ msgstr "Exportera min data"
 msgid "Export My Data"
 msgstr "Exportera min data"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:82
-#: src/screens/Settings/ContentAndMediaSettings.tsx:85
+#: src/screens/Settings/ContentAndMediaSettings.tsx:83
+#: src/screens/Settings/ContentAndMediaSettings.tsx:86
 msgid "External media"
 msgstr "Extern media"
 
@@ -2633,12 +2712,12 @@ msgstr "Extern media"
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
 msgstr "Extern media kan göra det möjligt för webbplatser att samla in information om dig och din enhet. Ingen information skickas eller begärs förrän du trycker på spelaknappen."
 
-#: src/Navigation.tsx:315
+#: src/Navigation.tsx:316
 #: src/screens/Settings/ExternalMediaPreferences.tsx:31
 msgid "External Media Preferences"
 msgstr "Inställningar för extern media"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:570
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:568
 msgid "Failed to change handle. Please try again."
 msgstr "Det gick inte att ändra användarnamn. Försök igen."
 
@@ -2667,8 +2746,8 @@ msgstr "Det gick inte att ta bort inlägget. Försök igen"
 msgid "Failed to delete starter pack"
 msgstr "Det gick inte att ta bort startpaketet"
 
-#: src/view/screens/Search/Explore.tsx:447
-#: src/view/screens/Search/Explore.tsx:475
+#: src/view/screens/Search/Explore.tsx:460
+#: src/view/screens/Search/Explore.tsx:488
 msgid "Failed to load feeds preferences"
 msgstr "Det gick inte att läsa in flödesinställningar"
 
@@ -2680,12 +2759,12 @@ msgstr "Det gick inte att läsa in gif-bilder"
 msgid "Failed to load past messages"
 msgstr "Det gick inte att läsa in tidigare meddelanden"
 
-#: src/view/screens/Search/Explore.tsx:440
-#: src/view/screens/Search/Explore.tsx:468
+#: src/view/screens/Search/Explore.tsx:453
+#: src/view/screens/Search/Explore.tsx:481
 msgid "Failed to load suggested feeds"
 msgstr "Det gick inte att läsa in föreslagna flöden"
 
-#: src/view/screens/Search/Explore.tsx:398
+#: src/view/screens/Search/Explore.tsx:411
 msgid "Failed to load suggested follows"
 msgstr "Det gick inte att läsa in föreslagna konton att följa"
 
@@ -2729,11 +2808,11 @@ msgstr "Det gick inte att uppdatera inställningarna"
 msgid "Failed to upload video"
 msgstr "Det gick inte att ladda upp videoklippet"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:343
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:341
 msgid "Failed to verify handle. Please try again."
 msgstr "Det gick inte att verifiera användarnamnet. Försök igen."
 
-#: src/Navigation.tsx:231
+#: src/Navigation.tsx:232
 msgid "Feed"
 msgstr "Flöde"
 
@@ -2752,7 +2831,7 @@ msgstr "Växla läge på flöde"
 
 #: src/view/shell/desktop/RightNav.tsx:93
 #: src/view/shell/desktop/RightNav.tsx:94
-#: src/view/shell/Drawer.tsx:319
+#: src/view/shell/Drawer.tsx:324
 msgid "Feedback"
 msgstr "Feedback"
 
@@ -2761,14 +2840,14 @@ msgstr "Feedback"
 msgid "Feedback sent!"
 msgstr "Feedback skickat!"
 
-#: src/Navigation.tsx:403
+#: src/Navigation.tsx:404
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
 #: src/view/screens/Feeds.tsx:508
-#: src/view/screens/Profile.tsx:235
+#: src/view/screens/Profile.tsx:238
 #: src/view/screens/SavedFeeds.tsx:96
-#: src/view/screens/Search/Search.tsx:526
-#: src/view/shell/desktop/LeftNav.tsx:445
-#: src/view/shell/Drawer.tsx:476
+#: src/view/screens/Search/Search.tsx:522
+#: src/view/shell/desktop/LeftNav.tsx:640
+#: src/view/shell/Drawer.tsx:481
 msgid "Feeds"
 msgstr "Flöden"
 
@@ -2793,7 +2872,7 @@ msgstr "Filen sparades utan problem!"
 msgid "Filter from feeds"
 msgstr "Filtrera bort från flöden"
 
-#: src/screens/Onboarding/StepFinished.tsx:296
+#: src/screens/Onboarding/StepFinished.tsx:303
 msgid "Finalizing"
 msgstr "Slutför"
 
@@ -2809,7 +2888,7 @@ msgstr "Hitta konton att följa"
 msgid "Find people to follow"
 msgstr "Hitta personer att följa"
 
-#: src/view/screens/Search/Search.tsx:596
+#: src/view/screens/Search/Search.tsx:588
 msgid "Find posts and users on Bluesky"
 msgstr "Hitta inlägg och användare på Bluesky"
 
@@ -2821,7 +2900,7 @@ msgstr "Slutför"
 msgid "Fitness"
 msgstr "Fitness"
 
-#: src/screens/Onboarding/StepFinished.tsx:276
+#: src/screens/Onboarding/StepFinished.tsx:283
 msgid "Flexible"
 msgstr "Flexibelt"
 
@@ -2830,6 +2909,7 @@ msgstr "Flexibelt"
 #: src/components/ProfileHoverCard/index.web.tsx:449
 #: src/components/ProfileHoverCard/index.web.tsx:460
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:234
+#: src/screens/VideoFeed/index.tsx:819
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:132
 msgid "Follow"
 msgstr "Följ"
@@ -2843,6 +2923,10 @@ msgstr "Följ"
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:114
 msgid "Follow {0}"
 msgstr "Följ {0}"
+
+#: src/screens/VideoFeed/index.tsx:798
+msgid "Follow {handle}"
+msgstr "Följ {handle}"
 
 #: src/view/com/posts/AviFollowButton.tsx:68
 msgid "Follow {name}"
@@ -2877,23 +2961,23 @@ msgctxt "action"
 msgid "Follow Back"
 msgstr "Följ tillbaka"
 
-#: src/view/screens/Search/Explore.tsx:355
+#: src/view/screens/Search/Explore.tsx:368
 msgid "Follow more accounts to get connected to your interests and build your network."
 msgstr "Följ fler användare för att anknyta till dina intressen och bygga upp ditt nätverk."
 
-#: src/components/KnownFollowers.tsx:231
+#: src/components/KnownFollowers.tsx:232
 msgid "Followed by <0>{0}</0>"
 msgstr "Följs av <0>{0}</0>"
 
-#: src/components/KnownFollowers.tsx:217
+#: src/components/KnownFollowers.tsx:218
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
 msgstr "Följs av <0>{0}</0> och {1, plural, one {# annan} other {# andra}}"
 
-#: src/components/KnownFollowers.tsx:204
+#: src/components/KnownFollowers.tsx:205
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
 msgstr "Följs av <0>{0}</0> och <1>{1}</1>"
 
-#: src/components/KnownFollowers.tsx:186
+#: src/components/KnownFollowers.tsx:187
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr "Följs av <0>{0}</0>, <1>{1}</1>, och {2, plural, one {# annan} other {# andra}}"
 
@@ -2901,7 +2985,7 @@ msgstr "Följs av <0>{0}</0>, <1>{1}</1>, och {2, plural, one {# annan} other {#
 msgid "Followed users"
 msgstr "Användare jag följer"
 
-#: src/Navigation.tsx:192
+#: src/Navigation.tsx:193
 msgid "Followers of @{0} that you know"
 msgstr "Följare av @{0} som du känner"
 
@@ -2915,6 +2999,7 @@ msgstr "Följare som du känner"
 #: src/components/ProfileHoverCard/index.web.tsx:448
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
+#: src/screens/VideoFeed/index.tsx:817
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
 #: src/view/screens/SavedFeeds.tsx:422
@@ -2926,16 +3011,20 @@ msgstr "Följer"
 msgid "Following {0}"
 msgstr "Följer {0}"
 
+#: src/screens/VideoFeed/index.tsx:797
+msgid "Following {handle}"
+msgstr "Följer {handle}"
+
 #: src/view/com/posts/AviFollowButton.tsx:50
 msgid "Following {name}"
 msgstr "Följer {name}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:74
-#: src/screens/Settings/ContentAndMediaSettings.tsx:77
+#: src/screens/Settings/ContentAndMediaSettings.tsx:75
+#: src/screens/Settings/ContentAndMediaSettings.tsx:78
 msgid "Following feed preferences"
 msgstr "Inställningar för Följer-flödet"
 
-#: src/Navigation.tsx:302
+#: src/Navigation.tsx:303
 #: src/screens/Settings/FollowingFeedPreferences.tsx:53
 msgid "Following Feed Preferences"
 msgstr "Inställningar för Följer-flödet"
@@ -2971,7 +3060,7 @@ msgstr "Av säkerhetsskäl kommer du inte kunna se det här igen. Om du tappar b
 
 #: src/screens/Settings/AppearanceSettings.tsx:142
 msgid "For the best experience, we recommend using the theme font."
-msgstr "Vi rekommenderar att använda tematypsnittet för bästa upplevelse."
+msgstr "Vi rekommenderar tematypsnittet för bästa upplevelse."
 
 #: src/components/dialogs/MutedWords.tsx:178
 msgid "Forever"
@@ -2982,11 +3071,11 @@ msgstr "Obegränsad"
 msgid "Forgot Password"
 msgstr "Glömt lösenord"
 
-#: src/screens/Login/LoginForm.tsx:232
+#: src/screens/Login/LoginForm.tsx:240
 msgid "Forgot password?"
 msgstr "Glömt lösenordet?"
 
-#: src/screens/Login/LoginForm.tsx:243
+#: src/screens/Login/LoginForm.tsx:251
 msgid "Forgot?"
 msgstr "Glömt?"
 
@@ -3007,11 +3096,11 @@ msgstr "Från <0/>"
 msgid "Gallery"
 msgstr "Galleri"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:297
+#: src/components/StarterPack/ProfileStarterPacks.tsx:296
 msgid "Generate a starter pack"
 msgstr "Generera ett startpaket"
 
-#: src/view/shell/Drawer.tsx:323
+#: src/view/shell/Drawer.tsx:328
 msgid "Get help"
 msgstr "Få hjälp"
 
@@ -3039,7 +3128,10 @@ msgstr "Uppenbara överträdelser av lagar eller användarvillkor"
 #: src/components/Layout/Header/index.tsx:118
 #: src/components/moderation/ScreenHider.tsx:154
 #: src/components/moderation/ScreenHider.tsx:163
-#: src/screens/Profile/ProfileFeed/index.tsx:82
+#: src/screens/Profile/ProfileFeed/index.tsx:89
+#: src/screens/VideoFeed/components/Header.tsx:163
+#: src/screens/VideoFeed/index.tsx:1098
+#: src/screens/VideoFeed/index.tsx:1102
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
 #: src/view/screens/ProfileList.tsx:1009
@@ -3050,20 +3142,20 @@ msgstr "Gå tillbaka"
 #: src/screens/List/ListHiddenScreen.tsx:221
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
-#: src/screens/Profile/ProfileFeed/index.tsx:87
+#: src/screens/Profile/ProfileFeed/index.tsx:94
 #: src/screens/StarterPack/StarterPackScreen.tsx:758
 #: src/view/screens/NotFound.tsx:56
 #: src/view/screens/ProfileList.tsx:1014
 msgid "Go Back"
 msgstr "Gå tillbaka"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:542
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:540
 msgid "Go back to previous page"
 msgstr "Gå tillbaka till föregående sida"
 
-#: src/components/dms/ReportDialog.tsx:149
-#: src/components/ReportDialog/SelectReportOptionView.tsx:80
-#: src/components/ReportDialog/SubmitView.tsx:109
+#: src/components/dms/ReportDialog.tsx:190
+#: src/components/ReportDialog/SelectReportOptionView.tsx:78
+#: src/components/ReportDialog/SubmitView.tsx:110
 #: src/screens/Onboarding/Layout.tsx:101
 #: src/screens/Onboarding/Layout.tsx:190
 #: src/screens/Signup/BackNextButtons.tsx:35
@@ -3082,7 +3174,7 @@ msgstr "Gå hem"
 msgid "Go Home"
 msgstr "Gå till Hem"
 
-#: src/screens/Messages/components/ChatListItem.tsx:264
+#: src/screens/Messages/components/ChatListItem.tsx:274
 msgid "Go to conversation with {0}"
 msgstr "Gå till konversation med {0}"
 
@@ -3091,11 +3183,11 @@ msgstr "Gå till konversation med {0}"
 msgid "Go to next"
 msgstr "Gå till nästa"
 
-#: src/components/dms/ConvoMenu.tsx:167
+#: src/components/dms/ConvoMenu.tsx:170
 msgid "Go to profile"
 msgstr "Gå till profil"
 
-#: src/components/dms/ConvoMenu.tsx:164
+#: src/components/dms/ConvoMenu.tsx:167
 msgid "Go to user's profile"
 msgstr "Gå till användarens profil"
 
@@ -3115,16 +3207,16 @@ msgstr "Halvvägs där!"
 msgid "Handle"
 msgstr "Användarnamn"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:574
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:572
 msgid "Handle already taken. Please try a different one."
 msgstr "Användarnamnet används redan av en annan. Försök med ett annat."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:191
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:327
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:189
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:325
 msgid "Handle changed!"
 msgstr "Användarnamnet har ändrats!"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:578
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:576
 msgid "Handle too long. Please try a shorter one."
 msgstr "Användarnamnet är för långt. Försök med ett kortare."
 
@@ -3136,13 +3228,16 @@ msgstr "Haptik"
 msgid "Harassment, trolling, or intolerance"
 msgstr "Trakasserier, trolling eller intolerans"
 
-#: src/Navigation.tsx:378
+#: src/Navigation.tsx:379
 msgid "Hashtag"
 msgstr "Hashtagg"
 
-#: src/components/RichText.tsx:218
-msgid "Hashtag: #{tag}"
+#: src/components/RichTextTag.tsx:51
+msgid "Hashtag {tag}"
 msgstr "Hashtagg: #{tag}"
+
+#~ msgid "Hashtag: #{tag}"
+#~ msgstr "Hashtagg: #{tag}"
 
 #: src/screens/Signup/index.tsx:173
 msgid "Having trouble?"
@@ -3152,7 +3247,7 @@ msgstr "Har du problem?"
 #: src/screens/Settings/Settings.tsx:211
 #: src/view/shell/desktop/RightNav.tsx:111
 #: src/view/shell/desktop/RightNav.tsx:112
-#: src/view/shell/Drawer.tsx:332
+#: src/view/shell/Drawer.tsx:337
 msgid "Help"
 msgstr "Hjälp"
 
@@ -3164,11 +3259,21 @@ msgstr "Låt folk veta att du inte är en bot genom att ladda upp en bild eller 
 msgid "Here is your app password!"
 msgstr "Är är ditt applösenord!"
 
+#: src/components/VideoPostCard.tsx:172
+#: src/components/VideoPostCard.tsx:448
+msgid "Hidden"
+msgstr "Dolt"
+
+#: src/screens/VideoFeed/index.tsx:606
+msgid "Hidden by your moderation settings."
+msgstr "Dolt av dina modereringsinställningar."
+
 #: src/components/ListCard.tsx:130
 msgid "Hidden list"
 msgstr "Dold lista"
 
-#: src/components/interstitials/Trending.tsx:101
+#: src/components/interstitials/Trending.tsx:131
+#: src/components/interstitials/TrendingVideos.tsx:140
 #: src/components/moderation/ContentHider.tsx:200
 #: src/components/moderation/LabelPreference.tsx:135
 #: src/components/moderation/PostHider.tsx:122
@@ -3216,17 +3321,21 @@ msgstr "Dölj det här inlägget?"
 msgid "Hide this reply?"
 msgstr "Dölj det här svaret?"
 
-#: src/components/interstitials/Trending.tsx:84
+#: src/components/interstitials/Trending.tsx:113
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:83
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:62
 msgid "Hide trending topics"
 msgstr "Dölj trendande ämnen"
 
-#: src/components/interstitials/Trending.tsx:99
+#: src/components/interstitials/Trending.tsx:129
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:135
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:108
 msgid "Hide trending topics?"
 msgstr "Dölj trendande ämnen?"
+
+#: src/components/interstitials/TrendingVideos.tsx:138
+msgid "Hide trending videos?"
+msgstr "Dölj trendande videoklipp?"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:592
 msgid "Hide user list"
@@ -3264,21 +3373,20 @@ msgstr "Hmmmm, vi kunde inte ladda den modereringstjänsten."
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "Vänta lite! Vi ger gradvis tillgång till videoklipp till fler användare, och du står fortfarande i kön. Kom tillbaka och försök snart igen!"
 
-#: src/Navigation.tsx:594
-#: src/Navigation.tsx:614
-#: src/view/shell/bottom-bar/BottomBar.tsx:163
-#: src/view/shell/desktop/LeftNav.tsx:389
-#: src/view/shell/Drawer.tsx:391
+#: src/Navigation.tsx:603
+#: src/Navigation.tsx:623
+#: src/view/shell/bottom-bar/BottomBar.tsx:162
+#: src/view/shell/desktop/LeftNav.tsx:584
+#: src/view/shell/Drawer.tsx:396
 msgid "Home"
 msgstr "Hem"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:400
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:398
 msgid "Host:"
 msgstr "Värd:"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:83
-#: src/screens/Login/LoginForm.tsx:168
-#: src/screens/Signup/StepInfo/index.tsx:133
+#: src/screens/Login/LoginForm.tsx:176
 msgid "Hosting provider"
 msgstr "Värdleverantör"
 
@@ -3308,8 +3416,8 @@ msgstr "Jag har en kod"
 msgid "I have a confirmation code"
 msgstr "Jag har en bekräftelsekod"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:263
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:269
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:261
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:267
 msgid "I have my own domain"
 msgstr "Jag har min egen domän"
 
@@ -3330,7 +3438,7 @@ msgstr "Om du inte är vuxen enligt ditt lands lagar måste din förälder eller
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "Om du raderar den här listan kommer du inte att kunna återställa den."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:250
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:248
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
 msgstr "Om du har en egen domän kan du använda den som ditt användarnamn. Det gör det möjligt för dig att själv verifiera din identitet. <0>Läs mer här.</0>"
 
@@ -3341,6 +3449,10 @@ msgstr "Om du tar bort det här inlägget kommer du inte att kunna återställa 
 #: src/view/com/modals/ChangePassword.tsx:149
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
 msgstr "Om du vill ändra ditt lösenord skickar vi en kod till dig för att verifiera att det här är ditt konto."
+
+#: src/view/com/auth/server-input/index.tsx:168
+msgid "If you're a developer, you can host your own server."
+msgstr "Om du är en utvecklare kan du stå som värd för din egen server."
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
@@ -3370,7 +3482,11 @@ msgstr "Imitation, felaktig information eller falska påståenden"
 msgid "Inappropriate messages or explicit links"
 msgstr "Olämpliga meddelanden eller explicita länkar"
 
-#: src/screens/Login/SetNewPasswordForm.tsx:121
+#: src/screens/Login/LoginForm.tsx:157
+msgid "Incorrect username or password"
+msgstr "Felaktigt användarnamn eller lösenord"
+
+#: src/screens/Login/SetNewPasswordForm.tsx:127
 msgid "Input code sent to your email for password reset"
 msgstr "Ange den kod som har skickats till din e-post för att återställa lösenordet"
 
@@ -3378,7 +3494,7 @@ msgstr "Ange den kod som har skickats till din e-post för att återställa lös
 msgid "Input confirmation code for account deletion"
 msgstr "Ange bekräftelsekod för att ta bort kontot"
 
-#: src/screens/Login/SetNewPasswordForm.tsx:145
+#: src/screens/Login/SetNewPasswordForm.tsx:151
 msgid "Input new password"
 msgstr "Ange nytt lösenord"
 
@@ -3386,15 +3502,15 @@ msgstr "Ange nytt lösenord"
 msgid "Input password for account deletion"
 msgstr "Ange lösenord för att ta bort kontot"
 
-#: src/screens/Login/LoginForm.tsx:273
+#: src/screens/Login/LoginForm.tsx:281
 msgid "Input the code which has been emailed to you"
 msgstr "Ange koden som har skickats till dig via e-post"
 
-#: src/screens/Login/LoginForm.tsx:202
+#: src/screens/Login/LoginForm.tsx:210
 msgid "Input the username or email address you used at signup"
 msgstr "Ange användarnamnet eller e-postadressen som du använde när du registrerade dig"
 
-#: src/screens/Login/LoginForm.tsx:227
+#: src/screens/Login/LoginForm.tsx:235
 msgid "Input your password"
 msgstr "Ange ditt lösenord"
 
@@ -3402,12 +3518,12 @@ msgstr "Ange ditt lösenord"
 msgid "Interaction limited"
 msgstr "Interaktion begränsad"
 
-#: src/screens/Login/LoginForm.tsx:144
+#: src/screens/Login/LoginForm.tsx:149
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
 msgstr "Ogiltig bekräftelsekod för 2FA."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:580
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:578
 msgid "Invalid handle. Please try a different one."
 msgstr "Ogiltigt användarnamn. Försök med ett annat."
 
@@ -3415,10 +3531,8 @@ msgstr "Ogiltigt användarnamn. Försök med ett annat."
 msgid "Invalid or unsupported post record"
 msgstr "Ogiltig eller icke stödd inläggspost"
 
-#: src/screens/Login/LoginForm.tsx:90
-#: src/screens/Login/LoginForm.tsx:149
-msgid "Invalid username or password"
-msgstr "Ogiltigt användarnamn eller lösenord"
+#~ msgid "Invalid username or password"
+#~ msgstr "Ogiltigt användarnamn eller lösenord"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91
 msgid "Invalid Verification Code"
@@ -3428,7 +3542,7 @@ msgstr "Ogiltig verifieringskod"
 msgid "Invite a Friend"
 msgstr "Bjud in en vän"
 
-#: src/screens/Signup/StepInfo/index.tsx:151
+#: src/screens/Signup/StepInfo/index.tsx:145
 msgid "Invite code"
 msgstr "Inbjudningskod"
 
@@ -3460,7 +3574,7 @@ msgstr "Inbjudningar, men personliga"
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
 msgstr "Det verkar som att du har angett din e-postadress fel. Är du säker på att du har skrivit rätt?"
 
-#: src/screens/Signup/StepInfo/index.tsx:241
+#: src/screens/Signup/StepInfo/index.tsx:235
 msgid "It's correct"
 msgstr "Det är korrekt"
 
@@ -3468,7 +3582,7 @@ msgstr "Det är korrekt"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "Just nu är det bara du! Lägg till fler personer i ditt startpaket genom att söka ovan."
 
-#: src/view/com/composer/Composer.tsx:1578
+#: src/view/com/composer/Composer.tsx:1586
 msgid "Job ID: {0}"
 msgstr "Jobb-ID: {0}"
 
@@ -3486,7 +3600,7 @@ msgstr "Gå med i Bluesky"
 #: src/components/StarterPack/QrCode.tsx:62
 #: src/view/shell/NavSignupCard.tsx:40
 msgid "Join the conversation"
-msgstr "Delta i konversationen"
+msgstr "Delta i samtalen"
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:104
@@ -3502,7 +3616,7 @@ msgid "Labeled by the author."
 msgstr "Märkt av användaren."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:75
-#: src/view/screens/Profile.tsx:229
+#: src/view/screens/Profile.tsx:231
 msgid "Labels"
 msgstr "Etiketter"
 
@@ -3526,7 +3640,7 @@ msgstr "Etiketter på ditt innehåll"
 msgid "Language selection"
 msgstr "Språkval"
 
-#: src/Navigation.tsx:165
+#: src/Navigation.tsx:166
 msgid "Language Settings"
 msgstr "Språkinställningar"
 
@@ -3542,11 +3656,11 @@ msgstr "Större"
 
 #: src/screens/Hashtag.tsx:95
 #: src/screens/Topic.tsx:77
-#: src/view/screens/Search/Search.tsx:510
+#: src/view/screens/Search/Search.tsx:506
 msgid "Latest"
 msgstr "Senaste"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:254
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:252
 msgid "learn more"
 msgstr "läs mer"
 
@@ -3558,7 +3672,7 @@ msgstr "Läs mer"
 msgid "Learn more about Bluesky"
 msgstr "Läs mer om Bluesky"
 
-#: src/view/com/auth/server-input/index.tsx:156
+#: src/view/com/auth/server-input/index.tsx:178
 msgid "Learn more about self hosting your PDS."
 msgstr "Läs mer om att stå som värd för din egen PDS."
 
@@ -3578,11 +3692,11 @@ msgid "Learn more about what is public on Bluesky."
 msgstr "Läs mer om vad som är offentligt på Bluesky."
 
 #: src/components/moderation/ContentHider.tsx:239
-#: src/view/com/auth/server-input/index.tsx:158
+#: src/view/com/auth/server-input/index.tsx:180
 msgid "Learn more."
 msgstr "Läs mer."
 
-#: src/components/dms/LeaveConvoPrompt.tsx:49
+#: src/components/dms/LeaveConvoPrompt.tsx:44
 msgid "Leave"
 msgstr "Lämna"
 
@@ -3591,11 +3705,11 @@ msgstr "Lämna"
 msgid "Leave chat"
 msgstr "Lämna chatt"
 
-#: src/components/dms/ConvoMenu.tsx:138
 #: src/components/dms/ConvoMenu.tsx:141
-#: src/components/dms/ConvoMenu.tsx:208
+#: src/components/dms/ConvoMenu.tsx:144
 #: src/components/dms/ConvoMenu.tsx:211
-#: src/components/dms/LeaveConvoPrompt.tsx:45
+#: src/components/dms/ConvoMenu.tsx:214
+#: src/components/dms/LeaveConvoPrompt.tsx:40
 msgid "Leave conversation"
 msgstr "Lämna konversation"
 
@@ -3607,11 +3721,11 @@ msgstr "Lämna alla alternativ omarkerade för att se alla språk."
 msgid "Leaving Bluesky"
 msgstr "Du är på väg att lämna Bluesky"
 
-#: src/screens/SignupQueued.tsx:140
+#: src/screens/SignupQueued.tsx:155
 msgid "left to go."
 msgstr "kvar."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:313
+#: src/components/StarterPack/ProfileStarterPacks.tsx:312
 msgid "Let me choose"
 msgstr "Låt mig välja"
 
@@ -3620,7 +3734,7 @@ msgstr "Låt mig välja"
 msgid "Let's get your password reset!"
 msgstr "Låt oss få ditt lösenord återställt!"
 
-#: src/screens/Onboarding/StepFinished.tsx:296
+#: src/screens/Onboarding/StepFinished.tsx:303
 msgid "Let's go!"
 msgstr "Nu kör vi!"
 
@@ -3654,8 +3768,8 @@ msgid "Like this feed"
 msgstr "Gilla det här flödet"
 
 #: src/components/LikesDialog.tsx:85
-#: src/Navigation.tsx:236
-#: src/Navigation.tsx:241
+#: src/Navigation.tsx:237
+#: src/Navigation.tsx:242
 msgid "Liked by"
 msgstr "Gillat av"
 
@@ -3677,7 +3791,7 @@ msgstr "Gillat av {0, plural, one {# användare} other {# användare}}"
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr "Gillat av {likeCount, plural, one {# användare} other {# användare}}"
 
-#: src/view/screens/Profile.tsx:234
+#: src/view/screens/Profile.tsx:237
 msgid "Likes"
 msgstr "Gillamarkeringar"
 
@@ -3690,7 +3804,7 @@ msgstr "Gillamarkeringar på det här inlägget"
 msgid "Linear"
 msgstr "Linjärt"
 
-#: src/Navigation.tsx:198
+#: src/Navigation.tsx:199
 msgid "List"
 msgstr "Lista"
 
@@ -3743,12 +3857,12 @@ msgstr "Blockeringen av listan har hävts"
 msgid "List unmuted"
 msgstr "Listan ignoreras inte mer"
 
-#: src/Navigation.tsx:135
+#: src/Navigation.tsx:136
 #: src/view/screens/Lists.tsx:62
-#: src/view/screens/Profile.tsx:230
-#: src/view/screens/Profile.tsx:237
-#: src/view/shell/desktop/LeftNav.tsx:463
-#: src/view/shell/Drawer.tsx:491
+#: src/view/screens/Profile.tsx:232
+#: src/view/screens/Profile.tsx:240
+#: src/view/shell/desktop/LeftNav.tsx:658
+#: src/view/shell/Drawer.tsx:496
 msgid "Lists"
 msgstr "Listor"
 
@@ -3756,15 +3870,15 @@ msgstr "Listor"
 msgid "Lists blocking this user:"
 msgstr "Listor som blockerar den här användaren:"
 
-#: src/view/screens/Search/Explore.tsx:133
+#: src/view/screens/Search/Explore.tsx:134
 msgid "Load more"
 msgstr "Läs in fler"
 
-#: src/view/screens/Search/Explore.tsx:221
+#: src/view/screens/Search/Explore.tsx:223
 msgid "Load more suggested feeds"
 msgstr "Läs in fler föreslagna flöden"
 
-#: src/view/screens/Search/Explore.tsx:219
+#: src/view/screens/Search/Explore.tsx:221
 msgid "Load more suggested follows"
 msgstr "Läs in fler följförslag"
 
@@ -3772,9 +3886,9 @@ msgstr "Läs in fler följförslag"
 msgid "Load new notifications"
 msgstr "Läs in nya notiser"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:192
-#: src/screens/Profile/Sections/Feed.tsx:96
-#: src/view/com/feeds/FeedPage.tsx:143
+#: src/screens/Profile/ProfileFeed/index.tsx:221
+#: src/screens/Profile/Sections/Feed.tsx:98
+#: src/view/com/feeds/FeedPage.tsx:155
 #: src/view/screens/ProfileList.tsx:849
 msgid "Load new posts"
 msgstr "Läs in nya inlägg"
@@ -3783,7 +3897,7 @@ msgstr "Läs in nya inlägg"
 msgid "Loading..."
 msgstr "Laddar…"
 
-#: src/Navigation.tsx:261
+#: src/Navigation.tsx:262
 msgid "Log"
 msgstr "Logg"
 
@@ -3792,11 +3906,14 @@ msgstr "Logg"
 msgid "Log in or sign up"
 msgstr "Logga in eller registrera dig"
 
-#: src/screens/SignupQueued.tsx:168
-#: src/screens/SignupQueued.tsx:171
-#: src/screens/SignupQueued.tsx:196
-#: src/screens/SignupQueued.tsx:199
+#: src/screens/SignupQueued.tsx:93
+#: src/screens/SignupQueued.tsx:96
+#: src/screens/Takendown.tsx:85
 msgid "Log out"
+msgstr "Logga ut"
+
+#: src/screens/Takendown.tsx:88
+msgid "Log Out"
 msgstr "Logga ut"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:78
@@ -3812,15 +3929,15 @@ msgid "Logo by @sawaratsuki.bsky.social"
 msgstr "Logotyp av @sawaratsuki.bsky.social"
 
 #: src/view/shell/desktop/RightNav.tsx:118
-#: src/view/shell/Drawer.tsx:629
+#: src/view/shell/Drawer.tsx:634
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr "Logotyp av <0>@sawaratsuki.bsky.social</0>"
 
-#: src/components/RichText.tsx:219
+#: src/components/RichTextTag.tsx:53
 msgid "Long press to open tag menu for #{tag}"
 msgstr "Tryck och håll nere för att öppna taggmenyn för #{tag}"
 
-#: src/screens/Login/SetNewPasswordForm.tsx:110
+#: src/screens/Login/SetNewPasswordForm.tsx:116
 msgid "Looks like XXXXX-XXXXX"
 msgstr "Ser ut som XXXXX-XXXXX"
 
@@ -3836,16 +3953,16 @@ msgstr "Det ser ut som att du har plockat bort alla dina flöden. Men oroa dig i
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
 msgstr "Det ser ut som om du saknar ett följflöde. <0>Klicka här för att lägga till ett.</0>"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:266
+#: src/components/StarterPack/ProfileStarterPacks.tsx:265
 msgid "Make one for me"
-msgstr "Gör en åt mig"
+msgstr "Gör ett åt mig"
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
 msgstr "Se till att du är säker på att du navigeras dit du har tänkt!"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:58
-#: src/screens/Settings/ContentAndMediaSettings.tsx:61
+#: src/screens/Settings/ContentAndMediaSettings.tsx:59
+#: src/screens/Settings/ContentAndMediaSettings.tsx:62
 msgid "Manage saved feeds"
 msgstr "Hantera sparade flöden"
 
@@ -3853,12 +3970,12 @@ msgstr "Hantera sparade flöden"
 msgid "Manage your muted words and tags"
 msgstr "Hantera dina ignorerade ord och taggar"
 
-#: src/components/dms/ConvoMenu.tsx:151
-#: src/components/dms/ConvoMenu.tsx:158
+#: src/components/dms/ConvoMenu.tsx:154
+#: src/components/dms/ConvoMenu.tsx:161
 msgid "Mark as read"
 msgstr "Markera som läst"
 
-#: src/view/screens/Profile.tsx:233
+#: src/view/screens/Profile.tsx:235
 msgid "Media"
 msgstr "Media"
 
@@ -3878,8 +3995,8 @@ msgstr "Omnämnda användare"
 msgid "Mentions"
 msgstr "Omnämnanden"
 
-#: src/components/Menu/index.tsx:96
-#: src/view/screens/Search/Search.tsx:864
+#: src/components/Menu/index.tsx:103
+#: src/view/screens/Search/Search.tsx:856
 msgid "Menu"
 msgstr "Meny"
 
@@ -3888,7 +4005,7 @@ msgid "Message {0}"
 msgstr "Meddelande {0}"
 
 #: src/components/dms/MessageMenu.tsx:72
-#: src/screens/Messages/components/ChatListItem.tsx:165
+#: src/screens/Messages/components/ChatListItem.tsx:174
 msgid "Message deleted"
 msgstr "Meddelandet har tagits bort"
 
@@ -3905,9 +4022,9 @@ msgstr "Inmatningsfält för meddelande"
 msgid "Message is too long"
 msgstr "Meddelandet är för långt"
 
-#: src/Navigation.tsx:609
-#: src/screens/Messages/ChatList.tsx:262
-#: src/screens/Messages/ChatList.tsx:286
+#: src/Navigation.tsx:618
+#: src/screens/Messages/ChatList.tsx:270
+#: src/screens/Messages/ChatList.tsx:294
 msgid "Messages"
 msgstr "Meddelanden"
 
@@ -3919,7 +4036,7 @@ msgstr "Vilseledande konto"
 msgid "Misleading Post"
 msgstr "Vilseledande inlägg"
 
-#: src/Navigation.tsx:140
+#: src/Navigation.tsx:141
 #: src/screens/Moderation/index.tsx:88
 #: src/screens/Settings/Settings.tsx:167
 #: src/screens/Settings/Settings.tsx:170
@@ -3956,7 +4073,7 @@ msgstr "Modereringslista uppdaterad"
 msgid "Moderation lists"
 msgstr "Modereringslistor"
 
-#: src/Navigation.tsx:145
+#: src/Navigation.tsx:146
 #: src/view/screens/ModerationModlists.tsx:62
 msgid "Moderation Lists"
 msgstr "Modereringslistor"
@@ -3965,7 +4082,7 @@ msgstr "Modereringslistor"
 msgid "moderation settings"
 msgstr "modereringsinställningar"
 
-#: src/Navigation.tsx:251
+#: src/Navigation.tsx:252
 msgid "Moderation states"
 msgstr "Modereringslägen"
 
@@ -4010,19 +4127,22 @@ msgstr "Filmer"
 msgid "Music"
 msgstr "Musik"
 
-#: src/components/TagMenu/index.tsx:264
-msgid "Mute"
-msgstr "Stäng av ljud"
-
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:156
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:95
 msgctxt "video"
 msgid "Mute"
 msgstr "Stäng av ljud"
 
-#: src/components/TagMenu/index.web.tsx:116
-msgid "Mute {truncatedTag}"
-msgstr "Ignorera {truncatedTag}"
+#~ msgid "Mute"
+#~ msgstr "Stäng av ljud"
+
+#: src/components/RichTextTag.tsx:140
+#: src/components/RichTextTag.tsx:153
+msgid "Mute {tag}"
+msgstr "Ignorera {tag}"
+
+#~ msgid "Mute {truncatedTag}"
+#~ msgstr "Ignorera {truncatedTag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:259
 #: src/view/com/profile/ProfileMenu.tsx:266
@@ -4033,12 +4153,11 @@ msgstr "Ignorera konto"
 msgid "Mute accounts"
 msgstr "Ignorera konton"
 
-#: src/components/TagMenu/index.tsx:224
-msgid "Mute all {displayTag} posts"
-msgstr "Ignorera {displayTag}-inlögg"
+#~ msgid "Mute all {displayTag} posts"
+#~ msgstr "Ignorera {displayTag}-inlögg"
 
-#: src/components/dms/ConvoMenu.tsx:172
-#: src/components/dms/ConvoMenu.tsx:178
+#: src/components/dms/ConvoMenu.tsx:175
+#: src/components/dms/ConvoMenu.tsx:181
 msgid "Mute conversation"
 msgstr "Ignorera konversation"
 
@@ -4092,7 +4211,7 @@ msgstr "Ignorera ord och taggar"
 msgid "Muted accounts"
 msgstr "Ignorerade konton"
 
-#: src/Navigation.tsx:150
+#: src/Navigation.tsx:151
 #: src/view/screens/ModerationMutedAccounts.tsx:100
 msgid "Muted Accounts"
 msgstr "Ignorerade konton"
@@ -4122,9 +4241,8 @@ msgstr "Min födelsedag"
 msgid "My Feeds"
 msgstr "Mina flöden"
 
-#: src/view/shell/desktop/LeftNav.tsx:84
-msgid "My Profile"
-msgstr "Min profil"
+#~ msgid "My Profile"
+#~ msgstr "Min profil"
 
 #: src/view/com/modals/CreateOrEditList.tsx:270
 msgid "Name"
@@ -4151,7 +4269,7 @@ msgid "Navigate to {0}"
 msgstr "Navigera till {0}"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:166
-#: src/screens/Login/LoginForm.tsx:326
+#: src/screens/Login/LoginForm.tsx:334
 #: src/view/com/modals/ChangePassword.tsx:169
 msgid "Navigates to the next screen"
 msgstr "Navigerar till nästa ruta"
@@ -4164,15 +4282,15 @@ msgstr "Navigerar till din profil"
 msgid "Need to change it?"
 msgstr "Behöver du ändra på det?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:130
+#: src/components/ReportDialog/SelectReportOptionView.tsx:128
 msgid "Need to report a copyright violation?"
 msgstr "Behöver du rapportera en upphovsrättsöverträdelse?"
 
-#: src/screens/Onboarding/StepFinished.tsx:264
+#: src/screens/Onboarding/StepFinished.tsx:271
 msgid "Never lose access to your followers or data."
 msgstr "Förlora aldrig åtkomsten till dina följare eller din data."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:550
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:548
 msgid "Nevermind, create a handle for me"
 msgstr "Det var inget. Skapa ett användarnamn åt mig"
 
@@ -4183,14 +4301,14 @@ msgid "New"
 msgstr "Ny"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:65
-#: src/screens/Messages/ChatList.tsx:269
-#: src/screens/Messages/ChatList.tsx:276
+#: src/screens/Messages/ChatList.tsx:277
+#: src/screens/Messages/ChatList.tsx:284
 msgid "New chat"
 msgstr "Ny chatt"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:204
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:212
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:358
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:202
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:210
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:356
 msgid "New handle"
 msgstr "Nytt användarnamn"
 
@@ -4215,21 +4333,21 @@ msgstr "Nytt lösenord"
 msgid "New Password"
 msgstr "Nytt lösenord"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:209
+#: src/screens/Profile/ProfileFeed/index.tsx:238
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
-#: src/view/screens/Profile.tsx:495
+#: src/view/screens/Profile.tsx:518
 #: src/view/screens/ProfileList.tsx:250
 #: src/view/screens/ProfileList.tsx:283
 msgid "New post"
 msgstr "Nytt inlägg"
 
-#: src/view/com/feeds/FeedPage.tsx:154
+#: src/view/com/feeds/FeedPage.tsx:166
 msgctxt "action"
 msgid "New post"
 msgstr "Nytt inlägg"
 
-#: src/view/shell/desktop/LeftNav.tsx:309
+#: src/view/shell/desktop/LeftNav.tsx:504
 msgctxt "action"
 msgid "New Post"
 msgstr "Nytt inlägg"
@@ -4256,10 +4374,10 @@ msgstr "Nyheter"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:137
 #: src/screens/Login/ForgotPasswordForm.tsx:143
-#: src/screens/Login/LoginForm.tsx:325
-#: src/screens/Login/LoginForm.tsx:332
-#: src/screens/Login/SetNewPasswordForm.tsx:168
+#: src/screens/Login/LoginForm.tsx:333
+#: src/screens/Login/LoginForm.tsx:340
 #: src/screens/Login/SetNewPasswordForm.tsx:174
+#: src/screens/Login/SetNewPasswordForm.tsx:180
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
@@ -4280,8 +4398,8 @@ msgstr "Nästa bild"
 msgid "No app passwords yet"
 msgstr "Du har inga applösenord ännu"
 
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:378
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:380
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:382
 msgid "No DNS Panel"
 msgstr "Ingen DNS-panel"
 
@@ -4303,15 +4421,18 @@ msgstr "Inga gillamarkeringar ännu"
 msgid "No longer following {0}"
 msgstr "{0} följs inte längre"
 
-#: src/screens/Signup/StepHandle.tsx:169
-msgid "No longer than 253 characters"
-msgstr "Inte längre än 253 tecken"
+#: src/screens/Signup/StepHandle.tsx:173
+msgid "No longer than {0} characters"
+msgstr "Får inte vara längre än {0} tecken"
 
-#: src/screens/Messages/components/ChatListItem.tsx:116
+#~ msgid "No longer than 253 characters"
+#~ msgstr "Inte längre än 253 tecken"
+
+#: src/screens/Messages/components/ChatListItem.tsx:118
 msgid "No messages yet"
 msgstr "Inga meddelanden ännu"
 
-#: src/screens/Messages/ChatList.tsx:225
+#: src/screens/Messages/ChatList.tsx:233
 msgid "No more conversations to show"
 msgstr "Inga fler konversationer att visa"
 
@@ -4328,7 +4449,7 @@ msgstr "Ingen"
 msgid "No one but the author can quote this post."
 msgstr "Ingen annan än författaren kan citera detta inlägg."
 
-#: src/screens/Profile/Sections/Feed.tsx:65
+#: src/screens/Profile/Sections/Feed.tsx:66
 msgid "No posts yet."
 msgstr "Inga inlägg ännu."
 
@@ -4350,7 +4471,7 @@ msgstr "Inga resultat"
 msgid "No results"
 msgstr "Inga resultat"
 
-#: src/components/Lists.tsx:183
+#: src/components/Lists.tsx:189
 msgid "No results found"
 msgstr "Inget resultat hittades"
 
@@ -4359,9 +4480,9 @@ msgid "No results found for \"{query}\""
 msgstr "Inget resultat hittades för \"{query}\""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
-#: src/view/screens/Search/Search.tsx:229
-#: src/view/screens/Search/Search.tsx:268
-#: src/view/screens/Search/Search.tsx:314
+#: src/view/screens/Search/Search.tsx:227
+#: src/view/screens/Search/Search.tsx:265
+#: src/view/screens/Search/Search.tsx:310
 msgid "No results found for {query}"
 msgstr "Inget resultat hittades för {query}"
 
@@ -4400,7 +4521,7 @@ msgstr "Ingen hittades. Försök med att söka efter någon annan."
 msgid "Non-sexual Nudity"
 msgstr "Icke-sexuell nakenhet"
 
-#: src/Navigation.tsx:130
+#: src/Navigation.tsx:131
 #: src/view/screens/Profile.tsx:129
 msgid "Not Found"
 msgstr "Hittades inte"
@@ -4420,7 +4541,7 @@ msgstr "Anmärkning om delning"
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "Obs: Bluesky är ett öppet och offentligt nätverk. Den här inställningen begränsar endast ditt kontos synlighet på Blueskys app och webbplats. Andra appar kanske inte respekterar den här inställningen. Ditt innehåll kan fortfarande visas för utloggade användare genom andra appar och webbplatser."
 
-#: src/screens/Messages/ChatList.tsx:180
+#: src/screens/Messages/ChatList.tsx:188
 msgid "Nothing here"
 msgstr "Här var det tomt"
 
@@ -4428,7 +4549,7 @@ msgstr "Här var det tomt"
 msgid "Notification filters"
 msgstr "Notisfilter"
 
-#: src/Navigation.tsx:398
+#: src/Navigation.tsx:399
 #: src/view/screens/Notifications.tsx:134
 msgid "Notification settings"
 msgstr "Notisinställningar"
@@ -4445,11 +4566,11 @@ msgstr "Notisljud"
 msgid "Notification Sounds"
 msgstr "Notisljud"
 
-#: src/Navigation.tsx:604
+#: src/Navigation.tsx:613
 #: src/view/screens/Notifications.tsx:128
-#: src/view/shell/bottom-bar/BottomBar.tsx:231
-#: src/view/shell/desktop/LeftNav.tsx:426
-#: src/view/shell/Drawer.tsx:444
+#: src/view/shell/bottom-bar/BottomBar.tsx:230
+#: src/view/shell/desktop/LeftNav.tsx:621
+#: src/view/shell/Drawer.tsx:449
 msgid "Notifications"
 msgstr "Notiser"
 
@@ -4505,19 +4626,19 @@ msgstr "Äldsta svar först"
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "på<0><1/><2><3/></2></0>"
 
-#: src/screens/Settings/Settings.tsx:303
+#: src/screens/Settings/Settings.tsx:304
 msgid "Onboarding reset"
 msgstr "Återställning av kom-igång-guide"
 
-#: src/view/com/composer/Composer.tsx:331
+#: src/view/com/composer/Composer.tsx:338
 msgid "One or more GIFs is missing alt text."
 msgstr "En eller flera gif-bilder saknar alternativtext."
 
-#: src/view/com/composer/Composer.tsx:328
+#: src/view/com/composer/Composer.tsx:335
 msgid "One or more images is missing alt text."
 msgstr "En eller flera bilder saknar alternativtext."
 
-#: src/view/com/composer/Composer.tsx:338
+#: src/view/com/composer/Composer.tsx:345
 msgid "One or more videos is missing alt text."
 msgstr "Ett eller flera videoklipp saknar alternativtext."
 
@@ -4529,7 +4650,7 @@ msgstr "Endast .jpg- och .png-filer stöds"
 msgid "Only {0} can reply."
 msgstr "Endast {0} kan svara."
 
-#: src/screens/Signup/StepHandle.tsx:152
+#: src/screens/Signup/StepHandle.tsx:156
 msgid "Only contains letters, numbers, and hyphens"
 msgstr "Innehåller endast bokstäver, siffror och bindestreck"
 
@@ -4541,13 +4662,13 @@ msgstr "Endast bildfiler stöds"
 msgid "Only WebVTT (.vtt) files are supported"
 msgstr "Endast WebVTT-filer (.vtt) stöds"
 
-#: src/components/Lists.tsx:88
+#: src/components/Lists.tsx:94
 msgid "Oops, something went wrong!"
 msgstr "Hoppsan, något gick fel!"
 
-#: src/components/Lists.tsx:167
-#: src/components/StarterPack/ProfileStarterPacks.tsx:322
-#: src/components/StarterPack/ProfileStarterPacks.tsx:331
+#: src/components/Lists.tsx:173
+#: src/components/StarterPack/ProfileStarterPacks.tsx:321
+#: src/components/StarterPack/ProfileStarterPacks.tsx:330
 #: src/screens/Settings/AppPasswords.tsx:59
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:104
 #: src/screens/Settings/NotificationSettings.tsx:54
@@ -4555,7 +4676,7 @@ msgstr "Hoppsan, något gick fel!"
 msgid "Oops!"
 msgstr "Hoppsan!"
 
-#: src/screens/Onboarding/StepFinished.tsx:260
+#: src/screens/Onboarding/StepFinished.tsx:267
 msgid "Open"
 msgstr "Öppna"
 
@@ -4571,18 +4692,18 @@ msgstr "Öppna avatarskapare"
 msgid "Open change handle dialog"
 msgstr "Öppna dialogruta för ändring av användarnamn"
 
-#: src/screens/Messages/components/ChatListItem.tsx:272
-#: src/screens/Messages/components/ChatListItem.tsx:273
+#: src/screens/Messages/components/ChatListItem.tsx:282
+#: src/screens/Messages/components/ChatListItem.tsx:283
 msgid "Open conversation options"
 msgstr "Öppna konversationsalternativ"
 
-#: src/components/Layout/Header/index.tsx:145
+#: src/components/Layout/Header/index.tsx:149
 msgid "Open drawer menu"
 msgstr "Öppna sidpanel"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1228
-#: src/view/com/composer/Composer.tsx:1229
+#: src/view/com/composer/Composer.tsx:1235
+#: src/view/com/composer/Composer.tsx:1236
 msgid "Open emoji picker"
 msgstr "Öppna emoji-väljaren"
 
@@ -4607,7 +4728,7 @@ msgstr "Öppna länk till {niceUrl}"
 msgid "Open message options"
 msgstr "Öppna meddelandealternativ"
 
-#: src/screens/Settings/Settings.tsx:329
+#: src/screens/Settings/Settings.tsx:330
 msgid "Open moderation debug page"
 msgstr "Öppna felsökningssida för moderering"
 
@@ -4623,12 +4744,12 @@ msgstr "Öppna meny för inläggsalternativ"
 msgid "Open starter pack menu"
 msgstr "Öppna startpaketsmeny"
 
-#: src/screens/Settings/Settings.tsx:322
-#: src/screens/Settings/Settings.tsx:336
+#: src/screens/Settings/Settings.tsx:323
+#: src/screens/Settings/Settings.tsx:337
 msgid "Open storybook page"
 msgstr "Öppna Storybook-sida"
 
-#: src/screens/Settings/Settings.tsx:315
+#: src/screens/Settings/Settings.tsx:316
 msgid "Open system log"
 msgstr "Öppna systemlogg"
 
@@ -4678,7 +4799,7 @@ msgstr "Öppnar dialogruta för val av gif-bild"
 msgid "Opens list of invite codes"
 msgstr "Öppnar lista med inbjudningskoder"
 
-#: src/screens/Login/LoginForm.tsx:233
+#: src/screens/Login/LoginForm.tsx:241
 msgid "Opens password reset form"
 msgstr "Öppnar formulär för återställning av lösenord"
 
@@ -4687,7 +4808,7 @@ msgid "Opens the linked website"
 msgstr "Öppnar den länkade webbplatsen"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:679
-#: src/view/com/util/UserAvatar.tsx:436
+#: src/view/com/util/UserAvatar.tsx:437
 msgid "Opens this profile"
 msgstr "Öppnar den här profilen"
 
@@ -4699,8 +4820,8 @@ msgstr "Öppnar verktyg för val av videoklipp"
 msgid "Option {0} of {numItems}"
 msgstr "Alternativ {0} av {numItems}"
 
-#: src/components/dms/ReportDialog.tsx:178
-#: src/components/ReportDialog/SubmitView.tsx:167
+#: src/components/dms/ReportDialog.tsx:219
+#: src/components/ReportDialog/SubmitView.tsx:168
 msgid "Optionally provide additional information below:"
 msgstr "Lägg till valfri ytterligare information nedan:"
 
@@ -4733,11 +4854,15 @@ msgstr "Annat konto"
 msgid "Other..."
 msgstr "Annat…"
 
+#: src/components/dms/ReportDialog.tsx:339
+msgid "Our moderation team has recieved your report."
+msgstr "Vårt modereringsteam har tagit emot din anmälan."
+
 #: src/screens/Messages/components/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr "Våra moderatorer har granskat anmälningarna och beslutat att ta bort din åtkomst till chattar på Bluesky."
 
-#: src/components/Lists.tsx:184
+#: src/components/Lists.tsx:190
 #: src/view/screens/NotFound.tsx:47
 msgid "Page not found"
 msgstr "Sidan hittades inte"
@@ -4746,10 +4871,10 @@ msgstr "Sidan hittades inte"
 msgid "Page Not Found"
 msgstr "Sidan hittades inte"
 
-#: src/screens/Login/LoginForm.tsx:212
+#: src/screens/Login/LoginForm.tsx:220
 #: src/screens/Settings/AccountSettings.tsx:117
 #: src/screens/Settings/AccountSettings.tsx:121
-#: src/screens/Signup/StepInfo/index.tsx:192
+#: src/screens/Signup/StepInfo/index.tsx:186
 #: src/view/com/modals/DeleteAccount.tsx:239
 #: src/view/com/modals/DeleteAccount.tsx:246
 msgid "Password"
@@ -4778,15 +4903,15 @@ msgid "Pause video"
 msgstr "Pausa video"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/Search/Search.tsx:520
+#: src/view/screens/Search/Search.tsx:516
 msgid "People"
 msgstr "Personer"
 
-#: src/Navigation.tsx:185
+#: src/Navigation.tsx:186
 msgid "People followed by @{0}"
 msgstr "Personer som följs av @{0}"
 
-#: src/Navigation.tsx:178
+#: src/Navigation.tsx:179
 msgid "People following @{0}"
 msgstr "Personer som följer @{0}"
 
@@ -4815,10 +4940,19 @@ msgstr "Fotografi"
 msgid "Pictures meant for adults."
 msgstr "Bilder avsedda för vuxna."
 
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:173
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:178
+msgid "Pin"
+msgstr "Fäst"
+
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:519
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:526
 msgid "Pin feed"
 msgstr "Fäst flöde"
+
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:167
+msgid "Pin the trending videos feed to your home screen for easy access"
+msgstr "Fäst flödet med trendande videoklipp på din hemskärm för enkel åtkomst"
 
 #: src/view/screens/ProfileList.tsx:685
 msgid "Pin to home"
@@ -4864,7 +4998,7 @@ msgstr "Spela {0}"
 msgid "Play or pause the GIF"
 msgstr "Spela upp eller pausa gif-bilden"
 
-#: src/view/com/util/post-embeds/VideoEmbed.tsx:107
+#: src/view/com/util/post-embeds/VideoEmbed.tsx:134
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:321
 msgid "Play video"
 msgstr "Spela upp videoklipp"
@@ -4895,6 +5029,10 @@ msgstr "Slutför captcha-verifieringen."
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
 msgstr "Vänligen bekräfta din e-postadress innan du ändrar den. Detta är ett tillfälligt som kommer att tas bort efter att fler verktyg för uppdatering av e-post lagts till."
 
+#: src/screens/Login/SetNewPasswordForm.tsx:56
+msgid "Please enter a password."
+msgstr "Ange ett lösenord."
+
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:114
 msgid "Please enter a unique name for this app password or use our randomly generated one."
 msgstr "Ange ett unikt namn för applösenordet eller använd ett slumpmässigt genererat av oss."
@@ -4912,9 +5050,17 @@ msgstr "Ange din e-postadress."
 msgid "Please enter your invite code."
 msgstr "Ange din inbjudningskod."
 
+#: src/screens/Login/LoginForm.tsx:95
+msgid "Please enter your password"
+msgstr "Ange ditt lösenord"
+
 #: src/view/com/modals/DeleteAccount.tsx:235
 msgid "Please enter your password as well:"
 msgstr "Ange ditt lösenord också:"
+
+#: src/screens/Login/LoginForm.tsx:90
+msgid "Please enter your username"
+msgstr "Ange ditt användarnamn"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 msgid "Please explain why you think this label was incorrectly applied by {0}"
@@ -4938,11 +5084,15 @@ msgstr "Verifiera din e-post"
 msgid "Politics"
 msgstr "Politik"
 
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:116
+msgid "Popular videos in your network."
+msgstr "Populära videoklipp i ditt nätverk."
+
 #: src/view/com/composer/labels/LabelsBtn.tsx:157
 msgid "Porn"
 msgstr "Porr"
 
-#: src/view/com/composer/Composer.tsx:944
+#: src/view/com/composer/Composer.tsx:951
 msgctxt "action"
 msgid "Post"
 msgstr "Publicera"
@@ -4952,7 +5102,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "Inlägg"
 
-#: src/view/com/composer/Composer.tsx:942
+#: src/view/com/composer/Composer.tsx:949
 msgctxt "action"
 msgid "Post All"
 msgstr "Publicera alla"
@@ -4961,10 +5111,10 @@ msgstr "Publicera alla"
 msgid "Post by {0}"
 msgstr "Inlägg av {0}"
 
-#: src/Navigation.tsx:204
-#: src/Navigation.tsx:211
-#: src/Navigation.tsx:218
-#: src/Navigation.tsx:225
+#: src/Navigation.tsx:205
+#: src/Navigation.tsx:212
+#: src/Navigation.tsx:219
+#: src/Navigation.tsx:226
 msgid "Post by @{0}"
 msgstr "Inlägg av @{0}"
 
@@ -4975,6 +5125,10 @@ msgstr "Inlägg borttaget"
 #: src/lib/api/index.ts:185
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr "Inlägget kunde inte laddas upp. Kontrollera din internetanslutning och försök igen."
+
+#: src/screens/VideoFeed/index.tsx:511
+msgid "Post has been deleted"
+msgstr "Inlägget har tagits bort"
 
 #: src/view/com/post-thread/PostThread.tsx:266
 msgid "Post hidden"
@@ -5015,12 +5169,11 @@ msgstr "Inlägget har fästs"
 msgid "Post unpinned"
 msgstr "Inlägget har lossats"
 
-#: src/components/TagMenu/index.tsx:268
-msgid "posts"
-msgstr "inlägg"
+#~ msgid "posts"
+#~ msgstr "inlägg"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
-#: src/view/screens/Profile.tsx:231
+#: src/view/screens/Profile.tsx:233
 msgid "Posts"
 msgstr "Inlägg"
 
@@ -5044,12 +5197,13 @@ msgstr "Inställning sparad"
 msgid "Press to attempt reconnection"
 msgstr "Tryck för att försöka återansluta"
 
-#: src/components/forms/HostingProvider.tsx:46
+#: src/components/forms/HostingProvider.tsx:50
+#: src/components/forms/HostingProvider.tsx:66
 msgid "Press to change hosting provider"
 msgstr "Tryck för att byta världleverantör"
 
 #: src/components/Error.tsx:60
-#: src/components/Lists.tsx:93
+#: src/components/Lists.tsx:99
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Signup/BackNextButtons.tsx:47
 msgid "Press to retry"
@@ -5086,21 +5240,21 @@ msgstr "Integritet"
 msgid "Privacy and security"
 msgstr "Integritet och säkerhet"
 
-#: src/Navigation.tsx:347
+#: src/Navigation.tsx:348
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:36
 msgid "Privacy and Security"
 msgstr "Integritet och säkerhet"
 
-#: src/Navigation.tsx:271
+#: src/Navigation.tsx:272
 #: src/screens/Settings/AboutSettings.tsx:45
 #: src/screens/Settings/AboutSettings.tsx:48
 #: src/view/screens/PrivacyPolicy.tsx:31
-#: src/view/shell/Drawer.tsx:624
-#: src/view/shell/Drawer.tsx:625
+#: src/view/shell/Drawer.tsx:629
+#: src/view/shell/Drawer.tsx:630
 msgid "Privacy Policy"
 msgstr "Integritetspolicy"
 
-#: src/view/com/composer/Composer.tsx:1641
+#: src/view/com/composer/Composer.tsx:1649
 msgid "Processing video..."
 msgstr "Bearbetar videoklipp…"
 
@@ -5110,14 +5264,14 @@ msgid "Processing..."
 msgstr "Bearbetar…"
 
 #: src/view/screens/DebugMod.tsx:919
-#: src/view/screens/Profile.tsx:362
+#: src/view/screens/Profile.tsx:372
 msgid "profile"
 msgstr "profil"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:276
-#: src/view/shell/desktop/LeftNav.tsx:481
+#: src/view/shell/bottom-bar/BottomBar.tsx:275
+#: src/view/shell/desktop/LeftNav.tsx:676
 #: src/view/shell/Drawer.tsx:71
-#: src/view/shell/Drawer.tsx:516
+#: src/view/shell/Drawer.tsx:521
 msgid "Profile"
 msgstr "Profil"
 
@@ -5126,7 +5280,7 @@ msgstr "Profil"
 msgid "Profile updated"
 msgstr "Profilen har uppdaterats"
 
-#: src/screens/Onboarding/StepFinished.tsx:246
+#: src/screens/Onboarding/StepFinished.tsx:253
 msgid "Public"
 msgstr "Offentlig"
 
@@ -5191,7 +5345,7 @@ msgstr "Citeringar av detta inlägg"
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "Slumpmässigt (även kallat författarroulette)"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:583
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:581
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr "Anropsgränsen har överskridits. Du har försökt att ändra ditt användarnamn för många gånger under en kort period. Vänta någon minut innan du försöker igen."
 
@@ -5203,6 +5357,14 @@ msgstr "Sätt tillbaka citat"
 #: src/screens/Deactivated.tsx:140
 msgid "Reactivate your account"
 msgstr "Återaktivera ditt konto"
+
+#: src/screens/VideoFeed/index.tsx:932
+msgid "Read less"
+msgstr "Visa mindre"
+
+#: src/screens/VideoFeed/index.tsx:932
+msgid "Read more"
+msgstr "Visa mer"
 
 #: src/view/com/auth/SplashScreen.web.tsx:171
 msgid "Read the Bluesky blog"
@@ -5218,11 +5380,16 @@ msgstr "Läs Blueskys integritetspolicy"
 msgid "Read the Bluesky Terms of Service"
 msgstr "Läs Blueskys användarvillkor"
 
-#: src/components/dms/ReportDialog.tsx:169
+#: src/screens/Takendown.tsx:162
+#: src/screens/Takendown.tsx:170
+msgid "Reason for appeal"
+msgstr "Skäl för omprövningsbegäran"
+
+#: src/components/dms/ReportDialog.tsx:210
 msgid "Reason:"
 msgstr "Anledning:"
 
-#: src/view/screens/Search/Search.tsx:1042
+#: src/view/screens/Search/Search.tsx:1034
 msgid "Recent Searches"
 msgstr "Senaste sökningar"
 
@@ -5234,7 +5401,7 @@ msgstr "Rekommenderat"
 msgid "Reconnect"
 msgstr "Återanslut"
 
-#: src/screens/Messages/ChatList.tsx:163
+#: src/screens/Messages/ChatList.tsx:171
 msgid "Reload conversations"
 msgstr "Ladda om konversationer"
 
@@ -5242,7 +5409,7 @@ msgstr "Ladda om konversationer"
 #: src/components/FeedCard.tsx:315
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:101
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:108
-#: src/screens/Settings/Settings.tsx:466
+#: src/screens/Settings/Settings.tsx:468
 #: src/view/com/feeds/FeedSourceCard.tsx:322
 #: src/view/com/modals/ListAddRemoveUsers.tsx:269
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
@@ -5254,8 +5421,8 @@ msgstr "Ta bort"
 msgid "Remove {displayName} from starter pack"
 msgstr "Ta bort {displayName} från startpaketet"
 
-#: src/screens/Settings/Settings.tsx:445
-#: src/screens/Settings/Settings.tsx:448
+#: src/screens/Settings/Settings.tsx:447
+#: src/screens/Settings/Settings.tsx:450
 msgid "Remove account"
 msgstr "Ta bort konto"
 
@@ -5263,7 +5430,7 @@ msgstr "Ta bort konto"
 msgid "Remove attachment"
 msgstr "Ta bort bilaga"
 
-#: src/view/com/util/UserAvatar.tsx:403
+#: src/view/com/util/UserAvatar.tsx:404
 msgid "Remove Avatar"
 msgstr "Ta bort avatar"
 
@@ -5299,7 +5466,7 @@ msgstr "Ta bort från mina flöden"
 msgid "Remove from my feeds?"
 msgstr "Ta bort från mina flöden?"
 
-#: src/screens/Settings/Settings.tsx:458
+#: src/screens/Settings/Settings.tsx:460
 msgid "Remove from quick access?"
 msgstr "Ta bort från snabbåtkomst?"
 
@@ -5315,11 +5482,11 @@ msgstr "Ta bort bild"
 msgid "Remove mute word from your list"
 msgstr "Ta bort ignorerat ord från din lista"
 
-#: src/view/screens/Search/Search.tsx:1090
+#: src/view/screens/Search/Search.tsx:1082
 msgid "Remove profile"
 msgstr "Ta bort profil"
 
-#: src/view/screens/Search/Search.tsx:1092
+#: src/view/screens/Search/Search.tsx:1084
 msgid "Remove profile from search history"
 msgstr "Ta bort profil från sökhistoriken"
 
@@ -5377,7 +5544,7 @@ msgstr "Tar bort citerat inlägg"
 msgid "Replace with Discover"
 msgstr "Ersätt med Upptäck"
 
-#: src/view/screens/Profile.tsx:232
+#: src/view/screens/Profile.tsx:234
 msgid "Replies"
 msgstr "Svar"
 
@@ -5389,7 +5556,7 @@ msgstr "Svar inaktiverade"
 msgid "Replies to this post are disabled."
 msgstr "Svar är inaktiverat för det här inlägget."
 
-#: src/view/com/composer/Composer.tsx:940
+#: src/view/com/composer/Composer.tsx:947
 msgctxt "action"
 msgid "Reply"
 msgstr "Svara"
@@ -5461,8 +5628,8 @@ msgstr "Anmäl"
 msgid "Report Account"
 msgstr "Anmäl konto"
 
-#: src/components/dms/ConvoMenu.tsx:197
 #: src/components/dms/ConvoMenu.tsx:200
+#: src/components/dms/ConvoMenu.tsx:203
 #: src/components/dms/ReportConversationPrompt.tsx:17
 msgid "Report conversation"
 msgstr "Anmäl konversation"
@@ -5494,33 +5661,37 @@ msgstr "Anmäl inlägg"
 msgid "Report starter pack"
 msgstr "Anmäl startpaket"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:43
+#: src/components/dms/ReportDialog.tsx:336
+msgid "Report submitted"
+msgstr "Anmälan skickad"
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:41
 msgid "Report this content"
 msgstr "Anmäl det här innehållet"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:56
+#: src/components/ReportDialog/SelectReportOptionView.tsx:54
 msgid "Report this feed"
 msgstr "Anmäl det här flödet"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:53
+#: src/components/ReportDialog/SelectReportOptionView.tsx:51
 msgid "Report this list"
 msgstr "Anmäl den här listan"
 
-#: src/components/dms/ReportDialog.tsx:44
-#: src/components/dms/ReportDialog.tsx:137
-#: src/components/ReportDialog/SelectReportOptionView.tsx:62
+#: src/components/dms/ReportDialog.tsx:58
+#: src/components/dms/ReportDialog.tsx:178
+#: src/components/ReportDialog/SelectReportOptionView.tsx:60
 msgid "Report this message"
 msgstr "Anmäl det här meddelandet"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:50
+#: src/components/ReportDialog/SelectReportOptionView.tsx:48
 msgid "Report this post"
 msgstr "Anmäl det här inlägget"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:59
+#: src/components/ReportDialog/SelectReportOptionView.tsx:57
 msgid "Report this starter pack"
 msgstr "Anmäl det här startpaketet"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:47
+#: src/components/ReportDialog/SelectReportOptionView.tsx:45
 msgid "Report this user"
 msgstr "Anmäl den här användaren"
 
@@ -5586,7 +5757,7 @@ msgstr "Kräv alternativtext innan publicering"
 msgid "Require an email code to log in to your account."
 msgstr "Kräv en en kod som skickas via e-post för att logga in på dit konto."
 
-#: src/screens/Signup/StepInfo/index.tsx:159
+#: src/screens/Signup/StepInfo/index.tsx:153
 msgid "Required for this provider"
 msgstr "Obligatoriskt för den här leverantören"
 
@@ -5617,8 +5788,8 @@ msgstr "Återställningskod"
 msgid "Reset Code"
 msgstr "Återställningskod"
 
-#: src/screens/Settings/Settings.tsx:343
-#: src/screens/Settings/Settings.tsx:345
+#: src/screens/Settings/Settings.tsx:344
+#: src/screens/Settings/Settings.tsx:346
 msgid "Reset onboarding state"
 msgstr "Återställ status för kom-igång-guide"
 
@@ -5626,7 +5797,7 @@ msgstr "Återställ status för kom-igång-guide"
 msgid "Reset password"
 msgstr "Återställ lösenord"
 
-#: src/screens/Login/LoginForm.tsx:306
+#: src/screens/Login/LoginForm.tsx:314
 msgid "Retries login"
 msgstr "Försöker logga in på nytt"
 
@@ -5637,11 +5808,11 @@ msgstr "Försöker igen med den senaste misslyckade åtgärden"
 
 #: src/components/dms/MessageItem.tsx:245
 #: src/components/Error.tsx:65
-#: src/components/Lists.tsx:104
-#: src/components/StarterPack/ProfileStarterPacks.tsx:336
-#: src/screens/Login/LoginForm.tsx:305
-#: src/screens/Login/LoginForm.tsx:312
-#: src/screens/Messages/ChatList.tsx:169
+#: src/components/Lists.tsx:110
+#: src/components/StarterPack/ProfileStarterPacks.tsx:335
+#: src/screens/Login/LoginForm.tsx:313
+#: src/screens/Login/LoginForm.tsx:320
+#: src/screens/Messages/ChatList.tsx:177
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Onboarding/StepInterests/index.tsx:217
 #: src/screens/Onboarding/StepInterests/index.tsx:220
@@ -5664,7 +5835,8 @@ msgstr "Gå tillbaka till föregående sida"
 msgid "Returns to home page"
 msgstr "Går tillbaka till startsidan"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:83
+#: src/screens/Profile/ProfileFeed/index.tsx:90
+#: src/screens/VideoFeed/index.tsx:1099
 #: src/view/screens/NotFound.tsx:60
 msgid "Returns to previous page"
 msgstr "Går tillbaka till föregående sida"
@@ -5675,7 +5847,7 @@ msgstr "Går tillbaka till föregående sida"
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:245
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:243
 #: src/view/com/composer/GifAltText.tsx:190
 #: src/view/com/composer/GifAltText.tsx:199
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:77
@@ -5716,7 +5888,7 @@ msgstr "Spara bild"
 msgid "Save image crop"
 msgstr "Spara bildbeskärning"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:231
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:229
 msgid "Save new handle"
 msgstr "Spara nytt användarnamn"
 
@@ -5769,12 +5941,12 @@ msgstr "Gå till toppen"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:487
 #: src/components/forms/SearchInput.tsx:34
 #: src/components/forms/SearchInput.tsx:36
-#: src/Navigation.tsx:599
+#: src/Navigation.tsx:608
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
-#: src/view/screens/Search/Search.tsx:578
-#: src/view/shell/bottom-bar/BottomBar.tsx:183
-#: src/view/shell/desktop/LeftNav.tsx:407
-#: src/view/shell/Drawer.tsx:365
+#: src/view/screens/Search/Search.tsx:570
+#: src/view/shell/bottom-bar/BottomBar.tsx:182
+#: src/view/shell/desktop/LeftNav.tsx:602
+#: src/view/shell/Drawer.tsx:370
 msgid "Search"
 msgstr "Sök"
 
@@ -5794,7 +5966,7 @@ msgstr "Sök efter \"{interestsDisplayName}\"{activeText}"
 msgid "Search for \"{query}\""
 msgstr "Sök efter ”{query}”"
 
-#: src/view/screens/Search/Search.tsx:988
+#: src/view/screens/Search/Search.tsx:980
 msgid "Search for \"{searchText}\""
 msgstr "Sök efter ”{searchText}”"
 
@@ -5825,21 +5997,33 @@ msgstr "Sök i Tenor"
 msgid "Security Step Required"
 msgstr "Säkerhetssteg krävs"
 
-#: src/components/TagMenu/index.web.tsx:77
-msgid "See {truncatedTag} posts"
-msgstr "Se {truncatedTag}-inlägg"
+#: src/components/RichTextTag.tsx:111
+msgid "See {tag} posts"
+msgstr "Se {tag}-inlägg"
 
-#: src/components/TagMenu/index.web.tsx:94
-msgid "See {truncatedTag} posts by user"
-msgstr "Se {truncatedTag}-inlägg av användaren"
+#: src/components/RichTextTag.tsx:124
+msgid "See {tag} posts by user"
+msgstr "Se {tag}-inlägg av användare"
 
-#: src/components/TagMenu/index.tsx:155
-msgid "See <0>{displayTag}</0> posts"
-msgstr "Se <0>{displayTag}</0>-inlägg"
+#~ msgid "See {truncatedTag} posts"
+#~ msgstr "Se {truncatedTag}-inlägg"
 
-#: src/components/TagMenu/index.tsx:203
-msgid "See <0>{displayTag}</0> posts by this user"
-msgstr "Se <0>{displayTag}</0>-inlägg av den här användaren"
+#~ msgid "See {truncatedTag} posts by user"
+#~ msgstr "Se {truncatedTag}-inlägg av användaren"
+
+#: src/components/RichTextTag.tsx:118
+msgid "See #{tag} posts"
+msgstr "Se #{tag}-inlägg"
+
+#: src/components/RichTextTag.tsx:132
+msgid "See #{tag} posts by user"
+msgstr "Se #{tag}-inlägg av användare"
+
+#~ msgid "See <0>{displayTag}</0> posts"
+#~ msgstr "Se <0>{displayTag}</0>-inlägg"
+
+#~ msgid "See <0>{displayTag}</0> posts by this user"
+#~ msgstr "Se <0>{displayTag}</0>-inlägg av den här användaren"
 
 #: src/view/com/auth/SplashScreen.web.tsx:176
 msgid "See jobs at Bluesky"
@@ -5909,13 +6093,12 @@ msgstr "Välj undertextfil (.vtt)"
 msgid "Select the {emojiName} emoji as your avatar"
 msgstr "Välj emojin {emojiName} som din avatar"
 
-#: src/components/ReportDialog/SubmitView.tsx:140
+#: src/components/ReportDialog/SubmitView.tsx:141
 msgid "Select the moderation service(s) to report to"
 msgstr "Välj den eller de modereringstjänster som du vill skicka din anmälan till"
 
-#: src/view/com/auth/server-input/index.tsx:79
-msgid "Select the service that hosts your data."
-msgstr "Välj den tjänst som är värd för din data."
+#~ msgid "Select the service that hosts your data."
+#~ msgstr "Välj den tjänst som är värd för din data."
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:100
 msgid "Select video"
@@ -5933,7 +6116,7 @@ msgstr "Välj vilka språk som du vill att de flöden du prenumererar på ska in
 msgid "Select your app language for the default text to display in the app."
 msgstr "Välj det språk som du vill ska användas för appens användargränssnitt."
 
-#: src/screens/Signup/StepInfo/index.tsx:223
+#: src/screens/Signup/StepInfo/index.tsx:217
 msgid "Select your date of birth"
 msgstr "Välj ditt födelsedatum"
 
@@ -5971,7 +6154,7 @@ msgctxt "action"
 msgid "Send Email"
 msgstr "Skicka e-postmeddelande"
 
-#: src/view/shell/Drawer.tsx:312
+#: src/view/shell/Drawer.tsx:317
 msgid "Send feedback"
 msgstr "Skicka feedback"
 
@@ -5984,10 +6167,10 @@ msgstr "Skicka meddelande"
 msgid "Send post to..."
 msgstr "Skicka inlägg till…"
 
-#: src/components/dms/ReportDialog.tsx:229
-#: src/components/dms/ReportDialog.tsx:232
-#: src/components/ReportDialog/SubmitView.tsx:220
-#: src/components/ReportDialog/SubmitView.tsx:224
+#: src/components/dms/ReportDialog.tsx:269
+#: src/components/dms/ReportDialog.tsx:272
+#: src/components/ReportDialog/SubmitView.tsx:221
+#: src/components/ReportDialog/SubmitView.tsx:225
 msgid "Send report"
 msgstr "Skicka anmälan"
 
@@ -6009,7 +6192,7 @@ msgstr "Skicka via direktmeddelande"
 msgid "Sends email with confirmation code for account deletion"
 msgstr "Skickar e-postmeddelande med bekräftelsekod för kontoborttagning"
 
-#: src/view/com/auth/server-input/index.tsx:111
+#: src/view/com/auth/server-input/index.tsx:127
 msgid "Server address"
 msgstr "Serveradress"
 
@@ -6021,7 +6204,7 @@ msgstr "Ställ in appikon till {0}"
 msgid "Set birthdate"
 msgstr "Ange födelsedatum"
 
-#: src/screens/Login/SetNewPasswordForm.tsx:96
+#: src/screens/Login/SetNewPasswordForm.tsx:102
 msgid "Set new password"
 msgstr "Ange nytt lösenord"
 
@@ -6033,10 +6216,10 @@ msgstr "Konfigurera ditt konto"
 msgid "Sets email for password reset"
 msgstr "Ställer in e-postadress för återställning av lösenord"
 
-#: src/Navigation.tsx:160
+#: src/Navigation.tsx:161
 #: src/screens/Settings/Settings.tsx:80
-#: src/view/shell/desktop/LeftNav.tsx:499
-#: src/view/shell/Drawer.tsx:529
+#: src/view/shell/desktop/LeftNav.tsx:694
+#: src/view/shell/Drawer.tsx:534
 msgid "Settings"
 msgstr "Inställningar"
 
@@ -6117,7 +6300,7 @@ msgstr "Dela det här startpaketet och hjälp andra att gå med i din gemenskap 
 msgid "Share your favorite feed!"
 msgstr "Dela ditt favoritflöde!"
 
-#: src/Navigation.tsx:256
+#: src/Navigation.tsx:257
 msgid "Shared Preferences Tester"
 msgstr "Testare för delade inställningar"
 
@@ -6138,6 +6321,8 @@ msgstr "Visa alternativtext"
 #: src/components/moderation/ScreenHider.tsx:172
 #: src/components/moderation/ScreenHider.tsx:175
 #: src/screens/List/ListHiddenScreen.tsx:187
+#: src/screens/VideoFeed/index.tsx:609
+#: src/screens/VideoFeed/index.tsx:615
 msgid "Show anyway"
 msgstr "Visa ändå"
 
@@ -6240,17 +6425,15 @@ msgstr "Visa varning och filtrera från flöden"
 #: src/components/dialogs/Signin.tsx:99
 #: src/screens/Login/index.tsx:97
 #: src/screens/Login/index.tsx:116
-#: src/screens/Login/LoginForm.tsx:165
+#: src/screens/Login/LoginForm.tsx:173
 #: src/view/com/auth/SplashScreen.tsx:61
 #: src/view/com/auth/SplashScreen.tsx:69
 #: src/view/com/auth/SplashScreen.web.tsx:123
 #: src/view/com/auth/SplashScreen.web.tsx:131
-#: src/view/shell/bottom-bar/BottomBar.tsx:316
-#: src/view/shell/bottom-bar/BottomBar.tsx:317
+#: src/view/shell/bottom-bar/BottomBar.tsx:314
 #: src/view/shell/bottom-bar/BottomBar.tsx:319
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:212
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:213
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:215
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:217
 #: src/view/shell/NavSignupCard.tsx:57
 #: src/view/shell/NavSignupCard.tsx:62
 msgid "Sign in"
@@ -6275,23 +6458,19 @@ msgstr "Logga in på Bluesky eller skapa ett nytt konto"
 #: src/screens/Settings/Settings.tsx:225
 #: src/screens/Settings/Settings.tsx:227
 #: src/screens/Settings/Settings.tsx:259
+#: src/view/shell/desktop/LeftNav.tsx:208
+#: src/view/shell/desktop/LeftNav.tsx:288
+#: src/view/shell/desktop/LeftNav.tsx:291
 msgid "Sign out"
 msgstr "Logga ut"
 
 #: src/screens/Settings/Settings.tsx:256
+#: src/view/shell/desktop/LeftNav.tsx:205
 msgid "Sign out?"
 msgstr "Logga ut?"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:306
-#: src/view/shell/bottom-bar/BottomBar.tsx:307
-#: src/view/shell/bottom-bar/BottomBar.tsx:309
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:202
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:203
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:205
-#: src/view/shell/NavSignupCard.tsx:47
-#: src/view/shell/NavSignupCard.tsx:52
-msgid "Sign up"
-msgstr "Registrera dig"
+#~ msgid "Sign up"
+#~ msgstr "Registrera dig"
 
 #: src/components/moderation/ScreenHider.tsx:91
 #: src/lib/moderation/useGlobalLabelStrings.ts:28
@@ -6330,7 +6509,7 @@ msgstr "Mindre"
 msgid "Software Dev"
 msgstr "Mjukvaruutveckling"
 
-#: src/components/FeedInterstitials.tsx:445
+#: src/components/FeedInterstitials.tsx:449
 msgid "Some other feeds you might like"
 msgstr "Några andra flöden som du kanske gillar"
 
@@ -6353,7 +6532,7 @@ msgstr "Något gick fel. Försök igen"
 msgid "Something went wrong, please try again."
 msgstr "Något gick fel. Försök igen."
 
-#: src/components/Lists.tsx:168
+#: src/components/Lists.tsx:174
 #: src/screens/Settings/NotificationSettings.tsx:55
 msgid "Something went wrong!"
 msgstr "Något gick fel!"
@@ -6362,7 +6541,7 @@ msgstr "Något gick fel!"
 msgid "Something wrong? Let us know."
 msgstr "Är något på tok? Hör av dig till oss."
 
-#: src/App.native.tsx:122
+#: src/App.native.tsx:121
 #: src/App.web.tsx:97
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "Beklagar! Din session har löpt ut. Vänligen logga in igen."
@@ -6415,8 +6594,8 @@ msgstr "Börja med att lägga till personer!"
 msgid "Start chat with {displayName}"
 msgstr "Starta chatt med {displayName}"
 
-#: src/Navigation.tsx:408
-#: src/Navigation.tsx:413
+#: src/Navigation.tsx:409
+#: src/Navigation.tsx:414
 #: src/screens/StarterPack/Wizard/index.tsx:186
 msgid "Starter Pack"
 msgstr "Startpaket"
@@ -6438,11 +6617,11 @@ msgstr "Startpaket av dig"
 msgid "Starter pack is invalid"
 msgstr "Startpaketet är ogiltigt"
 
-#: src/view/screens/Profile.tsx:236
+#: src/view/screens/Profile.tsx:239
 msgid "Starter Packs"
 msgstr "Startpaket"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:244
+#: src/components/StarterPack/ProfileStarterPacks.tsx:243
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "Med startpaket kan du enkelt dela dina favoritflöden och personer med dina vänner."
 
@@ -6455,12 +6634,12 @@ msgstr "Driftinformation"
 msgid "Step {0} of {1}"
 msgstr "Steg {0} av {1}"
 
-#: src/screens/Settings/Settings.tsx:308
+#: src/screens/Settings/Settings.tsx:309
 msgid "Storage cleared, you need to restart the app now."
 msgstr "Datan har rensats. Starta om appen nu."
 
-#: src/Navigation.tsx:246
-#: src/screens/Settings/Settings.tsx:324
+#: src/Navigation.tsx:247
+#: src/screens/Settings/Settings.tsx:325
 msgid "Storybook"
 msgstr "Storybook"
 
@@ -6470,6 +6649,14 @@ msgstr "Storybook"
 #: src/screens/Messages/components/ChatDisabled.tsx:143
 msgid "Submit"
 msgstr "Skicka"
+
+#: src/screens/Takendown.tsx:70
+msgid "Submit appeal"
+msgstr "Skicka omprövningsbegäran"
+
+#: src/screens/Takendown.tsx:76
+msgid "Submit Appeal"
+msgstr "Skicka omprövningsbegäran"
 
 #: src/view/screens/ProfileList.tsx:712
 msgid "Subscribe"
@@ -6495,7 +6682,7 @@ msgstr "Prenumerera på den här listan"
 msgid "Success!"
 msgstr "Klart!"
 
-#: src/view/screens/Search/Explore.tsx:353
+#: src/view/screens/Search/Explore.tsx:366
 msgid "Suggested accounts"
 msgstr "Föreslagna konton"
 
@@ -6508,7 +6695,7 @@ msgstr "Föreslaget åt dig"
 msgid "Suggestive"
 msgstr "Suggestivt"
 
-#: src/Navigation.tsx:266
+#: src/Navigation.tsx:267
 #: src/view/screens/Support.tsx:31
 #: src/view/screens/Support.tsx:34
 msgid "Support"
@@ -6516,7 +6703,8 @@ msgstr "Support"
 
 #: src/screens/Settings/Settings.tsx:102
 #: src/screens/Settings/Settings.tsx:116
-#: src/screens/Settings/Settings.tsx:411
+#: src/screens/Settings/Settings.tsx:412
+#: src/view/shell/desktop/LeftNav.tsx:243
 msgid "Switch account"
 msgstr "Växla konto"
 
@@ -6525,6 +6713,14 @@ msgstr "Växla konto"
 msgid "Switch Account"
 msgstr "Växla konto"
 
+#: src/view/shell/desktop/LeftNav.tsx:107
+msgid "Switch accounts"
+msgstr "Växla mellan konton"
+
+#: src/view/shell/desktop/LeftNav.tsx:251
+msgid "Switch to {0}"
+msgstr "Växla till {0}"
+
 #: src/screens/Settings/AppearanceSettings.tsx:97
 #: src/screens/Settings/AppearanceSettings.tsx:147
 msgid "System"
@@ -6532,13 +6728,12 @@ msgstr "System"
 
 #: src/screens/Settings/AboutSettings.tsx:60
 #: src/screens/Settings/AboutSettings.tsx:63
-#: src/screens/Settings/Settings.tsx:317
+#: src/screens/Settings/Settings.tsx:318
 msgid "System log"
 msgstr "Systemlogg"
 
-#: src/components/TagMenu/index.tsx:110
-msgid "Tag menu: {displayTag}"
-msgstr "Taggmeny: {displayTag}"
+#~ msgid "Tag menu: {displayTag}"
+#~ msgstr "Taggmeny: {displayTag}"
 
 #: src/components/dialogs/MutedWords.tsx:282
 msgid "Tags only"
@@ -6561,6 +6756,10 @@ msgstr "Tryck för att avfärda"
 msgid "Tap to enter full screen"
 msgstr "Tryck för att gå till helskärmsläge"
 
+#: src/screens/VideoFeed/index.tsx:931
+msgid "Tap to expand or collapse post text."
+msgstr "Tryck för att fälla ut eller ihop inläggstext."
+
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 msgid "Tap to play or pause"
 msgstr "Tryck för att spela eller pausa"
@@ -6573,6 +6772,10 @@ msgstr "Tryck för att växla mellan ljud av/på"
 #: src/view/com/util/images/AutoSizedImage.tsx:221
 msgid "Tap to view full image"
 msgstr "Tryck för att visa hela bilden"
+
+#: src/components/VideoPostCard.tsx:115
+msgid "Tap to view video in immersive mode."
+msgstr "Tryck för att visa videoklipp i uppslukande läge."
 
 #: src/state/shell/progress-guide.tsx:233
 msgid "Task complete - 10 follows!"
@@ -6608,12 +6811,12 @@ msgstr "Berätta lite mer"
 msgid "Terms"
 msgstr "Villkor"
 
-#: src/Navigation.tsx:276
+#: src/Navigation.tsx:277
 #: src/screens/Settings/AboutSettings.tsx:37
 #: src/screens/Settings/AboutSettings.tsx:40
 #: src/view/screens/TermsOfService.tsx:31
-#: src/view/shell/Drawer.tsx:617
-#: src/view/shell/Drawer.tsx:619
+#: src/view/shell/Drawer.tsx:622
+#: src/view/shell/Drawer.tsx:624
 msgid "Terms of Service"
 msgstr "Användarvillkor"
 
@@ -6628,6 +6831,10 @@ msgstr "Termer som används bryter mot gemenskapens riktlinjer"
 msgid "Text & tags"
 msgstr "Textinnehåll och taggar"
 
+#: src/components/dms/ReportDialog.tsx:227
+msgid "Text field"
+msgstr "Textfält"
+
 #: src/components/moderation/LabelsOnMeDialog.tsx:263
 #: src/screens/Messages/components/ChatDisabled.tsx:108
 msgid "Text input field"
@@ -6637,8 +6844,7 @@ msgstr "Textinmatningsfält"
 msgid "Thank you! Your email has been successfully verified."
 msgstr "Tack! Din e-post har verifierats utan problem."
 
-#: src/components/dms/ReportDialog.tsx:129
-#: src/components/ReportDialog/SubmitView.tsx:82
+#: src/components/ReportDialog/SubmitView.tsx:83
 msgid "Thank you. Your report has been sent."
 msgstr "Tack. Din anmälan har skickats."
 
@@ -6646,11 +6852,11 @@ msgstr "Tack. Din anmälan har skickats."
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr "Tack. Din e-postadress har verifierats utan problem. Du kan stänga den här dialogrutan."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:470
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:468
 msgid "That contains the following:"
 msgstr "Som innehåller följande:"
 
-#: src/screens/Signup/StepHandle.tsx:51
+#: src/screens/Signup/StepHandle.tsx:55
 msgid "That handle is already taken."
 msgstr "Det användarnamnet används redan av en annan."
 
@@ -6665,6 +6871,10 @@ msgstr "Det startpaketet kunde inte hittas."
 
 #: src/view/com/post-thread/PostQuotes.tsx:132
 msgid "That's all, folks!"
+msgstr "Det var allt!"
+
+#: src/screens/VideoFeed/index.tsx:1071
+msgid "That's everything!"
 msgstr "Det var allt!"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
@@ -6788,7 +6998,7 @@ msgstr "Ett problem uppstod med anslutningen till din server"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Ett problem uppstod med att hämta notiser. Tryck här för att försöka igen."
 
-#: src/view/com/posts/PostFeed.tsx:486
+#: src/view/com/posts/PostFeed.tsx:592
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "Ett problem uppstod med att hämta inlägg. Tryck här för att försöka igen."
 
@@ -6813,8 +7023,8 @@ msgstr "Ett problem uppstod med att hämta din serviceinformation"
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
 msgstr "Ett problem uppstod med att ta bort det här flödet. Kontrollera din internetanslutning och försök igen."
 
-#: src/components/dms/ReportDialog.tsx:217
-#: src/components/ReportDialog/SubmitView.tsx:87
+#: src/components/dms/ReportDialog.tsx:257
+#: src/components/ReportDialog/SubmitView.tsx:88
 msgid "There was an issue sending your report. Please check your internet connection."
 msgstr "Ett problem uppstod med att skicka din anmälan. Kontrollera din internetanslutning och försök igen."
 
@@ -6855,7 +7065,7 @@ msgstr "Ett problem uppstod! Kontrollera din internetanslutning och försök ige
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr "Ett oväntat problem uppstod i applikationen. Låt oss veta om det drabbade dig!"
 
-#: src/screens/SignupQueued.tsx:115
+#: src/screens/SignupQueued.tsx:130
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "Det har varit en rusning av nya användare till Bluesky! Vi kommer att aktivera ditt konto så snart vi kan."
 
@@ -6908,7 +7118,7 @@ msgstr "Det här innehållet är inte tillgängligt eftersom en av de involverad
 msgid "This content is not viewable without a Bluesky account."
 msgstr "Det här innehållet kan inte visas utan ett Bluesky-konto."
 
-#: src/screens/Messages/components/ChatListItem.tsx:266
+#: src/screens/Messages/components/ChatListItem.tsx:276
 msgid "This conversation is with a deleted or a deactivated account. Press for options."
 msgstr "Den här konversationen gäller ett borttaget eller avaktiverat konto. Tryck för att se alternativ."
 
@@ -6929,7 +7139,7 @@ msgid "This feed is empty! You may need to follow more users or tune your langua
 msgstr "Det här flödet är tomt! Du kanske borde följa fler användare eller justera dina språkinställningar."
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
-#: src/screens/Profile/ProfileFeed/index.tsx:170
+#: src/screens/Profile/ProfileFeed/index.tsx:189
 #: src/view/screens/ProfileList.tsx:814
 msgid "This feed is empty."
 msgstr "Det här flödet är tomt."
@@ -6938,7 +7148,7 @@ msgstr "Det här flödet är tomt."
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
 msgstr "Det här flödet är inte längre online. Vi visar Upptäck-flödet istället."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:576
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:574
 msgid "This handle is reserved. Please try a different one."
 msgstr "Det här användarnamnet är reserverat. Försök med ett annat."
 
@@ -6984,7 +7194,7 @@ msgstr "Den här modereringstjänsten är inte tillgänglig. Se nedan för mer i
 
 #: src/view/com/post-thread/PostThreadItem.tsx:845
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
-msgstr "Det här inlägget påstås ha skapats den <0>{0}</0>, men sågs inte på Bluesky förrän den <1>{1}</1>."
+msgstr "Det här inlägget har <0>{0}</0> som angivet skapelsedatum, men registrerades på Bluesky först den <1>{1}</1>."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:152
 msgid "This post has been deleted."
@@ -6999,7 +7209,7 @@ msgstr "Det här inlägget är syns bara för inloggade användare. Det kommer i
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Det här inlägget kommer att hållas dolt från flöden och trådar. Det här kan inte ångras."
 
-#: src/view/com/composer/Composer.tsx:413
+#: src/view/com/composer/Composer.tsx:420
 msgid "This post's author has disabled quote posts."
 msgstr "Författaren till det här inlägget har inaktiverat citeringar."
 
@@ -7015,7 +7225,7 @@ msgstr "Det här svaret kommer att sorteras in i en dold sektion längst ner i t
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Den här tjänsten har inte tillhandahållit några användarvillkor eller någon integritetspolicy."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:439
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:437
 msgid "This should create a domain record at:"
 msgstr "Det här ska skapa en domänpost på:"
 
@@ -7056,7 +7266,7 @@ msgstr "Den här användaren följer inte någon."
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr "Detta tar bort “{0}“ från dina tysta ord. Du kan alltid lägga till det igen senare."
 
-#: src/screens/Settings/Settings.tsx:460
+#: src/screens/Settings/Settings.tsx:462
 msgid "This will remove @{0} from the quick access list."
 msgstr "Det här tar bort @{0} från snabbåtkomstlistan."
 
@@ -7069,8 +7279,8 @@ msgstr "Det här tar bort ditt inlägg från citatinlägget för alla användare
 msgid "Thread options"
 msgstr "Trådalternativ"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:66
-#: src/screens/Settings/ContentAndMediaSettings.tsx:69
+#: src/screens/Settings/ContentAndMediaSettings.tsx:67
+#: src/screens/Settings/ContentAndMediaSettings.tsx:70
 msgid "Thread preferences"
 msgstr "Trådinställningar"
 
@@ -7087,7 +7297,7 @@ msgstr "Trådat"
 msgid "Threaded mode"
 msgstr "Trådat läge"
 
-#: src/Navigation.tsx:309
+#: src/Navigation.tsx:310
 msgid "Threads Preferences"
 msgstr "Trådinställningar"
 
@@ -7125,11 +7335,11 @@ msgstr "Växla mellan att tillåta eller inaktivera vuxet innehåll"
 
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
-#: src/view/screens/Search/Search.tsx:500
+#: src/view/screens/Search/Search.tsx:496
 msgid "Top"
 msgstr "Topp"
 
-#: src/Navigation.tsx:383
+#: src/Navigation.tsx:384
 msgid "Topic"
 msgstr "Ämne"
 
@@ -7147,6 +7357,11 @@ msgstr "Översätt"
 msgid "Trending"
 msgstr "Trendar"
 
+#: src/components/interstitials/TrendingVideos.tsx:88
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:106
+msgid "Trending Videos"
+msgstr "Trendande videoklipp"
+
 #: src/view/com/util/error/ErrorScreen.tsx:103
 msgctxt "action"
 msgid "Try again"
@@ -7160,7 +7375,7 @@ msgstr "TV"
 msgid "Two-factor authentication (2FA)"
 msgstr "Tvåfaktorsautentisering (2FA)"
 
-#: src/screens/Signup/StepHandle.tsx:114
+#: src/screens/Signup/StepHandle.tsx:118
 msgid "Type your desired username"
 msgstr "Skriv in ditt önskade användarnamn"
 
@@ -7168,7 +7383,7 @@ msgstr "Skriv in ditt önskade användarnamn"
 msgid "Type your message here"
 msgstr "Skriv ditt meddelande här"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:415
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:413
 msgid "Type:"
 msgstr "Typ:"
 
@@ -7186,8 +7401,8 @@ msgstr "Det gick inte att ansluta. Kontrollera din internetanslutning och förs�
 
 #: src/screens/Login/ForgotPasswordForm.tsx:68
 #: src/screens/Login/index.tsx:76
-#: src/screens/Login/LoginForm.tsx:154
-#: src/screens/Login/SetNewPasswordForm.tsx:71
+#: src/screens/Login/LoginForm.tsx:162
+#: src/screens/Login/SetNewPasswordForm.tsx:77
 #: src/screens/Signup/index.tsx:71
 #: src/view/com/modals/ChangePassword.tsx:71
 msgid "Unable to contact your service. Please check your Internet connection."
@@ -7213,8 +7428,8 @@ msgctxt "action"
 msgid "Unblock"
 msgstr "Häv blockering"
 
-#: src/components/dms/ConvoMenu.tsx:188
-#: src/components/dms/ConvoMenu.tsx:192
+#: src/components/dms/ConvoMenu.tsx:191
+#: src/components/dms/ConvoMenu.tsx:195
 msgid "Unblock account"
 msgstr "Häv blockering av konto"
 
@@ -7251,6 +7466,10 @@ msgstr "Sluta följ {0}"
 msgid "Unfollow Account"
 msgstr "Sluta följ konto"
 
+#: src/screens/VideoFeed/index.tsx:801
+msgid "Unfollow user"
+msgstr "Sluta följ användare"
+
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Unlike"
 msgstr "Sluta gilla"
@@ -7259,31 +7478,33 @@ msgstr "Sluta gilla"
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "Ta bort gillamarkering ({0, plural, one {# gillamarkering} other {# gillamarkeringar}})"
 
-#: src/components/TagMenu/index.tsx:264
-#: src/view/screens/ProfileList.tsx:701
-msgid "Unmute"
-msgstr "Sätt på ljud"
-
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:155
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
 msgctxt "video"
 msgid "Unmute"
 msgstr "Sätt på ljud"
 
-#: src/components/TagMenu/index.web.tsx:115
-msgid "Unmute {truncatedTag}"
-msgstr "Sluta ignorera {truncatedTag}"
+#: src/view/screens/ProfileList.tsx:701
+msgid "Unmute"
+msgstr "Sätt på ljud"
+
+#: src/components/RichTextTag.tsx:140
+#: src/components/RichTextTag.tsx:153
+msgid "Unmute {tag}"
+msgstr "Sluta ignorera {tag}"
+
+#~ msgid "Unmute {truncatedTag}"
+#~ msgstr "Sluta ignorera {truncatedTag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:258
 #: src/view/com/profile/ProfileMenu.tsx:264
 msgid "Unmute Account"
 msgstr "Sluta ignorera konto"
 
-#: src/components/TagMenu/index.tsx:223
-msgid "Unmute all {displayTag} posts"
-msgstr "Sluta ignorera alla {displayTag}-inägg"
+#~ msgid "Unmute all {displayTag} posts"
+#~ msgstr "Sluta ignorera alla {displayTag}-inägg"
 
-#: src/components/dms/ConvoMenu.tsx:176
+#: src/components/dms/ConvoMenu.tsx:179
 msgid "Unmute conversation"
 msgstr "Sluta ignorera konversation"
 
@@ -7344,7 +7565,7 @@ msgstr "Sluta prenumerera på den här etikettsättaren"
 msgid "Unsubscribed from list"
 msgstr "Avslutade prenumeration på lista"
 
-#: src/view/com/composer/Composer.tsx:766
+#: src/view/com/composer/Composer.tsx:773
 msgid "Unsupported video type"
 msgstr "Videotypen stöds inte"
 
@@ -7361,8 +7582,8 @@ msgstr "Oönskat sexuellt innehåll"
 msgid "Update <0>{displayName}</0> in Lists"
 msgstr "Uppdatera <0>{displayName}</0> i Listor"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:509
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:530
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:507
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:528
 msgid "Update to {domain}"
 msgstr "Uppdatera till {domain}"
 
@@ -7374,7 +7595,7 @@ msgstr "Det gick inte att uppdatera citatets sammanlänkning"
 msgid "Updating reply visibility failed"
 msgstr "Det gick inte att uppdatera synlighet för svar"
 
-#: src/screens/Login/SetNewPasswordForm.tsx:180
+#: src/screens/Login/SetNewPasswordForm.tsx:186
 msgid "Updating..."
 msgstr "Uppdaterar…"
 
@@ -7382,39 +7603,39 @@ msgstr "Uppdaterar…"
 msgid "Upload a photo instead"
 msgstr "Ladda upp ett foto istället"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:455
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:453
 msgid "Upload a text file to:"
 msgstr "Ladda upp en textfil till:"
 
-#: src/view/com/util/UserAvatar.tsx:371
-#: src/view/com/util/UserAvatar.tsx:374
+#: src/view/com/util/UserAvatar.tsx:372
+#: src/view/com/util/UserAvatar.tsx:375
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "Ladda upp från Kamera"
 
-#: src/view/com/util/UserAvatar.tsx:388
+#: src/view/com/util/UserAvatar.tsx:389
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "Ladda upp från Filer"
 
-#: src/view/com/util/UserAvatar.tsx:382
-#: src/view/com/util/UserAvatar.tsx:386
+#: src/view/com/util/UserAvatar.tsx:383
+#: src/view/com/util/UserAvatar.tsx:387
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
 msgstr "Ladda upp från Bibliotek"
 
-#: src/lib/api/index.ts:296
+#: src/lib/api/index.ts:301
 msgid "Uploading images..."
 msgstr "Laddar upp bilder…"
 
-#: src/lib/api/index.ts:350
-#: src/lib/api/index.ts:374
+#: src/lib/api/index.ts:355
+#: src/lib/api/index.ts:379
 msgid "Uploading link thumbnail..."
 msgstr "Laddar upp miniatyrbild av länk…"
 
-#: src/view/com/composer/Composer.tsx:1638
+#: src/view/com/composer/Composer.tsx:1646
 msgid "Uploading video..."
 msgstr "Laddar upp video…"
 
@@ -7422,7 +7643,7 @@ msgstr "Laddar upp video…"
 msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
 msgstr "Använd applösenord för att logga in på andra Bluesky-klienter utan att ge full tillgång till ditt konto eller lösenord."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:541
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:539
 msgid "Use default provider"
 msgstr "Använd förvald leverantör"
 
@@ -7431,8 +7652,8 @@ msgstr "Använd förvald leverantör"
 msgid "Use in-app browser"
 msgstr "Använd appens inbyggda webbläsare"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:92
-#: src/screens/Settings/ContentAndMediaSettings.tsx:98
+#: src/screens/Settings/ContentAndMediaSettings.tsx:93
+#: src/screens/Settings/ContentAndMediaSettings.tsx:99
 msgid "Use in-app browser to open links"
 msgstr "Öppna länkar i appens inbyggda webbläsare"
 
@@ -7494,7 +7715,7 @@ msgstr "Användarlista skapad"
 msgid "User list updated"
 msgstr "Användarlista uppdaterad"
 
-#: src/screens/Login/LoginForm.tsx:185
+#: src/screens/Login/LoginForm.tsx:193
 msgid "Username or email address"
 msgstr "Användarnamn eller e-postadress"
 
@@ -7515,7 +7736,7 @@ msgstr "Användare i ”{0}”"
 msgid "Users that have liked this content or profile"
 msgstr "Användare som har gillat detta innehåll eller denna profil"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:421
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:419
 msgid "Value:"
 msgstr "Värde:"
 
@@ -7523,8 +7744,8 @@ msgstr "Värde:"
 msgid "Verified email required"
 msgstr "Verifierad e-postadress krävs"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:511
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:532
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:509
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:530
 msgid "Verify DNS Record"
 msgstr "Verifiera DNS-post"
 
@@ -7542,8 +7763,8 @@ msgstr "Verifiera ny e-postadress"
 msgid "Verify now"
 msgstr "Verifiera nu"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:512
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:534
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:510
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:532
 msgid "Verify Text File"
 msgstr "Verifiera textfil"
 
@@ -7571,12 +7792,28 @@ msgstr "Videoklipp"
 msgid "Video failed to process"
 msgstr "Bearbetning av videoklipp misslyckades"
 
+#: src/Navigation.tsx:430
+msgid "Video Feed"
+msgstr "Videoflöde"
+
+#: src/components/VideoPostCard.tsx:116
+msgid "Video from {0}: {text}"
+msgstr "Videoklipp från {0}: {text}"
+
 #: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
 msgid "Video Games"
 msgstr "TV-spel"
 
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:169
+#: src/screens/VideoFeed/index.tsx:1029
+msgid "Video is paused"
+msgstr "Videoklippet är pausat"
+
+#: src/screens/VideoFeed/index.tsx:1029
+msgid "Video is playing"
+msgstr "Videklippet spelas upp"
+
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:191
 msgid "Video not found."
 msgstr "Videoklippet hittades inte."
 
@@ -7584,13 +7821,17 @@ msgstr "Videoklippet hittades inte."
 msgid "Video settings"
 msgstr "Inställningar för videoklipp"
 
-#: src/view/com/composer/Composer.tsx:1648
+#: src/view/com/composer/Composer.tsx:1656
 msgid "Video uploaded"
 msgstr "Videoklipp uppladdat"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:83
 msgid "Video: {0}"
 msgstr "Videoklipp: {0}"
+
+#: src/view/screens/Profile.tsx:236
+msgid "Videos"
+msgstr "Videoklipp"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:58
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:73
@@ -7603,21 +7844,20 @@ msgstr "Visa {0}s avatar"
 
 #: src/components/ProfileCard.tsx:110
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:450
+#: src/screens/VideoFeed/index.tsx:762
 #: src/view/com/notifications/NotificationFeedItem.tsx:409
 msgid "View {0}'s profile"
 msgstr "Visa {0}s profil"
 
-#: src/components/dms/MessagesListHeader.tsx:158
+#: src/components/dms/MessagesListHeader.tsx:167
 msgid "View {displayName}'s profile"
 msgstr "Visa {displayName}s profil"
 
-#: src/components/TagMenu/index.tsx:172
-msgid "View all posts by @{authorHandle} with tag {displayTag}"
-msgstr "Visa alla inlägg av @{authorHandle} med taggen {displayTag}"
+#~ msgid "View all posts by @{authorHandle} with tag {displayTag}"
+#~ msgstr "Visa alla inlägg av @{authorHandle} med taggen {displayTag}"
 
-#: src/components/TagMenu/index.tsx:126
-msgid "View all posts with tag {displayTag}"
-msgstr "Visa alla inlägg med taggen {displayTag}"
+#~ msgid "View all posts with tag {displayTag}"
+#~ msgstr "Visa alla inlägg med taggen {displayTag}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
@@ -7631,11 +7871,13 @@ msgstr "Se blogginlägget för mer information"
 msgid "View debug entry"
 msgstr "Visa loggpost"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:139
+#: src/components/ReportDialog/SelectReportOptionView.tsx:137
+#: src/screens/VideoFeed/index.tsx:637
+#: src/screens/VideoFeed/index.tsx:655
 msgid "View details"
 msgstr "Visa detaljer"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:134
+#: src/components/ReportDialog/SelectReportOptionView.tsx:132
 msgid "View details for reporting a copyright violation"
 msgstr "Visa detaljer angående anmälan av en upphovsrättsöverträdelse"
 
@@ -7646,6 +7888,13 @@ msgstr "Visa hela tråden"
 #: src/components/moderation/LabelsOnMe.tsx:46
 msgid "View information about these labels"
 msgstr "Visa information om de här etiketterna"
+
+#: src/components/interstitials/TrendingVideos.tsx:191
+#: src/components/interstitials/TrendingVideos.tsx:210
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:231
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:250
+msgid "View more"
+msgstr "Visa mer"
 
 #: src/components/ProfileHoverCard/index.web.tsx:419
 #: src/components/ProfileHoverCard/index.web.tsx:439
@@ -7668,6 +7917,10 @@ msgstr "Visa etiketteringstjänsten från @{0}"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:485
 msgid "View users who like this feed"
 msgstr "Visa användare som gillar detta flöde"
+
+#: src/components/VideoPostCard.tsx:392
+msgid "View video"
+msgstr "Visa videoklipp"
 
 #: src/screens/Moderation/index.tsx:248
 msgid "View your blocked accounts"
@@ -7721,7 +7974,7 @@ msgstr "Vi kunde inte hitta några resultat för det ämnet."
 msgid "We couldn't load this conversation"
 msgstr "Vi kunde inte läsa in den här konversationen"
 
-#: src/screens/SignupQueued.tsx:145
+#: src/screens/SignupQueued.tsx:160
 msgid "We estimate {estimatedTime} until your account is ready."
 msgstr "Vi beräknar att det tar {estimatedTime} tills ditt konto är klart."
 
@@ -7729,7 +7982,7 @@ msgstr "Vi beräknar att det tar {estimatedTime} tills ditt konto är klart."
 msgid "We have sent another verification email to <0>{0}</0>."
 msgstr "Vi har skickat ett till verifieringsmeddelande till <0>{0}</0>."
 
-#: src/screens/Onboarding/StepFinished.tsx:238
+#: src/screens/Onboarding/StepFinished.tsx:245
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
 msgstr "Vi hoppas du får en underbar tid hos oss. Kom ihåg, Bluesky är:"
 
@@ -7753,7 +8006,7 @@ msgstr "Vi kunde inte läsa in dina konfigurerade etikettsättare just nu."
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
 msgstr "Vi kunde inte ansluta. Försök igen för att fortsätta konfigurera ditt konto. Om problemet kvarstår kan du hoppa över den här guiden."
 
-#: src/screens/SignupQueued.tsx:149
+#: src/screens/SignupQueued.tsx:164
 msgid "We will let you know when your account is ready."
 msgstr "Vi meddelar dig när ditt konto är klart."
 
@@ -7778,15 +8031,15 @@ msgstr "Vi beklagar, men vi kunde inte läsa in den här listan. Om det här kva
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "Vi beklagar, men vi kunde inte läsa in dina ignorerade ord just nu. Försök igen."
 
-#: src/view/screens/Search/Search.tsx:202
+#: src/view/screens/Search/Search.tsx:201
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Vi beklagar, men din sökning kunde inte slutföras. Försök igen om några minuter."
 
-#: src/view/com/composer/Composer.tsx:410
+#: src/view/com/composer/Composer.tsx:417
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "Vi beklagar! Inlägget som du vill svara på har tagits bort."
 
-#: src/components/Lists.tsx:188
+#: src/components/Lists.tsx:194
 #: src/view/screens/NotFound.tsx:50
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "Vi beklagar! Vi kan inte hitta den sida du letade efter."
@@ -7817,7 +8070,7 @@ msgstr "Vad folk skriver inlägg om."
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:729
+#: src/view/com/composer/Composer.tsx:736
 msgid "What's up?"
 msgstr "Vad händer?"
 
@@ -7838,35 +8091,44 @@ msgid "Who can reply"
 msgstr "Vem kan svara"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
-#: src/screens/Messages/ChatList.tsx:148
+#: src/screens/Messages/ChatList.tsx:156
 msgid "Whoops!"
 msgstr "Hoppsan!"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:44
+#: src/components/interstitials/TrendingVideos.tsx:127
+#: src/screens/Search/components/ExploreTrendingVideos.tsx:147
+msgid "Whoops! Trending videos failed to load."
+msgstr "Hoppsan! Det gick inte att läsa in trendande videoklipp."
+
+#: src/screens/Takendown.tsx:173
+msgid "Why are you appealing?"
+msgstr "Varför begär du omprövning?"
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:42
 msgid "Why should this content be reviewed?"
 msgstr "Varför borde det här innehållet granskas?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:57
+#: src/components/ReportDialog/SelectReportOptionView.tsx:55
 msgid "Why should this feed be reviewed?"
 msgstr "Varför borde det här flödet granskas?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:54
+#: src/components/ReportDialog/SelectReportOptionView.tsx:52
 msgid "Why should this list be reviewed?"
 msgstr "Varför borde den här listan granskas?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:63
+#: src/components/ReportDialog/SelectReportOptionView.tsx:61
 msgid "Why should this message be reviewed?"
 msgstr "Varför borde det här meddelandet granskas?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:51
+#: src/components/ReportDialog/SelectReportOptionView.tsx:49
 msgid "Why should this post be reviewed?"
 msgstr "Varför borde det här inlägget granskas?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:60
+#: src/components/ReportDialog/SelectReportOptionView.tsx:58
 msgid "Why should this starter pack be reviewed?"
 msgstr "Varför borde det här startpaketet granskas?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:48
+#: src/components/ReportDialog/SelectReportOptionView.tsx:46
 msgid "Why should this user be reviewed?"
 msgstr "Varför borde den här användaren granskas?"
 
@@ -7875,12 +8137,12 @@ msgstr "Varför borde den här användaren granskas?"
 msgid "Write a message"
 msgstr "Skriv ett meddelande"
 
-#: src/view/com/composer/Composer.tsx:817
+#: src/view/com/composer/Composer.tsx:824
 msgid "Write post"
 msgstr "Skriv inlägg"
 
-#: src/view/com/composer/Composer.tsx:727
-#: src/view/com/post-thread/PostThreadComposePrompt.tsx:70
+#: src/view/com/composer/Composer.tsx:734
+#: src/view/com/post-thread/PostThreadComposePrompt.tsx:69
 msgid "Write your reply"
 msgstr "Skriv ditt svar"
 
@@ -7889,7 +8151,7 @@ msgstr "Skriv ditt svar"
 msgid "Writers"
 msgstr "Författare"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:339
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:337
 msgid "Wrong DID returned from server. Received: {0}"
 msgstr "Fel DID returnerades från servern. Mottaget: {0}"
 
@@ -7930,7 +8192,7 @@ msgstr "du"
 msgid "You"
 msgstr "Du"
 
-#: src/screens/SignupQueued.tsx:142
+#: src/screens/SignupQueued.tsx:157
 msgid "You are in line."
 msgstr "Du står i kö."
 
@@ -7964,7 +8226,8 @@ msgstr "Du kan nu logga in med ditt nya lösenord."
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
 msgstr "Du kan återaktivera ditt konto för att fortsätta logga in. Din profil och dina inlägg kommer att vara synliga för andra användare."
 
-#: src/components/interstitials/Trending.tsx:100
+#: src/components/interstitials/Trending.tsx:130
+#: src/components/interstitials/TrendingVideos.tsx:139
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:136
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:109
 msgid "You can update this later from your settings."
@@ -8005,7 +8268,7 @@ msgid "You have blocked this user. You cannot view their content."
 msgstr "Du har blockerat den här användaren. Du kan inte se dennes innehåll."
 
 #: src/screens/Login/SetNewPasswordForm.tsx:48
-#: src/screens/Login/SetNewPasswordForm.tsx:85
+#: src/screens/Login/SetNewPasswordForm.tsx:91
 #: src/view/com/modals/ChangePassword.tsx:88
 #: src/view/com/modals/ChangePassword.tsx:122
 msgid "You have entered an invalid code. It should look like XXXXX-XXXXX."
@@ -8028,7 +8291,7 @@ msgstr "Du har ignorerat det här kontot."
 msgid "You have muted this user"
 msgstr "Du har ignorerat den här användaren"
 
-#: src/screens/Messages/ChatList.tsx:190
+#: src/screens/Messages/ChatList.tsx:198
 msgid "You have no conversations yet. Start one!"
 msgstr "Du har inga konversationer ännu. Starta en!"
 
@@ -8049,7 +8312,7 @@ msgstr "Du har inte blockerat några konton än. För att blockera ett konto, g�
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr "Du har inte ignorerat några konton än. För att blockera ett konto, gå till dess profil och välj ”Ignorera konto” i kontomenyn."
 
-#: src/components/Lists.tsx:52
+#: src/components/Lists.tsx:57
 msgid "You have reached the end"
 msgstr "Du har nått slutet"
 
@@ -8057,7 +8320,7 @@ msgstr "Du har nått slutet"
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "Du har för tillfället nått gränsen för videouppladdningar. Försök igen senare."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:241
+#: src/components/StarterPack/ProfileStarterPacks.tsx:240
 msgid "You haven't created a starter pack yet!"
 msgstr "Du har inte skapat ett startpaket ännu!"
 
@@ -8094,7 +8357,7 @@ msgstr "Du kan bara välja upp till 4 bilder"
 msgid "You must be 13 years of age or older to sign up."
 msgstr "Du måste vara 13 år eller äldre för att registrera dig."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:324
+#: src/components/StarterPack/ProfileStarterPacks.tsx:323
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr "Du måste följa minst sju andra personer för att generera ett startpaket."
 
@@ -8106,7 +8369,7 @@ msgstr "Du måste ge åtkomst till ditt fotobibliotek för att spara en QR-kod"
 msgid "You must grant access to your photo library to save the image."
 msgstr "Du måste ge åtkomst till ditt fotobibliotek för att kunna spara bilden."
 
-#: src/components/ReportDialog/SubmitView.tsx:210
+#: src/components/ReportDialog/SubmitView.tsx:211
 msgid "You must select at least one labeler for a report"
 msgstr "Du måste välja minst en etikettsättare för att göra en anmälan"
 
@@ -8115,6 +8378,7 @@ msgid "You previously deactivated @{0}."
 msgstr "Du har tidigare inaktiverat @{0}."
 
 #: src/screens/Settings/Settings.tsx:257
+#: src/view/shell/desktop/LeftNav.tsx:206
 msgid "You will be signed out of all your accounts."
 msgstr "Du kommer att loggas ut från alla dina konton."
 
@@ -8126,19 +8390,19 @@ msgstr "Du kommer inte längre få notiser för den här tråden"
 msgid "You will now receive notifications for this thread"
 msgstr "Du kommer att få notiser för den här tråden i fortsättningen"
 
-#: src/screens/Login/SetNewPasswordForm.tsx:98
+#: src/screens/Login/SetNewPasswordForm.tsx:104
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "Du kommer att få ett e-postmeddelande med en ”återställningskod”. Ange koden här och ange sedan ditt nya lösenord."
 
-#: src/screens/Messages/components/ChatListItem.tsx:124
+#: src/screens/Messages/components/ChatListItem.tsx:133
 msgid "You: {0}"
 msgstr "Du: {0}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:153
+#: src/screens/Messages/components/ChatListItem.tsx:162
 msgid "You: {defaultEmbeddedContentMessage}"
 msgstr "Du: {defaultEmbeddedContentMessage}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:146
+#: src/screens/Messages/components/ChatListItem.tsx:155
 msgid "You: {short}"
 msgstr "Du: {short}"
 
@@ -8166,7 +8430,7 @@ msgstr "Du kommer att få ett e-postmeddelande till <0>{0}</0> för att verifier
 msgid "You'll stay updated with these feeds"
 msgstr "Du kommer att hålla dig uppdaterad med dessa flöden"
 
-#: src/screens/SignupQueued.tsx:112
+#: src/screens/SignupQueued.tsx:127
 msgid "You're in line"
 msgstr "Du står i kö"
 
@@ -8175,7 +8439,7 @@ msgstr "Du står i kö"
 msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
 msgstr "Du är inloggad med ett applösenord. Logga in med ditt huvudlösenord för att fortsätta inaktiveringen av ditt konto."
 
-#: src/screens/Onboarding/StepFinished.tsx:235
+#: src/screens/Onboarding/StepFinished.tsx:242
 msgid "You're ready to go!"
 msgstr "Du är redo att köra!"
 
@@ -8200,6 +8464,10 @@ msgstr "Du har nått din dagliga gräns för videouppladdningar (för många byt
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "Du har nått din dagliga gräns för videouppladdningar (för många videoklipp)"
 
+#: src/screens/VideoFeed/index.tsx:1080
+msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
+msgstr "Det finns inga fler videoklipp att titta på. Det kanske är dags för att ta en paus?"
+
 #: src/screens/Signup/index.tsx:140
 msgid "Your account"
 msgstr "Ditt konto"
@@ -8207,6 +8475,10 @@ msgstr "Ditt konto"
 #: src/view/com/modals/DeleteAccount.tsx:84
 msgid "Your account has been deleted"
 msgstr "Ditt konto har tagits bort"
+
+#: src/screens/Takendown.tsx:146
+msgid "Your account has been suspended"
+msgstr "Ditt konto har stängts av"
 
 #: src/view/com/composer/state/video.ts:429
 msgid "Your account is not yet old enough to upload videos. Please try again later."
@@ -8216,11 +8488,19 @@ msgstr "Ditt konto är ännu inte tillräckligt gammalt för att ladda upp video
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "Datakatalogen för ditt konto innehåller alla offentliga dataposter och kan laddas ner som en CAR-fil. Filen innehåller inte medieinbäddningar såsom bilder; eller privata uppgifter som behöver hämtas separat."
 
-#: src/screens/Signup/StepInfo/index.tsx:211
+#: src/screens/Takendown.tsx:214
+msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
+msgstr "Ditt konto har har visats sig bryta mot <0>Bluesky Socials användarvillkor</0>. Ett e-postmeddelande har skickats till dig med information om den specifika överträdelsen och avstängningsperioden, om tillämpligt. Om du anser att detta beslut är felaktigt kan du begära att det omprövas."
+
+#: src/screens/Takendown.tsx:154
+msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
+msgstr "Din omprövningsbegäran har skickats. Du kommer att meddelas via e-post om den går igenom."
+
+#: src/screens/Signup/StepInfo/index.tsx:205
 msgid "Your birth date"
 msgstr "Ditt födelsedatum"
 
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:173
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:195
 msgid "Your browser does not support the video format. Please try a different browser."
 msgstr "Din webbläsare stöder inte videoformatet. Försök med en annan webbläsare."
 
@@ -8232,7 +8512,7 @@ msgstr "Dina chattar har inaktiverats"
 msgid "Your choice will be saved, but can be changed later in settings."
 msgstr "Ditt val sparas, och kan ändras senare i inställningar."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:496
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:494
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
 msgstr "Ditt nuvarande användarnamn <0>{0}</0> kommer automatiskt att förbli reserverat för dig. Du kan när som helst byta tillbaka till det med det här kontot."
 
@@ -8259,11 +8539,11 @@ msgstr "Din första gillamarkering!"
 msgid "Your following feed is empty! Follow more users to see what's happening."
 msgstr "Ditt följflöde är tomt! Följ fler användare för att se vad som händer."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:223
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:221
 msgid "Your full handle will be <0>@{0}</0>"
 msgstr "Ditt fullständiga användarnamn blir <0>@{0}</0>"
 
-#: src/screens/Signup/StepHandle.tsx:125
+#: src/screens/Signup/StepHandle.tsx:129
 msgid "Your full username will be"
 msgstr "Ditt fullständiga användarnamn blir"
 
@@ -8275,15 +8555,15 @@ msgstr "Dina ignorerade ord"
 msgid "Your password has been changed successfully!"
 msgstr "Ändringen av ditt lösenord lyckades!"
 
-#: src/view/com/composer/Composer.tsx:470
+#: src/view/com/composer/Composer.tsx:477
 msgid "Your post has been published"
 msgstr "Ditt inlägg har publicerats"
 
-#: src/view/com/composer/Composer.tsx:467
+#: src/view/com/composer/Composer.tsx:474
 msgid "Your posts have been published"
 msgstr "Dina inlägg har publicerats"
 
-#: src/screens/Onboarding/StepFinished.tsx:250
+#: src/screens/Onboarding/StepFinished.tsx:257
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "Dina inlägg, gillamarkeringar och blockeringar är offentliga. Ignoreringar är privata."
 
@@ -8291,10 +8571,10 @@ msgstr "Dina inlägg, gillamarkeringar och blockeringar är offentliga. Ignoreri
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "Din profil, dina inlägg, flöden och listor kommer inte längre att vara synliga för andra Bluesky-användare. Du kan återaktivera ditt konto när som helst genom att logga in."
 
-#: src/view/com/composer/Composer.tsx:469
+#: src/view/com/composer/Composer.tsx:476
 msgid "Your reply has been published"
 msgstr "Ditt svar har publicerats"
 
-#: src/components/dms/ReportDialog.tsx:157
+#: src/components/dms/ReportDialog.tsx:198
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "Din anmälan kommer att skickas till Blueskys modereringstjänst"

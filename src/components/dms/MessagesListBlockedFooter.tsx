@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, ModerationCause} from '@atproto/api'
+import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -19,15 +19,12 @@ export function MessagesListBlockedFooter({
   recipient: initialRecipient,
   convoId,
   hasMessages,
-  blockInfo,
+  moderation,
 }: {
   recipient: AppBskyActorDefs.ProfileViewBasic
   convoId: string
   hasMessages: boolean
-  blockInfo: {
-    listBlocks: ModerationCause[]
-    userBlock: ModerationCause | undefined
-  }
+  moderation: ModerationDecision
 }) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
@@ -39,7 +36,17 @@ export function MessagesListBlockedFooter({
   const reportControl = useDialogControl()
   const blockedByListControl = useDialogControl()
 
-  const {listBlocks, userBlock} = blockInfo
+  const {listBlocks, userBlock} = React.useMemo(() => {
+    const modui = moderation.ui('profileView')
+    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
+    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
+    const userBlock = blocks.find(alert => alert.source.type === 'user')
+    return {
+      listBlocks,
+      userBlock,
+    }
+  }, [moderation])
+
   const isBlocking = !!userBlock || !!listBlocks.length
 
   const onUnblockPress = React.useCallback(() => {

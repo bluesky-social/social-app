@@ -17,6 +17,7 @@ export function DateField({
   isInvalid,
   testID,
   accessibilityHint,
+  maximumDate,
 }: DateFieldProps) {
   const t = useTheme()
   const [open, setOpen] = React.useState(false)
@@ -67,6 +68,9 @@ export function DateField({
           aria-label={label}
           accessibilityLabel={label}
           accessibilityHint={accessibilityHint}
+          maximumDate={
+            maximumDate ? new Date(toSimpleDateString(maximumDate)) : undefined
+          }
         />
       )}
     </>

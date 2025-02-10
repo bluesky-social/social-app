@@ -1,6 +1,7 @@
+import {useCallback, useEffect, useState} from 'react'
 import {MMKV} from 'react-native-mmkv'
 
-import {Device} from '#/storage/schema'
+import {Account, Device} from '#/storage/schema'
 
 export * from '#/storage/schema'
 
@@ -64,6 +65,72 @@ export class Storage<Scopes extends unknown[], Schema> {
   removeMany<Key extends keyof Schema>(scopes: [...Scopes], keys: Key[]) {
     keys.forEach(key => this.remove([...scopes, key]))
   }
+
+  /**
+   * Fires a callback when the storage associated with a given key changes
+   *
+   * @returns Listener - call `remove()` to stop listening
+   */
+  addOnValueChangedListener<Key extends keyof Schema>(
+    scopes: [...Scopes, Key],
+    callback: () => void,
+  ) {
+    return this.store.addOnValueChangedListener(key => {
+      if (key === scopes.join(this.sep)) {
+        callback()
+      }
+    })
+  }
+}
+
+type StorageSchema<T extends Storage<any, any>> = T extends Storage<
+  any,
+  infer U
+>
+  ? U
+  : never
+type StorageScopes<T extends Storage<any, any>> = T extends Storage<
+  infer S,
+  any
+>
+  ? S
+  : never
+
+/**
+ * Hook to use a storage instance. Acts like a useState hook, but persists the
+ * value in storage.
+ */
+export function useStorage<
+  Store extends Storage<any, any>,
+  Key extends keyof StorageSchema<Store>,
+>(
+  storage: Store,
+  scopes: [...StorageScopes<Store>, Key],
+): [
+  StorageSchema<Store>[Key] | undefined,
+  (data: StorageSchema<Store>[Key]) => void,
+] {
+  type Schema = StorageSchema<Store>
+  const [value, setValue] = useState<Schema[Key] | undefined>(() =>
+    storage.get(scopes),
+  )
+
+  useEffect(() => {
+    const sub = storage.addOnValueChangedListener(scopes, () => {
+      setValue(storage.get(scopes))
+    })
+    return () => sub.remove()
+  }, [storage, scopes])
+
+  const setter = useCallback(
+    (data: Schema[Key]) => {
+      setValue(data)
+      storage.set(scopes, data)
+    },
+    [storage, scopes],
+  )
+
+  return [value, setter] as const
 }
 
 /**
@@ -73,9 +140,15 @@ export class Storage<Scopes extends unknown[], Schema> {
  */
 export const device = new Storage<[], Device>({id: 'bsky_device'})
 
+/**
+ * Account data that's specific to the account on this device
+ */
+export const account = new Storage<[string], Account>({id: 'bsky_account'})
+
 if (__DEV__ && typeof window !== 'undefined') {
-  // @ts-ignore
+  // @ts-expect-error - dev global
   window.bsky_storage = {
     device,
+    account,
   }
 }

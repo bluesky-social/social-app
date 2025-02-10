@@ -336,7 +336,7 @@ function DoneStep({
           <Trans>Report submitted</Trans>
         </Text>
         <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-          <Trans>Our moderation team has recieved your report.</Trans>
+          <Trans>Our moderation team has received your report.</Trans>
         </Text>
       </View>
       <Toggle.Group
