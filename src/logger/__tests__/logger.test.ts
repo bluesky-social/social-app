@@ -26,47 +26,14 @@ beforeAll(() => {
 describe('general functionality', () => {
   test('default params', () => {
     const logger = new Logger()
-    expect(logger.enabled).toBeFalsy()
     expect(logger.level).toEqual(LogLevel.Debug) // mocked above
   })
 
   test('can override default params', () => {
     const logger = new Logger({
-      enabled: true,
       level: LogLevel.Info,
     })
-    expect(logger.enabled).toBeTruthy()
     expect(logger.level).toEqual(LogLevel.Info)
-  })
-
-  test('disabled logger does not report', () => {
-    const logger = new Logger({
-      enabled: false,
-      level: LogLevel.Debug,
-    })
-
-    const mockTransport = jest.fn()
-
-    logger.addTransport(mockTransport)
-    logger.debug('message')
-
-    expect(mockTransport).not.toHaveBeenCalled()
-  })
-
-  test('disablement', () => {
-    const logger = new Logger({
-      enabled: true,
-      level: LogLevel.Debug,
-    })
-
-    logger.disable()
-
-    const mockTransport = jest.fn()
-
-    logger.addTransport(mockTransport)
-    logger.debug('message')
-
-    expect(mockTransport).not.toHaveBeenCalled()
   })
 
   test('passing debug contexts automatically enables debug mode', () => {
@@ -76,7 +43,7 @@ describe('general functionality', () => {
 
   test('supports extra metadata', () => {
     const timestamp = Date.now()
-    const logger = new Logger({enabled: true})
+    const logger = new Logger({})
 
     const mockTransport = jest.fn()
 
@@ -95,7 +62,7 @@ describe('general functionality', () => {
 
   test('supports nullish/falsy metadata', () => {
     const timestamp = Date.now()
-    const logger = new Logger({enabled: true})
+    const logger = new Logger({})
 
     const mockTransport = jest.fn()
 
@@ -241,7 +208,7 @@ describe('general functionality', () => {
 
   test('add/remove transport', () => {
     const timestamp = Date.now()
-    const logger = new Logger({enabled: true})
+    const logger = new Logger({})
     const mockTransport = jest.fn()
 
     const remove = logger.addTransport(mockTransport)
@@ -270,7 +237,6 @@ describe('debug contexts', () => {
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
-      enabled: true,
       debug: 'specific',
     })
 
@@ -289,7 +255,6 @@ describe('debug contexts', () => {
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
-      enabled: true,
       debug: 'namespace*',
     })
 
@@ -308,7 +273,6 @@ describe('debug contexts', () => {
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
-      enabled: true,
       debug: 'namespace:foo:*',
     })
 
@@ -328,7 +292,6 @@ describe('supports levels', () => {
   test('debug', () => {
     const timestamp = Date.now()
     const logger = new Logger({
-      enabled: true,
       level: LogLevel.Debug,
     })
     const message = nanoid()
@@ -368,7 +331,6 @@ describe('supports levels', () => {
   test('info', () => {
     const timestamp = Date.now()
     const logger = new Logger({
-      enabled: true,
       level: LogLevel.Info,
     })
     const message = nanoid()
@@ -391,7 +353,6 @@ describe('supports levels', () => {
   test('warn', () => {
     const timestamp = Date.now()
     const logger = new Logger({
-      enabled: true,
       level: LogLevel.Warn,
     })
     const message = nanoid()
@@ -417,7 +378,6 @@ describe('supports levels', () => {
   test('error', () => {
     const timestamp = Date.now()
     const logger = new Logger({
-      enabled: true,
       level: LogLevel.Error,
     })
     const message = nanoid()

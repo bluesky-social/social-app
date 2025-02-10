@@ -166,22 +166,18 @@ export class Logger {
   LogLevel = LogLevel
   DebugContext = DebugContext
 
-  enabled: boolean
   level: LogLevel
   transports: Transport[] = []
 
   protected debugContextRegexes: RegExp[] = []
 
   constructor({
-    enabled = process.env.NODE_ENV !== 'test',
     level = env.LOG_LEVEL as LogLevel,
     debug = env.LOG_DEBUG || '',
   }: {
-    enabled?: boolean
     level?: LogLevel
     debug?: string
   } = {}) {
-    this.enabled = enabled !== false
     this.level = debug ? LogLevel.Debug : level ?? LogLevel.Info // default to info
     this.debugContextRegexes = (debug || '').split(',').map(context => {
       return new RegExp(context.replace(/[^\w:*]/, '').replace(/\*/g, '.*'))
@@ -217,21 +213,11 @@ export class Logger {
     }
   }
 
-  disable() {
-    this.enabled = false
-  }
-
-  enable() {
-    this.enabled = true
-  }
-
   protected transport(
     level: LogLevel,
     message: string | Error,
     metadata: Metadata = {},
   ) {
-    if (!this.enabled) return
-
     const timestamp = Date.now()
     const meta = metadata || {}
 
