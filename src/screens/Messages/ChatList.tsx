@@ -173,7 +173,7 @@ export function MessagesScreen({navigation, route}: Props) {
                   <View style={[a.pt_3xl, a.align_center]}>
                     <CircleInfo
                       width={48}
-                      fill={t.atoms.border_contrast_low.borderColor}
+                      fill={t.atoms.text_contrast_low.color}
                     />
                     <Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_bold]}>
                       <Trans>Whoops!</Trans>
@@ -187,13 +187,14 @@ export function MessagesScreen({navigation, route}: Props) {
                         t.atoms.text_contrast_medium,
                         {maxWidth: 360},
                       ]}>
-                      {cleanError(error)}
+                      {cleanError(error) ||
+                        _(msg`Failed to load conversations`)}
                     </Text>
 
                     <Button
                       label={_(msg`Reload conversations`)}
-                      size="large"
-                      color="secondary"
+                      size="small"
+                      color="secondary_inverted"
                       variant="solid"
                       onPress={() => refetch()}>
                       <ButtonText>
