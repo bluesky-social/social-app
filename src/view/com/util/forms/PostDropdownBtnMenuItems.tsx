@@ -637,15 +637,6 @@ let PostDropdownMenuItems = ({
             <Menu.Group>
               {!isAuthor && (
                 <>
-                  {!postAuthor.viewer?.blocking && (
-                    <Menu.Item
-                      testID="postDropdownBlockBtn"
-                      label={_(msg`Block account`)}
-                      onPress={() => blockPromptControl.open()}>
-                      <Menu.ItemText>{_(msg`Block account`)}</Menu.ItemText>
-                      <Menu.ItemIcon icon={PersonX} position="right" />
-                    </Menu.Item>
-                  )}
                   <Menu.Item
                     testID="postDropdownMuteBtn"
                     label={
@@ -664,6 +655,17 @@ let PostDropdownMenuItems = ({
                       position="right"
                     />
                   </Menu.Item>
+
+                  {!postAuthor.viewer?.blocking && (
+                    <Menu.Item
+                      testID="postDropdownBlockBtn"
+                      label={_(msg`Block account`)}
+                      onPress={() => blockPromptControl.open()}>
+                      <Menu.ItemText>{_(msg`Block account`)}</Menu.ItemText>
+                      <Menu.ItemIcon icon={PersonX} position="right" />
+                    </Menu.Item>
+                  )}
+
                   <Menu.Item
                     testID="postDropdownReportBtn"
                     label={_(msg`Report post`)}
