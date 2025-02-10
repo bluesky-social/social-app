@@ -215,6 +215,24 @@ input:focus {
   }
 }
 
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
 /* animating radix dropdowns requires knowing the data attributes */
 .dropdown-menu-transform-origin > * {
   transform-origin: var(--radix-dropdown-menu-content-transform-origin);

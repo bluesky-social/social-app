@@ -980,6 +980,13 @@ export const atoms = {
   zoom_out: web({
     animation: 'zoomOut ease-out 0.1s',
   }),
+  slide_in_left: web({
+    animation: 'slideInLeft ease-out 0.3s',
+  }),
+  slide_out_left: web({
+    animation: 'slideOutLeft ease-in 0.15s',
+    animationFillMode: 'forwards',
+  }),
   // special composite animation for dialogs
   zoom_fade_in: web({
     animation: 'zoomIn ease-out 0.1s, fadeIn ease-out 0.1s',
