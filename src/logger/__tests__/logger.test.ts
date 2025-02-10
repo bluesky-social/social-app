@@ -36,11 +36,6 @@ describe('general functionality', () => {
     expect(logger.level).toEqual(LogLevel.Info)
   })
 
-  test('passing debug contexts automatically enables debug mode', () => {
-    const logger = new Logger({debug: 'specific'})
-    expect(logger.level).toEqual(LogLevel.Debug)
-  })
-
   test('supports extra metadata', () => {
     const timestamp = Date.now()
     const logger = new Logger({})
@@ -54,6 +49,7 @@ describe('general functionality', () => {
 
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Warn,
+      undefined,
       'message',
       extra,
       timestamp,
@@ -72,6 +68,7 @@ describe('general functionality', () => {
     logger.warn('a', null)
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Warn,
+      undefined,
       'a',
       {},
       timestamp,
@@ -81,6 +78,7 @@ describe('general functionality', () => {
     logger.warn('b', false)
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Warn,
+      undefined,
       'b',
       {},
       timestamp,
@@ -90,6 +88,7 @@ describe('general functionality', () => {
     logger.warn('c', 0)
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Warn,
+      undefined,
       'c',
       {},
       timestamp,
@@ -97,7 +96,7 @@ describe('general functionality', () => {
 
     remove()
 
-    logger.addTransport((level, message, metadata) => {
+    logger.addTransport((level, context, message, metadata) => {
       expect(typeof metadata).toEqual('object')
     })
 
@@ -110,7 +109,7 @@ describe('general functionality', () => {
     const timestamp = Date.now()
     const sentryTimestamp = timestamp / 1000
 
-    sentryTransport(LogLevel.Debug, message, {}, timestamp)
+    sentryTransport(LogLevel.Debug, undefined, message, {}, timestamp)
     expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
       message,
       data: {},
@@ -121,6 +120,7 @@ describe('general functionality', () => {
 
     sentryTransport(
       LogLevel.Info,
+      undefined,
       message,
       {type: 'info', prop: true},
       timestamp,
@@ -133,7 +133,7 @@ describe('general functionality', () => {
       timestamp: sentryTimestamp,
     })
 
-    sentryTransport(LogLevel.Log, message, {}, timestamp)
+    sentryTransport(LogLevel.Log, undefined, message, {}, timestamp)
     expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
       message,
       data: {},
@@ -148,7 +148,7 @@ describe('general functionality', () => {
       extra: {},
     })
 
-    sentryTransport(LogLevel.Warn, message, {}, timestamp)
+    sentryTransport(LogLevel.Warn, undefined, message, {}, timestamp)
     expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
       message,
       data: {},
@@ -170,6 +170,7 @@ describe('general functionality', () => {
 
     sentryTransport(
       LogLevel.Error,
+      undefined,
       e,
       {
         tags,
@@ -193,6 +194,7 @@ describe('general functionality', () => {
 
     sentryTransport(
       LogLevel.Debug,
+      undefined,
       message,
       {error: new Error('foo')},
       timestamp,
@@ -223,7 +225,29 @@ describe('general functionality', () => {
     expect(mockTransport).toHaveBeenNthCalledWith(
       1,
       LogLevel.Warn,
+      undefined,
       'warn',
+      {},
+      timestamp,
+    )
+  })
+})
+
+describe('create', () => {
+  const mockTransport = jest.fn()
+
+  test('create', () => {
+    const timestamp = Date.now()
+    const message = nanoid()
+    const logger = Logger.create('notifications')
+
+    logger.addTransport(mockTransport)
+    logger.info(message, {})
+
+    expect(mockTransport).toHaveBeenCalledWith(
+      LogLevel.Info,
+      'notifications',
+      message,
       {},
       timestamp,
     )
@@ -237,14 +261,17 @@ describe('debug contexts', () => {
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
-      debug: 'specific',
+      // @ts-ignore
+      context: 'specific',
+      level: LogLevel.Debug,
     })
 
     logger.addTransport(mockTransport)
-    logger.debug(message, {}, 'specific')
+    logger.debug(message, {})
 
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Debug,
+      'specific',
       message,
       {},
       timestamp,
@@ -255,14 +282,17 @@ describe('debug contexts', () => {
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
-      debug: 'namespace*',
+      // @ts-ignore
+      context: 'namespace:foo',
+      contextFilter: 'namespace*',
     })
 
     logger.addTransport(mockTransport)
-    logger.debug(message, {}, 'namespace')
+    logger.debug(message, {})
 
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Debug,
+      'namespace:foo',
       message,
       {},
       timestamp,
@@ -273,14 +303,17 @@ describe('debug contexts', () => {
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
-      debug: 'namespace:foo:*',
+      // @ts-ignore
+      context: 'namespace:bar:baz',
+      contextFilter: 'namespace:foo:*',
     })
 
     logger.addTransport(mockTransport)
-    logger.debug(message, {}, 'namespace:bar:baz')
+    logger.debug(message, {})
 
     expect(mockTransport).not.toHaveBeenCalledWith(
       LogLevel.Debug,
+      'namespace:bar:baz',
       message,
       {},
       timestamp,
@@ -302,6 +335,7 @@ describe('supports levels', () => {
     logger.debug(message)
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Debug,
+      undefined,
       message,
       {},
       timestamp,
@@ -310,6 +344,7 @@ describe('supports levels', () => {
     logger.info(message)
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Info,
+      undefined,
       message,
       {},
       timestamp,
@@ -318,6 +353,7 @@ describe('supports levels', () => {
     logger.warn(message)
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Warn,
+      undefined,
       message,
       {},
       timestamp,
@@ -325,7 +361,13 @@ describe('supports levels', () => {
 
     const e = new Error(message)
     logger.error(e)
-    expect(mockTransport).toHaveBeenCalledWith(LogLevel.Error, e, {}, timestamp)
+    expect(mockTransport).toHaveBeenCalledWith(
+      LogLevel.Error,
+      undefined,
+      e,
+      {},
+      timestamp,
+    )
   })
 
   test('info', () => {
@@ -344,6 +386,7 @@ describe('supports levels', () => {
     logger.info(message)
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Info,
+      undefined,
       message,
       {},
       timestamp,
@@ -369,6 +412,7 @@ describe('supports levels', () => {
     logger.warn(message)
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Warn,
+      undefined,
       message,
       {},
       timestamp,
@@ -396,6 +440,12 @@ describe('supports levels', () => {
 
     const e = new Error('original message')
     logger.error(e)
-    expect(mockTransport).toHaveBeenCalledWith(LogLevel.Error, e, {}, timestamp)
+    expect(mockTransport).toHaveBeenCalledWith(
+      LogLevel.Error,
+      undefined,
+      e,
+      {},
+      timestamp,
+    )
   })
 })

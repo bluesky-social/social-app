@@ -5,8 +5,8 @@
  * be capitalized, for parity with the `LOG_DEBUG` env var, please use all
  * lowercase.
  */
-export const DebugContext = {
-  // e.g. composer: 'composer'
+export const LogContext = {
+  default: 'default',
   session: 'session',
   notifications: 'notifications',
   convo: 'convo',

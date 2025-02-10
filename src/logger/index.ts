@@ -2,7 +2,7 @@ import format from 'date-fns/format'
 import {nanoid} from 'nanoid/non-secure'
 
 import {isNetworkError} from '#/lib/strings/errors'
-import {DebugContext} from '#/logger/debugContext'
+import {LogContext} from '#/logger/logContext'
 import {add} from '#/logger/logDump'
 import {Sentry} from '#/logger/sentry'
 import * as env from '#/env'
@@ -44,6 +44,7 @@ export function prepareMetadata(metadata: Metadata): Metadata {
  */
 export const consoleTransport: Transport = (
   level,
+  context,
   message,
   metadata,
   timestamp,
@@ -71,6 +72,7 @@ export const consoleTransport: Transport = (
 
 export const sentryTransport: Transport = (
   level,
+  context,
   message,
   {type, tags, ...metadata},
   timestamp,
@@ -158,35 +160,45 @@ function sendQueuedMessages() {
   }
 }
 
-/**
- * Main class. Defaults are provided in the constructor so that subclasses are
- * technically possible, if we need to go that route in the future.
- */
 export class Logger {
-  LogLevel = LogLevel
-  DebugContext = DebugContext
+  Level = LogLevel
+  Context = LogContext
 
   level: LogLevel
+  context: keyof typeof LogContext | undefined = undefined
+  contextFilter: string = ''
   transports: Transport[] = []
 
   protected debugContextRegexes: RegExp[] = []
 
-  constructor({
-    level = env.LOG_LEVEL as LogLevel,
-    debug = env.LOG_DEBUG || '',
-  }: {
-    level?: LogLevel
-    debug?: string
-  } = {}) {
-    this.level = debug ? LogLevel.Debug : level ?? LogLevel.Info // default to info
-    this.debugContextRegexes = (debug || '').split(',').map(context => {
-      return new RegExp(context.replace(/[^\w:*]/, '').replace(/\*/g, '.*'))
+  static create(context: keyof typeof LogContext) {
+    return new Logger({
+      level: (env.LOG_LEVEL || LogLevel.Info) as LogLevel,
+      context,
+      contextFilter: env.LOG_DEBUG || '',
     })
   }
 
-  debug(message: string, metadata: Metadata = {}, context?: string) {
-    if (context && !this.debugContextRegexes.find(reg => reg.test(context)))
-      return
+  constructor({
+    level = env.LOG_LEVEL as LogLevel,
+    context,
+    contextFilter = env.LOG_DEBUG || '',
+  }: {
+    level?: LogLevel
+    context?: keyof typeof LogContext
+    contextFilter?: string
+  } = {}) {
+    this.context = context
+    this.level = level ?? LogLevel.Info // default to info
+    this.contextFilter = contextFilter || ''
+    this.debugContextRegexes = (this.contextFilter || '')
+      .split(',')
+      .map(filter => {
+        return new RegExp(filter.replace(/[^\w:*]/, '').replace(/\*/g, '.*'))
+      })
+  }
+
+  debug(message: string, metadata: Metadata = {}) {
     this.transport(LogLevel.Debug, message, metadata)
   }
 
@@ -218,6 +230,12 @@ export class Logger {
     message: string | Error,
     metadata: Metadata = {},
   ) {
+    if (
+      !!this.context &&
+      !this.debugContextRegexes.find(reg => reg.test(this.context!))
+    )
+      return
+
     const timestamp = Date.now()
     const meta = metadata || {}
 
@@ -226,6 +244,7 @@ export class Logger {
       id: nanoid(),
       timestamp,
       level,
+      context: this.context,
       message,
       metadata: meta,
     })
@@ -233,7 +252,7 @@ export class Logger {
     if (!enabledLogLevels[this.level].includes(level)) return
 
     for (const transport of this.transports) {
-      transport(level, message, meta, timestamp)
+      transport(level, this.context, message, meta, timestamp)
     }
   }
 }
@@ -243,7 +262,7 @@ export class Logger {
  *
  * Basic usage:
  *
- *   `logger.debug(message[, metadata, debugContext])`
+ *   `logger.debug(message[, metadata])`
  *   `logger.info(message[, metadata])`
  *   `logger.warn(message[, metadata])`
  *   `logger.error(error[, metadata])`

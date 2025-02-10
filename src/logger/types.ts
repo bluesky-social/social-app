@@ -1,3 +1,4 @@
+import {LogContext} from '#/logger/debugContext'
 import type {Sentry} from '#/logger/sentry'
 
 export enum LogLevel {
@@ -10,6 +11,7 @@ export enum LogLevel {
 
 export type Transport = (
   level: LogLevel,
+  context: keyof typeof LogContext | undefined,
   message: string | Error,
   metadata: Metadata,
   timestamp: number,
@@ -64,6 +66,7 @@ export type ConsoleTransportEntry = {
   id: string
   timestamp: number
   level: LogLevel
+  context: keyof typeof LogContext | undefined
   message: string | Error
   metadata: Metadata
 }
