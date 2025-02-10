@@ -49,7 +49,6 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
             accessibilityLabel="Dismiss"
             accessibilityHint=""
             onPress={() => {
-              console.log('Toast clicked')
               activeToast.onClick?.()
               setActiveToast(undefined)
             }}
