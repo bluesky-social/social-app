@@ -68,7 +68,6 @@ export const atoms = {
    * Used for the outermost components on screens, to ensure that they can fill
    * the screen and extend beyond.
    */
-  // @ts-ignore - web only minHeight string
   util_screen_outer: [
     web({
       minHeight: '100vh',
@@ -76,7 +75,7 @@ export const atoms = {
     native({
       height: '100%',
     }),
-  ] as ViewStyle,
+  ] as StyleProp<ViewStyle>,
 
   /*
    * Theme-independent bg colors
@@ -981,7 +980,8 @@ export const atoms = {
     animation: 'zoomOut ease-out 0.1s',
   }),
   slide_in_left: web({
-    animation: 'slideInLeft ease-out 0.3s',
+    // exponential easing function
+    animation: 'slideInLeft cubic-bezier(0.16, 1, 0.3, 1) 0.5s',
   }),
   slide_out_left: web({
     animation: 'slideOutLeft ease-in 0.15s',
