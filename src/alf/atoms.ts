@@ -969,16 +969,16 @@ export const atoms = {
    * Animaations
    */
   fade_in: web({
-    animate: 'fadeIn ease-out 0.15s',
+    animation: 'fadeIn ease-out 0.15s',
   }),
   fade_out: web({
-    animate: 'fadeOut ease-out 0.15s',
+    animation: 'fadeOut ease-out 0.15s',
   }),
   zoom_in: web({
-    animate: 'zoomIn ease-out 0.1s',
+    animation: 'zoomIn ease-out 0.1s',
   }),
   zoom_out: web({
-    animate: 'zoomOut ease-out 0.1s',
+    animation: 'zoomOut ease-out 0.1s',
   }),
   // special composite animation for dialogs
   zoom_fade_in: web({
