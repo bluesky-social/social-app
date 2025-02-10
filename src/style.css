@@ -187,6 +187,7 @@ input:focus {
   animation: rotate 500ms linear infinite;
 }
 
+/* animations for atoms */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -211,24 +212,6 @@ input:focus {
   }
   to {
     transform: scale(1);
-  }
-}
-
-@keyframes slideInTop {
-  from {
-    transform: translateY(-0.5rem);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInBottom {
-  from {
-    transform: translateY(0.5rem);
-  }
-  to {
-    transform: translateY(0);
   }
 }
 
