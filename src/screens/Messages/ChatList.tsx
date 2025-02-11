@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
-import {ChatBskyConvoDefs} from '@atproto/api'
+import {ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
@@ -18,6 +18,7 @@ import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
+import {useSession} from '#/state/session'
 import {List, ListRef} from '#/view/com/util/List'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -35,20 +36,37 @@ import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {ChatListItem} from './components/ChatListItem'
+import {InboxPreview} from './components/InboxPreview'
+
+type ListItem =
+  | {
+      type: 'INBOX'
+      count: number
+      profiles: ChatBskyActorDefs.ProfileViewBasic[]
+    }
+  | {
+      type: 'CONVERSATION'
+      conversation: ChatBskyConvoDefs.ConvoView
+    }
+
+function renderItem({item}: {item: ListItem}) {
+  switch (item.type) {
+    case 'INBOX':
+      return <InboxPreview count={item.count} profiles={item.profiles} />
+    case 'CONVERSATION':
+      return <ChatListItem convo={item.conversation} />
+  }
+}
+
+function keyExtractor(item: ListItem) {
+  return item.type === 'INBOX' ? 'INBOX' : item.conversation.id
+}
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
-
-function renderItem({item}: {item: ChatBskyConvoDefs.ConvoView}) {
-  return <ChatListItem convo={item} />
-}
-
-function keyExtractor(item: ChatBskyConvoDefs.ConvoView) {
-  return item.id
-}
-
 export function MessagesScreen({navigation, route}: Props) {
   const {_} = useLingui()
   const t = useTheme()
+  const {currentAccount} = useSession()
   const newChatControl = useDialogControl()
   const scrollElRef: ListRef = useAnimatedRef()
   const pushToConversation = route.params?.pushToConversation
@@ -102,15 +120,27 @@ export function MessagesScreen({navigation, route}: Props) {
 
   const conversations = useMemo(() => {
     if (data?.pages) {
-      return (
-        data.pages
-          .flatMap(page => page.convos)
-          // filter out convos that are actively being left
-          .filter(convo => !leftConvos.includes(convo.id))
-      )
+      const conversations = data.pages
+        .flatMap(page => page.convos)
+        // filter out convos that are actively being left
+        .filter(convo => !leftConvos.includes(convo.id))
+
+      return [
+        {
+          type: 'INBOX',
+          count: 3,
+          profiles: conversations
+            .map(x => x.members.find(y => y.did !== currentAccount?.did))
+            .filter(x => !!x)
+            .slice(0, 3),
+        },
+        ...conversations.map(
+          convo => ({type: 'CONVERSATION', conversation: convo} as const),
+        ),
+      ] satisfies ListItem[]
     }
     return []
-  }, [data, leftConvos])
+  }, [data, leftConvos, currentAccount?.did])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
@@ -291,7 +321,7 @@ function Header({newChatControl}: {newChatControl: DialogControlProps}) {
         <>
           <Layout.Header.Content>
             <Layout.Header.TitleText>
-              <Trans>Messages</Trans>
+              <Trans>Chats</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
 
@@ -315,7 +345,7 @@ function Header({newChatControl}: {newChatControl: DialogControlProps}) {
           <Layout.Header.MenuButton />
           <Layout.Header.Content>
             <Layout.Header.TitleText>
-              <Trans>Messages</Trans>
+              <Trans>Chats</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
           <Layout.Header.Slot>{settingsLink}</Layout.Header.Slot>
