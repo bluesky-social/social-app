@@ -8,7 +8,7 @@ msgstr ""
 "Language: an\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-11 21:18\n"
+"PO-Revision-Date: 2025-02-11 22:28\n"
 "Last-Translator: \n"
 "Language-Team: Aragonese\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -89,7 +89,7 @@ msgstr "{0, plural, one {seguidor} other {seguidors}}"
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {seguindo} other {seguindo}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:447
+#: src/view/com/post-thread/PostThreadItem.tsx:452
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {me-fa-goyo} other {me-fa-goyos}}"
 
@@ -97,11 +97,11 @@ msgstr "{0, plural, one {me-fa-goyo} other {me-fa-goyos}}"
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {publicación} other {publicacions}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:431
+#: src/view/com/post-thread/PostThreadItem.tsx:436
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, one {cita} other {citas}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:413
+#: src/view/com/post-thread/PostThreadItem.tsx:418
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {republicación} other {republicacions}}"
 
@@ -328,7 +328,7 @@ msgstr "<0>{0}</0> and<1> </1><2>{1} </2>s'incluyen en o tuyo paquet d'inicio"
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0> s'incluye en o tuyo paquet d'inicio"
 
-#: src/components/WhoCanReply.tsx:279
+#: src/components/WhoCanReply.tsx:292
 msgid "<0>{0}</0> members"
 msgstr "<0>{0}</0> miembros"
 
@@ -735,7 +735,7 @@ msgstr "I ha habiu una error desconoixida"
 msgid "an unknown labeler"
 msgstr "un etiquetador desconoixiu"
 
-#: src/components/WhoCanReply.tsx:300
+#: src/components/WhoCanReply.tsx:313
 msgid "and"
 msgstr "y"
 
@@ -844,12 +844,12 @@ msgstr "Apariencia"
 msgid "Apply default recommended feeds"
 msgstr "Aplicar canals recomendadas predeterminadas"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:834
+#: src/view/com/post-thread/PostThreadItem.tsx:839
 msgid "Archived from {0}"
 msgstr "Archivau dende {0}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:803
-#: src/view/com/post-thread/PostThreadItem.tsx:842
+#: src/view/com/post-thread/PostThreadItem.tsx:808
+#: src/view/com/post-thread/PostThreadItem.tsx:847
 msgid "Archived post"
 msgstr "Publicación archivada"
 
@@ -1066,7 +1066,7 @@ msgstr "Blog"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:859
+#: src/view/com/post-thread/PostThreadItem.tsx:864
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky no puede confirmar l'autenticidat d'a data declarada."
 
@@ -1252,9 +1252,9 @@ msgid "Cancels opening the linked website"
 msgstr "Cancela obridura d'o puesto web vinculau"
 
 #: src/state/shell/composer/index.tsx:83
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:117
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:158
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:194
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:127
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:168
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:204
 msgid "Cannot interact with a blocked user"
 msgstr "No se puede interactuar con un usuario blocau"
 
@@ -1725,7 +1725,7 @@ msgstr "Versión de compilación copiada a lo portafuellas"
 #: src/lib/sharing.ts:25
 #: src/view/com/modals/InviteCodes.tsx:153
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:235
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:393
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:403
 msgid "Copied to clipboard"
 msgstr "Copiau a lo portafuellas"
 
@@ -3001,10 +3001,6 @@ msgstr "Seguiu per <0>{0}</0> y <1>{1}</1>"
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr "Seguiu per <0>{0}</0>, <1>{1}</1>, y {2, plural, one {# other} other {# others}}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:432
-msgid "Followed users"
-msgstr "Usuarios seguius"
-
 #: src/Navigation.tsx:202
 msgid "Followers of @{0} that you know"
 msgstr "Seguidors de @{0} que conoixes"
@@ -3536,7 +3532,7 @@ msgstr "Codigo de confirmación 2FA no ye valido."
 msgid "Invalid handle. Please try a different one."
 msgstr "Identificador no valido. Intenta-lo con un atro."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:277
+#: src/view/com/post-thread/PostThreadItem.tsx:282
 msgid "Invalid or unsupported post record"
 msgstr "Rechistro de publicación invalido u no compatible"
 
@@ -3755,7 +3751,7 @@ msgstr "Liuchero"
 msgid "Like"
 msgstr "Me fa goyo"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:311
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:321
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr "Me fa goyo ({0, plural, one {# me-fa-goyo} other {# me-fa-goyos}})"
 
@@ -4104,7 +4100,7 @@ msgstr "Ferramientas de moderación"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "Lo moderador ha decidiu d'establir una advertencia cheneral sobre lo conteniu."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:632
+#: src/view/com/post-thread/PostThreadItem.tsx:637
 msgid "More"
 msgstr "Mas"
 
@@ -4527,7 +4523,7 @@ msgstr "No pas agora"
 
 #: src/view/com/profile/ProfileMenu.tsx:348
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:686
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:357
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:367
 msgid "Note about sharing"
 msgstr "Nota sobre compartir"
 
@@ -4605,7 +4601,7 @@ msgid "OK"
 msgstr "D'acuerdo"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/view/com/post-thread/PostThreadItem.tsx:864
+#: src/view/com/post-thread/PostThreadItem.tsx:869
 msgid "Okay"
 msgstr "Ye bien"
 
@@ -5562,7 +5558,7 @@ msgctxt "action"
 msgid "Reply"
 msgstr "Responder"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:263
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:273
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr "Responder ({0, plural, one {# respuesta} other {# respuestas}})"
 
@@ -5848,8 +5844,8 @@ msgid "Returns to the previous step"
 msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:120
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:468
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:474
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:478
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -6242,7 +6238,7 @@ msgstr "Sexualment suchestivo"
 #: src/view/com/profile/ProfileMenu.tsx:204
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:346
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:356
 #: src/view/screens/ProfileList.tsx:483
 msgid "Share"
 msgstr "Compartir"
@@ -6262,7 +6258,7 @@ msgstr "Comparte un dato curioso!"
 
 #: src/view/com/profile/ProfileMenu.tsx:353
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:691
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:362
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:372
 msgid "Share anyway"
 msgstr "Compartir de totas trazas"
 
@@ -6350,7 +6346,7 @@ msgstr "Amostrar menos como este"
 msgid "Show list anyway"
 msgstr "Amostrar lista de totas trazas"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:592
+#: src/view/com/post-thread/PostThreadItem.tsx:597
 #: src/view/com/post/Post.tsx:242
 #: src/view/com/posts/PostFeedItem.tsx:509
 msgid "Show More"
@@ -6410,7 +6406,7 @@ msgstr "Amostrar advertencia"
 msgid "Show warning and filter from feeds"
 msgstr "Amostrar advertencia y filtrar d'as canals"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:805
+#: src/view/com/post-thread/PostThreadItem.tsx:810
 msgid "Shows information about when this post was created"
 msgstr ""
 
@@ -7154,7 +7150,7 @@ msgstr "Esta lista ye vueda."
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "Este servicio de moderación no ye disponible. Consulta mas detalles contino. Si lo problema persiste, contacta-nos."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:845
+#: src/view/com/post-thread/PostThreadItem.tsx:850
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Esta publicación diz haber estau creada lo <0>{0}</0>, pero la hemos vista en Bluesky lo <1>{1}</1>."
 
@@ -7167,7 +7163,7 @@ msgid "This post has been deleted."
 msgstr "Esta publicación ye estada eliminada."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:359
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:369
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "Esta publicación nomás ye visible pa usuarios rechistraus. No será visible pa personas que no han iniciau sesión."
 
@@ -7315,8 +7311,8 @@ msgstr "Tema"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:770
-#: src/view/com/post-thread/PostThreadItem.tsx:773
+#: src/view/com/post-thread/PostThreadItem.tsx:775
+#: src/view/com/post-thread/PostThreadItem.tsx:778
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:404
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:406
 msgid "Translate"
@@ -7444,7 +7440,7 @@ msgstr ""
 msgid "Unlike"
 msgstr "Ya no me fa goyo"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:305
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:315
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "Ya no me fa goyo ({0, plural, one {# me-fa-goyo} other {# me-fa-goyos}})"
 
@@ -7683,22 +7679,30 @@ msgstr "Lista d'usuarios actualizada"
 msgid "Username or email address"
 msgstr "Nombre d'usuario u adreza de correu electronico"
 
-#: src/components/WhoCanReply.tsx:263
+#: src/components/WhoCanReply.tsx:276
 msgid "users followed by <0>@{0}</0>"
 msgstr "usuarios seguius per <0>@{0}</0>"
+
+#: src/components/WhoCanReply.tsx:263
+msgid "users following <0>@{0}</0>"
+msgstr ""
 
 #: src/screens/Messages/Settings.tsx:92
 #: src/screens/Messages/Settings.tsx:95
 msgid "Users I follow"
 msgstr "Usuarios que sigo"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:455
 msgid "Users in \"{0}\""
 msgstr "Usuarios en \"{0}\""
 
 #: src/components/LikesDialog.tsx:83
 msgid "Users that have liked this content or profile"
 msgstr "Usuarios que les ha feito goyo este conteniu u perfil"
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:432
+msgid "Users you follow"
+msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:419
 msgid "Value:"
@@ -8509,6 +8513,10 @@ msgstr "Lo tuyo correu electronico encara no ha estau comprebau. Per la tuya seg
 #: src/state/shell/progress-guide.tsx:213
 msgid "Your first like!"
 msgstr "Lo tuyo primer \"me fa goyo\"!"
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
+msgid "Your followers"
+msgstr ""
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
