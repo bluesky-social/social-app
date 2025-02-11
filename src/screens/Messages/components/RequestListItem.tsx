@@ -1,51 +1,70 @@
-import {useCallback} from 'react'
+import {View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {atoms as a, tokens} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useSession} from '#/state/session'
+import {atoms as a} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon} from '#/components/icons/ArrowBoxLeft'
-import {CircleX_Stroke2_Corner0_Rounded as CircleXIcon} from '#/components/icons/CircleX'
 import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
 import {PersonX_Stroke2_Corner0_Rounded as PersonXIcon} from '#/components/icons/Person'
+import {KnownFollowers} from '#/components/KnownFollowers'
 import * as Menu from '#/components/Menu'
 import {ChatListItem} from './ChatListItem'
 
 export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
-  const renderOptions = useCallback(
-    () => <RequestMenu convo={convo} />,
-    [convo],
+  const {currentAccount} = useSession()
+  const {_} = useLingui()
+  const moderationOpts = useModerationOpts()
+
+  const otherUser = convo.members.find(
+    member => member.did !== currentAccount?.did,
   )
+
+  if (!otherUser || !moderationOpts) {
+    return null
+  }
+
   return (
-    <ChatListItem
-      convo={convo}
-      showKnownFollowers
-      renderOptions={renderOptions}
-    />
+    <ChatListItem convo={convo} showMenu={false}>
+      <View style={[a.pt_sm]}>
+        <KnownFollowers
+          profile={otherUser}
+          moderationOpts={moderationOpts}
+          minimal
+          showIfEmpty
+        />
+      </View>
+      <View style={[a.pt_sm, a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
+        <Button
+          label={_(msg`Accept chat request`)}
+          size="tiny"
+          variant="solid"
+          color="secondary_inverted"
+          style={a.flex_1}>
+          <ButtonText>Accept</ButtonText>
+        </Button>
+        <RejectMenu convo={convo} />
+      </View>
+    </ChatListItem>
   )
 }
-function RequestMenu({}: {convo: ChatBskyConvoDefs.ConvoView}) {
+function RejectMenu({}: {convo: ChatBskyConvoDefs.ConvoView}) {
   const {_} = useLingui()
 
   return (
     <Menu.Root>
       <Menu.Trigger label={_(msg`Reject chat request`)}>
-        {({props, state}) => (
+        {({props}) => (
           <Button
             {...props}
             label={props.accessibilityLabel}
-            style={[
-              a.p_2xs,
-              (state.hovered || state.pressed) && {opacity: 0.5},
-              // make sure pfp is in the middle
-              a.absolute,
-              {top: tokens.space.md, right: tokens.space.md},
-            ]}
+            style={[a.flex_1]}
             color="secondary"
-            variant="solid"
-            size="small">
-            <ButtonIcon icon={CircleXIcon} />
+            variant="outline"
+            size="tiny">
             <ButtonText>Reject</ButtonText>
           </Button>
         )}
