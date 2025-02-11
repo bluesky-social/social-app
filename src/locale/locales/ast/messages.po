@@ -8,7 +8,7 @@ msgstr ""
 "Language: ast\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-11 22:28\n"
+"PO-Revision-Date: 2025-02-11 23:28\n"
 "Last-Translator: \n"
 "Language-Team: Asturian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -895,7 +895,7 @@ msgstr ""
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:69
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
-msgstr ""
+msgstr "¿Tas escribiendo na llingua «<0>{suggestedLanguageName}</0>»?"
 
 #: src/screens/Onboarding/index.tsx:23
 #: src/screens/Onboarding/state.ts:95
@@ -908,7 +908,7 @@ msgstr "Desnudos artísticos o que nun son eróticos."
 
 #: src/screens/Signup/StepHandle.tsx:180
 msgid "At least 3 characters"
-msgstr ""
+msgstr "Ye de 3 caráuteres polo menos"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:105
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
@@ -1093,7 +1093,7 @@ msgstr ""
 
 #: src/screens/Settings/components/PwiOptOut.tsx:92
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr ""
+msgstr "Bluesky nun va amosar el perfil nin les publicaciones a los usuarios que nun aniciaren la sesión. Ye posible qu'otres aplicaciones nun respeten esta solicitú. Esta opción nun fai que la cuenta seya privada."
 
 #: src/screens/Settings/AppIconSettings/index.tsx:99
 msgid "Bluesky+"
@@ -1406,7 +1406,7 @@ msgstr "Escueyi una contraseña"
 
 #: src/screens/Signup/index.tsx:142
 msgid "Choose your username"
-msgstr ""
+msgstr "L'identificador"
 
 #: src/screens/Settings/Settings.tsx:351
 msgid "Clear all storage data"
@@ -4642,7 +4642,7 @@ msgstr ""
 
 #: src/screens/Signup/StepHandle.tsx:156
 msgid "Only contains letters, numbers, and hyphens"
-msgstr ""
+msgstr "Contién namás lletres, númberos y guiones"
 
 #: src/lib/media/picker.shared.ts:29
 msgid "Only image files are supported"
@@ -6791,7 +6791,7 @@ msgstr "Testu y etiquetes"
 
 #: src/components/dms/ReportDialog.tsx:227
 msgid "Text field"
-msgstr ""
+msgstr "Campu de testu"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:263
 #: src/screens/Messages/components/ChatDisabled.tsx:108
@@ -7078,7 +7078,7 @@ msgstr "Esti conteníu nun se pue ver ensin una cuenta de Bluesky."
 
 #: src/screens/Messages/components/ChatListItem.tsx:284
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
-msgstr ""
+msgstr "Esta conversación ye con una cuenta desaniciada o desactivada. Primi pa consiguir opciones"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:94
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -7307,7 +7307,7 @@ msgstr "Lo destacao"
 
 #: src/Navigation.tsx:393
 msgid "Topic"
-msgstr ""
+msgstr "Tema"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
@@ -7343,7 +7343,7 @@ msgstr "Autenticación en dos pasos (2FA)"
 
 #: src/screens/Signup/StepHandle.tsx:118
 msgid "Type your desired username"
-msgstr ""
+msgstr "Teclexa l'identificador que quies"
 
 #: src/screens/Messages/components/MessageInput.tsx:148
 msgid "Type your message here"
@@ -7434,7 +7434,7 @@ msgstr "Dexar de siguir la cuenta"
 
 #: src/screens/VideoFeed/index.tsx:803
 msgid "Unfollows the user"
-msgstr ""
+msgstr "Dexa de siguir al usuariu"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Unlike"
@@ -7799,7 +7799,7 @@ msgstr "Videu: {0}"
 
 #: src/view/screens/Profile.tsx:236
 msgid "Videos"
-msgstr ""
+msgstr "Vídeos"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:58
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:73
@@ -8077,7 +8077,7 @@ msgstr "¡Meca! La carga de los vídeos en tendencia falló."
 
 #: src/screens/Takendown.tsx:173
 msgid "Why are you appealing?"
-msgstr ""
+msgstr "¿Por qué apelles?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:42
 msgid "Why should this content be reviewed?"
@@ -8473,7 +8473,7 @@ msgstr ""
 
 #: src/screens/Takendown.tsx:154
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
-msgstr ""
+msgstr "Unvióse l'apellación. Si s'acepta, vas recibir un mensaxe per corréu electrónicu."
 
 #: src/screens/Signup/StepInfo/index.tsx:205
 msgid "Your birth date"
@@ -8528,7 +8528,7 @@ msgstr "L'identificador completu va ser <0>@{0}</0>"
 
 #: src/screens/Signup/StepHandle.tsx:129
 msgid "Your full username will be"
-msgstr ""
+msgstr "L'identificador completu va ser"
 
 #: src/components/dialogs/MutedWords.tsx:369
 msgid "Your muted words"
