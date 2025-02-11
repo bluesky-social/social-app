@@ -8,6 +8,7 @@ test('works', () => {
     {
       id: '1',
       level: LogLevel.Debug,
+      context: 'convo',
       message: 'hello',
       metadata: {},
       timestamp: Date.now(),
@@ -15,6 +16,7 @@ test('works', () => {
     {
       id: '2',
       level: LogLevel.Debug,
+      context: 'convo',
       message: 'hello',
       metadata: {},
       timestamp: Date.now(),
@@ -22,6 +24,7 @@ test('works', () => {
     {
       id: '3',
       level: LogLevel.Debug,
+      context: 'convo',
       message: 'hello',
       metadata: {},
       timestamp: Date.now(),

@@ -134,6 +134,20 @@ export const sentryTransport: Transport = (
   }
 }
 
+const transports: Transport[] = (function configureTransports() {
+  switch (process.env.NODE_ENV) {
+    case 'production': {
+      return [sentryTransport, createBitdriftTransport()]
+    }
+    case 'test': {
+      return []
+    }
+    default: {
+      return [consoleTransport]
+    }
+  }
+})()
+
 const queuedMessages: [string, Parameters<typeof Sentry.captureMessage>[1]][] =
   []
 let sentrySendTimeout: ReturnType<typeof setTimeout> | null = null
@@ -161,13 +175,12 @@ function sendQueuedMessages() {
 }
 
 export class Logger {
-  Level = LogLevel
-  Context = LogContext
+  static Level = LogLevel
+  static Context = LogContext
 
   level: LogLevel
   context: keyof typeof LogContext | undefined = undefined
   contextFilter: string = ''
-  transports: Transport[] = []
 
   protected debugContextRegexes: RegExp[] = []
 
@@ -218,19 +231,13 @@ export class Logger {
     this.transport(LogLevel.Error, error, metadata)
   }
 
-  addTransport(transport: Transport) {
-    this.transports.push(transport)
-    return () => {
-      this.transports.splice(this.transports.indexOf(transport), 1)
-    }
-  }
-
   protected transport(
     level: LogLevel,
     message: string | Error,
     metadata: Metadata = {},
   ) {
     if (
+      !!this.contextFilter &&
       !!this.context &&
       !this.debugContextRegexes.find(reg => reg.test(this.context!))
     )
@@ -251,7 +258,7 @@ export class Logger {
 
     if (!enabledLogLevels[this.level].includes(level)) return
 
-    for (const transport of this.transports) {
+    for (const transport of transports) {
       transport(level, this.context, message, meta, timestamp)
     }
   }
@@ -270,19 +277,3 @@ export class Logger {
  *   `logger.enable()`
  */
 export const logger = new Logger()
-
-if (process.env.NODE_ENV !== 'test') {
-  logger.addTransport(createBitdriftTransport())
-}
-
-if (process.env.NODE_ENV !== 'test') {
-  if (__DEV__) {
-    logger.addTransport(consoleTransport)
-    /*
-     * Comment this out to enable Sentry transport in dev
-     */
-    // logger.addTransport(sentryTransport)
-  } else {
-    logger.addTransport(sentryTransport)
-  }
-}

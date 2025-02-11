@@ -15,7 +15,8 @@ export function createBitdriftTransport(): Transport {
     [LogLevel.Error]: bdError,
   } as const
 
-  return (level, message) => {
+  // TODO
+  return (level, _context, message) => {
     const log = logFunctions[level]
     log('' + message)
   }
