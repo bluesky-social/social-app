@@ -24,7 +24,7 @@ import {
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
 import * as Pills from '#/components/Pills'
-import * as atp from '#/types/bsky'
+import * as bsky from '#/types/bsky'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
@@ -42,12 +42,12 @@ export function ProfileCard({
   showKnownFollowers,
 }: {
   testID?: string
-  profile: atp.profile.AnyProfileView
+  profile: bsky.profile.AnyProfileView
   noModFilter?: boolean
   noBg?: boolean
   noBorder?: boolean
   renderButton?: (
-    profile: Shadow<atp.profile.AnyProfileView>,
+    profile: Shadow<bsky.profile.AnyProfileView>,
   ) => React.ReactNode
   onPress?: () => void
   style?: StyleProp<ViewStyle>

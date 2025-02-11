@@ -1,6 +1,6 @@
 import {AtUri} from '@atproto/api'
 
-import * as atp from '#/types/bsky'
+import * as bsky from '#/types/bsky'
 
 export function createStarterPackLinkFromAndroidReferrer(
   referrerQueryString: string,
@@ -81,7 +81,7 @@ export function httpStarterPackUriToAtUri(httpUri?: string): string | null {
 }
 
 export function getStarterPackOgCard(
-  didOrStarterPack: atp.starterPack.AnyStarterPackView | string,
+  didOrStarterPack: bsky.starterPack.AnyStarterPackView | string,
   rkey?: string,
 ) {
   if (typeof didOrStarterPack === 'string') {
