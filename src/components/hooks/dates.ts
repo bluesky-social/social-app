@@ -65,6 +65,7 @@ const locales: Record<AppLanguage, Locale | undefined> = {
   gl,
   hi,
   hu,
+  ia: undefined,
   id,
   it,
   ja,
