@@ -43,7 +43,7 @@
     "perf:test:results": "NODE_ENV=test flashlight report .perf/results.json",
     "perf:measure": "NODE_ENV=test flashlight measure",
     "intl:build": "yarn intl:extract && yarn intl:compile",
-    "intl:extract": "lingui extract --clean",
+    "intl:extract": "lingui extract --clean --locale en",
     "intl:compile": "lingui compile",
     "intl:pull": "crowdin download translations --verbose -b main",
     "intl:push": "crowdin push translations --verbose -b main",
