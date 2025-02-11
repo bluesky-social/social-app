@@ -7,6 +7,10 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {appVersion, BUNDLE_DATE, bundleInfo} from '#/lib/app-info'
 import {STATUS_PAGE_URL} from '#/lib/constants'
 import {CommonNavigatorParams} from '#/lib/routes/types'
+import {
+  useDevModeEnabled,
+  useSetDevModeEnabled,
+} from '#/state/preferences/dev-mode'
 import * as Toast from '#/view/com/util/Toast'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {CodeLines_Stroke2_Corner2_Rounded as CodeLinesIcon} from '#/components/icons/CodeLines'
@@ -18,6 +22,8 @@ import * as Layout from '#/components/Layout'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AboutSettings'>
 export function AboutSettingsScreen({}: Props) {
   const {_} = useLingui()
+  const devModeEnabled = useDevModeEnabled()
+  const setDevModeEnabled = useSetDevModeEnabled()
 
   return (
     <Layout.Screen>
@@ -66,6 +72,17 @@ export function AboutSettingsScreen({}: Props) {
           <SettingsList.PressableItem
             label={_(msg`Version ${appVersion}`)}
             accessibilityHint={_(msg`Copies build version to clipboard`)}
+            onLongPress={() => {
+              const newDevModeEnabled = !devModeEnabled
+              setDevModeEnabled(newDevModeEnabled)
+              Toast.show(
+                _(
+                  msg`Developer mode ${
+                    newDevModeEnabled ? 'enabled' : 'disabled'
+                  }`,
+                ),
+              )
+            }}
             onPress={() => {
               setStringAsync(
                 `Build version: ${appVersion}; Bundle info: ${bundleInfo}; Bundle date: ${BUNDLE_DATE}; Platform: ${Platform.OS}; Platform version: ${Platform.Version}`,

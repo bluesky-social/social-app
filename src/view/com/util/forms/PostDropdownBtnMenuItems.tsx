@@ -77,6 +77,7 @@ import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import * as Toast from '../Toast'
+import {useDevModeEnabled} from '#/state/preferences/dev-mode'
 
 let PostDropdownMenuItems = ({
   post,
@@ -122,6 +123,7 @@ let PostDropdownMenuItems = ({
   const hideReplyConfirmControl = useDialogControl()
   const {mutateAsync: toggleReplyVisibility} =
     useToggleReplyVisibilityMutation()
+  const devModeEnabled = useDevModeEnabled()
 
   const postUri = post.uri
   const postCid = post.cid
@@ -365,6 +367,14 @@ let PostDropdownMenuItems = ({
       }
     }
   }, [_, queueBlock])
+
+  const onShareATURI = useCallback(() => {
+    shareUrl(postUri)
+  }, [postUri])
+
+  const onShareAuthorDID = useCallback(() => {
+    shareUrl(postAuthor.did)
+  }, [postAuthor.did])
 
   return (
     <>
@@ -647,6 +657,28 @@ let PostDropdownMenuItems = ({
                 </>
               )}
             </Menu.Group>
+
+            {devModeEnabled ? (
+              <>
+                <Menu.Divider />
+                <Menu.Group>
+                  <Menu.Item
+                    testID="postAtUriShareBtn"
+                    label={_(msg`Copy post at:// URI`)}
+                    onPress={onShareATURI}>
+                    <Menu.ItemText>{_(msg`Copy post at:// URI`)}</Menu.ItemText>
+                    <Menu.ItemIcon icon={Share} position="right" />
+                  </Menu.Item>
+                  <Menu.Item
+                    testID="postAuthorDIDShareBtn"
+                    label={_(msg`Copy author DID`)}
+                    onPress={onShareAuthorDID}>
+                    <Menu.ItemText>{_(msg`Copy author DID`)}</Menu.ItemText>
+                    <Menu.ItemIcon icon={Share} position="right" />
+                  </Menu.Item>
+                </Menu.Group>
+              </>
+            ) : null}
           </>
         )}
       </Menu.Outer>
