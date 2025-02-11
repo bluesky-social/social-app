@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-11 21:17\n"
+"PO-Revision-Date: 2025-02-11 22:28\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -89,7 +89,7 @@ msgstr "{0, plural, one {följare} other {följare}}"
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {följd} other {följda}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:447
+#: src/view/com/post-thread/PostThreadItem.tsx:452
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {gillamarkering} other {gillamarkeringar}}"
 
@@ -97,11 +97,11 @@ msgstr "{0, plural, one {gillamarkering} other {gillamarkeringar}}"
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {inlägg} other {inlägg}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:431
+#: src/view/com/post-thread/PostThreadItem.tsx:436
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, one {citat} other {citat}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:413
+#: src/view/com/post-thread/PostThreadItem.tsx:418
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {återpublicering} other {återpubliceringar}}"
 
@@ -328,7 +328,7 @@ msgstr "<0>{0}</0> och<1> </1><2>{1} </2>ingår i ditt startpaket"
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0> ingår i ditt startpaket"
 
-#: src/components/WhoCanReply.tsx:279
+#: src/components/WhoCanReply.tsx:292
 msgid "<0>{0}</0> members"
 msgstr "<0>{0}</0> medlemmar"
 
@@ -735,7 +735,7 @@ msgstr "ett okänt fel uppstod"
 msgid "an unknown labeler"
 msgstr "en okänd etikettsättare"
 
-#: src/components/WhoCanReply.tsx:300
+#: src/components/WhoCanReply.tsx:313
 msgid "and"
 msgstr "och"
 
@@ -844,12 +844,12 @@ msgstr "Utseende"
 msgid "Apply default recommended feeds"
 msgstr "Tillämpa förvalda rekommenderade flöden"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:834
+#: src/view/com/post-thread/PostThreadItem.tsx:839
 msgid "Archived from {0}"
 msgstr "Arkiverat från {0}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:803
-#: src/view/com/post-thread/PostThreadItem.tsx:842
+#: src/view/com/post-thread/PostThreadItem.tsx:808
+#: src/view/com/post-thread/PostThreadItem.tsx:847
 msgid "Archived post"
 msgstr "Arkiverat inlägg"
 
@@ -1066,7 +1066,7 @@ msgstr "Blogg"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:859
+#: src/view/com/post-thread/PostThreadItem.tsx:864
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky kan inte bekräfta äktheten av det angivna datumet."
 
@@ -1252,9 +1252,9 @@ msgid "Cancels opening the linked website"
 msgstr "Avbryter öppningen av den länkade webbplatsen"
 
 #: src/state/shell/composer/index.tsx:83
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:117
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:158
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:194
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:127
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:168
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:204
 msgid "Cannot interact with a blocked user"
 msgstr "Det går inte att interagera med en blockerad användare"
 
@@ -1725,7 +1725,7 @@ msgstr "Byggversion kopierad till urklipp"
 #: src/lib/sharing.ts:25
 #: src/view/com/modals/InviteCodes.tsx:153
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:235
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:393
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:403
 msgid "Copied to clipboard"
 msgstr "Kopierat till urklipp"
 
@@ -3001,10 +3001,6 @@ msgstr "Följs av <0>{0}</0> och <1>{1}</1>"
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr "Följs av <0>{0}</0>, <1>{1}</1>, och {2, plural, one {# annan} other {# andra}}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:432
-msgid "Followed users"
-msgstr "Användare jag följer"
-
 #: src/Navigation.tsx:202
 msgid "Followers of @{0} that you know"
 msgstr "Följare av @{0} som du känner"
@@ -3536,7 +3532,7 @@ msgstr "Ogiltig bekräftelsekod för 2FA."
 msgid "Invalid handle. Please try a different one."
 msgstr "Ogiltigt användarnamn. Försök med ett annat."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:277
+#: src/view/com/post-thread/PostThreadItem.tsx:282
 msgid "Invalid or unsupported post record"
 msgstr "Ogiltig eller icke stödd inläggspost"
 
@@ -3755,7 +3751,7 @@ msgstr "Ljust"
 msgid "Like"
 msgstr "Gilla"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:311
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:321
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr "Gilla ({0, plural, one {# gillamarkering} other {# gillamarkeringar}})"
 
@@ -4104,7 +4100,7 @@ msgstr "Modereringsverktyg"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "En moderator har valt att sätta en allmän varning på innehållet."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:632
+#: src/view/com/post-thread/PostThreadItem.tsx:637
 msgid "More"
 msgstr "Mer"
 
@@ -4527,7 +4523,7 @@ msgstr "Inte just nu"
 
 #: src/view/com/profile/ProfileMenu.tsx:348
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:686
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:357
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:367
 msgid "Note about sharing"
 msgstr "Anmärkning om delning"
 
@@ -4605,7 +4601,7 @@ msgid "OK"
 msgstr "OK"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/view/com/post-thread/PostThreadItem.tsx:864
+#: src/view/com/post-thread/PostThreadItem.tsx:869
 msgid "Okay"
 msgstr "Okej"
 
@@ -5562,7 +5558,7 @@ msgctxt "action"
 msgid "Reply"
 msgstr "Svara"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:263
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:273
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr "Svar ({0, plural, one {# svar} other {# svar}})"
 
@@ -5848,8 +5844,8 @@ msgid "Returns to the previous step"
 msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:120
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:468
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:474
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:478
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -6242,7 +6238,7 @@ msgstr "Sexuellt suggestiv"
 #: src/view/com/profile/ProfileMenu.tsx:204
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:346
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:356
 #: src/view/screens/ProfileList.tsx:483
 msgid "Share"
 msgstr "Dela"
@@ -6262,7 +6258,7 @@ msgstr "Dela med dig av något som är kul att veta!"
 
 #: src/view/com/profile/ProfileMenu.tsx:353
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:691
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:362
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:372
 msgid "Share anyway"
 msgstr "Dela ändå"
 
@@ -6350,7 +6346,7 @@ msgstr "Visa mindre av sånt här"
 msgid "Show list anyway"
 msgstr "Visa listan ändå"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:592
+#: src/view/com/post-thread/PostThreadItem.tsx:597
 #: src/view/com/post/Post.tsx:242
 #: src/view/com/posts/PostFeedItem.tsx:509
 msgid "Show More"
@@ -6410,7 +6406,7 @@ msgstr "Visa varning"
 msgid "Show warning and filter from feeds"
 msgstr "Visa varning och filtrera från flöden"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:805
+#: src/view/com/post-thread/PostThreadItem.tsx:810
 msgid "Shows information about when this post was created"
 msgstr ""
 
@@ -7154,7 +7150,7 @@ msgstr "Den här listan är tom."
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "Den här modereringstjänsten är inte tillgänglig. Se nedan för mer information. Kontakta oss om problemet kvarstår."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:845
+#: src/view/com/post-thread/PostThreadItem.tsx:850
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Det här inlägget har <0>{0}</0> som angivet skapelsedatum, men registrerades på Bluesky först den <1>{1}</1>."
 
@@ -7167,7 +7163,7 @@ msgid "This post has been deleted."
 msgstr "Det här inlägget har raderats."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:359
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:369
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "Det här inlägget är syns bara för inloggade användare. Det kommer inte att vara synligt för personer som inte är inloggade."
 
@@ -7315,8 +7311,8 @@ msgstr "Ämne"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:770
-#: src/view/com/post-thread/PostThreadItem.tsx:773
+#: src/view/com/post-thread/PostThreadItem.tsx:775
+#: src/view/com/post-thread/PostThreadItem.tsx:778
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:404
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:406
 msgid "Translate"
@@ -7444,7 +7440,7 @@ msgstr ""
 msgid "Unlike"
 msgstr "Sluta gilla"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:305
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:315
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "Ta bort gillamarkering ({0, plural, one {# gillamarkering} other {# gillamarkeringar}})"
 
@@ -7683,22 +7679,30 @@ msgstr "Användarlista uppdaterad"
 msgid "Username or email address"
 msgstr "Användarnamn eller e-postadress"
 
-#: src/components/WhoCanReply.tsx:263
+#: src/components/WhoCanReply.tsx:276
 msgid "users followed by <0>@{0}</0>"
 msgstr "användare som <0>@{0}</0> följer"
+
+#: src/components/WhoCanReply.tsx:263
+msgid "users following <0>@{0}</0>"
+msgstr ""
 
 #: src/screens/Messages/Settings.tsx:92
 #: src/screens/Messages/Settings.tsx:95
 msgid "Users I follow"
 msgstr "Användare som jag följer"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:455
 msgid "Users in \"{0}\""
 msgstr "Användare i ”{0}”"
 
 #: src/components/LikesDialog.tsx:83
 msgid "Users that have liked this content or profile"
 msgstr "Användare som har gillat detta innehåll eller denna profil"
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:432
+msgid "Users you follow"
+msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:419
 msgid "Value:"
@@ -8509,6 +8513,10 @@ msgstr "Din e-post har inte verifierats än. Det är en viktig säkerhetsåtgär
 #: src/state/shell/progress-guide.tsx:213
 msgid "Your first like!"
 msgstr "Din första gillamarkering!"
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
+msgid "Your followers"
+msgstr ""
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
