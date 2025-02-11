@@ -6,7 +6,6 @@
  * lowercase.
  */
 export const LogContext = {
-  default: 'default',
   session: 'session',
   notifications: 'notifications',
   convo: 'convo',
