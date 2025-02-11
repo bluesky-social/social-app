@@ -188,7 +188,7 @@ export function useNotificationsHandler() {
           return DEFAULT_HANDLER_OPTIONS
         }
 
-        logger.debug('Notifications: received', {e})
+        logger.debug('received', {e})
 
         const payload = e.request.trigger.payload as NotificationPayload
         if (
@@ -215,7 +215,7 @@ export function useNotificationsHandler() {
         }
         prevDate = e.notification.date
 
-        logger.debug('Notifications: response received', {
+        logger.debug('response received', {
           actionIdentifier: e.actionIdentifier,
         })
 
@@ -242,7 +242,7 @@ export function useNotificationsHandler() {
           ) {
             truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
           }
-          logger.debug('Notifications: handleNotification', {
+          logger.debug('handleNotification', {
             content: e.notification.request.content,
             payload: e.notification.request.trigger.payload,
           })
