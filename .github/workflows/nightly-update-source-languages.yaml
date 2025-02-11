@@ -33,4 +33,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Nightly source-language update
-          file_pattern: /src/locale/locales/en/messages.po
+          file_pattern: ./src/locale/locales/en/messages.po
