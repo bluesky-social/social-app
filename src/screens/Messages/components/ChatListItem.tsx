@@ -39,6 +39,7 @@ import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
 import {Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen} from '#/components/icons/EnveopeOpen'
 import {Trash_Stroke2_Corner0_Rounded} from '#/components/icons/Trash'
+import {KnownFollowers} from '#/components/KnownFollowers'
 import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -47,8 +48,12 @@ import * as bsky from '#/types/bsky'
 
 export let ChatListItem = ({
   convo,
+  showKnownFollowers,
+  renderOptions,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
+  showKnownFollowers?: boolean
+  renderOptions?: () => React.ReactNode
 }): React.ReactNode => {
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
@@ -66,6 +71,8 @@ export let ChatListItem = ({
       convo={convo}
       profile={otherUser}
       moderationOpts={moderationOpts}
+      showKnownFollowers={showKnownFollowers}
+      renderOptions={renderOptions}
     />
   )
 }
@@ -76,10 +83,14 @@ function ChatListItemReady({
   convo,
   profile: profileUnshadowed,
   moderationOpts,
+  showKnownFollowers,
+  renderOptions,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
+  showKnownFollowers?: boolean
+  renderOptions?: () => React.ReactNode
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -315,7 +326,7 @@ function ChatListItemReady({
                 <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
                   <Text
                     numberOfLines={1}
-                    style={[{maxWidth: '85%'}, web([a.leading_normal])]}>
+                    style={[{maxWidth: '80%'}, web([a.leading_normal])]}>
                     <Text
                       emoji
                       style={[
@@ -389,6 +400,17 @@ function ChatListItemReady({
                   size="lg"
                   style={[a.pt_xs]}
                 />
+
+                {showKnownFollowers && (
+                  <View style={[a.pt_sm]}>
+                    <KnownFollowers
+                      profile={profile}
+                      moderationOpts={moderationOpts}
+                      minimal
+                      showIfEmpty
+                    />
+                  </View>
+                )}
               </View>
 
               {convo.unreadCount > 0 && (
@@ -412,26 +434,30 @@ function ChatListItemReady({
           )}
         </Link>
 
-        <ConvoMenu
-          convo={convo}
-          profile={profile}
-          control={menuControl}
-          currentScreen="list"
-          showMarkAsRead={convo.unreadCount > 0}
-          hideTrigger={isNative}
-          blockInfo={blockInfo}
-          style={[
-            a.absolute,
-            a.h_full,
-            a.self_end,
-            a.justify_center,
-            {
-              right: tokens.space.lg,
-              opacity: !gtMobile || showActions || menuControl.isOpen ? 1 : 0,
-            },
-          ]}
-          latestReportableMessage={latestReportableMessage}
-        />
+        {renderOptions ? (
+          renderOptions()
+        ) : (
+          <ConvoMenu
+            convo={convo}
+            profile={profile}
+            control={menuControl}
+            currentScreen="list"
+            showMarkAsRead={convo.unreadCount > 0}
+            hideTrigger={isNative}
+            blockInfo={blockInfo}
+            style={[
+              a.absolute,
+              a.h_full,
+              a.self_end,
+              a.justify_center,
+              {
+                right: tokens.space.lg,
+                opacity: !gtMobile || showActions || menuControl.isOpen ? 1 : 0,
+              },
+            ]}
+            latestReportableMessage={latestReportableMessage}
+          />
+        )}
         <LeaveConvoPrompt
           control={leaveConvoControl}
           convoId={convo.id}
