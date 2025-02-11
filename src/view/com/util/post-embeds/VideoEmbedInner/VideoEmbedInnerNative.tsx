@@ -132,13 +132,13 @@ function VideoControls({
         onPress={enterFullscreen}
         style={a.flex_1}
         accessibilityLabel={_(msg`Video`)}
-        accessibilityHint={_(msg`Tap to enter full screen`)}
+        accessibilityHint={_(msg`Enters full screen`)}
         accessibilityRole="button"
       />
       <ControlButton
         onPress={togglePlayback}
         label={isPlaying ? _(msg`Pause`) : _(msg`Play`)}
-        accessibilityHint={_(msg`Tap to play or pause`)}
+        accessibilityHint={_(msg`Plays or pauses the video`)}
         style={{left: 6}}>
         {isPlaying ? (
           <PauseIcon width={13} fill={t.palette.white} />
@@ -155,7 +155,7 @@ function VideoControls({
             ? _(msg({message: `Unmute`, context: 'video'}))
             : _(msg({message: `Mute`, context: 'video'}))
         }
-        accessibilityHint={_(msg`Tap to toggle sound`)}
+        accessibilityHint={_(msg`Toggles the sound`)}
         style={{right: 6}}>
         {muted ? (
           <MuteIcon width={13} fill={t.palette.white} />

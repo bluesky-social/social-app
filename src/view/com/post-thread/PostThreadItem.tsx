@@ -802,7 +802,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
       <Button
         label={_(msg`Archived post`)}
         accessibilityHint={_(
-          msg`Show information about when this post was created`,
+          msg`Shows information about when this post was created`,
         )}
         onPress={e => {
           e.preventDefault()

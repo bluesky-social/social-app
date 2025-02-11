@@ -1241,7 +1241,7 @@ function ComposerFooter({
                 onPress={onEmojiButtonPress}
                 style={a.p_sm}
                 label={_(msg`Open emoji picker`)}
-                accessibilityHint={_(msg`Open emoji picker`)}
+                accessibilityHint={_(msg`Opens emoji picker`)}
                 variant="ghost"
                 shape="round"
                 color="primary">

@@ -807,7 +807,7 @@ export function SearchScreen(
                   hitSlop={HITSLOP_10}
                   label={_(msg`Menu`)}
                   accessibilityHint={_(
-                    msg`Access navigation links and settings`,
+                    msg`Provides access to navigation links and settings`,
                   )}
                   size="large"
                   variant="solid"
@@ -1033,7 +1033,7 @@ function SearchHistory({
                     accessibilityRole="button"
                     accessibilityLabel={_(msg`Remove profile`)}
                     accessibilityHint={_(
-                      msg`Remove profile from search history`,
+                      msg`Removes profile from search history`,
                     )}
                     onPress={() => onRemoveProfileClick(profile)}
                     hitSlop={createHitslop(6)}
