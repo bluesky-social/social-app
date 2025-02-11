@@ -1,143 +1,25 @@
-import format from 'date-fns/format'
 import {nanoid} from 'nanoid/non-secure'
 
-import {isNetworkError} from '#/lib/strings/errors'
 import {LogContext} from '#/logger/logContext'
 import {add} from '#/logger/logDump'
-import {Sentry} from '#/logger/sentry'
-import * as env from '#/env'
-import {createBitdriftTransport} from './bitdriftTransport'
-import {Metadata} from './types'
-import {ConsoleTransportEntry, LogLevel, Transport} from './types'
+import {bitdriftTransport} from '#/logger/transports/bitdrift'
+import {consoleTransport} from '#/logger/transports/console'
+import {sentryTransport} from '#/logger/transports/sentry'
+import {
+  ConsoleTransportEntry,
+  LogLevel,
+  Metadata,
+  Transport,
+} from '#/logger/types'
+import {enabledLogLevels} from '#/logger/util'
 
 export {LogLevel}
 export type {ConsoleTransportEntry, Transport}
 
-const enabledLogLevels: {
-  [key in LogLevel]: LogLevel[]
-} = {
-  [LogLevel.Debug]: [
-    LogLevel.Debug,
-    LogLevel.Info,
-    LogLevel.Log,
-    LogLevel.Warn,
-    LogLevel.Error,
-  ],
-  [LogLevel.Info]: [LogLevel.Info, LogLevel.Log, LogLevel.Warn, LogLevel.Error],
-  [LogLevel.Log]: [LogLevel.Log, LogLevel.Warn, LogLevel.Error],
-  [LogLevel.Warn]: [LogLevel.Warn, LogLevel.Error],
-  [LogLevel.Error]: [LogLevel.Error],
-}
-
-export function prepareMetadata(metadata: Metadata): Metadata {
-  return Object.keys(metadata).reduce((acc, key) => {
-    let value = metadata[key]
-    if (value instanceof Error) {
-      value = value.toString()
-    }
-    return {...acc, [key]: value}
-  }, {})
-}
-
-/**
- * Used in dev mode to nicely log to the console
- */
-export const consoleTransport: Transport = (
-  level,
-  context,
-  message,
-  metadata,
-  timestamp,
-) => {
-  const extra = Object.keys(metadata).length
-    ? ' ' + JSON.stringify(prepareMetadata(metadata), null, '  ')
-    : ''
-  const log = {
-    [LogLevel.Debug]: console.debug,
-    [LogLevel.Info]: console.info,
-    [LogLevel.Log]: console.log,
-    [LogLevel.Warn]: console.warn,
-    [LogLevel.Error]: console.error,
-  }[level]
-
-  if (message instanceof Error) {
-    console.info(
-      `${format(timestamp, 'HH:mm:ss')} ${message.toString()}${extra}`,
-    )
-    log(message)
-  } else {
-    log(`${format(timestamp, 'HH:mm:ss')} ${message.toString()}${extra}`)
-  }
-}
-
-export const sentryTransport: Transport = (
-  level,
-  context,
-  message,
-  {type, tags, ...metadata},
-  timestamp,
-) => {
-  const meta = prepareMetadata(metadata)
-
-  /**
-   * If a string, report a breadcrumb
-   */
-  if (typeof message === 'string') {
-    const severity = (
-      {
-        [LogLevel.Debug]: 'debug',
-        [LogLevel.Info]: 'info',
-        [LogLevel.Log]: 'log', // Sentry value here is undefined
-        [LogLevel.Warn]: 'warning',
-        [LogLevel.Error]: 'error',
-      } as const
-    )[level]
-
-    Sentry.addBreadcrumb({
-      message,
-      data: meta,
-      type: type || 'default',
-      level: severity,
-      timestamp: timestamp / 1000, // Sentry expects seconds
-    })
-
-    // We don't want to send any network errors to sentry
-    if (isNetworkError(message)) {
-      return
-    }
-
-    /**
-     * Send all higher levels with `captureMessage`, with appropriate severity
-     * level
-     */
-    if (level === 'error' || level === 'warn' || level === 'log') {
-      const messageLevel = ({
-        [LogLevel.Log]: 'log',
-        [LogLevel.Warn]: 'warning',
-        [LogLevel.Error]: 'error',
-      }[level] || 'log') as Sentry.Breadcrumb['level']
-      // Defer non-critical messages so they're sent in a batch
-      queueMessageForSentry(message, {
-        level: messageLevel,
-        tags,
-        extra: meta,
-      })
-    }
-  } else {
-    /**
-     * It's otherwise an Error and should be reported with captureException
-     */
-    Sentry.captureException(message, {
-      tags,
-      extra: meta,
-    })
-  }
-}
-
-const transports: Transport[] = (function configureTransports() {
+const TRANSPORTS: Transport[] = (function configureTransports() {
   switch (process.env.NODE_ENV) {
     case 'production': {
-      return [sentryTransport, createBitdriftTransport()]
+      return [sentryTransport, bitdriftTransport]
     }
     case 'test': {
       return []
@@ -148,32 +30,6 @@ const transports: Transport[] = (function configureTransports() {
   }
 })()
 
-const queuedMessages: [string, Parameters<typeof Sentry.captureMessage>[1]][] =
-  []
-let sentrySendTimeout: ReturnType<typeof setTimeout> | null = null
-function queueMessageForSentry(
-  message: string,
-  captureContext: Parameters<typeof Sentry.captureMessage>[1],
-) {
-  queuedMessages.push([message, captureContext])
-  if (!sentrySendTimeout) {
-    // Throttle sending messages with a leading delay
-    // so that we can get Sentry out of the critical path.
-    sentrySendTimeout = setTimeout(() => {
-      sentrySendTimeout = null
-      sendQueuedMessages()
-    }, 7000)
-  }
-}
-function sendQueuedMessages() {
-  while (queuedMessages.length > 0) {
-    const record = queuedMessages.shift()
-    if (record) {
-      Sentry.captureMessage(record[0], record[1])
-    }
-  }
-}
-
 export class Logger {
   static Level = LogLevel
   static Context = LogContext
@@ -183,19 +39,24 @@ export class Logger {
   contextFilter: string = ''
 
   protected debugContextRegexes: RegExp[] = []
+  protected transports: Transport[] = []
 
-  static create(context: keyof typeof LogContext) {
-    return new Logger({
-      level: (env.LOG_LEVEL || LogLevel.Info) as LogLevel,
+  static create(context?: keyof typeof LogContext) {
+    const logger = new Logger({
+      level: (process.env.EXPO_PUBLIC_LOG_LEVEL || LogLevel.Info) as LogLevel,
       context,
-      contextFilter: env.LOG_DEBUG || '',
+      contextFilter: process.env.EXPO_PUBLIC_LOG_DEBUG || '',
     })
+    for (const transport of TRANSPORTS) {
+      logger.addTransport(transport)
+    }
+    return logger
   }
 
   constructor({
-    level = env.LOG_LEVEL as LogLevel,
+    level = process.env.EXPO_PUBLIC_LOG_LEVEL as LogLevel,
     context,
-    contextFilter = env.LOG_DEBUG || '',
+    contextFilter = process.env.EXPO_PUBLIC_LOG_DEBUG || '',
   }: {
     level?: LogLevel
     context?: keyof typeof LogContext
@@ -231,6 +92,13 @@ export class Logger {
     this.transport(LogLevel.Error, error, metadata)
   }
 
+  addTransport(transport: Transport) {
+    this.transports.push(transport)
+    return () => {
+      this.transports.splice(this.transports.indexOf(transport), 1)
+    }
+  }
+
   protected transport(
     level: LogLevel,
     message: string | Error,
@@ -258,14 +126,14 @@ export class Logger {
 
     if (!enabledLogLevels[this.level].includes(level)) return
 
-    for (const transport of transports) {
+    for (const transport of this.transports) {
       transport(level, this.context, message, meta, timestamp)
     }
   }
 }
 
 /**
- * Logger instance. See `@/logger/README` for docs.
+ * Default logger instance. See `@/logger/README` for docs.
  *
  * Basic usage:
  *
@@ -276,4 +144,4 @@ export class Logger {
  *   `logger.disable()`
  *   `logger.enable()`
  */
-export const logger = new Logger()
+export const logger = Logger.create()

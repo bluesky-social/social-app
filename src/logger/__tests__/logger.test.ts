@@ -2,7 +2,8 @@ import {beforeAll, describe, expect, jest, test} from '@jest/globals'
 import * as Sentry from '@sentry/react-native'
 import {nanoid} from 'nanoid/non-secure'
 
-import {Logger, LogLevel, sentryTransport} from '#/logger'
+import {Logger, LogLevel} from '#/logger'
+import {sentryTransport} from '#/logger/transports/sentry'
 
 jest.mock('#/env', () => ({
   /*
