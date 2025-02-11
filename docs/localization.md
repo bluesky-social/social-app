@@ -40,16 +40,18 @@ Please only request a new language when you are certain you will be able to cont
 
 Install the [Crowdin CLI](https://crowdin.github.io/crowdin-cli/). You will need to [configure your API token](https://crowdin.github.io/crowdin-cli/configuration) to access the project.
 
+### English source-file sync with Crowdin
+
+Every night, a GitHub action will run `yarn intl:extract` to update the english `messages.po` file. This will be automatically synced with Crowdin. Crowdin should notify all subscribed users of new translations.
+
 ### Release process
 
 1. Pull main and create a branch.
 1. Run `yarn intl:pull` to fetch all translation updates from Crowdin.
 1. Create a PR, ensure the translations all look correct, and merge.
-1. Merge all approved translation PRs (contributions from outside crowdin).
-1. Pull main.
-1. Run `yarn intl:extract` to sync the english `.po` file with the state of the app.
-1. Run `yarn intl:push` to sync Crowdin with the state of the repo.
-1. Commit the updated english `.po` and push to GitHub.
+1. If needed:
+  1. Merge all approved translation PRs (contributions from outside crowdin).
+  1. Run `yarn intl:push` to sync Crowdin with the state of the repo.
 
 ### Testing the translations in Crowdin
 
