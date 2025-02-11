@@ -14,38 +14,6 @@ export const consoleTransport: Transport = (
   metadata,
   timestamp,
 ) => {
-  /**
-   * Color handling copied from Kleur
-   *
-   * @see https://github.com/lukeed/kleur/blob/fa3454483899ddab550d08c18c028e6db1aab0e5/colors.mjs#L13
-   */
-  const colors: {
-    [key: string]: [number, number]
-  } = {
-    default: [0, 0],
-    blue: [36, 39],
-    green: [32, 39],
-    magenta: [35, 39],
-    red: [31, 39],
-    yellow: [33, 39],
-  }
-
-  function withColor([x, y]: [number, number]) {
-    const rgx = new RegExp(`\\x1b\\[${y}m`, 'g')
-    const open = `\x1b[${x}m`,
-      close = `\x1b[${y}m`
-
-    return function (txt: string) {
-      if (txt == null) return txt
-
-      return (
-        open +
-        (~('' + txt).indexOf(close) ? txt.replace(rgx, close + open) : txt) +
-        close
-      )
-    }
-  }
-
   const hasMetadata = Object.keys(metadata).length
   const colorize = withColor(
     {
@@ -86,5 +54,37 @@ export const consoleTransport: Transport = (
       // for stacktrace
       console.error(message)
     }
+  }
+}
+
+/**
+ * Color handling copied from Kleur
+ *
+ * @see https://github.com/lukeed/kleur/blob/fa3454483899ddab550d08c18c028e6db1aab0e5/colors.mjs#L13
+ */
+const colors: {
+  [key: string]: [number, number]
+} = {
+  default: [0, 0],
+  blue: [36, 39],
+  green: [32, 39],
+  magenta: [35, 39],
+  red: [31, 39],
+  yellow: [33, 39],
+}
+
+function withColor([x, y]: [number, number]) {
+  const rgx = new RegExp(`\\x1b\\[${y}m`, 'g')
+  const open = `\x1b[${x}m`,
+    close = `\x1b[${y}m`
+
+  return function (txt: string) {
+    if (txt == null) return txt
+
+    return (
+      open +
+      (~('' + txt).indexOf(close) ? txt.replace(rgx, close + open) : txt) +
+      close
+    )
   }
 }
