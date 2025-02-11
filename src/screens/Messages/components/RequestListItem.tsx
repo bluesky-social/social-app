@@ -1,10 +1,10 @@
 import {useCallback} from 'react'
-import {Keyboard, Pressable} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
-import {useLingui as useExample} from '@lingui/react'
+import {useLingui} from '@lingui/react'
 
-import {atoms as a, tokens, useTheme} from '#/alf'
+import {atoms as a, tokens} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon} from '#/components/icons/ArrowBoxLeft'
 import {CircleX_Stroke2_Corner0_Rounded as CircleXIcon} from '#/components/icons/CircleX'
 import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
@@ -26,29 +26,28 @@ export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
   )
 }
 function RequestMenu({}: {convo: ChatBskyConvoDefs.ConvoView}) {
-  const {_} = useExample()
-  const t = useTheme()
+  const {_} = useLingui()
+
   return (
     <Menu.Root>
-      <Menu.Trigger label={_(msg`Request options`)}>
+      <Menu.Trigger label={_(msg`Reject chat request`)}>
         {({props, state}) => (
-          <Pressable
+          <Button
             {...props}
-            onPress={() => {
-              Keyboard.dismiss()
-              props.onPress()
-            }}
+            label={props.accessibilityLabel}
             style={[
               a.p_2xs,
-              a.rounded_full,
               (state.hovered || state.pressed) && {opacity: 0.5},
-              // {backgroundColor: 'red'},
               // make sure pfp is in the middle
               a.absolute,
-              {top: tokens.space.lg, right: tokens.space.md},
-            ]}>
-            <CircleXIcon size="xl" style={t.atoms.text} />
-          </Pressable>
+              {top: tokens.space.md, right: tokens.space.md},
+            ]}
+            color="secondary"
+            variant="solid"
+            size="small">
+            <ButtonIcon icon={CircleXIcon} />
+            <ButtonText>Reject</ButtonText>
+          </Button>
         )}
       </Menu.Trigger>
       <Menu.Outer>
