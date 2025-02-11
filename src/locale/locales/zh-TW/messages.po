@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-06 00:39\n"
+"PO-Revision-Date: 2025-02-11 21:09\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -107,7 +107,7 @@ msgstr ""
 
 #: src/screens/Settings/Settings.tsx:424
 msgid "{0}"
-msgstr ""
+msgstr "{0}"
 
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
@@ -150,27 +150,27 @@ msgstr ""
 #. How many days have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:158
 msgid "{0}d"
-msgstr ""
+msgstr "{0} 天前"
 
 #. How many hours have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:148
 msgid "{0}h"
-msgstr ""
+msgstr "{0} 小時前"
 
 #. How many minutes have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:138
 msgid "{0}m"
-msgstr ""
+msgstr "{0} 分鐘前"
 
 #. How many months have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:169
 msgid "{0}mo"
-msgstr ""
+msgstr "{0} 個月前"
 
 #. How many seconds have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:128
 msgid "{0}s"
-msgstr ""
+msgstr "{0} 秒前"
 
 #: src/view/shell/desktop/LeftNav.tsx:384
 msgid "{count} unread items"
@@ -354,7 +354,7 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:193
 msgid "24 hours"
-msgstr ""
+msgstr "24 小時"
 
 #: src/screens/Login/LoginForm.tsx:260
 msgid "2FA Confirmation"
@@ -362,11 +362,11 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:232
 msgid "30 days"
-msgstr ""
+msgstr "30 天"
 
 #: src/components/dialogs/MutedWords.tsx:217
 msgid "7 days"
-msgstr ""
+msgstr "7 天"
 
 #: src/Navigation.tsx:364
 #: src/screens/Settings/AboutSettings.tsx:28
@@ -944,7 +944,7 @@ msgstr ""
 #: src/screens/Signup/BackNextButtons.tsx:41
 #: src/screens/StarterPack/Wizard/index.tsx:286
 msgid "Back"
-msgstr ""
+msgstr "返回"
 
 #: src/view/screens/Lists.tsx:81
 #: src/view/screens/ModerationModlists.tsx:81
@@ -968,7 +968,7 @@ msgstr ""
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:74
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:111
 msgid "BETA"
-msgstr ""
+msgstr "BETA"
 
 #: src/components/dialogs/BirthDateSettings.tsx:102
 #: src/screens/Settings/AccountSettings.tsx:109
@@ -1072,7 +1072,7 @@ msgstr ""
 #: src/view/com/auth/server-input/index.tsx:132
 #: src/view/com/auth/server-input/index.tsx:133
 msgid "Bluesky"
-msgstr ""
+msgstr "Bluesky"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:859
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
@@ -1105,7 +1105,7 @@ msgstr ""
 
 #: src/screens/Settings/AppIconSettings/index.tsx:99
 msgid "Bluesky+"
-msgstr ""
+msgstr "Bluesky+"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:102
 msgid "Bluesky+ icons"
@@ -1730,7 +1730,7 @@ msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 msgid "Copy"
-msgstr ""
+msgstr "複製"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:196
 msgid "Copy App Password"
@@ -1938,7 +1938,7 @@ msgstr ""
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:661
 #: src/view/screens/ProfileList.tsx:739
 msgid "Delete"
-msgstr ""
+msgstr "刪除"
 
 #: src/screens/Settings/AccountSettings.tsx:156
 #: src/screens/Settings/AccountSettings.tsx:161
@@ -3106,7 +3106,7 @@ msgstr ""
 
 #: src/components/MediaPreview.tsx:122
 msgid "GIF"
-msgstr ""
+msgstr "GIF"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:234
 msgid "Give your profile a face"
@@ -3367,7 +3367,7 @@ msgstr ""
 #: src/view/shell/desktop/LeftNav.tsx:584
 #: src/view/shell/Drawer.tsx:396
 msgid "Home"
-msgstr ""
+msgstr "首頁"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:398
 msgid "Host:"
@@ -3899,7 +3899,7 @@ msgstr ""
 
 #: src/screens/Takendown.tsx:88
 msgid "Log Out"
-msgstr ""
+msgstr "登出"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:78
 msgid "Logged-out visibility"
@@ -4082,7 +4082,7 @@ msgstr ""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:632
 msgid "More"
-msgstr ""
+msgstr "更多"
 
 #: src/view/shell/desktop/Feeds.tsx:102
 #: src/view/shell/desktop/Feeds.tsx:105
@@ -4361,7 +4361,7 @@ msgstr ""
 #: src/view/com/modals/ChangePassword.tsx:254
 #: src/view/com/modals/ChangePassword.tsx:256
 msgid "Next"
-msgstr ""
+msgstr "下一步"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:169
 msgid "Next image"
@@ -4546,11 +4546,11 @@ msgstr ""
 
 #: src/lib/hooks/useTimeAgo.ts:122
 msgid "now"
-msgstr ""
+msgstr "剛剛"
 
 #: src/components/dms/MessageItem.tsx:198
 msgid "Now"
-msgstr ""
+msgstr "剛剛"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:151
 #: src/view/com/composer/labels/LabelsBtn.tsx:154
@@ -4958,7 +4958,7 @@ msgstr ""
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:140
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:370
 msgid "Play"
-msgstr ""
+msgstr "播放"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:107
 msgid "Play {0}"
@@ -5825,13 +5825,13 @@ msgstr ""
 #: src/view/com/modals/EditProfile.tsx:219
 #: src/view/screens/SavedFeeds.tsx:109
 msgid "Save"
-msgstr ""
+msgstr "儲存"
 
 #: src/view/com/lightbox/ImageViewing/index.tsx:622
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
-msgstr ""
+msgstr "儲存"
 
 #: src/components/dialogs/BirthDateSettings.tsx:114
 msgid "Save birthday"
@@ -5915,7 +5915,7 @@ msgstr ""
 #: src/view/shell/desktop/LeftNav.tsx:602
 #: src/view/shell/Drawer.tsx:370
 msgid "Search"
-msgstr ""
+msgstr "搜尋"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:745
 msgid "Search by name or interest"
@@ -6195,12 +6195,12 @@ msgstr ""
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:346
 #: src/view/screens/ProfileList.tsx:483
 msgid "Share"
-msgstr ""
+msgstr "分享"
 
 #: src/view/com/lightbox/ImageViewing/index.tsx:631
 msgctxt "action"
 msgid "Share"
-msgstr ""
+msgstr "分享"
 
 #: src/components/dms/ChatEmptyPill.tsx:37
 msgid "Share a cool story!"
@@ -6389,7 +6389,7 @@ msgstr ""
 #: src/view/shell/NavSignupCard.tsx:57
 #: src/view/shell/NavSignupCard.tsx:62
 msgid "Sign in"
-msgstr ""
+msgstr "登入"
 
 #: src/components/AccountList.tsx:122
 msgid "Sign in as {0}"
@@ -6443,7 +6443,7 @@ msgstr ""
 #: src/screens/Onboarding/StepInterests/index.tsx:231
 #: src/screens/StarterPack/Wizard/index.tsx:195
 msgid "Skip"
-msgstr ""
+msgstr "跳過"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:228
 msgid "Skip this flow"
@@ -6664,7 +6664,7 @@ msgstr ""
 
 #: src/view/shell/desktop/LeftNav.tsx:107
 msgid "Switch accounts"
-msgstr ""
+msgstr "切換帳號"
 
 #: src/view/shell/desktop/LeftNav.tsx:251
 msgid "Switch to {0}"
@@ -7269,7 +7269,7 @@ msgstr ""
 
 #: src/components/dms/DateDivider.tsx:44
 msgid "Today"
-msgstr ""
+msgstr "今天"
 
 #: src/view/com/util/forms/DropdownButton.tsx:258
 msgid "Toggle dropdown"
@@ -7428,11 +7428,11 @@ msgstr ""
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
 msgctxt "video"
 msgid "Unmute"
-msgstr ""
+msgstr "取消靜音"
 
 #: src/view/screens/ProfileList.tsx:701
 msgid "Unmute"
-msgstr ""
+msgstr "取消靜音"
 
 #: src/components/RichTextTag.tsx:140
 #: src/components/RichTextTag.tsx:153
@@ -7726,7 +7726,7 @@ msgstr ""
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:83
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:134
 msgid "Video"
-msgstr ""
+msgstr "影片"
 
 #: src/view/com/composer/state/video.ts:358
 msgid "Video failed to process"
@@ -7771,7 +7771,7 @@ msgstr ""
 
 #: src/view/screens/Profile.tsx:236
 msgid "Videos"
-msgstr ""
+msgstr "影片"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:58
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:73
@@ -7880,7 +7880,7 @@ msgstr ""
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:80
 msgid "Volume"
-msgstr ""
+msgstr "音量"
 
 #: src/components/moderation/LabelPreference.tsx:136
 #: src/lib/moderation/useLabelBehaviorDescription.ts:17
