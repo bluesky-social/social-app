@@ -257,24 +257,24 @@ export function PostThread({uri}: {uri: string | undefined}) {
     randomCache,
   ])
 
-  const [collapsedCIDs, setCollapsedCIDs] = React.useState(new Set())
-  const descendantsOfCollapsedCIDs = React.useMemo(() => {
+  const [collapsedURIs, setCollapsedURIs] = React.useState(new Set())
+  const descendantsOfCollapsedURIs = React.useMemo(() => {
     const set = new Set<string>()
     if (!skeleton) return set
 
     for (let val of skeleton.replies) {
       if (!isThreadPost(val)) continue
-      if (collapsedCIDs.has(val.post.cid) || set.has(val.post.cid)) {
+      if (collapsedURIs.has(val.post.uri) || set.has(val.post.uri)) {
         val.replies?.forEach(r => {
-          isThreadPost(r) && set.add(r.post.cid)
+          isThreadPost(r) && set.add(r.post.uri)
         })
       }
     }
     return set
-  }, [collapsedCIDs, skeleton])
-  const toggleCollapse = React.useCallback((cid: string) => {
-    setCollapsedCIDs(x => {
-      x.has(cid) ? x.delete(cid) : x.add(cid)
+  }, [collapsedURIs, skeleton])
+  const toggleCollapse = React.useCallback((collapseUri: string) => {
+    setCollapsedURIs(x => {
+      x.has(collapseUri) ? x.delete(collapseUri) : x.add(collapseUri)
       return new Set(x)
     })
   }, [])
@@ -511,8 +511,8 @@ export function PostThread({uri}: {uri: string | undefined}) {
           ref={item.ctx.isHighlightedPost ? highlightedPostRef : undefined}
           onLayout={deferParents ? () => setDeferParents(false) : undefined}>
           <PostThreadItem
-            isCollapsed={collapsedCIDs.has(item.post.cid)}
-            isUnderCollapsed={descendantsOfCollapsedCIDs.has(item.post.cid)}
+            isCollapsed={collapsedURIs.has(item.post.uri)}
+            isUnderCollapsed={descendantsOfCollapsedURIs.has(item.post.uri)}
             onCollapse={treeView ? toggleCollapse : NO_OP}
             post={item.post}
             record={item.record}

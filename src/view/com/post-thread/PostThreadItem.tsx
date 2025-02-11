@@ -82,7 +82,7 @@ export function PostThreadItem({
 }: {
   isCollapsed: boolean
   isUnderCollapsed: boolean
-  onCollapse: (cid: string) => void
+  onCollapse: (uri: string) => void
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
   moderation: ModerationDecision | undefined
@@ -188,7 +188,7 @@ let PostThreadItemLoaded = ({
 }: {
   isCollapsed: boolean
   isUnderCollapsed: boolean
-  onCollapse: (cid: string) => void
+  onCollapse: (uri: string) => void
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
@@ -515,7 +515,7 @@ let PostThreadItemLoaded = ({
             testID={`postThreadItem-by-${post.author.handle}`}
             href={postHref}
             onLongPress={() => {
-              onCollapse(post.cid)
+              onCollapse(post.uri)
             }}
             disabled={overrideBlur}
             modui={moderation.ui('contentList')}
@@ -554,7 +554,7 @@ let PostThreadItemLoaded = ({
           testID={`postThreadItem-by-${post.author.handle}`}
           href={postHref}
           onLongPress={() => {
-            onCollapse(post.cid)
+            onCollapse(post.uri)
           }}
           disabled={overrideBlur}
           modui={moderation.ui('contentList')}
@@ -648,7 +648,7 @@ let PostThreadItemLoaded = ({
                     enableTags
                     value={richText}
                     onLinkLongPress={() => {
-                      onCollapse(post.cid)
+                      onCollapse(post.uri)
                     }}
                     style={[a.flex_1, a.text_md]}
                     numberOfLines={limitLines ? MAX_POST_LINES : undefined}
