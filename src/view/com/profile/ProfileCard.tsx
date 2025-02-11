@@ -77,6 +77,7 @@ export function ProfileCard({
     showKnownFollowers &&
     shouldShowKnownFollowers(profile.viewer?.knownFollowers) &&
     moderationOpts
+  const hasDescription = 'description' in profile
 
   return (
     <Link
@@ -127,35 +128,29 @@ export function ProfileCard({
           <View style={styles.layoutButton}>{renderButton(profile)}</View>
         ) : undefined}
       </View>
-      {atp.profile.isView(profile) || atp.profile.isDetailedView(profile) ? (
-        <>
-          {profile.description || knownFollowersVisible ? (
-            <View style={styles.details}>
-              {profile.description ? (
-                <Text emoji style={pal.text} numberOfLines={4}>
-                  {profile.description as string}
-                </Text>
-              ) : null}
-              {knownFollowersVisible ? (
-                <View
-                  style={[
-                    a.flex_row,
-                    a.align_center,
-                    a.gap_sm,
-                    !!profile.description && a.mt_md,
-                  ]}>
-                  {atp.profile.isDetailedView(profile) && (
-                    <KnownFollowers
-                      minimal
-                      profile={profile}
-                      moderationOpts={moderationOpts}
-                    />
-                  )}
-                </View>
-              ) : null}
+      {hasDescription || knownFollowersVisible ? (
+        <View style={styles.details}>
+          {hasDescription && profile.description ? (
+            <Text emoji style={pal.text} numberOfLines={4}>
+              {profile.description as string}
+            </Text>
+          ) : null}
+          {knownFollowersVisible ? (
+            <View
+              style={[
+                a.flex_row,
+                a.align_center,
+                a.gap_sm,
+                !!hasDescription && a.mt_md,
+              ]}>
+              <KnownFollowers
+                minimal
+                profile={profile}
+                moderationOpts={moderationOpts}
+              />
             </View>
           ) : null}
-        </>
+        </View>
       ) : null}
     </Link>
   )

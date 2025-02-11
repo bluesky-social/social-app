@@ -266,6 +266,7 @@
     "webpack-bundle-analyzer": "^4.10.1"
   },
   "resolutions": {
+    "@atproto/lexicon": "0.4.6-next.5",
     "@expo/image-utils": "0.6.3",
     "@react-native/babel-preset": "0.76.1",
     "@react-native/normalize-colors": "0.76.1",
