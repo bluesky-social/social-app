@@ -39,7 +39,6 @@ import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
 import {Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen} from '#/components/icons/EnveopeOpen'
 import {Trash_Stroke2_Corner0_Rounded} from '#/components/icons/Trash'
-import {KnownFollowers} from '#/components/KnownFollowers'
 import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -48,12 +47,12 @@ import * as bsky from '#/types/bsky'
 
 export let ChatListItem = ({
   convo,
-  showKnownFollowers,
-  renderOptions,
+  showMenu = true,
+  children,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
-  showKnownFollowers?: boolean
-  renderOptions?: () => React.ReactNode
+  showMenu?: boolean
+  children?: React.ReactNode
 }): React.ReactNode => {
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
@@ -71,9 +70,9 @@ export let ChatListItem = ({
       convo={convo}
       profile={otherUser}
       moderationOpts={moderationOpts}
-      showKnownFollowers={showKnownFollowers}
-      renderOptions={renderOptions}
-    />
+      showMenu={showMenu}>
+      {children}
+    </ChatListItemReady>
   )
 }
 
@@ -83,14 +82,14 @@ function ChatListItemReady({
   convo,
   profile: profileUnshadowed,
   moderationOpts,
-  showKnownFollowers,
-  renderOptions,
+  showMenu,
+  children,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
-  showKnownFollowers?: boolean
-  renderOptions?: () => React.ReactNode
+  showMenu?: boolean
+  children?: React.ReactNode
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -326,7 +325,7 @@ function ChatListItemReady({
                 <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
                   <Text
                     numberOfLines={1}
-                    style={[{maxWidth: '80%'}, web([a.leading_normal])]}>
+                    style={[{maxWidth: '85%'}, web([a.leading_normal])]}>
                     <Text
                       emoji
                       style={[
@@ -401,16 +400,7 @@ function ChatListItemReady({
                   style={[a.pt_xs]}
                 />
 
-                {showKnownFollowers && (
-                  <View style={[a.pt_sm]}>
-                    <KnownFollowers
-                      profile={profile}
-                      moderationOpts={moderationOpts}
-                      minimal
-                      showIfEmpty
-                    />
-                  </View>
-                )}
+                {children}
               </View>
 
               {convo.unreadCount > 0 && (
@@ -434,9 +424,7 @@ function ChatListItemReady({
           )}
         </Link>
 
-        {renderOptions ? (
-          renderOptions()
-        ) : (
+        {showMenu && (
           <ConvoMenu
             convo={convo}
             profile={profile}
