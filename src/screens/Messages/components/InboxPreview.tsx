@@ -32,7 +32,7 @@ export function InboxPreview({
         a.border_t,
         {marginTop: a.border_t.borderTopWidth * -1},
         a.border_b,
-        t.atoms.border_contrast_medium,
+        t.atoms.border_contrast_low,
         a.rounded_0,
       ]}
       to="/messages/inbox"
