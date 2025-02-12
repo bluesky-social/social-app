@@ -8,7 +8,7 @@ msgstr ""
 "Language: vi\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-12 14:49\n"
+"PO-Revision-Date: 2025-02-12 16:13\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1317,12 +1317,12 @@ msgstr "Thay đổi địa chỉ email của bạn"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Changes app icon"
-msgstr ""
+msgstr "Thay đổi biểu tượng ứng dụng"
 
 #: src/components/forms/HostingProvider.tsx:50
 #: src/components/forms/HostingProvider.tsx:66
 msgid "Changes hosting provider"
-msgstr ""
+msgstr "Thay đổi nơi quản lý tài khoản"
 
 #: src/Navigation.tsx:398
 #: src/view/shell/bottom-bar/BottomBar.tsx:204
@@ -1517,7 +1517,7 @@ msgstr "Đóng cảnh báo cập nhật mật khẩu"
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
 msgid "Closes the emoji picker"
-msgstr ""
+msgstr "Đóng bảng chọn emoji"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:32
 msgid "Closes viewer for header image"
@@ -1736,7 +1736,7 @@ msgstr "Đã sao chép!"
 
 #: src/screens/Settings/AboutSettings.tsx:68
 msgid "Copies build version to clipboard"
-msgstr ""
+msgstr "Sao chép mã số phiên bản vào bản ghi tạm"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 msgid "Copy"
@@ -1899,7 +1899,7 @@ msgstr "Tùy chỉnh ai có thể tương tác với bài đăng này."
 
 #: src/screens/Onboarding/Layout.tsx:56
 msgid "Customizes your Bluesky experience"
-msgstr ""
+msgstr "Tuỳ biến trải nghiệm Bluesky của bạn"
 
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
@@ -2578,7 +2578,7 @@ msgstr "Nhập email mới của bạn ở dưới."
 
 #: src/screens/Login/LoginForm.tsx:235
 msgid "Enter your password"
-msgstr ""
+msgstr "Nhập mật khẩu"
 
 #: src/screens/Login/index.tsx:98
 msgid "Enter your username and password"
@@ -2586,7 +2586,7 @@ msgstr "Nhập tên đăng nhập và mật khẩu"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
 msgid "Enters full screen"
-msgstr ""
+msgstr "Mở toàn màn hình"
 
 #: src/view/com/composer/Composer.tsx:1660
 #: src/view/com/util/error/ErrorScreen.tsx:42
@@ -2673,11 +2673,11 @@ msgstr "Mở rộng hoặc thu gọn toàn bộ bài đăng bạn đang trả l�
 
 #: src/screens/VideoFeed/index.tsx:933
 msgid "Expands or collapses post text"
-msgstr ""
+msgstr "Mở rộng hoặc thu gọn nội dung bài đăng"
 
 #: src/view/com/composer/ComposerReplyTo.tsx:73
 msgid "Expands or collapses the full post you are replying to"
-msgstr ""
+msgstr "Mở rộng hoặc thu gọn bài đăng bạn đang trả lời"
 
 #: src/lib/api/index.ts:405
 msgid "Expected uri to resolve to a record"
@@ -2798,7 +2798,7 @@ msgstr "Không lưu được cài đặt thông báo, vui lòng thử lại"
 
 #: src/screens/ModerationInteractionSettings/index.tsx:108
 msgid "Failed to save settings. Please try again."
-msgstr ""
+msgstr "Không thể lưu cài đặt. Vui lòng thử lại."
 
 #: src/components/dms/MessageItem.tsx:234
 msgid "Failed to send"
@@ -3344,7 +3344,7 @@ msgstr "Ẩn danh sách người dùng"
 #: src/components/moderation/ContentHider.tsx:151
 #: src/components/moderation/PostHider.tsx:79
 msgid "Hides the content"
-msgstr ""
+msgstr "Ẩn nội dung"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:117
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
@@ -3521,7 +3521,7 @@ msgstr "Tương tác bị giới hạn"
 
 #: src/screens/Moderation/index.tsx:209
 msgid "Interaction settings"
-msgstr ""
+msgstr "Cài đặt tương tác"
 
 #: src/screens/Login/LoginForm.tsx:149
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
@@ -3680,7 +3680,7 @@ msgstr "Tìm hiểu thêm về việc tự lưu trữ PDS của bạn."
 
 #: src/components/moderation/ContentHider.tsx:149
 msgid "Learn more about the moderation applied to this content"
-msgstr ""
+msgstr "Tìm hiểu thêm về kiểm duyệt được áp dụng cho nội dung này"
 
 #: src/components/moderation/ContentHider.tsx:215
 msgid "Learn more about the moderation applied to this content."
@@ -4756,7 +4756,7 @@ msgstr "Mở máy ảnh trên thiết bị"
 
 #: src/screens/Settings/AccountSettings.tsx:127
 msgid "Opens change handle dialog"
-msgstr ""
+msgstr "Mở hộp thoại thay đổi tên tài khoản"
 
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:35
 msgid "Opens composer"
@@ -4768,7 +4768,7 @@ msgstr "Mở thư viện ảnh trên thiết bị"
 
 #: src/view/com/composer/Composer.tsx:1244
 msgid "Opens emoji picker"
-msgstr ""
+msgstr "Mở trình chọn emoji"
 
 #: src/view/com/auth/SplashScreen.tsx:49
 #: src/view/com/auth/SplashScreen.web.tsx:111
@@ -4786,7 +4786,7 @@ msgstr "Mở hộp thoại chọn GIF"
 
 #: src/screens/Settings/Settings.tsx:208
 msgid "Opens helpdesk in browser"
-msgstr ""
+msgstr "Mở trợ giúp trong trình duyệt"
 
 #: src/view/com/modals/InviteCodes.tsx:173
 msgid "Opens list of invite codes"
@@ -4994,11 +4994,11 @@ msgstr "Phát video"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:42
 msgid "Plays or pauses the GIF"
-msgstr ""
+msgstr "Phát hoặc dừng GIF"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 msgid "Plays or pauses the video"
-msgstr ""
+msgstr "Phát hoặc dừng video"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:106
 msgid "Plays the GIF"
@@ -5006,7 +5006,7 @@ msgstr "Phát GIF"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:59
 msgid "Plays the video"
-msgstr ""
+msgstr "Phát video"
 
 #: src/screens/Signup/state.ts:217
 msgid "Please choose your handle."
@@ -5147,7 +5147,7 @@ msgstr "Cài đặt tương tác bài đăng"
 #: src/Navigation.tsx:163
 #: src/screens/ModerationInteractionSettings/index.tsx:34
 msgid "Post Interaction Settings"
-msgstr ""
+msgstr "Cài đặt tương tác bài đăng"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:89
 msgid "Post language"
@@ -5275,7 +5275,7 @@ msgstr "Đã cập nhật hồ sơ"
 
 #: src/view/screens/Search/Search.tsx:810
 msgid "Provides access to navigation links and settings"
-msgstr ""
+msgstr "Cho phép truy cập tới liên kết điều hướng và cài đặt"
 
 #: src/screens/Onboarding/StepFinished.tsx:253
 msgid "Public"
@@ -5530,7 +5530,7 @@ msgstr "Đã xóa khỏi bảng tin của tôi"
 
 #: src/view/screens/Search/Search.tsx:1036
 msgid "Removes profile from search history"
-msgstr ""
+msgstr "Xóa hồ sơ khỏi lịch sử tìm kiếm"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
@@ -5841,7 +5841,7 @@ msgstr "Trở về trang trước"
 
 #: src/screens/StarterPack/Wizard/index.tsx:287
 msgid "Returns to the previous step"
-msgstr ""
+msgstr "Quay lại bước trước đó"
 
 #: src/components/dialogs/BirthDateSettings.tsx:120
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:478
@@ -5996,7 +5996,7 @@ msgstr "Tìm Tenor"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
 #: src/components/ProgressGuide/FollowDialog.tsx:765
 msgid "Searches for profiles"
-msgstr ""
+msgstr "Tìm hồ sơ"
 
 #: src/view/com/modals/ChangeEmail.tsx:105
 msgid "Security Step Required"
@@ -6120,7 +6120,7 @@ msgstr "Chọn ngôn ngữ ưa thích cho bản dịch trong bảng tin của b�
 
 #: src/view/com/util/forms/DropdownButton.tsx:297
 msgid "Selects option {0} of {numItems}"
-msgstr ""
+msgstr "Lựa chọn {0} trong {numItems}"
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
@@ -6219,7 +6219,7 @@ msgstr "Cài đặt"
 
 #: src/screens/ModerationInteractionSettings/index.tsx:102
 msgid "Settings saved"
-msgstr ""
+msgstr "Cài đặt được lưu"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Sexual activity or erotic nudity."
@@ -6408,16 +6408,16 @@ msgstr "Hiển thị cảnh báo và bộ lọc từ bảng tin"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:810
 msgid "Shows information about when this post was created"
-msgstr ""
+msgstr "Hiển thị thông tin về thời gian đăng của bài này"
 
 #: src/screens/Settings/Settings.tsx:104
 msgid "Shows other accounts you can switch to"
-msgstr ""
+msgstr "Hiển thị các tài khoản khác bạn có thể chuyển đổi sang"
 
 #: src/components/moderation/ContentHider.tsx:152
 #: src/components/moderation/PostHider.tsx:79
 msgid "Shows the content"
-msgstr ""
+msgstr "Hiển thị nội dung"
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
@@ -6888,7 +6888,7 @@ msgstr "Các nhãn sau đây đã được gắn cho nội dung của bạn."
 
 #: src/screens/ModerationInteractionSettings/index.tsx:42
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
-msgstr ""
+msgstr "Các cài đặt sau sẽ được sử dụng làm mặc định khi bạn tạo bài đăng mới. Bạn có thể chỉnh sửa chúng cho từng bài đăng cụ thể từ trình soạn thảo."
 
 #: src/view/com/post-thread/PostThread.tsx:262
 #: src/view/com/post-thread/PostThread.tsx:274
@@ -7078,7 +7078,7 @@ msgstr "Không thể xem nội dung này nếu không có tài khoản Bluesky."
 
 #: src/screens/Messages/components/ChatListItem.tsx:284
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
-msgstr ""
+msgstr "Nội dung này thuộc tài khoản đã xóa hoặc vô hiệu hóa. Nhấn để xem tùy chọn"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:94
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -7156,7 +7156,7 @@ msgstr "Bài đăng này khai rằng đã được tạo vào <0>{0}</0>, nhưng
 
 #: src/components/WhoCanReply.tsx:213
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
-msgstr ""
+msgstr "Bài đăng này có loại threadgate không xác định. Ứng dụng của bạn có thể đã lỗi thời."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:152
 msgid "This post has been deleted."
@@ -7297,7 +7297,7 @@ msgstr "Bật/tắt nội dung 18+"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:158
 msgid "Toggles the sound"
-msgstr ""
+msgstr "Bật/tắt tiếng"
 
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
@@ -7434,7 +7434,7 @@ msgstr "Bỏ theo dõi tài khoản"
 
 #: src/screens/VideoFeed/index.tsx:803
 msgid "Unfollows the user"
-msgstr ""
+msgstr "Bỏ theo dõi người này"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Unlike"
@@ -7685,7 +7685,7 @@ msgstr "người dùng theo dõi bởi <0>@{0}</0>"
 
 #: src/components/WhoCanReply.tsx:263
 msgid "users following <0>@{0}</0>"
-msgstr ""
+msgstr "người dùng theo dõi <0>@{0}</0>"
 
 #: src/screens/Messages/Settings.tsx:92
 #: src/screens/Messages/Settings.tsx:95
@@ -7702,7 +7702,7 @@ msgstr "Người dùng đã thích nội dung hoặc hồ sơ này"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:432
 msgid "Users you follow"
-msgstr ""
+msgstr "Người bạn theo dõi"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:419
 msgid "Value:"
@@ -7890,7 +7890,7 @@ msgstr "Xem tài khoản bạn đã chặn"
 
 #: src/screens/Moderation/index.tsx:204
 msgid "View your default post interaction settings"
-msgstr ""
+msgstr "Xem cài đặt tương tác mặc định cho bài đăng"
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:56
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:77
@@ -7908,11 +7908,11 @@ msgstr "Xem tài khoản bạn đã ẩn"
 #: src/view/com/util/images/AutoSizedImage.tsx:199
 #: src/view/com/util/images/AutoSizedImage.tsx:221
 msgid "Views full image"
-msgstr ""
+msgstr "Xem hình đầy đủ"
 
 #: src/components/VideoPostCard.tsx:115
 msgid "Views video in immersive mode"
-msgstr ""
+msgstr "Xem video ở chế độ toàn màn hình"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -8203,7 +8203,7 @@ msgstr "Bạn có thể kích hoạt lại tài khoản của mình để tiếp
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
 msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings.</0>"
-msgstr ""
+msgstr "Bạn có thể thiết lập cài đặt tương tác mặc định trong <0>Cài đặt → Kiểm duyệt → Cài đặt tương tác</0>"
 
 #: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:139
@@ -8516,7 +8516,7 @@ msgstr "Lượt thích đầu của bạn!"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
 msgid "Your followers"
-msgstr ""
+msgstr "Người theo dõi bạn"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
