@@ -184,6 +184,7 @@ export function Outer({
     <DropdownMenu.Portal>
       <DropdownMenu.Content
         sideOffset={5}
+        collisionPadding={{left: 5, right: 5, bottom: 5}}
         loop
         aria-label="Test"
         className="dropdown-menu-transform-origin">
