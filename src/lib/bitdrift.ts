@@ -18,6 +18,7 @@ initPromise.then(() => {
   if (isEnabled && BITDRIFT_API_KEY) {
     init(BITDRIFT_API_KEY, SessionStrategy.Activity, {
       url: 'https://api-bsky.bitdrift.io',
+      // TODO gate
       enableNetworkInstrumentation: true, // Only effects iOS, Android instrumentation is set via Gradle Plugin
     })
   }
