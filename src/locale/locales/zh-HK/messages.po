@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-12 05:07\n"
+"PO-Revision-Date: 2025-02-12 06:29\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -2826,7 +2826,7 @@ msgstr "更新唔到設定"
 #: src/lib/media/video/upload.web.ts:78
 #: src/lib/media/video/upload.web.ts:88
 msgid "Failed to upload video"
-msgstr "上載唔到影片"
+msgstr "上載唔到條片"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:341
 msgid "Failed to verify handle. Please try again."
