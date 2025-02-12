@@ -72,11 +72,9 @@ export function AboutSettingsScreen({}: Props) {
               const newDevModeEnabled = !devModeEnabled
               setDevModeEnabled(newDevModeEnabled)
               Toast.show(
-                _(
-                  msg`Developer mode ${
-                    newDevModeEnabled ? 'enabled' : 'disabled'
-                  }`,
-                ),
+                newDevModeEnabled
+                  ? _(msg`Developer mode enabled`)
+                  : _(msg`Developer mode disabled`),
               )
             }}
             onPress={() => {
