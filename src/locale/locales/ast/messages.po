@@ -8,7 +8,7 @@ msgstr ""
 "Language: ast\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-11 23:28\n"
+"PO-Revision-Date: 2025-02-12 12:24\n"
 "Last-Translator: \n"
 "Language-Team: Asturian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1076,7 +1076,7 @@ msgstr "Bluesky ye una rede abierta onde pues escoyer l'agospiador. Si yes desen
 
 #: src/view/com/auth/server-input/index.tsx:145
 msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
-msgstr ""
+msgstr "Bluesky ye una rede abierta onde pues escoyer el to fornidor. Si ye la primer vegada que tas equí, aconseyámoste que seleiciones la opción predeterminada de Bluesky Social."
 
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
@@ -1085,7 +1085,7 @@ msgstr "¡Bluesky ye meyor con compaña!"
 
 #: src/screens/Takendown.tsx:217
 msgid "Bluesky Social Terms of Service"
-msgstr ""
+msgstr "Términos del serviciu de Bluesky Social"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:299
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
