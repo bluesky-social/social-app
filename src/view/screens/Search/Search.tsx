@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useLayoutEffect} from 'react'
+import React, {useCallback, useLayoutEffect} from 'react'
 import {
   ActivityIndicator,
   Image,
@@ -11,11 +11,6 @@ import {
 } from 'react-native'
 import {ScrollView as RNGHScrollView} from 'react-native-gesture-handler'
 import RNPickerSelect from 'react-native-picker-select'
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -621,6 +616,7 @@ export function SearchScreen(
 
   const updateSearchHistory = useCallback(
     async (item: string) => {
+      if (!item) return
       const newSearchHistory = [
         item,
         ...termHistory.filter(search => search !== item),
@@ -778,26 +774,6 @@ export function SearchScreen(
     }
   }, [setShowAutocomplete])
 
-  const cancelWidth = useSharedValue(70)
-  const showCancelBtnAnimation = useSharedValue(0)
-
-  useEffect(() => {
-    if (showAutocomplete) {
-      showCancelBtnAnimation.set(withTiming(1))
-    } else {
-      showCancelBtnAnimation.set(withTiming(0))
-    }
-  }, [showAutocomplete, showCancelBtnAnimation])
-
-  const animatedInputContainerStyle = useAnimatedStyle(() => ({
-    marginRight: showCancelBtnAnimation.get() * cancelWidth.get(),
-  }))
-
-  const animatedCancelBtnStyle = useAnimatedStyle(() => ({
-    opacity: showCancelBtnAnimation.get(),
-    right: cancelWidth.get() * -1,
-  }))
-
   return (
     <Layout.Screen testID="searchScreen">
       <View
@@ -842,43 +818,35 @@ export function SearchScreen(
             </View>
           )}
           <View style={[a.px_md, a.pt_sm, a.pb_sm, a.overflow_hidden]}>
-            <Animated.View
-              style={[a.gap_sm, a.relative, animatedInputContainerStyle]}>
-              <View style={[a.w_full]}>
-                <SearchInput
-                  ref={textInput}
-                  value={searchText}
-                  onFocus={onSearchInputFocus}
-                  onChangeText={onChangeText}
-                  onClearText={onPressClearQuery}
-                  onSubmitEditing={onSubmit}
-                  placeholder={_(msg`Search for posts, users, or feeds`)}
-                  hitSlop={{...HITSLOP_20, top: 0}}
-                />
+            <View style={[a.gap_sm]}>
+              <View style={[a.w_full, a.flex_row, a.align_stretch, a.gap_xs]}>
+                <View style={[a.flex_1]}>
+                  <SearchInput
+                    ref={textInput}
+                    value={searchText}
+                    onFocus={onSearchInputFocus}
+                    onChangeText={onChangeText}
+                    onClearText={onPressClearQuery}
+                    onSubmitEditing={onSubmit}
+                    placeholder={_(msg`Search for posts, users, or feeds`)}
+                    hitSlop={{...HITSLOP_20, top: 0}}
+                  />
+                </View>
+                {showAutocomplete && (
+                  <Button
+                    label={_(msg`Cancel search`)}
+                    size="large"
+                    variant="ghost"
+                    color="secondary"
+                    style={[a.px_sm]}
+                    onPress={onPressCancelSearch}
+                    hitSlop={HITSLOP_10}>
+                    <ButtonText>
+                      <Trans>Cancel</Trans>
+                    </ButtonText>
+                  </Button>
+                )}
               </View>
-              <Animated.View
-                style={[
-                  a.absolute,
-                  {top: 0, bottom: 0},
-                  a.pl_xs,
-                  animatedCancelBtnStyle,
-                  !showAutocomplete && a.pointer_events_none,
-                ]}
-                onLayout={evt => cancelWidth.set(evt.nativeEvent.layout.width)}
-                aria-hidden={!showAutocomplete}>
-                <Button
-                  label={_(msg`Cancel search`)}
-                  size="large"
-                  variant="ghost"
-                  color="secondary"
-                  style={[a.px_sm]}
-                  onPress={onPressCancelSearch}
-                  hitSlop={HITSLOP_10}>
-                  <ButtonText>
-                    <Trans>Cancel</Trans>
-                  </ButtonText>
-                </Button>
-              </Animated.View>
 
               {showFilters && gtMobile && (
                 <View
@@ -896,7 +864,7 @@ export function SearchScreen(
                   </View>
                 </View>
               )}
-            </Animated.View>
+            </View>
           </View>
         </Layout.Center>
       </View>
