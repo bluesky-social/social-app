@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-12 02:28\n"
+"PO-Revision-Date: 2025-02-12 03:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1055,7 +1055,7 @@ msgstr "封鎖係公開嘅。封鎖咗嘅帳號唔得喺你嘅討論串度回覆
 
 #: src/view/com/profile/ProfileMenu.tsx:333
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
-msgstr "封鎖唔會阻止標籤喺你嘅帳號上面套用，但係會阻止呢個帳號喺你嘅討論串度回覆抑或同你互動。"
+msgstr "封鎖帳號唔會阻止佢標記你嘅帳號，但係會阻止佢喺你嘅討論串度回覆抑或同你互動。"
 
 #: src/view/com/auth/SplashScreen.web.tsx:173
 msgid "Blog"
@@ -1525,11 +1525,11 @@ msgstr "閂咗標題圖片嘅檢視器去"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:401
 msgid "Collapse list of users"
-msgstr "收合用戶清單"
+msgstr "摺疊用戶清單"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:594
 msgid "Collapses list of users for a given notification"
-msgstr "收合特定通知嘅使用者清單"
+msgstr "摺疊特定通知嘅使用者清單"
 
 #: src/screens/Settings/AppearanceSettings.tsx:93
 msgid "Color mode"
@@ -1899,7 +1899,7 @@ msgstr "調整邊啲人可以喺呢條帖文度互動。"
 
 #: src/screens/Onboarding/Layout.tsx:56
 msgid "Customizes your Bluesky experience"
-msgstr ""
+msgstr "自訂你 Bluesky 嘅體驗"
 
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
@@ -2669,15 +2669,15 @@ msgstr "展開用戶清單"
 
 #: src/view/com/composer/ComposerReplyTo.tsx:70
 msgid "Expand or collapse the full post you are replying to"
-msgstr "展開抑或收埋你回覆緊嘅完整帖文"
+msgstr "展開抑或摺疊你覆緊嘅完整帖文"
 
 #: src/screens/VideoFeed/index.tsx:933
 msgid "Expands or collapses post text"
-msgstr ""
+msgstr "展開抑或摺疊帖文文字"
 
 #: src/view/com/composer/ComposerReplyTo.tsx:73
 msgid "Expands or collapses the full post you are replying to"
-msgstr ""
+msgstr "展開抑或摺疊你覆緊嘅完整帖文"
 
 #: src/lib/api/index.ts:405
 msgid "Expected uri to resolve to a record"
@@ -2798,7 +2798,7 @@ msgstr "儲存唔到通知偏好設定，唔該試多一次"
 
 #: src/screens/ModerationInteractionSettings/index.tsx:108
 msgid "Failed to save settings. Please try again."
-msgstr ""
+msgstr "儲存唔到設定，唔該試多一次。"
 
 #: src/components/dms/MessageItem.tsx:234
 msgid "Failed to send"
@@ -2886,7 +2886,7 @@ msgstr "我哋覺得呢啲動態源可能會啱你心水。"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:43
 msgid "File saved successfully!"
-msgstr "檔案儲存成功！"
+msgstr "檔案經已儲存成功！"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
@@ -3344,7 +3344,7 @@ msgstr "隱藏用戶清單"
 #: src/components/moderation/ContentHider.tsx:151
 #: src/components/moderation/PostHider.tsx:79
 msgid "Hides the content"
-msgstr ""
+msgstr "隱藏內容"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:117
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
@@ -3521,7 +3521,7 @@ msgstr "已限制互動"
 
 #: src/screens/Moderation/index.tsx:209
 msgid "Interaction settings"
-msgstr ""
+msgstr "互動設定"
 
 #: src/screens/Login/LoginForm.tsx:149
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
@@ -3680,11 +3680,11 @@ msgstr "進一步瞭解關於自行托管 PDS 嘅資訊。"
 
 #: src/components/moderation/ContentHider.tsx:149
 msgid "Learn more about the moderation applied to this content"
-msgstr ""
+msgstr "進一步瞭解呢個內容所套用嘅內容審覈資訊"
 
 #: src/components/moderation/ContentHider.tsx:215
 msgid "Learn more about the moderation applied to this content."
-msgstr "進一步瞭解呢個內容所應用嘅審覈資訊。"
+msgstr "進一步瞭解呢個內容所套用嘅內容審覈資訊。"
 
 #: src/components/moderation/PostHider.tsx:100
 #: src/components/moderation/ScreenHider.tsx:127
@@ -4756,7 +4756,7 @@ msgstr "打開你嘅裝置上嘅相機"
 
 #: src/screens/Settings/AccountSettings.tsx:127
 msgid "Opens change handle dialog"
-msgstr ""
+msgstr "打開帳號頭銜對話框"
 
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:35
 msgid "Opens composer"
@@ -4786,7 +4786,7 @@ msgstr "打開揀選 GIF 對話框"
 
 #: src/screens/Settings/Settings.tsx:208
 msgid "Opens helpdesk in browser"
-msgstr ""
+msgstr "喺瀏覽器度打開服務中心"
 
 #: src/view/com/modals/InviteCodes.tsx:173
 msgid "Opens list of invite codes"
@@ -4994,11 +4994,11 @@ msgstr "播放影片"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:42
 msgid "Plays or pauses the GIF"
-msgstr ""
+msgstr "播放抑或暫停 GIF"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 msgid "Plays or pauses the video"
-msgstr ""
+msgstr "播放抑或暫停影片"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:106
 msgid "Plays the GIF"
@@ -5006,7 +5006,7 @@ msgstr "播放 GIF"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:59
 msgid "Plays the video"
-msgstr ""
+msgstr "播放影片"
 
 #: src/screens/Signup/state.ts:217
 msgid "Please choose your handle."
@@ -5060,7 +5060,7 @@ msgstr "請輸入你嘅用戶名"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 msgid "Please explain why you think this label was incorrectly applied by {0}"
-msgstr "請解釋點解你以爲 {0} 唔應該用呢個標記"
+msgstr "請解釋點解你覺得 {0} 唔應該套用呢個標籤"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
@@ -5147,7 +5147,7 @@ msgstr "帖文互動設定"
 #: src/Navigation.tsx:163
 #: src/screens/ModerationInteractionSettings/index.tsx:34
 msgid "Post Interaction Settings"
-msgstr ""
+msgstr "帖文互動設定"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:89
 msgid "Post language"
@@ -5314,7 +5314,7 @@ msgstr "引用帖文經已重新連結"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:302
 msgid "Quote post was successfully detached"
-msgstr "引用帖文經已分離"
+msgstr "引用帖文經已成功分離"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:177
 #: src/view/com/util/post-ctrls/RepostButton.tsx:199
@@ -5530,7 +5530,7 @@ msgstr "經已喺你嘅動態源度刪除"
 
 #: src/view/screens/Search/Search.tsx:1036
 msgid "Removes profile from search history"
-msgstr ""
+msgstr "從搵嘢記錄度刪除個人檔案"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
@@ -5841,7 +5841,7 @@ msgstr "返去上一頁"
 
 #: src/screens/StarterPack/Wizard/index.tsx:287
 msgid "Returns to the previous step"
-msgstr ""
+msgstr "返去上一步"
 
 #: src/components/dialogs/BirthDateSettings.tsx:120
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:478
@@ -5996,7 +5996,7 @@ msgstr "搵 Tenor"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
 #: src/components/ProgressGuide/FollowDialog.tsx:765
 msgid "Searches for profiles"
-msgstr ""
+msgstr "搵個人檔案"
 
 #: src/view/com/modals/ChangeEmail.tsx:105
 msgid "Security Step Required"
@@ -6120,7 +6120,7 @@ msgstr "揀選你喺訂閱嘅動態源度要翻譯嘅目標語言"
 
 #: src/view/com/util/forms/DropdownButton.tsx:297
 msgid "Selects option {0} of {numItems}"
-msgstr ""
+msgstr "第 {0} 個選項，共 {numItems} 個"
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
@@ -6408,16 +6408,16 @@ msgstr "顯示警告兼且喺動態源度篩選"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:810
 msgid "Shows information about when this post was created"
-msgstr ""
+msgstr "顯示呢條帖文嘅創建時間"
 
 #: src/screens/Settings/Settings.tsx:104
 msgid "Shows other accounts you can switch to"
-msgstr ""
+msgstr "顯示其他你切換到嘅帳號"
 
 #: src/components/moderation/ContentHider.tsx:152
 #: src/components/moderation/PostHider.tsx:79
 msgid "Shows the content"
-msgstr ""
+msgstr "顯示內容"
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
@@ -6800,7 +6800,7 @@ msgstr "文字輸入欄位"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:96
 msgid "Thank you! Your email has been successfully verified."
-msgstr "多謝！你嘅電郵經已成功驗證。"
+msgstr "多謝！你嘅電郵經已驗證成功。"
 
 #: src/components/ReportDialog/SubmitView.tsx:83
 msgid "Thank you. Your report has been sent."
@@ -6808,7 +6808,7 @@ msgstr "多謝，你嘅擧報經已寄出。"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
-msgstr "多謝，你經已成功驗證咗你嘅電郵地址。而家你可以閂咗呢個對話框去。"
+msgstr "多謝，你經已成功驗證你嘅電郵地址。而家你可以閂咗呢個對話框去。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:468
 msgid "That contains the following:"
@@ -6888,7 +6888,7 @@ msgstr "以下標籤經已套用到你嘅內容度。"
 
 #: src/screens/ModerationInteractionSettings/index.tsx:42
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
-msgstr ""
+msgstr "下低嘅設定將會用係你發佈帖文嗰陣嘅預設值。你後面可以透過帖文編輯器對特定嘅帖文去變更呢啲設定。"
 
 #: src/view/com/post-thread/PostThread.tsx:262
 #: src/view/com/post-thread/PostThread.tsx:274
@@ -7078,7 +7078,7 @@ msgstr "呢個內容要你有 Bluesky 帳號先至睇到。"
 
 #: src/screens/Messages/components/ChatListItem.tsx:284
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
-msgstr ""
+msgstr "同你對話嗰個人經已停用抑或刪除帳號，撳低去睇更多選項"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:94
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -7120,11 +7120,11 @@ msgstr "呢樣嘢好緊要，以防你將來需要變更你嘅電郵抑或重設
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:150
 msgid "This label was applied by <0>{0}</0>."
-msgstr "呢個標籤係 <0>{0}</0> 加嘅。"
+msgstr "呢個標籤係 <0>{0}</0> 所標記。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:145
 msgid "This label was applied by the author."
-msgstr "呢個標籤係作者加嘅。"
+msgstr "呢個標籤係作者所標記。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:163
 msgid "This label was applied by you."
@@ -7156,7 +7156,7 @@ msgstr "呢條帖文話係話喺 <0>{0}</0> 發佈嘅，但係最先出現喺 Bl
 
 #: src/components/WhoCanReply.tsx:213
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
-msgstr ""
+msgstr "呢條帖文存在未知嘅內容類型，你 App 嘅版本可能過咗期。"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:152
 msgid "This post has been deleted."
@@ -7297,7 +7297,7 @@ msgstr "切換控制啓用抑或停用成人內容"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:158
 msgid "Toggles the sound"
-msgstr ""
+msgstr "切換音量狀態"
 
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
@@ -7685,7 +7685,7 @@ msgstr "<0>@{0}</0> 跟咗嘅用戶"
 
 #: src/components/WhoCanReply.tsx:263
 msgid "users following <0>@{0}</0>"
-msgstr ""
+msgstr "<0>@{0}</0> 跟緊嘅用戶"
 
 #: src/screens/Messages/Settings.tsx:92
 #: src/screens/Messages/Settings.tsx:95
@@ -7890,7 +7890,7 @@ msgstr "睇下你封鎖咗嘅帳號"
 
 #: src/screens/Moderation/index.tsx:204
 msgid "View your default post interaction settings"
-msgstr ""
+msgstr "睇下你預設嘅帖文互動設定"
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:56
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:77
@@ -7908,11 +7908,11 @@ msgstr "睇下你嘅靜音帳號"
 #: src/view/com/util/images/AutoSizedImage.tsx:199
 #: src/view/com/util/images/AutoSizedImage.tsx:221
 msgid "Views full image"
-msgstr ""
+msgstr "睇下完整圖片"
 
 #: src/components/VideoPostCard.tsx:115
 msgid "Views video in immersive mode"
-msgstr ""
+msgstr "進入沉浸模式睇片"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -8203,7 +8203,7 @@ msgstr "你可以重新啓用你嘅帳號嚟繼續登入，你嘅個人檔案同
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
 msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings.</0>"
-msgstr ""
+msgstr "你可以喺 <0>設定 → 內容審覈 → 互動設定 </0> 度調整預設互動設定。"
 
 #: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:139
@@ -8318,7 +8318,7 @@ msgstr "若然你覺得其他人標記嘅呢啲標籤唔啱，可以提出申訴
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:83
 msgid "You may appeal these labels if you feel they were placed in error."
-msgstr "若然你覺得呢啲標籤黐錯咗，可以提出申訴。"
+msgstr "若然你覺得呢啲標籤唔啱，可以提出申訴。"
 
 #: src/screens/StarterPack/Wizard/State.tsx:79
 msgid "You may only add up to {STARTER_PACK_MAX_SIZE} profiles"
@@ -8350,7 +8350,7 @@ msgstr "你必須授予相片圖庫取用權限先至可以儲存圖片。"
 
 #: src/components/ReportDialog/SubmitView.tsx:211
 msgid "You must select at least one labeler for a report"
-msgstr "你必須選擇至少一個標記者嚟提交擧報"
+msgstr "你必須揀選至少一個標記者嚟提交擧報"
 
 #: src/screens/Deactivated.tsx:127
 msgid "You previously deactivated @{0}."
@@ -8536,7 +8536,7 @@ msgstr "你設定咗嘅靜音字"
 
 #: src/view/com/modals/ChangePassword.tsx:158
 msgid "Your password has been changed successfully!"
-msgstr "你嘅密碼經已改好！"
+msgstr "你嘅密碼經已變更成功！"
 
 #: src/view/com/composer/Composer.tsx:485
 msgid "Your post has been published"
