@@ -12,10 +12,6 @@ import {
 import {ScrollView as RNGHScrollView} from 'react-native-gesture-handler'
 import RNPickerSelect from 'react-native-picker-select'
 import Animated, {
-  FadeIn,
-  FadeOut,
-  LayoutAnimationConfig,
-  LinearTransition,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -66,7 +62,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {Explore} from '#/view/screens/Search/Explore'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
 import {makeSearchQuery, parseSearchQuery} from '#/screens/Search/utils'
-import {atoms as a, native, tokens, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
@@ -818,40 +814,34 @@ export function SearchScreen(
           }),
         ]}>
         <Layout.Center style={t.atoms.bg}>
-          <LayoutAnimationConfig skipEntering skipExiting>
-            {!gtMobile && !showAutocomplete && (
-              <Animated.View
-                entering={native(FadeIn.delay(100).duration(200))}
-                exiting={native(FadeOut.duration(200))}
-                // HACK: shift up search input. we can't remove the top padding
-                // on the search input because it messes up the layout animation
-                // if we add it only when the header is hidden
-                style={{marginBottom: tokens.space.sm * -1}}>
-                <Layout.Header.Outer noBottomBorder>
-                  <Layout.Header.MenuButton />
-                  <Layout.Header.Content
-                    align={showFilters ? 'left' : 'platform'}>
-                    <Layout.Header.TitleText>
-                      <Trans>Search</Trans>
-                    </Layout.Header.TitleText>
-                  </Layout.Header.Content>
-                  {showFilters ? (
-                    <View style={[{minWidth: 140}]}>
-                      <SearchLanguageDropdown
-                        value={params.lang}
-                        onChange={params.setLang}
-                      />
-                    </View>
-                  ) : (
-                    <Layout.Header.Slot />
-                  )}
-                </Layout.Header.Outer>
-              </Animated.View>
-            )}
-          </LayoutAnimationConfig>
-          <Animated.View
-            style={[a.px_md, a.pt_sm, a.pb_sm, a.overflow_hidden]}
-            layout={native(LinearTransition)}>
+          {!gtMobile && (
+            <View
+              // HACK: shift up search input. we can't remove the top padding
+              // on the search input because it messes up the layout animation
+              // if we add it only when the header is hidden
+              style={{marginBottom: tokens.space.sm * -1}}>
+              <Layout.Header.Outer noBottomBorder>
+                <Layout.Header.MenuButton />
+                <Layout.Header.Content
+                  align={showFilters ? 'left' : 'platform'}>
+                  <Layout.Header.TitleText>
+                    <Trans>Search</Trans>
+                  </Layout.Header.TitleText>
+                </Layout.Header.Content>
+                {showFilters ? (
+                  <View style={[{minWidth: 140}]}>
+                    <SearchLanguageDropdown
+                      value={params.lang}
+                      onChange={params.setLang}
+                    />
+                  </View>
+                ) : (
+                  <Layout.Header.Slot />
+                )}
+              </Layout.Header.Outer>
+            </View>
+          )}
+          <View style={[a.px_md, a.pt_sm, a.pb_sm, a.overflow_hidden]}>
             <Animated.View
               style={[a.gap_sm, a.relative, animatedInputContainerStyle]}>
               <View style={[a.w_full]}>
@@ -907,7 +897,7 @@ export function SearchScreen(
                 </View>
               )}
             </Animated.View>
-          </Animated.View>
+          </View>
         </Layout.Center>
       </View>
 
