@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useLayoutEffect} from 'react'
 import {
   ActivityIndicator,
   Image,
@@ -21,7 +21,7 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
 import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
-import {createHitslop} from '#/lib/constants'
+import {createHitslop, HITSLOP_20} from '#/lib/constants'
 import {HITSLOP_10} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -46,7 +46,6 @@ import {usePopularFeedsSearch} from '#/state/queries/feed'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSession} from '#/state/session'
-import {useSetDrawerOpen} from '#/state/shell'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
@@ -58,18 +57,11 @@ import {Text} from '#/view/com/util/text/Text'
 import {Explore} from '#/view/screens/Search/Explore'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
 import {makeSearchQuery, parseSearchQuery} from '#/screens/Search/utils'
-import {
-  atoms as a,
-  tokens,
-  useBreakpoints,
-  useTheme as useThemeNew,
-  web,
-} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
-import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import * as Layout from '#/components/Layout'
 import {account, useStorage} from '#/storage'
 
@@ -278,7 +270,7 @@ let SearchScreenFeedsResults = ({
   query: string
   active: boolean
 }): React.ReactNode => {
-  const t = useThemeNew()
+  const t = useTheme()
   const {_} = useLingui()
 
   const {data: results, isFetched} = usePopularFeedsSearch({
@@ -323,7 +315,7 @@ function SearchLanguageDropdown({
   value: string
   onChange(value: string): void
 }) {
-  const t = useThemeNew()
+  const t = useTheme()
   const {_} = useLingui()
   const {appLanguage, contentLanguages} = useLanguagePrefs()
 
@@ -534,12 +526,7 @@ let SearchScreenInner = ({
     <Pager
       onPageSelected={onPageSelected}
       renderTabBar={props => (
-        <Layout.Center
-          style={[
-            a.z_10,
-            web([a.sticky]),
-            {top: isWeb ? headerHeight : undefined},
-          ]}>
+        <Layout.Center style={[a.z_10, web([a.sticky, {top: headerHeight}])]}>
           <TabBar items={sections.map(section => section.title)} {...props} />
         </Layout.Center>
       )}
@@ -597,12 +584,11 @@ SearchScreenInner = React.memo(SearchScreenInner)
 export function SearchScreen(
   props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
 ) {
-  const t = useThemeNew()
+  const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
   const textInput = React.useRef<TextInput>(null)
   const {_} = useLingui()
-  const setDrawerOpen = useSetDrawerOpen()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {currentAccount} = useSession()
 
@@ -630,6 +616,7 @@ export function SearchScreen(
 
   const updateSearchHistory = useCallback(
     async (item: string) => {
+      if (!item) return
       const newSearchHistory = [
         item,
         ...termHistory.filter(search => search !== item),
@@ -667,11 +654,17 @@ export function SearchScreen(
     initialQuery: queryParam,
   })
   const showFilters = Boolean(queryWithParams && !showAutocomplete)
-  /*
-   * Arbitrary sizing, so guess and check, used for sticky header alignment and
-   * sizing.
-   */
-  const headerHeight = 60 + (showFilters ? 40 : 0)
+
+  // web only - measure header height for sticky positioning
+  const [headerHeight, setHeaderHeight] = React.useState(0)
+  const headerRef = React.useRef(null)
+  useLayoutEffect(() => {
+    if (isWeb) {
+      if (!headerRef.current) return
+      const measurement = (headerRef.current as Element).getBoundingClientRect()
+      setHeaderHeight(measurement.height)
+    }
+  }, [])
 
   useFocusEffect(
     useNonReactiveCallback(() => {
@@ -680,11 +673,6 @@ export function SearchScreen(
       }
     }),
   )
-
-  const onPressMenu = React.useCallback(() => {
-    textInput.current?.blur()
-    setDrawerOpen(true)
-  }, [setDrawerOpen])
 
   const onPressClearQuery = React.useCallback(() => {
     scrollToTopWeb()
@@ -789,75 +777,94 @@ export function SearchScreen(
   return (
     <Layout.Screen testID="searchScreen">
       <View
+        ref={headerRef}
+        onLayout={evt => {
+          if (isWeb) setHeaderHeight(evt.nativeEvent.layout.height)
+        }}
         style={[
+          a.relative,
+          a.z_10,
           web({
-            height: headerHeight,
             position: 'sticky',
             top: 0,
-            zIndex: 1,
           }),
         ]}>
-        <Layout.Center>
-          <View style={[a.p_md, a.pb_sm, a.gap_sm, t.atoms.bg]}>
-            <View style={[a.flex_row, a.gap_sm]}>
-              {!gtMobile && !showAutocomplete && (
-                <Button
-                  testID="viewHeaderBackOrMenuBtn"
-                  onPress={onPressMenu}
-                  hitSlop={HITSLOP_10}
-                  label={_(msg`Menu`)}
-                  accessibilityHint={_(
-                    msg`Provides access to navigation links and settings`,
-                  )}
-                  size="large"
-                  variant="solid"
-                  color="secondary"
-                  shape="square">
-                  <ButtonIcon icon={Menu} size="lg" />
-                </Button>
-              )}
-              <View style={[a.flex_1]}>
-                <SearchInput
-                  ref={textInput}
-                  value={searchText}
-                  onFocus={onSearchInputFocus}
-                  onChangeText={onChangeText}
-                  onClearText={onPressClearQuery}
-                  onSubmitEditing={onSubmit}
-                />
-              </View>
-              {showAutocomplete && (
-                <Button
-                  label={_(msg`Cancel search`)}
-                  size="large"
-                  variant="ghost"
-                  color="secondary"
-                  style={[a.px_sm]}
-                  onPress={onPressCancelSearch}
-                  hitSlop={HITSLOP_10}>
-                  <ButtonText>
-                    <Trans>Cancel</Trans>
-                  </ButtonText>
-                </Button>
-              )}
+        <Layout.Center style={t.atoms.bg}>
+          {!gtMobile && (
+            <View
+              // HACK: shift up search input. we can't remove the top padding
+              // on the search input because it messes up the layout animation
+              // if we add it only when the header is hidden
+              style={{marginBottom: tokens.space.sm * -1}}>
+              <Layout.Header.Outer noBottomBorder>
+                <Layout.Header.MenuButton />
+                <Layout.Header.Content
+                  align={showFilters ? 'left' : 'platform'}>
+                  <Layout.Header.TitleText>
+                    <Trans>Search</Trans>
+                  </Layout.Header.TitleText>
+                </Layout.Header.Content>
+                {showFilters ? (
+                  <View style={[{minWidth: 140}]}>
+                    <SearchLanguageDropdown
+                      value={params.lang}
+                      onChange={params.setLang}
+                    />
+                  </View>
+                ) : (
+                  <Layout.Header.Slot />
+                )}
+              </Layout.Header.Outer>
             </View>
-
-            {showFilters && (
-              <View
-                style={[
-                  a.flex_row,
-                  a.align_center,
-                  a.justify_between,
-                  a.gap_sm,
-                ]}>
-                <View style={[{width: 140}]}>
-                  <SearchLanguageDropdown
-                    value={params.lang}
-                    onChange={params.setLang}
+          )}
+          <View style={[a.px_md, a.pt_sm, a.pb_sm, a.overflow_hidden]}>
+            <View style={[a.gap_sm]}>
+              <View style={[a.w_full, a.flex_row, a.align_stretch, a.gap_xs]}>
+                <View style={[a.flex_1]}>
+                  <SearchInput
+                    ref={textInput}
+                    value={searchText}
+                    onFocus={onSearchInputFocus}
+                    onChangeText={onChangeText}
+                    onClearText={onPressClearQuery}
+                    onSubmitEditing={onSubmit}
+                    placeholder={_(msg`Search for posts, users, or feeds`)}
+                    hitSlop={{...HITSLOP_20, top: 0}}
                   />
                 </View>
+                {showAutocomplete && (
+                  <Button
+                    label={_(msg`Cancel search`)}
+                    size="large"
+                    variant="ghost"
+                    color="secondary"
+                    style={[a.px_sm]}
+                    onPress={onPressCancelSearch}
+                    hitSlop={HITSLOP_10}>
+                    <ButtonText>
+                      <Trans>Cancel</Trans>
+                    </ButtonText>
+                  </Button>
+                )}
               </View>
-            )}
+
+              {showFilters && gtMobile && (
+                <View
+                  style={[
+                    a.flex_row,
+                    a.align_center,
+                    a.justify_between,
+                    a.gap_sm,
+                  ]}>
+                  <View style={[{width: 140}]}>
+                    <SearchLanguageDropdown
+                      value={params.lang}
+                      onChange={params.setLang}
+                    />
+                  </View>
+                </View>
+              )}
+            </View>
           </View>
         </Layout.Center>
       </View>
