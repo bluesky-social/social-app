@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-12 02:28\n"
+"PO-Revision-Date: 2025-02-12 16:13\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1317,12 +1317,12 @@ msgstr "Ändra din e‑postadress"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Changes app icon"
-msgstr ""
+msgstr "Ändrar appikon"
 
 #: src/components/forms/HostingProvider.tsx:50
 #: src/components/forms/HostingProvider.tsx:66
 msgid "Changes hosting provider"
-msgstr ""
+msgstr "Ändrar värdleverantör"
 
 #: src/Navigation.tsx:398
 #: src/view/shell/bottom-bar/BottomBar.tsx:204
@@ -1517,7 +1517,7 @@ msgstr "Stänger avisering om uppdatering av lösenord"
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
 msgid "Closes the emoji picker"
-msgstr ""
+msgstr "Stänger emojiväljaren"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:32
 msgid "Closes viewer for header image"
@@ -1736,7 +1736,7 @@ msgstr "Kopierat!"
 
 #: src/screens/Settings/AboutSettings.tsx:68
 msgid "Copies build version to clipboard"
-msgstr ""
+msgstr "Kopierar byggversion till urklipp"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 msgid "Copy"
@@ -1899,7 +1899,7 @@ msgstr "Ställ in vilka som kan interagera med det här inlägget."
 
 #: src/screens/Onboarding/Layout.tsx:56
 msgid "Customizes your Bluesky experience"
-msgstr ""
+msgstr "Anpassar din upplevelse på Bluesky"
 
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
@@ -2586,7 +2586,7 @@ msgstr "Ange ditt användarnamn och lösenord"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
 msgid "Enters full screen"
-msgstr ""
+msgstr "Öppnar helskärm"
 
 #: src/view/com/composer/Composer.tsx:1660
 #: src/view/com/util/error/ErrorScreen.tsx:42
@@ -2673,7 +2673,7 @@ msgstr "Utöka eller fäll ihop det inlägg som du svarar på i sin helhet"
 
 #: src/screens/VideoFeed/index.tsx:933
 msgid "Expands or collapses post text"
-msgstr ""
+msgstr "Utökar eller fäller ihop inläggstext"
 
 #: src/view/com/composer/ComposerReplyTo.tsx:73
 msgid "Expands or collapses the full post you are replying to"
@@ -3344,7 +3344,7 @@ msgstr "Dölj användarlista"
 #: src/components/moderation/ContentHider.tsx:151
 #: src/components/moderation/PostHider.tsx:79
 msgid "Hides the content"
-msgstr ""
+msgstr "Döljer innehållet"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:117
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
@@ -3680,7 +3680,7 @@ msgstr "Läs mer om att stå som värd för din egen PDS."
 
 #: src/components/moderation/ContentHider.tsx:149
 msgid "Learn more about the moderation applied to this content"
-msgstr ""
+msgstr "Läs mer om den moderering som tillämpas på det här innehållet"
 
 #: src/components/moderation/ContentHider.tsx:215
 msgid "Learn more about the moderation applied to this content."
@@ -4756,7 +4756,7 @@ msgstr "Öppnar kameran på enheten"
 
 #: src/screens/Settings/AccountSettings.tsx:127
 msgid "Opens change handle dialog"
-msgstr ""
+msgstr "Öppnar dialogruta för ändring av användarnamn"
 
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:35
 msgid "Opens composer"
@@ -4994,11 +4994,11 @@ msgstr "Spela upp videoklipp"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:42
 msgid "Plays or pauses the GIF"
-msgstr ""
+msgstr "Spelar upp eller pausar gif-bilden"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 msgid "Plays or pauses the video"
-msgstr ""
+msgstr "Spelar upp eller pausar videoklippet"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:106
 msgid "Plays the GIF"
@@ -5006,7 +5006,7 @@ msgstr "Spelar upp gif-bilden"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:59
 msgid "Plays the video"
-msgstr ""
+msgstr "Spelar upp videoklippet"
 
 #: src/screens/Signup/state.ts:217
 msgid "Please choose your handle."
@@ -5275,7 +5275,7 @@ msgstr "Profilen har uppdaterats"
 
 #: src/view/screens/Search/Search.tsx:810
 msgid "Provides access to navigation links and settings"
-msgstr ""
+msgstr "Ger åtkomst till navigeringslänkar och inställningar"
 
 #: src/screens/Onboarding/StepFinished.tsx:253
 msgid "Public"
@@ -5530,7 +5530,7 @@ msgstr "Borttaget från dina flöden"
 
 #: src/view/screens/Search/Search.tsx:1036
 msgid "Removes profile from search history"
-msgstr ""
+msgstr "Tar bort profilen från sökhistoriken"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
@@ -5841,7 +5841,7 @@ msgstr "Går tillbaka till föregående sida"
 
 #: src/screens/StarterPack/Wizard/index.tsx:287
 msgid "Returns to the previous step"
-msgstr ""
+msgstr "Går tillbaka till föregående steg"
 
 #: src/components/dialogs/BirthDateSettings.tsx:120
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:478
@@ -5996,7 +5996,7 @@ msgstr "Sök i Tenor"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
 #: src/components/ProgressGuide/FollowDialog.tsx:765
 msgid "Searches for profiles"
-msgstr ""
+msgstr "Söker efter profiler"
 
 #: src/view/com/modals/ChangeEmail.tsx:105
 msgid "Security Step Required"
@@ -6120,7 +6120,7 @@ msgstr "Välj önskat språk för översättningar i ditt flöde."
 
 #: src/view/com/util/forms/DropdownButton.tsx:297
 msgid "Selects option {0} of {numItems}"
-msgstr ""
+msgstr "Väljer alternativ {0} av {numItems}"
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
@@ -6412,12 +6412,12 @@ msgstr "Visar information om när det här inlägget skapades"
 
 #: src/screens/Settings/Settings.tsx:104
 msgid "Shows other accounts you can switch to"
-msgstr ""
+msgstr "Visar andra konton som du kan växla till"
 
 #: src/components/moderation/ContentHider.tsx:152
 #: src/components/moderation/PostHider.tsx:79
 msgid "Shows the content"
-msgstr ""
+msgstr "Visar innehållet"
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
