@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-11 22:27\n"
+"PO-Revision-Date: 2025-02-12 01:32\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1317,12 +1317,12 @@ msgstr "이메일 주소를 변경하세요"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Changes app icon"
-msgstr ""
+msgstr "앱 아이콘을 변경합니다"
 
 #: src/components/forms/HostingProvider.tsx:50
 #: src/components/forms/HostingProvider.tsx:66
 msgid "Changes hosting provider"
-msgstr ""
+msgstr "호스팅 제공자를 변경합니다"
 
 #: src/Navigation.tsx:398
 #: src/view/shell/bottom-bar/BottomBar.tsx:204
@@ -1517,7 +1517,7 @@ msgstr "비밀번호 변경 알림을 닫습니다"
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
 msgid "Closes the emoji picker"
-msgstr ""
+msgstr "이모티콘 선택기를 닫습니다"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:32
 msgid "Closes viewer for header image"
@@ -1736,7 +1736,7 @@ msgstr "복사했습니다!"
 
 #: src/screens/Settings/AboutSettings.tsx:68
 msgid "Copies build version to clipboard"
-msgstr ""
+msgstr "빌드 버전을 클립보드에 복사합니다"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 msgid "Copy"
@@ -1899,7 +1899,7 @@ msgstr "이 게시물과 상호작용할 수 있는 사람을 사용자 지정�
 
 #: src/screens/Onboarding/Layout.tsx:56
 msgid "Customizes your Bluesky experience"
-msgstr ""
+msgstr "내 Bluesky 경험을 맞춤 설정합니다"
 
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
@@ -2578,7 +2578,7 @@ msgstr "아래에 새 이메일 주소를 입력하세요."
 
 #: src/screens/Login/LoginForm.tsx:235
 msgid "Enter your password"
-msgstr ""
+msgstr "비밀번호를 입력합니다"
 
 #: src/screens/Login/index.tsx:98
 msgid "Enter your username and password"
@@ -2586,7 +2586,7 @@ msgstr "사용자 이름 및 비밀번호 입력"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
 msgid "Enters full screen"
-msgstr ""
+msgstr "전체화면으로 봅니다"
 
 #: src/view/com/composer/Composer.tsx:1660
 #: src/view/com/util/error/ErrorScreen.tsx:42
@@ -2673,11 +2673,11 @@ msgstr "답글을 달고 있는 전체 게시물을 펼치거나 접습니다"
 
 #: src/screens/VideoFeed/index.tsx:933
 msgid "Expands or collapses post text"
-msgstr ""
+msgstr "게시물 텍스트를 펼치거나 접습니다"
 
 #: src/view/com/composer/ComposerReplyTo.tsx:73
 msgid "Expands or collapses the full post you are replying to"
-msgstr ""
+msgstr "답글을 달고 있는 전체 게시물을 펼치거나 접습니다"
 
 #: src/lib/api/index.ts:405
 msgid "Expected uri to resolve to a record"
@@ -2798,7 +2798,7 @@ msgstr "알림 설정을 저장하지 못했습니다. 다시 시도해 주세�
 
 #: src/screens/ModerationInteractionSettings/index.tsx:108
 msgid "Failed to save settings. Please try again."
-msgstr ""
+msgstr "설정을 저장하지 못했습니다. 다시 시도해 주세요."
 
 #: src/components/dms/MessageItem.tsx:234
 msgid "Failed to send"
@@ -3344,7 +3344,7 @@ msgstr "사용자 리스트 숨기기"
 #: src/components/moderation/ContentHider.tsx:151
 #: src/components/moderation/PostHider.tsx:79
 msgid "Hides the content"
-msgstr ""
+msgstr "콘텐츠를 숨깁니다"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:117
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
@@ -3521,7 +3521,7 @@ msgstr "상호작용 제한됨"
 
 #: src/screens/Moderation/index.tsx:209
 msgid "Interaction settings"
-msgstr ""
+msgstr "상호작용 설정"
 
 #: src/screens/Login/LoginForm.tsx:149
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
@@ -3680,7 +3680,7 @@ msgstr "PDS 셀프 호스팅에 대해 자세히 알아보세요."
 
 #: src/components/moderation/ContentHider.tsx:149
 msgid "Learn more about the moderation applied to this content"
-msgstr ""
+msgstr "이 콘텐츠에 적용된 검토 설정에 대해 자세히 알아보세요"
 
 #: src/components/moderation/ContentHider.tsx:215
 msgid "Learn more about the moderation applied to this content."
@@ -4756,7 +4756,7 @@ msgstr "기기에서 카메라를 엽니다"
 
 #: src/screens/Settings/AccountSettings.tsx:127
 msgid "Opens change handle dialog"
-msgstr ""
+msgstr "핸들 변경 대화 상자를 엽니다"
 
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:35
 msgid "Opens composer"
@@ -4768,7 +4768,7 @@ msgstr "기기의 사진 갤러리를 엽니다"
 
 #: src/view/com/composer/Composer.tsx:1244
 msgid "Opens emoji picker"
-msgstr ""
+msgstr "이모티콘 선택기를 엽니다"
 
 #: src/view/com/auth/SplashScreen.tsx:49
 #: src/view/com/auth/SplashScreen.web.tsx:111
@@ -4786,7 +4786,7 @@ msgstr "GIF 선택 대화 상자를 엽니다"
 
 #: src/screens/Settings/Settings.tsx:208
 msgid "Opens helpdesk in browser"
-msgstr ""
+msgstr "브라우저에서 지원 문서를 엽니다"
 
 #: src/view/com/modals/InviteCodes.tsx:173
 msgid "Opens list of invite codes"
@@ -4898,7 +4898,7 @@ msgstr "사람들"
 
 #: src/Navigation.tsx:195
 msgid "People followed by @{0}"
-msgstr "@{0} 님이 팔로우한 사람들"
+msgstr "@{0} 님이 팔로우하는 사람들"
 
 #: src/Navigation.tsx:188
 msgid "People following @{0}"
@@ -4994,11 +4994,11 @@ msgstr "동영상 재생"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:42
 msgid "Plays or pauses the GIF"
-msgstr ""
+msgstr "GIF를 재생하거나 일시 정지합니다"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 msgid "Plays or pauses the video"
-msgstr ""
+msgstr "동영상을 재생하거나 일시 정지합니다"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:106
 msgid "Plays the GIF"
@@ -5006,7 +5006,7 @@ msgstr "GIF를 재생합니다"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:59
 msgid "Plays the video"
-msgstr ""
+msgstr "동영상을 재생합니다"
 
 #: src/screens/Signup/state.ts:217
 msgid "Please choose your handle."
@@ -5147,7 +5147,7 @@ msgstr "게시물 상호작용 설정"
 #: src/Navigation.tsx:163
 #: src/screens/ModerationInteractionSettings/index.tsx:34
 msgid "Post Interaction Settings"
-msgstr ""
+msgstr "게시물 상호작용 설정"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:89
 msgid "Post language"
@@ -5275,7 +5275,7 @@ msgstr "프로필을 업데이트했습니다"
 
 #: src/view/screens/Search/Search.tsx:810
 msgid "Provides access to navigation links and settings"
-msgstr ""
+msgstr "탐색 링크 및 설정으로 이동합니다"
 
 #: src/screens/Onboarding/StepFinished.tsx:253
 msgid "Public"
@@ -5530,7 +5530,7 @@ msgstr "내 피드에서 제거했습니다"
 
 #: src/view/screens/Search/Search.tsx:1036
 msgid "Removes profile from search history"
-msgstr ""
+msgstr "검색 기록에서 프로필을 제거합니다"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
@@ -5841,7 +5841,7 @@ msgstr "이전 페이지로 돌아갑니다"
 
 #: src/screens/StarterPack/Wizard/index.tsx:287
 msgid "Returns to the previous step"
-msgstr ""
+msgstr "이전 단계로 돌아갑니다"
 
 #: src/components/dialogs/BirthDateSettings.tsx:120
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:478
@@ -5996,7 +5996,7 @@ msgstr "Tenor 검색"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
 #: src/components/ProgressGuide/FollowDialog.tsx:765
 msgid "Searches for profiles"
-msgstr ""
+msgstr "프로필을 검색합니다"
 
 #: src/view/com/modals/ChangeEmail.tsx:105
 msgid "Security Step Required"
@@ -6120,7 +6120,7 @@ msgstr "피드에서 번역을 위해 선호하는 언어를 선택합니다."
 
 #: src/view/com/util/forms/DropdownButton.tsx:297
 msgid "Selects option {0} of {numItems}"
-msgstr ""
+msgstr "옵션 {numItems}개 중 {0}번째를 선택합니다"
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
@@ -6219,7 +6219,7 @@ msgstr "설정"
 
 #: src/screens/ModerationInteractionSettings/index.tsx:102
 msgid "Settings saved"
-msgstr ""
+msgstr "설정을 저장했습니다"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Sexual activity or erotic nudity."
@@ -6408,16 +6408,16 @@ msgstr "경고 표시 및 피드에서 필터링"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:810
 msgid "Shows information about when this post was created"
-msgstr ""
+msgstr "이 게시물이 언제 작성되었는지에 대한 정보를 표시합니다"
 
 #: src/screens/Settings/Settings.tsx:104
 msgid "Shows other accounts you can switch to"
-msgstr ""
+msgstr "전환할 수 있는 다른 계정을 표시합니다"
 
 #: src/components/moderation/ContentHider.tsx:152
 #: src/components/moderation/PostHider.tsx:79
 msgid "Shows the content"
-msgstr ""
+msgstr "콘텐츠를 표시합니다"
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
@@ -6888,7 +6888,7 @@ msgstr "내 콘텐츠에 다음 라벨이 적용되었습니다."
 
 #: src/screens/ModerationInteractionSettings/index.tsx:42
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
-msgstr ""
+msgstr "새 게시물을 작성할 때 다음 설정이 기본값으로 사용됩니다. 작성기에서 특정 게시물에 대해 이러한 설정을 변경할 수 있습니다."
 
 #: src/view/com/post-thread/PostThread.tsx:262
 #: src/view/com/post-thread/PostThread.tsx:274
@@ -7078,7 +7078,7 @@ msgstr "이 콘텐츠는 Bluesky 계정이 없으면 볼 수 없습니다."
 
 #: src/screens/Messages/components/ChatListItem.tsx:284
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
-msgstr ""
+msgstr "이 대화는 삭제되었거나 비활성화된 계정과의 대화입니다. 옵션을 보려면 누르세요"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:94
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -7156,7 +7156,7 @@ msgstr "이 게시물은 <0>{0}</0>에 작성되었다고 주장하지만 Bluesk
 
 #: src/components/WhoCanReply.tsx:213
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
-msgstr ""
+msgstr "이 게시물에 알 수 없는 유형의 스레드게이트가 있습니다. 앱이 오래되었을 수 있습니다."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:152
 msgid "This post has been deleted."
@@ -7297,7 +7297,7 @@ msgstr "성인 콘텐츠 활성화 또는 비활성화 전환"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:158
 msgid "Toggles the sound"
-msgstr ""
+msgstr "소리를 켜거나 끕니다"
 
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
@@ -7434,7 +7434,7 @@ msgstr "계정 언팔로우"
 
 #: src/screens/VideoFeed/index.tsx:803
 msgid "Unfollows the user"
-msgstr ""
+msgstr "사용자를 언팔로우합니다"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Unlike"
@@ -7681,11 +7681,11 @@ msgstr "사용자 이름 또는 이메일 주소"
 
 #: src/components/WhoCanReply.tsx:276
 msgid "users followed by <0>@{0}</0>"
-msgstr "<0>@{0}</0> 님이 팔로우한 사용자"
+msgstr "<0>@{0}</0> 님이 팔로우하는 사용자"
 
 #: src/components/WhoCanReply.tsx:263
 msgid "users following <0>@{0}</0>"
-msgstr ""
+msgstr "<0>@{0}</0> 님을 팔로우하는 사용자"
 
 #: src/screens/Messages/Settings.tsx:92
 #: src/screens/Messages/Settings.tsx:95
@@ -7702,7 +7702,7 @@ msgstr "이 콘텐츠 또는 프로필을 좋아하는 사용자"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:432
 msgid "Users you follow"
-msgstr ""
+msgstr "내가 팔로우하는 사용자"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:419
 msgid "Value:"
@@ -7890,7 +7890,7 @@ msgstr "내가 차단한 계정 보기"
 
 #: src/screens/Moderation/index.tsx:204
 msgid "View your default post interaction settings"
-msgstr ""
+msgstr "기본 게시물 상호작용 설정 보기"
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:56
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:77
@@ -7908,11 +7908,11 @@ msgstr "내가 뮤트한 계정 보기"
 #: src/view/com/util/images/AutoSizedImage.tsx:199
 #: src/view/com/util/images/AutoSizedImage.tsx:221
 msgid "Views full image"
-msgstr ""
+msgstr "전체 이미지를 봅니다"
 
 #: src/components/VideoPostCard.tsx:115
 msgid "Views video in immersive mode"
-msgstr ""
+msgstr "몰입형 모드로 동영상을 봅니다"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -7963,7 +7963,7 @@ msgstr "즐거운 시간 되시기 바랍니다. Bluesky의 다음 특징을 기
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
-msgstr "팔로우한 사용자의 게시물이 부족합니다. 대신 <0/>의 최신 게시물을 표시합니다."
+msgstr "팔로우하는 사용자의 게시물이 부족합니다. 대신 <0/>의 최신 게시물을 표시합니다."
 
 #: src/view/com/composer/state/video.ts:417
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
@@ -8203,7 +8203,7 @@ msgstr "계정을 재활성화하여 로그인을 계속할 수 있습니다. �
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
 msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings.</0>"
-msgstr ""
+msgstr "<0>설정 → 검토 → 상호작용 설정</0>에서 기본 상호작용 설정을 변경할 수 있습니다."
 
 #: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:139
@@ -8516,7 +8516,7 @@ msgstr "첫 좋아요!"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
 msgid "Your followers"
-msgstr ""
+msgstr "내 팔로워"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
