@@ -187,6 +187,7 @@ input:focus {
   animation: rotate 500ms linear infinite;
 }
 
+/* animations for atoms */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -212,6 +213,11 @@ input:focus {
   to {
     transform: scale(1);
   }
+}
+
+/* animating radix dropdowns requires knowing the data attributes */
+.dropdown-menu-transform-origin > * {
+  transform-origin: var(--radix-dropdown-menu-content-transform-origin);
 }
 
 .force-no-clicks > *,
