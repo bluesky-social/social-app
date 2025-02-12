@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-11 22:28\n"
+"PO-Revision-Date: 2025-02-12 02:28\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -396,7 +396,7 @@ msgstr "此帳經已封鎖"
 
 #: src/view/com/profile/ProfileMenu.tsx:145
 msgid "Account followed"
-msgstr "此帳經已跟緊"
+msgstr "經已跟咗此帳"
 
 #: src/view/com/profile/ProfileMenu.tsx:108
 msgid "Account muted"
@@ -426,7 +426,7 @@ msgstr "此帳經已解除封鎖"
 
 #: src/view/com/profile/ProfileMenu.tsx:157
 msgid "Account unfollowed"
-msgstr "此帳經已唔再跟"
+msgstr "經已唔再跟此帳"
 
 #: src/view/com/profile/ProfileMenu.tsx:98
 msgid "Account unmuted"
@@ -585,7 +585,7 @@ msgstr "全部"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
-msgstr "你跟晒所有帳號喇！"
+msgstr "你經已跟晒所有帳號喇！"
 
 #: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
@@ -1317,12 +1317,12 @@ msgstr "變更你嘅電郵地址"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Changes app icon"
-msgstr ""
+msgstr "變更 App 圖標"
 
 #: src/components/forms/HostingProvider.tsx:50
 #: src/components/forms/HostingProvider.tsx:66
 msgid "Changes hosting provider"
-msgstr ""
+msgstr "變更託管服務提供者"
 
 #: src/Navigation.tsx:398
 #: src/view/shell/bottom-bar/BottomBar.tsx:204
@@ -1467,7 +1467,7 @@ msgstr "閂"
 #: src/components/Dialog/index.web.tsx:110
 #: src/components/Dialog/index.web.tsx:252
 msgid "Close active dialog"
-msgstr "閂咗目前嘅對話框"
+msgstr "閂咗目前嘅對話框去"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:31
 msgid "Close alert"
@@ -1475,7 +1475,7 @@ msgstr "閂咗警示去"
 
 #: src/view/com/util/BottomSheetCustomBackdrop.tsx:36
 msgid "Close bottom drawer"
-msgstr "閂咗底部櫃桶去"
+msgstr "閂咗下低櫃桶去"
 
 #: src/components/dialogs/GifSelect.tsx:275
 msgid "Close dialog"
@@ -1484,7 +1484,7 @@ msgstr "閂咗對話框去"
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
 msgid "Close emoji picker"
-msgstr "閂咗 emoji 選擇器去"
+msgstr "閂咗 Emoji 選擇器去"
 
 #: src/components/dialogs/GifSelect.tsx:169
 msgid "Close GIF dialog"
@@ -1517,7 +1517,7 @@ msgstr "閂咗密碼更新警示去"
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
 msgid "Closes the emoji picker"
-msgstr ""
+msgstr "閂咗 Emoji 選擇器去"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:32
 msgid "Closes viewer for header image"
@@ -1719,7 +1719,7 @@ msgstr "複製咗喇"
 
 #: src/screens/Settings/AboutSettings.tsx:73
 msgid "Copied build version to clipboard"
-msgstr "複製咗構建版本到剪貼簿喇"
+msgstr "經已複製構建版本去剪貼簿"
 
 #: src/components/dms/MessageMenu.tsx:57
 #: src/lib/sharing.ts:25
@@ -1736,7 +1736,7 @@ msgstr "複製咗喇！"
 
 #: src/screens/Settings/AboutSettings.tsx:68
 msgid "Copies build version to clipboard"
-msgstr ""
+msgstr "經已複製構建版本去剪貼簿"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 msgid "Copy"
@@ -2233,7 +2233,7 @@ msgstr "攪掂{extraText}"
 
 #: src/components/Dialog/index.tsx:314
 msgid "Double tap to close the dialog"
-msgstr "撳兩下閂咗呢個對話框"
+msgstr "撳兩下閂咗呢個對話框去"
 
 #: src/screens/VideoFeed/index.tsx:1039
 msgid "Double tap to like"
@@ -2578,7 +2578,7 @@ msgstr "喺下低輸入你嘅新電郵地址。"
 
 #: src/screens/Login/LoginForm.tsx:235
 msgid "Enter your password"
-msgstr ""
+msgstr "輸入你嘅密碼"
 
 #: src/screens/Login/index.tsx:98
 msgid "Enter your username and password"
@@ -2586,7 +2586,7 @@ msgstr "輸入你嘅用戶名同密碼"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
 msgid "Enters full screen"
-msgstr ""
+msgstr "進入全螢幕"
 
 #: src/view/com/composer/Composer.tsx:1660
 #: src/view/com/util/error/ErrorScreen.tsx:42
@@ -2633,11 +2633,11 @@ msgstr "頻繁抑或不受歡迎嘅訊息"
 
 #: src/components/dialogs/MutedWords.tsx:311
 msgid "Exclude users you follow"
-msgstr "排除你跟咗嘅用戶"
+msgstr "排除你跟嘅用戶"
 
 #: src/components/dialogs/MutedWords.tsx:514
 msgid "Excludes users you follow"
-msgstr "排除你跟咗嘅用戶"
+msgstr "排除你跟嘅用戶"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:404
 msgid "Exit fullscreen"
@@ -4690,7 +4690,7 @@ msgstr "打開櫃桶選單"
 #: src/screens/Messages/components/MessageInput.web.tsx:181
 #: src/view/com/composer/Composer.tsx:1243
 msgid "Open emoji picker"
-msgstr "打開 emoji 選擇器"
+msgstr "打開 Emoji 選擇器"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:190
 msgid "Open feed info screen"
@@ -4768,7 +4768,7 @@ msgstr "打開裝置相簿"
 
 #: src/view/com/composer/Composer.tsx:1244
 msgid "Opens emoji picker"
-msgstr ""
+msgstr "打開 Emoji 選擇器"
 
 #: src/view/com/auth/SplashScreen.tsx:49
 #: src/view/com/auth/SplashScreen.web.tsx:111
@@ -6044,7 +6044,7 @@ msgstr "揀個頭像"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:65
 msgid "Select an emoji"
-msgstr "揀個表情符號"
+msgstr "揀個 Emoji"
 
 #: src/screens/Settings/LanguageSettings.tsx:262
 msgid "Select content languages"
@@ -6084,7 +6084,7 @@ msgstr "揀份字幕檔案（.vtt）"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
-msgstr "揀個 {emojiName} emoji 做你嘅頭像"
+msgstr "揀個 {emojiName} Emoji 做你嘅頭像"
 
 #: src/components/ReportDialog/SubmitView.tsx:141
 msgid "Select the moderation service(s) to report to"
@@ -6219,7 +6219,7 @@ msgstr "設定"
 
 #: src/screens/ModerationInteractionSettings/index.tsx:102
 msgid "Settings saved"
-msgstr ""
+msgstr "設定經已儲存"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Sexual activity or erotic nudity."
@@ -7434,7 +7434,7 @@ msgstr "唔再跟佢"
 
 #: src/screens/VideoFeed/index.tsx:803
 msgid "Unfollows the user"
-msgstr ""
+msgstr "唔再跟呢位用戶"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Unlike"
@@ -7702,7 +7702,7 @@ msgstr "讚過呢個內容抑或個人檔案嘅用戶"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:432
 msgid "Users you follow"
-msgstr ""
+msgstr "你跟嘅用戶"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:419
 msgid "Value:"
@@ -8218,7 +8218,7 @@ msgstr "你未有任何擁躉。"
 
 #: src/screens/Profile/KnownFollowers.tsx:109
 msgid "You don't follow any users who follow @{name}."
-msgstr "你唔會跟住任何跟過 @{name} 嘅用戶。"
+msgstr "你未有跟任何跟咗 @{name} 嘅用戶。"
 
 #: src/view/com/modals/InviteCodes.tsx:67
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
@@ -8387,11 +8387,11 @@ msgstr "你：{short}"
 
 #: src/screens/Signup/index.tsx:107
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
-msgstr "建立完帳號之後，你就會跟住啲建議嘅用戶同動態源！"
+msgstr "建立完帳號之後，你就會自動跟啲建議嘅用戶同動態源！"
 
 #: src/screens/Signup/index.tsx:112
 msgid "You'll follow the suggested users once you finish creating your account!"
-msgstr "建立完帳號之後，你就會跟住啲建議嘅用戶！"
+msgstr "建立完帳號之後，你就會自動跟啲建議嘅用戶！"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:232
 msgid "You'll follow these people and {0} others"
@@ -8516,7 +8516,7 @@ msgstr "你嘅第一個讚！"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
 msgid "Your followers"
-msgstr ""
+msgstr "你嘅擁躉"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
