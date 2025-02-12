@@ -1,11 +1,5 @@
 import React from 'react'
-import {
-  InteractionManager,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native'
+import {InteractionManager, StyleProp, View, ViewStyle} from 'react-native'
 import {MeasuredDimensions, runOnJS, runOnUI} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {
@@ -22,7 +16,6 @@ import {
 } from '@atproto/api'
 
 import {HandleRef, measureHandle} from '#/lib/hooks/useHandleRef'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useLightboxControls} from '#/state/lightbox'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
@@ -255,7 +248,7 @@ export function PostEmbeds({
 }
 
 export function MaybeFeedCard({view}: {view: AppBskyFeedDefs.GeneratorView}) {
-  const pal = usePalette('default')
+  const t = useTheme()
   const moderationOpts = useModerationOpts()
   const moderation = React.useMemo(() => {
     return moderationOpts
@@ -267,7 +260,7 @@ export function MaybeFeedCard({view}: {view: AppBskyFeedDefs.GeneratorView}) {
     <ContentHider modui={moderation?.ui('contentList')}>
       <FeedSourceCard
         feedUri={view.uri}
-        style={[pal.view, pal.border, styles.customFeedOuter]}
+        style={[a.border, t.atoms.border_contrast_medium, a.p_md, a.rounded_sm]}
         showLikes
       />
     </ContentHider>
@@ -283,38 +276,10 @@ export function MaybeListCard({view}: {view: AppBskyGraphDefs.ListView}) {
 
   return (
     <ContentHider modui={moderation?.ui('contentList')}>
-      <View
-        style={[
-          a.border,
-          t.atoms.border_contrast_medium,
-          a.p_md,
-          a.rounded_sm,
-        ]}>
-        <ListCard.Default view={view} />
-      </View>
+      <ListCard.Default
+        view={view}
+        style={[a.border, t.atoms.border_contrast_medium, a.p_md, a.rounded_sm]}
+      />
     </ContentHider>
   )
 }
-
-const styles = StyleSheet.create({
-  altContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-    borderRadius: 6,
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-    position: 'absolute',
-    right: 6,
-    bottom: 6,
-  },
-  alt: {
-    color: 'white',
-    fontSize: 7,
-    fontWeight: '600',
-  },
-  customFeedOuter: {
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-  },
-})
