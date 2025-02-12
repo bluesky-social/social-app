@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-12 03:58\n"
+"PO-Revision-Date: 2025-02-12 05:07\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -3632,7 +3632,7 @@ msgstr "標籤係用戶同內容嘅註解。佢哋可以用嚟隱藏、警告同
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:71
 msgid "Labels on your account"
-msgstr "你個帳號黐咗嘅標籤"
+msgstr "你嘅帳號黐咗嘅標籤"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:73
 msgid "Labels on your content"
@@ -5275,7 +5275,7 @@ msgstr "個人檔案經已更新"
 
 #: src/view/screens/Search/Search.tsx:810
 msgid "Provides access to navigation links and settings"
-msgstr ""
+msgstr "提供訪問導覽連結同設定"
 
 #: src/screens/Onboarding/StepFinished.tsx:253
 msgid "Public"
@@ -8314,7 +8314,7 @@ msgstr "你隱藏咗呢個回覆。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:78
 msgid "You may appeal non-self labels if you feel they were placed in error."
-msgstr "若然你覺得其他人標記嘅呢啲標籤唔啱，可以提出申訴。"
+msgstr "若然你覺得其他人黐嘅呢啲標籤唔啱，可以提出申訴。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:83
 msgid "You may appeal these labels if you feel they were placed in error."
