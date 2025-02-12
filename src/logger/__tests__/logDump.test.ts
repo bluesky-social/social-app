@@ -1,7 +1,7 @@
 import {expect, test} from '@jest/globals'
 
-import {add, ConsoleTransportEntry,getEntries} from '#/logger/logDump'
-import {LogContext,LogLevel} from '#/logger/types'
+import {add, ConsoleTransportEntry, getEntries} from '#/logger/logDump'
+import {LogContext, LogLevel} from '#/logger/types'
 
 test('works', () => {
   const items: ConsoleTransportEntry[] = [
