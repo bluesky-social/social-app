@@ -158,7 +158,7 @@ export function Inner({
                     </Text>
                     ?{' '}
                     <InlineLinkText
-                      to="#"
+                      href="#"
                       label={_(msg`Change email address`)}
                       style={[a.text_md, a.leading_snug]}
                       onPress={e => {
@@ -183,7 +183,7 @@ export function Inner({
                     to verify it's you.
                   </Trans>{' '}
                   <InlineLinkText
-                    to="#"
+                    href="#"
                     label={_(msg`Change email address`)}
                     style={[a.text_md, a.leading_snug]}
                     onPress={e => {

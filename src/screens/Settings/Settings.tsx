@@ -150,28 +150,30 @@ export function SettingsScreen({}: Props) {
             <AddAccountRow />
           )}
           <SettingsList.Divider />
-          <SettingsList.LinkItem to="/settings/account" label={_(msg`Account`)}>
+          <SettingsList.LinkItem
+            screen="AccountSettings"
+            label={_(msg`Account`)}>
             <SettingsList.ItemIcon icon={PersonIcon} />
             <SettingsList.ItemText>
               <Trans>Account</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
-            to="/settings/privacy-and-security"
+            screen="PrivacyAndSecuritySettings"
             label={_(msg`Privacy and security`)}>
             <SettingsList.ItemIcon icon={LockIcon} />
             <SettingsList.ItemText>
               <Trans>Privacy and security</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
-          <SettingsList.LinkItem to="/moderation" label={_(msg`Moderation`)}>
+          <SettingsList.LinkItem screen="Moderation" label={_(msg`Moderation`)}>
             <SettingsList.ItemIcon icon={HandIcon} />
             <SettingsList.ItemText>
               <Trans>Moderation</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
-            to="/settings/content-and-media"
+            screen="ContentAndMediaSettings"
             label={_(msg`Content and media`)}>
             <SettingsList.ItemIcon icon={WindowIcon} />
             <SettingsList.ItemText>
@@ -179,7 +181,7 @@ export function SettingsScreen({}: Props) {
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
-            to="/settings/appearance"
+            screen="AppearanceSettings"
             label={_(msg`Appearance`)}>
             <SettingsList.ItemIcon icon={PaintRollerIcon} />
             <SettingsList.ItemText>
@@ -187,7 +189,7 @@ export function SettingsScreen({}: Props) {
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
-            to="/settings/accessibility"
+            screen="AccessibilitySettings"
             label={_(msg`Accessibility`)}>
             <SettingsList.ItemIcon icon={AccessibilityIcon} />
             <SettingsList.ItemText>
@@ -195,7 +197,7 @@ export function SettingsScreen({}: Props) {
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
-            to="/settings/language"
+            screen="LanguageSettings"
             label={_(msg`Languages`)}>
             <SettingsList.ItemIcon icon={EarthIcon} />
             <SettingsList.ItemText>
@@ -212,7 +214,7 @@ export function SettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
-          <SettingsList.LinkItem to="/settings/about" label={_(msg`About`)}>
+          <SettingsList.LinkItem screen="AboutSettings" label={_(msg`About`)}>
             <SettingsList.ItemIcon icon={BubbleInfoIcon} />
             <SettingsList.ItemText>
               <Trans>About</Trans>

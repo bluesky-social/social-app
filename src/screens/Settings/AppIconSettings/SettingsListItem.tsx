@@ -14,7 +14,7 @@ export function SettingsListItem() {
 
   return (
     <SettingsList.LinkItem
-      to="/settings/app-icon"
+      screen="AppIconSettings"
       label={_(msg`App Icon`)}
       contentContainerStyle={[a.align_start]}>
       <SettingsList.ItemIcon icon={Shapes} />

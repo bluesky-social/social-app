@@ -101,7 +101,7 @@ export function NoFeedsPinned({
 
           <Link
             label={_(msg`Browse other feeds`)}
-            to="/feeds"
+            screen="Feeds"
             size="large"
             variant="solid"
             color="secondary">

@@ -28,10 +28,29 @@ import {router} from '#/routes'
  */
 export {useButtonContext as useLinkContext} from '#/components/Button'
 
-type BaseLinkProps = Pick<
-  Parameters<typeof useLinkProps<AllNavigatorParams>>[0],
-  'to'
-> & {
+/**
+ * Copied from react-nativgation's LinkProps, but with `action` removed. Removing action breaks
+ * the type, causing screen and params to lose their 'connection'
+ */
+
+export type CustomLinkProps<
+  ParamList = AllNavigatorParams,
+  RouteName extends keyof ParamList = keyof ParamList,
+> =
+  | ({
+      href?: string
+    } & {
+      [Screen in keyof ParamList]: undefined extends ParamList[Screen]
+        ? {screen: Screen; params?: ParamList[Screen]}
+        : {screen: Screen; params: ParamList[Screen]}
+    }[RouteName])
+  | {
+      href: string
+      screen?: undefined
+      params?: undefined
+    }
+
+type BaseLinkProps = CustomLinkProps & {
   testID?: string
 
   /**
@@ -71,8 +90,18 @@ type BaseLinkProps = Pick<
   shareOnLongPress?: boolean
 }
 
+function test({screen, params}: CustomLinkProps) {
+  if (screen === 'Search') {
+    params.q
+    // @ts-expect-error hiasuhdas
+    params.did
+  }
+}
+
 export function useLink({
-  to,
+  screen,
+  params,
+  href: hrefProp,
   displayText,
   action = 'push',
   disableMismatchWarning,
@@ -85,10 +114,22 @@ export function useLink({
   overridePresentation?: boolean
 }) {
   const navigation = useNavigationDeduped()
-  const {href} = useLinkProps<AllNavigatorParams>({
-    to:
-      typeof to === 'string' ? convertBskyAppUrlIfNeeded(sanitizeUrl(to)) : to,
+  const safeHrefProp = hrefProp
+    ? convertBskyAppUrlIfNeeded(sanitizeUrl(hrefProp))
+    : undefined
+
+  let {href} = useLinkProps<AllNavigatorParams>({
+    screen: screen!,
+    params,
+    href: safeHrefProp,
   })
+  if (!href) {
+    if (safeHrefProp) {
+      href = safeHrefProp
+    } else {
+      throw new Error('No href provided')
+    }
+  }
   const isExternal = isExternalUrl(href)
   const {openModal, closeModal} = useModalControls()
   const openLink = useOpenLink()
@@ -97,7 +138,7 @@ export function useLink({
     (e: GestureResponderEvent) => {
       const exitEarlyIfFalse = outerOnPress?.(e)
 
-      if (exitEarlyIfFalse === false) return
+      if (exitEarlyIfFalse === false || e.defaultPrevented) return
 
       const requiresWarning = Boolean(
         !disableMismatchWarning &&
@@ -214,7 +255,9 @@ export type LinkProps = Omit<BaseLinkProps, 'disableMismatchWarning'> &
  */
 export function Link({
   children,
-  to,
+  screen,
+  params,
+  href: hrefProp,
   action = 'push',
   onPress: outerOnPress,
   onLongPress: outerOnLongPress,
@@ -222,7 +265,9 @@ export function Link({
   ...rest
 }: LinkProps) {
   const {href, isExternal, onPress, onLongPress} = useLink({
-    to,
+    screen,
+    params,
+    href: hrefProp,
     displayText: typeof children === 'string' ? children : '',
     action,
     onPress: outerOnPress,
@@ -267,7 +312,9 @@ export type InlineLinkProps = React.PropsWithChildren<
 
 export function InlineLinkText({
   children,
-  to,
+  screen,
+  params,
+  href: hrefProp,
   action = 'push',
   disableMismatchWarning,
   style,
@@ -284,7 +331,9 @@ export function InlineLinkText({
   const t = useTheme()
   const stringChildren = typeof children === 'string'
   const {href, isExternal, onPress, onLongPress} = useLink({
-    to,
+    screen,
+    params,
+    href: hrefProp,
     displayText: stringChildren ? children : '',
     action,
     disableMismatchWarning,
@@ -344,12 +393,12 @@ export function InlineLinkText({
 
 export function WebOnlyInlineLinkText({
   children,
-  to,
+  href,
   onPress,
   ...props
 }: Omit<InlineLinkProps, 'onLongPress'>) {
   return isWeb ? (
-    <InlineLinkText {...props} to={to} onPress={onPress}>
+    <InlineLinkText {...props} href={href} onPress={onPress}>
       {children}
     </InlineLinkText>
   ) : (
@@ -366,7 +415,7 @@ export function WebOnlyInlineLinkText({
 export function createStaticClick(
   onPressHandler: Exclude<BaseLinkProps['onPress'], undefined>,
 ): {
-  to: BaseLinkProps['to']
+  to: BaseLinkProps['href']
   onPress: Exclude<BaseLinkProps['onPress'], undefined>
 } {
   return {

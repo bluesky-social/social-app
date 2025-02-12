@@ -203,7 +203,7 @@ export function ModerationScreenInner({
         <Link
           label={_(msg`View your default post interaction settings`)}
           testID="interactionSettingsBtn"
-          to="/moderation/interaction-settings">
+          screen="ModerationInteractionSettings">
           {state => (
             <SubItem
               title={_(msg`Interaction settings`)}
@@ -233,7 +233,7 @@ export function ModerationScreenInner({
         <Link
           label={_(msg`View your moderation lists`)}
           testID="moderationlistsBtn"
-          to="/moderation/modlists">
+          screen="ModerationModlists">
           {state => (
             <SubItem
               title={_(msg`Moderation lists`)}
@@ -248,7 +248,7 @@ export function ModerationScreenInner({
         <Link
           label={_(msg`View your muted accounts`)}
           testID="mutedAccountsBtn"
-          to="/moderation/muted-accounts">
+          screen="ModerationMutedAccounts">
           {state => (
             <SubItem
               title={_(msg`Muted accounts`)}
@@ -263,7 +263,7 @@ export function ModerationScreenInner({
         <Link
           label={_(msg`View your blocked accounts`)}
           testID="blockedAccountsBtn"
-          to="/moderation/blocked-accounts">
+          screen="ModerationBlockedAccounts">
           {state => (
             <SubItem
               title={_(msg`Blocked accounts`)}
@@ -356,7 +356,7 @@ export function ModerationScreenInner({
                       Adult content can only be enabled via the Web at{' '}
                       <InlineLinkText
                         label={_(msg`The Bluesky web application`)}
-                        to=""
+                        href="#"
                         onPress={evt => {
                           evt.preventDefault()
                           Linking.openURL('https://bsky.app/')

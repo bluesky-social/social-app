@@ -250,7 +250,7 @@ function ProvidedHandlePage({
               lets you self-verify your identity.{' '}
               <InlineLinkText
                 label={_(msg`learn more`)}
-                to="https://bsky.social/about/blog/4-28-2023-domain-handle-tutorial"
+                href="https://bsky.social/about/blog/4-28-2023-domain-handle-tutorial"
                 style={[a.font_bold]}
                 disableMismatchWarning>
                 Learn more here.

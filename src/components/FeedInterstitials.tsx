@@ -349,7 +349,7 @@ export function ProfileGrid({
           <View style={[a.flex_row, a.justify_end, a.align_center, a.gap_md]}>
             <InlineLinkText
               label={_(msg`Browse more suggestions`)}
-              to="/search"
+              screen="Search"
               style={[t.atoms.text_contrast_medium]}>
               <Trans>Browse more suggestions</Trans>
             </InlineLinkText>
@@ -486,7 +486,7 @@ export function SuggestedFeeds() {
             ]}>
             <InlineLinkText
               label={_(msg`Browse more suggestions`)}
-              to="/search"
+              screen="Search"
               style={[t.atoms.text_contrast_medium]}>
               <Trans>Browse more suggestions</Trans>
             </InlineLinkText>

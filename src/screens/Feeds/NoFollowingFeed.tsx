@@ -37,7 +37,7 @@ export function NoFollowingFeed() {
         <Trans>
           Looks like you're missing a following feed.{' '}
           <InlineLinkText
-            to="/"
+            href="#"
             label={_(msg`Add the default feed of only people you follow`)}
             onPress={addRecommendedFeeds}
             style={[a.leading_snug]}>

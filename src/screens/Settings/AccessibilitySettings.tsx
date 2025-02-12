@@ -105,7 +105,7 @@ export function AccessibilitySettingsScreen({}: Props) {
               <Trans>
                 Autoplay options have moved to the{' '}
                 <InlineLinkText
-                  to="/settings/content-and-media"
+                  screen="ContentAndMediaSettings"
                   label={_(msg`Content and media`)}>
                   Content and Media settings
                 </InlineLinkText>

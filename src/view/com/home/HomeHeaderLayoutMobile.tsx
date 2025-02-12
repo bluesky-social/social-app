@@ -72,7 +72,7 @@ export function HomeHeaderLayoutMobile({
           {hasSession && (
             <Link
               testID="viewHeaderHomeFeedPrefsBtn"
-              to="/feeds"
+              screen="Feeds"
               hitSlop={HITSLOP_10}
               label={_(msg`View your feeds and explore more`)}
               size="small"

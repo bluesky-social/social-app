@@ -239,7 +239,7 @@ let MessageItemMetadata = ({
               &middot;{' '}
               <InlineLinkText
                 label={_(msg`Click to retry failed message`)}
-                to="#"
+                href="#"
                 onPress={handleRetry}
                 style={[a.text_xs]}>
                 {_(msg`Retry`)}

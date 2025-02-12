@@ -245,7 +245,7 @@ export function LabelerLabelPreference({
                   Configured in{' '}
                   <InlineLinkText
                     label={_(msg`moderation settings`)}
-                    to="/moderation"
+                    screen="Moderation"
                     style={a.text_sm}>
                     moderation settings
                   </InlineLinkText>

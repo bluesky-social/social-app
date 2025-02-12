@@ -59,7 +59,7 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
             <Email2FAToggle />
           </SettingsList.Item>
           <SettingsList.LinkItem
-            to="/settings/app-passwords"
+            screen="AppPasswords"
             label={_(msg`App passwords`)}>
             <SettingsList.ItemIcon icon={KeyIcon} />
             <SettingsList.ItemText>
@@ -98,7 +98,7 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
                       label={_(
                         msg`Learn more about what is public on Bluesky.`,
                       )}
-                      to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy">
+                      href="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy">
                       <Trans>Learn more about what is public on Bluesky.</Trans>
                     </InlineLinkText>
                   </Admonition.Text>

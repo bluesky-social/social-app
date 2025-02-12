@@ -44,7 +44,7 @@ export function MessageListError({item}: {item: ConvoItem & {type: 'error'}}) {
           {description} &middot;{' '}
           {item.retry && (
             <InlineLinkText
-              to="#"
+              href="#"
               label={help}
               onPress={e => {
                 e.preventDefault()

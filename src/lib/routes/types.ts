@@ -105,25 +105,27 @@ export type FlatNavigatorParams = CommonNavigatorParams & {
   Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
 }
 
-export type AllNavigatorParams = CommonNavigatorParams & {
-  HomeTab: undefined
-  Home: undefined
-  SearchTab: undefined
-  Search: {q?: string}
-  Feeds: undefined
-  NotificationsTab: undefined
-  Notifications: undefined
-  MyProfileTab: undefined
-  Hashtag: {tag: string; author?: string}
-  Topic: {topic: string}
-  MessagesTab: undefined
-  Messages: {animation?: 'push' | 'pop'}
-  Start: {name: string; rkey: string}
-  StarterPack: {name: string; rkey: string; new?: boolean}
-  StarterPackShort: {code: string}
-  StarterPackWizard: undefined
-  StarterPackEdit: {rkey?: string}
-}
+export type AllNavigatorParams = Prettify<
+  CommonNavigatorParams & {
+    HomeTab: undefined
+    Home: undefined
+    SearchTab: undefined
+    Search: {q?: string}
+    Feeds: undefined
+    NotificationsTab: undefined
+    Notifications: undefined
+    MyProfileTab: undefined
+    Hashtag: {tag: string; author?: string}
+    Topic: {topic: string}
+    MessagesTab: undefined
+    Messages: {animation?: 'push' | 'pop'}
+    Start: {name: string; rkey: string}
+    StarterPack: {name: string; rkey: string; new?: boolean}
+    StarterPackShort: {code: string}
+    StarterPackWizard: undefined
+    StarterPackEdit: {rkey?: string}
+  }
+>
 
 // NOTE
 // this isn't strictly correct but it should be close enough
@@ -141,3 +143,7 @@ export type Route = {
   match: (path: string) => MatchResult | undefined
   build: (params: RouteParams) => string
 }
+
+type Prettify<T> = {
+  [K in keyof T]: T[K]
+} & {}

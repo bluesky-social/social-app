@@ -55,7 +55,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
       <Layout.Content>
         <SettingsList.Container>
           <SettingsList.LinkItem
-            to="/settings/saved-feeds"
+            screen="SavedFeeds"
             label={_(msg`Manage saved feeds`)}>
             <SettingsList.ItemIcon icon={HashtagIcon} />
             <SettingsList.ItemText>
@@ -63,7 +63,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
-            to="/settings/threads"
+            screen="PreferencesThreads"
             label={_(msg`Thread preferences`)}>
             <SettingsList.ItemIcon icon={BubblesIcon} />
             <SettingsList.ItemText>
@@ -71,7 +71,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
-            to="/settings/following-feed"
+            screen="PreferencesFollowingFeed"
             label={_(msg`Following feed preferences`)}>
             <SettingsList.ItemIcon icon={HomeIcon} />
             <SettingsList.ItemText>
@@ -79,7 +79,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
-            to="/settings/external-embeds"
+            screen="PreferencesExternalEmbeds"
             label={_(msg`External media`)}>
             <SettingsList.ItemIcon icon={MacintoshIcon} />
             <SettingsList.ItemText>

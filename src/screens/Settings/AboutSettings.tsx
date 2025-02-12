@@ -33,7 +33,7 @@ export function AboutSettingsScreen({}: Props) {
       <Layout.Content>
         <SettingsList.Container>
           <SettingsList.LinkItem
-            to="https://bsky.social/about/support/tos"
+            href="https://bsky.social/about/support/tos"
             label={_(msg`Terms of Service`)}>
             <SettingsList.ItemIcon icon={NewspaperIcon} />
             <SettingsList.ItemText>
@@ -41,7 +41,7 @@ export function AboutSettingsScreen({}: Props) {
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
-            to="https://bsky.social/about/support/privacy-policy"
+            href="https://bsky.social/about/support/privacy-policy"
             label={_(msg`Privacy Policy`)}>
             <SettingsList.ItemIcon icon={NewspaperIcon} />
             <SettingsList.ItemText>
@@ -49,7 +49,7 @@ export function AboutSettingsScreen({}: Props) {
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
-            to={STATUS_PAGE_URL}
+            href={STATUS_PAGE_URL}
             label={_(msg`Status Page`)}>
             <SettingsList.ItemIcon icon={GlobeIcon} />
             <SettingsList.ItemText>
@@ -57,7 +57,7 @@ export function AboutSettingsScreen({}: Props) {
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.Divider />
-          <SettingsList.LinkItem to="/sys/log" label={_(msg`System log`)}>
+          <SettingsList.LinkItem screen="Log" label={_(msg`System log`)}>
             <SettingsList.ItemIcon icon={CodeLinesIcon} />
             <SettingsList.ItemText>
               <Trans>System log</Trans>

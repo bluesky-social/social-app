@@ -51,7 +51,7 @@ function HomeHeaderLayoutDesktopAndTablet({
               <Logo width={kawaii ? 60 : 28} />
             </View>
             <Link
-              to="/feeds"
+              screen="Feeds"
               hitSlop={10}
               label={_(msg`View your feeds and explore more`)}
               size="small"
