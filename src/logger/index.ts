@@ -25,7 +25,7 @@ const TRANSPORTS: Transport[] = (function configureTransports() {
       return []
     }
     default: {
-      return [consoleTransport]
+      return [consoleTransport, bitdriftTransport]
     }
   }
 })()
