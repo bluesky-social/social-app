@@ -8,7 +8,8 @@ export {debug, error, info, warn} from '@bitdrift/react-native'
 const BITDRIFT_API_KEY = process.env.BITDRIFT_API_KEY
 
 initPromise.then(() => {
-  let isEnabled = false
+  // TODO revert
+  let isEnabled = true
   try {
     if (Statsig.checkGate('enable_bitdrift')) {
       isEnabled = true
