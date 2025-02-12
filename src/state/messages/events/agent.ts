@@ -19,7 +19,7 @@ import {
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 
 const LOGGER_CONTEXT = 'MessagesEventBus'
-const logger = Logger.create(Logger.Context.convo)
+const logger = Logger.create(Logger.Context.Convo)
 
 export class MessagesEventBus {
   private id: string

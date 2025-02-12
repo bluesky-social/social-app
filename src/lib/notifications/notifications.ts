@@ -14,7 +14,7 @@ const SERVICE_DID = (serviceUrl?: string) =>
     ? 'did:web:api.staging.bsky.dev'
     : 'did:web:api.bsky.app'
 
-const logger = Logger.create(Logger.Context.notifications)
+const logger = Logger.create(Logger.Context.Notifications)
 
 async function registerPushToken(
   agent: BskyAgent,

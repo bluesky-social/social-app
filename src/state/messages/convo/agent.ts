@@ -34,7 +34,7 @@ import {MessagesEventBus} from '#/state/messages/events/agent'
 import {MessagesEventBusError} from '#/state/messages/events/types'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 
-const logger = Logger.create(Logger.Context.convo)
+const logger = Logger.create(Logger.Context.Convo)
 
 export function isConvoItemMessage(
   item: ConvoItem,

@@ -1,14 +1,14 @@
 import {expect, test} from '@jest/globals'
 
-import {ConsoleTransportEntry, LogLevel} from '#/logger'
-import {add, getEntries} from '#/logger/logDump'
+import {add, ConsoleTransportEntry,getEntries} from '#/logger/logDump'
+import {LogContext,LogLevel} from '#/logger/types'
 
 test('works', () => {
   const items: ConsoleTransportEntry[] = [
     {
       id: '1',
       level: LogLevel.Debug,
-      context: 'convo',
+      context: LogContext.Default,
       message: 'hello',
       metadata: {},
       timestamp: Date.now(),
@@ -16,7 +16,7 @@ test('works', () => {
     {
       id: '2',
       level: LogLevel.Debug,
-      context: 'convo',
+      context: LogContext.Default,
       message: 'hello',
       metadata: {},
       timestamp: Date.now(),
@@ -24,7 +24,7 @@ test('works', () => {
     {
       id: '3',
       level: LogLevel.Debug,
-      context: 'convo',
+      context: LogContext.Default,
       message: 'hello',
       metadata: {},
       timestamp: Date.now(),

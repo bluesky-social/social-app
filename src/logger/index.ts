@@ -1,21 +1,12 @@
 import {nanoid} from 'nanoid/non-secure'
 
-import {LogContext} from '#/logger/logContext'
 import {add} from '#/logger/logDump'
 import {bitdriftTransport} from '#/logger/transports/bitdrift'
 import {consoleTransport} from '#/logger/transports/console'
 import {sentryTransport} from '#/logger/transports/sentry'
-import {
-  ConsoleTransportEntry,
-  LogLevel,
-  Metadata,
-  Transport,
-} from '#/logger/types'
+import {LogContext, LogLevel, Metadata, Transport} from '#/logger/types'
 import {enabledLogLevels} from '#/logger/util'
 import {isWeb} from '#/platform/detection'
-
-export {LogLevel}
-export type {ConsoleTransportEntry, Transport}
 
 const TRANSPORTS: Transport[] = (function configureTransports() {
   switch (process.env.NODE_ENV) {
@@ -38,13 +29,13 @@ export class Logger {
   static Context = LogContext
 
   level: LogLevel
-  context: keyof typeof LogContext | undefined = undefined
+  context: LogContext | undefined = undefined
   contextFilter: string = ''
 
   protected debugContextRegexes: RegExp[] = []
   protected transports: Transport[] = []
 
-  static create(context?: keyof typeof LogContext) {
+  static create(context?: LogContext) {
     const logger = new Logger({
       level: (process.env.EXPO_PUBLIC_LOG_LEVEL || LogLevel.Info) as LogLevel,
       context,
@@ -62,7 +53,7 @@ export class Logger {
     contextFilter = process.env.EXPO_PUBLIC_LOG_DEBUG || '',
   }: {
     level?: LogLevel
-    context?: keyof typeof LogContext
+    context?: LogContext
     contextFilter?: string
   } = {}) {
     this.context = context
@@ -147,4 +138,4 @@ export class Logger {
  *   `logger.disable()`
  *   `logger.enable()`
  */
-export const logger = Logger.create(Logger.Context.logger)
+export const logger = Logger.create(Logger.Context.Default)

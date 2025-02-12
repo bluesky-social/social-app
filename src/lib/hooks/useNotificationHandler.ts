@@ -50,7 +50,7 @@ const DEFAULT_HANDLER_OPTIONS = {
 let storedPayload: NotificationPayload | undefined
 let prevDate = 0
 
-const logger = Logger.create(Logger.Context.notifications)
+const logger = Logger.create(Logger.Context.Notifications)
 
 export function useNotificationsHandler() {
   const queryClient = useQueryClient()

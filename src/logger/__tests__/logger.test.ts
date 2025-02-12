@@ -2,8 +2,9 @@ import {beforeAll, describe, expect, jest, test} from '@jest/globals'
 import * as Sentry from '@sentry/react-native'
 import {nanoid} from 'nanoid/non-secure'
 
-import {Logger, LogLevel} from '#/logger'
+import {Logger} from '#/logger'
 import {sentryTransport} from '#/logger/transports/sentry'
+import {LogLevel} from '#/logger/types'
 
 jest.mock('#/env', () => ({
   /*
@@ -240,7 +241,7 @@ describe('create', () => {
   test('create', () => {
     const timestamp = Date.now()
     const message = nanoid()
-    const logger = Logger.create('notifications')
+    const logger = Logger.create(Logger.Context.Default)
 
     logger.addTransport(mockTransport)
     logger.info(message, {})
