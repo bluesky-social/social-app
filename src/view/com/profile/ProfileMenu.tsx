@@ -6,7 +6,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
-import {shareUrl} from '#/lib/sharing'
+import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {Shadow} from '#/state/cache/types'
@@ -170,11 +170,11 @@ let ProfileMenu = ({
   }, [reportDialogControl])
 
   const onPressShareATUri = React.useCallback(() => {
-    shareUrl(`at://${profile.did}`)
+    shareText(`at://${profile.did}`)
   }, [profile.did])
 
   const onPressShareDID = React.useCallback(() => {
-    shareUrl(profile.did)
+    shareText(profile.did)
   }, [profile.did])
 
   return (

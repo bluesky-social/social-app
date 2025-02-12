@@ -21,7 +21,7 @@ import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
-import {shareUrl} from '#/lib/sharing'
+import {shareText, shareUrl} from '#/lib/sharing'
 import {logEvent} from '#/lib/statsig/statsig'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
@@ -369,11 +369,11 @@ let PostDropdownMenuItems = ({
   }, [_, queueBlock])
 
   const onShareATURI = useCallback(() => {
-    shareUrl(postUri)
+    shareText(postUri)
   }, [postUri])
 
   const onShareAuthorDID = useCallback(() => {
-    shareUrl(postAuthor.did)
+    shareText(postAuthor.did)
   }, [postAuthor.did])
 
   return (
