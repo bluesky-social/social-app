@@ -8,7 +8,7 @@ msgstr ""
 "Language: vi\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-11 22:28\n"
+"PO-Revision-Date: 2025-02-12 13:36\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1792,51 +1792,51 @@ msgstr "Sao chép mã QR"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:426
 msgid "Copy TXT record value"
-msgstr ""
+msgstr "Sao chép giá trị bản ghi TXT"
 
 #: src/Navigation.tsx:296
 #: src/view/screens/CopyrightPolicy.tsx:31
 msgid "Copyright Policy"
-msgstr ""
+msgstr "Chính sách bản quyền"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:33
 #: src/components/dms/ReportDialog.tsx:308
 msgid "Could not leave chat"
-msgstr ""
+msgstr "Không thể rời khỏi chat"
 
 #: src/screens/Profile/ProfileFeed/index.tsx:80
 msgid "Could not load feed"
-msgstr ""
+msgstr "Không thể tải bảng tin"
 
 #: src/view/screens/ProfileList.tsx:1000
 msgid "Could not load list"
-msgstr ""
+msgstr "Không thể tải danh sách"
 
 #: src/components/dms/ConvoMenu.tsx:185
 msgid "Could not mute chat"
-msgstr ""
+msgstr "Không thể tắt thông báo chat"
 
 #: src/view/com/composer/videos/VideoPreview.web.tsx:66
 msgid "Could not process your video"
-msgstr ""
+msgstr "Không thể xử lý video của bạn"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:289
 msgid "Create"
-msgstr ""
+msgstr "Tạo"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:153
 msgid "Create a QR code for a starter pack"
-msgstr ""
+msgstr "Tạo mã QR cho gói khởi đầu"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:167
 #: src/components/StarterPack/ProfileStarterPacks.tsx:270
 #: src/Navigation.tsx:428
 msgid "Create a starter pack"
-msgstr ""
+msgstr "Tạo gói khởi đầu"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:251
 msgid "Create a starter pack for me"
-msgstr ""
+msgstr "Tạo gói khởi đầu cho tôi"
 
 #: src/view/com/auth/SplashScreen.tsx:55
 #: src/view/com/auth/SplashScreen.web.tsx:117
@@ -1847,29 +1847,29 @@ msgstr ""
 #: src/view/shell/NavSignupCard.tsx:47
 #: src/view/shell/NavSignupCard.tsx:52
 msgid "Create account"
-msgstr ""
+msgstr "Tạo tài khoản"
 
 #: src/screens/Signup/index.tsx:93
 msgid "Create Account"
-msgstr ""
+msgstr "Tạo tài khoản"
 
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
 msgid "Create an account"
-msgstr ""
+msgstr "Tạo tài khoản"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:292
 msgid "Create an avatar instead"
-msgstr ""
+msgstr "Tạo hình đại diện"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:174
 msgid "Create another"
-msgstr ""
+msgstr "Tạo thêm"
 
 #: src/view/com/auth/SplashScreen.tsx:47
 #: src/view/com/auth/SplashScreen.web.tsx:109
 msgid "Create new account"
-msgstr ""
+msgstr "Tạo tài khoản mới"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:99
 msgid "Create report for {0}"
@@ -1974,11 +1974,11 @@ msgstr "Xóa bản ghi khai báo chat"
 #: src/components/dms/ReportDialog.tsx:353
 #: src/components/dms/ReportDialog.tsx:356
 msgid "Delete conversation"
-msgstr ""
+msgstr "Xóa cuộc trò chuyện"
 
 #: src/components/dms/ReportDialog.tsx:327
 msgid "Delete Conversation"
-msgstr ""
+msgstr "Xoá cuộc trò chuyện"
 
 #: src/components/dms/MessageMenu.tsx:124
 msgid "Delete for me"
@@ -2117,86 +2117,86 @@ msgstr "Hủy bản nháp?"
 
 #: src/view/com/composer/Composer.tsx:867
 msgid "Discard post?"
-msgstr ""
+msgstr "Hủy bài đăng?"
 
 #: src/screens/Settings/components/PwiOptOut.tsx:80
 #: src/screens/Settings/components/PwiOptOut.tsx:84
 msgid "Discourage apps from showing my account to logged-out users"
-msgstr ""
+msgstr "Ngăn ứng dụng hiển thị tài khoản của tôi cho người dùng đã đăng xuất"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
 msgid "Discover new custom feeds"
-msgstr ""
+msgstr "Khám phá bảng tin mới"
 
 #: src/view/screens/Search/Explore.tsx:425
 msgid "Discover new feeds"
-msgstr ""
+msgstr "Khám phá bảng tin mới"
 
 #: src/view/screens/Feeds.tsx:725
 msgid "Discover New Feeds"
-msgstr ""
+msgstr "Khám phá bảng tin mới"
 
 #: src/components/Dialog/index.tsx:313
 msgid "Dismiss"
-msgstr ""
+msgstr "Bỏ qua"
 
 #: src/view/com/composer/Composer.tsx:1575
 msgid "Dismiss error"
-msgstr ""
+msgstr "Bỏ qua lỗi "
 
 #: src/components/ProgressGuide/List.tsx:42
 msgid "Dismiss getting started guide"
-msgstr ""
+msgstr "Bỏ qua hướng dẫn bắt đầu"
 
 #: src/components/interstitials/TrendingVideos.tsx:92
 msgid "Dismiss this section"
-msgstr ""
+msgstr "Đóng phần này"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:71
 #: src/screens/Settings/AccessibilitySettings.tsx:76
 msgid "Display larger alt text badges"
-msgstr ""
+msgstr "Hiển thị biểu tượng văn bản thay thế lớn hơn"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:314
 #: src/screens/Profile/Header/EditProfileDialog.tsx:320
 #: src/screens/Profile/Header/EditProfileDialog.tsx:351
 #: src/view/com/modals/EditProfile.tsx:187
 msgid "Display name"
-msgstr ""
+msgstr "Tên hiển thị"
 
 #: src/view/com/modals/EditProfile.tsx:175
 msgid "Display Name"
-msgstr ""
+msgstr "Tên hiển thị"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:333
 msgid "Display name is too long"
-msgstr ""
+msgstr "Tên hiển thị quá dài"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:334
 msgid "Display name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
-msgstr ""
+msgstr "Tên hiển thị quá dài. Số ký tự tối đa là {DISPLAY_NAME_MAX_GRAPHEMES}."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:373
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:375
 msgid "DNS Panel"
-msgstr ""
+msgstr "Bảng DNS"
 
 #: src/components/dialogs/MutedWords.tsx:302
 msgid "Do not apply this mute word to users you follow"
-msgstr ""
+msgstr "Đừng áp dụng từ cấm này cho người dùng bạn đang theo dõi"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
-msgstr ""
+msgstr "Không chứa hình khỏa thân."
 
 #: src/screens/Signup/StepHandle.tsx:163
 msgid "Doesn't begin or end with a hyphen"
-msgstr ""
+msgstr "Không bắt đầu hoặc kết thúc bằng dấu gạch ngang"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:488
 msgid "Domain verified!"
-msgstr ""
+msgstr "Tên miền đã được xác minh!"
 
 #: src/components/dialogs/BirthDateSettings.tsx:114
 #: src/components/dialogs/BirthDateSettings.tsx:120
@@ -2218,18 +2218,18 @@ msgstr ""
 #: src/view/com/modals/InviteCodes.tsx:124
 #: src/view/com/modals/ListAddRemoveUsers.tsx:143
 msgid "Done"
-msgstr ""
+msgstr "Xong"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:145
 #: src/view/com/modals/UserAddRemoveLists.tsx:113
 #: src/view/com/modals/UserAddRemoveLists.tsx:116
 msgctxt "action"
 msgid "Done"
-msgstr ""
+msgstr "Xong"
 
 #: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:42
 msgid "Done{extraText}"
-msgstr ""
+msgstr "Xong {extraText}"
 
 #: src/components/Dialog/index.tsx:314
 msgid "Double tap to close the dialog"
