@@ -46,6 +46,7 @@ import {
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_20} from '#/lib/constants'
+import {getVideoEmbed, isVideoView} from '#/lib/embeds'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
@@ -210,14 +211,17 @@ function Feed() {
           const feedPost = slice.items.find(
             item => item.uri === slice.feedPostUri,
           )
-          if (feedPost && AppBskyEmbedVideo.isView(feedPost.post.embed)) {
-            items.push({
-              _reactKey: feedPost._reactKey,
-              moderation: feedPost.moderation,
-              post: feedPost.post,
-              video: feedPost.post.embed,
-              feedContext: slice.feedContext,
-            })
+          if (feedPost && isVideoView(feedPost.post.embed)) {
+            const video = getVideoEmbed(feedPost.post.embed)
+            if (video) {
+              items.push({
+                _reactKey: feedPost._reactKey,
+                moderation: feedPost.moderation,
+                post: feedPost.post,
+                video: video,
+                feedContext: slice.feedContext,
+              })
+            }
           }
         }
         return items
