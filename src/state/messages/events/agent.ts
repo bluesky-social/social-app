@@ -18,6 +18,7 @@ import {
 } from '#/state/messages/events/types'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 
+const LOGGER_CONTEXT = 'MessagesEventBus'
 const logger = Logger.create(Logger.Context.convo)
 
 export class MessagesEventBus {
@@ -90,17 +91,17 @@ export class MessagesEventBus {
   }
 
   background() {
-    logger.debug(`background`, {})
+    logger.debug(`${LOGGER_CONTEXT}: background`, {})
     this.dispatch({event: MessagesEventBusDispatchEvent.Background})
   }
 
   suspend() {
-    logger.debug(`suspend`, {})
+    logger.debug(`${LOGGER_CONTEXT}: suspend`, {})
     this.dispatch({event: MessagesEventBusDispatchEvent.Suspend})
   }
 
   resume() {
-    logger.debug(`resume`, {})
+    logger.debug(`${LOGGER_CONTEXT}: resume`, {})
     this.dispatch({event: MessagesEventBusDispatchEvent.Resume})
   }
 
@@ -222,7 +223,7 @@ export class MessagesEventBus {
         break
     }
 
-    logger.debug(`dispatch '${action.event}'`, {
+    logger.debug(`${LOGGER_CONTEXT}: dispatch '${action.event}'`, {
       id: this.id,
       prev: prevStatus,
       next: this.status,
@@ -230,7 +231,7 @@ export class MessagesEventBus {
   }
 
   private async init() {
-    logger.debug(`init`, {})
+    logger.debug(`${LOGGER_CONTEXT}: init`, {})
 
     try {
       const response = await networkRetry(2, () => {
@@ -254,7 +255,7 @@ export class MessagesEventBus {
       this.dispatch({event: MessagesEventBusDispatchEvent.Ready})
     } catch (e: any) {
       logger.error(e, {
-        context: `init failed`,
+        context: `${LOGGER_CONTEXT}: init failed`,
       })
 
       this.dispatch({
@@ -317,13 +318,12 @@ export class MessagesEventBus {
     this.isPolling = true
 
     // logger.debug(
-    //   `poll`,
+    //   `${LOGGER_CONTEXT}: poll`,
     //   {
     //     requestedPollIntervals: Array.from(
     //       this.requestedPollIntervals.values(),
     //     ),
     //   },
-    //   logger.DebugContext.convo,
     // )
 
     try {
@@ -368,12 +368,12 @@ export class MessagesEventBus {
           this.emitter.emit('event', {type: 'logs', logs: batch})
         } catch (e: any) {
           logger.error(e, {
-            context: `process latest events`,
+            context: `${LOGGER_CONTEXT}: process latest events`,
           })
         }
       }
     } catch (e: any) {
-      logger.error(e, {context: `poll events failed`})
+      logger.error(e, {context: `${LOGGER_CONTEXT}: poll events failed`})
 
       this.dispatch({
         event: MessagesEventBusDispatchEvent.Error,

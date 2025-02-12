@@ -127,7 +127,7 @@ export class Convo {
 
   getSnapshot(): ConvoState {
     if (!this.snapshot) this.snapshot = this.generateSnapshot()
-    // logger.debug('snapshotted', {})
+    // logger.debug('Convo: snapshotted', {})
     return this.snapshot
   }
 
@@ -377,7 +377,7 @@ export class Convo {
         break
     }
 
-    logger.debug(`dispatch '${action.event}'`, {
+    logger.debug(`Convo: dispatch '${action.event}'`, {
       id: this.id,
       prev: prevStatus,
       next: this.status,
@@ -452,13 +452,13 @@ export class Convo {
        * Some validation prior to `Ready` status
        */
       if (!this.convo) {
-        throw new Error('could not find convo')
+        throw new Error('Convo: could not find convo')
       }
       if (!this.sender) {
-        throw new Error('could not find sender in convo')
+        throw new Error('Convo: could not find sender in convo')
       }
       if (!this.recipients) {
-        throw new Error('could not find recipients in convo')
+        throw new Error('Convo: could not find recipients in convo')
       }
 
       const userIsDisabled = Boolean(this.sender.chatDisabled)
@@ -469,7 +469,7 @@ export class Convo {
         this.dispatch({event: ConvoDispatchEvent.Ready})
       }
     } catch (e: any) {
-      logger.error(e, {context: 'setup failed'})
+      logger.error(e, {context: 'Convo: setup failed'})
 
       this.dispatch({
         event: ConvoDispatchEvent.Error,
@@ -574,7 +574,7 @@ export class Convo {
       this.sender = sender || this.sender
       this.recipients = recipients || this.recipients
     } catch (e: any) {
-      logger.error(e, {context: `failed to refresh convo`})
+      logger.error(e, {context: `Convo: failed to refresh convo`})
     }
   }
 
@@ -584,7 +584,7 @@ export class Convo {
       }
     | undefined
   async fetchMessageHistory() {
-    logger.debug('fetch message history', {})
+    logger.debug('Convo: fetch message history', {})
 
     /*
      * If oldestRev is null, we've fetched all history.
@@ -638,7 +638,7 @@ export class Convo {
         }
       }
     } catch (e: any) {
-      logger.error('failed to fetch message history')
+      logger.error('Convo: failed to fetch message history')
 
       this.fetchMessageHistoryError = {
         retry: () => {
@@ -771,7 +771,7 @@ export class Convo {
     // Ignore empty messages for now since they have no other purpose atm
     if (!message.text.trim() && !message.embed) return
 
-    logger.debug('send message', {})
+    logger.debug('Convo: send message', {})
 
     const tempId = nanoid()
 
@@ -789,7 +789,7 @@ export class Convo {
 
   async processPendingMessages() {
     logger.debug(
-      `processing messages (${this.pendingMessages.size} remaining)`,
+      `Convo: processing messages (${this.pendingMessages.size} remaining)`,
       {},
     )
 
@@ -834,7 +834,7 @@ export class Convo {
       // continue queue processing
       await this.processPendingMessages()
     } catch (e: any) {
-      logger.error(e, {context: `failed to send message`})
+      logger.error(e, {context: `Convo: failed to send message`})
       this.handleSendMessageFailure(e)
       this.isProcessingPendingMessages = false
     }
@@ -897,7 +897,7 @@ export class Convo {
     this.commit()
 
     logger.debug(
-      `batch retrying ${this.pendingMessages.size} pending messages`,
+      `Convo: batch retrying ${this.pendingMessages.size} pending messages`,
       {},
     )
 
@@ -930,15 +930,18 @@ export class Convo {
 
       this.commit()
 
-      logger.debug(`sent ${this.pendingMessages.size} pending messages`, {})
+      logger.debug(
+        `Convo: sent ${this.pendingMessages.size} pending messages`,
+        {},
+      )
     } catch (e: any) {
-      logger.error(e, {context: `failed to batch retry messages`})
+      logger.error(e, {context: `Convo: failed to batch retry messages`})
       this.handleSendMessageFailure(e)
     }
   }
 
   async deleteMessage(messageId: string) {
-    logger.debug('delete message', {})
+    logger.debug('Convo: delete message', {})
 
     this.deletedMessages.add(messageId)
     this.commit()
@@ -954,7 +957,7 @@ export class Convo {
         )
       })
     } catch (e: any) {
-      logger.error(e, {context: `failed to delete message`})
+      logger.error(e, {context: `Convo: failed to delete message`})
       this.deletedMessages.delete(messageId)
       this.commit()
       throw e

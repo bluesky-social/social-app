@@ -9,12 +9,12 @@ import {devicePlatform, isAndroid, isNative} from '#/platform/detection'
 import {SessionAccount, useAgent, useSession} from '#/state/session'
 import BackgroundNotificationHandler from '../../../modules/expo-background-notification-handler'
 
-const logger = Logger.create(Logger.Context.notifications)
-
 const SERVICE_DID = (serviceUrl?: string) =>
   serviceUrl?.includes('staging')
     ? 'did:web:api.staging.bsky.dev'
     : 'did:web:api.bsky.app'
+
+const logger = Logger.create(Logger.Context.notifications)
 
 async function registerPushToken(
   agent: BskyAgent,
@@ -28,7 +28,7 @@ async function registerPushToken(
       token: token.data,
       appId: 'xyz.blueskyweb.app',
     })
-    logger.debug('sent push token (init)', {
+    logger.debug('Notifications: Sent push token (init)', {
       tokenType: token.type,
       token: token.data,
     })
