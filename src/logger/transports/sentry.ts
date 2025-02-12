@@ -1,6 +1,6 @@
 import {isNetworkError} from '#/lib/strings/errors'
 import {Sentry} from '#/logger/sentry'
-import {LogLevel,Transport} from '#/logger/types'
+import {LogLevel, Transport} from '#/logger/types'
 import {prepareMetadata} from '#/logger/util'
 
 export const sentryTransport: Transport = (
@@ -27,6 +27,7 @@ export const sentryTransport: Transport = (
     )[level]
 
     Sentry.addBreadcrumb({
+      category: context,
       message,
       data: meta,
       type: type || 'default',
@@ -50,7 +51,7 @@ export const sentryTransport: Transport = (
         [LogLevel.Error]: 'error',
       }[level] || 'log') as Sentry.Breadcrumb['level']
       // Defer non-critical messages so they're sent in a batch
-      queueMessageForSentry(message, {
+      queueMessageForSentry(`(${context}) message`, {
         level: messageLevel,
         tags,
         extra: meta,
