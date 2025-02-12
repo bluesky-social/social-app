@@ -58,6 +58,7 @@ import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
 import {makeSearchQuery, parseSearchQuery} from '#/screens/Search/utils'
 import {
   atoms as a,
+  native,
   platform,
   tokens,
   useBreakpoints,
@@ -371,7 +372,12 @@ function SearchLanguageDropdown({
             label={props.accessibilityLabel}
             size="small"
             color={platform({native: 'primary', default: 'secondary'})}
-            variant={platform({native: 'ghost', default: 'solid'})}>
+            variant={platform({native: 'ghost', default: 'solid'})}
+            style={native([
+              a.py_sm,
+              a.px_sm,
+              {marginRight: tokens.space.sm * -1},
+            ])}>
             <ButtonIcon icon={EarthIcon} />
             <ButtonText>{currentLanguageLabel}</ButtonText>
             <ButtonIcon
@@ -793,11 +799,10 @@ export function SearchScreen(
               // HACK: shift up search input. we can't remove the top padding
               // on the search input because it messes up the layout animation
               // if we add it only when the header is hidden
-              style={{marginBottom: tokens.space.sm * -1}}>
+              style={{marginBottom: tokens.space.xs * -1}}>
               <Layout.Header.Outer noBottomBorder>
                 <Layout.Header.MenuButton />
-                <Layout.Header.Content
-                  align={showFilters ? 'left' : 'platform'}>
+                <Layout.Header.Content align="left">
                   <Layout.Header.TitleText>
                     <Trans>Search</Trans>
                   </Layout.Header.TitleText>
