@@ -8,7 +8,7 @@ msgstr ""
 "Language: en_GB\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-11 22:28\n"
+"PO-Revision-Date: 2025-02-12 00:23\n"
 "Last-Translator: \n"
 "Language-Team: English, United Kingdom\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1389,7 +1389,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
-msgstr ""
+msgstr "Choose this colour as your avatar"
 
 #: src/view/com/auth/server-input/index.tsx:126
 msgid "Choose your account provider"
@@ -1899,7 +1899,7 @@ msgstr "Customise who can interact with this post."
 
 #: src/screens/Onboarding/Layout.tsx:56
 msgid "Customizes your Bluesky experience"
-msgstr ""
+msgstr "Customises your Bluesky experience"
 
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
@@ -5217,7 +5217,7 @@ msgstr ""
 #: src/screens/Settings/ThreadPreferences.tsx:112
 #: src/screens/Settings/ThreadPreferences.tsx:117
 msgid "Prioritize your Follows"
-msgstr ""
+msgstr "Prioritise your Follows"
 
 #: src/screens/Settings/NotificationSettings.tsx:67
 msgid "Priority notifications"
@@ -6667,7 +6667,7 @@ msgstr "Subscribe to Labeller"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:204
 msgid "Subscribe to this labeler"
-msgstr ""
+msgstr "Subscribe to this labeller"
 
 #: src/view/screens/ProfileList.tsx:708
 msgid "Subscribe to this list"
@@ -7519,7 +7519,7 @@ msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:203
 msgid "Unsubscribe from this labeler"
-msgstr ""
+msgstr "Unsubscribe from this labeller"
 
 #: src/screens/List/ListHiddenScreen.tsx:86
 msgid "Unsubscribed from list"
