@@ -8,7 +8,7 @@ msgstr ""
 "Language: es\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-11 22:27\n"
+"PO-Revision-Date: 2025-02-12 20:09\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1908,7 +1908,7 @@ msgstr ""
 
 #: src/view/screens/Debug.tsx:69
 msgid "Dark mode"
-msgstr ""
+msgstr "Modo oscuro"
 
 #: src/screens/Settings/AppearanceSettings.tsx:118
 msgid "Dark theme"
@@ -1998,7 +1998,7 @@ msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:267
 msgid "Delete my account"
-msgstr ""
+msgstr "Eliminar mi cuenta"
 
 #: src/view/com/composer/Composer.tsx:842
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:642
@@ -2661,7 +2661,7 @@ msgstr ""
 
 #: src/view/com/lightbox/Lightbox.web.tsx:184
 msgid "Expand alt text"
-msgstr ""
+msgstr "Expandir el texto alternativo"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:402
 msgid "Expand list of users"
@@ -2721,7 +2721,7 @@ msgstr ""
 #: src/components/dialogs/EmbedConsent.tsx:54
 #: src/components/dialogs/EmbedConsent.tsx:58
 msgid "External Media"
-msgstr ""
+msgstr "Medios externos"
 
 #: src/components/dialogs/EmbedConsent.tsx:70
 #: src/screens/Settings/ExternalMediaPreferences.tsx:40
@@ -4994,7 +4994,7 @@ msgstr ""
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:42
 msgid "Plays or pauses the GIF"
-msgstr ""
+msgstr "Reproduce o pausa el GIF"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 msgid "Plays or pauses the video"
@@ -7185,7 +7185,7 @@ msgstr ""
 
 #: src/screens/Signup/StepInfo/Policies.tsx:37
 msgid "This service has not provided terms of service or a privacy policy."
-msgstr ""
+msgstr "Este servicio no ha proporcionado términos de servicio ni una política de privacidad."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:437
 msgid "This should create a domain record at:"
