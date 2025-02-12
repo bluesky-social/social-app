@@ -1,6 +1,5 @@
 import React from 'react'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useServiceConfigQuery} from '#/state/queries/service-config'
 import {device} from '#/storage'
@@ -14,7 +13,6 @@ const Context = React.createContext<Context>({
 })
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const gate = useGate()
   const langPrefs = useLanguagePrefs()
   const {data: config, isLoading: isInitialLoad} = useServiceConfigQuery()
   const ctx = React.useMemo<Context>(() => {
@@ -45,23 +43,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
      * the server, we can exit early.
      */
     const enabled = Boolean(config?.topicsEnabled)
-    if (!enabled) {
-      // cache for next reload
-      device.set(['trendingBetaEnabled'], enabled)
-      return {enabled: false}
-    }
-
-    /*
-     * Service is enabled, but also check statsig in case we're rolling back.
-     */
-    const gateEnabled = gate('trending_topics_beta')
-    const _enabled = enabled && gateEnabled
 
     // update cache
-    device.set(['trendingBetaEnabled'], _enabled)
+    device.set(['trendingBetaEnabled'], enabled)
 
-    return {enabled: _enabled}
-  }, [isInitialLoad, config, gate, langPrefs.contentLanguages])
+    return {enabled}
+  }, [isInitialLoad, config, langPrefs.contentLanguages])
   return <Context.Provider value={ctx}>{children}</Context.Provider>
 }
 
