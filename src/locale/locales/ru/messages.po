@@ -8,7 +8,7 @@ msgstr ""
 "Language: ru\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-12 08:53\n"
+"PO-Revision-Date: 2025-02-12 11:11\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
@@ -2834,31 +2834,31 @@ msgstr ""
 
 #: src/Navigation.tsx:241
 msgid "Feed"
-msgstr ""
+msgstr "Лента"
 
 #: src/components/FeedCard.tsx:134
 #: src/view/com/feeds/FeedSourceCard.tsx:253
 msgid "Feed by {0}"
-msgstr ""
+msgstr "Лента от {0}"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:353
 msgid "Feed menu"
-msgstr ""
+msgstr "Меню ленты"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:54
 msgid "Feed toggle"
-msgstr ""
+msgstr "Переключатель ленты"
 
 #: src/view/shell/desktop/RightNav.tsx:93
 #: src/view/shell/desktop/RightNav.tsx:94
 #: src/view/shell/Drawer.tsx:324
 msgid "Feedback"
-msgstr ""
+msgstr "Обратная связь"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:266
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:275
 msgid "Feedback sent!"
-msgstr ""
+msgstr "Обратная связь отправлена!"
 
 #: src/Navigation.tsx:413
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
@@ -2869,16 +2869,16 @@ msgstr ""
 #: src/view/shell/desktop/LeftNav.tsx:640
 #: src/view/shell/Drawer.tsx:481
 msgid "Feeds"
-msgstr ""
+msgstr "Ленты"
 
 #: src/view/screens/SavedFeeds.tsx:198
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
-msgstr ""
+msgstr "Ленты - это алгоритмы, созданные пользователями с некоторым опытом программирования. <0/> для дополнительной информации."
 
 #: src/components/FeedCard.tsx:272
 #: src/view/screens/SavedFeeds.tsx:82
 msgid "Feeds updated!"
-msgstr ""
+msgstr "Ленты изменены!"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:54
 msgid "Feeds we think you might like."
@@ -2886,21 +2886,21 @@ msgstr ""
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:43
 msgid "File saved successfully!"
-msgstr ""
+msgstr "Файл успешно сохранён!"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
-msgstr ""
+msgstr "Фильтровать из лент"
 
 #: src/screens/Onboarding/StepFinished.tsx:303
 msgid "Finalizing"
-msgstr ""
+msgstr "Завершение"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:48
 #: src/view/com/posts/FollowingEmptyState.tsx:53
 #: src/view/com/posts/FollowingEndOfFeed.tsx:54
 msgid "Find accounts to follow"
-msgstr ""
+msgstr "Найдите учётные записи для подписки"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:78
 #: src/components/ProgressGuide/FollowDialog.tsx:88
@@ -2910,19 +2910,19 @@ msgstr ""
 
 #: src/view/screens/Search/Search.tsx:588
 msgid "Find posts and users on Bluesky"
-msgstr ""
+msgstr "Найти посты и пользователей в Bluesky"
 
 #: src/screens/StarterPack/Wizard/index.tsx:195
 msgid "Finish"
-msgstr ""
+msgstr "Финиш"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Fitness"
-msgstr ""
+msgstr "Фитнес"
 
 #: src/screens/Onboarding/StepFinished.tsx:283
 msgid "Flexible"
-msgstr ""
+msgstr "Гибкий"
 
 #. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:366
@@ -2932,17 +2932,17 @@ msgstr ""
 #: src/screens/VideoFeed/index.tsx:821
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:132
 msgid "Follow"
-msgstr ""
+msgstr "Подписаться"
 
 #: src/view/com/profile/FollowButton.tsx:72
 msgctxt "action"
 msgid "Follow"
-msgstr ""
+msgstr "Подписаться"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:218
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:114
 msgid "Follow {0}"
-msgstr ""
+msgstr "Подписаться на {0}"
 
 #: src/screens/VideoFeed/index.tsx:800
 msgid "Follow {handle}"
@@ -2950,7 +2950,7 @@ msgstr ""
 
 #: src/view/com/posts/AviFollowButton.tsx:68
 msgid "Follow {name}"
-msgstr ""
+msgstr "Подписаться на {name}"
 
 #: src/components/ProgressGuide/List.tsx:52
 #: src/state/shell/progress-guide.tsx:229
@@ -2959,7 +2959,7 @@ msgstr ""
 
 #: src/components/ProgressGuide/List.tsx:69
 msgid "Follow 7 accounts"
-msgstr ""
+msgstr "Подпишитесь на 7 учётных записей"
 
 #: src/view/com/profile/ProfileMenu.tsx:222
 #: src/view/com/profile/ProfileMenu.tsx:233
@@ -3101,7 +3101,7 @@ msgstr ""
 
 #: src/screens/Hashtag.tsx:120
 msgid "From @{sanitizedAuthor}"
-msgstr ""
+msgstr "От @{sanitizedAuthor}"
 
 #: src/view/com/posts/PostFeedItem.tsx:282
 msgctxt "from-feed"
@@ -3110,24 +3110,24 @@ msgstr ""
 
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:50
 msgid "Gallery"
-msgstr ""
+msgstr "Галерея"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:296
 msgid "Generate a starter pack"
-msgstr ""
+msgstr "Сгенерировать стартовый набор"
 
 #: src/view/shell/Drawer.tsx:328
 msgid "Get help"
-msgstr ""
+msgstr "Получить помощь"
 
 #: src/view/com/modals/VerifyEmail.tsx:197
 #: src/view/com/modals/VerifyEmail.tsx:199
 msgid "Get Started"
-msgstr ""
+msgstr "Приступить"
 
 #: src/components/ProgressGuide/List.tsx:35
 msgid "Getting started"
-msgstr ""
+msgstr "Начало работы"
 
 #: src/components/MediaPreview.tsx:122
 msgid "GIF"
@@ -3135,11 +3135,11 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:234
 msgid "Give your profile a face"
-msgstr ""
+msgstr "Придайте своему профилю лицо"
 
 #: src/lib/moderation/useReportOptions.ts:39
 msgid "Glaring violations of law or terms of service"
-msgstr ""
+msgstr "Грубые нарушения закона или условий использования"
 
 #: src/components/Layout/Header/index.tsx:118
 #: src/components/moderation/ScreenHider.tsx:154
@@ -3172,7 +3172,7 @@ msgstr ""
 #: src/screens/Onboarding/Layout.tsx:188
 #: src/screens/Signup/BackNextButtons.tsx:35
 msgid "Go back to previous step"
-msgstr ""
+msgstr "Вернуться к предыдущему шагу"
 
 #: src/view/screens/NotFound.tsx:57
 msgid "Go home"
@@ -3184,7 +3184,7 @@ msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:282
 msgid "Go to conversation with {0}"
-msgstr ""
+msgstr "Перейти к беседе с {0}"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:165
 #: src/view/com/modals/ChangePassword.tsx:168
@@ -3213,20 +3213,20 @@ msgstr ""
 #: src/screens/Settings/AccountSettings.tsx:126
 #: src/screens/Settings/AccountSettings.tsx:131
 msgid "Handle"
-msgstr ""
+msgstr "Псевдоним"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:572
 msgid "Handle already taken. Please try a different one."
-msgstr ""
+msgstr "Этот псевдоним уже занят. Пожалуйста, попробуйте другой."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:189
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:325
 msgid "Handle changed!"
-msgstr ""
+msgstr "Псевдоним изменён!"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:576
 msgid "Handle too long. Please try a shorter one."
-msgstr ""
+msgstr "Псевдоним слишком длинный. Пожалуйста, попробуйте более короткий."
 
 #: src/screens/Settings/AccessibilitySettings.tsx:87
 msgid "Haptics"
@@ -3234,7 +3234,7 @@ msgstr ""
 
 #: src/lib/moderation/useReportOptions.ts:34
 msgid "Harassment, trolling, or intolerance"
-msgstr ""
+msgstr "Домогательства, троллинг или нетерпимость"
 
 #: src/Navigation.tsx:388
 msgid "Hashtag"
@@ -3246,7 +3246,7 @@ msgstr ""
 
 #: src/screens/Signup/index.tsx:173
 msgid "Having trouble?"
-msgstr ""
+msgstr "Возникли проблемы?"
 
 #: src/screens/Settings/Settings.tsx:207
 #: src/screens/Settings/Settings.tsx:211
@@ -3258,7 +3258,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:237
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
-msgstr ""
+msgstr "Чтобы люди знали, что вы не бот, загрузите фотографию или создайте аватар."
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
 msgid "Here is your app password!"
@@ -3267,15 +3267,15 @@ msgstr ""
 #: src/components/VideoPostCard.tsx:172
 #: src/components/VideoPostCard.tsx:448
 msgid "Hidden"
-msgstr ""
+msgstr "Скрыто"
 
 #: src/screens/VideoFeed/index.tsx:606
 msgid "Hidden by your moderation settings."
-msgstr ""
+msgstr "Скрыто настройками модерации."
 
 #: src/components/ListCard.tsx:130
 msgid "Hidden list"
-msgstr ""
+msgstr "Скрытый список"
 
 #: src/components/interstitials/Trending.tsx:131
 #: src/components/interstitials/TrendingVideos.tsx:140
@@ -3640,17 +3640,17 @@ msgstr ""
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:107
 msgid "Language selection"
-msgstr ""
+msgstr "Выбор языка"
 
 #: src/Navigation.tsx:175
 msgid "Language Settings"
-msgstr ""
+msgstr "Настройки языка"
 
 #: src/screens/Settings/LanguageSettings.tsx:71
 #: src/screens/Settings/Settings.tsx:199
 #: src/screens/Settings/Settings.tsx:202
 msgid "Languages"
-msgstr ""
+msgstr "Языки"
 
 #: src/screens/Settings/AppearanceSettings.tsx:172
 msgid "Larger"
@@ -3664,19 +3664,19 @@ msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:252
 msgid "learn more"
-msgstr ""
+msgstr "узнать больше"
 
 #: src/components/moderation/ScreenHider.tsx:140
 msgid "Learn More"
-msgstr ""
+msgstr "Узнать больше"
 
 #: src/view/com/auth/SplashScreen.web.tsx:166
 msgid "Learn more about Bluesky"
-msgstr ""
+msgstr "Узнайте больше о Bluesky"
 
 #: src/view/com/auth/server-input/index.tsx:214
 msgid "Learn more about self hosting your PDS."
-msgstr ""
+msgstr "Узнайте больше о самостоятельном хостинге PDS."
 
 #: src/components/moderation/ContentHider.tsx:149
 msgid "Learn more about the moderation applied to this content"
@@ -3684,22 +3684,22 @@ msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:215
 msgid "Learn more about the moderation applied to this content."
-msgstr ""
+msgstr "Узнайте больше о том, какая модерация применима к этому содержимому."
 
 #: src/components/moderation/PostHider.tsx:100
 #: src/components/moderation/ScreenHider.tsx:127
 msgid "Learn more about this warning"
-msgstr ""
+msgstr "Узнать больше об этом предупреждении"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:99
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:102
 msgid "Learn more about what is public on Bluesky."
-msgstr ""
+msgstr "Узнать больше о том, что является публичным в Bluesky."
 
 #: src/components/moderation/ContentHider.tsx:239
 #: src/view/com/auth/server-input/index.tsx:216
 msgid "Learn more."
-msgstr ""
+msgstr "Узнать больше."
 
 #: src/components/dms/LeaveConvoPrompt.tsx:44
 msgid "Leave"
