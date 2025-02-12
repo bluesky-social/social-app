@@ -199,7 +199,7 @@ export function StepFinished() {
     setActiveStarterPack(undefined)
     setHasCheckedForStarterPack(true)
     startProgressGuide(
-      gate('new_postonboarding') ? 'follow-10' : 'like-10-and-follow-7',
+      gate('old_postonboarding') ? 'like-10-and-follow-7' : 'follow-10',
     )
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
