@@ -1,5 +1,5 @@
 import {isNetworkError} from '#/lib/strings/errors'
-import {Sentry} from '#/logger/sentry'
+import {Sentry} from '#/logger/sentry/lib'
 import {LogLevel, Transport} from '#/logger/types'
 import {prepareMetadata} from '#/logger/util'
 
@@ -45,14 +45,9 @@ export const sentryTransport: Transport = (
      * level
      */
     if (level === 'error' || level === 'warn' || level === 'log') {
-      const messageLevel = ({
-        [LogLevel.Log]: 'log',
-        [LogLevel.Warn]: 'warning',
-        [LogLevel.Error]: 'error',
-      }[level] || 'log') as Sentry.Breadcrumb['level']
       // Defer non-critical messages so they're sent in a batch
       queueMessageForSentry(`(${context}) message`, {
-        level: messageLevel,
+        level: severity,
         tags,
         extra: meta,
       })

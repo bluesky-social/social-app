@@ -12,6 +12,7 @@ import {
   Transport,
 } from '#/logger/types'
 import {enabledLogLevels} from '#/logger/util'
+import {isWeb} from '#/platform/detection'
 
 export {LogLevel}
 export type {ConsoleTransportEntry, Transport}
@@ -19,7 +20,9 @@ export type {ConsoleTransportEntry, Transport}
 const TRANSPORTS: Transport[] = (function configureTransports() {
   switch (process.env.NODE_ENV) {
     case 'production': {
-      return [sentryTransport, bitdriftTransport]
+      return [isWeb && sentryTransport, bitdriftTransport].filter(
+        Boolean,
+      ) as Transport[]
     }
     case 'test': {
       return []
@@ -144,4 +147,4 @@ export class Logger {
  *   `logger.disable()`
  *   `logger.enable()`
  */
-export const logger = Logger.create()
+export const logger = Logger.create(Logger.Context.logger)

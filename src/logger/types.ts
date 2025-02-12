@@ -1,5 +1,5 @@
 import {LogContext} from '#/logger/logContext'
-import type {Sentry} from '#/logger/sentry'
+import type {Sentry} from '#/logger/sentry/lib'
 
 export enum LogLevel {
   Debug = 'debug',
