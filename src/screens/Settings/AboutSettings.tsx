@@ -7,10 +7,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {appVersion, BUNDLE_DATE, bundleInfo} from '#/lib/app-info'
 import {STATUS_PAGE_URL} from '#/lib/constants'
 import {CommonNavigatorParams} from '#/lib/routes/types'
-import {
-  useDevModeEnabled,
-  useSetDevModeEnabled,
-} from '#/state/preferences/dev-mode'
+import {useDevModeEnabled} from '#/state/preferences/dev-mode'
 import * as Toast from '#/view/com/util/Toast'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {CodeLines_Stroke2_Corner2_Rounded as CodeLinesIcon} from '#/components/icons/CodeLines'
@@ -22,8 +19,7 @@ import * as Layout from '#/components/Layout'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AboutSettings'>
 export function AboutSettingsScreen({}: Props) {
   const {_} = useLingui()
-  const devModeEnabled = useDevModeEnabled()
-  const setDevModeEnabled = useSetDevModeEnabled()
+  const [devModeEnabled, setDevModeEnabled] = useDevModeEnabled()
 
   return (
     <Layout.Screen>
