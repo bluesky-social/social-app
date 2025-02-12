@@ -133,9 +133,8 @@ export class Logger {
  *
  *   `logger.debug(message[, metadata])`
  *   `logger.info(message[, metadata])`
+ *   `logger.log(message[, metadata])`
  *   `logger.warn(message[, metadata])`
  *   `logger.error(error[, metadata])`
- *   `logger.disable()`
- *   `logger.enable()`
  */
 export const logger = Logger.create(Logger.Context.Default)
