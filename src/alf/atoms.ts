@@ -50,6 +50,12 @@ export const atoms = {
   overflow_hidden: {
     overflow: 'hidden',
   },
+  /**
+   * @platform web
+   */
+  overflow_auto: web({
+    overflow: 'auto',
+  }),
 
   /*
    * Width

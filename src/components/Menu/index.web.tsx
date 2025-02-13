@@ -184,6 +184,7 @@ export function Outer({
     <DropdownMenu.Portal>
       <DropdownMenu.Content
         sideOffset={5}
+        collisionPadding={{left: 5, right: 5, bottom: 5}}
         loop
         aria-label="Test"
         className="dropdown-menu-transform-origin">
@@ -195,6 +196,7 @@ export function Outer({
             t.name === 'light' ? t.atoms.bg : t.atoms.bg_contrast_25,
             t.atoms.shadow_md,
             t.atoms.border_contrast_low,
+            a.overflow_auto,
             !reduceMotionEnabled && a.zoom_fade_in,
             style,
           ]}>
@@ -380,9 +382,8 @@ export function Divider() {
       style={flatten([
         a.my_xs,
         t.atoms.bg_contrast_100,
-        {
-          height: 1,
-        },
+        a.flex_shrink_0,
+        {height: 1},
       ])}
     />
   )
