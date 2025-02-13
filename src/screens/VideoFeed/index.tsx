@@ -800,7 +800,9 @@ function Overlay({
                           : _(msg`Follow ${handle}`)
                       }
                       accessibilityHint={
-                        profile.viewer?.following ? _(msg`Unfollows the user`) : ''
+                        profile.viewer?.following
+                          ? _(msg`Unfollows the user`)
+                          : ''
                       }
                       size="small"
                       variant="solid"
