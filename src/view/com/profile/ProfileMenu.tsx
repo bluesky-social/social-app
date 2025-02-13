@@ -6,11 +6,12 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
-import {shareUrl} from '#/lib/sharing'
+import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
+import {useDevModeEnabled} from '#/state/preferences/dev-mode'
 import {
   RQKEY as profileQueryKey,
   useProfileBlockMutationQueue,
@@ -52,6 +53,7 @@ let ProfileMenu = ({
   const isBlocked = profile.viewer?.blocking || profile.viewer?.blockedBy
   const isFollowingBlockedAccount = isFollowing && isBlocked
   const isLabelerAndNotBlocked = !!profile.associated?.labeler && !isBlocked
+  const [devModeEnabled] = useDevModeEnabled()
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
@@ -166,6 +168,14 @@ let ProfileMenu = ({
   const onPressReportAccount = React.useCallback(() => {
     reportDialogControl.open()
   }, [reportDialogControl])
+
+  const onPressShareATUri = React.useCallback(() => {
+    shareText(`at://${profile.did}`)
+  }, [profile.did])
+
+  const onPressShareDID = React.useCallback(() => {
+    shareText(profile.did)
+  }, [profile.did])
 
   return (
     <EventStopper onKeyDown={false}>
@@ -308,6 +318,31 @@ let ProfileMenu = ({
               </Menu.Group>
             </>
           )}
+          {devModeEnabled ? (
+            <>
+              <Menu.Divider />
+              <Menu.Group>
+                <Menu.Item
+                  testID="profileHeaderDropdownShareATURIBtn"
+                  label={_(msg`Copy at:// URI`)}
+                  onPress={onPressShareATUri}>
+                  <Menu.ItemText>
+                    <Trans>Copy at:// URI</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={Share} />
+                </Menu.Item>
+                <Menu.Item
+                  testID="profileHeaderDropdownShareDIDBtn"
+                  label={_(msg`Copy DID`)}
+                  onPress={onPressShareDID}>
+                  <Menu.ItemText>
+                    <Trans>Copy DID</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={Share} />
+                </Menu.Item>
+              </Menu.Group>
+            </>
+          ) : null}
         </Menu.Outer>
       </Menu.Root>
 
