@@ -8,7 +8,7 @@ msgstr ""
 "Language: pl\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-13 03:02\n"
+"PO-Revision-Date: 2025-02-13 10:55\n"
 "Last-Translator: \n"
 "Language-Team: Polish\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
@@ -591,7 +591,7 @@ msgstr "Wszystkie konta zaobserwowane!"
 #: src/view/screens/Search/Search.tsx:399
 #: src/view/screens/Search/Search.tsx:401
 msgid "All languages"
-msgstr ""
+msgstr "Wszystkie języki"
 
 #: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
@@ -1152,7 +1152,7 @@ msgstr "Przeglądaj wpisy z tagiem {displayName}"
 
 #: src/components/TrendingTopics.tsx:195
 msgid "Browse starter pack {displayName}"
-msgstr ""
+msgstr "Przeglądaj pakiet startowy {displayName}"
 
 #: src/components/TrendingTopics.tsx:232
 msgid "Browse topic {displayName}"
@@ -1488,7 +1488,7 @@ msgstr "Zamknij to okno"
 
 #: src/view/shell/index.web.tsx:83
 msgid "Close drawer menu"
-msgstr ""
+msgstr "Zamknij menu"
 
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
@@ -1664,7 +1664,7 @@ msgstr "Filtrowanie"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:57
 msgid "Content from across the network we think you might like."
-msgstr ""
+msgstr "Treści z całej sieci, które naszym zdaniem mogą ci się spodobać."
 
 #: src/screens/Settings/LanguageSettings.tsx:251
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
@@ -1755,12 +1755,12 @@ msgstr "Kopiuj hasło aplikacji"
 #: src/view/com/profile/ProfileMenu.tsx:327
 #: src/view/com/profile/ProfileMenu.tsx:330
 msgid "Copy at:// URI"
-msgstr ""
+msgstr "Skopiuj:// URI"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:674
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:676
 msgid "Copy author DID"
-msgstr ""
+msgstr "Skopiuj DID"
 
 #: src/components/dialogs/Embed.tsx:122
 #: src/components/dialogs/Embed.tsx:141
@@ -1802,7 +1802,7 @@ msgstr "Kopiuj tekst wiadomości"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
 msgid "Copy post at:// URI"
-msgstr ""
+msgstr "Skopiuj wpis:// URI"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:422
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:424
@@ -2091,11 +2091,11 @@ msgstr "Odłączyć cytat?"
 
 #: src/screens/Settings/AboutSettings.tsx:77
 msgid "Developer mode disabled"
-msgstr ""
+msgstr "Tryb programisty wyłączony"
 
 #: src/screens/Settings/AboutSettings.tsx:76
 msgid "Developer mode enabled"
-msgstr ""
+msgstr "Tryb programisty włączony"
 
 #: src/screens/Settings/Settings.tsx:242
 #: src/screens/Settings/Settings.tsx:245
@@ -2925,11 +2925,11 @@ msgstr "Odfiltruj z kanałów"
 
 #: src/view/screens/Search/Search.tsx:397
 msgid "Filter search by language"
-msgstr ""
+msgstr "Filtruj wyszukiwanie według języka"
 
 #: src/view/screens/Search/Search.tsx:367
 msgid "Filter search by language (currently: {currentLanguageLabel})"
-msgstr ""
+msgstr "Filtruj wyszukiwanie według języka (aktywny: {currentLanguageLabel})"
 
 #: src/screens/Onboarding/StepFinished.tsx:303
 msgid "Finalizing"
@@ -6013,7 +6013,7 @@ msgstr "Szukaj kanałów, które chcesz polecać innym."
 
 #: src/view/screens/Search/Search.tsx:832
 msgid "Search for posts, users, or feeds"
-msgstr ""
+msgstr "Szukaj wpisów, osób lub kanałów"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
 msgid "Search for users"
