@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-13 04:06\n"
+"PO-Revision-Date: 2025-02-13 05:05\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -581,7 +581,7 @@ msgstr "進階設定"
 
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
-msgstr "全部"
+msgstr "所有"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
@@ -591,7 +591,7 @@ msgstr "你經已跟晒所有帳號喇！"
 #: src/view/screens/Search/Search.tsx:399
 #: src/view/screens/Search/Search.tsx:401
 msgid "All languages"
-msgstr ""
+msgstr "所有語言"
 
 #: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
@@ -1742,7 +1742,7 @@ msgstr "複製咗喇！"
 
 #: src/screens/Settings/AboutSettings.tsx:70
 msgid "Copies build version to clipboard"
-msgstr "經已複製構建版本去剪貼簿"
+msgstr "複製構建版本去剪貼簿"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 msgid "Copy"
@@ -1922,7 +1922,7 @@ msgstr "調整邊啲人可以喺呢條帖文度互動。"
 
 #: src/screens/Onboarding/Layout.tsx:56
 msgid "Customizes your Bluesky experience"
-msgstr "自訂你 Bluesky 嘅體驗"
+msgstr "自訂你嘅 Bluesky 體驗"
 
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
@@ -4794,7 +4794,7 @@ msgstr "打開你嘅裝置上嘅相機"
 
 #: src/screens/Settings/AccountSettings.tsx:127
 msgid "Opens change handle dialog"
-msgstr "打開帳號頭銜對話框"
+msgstr "打開變更帳號頭銜對話框"
 
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:35
 msgid "Opens composer"
@@ -4824,7 +4824,7 @@ msgstr "打開揀選 GIF 對話框"
 
 #: src/screens/Settings/Settings.tsx:208
 msgid "Opens helpdesk in browser"
-msgstr "喺瀏覽器度打開服務中心"
+msgstr "喺瀏覽器度打開說明中心"
 
 #: src/view/com/modals/InviteCodes.tsx:173
 msgid "Opens list of invite codes"
@@ -5564,7 +5564,7 @@ msgstr "經已喺你嘅動態源度刪除"
 
 #: src/view/screens/Search/Search.tsx:1042
 msgid "Removes profile from search history"
-msgstr "從搵嘢記錄度刪除個人檔案"
+msgstr "喺搵嘢記錄度刪除個人檔案"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
 msgid "Removes quoted post"
