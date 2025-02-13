@@ -169,17 +169,17 @@ function Label({
             <Text
               style={[a.flex_1, a.leading_snug, t.atoms.text_contrast_medium]}
               numberOfLines={1}>
-              <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
-                <Trans>Source: </Trans>{' '}
-              </Text>
-              <InlineLinkText
-                label={sourceName}
-                to={makeProfileLink(
-                  labeler ? labeler.creator : {did: label.src, handle: ''},
-                )}
-                onPress={() => control.close()}>
-                {sourceName}
-              </InlineLinkText>
+              <Trans>
+                Source:{' '}
+                <InlineLinkText
+                  label={sourceName}
+                  to={makeProfileLink(
+                    labeler ? labeler.creator : {did: label.src, handle: ''},
+                  )}
+                  onPress={() => control.close()}>
+                  {sourceName}
+                </InlineLinkText>
+              </Trans>
             </Text>
             {label.exp && (
               <View>
