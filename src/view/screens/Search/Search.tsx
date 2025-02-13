@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback, useLayoutEffect, useMemo} from 'react'
 import {
   ActivityIndicator,
   Image,
@@ -10,7 +10,6 @@ import {
   View,
 } from 'react-native'
 import {ScrollView as RNGHScrollView} from 'react-native-gesture-handler'
-import RNPickerSelect from 'react-native-picker-select'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -18,11 +17,10 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
 import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
-import {createHitslop} from '#/lib/constants'
+import {createHitslop, HITSLOP_20} from '#/lib/constants'
 import {HITSLOP_10} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -37,7 +35,6 @@ import {
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {languageName} from '#/locale/helpers'
-import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {useLanguagePrefs} from '#/state/preferences/languages'
@@ -45,9 +42,9 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
+import {useProfilesQuery} from '#/state/queries/profile'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSession} from '#/state/session'
-import {useSetDrawerOpen} from '#/state/shell'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
@@ -61,17 +58,24 @@ import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
 import {makeSearchQuery, parseSearchQuery} from '#/screens/Search/utils'
 import {
   atoms as a,
+  native,
+  platform,
   tokens,
   useBreakpoints,
-  useTheme as useThemeNew,
+  useTheme,
   web,
 } from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
-import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
-import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import {
+  ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
+  ChevronTopBottom_Stroke2_Corner0_Rounded as ChevronUpDownIcon,
+} from '#/components/icons/Chevron'
+import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Globe'
 import * as Layout from '#/components/Layout'
+import * as Menu from '#/components/Menu'
+import {account, useStorage} from '#/storage'
 
 function Loader() {
   return (
@@ -278,7 +282,7 @@ let SearchScreenFeedsResults = ({
   query: string
   active: boolean
 }): React.ReactNode => {
-  const t = useThemeNew()
+  const t = useTheme()
   const {_} = useLingui()
 
   const {data: results, isFetched} = usePopularFeedsSearch({
@@ -323,103 +327,95 @@ function SearchLanguageDropdown({
   value: string
   onChange(value: string): void
 }) {
-  const t = useThemeNew()
   const {_} = useLingui()
   const {appLanguage, contentLanguages} = useLanguagePrefs()
 
-  const items = React.useMemo(() => {
-    return [
-      {
-        label: _(msg`Any language`),
-        inputLabel: _(msg`Any language`),
-        value: '',
-        key: '*',
-      },
-    ].concat(
-      LANGUAGES.filter(
-        (lang, index, self) =>
-          Boolean(lang.code2) && // reduce to the code2 varieties
-          index === self.findIndex(t => t.code2 === lang.code2), // remove dupes (which will happen)
-      )
-        .map(l => ({
-          label: languageName(l, appLanguage),
-          inputLabel: languageName(l, appLanguage),
-          value: l.code2,
-          key: l.code2 + l.code3,
-        }))
-        .sort((a, b) => {
-          // prioritize user's languages
-          const aIsUser = contentLanguages.includes(a.value)
-          const bIsUser = contentLanguages.includes(b.value)
-          if (aIsUser && !bIsUser) return -1
-          if (bIsUser && !aIsUser) return 1
-          // prioritize "common" langs in the network
-          const aIsCommon = !!APP_LANGUAGES.find(al => al.code2 === a.value)
-          const bIsCommon = !!APP_LANGUAGES.find(al => al.code2 === b.value)
-          if (aIsCommon && !bIsCommon) return -1
-          if (bIsCommon && !aIsCommon) return 1
-          // fall back to alphabetical
-          return a.label.localeCompare(b.label)
-        }),
+  const languages = useMemo(() => {
+    return LANGUAGES.filter(
+      (lang, index, self) =>
+        Boolean(lang.code2) && // reduce to the code2 varieties
+        index === self.findIndex(t => t.code2 === lang.code2), // remove dupes (which will happen)
     )
-  }, [_, appLanguage, contentLanguages])
+      .map(l => ({
+        label: languageName(l, appLanguage),
+        value: l.code2,
+        key: l.code2 + l.code3,
+      }))
+      .sort((a, b) => {
+        // prioritize user's languages
+        const aIsUser = contentLanguages.includes(a.value)
+        const bIsUser = contentLanguages.includes(b.value)
+        if (aIsUser && !bIsUser) return -1
+        if (bIsUser && !aIsUser) return 1
+        // prioritize "common" langs in the network
+        const aIsCommon = !!APP_LANGUAGES.find(al => al.code2 === a.value)
+        const bIsCommon = !!APP_LANGUAGES.find(al => al.code2 === b.value)
+        if (aIsCommon && !bIsCommon) return -1
+        if (bIsCommon && !aIsCommon) return 1
+        // fall back to alphabetical
+        return a.label.localeCompare(b.label)
+      })
+  }, [appLanguage, contentLanguages])
 
-  const style = {
-    backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
-    color: t.atoms.text.color,
-    fontSize: a.text_xs.fontSize,
-    fontFamily: 'inherit',
-    fontWeight: a.font_bold.fontWeight,
-    paddingHorizontal: 14,
-    paddingRight: 32,
-    paddingVertical: 8,
-    borderRadius: a.rounded_full.borderRadius,
-    borderWidth: a.border.borderWidth,
-    borderColor: t.atoms.border_contrast_low.borderColor,
-  }
+  const currentLanguageLabel =
+    languages.find(lang => lang.value === value)?.label ?? _(msg`All languages`)
 
   return (
-    <RNPickerSelect
-      darkTheme={t.scheme === 'dark'}
-      placeholder={{}}
-      value={value}
-      onValueChange={onChange}
-      items={items}
-      Icon={() => (
-        <ChevronDown fill={t.atoms.text_contrast_low.color} size="sm" />
-      )}
-      useNativeAndroidPickerStyle={false}
-      style={{
-        iconContainer: {
-          pointerEvents: 'none',
-          right: a.px_sm.paddingRight,
-          top: 0,
-          bottom: 0,
-          display: 'flex',
-          justifyContent: 'center',
-        },
-        inputAndroid: {
-          ...style,
-          paddingVertical: 2,
-        },
-        inputIOS: {
-          ...style,
-        },
-        inputWeb: web({
-          ...style,
-          cursor: 'pointer',
-          // @ts-ignore web only
-          '-moz-appearance': 'none',
-          '-webkit-appearance': 'none',
-          appearance: 'none',
-          outline: 0,
-          borderWidth: 0,
-          overflow: 'hidden',
-          whiteSpace: 'nowrap',
-          textOverflow: 'ellipsis',
-        }),
-      }}
-    />
+    <Menu.Root>
+      <Menu.Trigger
+        label={_(
+          msg`Filter search by language (currently: ${currentLanguageLabel})`,
+        )}>
+        {({props}) => (
+          <Button
+            {...props}
+            label={props.accessibilityLabel}
+            size="small"
+            color={platform({native: 'primary', default: 'secondary'})}
+            variant={platform({native: 'ghost', default: 'solid'})}
+            style={native([
+              a.py_sm,
+              a.px_sm,
+              {marginRight: tokens.space.sm * -1},
+            ])}>
+            <ButtonIcon icon={EarthIcon} />
+            <ButtonText>{currentLanguageLabel}</ButtonText>
+            <ButtonIcon
+              icon={platform({
+                native: ChevronUpDownIcon,
+                default: ChevronDownIcon,
+              })}
+            />
+          </Button>
+        )}
+      </Menu.Trigger>
+      <Menu.Outer
+        // HACKFIX: Currently there is no height limit for Radix dropdowns,
+        // so if it's too tall it just goes off screen. TODO: fix internally -sfn
+        style={web({maxHeight: '70vh'})}>
+        <Menu.LabelText>
+          <Trans>Filter search by language</Trans>
+        </Menu.LabelText>
+        <Menu.Item label={_(msg`All languages`)} onPress={() => onChange('')}>
+          <Menu.ItemText>
+            <Trans>All languages</Trans>
+          </Menu.ItemText>
+          <Menu.ItemRadio selected={value === ''} />
+        </Menu.Item>
+        <Menu.Divider />
+        <Menu.Group>
+          {languages.map(lang => (
+            <Menu.Item
+              key={lang.key}
+              label={lang.label}
+              onPress={() => onChange(lang.value)}>
+              <Menu.ItemText>{lang.label}</Menu.ItemText>
+              <Menu.ItemRadio selected={value === lang.value} />
+            </Menu.Item>
+          ))}
+        </Menu.Group>
+      </Menu.Outer>
+    </Menu.Root>
   )
 }
 
@@ -534,12 +530,7 @@ let SearchScreenInner = ({
     <Pager
       onPageSelected={onPageSelected}
       renderTabBar={props => (
-        <Layout.Center
-          style={[
-            a.z_10,
-            web([a.sticky]),
-            {top: isWeb ? headerHeight : undefined},
-          ]}>
+        <Layout.Center style={[a.z_10, web([a.sticky, {top: headerHeight}])]}>
           <TabBar items={sections.map(section => section.title)} {...props} />
         </Layout.Center>
       )}
@@ -597,13 +588,13 @@ SearchScreenInner = React.memo(SearchScreenInner)
 export function SearchScreen(
   props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
 ) {
-  const t = useThemeNew()
+  const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
   const textInput = React.useRef<TextInput>(null)
   const {_} = useLingui()
-  const setDrawerOpen = useSetDrawerOpen()
   const setMinimalShellMode = useSetMinimalShellMode()
+  const {currentAccount} = useSession()
 
   // Query terms
   const queryParam = props.route?.params?.q ?? ''
@@ -612,20 +603,72 @@ export function SearchScreen(
     useActorAutocompleteQuery(searchText, true)
 
   const [showAutocomplete, setShowAutocomplete] = React.useState(false)
-  const [searchHistory, setSearchHistory] = React.useState<string[]>([])
-  const [selectedProfiles, setSelectedProfiles] = React.useState<
-    AppBskyActorDefs.ProfileViewBasic[]
-  >([])
+
+  const [termHistory = [], setTermHistory] = useStorage(account, [
+    currentAccount?.did ?? 'pwi',
+    'searchTermHistory',
+  ] as const)
+  const [accountHistory = [], setAccountHistory] = useStorage(account, [
+    currentAccount?.did ?? 'pwi',
+    'searchAccountHistory',
+  ])
+
+  const {data: accountHistoryProfiles} = useProfilesQuery({
+    handles: accountHistory,
+    maintainData: true,
+  })
+
+  const updateSearchHistory = useCallback(
+    async (item: string) => {
+      if (!item) return
+      const newSearchHistory = [
+        item,
+        ...termHistory.filter(search => search !== item),
+      ].slice(0, 6)
+      setTermHistory(newSearchHistory)
+    },
+    [termHistory, setTermHistory],
+  )
+
+  const updateProfileHistory = useCallback(
+    async (item: AppBskyActorDefs.ProfileViewBasic) => {
+      const newAccountHistory = [
+        item.did,
+        ...accountHistory.filter(p => p !== item.did),
+      ].slice(0, 5)
+      setAccountHistory(newAccountHistory)
+    },
+    [accountHistory, setAccountHistory],
+  )
+
+  const deleteSearchHistoryItem = useCallback(
+    async (item: string) => {
+      setTermHistory(termHistory.filter(search => search !== item))
+    },
+    [termHistory, setTermHistory],
+  )
+  const deleteProfileHistoryItem = useCallback(
+    async (item: AppBskyActorDefs.ProfileViewBasic) => {
+      setAccountHistory(accountHistory.filter(p => p !== item.did))
+    },
+    [accountHistory, setAccountHistory],
+  )
 
   const {params, query, queryWithParams} = useQueryManager({
     initialQuery: queryParam,
   })
   const showFilters = Boolean(queryWithParams && !showAutocomplete)
-  /*
-   * Arbitrary sizing, so guess and check, used for sticky header alignment and
-   * sizing.
-   */
-  const headerHeight = 60 + (showFilters ? 40 : 0)
+
+  // web only - measure header height for sticky positioning
+  const [headerHeight, setHeaderHeight] = React.useState(0)
+  const headerRef = React.useRef(null)
+  useLayoutEffect(() => {
+    if (isWeb) {
+      if (!headerRef.current) return
+      const measurement = (headerRef.current as Element).getBoundingClientRect()
+      setHeaderHeight(measurement.height)
+    }
+  }, [])
 
   useFocusEffect(
     useNonReactiveCallback(() => {
@@ -634,30 +677,6 @@ export function SearchScreen(
       }
     }),
   )
-
-  React.useEffect(() => {
-    const loadSearchHistory = async () => {
-      try {
-        const history = await AsyncStorage.getItem('searchHistory')
-        if (history !== null) {
-          setSearchHistory(JSON.parse(history))
-        }
-        const profiles = await AsyncStorage.getItem('selectedProfiles')
-        if (profiles !== null) {
-          setSelectedProfiles(JSON.parse(profiles))
-        }
-      } catch (e: any) {
-        logger.error('Failed to load search history', {message: e})
-      }
-    }
-
-    loadSearchHistory()
-  }, [])
-
-  const onPressMenu = React.useCallback(() => {
-    textInput.current?.blur()
-    setDrawerOpen(true)
-  }, [setDrawerOpen])
 
   const onPressClearQuery = React.useCallback(() => {
     scrollToTopWeb()
@@ -669,57 +688,6 @@ export function SearchScreen(
     scrollToTopWeb()
     setSearchText(text)
   }, [])
-
-  const updateSearchHistory = React.useCallback(
-    async (newQuery: string) => {
-      newQuery = newQuery.trim()
-      if (newQuery) {
-        let newHistory = [
-          newQuery,
-          ...searchHistory.filter(q => q !== newQuery),
-        ]
-
-        if (newHistory.length > 5) {
-          newHistory = newHistory.slice(0, 5)
-        }
-
-        setSearchHistory(newHistory)
-        try {
-          await AsyncStorage.setItem(
-            'searchHistory',
-            JSON.stringify(newHistory),
-          )
-        } catch (e: any) {
-          logger.error('Failed to save search history', {message: e})
-        }
-      }
-    },
-    [searchHistory, setSearchHistory],
-  )
-
-  const updateSelectedProfiles = React.useCallback(
-    async (profile: AppBskyActorDefs.ProfileViewBasic) => {
-      let newProfiles = [
-        profile,
-        ...selectedProfiles.filter(p => p.did !== profile.did),
-      ]
-
-      if (newProfiles.length > 5) {
-        newProfiles = newProfiles.slice(0, 5)
-      }
-
-      setSelectedProfiles(newProfiles)
-      try {
-        await AsyncStorage.setItem(
-          'selectedProfiles',
-          JSON.stringify(newProfiles),
-        )
-      } catch (e: any) {
-        logger.error('Failed to save selected profiles', {message: e})
-      }
-    },
-    [selectedProfiles, setSelectedProfiles],
-  )
 
   const navigateToItem = React.useCallback(
     (item: string) => {
@@ -774,10 +742,10 @@ export function SearchScreen(
     (profile: AppBskyActorDefs.ProfileViewBasic) => {
       // Slight delay to avoid updating during push nav animation.
       setTimeout(() => {
-        updateSelectedProfiles(profile)
+        updateProfileHistory(profile)
       }, 400)
     },
-    [updateSelectedProfiles],
+    [updateProfileHistory],
   )
 
   const onSoftReset = React.useCallback(() => {
@@ -798,36 +766,6 @@ export function SearchScreen(
     }, [onSoftReset, setMinimalShellMode]),
   )
 
-  const handleRemoveHistoryItem = React.useCallback(
-    (itemToRemove: string) => {
-      const updatedHistory = searchHistory.filter(item => item !== itemToRemove)
-      setSearchHistory(updatedHistory)
-      AsyncStorage.setItem(
-        'searchHistory',
-        JSON.stringify(updatedHistory),
-      ).catch(e => {
-        logger.error('Failed to update search history', {message: e})
-      })
-    },
-    [searchHistory],
-  )
-
-  const handleRemoveProfile = React.useCallback(
-    (profileToRemove: AppBskyActorDefs.ProfileViewBasic) => {
-      const updatedProfiles = selectedProfiles.filter(
-        profile => profile.did !== profileToRemove.did,
-      )
-      setSelectedProfiles(updatedProfiles)
-      AsyncStorage.setItem(
-        'selectedProfiles',
-        JSON.stringify(updatedProfiles),
-      ).catch(e => {
-        logger.error('Failed to update selected profiles', {message: e})
-      })
-    },
-    [selectedProfiles],
-  )
-
   const onSearchInputFocus = React.useCallback(() => {
     if (isWeb) {
       // Prevent a jump on iPad by ensuring that
@@ -843,75 +781,89 @@ export function SearchScreen(
   return (
     <Layout.Screen testID="searchScreen">
       <View
+        ref={headerRef}
+        onLayout={evt => {
+          if (isWeb) setHeaderHeight(evt.nativeEvent.layout.height)
+        }}
         style={[
+          a.relative,
+          a.z_10,
           web({
-            height: headerHeight,
             position: 'sticky',
             top: 0,
-            zIndex: 1,
           }),
         ]}>
-        <Layout.Center>
-          <View style={[a.p_md, a.pb_sm, a.gap_sm, t.atoms.bg]}>
-            <View style={[a.flex_row, a.gap_sm]}>
-              {!gtMobile && !showAutocomplete && (
-                <Button
-                  testID="viewHeaderBackOrMenuBtn"
-                  onPress={onPressMenu}
-                  hitSlop={HITSLOP_10}
-                  label={_(msg`Menu`)}
-                  accessibilityHint={_(
-                    msg`Access navigation links and settings`,
-                  )}
-                  size="large"
-                  variant="solid"
-                  color="secondary"
-                  shape="square">
-                  <ButtonIcon icon={Menu} size="lg" />
-                </Button>
-              )}
-              <View style={[a.flex_1]}>
-                <SearchInput
-                  ref={textInput}
-                  value={searchText}
-                  onFocus={onSearchInputFocus}
-                  onChangeText={onChangeText}
-                  onClearText={onPressClearQuery}
-                  onSubmitEditing={onSubmit}
-                />
-              </View>
-              {showAutocomplete && (
-                <Button
-                  label={_(msg`Cancel search`)}
-                  size="large"
-                  variant="ghost"
-                  color="secondary"
-                  style={[a.px_sm]}
-                  onPress={onPressCancelSearch}
-                  hitSlop={HITSLOP_10}>
-                  <ButtonText>
-                    <Trans>Cancel</Trans>
-                  </ButtonText>
-                </Button>
-              )}
+        <Layout.Center style={t.atoms.bg}>
+          {!gtMobile && (
+            <View
+              // HACK: shift up search input. we can't remove the top padding
+              // on the search input because it messes up the layout animation
+              // if we add it only when the header is hidden
+              style={{marginBottom: tokens.space.xs * -1}}>
+              <Layout.Header.Outer noBottomBorder>
+                <Layout.Header.MenuButton />
+                <Layout.Header.Content align="left">
+                  <Layout.Header.TitleText>
+                    <Trans>Search</Trans>
+                  </Layout.Header.TitleText>
+                </Layout.Header.Content>
+                {showFilters ? (
+                  <SearchLanguageDropdown
+                    value={params.lang}
+                    onChange={params.setLang}
+                  />
+                ) : (
+                  <Layout.Header.Slot />
+                )}
+              </Layout.Header.Outer>
             </View>
+          )}
+          <View style={[a.px_md, a.pt_sm, a.pb_sm, a.overflow_hidden]}>
+            <View style={[a.gap_sm]}>
+              <View style={[a.w_full, a.flex_row, a.align_stretch, a.gap_xs]}>
+                <View style={[a.flex_1]}>
+                  <SearchInput
+                    ref={textInput}
+                    value={searchText}
+                    onFocus={onSearchInputFocus}
+                    onChangeText={onChangeText}
+                    onClearText={onPressClearQuery}
+                    onSubmitEditing={onSubmit}
+                    placeholder={_(msg`Search for posts, users, or feeds`)}
+                    hitSlop={{...HITSLOP_20, top: 0}}
+                  />
+                </View>
+                {showAutocomplete && (
+                  <Button
+                    label={_(msg`Cancel search`)}
+                    size="large"
+                    variant="ghost"
+                    color="secondary"
+                    style={[a.px_sm]}
+                    onPress={onPressCancelSearch}
+                    hitSlop={HITSLOP_10}>
+                    <ButtonText>
+                      <Trans>Cancel</Trans>
+                    </ButtonText>
+                  </Button>
+                )}
+              </View>
 
-            {showFilters && (
-              <View
-                style={[
-                  a.flex_row,
-                  a.align_center,
-                  a.justify_between,
-                  a.gap_sm,
-                ]}>
-                <View style={[{width: 140}]}>
+              {showFilters && gtMobile && (
+                <View
+                  style={[
+                    a.flex_row,
+                    a.align_center,
+                    a.justify_between,
+                    a.gap_sm,
+                  ]}>
                   <SearchLanguageDropdown
                     value={params.lang}
                     onChange={params.setLang}
                   />
                 </View>
-              </View>
-            )}
+              )}
+            </View>
           </View>
         </Layout.Center>
       </View>
@@ -932,12 +884,12 @@ export function SearchScreen(
           />
         ) : (
           <SearchHistory
-            searchHistory={searchHistory}
-            selectedProfiles={selectedProfiles}
+            searchHistory={termHistory}
+            selectedProfiles={accountHistoryProfiles?.profiles || []}
             onItemClick={handleHistoryItemClick}
             onProfileClick={handleProfileClick}
-            onRemoveItemClick={handleRemoveHistoryItem}
-            onRemoveProfileClick={handleRemoveProfile}
+            onRemoveItemClick={deleteSearchHistoryItem}
+            onRemoveProfileClick={deleteProfileHistoryItem}
           />
         )}
       </View>
@@ -1087,7 +1039,7 @@ function SearchHistory({
                     accessibilityRole="button"
                     accessibilityLabel={_(msg`Remove profile`)}
                     accessibilityHint={_(
-                      msg`Remove profile from search history`,
+                      msg`Removes profile from search history`,
                     )}
                     onPress={() => onRemoveProfileClick(profile)}
                     hitSlop={createHitslop(6)}

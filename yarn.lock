@@ -277,7 +277,7 @@
     multiformats "^9.9.0"
     zod "^3.23.8"
 
-"@atproto/lexicon@^0.4.7":
+"@atproto/lexicon@^0.4.4", "@atproto/lexicon@^0.4.7":
   version "0.4.7"
   resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.4.7.tgz#f5d31615c21bcfd3e655f1e4f11a40a62fea9f86"
   integrity sha512-/x6h3tAiDNzSi4eXtC8ke65B7UzsagtlGRHmUD95698x5lBRpDnpizj0fZWTZVYed5qnOmz/ZEue+v3wDmO61g==

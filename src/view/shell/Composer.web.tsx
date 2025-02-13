@@ -5,6 +5,7 @@ import {useFocusGuards} from '@radix-ui/react-focus-guards'
 import {FocusScope} from '@radix-ui/react-focus-scope'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
+import {useA11y} from '#/state/a11y'
 import {useModals} from '#/state/modals'
 import {ComposerOpts, useComposerState} from '#/state/shell/composer'
 import {
@@ -12,7 +13,7 @@ import {
   EmojiPickerPosition,
   EmojiPickerState,
 } from '#/view/com/composer/text-input/web/EmojiPicker.web'
-import {useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, flatten, useBreakpoints, useTheme} from '#/alf'
 import {ComposePost, useComposerCancelRef} from '../com/composer/Composer'
 
 const BOTTOM_BAR_HEIGHT = 61
@@ -41,6 +42,7 @@ function Inner({state}: {state: ComposerOpts}) {
   const {isModalActive} = useModals()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
+  const {reduceMotionEnabled} = useA11y()
   const [pickerState, setPickerState] = React.useState<EmojiPickerState>({
     isOpen: false,
     pos: {top: 0, left: 0, right: 0, bottom: 0, nextFocusRef: null},
@@ -71,17 +73,15 @@ function Inner({state}: {state: ComposerOpts}) {
       <DismissableLayer
         role="dialog"
         aria-modal
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: '#000c',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
+        style={flatten([
+          {position: 'fixed'},
+          a.inset_0,
+          {backgroundColor: '#000c'},
+          a.flex,
+          a.flex_col,
+          a.align_center,
+          !reduceMotionEnabled && a.fade_in,
+        ])}
         onFocusOutside={evt => evt.preventDefault()}
         onInteractOutside={evt => evt.preventDefault()}
         onDismiss={() => {
@@ -96,6 +96,11 @@ function Inner({state}: {state: ComposerOpts}) {
             !gtMobile && styles.containerMobile,
             t.atoms.bg,
             t.atoms.border_contrast_medium,
+            !reduceMotionEnabled && [
+              a.zoom_fade_in,
+              {animationDelay: 0.1},
+              {animationFillMode: 'backwards'},
+            ],
           ]}>
           <ComposePost
             cancelRef={ref}
@@ -123,14 +128,14 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 0,
     borderWidth: 1,
-    // @ts-ignore web only
+    // @ts-expect-error web only
     maxHeight: 'calc(100% - (40px * 2))',
     overflow: 'hidden',
   },
   containerMobile: {
     borderRadius: 0,
     marginBottom: BOTTOM_BAR_HEIGHT,
-    // @ts-ignore web only
+    // @ts-expect-error web only
     maxHeight: `calc(100% - ${BOTTOM_BAR_HEIGHT}px)`,
   },
 })

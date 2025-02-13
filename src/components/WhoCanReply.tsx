@@ -213,7 +213,12 @@ function Rules({
           a.flex_wrap,
           t.atoms.text_contrast_medium,
         ]}>
-        {settings[0].type === 'everybody' ? (
+        {settings.length === 0 ? (
+          <Trans>
+            This post has an unknown type of threadgate on it. Your app may be
+            out of date.
+          </Trans>
+        ) : settings[0].type === 'everybody' ? (
           <Trans>Everybody can reply to this post.</Trans>
         ) : settings[0].type === 'nobody' ? (
           <Trans>Replies to this post are disabled.</Trans>
@@ -256,6 +261,19 @@ function Rule({
 }) {
   if (rule.type === 'mention') {
     return <Trans>mentioned users</Trans>
+  }
+  if (rule.type === 'followers') {
+    return (
+      <Trans>
+        users following{' '}
+        <InlineLinkText
+          label={`@${post.author.handle}`}
+          to={makeProfileLink(post.author)}
+          style={[a.text_sm, a.leading_snug]}>
+          @{post.author.handle}
+        </InlineLinkText>
+      </Trans>
+    )
   }
   if (rule.type === 'following') {
     return (

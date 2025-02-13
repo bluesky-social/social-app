@@ -281,7 +281,7 @@ function ChatListItemReady({
             !isDeletedAccount
               ? _(msg`Go to conversation with ${profile.handle}`)
               : _(
-                  msg`This conversation is with a deleted or a deactivated account. Press for options.`,
+                  msg`This conversation is with a deleted or a deactivated account. Press for options`,
                 )
           }
           accessibilityActions={

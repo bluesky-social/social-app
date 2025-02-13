@@ -185,6 +185,8 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.hi
       case 'hu':
         return AppLanguage.hu
+      case 'ia':
+        return AppLanguage.ia
       case 'id':
         return AppLanguage.id
       case 'it':

@@ -1,5 +1,5 @@
 import {createContext, useCallback, useContext} from 'react'
-import {GestureResponderEvent, View} from 'react-native'
+import {GestureResponderEvent, Keyboard, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -140,6 +140,7 @@ export function MenuButton() {
   const {gtMobile} = useBreakpoints()
 
   const onPress = useCallback(() => {
+    Keyboard.dismiss()
     setDrawerOpen(true)
   }, [setDrawerOpen])
 

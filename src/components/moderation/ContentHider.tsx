@@ -146,10 +146,10 @@ function ContentHiderActive({
         label={desc.name}
         accessibilityHint={
           modui.noOverride
-            ? _(msg`Learn more about the moderation applied to this content.`)
+            ? _(msg`Learn more about the moderation applied to this content`)
             : override
-            ? _(msg`Hide the content`)
-            : _(msg`Show the content`)
+            ? _(msg`Hides the content`)
+            : _(msg`Shows the content`)
         }>
         {state => (
           <View

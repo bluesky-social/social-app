@@ -12,6 +12,7 @@ import {PressableScale} from '#/lib/custom-animations/PressableScale'
 // import {UserAvatar} from '#/view/com/util/UserAvatar'
 import type {TrendingTopic} from '#/state/queries/trending/useTrendingTopics'
 import {atoms as a, native, useTheme, ViewStyleProp} from '#/alf'
+import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
 import {Link as InternalLink, LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
@@ -24,9 +25,8 @@ export function TrendingTopic({
   const topic = useTopic(raw)
 
   const isSmall = size === 'small'
-  // const hasAvi = topic.type === 'feed' || topic.type === 'profile'
-  // const aviSize = isSmall ? 16 : 20
-  // const iconSize = isSmall ? 16 : 20
+  const hasIcon = topic.type === 'starter-pack' && !isSmall
+  const iconSize = 20
 
   return (
     <View
@@ -45,45 +45,47 @@ export function TrendingTopic({
               },
             ]
           : [a.py_sm, a.px_md],
+        hasIcon && {gap: 6},
         style,
-        /*
-        {
-          padding: 6,
-          gap: hasAvi ? 4 : 2,
-        },
-        a.pr_md,
-       */
       ]}>
+      {hasIcon && topic.type === 'starter-pack' && (
+        <StarterPackIcon
+          gradient="sky"
+          width={iconSize}
+          style={{marginLeft: -3, marginVertical: -1}}
+        />
+      )}
+
       {/*
-      <View
-        style={[
-          a.align_center,
-          a.justify_center,
-          a.rounded_full,
-          a.overflow_hidden,
-          {
-            width: aviSize,
-            height: aviSize,
-          },
-        ]}>
-        {topic.type === 'tag' ? (
-          <Hashtag width={iconSize} />
-        ) : topic.type === 'topic' ? (
-          <Quote width={iconSize - 2} />
-        ) : topic.type === 'feed' ? (
-          <UserAvatar
-            type="user"
-            size={aviSize}
-            avatar=""
-          />
-        ) : (
-          <UserAvatar
-            type="user"
-            size={aviSize}
-            avatar=""
-          />
-        )}
-      </View>
+        <View
+          style={[
+            a.align_center,
+            a.justify_center,
+            a.rounded_full,
+            a.overflow_hidden,
+            {
+              width: iconSize,
+              height: iconSize,
+            },
+          ]}>
+          {topic.type === 'tag' ? (
+            <Hashtag width={iconSize} />
+          ) : topic.type === 'topic' ? (
+            <Quote width={iconSize - 2} />
+          ) : topic.type === 'feed' ? (
+            <UserAvatar
+              type="user"
+              size={aviSize}
+              avatar=""
+            />
+          ) : (
+            <UserAvatar
+              type="user"
+              size={aviSize}
+              avatar=""
+            />
+          )}
+        </View>
         */}
 
       <Text
@@ -151,7 +153,7 @@ export function TrendingTopicLink({
 
 type ParsedTrendingTopic =
   | {
-      type: 'topic' | 'tag' | 'unknown'
+      type: 'topic' | 'tag' | 'starter-pack' | 'unknown'
       label: string
       displayName: string
       url: string
@@ -184,6 +186,14 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
         label: _(msg`Browse posts tagged with ${displayName}`),
         displayName,
         // displayName: displayName.replace(/^#/, ''),
+        uri: undefined,
+        url: link,
+      }
+    } else if (link.startsWith('/starter-pack')) {
+      return {
+        type: 'starter-pack',
+        label: _(msg`Browse starter pack ${displayName}`),
+        displayName,
         uri: undefined,
         url: link,
       }

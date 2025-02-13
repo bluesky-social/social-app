@@ -76,7 +76,7 @@ export function PostHider({
       }}
       accessibilityRole="button"
       accessibilityHint={
-        override ? _(msg`Hide the content`) : _(msg`Show the content`)
+        override ? _(msg`Hides the content`) : _(msg`Shows the content`)
       }
       accessibilityLabel=""
       style={[
