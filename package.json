@@ -43,8 +43,10 @@
     "perf:test:results": "NODE_ENV=test flashlight report .perf/results.json",
     "perf:measure": "NODE_ENV=test flashlight measure",
     "intl:build": "yarn intl:extract && yarn intl:compile",
-    "intl:extract": "lingui extract",
+    "intl:extract": "lingui extract --clean --locale en",
     "intl:compile": "lingui compile",
+    "intl:pull": "crowdin download translations --verbose -b main",
+    "intl:push": "crowdin push translations --verbose -b main",
     "nuke": "rm -rf ./node_modules && rm -rf ./ios && rm -rf ./android",
     "update-extensions": "bash scripts/updateExtensions.sh",
     "export": "npx expo export",
@@ -54,8 +56,7 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "0.14.0-next.6",
-    "@atproto/lexicon": "0.4.6-next.5",
+    "@atproto/api": "^0.14.0",
     "@bitdrift/react-native": "^0.6.2",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
@@ -210,7 +211,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@atproto/dev-env": "^0.3.67",
+    "@atproto/dev-env": "^0.3.87",
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@babel/runtime": "^7.26.0",
@@ -266,7 +267,6 @@
     "webpack-bundle-analyzer": "^4.10.1"
   },
   "resolutions": {
-    "@atproto/lexicon": "0.4.6-next.5",
     "@expo/image-utils": "0.6.3",
     "@react-native/babel-preset": "0.76.1",
     "@react-native/normalize-colors": "0.76.1",
