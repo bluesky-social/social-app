@@ -8,7 +8,7 @@ msgstr ""
 "Language: it\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-13 03:01\n"
+"PO-Revision-Date: 2025-02-13 10:55\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -591,7 +591,7 @@ msgstr "Tutti gli account sono stati seguiti!"
 #: src/view/screens/Search/Search.tsx:399
 #: src/view/screens/Search/Search.tsx:401
 msgid "All languages"
-msgstr ""
+msgstr "Tutte le lingue"
 
 #: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
@@ -1152,7 +1152,7 @@ msgstr "Sfoglia i post con tag {displayName}"
 
 #: src/components/TrendingTopics.tsx:195
 msgid "Browse starter pack {displayName}"
-msgstr ""
+msgstr "Sfoglia lo starter pack {displayName}"
 
 #: src/components/TrendingTopics.tsx:232
 msgid "Browse topic {displayName}"
@@ -1322,12 +1322,12 @@ msgstr "Modifica il tuo indirizzo email"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Changes app icon"
-msgstr ""
+msgstr "Cambia icona dell'app"
 
 #: src/components/forms/HostingProvider.tsx:50
 #: src/components/forms/HostingProvider.tsx:66
 msgid "Changes hosting provider"
-msgstr ""
+msgstr "Cambia il fornitore di hosting"
 
 #: src/Navigation.tsx:398
 #: src/view/shell/bottom-bar/BottomBar.tsx:204
@@ -1488,7 +1488,7 @@ msgstr "Chiudi la finestra di dialogo"
 
 #: src/view/shell/index.web.tsx:83
 msgid "Close drawer menu"
-msgstr ""
+msgstr "Chiudi il menu a scomparsa"
 
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
@@ -1518,7 +1518,7 @@ msgstr "Chiude l'avviso di aggiornamento della password"
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
 msgid "Closes the emoji picker"
-msgstr ""
+msgstr "Chiude il selettore emoji"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:32
 msgid "Closes viewer for header image"
@@ -1664,7 +1664,7 @@ msgstr "Filtri dei contenuti"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:57
 msgid "Content from across the network we think you might like."
-msgstr ""
+msgstr "Contenuti di tutta la rete che potrebbero piacerti."
 
 #: src/screens/Settings/LanguageSettings.tsx:251
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
@@ -1742,7 +1742,7 @@ msgstr "Copiato!"
 
 #: src/screens/Settings/AboutSettings.tsx:70
 msgid "Copies build version to clipboard"
-msgstr ""
+msgstr "Copia la versione negli appunti"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 msgid "Copy"
@@ -1755,12 +1755,12 @@ msgstr "Copia password per app"
 #: src/view/com/profile/ProfileMenu.tsx:327
 #: src/view/com/profile/ProfileMenu.tsx:330
 msgid "Copy at:// URI"
-msgstr ""
+msgstr "Copia URL at://"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:674
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:676
 msgid "Copy author DID"
-msgstr ""
+msgstr "Copia DID dell'autore"
 
 #: src/components/dialogs/Embed.tsx:122
 #: src/components/dialogs/Embed.tsx:141
@@ -1802,7 +1802,7 @@ msgstr "Copia testo del messaggio"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
 msgid "Copy post at:// URI"
-msgstr ""
+msgstr "Copia URL at:// del post"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:422
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:424
@@ -1922,7 +1922,7 @@ msgstr "Personalizza chi può interagire con questo post."
 
 #: src/screens/Onboarding/Layout.tsx:56
 msgid "Customizes your Bluesky experience"
-msgstr ""
+msgstr "Personalizza la tua esperienza su Bluesky"
 
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
@@ -2091,11 +2091,11 @@ msgstr "Scollegare la citazione del post?"
 
 #: src/screens/Settings/AboutSettings.tsx:77
 msgid "Developer mode disabled"
-msgstr ""
+msgstr "Modalità sviluppatore disattivata"
 
 #: src/screens/Settings/AboutSettings.tsx:76
 msgid "Developer mode enabled"
-msgstr ""
+msgstr "Modalità sviluppatore attivata"
 
 #: src/screens/Settings/Settings.tsx:242
 #: src/screens/Settings/Settings.tsx:245
@@ -2609,7 +2609,7 @@ msgstr "Inserisci il tuo nuovo indirizzo email qui sotto."
 
 #: src/screens/Login/LoginForm.tsx:235
 msgid "Enter your password"
-msgstr ""
+msgstr "Inserisci la tua password"
 
 #: src/screens/Login/index.tsx:98
 msgid "Enter your username and password"
@@ -2617,7 +2617,7 @@ msgstr "Inserisci il tuo nome utente e la tua password"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
 msgid "Enters full screen"
-msgstr ""
+msgstr "Passa a schermo intero"
 
 #: src/view/com/composer/Composer.tsx:1660
 #: src/view/com/util/error/ErrorScreen.tsx:42
@@ -2704,11 +2704,11 @@ msgstr "Espandi o comprimi il post a cui stai rispondendo"
 
 #: src/screens/VideoFeed/index.tsx:935
 msgid "Expands or collapses post text"
-msgstr ""
+msgstr "Espande o comprime il testo del post"
 
 #: src/view/com/composer/ComposerReplyTo.tsx:73
 msgid "Expands or collapses the full post you are replying to"
-msgstr ""
+msgstr "Espande o comprime il post a cui stai rispondendo"
 
 #: src/lib/api/index.ts:405
 msgid "Expected uri to resolve to a record"
@@ -2829,7 +2829,7 @@ msgstr "Errore nel salvataggio delle modifiche, riprovare"
 
 #: src/screens/ModerationInteractionSettings/index.tsx:108
 msgid "Failed to save settings. Please try again."
-msgstr ""
+msgstr "Non è stato possibile salvare le impostazioni. Riprovare."
 
 #: src/components/dms/MessageItem.tsx:234
 msgid "Failed to send"
@@ -2925,11 +2925,11 @@ msgstr "Filtra dai feed"
 
 #: src/view/screens/Search/Search.tsx:397
 msgid "Filter search by language"
-msgstr ""
+msgstr "Filtra la ricerca per lingua"
 
 #: src/view/screens/Search/Search.tsx:367
 msgid "Filter search by language (currently: {currentLanguageLabel})"
-msgstr ""
+msgstr "Filtra la ricerca per lingua (attualmente: {currentLanguageLabel})"
 
 #: src/screens/Onboarding/StepFinished.tsx:303
 msgid "Finalizing"
@@ -3383,7 +3383,7 @@ msgstr "Nascondi elenco utenti"
 #: src/components/moderation/ContentHider.tsx:151
 #: src/components/moderation/PostHider.tsx:79
 msgid "Hides the content"
-msgstr ""
+msgstr "Nasconde il contenuto"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:117
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
@@ -3560,7 +3560,7 @@ msgstr "Interazione limitata"
 
 #: src/screens/Moderation/index.tsx:209
 msgid "Interaction settings"
-msgstr ""
+msgstr "Impostazioni per le interazioni"
 
 #: src/screens/Login/LoginForm.tsx:149
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
@@ -3719,7 +3719,7 @@ msgstr "Maggiori informazioni su come ospitare il tuo server."
 
 #: src/components/moderation/ContentHider.tsx:149
 msgid "Learn more about the moderation applied to this content"
-msgstr ""
+msgstr "Scopri di più sulla moderazione applicata a questo contenuto"
 
 #: src/components/moderation/ContentHider.tsx:215
 msgid "Learn more about the moderation applied to this content."
@@ -4794,7 +4794,7 @@ msgstr "Apre la fotocamera sul dispositivo"
 
 #: src/screens/Settings/AccountSettings.tsx:127
 msgid "Opens change handle dialog"
-msgstr ""
+msgstr "Apre la schermata per modificare il nome utente"
 
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:35
 msgid "Opens composer"
@@ -4806,7 +4806,7 @@ msgstr "Apre la galleria fotografica del dispositivo"
 
 #: src/view/com/composer/Composer.tsx:1244
 msgid "Opens emoji picker"
-msgstr ""
+msgstr "Apre il selettore emoji"
 
 #: src/view/com/auth/SplashScreen.tsx:49
 #: src/view/com/auth/SplashScreen.web.tsx:111
@@ -4824,7 +4824,7 @@ msgstr "Apre la finestra per selezionare i GIF"
 
 #: src/screens/Settings/Settings.tsx:208
 msgid "Opens helpdesk in browser"
-msgstr ""
+msgstr "Apre il centro assistenza nel browser"
 
 #: src/view/com/modals/InviteCodes.tsx:173
 msgid "Opens list of invite codes"
@@ -5032,11 +5032,11 @@ msgstr "Riproduci video"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:42
 msgid "Plays or pauses the GIF"
-msgstr ""
+msgstr "Riproduce o mette in pausa la GIF"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 msgid "Plays or pauses the video"
-msgstr ""
+msgstr "Riproduce o mette in pausa il video"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:106
 msgid "Plays the GIF"
@@ -5044,7 +5044,7 @@ msgstr "Riproduci questa GIF"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:59
 msgid "Plays the video"
-msgstr ""
+msgstr "Riproduce il video"
 
 #: src/screens/Signup/state.ts:217
 msgid "Please choose your handle."
@@ -5185,7 +5185,7 @@ msgstr "Gestisci interazioni post"
 #: src/Navigation.tsx:163
 #: src/screens/ModerationInteractionSettings/index.tsx:34
 msgid "Post Interaction Settings"
-msgstr ""
+msgstr "Impostazioni interazioni"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:89
 msgid "Post language"
@@ -5564,7 +5564,7 @@ msgstr "Rimosso dai tuoi feed"
 
 #: src/view/screens/Search/Search.tsx:1042
 msgid "Removes profile from search history"
-msgstr ""
+msgstr "Rimuove il profilo dalla cronologia di ricerca"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
 msgid "Removes quoted post"
@@ -5875,7 +5875,7 @@ msgstr "Ritorna alla pagina precedente"
 
 #: src/screens/StarterPack/Wizard/index.tsx:287
 msgid "Returns to the previous step"
-msgstr ""
+msgstr "Ritorna al passo precedente"
 
 #: src/components/dialogs/BirthDateSettings.tsx:120
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:478
@@ -6013,7 +6013,7 @@ msgstr "Cerca feed che potresti suggerire ad altri utenti."
 
 #: src/view/screens/Search/Search.tsx:832
 msgid "Search for posts, users, or feeds"
-msgstr ""
+msgstr "Cerca post, utenti o feed"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
 msgid "Search for users"
@@ -6035,7 +6035,7 @@ msgstr "Cerca Tenor"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
 #: src/components/ProgressGuide/FollowDialog.tsx:765
 msgid "Searches for profiles"
-msgstr ""
+msgstr "Cerca profili"
 
 #: src/view/com/modals/ChangeEmail.tsx:105
 msgid "Security Step Required"
@@ -6159,7 +6159,7 @@ msgstr "Seleziona la tua lingua preferita per le traduzioni nel tuo feed."
 
 #: src/view/com/util/forms/DropdownButton.tsx:297
 msgid "Selects option {0} of {numItems}"
-msgstr ""
+msgstr "Seleziona l'opzione {0} di {numItems}"
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
@@ -6258,7 +6258,7 @@ msgstr "Impostazioni"
 
 #: src/screens/ModerationInteractionSettings/index.tsx:102
 msgid "Settings saved"
-msgstr ""
+msgstr "Impostazioni salvate"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Sexual activity or erotic nudity."
@@ -6447,16 +6447,16 @@ msgstr "Mostra avviso e filtra dai feed"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:810
 msgid "Shows information about when this post was created"
-msgstr ""
+msgstr "Mostra informazioni sulla data di creazione del post"
 
 #: src/screens/Settings/Settings.tsx:104
 msgid "Shows other accounts you can switch to"
-msgstr ""
+msgstr "Mostra gli altri account a cui puoi passare"
 
 #: src/components/moderation/ContentHider.tsx:152
 #: src/components/moderation/PostHider.tsx:79
 msgid "Shows the content"
-msgstr ""
+msgstr "Mostra il contenuto"
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
@@ -6927,7 +6927,7 @@ msgstr "Ai tuoi contenuti sono state applicate le seguenti etichette."
 
 #: src/screens/ModerationInteractionSettings/index.tsx:42
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
-msgstr ""
+msgstr "Queste impostazioni saranno utilizzate come predefinite quando si crea un nuovo post. Puoi modificarle per un post specifico dal compositore."
 
 #: src/view/com/post-thread/PostThread.tsx:262
 #: src/view/com/post-thread/PostThread.tsx:274
@@ -7117,7 +7117,7 @@ msgstr "Questo contenuto non è visualizzabile senza un account Bluesky."
 
 #: src/screens/Messages/components/ChatListItem.tsx:284
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
-msgstr ""
+msgstr "L'utente di questa conversazione ha disattivato o eliminato l'account. Premi per le opzioni"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:94
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -7195,7 +7195,7 @@ msgstr "Questo post dichiara di essere stato creato il <0>{0}</0>, ma è stato v
 
 #: src/components/WhoCanReply.tsx:213
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
-msgstr ""
+msgstr "Questo post ha un tipo sconosciuto di restrizione. La tua app potrebbe non essere aggiornata."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:152
 msgid "This post has been deleted."
@@ -7336,7 +7336,7 @@ msgstr "Seleziona per abilitare o disabilitare i contenuti per adulti"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:158
 msgid "Toggles the sound"
-msgstr ""
+msgstr "Attiva/disattiva il suono"
 
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
@@ -7473,7 +7473,7 @@ msgstr "Smetti di seguire questo account"
 
 #: src/screens/VideoFeed/index.tsx:804
 msgid "Unfollows the user"
-msgstr ""
+msgstr "Smetti di seguire"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Unlike"
@@ -7724,7 +7724,7 @@ msgstr "utenti seguiti da <0>@{0}</0>"
 
 #: src/components/WhoCanReply.tsx:263
 msgid "users following <0>@{0}</0>"
-msgstr ""
+msgstr "utenti che seguono <0>@{0}</0>"
 
 #: src/screens/Messages/Settings.tsx:92
 #: src/screens/Messages/Settings.tsx:95
@@ -7741,7 +7741,7 @@ msgstr "Utenti a cui è piaciuto questo contenuto o profilo"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:432
 msgid "Users you follow"
-msgstr ""
+msgstr "Utenti che segui"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:419
 msgid "Value:"
@@ -7929,7 +7929,7 @@ msgstr "Vedi i tuoi account bloccati"
 
 #: src/screens/Moderation/index.tsx:204
 msgid "View your default post interaction settings"
-msgstr ""
+msgstr "Vedi impostazioni predefinite per le interazioni"
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:56
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:77
@@ -7947,11 +7947,11 @@ msgstr "Vedi i tuoi account silenziati"
 #: src/view/com/util/images/AutoSizedImage.tsx:199
 #: src/view/com/util/images/AutoSizedImage.tsx:221
 msgid "Views full image"
-msgstr ""
+msgstr "Vedi l'immagine completa"
 
 #: src/components/VideoPostCard.tsx:115
 msgid "Views video in immersive mode"
-msgstr ""
+msgstr "Mostra video in modalità immersiva"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -8242,7 +8242,7 @@ msgstr "Puoi riattivare il tuo account per accedere. Il tuo profilo e i tuoi pos
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
 msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings.</0>"
-msgstr ""
+msgstr "Puoi configurare le impostazioni predefinite per le interazioni in <0>Impostazioni → Moderazione → Impostazioni interazioni.</0>"
 
 #: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:139
@@ -8555,7 +8555,7 @@ msgstr "Il tuo primo mi piace!"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
 msgid "Your followers"
-msgstr ""
+msgstr "I tuoi follower"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
