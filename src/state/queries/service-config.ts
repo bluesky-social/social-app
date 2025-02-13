@@ -19,7 +19,7 @@ export function useServiceConfigQuery() {
         const {data} = await agent.api.app.bsky.unspecced.getConfig()
         return {
           checkEmailConfirmed: Boolean(data.checkEmailConfirmed),
-          // @ts-expect-error TODO migrate once updated
+          // @ts-expect-error not included in types atm
           topicsEnabled: Boolean(data.topicsEnabled),
         }
       } catch (e) {
