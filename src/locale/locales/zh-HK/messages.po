@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-13 03:02\n"
+"PO-Revision-Date: 2025-02-13 04:06\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -6159,7 +6159,7 @@ msgstr "揀選你喺訂閱嘅動態源度要翻譯嘅目標語言"
 
 #: src/view/com/util/forms/DropdownButton.tsx:297
 msgid "Selects option {0} of {numItems}"
-msgstr "第 {0} 個選項，共 {numItems} 個"
+msgstr "揀算第 {0} 個選項（共 {numItems} 個）"
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
@@ -6447,11 +6447,11 @@ msgstr "顯示警告兼且喺動態源度篩選"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:810
 msgid "Shows information about when this post was created"
-msgstr "顯示呢條帖文嘅創建時間"
+msgstr "顯示關於呢條帖文嘅建立時間資訊"
 
 #: src/screens/Settings/Settings.tsx:104
 msgid "Shows other accounts you can switch to"
-msgstr "顯示其他你切換到嘅帳號"
+msgstr "顯示其他你切換得到嘅帳號"
 
 #: src/components/moderation/ContentHider.tsx:152
 #: src/components/moderation/PostHider.tsx:79
@@ -6927,7 +6927,7 @@ msgstr "以下標籤經已套用到你嘅內容度。"
 
 #: src/screens/ModerationInteractionSettings/index.tsx:42
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
-msgstr "下低嘅設定將會用係你發佈帖文嗰陣嘅預設值。你後面可以透過帖文編輯器對特定嘅帖文去變更呢啲設定。"
+msgstr "下低嘅設定會當成預設值套用到你新帖文度。你亦都可以出新帖文嗰陣去改返佢哋。"
 
 #: src/view/com/post-thread/PostThread.tsx:262
 #: src/view/com/post-thread/PostThread.tsx:274
@@ -7336,7 +7336,7 @@ msgstr "切換控制啓用抑或停用成人內容"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:158
 msgid "Toggles the sound"
-msgstr "切換音量狀態"
+msgstr "切換聲音"
 
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
@@ -7724,7 +7724,7 @@ msgstr "<0>@{0}</0> 跟咗嘅用戶"
 
 #: src/components/WhoCanReply.tsx:263
 msgid "users following <0>@{0}</0>"
-msgstr "<0>@{0}</0> 跟緊嘅用戶"
+msgstr "跟緊 <0>@{0}</0> 嘅用戶"
 
 #: src/screens/Messages/Settings.tsx:92
 #: src/screens/Messages/Settings.tsx:95
@@ -8242,7 +8242,7 @@ msgstr "你可以重新啓用你嘅帳號嚟繼續登入，你嘅個人檔案同
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
 msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings.</0>"
-msgstr "你可以喺 <0>設定 → 內容審覈 → 互動設定 </0> 度調整預設互動設定。"
+msgstr "你可以喺 <0>設定 → 內容審覈 → 互動設定</0> 度調整預設互動設定。"
 
 #: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:139
