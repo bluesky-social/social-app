@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-13 03:01\n"
+"PO-Revision-Date: 2025-02-13 08:59\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -6447,7 +6447,7 @@ msgstr "警告の表示とフィードからのフィルタリング"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:810
 msgid "Shows information about when this post was created"
-msgstr ""
+msgstr "この投稿がいつ作成されたかについての情報を表示する"
 
 #: src/screens/Settings/Settings.tsx:104
 msgid "Shows other accounts you can switch to"
@@ -6927,7 +6927,7 @@ msgstr "以下のラベルがあなたのコンテンツに適用されました
 
 #: src/screens/ModerationInteractionSettings/index.tsx:42
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
-msgstr ""
+msgstr "新しい投稿を作成する場合、以下の設定がデフォルトとして使用されます。個々の投稿に対する設定は編集画面から変更できます。"
 
 #: src/view/com/post-thread/PostThread.tsx:262
 #: src/view/com/post-thread/PostThread.tsx:274
@@ -7365,7 +7365,7 @@ msgstr "トレンド"
 #: src/components/interstitials/TrendingVideos.tsx:88
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:106
 msgid "Trending Videos"
-msgstr ""
+msgstr "話題のビデオ"
 
 #: src/view/com/util/error/ErrorScreen.tsx:103
 msgctxt "action"
@@ -7473,7 +7473,7 @@ msgstr "アカウントのフォローを解除"
 
 #: src/screens/VideoFeed/index.tsx:804
 msgid "Unfollows the user"
-msgstr ""
+msgstr "ユーザーのフォローを解除"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Unlike"
@@ -7724,7 +7724,7 @@ msgstr "<0>@{0}</0>にフォローされているユーザー"
 
 #: src/components/WhoCanReply.tsx:263
 msgid "users following <0>@{0}</0>"
-msgstr ""
+msgstr "<0>@{0}</0>をフォローしているユーザー"
 
 #: src/screens/Messages/Settings.tsx:92
 #: src/screens/Messages/Settings.tsx:95
@@ -7741,7 +7741,7 @@ msgstr "このコンテンツやプロフィールにいいねをしているユ
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:432
 msgid "Users you follow"
-msgstr ""
+msgstr "フォローしているユーザー"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:419
 msgid "Value:"
@@ -7814,11 +7814,11 @@ msgstr "ビデオゲーム"
 
 #: src/screens/VideoFeed/index.tsx:1033
 msgid "Video is paused"
-msgstr ""
+msgstr "ビデオは一時停止中です"
 
 #: src/screens/VideoFeed/index.tsx:1033
 msgid "Video is playing"
-msgstr ""
+msgstr "ビデオを再生中です"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:191
 msgid "Video not found."
@@ -7929,7 +7929,7 @@ msgstr "ブロックしたアカウントを見る"
 
 #: src/screens/Moderation/index.tsx:204
 msgid "View your default post interaction settings"
-msgstr ""
+msgstr "投稿への反応のデフォルト設定を表示"
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:56
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:77
@@ -7947,11 +7947,11 @@ msgstr "ミュートしたアカウントを見る"
 #: src/view/com/util/images/AutoSizedImage.tsx:199
 #: src/view/com/util/images/AutoSizedImage.tsx:221
 msgid "Views full image"
-msgstr ""
+msgstr "画像全体を表示"
 
 #: src/components/VideoPostCard.tsx:115
 msgid "Views video in immersive mode"
-msgstr ""
+msgstr "ビデオを没入モードで表示"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
