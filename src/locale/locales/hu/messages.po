@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-11 22:27\n"
+"PO-Revision-Date: 2025-02-13 03:01\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -168,7 +168,7 @@ msgstr "{0} hónapja"
 msgid "{0}s"
 msgstr "{0} másodperce"
 
-#: src/view/shell/desktop/LeftNav.tsx:384
+#: src/view/shell/desktop/LeftNav.tsx:387
 msgid "{count} unread items"
 msgstr "{count} olvasatlan elem"
 
@@ -365,7 +365,7 @@ msgid "7 days"
 msgstr "7 napig"
 
 #: src/Navigation.tsx:373
-#: src/screens/Settings/AboutSettings.tsx:28
+#: src/screens/Settings/AboutSettings.tsx:30
 #: src/screens/Settings/Settings.tsx:215
 #: src/screens/Settings/Settings.tsx:218
 msgid "About"
@@ -389,16 +389,16 @@ msgstr "Kisegítő lehetőségek"
 msgid "Account"
 msgstr "Fiók"
 
-#: src/view/com/profile/ProfileMenu.tsx:132
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:360
+#: src/view/com/profile/ProfileMenu.tsx:134
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:362
 msgid "Account blocked"
 msgstr "Letiltottad a fiókot"
 
-#: src/view/com/profile/ProfileMenu.tsx:145
+#: src/view/com/profile/ProfileMenu.tsx:147
 msgid "Account followed"
 msgstr "Mostantól követed a fiókot"
 
-#: src/view/com/profile/ProfileMenu.tsx:108
+#: src/view/com/profile/ProfileMenu.tsx:110
 msgid "Account muted"
 msgstr "Elnémítottad a fiókot"
 
@@ -420,15 +420,15 @@ msgid "Account removed from quick access"
 msgstr "Eltávolítottad a fiókot a listáról"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:137
-#: src/view/com/profile/ProfileMenu.tsx:122
+#: src/view/com/profile/ProfileMenu.tsx:124
 msgid "Account unblocked"
 msgstr "Feloldottad a fiók tiltását"
 
-#: src/view/com/profile/ProfileMenu.tsx:157
+#: src/view/com/profile/ProfileMenu.tsx:159
 msgid "Account unfollowed"
 msgstr "Mostantól már nem követed a fiókot"
 
-#: src/view/com/profile/ProfileMenu.tsx:98
+#: src/view/com/profile/ProfileMenu.tsx:100
 msgid "Account unmuted"
 msgstr "Feloldottad a fiók némítását"
 
@@ -477,8 +477,8 @@ msgstr "Helyettesítő szöveg hozzáadása (nem kötelező)"
 
 #: src/screens/Settings/Settings.tsx:373
 #: src/screens/Settings/Settings.tsx:376
-#: src/view/shell/desktop/LeftNav.tsx:281
-#: src/view/shell/desktop/LeftNav.tsx:285
+#: src/view/shell/desktop/LeftNav.tsx:284
+#: src/view/shell/desktop/LeftNav.tsx:288
 msgid "Add another account"
 msgstr "Fiók felvétele a listára"
 
@@ -533,8 +533,8 @@ msgstr "Vedd fel az alábbi DNS-rekordot a tartományodhoz:"
 msgid "Add this feed to your feeds"
 msgstr "Add hozzá ezt a hírfolyamot a gyűjteményedhez!"
 
-#: src/view/com/profile/ProfileMenu.tsx:243
-#: src/view/com/profile/ProfileMenu.tsx:246
+#: src/view/com/profile/ProfileMenu.tsx:253
+#: src/view/com/profile/ProfileMenu.tsx:256
 msgid "Add to Lists"
 msgstr "Felvétel listára"
 
@@ -586,6 +586,12 @@ msgstr "Mind"
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
 msgstr "Mostantól mindegyik fiókot követed!"
+
+#: src/view/screens/Search/Search.tsx:361
+#: src/view/screens/Search/Search.tsx:399
+#: src/view/screens/Search/Search.tsx:401
+msgid "All languages"
+msgstr ""
 
 #: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
@@ -751,11 +757,6 @@ msgstr "Animált GIF"
 #: src/lib/moderation/useReportOptions.ts:33
 msgid "Anti-Social Behavior"
 msgstr "Antiszociális viselkedés"
-
-#: src/view/screens/Search/Search.tsx:333
-#: src/view/screens/Search/Search.tsx:334
-msgid "Any language"
-msgstr "Bármely nyelv"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:48
 msgid "Anybody can interact"
@@ -968,25 +969,25 @@ msgid "Birthday"
 msgstr "Születésnap"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
-#: src/view/com/profile/ProfileMenu.tsx:341
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:744
+#: src/view/com/profile/ProfileMenu.tsx:376
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:776
 msgid "Block"
 msgstr "Letiltás"
 
 #: src/components/dms/ConvoMenu.tsx:250
 #: src/components/dms/ConvoMenu.tsx:253
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:603
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:605
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:615
 msgid "Block account"
 msgstr "Fiók letiltása"
 
-#: src/view/com/profile/ProfileMenu.tsx:280
-#: src/view/com/profile/ProfileMenu.tsx:287
+#: src/view/com/profile/ProfileMenu.tsx:290
+#: src/view/com/profile/ProfileMenu.tsx:297
 msgid "Block Account"
 msgstr "Fiók letiltása"
 
-#: src/view/com/profile/ProfileMenu.tsx:324
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:739
+#: src/view/com/profile/ProfileMenu.tsx:359
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:771
 msgid "Block Account?"
 msgstr "Fiók letiltása"
 
@@ -1032,8 +1033,8 @@ msgstr "Letiltott fiókok"
 msgid "Blocked Accounts"
 msgstr "Letiltott fiókok"
 
-#: src/view/com/profile/ProfileMenu.tsx:336
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:741
+#: src/view/com/profile/ProfileMenu.tsx:371
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:773
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Az általad letiltott fiókok nem képesek válaszolni a bejegyzéseidre, megemlíteni Téged vagy bármilyen egyéb módon kapcsolatba lépni Veled."
 
@@ -1053,7 +1054,7 @@ msgstr "A feljegyző letiltása nem akadályozza meg abban, hogy feljegyzéseket
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "A letiltás nyilvános. Az általad letiltott fiókok nem képesek válaszolni a bejegyzéseidre, megemlíteni Téged vagy bármilyen egyéb módon kapcsolatba lépni Veled."
 
-#: src/view/com/profile/ProfileMenu.tsx:333
+#: src/view/com/profile/ProfileMenu.tsx:368
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
 msgstr "A fiók letiltása nem fogja megakadályozni a feljegyzések hozzárendelését a saját fiókodhoz, viszont a letiltott fiók nem lesz képes válaszolni a bejegyzéseidre és egyéb módon kapcsolatba lépni Veled."
 
@@ -1141,15 +1142,19 @@ msgstr "További javaslatokat a Felfedezés oldalon találsz"
 msgid "Browse other feeds"
 msgstr "További hírfolyamok"
 
-#: src/components/TrendingTopics.tsx:176
+#: src/components/TrendingTopics.tsx:178
 msgid "Browse posts about {displayName}"
 msgstr "A(z) „{displayName}” témakörrel kapcsolatos bejegyzések"
 
-#: src/components/TrendingTopics.tsx:184
+#: src/components/TrendingTopics.tsx:186
 msgid "Browse posts tagged with {displayName}"
 msgstr "A(z) „{displayName}” címkével ellátott bejegyzések"
 
-#: src/components/TrendingTopics.tsx:222
+#: src/components/TrendingTopics.tsx:195
+msgid "Browse starter pack {displayName}"
+msgstr ""
+
+#: src/components/TrendingTopics.tsx:232
 msgid "Browse topic {displayName}"
 msgstr "A(z) „{displayName}” témakör böngészése"
 
@@ -1209,7 +1214,7 @@ msgstr "Kamera"
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:213
-#: src/view/screens/Search/Search.tsx:839
+#: src/view/screens/Search/Search.tsx:846
 #: src/view/shell/desktop/LeftNav.tsx:209
 msgid "Cancel"
 msgstr "Mégse"
@@ -1243,7 +1248,7 @@ msgid "Cancel reactivation and log out"
 msgstr "Újraaktiválás megszakítása és kilépés"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:831
+#: src/view/screens/Search/Search.tsx:838
 msgid "Cancel search"
 msgstr "Keresés megszakítása"
 
@@ -1326,7 +1331,7 @@ msgstr ""
 
 #: src/Navigation.tsx:398
 #: src/view/shell/bottom-bar/BottomBar.tsx:204
-#: src/view/shell/desktop/LeftNav.tsx:530
+#: src/view/shell/desktop/LeftNav.tsx:533
 #: src/view/shell/Drawer.tsx:422
 msgid "Chat"
 msgstr "Csevegés"
@@ -1464,8 +1469,8 @@ msgstr "Kipp 🐴 kopp 🐴"
 msgid "Close"
 msgstr "Bezárás"
 
-#: src/components/Dialog/index.web.tsx:110
-#: src/components/Dialog/index.web.tsx:252
+#: src/components/Dialog/index.web.tsx:111
+#: src/components/Dialog/index.web.tsx:253
 msgid "Close active dialog"
 msgstr "Az előtérben lévő párbeszédablak bezárása"
 
@@ -1480,6 +1485,10 @@ msgstr "Alsó kinyíló menü bezárása"
 #: src/components/dialogs/GifSelect.tsx:275
 msgid "Close dialog"
 msgstr "Párbeszédablak bezárása"
+
+#: src/view/shell/index.web.tsx:83
+msgid "Close drawer menu"
+msgstr ""
 
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
@@ -1498,17 +1507,9 @@ msgstr "Kép bezárása"
 msgid "Close image viewer"
 msgstr "Képnézegető bezárása"
 
-#: src/view/shell/index.web.tsx:69
-msgid "Close navigation footer"
-msgstr "Navigációs lábléc bezárása"
-
 #: src/components/Menu/index.tsx:298
 msgid "Close this dialog"
 msgstr "Párbeszédablak bezárása"
-
-#: src/view/shell/index.web.tsx:70
-msgid "Closes bottom navigation bar"
-msgstr "Alsó navigációs sáv bezárása"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:32
 msgid "Closes password update alert"
@@ -1558,7 +1559,7 @@ msgstr "Regisztrációs varázsló befejezése és a Bluesky használatának meg
 msgid "Complete the challenge"
 msgstr "Biztonsági kihívás"
 
-#: src/view/shell/desktop/LeftNav.tsx:496
+#: src/view/shell/desktop/LeftNav.tsx:499
 msgid "Compose new post"
 msgstr "Új bejegyzés írása"
 
@@ -1661,6 +1662,10 @@ msgstr "Letiltottad a tartalmat"
 msgid "Content filters"
 msgstr "Tartalomszűrés"
 
+#: src/screens/Search/components/ExploreRecommendations.tsx:57
+msgid "Content from across the network we think you might like."
+msgstr ""
+
 #: src/screens/Settings/LanguageSettings.tsx:251
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
 msgid "Content Languages"
@@ -1682,7 +1687,7 @@ msgstr "Tartalomfigyelmeztetés"
 msgid "Content warnings"
 msgstr "Tartalomfigyelmeztetések"
 
-#: src/components/Menu/index.web.tsx:82
+#: src/components/Menu/index.web.tsx:83
 msgid "Context menu backdrop, click to close the menu."
 msgstr "A környezetérzékeny menü háttere. Kattints ide a menü bezárásához!"
 
@@ -1717,14 +1722,15 @@ msgstr "Sütés-főzés"
 msgid "Copied"
 msgstr "Vágólapra helyezve"
 
-#: src/screens/Settings/AboutSettings.tsx:73
+#: src/screens/Settings/AboutSettings.tsx:84
 msgid "Copied build version to clipboard"
 msgstr "Buildszám a vágólapra helyezve"
 
 #: src/components/dms/MessageMenu.tsx:57
 #: src/lib/sharing.ts:25
+#: src/lib/sharing.ts:41
 #: src/view/com/modals/InviteCodes.tsx:153
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:235
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:237
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:403
 msgid "Copied to clipboard"
 msgstr "Vágólapra helyezve"
@@ -1734,7 +1740,7 @@ msgstr "Vágólapra helyezve"
 msgid "Copied!"
 msgstr "Vágólapra helyezve."
 
-#: src/screens/Settings/AboutSettings.tsx:68
+#: src/screens/Settings/AboutSettings.tsx:70
 msgid "Copies build version to clipboard"
 msgstr ""
 
@@ -1746,12 +1752,24 @@ msgstr "Másolás"
 msgid "Copy App Password"
 msgstr "Alkalmazásjelszó másolása"
 
+#: src/view/com/profile/ProfileMenu.tsx:327
+#: src/view/com/profile/ProfileMenu.tsx:330
+msgid "Copy at:// URI"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:674
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:676
+msgid "Copy author DID"
+msgstr ""
+
 #: src/components/dialogs/Embed.tsx:122
 #: src/components/dialogs/Embed.tsx:141
 msgid "Copy code"
 msgstr "Kód másolása"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:472
+#: src/view/com/profile/ProfileMenu.tsx:336
+#: src/view/com/profile/ProfileMenu.tsx:339
 msgid "Copy DID"
 msgstr "DID másolása"
 
@@ -1771,8 +1789,8 @@ msgstr "Hivatkozás másolása"
 msgid "Copy link to list"
 msgstr "Lista hivatkozásának másolása"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:444
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
 msgid "Copy link to post"
 msgstr "Bejegyzés hivatkozásának másolása"
 
@@ -1781,8 +1799,13 @@ msgstr "Bejegyzés hivatkozásának másolása"
 msgid "Copy message text"
 msgstr "Üzenet szövegének másolása"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:412
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:414
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
+msgid "Copy post at:// URI"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:422
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:424
 msgid "Copy post text"
 msgstr "Bejegyzés szövegének másolása"
 
@@ -1945,7 +1968,7 @@ msgstr "Alapértelmezett ikonok"
 #: src/screens/StarterPack/StarterPackScreen.tsx:586
 #: src/screens/StarterPack/StarterPackScreen.tsx:665
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:661
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:693
 #: src/view/screens/ProfileList.tsx:739
 msgid "Delete"
 msgstr "Törlés"
@@ -2001,8 +2024,8 @@ msgid "Delete my account"
 msgstr "Fiók törlése"
 
 #: src/view/com/composer/Composer.tsx:842
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:642
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:644
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:652
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:654
 msgid "Delete post"
 msgstr "Bejegyzés törlése"
 
@@ -2019,7 +2042,7 @@ msgstr "Kezdőcsomag törlése"
 msgid "Delete this list?"
 msgstr "Lista törlése"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:656
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
 msgid "Delete this post?"
 msgstr "Bejegyzés törlése"
 
@@ -2057,14 +2080,22 @@ msgstr "A leírás túl hosszú. A korlát {DESCRIPTION_MAX_GRAPHEMES} karakter.
 msgid "Descriptive alt text"
 msgstr "Helyettesítő szöveg"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:566
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:576
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:586
 msgid "Detach quote"
 msgstr "Idézet leválasztása"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:719
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:751
 msgid "Detach quote post?"
 msgstr "Idézet leválasztása"
+
+#: src/screens/Settings/AboutSettings.tsx:77
+msgid "Developer mode disabled"
+msgstr ""
+
+#: src/screens/Settings/AboutSettings.tsx:76
+msgid "Developer mode enabled"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:242
 #: src/screens/Settings/Settings.tsx:245
@@ -2235,7 +2266,7 @@ msgstr "Kész{extraText}"
 msgid "Double tap to close the dialog"
 msgstr "Koppints kétszer a párbeszédablak bezárásához"
 
-#: src/screens/VideoFeed/index.tsx:1039
+#: src/screens/VideoFeed/index.tsx:1041
 msgid "Double tap to like"
 msgstr "Koppints kétszer a kedveléshez"
 
@@ -2327,8 +2358,8 @@ msgstr "Hírfolyamok szerkesztése"
 msgid "Edit image"
 msgstr "Kép szerkesztése"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:623
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:636
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:633
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:646
 msgid "Edit interaction settings"
 msgstr "Kapcsolatbalépési beállítások szerkesztése"
 
@@ -2447,8 +2478,8 @@ msgid "Embed HTML code"
 msgstr "HTML-kód beágyazása"
 
 #: src/components/dialogs/Embed.tsx:97
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:451
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:461
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:463
 msgid "Embed post"
 msgstr "Bejegyzés beágyazása"
 
@@ -2602,7 +2633,7 @@ msgid "Error receiving captcha response."
 msgstr "A captcha válaszának fogadása meghiúsult."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:183
-#: src/view/screens/Search/Search.tsx:110
+#: src/view/screens/Search/Search.tsx:114
 msgid "Error:"
 msgstr "Hiba:"
 
@@ -2671,7 +2702,7 @@ msgstr "Lista kibontása"
 msgid "Expand or collapse the full post you are replying to"
 msgstr "A válasz forrásaként származó bejegyzés kibontása/összecsukása"
 
-#: src/screens/VideoFeed/index.tsx:933
+#: src/screens/VideoFeed/index.tsx:935
 msgid "Expands or collapses post text"
 msgstr ""
 
@@ -2754,7 +2785,7 @@ msgstr "A lista létrehozása meghiúsult. Ellenőrizd az internetkapcsolatot, m
 msgid "Failed to delete message"
 msgstr "Az üzenet törlése meghiúsult"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:195
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:197
 msgid "Failed to delete post, please try again"
 msgstr "A bejegyzés törlése meghiúsult. Próbáld újra!"
 
@@ -2809,7 +2840,7 @@ msgstr "A küldés meghiúsult"
 msgid "Failed to submit appeal, please try again."
 msgstr "A fellebbezés elküldése meghiúsult. Próbáld újra!"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:224
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:226
 msgid "Failed to toggle thread mute, please try again"
 msgstr "A beszélgetés némításának ki-/bekapcsolása meghiúsult. Próbáld újra!"
 
@@ -2855,8 +2886,8 @@ msgstr "Hírfolyam ki/be"
 msgid "Feedback"
 msgstr "Visszajelzés"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:266
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:275
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:268
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:277
 msgid "Feedback sent!"
 msgstr "Megkaptuk a visszajelzést!"
 
@@ -2865,8 +2896,8 @@ msgstr "Megkaptuk a visszajelzést!"
 #: src/view/screens/Feeds.tsx:508
 #: src/view/screens/Profile.tsx:238
 #: src/view/screens/SavedFeeds.tsx:96
-#: src/view/screens/Search/Search.tsx:522
-#: src/view/shell/desktop/LeftNav.tsx:640
+#: src/view/screens/Search/Search.tsx:518
+#: src/view/shell/desktop/LeftNav.tsx:643
 #: src/view/shell/Drawer.tsx:481
 msgid "Feeds"
 msgstr "Hírfolyamok"
@@ -2880,7 +2911,7 @@ msgstr "A hírfolyamok olyan egyéni algoritmusok, amelyeket felhasználók ép�
 msgid "Feeds updated!"
 msgstr "A hírfolyamok frissítése megtörtént"
 
-#: src/screens/Search/components/ExploreRecommendations.tsx:54
+#: src/screens/Search/components/ExploreRecommendations.tsx:63
 msgid "Feeds we think you might like."
 msgstr "További ajánlott hírfolyamok."
 
@@ -2891,6 +2922,14 @@ msgstr "A fájl mentése sikeresen megtörtént"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
 msgstr "Kiszűrés a hírfolyamokból"
+
+#: src/view/screens/Search/Search.tsx:397
+msgid "Filter search by language"
+msgstr ""
+
+#: src/view/screens/Search/Search.tsx:367
+msgid "Filter search by language (currently: {currentLanguageLabel})"
+msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:303
 msgid "Finalizing"
@@ -2908,7 +2947,7 @@ msgstr "Követendő fiókok felfedezése"
 msgid "Find people to follow"
 msgstr "Követendő személyek felfedezése"
 
-#: src/view/screens/Search/Search.tsx:588
+#: src/view/screens/Search/Search.tsx:579
 msgid "Find posts and users on Bluesky"
 msgstr "Bejegyzések és felhasználók felfedezése a Blueskyon"
 
@@ -2929,7 +2968,7 @@ msgstr "Rugalmas"
 #: src/components/ProfileHoverCard/index.web.tsx:449
 #: src/components/ProfileHoverCard/index.web.tsx:460
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:234
-#: src/screens/VideoFeed/index.tsx:821
+#: src/screens/VideoFeed/index.tsx:823
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:132
 msgid "Follow"
 msgstr "Követés"
@@ -2961,8 +3000,8 @@ msgstr "Kövess 10 fiókot!"
 msgid "Follow 7 accounts"
 msgstr "Kövess 7 fiókot!"
 
-#: src/view/com/profile/ProfileMenu.tsx:222
-#: src/view/com/profile/ProfileMenu.tsx:233
+#: src/view/com/profile/ProfileMenu.tsx:232
+#: src/view/com/profile/ProfileMenu.tsx:243
 msgid "Follow Account"
 msgstr "Fiók követése"
 
@@ -3015,7 +3054,7 @@ msgstr "Ismert követők"
 #: src/components/ProfileHoverCard/index.web.tsx:448
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
-#: src/screens/VideoFeed/index.tsx:819
+#: src/screens/VideoFeed/index.tsx:821
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
 #: src/view/screens/SavedFeeds.tsx:422
@@ -3146,8 +3185,8 @@ msgstr "A törvény vagy a felhasználási feltételek egyértelmű megszegése"
 #: src/components/moderation/ScreenHider.tsx:163
 #: src/screens/Profile/ProfileFeed/index.tsx:89
 #: src/screens/VideoFeed/components/Header.tsx:163
-#: src/screens/VideoFeed/index.tsx:1100
-#: src/screens/VideoFeed/index.tsx:1104
+#: src/screens/VideoFeed/index.tsx:1102
+#: src/screens/VideoFeed/index.tsx:1106
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
 #: src/view/screens/ProfileList.tsx:1009
@@ -3273,7 +3312,7 @@ msgstr "Rejtett tartalom"
 msgid "Hidden by your moderation settings."
 msgstr "Elrejtve a moderálási beállítások alapján."
 
-#: src/components/ListCard.tsx:130
+#: src/components/ListCard.tsx:131
 msgid "Hidden list"
 msgstr "Rejtett lista"
 
@@ -3287,7 +3326,7 @@ msgstr "Rejtett lista"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:137
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:672
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:704
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "Hide"
 msgstr "Elrejtés"
@@ -3297,27 +3336,27 @@ msgctxt "action"
 msgid "Hide"
 msgstr "Elrejtés"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:523
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:529
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:533
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 msgid "Hide post for me"
 msgstr "Bejegyzés elrejtése helyileg"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:540
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:550
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:560
 msgid "Hide reply for everyone"
 msgstr "Válasz elrejtése mindenkinek"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:522
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:528
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:532
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:538
 msgid "Hide reply for me"
 msgstr "Válasz elrejtése helyileg"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:699
 msgid "Hide this post?"
 msgstr "Bejegyzés elrejtése"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:729
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:699
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:761
 msgid "Hide this reply?"
 msgstr "Válasz elrejtése"
 
@@ -3381,7 +3420,7 @@ msgstr "Egy pillanat! A videófeltöltés lehetősége még nem mindenki számá
 #: src/Navigation.tsx:612
 #: src/Navigation.tsx:632
 #: src/view/shell/bottom-bar/BottomBar.tsx:162
-#: src/view/shell/desktop/LeftNav.tsx:584
+#: src/view/shell/desktop/LeftNav.tsx:587
 #: src/view/shell/Drawer.tsx:396
 msgid "Home"
 msgstr "Kezdőlap"
@@ -3447,7 +3486,7 @@ msgstr "A lista törlése nem vonható vissza."
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
 msgstr "Ha rendelkezel saját tartománnyal, akkor az is lehet a felhasználóneved. Így magadtól is hitelesítheted a kiléted. <0>További információ</0>."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:690
 msgid "If you remove this post, you won't be able to recover it."
 msgstr "A bejegyzés törlése nem vonható vissza."
 
@@ -3658,7 +3697,7 @@ msgstr "Nagyobb"
 
 #: src/screens/Hashtag.tsx:95
 #: src/screens/Topic.tsx:77
-#: src/view/screens/Search/Search.tsx:506
+#: src/view/screens/Search/Search.tsx:502
 msgid "Latest"
 msgstr "Legújabb"
 
@@ -3821,7 +3860,7 @@ msgstr "Lista profilképe"
 msgid "List blocked"
 msgstr "Letiltottad a listán szereplő személyeket"
 
-#: src/components/ListCard.tsx:150
+#: src/components/ListCard.tsx:151
 #: src/view/com/feeds/FeedSourceCard.tsx:255
 msgid "List by {0}"
 msgstr "Lista – Szerző: {0}"
@@ -3866,7 +3905,7 @@ msgstr "Feloldottad a listán szereplő személyek némítását"
 #: src/view/screens/Lists.tsx:62
 #: src/view/screens/Profile.tsx:232
 #: src/view/screens/Profile.tsx:240
-#: src/view/shell/desktop/LeftNav.tsx:658
+#: src/view/shell/desktop/LeftNav.tsx:661
 #: src/view/shell/Drawer.tsx:496
 msgid "Lists"
 msgstr "Listák"
@@ -4001,7 +4040,6 @@ msgid "Mentions"
 msgstr "Említések"
 
 #: src/components/Menu/index.tsx:103
-#: src/view/screens/Search/Search.tsx:808
 msgid "Menu"
 msgstr "Menü"
 
@@ -4052,7 +4090,7 @@ msgstr "Moderálás"
 msgid "Moderation details"
 msgstr "Moderálási részletek"
 
-#: src/components/ListCard.tsx:149
+#: src/components/ListCard.tsx:150
 #: src/view/com/modals/UserAddRemoveLists.tsx:222
 msgid "Moderation list by {0}"
 msgstr "Moderálólista – Szerző: {0}"
@@ -4109,7 +4147,7 @@ msgstr "Továbbiak"
 msgid "More feeds"
 msgstr "További hírfolyamok"
 
-#: src/view/com/profile/ProfileMenu.tsx:179
+#: src/view/com/profile/ProfileMenu.tsx:189
 #: src/view/screens/ProfileList.tsx:721
 msgid "More options"
 msgstr "További lehetőségek"
@@ -4143,8 +4181,8 @@ msgstr "Elnémítás"
 msgid "Mute {tag}"
 msgstr "A(z) {tag} címke elnémítása"
 
-#: src/view/com/profile/ProfileMenu.tsx:259
-#: src/view/com/profile/ProfileMenu.tsx:266
+#: src/view/com/profile/ProfileMenu.tsx:269
+#: src/view/com/profile/ProfileMenu.tsx:276
 msgid "Mute Account"
 msgstr "Fiók elnémítása"
 
@@ -4193,13 +4231,13 @@ msgstr "Szó elnémítása csak címkékben"
 msgid "Mute this word until you unmute it"
 msgstr "Szó elnémítása a némítás feloldásáig"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:489
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:493
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:499
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
 msgid "Mute thread"
 msgstr "Válaszlánc elnémítása"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:505
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:513
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:515
 msgid "Mute words & tags"
 msgstr "Szavak és címkék elnémítása"
 
@@ -4340,7 +4378,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "Új bejegyzés"
 
-#: src/view/shell/desktop/LeftNav.tsx:504
+#: src/view/shell/desktop/LeftNav.tsx:507
 msgctxt "action"
 msgid "New Post"
 msgstr "Új bejegyzés"
@@ -4470,9 +4508,9 @@ msgid "No results found for \"{query}\""
 msgstr "A(z) „{query}” kifejezésre nincs találat"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
-#: src/view/screens/Search/Search.tsx:227
-#: src/view/screens/Search/Search.tsx:265
-#: src/view/screens/Search/Search.tsx:310
+#: src/view/screens/Search/Search.tsx:231
+#: src/view/screens/Search/Search.tsx:269
+#: src/view/screens/Search/Search.tsx:314
 msgid "No results found for {query}"
 msgstr "A(z) „{query}” kifejezésre nincs találat"
 
@@ -4521,8 +4559,8 @@ msgstr "Ez a tartalom nem található"
 msgid "Not right now"
 msgstr "Talán máskor"
 
-#: src/view/com/profile/ProfileMenu.tsx:348
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:686
+#: src/view/com/profile/ProfileMenu.tsx:383
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:718
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:367
 msgid "Note about sharing"
 msgstr "Korlátozott láthatóság"
@@ -4559,7 +4597,7 @@ msgstr "Értesítési hangok"
 #: src/Navigation.tsx:622
 #: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:230
-#: src/view/shell/desktop/LeftNav.tsx:621
+#: src/view/shell/desktop/LeftNav.tsx:624
 #: src/view/shell/Drawer.tsx:449
 msgid "Notifications"
 msgstr "Értesítések"
@@ -4683,7 +4721,7 @@ msgstr "Profilképkészítő megnyitása"
 msgid "Open conversation options"
 msgstr "Beszélgetési beállítások megnyitása"
 
-#: src/components/Layout/Header/index.tsx:149
+#: src/components/Layout/Header/index.tsx:150
 msgid "Open drawer menu"
 msgstr "Oldalsó menü megnyitása"
 
@@ -4892,7 +4930,7 @@ msgid "Pause video"
 msgstr "Videó szüneteltetése"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/Search/Search.tsx:516
+#: src/view/screens/Search/Search.tsx:512
 msgid "People"
 msgstr "Személyek"
 
@@ -4951,8 +4989,8 @@ msgstr "Kitűzés a kezdőlapra"
 msgid "Pin to Home"
 msgstr "Kitűzés a kezdőlapra"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:380
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:387
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:390
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:397
 msgid "Pin to your profile"
 msgstr "Kitűzés a profilodra"
 
@@ -5114,7 +5152,7 @@ msgstr "{0} bejegyzése"
 msgid "Post by @{0}"
 msgstr "@{0} bejegyzése"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:175
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:177
 msgid "Post deleted"
 msgstr "Törölted a bejegyzést"
 
@@ -5239,8 +5277,8 @@ msgid "Privacy and Security"
 msgstr "Adatvédelem és biztonság"
 
 #: src/Navigation.tsx:281
-#: src/screens/Settings/AboutSettings.tsx:45
-#: src/screens/Settings/AboutSettings.tsx:48
+#: src/screens/Settings/AboutSettings.tsx:47
+#: src/screens/Settings/AboutSettings.tsx:50
 #: src/view/screens/PrivacyPolicy.tsx:31
 #: src/view/shell/Drawer.tsx:629
 #: src/view/shell/Drawer.tsx:630
@@ -5262,7 +5300,7 @@ msgid "profile"
 msgstr "profil"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:275
-#: src/view/shell/desktop/LeftNav.tsx:676
+#: src/view/shell/desktop/LeftNav.tsx:679
 #: src/view/shell/Drawer.tsx:71
 #: src/view/shell/Drawer.tsx:521
 msgid "Profile"
@@ -5272,10 +5310,6 @@ msgstr "Profil"
 #: src/view/com/modals/EditProfile.tsx:124
 msgid "Profile updated"
 msgstr "Frissítetted a profilodat"
-
-#: src/view/screens/Search/Search.tsx:810
-msgid "Provides access to navigation links and settings"
-msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:253
 msgid "Public"
@@ -5308,11 +5342,11 @@ msgstr "A QR-kód fényképalbumba mentése megtörtént"
 msgid "Quote post"
 msgstr "Idézés"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:303
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:305
 msgid "Quote post was re-attached"
 msgstr "Visszakapcsoltad az idézetet"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:302
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:304
 msgid "Quote post was successfully detached"
 msgstr "Leválasztottad az idézetet"
 
@@ -5346,8 +5380,8 @@ msgstr "Véletlenszerű (más néven: „Közzétevői rulett”)"
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr "Korlát átlépve – rövid időn belül túl sokszor próbáltad megváltoztatni a felhasználónevedet. Várj egy kicsit, mielőtt újra megkísérelnéd!"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:565
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:575
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:585
 msgid "Re-attach quote"
 msgstr "Idézet visszakapcsolása"
 
@@ -5355,11 +5389,11 @@ msgstr "Idézet visszakapcsolása"
 msgid "Reactivate your account"
 msgstr "Fiók újraaktiválása"
 
-#: src/screens/VideoFeed/index.tsx:934
+#: src/screens/VideoFeed/index.tsx:936
 msgid "Read less"
 msgstr "Kevesebb"
 
-#: src/screens/VideoFeed/index.tsx:934
+#: src/screens/VideoFeed/index.tsx:936
 msgid "Read more"
 msgstr "Több"
 
@@ -5386,11 +5420,11 @@ msgstr "Fellebbezési ok"
 msgid "Reason:"
 msgstr "Indoklás:"
 
-#: src/view/screens/Search/Search.tsx:986
+#: src/view/screens/Search/Search.tsx:992
 msgid "Recent Searches"
 msgstr "Keresési előzmények"
 
-#: src/screens/Search/components/ExploreRecommendations.tsx:50
+#: src/screens/Search/components/ExploreRecommendations.tsx:52
 msgid "Recommended"
 msgstr "Javasolt"
 
@@ -5479,11 +5513,11 @@ msgstr "Kép eltávolítása"
 msgid "Remove mute word from your list"
 msgstr "Szó némításának feloldása"
 
-#: src/view/screens/Search/Search.tsx:1034
+#: src/view/screens/Search/Search.tsx:1040
 msgid "Remove profile"
 msgstr "Profil eltávolítása"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:284
 msgid "Remove quote"
 msgstr "Idézet eltávolítása"
 
@@ -5528,11 +5562,11 @@ msgstr "Eltávolítottad a hírfolyamot az elmentett hírfolyamok közül"
 msgid "Removed from your feeds"
 msgstr "Eltávolítottad a hírfolyamot a gyűjteményedből"
 
-#: src/view/screens/Search/Search.tsx:1036
+#: src/view/screens/Search/Search.tsx:1042
 msgid "Removes profile from search history"
 msgstr ""
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
 msgid "Removes quoted post"
 msgstr "Idézett bejegyzés eltávolítása"
 
@@ -5606,11 +5640,11 @@ msgctxt "description"
 msgid "Reply to you"
 msgstr "Válasz a bejegyzésedre"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:333
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:335
 msgid "Reply visibility updated"
 msgstr "Frissítetted a válasz láthatóságát"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:332
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:334
 msgid "Reply was successfully hidden"
 msgstr "Elrejtetted a választ"
 
@@ -5620,8 +5654,8 @@ msgstr "Elrejtetted a választ"
 msgid "Report"
 msgstr "Jelentés"
 
-#: src/view/com/profile/ProfileMenu.tsx:299
-#: src/view/com/profile/ProfileMenu.tsx:302
+#: src/view/com/profile/ProfileMenu.tsx:309
+#: src/view/com/profile/ProfileMenu.tsx:312
 msgid "Report Account"
 msgstr "Fiók jelentése"
 
@@ -5648,8 +5682,8 @@ msgstr "Lista jelentése"
 msgid "Report message"
 msgstr "Üzenet jelentése"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:611
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:621
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:623
 msgid "Report post"
 msgstr "Bejegyzés jelentése"
 
@@ -5833,7 +5867,7 @@ msgstr "Vissza a kezdőlapra"
 
 #: src/screens/Profile/ProfileFeed/index.tsx:90
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:540
-#: src/screens/VideoFeed/index.tsx:1101
+#: src/screens/VideoFeed/index.tsx:1103
 #: src/view/screens/NotFound.tsx:60
 #: src/view/screens/ProfileList.tsx:1010
 msgid "Returns to previous page"
@@ -5945,9 +5979,10 @@ msgstr "Vissza a tetejére"
 #: src/components/forms/SearchInput.tsx:36
 #: src/Navigation.tsx:617
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
-#: src/view/screens/Search/Search.tsx:570
+#: src/view/screens/Search/Search.tsx:561
+#: src/view/screens/Search/Search.tsx:807
 #: src/view/shell/bottom-bar/BottomBar.tsx:182
-#: src/view/shell/desktop/LeftNav.tsx:602
+#: src/view/shell/desktop/LeftNav.tsx:605
 #: src/view/shell/Drawer.tsx:370
 msgid "Search"
 msgstr "Keresés"
@@ -5968,13 +6003,17 @@ msgstr "Keresés: „{interestsDisplayName}”{activeText}"
 msgid "Search for \"{query}\""
 msgstr "Keresés: {query}"
 
-#: src/view/screens/Search/Search.tsx:932
+#: src/view/screens/Search/Search.tsx:938
 msgid "Search for \"{searchText}\""
 msgstr "Keresés: {searchText}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:474
 msgid "Search for feeds that you want to suggest to others."
 msgstr "Ajánlható hírfolyamok keresése."
+
+#: src/view/screens/Search/Search.tsx:832
+msgid "Search for posts, users, or feeds"
+msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
 msgid "Search for users"
@@ -6177,8 +6216,8 @@ msgstr "Jelentés küldése neki: {0}"
 msgid "Send verification email"
 msgstr "Visszaigazoló email küldése"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:423
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:426
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:433
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:436
 msgid "Send via direct message"
 msgstr "Továbbítás személyes üzenetben"
 
@@ -6212,7 +6251,7 @@ msgstr "Email cím beállítása jelszóvisszaállításhoz"
 
 #: src/Navigation.tsx:170
 #: src/screens/Settings/Settings.tsx:80
-#: src/view/shell/desktop/LeftNav.tsx:694
+#: src/view/shell/desktop/LeftNav.tsx:697
 #: src/view/shell/Drawer.tsx:534
 msgid "Settings"
 msgstr "Beállítások"
@@ -6234,10 +6273,10 @@ msgstr "Szexuális tartalom"
 #: src/screens/StarterPack/StarterPackScreen.tsx:423
 #: src/screens/StarterPack/StarterPackScreen.tsx:595
 #: src/screens/Topic.tsx:102
-#: src/view/com/profile/ProfileMenu.tsx:195
-#: src/view/com/profile/ProfileMenu.tsx:204
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
+#: src/view/com/profile/ProfileMenu.tsx:205
+#: src/view/com/profile/ProfileMenu.tsx:214
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:444
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:356
 #: src/view/screens/ProfileList.tsx:483
 msgid "Share"
@@ -6256,8 +6295,8 @@ msgstr "Meséld el, hogy mi történt Veled!"
 msgid "Share a fun fact!"
 msgstr "Mondj el egy érdekességet!"
 
-#: src/view/com/profile/ProfileMenu.tsx:353
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:691
+#: src/view/com/profile/ProfileMenu.tsx:388
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:723
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:372
 msgid "Share anyway"
 msgstr "Továbbítás mégis"
@@ -6337,8 +6376,8 @@ msgstr "Jelvény mutatása és kiszűrés a hírfolyamokból"
 msgid "Show hidden replies"
 msgstr "Elrejtett válaszok mutatása"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:473
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:475
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:483
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:485
 msgid "Show less like this"
 msgstr "Kevesebb ilyet mutasson"
 
@@ -6352,8 +6391,8 @@ msgstr "Lista mutatása mégis"
 msgid "Show More"
 msgstr "Továbbiak"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:465
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:467
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:475
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:477
 msgid "Show more like this"
 msgstr "Több ilyet mutasson"
 
@@ -6383,8 +6422,8 @@ msgstr "Válaszok megjelenítése egymásba ágyazva"
 msgid "Show replies by people you follow before all other replies"
 msgstr "Az Általad követett személyek válaszainak megjelenítése legfelül egy bejegyzés alatt"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:549
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:559
 msgid "Show reply for everyone"
 msgstr "Válasz mutatása mindenkinek"
 
@@ -6457,8 +6496,8 @@ msgstr "Jelentkezz be vagy hozz létre egy Bluesky-fiókot!"
 #: src/screens/Settings/Settings.tsx:227
 #: src/screens/Settings/Settings.tsx:259
 #: src/view/shell/desktop/LeftNav.tsx:208
-#: src/view/shell/desktop/LeftNav.tsx:288
 #: src/view/shell/desktop/LeftNav.tsx:291
+#: src/view/shell/desktop/LeftNav.tsx:294
 msgid "Sign out"
 msgstr "Kijelentkezés"
 
@@ -6620,8 +6659,8 @@ msgstr "Kezdőcsomagok"
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "A kezdőcsomagokkal könnyen megoszthatod a kedvenc hírfolyamaidat és személyeidet."
 
-#: src/screens/Settings/AboutSettings.tsx:53
-#: src/screens/Settings/AboutSettings.tsx:56
+#: src/screens/Settings/AboutSettings.tsx:55
+#: src/screens/Settings/AboutSettings.tsx:58
 msgid "Status Page"
 msgstr "Állapot"
 
@@ -6699,7 +6738,7 @@ msgstr "Támogatás"
 #: src/screens/Settings/Settings.tsx:102
 #: src/screens/Settings/Settings.tsx:116
 #: src/screens/Settings/Settings.tsx:412
-#: src/view/shell/desktop/LeftNav.tsx:243
+#: src/view/shell/desktop/LeftNav.tsx:246
 msgid "Switch account"
 msgstr "Fiókváltás"
 
@@ -6712,7 +6751,7 @@ msgstr "Fiókváltás"
 msgid "Switch accounts"
 msgstr "Fiókváltás"
 
-#: src/view/shell/desktop/LeftNav.tsx:251
+#: src/view/shell/desktop/LeftNav.tsx:254
 msgid "Switch to {0}"
 msgstr "Váltás rá: {0}"
 
@@ -6721,8 +6760,8 @@ msgstr "Váltás rá: {0}"
 msgid "System"
 msgstr "Rendszer"
 
-#: src/screens/Settings/AboutSettings.tsx:60
-#: src/screens/Settings/AboutSettings.tsx:63
+#: src/screens/Settings/AboutSettings.tsx:62
+#: src/screens/Settings/AboutSettings.tsx:65
 #: src/screens/Settings/Settings.tsx:318
 msgid "System log"
 msgstr "Rendszernapló"
@@ -6771,8 +6810,8 @@ msgid "Terms"
 msgstr "Feltételek"
 
 #: src/Navigation.tsx:286
-#: src/screens/Settings/AboutSettings.tsx:37
-#: src/screens/Settings/AboutSettings.tsx:40
+#: src/screens/Settings/AboutSettings.tsx:39
+#: src/screens/Settings/AboutSettings.tsx:42
 #: src/view/screens/TermsOfService.tsx:31
 #: src/view/shell/Drawer.tsx:622
 #: src/view/shell/Drawer.tsx:624
@@ -6832,12 +6871,12 @@ msgstr "Ez a kezdőcsomag nem található."
 msgid "That's all, folks!"
 msgstr "Ez van, srácok!"
 
-#: src/screens/VideoFeed/index.tsx:1073
+#: src/screens/VideoFeed/index.tsx:1075
 msgid "That's everything!"
 msgstr "Ez minden!"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
-#: src/view/com/profile/ProfileMenu.tsx:329
+#: src/view/com/profile/ProfileMenu.tsx:364
 msgid "The account will be able to interact with you after unblocking."
 msgstr "A fiók ismét képes lesz kapcsolatba lépni veled, ha feloldod a letiltását."
 
@@ -6998,13 +7037,13 @@ msgstr "A hírfolyamok frissítése meghiúsult. Ellenőrizd az internetkapcsola
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:141
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:91
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:102
-#: src/view/com/profile/ProfileMenu.tsx:102
-#: src/view/com/profile/ProfileMenu.tsx:112
-#: src/view/com/profile/ProfileMenu.tsx:126
-#: src/view/com/profile/ProfileMenu.tsx:136
-#: src/view/com/profile/ProfileMenu.tsx:149
-#: src/view/com/profile/ProfileMenu.tsx:161
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:364
+#: src/view/com/profile/ProfileMenu.tsx:104
+#: src/view/com/profile/ProfileMenu.tsx:114
+#: src/view/com/profile/ProfileMenu.tsx:128
+#: src/view/com/profile/ProfileMenu.tsx:138
+#: src/view/com/profile/ProfileMenu.tsx:151
+#: src/view/com/profile/ProfileMenu.tsx:163
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:366
 msgid "There was an issue! {0}"
 msgstr "Hiba történt! {0}"
 
@@ -7163,12 +7202,12 @@ msgstr ""
 msgid "This post has been deleted."
 msgstr "Ezt a bejegyzést törölték."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:720
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:369
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "Ez a bejegyzés csak a bejelentkezett felhasználók számára látható; a kijelentkezett felhasználók számára nem."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:701
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Ez a bejegyzés el lesz rejtve a hírfolyamokból és a válaszláncokból. Ez a művelet nem vonható vissza."
 
@@ -7176,11 +7215,11 @@ msgstr "Ez a bejegyzés el lesz rejtve a hírfolyamokból és a válaszláncokb�
 msgid "This post's author has disabled quote posts."
 msgstr "A szerző letiltotta az idézést."
 
-#: src/view/com/profile/ProfileMenu.tsx:350
+#: src/view/com/profile/ProfileMenu.tsx:385
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "Ez a profil csak a bejelentkezett felhasználók számára látható; a kijelentkezett felhasználók számára nem."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:731
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:763
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr "Ez a válasz egy rejtett részlegbe lesz sorolva a válaszláncok legalján és se Te, sem pedig mások nem fognak értesítéseket kapni a jövőbeli válaszokról."
 
@@ -7233,7 +7272,7 @@ msgstr "Ezzel a(z) „{0}” kifejezés el lesz távolítva az elnémított szav
 msgid "This will remove @{0} from the quick access list."
 msgstr "Ezzel @{0} el lesz távolítva a fióklistáról."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:721
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:753
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "Ezzel el fogod távolítani a bejegyzést az idézésből mindenki számára, ami egy helyőrzővel lesz helyettesítve."
 
@@ -7302,7 +7341,7 @@ msgstr ""
 
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
-#: src/view/screens/Search/Search.tsx:496
+#: src/view/screens/Search/Search.tsx:492
 msgid "Top"
 msgstr "Felkapott"
 
@@ -7314,8 +7353,8 @@ msgstr "Témakör"
 #: src/components/dms/MessageMenu.tsx:105
 #: src/view/com/post-thread/PostThreadItem.tsx:775
 #: src/view/com/post-thread/PostThreadItem.tsx:778
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:404
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:406
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:414
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:416
 msgid "Translate"
 msgstr "Lefordítás"
 
@@ -7385,7 +7424,7 @@ msgstr "A törlés meghiúsult"
 #: src/components/dms/MessagesListBlockedFooter.tsx:118
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:197
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
-#: src/view/com/profile/ProfileMenu.tsx:341
+#: src/view/com/profile/ProfileMenu.tsx:376
 #: src/view/screens/ProfileList.tsx:694
 msgid "Unblock"
 msgstr "Tiltás feloldása"
@@ -7400,13 +7439,13 @@ msgstr "Tiltás feloldása"
 msgid "Unblock account"
 msgstr "Fiók tiltásának feloldása"
 
-#: src/view/com/profile/ProfileMenu.tsx:279
-#: src/view/com/profile/ProfileMenu.tsx:285
+#: src/view/com/profile/ProfileMenu.tsx:289
+#: src/view/com/profile/ProfileMenu.tsx:295
 msgid "Unblock Account"
 msgstr "Fiók tiltásának feloldása"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
-#: src/view/com/profile/ProfileMenu.tsx:323
+#: src/view/com/profile/ProfileMenu.tsx:358
 msgid "Unblock Account?"
 msgstr "Fiók tiltásának feloldása"
 
@@ -7428,12 +7467,12 @@ msgstr "Követés megszüntetése"
 msgid "Unfollow {0}"
 msgstr "{0} követésének megszüntetése"
 
-#: src/view/com/profile/ProfileMenu.tsx:221
 #: src/view/com/profile/ProfileMenu.tsx:231
+#: src/view/com/profile/ProfileMenu.tsx:241
 msgid "Unfollow Account"
 msgstr "Fiók követésének megszüntetése"
 
-#: src/screens/VideoFeed/index.tsx:803
+#: src/screens/VideoFeed/index.tsx:804
 msgid "Unfollows the user"
 msgstr ""
 
@@ -7460,8 +7499,8 @@ msgstr "Némítás feloldása"
 msgid "Unmute {tag}"
 msgstr "A(z) {tag} némításának feloldása"
 
-#: src/view/com/profile/ProfileMenu.tsx:258
-#: src/view/com/profile/ProfileMenu.tsx:264
+#: src/view/com/profile/ProfileMenu.tsx:268
+#: src/view/com/profile/ProfileMenu.tsx:274
 msgid "Unmute Account"
 msgstr "Fiók némításának feloldása"
 
@@ -7469,8 +7508,8 @@ msgstr "Fiók némításának feloldása"
 msgid "Unmute conversation"
 msgstr "Beszélgetés némításának feloldása"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:489
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:493
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:499
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
 msgid "Unmute thread"
 msgstr "Válaszlánc némításának feloldása"
 
@@ -7492,8 +7531,8 @@ msgstr "Kitűzés feloldása"
 msgid "Unpin from home"
 msgstr "Kitűzés feloldása a kezdőlapról"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:379
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:386
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:389
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:396
 msgid "Unpin from profile"
 msgstr "Kitűzés feloldása a profilodról"
 
@@ -7548,11 +7587,11 @@ msgstr "<0>{displayName}</0> listatagságának frissítése"
 msgid "Update to {domain}"
 msgstr "Frissítés erre: {domain}"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:306
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:308
 msgid "Updating quote attachment failed"
 msgstr "Az idézet leválasztása/visszakapcsolása meghiúsult"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:336
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:338
 msgid "Updating reply visibility failed"
 msgstr "A válasz láthatóságának frissítése meghiúsult"
 
@@ -7747,8 +7786,8 @@ msgstr "Email-cím visszaigazolása"
 msgid "Verify Your Email"
 msgstr "Email-cím visszaigazolása"
 
-#: src/screens/Settings/AboutSettings.tsx:67
-#: src/screens/Settings/AboutSettings.tsx:77
+#: src/screens/Settings/AboutSettings.tsx:69
+#: src/screens/Settings/AboutSettings.tsx:88
 msgid "Version {appVersion}"
 msgstr "Verziószám: {appVersion}"
 
@@ -7774,11 +7813,11 @@ msgstr "{0} videója: {text}"
 msgid "Video Games"
 msgstr "Videojátékok"
 
-#: src/screens/VideoFeed/index.tsx:1031
+#: src/screens/VideoFeed/index.tsx:1033
 msgid "Video is paused"
 msgstr "Videó szüneteltetve"
 
-#: src/screens/VideoFeed/index.tsx:1031
+#: src/screens/VideoFeed/index.tsx:1033
 msgid "Video is playing"
 msgstr "Videó lejátszása folyamatban"
 
@@ -8007,7 +8046,7 @@ msgstr "Sajnáljuk, de a lista lekérése meghiúsult. Ha a probléma fennáll, 
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "Sajnáljuk, de az elnémított szavak listájának betöltése meghiúsult. Próbáld újra!"
 
-#: src/view/screens/Search/Search.tsx:201
+#: src/view/screens/Search/Search.tsx:205
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Sajnáljuk, de a keresés meghiúsult. Próbáld újra egy pár percen belül!"
 
@@ -8144,11 +8183,11 @@ msgstr "Igen – deaktiválás"
 msgid "Yes, delete this starter pack"
 msgstr "Igen – kezdőcsomag törlése"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:724
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:756
 msgid "Yes, detach"
 msgstr "Igen – leválasztás"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:734
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:766
 msgid "Yes, hide"
 msgstr "Igen – elrejtés"
 
@@ -8362,11 +8401,11 @@ msgstr "Korábban deaktiváltad a(z) @{0} fiókot."
 msgid "You will be signed out of all your accounts."
 msgstr "Ezzel az összes fiókból ki fogsz jelentkezni."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:217
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:219
 msgid "You will no longer receive notifications for this thread"
 msgstr "Mostantól nem fogsz értesítéseket kapni erről a válaszláncról"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:213
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:215
 msgid "You will now receive notifications for this thread"
 msgstr "Mostantól fogsz értesítéseket kapni erről a válaszláncról"
 
@@ -8444,7 +8483,7 @@ msgstr "Elérted a napi videófeltöltési korlátot (bájthatár meghaladva)"
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "Elérted a napi videófeltöltési korlátot (videómennyiség meghaladva)"
 
-#: src/screens/VideoFeed/index.tsx:1082
+#: src/screens/VideoFeed/index.tsx:1084
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "Kifogytunk a videókból. Mit szólnál egy kis szünethez?"
 
