@@ -8,7 +8,7 @@ msgstr ""
 "Language: it\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-13 10:55\n"
+"PO-Revision-Date: 2025-02-13 13:18\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -300,7 +300,7 @@ msgstr "{profileName} si è iscritto a Bluesky {0} fa"
 
 #: src/components/NewskieDialog.tsx:111
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
-msgstr "{profileName} si è iscritto a Bluesky usando uno starter pack {0} giorno/i fa"
+msgstr "{profileName} si è iscritto a Bluesky usando uno starter pack {0} fa"
 
 #: src/screens/StarterPack/Wizard/index.tsx:449
 msgctxt "profiles"
