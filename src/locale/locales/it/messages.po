@@ -8,7 +8,7 @@ msgstr ""
 "Language: it\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-11 22:27\n"
+"PO-Revision-Date: 2025-02-13 03:01\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -168,7 +168,7 @@ msgstr "{0}me"
 msgid "{0}s"
 msgstr "{0}s"
 
-#: src/view/shell/desktop/LeftNav.tsx:384
+#: src/view/shell/desktop/LeftNav.tsx:387
 msgid "{count} unread items"
 msgstr "{count} elementi non letti"
 
@@ -365,7 +365,7 @@ msgid "7 days"
 msgstr "7 giorni"
 
 #: src/Navigation.tsx:373
-#: src/screens/Settings/AboutSettings.tsx:28
+#: src/screens/Settings/AboutSettings.tsx:30
 #: src/screens/Settings/Settings.tsx:215
 #: src/screens/Settings/Settings.tsx:218
 msgid "About"
@@ -389,16 +389,16 @@ msgstr "Impostazioni di accessibilità"
 msgid "Account"
 msgstr "Account"
 
-#: src/view/com/profile/ProfileMenu.tsx:132
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:360
+#: src/view/com/profile/ProfileMenu.tsx:134
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:362
 msgid "Account blocked"
 msgstr "Account bloccato"
 
-#: src/view/com/profile/ProfileMenu.tsx:145
+#: src/view/com/profile/ProfileMenu.tsx:147
 msgid "Account followed"
 msgstr "Account seguito"
 
-#: src/view/com/profile/ProfileMenu.tsx:108
+#: src/view/com/profile/ProfileMenu.tsx:110
 msgid "Account muted"
 msgstr "Account silenziato"
 
@@ -420,15 +420,15 @@ msgid "Account removed from quick access"
 msgstr "Account rimosso dall'accesso immediato"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:137
-#: src/view/com/profile/ProfileMenu.tsx:122
+#: src/view/com/profile/ProfileMenu.tsx:124
 msgid "Account unblocked"
 msgstr "Account sbloccato"
 
-#: src/view/com/profile/ProfileMenu.tsx:157
+#: src/view/com/profile/ProfileMenu.tsx:159
 msgid "Account unfollowed"
 msgstr "Account non seguito"
 
-#: src/view/com/profile/ProfileMenu.tsx:98
+#: src/view/com/profile/ProfileMenu.tsx:100
 msgid "Account unmuted"
 msgstr "Account riattivato"
 
@@ -477,8 +477,8 @@ msgstr "Aggiungi testo alternativo (opzionale)"
 
 #: src/screens/Settings/Settings.tsx:373
 #: src/screens/Settings/Settings.tsx:376
-#: src/view/shell/desktop/LeftNav.tsx:281
-#: src/view/shell/desktop/LeftNav.tsx:285
+#: src/view/shell/desktop/LeftNav.tsx:284
+#: src/view/shell/desktop/LeftNav.tsx:288
 msgid "Add another account"
 msgstr "Aggiungi un altro account"
 
@@ -533,8 +533,8 @@ msgstr "Aggiungi il seguente record DNS al tuo dominio:"
 msgid "Add this feed to your feeds"
 msgstr "Aggiungi feed"
 
-#: src/view/com/profile/ProfileMenu.tsx:243
-#: src/view/com/profile/ProfileMenu.tsx:246
+#: src/view/com/profile/ProfileMenu.tsx:253
+#: src/view/com/profile/ProfileMenu.tsx:256
 msgid "Add to Lists"
 msgstr "Aggiungi alle liste"
 
@@ -586,6 +586,12 @@ msgstr "Tutte"
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
 msgstr "Tutti gli account sono stati seguiti!"
+
+#: src/view/screens/Search/Search.tsx:361
+#: src/view/screens/Search/Search.tsx:399
+#: src/view/screens/Search/Search.tsx:401
+msgid "All languages"
+msgstr ""
 
 #: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
@@ -751,11 +757,6 @@ msgstr "GIF animata"
 #: src/lib/moderation/useReportOptions.ts:33
 msgid "Anti-Social Behavior"
 msgstr "Comportamento antisociale"
-
-#: src/view/screens/Search/Search.tsx:333
-#: src/view/screens/Search/Search.tsx:334
-msgid "Any language"
-msgstr "Qualsiasi lingua"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:48
 msgid "Anybody can interact"
@@ -968,25 +969,25 @@ msgid "Birthday"
 msgstr "Compleanno"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
-#: src/view/com/profile/ProfileMenu.tsx:341
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:744
+#: src/view/com/profile/ProfileMenu.tsx:376
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:776
 msgid "Block"
 msgstr "Blocca"
 
 #: src/components/dms/ConvoMenu.tsx:250
 #: src/components/dms/ConvoMenu.tsx:253
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:603
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:605
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:615
 msgid "Block account"
 msgstr "Blocca account"
 
-#: src/view/com/profile/ProfileMenu.tsx:280
-#: src/view/com/profile/ProfileMenu.tsx:287
+#: src/view/com/profile/ProfileMenu.tsx:290
+#: src/view/com/profile/ProfileMenu.tsx:297
 msgid "Block Account"
 msgstr "Blocca account"
 
-#: src/view/com/profile/ProfileMenu.tsx:324
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:739
+#: src/view/com/profile/ProfileMenu.tsx:359
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:771
 msgid "Block Account?"
 msgstr "Bloccare account?"
 
@@ -1032,8 +1033,8 @@ msgstr "Account bloccati"
 msgid "Blocked Accounts"
 msgstr "Account bloccati"
 
-#: src/view/com/profile/ProfileMenu.tsx:336
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:741
+#: src/view/com/profile/ProfileMenu.tsx:371
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:773
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Gli account bloccati non possono rispondere alle tue discussioni, menzionarti o interagire in nessun altro modo con te."
 
@@ -1053,7 +1054,7 @@ msgstr "Il blocco non impedisce all'etichettatore di inserire etichette sul tuo 
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Il blocco è pubblico. Gli account bloccati non possono rispondere alle tue discussioni, menzionarti, o interagire con te in nessun altro modo."
 
-#: src/view/com/profile/ProfileMenu.tsx:333
+#: src/view/com/profile/ProfileMenu.tsx:368
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
 msgstr "Il blocco non impedirà l'applicazione delle etichette al tuo account, ma impedirà a questo account di rispondere alle tue discussioni o di interagire con te."
 
@@ -1141,15 +1142,19 @@ msgstr "Scopri nuovi suggerimenti dalla Ricerca"
 msgid "Browse other feeds"
 msgstr "Cerca altri feed"
 
-#: src/components/TrendingTopics.tsx:176
+#: src/components/TrendingTopics.tsx:178
 msgid "Browse posts about {displayName}"
 msgstr "Sfoglia i post su {displayName}"
 
-#: src/components/TrendingTopics.tsx:184
+#: src/components/TrendingTopics.tsx:186
 msgid "Browse posts tagged with {displayName}"
 msgstr "Sfoglia i post con tag {displayName}"
 
-#: src/components/TrendingTopics.tsx:222
+#: src/components/TrendingTopics.tsx:195
+msgid "Browse starter pack {displayName}"
+msgstr ""
+
+#: src/components/TrendingTopics.tsx:232
 msgid "Browse topic {displayName}"
 msgstr "Sfoglia l'argomento {displayName}"
 
@@ -1209,7 +1214,7 @@ msgstr "Fotocamera"
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:213
-#: src/view/screens/Search/Search.tsx:839
+#: src/view/screens/Search/Search.tsx:846
 #: src/view/shell/desktop/LeftNav.tsx:209
 msgid "Cancel"
 msgstr "Annulla"
@@ -1243,7 +1248,7 @@ msgid "Cancel reactivation and log out"
 msgstr "Annulla la riattivazione e disconnettiti"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:831
+#: src/view/screens/Search/Search.tsx:838
 msgid "Cancel search"
 msgstr "Annulla la ricerca"
 
@@ -1326,7 +1331,7 @@ msgstr ""
 
 #: src/Navigation.tsx:398
 #: src/view/shell/bottom-bar/BottomBar.tsx:204
-#: src/view/shell/desktop/LeftNav.tsx:530
+#: src/view/shell/desktop/LeftNav.tsx:533
 #: src/view/shell/Drawer.tsx:422
 msgid "Chat"
 msgstr "Messaggi"
@@ -1464,8 +1469,8 @@ msgstr "Clop 🐴 clop 🐴"
 msgid "Close"
 msgstr "Chiudi"
 
-#: src/components/Dialog/index.web.tsx:110
-#: src/components/Dialog/index.web.tsx:252
+#: src/components/Dialog/index.web.tsx:111
+#: src/components/Dialog/index.web.tsx:253
 msgid "Close active dialog"
 msgstr "Chiudi la finestra attiva"
 
@@ -1480,6 +1485,10 @@ msgstr "Chiudi menu a scomparsa inferiore"
 #: src/components/dialogs/GifSelect.tsx:275
 msgid "Close dialog"
 msgstr "Chiudi la finestra di dialogo"
+
+#: src/view/shell/index.web.tsx:83
+msgid "Close drawer menu"
+msgstr ""
 
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
@@ -1498,17 +1507,9 @@ msgstr "Chiudi l'immagine"
 msgid "Close image viewer"
 msgstr "Chiudi il visualizzatore di immagini"
 
-#: src/view/shell/index.web.tsx:69
-msgid "Close navigation footer"
-msgstr "Chiudi la navigazione del footer"
-
 #: src/components/Menu/index.tsx:298
 msgid "Close this dialog"
 msgstr "Chiudi la finestra"
-
-#: src/view/shell/index.web.tsx:70
-msgid "Closes bottom navigation bar"
-msgstr "Chiude la barra di navigazione in basso"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:32
 msgid "Closes password update alert"
@@ -1558,7 +1559,7 @@ msgstr "Completa la registrazione e inizia a usare il tuo account"
 msgid "Complete the challenge"
 msgstr "Completa la challenge"
 
-#: src/view/shell/desktop/LeftNav.tsx:496
+#: src/view/shell/desktop/LeftNav.tsx:499
 msgid "Compose new post"
 msgstr "Scrivi un nuovo post"
 
@@ -1661,6 +1662,10 @@ msgstr "Contenuto bloccato"
 msgid "Content filters"
 msgstr "Filtri dei contenuti"
 
+#: src/screens/Search/components/ExploreRecommendations.tsx:57
+msgid "Content from across the network we think you might like."
+msgstr ""
+
 #: src/screens/Settings/LanguageSettings.tsx:251
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
 msgid "Content Languages"
@@ -1682,7 +1687,7 @@ msgstr "Avviso sul contenuto"
 msgid "Content warnings"
 msgstr "Avviso sui contenuti"
 
-#: src/components/Menu/index.web.tsx:82
+#: src/components/Menu/index.web.tsx:83
 msgid "Context menu backdrop, click to close the menu."
 msgstr "Sfondo del menu contestuale, clicca per chiudere il menu."
 
@@ -1717,14 +1722,15 @@ msgstr "Cucina"
 msgid "Copied"
 msgstr "Copiato"
 
-#: src/screens/Settings/AboutSettings.tsx:73
+#: src/screens/Settings/AboutSettings.tsx:84
 msgid "Copied build version to clipboard"
 msgstr "Versione della build copiata negli appunti"
 
 #: src/components/dms/MessageMenu.tsx:57
 #: src/lib/sharing.ts:25
+#: src/lib/sharing.ts:41
 #: src/view/com/modals/InviteCodes.tsx:153
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:235
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:237
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:403
 msgid "Copied to clipboard"
 msgstr "Copiato negli appunti"
@@ -1734,7 +1740,7 @@ msgstr "Copiato negli appunti"
 msgid "Copied!"
 msgstr "Copiato!"
 
-#: src/screens/Settings/AboutSettings.tsx:68
+#: src/screens/Settings/AboutSettings.tsx:70
 msgid "Copies build version to clipboard"
 msgstr ""
 
@@ -1746,12 +1752,24 @@ msgstr "Copia"
 msgid "Copy App Password"
 msgstr "Copia password per app"
 
+#: src/view/com/profile/ProfileMenu.tsx:327
+#: src/view/com/profile/ProfileMenu.tsx:330
+msgid "Copy at:// URI"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:674
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:676
+msgid "Copy author DID"
+msgstr ""
+
 #: src/components/dialogs/Embed.tsx:122
 #: src/components/dialogs/Embed.tsx:141
 msgid "Copy code"
 msgstr "Copia codice"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:472
+#: src/view/com/profile/ProfileMenu.tsx:336
+#: src/view/com/profile/ProfileMenu.tsx:339
 msgid "Copy DID"
 msgstr "Copia DID"
 
@@ -1771,8 +1789,8 @@ msgstr "Copia link"
 msgid "Copy link to list"
 msgstr "Copia link alla lista"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:444
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
 msgid "Copy link to post"
 msgstr "Copia link al post"
 
@@ -1781,8 +1799,13 @@ msgstr "Copia link al post"
 msgid "Copy message text"
 msgstr "Copia testo del messaggio"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:412
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:414
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
+msgid "Copy post at:// URI"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:422
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:424
 msgid "Copy post text"
 msgstr "Copia testo del post"
 
@@ -1945,7 +1968,7 @@ msgstr "Icone predefinite"
 #: src/screens/StarterPack/StarterPackScreen.tsx:586
 #: src/screens/StarterPack/StarterPackScreen.tsx:665
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:661
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:693
 #: src/view/screens/ProfileList.tsx:739
 msgid "Delete"
 msgstr "Elimina"
@@ -2001,8 +2024,8 @@ msgid "Delete my account"
 msgstr "Elimina il mio account"
 
 #: src/view/com/composer/Composer.tsx:842
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:642
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:644
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:652
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:654
 msgid "Delete post"
 msgstr "Elimina il post"
 
@@ -2019,7 +2042,7 @@ msgstr "Eliminare lo starter pack?"
 msgid "Delete this list?"
 msgstr "Eliminare questa lista?"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:656
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
 msgid "Delete this post?"
 msgstr "Eliminare questo post?"
 
@@ -2057,14 +2080,22 @@ msgstr "La descrizione è troppo lunga. Il numero massimo di caratteri è {DESCR
 msgid "Descriptive alt text"
 msgstr "Testo descrittivo alternativo"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:566
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:576
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:586
 msgid "Detach quote"
 msgstr "Scollega citazione"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:719
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:751
 msgid "Detach quote post?"
 msgstr "Scollegare la citazione del post?"
+
+#: src/screens/Settings/AboutSettings.tsx:77
+msgid "Developer mode disabled"
+msgstr ""
+
+#: src/screens/Settings/AboutSettings.tsx:76
+msgid "Developer mode enabled"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:242
 #: src/screens/Settings/Settings.tsx:245
@@ -2235,7 +2266,7 @@ msgstr "Fatto{extraText}"
 msgid "Double tap to close the dialog"
 msgstr "Tocca due volte per chiudere la finestra"
 
-#: src/screens/VideoFeed/index.tsx:1039
+#: src/screens/VideoFeed/index.tsx:1041
 msgid "Double tap to like"
 msgstr "Tocca due volte per mettere mi piace"
 
@@ -2327,8 +2358,8 @@ msgstr "Modifica i feed"
 msgid "Edit image"
 msgstr "Modifica l'immagine"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:623
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:636
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:633
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:646
 msgid "Edit interaction settings"
 msgstr "Modifica impostazioni di interazione"
 
@@ -2447,8 +2478,8 @@ msgid "Embed HTML code"
 msgstr "Incorpora il codice HTML"
 
 #: src/components/dialogs/Embed.tsx:97
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:451
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:461
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:463
 msgid "Embed post"
 msgstr "Incorpora il post"
 
@@ -2602,7 +2633,7 @@ msgid "Error receiving captcha response."
 msgstr "Errore nella risposta del captcha."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:183
-#: src/view/screens/Search/Search.tsx:110
+#: src/view/screens/Search/Search.tsx:114
 msgid "Error:"
 msgstr "Errore:"
 
@@ -2671,7 +2702,7 @@ msgstr "Espandi la lista di utenti"
 msgid "Expand or collapse the full post you are replying to"
 msgstr "Espandi o comprimi il post a cui stai rispondendo"
 
-#: src/screens/VideoFeed/index.tsx:933
+#: src/screens/VideoFeed/index.tsx:935
 msgid "Expands or collapses post text"
 msgstr ""
 
@@ -2754,7 +2785,7 @@ msgstr "Impossibile creare l'elenco. Controlla la connessione Internet e riprova
 msgid "Failed to delete message"
 msgstr "Errore nell'eliminazione del messaggio"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:195
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:197
 msgid "Failed to delete post, please try again"
 msgstr "Non è stato possibile eliminare il post, riprovare"
 
@@ -2809,7 +2840,7 @@ msgstr "Impossibile inviare messaggio"
 msgid "Failed to submit appeal, please try again."
 msgstr "Errore nell'invio dell'appello, riprovare."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:224
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:226
 msgid "Failed to toggle thread mute, please try again"
 msgstr "Impossibile abilitare silenziamento thread, riprovare"
 
@@ -2855,8 +2886,8 @@ msgstr "Attiva/disattiva feed"
 msgid "Feedback"
 msgstr "Commenti"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:266
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:275
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:268
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:277
 msgid "Feedback sent!"
 msgstr "Feedback inviato!"
 
@@ -2865,8 +2896,8 @@ msgstr "Feedback inviato!"
 #: src/view/screens/Feeds.tsx:508
 #: src/view/screens/Profile.tsx:238
 #: src/view/screens/SavedFeeds.tsx:96
-#: src/view/screens/Search/Search.tsx:522
-#: src/view/shell/desktop/LeftNav.tsx:640
+#: src/view/screens/Search/Search.tsx:518
+#: src/view/shell/desktop/LeftNav.tsx:643
 #: src/view/shell/Drawer.tsx:481
 msgid "Feeds"
 msgstr "Feed"
@@ -2880,7 +2911,7 @@ msgstr "I feed sono algoritmi personalizzati che gli utenti possono creare con u
 msgid "Feeds updated!"
 msgstr "Feed aggiornati!"
 
-#: src/screens/Search/components/ExploreRecommendations.tsx:54
+#: src/screens/Search/components/ExploreRecommendations.tsx:63
 msgid "Feeds we think you might like."
 msgstr "Feed che potrebbero piacerti."
 
@@ -2891,6 +2922,14 @@ msgstr "File salvato con successo!"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
 msgstr "Filtra dai feed"
+
+#: src/view/screens/Search/Search.tsx:397
+msgid "Filter search by language"
+msgstr ""
+
+#: src/view/screens/Search/Search.tsx:367
+msgid "Filter search by language (currently: {currentLanguageLabel})"
+msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:303
 msgid "Finalizing"
@@ -2908,7 +2947,7 @@ msgstr "Scopri account da seguire"
 msgid "Find people to follow"
 msgstr "Trova persone da seguire"
 
-#: src/view/screens/Search/Search.tsx:588
+#: src/view/screens/Search/Search.tsx:579
 msgid "Find posts and users on Bluesky"
 msgstr "Scopri post e utenti su Bluesky"
 
@@ -2929,7 +2968,7 @@ msgstr "Flessibile"
 #: src/components/ProfileHoverCard/index.web.tsx:449
 #: src/components/ProfileHoverCard/index.web.tsx:460
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:234
-#: src/screens/VideoFeed/index.tsx:821
+#: src/screens/VideoFeed/index.tsx:823
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:132
 msgid "Follow"
 msgstr "Segui"
@@ -2961,8 +3000,8 @@ msgstr "Segui 10 account"
 msgid "Follow 7 accounts"
 msgstr "Segui 7 account"
 
-#: src/view/com/profile/ProfileMenu.tsx:222
-#: src/view/com/profile/ProfileMenu.tsx:233
+#: src/view/com/profile/ProfileMenu.tsx:232
+#: src/view/com/profile/ProfileMenu.tsx:243
 msgid "Follow Account"
 msgstr "Segui account"
 
@@ -3015,7 +3054,7 @@ msgstr "Follower che conosci"
 #: src/components/ProfileHoverCard/index.web.tsx:448
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
-#: src/screens/VideoFeed/index.tsx:819
+#: src/screens/VideoFeed/index.tsx:821
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
 #: src/view/screens/SavedFeeds.tsx:422
@@ -3146,8 +3185,8 @@ msgstr "Evidenti violazioni della legge o dei termini di servizio"
 #: src/components/moderation/ScreenHider.tsx:163
 #: src/screens/Profile/ProfileFeed/index.tsx:89
 #: src/screens/VideoFeed/components/Header.tsx:163
-#: src/screens/VideoFeed/index.tsx:1100
-#: src/screens/VideoFeed/index.tsx:1104
+#: src/screens/VideoFeed/index.tsx:1102
+#: src/screens/VideoFeed/index.tsx:1106
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
 #: src/view/screens/ProfileList.tsx:1009
@@ -3273,7 +3312,7 @@ msgstr "Nascosto"
 msgid "Hidden by your moderation settings."
 msgstr "Nascosto dalle tue impostazioni di moderazione."
 
-#: src/components/ListCard.tsx:130
+#: src/components/ListCard.tsx:131
 msgid "Hidden list"
 msgstr "Lista nascosta"
 
@@ -3287,7 +3326,7 @@ msgstr "Lista nascosta"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:137
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:672
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:704
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "Hide"
 msgstr "Nascondi"
@@ -3297,27 +3336,27 @@ msgctxt "action"
 msgid "Hide"
 msgstr "Nascondi"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:523
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:529
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:533
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 msgid "Hide post for me"
 msgstr "Nascondi post per me"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:540
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:550
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:560
 msgid "Hide reply for everyone"
 msgstr "Nascondi risposta per tutti"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:522
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:528
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:532
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:538
 msgid "Hide reply for me"
 msgstr "Nascondi risposta per me"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:699
 msgid "Hide this post?"
 msgstr "Nascondere questo post?"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:729
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:699
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:761
 msgid "Hide this reply?"
 msgstr "Nascondere questa risposta?"
 
@@ -3381,7 +3420,7 @@ msgstr "Un po' di pazienza: stiamo gradualmente dando accesso al video e tu sei 
 #: src/Navigation.tsx:612
 #: src/Navigation.tsx:632
 #: src/view/shell/bottom-bar/BottomBar.tsx:162
-#: src/view/shell/desktop/LeftNav.tsx:584
+#: src/view/shell/desktop/LeftNav.tsx:587
 #: src/view/shell/Drawer.tsx:396
 msgid "Home"
 msgstr "Home"
@@ -3447,7 +3486,7 @@ msgstr "Se elimini questa lista, non potrai recuperarla."
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
 msgstr "Se hai un tuo dominio, puoi usarlo come nome utente. Questo consente di auto-verificare la tua identità. <0>Ulteriori informazioni.</0>"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:690
 msgid "If you remove this post, you won't be able to recover it."
 msgstr "Se rimuovi questo post, non potrai recuperarlo."
 
@@ -3658,7 +3697,7 @@ msgstr "Più grande"
 
 #: src/screens/Hashtag.tsx:95
 #: src/screens/Topic.tsx:77
-#: src/view/screens/Search/Search.tsx:506
+#: src/view/screens/Search/Search.tsx:502
 msgid "Latest"
 msgstr "Recenti"
 
@@ -3821,7 +3860,7 @@ msgstr "Immagine della lista"
 msgid "List blocked"
 msgstr "Lista bloccata"
 
-#: src/components/ListCard.tsx:150
+#: src/components/ListCard.tsx:151
 #: src/view/com/feeds/FeedSourceCard.tsx:255
 msgid "List by {0}"
 msgstr "Lista di {0}"
@@ -3866,7 +3905,7 @@ msgstr "Lista riattivata"
 #: src/view/screens/Lists.tsx:62
 #: src/view/screens/Profile.tsx:232
 #: src/view/screens/Profile.tsx:240
-#: src/view/shell/desktop/LeftNav.tsx:658
+#: src/view/shell/desktop/LeftNav.tsx:661
 #: src/view/shell/Drawer.tsx:496
 msgid "Lists"
 msgstr "Liste"
@@ -4001,7 +4040,6 @@ msgid "Mentions"
 msgstr "Menzioni"
 
 #: src/components/Menu/index.tsx:103
-#: src/view/screens/Search/Search.tsx:808
 msgid "Menu"
 msgstr "Menu"
 
@@ -4052,7 +4090,7 @@ msgstr "Moderazione"
 msgid "Moderation details"
 msgstr "Dettagli sulla moderazione"
 
-#: src/components/ListCard.tsx:149
+#: src/components/ListCard.tsx:150
 #: src/view/com/modals/UserAddRemoveLists.tsx:222
 msgid "Moderation list by {0}"
 msgstr "Lista di moderazione di {0}"
@@ -4109,7 +4147,7 @@ msgstr "Di più"
 msgid "More feeds"
 msgstr "Altri feed"
 
-#: src/view/com/profile/ProfileMenu.tsx:179
+#: src/view/com/profile/ProfileMenu.tsx:189
 #: src/view/screens/ProfileList.tsx:721
 msgid "More options"
 msgstr "Altre opzioni"
@@ -4143,8 +4181,8 @@ msgstr "Silenzia"
 msgid "Mute {tag}"
 msgstr "Silenzia {tag}"
 
-#: src/view/com/profile/ProfileMenu.tsx:259
-#: src/view/com/profile/ProfileMenu.tsx:266
+#: src/view/com/profile/ProfileMenu.tsx:269
+#: src/view/com/profile/ProfileMenu.tsx:276
 msgid "Mute Account"
 msgstr "Silenzia account"
 
@@ -4193,13 +4231,13 @@ msgstr "Silenzia questa parola solo nei tag"
 msgid "Mute this word until you unmute it"
 msgstr "Silenzia questa parola finchè non la riattivi"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:489
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:493
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:499
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
 msgid "Mute thread"
 msgstr "Silenzia questa discussione"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:505
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:513
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:515
 msgid "Mute words & tags"
 msgstr "Silenzia parole e tag"
 
@@ -4340,7 +4378,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "Nuovo post"
 
-#: src/view/shell/desktop/LeftNav.tsx:504
+#: src/view/shell/desktop/LeftNav.tsx:507
 msgctxt "action"
 msgid "New Post"
 msgstr "Nuovo post"
@@ -4470,9 +4508,9 @@ msgid "No results found for \"{query}\""
 msgstr "Nessun risultato trovato per \"{query}\""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
-#: src/view/screens/Search/Search.tsx:227
-#: src/view/screens/Search/Search.tsx:265
-#: src/view/screens/Search/Search.tsx:310
+#: src/view/screens/Search/Search.tsx:231
+#: src/view/screens/Search/Search.tsx:269
+#: src/view/screens/Search/Search.tsx:314
 msgid "No results found for {query}"
 msgstr "Nessun risultato trovato per {query}"
 
@@ -4521,8 +4559,8 @@ msgstr "Non trovato"
 msgid "Not right now"
 msgstr "Non adesso"
 
-#: src/view/com/profile/ProfileMenu.tsx:348
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:686
+#: src/view/com/profile/ProfileMenu.tsx:383
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:718
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:367
 msgid "Note about sharing"
 msgstr "Nota sulla condivisione"
@@ -4559,7 +4597,7 @@ msgstr "Suoni di notifica"
 #: src/Navigation.tsx:622
 #: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:230
-#: src/view/shell/desktop/LeftNav.tsx:621
+#: src/view/shell/desktop/LeftNav.tsx:624
 #: src/view/shell/Drawer.tsx:449
 msgid "Notifications"
 msgstr "Notifiche"
@@ -4683,7 +4721,7 @@ msgstr "Apri il creatore di avatar"
 msgid "Open conversation options"
 msgstr "Apri opzioni conversazione"
 
-#: src/components/Layout/Header/index.tsx:149
+#: src/components/Layout/Header/index.tsx:150
 msgid "Open drawer menu"
 msgstr "Apri il menu a scomparsa"
 
@@ -4892,7 +4930,7 @@ msgid "Pause video"
 msgstr "Metti video in pausa"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/Search/Search.tsx:516
+#: src/view/screens/Search/Search.tsx:512
 msgid "People"
 msgstr "Utenti"
 
@@ -4951,8 +4989,8 @@ msgstr "Fissa su home"
 msgid "Pin to Home"
 msgstr "Fissa su home"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:380
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:387
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:390
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:397
 msgid "Pin to your profile"
 msgstr "Fissa sul tuo profilo"
 
@@ -5114,7 +5152,7 @@ msgstr "Pubblicato da {0}"
 msgid "Post by @{0}"
 msgstr "Pubblicato da @{0}"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:175
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:177
 msgid "Post deleted"
 msgstr "Post eliminato"
 
@@ -5239,8 +5277,8 @@ msgid "Privacy and Security"
 msgstr "Privacy e sicurezza"
 
 #: src/Navigation.tsx:281
-#: src/screens/Settings/AboutSettings.tsx:45
-#: src/screens/Settings/AboutSettings.tsx:48
+#: src/screens/Settings/AboutSettings.tsx:47
+#: src/screens/Settings/AboutSettings.tsx:50
 #: src/view/screens/PrivacyPolicy.tsx:31
 #: src/view/shell/Drawer.tsx:629
 #: src/view/shell/Drawer.tsx:630
@@ -5262,7 +5300,7 @@ msgid "profile"
 msgstr "profilo"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:275
-#: src/view/shell/desktop/LeftNav.tsx:676
+#: src/view/shell/desktop/LeftNav.tsx:679
 #: src/view/shell/Drawer.tsx:71
 #: src/view/shell/Drawer.tsx:521
 msgid "Profile"
@@ -5272,10 +5310,6 @@ msgstr "Profilo"
 #: src/view/com/modals/EditProfile.tsx:124
 msgid "Profile updated"
 msgstr "Profilo aggiornato"
-
-#: src/view/screens/Search/Search.tsx:810
-msgid "Provides access to navigation links and settings"
-msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:253
 msgid "Public"
@@ -5308,11 +5342,11 @@ msgstr "Codice QR salvato nella galleria!"
 msgid "Quote post"
 msgstr "Cita post"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:303
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:305
 msgid "Quote post was re-attached"
 msgstr "Citazione post riattaccata"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:302
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:304
 msgid "Quote post was successfully detached"
 msgstr "Citazione post scollegata con successo"
 
@@ -5346,8 +5380,8 @@ msgstr "Casuale (\"Poster's Roulette\")"
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr "Limite di richieste superato: hai provato a cambiare il nome utente troppe volte in un breve lasso di tempo. Attendi un minuto prima di riprovare."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:565
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:575
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:585
 msgid "Re-attach quote"
 msgstr "Riattacca citazione"
 
@@ -5355,11 +5389,11 @@ msgstr "Riattacca citazione"
 msgid "Reactivate your account"
 msgstr "Riattiva account"
 
-#: src/screens/VideoFeed/index.tsx:934
+#: src/screens/VideoFeed/index.tsx:936
 msgid "Read less"
 msgstr "Leggi di meno"
 
-#: src/screens/VideoFeed/index.tsx:934
+#: src/screens/VideoFeed/index.tsx:936
 msgid "Read more"
 msgstr "Leggi di più"
 
@@ -5386,11 +5420,11 @@ msgstr "Motivo del ricorso"
 msgid "Reason:"
 msgstr "Motivo:"
 
-#: src/view/screens/Search/Search.tsx:986
+#: src/view/screens/Search/Search.tsx:992
 msgid "Recent Searches"
 msgstr "Ricerche recenti"
 
-#: src/screens/Search/components/ExploreRecommendations.tsx:50
+#: src/screens/Search/components/ExploreRecommendations.tsx:52
 msgid "Recommended"
 msgstr "Consigliati"
 
@@ -5479,11 +5513,11 @@ msgstr "Rimuovi l'immagine"
 msgid "Remove mute word from your list"
 msgstr "Rimuovi parola silenziata dalla tua lista"
 
-#: src/view/screens/Search/Search.tsx:1034
+#: src/view/screens/Search/Search.tsx:1040
 msgid "Remove profile"
 msgstr "Rimuovi profilo"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:284
 msgid "Remove quote"
 msgstr "Rimuovi citazione"
 
@@ -5528,11 +5562,11 @@ msgstr "Rimosso dai feed salvati"
 msgid "Removed from your feeds"
 msgstr "Rimosso dai tuoi feed"
 
-#: src/view/screens/Search/Search.tsx:1036
+#: src/view/screens/Search/Search.tsx:1042
 msgid "Removes profile from search history"
 msgstr ""
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
 msgid "Removes quoted post"
 msgstr "Rimuovi post citato"
 
@@ -5606,11 +5640,11 @@ msgctxt "description"
 msgid "Reply to you"
 msgstr "Risposta a te"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:333
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:335
 msgid "Reply visibility updated"
 msgstr "Visibilità risposte aggiornata"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:332
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:334
 msgid "Reply was successfully hidden"
 msgstr "Risposta nascosta con successo"
 
@@ -5620,8 +5654,8 @@ msgstr "Risposta nascosta con successo"
 msgid "Report"
 msgstr "Segnala"
 
-#: src/view/com/profile/ProfileMenu.tsx:299
-#: src/view/com/profile/ProfileMenu.tsx:302
+#: src/view/com/profile/ProfileMenu.tsx:309
+#: src/view/com/profile/ProfileMenu.tsx:312
 msgid "Report Account"
 msgstr "Segnala account"
 
@@ -5648,8 +5682,8 @@ msgstr "Segnala lista"
 msgid "Report message"
 msgstr "Segnala messaggio"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:611
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:621
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:623
 msgid "Report post"
 msgstr "Segnala post"
 
@@ -5833,7 +5867,7 @@ msgstr "Ritorna alla home"
 
 #: src/screens/Profile/ProfileFeed/index.tsx:90
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:540
-#: src/screens/VideoFeed/index.tsx:1101
+#: src/screens/VideoFeed/index.tsx:1103
 #: src/view/screens/NotFound.tsx:60
 #: src/view/screens/ProfileList.tsx:1010
 msgid "Returns to previous page"
@@ -5945,9 +5979,10 @@ msgstr "Scorri verso l'alto"
 #: src/components/forms/SearchInput.tsx:36
 #: src/Navigation.tsx:617
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
-#: src/view/screens/Search/Search.tsx:570
+#: src/view/screens/Search/Search.tsx:561
+#: src/view/screens/Search/Search.tsx:807
 #: src/view/shell/bottom-bar/BottomBar.tsx:182
-#: src/view/shell/desktop/LeftNav.tsx:602
+#: src/view/shell/desktop/LeftNav.tsx:605
 #: src/view/shell/Drawer.tsx:370
 msgid "Search"
 msgstr "Cerca"
@@ -5968,13 +6003,17 @@ msgstr "Cerca \"{interestsDisplayName}\"{activeText}"
 msgid "Search for \"{query}\""
 msgstr "Cerca \"{query}\""
 
-#: src/view/screens/Search/Search.tsx:932
+#: src/view/screens/Search/Search.tsx:938
 msgid "Search for \"{searchText}\""
 msgstr "Cerca \"{searchText}\""
 
 #: src/screens/StarterPack/Wizard/index.tsx:474
 msgid "Search for feeds that you want to suggest to others."
 msgstr "Cerca feed che potresti suggerire ad altri utenti."
+
+#: src/view/screens/Search/Search.tsx:832
+msgid "Search for posts, users, or feeds"
+msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
 msgid "Search for users"
@@ -6177,8 +6216,8 @@ msgstr "Invia la segnalazione a {0}"
 msgid "Send verification email"
 msgstr "Invia email di verifica"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:423
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:426
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:433
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:436
 msgid "Send via direct message"
 msgstr "Invia tramite messaggi"
 
@@ -6212,7 +6251,7 @@ msgstr "Imposta l'email per la reimpostazione della password"
 
 #: src/Navigation.tsx:170
 #: src/screens/Settings/Settings.tsx:80
-#: src/view/shell/desktop/LeftNav.tsx:694
+#: src/view/shell/desktop/LeftNav.tsx:697
 #: src/view/shell/Drawer.tsx:534
 msgid "Settings"
 msgstr "Impostazioni"
@@ -6234,10 +6273,10 @@ msgstr "Sessualmente allusivo"
 #: src/screens/StarterPack/StarterPackScreen.tsx:423
 #: src/screens/StarterPack/StarterPackScreen.tsx:595
 #: src/screens/Topic.tsx:102
-#: src/view/com/profile/ProfileMenu.tsx:195
-#: src/view/com/profile/ProfileMenu.tsx:204
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
+#: src/view/com/profile/ProfileMenu.tsx:205
+#: src/view/com/profile/ProfileMenu.tsx:214
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:444
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:356
 #: src/view/screens/ProfileList.tsx:483
 msgid "Share"
@@ -6256,8 +6295,8 @@ msgstr "Condividi una storia interessante!"
 msgid "Share a fun fact!"
 msgstr "Condividi un fatto divertente!"
 
-#: src/view/com/profile/ProfileMenu.tsx:353
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:691
+#: src/view/com/profile/ProfileMenu.tsx:388
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:723
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:372
 msgid "Share anyway"
 msgstr "Condividi comunque"
@@ -6337,8 +6376,8 @@ msgstr "Mostra badge e filtra dai feed"
 msgid "Show hidden replies"
 msgstr "Mostra risposte nascoste"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:473
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:475
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:483
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:485
 msgid "Show less like this"
 msgstr "Mostra meno come questo"
 
@@ -6352,8 +6391,8 @@ msgstr "Mostra comunque lista"
 msgid "Show More"
 msgstr "Mostra di più"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:465
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:467
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:475
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:477
 msgid "Show more like this"
 msgstr "Mostra altri come questo"
 
@@ -6383,8 +6422,8 @@ msgstr "Mostra risposte come un thread"
 msgid "Show replies by people you follow before all other replies"
 msgstr "Mostra risposte delle persone che segui prima delle altre risposte"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:549
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:559
 msgid "Show reply for everyone"
 msgstr "Mostra risposta per tutti"
 
@@ -6457,8 +6496,8 @@ msgstr "Accedi a Bluesky o crea un nuovo account"
 #: src/screens/Settings/Settings.tsx:227
 #: src/screens/Settings/Settings.tsx:259
 #: src/view/shell/desktop/LeftNav.tsx:208
-#: src/view/shell/desktop/LeftNav.tsx:288
 #: src/view/shell/desktop/LeftNav.tsx:291
+#: src/view/shell/desktop/LeftNav.tsx:294
 msgid "Sign out"
 msgstr "Esci"
 
@@ -6620,8 +6659,8 @@ msgstr "Starter pack"
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "Gli starter pack ti permettono di condividere utenti e feed preferiti con i tuoi amici."
 
-#: src/screens/Settings/AboutSettings.tsx:53
-#: src/screens/Settings/AboutSettings.tsx:56
+#: src/screens/Settings/AboutSettings.tsx:55
+#: src/screens/Settings/AboutSettings.tsx:58
 msgid "Status Page"
 msgstr "Pagina di stato"
 
@@ -6699,7 +6738,7 @@ msgstr "Supporto"
 #: src/screens/Settings/Settings.tsx:102
 #: src/screens/Settings/Settings.tsx:116
 #: src/screens/Settings/Settings.tsx:412
-#: src/view/shell/desktop/LeftNav.tsx:243
+#: src/view/shell/desktop/LeftNav.tsx:246
 msgid "Switch account"
 msgstr "Cambia account"
 
@@ -6712,7 +6751,7 @@ msgstr "Cambia account"
 msgid "Switch accounts"
 msgstr "Cambia account"
 
-#: src/view/shell/desktop/LeftNav.tsx:251
+#: src/view/shell/desktop/LeftNav.tsx:254
 msgid "Switch to {0}"
 msgstr "Passa a {0}"
 
@@ -6721,8 +6760,8 @@ msgstr "Passa a {0}"
 msgid "System"
 msgstr "Sistema"
 
-#: src/screens/Settings/AboutSettings.tsx:60
-#: src/screens/Settings/AboutSettings.tsx:63
+#: src/screens/Settings/AboutSettings.tsx:62
+#: src/screens/Settings/AboutSettings.tsx:65
 #: src/screens/Settings/Settings.tsx:318
 msgid "System log"
 msgstr "Registro di sistema"
@@ -6770,8 +6809,8 @@ msgid "Terms"
 msgstr "Termini"
 
 #: src/Navigation.tsx:286
-#: src/screens/Settings/AboutSettings.tsx:37
-#: src/screens/Settings/AboutSettings.tsx:40
+#: src/screens/Settings/AboutSettings.tsx:39
+#: src/screens/Settings/AboutSettings.tsx:42
 #: src/view/screens/TermsOfService.tsx:31
 #: src/view/shell/Drawer.tsx:622
 #: src/view/shell/Drawer.tsx:624
@@ -6831,12 +6870,12 @@ msgstr "Impossibile trovare starter pack."
 msgid "That's all, folks!"
 msgstr "Questo è tutto, gente!"
 
-#: src/screens/VideoFeed/index.tsx:1073
+#: src/screens/VideoFeed/index.tsx:1075
 msgid "That's everything!"
 msgstr "È tutto!"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
-#: src/view/com/profile/ProfileMenu.tsx:329
+#: src/view/com/profile/ProfileMenu.tsx:364
 msgid "The account will be able to interact with you after unblocking."
 msgstr "L'account sarà in grado di interagire con te dopo lo sblocco."
 
@@ -6997,13 +7036,13 @@ msgstr "Si è verificato un problema durante l'aggiornamento dei tuoi feed. Veri
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:141
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:91
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:102
-#: src/view/com/profile/ProfileMenu.tsx:102
-#: src/view/com/profile/ProfileMenu.tsx:112
-#: src/view/com/profile/ProfileMenu.tsx:126
-#: src/view/com/profile/ProfileMenu.tsx:136
-#: src/view/com/profile/ProfileMenu.tsx:149
-#: src/view/com/profile/ProfileMenu.tsx:161
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:364
+#: src/view/com/profile/ProfileMenu.tsx:104
+#: src/view/com/profile/ProfileMenu.tsx:114
+#: src/view/com/profile/ProfileMenu.tsx:128
+#: src/view/com/profile/ProfileMenu.tsx:138
+#: src/view/com/profile/ProfileMenu.tsx:151
+#: src/view/com/profile/ProfileMenu.tsx:163
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:366
 msgid "There was an issue! {0}"
 msgstr "Si è verificato un problema! {0}"
 
@@ -7162,12 +7201,12 @@ msgstr ""
 msgid "This post has been deleted."
 msgstr "Questo post è stato eliminato."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:720
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:369
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "Questo post è visibile solo agli utenti registrati. Non sarà visibile alle persone che non hanno effettuato l'accesso."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:701
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Questo post verrà nascosto dai feed e dai thread. L'azione è irreversibile."
 
@@ -7175,11 +7214,11 @@ msgstr "Questo post verrà nascosto dai feed e dai thread. L'azione è irreversi
 msgid "This post's author has disabled quote posts."
 msgstr "L'autore del post ha disattivato le citazioni."
 
-#: src/view/com/profile/ProfileMenu.tsx:350
+#: src/view/com/profile/ProfileMenu.tsx:385
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "Questo profilo è visibile solo agli utenti registrati. Non sarà visibile alle persone che non hanno effettuato l'accesso."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:731
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:763
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr "Questa risposta verrà spostata in una sezione nascosta in fondo al thread e le notifiche delle risposte saranno disattivate - sia per te che per gli altri."
 
@@ -7232,7 +7271,7 @@ msgstr "Questo eliminerà \"{0}\" dalle tue parole silenziate. Puoi riaggiungerl
 msgid "This will remove @{0} from the quick access list."
 msgstr "Questo rimuoverà @{0} dalla lista d'accesso rapido."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:721
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:753
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "Il tuo post verrà rimosso da questa citazione per tutti gli utenti, ed al suo posto verrà mostrato un avviso."
 
@@ -7301,7 +7340,7 @@ msgstr ""
 
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
-#: src/view/screens/Search/Search.tsx:496
+#: src/view/screens/Search/Search.tsx:492
 msgid "Top"
 msgstr "Popolari"
 
@@ -7313,8 +7352,8 @@ msgstr "Argomento"
 #: src/components/dms/MessageMenu.tsx:105
 #: src/view/com/post-thread/PostThreadItem.tsx:775
 #: src/view/com/post-thread/PostThreadItem.tsx:778
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:404
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:406
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:414
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:416
 msgid "Translate"
 msgstr "Traduci"
 
@@ -7384,7 +7423,7 @@ msgstr "Impossibile eliminare"
 #: src/components/dms/MessagesListBlockedFooter.tsx:118
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:197
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
-#: src/view/com/profile/ProfileMenu.tsx:341
+#: src/view/com/profile/ProfileMenu.tsx:376
 #: src/view/screens/ProfileList.tsx:694
 msgid "Unblock"
 msgstr "Sblocca"
@@ -7399,13 +7438,13 @@ msgstr "Sblocca"
 msgid "Unblock account"
 msgstr "Sblocca account"
 
-#: src/view/com/profile/ProfileMenu.tsx:279
-#: src/view/com/profile/ProfileMenu.tsx:285
+#: src/view/com/profile/ProfileMenu.tsx:289
+#: src/view/com/profile/ProfileMenu.tsx:295
 msgid "Unblock Account"
 msgstr "Sblocca account"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
-#: src/view/com/profile/ProfileMenu.tsx:323
+#: src/view/com/profile/ProfileMenu.tsx:358
 msgid "Unblock Account?"
 msgstr "Sblocca account?"
 
@@ -7427,12 +7466,12 @@ msgstr "Smetti di seguire"
 msgid "Unfollow {0}"
 msgstr "Smetti di seguire {0}"
 
-#: src/view/com/profile/ProfileMenu.tsx:221
 #: src/view/com/profile/ProfileMenu.tsx:231
+#: src/view/com/profile/ProfileMenu.tsx:241
 msgid "Unfollow Account"
 msgstr "Smetti di seguire questo account"
 
-#: src/screens/VideoFeed/index.tsx:803
+#: src/screens/VideoFeed/index.tsx:804
 msgid "Unfollows the user"
 msgstr ""
 
@@ -7459,8 +7498,8 @@ msgstr "Riattiva"
 msgid "Unmute {tag}"
 msgstr "Riattiva {tag}"
 
-#: src/view/com/profile/ProfileMenu.tsx:258
-#: src/view/com/profile/ProfileMenu.tsx:264
+#: src/view/com/profile/ProfileMenu.tsx:268
+#: src/view/com/profile/ProfileMenu.tsx:274
 msgid "Unmute Account"
 msgstr "Riattiva questo account"
 
@@ -7468,8 +7507,8 @@ msgstr "Riattiva questo account"
 msgid "Unmute conversation"
 msgstr "Riattiva conversazione"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:489
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:493
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:499
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
 msgid "Unmute thread"
 msgstr "Riattiva questa discussione"
 
@@ -7491,8 +7530,8 @@ msgstr "Non fissare più il feed"
 msgid "Unpin from home"
 msgstr "Non fissare più su home"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:379
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:386
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:389
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:396
 msgid "Unpin from profile"
 msgstr "Non fissare più sul profilo"
 
@@ -7547,11 +7586,11 @@ msgstr "Aggiorna <0>{displayName}</0> nelle liste"
 msgid "Update to {domain}"
 msgstr "Aggiorna a {domain}"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:306
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:308
 msgid "Updating quote attachment failed"
 msgstr "Impossibile aggiornare allegato"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:336
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:338
 msgid "Updating reply visibility failed"
 msgstr "Impossibile aggiornare visibilità risposte"
 
@@ -7746,8 +7785,8 @@ msgstr "Verifica il tuo indirizzo email"
 msgid "Verify Your Email"
 msgstr "Verifica il tuo indirizzo email"
 
-#: src/screens/Settings/AboutSettings.tsx:67
-#: src/screens/Settings/AboutSettings.tsx:77
+#: src/screens/Settings/AboutSettings.tsx:69
+#: src/screens/Settings/AboutSettings.tsx:88
 msgid "Version {appVersion}"
 msgstr "Versione {appVersion}"
 
@@ -7773,11 +7812,11 @@ msgstr "Video da {0}: {text}"
 msgid "Video Games"
 msgstr "Videogiochi"
 
-#: src/screens/VideoFeed/index.tsx:1031
+#: src/screens/VideoFeed/index.tsx:1033
 msgid "Video is paused"
 msgstr "Video in pausa"
 
-#: src/screens/VideoFeed/index.tsx:1031
+#: src/screens/VideoFeed/index.tsx:1033
 msgid "Video is playing"
 msgstr "Video in riproduzione"
 
@@ -8006,7 +8045,7 @@ msgstr "Siamo spiacenti, ma non siamo riusciti a risolvere questa lista. Se il p
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "Non è stato possibile caricare le parole silenziate. Riprova."
 
-#: src/view/screens/Search/Search.tsx:201
+#: src/view/screens/Search/Search.tsx:205
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Siamo spiacenti, ma non è stato possibile completare la ricerca. Riprova tra qualche minuto."
 
@@ -8143,11 +8182,11 @@ msgstr "Sì, disattiva il mio account"
 msgid "Yes, delete this starter pack"
 msgstr "Sì, elimina questo starter pack"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:724
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:756
 msgid "Yes, detach"
 msgstr "Sì, scollega"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:734
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:766
 msgid "Yes, hide"
 msgstr "Sì"
 
@@ -8361,11 +8400,11 @@ msgstr "Hai precedentemente disattivato @{0}."
 msgid "You will be signed out of all your accounts."
 msgstr "Verrai disconnesso da tutti i tuoi account."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:217
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:219
 msgid "You will no longer receive notifications for this thread"
 msgstr "Non riceverai più notifiche relative a questo thread"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:213
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:215
 msgid "You will now receive notifications for this thread"
 msgstr "Riceverai le notifiche per questo thread"
 
@@ -8443,7 +8482,7 @@ msgstr "Hai raggiunto il limite giornaliero di video caricati (troppi byte)"
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "Hai raggiunto il limite giornaliero di video caricati (troppi video)"
 
-#: src/screens/VideoFeed/index.tsx:1082
+#: src/screens/VideoFeed/index.tsx:1084
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "Non ci sono altri video da guardare. Forse è il momento giusto per fare una pausa?"
 
