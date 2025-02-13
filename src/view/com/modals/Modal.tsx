@@ -9,6 +9,7 @@ import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import * as ChangeEmailModal from './ChangeEmail'
 import * as ChangePasswordModal from './ChangePassword'
+import * as ConvertStarterPackToList from './ConvertStarterPackToList'
 import * as CreateOrEditListModal from './CreateOrEditList'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as EditProfileModal from './EditProfile'
@@ -58,6 +59,9 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'create-or-edit-list') {
     snapPoints = CreateOrEditListModal.snapPoints
     element = <CreateOrEditListModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'convert-starter-pack-to-list') {
+    snapPoints = ConvertStarterPackToList.snapPoints
+    element = <ConvertStarterPackToList.Component {...activeModal} />
   } else if (activeModal?.name === 'user-add-remove-lists') {
     snapPoints = UserAddRemoveListsModal.snapPoints
     element = <UserAddRemoveListsModal.Component {...activeModal} />

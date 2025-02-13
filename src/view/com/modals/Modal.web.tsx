@@ -8,6 +8,7 @@ import type {Modal as ModalIface} from '#/state/modals'
 import {useModalControls, useModals} from '#/state/modals'
 import * as ChangeEmailModal from './ChangeEmail'
 import * as ChangePasswordModal from './ChangePassword'
+import * as ConvertStarterPackToList from './ConvertStarterPackToList'
 import * as CreateOrEditListModal from './CreateOrEditList'
 import * as CropImageModal from './CropImage.web'
 import * as DeleteAccountModal from './DeleteAccount'
@@ -63,6 +64,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <EditProfileModal.Component {...modal} />
   } else if (modal.name === 'create-or-edit-list') {
     element = <CreateOrEditListModal.Component {...modal} />
+  } else if (modal.name === 'convert-starter-pack-to-list') {
+    element = <ConvertStarterPackToList.Component {...modal} />
   } else if (modal.name === 'user-add-remove-lists') {
     element = <UserAddRemoveLists.Component {...modal} />
   } else if (modal.name === 'list-add-remove-users') {

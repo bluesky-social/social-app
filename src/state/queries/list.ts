@@ -7,6 +7,7 @@ import {
   BskyAgent,
   Facet,
 } from '@atproto/api'
+import {Create} from '@atproto/api/dist/client/types/com/atproto/repo/applyWrites'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
@@ -105,6 +106,121 @@ export function useListCreateMutation() {
       },
     },
   )
+}
+
+export interface ListCreatefromStarterPackMutateParams {
+  name: string
+  description: string
+  descriptionFacets: Facet[] | undefined
+  avatar: RNImage | null | undefined
+  starterPackUri: string
+}
+export function useListCreateFromStarterPackMutation() {
+  const {currentAccount} = useSession()
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+
+  return useMutation<
+    {uri: string; cid: string},
+    Error,
+    ListCreatefromStarterPackMutateParams
+  >({
+    async mutationFn({
+      name,
+      description,
+      descriptionFacets,
+      avatar,
+      starterPackUri,
+    }) {
+      if (!currentAccount) {
+        throw new Error('Not logged in')
+      }
+
+      const starterPack = await agent.app.bsky.graph.getList({
+        list: starterPackUri,
+        limit: 100,
+      })
+
+      if (!starterPack.data.items) throw new Error('Invalid Starter Pack')
+      if (starterPack.data.items.length === 0)
+        throw new Error('Empty Starter Pack')
+
+      const record: AppBskyGraphList.Record = {
+        purpose: 'app.bsky.graph.defs#curatelist',
+        name,
+        description,
+        descriptionFacets,
+        avatar: undefined,
+        createdAt: new Date().toISOString(),
+      }
+
+      if (avatar) {
+        const blobRes = await uploadBlob(agent, avatar.path, avatar.mime)
+        record.avatar = blobRes.data.blob
+      }
+
+      const list = await agent.app.bsky.graph.list.create(
+        {repo: currentAccount.did},
+        record,
+      )
+
+      let cursor = starterPack.data.cursor
+      let page = starterPack
+
+      do {
+        const members = page.data.items as AppBskyGraphDefs.ListItemView[]
+
+        // because there's no way to batch insert members when creating a new List
+        // we insert them with batch writes using {atproto.repo.applyWrites}
+        // SEE: https://docs.bsky.app/docs/api/com-atproto-repo-apply-writes
+
+        const writes: Create[] = new Array(members.length)
+
+        for (let i = 0; i < members.length; i++) {
+          writes[i] = {
+            $type: 'com.atproto.repo.applyWrites#create',
+            collection: 'app.bsky.graph.listitem',
+            value: {
+              subject: members[i].subject.did,
+              list: list.uri,
+              createdAt: record.createdAt,
+            },
+          }
+        }
+
+        await agent.com.atproto.repo.applyWrites({
+          repo: currentAccount.did,
+          writes,
+        })
+
+        if (cursor) {
+          page = await agent.app.bsky.graph.getList({
+            list: starterPackUri,
+            limit: 100,
+            cursor,
+          })
+
+          cursor = page.data.cursor
+        }
+      } while (cursor)
+
+      // wait for the appview to update
+      await whenAppViewReady(
+        agent,
+        list.uri,
+        (v: AppBskyGraphGetList.Response) => {
+          return typeof v?.data?.list.uri === 'string'
+        },
+      )
+      return list
+    },
+    onSuccess() {
+      invalidateMyLists(queryClient)
+      queryClient.invalidateQueries({
+        queryKey: PROFILE_LISTS_RQKEY(currentAccount!.did),
+      })
+    },
+  })
 }
 
 export interface ListMetadataMutateParams {
@@ -212,8 +328,8 @@ export function useListDeleteMutation() {
       }
 
       // batch delete the list and listitem records
-      const createDel = (uri: string) => {
-        const urip = new AtUri(uri)
+      const createDel = (uriToDelete: string) => {
+        const urip = new AtUri(uriToDelete)
         return {
           $type: 'com.atproto.repo.applyWrites#delete',
           collection: urip.collection,
@@ -221,7 +337,7 @@ export function useListDeleteMutation() {
         }
       }
       const writes = listitemRecordUris
-        .map(uri => createDel(uri))
+        .map(currentUri => createDel(currentUri))
         .concat([createDel(uri)])
 
       // apply in chunks
