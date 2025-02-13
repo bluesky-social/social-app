@@ -326,8 +326,10 @@ function useProfileFollowMutation(
         didBecomeMutual: profile.viewer
           ? Boolean(profile.viewer.followedBy)
           : undefined,
-        // @ts-expect-error — this is optional
-        followeeClout: toClout(profile?.followersCount),
+        followeeClout:
+          'followersCount' in profile
+            ? toClout(profile.followersCount)
+            : undefined,
         followerClout: toClout(ownProfile?.followersCount),
       })
       return await agent.follow(did)
