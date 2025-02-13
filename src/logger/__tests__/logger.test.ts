@@ -111,8 +111,15 @@ describe('general functionality', () => {
     const timestamp = Date.now()
     const sentryTimestamp = timestamp / 1000
 
-    sentryTransport(LogLevel.Debug, undefined, message, {}, timestamp)
+    sentryTransport(
+      LogLevel.Debug,
+      Logger.Context.Default,
+      message,
+      {},
+      timestamp,
+    )
     expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
+      category: Logger.Context.Default,
       message,
       data: {},
       type: 'default',
@@ -122,12 +129,13 @@ describe('general functionality', () => {
 
     sentryTransport(
       LogLevel.Info,
-      undefined,
+      Logger.Context.Default,
       message,
       {type: 'info', prop: true},
       timestamp,
     )
     expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
+      category: Logger.Context.Default,
       message,
       data: {prop: true},
       type: 'info',
@@ -135,8 +143,15 @@ describe('general functionality', () => {
       timestamp: sentryTimestamp,
     })
 
-    sentryTransport(LogLevel.Log, undefined, message, {}, timestamp)
+    sentryTransport(
+      LogLevel.Log,
+      Logger.Context.Default,
+      message,
+      {},
+      timestamp,
+    )
     expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
+      category: Logger.Context.Default,
       message,
       data: {},
       type: 'default',
@@ -144,14 +159,24 @@ describe('general functionality', () => {
       timestamp: sentryTimestamp,
     })
     jest.runAllTimers()
-    expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
-      level: 'log',
-      tags: undefined,
-      extra: {},
-    })
+    expect(Sentry.captureMessage).toHaveBeenCalledWith(
+      `(${Logger.Context.Default}) ${message}`,
+      {
+        level: 'log',
+        tags: undefined,
+        extra: {},
+      },
+    )
 
-    sentryTransport(LogLevel.Warn, undefined, message, {}, timestamp)
+    sentryTransport(
+      LogLevel.Warn,
+      Logger.Context.Default,
+      message,
+      {},
+      timestamp,
+    )
     expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
+      category: Logger.Context.Default,
       message,
       data: {},
       type: 'default',
@@ -159,11 +184,14 @@ describe('general functionality', () => {
       timestamp: sentryTimestamp,
     })
     jest.runAllTimers()
-    expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
-      level: 'warning',
-      tags: undefined,
-      extra: {},
-    })
+    expect(Sentry.captureMessage).toHaveBeenCalledWith(
+      `(${Logger.Context.Default}) ${message}`,
+      {
+        level: 'warning',
+        tags: undefined,
+        extra: {},
+      },
+    )
 
     const e = new Error('error')
     const tags = {
@@ -172,7 +200,7 @@ describe('general functionality', () => {
 
     sentryTransport(
       LogLevel.Error,
-      undefined,
+      Logger.Context.Default,
       e,
       {
         tags,
@@ -248,7 +276,7 @@ describe('create', () => {
 
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Info,
-      'notifications',
+      Logger.Context.Default,
       message,
       {},
       timestamp,
