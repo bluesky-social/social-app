@@ -1,4 +1,3 @@
-import {asPredicate} from '@atproto/api'
 import {ValidationResult} from '@atproto/lexicon'
 
 export * as post from '#/types/bsky/post'
@@ -30,7 +29,7 @@ export function dangerousIsType<R extends {$type?: string}>(
 }
 
 /**
- * Fully validates the object schema, which as a performance cost.
+ * Fully validates the object schema, which has a performance cost.
  *
  * For faster checks with data we trust, like that from our app view, use the
  * `dangerousIsType` export from this same file.
@@ -42,10 +41,11 @@ export function dangerousIsType<R extends {$type?: string}>(
  * if (bsky.validate(item, AppBskyFeedPost.validateRecord)) {
  *   // `item` has type `$Typed<AppBskyFeedPost.Record>` here
  * }
+ * ```
  */
 export function validate<R extends {$type?: string}>(
   record: unknown,
-  identity: (v: unknown) => ValidationResult<R>,
+  validator: (v: unknown) => ValidationResult<R>,
 ): record is R {
-  return asPredicate(identity)(record)
+  return validator(record).success
 }
