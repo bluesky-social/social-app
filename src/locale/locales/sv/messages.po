@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-13 03:02\n"
+"PO-Revision-Date: 2025-02-13 23:50\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -2095,7 +2095,7 @@ msgstr ""
 
 #: src/screens/Settings/AboutSettings.tsx:76
 msgid "Developer mode enabled"
-msgstr ""
+msgstr "Utvecklarläge aktiverat"
 
 #: src/screens/Settings/Settings.tsx:242
 #: src/screens/Settings/Settings.tsx:245
@@ -6013,7 +6013,7 @@ msgstr "Sök efter flöden att föreslå åt andra."
 
 #: src/view/screens/Search/Search.tsx:832
 msgid "Search for posts, users, or feeds"
-msgstr ""
+msgstr "Sök efter inlägg, användare eller flöden"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
 msgid "Search for users"
