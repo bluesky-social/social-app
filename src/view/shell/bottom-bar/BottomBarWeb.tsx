@@ -240,18 +240,28 @@ const NavItem: React.FC<{
     }
     return getCurrentRoute(state)
   })
+
+  // Détermine si nous sommes sur le profil de quelqu'un d'autre
+  const isOnDifferentProfile =
+    currentRoute.name === 'Profile' &&
+    routeName === 'Profile' &&
+    (currentRoute.params as CommonNavigatorParams['Profile']).name !==
+      currentAccount?.handle
+
   const isActive =
     currentRoute.name === 'Profile'
       ? isTab(currentRoute.name, routeName) &&
         (currentRoute.params as CommonNavigatorParams['Profile']).name ===
-          currentAccount?.handle
+          (routeName === 'Profile'
+            ? currentAccount?.handle
+            : (currentRoute.params as CommonNavigatorParams['Profile']).name)
       : isTab(currentRoute.name, routeName)
 
   return (
     <Link
       href={href}
       style={[styles.ctrl, a.pb_lg]}
-      navigationAction="navigate"
+      navigationAction={isOnDifferentProfile ? 'push' : 'navigate'}
       aria-role="link"
       aria-label={routeName}
       accessible={true}>
