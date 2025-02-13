@@ -581,7 +581,7 @@ function Footer({
 function getName(item: bsky.profile.AnyProfileView | GeneratorView) {
   if (typeof item.displayName === 'string') {
     return enforceLen(sanitizeDisplayName(item.displayName), 28, true)
-  } else if ('handle' in item) {
+  } else if ('handle' in item && typeof item.handle === 'string') {
     return enforceLen(sanitizeHandle(item.handle), 28, true)
   }
   return ''
