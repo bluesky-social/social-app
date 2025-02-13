@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-13 05:05\n"
+"PO-Revision-Date: 2025-02-13 16:59\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1152,7 +1152,7 @@ msgstr "睇下用咗 {displayName} 標籤嘅貼文"
 
 #: src/components/TrendingTopics.tsx:195
 msgid "Browse starter pack {displayName}"
-msgstr ""
+msgstr "瀏覽新手包 {displayName}"
 
 #: src/components/TrendingTopics.tsx:232
 msgid "Browse topic {displayName}"
@@ -1488,7 +1488,7 @@ msgstr "閂咗對話框去"
 
 #: src/view/shell/index.web.tsx:83
 msgid "Close drawer menu"
-msgstr ""
+msgstr "閂咗櫃桶選單去"
 
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
@@ -1664,7 +1664,7 @@ msgstr "內容篩選器"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:57
 msgid "Content from across the network we think you might like."
-msgstr ""
+msgstr "我哋精選咗啲喺唔同社交網絡搵到，可能會啱你心水嘅內容。"
 
 #: src/screens/Settings/LanguageSettings.tsx:251
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
@@ -1755,12 +1755,12 @@ msgstr "複製 App 密碼"
 #: src/view/com/profile/ProfileMenu.tsx:327
 #: src/view/com/profile/ProfileMenu.tsx:330
 msgid "Copy at:// URI"
-msgstr ""
+msgstr "複製 at:// 連結"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:674
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:676
 msgid "Copy author DID"
-msgstr ""
+msgstr "複製發布者 DID"
 
 #: src/components/dialogs/Embed.tsx:122
 #: src/components/dialogs/Embed.tsx:141
@@ -1802,7 +1802,7 @@ msgstr "複製訊息文字"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
 msgid "Copy post at:// URI"
-msgstr ""
+msgstr "複製貼文 at:// 連結"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:422
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:424
@@ -2091,11 +2091,11 @@ msgstr "係咪要拆開引用帖文？"
 
 #: src/screens/Settings/AboutSettings.tsx:77
 msgid "Developer mode disabled"
-msgstr ""
+msgstr "開發者模式經已停用"
 
 #: src/screens/Settings/AboutSettings.tsx:76
 msgid "Developer mode enabled"
-msgstr ""
+msgstr "開發者模式經已啓用"
 
 #: src/screens/Settings/Settings.tsx:242
 #: src/screens/Settings/Settings.tsx:245
@@ -2925,11 +2925,11 @@ msgstr "喺動態源度篩選"
 
 #: src/view/screens/Search/Search.tsx:397
 msgid "Filter search by language"
-msgstr ""
+msgstr "按語言篩選去搵"
 
 #: src/view/screens/Search/Search.tsx:367
 msgid "Filter search by language (currently: {currentLanguageLabel})"
-msgstr ""
+msgstr "按語言篩選去搵（目前：{currentLanguageLabel}）"
 
 #: src/screens/Onboarding/StepFinished.tsx:303
 msgid "Finalizing"
@@ -6013,7 +6013,7 @@ msgstr "搵你想同其他人推薦嘅動態源。"
 
 #: src/view/screens/Search/Search.tsx:832
 msgid "Search for posts, users, or feeds"
-msgstr ""
+msgstr "搵帖文、用戶或動態源"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
 msgid "Search for users"
