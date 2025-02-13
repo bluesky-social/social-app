@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-13 08:59\n"
+"PO-Revision-Date: 2025-02-13 13:18\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1755,7 +1755,7 @@ msgstr "Alkalmazásjelszó másolása"
 #: src/view/com/profile/ProfileMenu.tsx:327
 #: src/view/com/profile/ProfileMenu.tsx:330
 msgid "Copy at:// URI"
-msgstr ""
+msgstr "„at://” URI másolása"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:674
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:676
@@ -1802,7 +1802,7 @@ msgstr "Üzenet szövegének másolása"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
 msgid "Copy post at:// URI"
-msgstr ""
+msgstr "Bejegyzés „at://” URI-jének másolása"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:422
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:424
