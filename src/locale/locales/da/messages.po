@@ -8,7 +8,7 @@ msgstr ""
 "Language: da\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-13 03:01\n"
+"PO-Revision-Date: 2025-02-13 15:34\n"
 "Last-Translator: \n"
 "Language-Team: Danish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -5180,7 +5180,7 @@ msgstr "Opslag skjult af dig"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:99
 msgid "Post interaction settings"
-msgstr "Indstillinger for interaktion"
+msgstr "Interaktionsindstillinger"
 
 #: src/Navigation.tsx:163
 #: src/screens/ModerationInteractionSettings/index.tsx:34
