@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-14 02:02\n"
+"PO-Revision-Date: 2025-02-14 03:19\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -365,7 +365,7 @@ msgid "7 days"
 msgstr "7 dagar"
 
 #: src/Navigation.tsx:373
-#: src/screens/Settings/AboutSettings.tsx:30
+#: src/screens/Settings/AboutSettings.tsx:33
 #: src/screens/Settings/Settings.tsx:215
 #: src/screens/Settings/Settings.tsx:218
 msgid "About"
@@ -607,11 +607,11 @@ msgstr "Tillåt åtkomst till dina direktmeddelanden"
 msgid "Allow new messages from"
 msgstr "Tillåt nya meddelanden från"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:343
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
 msgid "Allow quote posts"
 msgstr "Tillåt citeringar"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
 msgid "Allow replies from:"
 msgstr "Tillåt svar från:"
 
@@ -1429,11 +1429,11 @@ msgstr "Rensa sökfrågan"
 msgid "click here"
 msgstr "klicka här"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:336
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
 msgid "Click to disable quote posts of this post."
 msgstr "Klicka för att inaktivera citeringar av detta inlägg."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:338
 msgid "Click to enable quote posts of this post."
 msgstr "Klicka för att tillåta citeringar av detta inlägg."
 
@@ -1722,7 +1722,7 @@ msgstr "Matlagning"
 msgid "Copied"
 msgstr "Kopierat"
 
-#: src/screens/Settings/AboutSettings.tsx:84
+#: src/screens/Settings/AboutSettings.tsx:87
 msgid "Copied build version to clipboard"
 msgstr "Byggversion kopierad till urklipp"
 
@@ -1740,7 +1740,7 @@ msgstr "Kopierat till urklipp"
 msgid "Copied!"
 msgstr "Kopierat!"
 
-#: src/screens/Settings/AboutSettings.tsx:70
+#: src/screens/Settings/AboutSettings.tsx:73
 msgid "Copies build version to clipboard"
 msgstr "Kopierar byggversion till urklipp"
 
@@ -1916,7 +1916,7 @@ msgstr "Kultur"
 msgid "Custom"
 msgstr "Anpassad"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:102
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:103
 msgid "Customize who can interact with this post."
 msgstr "Ställ in vilka som kan interagera med det här inlägget."
 
@@ -2089,11 +2089,11 @@ msgstr "Avskilj citat"
 msgid "Detach quote post?"
 msgstr "Avskilj citatinlägg?"
 
-#: src/screens/Settings/AboutSettings.tsx:77
+#: src/screens/Settings/AboutSettings.tsx:80
 msgid "Developer mode disabled"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:76
+#: src/screens/Settings/AboutSettings.tsx:79
 msgid "Developer mode enabled"
 msgstr "Utvecklarläge aktiverat"
 
@@ -2385,7 +2385,7 @@ msgid "Edit People"
 msgstr "Redigera personer"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:69
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:239
 msgid "Edit post interaction settings"
 msgstr "Redigera interaktionsinställningar för inlägg"
 
@@ -2637,7 +2637,7 @@ msgstr "Fel vid mottagning av captcha-svar."
 msgid "Error:"
 msgstr "Fel:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:394
 msgid "Everybody"
 msgstr "Alla"
 
@@ -3312,7 +3312,7 @@ msgstr "Dolt"
 msgid "Hidden by your moderation settings."
 msgstr "Dolt av dina modereringsinställningar."
 
-#: src/components/ListCard.tsx:131
+#: src/components/ListCard.tsx:130
 msgid "Hidden list"
 msgstr "Dold lista"
 
@@ -3860,7 +3860,7 @@ msgstr "Listavatar"
 msgid "List blocked"
 msgstr "Lista blockerad"
 
-#: src/components/ListCard.tsx:151
+#: src/components/ListCard.tsx:150
 #: src/view/com/feeds/FeedSourceCard.tsx:255
 msgid "List by {0}"
 msgstr "Lista av {0}"
@@ -4031,7 +4031,7 @@ msgstr "Media som kan vara störande eller olämplig för vissa målgrupper."
 msgid "mentioned users"
 msgstr "omnämnda användare"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:422
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:423
 msgid "Mentioned users"
 msgstr "Omnämnda användare"
 
@@ -4090,7 +4090,7 @@ msgstr "Moderering"
 msgid "Moderation details"
 msgstr "Modereringsdetaljer"
 
-#: src/components/ListCard.tsx:150
+#: src/components/ListCard.tsx:149
 #: src/view/com/modals/UserAddRemoveLists.tsx:222
 msgid "Moderation list by {0}"
 msgstr "Modereringslista av {0}"
@@ -4523,7 +4523,7 @@ msgstr "Inget sökresultat hittades för \"{search}\"."
 msgid "No thanks"
 msgstr "Nej tack"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:405
 msgid "Nobody"
 msgstr "Ingen"
 
@@ -4856,7 +4856,7 @@ msgstr "Lägg till valfri ytterligare information nedan:"
 msgid "Options:"
 msgstr "Alternativ:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:417
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:418
 msgid "Or combine these options:"
 msgstr "Eller kombinera mellan de här alternativen:"
 
@@ -5178,7 +5178,7 @@ msgstr "Inlägg dolt genom ignorerat ord"
 msgid "Post Hidden by You"
 msgstr "Inlägg dolt av dig"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:99
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
 msgid "Post interaction settings"
 msgstr "Interaktionsinställningar för inlägg"
 
@@ -5277,8 +5277,8 @@ msgid "Privacy and Security"
 msgstr "Integritet och säkerhet"
 
 #: src/Navigation.tsx:281
-#: src/screens/Settings/AboutSettings.tsx:47
 #: src/screens/Settings/AboutSettings.tsx:50
+#: src/screens/Settings/AboutSettings.tsx:53
 #: src/view/screens/PrivacyPolicy.tsx:31
 #: src/view/shell/Drawer.tsx:629
 #: src/view/shell/Drawer.tsx:630
@@ -5357,7 +5357,7 @@ msgstr "Citatinlägget avskiljdes utan problem"
 msgid "Quote posts disabled"
 msgstr "Citeringar är inaktiverade"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:328
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:329
 msgid "Quote settings"
 msgstr "Citatinställningar"
 
@@ -5517,7 +5517,7 @@ msgstr "Ta bort ignorerat ord från din lista"
 msgid "Remove profile"
 msgstr "Ta bort profil"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:284
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
 msgid "Remove quote"
 msgstr "Ta bort citat"
 
@@ -5566,7 +5566,7 @@ msgstr "Borttaget från dina flöden"
 msgid "Removes profile from search history"
 msgstr "Tar bort profilen från sökhistoriken"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
 msgstr "Tar bort citerat inlägg"
 
@@ -5606,11 +5606,11 @@ msgstr "Svaret har dolts av trådskaparen"
 msgid "Reply Hidden by You"
 msgstr "Svaret har dolts av dig"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:384
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:385
 msgid "Reply settings"
 msgstr "Svarsinställningar"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:369
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:370
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "Svarsinställningarna sätts av trådens författare"
 
@@ -5878,8 +5878,8 @@ msgid "Returns to the previous step"
 msgstr "Går tillbaka till föregående steg"
 
 #: src/components/dialogs/BirthDateSettings.tsx:120
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:478
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:479
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:485
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -6659,8 +6659,8 @@ msgstr "Startpaket"
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "Med startpaket kan du enkelt dela dina favoritflöden och personer med dina vänner."
 
-#: src/screens/Settings/AboutSettings.tsx:55
 #: src/screens/Settings/AboutSettings.tsx:58
+#: src/screens/Settings/AboutSettings.tsx:61
 msgid "Status Page"
 msgstr "Driftinformation"
 
@@ -6760,8 +6760,8 @@ msgstr "Växla till {0}"
 msgid "System"
 msgstr "System"
 
-#: src/screens/Settings/AboutSettings.tsx:62
 #: src/screens/Settings/AboutSettings.tsx:65
+#: src/screens/Settings/AboutSettings.tsx:68
 #: src/screens/Settings/Settings.tsx:318
 msgid "System log"
 msgstr "Systemlogg"
@@ -6809,8 +6809,8 @@ msgid "Terms"
 msgstr "Villkor"
 
 #: src/Navigation.tsx:286
-#: src/screens/Settings/AboutSettings.tsx:39
 #: src/screens/Settings/AboutSettings.tsx:42
+#: src/screens/Settings/AboutSettings.tsx:45
 #: src/view/screens/TermsOfService.tsx:31
 #: src/view/shell/Drawer.tsx:622
 #: src/view/shell/Drawer.tsx:624
@@ -7046,7 +7046,7 @@ msgstr "Ett problem uppstod med att uppdatera dina flöden. Kontrollera din inte
 msgid "There was an issue! {0}"
 msgstr "Ett problem uppstod! {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:216
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:217
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -7731,7 +7731,7 @@ msgstr "användare som följer <0>@{0}</0>"
 msgid "Users I follow"
 msgstr "Användare som jag följer"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:455
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:456
 msgid "Users in \"{0}\""
 msgstr "Användare i ”{0}”"
 
@@ -7739,7 +7739,7 @@ msgstr "Användare i ”{0}”"
 msgid "Users that have liked this content or profile"
 msgstr "Användare som har gillat detta innehåll eller denna profil"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:432
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:433
 msgid "Users you follow"
 msgstr "Användare som du följer"
 
@@ -7785,8 +7785,8 @@ msgstr "Verifiera din e-postadress"
 msgid "Verify Your Email"
 msgstr "Verifiera din e-postadress"
 
-#: src/screens/Settings/AboutSettings.tsx:69
-#: src/screens/Settings/AboutSettings.tsx:88
+#: src/screens/Settings/AboutSettings.tsx:72
+#: src/screens/Settings/AboutSettings.tsx:91
 msgid "Version {appVersion}"
 msgstr "Version {appVersion}"
 
@@ -8241,8 +8241,8 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "Du kan återaktivera ditt konto för att fortsätta logga in. Din profil och dina inlägg kommer att vara synliga för andra användare."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
-msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings.</0>"
-msgstr "Du kan ställa in förvalda interaktionsinställningar i <0>Inställningar → Moderering → Interaktionsinställningar.</0>"
+msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings</0>."
+msgstr ""
 
 #: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:139
@@ -8553,7 +8553,7 @@ msgstr "Din e-post har inte verifierats än. Det är en viktig säkerhetsåtgär
 msgid "Your first like!"
 msgstr "Din första gillamarkering!"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:443
 msgid "Your followers"
 msgstr "Dina följare"
 
