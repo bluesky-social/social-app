@@ -6,17 +6,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: ia\n"
-"Project-Id-Version: bluesky-in-interlingua\n"
+"Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-10 20:45\n"
+"PO-Revision-Date: 2025-02-14 19:57\n"
 "Last-Translator: \n"
 "Language-Team: Interlingua\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Crowdin-Project: bluesky-in-interlingua\n"
-"X-Crowdin-Project-ID: 739423\n"
+"X-Crowdin-Project: bluesky-social\n"
+"X-Crowdin-Project-ID: 664276\n"
 "X-Crowdin-Language: ia\n"
-"X-Crowdin-File: messages.po\n"
-"X-Crowdin-File-ID: 4\n"
+"X-Crowdin-File: /main/src/locale/locales/en/messages.po\n"
+"X-Crowdin-File-ID: 12\n"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:567
 msgid "(active)"
@@ -29,7 +29,7 @@ msgstr ""
 #: src/screens/Settings/AccountSettings.tsx:65
 #: src/view/com/modals/VerifyEmail.tsx:150
 msgid "(no email)"
-msgstr "(necun e-mail)"
+msgstr ""
 
 #: src/lib/hooks/useTimeAgo.ts:156
 msgid "{0, plural, one {# day} other {# days}}"
@@ -89,7 +89,7 @@ msgstr ""
 msgid "{0, plural, one {following} other {following}}"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:447
+#: src/view/com/post-thread/PostThreadItem.tsx:452
 msgid "{0, plural, one {like} other {likes}}"
 msgstr ""
 
@@ -97,11 +97,11 @@ msgstr ""
 msgid "{0, plural, one {post} other {posts}}"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:431
+#: src/view/com/post-thread/PostThreadItem.tsx:436
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:413
+#: src/view/com/post-thread/PostThreadItem.tsx:418
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr ""
 
@@ -121,7 +121,7 @@ msgstr ""
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:201
 msgid "{0} of {1}"
-msgstr "{0} de {1}"
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:480
 msgid "{0} people have used this starter pack!"
@@ -129,11 +129,11 @@ msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:207
 msgid "{0} unread items"
-msgstr "{0} elementos non legite"
+msgstr ""
 
 #: src/view/com/util/UserAvatar.tsx:436
 msgid "{0}'s avatar"
-msgstr "Avatar de {0}"
+msgstr ""
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:67
 msgid "{0}'s favorite feeds and people - join me!"
@@ -168,9 +168,9 @@ msgstr ""
 msgid "{0}s"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:384
+#: src/view/shell/desktop/LeftNav.tsx:387
 msgid "{count} unread items"
-msgstr "{count} elementos non legite"
+msgstr ""
 
 #: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:178
@@ -207,7 +207,7 @@ msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:313
 msgid "{firstAuthorLink} followed you"
-msgstr "{firstAuthorLink} te seque"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:290
 msgid "{firstAuthorLink} followed you back"
@@ -231,7 +231,7 @@ msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:294
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
-msgstr "{firstAuthorName} e {additionalAuthorsCount, plural, one {{formattedAuthorsCount} altere} other {{formattedAuthorsCount} alteres}} te ha sequite"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:320
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
@@ -251,7 +251,7 @@ msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:299
 msgid "{firstAuthorName} followed you"
-msgstr "{firstAuthorName} te ha sequite"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:289
 msgid "{firstAuthorName} followed you back"
@@ -284,15 +284,15 @@ msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:262
 msgid "{notificationCount} unread items"
-msgstr "{notificationCount} elementos non legite"
+msgstr ""
 
 #: src/view/shell/Drawer.tsx:453
 msgid "{numUnreadNotifications} unread"
-msgstr "{numUnreadNotifications} non legite"
+msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:234
 msgid "{numUnreadNotifications} unread items"
-msgstr "{numUnreadNotifications} elementos non legite"
+msgstr ""
 
 #: src/components/NewskieDialog.tsx:116
 msgid "{profileName} joined Bluesky {0} ago"
@@ -328,7 +328,7 @@ msgstr ""
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:279
+#: src/components/WhoCanReply.tsx:292
 msgid "<0>{0}</0> members"
 msgstr ""
 
@@ -350,40 +350,36 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:193
 msgid "24 hours"
-msgstr "24 horas"
+msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:260
 msgid "2FA Confirmation"
-msgstr "Confirmation 2FA"
+msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:232
 msgid "30 days"
-msgstr "30 dies"
+msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:217
 msgid "7 days"
-msgstr "7 dies"
+msgstr ""
 
 #: src/Navigation.tsx:373
-#: src/screens/Settings/AboutSettings.tsx:28
+#: src/screens/Settings/AboutSettings.tsx:33
 #: src/screens/Settings/Settings.tsx:215
 #: src/screens/Settings/Settings.tsx:218
 msgid "About"
-msgstr "A proposito de"
-
-#: src/view/screens/Search/Search.tsx:810
-msgid "Access navigation links and settings"
-msgstr "Accede a ligamines de navigation e configurationes"
+msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:46
 #: src/screens/Settings/Settings.tsx:191
 #: src/screens/Settings/Settings.tsx:194
 msgid "Accessibility"
-msgstr "Accessibilitate"
+msgstr ""
 
 #: src/Navigation.tsx:333
 msgid "Accessibility Settings"
-msgstr "Configurationes de accessibilitate"
+msgstr ""
 
 #: src/Navigation.tsx:349
 #: src/screens/Login/LoginForm.tsx:186
@@ -391,60 +387,60 @@ msgstr "Configurationes de accessibilitate"
 #: src/screens/Settings/Settings.tsx:153
 #: src/screens/Settings/Settings.tsx:156
 msgid "Account"
-msgstr "Conto"
+msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:132
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:360
+#: src/view/com/profile/ProfileMenu.tsx:134
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:362
 msgid "Account blocked"
-msgstr "Conto blocate"
+msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:145
+#: src/view/com/profile/ProfileMenu.tsx:147
 msgid "Account followed"
-msgstr "Conto sequite"
+msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:108
+#: src/view/com/profile/ProfileMenu.tsx:110
 msgid "Account muted"
-msgstr "Conto silentiate"
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:101
 #: src/lib/moderation/useModerationCauseDescription.ts:96
 msgid "Account Muted"
-msgstr "Conto silentiate"
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:87
 msgid "Account Muted by List"
-msgstr "Conto silentiate per lista"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:430
 msgid "Account options"
-msgstr "Optiones de conto"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:466
 msgid "Account removed from quick access"
-msgstr "Conto removite del accesso rapide"
+msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:137
-#: src/view/com/profile/ProfileMenu.tsx:122
+#: src/view/com/profile/ProfileMenu.tsx:124
 msgid "Account unblocked"
-msgstr "Conto disblocate"
+msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:157
+#: src/view/com/profile/ProfileMenu.tsx:159
 msgid "Account unfollowed"
-msgstr "Conto dissequite"
+msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:98
+#: src/view/com/profile/ProfileMenu.tsx:100
 msgid "Account unmuted"
-msgstr "Conto dissilentiate"
+msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:328
 #: src/view/com/modals/ListAddRemoveUsers.tsx:269
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 msgid "Add"
-msgstr "Adder"
+msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:551
 msgid "Add {0} more to continue"
-msgstr "Adder {0} plus a continuar"
+msgstr ""
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:58
 msgid "Add {displayName} to starter pack"
@@ -453,17 +449,17 @@ msgstr ""
 #: src/view/com/composer/labels/LabelsBtn.tsx:107
 #: src/view/com/composer/labels/LabelsBtn.tsx:112
 msgid "Add a content warning"
-msgstr "Adder un advertimento de contento"
+msgstr ""
 
 #: src/view/screens/ProfileList.tsx:895
 #: src/view/screens/ProfileList.tsx:913
 msgid "Add a user to this list"
-msgstr "Adder un usator a iste lista"
+msgstr ""
 
 #: src/components/dialogs/SwitchAccount.tsx:55
 #: src/screens/Deactivated.tsx:191
 msgid "Add account"
-msgstr "Adder conto"
+msgstr ""
 
 #: src/view/com/composer/GifAltText.tsx:76
 #: src/view/com/composer/GifAltText.tsx:144
@@ -473,32 +469,32 @@ msgstr "Adder conto"
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:88
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:93
 msgid "Add alt text"
-msgstr "Adder texto alternative"
+msgstr ""
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:107
 msgid "Add alt text (optional)"
-msgstr "Adder texto alternative (optional)"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:373
 #: src/screens/Settings/Settings.tsx:376
-#: src/view/shell/desktop/LeftNav.tsx:281
-#: src/view/shell/desktop/LeftNav.tsx:285
+#: src/view/shell/desktop/LeftNav.tsx:284
+#: src/view/shell/desktop/LeftNav.tsx:288
 msgid "Add another account"
-msgstr "Adder altere conto"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:743
 msgid "Add another post"
-msgstr "Adder un altere publication"
+msgstr ""
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:102
 msgid "Add app password"
-msgstr "Adder contrasigno de application"
+msgstr ""
 
 #: src/screens/Settings/AppPasswords.tsx:75
 #: src/screens/Settings/AppPasswords.tsx:83
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:111
 msgid "Add App Password"
-msgstr "Adder contrasigno de application"
+msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:321
 msgid "Add mute word for configured settings"
@@ -506,20 +502,20 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:112
 msgid "Add muted words and tags"
-msgstr "Adder parolas e etiquettas silentiate"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1257
 msgid "Add new post"
-msgstr "Adder nove publication"
+msgstr ""
 
 #: src/view/screens/ProfileList.tsx:903
 #: src/view/screens/ProfileList.tsx:921
 msgid "Add people"
-msgstr "Adder personas"
+msgstr ""
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
-msgstr "Adder fluxos recommendate"
+msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:471
 msgid "Add some feeds to your starter pack!"
@@ -535,25 +531,25 @@ msgstr ""
 
 #: src/components/FeedCard.tsx:295
 msgid "Add this feed to your feeds"
-msgstr "Adde iste fluxo a tu fluxos"
+msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:243
-#: src/view/com/profile/ProfileMenu.tsx:246
+#: src/view/com/profile/ProfileMenu.tsx:253
+#: src/view/com/profile/ProfileMenu.tsx:256
 msgid "Add to Lists"
-msgstr "Adder al listas"
+msgstr ""
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
 msgid "Add to my feeds"
-msgstr "Adder a mi fluxos"
+msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:192
 #: src/view/com/modals/UserAddRemoveLists.tsx:162
 msgid "Added to list"
-msgstr "Addite al lista"
+msgstr ""
 
 #: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Added to my feeds"
-msgstr "Addite a mi fluxos"
+msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:160
 msgid "Adult"
@@ -581,15 +577,21 @@ msgstr ""
 
 #: src/screens/Moderation/index.tsx:399
 msgid "Advanced"
-msgstr "Avantiate"
+msgstr ""
 
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
-msgstr "Toto"
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
-msgstr "Tote le contos ha essite sequite!"
+msgstr ""
+
+#: src/view/screens/Search/Search.tsx:361
+#: src/view/screens/Search/Search.tsx:399
+#: src/view/screens/Search/Search.tsx:401
+msgid "All languages"
+msgstr ""
 
 #: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
@@ -598,29 +600,29 @@ msgstr ""
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:146
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:153
 msgid "Allow access to your direct messages"
-msgstr "Permitter accesso a tu messages directe"
+msgstr ""
 
 #: src/screens/Messages/Settings.tsx:70
 #: src/screens/Messages/Settings.tsx:73
 msgid "Allow new messages from"
-msgstr "Permitter nove messages de"
+msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:343
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
 msgid "Allow quote posts"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
 msgid "Allow replies from:"
-msgstr "Permitter responsas de:"
+msgstr ""
 
 #: src/screens/Settings/AppPasswords.tsx:200
 msgid "Allows access to direct messages"
-msgstr "Permitte accesso a messages directe"
+msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:171
 #: src/view/com/modals/ChangePassword.tsx:171
 msgid "Already have a code?"
-msgstr "Ha tu jam un codice?"
+msgstr ""
 
 #: src/screens/Login/ChooseAccountForm.tsx:43
 msgid "Already signed in as @{0}"
@@ -639,11 +641,11 @@ msgstr ""
 #: src/view/com/composer/videos/SubtitleDialog.tsx:102
 #: src/view/com/composer/videos/SubtitleDialog.tsx:106
 msgid "Alt text"
-msgstr "Texto alternative"
+msgstr ""
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:191
 msgid "Alt Text"
-msgstr "Texto alternative"
+msgstr ""
 
 #: src/view/com/composer/photos/Gallery.tsx:255
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
@@ -669,11 +671,11 @@ msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:265
 msgid "An error has occurred"
-msgstr "Ocurreva un error"
+msgstr ""
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:420
 msgid "An error occurred"
-msgstr "Ocurreva un error"
+msgstr ""
 
 #: src/view/com/composer/state/video.ts:398
 msgid "An error occurred while compressing the video."
@@ -739,54 +741,49 @@ msgstr ""
 msgid "an unknown labeler"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:300
+#: src/components/WhoCanReply.tsx:313
 msgid "and"
-msgstr "e"
+msgstr ""
 
 #: src/screens/Onboarding/index.tsx:29
 #: src/screens/Onboarding/state.ts:94
 msgid "Animals"
-msgstr "Animales"
+msgstr ""
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:149
 msgid "Animated GIF"
-msgstr "GIF animate"
+msgstr ""
 
 #: src/lib/moderation/useReportOptions.ts:33
 msgid "Anti-Social Behavior"
-msgstr "Comportamento antisocial"
-
-#: src/view/screens/Search/Search.tsx:333
-#: src/view/screens/Search/Search.tsx:334
-msgid "Any language"
-msgstr "Qualcunque lingua"
+msgstr ""
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:48
 msgid "Anybody can interact"
-msgstr "Quicunque pote interager"
+msgstr ""
 
 #: src/Navigation.tsx:381
 #: src/screens/Settings/AppIconSettings/index.tsx:67
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:18
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:23
 msgid "App Icon"
-msgstr "Icone de application"
+msgstr ""
 
 #: src/screens/Settings/LanguageSettings.tsx:80
 msgid "App Language"
-msgstr "Lingua de app"
+msgstr ""
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:122
 msgid "App Password"
-msgstr "Contrasigno de app"
+msgstr ""
 
 #: src/screens/Settings/AppPasswords.tsx:147
 msgid "App password deleted"
-msgstr "Contrasigno de application supprimite"
+msgstr ""
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:84
 msgid "App password name must be unique"
-msgstr "Le nomine del contrasigno de application debe esser unic"
+msgstr ""
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:62
 msgid "App password names can only contain letters, numbers, spaces, dashes, and underscores"
@@ -799,12 +796,12 @@ msgstr ""
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:63
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:66
 msgid "App passwords"
-msgstr "Contrasignos de application"
+msgstr ""
 
 #: src/Navigation.tsx:301
 #: src/screens/Settings/AppPasswords.tsx:51
 msgid "App Passwords"
-msgstr "Contrasignos de application"
+msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:148
 #: src/components/moderation/LabelsOnMeDialog.tsx:151
@@ -841,21 +838,21 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:183
 #: src/screens/Settings/Settings.tsx:186
 msgid "Appearance"
-msgstr "Apparentia"
+msgstr ""
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 #: src/screens/Home/NoFeedsPinned.tsx:93
 msgid "Apply default recommended feeds"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:834
+#: src/view/com/post-thread/PostThreadItem.tsx:839
 msgid "Archived from {0}"
-msgstr "Archivate desde {0}"
+msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:803
-#: src/view/com/post-thread/PostThreadItem.tsx:842
+#: src/view/com/post-thread/PostThreadItem.tsx:808
+#: src/view/com/post-thread/PostThreadItem.tsx:847
 msgid "Archived post"
-msgstr "Publication archivate"
+msgstr ""
 
 #: src/screens/Settings/AppPasswords.tsx:209
 msgid "Are you sure you want to delete the app password \"{0}\"?"
@@ -895,7 +892,7 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:433
 msgid "Are you sure?"
-msgstr "Es tu secur?"
+msgstr ""
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:69
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
@@ -912,7 +909,7 @@ msgstr ""
 
 #: src/screens/Signup/StepHandle.tsx:180
 msgid "At least 3 characters"
-msgstr "Al minus 3 characteres"
+msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:105
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
@@ -964,39 +961,39 @@ msgstr ""
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:74
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:111
 msgid "BETA"
-msgstr "BETA"
+msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:102
 #: src/screens/Settings/AccountSettings.tsx:109
 msgid "Birthday"
-msgstr "Anniversario"
+msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
-#: src/view/com/profile/ProfileMenu.tsx:341
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:744
+#: src/view/com/profile/ProfileMenu.tsx:376
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:776
 msgid "Block"
-msgstr "Blocar"
+msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:250
 #: src/components/dms/ConvoMenu.tsx:253
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:603
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:605
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:615
 msgid "Block account"
-msgstr "Blocar conto"
+msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:280
-#: src/view/com/profile/ProfileMenu.tsx:287
+#: src/view/com/profile/ProfileMenu.tsx:290
+#: src/view/com/profile/ProfileMenu.tsx:297
 msgid "Block Account"
-msgstr "Blocar conto"
+msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:324
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:739
+#: src/view/com/profile/ProfileMenu.tsx:359
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:771
 msgid "Block Account?"
-msgstr "Blocar conto?"
+msgstr ""
 
 #: src/view/screens/ProfileList.tsx:639
 msgid "Block accounts"
-msgstr "Blocar contos"
+msgstr ""
 
 #: src/components/dms/ReportDialog.tsx:325
 msgid "Block and Delete"
@@ -1008,11 +1005,11 @@ msgstr ""
 
 #: src/view/screens/ProfileList.tsx:760
 msgid "Block list"
-msgstr "Blocar lista"
+msgstr ""
 
 #: src/view/screens/ProfileList.tsx:755
 msgid "Block these accounts?"
-msgstr "Blocar iste contos?"
+msgstr ""
 
 #: src/components/dms/ReportDialog.tsx:347
 #: src/components/dms/ReportDialog.tsx:350
@@ -1025,19 +1022,19 @@ msgstr ""
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:83
 msgid "Blocked"
-msgstr "Blocate"
+msgstr ""
 
 #: src/screens/Moderation/index.tsx:269
 msgid "Blocked accounts"
-msgstr "Contos blocate"
+msgstr ""
 
 #: src/Navigation.tsx:157
 #: src/view/screens/ModerationBlockedAccounts.tsx:101
 msgid "Blocked Accounts"
-msgstr "Contos blocate"
+msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:336
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:741
+#: src/view/com/profile/ProfileMenu.tsx:371
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:773
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr ""
 
@@ -1047,7 +1044,7 @@ msgstr ""
 
 #: src/view/com/post-thread/PostThread.tsx:464
 msgid "Blocked post."
-msgstr "Blocar publication."
+msgstr ""
 
 #: src/screens/Profile/Sections/Labels.tsx:174
 msgid "Blocking does not prevent this labeler from placing labels on your account."
@@ -1057,20 +1054,20 @@ msgstr ""
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:333
+#: src/view/com/profile/ProfileMenu.tsx:368
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
 msgstr ""
 
 #: src/view/com/auth/SplashScreen.web.tsx:173
 msgid "Blog"
-msgstr "Blog"
+msgstr ""
 
 #: src/view/com/auth/server-input/index.tsx:132
 #: src/view/com/auth/server-input/index.tsx:133
 msgid "Bluesky"
-msgstr "Bluesky"
+msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:859
+#: src/view/com/post-thread/PostThreadItem.tsx:864
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
@@ -1085,7 +1082,7 @@ msgstr ""
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
 msgid "Bluesky is better with friends!"
-msgstr "Bluesky es melior con amicos!"
+msgstr ""
 
 #: src/screens/Takendown.tsx:217
 msgid "Bluesky Social Terms of Service"
@@ -1105,7 +1102,7 @@ msgstr ""
 
 #: src/screens/Settings/AppIconSettings/index.tsx:102
 msgid "Bluesky+ icons"
-msgstr "Icones de Bluesky+"
+msgstr ""
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
@@ -1118,7 +1115,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:30
 #: src/screens/Onboarding/state.ts:96
 msgid "Books"
-msgstr "Libros"
+msgstr ""
 
 #: src/components/FeedInterstitials.tsx:370
 msgid "Browse more accounts on the Explore page"
@@ -1145,15 +1142,19 @@ msgstr ""
 msgid "Browse other feeds"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:176
+#: src/components/TrendingTopics.tsx:178
 msgid "Browse posts about {displayName}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:184
+#: src/components/TrendingTopics.tsx:186
 msgid "Browse posts tagged with {displayName}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:222
+#: src/components/TrendingTopics.tsx:195
+msgid "Browse starter pack {displayName}"
+msgstr ""
+
+#: src/components/TrendingTopics.tsx:232
 msgid "Browse topic {displayName}"
 msgstr ""
 
@@ -1183,7 +1184,7 @@ msgstr ""
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:72
 msgid "Camera"
-msgstr "Camera"
+msgstr ""
 
 #: src/components/Menu/index.tsx:304
 #: src/components/Prompt.tsx:129
@@ -1213,22 +1214,22 @@ msgstr "Camera"
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:213
-#: src/view/screens/Search/Search.tsx:839
+#: src/view/screens/Search/Search.tsx:846
 #: src/view/shell/desktop/LeftNav.tsx:209
 msgid "Cancel"
-msgstr "Cancellar"
+msgstr ""
 
 #: src/view/com/modals/CreateOrEditList.tsx:340
 #: src/view/com/modals/DeleteAccount.tsx:170
 #: src/view/com/modals/DeleteAccount.tsx:278
 msgctxt "action"
 msgid "Cancel"
-msgstr "Cancellar"
+msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:166
 #: src/view/com/modals/DeleteAccount.tsx:274
 msgid "Cancel account deletion"
-msgstr "Cancellar deletion de conto"
+msgstr ""
 
 #: src/view/com/modals/CropImage.web.tsx:94
 msgid "Cancel image crop"
@@ -1236,7 +1237,7 @@ msgstr ""
 
 #: src/view/com/modals/EditProfile.tsx:239
 msgid "Cancel profile editing"
-msgstr "Cancellar edition de profilo"
+msgstr ""
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:207
 msgid "Cancel quote post"
@@ -1247,33 +1248,33 @@ msgid "Cancel reactivation and log out"
 msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:831
+#: src/view/screens/Search/Search.tsx:838
 msgid "Cancel search"
-msgstr "Cancellar cerca"
+msgstr ""
 
 #: src/view/com/modals/LinkWarning.tsx:106
 msgid "Cancels opening the linked website"
 msgstr ""
 
 #: src/state/shell/composer/index.tsx:83
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:117
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:158
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:194
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:127
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:168
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:204
 msgid "Cannot interact with a blocked user"
 msgstr ""
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:133
 msgid "Captions (.vtt)"
-msgstr "Subtitulos (.vtt)"
+msgstr ""
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:56
 msgid "Captions & alt text"
-msgstr "Subtitulos e texto alternative"
+msgstr ""
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:60
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
-msgstr "Cambiar"
+msgstr ""
 
 #: src/screens/Settings/AppIconSettings/index.tsx:39
 msgid "Change app icon"
@@ -1287,25 +1288,25 @@ msgstr ""
 #: src/screens/Settings/AccountSettings.tsx:97
 #: src/screens/Settings/AccountSettings.tsx:101
 msgid "Change email"
-msgstr "Cambiar e-mail"
+msgstr ""
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:162
 #: src/components/dialogs/VerifyEmailDialog.tsx:187
 msgid "Change email address"
-msgstr "Cambiar adresse de e-mail"
+msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:92
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:96
 msgid "Change Handle"
-msgstr "Cambiar nomine de usator"
+msgstr ""
 
 #: src/view/com/modals/VerifyEmail.tsx:155
 msgid "Change my email"
-msgstr "Cambiar mi e-mail"
+msgstr ""
 
 #: src/view/com/modals/ChangePassword.tsx:142
 msgid "Change Password"
-msgstr "Cambiar contrasigno"
+msgstr ""
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:82
 msgid "Change post language to {suggestedLanguageName}"
@@ -1313,42 +1314,51 @@ msgstr ""
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
-msgstr "Cambiar tu e-mail"
+msgstr ""
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:171
 msgid "Change your email address"
-msgstr "Cambiar tu adresse de e-mail"
+msgstr ""
+
+#: src/screens/Settings/AppIconSettings/index.tsx:216
+msgid "Changes app icon"
+msgstr ""
+
+#: src/components/forms/HostingProvider.tsx:50
+#: src/components/forms/HostingProvider.tsx:66
+msgid "Changes hosting provider"
+msgstr ""
 
 #: src/Navigation.tsx:398
 #: src/view/shell/bottom-bar/BottomBar.tsx:204
-#: src/view/shell/desktop/LeftNav.tsx:530
+#: src/view/shell/desktop/LeftNav.tsx:533
 #: src/view/shell/Drawer.tsx:422
 msgid "Chat"
-msgstr "Chat"
+msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:179
 msgid "Chat muted"
-msgstr "Chat silentiate"
+msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:78
 #: src/components/dms/MessageMenu.tsx:81
 #: src/Navigation.tsx:403
 #: src/screens/Messages/ChatList.tsx:253
 msgid "Chat settings"
-msgstr "Configurationes de Chat"
+msgstr ""
 
 #: src/screens/Messages/Settings.tsx:62
 msgid "Chat Settings"
-msgstr "Configurationes de Chat"
+msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:181
 msgid "Chat unmuted"
-msgstr "Chat dissilentiate"
+msgstr ""
 
 #: src/screens/SignupQueued.tsx:78
 #: src/screens/SignupQueued.tsx:82
 msgid "Check my status"
-msgstr "Verificar mi stato"
+msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:293
 msgid "Check your email for a login code and enter it here."
@@ -1360,7 +1370,7 @@ msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:370
 msgid "Choose domain verification method"
-msgstr "Elige methodo de verification de dominio"
+msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:194
 msgid "Choose Feeds"
@@ -1368,11 +1378,11 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:307
 msgid "Choose for me"
-msgstr "Elige por me"
+msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:190
 msgid "Choose People"
-msgstr "Elige personas"
+msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:115
 msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
@@ -1384,7 +1394,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
-msgstr "Elige iste color como tu avatar"
+msgstr ""
 
 #: src/view/com/auth/server-input/index.tsx:126
 msgid "Choose your account provider"
@@ -1397,7 +1407,7 @@ msgstr ""
 
 #: src/screens/Signup/StepInfo/index.tsx:195
 msgid "Choose your password"
-msgstr "Elige tu contrasigno"
+msgstr ""
 
 #: src/screens/Signup/index.tsx:142
 msgid "Choose your username"
@@ -1413,17 +1423,17 @@ msgstr ""
 
 #: src/components/forms/SearchInput.tsx:70
 msgid "Clear search query"
-msgstr "Nettar texto a cercar"
+msgstr ""
 
 #: src/view/screens/Support.tsx:41
 msgid "click here"
-msgstr "clicca hic"
-
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:336
-msgid "Click to disable quote posts of this post."
 msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
+msgid "Click to disable quote posts of this post."
+msgstr ""
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:338
 msgid "Click to enable quote posts of this post."
 msgstr ""
 
@@ -1457,12 +1467,12 @@ msgstr ""
 #: src/view/com/modals/ChangePassword.tsx:271
 #: src/view/com/util/post-embeds/GifEmbed.tsx:197
 msgid "Close"
-msgstr "Clauder"
+msgstr ""
 
-#: src/components/Dialog/index.web.tsx:110
-#: src/components/Dialog/index.web.tsx:252
+#: src/components/Dialog/index.web.tsx:111
+#: src/components/Dialog/index.web.tsx:253
 msgid "Close active dialog"
-msgstr "Clauder quadro de dialogo active"
+msgstr ""
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:31
 msgid "Close alert"
@@ -1474,7 +1484,11 @@ msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:275
 msgid "Close dialog"
-msgstr "Clauder quadro de dialogo"
+msgstr ""
+
+#: src/view/shell/index.web.tsx:83
+msgid "Close drawer menu"
+msgstr ""
 
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
@@ -1483,30 +1497,27 @@ msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:169
 msgid "Close GIF dialog"
-msgstr "Clauder quadro de dialogo de GIF"
+msgstr ""
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:31
 msgid "Close image"
-msgstr "Clauder imagine"
+msgstr ""
 
 #: src/view/com/lightbox/Lightbox.web.tsx:109
 msgid "Close image viewer"
-msgstr "Clauder visualisator de imagine"
-
-#: src/view/shell/index.web.tsx:69
-msgid "Close navigation footer"
 msgstr ""
 
 #: src/components/Menu/index.tsx:298
 msgid "Close this dialog"
-msgstr "Clauder iste quadro de dialogo"
-
-#: src/view/shell/index.web.tsx:70
-msgid "Closes bottom navigation bar"
 msgstr ""
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:32
 msgid "Closes password update alert"
+msgstr ""
+
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
+msgid "Closes the emoji picker"
 msgstr ""
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:32
@@ -1548,7 +1559,7 @@ msgstr ""
 msgid "Complete the challenge"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:496
+#: src/view/shell/desktop/LeftNav.tsx:499
 msgid "Compose new post"
 msgstr ""
 
@@ -1582,24 +1593,24 @@ msgstr ""
 #: src/view/com/modals/VerifyEmail.tsx:239
 #: src/view/com/modals/VerifyEmail.tsx:241
 msgid "Confirm"
-msgstr "Confirmar"
+msgstr ""
 
 #: src/view/com/modals/ChangeEmail.tsx:188
 #: src/view/com/modals/ChangeEmail.tsx:190
 msgid "Confirm Change"
-msgstr "Confirmar cambiamentos"
+msgstr ""
 
 #: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:34
 msgid "Confirm content language settings"
-msgstr "Confirmar configurationes de lingua de contento"
+msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:264
 msgid "Confirm delete account"
-msgstr "Confirmar deletion de conto"
+msgstr ""
 
 #: src/screens/Moderation/index.tsx:303
 msgid "Confirm your age:"
-msgstr "Confirma tu etate:"
+msgstr ""
 
 #: src/screens/Moderation/index.tsx:294
 msgid "Confirm your birthdate"
@@ -1614,20 +1625,20 @@ msgstr ""
 #: src/view/com/modals/DeleteAccount.tsx:226
 #: src/view/com/modals/VerifyEmail.tsx:173
 msgid "Confirmation code"
-msgstr "Codice de confirmation"
+msgstr ""
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:210
 msgid "Confirmation Code"
-msgstr "Codice de confirmation"
+msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:327
 msgid "Connecting..."
-msgstr "Connexion in corso..."
+msgstr ""
 
 #: src/screens/Signup/index.tsx:175
 #: src/screens/Signup/index.tsx:178
 msgid "Contact support"
-msgstr "Contactar supporto"
+msgstr ""
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:50
 msgid "Content & Media"
@@ -1637,49 +1648,53 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:175
 #: src/screens/Settings/Settings.tsx:178
 msgid "Content and media"
-msgstr "Contento e multimedia"
+msgstr ""
 
 #: src/Navigation.tsx:365
 msgid "Content and Media"
-msgstr "Contento e multimedia"
+msgstr ""
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:18
 msgid "Content Blocked"
-msgstr "Contento blocate"
+msgstr ""
 
 #: src/screens/Moderation/index.tsx:287
 msgid "Content filters"
-msgstr "Filtros de contento"
+msgstr ""
+
+#: src/screens/Search/components/ExploreRecommendations.tsx:57
+msgid "Content from across the network we think you might like."
+msgstr ""
 
 #: src/screens/Settings/LanguageSettings.tsx:251
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
 msgid "Content Languages"
-msgstr "Linguas de contento"
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:80
 #: src/lib/moderation/useModerationCauseDescription.ts:80
 msgid "Content Not Available"
-msgstr "Contento non disponibile"
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:48
 #: src/components/moderation/ScreenHider.tsx:93
 #: src/lib/moderation/useGlobalLabelStrings.ts:22
 #: src/lib/moderation/useModerationCauseDescription.ts:43
 msgid "Content Warning"
-msgstr "Advertimento de contento"
+msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:60
 msgid "Content warnings"
-msgstr "Advertimentos de contento"
+msgstr ""
 
-#: src/components/Menu/index.web.tsx:82
+#: src/components/Menu/index.web.tsx:83
 msgid "Context menu backdrop, click to close the menu."
 msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:244
 #: src/screens/Onboarding/StepProfile/index.tsx:278
 msgid "Continue"
-msgstr "Continuar"
+msgstr ""
 
 #: src/components/AccountList.tsx:121
 msgid "Continue as {0} (currently signed in)"
@@ -1697,53 +1712,66 @@ msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:179
 msgid "Conversation deleted"
-msgstr "Conversation supprimite"
+msgstr ""
 
 #: src/screens/Onboarding/index.tsx:41
 msgid "Cooking"
-msgstr "Cocina"
+msgstr ""
 
 #: src/view/com/modals/InviteCodes.tsx:183
 msgid "Copied"
-msgstr "Copiate"
+msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:73
+#: src/screens/Settings/AboutSettings.tsx:87
 msgid "Copied build version to clipboard"
-msgstr "Version de compilation copiate al area de transferentia"
+msgstr ""
 
 #: src/components/dms/MessageMenu.tsx:57
 #: src/lib/sharing.ts:25
+#: src/lib/sharing.ts:41
 #: src/view/com/modals/InviteCodes.tsx:153
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:235
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:393
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:237
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:403
 msgid "Copied to clipboard"
-msgstr "Copiate al area de transferentia"
+msgstr ""
 
 #: src/components/dialogs/Embed.tsx:136
 #: src/screens/Settings/components/CopyButton.tsx:66
 msgid "Copied!"
-msgstr "Copiate!"
+msgstr ""
+
+#: src/screens/Settings/AboutSettings.tsx:73
+msgid "Copies build version to clipboard"
+msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 msgid "Copy"
-msgstr "Copiar"
+msgstr ""
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:196
 msgid "Copy App Password"
-msgstr "Copiar contrasigno de application"
+msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:68
-msgid "Copy build version to clipboard"
-msgstr "Copiar version de compilation al area de transferentia"
+#: src/view/com/profile/ProfileMenu.tsx:327
+#: src/view/com/profile/ProfileMenu.tsx:330
+msgid "Copy at:// URI"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:674
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:676
+msgid "Copy author DID"
+msgstr ""
 
 #: src/components/dialogs/Embed.tsx:122
 #: src/components/dialogs/Embed.tsx:141
 msgid "Copy code"
-msgstr "Copiar codice"
+msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:472
+#: src/view/com/profile/ProfileMenu.tsx:336
+#: src/view/com/profile/ProfileMenu.tsx:339
 msgid "Copy DID"
-msgstr "Copiar DID"
+msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:405
 msgid "Copy host"
@@ -1751,34 +1779,39 @@ msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:123
 msgid "Copy link"
-msgstr "Copiar ligamine"
+msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:130
 msgid "Copy Link"
-msgstr "Copiar ligamine"
+msgstr ""
 
 #: src/view/screens/ProfileList.tsx:483
 msgid "Copy link to list"
-msgstr "Copiar ligamine al lista"
+msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:444
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
 msgid "Copy link to post"
-msgstr "Copiar ligamine al publication"
+msgstr ""
 
 #: src/components/dms/MessageMenu.tsx:110
 #: src/components/dms/MessageMenu.tsx:112
 msgid "Copy message text"
-msgstr "Copiar message de texto"
+msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:412
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:414
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
+msgid "Copy post at:// URI"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:422
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:424
 msgid "Copy post text"
-msgstr "Copiar texto de publication"
+msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:169
 msgid "Copy QR code"
-msgstr "Copiar codice QR"
+msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:426
 msgid "Copy TXT record value"
@@ -1787,7 +1820,7 @@ msgstr ""
 #: src/Navigation.tsx:296
 #: src/view/screens/CopyrightPolicy.tsx:31
 msgid "Copyright Policy"
-msgstr "Politica de Copyright"
+msgstr ""
 
 #: src/components/dms/LeaveConvoPrompt.tsx:33
 #: src/components/dms/ReportDialog.tsx:308
@@ -1812,7 +1845,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:289
 msgid "Create"
-msgstr "Crear"
+msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:153
 msgid "Create a QR code for a starter pack"
@@ -1841,12 +1874,12 @@ msgstr ""
 
 #: src/screens/Signup/index.tsx:93
 msgid "Create Account"
-msgstr "Crear conto"
+msgstr ""
 
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
 msgid "Create an account"
-msgstr "Crear un conto"
+msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:292
 msgid "Create an avatar instead"
@@ -1859,7 +1892,7 @@ msgstr ""
 #: src/view/com/auth/SplashScreen.tsx:47
 #: src/view/com/auth/SplashScreen.web.tsx:109
 msgid "Create new account"
-msgstr "Crear nove conto"
+msgstr ""
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:99
 msgid "Create report for {0}"
@@ -1867,11 +1900,11 @@ msgstr ""
 
 #: src/screens/Settings/AppPasswords.tsx:174
 msgid "Created {0}"
-msgstr "Create {0}"
+msgstr ""
 
 #: src/screens/List/ListHiddenScreen.tsx:127
 msgid "Creator has been blocked"
-msgstr "Le creator ha essite blocate"
+msgstr ""
 
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
@@ -1883,22 +1916,26 @@ msgstr ""
 msgid "Custom"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:102
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:103
 msgid "Customize who can interact with this post."
+msgstr ""
+
+#: src/screens/Onboarding/Layout.tsx:56
+msgid "Customizes your Bluesky experience"
 msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
 msgid "Dark"
-msgstr "Obscur"
+msgstr ""
 
 #: src/view/screens/Debug.tsx:69
 msgid "Dark mode"
-msgstr "Modo obscur"
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:118
 msgid "Dark theme"
-msgstr "Thema obscur"
+msgstr ""
 
 #: src/screens/Signup/StepInfo/index.tsx:216
 msgid "Date of birth"
@@ -1908,7 +1945,7 @@ msgstr ""
 #: src/screens/Settings/AccountSettings.tsx:151
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:73
 msgid "Deactivate account"
-msgstr "Disactivar conto"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:332
 msgid "Debug Moderation"
@@ -1916,30 +1953,30 @@ msgstr ""
 
 #: src/view/screens/Debug.tsx:89
 msgid "Debug panel"
-msgstr "Pannello de depuration"
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:168
 msgid "Default"
-msgstr "Predefinite"
+msgstr ""
 
 #: src/screens/Settings/AppIconSettings/index.tsx:75
 msgid "Default icons"
-msgstr "Icones predefinite"
+msgstr ""
 
 #: src/components/dms/MessageMenu.tsx:152
 #: src/screens/Settings/AppPasswords.tsx:212
 #: src/screens/StarterPack/StarterPackScreen.tsx:586
 #: src/screens/StarterPack/StarterPackScreen.tsx:665
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:661
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:693
 #: src/view/screens/ProfileList.tsx:739
 msgid "Delete"
-msgstr "Supprimer"
+msgstr ""
 
 #: src/screens/Settings/AccountSettings.tsx:156
 #: src/screens/Settings/AccountSettings.tsx:161
 msgid "Delete account"
-msgstr "Supprimer conto"
+msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:101
 msgid "Delete Account <0>\"</0><1>{0}</1><2>\"</2>"
@@ -1947,7 +1984,7 @@ msgstr ""
 
 #: src/screens/Settings/AppPasswords.tsx:187
 msgid "Delete app password"
-msgstr "Supprimer contrasigno de application"
+msgstr ""
 
 #: src/screens/Settings/AppPasswords.tsx:207
 msgid "Delete app password?"
@@ -1968,7 +2005,7 @@ msgstr ""
 
 #: src/components/dms/MessageMenu.tsx:124
 msgid "Delete for me"
-msgstr "Supprimer pro me"
+msgstr ""
 
 #: src/view/screens/ProfileList.tsx:526
 msgid "Delete List"
@@ -1984,11 +2021,11 @@ msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:267
 msgid "Delete my account"
-msgstr "Supprimer mi conto"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:842
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:642
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:644
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:652
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:654
 msgid "Delete post"
 msgstr ""
 
@@ -2005,18 +2042,18 @@ msgstr ""
 msgid "Delete this list?"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:656
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
 msgid "Delete this post?"
 msgstr ""
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:93
 msgid "Deleted"
-msgstr "Supprimite"
+msgstr ""
 
 #: src/components/dms/MessagesListHeader.tsx:154
 #: src/screens/Messages/components/ChatListItem.tsx:113
 msgid "Deleted Account"
-msgstr "Conto supprimite"
+msgstr ""
 
 #: src/view/com/post-thread/PostThread.tsx:450
 msgid "Deleted post."
@@ -2043,13 +2080,21 @@ msgstr ""
 msgid "Descriptive alt text"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:566
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:576
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:586
 msgid "Detach quote"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:719
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:751
 msgid "Detach quote post?"
+msgstr ""
+
+#: src/screens/Settings/AboutSettings.tsx:80
+msgid "Developer mode disabled"
+msgstr ""
+
+#: src/screens/Settings/AboutSettings.tsx:79
+msgid "Developer mode enabled"
 msgstr ""
 
 #: src/screens/Settings/Settings.tsx:242
@@ -2076,7 +2121,7 @@ msgstr ""
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:386
 msgid "Disable subtitles"
-msgstr "Disactivar subtitulos"
+msgstr ""
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
@@ -2221,7 +2266,7 @@ msgstr ""
 msgid "Double tap to close the dialog"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1039
+#: src/screens/VideoFeed/index.tsx:1041
 msgid "Double tap to like"
 msgstr ""
 
@@ -2313,8 +2358,8 @@ msgstr ""
 msgid "Edit image"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:623
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:636
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:633
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:646
 msgid "Edit interaction settings"
 msgstr ""
 
@@ -2340,7 +2385,7 @@ msgid "Edit People"
 msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:69
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:239
 msgid "Edit post interaction settings"
 msgstr ""
 
@@ -2433,8 +2478,8 @@ msgid "Embed HTML code"
 msgstr ""
 
 #: src/components/dialogs/Embed.tsx:97
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:451
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:461
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:463
 msgid "Embed post"
 msgstr ""
 
@@ -2449,15 +2494,15 @@ msgstr ""
 #: src/screens/Settings/components/Email2FAToggle.tsx:56
 #: src/screens/Settings/components/Email2FAToggle.tsx:60
 msgid "Enable"
-msgstr "Habilitar"
+msgstr ""
 
 #: src/components/dialogs/EmbedConsent.tsx:100
 msgid "Enable {0} only"
-msgstr "Habilitar {0} solmente"
+msgstr ""
 
 #: src/screens/Moderation/index.tsx:332
 msgid "Enable adult content"
-msgstr "Habilitar contento pro adultos"
+msgstr ""
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:53
 msgid "Enable Email 2FA"
@@ -2479,7 +2524,7 @@ msgstr ""
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:387
 msgid "Enable subtitles"
-msgstr "Activar subtitulos"
+msgstr ""
 
 #: src/components/dialogs/EmbedConsent.tsx:93
 msgid "Enable this source only"
@@ -2502,7 +2547,7 @@ msgstr ""
 #: src/screens/Messages/Settings.tsx:133
 #: src/screens/Moderation/index.tsx:343
 msgid "Enabled"
-msgstr "Habilitate"
+msgstr ""
 
 #: src/screens/Profile/Sections/Feed.tsx:116
 msgid "End of feed"
@@ -2514,20 +2559,20 @@ msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:139
 msgid "Enter a password"
-msgstr "Entra un contrasigno"
+msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:127
 #: src/components/dialogs/MutedWords.tsx:128
 msgid "Enter a word or tag"
-msgstr "Entra un parola o etiquetta"
+msgstr ""
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:89
 msgid "Enter Code"
-msgstr "Entra codice"
+msgstr ""
 
 #: src/view/com/modals/VerifyEmail.tsx:113
 msgid "Enter Confirmation Code"
-msgstr "Entra codice de confirmation"
+msgstr ""
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:405
 msgid "Enter fullscreen"
@@ -2562,14 +2607,22 @@ msgstr ""
 msgid "Enter your new email address below."
 msgstr ""
 
+#: src/screens/Login/LoginForm.tsx:235
+msgid "Enter your password"
+msgstr ""
+
 #: src/screens/Login/index.tsx:98
 msgid "Enter your username and password"
-msgstr "Entra tu nomine de usator e contrasigno"
+msgstr ""
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
+msgid "Enters full screen"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1660
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
-msgstr "Error"
+msgstr ""
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:47
 msgid "Error occurred while saving file"
@@ -2580,11 +2633,11 @@ msgid "Error receiving captcha response."
 msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:183
-#: src/view/screens/Search/Search.tsx:110
+#: src/view/screens/Search/Search.tsx:114
 msgid "Error:"
-msgstr "Error:"
+msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:394
 msgid "Everybody"
 msgstr ""
 
@@ -2619,7 +2672,7 @@ msgstr ""
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:404
 msgid "Exit fullscreen"
-msgstr "Exir del schermo plen"
+msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:275
 msgid "Exits account deletion process"
@@ -2646,8 +2699,15 @@ msgid "Expand list of users"
 msgstr ""
 
 #: src/view/com/composer/ComposerReplyTo.tsx:70
-#: src/view/com/composer/ComposerReplyTo.tsx:73
 msgid "Expand or collapse the full post you are replying to"
+msgstr ""
+
+#: src/screens/VideoFeed/index.tsx:935
+msgid "Expands or collapses post text"
+msgstr ""
+
+#: src/view/com/composer/ComposerReplyTo.tsx:73
+msgid "Expands or collapses the full post you are replying to"
 msgstr ""
 
 #: src/lib/api/index.ts:405
@@ -2661,11 +2721,11 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:500
 msgid "Expired"
-msgstr "Expirate"
+msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:502
 msgid "Expires {0}"
-msgstr "Expira {0}"
+msgstr ""
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
@@ -2725,7 +2785,7 @@ msgstr ""
 msgid "Failed to delete message"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:195
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:197
 msgid "Failed to delete post, please try again"
 msgstr ""
 
@@ -2780,7 +2840,7 @@ msgstr ""
 msgid "Failed to submit appeal, please try again."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:224
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:226
 msgid "Failed to toggle thread mute, please try again"
 msgstr ""
 
@@ -2826,8 +2886,8 @@ msgstr ""
 msgid "Feedback"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:266
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:275
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:268
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:277
 msgid "Feedback sent!"
 msgstr ""
 
@@ -2836,8 +2896,8 @@ msgstr ""
 #: src/view/screens/Feeds.tsx:508
 #: src/view/screens/Profile.tsx:238
 #: src/view/screens/SavedFeeds.tsx:96
-#: src/view/screens/Search/Search.tsx:522
-#: src/view/shell/desktop/LeftNav.tsx:640
+#: src/view/screens/Search/Search.tsx:518
+#: src/view/shell/desktop/LeftNav.tsx:643
 #: src/view/shell/Drawer.tsx:481
 msgid "Feeds"
 msgstr ""
@@ -2851,7 +2911,7 @@ msgstr ""
 msgid "Feeds updated!"
 msgstr ""
 
-#: src/screens/Search/components/ExploreRecommendations.tsx:54
+#: src/screens/Search/components/ExploreRecommendations.tsx:63
 msgid "Feeds we think you might like."
 msgstr ""
 
@@ -2861,6 +2921,14 @@ msgstr ""
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
+msgstr ""
+
+#: src/view/screens/Search/Search.tsx:397
+msgid "Filter search by language"
+msgstr ""
+
+#: src/view/screens/Search/Search.tsx:367
+msgid "Filter search by language (currently: {currentLanguageLabel})"
 msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:303
@@ -2879,7 +2947,7 @@ msgstr ""
 msgid "Find people to follow"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:588
+#: src/view/screens/Search/Search.tsx:579
 msgid "Find posts and users on Bluesky"
 msgstr ""
 
@@ -2900,7 +2968,7 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.web.tsx:449
 #: src/components/ProfileHoverCard/index.web.tsx:460
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:234
-#: src/screens/VideoFeed/index.tsx:821
+#: src/screens/VideoFeed/index.tsx:823
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:132
 msgid "Follow"
 msgstr ""
@@ -2932,8 +3000,8 @@ msgstr ""
 msgid "Follow 7 accounts"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:222
-#: src/view/com/profile/ProfileMenu.tsx:233
+#: src/view/com/profile/ProfileMenu.tsx:232
+#: src/view/com/profile/ProfileMenu.tsx:243
 msgid "Follow Account"
 msgstr ""
 
@@ -2972,10 +3040,6 @@ msgstr ""
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:432
-msgid "Followed users"
-msgstr ""
-
 #: src/Navigation.tsx:202
 msgid "Followers of @{0} that you know"
 msgstr ""
@@ -2990,7 +3054,7 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.web.tsx:448
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
-#: src/screens/VideoFeed/index.tsx:819
+#: src/screens/VideoFeed/index.tsx:821
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
 #: src/view/screens/SavedFeeds.tsx:422
@@ -3121,8 +3185,8 @@ msgstr ""
 #: src/components/moderation/ScreenHider.tsx:163
 #: src/screens/Profile/ProfileFeed/index.tsx:89
 #: src/screens/VideoFeed/components/Header.tsx:163
-#: src/screens/VideoFeed/index.tsx:1100
-#: src/screens/VideoFeed/index.tsx:1104
+#: src/screens/VideoFeed/index.tsx:1102
+#: src/screens/VideoFeed/index.tsx:1106
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
 #: src/view/screens/ProfileList.tsx:1009
@@ -3140,21 +3204,13 @@ msgstr ""
 msgid "Go Back"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:540
-msgid "Go back to previous page"
-msgstr ""
-
 #: src/components/dms/ReportDialog.tsx:190
 #: src/components/ReportDialog/SelectReportOptionView.tsx:78
 #: src/components/ReportDialog/SubmitView.tsx:110
-#: src/screens/Onboarding/Layout.tsx:101
-#: src/screens/Onboarding/Layout.tsx:190
+#: src/screens/Onboarding/Layout.tsx:99
+#: src/screens/Onboarding/Layout.tsx:188
 #: src/screens/Signup/BackNextButtons.tsx:35
 msgid "Go back to previous step"
-msgstr ""
-
-#: src/screens/StarterPack/Wizard/index.tsx:287
-msgid "Go back to the previous step"
 msgstr ""
 
 #: src/view/screens/NotFound.tsx:57
@@ -3270,42 +3326,37 @@ msgstr ""
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:137
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:672
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:704
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "Hide"
-msgstr "Celar"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:601
 msgctxt "action"
 msgid "Hide"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:523
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:529
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:533
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 msgid "Hide post for me"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:540
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:550
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:560
 msgid "Hide reply for everyone"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:522
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:528
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:532
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:538
 msgid "Hide reply for me"
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:151
-#: src/components/moderation/PostHider.tsx:79
-msgid "Hide the content"
-msgstr ""
-
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:699
 msgid "Hide this post?"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:729
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:699
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:761
 msgid "Hide this reply?"
 msgstr ""
 
@@ -3327,6 +3378,11 @@ msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:592
 msgid "Hide user list"
+msgstr ""
+
+#: src/components/moderation/ContentHider.tsx:151
+#: src/components/moderation/PostHider.tsx:79
+msgid "Hides the content"
 msgstr ""
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:117
@@ -3364,7 +3420,7 @@ msgstr ""
 #: src/Navigation.tsx:612
 #: src/Navigation.tsx:632
 #: src/view/shell/bottom-bar/BottomBar.tsx:162
-#: src/view/shell/desktop/LeftNav.tsx:584
+#: src/view/shell/desktop/LeftNav.tsx:587
 #: src/view/shell/Drawer.tsx:396
 msgid "Home"
 msgstr ""
@@ -3430,7 +3486,7 @@ msgstr ""
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:690
 msgid "If you remove this post, you won't be able to recover it."
 msgstr ""
 
@@ -3498,10 +3554,6 @@ msgstr ""
 msgid "Input the username or email address you used at signup"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:235
-msgid "Input your password"
-msgstr ""
-
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:49
 msgid "Interaction limited"
 msgstr ""
@@ -3519,7 +3571,7 @@ msgstr ""
 msgid "Invalid handle. Please try a different one."
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:277
+#: src/view/com/post-thread/PostThreadItem.tsx:282
 msgid "Invalid or unsupported post record"
 msgstr ""
 
@@ -3645,7 +3697,7 @@ msgstr ""
 
 #: src/screens/Hashtag.tsx:95
 #: src/screens/Topic.tsx:77
-#: src/view/screens/Search/Search.tsx:506
+#: src/view/screens/Search/Search.tsx:502
 msgid "Latest"
 msgstr ""
 
@@ -3666,6 +3718,9 @@ msgid "Learn more about self hosting your PDS."
 msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:149
+msgid "Learn more about the moderation applied to this content"
+msgstr ""
+
 #: src/components/moderation/ContentHider.tsx:215
 msgid "Learn more about the moderation applied to this content."
 msgstr ""
@@ -3735,7 +3790,7 @@ msgstr ""
 msgid "Like"
 msgstr ""
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:311
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:321
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -3850,7 +3905,7 @@ msgstr ""
 #: src/view/screens/Lists.tsx:62
 #: src/view/screens/Profile.tsx:232
 #: src/view/screens/Profile.tsx:240
-#: src/view/shell/desktop/LeftNav.tsx:658
+#: src/view/shell/desktop/LeftNav.tsx:661
 #: src/view/shell/Drawer.tsx:496
 msgid "Lists"
 msgstr ""
@@ -3976,7 +4031,7 @@ msgstr ""
 msgid "mentioned users"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:422
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:423
 msgid "Mentioned users"
 msgstr ""
 
@@ -3985,7 +4040,6 @@ msgid "Mentions"
 msgstr ""
 
 #: src/components/Menu/index.tsx:103
-#: src/view/screens/Search/Search.tsx:808
 msgid "Menu"
 msgstr ""
 
@@ -4084,7 +4138,7 @@ msgstr ""
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:632
+#: src/view/com/post-thread/PostThreadItem.tsx:637
 msgid "More"
 msgstr ""
 
@@ -4093,7 +4147,7 @@ msgstr ""
 msgid "More feeds"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:179
+#: src/view/com/profile/ProfileMenu.tsx:189
 #: src/view/screens/ProfileList.tsx:721
 msgid "More options"
 msgstr ""
@@ -4127,8 +4181,8 @@ msgstr ""
 msgid "Mute {tag}"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:259
-#: src/view/com/profile/ProfileMenu.tsx:266
+#: src/view/com/profile/ProfileMenu.tsx:269
+#: src/view/com/profile/ProfileMenu.tsx:276
 msgid "Mute Account"
 msgstr ""
 
@@ -4177,13 +4231,13 @@ msgstr ""
 msgid "Mute this word until you unmute it"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:489
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:493
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:499
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
 msgid "Mute thread"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:505
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:513
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:515
 msgid "Mute words & tags"
 msgstr ""
 
@@ -4324,7 +4378,7 @@ msgctxt "action"
 msgid "New post"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:504
+#: src/view/shell/desktop/LeftNav.tsx:507
 msgctxt "action"
 msgid "New Post"
 msgstr ""
@@ -4454,9 +4508,9 @@ msgid "No results found for \"{query}\""
 msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
-#: src/view/screens/Search/Search.tsx:227
-#: src/view/screens/Search/Search.tsx:265
-#: src/view/screens/Search/Search.tsx:310
+#: src/view/screens/Search/Search.tsx:231
+#: src/view/screens/Search/Search.tsx:269
+#: src/view/screens/Search/Search.tsx:314
 msgid "No results found for {query}"
 msgstr ""
 
@@ -4469,7 +4523,7 @@ msgstr ""
 msgid "No thanks"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:405
 msgid "Nobody"
 msgstr ""
 
@@ -4505,9 +4559,9 @@ msgstr ""
 msgid "Not right now"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:348
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:686
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:357
+#: src/view/com/profile/ProfileMenu.tsx:383
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:718
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:367
 msgid "Note about sharing"
 msgstr ""
 
@@ -4543,7 +4597,7 @@ msgstr ""
 #: src/Navigation.tsx:622
 #: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:230
-#: src/view/shell/desktop/LeftNav.tsx:621
+#: src/view/shell/desktop/LeftNav.tsx:624
 #: src/view/shell/Drawer.tsx:449
 msgid "Notifications"
 msgstr ""
@@ -4585,7 +4639,7 @@ msgid "OK"
 msgstr ""
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/view/com/post-thread/PostThreadItem.tsx:864
+#: src/view/com/post-thread/PostThreadItem.tsx:869
 msgid "Okay"
 msgstr ""
 
@@ -4652,7 +4706,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:267
 msgid "Open"
-msgstr "Aperir"
+msgstr ""
 
 #: src/view/com/posts/AviFollowButton.tsx:86
 msgid "Open {name} profile shortcut menu"
@@ -4662,22 +4716,17 @@ msgstr ""
 msgid "Open avatar creator"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:127
-msgid "Open change handle dialog"
-msgstr ""
-
 #: src/screens/Messages/components/ChatListItem.tsx:290
 #: src/screens/Messages/components/ChatListItem.tsx:291
 msgid "Open conversation options"
 msgstr ""
 
-#: src/components/Layout/Header/index.tsx:149
+#: src/components/Layout/Header/index.tsx:150
 msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
 #: src/view/com/composer/Composer.tsx:1243
-#: src/view/com/composer/Composer.tsx:1244
 msgid "Open emoji picker"
 msgstr ""
 
@@ -4688,10 +4737,6 @@ msgstr ""
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:290
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:295
 msgid "Open feed options menu"
-msgstr ""
-
-#: src/screens/Settings/Settings.tsx:208
-msgid "Open helpdesk in browser"
 msgstr ""
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:71
@@ -4725,7 +4770,7 @@ msgstr ""
 
 #: src/screens/Settings/Settings.tsx:316
 msgid "Open system log"
-msgstr "Aperir registro de systema"
+msgstr ""
 
 #: src/view/com/util/forms/DropdownButton.tsx:162
 msgid "Opens {numItems} options"
@@ -4747,12 +4792,20 @@ msgstr ""
 msgid "Opens camera on device"
 msgstr ""
 
+#: src/screens/Settings/AccountSettings.tsx:127
+msgid "Opens change handle dialog"
+msgstr ""
+
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:35
 msgid "Opens composer"
 msgstr ""
 
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:51
 msgid "Opens device photo gallery"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:1244
+msgid "Opens emoji picker"
 msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:49
@@ -4769,13 +4822,17 @@ msgstr ""
 msgid "Opens GIF select dialog"
 msgstr ""
 
+#: src/screens/Settings/Settings.tsx:208
+msgid "Opens helpdesk in browser"
+msgstr ""
+
 #: src/view/com/modals/InviteCodes.tsx:173
 msgid "Opens list of invite codes"
 msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:241
 msgid "Opens password reset form"
-msgstr "Aperi le formulario de reinitialisation de contrasigno"
+msgstr ""
 
 #: src/view/com/modals/LinkWarning.tsx:93
 msgid "Opens the linked website"
@@ -4784,14 +4841,10 @@ msgstr ""
 #: src/view/com/notifications/NotificationFeedItem.tsx:679
 #: src/view/com/util/UserAvatar.tsx:437
 msgid "Opens this profile"
-msgstr "Aperi iste profilo"
+msgstr ""
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:101
 msgid "Opens video picker"
-msgstr ""
-
-#: src/view/com/util/forms/DropdownButton.tsx:296
-msgid "Option {0} of {numItems}"
 msgstr ""
 
 #: src/components/dms/ReportDialog.tsx:219
@@ -4801,9 +4854,9 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:299
 msgid "Options:"
-msgstr "Optiones:"
+msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:417
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:418
 msgid "Or combine these options:"
 msgstr ""
 
@@ -4852,7 +4905,7 @@ msgstr ""
 #: src/view/com/modals/DeleteAccount.tsx:239
 #: src/view/com/modals/DeleteAccount.tsx:246
 msgid "Password"
-msgstr "Contrasigno"
+msgstr ""
 
 #: src/view/com/modals/ChangePassword.tsx:143
 msgid "Password Changed"
@@ -4877,7 +4930,7 @@ msgid "Pause video"
 msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/Search/Search.tsx:516
+#: src/view/screens/Search/Search.tsx:512
 msgid "People"
 msgstr ""
 
@@ -4936,8 +4989,8 @@ msgstr ""
 msgid "Pin to Home"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:380
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:387
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:390
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:397
 msgid "Pin to your profile"
 msgstr ""
 
@@ -4968,22 +5021,29 @@ msgstr ""
 msgid "Play {0}"
 msgstr ""
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:42
-msgid "Play or pause the GIF"
-msgstr ""
-
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:134
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:321
 msgid "Play video"
 msgstr ""
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:58
-#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:59
 msgid "Play Video"
+msgstr ""
+
+#: src/view/com/util/post-embeds/GifEmbed.tsx:42
+msgid "Plays or pauses the GIF"
+msgstr ""
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
+msgid "Plays or pauses the video"
 msgstr ""
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:106
 msgid "Plays the GIF"
+msgstr ""
+
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:59
+msgid "Plays the video"
 msgstr ""
 
 #: src/screens/Signup/state.ts:217
@@ -5092,7 +5152,7 @@ msgstr ""
 msgid "Post by @{0}"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:175
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:177
 msgid "Post deleted"
 msgstr ""
 
@@ -5118,7 +5178,7 @@ msgstr ""
 msgid "Post Hidden by You"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:99
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
 msgid "Post interaction settings"
 msgstr ""
 
@@ -5167,15 +5227,10 @@ msgstr ""
 
 #: src/state/queries/notifications/settings.ts:44
 msgid "Preference saved"
-msgstr "Preferentia salvate"
+msgstr ""
 
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
-msgstr ""
-
-#: src/components/forms/HostingProvider.tsx:50
-#: src/components/forms/HostingProvider.tsx:66
-msgid "Press to change hosting provider"
 msgstr ""
 
 #: src/components/Error.tsx:60
@@ -5183,7 +5238,7 @@ msgstr ""
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Signup/BackNextButtons.tsx:47
 msgid "Press to retry"
-msgstr "Pressa pro retentar"
+msgstr ""
 
 #: src/components/KnownFollowers.tsx:124
 msgid "Press to view followers of this account that you also follow"
@@ -5195,7 +5250,7 @@ msgstr ""
 
 #: src/screens/Settings/LanguageSettings.tsx:167
 msgid "Primary Language"
-msgstr "Lingua principal"
+msgstr ""
 
 #: src/screens/Settings/ThreadPreferences.tsx:112
 #: src/screens/Settings/ThreadPreferences.tsx:117
@@ -5222,13 +5277,13 @@ msgid "Privacy and Security"
 msgstr ""
 
 #: src/Navigation.tsx:281
-#: src/screens/Settings/AboutSettings.tsx:45
-#: src/screens/Settings/AboutSettings.tsx:48
+#: src/screens/Settings/AboutSettings.tsx:50
+#: src/screens/Settings/AboutSettings.tsx:53
 #: src/view/screens/PrivacyPolicy.tsx:31
 #: src/view/shell/Drawer.tsx:629
 #: src/view/shell/Drawer.tsx:630
 msgid "Privacy Policy"
-msgstr "Politica de privatessa"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1657
 msgid "Processing video..."
@@ -5245,20 +5300,20 @@ msgid "profile"
 msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:275
-#: src/view/shell/desktop/LeftNav.tsx:676
+#: src/view/shell/desktop/LeftNav.tsx:679
 #: src/view/shell/Drawer.tsx:71
 #: src/view/shell/Drawer.tsx:521
 msgid "Profile"
-msgstr "Profilo"
+msgstr ""
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:191
 #: src/view/com/modals/EditProfile.tsx:124
 msgid "Profile updated"
-msgstr "Profilo actualisate"
+msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:253
 msgid "Public"
-msgstr "Public"
+msgstr ""
 
 #: src/view/com/lists/MyLists.tsx:77
 msgid "Public, sharable lists of users to mute or block in bulk."
@@ -5270,7 +5325,7 @@ msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:128
 msgid "QR code copied to your clipboard!"
-msgstr "Codice QR copiate a tu area de transferentia!"
+msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:106
 msgid "QR code has been downloaded!"
@@ -5287,11 +5342,11 @@ msgstr ""
 msgid "Quote post"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:303
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:305
 msgid "Quote post was re-attached"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:302
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:304
 msgid "Quote post was successfully detached"
 msgstr ""
 
@@ -5302,7 +5357,7 @@ msgstr ""
 msgid "Quote posts disabled"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:328
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:329
 msgid "Quote settings"
 msgstr ""
 
@@ -5325,31 +5380,31 @@ msgstr ""
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:565
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:575
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:585
 msgid "Re-attach quote"
 msgstr ""
 
 #: src/screens/Deactivated.tsx:140
 msgid "Reactivate your account"
-msgstr "Reactivar tu conto"
+msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:934
+#: src/screens/VideoFeed/index.tsx:936
 msgid "Read less"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:934
+#: src/screens/VideoFeed/index.tsx:936
 msgid "Read more"
 msgstr ""
 
 #: src/view/com/auth/SplashScreen.web.tsx:171
 msgid "Read the Bluesky blog"
-msgstr "Lege le blog de Bluesky"
+msgstr ""
 
 #: src/screens/Signup/StepInfo/Policies.tsx:58
 #: src/screens/Signup/StepInfo/Policies.tsx:84
 msgid "Read the Bluesky Privacy Policy"
-msgstr "Lege le politica de privatessa de Bluesky"
+msgstr ""
 
 #: src/screens/Signup/StepInfo/Policies.tsx:51
 #: src/screens/Signup/StepInfo/Policies.tsx:71
@@ -5365,17 +5420,17 @@ msgstr ""
 msgid "Reason:"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:986
+#: src/view/screens/Search/Search.tsx:992
 msgid "Recent Searches"
-msgstr "Cercas recente"
+msgstr ""
 
-#: src/screens/Search/components/ExploreRecommendations.tsx:50
+#: src/screens/Search/components/ExploreRecommendations.tsx:52
 msgid "Recommended"
-msgstr "Recommendate"
+msgstr ""
 
 #: src/screens/Messages/components/MessageListError.tsx:20
 msgid "Reconnect"
-msgstr "Reconnecter"
+msgstr ""
 
 #: src/screens/Messages/ChatList.tsx:171
 msgid "Reload conversations"
@@ -5400,7 +5455,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:447
 #: src/screens/Settings/Settings.tsx:450
 msgid "Remove account"
-msgstr "Remover conto"
+msgstr ""
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:15
 msgid "Remove attachment"
@@ -5458,12 +5513,8 @@ msgstr ""
 msgid "Remove mute word from your list"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:1034
+#: src/view/screens/Search/Search.tsx:1040
 msgid "Remove profile"
-msgstr ""
-
-#: src/view/screens/Search/Search.tsx:1036
-msgid "Remove profile from search history"
 msgstr ""
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
@@ -5511,6 +5562,10 @@ msgstr ""
 msgid "Removed from your feeds"
 msgstr ""
 
+#: src/view/screens/Search/Search.tsx:1042
+msgid "Removes profile from search history"
+msgstr ""
+
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
 msgstr ""
@@ -5537,7 +5592,7 @@ msgctxt "action"
 msgid "Reply"
 msgstr ""
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:263
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:273
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr ""
 
@@ -5551,11 +5606,11 @@ msgstr ""
 msgid "Reply Hidden by You"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:384
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:385
 msgid "Reply settings"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:369
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:370
 msgid "Reply settings are chosen by the author of the thread"
 msgstr ""
 
@@ -5585,11 +5640,11 @@ msgctxt "description"
 msgid "Reply to you"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:333
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:335
 msgid "Reply visibility updated"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:332
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:334
 msgid "Reply was successfully hidden"
 msgstr ""
 
@@ -5597,12 +5652,12 @@ msgstr ""
 #: src/components/dms/MessagesListBlockedFooter.tsx:84
 #: src/components/dms/MessagesListBlockedFooter.tsx:91
 msgid "Report"
-msgstr "Signalar"
+msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:299
-#: src/view/com/profile/ProfileMenu.tsx:302
+#: src/view/com/profile/ProfileMenu.tsx:309
+#: src/view/com/profile/ProfileMenu.tsx:312
 msgid "Report Account"
-msgstr "Signalar conto"
+msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:258
 #: src/components/dms/ConvoMenu.tsx:261
@@ -5617,18 +5672,18 @@ msgstr ""
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:542
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:548
 msgid "Report feed"
-msgstr "Signalar fluxo"
+msgstr ""
 
 #: src/view/screens/ProfileList.tsx:540
 msgid "Report List"
-msgstr "Signalar lista"
+msgstr ""
 
 #: src/components/dms/MessageMenu.tsx:130
 msgid "Report message"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:611
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:621
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:623
 msgid "Report post"
 msgstr ""
 
@@ -5643,15 +5698,15 @@ msgstr ""
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:41
 msgid "Report this content"
-msgstr "Signalar iste contento"
+msgstr ""
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:54
 msgid "Report this feed"
-msgstr "Signalar iste fluxo"
+msgstr ""
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:51
 msgid "Report this list"
-msgstr "Signalar iste lista"
+msgstr ""
 
 #: src/components/dms/ReportDialog.tsx:58
 #: src/components/dms/ReportDialog.tsx:178
@@ -5758,11 +5813,11 @@ msgstr ""
 
 #: src/view/com/modals/ChangePassword.tsx:186
 msgid "Reset code"
-msgstr "Reinitialisar codice"
+msgstr ""
 
 #: src/view/com/modals/ChangePassword.tsx:193
 msgid "Reset Code"
-msgstr "Reinitialisar codice"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:344
 #: src/screens/Settings/Settings.tsx:346
@@ -5771,7 +5826,7 @@ msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:80
 msgid "Reset password"
-msgstr "Reinitialisar contrasigno"
+msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:314
 msgid "Retries login"
@@ -5803,7 +5858,6 @@ msgstr ""
 #: src/components/Error.tsx:73
 #: src/screens/List/ListHiddenScreen.tsx:216
 #: src/screens/StarterPack/StarterPackScreen.tsx:752
-#: src/view/screens/ProfileList.tsx:1010
 msgid "Return to previous page"
 msgstr ""
 
@@ -5812,14 +5866,20 @@ msgid "Returns to home page"
 msgstr ""
 
 #: src/screens/Profile/ProfileFeed/index.tsx:90
-#: src/screens/VideoFeed/index.tsx:1101
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:540
+#: src/screens/VideoFeed/index.tsx:1103
 #: src/view/screens/NotFound.tsx:60
+#: src/view/screens/ProfileList.tsx:1010
 msgid "Returns to previous page"
 msgstr ""
 
+#: src/screens/StarterPack/Wizard/index.tsx:287
+msgid "Returns to the previous step"
+msgstr ""
+
 #: src/components/dialogs/BirthDateSettings.tsx:120
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:468
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:474
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:479
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:485
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -5834,13 +5894,13 @@ msgstr ""
 #: src/view/com/modals/EditProfile.tsx:219
 #: src/view/screens/SavedFeeds.tsx:109
 msgid "Save"
-msgstr "Salveguardar"
+msgstr ""
 
 #: src/view/com/lightbox/ImageViewing/index.tsx:622
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
-msgstr "Salveguardar"
+msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:114
 msgid "Save birthday"
@@ -5858,7 +5918,7 @@ msgstr ""
 #: src/components/StarterPack/ShareDialog.tsx:150
 #: src/components/StarterPack/ShareDialog.tsx:157
 msgid "Save image"
-msgstr "Salveguardar imagine"
+msgstr ""
 
 #: src/view/com/modals/CropImage.web.tsx:104
 msgid "Save image crop"
@@ -5875,11 +5935,11 @@ msgstr ""
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:319
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:325
 msgid "Save to my feeds"
-msgstr "Salveguardar a mi fluxos"
+msgstr ""
 
 #: src/view/screens/SavedFeeds.tsx:164
 msgid "Saved Feeds"
-msgstr "Fluxos salveguardate"
+msgstr ""
 
 #: src/view/com/lightbox/Lightbox.tsx:44
 msgid "Saved to your camera roll"
@@ -5919,9 +5979,10 @@ msgstr ""
 #: src/components/forms/SearchInput.tsx:36
 #: src/Navigation.tsx:617
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
-#: src/view/screens/Search/Search.tsx:570
+#: src/view/screens/Search/Search.tsx:561
+#: src/view/screens/Search/Search.tsx:807
 #: src/view/shell/bottom-bar/BottomBar.tsx:182
-#: src/view/shell/desktop/LeftNav.tsx:602
+#: src/view/shell/desktop/LeftNav.tsx:605
 #: src/view/shell/Drawer.tsx:370
 msgid "Search"
 msgstr ""
@@ -5942,12 +6003,16 @@ msgstr ""
 msgid "Search for \"{query}\""
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:932
+#: src/view/screens/Search/Search.tsx:938
 msgid "Search for \"{searchText}\""
 msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:474
 msgid "Search for feeds that you want to suggest to others."
+msgstr ""
+
+#: src/view/screens/Search/Search.tsx:832
+msgid "Search for posts, users, or feeds"
 msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
@@ -5959,14 +6024,17 @@ msgid "Search GIFs"
 msgstr ""
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:507
-#: src/components/dms/dialogs/SearchablePeopleList.tsx:508
 #: src/components/ProgressGuide/FollowDialog.tsx:764
-#: src/components/ProgressGuide/FollowDialog.tsx:765
 msgid "Search profiles"
 msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:178
 msgid "Search Tenor"
+msgstr ""
+
+#: src/components/dms/dialogs/SearchablePeopleList.tsx:508
+#: src/components/ProgressGuide/FollowDialog.tsx:765
+msgid "Searches for profiles"
 msgstr ""
 
 #: src/view/com/modals/ChangeEmail.tsx:105
@@ -6003,7 +6071,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
-msgstr "Selige un color"
+msgstr ""
 
 #: src/screens/Login/ChooseAccountForm.tsx:77
 msgid "Select account"
@@ -6089,6 +6157,10 @@ msgstr ""
 msgid "Select your preferred language for translations in your feed."
 msgstr ""
 
+#: src/view/com/util/forms/DropdownButton.tsx:297
+msgid "Selects option {0} of {numItems}"
+msgstr ""
+
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
 msgstr ""
@@ -6122,32 +6194,32 @@ msgstr ""
 #: src/screens/Messages/components/MessageInput.tsx:173
 #: src/screens/Messages/components/MessageInput.web.tsx:235
 msgid "Send message"
-msgstr "Inviar message"
+msgstr ""
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:62
 msgid "Send post to..."
-msgstr "Inviar message a..."
+msgstr ""
 
 #: src/components/dms/ReportDialog.tsx:269
 #: src/components/dms/ReportDialog.tsx:272
 #: src/components/ReportDialog/SubmitView.tsx:221
 #: src/components/ReportDialog/SubmitView.tsx:225
 msgid "Send report"
-msgstr "Inviar reporto"
+msgstr ""
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:42
 msgid "Send report to {0}"
-msgstr "Inviar reporto a {0}"
+msgstr ""
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:120
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:123
 msgid "Send verification email"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:423
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:426
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:433
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:436
 msgid "Send via direct message"
-msgstr "Inviar via message directe"
+msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:147
 msgid "Sends email with confirmation code for account deletion"
@@ -6155,7 +6227,7 @@ msgstr ""
 
 #: src/view/com/auth/server-input/index.tsx:163
 msgid "Server address"
-msgstr "Adresse de servitor"
+msgstr ""
 
 #: src/screens/Settings/AppIconSettings/index.tsx:178
 msgid "Set app icon to {0}"
@@ -6167,7 +6239,7 @@ msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:102
 msgid "Set new password"
-msgstr "Definir nove contrasigno"
+msgstr ""
 
 #: src/screens/Onboarding/Layout.tsx:47
 msgid "Set up your account"
@@ -6179,10 +6251,10 @@ msgstr ""
 
 #: src/Navigation.tsx:170
 #: src/screens/Settings/Settings.tsx:80
-#: src/view/shell/desktop/LeftNav.tsx:694
+#: src/view/shell/desktop/LeftNav.tsx:697
 #: src/view/shell/Drawer.tsx:534
 msgid "Settings"
-msgstr "Parametros"
+msgstr ""
 
 #: src/screens/ModerationInteractionSettings/index.tsx:102
 msgid "Settings saved"
@@ -6201,11 +6273,11 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:423
 #: src/screens/StarterPack/StarterPackScreen.tsx:595
 #: src/screens/Topic.tsx:102
-#: src/view/com/profile/ProfileMenu.tsx:195
-#: src/view/com/profile/ProfileMenu.tsx:204
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:346
+#: src/view/com/profile/ProfileMenu.tsx:205
+#: src/view/com/profile/ProfileMenu.tsx:214
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:444
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:356
 #: src/view/screens/ProfileList.tsx:483
 msgid "Share"
 msgstr ""
@@ -6223,9 +6295,9 @@ msgstr ""
 msgid "Share a fun fact!"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:353
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:691
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:362
+#: src/view/com/profile/ProfileMenu.tsx:388
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:723
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:372
 msgid "Share anyway"
 msgstr ""
 
@@ -6247,7 +6319,7 @@ msgstr ""
 #: src/components/StarterPack/ShareDialog.tsx:134
 #: src/components/StarterPack/ShareDialog.tsx:145
 msgid "Share QR code"
-msgstr "Compartir codice QR"
+msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:470
 msgid "Share this feed"
@@ -6277,7 +6349,7 @@ msgstr ""
 #: src/components/moderation/LabelPreference.tsx:137
 #: src/components/moderation/PostHider.tsx:122
 msgid "Show"
-msgstr "Monstrar"
+msgstr ""
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:178
 msgid "Show alt text"
@@ -6302,14 +6374,10 @@ msgstr ""
 
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:22
 msgid "Show hidden replies"
-msgstr "Monstrar responsas celate"
-
-#: src/view/com/post-thread/PostThreadItem.tsx:805
-msgid "Show information about when this post was created"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:473
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:475
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:483
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:485
 msgid "Show less like this"
 msgstr ""
 
@@ -6317,23 +6385,19 @@ msgstr ""
 msgid "Show list anyway"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:592
+#: src/view/com/post-thread/PostThreadItem.tsx:597
 #: src/view/com/post/Post.tsx:242
 #: src/view/com/posts/PostFeedItem.tsx:509
 msgid "Show More"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:465
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:467
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:475
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:477
 msgid "Show more like this"
 msgstr ""
 
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:22
 msgid "Show muted replies"
-msgstr "Monstrar responsas silentiate"
-
-#: src/screens/Settings/Settings.tsx:104
-msgid "Show other accounts you can switch to"
 msgstr ""
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:104
@@ -6344,7 +6408,7 @@ msgstr ""
 #: src/screens/Settings/FollowingFeedPreferences.tsx:68
 #: src/screens/Settings/FollowingFeedPreferences.tsx:78
 msgid "Show replies"
-msgstr "Monstrar responsas"
+msgstr ""
 
 #: src/view/com/post-thread/PostThread.tsx:622
 msgid "Show replies as"
@@ -6358,8 +6422,8 @@ msgstr ""
 msgid "Show replies by people you follow before all other replies"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:549
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:559
 msgid "Show reply for everyone"
 msgstr ""
 
@@ -6373,17 +6437,25 @@ msgstr ""
 msgid "Show samples of your saved feeds in your Following feed"
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:152
-#: src/components/moderation/PostHider.tsx:79
-msgid "Show the content"
-msgstr ""
-
 #: src/lib/moderation/useLabelBehaviorDescription.ts:58
 msgid "Show warning"
 msgstr ""
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:56
 msgid "Show warning and filter from feeds"
+msgstr ""
+
+#: src/view/com/post-thread/PostThreadItem.tsx:810
+msgid "Shows information about when this post was created"
+msgstr ""
+
+#: src/screens/Settings/Settings.tsx:104
+msgid "Shows other accounts you can switch to"
+msgstr ""
+
+#: src/components/moderation/ContentHider.tsx:152
+#: src/components/moderation/PostHider.tsx:79
+msgid "Shows the content"
 msgstr ""
 
 #: src/components/dialogs/Signin.tsx:97
@@ -6424,8 +6496,8 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:227
 #: src/screens/Settings/Settings.tsx:259
 #: src/view/shell/desktop/LeftNav.tsx:208
-#: src/view/shell/desktop/LeftNav.tsx:288
 #: src/view/shell/desktop/LeftNav.tsx:291
+#: src/view/shell/desktop/LeftNav.tsx:294
 msgid "Sign out"
 msgstr ""
 
@@ -6456,7 +6528,7 @@ msgstr ""
 #: src/screens/Onboarding/StepInterests/index.tsx:231
 #: src/screens/StarterPack/Wizard/index.tsx:195
 msgid "Skip"
-msgstr "Saltar"
+msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:228
 msgid "Skip this flow"
@@ -6587,10 +6659,10 @@ msgstr ""
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:53
-#: src/screens/Settings/AboutSettings.tsx:56
+#: src/screens/Settings/AboutSettings.tsx:58
+#: src/screens/Settings/AboutSettings.tsx:61
 msgid "Status Page"
-msgstr "Pagina de stato"
+msgstr ""
 
 #: src/screens/Signup/index.tsx:130
 msgid "Step {0} of {1}"
@@ -6622,7 +6694,7 @@ msgstr ""
 
 #: src/view/screens/ProfileList.tsx:712
 msgid "Subscribe"
-msgstr "Subscriber"
+msgstr ""
 
 #: src/screens/Profile/Sections/Labels.tsx:202
 msgid "Subscribe to @{0} to use these labels:"
@@ -6661,12 +6733,12 @@ msgstr ""
 #: src/view/screens/Support.tsx:31
 #: src/view/screens/Support.tsx:34
 msgid "Support"
-msgstr "Supporto"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:102
 #: src/screens/Settings/Settings.tsx:116
 #: src/screens/Settings/Settings.tsx:412
-#: src/view/shell/desktop/LeftNav.tsx:243
+#: src/view/shell/desktop/LeftNav.tsx:246
 msgid "Switch account"
 msgstr ""
 
@@ -6679,61 +6751,27 @@ msgstr ""
 msgid "Switch accounts"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:251
+#: src/view/shell/desktop/LeftNav.tsx:254
 msgid "Switch to {0}"
 msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:97
 #: src/screens/Settings/AppearanceSettings.tsx:147
 msgid "System"
-msgstr "Systema"
+msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:60
-#: src/screens/Settings/AboutSettings.tsx:63
+#: src/screens/Settings/AboutSettings.tsx:65
+#: src/screens/Settings/AboutSettings.tsx:68
 #: src/screens/Settings/Settings.tsx:318
 msgid "System log"
-msgstr "Registro de systema"
+msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:282
 msgid "Tags only"
-msgstr "Solmente etiquettas"
-
-#: src/screens/Settings/AppIconSettings/index.tsx:216
-msgid "Tap to change app icon"
-msgstr ""
-
-#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
-#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
-msgid "Tap to close the emoji picker"
 msgstr ""
 
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"
-msgstr "Tocca pro clauder"
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
-msgid "Tap to enter full screen"
-msgstr ""
-
-#: src/screens/VideoFeed/index.tsx:933
-msgid "Tap to expand or collapse post text."
-msgstr ""
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
-msgid "Tap to play or pause"
-msgstr ""
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:158
-msgid "Tap to toggle sound"
-msgstr ""
-
-#: src/view/com/util/images/AutoSizedImage.tsx:199
-#: src/view/com/util/images/AutoSizedImage.tsx:221
-msgid "Tap to view full image"
-msgstr ""
-
-#: src/components/VideoPostCard.tsx:115
-msgid "Tap to view video in immersive mode."
 msgstr ""
 
 #: src/state/shell/progress-guide.tsx:233
@@ -6771,8 +6809,8 @@ msgid "Terms"
 msgstr ""
 
 #: src/Navigation.tsx:286
-#: src/screens/Settings/AboutSettings.tsx:37
-#: src/screens/Settings/AboutSettings.tsx:40
+#: src/screens/Settings/AboutSettings.tsx:42
+#: src/screens/Settings/AboutSettings.tsx:45
 #: src/view/screens/TermsOfService.tsx:31
 #: src/view/shell/Drawer.tsx:622
 #: src/view/shell/Drawer.tsx:624
@@ -6832,12 +6870,12 @@ msgstr ""
 msgid "That's all, folks!"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1073
+#: src/screens/VideoFeed/index.tsx:1075
 msgid "That's everything!"
 msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
-#: src/view/com/profile/ProfileMenu.tsx:329
+#: src/view/com/profile/ProfileMenu.tsx:364
 msgid "The account will be able to interact with you after unblocking."
 msgstr ""
 
@@ -6865,11 +6903,11 @@ msgstr ""
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:102
 msgid "The Discover feed"
-msgstr "Le fluxo Discoperir"
+msgstr ""
 
 #: src/state/shell/progress-guide.tsx:224
 msgid "The Discover feed now knows what you like"
-msgstr "Le fluxo Discoperir ora cognosce lo que tu ama"
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:320
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
@@ -6889,10 +6927,6 @@ msgstr ""
 
 #: src/screens/ModerationInteractionSettings/index.tsx:42
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
-msgstr ""
-
-#: src/screens/Onboarding/Layout.tsx:57
-msgid "The following steps will help customize your Bluesky experience."
 msgstr ""
 
 #: src/view/com/post-thread/PostThread.tsx:262
@@ -6930,7 +6964,7 @@ msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:151
 msgid "Theme"
-msgstr "Thema"
+msgstr ""
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
@@ -7002,17 +7036,17 @@ msgstr ""
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:141
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:91
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:102
-#: src/view/com/profile/ProfileMenu.tsx:102
-#: src/view/com/profile/ProfileMenu.tsx:112
-#: src/view/com/profile/ProfileMenu.tsx:126
-#: src/view/com/profile/ProfileMenu.tsx:136
-#: src/view/com/profile/ProfileMenu.tsx:149
-#: src/view/com/profile/ProfileMenu.tsx:161
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:364
+#: src/view/com/profile/ProfileMenu.tsx:104
+#: src/view/com/profile/ProfileMenu.tsx:114
+#: src/view/com/profile/ProfileMenu.tsx:128
+#: src/view/com/profile/ProfileMenu.tsx:138
+#: src/view/com/profile/ProfileMenu.tsx:151
+#: src/view/com/profile/ProfileMenu.tsx:163
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:366
 msgid "There was an issue! {0}"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:216
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:217
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -7082,7 +7116,7 @@ msgid "This content is not viewable without a Bluesky account."
 msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:284
-msgid "This conversation is with a deleted or a deactivated account. Press for options."
+msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr ""
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:94
@@ -7105,7 +7139,7 @@ msgstr ""
 #: src/screens/Profile/ProfileFeed/index.tsx:189
 #: src/view/screens/ProfileList.tsx:814
 msgid "This feed is empty."
-msgstr "Iste fluxo es vacue."
+msgstr ""
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:99
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
@@ -7155,7 +7189,7 @@ msgstr ""
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:845
+#: src/view/com/post-thread/PostThreadItem.tsx:850
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
 
@@ -7165,14 +7199,14 @@ msgstr ""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:152
 msgid "This post has been deleted."
-msgstr "Iste message ha essite supprimite."
+msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:359
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:720
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:369
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:701
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr ""
 
@@ -7180,11 +7214,11 @@ msgstr ""
 msgid "This post's author has disabled quote posts."
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:350
+#: src/view/com/profile/ProfileMenu.tsx:385
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:731
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:763
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr ""
 
@@ -7237,7 +7271,7 @@ msgstr ""
 msgid "This will remove @{0} from the quick access list."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:721
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:753
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr ""
 
@@ -7290,7 +7324,7 @@ msgstr ""
 
 #: src/components/dms/DateDivider.tsx:44
 msgid "Today"
-msgstr "Hodie"
+msgstr ""
 
 #: src/view/com/util/forms/DropdownButton.tsx:258
 msgid "Toggle dropdown"
@@ -7300,9 +7334,13 @@ msgstr ""
 msgid "Toggle to enable or disable adult content"
 msgstr ""
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:158
+msgid "Toggles the sound"
+msgstr ""
+
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
-#: src/view/screens/Search/Search.tsx:496
+#: src/view/screens/Search/Search.tsx:492
 msgid "Top"
 msgstr ""
 
@@ -7312,12 +7350,12 @@ msgstr ""
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:770
-#: src/view/com/post-thread/PostThreadItem.tsx:773
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:404
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:406
+#: src/view/com/post-thread/PostThreadItem.tsx:775
+#: src/view/com/post-thread/PostThreadItem.tsx:778
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:414
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:416
 msgid "Translate"
-msgstr "Traducer"
+msgstr ""
 
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:69
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:59
@@ -7332,11 +7370,11 @@ msgstr ""
 #: src/view/com/util/error/ErrorScreen.tsx:103
 msgctxt "action"
 msgid "Try again"
-msgstr "Retenta"
+msgstr ""
 
 #: src/screens/Onboarding/state.ts:115
 msgid "TV"
-msgstr "TV"
+msgstr ""
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:56
 msgid "Two-factor authentication (2FA)"
@@ -7348,11 +7386,11 @@ msgstr ""
 
 #: src/screens/Messages/components/MessageInput.tsx:148
 msgid "Type your message here"
-msgstr "Scribe tu message hic"
+msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:413
 msgid "Type:"
-msgstr "Typo:"
+msgstr ""
 
 #: src/view/screens/ProfileList.tsx:590
 msgid "Un-block list"
@@ -7377,7 +7415,7 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:650
 msgid "Unable to delete"
-msgstr "Impossibile de supprimer"
+msgstr ""
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:96
 #: src/components/dms/MessagesListBlockedFooter.tsx:103
@@ -7385,30 +7423,30 @@ msgstr "Impossibile de supprimer"
 #: src/components/dms/MessagesListBlockedFooter.tsx:118
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:197
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
-#: src/view/com/profile/ProfileMenu.tsx:341
+#: src/view/com/profile/ProfileMenu.tsx:376
 #: src/view/screens/ProfileList.tsx:694
 msgid "Unblock"
-msgstr "Disblocar"
+msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:202
 msgctxt "action"
 msgid "Unblock"
-msgstr "Disblocar"
+msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:250
 #: src/components/dms/ConvoMenu.tsx:253
 msgid "Unblock account"
-msgstr "Disblocar conto"
+msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:279
-#: src/view/com/profile/ProfileMenu.tsx:285
+#: src/view/com/profile/ProfileMenu.tsx:289
+#: src/view/com/profile/ProfileMenu.tsx:295
 msgid "Unblock Account"
-msgstr "Disblocar conto"
+msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
-#: src/view/com/profile/ProfileMenu.tsx:323
+#: src/view/com/profile/ProfileMenu.tsx:358
 msgid "Unblock Account?"
-msgstr "Disblocar le conto?"
+msgstr ""
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:76
@@ -7428,20 +7466,20 @@ msgstr ""
 msgid "Unfollow {0}"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:221
 #: src/view/com/profile/ProfileMenu.tsx:231
+#: src/view/com/profile/ProfileMenu.tsx:241
 msgid "Unfollow Account"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:803
-msgid "Unfollow user"
+#: src/screens/VideoFeed/index.tsx:804
+msgid "Unfollows the user"
 msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Unlike"
 msgstr ""
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:305
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:315
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -7460,8 +7498,8 @@ msgstr ""
 msgid "Unmute {tag}"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:258
-#: src/view/com/profile/ProfileMenu.tsx:264
+#: src/view/com/profile/ProfileMenu.tsx:268
+#: src/view/com/profile/ProfileMenu.tsx:274
 msgid "Unmute Account"
 msgstr ""
 
@@ -7469,8 +7507,8 @@ msgstr ""
 msgid "Unmute conversation"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:489
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:493
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:499
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
 msgid "Unmute thread"
 msgstr ""
 
@@ -7492,8 +7530,8 @@ msgstr ""
 msgid "Unpin from home"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:379
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:386
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:389
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:396
 msgid "Unpin from profile"
 msgstr ""
 
@@ -7548,11 +7586,11 @@ msgstr ""
 msgid "Update to {domain}"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:306
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:308
 msgid "Updating quote attachment failed"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:336
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:338
 msgid "Updating reply visibility failed"
 msgstr ""
 
@@ -7562,7 +7600,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:290
 msgid "Upload a photo instead"
-msgstr "Incargar un photo in su loco"
+msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:453
 msgid "Upload a text file to:"
@@ -7670,18 +7708,22 @@ msgstr ""
 
 #: src/view/com/modals/CreateOrEditList.tsx:176
 msgid "User list created"
-msgstr "Lista de usator create"
+msgstr ""
 
 #: src/view/com/modals/CreateOrEditList.tsx:162
 msgid "User list updated"
-msgstr "Lista de usator actualisate"
+msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:193
 msgid "Username or email address"
-msgstr "Nomine de usator o adresse de e-mail"
+msgstr ""
+
+#: src/components/WhoCanReply.tsx:276
+msgid "users followed by <0>@{0}</0>"
+msgstr ""
 
 #: src/components/WhoCanReply.tsx:263
-msgid "users followed by <0>@{0}</0>"
+msgid "users following <0>@{0}</0>"
 msgstr ""
 
 #: src/screens/Messages/Settings.tsx:92
@@ -7689,7 +7731,7 @@ msgstr ""
 msgid "Users I follow"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:445
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:456
 msgid "Users in \"{0}\""
 msgstr ""
 
@@ -7697,9 +7739,13 @@ msgstr ""
 msgid "Users that have liked this content or profile"
 msgstr ""
 
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:433
+msgid "Users you follow"
+msgstr ""
+
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:419
 msgid "Value:"
-msgstr "Valor:"
+msgstr ""
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:125
 msgid "Verified email required"
@@ -7739,10 +7785,10 @@ msgstr ""
 msgid "Verify Your Email"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:67
-#: src/screens/Settings/AboutSettings.tsx:77
+#: src/screens/Settings/AboutSettings.tsx:72
+#: src/screens/Settings/AboutSettings.tsx:91
 msgid "Version {appVersion}"
-msgstr "Version {appVersion}"
+msgstr ""
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:83
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:134
@@ -7764,31 +7810,31 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
 msgid "Video Games"
-msgstr "Videojocos"
+msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1031
+#: src/screens/VideoFeed/index.tsx:1033
 msgid "Video is paused"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1031
+#: src/screens/VideoFeed/index.tsx:1033
 msgid "Video is playing"
 msgstr ""
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:191
 msgid "Video not found."
-msgstr "Video non trovate."
+msgstr ""
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:99
 msgid "Video settings"
-msgstr "Configurationes de video"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1664
 msgid "Video uploaded"
-msgstr "Video cargate"
+msgstr ""
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:83
 msgid "Video: {0}"
-msgstr "Video: {0}"
+msgstr ""
 
 #: src/view/screens/Profile.tsx:236
 msgid "Videos"
@@ -7808,15 +7854,15 @@ msgstr ""
 #: src/screens/VideoFeed/index.tsx:763
 #: src/view/com/notifications/NotificationFeedItem.tsx:409
 msgid "View {0}'s profile"
-msgstr "Visualisar profilo de {0}"
+msgstr ""
 
 #: src/components/dms/MessagesListHeader.tsx:173
 msgid "View {displayName}'s profile"
-msgstr "Visualisar profilo de {displayName}"
+msgstr ""
 
 #: src/components/ProfileHoverCard/index.web.tsx:433
 msgid "View blocked user's profile"
-msgstr "Visualisar profilo de usator blocate"
+msgstr ""
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:98
 msgid "View blogpost for more details"
@@ -7830,19 +7876,19 @@ msgstr ""
 #: src/screens/VideoFeed/index.tsx:637
 #: src/screens/VideoFeed/index.tsx:655
 msgid "View details"
-msgstr "Visualisar detalios"
+msgstr ""
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:132
 msgid "View details for reporting a copyright violation"
-msgstr "Visualisar detalios pro signalar un violation de copyright"
+msgstr ""
 
 #: src/view/com/posts/ViewFullThread.tsx:56
 msgid "View full thread"
-msgstr "Visualisar topico complete"
+msgstr ""
 
 #: src/components/moderation/LabelsOnMe.tsx:46
 msgid "View information about these labels"
-msgstr "Visualisar information sur iste etiquettas"
+msgstr ""
 
 #: src/components/interstitials/TrendingVideos.tsx:191
 #: src/components/interstitials/TrendingVideos.tsx:210
@@ -7859,11 +7905,11 @@ msgstr ""
 #: src/view/com/util/PostMeta.tsx:78
 #: src/view/com/util/PostMeta.tsx:93
 msgid "View profile"
-msgstr "Visualisar profilo"
+msgstr ""
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:119
 msgid "View the avatar"
-msgstr "Visualisar le avatar"
+msgstr ""
 
 #: src/components/LabelingServiceCard/index.tsx:164
 msgid "View the labeling service provided by @{0}"
@@ -7879,7 +7925,7 @@ msgstr ""
 
 #: src/screens/Moderation/index.tsx:264
 msgid "View your blocked accounts"
-msgstr "Visualisar tu contos blocate"
+msgstr ""
 
 #: src/screens/Moderation/index.tsx:204
 msgid "View your default post interaction settings"
@@ -7888,24 +7934,33 @@ msgstr ""
 #: src/view/com/home/HomeHeaderLayout.web.tsx:56
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:77
 msgid "View your feeds and explore more"
-msgstr "Vider tu fluxos e explorar plus"
+msgstr ""
 
 #: src/screens/Moderation/index.tsx:234
 msgid "View your moderation lists"
-msgstr "Vider tu listas de moderation"
+msgstr ""
 
 #: src/screens/Moderation/index.tsx:249
 msgid "View your muted accounts"
-msgstr "Vider tu contos silentiate"
+msgstr ""
+
+#: src/view/com/util/images/AutoSizedImage.tsx:199
+#: src/view/com/util/images/AutoSizedImage.tsx:221
+msgid "Views full image"
+msgstr ""
+
+#: src/components/VideoPostCard.tsx:115
+msgid "Views video in immersive mode"
+msgstr ""
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
 msgid "Visit Site"
-msgstr "Visitar sito"
+msgstr ""
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:80
 msgid "Volume"
-msgstr "Volumine"
+msgstr ""
 
 #: src/components/moderation/LabelPreference.tsx:136
 #: src/lib/moderation/useLabelBehaviorDescription.ts:17
@@ -7990,7 +8045,7 @@ msgstr ""
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:201
+#: src/view/screens/Search/Search.tsx:205
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr ""
 
@@ -8013,7 +8068,7 @@ msgstr ""
 
 #: src/components/NewskieDialog.tsx:103
 msgid "Welcome, friend!"
-msgstr "Benvenite, amico!"
+msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:126
 msgid "What are your interests?"
@@ -8035,7 +8090,7 @@ msgstr ""
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:80
 msgid "Which languages are used in this post?"
-msgstr "Qual linguas es usate in iste publication?"
+msgstr ""
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:79
 msgid "Which languages would you like to see in your algorithmic feeds?"
@@ -8094,16 +8149,16 @@ msgstr ""
 #: src/screens/Messages/components/MessageInput.tsx:149
 #: src/screens/Messages/components/MessageInput.web.tsx:214
 msgid "Write a message"
-msgstr "Scribe un message"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:832
 msgid "Write post"
-msgstr "Scriber message"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:742
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:69
 msgid "Write your reply"
-msgstr "Scribe tu responsa"
+msgstr ""
 
 #: src/screens/Onboarding/index.tsx:25
 #: src/screens/Onboarding/state.ts:116
@@ -8116,40 +8171,40 @@ msgstr ""
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:86
 msgid "Yes"
-msgstr "Si"
+msgstr ""
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:106
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:108
 msgid "Yes, deactivate"
-msgstr "Si, disactivar"
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:662
 msgid "Yes, delete this starter pack"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:724
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:756
 msgid "Yes, detach"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:734
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:766
 msgid "Yes, hide"
-msgstr "Si, celar"
+msgstr ""
 
 #: src/screens/Deactivated.tsx:146
 msgid "Yes, reactivate my account"
-msgstr "Si, reactivar mi conto"
+msgstr ""
 
 #: src/components/dms/DateDivider.tsx:46
 msgid "Yesterday"
-msgstr "Heri"
+msgstr ""
 
 #: src/screens/List/ListHiddenScreen.tsx:150
 msgid "you"
-msgstr "tu"
+msgstr ""
 
 #: src/components/NewskieDialog.tsx:43
 msgid "You"
-msgstr "Tu"
+msgstr ""
 
 #: src/screens/SignupQueued.tsx:157
 msgid "You are in line."
@@ -8157,7 +8212,7 @@ msgstr ""
 
 #: src/view/com/composer/state/video.ts:410
 msgid "You are not allowed to upload videos."
-msgstr "Tu non es permitte incargar videos."
+msgstr ""
 
 #: src/view/com/profile/ProfileFollows.tsx:94
 msgid "You are not following anyone."
@@ -8186,7 +8241,7 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
-msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings.</0>"
+msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings</0>."
 msgstr ""
 
 #: src/components/interstitials/Trending.tsx:130
@@ -8218,11 +8273,11 @@ msgstr ""
 
 #: src/view/com/post-thread/PostThread.tsx:268
 msgid "You have blocked the author or you have been blocked by the author."
-msgstr "Tu ha blocate le autor o tu ha essite blocate per le autor."
+msgstr ""
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:65
 msgid "You have blocked this user"
-msgstr "Tu ha blocate iste usator"
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:71
 #: src/lib/moderation/useModerationCauseDescription.ts:55
@@ -8239,20 +8294,20 @@ msgstr ""
 
 #: src/lib/moderation/useModerationCauseDescription.ts:114
 msgid "You have hidden this post"
-msgstr "Tu ha celate iste message"
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:109
 msgid "You have hidden this post."
-msgstr "Tu ha celate iste message."
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:102
 #: src/lib/moderation/useModerationCauseDescription.ts:97
 msgid "You have muted this account."
-msgstr "Tu ha silentiate iste conto."
+msgstr ""
 
 #: src/lib/moderation/useModerationCauseDescription.ts:91
 msgid "You have muted this user"
-msgstr "Tu ha silentiate iste usator"
+msgstr ""
 
 #: src/screens/Messages/ChatList.tsx:198
 msgid "You have no conversations yet. Start one!"
@@ -8310,11 +8365,11 @@ msgstr ""
 
 #: src/screens/StarterPack/Wizard/State.tsx:97
 msgid "You may only add up to 3 feeds"
-msgstr "Tu pote solmente adder usque 3 fluxos"
+msgstr ""
 
 #: src/lib/media/picker.shared.ts:22
 msgid "You may only select up to 4 images"
-msgstr "Tu pote selectionar solmente 4 imagines"
+msgstr ""
 
 #: src/screens/Signup/StepInfo/Policies.tsx:106
 msgid "You must be 13 years of age or older to sign up."
@@ -8345,11 +8400,11 @@ msgstr ""
 msgid "You will be signed out of all your accounts."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:217
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:219
 msgid "You will no longer receive notifications for this thread"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:213
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:215
 msgid "You will now receive notifications for this thread"
 msgstr ""
 
@@ -8395,7 +8450,7 @@ msgstr ""
 
 #: src/screens/SignupQueued.tsx:127
 msgid "You're in line"
-msgstr "Tu es in fila"
+msgstr ""
 
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
@@ -8404,7 +8459,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:242
 msgid "You're ready to go!"
-msgstr "Toto preste!"
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:106
 #: src/lib/moderation/useModerationCauseDescription.ts:106
@@ -8413,7 +8468,7 @@ msgstr ""
 
 #: src/state/shell/progress-guide.tsx:234
 msgid "You've found some people to follow"
-msgstr "Tu ha trovate alicun personas a sequer"
+msgstr ""
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
@@ -8427,17 +8482,17 @@ msgstr ""
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1082
+#: src/screens/VideoFeed/index.tsx:1084
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr ""
 
 #: src/screens/Signup/index.tsx:140
 msgid "Your account"
-msgstr "Tu conto"
+msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:84
 msgid "Your account has been deleted"
-msgstr "Tu conto ha essite supprimite"
+msgstr ""
 
 #: src/screens/Takendown.tsx:146
 msgid "Your account has been suspended"
@@ -8461,15 +8516,15 @@ msgstr ""
 
 #: src/screens/Signup/StepInfo/index.tsx:205
 msgid "Your birth date"
-msgstr "Tu data de anniversario"
+msgstr ""
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:195
 msgid "Your browser does not support the video format. Please try a different browser."
-msgstr "Tu navigator non supporta le formato de video. Retenta con un navigator differente."
+msgstr ""
 
 #: src/screens/Messages/components/ChatDisabled.tsx:25
 msgid "Your chats have been disabled"
-msgstr "Tu chats ha essite dishabilitate"
+msgstr ""
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "Your choice will be saved, but can be changed later in settings."
@@ -8496,35 +8551,39 @@ msgstr ""
 
 #: src/state/shell/progress-guide.tsx:213
 msgid "Your first like!"
-msgstr "Tu prime me place!"
+msgstr ""
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:443
+msgid "Your followers"
+msgstr ""
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "Tu fluxo de sequites es vacue! Seque plus de usatores pro vider lo que passa."
+msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:221
 msgid "Your full handle will be <0>@{0}</0>"
-msgstr "Tu nomine de usator complete sera <0>@{0}</0>"
+msgstr ""
 
 #: src/screens/Signup/StepHandle.tsx:129
 msgid "Your full username will be"
-msgstr "Tu nomine complete de usator sera"
+msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:369
 msgid "Your muted words"
-msgstr "Tu parolas silentiate"
+msgstr ""
 
 #: src/view/com/modals/ChangePassword.tsx:158
 msgid "Your password has been changed successfully!"
-msgstr "Tu contrasigno ha essite cambiate con successo!"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:485
 msgid "Your post has been published"
-msgstr "Tu message ha essite publicate"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:482
 msgid "Your posts have been published"
-msgstr "Tu messages ha essite publicate"
+msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:257
 msgid "Your posts, likes, and blocks are public. Mutes are private."
@@ -8536,8 +8595,9 @@ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:484
 msgid "Your reply has been published"
-msgstr "Tu responsa ha essite publicate"
+msgstr ""
 
 #: src/components/dms/ReportDialog.tsx:198
 msgid "Your report will be sent to the Bluesky Moderation Service"
-msgstr "Tu reporto sera inviate al Servicio de Moderation de Bluesky"
+msgstr ""
+
