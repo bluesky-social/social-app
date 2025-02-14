@@ -8,7 +8,7 @@ msgstr ""
 "Language: vi\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-13 03:02\n"
+"PO-Revision-Date: 2025-02-14 03:19\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -365,7 +365,7 @@ msgid "7 days"
 msgstr "7 ngày"
 
 #: src/Navigation.tsx:373
-#: src/screens/Settings/AboutSettings.tsx:30
+#: src/screens/Settings/AboutSettings.tsx:33
 #: src/screens/Settings/Settings.tsx:215
 #: src/screens/Settings/Settings.tsx:218
 msgid "About"
@@ -607,11 +607,11 @@ msgstr "Cho phép truy cập tin nhắn của bạn"
 msgid "Allow new messages from"
 msgstr "Cho phép tin nhắn mới từ"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:343
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
 msgid "Allow quote posts"
 msgstr "Cho phép trích dẫn bài đăng"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
 msgid "Allow replies from:"
 msgstr "Cho phép trả lời từ:"
 
@@ -1429,11 +1429,11 @@ msgstr "Xóa truy vấn tìm kiếm"
 msgid "click here"
 msgstr "nhấn vào đây"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:336
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
 msgid "Click to disable quote posts of this post."
 msgstr "Nhấn để vô hiệu hóa trích dẫn cho bài đăng này."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:338
 msgid "Click to enable quote posts of this post."
 msgstr "Nhấn để cho phép trích dẫn cho bài đăng này."
 
@@ -1722,7 +1722,7 @@ msgstr "Nấu ăn"
 msgid "Copied"
 msgstr "Đã sao chép"
 
-#: src/screens/Settings/AboutSettings.tsx:84
+#: src/screens/Settings/AboutSettings.tsx:87
 msgid "Copied build version to clipboard"
 msgstr "Đã sao chép phiên bản xây dựng vào bảng ghi tạm"
 
@@ -1740,7 +1740,7 @@ msgstr "Đã sao chép vào bảng ghi tạm"
 msgid "Copied!"
 msgstr "Đã sao chép!"
 
-#: src/screens/Settings/AboutSettings.tsx:70
+#: src/screens/Settings/AboutSettings.tsx:73
 msgid "Copies build version to clipboard"
 msgstr "Sao chép mã số phiên bản vào bản ghi tạm"
 
@@ -1916,7 +1916,7 @@ msgstr "Văn hóa"
 msgid "Custom"
 msgstr "Tùy chỉnh"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:102
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:103
 msgid "Customize who can interact with this post."
 msgstr "Tùy chỉnh ai có thể tương tác với bài đăng này."
 
@@ -2089,11 +2089,11 @@ msgstr "Gỡ trích dẫn"
 msgid "Detach quote post?"
 msgstr "Gỡ trích dẫn bài đăng?"
 
-#: src/screens/Settings/AboutSettings.tsx:77
+#: src/screens/Settings/AboutSettings.tsx:80
 msgid "Developer mode disabled"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:76
+#: src/screens/Settings/AboutSettings.tsx:79
 msgid "Developer mode enabled"
 msgstr ""
 
@@ -2385,7 +2385,7 @@ msgid "Edit People"
 msgstr "Thay đổi người"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:69
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:239
 msgid "Edit post interaction settings"
 msgstr "Chỉnh sửa cài đặt tương tác bài đăng"
 
@@ -2637,7 +2637,7 @@ msgstr "Nhận được lỗi phản hồi captcha."
 msgid "Error:"
 msgstr "Lỗi:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:394
 msgid "Everybody"
 msgstr "Mọi người"
 
@@ -3312,7 +3312,7 @@ msgstr "Bị ẩn"
 msgid "Hidden by your moderation settings."
 msgstr "Bị ẩn bởi cài đặt kiểm duyệt của bạn."
 
-#: src/components/ListCard.tsx:131
+#: src/components/ListCard.tsx:130
 msgid "Hidden list"
 msgstr "Danh sách ẩn"
 
@@ -3860,7 +3860,7 @@ msgstr "Hình đại diện danh sách"
 msgid "List blocked"
 msgstr "Đã chặn danh sách"
 
-#: src/components/ListCard.tsx:151
+#: src/components/ListCard.tsx:150
 #: src/view/com/feeds/FeedSourceCard.tsx:255
 msgid "List by {0}"
 msgstr "Danh sách bởi {0}"
@@ -4031,7 +4031,7 @@ msgstr "Phương tiện có thể gây phản cảm cho một số khán giả."
 msgid "mentioned users"
 msgstr "người dùng được đề cập"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:422
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:423
 msgid "Mentioned users"
 msgstr "Người dùng được đề cập"
 
@@ -4090,7 +4090,7 @@ msgstr "Kiểm duyệt"
 msgid "Moderation details"
 msgstr "Chi tiết kiểm duyệt"
 
-#: src/components/ListCard.tsx:150
+#: src/components/ListCard.tsx:149
 #: src/view/com/modals/UserAddRemoveLists.tsx:222
 msgid "Moderation list by {0}"
 msgstr "Danh sách kiểm duyệt bởi {0}"
@@ -4523,7 +4523,7 @@ msgstr "Không tìm thấy kết quả nào cho \"{search}\"."
 msgid "No thanks"
 msgstr "Không, cảm ơn"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:405
 msgid "Nobody"
 msgstr "Không ai"
 
@@ -4856,7 +4856,7 @@ msgstr "Cung cấp thêm thông tin bên dưới (không bắt buộc):"
 msgid "Options:"
 msgstr "Lựa chọn:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:417
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:418
 msgid "Or combine these options:"
 msgstr "Hoặc kết hợp các lựa chọn sau:"
 
@@ -5178,7 +5178,7 @@ msgstr "Bài đăng bị ẩn do từ cấm"
 msgid "Post Hidden by You"
 msgstr "Bài đăng ẩn bởi bạn"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:99
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
 msgid "Post interaction settings"
 msgstr "Cài đặt tương tác bài đăng"
 
@@ -5277,8 +5277,8 @@ msgid "Privacy and Security"
 msgstr "Quyền riêng tư và bảo mật"
 
 #: src/Navigation.tsx:281
-#: src/screens/Settings/AboutSettings.tsx:47
 #: src/screens/Settings/AboutSettings.tsx:50
+#: src/screens/Settings/AboutSettings.tsx:53
 #: src/view/screens/PrivacyPolicy.tsx:31
 #: src/view/shell/Drawer.tsx:629
 #: src/view/shell/Drawer.tsx:630
@@ -5357,7 +5357,7 @@ msgstr "Bài đăng trích dẫn đã được gỡ thành công"
 msgid "Quote posts disabled"
 msgstr "Trích dẫn bài đăng đã bị tắt"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:328
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:329
 msgid "Quote settings"
 msgstr "Cài đặt trích dẫn"
 
@@ -5517,7 +5517,7 @@ msgstr "Xóa từ cấm khỏi danh sách của bạn"
 msgid "Remove profile"
 msgstr "Xóa hồ sơ"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:284
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
 msgid "Remove quote"
 msgstr "Xóa trích dẫn"
 
@@ -5566,7 +5566,7 @@ msgstr "Đã xóa khỏi bảng tin của tôi"
 msgid "Removes profile from search history"
 msgstr "Xóa hồ sơ khỏi lịch sử tìm kiếm"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
 msgstr "Xóa bài đăng trích dẫn"
 
@@ -5606,11 +5606,11 @@ msgstr "Trả lời bị ẩn bởi tác giả của thảo luận"
 msgid "Reply Hidden by You"
 msgstr "Trả lời bị ẩn bởi bạn"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:384
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:385
 msgid "Reply settings"
 msgstr "Cài đặt trả lời"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:369
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:370
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "Cài đặt trả lời được chọn bởi tác giả của thảo luận"
 
@@ -5878,8 +5878,8 @@ msgid "Returns to the previous step"
 msgstr "Quay lại bước trước đó"
 
 #: src/components/dialogs/BirthDateSettings.tsx:120
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:478
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:479
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:485
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -6659,8 +6659,8 @@ msgstr "Gói khởi đầu"
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "Gói khởi đầu giúp bạn dễ dàng chia sẻ bảng tin và người yêu thích của mình với bạn bè."
 
-#: src/screens/Settings/AboutSettings.tsx:55
 #: src/screens/Settings/AboutSettings.tsx:58
+#: src/screens/Settings/AboutSettings.tsx:61
 msgid "Status Page"
 msgstr "Trang trạng thái"
 
@@ -6760,8 +6760,8 @@ msgstr "Chuyển sang {0}"
 msgid "System"
 msgstr "Hệ thống"
 
-#: src/screens/Settings/AboutSettings.tsx:62
 #: src/screens/Settings/AboutSettings.tsx:65
+#: src/screens/Settings/AboutSettings.tsx:68
 #: src/screens/Settings/Settings.tsx:318
 msgid "System log"
 msgstr "Log hệ thống"
@@ -6809,8 +6809,8 @@ msgid "Terms"
 msgstr "Điều khoản"
 
 #: src/Navigation.tsx:286
-#: src/screens/Settings/AboutSettings.tsx:39
 #: src/screens/Settings/AboutSettings.tsx:42
+#: src/screens/Settings/AboutSettings.tsx:45
 #: src/view/screens/TermsOfService.tsx:31
 #: src/view/shell/Drawer.tsx:622
 #: src/view/shell/Drawer.tsx:624
@@ -7046,7 +7046,7 @@ msgstr "Có vấn đề cập nhật bảng tin của bạn, vui lòng kiểm tr
 msgid "There was an issue! {0}"
 msgstr "Đã xảy ra vấn đề! {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:216
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:217
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -7731,7 +7731,7 @@ msgstr "người dùng theo dõi <0>@{0}</0>"
 msgid "Users I follow"
 msgstr "Người dùng tôi theo dõi"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:455
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:456
 msgid "Users in \"{0}\""
 msgstr "Người dùng trong \"{0}\""
 
@@ -7739,7 +7739,7 @@ msgstr "Người dùng trong \"{0}\""
 msgid "Users that have liked this content or profile"
 msgstr "Người dùng đã thích nội dung hoặc hồ sơ này"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:432
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:433
 msgid "Users you follow"
 msgstr "Người bạn theo dõi"
 
@@ -7785,8 +7785,8 @@ msgstr "Xác minh email của bạn"
 msgid "Verify Your Email"
 msgstr "Xác minh email của bạn"
 
-#: src/screens/Settings/AboutSettings.tsx:69
-#: src/screens/Settings/AboutSettings.tsx:88
+#: src/screens/Settings/AboutSettings.tsx:72
+#: src/screens/Settings/AboutSettings.tsx:91
 msgid "Version {appVersion}"
 msgstr "Phiên bản {appVersion}"
 
@@ -8241,8 +8241,8 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "Bạn có thể kích hoạt lại tài khoản của mình để tiếp tục đăng nhập. Hồ sơ và bài đăng của bạn sẽ hiển thị cho người dùng khác."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
-msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings.</0>"
-msgstr "Bạn có thể thiết lập cài đặt tương tác mặc định trong <0>Cài đặt → Kiểm duyệt → Cài đặt tương tác</0>"
+msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings</0>."
+msgstr ""
 
 #: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:139
@@ -8553,7 +8553,7 @@ msgstr "Email của bạn chưa được xác minh. Chúng tôi khuyến khích 
 msgid "Your first like!"
 msgstr "Lượt thích đầu của bạn!"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:443
 msgid "Your followers"
 msgstr "Người theo dõi bạn"
 
