@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-13 08:59\n"
+"PO-Revision-Date: 2025-02-14 02:02\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -49,11 +49,11 @@ msgstr "{0, plural, other {#時間}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this account"
-msgstr "{0, plural, other {#個のラベル}}がこのアカウントに適用されています"
+msgstr "{0, plural, other {#件のラベル}}がこのアカウントに適用されています"
 
 #: src/components/moderation/LabelsOnMe.tsx:62
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this content"
-msgstr "{0, plural, other {#個のラベル}}がこのコンテンツに適用されています"
+msgstr "{0, plural, other {#件のラベル}}がこのコンテンツに適用されています"
 
 #: src/screens/Post/PostLikedBy.tsx:41
 msgid "{0, plural, one {# like} other {# likes}}"
@@ -3792,7 +3792,7 @@ msgstr "いいねする"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:321
 msgid "Like ({0, plural, one {# like} other {# likes}})"
-msgstr "いいねする ({0, plural, other {#個のいいね}})"
+msgstr "いいねする ({0, plural, other {#件のいいね}})"
 
 #: src/components/ProgressGuide/List.tsx:63
 msgid "Like 10 posts"
@@ -4636,7 +4636,7 @@ msgstr "ちょっと！何らかの問題が発生したようです。"
 #: src/screens/Settings/AppIconSettings/index.tsx:48
 #: src/screens/Settings/AppIconSettings/index.tsx:229
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
 #: src/view/com/post-thread/PostThreadItem.tsx:869
@@ -6159,7 +6159,7 @@ msgstr "フィード内の翻訳に使用する言語を選択します。"
 
 #: src/view/com/util/forms/DropdownButton.tsx:297
 msgid "Selects option {0} of {numItems}"
-msgstr ""
+msgstr "{numItems}個中{0}個目のオプションを選択"
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
@@ -7481,7 +7481,7 @@ msgstr "いいねを外す"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:315
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
-msgstr "いいねを外す（{0, plural, other {#個のいいね}}）"
+msgstr "いいねを外す（{0, plural, other {#件のいいね}}）"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:155
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
