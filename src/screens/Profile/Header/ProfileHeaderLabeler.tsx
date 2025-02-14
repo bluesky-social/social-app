@@ -154,7 +154,7 @@ let ProfileHeaderLabeler = ({
         if (willSubscribe) {
           logEvent('moderation:subscribedToLabeler', {})
         } else {
-          logEvent('moderation:unbuscribedFromLabeler', {})
+          logEvent('moderation:unsubscribedFromLabeler', {})
         }
       }),
     [
