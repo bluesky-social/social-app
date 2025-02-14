@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-14 02:02\n"
+"PO-Revision-Date: 2025-02-14 03:19\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -365,7 +365,7 @@ msgid "7 days"
 msgstr "7일"
 
 #: src/Navigation.tsx:373
-#: src/screens/Settings/AboutSettings.tsx:30
+#: src/screens/Settings/AboutSettings.tsx:33
 #: src/screens/Settings/Settings.tsx:215
 #: src/screens/Settings/Settings.tsx:218
 msgid "About"
@@ -607,11 +607,11 @@ msgstr "다이렉트 메시지 접근 허용"
 msgid "Allow new messages from"
 msgstr "새 메시지를 허용할 대상"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:343
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
 msgid "Allow quote posts"
 msgstr "게시물 인용 허용"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
 msgid "Allow replies from:"
 msgstr "답글을 허용할 대상"
 
@@ -1429,11 +1429,11 @@ msgstr "검색어 지우기"
 msgid "click here"
 msgstr "이곳을 클릭"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:336
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
 msgid "Click to disable quote posts of this post."
 msgstr "이 게시물의 인용 게시물을 비활성화하려면 클릭하세요."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:338
 msgid "Click to enable quote posts of this post."
 msgstr "이 게시물의 인용 게시물을 활성화하려면 클릭하세요."
 
@@ -1722,7 +1722,7 @@ msgstr "요리"
 msgid "Copied"
 msgstr "복사됨"
 
-#: src/screens/Settings/AboutSettings.tsx:84
+#: src/screens/Settings/AboutSettings.tsx:87
 msgid "Copied build version to clipboard"
 msgstr "빌드 버전을 클립보드에 복사했습니다"
 
@@ -1740,7 +1740,7 @@ msgstr "클립보드에 복사했습니다"
 msgid "Copied!"
 msgstr "복사했습니다!"
 
-#: src/screens/Settings/AboutSettings.tsx:70
+#: src/screens/Settings/AboutSettings.tsx:73
 msgid "Copies build version to clipboard"
 msgstr "빌드 버전을 클립보드에 복사합니다"
 
@@ -1916,7 +1916,7 @@ msgstr "문화"
 msgid "Custom"
 msgstr "사용자 지정"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:102
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:103
 msgid "Customize who can interact with this post."
 msgstr "이 게시물과 상호작용할 수 있는 사람을 사용자 지정합니다."
 
@@ -2089,11 +2089,11 @@ msgstr "인용 해제"
 msgid "Detach quote post?"
 msgstr "인용을 해제하시겠습니까?"
 
-#: src/screens/Settings/AboutSettings.tsx:77
+#: src/screens/Settings/AboutSettings.tsx:80
 msgid "Developer mode disabled"
 msgstr "개발자 모드를 비활성화했습니다"
 
-#: src/screens/Settings/AboutSettings.tsx:76
+#: src/screens/Settings/AboutSettings.tsx:79
 msgid "Developer mode enabled"
 msgstr "개발자 모드를 활성화했습니다"
 
@@ -2385,7 +2385,7 @@ msgid "Edit People"
 msgstr "사람들 편집하기"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:69
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:239
 msgid "Edit post interaction settings"
 msgstr "게시물 상호작용 설정 편집하기"
 
@@ -2637,7 +2637,7 @@ msgstr "캡차 응답을 수신하는 동안 오류가 발생했습니다."
 msgid "Error:"
 msgstr "오류:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:394
 msgid "Everybody"
 msgstr "모두"
 
@@ -3312,7 +3312,7 @@ msgstr "숨겨짐"
 msgid "Hidden by your moderation settings."
 msgstr "검토 설정에 의해 숨겨졌습니다."
 
-#: src/components/ListCard.tsx:131
+#: src/components/ListCard.tsx:130
 msgid "Hidden list"
 msgstr "숨겨진 리스트"
 
@@ -3860,7 +3860,7 @@ msgstr "리스트 아바타"
 msgid "List blocked"
 msgstr "리스트를 차단했습니다"
 
-#: src/components/ListCard.tsx:151
+#: src/components/ListCard.tsx:150
 #: src/view/com/feeds/FeedSourceCard.tsx:255
 msgid "List by {0}"
 msgstr "{0} 님의 리스트"
@@ -4031,7 +4031,7 @@ msgstr "일부 사용자에게 불쾌감을 주거나 부적절할 수 있는 �
 msgid "mentioned users"
 msgstr "멘션한 사용자"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:422
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:423
 msgid "Mentioned users"
 msgstr "멘션한 사용자"
 
@@ -4090,7 +4090,7 @@ msgstr "검토"
 msgid "Moderation details"
 msgstr "검토 세부 정보"
 
-#: src/components/ListCard.tsx:150
+#: src/components/ListCard.tsx:149
 #: src/view/com/modals/UserAddRemoveLists.tsx:222
 msgid "Moderation list by {0}"
 msgstr "{0} 님의 검토 리스트"
@@ -4523,7 +4523,7 @@ msgstr "\"{search}\"에 대한 검색 결과를 찾을 수 없습니다."
 msgid "No thanks"
 msgstr "사용하지 않음"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:405
 msgid "Nobody"
 msgstr "없음"
 
@@ -4856,7 +4856,7 @@ msgstr "선택 사항으로 아래에 추가 정보를 입력하세요."
 msgid "Options:"
 msgstr "옵션:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:417
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:418
 msgid "Or combine these options:"
 msgstr "또는 다음 옵션을 결합하세요."
 
@@ -5178,7 +5178,7 @@ msgstr "뮤트한 단어로 숨겨진 게시물"
 msgid "Post Hidden by You"
 msgstr "내가 숨긴 게시물"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:99
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
 msgid "Post interaction settings"
 msgstr "게시물 상호작용 설정"
 
@@ -5277,8 +5277,8 @@ msgid "Privacy and Security"
 msgstr "개인정보 및 보안"
 
 #: src/Navigation.tsx:281
-#: src/screens/Settings/AboutSettings.tsx:47
 #: src/screens/Settings/AboutSettings.tsx:50
+#: src/screens/Settings/AboutSettings.tsx:53
 #: src/view/screens/PrivacyPolicy.tsx:31
 #: src/view/shell/Drawer.tsx:629
 #: src/view/shell/Drawer.tsx:630
@@ -5357,7 +5357,7 @@ msgstr "인용을 성공적으로 해제했습니다"
 msgid "Quote posts disabled"
 msgstr "게시물 인용 비활성화됨"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:328
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:329
 msgid "Quote settings"
 msgstr "인용 설정"
 
@@ -5517,7 +5517,7 @@ msgstr "목록에서 뮤트한 단어 제거"
 msgid "Remove profile"
 msgstr "프로필 제거"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:284
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
 msgid "Remove quote"
 msgstr "인용 제거"
 
@@ -5566,7 +5566,7 @@ msgstr "내 피드에서 제거했습니다"
 msgid "Removes profile from search history"
 msgstr "검색 기록에서 프로필을 제거합니다"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
 msgstr "인용된 게시물을 제거합니다"
 
@@ -5606,11 +5606,11 @@ msgstr "스레드 작성자에 의해 답글 숨겨짐"
 msgid "Reply Hidden by You"
 msgstr "나에 의해 답글 숨겨짐"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:384
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:385
 msgid "Reply settings"
 msgstr "답글 설정"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:369
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:370
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "답글 설정은 스레드 작성자가 선택합니다"
 
@@ -5878,8 +5878,8 @@ msgid "Returns to the previous step"
 msgstr "이전 단계로 돌아갑니다"
 
 #: src/components/dialogs/BirthDateSettings.tsx:120
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:478
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:479
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:485
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -6659,8 +6659,8 @@ msgstr "스타터 팩"
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "스타터 팩을 사용하면 좋아하는 피드와 사람들을 친구들과 쉽게 공유할 수 있습니다."
 
-#: src/screens/Settings/AboutSettings.tsx:55
 #: src/screens/Settings/AboutSettings.tsx:58
+#: src/screens/Settings/AboutSettings.tsx:61
 msgid "Status Page"
 msgstr "상태 페이지"
 
@@ -6760,8 +6760,8 @@ msgstr "{0}(으)로 전환"
 msgid "System"
 msgstr "시스템"
 
-#: src/screens/Settings/AboutSettings.tsx:62
 #: src/screens/Settings/AboutSettings.tsx:65
+#: src/screens/Settings/AboutSettings.tsx:68
 #: src/screens/Settings/Settings.tsx:318
 msgid "System log"
 msgstr "시스템 로그"
@@ -6809,8 +6809,8 @@ msgid "Terms"
 msgstr "이용약관"
 
 #: src/Navigation.tsx:286
-#: src/screens/Settings/AboutSettings.tsx:39
 #: src/screens/Settings/AboutSettings.tsx:42
+#: src/screens/Settings/AboutSettings.tsx:45
 #: src/view/screens/TermsOfService.tsx:31
 #: src/view/shell/Drawer.tsx:622
 #: src/view/shell/Drawer.tsx:624
@@ -7046,7 +7046,7 @@ msgstr "피드를 업데이트하는 동안 문제가 발생했습니다. 인터
 msgid "There was an issue! {0}"
 msgstr "문제가 발생했습니다! {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:216
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:217
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -7731,7 +7731,7 @@ msgstr "<0>@{0}</0> 님을 팔로우하는 사용자"
 msgid "Users I follow"
 msgstr "내가 팔로우하는 사용자"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:455
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:456
 msgid "Users in \"{0}\""
 msgstr "\"{0}\"에 있는 사용자"
 
@@ -7739,7 +7739,7 @@ msgstr "\"{0}\"에 있는 사용자"
 msgid "Users that have liked this content or profile"
 msgstr "이 콘텐츠 또는 프로필을 좋아하는 사용자"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:432
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:433
 msgid "Users you follow"
 msgstr "내가 팔로우하는 사용자"
 
@@ -7785,8 +7785,8 @@ msgstr "이메일 인증하기"
 msgid "Verify Your Email"
 msgstr "이메일 인증하기"
 
-#: src/screens/Settings/AboutSettings.tsx:69
-#: src/screens/Settings/AboutSettings.tsx:88
+#: src/screens/Settings/AboutSettings.tsx:72
+#: src/screens/Settings/AboutSettings.tsx:91
 msgid "Version {appVersion}"
 msgstr "버전 {appVersion}"
 
@@ -8241,8 +8241,8 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "계정을 재활성화하여 로그인을 계속할 수 있습니다. 내 프로필과 글이 다른 사용자에게 표시됩니다."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
-msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings.</0>"
-msgstr "<0>설정 → 검토 → 상호작용 설정</0>에서 기본 상호작용 설정을 변경할 수 있습니다."
+msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings</0>."
+msgstr ""
 
 #: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:139
@@ -8553,7 +8553,7 @@ msgstr "이메일이 아직 인증되지 않았습니다. 이는 중요한 보�
 msgid "Your first like!"
 msgstr "첫 좋아요!"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:443
 msgid "Your followers"
 msgstr "내 팔로워"
 
