@@ -8,7 +8,7 @@ msgstr ""
 "Language: en_GB\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-13 05:05\n"
+"PO-Revision-Date: 2025-02-14 03:19\n"
 "Last-Translator: \n"
 "Language-Team: English, United Kingdom\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -365,7 +365,7 @@ msgid "7 days"
 msgstr "7 days"
 
 #: src/Navigation.tsx:373
-#: src/screens/Settings/AboutSettings.tsx:30
+#: src/screens/Settings/AboutSettings.tsx:33
 #: src/screens/Settings/Settings.tsx:215
 #: src/screens/Settings/Settings.tsx:218
 msgid "About"
@@ -607,11 +607,11 @@ msgstr "Allow access to your direct messages"
 msgid "Allow new messages from"
 msgstr "Allow new messages from"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:343
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
 msgid "Allow quote posts"
 msgstr "Allow quote posts"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
 msgid "Allow replies from:"
 msgstr "Allow replies from:"
 
@@ -1429,11 +1429,11 @@ msgstr "Clear search query"
 msgid "click here"
 msgstr "click here"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:336
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
 msgid "Click to disable quote posts of this post."
 msgstr "Click to disable quote posts of this post."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:338
 msgid "Click to enable quote posts of this post."
 msgstr "Click to enable quote posts of this post."
 
@@ -1722,7 +1722,7 @@ msgstr "Cooking"
 msgid "Copied"
 msgstr "Copied"
 
-#: src/screens/Settings/AboutSettings.tsx:84
+#: src/screens/Settings/AboutSettings.tsx:87
 msgid "Copied build version to clipboard"
 msgstr "Copied build version to clipboard"
 
@@ -1740,7 +1740,7 @@ msgstr "Copied to clipboard"
 msgid "Copied!"
 msgstr "Copied!"
 
-#: src/screens/Settings/AboutSettings.tsx:70
+#: src/screens/Settings/AboutSettings.tsx:73
 msgid "Copies build version to clipboard"
 msgstr "Copies build version to clipboard"
 
@@ -1916,7 +1916,7 @@ msgstr "Culture"
 msgid "Custom"
 msgstr "Custom"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:102
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:103
 msgid "Customize who can interact with this post."
 msgstr "Customise who can interact with this post."
 
@@ -2089,11 +2089,11 @@ msgstr "Detach quote"
 msgid "Detach quote post?"
 msgstr "Detach quote post?"
 
-#: src/screens/Settings/AboutSettings.tsx:77
+#: src/screens/Settings/AboutSettings.tsx:80
 msgid "Developer mode disabled"
 msgstr "Developer mode disabled"
 
-#: src/screens/Settings/AboutSettings.tsx:76
+#: src/screens/Settings/AboutSettings.tsx:79
 msgid "Developer mode enabled"
 msgstr "Developer mode enabled"
 
@@ -2385,7 +2385,7 @@ msgid "Edit People"
 msgstr "Edit People"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:69
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:239
 msgid "Edit post interaction settings"
 msgstr "Edit post interaction settings"
 
@@ -2637,7 +2637,7 @@ msgstr "Error receiving captcha response."
 msgid "Error:"
 msgstr "Error:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:394
 msgid "Everybody"
 msgstr "Everybody"
 
@@ -3312,7 +3312,7 @@ msgstr "Hidden"
 msgid "Hidden by your moderation settings."
 msgstr "Hidden by your moderation settings."
 
-#: src/components/ListCard.tsx:131
+#: src/components/ListCard.tsx:130
 msgid "Hidden list"
 msgstr "Hidden list"
 
@@ -3860,7 +3860,7 @@ msgstr "List Avatar"
 msgid "List blocked"
 msgstr "List blocked"
 
-#: src/components/ListCard.tsx:151
+#: src/components/ListCard.tsx:150
 #: src/view/com/feeds/FeedSourceCard.tsx:255
 msgid "List by {0}"
 msgstr "List by {0}"
@@ -4031,7 +4031,7 @@ msgstr "Media that may be disturbing or inappropriate for some audiences."
 msgid "mentioned users"
 msgstr "mentioned users"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:422
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:423
 msgid "Mentioned users"
 msgstr "Mentioned users"
 
@@ -4090,7 +4090,7 @@ msgstr "Moderation"
 msgid "Moderation details"
 msgstr "Moderation details"
 
-#: src/components/ListCard.tsx:150
+#: src/components/ListCard.tsx:149
 #: src/view/com/modals/UserAddRemoveLists.tsx:222
 msgid "Moderation list by {0}"
 msgstr "Moderation list by {0}"
@@ -4523,7 +4523,7 @@ msgstr "No search results found for \"{search}\"."
 msgid "No thanks"
 msgstr "No thanks"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:405
 msgid "Nobody"
 msgstr "Nobody"
 
@@ -4856,7 +4856,7 @@ msgstr "Optionally provide additional information below:"
 msgid "Options:"
 msgstr "Options:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:417
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:418
 msgid "Or combine these options:"
 msgstr "Or combine these options:"
 
@@ -5178,7 +5178,7 @@ msgstr "Post Hidden by Muted Word"
 msgid "Post Hidden by You"
 msgstr "Post Hidden by You"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:99
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
 msgid "Post interaction settings"
 msgstr "Post interaction settings"
 
@@ -5277,8 +5277,8 @@ msgid "Privacy and Security"
 msgstr "Privacy and Security"
 
 #: src/Navigation.tsx:281
-#: src/screens/Settings/AboutSettings.tsx:47
 #: src/screens/Settings/AboutSettings.tsx:50
+#: src/screens/Settings/AboutSettings.tsx:53
 #: src/view/screens/PrivacyPolicy.tsx:31
 #: src/view/shell/Drawer.tsx:629
 #: src/view/shell/Drawer.tsx:630
@@ -5357,7 +5357,7 @@ msgstr "Quote post was successfully detached"
 msgid "Quote posts disabled"
 msgstr "Quote posts disabled"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:328
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:329
 msgid "Quote settings"
 msgstr "Quote settings"
 
@@ -5517,7 +5517,7 @@ msgstr "Remove mute word from your list"
 msgid "Remove profile"
 msgstr "Remove profile"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:284
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
 msgid "Remove quote"
 msgstr "Remove quote"
 
@@ -5566,7 +5566,7 @@ msgstr "Removed from your feeds"
 msgid "Removes profile from search history"
 msgstr "Removes profile from search history"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
 msgstr "Removes quoted post"
 
@@ -5606,11 +5606,11 @@ msgstr "Reply Hidden by Thread Author"
 msgid "Reply Hidden by You"
 msgstr "Reply Hidden by You"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:384
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:385
 msgid "Reply settings"
 msgstr "Reply settings"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:369
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:370
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "Reply settings are chosen by the author of the thread"
 
@@ -5878,8 +5878,8 @@ msgid "Returns to the previous step"
 msgstr "Returns to the previous step"
 
 #: src/components/dialogs/BirthDateSettings.tsx:120
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:478
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:479
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:485
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -6659,8 +6659,8 @@ msgstr "Starter Packs"
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "Starter packs let you easily share your favourite feeds and people with your friends."
 
-#: src/screens/Settings/AboutSettings.tsx:55
 #: src/screens/Settings/AboutSettings.tsx:58
+#: src/screens/Settings/AboutSettings.tsx:61
 msgid "Status Page"
 msgstr "Status Page"
 
@@ -6760,8 +6760,8 @@ msgstr "Switch to {0}"
 msgid "System"
 msgstr "System"
 
-#: src/screens/Settings/AboutSettings.tsx:62
 #: src/screens/Settings/AboutSettings.tsx:65
+#: src/screens/Settings/AboutSettings.tsx:68
 #: src/screens/Settings/Settings.tsx:318
 msgid "System log"
 msgstr "System log"
@@ -6809,8 +6809,8 @@ msgid "Terms"
 msgstr "Terms"
 
 #: src/Navigation.tsx:286
-#: src/screens/Settings/AboutSettings.tsx:39
 #: src/screens/Settings/AboutSettings.tsx:42
+#: src/screens/Settings/AboutSettings.tsx:45
 #: src/view/screens/TermsOfService.tsx:31
 #: src/view/shell/Drawer.tsx:622
 #: src/view/shell/Drawer.tsx:624
@@ -7046,7 +7046,7 @@ msgstr "There was an issue updating your feeds, please check your internet conne
 msgid "There was an issue! {0}"
 msgstr "There was an issue! {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:216
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:217
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -7731,7 +7731,7 @@ msgstr "users following <0>@{0}</0>"
 msgid "Users I follow"
 msgstr "Users I follow"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:455
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:456
 msgid "Users in \"{0}\""
 msgstr "Users in \"{0}\""
 
@@ -7739,7 +7739,7 @@ msgstr "Users in \"{0}\""
 msgid "Users that have liked this content or profile"
 msgstr "Users that have liked this content or profile"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:432
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:433
 msgid "Users you follow"
 msgstr "Users you follow"
 
@@ -7785,8 +7785,8 @@ msgstr "Verify your email"
 msgid "Verify Your Email"
 msgstr "Verify Your Email"
 
-#: src/screens/Settings/AboutSettings.tsx:69
-#: src/screens/Settings/AboutSettings.tsx:88
+#: src/screens/Settings/AboutSettings.tsx:72
+#: src/screens/Settings/AboutSettings.tsx:91
 msgid "Version {appVersion}"
 msgstr "Version {appVersion}"
 
@@ -8241,8 +8241,8 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
-msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings.</0>"
-msgstr "You can set default interaction settings in <0>Settings → Moderation → Interaction settings.</0>"
+msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings</0>."
+msgstr ""
 
 #: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:139
@@ -8553,7 +8553,7 @@ msgstr "Your email has not yet been verified. This is an important security step
 msgid "Your first like!"
 msgstr "Your first like!"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:443
 msgid "Your followers"
 msgstr "Your followers"
 
