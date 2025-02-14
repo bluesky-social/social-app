@@ -170,7 +170,7 @@ export function formatDateDiff({
                 message: plural(diff.value, {one: '#mo', other: '#mo'}),
                 comment: `How many months have passed, displayed in a narrow form`,
               }),
-            );
+            )
       }
       return i18n.date(new Date(diff.earlier))
     }
