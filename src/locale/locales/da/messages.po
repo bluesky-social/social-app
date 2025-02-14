@@ -8,7 +8,7 @@ msgstr ""
 "Language: da\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-13 15:34\n"
+"PO-Revision-Date: 2025-02-14 03:19\n"
 "Last-Translator: \n"
 "Language-Team: Danish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -365,7 +365,7 @@ msgid "7 days"
 msgstr "7 dage"
 
 #: src/Navigation.tsx:373
-#: src/screens/Settings/AboutSettings.tsx:30
+#: src/screens/Settings/AboutSettings.tsx:33
 #: src/screens/Settings/Settings.tsx:215
 #: src/screens/Settings/Settings.tsx:218
 msgid "About"
@@ -607,11 +607,11 @@ msgstr "Tillad adgang til dine direkte beskeder"
 msgid "Allow new messages from"
 msgstr "Tillad nye beskeder fra"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:343
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
 msgid "Allow quote posts"
 msgstr "Tillad citatopslag"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
 msgid "Allow replies from:"
 msgstr "Tillad svar fra:"
 
@@ -1429,11 +1429,11 @@ msgstr "Ryd søgefelt"
 msgid "click here"
 msgstr "klik her"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:336
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
 msgid "Click to disable quote posts of this post."
 msgstr "Klik for at spærre for citater af dette opslag."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:338
 msgid "Click to enable quote posts of this post."
 msgstr "Klik for et tillade citater af dette opslag."
 
@@ -1722,7 +1722,7 @@ msgstr "Madlavning"
 msgid "Copied"
 msgstr "Kopieret"
 
-#: src/screens/Settings/AboutSettings.tsx:84
+#: src/screens/Settings/AboutSettings.tsx:87
 msgid "Copied build version to clipboard"
 msgstr "Kopieret versionsnummer til udklipsholder"
 
@@ -1740,7 +1740,7 @@ msgstr "Kopieret til udklipsholder"
 msgid "Copied!"
 msgstr "Kopieret!"
 
-#: src/screens/Settings/AboutSettings.tsx:70
+#: src/screens/Settings/AboutSettings.tsx:73
 msgid "Copies build version to clipboard"
 msgstr ""
 
@@ -1916,7 +1916,7 @@ msgstr "Kultur"
 msgid "Custom"
 msgstr "Tilpasset"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:102
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:103
 msgid "Customize who can interact with this post."
 msgstr "Tilpas, hvem der kan interagere med dette opslag."
 
@@ -2089,11 +2089,11 @@ msgstr "Afkobl citat"
 msgid "Detach quote post?"
 msgstr "Afkobl citeret opslag?"
 
-#: src/screens/Settings/AboutSettings.tsx:77
+#: src/screens/Settings/AboutSettings.tsx:80
 msgid "Developer mode disabled"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:76
+#: src/screens/Settings/AboutSettings.tsx:79
 msgid "Developer mode enabled"
 msgstr ""
 
@@ -2385,7 +2385,7 @@ msgid "Edit People"
 msgstr "Rediger personer"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:69
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:239
 msgid "Edit post interaction settings"
 msgstr "Rediger interaktionsindstillinger"
 
@@ -2637,7 +2637,7 @@ msgstr "En fejl opstod under modtagelse af opgaveløsning"
 msgid "Error:"
 msgstr "Fejl:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:394
 msgid "Everybody"
 msgstr "Alle"
 
@@ -3312,7 +3312,7 @@ msgstr "Skjult"
 msgid "Hidden by your moderation settings."
 msgstr "Skjult af dine moderationsindstillinger."
 
-#: src/components/ListCard.tsx:131
+#: src/components/ListCard.tsx:130
 msgid "Hidden list"
 msgstr "Skjult liste"
 
@@ -3860,7 +3860,7 @@ msgstr "Listens avatar"
 msgid "List blocked"
 msgstr "Liste blokeret"
 
-#: src/components/ListCard.tsx:151
+#: src/components/ListCard.tsx:150
 #: src/view/com/feeds/FeedSourceCard.tsx:255
 msgid "List by {0}"
 msgstr "Liste af {0}"
@@ -4031,7 +4031,7 @@ msgstr "Medier, der kan virke stødende eller upassende for visse personer."
 msgid "mentioned users"
 msgstr "omtalte brugere"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:422
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:423
 msgid "Mentioned users"
 msgstr "Omtalte brugere"
 
@@ -4090,7 +4090,7 @@ msgstr "Moderation"
 msgid "Moderation details"
 msgstr "Moderationsoplysninger"
 
-#: src/components/ListCard.tsx:150
+#: src/components/ListCard.tsx:149
 #: src/view/com/modals/UserAddRemoveLists.tsx:222
 msgid "Moderation list by {0}"
 msgstr "Moderationsliste af {0}"
@@ -4523,7 +4523,7 @@ msgstr "Ingen søgeresultater fundet for \"{search}\"."
 msgid "No thanks"
 msgstr "Nej tak"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:405
 msgid "Nobody"
 msgstr "Ingen"
 
@@ -4856,7 +4856,7 @@ msgstr "Tilføj evt. yderligere informationer herunder:"
 msgid "Options:"
 msgstr "Indstillinger:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:417
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:418
 msgid "Or combine these options:"
 msgstr "Eller fra en af disse:"
 
@@ -5178,7 +5178,7 @@ msgstr "Opslag indeholder skjulte ord"
 msgid "Post Hidden by You"
 msgstr "Opslag skjult af dig"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:99
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
 msgid "Post interaction settings"
 msgstr "Interaktionsindstillinger"
 
@@ -5277,8 +5277,8 @@ msgid "Privacy and Security"
 msgstr "Privatliv og sikkerhed"
 
 #: src/Navigation.tsx:281
-#: src/screens/Settings/AboutSettings.tsx:47
 #: src/screens/Settings/AboutSettings.tsx:50
+#: src/screens/Settings/AboutSettings.tsx:53
 #: src/view/screens/PrivacyPolicy.tsx:31
 #: src/view/shell/Drawer.tsx:629
 #: src/view/shell/Drawer.tsx:630
@@ -5357,7 +5357,7 @@ msgstr "Citatopslag blev afkoblet"
 msgid "Quote posts disabled"
 msgstr "Citatopslag ikke tilladt"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:328
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:329
 msgid "Quote settings"
 msgstr "Indstillinger for citat"
 
@@ -5517,7 +5517,7 @@ msgstr "Fjern skjult ord fra din liste"
 msgid "Remove profile"
 msgstr "Fjern profil"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:284
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
 msgid "Remove quote"
 msgstr "Fjern citat"
 
@@ -5566,7 +5566,7 @@ msgstr "Fjernet fra dine feeds"
 msgid "Removes profile from search history"
 msgstr ""
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
 msgstr "Fjerner citeret opslag"
 
@@ -5606,11 +5606,11 @@ msgstr "Svar skjult af trådens forfatter"
 msgid "Reply Hidden by You"
 msgstr "Svar skjult af dig"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:384
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:385
 msgid "Reply settings"
 msgstr "Indstillinger for svar"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:369
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:370
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "Svarindstillinger er bestemt af trådens forfatter"
 
@@ -5878,8 +5878,8 @@ msgid "Returns to the previous step"
 msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:120
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:478
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:479
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:485
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -6659,8 +6659,8 @@ msgstr "Startpakker"
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "Startpakker lader dig let dele dine foretrukne feeds og personer med dine venner."
 
-#: src/screens/Settings/AboutSettings.tsx:55
 #: src/screens/Settings/AboutSettings.tsx:58
+#: src/screens/Settings/AboutSettings.tsx:61
 msgid "Status Page"
 msgstr "Statusside"
 
@@ -6760,8 +6760,8 @@ msgstr "Skift til {0}"
 msgid "System"
 msgstr "System"
 
-#: src/screens/Settings/AboutSettings.tsx:62
 #: src/screens/Settings/AboutSettings.tsx:65
+#: src/screens/Settings/AboutSettings.tsx:68
 #: src/screens/Settings/Settings.tsx:318
 msgid "System log"
 msgstr "Systemlog"
@@ -6809,8 +6809,8 @@ msgid "Terms"
 msgstr "Vilkår"
 
 #: src/Navigation.tsx:286
-#: src/screens/Settings/AboutSettings.tsx:39
 #: src/screens/Settings/AboutSettings.tsx:42
+#: src/screens/Settings/AboutSettings.tsx:45
 #: src/view/screens/TermsOfService.tsx:31
 #: src/view/shell/Drawer.tsx:622
 #: src/view/shell/Drawer.tsx:624
@@ -7046,7 +7046,7 @@ msgstr "Dine feeds kunne ikke opdateres. Tjek din internetforbindelse og prøv i
 msgid "There was an issue! {0}"
 msgstr "Der opstod en fejl! {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:216
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:217
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -7731,7 +7731,7 @@ msgstr ""
 msgid "Users I follow"
 msgstr "Brugere, jeg følger"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:455
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:456
 msgid "Users in \"{0}\""
 msgstr "Brugere i \"{0}\""
 
@@ -7739,7 +7739,7 @@ msgstr "Brugere i \"{0}\""
 msgid "Users that have liked this content or profile"
 msgstr "Brugere, som har liket indholdet/profilen"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:432
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:433
 msgid "Users you follow"
 msgstr ""
 
@@ -7785,8 +7785,8 @@ msgstr "Bekræft din e-mail"
 msgid "Verify Your Email"
 msgstr "Bekræft din e-mail"
 
-#: src/screens/Settings/AboutSettings.tsx:69
-#: src/screens/Settings/AboutSettings.tsx:88
+#: src/screens/Settings/AboutSettings.tsx:72
+#: src/screens/Settings/AboutSettings.tsx:91
 msgid "Version {appVersion}"
 msgstr "Version {appVersion}"
 
@@ -8241,7 +8241,7 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "Du kan genaktivere din konto ved at logge ind. Andre brugere vil igen kunne se din profil og dine opslag."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
-msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings.</0>"
+msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings</0>."
 msgstr ""
 
 #: src/components/interstitials/Trending.tsx:130
@@ -8553,7 +8553,7 @@ msgstr "Din e-mail er endnu ikke bekræftet. Dette er et vigtigt sikkerhedseleme
 msgid "Your first like!"
 msgstr "Dit første like!"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:443
 msgid "Your followers"
 msgstr ""
 
