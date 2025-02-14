@@ -8,7 +8,7 @@ msgstr ""
 "Language: it\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-14 03:19\n"
+"PO-Revision-Date: 2025-02-14 09:00\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -8242,7 +8242,7 @@ msgstr "Puoi riattivare il tuo account per accedere. Il tuo profilo e i tuoi pos
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
 msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings</0>."
-msgstr ""
+msgstr "Puoi configurare le impostazioni di interazione predefinite in <0>Impostazioni → Moderazione → Impostazioni per le interazioni</0>."
 
 #: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:139
