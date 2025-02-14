@@ -810,6 +810,8 @@ export function SearchScreenShell({
     }
   }, [setShowAutocomplete])
 
+  const showHeader = !gtMobile || navButton !== 'menu'
+
   return (
     <Layout.Screen testID={testID}>
       <View
@@ -826,7 +828,7 @@ export function SearchScreenShell({
           }),
         ]}>
         <Layout.Center style={t.atoms.bg}>
-          {!gtMobile && (
+          {showHeader && (
             <View
               // HACK: shift up search input. we can't remove the top padding
               // on the search input because it messes up the layout animation
@@ -888,7 +890,7 @@ export function SearchScreenShell({
                 )}
               </View>
 
-              {showFilters && gtMobile && (
+              {showFilters && !showHeader && (
                 <View
                   style={[
                     a.flex_row,
