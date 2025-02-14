@@ -51,6 +51,22 @@ export type LogEvents = {
   }
   'signup:captchaSuccess': {}
   'signup:captchaFailure': {}
+  'signin:hostingProviderPressed': {
+    hostingProviderDidChange: boolean
+  }
+  'signin:hostingProviderFailedResolution': {}
+  'signin:success': {
+    failedAttemptsCount: number
+    isUsingCustomProvider: boolean
+    timeTakenSeconds: number
+  }
+  'signin:backPressed': {
+    failedAttemptsCount: number
+  }
+  'signin:forgotPasswordPressed': {}
+  'signin:passwordReset': {}
+  'signin:passwordResetSuccess': {}
+  'signin:passwordResetFailure': {}
   'onboarding:interests:nextPressed': {
     selectedInterests: string[]
     selectedInterestsLength: number
