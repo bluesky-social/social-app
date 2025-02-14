@@ -8,7 +8,7 @@ msgstr ""
 "Language: eu\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-13 16:59\n"
+"PO-Revision-Date: 2025-02-14 03:19\n"
 "Last-Translator: \n"
 "Language-Team: Basque\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -365,7 +365,7 @@ msgid "7 days"
 msgstr "7 egun"
 
 #: src/Navigation.tsx:373
-#: src/screens/Settings/AboutSettings.tsx:30
+#: src/screens/Settings/AboutSettings.tsx:33
 #: src/screens/Settings/Settings.tsx:215
 #: src/screens/Settings/Settings.tsx:218
 msgid "About"
@@ -607,11 +607,11 @@ msgstr "Baimendu sarrera zure mezu zuzenetara"
 msgid "Allow new messages from"
 msgstr "Baimendu mezu berriak bertatik"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:343
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
 msgid "Allow quote posts"
 msgstr "Baimendu post aipamenak"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
 msgid "Allow replies from:"
 msgstr "Baimendu erantzunak bertatik:"
 
@@ -1429,11 +1429,11 @@ msgstr "Garbitu bilaketa-kontsulta"
 msgid "click here"
 msgstr "klik hemen"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:336
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
 msgid "Click to disable quote posts of this post."
 msgstr "Egin klik post honen aipamen postak desgaitzeko."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:338
 msgid "Click to enable quote posts of this post."
 msgstr "Egin klik post honen aipamen postak gaitzeko."
 
@@ -1722,7 +1722,7 @@ msgstr "Sukaldatzen"
 msgid "Copied"
 msgstr "Kopiatua"
 
-#: src/screens/Settings/AboutSettings.tsx:84
+#: src/screens/Settings/AboutSettings.tsx:87
 msgid "Copied build version to clipboard"
 msgstr "Konpilazio bertsioa arbelean kopiatu da"
 
@@ -1740,7 +1740,7 @@ msgstr "Arbelean kopiatua"
 msgid "Copied!"
 msgstr "Kopiatuta!"
 
-#: src/screens/Settings/AboutSettings.tsx:70
+#: src/screens/Settings/AboutSettings.tsx:73
 msgid "Copies build version to clipboard"
 msgstr "Eraikitze-bertsioa arbelean kopiatzen du"
 
@@ -1916,7 +1916,7 @@ msgstr "Kultura"
 msgid "Custom"
 msgstr "Pertsonalizatua"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:102
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:103
 msgid "Customize who can interact with this post."
 msgstr "Pertsonalizatu post honekin nork elkarreragin dezakeen."
 
@@ -2089,11 +2089,11 @@ msgstr "Kendu aipamena"
 msgid "Detach quote post?"
 msgstr "Postaren aipamena kendu?"
 
-#: src/screens/Settings/AboutSettings.tsx:77
+#: src/screens/Settings/AboutSettings.tsx:80
 msgid "Developer mode disabled"
 msgstr "Garatzaile modua desgaituta"
 
-#: src/screens/Settings/AboutSettings.tsx:76
+#: src/screens/Settings/AboutSettings.tsx:79
 msgid "Developer mode enabled"
 msgstr "Garatzaile modua gaituta"
 
@@ -2385,7 +2385,7 @@ msgid "Edit People"
 msgstr "Editatu Jendea"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:69
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:239
 msgid "Edit post interaction settings"
 msgstr "Editatu posten interakzio-ezarpenak"
 
@@ -2637,7 +2637,7 @@ msgstr "Errore bat gertatu da captcha erantzuna jasotzean."
 msgid "Error:"
 msgstr "Errorea:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:394
 msgid "Everybody"
 msgstr "Denek"
 
@@ -3312,7 +3312,7 @@ msgstr "Ezkutua"
 msgid "Hidden by your moderation settings."
 msgstr "Ezkutatuta zure moderazio doikuntzagatik."
 
-#: src/components/ListCard.tsx:131
+#: src/components/ListCard.tsx:130
 msgid "Hidden list"
 msgstr "Ezkutuko zerrenda"
 
@@ -3860,7 +3860,7 @@ msgstr "Zerrenda Abatarra"
 msgid "List blocked"
 msgstr "Zerrenda blokeatua"
 
-#: src/components/ListCard.tsx:151
+#: src/components/ListCard.tsx:150
 #: src/view/com/feeds/FeedSourceCard.tsx:255
 msgid "List by {0}"
 msgstr "{0}-ren Zerrenda"
@@ -4031,7 +4031,7 @@ msgstr "Publiko batzuentzat kezkagarriak edo desegokiak izan daitezkeen multimed
 msgid "mentioned users"
 msgstr "aipatutako erabiltzaileak"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:422
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:423
 msgid "Mentioned users"
 msgstr "Aipatutako erabiltzaileak"
 
@@ -4090,7 +4090,7 @@ msgstr "Moderazioa"
 msgid "Moderation details"
 msgstr "Moderazio xehetasunak"
 
-#: src/components/ListCard.tsx:150
+#: src/components/ListCard.tsx:149
 #: src/view/com/modals/UserAddRemoveLists.tsx:222
 msgid "Moderation list by {0}"
 msgstr "{0}-ren moderazio zerrenda"
@@ -4523,7 +4523,7 @@ msgstr "Ez da aurkitu \"{search}\" bilaketaren emaitzarik."
 msgid "No thanks"
 msgstr "Ez, eskerrik asko"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:405
 msgid "Nobody"
 msgstr "Inor"
 
@@ -4856,7 +4856,7 @@ msgstr "Aukeran, eman informazio gehigarria behean:"
 msgid "Options:"
 msgstr "Aukerak:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:417
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:418
 msgid "Or combine these options:"
 msgstr "Edo konbinatu aukera hauek:"
 
@@ -5178,7 +5178,7 @@ msgstr "Post Ezkutua Mutututako Hitz batengatik"
 msgid "Post Hidden by You"
 msgstr "Zuk Ezkututako Posta"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:99
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
 msgid "Post interaction settings"
 msgstr "Postaren elkarrekintza-ezarpenak"
 
@@ -5277,8 +5277,8 @@ msgid "Privacy and Security"
 msgstr "Pribatutasuna eta Segurtasuna"
 
 #: src/Navigation.tsx:281
-#: src/screens/Settings/AboutSettings.tsx:47
 #: src/screens/Settings/AboutSettings.tsx:50
+#: src/screens/Settings/AboutSettings.tsx:53
 #: src/view/screens/PrivacyPolicy.tsx:31
 #: src/view/shell/Drawer.tsx:629
 #: src/view/shell/Drawer.tsx:630
@@ -5357,7 +5357,7 @@ msgstr "Aipatutako posta behar bezala kendu da"
 msgid "Quote posts disabled"
 msgstr "Post aipamenak desgaituta daude"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:328
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:329
 msgid "Quote settings"
 msgstr "Aipamen ezarpenak"
 
@@ -5517,7 +5517,7 @@ msgstr "Kendu hitz mututua zure zerrendatik"
 msgid "Remove profile"
 msgstr "Kendu profila"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:284
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
 msgid "Remove quote"
 msgstr "Kendu aipamena"
 
@@ -5566,7 +5566,7 @@ msgstr "Zure feedetatik kenduta"
 msgid "Removes profile from search history"
 msgstr "Bilaketa historiatik profila kentzen du"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
 msgstr "Aipatutako posta kentzen du"
 
@@ -5606,11 +5606,11 @@ msgstr "Erantzuna Hariaren Egileak Ezkutatuta"
 msgid "Reply Hidden by You"
 msgstr "Erantzuna Zuk Ezkutatuta"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:384
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:385
 msgid "Reply settings"
 msgstr "Erantzunaren ezarpenak"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:369
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:370
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "Erantzun ezarpenak hariaren egileak aukeratzen ditu"
 
@@ -5878,8 +5878,8 @@ msgid "Returns to the previous step"
 msgstr "Aurreko urratsera itzultzen da"
 
 #: src/components/dialogs/BirthDateSettings.tsx:120
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:478
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:479
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:485
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -6659,8 +6659,8 @@ msgstr "Abio Multzoak"
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "Abio multzoek zure gogoko feedak eta jendea zure lagunekin erraz partekatzeko aukera ematen dizu."
 
-#: src/screens/Settings/AboutSettings.tsx:55
 #: src/screens/Settings/AboutSettings.tsx:58
+#: src/screens/Settings/AboutSettings.tsx:61
 msgid "Status Page"
 msgstr "Egoera Orria"
 
@@ -6760,8 +6760,8 @@ msgstr "Aldatu {0}-ra"
 msgid "System"
 msgstr "Sistema"
 
-#: src/screens/Settings/AboutSettings.tsx:62
 #: src/screens/Settings/AboutSettings.tsx:65
+#: src/screens/Settings/AboutSettings.tsx:68
 #: src/screens/Settings/Settings.tsx:318
 msgid "System log"
 msgstr "Sistemaren erregistroa"
@@ -6809,8 +6809,8 @@ msgid "Terms"
 msgstr "Baldintzak"
 
 #: src/Navigation.tsx:286
-#: src/screens/Settings/AboutSettings.tsx:39
 #: src/screens/Settings/AboutSettings.tsx:42
+#: src/screens/Settings/AboutSettings.tsx:45
 #: src/view/screens/TermsOfService.tsx:31
 #: src/view/shell/Drawer.tsx:622
 #: src/view/shell/Drawer.tsx:624
@@ -7046,7 +7046,7 @@ msgstr "Arazo bat izan da feedak eguneratzean. Egiaztatu Interneteko konexioa et
 msgid "There was an issue! {0}"
 msgstr "Arazo bat egon da! {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:216
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:217
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -7731,7 +7731,7 @@ msgstr "<0>@{0}</0> erabiltzaileak jarraitzen"
 msgid "Users I follow"
 msgstr "Nik jarraitzen ditudan erabiltzaileak"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:455
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:456
 msgid "Users in \"{0}\""
 msgstr "\"{0}\"-n dauden erabiltzaileak"
 
@@ -7739,7 +7739,7 @@ msgstr "\"{0}\"-n dauden erabiltzaileak"
 msgid "Users that have liked this content or profile"
 msgstr "Eduki edo profil hau gustoko duten erabiltzaileak"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:432
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:433
 msgid "Users you follow"
 msgstr "Nik jarraitzen ditudan erabiltzaileak"
 
@@ -7785,8 +7785,8 @@ msgstr "Egiaztatu zure posta elektronikoa"
 msgid "Verify Your Email"
 msgstr "Egiaztatu zure posta elektronikoa"
 
-#: src/screens/Settings/AboutSettings.tsx:69
-#: src/screens/Settings/AboutSettings.tsx:88
+#: src/screens/Settings/AboutSettings.tsx:72
+#: src/screens/Settings/AboutSettings.tsx:91
 msgid "Version {appVersion}"
 msgstr "{appVersion} bertsioa"
 
@@ -8241,8 +8241,8 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "Zure kontua berriro aktiba dezakezu saioa hasten jarraitzeko. Zure profila eta postak beste erabiltzaileek ikusgai izango dituzte."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
-msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings.</0>"
-msgstr "Interakzio-ezarpen lehenetsiak ezar ditzakezu <0>Ezarpenak → Moderazioa → Interakzio-ezarpenak</0> atalean"
+msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings</0>."
+msgstr ""
 
 #: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:139
@@ -8553,7 +8553,7 @@ msgstr "Zure helbide elektronikoa ez da oraindik egiaztatu. Gomendatzen dugun se
 msgid "Your first like!"
 msgstr "Zure lehenengo gogokoa!"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:443
 msgid "Your followers"
 msgstr "Zure jarraitzaileak"
 
