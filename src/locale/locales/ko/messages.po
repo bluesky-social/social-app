@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-13 05:05\n"
+"PO-Revision-Date: 2025-02-14 00:59\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -8595,7 +8595,7 @@ msgstr "내 프로필, 글, 피드 및 리스트가 더 이상 다른 Bluesky �
 
 #: src/view/com/composer/Composer.tsx:484
 msgid "Your reply has been published"
-msgstr "내 답글을 게시했습니다"
+msgstr "답글을 게시했습니다"
 
 #: src/components/dms/ReportDialog.tsx:198
 msgid "Your report will be sent to the Bluesky Moderation Service"
