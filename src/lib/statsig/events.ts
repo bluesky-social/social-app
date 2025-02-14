@@ -30,7 +30,9 @@ export type LogEvents = {
     secondsActive: number
   }
   'state:foreground': {}
-  'router:navigate:notifications': {}
+  'lake:router:navigate': {
+    from?: string
+  }
   'deepLink:referrerReceived': {
     to: string
     referrer: string
