@@ -182,8 +182,8 @@ let ProfileMenu = ({
   }, [profile.did])
 
   const onPressSearch = React.useCallback(() => {
-    navigation.navigate('ProfileSearch', {name: profile.did})
-  }, [navigation, profile.did])
+    navigation.navigate('ProfileSearch', {name: profile.handle})
+  }, [navigation, profile.handle])
 
   return (
     <EventStopper onKeyDown={false}>
