@@ -31,7 +31,6 @@ export type LogEvents = {
   }
   'state:foreground': {}
   'lake:router:navigate': {
-    to?: string
     from?: string
   }
   'deepLink:referrerReceived': {
