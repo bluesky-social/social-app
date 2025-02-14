@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-13 03:01\n"
+"PO-Revision-Date: 2025-02-14 03:19\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -365,7 +365,7 @@ msgid "7 days"
 msgstr "7 zile"
 
 #: src/Navigation.tsx:373
-#: src/screens/Settings/AboutSettings.tsx:30
+#: src/screens/Settings/AboutSettings.tsx:33
 #: src/screens/Settings/Settings.tsx:215
 #: src/screens/Settings/Settings.tsx:218
 msgid "About"
@@ -607,11 +607,11 @@ msgstr "Permite accesul la mesajele tale directe"
 msgid "Allow new messages from"
 msgstr "Permite mesaje noi de la"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:343
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
 msgid "Allow quote posts"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
 msgid "Allow replies from:"
 msgstr "Permite răspunsuri de la:"
 
@@ -1429,11 +1429,11 @@ msgstr "Șterge căutarea"
 msgid "click here"
 msgstr "apasă aici"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:336
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
 msgid "Click to disable quote posts of this post."
 msgstr "Apasă pentru a dezactiva citările pentru această postare."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:338
 msgid "Click to enable quote posts of this post."
 msgstr "Apasă pentru a activa citările pentru această postare."
 
@@ -1722,7 +1722,7 @@ msgstr "Gătit"
 msgid "Copied"
 msgstr "Copiat"
 
-#: src/screens/Settings/AboutSettings.tsx:84
+#: src/screens/Settings/AboutSettings.tsx:87
 msgid "Copied build version to clipboard"
 msgstr "Versiunea de compilare a fost copiată în clipboard"
 
@@ -1740,7 +1740,7 @@ msgstr "Copiat în clipboard"
 msgid "Copied!"
 msgstr "Copiat!"
 
-#: src/screens/Settings/AboutSettings.tsx:70
+#: src/screens/Settings/AboutSettings.tsx:73
 msgid "Copies build version to clipboard"
 msgstr ""
 
@@ -1916,7 +1916,7 @@ msgstr "Cultură"
 msgid "Custom"
 msgstr "Personalizat"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:102
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:103
 msgid "Customize who can interact with this post."
 msgstr "Personalizează cine poate interacționa cu această postare."
 
@@ -2089,11 +2089,11 @@ msgstr "Detașează citarea"
 msgid "Detach quote post?"
 msgstr "Detașezi citarea postării?"
 
-#: src/screens/Settings/AboutSettings.tsx:77
+#: src/screens/Settings/AboutSettings.tsx:80
 msgid "Developer mode disabled"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:76
+#: src/screens/Settings/AboutSettings.tsx:79
 msgid "Developer mode enabled"
 msgstr ""
 
@@ -2385,7 +2385,7 @@ msgid "Edit People"
 msgstr "Editează persoane"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:69
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:239
 msgid "Edit post interaction settings"
 msgstr "Editează setările de interacțiune ale postării"
 
@@ -2637,7 +2637,7 @@ msgstr "Eroare la primirea răspunsului captcha."
 msgid "Error:"
 msgstr "Eroare:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:394
 msgid "Everybody"
 msgstr "Toată lumea"
 
@@ -3312,7 +3312,7 @@ msgstr ""
 msgid "Hidden by your moderation settings."
 msgstr ""
 
-#: src/components/ListCard.tsx:131
+#: src/components/ListCard.tsx:130
 msgid "Hidden list"
 msgstr "Listă ascunsă"
 
@@ -3860,7 +3860,7 @@ msgstr "Avatar Listă"
 msgid "List blocked"
 msgstr "Listă blocată"
 
-#: src/components/ListCard.tsx:151
+#: src/components/ListCard.tsx:150
 #: src/view/com/feeds/FeedSourceCard.tsx:255
 msgid "List by {0}"
 msgstr "Listă de {0}"
@@ -4031,7 +4031,7 @@ msgstr "Conținut media care poate fi deranjant sau nepotrivit pentru anumite au
 msgid "mentioned users"
 msgstr "utilizatori menționați"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:422
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:423
 msgid "Mentioned users"
 msgstr "Utilizatori menționați"
 
@@ -4090,7 +4090,7 @@ msgstr "Moderare"
 msgid "Moderation details"
 msgstr "Detalii despre moderare"
 
-#: src/components/ListCard.tsx:150
+#: src/components/ListCard.tsx:149
 #: src/view/com/modals/UserAddRemoveLists.tsx:222
 msgid "Moderation list by {0}"
 msgstr "Listă de moderare creată de {0}"
@@ -4523,7 +4523,7 @@ msgstr "Nu s-au găsit rezultate de căutare pentru \"{search}\"."
 msgid "No thanks"
 msgstr "Nu, mulțumesc"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:405
 msgid "Nobody"
 msgstr "Nimeni"
 
@@ -4856,7 +4856,7 @@ msgstr "Opțional, poți să oferi informații suplimentare mai jos:"
 msgid "Options:"
 msgstr "Opțiuni:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:417
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:418
 msgid "Or combine these options:"
 msgstr "Sau combină aceste opțiuni:"
 
@@ -5178,7 +5178,7 @@ msgstr "Postare ascunsă de un cuvânt pus pe mut"
 msgid "Post Hidden by You"
 msgstr "Postare ascunsă de tine"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:99
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
 msgid "Post interaction settings"
 msgstr "Setări pentru interacțiunea cu postarea"
 
@@ -5277,8 +5277,8 @@ msgid "Privacy and Security"
 msgstr "Confidențialitate și Securitate"
 
 #: src/Navigation.tsx:281
-#: src/screens/Settings/AboutSettings.tsx:47
 #: src/screens/Settings/AboutSettings.tsx:50
+#: src/screens/Settings/AboutSettings.tsx:53
 #: src/view/screens/PrivacyPolicy.tsx:31
 #: src/view/shell/Drawer.tsx:629
 #: src/view/shell/Drawer.tsx:630
@@ -5357,7 +5357,7 @@ msgstr "Citarea postării a fost detașată cu succes"
 msgid "Quote posts disabled"
 msgstr "Postările citate sunt dezactivate"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:328
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:329
 msgid "Quote settings"
 msgstr "Setări pentru citări"
 
@@ -5517,7 +5517,7 @@ msgstr "Elimină cuvântul pus pe mut din lista ta"
 msgid "Remove profile"
 msgstr "Elimină profilul"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:284
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
 msgid "Remove quote"
 msgstr "Elimină citarea"
 
@@ -5566,7 +5566,7 @@ msgstr "Eliminat din fluxurile tale"
 msgid "Removes profile from search history"
 msgstr ""
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
 msgstr "Elimină citarea postării"
 
@@ -5606,11 +5606,11 @@ msgstr "Răspuns ascuns de autorul discuției"
 msgid "Reply Hidden by You"
 msgstr "Răspuns ascuns de tine"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:384
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:385
 msgid "Reply settings"
 msgstr "Setări pentru răspunsuri"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:369
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:370
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "Setările pentru răspunsuri sunt alese de autorul discuției"
 
@@ -5878,8 +5878,8 @@ msgid "Returns to the previous step"
 msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:120
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:478
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:479
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:485
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -6659,8 +6659,8 @@ msgstr "Pachete de început"
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "Pachetele de început îți permit să îți împărtășești ușor fluxurile și persoanele preferate cu prietenii tăi."
 
-#: src/screens/Settings/AboutSettings.tsx:55
 #: src/screens/Settings/AboutSettings.tsx:58
+#: src/screens/Settings/AboutSettings.tsx:61
 msgid "Status Page"
 msgstr "Pagină de Status"
 
@@ -6760,8 +6760,8 @@ msgstr ""
 msgid "System"
 msgstr "Sistem"
 
-#: src/screens/Settings/AboutSettings.tsx:62
 #: src/screens/Settings/AboutSettings.tsx:65
+#: src/screens/Settings/AboutSettings.tsx:68
 #: src/screens/Settings/Settings.tsx:318
 msgid "System log"
 msgstr "Jurnal sistem"
@@ -6809,8 +6809,8 @@ msgid "Terms"
 msgstr "Termeni"
 
 #: src/Navigation.tsx:286
-#: src/screens/Settings/AboutSettings.tsx:39
 #: src/screens/Settings/AboutSettings.tsx:42
+#: src/screens/Settings/AboutSettings.tsx:45
 #: src/view/screens/TermsOfService.tsx:31
 #: src/view/shell/Drawer.tsx:622
 #: src/view/shell/Drawer.tsx:624
@@ -7046,7 +7046,7 @@ msgstr "A apărut o problemă la actualizarea fluxurilor tale, verifică conexiu
 msgid "There was an issue! {0}"
 msgstr "A apărut o problemă! {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:216
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:217
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -7731,7 +7731,7 @@ msgstr ""
 msgid "Users I follow"
 msgstr "Utilizatori pe care îi urmăresc"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:455
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:456
 msgid "Users in \"{0}\""
 msgstr "Utilizatori din \"{0}\""
 
@@ -7739,7 +7739,7 @@ msgstr "Utilizatori din \"{0}\""
 msgid "Users that have liked this content or profile"
 msgstr "Utilizatori care au apreciat acest conținut sau profil"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:432
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:433
 msgid "Users you follow"
 msgstr ""
 
@@ -7785,8 +7785,8 @@ msgstr "Verifică-ți e-mailul"
 msgid "Verify Your Email"
 msgstr "Verifică-ți e-mailul"
 
-#: src/screens/Settings/AboutSettings.tsx:69
-#: src/screens/Settings/AboutSettings.tsx:88
+#: src/screens/Settings/AboutSettings.tsx:72
+#: src/screens/Settings/AboutSettings.tsx:91
 msgid "Version {appVersion}"
 msgstr "Versiune {appVersion}"
 
@@ -8241,7 +8241,7 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "Poți reactiva contul pentru a continua autentificarea. Profilul și postările tale vor fi vizibile pentru ceilalți utilizatori."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
-msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings.</0>"
+msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings</0>."
 msgstr ""
 
 #: src/components/interstitials/Trending.tsx:130
@@ -8553,7 +8553,7 @@ msgstr "E-mailul tău nu a fost încă verificat. Acesta este un pas important d
 msgid "Your first like!"
 msgstr "Primul tău like!"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:443
 msgid "Your followers"
 msgstr ""
 
