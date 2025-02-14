@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-13 13:18\n"
+"PO-Revision-Date: 2025-02-14 03:19\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -365,7 +365,7 @@ msgid "7 days"
 msgstr "7 napig"
 
 #: src/Navigation.tsx:373
-#: src/screens/Settings/AboutSettings.tsx:30
+#: src/screens/Settings/AboutSettings.tsx:33
 #: src/screens/Settings/Settings.tsx:215
 #: src/screens/Settings/Settings.tsx:218
 msgid "About"
@@ -607,11 +607,11 @@ msgstr "Hozzáférés megadása a személyes üzenetekhez"
 msgid "Allow new messages from"
 msgstr "Bejövő üzenetek fogadása"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:343
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
 msgid "Allow quote posts"
 msgstr "Idézetek mutatása"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
 msgid "Allow replies from:"
 msgstr "Válaszok fogadása:"
 
@@ -1429,11 +1429,11 @@ msgstr "Keresési kifejezés törlése"
 msgid "click here"
 msgstr "kattints ide"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:336
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
 msgid "Click to disable quote posts of this post."
 msgstr "Kattints ide a bejegyzés idézésének letiltásához."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:338
 msgid "Click to enable quote posts of this post."
 msgstr "Kattints ide a bejegyzés idézésének engedélyezéséhez."
 
@@ -1722,7 +1722,7 @@ msgstr "Sütés-főzés"
 msgid "Copied"
 msgstr "Vágólapra helyezve"
 
-#: src/screens/Settings/AboutSettings.tsx:84
+#: src/screens/Settings/AboutSettings.tsx:87
 msgid "Copied build version to clipboard"
 msgstr "Buildszám a vágólapra helyezve"
 
@@ -1740,7 +1740,7 @@ msgstr "Vágólapra helyezve"
 msgid "Copied!"
 msgstr "Vágólapra helyezve."
 
-#: src/screens/Settings/AboutSettings.tsx:70
+#: src/screens/Settings/AboutSettings.tsx:73
 msgid "Copies build version to clipboard"
 msgstr "Buildszám másolása a vágólapra"
 
@@ -1916,7 +1916,7 @@ msgstr "Kultúra"
 msgid "Custom"
 msgstr "Egyéni"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:102
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:103
 msgid "Customize who can interact with this post."
 msgstr "Add meg, hogy ki léphet kapcsolatba ezzel a bejegyzéssel!"
 
@@ -2089,11 +2089,11 @@ msgstr "Idézet leválasztása"
 msgid "Detach quote post?"
 msgstr "Idézet leválasztása"
 
-#: src/screens/Settings/AboutSettings.tsx:77
+#: src/screens/Settings/AboutSettings.tsx:80
 msgid "Developer mode disabled"
 msgstr "Fejlesztői mód kikapcsolva"
 
-#: src/screens/Settings/AboutSettings.tsx:76
+#: src/screens/Settings/AboutSettings.tsx:79
 msgid "Developer mode enabled"
 msgstr "Fejlesztői mód bekapcsolva"
 
@@ -2385,7 +2385,7 @@ msgid "Edit People"
 msgstr "Személyek szerkesztése"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:69
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:239
 msgid "Edit post interaction settings"
 msgstr "A bejegyzés kapcsolatbalépési beállításainak szerkesztése"
 
@@ -2637,7 +2637,7 @@ msgstr "A captcha válaszának fogadása meghiúsult."
 msgid "Error:"
 msgstr "Hiba:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:394
 msgid "Everybody"
 msgstr "Bárkitől"
 
@@ -3312,7 +3312,7 @@ msgstr "Rejtett tartalom"
 msgid "Hidden by your moderation settings."
 msgstr "Elrejtve a moderálási beállítások alapján."
 
-#: src/components/ListCard.tsx:131
+#: src/components/ListCard.tsx:130
 msgid "Hidden list"
 msgstr "Rejtett lista"
 
@@ -3860,7 +3860,7 @@ msgstr "Lista profilképe"
 msgid "List blocked"
 msgstr "Letiltottad a listán szereplő személyeket"
 
-#: src/components/ListCard.tsx:151
+#: src/components/ListCard.tsx:150
 #: src/view/com/feeds/FeedSourceCard.tsx:255
 msgid "List by {0}"
 msgstr "Lista – Szerző: {0}"
@@ -4031,7 +4031,7 @@ msgstr "A nyugalom megzavarására alkalmas vagy felnőtt témákat ábrázoló 
 msgid "mentioned users"
 msgstr "a megemlített felhasználók"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:422
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:423
 msgid "Mentioned users"
 msgstr "A megemlített felhasználóktól"
 
@@ -4090,7 +4090,7 @@ msgstr "Moderálás"
 msgid "Moderation details"
 msgstr "Moderálási részletek"
 
-#: src/components/ListCard.tsx:150
+#: src/components/ListCard.tsx:149
 #: src/view/com/modals/UserAddRemoveLists.tsx:222
 msgid "Moderation list by {0}"
 msgstr "Moderálólista – Szerző: {0}"
@@ -4523,7 +4523,7 @@ msgstr "A(z) „{search}” kifejezésre nincs találat."
 msgid "No thanks"
 msgstr "Köszönöm, nem"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:405
 msgid "Nobody"
 msgstr "Senkitől"
 
@@ -4856,7 +4856,7 @@ msgstr "Lehetőséged van megadni az alábbi információt is (Nem kötelező):"
 msgid "Options:"
 msgstr "További lehetőségek:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:417
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:418
 msgid "Or combine these options:"
 msgstr "Vagy használd egyszerre az alábbi lehetőségek bármelyikét:"
 
@@ -5178,7 +5178,7 @@ msgstr "Bejegyzés elrejtve egy elnémított szó által"
 msgid "Post Hidden by You"
 msgstr "Elrejtetted a bejegyzést"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:99
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
 msgid "Post interaction settings"
 msgstr "Kapcsolatbalépési beállítások"
 
@@ -5277,8 +5277,8 @@ msgid "Privacy and Security"
 msgstr "Adatvédelem és biztonság"
 
 #: src/Navigation.tsx:281
-#: src/screens/Settings/AboutSettings.tsx:47
 #: src/screens/Settings/AboutSettings.tsx:50
+#: src/screens/Settings/AboutSettings.tsx:53
 #: src/view/screens/PrivacyPolicy.tsx:31
 #: src/view/shell/Drawer.tsx:629
 #: src/view/shell/Drawer.tsx:630
@@ -5357,7 +5357,7 @@ msgstr "Leválasztottad az idézetet"
 msgid "Quote posts disabled"
 msgstr "Ezt a bejegyzést nem idézhetik mások"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:328
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:329
 msgid "Quote settings"
 msgstr "Idézési beállítások"
 
@@ -5517,7 +5517,7 @@ msgstr "Szó némításának feloldása"
 msgid "Remove profile"
 msgstr "Profil eltávolítása"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:284
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
 msgid "Remove quote"
 msgstr "Idézet eltávolítása"
 
@@ -5566,7 +5566,7 @@ msgstr "Eltávolítottad a hírfolyamot a gyűjteményedből"
 msgid "Removes profile from search history"
 msgstr "Profil eltávolítása a keresési előzményekből"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
 msgstr "Idézett bejegyzés eltávolítása"
 
@@ -5606,11 +5606,11 @@ msgstr "Elrejtve a válaszlánc szerzője által"
 msgid "Reply Hidden by You"
 msgstr "Elrejtve Általad"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:384
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:385
 msgid "Reply settings"
 msgstr "Válaszbeállítások"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:369
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:370
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "A teljes válaszlánc beállításait az eredeti szerző kezeli"
 
@@ -5878,8 +5878,8 @@ msgid "Returns to the previous step"
 msgstr "Vissza az előző lépéshez"
 
 #: src/components/dialogs/BirthDateSettings.tsx:120
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:478
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:479
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:485
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -6659,8 +6659,8 @@ msgstr "Kezdőcsomagok"
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "A kezdőcsomagokkal könnyen megoszthatod a kedvenc hírfolyamaidat és személyeidet."
 
-#: src/screens/Settings/AboutSettings.tsx:55
 #: src/screens/Settings/AboutSettings.tsx:58
+#: src/screens/Settings/AboutSettings.tsx:61
 msgid "Status Page"
 msgstr "Állapot"
 
@@ -6760,8 +6760,8 @@ msgstr "Váltás rá: {0}"
 msgid "System"
 msgstr "Rendszer"
 
-#: src/screens/Settings/AboutSettings.tsx:62
 #: src/screens/Settings/AboutSettings.tsx:65
+#: src/screens/Settings/AboutSettings.tsx:68
 #: src/screens/Settings/Settings.tsx:318
 msgid "System log"
 msgstr "Rendszernapló"
@@ -6810,8 +6810,8 @@ msgid "Terms"
 msgstr "Feltételek"
 
 #: src/Navigation.tsx:286
-#: src/screens/Settings/AboutSettings.tsx:39
 #: src/screens/Settings/AboutSettings.tsx:42
+#: src/screens/Settings/AboutSettings.tsx:45
 #: src/view/screens/TermsOfService.tsx:31
 #: src/view/shell/Drawer.tsx:622
 #: src/view/shell/Drawer.tsx:624
@@ -7047,7 +7047,7 @@ msgstr "A hírfolyamok frissítése meghiúsult. Ellenőrizd az internetkapcsola
 msgid "There was an issue! {0}"
 msgstr "Hiba történt! {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:216
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:217
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -7732,7 +7732,7 @@ msgstr "a(z) <0>@{0}</0>-személyt követett felhasználók"
 msgid "Users I follow"
 msgstr "Csak a követett személyektől"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:455
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:456
 msgid "Users in \"{0}\""
 msgstr "A(z) „{0}” listán szereplő felhasználóktól"
 
@@ -7740,7 +7740,7 @@ msgstr "A(z) „{0}” listán szereplő felhasználóktól"
 msgid "Users that have liked this content or profile"
 msgstr "A tartalmat vagy profilt kedvelő felhasználók"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:432
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:433
 msgid "Users you follow"
 msgstr "Az Általad követett személyektől"
 
@@ -7786,8 +7786,8 @@ msgstr "Email-cím visszaigazolása"
 msgid "Verify Your Email"
 msgstr "Email-cím visszaigazolása"
 
-#: src/screens/Settings/AboutSettings.tsx:69
-#: src/screens/Settings/AboutSettings.tsx:88
+#: src/screens/Settings/AboutSettings.tsx:72
+#: src/screens/Settings/AboutSettings.tsx:91
 msgid "Version {appVersion}"
 msgstr "Verziószám: {appVersion}"
 
@@ -8242,8 +8242,8 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "A bejelentkezés folytatásához újraaktiválhatod a fiókodat. Ezek után a profilod és a bejegyzéseid ismét láthatóak lesznek más felhasználók számára."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
-msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings.</0>"
-msgstr "Az alapértelmezett beállításokat a <0>Beállítások → Moderálás → Kapcsolatbalépési beállítások</0>-menüben határozhatod meg."
+msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings</0>."
+msgstr ""
 
 #: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:139
@@ -8554,7 +8554,7 @@ msgstr "Az email-címed még nincs visszaigazolva. Ez egy fontos biztonsági lé
 msgid "Your first like!"
 msgstr "Az első kedvelésed!"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:443
 msgid "Your followers"
 msgstr "A Téged követett személyektől"
 
