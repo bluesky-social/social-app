@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-14 00:59\n"
+"PO-Revision-Date: 2025-02-14 02:02\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -7505,7 +7505,7 @@ msgstr "계정 언뮤트"
 
 #: src/components/dms/ConvoMenu.tsx:239
 msgid "Unmute conversation"
-msgstr "알림 언뮤트"
+msgstr "대화 언뮤트"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:499
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
