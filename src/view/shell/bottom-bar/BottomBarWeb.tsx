@@ -241,7 +241,7 @@ const NavItem: React.FC<{
     return getCurrentRoute(state)
   })
 
-  // Détermine si nous sommes sur le profil de quelqu'un d'autre
+  // Checks whether we're on someone else's profile
   const isOnDifferentProfile =
     currentRoute.name === 'Profile' &&
     routeName === 'Profile' &&
