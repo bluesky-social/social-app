@@ -211,9 +211,9 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="ProfileSearch"
         getComponent={() => ProfileSearchScreen}
-        options={{
-          title: title(msg`Search posts`),
-        }}
+        options={({route}) => ({
+          title: title(msg`Search @${route.params.name}'s posts`),
+        })}
       />
       <Stack.Screen
         name="PostThread"
