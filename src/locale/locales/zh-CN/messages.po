@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-13 05:05\n"
+"PO-Revision-Date: 2025-02-14 03:19\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -365,7 +365,7 @@ msgid "7 days"
 msgstr "7 天"
 
 #: src/Navigation.tsx:373
-#: src/screens/Settings/AboutSettings.tsx:30
+#: src/screens/Settings/AboutSettings.tsx:33
 #: src/screens/Settings/Settings.tsx:215
 #: src/screens/Settings/Settings.tsx:218
 msgid "About"
@@ -607,11 +607,11 @@ msgstr "允许读取你的私信"
 msgid "Allow new messages from"
 msgstr "允许以下来源向你发送私信"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:343
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
 msgid "Allow quote posts"
 msgstr "允许引用帖文"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
 msgid "Allow replies from:"
 msgstr "允许这些来源回复："
 
@@ -1429,11 +1429,11 @@ msgstr "清除搜索历史记录"
 msgid "click here"
 msgstr "点击这里"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:336
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
 msgid "Click to disable quote posts of this post."
 msgstr "点击来禁止其他人引用这则帖文。"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:338
 msgid "Click to enable quote posts of this post."
 msgstr "点击来允许其他人引用这则帖文。"
 
@@ -1722,7 +1722,7 @@ msgstr "烹饪"
 msgid "Copied"
 msgstr "已复制"
 
-#: src/screens/Settings/AboutSettings.tsx:84
+#: src/screens/Settings/AboutSettings.tsx:87
 msgid "Copied build version to clipboard"
 msgstr "已复制构建版本号至剪贴板"
 
@@ -1740,7 +1740,7 @@ msgstr "已复制至剪贴板"
 msgid "Copied!"
 msgstr "已复制！"
 
-#: src/screens/Settings/AboutSettings.tsx:70
+#: src/screens/Settings/AboutSettings.tsx:73
 msgid "Copies build version to clipboard"
 msgstr "已复制构建版本号至剪贴板"
 
@@ -1916,7 +1916,7 @@ msgstr "文化"
 msgid "Custom"
 msgstr "自定义"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:102
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:103
 msgid "Customize who can interact with this post."
 msgstr "自定义哪些人可以参与这则帖文的互动。"
 
@@ -2089,11 +2089,11 @@ msgstr "分离引用"
 msgid "Detach quote post?"
 msgstr "要分离引用帖文吗？"
 
-#: src/screens/Settings/AboutSettings.tsx:77
+#: src/screens/Settings/AboutSettings.tsx:80
 msgid "Developer mode disabled"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:76
+#: src/screens/Settings/AboutSettings.tsx:79
 msgid "Developer mode enabled"
 msgstr ""
 
@@ -2385,7 +2385,7 @@ msgid "Edit People"
 msgstr "编辑用户"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:69
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:238
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:239
 msgid "Edit post interaction settings"
 msgstr "编辑帖文互动选项"
 
@@ -2637,7 +2637,7 @@ msgstr "CAPTCHA（人机验证）响应错误。"
 msgid "Error:"
 msgstr "错误："
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:394
 msgid "Everybody"
 msgstr "所有人"
 
@@ -3312,7 +3312,7 @@ msgstr "隐藏"
 msgid "Hidden by your moderation settings."
 msgstr "由你的内容审核设置所隐藏。"
 
-#: src/components/ListCard.tsx:131
+#: src/components/ListCard.tsx:130
 msgid "Hidden list"
 msgstr "隐藏列表"
 
@@ -3860,7 +3860,7 @@ msgstr "列表头像"
 msgid "List blocked"
 msgstr "已屏蔽该列表"
 
-#: src/components/ListCard.tsx:151
+#: src/components/ListCard.tsx:150
 #: src/view/com/feeds/FeedSourceCard.tsx:255
 msgid "List by {0}"
 msgstr "由 {0} 创建的列表"
@@ -4031,7 +4031,7 @@ msgstr "可能会令部分受众不安或造成不适的媒体内容。"
 msgid "mentioned users"
 msgstr "被提及的用户"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:422
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:423
 msgid "Mentioned users"
 msgstr "被提及的用户"
 
@@ -4090,7 +4090,7 @@ msgstr "内容审核"
 msgid "Moderation details"
 msgstr "内容审核详情"
 
-#: src/components/ListCard.tsx:150
+#: src/components/ListCard.tsx:149
 #: src/view/com/modals/UserAddRemoveLists.tsx:222
 msgid "Moderation list by {0}"
 msgstr "由 {0} 创建的内容审核列表"
@@ -4523,7 +4523,7 @@ msgstr "未找到“{search}”的搜索结果。"
 msgid "No thanks"
 msgstr "不，谢谢"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:404
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:405
 msgid "Nobody"
 msgstr "仅限自己"
 
@@ -4856,7 +4856,7 @@ msgstr "在下方提供额外信息（可选）："
 msgid "Options:"
 msgstr "选项："
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:417
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:418
 msgid "Or combine these options:"
 msgstr "或者组合选择这些选项："
 
@@ -5178,7 +5178,7 @@ msgstr "这则帖文因设置的隐藏字词而被隐藏"
 msgid "Post Hidden by You"
 msgstr "你已隐藏这则帖文"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:99
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
 msgid "Post interaction settings"
 msgstr "帖文互动选项"
 
@@ -5277,8 +5277,8 @@ msgid "Privacy and Security"
 msgstr "隐私与安全"
 
 #: src/Navigation.tsx:281
-#: src/screens/Settings/AboutSettings.tsx:47
 #: src/screens/Settings/AboutSettings.tsx:50
+#: src/screens/Settings/AboutSettings.tsx:53
 #: src/view/screens/PrivacyPolicy.tsx:31
 #: src/view/shell/Drawer.tsx:629
 #: src/view/shell/Drawer.tsx:630
@@ -5357,7 +5357,7 @@ msgstr "已成功分离引用帖文"
 msgid "Quote posts disabled"
 msgstr "已停用帖文引用"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:328
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:329
 msgid "Quote settings"
 msgstr "引用选项"
 
@@ -5517,7 +5517,7 @@ msgstr "从你的隐藏字词列表中删除"
 msgid "Remove profile"
 msgstr "删除个人资料"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:284
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
 msgid "Remove quote"
 msgstr "删除引用"
 
@@ -5566,7 +5566,7 @@ msgstr "已从你的动态源中删除"
 msgid "Removes profile from search history"
 msgstr "从搜索历史中删除个人资料"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
 msgstr "删除引用的帖文"
 
@@ -5606,11 +5606,11 @@ msgstr "已被这条讨论串的发布者隐藏回复"
 msgid "Reply Hidden by You"
 msgstr "你已隐藏这则回复"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:384
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:385
 msgid "Reply settings"
 msgstr "回复选项"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:369
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:370
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "由这条讨论串的发布者设置的回复选项"
 
@@ -5878,8 +5878,8 @@ msgid "Returns to the previous step"
 msgstr "返回上一步"
 
 #: src/components/dialogs/BirthDateSettings.tsx:120
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:478
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:484
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:479
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:485
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -6659,8 +6659,8 @@ msgstr "新手包"
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "新手包能使你轻松与朋友分享你喜欢的用户和动态源。"
 
-#: src/screens/Settings/AboutSettings.tsx:55
 #: src/screens/Settings/AboutSettings.tsx:58
+#: src/screens/Settings/AboutSettings.tsx:61
 msgid "Status Page"
 msgstr "状态页"
 
@@ -6760,8 +6760,8 @@ msgstr "切换到 {0}"
 msgid "System"
 msgstr "系统"
 
-#: src/screens/Settings/AboutSettings.tsx:62
 #: src/screens/Settings/AboutSettings.tsx:65
+#: src/screens/Settings/AboutSettings.tsx:68
 #: src/screens/Settings/Settings.tsx:318
 msgid "System log"
 msgstr "系统日志"
@@ -6809,8 +6809,8 @@ msgid "Terms"
 msgstr "条款"
 
 #: src/Navigation.tsx:286
-#: src/screens/Settings/AboutSettings.tsx:39
 #: src/screens/Settings/AboutSettings.tsx:42
+#: src/screens/Settings/AboutSettings.tsx:45
 #: src/view/screens/TermsOfService.tsx:31
 #: src/view/shell/Drawer.tsx:622
 #: src/view/shell/Drawer.tsx:624
@@ -7046,7 +7046,7 @@ msgstr "更新动态源时出现问题。请检查网络连接并重试。"
 msgid "There was an issue! {0}"
 msgstr "出现问题了！{0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:216
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:217
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -7731,7 +7731,7 @@ msgstr "正在关注 <0>@{0}</0> 的用户"
 msgid "Users I follow"
 msgstr "我关注的用户"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:455
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:456
 msgid "Users in \"{0}\""
 msgstr "“{0}”中的用户"
 
@@ -7739,7 +7739,7 @@ msgstr "“{0}”中的用户"
 msgid "Users that have liked this content or profile"
 msgstr "已喜欢该内容或个人资料的账户"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:432
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:433
 msgid "Users you follow"
 msgstr "你关注的用户"
 
@@ -7785,8 +7785,8 @@ msgstr "验证你的电子邮箱"
 msgid "Verify Your Email"
 msgstr "验证你的电子邮箱"
 
-#: src/screens/Settings/AboutSettings.tsx:69
-#: src/screens/Settings/AboutSettings.tsx:88
+#: src/screens/Settings/AboutSettings.tsx:72
+#: src/screens/Settings/AboutSettings.tsx:91
 msgid "Version {appVersion}"
 msgstr "版本号 {appVersion}"
 
@@ -8241,8 +8241,8 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "你可以继续登录以重新启用你的账户，其他用户将能够重新看到你的个人资料和帖文。"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
-msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings.</0>"
-msgstr "你可以在 <0>设置 → 内容审核 → 互动选项 </0> 里调整默认互动设置"
+msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings</0>."
+msgstr ""
 
 #: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:139
@@ -8553,7 +8553,7 @@ msgstr "你的电子邮箱尚未验证。这是一个重要的安全步骤，我
 msgid "Your first like!"
 msgstr "你的第一次喜欢！"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:442
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:443
 msgid "Your followers"
 msgstr "你的关注者"
 
