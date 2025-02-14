@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-14 19:57\n"
+"PO-Revision-Date: 2025-02-14 21:03\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -2708,7 +2708,7 @@ msgstr "Utökar eller fäller ihop inläggstext"
 
 #: src/view/com/composer/ComposerReplyTo.tsx:73
 msgid "Expands or collapses the full post you are replying to"
-msgstr ""
+msgstr "Utökar eller fäller ihop det fullständiga inlägg du svarar på"
 
 #: src/lib/api/index.ts:405
 msgid "Expected uri to resolve to a record"
@@ -4798,7 +4798,7 @@ msgstr "Öppnar dialogruta för ändring av användarnamn"
 
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:35
 msgid "Opens composer"
-msgstr "Öppnar inläggsverktyg"
+msgstr "Öppnar inläggsverktyget"
 
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:51
 msgid "Opens device photo gallery"
@@ -7195,7 +7195,7 @@ msgstr "Det här inlägget har <0>{0}</0> som angivet skapelsedatum, men registr
 
 #: src/components/WhoCanReply.tsx:213
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
-msgstr ""
+msgstr "Det här inlägget har en okänd typ av trådrestriktion inställd. Din app kan vara inaktuell."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:152
 msgid "This post has been deleted."
