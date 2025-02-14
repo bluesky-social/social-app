@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-14 03:19\n"
+"PO-Revision-Date: 2025-02-14 06:09\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -8242,7 +8242,7 @@ msgstr "계정을 재활성화하여 로그인을 계속할 수 있습니다. �
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
 msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings</0>."
-msgstr ""
+msgstr "<0>설정 → 검토 → 상호작용 설정</0>에서 기본 상호작용 설정을 변경할 수 있습니다."
 
 #: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:139
