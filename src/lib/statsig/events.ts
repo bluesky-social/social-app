@@ -287,4 +287,17 @@ export type LogEvents = {
 
   'progressGuide:hide': {}
   'progressGuide:followDialog:open': {}
+
+  'moderation:subscribedToLabeler': {}
+  'moderation:unsubscribedFromLabeler': {}
+  'moderation:changeLabelPreference': {
+    preference: string
+  }
+
+  'moderation:subscribedToList': {
+    type: 'mute' | 'block'
+  }
+  'moderation:unsubscribedFromList': {
+    type: 'mute' | 'block'
+  }
 }

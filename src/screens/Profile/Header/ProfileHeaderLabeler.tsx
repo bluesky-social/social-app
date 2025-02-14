@@ -14,6 +14,7 @@ import {useLingui} from '@lingui/react'
 import {MAX_LABELERS} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {isAppLabeler} from '#/lib/moderation'
+import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -134,6 +135,7 @@ let ProfileHeaderLabeler = ({
   const onPressSubscribe = React.useCallback(
     () =>
       requireAuth(async (): Promise<void> => {
+        const willSubscribe = !isSubscribed
         try {
           await toggleSubscription({
             did: profile.did,
@@ -146,6 +148,13 @@ let ProfileHeaderLabeler = ({
             return
           }
           logger.error(`Failed to subscribe to labeler`, {message: e.message})
+          return
+        }
+
+        if (willSubscribe) {
+          logEvent('moderation:subscribedToLabeler', {})
+        } else {
+          logEvent('moderation:unbuscribedFromLabeler', {})
         }
       }),
     [

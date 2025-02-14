@@ -24,6 +24,7 @@ import {makeListLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {NavigationProp} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
+import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {s} from '#/lib/styles'
@@ -389,53 +390,61 @@ function Header({
   const onSubscribeMute = useCallback(async () => {
     try {
       await listMuteMutation.mutateAsync({uri: list.uri, mute: true})
-      Toast.show(_(msg`List muted`))
     } catch {
       Toast.show(
         _(
           msg`There was an issue. Please check your internet connection and try again.`,
         ),
       )
+      return
     }
+    Toast.show(_(msg`List muted`))
+    logEvent('moderation:subscribedToList', {type: 'mute'})
   }, [list, listMuteMutation, _])
 
   const onUnsubscribeMute = useCallback(async () => {
     try {
       await listMuteMutation.mutateAsync({uri: list.uri, mute: false})
-      Toast.show(_(msg`List unmuted`))
     } catch {
       Toast.show(
         _(
           msg`There was an issue. Please check your internet connection and try again.`,
         ),
       )
+      return
     }
+    Toast.show(_(msg`List unmuted`))
+    logEvent('moderation:unsubscribedFromList', {type: 'mute'})
   }, [list, listMuteMutation, _])
 
   const onSubscribeBlock = useCallback(async () => {
     try {
       await listBlockMutation.mutateAsync({uri: list.uri, block: true})
-      Toast.show(_(msg`List blocked`))
     } catch {
       Toast.show(
         _(
           msg`There was an issue. Please check your internet connection and try again.`,
         ),
       )
+      return
     }
+    Toast.show(_(msg`List blocked`))
+    logEvent('moderation:subscribedToList', {type: 'block'})
   }, [list, listBlockMutation, _])
 
   const onUnsubscribeBlock = useCallback(async () => {
     try {
       await listBlockMutation.mutateAsync({uri: list.uri, block: false})
-      Toast.show(_(msg`List unblocked`))
     } catch {
       Toast.show(
         _(
           msg`There was an issue. Please check your internet connection and try again.`,
         ),
       )
+      return
     }
+    Toast.show(_(msg`List unblocked`))
+    logEvent('moderation:unsubscribedFromList', {type: 'block'})
   }, [list, listBlockMutation, _])
 
   const onPressEdit = useCallback(() => {
