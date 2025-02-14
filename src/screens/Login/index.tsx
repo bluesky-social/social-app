@@ -103,7 +103,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   const onAttemptSuccess = () => {
     logEvent('signin:success', {
       isUsingCustomProvider: serviceUrl !== DEFAULT_SERVICE,
-      timeTakenSeconds: (Date.now() - startTimeRef.current) / 1000,
+      timeTakenSeconds: Math.round((Date.now() - startTimeRef.current) / 1000),
       failedAttemptsCount: failedAttemptCountRef.current,
     })
     setCurrentForm(Forms.Login)
