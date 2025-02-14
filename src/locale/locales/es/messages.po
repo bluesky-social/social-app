@@ -8,7 +8,7 @@ msgstr ""
 "Language: es\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-14 09:57\n"
+"PO-Revision-Date: 2025-02-14 11:12\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -791,8 +791,7 @@ msgstr "Los nombres de contraseña de app solo pueden contener letras, números,
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:80
 msgid "App password names must be at least 4 characters long"
-msgstr "El nombre de la contraseña de app debe\n"
-" tener al menos cuatro caracteres"
+msgstr "El nombre de la contraseña de app debe tener al menos cuatro caracteres"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:63
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:66
@@ -1116,7 +1115,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:30
 #: src/screens/Onboarding/state.ts:96
 msgid "Books"
-msgstr ""
+msgstr "Libros"
 
 #: src/components/FeedInterstitials.tsx:370
 msgid "Browse more accounts on the Explore page"
@@ -1391,11 +1390,11 @@ msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:287
 msgid "Choose the algorithms that power your custom feeds."
-msgstr ""
+msgstr "Tú eliges los algoritmos que usar en tus feed."
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
-msgstr ""
+msgstr "Elige este color como tu avatar"
 
 #: src/view/com/auth/server-input/index.tsx:126
 msgid "Choose your account provider"
@@ -1448,7 +1447,7 @@ msgstr ""
 
 #: src/screens/Onboarding/index.tsx:32
 msgid "Climate"
-msgstr ""
+msgstr "Clima"
 
 #: src/components/dms/ChatEmptyPill.tsx:39
 msgid "Clip 🐴 clop 🐴"
@@ -1540,7 +1539,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:97
 msgid "Comedy"
-msgstr ""
+msgstr "Comedia"
 
 #: src/screens/Onboarding/index.tsx:24
 #: src/screens/Onboarding/state.ts:98
@@ -1554,7 +1553,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:300
 msgid "Complete onboarding and start using your account"
-msgstr ""
+msgstr "Completa la incorporación y comienza a usar tu cuenta"
 
 #: src/screens/Signup/index.tsx:144
 msgid "Complete the challenge"
@@ -1695,7 +1694,7 @@ msgstr ""
 #: src/screens/Onboarding/StepInterests/index.tsx:244
 #: src/screens/Onboarding/StepProfile/index.tsx:278
 msgid "Continue"
-msgstr ""
+msgstr "Continuar"
 
 #: src/components/AccountList.tsx:121
 msgid "Continue as {0} (currently signed in)"
@@ -1709,7 +1708,7 @@ msgstr ""
 #: src/screens/Onboarding/StepProfile/index.tsx:275
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
-msgstr ""
+msgstr "Continuar al siguiente paso"
 
 #: src/screens/Messages/components/ChatListItem.tsx:179
 msgid "Conversation deleted"
@@ -1717,7 +1716,7 @@ msgstr ""
 
 #: src/screens/Onboarding/index.tsx:41
 msgid "Cooking"
-msgstr ""
+msgstr "Cocinando"
 
 #: src/view/com/modals/InviteCodes.tsx:183
 msgid "Copied"
@@ -1884,7 +1883,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:292
 msgid "Create an avatar instead"
-msgstr ""
+msgstr "Crea un avatar"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:174
 msgid "Create another"
@@ -1910,7 +1909,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
 msgid "Culture"
-msgstr ""
+msgstr "Cultura"
 
 #: src/view/com/auth/server-input/index.tsx:138
 #: src/view/com/auth/server-input/index.tsx:139
@@ -2429,7 +2428,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:31
 #: src/screens/Onboarding/state.ts:101
 msgid "Education"
-msgstr ""
+msgstr "Educación"
 
 #: src/screens/List/ListHiddenScreen.tsx:141
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
@@ -2636,7 +2635,7 @@ msgstr ""
 #: src/screens/Onboarding/StepInterests/index.tsx:183
 #: src/view/screens/Search/Search.tsx:114
 msgid "Error:"
-msgstr ""
+msgstr "Error:"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:394
 msgid "Everybody"
@@ -2934,7 +2933,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:303
 msgid "Finalizing"
-msgstr ""
+msgstr "Finalizando"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:48
 #: src/view/com/posts/FollowingEmptyState.tsx:53
@@ -2958,11 +2957,11 @@ msgstr ""
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Fitness"
-msgstr ""
+msgstr "Fitness"
 
 #: src/screens/Onboarding/StepFinished.tsx:283
 msgid "Flexible"
-msgstr ""
+msgstr "Flexible"
 
 #. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:366
@@ -3104,7 +3103,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:102
 msgid "Food"
-msgstr ""
+msgstr "Comida"
 
 #: src/view/com/modals/DeleteAccount.tsx:125
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
@@ -3175,7 +3174,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:234
 msgid "Give your profile a face"
-msgstr ""
+msgstr "Ponle cara a tu perfil"
 
 #: src/lib/moderation/useReportOptions.ts:39
 msgid "Glaring violations of law or terms of service"
@@ -3212,7 +3211,7 @@ msgstr ""
 #: src/screens/Onboarding/Layout.tsx:188
 #: src/screens/Signup/BackNextButtons.tsx:35
 msgid "Go back to previous step"
-msgstr ""
+msgstr "Volver al paso anterior"
 
 #: src/view/screens/NotFound.tsx:57
 msgid "Go home"
@@ -3298,7 +3297,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:237
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
-msgstr ""
+msgstr "Sube una foto o crea un avatar para que la gente sepa que no eres un bot."
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:187
 msgid "Here is your app password!"
@@ -3647,7 +3646,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:104
 msgid "Journalism"
-msgstr ""
+msgstr "Periodismo"
 
 #: src/components/moderation/ContentHider.tsx:231
 msgid "Labeled by {0}."
@@ -3781,7 +3780,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:303
 msgid "Let's go!"
-msgstr ""
+msgstr "¡Vamos!"
 
 #: src/screens/Settings/AppearanceSettings.tsx:101
 msgid "Light"
@@ -4165,11 +4164,11 @@ msgstr ""
 
 #: src/screens/Onboarding/state.ts:105
 msgid "Movies"
-msgstr ""
+msgstr "Cine"
 
 #: src/screens/Onboarding/state.ts:106
 msgid "Music"
-msgstr ""
+msgstr "Música"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:156
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:95
@@ -4294,7 +4293,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:22
 #: src/screens/Onboarding/state.ts:107
 msgid "Nature"
-msgstr ""
+msgstr "Naturaleza"
 
 #: src/components/StarterPack/StarterPackCard.tsx:124
 msgid "Navigate to {0}"
@@ -4320,7 +4319,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:271
 msgid "Never lose access to your followers or data."
-msgstr ""
+msgstr "No pierdas el acceso a tus seguidores o tus datos"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:548
 msgid "Nevermind, create a handle for me"
@@ -4402,7 +4401,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:20
 #: src/screens/Onboarding/state.ts:108
 msgid "News"
-msgstr ""
+msgstr "Noticias"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:137
 #: src/screens/Login/ForgotPasswordForm.tsx:143
@@ -4506,7 +4505,7 @@ msgstr ""
 
 #: src/view/screens/Feeds.tsx:470
 msgid "No results found for \"{query}\""
-msgstr ""
+msgstr "No se han encontrado resultados para \"{query}\""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
 #: src/view/screens/Search/Search.tsx:231
@@ -4517,7 +4516,7 @@ msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:229
 msgid "No search results found for \"{search}\"."
-msgstr ""
+msgstr "No se encontraron resultados para \"{search}\"."
 
 #: src/components/dialogs/EmbedConsent.tsx:104
 #: src/components/dialogs/EmbedConsent.tsx:111
@@ -4631,7 +4630,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:124
 msgid "Oh no! Something went wrong."
-msgstr ""
+msgstr "¡Oh no! Algo va mal."
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:352
 #: src/screens/Settings/AppIconSettings/index.tsx:48
@@ -4661,7 +4660,7 @@ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:346
 msgid "One or more GIFs is missing alt text."
-msgstr ""
+msgstr "Falta el texto alternativo en uno o más GIF."
 
 #: src/view/com/composer/Composer.tsx:343
 msgid "One or more images is missing alt text."
@@ -4673,7 +4672,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:115
 msgid "Only .jpg and .png files are supported"
-msgstr ""
+msgstr "Solo se admiten archivos .jpg y .png"
 
 #: src/components/WhoCanReply.tsx:222
 msgid "Only {0} can reply."
@@ -4689,7 +4688,7 @@ msgstr ""
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:40
 msgid "Only WebVTT (.vtt) files are supported"
-msgstr ""
+msgstr "Solo se admiten archivos WebVTT (.vtt)"
 
 #: src/components/Lists.tsx:94
 msgid "Oops, something went wrong!"
@@ -4707,7 +4706,7 @@ msgstr "¡Uy!"
 
 #: src/screens/Onboarding/StepFinished.tsx:267
 msgid "Open"
-msgstr ""
+msgstr "Abierto"
 
 #: src/view/com/posts/AviFollowButton.tsx:86
 msgid "Open {name} profile shortcut menu"
@@ -4715,7 +4714,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:286
 msgid "Open avatar creator"
-msgstr ""
+msgstr "Abrir el creador de avatares"
 
 #: src/screens/Messages/components/ChatListItem.tsx:290
 #: src/screens/Messages/components/ChatListItem.tsx:291
@@ -4733,12 +4732,12 @@ msgstr "Abrir el selector de emojis"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:190
 msgid "Open feed info screen"
-msgstr ""
+msgstr "Abrir la pantalla de información del feed"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:290
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:295
 msgid "Open feed options menu"
-msgstr ""
+msgstr "Abrir el menú de opciones del feed"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:71
 msgid "Open link to {niceUrl}"
@@ -4771,7 +4770,7 @@ msgstr ""
 
 #: src/screens/Settings/Settings.tsx:316
 msgid "Open system log"
-msgstr ""
+msgstr "Abrir el registro del sistema"
 
 #: src/view/com/util/forms/DropdownButton.tsx:162
 msgid "Opens {numItems} options"
@@ -4958,11 +4957,11 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:28
 #: src/screens/Onboarding/state.ts:109
 msgid "Pets"
-msgstr ""
+msgstr "Mascotas"
 
 #: src/screens/Onboarding/state.ts:110
 msgid "Photography"
-msgstr ""
+msgstr "Fotografía"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:170
 msgid "Pictures meant for adults."
@@ -5117,7 +5116,7 @@ msgstr "Verifica tu correo electrónico"
 #: src/screens/Onboarding/index.tsx:34
 #: src/screens/Onboarding/state.ts:111
 msgid "Politics"
-msgstr ""
+msgstr "Política"
 
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:116
 msgid "Popular videos in your network."
@@ -5314,7 +5313,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:253
 msgid "Public"
-msgstr ""
+msgstr "Público"
 
 #: src/view/com/lists/MyLists.tsx:77
 msgid "Public, sharable lists of users to mute or block in bulk."
@@ -5854,7 +5853,7 @@ msgstr ""
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoFallback.tsx:55
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoFallback.tsx:57
 msgid "Retry"
-msgstr ""
+msgstr "Reintentar"
 
 #: src/components/Error.tsx:73
 #: src/screens/List/ListHiddenScreen.tsx:216
@@ -5969,7 +5968,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:33
 #: src/screens/Onboarding/state.ts:112
 msgid "Science"
-msgstr ""
+msgstr "Ciencia"
 
 #: src/view/screens/ProfileList.tsx:967
 msgid "Scroll to top"
@@ -6072,7 +6071,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
-msgstr ""
+msgstr "Selecciona un color"
 
 #: src/screens/Login/ChooseAccountForm.tsx:77
 msgid "Select account"
@@ -6080,11 +6079,11 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/AvatarCircle.tsx:66
 msgid "Select an avatar"
-msgstr ""
+msgstr "Selecciona un avatar"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:65
 msgid "Select an emoji"
-msgstr ""
+msgstr "Selecciona un emoji"
 
 #: src/screens/Settings/LanguageSettings.tsx:262
 msgid "Select content languages"
@@ -6124,7 +6123,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
-msgstr ""
+msgstr "Seleccionar el emoji {emojiName} como tu avatar"
 
 #: src/components/ReportDialog/SubmitView.tsx:141
 msgid "Select the moderation service(s) to report to"
@@ -6152,7 +6151,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:192
 msgid "Select your interests from the options below"
-msgstr ""
+msgstr "Selecciona tus intereses entre las siguientes opciones"
 
 #: src/screens/Settings/LanguageSettings.tsx:171
 msgid "Select your preferred language for translations in your feed."
@@ -6244,7 +6243,7 @@ msgstr ""
 
 #: src/screens/Onboarding/Layout.tsx:47
 msgid "Set up your account"
-msgstr ""
+msgstr "Configura tu cuenta"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:107
 msgid "Sets email for password reset"
@@ -6529,11 +6528,11 @@ msgstr ""
 #: src/screens/Onboarding/StepInterests/index.tsx:231
 #: src/screens/StarterPack/Wizard/index.tsx:195
 msgid "Skip"
-msgstr ""
+msgstr "Saltar"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:228
 msgid "Skip this flow"
-msgstr ""
+msgstr "Saltar este flujo"
 
 #: src/screens/Settings/AppearanceSettings.tsx:164
 msgid "Smaller"
@@ -6542,7 +6541,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:100
 msgid "Software Dev"
-msgstr ""
+msgstr "Programación"
 
 #: src/components/FeedInterstitials.tsx:470
 msgid "Some other feeds you might like"
@@ -6609,7 +6608,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:113
 msgid "Sports"
-msgstr ""
+msgstr "Deportes"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:72
 msgid "Start a new chat"
@@ -6790,7 +6789,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:114
 msgid "Tech"
-msgstr ""
+msgstr "Tecnología"
 
 #: src/components/dms/ChatEmptyPill.tsx:35
 msgid "Tell a joke!"
@@ -7375,7 +7374,7 @@ msgstr ""
 
 #: src/screens/Onboarding/state.ts:115
 msgid "TV"
-msgstr ""
+msgstr "Televisión"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:56
 msgid "Two-factor authentication (2FA)"
@@ -7601,7 +7600,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:290
 msgid "Upload a photo instead"
-msgstr ""
+msgstr "Sube una foto en su lugar"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:453
 msgid "Upload a text file to:"
@@ -7811,7 +7810,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
 msgid "Video Games"
-msgstr ""
+msgstr "Videojuegos"
 
 #: src/screens/VideoFeed/index.tsx:1033
 msgid "Video is paused"
@@ -7999,7 +7998,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:245
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
-msgstr ""
+msgstr "Esperamos que lo pases bien. Recuerda, Bluesky es:"
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
@@ -8019,7 +8018,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:129
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
-msgstr ""
+msgstr "No pudimos conectarnos. Inténtalo de nuevo para continuar configurando tu cuenta. Si sigue fallando, puedes omitir este proceso."
 
 #: src/screens/SignupQueued.tsx:164
 msgid "We will let you know when your account is ready."
@@ -8027,7 +8026,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:134
 msgid "We'll use this to help customize your experience."
-msgstr ""
+msgstr "Usaremos esta información para personalizar tu experiencia."
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:88
 #: src/components/ProgressGuide/FollowDialog.tsx:157
@@ -8073,7 +8072,7 @@ msgstr "¡Qué gusto verte!"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:126
 msgid "What are your interests?"
-msgstr ""
+msgstr "¿Qué te interesa?"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:41
 msgid "What do you want to call your starter pack?"
@@ -8164,7 +8163,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:25
 #: src/screens/Onboarding/state.ts:116
 msgid "Writers"
-msgstr ""
+msgstr "Escritores y escritoras"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:337
 msgid "Wrong DID returned from server. Received: {0}"
@@ -8460,7 +8459,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:242
 msgid "You're ready to go!"
-msgstr ""
+msgstr "¡Eso es todo!"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:106
 #: src/lib/moderation/useModerationCauseDescription.ts:106
@@ -8588,7 +8587,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:257
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr ""
+msgstr "Tus publicaciones, a qué le das \"me gusta\" y a quién bloqueas son públicos. Nadie puede ver a quien silencias."
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
