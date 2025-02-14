@@ -8,7 +8,7 @@ msgstr ""
 "Language: eu\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-14 19:57\n"
+"PO-Revision-Date: 2025-02-14 21:03\n"
 "Last-Translator: \n"
 "Language-Team: Basque\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -8242,7 +8242,7 @@ msgstr "Zure kontua berriro aktiba dezakezu saioa hasten jarraitzeko. Zure profi
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
 msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings</0>."
-msgstr ""
+msgstr "Interakzio-ezarpen lehenetsiak ezar ditzakezu <0>Ezarpenak → Moderazioa → Interakzio-ezarpenak</0> atalean."
 
 #: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:139
