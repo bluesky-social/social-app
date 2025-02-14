@@ -91,6 +91,7 @@ import {VideoFeed} from '#/screens/VideoFeed'
 import {useTheme} from '#/alf'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import {ProfileSearchScreen} from './screens/Profile/ProfileSearch'
 import {AboutSettingsScreen} from './screens/Settings/AboutSettings'
 import {AccessibilitySettingsScreen} from './screens/Settings/AccessibilitySettings'
 import {AccountSettingsScreen} from './screens/Settings/AccountSettings'
@@ -206,6 +207,13 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="ProfileList"
         getComponent={() => ProfileListScreen}
         options={{title: title(msg`List`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="ProfileSearch"
+        getComponent={() => ProfileSearchScreen}
+        options={({route}) => ({
+          title: title(msg`Search @${route.params.name}'s posts`),
+        })}
       />
       <Stack.Screen
         name="PostThread"
