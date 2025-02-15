@@ -1,27 +1,26 @@
-name: CIS-565_Build
+name: raw-build
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
-  pull_request:
-    branches: [ main ]
+  push:
+    branches:
+      - main
 
 jobs:
-  build:
+  raw-build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set Up Node.js
-        uses: actions/setup-node@v3
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v4
         with:
-          node-version: '16'
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Build Project
-        run: npm run build
+          context: .
+          file: ./Dockerfile
+          push: false
+          # Optionally, specify a tag for the local image:
+          # tags: myimage:latest
