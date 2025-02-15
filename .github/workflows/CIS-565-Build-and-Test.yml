@@ -1,4 +1,4 @@
-name: raw-build
+name: CIS-565_BUILD
 
 on:
   workflow_dispatch:
