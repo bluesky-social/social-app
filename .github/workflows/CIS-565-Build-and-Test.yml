@@ -1,8 +1,9 @@
-name: Build Bluesky
+name: CIS-565_Build
 
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
   pull_request:
     branches: [ main ]
 
