@@ -41,6 +41,7 @@ export function Outer({
   children,
   control,
   onClose,
+  webOptions,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
@@ -116,7 +117,7 @@ export function Outer({
                   a.inset_0,
                   a.z_10,
                   a.align_center,
-                  gtMobile ? a.p_lg : a.p_md,
+                  gtMobile ? a.p_5xl : a.p_xl,
                   {overflowY: 'auto'},
                 ]}>
                 <Backdrop />
@@ -124,7 +125,9 @@ export function Outer({
                   style={[
                     a.w_full,
                     a.z_20,
-                    a.justify_center,
+                    webOptions?.alignTop
+                      ? undefined
+                      : a.justify_center,
                     a.align_center,
                     {
                       minHeight: web('calc(90vh - 36px)') || undefined,
