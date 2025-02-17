@@ -2,10 +2,12 @@ import React, {memo} from 'react'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
+import {NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
@@ -26,6 +28,7 @@ import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
+import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {PeopleRemove2_Stroke2_Corner0_Rounded as UserMinus} from '#/components/icons/PeopleRemove2'
 import {
@@ -48,6 +51,7 @@ let ProfileMenu = ({
   const {openModal} = useModalControls()
   const reportDialogControl = useReportDialogControl()
   const queryClient = useQueryClient()
+  const navigation = useNavigation<NavigationProp>()
   const isSelf = currentAccount?.did === profile.did
   const isFollowing = profile.viewer?.following
   const isBlocked = profile.viewer?.blocking || profile.viewer?.blockedBy
@@ -177,6 +181,10 @@ let ProfileMenu = ({
     shareText(profile.did)
   }, [profile.did])
 
+  const onPressSearch = React.useCallback(() => {
+    navigation.navigate('ProfileSearch', {name: profile.handle})
+  }, [navigation, profile.handle])
+
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
@@ -214,6 +222,15 @@ let ProfileMenu = ({
                 <Trans>Share</Trans>
               </Menu.ItemText>
               <Menu.ItemIcon icon={Share} />
+            </Menu.Item>
+            <Menu.Item
+              testID="profileHeaderDropdownSearchBtn"
+              label={_(msg`Search Posts`)}
+              onPress={onPressSearch}>
+              <Menu.ItemText>
+                <Trans>Search Posts</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={SearchIcon} />
             </Menu.Item>
           </Menu.Group>
 

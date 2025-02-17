@@ -277,7 +277,7 @@
     multiformats "^9.9.0"
     zod "^3.23.8"
 
-"@atproto/lexicon@^0.4.4", "@atproto/lexicon@^0.4.7":
+"@atproto/lexicon@^0.4.7":
   version "0.4.7"
   resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.4.7.tgz#f5d31615c21bcfd3e655f1e4f11a40a62fea9f86"
   integrity sha512-/x6h3tAiDNzSi4eXtC8ke65B7UzsagtlGRHmUD95698x5lBRpDnpizj0fZWTZVYed5qnOmz/ZEue+v3wDmO61g==
@@ -3386,10 +3386,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bitdrift/react-native@^0.6.2":
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/@bitdrift/react-native/-/react-native-0.6.2.tgz#8e75d45a63fccad38b310fdea8069fa929cb97c3"
-  integrity sha512-4DIsZwAr9/Q1RI7lsnUphRoMuOuLWWESNXI759niSmU8XHTJISwwOQzUm7qWn7waBJGhxaq+jn+vlTV5Fai6zw==
+"@bitdrift/react-native@^0.6.8":
+  version "0.6.8"
+  resolved "https://registry.yarnpkg.com/@bitdrift/react-native/-/react-native-0.6.8.tgz#386495857bc81345de418750b5ca0e3c3b964f6c"
+  integrity sha512-ixjJTEfUz3GeQ7srxpoYpnOGVx+iDA/A8Y3CZe5cg+/b0d8xur8fBKFoRBiXXohzJnYq4W8MIWIhLAwm5sD9oA==
   dependencies:
     "@expo/config-plugins" "^9.0.14"
     fast-json-stringify "^6.0.0"
