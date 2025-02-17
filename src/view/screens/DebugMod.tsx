@@ -378,9 +378,9 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                           <Toggle.Checkbox />
                           <Toggle.LabelText>Adult disabled</Toggle.LabelText>
                         </Toggle.Item>
-                        <Toggle.Item name="loggedOut" label="Logged out">
+                        <Toggle.Item name="loggedOut" label="Signed out">
                           <Toggle.Checkbox />
-                          <Toggle.LabelText>Logged out</Toggle.LabelText>
+                          <Toggle.LabelText>Signed out</Toggle.LabelText>
                         </Toggle.Item>
                       </View>
                     </Toggle.Group>

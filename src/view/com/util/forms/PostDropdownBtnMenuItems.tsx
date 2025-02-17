@@ -717,7 +717,7 @@ let PostDropdownMenuItems = ({
         control={loggedOutWarningPromptControl}
         title={_(msg`Note about sharing`)}
         description={_(
-          msg`This post is only visible to logged-in users. It won't be visible to people who aren't logged in.`,
+          msg`This post is only visible to logged-in users. It won't be visible to people who aren't signed in.`,
         )}
         onConfirm={onSharePost}
         confirmButtonCta={_(msg`Share anyway`)}

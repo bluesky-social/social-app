@@ -294,7 +294,7 @@ export function useDeleteStarterPackMutation({
   return useMutation({
     mutationFn: async ({listUri, rkey}: {listUri?: string; rkey: string}) => {
       if (!agent.session) {
-        throw new Error(`Requires logged in user`)
+        throw new Error(`Requires signed in user`)
       }
 
       if (listUri) {
