@@ -48,17 +48,19 @@ export class Logger {
   }
 
   constructor({
-    level = process.env.EXPO_PUBLIC_LOG_LEVEL as LogLevel,
+    level,
     context,
-    contextFilter = process.env.EXPO_PUBLIC_LOG_DEBUG || '',
+    contextFilter,
   }: {
     level?: LogLevel
     context?: LogContext
     contextFilter?: string
   } = {}) {
     this.context = context
-    this.level = level ?? LogLevel.Info // default to info
-    this.contextFilter = contextFilter || ''
+    this.level =
+      level || (process.env.EXPO_PUBLIC_LOG_LEVEL as LogLevel) || LogLevel.Info // default to info
+    this.contextFilter =
+      contextFilter || process.env.EXPO_PUBLIC_LOG_DEBUG || ''
     this.debugContextRegexes = (this.contextFilter || '')
       .split(',')
       .map(filter => {

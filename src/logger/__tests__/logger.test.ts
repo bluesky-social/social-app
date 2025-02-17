@@ -6,15 +6,6 @@ import {Logger} from '#/logger'
 import {sentryTransport} from '#/logger/transports/sentry'
 import {LogLevel} from '#/logger/types'
 
-jest.mock('#/env', () => ({
-  /*
-   * Forces debug mode for tests using the default logger. Most tests create
-   * their own logger instance.
-   */
-  LOG_LEVEL: 'debug',
-  LOG_DEBUG: '',
-}))
-
 jest.mock('@sentry/react-native', () => ({
   addBreadcrumb: jest.fn(),
   captureException: jest.fn(),
@@ -28,14 +19,14 @@ beforeAll(() => {
 describe('general functionality', () => {
   test('default params', () => {
     const logger = new Logger()
-    expect(logger.level).toEqual(LogLevel.Debug) // mocked above
+    expect(logger.level).toEqual(LogLevel.Info)
   })
 
   test('can override default params', () => {
     const logger = new Logger({
-      level: LogLevel.Info,
+      level: LogLevel.Debug,
     })
-    expect(logger.level).toEqual(LogLevel.Info)
+    expect(logger.level).toEqual(LogLevel.Debug)
   })
 
   test('supports extra metadata', () => {
@@ -264,9 +255,8 @@ describe('general functionality', () => {
 })
 
 describe('create', () => {
-  const mockTransport = jest.fn()
-
   test('create', () => {
+    const mockTransport = jest.fn()
     const timestamp = Date.now()
     const message = nanoid()
     const logger = Logger.create(Logger.Context.Default)
@@ -285,9 +275,8 @@ describe('create', () => {
 })
 
 describe('debug contexts', () => {
-  const mockTransport = jest.fn()
-
   test('specific', () => {
+    const mockTransport = jest.fn()
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
@@ -309,12 +298,14 @@ describe('debug contexts', () => {
   })
 
   test('namespaced', () => {
+    const mockTransport = jest.fn()
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
       // @ts-ignore
       context: 'namespace:foo',
-      contextFilter: 'namespace*',
+      contextFilter: 'namespace:*',
+      level: LogLevel.Debug,
     })
 
     logger.addTransport(mockTransport)
@@ -330,6 +321,7 @@ describe('debug contexts', () => {
   })
 
   test('ignores inactive', () => {
+    const mockTransport = jest.fn()
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
