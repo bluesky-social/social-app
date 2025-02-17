@@ -657,8 +657,8 @@ export const ComposePost = ({
             ref={scrollViewRef}
             layout={native(LinearTransition)}
             onScroll={scrollHandler}
-            style={styles.scrollView}
-            contentContainerStyle={a.flex_1}
+            contentContainerStyle={a.flex_grow}
+            style={a.flex_1}
             keyboardShouldPersistTaps="always"
             onContentSizeChange={onScrollViewContentSizeChange}
             onLayout={onScrollViewLayout}>
@@ -796,7 +796,12 @@ let ComposerPost = React.memo(function ComposerPost({
   )
 
   return (
-    <View style={[styles.post, !isActive && styles.inactivePost, a.flex_1]}>
+    <View
+      style={[
+        styles.post,
+        !isActive && styles.inactivePost,
+        isTextOnly && isNative && a.flex_grow,
+      ]}>
       <View
         style={[
           styles.textInputLayout,
@@ -806,9 +811,11 @@ let ComposerPost = React.memo(function ComposerPost({
           avatar={currentProfile?.avatar}
           size={50}
           type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
+          style={styles.avatarTopOffset}
         />
         <TextInput
           ref={textInput}
+          style={styles.textInputTopOffset}
           richtext={richtext}
           placeholder={selectTextInputPlaceholder}
           autoFocus
@@ -1512,10 +1519,15 @@ const styles = StyleSheet.create({
   },
   textInputLayout: {
     flexDirection: 'row',
-    paddingTop: 4,
   },
   textInputLayoutMobile: {
     flex: 1,
+  },
+  avatarTopOffset: {
+    marginTop: 4,
+  },
+  textInputTopOffset: {
+    paddingTop: 4,
   },
   addExtLinkBtn: {
     borderWidth: 1,
