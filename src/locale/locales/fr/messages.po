@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-17 20:24\n"
+"PO-Revision-Date: 2025-02-17 22:42\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -8573,7 +8573,7 @@ msgstr "Votre première mention « j’aime » !"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:443
 msgid "Your followers"
-msgstr "Vos abonnés"
+msgstr "Comptes qui vous suivent"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
