@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-17 17:52\n"
+"PO-Revision-Date: 2025-02-17 19:22\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -3256,7 +3256,7 @@ msgstr "Användarnamn"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:572
 msgid "Handle already taken. Please try a different one."
-msgstr "Användarnamnet används redan av en annan. Försök med ett annat."
+msgstr "Användarnamnet är upptaget. Försök med ett annat."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:189
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:325
