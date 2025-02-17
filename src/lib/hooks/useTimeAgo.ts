@@ -19,7 +19,7 @@ const HOUR = MINUTE * 60
 const DAY = HOUR * 24
 const MONTH_30 = DAY * 30
 
-export function useGetTimeAgo() {
+export function useGetTimeAgo({future = false}: {future?: boolean} = {}) {
   const {i18n} = useLingui()
   return useCallback(
     (
@@ -27,10 +27,10 @@ export function useGetTimeAgo() {
       later: number | string | Date,
       options?: {format: DateDiffFormat},
     ) => {
-      const diff = dateDiff(earlier, later)
+      const diff = dateDiff(earlier, later, future ? 'up' : 'down')
       return formatDateDiff({diff, i18n, format: options?.format})
     },
-    [i18n],
+    [i18n, future],
   )
 }
 
@@ -45,6 +45,7 @@ export function useGetTimeAgo() {
 export function dateDiff(
   earlier: number | string | Date,
   later: number | string | Date,
+  rounding: 'up' | 'down' = 'down',
 ): DateDiff {
   let diff = {
     value: 0,
@@ -65,25 +66,37 @@ export function dateDiff(
       unit: 'second' as DateDiff['unit'],
     }
   } else if (diffSeconds < HOUR) {
-    const value = Math.floor(diffSeconds / MINUTE)
+    const value =
+      rounding === 'up'
+        ? Math.ceil(diffSeconds / MINUTE)
+        : Math.floor(diffSeconds / MINUTE)
     diff = {
       value,
       unit: 'minute' as DateDiff['unit'],
     }
   } else if (diffSeconds < DAY) {
-    const value = Math.floor(diffSeconds / HOUR)
+    const value =
+      rounding === 'up'
+        ? Math.ceil(diffSeconds / HOUR)
+        : Math.floor(diffSeconds / HOUR)
     diff = {
       value,
       unit: 'hour' as DateDiff['unit'],
     }
   } else if (diffSeconds < MONTH_30) {
-    const value = Math.floor(diffSeconds / DAY)
+    const value =
+      rounding === 'up'
+        ? Math.ceil(diffSeconds / DAY)
+        : Math.floor(diffSeconds / DAY)
     diff = {
       value,
       unit: 'day' as DateDiff['unit'],
     }
   } else {
-    const value = Math.floor(diffSeconds / MONTH_30)
+    const value =
+      rounding === 'up'
+        ? Math.ceil(diffSeconds / MONTH_30)
+        : Math.floor(diffSeconds / MONTH_30)
     diff = {
       value,
       unit: 'month' as DateDiff['unit'],

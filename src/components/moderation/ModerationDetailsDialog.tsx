@@ -42,7 +42,7 @@ function ModerationDetailsDialogInner({
   const {_} = useLingui()
   const desc = useModerationCauseDescription(modcause)
   const {currentAccount} = useSession()
-  const timeDiff = useGetTimeAgo()
+  const timeDiff = useGetTimeAgo({future: true})
 
   let name
   let description

@@ -123,7 +123,7 @@ function Label({
   const sourceName = labeler
     ? sanitizeHandle(labeler.creator.handle, '@')
     : label.src
-  const timeDiff = useGetTimeAgo()
+  const timeDiff = useGetTimeAgo({future: true})
   return (
     <View
       style={[
