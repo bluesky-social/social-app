@@ -135,6 +135,8 @@ export function ListConvosProviderInner({
                   ) {
                     if (log.message.sender.did !== currentAccount?.did) {
                       unreadCount++
+                    } else {
+                      unreadCount = 0
                     }
                   }
                 } else {
