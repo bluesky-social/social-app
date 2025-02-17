@@ -399,7 +399,7 @@ let ProfileMenu = ({
         control={loggedOutWarningPromptControl}
         title={_(msg`Note about sharing`)}
         description={_(
-          msg`This profile is only visible to logged-in users. It won't be visible to people who aren't logged in.`,
+          msg`This profile is only visible to logged-in users. It won't be visible to people who aren't signed in.`,
         )}
         onConfirm={onPressShare}
         confirmButtonCta={_(msg`Share anyway`)}

@@ -63,7 +63,7 @@ export function useListCreateMutation() {
         avatar,
       }) {
         if (!currentAccount) {
-          throw new Error('Not logged in')
+          throw new Error('Not signed in')
         }
         if (
           purpose !== 'app.bsky.graph.defs#curatelist' &&
@@ -129,7 +129,7 @@ export function useListMetadataMutation() {
     async mutationFn({uri, name, description, descriptionFacets, avatar}) {
       const {hostname, rkey} = new AtUri(uri)
       if (!currentAccount) {
-        throw new Error('Not logged in')
+        throw new Error('Not signed in')
       }
       if (currentAccount.did !== hostname) {
         throw new Error('You do not own this list')
