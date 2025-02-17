@@ -69,23 +69,23 @@ export class Logger {
   }
 
   debug(message: string, metadata: Metadata = {}) {
-    this.transport(LogLevel.Debug, message, metadata)
+    this.transport({level: LogLevel.Debug, message, metadata})
   }
 
   info(message: string, metadata: Metadata = {}) {
-    this.transport(LogLevel.Info, message, metadata)
+    this.transport({level: LogLevel.Info, message, metadata})
   }
 
   log(message: string, metadata: Metadata = {}) {
-    this.transport(LogLevel.Log, message, metadata)
+    this.transport({level: LogLevel.Log, message, metadata})
   }
 
   warn(message: string, metadata: Metadata = {}) {
-    this.transport(LogLevel.Warn, message, metadata)
+    this.transport({level: LogLevel.Warn, message, metadata})
   }
 
   error(error: Error | string, metadata: Metadata = {}) {
-    this.transport(LogLevel.Error, error, metadata)
+    this.transport({level: LogLevel.Error, message: error, metadata})
   }
 
   addTransport(transport: Transport) {
@@ -95,11 +95,15 @@ export class Logger {
     }
   }
 
-  protected transport(
-    level: LogLevel,
-    message: string | Error,
-    metadata: Metadata = {},
-  ) {
+  protected transport({
+    level,
+    message,
+    metadata = {},
+  }: {
+    level: LogLevel
+    message: string | Error
+    metadata: Metadata
+  }) {
     if (
       !!this.contextFilter &&
       !!this.context &&
