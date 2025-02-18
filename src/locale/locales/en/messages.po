@@ -922,8 +922,8 @@ msgstr ""
 #: src/screens/Login/ChooseAccountForm.tsx:95
 #: src/screens/Login/ForgotPasswordForm.tsx:123
 #: src/screens/Login/ForgotPasswordForm.tsx:129
-#: src/screens/Login/LoginForm.tsx:308
-#: src/screens/Login/LoginForm.tsx:314
+#: src/screens/Login/LoginForm.tsx:310
+#: src/screens/Login/LoginForm.tsx:316
 #: src/screens/Login/SetNewPasswordForm.tsx:164
 #: src/screens/Login/SetNewPasswordForm.tsx:170
 #: src/screens/Messages/components/ChatDisabled.tsx:133
@@ -1239,7 +1239,7 @@ msgid "Cancel quote post"
 msgstr ""
 
 #: src/screens/Deactivated.tsx:151
-msgid "Cancel reactivation and log out"
+msgid "Cancel reactivation and sign out"
 msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
@@ -1356,7 +1356,7 @@ msgid "Check my status"
 msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:301
-msgid "Check your email for a login code and enter it here."
+msgid "Check your email for a sign in code and enter it here."
 msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:213
@@ -1626,7 +1626,7 @@ msgstr ""
 msgid "Confirmation Code"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:335
+#: src/screens/Login/LoginForm.tsx:337
 msgid "Connecting..."
 msgstr ""
 
@@ -3940,27 +3940,8 @@ msgstr ""
 msgid "Log"
 msgstr ""
 
-#: src/screens/Deactivated.tsx:202
-#: src/screens/Deactivated.tsx:208
-msgid "Log in or sign up"
-msgstr ""
-
-#: src/screens/SignupQueued.tsx:93
-#: src/screens/SignupQueued.tsx:96
-#: src/screens/Takendown.tsx:85
-msgid "Log out"
-msgstr ""
-
-#: src/screens/Takendown.tsx:88
-msgid "Log Out"
-msgstr ""
-
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:78
 msgid "Logged-out visibility"
-msgstr ""
-
-#: src/components/AccountList.tsx:65
-msgid "Login to account that is not listed"
 msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:121
@@ -4295,7 +4276,7 @@ msgid "Navigate to {0}"
 msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:166
-#: src/screens/Login/LoginForm.tsx:342
+#: src/screens/Login/LoginForm.tsx:344
 #: src/view/com/modals/ChangePassword.tsx:169
 msgid "Navigates to the next screen"
 msgstr ""
@@ -4400,8 +4381,8 @@ msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:137
 #: src/screens/Login/ForgotPasswordForm.tsx:143
-#: src/screens/Login/LoginForm.tsx:341
-#: src/screens/Login/LoginForm.tsx:348
+#: src/screens/Login/LoginForm.tsx:343
+#: src/screens/Login/LoginForm.tsx:350
 #: src/screens/Login/SetNewPasswordForm.tsx:178
 #: src/screens/Login/SetNewPasswordForm.tsx:184
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
@@ -4810,7 +4791,7 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.web.tsx:125
-msgid "Opens flow to sign into your existing Bluesky account"
+msgid "Opens flow to sign in to your existing Bluesky account"
 msgstr ""
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
@@ -4860,7 +4841,7 @@ msgid "Or, continue with another account."
 msgstr ""
 
 #: src/screens/Deactivated.tsx:186
-msgid "Or, log into one of your other accounts."
+msgid "Or, sign in to one of your other accounts."
 msgstr ""
 
 #: src/lib/moderation/useReportOptions.ts:27
@@ -5780,7 +5761,7 @@ msgid "Require alt text before posting"
 msgstr ""
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
-msgid "Require an email code to log in to your account."
+msgid "Require an email code to sign in to your account."
 msgstr ""
 
 #: src/screens/Signup/StepInfo/index.tsx:153
@@ -5823,8 +5804,8 @@ msgstr ""
 msgid "Reset password"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:322
-msgid "Retries login"
+#: src/screens/Login/LoginForm.tsx:324
+msgid "Retries sign in"
 msgstr ""
 
 #: src/view/com/util/error/ErrorMessage.tsx:62
@@ -5836,8 +5817,8 @@ msgstr ""
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:110
 #: src/components/StarterPack/ProfileStarterPacks.tsx:335
-#: src/screens/Login/LoginForm.tsx:321
-#: src/screens/Login/LoginForm.tsx:328
+#: src/screens/Login/LoginForm.tsx:323
+#: src/screens/Login/LoginForm.tsx:330
 #: src/screens/Messages/ChatList.tsx:177
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Onboarding/StepInterests/index.tsx:217
@@ -6501,17 +6482,33 @@ msgstr ""
 msgid "Sign in or create your account to join the conversation!"
 msgstr ""
 
+#: src/screens/Deactivated.tsx:202
+#: src/screens/Deactivated.tsx:208
+msgid "Sign in or sign up"
+msgstr ""
+
+#: src/components/AccountList.tsx:65
+msgid "Sign in to account that is not listed"
+msgstr ""
+
 #: src/components/dialogs/Signin.tsx:46
-msgid "Sign into Bluesky or create a new account"
+msgid "Sign in to Bluesky or create a new account"
 msgstr ""
 
 #: src/screens/Settings/Settings.tsx:225
 #: src/screens/Settings/Settings.tsx:227
 #: src/screens/Settings/Settings.tsx:259
+#: src/screens/SignupQueued.tsx:93
+#: src/screens/SignupQueued.tsx:96
+#: src/screens/Takendown.tsx:85
 #: src/view/shell/desktop/LeftNav.tsx:208
 #: src/view/shell/desktop/LeftNav.tsx:291
 #: src/view/shell/desktop/LeftNav.tsx:294
 msgid "Sign out"
+msgstr ""
+
+#: src/screens/Takendown.tsx:88
+msgid "Sign Out"
 msgstr ""
 
 #: src/screens/Settings/Settings.tsx:256
@@ -6590,7 +6587,7 @@ msgstr ""
 
 #: src/App.native.tsx:121
 #: src/App.web.tsx:97
-msgid "Sorry! Your session expired. Please log in again."
+msgid "Sorry! Your session expired. Please sign in again."
 msgstr ""
 
 #: src/screens/Settings/ThreadPreferences.tsx:55
@@ -7216,7 +7213,7 @@ msgstr ""
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:720
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:369
-msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
+msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:701
@@ -7228,7 +7225,7 @@ msgid "This post's author has disabled quote posts."
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:402
-msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
+msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:763
@@ -7679,7 +7676,7 @@ msgid "Use recommended"
 msgstr ""
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:190
-msgid "Use this to sign into the other app along with your handle."
+msgid "Use this to sign in to the other app along with your handle."
 msgstr ""
 
 #: src/view/com/modals/InviteCodes.tsx:201
@@ -8465,13 +8462,13 @@ msgstr ""
 msgid "You're in line"
 msgstr ""
 
-#: src/screens/Deactivated.tsx:89
-#: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
-msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
-msgstr ""
-
 #: src/screens/Onboarding/StepFinished.tsx:242
 msgid "You're ready to go!"
+msgstr ""
+
+#: src/screens/Deactivated.tsx:89
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
+msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:106
