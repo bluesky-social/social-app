@@ -61,7 +61,7 @@ export type DialogOuterProps = {
   onClose?: () => void
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
   webOptions?: {
-    alignTop?: boolean
+    alignCenter?: boolean
   }
   testID?: string
 }

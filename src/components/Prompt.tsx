@@ -45,6 +45,7 @@ export function Outer({
     <Dialog.Outer
       control={control}
       testID={testID}
+      webOptions={{alignCenter: true}}
       nativeOptions={{preventExpansion: true, ...nativeOptions}}>
       <Dialog.Handle />
       <Context.Provider value={context}>
