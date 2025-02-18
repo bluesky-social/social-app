@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 03:17\n"
+"PO-Revision-Date: 2025-02-18 06:47\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1245,7 +1245,7 @@ msgstr "唔再引用帖文"
 
 #: src/screens/Deactivated.tsx:151
 msgid "Cancel reactivation and sign out"
-msgstr ""
+msgstr "取消重新啓動兼登出"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
 #: src/view/screens/Search/Search.tsx:879
@@ -1362,7 +1362,7 @@ msgstr "檢查我嘅狀態"
 
 #: src/screens/Login/LoginForm.tsx:301
 msgid "Check your email for a sign in code and enter it here."
-msgstr ""
+msgstr "喺呢度輸入傳送到你電郵嘅登入驗證碼。"
 
 #: src/view/com/modals/DeleteAccount.tsx:213
 msgid "Check your inbox for an email with the confirmation code to enter below:"
@@ -4797,7 +4797,7 @@ msgstr "打開流程去到建立一個新嘅 Bluesky 帳號"
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.web.tsx:125
 msgid "Opens flow to sign in to your existing Bluesky account"
-msgstr ""
+msgstr "打開流程去到登入你現有嘅 Bluesky 帳號"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Opens GIF select dialog"
@@ -4847,7 +4847,7 @@ msgstr "抑或用第個帳號繼續。"
 
 #: src/screens/Deactivated.tsx:186
 msgid "Or, sign in to one of your other accounts."
-msgstr ""
+msgstr "抑或登入你其他嘅帳號。"
 
 #: src/lib/moderation/useReportOptions.ts:27
 #: src/view/com/composer/labels/LabelsBtn.tsx:186
@@ -5767,7 +5767,7 @@ msgstr "發佈之前要提供替代文字"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
 msgid "Require an email code to sign in to your account."
-msgstr ""
+msgstr "登入嗰陣要用埋電郵驗證碼先至得。"
 
 #: src/screens/Signup/StepInfo/index.tsx:153
 msgid "Required for this provider"
@@ -5811,7 +5811,7 @@ msgstr "重設密碼"
 
 #: src/screens/Login/LoginForm.tsx:324
 msgid "Retries sign in"
-msgstr ""
+msgstr "試多次登入"
 
 #: src/view/com/util/error/ErrorMessage.tsx:62
 #: src/view/com/util/error/ErrorScreen.tsx:99
@@ -6490,15 +6490,15 @@ msgstr "登入抑或建立帳號嚟加入對話！"
 #: src/screens/Deactivated.tsx:202
 #: src/screens/Deactivated.tsx:208
 msgid "Sign in or sign up"
-msgstr ""
+msgstr "登入抑或註冊"
 
 #: src/components/AccountList.tsx:65
 msgid "Sign in to account that is not listed"
-msgstr ""
+msgstr "登入未有列出嘅帳號"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign in to Bluesky or create a new account"
-msgstr ""
+msgstr "登入 Bluesky 抑或整個新帳號"
 
 #: src/screens/Settings/Settings.tsx:225
 #: src/screens/Settings/Settings.tsx:227
@@ -6514,7 +6514,7 @@ msgstr "登出"
 
 #: src/screens/Takendown.tsx:88
 msgid "Sign Out"
-msgstr ""
+msgstr "登出"
 
 #: src/screens/Settings/Settings.tsx:256
 #: src/view/shell/desktop/LeftNav.tsx:205
@@ -6593,7 +6593,7 @@ msgstr "有輘輷？話畀我哋知。"
 #: src/App.native.tsx:121
 #: src/App.web.tsx:97
 msgid "Sorry! Your session expired. Please sign in again."
-msgstr ""
+msgstr "對唔住！你嘅登入狀態過咗期，唔該試多次登入。"
 
 #: src/screens/Settings/ThreadPreferences.tsx:55
 msgid "Sort replies"
@@ -7219,7 +7219,7 @@ msgstr "呢條帖文經已刪咗。"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:720
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:369
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
-msgstr ""
+msgstr "呢條帖文淨係畀登入咗嘅用戶睇，未登入嘅人唔會睇到。"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:701
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
@@ -7231,7 +7231,7 @@ msgstr "呢條帖文嘅發佈者唔俾人引用。"
 
 #: src/view/com/profile/ProfileMenu.tsx:402
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
-msgstr ""
+msgstr "呢份個人檔案淨係畀登入咗嘅人睇，冇得畀未登入嘅人睇。"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:763
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
@@ -7682,7 +7682,7 @@ msgstr "使用建議選項"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:190
 msgid "Use this to sign in to the other app along with your handle."
-msgstr ""
+msgstr "用呢個嚟登入另一個 App 同埋你嘅帳號頭銜。"
 
 #: src/view/com/modals/InviteCodes.tsx:201
 msgid "Used by:"
@@ -8474,7 +8474,7 @@ msgstr "喂，攪掂喇！"
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
 msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
-msgstr ""
+msgstr "你而家用緊 App 密碼去登入。請用返你嘅主要密碼登入去繼續停用你嘅帳號。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:106
 #: src/lib/moderation/useModerationCauseDescription.ts:106
