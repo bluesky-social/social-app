@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-17 16:45\n"
+"PO-Revision-Date: 2025-02-18 01:38\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -591,7 +591,7 @@ msgstr "已关注所有账户！"
 #: src/view/screens/Search/Search.tsx:399
 #: src/view/screens/Search/Search.tsx:401
 msgid "All languages"
-msgstr ""
+msgstr "全部语言"
 
 #: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
@@ -1152,7 +1152,7 @@ msgstr "浏览带有标签 {displayName} 的帖文"
 
 #: src/components/TrendingTopics.tsx:195
 msgid "Browse starter pack {displayName}"
-msgstr ""
+msgstr "浏览新手包 {displayName}"
 
 #: src/components/TrendingTopics.tsx:232
 msgid "Browse topic {displayName}"
@@ -1488,7 +1488,7 @@ msgstr "关闭对话框"
 
 #: src/view/shell/index.web.tsx:83
 msgid "Close drawer menu"
-msgstr ""
+msgstr "关闭抽屉菜单"
 
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
@@ -1664,7 +1664,7 @@ msgstr "内容过滤器"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:57
 msgid "Content from across the network we think you might like."
-msgstr ""
+msgstr "我们从网络的各个角落精选出了你可能会感兴趣的内容。"
 
 #: src/screens/Settings/LanguageSettings.tsx:251
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
@@ -1755,12 +1755,12 @@ msgstr "复制应用密码"
 #: src/view/com/profile/ProfileMenu.tsx:344
 #: src/view/com/profile/ProfileMenu.tsx:347
 msgid "Copy at:// URI"
-msgstr ""
+msgstr "复制 at:// 链接"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:674
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:676
 msgid "Copy author DID"
-msgstr ""
+msgstr "复制发布者 DID"
 
 #: src/components/dialogs/Embed.tsx:122
 #: src/components/dialogs/Embed.tsx:141
@@ -1802,7 +1802,7 @@ msgstr "复制私信文字"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
 msgid "Copy post at:// URI"
-msgstr ""
+msgstr "复制帖文 at:// 链接"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:422
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:424
@@ -2091,11 +2091,11 @@ msgstr "要分离引用帖文吗？"
 
 #: src/screens/Settings/AboutSettings.tsx:80
 msgid "Developer mode disabled"
-msgstr ""
+msgstr "已禁用开发者模式"
 
 #: src/screens/Settings/AboutSettings.tsx:79
 msgid "Developer mode enabled"
-msgstr ""
+msgstr "已启用开发者模式"
 
 #: src/screens/Settings/Settings.tsx:242
 #: src/screens/Settings/Settings.tsx:245
@@ -2925,11 +2925,11 @@ msgstr "从动态源中过滤"
 
 #: src/view/screens/Search/Search.tsx:397
 msgid "Filter search by language"
-msgstr ""
+msgstr "按语言过滤搜索"
 
 #: src/view/screens/Search/Search.tsx:367
 msgid "Filter search by language (currently: {currentLanguageLabel})"
-msgstr ""
+msgstr "按语言过滤搜索（当前：{currentLanguageLabel}）"
 
 #: src/screens/Onboarding/StepFinished.tsx:303
 msgid "Finalizing"
@@ -5990,7 +5990,7 @@ msgstr "搜索"
 #: src/Navigation.tsx:215
 #: src/screens/Profile/ProfileSearch.tsx:34
 msgid "Search @{0}'s posts"
-msgstr ""
+msgstr "搜索 @{0} 的帖文"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:745
 msgid "Search by name or interest"
@@ -6018,7 +6018,7 @@ msgstr "通过搜索来添加你想分享的动态源。"
 
 #: src/view/screens/Search/Search.tsx:872
 msgid "Search for posts, users, or feeds"
-msgstr ""
+msgstr "搜索帖文、用户或动态源"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
 msgid "Search for users"
@@ -6030,12 +6030,12 @@ msgstr "搜索 GIF"
 
 #: src/screens/Profile/ProfileSearch.tsx:33
 msgid "Search my posts"
-msgstr ""
+msgstr "搜索我的帖文"
 
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Search Posts"
-msgstr ""
+msgstr "搜索帖文"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:507
 #: src/components/ProgressGuide/FollowDialog.tsx:764
@@ -6048,7 +6048,7 @@ msgstr "搜索 Tenor"
 
 #: src/screens/Profile/ProfileSearch.tsx:35
 msgid "Search..."
-msgstr ""
+msgstr "搜索……"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
 #: src/components/ProgressGuide/FollowDialog.tsx:765
@@ -8260,7 +8260,7 @@ msgstr "你可以继续登录以重新启用你的账户，其他用户将能够
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
 msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings</0>."
-msgstr ""
+msgstr "你可以在 <0>设置 → 内容审核 → 互动选项 </0> 里调整默认互动设置。"
 
 #: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:139
