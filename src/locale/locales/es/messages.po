@@ -8,7 +8,7 @@ msgstr ""
 "Language: es\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 10:24\n"
+"PO-Revision-Date: 2025-02-18 11:28\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -5101,7 +5101,7 @@ msgstr "Política"
 
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:116
 msgid "Popular videos in your network."
-msgstr "videos populares en tu red."
+msgstr "Videos populares en tu red."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:157
 msgid "Porn"
@@ -7380,7 +7380,7 @@ msgstr "Tendencias"
 #: src/components/interstitials/TrendingVideos.tsx:88
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:106
 msgid "Trending Videos"
-msgstr "videos populares"
+msgstr "Videos populares"
 
 #: src/view/com/util/error/ErrorScreen.tsx:103
 msgctxt "action"
@@ -7529,7 +7529,7 @@ msgstr "Demutear hilo"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:318
 msgid "Unmute video"
-msgstr "Desmutear video"
+msgstr "Activar el sonido del video"
 
 #: src/view/screens/ProfileList.tsx:685
 msgid "Unpin"
@@ -7808,7 +7808,7 @@ msgstr "Versión {appVersion}"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:83
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:134
 msgid "Video"
-msgstr "video"
+msgstr "Video"
 
 #: src/view/com/composer/state/video.ts:358
 msgid "Video failed to process"
@@ -7849,11 +7849,11 @@ msgstr "Video subido"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:83
 msgid "Video: {0}"
-msgstr "video: {0}"
+msgstr "Video: {0}"
 
 #: src/view/screens/Profile.tsx:236
 msgid "Videos"
-msgstr "videos"
+msgstr "Videos"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:58
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:73
