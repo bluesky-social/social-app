@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-17 16:45\n"
+"PO-Revision-Date: 2025-02-18 00:28\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -3605,7 +3605,7 @@ msgstr "이 스타터 팩을 사용할 사람들을 초대하세요!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:34
 msgid "Invite your friends to follow your favorite feeds and people"
-msgstr "친구를 초대하여 좋아하는 피드와 사람들을 팔로우할 수 있게 합니다."
+msgstr "친구를 초대하여 좋아하는 피드와 사람들을 팔로우할 수 있도록 합니다"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:31
 msgid "Invites, but personal"
@@ -4811,12 +4811,12 @@ msgstr "이모티콘 선택기를 엽니다"
 #: src/view/com/auth/SplashScreen.tsx:49
 #: src/view/com/auth/SplashScreen.web.tsx:111
 msgid "Opens flow to create a new Bluesky account"
-msgstr "새 Bluesky 계정을 만드는 플로를 엽니다"
+msgstr "새 Bluesky 계정을 만드는 화면을 엽니다"
 
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.web.tsx:125
 msgid "Opens flow to sign into your existing Bluesky account"
-msgstr "존재하는 Bluesky 계정에 로그인하는 플로를 엽니다"
+msgstr "존재하는 Bluesky 계정에 로그인하는 화면을 엽니다"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Opens GIF select dialog"
@@ -5990,7 +5990,7 @@ msgstr "검색"
 #: src/Navigation.tsx:215
 #: src/screens/Profile/ProfileSearch.tsx:34
 msgid "Search @{0}'s posts"
-msgstr ""
+msgstr "@{0} 님의 게시물 검색"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:745
 msgid "Search by name or interest"
@@ -6030,12 +6030,12 @@ msgstr "GIF 검색하기"
 
 #: src/screens/Profile/ProfileSearch.tsx:33
 msgid "Search my posts"
-msgstr ""
+msgstr "내 게시물 검색"
 
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Search Posts"
-msgstr ""
+msgstr "게시물 검색"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:507
 #: src/components/ProgressGuide/FollowDialog.tsx:764
@@ -6048,7 +6048,7 @@ msgstr "Tenor 검색"
 
 #: src/screens/Profile/ProfileSearch.tsx:35
 msgid "Search..."
-msgstr ""
+msgstr "검색..."
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
 #: src/components/ProgressGuide/FollowDialog.tsx:765
