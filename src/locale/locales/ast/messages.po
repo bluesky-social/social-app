@@ -8,7 +8,7 @@ msgstr ""
 "Language: ast\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 12:33\n"
+"PO-Revision-Date: 2025-02-18 13:32\n"
 "Last-Translator: \n"
 "Language-Team: Asturian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -591,7 +591,7 @@ msgstr ""
 #: src/view/screens/Search/Search.tsx:399
 #: src/view/screens/Search/Search.tsx:401
 msgid "All languages"
-msgstr ""
+msgstr "Toles llingües"
 
 #: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
@@ -913,7 +913,7 @@ msgstr "Ye de 3 caráuteres polo menos"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:105
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
-msgstr "Les opciones de reproducción automática moviéronse a <0>Configuración del conteníu multimedia</0>."
+msgstr "Les opciones de reproducción automática treslladáronse a <0>Configuración del conteníu multimedia</0>."
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:107
 #: src/screens/Settings/ContentAndMediaSettings.tsx:113
@@ -6197,7 +6197,7 @@ msgstr ""
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:62
 msgid "Send post to..."
-msgstr ""
+msgstr "Unviar la publicación a…"
 
 #: src/components/dms/ReportDialog.tsx:269
 #: src/components/dms/ReportDialog.tsx:272
@@ -7210,7 +7210,7 @@ msgstr "Indicóse qu'esta publicación se creó'l <0>{0}</0> mas la primer vegad
 
 #: src/components/WhoCanReply.tsx:213
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
-msgstr ""
+msgstr "Esta publicación contién un tipu desconocíu de «threadgate». Ye posible que l'aplicación nun tea anovada."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:152
 msgid "This post has been deleted."
@@ -7405,7 +7405,7 @@ msgstr "Escribi'l to mensaxe equí"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:413
 msgid "Type:"
-msgstr ""
+msgstr "Tipu:"
 
 #: src/view/screens/ProfileList.tsx:590
 msgid "Un-block list"
