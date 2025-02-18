@@ -53,9 +53,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
       aria-role="dialog"
       aria-label={dialogLabel}
       accessibilityLabel={dialogLabel}
-      accessibilityHint={_(
-        msg`The following steps will help customize your Bluesky experience.`,
-      )}
+      accessibilityHint={_(msg`Customizes your Bluesky experience`)}
       style={[
         // @ts-ignore web only -prf
         isWeb ? a.fixed : a.absolute,

@@ -81,8 +81,9 @@ export function PostInteractionSettingsControlledDialog({
             <Trans>
               You can set default interaction settings in{' '}
               <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
-                Settings &rarr; Moderation &rarr; Interaction settings.
+                Settings &rarr; Moderation &rarr; Interaction settings
               </Text>
+              .
             </Trans>
           </Text>
         </View>
@@ -429,13 +430,23 @@ export function PostInteractionSettingsForm({
                     disabled={replySettingsDisabled}
                   />
                   <Selectable
-                    label={_(msg`Followed users`)}
+                    label={_(msg`Users you follow`)}
                     isSelected={
                       !!threadgateAllowUISettings.find(
                         v => v.type === 'following',
                       )
                     }
                     onPress={() => onPressAudience({type: 'following'})}
+                    disabled={replySettingsDisabled}
+                  />
+                  <Selectable
+                    label={_(msg`Your followers`)}
+                    isSelected={
+                      !!threadgateAllowUISettings.find(
+                        v => v.type === 'followers',
+                      )
+                    }
+                    onPress={() => onPressAudience({type: 'followers'})}
                     disabled={replySettingsDisabled}
                   />
                   {lists && lists.length > 0

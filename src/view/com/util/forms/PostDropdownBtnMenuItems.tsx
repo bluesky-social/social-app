@@ -21,7 +21,7 @@ import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
-import {shareUrl} from '#/lib/sharing'
+import {shareText, shareUrl} from '#/lib/sharing'
 import {logEvent} from '#/lib/statsig/statsig'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
@@ -33,6 +33,7 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
+import {useDevModeEnabled} from '#/state/preferences/dev-mode'
 import {usePinnedPostMutation} from '#/state/queries/pinned-post'
 import {
   usePostDeleteMutation,
@@ -122,6 +123,7 @@ let PostDropdownMenuItems = ({
   const hideReplyConfirmControl = useDialogControl()
   const {mutateAsync: toggleReplyVisibility} =
     useToggleReplyVisibilityMutation()
+  const [devModeEnabled] = useDevModeEnabled()
 
   const postUri = post.uri
   const postCid = post.cid
@@ -365,6 +367,14 @@ let PostDropdownMenuItems = ({
       }
     }
   }, [_, queueBlock])
+
+  const onShareATURI = useCallback(() => {
+    shareText(postUri)
+  }, [postUri])
+
+  const onShareAuthorDID = useCallback(() => {
+    shareText(postAuthor.did)
+  }, [postAuthor.did])
 
   return (
     <>
@@ -647,6 +657,28 @@ let PostDropdownMenuItems = ({
                 </>
               )}
             </Menu.Group>
+
+            {devModeEnabled ? (
+              <>
+                <Menu.Divider />
+                <Menu.Group>
+                  <Menu.Item
+                    testID="postAtUriShareBtn"
+                    label={_(msg`Copy post at:// URI`)}
+                    onPress={onShareATURI}>
+                    <Menu.ItemText>{_(msg`Copy post at:// URI`)}</Menu.ItemText>
+                    <Menu.ItemIcon icon={Share} position="right" />
+                  </Menu.Item>
+                  <Menu.Item
+                    testID="postAuthorDIDShareBtn"
+                    label={_(msg`Copy author DID`)}
+                    onPress={onShareAuthorDID}>
+                    <Menu.ItemText>{_(msg`Copy author DID`)}</Menu.ItemText>
+                    <Menu.ItemIcon icon={Share} position="right" />
+                  </Menu.Item>
+                </Menu.Group>
+              </>
+            ) : null}
           </>
         )}
       </Menu.Outer>
@@ -685,7 +717,7 @@ let PostDropdownMenuItems = ({
         control={loggedOutWarningPromptControl}
         title={_(msg`Note about sharing`)}
         description={_(
-          msg`This post is only visible to logged-in users. It won't be visible to people who aren't logged in.`,
+          msg`This post is only visible to logged-in users. It won't be visible to people who aren't signed in.`,
         )}
         onConfirm={onSharePost}
         confirmButtonCta={_(msg`Share anyway`)}

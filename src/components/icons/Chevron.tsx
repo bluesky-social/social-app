@@ -15,3 +15,7 @@ export const ChevronTop_Stroke2_Corner0_Rounded = createSinglePathSVG({
 export const ChevronBottom_Stroke2_Corner0_Rounded = createSinglePathSVG({
   path: 'M3.293 8.293a1 1 0 0 1 1.414 0L12 15.586l7.293-7.293a1 1 0 1 1 1.414 1.414l-8 8a1 1 0 0 1-1.414 0l-8-8a1 1 0 0 1 0-1.414Z',
 })
+
+export const ChevronTopBottom_Stroke2_Corner0_Rounded = createSinglePathSVG({
+  path: 'M11.293 4.293a1 1 0 0 1 1.414 0l4 4a1 1 0 0 1-1.414 1.414L12 6.414 8.707 9.707a1 1 0 0 1-1.414-1.414l4-4Zm-4 10a1 1 0 0 1 1.414 0L12 17.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414Z',
+})

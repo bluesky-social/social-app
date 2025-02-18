@@ -330,7 +330,7 @@ export function useSearchPopularFeedsMutation() {
       if (moderationOpts) {
         return res.data.feeds.filter(feed => {
           const decision = moderateFeedGenerator(feed, moderationOpts)
-          return !decision.ui('contentList').filter
+          return !decision.ui('contentMedia').blur
         })
       }
 
@@ -371,7 +371,7 @@ export function usePopularFeedsSearch({
     select(data) {
       return data.filter(feed => {
         const decision = moderateFeedGenerator(feed, moderationOpts!)
-        return !decision.ui('contentList').filter
+        return !decision.ui('contentMedia').blur
       })
     },
   })

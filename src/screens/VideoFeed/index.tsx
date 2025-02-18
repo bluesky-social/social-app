@@ -800,7 +800,9 @@ function Overlay({
                           : _(msg`Follow ${handle}`)
                       }
                       accessibilityHint={
-                        profile.viewer?.following ? _(msg`Unfollow user`) : ''
+                        profile.viewer?.following
+                          ? _(msg`Unfollows the user`)
+                          : ''
                       }
                       size="small"
                       variant="solid"
@@ -930,7 +932,7 @@ function ExpandableRichTextView({
       />
       {constrained && !screenReaderEnabled && (
         <Pressable
-          accessibilityHint={_(msg`Tap to expand or collapse post text.`)}
+          accessibilityHint={_(msg`Expands or collapses post text`)}
           accessibilityLabel={expanded ? _(msg`Read less`) : _(msg`Read more`)}
           hitSlop={HITSLOP_20}
           onPress={() => setExpanded(prev => !prev)}

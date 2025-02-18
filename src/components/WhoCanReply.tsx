@@ -258,6 +258,19 @@ function Rule({
   if (rule.type === 'mention') {
     return <Trans>mentioned users</Trans>
   }
+  if (rule.type === 'followers') {
+    return (
+      <Trans>
+        users following{' '}
+        <InlineLinkText
+          label={`@${post.author.handle}`}
+          to={makeProfileLink(post.author)}
+          style={[a.text_sm, a.leading_snug]}>
+          @{post.author.handle}
+        </InlineLinkText>
+      </Trans>
+    )
+  }
   if (rule.type === 'following') {
     return (
       <Trans>

@@ -12,7 +12,7 @@ import {precacheResolvedUri} from '#/state/queries/resolve-uri'
 import {precacheStarterPack} from '#/state/queries/starter-packs'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
-import {StarterPack} from '#/components/icons/StarterPack'
+import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
 import {Link as BaseLink, LinkProps as BaseLinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
@@ -64,7 +64,7 @@ export function Card({
   return (
     <View style={[a.w_full, a.gap_md]}>
       <View style={[a.flex_row, a.gap_sm, a.w_full]}>
-        {!noIcon ? <StarterPack width={40} gradient="sky" /> : null}
+        {!noIcon ? <StarterPackIcon width={40} gradient="sky" /> : null}
         <View style={[a.flex_1]}>
           <Text
             emoji

@@ -43,7 +43,7 @@
     "perf:test:results": "NODE_ENV=test flashlight report .perf/results.json",
     "perf:measure": "NODE_ENV=test flashlight measure",
     "intl:build": "yarn intl:extract && yarn intl:compile",
-    "intl:extract": "lingui extract --clean",
+    "intl:extract": "lingui extract --clean --locale en",
     "intl:compile": "lingui compile",
     "intl:pull": "crowdin download translations --verbose -b main",
     "intl:push": "crowdin push translations --verbose -b main",
@@ -56,8 +56,8 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "^0.13.33",
-    "@bitdrift/react-native": "^0.6.2",
+    "@atproto/api": "^0.13.35",
+    "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
     "@emoji-mart/react": "^1.1.1",

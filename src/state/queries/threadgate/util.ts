@@ -43,6 +43,8 @@ export function threadgateRecordToAllowUISetting(
         setting = {type: 'mention'}
       } else if (allow.$type === 'app.bsky.feed.threadgate#followingRule') {
         setting = {type: 'following'}
+      } else if (allow.$type === 'app.bsky.feed.threadgate#followerRule') {
+        setting = {type: 'followers'}
       } else if (allow.$type === 'app.bsky.feed.threadgate#listRule') {
         setting = {type: 'list', list: allow.list}
       }
@@ -79,6 +81,8 @@ export function threadgateAllowUISettingToAllowRecordValue(
         allow.push({$type: 'app.bsky.feed.threadgate#mentionRule'})
       } else if (rule.type === 'following') {
         allow.push({$type: 'app.bsky.feed.threadgate#followingRule'})
+      } else if (rule.type === 'followers') {
+        allow.push({$type: 'app.bsky.feed.threadgate#followerRule'})
       } else if (rule.type === 'list') {
         allow.push({
           $type: 'app.bsky.feed.threadgate#listRule',

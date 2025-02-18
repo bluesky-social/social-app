@@ -241,6 +241,11 @@ let PostThreadItemLoaded = ({
     return makeProfileLink(post.author, 'post', urip.rkey, 'quotes')
   }, [post.uri, post.author])
   const quotesTitle = _(msg`Quotes of this post`)
+  const onlyFollowersCanReply = !!threadgateRecord?.allow?.find(
+    rule => rule.$type === 'app.bsky.feed.threadgate#followerRule',
+  )
+  const showFollowButton =
+    currentAccount?.did !== post.author.did && !onlyFollowersCanReply
 
   const translatorUrl = getTranslatorLink(
     record?.text || '',
@@ -343,7 +348,7 @@ let PostThreadItemLoaded = ({
                 </Text>
               </Link>
             </View>
-            {currentAccount?.did !== post.author.did && (
+            {showFollowButton && (
               <View>
                 <PostThreadFollowBtn did={post.author.did} />
               </View>
@@ -802,7 +807,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
       <Button
         label={_(msg`Archived post`)}
         accessibilityHint={_(
-          msg`Show information about when this post was created`,
+          msg`Shows information about when this post was created`,
         )}
         onPress={e => {
           e.preventDefault()
