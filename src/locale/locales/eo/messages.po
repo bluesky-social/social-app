@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 08:15\n"
+"PO-Revision-Date: 2025-02-18 09:25\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -2498,7 +2498,7 @@ msgstr "Ŝalti"
 
 #: src/components/dialogs/EmbedConsent.tsx:100
 msgid "Enable {0} only"
-msgstr ""
+msgstr "Ŝalti nur {0}"
 
 #: src/screens/Moderation/index.tsx:332
 msgid "Enable adult content"
@@ -2524,7 +2524,7 @@ msgstr ""
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:387
 msgid "Enable subtitles"
-msgstr ""
+msgstr "Ŝalti subtekstojn"
 
 #: src/components/dialogs/EmbedConsent.tsx:93
 msgid "Enable this source only"
@@ -2971,25 +2971,25 @@ msgstr ""
 #: src/screens/VideoFeed/index.tsx:823
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:132
 msgid "Follow"
-msgstr ""
+msgstr "Sekvi"
 
 #: src/view/com/profile/FollowButton.tsx:72
 msgctxt "action"
 msgid "Follow"
-msgstr ""
+msgstr "Sekvi"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:218
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:114
 msgid "Follow {0}"
-msgstr ""
+msgstr "Sekvi {0}"
 
 #: src/screens/VideoFeed/index.tsx:800
 msgid "Follow {handle}"
-msgstr ""
+msgstr "Sekvi {handle}"
 
 #: src/view/com/posts/AviFollowButton.tsx:68
 msgid "Follow {name}"
-msgstr ""
+msgstr "Sekvi {name}"
 
 #: src/components/ProgressGuide/List.tsx:52
 #: src/state/shell/progress-guide.tsx:229
@@ -3003,12 +3003,12 @@ msgstr ""
 #: src/view/com/profile/ProfileMenu.tsx:249
 #: src/view/com/profile/ProfileMenu.tsx:260
 msgid "Follow Account"
-msgstr ""
+msgstr "Sekvi konton"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:428
 #: src/screens/StarterPack/StarterPackScreen.tsx:436
 msgid "Follow all"
-msgstr ""
+msgstr "Sekvi ĉiujn"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:232
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:130
@@ -3026,7 +3026,7 @@ msgstr ""
 
 #: src/components/KnownFollowers.tsx:232
 msgid "Followed by <0>{0}</0>"
-msgstr ""
+msgstr "Sekvata de <0>{0}</0>"
 
 #: src/components/KnownFollowers.tsx:218
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
