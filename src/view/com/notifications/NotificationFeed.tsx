@@ -175,7 +175,6 @@ export function NotificationFeed({
         onEndReachedThreshold={2}
         onScrolledDownChange={onScrolledDownChange}
         contentContainerStyle={s.contentContainer}
-        // @ts-ignore our .web version only -prf
         desktopFixedHeight
         initialNumToRender={initialNumToRender}
         windowSize={11}
