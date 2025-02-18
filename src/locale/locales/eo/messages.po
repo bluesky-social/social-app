@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 18:41\n"
+"PO-Revision-Date: 2025-02-18 19:37\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -3659,11 +3659,11 @@ msgstr ""
 #: src/view/com/composer/labels/LabelsBtn.tsx:75
 #: src/view/screens/Profile.tsx:231
 msgid "Labels"
-msgstr ""
+msgstr "Etikedoj"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:73
 msgid "Labels added"
-msgstr ""
+msgstr "Etikedoj aldonitaj"
 
 #: src/screens/Profile/Sections/Labels.tsx:164
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
@@ -3689,11 +3689,11 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:199
 #: src/screens/Settings/Settings.tsx:202
 msgid "Languages"
-msgstr ""
+msgstr "Lingvoj"
 
 #: src/screens/Settings/AppearanceSettings.tsx:172
 msgid "Larger"
-msgstr ""
+msgstr "Pli granda"
 
 #: src/screens/Hashtag.tsx:95
 #: src/screens/Topic.tsx:77
@@ -3742,7 +3742,7 @@ msgstr ""
 
 #: src/components/dms/LeaveConvoPrompt.tsx:44
 msgid "Leave"
-msgstr ""
+msgstr "Foriri"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:73
 #: src/components/dms/MessagesListBlockedFooter.tsx:80
@@ -3863,19 +3863,19 @@ msgstr ""
 #: src/components/ListCard.tsx:150
 #: src/view/com/feeds/FeedSourceCard.tsx:255
 msgid "List by {0}"
-msgstr ""
+msgstr "Listo de {0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:156
 msgid "List by <0/>"
-msgstr ""
+msgstr "Listo de <0/>"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:154
 msgid "List by you"
-msgstr ""
+msgstr "Listo de vi"
 
 #: src/view/screens/ProfileList.tsx:455
 msgid "List deleted"
-msgstr ""
+msgstr "Listo forigita"
 
 #: src/screens/List/ListHiddenScreen.tsx:129
 msgid "List has been hidden"
@@ -3883,7 +3883,7 @@ msgstr ""
 
 #: src/view/screens/ProfileList.tsx:170
 msgid "List Hidden"
-msgstr ""
+msgstr "Listo kaŝita"
 
 #: src/view/screens/ProfileList.tsx:392
 msgid "List muted"
@@ -3908,7 +3908,7 @@ msgstr ""
 #: src/view/shell/desktop/LeftNav.tsx:661
 #: src/view/shell/Drawer.tsx:496
 msgid "Lists"
-msgstr ""
+msgstr "Listoj"
 
 #: src/components/dms/BlockedByListDialog.tsx:39
 msgid "Lists blocking this user:"
@@ -4044,13 +4044,13 @@ msgstr ""
 #: src/screens/Messages/components/MessageInput.tsx:78
 #: src/screens/Messages/components/MessageInput.web.tsx:60
 msgid "Message is too long"
-msgstr ""
+msgstr "Mesaĝo tro longas"
 
 #: src/Navigation.tsx:635
 #: src/screens/Messages/ChatList.tsx:269
 #: src/screens/Messages/ChatList.tsx:293
 msgid "Messages"
-msgstr ""
+msgstr "Mesaĝoj"
 
 #: src/lib/moderation/useReportOptions.ts:47
 msgid "Misleading Account"
@@ -4121,7 +4121,7 @@ msgstr ""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:637
 msgid "More"
-msgstr ""
+msgstr "Pli"
 
 #: src/view/shell/desktop/Feeds.tsx:102
 #: src/view/shell/desktop/Feeds.tsx:105
@@ -4145,11 +4145,11 @@ msgstr ""
 
 #: src/screens/Onboarding/state.ts:105
 msgid "Movies"
-msgstr ""
+msgstr "Filmoj"
 
 #: src/screens/Onboarding/state.ts:106
 msgid "Music"
-msgstr ""
+msgstr "Muziko"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:156
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:95
@@ -4310,28 +4310,28 @@ msgstr ""
 #: src/view/screens/ModerationModlists.tsx:74
 msgctxt "action"
 msgid "New"
-msgstr ""
+msgstr "Nova"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:65
 #: src/screens/Messages/ChatList.tsx:276
 #: src/screens/Messages/ChatList.tsx:283
 msgid "New chat"
-msgstr ""
+msgstr "Nova babilo"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:202
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:210
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:356
 msgid "New handle"
-msgstr ""
+msgstr "Nova nomo"
 
 #: src/view/screens/Lists.tsx:66
 #: src/view/screens/ModerationModlists.tsx:66
 msgid "New list"
-msgstr ""
+msgstr "Nova listo"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
-msgstr ""
+msgstr "Novaj mesaĝoj"
 
 #: src/view/com/modals/CreateOrEditList.tsx:232
 msgid "New Moderation List"
@@ -4339,11 +4339,11 @@ msgstr ""
 
 #: src/view/com/modals/ChangePassword.tsx:213
 msgid "New password"
-msgstr ""
+msgstr "Nova pasvorto"
 
 #: src/view/com/modals/ChangePassword.tsx:218
 msgid "New Password"
-msgstr ""
+msgstr "Nova pasvorto"
 
 #: src/screens/Profile/ProfileFeed/index.tsx:238
 #: src/view/screens/Feeds.tsx:549
@@ -4352,17 +4352,17 @@ msgstr ""
 #: src/view/screens/ProfileList.tsx:250
 #: src/view/screens/ProfileList.tsx:283
 msgid "New post"
-msgstr ""
+msgstr "Nova afiŝo"
 
 #: src/view/com/feeds/FeedPage.tsx:166
 msgctxt "action"
 msgid "New post"
-msgstr ""
+msgstr "Nova afiŝo"
 
 #: src/view/shell/desktop/LeftNav.tsx:507
 msgctxt "action"
 msgid "New Post"
-msgstr ""
+msgstr "Nova afiŝo"
 
 #: src/components/NewskieDialog.tsx:83
 msgid "New user info dialog"
@@ -4382,7 +4382,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:20
 #: src/screens/Onboarding/state.ts:108
 msgid "News"
-msgstr ""
+msgstr "Novaĵoj"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:137
 #: src/screens/Login/ForgotPasswordForm.tsx:143
@@ -4561,19 +4561,19 @@ msgstr ""
 #: src/Navigation.tsx:416
 #: src/view/screens/Notifications.tsx:134
 msgid "Notification settings"
-msgstr ""
+msgstr "Sciigaj agordoj"
 
 #: src/screens/Settings/NotificationSettings.tsx:46
 msgid "Notification Settings"
-msgstr ""
+msgstr "Sciigaj agordoj"
 
 #: src/screens/Messages/Settings.tsx:123
 msgid "Notification sounds"
-msgstr ""
+msgstr "Sciigaj sonoj"
 
 #: src/screens/Messages/Settings.tsx:120
 msgid "Notification Sounds"
-msgstr ""
+msgstr "Sciigaj sonoj"
 
 #: src/Navigation.tsx:630
 #: src/view/screens/Notifications.tsx:128
@@ -4581,15 +4581,15 @@ msgstr ""
 #: src/view/shell/desktop/LeftNav.tsx:624
 #: src/view/shell/Drawer.tsx:449
 msgid "Notifications"
-msgstr ""
+msgstr "Sciigoj"
 
 #: src/lib/hooks/useTimeAgo.ts:122
 msgid "now"
-msgstr ""
+msgstr "nun"
 
 #: src/components/dms/MessageItem.tsx:198
 msgid "Now"
-msgstr ""
+msgstr "Nun"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:151
 #: src/view/com/composer/labels/LabelsBtn.tsx:154
