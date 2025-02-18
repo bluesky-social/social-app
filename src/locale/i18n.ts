@@ -174,7 +174,7 @@ export async function dynamicActivate(locale: AppLanguage) {
       ])
       break
     }
-    case AppLanguage.id: {
+    case AppLanguage.ia: {
       i18n.loadAndActivate({locale, messages: messagesIa})
       await Promise.all([
         import('@formatjs/intl-pluralrules/locale-data/ia'),
