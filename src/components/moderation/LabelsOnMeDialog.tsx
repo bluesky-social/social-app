@@ -165,7 +165,13 @@ function Label({
             <Trans>This label was applied by you.</Trans>
           </Text>
         ) : (
-          <View style={[a.flex_row, a.justify_between, a.gap_xl]}>
+          <View
+            style={[
+              a.flex_row,
+              a.justify_between,
+              a.gap_xl,
+              {paddingBottom: 1},
+            ]}>
             <Text
               style={[a.flex_1, a.leading_snug, t.atoms.text_contrast_medium]}
               numberOfLines={1}>
