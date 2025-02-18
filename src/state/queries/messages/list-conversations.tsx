@@ -9,6 +9,7 @@ import {
   ChatBskyConvoDefs,
   ChatBskyConvoListConvos,
   moderateProfile,
+  ModerationOpts,
 } from '@atproto/api'
 import {
   InfiniteData,
@@ -66,9 +67,10 @@ export function useListConvosQuery({
   })
 }
 
-const ListConvosContext = createContext<ChatBskyConvoDefs.ConvoView[] | null>(
-  null,
-)
+const ListConvosContext = createContext<{
+  accepted: ChatBskyConvoDefs.ConvoView[]
+  request: ChatBskyConvoDefs.ConvoView[]
+} | null>(null)
 
 export function useListConvos() {
   const ctx = useContext(ListConvosContext)
@@ -78,12 +80,13 @@ export function useListConvos() {
   return ctx
 }
 
+const empty = {accepted: [], request: []}
 export function ListConvosProvider({children}: {children: React.ReactNode}) {
   const {hasSession} = useSession()
 
   if (!hasSession) {
     return (
-      <ListConvosContext.Provider value={[]}>
+      <ListConvosContext.Provider value={empty}>
         {children}
       </ListConvosContext.Provider>
     )
@@ -97,20 +100,27 @@ export function ListConvosProviderInner({
 }: {
   children: React.ReactNode
 }) {
-  const {refetch, data} = useListConvosQuery()
+  const {refetch: acceptedRefetch, data: acceptedData} = useListConvosQuery({
+    status: 'accepted',
+  })
+  const {refetch: requestRefetch, data: requestData} = useListConvosQuery({
+    status: 'request',
+  })
   const messagesBus = useMessagesEventBus()
   const queryClient = useQueryClient()
   const {currentConvoId} = useCurrentConvoId()
   const {currentAccount} = useSession()
 
-  const debouncedRefetch = useMemo(
-    () =>
-      throttle(refetch, 500, {
-        leading: true,
-        trailing: true,
-      }),
-    [refetch],
-  )
+  const debouncedRefetch = useMemo(() => {
+    const refetch = () => {
+      acceptedRefetch()
+      requestRefetch()
+    }
+    return throttle(refetch, 500, {
+      leading: true,
+      trailing: true,
+    })
+  }, [acceptedRefetch, requestRefetch])
 
   useEffect(() => {
     const unsub = messagesBus.on(
@@ -227,15 +237,17 @@ export function ListConvosProviderInner({
   }, [
     messagesBus,
     currentConvoId,
-    refetch,
     queryClient,
     currentAccount?.did,
     debouncedRefetch,
   ])
 
   const ctx = useMemo(() => {
-    return data?.pages.flatMap(page => page.convos) ?? []
-  }, [data])
+    return {
+      accepted: acceptedData?.pages.flatMap(page => page.convos) ?? [],
+      request: requestData?.pages.flatMap(page => page.convos) ?? [],
+    }
+  }, [acceptedData, requestData])
 
   return (
     <ListConvosContext.Provider value={ctx}>
@@ -247,31 +259,25 @@ export function ListConvosProviderInner({
 export function useUnreadMessageCount() {
   const {currentConvoId} = useCurrentConvoId()
   const {currentAccount} = useSession()
-  const convos = useListConvos()
+  const {accepted, request} = useListConvos()
   const moderationOpts = useModerationOpts()
 
   const count = useMemo(() => {
     return (
-      convos
-        .filter(convo => convo.id !== currentConvoId)
-        .reduce((acc, convo) => {
-          const otherMember = convo.members.find(
-            member => member.did !== currentAccount?.did,
-          )
-
-          if (!otherMember || !moderationOpts) return acc
-
-          const moderation = moderateProfile(otherMember, moderationOpts)
-          const shouldIgnore =
-            convo.muted ||
-            moderation.blocked ||
-            otherMember.did === 'missing.invalid'
-          const unreadCount = !shouldIgnore && convo.unreadCount > 0 ? 1 : 0
-
-          return acc + unreadCount
-        }, 0) ?? 0
+      calculateCount(
+        accepted,
+        currentAccount?.did,
+        currentConvoId,
+        moderationOpts,
+      ) +
+      calculateCount(
+        request,
+        currentAccount?.did,
+        currentConvoId,
+        moderationOpts,
+      )
     )
-  }, [convos, currentAccount?.did, currentConvoId, moderationOpts])
+  }, [accepted, request, currentAccount?.did, currentConvoId, moderationOpts])
 
   return useMemo(() => {
     return {
@@ -279,6 +285,34 @@ export function useUnreadMessageCount() {
       numUnread: count > 0 ? (count > 10 ? '10+' : String(count)) : undefined,
     }
   }, [count])
+}
+
+function calculateCount(
+  convos: ChatBskyConvoDefs.ConvoView[],
+  currentAccountDid: string | undefined,
+  currentConvoId: string | undefined,
+  moderationOpts: ModerationOpts | undefined,
+) {
+  return (
+    convos
+      .filter(convo => convo.id !== currentConvoId)
+      .reduce((acc, convo) => {
+        const otherMember = convo.members.find(
+          member => member.did !== currentAccountDid,
+        )
+
+        if (!otherMember || !moderationOpts) return acc
+
+        const moderation = moderateProfile(otherMember, moderationOpts)
+        const shouldIgnore =
+          convo.muted ||
+          moderation.blocked ||
+          otherMember.did === 'missing.invalid'
+        const unreadCount = !shouldIgnore && convo.unreadCount > 0 ? 1 : 0
+
+        return acc + unreadCount
+      }, 0) ?? 0
+  )
 }
 
 export type ConvoListQueryData = {
