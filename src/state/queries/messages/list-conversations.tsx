@@ -24,26 +24,42 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useAgent, useSession} from '#/state/session'
 
-export const RQKEY = ['convo-list']
+export const RQKEY_ROOT = 'convo-list'
+export const RQKEY = (status: 'accepted' | 'request' | 'all') => [
+  'convo-list',
+  status,
+]
 type RQPageParam = string | undefined
 
 export function useListConvosQuery({
   enabled,
+  status,
 }: {
   enabled?: boolean
+  status?: 'request' | 'accepted'
 } = {}) {
   const agent = useAgent()
 
   return useInfiniteQuery({
     enabled,
-    queryKey: RQKEY,
+    queryKey: RQKEY(status ?? 'all'),
     queryFn: async ({pageParam}) => {
-      const {data} = await agent.api.chat.bsky.convo.listConvos(
-        {cursor: pageParam, limit: 20},
-        {headers: DM_SERVICE_HEADERS},
-      )
+      const sp = new URLSearchParams({limit: '20'})
+      if (pageParam) sp.set('cursor', pageParam)
+      if (status) sp.set('status', status)
 
-      return data
+      return (await fetch(
+        `${agent.dispatchUrl}xrpc/chat.bsky.convo.listConvos?${sp.toString()}`,
+        {
+          headers: {
+            accept: 'application/json',
+            authorization: `Bearer ${agent.session!.accessJwt}`,
+            ...DM_SERVICE_HEADERS,
+          },
+        },
+      ).then(res => res.json())) as Promise<
+        ChatBskyConvoListConvos.Response['data']
+      >
     },
     initialPageParam: undefined as RQPageParam,
     getNextPageParam: lastPage => lastPage.cursor,
@@ -105,11 +121,11 @@ export function ListConvosProviderInner({
           if (ChatBskyConvoDefs.isLogBeginConvo(log)) {
             debouncedRefetch()
           } else if (ChatBskyConvoDefs.isLogLeaveConvo(log)) {
-            queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) =>
+            queryClient.setQueryData([RQKEY_ROOT], (old: ConvoListQueryData) =>
               optimisticDelete(log.convoId, old),
             )
           } else if (ChatBskyConvoDefs.isLogDeleteMessage(log)) {
-            queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) =>
+            queryClient.setQueryData([RQKEY_ROOT], (old: ConvoListQueryData) =>
               optimisticUpdate(log.convoId, old, convo => {
                 if (
                   (ChatBskyConvoDefs.isDeletedMessageView(log.message) ||
@@ -133,68 +149,71 @@ export function ListConvosProviderInner({
             // Store in a new var to avoid TS errors due to closures.
             const logRef: ChatBskyConvoDefs.LogCreateMessage = log
 
-            queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) => {
-              if (!old) return old
+            queryClient.setQueryData(
+              [RQKEY_ROOT],
+              (old: ConvoListQueryData) => {
+                if (!old) return old
 
-              function updateConvo(convo: ChatBskyConvoDefs.ConvoView) {
-                let unreadCount = convo.unreadCount
-                if (convo.id !== currentConvoId) {
-                  if (
-                    ChatBskyConvoDefs.isMessageView(logRef.message) ||
-                    ChatBskyConvoDefs.isDeletedMessageView(logRef.message)
-                  ) {
-                    if (logRef.message.sender.did !== currentAccount?.did) {
-                      unreadCount++
-                    }
-                  }
-                } else {
-                  unreadCount = 0
-                }
-
-                return {
-                  ...convo,
-                  rev: logRef.rev,
-                  lastMessage: logRef.message,
-                  unreadCount,
-                }
-              }
-
-              function filterConvoFromPage(
-                convo: ChatBskyConvoDefs.ConvoView[],
-              ) {
-                return convo.filter(c => c.id !== logRef.convoId)
-              }
-
-              const existingConvo = getConvoFromQueryData(logRef.convoId, old)
-
-              if (existingConvo) {
-                return {
-                  ...old,
-                  pages: old.pages.map((page, i) => {
-                    if (i === 0) {
-                      return {
-                        ...page,
-                        convos: [
-                          updateConvo(existingConvo),
-                          ...filterConvoFromPage(page.convos),
-                        ],
+                function updateConvo(convo: ChatBskyConvoDefs.ConvoView) {
+                  let unreadCount = convo.unreadCount
+                  if (convo.id !== currentConvoId) {
+                    if (
+                      ChatBskyConvoDefs.isMessageView(logRef.message) ||
+                      ChatBskyConvoDefs.isDeletedMessageView(logRef.message)
+                    ) {
+                      if (logRef.message.sender.did !== currentAccount?.did) {
+                        unreadCount++
                       }
                     }
-                    return {
-                      ...page,
-                      convos: filterConvoFromPage(page.convos),
-                    }
-                  }),
+                  } else {
+                    unreadCount = 0
+                  }
+
+                  return {
+                    ...convo,
+                    rev: logRef.rev,
+                    lastMessage: logRef.message,
+                    unreadCount,
+                  }
                 }
-              } else {
-                /**
-                 * We received a message from an conversation old enough that
-                 * it doesn't exist in the query cache, meaning we need to
-                 * refetch and bump the old convo to the top.
-                 */
-                debouncedRefetch()
-              }
-            })
+
+                function filterConvoFromPage(
+                  convo: ChatBskyConvoDefs.ConvoView[],
+                ) {
+                  return convo.filter(c => c.id !== logRef.convoId)
+                }
+
+                const existingConvo = getConvoFromQueryData(logRef.convoId, old)
+
+                if (existingConvo) {
+                  return {
+                    ...old,
+                    pages: old.pages.map((page, i) => {
+                      if (i === 0) {
+                        return {
+                          ...page,
+                          convos: [
+                            updateConvo(existingConvo),
+                            ...filterConvoFromPage(page.convos),
+                          ],
+                        }
+                      }
+                      return {
+                        ...page,
+                        convos: filterConvoFromPage(page.convos),
+                      }
+                    }),
+                  }
+                } else {
+                  /**
+                   * We received a message from an conversation old enough that
+                   * it doesn't exist in the query cache, meaning we need to
+                   * refetch and bump the old convo to the top.
+                   */
+                  debouncedRefetch()
+                }
+              },
+            )
           }
         }
       },
@@ -272,7 +291,7 @@ export function useOnMarkAsRead() {
 
   return useCallback(
     (chatId: string) => {
-      queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) => {
+      queryClient.setQueryData([RQKEY_ROOT], (old: ConvoListQueryData) => {
         return optimisticUpdate(chatId, old, convo => ({
           ...convo,
           unreadCount: 0,
@@ -331,7 +350,7 @@ export function* findAllProfilesInQueryData(
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<ChatBskyConvoListConvos.OutputSchema>
   >({
-    queryKey: RQKEY,
+    queryKey: [RQKEY_ROOT],
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {

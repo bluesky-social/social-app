@@ -33,6 +33,7 @@ export function InboxPreview({
         {marginTop: a.border_t.borderTopWidth * -1},
         a.border_b,
         t.atoms.border_contrast_low,
+        {minHeight: 42},
         a.rounded_0,
       ]}
       to="/messages/inbox"
@@ -40,25 +41,27 @@ export function InboxPreview({
       variant="solid">
       <View style={[a.relative]}>
         <ButtonIcon icon={EnvelopeIcon} size="lg" />
-        <View
-          style={[
-            a.absolute,
-            a.rounded_full,
-            a.z_20,
-            {
-              top: -4,
-              right: -5,
-              width: 10,
-              height: 10,
-              backgroundColor: t.palette.primary_500,
-            },
-          ]}
-        />
+        {profiles.length > 0 && (
+          <View
+            style={[
+              a.absolute,
+              a.rounded_full,
+              a.z_20,
+              {
+                top: -4,
+                right: -5,
+                width: 10,
+                height: 10,
+                backgroundColor: t.palette.primary_500,
+              },
+            ]}
+          />
+        )}
       </View>
       <ButtonText
         style={[a.flex_1, a.font_bold, a.text_left]}
         numberOfLines={1}>
-        <Trans>Chat requests</Trans>
+        <Trans>Requests</Trans>
       </ButtonText>
       <AvatarStack
         profiles={profiles}
