@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 03:17\n"
+"PO-Revision-Date: 2025-02-18 05:23\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -2446,7 +2446,7 @@ msgstr "メールでの２要素認証を無効にしました"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:54
 msgid "Email 2FA enabled"
-msgstr "メールでの２要素認証を有効にしました"
+msgstr "メールでの２要素認証が有効"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:93
 msgid "Email address"
