@@ -8,7 +8,7 @@ msgstr ""
 "Language: hi\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-17 16:45\n"
+"PO-Revision-Date: 2025-02-18 03:17\n"
 "Last-Translator: \n"
 "Language-Team: Hindi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -927,8 +927,8 @@ msgstr "वीडियो और GIF स्वतः चलाएँ"
 #: src/screens/Login/ChooseAccountForm.tsx:95
 #: src/screens/Login/ForgotPasswordForm.tsx:123
 #: src/screens/Login/ForgotPasswordForm.tsx:129
-#: src/screens/Login/LoginForm.tsx:308
-#: src/screens/Login/LoginForm.tsx:314
+#: src/screens/Login/LoginForm.tsx:310
+#: src/screens/Login/LoginForm.tsx:316
 #: src/screens/Login/SetNewPasswordForm.tsx:164
 #: src/screens/Login/SetNewPasswordForm.tsx:170
 #: src/screens/Messages/components/ChatDisabled.tsx:133
@@ -1244,8 +1244,8 @@ msgid "Cancel quote post"
 msgstr "क्वोट पोस्ट रद्द करें"
 
 #: src/screens/Deactivated.tsx:151
-msgid "Cancel reactivation and log out"
-msgstr "पुनःसक्रियण रद्द करें और लॉग आउट करें"
+msgid "Cancel reactivation and sign out"
+msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
 #: src/view/screens/Search/Search.tsx:879
@@ -1361,8 +1361,8 @@ msgid "Check my status"
 msgstr "मेरी स्थिति दिखाएँ"
 
 #: src/screens/Login/LoginForm.tsx:301
-msgid "Check your email for a login code and enter it here."
-msgstr "आपके ईमेल में लॉग इन कोड़े देखें और यहाँ दर्ज करें।"
+msgid "Check your email for a sign in code and enter it here."
+msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:213
 msgid "Check your inbox for an email with the confirmation code to enter below:"
@@ -1631,7 +1631,7 @@ msgstr "पुष्टिकरण कोड"
 msgid "Confirmation Code"
 msgstr "पुष्टिकरण कोड"
 
-#: src/screens/Login/LoginForm.tsx:335
+#: src/screens/Login/LoginForm.tsx:337
 msgid "Connecting..."
 msgstr "कनेक्ट किया जा रहा..."
 
@@ -3945,28 +3945,9 @@ msgstr "लोड हो रहा है..."
 msgid "Log"
 msgstr "लॉग"
 
-#: src/screens/Deactivated.tsx:202
-#: src/screens/Deactivated.tsx:208
-msgid "Log in or sign up"
-msgstr "लॉग इन या साइन अप"
-
-#: src/screens/SignupQueued.tsx:93
-#: src/screens/SignupQueued.tsx:96
-#: src/screens/Takendown.tsx:85
-msgid "Log out"
-msgstr "लॉग आउट"
-
-#: src/screens/Takendown.tsx:88
-msgid "Log Out"
-msgstr ""
-
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:78
 msgid "Logged-out visibility"
 msgstr "लॉग आउट दृश्यता"
-
-#: src/components/AccountList.tsx:65
-msgid "Login to account that is not listed"
-msgstr "उस खाते में लॉग इन करें जो सूचीबद्ध नहीं है"
 
 #: src/view/shell/desktop/RightNav.tsx:121
 msgid "Logo by @sawaratsuki.bsky.social"
@@ -4300,7 +4281,7 @@ msgid "Navigate to {0}"
 msgstr "{0} पर जाएँ"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:166
-#: src/screens/Login/LoginForm.tsx:342
+#: src/screens/Login/LoginForm.tsx:344
 #: src/view/com/modals/ChangePassword.tsx:169
 msgid "Navigates to the next screen"
 msgstr "अगले स्क्रीन पर जाता है"
@@ -4405,8 +4386,8 @@ msgstr "समाचार"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:137
 #: src/screens/Login/ForgotPasswordForm.tsx:143
-#: src/screens/Login/LoginForm.tsx:341
-#: src/screens/Login/LoginForm.tsx:348
+#: src/screens/Login/LoginForm.tsx:343
+#: src/screens/Login/LoginForm.tsx:350
 #: src/screens/Login/SetNewPasswordForm.tsx:178
 #: src/screens/Login/SetNewPasswordForm.tsx:184
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
@@ -4815,8 +4796,8 @@ msgstr "नया Bluesky खाता बनाने का साधन ख�
 
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.web.tsx:125
-msgid "Opens flow to sign into your existing Bluesky account"
-msgstr "अपने मौजूदा Bluesky खाते में साइन इन करने का साधन खोलता है"
+msgid "Opens flow to sign in to your existing Bluesky account"
+msgstr ""
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Opens GIF select dialog"
@@ -4865,8 +4846,8 @@ msgid "Or, continue with another account."
 msgstr "या, अन्य खाते से जारी रखें।"
 
 #: src/screens/Deactivated.tsx:186
-msgid "Or, log into one of your other accounts."
-msgstr "या, आपके अन्य खातों में लॉग इन करें"
+msgid "Or, sign in to one of your other accounts."
+msgstr ""
 
 #: src/lib/moderation/useReportOptions.ts:27
 #: src/view/com/composer/labels/LabelsBtn.tsx:186
@@ -5785,8 +5766,8 @@ msgid "Require alt text before posting"
 msgstr "पोस्ट करने से पहले वैकल्पिक पाठ आवश्यक करें"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
-msgid "Require an email code to log in to your account."
-msgstr "खाते में लॉग इन करने के लिए ईमेल कोड आवश्यक करें"
+msgid "Require an email code to sign in to your account."
+msgstr ""
 
 #: src/screens/Signup/StepInfo/index.tsx:153
 msgid "Required for this provider"
@@ -5828,9 +5809,9 @@ msgstr "ज्ञानप्राप्ति स्थिति को री
 msgid "Reset password"
 msgstr "पासवर्ड रीसेट करें"
 
-#: src/screens/Login/LoginForm.tsx:322
-msgid "Retries login"
-msgstr "लॉग इन को फिर से प्रयास करता है"
+#: src/screens/Login/LoginForm.tsx:324
+msgid "Retries sign in"
+msgstr ""
 
 #: src/view/com/util/error/ErrorMessage.tsx:62
 #: src/view/com/util/error/ErrorScreen.tsx:99
@@ -5841,8 +5822,8 @@ msgstr "पिछली क्रिया का फिर से प्रय�
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:110
 #: src/components/StarterPack/ProfileStarterPacks.tsx:335
-#: src/screens/Login/LoginForm.tsx:321
-#: src/screens/Login/LoginForm.tsx:328
+#: src/screens/Login/LoginForm.tsx:323
+#: src/screens/Login/LoginForm.tsx:330
 #: src/screens/Messages/ChatList.tsx:177
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Onboarding/StepInterests/index.tsx:217
@@ -6506,18 +6487,34 @@ msgstr "... के रूप में साइन इन करें"
 msgid "Sign in or create your account to join the conversation!"
 msgstr "बातचीत में जुड़ने के लिए साइन इन करें या अपना खाता बनाएँ"
 
+#: src/screens/Deactivated.tsx:202
+#: src/screens/Deactivated.tsx:208
+msgid "Sign in or sign up"
+msgstr ""
+
+#: src/components/AccountList.tsx:65
+msgid "Sign in to account that is not listed"
+msgstr ""
+
 #: src/components/dialogs/Signin.tsx:46
-msgid "Sign into Bluesky or create a new account"
-msgstr "Bluesky में साइन इन करें या नया खाता बनाएँ"
+msgid "Sign in to Bluesky or create a new account"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:225
 #: src/screens/Settings/Settings.tsx:227
 #: src/screens/Settings/Settings.tsx:259
+#: src/screens/SignupQueued.tsx:93
+#: src/screens/SignupQueued.tsx:96
+#: src/screens/Takendown.tsx:85
 #: src/view/shell/desktop/LeftNav.tsx:208
 #: src/view/shell/desktop/LeftNav.tsx:291
 #: src/view/shell/desktop/LeftNav.tsx:294
 msgid "Sign out"
 msgstr "साइन आउट करें"
+
+#: src/screens/Takendown.tsx:88
+msgid "Sign Out"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:256
 #: src/view/shell/desktop/LeftNav.tsx:205
@@ -6595,8 +6592,8 @@ msgstr "कुछ गड़बड़ है? हमें बताएँ।"
 
 #: src/App.native.tsx:121
 #: src/App.web.tsx:97
-msgid "Sorry! Your session expired. Please log in again."
-msgstr "क्षमा करें! आपका सत्र समाप्त हो गया। फिर से लॉग इन करें।"
+msgid "Sorry! Your session expired. Please sign in again."
+msgstr ""
 
 #: src/screens/Settings/ThreadPreferences.tsx:55
 msgid "Sort replies"
@@ -7221,8 +7218,8 @@ msgstr "इस पोस्ट को मिटा दिया गया है
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:720
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:369
-msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
-msgstr "यह पोस्ट केवल लॉग-इन उपयोगकर्ताओं को दृश्यमान है। जो लोग लॉग-इन नहीं है उन्हें यह नहीं दिखाई देगा।"
+msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
+msgstr ""
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:701
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
@@ -7233,8 +7230,8 @@ msgid "This post's author has disabled quote posts."
 msgstr "इस पोस्ट के लेखक ने क्वोट पोस्ट अक्षम किए हैं।"
 
 #: src/view/com/profile/ProfileMenu.tsx:402
-msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
-msgstr "यह प्रोफ़ाइल केवल लॉग-इन उपयोगकर्ताओं को दृश्यमान है। जो लोग लॉग-इन नहीं है उन्हें यह नहीं दिखाई देगा।"
+msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
+msgstr ""
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:763
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
@@ -7684,8 +7681,8 @@ msgid "Use recommended"
 msgstr "अनुशंसित का उपयोग करें"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:190
-msgid "Use this to sign into the other app along with your handle."
-msgstr "अपने हैंडल के साथ दूसरे ऐप में साइन इन करने के लिए इसका उपयोग करें।"
+msgid "Use this to sign in to the other app along with your handle."
+msgstr ""
 
 #: src/view/com/modals/InviteCodes.tsx:201
 msgid "Used by:"
@@ -8470,14 +8467,14 @@ msgstr "इन फ़ीड से साथ आप ताज़ा रहेंगे
 msgid "You're in line"
 msgstr "आप पंक्ति में हैं"
 
-#: src/screens/Deactivated.tsx:89
-#: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
-msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
-msgstr "आप ऐप पासवर्ड से लॉग इन हैं। खाता निष्क्रियण जारी रखने के लिए अपने मुख्य पासवर्ड से लॉग इन करें।"
-
 #: src/screens/Onboarding/StepFinished.tsx:242
 msgid "You're ready to go!"
 msgstr "आप बढ़ने के लिए तैयार हैं!"
+
+#: src/screens/Deactivated.tsx:89
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
+msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:106
 #: src/lib/moderation/useModerationCauseDescription.ts:106
