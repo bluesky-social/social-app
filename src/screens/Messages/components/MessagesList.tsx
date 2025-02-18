@@ -4,15 +4,14 @@ import {useKeyboardHandler} from 'react-native-keyboard-controller'
 import Animated, {
   runOnJS,
   scrollTo,
+  useAnimatedProps,
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyEmbedRecord, AppBskyRichtextFacet, RichText} from '@atproto/api'
 
-import {clamp} from '#/lib/numbers'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {
@@ -20,20 +19,22 @@ import {
   isBskyPostUrl,
 } from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
+import {isIOS, isNative} from '#/platform/detection'
 import {isWeb} from '#/platform/detection'
 import {isConvoActive, useConvoActive} from '#/state/messages/convo'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
 import {useGetPost} from '#/state/queries/post'
 import {useAgent} from '#/state/session'
+import {useShellLayout} from '#/state/shell/shell-layout'
 import {
   EmojiPicker,
   EmojiPickerState,
 } from '#/view/com/composer/text-input/web/EmojiPicker.web'
-import {List, ListMethods} from '#/view/com/util/List'
+import {List, ListMethods, ListProps} from '#/view/com/util/List'
 import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
+import {atoms as a} from '#/alf'
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
@@ -90,6 +91,8 @@ export function MessagesList({
   const agent = useAgent()
   const getPost = useGetPost()
   const {embedUri, setEmbed} = useMessageEmbed()
+  const {footerHeight} = useShellLayout()
+  const messageInputHeight = useSharedValue(52)
 
   const flatListRef = useAnimatedRef<ListMethods>()
 
@@ -237,9 +240,6 @@ export function MessagesList({
   )
 
   // -- Keyboard animation handling
-  const {bottom: bottomInset} = useSafeAreaInsets()
-  const bottomOffset = isWeb ? 0 : clamp(60 + bottomInset, 60, 75)
-
   const keyboardHeight = useSharedValue(0)
   const keyboardIsOpening = useSharedValue(false)
 
@@ -263,28 +263,76 @@ export function MessagesList({
       onMove: e => {
         'worklet'
         keyboardHeight.set(e.height)
-        if (e.height > bottomOffset) {
+        if (
+          isIOS
+            ? isAtBottom.get()
+            : e.height > footerHeight.get() + messageInputHeight.get()
+        ) {
           scrollTo(flatListRef, 0, 1e7, false)
         }
+      },
+      onInteractive: e => {
+        'worklet'
+        keyboardHeight.set(e.height)
       },
       onEnd: e => {
         'worklet'
         keyboardHeight.set(e.height)
-        if (e.height > bottomOffset) {
+        if (
+          isIOS
+            ? isAtBottom.get()
+            : e.height > footerHeight.get() + messageInputHeight.get()
+        ) {
           scrollTo(flatListRef, 0, 1e7, false)
         }
         keyboardIsOpening.set(false)
       },
     },
-    [bottomOffset],
+    [],
   )
 
-  const animatedListStyle = useAnimatedStyle(() => ({
-    marginBottom: Math.max(keyboardHeight.get(), bottomOffset),
-  }))
+  const animatedListStyle = useAnimatedStyle(() => {
+    if (!isIOS) {
+      return {
+        marginBottom: Math.max(
+          keyboardHeight.get(),
+          footerHeight.get() + messageInputHeight.get(),
+        ),
+      }
+    }
+    return {}
+  })
+
+  const animatedProps = useAnimatedProps(() => {
+    if (isIOS) {
+      return {
+        scrollIndicatorInsets: {
+          top: 0,
+          left: 0,
+          right: 1,
+          bottom:
+            Math.max(keyboardHeight.get(), footerHeight.get()) +
+            messageInputHeight.get(),
+        },
+        contentInset: {
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom:
+            Math.max(keyboardHeight.get(), footerHeight.get()) +
+            messageInputHeight.get(),
+        },
+      } satisfies Partial<ListProps>
+    }
+    return {}
+  })
 
   const animatedStickyViewStyle = useAnimatedStyle(() => ({
-    transform: [{translateY: -Math.max(keyboardHeight.get(), bottomOffset)}],
+    transform: [
+      {
+        translateY: -Math.max(keyboardHeight.get(), footerHeight.get()),
+      },
+    ],
   }))
 
   // -- Message sending
@@ -406,11 +454,12 @@ export function MessagesList({
           disableFullWindowScroll={true}
           disableVirtualization={true}
           style={animatedListStyle}
+          animatedProps={animatedProps}
           // The extra two items account for the header and the footer components
           initialNumToRender={isNative ? 32 : 62}
           maxToRenderPerBatch={isWeb ? 32 : 62}
-          keyboardDismissMode="on-drag"
-          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode={isIOS ? 'interactive' : 'on-drag'}
+          keyboardShouldPersistTaps={isIOS ? 'always' : 'handled'}
           maintainVisibleContentPosition={{
             minIndexForVisible: 0,
           }}
@@ -424,9 +473,15 @@ export function MessagesList({
           ListHeaderComponent={
             <MaybeLoader isLoading={convoState.isFetchingHistory} />
           }
+          automaticallyAdjustContentInsets={false}
         />
       </ScrollProvider>
-      <Animated.View style={animatedStickyViewStyle}>
+      <Animated.View
+        style={[
+          a.absolute,
+          {bottom: 0, left: 0, right: 0},
+          animatedStickyViewStyle,
+        ]}>
         {convoState.status === ConvoStatus.Disabled ? (
           <ChatDisabled />
         ) : blocked ? (
@@ -436,13 +491,20 @@ export function MessagesList({
             {isConvoActive(convoState) &&
               !convoState.isFetchingHistory &&
               convoState.items.length === 0 && <ChatEmptyPill />}
-            <MessageInput
-              onSendMessage={onSendMessage}
-              hasEmbed={!!embedUri}
-              setEmbed={setEmbed}
-              openEmojiPicker={pos => setEmojiPickerState({isOpen: true, pos})}>
-              <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
-            </MessageInput>
+            <View
+              onLayout={evt =>
+                messageInputHeight.set(evt.nativeEvent.layout.height)
+              }>
+              <MessageInput
+                onSendMessage={onSendMessage}
+                hasEmbed={!!embedUri}
+                setEmbed={setEmbed}
+                openEmojiPicker={pos =>
+                  setEmojiPickerState({isOpen: true, pos})
+                }>
+                <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
+              </MessageInput>
+            </View>
           </>
         )}
       </Animated.View>
