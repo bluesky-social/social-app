@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 03:17\n"
+"PO-Revision-Date: 2025-02-18 08:15\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -33,19 +33,19 @@ msgstr ""
 
 #: src/lib/hooks/useTimeAgo.ts:156
 msgid "{0, plural, one {# day} other {# days}}"
-msgstr ""
+msgstr "{0, plural, one {# tago} other {# tagoj}}"
 
 #: src/screens/Profile/ProfileFollowers.tsx:40
 msgid "{0, plural, one {# follower} other {# followers}}"
-msgstr ""
+msgstr "{0, plural, one {# sekvanto} other {# sekvantoj}}"
 
 #: src/screens/Profile/ProfileFollows.tsx:40
 msgid "{0, plural, one {# following} other {# following}}"
-msgstr ""
+msgstr "{0, plural, one {# sekvata} other {# sekvataj}}"
 
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
-msgstr ""
+msgstr "{0, plural, one {# horo} other {# horoj}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this account"
@@ -57,15 +57,15 @@ msgstr ""
 
 #: src/screens/Post/PostLikedBy.tsx:41
 msgid "{0, plural, one {# like} other {# likes}}"
-msgstr ""
+msgstr "{0, plural, one {# ŝato} other {# ŝatoj}}"
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr ""
+msgstr "{0, plural, one {# minuto} other {# minutoj}}"
 
 #: src/lib/hooks/useTimeAgo.ts:167
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr ""
+msgstr "{0, plural, one {# monato} other {# monatoj}}"
 
 #: src/screens/Post/PostQuotes.tsx:41
 msgid "{0, plural, one {# quote} other {# quotes}}"
@@ -77,25 +77,25 @@ msgstr ""
 
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
-msgstr ""
+msgstr "{0, plural, one {# sekundo} other {# sekundoj}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr ""
+msgstr "{0, plural, one {sekvanto} other {sekvantoj}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
-msgstr ""
+msgstr "{0, plural, one {sekvata} other {sekvataj}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:452
 msgid "{0, plural, one {like} other {likes}}"
-msgstr ""
+msgstr "{0, plural, one {ŝato} other {ŝatoj}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
-msgstr ""
+msgstr "{0, plural, one {afiŝo} other {afiŝoj}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:436
 msgid "{0, plural, one {quote} other {quotes}}"
@@ -117,7 +117,7 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:219
 msgid "{0} joined this week"
-msgstr ""
+msgstr "{0} aliĝis ĉi-semajne"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:201
 msgid "{0} of {1}"
@@ -146,27 +146,27 @@ msgstr ""
 #. How many days have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:158
 msgid "{0}d"
-msgstr ""
+msgstr "{0}t"
 
 #. How many hours have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:148
 msgid "{0}h"
-msgstr ""
+msgstr "{0}h"
 
 #. How many minutes have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:138
 msgid "{0}m"
-msgstr ""
+msgstr "{0}m"
 
 #. How many months have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:169
 msgid "{0}mo"
-msgstr ""
+msgstr "{0}mo"
 
 #. How many seconds have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:128
 msgid "{0}s"
-msgstr ""
+msgstr "{0}s"
 
 #: src/view/shell/desktop/LeftNav.tsx:387
 msgid "{count} unread items"
@@ -179,11 +179,11 @@ msgstr ""
 
 #: src/screens/SignupQueued.tsx:216
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
-msgstr ""
+msgstr "{estimatedTimeHrs, plural, one {horo} other {horoj}}"
 
 #: src/screens/SignupQueued.tsx:222
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
-msgstr ""
+msgstr "{estimatedTimeMins, plural, one {minuto} other {minutoj}}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:301
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
@@ -288,7 +288,7 @@ msgstr ""
 
 #: src/view/shell/Drawer.tsx:453
 msgid "{numUnreadNotifications} unread"
-msgstr ""
+msgstr "{numUnreadNotifications} nelegitaj"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:234
 msgid "{numUnreadNotifications} unread items"
@@ -296,7 +296,7 @@ msgstr ""
 
 #: src/components/NewskieDialog.tsx:116
 msgid "{profileName} joined Bluesky {0} ago"
-msgstr ""
+msgstr "{profileName} aliĝis al Bluesky antaŭ {0}"
 
 #: src/components/NewskieDialog.tsx:111
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
@@ -314,11 +314,11 @@ msgstr ""
 
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
-msgstr ""
+msgstr "<0>{0}</0> {1, plural, one {sekvanto} other {sekvantoj}}"
 
 #: src/view/shell/Drawer.tsx:108
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
-msgstr ""
+msgstr "<0>{0}</0> {1, plural, one {sekvata} other {sekvataj}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:490
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
@@ -330,11 +330,11 @@ msgstr ""
 
 #: src/components/WhoCanReply.tsx:292
 msgid "<0>{0}</0> members"
-msgstr ""
+msgstr "<0>{0}</0> anoj"
 
 #: src/components/dms/DateDivider.tsx:69
 msgid "<0>{date}</0> at {time}"
-msgstr ""
+msgstr "<0>{date}</0> je {time}"
 
 #: src/screens/Settings/NotificationSettings.tsx:85
 msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
@@ -350,7 +350,7 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:193
 msgid "24 hours"
-msgstr ""
+msgstr "24 horoj"
 
 #: src/screens/Login/LoginForm.tsx:268
 msgid "2FA Confirmation"
@@ -358,24 +358,24 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:232
 msgid "30 days"
-msgstr ""
+msgstr "30 tagoj"
 
 #: src/components/dialogs/MutedWords.tsx:217
 msgid "7 days"
-msgstr ""
+msgstr "7 tagoj"
 
 #: src/Navigation.tsx:381
 #: src/screens/Settings/AboutSettings.tsx:33
 #: src/screens/Settings/Settings.tsx:215
 #: src/screens/Settings/Settings.tsx:218
 msgid "About"
-msgstr ""
+msgstr "Pri"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:46
 #: src/screens/Settings/Settings.tsx:191
 #: src/screens/Settings/Settings.tsx:194
 msgid "Accessibility"
-msgstr ""
+msgstr "Alirebleco"
 
 #: src/Navigation.tsx:341
 msgid "Accessibility Settings"
@@ -387,7 +387,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:153
 #: src/screens/Settings/Settings.tsx:156
 msgid "Account"
-msgstr ""
+msgstr "Konto"
 
 #: src/view/com/profile/ProfileMenu.tsx:138
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:362
@@ -436,7 +436,7 @@ msgstr ""
 #: src/view/com/modals/ListAddRemoveUsers.tsx:269
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 msgid "Add"
-msgstr ""
+msgstr "Aldoni"
 
 #: src/screens/StarterPack/Wizard/index.tsx:551
 msgid "Add {0} more to continue"
@@ -459,7 +459,7 @@ msgstr ""
 #: src/components/dialogs/SwitchAccount.tsx:55
 #: src/screens/Deactivated.tsx:191
 msgid "Add account"
-msgstr ""
+msgstr "Aldoni konton"
 
 #: src/view/com/composer/GifAltText.tsx:76
 #: src/view/com/composer/GifAltText.tsx:144
@@ -506,7 +506,7 @@ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1257
 msgid "Add new post"
-msgstr ""
+msgstr "Aldoni novan afiŝon"
 
 #: src/view/screens/ProfileList.tsx:903
 #: src/view/screens/ProfileList.tsx:921
@@ -536,7 +536,7 @@ msgstr ""
 #: src/view/com/profile/ProfileMenu.tsx:270
 #: src/view/com/profile/ProfileMenu.tsx:273
 msgid "Add to Lists"
-msgstr ""
+msgstr "Aldoni al listoj"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
 msgid "Add to my feeds"
@@ -591,7 +591,7 @@ msgstr ""
 #: src/view/screens/Search/Search.tsx:399
 #: src/view/screens/Search/Search.tsx:401
 msgid "All languages"
-msgstr ""
+msgstr "Ĉiuj lingvoj"
 
 #: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
@@ -671,11 +671,11 @@ msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:265
 msgid "An error has occurred"
-msgstr ""
+msgstr "Eraro okazis"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:420
 msgid "An error occurred"
-msgstr ""
+msgstr "Eraro okazis"
 
 #: src/view/com/composer/state/video.ts:398
 msgid "An error occurred while compressing the video."
@@ -734,7 +734,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:185
 msgid "an unknown error occurred"
-msgstr ""
+msgstr "nekonata eraro okazis"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:157
 #: src/components/moderation/ModerationDetailsDialog.tsx:153
@@ -743,16 +743,16 @@ msgstr ""
 
 #: src/components/WhoCanReply.tsx:313
 msgid "and"
-msgstr ""
+msgstr "kaj"
 
 #: src/screens/Onboarding/index.tsx:29
 #: src/screens/Onboarding/state.ts:94
 msgid "Animals"
-msgstr ""
+msgstr "Bestoj"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:149
 msgid "Animated GIF"
-msgstr ""
+msgstr "GIF-movbildo"
 
 #: src/lib/moderation/useReportOptions.ts:33
 msgid "Anti-Social Behavior"
@@ -771,11 +771,11 @@ msgstr ""
 
 #: src/screens/Settings/LanguageSettings.tsx:80
 msgid "App Language"
-msgstr ""
+msgstr "Apa lingvo"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:122
 msgid "App Password"
-msgstr ""
+msgstr "Apa pasvorto"
 
 #: src/screens/Settings/AppPasswords.tsx:147
 msgid "App password deleted"
@@ -838,7 +838,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:183
 #: src/screens/Settings/Settings.tsx:186
 msgid "Appearance"
-msgstr ""
+msgstr "Aspekto"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 #: src/screens/Home/NoFeedsPinned.tsx:93
@@ -892,7 +892,7 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:433
 msgid "Are you sure?"
-msgstr ""
+msgstr "Ĉu vi certas?"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:69
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
@@ -901,7 +901,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:23
 #: src/screens/Onboarding/state.ts:95
 msgid "Art"
-msgstr ""
+msgstr "Arto"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:172
 msgid "Artistic or non-erotic nudity."
@@ -966,7 +966,7 @@ msgstr ""
 #: src/components/dialogs/BirthDateSettings.tsx:102
 #: src/screens/Settings/AccountSettings.tsx:109
 msgid "Birthday"
-msgstr ""
+msgstr "Naskiĝtago"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
 #: src/view/com/profile/ProfileMenu.tsx:393
@@ -1060,12 +1060,12 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.web.tsx:173
 msgid "Blog"
-msgstr ""
+msgstr "Blogo"
 
 #: src/view/com/auth/server-input/index.tsx:136
 #: src/view/com/auth/server-input/index.tsx:137
 msgid "Bluesky"
-msgstr ""
+msgstr "Bluesky"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:864
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
@@ -1115,7 +1115,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:30
 #: src/screens/Onboarding/state.ts:96
 msgid "Books"
-msgstr ""
+msgstr "Libroj"
 
 #: src/components/FeedInterstitials.tsx:370
 msgid "Browse more accounts on the Explore page"
@@ -1160,7 +1160,7 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.web.tsx:168
 msgid "Business"
-msgstr ""
+msgstr "Komerco"
 
 #: src/components/LabelingServiceCard/index.tsx:62
 msgid "By {0}"
@@ -1217,14 +1217,14 @@ msgstr ""
 #: src/view/screens/Search/Search.tsx:887
 #: src/view/shell/desktop/LeftNav.tsx:209
 msgid "Cancel"
-msgstr ""
+msgstr "Nuligi"
 
 #: src/view/com/modals/CreateOrEditList.tsx:340
 #: src/view/com/modals/DeleteAccount.tsx:170
 #: src/view/com/modals/DeleteAccount.tsx:278
 msgctxt "action"
 msgid "Cancel"
-msgstr ""
+msgstr "Nuligi"
 
 #: src/view/com/modals/DeleteAccount.tsx:166
 #: src/view/com/modals/DeleteAccount.tsx:274
@@ -1334,7 +1334,7 @@ msgstr ""
 #: src/view/shell/desktop/LeftNav.tsx:533
 #: src/view/shell/Drawer.tsx:422
 msgid "Chat"
-msgstr ""
+msgstr "Babilo"
 
 #: src/components/dms/ConvoMenu.tsx:179
 msgid "Chat muted"
@@ -1427,7 +1427,7 @@ msgstr ""
 
 #: src/view/screens/Support.tsx:41
 msgid "click here"
-msgstr ""
+msgstr "alklaku ĉi tie"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
 msgid "Click to disable quote posts of this post."
@@ -1447,7 +1447,7 @@ msgstr ""
 
 #: src/screens/Onboarding/index.tsx:32
 msgid "Climate"
-msgstr ""
+msgstr "Klimato"
 
 #: src/components/dms/ChatEmptyPill.tsx:39
 msgid "Clip 🐴 clop 🐴"
@@ -1467,7 +1467,7 @@ msgstr ""
 #: src/view/com/modals/ChangePassword.tsx:271
 #: src/view/com/util/post-embeds/GifEmbed.tsx:197
 msgid "Close"
-msgstr ""
+msgstr "Fermi"
 
 #: src/components/Dialog/index.web.tsx:111
 #: src/components/Dialog/index.web.tsx:253
@@ -1501,7 +1501,7 @@ msgstr ""
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:31
 msgid "Close image"
-msgstr ""
+msgstr "Fermi bildon"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:109
 msgid "Close image viewer"
@@ -1539,12 +1539,12 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:97
 msgid "Comedy"
-msgstr ""
+msgstr "Komedio"
 
 #: src/screens/Onboarding/index.tsx:24
 #: src/screens/Onboarding/state.ts:98
 msgid "Comics"
-msgstr ""
+msgstr "Komiksoj"
 
 #: src/Navigation.tsx:299
 #: src/view/screens/CommunityGuidelines.tsx:34
@@ -1716,11 +1716,11 @@ msgstr ""
 
 #: src/screens/Onboarding/index.tsx:41
 msgid "Cooking"
-msgstr ""
+msgstr "Kuirado"
 
 #: src/view/com/modals/InviteCodes.tsx:183
 msgid "Copied"
-msgstr ""
+msgstr "Kopiita"
 
 #: src/screens/Settings/AboutSettings.tsx:87
 msgid "Copied build version to clipboard"
@@ -1733,12 +1733,12 @@ msgstr ""
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:237
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:403
 msgid "Copied to clipboard"
-msgstr ""
+msgstr "Kopiita al tondujo"
 
 #: src/components/dialogs/Embed.tsx:136
 #: src/screens/Settings/components/CopyButton.tsx:66
 msgid "Copied!"
-msgstr ""
+msgstr "Kopiita!"
 
 #: src/screens/Settings/AboutSettings.tsx:73
 msgid "Copies build version to clipboard"
@@ -1746,7 +1746,7 @@ msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 msgid "Copy"
-msgstr ""
+msgstr "Kopii"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:196
 msgid "Copy App Password"
@@ -1765,7 +1765,7 @@ msgstr ""
 #: src/components/dialogs/Embed.tsx:122
 #: src/components/dialogs/Embed.tsx:141
 msgid "Copy code"
-msgstr ""
+msgstr "Kopii kodon"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:472
 #: src/view/com/profile/ProfileMenu.tsx:353
@@ -1779,11 +1779,11 @@ msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:123
 msgid "Copy link"
-msgstr ""
+msgstr "Kopii ligilon"
 
 #: src/components/StarterPack/ShareDialog.tsx:130
 msgid "Copy Link"
-msgstr ""
+msgstr "Kopii ligilon"
 
 #: src/view/screens/ProfileList.tsx:483
 msgid "Copy link to list"
@@ -1811,7 +1811,7 @@ msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:169
 msgid "Copy QR code"
-msgstr ""
+msgstr "Kopii QR-kodon"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:426
 msgid "Copy TXT record value"
@@ -1845,7 +1845,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:289
 msgid "Create"
-msgstr ""
+msgstr "Krei"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:153
 msgid "Create a QR code for a starter pack"
@@ -1870,16 +1870,16 @@ msgstr ""
 #: src/view/shell/NavSignupCard.tsx:47
 #: src/view/shell/NavSignupCard.tsx:52
 msgid "Create account"
-msgstr ""
+msgstr "Krei konton"
 
 #: src/screens/Signup/index.tsx:93
 msgid "Create Account"
-msgstr ""
+msgstr "Krei konton"
 
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
 msgid "Create an account"
-msgstr ""
+msgstr "Krei konton"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:292
 msgid "Create an avatar instead"
@@ -1892,7 +1892,7 @@ msgstr ""
 #: src/view/com/auth/SplashScreen.tsx:47
 #: src/view/com/auth/SplashScreen.web.tsx:109
 msgid "Create new account"
-msgstr ""
+msgstr "Krei novan konton"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:99
 msgid "Create report for {0}"
@@ -1909,7 +1909,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
 msgid "Culture"
-msgstr ""
+msgstr "Kulturo"
 
 #: src/view/com/auth/server-input/index.tsx:142
 #: src/view/com/auth/server-input/index.tsx:143
@@ -1927,19 +1927,19 @@ msgstr ""
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
 msgid "Dark"
-msgstr ""
+msgstr "Malhela"
 
 #: src/view/screens/Debug.tsx:69
 msgid "Dark mode"
-msgstr ""
+msgstr "Malhela reĝimo"
 
 #: src/screens/Settings/AppearanceSettings.tsx:118
 msgid "Dark theme"
-msgstr ""
+msgstr "Malhela etoso"
 
 #: src/screens/Signup/StepInfo/index.tsx:216
 msgid "Date of birth"
-msgstr ""
+msgstr "Naskiĝdato"
 
 #: src/screens/Settings/AccountSettings.tsx:146
 #: src/screens/Settings/AccountSettings.tsx:151
@@ -1971,16 +1971,16 @@ msgstr ""
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:693
 #: src/view/screens/ProfileList.tsx:739
 msgid "Delete"
-msgstr ""
+msgstr "Forigi"
 
 #: src/screens/Settings/AccountSettings.tsx:156
 #: src/screens/Settings/AccountSettings.tsx:161
 msgid "Delete account"
-msgstr ""
+msgstr "Forigi konton"
 
 #: src/view/com/modals/DeleteAccount.tsx:101
 msgid "Delete Account <0>\"</0><1>{0}</1><2>\"</2>"
-msgstr ""
+msgstr "Forigi konton <0>\"</0><1>{0}</1><2>\"</2>"
 
 #: src/screens/Settings/AppPasswords.tsx:187
 msgid "Delete app password"
@@ -2009,11 +2009,11 @@ msgstr ""
 
 #: src/view/screens/ProfileList.tsx:526
 msgid "Delete List"
-msgstr ""
+msgstr "Forigi liston"
 
 #: src/components/dms/MessageMenu.tsx:148
 msgid "Delete message"
-msgstr ""
+msgstr "Forigi mesaĝon"
 
 #: src/components/dms/MessageMenu.tsx:122
 msgid "Delete message for me"
@@ -2021,13 +2021,13 @@ msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:267
 msgid "Delete my account"
-msgstr ""
+msgstr "Forigi mian konton"
 
 #: src/view/com/composer/Composer.tsx:842
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:652
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:654
 msgid "Delete post"
-msgstr ""
+msgstr "Forigi afiŝon"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:580
 #: src/screens/StarterPack/StarterPackScreen.tsx:736
@@ -2095,7 +2095,7 @@ msgstr ""
 
 #: src/screens/Settings/AboutSettings.tsx:79
 msgid "Developer mode enabled"
-msgstr ""
+msgstr "Programista reĝimo ŝaltita"
 
 #: src/screens/Settings/Settings.tsx:242
 #: src/screens/Settings/Settings.tsx:245
@@ -2285,7 +2285,7 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:153
 msgid "Duration:"
-msgstr ""
+msgstr "Daŭro:"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:211
 msgid "e.g. alice"
@@ -2336,12 +2336,12 @@ msgstr ""
 #: src/screens/StarterPack/Wizard/index.tsx:534
 #: src/screens/StarterPack/Wizard/index.tsx:541
 msgid "Edit"
-msgstr ""
+msgstr "Redakti"
 
 #: src/view/com/lists/ListMembers.tsx:142
 msgctxt "action"
 msgid "Edit"
-msgstr ""
+msgstr "Redakti"
 
 #: src/view/com/util/UserAvatar.tsx:348
 #: src/view/com/util/UserBanner.tsx:95
@@ -2350,13 +2350,13 @@ msgstr ""
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:111
 msgid "Edit Feeds"
-msgstr ""
+msgstr "Redakti fluojn"
 
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:58
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:62
 #: src/view/com/composer/photos/Gallery.tsx:194
 msgid "Edit image"
-msgstr ""
+msgstr "Redakti bildon"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:633
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:646
@@ -2378,7 +2378,7 @@ msgstr ""
 
 #: src/view/com/modals/EditProfile.tsx:147
 msgid "Edit my profile"
-msgstr ""
+msgstr "Redakti mian profilon"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:109
 msgid "Edit People"
@@ -2394,12 +2394,12 @@ msgstr ""
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:186
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:179
 msgid "Edit profile"
-msgstr ""
+msgstr "Redakti profilon"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:189
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:182
 msgid "Edit Profile"
-msgstr ""
+msgstr "Redakti profilon"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:567
 msgid "Edit starter pack"
@@ -2428,7 +2428,7 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:31
 #: src/screens/Onboarding/state.ts:101
 msgid "Education"
-msgstr ""
+msgstr "Eduko"
 
 #: src/screens/List/ListHiddenScreen.tsx:141
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
@@ -2450,7 +2450,7 @@ msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:93
 msgid "Email address"
-msgstr ""
+msgstr "Retpoŝtadreso"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:104
 msgid "Email Resent"
@@ -2494,7 +2494,7 @@ msgstr ""
 #: src/screens/Settings/components/Email2FAToggle.tsx:56
 #: src/screens/Settings/components/Email2FAToggle.tsx:60
 msgid "Enable"
-msgstr ""
+msgstr "Ŝalti"
 
 #: src/components/dialogs/EmbedConsent.tsx:100
 msgid "Enable {0} only"
@@ -2547,7 +2547,7 @@ msgstr ""
 #: src/screens/Messages/Settings.tsx:133
 #: src/screens/Moderation/index.tsx:343
 msgid "Enabled"
-msgstr ""
+msgstr "Ŝaltita"
 
 #: src/screens/Profile/Sections/Feed.tsx:116
 msgid "End of feed"
@@ -2609,11 +2609,11 @@ msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:243
 msgid "Enter your password"
-msgstr ""
+msgstr "Entajpu vian pasvorton"
 
 #: src/screens/Login/index.tsx:123
 msgid "Enter your username and password"
-msgstr ""
+msgstr "Entajpu vian uzantnomon kaj pasvorton"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
 msgid "Enters full screen"
@@ -2622,7 +2622,7 @@ msgstr ""
 #: src/view/com/composer/Composer.tsx:1660
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
-msgstr ""
+msgstr "Eraro"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:47
 msgid "Error occurred while saving file"
@@ -2635,11 +2635,11 @@ msgstr ""
 #: src/screens/Onboarding/StepInterests/index.tsx:183
 #: src/view/screens/Search/Search.tsx:114
 msgid "Error:"
-msgstr ""
+msgstr "Eraro:"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:394
 msgid "Everybody"
-msgstr ""
+msgstr "Ĉiuj"
 
 #: src/components/WhoCanReply.tsx:67
 msgid "Everybody can reply"
@@ -2652,7 +2652,7 @@ msgstr ""
 #: src/screens/Messages/Settings.tsx:83
 #: src/screens/Messages/Settings.tsx:86
 msgid "Everyone"
-msgstr ""
+msgstr "Ĉiuj"
 
 #: src/lib/moderation/useReportOptions.ts:73
 msgid "Excessive mentions or replies"
@@ -2865,12 +2865,12 @@ msgstr ""
 
 #: src/Navigation.tsx:249
 msgid "Feed"
-msgstr ""
+msgstr "Fluo"
 
 #: src/components/FeedCard.tsx:134
 #: src/view/com/feeds/FeedSourceCard.tsx:253
 msgid "Feed by {0}"
-msgstr ""
+msgstr "Fluo de"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:353
 msgid "Feed menu"
@@ -2900,7 +2900,7 @@ msgstr ""
 #: src/view/shell/desktop/LeftNav.tsx:643
 #: src/view/shell/Drawer.tsx:481
 msgid "Feeds"
-msgstr ""
+msgstr "Fluoj"
 
 #: src/view/screens/SavedFeeds.tsx:198
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
@@ -3094,11 +3094,11 @@ msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:140
 msgid "Font"
-msgstr ""
+msgstr "Tiparo"
 
 #: src/screens/Settings/AppearanceSettings.tsx:160
 msgid "Font size"
-msgstr ""
+msgstr "Tipara grando"
 
 #: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:102
@@ -3170,7 +3170,7 @@ msgstr ""
 
 #: src/components/MediaPreview.tsx:122
 msgid "GIF"
-msgstr ""
+msgstr "GIF"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:234
 msgid "Give your profile a face"
