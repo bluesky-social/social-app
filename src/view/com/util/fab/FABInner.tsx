@@ -21,7 +21,7 @@ export interface FABProps
 
 export function FABInner({testID, icon, onPress, ...props}: FABProps) {
   const insets = useSafeAreaInsets()
-  const {isMobile, isTablet} = useWebMediaQueries()
+  const {isTablet} = useWebMediaQueries()
   const playHaptic = useHaptics()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
 
@@ -33,12 +33,7 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
 
   return (
     <Animated.View
-      style={[
-        styles.outer,
-        size,
-        tabletSpacing,
-        isMobile && fabMinimalShellTransform,
-      ]}>
+      style={[styles.outer, size, tabletSpacing, fabMinimalShellTransform]}>
       <PressableScale
         testID={testID}
         onPressIn={ios(() => playHaptic('Light'))}

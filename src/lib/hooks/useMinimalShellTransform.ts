@@ -2,6 +2,7 @@ import {interpolate, useAnimatedStyle} from 'react-native-reanimated'
 
 import {useMinimalShellMode} from '#/state/shell/minimal-mode'
 import {useShellLayout} from '#/state/shell/shell-layout'
+import {useWebMediaQueries} from './useWebMediaQueries'
 
 // Keep these separated so that we only pay for useAnimatedStyle that gets used.
 
@@ -54,16 +55,16 @@ export function useMinimalShellFooterTransform() {
 }
 
 export function useMinimalShellFabTransform() {
-  const {footerMode} = useMinimalShellMode()
+  const {isMobile} = useWebMediaQueries()
 
   const fabTransform = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          translateY: interpolate(footerMode.get(), [0, 1], [-44, 0]),
+          translateY: interpolate(isMobile ? 0 : 1, [0, 1], [-44, 0]),
         },
       ],
     }
-  })
+  }, [isMobile])
   return fabTransform
 }
