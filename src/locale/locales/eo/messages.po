@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 19:37\n"
+"PO-Revision-Date: 2025-02-18 20:37\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -4873,11 +4873,11 @@ msgstr ""
 #: src/components/Lists.tsx:190
 #: src/view/screens/NotFound.tsx:47
 msgid "Page not found"
-msgstr ""
+msgstr "Paĝo netrovita"
 
 #: src/view/screens/NotFound.tsx:44
 msgid "Page Not Found"
-msgstr ""
+msgstr "Paĝo netrovita"
 
 #: src/screens/Login/LoginForm.tsx:228
 #: src/screens/Settings/AccountSettings.tsx:117
@@ -4886,7 +4886,7 @@ msgstr ""
 #: src/view/com/modals/DeleteAccount.tsx:239
 #: src/view/com/modals/DeleteAccount.tsx:246
 msgid "Password"
-msgstr ""
+msgstr "Pasvorto"
 
 #: src/view/com/modals/ChangePassword.tsx:143
 msgid "Password Changed"
@@ -5179,7 +5179,7 @@ msgstr ""
 #: src/view/com/post-thread/PostThread.tsx:261
 #: src/view/com/post-thread/PostThread.tsx:273
 msgid "Post not found"
-msgstr ""
+msgstr "Afiŝo netrovita"
 
 #: src/state/queries/pinned-post.ts:59
 msgid "Post pinned"
@@ -5192,7 +5192,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
 #: src/view/screens/Profile.tsx:233
 msgid "Posts"
-msgstr ""
+msgstr "Afiŝoj"
 
 #: src/components/dialogs/MutedWords.tsx:115
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
@@ -5411,7 +5411,7 @@ msgstr ""
 
 #: src/screens/Messages/components/MessageListError.tsx:20
 msgid "Reconnect"
-msgstr ""
+msgstr "Rekonekti"
 
 #: src/screens/Messages/ChatList.tsx:171
 msgid "Reload conversations"
@@ -5496,16 +5496,16 @@ msgstr ""
 
 #: src/view/screens/Search/Search.tsx:1081
 msgid "Remove profile"
-msgstr ""
+msgstr "Forigi profilon"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
 msgid "Remove quote"
-msgstr ""
+msgstr "Forigi citaĵon"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:155
 #: src/view/com/util/post-ctrls/RepostButton.tsx:165
 msgid "Remove repost"
-msgstr ""
+msgstr "Forigi reafiŝon"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:260
 msgid "Remove subtitle file"
@@ -5517,11 +5517,11 @@ msgstr ""
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:109
 msgid "Removed by author"
-msgstr ""
+msgstr "Forigita de aŭtoro"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:107
 msgid "Removed by you"
-msgstr ""
+msgstr "Forigita de vi"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:200
 #: src/view/com/modals/UserAddRemoveLists.tsx:170
@@ -5571,7 +5571,7 @@ msgstr ""
 #: src/view/com/composer/Composer.tsx:955
 msgctxt "action"
 msgid "Reply"
-msgstr ""
+msgstr "Respondi"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:273
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
@@ -5875,13 +5875,13 @@ msgstr ""
 #: src/view/com/modals/EditProfile.tsx:219
 #: src/view/screens/SavedFeeds.tsx:109
 msgid "Save"
-msgstr ""
+msgstr "Konservi"
 
 #: src/view/com/lightbox/ImageViewing/index.tsx:622
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
-msgstr ""
+msgstr "Konservi"
 
 #: src/components/dialogs/BirthDateSettings.tsx:114
 msgid "Save birthday"
