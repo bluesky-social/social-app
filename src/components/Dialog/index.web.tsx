@@ -125,9 +125,7 @@ export function Outer({
                   style={[
                     a.w_full,
                     a.z_20,
-                    webOptions?.alignTop
-                      ? undefined
-                      : a.justify_center,
+                    webOptions?.alignTop ? undefined : a.justify_center,
                     a.align_center,
                     {
                       minHeight: web('calc(90vh - 36px)') || undefined,
