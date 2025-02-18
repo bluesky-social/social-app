@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 03:17\n"
+"PO-Revision-Date: 2025-02-18 04:23\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1245,7 +1245,7 @@ msgstr "게시물 인용 취소"
 
 #: src/screens/Deactivated.tsx:151
 msgid "Cancel reactivation and sign out"
-msgstr ""
+msgstr "재활성화 취소 및 로그아웃"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
 #: src/view/screens/Search/Search.tsx:879
@@ -1362,7 +1362,7 @@ msgstr "내 상태 확인"
 
 #: src/screens/Login/LoginForm.tsx:301
 msgid "Check your email for a sign in code and enter it here."
-msgstr ""
+msgstr "이메일에서 로그인 코드를 확인한 후 여기에 입력하세요."
 
 #: src/view/com/modals/DeleteAccount.tsx:213
 msgid "Check your inbox for an email with the confirmation code to enter below:"
@@ -4797,7 +4797,7 @@ msgstr "새 Bluesky 계정을 만드는 화면을 엽니다"
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.web.tsx:125
 msgid "Opens flow to sign in to your existing Bluesky account"
-msgstr ""
+msgstr "존재하는 Bluesky 계정에 로그인하는 화면을 엽니다"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Opens GIF select dialog"
@@ -4847,7 +4847,7 @@ msgstr "또는 다른 계정으로 계속 진행하세요."
 
 #: src/screens/Deactivated.tsx:186
 msgid "Or, sign in to one of your other accounts."
-msgstr ""
+msgstr "또는 다른 계정 중 하나로 로그인하세요."
 
 #: src/lib/moderation/useReportOptions.ts:27
 #: src/view/com/composer/labels/LabelsBtn.tsx:186
@@ -5767,7 +5767,7 @@ msgstr "게시하기 전 대체 텍스트 필수"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
 msgid "Require an email code to sign in to your account."
-msgstr ""
+msgstr "계정에 로그인할 때 이메일 코드를 요구합니다."
 
 #: src/screens/Signup/StepInfo/index.tsx:153
 msgid "Required for this provider"
@@ -5811,7 +5811,7 @@ msgstr "비밀번호 재설정"
 
 #: src/screens/Login/LoginForm.tsx:324
 msgid "Retries sign in"
-msgstr ""
+msgstr "로그인을 다시 시도합니다"
 
 #: src/view/com/util/error/ErrorMessage.tsx:62
 #: src/view/com/util/error/ErrorScreen.tsx:99
@@ -6490,15 +6490,15 @@ msgstr "대화에 참여하려면 로그인하거나 계정을 만드세요!"
 #: src/screens/Deactivated.tsx:202
 #: src/screens/Deactivated.tsx:208
 msgid "Sign in or sign up"
-msgstr ""
+msgstr "로그인 또는 가입"
 
 #: src/components/AccountList.tsx:65
 msgid "Sign in to account that is not listed"
-msgstr ""
+msgstr "목록에 없는 계정으로 로그인"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign in to Bluesky or create a new account"
-msgstr ""
+msgstr "Bluesky에 로그인하거나 새 계정 만들기"
 
 #: src/screens/Settings/Settings.tsx:225
 #: src/screens/Settings/Settings.tsx:227
@@ -6514,7 +6514,7 @@ msgstr "로그아웃"
 
 #: src/screens/Takendown.tsx:88
 msgid "Sign Out"
-msgstr ""
+msgstr "로그아웃"
 
 #: src/screens/Settings/Settings.tsx:256
 #: src/view/shell/desktop/LeftNav.tsx:205
@@ -6593,7 +6593,7 @@ msgstr "문제가 발생했나요? 저희에게 알려주세요."
 #: src/App.native.tsx:121
 #: src/App.web.tsx:97
 msgid "Sorry! Your session expired. Please sign in again."
-msgstr ""
+msgstr "죄송합니다. 세션이 만료되었습니다. 다시 로그인해 주세요."
 
 #: src/screens/Settings/ThreadPreferences.tsx:55
 msgid "Sort replies"
@@ -7219,7 +7219,7 @@ msgstr "이 게시물은 삭제되었습니다."
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:720
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:369
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
-msgstr ""
+msgstr "이 게시물은 로그인한 사용자에게만 표시됩니다. 로그인하지 않은 사용자에게는 표시되지 않습니다."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:701
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
@@ -7231,7 +7231,7 @@ msgstr "이 게시물의 작성자가 인용 게시물을 비활성화했습니�
 
 #: src/view/com/profile/ProfileMenu.tsx:402
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
-msgstr ""
+msgstr "이 프로필은 로그인한 사용자에게만 표시됩니다. 로그인하지 않은 사용자에게는 표시되지 않습니다."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:763
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
@@ -7682,7 +7682,7 @@ msgstr "추천 사용"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:190
 msgid "Use this to sign in to the other app along with your handle."
-msgstr ""
+msgstr "이 비밀번호와 핸들을 사용하여 다른 앱에 로그인하세요."
 
 #: src/view/com/modals/InviteCodes.tsx:201
 msgid "Used by:"
@@ -8474,7 +8474,7 @@ msgstr "준비가 끝났습니다!"
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
 msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
-msgstr ""
+msgstr "앱 비밀번호로 로그인한 상태입니다. 계정 비활성화를 계속하려면 원래 비밀번호로 로그인하세요."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:106
 #: src/lib/moderation/useModerationCauseDescription.ts:106
