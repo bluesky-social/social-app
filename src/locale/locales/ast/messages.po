@@ -8,7 +8,7 @@ msgstr ""
 "Language: ast\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 03:17\n"
+"PO-Revision-Date: 2025-02-18 12:33\n"
 "Last-Translator: \n"
 "Language-Team: Asturian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -3484,7 +3484,7 @@ msgstr "Si desanicies esta llista, nun vas ser a recuperala."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:248
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
-msgstr ""
+msgstr "Si tienes un dominiu pues usalu como identificador. Esto permítete verificar la to identidá. <0>Conoz más equí.</0>"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:690
 msgid "If you remove this post, you won't be able to recover it."
@@ -4847,7 +4847,7 @@ msgstr "O sigue con otra cuenta."
 
 #: src/screens/Deactivated.tsx:186
 msgid "Or, sign in to one of your other accounts."
-msgstr ""
+msgstr "O anicia la sesión n'otra de les tos cuentes."
 
 #: src/lib/moderation/useReportOptions.ts:27
 #: src/view/com/composer/labels/LabelsBtn.tsx:186
@@ -6593,7 +6593,7 @@ msgstr "¿Hai daqué mal? Coméntanoslo."
 #: src/App.native.tsx:121
 #: src/App.web.tsx:97
 msgid "Sorry! Your session expired. Please sign in again."
-msgstr ""
+msgstr "La sesión caducó. Volvi aniciala."
 
 #: src/screens/Settings/ThreadPreferences.tsx:55
 msgid "Sort replies"
@@ -7298,7 +7298,7 @@ msgstr ""
 #: src/screens/Settings/ContentAndMediaSettings.tsx:67
 #: src/screens/Settings/ContentAndMediaSettings.tsx:70
 msgid "Thread preferences"
-msgstr ""
+msgstr "Peferencies de los filos"
 
 #: src/screens/Settings/ThreadPreferences.tsx:45
 msgid "Thread Preferences"
@@ -7664,12 +7664,12 @@ msgstr ""
 #: src/view/com/modals/InAppBrowserConsent.tsx:53
 #: src/view/com/modals/InAppBrowserConsent.tsx:55
 msgid "Use in-app browser"
-msgstr "Usar el restolador na aplicación"
+msgstr "Usar el restolador web na aplicación"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:93
 #: src/screens/Settings/ContentAndMediaSettings.tsx:99
 msgid "Use in-app browser to open links"
-msgstr ""
+msgstr "Usar el restolador web dientro de l'aplicación p'abrir enllaces"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:63
 #: src/view/com/modals/InAppBrowserConsent.tsx:65
