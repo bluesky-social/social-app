@@ -8,7 +8,7 @@ msgstr ""
 "Language: ia\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 03:44\n"
+"PO-Revision-Date: 2025-02-18 05:23\n"
 "Last-Translator: \n"
 "Language-Team: Interlingua\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -3378,7 +3378,7 @@ msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:592
 msgid "Hide user list"
-msgstr "Occultar lista de usator"
+msgstr "Celar lista de usatores"
 
 #: src/components/moderation/ContentHider.tsx:151
 #: src/components/moderation/PostHider.tsx:79
