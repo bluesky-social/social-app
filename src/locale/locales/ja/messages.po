@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 05:23\n"
+"PO-Revision-Date: 2025-02-18 09:25\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1362,7 +1362,7 @@ msgstr "ステータスを確認"
 
 #: src/screens/Login/LoginForm.tsx:301
 msgid "Check your email for a sign in code and enter it here."
-msgstr ""
+msgstr "確認コードが記載されたメールを確認し、ここに入力してください。"
 
 #: src/view/com/modals/DeleteAccount.tsx:213
 msgid "Check your inbox for an email with the confirmation code to enter below:"
@@ -4847,7 +4847,7 @@ msgstr "または、他のアカウントで続行する。"
 
 #: src/screens/Deactivated.tsx:186
 msgid "Or, sign in to one of your other accounts."
-msgstr ""
+msgstr "または、他のアカウントにサインインします。"
 
 #: src/lib/moderation/useReportOptions.ts:27
 #: src/view/com/composer/labels/LabelsBtn.tsx:186
@@ -6490,7 +6490,7 @@ msgstr "会話に参加するにはサインインするか新しくアカウン
 #: src/screens/Deactivated.tsx:202
 #: src/screens/Deactivated.tsx:208
 msgid "Sign in or sign up"
-msgstr ""
+msgstr "サインインまたはサインアップ"
 
 #: src/components/AccountList.tsx:65
 msgid "Sign in to account that is not listed"
@@ -6498,7 +6498,7 @@ msgstr ""
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign in to Bluesky or create a new account"
-msgstr ""
+msgstr "Blueskyにサインイン または 新規アカウントの登録"
 
 #: src/screens/Settings/Settings.tsx:225
 #: src/screens/Settings/Settings.tsx:227
@@ -6514,7 +6514,7 @@ msgstr "サインアウト"
 
 #: src/screens/Takendown.tsx:88
 msgid "Sign Out"
-msgstr ""
+msgstr "サインアウト"
 
 #: src/screens/Settings/Settings.tsx:256
 #: src/view/shell/desktop/LeftNav.tsx:205
@@ -6593,7 +6593,7 @@ msgstr "何か問題がありますか？お知らせください。"
 #: src/App.native.tsx:121
 #: src/App.web.tsx:97
 msgid "Sorry! Your session expired. Please sign in again."
-msgstr ""
+msgstr "申し訳ありません！セッションの有効期限が切れました。もう一度サインインしてください。"
 
 #: src/screens/Settings/ThreadPreferences.tsx:55
 msgid "Sort replies"
@@ -7219,7 +7219,7 @@ msgstr "この投稿は削除されました。"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:720
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:369
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
-msgstr ""
+msgstr "この投稿はサインインしているユーザーにのみ表示されます。サインインしていないユーザーには表示されません。"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:701
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
@@ -7231,7 +7231,7 @@ msgstr "この投稿の投稿者は引用投稿を無効にしています。"
 
 #: src/view/com/profile/ProfileMenu.tsx:402
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
-msgstr ""
+msgstr "この投稿はサインインしているユーザーにのみ表示されます。サインインしていないユーザーには表示されません。"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:763
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
@@ -8474,7 +8474,7 @@ msgstr "準備ができました！"
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
 msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
-msgstr ""
+msgstr "アプリパスワードでサインインしています。アカウントを無効にするには、メインパスワードでサインインしてください。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:106
 #: src/lib/moderation/useModerationCauseDescription.ts:106
