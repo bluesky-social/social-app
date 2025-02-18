@@ -13,7 +13,7 @@ import {useAgent} from '#/state/session'
 import {
   ConvoListQueryData,
   getConvoFromQueryData,
-  RQKEY as LIST_CONVOS_KEY,
+  RQKEY_ROOT as LIST_CONVOS_KEY,
 } from './list-conversations'
 
 const RQKEY_ROOT = 'convo'
@@ -76,7 +76,7 @@ export function useMarkAsReadMutation() {
     onSuccess(_, {convoId}) {
       if (!convoId) return
 
-      queryClient.setQueryData(LIST_CONVOS_KEY, (old: ConvoListQueryData) => {
+      queryClient.setQueryData([LIST_CONVOS_KEY], (old: ConvoListQueryData) => {
         if (!old) return old
 
         const existingConvo = getConvoFromQueryData(convoId, old)
