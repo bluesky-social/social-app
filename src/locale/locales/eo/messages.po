@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 10:24\n"
+"PO-Revision-Date: 2025-02-18 12:33\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -354,7 +354,7 @@ msgstr "24 horoj"
 
 #: src/screens/Login/LoginForm.tsx:268
 msgid "2FA Confirmation"
-msgstr ""
+msgstr "2FA-konfirmo"
 
 #: src/components/dialogs/MutedWords.tsx:232
 msgid "30 days"
@@ -3528,7 +3528,7 @@ msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:164
 msgid "Incorrect username or password"
-msgstr ""
+msgstr "Malĝusta uzantnomo aŭ pasvorto"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:131
 msgid "Input code sent to your email for password reset"
@@ -3540,7 +3540,7 @@ msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:155
 msgid "Input new password"
-msgstr ""
+msgstr "Entajpu novan pasvorton"
 
 #: src/view/com/modals/DeleteAccount.tsx:247
 msgid "Input password for account deletion"
@@ -3581,11 +3581,11 @@ msgstr ""
 
 #: src/view/com/modals/InviteCodes.tsx:94
 msgid "Invite a Friend"
-msgstr ""
+msgstr "Inviti amikon"
 
 #: src/screens/Signup/StepInfo/index.tsx:145
 msgid "Invite code"
-msgstr ""
+msgstr "Invita kodo"
 
 #: src/screens/Signup/state.ts:258
 msgid "Invite code not accepted. Check that you input it correctly and try again."
@@ -3625,11 +3625,11 @@ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1594
 msgid "Job ID: {0}"
-msgstr ""
+msgstr "ID de laboro: {0}"
 
 #: src/view/com/auth/SplashScreen.web.tsx:178
 msgid "Jobs"
-msgstr ""
+msgstr "Laboroj"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:201
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:207
