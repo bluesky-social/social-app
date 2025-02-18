@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 05:23\n"
+"PO-Revision-Date: 2025-02-18 06:47\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1664,7 +1664,7 @@ msgstr "內容篩選"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:57
 msgid "Content from across the network we think you might like."
-msgstr ""
+msgstr "我們從網路的各個角落精選出了您可能會感興趣的內容。"
 
 #: src/screens/Settings/LanguageSettings.tsx:251
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
@@ -3625,7 +3625,7 @@ msgstr "現在新手包裡只有您一個人！使用上面的搜尋功能，將
 
 #: src/view/com/composer/Composer.tsx:1594
 msgid "Job ID: {0}"
-msgstr ""
+msgstr "作業 ID：{0}"
 
 #: src/view/com/auth/SplashScreen.web.tsx:178
 msgid "Jobs"
@@ -3719,7 +3719,7 @@ msgstr "深入瞭解如何自行架設 PDS。"
 
 #: src/components/moderation/ContentHider.tsx:149
 msgid "Learn more about the moderation applied to this content"
-msgstr ""
+msgstr "深入瞭解對這項內容套用的審核措施"
 
 #: src/components/moderation/ContentHider.tsx:215
 msgid "Learn more about the moderation applied to this content."
@@ -5355,7 +5355,7 @@ msgstr "引用這則貼文"
 #: src/view/com/post-thread/PostThread.tsx:692
 #: src/view/com/post-thread/PostThread.tsx:697
 msgid "Random (aka \"Poster's Roulette\")"
-msgstr ""
+msgstr "隨機顯示 (或稱發文者大風吹)"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:581
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
@@ -5971,7 +5971,7 @@ msgstr "搜尋"
 #: src/Navigation.tsx:215
 #: src/screens/Profile/ProfileSearch.tsx:34
 msgid "Search @{0}'s posts"
-msgstr ""
+msgstr "搜尋 @{0} 的貼文"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:745
 msgid "Search by name or interest"
@@ -6011,12 +6011,12 @@ msgstr "搜尋 GIF"
 
 #: src/screens/Profile/ProfileSearch.tsx:33
 msgid "Search my posts"
-msgstr ""
+msgstr "搜尋我的貼文"
 
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Search Posts"
-msgstr ""
+msgstr "搜尋貼文"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:507
 #: src/components/ProgressGuide/FollowDialog.tsx:764
@@ -6029,7 +6029,7 @@ msgstr "搜尋 Tenor"
 
 #: src/screens/Profile/ProfileSearch.tsx:35
 msgid "Search..."
-msgstr ""
+msgstr "搜尋..."
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
 #: src/components/ProgressGuide/FollowDialog.tsx:765
@@ -6257,7 +6257,7 @@ msgstr "設定"
 
 #: src/screens/ModerationInteractionSettings/index.tsx:102
 msgid "Settings saved"
-msgstr ""
+msgstr "設定已儲存"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Sexual activity or erotic nudity."
@@ -6446,11 +6446,11 @@ msgstr "顯示警告，並從動態中排除內容"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:810
 msgid "Shows information about when this post was created"
-msgstr ""
+msgstr "顯示有關此貼文建立時間的資訊"
 
 #: src/screens/Settings/Settings.tsx:104
 msgid "Shows other accounts you can switch to"
-msgstr ""
+msgstr "顯示其他您可以切換的帳號"
 
 #: src/components/moderation/ContentHider.tsx:152
 #: src/components/moderation/PostHider.tsx:79
@@ -6942,7 +6942,7 @@ msgstr "以下標記已套用到您的內容。"
 
 #: src/screens/ModerationInteractionSettings/index.tsx:42
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
-msgstr ""
+msgstr "以下設定將自動套用到新的貼文。您也可以在撰寫貼文時自行修改這些選項。"
 
 #: src/view/com/post-thread/PostThread.tsx:262
 #: src/view/com/post-thread/PostThread.tsx:274
@@ -7210,7 +7210,7 @@ msgstr "這則貼文宣告的發布時間為 <0>{0}</0>，但首次出現在 Blu
 
 #: src/components/WhoCanReply.tsx:213
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
-msgstr ""
+msgstr "這則貼文套用了不支援的內容限制。您的應用程式版本可能已經過舊。"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:152
 msgid "This post has been deleted."
@@ -7351,7 +7351,7 @@ msgstr "切換以啟用或停用成人內容"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:158
 msgid "Toggles the sound"
-msgstr ""
+msgstr "切換聲音"
 
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
