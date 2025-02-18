@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 12:33\n"
+"PO-Revision-Date: 2025-02-18 18:41\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -3458,7 +3458,7 @@ msgstr "Mi havas kodon"
 
 #: src/view/com/modals/VerifyEmail.tsx:224
 msgid "I have a confirmation code"
-msgstr ""
+msgstr "Mi havas konfirman kodon"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:261
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:267
@@ -3468,7 +3468,7 @@ msgstr ""
 #: src/components/dms/BlockedByListDialog.tsx:57
 #: src/components/dms/ReportConversationPrompt.tsx:21
 msgid "I understand"
-msgstr ""
+msgstr "Mi komprenas"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:186
 msgid "If alt text is long, toggles alt text expanded state"
