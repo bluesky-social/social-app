@@ -315,7 +315,6 @@ function ChatListItemReady({
                 a.py_md,
                 a.gap_md,
                 (hovered || pressed || focused) && t.atoms.bg_contrast_25,
-                t.atoms.border_contrast_low,
               ]}>
               {/* Avatar goes here */}
               <View style={{width: 52, height: 52}} />

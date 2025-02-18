@@ -3,11 +3,15 @@ import {View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
 import {useAppState} from '#/lib/hooks/useAppState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  CommonNavigatorParams,
+  NativeStackScreenProps,
+  NavigationProp,
+} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
@@ -19,6 +23,7 @@ import {List} from '#/view/com/util/List'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
+import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotateCounterClockwise'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {Message_Stroke2_Corner0_Rounded as MessageIcon} from '#/components/icons/Message'
@@ -49,6 +54,7 @@ export function MessagesInboxScreen({}: Props) {
 function RequestList() {
   const {_} = useLingui()
   const t = useTheme()
+  const navigation = useNavigation<NavigationProp>()
 
   // Request the poll interval to be 10s (or whatever the MESSAGE_SCREEN_POLL_INTERVAL is set to in the future)
   // but only when the screen is active
@@ -78,7 +84,7 @@ function RequestList() {
     isError,
     error,
     refetch,
-  } = useListConvosQuery()
+  } = useListConvosQuery({status: 'request'})
 
   useRefreshOnFocus(refetch)
 
@@ -174,8 +180,25 @@ function RequestList() {
                       a.leading_snug,
                       t.atoms.text_contrast_medium,
                     ]}>
-                    <Trans>You have no conversations yet. Start one!</Trans>
+                    <Trans>Inbox zero!</Trans>
                   </Text>
+                  <Button
+                    variant="solid"
+                    color="secondary"
+                    size="small"
+                    label={_(msg`Go back`)}
+                    onPress={() => {
+                      if (navigation.canGoBack()) {
+                        navigation.goBack()
+                      } else {
+                        navigation.navigate('Messages', {animation: 'pop'})
+                      }
+                    }}>
+                    <ButtonIcon icon={ArrowLeftIcon} />
+                    <ButtonText>
+                      <Trans>Back to Chats</Trans>
+                    </ButtonText>
+                  </Button>
                 </View>
               </>
             )}
@@ -200,8 +223,6 @@ function RequestList() {
           onRetry={fetchNextPage}
           style={{borderColor: 'transparent'}}
           hasNextPage={hasNextPage}
-          showEndMessage={true}
-          endMessageText={_(msg`No more conversations to show`)}
         />
       }
       onEndReachedThreshold={isNative ? 1.5 : 0}

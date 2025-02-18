@@ -1,22 +1,35 @@
+import {useCallback} from 'react'
 import {View} from 'react-native'
-import {ChatBskyConvoDefs} from '@atproto/api'
+import {ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
+import {NavigationProp} from '#/lib/routes/types'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useAcceptConversation} from '#/state/queries/messages/accept-conversation'
+import {precacheConvoQuery} from '#/state/queries/messages/conversation'
+import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
+import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {atoms as a} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon} from '#/components/icons/ArrowBoxLeft'
+import * as Toast from '#/view/com/util/Toast'
+import {atoms as a, tokens} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
+import {ReportDialog} from '#/components/dms/ReportDialog'
+import {CircleX_Stroke2_Corner0_Rounded} from '#/components/icons/CircleX'
 import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
 import {PersonX_Stroke2_Corner0_Rounded as PersonXIcon} from '#/components/icons/Person'
 import {KnownFollowers} from '#/components/KnownFollowers'
+import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
+import {Text} from '#/components/Typography'
 import {ChatListItem} from './ChatListItem'
 
 export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
   const {currentAccount} = useSession()
-  const {_} = useLingui()
   const moderationOpts = useModerationOpts()
 
   const otherUser = convo.members.find(
@@ -27,64 +40,200 @@ export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
     return null
   }
 
-  return (
-    <ChatListItem convo={convo} showMenu={false}>
-      <View style={[a.pt_sm]}>
-        <KnownFollowers
-          profile={otherUser}
-          moderationOpts={moderationOpts}
-          minimal
-          showIfEmpty
-        />
-      </View>
-      <View style={[a.pt_sm, a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-        <Button
-          label={_(msg`Accept chat request`)}
-          size="tiny"
-          variant="solid"
-          color="secondary_inverted"
-          style={a.flex_1}>
-          <ButtonText>Accept</ButtonText>
-        </Button>
-        <RejectMenu convo={convo} />
-      </View>
-    </ChatListItem>
-  )
-}
-function RejectMenu({}: {convo: ChatBskyConvoDefs.ConvoView}) {
-  const {_} = useLingui()
+  const isDeletedAccount = otherUser.handle === 'missing.invalid'
 
   return (
-    <Menu.Root>
-      <Menu.Trigger label={_(msg`Reject chat request`)}>
-        {({props}) => (
-          <Button
-            {...props}
-            label={props.accessibilityLabel}
-            style={[a.flex_1]}
-            color="secondary"
-            variant="outline"
-            size="tiny">
-            <ButtonText>Reject</ButtonText>
-          </Button>
+    <View style={[a.relative, a.flex_1]}>
+      <ChatListItem convo={convo} showMenu={false}>
+        <View style={[a.pt_sm]}>
+          <KnownFollowers
+            profile={otherUser}
+            moderationOpts={moderationOpts}
+            minimal
+            showIfEmpty
+          />
+        </View>
+        {/* spacer, since you can't nest pressables */}
+        <View style={[a.pt_md, a.pb_xs, a.w_full, {opacity: 0}]} aria-hidden>
+          {/* Placeholder text so that it responds to the font height */}
+          <Text style={[a.text_xs, a.leading_tight, a.font_bold]}>
+            Accept Request
+          </Text>
+        </View>
+      </ChatListItem>
+      <View
+        style={[
+          a.absolute,
+          a.pr_md,
+          a.w_full,
+          a.flex_row,
+          a.align_center,
+          a.gap_sm,
+          {
+            bottom: tokens.space.md,
+            paddingLeft: tokens.space.lg + 52 + tokens.space.md,
+          },
+        ]}>
+        {!isDeletedAccount ? (
+          <>
+            <AcceptChatButton convo={convo} />
+            <RejectMenu convo={convo} profile={otherUser} />
+          </>
+        ) : (
+          <>
+            <DeleteChatButton convo={convo} />
+            <View style={a.flex_1} />
+          </>
         )}
-      </Menu.Trigger>
-      <Menu.Outer>
-        <Menu.Group>
-          <Menu.Item label="Leave conversation" onPress={() => {}}>
-            <Menu.ItemText>Leave conversation</Menu.ItemText>
-            <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
-          </Menu.Item>
-          <Menu.Item label="Block account" onPress={() => {}}>
-            <Menu.ItemText>Block account</Menu.ItemText>
-            <Menu.ItemIcon icon={PersonXIcon} />
-          </Menu.Item>
-          <Menu.Item label="Report conversation" onPress={() => {}}>
-            <Menu.ItemText>Report conversation</Menu.ItemText>
-            <Menu.ItemIcon icon={FlagIcon} />
-          </Menu.Item>
-        </Menu.Group>
-      </Menu.Outer>
-    </Menu.Root>
+      </View>
+    </View>
+  )
+}
+function RejectMenu({
+  convo,
+  profile,
+}: {
+  convo: ChatBskyConvoDefs.ConvoView
+  profile: ChatBskyActorDefs.ProfileViewBasic
+}) {
+  const {_} = useLingui()
+  const shadowedProfile = useProfileShadow(profile)
+  const {mutate: leaveConvo} = useLeaveConvo(convo.id, {
+    onError: () => {
+      Toast.show(_('Failed to delete chat'), 'xmark')
+    },
+  })
+  const [queueBlock] = useProfileBlockMutationQueue(shadowedProfile)
+
+  const onPressDelete = useCallback(() => {
+    Toast.show(_('Chat deleted'), 'check')
+    leaveConvo()
+  }, [leaveConvo, _])
+
+  const onPressBlock = useCallback(() => {
+    Toast.show(_('Account blocked'), 'check')
+    // block and also delete convo
+    queueBlock()
+    leaveConvo()
+  }, [queueBlock, leaveConvo, _])
+
+  const reportControl = useDialogControl()
+
+  const lastMessage = ChatBskyConvoDefs.isMessageView(convo.lastMessage)
+    ? convo.lastMessage
+    : null
+
+  return (
+    <>
+      <Menu.Root>
+        <Menu.Trigger label={_(msg`Reject chat request`)}>
+          {({props}) => (
+            <Button
+              {...props}
+              label={props.accessibilityLabel}
+              style={[a.flex_1]}
+              color="secondary"
+              variant="outline"
+              size="tiny">
+              <ButtonText>Reject</ButtonText>
+            </Button>
+          )}
+        </Menu.Trigger>
+        <Menu.Outer>
+          <Menu.Group>
+            <Menu.Item label="Delete conversation" onPress={onPressDelete}>
+              <Menu.ItemText>Delete conversation</Menu.ItemText>
+              <Menu.ItemIcon icon={CircleX_Stroke2_Corner0_Rounded} />
+            </Menu.Item>
+            <Menu.Item label="Block account" onPress={onPressBlock}>
+              <Menu.ItemText>Block account</Menu.ItemText>
+              <Menu.ItemIcon icon={PersonXIcon} />
+            </Menu.Item>
+            {/* note: last message will almost certainly be defined, since you can't
+              delete messages for other people andit's impossible for a convo on this
+              screen to have a message sent by you */}
+            {lastMessage && (
+              <Menu.Item
+                label="Report conversation"
+                onPress={reportControl.open}>
+                <Menu.ItemText>Report conversation</Menu.ItemText>
+                <Menu.ItemIcon icon={FlagIcon} />
+              </Menu.Item>
+            )}
+          </Menu.Group>
+        </Menu.Outer>
+      </Menu.Root>
+      {lastMessage && (
+        <ReportDialog
+          currentScreen="list"
+          params={{
+            type: 'convoMessage',
+            convoId: convo.id,
+            message: lastMessage,
+          }}
+          control={reportControl}
+        />
+      )}
+    </>
+  )
+}
+
+function AcceptChatButton({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
+  const {_} = useLingui()
+  const queryClient = useQueryClient()
+  const navigation = useNavigation<NavigationProp>()
+
+  const {mutate: acceptConvo, isPending} = useAcceptConversation(convo.id, {
+    onError: () => {
+      Toast.show(_('Failed to accept chat'), 'xmark')
+    },
+  })
+
+  const onPressAccept = useCallback(() => {
+    acceptConvo()
+    precacheConvoQuery(queryClient, convo)
+    navigation.navigate('MessagesConversation', {conversation: convo.id})
+  }, [acceptConvo, navigation, convo, queryClient])
+
+  return (
+    <Button
+      label={_(msg`Accept chat request`)}
+      size="tiny"
+      variant="solid"
+      color="secondary_inverted"
+      style={a.flex_1}
+      onPress={onPressAccept}>
+      {isPending ? (
+        <ButtonIcon icon={Loader} />
+      ) : (
+        <ButtonText>Accept</ButtonText>
+      )}
+    </Button>
+  )
+}
+
+function DeleteChatButton({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
+  const {_} = useLingui()
+  const {mutate: leaveConvo} = useLeaveConvo(convo.id, {
+    onError: () => {
+      Toast.show(_('Failed to delete chat'), 'xmark')
+    },
+  })
+
+  const onPressDelete = useCallback(() => {
+    Toast.show(_('Chat deleted'), 'check')
+    leaveConvo()
+  }, [leaveConvo, _])
+
+  return (
+    <Button
+      label={_(msg`Delete chat`)}
+      size="tiny"
+      variant="outline"
+      color="secondary"
+      style={a.flex_1}
+      onPress={onPressDelete}>
+      <ButtonText>Delete chat</ButtonText>
+    </Button>
   )
 }

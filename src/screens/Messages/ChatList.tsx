@@ -112,9 +112,14 @@ export function MessagesScreen({navigation, route}: Props) {
     isError,
     error,
     refetch,
-  } = useListConvosQuery()
+  } = useListConvosQuery({status: 'accepted'})
+
+  const {data: inboxData, refetch: refetchInbox} = useListConvosQuery({
+    status: 'request',
+  })
 
   useRefreshOnFocus(refetch)
+  useRefreshOnFocus(refetchInbox)
 
   const leftConvos = useLeftConvos()
 
@@ -125,14 +130,19 @@ export function MessagesScreen({navigation, route}: Props) {
         // filter out convos that are actively being left
         .filter(convo => !leftConvos.includes(convo.id))
 
+      const inbox =
+        inboxData?.pages
+          .flatMap(page => page.convos)
+          .filter(convo => !leftConvos.includes(convo.id)) ?? []
+      const pending = inbox
+        .map(x => x.members.find(y => y.did !== currentAccount?.did))
+        .filter(x => !!x)
+
       return [
         {
           type: 'INBOX',
-          count: 3,
-          profiles: conversations
-            .map(x => x.members.find(y => y.did !== currentAccount?.did))
-            .filter(x => !!x)
-            .slice(0, 3),
+          count: pending.length,
+          profiles: pending.slice(0, 3),
         },
         ...conversations.map(
           convo => ({type: 'CONVERSATION', conversation: convo} as const),
@@ -140,17 +150,17 @@ export function MessagesScreen({navigation, route}: Props) {
       ] satisfies ListItem[]
     }
     return []
-  }, [data, leftConvos, currentAccount?.did])
+  }, [data, leftConvos, currentAccount?.did, inboxData])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
     try {
-      await refetch()
+      await Promise.all([refetch(), refetchInbox()])
     } catch (err) {
       logger.error('Failed to refresh conversations', {message: err})
     }
     setIsPTRing(false)
-  }, [refetch, setIsPTRing])
+  }, [refetch, refetchInbox, setIsPTRing])
 
   const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
@@ -284,8 +294,6 @@ export function MessagesScreen({navigation, route}: Props) {
             onRetry={fetchNextPage}
             style={{borderColor: 'transparent'}}
             hasNextPage={hasNextPage}
-            showEndMessage={true}
-            endMessageText={_(msg`No more conversations to show`)}
           />
         }
         onEndReachedThreshold={isNative ? 1.5 : 0}
