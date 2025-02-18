@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-17 16:45\n"
+"PO-Revision-Date: 2025-02-18 00:28\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -591,7 +591,7 @@ msgstr "すべてのアカウントをフォローしました！"
 #: src/view/screens/Search/Search.tsx:399
 #: src/view/screens/Search/Search.tsx:401
 msgid "All languages"
-msgstr ""
+msgstr "すべての言語"
 
 #: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
@@ -1488,7 +1488,7 @@ msgstr "ダイアログを閉じる"
 
 #: src/view/shell/index.web.tsx:83
 msgid "Close drawer menu"
-msgstr ""
+msgstr "引き出しメニューを閉じる"
 
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
@@ -1664,7 +1664,7 @@ msgstr "コンテンツのフィルター"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:57
 msgid "Content from across the network we think you might like."
-msgstr ""
+msgstr "お好みかもしれないネットワークからのコンテンツ。"
 
 #: src/screens/Settings/LanguageSettings.tsx:251
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
@@ -1742,7 +1742,7 @@ msgstr "コピーしました！"
 
 #: src/screens/Settings/AboutSettings.tsx:73
 msgid "Copies build version to clipboard"
-msgstr ""
+msgstr "ビルドバージョンをクリップボードへコピー"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 msgid "Copy"
@@ -2112,7 +2112,7 @@ msgstr "グレー"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:89
 msgid "Disable Email 2FA"
-msgstr ""
+msgstr "メールでの２要素認証を無効にする"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:91
 #: src/screens/Settings/AccessibilitySettings.tsx:96
@@ -2442,11 +2442,11 @@ msgstr "メールアドレス"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:64
 msgid "Email 2FA disabled"
-msgstr ""
+msgstr "メールでの２要素認証を無効にしました"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:54
 msgid "Email 2FA enabled"
-msgstr ""
+msgstr "メールでの２要素認証を有効にしました"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:93
 msgid "Email address"
@@ -2506,7 +2506,7 @@ msgstr "成人向けコンテンツを有効にする"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:53
 msgid "Enable Email 2FA"
-msgstr ""
+msgstr "メールでの２要素認証を有効にする"
 
 #: src/components/dialogs/EmbedConsent.tsx:81
 #: src/components/dialogs/EmbedConsent.tsx:88
@@ -2704,7 +2704,7 @@ msgstr "返信する投稿全体を展開または折りたたむ"
 
 #: src/screens/VideoFeed/index.tsx:935
 msgid "Expands or collapses post text"
-msgstr ""
+msgstr "テキストを展開または折りたたむ"
 
 #: src/view/com/composer/ComposerReplyTo.tsx:73
 msgid "Expands or collapses the full post you are replying to"
@@ -3364,7 +3364,7 @@ msgstr "この返信を非表示にしますか？"
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:83
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:62
 msgid "Hide trending topics"
-msgstr "トレンド・トピックを隠す"
+msgstr "トレンド・トピックを非表示にする"
 
 #: src/components/interstitials/Trending.tsx:129
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:135
@@ -3383,7 +3383,7 @@ msgstr "ユーザーリストを非表示"
 #: src/components/moderation/ContentHider.tsx:151
 #: src/components/moderation/PostHider.tsx:79
 msgid "Hides the content"
-msgstr ""
+msgstr "コンテンツを非表示"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:117
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
@@ -3565,7 +3565,7 @@ msgstr "反応関連の設定"
 #: src/screens/Login/LoginForm.tsx:156
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
-msgstr ""
+msgstr "無効な２要素認証の確認コードです。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:578
 msgid "Invalid handle. Please try a different one."
@@ -3667,7 +3667,7 @@ msgstr "ラベルが追加されました"
 
 #: src/screens/Profile/Sections/Labels.tsx:164
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
-msgstr "ラベルは、ユーザーやコンテンツに対する注釈です。ラベルはネットワークを隠したり、警告したり、分類したりするのに使われます。"
+msgstr "ラベルは、ユーザーやコンテンツに対する注釈です。ラベルはネットワークを非表示にしたり、警告したり、分類したりするのに使われます。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:71
 msgid "Labels on your account"
@@ -7326,7 +7326,7 @@ msgstr "残り時間：{time}秒"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:99
 msgid "To disable the email 2FA method, please verify your access to the email address."
-msgstr ""
+msgstr "メールでの２要素認証を無効にするには、メールアドレスにアクセスできるか確認してください。"
 
 #: src/components/dms/ReportConversationPrompt.tsx:19
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
@@ -8482,7 +8482,7 @@ msgstr "準備ができました！"
 #: src/components/moderation/ModerationDetailsDialog.tsx:106
 #: src/lib/moderation/useModerationCauseDescription.ts:106
 msgid "You've chosen to hide a word or tag within this post."
-msgstr "この投稿でワードまたはタグを隠すことを選択しました。"
+msgstr "この投稿でワードまたはタグを非表示にすることを選択しました。"
 
 #: src/state/shell/progress-guide.tsx:234
 msgid "You've found some people to follow"
