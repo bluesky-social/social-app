@@ -1,25 +1,19 @@
 import {View} from 'react-native'
-import {
-  AppBskyActorDefs,
-  ChatBskyActorDefs,
-  moderateProfile,
-} from '@atproto/api'
+import {moderateProfile} from '@atproto/api'
 
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
+import * as bsky from '#/types/bsky'
 
 export function AvatarStack({
   profiles,
   size = 26,
   backgroundColor,
 }: {
-  profiles:
-    | string[]
-    | AppBskyActorDefs.ProfileView[]
-    | ChatBskyActorDefs.ProfileViewBasic[]
+  profiles: string[] | bsky.profile.AnyProfileView[]
   size?: number
   backgroundColor?: string
 }) {
@@ -34,11 +28,7 @@ export function AvatarStack({
   }
   return (
     <AvatarStackInner
-      profiles={
-        profiles as
-          | AppBskyActorDefs.ProfileView[]
-          | ChatBskyActorDefs.ProfileViewBasic[]
-      }
+      profiles={profiles as bsky.profile.AnyProfileView[]}
       size={size}
       backgroundColor={backgroundColor}
     />
@@ -81,9 +71,7 @@ function AvatarStackInner({
   numPending,
   backgroundColor,
 }: {
-  profiles:
-    | AppBskyActorDefs.ProfileView[]
-    | ChatBskyActorDefs.ProfileViewBasic[]
+  profiles: bsky.profile.AnyProfileView[]
   size: number
   numPending?: number
   backgroundColor?: string
