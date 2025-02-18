@@ -76,6 +76,7 @@ import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Glo
 import * as Layout from '#/components/Layout'
 import * as Menu from '#/components/Menu'
 import {account, useStorage} from '#/storage'
+import * as bsky from '#/types/bsky'
 
 function Loader() {
   return (
@@ -656,7 +657,7 @@ export function SearchScreenShell({
   )
 
   const updateProfileHistory = useCallback(
-    async (item: AppBskyActorDefs.ProfileViewBasic) => {
+    async (item: bsky.profile.AnyProfileView) => {
       const newAccountHistory = [
         item.did,
         ...accountHistory.filter(p => p !== item.did),
@@ -673,7 +674,7 @@ export function SearchScreenShell({
     [termHistory, setTermHistory],
   )
   const deleteProfileHistoryItem = useCallback(
-    async (item: AppBskyActorDefs.ProfileViewBasic) => {
+    async (item: AppBskyActorDefs.ProfileViewDetailed) => {
       setAccountHistory(accountHistory.filter(p => p !== item.did))
     },
     [accountHistory, setAccountHistory],
@@ -766,7 +767,7 @@ export function SearchScreenShell({
   )
 
   const handleProfileClick = React.useCallback(
-    (profile: AppBskyActorDefs.ProfileViewBasic) => {
+    (profile: bsky.profile.AnyProfileView) => {
       // Slight delay to avoid updating during push nav animation.
       setTimeout(() => {
         updateProfileHistory(profile)
@@ -1013,11 +1014,11 @@ function SearchHistory({
   onRemoveProfileClick,
 }: {
   searchHistory: string[]
-  selectedProfiles: AppBskyActorDefs.ProfileViewBasic[]
+  selectedProfiles: AppBskyActorDefs.ProfileViewDetailed[]
   onItemClick: (item: string) => void
-  onProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
+  onProfileClick: (profile: AppBskyActorDefs.ProfileViewDetailed) => void
   onRemoveItemClick: (item: string) => void
-  onRemoveProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
+  onRemoveProfileClick: (profile: AppBskyActorDefs.ProfileViewDetailed) => void
 }) {
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')

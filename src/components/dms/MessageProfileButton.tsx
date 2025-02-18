@@ -19,7 +19,7 @@ import {VerifyEmailDialog} from '../dialogs/VerifyEmailDialog'
 export function MessageProfileButton({
   profile,
 }: {
-  profile: AppBskyActorDefs.ProfileView
+  profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
   const {_} = useLingui()
   const t = useTheme()

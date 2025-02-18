@@ -1,7 +1,6 @@
 import React from 'react'
 import {GestureResponderEvent, View} from 'react-native'
 import {
-  AppBskyActorDefs,
   moderateProfile,
   ModerationOpts,
   RichText as RichTextApi,
@@ -25,13 +24,14 @@ import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus
 import {Link as InternalLink, LinkProps} from '#/components/Link'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 export function Default({
   profile,
   moderationOpts,
   logContext = 'ProfileCard',
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
 }) {
@@ -51,7 +51,7 @@ export function Card({
   moderationOpts,
   logContext = 'ProfileCard',
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
 }) {
@@ -101,7 +101,7 @@ export function Link({
   style,
   ...rest
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: bsky.profile.AnyProfileView
 } & Omit<LinkProps, 'to' | 'label'>) {
   const {_} = useLingui()
   return (
@@ -126,7 +126,7 @@ export function Avatar({
   profile,
   moderationOpts,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
   const moderation = moderateProfile(profile, moderationOpts)
@@ -161,7 +161,7 @@ export function NameAndHandle({
   profile,
   moderationOpts,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
@@ -224,17 +224,16 @@ export function Description({
   profile: profileUnshadowed,
   numberOfLines = 3,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: bsky.profile.AnyProfileView
   numberOfLines?: number
 }) {
   const profile = useProfileShadow(profileUnshadowed)
-  const {description} = profile
   const rt = React.useMemo(() => {
-    if (!description) return
-    const rt = new RichTextApi({text: description || ''})
+    if (!('description' in profile)) return
+    const rt = new RichTextApi({text: profile.description || ''})
     rt.detectFacetsWithoutResolution()
     return rt
-  }, [description])
+  }, [profile])
   if (!rt) return null
   if (
     profile.viewer &&
@@ -281,7 +280,7 @@ export function DescriptionPlaceholder({
 }
 
 export type FollowButtonProps = {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   logContext: LogEvents['profile:follow']['logContext'] &
     LogEvents['profile:unfollow']['logContext']

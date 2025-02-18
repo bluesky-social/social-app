@@ -69,12 +69,10 @@ export function useDeleteActorDeclaration() {
   return useMutation({
     mutationFn: async () => {
       if (!currentAccount) throw new Error('Not signed in')
-      // TODO(sam): remove validate: false once PDSes have the new lexicon
       const result = await agent.api.com.atproto.repo.deleteRecord({
         repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
         rkey: 'self',
-        validate: false,
       })
       return result
     },

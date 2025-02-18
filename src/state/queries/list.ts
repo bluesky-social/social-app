@@ -1,11 +1,14 @@
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {
+  $Typed,
   AppBskyGraphDefs,
   AppBskyGraphGetList,
   AppBskyGraphList,
   AtUri,
   BskyAgent,
+  ComAtprotoRepoApplyWrites,
   Facet,
+  Un$Typed,
 } from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
@@ -68,7 +71,7 @@ export function useListCreateMutation() {
         ) {
           throw new Error('Invalid list purpose: must be curatelist or modlist')
         }
-        const record: AppBskyGraphList.Record = {
+        const record: Un$Typed<AppBskyGraphList.Record> = {
           purpose,
           name,
           description,
@@ -212,7 +215,9 @@ export function useListDeleteMutation() {
       }
 
       // batch delete the list and listitem records
-      const createDel = (uri: string) => {
+      const createDel = (
+        uri: string,
+      ): $Typed<ComAtprotoRepoApplyWrites.Delete> => {
         const urip = new AtUri(uri)
         return {
           $type: 'com.atproto.repo.applyWrites#delete',

@@ -27,6 +27,7 @@ import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 function getBlackColor(t: ReturnType<typeof useTheme>) {
   return select(t.name, {
@@ -78,7 +79,12 @@ export function VideoPostCard({
   if (!AppBskyEmbedVideo.isView(embed)) return null
 
   const author = post.author
-  const text = AppBskyFeedPost.isRecord(post.record) ? post.record?.text : ''
+  const text = bsky.dangerousIsType<AppBskyFeedPost.Record>(
+    post.record,
+    AppBskyFeedPost.isRecord,
+  )
+    ? post.record?.text
+    : ''
   const likeCount = post?.likeCount ?? 0
   const repostCount = post?.repostCount ?? 0
   const {thumbnail} = embed

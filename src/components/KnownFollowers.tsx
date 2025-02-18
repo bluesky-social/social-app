@@ -10,6 +10,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Link, LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 const AVI_SIZE = 30
 const AVI_SIZE_SMALL = 20
@@ -33,7 +34,7 @@ export function KnownFollowers({
   onLinkPress,
   minimal,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   onLinkPress?: LinkProps['onPress']
   minimal?: boolean
@@ -77,7 +78,7 @@ function KnownFollowersInner({
   onLinkPress,
   minimal,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   cachedKnownFollowers: AppBskyActorDefs.KnownFollowers
   onLinkPress?: LinkProps['onPress']
