@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 00:28\n"
+"PO-Revision-Date: 2025-02-18 01:38\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -5990,7 +5990,7 @@ msgstr "検索"
 #: src/Navigation.tsx:215
 #: src/screens/Profile/ProfileSearch.tsx:34
 msgid "Search @{0}'s posts"
-msgstr ""
+msgstr "@{0}の投稿を検索"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:745
 msgid "Search by name or interest"
@@ -6030,12 +6030,12 @@ msgstr "GIFを検索"
 
 #: src/screens/Profile/ProfileSearch.tsx:33
 msgid "Search my posts"
-msgstr ""
+msgstr "自分の投稿を検索"
 
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Search Posts"
-msgstr ""
+msgstr "投稿を検索"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:507
 #: src/components/ProgressGuide/FollowDialog.tsx:764
@@ -6048,7 +6048,7 @@ msgstr "Tenorを検索"
 
 #: src/screens/Profile/ProfileSearch.tsx:35
 msgid "Search..."
-msgstr ""
+msgstr "検索…"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
 #: src/components/ProgressGuide/FollowDialog.tsx:765
