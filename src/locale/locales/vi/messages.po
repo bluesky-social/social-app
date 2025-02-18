@@ -8,7 +8,7 @@ msgstr ""
 "Language: vi\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-17 16:45\n"
+"PO-Revision-Date: 2025-02-18 03:17\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -927,8 +927,8 @@ msgstr "Tự động phát video và GIF"
 #: src/screens/Login/ChooseAccountForm.tsx:95
 #: src/screens/Login/ForgotPasswordForm.tsx:123
 #: src/screens/Login/ForgotPasswordForm.tsx:129
-#: src/screens/Login/LoginForm.tsx:308
-#: src/screens/Login/LoginForm.tsx:314
+#: src/screens/Login/LoginForm.tsx:310
+#: src/screens/Login/LoginForm.tsx:316
 #: src/screens/Login/SetNewPasswordForm.tsx:164
 #: src/screens/Login/SetNewPasswordForm.tsx:170
 #: src/screens/Messages/components/ChatDisabled.tsx:133
@@ -1244,8 +1244,8 @@ msgid "Cancel quote post"
 msgstr "Hủy bài đăng trích dẫn"
 
 #: src/screens/Deactivated.tsx:151
-msgid "Cancel reactivation and log out"
-msgstr "Hủy kích hoạt lại và đăng xuất"
+msgid "Cancel reactivation and sign out"
+msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
 #: src/view/screens/Search/Search.tsx:879
@@ -1361,8 +1361,8 @@ msgid "Check my status"
 msgstr "Kiểm tra trạng thái của tôi"
 
 #: src/screens/Login/LoginForm.tsx:301
-msgid "Check your email for a login code and enter it here."
-msgstr "Kiểm tra email của bạn để nhận mã đăng nhập và nhập nó ở đây."
+msgid "Check your email for a sign in code and enter it here."
+msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:213
 msgid "Check your inbox for an email with the confirmation code to enter below:"
@@ -1631,7 +1631,7 @@ msgstr "Mã xác nhận"
 msgid "Confirmation Code"
 msgstr "Mã xác nhận"
 
-#: src/screens/Login/LoginForm.tsx:335
+#: src/screens/Login/LoginForm.tsx:337
 msgid "Connecting..."
 msgstr "Đang kết nối..."
 
@@ -3945,28 +3945,9 @@ msgstr "Đang tải..."
 msgid "Log"
 msgstr "Log"
 
-#: src/screens/Deactivated.tsx:202
-#: src/screens/Deactivated.tsx:208
-msgid "Log in or sign up"
-msgstr "Đăng nhập hoặc đăng ký"
-
-#: src/screens/SignupQueued.tsx:93
-#: src/screens/SignupQueued.tsx:96
-#: src/screens/Takendown.tsx:85
-msgid "Log out"
-msgstr "Đăng xuất"
-
-#: src/screens/Takendown.tsx:88
-msgid "Log Out"
-msgstr "Đăng xuất"
-
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:78
 msgid "Logged-out visibility"
 msgstr "Trạng thái hiển thị sau đăng xuất"
-
-#: src/components/AccountList.tsx:65
-msgid "Login to account that is not listed"
-msgstr "Đăng nhập vào tải khoản chưa được liệt kê"
 
 #: src/view/shell/desktop/RightNav.tsx:121
 msgid "Logo by @sawaratsuki.bsky.social"
@@ -4300,7 +4281,7 @@ msgid "Navigate to {0}"
 msgstr "Điều hướng đến {0}"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:166
-#: src/screens/Login/LoginForm.tsx:342
+#: src/screens/Login/LoginForm.tsx:344
 #: src/view/com/modals/ChangePassword.tsx:169
 msgid "Navigates to the next screen"
 msgstr "Điều hướng đến màn hình kế tiếp"
@@ -4405,8 +4386,8 @@ msgstr "Tin tức"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:137
 #: src/screens/Login/ForgotPasswordForm.tsx:143
-#: src/screens/Login/LoginForm.tsx:341
-#: src/screens/Login/LoginForm.tsx:348
+#: src/screens/Login/LoginForm.tsx:343
+#: src/screens/Login/LoginForm.tsx:350
 #: src/screens/Login/SetNewPasswordForm.tsx:178
 #: src/screens/Login/SetNewPasswordForm.tsx:184
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
@@ -4815,8 +4796,8 @@ msgstr "Mở quy trình tạo tài khoản Bluesky mới"
 
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.web.tsx:125
-msgid "Opens flow to sign into your existing Bluesky account"
-msgstr "Mở quy trình đăng nhập vào tài khoản Bluesky hiện tại của bạn"
+msgid "Opens flow to sign in to your existing Bluesky account"
+msgstr ""
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Opens GIF select dialog"
@@ -4865,8 +4846,8 @@ msgid "Or, continue with another account."
 msgstr "Hoặc tiếp tục với tài khoản khác"
 
 #: src/screens/Deactivated.tsx:186
-msgid "Or, log into one of your other accounts."
-msgstr "Hoặc đăng nhập bằng một trong các tài khoản khác của bạn."
+msgid "Or, sign in to one of your other accounts."
+msgstr ""
 
 #: src/lib/moderation/useReportOptions.ts:27
 #: src/view/com/composer/labels/LabelsBtn.tsx:186
@@ -5785,8 +5766,8 @@ msgid "Require alt text before posting"
 msgstr "Yêu cầu văn bản thay thế trước khi đăng"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
-msgid "Require an email code to log in to your account."
-msgstr "Yêu cầu mã email để đăng nhập vào tài khoản của bạn."
+msgid "Require an email code to sign in to your account."
+msgstr ""
 
 #: src/screens/Signup/StepInfo/index.tsx:153
 msgid "Required for this provider"
@@ -5828,9 +5809,9 @@ msgstr "Đặt lại trại thái hướng dẫn"
 msgid "Reset password"
 msgstr "Đặt lại mật khẩu"
 
-#: src/screens/Login/LoginForm.tsx:322
-msgid "Retries login"
-msgstr "Thử đăng nhập lại"
+#: src/screens/Login/LoginForm.tsx:324
+msgid "Retries sign in"
+msgstr ""
 
 #: src/view/com/util/error/ErrorMessage.tsx:62
 #: src/view/com/util/error/ErrorScreen.tsx:99
@@ -5841,8 +5822,8 @@ msgstr "Thử lại hành động cuối cùng (đã xảy ra lỗi)"
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:110
 #: src/components/StarterPack/ProfileStarterPacks.tsx:335
-#: src/screens/Login/LoginForm.tsx:321
-#: src/screens/Login/LoginForm.tsx:328
+#: src/screens/Login/LoginForm.tsx:323
+#: src/screens/Login/LoginForm.tsx:330
 #: src/screens/Messages/ChatList.tsx:177
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Onboarding/StepInterests/index.tsx:217
@@ -6506,18 +6487,34 @@ msgstr "Đăng nhập bằng..."
 msgid "Sign in or create your account to join the conversation!"
 msgstr "Đăng nhập hoặc tạo tài khoản để tham gia cuộc trò chuyện!"
 
+#: src/screens/Deactivated.tsx:202
+#: src/screens/Deactivated.tsx:208
+msgid "Sign in or sign up"
+msgstr ""
+
+#: src/components/AccountList.tsx:65
+msgid "Sign in to account that is not listed"
+msgstr ""
+
 #: src/components/dialogs/Signin.tsx:46
-msgid "Sign into Bluesky or create a new account"
-msgstr "Đăng nhập vào Bluesky hoặc tạo tài khoản mới"
+msgid "Sign in to Bluesky or create a new account"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:225
 #: src/screens/Settings/Settings.tsx:227
 #: src/screens/Settings/Settings.tsx:259
+#: src/screens/SignupQueued.tsx:93
+#: src/screens/SignupQueued.tsx:96
+#: src/screens/Takendown.tsx:85
 #: src/view/shell/desktop/LeftNav.tsx:208
 #: src/view/shell/desktop/LeftNav.tsx:291
 #: src/view/shell/desktop/LeftNav.tsx:294
 msgid "Sign out"
 msgstr "Đăng xuất"
+
+#: src/screens/Takendown.tsx:88
+msgid "Sign Out"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:256
 #: src/view/shell/desktop/LeftNav.tsx:205
@@ -6595,8 +6592,8 @@ msgstr "Có gì không đúng? Hãy cho chúng tôi biết."
 
 #: src/App.native.tsx:121
 #: src/App.web.tsx:97
-msgid "Sorry! Your session expired. Please log in again."
-msgstr "Xin lỗi! Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại"
+msgid "Sorry! Your session expired. Please sign in again."
+msgstr ""
 
 #: src/screens/Settings/ThreadPreferences.tsx:55
 msgid "Sort replies"
@@ -7221,8 +7218,8 @@ msgstr "Bài đăng này đã bị xóa."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:720
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:369
-msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
-msgstr "Bài đăng này chỉ hiển thị cho người dùng đã đăng nhập. Nó sẽ không hiển thị cho người không đăng nhập."
+msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
+msgstr ""
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:701
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
@@ -7233,8 +7230,8 @@ msgid "This post's author has disabled quote posts."
 msgstr "Tác giả bài đăng này đã tắt chức năng trích dẫn bài đăng."
 
 #: src/view/com/profile/ProfileMenu.tsx:402
-msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
-msgstr "Hồ sơ này chỉ hiển thị cho người dùng đã đăng nhập. Nó sẽ không hiển thị cho người không đăng nhập."
+msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
+msgstr ""
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:763
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
@@ -7684,8 +7681,8 @@ msgid "Use recommended"
 msgstr "Sử dụng đề xuất"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:190
-msgid "Use this to sign into the other app along with your handle."
-msgstr "Sử dụng để đăng nhập vào ứng dụng khác cùng với tên người dùng của bạn."
+msgid "Use this to sign in to the other app along with your handle."
+msgstr ""
 
 #: src/view/com/modals/InviteCodes.tsx:201
 msgid "Used by:"
@@ -8470,14 +8467,14 @@ msgstr "Bạn sẽ được cập nhật với những bảng tin này"
 msgid "You're in line"
 msgstr "Bạn đang trong hàng chờ"
 
-#: src/screens/Deactivated.tsx:89
-#: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
-msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
-msgstr "Bạn đã đăng nhập bằng mật khẩu ứng dụng. Vui lòng đăng nhập bằng mật khẩu chính để tiếp tục vô hiệu hóa tài khoản."
-
 #: src/screens/Onboarding/StepFinished.tsx:242
 msgid "You're ready to go!"
 msgstr "Bạn đã sẵn sàng!"
+
+#: src/screens/Deactivated.tsx:89
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
+msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:106
 #: src/lib/moderation/useModerationCauseDescription.ts:106
