@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 18:41\n"
+"PO-Revision-Date: 2025-02-18 19:37\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese, Brazilian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -632,7 +632,7 @@ msgstr "Já registrado como @{0}"
 #: src/view/com/composer/photos/Gallery.tsx:187
 #: src/view/com/util/post-embeds/GifEmbed.tsx:186
 msgid "ALT"
-msgstr ""
+msgstr "DESC"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:56
 #: src/view/com/composer/GifAltText.tsx:154
@@ -4747,7 +4747,7 @@ msgstr "Abrir o menu do pacote inicial"
 #: src/screens/Settings/Settings.tsx:323
 #: src/screens/Settings/Settings.tsx:337
 msgid "Open storybook page"
-msgstr "Abre o storybook"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:316
 msgid "Open system log"
@@ -5075,7 +5075,7 @@ msgstr "Por favor, digite sua senha também:"
 
 #: src/screens/Login/LoginForm.tsx:94
 msgid "Please enter your username"
-msgstr ""
+msgstr "Insira seu nome de usuário"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 msgid "Please explain why you think this label was incorrectly applied by {0}"
@@ -5767,7 +5767,7 @@ msgstr "Exigir texto descritivo antes de postar"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
 msgid "Require an email code to sign in to your account."
-msgstr ""
+msgstr "Requer um código de e-mail para entrar em sua conta."
 
 #: src/screens/Signup/StepInfo/index.tsx:153
 msgid "Required for this provider"
@@ -6016,7 +6016,7 @@ msgstr "Buscar minhas postagens"
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Search Posts"
-msgstr ""
+msgstr "Buscar nas postagens do usuário"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:507
 #: src/components/ProgressGuide/FollowDialog.tsx:764
@@ -6158,7 +6158,7 @@ msgstr "Selecione seu idioma preferido para as traduções no seu feed."
 
 #: src/view/com/util/forms/DropdownButton.tsx:297
 msgid "Selects option {0} of {numItems}"
-msgstr ""
+msgstr "Seleciona a opção {0} de {numItems}"
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
@@ -6257,7 +6257,7 @@ msgstr "Configurações"
 
 #: src/screens/ModerationInteractionSettings/index.tsx:102
 msgid "Settings saved"
-msgstr ""
+msgstr "Ajustes salvos"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Sexual activity or erotic nudity."
@@ -6352,7 +6352,7 @@ msgstr "Mostrar"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:178
 msgid "Show alt text"
-msgstr ""
+msgstr "Mostrar texto descritivo"
 
 #: src/components/moderation/ScreenHider.tsx:172
 #: src/components/moderation/ScreenHider.tsx:175
@@ -6446,16 +6446,16 @@ msgstr "Mostrar aviso e filtrar dos feeds"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:810
 msgid "Shows information about when this post was created"
-msgstr ""
+msgstr "Mostra informações sobre quando esta postagem foi criada"
 
 #: src/screens/Settings/Settings.tsx:104
 msgid "Shows other accounts you can switch to"
-msgstr ""
+msgstr "Exibe suas outras contas que você pode acessar"
 
 #: src/components/moderation/ContentHider.tsx:152
 #: src/components/moderation/PostHider.tsx:79
 msgid "Shows the content"
-msgstr ""
+msgstr "Exibe o conteúdo"
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
@@ -6490,15 +6490,15 @@ msgstr "Entre ou crie a sua conta para participar da conversa!"
 #: src/screens/Deactivated.tsx:202
 #: src/screens/Deactivated.tsx:208
 msgid "Sign in or sign up"
-msgstr ""
+msgstr "Registrar-se ou criar conta"
 
 #: src/components/AccountList.tsx:65
 msgid "Sign in to account that is not listed"
-msgstr ""
+msgstr "Entrar em uma conta não listada"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign in to Bluesky or create a new account"
-msgstr ""
+msgstr "Registre-se no Bluesky ou crie uma conta"
 
 #: src/screens/Settings/Settings.tsx:225
 #: src/screens/Settings/Settings.tsx:227
@@ -6514,7 +6514,7 @@ msgstr "Sair"
 
 #: src/screens/Takendown.tsx:88
 msgid "Sign Out"
-msgstr ""
+msgstr "Sair"
 
 #: src/screens/Settings/Settings.tsx:256
 #: src/view/shell/desktop/LeftNav.tsx:205
@@ -6593,7 +6593,7 @@ msgstr "Algo de errado? Nos avise."
 #: src/App.native.tsx:121
 #: src/App.web.tsx:97
 msgid "Sorry! Your session expired. Please sign in again."
-msgstr ""
+msgstr "Desculpe! Sua sessão expirou. Entre novamente."
 
 #: src/screens/Settings/ThreadPreferences.tsx:55
 msgid "Sort replies"
@@ -6614,7 +6614,7 @@ msgstr "Fonte:"
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
 msgid "Spam"
-msgstr ""
+msgstr "Spam"
 
 #: src/lib/moderation/useReportOptions.ts:55
 msgid "Spam; excessive mentions or replies"
@@ -7682,7 +7682,7 @@ msgstr "Usar recomendados"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:190
 msgid "Use this to sign in to the other app along with your handle."
-msgstr ""
+msgstr "Use isso para registrar-se no outro app junto ao seu nome de usuário."
 
 #: src/view/com/modals/InviteCodes.tsx:201
 msgid "Used by:"
@@ -8474,7 +8474,7 @@ msgstr "Tudo pronto!"
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
 msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
-msgstr ""
+msgstr "Você está conectado com uma Senha de app. Entre usando a sua senha padrão para prosseguir com a exclusão da conta."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:106
 #: src/lib/moderation/useModerationCauseDescription.ts:106
