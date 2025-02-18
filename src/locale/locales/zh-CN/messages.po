@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 05:23\n"
+"PO-Revision-Date: 2025-02-18 06:47\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -4797,7 +4797,7 @@ msgstr "开启创建新 Bluesky 账户流程"
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.web.tsx:125
 msgid "Opens flow to sign in to your existing Bluesky account"
-msgstr ""
+msgstr "开启登录到你现有的 Bluesky 账户流程"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Opens GIF select dialog"
@@ -4847,7 +4847,7 @@ msgstr "或者以其他账户继续。"
 
 #: src/screens/Deactivated.tsx:186
 msgid "Or, sign in to one of your other accounts."
-msgstr ""
+msgstr "或者使用你的其他账户登录。"
 
 #: src/lib/moderation/useReportOptions.ts:27
 #: src/view/com/composer/labels/LabelsBtn.tsx:186
@@ -5767,7 +5767,7 @@ msgstr "发布时检查媒体是否提供替代文本"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
 msgid "Require an email code to sign in to your account."
-msgstr ""
+msgstr "需要电子邮件验证码才能登录到你的账户。"
 
 #: src/screens/Signup/StepInfo/index.tsx:153
 msgid "Required for this provider"
@@ -5811,7 +5811,7 @@ msgstr "重置密码"
 
 #: src/screens/Login/LoginForm.tsx:324
 msgid "Retries sign in"
-msgstr ""
+msgstr "重试登录"
 
 #: src/view/com/util/error/ErrorMessage.tsx:62
 #: src/view/com/util/error/ErrorScreen.tsx:99
@@ -6490,15 +6490,15 @@ msgstr "登录或创建你的账户来加入对话吧！"
 #: src/screens/Deactivated.tsx:202
 #: src/screens/Deactivated.tsx:208
 msgid "Sign in or sign up"
-msgstr ""
+msgstr "登陆或注册"
 
 #: src/components/AccountList.tsx:65
 msgid "Sign in to account that is not listed"
-msgstr ""
+msgstr "登录未列出的账户"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign in to Bluesky or create a new account"
-msgstr ""
+msgstr "登录 Bluesky 或创建新账户"
 
 #: src/screens/Settings/Settings.tsx:225
 #: src/screens/Settings/Settings.tsx:227
@@ -6514,7 +6514,7 @@ msgstr "登出"
 
 #: src/screens/Takendown.tsx:88
 msgid "Sign Out"
-msgstr ""
+msgstr "登出"
 
 #: src/screens/Settings/Settings.tsx:256
 #: src/view/shell/desktop/LeftNav.tsx:205
@@ -6593,7 +6593,7 @@ msgstr "有点问题？请告诉我们。"
 #: src/App.native.tsx:121
 #: src/App.web.tsx:97
 msgid "Sorry! Your session expired. Please sign in again."
-msgstr ""
+msgstr "很抱歉，你的登录会话已过期，请重新登录。"
 
 #: src/screens/Settings/ThreadPreferences.tsx:55
 msgid "Sort replies"
@@ -7219,7 +7219,7 @@ msgstr "这则帖文已被删除。"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:720
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:369
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
-msgstr ""
+msgstr "这则帖文只对已登录用户可见。未登录的用户将无法看到。"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:701
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
@@ -7231,7 +7231,7 @@ msgstr "这则帖文的发布者已停用引用帖文。"
 
 #: src/view/com/profile/ProfileMenu.tsx:402
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
-msgstr ""
+msgstr "此个人资料只对已登录用户可见，未登录的用户将无法看到。"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:763
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
@@ -7682,7 +7682,7 @@ msgstr "使用推荐"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:190
 msgid "Use this to sign in to the other app along with your handle."
-msgstr ""
+msgstr "使用这个和你的账户代码一起登录其他应用。"
 
 #: src/view/com/modals/InviteCodes.tsx:201
 msgid "Used by:"
@@ -8474,7 +8474,7 @@ msgstr "你已完成设置！"
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
 msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
-msgstr ""
+msgstr "你正在使用应用密码登录账户，请改用你的主密码登录以继续停用你的账户。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:106
 #: src/lib/moderation/useModerationCauseDescription.ts:106
