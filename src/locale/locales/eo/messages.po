@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 09:25\n"
+"PO-Revision-Date: 2025-02-18 10:24\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -3030,15 +3030,15 @@ msgstr "Sekvata de <0>{0}</0>"
 
 #: src/components/KnownFollowers.tsx:218
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
-msgstr ""
+msgstr "Sekvata de <0>{0}</0> kaj {1, plural, one {# alia} other {# aliaj}}"
 
 #: src/components/KnownFollowers.tsx:205
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
-msgstr ""
+msgstr "Sekvata de <0>{0}</0> kaj <1>{1}</1>"
 
 #: src/components/KnownFollowers.tsx:187
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
-msgstr ""
+msgstr "Sekvata de <0>{0}</0>, <1>{1}</1>, kaj {2, plural, one {# alia} other {# aliaj}}"
 
 #: src/Navigation.tsx:203
 msgid "Followers of @{0} that you know"
@@ -3064,15 +3064,15 @@ msgstr ""
 #: src/components/ProfileCard.tsx:323
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
 msgid "Following {0}"
-msgstr ""
+msgstr "Sekvas {0}"
 
 #: src/screens/VideoFeed/index.tsx:799
 msgid "Following {handle}"
-msgstr ""
+msgstr "Sekvas {handle}"
 
 #: src/view/com/posts/AviFollowButton.tsx:50
 msgid "Following {name}"
-msgstr ""
+msgstr "Sekvas {name}"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:75
 #: src/screens/Settings/ContentAndMediaSettings.tsx:78
@@ -3119,7 +3119,7 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:178
 msgid "Forever"
-msgstr ""
+msgstr "Eterne"
 
 #: src/screens/Login/index.tsx:153
 #: src/screens/Login/index.tsx:168
@@ -3157,7 +3157,7 @@ msgstr ""
 
 #: src/view/shell/Drawer.tsx:328
 msgid "Get help"
-msgstr ""
+msgstr "Akiri helpon"
 
 #: src/view/com/modals/VerifyEmail.tsx:197
 #: src/view/com/modals/VerifyEmail.tsx:199
@@ -3232,11 +3232,11 @@ msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:230
 msgid "Go to profile"
-msgstr ""
+msgstr "Iri al profilo"
 
 #: src/components/dms/ConvoMenu.tsx:227
 msgid "Go to user's profile"
-msgstr ""
+msgstr "Iri al uzanta profilo"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/view/com/composer/labels/LabelsBtn.tsx:202
@@ -3252,7 +3252,7 @@ msgstr ""
 #: src/screens/Settings/AccountSettings.tsx:126
 #: src/screens/Settings/AccountSettings.tsx:131
 msgid "Handle"
-msgstr ""
+msgstr "Nomo"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:572
 msgid "Handle already taken. Please try a different one."
@@ -3261,7 +3261,7 @@ msgstr ""
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:189
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:325
 msgid "Handle changed!"
-msgstr ""
+msgstr "Nomo ŝanĝita!"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:576
 msgid "Handle too long. Please try a shorter one."
@@ -3277,11 +3277,11 @@ msgstr ""
 
 #: src/Navigation.tsx:396
 msgid "Hashtag"
-msgstr ""
+msgstr "Kradvorto"
 
 #: src/components/RichTextTag.tsx:51
 msgid "Hashtag {tag}"
-msgstr ""
+msgstr "Kradvorto {tag}"
 
 #: src/screens/Signup/index.tsx:173
 msgid "Having trouble?"
@@ -3293,7 +3293,7 @@ msgstr ""
 #: src/view/shell/desktop/RightNav.tsx:112
 #: src/view/shell/Drawer.tsx:337
 msgid "Help"
-msgstr ""
+msgstr "Helpo"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:237
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
@@ -3306,7 +3306,7 @@ msgstr ""
 #: src/components/VideoPostCard.tsx:172
 #: src/components/VideoPostCard.tsx:448
 msgid "Hidden"
-msgstr ""
+msgstr "Kaŝita"
 
 #: src/screens/VideoFeed/index.tsx:606
 msgid "Hidden by your moderation settings."
@@ -3329,12 +3329,12 @@ msgstr ""
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:704
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "Hide"
-msgstr ""
+msgstr "Kaŝi"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:601
 msgctxt "action"
 msgid "Hide"
-msgstr ""
+msgstr "Kaŝi"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:533
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
@@ -3423,7 +3423,7 @@ msgstr ""
 #: src/view/shell/desktop/LeftNav.tsx:587
 #: src/view/shell/Drawer.tsx:396
 msgid "Home"
-msgstr ""
+msgstr "Hejmo"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:398
 msgid "Host:"
@@ -3449,12 +3449,12 @@ msgstr ""
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:136
 #: src/view/com/modals/VerifyEmail.tsx:222
 msgid "I have a code"
-msgstr ""
+msgstr "Mi havas kodon"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:239
 #: src/components/dialogs/VerifyEmailDialog.tsx:246
 msgid "I Have a Code"
-msgstr ""
+msgstr "Mi havas kodon"
 
 #: src/view/com/modals/VerifyEmail.tsx:224
 msgid "I have a confirmation code"
@@ -3508,7 +3508,7 @@ msgstr ""
 
 #: src/view/com/util/images/Gallery.tsx:71
 msgid "Image"
-msgstr ""
+msgstr "Bildo"
 
 #: src/components/StarterPack/ShareDialog.tsx:76
 msgid "Image saved to your camera roll!"
