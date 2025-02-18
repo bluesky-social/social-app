@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-18 03:17\n"
+"PO-Revision-Date: 2025-02-18 17:19\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese, Brazilian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -338,7 +338,7 @@ msgstr "<0>{date}</0> às {time}"
 
 #: src/screens/Settings/NotificationSettings.tsx:85
 msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
-msgstr "<0>Experimental:</0> Ao ativar esta opção, você somente receberá notificações de resposta e citação apenas de usuários que você segue. Adicionaremos mais controle aqui no futuro."
+msgstr "<0>Experimental:</0> Ao ativar esta opção, você somente receberá notificações de resposta e citação apenas de usuários que você segue. Adicionaremos mais opções de controle aqui no futuro."
 
 #: src/screens/StarterPack/Wizard/index.tsx:440
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
@@ -815,7 +815,7 @@ msgstr "Contestar rótulo \"{0}\""
 #: src/components/moderation/LabelsOnMeDialog.tsx:233
 #: src/screens/Messages/components/ChatDisabled.tsx:91
 msgid "Appeal submitted"
-msgstr "Revogação enviada"
+msgstr "Contestação enviada."
 
 #: src/screens/Takendown.tsx:111
 #: src/screens/Takendown.tsx:144
@@ -1069,7 +1069,7 @@ msgstr "Bluesky"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:864
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
-msgstr "O Bluesky não pode alegar que a data solicitada é genuína."
+msgstr "O Bluesky não pode confirmar que a data mostrada é legítima."
 
 #: src/view/com/auth/server-input/index.tsx:212
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
@@ -1698,7 +1698,7 @@ msgstr "Continuar"
 
 #: src/components/AccountList.tsx:121
 msgid "Continue as {0} (currently signed in)"
-msgstr "Continuar como {0}? (já registrado)"
+msgstr "Continuar como {0} (já conectado)"
 
 #: src/view/com/post-thread/PostThreadLoadMore.tsx:60
 msgid "Continue thread..."
