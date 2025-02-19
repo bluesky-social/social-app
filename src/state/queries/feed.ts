@@ -345,18 +345,6 @@ export const createPopularFeedsSearchQueryKey = (query: string) => [
   query,
 ]
 
-function normalizeText(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[.,!?;:\s]+/g, ' ')
-    .trim()
-}
-
-function isPartialMatch(searchTerms: string[], targetText: string): boolean {
-  const normalizedTarget = normalizeText(targetText)
-  return searchTerms.every(term => normalizedTarget.includes(term))
-}
-
 export function usePopularFeedsSearch({
   query,
   enabled,
@@ -367,83 +355,68 @@ export function usePopularFeedsSearch({
   const agent = useAgent()
   const moderationOpts = useModerationOpts()
   const enabledInner = enabled ?? Boolean(moderationOpts)
+  const {hasSession} = useSession()
+
+  // Normalize query: trim whitespace and convert to lowercase
+  const normalizedQuery = query.trim().toLowerCase()
 
   return useQuery({
-    enabled: enabledInner,
-    queryKey: createPopularFeedsSearchQueryKey(query),
+    enabled: enabledInner && normalizedQuery.length > 1, // Match the FeedsScreen behavior
+    queryKey: createPopularFeedsSearchQueryKey(normalizedQuery),
     queryFn: async () => {
-      // Try multiple search variations to increase chances of finding matches
-      const searchTerms = normalizeText(query).split(' ').filter(Boolean)
-
-      // First try the exact query
-      const exactRes = await agent.app.bsky.unspecced.getPopularFeedGenerators({
-        limit: 30, // Increased limit to get more potential matches
-        query: query,
+      console.log('Starting feed search with:', {
+        originalQuery: query,
+        normalizedQuery,
+        hasSession,
+        moderationOpts: Boolean(moderationOpts),
+        agent: Boolean(agent),
       })
 
-      // Then try with just the first word to get more potential matches
-      const firstWordRes =
-        searchTerms.length > 1
-          ? await agent.app.bsky.unspecced.getPopularFeedGenerators({
-              limit: 30,
-              query: searchTerms[0],
-            })
-          : {data: {feeds: []}}
+      // Split query into words
+      const words = normalizedQuery.split(/\s+/)
+
+      // Try each word in the query to maximize matches
+      const allResults = await Promise.all(
+        words.map(async word => {
+          console.log('Trying search with word:', word)
+          const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
+            limit: 15,
+            query: word,
+          })
+          return res.data.feeds || []
+        }),
+      )
 
       // Combine and deduplicate results
-      const allFeeds = [...exactRes.data.feeds]
-      firstWordRes.data.feeds.forEach(feed => {
-        if (!allFeeds.some(existing => existing.uri === feed.uri)) {
-          allFeeds.push(feed)
-        }
+      const seenUris = new Set<string>()
+      const combinedFeeds = allResults.flat().filter(feed => {
+        if (seenUris.has(feed.uri)) return false
+        seenUris.add(feed.uri)
+        return true
       })
 
-      return allFeeds
+      console.log('Combined results:', {
+        totalResults: combinedFeeds.length,
+        words,
+      })
+
+      // Apply moderation filtering if needed
+      if (moderationOpts) {
+        return combinedFeeds.filter(feed => {
+          const decision = moderateFeedGenerator(feed, moderationOpts)
+          return !decision.ui('contentMedia').blur
+        })
+      }
+
+      return combinedFeeds
     },
     placeholderData: keepPreviousData,
     select(data) {
-      // Client-side filtering with flexible matching
-      const searchTerms = normalizeText(query).split(' ').filter(Boolean)
-      const results = data.filter(feed => {
-        // Apply moderation if needed
-        if (moderationOpts) {
-          const decision = moderateFeedGenerator(feed, moderationOpts!)
-          if (decision.ui('contentMedia').blur) {
-            return false
-          }
-        }
-
-        // Check title and description for partial matches
-        const feedTitle = feed.displayName || ''
-        const feedDesc = feed.description || ''
-
-        // A feed matches if all search terms appear in either the title or description
-        return (
-          isPartialMatch(searchTerms, feedTitle) ||
-          isPartialMatch(searchTerms, feedDesc)
-        )
+      console.log('Selecting data:', {
+        dataLength: data?.length,
+        moderationOpts: Boolean(moderationOpts),
       })
-
-      // Sort results by relevance
-      return results.sort((a, b) => {
-        const aTitle = normalizeText(a.displayName || '')
-        const bTitle = normalizeText(b.displayName || '')
-
-        // Exact matches first
-        const aExactMatch = aTitle === normalizeText(query)
-        const bExactMatch = bTitle === normalizeText(query)
-        if (aExactMatch && !bExactMatch) return -1
-        if (!aExactMatch && bExactMatch) return 1
-
-        // Then partial matches in title
-        const aPartialMatch = isPartialMatch(searchTerms, aTitle)
-        const bPartialMatch = isPartialMatch(searchTerms, bTitle)
-        if (aPartialMatch && !bPartialMatch) return -1
-        if (!aPartialMatch && bPartialMatch) return 1
-
-        // Then by like count if available
-        return (b.likeCount || 0) - (a.likeCount || 0)
-      })
+      return data
     },
   })
 }
