@@ -72,7 +72,7 @@ function RequestList() {
     }, [messagesBus, isActive]),
   )
 
-  const initialNumToRender = useInitialNumToRender({minItemHeight: 80})
+  const initialNumToRender = useInitialNumToRender({minItemHeight: 130})
   const [isPTRing, setIsPTRing] = useState(false)
 
   const {
