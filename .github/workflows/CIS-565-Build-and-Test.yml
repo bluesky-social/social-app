@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  raw-build:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -17,6 +17,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Build Docker image
+        id: build
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -24,3 +25,24 @@ jobs:
           push: false
           # Optionally, specify a tag for the local image:
           # tags: myimage:latest
+
+  playwright-tests:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright Tests
+        run: npx playwright test
