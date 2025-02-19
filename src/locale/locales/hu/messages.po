@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-19 03:37\n"
+"PO-Revision-Date: 2025-02-19 06:09\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -2730,7 +2730,7 @@ msgstr "{0} lejár"
 #: src/components/moderation/LabelsOnMeDialog.tsx:199
 #: src/components/moderation/ModerationDetailsDialog.tsx:208
 msgid "Expires in {0}"
-msgstr ""
+msgstr "Lejár: {0} múlva"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
@@ -6615,7 +6615,7 @@ msgstr "Egy bejegyzés alatti válaszok rendezése:"
 #: src/components/moderation/LabelsOnMeDialog.tsx:178
 #: src/components/moderation/ModerationDetailsDialog.tsx:186
 msgid "Source: <0>{sourceName}</0>"
-msgstr ""
+msgstr "Forrás: <0>{sourceName}</0>"
 
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
