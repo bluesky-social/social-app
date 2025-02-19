@@ -8,6 +8,7 @@ import {
   ViewabilityConfig,
   ViewToken,
 } from 'react-native'
+import {SystemBars} from 'react-native-edge-to-edge'
 import {
   Gesture,
   GestureDetector,
@@ -77,7 +78,7 @@ import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Header} from '#/screens/VideoFeed/components/Header'
 import {atoms as a, ios, platform, ThemeProvider, useTheme} from '#/alf'
-import {setNavigationBar} from '#/alf/util/navigationBar'
+import {setSystemUITheme} from '#/alf/util/systemUI'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
@@ -126,10 +127,10 @@ export function VideoFeed({}: NativeStackScreenProps<
   useFocusEffect(
     useCallback(() => {
       setMinShellMode(true)
-      setNavigationBar('lightbox', t)
+      setSystemUITheme('lightbox', t)
       return () => {
         setMinShellMode(false)
-        setNavigationBar('theme', t)
+        setSystemUITheme('theme', t)
       }
     }, [setMinShellMode, t]),
   )
@@ -140,6 +141,7 @@ export function VideoFeed({}: NativeStackScreenProps<
   return (
     <ThemeProvider theme="dark">
       <Layout.Screen noInsetTop style={{backgroundColor: 'black'}}>
+        <SystemBars style={{statusBar: 'light', navigationBar: 'light'}} />
         <View
           style={[
             a.absolute,
