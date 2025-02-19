@@ -782,6 +782,14 @@ export class Convo {
       id: tempId,
       message,
     })
+    // @ts-expect-error need SDK update
+    if (this.convo?.status === 'request') {
+      this.convo = {
+        ...this.convo,
+        // @ts-expect-error need SDK update
+        status: 'request',
+      }
+    }
     this.commit()
 
     if (!this.isProcessingPendingMessages && !this.pendingMessageFailure) {
