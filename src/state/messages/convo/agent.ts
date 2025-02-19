@@ -787,7 +787,7 @@ export class Convo {
       this.convo = {
         ...this.convo,
         // @ts-expect-error need SDK update
-        status: 'request',
+        status: 'accepted',
       }
     }
     this.commit()
