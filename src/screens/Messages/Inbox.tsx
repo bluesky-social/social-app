@@ -41,7 +41,7 @@ export function MessagesInboxScreen({}: Props) {
         <Layout.Header.BackButton />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
-            <Trans>Chat request inbox</Trans>
+            <Trans>Chat requests</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
         <Layout.Header.Slot />
@@ -170,7 +170,7 @@ function RequestList() {
                 <View style={[a.pt_3xl, a.align_center]}>
                   <MessageIcon width={48} fill={t.palette.primary_500} />
                   <Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_bold]}>
-                    <Trans>Nothing here</Trans>
+                    <Trans>Inbox zero!</Trans>
                   </Text>
                   <Text
                     style={[
@@ -180,7 +180,9 @@ function RequestList() {
                       a.leading_snug,
                       t.atoms.text_contrast_medium,
                     ]}>
-                    <Trans>Inbox zero!</Trans>
+                    <Trans>
+                      You don't have any chat requests at the moment.
+                    </Trans>
                   </Text>
                   <Button
                     variant="solid"
