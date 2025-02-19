@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-19 03:37\n"
+"PO-Revision-Date: 2025-02-19 12:44\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -7822,7 +7822,7 @@ msgstr "ビデオフィード"
 
 #: src/components/VideoPostCard.tsx:122
 msgid "Video from {0}: {text}"
-msgstr "{0}からのビデオ: {text}"
+msgstr "{0}からのビデオ：{text}"
 
 #: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
