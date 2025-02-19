@@ -8,7 +8,7 @@ msgstr ""
 "Language: pl\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-19 06:09\n"
+"PO-Revision-Date: 2025-02-19 07:43\n"
 "Last-Translator: \n"
 "Language-Team: Polish\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
@@ -1040,7 +1040,7 @@ msgstr "Zablokowane konta nie mogą komentować twoich wpisów, wzmiankować ci�
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:112
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
-msgstr "Zablokowane konta nie mogą odpowiadać na twoje wpisy, wzmiankować cię ani w inny sposób wchodzić z tobą w interakcje. Nie będziesz widzieć ich treści, a oni nie będą widzieć twoich."
+msgstr "Zablokowane konta nie mogą komentować twoich wpisów, wzmiankować cię ani w inny sposób wchodzić z tobą w interakcje. Nie będziesz widzieć ich treści, a oni nie będą widzieć twoich."
 
 #: src/view/com/post-thread/PostThread.tsx:464
 msgid "Blocked post."
@@ -1052,11 +1052,11 @@ msgstr "Blokowanie nie przeszkodzi moderacji w umieszczaniu ostrzeżeń na twoim
 
 #: src/view/screens/ProfileList.tsx:757
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
-msgstr "Blokowanie jest publiczne. Zablokowane konta nie mogą odpowiadać na twoje wpisy, wzmiankować cię ani w inny sposób wchodzić z tobą w interakcje."
+msgstr "Blokowanie jest publiczne. Zablokowane konta nie mogą komentować twoich wpisów, wzmiankować cię ani w inny sposób wchodzić z tobą w interakcje."
 
 #: src/view/com/profile/ProfileMenu.tsx:385
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
-msgstr "Blokowanie nie przeszkodzi w umieszczaniu ostrzeżeń na twoim koncie, ale uniemożliwi odpowiadanie na twoje wpisy lub wchodzenie z tobą w interakcje."
+msgstr "Blokowanie nie przeszkodzi w umieszczaniu ostrzeżeń na twoim koncie, ale uniemożliwi komentowanie twoich wpisów lub wchodzenie z tobą w interakcje."
 
 #: src/view/com/auth/SplashScreen.web.tsx:173
 msgid "Blog"
@@ -4662,7 +4662,7 @@ msgstr "Obsługiwane są tylko pliki .jpg i .png"
 
 #: src/components/WhoCanReply.tsx:226
 msgid "Only {0} can reply."
-msgstr "Tylko {0} mogą odpowiadać"
+msgstr "Tylko {0} mogą komentować."
 
 #: src/screens/Signup/StepHandle.tsx:156
 msgid "Only contains letters, numbers, and hyphens"
@@ -8068,7 +8068,7 @@ msgstr "Przepraszamy, ale twoje wyszukiwanie się nie powiodło. Spróbuj ponown
 
 #: src/view/com/composer/Composer.tsx:425
 msgid "We're sorry! The post you are replying to has been deleted."
-msgstr "Przepraszamy! Wpis, na który odpowiadasz, został usunięty."
+msgstr "Przepraszamy! Wpis, który komentujesz, został usunięty."
 
 #: src/components/Lists.tsx:194
 #: src/view/screens/NotFound.tsx:50
@@ -8119,7 +8119,7 @@ msgstr "Kto może wchodzić w interakcje z tym wpisem?"
 
 #: src/components/WhoCanReply.tsx:91
 msgid "Who can reply"
-msgstr "Kto może odpowiadać"
+msgstr "Kto może komentować"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
 #: src/screens/Messages/ChatList.tsx:156
