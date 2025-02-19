@@ -1124,6 +1124,7 @@ function ComposerPills({
         contentContainerStyle={[a.gap_sm]}
         horizontal={true}
         bounces={false}
+        keyboardShouldPersistTaps="always"
         showsHorizontalScrollIndicator={false}>
         {isReply ? null : (
           <ThreadgateBtn
