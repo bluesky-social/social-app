@@ -7290,6 +7290,10 @@ msgstr "វានឹងដក @{0} ចេញពីបញ្ជីចូលប្
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "វានឹងលុបការបង្ហោះរបស់អ្នកចេញពីប្រកាសសម្រង់នេះសម្រាប់អ្នកប្រើប្រាស់ទាំងអស់ ហើយជំនួសវាដោយកន្លែងដាក់"
 
+#: src/components/dialogs/MutedWords.tsx:98
+msgid "This word has already been muted"
+msgstr ""
+
 #: src/view/com/post-thread/PostThread.tsx:606
 #: src/view/com/post-thread/PostThread.tsx:609
 msgid "Thread options"
