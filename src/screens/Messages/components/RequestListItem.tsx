@@ -90,10 +90,17 @@ export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
     </View>
   )
 }
-function RejectMenu({
+
+export function RejectMenu({
   convo,
   profile,
-}: {
+  size = 'tiny',
+  variant = 'outline',
+  color = 'secondary',
+  label,
+  ...props
+}: Omit<ButtonProps, 'onPress' | 'children' | 'label'> & {
+  label?: string
   convo: ChatBskyConvoDefs.ConvoView
   profile: ChatBskyActorDefs.ProfileViewBasic
 }) {
@@ -128,17 +135,16 @@ function RejectMenu({
     <>
       <Menu.Root>
         <Menu.Trigger label={_(msg`Reject chat request`)}>
-          {({props}) => (
+          {({props: triggerProps}) => (
             <Button
+              {...triggerProps}
               {...props}
-              label={props.accessibilityLabel}
+              label={triggerProps.accessibilityLabel}
               style={[a.flex_1]}
-              color="secondary"
-              variant="outline"
-              size="tiny">
-              <ButtonText>
-                <Trans>Reject</Trans>
-              </ButtonText>
+              color={color}
+              variant={variant}
+              size={size}>
+              <ButtonText>{label || <Trans>Reject</Trans>}</ButtonText>
             </Button>
           )}
         </Menu.Trigger>
