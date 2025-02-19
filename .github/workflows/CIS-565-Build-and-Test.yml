@@ -2,6 +2,11 @@ name: CIS-565_BUILD
 
 on:
   workflow_dispatch:
+    inputs:
+      testPath:
+        description: "Path to Playwright tests (e.g., __e2e__)"
+        required: false
+        default: "__e2e__"
   push:
     branches:
       - main
@@ -23,8 +28,6 @@ jobs:
           context: .
           file: ./Dockerfile
           push: false
-          # Optionally, specify a tag for the local image:
-          # tags: myimage:latest
 
   playwright-tests:
     needs: build
@@ -45,4 +48,4 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright Tests
-        run: npx playwright test
+        run: npx playwright test ${{ github.event.inputs.testPath }}
