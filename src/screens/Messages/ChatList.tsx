@@ -133,7 +133,12 @@ export function MessagesScreen({navigation, route}: Props) {
       const inbox =
         inboxData?.pages
           .flatMap(page => page.convos)
-          .filter(convo => !leftConvos.includes(convo.id)) ?? []
+          .filter(
+            convo =>
+              !leftConvos.includes(convo.id) &&
+              !convo.muted &&
+              convo.unreadCount > 0,
+          ) ?? []
       const pending = inbox
         .map(x => x.members.find(y => y.did !== currentAccount?.did))
         .filter(x => !!x)
