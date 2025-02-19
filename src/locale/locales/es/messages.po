@@ -8,7 +8,7 @@ msgstr ""
 "Language: es\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-19 08:54\n"
+"PO-Revision-Date: 2025-02-19 10:24\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1561,7 +1561,7 @@ msgstr "Completa el desafío"
 
 #: src/view/shell/desktop/LeftNav.tsx:499
 msgid "Compose new post"
-msgstr "Redactar nueva publicación"
+msgstr "Escribir nueva publicación"
 
 #: src/view/com/composer/Composer.tsx:834
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
@@ -1569,7 +1569,7 @@ msgstr "Componer publicaciones hasta {MAX_GRAPHEME_LENGTH} caracteres de longitu
 
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:34
 msgid "Compose reply"
-msgstr "Redactar la respuesta"
+msgstr "Escribir la respuesta"
 
 #: src/view/com/composer/Composer.tsx:1651
 msgid "Compressing video..."
@@ -6615,7 +6615,7 @@ msgstr "Ordenar respuestas a la misma publicación por:"
 #: src/components/moderation/LabelsOnMeDialog.tsx:178
 #: src/components/moderation/ModerationDetailsDialog.tsx:186
 msgid "Source: <0>{sourceName}</0>"
-msgstr ""
+msgstr "Origen: <0>{sourceName}</0>"
 
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
@@ -7415,7 +7415,7 @@ msgstr "Desbloquear lista"
 
 #: src/view/screens/ProfileList.tsx:575
 msgid "Un-mute list"
-msgstr "Demutear lista"
+msgstr "Dejar de silenciar la lista"
 
 #: src/lib/strings/errors.ts:11
 msgid "Unable to connect. Please check your internet connection and try again."
@@ -7453,17 +7453,17 @@ msgstr "Desbloquear"
 #: src/components/dms/ConvoMenu.tsx:247
 #: src/components/dms/ConvoMenu.tsx:250
 msgid "Unblock account"
-msgstr "Desbloquear cuenta"
+msgstr "Desbloquear la cuenta"
 
 #: src/view/com/profile/ProfileMenu.tsx:306
 #: src/view/com/profile/ProfileMenu.tsx:312
 msgid "Unblock Account"
-msgstr "Desbloquear Cuenta"
+msgstr "Desbloquear la cuenta"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
 #: src/view/com/profile/ProfileMenu.tsx:375
 msgid "Unblock Account?"
-msgstr "¿Desbloquear Cuenta?"
+msgstr "¿Desbloquear la cuenta?"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:76
@@ -7504,11 +7504,11 @@ msgstr "No me gusta ({0, plural, one {# me gusta} other {# me gusta}})"
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
 msgctxt "video"
 msgid "Unmute"
-msgstr "Demutear"
+msgstr "Dejar de silenciar"
 
 #: src/view/screens/ProfileList.tsx:701
 msgid "Unmute"
-msgstr "Demutear"
+msgstr "Dejar de silenciar"
 
 #: src/components/RichTextTag.tsx:140
 #: src/components/RichTextTag.tsx:153
@@ -7518,16 +7518,16 @@ msgstr "Dejar de silenciar {tag}"
 #: src/view/com/profile/ProfileMenu.tsx:285
 #: src/view/com/profile/ProfileMenu.tsx:291
 msgid "Unmute Account"
-msgstr "Demutear Cuenta"
+msgstr "Dejar de silenciar la cuenta"
 
 #: src/components/dms/ConvoMenu.tsx:236
 msgid "Unmute conversation"
-msgstr "Demutear conversación"
+msgstr "Dejar de silenciar la conversación"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:499
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
 msgid "Unmute thread"
-msgstr "Demutear hilo"
+msgstr "Dejar de silenciar el hilo"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:318
 msgid "Unmute video"
@@ -7605,7 +7605,7 @@ msgstr "Actualizar a {domain}"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:308
 msgid "Updating quote attachment failed"
-msgstr "Actualizar el adjunto de la cita falló"
+msgstr "Error al actualizar el adjunto de la cita"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:338
 msgid "Updating reply visibility failed"
@@ -7649,7 +7649,7 @@ msgstr "Subiendo imágenes..."
 #: src/lib/api/index.ts:356
 #: src/lib/api/index.ts:380
 msgid "Uploading link thumbnail..."
-msgstr "Subiendo miniatura del link..."
+msgstr "Subiendo miniatura del enlace..."
 
 #: src/view/com/composer/Composer.tsx:1654
 msgid "Uploading video..."
@@ -7666,12 +7666,12 @@ msgstr "Utilizar el proveedor predeterminado"
 #: src/view/com/modals/InAppBrowserConsent.tsx:53
 #: src/view/com/modals/InAppBrowserConsent.tsx:55
 msgid "Use in-app browser"
-msgstr "Usar navegador integrado"
+msgstr "Usar el navegador integrado"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:93
 #: src/screens/Settings/ContentAndMediaSettings.tsx:99
 msgid "Use in-app browser to open links"
-msgstr "Usar navegador en-aplicación para abrir enlaces"
+msgstr "Usar el navegador integrado para abrir los enlaces"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:63
 #: src/view/com/modals/InAppBrowserConsent.tsx:65
@@ -7697,7 +7697,7 @@ msgstr "Usuario bloqueado"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:55
 msgid "User Blocked by \"{0}\""
-msgstr "Usuario bloqueado por \"{0}\"\" # uppercase"
+msgstr "Usuario bloqueado por \"{0}\""
 
 #: src/components/dms/BlockedByListDialog.tsx:27
 msgid "User blocked by list"
@@ -7705,7 +7705,7 @@ msgstr "Usuario bloqueado por lista"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:57
 msgid "User Blocked by List"
-msgstr "Usuario Bloqueado por Lista"
+msgstr "Usuario bloqueado por una lista"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:73
 msgid "User Blocking You"
@@ -8023,7 +8023,7 @@ msgstr "Ya no quedan publicaciones de las cuentas que sigues. Aquí está lo úl
 
 #: src/view/com/composer/state/video.ts:417
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
-msgstr "No pudimos determinar si tienes permiso para subir videos. Por favor, inténtalo de nuevo."
+msgstr "No pudimos determinar si tienes permiso para cargar videos. Inténtalo de nuevo."
 
 #: src/components/dialogs/BirthDateSettings.tsx:51
 msgid "We were unable to load your birth date preferences. Please try again."
@@ -8170,7 +8170,7 @@ msgstr "Escribe un mensaje"
 
 #: src/view/com/composer/Composer.tsx:832
 msgid "Write post"
-msgstr "Redacta una publicación"
+msgstr "Escribe una publicación"
 
 #: src/view/com/composer/Composer.tsx:742
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:69
@@ -8274,7 +8274,7 @@ msgstr "No tienes ningún seguidor."
 
 #: src/screens/Profile/KnownFollowers.tsx:109
 msgid "You don't follow any users who follow @{name}."
-msgstr "No sigues a ningún usuario que sigue a @{name}."
+msgstr "No sigues a ningún usuario que siga a @{name}."
 
 #: src/view/com/modals/InviteCodes.tsx:67
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
@@ -8307,7 +8307,7 @@ msgstr "Has bloqueado a este usuario. No puedes ver su contenido."
 #: src/view/com/modals/ChangePassword.tsx:88
 #: src/view/com/modals/ChangePassword.tsx:122
 msgid "You have entered an invalid code. It should look like XXXXX-XXXXX."
-msgstr "Has ingresado un código inválido. Debe lucir algo así XXXXX-XXXXX."
+msgstr "Has ingresado un código inválido. El formato debería ser XXXXX-XXXXX."
 
 #: src/lib/moderation/useModerationCauseDescription.ts:116
 msgid "You have hidden this post"
@@ -8320,11 +8320,11 @@ msgstr "Has ocultado esta publicación."
 #: src/components/moderation/ModerationDetailsDialog.tsx:104
 #: src/lib/moderation/useModerationCauseDescription.ts:99
 msgid "You have muted this account."
-msgstr "Has muteado a esta cuenta."
+msgstr "Has silenciado esta cuenta."
 
 #: src/lib/moderation/useModerationCauseDescription.ts:93
 msgid "You have muted this user"
-msgstr "Has muteado a esta cuenta"
+msgstr "Has silenciado a este usuario"
 
 #: src/screens/Messages/ChatList.tsx:198
 msgid "You have no conversations yet. Start one!"
@@ -8406,7 +8406,7 @@ msgstr "Debes otorgar acceso a tu biblioteca de fotos para guardar la imagen."
 
 #: src/components/ReportDialog/SubmitView.tsx:211
 msgid "You must select at least one labeler for a report"
-msgstr "Debes seleccionar al menos un etiquetador para un informe"
+msgstr "Debes seleccionar al menos un etiquetador para una denuncia"
 
 #: src/screens/Deactivated.tsx:127
 msgid "You previously deactivated @{0}."
@@ -8427,7 +8427,7 @@ msgstr "Ahora recibirás notificaciones de este hilo"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:108
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
-msgstr "Enviamos un código de reseteo a tu correo. Introduce ese código aquí y luego introduce tu nueva contraseña."
+msgstr "Hemos enviado un código de restablecimiento a tu correo. Introdúcelo aquí y, después, introduce tu nueva contraseña."
 
 #: src/screens/Messages/components/ChatListItem.tsx:139
 msgid "You: {0}"
