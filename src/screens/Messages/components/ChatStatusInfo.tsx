@@ -29,7 +29,8 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
         a.flex_1,
         t.atoms.bg,
         a.px_lg,
-        a.py_lg,
+        a.pt_lg,
+        a.pb_sm,
         a.gap_md,
         a.align_center,
         a.absolute,
@@ -44,7 +45,7 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
           showIfEmpty
         />
       )}
-      <View style={[a.flex_row, a.gap_sm]}>
+      <View style={[a.flex_row, a.gap_sm, a.w_full]}>
         {otherUser && (
           <RejectMenu
             label={_(msg`Block or report`)}
@@ -52,14 +53,15 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
             profile={otherUser}
             color="negative"
             size="small"
+            currentScreen="conversation"
           />
         )}
         <DeleteChatButton
           label={_(msg`Delete`)}
           convo={convoState.convo}
-          popOnLeave
           color="secondary"
           size="small"
+          currentScreen="conversation"
         />
       </View>
     </View>

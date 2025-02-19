@@ -7,7 +7,6 @@ import {StackActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {NavigationProp} from '#/lib/routes/types'
-import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAcceptConversation} from '#/state/queries/messages/accept-conversation'
@@ -78,11 +77,16 @@ export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
         {!isDeletedAccount ? (
           <>
             <AcceptChatButton convo={convo} />
-            <RejectMenu convo={convo} profile={otherUser} />
+            <RejectMenu
+              convo={convo}
+              profile={otherUser}
+              showDeleteConvo
+              currentScreen="list"
+            />
           </>
         ) : (
           <>
-            <DeleteChatButton convo={convo} />
+            <DeleteChatButton convo={convo} currentScreen="list" />
             <View style={a.flex_1} />
           </>
         )}
@@ -98,15 +102,25 @@ export function RejectMenu({
   variant = 'outline',
   color = 'secondary',
   label,
+  showDeleteConvo,
+  currentScreen,
   ...props
 }: Omit<ButtonProps, 'onPress' | 'children' | 'label'> & {
   label?: string
   convo: ChatBskyConvoDefs.ConvoView
   profile: ChatBskyActorDefs.ProfileViewBasic
+  showDeleteConvo?: boolean
+  currentScreen: 'list' | 'conversation'
 }) {
   const {_} = useLingui()
   const shadowedProfile = useProfileShadow(profile)
+  const navigation = useNavigation<NavigationProp>()
   const {mutate: leaveConvo} = useLeaveConvo(convo.id, {
+    onMutate: () => {
+      if (currentScreen === 'conversation') {
+        navigation.dispatch(StackActions.pop())
+      }
+    },
     onError: () => {
       Toast.show(_('Failed to delete chat'), 'xmark')
     },
@@ -150,14 +164,16 @@ export function RejectMenu({
         </Menu.Trigger>
         <Menu.Outer>
           <Menu.Group>
-            <Menu.Item
-              label={_(msg`Delete conversation`)}
-              onPress={onPressDelete}>
-              <Menu.ItemText>
-                <Trans>Delete conversation</Trans>
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={CircleX_Stroke2_Corner0_Rounded} />
-            </Menu.Item>
+            {showDeleteConvo && (
+              <Menu.Item
+                label={_(msg`Delete conversation`)}
+                onPress={onPressDelete}>
+                <Menu.ItemText>
+                  <Trans>Delete conversation</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={CircleX_Stroke2_Corner0_Rounded} />
+              </Menu.Item>
+            )}
             <Menu.Item label={_(msg`Block account`)} onPress={onPressBlock}>
               <Menu.ItemText>
                 <Trans>Block account</Trans>
@@ -182,7 +198,7 @@ export function RejectMenu({
       </Menu.Root>
       {lastMessage && (
         <ReportDialog
-          currentScreen="list"
+          currentScreen={currentScreen}
           params={{
             type: 'convoMessage',
             convoId: convo.id,
@@ -238,22 +254,20 @@ export function DeleteChatButton({
   variant = 'outline',
   color = 'secondary',
   label,
-  popOnLeave = false,
+  currentScreen,
   ...props
 }: Omit<ButtonProps, 'onPress' | 'children' | 'label'> & {
   label?: string
   convo: ChatBskyConvoDefs.ConvoView
-  popOnLeave?: boolean
+  currentScreen: 'list' | 'conversation'
 }) {
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
 
   const {mutate: leaveConvo} = useLeaveConvo(convo.id, {
     onMutate: () => {
-      if (popOnLeave) {
-        navigation.dispatch(
-          StackActions.replace('Messages', isNative ? {animation: 'pop'} : {}),
-        )
+      if (currentScreen === 'conversation') {
+        navigation.dispatch(StackActions.pop())
       }
     },
     onError: () => {
