@@ -13,6 +13,7 @@ import {shareUrl} from '#/lib/sharing'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {enforceLen} from '#/lib/strings/helpers'
+import {isAndroid} from '#/platform/detection'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {Pager} from '#/view/com/pager/Pager'
@@ -22,6 +23,7 @@ import {List} from '#/view/com/util/List'
 import {atoms as a, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {DivergingNodes_Stroke2_Corner0_Rounded as ShareAndroid} from '#/components/icons/DivergingNodes'
 import * as Layout from '#/components/Layout'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 
@@ -131,7 +133,7 @@ export default function HashtagScreen({
                   onPress={onShare}
                   hitSlop={HITSLOP_10}
                   style={[{right: -3}]}>
-                  <ButtonIcon icon={Share} size="md" />
+                  <ButtonIcon icon={isAndroid ? ShareAndroid : Share} size="md" />
                 </Button>
               </Layout.Header.Slot>
             </Layout.Header.Outer>

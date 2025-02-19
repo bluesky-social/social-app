@@ -11,6 +11,7 @@ import {NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
+import {isAndroid} from '#/platform/detection'
 import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
 import {useDevModeEnabled} from '#/state/preferences/dev-mode'
@@ -25,6 +26,7 @@ import {EventStopper} from '#/view/com/util/EventStopper'
 import * as Toast from '#/view/com/util/Toast'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {DivergingNodes_Stroke2_Corner0_Rounded as ShareAndroid} from '#/components/icons/DivergingNodes'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
@@ -224,7 +226,7 @@ let ProfileMenu = ({
               <Menu.ItemText>
                 <Trans>Share</Trans>
               </Menu.ItemText>
-              <Menu.ItemIcon icon={Share} />
+              <Menu.ItemIcon icon={isAndroid ? ShareAndroid : Share} />
             </Menu.Item>
             <Menu.Item
               testID="profileHeaderDropdownSearchBtn"
@@ -349,7 +351,7 @@ let ProfileMenu = ({
                   <Menu.ItemText>
                     <Trans>Copy at:// URI</Trans>
                   </Menu.ItemText>
-                  <Menu.ItemIcon icon={Share} />
+                  <Menu.ItemIcon icon={isAndroid ? ShareAndroid : Share} />
                 </Menu.Item>
                 <Menu.Item
                   testID="profileHeaderDropdownShareDIDBtn"
@@ -358,7 +360,7 @@ let ProfileMenu = ({
                   <Menu.ItemText>
                     <Trans>Copy DID</Trans>
                   </Menu.ItemText>
-                  <Menu.ItemIcon icon={Share} />
+                  <Menu.ItemIcon icon={isAndroid ? ShareAndroid : Share} />
                 </Menu.Item>
               </Menu.Group>
             </>
