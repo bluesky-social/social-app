@@ -1,12 +1,13 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
 import {ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
+import {StackActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {NavigationProp} from '#/lib/routes/types'
+import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAcceptConversation} from '#/state/queries/messages/accept-conversation'
@@ -16,7 +17,7 @@ import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, tokens} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonProps, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {ReportDialog} from '#/components/dms/ReportDialog'
 import {CircleX_Stroke2_Corner0_Rounded} from '#/components/icons/CircleX'
@@ -57,7 +58,7 @@ export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
         <View style={[a.pt_md, a.pb_xs, a.w_full, {opacity: 0}]} aria-hidden>
           {/* Placeholder text so that it responds to the font height */}
           <Text style={[a.text_xs, a.leading_tight, a.font_bold]}>
-            Accept Request
+            <Trans>Accept Request</Trans>
           </Text>
         </View>
       </ChatListItem>
@@ -135,18 +136,26 @@ function RejectMenu({
               color="secondary"
               variant="outline"
               size="tiny">
-              <ButtonText>Reject</ButtonText>
+              <ButtonText>
+                <Trans>Reject</Trans>
+              </ButtonText>
             </Button>
           )}
         </Menu.Trigger>
         <Menu.Outer>
           <Menu.Group>
-            <Menu.Item label="Delete conversation" onPress={onPressDelete}>
-              <Menu.ItemText>Delete conversation</Menu.ItemText>
+            <Menu.Item
+              label={_(msg`Delete conversation`)}
+              onPress={onPressDelete}>
+              <Menu.ItemText>
+                <Trans>Delete conversation</Trans>
+              </Menu.ItemText>
               <Menu.ItemIcon icon={CircleX_Stroke2_Corner0_Rounded} />
             </Menu.Item>
-            <Menu.Item label="Block account" onPress={onPressBlock}>
-              <Menu.ItemText>Block account</Menu.ItemText>
+            <Menu.Item label={_(msg`Block account`)} onPress={onPressBlock}>
+              <Menu.ItemText>
+                <Trans>Block account</Trans>
+              </Menu.ItemText>
               <Menu.ItemIcon icon={PersonXIcon} />
             </Menu.Item>
             {/* note: last message will almost certainly be defined, since you can't
@@ -154,9 +163,11 @@ function RejectMenu({
               screen to have a message sent by you */}
             {lastMessage && (
               <Menu.Item
-                label="Report conversation"
+                label={_(msg`Report conversation`)}
                 onPress={reportControl.open}>
-                <Menu.ItemText>Report conversation</Menu.ItemText>
+                <Menu.ItemText>
+                  <Trans>Report conversation</Trans>
+                </Menu.ItemText>
                 <Menu.ItemIcon icon={FlagIcon} />
               </Menu.Item>
             )}
@@ -191,7 +202,8 @@ function AcceptChatButton({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
 
   const onPressAccept = useCallback(() => {
     acceptConvo()
-    precacheConvoQuery(queryClient, convo)
+    // @ts-expect-error need API update
+    precacheConvoQuery(queryClient, {...convo, status: 'accepted'})
     navigation.navigate('MessagesConversation', {conversation: convo.id})
   }, [acceptConvo, navigation, convo, queryClient])
 
@@ -206,15 +218,38 @@ function AcceptChatButton({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
       {isPending ? (
         <ButtonIcon icon={Loader} />
       ) : (
-        <ButtonText>Accept</ButtonText>
+        <ButtonText>
+          <Trans>Accept</Trans>
+        </ButtonText>
       )}
     </Button>
   )
 }
 
-function DeleteChatButton({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
+export function DeleteChatButton({
+  convo,
+  size = 'tiny',
+  variant = 'outline',
+  color = 'secondary',
+  label,
+  popOnLeave = false,
+  ...props
+}: Omit<ButtonProps, 'onPress' | 'children' | 'label'> & {
+  label?: string
+  convo: ChatBskyConvoDefs.ConvoView
+  popOnLeave?: boolean
+}) {
   const {_} = useLingui()
+  const navigation = useNavigation<NavigationProp>()
+
   const {mutate: leaveConvo} = useLeaveConvo(convo.id, {
+    onMutate: () => {
+      if (popOnLeave) {
+        navigation.dispatch(
+          StackActions.replace('Messages', isNative ? {animation: 'pop'} : {}),
+        )
+      }
+    },
     onError: () => {
       Toast.show(_('Failed to delete chat'), 'xmark')
     },
@@ -227,13 +262,14 @@ function DeleteChatButton({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
 
   return (
     <Button
-      label={_(msg`Delete chat`)}
-      size="tiny"
-      variant="outline"
-      color="secondary"
+      label={label || _(msg`Delete chat`)}
+      size={size}
+      variant={variant}
+      color={color}
       style={a.flex_1}
-      onPress={onPressDelete}>
-      <ButtonText>Delete chat</ButtonText>
+      onPress={onPressDelete}
+      {...props}>
+      <ButtonText>{label || <Trans>Delete chat</Trans>}</ButtonText>
     </Button>
   )
 }
