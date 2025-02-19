@@ -237,6 +237,9 @@ input:focus {
 .dropdown-menu-transform-origin > * {
   transform-origin: var(--radix-dropdown-menu-content-transform-origin);
 }
+.dropdown-menu-constrain-size > * {
+  max-height: var(--radix-dropdown-menu-content-available-height);
+}
 
 .force-no-clicks > *,
 .force-no-clicks * {
