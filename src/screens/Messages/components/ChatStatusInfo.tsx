@@ -7,7 +7,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {KnownFollowers} from '#/components/KnownFollowers'
-import {DeleteChatButton, RejectMenu} from './RequestListItem'
+import {DeleteChatButton, RejectMenu} from './RequestButtons'
 
 export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
   const t = useTheme()
@@ -31,7 +31,7 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
         a.px_lg,
         a.pt_lg,
         a.pb_sm,
-        a.gap_md,
+        a.gap_lg,
         a.align_center,
         a.absolute,
         {bottom: '100%'},
