@@ -8,7 +8,7 @@ msgstr ""
 "Language: es\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-19 03:37\n"
+"PO-Revision-Date: 2025-02-19 08:54\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1652,11 +1652,11 @@ msgstr "Contenido y medios"
 
 #: src/Navigation.tsx:373
 msgid "Content and Media"
-msgstr "Contenido y Medios"
+msgstr "Contenido y medios"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:18
 msgid "Content Blocked"
-msgstr "Contenido Bloqueado"
+msgstr "Contenido bloqueado"
 
 #: src/screens/Moderation/index.tsx:287
 msgid "Content filters"
@@ -2053,7 +2053,7 @@ msgstr "Eliminado"
 #: src/components/dms/MessagesListHeader.tsx:155
 #: src/screens/Messages/components/ChatListItem.tsx:113
 msgid "Deleted Account"
-msgstr "Cuenta Eliminada"
+msgstr "Cuenta eliminada"
 
 #: src/view/com/post-thread/PostThread.tsx:450
 msgid "Deleted post."
@@ -7822,7 +7822,7 @@ msgstr "Feed de videos"
 
 #: src/components/VideoPostCard.tsx:122
 msgid "Video from {0}: {text}"
-msgstr "video de {0}: {text}"
+msgstr "Video de {0}: {text}"
 
 #: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
@@ -8353,7 +8353,7 @@ msgstr "Has llegado al final"
 
 #: src/lib/media/video/upload.shared.ts:56
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
-msgstr "Has alcanzado temporalmente el límite de subidas de videos. Por favor, inténtalo de nuevo más tarde."
+msgstr "Has alcanzado temporalmente el límite de carga de videos. Inténtalo de nuevo más tarde."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:240
 msgid "You haven't created a starter pack yet!"
@@ -8447,7 +8447,7 @@ msgstr "¡Comenzarás a seguir a los usuarios y feeds sugeridos una vez que term
 
 #: src/screens/Signup/index.tsx:116
 msgid "You'll follow the suggested users once you finish creating your account!"
-msgstr "Comenzarás a seguir a los usuarios sugeridos una vez que termines de crear tu cuenta!"
+msgstr "¡Comenzarás a seguir a los usuarios sugeridos cuando hayas terminado de crear tu cuenta!"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:238
 msgid "You'll follow these people and {0} others"
@@ -8489,7 +8489,7 @@ msgstr "Has encontrado algunas personas a las que seguir"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
-msgstr "¡Haz llegado al fin de tu feed! Encuentra más cuentas para seguir."
+msgstr "¡Has llegado al fin de tu feed! Encuentra más cuentas para seguir."
 
 #: src/view/com/composer/state/video.ts:421
 msgid "You've reached your daily limit for video uploads (too many bytes)"
