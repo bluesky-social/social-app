@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-19 12:44\n"
+"PO-Revision-Date: 2025-02-20 13:23\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -2274,8 +2274,8 @@ msgstr "ダブルタップでいいね"
 msgid "Download Bluesky"
 msgstr "Blueskyをダウンロード"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:77
-#: src/screens/Settings/components/ExportCarDialog.tsx:82
+#: src/screens/Settings/components/ExportCarDialog.tsx:79
+#: src/screens/Settings/components/ExportCarDialog.tsx:84
 msgid "Download CAR file"
 msgstr "CARファイルをダウンロード"
 
@@ -2730,7 +2730,7 @@ msgstr "期限：{0}"
 #: src/components/moderation/LabelsOnMeDialog.tsx:199
 #: src/components/moderation/ModerationDetailsDialog.tsx:208
 msgid "Expires in {0}"
-msgstr ""
+msgstr "{0}で期限切れ"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
@@ -4802,7 +4802,7 @@ msgstr "新しいBlueskyのアカウントを作成するフローを開く"
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.web.tsx:125
 msgid "Opens flow to sign in to your existing Bluesky account"
-msgstr ""
+msgstr "既存のBlueskyアカウントにサインインする画面を開きます"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Opens GIF select dialog"
@@ -6615,7 +6615,7 @@ msgstr "次の方法で同じ投稿への返信を並び替えます。"
 #: src/components/moderation/LabelsOnMeDialog.tsx:178
 #: src/components/moderation/ModerationDetailsDialog.tsx:186
 msgid "Source: <0>{sourceName}</0>"
-msgstr ""
+msgstr "ソース：<0>{sourceName}</0>"
 
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
@@ -7140,7 +7140,7 @@ msgstr "このコンテンツはBlueskyのアカウントがないと閲覧で�
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr "削除あるいは無効化されたアカウントとの会話です。押すと選択肢が表示されます"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:94
+#: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "この機能はベータ版です。リポジトリのエクスポートの詳細については、<0>このブログ投稿</0>を参照してください。"
 
@@ -7881,7 +7881,7 @@ msgstr "{displayName}のプロフィールを表示"
 msgid "View blocked user's profile"
 msgstr "ブロック中のユーザーのプロフィールを表示"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:98
+#: src/screens/Settings/components/ExportCarDialog.tsx:100
 msgid "View blogpost for more details"
 msgstr "詳細についてのブログの記事を見る"
 
@@ -8519,7 +8519,7 @@ msgstr "あなたのアカウントは停止されています"
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "あなたのアカウントはまだ新しいのでビデオをアップロードできません。もう一度お試しください。"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:65
+#: src/screens/Settings/components/ExportCarDialog.tsx:67
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "あなたのアカウントの公開データの全記録を含むリポジトリは、「CAR」ファイルとしてダウンロードできます。このファイルには、画像などのメディア埋め込み、また非公開のデータは含まれていないため、それらは個別に取得する必要があります。"
 
