@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-19 03:37\n"
+"PO-Revision-Date: 2025-02-20 13:23\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -2274,8 +2274,8 @@ msgstr ""
 msgid "Download Bluesky"
 msgstr "Descarcă Bluesky"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:77
-#: src/screens/Settings/components/ExportCarDialog.tsx:82
+#: src/screens/Settings/components/ExportCarDialog.tsx:79
+#: src/screens/Settings/components/ExportCarDialog.tsx:84
 msgid "Download CAR file"
 msgstr "Descarcă fișierul CAR"
 
@@ -7140,7 +7140,7 @@ msgstr "Acest conținut nu poate fi vizualizat fără un cont Bluesky."
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:94
+#: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "Această funcționalitate este în beta. Poți citi mai multe despre exporturile de depozite în <0>acest articol de blog</0>."
 
@@ -7881,7 +7881,7 @@ msgstr "Vezi profilul utilizatorului {displayName}"
 msgid "View blocked user's profile"
 msgstr "Vezi profilul utilizatorului blocat"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:98
+#: src/screens/Settings/components/ExportCarDialog.tsx:100
 msgid "View blogpost for more details"
 msgstr "Vezi articolul pentru mai multe detalii"
 
@@ -8519,7 +8519,7 @@ msgstr "Contul tău a fost suspendat"
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Contul tău nu este suficient de vechi pentru a încărca videoclipuri. Încearcă mai târziu."
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:65
+#: src/screens/Settings/components/ExportCarDialog.tsx:67
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "Depozitul contului tău, care conține toate înregistrările de date publice, poate fi descărcat ca fișier \"CAR\". Acest fișier nu include încorporări media, cum ar fi imagini, sau datele tale private, care trebuie obținute separat."
 
