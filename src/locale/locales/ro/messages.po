@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-20 17:35\n"
+"PO-Revision-Date: 2025-02-20 19:05\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -1318,7 +1318,7 @@ msgstr "Schimbă-ți e-mailul"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:171
 msgid "Change your email address"
-msgstr "Schimbă-ți adresa de email"
+msgstr "Schimbă-ți adresa de e-mail"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Changes app icon"
@@ -1642,7 +1642,7 @@ msgstr "Contactează suportul"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:50
 msgid "Content & Media"
-msgstr ""
+msgstr "Conținut și media"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:109
 #: src/screens/Settings/Settings.tsx:175
@@ -2609,7 +2609,7 @@ msgstr "Introdu mai jos noul e-mail"
 
 #: src/screens/Login/LoginForm.tsx:243
 msgid "Enter your password"
-msgstr ""
+msgstr "Introdu-ți parola"
 
 #: src/screens/Login/index.tsx:123
 msgid "Enter your username and password"
@@ -3315,7 +3315,7 @@ msgstr "Ascuns"
 
 #: src/screens/VideoFeed/index.tsx:607
 msgid "Hidden by your moderation settings."
-msgstr ""
+msgstr "Ascuns de setările tale de moderare."
 
 #: src/components/ListCard.tsx:130
 msgid "Hidden list"
@@ -6004,7 +6004,7 @@ msgstr "Caută fluxuri pe care vrei să le sugerezi altora."
 
 #: src/view/screens/Search/Search.tsx:873
 msgid "Search for posts, users, or feeds"
-msgstr ""
+msgstr "Caută postări, utilizatori sau fluxuri"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
 msgid "Search for users"
@@ -6016,12 +6016,12 @@ msgstr "Caută GIF-uri"
 
 #: src/screens/Profile/ProfileSearch.tsx:33
 msgid "Search my posts"
-msgstr ""
+msgstr "Caută în postările mele"
 
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Search Posts"
-msgstr ""
+msgstr "Caută postări"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
 #: src/components/ProgressGuide/FollowDialog.tsx:764
@@ -6034,12 +6034,12 @@ msgstr "Caută pe Tenor"
 
 #: src/screens/Profile/ProfileSearch.tsx:35
 msgid "Search..."
-msgstr ""
+msgstr "Caută..."
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:509
 #: src/components/ProgressGuide/FollowDialog.tsx:765
 msgid "Searches for profiles"
-msgstr ""
+msgstr "Căutări pentru profiluri"
 
 #: src/view/com/modals/ChangeEmail.tsx:105
 msgid "Security Step Required"
@@ -6055,7 +6055,7 @@ msgstr ""
 
 #: src/components/RichTextTag.tsx:118
 msgid "See #{tag} posts"
-msgstr ""
+msgstr "Vezi postările cu #{tag}"
 
 #: src/components/RichTextTag.tsx:132
 msgid "See #{tag} posts by user"
@@ -6235,7 +6235,7 @@ msgstr "Adresa serverului"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:178
 msgid "Set app icon to {0}"
-msgstr ""
+msgstr "Setează pictograma aplicației la {0}"
 
 #: src/screens/Moderation/index.tsx:306
 msgid "Set birthdate"
@@ -7399,7 +7399,7 @@ msgstr "Autentificare în doi pași (2FA)"
 
 #: src/screens/Signup/StepHandle.tsx:118
 msgid "Type your desired username"
-msgstr ""
+msgstr "Introdu numele de utilizator dorit"
 
 #: src/screens/Messages/components/MessageInput.tsx:148
 msgid "Type your message here"
@@ -8266,7 +8266,7 @@ msgstr ""
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:136
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:109
 msgid "You can update this later from your settings."
-msgstr ""
+msgstr "Poți actualiza acest lucru mai târziu din setările tale."
 
 #: src/view/com/profile/ProfileFollowers.tsx:94
 msgid "You do not have any followers."
@@ -8485,7 +8485,7 @@ msgstr "Ai ales să ascunzi un cuvânt sau o etichetă în cadrul acestei postă
 
 #: src/state/shell/progress-guide.tsx:234
 msgid "You've found some people to follow"
-msgstr ""
+msgstr "Ai găsit persoane pe care să le urmărești"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
@@ -8529,7 +8529,7 @@ msgstr ""
 
 #: src/screens/Takendown.tsx:154
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
-msgstr ""
+msgstr "Apelul tău a fost trimis. Dacă apelul reușește, vei primi un e-mail."
 
 #: src/screens/Signup/StepInfo/index.tsx:205
 msgid "Your birth date"
