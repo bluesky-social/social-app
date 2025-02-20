@@ -8,7 +8,7 @@ msgstr ""
 "Language: ru\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-19 03:37\n"
+"PO-Revision-Date: 2025-02-20 11:48\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
@@ -511,7 +511,7 @@ msgstr "Добавить новый пост"
 #: src/view/screens/ProfileList.tsx:903
 #: src/view/screens/ProfileList.tsx:921
 msgid "Add people"
-msgstr ""
+msgstr "Добавить людей"
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
@@ -591,7 +591,7 @@ msgstr "Все учётные записи отслеживаются!"
 #: src/view/screens/Search/Search.tsx:400
 #: src/view/screens/Search/Search.tsx:402
 msgid "All languages"
-msgstr ""
+msgstr "Все языки"
 
 #: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
@@ -824,7 +824,7 @@ msgstr ""
 
 #: src/screens/Takendown.tsx:114
 msgid "Appeal Suspension"
-msgstr ""
+msgstr "Обжаловать приостановку"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:51
 #: src/screens/Messages/components/ChatDisabled.tsx:53
@@ -896,7 +896,7 @@ msgstr "Вы уверены?"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:69
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
-msgstr ""
+msgstr "Вы пишете на <0>{suggestedLanguageName}</0>?"
 
 #: src/screens/Onboarding/index.tsx:23
 #: src/screens/Onboarding/state.ts:95
@@ -997,11 +997,11 @@ msgstr "Заблокировать учётные записи"
 
 #: src/components/dms/ReportDialog.tsx:327
 msgid "Block and Delete"
-msgstr ""
+msgstr "Заблокировать и удалить"
 
 #: src/components/dms/ReportDialog.tsx:345
 msgid "Block and/or delete this conversation"
-msgstr ""
+msgstr "Заблокировать и/или удалить эту беседу"
 
 #: src/view/screens/ProfileList.tsx:760
 msgid "Block list"
@@ -1014,11 +1014,11 @@ msgstr "Заблокировать эти учётные записи?"
 #: src/components/dms/ReportDialog.tsx:349
 #: src/components/dms/ReportDialog.tsx:352
 msgid "Block user"
-msgstr ""
+msgstr "Заблокировать пользователя"
 
 #: src/components/dms/ReportDialog.tsx:331
 msgid "Block User"
-msgstr ""
+msgstr "Заблокировать пользователя"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:84
 msgid "Blocked"
@@ -1065,7 +1065,7 @@ msgstr "Блог"
 #: src/view/com/auth/server-input/index.tsx:136
 #: src/view/com/auth/server-input/index.tsx:137
 msgid "Bluesky"
-msgstr ""
+msgstr "Bluesky"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:868
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
@@ -1086,7 +1086,7 @@ msgstr "Bluesky лучше с друзьями!"
 
 #: src/screens/Takendown.tsx:217
 msgid "Bluesky Social Terms of Service"
-msgstr ""
+msgstr "Условия предоставления услуг Bluesky Social"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:299
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -1098,7 +1098,7 @@ msgstr "Bluesky не будет показывать ваш профиль и п
 
 #: src/screens/Settings/AppIconSettings/index.tsx:99
 msgid "Bluesky+"
-msgstr ""
+msgstr "Bluesky+"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:102
 msgid "Bluesky+ icons"
@@ -1144,7 +1144,7 @@ msgstr "Просмотр других лент"
 
 #: src/components/TrendingTopics.tsx:178
 msgid "Browse posts about {displayName}"
-msgstr ""
+msgstr "Просмотреть посты о {displayName}"
 
 #: src/components/TrendingTopics.tsx:186
 msgid "Browse posts tagged with {displayName}"
@@ -1411,7 +1411,7 @@ msgstr "Укажите пароль"
 
 #: src/screens/Signup/index.tsx:146
 msgid "Choose your username"
-msgstr ""
+msgstr "Выберите свой псевдоним"
 
 #: src/screens/Settings/Settings.tsx:351
 msgid "Clear all storage data"
@@ -1755,12 +1755,12 @@ msgstr "Копировать пароль приложения"
 #: src/view/com/profile/ProfileMenu.tsx:344
 #: src/view/com/profile/ProfileMenu.tsx:347
 msgid "Copy at:// URI"
-msgstr ""
+msgstr "Копировать at:// URI"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:674
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:676
 msgid "Copy author DID"
-msgstr ""
+msgstr "Копировать DID автора"
 
 #: src/components/dialogs/Embed.tsx:122
 #: src/components/dialogs/Embed.tsx:141
@@ -1802,7 +1802,7 @@ msgstr "Копировать текст сообщения"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
 msgid "Copy post at:// URI"
-msgstr ""
+msgstr "Копировать at:// URI поста"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:422
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:424
@@ -1997,11 +1997,11 @@ msgstr "Удалить запись объявления чата"
 #: src/components/dms/ReportDialog.tsx:355
 #: src/components/dms/ReportDialog.tsx:358
 msgid "Delete conversation"
-msgstr ""
+msgstr "Удалить беседу"
 
 #: src/components/dms/ReportDialog.tsx:329
 msgid "Delete Conversation"
-msgstr ""
+msgstr "Удалить беседу"
 
 #: src/components/dms/MessageMenu.tsx:124
 msgid "Delete for me"
@@ -2091,11 +2091,11 @@ msgstr "Отделить цитату от поста?"
 
 #: src/screens/Settings/AboutSettings.tsx:80
 msgid "Developer mode disabled"
-msgstr ""
+msgstr "Режим разработчика отключен"
 
 #: src/screens/Settings/AboutSettings.tsx:79
 msgid "Developer mode enabled"
-msgstr ""
+msgstr "Режим разработчика включен"
 
 #: src/screens/Settings/Settings.tsx:242
 #: src/screens/Settings/Settings.tsx:245
@@ -2274,8 +2274,8 @@ msgstr ""
 msgid "Download Bluesky"
 msgstr "Скачать Bluesky"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:77
-#: src/screens/Settings/components/ExportCarDialog.tsx:82
+#: src/screens/Settings/components/ExportCarDialog.tsx:79
+#: src/screens/Settings/components/ExportCarDialog.tsx:84
 msgid "Download CAR file"
 msgstr "Скачать CAR файл"
 
@@ -2432,7 +2432,7 @@ msgstr "Образование"
 
 #: src/screens/List/ListHiddenScreen.tsx:141
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
-msgstr ""
+msgstr "Либо создатель этого списка заблокировал вас, либо вы заблокировали создателя."
 
 #: src/screens/Settings/AccountSettings.tsx:60
 #: src/screens/Signup/StepInfo/index.tsx:164
@@ -2609,7 +2609,7 @@ msgstr "Введите новый адрес электронной почты."
 
 #: src/screens/Login/LoginForm.tsx:243
 msgid "Enter your password"
-msgstr ""
+msgstr "Введите ваш пароль"
 
 #: src/screens/Login/index.tsx:123
 msgid "Enter your username and password"
@@ -4165,7 +4165,7 @@ msgstr "Выключить звук"
 #: src/components/RichTextTag.tsx:140
 #: src/components/RichTextTag.tsx:153
 msgid "Mute {tag}"
-msgstr ""
+msgstr "Игнорировать {tag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:286
 #: src/view/com/profile/ProfileMenu.tsx:293
@@ -5080,7 +5080,7 @@ msgstr "Пожалуйста, также введите ваш пароль:"
 
 #: src/screens/Login/LoginForm.tsx:94
 msgid "Please enter your username"
-msgstr ""
+msgstr "Пожалуйста, введите ваш псевдоним"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:290
 msgid "Please explain why you think this label was incorrectly applied by {0}"
@@ -7140,7 +7140,7 @@ msgstr "Этот контент недоступен для просмотра �
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:94
+#: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "Эта функция находится в бете. Вы можете узнать больше об экспорте репозиториев в <0>этом блоге.</0>."
 
@@ -7399,7 +7399,7 @@ msgstr "Двухфакторная аутентификация (2FA)"
 
 #: src/screens/Signup/StepHandle.tsx:118
 msgid "Type your desired username"
-msgstr ""
+msgstr "Введите желаемый псевдоним"
 
 #: src/screens/Messages/components/MessageInput.tsx:148
 msgid "Type your message here"
@@ -7881,7 +7881,7 @@ msgstr "Показать профиль {displayName}"
 msgid "View blocked user's profile"
 msgstr "Просмотреть профиль заблокированного пользователя"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:98
+#: src/screens/Settings/components/ExportCarDialog.tsx:100
 msgid "View blogpost for more details"
 msgstr "Посмотреть запись в блоге для получения более подробной информации"
 
@@ -8519,7 +8519,7 @@ msgstr ""
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Ваша учётная запись создана ещё недостаточно давно, чтобы вы могли загружать видео. Попробуйте ещё раз позже."
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:65
+#: src/screens/Settings/components/ExportCarDialog.tsx:67
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "Данные из вашей учётной записи, содержащие все общедоступные записи, можно загрузить как \"CAR\" файл. Этот файл не содержит медиафайлов, таких как изображения, или личные данные, которые необходимо получить отдельно."
 
@@ -8584,7 +8584,7 @@ msgstr "Вашим полным псевдонимом будет <0>@{0}</0>"
 
 #: src/screens/Signup/StepHandle.tsx:129
 msgid "Your full username will be"
-msgstr ""
+msgstr "Вашим полным псевдонимом будет"
 
 #: src/components/dialogs/MutedWords.tsx:369
 msgid "Your muted words"
