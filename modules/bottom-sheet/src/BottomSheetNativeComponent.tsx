@@ -110,6 +110,7 @@ export class BottomSheetNativeComponent extends React.Component<
           }}
           containerBackgroundColor={backgroundColor}>
           <View
+            collapsable={false}
             style={[
               {
                 flex: 1,
@@ -122,6 +123,7 @@ export class BottomSheetNativeComponent extends React.Component<
               extraStyles,
             ]}>
             <View
+              collapsable={false}
               onLayout={e => {
                 const {height} = e.nativeEvent.layout
                 this.setState({viewHeight: height})

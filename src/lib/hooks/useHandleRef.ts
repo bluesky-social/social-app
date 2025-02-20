@@ -13,6 +13,9 @@ export function useHandleRef(): HandleRef {
     const ref = (node: any) => {
       if (node) {
         ref.current =
+          // Latest Fabric
+          node.__internalInstanceHandle?.stateNode?.node ??
+          // Paper
           node._nativeTag ??
           node.__nativeTag ??
           node.canonical?.nativeTag ??
