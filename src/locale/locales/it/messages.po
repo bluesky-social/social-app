@@ -8,7 +8,7 @@ msgstr ""
 "Language: it\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-19 11:45\n"
+"PO-Revision-Date: 2025-02-20 13:23\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -227,7 +227,7 @@ msgstr "{firstAuthorLink} ha ripubblicato il tuo post"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:367
 msgid "{firstAuthorLink} signed up with your starter pack"
-msgstr "{firstAuthorLink} si è iscritto al tuo starter pack"
+msgstr "{firstAuthorLink} si è iscritto con il tuo starter pack"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:298
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
@@ -2274,8 +2274,8 @@ msgstr "Tocca due volte per mettere mi piace"
 msgid "Download Bluesky"
 msgstr "Scarica Bluesky"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:77
-#: src/screens/Settings/components/ExportCarDialog.tsx:82
+#: src/screens/Settings/components/ExportCarDialog.tsx:79
+#: src/screens/Settings/components/ExportCarDialog.tsx:84
 msgid "Download CAR file"
 msgstr "Scarica il file CAR"
 
@@ -7140,7 +7140,7 @@ msgstr "Questo contenuto non è visualizzabile senza un account Bluesky."
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr "L'utente di questa conversazione ha disattivato o eliminato l'account. Premi per le opzioni"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:94
+#: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "Questa funzionalità è in versione beta. Puoi leggere ulteriori informazioni sulle esportazioni del repository in <0>questo post del blog</0>."
 
@@ -7881,7 +7881,7 @@ msgstr "Vedi il profilo di {displayName}"
 msgid "View blocked user's profile"
 msgstr "Vedi questo profilo bloccato"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:98
+#: src/screens/Settings/components/ExportCarDialog.tsx:100
 msgid "View blogpost for more details"
 msgstr "Vedi il post del blog per maggiori dettagli"
 
@@ -8519,7 +8519,7 @@ msgstr "Il tuo account è stato sospeso"
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Il tuo account è troppo recente per caricare video. Riprova più tardi."
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:65
+#: src/screens/Settings/components/ExportCarDialog.tsx:67
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "L'archivio del tuo account, che contiene tutti i record di dati pubblici, può essere scaricato come file \"CAR\". Questo file non include elementi multimediali incorporati, come immagini o dati privati, che devono essere recuperati separatamente."
 
