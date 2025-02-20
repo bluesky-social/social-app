@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-20 13:23\n"
+"PO-Revision-Date: 2025-02-20 17:35\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -57,7 +57,7 @@ msgstr "{0, plural, one {o etichetă a fost plasată} few {# etichete au fost pl
 
 #: src/screens/Post/PostLikedBy.tsx:41
 msgid "{0, plural, one {# like} other {# likes}}"
-msgstr "{0, plural, one {# apreciere} few {# aprecieri} other {# de aprecieri}}"
+msgstr "{0, plural, one {o apreciere} few {# aprecieri} other {# de aprecieri}}"
 
 #: src/lib/hooks/useTimeAgo.ts:149
 msgid "{0, plural, one {# minute} other {# minutes}}"
@@ -69,7 +69,7 @@ msgstr "{0, plural, one {o lună} few {# luni} other {# de luni}}"
 
 #: src/screens/Post/PostQuotes.tsx:41
 msgid "{0, plural, one {# quote} other {# quotes}}"
-msgstr ""
+msgstr "{0, plural, one {un citat} few {# citate} other {# de citate}}"
 
 #: src/screens/Post/PostRepostedBy.tsx:41
 msgid "{0, plural, one {# repost} other {# reposts}}"
@@ -191,11 +191,11 @@ msgstr "{firstAuthorLink} și <0>{additionalAuthorsCount, plural, one {un alt ut
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:331
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
-msgstr "{firstAuthorLink} și <0>{additionalAuthorsCount, plural, one {un alt utilizator} few {alți {formattedAuthorsCount} utilizatori} other {alți {formattedAuthorsCount} de utilizatori}}</0> au apreciat feed-ul tău personalizat"
+msgstr "Lui {firstAuthorLink} și <0>{additionalAuthorsCount, plural, one {unui alt utilizator} few {altor {formattedAuthorsCount} utilizatori} other {altor {formattedAuthorsCount} de utilizatori}}</0> le place fluxul tău personalizat"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:224
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
-msgstr "{firstAuthorLink} și <0>{additionalAuthorsCount, plural, one {un alt utilizator} few {alți {formattedAuthorsCount} utilizatori} other {alți {formattedAuthorsCount} de utilizatori}}</0> au apreciat postarea ta"
+msgstr "Lui {firstAuthorLink} și <0>{additionalAuthorsCount, plural, one {unui alt utilizator} few {altor {formattedAuthorsCount} utilizatori} other {altor {formattedAuthorsCount} de utilizatori}}</0> le place postarea ta"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:248
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
@@ -215,7 +215,7 @@ msgstr "{firstAuthorLink} te-a urmărit înapoi"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:343
 msgid "{firstAuthorLink} liked your custom feed"
-msgstr "{firstAuthorLink} a apreciat fluxul tău personalizat"
+msgstr "Lui {firstAuthorLink} îi place fluxul tău personalizat"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:236
 msgid "{firstAuthorLink} liked your post"
@@ -235,11 +235,11 @@ msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {un alt utili
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:324
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
-msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {un alt utilizator} few {alți {formattedAuthorsCount} utilizatori} other {alți {formattedAuthorsCount} de utilizatori}} au apreciat feed-ul tău personalizat"
+msgstr "Lui {firstAuthorName} și {additionalAuthorsCount, plural, one {unui alt utilizator} few {altor {formattedAuthorsCount} utilizatori} other {altor {formattedAuthorsCount} de utilizatori}} le place fluxul tău personalizat"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:217
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
-msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {un alt utilizator} few {alți {formattedAuthorsCount} utilizatori} other {alți {formattedAuthorsCount} de utilizatori}} au apreciat postarea ta"
+msgstr "Lui {firstAuthorName} și {additionalAuthorsCount, plural, one {unui alt utilizator} few {altor {formattedAuthorsCount} utilizatori} other {altor {formattedAuthorsCount} de utilizatori}} le place postarea ta"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:241
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
@@ -259,11 +259,11 @@ msgstr "{firstAuthorName} te-a urmărit înapoi"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:329
 msgid "{firstAuthorName} liked your custom feed"
-msgstr "{firstAuthorName} a apreciat flux tău personalizat"
+msgstr "Lui {firstAuthorName} îi place flux tău personalizat"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:222
 msgid "{firstAuthorName} liked your post"
-msgstr "{firstAuthorName} a apreciat postarea ta"
+msgstr "Lui {firstAuthorName} îi place postarea ta"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:246
 msgid "{firstAuthorName} reposted your post"
@@ -609,7 +609,7 @@ msgstr "Permite mesaje noi de la"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
 msgid "Allow quote posts"
-msgstr ""
+msgstr "Permite citare postări"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
 msgid "Allow replies from:"
@@ -884,7 +884,7 @@ msgstr "Sigur vrei să elimini asta din fluxurile tale?"
 
 #: src/view/com/composer/Composer.tsx:694
 msgid "Are you sure you'd like to discard this draft?"
-msgstr "Sigur vrei să să renunți la acestă schiță?"
+msgstr "Sigur renunți la acestă schiță?"
 
 #: src/view/com/composer/Composer.tsx:868
 msgid "Are you sure you'd like to discard this post?"
@@ -1086,7 +1086,7 @@ msgstr "Bluesky este mai bun cu prietenii!"
 
 #: src/screens/Takendown.tsx:217
 msgid "Bluesky Social Terms of Service"
-msgstr ""
+msgstr "Termeni de utilizare Bluesky Social"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:299
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -1144,7 +1144,7 @@ msgstr "Caută alte fluxuri"
 
 #: src/components/TrendingTopics.tsx:178
 msgid "Browse posts about {displayName}"
-msgstr ""
+msgstr "Răsfoiește postări despre {displayName}"
 
 #: src/components/TrendingTopics.tsx:186
 msgid "Browse posts tagged with {displayName}"
@@ -1664,7 +1664,7 @@ msgstr "Filtre de conținut"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:57
 msgid "Content from across the network we think you might like."
-msgstr ""
+msgstr "Conținut din întreaga rețea care credem că ți-ar plăcea."
 
 #: src/screens/Settings/LanguageSettings.tsx:251
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
@@ -2268,7 +2268,7 @@ msgstr "Apasă de două ori pentru a închide fereastra"
 
 #: src/screens/VideoFeed/index.tsx:1047
 msgid "Double tap to like"
-msgstr ""
+msgstr "Atinge de două ori pentru a aprecia"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:323
 msgid "Download Bluesky"
@@ -3618,7 +3618,7 @@ msgstr "Invitații, dar personale"
 
 #: src/screens/Signup/StepInfo/index.tsx:80
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
-msgstr "Se pare că ai introdus incorect adresa de e-mail. Ești sigur că este corectă?"
+msgstr "Se pare că ai introdus incorect adresa de e-mail. Sigur este corectă?"
 
 #: src/screens/Signup/StepInfo/index.tsx:236
 msgid "It's correct"
@@ -3793,15 +3793,15 @@ msgstr "Lumină"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Like"
-msgstr "Apreciază"
+msgstr "Îmi place"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:312
 msgid "Like ({0, plural, one {# like} other {# likes}})"
-msgstr ""
+msgstr "Apreciez ({0, plural, one {# apreciere} few {# aprecieri} other {# de aprecieri}})"
 
 #: src/components/ProgressGuide/List.tsx:63
 msgid "Like 10 posts"
-msgstr "Apasă Like la 10 postări"
+msgstr "Apreciază 10 postări"
 
 #: src/state/shell/progress-guide.tsx:214
 #: src/state/shell/progress-guide.tsx:219
@@ -3810,7 +3810,7 @@ msgstr "Apasă Like la 10 postări pentru a antrena fluxul Discover"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:501
 msgid "Like feed"
-msgstr ""
+msgstr "Flux aprecieri"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:275
 msgid "Like this feed"
@@ -4440,7 +4440,7 @@ msgstr "Nu mai urmărești pe {0}"
 
 #: src/screens/Signup/StepHandle.tsx:173
 msgid "No longer than {0} characters"
-msgstr ""
+msgstr "Nu mai mult de {0} caractere"
 
 #: src/screens/Messages/components/ChatListItem.tsx:124
 msgid "No messages yet"
@@ -4718,7 +4718,7 @@ msgstr "Deschide selectorul de emoji"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:190
 msgid "Open feed info screen"
-msgstr ""
+msgstr "Deschide ecranul cu informații despre flux"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:290
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:295
@@ -5022,7 +5022,7 @@ msgstr "Redă sau pune pe pauză GIF-ul"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 msgid "Plays or pauses the video"
-msgstr ""
+msgstr "Redă sau pune pe pauză videoul"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:106
 msgid "Plays the GIF"
@@ -5030,7 +5030,7 @@ msgstr "Redă GIF-ul"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:59
 msgid "Plays the video"
-msgstr ""
+msgstr "Redă videoul"
 
 #: src/screens/Signup/state.ts:217
 msgid "Please choose your handle."
@@ -5602,7 +5602,7 @@ msgstr "Setările pentru răspunsuri sunt alese de autorul discuției"
 
 #: src/view/com/post-thread/PostThread.tsx:648
 msgid "Reply sorting"
-msgstr ""
+msgstr "Ordine răspunsuri"
 
 #: src/view/com/post/Post.tsx:204
 #: src/view/com/posts/PostFeedItem.tsx:558
@@ -5725,7 +5725,7 @@ msgstr "Repostează"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:74
 msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr ""
+msgstr "Re-postează ({0, plural, one {# re-postare} few {# re-postări} other {# de re-postări}})"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:554
 #: src/view/com/util/post-ctrls/RepostButton.tsx:148
@@ -5772,7 +5772,7 @@ msgstr "Cere text alternativ înainte de a posta"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
 msgid "Require an email code to sign in to your account."
-msgstr ""
+msgstr "Cere un cod pe e-mail pentru a te conecta în contul tău."
 
 #: src/screens/Signup/StepInfo/index.tsx:153
 msgid "Required for this provider"
@@ -5816,7 +5816,7 @@ msgstr "Resetează parola"
 
 #: src/screens/Login/LoginForm.tsx:324
 msgid "Retries sign in"
-msgstr ""
+msgstr "Reîncearcă autentificarea"
 
 #: src/view/com/util/error/ErrorMessage.tsx:62
 #: src/view/com/util/error/ErrorScreen.tsx:99
@@ -5976,7 +5976,7 @@ msgstr "Căutare"
 #: src/Navigation.tsx:215
 #: src/screens/Profile/ProfileSearch.tsx:34
 msgid "Search @{0}'s posts"
-msgstr ""
+msgstr "Caută în postările de la @{0}"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:745
 msgid "Search by name or interest"
@@ -6327,7 +6327,7 @@ msgstr "Împărtășește codul QR"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:470
 msgid "Share this feed"
-msgstr ""
+msgstr "Partajează acest flux"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:422
 msgid "Share this starter pack"
@@ -6460,7 +6460,7 @@ msgstr ""
 #: src/components/moderation/ContentHider.tsx:152
 #: src/components/moderation/PostHider.tsx:79
 msgid "Shows the content"
-msgstr ""
+msgstr "Arată conținutul"
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
@@ -6495,7 +6495,7 @@ msgstr "Conectează-te sau creează-ți un cont pentru a te alătura conversați
 #: src/screens/Deactivated.tsx:202
 #: src/screens/Deactivated.tsx:208
 msgid "Sign in or sign up"
-msgstr ""
+msgstr "Conectare sau înregistrare"
 
 #: src/components/AccountList.tsx:65
 msgid "Sign in to account that is not listed"
@@ -6503,7 +6503,7 @@ msgstr ""
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign in to Bluesky or create a new account"
-msgstr ""
+msgstr "Conectează-te pe Bluesky sau creează un cont nou"
 
 #: src/screens/Settings/Settings.tsx:225
 #: src/screens/Settings/Settings.tsx:227
@@ -6519,7 +6519,7 @@ msgstr "Deconectează-te"
 
 #: src/screens/Takendown.tsx:88
 msgid "Sign Out"
-msgstr ""
+msgstr "Deconectare"
 
 #: src/screens/Settings/Settings.tsx:256
 #: src/view/shell/desktop/LeftNav.tsx:205
@@ -6598,7 +6598,7 @@ msgstr "E ceva în neregulă? Anunță-ne."
 #: src/App.native.tsx:121
 #: src/App.web.tsx:97
 msgid "Sorry! Your session expired. Please sign in again."
-msgstr ""
+msgstr "Ne pare rău! Sesiunea ta a expirat. Te rog să te conectezi din nou."
 
 #: src/screens/Settings/ThreadPreferences.tsx:55
 msgid "Sort replies"
@@ -6615,7 +6615,7 @@ msgstr "Sortează răspunsurile la aceeași postare după:"
 #: src/components/moderation/LabelsOnMeDialog.tsx:178
 #: src/components/moderation/ModerationDetailsDialog.tsx:186
 msgid "Source: <0>{sourceName}</0>"
-msgstr ""
+msgstr "Sursă: <0>{sourceName}</0>"
 
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
@@ -6851,7 +6851,7 @@ msgstr "Text și etichete"
 
 #: src/components/dms/ReportDialog.tsx:229
 msgid "Text field"
-msgstr ""
+msgstr "Câmp text"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:288
 #: src/screens/Messages/components/ChatDisabled.tsx:108
@@ -7138,7 +7138,7 @@ msgstr "Acest conținut nu poate fi vizualizat fără un cont Bluesky."
 
 #: src/screens/Messages/components/ChatListItem.tsx:284
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
-msgstr ""
+msgstr "Această conversație este cu un cont șters sau dezactivat. Apasă pentru opțiuni"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -7221,7 +7221,7 @@ msgstr "Această postare a fost ștearsă."
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:720
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:360
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
-msgstr ""
+msgstr "Această postare este vizibilă doar utilizatorilor conectați. Nu va fi vizibilă pentru persoanele care nu sunt conectate."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:701
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
@@ -7233,7 +7233,7 @@ msgstr "Autorul acestei postări a dezactivat citările."
 
 #: src/view/com/profile/ProfileMenu.tsx:402
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
-msgstr ""
+msgstr "Acest profil este vizibil numai pentru utilizatorii conectați. Nu va fi vizibil pentru persoanele care nu sunt conectate."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:763
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
@@ -7295,7 +7295,7 @@ msgstr "Aceasta va elimina postarea ta din acestă citare pentru toți utilizato
 #: src/view/com/post-thread/PostThread.tsx:606
 #: src/view/com/post-thread/PostThread.tsx:609
 msgid "Thread options"
-msgstr ""
+msgstr "Opțiuni discuție"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:67
 #: src/screens/Settings/ContentAndMediaSettings.tsx:70
@@ -7337,7 +7337,7 @@ msgstr "Pentru a încărca videoclipuri pe Bluesky, trebuie mai întâi să veri
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:31
 msgid "To whom would you like to send this report?"
-msgstr ""
+msgstr "Cui dorești să trimiți acest raport?"
 
 #: src/components/dms/DateDivider.tsx:44
 msgid "Today"
@@ -7353,7 +7353,7 @@ msgstr "Comută pentru a activa sau dezactiva conținutul pentru adulți"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:158
 msgid "Toggles the sound"
-msgstr ""
+msgstr "Comută sunetul"
 
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
@@ -7494,11 +7494,11 @@ msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Unlike"
-msgstr ""
+msgstr "Nu-mi place"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:306
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
-msgstr ""
+msgstr "Nu apreciez ({0, plural, one {# apreciere} few {# aprecieri} other {# de aprecieri}})"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:155
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
@@ -7758,7 +7758,7 @@ msgstr "Utilizatori care au apreciat acest conținut sau profil"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:433
 msgid "Users you follow"
-msgstr ""
+msgstr "Utilizatori pe care îi urmărești"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:419
 msgid "Value:"
@@ -7835,7 +7835,7 @@ msgstr "Video-ul este oprit"
 
 #: src/screens/VideoFeed/index.tsx:1039
 msgid "Video is playing"
-msgstr ""
+msgstr "Videoul se redă"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:191
 msgid "Video not found."
@@ -8097,7 +8097,7 @@ msgstr "Cum doriți să numiți pachetul de început?"
 
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:79
 msgid "What people are posting about."
-msgstr ""
+msgstr "Despre ce postează oamenii."
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
@@ -8549,7 +8549,7 @@ msgstr "Alegerea ta va fi salvată, dar poate fi schimbată ulterior în setări
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:494
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
-msgstr ""
+msgstr "Numele tău actual de utilizator <0>{0}</0> va rămâne automat rezervat pentru tine. Poți reveni la el oricând din acest cont."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Signup/state.ts:203
@@ -8584,7 +8584,7 @@ msgstr "Numele de utilizator al tău complet va fi <0>@{0}</0>."
 
 #: src/screens/Signup/StepHandle.tsx:129
 msgid "Your full username will be"
-msgstr ""
+msgstr "Numele tău complet de utilizator va fi"
 
 #: src/components/dialogs/MutedWords.tsx:369
 msgid "Your muted words"
