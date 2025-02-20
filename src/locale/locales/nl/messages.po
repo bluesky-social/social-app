@@ -8,7 +8,7 @@ msgstr ""
 "Language: nl\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-19 03:37\n"
+"PO-Revision-Date: 2025-02-20 08:37\n"
 "Last-Translator: \n"
 "Language-Team: Dutch\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -2274,8 +2274,8 @@ msgstr ""
 msgid "Download Bluesky"
 msgstr "Bluesky downloaden"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:77
-#: src/screens/Settings/components/ExportCarDialog.tsx:82
+#: src/screens/Settings/components/ExportCarDialog.tsx:79
+#: src/screens/Settings/components/ExportCarDialog.tsx:84
 msgid "Download CAR file"
 msgstr "CAR-bestand downloaden"
 
@@ -7140,7 +7140,7 @@ msgstr "Deze inhoud is niet zichtbaar zonder een Bluesky-account."
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:94
+#: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "Deze functie is in bèta. Je kunt meer lezen over repository-exporten in <0>dit blogbericht</0>."
 
@@ -7881,7 +7881,7 @@ msgstr "Profiel van {displayName} bekijken"
 msgid "View blocked user's profile"
 msgstr "Profiel van geblokkeerde gebruiker bekijken"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:98
+#: src/screens/Settings/components/ExportCarDialog.tsx:100
 msgid "View blogpost for more details"
 msgstr "Bekijk blogpost voor meer details"
 
@@ -8519,7 +8519,7 @@ msgstr ""
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Je account is nog niet oud genoeg om video's te uploaden. Probeer het later nog eens."
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:65
+#: src/screens/Settings/components/ExportCarDialog.tsx:67
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "Je accountrepository, die alle openbare gegevensrecords bevat, kan worden gedownload als een \"CAR\"-bestand. Dit bestand bevat geen media-insluitingen zoals afbeeldingen, en geen privégegevens. Die moeten afzonderlijk worden opgehaald."
 
