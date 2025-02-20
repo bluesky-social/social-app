@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-19 03:37\n"
+"PO-Revision-Date: 2025-02-20 04:19\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -2274,8 +2274,8 @@ msgstr "双击以点赞"
 msgid "Download Bluesky"
 msgstr "下载 Bluesky"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:77
-#: src/screens/Settings/components/ExportCarDialog.tsx:82
+#: src/screens/Settings/components/ExportCarDialog.tsx:79
+#: src/screens/Settings/components/ExportCarDialog.tsx:84
 msgid "Download CAR file"
 msgstr "下载 CAR 文件"
 
@@ -2730,7 +2730,7 @@ msgstr "将于 {0} 到期"
 #: src/components/moderation/LabelsOnMeDialog.tsx:199
 #: src/components/moderation/ModerationDetailsDialog.tsx:208
 msgid "Expires in {0}"
-msgstr ""
+msgstr "将于 {0} 后到期"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
@@ -6615,7 +6615,7 @@ msgstr "对同一帖文的回复进行排序："
 #: src/components/moderation/LabelsOnMeDialog.tsx:178
 #: src/components/moderation/ModerationDetailsDialog.tsx:186
 msgid "Source: <0>{sourceName}</0>"
-msgstr ""
+msgstr "来源：<0>{sourceName}</0>"
 
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
@@ -7140,7 +7140,7 @@ msgstr "该内容需要登录 Bluesky 账户方可查看。"
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr "此对话的参与者已停用或删除账户，点击以获取更多详情"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:94
+#: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "该功能正在测试。你可以在<0>这篇博客文章</0>中获得关于导出数据的更多详情。"
 
@@ -7881,7 +7881,7 @@ msgstr "查看 {displayName} 的个人资料"
 msgid "View blocked user's profile"
 msgstr "查看该屏蔽账户的个人资料"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:98
+#: src/screens/Settings/components/ExportCarDialog.tsx:100
 msgid "View blogpost for more details"
 msgstr "查看博客文章以获取更多资讯"
 
@@ -8519,7 +8519,7 @@ msgstr "你的账户已停用"
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "你的账户注册时间过短，暂时无法上传视频。请稍后再试。"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:65
+#: src/screens/Settings/components/ExportCarDialog.tsx:67
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "你可以将你的账户数据导出为一个“CAR”文件，该文件包含了该账户所有公开的数据记录，但不包括任何嵌入媒体，例如图像或你的私人资料，这些数据需要另外获取。"
 
