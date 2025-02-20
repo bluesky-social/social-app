@@ -1,13 +1,11 @@
 import React from 'react'
-import {ScrollView, View} from 'react-native'
+import {View} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 
 import {NavigationProp} from '#/lib/routes/types'
-import {isWeb} from '#/platform/detection'
 import {useSetThemePrefs} from '#/state/shell'
-import {CenteredView} from '#/view/com/util/Views'
 import {ListContained} from '#/view/screens/Storybook/ListContained'
-import {atoms as a, ThemeProvider, useTheme} from '#/alf'
+import {atoms as a, ThemeProvider} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Layout from '#/components/Layout'
 import {Admonitions} from './Admonitions'
@@ -27,25 +25,27 @@ import {Typography} from './Typography'
 export function Storybook() {
   return (
     <Layout.Screen>
-      {isWeb ? (
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>Storybook</Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
+      <Layout.Content keyboardShouldPersistTaps="handled">
         <StorybookInner />
-      ) : (
-        <ScrollView>
-          <StorybookInner />
-        </ScrollView>
-      )}
+      </Layout.Content>
     </Layout.Screen>
   )
 }
 
 function StorybookInner() {
-  const t = useTheme()
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
   const [showContainedList, setShowContainedList] = React.useState(false)
   const navigation = useNavigation<NavigationProp>()
 
   return (
-    <CenteredView style={[t.atoms.bg]}>
+    <>
       <View style={[a.p_xl, a.gap_5xl, {paddingBottom: 100}]}>
         {!showContainedList ? (
           <>
@@ -100,10 +100,6 @@ function StorybookInner() {
               <ButtonText>Open Shared Prefs Tester</ButtonText>
             </Button>
 
-            <Admonitions />
-
-            <Settings />
-
             <ThemeProvider theme="light">
               <Theming />
             </ThemeProvider>
@@ -126,6 +122,8 @@ function StorybookInner() {
             <Menus />
             <Breakpoints />
             <Dialogs />
+            <Admonitions />
+            <Settings />
 
             <Button
               variant="solid"
@@ -150,6 +148,6 @@ function StorybookInner() {
           </>
         )}
       </View>
-    </CenteredView>
+    </>
   )
 }
