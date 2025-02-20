@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-19 07:43\n"
+"PO-Revision-Date: 2025-02-20 04:19\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -2274,8 +2274,8 @@ msgstr "撳兩下讚佢"
 msgid "Download Bluesky"
 msgstr "下載 Bluesky"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:77
-#: src/screens/Settings/components/ExportCarDialog.tsx:82
+#: src/screens/Settings/components/ExportCarDialog.tsx:79
+#: src/screens/Settings/components/ExportCarDialog.tsx:84
 msgid "Download CAR file"
 msgstr "下載 CAR 檔案"
 
@@ -2730,7 +2730,7 @@ msgstr "過期時間 {0}"
 #: src/components/moderation/LabelsOnMeDialog.tsx:199
 #: src/components/moderation/ModerationDetailsDialog.tsx:208
 msgid "Expires in {0}"
-msgstr "過期時間 {0}"
+msgstr "將於 {0} 後過期"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
@@ -7140,7 +7140,7 @@ msgstr "呢個內容要你有 Bluesky 帳號先至睇到。"
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr "同你對話嗰個人經已停用抑或刪除帳號，撳低去睇更多選項"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:94
+#: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "呢個功能仲喺測試階段。你可以睇 <0>呢篇網誌</0> 知多啲匯出資料嘅資訊。"
 
@@ -7881,7 +7881,7 @@ msgstr "睇下 {displayName} 嘅個人檔案"
 msgid "View blocked user's profile"
 msgstr "睇下被封鎖用戶嘅個人檔案"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:98
+#: src/screens/Settings/components/ExportCarDialog.tsx:100
 msgid "View blogpost for more details"
 msgstr "睇下網誌文章嚟了解更多資訊"
 
@@ -8519,7 +8519,7 @@ msgstr "你嘅帳號經已停權"
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "你嘅帳號太新未得畀你上載影片。唔該遲啲試多一次。"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:65
+#: src/screens/Settings/components/ExportCarDialog.tsx:67
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "你可以將你嘅帳號所有公開資料記錄匯出成一份「CAR」檔案形式下載。呢份檔案唔包括嵌入媒體（譬如圖片同影片）抑或你嘅私人資料（譬如傾偈記錄），呢啲資料需要另外擷取。"
 
@@ -8545,7 +8545,7 @@ msgstr "你傾偈功能俾人停用咗"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "Your choice will be saved, but can be changed later in settings."
-msgstr "你揀嘅嘢會儲存，但係可以遲啲再喺設定度改返。"
+msgstr "你揀嘅嘢將被儲存，但係可以遲啲再喺設定度改返。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:494
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
