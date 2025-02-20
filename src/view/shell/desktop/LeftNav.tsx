@@ -2,7 +2,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
   useLinkProps,
@@ -384,7 +384,12 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
               {right: -20}, // more breathing room
             ]}>
             <Text
-              accessibilityLabel={_(msg`${count} unread items`)}
+              accessibilityLabel={_(
+                msg`${plural(count, {
+                  one: '# unread item',
+                  other: '# unread items',
+                })}`,
+              )}
               accessibilityHint=""
               accessible={true}
               numberOfLines={1}

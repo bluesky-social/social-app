@@ -2,7 +2,7 @@ import React, {ComponentProps} from 'react'
 import {GestureResponderEvent, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, Trans} from '@lingui/macro'
+import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {StackActions} from '@react-navigation/native'
@@ -204,7 +204,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               accessibilityLabel={_(msg`Chat`)}
               accessibilityHint={
                 numUnreadMessages.count > 0
-                  ? _(msg`${numUnreadMessages.numUnread} unread items`)
+                  ? _(
+                      msg`${plural(numUnreadMessages.numUnread ?? 0, {
+                        one: '# unread item',
+                        other: '# unread items',
+                      })}` || '',
+                    )
                   : ''
               }
             />
@@ -231,7 +236,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               accessibilityHint={
                 numUnreadNotifications === ''
                   ? ''
-                  : _(msg`${numUnreadNotifications} unread items`)
+                  : _(
+                      msg`${plural(numUnreadNotifications ?? 0, {
+                        one: '# unread item',
+                        other: '# unread items',
+                      })}` || '',
+                    )
               }
             />
             <Btn
