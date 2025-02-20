@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useState} from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
 import {AppBskyEmbedExternal} from '@atproto/api'
@@ -44,12 +44,15 @@ export const ExternalLinkEmbed = ({
     }
   }, [link.uri, externalEmbedPrefs])
   const hasMedia = Boolean(imageUri || embedPlayerParams)
+  const [aspectRatio, setAspectRatio] = useState(1.91)
 
   const onShareExternal = useCallback(() => {
     if (link.uri && isNative) {
       shareUrl(link.uri)
     }
   }, [link.uri])
+
+  const clampRatio = (ratio: number) => Math.max(0.5, Math.min(ratio, 3))
 
   if (embedPlayerParams?.source === 'tenor') {
     const parsedAlt = parseAltFromGIFDescription(link.description)
@@ -89,7 +92,11 @@ export const ExternalLinkEmbed = ({
           {imageUri && !embedPlayerParams ? (
             <Image
               style={{
-                aspectRatio: 1.91,
+                aspectRatio,
+              }}
+              onLoad={e => {
+                const {width, height} = e.source
+                setAspectRatio(clampRatio(width / height))
               }}
               source={{uri: imageUri}}
               accessibilityIgnoresInvertColors
