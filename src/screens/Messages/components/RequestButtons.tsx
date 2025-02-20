@@ -140,14 +140,31 @@ export function RejectMenu({
 
 export function AcceptChatButton({
   convo,
-}: {
+  size = 'tiny',
+  variant = 'solid',
+  color = 'secondary_inverted',
+  label,
+  currentScreen,
+  onAcceptConvo,
+  ...props
+}: Omit<ButtonProps, 'onPress' | 'children' | 'label'> & {
+  label?: string
   convo: ChatBskyConvoDefs.ConvoView
+  onAcceptConvo?: () => void
+  currentScreen: 'list' | 'conversation'
 }) {
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const navigation = useNavigation<NavigationProp>()
 
   const {mutate: acceptConvo, isPending} = useAcceptConversation(convo.id, {
+    onMutate: () => {
+      onAcceptConvo?.()
+      if (currentScreen === 'list') {
+        precacheConvoQuery(queryClient, {...convo, status: 'accepted'})
+        navigation.navigate('MessagesConversation', {conversation: convo.id})
+      }
+    },
     onError: () => {
       Toast.show(_('Failed to accept chat'), 'xmark')
     },
@@ -155,24 +172,21 @@ export function AcceptChatButton({
 
   const onPressAccept = useCallback(() => {
     acceptConvo()
-    precacheConvoQuery(queryClient, {...convo, status: 'accepted'})
-    navigation.navigate('MessagesConversation', {conversation: convo.id})
-  }, [acceptConvo, navigation, convo, queryClient])
+  }, [acceptConvo])
 
   return (
     <Button
-      label={_(msg`Accept chat request`)}
-      size="tiny"
-      variant="solid"
-      color="secondary_inverted"
+      {...props}
+      label={label || _(msg`Accept chat request`)}
+      size={size}
+      variant={variant}
+      color={color}
       style={a.flex_1}
       onPress={onPressAccept}>
       {isPending ? (
         <ButtonIcon icon={Loader} />
       ) : (
-        <ButtonText>
-          <Trans>Accept</Trans>
-        </ButtonText>
+        <ButtonText>{label || <Trans>Accept</Trans>}</ButtonText>
       )}
     </Button>
   )
