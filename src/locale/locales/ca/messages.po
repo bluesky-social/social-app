@@ -8,7 +8,7 @@ msgstr ""
 "Language: ca\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-19 03:37\n"
+"PO-Revision-Date: 2025-02-20 13:23\n"
 "Last-Translator: \n"
 "Language-Team: Catalan\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1245,7 +1245,7 @@ msgstr "Cancel·la la citació de la publicació"
 
 #: src/screens/Deactivated.tsx:151
 msgid "Cancel reactivation and sign out"
-msgstr ""
+msgstr "Cancel·la la reactivació i surt"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
 #: src/view/screens/Search/Search.tsx:880
@@ -1362,7 +1362,7 @@ msgstr "Comprova el meu estat"
 
 #: src/screens/Login/LoginForm.tsx:301
 msgid "Check your email for a sign in code and enter it here."
-msgstr ""
+msgstr "Comprova el teu correu electrònic per a obtenir un codi d'inici de sessió i introdueix-lo aquí."
 
 #: src/view/com/modals/DeleteAccount.tsx:213
 msgid "Check your inbox for an email with the confirmation code to enter below:"
@@ -2274,8 +2274,8 @@ msgstr "Fes dos tocs per a fer m'agrada"
 msgid "Download Bluesky"
 msgstr "Descarrega Bluesky"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:77
-#: src/screens/Settings/components/ExportCarDialog.tsx:82
+#: src/screens/Settings/components/ExportCarDialog.tsx:79
+#: src/screens/Settings/components/ExportCarDialog.tsx:84
 msgid "Download CAR file"
 msgstr "Descarrega el fitxer CAR"
 
@@ -2730,7 +2730,7 @@ msgstr "Caduca {0}"
 #: src/components/moderation/LabelsOnMeDialog.tsx:199
 #: src/components/moderation/ModerationDetailsDialog.tsx:208
 msgid "Expires in {0}"
-msgstr ""
+msgstr "Caduca {0}"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
@@ -4802,7 +4802,7 @@ msgstr "Obre el procés per a crear un nou compte de Bluesky"
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.web.tsx:125
 msgid "Opens flow to sign in to your existing Bluesky account"
-msgstr ""
+msgstr "Obre el procés per a iniciar sessió a un compte existent de Bluesky"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Opens GIF select dialog"
@@ -4852,7 +4852,7 @@ msgstr "O continua amb un altre compte."
 
 #: src/screens/Deactivated.tsx:186
 msgid "Or, sign in to one of your other accounts."
-msgstr ""
+msgstr "O inicia sessió en un altre dels teus comptes."
 
 #: src/lib/moderation/useReportOptions.ts:27
 #: src/view/com/composer/labels/LabelsBtn.tsx:186
@@ -5772,7 +5772,7 @@ msgstr "Requereix un text alternatiu abans de publicar"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
 msgid "Require an email code to sign in to your account."
-msgstr ""
+msgstr "Sol·licita el codi de correu per a iniciar sessió al teu compte."
 
 #: src/screens/Signup/StepInfo/index.tsx:153
 msgid "Required for this provider"
@@ -5816,7 +5816,7 @@ msgstr "Restableix la contrasenya"
 
 #: src/screens/Login/LoginForm.tsx:324
 msgid "Retries sign in"
-msgstr ""
+msgstr "Torna a intentar iniciar sessió"
 
 #: src/view/com/util/error/ErrorMessage.tsx:62
 #: src/view/com/util/error/ErrorScreen.tsx:99
@@ -5976,7 +5976,7 @@ msgstr "Cerca"
 #: src/Navigation.tsx:215
 #: src/screens/Profile/ProfileSearch.tsx:34
 msgid "Search @{0}'s posts"
-msgstr ""
+msgstr "Cerca a les publicacions de @{0}"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:745
 msgid "Search by name or interest"
@@ -6016,12 +6016,12 @@ msgstr "Cerca GIF"
 
 #: src/screens/Profile/ProfileSearch.tsx:33
 msgid "Search my posts"
-msgstr ""
+msgstr "Cerca a les meves publicacions"
 
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Search Posts"
-msgstr ""
+msgstr "Cerca publicacions"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
 #: src/components/ProgressGuide/FollowDialog.tsx:764
@@ -6034,7 +6034,7 @@ msgstr "Cerca Tenor"
 
 #: src/screens/Profile/ProfileSearch.tsx:35
 msgid "Search..."
-msgstr ""
+msgstr "Cerca..."
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:509
 #: src/components/ProgressGuide/FollowDialog.tsx:765
@@ -6495,15 +6495,15 @@ msgstr "Inicia sessió o crea el teu compte per a unir-te a la conversa"
 #: src/screens/Deactivated.tsx:202
 #: src/screens/Deactivated.tsx:208
 msgid "Sign in or sign up"
-msgstr ""
+msgstr "Inicia sessió o registra't"
 
 #: src/components/AccountList.tsx:65
 msgid "Sign in to account that is not listed"
-msgstr ""
+msgstr "Inicia sessió a un compte que no està llistat"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign in to Bluesky or create a new account"
-msgstr ""
+msgstr "Inicia sessió o crea el teu compte"
 
 #: src/screens/Settings/Settings.tsx:225
 #: src/screens/Settings/Settings.tsx:227
@@ -6519,7 +6519,7 @@ msgstr "Tanca sessió"
 
 #: src/screens/Takendown.tsx:88
 msgid "Sign Out"
-msgstr ""
+msgstr "Tanca la sessió"
 
 #: src/screens/Settings/Settings.tsx:256
 #: src/view/shell/desktop/LeftNav.tsx:205
@@ -6598,7 +6598,7 @@ msgstr "Alguna cosa no va a l'hora? Fes-nos-ho saber."
 #: src/App.native.tsx:121
 #: src/App.web.tsx:97
 msgid "Sorry! Your session expired. Please sign in again."
-msgstr ""
+msgstr "La teva sessió ha caducat. Torna a iniciar-la."
 
 #: src/screens/Settings/ThreadPreferences.tsx:55
 msgid "Sort replies"
@@ -6615,7 +6615,7 @@ msgstr "Ordena les respostes a la mateixa publicació per:"
 #: src/components/moderation/LabelsOnMeDialog.tsx:178
 #: src/components/moderation/ModerationDetailsDialog.tsx:186
 msgid "Source: <0>{sourceName}</0>"
-msgstr ""
+msgstr "Font:<0>{sourceName}</0>"
 
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
@@ -7140,7 +7140,7 @@ msgstr "Aquest contingut no es pot veure sense un compte de Bluesky."
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr "Aquesta conversa és amb un compte suprimit o desactivat. Prem per obtenir opcions"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:94
+#: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "Aquesta funció està en versió beta. Podeu obtenir més informació sobre les exportacions de repositoris en <0>aquesta entrada de bloc</0>."
 
@@ -7221,7 +7221,7 @@ msgstr "Aquesta publicació ha estat esborrada."
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:720
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:360
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
-msgstr ""
+msgstr "Aquesta publicació només és visible per als usuaris que han iniciat sessió. No serà visible per a les persones que no hagin iniciat sessió."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:701
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
@@ -7233,7 +7233,7 @@ msgstr "L'autor d'aquesta publicació ha deshabilitat les citacions."
 
 #: src/view/com/profile/ProfileMenu.tsx:402
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
-msgstr ""
+msgstr "Aquest perfil només és visible per als usuaris que han iniciat sessió. No serà visible per a les persones que no hagin iniciat sessió."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:763
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
@@ -7684,7 +7684,7 @@ msgstr "Utilitza els recomanats"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:190
 msgid "Use this to sign in to the other app along with your handle."
-msgstr ""
+msgstr "Utilitza-ho per a iniciar sessió a l'altra aplicació, juntament amb el teu identificador."
 
 #: src/view/com/modals/InviteCodes.tsx:201
 msgid "Used by:"
@@ -7881,7 +7881,7 @@ msgstr "Mostra el perfil de {displayName}"
 msgid "View blocked user's profile"
 msgstr "Veure el perfil de l'usuari bloquejat"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:98
+#: src/screens/Settings/components/ExportCarDialog.tsx:100
 msgid "View blogpost for more details"
 msgstr "Veure l'entrada al blog per a més detalls"
 
@@ -8476,7 +8476,7 @@ msgstr "Ja està tot llest!"
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
 msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
-msgstr ""
+msgstr "Has iniciat sessió amb una contrasenya d'aplicació. Inicia sessió amb la teva contrasenya principal per continuar la desactivació del teu compte."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:108
 #: src/lib/moderation/useModerationCauseDescription.ts:108
@@ -8519,7 +8519,7 @@ msgstr "S'ha suspès el teu compte"
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "El teu compte encara no té l'edat suficient per penjar vídeos. Torna-ho a provar més tard."
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:65
+#: src/screens/Settings/components/ExportCarDialog.tsx:67
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "El repositori del teu compte, que conté tots els registres de dades públiques, es pot baixar com a fitxer \"CAR\". Aquest fitxer no inclou incrustacions multimèdia, com ara imatges, ni les teves dades privades, que s'han d'obtenir per separat."
 
