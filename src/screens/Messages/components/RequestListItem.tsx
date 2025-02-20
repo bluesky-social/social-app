@@ -58,7 +58,7 @@ export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
         ]}>
         {!isDeletedAccount ? (
           <>
-            <AcceptChatButton convo={convo} />
+            <AcceptChatButton convo={convo} currentScreen="list" />
             <RejectMenu
               convo={convo}
               profile={otherUser}
