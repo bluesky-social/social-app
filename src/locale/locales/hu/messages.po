@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-19 06:09\n"
+"PO-Revision-Date: 2025-02-20 11:48\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -609,7 +609,7 @@ msgstr "Bejövő üzenetek fogadása"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
 msgid "Allow quote posts"
-msgstr "Idézetek mutatása"
+msgstr "Idézés engedélyezése"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
 msgid "Allow replies from:"
@@ -2274,8 +2274,8 @@ msgstr "Koppints kétszer a kedveléshez"
 msgid "Download Bluesky"
 msgstr "A Bluesky letöltése"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:77
-#: src/screens/Settings/components/ExportCarDialog.tsx:82
+#: src/screens/Settings/components/ExportCarDialog.tsx:79
+#: src/screens/Settings/components/ExportCarDialog.tsx:84
 msgid "Download CAR file"
 msgstr "CAR fájl letöltése"
 
@@ -4844,7 +4844,7 @@ msgstr "További lehetőségek:"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:418
 msgid "Or combine these options:"
-msgstr "Vagy használd egyszerre az alábbi lehetőségek bármelyikét:"
+msgstr "Az alábbi lehetőségek közül egyszerre többet is kijelölhetsz:"
 
 #: src/screens/Deactivated.tsx:199
 msgid "Or, continue with another account."
@@ -5106,7 +5106,7 @@ msgstr "Politika"
 
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:116
 msgid "Popular videos in your network."
-msgstr "A hálózat népszerű videói."
+msgstr "Népszerű videók a hálózatról."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:157
 msgid "Porn"
@@ -7141,7 +7141,7 @@ msgstr "Ezt a tartalmat bejelentkezés nélkül nem tekintheted meg."
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr "Ez a beszélgetés egy már törölt vagy deaktivált fiókkal történt. A lehetőségekhez kattints ide"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:94
+#: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "Kísérleti funkció. Az adattár-exportálásról bővebben <0>ebben a blogbejegyzésben</0> olvashatsz."
 
@@ -7751,7 +7751,7 @@ msgstr "Csak a követett személyektől"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:456
 msgid "Users in \"{0}\""
-msgstr "A(z) „{0}” listán szereplő felhasználóktól"
+msgstr "A(z) „{0}”-listán szereplő felhasználóktól"
 
 #: src/components/LikesDialog.tsx:83
 msgid "Users that have liked this content or profile"
@@ -7882,7 +7882,7 @@ msgstr "{displayName} profiljának megtekintése"
 msgid "View blocked user's profile"
 msgstr "Letiltott felhasználó profiljának megtekintése"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:98
+#: src/screens/Settings/components/ExportCarDialog.tsx:100
 msgid "View blogpost for more details"
 msgstr "További részleteket a blogbejegyzésben olvashatsz"
 
@@ -8520,7 +8520,7 @@ msgstr "A fiókod felfüggesztésre került"
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "A fiókod még nem elég idős a videók feltöltéséhez. Próbáld újra később!"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:65
+#: src/screens/Settings/components/ExportCarDialog.tsx:67
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "A fiókod adattára, ami az összes nyilvános adatodat tartalmazza, letölthető egy „CAR” fájlként. Ez a fájl nem tartalmazza a beágyazott médiatartalmakat (pl.: képeket), sem pedig a személyes adataidat, amit külön kell lekérned."
 
