@@ -8,7 +8,7 @@ msgstr ""
 "Language: ru\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-20 14:22\n"
+"PO-Revision-Date: 2025-02-20 15:33\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
@@ -284,7 +284,7 @@ msgstr "{handle} не может получать сообщения"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:262
 msgid "{notificationCount} unread items"
-msgstr ""
+msgstr "{notificationCount} непрочитанных элементов"
 
 #: src/view/shell/Drawer.tsx:453
 msgid "{numUnreadNotifications} unread"
@@ -1077,7 +1077,7 @@ msgstr "Bluesky - это открытая сеть, где вы можете в�
 
 #: src/view/com/auth/server-input/index.tsx:149
 msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
-msgstr ""
+msgstr "Bluesky - это открытая сеть, где вы можете сами выбирать провайдера. Если вы впервые здесь, мы рекомендуем выбрать Bluesky Social по умолчанию."
 
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
@@ -3379,7 +3379,7 @@ msgstr "Скрыть актуальные темы?"
 
 #: src/components/interstitials/TrendingVideos.tsx:138
 msgid "Hide trending videos?"
-msgstr ""
+msgstr "Скрыть актуальные видео?"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:596
 msgid "Hide user list"
@@ -5412,7 +5412,7 @@ msgstr "Последние запросы"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:52
 msgid "Recommended"
-msgstr ""
+msgstr "Рекомендуется"
 
 #: src/screens/Messages/components/MessageListError.tsx:20
 msgid "Reconnect"
@@ -6451,7 +6451,7 @@ msgstr "Показать предупреждения и фильтровать 
 
 #: src/view/com/post-thread/PostThreadItem.tsx:814
 msgid "Shows information about when this post was created"
-msgstr ""
+msgstr "Показывает информацию о том, когда был создан этот пост"
 
 #: src/screens/Settings/Settings.tsx:104
 msgid "Shows other accounts you can switch to"
@@ -6851,7 +6851,7 @@ msgstr "Текст и теги"
 
 #: src/components/dms/ReportDialog.tsx:229
 msgid "Text field"
-msgstr ""
+msgstr "Текстовое поле"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:288
 #: src/screens/Messages/components/ChatDisabled.tsx:108
@@ -6948,7 +6948,7 @@ msgstr "Следующие метки были добавлены к вашем�
 
 #: src/screens/ModerationInteractionSettings/index.tsx:42
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
-msgstr ""
+msgstr "Следующие настройки будут использоваться по умолчанию при создании новых постов. Вы можете изменить их для конкретного поста из редактора."
 
 #: src/view/com/post-thread/PostThread.tsx:262
 #: src/view/com/post-thread/PostThread.tsx:274
@@ -7490,7 +7490,7 @@ msgstr "Отписаться от учётной записи"
 
 #: src/screens/VideoFeed/index.tsx:810
 msgid "Unfollows the user"
-msgstr ""
+msgstr "Отписаться от пользователя"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Unlike"
@@ -7513,7 +7513,7 @@ msgstr "Не игнорировать"
 #: src/components/RichTextTag.tsx:140
 #: src/components/RichTextTag.tsx:153
 msgid "Unmute {tag}"
-msgstr ""
+msgstr "Не игнорировать {tag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:285
 #: src/view/com/profile/ProfileMenu.tsx:291
@@ -7741,7 +7741,7 @@ msgstr "пользователи, на которых подписан <0>@{0}</
 
 #: src/components/WhoCanReply.tsx:267
 msgid "users following <0>@{0}</0>"
-msgstr ""
+msgstr "пользователи подписанные на <0>@{0}</0>"
 
 #: src/screens/Messages/Settings.tsx:92
 #: src/screens/Messages/Settings.tsx:95
@@ -7758,7 +7758,7 @@ msgstr "Пользователи, которым понравился этот �
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:433
 msgid "Users you follow"
-msgstr ""
+msgstr "Пользователи, на которых вы подписаны"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:419
 msgid "Value:"
@@ -7946,7 +7946,7 @@ msgstr "Просмотрите заблокированные вами учёт�
 
 #: src/screens/Moderation/index.tsx:204
 msgid "View your default post interaction settings"
-msgstr ""
+msgstr "Просмотр ваших настроек взаимодействия с постами по умолчанию"
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:56
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:77
