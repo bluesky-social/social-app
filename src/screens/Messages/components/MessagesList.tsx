@@ -443,17 +443,20 @@ export function MessagesList({
               !convoState.isFetchingHistory &&
               convoState.items.length === 0 && <ChatEmptyPill />}
             {isConvoActive(convoState) &&
-              // @ts-expect-error need SDK update
-              convoState.convo.status === 'request' && (
-                <ChatStatusInfo convoState={convoState} />
-              )}
-            <MessageInput
-              onSendMessage={onSendMessage}
-              hasEmbed={!!embedUri}
-              setEmbed={setEmbed}
-              openEmojiPicker={pos => setEmojiPickerState({isOpen: true, pos})}>
-              <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
-            </MessageInput>
+            // @ts-expect-error need SDK update
+            convoState.convo.status === 'request' ? (
+              <ChatStatusInfo convoState={convoState} />
+            ) : (
+              <MessageInput
+                onSendMessage={onSendMessage}
+                hasEmbed={!!embedUri}
+                setEmbed={setEmbed}
+                openEmojiPicker={pos =>
+                  setEmojiPickerState({isOpen: true, pos})
+                }>
+                <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
+              </MessageInput>
+            )}
           </>
         )}
       </Animated.View>
