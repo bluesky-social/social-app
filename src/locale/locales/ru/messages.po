@@ -8,7 +8,7 @@ msgstr ""
 "Language: ru\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-20 13:23\n"
+"PO-Revision-Date: 2025-02-20 14:22\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
@@ -1148,7 +1148,7 @@ msgstr "Просмотреть посты о {displayName}"
 
 #: src/components/TrendingTopics.tsx:186
 msgid "Browse posts tagged with {displayName}"
-msgstr ""
+msgstr "Просмотреть посты с тегом {displayName}"
 
 #: src/components/TrendingTopics.tsx:195
 msgid "Browse starter pack {displayName}"
@@ -1156,7 +1156,7 @@ msgstr "Просмотреть стартовый набор {displayName}"
 
 #: src/components/TrendingTopics.tsx:232
 msgid "Browse topic {displayName}"
-msgstr ""
+msgstr "Просмотреть тему {displayName}"
 
 #: src/view/com/auth/SplashScreen.web.tsx:168
 msgid "Business"
@@ -1245,7 +1245,7 @@ msgstr "Отменить цитирование поста"
 
 #: src/screens/Deactivated.tsx:151
 msgid "Cancel reactivation and sign out"
-msgstr ""
+msgstr "Отменить реактивацию и выйти из системы"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
 #: src/view/screens/Search/Search.tsx:880
@@ -1322,12 +1322,12 @@ msgstr "Измените свой адрес электронной почты"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Changes app icon"
-msgstr ""
+msgstr "Изменяет иконку приложения"
 
 #: src/components/forms/HostingProvider.tsx:50
 #: src/components/forms/HostingProvider.tsx:66
 msgid "Changes hosting provider"
-msgstr ""
+msgstr "Изменяет хостинг-провайдера"
 
 #: src/Navigation.tsx:406
 #: src/view/shell/bottom-bar/BottomBar.tsx:204
@@ -1362,7 +1362,7 @@ msgstr "Проверить мой статус"
 
 #: src/screens/Login/LoginForm.tsx:301
 msgid "Check your email for a sign in code and enter it here."
-msgstr ""
+msgstr "Проверьте свою электронную почту на наличие кода для входа и введите его здесь."
 
 #: src/view/com/modals/DeleteAccount.tsx:213
 msgid "Check your inbox for an email with the confirmation code to enter below:"
@@ -1398,7 +1398,7 @@ msgstr "Выберите этот цвет в качестве своего ав
 
 #: src/view/com/auth/server-input/index.tsx:130
 msgid "Choose your account provider"
-msgstr ""
+msgstr "Выберите провайдера вашей учётной записи"
 
 #: src/view/screens/Feeds.tsx:728
 #: src/view/screens/Search/Explore.tsx:427
@@ -1439,7 +1439,7 @@ msgstr "Нажмите, чтобы включить цитирование эт�
 
 #: src/components/RichTextTag.tsx:54
 msgid "Click to open tag menu for {tag}"
-msgstr ""
+msgstr "Нажмите, чтобы открыть меню тегов для {tag}"
 
 #: src/components/dms/MessageItem.tsx:241
 msgid "Click to retry failed message"
@@ -1488,12 +1488,12 @@ msgstr "Закрыть диалог"
 
 #: src/view/shell/index.web.tsx:83
 msgid "Close drawer menu"
-msgstr ""
+msgstr "Закрывает выдвижное меню"
 
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
 msgid "Close emoji picker"
-msgstr ""
+msgstr "Закрыть подборщик эмодзи"
 
 #: src/components/dialogs/GifSelect.tsx:169
 msgid "Close GIF dialog"
@@ -1518,7 +1518,7 @@ msgstr "Закрывает уведомление об изменении пар
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
 msgid "Closes the emoji picker"
-msgstr ""
+msgstr "Закрывает подборщик эмодзи"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:32
 msgid "Closes viewer for header image"
@@ -1742,7 +1742,7 @@ msgstr "Скопировано!"
 
 #: src/screens/Settings/AboutSettings.tsx:73
 msgid "Copies build version to clipboard"
-msgstr ""
+msgstr "Копирует версию сборки в буфер обмена"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:181
 msgid "Copy"
@@ -1904,7 +1904,7 @@ msgstr "Создано: {0}"
 
 #: src/screens/List/ListHiddenScreen.tsx:127
 msgid "Creator has been blocked"
-msgstr ""
+msgstr "Создатель был заблокирован"
 
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
@@ -1922,7 +1922,7 @@ msgstr "Настройте, кто может взаимодействовать
 
 #: src/screens/Onboarding/Layout.tsx:56
 msgid "Customizes your Bluesky experience"
-msgstr ""
+msgstr "Настройте свой опыт работы с Bluesky"
 
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
@@ -2182,7 +2182,7 @@ msgstr "Пропустить руководство по началу работ
 
 #: src/components/interstitials/TrendingVideos.tsx:92
 msgid "Dismiss this section"
-msgstr ""
+msgstr "Пропустить этот раздел"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:71
 #: src/screens/Settings/AccessibilitySettings.tsx:76
@@ -2617,7 +2617,7 @@ msgstr "Введите псевдоним и пароль"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
 msgid "Enters full screen"
-msgstr ""
+msgstr "Переходит в полноэкранный режим"
 
 #: src/view/com/composer/Composer.tsx:1660
 #: src/view/com/util/error/ErrorScreen.tsx:42
@@ -2704,11 +2704,11 @@ msgstr "Развернуть или свернуть весь пост, на к�
 
 #: src/screens/VideoFeed/index.tsx:941
 msgid "Expands or collapses post text"
-msgstr ""
+msgstr "Разворачивает или сворачивает текст поста"
 
 #: src/view/com/composer/ComposerReplyTo.tsx:73
 msgid "Expands or collapses the full post you are replying to"
-msgstr ""
+msgstr "Разворачивает или сворачивает весь пост, на который вы отвечаете"
 
 #: src/lib/api/index.ts:406
 msgid "Expected uri to resolve to a record"
@@ -2834,7 +2834,7 @@ msgstr "Не удалось сохранить настройки уведомл
 
 #: src/screens/ModerationInteractionSettings/index.tsx:108
 msgid "Failed to save settings. Please try again."
-msgstr ""
+msgstr "Не удалось сохранить настройки. Пожалуйста, попробуйте еще раз."
 
 #: src/components/dms/MessageItem.tsx:234
 msgid "Failed to send"
@@ -2930,11 +2930,11 @@ msgstr "Фильтровать из лент"
 
 #: src/view/screens/Search/Search.tsx:398
 msgid "Filter search by language"
-msgstr ""
+msgstr "Фильтр поиска по языку"
 
 #: src/view/screens/Search/Search.tsx:368
 msgid "Filter search by language (currently: {currentLanguageLabel})"
-msgstr ""
+msgstr "Фильтр поиска по языку (текущий: {currentLanguageLabel})"
 
 #: src/screens/Onboarding/StepFinished.tsx:314
 msgid "Finalizing"
@@ -2950,7 +2950,7 @@ msgstr "Найдите учётные записи для подписки"
 #: src/components/ProgressGuide/FollowDialog.tsx:88
 #: src/components/ProgressGuide/FollowDialog.tsx:417
 msgid "Find people to follow"
-msgstr ""
+msgstr "Найти людей, чтобы подписаться"
 
 #: src/view/screens/Search/Search.tsx:587
 msgid "Find posts and users on Bluesky"
@@ -2990,7 +2990,7 @@ msgstr "Подписаться на {0}"
 
 #: src/screens/VideoFeed/index.tsx:806
 msgid "Follow {handle}"
-msgstr ""
+msgstr "Подписаться на {handle}"
 
 #: src/view/com/posts/AviFollowButton.tsx:68
 msgid "Follow {name}"
@@ -3369,13 +3369,13 @@ msgstr "Скрыть этот ответ?"
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:83
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:62
 msgid "Hide trending topics"
-msgstr ""
+msgstr "Скрыть актуальные темы"
 
 #: src/components/interstitials/Trending.tsx:129
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:135
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:108
 msgid "Hide trending topics?"
-msgstr ""
+msgstr "Скрыть актуальные темы?"
 
 #: src/components/interstitials/TrendingVideos.tsx:138
 msgid "Hide trending videos?"
@@ -3501,7 +3501,7 @@ msgstr "Если вы хотите изменить пароль, мы отпр�
 
 #: src/view/com/auth/server-input/index.tsx:208
 msgid "If you're a developer, you can host your own server."
-msgstr ""
+msgstr "Если вы разработчик, вы можете разместить свой собственный сервер."
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
@@ -3565,7 +3565,7 @@ msgstr "Взаимодействие ограничено"
 
 #: src/screens/Moderation/index.tsx:209
 msgid "Interaction settings"
-msgstr ""
+msgstr "Настройки взаимодействия"
 
 #: src/screens/Login/LoginForm.tsx:156
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
@@ -3851,7 +3851,7 @@ msgstr "Лайки этого поста"
 #: src/view/com/post-thread/PostThread.tsx:626
 #: src/view/com/post-thread/PostThread.tsx:631
 msgid "Linear"
-msgstr ""
+msgstr "Линейно"
 
 #: src/Navigation.tsx:209
 msgid "List"
@@ -4440,7 +4440,7 @@ msgstr "Вы больше не подписаны на {0}"
 
 #: src/screens/Signup/StepHandle.tsx:173
 msgid "No longer than {0} characters"
-msgstr ""
+msgstr "Не более {0} символов"
 
 #: src/screens/Messages/components/ChatListItem.tsx:124
 msgid "No messages yet"
@@ -4792,7 +4792,7 @@ msgstr "Открывает фотогалерею устройства"
 
 #: src/view/com/composer/Composer.tsx:1244
 msgid "Opens emoji picker"
-msgstr ""
+msgstr "Открывает подборщик эмодзи"
 
 #: src/view/com/auth/SplashScreen.tsx:49
 #: src/view/com/auth/SplashScreen.web.tsx:111
@@ -4802,7 +4802,7 @@ msgstr "Открывает процесс создания новой учётн
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.web.tsx:125
 msgid "Opens flow to sign in to your existing Bluesky account"
-msgstr ""
+msgstr "Открывается процесс входа в существующую учетную запись Bluesky"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Opens GIF select dialog"
@@ -4810,7 +4810,7 @@ msgstr "Открывает диалоговое окно выбора GIF"
 
 #: src/screens/Settings/Settings.tsx:208
 msgid "Opens helpdesk in browser"
-msgstr ""
+msgstr "Открывает службу поддержки в браузере"
 
 #: src/view/com/modals/InviteCodes.tsx:173
 msgid "Opens list of invite codes"
@@ -4869,7 +4869,7 @@ msgstr "Другие..."
 
 #: src/components/dms/ReportDialog.tsx:341
 msgid "Our moderation team has received your report."
-msgstr ""
+msgstr "Наша команда модерации получила вашу жалобу."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
@@ -4965,7 +4965,7 @@ msgstr "Закрепить ленту"
 
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:167
 msgid "Pin the trending videos feed to your home screen for easy access"
-msgstr ""
+msgstr "Закрепить ленту актуальных видео на главном экране для удобного доступа"
 
 #: src/view/screens/ProfileList.tsx:685
 msgid "Pin to home"
@@ -5022,7 +5022,7 @@ msgstr "Воспроизводит или приостанавливает GIF"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 msgid "Plays or pauses the video"
-msgstr ""
+msgstr "Воспроизводит или приостанавливает видео"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:106
 msgid "Plays the GIF"
@@ -5303,11 +5303,11 @@ msgstr "Публичный"
 
 #: src/view/com/lists/MyLists.tsx:77
 msgid "Public, sharable lists of users to mute or block in bulk."
-msgstr ""
+msgstr "Публичные, доступные для обмена списки пользователей для массового игнорирования или блокировки."
 
 #: src/view/com/lists/MyLists.tsx:72
 msgid "Public, sharable lists which can be used to drive feeds."
-msgstr ""
+msgstr "Публичные, доступные для обмена списки, которые могут использоваться для формирования лент."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:134
 msgid "QR code copied to your clipboard!"
@@ -5602,7 +5602,7 @@ msgstr "Настройки ответов выбирает автор ветки
 
 #: src/view/com/post-thread/PostThread.tsx:648
 msgid "Reply sorting"
-msgstr ""
+msgstr "Сортировка ответов"
 
 #: src/view/com/post/Post.tsx:204
 #: src/view/com/posts/PostFeedItem.tsx:558
@@ -5680,7 +5680,7 @@ msgstr "Пожаловаться на стартовый набор"
 
 #: src/components/dms/ReportDialog.tsx:338
 msgid "Report submitted"
-msgstr ""
+msgstr "Отчёт отправлен"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:41
 msgid "Report this content"
@@ -5772,7 +5772,7 @@ msgstr "Требовать альтернативный текст изобра�
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
 msgid "Require an email code to sign in to your account."
-msgstr ""
+msgstr "Требовать код с электронной почты для входа в учётную запись."
 
 #: src/screens/Signup/StepInfo/index.tsx:153
 msgid "Required for this provider"
@@ -5861,7 +5861,7 @@ msgstr "Возвращает к предыдущей странице"
 
 #: src/screens/StarterPack/Wizard/index.tsx:288
 msgid "Returns to the previous step"
-msgstr ""
+msgstr "Возвращает к предыдущему шагу"
 
 #: src/components/dialogs/BirthDateSettings.tsx:120
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:479
@@ -5976,11 +5976,11 @@ msgstr "Поиск"
 #: src/Navigation.tsx:215
 #: src/screens/Profile/ProfileSearch.tsx:34
 msgid "Search @{0}'s posts"
-msgstr ""
+msgstr "Поиск постов @{0}"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:745
 msgid "Search by name or interest"
-msgstr ""
+msgstr "Поиск по имени или интересам"
 
 #: src/view/screens/Feeds.tsx:441
 msgid "Search feeds"
@@ -5988,7 +5988,7 @@ msgstr "Поиск лент"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:575
 msgid "Search for \"{interestsDisplayName}\"{activeText}"
-msgstr ""
+msgstr "Поиск по \"{interestsDisplayName}\"{activeText}"
 
 #: src/view/shell/desktop/Search.tsx:201
 msgid "Search for \"{query}\""
@@ -6004,7 +6004,7 @@ msgstr "Поиск лент, которые вы хотите предложит
 
 #: src/view/screens/Search/Search.tsx:873
 msgid "Search for posts, users, or feeds"
-msgstr ""
+msgstr "Поиск по постам, пользователям или лентам"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
 msgid "Search for users"
@@ -6016,12 +6016,12 @@ msgstr "Поиск GIF-файлов"
 
 #: src/screens/Profile/ProfileSearch.tsx:33
 msgid "Search my posts"
-msgstr ""
+msgstr "Поиск по моим постам"
 
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Search Posts"
-msgstr ""
+msgstr "Поиск постов"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
 #: src/components/ProgressGuide/FollowDialog.tsx:764
@@ -6039,7 +6039,7 @@ msgstr "Поиск..."
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:509
 #: src/components/ProgressGuide/FollowDialog.tsx:765
 msgid "Searches for profiles"
-msgstr ""
+msgstr "Ищет профили"
 
 #: src/view/com/modals/ChangeEmail.tsx:105
 msgid "Security Step Required"
@@ -6059,7 +6059,7 @@ msgstr "Посмотреть посты #{tag}"
 
 #: src/components/RichTextTag.tsx:132
 msgid "See #{tag} posts by user"
-msgstr ""
+msgstr "Просмотреть посты пользователя #{tag}"
 
 #: src/view/com/auth/SplashScreen.web.tsx:176
 msgid "See jobs at Bluesky"
@@ -6495,11 +6495,11 @@ msgstr "Войдите или создайте свою учётную запи�
 #: src/screens/Deactivated.tsx:202
 #: src/screens/Deactivated.tsx:208
 msgid "Sign in or sign up"
-msgstr ""
+msgstr "Войдите или зарегистрируйтесь"
 
 #: src/components/AccountList.tsx:65
 msgid "Sign in to account that is not listed"
-msgstr ""
+msgstr "Войти в учётную запись, которой нет в списке"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign in to Bluesky or create a new account"
@@ -6519,7 +6519,7 @@ msgstr "Выйти"
 
 #: src/screens/Takendown.tsx:88
 msgid "Sign Out"
-msgstr ""
+msgstr "Выйти"
 
 #: src/screens/Settings/Settings.tsx:256
 #: src/view/shell/desktop/LeftNav.tsx:205
@@ -6598,7 +6598,7 @@ msgstr "Что-то не так? Сообщите нам."
 #: src/App.native.tsx:121
 #: src/App.web.tsx:97
 msgid "Sorry! Your session expired. Please sign in again."
-msgstr ""
+msgstr "Извините! Ваша сессия истекла. Пожалуйста, войдите снова."
 
 #: src/screens/Settings/ThreadPreferences.tsx:55
 msgid "Sort replies"
@@ -7221,7 +7221,7 @@ msgstr "Этот пост был удален."
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:720
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:360
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
-msgstr ""
+msgstr "Этот пост виден только вошедшим в систему пользователям. Оно не будет видно тем, кто не вошел в систему."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:701
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
@@ -7233,7 +7233,7 @@ msgstr "Автор этого поста отключил цитирование
 
 #: src/view/com/profile/ProfileMenu.tsx:402
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
-msgstr ""
+msgstr "Этот профиль виден только вошедшим в систему пользователям. Он не будет видно тем, кто не вошел в систему."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:763
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
@@ -7329,7 +7329,7 @@ msgstr "Чтобы отключить метод 2FA по электронной
 
 #: src/components/dms/ReportConversationPrompt.tsx:19
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr "Чтобы сообщить о беседе, сообщите об одном из её сообщений на экране беседы. Это позволит нашим модераторам понять контекст вашей проблемы."
+msgstr "Чтобы пожаловаться на беседу, отправьте одно из ее сообщений через экран беседы. Это позволит нашим модераторам понять контекст вашей проблемы."
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:127
 msgid "To upload videos to Bluesky, you must first verify your email."
@@ -7684,7 +7684,7 @@ msgstr "Использовать рекомендуемые"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:190
 msgid "Use this to sign in to the other app along with your handle."
-msgstr ""
+msgstr "Используйте его для входа в другое приложение вместе со своим псевдонимом."
 
 #: src/view/com/modals/InviteCodes.tsx:201
 msgid "Used by:"
@@ -7968,7 +7968,7 @@ msgstr ""
 
 #: src/components/VideoPostCard.tsx:121
 msgid "Views video in immersive mode"
-msgstr ""
+msgstr "Просмотр видео в режиме погружения"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -7999,7 +7999,7 @@ msgstr "Мы не смогли найти никаких результатов 
 
 #: src/screens/Topic.tsx:178
 msgid "We couldn't find any results for that topic."
-msgstr ""
+msgstr "Мы не смогли найти никаких результатов по этой теме."
 
 #: src/screens/Messages/Conversation.tsx:113
 msgid "We couldn't load this conversation"
@@ -8097,7 +8097,7 @@ msgstr "Как вы хотите назвать свой стартовый на
 
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:79
 msgid "What people are posting about."
-msgstr ""
+msgstr "О чём люди постят."
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
