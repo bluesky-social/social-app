@@ -6,7 +6,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
-import {logger} from '#/logger'
+import {Logger} from '#/logger'
 import {isAndroid} from '#/platform/detection'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
@@ -49,6 +49,8 @@ const DEFAULT_HANDLER_OPTIONS = {
 // These need to stay outside the hook to persist between account switches
 let storedPayload: NotificationPayload | undefined
 let prevDate = 0
+
+const logger = Logger.create(Logger.Context.Notifications)
 
 export function useNotificationsHandler() {
   const queryClient = useQueryClient()
@@ -186,11 +188,7 @@ export function useNotificationsHandler() {
           return DEFAULT_HANDLER_OPTIONS
         }
 
-        logger.debug(
-          'Notifications: received',
-          {e},
-          logger.DebugContext.notifications,
-        )
+        logger.debug('Notifications: received', {e})
 
         const payload = e.request.trigger.payload as NotificationPayload
         if (
@@ -217,13 +215,9 @@ export function useNotificationsHandler() {
         }
         prevDate = e.notification.date
 
-        logger.debug(
-          'Notifications: response received',
-          {
-            actionIdentifier: e.actionIdentifier,
-          },
-          logger.DebugContext.notifications,
-        )
+        logger.debug('Notifications: response received', {
+          actionIdentifier: e.actionIdentifier,
+        })
 
         if (
           e.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER &&
@@ -235,7 +229,6 @@ export function useNotificationsHandler() {
           logger.debug(
             'User pressed a notification, opening notifications tab',
             {},
-            logger.DebugContext.notifications,
           )
           logEvent('notifications:openApp', {})
           invalidateCachedUnreadPage()

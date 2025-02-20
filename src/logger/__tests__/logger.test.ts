@@ -2,16 +2,9 @@ import {beforeAll, describe, expect, jest, test} from '@jest/globals'
 import * as Sentry from '@sentry/react-native'
 import {nanoid} from 'nanoid/non-secure'
 
-import {Logger, LogLevel, sentryTransport} from '#/logger'
-
-jest.mock('#/env', () => ({
-  /*
-   * Forces debug mode for tests using the default logger. Most tests create
-   * their own logger instance.
-   */
-  LOG_LEVEL: 'debug',
-  LOG_DEBUG: '',
-}))
+import {Logger} from '#/logger'
+import {sentryTransport} from '#/logger/transports/sentry'
+import {LogLevel} from '#/logger/types'
 
 jest.mock('@sentry/react-native', () => ({
   addBreadcrumb: jest.fn(),
@@ -26,57 +19,19 @@ beforeAll(() => {
 describe('general functionality', () => {
   test('default params', () => {
     const logger = new Logger()
-    expect(logger.enabled).toBeFalsy()
-    expect(logger.level).toEqual(LogLevel.Debug) // mocked above
+    expect(logger.level).toEqual(LogLevel.Info)
   })
 
   test('can override default params', () => {
     const logger = new Logger({
-      enabled: true,
-      level: LogLevel.Info,
-    })
-    expect(logger.enabled).toBeTruthy()
-    expect(logger.level).toEqual(LogLevel.Info)
-  })
-
-  test('disabled logger does not report', () => {
-    const logger = new Logger({
-      enabled: false,
       level: LogLevel.Debug,
     })
-
-    const mockTransport = jest.fn()
-
-    logger.addTransport(mockTransport)
-    logger.debug('message')
-
-    expect(mockTransport).not.toHaveBeenCalled()
-  })
-
-  test('disablement', () => {
-    const logger = new Logger({
-      enabled: true,
-      level: LogLevel.Debug,
-    })
-
-    logger.disable()
-
-    const mockTransport = jest.fn()
-
-    logger.addTransport(mockTransport)
-    logger.debug('message')
-
-    expect(mockTransport).not.toHaveBeenCalled()
-  })
-
-  test('passing debug contexts automatically enables debug mode', () => {
-    const logger = new Logger({debug: 'specific'})
     expect(logger.level).toEqual(LogLevel.Debug)
   })
 
   test('supports extra metadata', () => {
     const timestamp = Date.now()
-    const logger = new Logger({enabled: true})
+    const logger = new Logger({})
 
     const mockTransport = jest.fn()
 
@@ -87,6 +42,7 @@ describe('general functionality', () => {
 
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Warn,
+      undefined,
       'message',
       extra,
       timestamp,
@@ -95,7 +51,7 @@ describe('general functionality', () => {
 
   test('supports nullish/falsy metadata', () => {
     const timestamp = Date.now()
-    const logger = new Logger({enabled: true})
+    const logger = new Logger({})
 
     const mockTransport = jest.fn()
 
@@ -105,6 +61,7 @@ describe('general functionality', () => {
     logger.warn('a', null)
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Warn,
+      undefined,
       'a',
       {},
       timestamp,
@@ -114,6 +71,7 @@ describe('general functionality', () => {
     logger.warn('b', false)
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Warn,
+      undefined,
       'b',
       {},
       timestamp,
@@ -123,6 +81,7 @@ describe('general functionality', () => {
     logger.warn('c', 0)
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Warn,
+      undefined,
       'c',
       {},
       timestamp,
@@ -130,7 +89,7 @@ describe('general functionality', () => {
 
     remove()
 
-    logger.addTransport((level, message, metadata) => {
+    logger.addTransport((level, context, message, metadata) => {
       expect(typeof metadata).toEqual('object')
     })
 
@@ -143,8 +102,15 @@ describe('general functionality', () => {
     const timestamp = Date.now()
     const sentryTimestamp = timestamp / 1000
 
-    sentryTransport(LogLevel.Debug, message, {}, timestamp)
+    sentryTransport(
+      LogLevel.Debug,
+      Logger.Context.Default,
+      message,
+      {},
+      timestamp,
+    )
     expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
+      category: Logger.Context.Default,
       message,
       data: {},
       type: 'default',
@@ -154,11 +120,13 @@ describe('general functionality', () => {
 
     sentryTransport(
       LogLevel.Info,
+      Logger.Context.Default,
       message,
       {type: 'info', prop: true},
       timestamp,
     )
     expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
+      category: Logger.Context.Default,
       message,
       data: {prop: true},
       type: 'info',
@@ -166,8 +134,15 @@ describe('general functionality', () => {
       timestamp: sentryTimestamp,
     })
 
-    sentryTransport(LogLevel.Log, message, {}, timestamp)
+    sentryTransport(
+      LogLevel.Log,
+      Logger.Context.Default,
+      message,
+      {},
+      timestamp,
+    )
     expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
+      category: Logger.Context.Default,
       message,
       data: {},
       type: 'default',
@@ -175,14 +150,24 @@ describe('general functionality', () => {
       timestamp: sentryTimestamp,
     })
     jest.runAllTimers()
-    expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
-      level: 'log',
-      tags: undefined,
-      extra: {},
-    })
+    expect(Sentry.captureMessage).toHaveBeenCalledWith(
+      `(${Logger.Context.Default}) ${message}`,
+      {
+        level: 'log',
+        tags: undefined,
+        extra: {},
+      },
+    )
 
-    sentryTransport(LogLevel.Warn, message, {}, timestamp)
+    sentryTransport(
+      LogLevel.Warn,
+      Logger.Context.Default,
+      message,
+      {},
+      timestamp,
+    )
     expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
+      category: Logger.Context.Default,
       message,
       data: {},
       type: 'default',
@@ -190,11 +175,14 @@ describe('general functionality', () => {
       timestamp: sentryTimestamp,
     })
     jest.runAllTimers()
-    expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
-      level: 'warning',
-      tags: undefined,
-      extra: {},
-    })
+    expect(Sentry.captureMessage).toHaveBeenCalledWith(
+      `(${Logger.Context.Default}) ${message}`,
+      {
+        level: 'warning',
+        tags: undefined,
+        extra: {},
+      },
+    )
 
     const e = new Error('error')
     const tags = {
@@ -203,6 +191,7 @@ describe('general functionality', () => {
 
     sentryTransport(
       LogLevel.Error,
+      Logger.Context.Default,
       e,
       {
         tags,
@@ -226,6 +215,7 @@ describe('general functionality', () => {
 
     sentryTransport(
       LogLevel.Debug,
+      undefined,
       message,
       {error: new Error('foo')},
       timestamp,
@@ -241,7 +231,7 @@ describe('general functionality', () => {
 
   test('add/remove transport', () => {
     const timestamp = Date.now()
-    const logger = new Logger({enabled: true})
+    const logger = new Logger({})
     const mockTransport = jest.fn()
 
     const remove = logger.addTransport(mockTransport)
@@ -256,6 +246,7 @@ describe('general functionality', () => {
     expect(mockTransport).toHaveBeenNthCalledWith(
       1,
       LogLevel.Warn,
+      undefined,
       'warn',
       {},
       timestamp,
@@ -263,22 +254,43 @@ describe('general functionality', () => {
   })
 })
 
-describe('debug contexts', () => {
-  const mockTransport = jest.fn()
+describe('create', () => {
+  test('create', () => {
+    const mockTransport = jest.fn()
+    const timestamp = Date.now()
+    const message = nanoid()
+    const logger = Logger.create(Logger.Context.Default)
 
+    logger.addTransport(mockTransport)
+    logger.info(message, {})
+
+    expect(mockTransport).toHaveBeenCalledWith(
+      LogLevel.Info,
+      Logger.Context.Default,
+      message,
+      {},
+      timestamp,
+    )
+  })
+})
+
+describe('debug contexts', () => {
   test('specific', () => {
+    const mockTransport = jest.fn()
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
-      enabled: true,
-      debug: 'specific',
+      // @ts-ignore
+      context: 'specific',
+      level: LogLevel.Debug,
     })
 
     logger.addTransport(mockTransport)
-    logger.debug(message, {}, 'specific')
+    logger.debug(message, {})
 
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Debug,
+      'specific',
       message,
       {},
       timestamp,
@@ -286,18 +298,22 @@ describe('debug contexts', () => {
   })
 
   test('namespaced', () => {
+    const mockTransport = jest.fn()
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
-      enabled: true,
-      debug: 'namespace*',
+      // @ts-ignore
+      context: 'namespace:foo',
+      contextFilter: 'namespace:*',
+      level: LogLevel.Debug,
     })
 
     logger.addTransport(mockTransport)
-    logger.debug(message, {}, 'namespace')
+    logger.debug(message, {})
 
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Debug,
+      'namespace:foo',
       message,
       {},
       timestamp,
@@ -305,18 +321,21 @@ describe('debug contexts', () => {
   })
 
   test('ignores inactive', () => {
+    const mockTransport = jest.fn()
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
-      enabled: true,
-      debug: 'namespace:foo:*',
+      // @ts-ignore
+      context: 'namespace:bar:baz',
+      contextFilter: 'namespace:foo:*',
     })
 
     logger.addTransport(mockTransport)
-    logger.debug(message, {}, 'namespace:bar:baz')
+    logger.debug(message, {})
 
     expect(mockTransport).not.toHaveBeenCalledWith(
       LogLevel.Debug,
+      'namespace:bar:baz',
       message,
       {},
       timestamp,
@@ -328,7 +347,6 @@ describe('supports levels', () => {
   test('debug', () => {
     const timestamp = Date.now()
     const logger = new Logger({
-      enabled: true,
       level: LogLevel.Debug,
     })
     const message = nanoid()
@@ -339,6 +357,7 @@ describe('supports levels', () => {
     logger.debug(message)
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Debug,
+      undefined,
       message,
       {},
       timestamp,
@@ -347,6 +366,7 @@ describe('supports levels', () => {
     logger.info(message)
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Info,
+      undefined,
       message,
       {},
       timestamp,
@@ -355,6 +375,7 @@ describe('supports levels', () => {
     logger.warn(message)
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Warn,
+      undefined,
       message,
       {},
       timestamp,
@@ -362,13 +383,18 @@ describe('supports levels', () => {
 
     const e = new Error(message)
     logger.error(e)
-    expect(mockTransport).toHaveBeenCalledWith(LogLevel.Error, e, {}, timestamp)
+    expect(mockTransport).toHaveBeenCalledWith(
+      LogLevel.Error,
+      undefined,
+      e,
+      {},
+      timestamp,
+    )
   })
 
   test('info', () => {
     const timestamp = Date.now()
     const logger = new Logger({
-      enabled: true,
       level: LogLevel.Info,
     })
     const message = nanoid()
@@ -382,6 +408,7 @@ describe('supports levels', () => {
     logger.info(message)
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Info,
+      undefined,
       message,
       {},
       timestamp,
@@ -391,7 +418,6 @@ describe('supports levels', () => {
   test('warn', () => {
     const timestamp = Date.now()
     const logger = new Logger({
-      enabled: true,
       level: LogLevel.Warn,
     })
     const message = nanoid()
@@ -408,6 +434,7 @@ describe('supports levels', () => {
     logger.warn(message)
     expect(mockTransport).toHaveBeenCalledWith(
       LogLevel.Warn,
+      undefined,
       message,
       {},
       timestamp,
@@ -417,7 +444,6 @@ describe('supports levels', () => {
   test('error', () => {
     const timestamp = Date.now()
     const logger = new Logger({
-      enabled: true,
       level: LogLevel.Error,
     })
     const message = nanoid()
@@ -436,6 +462,12 @@ describe('supports levels', () => {
 
     const e = new Error('original message')
     logger.error(e)
-    expect(mockTransport).toHaveBeenCalledWith(LogLevel.Error, e, {}, timestamp)
+    expect(mockTransport).toHaveBeenCalledWith(
+      LogLevel.Error,
+      undefined,
+      e,
+      {},
+      timestamp,
+    )
   })
 })

@@ -10,7 +10,7 @@ import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
-import {logger} from '#/logger'
+import {Logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {
   ACTIVE_POLL_INTERVAL,
@@ -33,6 +33,8 @@ import {
 import {MessagesEventBus} from '#/state/messages/events/agent'
 import {MessagesEventBusError} from '#/state/messages/events/types'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
+
+const logger = Logger.create(Logger.Context.Convo)
 
 export function isConvoItemMessage(
   item: ConvoItem,
@@ -125,7 +127,7 @@ export class Convo {
 
   getSnapshot(): ConvoState {
     if (!this.snapshot) this.snapshot = this.generateSnapshot()
-    // logger.debug('Convo: snapshotted', {}, logger.DebugContext.convo)
+    // logger.debug('Convo: snapshotted', {})
     return this.snapshot
   }
 
@@ -375,15 +377,11 @@ export class Convo {
         break
     }
 
-    logger.debug(
-      `Convo: dispatch '${action.event}'`,
-      {
-        id: this.id,
-        prev: prevStatus,
-        next: this.status,
-      },
-      logger.DebugContext.convo,
-    )
+    logger.debug(`Convo: dispatch '${action.event}'`, {
+      id: this.id,
+      prev: prevStatus,
+      next: this.status,
+    })
 
     this.updateLastActiveTimestamp()
     this.commit()
@@ -586,7 +584,7 @@ export class Convo {
       }
     | undefined
   async fetchMessageHistory() {
-    logger.debug('Convo: fetch message history', {}, logger.DebugContext.convo)
+    logger.debug('Convo: fetch message history', {})
 
     /*
      * If oldestRev is null, we've fetched all history.
@@ -773,7 +771,7 @@ export class Convo {
     // Ignore empty messages for now since they have no other purpose atm
     if (!message.text.trim() && !message.embed) return
 
-    logger.debug('Convo: send message', {}, logger.DebugContext.convo)
+    logger.debug('Convo: send message', {})
 
     const tempId = nanoid()
 
@@ -793,7 +791,6 @@ export class Convo {
     logger.debug(
       `Convo: processing messages (${this.pendingMessages.size} remaining)`,
       {},
-      logger.DebugContext.convo,
     )
 
     const pendingMessage = Array.from(this.pendingMessages.values()).shift()
@@ -902,7 +899,6 @@ export class Convo {
     logger.debug(
       `Convo: batch retrying ${this.pendingMessages.size} pending messages`,
       {},
-      logger.DebugContext.convo,
     )
 
     try {
@@ -937,7 +933,6 @@ export class Convo {
       logger.debug(
         `Convo: sent ${this.pendingMessages.size} pending messages`,
         {},
-        logger.DebugContext.convo,
       )
     } catch (e: any) {
       logger.error(e, {context: `Convo: failed to batch retry messages`})
@@ -946,7 +941,7 @@ export class Convo {
   }
 
   async deleteMessage(messageId: string) {
-    logger.debug('Convo: delete message', {}, logger.DebugContext.convo)
+    logger.debug('Convo: delete message', {})
 
     this.deletedMessages.add(messageId)
     this.commit()

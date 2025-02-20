@@ -1,4 +1,16 @@
-import type {Sentry} from '#/logger/sentry'
+import type {Sentry} from '#/logger/sentry/lib'
+
+/**
+ * DO NOT IMPORT THIS DIRECTLY
+ *
+ * Logger contexts, defined here and used via `Logger.Context.*` static prop.
+ */
+export enum LogContext {
+  Default = 'logger',
+  Session = 'session',
+  Notifications = 'notifications',
+  Convo = 'convo',
+}
 
 export enum LogLevel {
   Debug = 'debug',
@@ -10,6 +22,7 @@ export enum LogLevel {
 
 export type Transport = (
   level: LogLevel,
+  context: LogContext | undefined,
   message: string | Error,
   metadata: Metadata,
   timestamp: number,
@@ -59,11 +72,3 @@ export type Metadata = {
    */
   [key: string]: unknown
 } & Parameters<typeof Sentry.captureException>[1]
-
-export type ConsoleTransportEntry = {
-  id: string
-  timestamp: number
-  level: LogLevel
-  message: string | Error
-  metadata: Metadata
-}
