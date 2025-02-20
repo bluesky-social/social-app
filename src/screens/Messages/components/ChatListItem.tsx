@@ -47,8 +47,12 @@ import * as bsky from '#/types/bsky'
 
 export let ChatListItem = ({
   convo,
+  showMenu = true,
+  children,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
+  showMenu?: boolean
+  children?: React.ReactNode
 }): React.ReactNode => {
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
@@ -66,7 +70,9 @@ export let ChatListItem = ({
       convo={convo}
       profile={otherUser}
       moderationOpts={moderationOpts}
-    />
+      showMenu={showMenu}>
+      {children}
+    </ChatListItemReady>
   )
 }
 
@@ -76,10 +82,14 @@ function ChatListItemReady({
   convo,
   profile: profileUnshadowed,
   moderationOpts,
+  showMenu,
+  children,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
+  showMenu?: boolean
+  children?: React.ReactNode
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -305,7 +315,6 @@ function ChatListItemReady({
                 a.py_md,
                 a.gap_md,
                 (hovered || pressed || focused) && t.atoms.bg_contrast_25,
-                t.atoms.border_contrast_low,
               ]}>
               {/* Avatar goes here */}
               <View style={{width: 52, height: 52}} />
@@ -389,6 +398,8 @@ function ChatListItemReady({
                   size="lg"
                   style={[a.pt_xs]}
                 />
+
+                {children}
               </View>
 
               {convo.unreadCount > 0 && (
@@ -412,26 +423,28 @@ function ChatListItemReady({
           )}
         </Link>
 
-        <ConvoMenu
-          convo={convo}
-          profile={profile}
-          control={menuControl}
-          currentScreen="list"
-          showMarkAsRead={convo.unreadCount > 0}
-          hideTrigger={isNative}
-          blockInfo={blockInfo}
-          style={[
-            a.absolute,
-            a.h_full,
-            a.self_end,
-            a.justify_center,
-            {
-              right: tokens.space.lg,
-              opacity: !gtMobile || showActions || menuControl.isOpen ? 1 : 0,
-            },
-          ]}
-          latestReportableMessage={latestReportableMessage}
-        />
+        {showMenu && (
+          <ConvoMenu
+            convo={convo}
+            profile={profile}
+            control={menuControl}
+            currentScreen="list"
+            showMarkAsRead={convo.unreadCount > 0}
+            hideTrigger={isNative}
+            blockInfo={blockInfo}
+            style={[
+              a.absolute,
+              a.h_full,
+              a.self_end,
+              a.justify_center,
+              {
+                right: tokens.space.lg,
+                opacity: !gtMobile || showActions || menuControl.isOpen ? 1 : 0,
+              },
+            ]}
+            latestReportableMessage={latestReportableMessage}
+          />
+        )}
         <LeaveConvoPrompt
           control={leaveConvoControl}
           convoId={convo.id}

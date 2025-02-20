@@ -1,37 +1,94 @@
 import {View} from 'react-native'
 import {moderateProfile} from '@atproto/api'
 
+import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
+import * as bsky from '#/types/bsky'
 
 export function AvatarStack({
   profiles,
   size = 26,
+  backgroundColor,
+}: {
+  profiles: string[] | bsky.profile.AnyProfileView[]
+  size?: number
+  backgroundColor?: string
+}) {
+  if (typeof profiles[0] === 'string') {
+    return (
+      <AvatarStackWithFetch
+        profiles={profiles as string[]}
+        size={size}
+        backgroundColor={backgroundColor}
+      />
+    )
+  }
+  return (
+    <AvatarStackInner
+      profiles={profiles as bsky.profile.AnyProfileView[]}
+      size={size}
+      backgroundColor={backgroundColor}
+    />
+  )
+}
+
+function AvatarStackWithFetch({
+  profiles,
+  size,
+  backgroundColor,
 }: {
   profiles: string[]
-  size?: number
+  size: number
+  backgroundColor?: string
 }) {
-  const halfSize = size / 2
   const {data, error} = useProfilesQuery({handles: profiles})
-  const t = useTheme()
-  const moderationOpts = useModerationOpts()
 
   if (error) {
-    console.error(error)
+    if (error.name !== 'AbortError') {
+      logger.error('Error fetching profiles for AvatarStack', {
+        safeMessage: error,
+      })
+    }
     return null
   }
 
-  const isPending = !data || !moderationOpts
+  return (
+    <AvatarStackInner
+      numPending={profiles.length}
+      profiles={data?.profiles || []}
+      size={size}
+      backgroundColor={backgroundColor}
+    />
+  )
+}
+
+function AvatarStackInner({
+  profiles,
+  size,
+  numPending,
+  backgroundColor,
+}: {
+  profiles: bsky.profile.AnyProfileView[]
+  size: number
+  numPending?: number
+  backgroundColor?: string
+}) {
+  const halfSize = size / 2
+  const t = useTheme()
+  const moderationOpts = useModerationOpts()
+
+  const isPending = numPending || !moderationOpts
 
   const items = isPending
-    ? Array.from({length: profiles.length}).map((_, i) => ({
+    ? Array.from({length: numPending ?? profiles.length}).map((_, i) => ({
         key: i,
         profile: null,
         moderation: null,
       }))
-    : data.profiles.map(item => ({
+    : profiles.map(item => ({
         key: item.did,
         profile: item,
         moderation: moderateProfile(item, moderationOpts),
@@ -56,7 +113,7 @@ export function AvatarStack({
               height: size,
               left: i * -halfSize,
               borderWidth: 1,
-              borderColor: t.atoms.bg.backgroundColor,
+              borderColor: backgroundColor ?? t.atoms.bg.backgroundColor,
               borderRadius: 999,
               zIndex: 3 - i,
             },
