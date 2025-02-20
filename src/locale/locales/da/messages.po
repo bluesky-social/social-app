@@ -8,7 +8,7 @@ msgstr ""
 "Language: da\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-19 03:37\n"
+"PO-Revision-Date: 2025-02-20 21:03\n"
 "Last-Translator: \n"
 "Language-Team: Danish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -2274,8 +2274,8 @@ msgstr "Tryk dobbelt for at like"
 msgid "Download Bluesky"
 msgstr "Download Bluesky"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:77
-#: src/screens/Settings/components/ExportCarDialog.tsx:82
+#: src/screens/Settings/components/ExportCarDialog.tsx:79
+#: src/screens/Settings/components/ExportCarDialog.tsx:84
 msgid "Download CAR file"
 msgstr "Download CAR-fil"
 
@@ -7140,7 +7140,7 @@ msgstr "Denne indhold kan ikke ses uden en Bluesky-konto."
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:94
+#: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "Denne funktion er i beta. Du kan læse mere om dataeksport i <0>dette blogindlæg</0>."
 
@@ -7881,7 +7881,7 @@ msgstr "Se {displayName}s profil"
 msgid "View blocked user's profile"
 msgstr "Vis blokeret brugers profil"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:98
+#: src/screens/Settings/components/ExportCarDialog.tsx:100
 msgid "View blogpost for more details"
 msgstr "Se blogpost for mere information"
 
@@ -8519,7 +8519,7 @@ msgstr "Din konto er suspenderet"
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Din konto er ikke gammel nok til videoupload. Prøv igen senere."
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:65
+#: src/screens/Settings/components/ExportCarDialog.tsx:67
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "Dit kontoarkiv, som indeholder al din offentlige data, kan downloades som en CAR-fil. Denne fil indeholder ikke vedhæftede medier, fx billeder, eller dine private oplysninger, som skal downloades separat."
 
