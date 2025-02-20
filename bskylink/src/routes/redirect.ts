@@ -6,47 +6,40 @@ import {Express} from 'express'
 import {AppContext} from '../context.js'
 import {handler} from './util.js'
 
+const INTERNAL_IP_REGEX = new RegExp(
+  '(^127.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$)|(^10.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$)|(^172.1[6-9]{1}[0-9]{0,1}.[0-9]{1,3}.[0-9]{1,3}$)|(^172.2[0-9]{1}[0-9]{0,1}.[0-9]{1,3}.[0-9]{1,3}$)|(^172.3[0-1]{1}[0-9]{0,1}.[0-9]{1,3}.[0-9]{1,3}$)|(^192.168.[0-9]{1,3}.[0-9]{1,3}$)|^localhost',
+  'i',
+)
+
 export default function (ctx: AppContext, app: Express) {
   return app.get(
-    '/:linkId',
+    '/redirect',
     handler(async (req, res) => {
-      const linkId = req.params.linkId
-      const contentType = req.accepts(['html', 'json'])
+      let link = req.query.u
       assert(
-        typeof linkId === 'string',
-        'express guarantees id parameter is a string',
+        typeof link === 'string',
+        'express guarantees link query parameter is a string',
       )
-      const found = await ctx.db.db
-        .selectFrom('link')
-        .selectAll()
-        .where('id', '=', linkId)
-        .executeTakeFirst()
-      if (!found) {
-        // potentially broken or mistyped link
+      link = decodeURIComponent(link)
+
+      let url: URL | undefined
+      try {
+        url = new URL(link)
+      } catch {}
+
+      if (
+        !url ||
+        (url.protocol !== 'http:' && url.protocol !== 'https:') || // is a http(s) url
+        (ctx.cfg.service.hostnames.includes(url.hostname.toLowerCase()) &&
+          url.pathname === '/redirect') || // is a redirect loop
+        INTERNAL_IP_REGEX.test(url.hostname) // isn't directing to an internal location
+      ) {
         res.setHeader('Cache-Control', 'no-store')
-        if (contentType === 'json') {
-          return res
-            .status(404)
-            .json({
-              error: 'NotFound',
-              message: 'Link not found',
-            })
-            .end()
-        }
-        // send the user to the app
         res.setHeader('Location', `https://${ctx.cfg.service.appHostname}`)
         return res.status(302).end()
       }
-      // build url from original url in order to preserve query params
-      const url = new URL(
-        req.originalUrl,
-        `https://${ctx.cfg.service.appHostname}`,
-      )
-      url.pathname = found.path
+
       res.setHeader('Cache-Control', `max-age=${(7 * DAY) / SECOND}`)
-      if (contentType === 'json') {
-        return res.json({url: url.href}).end()
-      }
       res.setHeader('Location', url.href)
       return res.status(301).end()
     }),
