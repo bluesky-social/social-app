@@ -219,7 +219,7 @@ export type ConvoStateError = {
   deleteMessage: undefined
   sendMessage: undefined
   fetchMessageHistory: undefined
-  acceptChat: undefined
+  markConvoAccepted: undefined
 }
 export type ConvoStateDisabled = {
   status: ConvoStatus.Disabled
@@ -232,7 +232,7 @@ export type ConvoStateDisabled = {
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
-  acceptChat: AcceptChat
+  markConvoAccepted: MarkConvoAccepted
 }
 export type ConvoState =
   | ConvoStateUninitialized
