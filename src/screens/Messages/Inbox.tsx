@@ -1,9 +1,10 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {ChatBskyConvoDefs} from '@atproto/api'
+import {ChatBskyConvoDefs, ChatBskyConvoListConvos} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {useAppState} from '#/lib/hooks/useAppState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -18,13 +19,19 @@ import {isNative} from '#/platform/detection'
 import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
-import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
+import {
+  RQKEY,
+  useListConvosQuery,
+} from '#/state/queries/messages/list-conversations'
+import {FAB} from '#/view/com/util/fab/FAB'
 import {List} from '#/view/com/util/List'
+import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotateCounterClockwise'
+import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {Message_Stroke2_Corner0_Rounded as MessageIcon} from '#/components/icons/Message'
 import * as Layout from '#/components/Layout'
@@ -55,6 +62,7 @@ function RequestList() {
   const {_} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
+  const queryClient = useQueryClient()
 
   // Request the poll interval to be 10s (or whatever the MESSAGE_SCREEN_POLL_INTERVAL is set to in the future)
   // but only when the screen is active
@@ -120,6 +128,10 @@ function RequestList() {
       logger.error('Failed to load more conversations', {message: err})
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
+
+  const hasUnreadConvos = useMemo(() => {
+    return conversations.some(conversation => conversation.unreadCount > 0)
+  }, [conversations])
 
   if (conversations.length < 1) {
     return (
@@ -211,28 +223,62 @@ function RequestList() {
   }
 
   return (
-    <List
-      data={conversations}
-      renderItem={renderItem}
-      keyExtractor={keyExtractor}
-      refreshing={isPTRing}
-      onRefresh={onRefresh}
-      onEndReached={onEndReached}
-      ListFooterComponent={
-        <ListFooter
-          isFetchingNextPage={isFetchingNextPage}
-          error={cleanError(error)}
-          onRetry={fetchNextPage}
-          style={{borderColor: 'transparent'}}
-          hasNextPage={hasNextPage}
+    <>
+      <List
+        data={conversations}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        refreshing={isPTRing}
+        onRefresh={onRefresh}
+        onEndReached={onEndReached}
+        ListFooterComponent={
+          <ListFooter
+            isFetchingNextPage={isFetchingNextPage}
+            error={cleanError(error)}
+            onRetry={fetchNextPage}
+            style={{borderColor: 'transparent'}}
+            hasNextPage={hasNextPage}
+          />
+        }
+        onEndReachedThreshold={isNative ? 1.5 : 0}
+        initialNumToRender={initialNumToRender}
+        windowSize={11}
+        desktopFixedHeight
+        sideBorders={false}
+      />
+      {hasUnreadConvos && (
+        <FAB
+          testID="markAllAsReadFAB"
+          onPress={() => {
+            // TODO: mark all as read. proof-of-concept just clears clientside
+            queryClient.setQueryData(
+              RQKEY('request'),
+              (old?: {
+                pageParams: Array<string | undefined>
+                pages: Array<ChatBskyConvoListConvos.OutputSchema>
+              }) => {
+                if (!old) return old
+                return {
+                  ...old,
+                  pages: old.pages.map(page => ({
+                    ...page,
+                    convos: page.convos.map(convo => ({
+                      ...convo,
+                      unreadCount: 0,
+                    })),
+                  })),
+                }
+              },
+            )
+            Toast.show(_(msg`Marked all as read`), 'check')
+          }}
+          icon={<CheckIcon size="lg" fill={t.palette.white} />}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Mark all as read`)}
+          accessibilityHint=""
         />
-      }
-      onEndReachedThreshold={isNative ? 1.5 : 0}
-      initialNumToRender={initialNumToRender}
-      windowSize={11}
-      desktopFixedHeight
-      sideBorders={false}
-    />
+      )}
+    </>
   )
 }
 
