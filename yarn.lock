@@ -80,6 +80,20 @@
     tlds "^1.234.0"
     zod "^3.23.8"
 
+"@atproto/api@^0.14.3":
+  version "0.14.3"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.14.3.tgz#8e55b93f4d2471fb97093ca2437c10af16fb6bc9"
+  integrity sha512-S9WTXs7zRaHWydz4YlnoAIkve3TXC+KLi4CpoyDMCIrHkw6fOUFIUt5vYLUnQqHovkuE31dzICMTzVMdtqBuwA==
+  dependencies:
+    "@atproto/common-web" "^0.4.0"
+    "@atproto/lexicon" "^0.4.7"
+    "@atproto/syntax" "^0.3.3"
+    "@atproto/xrpc" "^0.6.9"
+    await-lock "^2.2.2"
+    multiformats "^9.9.0"
+    tlds "^1.234.0"
+    zod "^3.23.8"
+
 "@atproto/aws@^0.2.15":
   version "0.2.15"
   resolved "https://registry.yarnpkg.com/@atproto/aws/-/aws-0.2.15.tgz#edc534a420b4da37e2f049d471bf40df93447a25"
