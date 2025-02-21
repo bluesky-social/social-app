@@ -8,8 +8,8 @@ on:
         type: choice
         description: Build profile to use
         options:
-          - testflight
-          - production
+          # - testflight
+          # - production
 
 jobs:
   build:
