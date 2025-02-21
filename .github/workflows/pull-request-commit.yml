@@ -5,9 +5,9 @@ name: PR Tests
 
 on:
   push:
-    branches: [main]
+    branches: # [main]
   pull_request:
-    types: [opened, synchronize]
+    types: # [opened, synchronize]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
