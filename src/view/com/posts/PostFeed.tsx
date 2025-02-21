@@ -625,7 +625,7 @@ let PostFeed = ({
             reason={
               (indexInSlice === 0 &&
                 AppBskyFeedDefs.isReasonPin(slice.reason)) ||
-              AppBskyFeedDefs.isReasonSponsored(slice.reason)
+              AppBskyFeedDefs.isReasonPromoted(slice.reason)
                 ? slice.reason
                 : undefined
             }
