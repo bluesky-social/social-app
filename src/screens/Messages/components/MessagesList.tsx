@@ -441,11 +441,13 @@ export function MessagesList({
           <>
             {isConvoActive(convoState) &&
               !convoState.isFetchingHistory &&
-              convoState.items.length === 0 && <ChatEmptyPill />}
-            {isConvoActive(convoState) &&
-              convoState.convo.status === 'request' && (
-                <ChatStatusInfo convoState={convoState} />
-              )}
+              (convoState.items.length === 0 ? (
+                <ChatEmptyPill />
+              ) : (
+                convoState.convo.status === 'request' && (
+                  <ChatStatusInfo convoState={convoState} />
+                )
+              ))}
             <MessageInput
               onSendMessage={onSendMessage}
               hasEmbed={!!embedUri}
