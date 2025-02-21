@@ -353,9 +353,8 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
         a.transition_color,
       ]}
       hoverStyle={t.atoms.bg_contrast_25}
-      // @ts-ignore the function signature differs on web -prf
+      // @ts-expect-error the function signature differs on web -prf
       onPress={onPressWrapped}
-      // @ts-ignore web only -prf
       href={href}
       dataSet={{noUnderline: 1}}
       role="link"
@@ -520,6 +519,7 @@ function ChatNavItem() {
     <NavItem
       href="/messages"
       count={numUnreadMessages.numUnread}
+      hasNew={numUnreadMessages.hasNew}
       icon={
         <Message style={pal.text} aria-hidden={true} width={NAV_ICON_WIDTH} />
       }
