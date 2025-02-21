@@ -40,6 +40,7 @@ jobs:
         uses: crowdin/github-action@v2
         with:
           upload_sources: true
+          upload_sources_args: "-b main"
           upload_translations: false
           push_translations: false
           push_sources: false
