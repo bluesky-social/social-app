@@ -81,8 +81,9 @@ export function PostInteractionSettingsControlledDialog({
             <Trans>
               You can set default interaction settings in{' '}
               <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
-                Settings &rarr; Moderation &rarr; Interaction settings.
+                Settings &rarr; Moderation &rarr; Interaction settings
               </Text>
+              .
             </Trans>
           </Text>
         </View>

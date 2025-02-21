@@ -86,7 +86,7 @@ export function Deactivated() {
         case 'Bad token scope':
           setError(
             _(
-              msg`You're logged in with an App Password. Please log in with your main password to continue deactivating your account.`,
+              msg`You're signed in with an App Password. Please sign in with your main password to continue deactivating your account.`,
             ),
           )
           break
@@ -148,7 +148,7 @@ export function Deactivated() {
                 {pending && <ButtonIcon icon={Loader} position="right" />}
               </Button>
               <Button
-                label={_(msg`Cancel reactivation and log out`)}
+                label={_(msg`Cancel reactivation and sign out`)}
                 size="large"
                 variant="solid"
                 color="secondary"
@@ -183,7 +183,7 @@ export function Deactivated() {
             <>
               <Text
                 style={[t.atoms.text_contrast_medium, a.pb_md, a.leading_snug]}>
-                <Trans>Or, log into one of your other accounts.</Trans>
+                <Trans>Or, sign in to one of your other accounts.</Trans>
               </Text>
               <AccountList
                 onSelectAccount={onSelectAccount}
@@ -199,13 +199,13 @@ export function Deactivated() {
                 <Trans>Or, continue with another account.</Trans>
               </Text>
               <Button
-                label={_(msg`Log in or sign up`)}
+                label={_(msg`Sign in or sign up`)}
                 size="large"
                 variant="solid"
                 color="secondary"
                 onPress={() => setShowLoggedOut(true)}>
                 <ButtonText>
-                  <Trans>Log in or sign up</Trans>
+                  <Trans>Sign in or sign up</Trans>
                 </ButtonText>
               </Button>
             </>

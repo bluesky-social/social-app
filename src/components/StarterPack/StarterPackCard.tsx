@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {AppBskyGraphDefs, AppBskyGraphStarterpack, AtUri} from '@atproto/api'
+import {AppBskyGraphStarterpack, AtUri} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -15,11 +15,12 @@ import {atoms as a, useTheme} from '#/alf'
 import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
 import {Link as BaseLink, LinkProps as BaseLinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 export function Default({
   starterPack,
 }: {
-  starterPack?: AppBskyGraphDefs.StarterPackViewBasic
+  starterPack?: bsky.starterPack.AnyStarterPackView
 }) {
   if (!starterPack) return null
   return (
@@ -32,7 +33,7 @@ export function Default({
 export function Notification({
   starterPack,
 }: {
-  starterPack?: AppBskyGraphDefs.StarterPackViewBasic
+  starterPack?: bsky.starterPack.AnyStarterPackView
 }) {
   if (!starterPack) return null
   return (
@@ -47,7 +48,7 @@ export function Card({
   noIcon,
   noDescription,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackViewBasic
+  starterPack: bsky.starterPack.AnyStarterPackView
   noIcon?: boolean
   noDescription?: boolean
 }) {
@@ -57,7 +58,12 @@ export function Card({
   const t = useTheme()
   const {currentAccount} = useSession()
 
-  if (!AppBskyGraphStarterpack.isRecord(record)) {
+  if (
+    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+      record,
+      AppBskyGraphStarterpack.isRecord,
+    )
+  ) {
     return null
   }
 
@@ -100,7 +106,7 @@ export function Link({
   starterPack,
   children,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackViewBasic
+  starterPack: bsky.starterPack.AnyStarterPackView
   onPress?: () => void
   children: BaseLinkProps['children']
 }) {
@@ -139,7 +145,7 @@ export function Link({
 export function Embed({
   starterPack,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackViewBasic
+  starterPack: bsky.starterPack.AnyStarterPackView
 }) {
   const t = useTheme()
   const imageUri = getStarterPackOgCard(starterPack)

@@ -19,6 +19,7 @@ export const router = new Router({
   ProfileFollowers: '/profile/:name/followers',
   ProfileFollows: '/profile/:name/follows',
   ProfileKnownFollowers: '/profile/:name/known-followers',
+  ProfileSearch: '/profile/:name/search',
   ProfileList: '/profile/:name/lists/:rkey',
   PostThread: '/profile/:name/post/:rkey',
   PostLikedBy: '/profile/:name/post/:rkey/liked-by',

@@ -1,7 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
 import {
-  AppBskyActorDefs,
   AppBskyGraphDefs,
   AtUri,
   moderateUserList,
@@ -26,7 +25,7 @@ import {
 import {Link as InternalLink, LinkProps} from '#/components/Link'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
-import {ButtonProps} from './Button'
+import * as bsky from '#/types/bsky'
 
 /*
  * This component is based on `FeedCard` and is tightly coupled with that
@@ -49,7 +48,7 @@ const MODLIST = 'app.bsky.graph.defs#modlist'
 type Props = {
   view: AppBskyGraphDefs.ListView
   showPinButton?: boolean
-} & Omit<LinkProps, 'to' | 'label' | 'children'>
+}
 
 export function Default(props: Props) {
   const {view, showPinButton} = props
@@ -83,7 +82,7 @@ export function Link({
   view,
   children,
   ...props
-}: Props & Pick<ButtonProps, 'children'>) {
+}: Props & Omit<LinkProps, 'to' | 'label'>) {
   const queryClient = useQueryClient()
 
   const href = React.useMemo(() => {
@@ -108,7 +107,7 @@ export function TitleAndByline({
   modUi,
 }: {
   title: string
-  creator?: AppBskyActorDefs.ProfileViewBasic
+  creator?: bsky.profile.AnyProfileView
   purpose?: AppBskyGraphDefs.ListView['purpose']
   modUi?: ModerationUI
 }) {

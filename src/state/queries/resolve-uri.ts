@@ -1,14 +1,9 @@
-import {AppBskyActorDefs, AtUri} from '@atproto/api'
-import {
-  QueryClient,
-  useQuery,
-  useQueryClient,
-  UseQueryResult,
-} from '@tanstack/react-query'
+import {AtUri} from '@atproto/api'
+import {QueryClient, useQuery, UseQueryResult} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
-import {profileBasicQueryKey as RQKEY_PROFILE_BASIC} from './profile'
+import {useUnstableProfileViewCache} from './profile'
 
 const RQKEY_ROOT = 'resolved-did'
 export const RQKEY = (didOrHandle: string) => [RQKEY_ROOT, didOrHandle]
@@ -28,8 +23,8 @@ export function useResolveUriQuery(uri: string | undefined): UriUseQueryResult {
 }
 
 export function useResolveDidQuery(didOrHandle: string | undefined) {
-  const queryClient = useQueryClient()
   const agent = useAgent()
+  const {getUnstableProfile} = useUnstableProfileViewCache()
 
   return useQuery<string, Error>({
     staleTime: STALE.HOURS.ONE,
@@ -45,11 +40,7 @@ export function useResolveDidQuery(didOrHandle: string | undefined) {
     initialData: () => {
       // Return undefined if no did or handle
       if (!didOrHandle) return
-
-      const profile =
-        queryClient.getQueryData<AppBskyActorDefs.ProfileViewBasic>(
-          RQKEY_PROFILE_BASIC(didOrHandle),
-        )
+      const profile = getUnstableProfile(didOrHandle)
       return profile?.did
     },
     enabled: !!didOrHandle,

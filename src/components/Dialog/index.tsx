@@ -26,7 +26,7 @@ import {isAndroid, isIOS} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, ListMethods, ListProps} from '#/view/com/util/List'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {useThemeName} from '#/alf/util/useColorModeTheme'
 import {Context, useDialogContext} from '#/components/Dialog/context'
 import {
@@ -46,7 +46,7 @@ export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/shared'
 export * from '#/components/Dialog/types'
 export * from '#/components/Dialog/utils'
-// @ts-ignore
+
 export const Input = createInput(TextInput)
 
 export function Outer({
@@ -168,7 +168,9 @@ export function Outer({
       onStateChange={onStateChange}
       disableDrag={disableDrag}>
       <Context.Provider value={context}>
-        <View testID={testID}>{children}</View>
+        <View testID={testID} style={[a.relative]}>
+          {children}
+        </View>
       </Context.Provider>
     </BottomSheet>
   )
@@ -196,7 +198,7 @@ export function Inner({children, style, header}: DialogInnerProps) {
 
 export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
   function ScrollableInner(
-    {children, style, contentContainerStyle, header, ...props},
+    {children, contentContainerStyle, header, ...props},
     ref,
   ) {
     const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
@@ -216,13 +218,21 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
       [],
     )
 
-    const basePading =
-      (isIOS ? 30 : 50) + (isIOS ? keyboardHeight / 4 : keyboardHeight)
-    const fullPaddingBase = insets.bottom + insets.top + basePading
-    const fullPadding = isIOS ? fullPaddingBase : fullPaddingBase + 50
-
-    const paddingBottom =
-      nativeSnapPoint === BottomSheetSnapPoint.Full ? fullPadding : basePading
+    let paddingBottom = 0
+    if (isIOS) {
+      paddingBottom += keyboardHeight / 4
+      if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
+        paddingBottom += insets.bottom + tokens.space.md
+      }
+      paddingBottom = Math.max(paddingBottom, tokens.space._2xl)
+    } else {
+      paddingBottom += keyboardHeight
+      if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
+        paddingBottom += insets.top
+      }
+      paddingBottom +=
+        Math.max(insets.bottom, tokens.space._5xl) + tokens.space._2xl
+    }
 
     const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       if (!isAndroid) {
@@ -238,7 +248,6 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
 
     return (
       <KeyboardAwareScrollView
-        style={[style]}
         contentContainerStyle={[
           a.pt_2xl,
           a.px_xl,
@@ -316,7 +325,7 @@ export function Handle() {
           style={[
             a.rounded_sm,
             {
-              top: 10,
+              top: tokens.space._2xl / 2 - 2.5,
               width: 35,
               height: 5,
               alignSelf: 'center',

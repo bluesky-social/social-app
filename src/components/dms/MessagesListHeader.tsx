@@ -17,6 +17,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {isWeb} from '#/platform/detection'
 import {Shadow} from '#/state/cache/profile-shadow'
 import {isConvoActive, useConvo} from '#/state/messages/convo'
+import {ConvoItem} from '#/state/messages/convo/types'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
@@ -31,7 +32,7 @@ export let MessagesListHeader = ({
   profile,
   moderation,
 }: {
-  profile?: Shadow<AppBskyActorDefs.ProfileViewBasic>
+  profile?: Shadow<AppBskyActorDefs.ProfileViewDetailed>
   moderation?: ModerationDecision
 }): React.ReactNode => {
   const t = useTheme()
@@ -138,7 +139,7 @@ function HeaderReady({
   moderation,
   blockInfo,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
   moderation: ModerationDecision
   blockInfo: {
     listBlocks: ModerationCause[]
@@ -157,8 +158,10 @@ function HeaderReady({
         moderation.ui('displayName'),
       )
 
+  // @ts-ignore findLast is polyfilled - esb
   const latestMessageFromOther = convoState.items.findLast(
-    item => item.type === 'message' && item.message.sender.did === profile.did,
+    (item: ConvoItem) =>
+      item.type === 'message' && item.message.sender.did === profile.did,
   )
 
   const latestReportableMessage =

@@ -1,6 +1,7 @@
 import React from 'react'
-import {ScrollView, View} from 'react-native'
-import {AppBskyActorDefs, AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {View} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
+import {AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -26,6 +27,7 @@ import {PersonPlus_Stroke2_Corner0_Rounded as Person} from '#/components/icons/P
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 import {ProgressGuideList} from './ProgressGuide/List'
 
 const MOBILE_CARD_WIDTH = 300
@@ -227,7 +229,7 @@ export function ProfileGrid({
   viewContext = 'feed',
 }: {
   isSuggestionsLoading: boolean
-  profiles: AppBskyActorDefs.ProfileViewDetailed[]
+  profiles: bsky.profile.AnyProfileView[]
   recId?: number
   error: Error | null
   viewContext: 'profile' | 'feed'

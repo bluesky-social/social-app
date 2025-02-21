@@ -45,6 +45,8 @@ export const LoginForm = ({
   onPressRetryConnect,
   onPressBack,
   onPressForgotPassword,
+  onAttemptSuccess,
+  onAttemptFailed,
 }: {
   error: string
   serviceUrl: string
@@ -55,6 +57,8 @@ export const LoginForm = ({
   onPressRetryConnect: () => void
   onPressBack: () => void
   onPressForgotPassword: () => void
+  onAttemptSuccess: () => void
+  onAttemptFailed: () => void
 }) => {
   const t = useTheme()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
@@ -131,6 +135,7 @@ export const LoginForm = ({
         },
         'LoginForm',
       )
+      onAttemptSuccess()
       setShowLoggedOut(false)
       setHasCheckedForStarterPack(true)
       requestNotificationsPermission('Login')
@@ -142,29 +147,32 @@ export const LoginForm = ({
         e instanceof ComAtprotoServerCreateSession.AuthFactorTokenRequiredError
       ) {
         setIsAuthFactorTokenNeeded(true)
-      } else if (errMsg.includes('Token is invalid')) {
-        logger.debug('Failed to login due to invalid 2fa token', {
-          error: errMsg,
-        })
-        setError(_(msg`Invalid 2FA confirmation code.`))
-      } else if (
-        errMsg.includes('Authentication Required') ||
-        errMsg.includes('Invalid identifier or password')
-      ) {
-        logger.debug('Failed to login due to invalid credentials', {
-          error: errMsg,
-        })
-        setError(_(msg`Incorrect username or password`))
-      } else if (isNetworkError(e)) {
-        logger.warn('Failed to login due to network error', {error: errMsg})
-        setError(
-          _(
-            msg`Unable to contact your service. Please check your Internet connection.`,
-          ),
-        )
       } else {
-        logger.warn('Failed to login', {error: errMsg})
-        setError(cleanError(errMsg))
+        onAttemptFailed()
+        if (errMsg.includes('Token is invalid')) {
+          logger.debug('Failed to login due to invalid 2fa token', {
+            error: errMsg,
+          })
+          setError(_(msg`Invalid 2FA confirmation code.`))
+        } else if (
+          errMsg.includes('Authentication Required') ||
+          errMsg.includes('Invalid identifier or password')
+        ) {
+          logger.debug('Failed to login due to invalid credentials', {
+            error: errMsg,
+          })
+          setError(_(msg`Incorrect username or password`))
+        } else if (isNetworkError(e)) {
+          logger.warn('Failed to login due to network error', {error: errMsg})
+          setError(
+            _(
+              msg`Unable to contact your service. Please check your Internet connection.`,
+            ),
+          )
+        } else {
+          logger.warn('Failed to login', {error: errMsg})
+          setError(cleanError(errMsg))
+        }
       }
     }
   }
@@ -290,7 +298,9 @@ export const LoginForm = ({
             />
           </TextField.Root>
           <Text style={[a.text_sm, t.atoms.text_contrast_medium, a.mt_sm]}>
-            <Trans>Check your email for a login code and enter it here.</Trans>
+            <Trans>
+              Check your email for a sign in code and enter it here.
+            </Trans>
           </Text>
         </View>
       )}
@@ -311,7 +321,7 @@ export const LoginForm = ({
           <Button
             testID="loginRetryButton"
             label={_(msg`Retry`)}
-            accessibilityHint={_(msg`Retries login`)}
+            accessibilityHint={_(msg`Retries sign in`)}
             variant="solid"
             color="secondary"
             size="large"

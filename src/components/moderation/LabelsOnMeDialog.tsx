@@ -5,6 +5,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
+import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useLabelSubject} from '#/lib/moderation'
 import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -66,7 +67,7 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
         />
       ) : (
         <>
-          <Text style={[a.text_2xl, a.font_bold, a.pb_xs, a.leading_tight]}>
+          <Text style={[a.text_2xl, a.font_heavy, a.pb_xs, a.leading_tight]}>
             {isAccount ? (
               <Trans>Labels on your account</Trans>
             ) : (
@@ -122,6 +123,7 @@ function Label({
   const sourceName = labeler
     ? sanitizeHandle(labeler.creator.handle, '@')
     : label.src
+  const timeDiff = useGetTimeAgo({future: true})
   return (
     <View
       style={[
@@ -163,18 +165,41 @@ function Label({
             <Trans>This label was applied by you.</Trans>
           </Text>
         ) : (
-          <View style={{flexDirection: 'row'}}>
-            <Text style={[t.atoms.text_contrast_medium]}>
-              <Trans>Source: </Trans>{' '}
+          <View
+            style={[
+              a.flex_row,
+              a.justify_between,
+              a.gap_xl,
+              {paddingBottom: 1},
+            ]}>
+            <Text
+              style={[a.flex_1, a.leading_snug, t.atoms.text_contrast_medium]}
+              numberOfLines={1}>
+              <Trans>
+                Source:{' '}
+                <InlineLinkText
+                  label={sourceName}
+                  to={makeProfileLink(
+                    labeler ? labeler.creator : {did: label.src, handle: ''},
+                  )}
+                  onPress={() => control.close()}>
+                  {sourceName}
+                </InlineLinkText>
+              </Trans>
             </Text>
-            <InlineLinkText
-              label={sourceName}
-              to={makeProfileLink(
-                labeler ? labeler.creator : {did: label.src, handle: ''},
-              )}
-              onPress={() => control.close()}>
-              {sourceName}
-            </InlineLinkText>
+            {label.exp && (
+              <View>
+                <Text
+                  style={[
+                    a.leading_snug,
+                    a.text_sm,
+                    a.italic,
+                    t.atoms.text_contrast_medium,
+                  ]}>
+                  <Trans>Expires in {timeDiff(Date.now(), label.exp)}</Trans>
+                </Text>
+              </View>
+            )}
           </View>
         )}
       </View>

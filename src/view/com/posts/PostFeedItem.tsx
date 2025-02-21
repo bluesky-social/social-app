@@ -47,6 +47,7 @@ import {AppModerationCause} from '#/components/Pills'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
+import * as bsky from '#/types/bsky'
 import {Link, TextLink, TextLinkOnWebOnly} from '../util/Link'
 import {AviFollowButton} from './AviFollowButton'
 
@@ -232,8 +233,9 @@ let FeedItemInner = ({
    * If `post[0]` in this slice is the actual root post (not an orphan thread),
    * then we may have a threadgate record to reference
    */
-  const threadgateRecord = AppBskyFeedThreadgate.isRecord(
+  const threadgateRecord = bsky.dangerousIsType<AppBskyFeedThreadgate.Record>(
     rootPost.threadgate?.record,
+    AppBskyFeedThreadgate.isRecord,
   )
     ? rootPost.threadgate.record
     : undefined
@@ -461,7 +463,10 @@ let PostContent = ({
   })
   const additionalPostAlerts: AppModerationCause[] = React.useMemo(() => {
     const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri)
-    const rootPostUri = AppBskyFeedPost.isRecord(post.record)
+    const rootPostUri = bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      post.record,
+      AppBskyFeedPost.isRecord,
+    )
       ? post.record?.reply?.root?.uri || post.uri
       : undefined
     const isControlledByViewer =

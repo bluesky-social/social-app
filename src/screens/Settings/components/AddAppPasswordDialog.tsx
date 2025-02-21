@@ -188,7 +188,7 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
               </Text>
               <Text style={[a.text_md, a.leading_snug]}>
                 <Trans>
-                  Use this to sign into the other app along with your handle.
+                  Use this to sign in to the other app along with your handle.
                 </Trans>
               </Text>
               <CopyButton

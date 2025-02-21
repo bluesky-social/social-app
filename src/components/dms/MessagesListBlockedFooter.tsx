@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
+import {ModerationDecision} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -14,6 +14,7 @@ import {BlockedByListDialog} from '#/components/dms/BlockedByListDialog'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 export function MessagesListBlockedFooter({
   recipient: initialRecipient,
@@ -21,7 +22,7 @@ export function MessagesListBlockedFooter({
   hasMessages,
   moderation,
 }: {
-  recipient: AppBskyActorDefs.ProfileViewBasic
+  recipient: bsky.profile.AnyProfileView
   convoId: string
   hasMessages: boolean
   moderation: ModerationDecision

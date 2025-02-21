@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react'
 import {TextInput, View} from 'react-native'
-import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
+import {moderateProfile, ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -28,13 +28,14 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 type Item =
   | {
       type: 'profile'
       key: string
       enabled: boolean
-      profile: AppBskyActorDefs.ProfileView
+      profile: bsky.profile.AnyProfileView
     }
   | {
       type: 'empty'
@@ -330,7 +331,7 @@ function ProfileCard({
   onPress,
 }: {
   enabled: boolean
-  profile: AppBskyActorDefs.ProfileView
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   onPress: (did: string) => void
 }) {
