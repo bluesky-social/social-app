@@ -19,7 +19,7 @@ import Graphemer from 'graphemer'
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useEmail} from '#/lib/hooks/useEmail'
-import {isIOS} from '#/platform/detection'
+import {isIOS, isWeb} from '#/platform/detection'
 import {
   useMessageDraft,
   useSaveMessageDraft,
@@ -87,6 +87,13 @@ export function MessageInput({
     if (isIOS) {
       setShouldEnforceClear(true)
     }
+    if (isWeb) {
+      // Pressing the send button causes the text input to lose focus, so we need to
+      // re-focus it after sending
+      setTimeout(() => {
+        inputRef.current?.focus()
+      }, 100)
+    }
   }, [
     needsEmailVerification,
     hasEmbed,
@@ -95,6 +102,7 @@ export function MessageInput({
     onSendMessage,
     playHaptic,
     setEmbed,
+    inputRef,
     _,
   ])
 
