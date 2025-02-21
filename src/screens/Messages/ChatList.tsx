@@ -137,20 +137,25 @@ export function MessagesScreen({navigation, route}: Props) {
     [navigation],
   )
 
-  const onScrollToTop = useCallback(() => {
+  const onSoftReset = useCallback(async () => {
     scrollElRef.current?.scrollToOffset({
       animated: isNative,
       offset: 0,
     })
-  }, [scrollElRef])
+    try {
+      await refetch()
+    } catch (err) {
+      logger.error('Failed to refresh conversations', {message: err})
+    }
+  }, [scrollElRef, refetch])
 
   const isScreenFocused = useIsFocused()
   useEffect(() => {
     if (!isScreenFocused) {
       return
     }
-    return listenSoftReset(onScrollToTop)
-  }, [onScrollToTop, isScreenFocused])
+    return listenSoftReset(onSoftReset)
+  }, [onSoftReset, isScreenFocused])
 
   if (conversations.length < 1) {
     return (
