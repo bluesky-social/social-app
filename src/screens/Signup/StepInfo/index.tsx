@@ -119,6 +119,12 @@ export function StepInfo({
         value: _(msg`Please choose your password.`),
       })
     }
+    if (password.length < 8) {
+      return dispatch({
+        type: 'setError',
+        value: _(msg`Your password must be at least 8 characters long.`),
+      })
+    }
 
     dispatch({type: 'setInviteCode', value: inviteCode})
     dispatch({type: 'setEmail', value: email})
