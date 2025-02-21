@@ -1,9 +1,9 @@
-import {ChatBskyConvoListConvos} from '@atproto/api'
+import {ChatBskyConvoAcceptConvo, ChatBskyConvoListConvos} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useAgent} from '#/state/session'
+import {DM_SERVICE_HEADERS} from './const'
 import {
   RQKEY as CONVO_LIST_KEY,
   RQKEY_ROOT as CONVO_LIST_ROOT_KEY,
@@ -17,7 +17,7 @@ export function useAcceptConversation(
     onError,
   }: {
     onMutate?: () => void
-    onSuccess?: (data: {rev: string}) => void
+    onSuccess?: (data: ChatBskyConvoAcceptConvo.OutputSchema) => void
     onError?: (error: Error) => void
   },
 ) {
@@ -26,19 +26,12 @@ export function useAcceptConversation(
 
   return useMutation({
     mutationFn: async () => {
-      return (await fetch(
-        `${agent.dispatchUrl}xrpc/chat.bsky.convo.acceptConvo`,
-        {
-          method: 'POST',
-          body: JSON.stringify({convoId}),
-          headers: {
-            'Content-Type': 'application/json',
-            accept: 'application/json',
-            authorization: `Bearer ${agent.session!.accessJwt}`,
-            ...DM_SERVICE_HEADERS,
-          },
-        },
-      ).then(res => res.json())) as Promise<{rev: string}>
+      const {data} = await agent.chat.bsky.convo.acceptConvo(
+        {convoId},
+        {headers: DM_SERVICE_HEADERS},
+      )
+
+      return data
     },
     onMutate: () => {
       let prevAcceptedPages: ChatBskyConvoListConvos.OutputSchema[] = []

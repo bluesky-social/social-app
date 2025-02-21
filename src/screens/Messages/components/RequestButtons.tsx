@@ -155,7 +155,6 @@ export function AcceptChatButton({
 
   const onPressAccept = useCallback(() => {
     acceptConvo()
-    // @ts-expect-error need API update
     precacheConvoQuery(queryClient, {...convo, status: 'accepted'})
     navigation.navigate('MessagesConversation', {conversation: convo.id})
   }, [acceptConvo, navigation, convo, queryClient])
