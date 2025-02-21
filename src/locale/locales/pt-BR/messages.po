@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-02-19 03:37\n"
+"PO-Revision-Date: 2025-02-21 02:26\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese, Brazilian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1250,7 +1250,7 @@ msgstr "Cancelar reativação e desconectar"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
 #: src/view/screens/Search/Search.tsx:880
 msgid "Cancel search"
-msgstr "Cancelar busca"
+msgstr "Cancelar pesquisa"
 
 #: src/view/com/modals/LinkWarning.tsx:106
 msgid "Cancels opening the linked website"
@@ -1423,7 +1423,7 @@ msgstr "Limpar dados de armazenamento (e então reiniciar)"
 
 #: src/components/forms/SearchInput.tsx:70
 msgid "Clear search query"
-msgstr "Limpar busca"
+msgstr "Limpar pesquisa"
 
 #: src/view/screens/Support.tsx:41
 msgid "click here"
@@ -2274,8 +2274,8 @@ msgstr "Toque duas vezes para curtir"
 msgid "Download Bluesky"
 msgstr "Baixar o Bluesky"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:77
-#: src/screens/Settings/components/ExportCarDialog.tsx:82
+#: src/screens/Settings/components/ExportCarDialog.tsx:79
+#: src/screens/Settings/components/ExportCarDialog.tsx:84
 msgid "Download CAR file"
 msgstr "Baixar arquivo CAR"
 
@@ -2688,7 +2688,7 @@ msgstr "Sair do visualizador de imagem"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:89
 msgid "Exits inputting search query"
-msgstr "Sair da busca"
+msgstr "Sair da pesquisa"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:184
 msgid "Expand alt text"
@@ -2730,7 +2730,7 @@ msgstr "Expira {0}"
 #: src/components/moderation/LabelsOnMeDialog.tsx:199
 #: src/components/moderation/ModerationDetailsDialog.tsx:208
 msgid "Expires in {0}"
-msgstr ""
+msgstr "Expira em {0}"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
@@ -2930,11 +2930,11 @@ msgstr "Filtrar dos feeds"
 
 #: src/view/screens/Search/Search.tsx:398
 msgid "Filter search by language"
-msgstr "Filtrar busca por idioma"
+msgstr "Filtrar pesquisa por idioma"
 
 #: src/view/screens/Search/Search.tsx:368
 msgid "Filter search by language (currently: {currentLanguageLabel})"
-msgstr "Filtrar busca por idioma (atual: {currentLanguageLabel})"
+msgstr "Filtrar pesquisa por idioma (atual: {currentLanguageLabel})"
 
 #: src/screens/Onboarding/StepFinished.tsx:314
 msgid "Finalizing"
@@ -5408,7 +5408,7 @@ msgstr "Motivo:"
 
 #: src/view/screens/Search/Search.tsx:1034
 msgid "Recent Searches"
-msgstr "Buscas Recentes"
+msgstr "Pesquisas Recentes"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:52
 msgid "Recommended"
@@ -5976,7 +5976,7 @@ msgstr "Pesquisar"
 #: src/Navigation.tsx:215
 #: src/screens/Profile/ProfileSearch.tsx:34
 msgid "Search @{0}'s posts"
-msgstr "Buscar postagens de @{0}"
+msgstr "Pesquisar postagens de @{0}"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:745
 msgid "Search by name or interest"
@@ -6004,11 +6004,11 @@ msgstr "Procure por feeds que você queira sugerir para outros."
 
 #: src/view/screens/Search/Search.tsx:873
 msgid "Search for posts, users, or feeds"
-msgstr "Busque por posts, usuários, ou feeds"
+msgstr "Pesquise por postagens, usuários ou feeds"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
 msgid "Search for users"
-msgstr "Buscar usuários"
+msgstr "Pesquisar usuários"
 
 #: src/components/dialogs/GifSelect.tsx:177
 msgid "Search GIFs"
@@ -6016,12 +6016,12 @@ msgstr "Pesquisar por GIFs"
 
 #: src/screens/Profile/ProfileSearch.tsx:33
 msgid "Search my posts"
-msgstr "Buscar minhas postagens"
+msgstr "Pesquisar minhas postagens"
 
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Search Posts"
-msgstr "Buscar nas postagens do usuário"
+msgstr "Pesquisar nas postagens do usuário"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
 #: src/components/ProgressGuide/FollowDialog.tsx:764
@@ -6034,12 +6034,12 @@ msgstr "Pesquisar via Tenor"
 
 #: src/screens/Profile/ProfileSearch.tsx:35
 msgid "Search..."
-msgstr "Buscar..."
+msgstr "Pesquisar..."
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:509
 #: src/components/ProgressGuide/FollowDialog.tsx:765
 msgid "Searches for profiles"
-msgstr "Buscas por perfis"
+msgstr "Pesquisa por perfis"
 
 #: src/view/com/modals/ChangeEmail.tsx:105
 msgid "Security Step Required"
@@ -6615,7 +6615,7 @@ msgstr "Classificar respostas de uma postagem por:"
 #: src/components/moderation/LabelsOnMeDialog.tsx:178
 #: src/components/moderation/ModerationDetailsDialog.tsx:186
 msgid "Source: <0>{sourceName}</0>"
-msgstr ""
+msgstr "Fonte: <0>{sourceName}</0>"
 
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
@@ -7140,7 +7140,7 @@ msgstr "Este conteúdo não é visível sem uma conta do Bluesky."
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr "Esta conversa é com uma conta desativada ou excluída. Pressione para ver as ações"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:94
+#: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "Esta funcionalidade está em beta. Você pode ler mais sobre exportação de repositórios <0>nesta postagem</0> do nosso blog."
 
@@ -7353,7 +7353,7 @@ msgstr "Ligar ou desligar conteúdo adulto"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:158
 msgid "Toggles the sound"
-msgstr ""
+msgstr "Alterna o som"
 
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
@@ -7881,7 +7881,7 @@ msgstr "Ver perfil de {displayName}"
 msgid "View blocked user's profile"
 msgstr "Ver perfil do usuário bloqueado"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:98
+#: src/screens/Settings/components/ExportCarDialog.tsx:100
 msgid "View blogpost for more details"
 msgstr "Veja a postagem no blog para mais detalhes"
 
@@ -8064,7 +8064,7 @@ msgstr "Não foi possível carregar sua lista de palavras silenciadas. Por favor
 
 #: src/view/screens/Search/Search.tsx:206
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
-msgstr "Lamentamos, mas sua busca não pôde ser concluída. Por favor, tente novamente em alguns minutos."
+msgstr "Lamentamos, mas sua pesquisa não pôde ser concluída. Por favor, tente novamente em alguns minutos."
 
 #: src/view/com/composer/Composer.tsx:425
 msgid "We're sorry! The post you are replying to has been deleted."
@@ -8519,7 +8519,7 @@ msgstr "Sua conta foi suspensa"
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Sua conta ainda não tem idade suficiente para enviar vídeos. Por favor, tente novamente mais tarde."
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:65
+#: src/screens/Settings/components/ExportCarDialog.tsx:67
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "O repositório da sua conta, contendo todos os seus dados públicos, pode ser baixado como um arquivo \"CAR\". Este arquivo não inclui imagens ou dados privados, estes devem ser exportados separadamente."
 
