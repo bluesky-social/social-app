@@ -8,8 +8,8 @@ on:
         type: choice
         description: Build profile to use
         options:
-          - testflight-android
-          - production
+          # - testflight-android
+          # - production
 
 jobs:
   build:
