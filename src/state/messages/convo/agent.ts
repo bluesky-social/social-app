@@ -801,10 +801,11 @@ export class Convo {
   }
 
   markConvoAccepted() {
-    this.convo = {
-      ...this.convo,
-      // @ts-expect-error need SDK update
-      status: 'accepted',
+    if (this.convo) {
+      this.convo = {
+        ...this.convo,
+        status: 'accepted',
+      }
     }
     this.commit()
   }
