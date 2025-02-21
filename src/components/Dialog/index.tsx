@@ -222,7 +222,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     if (isIOS) {
       paddingBottom += keyboardHeight / 4
       if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
-        paddingBottom += insets.bottom
+        paddingBottom += insets.bottom + tokens.space.md
       }
       paddingBottom = Math.max(paddingBottom, tokens.space._2xl)
     } else {
