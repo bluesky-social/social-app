@@ -520,6 +520,7 @@ function ChatNavItem() {
     <NavItem
       href="/messages"
       count={numUnreadMessages.numUnread}
+      hasNew={numUnreadMessages.hasNew}
       icon={
         <Message style={pal.text} aria-hidden={true} width={NAV_ICON_WIDTH} />
       }
