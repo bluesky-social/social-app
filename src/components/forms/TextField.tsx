@@ -15,6 +15,7 @@ import {
   android,
   applyFonts,
   atoms as a,
+  ios,
   TextStyleProp,
   useAlf,
   useTheme,
@@ -189,23 +190,19 @@ export function createInput(Component: typeof TextInput) {
       a.px_xs,
       {
         // paddingVertical doesn't work w/multiline - esb
-        paddingTop: 12,
-        paddingBottom: 13,
         lineHeight: a.text_md.fontSize * 1.1875,
         textAlignVertical: rest.multiline ? 'top' : undefined,
         minHeight: rest.multiline ? 80 : undefined,
         minWidth: 0,
       },
+      ios({paddingTop: 12, paddingBottom: 13}),
+      android(a.py_sm),
       // fix for autofill styles covering border
       web({
         paddingTop: 10,
         paddingBottom: 11,
         marginTop: 2,
         marginBottom: 2,
-      }),
-      android({
-        paddingTop: 8,
-        paddingBottom: 8,
       }),
       style,
     ])
