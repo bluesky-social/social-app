@@ -112,11 +112,8 @@ export function BottomBarWeb() {
               <NavItem
                 routeName="Messages"
                 href="/messages"
-                notificationCount={
-                  unreadMessageCount.count > 0
-                    ? unreadMessageCount.numUnread
-                    : undefined
-                }>
+                notificationCount={unreadMessageCount.numUnread}
+                hasNew={unreadMessageCount.hasNew}>
                 {({isActive}) => {
                   const Icon = isActive ? MessageFilled : Message
                   return (

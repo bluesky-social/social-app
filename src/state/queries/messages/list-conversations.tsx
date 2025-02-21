@@ -255,29 +255,45 @@ export function useUnreadMessageCount() {
   const {accepted, request} = useListConvos()
   const moderationOpts = useModerationOpts()
 
-  const count = useMemo(() => {
-    return (
-      calculateCount(
-        accepted,
-        currentAccount?.did,
-        currentConvoId,
-        moderationOpts,
-      ) +
-      calculateCount(
-        request,
-        currentAccount?.did,
-        currentConvoId,
-        moderationOpts,
-      )
+  return useMemo<{
+    count: number
+    numUnread?: string
+    hasNew: boolean
+  }>(() => {
+    const acceptedCount = calculateCount(
+      accepted,
+      currentAccount?.did,
+      currentConvoId,
+      moderationOpts,
     )
-  }, [accepted, request, currentAccount?.did, currentConvoId, moderationOpts])
-
-  return useMemo(() => {
-    return {
-      count,
-      numUnread: count > 0 ? (count > 10 ? '10+' : String(count)) : undefined,
+    const requestCount = calculateCount(
+      request,
+      currentAccount?.did,
+      currentConvoId,
+      moderationOpts,
+    )
+    if (acceptedCount > 0) {
+      const total = acceptedCount + Math.min(requestCount, 1)
+      return {
+        count: total,
+        numUnread: total > 10 ? '10+' : String(total),
+        // only needed when numUnread is undefined
+        hasNew: false,
+      }
+    } else if (requestCount > 0) {
+      return {
+        count: 1,
+        numUnread: undefined,
+        hasNew: true,
+      }
+    } else {
+      return {
+        count: 0,
+        numUnread: undefined,
+        hasNew: false,
+      }
     }
-  }, [count])
+  }, [accepted, request, currentAccount?.did, currentConvoId, moderationOpts])
 }
 
 function calculateCount(
