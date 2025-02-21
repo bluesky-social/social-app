@@ -75,22 +75,6 @@ export function StepInfo({
     const emailChanged = prevEmailValueRef.current !== email
     const password = passwordValueRef.current
 
-    if (emailChanged && tldtsRef.current) {
-      if (isEmailMaybeInvalid(email, tldtsRef.current)) {
-        prevEmailValueRef.current = email
-        setHasWarnedEmail(true)
-        return dispatch({
-          type: 'setError',
-          value: _(
-            msg`It looks like you may have entered your email address incorrectly. Are you sure it's right?`,
-          ),
-        })
-      }
-    } else if (hasWarnedEmail) {
-      setHasWarnedEmail(false)
-    }
-    prevEmailValueRef.current = email
-
     if (!is13(state.dateOfBirth)) {
       return
     }
@@ -116,6 +100,21 @@ export function StepInfo({
         field: 'email',
       })
     }
+    if (emailChanged && tldtsRef.current) {
+      if (isEmailMaybeInvalid(email, tldtsRef.current)) {
+        prevEmailValueRef.current = email
+        setHasWarnedEmail(true)
+        return dispatch({
+          type: 'setError',
+          value: _(
+            msg`It looks like you may have entered your email address incorrectly. Are you sure it's right?`,
+          ),
+        })
+      }
+    } else if (hasWarnedEmail) {
+      setHasWarnedEmail(false)
+    }
+    prevEmailValueRef.current = email
     if (!password) {
       return dispatch({
         type: 'setError',
