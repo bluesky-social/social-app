@@ -352,17 +352,9 @@ export function SuffixText({
         a.pr_sm,
         a.text_md,
         t.atoms.text_contrast_medium,
-        {
-          pointerEvents: 'none',
-        },
-        web({
-          marginTop: -2,
-        }),
-        ctx.hovered || ctx.focused
-          ? {
-              color: t.palette.contrast_800,
-            }
-          : {},
+        a.pointer_events_none,
+        web([{marginTop: -2}, a.leading_snug]),
+        (ctx.hovered || ctx.focused) && {color: t.palette.contrast_800},
         style,
       ]}>
       {children}
