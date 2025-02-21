@@ -45,22 +45,15 @@ export function useListConvosQuery({
     enabled,
     queryKey: RQKEY(status ?? 'all'),
     queryFn: async ({pageParam}) => {
-      const sp = new URLSearchParams({limit: '20'})
-      if (pageParam) sp.set('cursor', pageParam)
-      if (status) sp.set('status', status)
-
-      return (await fetch(
-        `${agent.dispatchUrl}xrpc/chat.bsky.convo.listConvos?${sp.toString()}`,
+      const {data} = await agent.chat.bsky.convo.listConvos(
         {
-          headers: {
-            accept: 'application/json',
-            authorization: `Bearer ${agent.session!.accessJwt}`,
-            ...DM_SERVICE_HEADERS,
-          },
+          limit: 20,
+          cursor: pageParam,
+          status,
         },
-      ).then(res => res.json())) as Promise<
-        ChatBskyConvoListConvos.Response['data']
-      >
+        {headers: DM_SERVICE_HEADERS},
+      )
+      return data
     },
     initialPageParam: undefined as RQPageParam,
     getNextPageParam: lastPage => lastPage.cursor,
