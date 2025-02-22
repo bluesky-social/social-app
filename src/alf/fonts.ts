@@ -3,8 +3,6 @@ import {TextStyle} from 'react-native'
 import {isAndroid, isWeb} from '#/platform/detection'
 import {Device, device} from '#/storage'
 
-const WEB_FONT_FAMILIES = `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`
-
 const factor = 0.0625 // 1 - (15/16)
 const fontScaleMultipliers: Record<Device['fontScale'], number> = {
   '-2': 1 - factor * 3,
@@ -73,7 +71,7 @@ export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
 
     if (isWeb) {
       // fallback families only supported on web
-      style.fontFamily += `, ${WEB_FONT_FAMILIES}`
+      style.fontFamily += `, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`
     }
 
     /**
