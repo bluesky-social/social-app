@@ -277,7 +277,7 @@ msgstr ""
 msgid "{handle} can't be messaged"
 msgstr ""
 
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:262
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:272
 msgid "{notificationCount} unread items"
 msgstr ""
 
@@ -385,7 +385,7 @@ msgid "Account"
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:138
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:362
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:368
 msgid "Account blocked"
 msgstr ""
 
@@ -394,6 +394,7 @@ msgid "Account followed"
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:114
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:391
 msgid "Account muted"
 msgstr ""
 
@@ -424,6 +425,7 @@ msgid "Account unfollowed"
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:104
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:381
 msgid "Account unmuted"
 msgstr ""
 
@@ -528,8 +530,11 @@ msgstr ""
 msgid "Add this feed to your feeds"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:270
 #: src/view/com/profile/ProfileMenu.tsx:273
+msgid "Add to lists"
+msgstr ""
+
+#: src/view/com/profile/ProfileMenu.tsx:270
 msgid "Add to Lists"
 msgstr ""
 
@@ -958,31 +963,28 @@ msgstr ""
 msgid "BETA"
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:102
+#: src/components/dialogs/BirthDateSettings.tsx:103
 #: src/screens/Settings/AccountSettings.tsx:109
 msgid "Birthday"
 msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
 #: src/view/com/profile/ProfileMenu.tsx:393
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:776
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:826
 msgid "Block"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:247
 #: src/components/dms/ConvoMenu.tsx:250
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:615
+#: src/view/com/profile/ProfileMenu.tsx:307
+#: src/view/com/profile/ProfileMenu.tsx:314
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:662
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:664
 msgid "Block account"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:307
-#: src/view/com/profile/ProfileMenu.tsx:314
-msgid "Block Account"
-msgstr ""
-
 #: src/view/com/profile/ProfileMenu.tsx:376
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:771
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:821
 msgid "Block Account?"
 msgstr ""
 
@@ -1029,7 +1031,7 @@ msgid "Blocked Accounts"
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:388
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:773
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:823
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr ""
 
@@ -1400,7 +1402,7 @@ msgstr ""
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:195
+#: src/screens/Signup/StepInfo/index.tsx:212
 msgid "Choose your password"
 msgstr ""
 
@@ -1725,7 +1727,7 @@ msgstr ""
 #: src/lib/sharing.ts:25
 #: src/lib/sharing.ts:41
 #: src/view/com/modals/InviteCodes.tsx:153
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:237
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:243
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:394
 msgid "Copied to clipboard"
 msgstr ""
@@ -1752,8 +1754,8 @@ msgstr ""
 msgid "Copy at:// URI"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:674
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:676
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:724
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:726
 msgid "Copy author DID"
 msgstr ""
 
@@ -1784,8 +1786,8 @@ msgstr ""
 msgid "Copy link to list"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:444
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:474
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:483
 msgid "Copy link to post"
 msgstr ""
 
@@ -1794,13 +1796,13 @@ msgstr ""
 msgid "Copy message text"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:717
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:719
 msgid "Copy post at:// URI"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:422
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:424
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:452
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:454
 msgid "Copy post text"
 msgstr ""
 
@@ -1932,7 +1934,7 @@ msgstr ""
 msgid "Dark theme"
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:216
+#: src/screens/Signup/StepInfo/index.tsx:239
 msgid "Date of birth"
 msgstr ""
 
@@ -1963,7 +1965,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:592
 #: src/screens/StarterPack/StarterPackScreen.tsx:671
 #: src/screens/StarterPack/StarterPackScreen.tsx:751
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:693
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:743
 #: src/view/screens/ProfileList.tsx:739
 msgid "Delete"
 msgstr ""
@@ -2019,8 +2021,8 @@ msgid "Delete my account"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:842
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:652
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:654
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:702
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:704
 msgid "Delete post"
 msgstr ""
 
@@ -2037,7 +2039,7 @@ msgstr ""
 msgid "Delete this list?"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:738
 msgid "Delete this post?"
 msgstr ""
 
@@ -2075,12 +2077,12 @@ msgstr ""
 msgid "Descriptive alt text"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:576
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:586
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:606
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:616
 msgid "Detach quote"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:751
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:801
 msgid "Detach quote post?"
 msgstr ""
 
@@ -2163,7 +2165,7 @@ msgstr ""
 msgid "Discover New Feeds"
 msgstr ""
 
-#: src/components/Dialog/index.tsx:313
+#: src/components/Dialog/index.tsx:322
 msgid "Dismiss"
 msgstr ""
 
@@ -2224,11 +2226,11 @@ msgstr ""
 msgid "Domain verified!"
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:114
-#: src/components/dialogs/BirthDateSettings.tsx:120
+#: src/components/dialogs/BirthDateSettings.tsx:115
+#: src/components/dialogs/BirthDateSettings.tsx:121
 #: src/components/dms/ReportDialog.tsx:325
-#: src/components/forms/DateField/index.tsx:87
-#: src/components/forms/DateField/index.tsx:93
+#: src/components/forms/DateField/index.tsx:102
+#: src/components/forms/DateField/index.tsx:108
 #: src/screens/Onboarding/StepProfile/index.tsx:330
 #: src/screens/Onboarding/StepProfile/index.tsx:333
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
@@ -2257,7 +2259,7 @@ msgstr ""
 msgid "Done{extraText}"
 msgstr ""
 
-#: src/components/Dialog/index.tsx:314
+#: src/components/Dialog/index.tsx:323
 msgid "Double tap to close the dialog"
 msgstr ""
 
@@ -2353,8 +2355,8 @@ msgstr ""
 msgid "Edit image"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:633
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:646
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:683
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:696
 msgid "Edit interaction settings"
 msgstr ""
 
@@ -2430,7 +2432,7 @@ msgid "Either the creator of this list has blocked you or you have blocked the c
 msgstr ""
 
 #: src/screens/Settings/AccountSettings.tsx:60
-#: src/screens/Signup/StepInfo/index.tsx:164
+#: src/screens/Signup/StepInfo/index.tsx:174
 #: src/view/com/modals/ChangeEmail.tsx:136
 msgid "Email"
 msgstr ""
@@ -2473,8 +2475,8 @@ msgid "Embed HTML code"
 msgstr ""
 
 #: src/components/dialogs/Embed.tsx:97
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:461
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:463
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:491
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:493
 msgid "Embed post"
 msgstr ""
 
@@ -2585,12 +2587,12 @@ msgstr ""
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:103
+#: src/components/dialogs/BirthDateSettings.tsx:104
 msgid "Enter your birth date"
 msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
-#: src/screens/Signup/StepInfo/index.tsx:176
+#: src/screens/Signup/StepInfo/index.tsx:187
 msgid "Enter your email address"
 msgstr ""
 
@@ -2785,7 +2787,7 @@ msgstr ""
 msgid "Failed to delete message"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:197
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:203
 msgid "Failed to delete post, please try again"
 msgstr ""
 
@@ -2840,7 +2842,7 @@ msgstr ""
 msgid "Failed to submit appeal, please try again."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:226
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:232
 msgid "Failed to toggle thread mute, please try again"
 msgstr ""
 
@@ -2886,8 +2888,8 @@ msgstr ""
 msgid "Feedback"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:268
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:277
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:274
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:283
 msgid "Feedback sent!"
 msgstr ""
 
@@ -3002,7 +3004,7 @@ msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:249
 #: src/view/com/profile/ProfileMenu.tsx:260
-msgid "Follow Account"
+msgid "Follow account"
 msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:434
@@ -3326,7 +3328,7 @@ msgstr ""
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:137
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:704
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:754
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "Hide"
 msgstr ""
@@ -3336,27 +3338,27 @@ msgctxt "action"
 msgid "Hide"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:533
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:563
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:569
 msgid "Hide post for me"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:550
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:560
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:580
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:590
 msgid "Hide reply for everyone"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:532
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:538
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:562
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:568
 msgid "Hide reply for me"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:699
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:749
 msgid "Hide this post?"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:699
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:761
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:749
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:811
 msgid "Hide this reply?"
 msgstr ""
 
@@ -3486,7 +3488,7 @@ msgstr ""
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:690
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:740
 msgid "If you remove this post, you won't be able to recover it."
 msgstr ""
 
@@ -3583,7 +3585,7 @@ msgstr ""
 msgid "Invite a Friend"
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:145
+#: src/screens/Signup/StepInfo/index.tsx:150
 msgid "Invite code"
 msgstr ""
 
@@ -3611,11 +3613,11 @@ msgstr ""
 msgid "Invites, but personal"
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:80
+#: src/screens/Signup/StepInfo/index.tsx:85
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:236
+#: src/screens/Signup/StepInfo/index.tsx:259
 msgid "It's correct"
 msgstr ""
 
@@ -4164,7 +4166,9 @@ msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:286
 #: src/view/com/profile/ProfileMenu.tsx:293
-msgid "Mute Account"
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:645
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:651
+msgid "Mute account"
 msgstr ""
 
 #: src/view/screens/ProfileList.tsx:627
@@ -4212,13 +4216,13 @@ msgstr ""
 msgid "Mute this word until you unmute it"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:499
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:529
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:533
 msgid "Mute thread"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:513
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:515
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:543
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:545
 msgid "Mute words & tags"
 msgstr ""
 
@@ -4247,8 +4251,8 @@ msgstr ""
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:34
-#: src/components/dialogs/BirthDateSettings.tsx:37
+#: src/components/dialogs/BirthDateSettings.tsx:35
+#: src/components/dialogs/BirthDateSettings.tsx:38
 msgid "My Birthday"
 msgstr ""
 
@@ -4433,8 +4437,8 @@ msgstr ""
 msgid "No longer following {0}"
 msgstr ""
 
-#: src/screens/Signup/StepHandle.tsx:173
-msgid "No longer than {0} characters"
+#: src/screens/Signup/StepHandle.tsx:174
+msgid "No longer than {MAX_SERVICE_HANDLE_LENGTH} characters"
 msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:124
@@ -4541,7 +4545,7 @@ msgid "Not right now"
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:400
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:718
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:768
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:358
 msgid "Note about sharing"
 msgstr ""
@@ -4882,7 +4886,7 @@ msgstr ""
 #: src/screens/Login/LoginForm.tsx:228
 #: src/screens/Settings/AccountSettings.tsx:117
 #: src/screens/Settings/AccountSettings.tsx:121
-#: src/screens/Signup/StepInfo/index.tsx:186
+#: src/screens/Signup/StepInfo/index.tsx:202
 #: src/view/com/modals/DeleteAccount.tsx:239
 #: src/view/com/modals/DeleteAccount.tsx:246
 msgid "Password"
@@ -4970,8 +4974,8 @@ msgstr ""
 msgid "Pin to Home"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:390
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:397
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:420
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:427
 msgid "Pin to your profile"
 msgstr ""
 
@@ -5032,7 +5036,7 @@ msgid "Please choose your handle."
 msgstr ""
 
 #: src/screens/Signup/state.ts:210
-#: src/screens/Signup/StepInfo/index.tsx:114
+#: src/screens/Signup/StepInfo/index.tsx:119
 msgid "Please choose your password."
 msgstr ""
 
@@ -5057,11 +5061,11 @@ msgid "Please enter a valid word, tag, or phrase to mute"
 msgstr ""
 
 #: src/screens/Signup/state.ts:196
-#: src/screens/Signup/StepInfo/index.tsx:102
+#: src/screens/Signup/StepInfo/index.tsx:107
 msgid "Please enter your email."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:96
+#: src/screens/Signup/StepInfo/index.tsx:101
 msgid "Please enter your invite code."
 msgstr ""
 
@@ -5133,7 +5137,7 @@ msgstr ""
 msgid "Post by @{0}"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:177
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:183
 msgid "Post deleted"
 msgstr ""
 
@@ -5323,11 +5327,11 @@ msgstr ""
 msgid "Quote post"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:305
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:311
 msgid "Quote post was re-attached"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:304
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:310
 msgid "Quote post was successfully detached"
 msgstr ""
 
@@ -5361,8 +5365,8 @@ msgstr ""
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:575
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:585
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:605
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:615
 msgid "Re-attach quote"
 msgstr ""
 
@@ -5621,11 +5625,11 @@ msgctxt "description"
 msgid "Reply to you"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:335
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:341
 msgid "Reply visibility updated"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:334
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:340
 msgid "Reply was successfully hidden"
 msgstr ""
 
@@ -5637,7 +5641,7 @@ msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:326
 #: src/view/com/profile/ProfileMenu.tsx:329
-msgid "Report Account"
+msgid "Report account"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:255
@@ -5663,8 +5667,8 @@ msgstr ""
 msgid "Report message"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:621
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:623
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:671
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:673
 msgid "Report post"
 msgstr ""
 
@@ -5769,7 +5773,7 @@ msgstr ""
 msgid "Require an email code to sign in to your account."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:153
+#: src/screens/Signup/StepInfo/index.tsx:158
 msgid "Required for this provider"
 msgstr ""
 
@@ -5858,7 +5862,7 @@ msgstr ""
 msgid "Returns to the previous step"
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:120
+#: src/components/dialogs/BirthDateSettings.tsx:121
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:479
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:485
 #: src/components/StarterPack/QrCodeDialog.tsx:191
@@ -5883,7 +5887,7 @@ msgctxt "action"
 msgid "Save"
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:114
+#: src/components/dialogs/BirthDateSettings.tsx:115
 msgid "Save birthday"
 msgstr ""
 
@@ -6015,7 +6019,7 @@ msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/profile/ProfileMenu.tsx:231
-msgid "Search Posts"
+msgid "Search posts"
 msgstr ""
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
@@ -6144,7 +6148,7 @@ msgstr ""
 msgid "Select your app language for the default text to display in the app."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:217
+#: src/screens/Signup/StepInfo/index.tsx:240
 msgid "Select your date of birth"
 msgstr ""
 
@@ -6215,8 +6219,8 @@ msgstr ""
 msgid "Send verification email"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:433
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:436
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:463
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:466
 msgid "Send via direct message"
 msgstr ""
 
@@ -6274,8 +6278,8 @@ msgstr ""
 #: src/screens/Topic.tsx:102
 #: src/view/com/profile/ProfileMenu.tsx:213
 #: src/view/com/profile/ProfileMenu.tsx:222
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:444
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:474
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:483
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:347
 #: src/view/screens/ProfileList.tsx:483
 msgid "Share"
@@ -6295,7 +6299,7 @@ msgid "Share a fun fact!"
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:405
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:723
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:773
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:363
 msgid "Share anyway"
 msgstr ""
@@ -6375,8 +6379,8 @@ msgstr ""
 msgid "Show hidden replies"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:483
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:485
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:513
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:515
 msgid "Show less like this"
 msgstr ""
 
@@ -6390,8 +6394,8 @@ msgstr ""
 msgid "Show More"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:475
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:477
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:505
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:507
 msgid "Show more like this"
 msgstr ""
 
@@ -6421,8 +6425,8 @@ msgstr ""
 msgid "Show replies by people you follow before all other replies"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:549
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:559
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:579
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:589
 msgid "Show reply for everyone"
 msgstr ""
 
@@ -7058,7 +7062,9 @@ msgstr ""
 #: src/view/com/profile/ProfileMenu.tsx:142
 #: src/view/com/profile/ProfileMenu.tsx:155
 #: src/view/com/profile/ProfileMenu.tsx:167
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:366
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:372
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:385
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:395
 msgid "There was an issue! {0}"
 msgstr ""
 
@@ -7165,7 +7171,7 @@ msgstr ""
 msgid "This handle is reserved. Please try a different one."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:40
+#: src/components/dialogs/BirthDateSettings.tsx:41
 msgid "This information is not shared with other users."
 msgstr ""
 
@@ -7213,12 +7219,12 @@ msgstr ""
 msgid "This post has been deleted."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:720
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:770
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:360
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:701
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:751
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr ""
 
@@ -7230,7 +7236,7 @@ msgstr ""
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:763
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:813
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr ""
 
@@ -7283,7 +7289,7 @@ msgstr ""
 msgid "This will remove @{0} from the quick access list."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:753
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:803
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr ""
 
@@ -7364,8 +7370,8 @@ msgstr ""
 #: src/components/dms/MessageMenu.tsx:105
 #: src/view/com/post-thread/PostThreadItem.tsx:776
 #: src/view/com/post-thread/PostThreadItem.tsx:779
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:414
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:416
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:444
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:446
 msgid "Translate"
 msgstr ""
 
@@ -7447,12 +7453,9 @@ msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:247
 #: src/components/dms/ConvoMenu.tsx:250
-msgid "Unblock account"
-msgstr ""
-
 #: src/view/com/profile/ProfileMenu.tsx:306
 #: src/view/com/profile/ProfileMenu.tsx:312
-msgid "Unblock Account"
+msgid "Unblock account"
 msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
@@ -7480,7 +7483,7 @@ msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:248
 #: src/view/com/profile/ProfileMenu.tsx:258
-msgid "Unfollow Account"
+msgid "Unfollow account"
 msgstr ""
 
 #: src/screens/VideoFeed/index.tsx:810
@@ -7512,15 +7515,17 @@ msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:285
 #: src/view/com/profile/ProfileMenu.tsx:291
-msgid "Unmute Account"
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:644
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:650
+msgid "Unmute account"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:236
 msgid "Unmute conversation"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:499
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:529
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:533
 msgid "Unmute thread"
 msgstr ""
 
@@ -7542,8 +7547,8 @@ msgstr ""
 msgid "Unpin from home"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:389
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:396
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:419
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:426
 msgid "Unpin from profile"
 msgstr ""
 
@@ -7598,11 +7603,11 @@ msgstr ""
 msgid "Update to {domain}"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:308
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:314
 msgid "Updating quote attachment failed"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:338
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:344
 msgid "Updating reply visibility failed"
 msgstr ""
 
@@ -8020,7 +8025,7 @@ msgstr ""
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:51
+#: src/components/dialogs/BirthDateSettings.tsx:52
 msgid "We were unable to load your birth date preferences. Please try again."
 msgstr ""
 
@@ -8194,11 +8199,11 @@ msgstr ""
 msgid "Yes, delete this starter pack"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:756
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:806
 msgid "Yes, detach"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:766
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:816
 msgid "Yes, hide"
 msgstr ""
 
@@ -8412,11 +8417,11 @@ msgstr ""
 msgid "You will be signed out of all your accounts."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:219
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:225
 msgid "You will no longer receive notifications for this thread"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:215
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:221
 msgid "You will now receive notifications for this thread"
 msgstr ""
 
@@ -8526,7 +8531,7 @@ msgstr ""
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:205
+#: src/screens/Signup/StepInfo/index.tsx:227
 msgid "Your birth date"
 msgstr ""
 
@@ -8548,7 +8553,7 @@ msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Signup/state.ts:203
-#: src/screens/Signup/StepInfo/index.tsx:108
+#: src/screens/Signup/StepInfo/index.tsx:113
 #: src/view/com/modals/ChangePassword.tsx:55
 msgid "Your email appears to be invalid."
 msgstr ""
