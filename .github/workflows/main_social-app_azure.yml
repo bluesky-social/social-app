@@ -1,6 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
+# This is the project version with the correct keys
 name: Build and deploy container app to Azure Web App - elideus-app
 
 on:
@@ -15,6 +13,28 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: Build Web App with Yarn
+      run: |
+        export NVM_DIR=$HOME/.nvm
+        mkdir -p $NVM_DIR
+
+        wget --output-document=/tmp/nvm-install.sh https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh
+        bash /tmp/nvm-install.sh
+
+        . $NVM_DIR/nvm.sh
+        nvm install 20
+        nvm use 20
+
+        npm install --global yarn
+        yarn install
+        yarn intl:build
+        yarn build-web
+
+    - name: Stage React Web App
+      run: |
+        mkdir -p backend/static/
+        [ -d dist ] && cp -r dist/* backend/static/
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
@@ -31,7 +51,7 @@ jobs:
       with:
         push: true
         tags: elideus.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_78ce49491a7740b187cb15f7e08f5179 }}/elideus/social-app:${{ github.sha }}
-        file: ./Dockerfile
+        file: ./Dockerfile-azure
 
   deploy:
     runs-on: ubuntu-latest
@@ -39,8 +59,8 @@ jobs:
     environment:
       name: 'production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-    steps:
+      
+    steps:    
     - name: Deploy to Azure Web App
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2

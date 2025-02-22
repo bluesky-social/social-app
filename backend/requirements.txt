@@ -1,0 +1,3 @@
+gunicorn
+uvicorn
+fastapi
