@@ -18,7 +18,7 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN python -m venv $VIRTUAL_ENV && \
     . $VIRTUAL_ENV/bin/activate && \
     pip install --upgrade pip && \
-    pip install -r requirements.txt
+    pip install -r backend/requirements.txt
 
 # Expose the FastAPI port
 EXPOSE 8000
