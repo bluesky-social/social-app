@@ -420,9 +420,12 @@ let PreviewableUserAvatar = ({
   moderation,
   profile,
   disableHoverCard,
+  disableNavigation, // new prop
   onBeforePress,
   ...rest
-}: PreviewableUserAvatarProps): React.ReactNode => {
+}: PreviewableUserAvatarProps & {
+  disableNavigation?: boolean
+}): React.ReactNode => {
   const {_} = useLingui()
   const queryClient = useQueryClient()
 
@@ -431,23 +434,31 @@ let PreviewableUserAvatar = ({
     precacheProfile(queryClient, profile)
   }, [profile, queryClient, onBeforePress])
 
+  const avatarEl = (
+    <UserAvatar
+      avatar={profile.avatar}
+      moderation={moderation}
+      type={profile.associated?.labeler ? 'labeler' : 'user'}
+      {...rest}
+    />
+  )
+
   return (
     <ProfileHoverCard did={profile.did} disable={disableHoverCard}>
-      <Link
-        label={_(msg`${profile.displayName || profile.handle}'s avatar`)}
-        accessibilityHint={_(msg`Opens this profile`)}
-        to={makeProfileLink({
-          did: profile.did,
-          handle: profile.handle,
-        })}
-        onPress={onPress}>
-        <UserAvatar
-          avatar={profile.avatar}
-          moderation={moderation}
-          type={profile.associated?.labeler ? 'labeler' : 'user'}
-          {...rest}
-        />
-      </Link>
+      {disableNavigation ? (
+        avatarEl
+      ) : (
+        <Link
+          label={_(msg`${profile.displayName || profile.handle}'s avatar`)}
+          accessibilityHint={_(msg`Opens this profile`)}
+          to={makeProfileLink({
+            did: profile.did,
+            handle: profile.handle,
+          })}
+          onPress={onPress}>
+          {avatarEl}
+        </Link>
+      )}
     </ProfileHoverCard>
   )
 }

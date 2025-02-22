@@ -15,7 +15,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {ComposerOptsPostRef} from '#/state/shell/composer'
 import {MaybeQuoteEmbed} from '#/view/com/util/post-embeds/QuoteEmbed'
 import {Text} from '#/view/com/util/text/Text'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 
 export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
@@ -72,10 +72,12 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
       accessibilityHint={_(
         msg`Expands or collapses the full post you are replying to`,
       )}>
-      <UserAvatar
+      <PreviewableUserAvatar
         size={50}
-        avatar={replyTo.author.avatar}
+        profile={replyTo.author}
+        moderation={replyTo.moderation?.ui('avatar')}
         type={replyTo.author.associated?.labeler ? 'labeler' : 'user'}
+        disableNavigation={true} // disable linking when replying
       />
       <View style={styles.replyToPost}>
         <Text type="xl-medium" style={t.atoms.text} numberOfLines={1} emoji>
