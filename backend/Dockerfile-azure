@@ -24,10 +24,10 @@ RUN python -m venv $VIRTUAL_ENV && \
 EXPOSE 8000
 
 # Ensure startup.sh is executable
-RUN chmod +x /app/startup.sh
+RUN chmod +x /app/backend/startup.sh
 
 # Run the startup shell script
-CMD ["/bin/sh", "/app/startup.sh"]
+CMD ["/bin/sh", "/app/backend/startup.sh"]
 
 LABEL org.opencontainers.image.source=https://github.com/elide-us/social-app
 LABEL org.opencontainers.image.description="bsky.app Web App"
