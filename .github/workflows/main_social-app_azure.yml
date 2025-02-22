@@ -53,7 +53,7 @@ jobs:
       with:
         push: true
         tags: elideus.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_78ce49491a7740b187cb15f7e08f5179 }}/elideus/social-app:${{ github.sha }}
-        file: ./Dockerfile-azure
+        file: ./backend/Dockerfile-azure
 
   deploy:
     runs-on: ubuntu-latest
