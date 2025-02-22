@@ -4,7 +4,7 @@ import {isAndroid, isWeb} from '#/platform/detection'
 import {Device, device} from '#/storage'
 
 const WEB_FALLBACK_FONT_FAMILIES =
-  'sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+  'sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji"'
 
 const factor = 0.0625 // 1 - (15/16)
 const fontScaleMultipliers: Record<Device['fontScale'], number> = {
