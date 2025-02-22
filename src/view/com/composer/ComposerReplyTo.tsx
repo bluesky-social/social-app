@@ -15,7 +15,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {ComposerOptsPostRef} from '#/state/shell/composer'
 import {MaybeQuoteEmbed} from '#/view/com/util/post-embeds/QuoteEmbed'
 import {Text} from '#/view/com/util/text/Text'
-import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 
 export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
@@ -72,10 +72,9 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
       accessibilityHint={_(
         msg`Expands or collapses the full post you are replying to`,
       )}>
-      <PreviewableUserAvatar
+      <UserAvatar
         size={50}
-        profile={replyTo.author}
-        moderation={replyTo.moderation?.ui('avatar')}
+        avatar={replyTo.author.avatar}
         type={replyTo.author.associated?.labeler ? 'labeler' : 'user'}
       />
       <View style={styles.replyToPost}>
