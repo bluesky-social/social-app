@@ -16,16 +16,8 @@ jobs:
 
     - name: Build Web App with Yarn
       run: |
-        export NVM_DIR=$HOME/.nvm
-        mkdir -p $NVM_DIR
-
-        wget --output-document=/tmp/nvm-install.sh https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh
-        bash /tmp/nvm-install.sh
-
-        . $NVM_DIR/nvm.sh
         nvm install 20
         nvm use 20
-
         npm install --global yarn
         yarn install
         yarn intl:build
