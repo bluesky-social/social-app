@@ -36,7 +36,7 @@ jobs:
     - name: Stage React Web App
       run: |
         mkdir -p backend/static/
-        [ -d dist ] && cp -r dist/* backend/static/
+        [ -d /home/runner/work/social-app/social-app/web-build ] && cp -r /home/runner/work/social-app/social-app/web-build/* backend/static/
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
