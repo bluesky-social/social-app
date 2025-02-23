@@ -321,7 +321,7 @@ export const LoginForm = ({
           <Button
             testID="loginRetryButton"
             label={_(msg`Retry`)}
-            accessibilityHint={_(msg`Retries sign in`)}
+            accessibilityHint={_(msg`Retries signing in`)}
             variant="solid"
             color="secondary"
             size="large"
