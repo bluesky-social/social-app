@@ -46,7 +46,10 @@ import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import * as Menu from '#/components/Menu'
-import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
+import {
+  ReportDialog,
+  useReportDialogControl,
+} from '#/components/moderation/ReportDialog'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 
@@ -551,14 +554,15 @@ function DialogInner({
               </Button>
             </View>
 
-            <ReportDialog
-              control={reportDialogControl}
-              params={{
-                type: 'feedgen',
-                uri: info.uri,
-                cid: info.cid,
-              }}
-            />
+            {info.view && (
+              <ReportDialog
+                control={reportDialogControl}
+                subject={{
+                  ...info.view,
+                  $type: 'app.bsky.feed.defs#generatorView',
+                }}
+              />
+            )}
           </View>
         </>
       )}
