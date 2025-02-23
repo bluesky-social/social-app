@@ -86,18 +86,18 @@ export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
       const decorated = res.data.views.map(view => ({
         ...view,
         reasonTypes: REASON_TYPES,
-        // @ts-ignore TODO
         subjectTypes:
+          // @ts-expect-error TODO
           view.creator.did === BSKY_MOD_SERVICE
             ? ['account', 'record', 'chat']
             : ['account', 'record'],
-        // @ts-ignore TODO
         subjectCollections:
+          // @ts-expect-error TODO
           view.creator.did === BSKY_MOD_SERVICE
             ? undefined
             : ['app.bsky.feed.post'],
       }))
-      return decorated
+      return decorated as AppBskyLabelerDefs.LabelerViewDetailed[]
     },
   })
 }

@@ -13,9 +13,9 @@ import {isNative} from '#/platform/detection'
 import {useMyLabelersQuery} from '#/state/queries/preferences'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useGutters,useTheme} from '#/alf'
+import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
-import {Button, ButtonIcon,ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDelayedLoading} from '#/components/hooks/useDelayedLoading'
 import {
@@ -24,7 +24,7 @@ import {
 } from '#/components/icons/Check'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {createStaticClick,InlineLinkText} from '#/components/Link'
+import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useSubmitReportMutation} from './action'
@@ -32,7 +32,7 @@ import {useCopyForSubject} from './copy'
 import {initialState, reducer} from './state'
 import {ReportDialogProps, ReportSubject} from './types'
 import {parseReportSubject} from './utils/parseReportSubject'
-import {ReportOption,useReportOptions} from './utils/useReportOptions'
+import {ReportOption, useReportOptions} from './utils/useReportOptions'
 
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
@@ -48,21 +48,27 @@ export function ReportDialog(
   return (
     <Dialog.Outer control={props.control}>
       <Dialog.Handle />
-      {subject ? <Inner {...props} subject={subject} /> : <Invalid />}
+      {subject && false ? <Inner {...props} subject={subject} /> : <Invalid />}
     </Dialog.Outer>
   )
 }
 
-// TODO
+/**
+ * This should only be shown if the dialog is configured incorrectly by a
+ * developer, but nevertheless we should have a graceful fallback.
+ */
 function Invalid() {
   const {_} = useLingui()
   return (
     <Dialog.ScrollableInner label={_(msg`Report dialog`)}>
-      <Text style={[a.font_heavy, a.text_xl]}>
+      <Text style={[a.font_heavy, a.text_xl, a.leading_snug, a.pb_xs]}>
         <Trans>Invalid report subject</Trans>
       </Text>
-      <Text style={[a.text_md]}>
-        <Trans>This is a developer error.</Trans>
+      <Text style={[a.text_md, a.leading_snug]}>
+        <Trans>
+          Something wasn't quite right with the data you're trying to report.
+          Please contact support.
+        </Trans>
       </Text>
       <Dialog.Close />
     </Dialog.ScrollableInner>
@@ -78,12 +84,16 @@ function Inner(props: ReportDialogProps) {
     error: labelersLoadError,
   } = useMyLabelersQuery({excludeNonConfigurableLabelers: true})
   const isLoading = useDelayedLoading(500, isLabelerLoading)
-
   const copy = useCopyForSubject(props.subject)
-  const allOptions = useReportOptions()
-  const options = allOptions[props.subject.type]
-
+  const reportOptions = useReportOptions()
   const [state, dispatch] = React.useReducer(reducer, initialState)
+
+  /**
+   * Submission handling
+   */
+  const {mutateAsync: submitReport} = useSubmitReportMutation()
+  const [isPending, setPending] = React.useState(false)
+  const [isSuccess, setSuccess] = React.useState(false)
 
   /**
    * Labelers that support this `subject` and its NSID collection
@@ -92,7 +102,7 @@ function Inner(props: ReportDialogProps) {
     if (!allLabelers) return []
     return allLabelers
       .filter(l => {
-        // @ts-ignore
+        // @ts-expect-error TODO
         const subjectTypes: string[] | undefined = l.subjectTypes
         if (subjectTypes === undefined) return true
         if (props.subject.type === 'account') {
@@ -104,7 +114,7 @@ function Inner(props: ReportDialogProps) {
         }
       })
       .filter(l => {
-        // @ts-ignore
+        // @ts-expect-error TODO
         const collections: string[] | undefined = l.subjectCollections
         if (collections === undefined) return true
         // all chat collections accepted, since only Bluesky handles chats
@@ -113,22 +123,19 @@ function Inner(props: ReportDialogProps) {
       })
       .filter(l => {
         if (!state.selectedOption) return true
-        // @ts-ignore
+        // @ts-expect-error TODO
         const reasonTypes: string[] | undefined = l.reasonTypes
         if (reasonTypes === undefined) return true
         return reasonTypes.includes(state.selectedOption.reason)
       })
   }, [props, allLabelers, state.selectedOption])
 
-  const {mutateAsync: submitReport} = useSubmitReportMutation()
-  const [isPending, setPending] = React.useState(false)
-  const [isSuccess, setSuccess] = React.useState(false)
-
   const onSubmit = React.useCallback(async () => {
     dispatch({type: 'clearError'})
 
     try {
       setPending(true)
+      // wait at least 1s, make it feel substantial
       await wait(
         1e3,
         submitReport({
@@ -137,6 +144,7 @@ function Inner(props: ReportDialogProps) {
         }),
       )
       setSuccess(true)
+      // give time for user feedback
       setTimeout(() => {
         props.control.close()
       }, 1e3)
@@ -198,7 +206,7 @@ function Inner(props: ReportDialogProps) {
                 </View>
               ) : (
                 <View style={[a.gap_sm]}>
-                  {options.map(o => (
+                  {reportOptions[props.subject.type].map(o => (
                     <OptionCard
                       key={o.reason}
                       option={o}
