@@ -30,10 +30,12 @@ export function TimeIndicator({
   return (
     <View
       pointerEvents="none"
-      accessibilityLabel={_(msg`Time remaining: ${plural(Number(time) || 0, {
-        one: '# second',
-        other: '# seconds',
-      })}`)}
+      accessibilityLabel={_(
+        msg`Time remaining: ${plural(Number(time) || 0, {
+          one: '# second',
+          other: '# seconds',
+        })}`,
+      )}
       accessibilityHint=""
       style={[
         {
