@@ -30,6 +30,7 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 export function useMessageEmbed() {
   const route =
@@ -113,8 +114,10 @@ export function MessageInputEmbed({
   const {rt, record} = useMemo(() => {
     if (
       post &&
-      AppBskyFeedPost.isRecord(post.record) &&
-      AppBskyFeedPost.validateRecord(post.record).success
+      bsky.dangerousIsType<AppBskyFeedPost.Record>(
+        post.record,
+        AppBskyFeedPost.isRecord,
+      )
     ) {
       return {
         rt: new RichTextAPI({

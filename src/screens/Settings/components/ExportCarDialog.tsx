@@ -58,10 +58,12 @@ export function ExportCarDialog({
         accessibilityDescribedBy="dialog-description"
         accessibilityLabelledBy="dialog-title">
         <View style={[a.relative, a.gap_lg, a.w_full]}>
-          <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
+          <Text nativeID="dialog-title" style={[a.text_2xl, a.font_heavy]}>
             <Trans>Export My Data</Trans>
           </Text>
-          <Text nativeID="dialog-description" style={[a.text_sm]}>
+          <Text
+            nativeID="dialog-description"
+            style={[a.text_sm, a.leading_normal, t.atoms.text_contrast_high]}>
             <Trans>
               Your account repository, containing all public data records, can
               be downloaded as a "CAR" file. This file does not include media

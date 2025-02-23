@@ -165,7 +165,7 @@ function InnerReady({
   setHasScrolled,
 }: {
   moderation: ModerationDecision
-  recipient: Shadow<AppBskyActorDefs.ProfileViewBasic>
+  recipient: Shadow<AppBskyActorDefs.ProfileViewDetailed>
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
 }) {

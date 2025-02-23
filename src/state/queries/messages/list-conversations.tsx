@@ -101,7 +101,7 @@ export function ListConvosProviderInner({
       events => {
         if (events.type !== 'logs') return
 
-        events.logs.forEach(log => {
+        for (const log of events.logs) {
           if (ChatBskyConvoDefs.isLogBeginConvo(log)) {
             debouncedRefetch()
           } else if (ChatBskyConvoDefs.isLogLeaveConvo(log)) {
@@ -110,30 +110,40 @@ export function ListConvosProviderInner({
             )
           } else if (ChatBskyConvoDefs.isLogDeleteMessage(log)) {
             queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) =>
-              optimisticUpdate(log.convoId, old, convo =>
-                log.message.id === convo.lastMessage?.id
-                  ? {
-                      ...convo,
-                      rev: log.rev,
-                      lastMessage: log.message,
-                    }
-                  : convo,
-              ),
+              optimisticUpdate(log.convoId, old, convo => {
+                if (
+                  (ChatBskyConvoDefs.isDeletedMessageView(log.message) ||
+                    ChatBskyConvoDefs.isMessageView(log.message)) &&
+                  (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage) ||
+                    ChatBskyConvoDefs.isMessageView(convo.lastMessage))
+                ) {
+                  return log.message.id === convo.lastMessage.id
+                    ? {
+                        ...convo,
+                        rev: log.rev,
+                        lastMessage: log.message,
+                      }
+                    : convo
+                } else {
+                  return convo
+                }
+              }),
             )
           } else if (ChatBskyConvoDefs.isLogCreateMessage(log)) {
+            // Store in a new var to avoid TS errors due to closures.
+            const logRef: ChatBskyConvoDefs.LogCreateMessage = log
+
             queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) => {
               if (!old) return old
 
               function updateConvo(convo: ChatBskyConvoDefs.ConvoView) {
-                if (!ChatBskyConvoDefs.isLogCreateMessage(log)) return convo
-
                 let unreadCount = convo.unreadCount
                 if (convo.id !== currentConvoId) {
                   if (
-                    ChatBskyConvoDefs.isMessageView(log.message) ||
-                    ChatBskyConvoDefs.isDeletedMessageView(log.message)
+                    ChatBskyConvoDefs.isMessageView(logRef.message) ||
+                    ChatBskyConvoDefs.isDeletedMessageView(logRef.message)
                   ) {
-                    if (log.message.sender.did !== currentAccount?.did) {
+                    if (logRef.message.sender.did !== currentAccount?.did) {
                       unreadCount++
                     }
                   }
@@ -143,8 +153,8 @@ export function ListConvosProviderInner({
 
                 return {
                   ...convo,
-                  rev: log.rev,
-                  lastMessage: log.message,
+                  rev: logRef.rev,
+                  lastMessage: logRef.message,
                   unreadCount,
                 }
               }
@@ -152,10 +162,10 @@ export function ListConvosProviderInner({
               function filterConvoFromPage(
                 convo: ChatBskyConvoDefs.ConvoView[],
               ) {
-                return convo.filter(c => c.id !== log.convoId)
+                return convo.filter(c => c.id !== logRef.convoId)
               }
 
-              const existingConvo = getConvoFromQueryData(log.convoId, old)
+              const existingConvo = getConvoFromQueryData(logRef.convoId, old)
 
               if (existingConvo) {
                 return {
@@ -186,7 +196,7 @@ export function ListConvosProviderInner({
               }
             })
           }
-        })
+        }
       },
       {
         // get events for all chats

@@ -1,10 +1,6 @@
 import React, {useCallback} from 'react'
 import {Keyboard, Pressable, View} from 'react-native'
-import {
-  AppBskyActorDefs,
-  ChatBskyConvoDefs,
-  ModerationCause,
-} from '@atproto/api'
+import {ChatBskyConvoDefs, ModerationCause} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -34,6 +30,7 @@ import {
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
+import * as bsky from '#/types/bsky'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '../icons/Bubble'
 import {ReportDialog} from './ReportDialog'
 
@@ -49,7 +46,7 @@ let ConvoMenu = ({
   style,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
-  profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
+  profile: Shadow<bsky.profile.AnyProfileView>
   control?: Menu.MenuControlProps
   currentScreen: 'list' | 'conversation'
   showMarkAsRead?: boolean
@@ -148,7 +145,7 @@ function MenuContent({
   blockedByListControl,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
-  profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
+  profile: Shadow<bsky.profile.AnyProfileView>
   showMarkAsRead?: boolean
   blockInfo: {
     listBlocks: ModerationCause[]

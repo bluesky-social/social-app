@@ -4,4 +4,4 @@ export type ThreadgateAllowUISetting =
   | {type: 'mention'}
   | {type: 'following'}
   | {type: 'followers'}
-  | {type: 'list'; list: unknown}
+  | {type: 'list'; list: string}

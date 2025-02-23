@@ -65,10 +65,7 @@ export class MessagesEventBus {
     const handle = (event: MessagesEventBusEvent) => {
       if (event.type === 'logs' && options.convoId) {
         const filteredLogs = event.logs.filter(log => {
-          if (
-            typeof log.convoId === 'string' &&
-            log.convoId === options.convoId
-          ) {
+          if ('convoId' in log && log.convoId === options.convoId) {
             return log.convoId === options.convoId
           }
           return false
@@ -355,7 +352,7 @@ export class MessagesEventBus {
          * If there's a rev, we should handle it. If there's not a rev, we don't
          * know what it is.
          */
-        if (typeof ev.rev === 'string') {
+        if ('rev' in ev && typeof ev.rev === 'string') {
           /*
            * We only care about new events
            */

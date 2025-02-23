@@ -242,6 +242,7 @@ module.exports = function (config) {
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
         './plugins/withAndroidNoJitpackPlugin.js',
+        './plugins/withNoBundleCompression.js',
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
         './plugins/withAppDelegateReferrer.js',

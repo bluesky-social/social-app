@@ -26,7 +26,6 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
 import {useGate} from '#/lib/statsig/statsig'
 import {toShareUrl} from '#/lib/strings/url-helpers'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {
@@ -94,15 +93,7 @@ let PostCtrls = ({
       post.author.viewer?.blockedBy ||
       post.author.viewer?.blockingByList,
   )
-
-  const shadowedAuthor = useProfileShadow(post.author)
-  const followersCanReply = !!threadgateRecord?.allow?.find(
-    rule => rule.$type === 'app.bsky.feed.threadgate#followerRule',
-  )
-  const canOverrideReplyDisabled =
-    followersCanReply &&
-    shadowedAuthor.viewer?.following?.startsWith('at://did')
-  const replyDisabled = post.viewer?.replyDisabled && !canOverrideReplyDisabled
+  const replyDisabled = post.viewer?.replyDisabled
 
   const shouldShowLoggedOutWarning = React.useMemo(() => {
     return (
@@ -366,7 +357,7 @@ let PostCtrls = ({
             control={loggedOutWarningPromptControl}
             title={_(msg`Note about sharing`)}
             description={_(
-              msg`This post is only visible to logged-in users. It won't be visible to people who aren't logged in.`,
+              msg`This post is only visible to logged-in users. It won't be visible to people who aren't signed in.`,
             )}
             onConfirm={onShare}
             confirmButtonCta={_(msg`Share anyway`)}

@@ -36,6 +36,7 @@ import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
+import * as bsky from '#/types/bsky'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
 import {PostAlerts} from '../../../../components/moderation/PostAlerts'
 import {Link} from '../Link'
@@ -171,10 +172,14 @@ export function QuoteEmbed({
   const itemTitle = `Post by ${quote.author.handle}`
 
   const richText = React.useMemo(() => {
-    const text = AppBskyFeedPost.isRecord(quote.record) ? quote.record.text : ''
-    const facets = AppBskyFeedPost.isRecord(quote.record)
-      ? quote.record.facets
-      : undefined
+    if (
+      !bsky.dangerousIsType<AppBskyFeedPost.Record>(
+        quote.record,
+        AppBskyFeedPost.isRecord,
+      )
+    )
+      return undefined
+    const {text, facets} = quote.record
     return text.trim()
       ? new RichTextAPI({text: text, facets: facets})
       : undefined

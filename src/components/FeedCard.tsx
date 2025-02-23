@@ -1,7 +1,6 @@
 import React from 'react'
 import {GestureResponderEvent, View} from 'react-native'
 import {
-  AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
   AtUri,
@@ -32,6 +31,7 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {RichText, RichTextProps} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 type Props = {
   view: AppBskyFeedDefs.GeneratorView
@@ -115,7 +115,7 @@ export function TitleAndByline({
   creator,
 }: {
   title: string
-  creator?: AppBskyActorDefs.ProfileViewBasic
+  creator?: bsky.profile.AnyProfileView
 }) {
   const t = useTheme()
 

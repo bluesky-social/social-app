@@ -1,5 +1,5 @@
 import React, {useRef} from 'react'
-import {View} from 'react-native'
+import {TextInput, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
@@ -11,8 +11,9 @@ import {logger} from '#/logger'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {is13, is18, useSignupContext} from '#/screens/Signup/state'
 import {Policies} from '#/screens/Signup/StepInfo/Policies'
-import {atoms as a} from '#/alf'
+import {atoms as a, native} from '#/alf'
 import * as DateField from '#/components/forms/DateField'
+import {DateFieldRef} from '#/components/forms/DateField/types'
 import {FormError} from '#/components/forms/FormError'
 import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
@@ -50,6 +51,10 @@ export function StepInfo({
   const emailValueRef = useRef<string>(state.email)
   const prevEmailValueRef = useRef<string>(state.email)
   const passwordValueRef = useRef<string>(state.password)
+
+  const emailInputRef = useRef<TextInput>(null)
+  const passwordInputRef = useRef<TextInput>(null)
+  const birthdateInputRef = useRef<DateFieldRef>(null)
 
   const [hasWarnedEmail, setHasWarnedEmail] = React.useState<boolean>(false)
 
@@ -155,6 +160,11 @@ export function StepInfo({
                     autoCapitalize="none"
                     autoComplete="email"
                     keyboardType="email-address"
+                    returnKeyType="next"
+                    submitBehavior={native('submit')}
+                    onSubmitEditing={native(() =>
+                      emailInputRef.current?.focus(),
+                    )}
                   />
                 </TextField.Root>
               </View>
@@ -167,6 +177,7 @@ export function StepInfo({
                 <TextField.Icon icon={Envelope} />
                 <TextField.Input
                   testID="emailInput"
+                  inputRef={emailInputRef}
                   onChangeText={value => {
                     emailValueRef.current = value.trim()
                     if (hasWarnedEmail) {
@@ -178,6 +189,11 @@ export function StepInfo({
                   autoCapitalize="none"
                   autoComplete="email"
                   keyboardType="email-address"
+                  returnKeyType="next"
+                  submitBehavior={native('submit')}
+                  onSubmitEditing={native(() =>
+                    passwordInputRef.current?.focus(),
+                  )}
                 />
               </TextField.Root>
             </View>
@@ -189,6 +205,7 @@ export function StepInfo({
                 <TextField.Icon icon={Lock} />
                 <TextField.Input
                   testID="passwordInput"
+                  inputRef={passwordInputRef}
                   onChangeText={value => {
                     passwordValueRef.current = value
                   }}
@@ -197,6 +214,11 @@ export function StepInfo({
                   secureTextEntry
                   autoComplete="new-password"
                   autoCapitalize="none"
+                  returnKeyType="next"
+                  submitBehavior={native('blurAndSubmit')}
+                  onSubmitEditing={native(() =>
+                    birthdateInputRef.current?.focus(),
+                  )}
                 />
               </TextField.Root>
             </View>
@@ -206,6 +228,7 @@ export function StepInfo({
               </DateField.LabelText>
               <DateField.DateField
                 testID="date"
+                inputRef={birthdateInputRef}
                 value={state.dateOfBirth}
                 onChangeDate={date => {
                   dispatch({
