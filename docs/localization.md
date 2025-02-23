@@ -32,7 +32,7 @@ Please treat everyone with respect. Proof-readers are given final say on transla
 
 ### Adding a new language
 
-You can request a new language be added to the project on Crowdin by clicking **Request New Language** or you can create a [GitHub issue](https://github.com/bluesky-social/social-app/issues).
+You can request a new language be added to the project by clicking **Request New Language** on Crowdin or you can create a [GitHub issue](https://github.com/bluesky-social/social-app/issues).
 
 Please only request a new language when you are certain you will be able to contribute a substantive portion of translations for the language.
 
