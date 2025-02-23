@@ -58,6 +58,7 @@ interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
   profile: bsky.profile.AnyProfileView
   disableHoverCard?: boolean
+  disableNavigation?: boolean
   onBeforePress?: () => void
 }
 
@@ -420,12 +421,10 @@ let PreviewableUserAvatar = ({
   moderation,
   profile,
   disableHoverCard,
-  disableNavigation, // new prop
+  disableNavigation,
   onBeforePress,
   ...rest
-}: PreviewableUserAvatarProps & {
-  disableNavigation?: boolean
-}): React.ReactNode => {
+}: PreviewableUserAvatarProps): React.ReactNode => {
   const {_} = useLingui()
   const queryClient = useQueryClient()
 
