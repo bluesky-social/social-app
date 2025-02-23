@@ -1,4 +1,4 @@
-import {AppBskyLabelerDefs} from '@atproto/api'
+import {AppBskyLabelerDefs, ComAtprotoModerationDefs} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {z} from 'zod'
 
@@ -10,6 +10,16 @@ import {
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
+
+const BSKY_MOD_SERVICE = 'did:plc:ar7c4by46qjdydhdevvrndac'
+const REASON_TYPES = [
+  ComAtprotoModerationDefs.REASONSPAM,
+  ComAtprotoModerationDefs.REASONVIOLATION,
+  ComAtprotoModerationDefs.REASONMISLEADING,
+  ComAtprotoModerationDefs.REASONSEXUAL,
+  ComAtprotoModerationDefs.REASONRUDE,
+  ComAtprotoModerationDefs.REASONOTHER,
+]
 
 const labelerInfoQueryKeyRoot = 'labeler-info'
 export const labelerInfoQueryKey = (did: string) => [
@@ -73,7 +83,21 @@ export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
         dids,
         detailed: true,
       })
-      return res.data.views as AppBskyLabelerDefs.LabelerViewDetailed[]
+      const decorated = res.data.views.map(view => ({
+        ...view,
+        reasonTypes: REASON_TYPES,
+        // @ts-ignore TODO
+        subjectTypes:
+          view.creator.did === BSKY_MOD_SERVICE
+            ? ['account', 'record', 'chat']
+            : ['account', 'record'],
+        // @ts-ignore TODO
+        subjectCollections:
+          view.creator.did === BSKY_MOD_SERVICE
+            ? undefined
+            : ['app.bsky.feed.post'],
+      }))
+      return decorated
     },
   })
 }
