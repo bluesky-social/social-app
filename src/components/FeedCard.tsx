@@ -307,7 +307,7 @@ function SaveButtonInner({
 
       <Prompt.Basic
         control={removePromptControl}
-        title={_(msg`Remove from my feeds?`)}
+        title={_(msg`Remove from your feeds?`)}
         description={_(
           msg`Are you sure you want to remove this from your feeds?`,
         )}
