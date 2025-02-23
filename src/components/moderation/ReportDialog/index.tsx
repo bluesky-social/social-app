@@ -48,7 +48,7 @@ export function ReportDialog(
   return (
     <Dialog.Outer control={props.control}>
       <Dialog.Handle />
-      {subject && false ? <Inner {...props} subject={subject} /> : <Invalid />}
+      {subject ? <Inner {...props} subject={subject} /> : <Invalid />}
     </Dialog.Outer>
   )
 }
@@ -174,17 +174,19 @@ function Inner(props: ReportDialogProps) {
             activeIndex1={state.activeStepIndex1}
           />
           {isLoading ? (
-            <View style={[a.align_center, {height: 100}]}>
-              <Loader size="xl" />
+            <View style={[a.gap_sm]}>
+              <OptionCardSkeleton />
+              <OptionCardSkeleton />
+              <OptionCardSkeleton />
+              <OptionCardSkeleton />
+              <OptionCardSkeleton />
               {/* Here to capture focus for a hot sec to prevent flash */}
               <Pressable accessible={false} />
             </View>
           ) : labelersLoadError || !allLabelers ? (
-            <View>
-              <Text style={[a.text_md]}>
-                <Trans>Something went wrong, please try again.</Trans>
-              </Text>
-            </View>
+            <Admonition type="error">
+              <Trans>Something went wrong, please try again.</Trans>
+            </Admonition>
           ) : (
             <>
               {state.selectedOption ? (
@@ -461,6 +463,22 @@ function OptionCard({
         </View>
       )}
     </Button>
+  )
+}
+
+function OptionCardSkeleton() {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.w_full,
+        a.rounded_sm,
+        a.border,
+        t.atoms.bg_contrast_25,
+        t.atoms.border_contrast_low,
+        {height: 55}, // magic, based on web
+      ]}
+    />
   )
 }
 
