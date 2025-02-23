@@ -1,4 +1,5 @@
-import React from 'react'
+import {useCallback, useImperativeHandle, useState} from 'react'
+import {Keyboard} from 'react-native'
 import DatePicker from 'react-native-date-picker'
 
 import {useTheme} from '#/alf'
@@ -12,6 +13,7 @@ export const LabelText = TextField.LabelText
 
 export function DateField({
   value,
+  inputRef,
   onChangeDate,
   label,
   isInvalid,
@@ -20,9 +22,9 @@ export function DateField({
   maximumDate,
 }: DateFieldProps) {
   const t = useTheme()
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
 
-  const onChangeInternal = React.useCallback(
+  const onChangeInternal = useCallback(
     (date: Date) => {
       setOpen(false)
 
@@ -32,11 +34,25 @@ export function DateField({
     [onChangeDate, setOpen],
   )
 
-  const onPress = React.useCallback(() => {
+  useImperativeHandle(
+    inputRef,
+    () => ({
+      focus: () => {
+        Keyboard.dismiss()
+        setOpen(true)
+      },
+      blur: () => {
+        setOpen(false)
+      },
+    }),
+    [],
+  )
+
+  const onPress = useCallback(() => {
     setOpen(true)
   }, [])
 
-  const onCancel = React.useCallback(() => {
+  const onCancel = useCallback(() => {
     setOpen(false)
   }, [])
 

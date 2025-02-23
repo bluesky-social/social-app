@@ -160,7 +160,7 @@ appId: xyz.blueskyweb.app
 - tapOn:
     label: "Adds and removes users on curatelists from the profile"
     id: "bottomBarSearchBtn"
-- tapOn: "Search"
+- tapOn: "Search for posts, users, or feeds"
 - inputText: "bob"
 - tapOn:
     id: "searchAutoCompleteResult-bob.test"

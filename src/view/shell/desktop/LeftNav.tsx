@@ -220,7 +220,7 @@ function SwitchMenuItems({
   accounts:
     | {
         account: SessionAccount
-        profile?: AppBskyActorDefs.ProfileView
+        profile?: AppBskyActorDefs.ProfileViewDetailed
       }[]
     | undefined
   signOutPromptControl: DialogControlProps

@@ -41,7 +41,10 @@ import {
 } from '#/state/queries/post'
 import {useToggleQuoteDetachmentMutation} from '#/state/queries/postgate'
 import {getMaybeDetachedQuoteEmbed} from '#/state/queries/postgate/util'
-import {useProfileBlockMutationQueue} from '#/state/queries/profile'
+import {
+  useProfileBlockMutationQueue,
+  useProfileMuteMutationQueue,
+} from '#/state/queries/profile'
 import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
@@ -65,11 +68,13 @@ import {
 import {Eye_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/Eye'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
+import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
 import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/Person'
 import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
+import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
@@ -155,6 +160,7 @@ let PostDropdownMenuItems = ({
     useToggleQuoteDetachmentMutation()
 
   const [queueBlock] = useProfileBlockMutationQueue(postAuthor)
+  const [queueMute, queueUnmute] = useProfileMuteMutationQueue(postAuthor)
 
   const prefetchPostInteractionSettings = usePrefetchPostInteractionSettings({
     postUri: post.uri,
@@ -367,6 +373,30 @@ let PostDropdownMenuItems = ({
       }
     }
   }, [_, queueBlock])
+
+  const onMuteAuthor = useCallback(async () => {
+    if (postAuthor.viewer?.muted) {
+      try {
+        await queueUnmute()
+        Toast.show(_(msg`Account unmuted`))
+      } catch (e: any) {
+        if (e?.name !== 'AbortError') {
+          logger.error('Failed to unmute account', {message: e})
+          Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
+        }
+      }
+    } else {
+      try {
+        await queueMute()
+        Toast.show(_(msg`Account muted`))
+      } catch (e: any) {
+        if (e?.name !== 'AbortError') {
+          logger.error('Failed to mute account', {message: e})
+          Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
+        }
+      }
+    }
+  }, [_, queueMute, queueUnmute, postAuthor.viewer?.muted])
 
   const onShareATURI = useCallback(() => {
     shareText(postUri)
@@ -607,6 +637,25 @@ let PostDropdownMenuItems = ({
             <Menu.Group>
               {!isAuthor && (
                 <>
+                  <Menu.Item
+                    testID="postDropdownMuteBtn"
+                    label={
+                      postAuthor.viewer?.muted
+                        ? _(msg`Unmute account`)
+                        : _(msg`Mute account`)
+                    }
+                    onPress={onMuteAuthor}>
+                    <Menu.ItemText>
+                      {postAuthor.viewer?.muted
+                        ? _(msg`Unmute account`)
+                        : _(msg`Mute account`)}
+                    </Menu.ItemText>
+                    <Menu.ItemIcon
+                      icon={postAuthor.viewer?.muted ? UnmuteIcon : MuteIcon}
+                      position="right"
+                    />
+                  </Menu.Item>
+
                   {!postAuthor.viewer?.blocking && (
                     <Menu.Item
                       testID="postDropdownBlockBtn"
@@ -616,6 +665,7 @@ let PostDropdownMenuItems = ({
                       <Menu.ItemIcon icon={PersonX} position="right" />
                     </Menu.Item>
                   )}
+
                   <Menu.Item
                     testID="postDropdownReportBtn"
                     label={_(msg`Report post`)}
@@ -717,7 +767,7 @@ let PostDropdownMenuItems = ({
         control={loggedOutWarningPromptControl}
         title={_(msg`Note about sharing`)}
         description={_(
-          msg`This post is only visible to logged-in users. It won't be visible to people who aren't logged in.`,
+          msg`This post is only visible to logged-in users. It won't be visible to people who aren't signed in.`,
         )}
         onConfirm={onSharePost}
         confirmButtonCta={_(msg`Share anyway`)}

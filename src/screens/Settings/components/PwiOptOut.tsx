@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {ComAtprotoLabelDefs} from '@atproto/api'
+import {$Typed, ComAtprotoLabelDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -12,6 +12,7 @@ import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 export function PwiOptOut() {
   const t = useTheme()
@@ -33,7 +34,10 @@ export function PwiOptOut() {
       profile,
       updates: existing => {
         // create labels attr if needed
-        existing.labels = ComAtprotoLabelDefs.isSelfLabels(existing.labels)
+        const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = bsky.validate(
+          existing.labels,
+          ComAtprotoLabelDefs.validateSelfLabels,
+        )
           ? existing.labels
           : {
               $type: 'com.atproto.label.defs#selfLabels',
@@ -41,23 +45,26 @@ export function PwiOptOut() {
             }
 
         // toggle the label
-        const hasLabel = existing.labels.values.some(
+        const hasLabel = labels.values.some(
           l => l.val === '!no-unauthenticated',
         )
         if (hasLabel) {
           wasAdded = false
-          existing.labels.values = existing.labels.values.filter(
+          labels.values = labels.values.filter(
             l => l.val !== '!no-unauthenticated',
           )
         } else {
           wasAdded = true
-          existing.labels.values.push({val: '!no-unauthenticated'})
+          labels.values.push({val: '!no-unauthenticated'})
         }
 
         // delete if no longer needed
-        if (existing.labels.values.length === 0) {
+        if (labels.values.length === 0) {
           delete existing.labels
+        } else {
+          existing.labels = labels
         }
+
         return existing
       },
       checkCommitted: res => {

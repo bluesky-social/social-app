@@ -90,6 +90,7 @@ import {ListFooter} from '#/components/Lists'
 import * as Hider from '#/components/moderation/Hider'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 import {Scrubber, VIDEO_PLAYER_BOTTOM_INSET} from './components/Scrubber'
 
 function createThreeVideoPlayers(
@@ -694,7 +695,12 @@ function Overlay({
   )
 
   const rkey = new AtUri(post.uri).rkey
-  const record = AppBskyFeedPost.isRecord(post.record) ? post.record : undefined
+  const record = bsky.dangerousIsType<AppBskyFeedPost.Record>(
+    post.record,
+    AppBskyFeedPost.isRecord,
+  )
+    ? post.record
+    : undefined
   const richText = new RichTextAPI({
     text: record?.text || '',
     facets: record?.facets,

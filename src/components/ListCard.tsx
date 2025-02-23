@@ -1,7 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
 import {
-  AppBskyActorDefs,
   AppBskyGraphDefs,
   AtUri,
   moderateUserList,
@@ -26,6 +25,7 @@ import {
 import {Link as InternalLink, LinkProps} from '#/components/Link'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 /*
  * This component is based on `FeedCard` and is tightly coupled with that
@@ -107,7 +107,7 @@ export function TitleAndByline({
   modUi,
 }: {
   title: string
-  creator?: AppBskyActorDefs.ProfileViewBasic
+  creator?: bsky.profile.AnyProfileView
   purpose?: AppBskyGraphDefs.ListView['purpose']
   modUi?: ModerationUI
 }) {
