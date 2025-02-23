@@ -318,7 +318,7 @@ function MutedWordsInner() {
           <View style={[a.pt_xs]}>
             <Button
               disabled={isPending || !field}
-              label={_(msg`Add mute word for configured settings`)}
+              label={_(msg`Add mute word with configured settings`)}
               size="large"
               color="primary"
               variant="solid"
