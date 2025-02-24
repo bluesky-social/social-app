@@ -4,11 +4,7 @@ import {ChatBskyConvoDefs, ChatBskyConvoListConvos} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import {
-  InfiniteData,
-  UseInfiniteQueryResult,
-  useQueryClient,
-} from '@tanstack/react-query'
+import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
 
 import {useAppState} from '#/lib/hooks/useAppState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -23,10 +19,8 @@ import {isNative} from '#/platform/detection'
 import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
-import {
-  RQKEY,
-  useListConvosQuery,
-} from '#/state/queries/messages/list-conversations'
+import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
+import {useUpdateAllRead} from '#/state/queries/messages/update-all-read'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {List} from '#/view/com/util/List'
 import * as Toast from '#/view/com/util/Toast'
@@ -108,7 +102,6 @@ function RequestList({
   const {_} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
-  const queryClient = useQueryClient()
 
   // Request the poll interval to be 10s (or whatever the MESSAGE_SCREEN_POLL_INTERVAL is set to in the future)
   // but only when the screen is active
@@ -273,38 +266,7 @@ function RequestList({
         desktopFixedHeight
         sideBorders={false}
       />
-      {hasUnreadConvos && (
-        <FAB
-          testID="markAllAsReadFAB"
-          onPress={() => {
-            // TODO: mark all as read. proof-of-concept just clears clientside
-            queryClient.setQueryData(
-              RQKEY('request'),
-              (old?: {
-                pageParams: Array<string | undefined>
-                pages: Array<ChatBskyConvoListConvos.OutputSchema>
-              }) => {
-                if (!old) return old
-                return {
-                  ...old,
-                  pages: old.pages.map(page => ({
-                    ...page,
-                    convos: page.convos.map(convo => ({
-                      ...convo,
-                      unreadCount: 0,
-                    })),
-                  })),
-                }
-              },
-            )
-            Toast.show(_(msg`Marked all as read`), 'check')
-          }}
-          icon={<CheckIcon size="lg" fill={t.palette.white} />}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Mark all as read`)}
-          accessibilityHint=""
-        />
-      )}
+      {hasUnreadConvos && <MarkAllReadFAB />}
     </>
   )
 }
@@ -317,9 +279,40 @@ function renderItem({item}: {item: ChatBskyConvoDefs.ConvoView}) {
   return <RequestListItem convo={item} />
 }
 
+function MarkAllReadFAB() {
+  const {_} = useLingui()
+  const t = useTheme()
+  const {mutate: markAllRead} = useUpdateAllRead('request', {
+    onMutate: () => {
+      Toast.show(_(msg`Marked all as read`), 'check')
+    },
+    onError: () => {
+      Toast.show(_(msg`Failed to mark all requests as read`), 'xmark')
+    },
+  })
+
+  return (
+    <FAB
+      testID="markAllAsReadFAB"
+      onPress={() => markAllRead()}
+      icon={<CheckIcon size="lg" fill={t.palette.white} />}
+      accessibilityRole="button"
+      accessibilityLabel={_(msg`Mark all as read`)}
+      accessibilityHint=""
+    />
+  )
+}
+
 function MarkAsReadHeaderButton() {
   const {_} = useLingui()
-  const queryClient = useQueryClient()
+  const {mutate: markAllRead} = useUpdateAllRead('request', {
+    onMutate: () => {
+      Toast.show(_(msg`Marked all as read`), 'check')
+    },
+    onError: () => {
+      Toast.show(_(msg`Failed to mark all requests as read`), 'xmark')
+    },
+  })
 
   return (
     <Button
@@ -327,29 +320,7 @@ function MarkAsReadHeaderButton() {
       size="small"
       color="secondary"
       variant="solid"
-      onPress={() => {
-        // TODO: mark all as read. proof-of-concept just clears clientside
-        queryClient.setQueryData(
-          RQKEY('request'),
-          (old?: {
-            pageParams: Array<string | undefined>
-            pages: Array<ChatBskyConvoListConvos.OutputSchema>
-          }) => {
-            if (!old) return old
-            return {
-              ...old,
-              pages: old.pages.map(page => ({
-                ...page,
-                convos: page.convos.map(convo => ({
-                  ...convo,
-                  unreadCount: 0,
-                })),
-              })),
-            }
-          },
-        )
-        Toast.show(_(msg`Marked all as read`), 'check')
-      }}>
+      onPress={() => markAllRead()}>
       {({hovered, focused}) => (
         <>
           <ButtonIcon icon={CheckIcon} />
