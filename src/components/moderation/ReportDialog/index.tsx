@@ -23,11 +23,13 @@ import {
   CheckThick_Stroke2_Corner0_Rounded as Check,
 } from '#/components/icons/Check'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
+import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight} from '#/components/icons/SquareArrowTopRight'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {createStaticClick, InlineLinkText} from '#/components/Link'
+import {createStaticClick, InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useSubmitReportMutation} from './action'
+import {DMCA_LINK} from './const'
 import {useCopyForSubject} from './copy'
 import {initialState, reducer} from './state'
 import {ReportDialogProps, ReportSubject} from './types'
@@ -76,6 +78,7 @@ function Invalid() {
 }
 
 function Inner(props: ReportDialogProps) {
+  const t = useTheme()
   const {_} = useLingui()
   const ref = React.useRef<ScrollView>(null)
   const {
@@ -217,6 +220,38 @@ function Inner(props: ReportDialogProps) {
                       }}
                     />
                   ))}
+
+                  {['post', 'account'].includes(props.subject.type) && (
+                    <Link
+                      to={DMCA_LINK}
+                      label={_(
+                        msg`View details for reporting a copyright violation`,
+                      )}>
+                      {({hovered, pressed}) => (
+                        <View
+                          style={[
+                            a.flex_row,
+                            a.align_center,
+                            a.w_full,
+                            a.px_md,
+                            a.py_sm,
+                            a.rounded_sm,
+                            a.border,
+                            hovered || pressed
+                              ? [t.atoms.border_contrast_high]
+                              : [t.atoms.border_contrast_low],
+                          ]}>
+                          <Text style={[a.flex_1, a.italic, a.leading_snug]}>
+                            <Trans>Need to report a copyright violation?</Trans>
+                          </Text>
+                          <SquareArrowTopRight
+                            size="sm"
+                            fill={t.atoms.text.color}
+                          />
+                        </View>
+                      )}
+                    </Link>
+                  )}
                 </View>
               )}
             </>
