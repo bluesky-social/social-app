@@ -126,10 +126,12 @@ export function StepHandle() {
         </View>
         {draftValue !== '' && (
           <Text style={[a.text_md]}>
-            <Trans>Your full username will be</Trans>{' '}
-            <Text style={[a.text_md, a.font_bold]}>
-              @{createFullHandle(draftValue, state.userDomain)}
-            </Text>
+            <Trans>
+              Your full username will be{' '}
+              <Text style={[a.text_md, a.font_bold]}>
+                @{createFullHandle(draftValue, state.userDomain)}
+              </Text>
+            </Trans>
           </Text>
         )}
 
