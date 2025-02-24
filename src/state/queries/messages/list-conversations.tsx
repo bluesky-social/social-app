@@ -316,7 +316,7 @@ function calculateCount(
         const shouldIgnore =
           convo.muted ||
           moderation.blocked ||
-          otherMember.did === 'missing.invalid'
+          otherMember.handle === 'missing.invalid'
         const unreadCount = !shouldIgnore && convo.unreadCount > 0 ? 1 : 0
 
         return acc + unreadCount
