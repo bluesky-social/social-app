@@ -1,4 +1,4 @@
-import '#/lib/sentry' // must be near top
+import '#/logger/sentry/setup' // must be near top
 import '#/view/icons'
 import './style.css'
 

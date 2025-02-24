@@ -3,7 +3,7 @@ import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
-import {logger} from '#/logger'
+import {Logger} from '#/logger'
 import {
   BACKGROUND_POLL_INTERVAL,
   DEFAULT_POLL_INTERVAL,
@@ -19,6 +19,7 @@ import {
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 
 const LOGGER_CONTEXT = 'MessagesEventBus'
+const logger = Logger.create(Logger.Context.Convo)
 
 export class MessagesEventBus {
   private id: string
@@ -90,17 +91,17 @@ export class MessagesEventBus {
   }
 
   background() {
-    logger.debug(`${LOGGER_CONTEXT}: background`, {}, logger.DebugContext.convo)
+    logger.debug(`${LOGGER_CONTEXT}: background`, {})
     this.dispatch({event: MessagesEventBusDispatchEvent.Background})
   }
 
   suspend() {
-    logger.debug(`${LOGGER_CONTEXT}: suspend`, {}, logger.DebugContext.convo)
+    logger.debug(`${LOGGER_CONTEXT}: suspend`, {})
     this.dispatch({event: MessagesEventBusDispatchEvent.Suspend})
   }
 
   resume() {
-    logger.debug(`${LOGGER_CONTEXT}: resume`, {}, logger.DebugContext.convo)
+    logger.debug(`${LOGGER_CONTEXT}: resume`, {})
     this.dispatch({event: MessagesEventBusDispatchEvent.Resume})
   }
 
@@ -222,19 +223,15 @@ export class MessagesEventBus {
         break
     }
 
-    logger.debug(
-      `${LOGGER_CONTEXT}: dispatch '${action.event}'`,
-      {
-        id: this.id,
-        prev: prevStatus,
-        next: this.status,
-      },
-      logger.DebugContext.convo,
-    )
+    logger.debug(`${LOGGER_CONTEXT}: dispatch '${action.event}'`, {
+      id: this.id,
+      prev: prevStatus,
+      next: this.status,
+    })
   }
 
   private async init() {
-    logger.debug(`${LOGGER_CONTEXT}: init`, {}, logger.DebugContext.convo)
+    logger.debug(`${LOGGER_CONTEXT}: init`, {})
 
     try {
       const response = await networkRetry(2, () => {
@@ -327,7 +324,6 @@ export class MessagesEventBus {
     //       this.requestedPollIntervals.values(),
     //     ),
     //   },
-    //   logger.DebugContext.convo,
     // )
 
     try {
