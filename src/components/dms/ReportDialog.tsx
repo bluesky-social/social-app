@@ -311,6 +311,19 @@ function DoneStep({
     },
   })
 
+  let btnText = _(msg`Done`)
+  let toastMsg: string | undefined
+  if (actions.includes('leave') && actions.includes('block')) {
+    btnText = _(msg`Block and Delete`)
+    toastMsg = _(msg`Conversation deleted`)
+  } else if (actions.includes('leave')) {
+    btnText = _(msg`Delete Conversation`)
+    toastMsg = _(msg`Conversation deleted`)
+  } else if (actions.includes('block')) {
+    btnText = _(msg`Block User`)
+    toastMsg = _(msg`User blocked`)
+  }
+
   const onPressPrimaryAction = () => {
     control.close(() => {
       if (actions.includes('block')) {
@@ -319,16 +332,10 @@ function DoneStep({
       if (actions.includes('leave')) {
         leaveConvo()
       }
+      if (toastMsg) {
+        Toast.show(toastMsg, 'check')
+      }
     })
-  }
-
-  let btnText = _(msg`Done`)
-  if (actions.includes('leave') && actions.includes('block')) {
-    btnText = _(msg`Block and Delete`)
-  } else if (actions.includes('leave')) {
-    btnText = _(msg`Delete Conversation`)
-  } else if (actions.includes('block')) {
-    btnText = _(msg`Block User`)
   }
 
   return (
