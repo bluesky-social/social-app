@@ -92,7 +92,7 @@ export function Component() {
     if (!newPassword) {
       setError(
         _(
-          msg`Please enter a password. It should be at least 8 characters long.`,
+          msg`Please enter a password. It must be at least 8 characters long.`,
         ),
       )
       return
