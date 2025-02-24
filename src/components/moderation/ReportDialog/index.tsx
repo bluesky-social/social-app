@@ -132,6 +132,8 @@ function Inner(props: ReportDialogProps) {
         return reasonTypes.includes(state.selectedOption.reason)
       })
   }, [props, allLabelers, state.selectedOption])
+  const hasSupportedLabelers = !!supportedLabelers.length
+  const hasSingleSupportedLabeler = supportedLabelers.length === 1
 
   const onSubmit = React.useCallback(async () => {
     dispatch({type: 'clearError'})
@@ -267,35 +269,58 @@ function Inner(props: ReportDialogProps) {
           {state.activeStepIndex1 >= 2 && (
             <>
               {state.selectedLabeler ? (
-                <View style={[a.flex_row, a.align_center, a.gap_md]}>
-                  <View style={[a.flex_1]}>
+                <>
+                  {hasSingleSupportedLabeler ? (
                     <LabelerCard labeler={state.selectedLabeler} />
-                  </View>
-                  <Button
-                    label={_(msg`Change moderation service`)}
-                    size="tiny"
-                    variant="solid"
-                    color="secondary"
-                    shape="round"
-                    onPress={() => {
-                      dispatch({type: 'clearLabeler'})
-                    }}>
-                    <ButtonIcon icon={X} />
-                  </Button>
-                </View>
+                  ) : (
+                    <View style={[a.flex_row, a.align_center, a.gap_md]}>
+                      <View style={[a.flex_1]}>
+                        <LabelerCard labeler={state.selectedLabeler} />
+                      </View>
+                      <Button
+                        label={_(msg`Change moderation service`)}
+                        size="tiny"
+                        variant="solid"
+                        color="secondary"
+                        shape="round"
+                        onPress={() => {
+                          dispatch({type: 'clearLabeler'})
+                        }}>
+                        <ButtonIcon icon={X} />
+                      </Button>
+                    </View>
+                  )}
+                </>
               ) : (
                 <>
-                  {supportedLabelers.length ? (
+                  {hasSupportedLabelers ? (
                     <View style={[a.gap_sm]}>
-                      {supportedLabelers.map(l => (
-                        <LabelerCard
-                          key={l.creator.did}
-                          labeler={l}
-                          onSelect={() => {
-                            dispatch({type: 'selectLabeler', labeler: l})
-                          }}
-                        />
-                      ))}
+                      {hasSingleSupportedLabeler ? (
+                        <>
+                          <LabelerCard labeler={supportedLabelers[0]} />
+                          <ActionOnce
+                            check={() => !state.selectedLabeler}
+                            callback={() => {
+                              dispatch({
+                                type: 'selectLabeler',
+                                labeler: supportedLabelers[0],
+                              })
+                            }}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          {supportedLabelers.map(l => (
+                            <LabelerCard
+                              key={l.creator.did}
+                              labeler={l}
+                              onSelect={() => {
+                                dispatch({type: 'selectLabeler', labeler: l})
+                              }}
+                            />
+                          ))}
+                        </>
+                      )}
                     </View>
                   ) : (
                     // should never happen in our app
@@ -393,6 +418,21 @@ function Inner(props: ReportDialogProps) {
       </View>
     </Dialog.ScrollableInner>
   )
+}
+
+function ActionOnce({
+  check,
+  callback,
+}: {
+  check: () => boolean
+  callback: () => void
+}) {
+  React.useEffect(() => {
+    if (check()) {
+      callback()
+    }
+  }, [check, callback])
+  return null
 }
 
 function StepOuter({children}: {children: React.ReactNode}) {
