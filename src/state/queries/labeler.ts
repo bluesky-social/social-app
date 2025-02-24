@@ -74,26 +74,6 @@ export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
         detailed: true,
       })
       return res.data.views as AppBskyLabelerDefs.LabelerViewDetailed[]
-      /*
-      const BSKY_MOD_SERVICE = 'did:plc:ar7c4by46qjdydhdevvrndac'
-      const decorated = res.data.views.map(view => ({
-        ...view,
-        reasonTypes: REASON_TYPES,
-        subjectTypes: undefined,
-        subjectCollections: undefined,
-        // subjectTypes:
-        //   // @ts-expect-error TODO
-        //   view.creator.did === BSKY_MOD_SERVICE
-        //     ? ['account', 'record', 'chat']
-        //     : ['account', 'record'],
-        // subjectCollections:
-        //   // @ts-expect-error TODO
-        //   view.creator.did === BSKY_MOD_SERVICE
-        //     ? undefined
-        //     : ['app.bsky.feed.post', 'app.bsky.actor.profile'],
-      }))
-      return decorated as AppBskyLabelerDefs.LabelerViewDetailed[]
-      */
     },
   })
 }
