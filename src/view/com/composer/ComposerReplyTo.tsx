@@ -65,7 +65,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
     <Pressable
       style={[t.atoms.border_contrast_medium, styles.replyToLayout]}
       onPress={onPress}
-      accessibilityRole="button"
+      accessibilityRole="text"
       accessibilityLabel={_(
         msg`Expand or collapse the full post you are replying to`,
       )}
