@@ -476,6 +476,10 @@ function StepTitle({
               t.atoms.text_inverted,
               {
                 opacity: active ? 1 : 0.6,
+                fontVariant: ['tabular-nums'],
+                width: 24,
+                height: 24,
+                lineHeight: 24,
               },
             ]}>
             {index}
