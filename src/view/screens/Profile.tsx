@@ -114,7 +114,7 @@ function ProfileScreenInner({route}: Props) {
   }, [queryClient, profile?.viewer?.blockedBy, resolvedDid])
 
   // Most pushes will happen here, since we will have only placeholder data
-  if (isLoadingDid || isLoadingProfile || starterPacksQuery.isLoading) {
+  if (isLoadingDid || isLoadingProfile) {
     return (
       <Layout.Content>
         <ProfileHeaderLoading />
