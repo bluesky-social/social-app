@@ -262,6 +262,8 @@ function ChatListItemReady({
         leftFirst: deleteAction,
       }
 
+  const hasUnread = convo.unreadCount > 0 && !isDeletedAccount
+
   return (
     <GestureActionView actions={actions}>
       <View
@@ -385,9 +387,7 @@ function ChatListItemReady({
                   style={[
                     a.text_sm,
                     a.leading_snug,
-                    convo.unreadCount > 0
-                      ? a.font_bold
-                      : t.atoms.text_contrast_high,
+                    hasUnread ? a.font_bold : t.atoms.text_contrast_high,
                     isDimStyle && t.atoms.text_contrast_medium,
                   ]}>
                   {lastMessage}
@@ -402,7 +402,7 @@ function ChatListItemReady({
                 {children}
               </View>
 
-              {convo.unreadCount > 0 && (
+              {hasUnread && (
                 <View
                   style={[
                     a.absolute,
