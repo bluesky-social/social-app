@@ -715,15 +715,18 @@ export function DesktopLeftNav() {
 const styles = StyleSheet.create({
   leftNav: {
     position: 'fixed',
-    top: 10,
+    top: 0,
+    paddingTop: 10,
+    paddingBottom: 10,
     left: '50%',
     width: 240,
     // @ts-expect-error web only
-    maxHeight: 'calc(100vh - 10px)',
+    maxHeight: '100vh',
     overflowY: 'auto',
   },
   leftNavMinimal: {
-    top: 0,
+    paddingTop: 0,
+    paddingBottom: 0,
     paddingLeft: 0,
     paddingRight: 0,
     height: '100%',
