@@ -237,7 +237,7 @@ function Inner(props: ReportDialogProps) {
                     <LabelerCard labeler={state.selectedLabeler} />
                   </View>
                   <Button
-                    label={_(msg`Change report reason`)}
+                    label={_(msg`Change moderation service`)}
                     size="tiny"
                     variant="solid"
                     color="secondary"
@@ -254,19 +254,22 @@ function Inner(props: ReportDialogProps) {
                     <View style={[a.gap_sm]}>
                       {supportedLabelers.map(l => (
                         <LabelerCard
-                          // @ts-expect-error TODO
                           key={l.creator.did}
-                          // @ts-expect-error TODO
                           labeler={l}
                           onSelect={() => {
-                            // @ts-expect-error TODO
                             dispatch({type: 'selectLabeler', labeler: l})
                           }}
                         />
                       ))}
                     </View>
                   ) : (
-                    <Text>TODO</Text>
+                    // should never happen in our app
+                    <Admonition type="warning">
+                      <Trans>
+                        Unfortunately, none of your subscribed labelers supports
+                        this report type.
+                      </Trans>
+                    </Admonition>
                   )}
                 </>
               )}
@@ -289,17 +292,17 @@ function Inner(props: ReportDialogProps) {
                     <Text style={[a.font_bold, a.leading_snug]}>
                       {state.selectedLabeler?.creator.displayName}
                     </Text>
-                    .{' '}
-                    {!state.detailsOpen ? (
-                      <InlineLinkText
-                        label={_(msg`Add more details`)}
-                        {...createStaticClick(() => {
-                          dispatch({type: 'showDetails'})
-                        })}>
-                        Add more details (optional)
-                      </InlineLinkText>
-                    ) : null}
-                  </Trans>
+                    .
+                  </Trans>{' '}
+                  {!state.detailsOpen ? (
+                    <InlineLinkText
+                      label={_(msg`Add more details (optional)`)}
+                      {...createStaticClick(() => {
+                        dispatch({type: 'showDetails'})
+                      })}>
+                      <Trans>Add more details (optional)</Trans>
+                    </InlineLinkText>
+                  ) : null}
                 </Text>
 
                 {state.detailsOpen && (
@@ -310,7 +313,7 @@ function Inner(props: ReportDialogProps) {
                       onChangeText={details => {
                         dispatch({type: 'setDetails', details})
                       }}
-                      label={_(msg`Additional details`)}
+                      label={_(msg`Additional details (limit 300 characters)`)}
                       style={{paddingRight: 60}}
                       numberOfLines={4}
                     />
