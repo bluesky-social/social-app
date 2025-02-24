@@ -4,7 +4,11 @@ import {ChatBskyConvoDefs, ChatBskyConvoListConvos} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
+import {
+  InfiniteData,
+  UseInfiniteQueryResult,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {useAppState} from '#/lib/hooks/useAppState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -26,7 +30,7 @@ import {
 import {FAB} from '#/view/com/util/fab/FAB'
 import {List} from '#/view/com/util/List'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
@@ -42,6 +46,29 @@ import {RequestListItem} from './components/RequestListItem'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesInbox'>
 export function MessagesInboxScreen({}: Props) {
+  const {gtTablet} = useBreakpoints()
+
+  const listConvosQuery = useListConvosQuery({status: 'request'})
+  const {data} = listConvosQuery
+
+  const leftConvos = useLeftConvos()
+
+  const conversations = useMemo(() => {
+    if (data?.pages) {
+      const convos = data.pages
+        .flatMap(page => page.convos)
+        // filter out convos that are actively being left
+        .filter(convo => !leftConvos.includes(convo.id))
+
+      return convos
+    }
+    return []
+  }, [data, leftConvos])
+
+  const hasUnreadConvos = useMemo(() => {
+    return conversations.some(conversation => conversation.unreadCount > 0)
+  }, [conversations])
+
   return (
     <Layout.Screen testID="messagesInboxScreen">
       <Layout.Header.Outer>
@@ -51,14 +78,33 @@ export function MessagesInboxScreen({}: Props) {
             <Trans>Chat requests</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
-        <Layout.Header.Slot />
+        {hasUnreadConvos && gtTablet ? (
+          <MarkAsReadHeaderButton />
+        ) : (
+          <Layout.Header.Slot />
+        )}
       </Layout.Header.Outer>
-      <RequestList />
+      <RequestList
+        listConvosQuery={listConvosQuery}
+        conversations={conversations}
+        hasUnreadConvos={hasUnreadConvos}
+      />
     </Layout.Screen>
   )
 }
 
-function RequestList() {
+function RequestList({
+  listConvosQuery,
+  conversations,
+  hasUnreadConvos,
+}: {
+  listConvosQuery: UseInfiniteQueryResult<
+    InfiniteData<ChatBskyConvoListConvos.OutputSchema>,
+    Error
+  >
+  conversations: ChatBskyConvoDefs.ConvoView[]
+  hasUnreadConvos: boolean
+}) {
   const {_} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
@@ -84,7 +130,6 @@ function RequestList() {
   const [isPTRing, setIsPTRing] = useState(false)
 
   const {
-    data,
     isLoading,
     isFetchingNextPage,
     hasNextPage,
@@ -92,23 +137,9 @@ function RequestList() {
     isError,
     error,
     refetch,
-  } = useListConvosQuery({status: 'request'})
+  } = listConvosQuery
 
   useRefreshOnFocus(refetch)
-
-  const leftConvos = useLeftConvos()
-
-  const conversations = useMemo(() => {
-    if (data?.pages) {
-      const conversations = data.pages
-        .flatMap(page => page.convos)
-        // filter out convos that are actively being left
-        .filter(convo => !leftConvos.includes(convo.id))
-
-      return conversations
-    }
-    return []
-  }, [data, leftConvos])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
@@ -128,10 +159,6 @@ function RequestList() {
       logger.error('Failed to load more conversations', {message: err})
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
-
-  const hasUnreadConvos = useMemo(() => {
-    return conversations.some(conversation => conversation.unreadCount > 0)
-  }, [conversations])
 
   if (conversations.length < 1) {
     return (
@@ -288,4 +315,51 @@ function keyExtractor(item: ChatBskyConvoDefs.ConvoView) {
 
 function renderItem({item}: {item: ChatBskyConvoDefs.ConvoView}) {
   return <RequestListItem convo={item} />
+}
+
+function MarkAsReadHeaderButton() {
+  const {_} = useLingui()
+  const queryClient = useQueryClient()
+
+  return (
+    <Button
+      label={_(msg`Mark all as read`)}
+      size="small"
+      color="secondary"
+      variant="solid"
+      onPress={() => {
+        // TODO: mark all as read. proof-of-concept just clears clientside
+        queryClient.setQueryData(
+          RQKEY('request'),
+          (old?: {
+            pageParams: Array<string | undefined>
+            pages: Array<ChatBskyConvoListConvos.OutputSchema>
+          }) => {
+            if (!old) return old
+            return {
+              ...old,
+              pages: old.pages.map(page => ({
+                ...page,
+                convos: page.convos.map(convo => ({
+                  ...convo,
+                  unreadCount: 0,
+                })),
+              })),
+            }
+          },
+        )
+        Toast.show(_(msg`Marked all as read`), 'check')
+      }}>
+      {({hovered, focused}) => (
+        <>
+          <ButtonIcon icon={CheckIcon} />
+          {(hovered || focused) && (
+            <ButtonText>
+              <Trans>Mark all as read</Trans>
+            </ButtonText>
+          )}
+        </>
+      )}
+    </Button>
+  )
 }
