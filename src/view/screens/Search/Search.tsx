@@ -18,6 +18,7 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
 import {createHitslop, HITSLOP_20} from '#/lib/constants'
@@ -42,7 +43,10 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
-import {useProfilesQuery} from '#/state/queries/profile'
+import {
+  unstableCacheProfileView,
+  useProfilesQuery,
+} from '#/state/queries/profile'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
@@ -622,6 +626,7 @@ export function SearchScreenShell({
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {currentAccount} = useSession()
+  const queryClient = useQueryClient()
 
   // Query terms
   const [searchText, setSearchText] = React.useState<string>(queryParam)
@@ -768,12 +773,13 @@ export function SearchScreenShell({
 
   const handleProfileClick = React.useCallback(
     (profile: bsky.profile.AnyProfileView) => {
+      unstableCacheProfileView(queryClient, profile)
       // Slight delay to avoid updating during push nav animation.
       setTimeout(() => {
         updateProfileHistory(profile)
       }, 400)
     },
-    [updateProfileHistory],
+    [updateProfileHistory, queryClient],
   )
 
   const onSoftReset = React.useCallback(() => {
