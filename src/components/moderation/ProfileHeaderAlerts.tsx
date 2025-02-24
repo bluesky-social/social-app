@@ -1,7 +1,7 @@
 import {StyleProp, ViewStyle} from 'react-native'
-import {ModerationCause, ModerationDecision} from '@atproto/api'
+import {ModerationDecision} from '@atproto/api'
 
-import {getModerationCauseKey} from '#/lib/moderation'
+import {getModerationCauseKey, unique} from '#/lib/moderation'
 import * as Pills from '#/components/Pills'
 
 export function ProfileHeaderAlerts({
@@ -32,17 +32,5 @@ export function ProfileHeaderAlerts({
         />
       ))}
     </Pills.Row>
-  )
-}
-
-function unique(
-  value: ModerationCause,
-  index: number,
-  array: ModerationCause[],
-) {
-  return (
-    array.findIndex(
-      item => getModerationCauseKey(item) === getModerationCauseKey(value),
-    ) === index
   )
 }
