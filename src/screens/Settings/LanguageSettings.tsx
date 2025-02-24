@@ -82,8 +82,7 @@ export function LanguageSettingsScreen({}: Props) {
             <View style={[a.gap_md, a.w_full]}>
               <Text style={[a.leading_snug]}>
                 <Trans>
-                  Select which language you'd like to use for the app's user
-                  interface.
+                  Select which language to use for the app's user interface.
                 </Trans>
               </Text>
               <View style={[a.relative, web([a.w_full, {maxWidth: 400}])]}>
