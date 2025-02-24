@@ -6,7 +6,7 @@ We want the official Bluesky app to be supported in as many languages as possibl
 
 - We use Lingui to implement translations. You can find the documentation [here](https://lingui.dev/).
 - We use Crowdin to manage translations.
-  - Bluesky Crowdin: https://crowdin.com/project/bluesky-social
+  - Bluesky Crowdin: https://bluesky.crowdin.com/u/projects/1
   - Introduction to Crowdin: https://support.crowdin.com/for-translators/
 
 ## Translators
@@ -15,7 +15,7 @@ Much of the app is translated by community contributions. (We <3 our translators
 
 ### Using Crowdin
 
-[Crowdin](https://crowdin.com/project/bluesky-social) is our primary tool for managing translations. There are two roles:
+[Crowdin](https://bluesky.crowdin.com/u/projects/1) is our primary tool for managing translations. There are two roles:
 
 - **Proof-readers**. Can create new translations and approve submitted translations.
 - **Translators**. Can create new translations.
@@ -32,7 +32,7 @@ Please treat everyone with respect. Proof-readers are given final say on transla
 
 ### Adding a new language
 
-Create a new [Crowdin discussion](https://crowdin.com/project/bluesky-social/discussions) or [GitHub issue](https://github.com/bluesky-social/social-app/issues) requesting the new language be added to the project.
+Create a [Crowdin language request](https://bluesky.crowdin.com/u/projects/1) or [GitHub issue](https://github.com/bluesky-social/social-app/issues) requesting the new language be added to the project.
 
 Please only request a new language when you are certain you will be able to contribute a substantive portion of translations for the language.
 
