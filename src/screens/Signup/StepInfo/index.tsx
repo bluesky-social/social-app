@@ -107,7 +107,7 @@ export function StepInfo({
         return dispatch({
           type: 'setError',
           value: _(
-            msg`It looks like you may have entered your email address incorrectly. Are you sure it's right?`,
+            msg`Please double-check that you have entered your email address correctly.`,
           ),
         })
       }
