@@ -239,6 +239,17 @@ export function ListConvosProviderInner({
             } else if (updatedConvo.status === 'request') {
               queryClient.setQueriesData({queryKey: RQKEY('request')}, updateFn)
             }
+          } else if (ChatBskyConvoDefs.isLogReadMessage(log)) {
+            const logRef: ChatBskyConvoDefs.LogReadMessage = log
+            queryClient.setQueriesData(
+              {queryKey: [RQKEY_ROOT]},
+              (old?: ConvoListQueryData) =>
+                optimisticUpdate(logRef.convoId, old, convo => ({
+                  ...convo,
+                  unreadCount: 0,
+                  rev: logRef.rev,
+                })),
+            )
           }
         }
       },
