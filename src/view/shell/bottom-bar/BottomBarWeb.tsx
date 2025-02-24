@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {msg, Trans} from '@lingui/macro'
+import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigationState} from '@react-navigation/native'
 
@@ -269,7 +269,12 @@ const NavItem: React.FC<{
       {notificationCount ? (
         <View
           style={styles.notificationCount}
-          aria-label={_(msg`${notificationCount} unread items`)}>
+          aria-label={_(
+            msg`${plural(notificationCount, {
+              one: '# unread item',
+              other: '# unread items',
+            })}`,
+          )}>
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
       ) : hasNew ? (

@@ -1,7 +1,7 @@
 import React, {ComponentProps} from 'react'
 import {Linking, ScrollView, TouchableOpacity, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg, Plural, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
@@ -450,7 +450,12 @@ let NotificationsMenuItem = ({
       accessibilityHint={
         numUnreadNotifications === ''
           ? ''
-          : _(msg`${numUnreadNotifications} unread`)
+          : _(
+              msg`${plural(numUnreadNotifications ?? 0, {
+                one: '# unread item',
+                other: '# unread items',
+              })}` || '',
+            )
       }
       count={numUnreadNotifications}
       bold={isActive}
