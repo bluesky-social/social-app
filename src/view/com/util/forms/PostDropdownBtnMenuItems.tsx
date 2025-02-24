@@ -80,8 +80,11 @@ import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
+import {
+  ReportDialog,
+  useReportDialogControl,
+} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
-import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import * as Toast from '../Toast'
 
 let PostDropdownMenuItems = ({
@@ -756,10 +759,9 @@ let PostDropdownMenuItems = ({
 
       <ReportDialog
         control={reportDialogControl}
-        params={{
-          type: 'post',
-          uri: postUri,
-          cid: postCid,
+        subject={{
+          ...post,
+          $type: 'app.bsky.feed.defs#postView',
         }}
       />
 
