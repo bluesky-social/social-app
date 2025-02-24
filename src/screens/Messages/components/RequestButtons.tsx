@@ -186,7 +186,7 @@ export function DeleteChatButton({
   label,
   currentScreen,
   ...props
-}: Omit<ButtonProps, 'onPress' | 'children' | 'label'> & {
+}: Omit<ButtonProps, 'children' | 'label'> & {
   label?: string
   convo: ChatBskyConvoDefs.ConvoView
   currentScreen: 'list' | 'conversation'
