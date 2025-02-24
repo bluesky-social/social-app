@@ -1,4 +1,4 @@
-import {AppBskyLabelerDefs} from '@atproto/api'
+import {AppBskyLabelerDefs, ComAtprotoModerationDefs} from '@atproto/api'
 
 import {ReportOption} from './utils/useReportOptions'
 
@@ -56,6 +56,9 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
         ...state,
         selectedOption: action.option,
         activeStepIndex1: 2,
+        detailsOpen:
+          !!state.details ||
+          action.option.reason === ComAtprotoModerationDefs.REASONOTHER,
       }
     case 'clearOption':
       return {
@@ -63,7 +66,9 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
         selectedOption: undefined,
         selectedLabeler: undefined,
         activeStepIndex1: 1,
-        detailsOpen: !!state.details,
+        detailsOpen:
+          !!state.details ||
+          state.selectedOption?.reason === ComAtprotoModerationDefs.REASONOTHER,
       }
     case 'selectLabeler':
       return {
@@ -76,7 +81,9 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
         ...state,
         selectedLabeler: undefined,
         activeStepIndex1: 2,
-        detailsOpen: !!state.details,
+        detailsOpen:
+          !!state.details ||
+          state.selectedOption?.reason === ComAtprotoModerationDefs.REASONOTHER,
       }
     case 'setDetails':
       return {
