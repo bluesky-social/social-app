@@ -7,7 +7,6 @@ import {nanoid} from 'nanoid/non-secure'
 import {logEvent} from '#/lib/statsig/statsig'
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
 import {atoms as a, useTheme} from '#/alf'
@@ -75,7 +74,7 @@ export function StepCaptcha() {
   }, [dispatch, state.handle])
 
   return (
-    <ScreenTransition>
+    <>
       <View style={[a.gap_lg]}>
         <View
           style={[
@@ -103,6 +102,6 @@ export function StepCaptcha() {
         isLoading={state.isLoading}
         onBackPress={onBackPress}
       />
-    </ScreenTransition>
+    </>
   )
 }
