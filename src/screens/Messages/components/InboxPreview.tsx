@@ -33,7 +33,7 @@ export function InboxPreview({
         {marginTop: a.border_t.borderTopWidth * -1},
         a.border_b,
         t.atoms.border_contrast_low,
-        {minHeight: 42},
+        {minHeight: 44},
         a.rounded_0,
       ]}
       to="/messages/inbox"
