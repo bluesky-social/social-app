@@ -61,7 +61,7 @@ export function InboxPreview({
       <ButtonText
         style={[a.flex_1, a.font_bold, a.text_left]}
         numberOfLines={1}>
-        <Trans>Requests</Trans>
+        <Trans>Chat requests</Trans>
       </ButtonText>
       <AvatarStack
         profiles={profiles}
