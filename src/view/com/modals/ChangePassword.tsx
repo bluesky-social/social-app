@@ -91,9 +91,7 @@ export function Component() {
     }
     if (!newPassword) {
       setError(
-        _(
-          msg`Please enter a password. It must be at least 8 characters long.`,
-        ),
+        _(msg`Please enter a password. It must be at least 8 characters long.`),
       )
       return
     }
