@@ -223,7 +223,9 @@ function ProfileScreenLoaded({
   const showLikesTab = isMe
   const showFeedsTab = isMe || (profile.associated?.feedgens || 0) > 0
   const showStarterPacksTab =
-    isMe || !!starterPacksQuery.data?.pages?.[0].starterPacks.length
+    isMe ||
+    (profile.associated?.starterPacks || 0) > 0 ||
+    !!starterPacksQuery.data?.pages?.[0].starterPacks.length
   const showListsTab =
     hasSession && (isMe || (profile.associated?.lists || 0) > 0)
 
