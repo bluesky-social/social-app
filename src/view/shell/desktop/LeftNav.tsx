@@ -1,7 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
-import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
@@ -636,14 +635,14 @@ export function DesktopLeftNav() {
             href="/feeds"
             icon={
               <Hashtag
-                style={pal.text as FontAwesomeIconStyle}
+                style={pal.text}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
             }
             iconFilled={
               <HashtagFilled
-                style={pal.text as FontAwesomeIconStyle}
+                style={pal.text}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
