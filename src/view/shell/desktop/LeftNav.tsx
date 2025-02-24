@@ -729,6 +729,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: 86,
     alignItems: 'center',
+    overflowX: 'hidden',
   },
   backBtn: {
     position: 'absolute',
