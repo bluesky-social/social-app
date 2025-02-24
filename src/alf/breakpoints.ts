@@ -26,3 +26,18 @@ export function useBreakpoints(): Record<Breakpoint, boolean> & {
     }
   }, [gtPhone, gtMobile, gtTablet])
 }
+
+/**
+ * Fine-tuned breakpoints for the shell layout
+ */
+export function useLayoutBreakpoints() {
+  const rightNavVisible = useMediaQuery({minWidth: 1075})
+  const centerColumnOffset = useMediaQuery({minWidth: 1075, maxWidth: 1300})
+  const leftNavMinimal = useMediaQuery({maxWidth: 1300})
+
+  return {
+    rightNavVisible,
+    centerColumnOffset,
+    leftNavMinimal,
+  }
+}
