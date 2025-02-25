@@ -38,8 +38,11 @@ import {
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import * as Menu from '#/components/Menu'
+import {
+  ReportDialog,
+  useReportDialogControl,
+} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
-import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 
 let ProfileMenu = ({
   profile,
@@ -365,7 +368,10 @@ let ProfileMenu = ({
 
       <ReportDialog
         control={reportDialogControl}
-        params={{type: 'account', did: profile.did}}
+        subject={{
+          ...profile,
+          $type: 'app.bsky.actor.defs#profileViewDetailed',
+        }}
       />
 
       <Prompt.Basic
