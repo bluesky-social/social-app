@@ -11,68 +11,11 @@ import * as bsky from '#/types/bsky'
 export function AvatarStack({
   profiles,
   size = 26,
-  backgroundColor,
-}: {
-  profiles: string[] | bsky.profile.AnyProfileView[]
-  size?: number
-  backgroundColor?: string
-}) {
-  if (typeof profiles[0] === 'string') {
-    return (
-      <AvatarStackWithFetch
-        profiles={profiles as string[]}
-        size={size}
-        backgroundColor={backgroundColor}
-      />
-    )
-  }
-  return (
-    <AvatarStackInner
-      profiles={profiles as bsky.profile.AnyProfileView[]}
-      size={size}
-      backgroundColor={backgroundColor}
-    />
-  )
-}
-
-function AvatarStackWithFetch({
-  profiles,
-  size,
-  backgroundColor,
-}: {
-  profiles: string[]
-  size: number
-  backgroundColor?: string
-}) {
-  const {data, error} = useProfilesQuery({handles: profiles})
-
-  if (error) {
-    if (error.name !== 'AbortError') {
-      logger.error('Error fetching profiles for AvatarStack', {
-        safeMessage: error,
-      })
-    }
-    return null
-  }
-
-  return (
-    <AvatarStackInner
-      numPending={profiles.length}
-      profiles={data?.profiles || []}
-      size={size}
-      backgroundColor={backgroundColor}
-    />
-  )
-}
-
-function AvatarStackInner({
-  profiles,
-  size,
   numPending,
   backgroundColor,
 }: {
   profiles: bsky.profile.AnyProfileView[]
-  size: number
+  size?: number
   numPending?: number
   backgroundColor?: string
 }) {
@@ -80,7 +23,7 @@ function AvatarStackInner({
   const t = useTheme()
   const moderationOpts = useModerationOpts()
 
-  const isPending = numPending || !moderationOpts
+  const isPending = (numPending && profiles.length === 0) || !moderationOpts
 
   const items = isPending
     ? Array.from({length: numPending ?? profiles.length}).map((_, i) => ({
@@ -129,5 +72,35 @@ function AvatarStackInner({
         </View>
       ))}
     </View>
+  )
+}
+
+export function AvatarStackWithFetch({
+  profiles,
+  size,
+  backgroundColor,
+}: {
+  profiles: string[]
+  size?: number
+  backgroundColor?: string
+}) {
+  const {data, error} = useProfilesQuery({handles: profiles})
+
+  if (error) {
+    if (error.name !== 'AbortError') {
+      logger.error('Error fetching profiles for AvatarStack', {
+        safeMessage: error,
+      })
+    }
+    return null
+  }
+
+  return (
+    <AvatarStack
+      numPending={profiles.length}
+      profiles={data?.profiles || []}
+      size={size}
+      backgroundColor={backgroundColor}
+    />
   )
 }
