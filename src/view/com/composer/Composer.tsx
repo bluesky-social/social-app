@@ -811,7 +811,7 @@ let ComposerPost = React.memo(function ComposerPost({
         />
         <TextInput
           ref={textInput}
-          style={[a.pt_xs, a.debug]}
+          style={[a.pt_xs]}
           richtext={richtext}
           placeholder={selectTextInputPlaceholder}
           autoFocus
