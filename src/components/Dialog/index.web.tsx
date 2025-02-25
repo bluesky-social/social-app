@@ -125,15 +125,7 @@ export function Outer({
                   },
                 ]}>
                 <Backdrop />
-                <View
-                  style={[
-                    a.w_full,
-                    a.z_20,
-                    a.align_center,
-                    web({minHeight: '60vh'}),
-                  ]}>
-                  {children}
-                </View>
+                {children}
               </View>
             </TouchableWithoutFeedback>
           </Context.Provider>
