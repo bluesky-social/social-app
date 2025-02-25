@@ -498,7 +498,7 @@ function DialogInner({
           <View style={[a.flex_row, a.gap_sm, a.align_center, a.pt_sm]}>
             <Button
               disabled={isLikePending || isUnlikePending}
-              label={_(msg`Like feed`)}
+              label={_(msg`Like this feed`)}
               size="small"
               variant="solid"
               color="secondary"
