@@ -219,8 +219,8 @@ export const InnerFlatList = React.forwardRef<
       style={[
         a.overflow_hidden,
         a.px_0,
-        // @ts-expect-error web only -sfn
-        {maxHeight: 'calc(-36px + 100vh)'},
+        // 100 minus 10vh of paddingVertical
+        web({maxHeight: '80vh'}),
         webInnerStyle,
       ]}
       contentContainerStyle={[a.px_0, webInnerContentContainerStyle]}>
