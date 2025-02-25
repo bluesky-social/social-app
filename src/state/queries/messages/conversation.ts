@@ -76,34 +76,37 @@ export function useMarkAsReadMutation() {
     onSuccess(_, {convoId}) {
       if (!convoId) return
 
-      queryClient.setQueryData([LIST_CONVOS_KEY], (old: ConvoListQueryData) => {
-        if (!old) return old
+      queryClient.setQueriesData(
+        {queryKey: [LIST_CONVOS_KEY]},
+        (old?: ConvoListQueryData) => {
+          if (!old) return old
 
-        const existingConvo = getConvoFromQueryData(convoId, old)
+          const existingConvo = getConvoFromQueryData(convoId, old)
 
-        if (existingConvo) {
-          return {
-            ...old,
-            pages: old.pages.map(page => {
-              return {
-                ...page,
-                convos: page.convos.map(convo => {
-                  if (convo.id === convoId) {
-                    return {
-                      ...convo,
-                      unreadCount: 0,
+          if (existingConvo) {
+            return {
+              ...old,
+              pages: old.pages.map(page => {
+                return {
+                  ...page,
+                  convos: page.convos.map(convo => {
+                    if (convo.id === convoId) {
+                      return {
+                        ...convo,
+                        unreadCount: 0,
+                      }
                     }
-                  }
-                  return convo
-                }),
-              }
-            }),
+                    return convo
+                  }),
+                }
+              }),
+            }
+          } else {
+            // If we somehow marked a convo as read that doesn't exist in the
+            // list, then we don't need to do anything.
           }
-        } else {
-          // If we somehow marked a convo as read that doesn't exist in the
-          // list, then we don't need to do anything.
-        }
-      })
+        },
+      )
     },
   })
 }
