@@ -1,6 +1,6 @@
 import React from 'react'
 import {Keyboard, View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {toNiceDomain} from '#/lib/strings/url-helpers'
@@ -43,7 +43,7 @@ export function HostingProvider({
       {minimal ? (
         <View style={[a.flex_row, a.align_center, a.flex_wrap]}>
           <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-            You are creating an account on{' '}
+            <Trans>You are creating an account on </Trans>
           </Text>
           <Button
             label={toNiceDomain(serviceUrl)}
