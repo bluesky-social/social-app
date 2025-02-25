@@ -782,6 +782,12 @@ export class Convo {
       id: tempId,
       message,
     })
+    if (this.convo?.status === 'request') {
+      this.convo = {
+        ...this.convo,
+        status: 'accepted',
+      }
+    }
     this.commit()
 
     if (!this.isProcessingPendingMessages && !this.pendingMessageFailure) {
