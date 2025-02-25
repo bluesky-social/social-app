@@ -236,7 +236,25 @@ let ProfileHeaderStandard = ({
                 </ButtonText>
               </Button>
             </>
-          ) : null}
+          ) : (
+            <>
+              {profile.viewer?.following && (
+                <Button
+                  testID="unfollowBtn"
+                  size="small"
+                  color="secondary"
+                  variant="solid"
+                  label={_(msg`Unfollow ${profile.handle}`)}
+                  onPress={onPressUnfollow}
+                  style={[a.rounded_full]}>
+                  <ButtonIcon position="left" icon={Check} />
+                  <ButtonText>
+                    <Trans>Following</Trans>
+                  </ButtonText>
+                </Button>
+              )}
+            </>
+          )}
           <ProfileMenu profile={profile} />
         </View>
         <View style={[a.flex_col, a.gap_2xs, a.pt_2xs, a.pb_sm]}>
