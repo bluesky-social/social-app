@@ -125,12 +125,17 @@ export function Outer({
                   },
                 ]}>
                 <Backdrop />
+                {/**
+                 * This is needed to prevent centered dialogs from overflowing
+                 * above the screen, and provides a "natural" centering so that
+                 * stacked dialogs appear relatively aligned.
+                 */}
                 <View
                   style={[
                     a.w_full,
                     a.z_20,
                     a.align_center,
-                    web({minHeight: '60vh'}),
+                    web({minHeight: '60vh', position: 'static'}),
                   ]}>
                   {children}
                 </View>
@@ -219,8 +224,8 @@ export const InnerFlatList = React.forwardRef<
       style={[
         a.overflow_hidden,
         a.px_0,
-        // @ts-expect-error web only -sfn
-        {maxHeight: 'calc(-36px + 100vh)'},
+        // 100 minus 10vh of paddingVertical
+        web({maxHeight: '80vh'}),
         webInnerStyle,
       ]}
       contentContainerStyle={[a.px_0, webInnerContentContainerStyle]}>
