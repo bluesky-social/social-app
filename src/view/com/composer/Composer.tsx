@@ -1081,9 +1081,8 @@ function ComposerEmbeds({
           </Animated.View>
         )}
       </LayoutAnimationConfig>
-
-      <View style={!video ? [a.mt_md] : []}>
-        {embed.quote?.uri ? (
+      {embed.quote?.uri ? (
+        <View style={!video ? [a.mt_md] : []}>
           <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
             <View style={{pointerEvents: 'none'}}>
               <LazyQuoteEmbed uri={embed.quote.uri} />
@@ -1092,8 +1091,8 @@ function ComposerEmbeds({
               <QuoteX onRemove={() => dispatch({type: 'embed_remove_quote'})} />
             )}
           </View>
-        ) : null}
-      </View>
+        </View>
+      ) : null}
     </>
   )
 }
