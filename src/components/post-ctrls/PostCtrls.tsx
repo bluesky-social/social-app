@@ -1,32 +1,22 @@
 import React, {memo} from 'react'
-import {
-  Pressable,
-  type PressableStateCallbackType,
-  type StyleProp,
-  View,
-  type ViewStyle,
-} from 'react-native'
+import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
   type AppBskyFeedThreadgate,
-  AtUri,
   type RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {IS_INTERNAL} from '#/lib/app-info'
-import {DISCOVER_DEBUG_DIDS, POST_CTRL_HITSLOP} from '#/lib/constants'
+import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
 import {useHaptics} from '#/lib/haptics'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {makeProfileLink} from '#/lib/routes/links'
-import {shareUrl} from '#/lib/sharing'
 import {useGate} from '#/lib/statsig/statsig'
-import {toShareUrl} from '#/lib/strings/url-helpers'
 import {type Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {
@@ -41,13 +31,16 @@ import {
 import {formatCount} from '#/view/com/util/numeric/format'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme} from '#/alf'
-import {useDialogControl} from '#/components/Dialog'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
-import * as Prompt from '#/components/Prompt'
-import {PostDropdownBtn} from './PostDropdownBtn'
+import {
+  PostCtrlButton,
+  PostCtrlButtonIcon,
+  PostCtrlButtonText,
+} from './PostCtrlButton'
+import {PostMenuButton} from './PostMenuButton'
 import {RepostButton} from './RepostButton'
+import {ShareMenuButton} from './ShareMenuButton'
 
 let PostCtrls = ({
   big,
@@ -77,6 +70,7 @@ let PostCtrls = ({
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
 }): React.ReactNode => {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const {_, i18n} = useLingui()
   const {openComposer} = useOpenComposer()
   const {currentAccount} = useSession()
@@ -86,7 +80,6 @@ let PostCtrls = ({
     logContext,
   )
   const requireAuth = useRequireAuth()
-  const loggedOutWarningPromptControl = useDialogControl()
   const {sendInteraction} = useFeedFeedbackContext()
   const {captureAction} = useProgressGuideControls()
   const playHaptic = useHaptics()
@@ -101,20 +94,6 @@ let PostCtrls = ({
       post.author.viewer?.blockingByList,
   )
   const replyDisabled = post.viewer?.replyDisabled
-
-  const shouldShowLoggedOutWarning = React.useMemo(() => {
-    return (
-      post.author.did !== currentAccount?.did &&
-      !!post.author.labels?.find(label => label.val === '!no-unauthenticated')
-    )
-  }, [currentAccount, post])
-
-  const defaultCtrlColor = React.useMemo(
-    () => ({
-      color: t.palette.contrast_500,
-    }),
-    [t],
-  ) as StyleProp<ViewStyle>
 
   const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] =
     React.useState(false)
@@ -200,10 +179,6 @@ let PostCtrls = ({
   }
 
   const onShare = () => {
-    const urip = new AtUri(post.uri)
-    const href = makeProfileLink(post.author, 'post', urip.rkey)
-    const url = toShareUrl(href)
-    shareUrl(url)
     sendInteraction({
       item: post.uri,
       event: 'app.bsky.feed.defs#interactionShare',
@@ -212,20 +187,6 @@ let PostCtrls = ({
     })
   }
 
-  const btnStyle = React.useCallback(
-    ({pressed, hovered}: PressableStateCallbackType) => [
-      a.gap_xs,
-      a.rounded_full,
-      a.flex_row,
-      a.justify_center,
-      a.align_center,
-      a.overflow_hidden,
-      {padding: 5},
-      (pressed || hovered) && t.atoms.bg_contrast_25,
-    ],
-    [t.atoms.bg_contrast_25],
-  )
-
   return (
     <View style={[a.flex_row, a.justify_between, a.align_center, style]}>
       <View
@@ -233,39 +194,25 @@ let PostCtrls = ({
           big ? a.align_center : [a.flex_1, a.align_start, {marginLeft: -6}],
           replyDisabled ? {opacity: 0.5} : undefined,
         ]}>
-        <Pressable
+        <PostCtrlButton
           testID="replyBtn"
-          style={btnStyle}
-          onPress={() => {
-            if (!replyDisabled) {
-              playHaptic('Light')
-              requireAuth(() => onPressReply())
-            }
-          }}
-          accessibilityRole="button"
-          accessibilityLabel={_(
+          onPress={
+            !replyDisabled ? () => requireAuth(() => onPressReply()) : undefined
+          }
+          label={_(
             msg`Reply (${plural(post.replyCount || 0, {
               one: '# reply',
               other: '# replies',
             })})`,
           )}
-          accessibilityHint=""
-          hitSlop={POST_CTRL_HITSLOP}>
-          <Bubble
-            style={[defaultCtrlColor, {pointerEvents: 'none'}]}
-            width={big ? 22 : 18}
-          />
-          {typeof post.replyCount !== 'undefined' && post.replyCount > 0 ? (
-            <Text
-              style={[
-                defaultCtrlColor,
-                big ? a.text_md : {fontSize: 15},
-                a.user_select_none,
-              ]}>
+          big={big}>
+          <PostCtrlButtonIcon icon={Bubble} />
+          {typeof post.replyCount !== 'undefined' && post.replyCount > 0 && (
+            <PostCtrlButtonText>
               {formatCount(i18n, post.replyCount)}
-            </Text>
-          ) : undefined}
-        </Pressable>
+            </PostCtrlButtonText>
+          )}
+        </PostCtrlButton>
       </View>
       <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
         <RepostButton
@@ -278,12 +225,11 @@ let PostCtrls = ({
         />
       </View>
       <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
-        <Pressable
+        <PostCtrlButton
           testID="likeBtn"
-          style={btnStyle}
+          big={big}
           onPress={() => requireAuth(() => onPressToggleLike())}
-          accessibilityRole="button"
-          accessibilityLabel={
+          label={
             post.viewer?.like
               ? _(
                   msg`Unlike (${plural(post.likeCount || 0, {
@@ -297,9 +243,7 @@ let PostCtrls = ({
                     other: '# likes',
                   })})`,
                 )
-          }
-          accessibilityHint=""
-          hitSlop={POST_CTRL_HITSLOP}>
+          }>
           <AnimatedLikeIcon
             isLiked={Boolean(post.viewer?.like)}
             big={big}
@@ -311,52 +255,32 @@ let PostCtrls = ({
             isLiked={Boolean(post.viewer?.like)}
             hasBeenToggled={hasLikeIconBeenToggled}
           />
-        </Pressable>
+        </PostCtrlButton>
       </View>
-      {big && (
-        <>
-          <View style={a.align_center}>
-            <Pressable
-              testID="shareBtn"
-              style={btnStyle}
-              onPress={() => {
-                if (shouldShowLoggedOutWarning) {
-                  loggedOutWarningPromptControl.open()
-                } else {
-                  onShare()
-                }
-              }}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Share`)}
-              accessibilityHint=""
-              hitSlop={POST_CTRL_HITSLOP}>
-              <ArrowOutOfBox
-                style={[defaultCtrlColor, {pointerEvents: 'none'}]}
-                width={22}
-              />
-            </Pressable>
-          </View>
-          <Prompt.Basic
-            control={loggedOutWarningPromptControl}
-            title={_(msg`Note about sharing`)}
-            description={_(
-              msg`This post is only visible to logged-in users. It won't be visible to people who aren't signed in.`,
-            )}
-            onConfirm={onShare}
-            confirmButtonCta={_(msg`Share anyway`)}
-          />
-        </>
-      )}
+      <View
+        style={
+          big ? a.align_center : [gtMobile ? a.mr_sm : a.mr_xs, a.align_start]
+        }>
+        <ShareMenuButton
+          testID="postShareBtn"
+          post={post}
+          big={big}
+          record={record}
+          richText={richText}
+          timestamp={post.indexedAt}
+          threadgateRecord={threadgateRecord}
+          onShare={onShare}
+        />
+      </View>
       <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
-        <PostDropdownBtn
+        <PostMenuButton
           testID="postDropdownBtn"
           post={post}
           postFeedContext={feedContext}
           postReqId={reqId}
+          big={big}
           record={record}
           richText={richText}
-          style={{padding: 5}}
-          hitSlop={POST_CTRL_HITSLOP}
           timestamp={post.indexedAt}
           threadgateRecord={threadgateRecord}
           onShowLess={onShowLess}

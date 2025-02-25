@@ -1,5 +1,3 @@
-import React from 'react'
-import {Pressable, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -7,12 +5,15 @@ import {useRequireAuth} from '#/state/session'
 import {useSession} from '#/state/session'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import {formatCount} from '#/view/com/util/numeric/format'
-import {atoms as a, useTheme} from '#/alf'
-import {Button} from '#/components/Button'
+import {useTheme} from '#/alf'
 import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 import * as Menu from '#/components/Menu'
-import {Text} from '#/components/Typography'
+import {
+  PostCtrlButton,
+  PostCtrlButtonIcon,
+  PostCtrlButtonText,
+} from './PostCtrlButton'
 
 interface Props {
   isReposted: boolean
@@ -32,38 +33,30 @@ export const RepostButton = ({
   embeddingDisabled,
 }: Props) => {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {hasSession} = useSession()
   const requireAuth = useRequireAuth()
-
-  const color = React.useMemo(
-    () => ({
-      color: isReposted ? t.palette.positive_600 : t.palette.contrast_500,
-    }),
-    [t, isReposted],
-  )
 
   return hasSession ? (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
         <Menu.Trigger label={_(msg`Repost or quote post`)}>
-          {({props, state}) => {
+          {({props}) => {
             return (
-              <Pressable
-                {...props}
-                style={[
-                  a.rounded_full,
-                  (state.hovered || state.pressed) && {
-                    backgroundColor: t.palette.contrast_25,
-                  },
-                ]}>
-                <RepostInner
-                  isReposted={isReposted}
-                  color={color}
-                  repostCount={repostCount}
-                  big={big}
-                />
-              </Pressable>
+              <PostCtrlButton
+                testID="repostBtn"
+                active={isReposted}
+                activeColor={t.palette.positive_600}
+                label={props.accessibilityLabel}
+                big={big}
+                {...props}>
+                <PostCtrlButtonIcon icon={Repost} />
+                {typeof repostCount !== 'undefined' && repostCount > 0 && (
+                  <PostCtrlButtonText testID="repostCount">
+                    {formatCount(i18n, repostCount)}
+                  </PostCtrlButtonText>
+                )}
+              </PostCtrlButton>
             )
           }}
         </Menu.Trigger>
@@ -97,51 +90,18 @@ export const RepostButton = ({
       </Menu.Root>
     </EventStopper>
   ) : (
-    <Button
-      onPress={() => {
-        requireAuth(() => {})
-      }}
+    <PostCtrlButton
+      onPress={() => requireAuth(() => {})}
+      active={isReposted}
+      activeColor={t.palette.positive_600}
       label={_(msg`Repost or quote post`)}
-      style={{padding: 0}}
-      hoverStyle={t.atoms.bg_contrast_25}
-      shape="round">
-      <RepostInner
-        isReposted={isReposted}
-        color={color}
-        repostCount={repostCount}
-        big={big}
-      />
-    </Button>
-  )
-}
-
-const RepostInner = ({
-  isReposted,
-  color,
-  repostCount,
-  big,
-}: {
-  isReposted: boolean
-  color: {color: string}
-  repostCount?: number
-  big?: boolean
-}) => {
-  const {i18n} = useLingui()
-  return (
-    <View style={[a.flex_row, a.align_center, a.gap_xs, {padding: 5}]}>
-      <Repost style={color} width={big ? 22 : 18} />
-      {typeof repostCount !== 'undefined' && repostCount > 0 ? (
-        <Text
-          testID="repostCount"
-          style={[
-            color,
-            big ? a.text_md : {fontSize: 15},
-            isReposted && [a.font_bold],
-            a.user_select_none,
-          ]}>
+      big={big}>
+      <PostCtrlButtonIcon icon={Repost} />
+      {typeof repostCount !== 'undefined' && repostCount > 0 && (
+        <PostCtrlButtonText testID="repostCount">
           {formatCount(i18n, repostCount)}
-        </Text>
-      ) : undefined}
-    </View>
+        </PostCtrlButtonText>
+      )}
+    </PostCtrlButton>
   )
 }

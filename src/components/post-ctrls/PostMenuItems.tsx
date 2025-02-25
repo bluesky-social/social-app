@@ -13,7 +13,7 @@ import {
   AtUri,
   type RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
@@ -26,13 +26,12 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {shareText, shareUrl} from '#/lib/sharing'
+import {shareText} from '#/lib/sharing'
 import {logEvent} from '#/lib/statsig/statsig'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
@@ -53,20 +52,16 @@ import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import * as Toast from '#/view/com/util/Toast'
-import {useBreakpoints} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
-import {EmbedDialog} from '#/components/dialogs/Embed'
 import {
   PostInteractionSettingsDialog,
   usePrefetchPostInteractionSettings,
 } from '#/components/dialogs/PostInteractionSettingsDialog'
-import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
-import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBrackets} from '#/components/icons/CodeBrackets'
 import {
   EmojiSad_Stroke2_Corner0_Rounded as EmojiSad,
   EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmile,
@@ -76,7 +71,6 @@ import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/E
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
-import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
 import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/Person'
 import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
@@ -94,13 +88,12 @@ import * as Prompt from '#/components/Prompt'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import * as bsky from '#/types/bsky'
 
-let PostDropdownMenuItems = ({
+let PostMenuItems = ({
   post,
   postFeedContext,
   postReqId,
   record,
   richText,
-  timestamp,
   threadgateRecord,
   onShowLess,
 }: {
@@ -118,7 +111,6 @@ let PostDropdownMenuItems = ({
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
-  const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
   const {mutateAsync: deletePostMutate} = usePostDeleteMutation()
@@ -134,9 +126,6 @@ let PostDropdownMenuItems = ({
   const reportDialogControl = useReportDialogControl()
   const deletePromptControl = useDialogControl()
   const hidePromptControl = useDialogControl()
-  const loggedOutWarningPromptControl = useDialogControl()
-  const embedPostControl = useDialogControl()
-  const sendViaChatControl = useDialogControl()
   const postInteractionSettingsDialogControl = useDialogControl()
   const quotePostDetachConfirmControl = useDialogControl()
   const hideReplyConfirmControl = useDialogControl()
@@ -273,14 +262,6 @@ let PostDropdownMenuItems = ({
     label => label.val === '!no-unauthenticated',
   )
 
-  const showLoggedOutWarning =
-    postAuthor.did !== currentAccount?.did && hideInPWI
-
-  const onSharePost = () => {
-    const url = toShareUrl(href)
-    shareUrl(url)
-  }
-
   const onPressShowMore = () => {
     feedFeedback.sendInteraction({
       event: 'app.bsky.feed.defs#requestMore',
@@ -306,13 +287,6 @@ let PostDropdownMenuItems = ({
     } else {
       Toast.show(_(msg({message: 'Feedback sent!', context: 'toast'})))
     }
-  }
-
-  const onSelectChatToShareTo = (conversation: string) => {
-    navigation.navigate('MessagesConversation', {
-      conversation,
-      embed: postUri,
-    })
   }
 
   const onToggleQuotePostAttachment = async () => {
@@ -341,7 +315,6 @@ let PostDropdownMenuItems = ({
   }
 
   const canHidePostForMe = !isAuthor && !isPostHidden
-  const canEmbed = isWeb && gtMobile && !hideInPWI
   const canHideReplyForEveryone =
     !isAuthor && isRootPostAuthor && !isPostHidden && isReply
   const canDetachQuote = quoteEmbed && quoteEmbed.isOwnedByViewer
@@ -481,44 +454,6 @@ let PostDropdownMenuItems = ({
                 <Menu.ItemIcon icon={ClipboardIcon} position="right" />
               </Menu.Item>
             </>
-          )}
-
-          {hasSession && (
-            <Menu.Item
-              testID="postDropdownSendViaDMBtn"
-              label={_(msg`Send via direct message`)}
-              onPress={() => sendViaChatControl.open()}>
-              <Menu.ItemText>
-                <Trans>Send via direct message</Trans>
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={Send} position="right" />
-            </Menu.Item>
-          )}
-
-          <Menu.Item
-            testID="postDropdownShareBtn"
-            label={isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
-            onPress={() => {
-              if (showLoggedOutWarning) {
-                loggedOutWarningPromptControl.open()
-              } else {
-                onSharePost()
-              }
-            }}>
-            <Menu.ItemText>
-              {isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
-            </Menu.ItemText>
-            <Menu.ItemIcon icon={Share} position="right" />
-          </Menu.Item>
-
-          {canEmbed && (
-            <Menu.Item
-              testID="postDropdownEmbedBtn"
-              label={_(msg`Embed post`)}
-              onPress={() => embedPostControl.open()}>
-              <Menu.ItemText>{_(msg`Embed post`)}</Menu.ItemText>
-              <Menu.ItemIcon icon={CodeBrackets} position="right" />
-            </Menu.Item>
           )}
         </Menu.Group>
 
@@ -802,32 +737,6 @@ let PostDropdownMenuItems = ({
         }}
       />
 
-      <Prompt.Basic
-        control={loggedOutWarningPromptControl}
-        title={_(msg`Note about sharing`)}
-        description={_(
-          msg`This post is only visible to logged-in users. It won't be visible to people who aren't signed in.`,
-        )}
-        onConfirm={onSharePost}
-        confirmButtonCta={_(msg`Share anyway`)}
-      />
-
-      {canEmbed && (
-        <EmbedDialog
-          control={embedPostControl}
-          postCid={postCid}
-          postUri={postUri}
-          record={record}
-          postAuthor={postAuthor}
-          timestamp={timestamp}
-        />
-      )}
-
-      <SendViaChatDialog
-        control={sendViaChatControl}
-        onSelectChat={onSelectChatToShareTo}
-      />
-
       <PostInteractionSettingsDialog
         control={postInteractionSettingsDialogControl}
         postUri={post.uri}
@@ -868,5 +777,5 @@ let PostDropdownMenuItems = ({
     </>
   )
 }
-PostDropdownMenuItems = memo(PostDropdownMenuItems)
-export {PostDropdownMenuItems}
+PostMenuItems = memo(PostMenuItems)
+export {PostMenuItems}
