@@ -4,6 +4,7 @@ import {AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -52,6 +53,7 @@ export function ListMembers({
   const {isMobile} = useWebMediaQueries()
   const {openModal} = useModalControls()
   const {currentAccount} = useSession()
+  const bottomBarOffset = useBottomBarOffset()
 
   const {
     data,
@@ -202,9 +204,17 @@ export function ListMembers({
         error={cleanError(error)}
         isFetchingNextPage={isFetchingNextPage}
         onRetry={fetchNextPage}
+        style={{marginBottom: headerOffset}}
       />
     )
-  }, [hasNextPage, error, isFetchingNextPage, fetchNextPage, isEmpty])
+  }, [
+    isEmpty,
+    hasNextPage,
+    error,
+    isFetchingNextPage,
+    fetchNextPage,
+    headerOffset,
+  ])
 
   return (
     <View testID={testID} style={style}>
@@ -228,6 +238,9 @@ export function ListMembers({
         removeClippedSubviews={true}
         // @ts-ignore our .web version only -prf
         desktopFixedHeight={desktopFixedHeightOffset || true}
+        scrollIndicatorInsets={{
+          bottom: bottomBarOffset,
+        }}
       />
     </View>
   )
