@@ -7290,6 +7290,10 @@ msgstr "यह @{0} को जल्द पहुँच सूची से ह�
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "यह आपके पोस्ट को इस क्वोट पोस्ट से सभी उपयोगकर्ताओं के लिए हटा देगा, और उसके बदले एक स्थानधारक छोड़ देगा।"
 
+#: src/components/dialogs/MutedWords.tsx:98
+msgid "This word has already been muted"
+msgstr ""
+
 #: src/view/com/post-thread/PostThread.tsx:606
 #: src/view/com/post-thread/PostThread.tsx:609
 msgid "Thread options"

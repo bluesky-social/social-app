@@ -7290,6 +7290,10 @@ msgstr "Cela supprimera @{0} de la liste d’accès rapide."
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "Cela retirera votre post de cette citation pour tout le monde, et le remplacera par un espace vide."
 
+#: src/components/dialogs/MutedWords.tsx:98
+msgid "This word has already been muted"
+msgstr ""
+
 #: src/view/com/post-thread/PostThread.tsx:606
 #: src/view/com/post-thread/PostThread.tsx:609
 msgid "Thread options"
