@@ -1,6 +1,7 @@
-import React, {memo, useMemo} from 'react'
+import React, {memo, useMemo, useState} from 'react'
 import {
   GestureResponderEvent,
+  Pressable,
   StyleSheet,
   Text as RNText,
   View,
@@ -274,6 +275,11 @@ let PostThreadItemLoaded = ({
       onPost: onPostReply,
     })
   }, [openComposer, post, record, onPostReply, moderation])
+  const [isCollapsed, setIsCollapsed] = useState(false)
+
+  const toggleCollapse = () => {
+    setIsCollapsed(!isCollapsed)
+  }
 
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)
@@ -492,7 +498,8 @@ let PostThreadItemLoaded = ({
         showParentReplyLine={!!showParentReplyLine}
         treeView={treeView}
         hasPrecedingItem={hasPrecedingItem}
-        hideTopBorder={hideTopBorder}>
+        hideTopBorder={hideTopBorder}
+        onPress={toggleCollapse}>
         <PostHider
           testID={`postThreadItem-by-${post.author.handle}`}
           href={postHref}
@@ -576,51 +583,55 @@ let PostThreadItemLoaded = ({
                 avatarSize={24}
                 style={[a.pb_xs]}
               />
-              <LabelsOnMyPost post={post} style={[a.pb_xs]} />
-              <PostAlerts
-                modui={moderation.ui('contentList')}
-                style={[a.pb_2xs]}
-                additionalCauses={additionalPostAlerts}
-              />
-              {richText?.text ? (
-                <View style={[a.pb_2xs, a.pr_sm]}>
-                  <RichText
-                    enableTags
-                    value={richText}
-                    style={[a.flex_1, a.text_md]}
-                    numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-                    authorHandle={post.author.handle}
+              {!isCollapsed && (
+                <>
+                  <LabelsOnMyPost post={post} style={[a.pb_xs]} />
+                  <PostAlerts
+                    modui={moderation.ui('contentList')}
+                    style={[a.pb_2xs]}
+                    additionalCauses={additionalPostAlerts}
                   />
-                </View>
-              ) : undefined}
-              {limitLines ? (
-                <TextLink
-                  text={_(msg`Show More`)}
-                  style={pal.link}
-                  onPress={onPressShowMore}
-                  href="#"
-                />
-              ) : undefined}
-              {post.embed && (
-                <View style={[a.pb_xs]}>
-                  <PostEmbeds
-                    embed={post.embed}
-                    moderation={moderation}
-                    viewContext={PostEmbedViewContext.Feed}
+                  {richText?.text ? (
+                    <View style={[a.pb_2xs, a.pr_sm]}>
+                      <RichText
+                        enableTags
+                        value={richText}
+                        style={[a.flex_1, a.text_md]}
+                        numberOfLines={limitLines ? MAX_POST_LINES : undefined}
+                        authorHandle={post.author.handle}
+                      />
+                    </View>
+                  ) : undefined}
+                  {limitLines ? (
+                    <TextLink
+                      text={_(msg`Show More`)}
+                      style={pal.link}
+                      onPress={onPressShowMore}
+                      href="#"
+                    />
+                  ) : undefined}
+                  {post.embed && (
+                    <View style={[a.pb_xs]}>
+                      <PostEmbeds
+                        embed={post.embed}
+                        moderation={moderation}
+                        viewContext={PostEmbedViewContext.Feed}
+                      />
+                    </View>
+                  )}
+                  <PostCtrls
+                    post={post}
+                    record={record}
+                    richText={richText}
+                    onPressReply={onPressReply}
+                    logContext="PostThreadItem"
+                    threadgateRecord={threadgateRecord}
                   />
-                </View>
+                </>
               )}
-              <PostCtrls
-                post={post}
-                record={record}
-                richText={richText}
-                onPressReply={onPressReply}
-                logContext="PostThreadItem"
-                threadgateRecord={threadgateRecord}
-              />
             </View>
           </View>
-          {hasMore ? (
+          {hasMore && !isCollapsed ? (
             <Link
               style={[
                 styles.loadMore,
@@ -658,6 +669,7 @@ function PostOuterWrapper({
   hasPrecedingItem,
   hideTopBorder,
   children,
+  onPress,
 }: React.PropsWithChildren<{
   post: AppBskyFeedDefs.PostView
   treeView: boolean
@@ -665,6 +677,7 @@ function PostOuterWrapper({
   showParentReplyLine: boolean
   hasPrecedingItem: boolean
   hideTopBorder?: boolean
+  onPress: (event: GestureResponderEvent) => void
 }>) {
   const t = useTheme()
   const {
@@ -686,7 +699,9 @@ function PostOuterWrapper({
         onPointerEnter={onHoverIn}
         onPointerLeave={onHoverOut}>
         {Array.from(Array(depth - 1)).map((_, n: number) => (
-          <View
+          <Pressable
+            accessibilityRole="button"
+            onPress={onPress}
             key={`${post.uri}-padding-${n}`}
             style={[
               a.ml_sm,
