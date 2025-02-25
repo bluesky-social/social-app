@@ -125,7 +125,20 @@ export function Outer({
                   },
                 ]}>
                 <Backdrop />
-                {children}
+                {/**
+                 * This is needed to prevent centered dialogs from overflowing
+                 * above the screen, and provides a "natural" centering so that
+                 * stacked dialogs appear relatively aligned.
+                 */}
+                <View
+                  style={[
+                    a.w_full,
+                    a.z_20,
+                    a.align_center,
+                    web({minHeight: '60vh', position: 'static'}),
+                  ]}>
+                  {children}
+                </View>
               </View>
             </TouchableWithoutFeedback>
           </Context.Provider>
