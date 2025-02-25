@@ -31,6 +31,7 @@ const TIMEOUT = 2e3
 export function show(
   message: string,
   icon: FontAwesomeProps['icon'] = 'check',
+  _onClick?: () => void,
 ) {
   if (process.env.NODE_ENV === 'test') {
     return
