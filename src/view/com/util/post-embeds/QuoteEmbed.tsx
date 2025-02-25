@@ -14,6 +14,7 @@ import {
   AppBskyEmbedVideo,
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  moderatePost,
   ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -26,7 +27,6 @@ import {useQueryClient} from '@tanstack/react-query'
 import {HITSLOP_20} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {InfoCircleIcon} from '#/lib/icons'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {makeProfileLink} from '#/lib/routes/links'
 import {s} from '#/lib/styles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'

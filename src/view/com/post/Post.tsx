@@ -4,6 +4,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
+  moderatePost,
   ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -14,7 +15,6 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {MAX_POST_LINES} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {makeProfileLink} from '#/lib/routes/links'
 import {countLines} from '#/lib/strings/helpers'
 import {colors, s} from '#/lib/styles'
