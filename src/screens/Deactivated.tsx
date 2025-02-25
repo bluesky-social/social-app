@@ -106,6 +106,7 @@ export function Deactivated() {
   return (
     <View style={[a.util_screen_outer, a.flex_1]}>
       <Layout.Content
+        ignoreTabletLayoutOffset
         contentContainerStyle={[
           a.px_2xl,
           {

@@ -81,8 +81,10 @@ export function HomeScreen(props: Props) {
     )
   } else {
     return (
-      <Layout.Screen style={styles.loading}>
-        <ActivityIndicator size="large" />
+      <Layout.Screen>
+        <Layout.Center style={styles.loading}>
+          <ActivityIndicator size="large" />
+        </Layout.Center>
       </Layout.Screen>
     )
   }

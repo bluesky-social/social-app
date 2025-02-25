@@ -154,6 +154,7 @@ export function Outer({
       nativeSnapPoint: snapPoint,
       disableDrag,
       setDisableDrag,
+      isWithinDialog: true,
     }),
     [close, snapPoint, disableDrag, setDisableDrag],
   )

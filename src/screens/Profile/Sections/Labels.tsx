@@ -15,7 +15,6 @@ import {isLabelerSubscribed, lookupLabelValueDefinition} from '#/lib/moderation'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {isNative} from '#/platform/detection'
 import {ListRef} from '#/view/com/util/List'
-import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
@@ -148,8 +147,8 @@ export function ProfileLabelsSectionInner({
   }, [labelerInfo, labelValues])
 
   return (
-    <ScrollView
-      // @ts-ignore TODO fix this
+    <Layout.Content
+      // @ts-expect-error TODO fix this
       ref={scrollElRef}
       scrollEventThrottle={1}
       contentContainerStyle={{
@@ -228,9 +227,8 @@ export function ProfileLabelsSectionInner({
             })}
           </View>
         )}
-
-        <View style={{height: 400}} />
+        <View style={{height: 100}} />
       </View>
-    </ScrollView>
+    </Layout.Content>
   )
 }

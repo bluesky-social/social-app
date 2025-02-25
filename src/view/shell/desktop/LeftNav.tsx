@@ -1,7 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
-import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
@@ -33,7 +32,7 @@ import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, tokens, useLayoutBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps} from '#/components/Dialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
@@ -86,7 +85,7 @@ function ProfileCard() {
   })
   const profiles = data?.profiles
   const signOutPromptControl = Prompt.usePromptControl()
-  const {gtTablet} = useBreakpoints()
+  const {leftNavMinimal} = useLayoutBreakpoints()
   const {_} = useLingui()
   const t = useTheme()
 
@@ -101,7 +100,7 @@ function ProfileCard() {
     }))
 
   return (
-    <View style={[a.my_md, gtTablet && [a.w_full, a.align_start]]}>
+    <View style={[a.my_md, !leftNavMinimal && [a.w_full, a.align_start]]}>
       {!isLoading && profile ? (
         <Menu.Root>
           <Menu.Trigger label={_(msg`Switch accounts`)}>
@@ -120,7 +119,7 @@ function ProfileCard() {
                     a.align_center,
                     a.flex_row,
                     {gap: 6},
-                    gtTablet && [a.pl_lg, a.pr_md],
+                    !leftNavMinimal && [a.pl_lg, a.pr_md],
                   ]}>
                   <View
                     style={[
@@ -133,8 +132,8 @@ function ProfileCard() {
                       a.z_10,
                       active && {
                         transform: [
-                          {scale: gtTablet ? 2 / 3 : 0.8},
-                          {translateX: gtTablet ? -22 : 0},
+                          {scale: !leftNavMinimal ? 2 / 3 : 0.8},
+                          {translateX: !leftNavMinimal ? -22 : 0},
                         ],
                       },
                     ]}>
@@ -144,7 +143,7 @@ function ProfileCard() {
                       type={profile?.associated?.labeler ? 'labeler' : 'user'}
                     />
                   </View>
-                  {gtTablet && (
+                  {!leftNavMinimal && (
                     <>
                       <View
                         style={[
@@ -197,7 +196,7 @@ function ProfileCard() {
         <LoadingPlaceholder
           width={size}
           height={size}
-          style={[{borderRadius: size}, gtTablet && a.ml_lg]}
+          style={[{borderRadius: size}, !leftNavMinimal && a.ml_lg]}
         />
       )}
       <Prompt.Basic
@@ -307,8 +306,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const {gtMobile, gtTablet} = useBreakpoints()
-  const isTablet = gtMobile && !gtTablet
+  const {leftNavMinimal} = useLayoutBreakpoints()
   const [pathName] = React.useMemo(() => router.matchPath(href), [href])
   const currentRouteInfo = useNavigationState(state => {
     if (!state) {
@@ -350,9 +348,8 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
         a.transition_color,
       ]}
       hoverStyle={t.atoms.bg_contrast_25}
-      // @ts-ignore the function signature differs on web -prf
+      // @ts-expect-error the function signature differs on web -prf
       onPress={onPressWrapped}
-      // @ts-ignore web only -prf
       href={href}
       dataSet={{noUnderline: 1}}
       role="link"
@@ -367,7 +364,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
             width: 24,
             height: 24,
           },
-          isTablet && {
+          leftNavMinimal && {
             width: 40,
             height: 40,
           },
@@ -407,7 +404,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
                   paddingVertical: 1,
                   minWidth: 16,
                 },
-                isTablet && [
+                leftNavMinimal && [
                   {
                     top: '10%',
                     left: count.length === 1 ? 20 : 16,
@@ -429,7 +426,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
                 right: -1,
                 top: -3,
               },
-              isTablet && {
+              leftNavMinimal && {
                 right: 6,
                 top: 4,
               },
@@ -437,7 +434,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
           />
         ) : null}
       </View>
-      {gtTablet && (
+      {!leftNavMinimal && (
         <Text style={[a.text_xl, isCurrent ? a.font_heavy : a.font_normal]}>
           {label}
         </Text>
@@ -451,7 +448,7 @@ function ComposeBtn() {
   const {getState} = useNavigation()
   const {openComposer} = useComposerControls()
   const {_} = useLingui()
-  const {isTablet} = useWebMediaQueries()
+  const {leftNavMinimal} = useLayoutBreakpoints()
   const [isFetchingHandle, setIsFetchingHandle] = React.useState(false)
   const fetchHandle = useFetchHandle()
 
@@ -491,9 +488,10 @@ function ComposeBtn() {
   const onPressCompose = async () =>
     openComposer({mention: await getProfileHandle()})
 
-  if (isTablet) {
+  if (leftNavMinimal) {
     return null
   }
+
   return (
     <View style={[a.flex_row, a.pl_md, a.pt_xl]}>
       <Button
@@ -541,7 +539,8 @@ export function DesktopLeftNav() {
   const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isDesktop, isTablet} = useWebMediaQueries()
+  const {isDesktop} = useWebMediaQueries()
+  const {leftNavMinimal, centerColumnOffset} = useLayoutBreakpoints()
   const numUnreadNotifications = useUnreadNotifications()
   const hasHomeBadge = useHomeBadge()
   const gate = useGate()
@@ -556,8 +555,14 @@ export function DesktopLeftNav() {
       style={[
         a.px_xl,
         styles.leftNav,
-        isTablet && styles.leftNavTablet,
-        pal.border,
+        leftNavMinimal && styles.leftNavMinimal,
+        {
+          transform: [
+            {translateX: centerColumnOffset ? -450 : -300},
+            {translateX: '-100%'},
+            ...a.scrollbar_offset.transform,
+          ],
+        },
       ]}>
       {hasSession ? (
         <ProfileCard />
@@ -630,14 +635,14 @@ export function DesktopLeftNav() {
             href="/feeds"
             icon={
               <Hashtag
-                style={pal.text as FontAwesomeIconStyle}
+                style={pal.text}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
             }
             iconFilled={
               <HashtagFilled
-                style={pal.text as FontAwesomeIconStyle}
+                style={pal.text}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
@@ -708,36 +713,25 @@ export function DesktopLeftNav() {
 
 const styles = StyleSheet.create({
   leftNav: {
-    // @ts-ignore web only
     position: 'fixed',
-    top: 10,
-    // @ts-ignore web only
+    top: 0,
+    paddingTop: 10,
+    paddingBottom: 10,
     left: '50%',
-    transform: [
-      {
-        translateX: -300,
-      },
-      {
-        translateX: '-100%',
-      },
-      ...a.scrollbar_offset.transform,
-    ],
     width: 240,
-    // @ts-ignore web only
-    maxHeight: 'calc(100vh - 10px)',
+    // @ts-expect-error web only
+    maxHeight: '100vh',
     overflowY: 'auto',
   },
-  leftNavTablet: {
-    top: 0,
-    left: 0,
-    right: 'auto',
-    borderRightWidth: 1,
-    height: '100%',
-    width: 76,
+  leftNavMinimal: {
+    paddingTop: 0,
+    paddingBottom: 0,
     paddingLeft: 0,
     paddingRight: 0,
+    height: '100%',
+    width: 86,
     alignItems: 'center',
-    transform: [],
+    overflowX: 'hidden',
   },
   backBtn: {
     position: 'absolute',
