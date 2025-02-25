@@ -187,7 +187,7 @@ export function Outer({
         collisionPadding={{left: 5, right: 5, bottom: 5}}
         loop
         aria-label="Test"
-        className="dropdown-menu-transform-origin">
+        className="dropdown-menu-transform-origin dropdown-menu-constrain-size">
         <View
           style={[
             a.rounded_sm,

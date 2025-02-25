@@ -394,10 +394,7 @@ function SearchLanguageDropdown({
           </Button>
         )}
       </Menu.Trigger>
-      <Menu.Outer
-        // HACKFIX: Currently there is no height limit for Radix dropdowns,
-        // so if it's too tall it just goes off screen. TODO: fix internally -sfn
-        style={web({maxHeight: '70vh'})}>
+      <Menu.Outer>
         <Menu.LabelText>
           <Trans>Filter search by language</Trans>
         </Menu.LabelText>
