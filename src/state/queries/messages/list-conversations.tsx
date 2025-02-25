@@ -250,6 +250,49 @@ export function ListConvosProviderInner({
                   rev: logRef.rev,
                 })),
             )
+          } else if (ChatBskyConvoDefs.isLogAcceptConvo(log)) {
+            const logRef: ChatBskyConvoDefs.LogAcceptConvo = log
+            const requests = queryClient.getQueryData<ConvoListQueryData>(
+              RQKEY('request'),
+            )
+            if (!requests) {
+              debouncedRefetch()
+              return
+            }
+            const acceptedConvo = getConvoFromQueryData(log.convoId, requests)
+            if (!acceptedConvo) {
+              debouncedRefetch()
+              return
+            }
+            queryClient.setQueryData(
+              RQKEY('request'),
+              (old?: ConvoListQueryData) =>
+                optimisticDelete(logRef.convoId, old),
+            )
+            queryClient.setQueriesData(
+              {queryKey: RQKEY('accepted')},
+              (old?: ConvoListQueryData) => {
+                if (!old) {
+                  debouncedRefetch()
+                  return old
+                }
+                return {
+                  ...old,
+                  pages: old.pages.map((page, i) => {
+                    if (i === 0) {
+                      return {
+                        ...page,
+                        convos: [
+                          {...acceptedConvo, status: 'accepted'},
+                          ...page.convos,
+                        ],
+                      }
+                    }
+                    return page
+                  }),
+                }
+              },
+            )
           }
         }
       },
