@@ -293,6 +293,28 @@ export function ListConvosProviderInner({
                 }
               },
             )
+          } else if (ChatBskyConvoDefs.isLogMuteConvo(log)) {
+            const logRef: ChatBskyConvoDefs.LogMuteConvo = log
+            queryClient.setQueriesData(
+              {queryKey: [RQKEY_ROOT]},
+              (old?: ConvoListQueryData) =>
+                optimisticUpdate(logRef.convoId, old, convo => ({
+                  ...convo,
+                  muted: true,
+                  rev: logRef.rev,
+                })),
+            )
+          } else if (ChatBskyConvoDefs.isLogUnmuteConvo(log)) {
+            const logRef: ChatBskyConvoDefs.LogUnmuteConvo = log
+            queryClient.setQueriesData(
+              {queryKey: [RQKEY_ROOT]},
+              (old?: ConvoListQueryData) =>
+                optimisticUpdate(logRef.convoId, old, convo => ({
+                  ...convo,
+                  muted: false,
+                  rev: logRef.rev,
+                })),
+            )
           }
         }
       },
