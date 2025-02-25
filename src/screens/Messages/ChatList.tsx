@@ -1,9 +1,10 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
+import {useAnimatedRef} from 'react-native-reanimated'
 import {ChatBskyConvoDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useAppState} from '#/lib/hooks/useAppState'
@@ -12,11 +13,12 @@ import {MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
+import {listenSoftReset} from '#/state/events'
 import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
-import {List} from '#/view/com/util/List'
+import {List, ListRef} from '#/view/com/util/List'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps, useDialogControl} from '#/components/Dialog'
@@ -48,6 +50,7 @@ export function MessagesScreen({navigation, route}: Props) {
   const {_} = useLingui()
   const t = useTheme()
   const newChatControl = useDialogControl()
+  const scrollElRef: ListRef = useAnimatedRef()
   const pushToConversation = route.params?.pushToConversation
 
   // Whenever we have `pushToConversation` set, it means we pressed a notification for a chat without being on
@@ -134,6 +137,26 @@ export function MessagesScreen({navigation, route}: Props) {
     [navigation],
   )
 
+  const onSoftReset = useCallback(async () => {
+    scrollElRef.current?.scrollToOffset({
+      animated: isNative,
+      offset: 0,
+    })
+    try {
+      await refetch()
+    } catch (err) {
+      logger.error('Failed to refresh conversations', {message: err})
+    }
+  }, [scrollElRef, refetch])
+
+  const isScreenFocused = useIsFocused()
+  useEffect(() => {
+    if (!isScreenFocused) {
+      return
+    }
+    return listenSoftReset(onSoftReset)
+  }, [onSoftReset, isScreenFocused])
+
   if (conversations.length < 1) {
     return (
       <Layout.Screen>
@@ -216,6 +239,7 @@ export function MessagesScreen({navigation, route}: Props) {
       <Header newChatControl={newChatControl} />
       <NewChat onNewChat={onNewChat} control={newChatControl} />
       <List
+        ref={scrollElRef}
         data={conversations}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
