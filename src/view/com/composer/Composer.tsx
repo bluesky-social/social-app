@@ -798,24 +798,20 @@ let ComposerPost = React.memo(function ComposerPost({
   return (
     <View
       style={[
-        styles.post,
+        a.mx_lg,
         !isActive && styles.inactivePost,
         isTextOnly && isNative && a.flex_grow,
       ]}>
-      <View
-        style={[
-          styles.textInputLayout,
-          isNative && styles.textInputLayoutMobile,
-        ]}>
+      <View style={[a.flex_row, isNative && a.flex_1]}>
         <UserAvatar
           avatar={currentProfile?.avatar}
           size={50}
           type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
-          style={styles.avatarTopOffset}
+          style={[a.mt_xs]}
         />
         <TextInput
           ref={textInput}
-          style={styles.textInputTopOffset}
+          style={[a.pt_xs, a.debug]}
           richtext={richtext}
           placeholder={selectTextInputPlaceholder}
           autoFocus
@@ -1477,7 +1473,6 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   stickyFooterWeb: {
-    // @ts-ignore web-only
     position: 'sticky',
     bottom: 0,
   },
@@ -1511,23 +1506,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 5,
   },
-  post: {
-    marginHorizontal: 16,
-  },
   inactivePost: {
     opacity: 0.5,
-  },
-  textInputLayout: {
-    flexDirection: 'row',
-  },
-  textInputLayoutMobile: {
-    flex: 1,
-  },
-  avatarTopOffset: {
-    marginTop: 4,
-  },
-  textInputTopOffset: {
-    paddingTop: 4,
   },
   addExtLinkBtn: {
     borderWidth: 1,
