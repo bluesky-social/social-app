@@ -52,7 +52,7 @@ export function HostingProvider({
                 variant="ghost"
                 color="secondary"
                 size="tiny"
-                style={[a.px_xs, {margin: tokens.space.xs * -1}]}>
+                style={[a.px_xs, {marginHorizontal: tokens.space.xs * -1}]}>
                 <ButtonText style={[a.text_sm]}>
                   {toNiceDomain(serviceUrl)}
                 </ButtonText>
