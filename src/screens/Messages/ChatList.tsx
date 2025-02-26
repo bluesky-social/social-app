@@ -123,6 +123,22 @@ export function MessagesScreen({navigation, route}: Props) {
 
   const leftConvos = useLeftConvos()
 
+  const inboxPreviewConvos = useMemo(() => {
+    const inbox =
+      inboxData?.pages
+        .flatMap(page => page.convos)
+        .filter(
+          convo =>
+            !leftConvos.includes(convo.id) &&
+            !convo.muted &&
+            convo.unreadCount > 0,
+        ) ?? []
+
+    return inbox
+      .map(x => x.members.find(y => y.did !== currentAccount?.did))
+      .filter(x => !!x)
+  }, [inboxData, leftConvos, currentAccount?.did])
+
   const conversations = useMemo(() => {
     if (data?.pages) {
       const conversations = data.pages
@@ -130,24 +146,11 @@ export function MessagesScreen({navigation, route}: Props) {
         // filter out convos that are actively being left
         .filter(convo => !leftConvos.includes(convo.id))
 
-      const inbox =
-        inboxData?.pages
-          .flatMap(page => page.convos)
-          .filter(
-            convo =>
-              !leftConvos.includes(convo.id) &&
-              !convo.muted &&
-              convo.unreadCount > 0,
-          ) ?? []
-      const pending = inbox
-        .map(x => x.members.find(y => y.did !== currentAccount?.did))
-        .filter(x => !!x)
-
       return [
         {
           type: 'INBOX',
-          count: pending.length,
-          profiles: pending.slice(0, 3),
+          count: inboxPreviewConvos.length,
+          profiles: inboxPreviewConvos.slice(0, 3),
         },
         ...conversations.map(
           convo => ({type: 'CONVERSATION', conversation: convo} as const),
@@ -155,7 +158,7 @@ export function MessagesScreen({navigation, route}: Props) {
       ] satisfies ListItem[]
     }
     return []
-  }, [data, leftConvos, currentAccount?.did, inboxData])
+  }, [data, leftConvos, inboxPreviewConvos])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
@@ -251,6 +254,10 @@ export function MessagesScreen({navigation, route}: Props) {
                 </>
               ) : (
                 <>
+                  <InboxPreview
+                    count={inboxPreviewConvos.length}
+                    profiles={inboxPreviewConvos}
+                  />
                   <View style={[a.pt_3xl, a.align_center]}>
                     <Message width={48} fill={t.palette.primary_500} />
                     <Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_bold]}>
