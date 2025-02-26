@@ -458,24 +458,36 @@ function StepTitle({
           a.justify_center,
           a.align_center,
           a.rounded_full,
-          completed
-            ? [t.atoms.bg_contrast_500]
-            : [active ? t.atoms.bg_contrast_900 : t.atoms.bg_contrast_300],
+          a.border,
           {
             width: 24,
             height: 24,
+            backgroundColor: active
+              ? t.palette.primary_500
+              : completed
+              ? t.palette.primary_100
+              : t.atoms.bg_contrast_25.backgroundColor,
+            borderColor: active
+              ? t.palette.primary_500
+              : completed
+              ? t.palette.primary_400
+              : t.atoms.border_contrast_low.borderColor,
           },
         ]}>
         {completed ? (
-          <Check width={12} fill="white" />
+          <Check width={12} />
         ) : (
           <Text
             style={[
               a.font_heavy,
               a.text_center,
-              t.atoms.text_inverted,
+              t.atoms.text,
               {
-                opacity: active ? 1 : 0.6,
+                color: active
+                  ? 'white'
+                  : completed
+                  ? t.palette.primary_700
+                  : t.atoms.text_contrast_medium.color,
                 fontVariant: ['tabular-nums'],
                 width: 24,
                 height: 24,
