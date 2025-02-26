@@ -30,6 +30,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {useSharedInputStyles} from '#/components/forms/TextField'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
 import {useExtractEmbedFromFacets} from './MessageInputEmbed'
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
@@ -61,27 +62,25 @@ export function MessageInput({
   const [isFocused, setIsFocused] = useState(false)
   const [message, setMessage] = useState(getDraft)
   const inputRef = useAnimatedRef<TextInput>()
-  const messageRef = useRef(getDraft || '');
 
   const {needsEmailVerification} = useEmail()
 
   useSaveMessageDraft(message)
   useExtractEmbedFromFacets(message, setEmbed)
 
-  const onSubmit = useCallback(() => {
-    const currentMessage = messageRef.current;
+  const onSubmit = useNonReactiveCallback(() => {
     if (needsEmailVerification) {
       return
     }
-    if (!hasEmbed && currentMessage.trim() === '') {
+    if (!hasEmbed && message.trim() === '') {
       return
     }
-    if (new Graphemer().countGraphemes(currentMessage) > MAX_DM_GRAPHEME_LENGTH) {
+    if (new Graphemer().countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
       Toast.show(_(msg`Message is too long`), 'xmark')
       return
     }
     clearDraft()
-    onSendMessage(currentMessage)
+    onSendMessage(message)
     playHaptic()
     setEmbed(undefined)
     setMessage('')
@@ -92,17 +91,7 @@ export function MessageInput({
         inputRef.current?.focus()
       }, 100)
     }
-  }, [
-    needsEmailVerification,
-    hasEmbed,
-    message,
-    clearDraft,
-    onSendMessage,
-    playHaptic,
-    setEmbed,
-    inputRef,
-    _,
-  ])
+  })
 
   useFocusedInputHandler(
     {
@@ -130,7 +119,6 @@ export function MessageInput({
   }))
 
   function handleTextAreaChange(text: string) {
-    messageRef.current = text;
     setMessage(text);
   }
 
