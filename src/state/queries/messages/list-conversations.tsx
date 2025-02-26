@@ -144,7 +144,6 @@ export function ListConvosProviderInner({
                           ...convo,
                           rev: log.rev,
                           lastMessage: log.message,
-                          unreadCount: convo.unreadCount - 1,
                         }
                       : convo
                   } else {
