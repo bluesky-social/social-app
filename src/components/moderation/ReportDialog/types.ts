@@ -64,6 +64,4 @@ export type ParsedReportSubject =
 export type ReportDialogProps = {
   control: Dialog.DialogOuterProps['control']
   subject: ParsedReportSubject
-  // TODO handle convo report navigation
-  onFinishReport?: () => void
 }
