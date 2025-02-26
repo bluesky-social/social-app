@@ -56,6 +56,25 @@ export function useUpdateAllRead(
           }
         },
       )
+      // remove unread convos from the badge query
+      queryClient.setQueryData(
+        CONVO_LIST_KEY('all', 'unread'),
+        (old?: {
+          pageParams: Array<string | undefined>
+          pages: Array<ChatBskyConvoListConvos.OutputSchema>
+        }) => {
+          if (!old) return old
+          return {
+            ...old,
+            pages: old.pages.map(page => {
+              return {
+                ...page,
+                convos: page.convos.filter(convo => convo.status !== status),
+              }
+            }),
+          }
+        },
+      )
       onMutate?.()
       return {prevPages}
     },
@@ -79,6 +98,7 @@ export function useUpdateAllRead(
         },
       )
       queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY(status)})
+      queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY('all', 'unread')})
       onError?.(error)
     },
   })
