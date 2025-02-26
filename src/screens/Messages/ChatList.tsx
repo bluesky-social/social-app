@@ -205,7 +205,8 @@ export function MessagesScreen({navigation, route}: Props) {
     return listenSoftReset(onSoftReset)
   }, [onSoftReset, isScreenFocused])
 
-  if (conversations.length < 1) {
+  // Will always have 1 item - the inbox button
+  if (conversations.length < 2) {
     return (
       <Layout.Screen>
         <Header newChatControl={newChatControl} />
