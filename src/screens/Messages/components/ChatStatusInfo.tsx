@@ -32,7 +32,7 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
   }
 
   return (
-    <View style={[t.atoms.bg, a.p_lg, a.gap_lg, a.align_center]}>
+    <View style={[t.atoms.bg, a.p_lg, a.gap_md, a.align_center]}>
       {otherUser && (
         <KnownFollowers
           profile={otherUser}
