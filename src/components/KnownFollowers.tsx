@@ -92,12 +92,7 @@ function KnownFollowersInner({
   const t = useTheme()
   const {_} = useLingui()
 
-  const textStyle = [
-    a.flex_1,
-    a.text_sm,
-    a.leading_snug,
-    t.atoms.text_contrast_medium,
-  ]
+  const textStyle = [a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]
 
   const slice = cachedKnownFollowers.followers.slice(0, 3).map(f => {
     const moderation = moderateProfile(f, moderationOpts)
@@ -132,7 +127,6 @@ function KnownFollowersInner({
       onPress={onLinkPress}
       to={makeProfileLink(profile, 'known-followers')}
       style={[
-        a.flex_1,
         a.flex_row,
         minimal ? a.gap_sm : a.gap_md,
         a.align_center,
@@ -255,13 +249,7 @@ function EmptyFallback({show}: {show?: boolean}) {
   if (!show) return null
 
   return (
-    <Text
-      style={[
-        a.flex_1,
-        a.text_sm,
-        a.leading_snug,
-        t.atoms.text_contrast_medium,
-      ]}>
+    <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
       <Trans>Not followed by anyone you're following</Trans>
     </Text>
   )
