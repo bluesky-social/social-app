@@ -67,7 +67,7 @@ export function MessagesInboxScreen({}: Props) {
     <Layout.Screen testID="messagesInboxScreen">
       <Layout.Header.Outer>
         <Layout.Header.BackButton />
-        <Layout.Header.Content>
+        <Layout.Header.Content align={gtTablet ? 'left' : 'platform'}>
           <Layout.Header.TitleText>
             <Trans>Chat requests</Trans>
           </Layout.Header.TitleText>
@@ -321,16 +321,10 @@ function MarkAsReadHeaderButton() {
       color="secondary"
       variant="solid"
       onPress={() => markAllRead()}>
-      {({hovered, focused}) => (
-        <>
-          <ButtonIcon icon={CheckIcon} />
-          {(hovered || focused) && (
-            <ButtonText>
-              <Trans>Mark all as read</Trans>
-            </ButtonText>
-          )}
-        </>
-      )}
+      <ButtonIcon icon={CheckIcon} />
+      <ButtonText>
+        <Trans>Mark all as read</Trans>
+      </ButtonText>
     </Button>
   )
 }
