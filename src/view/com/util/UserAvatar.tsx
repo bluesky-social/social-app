@@ -66,6 +66,7 @@ interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
   profile: bsky.profile.AnyProfileView
   disableHoverCard?: boolean
+  disableNavigation?: boolean
   onBeforePress?: () => void
 }
 
@@ -439,6 +440,7 @@ let PreviewableUserAvatar = ({
   moderation,
   profile,
   disableHoverCard,
+  disableNavigation,
   onBeforePress,
   ...rest
 }: PreviewableUserAvatarProps): React.ReactNode => {
@@ -450,23 +452,31 @@ let PreviewableUserAvatar = ({
     precacheProfile(queryClient, profile)
   }, [profile, queryClient, onBeforePress])
 
+  const avatarEl = (
+    <UserAvatar
+      avatar={profile.avatar}
+      moderation={moderation}
+      type={profile.associated?.labeler ? 'labeler' : 'user'}
+      {...rest}
+    />
+  )
+
   return (
     <ProfileHoverCard did={profile.did} disable={disableHoverCard}>
-      <Link
-        label={_(msg`${profile.displayName || profile.handle}'s avatar`)}
-        accessibilityHint={_(msg`Opens this profile`)}
-        to={makeProfileLink({
-          did: profile.did,
-          handle: profile.handle,
-        })}
-        onPress={onPress}>
-        <UserAvatar
-          avatar={profile.avatar}
-          moderation={moderation}
-          type={profile.associated?.labeler ? 'labeler' : 'user'}
-          {...rest}
-        />
-      </Link>
+      {disableNavigation ? (
+        avatarEl
+      ) : (
+        <Link
+          label={_(msg`${profile.displayName || profile.handle}'s avatar`)}
+          accessibilityHint={_(msg`Opens this profile`)}
+          to={makeProfileLink({
+            did: profile.did,
+            handle: profile.handle,
+          })}
+          onPress={onPress}>
+          {avatarEl}
+        </Link>
+      )}
     </ProfileHoverCard>
   )
 }
