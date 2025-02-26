@@ -105,7 +105,6 @@ function Inner(props: ReportDialogProps) {
     if (!allLabelers) return []
     return allLabelers
       .filter(l => {
-        // @ts-expect-error TODO
         const subjectTypes: string[] | undefined = l.subjectTypes
         if (subjectTypes === undefined) return true
         if (props.subject.type === 'account') {
@@ -117,7 +116,6 @@ function Inner(props: ReportDialogProps) {
         }
       })
       .filter(l => {
-        // @ts-expect-error TODO
         const collections: string[] | undefined = l.subjectCollections
         if (collections === undefined) return true
         // all chat collections accepted, since only Bluesky handles chats
@@ -126,7 +124,6 @@ function Inner(props: ReportDialogProps) {
       })
       .filter(l => {
         if (!state.selectedOption) return true
-        // @ts-expect-error TODO
         const reasonTypes: string[] | undefined = l.reasonTypes
         if (reasonTypes === undefined) return true
         return reasonTypes.includes(state.selectedOption.reason)
