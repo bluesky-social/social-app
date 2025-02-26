@@ -14,10 +14,11 @@ import {useMyLabelersQuery} from '#/state/queries/preferences'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useGutters, useTheme} from '#/alf'
-import {Admonition} from '#/components/Admonition'
+import * as Admonition from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDelayedLoading} from '#/components/hooks/useDelayedLoading'
+import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Retry} from '#/components/icons/ArrowRotateCounterClockwise'
 import {
   Check_Stroke2_Corner0_Rounded as CheckThin,
   CheckThick_Stroke2_Corner0_Rounded as Check,
@@ -82,9 +83,10 @@ function Inner(props: ReportDialogProps) {
   const {_} = useLingui()
   const ref = React.useRef<ScrollView>(null)
   const {
-    isLoading: isLabelerLoading,
     data: allLabelers,
+    isLoading: isLabelerLoading,
     error: labelersLoadError,
+    refetch: refetchLabelers,
   } = useMyLabelersQuery({excludeNonConfigurableLabelers: true})
   const isLoading = useDelayedLoading(500, isLabelerLoading)
   const copy = useCopyForSubject(props.subject)
@@ -186,9 +188,20 @@ function Inner(props: ReportDialogProps) {
               <Pressable accessible={false} />
             </View>
           ) : labelersLoadError || !allLabelers ? (
-            <Admonition type="error">
-              <Trans>Something went wrong, please try again.</Trans>
-            </Admonition>
+            <Admonition.Outer type="error">
+              <Admonition.Row>
+                <Admonition.Icon />
+                <Admonition.Text>
+                  <Trans>Something went wrong, please try again</Trans>
+                </Admonition.Text>
+                <Admonition.Button
+                  label={_(msg`Retry loading report options`)}
+                  onPress={() => refetchLabelers()}>
+                  <ButtonText>Retry</ButtonText>
+                  <ButtonIcon icon={Retry} />
+                </Admonition.Button>
+              </Admonition.Row>
+            </Admonition.Outer>
           ) : (
             <>
               {state.selectedOption ? (
@@ -321,12 +334,12 @@ function Inner(props: ReportDialogProps) {
                     </View>
                   ) : (
                     // should never happen in our app
-                    <Admonition type="warning">
+                    <Admonition.Admonition type="warning">
                       <Trans>
                         Unfortunately, none of your subscribed labelers supports
                         this report type.
                       </Trans>
-                    </Admonition>
+                    </Admonition.Admonition>
                   )}
                 </>
               )}
@@ -407,7 +420,9 @@ function Inner(props: ReportDialogProps) {
               </Button>
 
               {state.error && (
-                <Admonition type="error">{state.error}</Admonition>
+                <Admonition.Admonition type="error">
+                  {state.error}
+                </Admonition.Admonition>
               )}
             </>
           )}
