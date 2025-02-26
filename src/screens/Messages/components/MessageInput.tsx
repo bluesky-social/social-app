@@ -185,7 +185,7 @@ export function MessageInput({
             // - This creates a race condition where the message may be submitted **before** the auto-corrected text is applied.
             //
             // **Fix:**
-            // - By using `InteractionManager.runAfterInteractions()` + a ref for the input value, we ensure the function runs **only after** iOS has finished processing touches.
+            // - By using `InteractionManager.runAfterInteractions()` + useNonReactiveCallback, we ensure the function runs **only after** iOS has finished processing touches.
             // - This guarantees that the latest auto-corrected text is captured before submitting the message.
             InteractionManager.runAfterInteractions(() => {
               onSubmit();
