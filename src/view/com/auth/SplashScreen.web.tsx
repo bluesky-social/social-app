@@ -175,7 +175,9 @@ function Footer() {
       <InlineLinkText
         label={_(msg`See jobs at Bluesky`)}
         to="https://bsky.social/about/join">
-        <Trans>Jobs</Trans>
+        <Trans comment="Link to a page with job openings at Bluesky">
+          Jobs
+        </Trans>
       </InlineLinkText>
 
       <View style={a.flex_1} />
