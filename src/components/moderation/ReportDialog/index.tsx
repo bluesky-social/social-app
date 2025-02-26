@@ -428,6 +428,8 @@ function Inner(props: ReportDialogProps) {
           )}
         </StepOuter>
       </View>
+
+      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
@@ -464,7 +466,7 @@ function StepTitle({
   const active = activeIndex1 === index
   const completed = activeIndex1 > index
   return (
-    <View style={[a.flex_row, a.gap_sm]}>
+    <View style={[a.flex_row, a.gap_sm, a.pr_3xl]}>
       <View
         style={[
           a.justify_center,
