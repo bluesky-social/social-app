@@ -32,6 +32,7 @@ module.exports = {
           'H6',
           'P',
           'Admonition',
+          'Admonition.Admonition',
         ],
         impliedTextProps: [],
         suggestedTextWrappers: {
