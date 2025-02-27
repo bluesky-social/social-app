@@ -29,6 +29,14 @@ describe('general functionality', () => {
     expect(logger.level).toEqual(LogLevel.Debug)
   })
 
+  test('contextFilter overrides level', () => {
+    const logger = new Logger({
+      level: LogLevel.Info,
+      contextFilter: 'test',
+    })
+    expect(logger.level).toEqual(LogLevel.Debug)
+  })
+
   test('supports extra metadata', () => {
     const timestamp = Date.now()
     const logger = new Logger({})

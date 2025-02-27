@@ -37,7 +37,7 @@ export class Logger {
 
   static create(context?: LogContext) {
     const logger = new Logger({
-      level: (process.env.EXPO_PUBLIC_LOG_LEVEL || LogLevel.Info) as LogLevel,
+      level: process.env.EXPO_PUBLIC_LOG_LEVEL as LogLevel,
       context,
       contextFilter: process.env.EXPO_PUBLIC_LOG_DEBUG || '',
     })
@@ -57,14 +57,15 @@ export class Logger {
     contextFilter?: string
   } = {}) {
     this.context = context
-    this.level =
-      level || (process.env.EXPO_PUBLIC_LOG_LEVEL as LogLevel) || LogLevel.Info // default to info
-    this.contextFilter =
-      contextFilter || process.env.EXPO_PUBLIC_LOG_DEBUG || ''
+    this.level = level || LogLevel.Info
+    this.contextFilter = contextFilter || ''
+    if (this.contextFilter) {
+      this.level = LogLevel.Debug
+    }
     this.debugContextRegexes = (this.contextFilter || '')
       .split(',')
       .map(filter => {
-        return new RegExp(filter.replace(/[^\w:*]/, '').replace(/\*/g, '.*'))
+        return new RegExp(filter.replace(/[^\w:*-]/, '').replace(/\*/g, '.*'))
       })
   }
 
@@ -105,6 +106,7 @@ export class Logger {
     metadata: Metadata
   }) {
     if (
+      level === LogLevel.Debug &&
       !!this.contextFilter &&
       !!this.context &&
       !this.debugContextRegexes.find(reg => reg.test(this.context!))
