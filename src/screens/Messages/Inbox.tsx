@@ -202,7 +202,9 @@ function RequestList({
                 <View style={[a.pt_3xl, a.align_center]}>
                   <MessageIcon width={48} fill={t.palette.primary_500} />
                   <Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_bold]}>
-                    <Trans>Inbox zero!</Trans>
+                    <Trans comment="Title message shown in chat requests inbox when it's empty">
+                      Inbox zero!
+                    </Trans>
                   </Text>
                   <Text
                     style={[
