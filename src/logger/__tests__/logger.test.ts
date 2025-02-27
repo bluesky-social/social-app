@@ -120,7 +120,7 @@ describe('general functionality', () => {
     expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
       category: Logger.Context.Default,
       message,
-      data: {},
+      data: {context: 'logger'},
       type: 'default',
       level: LogLevel.Debug,
       timestamp: sentryTimestamp,
@@ -136,7 +136,7 @@ describe('general functionality', () => {
     expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
       category: Logger.Context.Default,
       message,
-      data: {prop: true},
+      data: {prop: true, context: 'logger'},
       type: 'info',
       level: LogLevel.Info,
       timestamp: sentryTimestamp,
@@ -152,20 +152,17 @@ describe('general functionality', () => {
     expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
       category: Logger.Context.Default,
       message,
-      data: {},
+      data: {context: 'logger'},
       type: 'default',
       level: 'debug', // Sentry bug, log becomes debug
       timestamp: sentryTimestamp,
     })
     jest.runAllTimers()
-    expect(Sentry.captureMessage).toHaveBeenCalledWith(
-      `(${Logger.Context.Default}) ${message}`,
-      {
-        level: 'log',
-        tags: undefined,
-        extra: {},
-      },
-    )
+    expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
+      level: 'log',
+      tags: {category: 'logger'},
+      extra: {context: 'logger'},
+    })
 
     sentryTransport(
       LogLevel.Warn,
@@ -177,20 +174,17 @@ describe('general functionality', () => {
     expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
       category: Logger.Context.Default,
       message,
-      data: {},
+      data: {context: 'logger'},
       type: 'default',
       level: 'warning',
       timestamp: sentryTimestamp,
     })
     jest.runAllTimers()
-    expect(Sentry.captureMessage).toHaveBeenCalledWith(
-      `(${Logger.Context.Default}) ${message}`,
-      {
-        level: 'warning',
-        tags: undefined,
-        extra: {},
-      },
-    )
+    expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
+      level: 'warning',
+      tags: {category: 'logger'},
+      extra: {context: 'logger'},
+    })
 
     const e = new Error('error')
     const tags = {
@@ -209,9 +203,13 @@ describe('general functionality', () => {
     )
 
     expect(Sentry.captureException).toHaveBeenCalledWith(e, {
-      tags,
+      tags: {
+        ...tags,
+        category: 'logger',
+      },
       extra: {
         prop: true,
+        context: 'logger',
       },
     })
   })
