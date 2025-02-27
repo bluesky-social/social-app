@@ -154,7 +154,7 @@ function NoConvos() {
           a.text_center,
           a.font_bold,
         ]}>
-        Start a conversation, and it will appear here.
+        <Trans>Start a conversation, and it will appear here.</Trans>
       </Text>
     </View>
   )
