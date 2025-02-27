@@ -33,6 +33,11 @@ export type Transport = (
  */
 export type Metadata = {
   /**
+   * Reserved for appending `LogContext` to logging payloads
+   */
+  context?: undefined
+
+  /**
    * Applied as Sentry breadcrumb types. Defaults to `default`.
    *
    * @see https://develop.sentry.dev/sdk/event-payloads/breadcrumbs/#breadcrumb-types

@@ -102,7 +102,7 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
       Toast.show(_(msg`Settings saved`))
     } catch (e: any) {
       logger.error(`Failed to save post interaction settings`, {
-        context: 'ModerationInteractionSettingsScreen',
+        source: 'ModerationInteractionSettingsScreen',
         safeMessage: e.message,
       })
       setError(_(msg`Failed to save settings. Please try again.`))

@@ -255,7 +255,7 @@ export class MessagesEventBus {
       this.dispatch({event: MessagesEventBusDispatchEvent.Ready})
     } catch (e: any) {
       logger.error(e, {
-        context: `${LOGGER_CONTEXT}: init failed`,
+        message: `${LOGGER_CONTEXT}: init failed`,
       })
 
       this.dispatch({
@@ -368,12 +368,12 @@ export class MessagesEventBus {
           this.emitter.emit('event', {type: 'logs', logs: batch})
         } catch (e: any) {
           logger.error(e, {
-            context: `${LOGGER_CONTEXT}: process latest events`,
+            message: `${LOGGER_CONTEXT}: process latest events`,
           })
         }
       }
     } catch (e: any) {
-      logger.error(e, {context: `${LOGGER_CONTEXT}: poll events failed`})
+      logger.error(e, {message: `${LOGGER_CONTEXT}: poll events failed`})
 
       this.dispatch({
         event: MessagesEventBusDispatchEvent.Error,

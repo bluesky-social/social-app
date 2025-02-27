@@ -22,5 +22,9 @@ export const bitdriftTransport: Transport = (
   metadata,
 ) => {
   const log = logFunctions[level]
-  log(`(${context}) ${message}`, prepareMetadata(metadata))
+  log(message.toString(), {
+    // match Sentry payload
+    context,
+    ...prepareMetadata(metadata),
+  })
 }

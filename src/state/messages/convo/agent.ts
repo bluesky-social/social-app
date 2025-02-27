@@ -469,7 +469,7 @@ export class Convo {
         this.dispatch({event: ConvoDispatchEvent.Ready})
       }
     } catch (e: any) {
-      logger.error(e, {context: 'Convo: setup failed'})
+      logger.error(e, {message: 'Convo: setup failed'})
 
       this.dispatch({
         event: ConvoDispatchEvent.Error,
@@ -574,7 +574,7 @@ export class Convo {
       this.sender = sender || this.sender
       this.recipients = recipients || this.recipients
     } catch (e: any) {
-      logger.error(e, {context: `Convo: failed to refresh convo`})
+      logger.error(e, {message: `Convo: failed to refresh convo`})
     }
   }
 
@@ -834,7 +834,7 @@ export class Convo {
       // continue queue processing
       await this.processPendingMessages()
     } catch (e: any) {
-      logger.error(e, {context: `Convo: failed to send message`})
+      logger.error(e, {message: `Convo: failed to send message`})
       this.handleSendMessageFailure(e)
       this.isProcessingPendingMessages = false
     }
@@ -880,7 +880,7 @@ export class Convo {
     } else {
       this.pendingMessageFailure = 'unrecoverable'
       logger.error(e, {
-        context: `Convo handleSendMessageFailure received unknown error`,
+        message: `Convo handleSendMessageFailure received unknown error`,
       })
     }
 
@@ -935,7 +935,7 @@ export class Convo {
         {},
       )
     } catch (e: any) {
-      logger.error(e, {context: `Convo: failed to batch retry messages`})
+      logger.error(e, {message: `Convo: failed to batch retry messages`})
       this.handleSendMessageFailure(e)
     }
   }
@@ -957,7 +957,7 @@ export class Convo {
         )
       })
     } catch (e: any) {
-      logger.error(e, {context: `Convo: failed to delete message`})
+      logger.error(e, {message: `Convo: failed to delete message`})
       this.deletedMessages.delete(messageId)
       this.commit()
       throw e

@@ -10,7 +10,17 @@ export const sentryTransport: Transport = (
   {type, tags, ...metadata},
   timestamp,
 ) => {
-  const meta = prepareMetadata(metadata)
+  const meta = {
+    // match Bitdrift payload
+    context,
+    ...prepareMetadata(metadata),
+  }
+  let _tags = tags || {}
+  _tags = {
+    // use `category` to match breadcrumbs
+    category: context,
+    ...tags,
+  }
 
   /**
    * If a string, report a breadcrumb
@@ -46,9 +56,9 @@ export const sentryTransport: Transport = (
      */
     if (level === 'error' || level === 'warn' || level === 'log') {
       // Defer non-critical messages so they're sent in a batch
-      queueMessageForSentry(`(${context}) message`, {
+      queueMessageForSentry(message, {
         level: severity,
-        tags,
+        tags: _tags,
         extra: meta,
       })
     }
@@ -57,7 +67,7 @@ export const sentryTransport: Transport = (
      * It's otherwise an Error and should be reported with captureException
      */
     Sentry.captureException(message, {
-      tags,
+      tags: _tags,
       extra: meta,
     })
   }
