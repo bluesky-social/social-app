@@ -15,12 +15,12 @@ import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {useDialogControl} from '#/components/Dialog'
 import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
+import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
-import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
+import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBoxIcon} from '../icons/ArrowOutOfBox'
-import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '../icons/ChainLink'
 import {ShareMenuItemsProps} from './ShareMenuItems.types'
 
 let ShareMenuItems = ({
@@ -128,7 +128,7 @@ let ShareMenuItems = ({
               <Menu.ItemText>
                 <Trans>Send via direct message</Trans>
               </Menu.ItemText>
-              <Menu.ItemIcon icon={Send} position="right" />
+              <Menu.ItemIcon icon={PaperPlaneIcon} position="right" />
             </Menu.Item>
           )}
         </Menu.Group>
@@ -139,7 +139,7 @@ let ShareMenuItems = ({
             <Menu.Group>
               <Menu.Item
                 testID="postAtUriShareBtn"
-                label={_(msg`Copy post at:// URI`)}
+                label={_(msg`Share post at:// URI`)}
                 onPress={onShareATURI}>
                 <Menu.ItemText>
                   <Trans>Share post at:// URI</Trans>
@@ -148,7 +148,7 @@ let ShareMenuItems = ({
               </Menu.Item>
               <Menu.Item
                 testID="postAuthorDIDShareBtn"
-                label={_(msg`Copy author DID`)}
+                label={_(msg`Share author DID`)}
                 onPress={onShareAuthorDID}>
                 <Menu.ItemText>
                   <Trans>Share author DID</Trans>

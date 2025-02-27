@@ -18,7 +18,7 @@ import {EmbedDialog} from '#/components/dialogs/Embed'
 import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
-import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBrackets} from '#/components/icons/CodeBrackets'
+import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBracketsIcon} from '#/components/icons/CodeBrackets'
 import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
@@ -121,7 +121,7 @@ let ShareMenuItems = ({
               label={_(msg`Embed post`)}
               onPress={() => embedPostControl.open()}>
               <Menu.ItemText>{_(msg`Embed post`)}</Menu.ItemText>
-              <Menu.ItemIcon icon={CodeBrackets} position="right" />
+              <Menu.ItemIcon icon={CodeBracketsIcon} position="right" />
             </Menu.Item>
           )}
         </Menu.Group>

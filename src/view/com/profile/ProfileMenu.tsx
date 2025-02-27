@@ -11,6 +11,7 @@ import {NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
 import {useDevModeEnabled} from '#/state/preferences/dev-mode'
@@ -24,7 +25,9 @@ import {useSession} from '#/state/session'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import * as Toast from '#/view/com/util/Toast'
 import {Button, ButtonIcon} from '#/components/Button'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
+import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
+import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
@@ -210,7 +213,9 @@ let ProfileMenu = ({
           <Menu.Group>
             <Menu.Item
               testID="profileHeaderDropdownShareBtn"
-              label={_(msg`Share`)}
+              label={
+                isWeb ? _(msg`Copy link to profile`) : _(msg`Share via...`)
+              }
               onPress={() => {
                 if (showLoggedOutWarning) {
                   loggedOutWarningPromptControl.open()
@@ -219,9 +224,13 @@ let ProfileMenu = ({
                 }
               }}>
               <Menu.ItemText>
-                <Trans>Share</Trans>
+                {isWeb ? (
+                  <Trans>Copy link to profile</Trans>
+                ) : (
+                  <Trans>Share via...</Trans>
+                )}
               </Menu.ItemText>
-              <Menu.ItemIcon icon={Share} />
+              <Menu.ItemIcon icon={isWeb ? ChainLinkIcon : ArrowOutOfBoxIcon} />
             </Menu.Item>
             <Menu.Item
               testID="profileHeaderDropdownSearchBtn"
@@ -346,7 +355,7 @@ let ProfileMenu = ({
                   <Menu.ItemText>
                     <Trans>Copy at:// URI</Trans>
                   </Menu.ItemText>
-                  <Menu.ItemIcon icon={Share} />
+                  <Menu.ItemIcon icon={ClipboardIcon} />
                 </Menu.Item>
                 <Menu.Item
                   testID="profileHeaderDropdownShareDIDBtn"
@@ -355,7 +364,7 @@ let ProfileMenu = ({
                   <Menu.ItemText>
                     <Trans>Copy DID</Trans>
                   </Menu.ItemText>
-                  <Menu.ItemIcon icon={Share} />
+                  <Menu.ItemIcon icon={ClipboardIcon} />
                 </Menu.Item>
               </Menu.Group>
             </>
