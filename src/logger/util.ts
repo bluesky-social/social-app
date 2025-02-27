@@ -1,4 +1,4 @@
-import {LogLevel, Metadata} from '#/logger/types'
+import {LogLevel, Metadata, Serializable} from '#/logger/types'
 
 export const enabledLogLevels: {
   [key in LogLevel]: LogLevel[]
@@ -16,7 +16,9 @@ export const enabledLogLevels: {
   [LogLevel.Error]: [LogLevel.Error],
 }
 
-export function prepareMetadata(metadata: Metadata): Metadata {
+export function prepareMetadata(
+  metadata: Metadata,
+): Record<string, Serializable> {
   return Object.keys(metadata).reduce((acc, key) => {
     let value = metadata[key]
     if (value instanceof Error) {

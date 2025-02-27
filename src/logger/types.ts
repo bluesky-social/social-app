@@ -1,5 +1,3 @@
-import type {Sentry} from '#/logger/sentry/lib'
-
 /**
  * DO NOT IMPORT THIS DIRECTLY
  *
@@ -64,8 +62,8 @@ export type Metadata = {
    * Any additional data, passed through to Sentry as `extra` param on
    * exceptions, or the `data` param on breadcrumbs.
    */
-  [key: string]: Serializable
-} & Parameters<typeof Sentry.captureException>[1]
+  [key: string]: Serializable | Error | unknown
+}
 
 export type Serializable =
   | string

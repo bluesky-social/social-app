@@ -5,6 +5,7 @@ import {
   warn as bdWarn,
 } from '#/lib/bitdrift'
 import {LogLevel, Transport} from '#/logger/types'
+import {prepareMetadata} from '#/logger/util'
 
 const logFunctions = {
   [LogLevel.Debug]: bdDebug,
@@ -21,5 +22,5 @@ export const bitdriftTransport: Transport = (
   metadata,
 ) => {
   const log = logFunctions[level]
-  log(`(${context}) ${message}`, metadata)
+  log(`(${context}) ${message}`, prepareMetadata(metadata))
 }
