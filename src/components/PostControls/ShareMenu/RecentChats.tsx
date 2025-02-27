@@ -1,6 +1,6 @@
 import {ScrollView, View} from 'react-native'
 import {moderateProfile, type ModerationOpts} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
@@ -46,8 +46,7 @@ export function RecentChats({postUri}: {postUri: string}) {
         horizontal
         style={[a.flex_1, a.pt_2xs, {minHeight: 98}]}
         contentContainerStyle={[a.gap_sm, a.px_md]}
-        showsHorizontalScrollIndicator={false}
-        onLayout={evt => console.log(evt.nativeEvent.layout)}>
+        showsHorizontalScrollIndicator={false}>
         {convos && convos.length > 0 ? (
           convos.map(convo => {
             const otherMember = convo.members.find(
