@@ -1,5 +1,11 @@
-import {useCallback, useState} from 'react'
-import {Pressable, TextInput, useWindowDimensions, View, useRef} from 'react-native'
+import {useState} from 'react'
+import {
+  InteractionManager,
+  Pressable,
+  TextInput,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import {
   useFocusedInputHandler,
   useReanimatedKeyboardAnimation,
@@ -19,6 +25,7 @@ import Graphemer from 'graphemer'
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useEmail} from '#/lib/hooks/useEmail'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {isIOS, isWeb} from '#/platform/detection'
 import {
   useMessageDraft,
@@ -30,7 +37,6 @@ import {atoms as a, useTheme} from '#/alf'
 import {useSharedInputStyles} from '#/components/forms/TextField'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
 import {useExtractEmbedFromFacets} from './MessageInputEmbed'
-import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
@@ -119,7 +125,7 @@ export function MessageInput({
   }))
 
   function handleTextAreaChange(text: string) {
-    setMessage(text);
+    setMessage(text)
   }
 
   return (
@@ -188,8 +194,8 @@ export function MessageInput({
             // - By using `InteractionManager.runAfterInteractions()` + useNonReactiveCallback, we ensure the function runs **only after** iOS has finished processing touches.
             // - This guarantees that the latest auto-corrected text is captured before submitting the message.
             InteractionManager.runAfterInteractions(() => {
-              onSubmit();
-            });
+              onSubmit()
+            })
           }}
           disabled={needsEmailVerification}>
           <PaperPlane fill={t.palette.white} style={[a.relative, {left: 1}]} />
