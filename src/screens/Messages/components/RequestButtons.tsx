@@ -192,7 +192,9 @@ export function AcceptChatButton({
       {isPending ? (
         <ButtonIcon icon={Loader} />
       ) : (
-        <ButtonText>{label || <Trans>Accept</Trans>}</ButtonText>
+        <ButtonText>
+          {label || <Trans comment="Accept a chat request">Accept</Trans>}
+        </ButtonText>
       )}
     </Button>
   )
