@@ -1,3 +1,4 @@
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -9,7 +10,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {KnownFollowers} from '#/components/KnownFollowers'
 import {usePromptControl} from '#/components/Prompt'
-import {DeleteChatButton, RejectMenu} from './RequestButtons'
+import {AcceptChatButton, DeleteChatButton, RejectMenu} from './RequestButtons'
 
 export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
   const t = useTheme()
@@ -17,6 +18,10 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
   const moderationOpts = useModerationOpts()
   const {currentAccount} = useSession()
   const leaveConvoControl = usePromptControl()
+
+  const onAcceptChat = useCallback(() => {
+    convoState.markConvoAccepted()
+  }, [convoState])
 
   const otherUser = convoState.recipients.find(
     user => user.did !== currentAccount?.did,
@@ -27,8 +32,7 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
   }
 
   return (
-    <View
-      style={[t.atoms.bg, a.px_lg, a.pt_lg, a.pb_sm, a.gap_lg, a.align_center]}>
+    <View style={[t.atoms.bg, a.p_lg, a.gap_md, a.align_center]}>
       {otherUser && (
         <KnownFollowers
           profile={otherUser}
@@ -36,7 +40,7 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
           showIfEmpty
         />
       )}
-      <View style={[a.flex_row, a.gap_sm, a.w_full]}>
+      <View style={[a.flex_row, a.gap_md, a.w_full, otherUser && a.pt_sm]}>
         {otherUser && (
           <RejectMenu
             label={_(msg`Block or report`)}
@@ -60,6 +64,16 @@ export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
           control={leaveConvoControl}
           currentScreen="conversation"
           hasMessages={false}
+        />
+      </View>
+      <View style={[a.w_full, a.flex_row]}>
+        <AcceptChatButton
+          onAcceptConvo={onAcceptChat}
+          convo={convoState.convo}
+          color="primary"
+          variant="outline"
+          size="small"
+          currentScreen="conversation"
         />
       </View>
     </View>

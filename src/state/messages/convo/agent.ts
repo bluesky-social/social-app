@@ -103,6 +103,7 @@ export class Convo {
     this.ingestFirehose = this.ingestFirehose.bind(this)
     this.onFirehoseConnect = this.onFirehoseConnect.bind(this)
     this.onFirehoseError = this.onFirehoseError.bind(this)
+    this.markConvoAccepted = this.markConvoAccepted.bind(this)
   }
 
   private commit() {
@@ -143,6 +144,7 @@ export class Convo {
           deleteMessage: undefined,
           sendMessage: undefined,
           fetchMessageHistory: undefined,
+          markConvoAccepted: undefined,
         }
       }
       case ConvoStatus.Disabled:
@@ -160,6 +162,7 @@ export class Convo {
           deleteMessage: this.deleteMessage,
           sendMessage: this.sendMessage,
           fetchMessageHistory: this.fetchMessageHistory,
+          markConvoAccepted: this.markConvoAccepted,
         }
       }
       case ConvoStatus.Error: {
@@ -174,6 +177,7 @@ export class Convo {
           deleteMessage: undefined,
           sendMessage: undefined,
           fetchMessageHistory: undefined,
+          markConvoAccepted: undefined,
         }
       }
       default: {
@@ -188,6 +192,7 @@ export class Convo {
           deleteMessage: undefined,
           sendMessage: undefined,
           fetchMessageHistory: undefined,
+          markConvoAccepted: undefined,
         }
       }
     }
@@ -793,6 +798,16 @@ export class Convo {
     if (!this.isProcessingPendingMessages && !this.pendingMessageFailure) {
       this.processPendingMessages()
     }
+  }
+
+  markConvoAccepted() {
+    if (this.convo) {
+      this.convo = {
+        ...this.convo,
+        status: 'accepted',
+      }
+    }
+    this.commit()
   }
 
   async processPendingMessages() {
