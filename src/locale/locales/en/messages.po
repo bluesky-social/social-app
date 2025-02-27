@@ -133,7 +133,7 @@ msgstr ""
 msgid "{0} people have used this starter pack!"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:456
+#: src/view/com/util/UserAvatar.tsx:470
 msgid "{0}'s avatar"
 msgstr ""
 
@@ -1316,7 +1316,7 @@ msgid "Changes app icon"
 msgstr ""
 
 #: src/components/forms/HostingProvider.tsx:50
-#: src/components/forms/HostingProvider.tsx:66
+#: src/components/forms/HostingProvider.tsx:68
 msgid "Changes hosting provider"
 msgstr ""
 
@@ -2334,7 +2334,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:368
+#: src/view/com/util/UserAvatar.tsx:369
 #: src/view/com/util/UserBanner.tsx:95
 msgid "Edit avatar"
 msgstr ""
@@ -3621,6 +3621,7 @@ msgstr ""
 msgid "Job ID: {0}"
 msgstr ""
 
+#. Link to a page with job openings at Bluesky
 #: src/view/com/auth/SplashScreen.web.tsx:178
 msgid "Jobs"
 msgstr ""
@@ -3798,9 +3799,6 @@ msgid "Like 10 posts to train the Discover feed"
 msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:501
-msgid "Like feed"
-msgstr ""
-
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:275
 msgid "Like this feed"
 msgstr ""
@@ -4816,7 +4814,7 @@ msgid "Opens the linked website"
 msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:683
-#: src/view/com/util/UserAvatar.tsx:457
+#: src/view/com/util/UserAvatar.tsx:471
 msgid "Opens this profile"
 msgstr ""
 
@@ -5450,7 +5448,7 @@ msgstr ""
 msgid "Remove attachment"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:424
+#: src/view/com/util/UserAvatar.tsx:425
 msgid "Remove Avatar"
 msgstr ""
 
@@ -7632,20 +7630,20 @@ msgstr ""
 msgid "Upload a text file to:"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:392
-#: src/view/com/util/UserAvatar.tsx:395
+#: src/view/com/util/UserAvatar.tsx:393
+#: src/view/com/util/UserAvatar.tsx:396
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:409
+#: src/view/com/util/UserAvatar.tsx:410
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:403
-#: src/view/com/util/UserAvatar.tsx:407
+#: src/view/com/util/UserAvatar.tsx:404
+#: src/view/com/util/UserAvatar.tsx:408
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -8229,7 +8227,7 @@ msgid "You"
 msgstr ""
 
 #: src/components/forms/HostingProvider.tsx:46
-msgid "You are creating an account on"
+msgid "You are creating an account on <0><1>{0}</1><2/></0>"
 msgstr ""
 
 #: src/screens/SignupQueued.tsx:157
