@@ -278,6 +278,8 @@ export function SearchablePeopleList({
           a.border_b,
           t.atoms.border_contrast_low,
           t.atoms.bg,
+          {borderTopLeftRadius: a.rounded_md.borderRadius},
+          {borderTopRightRadius: a.rounded_md.borderRadius},
         ]}>
         <View style={[a.relative, native(a.align_center), a.justify_center]}>
           <Text
