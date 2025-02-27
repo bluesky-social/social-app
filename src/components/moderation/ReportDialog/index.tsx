@@ -197,7 +197,9 @@ function Inner(props: ReportDialogProps) {
                 <Admonition.Button
                   label={_(msg`Retry loading report options`)}
                   onPress={() => refetchLabelers()}>
-                  <ButtonText>Retry</ButtonText>
+                  <ButtonText>
+                    <Trans>Retry</Trans>
+                  </ButtonText>
                   <ButtonIcon icon={Retry} />
                 </Admonition.Button>
               </Admonition.Row>
