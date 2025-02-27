@@ -1,6 +1,6 @@
 import {ScrollView, View} from 'react-native'
 import {moderateProfile} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
