@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import {memo, useMemo} from 'react'
 import {
   Platform,
   type PressableProps,
@@ -136,7 +136,7 @@ let PostMenuItems = ({
   const postUri = post.uri
   const postCid = post.cid
   const postAuthor = useProfileShadow(post.author)
-  const quoteEmbed = React.useMemo(() => {
+  const quoteEmbed = useMemo(() => {
     if (!currentAccount || !post.embed) return
     return getMaybeDetachedQuoteEmbed({
       viewerDid: currentAccount.did,
@@ -170,7 +170,7 @@ let PostMenuItems = ({
     rootPostUri: rootUri,
   })
 
-  const href = React.useMemo(() => {
+  const href = useMemo(() => {
     const urip = new AtUri(postUri)
     return makeProfileLink(postAuthor, 'post', urip.rkey)
   }, [postUri, postAuthor])

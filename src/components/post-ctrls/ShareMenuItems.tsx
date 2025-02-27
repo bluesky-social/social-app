@@ -1,4 +1,5 @@
 import {memo, useMemo} from 'react'
+import * as ExpoClipboard from 'expo-clipboard'
 import {AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -10,14 +11,16 @@ import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
+import * as Toast from '#/view/com/util/Toast'
 import {useDialogControl} from '#/components/Dialog'
 import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
+import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {useDevMode} from '#/storage/hooks/dev-mode'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBoxIcon} from '../icons/ArrowOutOfBox'
 import {type ShareMenuItemsProps} from './ShareMenuItems.types'
 
 let ShareMenuItems = ({
@@ -27,7 +30,8 @@ let ShareMenuItems = ({
   const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
-  const loggedOutWarningPromptControl = useDialogControl()
+  const pwiWarningShareControl = useDialogControl()
+  const pwiWarningCopyControl = useDialogControl()
   const sendViaChatControl = useDialogControl()
   const [devModeEnabled] = useDevMode()
 
@@ -54,6 +58,14 @@ let ShareMenuItems = ({
     onShareProp()
   }
 
+  const onCopyLink = () => {
+    const url = toShareUrl(href)
+    ExpoClipboard.setUrlAsync(url).then(() =>
+      Toast.show(_(msg`Copied to clipboard`), 'clipboard-check'),
+    )
+    onShareProp()
+  }
+
   const onSelectChatToShareTo = (conversation: string) => {
     navigation.navigate('MessagesConversation', {
       conversation,
@@ -75,18 +87,34 @@ let ShareMenuItems = ({
         <Menu.Group>
           <Menu.Item
             testID="postDropdownShareBtn"
-            label={_(msg`Copy link to post`)}
+            label={_(msg`Share via...`)}
             onPress={() => {
               if (showLoggedOutWarning) {
-                loggedOutWarningPromptControl.open()
+                pwiWarningShareControl.open()
               } else {
                 onSharePost()
               }
             }}>
             <Menu.ItemText>
-              <Trans>Share post</Trans>
+              <Trans>Share via...</Trans>
             </Menu.ItemText>
             <Menu.ItemIcon icon={ArrowOutOfBoxIcon} position="right" />
+          </Menu.Item>
+
+          <Menu.Item
+            testID="postDropdownShareBtn"
+            label={_(msg`Copy link to post`)}
+            onPress={() => {
+              if (showLoggedOutWarning) {
+                pwiWarningCopyControl.open()
+              } else {
+                onCopyLink()
+              }
+            }}>
+            <Menu.ItemText>
+              <Trans>Copy link to post</Trans>
+            </Menu.ItemText>
+            <Menu.ItemIcon icon={ChainLinkIcon} position="right" />
           </Menu.Item>
 
           {hasSession && (
@@ -130,13 +158,23 @@ let ShareMenuItems = ({
       </Menu.Outer>
 
       <Prompt.Basic
-        control={loggedOutWarningPromptControl}
+        control={pwiWarningShareControl}
         title={_(msg`Note about sharing`)}
         description={_(
           msg`This post is only visible to logged-in users. It won't be visible to people who aren't signed in.`,
         )}
         onConfirm={onSharePost}
         confirmButtonCta={_(msg`Share anyway`)}
+      />
+
+      <Prompt.Basic
+        control={pwiWarningCopyControl}
+        title={_(msg`Note about sharing`)}
+        description={_(
+          msg`This post is only visible to logged-in users. It won't be visible to people who aren't signed in.`,
+        )}
+        onConfirm={onCopyLink}
+        confirmButtonCta={_(msg`Copy anyway`)}
       />
 
       <SendViaChatDialog
