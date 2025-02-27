@@ -35,11 +35,6 @@ module.exports = function (config) {
     : undefined
   const UPDATES_ENABLED = !!UPDATES_CHANNEL
 
-  const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
-  const SENTRY_DIST = `${PLATFORM}.${VERSION}.${IS_TESTFLIGHT ? 'tf' : ''}${
-    IS_DEV ? 'dev' : ''
-  }`
-
   return {
     expo: {
       version: VERSION,
@@ -197,15 +192,6 @@ module.exports = function (config) {
       plugins: [
         'expo-video',
         'expo-localization',
-        USE_SENTRY && [
-          '@sentry/react-native/expo',
-          {
-            organization: 'blueskyweb',
-            project: 'react-native',
-            release: VERSION,
-            dist: SENTRY_DIST,
-          },
-        ],
         [
           'expo-build-properties',
           {
@@ -402,22 +388,6 @@ module.exports = function (config) {
           },
           projectId: '55bd077a-d905-4184-9c7f-94789ba0f302',
         },
-      },
-      hooks: {
-        postPublish: [
-          /*
-           * @see https://docs.expo.dev/guides/using-sentry/#app-configuration
-           */
-          {
-            file: './postHooks/uploadSentrySourcemapsPostHook',
-            config: {
-              organization: 'blueskyweb',
-              project: 'react-native',
-              release: VERSION,
-              dist: SENTRY_DIST,
-            },
-          },
-        ],
       },
     },
   }
