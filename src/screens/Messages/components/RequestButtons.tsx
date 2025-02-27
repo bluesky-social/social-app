@@ -85,7 +85,13 @@ export function RejectMenu({
               color={color}
               variant={variant}
               size={size}>
-              <ButtonText>{label || <Trans>Reject</Trans>}</ButtonText>
+              <ButtonText>
+                {label || (
+                  <Trans comment="Reject a chat request, this opens a menu with options">
+                    Reject
+                  </Trans>
+                )}
+              </ButtonText>
             </Button>
           )}
         </Menu.Trigger>
