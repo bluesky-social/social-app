@@ -14,7 +14,12 @@ const logFunctions = {
   [LogLevel.Error]: bdError,
 } as const
 
-export const bitdriftTransport: Transport = (level, _context, message) => {
+export const bitdriftTransport: Transport = (
+  level,
+  context,
+  message,
+  metadata,
+) => {
   const log = logFunctions[level]
-  log('' + message)
+  log(`(${context}) ${message}`, metadata)
 }

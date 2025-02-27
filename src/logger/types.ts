@@ -9,7 +9,8 @@ export enum LogContext {
   Default = 'logger',
   Session = 'session',
   Notifications = 'notifications',
-  Convo = 'convo',
+  ConversationAgent = 'conversation-agent',
+  DMsAgent = 'dms-agent',
 }
 
 export enum LogLevel {
@@ -56,19 +57,23 @@ export type Metadata = {
    * @see https://github.com/getsentry/sentry-javascript/blob/903addf9a1a1534a6cb2ba3143654b918a86f6dd/packages/types/src/misc.ts#L65
    */
   tags?: {
-    [key: string]:
-      | number
-      | string
-      | boolean
-      | bigint
-      | symbol
-      | null
-      | undefined
+    [key: string]: number | string | boolean | null | undefined
   }
 
   /**
    * Any additional data, passed through to Sentry as `extra` param on
    * exceptions, or the `data` param on breadcrumbs.
    */
-  [key: string]: unknown
+  [key: string]: Serializable
 } & Parameters<typeof Sentry.captureException>[1]
+
+export type Serializable =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | Serializable[]
+  | {
+      [key: string]: Serializable
+    }
