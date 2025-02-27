@@ -39,7 +39,7 @@ export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
         <View style={[a.pt_md, a.pb_xs, a.w_full, {opacity: 0}]} aria-hidden>
           {/* Placeholder text so that it responds to the font height */}
           <Text style={[a.text_xs, a.leading_tight, a.font_bold]}>
-            <Trans>Accept Request</Trans>
+            <Trans comment="Accept a chat request">Accept Request</Trans>
           </Text>
         </View>
       </ChatListItem>
