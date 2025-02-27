@@ -1,4 +1,5 @@
 import 'react-native-url-polyfill/auto'
+import '#/logger/sentry/setup'
 import '#/lib/bitdrift' // must be near top
 import '#/view/icons'
 
