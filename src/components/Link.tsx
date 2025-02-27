@@ -69,6 +69,11 @@ type BaseLinkProps = Pick<
    * Native-only attribute. If true, will open the share sheet on long press.
    */
   shareOnLongPress?: boolean
+
+  /**
+   * Whether the link should be opened through the redirect proxy.
+   */
+  shouldProxy?: boolean
 }
 
 export function useLink({
@@ -80,9 +85,11 @@ export function useLink({
   onLongPress: outerOnLongPress,
   shareOnLongPress,
   overridePresentation,
+  shouldProxy,
 }: BaseLinkProps & {
   displayText: string
   overridePresentation?: boolean
+  shouldProxy?: boolean
 }) {
   const navigation = useNavigationDeduped()
   const {href} = useLinkProps<AllNavigatorParams>({
@@ -118,7 +125,7 @@ export function useLink({
         })
       } else {
         if (isExternal) {
-          openLink(href, overridePresentation)
+          openLink(href, overridePresentation, shouldProxy)
         } else {
           const shouldOpenInNewTab = shouldClickOpenNewTab(e)
 
@@ -161,6 +168,7 @@ export function useLink({
       action,
       navigation,
       overridePresentation,
+      shouldProxy,
     ],
   )
 
