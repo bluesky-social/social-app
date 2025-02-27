@@ -5,6 +5,7 @@ import * as WebBrowser from 'expo-web-browser'
 import {logEvent} from '#/lib/statsig/statsig'
 import {
   createBskyAppAbsoluteUrl,
+  createProxiedUrl,
   isBskyAppUrl,
   isBskyRSSUrl,
   isRelativeUrl,
@@ -23,7 +24,7 @@ export function useOpenLink() {
   const sheetWrapper = useSheetWrapper()
 
   const openLink = useCallback(
-    async (url: string, override?: boolean) => {
+    async (url: string, override?: boolean, shouldProxy?: boolean) => {
       if (isBskyRSSUrl(url) && isRelativeUrl(url)) {
         url = createBskyAppAbsoluteUrl(url)
       }
@@ -33,6 +34,10 @@ export function useOpenLink() {
           domain: toNiceDomain(url),
           url,
         })
+
+        if (shouldProxy) {
+          url = createProxiedUrl(url)
+        }
       }
 
       if (isNative && !url.startsWith('mailto:')) {
