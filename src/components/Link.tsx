@@ -227,6 +227,7 @@ export function Link({
   onPress: outerOnPress,
   onLongPress: outerOnLongPress,
   download,
+  shouldProxy,
   ...rest
 }: LinkProps) {
   const {href, isExternal, onPress, onLongPress} = useLink({
@@ -235,6 +236,7 @@ export function Link({
     action,
     onPress: outerOnPress,
     onLongPress: outerOnLongPress,
+    shouldProxy: shouldProxy,
   })
 
   return (
@@ -287,6 +289,7 @@ export function InlineLinkText({
   shareOnLongPress,
   disableUnderline,
   overridePresentation,
+  shouldProxy,
   ...rest
 }: InlineLinkProps) {
   const t = useTheme()
@@ -300,6 +303,7 @@ export function InlineLinkText({
     onLongPress: outerOnLongPress,
     shareOnLongPress,
     overridePresentation,
+    shouldProxy: shouldProxy,
   })
   const {
     state: hovered,

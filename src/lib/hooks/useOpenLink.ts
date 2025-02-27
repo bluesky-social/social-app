@@ -35,6 +35,7 @@ export function useOpenLink() {
           url,
         })
 
+        console.log('clicked:', shouldProxy)
         if (shouldProxy) {
           url = createProxiedUrl(url)
         }
