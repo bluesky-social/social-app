@@ -1,18 +1,13 @@
-import {
-  debug as bdDebug,
-  error as bdError,
-  info as bdInfo,
-  warn as bdWarn,
-} from '#/lib/bitdrift'
+import {debug, error, info, warn} from '#/logger/bitdrift/lib'
 import {LogLevel, Transport} from '#/logger/types'
 import {prepareMetadata} from '#/logger/util'
 
 const logFunctions = {
-  [LogLevel.Debug]: bdDebug,
-  [LogLevel.Info]: bdInfo,
-  [LogLevel.Log]: bdInfo,
-  [LogLevel.Warn]: bdWarn,
-  [LogLevel.Error]: bdError,
+  [LogLevel.Debug]: debug,
+  [LogLevel.Info]: info,
+  [LogLevel.Log]: info,
+  [LogLevel.Warn]: warn,
+  [LogLevel.Error]: error,
 } as const
 
 export const bitdriftTransport: Transport = (

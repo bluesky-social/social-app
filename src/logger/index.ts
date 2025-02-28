@@ -6,11 +6,14 @@ import {consoleTransport} from '#/logger/transports/console'
 import {sentryTransport} from '#/logger/transports/sentry'
 import {LogContext, LogLevel, Metadata, Transport} from '#/logger/types'
 import {enabledLogLevels} from '#/logger/util'
+import {isNative} from '#/platform/detection'
 
 const TRANSPORTS: Transport[] = (function configureTransports() {
   switch (process.env.NODE_ENV) {
     case 'production': {
-      return [sentryTransport, bitdriftTransport].filter(Boolean) as Transport[]
+      return [sentryTransport, isNative && bitdriftTransport].filter(
+        Boolean,
+      ) as Transport[]
     }
     case 'test': {
       return []
