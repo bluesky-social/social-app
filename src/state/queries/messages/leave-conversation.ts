@@ -1,3 +1,4 @@
+import {useMemo} from 'react'
 import {ChatBskyConvoLeaveConvo, ChatBskyConvoListConvos} from '@atproto/api'
 import {
   useMutation,
@@ -105,5 +106,8 @@ export function useLeftConvos() {
     filters: {mutationKey: [RQKEY_ROOT], status: 'success'},
     select: mutation => mutation.options.mutationKey?.[1] as string | undefined,
   })
-  return [...pending, ...success].filter(id => id !== undefined)
+  return useMemo(
+    () => [...pending, ...success].filter(id => id !== undefined),
+    [pending, success],
+  )
 }

@@ -24,6 +24,7 @@ import {useMessagesEventBus} from '#/state/messages/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useAgent, useSession} from '#/state/session'
+import {useLeftConvos} from './leave-conversation'
 
 export const RQKEY_ROOT = 'convo-list'
 export const RQKEY = (
@@ -101,6 +102,7 @@ export function ListConvosProviderInner({
   const queryClient = useQueryClient()
   const {currentConvoId} = useCurrentConvoId()
   const {currentAccount} = useSession()
+  const leftConvos = useLeftConvos()
 
   const debouncedRefetch = useMemo(() => {
     const refetchAndInvalidate = () => {
@@ -333,12 +335,15 @@ export function ListConvosProviderInner({
   ])
 
   const ctx = useMemo(() => {
-    const convos = data?.pages.flatMap(page => page.convos) ?? []
+    const convos =
+      data?.pages
+        .flatMap(page => page.convos)
+        .filter(convo => !leftConvos.includes(convo.id)) ?? []
     return {
       accepted: convos.filter(conv => conv.status === 'accepted'),
       request: convos.filter(conv => conv.status === 'request'),
     }
-  }, [data])
+  }, [data, leftConvos])
 
   return (
     <ListConvosContext.Provider value={ctx}>
