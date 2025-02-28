@@ -95,7 +95,7 @@ msgstr ""
 msgid "{0, plural, one {following} other {following}}"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:453
+#: src/view/com/post-thread/PostThreadItem.tsx:454
 msgid "{0, plural, one {like} other {likes}}"
 msgstr ""
 
@@ -103,11 +103,11 @@ msgstr ""
 msgid "{0, plural, one {post} other {posts}}"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:437
+#: src/view/com/post-thread/PostThreadItem.tsx:438
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:419
+#: src/view/com/post-thread/PostThreadItem.tsx:420
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr ""
 
@@ -839,12 +839,12 @@ msgstr ""
 msgid "Apply default recommended feeds"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:843
+#: src/view/com/post-thread/PostThreadItem.tsx:845
 msgid "Archived from {0}"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:812
-#: src/view/com/post-thread/PostThreadItem.tsx:851
+#: src/view/com/post-thread/PostThreadItem.tsx:814
+#: src/view/com/post-thread/PostThreadItem.tsx:853
 msgid "Archived post"
 msgstr ""
 
@@ -1058,7 +1058,7 @@ msgstr ""
 msgid "Bluesky"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:868
+#: src/view/com/post-thread/PostThreadItem.tsx:870
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
@@ -4111,7 +4111,7 @@ msgstr ""
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:638
+#: src/view/com/post-thread/PostThreadItem.tsx:640
 msgid "More"
 msgstr ""
 
@@ -4614,7 +4614,7 @@ msgid "OK"
 msgstr ""
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/view/com/post-thread/PostThreadItem.tsx:873
+#: src/view/com/post-thread/PostThreadItem.tsx:875
 msgid "Okay"
 msgstr ""
 
@@ -5606,23 +5606,23 @@ msgid "Reply sorting"
 msgstr ""
 
 #: src/view/com/post/Post.tsx:204
-#: src/view/com/posts/PostFeedItem.tsx:558
+#: src/view/com/posts/PostFeedItem.tsx:559
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:549
+#: src/view/com/posts/PostFeedItem.tsx:550
 msgctxt "description"
 msgid "Reply to a blocked post"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:551
+#: src/view/com/posts/PostFeedItem.tsx:552
 msgctxt "description"
 msgid "Reply to a post"
 msgstr ""
 
 #: src/view/com/post/Post.tsx:202
-#: src/view/com/posts/PostFeedItem.tsx:555
+#: src/view/com/posts/PostFeedItem.tsx:556
 msgctxt "description"
 msgid "Reply to you"
 msgstr ""
@@ -6390,9 +6390,9 @@ msgstr ""
 msgid "Show list anyway"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:598
-#: src/view/com/post/Post.tsx:242
-#: src/view/com/posts/PostFeedItem.tsx:514
+#: src/view/com/post-thread/PostThreadItem.tsx:600
+#: src/view/com/post/Post.tsx:243
+#: src/view/com/posts/PostFeedItem.tsx:515
 msgid "Show More"
 msgstr ""
 
@@ -6450,7 +6450,7 @@ msgstr ""
 msgid "Show warning and filter from feeds"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:814
+#: src/view/com/post-thread/PostThreadItem.tsx:816
 msgid "Shows information about when this post was created"
 msgstr ""
 
@@ -7213,7 +7213,7 @@ msgstr ""
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:854
+#: src/view/com/post-thread/PostThreadItem.tsx:856
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
 
@@ -7374,8 +7374,8 @@ msgstr ""
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:776
-#: src/view/com/post-thread/PostThreadItem.tsx:779
+#: src/view/com/post-thread/PostThreadItem.tsx:778
+#: src/view/com/post-thread/PostThreadItem.tsx:781
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:444
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:446
 msgid "Translate"
