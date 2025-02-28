@@ -41,7 +41,6 @@ import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {CenteredView} from '#/view/com/util/Views'
 import {useWizardState, WizardStep} from '#/screens/StarterPack/Wizard/State'
 import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
 import {StepFeeds} from '#/screens/StarterPack/Wizard/StepFeeds'
@@ -281,7 +280,7 @@ function WizardInner({
   }
 
   return (
-    <CenteredView style={[a.flex_1]} sideBorders>
+    <Layout.Center style={[a.flex_1]}>
       <Layout.Header.Outer>
         <Layout.Header.BackButton
           label={_(msg`Back`)}
@@ -319,7 +318,7 @@ function WizardInner({
           profile={profile}
         />
       )}
-    </CenteredView>
+    </Layout.Center>
   )
 }
 
