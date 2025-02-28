@@ -1,11 +1,5 @@
 import React, {memo, useMemo, useState} from 'react'
 import {
-  Pressable,
-  type PressableProps,
-  type StyleProp,
-  type ViewStyle,
-} from 'react-native'
-import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyFeedThreadgate,
@@ -14,42 +8,35 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useTheme} from '#/lib/ThemeContext'
 import {Shadow} from '#/state/cache/post-shadow'
-import {atoms as a, useTheme as useAlf} from '#/alf'
+import {EventStopper} from '#/view/com/util/EventStopper'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {useMenuControl} from '#/components/Menu'
 import * as Menu from '#/components/Menu'
-import {EventStopper} from '../EventStopper'
-import {PostDropdownMenuItems} from './PostDropdownBtnMenuItems'
+import {PostCtrlButton, PostCtrlButtonIcon} from './PostCtrlButton'
+import {PostMenuItems} from './PostMenuItems'
 
-let PostDropdownBtn = ({
+let PostMenuButton = ({
   testID,
   post,
   postFeedContext,
+  big,
   record,
   richText,
-  style,
-  hitSlop,
-  size,
   timestamp,
   threadgateRecord,
 }: {
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
   postFeedContext: string | undefined
+  big?: boolean
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
-  style?: StyleProp<ViewStyle>
-  hitSlop?: PressableProps['hitSlop']
-  size?: 'lg' | 'md' | 'sm'
   timestamp: string
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
-  const theme = useTheme()
-  const alf = useAlf()
   const {_} = useLingui()
-  const defaultCtrlColor = theme.palette.default.postCtrl
+
   const menuControl = useMenuControl()
   const [hasBeenOpen, setHasBeenOpen] = useState(false)
   const lazyMenuControl = useMemo(
@@ -68,31 +55,21 @@ let PostDropdownBtn = ({
     <EventStopper onKeyDown={false}>
       <Menu.Root control={lazyMenuControl}>
         <Menu.Trigger label={_(msg`Open post options menu`)}>
-          {({props, state}) => {
+          {({props}) => {
             return (
-              <Pressable
-                {...props}
-                hitSlop={hitSlop}
-                testID={testID}
-                style={[
-                  style,
-                  a.rounded_full,
-                  (state.hovered || state.pressed) && [
-                    alf.atoms.bg_contrast_25,
-                  ],
-                ]}>
-                <DotsHorizontal
-                  fill={defaultCtrlColor}
-                  style={{pointerEvents: 'none'}}
-                  size={size}
-                />
-              </Pressable>
+              <PostCtrlButton
+                testID="postDropdownBtn"
+                big={big}
+                label={props.accessibilityLabel}
+                {...props}>
+                <PostCtrlButtonIcon icon={DotsHorizontal} />
+              </PostCtrlButton>
             )
           }}
         </Menu.Trigger>
         {hasBeenOpen && (
           // Lazily initialized. Once mounted, they stay mounted.
-          <PostDropdownMenuItems
+          <PostMenuItems
             testID={testID}
             post={post}
             postFeedContext={postFeedContext}
@@ -107,5 +84,5 @@ let PostDropdownBtn = ({
   )
 }
 
-PostDropdownBtn = memo(PostDropdownBtn)
-export {PostDropdownBtn}
+PostMenuButton = memo(PostMenuButton)
+export {PostMenuButton}
