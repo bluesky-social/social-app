@@ -84,12 +84,18 @@ export class Convo {
   recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
   snapshot: ConvoState | undefined
 
+  // we're racing the request to accept the conversation when we
+  // fetch it - if this param is true, we'll optimistically mark as accepted
+  // regardless of the actual response -sfn
+  hasAccepted: boolean
+
   constructor(params: ConvoParams) {
     this.id = nanoid(3)
     this.convoId = params.convoId
     this.agent = params.agent
     this.events = params.events
     this.senderUserDid = params.agent.session?.did!
+    this.hasAccepted = params.hasAccepted
 
     if (params.placeholderData) {
       this.setupPlaceholderData(params.placeholderData)
@@ -445,6 +451,10 @@ export class Convo {
     this.recipients = data.convo.members.filter(
       m => m.did !== this.senderUserDid,
     )
+    // ensure status is set to accepted
+    if (this.hasAccepted) {
+      this.convo.status = 'accepted'
+    }
   }
 
   private async setup() {
@@ -454,6 +464,11 @@ export class Convo {
       this.convo = convo
       this.sender = sender
       this.recipients = recipients
+
+      // ensure status is set to accepted
+      if (this.hasAccepted) {
+        this.convo.status = 'accepted'
+      }
 
       /*
        * Some validation prior to `Ready` status

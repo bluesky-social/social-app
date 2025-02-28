@@ -168,10 +168,17 @@ export function AcceptChatButton({
       onAcceptConvo?.()
       if (currentScreen === 'list') {
         precacheConvoQuery(queryClient, {...convo, status: 'accepted'})
-        navigation.navigate('MessagesConversation', {conversation: convo.id})
+        navigation.navigate('MessagesConversation', {
+          conversation: convo.id,
+          accept: true,
+        })
       }
     },
     onError: () => {
+      // Should we show a toast here? They'll be on the convo screen, and it'll make
+      // no difference if the request failed - when they send a message, the convo will be accepted
+      // automatically. The only difference is that when they back out of the convo (without sending a message), the conversation will be rejected.
+      // the list will still have this chat in it -sfn
       Toast.show(_('Failed to accept chat'), 'xmark')
     },
   })
