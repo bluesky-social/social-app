@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, ScrollView, View} from 'react-native'
+import {Pressable, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {
   AppBskyGraphDefs,
@@ -25,13 +25,13 @@ import {
 } from '#/state/shell/starter-pack'
 import {LoggedOutScreenState} from '#/view/com/auth/LoggedOut'
 import {formatCount} from '#/view/com/util/numeric/format'
-import {CenteredView} from '#/view/com/util/Views'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import * as FeedCard from '#/components/FeedCard'
 import {useRichText} from '#/components/hooks/useRichText'
+import * as Layout from '#/components/Layout'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCard} from '#/components/ProfileCard'
@@ -165,10 +165,8 @@ function LandingScreenLoaded({
   }
 
   return (
-    <CenteredView style={a.flex_1}>
-      <ScrollView
-        style={[a.flex_1, t.atoms.bg]}
-        contentContainerStyle={{paddingBottom: 100}}>
+    <View style={[a.util_screen_outer]}>
+      <Layout.Content ignoreTabletLayoutOffset>
         <LinearGradientBackground
           style={[
             a.align_center,
@@ -313,7 +311,7 @@ function LandingScreenLoaded({
             </ButtonText>
           </Button>
         </View>
-      </ScrollView>
+      </Layout.Content>
       <AppClipOverlay
         visible={appClipOverlayVisible}
         setIsVisible={setAppClipOverlayVisible}
@@ -358,7 +356,7 @@ function LandingScreenLoaded({
           content="app-id=xyz.blueskyweb.app, app-clip-bundle-id=xyz.blueskyweb.app.AppClip, app-clip-display=card"
         />
       )}
-    </CenteredView>
+    </View>
   )
 }
 
