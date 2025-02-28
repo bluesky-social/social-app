@@ -91,6 +91,9 @@ export function toClout(n: number | null | undefined): number | undefined {
   }
 }
 
+/**
+ * @deprecated use `logger.metric()` instead
+ */
 export function logEvent<E extends keyof MetricEvents>(
   eventName: E & string,
   rawMetadata: MetricEvents[E] & FlatJSONRecord,
@@ -111,7 +114,13 @@ export function logEvent<E extends keyof MetricEvents>(
       }
       Statsig.logEvent(ev, null, fullMetadata)
     }
-    logger.info(eventName, fullMetadata)
+    /**
+     * All datalake events should be sent using `logger.metric`, and we don't
+     * want to double-emit logs to other transports.
+     */
+    if (!options.lake) {
+      logger.info(eventName, fullMetadata)
+    }
   } catch (e) {
     // A log should never interrupt the calling code, whatever happens.
     logger.error('Failed to log an event', {message: e})

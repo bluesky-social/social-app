@@ -1,6 +1,8 @@
 import {nanoid} from 'nanoid/non-secure'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import {add} from '#/logger/logDump'
+import {MetricEvents} from '#/logger/metrics'
 import {bitdriftTransport} from '#/logger/transports/bitdrift'
 import {consoleTransport} from '#/logger/transports/console'
 import {sentryTransport} from '#/logger/transports/sentry'
@@ -87,6 +89,25 @@ export class Logger {
 
   error(error: Error | string, metadata: Metadata = {}) {
     this.transport({level: LogLevel.Error, message: error, metadata})
+  }
+
+  metric<E extends keyof MetricEvents>(
+    event: E & string,
+    metadata: MetricEvents[E],
+    options: {
+      /**
+       * Optionally also send to StatSig
+       */
+      statsig?: boolean
+    } = {statsig: false},
+  ) {
+    logEvent(event, metadata, {
+      lake: !options.statsig,
+    })
+
+    for (const transport of this.transports) {
+      transport(LogLevel.Info, LogContext.Metric, event, metadata, Date.now())
+    }
   }
 
   addTransport(transport: Transport) {
