@@ -1,4 +1,4 @@
-import {debug, error,info, warn} from '#/logger/bitdrift/lib'
+import {debug, error, info, warn} from '#/logger/bitdrift/lib'
 import {LogLevel, Transport} from '#/logger/types'
 import {prepareMetadata} from '#/logger/util'
 
