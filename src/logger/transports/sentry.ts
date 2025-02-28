@@ -11,8 +11,7 @@ export const sentryTransport: Transport = (
   timestamp,
 ) => {
   const meta = {
-    // match Bitdrift payload
-    context,
+    __context__: context,
     ...prepareMetadata(metadata),
   }
   let _tags = tags || {}

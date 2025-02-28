@@ -9,6 +9,12 @@ export enum LogContext {
   Notifications = 'notifications',
   ConversationAgent = 'conversation-agent',
   DMsAgent = 'dms-agent',
+
+  /**
+   * METRIC IS FOR INTERNAL USE ONLY, don't create any other loggers using this
+   * context
+   */
+  Metric = 'metric',
 }
 
 export enum LogLevel {
@@ -33,9 +39,9 @@ export type Transport = (
  */
 export type Metadata = {
   /**
-   * Reserved for appending `LogContext` to logging payloads
+   * Reserved for appending `LogContext` in logging payloads
    */
-  context?: undefined
+  __context__?: undefined
 
   /**
    * Applied as Sentry breadcrumb types. Defaults to `default`.
