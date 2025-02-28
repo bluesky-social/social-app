@@ -5,6 +5,7 @@
  */
 export enum LogContext {
   Default = 'logger',
+  Metric = 'metric',
   Session = 'session',
   Notifications = 'notifications',
   ConversationAgent = 'conversation-agent',
@@ -35,7 +36,7 @@ export type Metadata = {
   /**
    * Reserved for appending `LogContext` to logging payloads
    */
-  context?: undefined
+  __context__?: undefined
 
   /**
    * Applied as Sentry breadcrumb types. Defaults to `default`.
