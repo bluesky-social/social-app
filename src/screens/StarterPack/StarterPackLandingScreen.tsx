@@ -165,7 +165,7 @@ function LandingScreenLoaded({
   }
 
   return (
-    <View style={[a.util_screen_outer]}>
+    <View style={[a.flex_1]}>
       <Layout.Content ignoreTabletLayoutOffset>
         <LinearGradientBackground
           style={[
@@ -374,11 +374,8 @@ export function AppClipOverlay({
       accessibilityRole="button"
       style={[
         a.absolute,
+        a.inset_0,
         {
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
           backgroundColor: 'rgba(0, 0, 0, 0.95)',
           zIndex: 1,
         },
