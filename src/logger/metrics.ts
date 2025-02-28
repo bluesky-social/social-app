@@ -1,4 +1,4 @@
-export type LogEvents = {
+export type MetricEvents = {
   // App events
   init: {
     initMs: number
@@ -30,7 +30,7 @@ export type LogEvents = {
     secondsActive: number
   }
   'state:foreground': {}
-  'lake:router:navigate': {
+  'router:navigate': {
     from?: string
   }
   'deepLink:referrerReceived': {
