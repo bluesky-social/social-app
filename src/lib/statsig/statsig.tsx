@@ -4,7 +4,6 @@ import {AppState, AppStateStatus} from 'react-native'
 import {Statsig, StatsigProvider} from 'statsig-react-native-expo'
 
 import {BUNDLE_DATE, BUNDLE_IDENTIFIER, IS_TESTFLIGHT} from '#/lib/app-info'
-import * as bitdrift from '#/lib/bitdrift'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
@@ -102,11 +101,7 @@ export function logEvent<E extends keyof LogEvents>(
     if (Statsig.initializeCalled()) {
       Statsig.logEvent(eventName, null, fullMetadata)
     }
-    // Intentionally bypass the logger abstraction to log rich objects.
-    console.groupCollapsed(eventName)
-    console.log(fullMetadata)
-    console.groupEnd()
-    bitdrift.info(eventName, fullMetadata)
+    logger.info(eventName, fullMetadata)
   } catch (e) {
     // A log should never interrupt the calling code, whatever happens.
     logger.error('Failed to log an event', {message: e})
