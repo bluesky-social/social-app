@@ -119,5 +119,4 @@ jest.mock('statsig-react-native-expo', () => ({
   },
 }))
 
-jest.mock('../src/lib/bitdrift', () => ({}))
 jest.mock('../src/lib/statsig/statsig', () => ({}))
