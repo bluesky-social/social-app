@@ -10,7 +10,7 @@ import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
-import {logger} from '#/logger'
+import {Logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {
   ACTIVE_POLL_INTERVAL,
@@ -33,6 +33,8 @@ import {
 import {MessagesEventBus} from '#/state/messages/events/agent'
 import {MessagesEventBusError} from '#/state/messages/events/types'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
+
+const logger = Logger.create(Logger.Context.ConversationAgent)
 
 export function isConvoItemMessage(
   item: ConvoItem,
@@ -125,7 +127,7 @@ export class Convo {
 
   getSnapshot(): ConvoState {
     if (!this.snapshot) this.snapshot = this.generateSnapshot()
-    // logger.debug('Convo: snapshotted', {}, logger.DebugContext.convo)
+    // logger.debug('Convo: snapshotted', {})
     return this.snapshot
   }
 
@@ -375,15 +377,11 @@ export class Convo {
         break
     }
 
-    logger.debug(
-      `Convo: dispatch '${action.event}'`,
-      {
-        id: this.id,
-        prev: prevStatus,
-        next: this.status,
-      },
-      logger.DebugContext.convo,
-    )
+    logger.debug(`Convo: dispatch '${action.event}'`, {
+      id: this.id,
+      prev: prevStatus,
+      next: this.status,
+    })
 
     this.updateLastActiveTimestamp()
     this.commit()
@@ -471,7 +469,7 @@ export class Convo {
         this.dispatch({event: ConvoDispatchEvent.Ready})
       }
     } catch (e: any) {
-      logger.error(e, {context: 'Convo: setup failed'})
+      logger.error(e, {message: 'Convo: setup failed'})
 
       this.dispatch({
         event: ConvoDispatchEvent.Error,
@@ -576,7 +574,7 @@ export class Convo {
       this.sender = sender || this.sender
       this.recipients = recipients || this.recipients
     } catch (e: any) {
-      logger.error(e, {context: `Convo: failed to refresh convo`})
+      logger.error(e, {message: `Convo: failed to refresh convo`})
     }
   }
 
@@ -586,7 +584,7 @@ export class Convo {
       }
     | undefined
   async fetchMessageHistory() {
-    logger.debug('Convo: fetch message history', {}, logger.DebugContext.convo)
+    logger.debug('Convo: fetch message history', {})
 
     /*
      * If oldestRev is null, we've fetched all history.
@@ -773,7 +771,7 @@ export class Convo {
     // Ignore empty messages for now since they have no other purpose atm
     if (!message.text.trim() && !message.embed) return
 
-    logger.debug('Convo: send message', {}, logger.DebugContext.convo)
+    logger.debug('Convo: send message', {})
 
     const tempId = nanoid()
 
@@ -793,7 +791,6 @@ export class Convo {
     logger.debug(
       `Convo: processing messages (${this.pendingMessages.size} remaining)`,
       {},
-      logger.DebugContext.convo,
     )
 
     const pendingMessage = Array.from(this.pendingMessages.values()).shift()
@@ -837,7 +834,7 @@ export class Convo {
       // continue queue processing
       await this.processPendingMessages()
     } catch (e: any) {
-      logger.error(e, {context: `Convo: failed to send message`})
+      logger.error(e, {message: `Convo: failed to send message`})
       this.handleSendMessageFailure(e)
       this.isProcessingPendingMessages = false
     }
@@ -883,7 +880,7 @@ export class Convo {
     } else {
       this.pendingMessageFailure = 'unrecoverable'
       logger.error(e, {
-        context: `Convo handleSendMessageFailure received unknown error`,
+        message: `Convo handleSendMessageFailure received unknown error`,
       })
     }
 
@@ -902,7 +899,6 @@ export class Convo {
     logger.debug(
       `Convo: batch retrying ${this.pendingMessages.size} pending messages`,
       {},
-      logger.DebugContext.convo,
     )
 
     try {
@@ -937,16 +933,15 @@ export class Convo {
       logger.debug(
         `Convo: sent ${this.pendingMessages.size} pending messages`,
         {},
-        logger.DebugContext.convo,
       )
     } catch (e: any) {
-      logger.error(e, {context: `Convo: failed to batch retry messages`})
+      logger.error(e, {message: `Convo: failed to batch retry messages`})
       this.handleSendMessageFailure(e)
     }
   }
 
   async deleteMessage(messageId: string) {
-    logger.debug('Convo: delete message', {}, logger.DebugContext.convo)
+    logger.debug('Convo: delete message', {})
 
     this.deletedMessages.add(messageId)
     this.commit()
@@ -962,7 +957,7 @@ export class Convo {
         )
       })
     } catch (e: any) {
-      logger.error(e, {context: `Convo: failed to delete message`})
+      logger.error(e, {message: `Convo: failed to delete message`})
       this.deletedMessages.delete(messageId)
       this.commit()
       throw e

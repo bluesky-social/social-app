@@ -96,7 +96,7 @@ export function Deactivated() {
       }
 
       logger.error(e, {
-        context: 'Failed to activate account',
+        message: 'Failed to activate account',
       })
     } finally {
       setPending(false)

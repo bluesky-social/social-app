@@ -61,7 +61,7 @@ function DeactivateAccountDialogInner({
       }
 
       logger.error(e, {
-        context: 'Failed to deactivate account',
+        message: 'Failed to deactivate account',
       })
     } finally {
       setPending(false)
