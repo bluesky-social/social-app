@@ -234,6 +234,7 @@ function PostInner({
                   numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                   style={[a.flex_1, a.text_md]}
                   authorHandle={post.author.handle}
+                  shouldProxyLinks={true}
                 />
               </View>
             ) : undefined}
