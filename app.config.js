@@ -83,6 +83,7 @@ module.exports = function (config) {
             'fi',
             'fr',
             'ga',
+            'gd',
             'gl',
             'hi',
             'hu',
