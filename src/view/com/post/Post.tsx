@@ -52,6 +52,7 @@ export function Post({
   style?: StyleProp<ViewStyle>
 }) {
   const moderationOpts = useModerationOpts()
+
   const record = useMemo<AppBskyFeedPost.Record | undefined>(
     () =>
       bsky.validate(post.record, AppBskyFeedPost.validateRecord)
