@@ -55,8 +55,11 @@ import * as Layout from '#/components/Layout'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
+import {
+  ReportDialog,
+  useReportDialogControl,
+} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
-import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {RichText} from '#/components/RichText'
 import {FeedsList} from '#/components/StarterPack/Main/FeedsList'
 import {PostsList} from '#/components/StarterPack/Main/PostsList'
@@ -620,10 +623,9 @@ function OverflowMenu({
       {starterPack.list && (
         <ReportDialog
           control={reportDialogControl}
-          params={{
-            type: 'starterpack',
-            uri: starterPack.uri,
-            cid: starterPack.cid,
+          subject={{
+            ...starterPack,
+            $type: 'app.bsky.graph.defs#starterPackView',
           }}
         />
       )}
