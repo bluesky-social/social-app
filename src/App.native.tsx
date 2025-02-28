@@ -1,6 +1,6 @@
 import 'react-native-url-polyfill/auto'
 import '#/logger/sentry/setup'
-import '#/logger/bitdrift/setup'
+import '#/lib/bitdrift' // must be near top
 import '#/view/icons'
 
 import React, {useEffect, useState} from 'react'
