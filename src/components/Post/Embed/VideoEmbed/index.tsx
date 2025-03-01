@@ -7,11 +7,11 @@ import {useLingui} from '@lingui/react'
 
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {ConstrainedImage} from '#/view/com/util/images/AutoSizedImage'
-import {VideoEmbedInnerNative} from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
+import {VideoEmbedInnerNative} from './VideoEmbedInner/VideoEmbedInnerNative'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 interface Props {
