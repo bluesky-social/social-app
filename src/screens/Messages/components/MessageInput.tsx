@@ -1,5 +1,11 @@
-import {useCallback, useState} from 'react'
-import {Pressable, TextInput, useWindowDimensions, View} from 'react-native'
+import {useState} from 'react'
+import {
+  InteractionManager,
+  Pressable,
+  TextInput,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import {
   useFocusedInputHandler,
   useReanimatedKeyboardAnimation,
@@ -19,6 +25,7 @@ import Graphemer from 'graphemer'
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useEmail} from '#/lib/hooks/useEmail'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {isIOS, isWeb} from '#/platform/detection'
 import {
   useMessageDraft,
@@ -61,14 +68,13 @@ export function MessageInput({
   const [isFocused, setIsFocused] = useState(false)
   const [message, setMessage] = useState(getDraft)
   const inputRef = useAnimatedRef<TextInput>()
-  const [shouldEnforceClear, setShouldEnforceClear] = useState(false)
 
   const {needsEmailVerification} = useEmail()
 
   useSaveMessageDraft(message)
   useExtractEmbedFromFacets(message, setEmbed)
 
-  const onSubmit = useCallback(() => {
+  const onSubmit = useNonReactiveCallback(() => {
     if (needsEmailVerification) {
       return
     }
@@ -84,9 +90,6 @@ export function MessageInput({
     playHaptic()
     setEmbed(undefined)
     setMessage('')
-    if (isIOS) {
-      setShouldEnforceClear(true)
-    }
     if (isWeb) {
       // Pressing the send button causes the text input to lose focus, so we need to
       // re-focus it after sending
@@ -94,17 +97,7 @@ export function MessageInput({
         inputRef.current?.focus()
       }, 100)
     }
-  }, [
-    needsEmailVerification,
-    hasEmbed,
-    message,
-    clearDraft,
-    onSendMessage,
-    playHaptic,
-    setEmbed,
-    inputRef,
-    _,
-  ])
+  })
 
   useFocusedInputHandler(
     {
@@ -131,6 +124,10 @@ export function MessageInput({
     scrollEnabled: isInputScrollable.get(),
   }))
 
+  function handleTextAreaChange(text: string) {
+    setMessage(text)
+  }
+
   return (
     <View style={[a.px_md, a.pb_sm, a.pt_xs]}>
       {children}
@@ -154,20 +151,7 @@ export function MessageInput({
           placeholder={_(msg`Write a message`)}
           placeholderTextColor={t.palette.contrast_500}
           value={message}
-          onChange={evt => {
-            // bit of a hack: iOS automatically accepts autocomplete suggestions when you tap anywhere on the screen
-            // including the button we just pressed - and this overrides clearing the input! so we watch for the
-            // next change and double make sure the input is cleared. It should *always* send an onChange event after
-            // clearing via setMessage('') that happens in onSubmit()
-            // -sfn
-            if (isIOS && shouldEnforceClear) {
-              setShouldEnforceClear(false)
-              setMessage('')
-              return
-            }
-            const text = evt.nativeEvent.text
-            setMessage(text)
-          }}
+          onChangeText={handleTextAreaChange}
           multiline={true}
           style={[
             a.flex_1,
@@ -197,7 +181,22 @@ export function MessageInput({
             a.justify_center,
             {height: 30, width: 30, backgroundColor: t.palette.primary_500},
           ]}
-          onPress={onSubmit}
+          onPress={() => {
+            // The React Native touch handling system treats any active touch as an "interaction."
+            // This means `runAfterInteractions()` will delay execution until **all active touches** have ended or been canceled.
+            //
+            // **Why this matters on iOS:**
+            // - When an auto-correct suggestion is visible, tapping the screen first applies the suggestion.
+            // - However, iOS **also forwards** the tap event to the button (or any other UI element underneath).
+            // - This creates a race condition where the message may be submitted **before** the auto-corrected text is applied.
+            //
+            // **Fix:**
+            // - By using `InteractionManager.runAfterInteractions()` + useNonReactiveCallback, we ensure the function runs **only after** iOS has finished processing touches.
+            // - This guarantees that the latest auto-corrected text is captured before submitting the message.
+            InteractionManager.runAfterInteractions(() => {
+              onSubmit()
+            })
+          }}
           disabled={needsEmailVerification}>
           <PaperPlane fill={t.palette.white} style={[a.relative, {left: 1}]} />
         </Pressable>
