@@ -1,7 +1,5 @@
 import React from 'react'
-import {InteractionManager, StyleSheet, View} from 'react-native'
-import {MeasuredDimensions, runOnJS, runOnUI} from 'react-native-reanimated'
-import {Image} from 'expo-image'
+import {StyleSheet, View} from 'react-native'
 import {
   $Typed,
   AppBskyFeedDefs,
@@ -13,17 +11,12 @@ import {
 import {Trans} from '@lingui/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {HandleRef, measureHandle} from '#/lib/hooks/useHandleRef'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {InfoCircleIcon} from '#/lib/icons'
 import {makeProfileLink} from '#/lib/routes/links'
-import {useLightboxControls} from '#/state/lightbox'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {Dimensions} from '#/view/com/lightbox/ImageViewing/@types'
-import {AutoSizedImage} from '#/view/com/util/images/AutoSizedImage'
-import {ImageLayoutGrid} from '#/view/com/util/images/ImageLayoutGrid'
 import {Link} from '#/view/com/util/Link'
 import {ExternalLinkEmbed} from '#/view/com/util/post-embeds/ExternalLinkEmbed'
 import {
@@ -42,6 +35,7 @@ import {SubtleWebHover} from '#/components/SubtleWebHover'
 import * as bsky from '#/types/bsky'
 import {Embed as TEmbed, EmbedType, parseEmbed} from '#/types/bsky/post'
 import {FeedEmbed} from './FeedEmbed'
+import {ImageEmbed} from './ImageEmbed'
 import {ListEmbed} from './ListEmbed'
 import {CommonProps, EmbedProps} from './types'
 
@@ -88,7 +82,7 @@ function MediaEmbed({
     case 'images': {
       return (
         <ContentHider modui={rest.moderation?.ui('contentMedia')}>
-          <ImagesEmbed embed={embed} {...rest} />
+          <ImageEmbed embed={embed} {...rest} />
         </ContentHider>
       )
     }
@@ -177,92 +171,6 @@ function RecordEmbed({
     default: {
       return null
     }
-  }
-}
-
-export function ImagesEmbed({
-  embed,
-  ...rest
-}: CommonProps & {
-  embed: EmbedType<'images'>
-}) {
-  const {openLightbox} = useLightboxControls()
-  const {images} = embed.view
-
-  if (images.length > 0) {
-    const items = images.map(img => ({
-      uri: img.fullsize,
-      thumbUri: img.thumb,
-      alt: img.alt,
-      dimensions: img.aspectRatio ?? null,
-    }))
-    const _openLightbox = (
-      index: number,
-      thumbRects: (MeasuredDimensions | null)[],
-      fetchedDims: (Dimensions | null)[],
-    ) => {
-      openLightbox({
-        images: items.map((item, i) => ({
-          ...item,
-          thumbRect: thumbRects[i] ?? null,
-          thumbDimensions: fetchedDims[i] ?? null,
-          type: 'image',
-        })),
-        index,
-      })
-    }
-    const onPress = (
-      index: number,
-      refs: HandleRef[],
-      fetchedDims: (Dimensions | null)[],
-    ) => {
-      const handles = refs.map(r => r.current)
-      runOnUI(() => {
-        'worklet'
-        const rects = handles.map(measureHandle)
-        runOnJS(_openLightbox)(index, rects, fetchedDims)
-      })()
-    }
-    const onPressIn = (_: number) => {
-      InteractionManager.runAfterInteractions(() => {
-        Image.prefetch(items.map(i => i.uri))
-      })
-    }
-
-    if (images.length === 1) {
-      const image = images[0]
-      return (
-        <View style={[a.mt_sm, rest.style]}>
-          <AutoSizedImage
-            crop={
-              rest.viewContext === PostEmbedViewContext.ThreadHighlighted
-                ? 'none'
-                : rest.viewContext ===
-                  PostEmbedViewContext.FeedEmbedRecordWithMedia
-                ? 'square'
-                : 'constrained'
-            }
-            image={image}
-            onPress={(containerRef, dims) => onPress(0, [containerRef], [dims])}
-            onPressIn={() => onPressIn(0)}
-            hideBadge={
-              rest.viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
-            }
-          />
-        </View>
-      )
-    }
-
-    return (
-      <View style={[a.mt_sm, rest.style]}>
-        <ImageLayoutGrid
-          images={images}
-          onPress={onPress}
-          onPressIn={onPressIn}
-          viewContext={rest.viewContext}
-        />
-      </View>
-    )
   }
 }
 
