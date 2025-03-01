@@ -1,11 +1,5 @@
 import React from 'react'
-import {
-  InteractionManager,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native'
+import {InteractionManager, StyleSheet, View} from 'react-native'
 import {MeasuredDimensions, runOnJS, runOnUI} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {
@@ -14,7 +8,6 @@ import {
   AppBskyFeedPost,
   AtUri,
   moderatePost,
-  ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {Trans} from '@lingui/macro'
@@ -28,7 +21,6 @@ import {useLightboxControls} from '#/state/lightbox'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {Dimensions} from '#/view/com/lightbox/ImageViewing/@types'
 import {AutoSizedImage} from '#/view/com/util/images/AutoSizedImage'
 import {ImageLayoutGrid} from '#/view/com/util/images/ImageLayoutGrid'
@@ -42,7 +34,6 @@ import {VideoEmbed} from '#/view/com/util/post-embeds/VideoEmbed'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {Text} from '#/view/com/util/text/Text'
 import {atoms as a, useTheme} from '#/alf'
-import * as ListCard from '#/components/ListCard'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {RichText} from '#/components/RichText'
@@ -50,20 +41,11 @@ import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import * as bsky from '#/types/bsky'
 import {Embed as TEmbed, EmbedType, parseEmbed} from '#/types/bsky/post'
+import {FeedEmbed} from './FeedEmbed'
+import {ListEmbed} from './ListEmbed'
+import {CommonProps, EmbedProps} from './types'
 
-export type CommonProps = {
-  moderation?: ModerationDecision
-  onOpen?: () => void
-  style?: StyleProp<ViewStyle>
-  allowNestedQuotes?: boolean
-  viewContext?: PostEmbedViewContext
-}
-
-export type PostEmbedProps = CommonProps & {
-  embed?: AppBskyFeedDefs.PostView['embed']
-}
-
-export function Embed({embed: rawEmbed, ...rest}: PostEmbedProps) {
+export function Embed({embed: rawEmbed, ...rest}: EmbedProps) {
   const embed = parseEmbed(rawEmbed)
 
   switch (embed.type) {
@@ -196,35 +178,6 @@ function RecordEmbed({
       return null
     }
   }
-}
-
-export function ListEmbed({
-  embed,
-}: CommonProps & {
-  embed: EmbedType<'list'>
-}) {
-  const t = useTheme()
-  return (
-    <View
-      style={[a.border, t.atoms.border_contrast_medium, a.p_md, a.rounded_sm]}>
-      <ListCard.Default view={embed.view} />
-    </View>
-  )
-}
-
-export function FeedEmbed({
-  embed,
-}: CommonProps & {
-  embed: EmbedType<'feed'>
-}) {
-  const pal = usePalette('default')
-  return (
-    <FeedSourceCard
-      feedUri={embed.view.uri}
-      style={[pal.view, pal.border, styles.customFeedOuter]}
-      showLikes
-    />
-  )
 }
 
 export function ImagesEmbed({
