@@ -38,6 +38,8 @@ import {ListEmbed} from './ListEmbed'
 import {PostPlaceholder as PostPlaceholderText} from './PostPlaceholder'
 import {CommonProps, EmbedProps} from './types'
 
+export {PostEmbedViewContext, QuoteEmbedViewContext} from './types'
+
 export function Embed({embed: rawEmbed, ...rest}: EmbedProps) {
   const embed = parseEmbed(rawEmbed)
 
@@ -206,7 +208,7 @@ export function PostDetachedEmbed({
  * Nests parent `Embed` component and therefore must live in this file to avoid
  * circular imports.
  */
-function QuoteEmbed({
+export function QuoteEmbed({
   embed,
   onOpen,
   style,

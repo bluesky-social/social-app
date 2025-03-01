@@ -1,7 +1,15 @@
 import {StyleProp, ViewStyle} from 'react-native'
 import {AppBskyFeedDefs, ModerationDecision} from '@atproto/api'
 
-import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
+export enum PostEmbedViewContext {
+  ThreadHighlighted = 'ThreadHighlighted',
+  Feed = 'Feed',
+  FeedEmbedRecordWithMedia = 'FeedEmbedRecordWithMedia',
+}
+
+export enum QuoteEmbedViewContext {
+  FeedEmbedRecordWithMedia = PostEmbedViewContext.FeedEmbedRecordWithMedia,
+}
 
 export type CommonProps = {
   moderation?: ModerationDecision
