@@ -9,6 +9,7 @@ export enum LogContext {
   Notifications = 'notifications',
   ConversationAgent = 'conversation-agent',
   DMsAgent = 'dms-agent',
+  ReportDialog = 'report-dialog',
 
   /**
    * METRIC IS FOR INTERNAL USE ONLY, don't create any other loggers using this

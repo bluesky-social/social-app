@@ -305,4 +305,15 @@ export type MetricEvents = {
 
   'progressGuide:hide': {}
   'progressGuide:followDialog:open': {}
+
+  'reportDialog:open': {
+    subjectType: string
+  }
+  'reportDialog:close': {}
+  'reportDialog:success': {
+    reason: string
+    labeler: string
+    details: boolean
+  }
+  'reportDialog:failure': {}
 }
