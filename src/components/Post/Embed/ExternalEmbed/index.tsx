@@ -11,7 +11,6 @@ import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
-import {GifEmbed} from '#/view/com/util/post-embeds/GifEmbed'
 import {atoms as a, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
 import {Earth_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
@@ -19,6 +18,7 @@ import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {ExternalGif} from './ExternalGif'
 import {ExternalPlayer} from './ExternalPlayer'
+import {GifEmbed} from './Gif'
 
 export const ExternalEmbed = ({
   link,
