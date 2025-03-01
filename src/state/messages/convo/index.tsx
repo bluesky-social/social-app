@@ -19,7 +19,7 @@ import {
   RQKEY as getConvoKey,
   useMarkAsReadMutation,
 } from '#/state/queries/messages/conversation'
-import {RQKEY as ListConvosQueryKey} from '#/state/queries/messages/list-conversations'
+import {RQKEY_ROOT as ListConvosQueryKeyRoot} from '#/state/queries/messages/list-conversations'
 import {RQKEY as createProfileQueryKey} from '#/state/queries/profile'
 import {useAgent} from '#/state/session'
 
@@ -60,7 +60,8 @@ export function useConvoActive() {
 export function ConvoProvider({
   children,
   convoId,
-}: Pick<ConvoParams, 'convoId'> & {children: React.ReactNode}) {
+  hasAccepted,
+}: Pick<ConvoParams, 'convoId' | 'hasAccepted'> & {children: React.ReactNode}) {
   const queryClient = useQueryClient()
   const agent = useAgent()
   const events = useMessagesEventBus()
@@ -73,6 +74,7 @@ export function ConvoProvider({
       agent,
       events,
       placeholderData: placeholder ? {convo: placeholder} : undefined,
+      hasAccepted,
     })
   })
   const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot)
@@ -104,7 +106,7 @@ export function ConvoProvider({
             })
           }
           queryClient.invalidateQueries({
-            queryKey: ListConvosQueryKey,
+            queryKey: [ListConvosQueryKeyRoot],
           })
         }
       }

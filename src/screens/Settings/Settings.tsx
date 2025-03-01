@@ -28,7 +28,7 @@ import {ProfileHeaderDisplayName} from '#/screens/Profile/Header/DisplayName'
 import {ProfileHeaderHandle} from '#/screens/Profile/Header/Handle'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, tokens, useTheme} from '#/alf'
-import {AvatarStack} from '#/components/AvatarStack'
+import {AvatarStackWithFetch} from '#/components/AvatarStack'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
@@ -118,7 +118,7 @@ export function SettingsScreen({}: Props) {
                 {showAccounts ? (
                   <SettingsList.ItemIcon icon={ChevronUpIcon} size="md" />
                 ) : (
-                  <AvatarStack
+                  <AvatarStackWithFetch
                     profiles={accounts
                       .map(acc => acc.did)
                       .filter(did => did !== currentAccount?.did)

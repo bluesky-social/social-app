@@ -53,10 +53,10 @@ export let MessagesListHeader = ({
   }, [moderation])
 
   const onPressBack = useCallback(() => {
-    if (isWeb) {
-      navigation.replace('Messages', {})
-    } else {
+    if (navigation.canGoBack()) {
       navigation.goBack()
+    } else {
+      navigation.navigate('Messages', {})
     }
   }, [navigation])
 
