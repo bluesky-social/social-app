@@ -13,6 +13,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
+  moderatePost,
   ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -22,7 +23,6 @@ import {useQueryClient} from '@tanstack/react-query'
 import {HandleRef, measureHandle} from '#/lib/hooks/useHandleRef'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {InfoCircleIcon} from '#/lib/icons'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {makeProfileLink} from '#/lib/routes/links'
 import {useLightboxControls} from '#/state/lightbox'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -48,8 +48,8 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {RichText} from '#/components/RichText'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
-import * as atp from '#/types/atproto'
-import {Embed, EmbedType,parseEmbed} from '#/types/atproto/post'
+import * as bsky from '#/types/bsky'
+import {Embed as TEmbed, EmbedType, parseEmbed} from '#/types/bsky/post'
 
 export type CommonProps = {
   moderation?: ModerationDecision
@@ -63,7 +63,7 @@ export type PostEmbedProps = CommonProps & {
   embed?: AppBskyFeedDefs.PostView['embed']
 }
 
-export function PostEmbed({embed: rawEmbed, ...rest}: PostEmbedProps) {
+export function Embed({embed: rawEmbed, ...rest}: PostEmbedProps) {
   const embed = parseEmbed(rawEmbed)
 
   switch (embed.type) {
@@ -100,7 +100,7 @@ function MediaEmbed({
   embed,
   ...rest
 }: CommonProps & {
-  embed: Embed
+  embed: TEmbed
 }) {
   switch (embed.type) {
     case 'images': {
@@ -138,7 +138,7 @@ function RecordEmbed({
   embed,
   ...rest
 }: CommonProps & {
-  embed: Embed
+  embed: TEmbed
 }) {
   switch (embed.type) {
     case 'feed': {
@@ -398,7 +398,7 @@ function QuoteEmbed({
 
   const richText = React.useMemo(() => {
     if (
-      !atp.dangerousIsType<AppBskyFeedPost.Record>(
+      !bsky.dangerousIsType<AppBskyFeedPost.Record>(
         quote.record,
         AppBskyFeedPost.isRecord,
       )
@@ -464,9 +464,7 @@ function QuoteEmbed({
               disableLinks
             />
           ) : null}
-          {quote.embed && (
-            <PostEmbed embed={quote.embed} moderation={moderation} />
-          )}
+          {quote.embed && <Embed embed={quote.embed} moderation={moderation} />}
         </Link>
       </ContentHider>
     </View>
