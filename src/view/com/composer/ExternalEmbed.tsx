@@ -8,9 +8,9 @@ import {
 } from '#/state/queries/resolve-link'
 import {Gif} from '#/state/queries/tenor'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
-import {ExternalLinkEmbed} from '#/view/com/util/post-embeds/ExternalLinkEmbed'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
+import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
 import {Embed as StarterPackEmbed} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
 import {MaybeFeedCard, MaybeListCard} from '../util/post-embeds'
@@ -44,7 +44,7 @@ export const ExternalEmbedGif = ({
     <View style={[a.overflow_hidden, t.atoms.border_contrast_medium]}>
       {linkInfo ? (
         <View style={{pointerEvents: 'auto'}}>
-          <ExternalLinkEmbed link={linkInfo} hideAlt />
+          <ExternalEmbed link={linkInfo} hideAlt />
         </View>
       ) : error ? (
         <Container style={[a.align_start, a.p_md, a.gap_xs]}>
@@ -80,7 +80,7 @@ export const ExternalEmbedLink = ({
     if (data) {
       if (data.type === 'external') {
         return (
-          <ExternalLinkEmbed
+          <ExternalEmbed
             link={{
               title: data.title || uri,
               uri,
