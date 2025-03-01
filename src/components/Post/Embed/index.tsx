@@ -17,7 +17,6 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {Link} from '#/view/com/util/Link'
-import {ExternalLinkEmbed} from '#/view/com/util/post-embeds/ExternalLinkEmbed'
 import {
   PostEmbedViewContext,
   QuoteEmbedViewContext,
@@ -32,6 +31,7 @@ import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import * as bsky from '#/types/bsky'
 import {Embed as TEmbed, EmbedType, parseEmbed} from '#/types/bsky/post'
+import {ExternalEmbed} from './ExternalEmbed'
 import {FeedEmbed} from './FeedEmbed'
 import {ImageEmbed} from './ImageEmbed'
 import {ListEmbed} from './ListEmbed'
@@ -88,7 +88,7 @@ function MediaEmbed({
     case 'link': {
       return (
         <ContentHider modui={rest.moderation?.ui('contentMedia')}>
-          <ExternalLinkEmbed
+          <ExternalEmbed
             link={embed.view.external}
             onOpen={rest.onOpen}
             style={[a.mt_sm, rest.style]}
