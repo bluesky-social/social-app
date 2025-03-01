@@ -131,32 +131,32 @@ let ProfileHeaderLabeler = ({
     }
   }, [editProfileControl, openModal, profile])
 
-  const onPressSubscribe = React.useCallback(
-    () =>
-      requireAuth(async (): Promise<void> => {
-        try {
-          await toggleSubscription({
-            did: profile.did,
-            subscribe: !isSubscribed,
-          })
-        } catch (e: any) {
-          reset()
-          if (e.message === 'MAX_LABELERS') {
-            cantSubscribePrompt.open()
-            return
-          }
-          logger.error(`Failed to subscribe to labeler`, {message: e.message})
+  const onPressSubscribe = React.useCallback(() => {
+    requireAuth(async (): Promise<void> => {
+      playHaptic()
+      try {
+        await toggleSubscription({
+          did: profile.did,
+          subscribe: !isSubscribed,
+        })
+      } catch (e: any) {
+        reset()
+        if (e.message === 'MAX_LABELERS') {
+          cantSubscribePrompt.open()
+          return
         }
-      }),
-    [
-      requireAuth,
-      toggleSubscription,
-      isSubscribed,
-      profile,
-      cantSubscribePrompt,
-      reset,
-    ],
-  )
+        logger.error(`Failed to subscribe to labeler`, {message: e.message})
+      }
+    })
+  }, [
+    playHaptic,
+    requireAuth,
+    toggleSubscription,
+    isSubscribed,
+    profile,
+    cantSubscribePrompt,
+    reset,
+  ])
 
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,
