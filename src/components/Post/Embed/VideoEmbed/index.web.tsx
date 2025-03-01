@@ -7,14 +7,14 @@ import {useLingui} from '@lingui/react'
 import {isFirefox} from '#/lib/browser'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {ConstrainedImage} from '#/view/com/util/images/AutoSizedImage'
+import {atoms as a} from '#/alf'
+import {useIsWithinMessage} from '#/components/dms/MessageContext'
+import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {
   HLSUnsupportedError,
   VideoEmbedInnerWeb,
   VideoNotFoundError,
-} from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb'
-import {atoms as a} from '#/alf'
-import {useIsWithinMessage} from '#/components/dms/MessageContext'
-import {useFullscreen} from '#/components/hooks/useFullscreen'
+} from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb'
 import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 

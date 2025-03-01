@@ -18,7 +18,6 @@ import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {Link} from '#/view/com/util/Link'
 import {} from '#/view/com/util/post-embeds/types'
-import {VideoEmbed} from '#/view/com/util/post-embeds/VideoEmbed'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {atoms as a, useTheme} from '#/alf'
 import {ContentHider} from '#/components/moderation/ContentHider'
@@ -39,6 +38,7 @@ import {
   PostEmbedViewContext,
   QuoteEmbedViewContext,
 } from './types'
+import {VideoEmbed} from './VideoEmbed'
 
 export {PostEmbedViewContext, QuoteEmbedViewContext} from './types'
 

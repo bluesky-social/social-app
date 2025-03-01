@@ -28,15 +28,15 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {atoms as a, useTheme} from '#/alf'
 import * as ListCard from '#/components/ListCard'
+import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
+import {VideoEmbed} from '#/components/Post/Embed/VideoEmbed'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
 import {Dimensions} from '../../lightbox/ImageViewing/@types'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
-import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
 import {PostEmbedViewContext, QuoteEmbedViewContext} from './types'
-import {VideoEmbed} from './VideoEmbed'
 
 export * from './types'
 
@@ -223,11 +223,7 @@ export function PostEmbeds({
     const link = embed.external
     return (
       <ContentHider modui={moderation?.ui('contentMedia')}>
-        <ExternalLinkEmbed
-          link={link}
-          onOpen={onOpen}
-          style={[a.mt_sm, style]}
-        />
+        <ExternalEmbed link={link} onOpen={onOpen} style={[a.mt_sm, style]} />
       </ContentHider>
     )
   }
