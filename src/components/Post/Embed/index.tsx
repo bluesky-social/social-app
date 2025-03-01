@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 import {
   $Typed,
   AppBskyFeedDefs,
@@ -12,7 +12,6 @@ import {Trans} from '@lingui/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {usePalette} from '#/lib/hooks/usePalette'
-import {InfoCircleIcon} from '#/lib/icons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {unstableCacheProfileView} from '#/state/queries/profile'
@@ -25,7 +24,6 @@ import {
 } from '#/view/com/util/post-embeds/types'
 import {VideoEmbed} from '#/view/com/util/post-embeds/VideoEmbed'
 import {PostMeta} from '#/view/com/util/PostMeta'
-import {Text} from '#/view/com/util/text/Text'
 import {atoms as a, useTheme} from '#/alf'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -37,6 +35,7 @@ import {Embed as TEmbed, EmbedType, parseEmbed} from '#/types/bsky/post'
 import {FeedEmbed} from './FeedEmbed'
 import {ImageEmbed} from './ImageEmbed'
 import {ListEmbed} from './ListEmbed'
+import {PostPlaceholder as PostPlaceholderText} from './PostPlaceholder'
 import {CommonProps, EmbedProps} from './types'
 
 export function Embed({embed: rawEmbed, ...rest}: EmbedProps) {
@@ -160,10 +159,18 @@ function RecordEmbed({
       )
     }
     case 'post_not_found': {
-      return <PostNotFoundEmbed />
+      return (
+        <PostPlaceholderText>
+          <Trans>Deleted</Trans>
+        </PostPlaceholderText>
+      )
     }
     case 'post_blocked': {
-      return <PostBlockedEmbed />
+      return (
+        <PostPlaceholderText>
+          <Trans>Blocked</Trans>
+        </PostPlaceholderText>
+      )
     }
     case 'post_detached': {
       return <PostDetachedEmbed embed={embed} />
@@ -174,60 +181,31 @@ function RecordEmbed({
   }
 }
 
-export function PostBlockedEmbed() {
-  const t = useTheme()
-  const pal = usePalette('default')
-  return (
-    <View
-      style={[styles.errorContainer, a.border, t.atoms.border_contrast_low]}>
-      <InfoCircleIcon size={18} style={pal.text} />
-      <Text type="lg" style={pal.text}>
-        <Trans>Blocked</Trans>
-      </Text>
-    </View>
-  )
-}
-
-export function PostNotFoundEmbed() {
-  const t = useTheme()
-  const pal = usePalette('default')
-  return (
-    <View
-      style={[styles.errorContainer, a.border, t.atoms.border_contrast_low]}>
-      <InfoCircleIcon size={18} style={pal.text} />
-      <Text type="lg" style={pal.text}>
-        <Trans>Deleted</Trans>
-      </Text>
-    </View>
-  )
-}
-
 export function PostDetachedEmbed({
   embed,
 }: {
   embed: EmbedType<'post_detached'>
 }) {
-  const t = useTheme()
-  const pal = usePalette('default')
   const {currentAccount} = useSession()
   const isViewerOwner = currentAccount?.did
     ? embed.view.uri.includes(currentAccount.did)
     : false
+
   return (
-    <View
-      style={[styles.errorContainer, a.border, t.atoms.border_contrast_low]}>
-      <InfoCircleIcon size={18} style={pal.text} />
-      <Text type="lg" style={pal.text}>
-        {isViewerOwner ? (
-          <Trans>Removed by you</Trans>
-        ) : (
-          <Trans>Removed by author</Trans>
-        )}
-      </Text>
-    </View>
+    <PostPlaceholderText>
+      {isViewerOwner ? (
+        <Trans>Removed by you</Trans>
+      ) : (
+        <Trans>Removed by author</Trans>
+      )}
+    </PostPlaceholderText>
   )
 }
 
+/*
+ * Nests parent `Embed` component and therefore must live in this file to avoid
+ * circular imports.
+ */
 function QuoteEmbed({
   embed,
   onOpen,
@@ -331,36 +309,3 @@ function QuoteEmbed({
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  altContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-    borderRadius: 6,
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-    position: 'absolute',
-    right: 6,
-    bottom: 6,
-  },
-  alt: {
-    color: 'white',
-    fontSize: 7,
-    fontWeight: '600',
-  },
-  customFeedOuter: {
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-  },
-  errorContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    borderRadius: 8,
-    marginTop: 8,
-    paddingVertical: 14,
-    paddingHorizontal: 14,
-    borderWidth: StyleSheet.hairlineWidth,
-  },
-})
