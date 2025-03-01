@@ -120,7 +120,7 @@ describe('general functionality', () => {
     expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
       category: Logger.Context.Default,
       message,
-      data: {context: 'logger'},
+      data: {__context__: 'logger'},
       type: 'default',
       level: LogLevel.Debug,
       timestamp: sentryTimestamp,
@@ -136,7 +136,7 @@ describe('general functionality', () => {
     expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
       category: Logger.Context.Default,
       message,
-      data: {prop: true, context: 'logger'},
+      data: {prop: true, __context__: 'logger'},
       type: 'info',
       level: LogLevel.Info,
       timestamp: sentryTimestamp,
@@ -152,7 +152,7 @@ describe('general functionality', () => {
     expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
       category: Logger.Context.Default,
       message,
-      data: {context: 'logger'},
+      data: {__context__: 'logger'},
       type: 'default',
       level: 'debug', // Sentry bug, log becomes debug
       timestamp: sentryTimestamp,
@@ -161,7 +161,7 @@ describe('general functionality', () => {
     expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
       level: 'log',
       tags: {category: 'logger'},
-      extra: {context: 'logger'},
+      extra: {__context__: 'logger'},
     })
 
     sentryTransport(
@@ -174,7 +174,7 @@ describe('general functionality', () => {
     expect(Sentry.addBreadcrumb).toHaveBeenCalledWith({
       category: Logger.Context.Default,
       message,
-      data: {context: 'logger'},
+      data: {__context__: 'logger'},
       type: 'default',
       level: 'warning',
       timestamp: sentryTimestamp,
@@ -183,7 +183,7 @@ describe('general functionality', () => {
     expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
       level: 'warning',
       tags: {category: 'logger'},
-      extra: {context: 'logger'},
+      extra: {__context__: 'logger'},
     })
 
     const e = new Error('error')
@@ -209,7 +209,7 @@ describe('general functionality', () => {
       },
       extra: {
         prop: true,
-        context: 'logger',
+        __context__: 'logger',
       },
     })
   })
