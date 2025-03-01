@@ -406,10 +406,11 @@ export function PostThread({uri}: {uri: string | undefined}) {
         text: thread.record.text,
         author: thread.post.author,
         embed: thread.post.embed,
+        moderation: threadModerationCache.get(thread),
       },
       onPost: onPostReply,
     })
-  }, [openComposer, thread, onPostReply])
+  }, [openComposer, thread, onPostReply, threadModerationCache])
 
   const canReply = !error && rootPost && !rootPost.viewer?.replyDisabled
   const hasParents =
