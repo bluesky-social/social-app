@@ -3,6 +3,7 @@ import {AppBskyLabelerDefs, ComAtprotoModerationDefs} from '@atproto/api'
 import {ReportOption} from './utils/useReportOptions'
 
 export type ReportState = {
+  userInteracted: boolean
   selectedOption?: ReportOption
   selectedLabeler?: AppBskyLabelerDefs.LabelerViewDetailed
   details?: string
@@ -42,6 +43,7 @@ export type ReportAction =
     }
 
 export const initialState: ReportState = {
+  userInteracted: false,
   selectedOption: undefined,
   selectedLabeler: undefined,
   details: undefined,

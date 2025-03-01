@@ -8,7 +8,7 @@ import {useLingui} from '@lingui/react'
 import {wait} from '#/lib/async/wait'
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {logger} from '#/logger'
+import {Logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {useMyLabelersQuery} from '#/state/queries/preferences'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
@@ -39,6 +39,8 @@ import {ReportOption, useReportOptions} from './utils/useReportOptions'
 
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
+const logger = Logger.create(Logger.Context.ReportDialog)
+
 export function ReportDialog(
   props: Omit<ReportDialogProps, 'subject'> & {
     subject: ReportSubject
@@ -48,8 +50,11 @@ export function ReportDialog(
     () => parseReportSubject(props.subject),
     [props.subject],
   )
+  const onClose = React.useCallback(() => {
+    logger.metric('reportDialog:close', {})
+  }, [])
   return (
-    <Dialog.Outer control={props.control}>
+    <Dialog.Outer control={props.control} onClose={onClose}>
       <Dialog.Handle />
       {subject ? <Inner {...props} subject={subject} /> : <Invalid />}
     </Dialog.Outer>
@@ -137,6 +142,8 @@ function Inner(props: ReportDialogProps) {
   const onSubmit = React.useCallback(async () => {
     dispatch({type: 'clearError'})
 
+    logger.info('submitting')
+
     try {
       setPending(true)
       // wait at least 1s, make it feel substantial
@@ -148,11 +155,17 @@ function Inner(props: ReportDialogProps) {
         }),
       )
       setSuccess(true)
+      logger.metric('reportDialog:success', {
+        reason: state.selectedOption?.reason!,
+        labeler: state.selectedLabeler?.creator.handle!,
+        details: !!state.details,
+      })
       // give time for user feedback
       setTimeout(() => {
         props.control.close()
       }, 1e3)
     } catch (e: any) {
+      logger.metric('reportDialog:failure', {})
       logger.error(e, {
         source: 'ReportDialog',
       })
@@ -164,6 +177,12 @@ function Inner(props: ReportDialogProps) {
       setPending(false)
     }
   }, [_, submitReport, state, dispatch, props, setPending, setSuccess])
+
+  React.useEffect(() => {
+    logger.metric('reportDialog:open', {
+      subjectType: props.subject.type,
+    })
+  }, [props.subject])
 
   return (
     <Dialog.ScrollableInner
