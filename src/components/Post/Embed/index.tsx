@@ -17,10 +17,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {Link} from '#/view/com/util/Link'
-import {
-  PostEmbedViewContext,
-  QuoteEmbedViewContext,
-} from '#/view/com/util/post-embeds/types'
+import {} from '#/view/com/util/post-embeds/types'
 import {VideoEmbed} from '#/view/com/util/post-embeds/VideoEmbed'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {atoms as a, useTheme} from '#/alf'
@@ -36,7 +33,12 @@ import {FeedEmbed} from './FeedEmbed'
 import {ImageEmbed} from './ImageEmbed'
 import {ListEmbed} from './ListEmbed'
 import {PostPlaceholder as PostPlaceholderText} from './PostPlaceholder'
-import {CommonProps, EmbedProps} from './types'
+import {
+  CommonProps,
+  EmbedProps,
+  PostEmbedViewContext,
+  QuoteEmbedViewContext,
+} from './types'
 
 export {PostEmbedViewContext, QuoteEmbedViewContext} from './types'
 

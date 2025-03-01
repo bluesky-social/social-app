@@ -2,8 +2,8 @@ import React from 'react'
 import {View} from 'react-native'
 import {$Typed, AppBskyEmbedRecord} from '@atproto/api'
 
-import {PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {atoms as a, native, useTheme} from '#/alf'
+import {PostEmbedViewContext} from '#/components/Post/Embed'
 import {Embed} from '#/components/Post/Embed'
 import {MessageContextProvider} from './MessageContext'
 
