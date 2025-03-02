@@ -2,14 +2,8 @@ name: CIS-565_BUILD
 
 on:
   workflow_dispatch:
-    inputs:
-      testPath:
-        description: "Path to Playwright tests (e.g., __e2e__)"
-        required: false
-        default: "__e2e__"
   push:
-    branches:
-      - main
+    branches: [ main, test ]
 
 jobs:
   build:
@@ -17,17 +11,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Build Docker image
-        id: build
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./Dockerfile
-          push: false
 
   playwright-tests:
     needs: build
@@ -39,7 +22,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: lts/*
 
       - name: Install dependencies
         run: npm ci
@@ -48,4 +31,6 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright Tests
-        run: npx playwright test ${{ github.event.inputs.testPath }}
+        working-directory: ./__tests__/lib
+        run: xvfb-run npx playwright test
+       
