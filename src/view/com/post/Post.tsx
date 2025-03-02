@@ -25,6 +25,7 @@ import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {AviFollowButton} from '#/view/com/posts/AviFollowButton'
 import {atoms as a} from '#/alf'
+import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
@@ -34,7 +35,6 @@ import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
 import {PostAlerts} from '../../../components/moderation/PostAlerts'
 import {Link, TextLink} from '../util/Link'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostEmbeds, PostEmbedViewContext} from '../util/post-embeds'
 import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
@@ -247,7 +247,7 @@ function PostInner({
               />
             ) : undefined}
             {post.embed ? (
-              <PostEmbeds
+              <Embed
                 embed={post.embed}
                 moderation={moderation}
                 viewContext={PostEmbedViewContext.Feed}
