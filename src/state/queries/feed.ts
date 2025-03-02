@@ -359,24 +359,68 @@ export function usePopularFeedsSearch({
   const agent = useAgent()
   const moderationOpts = useModerationOpts()
   const enabledInner = enabled ?? Boolean(moderationOpts)
+  const {hasSession} = useSession()
+
+  // Normalize query: trim whitespace and convert to lowercase
+  const normalizedQuery = query.trim().toLowerCase()
 
   return useQuery({
-    enabled: enabledInner,
-    queryKey: createPopularFeedsSearchQueryKey(query),
+    enabled: enabledInner && normalizedQuery.length > 1, // Match the FeedsScreen behavior
+    queryKey: createPopularFeedsSearchQueryKey(normalizedQuery),
     queryFn: async () => {
-      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
-        limit: 15,
-        query: query,
+      console.log('Starting feed search with:', {
+        originalQuery: query,
+        normalizedQuery,
+        hasSession,
+        moderationOpts: Boolean(moderationOpts),
+        agent: Boolean(agent),
       })
 
-      return res.data.feeds
+      // Split query into words
+      const words = normalizedQuery.split(/\s+/)
+
+      // Try each word in the query to maximize matches
+      const allResults = await Promise.all(
+        words.map(async word => {
+          console.log('Trying search with word:', word)
+          const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
+            limit: 15,
+            query: word,
+          })
+          return res.data.feeds || []
+        }),
+      )
+
+      // Combine and deduplicate results
+      const seenUris = new Set<string>()
+      const combinedFeeds = allResults.flat().filter(feed => {
+        if (seenUris.has(feed.uri)) return false
+        seenUris.add(feed.uri)
+        return true
+      })
+
+      console.log('Combined results:', {
+        totalResults: combinedFeeds.length,
+        words,
+      })
+
+      // Apply moderation filtering if needed
+      if (moderationOpts) {
+        return combinedFeeds.filter(feed => {
+          const decision = moderateFeedGenerator(feed, moderationOpts)
+          return !decision.ui('contentMedia').blur
+        })
+      }
+
+      return combinedFeeds
     },
     placeholderData: keepPreviousData,
     select(data) {
-      return data.filter(feed => {
-        const decision = moderateFeedGenerator(feed, moderationOpts!)
-        return !decision.ui('contentMedia').blur
+      console.log('Selecting data:', {
+        dataLength: data?.length,
+        moderationOpts: Boolean(moderationOpts),
       })
+      return data
     },
   })
 }
