@@ -28,9 +28,9 @@ import {SubtleWebHover} from '#/components/SubtleWebHover'
 import * as bsky from '#/types/bsky'
 import {Embed as TEmbed, EmbedType, parseEmbed} from '#/types/bsky/post'
 import {ExternalEmbed} from './ExternalEmbed'
-import {FeedEmbed} from './FeedEmbed'
+import {ModeratedFeedEmbed} from './FeedEmbed'
 import {ImageEmbed} from './ImageEmbed'
-import {ListEmbed} from './ListEmbed'
+import {ModeratedListEmbed} from './ListEmbed'
 import {PostPlaceholder as PostPlaceholderText} from './PostPlaceholder'
 import {
   CommonProps,
@@ -123,18 +123,14 @@ function RecordEmbed({
     case 'feed': {
       return (
         <View style={a.mt_sm}>
-          <ContentHider modui={rest.moderation?.ui('contentList')}>
-            <FeedEmbed embed={embed} {...rest} />
-          </ContentHider>
+          <ModeratedFeedEmbed embed={embed} {...rest} />
         </View>
       )
     }
     case 'list': {
       return (
         <View style={a.mt_sm}>
-          <ContentHider modui={rest.moderation?.ui('contentList')}>
-            <ListEmbed embed={embed} {...rest} />
-          </ContentHider>
+          <ModeratedListEmbed embed={embed} />
         </View>
       )
     }
