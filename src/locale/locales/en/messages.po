@@ -487,8 +487,8 @@ msgstr ""
 msgid "Add App Password"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:371
-#: src/components/moderation/ReportDialog/index.tsx:375
+#: src/components/moderation/ReportDialog/index.tsx:390
+#: src/components/moderation/ReportDialog/index.tsx:394
 msgid "Add more details (optional)"
 msgstr ""
 
@@ -550,7 +550,7 @@ msgstr ""
 msgid "Added to my feeds"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:388
+#: src/components/moderation/ReportDialog/index.tsx:407
 msgid "Additional details (limit 300 characters)"
 msgstr ""
 
@@ -1165,7 +1165,7 @@ msgid "Business"
 msgstr ""
 
 #: src/components/LabelingServiceCard/index.tsx:62
-#: src/components/moderation/ReportDialog/index.tsx:647
+#: src/components/moderation/ReportDialog/index.tsx:666
 msgid "By {0}"
 msgstr ""
 
@@ -1303,7 +1303,7 @@ msgstr ""
 msgid "Change Handle"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:293
+#: src/components/moderation/ReportDialog/index.tsx:312
 msgid "Change moderation service"
 msgstr ""
 
@@ -1319,7 +1319,7 @@ msgstr ""
 msgid "Change post language to {suggestedLanguageName}"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:215
+#: src/components/moderation/ReportDialog/index.tsx:234
 msgid "Change report reason"
 msgstr ""
 
@@ -1905,7 +1905,7 @@ msgstr ""
 msgid "Create new account"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:550
+#: src/components/moderation/ReportDialog/index.tsx:569
 #: src/components/ReportDialog/SelectReportOptionView.tsx:99
 msgid "Create report for {0}"
 msgstr ""
@@ -3603,7 +3603,7 @@ msgstr ""
 msgid "Invalid or unsupported post record"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:68
+#: src/components/moderation/ReportDialog/index.tsx:73
 msgid "Invalid report subject"
 msgstr ""
 
@@ -4331,7 +4331,7 @@ msgstr ""
 msgid "Need to change it?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:259
+#: src/components/moderation/ReportDialog/index.tsx:278
 #: src/components/ReportDialog/SelectReportOptionView.tsx:128
 msgid "Need to report a copyright violation?"
 msgstr ""
@@ -5706,8 +5706,8 @@ msgstr ""
 msgid "Report conversation"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:66
-#: src/components/moderation/ReportDialog/index.tsx:170
+#: src/components/moderation/ReportDialog/index.tsx:71
+#: src/components/moderation/ReportDialog/index.tsx:189
 #: src/components/ReportDialog/index.tsx:44
 msgid "Report dialog"
 msgstr ""
@@ -5889,7 +5889,7 @@ msgstr ""
 #: src/components/dms/MessageItem.tsx:245
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:110
-#: src/components/moderation/ReportDialog/index.tsx:201
+#: src/components/moderation/ReportDialog/index.tsx:220
 #: src/components/StarterPack/ProfileStarterPacks.tsx:334
 #: src/screens/Login/LoginForm.tsx:323
 #: src/screens/Login/LoginForm.tsx:330
@@ -5905,7 +5905,7 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:198
+#: src/components/moderation/ReportDialog/index.tsx:217
 msgid "Retry loading report options"
 msgstr ""
 
@@ -6185,7 +6185,7 @@ msgstr ""
 msgid "Select languages"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:278
+#: src/components/moderation/ReportDialog/index.tsx:297
 msgid "Select moderation service"
 msgstr ""
 
@@ -6287,7 +6287,7 @@ msgstr ""
 msgid "Send report to {0}"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:613
+#: src/components/moderation/ReportDialog/index.tsx:632
 msgid "Send report to {title}"
 msgstr ""
 
@@ -6647,7 +6647,7 @@ msgstr ""
 msgid "Some people can reply"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:71
+#: src/components/moderation/ReportDialog/index.tsx:76
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr ""
 
@@ -6655,7 +6655,7 @@ msgstr ""
 msgid "Something went wrong"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:195
+#: src/components/moderation/ReportDialog/index.tsx:214
 #: src/screens/Deactivated.tsx:94
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
 msgid "Something went wrong, please try again"
@@ -6672,7 +6672,7 @@ msgstr ""
 msgid "Something went wrong!"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:161
+#: src/components/moderation/ReportDialog/index.tsx:174
 msgid "Something went wrong. Please try again."
 msgstr ""
 
@@ -6801,9 +6801,9 @@ msgstr ""
 msgid "Submit Appeal"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:355
-#: src/components/moderation/ReportDialog/index.tsx:410
-#: src/components/moderation/ReportDialog/index.tsx:417
+#: src/components/moderation/ReportDialog/index.tsx:374
+#: src/components/moderation/ReportDialog/index.tsx:429
+#: src/components/moderation/ReportDialog/index.tsx:436
 msgid "Submit report"
 msgstr ""
 
@@ -7594,7 +7594,7 @@ msgstr ""
 msgid "Unfollows the user"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:340
+#: src/components/moderation/ReportDialog/index.tsx:359
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr ""
 
@@ -8005,7 +8005,7 @@ msgstr ""
 msgid "View details"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:242
+#: src/components/moderation/ReportDialog/index.tsx:261
 #: src/components/ReportDialog/SelectReportOptionView.tsx:132
 msgid "View details for reporting a copyright violation"
 msgstr ""
@@ -8735,7 +8735,7 @@ msgstr ""
 msgid "Your reply has been published"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:362
+#: src/components/moderation/ReportDialog/index.tsx:381
 msgid "Your report will be sent to <0>{0}</0>."
 msgstr ""
 
