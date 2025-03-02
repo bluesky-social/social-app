@@ -1,4 +1,4 @@
-import {StyleSheet,View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {InfoCircleIcon} from '#/lib/icons'
