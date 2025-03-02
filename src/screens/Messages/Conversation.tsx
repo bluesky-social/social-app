@@ -40,6 +40,7 @@ export function MessagesConversationScreen({route}: Props) {
   const setMinimalShellMode = useSetMinimalShellMode()
 
   const convoId = route.params.conversation
+  const hasAccepted = !!route.params.accept
   const {setCurrentConvoId} = useCurrentConvoId()
 
   useEnableKeyboardControllerScreen(true)
@@ -63,7 +64,7 @@ export function MessagesConversationScreen({route}: Props) {
 
   return (
     <Layout.Screen testID="convoScreen" style={web([{minHeight: 0}, a.flex_1])}>
-      <ConvoProvider key={convoId} convoId={convoId}>
+      <ConvoProvider key={convoId} convoId={convoId} hasAccepted={hasAccepted}>
         <Inner />
       </ConvoProvider>
     </Layout.Screen>

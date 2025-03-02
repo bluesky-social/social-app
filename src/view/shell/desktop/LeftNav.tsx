@@ -423,12 +423,12 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
                 backgroundColor: t.palette.primary_500,
                 width: 8,
                 height: 8,
-                right: -1,
-                top: -3,
+                right: -2,
+                top: -4,
               },
               leftNavMinimal && {
-                right: 6,
-                top: 4,
+                right: 4,
+                top: 2,
               },
             ]}
           />
@@ -520,6 +520,7 @@ function ChatNavItem() {
     <NavItem
       href="/messages"
       count={numUnreadMessages.numUnread}
+      hasNew={numUnreadMessages.hasNew}
       icon={
         <Message style={pal.text} aria-hidden={true} width={NAV_ICON_WIDTH} />
       }
