@@ -45,10 +45,10 @@ export function useListConvosQuery({
   return useInfiniteQuery({
     enabled: enabled && leaveConvoMutationStates.length === 0,
     queryKey: RQKEY,
-    queryFn: async ({pageParam, signal}) => {
+    queryFn: async ({pageParam}) => {
       const {data} = await agent.api.chat.bsky.convo.listConvos(
         {cursor: pageParam, limit: 20},
-        {headers: DM_SERVICE_HEADERS, signal},
+        {headers: DM_SERVICE_HEADERS},
       )
 
       return data
