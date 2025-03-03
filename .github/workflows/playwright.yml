@@ -11,8 +11,8 @@ on:
 
 # Automated job definition
 jobs:
-  # Test UI functionality
-  run-login-tests:
+  # Test Login UI functionality
+  run-login-system-tests:
     # After 1hr stop job if not completed
     timeout-minutes: 60
 
@@ -36,15 +36,13 @@ jobs:
       # Install Playwright browsers (i.e. Chromium, Webkit, Firefox) with dependencies
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
-      # Run the playwright test scripts wuth tag name UI
+      # Run the playwright test scripts
     - name: Run Playwright tests
-      # Specify which directory to run the tests from
-      working-directory: ./__tests__/lib
       run: xvfb-run npx playwright test
       # Upload the test scripts reports to the following directory, if the job was not cancelled. Keep report for 30 days
     - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
+      if: always()
       with:
-        name: playwright-report-ui
-        path: __tests__/reports/
+        name: playwright-login-ui-report
+        path: playwright-report/
         retention-days: 30
