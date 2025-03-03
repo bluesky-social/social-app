@@ -97,8 +97,6 @@ export function ListConvosProviderInner({
   const {currentConvoId} = useCurrentConvoId()
   const {currentAccount} = useSession()
 
-  console.log('list convos data', data)
-
   const debouncedRefetch = useMemo(
     () =>
       throttle(refetch, 500, {
