@@ -43,6 +43,8 @@ export function useListConvosQuery({
   })
 
   return useInfiniteQuery({
+    // Stop refetching if leaving conversation is pending and overriding the
+    // optimistic update.
     enabled: enabled && leaveConvoMutationStates.length === 0,
     queryKey: RQKEY,
     queryFn: async ({pageParam}) => {
