@@ -1,0 +1,47 @@
+name: Playwright Sample Tests
+
+# Automate Github actions
+on:
+  # Remote push request to 'main' repo, run below job
+  push:
+    branches: [ test ]
+
+  # Manual github actions calls, run below job
+  workflow_dispatch:
+
+# Automated job definition
+jobs:
+  # Test UI functionality
+  tests:
+    # After 1hr stop job if not completed
+    timeout-minutes: 60
+
+    # Run on github's linux environment
+    runs-on: ubuntu-latest
+
+    # Steps definition
+    steps:
+      # using the github action built-in cmds, checkout the repo
+    - uses: actions/checkout@v4
+      # setup node.js package
+    - uses: actions/setup-node@v4
+      # specify which node version (i.e. the latest version)
+      with:
+        node-version: lts/*
+      # Install any node dependencies needed
+    - name: Install dependencies
+      run: npm ci
+      # Install Playwright browsers (i.e. Chromium, Webkit, Firefox) with dependencies
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+      # Run the playwright test scripts wuth tag name UI
+    - name: Run Playwright tests
+      # Specify which directory to run the tests from
+      working-directory: ./__tests__/lib
+      run: xvfb-run npx playwright test
+      # Upload the test scripts reports to the following directory, if the job was not cancelled. Keep report for 30 days
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-report-ui
+        retention-days: 30
