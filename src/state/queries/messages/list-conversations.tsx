@@ -14,6 +14,7 @@ import {
   InfiniteData,
   QueryClient,
   useInfiniteQuery,
+  useMutationState,
   useQueryClient,
 } from '@tanstack/react-query'
 import throttle from 'lodash.throttle'
@@ -22,8 +23,8 @@ import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
+import {RQKEY_ROOT as LEAVE_CONVO_RQKEY_ROOT} from '#/state/queries/messages/leave-conversation'
 import {useAgent, useSession} from '#/state/session'
-
 export const RQKEY = ['convo-list']
 type RQPageParam = string | undefined
 
@@ -34,13 +35,20 @@ export function useListConvosQuery({
 } = {}) {
   const agent = useAgent()
 
+  const leaveConvoMutationStates = useMutationState({
+    filters: {
+      mutationKey: [LEAVE_CONVO_RQKEY_ROOT],
+      status: 'pending',
+    },
+  })
+
   return useInfiniteQuery({
-    enabled,
+    enabled: enabled && leaveConvoMutationStates.length === 0,
     queryKey: RQKEY,
-    queryFn: async ({pageParam}) => {
+    queryFn: async ({pageParam, signal}) => {
       const {data} = await agent.api.chat.bsky.convo.listConvos(
         {cursor: pageParam, limit: 20},
-        {headers: DM_SERVICE_HEADERS},
+        {headers: DM_SERVICE_HEADERS, signal},
       )
 
       return data
@@ -86,6 +94,8 @@ export function ListConvosProviderInner({
   const queryClient = useQueryClient()
   const {currentConvoId} = useCurrentConvoId()
   const {currentAccount} = useSession()
+
+  console.log('list convos data', data)
 
   const debouncedRefetch = useMemo(
     () =>
