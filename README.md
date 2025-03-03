@@ -1,6 +1,6 @@
 # Bluesky Social App
 
-Welcome friends! This is the codebase for the Bluesky Social app.
+Welcome friends! This is the codebase for the Bluesky Social Open Source app.
 
 Get the app itself:
 
