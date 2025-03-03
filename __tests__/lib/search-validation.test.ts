@@ -40,7 +40,7 @@ async function searchForUser(page: Page, userTerm: string): Promise<void> {
 }
 
 // Test Case: Searching for a BlueSky Post
-test('Search term and verify results', async ({ page }) => {
+test('Search term and verify results', {tag: '@search'}, async ({ page }) => {
 
   // Specify search term
   const searchTerm = 'Nba All Star Game';
@@ -65,7 +65,7 @@ test('Search term and verify results', async ({ page }) => {
 
  
 // Test Case: Searching for Nothing (empty search)
-test('Search empty term and verify results', async ({ page }) => {
+test('Search empty term and verify results', {tag: '@search'}, async ({ page }) => {
 
   // Specify empty search term
   const searchTerm = '';
@@ -84,7 +84,7 @@ test('Search empty term and verify results', async ({ page }) => {
 
 
 // Test Case: Searching for a BlueSky User
-test('Search user and verify results', async ({ page }) => {
+test('Search user and verify results', {tag: '@search'}, async ({ page }) => {
 
   // Specify user name
   const searchUser = 'Mark Cuban';
