@@ -12,7 +12,7 @@ import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
 import {RQKEY_ROOT as CONVO_LIST_KEY} from './list-conversations'
 
-const RQKEY_ROOT = 'leave-convo'
+export const RQKEY_ROOT = 'leave-convo'
 export function RQKEY(convoId: string | undefined) {
   return [RQKEY_ROOT, convoId]
 }
@@ -42,7 +42,8 @@ export function useLeaveConvo(
 
       return data
     },
-    onMutate: () => {
+    onMutate: async () => {
+      await queryClient.cancelQueries({queryKey: CONVO_LIST_KEY})
       let prevPages: ChatBskyConvoListConvos.OutputSchema[] = []
       queryClient.setQueryData(
         [CONVO_LIST_KEY],
