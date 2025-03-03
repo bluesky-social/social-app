@@ -21,19 +21,13 @@ jobs:
 
     # Steps definition
     steps:
-    # Create reports directory to store job reports
-    - name: Create Reports Directory (if not already created)
-      run: |
-        if [! -d "playwright-reports"]; then
-          mkdir "playwright-reports"
-        fi
-      # using the github action built-in cmds, checkout the repo
+      # Using the github action built-in cmds, checkout the repo
     - name: Checkout Code
       uses: actions/checkout@v4
-      # setup node.js package
+      # Setup node.js package
     - name: Setup Node.js Package
       uses: actions/setup-node@v4
-      # specify which node version (i.e. the latest version)
+      # Specify which node version (i.e. the latest version)
       with:
         node-version: lts/*
       # Install any node dependencies needed
