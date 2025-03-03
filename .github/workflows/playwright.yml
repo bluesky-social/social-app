@@ -2,7 +2,7 @@ name: Playwright Sample Tests
 
 # Automate Github actions
 on:
-  # Remote push request to 'main' repo, run below job
+  # Remote push request to 'test' repo, run below job
   push:
     branches: [ test ]
 
@@ -12,7 +12,7 @@ on:
 # Automated job definition
 jobs:
   # Test UI functionality
-  tests:
+  run-login-tests:
     # After 1hr stop job if not completed
     timeout-minutes: 60
 
@@ -21,10 +21,18 @@ jobs:
 
     # Steps definition
     steps:
+    # Create reports directory to store job reports
+    - name: Create Reports Directory (if not already created)
+      run: |
+        if [! -d "playwright-reports"]; then
+          mkdir "playwright-reports"
+        fi
       # using the github action built-in cmds, checkout the repo
-    - uses: actions/checkout@v4
+    - name: Checkout Code
+      uses: actions/checkout@v4
       # setup node.js package
-    - uses: actions/setup-node@v4
+    - name: Setup Node.js Package
+      uses: actions/setup-node@v4
       # specify which node version (i.e. the latest version)
       with:
         node-version: lts/*
@@ -44,4 +52,5 @@ jobs:
       if: ${{ !cancelled() }}
       with:
         name: playwright-report-ui
+        path: playwright-reports/
         retention-days: 30
