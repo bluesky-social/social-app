@@ -2,9 +2,6 @@ name: Playwright Sample Tests
 
 # Automate Github actions
 on:
-  # Remote push request to 'test' repo, run below job
-  push:
-    branches: [ test ]
 
   # Manual github actions calls, run below job
   workflow_dispatch:
