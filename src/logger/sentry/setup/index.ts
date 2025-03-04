@@ -34,7 +34,11 @@ init({
   dsn: 'https://8fb55ba4807fca137eedfc8403ee27ba@o4505071687041024.ingest.us.sentry.io/4508807082278912',
   debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
   environment: process.env.NODE_ENV,
-  dist,
-  release,
+  ...(Platform.OS === 'web'
+    ? {
+        dist,
+        release,
+      }
+    : {}),
   // ignoreErrors: [`t is not defined`, `Can't find variable: t`],
 })
