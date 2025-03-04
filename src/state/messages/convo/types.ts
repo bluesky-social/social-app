@@ -141,6 +141,7 @@ type SendMessage = (
   message: ChatBskyConvoSendMessage.InputSchema['message'],
 ) => void
 type FetchMessageHistory = () => Promise<void>
+type MarkConvoAccepted = () => void
 
 export type ConvoStateUninitialized = {
   status: ConvoStatus.Uninitialized
@@ -153,6 +154,7 @@ export type ConvoStateUninitialized = {
   deleteMessage: undefined
   sendMessage: undefined
   fetchMessageHistory: undefined
+  markConvoAccepted: undefined
 }
 export type ConvoStateInitializing = {
   status: ConvoStatus.Initializing
@@ -165,6 +167,7 @@ export type ConvoStateInitializing = {
   deleteMessage: undefined
   sendMessage: undefined
   fetchMessageHistory: undefined
+  markConvoAccepted: undefined
 }
 export type ConvoStateReady = {
   status: ConvoStatus.Ready
@@ -177,6 +180,7 @@ export type ConvoStateReady = {
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
+  markConvoAccepted: MarkConvoAccepted
 }
 export type ConvoStateBackgrounded = {
   status: ConvoStatus.Backgrounded
@@ -189,6 +193,7 @@ export type ConvoStateBackgrounded = {
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
+  markConvoAccepted: MarkConvoAccepted
 }
 export type ConvoStateSuspended = {
   status: ConvoStatus.Suspended
@@ -201,6 +206,7 @@ export type ConvoStateSuspended = {
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
+  markConvoAccepted: MarkConvoAccepted
 }
 export type ConvoStateError = {
   status: ConvoStatus.Error
@@ -213,6 +219,7 @@ export type ConvoStateError = {
   deleteMessage: undefined
   sendMessage: undefined
   fetchMessageHistory: undefined
+  markConvoAccepted: undefined
 }
 export type ConvoStateDisabled = {
   status: ConvoStatus.Disabled
@@ -225,6 +232,7 @@ export type ConvoStateDisabled = {
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
+  markConvoAccepted: MarkConvoAccepted
 }
 export type ConvoState =
   | ConvoStateUninitialized

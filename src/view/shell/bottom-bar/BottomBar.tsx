@@ -199,6 +199,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               }
               onPress={onPressMessages}
               notificationCount={numUnreadMessages.numUnread}
+              hasNew={numUnreadMessages.hasNew}
               accessible={true}
               accessibilityRole="tab"
               accessibilityLabel={_(msg`Chat`)}

@@ -9,7 +9,6 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   $Typed,
   AppBskyEmbedRecord,
@@ -17,7 +16,6 @@ import {
   RichText,
 } from '@atproto/api'
 
-import {clamp} from '#/lib/numbers'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {
@@ -31,6 +29,7 @@ import {isConvoActive, useConvoActive} from '#/state/messages/convo'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
 import {useGetPost} from '#/state/queries/post'
 import {useAgent} from '#/state/session'
+import {useShellLayout} from '#/state/shell/shell-layout'
 import {
   EmojiPicker,
   EmojiPickerState,
@@ -44,6 +43,7 @@ import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {ChatStatusInfo} from './ChatStatusInfo'
 import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
 
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
@@ -85,11 +85,13 @@ export function MessagesList({
   setHasScrolled,
   blocked,
   footer,
+  hasAcceptOverride,
 }: {
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
   blocked?: boolean
   footer?: React.ReactNode
+  hasAcceptOverride?: boolean
 }) {
   const convoState = useConvoActive()
   const agent = useAgent()
@@ -242,8 +244,7 @@ export function MessagesList({
   )
 
   // -- Keyboard animation handling
-  const {bottom: bottomInset} = useSafeAreaInsets()
-  const bottomOffset = isWeb ? 0 : clamp(60 + bottomInset, 60, 75)
+  const {footerHeight} = useShellLayout()
 
   const keyboardHeight = useSharedValue(0)
   const keyboardIsOpening = useSharedValue(false)
@@ -268,28 +269,30 @@ export function MessagesList({
       onMove: e => {
         'worklet'
         keyboardHeight.set(e.height)
-        if (e.height > bottomOffset) {
+        if (e.height > footerHeight.get()) {
           scrollTo(flatListRef, 0, 1e7, false)
         }
       },
       onEnd: e => {
         'worklet'
         keyboardHeight.set(e.height)
-        if (e.height > bottomOffset) {
+        if (e.height > footerHeight.get()) {
           scrollTo(flatListRef, 0, 1e7, false)
         }
         keyboardIsOpening.set(false)
       },
     },
-    [bottomOffset],
+    [footerHeight],
   )
 
   const animatedListStyle = useAnimatedStyle(() => ({
-    marginBottom: Math.max(keyboardHeight.get(), bottomOffset),
+    marginBottom: Math.max(keyboardHeight.get(), footerHeight.get()),
   }))
 
   const animatedStickyViewStyle = useAnimatedStyle(() => ({
-    transform: [{translateY: -Math.max(keyboardHeight.get(), bottomOffset)}],
+    transform: [
+      {translateY: -Math.max(keyboardHeight.get(), footerHeight.get())},
+    ],
   }))
 
   // -- Message sending
@@ -437,18 +440,41 @@ export function MessagesList({
         ) : blocked ? (
           footer
         ) : (
-          <>
-            {isConvoActive(convoState) &&
-              !convoState.isFetchingHistory &&
-              convoState.items.length === 0 && <ChatEmptyPill />}
-            <MessageInput
-              onSendMessage={onSendMessage}
-              hasEmbed={!!embedUri}
-              setEmbed={setEmbed}
-              openEmojiPicker={pos => setEmojiPickerState({isOpen: true, pos})}>
-              <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
-            </MessageInput>
-          </>
+          isConvoActive(convoState) &&
+          !convoState.isFetchingHistory && (
+            <>
+              {convoState.items.length === 0 ? (
+                <>
+                  <ChatEmptyPill />
+                  <MessageInput
+                    onSendMessage={onSendMessage}
+                    hasEmbed={!!embedUri}
+                    setEmbed={setEmbed}
+                    openEmojiPicker={pos =>
+                      setEmojiPickerState({isOpen: true, pos})
+                    }>
+                    <MessageInputEmbed
+                      embedUri={embedUri}
+                      setEmbed={setEmbed}
+                    />
+                  </MessageInput>
+                </>
+              ) : convoState.convo.status === 'request' &&
+                !hasAcceptOverride ? (
+                <ChatStatusInfo convoState={convoState} />
+              ) : (
+                <MessageInput
+                  onSendMessage={onSendMessage}
+                  hasEmbed={!!embedUri}
+                  setEmbed={setEmbed}
+                  openEmojiPicker={pos =>
+                    setEmojiPickerState({isOpen: true, pos})
+                  }>
+                  <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
+                </MessageInput>
+              )}
+            </>
+          )
         )}
       </Animated.View>
 
