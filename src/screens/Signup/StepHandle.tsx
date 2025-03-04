@@ -6,8 +6,8 @@ import {useLingui} from '@lingui/react'
 import {logEvent} from '#/lib/statsig/statsig'
 import {
   createFullHandle,
-  maxServiceHandleLength,
-  validateHandle,
+  MAX_SERVICE_HANDLE_LENGTH,
+  validateServiceHandle,
 } from '#/lib/strings/handles'
 import {useAgent} from '#/state/session'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
@@ -37,7 +37,7 @@ export function StepHandle() {
       value: handle,
     })
 
-    const newValidCheck = validateHandle(handle, state.userDomain)
+    const newValidCheck = validateServiceHandle(handle, state.userDomain)
     if (!newValidCheck.overall) {
       return
     }
@@ -97,7 +97,7 @@ export function StepHandle() {
     })
   }, [dispatch, state.activeStep])
 
-  const validCheck = validateHandle(draftValue, state.userDomain, true)
+  const validCheck = validateServiceHandle(draftValue, state.userDomain)
   return (
     <ScreenTransition>
       <View style={[a.gap_lg]}>
@@ -126,10 +126,12 @@ export function StepHandle() {
         </View>
         {draftValue !== '' && (
           <Text style={[a.text_md]}>
-            <Trans>Your full username will be</Trans>{' '}
-            <Text style={[a.text_md, a.font_bold]}>
-              @{createFullHandle(draftValue, state.userDomain)}
-            </Text>
+            <Trans>
+              Your full username will be{' '}
+              <Text style={[a.text_md, a.font_bold]}>
+                @{createFullHandle(draftValue, state.userDomain)}
+              </Text>
+            </Trans>
           </Text>
         )}
 
@@ -168,11 +170,11 @@ export function StepHandle() {
               <IsValidIcon
                 valid={validCheck.frontLength && validCheck.totalLength}
               />
-              {!validCheck.totalLength ? (
+              {!validCheck.totalLength ||
+              draftValue.length > MAX_SERVICE_HANDLE_LENGTH ? (
                 <Text style={[a.text_md, a.flex_1]}>
                   <Trans>
-                    No longer than {maxServiceHandleLength(state.userDomain)}{' '}
-                    characters
+                    No longer than {MAX_SERVICE_HANDLE_LENGTH} characters
                   </Trans>
                 </Text>
               ) : (

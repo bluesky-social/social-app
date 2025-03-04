@@ -1,7 +1,7 @@
 import {StyleProp, ViewStyle} from 'react-native'
 import {ModerationCause, ModerationUI} from '@atproto/api'
 
-import {getModerationCauseKey} from '#/lib/moderation'
+import {getModerationCauseKey, unique} from '#/lib/moderation'
 import * as Pills from '#/components/Pills'
 
 export function PostAlerts({
@@ -22,7 +22,7 @@ export function PostAlerts({
 
   return (
     <Pills.Row size={size} style={[size === 'sm' && {marginLeft: -3}, style]}>
-      {modui.alerts.map(cause => (
+      {modui.alerts.filter(unique).map(cause => (
         <Pills.Label
           key={getModerationCauseKey(cause)}
           cause={cause}
@@ -30,7 +30,7 @@ export function PostAlerts({
           noBg={size === 'sm'}
         />
       ))}
-      {modui.informs.map(cause => (
+      {modui.informs.filter(unique).map(cause => (
         <Pills.Label
           key={getModerationCauseKey(cause)}
           cause={cause}

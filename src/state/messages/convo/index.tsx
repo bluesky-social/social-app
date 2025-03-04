@@ -1,4 +1,5 @@
 import React, {useContext, useState, useSyncExternalStore} from 'react'
+import {ChatBskyConvoDefs} from '@atproto/api'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -14,8 +15,11 @@ import {
 } from '#/state/messages/convo/types'
 import {isConvoActive} from '#/state/messages/convo/util'
 import {useMessagesEventBus} from '#/state/messages/events'
-import {useMarkAsReadMutation} from '#/state/queries/messages/conversation'
-import {RQKEY as ListConvosQueryKey} from '#/state/queries/messages/list-conversations'
+import {
+  RQKEY as getConvoKey,
+  useMarkAsReadMutation,
+} from '#/state/queries/messages/conversation'
+import {RQKEY_ROOT as ListConvosQueryKeyRoot} from '#/state/queries/messages/list-conversations'
 import {RQKEY as createProfileQueryKey} from '#/state/queries/profile'
 import {useAgent} from '#/state/session'
 
@@ -60,14 +64,17 @@ export function ConvoProvider({
   const queryClient = useQueryClient()
   const agent = useAgent()
   const events = useMessagesEventBus()
-  const [convo] = useState(
-    () =>
-      new Convo({
-        convoId,
-        agent,
-        events,
-      }),
-  )
+  const [convo] = useState(() => {
+    const placeholder = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(
+      getConvoKey(convoId),
+    )
+    return new Convo({
+      convoId,
+      agent,
+      events,
+      placeholderData: placeholder ? {convo: placeholder} : undefined,
+    })
+  })
   const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot)
   const {mutate: markAsRead} = useMarkAsReadMutation()
 
@@ -97,7 +104,7 @@ export function ConvoProvider({
             })
           }
           queryClient.invalidateQueries({
-            queryKey: ListConvosQueryKey,
+            queryKey: [ListConvosQueryKeyRoot],
           })
         }
       }

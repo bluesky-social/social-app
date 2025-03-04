@@ -33,6 +33,7 @@ import {precacheResolvedUri} from './resolve-uri'
 
 export type FeedSourceFeedInfo = {
   type: 'feed'
+  view?: AppBskyFeedDefs.GeneratorView
   uri: string
   feedDescriptor: FeedDescriptor
   route: {
@@ -53,6 +54,7 @@ export type FeedSourceFeedInfo = {
 
 export type FeedSourceListInfo = {
   type: 'list'
+  view?: AppBskyGraphDefs.ListView
   uri: string
   feedDescriptor: FeedDescriptor
   route: {
@@ -93,6 +95,7 @@ export function hydrateFeedGenerator(
 
   return {
     type: 'feed',
+    view,
     uri: view.uri,
     feedDescriptor: `feedgen|${view.uri}`,
     cid: view.cid,
@@ -126,6 +129,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 
   return {
     type: 'list',
+    view,
     uri: view.uri,
     feedDescriptor: `list|${view.uri}`,
     route: {
@@ -330,7 +334,7 @@ export function useSearchPopularFeedsMutation() {
       if (moderationOpts) {
         return res.data.feeds.filter(feed => {
           const decision = moderateFeedGenerator(feed, moderationOpts)
-          return !decision.ui('contentList').filter
+          return !decision.ui('contentMedia').blur
         })
       }
 
@@ -371,7 +375,7 @@ export function usePopularFeedsSearch({
     select(data) {
       return data.filter(feed => {
         const decision = moderateFeedGenerator(feed, moderationOpts!)
-        return !decision.ui('contentList').filter
+        return !decision.ui('contentMedia').blur
       })
     },
   })

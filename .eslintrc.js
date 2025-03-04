@@ -32,6 +32,7 @@ module.exports = {
           'H6',
           'P',
           'Admonition',
+          'Admonition.Admonition',
         ],
         impliedTextProps: [],
         suggestedTextWrappers: {
@@ -80,20 +81,6 @@ module.exports = {
     ],
     'simple-import-sort/exports': 'error',
     'react-compiler/react-compiler': 'warn',
-    'no-restricted-imports': [
-      'error',
-      {
-        paths: [
-          {
-            name: '@atproto/api',
-            importNames: ['moderatePost'],
-            message:
-              'Please use `moderatePost_wrapped` from `#/lib/moderatePost_wrapped` instead.',
-          },
-        ],
-      },
-    ],
-    '@typescript-eslint/ban-ts-comment': 'warn',
   },
   ignorePatterns: [
     '**/__mocks__/*.ts',

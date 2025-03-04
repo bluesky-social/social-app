@@ -76,7 +76,7 @@ export const ProfileFeedgens = React.forwardRef<
     if (isError && isEmpty) {
       items = items.concat([ERROR_ITEM])
     }
-    if (!isFetched && isFetching) {
+    if (!isFetched || isFetching) {
       items = items.concat([LOADING])
     } else if (isEmpty) {
       items = items.concat([EMPTY])

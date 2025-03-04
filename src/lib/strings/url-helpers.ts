@@ -320,6 +320,21 @@ export function createBskyAppAbsoluteUrl(path: string): string {
   return `${BSKY_APP_HOST.replace(/\/$/, '')}/${sanitizedPath}`
 }
 
+export function createProxiedUrl(url: string): string {
+  let u
+  try {
+    u = URL.parse(url)
+  } catch {
+    return url
+  }
+
+  if (u?.protocol !== 'http:' && u?.protocol !== 'https:') {
+    return url
+  }
+
+  return `https://go.bsky.app/redirect?u=${url}`
+}
+
 export function isShortLink(url: string): boolean {
   return url.startsWith('https://go.bsky.app/')
 }

@@ -58,6 +58,7 @@ import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
+import * as bsky from '#/types/bsky'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
 import {Post} from '../post/Post'
 import {Link, TextLink} from '../util/Link'
@@ -71,7 +72,7 @@ const MAX_AUTHORS = 5
 const EXPANDED_AUTHOR_EL_HEIGHT = 35
 
 interface Author {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: AppBskyActorDefs.ProfileView
   href: string
   moderation: ModerationDecision
 }
@@ -264,7 +265,10 @@ let NotificationFeedItem = ({
 
     if (
       item.notification.author.viewer?.following &&
-      AppBskyGraphFollow.isRecord(item.notification.record)
+      bsky.dangerousIsType<AppBskyGraphFollow.Record>(
+        item.notification.record,
+        AppBskyGraphFollow.isRecord,
+      )
     ) {
       let followingTimestamp
       try {
@@ -521,7 +525,7 @@ function ExpandListPressable({
   }
 }
 
-function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
+function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileView}) {
   const {_} = useLingui()
   const agent = useAgent()
   const navigation = useNavigation<NavigationProp>()
@@ -716,7 +720,13 @@ function ExpandedAuthorsList({
 
 function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
   const pal = usePalette('default')
-  if (post && AppBskyFeedPost.isRecord(post?.record)) {
+  if (
+    post &&
+    bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      post?.record,
+      AppBskyFeedPost.isRecord,
+    )
+  ) {
     const text = post.record.text
 
     return (

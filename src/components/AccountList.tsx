@@ -62,7 +62,7 @@ export function AccountList({
         testID="chooseAddAccountBtn"
         style={[a.flex_1]}
         onPress={pendingDid ? undefined : onPressAddAccount}
-        label={_(msg`Login to account that is not listed`)}>
+        label={_(msg`Sign in to account that is not listed`)}>
         {({hovered, pressed}) => (
           <View
             style={[

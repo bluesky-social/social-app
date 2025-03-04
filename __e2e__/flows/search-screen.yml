@@ -12,8 +12,8 @@ appId: xyz.blueskyweb.app
 # Navigate to another user profile via autocomplete
 - tapOn:
     id: "bottomBarSearchBtn"
-- assertVisible: "Search"
-- tapOn: "Search"
+- assertVisible: "Search for posts, users, or feeds"
+- tapOn: "Search for posts, users, or feeds"
 - inputText: "b"
 - tapOn:
     id: "searchAutoCompleteResult-bob.test"

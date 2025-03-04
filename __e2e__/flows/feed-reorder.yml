@@ -16,7 +16,7 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "profileCardButton"
 - tapOn:
-    id: "profilePager-selector-4"
+    id: "profilePager-selector-5"
 - tapOn: "alice-favs"
 - tapOn: "Pin to Home"
 - tapOn:

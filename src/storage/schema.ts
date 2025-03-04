@@ -9,4 +9,10 @@ export type Device = {
     countryCode: string | undefined
   }
   trendingBetaEnabled: boolean
+  devMode: boolean
+}
+
+export type Account = {
+  searchTermHistory?: string[]
+  searchAccountHistory?: string[]
 }

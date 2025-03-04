@@ -2,22 +2,27 @@ msgid ""
 msgstr ""
 "POT-Creation-Date: 2023-11-05 16:01-0800\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: ko\n"
-"Project-Id-Version: \n"
+"Project-Id-Version: bluesky-social\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-01-24 09:10+0900\n"
-"Last-Translator: quiple\n"
-"Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade, Akamig\n"
-"Plural-Forms: \n"
+"PO-Revision-Date: 2025-02-14 19:57\n"
+"Last-Translator: \n"
+"Language-Team: Korean\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: bluesky-social\n"
+"X-Crowdin-Project-ID: 664276\n"
+"X-Crowdin-Language: ko\n"
+"X-Crowdin-File: /main/src/locale/locales/en/messages.po\n"
+"X-Crowdin-File-ID: 12\n"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:567
 msgid "(active)"
 msgstr "(활성)"
 
-#: src/screens/Messages/components/ChatListItem.tsx:139
+#: src/screens/Messages/components/ChatListItem.tsx:145
 msgid "(contains embedded content)"
 msgstr "(임베드 콘텐츠 포함)"
 
@@ -28,81 +33,77 @@ msgstr "(이메일 없음)"
 
 #: src/lib/hooks/useTimeAgo.ts:156
 msgid "{0, plural, one {# day} other {# days}}"
-msgstr "{0, plural, other {#}}일"
+msgstr "{0, plural, other {#일}}"
 
 #: src/screens/Profile/ProfileFollowers.tsx:40
 msgid "{0, plural, one {# follower} other {# followers}}"
-msgstr "{0, plural, other {#}} 팔로워"
+msgstr "{0, plural, other {# 팔로워}}"
 
 #: src/screens/Profile/ProfileFollows.tsx:40
 msgid "{0, plural, one {# following} other {# following}}"
-msgstr "{0, plural, other {#}} 팔로우 중"
+msgstr "{0, plural, other {# 팔로우 중}}"
 
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
-msgstr "{0, plural, other {#}}시간"
+msgstr "{0, plural, other {#시간}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this account"
-msgstr "이 계정에 {0, plural, other {#}}개의 라벨이 지정됨"
+msgstr "이 계정에 {0, plural, other {#개}}의 라벨이 지정됨"
 
 #: src/components/moderation/LabelsOnMe.tsx:62
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this content"
-msgstr "이 콘텐츠에 {0, plural, other {#}}개의 라벨이 지정됨"
+msgstr "이 콘텐츠에 {0, plural, other {#개}}의 라벨이 지정됨"
 
 #: src/screens/Post/PostLikedBy.tsx:41
 msgid "{0, plural, one {# like} other {# likes}}"
-msgstr "{0, plural, other {#}} 좋아요"
+msgstr "{0, plural, other {# 좋아요}}"
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr "{0, plural, other {#}}분"
+msgstr "{0, plural, other {#분}}"
 
 #: src/lib/hooks/useTimeAgo.ts:167
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr "{0, plural, other {#}}개월"
+msgstr "{0, plural, other {#개월}}"
 
 #: src/screens/Post/PostQuotes.tsx:41
 msgid "{0, plural, one {# quote} other {# quotes}}"
-msgstr "{0, plural, other {#}} 인용"
+msgstr "{0, plural, other {# 인용}}"
 
 #: src/screens/Post/PostRepostedBy.tsx:41
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr "{0, plural, other {#}} 재게시"
+msgstr "{0, plural, other {# 재게시}}"
 
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
-msgstr "{0, plural, other {#}}초"
+msgstr "{0, plural, other {#초}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr "팔로워"
+msgstr "{0, plural, other {팔로워}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
-msgstr "팔로우 중"
+msgstr "{0, plural, other {팔로우 중}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:447
+#: src/view/com/post-thread/PostThreadItem.tsx:452
 msgid "{0, plural, one {like} other {likes}}"
-msgstr "좋아요"
+msgstr "{0, plural, other {좋아요}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "게시물"
+msgstr "{0, plural, other {게시물}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:431
+#: src/view/com/post-thread/PostThreadItem.tsx:436
 msgid "{0, plural, one {quote} other {quotes}}"
-msgstr "인용"
+msgstr "{0, plural, other {인용}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:413
+#: src/view/com/post-thread/PostThreadItem.tsx:418
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr "재게시"
-
-#: src/screens/Settings/Settings.tsx:424
-msgid "{0}"
-msgstr "{0}"
+msgstr "{0, plural, other {재게시}}"
 
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
@@ -167,7 +168,7 @@ msgstr "{0}개월"
 msgid "{0}s"
 msgstr "{0}초"
 
-#: src/view/shell/desktop/LeftNav.tsx:384
+#: src/view/shell/desktop/LeftNav.tsx:387
 msgid "{count} unread items"
 msgstr "읽지 않은 항목 {count}개"
 
@@ -178,31 +179,31 @@ msgstr "{displayName} 님의 스타터 팩"
 
 #: src/screens/SignupQueued.tsx:216
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
-msgstr "시간"
+msgstr "{estimatedTimeHrs, plural, other {시간}}"
 
 #: src/screens/SignupQueued.tsx:222
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
-msgstr "분"
+msgstr "{estimatedTimeMins, plural, other {분}}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:301
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
-msgstr "{firstAuthorLink} 님 <0>외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}}}명</0>이 나를 팔로우했습니다"
+msgstr "{firstAuthorLink} 님 <0>외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}명}}</0>이 나를 팔로우했습니다"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:327
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
-msgstr "{firstAuthorLink} 님 <0>외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}}}명</0>이 내 맞춤 피드를 좋아합니다"
+msgstr "{firstAuthorLink} 님 <0>외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}명}}</0>이 내 맞춤 피드를 좋아합니다"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:223
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
-msgstr "{firstAuthorLink} 님 <0>외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}}}명</0>이 내 게시물을 좋아합니다"
+msgstr "{firstAuthorLink} 님 <0>외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}명}}</0>이 내 게시물을 좋아합니다"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:247
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
-msgstr "{firstAuthorLink} 님 <0>외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}}}명</0>이 내 게시물을 재게시했습니다"
+msgstr "{firstAuthorLink} 님 <0>외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}명}}</0>이 내 게시물을 재게시했습니다"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:351
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
-msgstr "{firstAuthorLink} 님 <0>외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}}}명</0>이 내 스타터 팩으로 가입했습니다"
+msgstr "{firstAuthorLink} 님 <0>외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}명}}</0>이 내 스타터 팩으로 가입했습니다"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:313
 msgid "{firstAuthorLink} followed you"
@@ -230,23 +231,23 @@ msgstr "{firstAuthorLink} 님이 내 스타터 팩으로 가입했습니다"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:294
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
-msgstr "{firstAuthorName} 님 외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}}}명이 나를 팔로우했습니다"
+msgstr "{firstAuthorName} 님 외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}명}}이 나를 팔로우했습니다"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:320
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
-msgstr "{firstAuthorName} 님 외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}}}명이 내 맞춤 피드를 좋아합니다"
+msgstr "{firstAuthorName} 님 외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}명}}이 내 맞춤 피드를 좋아합니다"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:216
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
-msgstr "{firstAuthorName} 님 외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}}}명이 내 게시물을 좋아합니다"
+msgstr "{firstAuthorName} 님 외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}명}}이 내 게시물을 좋아합니다"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:240
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
-msgstr "{firstAuthorName} 님 외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}}}명이 내 게시물을 재게시했습니다"
+msgstr "{firstAuthorName} 님 외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}명}}이 내 게시물을 재게시했습니다"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:344
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
-msgstr "{firstAuthorName} 님 외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}}}명이 내 스타터 팩으로 가입했습니다"
+msgstr "{firstAuthorName} 님 외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}명}}이 내 스타터 팩으로 가입했습니다"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:299
 msgid "{firstAuthorName} followed you"
@@ -304,20 +305,20 @@ msgstr "{profileName} 님은 {0} 전에 스타터 팩을 사용하여 Bluesky에
 #: src/screens/StarterPack/Wizard/index.tsx:449
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1} </1>외 {2, plural, other {#}}명이 스타터 팩에 포함됩니다"
+msgstr "<0>{0}, </0><1>{1} </1>외 {2, plural, other {#명}}이 스타터 팩에 포함됩니다"
 
 #: src/screens/StarterPack/Wizard/index.tsx:502
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1} </1>외 {2, plural, other {#}}개가 스타터 팩에 포함됩니다"
+msgstr "<0>{0}, </0><1>{1} </1>외 {2, plural, other {#개}}가 스타터 팩에 포함됩니다"
 
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
-msgstr "<0>{0}</0> 팔로워"
+msgstr "<0>{0}</0> {1, plural, other {팔로워}}"
 
 #: src/view/shell/Drawer.tsx:108
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
-msgstr "<0>{0}</0> 팔로우 중"
+msgstr "<0>{0}</0> {1, plural, other {팔로우 중}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:490
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
@@ -327,7 +328,7 @@ msgstr "<0>{0}</0> 및<1> </1><2>{1}</2>이(가) 스타터 팩에 포함됩니�
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0>이(가) 스타터 팩에 포함됩니다"
 
-#: src/components/WhoCanReply.tsx:274
+#: src/components/WhoCanReply.tsx:292
 msgid "<0>{0}</0> members"
 msgstr "<0>{0}</0>의 멤버"
 
@@ -351,7 +352,7 @@ msgstr "⚠잘못된 핸들"
 msgid "24 hours"
 msgstr "24시간"
 
-#: src/screens/Login/LoginForm.tsx:260
+#: src/screens/Login/LoginForm.tsx:268
 msgid "2FA Confirmation"
 msgstr "2단계 인증"
 
@@ -363,16 +364,12 @@ msgstr "30일"
 msgid "7 days"
 msgstr "7일"
 
-#: src/Navigation.tsx:364
-#: src/screens/Settings/AboutSettings.tsx:28
+#: src/Navigation.tsx:381
+#: src/screens/Settings/AboutSettings.tsx:33
 #: src/screens/Settings/Settings.tsx:215
 #: src/screens/Settings/Settings.tsx:218
 msgid "About"
 msgstr "정보"
-
-#: src/view/screens/Search/Search.tsx:858
-msgid "Access navigation links and settings"
-msgstr "탐색 링크 및 설정으로 이동합니다"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:46
 #: src/screens/Settings/Settings.tsx:191
@@ -380,28 +377,28 @@ msgstr "탐색 링크 및 설정으로 이동합니다"
 msgid "Accessibility"
 msgstr "접근성"
 
-#: src/Navigation.tsx:324
+#: src/Navigation.tsx:341
 msgid "Accessibility Settings"
 msgstr "접근성 설정"
 
-#: src/Navigation.tsx:340
-#: src/screens/Login/LoginForm.tsx:186
+#: src/Navigation.tsx:357
+#: src/screens/Login/LoginForm.tsx:194
 #: src/screens/Settings/AccountSettings.tsx:45
 #: src/screens/Settings/Settings.tsx:153
 #: src/screens/Settings/Settings.tsx:156
 msgid "Account"
 msgstr "계정"
 
-#: src/view/com/profile/ProfileMenu.tsx:132
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:360
+#: src/view/com/profile/ProfileMenu.tsx:138
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:362
 msgid "Account blocked"
 msgstr "계정을 차단했습니다"
 
-#: src/view/com/profile/ProfileMenu.tsx:145
+#: src/view/com/profile/ProfileMenu.tsx:151
 msgid "Account followed"
 msgstr "계정을 팔로우했습니다"
 
-#: src/view/com/profile/ProfileMenu.tsx:108
+#: src/view/com/profile/ProfileMenu.tsx:114
 msgid "Account muted"
 msgstr "계정을 뮤트했습니다"
 
@@ -423,15 +420,15 @@ msgid "Account removed from quick access"
 msgstr "빠른 액세스에서 계정 제거"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:137
-#: src/view/com/profile/ProfileMenu.tsx:122
+#: src/view/com/profile/ProfileMenu.tsx:128
 msgid "Account unblocked"
 msgstr "계정을 차단 해제했습니다"
 
-#: src/view/com/profile/ProfileMenu.tsx:157
+#: src/view/com/profile/ProfileMenu.tsx:163
 msgid "Account unfollowed"
 msgstr "계정을 언팔로우했습니다"
 
-#: src/view/com/profile/ProfileMenu.tsx:98
+#: src/view/com/profile/ProfileMenu.tsx:104
 msgid "Account unmuted"
 msgstr "계정을 언뮤트했습니다"
 
@@ -480,12 +477,12 @@ msgstr "대체 텍스트 추가 (선택 사항)"
 
 #: src/screens/Settings/Settings.tsx:373
 #: src/screens/Settings/Settings.tsx:376
-#: src/view/shell/desktop/LeftNav.tsx:281
-#: src/view/shell/desktop/LeftNav.tsx:285
+#: src/view/shell/desktop/LeftNav.tsx:284
+#: src/view/shell/desktop/LeftNav.tsx:288
 msgid "Add another account"
 msgstr "다른 계정 추가"
 
-#: src/view/com/composer/Composer.tsx:735
+#: src/view/com/composer/Composer.tsx:743
 msgid "Add another post"
 msgstr "다른 게시물 추가하기"
 
@@ -507,7 +504,7 @@ msgstr "구성 설정에 뮤트 단어 추가"
 msgid "Add muted words and tags"
 msgstr "뮤트할 단어 및 태그 추가"
 
-#: src/view/com/composer/Composer.tsx:1249
+#: src/view/com/composer/Composer.tsx:1257
 msgid "Add new post"
 msgstr "새 게시물 추가"
 
@@ -536,8 +533,8 @@ msgstr "도메인에 다음 DNS 레코드를 추가하세요:"
 msgid "Add this feed to your feeds"
 msgstr "이 피드를 내 피드에 추가하기"
 
-#: src/view/com/profile/ProfileMenu.tsx:243
-#: src/view/com/profile/ProfileMenu.tsx:246
+#: src/view/com/profile/ProfileMenu.tsx:270
+#: src/view/com/profile/ProfileMenu.tsx:273
 msgid "Add to Lists"
 msgstr "리스트에 추가"
 
@@ -565,7 +562,7 @@ msgstr "성인물"
 msgid "Adult Content"
 msgstr "성인 콘텐츠"
 
-#: src/screens/Moderation/index.tsx:339
+#: src/screens/Moderation/index.tsx:355
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
 msgstr "성인 콘텐츠는 <0>bsky.app</0>에서 웹을 통해서만 활성화할 수 있습니다."
 
@@ -578,7 +575,7 @@ msgstr "성인 콘텐츠가 비활성화되어 있습니다."
 msgid "Adult Content labels"
 msgstr "성인 콘텐츠 라벨"
 
-#: src/screens/Moderation/index.tsx:383
+#: src/screens/Moderation/index.tsx:399
 msgid "Advanced"
 msgstr "고급"
 
@@ -589,6 +586,12 @@ msgstr "모두"
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
 msgstr "모든 계정을 팔로우했습니다"
+
+#: src/view/screens/Search/Search.tsx:361
+#: src/view/screens/Search/Search.tsx:399
+#: src/view/screens/Search/Search.tsx:401
+msgid "All languages"
+msgstr "모든 언어"
 
 #: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
@@ -604,11 +607,11 @@ msgstr "다이렉트 메시지 접근 허용"
 msgid "Allow new messages from"
 msgstr "새 메시지를 허용할 대상"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:314
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
 msgid "Allow quote posts"
 msgstr "게시물 인용 허용"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
 msgid "Allow replies from:"
 msgstr "답글을 허용할 대상"
 
@@ -722,10 +725,10 @@ msgstr "채팅을 여는 동안 문제가 발생했습니다"
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
-#: src/components/ProfileCard.tsx:330
-#: src/components/ProfileCard.tsx:351
-#: src/view/com/profile/FollowButton.tsx:35
-#: src/view/com/profile/FollowButton.tsx:45
+#: src/components/ProfileCard.tsx:333
+#: src/components/ProfileCard.tsx:354
+#: src/view/com/profile/FollowButton.tsx:38
+#: src/view/com/profile/FollowButton.tsx:48
 msgid "An issue occurred, please try again."
 msgstr "문제가 발생했습니다. 다시 시도해 주세요."
 
@@ -738,7 +741,7 @@ msgstr "알 수 없는 오류가 발생했습니다"
 msgid "an unknown labeler"
 msgstr "알 수 없는 라벨러"
 
-#: src/components/WhoCanReply.tsx:295
+#: src/components/WhoCanReply.tsx:313
 msgid "and"
 msgstr "및"
 
@@ -755,16 +758,11 @@ msgstr "움직이는 GIF"
 msgid "Anti-Social Behavior"
 msgstr "반사회적 행위"
 
-#: src/view/screens/Search/Search.tsx:333
-#: src/view/screens/Search/Search.tsx:334
-msgid "Any language"
-msgstr "모든 언어"
-
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:48
 msgid "Anybody can interact"
 msgstr "누구나 상호작용할 수 있음"
 
-#: src/Navigation.tsx:372
+#: src/Navigation.tsx:389
 #: src/screens/Settings/AppIconSettings/index.tsx:67
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:18
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:23
@@ -800,7 +798,7 @@ msgstr "앱 비밀번호 이름은 4자 이상이어야 합니다"
 msgid "App passwords"
 msgstr "앱 비밀번호"
 
-#: src/Navigation.tsx:292
+#: src/Navigation.tsx:309
 #: src/screens/Settings/AppPasswords.tsx:51
 msgid "App Passwords"
 msgstr "앱 비밀번호"
@@ -835,7 +833,7 @@ msgstr "일시 정지 이의신청"
 msgid "Appeal this decision"
 msgstr "이 결정에 이의신청"
 
-#: src/Navigation.tsx:332
+#: src/Navigation.tsx:349
 #: src/screens/Settings/AppearanceSettings.tsx:85
 #: src/screens/Settings/Settings.tsx:183
 #: src/screens/Settings/Settings.tsx:186
@@ -847,12 +845,12 @@ msgstr "모양"
 msgid "Apply default recommended feeds"
 msgstr "기본 추천 피드 적용하기"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:834
+#: src/view/com/post-thread/PostThreadItem.tsx:839
 msgid "Archived from {0}"
 msgstr "{0}에 보관됨"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:803
-#: src/view/com/post-thread/PostThreadItem.tsx:842
+#: src/view/com/post-thread/PostThreadItem.tsx:808
+#: src/view/com/post-thread/PostThreadItem.tsx:847
 msgid "Archived post"
 msgstr "보관된 게시물"
 
@@ -884,11 +882,11 @@ msgstr "피드에서 {0}을(를) 제거하시겠습니까?"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "내 피드에서 이 피드를 삭제하시겠습니까?"
 
-#: src/view/com/composer/Composer.tsx:686
+#: src/view/com/composer/Composer.tsx:694
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "이 초안을 삭제하시겠습니까?"
 
-#: src/view/com/composer/Composer.tsx:860
+#: src/view/com/composer/Composer.tsx:868
 msgid "Are you sure you'd like to discard this post?"
 msgstr "이 게시물을 삭제하시겠습니까?"
 
@@ -922,17 +920,17 @@ msgstr "자동 재생 옵션은 <0>콘텐츠 및 미디어 설정</0>으로 이�
 msgid "Autoplay videos and GIFs"
 msgstr "동영상 및 GIF 자동 재생"
 
-#: src/components/dms/MessagesListHeader.tsx:74
+#: src/components/dms/MessagesListHeader.tsx:81
 #: src/components/moderation/LabelsOnMeDialog.tsx:290
 #: src/components/moderation/LabelsOnMeDialog.tsx:291
 #: src/screens/Login/ChooseAccountForm.tsx:90
 #: src/screens/Login/ChooseAccountForm.tsx:95
 #: src/screens/Login/ForgotPasswordForm.tsx:123
 #: src/screens/Login/ForgotPasswordForm.tsx:129
-#: src/screens/Login/LoginForm.tsx:300
-#: src/screens/Login/LoginForm.tsx:306
-#: src/screens/Login/SetNewPasswordForm.tsx:160
-#: src/screens/Login/SetNewPasswordForm.tsx:166
+#: src/screens/Login/LoginForm.tsx:310
+#: src/screens/Login/LoginForm.tsx:316
+#: src/screens/Login/SetNewPasswordForm.tsx:164
+#: src/screens/Login/SetNewPasswordForm.tsx:170
 #: src/screens/Messages/components/ChatDisabled.tsx:133
 #: src/screens/Messages/components/ChatDisabled.tsx:134
 #: src/screens/Profile/Header/Shell.tsx:115
@@ -946,7 +944,7 @@ msgstr "뒤로"
 msgid "Before creating a list, you must first verify your email."
 msgstr "목록을 만들기 전에 먼저 이메일을 인증해야 합니다."
 
-#: src/view/com/composer/Composer.tsx:613
+#: src/view/com/composer/Composer.tsx:621
 msgid "Before creating a post, you must first verify your email."
 msgstr "게시물을 작성하기 전에 먼저 이메일을 인증해야 합니다."
 
@@ -956,7 +954,7 @@ msgstr "스타터 팩을 만들기 전에 먼저 이메일을 인증해야 합�
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:79
 #: src/components/dms/MessageProfileButton.tsx:89
-#: src/screens/Messages/Conversation.tsx:209
+#: src/screens/Messages/Conversation.tsx:204
 msgid "Before you may message another user, you must first verify your email."
 msgstr "다른 사용자에게 메시지를 보내기 전에 먼저 이메일을 인증해야 합니다."
 
@@ -965,31 +963,31 @@ msgstr "다른 사용자에게 메시지를 보내기 전에 먼저 이메일을
 msgid "BETA"
 msgstr "BETA"
 
-#: src/components/dialogs/BirthDateSettings.tsx:106
+#: src/components/dialogs/BirthDateSettings.tsx:102
 #: src/screens/Settings/AccountSettings.tsx:109
 msgid "Birthday"
 msgstr "생년월일"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
-#: src/view/com/profile/ProfileMenu.tsx:341
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:744
+#: src/view/com/profile/ProfileMenu.tsx:393
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:776
 msgid "Block"
 msgstr "차단"
 
-#: src/components/dms/ConvoMenu.tsx:191
-#: src/components/dms/ConvoMenu.tsx:195
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:603
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:605
+#: src/components/dms/ConvoMenu.tsx:250
+#: src/components/dms/ConvoMenu.tsx:253
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:615
 msgid "Block account"
 msgstr "계정 차단"
 
-#: src/view/com/profile/ProfileMenu.tsx:280
-#: src/view/com/profile/ProfileMenu.tsx:287
+#: src/view/com/profile/ProfileMenu.tsx:307
+#: src/view/com/profile/ProfileMenu.tsx:314
 msgid "Block Account"
 msgstr "계정 차단"
 
-#: src/view/com/profile/ProfileMenu.tsx:324
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:739
+#: src/view/com/profile/ProfileMenu.tsx:376
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:771
 msgid "Block Account?"
 msgstr "계정을 차단하시겠습니까?"
 
@@ -1026,17 +1024,17 @@ msgstr "사용자 차단"
 msgid "Blocked"
 msgstr "차단됨"
 
-#: src/screens/Moderation/index.tsx:253
+#: src/screens/Moderation/index.tsx:269
 msgid "Blocked accounts"
 msgstr "차단한 계정"
 
-#: src/Navigation.tsx:156
+#: src/Navigation.tsx:158
 #: src/view/screens/ModerationBlockedAccounts.tsx:101
 msgid "Blocked Accounts"
 msgstr "차단한 계정"
 
-#: src/view/com/profile/ProfileMenu.tsx:336
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:741
+#: src/view/com/profile/ProfileMenu.tsx:388
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:773
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션하거나 기타 다른 방식으로 나와 상호작용할 수 없습니다."
 
@@ -1056,7 +1054,7 @@ msgstr "차단하더라도 이 라벨러가 내 계정에 라벨을 붙이는 �
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "차단 목록은 공개됩니다. 차단한 계정은 내 스레드에 답글을 달거나 나를 멘션하거나 기타 다른 방식으로 나와 상호작용할 수 없습니다."
 
-#: src/view/com/profile/ProfileMenu.tsx:333
+#: src/view/com/profile/ProfileMenu.tsx:385
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
 msgstr "차단하더라도 내 계정에 라벨이 붙는 것은 막지 못하지만, 이 계정이 내 스레드에 답글을 달거나 나와 상호작용하는 것은 중지됩니다."
 
@@ -1064,20 +1062,20 @@ msgstr "차단하더라도 내 계정에 라벨이 붙는 것은 막지 못하�
 msgid "Blog"
 msgstr "블로그"
 
-#: src/view/com/auth/server-input/index.tsx:92
-#: src/view/com/auth/server-input/index.tsx:94
+#: src/view/com/auth/server-input/index.tsx:136
+#: src/view/com/auth/server-input/index.tsx:137
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:859
+#: src/view/com/post-thread/PostThreadItem.tsx:864
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky는 해당 날짜의 진위를 확인할 수 없습니다."
 
-#: src/view/com/auth/server-input/index.tsx:172
+#: src/view/com/auth/server-input/index.tsx:212
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
 msgstr "Bluesky는 호스팅 제공자를 선택할 수 있는 개방형 네트워크입니다. 개발자라면 직접 서버를 호스팅할 수 있습니다."
 
-#: src/view/com/auth/server-input/index.tsx:109
+#: src/view/com/auth/server-input/index.tsx:149
 msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
 msgstr "Bluesky는 직접 제공자를 선택할 수 있는 개방형 네트워크입니다. 처음 사용하는 경우 기본으로 Bluesky Social을 선택하는 것이 좋습니다."
 
@@ -1119,23 +1117,23 @@ msgstr "이미지 흐리게 및 피드에서 필터링"
 msgid "Books"
 msgstr "책"
 
-#: src/components/FeedInterstitials.tsx:349
+#: src/components/FeedInterstitials.tsx:370
 msgid "Browse more accounts on the Explore page"
 msgstr "탐색 페이지에서 더 많은 계정 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:486
+#: src/components/FeedInterstitials.tsx:507
 msgid "Browse more feeds on the Explore page"
 msgstr "탐색 페이지에서 더 많은 피드 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:330
-#: src/components/FeedInterstitials.tsx:333
-#: src/components/FeedInterstitials.tsx:467
-#: src/components/FeedInterstitials.tsx:470
+#: src/components/FeedInterstitials.tsx:351
+#: src/components/FeedInterstitials.tsx:354
+#: src/components/FeedInterstitials.tsx:488
+#: src/components/FeedInterstitials.tsx:491
 msgid "Browse more suggestions"
 msgstr "더 많은 추천 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:357
-#: src/components/FeedInterstitials.tsx:495
+#: src/components/FeedInterstitials.tsx:378
+#: src/components/FeedInterstitials.tsx:516
 msgid "Browse more suggestions on the Explore page"
 msgstr "탐색 페이지에서 더 많은 추천 찾아보기"
 
@@ -1144,15 +1142,19 @@ msgstr "탐색 페이지에서 더 많은 추천 찾아보기"
 msgid "Browse other feeds"
 msgstr "다른 피드 탐색하기"
 
-#: src/components/TrendingTopics.tsx:176
+#: src/components/TrendingTopics.tsx:178
 msgid "Browse posts about {displayName}"
 msgstr "{displayName}에 관한 게시물 탐색하기"
 
-#: src/components/TrendingTopics.tsx:184
+#: src/components/TrendingTopics.tsx:186
 msgid "Browse posts tagged with {displayName}"
 msgstr "{displayName} 태그된 게시물 탐색하기"
 
-#: src/components/TrendingTopics.tsx:222
+#: src/components/TrendingTopics.tsx:195
+msgid "Browse starter pack {displayName}"
+msgstr "스타터 팩 {displayName} 탐색하기"
+
+#: src/components/TrendingTopics.tsx:232
 msgid "Browse topic {displayName}"
 msgstr "주제 {displayName} 탐색하기"
 
@@ -1197,7 +1199,7 @@ msgstr "카메라"
 #: src/screens/Settings/Settings.tsx:260
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:923
+#: src/view/com/composer/Composer.tsx:931
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:268
@@ -1242,8 +1244,8 @@ msgid "Cancel quote post"
 msgstr "게시물 인용 취소"
 
 #: src/screens/Deactivated.tsx:151
-msgid "Cancel reactivation and log out"
-msgstr "재활성화 취소 및 로그아웃"
+msgid "Cancel reactivation and sign out"
+msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
 #: src/view/screens/Search/Search.tsx:879
@@ -1255,9 +1257,9 @@ msgid "Cancels opening the linked website"
 msgstr "연결된 웹사이트를 여는 것을 취소합니다"
 
 #: src/state/shell/composer/index.tsx:83
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:117
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:158
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:194
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:127
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:168
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:204
 msgid "Cannot interact with a blocked user"
 msgstr "차단된 사용자와 상호작용할 수 없습니다"
 
@@ -1318,21 +1320,30 @@ msgstr "이메일 변경"
 msgid "Change your email address"
 msgstr "이메일 주소를 변경하세요"
 
-#: src/Navigation.tsx:389
+#: src/screens/Settings/AppIconSettings/index.tsx:216
+msgid "Changes app icon"
+msgstr "앱 아이콘을 변경합니다"
+
+#: src/components/forms/HostingProvider.tsx:50
+#: src/components/forms/HostingProvider.tsx:66
+msgid "Changes hosting provider"
+msgstr "호스팅 제공자를 변경합니다"
+
+#: src/Navigation.tsx:406
 #: src/view/shell/bottom-bar/BottomBar.tsx:204
-#: src/view/shell/desktop/LeftNav.tsx:530
+#: src/view/shell/desktop/LeftNav.tsx:533
 #: src/view/shell/Drawer.tsx:422
 msgid "Chat"
 msgstr "대화"
 
-#: src/components/dms/ConvoMenu.tsx:85
+#: src/components/dms/ConvoMenu.tsx:179
 msgid "Chat muted"
 msgstr "대화를 뮤트했습니다"
 
-#: src/components/dms/ConvoMenu.tsx:115
+#: src/components/dms/ConvoMenu.tsx:78
 #: src/components/dms/MessageMenu.tsx:81
-#: src/Navigation.tsx:394
-#: src/screens/Messages/ChatList.tsx:254
+#: src/Navigation.tsx:411
+#: src/screens/Messages/ChatList.tsx:253
 msgid "Chat settings"
 msgstr "대화 설정"
 
@@ -1340,7 +1351,7 @@ msgstr "대화 설정"
 msgid "Chat Settings"
 msgstr "대화 설정"
 
-#: src/components/dms/ConvoMenu.tsx:87
+#: src/components/dms/ConvoMenu.tsx:181
 msgid "Chat unmuted"
 msgstr "대화를 언뮤트했습니다"
 
@@ -1349,9 +1360,9 @@ msgstr "대화를 언뮤트했습니다"
 msgid "Check my status"
 msgstr "내 상태 확인"
 
-#: src/screens/Login/LoginForm.tsx:293
-msgid "Check your email for a login code and enter it here."
-msgstr "이메일에서 로그인 코드를 확인한 후 여기에 입력하세요."
+#: src/screens/Login/LoginForm.tsx:301
+msgid "Check your email for a sign in code and enter it here."
+msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:213
 msgid "Check your inbox for an email with the confirmation code to enter below:"
@@ -1385,12 +1396,12 @@ msgstr "맞춤 피드를 구동할 알고리즘을 선택하세요."
 msgid "Choose this color as your avatar"
 msgstr "이 색상을 아바타로 선택"
 
-#: src/view/com/auth/server-input/index.tsx:86
+#: src/view/com/auth/server-input/index.tsx:130
 msgid "Choose your account provider"
 msgstr "계정 제공자 선택"
 
 #: src/view/screens/Feeds.tsx:728
-#: src/view/screens/Search/Explore.tsx:424
+#: src/view/screens/Search/Explore.tsx:427
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr "나만의 타임라인을 선택하세요! 커뮤니티에서 만든 피드를 통해 마음에 드는 콘텐츠를 찾을 수 있습니다."
 
@@ -1418,11 +1429,11 @@ msgstr "검색어 지우기"
 msgid "click here"
 msgstr "이곳을 클릭"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:307
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
 msgid "Click to disable quote posts of this post."
 msgstr "이 게시물의 인용 게시물을 비활성화하려면 클릭하세요."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:308
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:338
 msgid "Click to enable quote posts of this post."
 msgstr "이 게시물의 인용 게시물을 활성화하려면 클릭하세요."
 
@@ -1458,8 +1469,8 @@ msgstr "다그닥 🐴 다그닥 🐴"
 msgid "Close"
 msgstr "닫기"
 
-#: src/components/Dialog/index.web.tsx:110
-#: src/components/Dialog/index.web.tsx:252
+#: src/components/Dialog/index.web.tsx:111
+#: src/components/Dialog/index.web.tsx:253
 msgid "Close active dialog"
 msgstr "열려 있는 대화 상자 닫기"
 
@@ -1474,6 +1485,10 @@ msgstr "하단 서랍 닫기"
 #: src/components/dialogs/GifSelect.tsx:275
 msgid "Close dialog"
 msgstr "대화 상자 닫기"
+
+#: src/view/shell/index.web.tsx:83
+msgid "Close drawer menu"
+msgstr "서랍 메뉴 닫기"
 
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
@@ -1492,21 +1507,18 @@ msgstr "이미지 닫기"
 msgid "Close image viewer"
 msgstr "이미지 뷰어 닫기"
 
-#: src/view/shell/index.web.tsx:69
-msgid "Close navigation footer"
-msgstr "탐색 푸터 닫기"
-
 #: src/components/Menu/index.tsx:298
 msgid "Close this dialog"
 msgstr "이 대화 상자 닫기"
 
-#: src/view/shell/index.web.tsx:70
-msgid "Closes bottom navigation bar"
-msgstr "하단 탐색 막대를 닫습니다"
-
 #: src/screens/Login/PasswordUpdatedForm.tsx:32
 msgid "Closes password update alert"
 msgstr "비밀번호 변경 알림을 닫습니다"
+
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
+msgid "Closes the emoji picker"
+msgstr "이모티콘 선택기를 닫습니다"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:32
 msgid "Closes viewer for header image"
@@ -1534,7 +1546,7 @@ msgstr "코미디"
 msgid "Comics"
 msgstr "만화"
 
-#: src/Navigation.tsx:282
+#: src/Navigation.tsx:299
 #: src/view/screens/CommunityGuidelines.tsx:34
 msgid "Community Guidelines"
 msgstr "커뮤니티 가이드라인"
@@ -1547,11 +1559,11 @@ msgstr "온보딩 완료 후 계정 사용 시작"
 msgid "Complete the challenge"
 msgstr "챌린지 완료하기"
 
-#: src/view/shell/desktop/LeftNav.tsx:496
+#: src/view/shell/desktop/LeftNav.tsx:499
 msgid "Compose new post"
 msgstr "새 게시물 작성하기"
 
-#: src/view/com/composer/Composer.tsx:826
+#: src/view/com/composer/Composer.tsx:834
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "최대 {MAX_GRAPHEME_LENGTH}자 길이까지 글을 작성할 수 있습니다"
 
@@ -1559,7 +1571,7 @@ msgstr "최대 {MAX_GRAPHEME_LENGTH}자 길이까지 글을 작성할 수 있습
 msgid "Compose reply"
 msgstr "답글 작성하기"
 
-#: src/view/com/composer/Composer.tsx:1643
+#: src/view/com/composer/Composer.tsx:1651
 msgid "Compressing video..."
 msgstr "동영상 압축 중…"
 
@@ -1596,16 +1608,16 @@ msgstr "콘텐츠 언어 설정 확인"
 msgid "Confirm delete account"
 msgstr "계정 삭제 확인"
 
-#: src/screens/Moderation/index.tsx:287
+#: src/screens/Moderation/index.tsx:303
 msgid "Confirm your age:"
 msgstr "나이를 확인하세요:"
 
-#: src/screens/Moderation/index.tsx:278
+#: src/screens/Moderation/index.tsx:294
 msgid "Confirm your birthdate"
 msgstr "생년월일 확인"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:214
-#: src/screens/Login/LoginForm.tsx:266
+#: src/screens/Login/LoginForm.tsx:274
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:144
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:150
 #: src/view/com/modals/ChangeEmail.tsx:152
@@ -1619,7 +1631,7 @@ msgstr "인증 코드"
 msgid "Confirmation Code"
 msgstr "인증 코드"
 
-#: src/screens/Login/LoginForm.tsx:327
+#: src/screens/Login/LoginForm.tsx:337
 msgid "Connecting..."
 msgstr "연결 중…"
 
@@ -1638,7 +1650,7 @@ msgstr "콘텐츠 및 미디어"
 msgid "Content and media"
 msgstr "콘텐츠 및 미디어"
 
-#: src/Navigation.tsx:356
+#: src/Navigation.tsx:373
 msgid "Content and Media"
 msgstr "콘텐츠 및 미디어"
 
@@ -1646,9 +1658,13 @@ msgstr "콘텐츠 및 미디어"
 msgid "Content Blocked"
 msgstr "콘텐츠 차단됨"
 
-#: src/screens/Moderation/index.tsx:271
+#: src/screens/Moderation/index.tsx:287
 msgid "Content filters"
 msgstr "콘텐츠 필터"
+
+#: src/screens/Search/components/ExploreRecommendations.tsx:57
+msgid "Content from across the network we think you might like."
+msgstr "좋아할 만한 네트워크 전반의 콘텐츠를 모았습니다."
 
 #: src/screens/Settings/LanguageSettings.tsx:251
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
@@ -1671,7 +1687,7 @@ msgstr "콘텐츠 경고"
 msgid "Content warnings"
 msgstr "콘텐츠 경고"
 
-#: src/components/Menu/index.web.tsx:82
+#: src/components/Menu/index.web.tsx:83
 msgid "Context menu backdrop, click to close the menu."
 msgstr "컨텍스트 메뉴 배경을 클릭하여 메뉴를 닫습니다."
 
@@ -1694,7 +1710,7 @@ msgstr "스레드 더 보기…"
 msgid "Continue to next step"
 msgstr "다음 단계로 계속하기"
 
-#: src/screens/Messages/components/ChatListItem.tsx:173
+#: src/screens/Messages/components/ChatListItem.tsx:179
 msgid "Conversation deleted"
 msgstr "대화 삭제됨"
 
@@ -1706,15 +1722,16 @@ msgstr "요리"
 msgid "Copied"
 msgstr "복사됨"
 
-#: src/screens/Settings/AboutSettings.tsx:73
+#: src/screens/Settings/AboutSettings.tsx:87
 msgid "Copied build version to clipboard"
 msgstr "빌드 버전을 클립보드에 복사했습니다"
 
 #: src/components/dms/MessageMenu.tsx:57
 #: src/lib/sharing.ts:25
+#: src/lib/sharing.ts:41
 #: src/view/com/modals/InviteCodes.tsx:153
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:235
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:393
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:237
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:403
 msgid "Copied to clipboard"
 msgstr "클립보드에 복사했습니다"
 
@@ -1722,6 +1739,10 @@ msgstr "클립보드에 복사했습니다"
 #: src/screens/Settings/components/CopyButton.tsx:66
 msgid "Copied!"
 msgstr "복사했습니다!"
+
+#: src/screens/Settings/AboutSettings.tsx:73
+msgid "Copies build version to clipboard"
+msgstr "빌드 버전을 클립보드에 복사합니다"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 msgid "Copy"
@@ -1731,9 +1752,15 @@ msgstr "복사"
 msgid "Copy App Password"
 msgstr "앱 비밀번호 복사"
 
-#: src/screens/Settings/AboutSettings.tsx:68
-msgid "Copy build version to clipboard"
-msgstr "빌드 버전을 클립보드에 복사합니다"
+#: src/view/com/profile/ProfileMenu.tsx:344
+#: src/view/com/profile/ProfileMenu.tsx:347
+msgid "Copy at:// URI"
+msgstr "at:// URI 복사"
+
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:674
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:676
+msgid "Copy author DID"
+msgstr "작성자 DID 복사"
 
 #: src/components/dialogs/Embed.tsx:122
 #: src/components/dialogs/Embed.tsx:141
@@ -1741,6 +1768,8 @@ msgid "Copy code"
 msgstr "코드 복사"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:472
+#: src/view/com/profile/ProfileMenu.tsx:353
+#: src/view/com/profile/ProfileMenu.tsx:356
 msgid "Copy DID"
 msgstr "DID 복사"
 
@@ -1760,8 +1789,8 @@ msgstr "링크 복사"
 msgid "Copy link to list"
 msgstr "리스트 링크 복사"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:444
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
 msgid "Copy link to post"
 msgstr "게시물 링크 복사"
 
@@ -1770,8 +1799,13 @@ msgstr "게시물 링크 복사"
 msgid "Copy message text"
 msgstr "메시지 텍스트 복사"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:412
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:414
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
+msgid "Copy post at:// URI"
+msgstr "게시물 at:// URI 복사"
+
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:422
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:424
 msgid "Copy post text"
 msgstr "게시물 텍스트 복사"
 
@@ -1783,7 +1817,7 @@ msgstr "QR 코드 복사"
 msgid "Copy TXT record value"
 msgstr "TXT 레코드 값 복사"
 
-#: src/Navigation.tsx:287
+#: src/Navigation.tsx:304
 #: src/view/screens/CopyrightPolicy.tsx:31
 msgid "Copyright Policy"
 msgstr "저작권 정책"
@@ -1801,7 +1835,7 @@ msgstr "피드를 불러올 수 없습니다"
 msgid "Could not load list"
 msgstr "리스트를 불러올 수 없습니다"
 
-#: src/components/dms/ConvoMenu.tsx:91
+#: src/components/dms/ConvoMenu.tsx:185
 msgid "Could not mute chat"
 msgstr "대화를 뮤트할 수 없습니다"
 
@@ -1819,7 +1853,7 @@ msgstr "스타터 팩 QR 코드 만들기"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:167
 #: src/components/StarterPack/ProfileStarterPacks.tsx:270
-#: src/Navigation.tsx:419
+#: src/Navigation.tsx:436
 msgid "Create a starter pack"
 msgstr "스타터 팩 만들기"
 
@@ -1877,21 +1911,25 @@ msgstr "작성자 차단됨"
 msgid "Culture"
 msgstr "문화"
 
-#: src/view/com/auth/server-input/index.tsx:100
-#: src/view/com/auth/server-input/index.tsx:102
+#: src/view/com/auth/server-input/index.tsx:142
+#: src/view/com/auth/server-input/index.tsx:143
 msgid "Custom"
 msgstr "사용자 지정"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:292
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:103
 msgid "Customize who can interact with this post."
 msgstr "이 게시물과 상호작용할 수 있는 사람을 사용자 지정합니다."
+
+#: src/screens/Onboarding/Layout.tsx:56
+msgid "Customizes your Bluesky experience"
+msgstr "내 Bluesky 경험을 맞춤 설정합니다"
 
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
 msgid "Dark"
 msgstr "어두움"
 
-#: src/view/screens/Debug.tsx:70
+#: src/view/screens/Debug.tsx:69
 msgid "Dark mode"
 msgstr "어두운 모드"
 
@@ -1913,7 +1951,7 @@ msgstr "계정 비활성화"
 msgid "Debug Moderation"
 msgstr "검토 디버그"
 
-#: src/view/screens/Debug.tsx:90
+#: src/view/screens/Debug.tsx:89
 msgid "Debug panel"
 msgstr "디버그 패널"
 
@@ -1930,7 +1968,7 @@ msgstr "기본 아이콘"
 #: src/screens/StarterPack/StarterPackScreen.tsx:586
 #: src/screens/StarterPack/StarterPackScreen.tsx:665
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:661
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:693
 #: src/view/screens/ProfileList.tsx:739
 msgid "Delete"
 msgstr "삭제"
@@ -1985,9 +2023,9 @@ msgstr "나에게 보이는 메시지 삭제"
 msgid "Delete my account"
 msgstr "내 계정 삭제"
 
-#: src/view/com/composer/Composer.tsx:834
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:642
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:644
+#: src/view/com/composer/Composer.tsx:842
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:652
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:654
 msgid "Delete post"
 msgstr "게시물 삭제"
 
@@ -2004,7 +2042,7 @@ msgstr "스타터 팩 삭제"
 msgid "Delete this list?"
 msgstr "이 리스트를 삭제하시겠습니까?"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:656
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
 msgid "Delete this post?"
 msgstr "이 게시물을 삭제하시겠습니까?"
 
@@ -2012,8 +2050,8 @@ msgstr "이 게시물을 삭제하시겠습니까?"
 msgid "Deleted"
 msgstr "삭제됨"
 
-#: src/components/dms/MessagesListHeader.tsx:148
-#: src/screens/Messages/components/ChatListItem.tsx:107
+#: src/components/dms/MessagesListHeader.tsx:154
+#: src/screens/Messages/components/ChatListItem.tsx:113
 msgid "Deleted Account"
 msgstr "삭제된 계정"
 
@@ -2042,14 +2080,22 @@ msgstr "설명이 너무 깁니다. 최대 글자 수는 {DESCRIPTION_MAX_GRAPHE
 msgid "Descriptive alt text"
 msgstr "설명이 포함된 대체 텍스트"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:566
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:576
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:586
 msgid "Detach quote"
 msgstr "인용 해제"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:719
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:751
 msgid "Detach quote post?"
 msgstr "인용을 해제하시겠습니까?"
+
+#: src/screens/Settings/AboutSettings.tsx:80
+msgid "Developer mode disabled"
+msgstr "개발자 모드를 비활성화했습니다"
+
+#: src/screens/Settings/AboutSettings.tsx:79
+msgid "Developer mode enabled"
+msgstr "개발자 모드를 활성화했습니다"
 
 #: src/screens/Settings/Settings.tsx:242
 #: src/screens/Settings/Settings.tsx:245
@@ -2082,13 +2128,13 @@ msgstr "자막 사용 안 함"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:68
 #: src/screens/Messages/Settings.tsx:139
 #: src/screens/Messages/Settings.tsx:142
-#: src/screens/Moderation/index.tsx:329
+#: src/screens/Moderation/index.tsx:345
 msgid "Disabled"
 msgstr "사용 안 함"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:688
-#: src/view/com/composer/Composer.tsx:867
+#: src/view/com/composer/Composer.tsx:696
+#: src/view/com/composer/Composer.tsx:875
 msgid "Discard"
 msgstr "삭제"
 
@@ -2096,11 +2142,11 @@ msgstr "삭제"
 msgid "Discard changes?"
 msgstr "변경 사항 삭제"
 
-#: src/view/com/composer/Composer.tsx:685
+#: src/view/com/composer/Composer.tsx:693
 msgid "Discard draft?"
 msgstr "초안 삭제"
 
-#: src/view/com/composer/Composer.tsx:859
+#: src/view/com/composer/Composer.tsx:867
 msgid "Discard post?"
 msgstr "게시물 삭제"
 
@@ -2114,7 +2160,7 @@ msgstr "앱이 로그아웃한 사용자에게 내 계정을 표시하지 않도
 msgid "Discover new custom feeds"
 msgstr "새로운 맞춤 피드 찾아보기"
 
-#: src/view/screens/Search/Explore.tsx:422
+#: src/view/screens/Search/Explore.tsx:425
 msgid "Discover new feeds"
 msgstr "새 피드 발견하기"
 
@@ -2126,7 +2172,7 @@ msgstr "새 피드 발견하기"
 msgid "Dismiss"
 msgstr "닫기"
 
-#: src/view/com/composer/Composer.tsx:1567
+#: src/view/com/composer/Composer.tsx:1575
 msgid "Dismiss error"
 msgstr "오류 무시"
 
@@ -2183,17 +2229,17 @@ msgstr "하이픈으로 시작하거나 끝나지 않음"
 msgid "Domain verified!"
 msgstr "도메인을 확인했습니다."
 
-#: src/components/dialogs/BirthDateSettings.tsx:118
-#: src/components/dialogs/BirthDateSettings.tsx:124
+#: src/components/dialogs/BirthDateSettings.tsx:114
+#: src/components/dialogs/BirthDateSettings.tsx:120
 #: src/components/dms/ReportDialog.tsx:323
-#: src/components/forms/DateField/index.tsx:77
-#: src/components/forms/DateField/index.tsx:83
+#: src/components/forms/DateField/index.tsx:87
+#: src/components/forms/DateField/index.tsx:93
 #: src/screens/Onboarding/StepProfile/index.tsx:330
 #: src/screens/Onboarding/StepProfile/index.tsx:333
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
-#: src/view/com/auth/server-input/index.tsx:192
-#: src/view/com/auth/server-input/index.tsx:193
+#: src/view/com/auth/server-input/index.tsx:232
+#: src/view/com/auth/server-input/index.tsx:233
 #: src/view/com/composer/labels/LabelsBtn.tsx:224
 #: src/view/com/composer/labels/LabelsBtn.tsx:231
 #: src/view/com/composer/videos/SubtitleDialog.tsx:169
@@ -2220,7 +2266,7 @@ msgstr "완료{extraText}"
 msgid "Double tap to close the dialog"
 msgstr "두 번 탭하여 대화 상자를 닫습니다"
 
-#: src/screens/VideoFeed/index.tsx:1037
+#: src/screens/VideoFeed/index.tsx:1041
 msgid "Double tap to like"
 msgstr "두 번 탭하여 좋아요 표시합니다"
 
@@ -2312,8 +2358,8 @@ msgstr "피드 편집하기"
 msgid "Edit image"
 msgstr "이미지 편집하기"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:623
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:636
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:633
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:646
 msgid "Edit interaction settings"
 msgstr "상호작용 설정 편집"
 
@@ -2325,7 +2371,7 @@ msgstr "리스트 세부 정보 편집"
 msgid "Edit Moderation List"
 msgstr "검토 리스트 편집"
 
-#: src/Navigation.tsx:297
+#: src/Navigation.tsx:314
 #: src/view/screens/Feeds.tsx:515
 msgid "Edit My Feeds"
 msgstr "내 피드 편집"
@@ -2338,8 +2384,8 @@ msgstr "내 프로필 편집하기"
 msgid "Edit People"
 msgstr "사람들 편집하기"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:66
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:204
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:69
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:239
 msgid "Edit post interaction settings"
 msgstr "게시물 상호작용 설정 편집하기"
 
@@ -2375,7 +2421,7 @@ msgstr "내 표시 이름을 편집합니다"
 msgid "Edit your profile description"
 msgstr "내 프로필 설명을 편집합니다"
 
-#: src/Navigation.tsx:424
+#: src/Navigation.tsx:441
 msgid "Edit your starter pack"
 msgstr "스타터 팩 편집"
 
@@ -2432,8 +2478,8 @@ msgid "Embed HTML code"
 msgstr "임베드 HTML 코드"
 
 #: src/components/dialogs/Embed.tsx:97
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:451
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:461
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:463
 msgid "Embed post"
 msgstr "게시물 임베드"
 
@@ -2454,7 +2500,7 @@ msgstr "활성화"
 msgid "Enable {0} only"
 msgstr "{0}에서만 사용"
 
-#: src/screens/Moderation/index.tsx:316
+#: src/screens/Moderation/index.tsx:332
 msgid "Enable adult content"
 msgstr "성인 콘텐츠 활성화"
 
@@ -2499,7 +2545,7 @@ msgstr "Discover 피드에서 인기 동영상 사용"
 
 #: src/screens/Messages/Settings.tsx:130
 #: src/screens/Messages/Settings.tsx:133
-#: src/screens/Moderation/index.tsx:327
+#: src/screens/Moderation/index.tsx:343
 msgid "Enabled"
 msgstr "사용"
 
@@ -2511,7 +2557,7 @@ msgstr "피드 끝"
 msgid "Ensure you have selected a language for each subtitle file."
 msgstr "각 자막 파일에 대한 언어를 선택했는지 확인하세요."
 
-#: src/screens/Login/SetNewPasswordForm.tsx:139
+#: src/screens/Login/SetNewPasswordForm.tsx:143
 msgid "Enter a password"
 msgstr "비밀번호 입력"
 
@@ -2544,7 +2590,7 @@ msgstr "사용할 도메인 입력"
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "계정을 만들 때 사용한 이메일을 입력하세요. 새 비밀번호를 설정할 수 있도록 \"재설정 코드\"를 보내드립니다."
 
-#: src/components/dialogs/BirthDateSettings.tsx:107
+#: src/components/dialogs/BirthDateSettings.tsx:103
 msgid "Enter your birth date"
 msgstr "생년월일을 입력하세요"
 
@@ -2561,11 +2607,19 @@ msgstr "새 이메일을 입력하세요"
 msgid "Enter your new email address below."
 msgstr "아래에 새 이메일 주소를 입력하세요."
 
-#: src/screens/Login/index.tsx:98
+#: src/screens/Login/LoginForm.tsx:243
+msgid "Enter your password"
+msgstr "비밀번호를 입력합니다"
+
+#: src/screens/Login/index.tsx:123
 msgid "Enter your username and password"
 msgstr "사용자 이름 및 비밀번호 입력"
 
-#: src/view/com/composer/Composer.tsx:1652
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
+msgid "Enters full screen"
+msgstr "전체화면으로 봅니다"
+
+#: src/view/com/composer/Composer.tsx:1660
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "오류"
@@ -2579,11 +2633,11 @@ msgid "Error receiving captcha response."
 msgstr "캡차 응답을 수신하는 동안 오류가 발생했습니다."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:183
-#: src/view/screens/Search/Search.tsx:110
+#: src/view/screens/Search/Search.tsx:114
 msgid "Error:"
 msgstr "오류:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:364
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:394
 msgid "Everybody"
 msgstr "모두"
 
@@ -2591,7 +2645,7 @@ msgstr "모두"
 msgid "Everybody can reply"
 msgstr "누구나 답글을 달 수 있음"
 
-#: src/components/WhoCanReply.tsx:213
+#: src/components/WhoCanReply.tsx:218
 msgid "Everybody can reply to this post."
 msgstr "누구나 이 게시물에 답글을 달 수 있습니다."
 
@@ -2645,8 +2699,15 @@ msgid "Expand list of users"
 msgstr "사용자 목록 펼치기"
 
 #: src/view/com/composer/ComposerReplyTo.tsx:70
-#: src/view/com/composer/ComposerReplyTo.tsx:73
 msgid "Expand or collapse the full post you are replying to"
+msgstr "답글을 달고 있는 전체 게시물을 펼치거나 접습니다"
+
+#: src/screens/VideoFeed/index.tsx:935
+msgid "Expands or collapses post text"
+msgstr "게시물 텍스트를 펼치거나 접습니다"
+
+#: src/view/com/composer/ComposerReplyTo.tsx:73
+msgid "Expands or collapses the full post you are replying to"
 msgstr "답글을 달고 있는 전체 게시물을 펼치거나 접습니다"
 
 #: src/lib/api/index.ts:405
@@ -2698,7 +2759,7 @@ msgstr "외부 미디어"
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
 msgstr "외부 미디어는 웹사이트가 나와 내 기기에 대한 정보를 수집하도록 할 수 있습니다. \"재생\" 버튼을 누르기 전까지는 어떠한 정보도 전송되거나 요청되지 않습니다."
 
-#: src/Navigation.tsx:316
+#: src/Navigation.tsx:333
 #: src/screens/Settings/ExternalMediaPreferences.tsx:31
 msgid "External Media Preferences"
 msgstr "외부 미디어 설정"
@@ -2724,7 +2785,7 @@ msgstr "리스트를 만들지 못했습니다. 인터넷 연결을 확인한 �
 msgid "Failed to delete message"
 msgstr "메시지를 삭제하지 못했습니다"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:195
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:197
 msgid "Failed to delete post, please try again"
 msgstr "게시물을 삭제하지 못했습니다. 다시 시도해 주세요"
 
@@ -2732,8 +2793,8 @@ msgstr "게시물을 삭제하지 못했습니다. 다시 시도해 주세요"
 msgid "Failed to delete starter pack"
 msgstr "스타터 팩을 삭제하지 못했습니다"
 
-#: src/view/screens/Search/Explore.tsx:460
-#: src/view/screens/Search/Explore.tsx:488
+#: src/view/screens/Search/Explore.tsx:463
+#: src/view/screens/Search/Explore.tsx:491
 msgid "Failed to load feeds preferences"
 msgstr "피드 환경설정을 불러오지 못했습니다"
 
@@ -2745,12 +2806,12 @@ msgstr "GIF를 불러오지 못했습니다"
 msgid "Failed to load past messages"
 msgstr "지난 메시지를 불러오지 못했습니다"
 
-#: src/view/screens/Search/Explore.tsx:453
-#: src/view/screens/Search/Explore.tsx:481
+#: src/view/screens/Search/Explore.tsx:456
+#: src/view/screens/Search/Explore.tsx:484
 msgid "Failed to load suggested feeds"
 msgstr "추천 피드를 불러오지 못했습니다"
 
-#: src/view/screens/Search/Explore.tsx:411
+#: src/view/screens/Search/Explore.tsx:414
 msgid "Failed to load suggested follows"
 msgstr "추천 팔로우를 불러오지 못했습니다"
 
@@ -2766,6 +2827,10 @@ msgstr "이미지를 저장하지 못함: {0}"
 msgid "Failed to save notification preferences, please try again"
 msgstr "알림 설정을 저장하지 못했습니다. 다시 시도해 주세요"
 
+#: src/screens/ModerationInteractionSettings/index.tsx:108
+msgid "Failed to save settings. Please try again."
+msgstr "설정을 저장하지 못했습니다. 다시 시도해 주세요."
+
 #: src/components/dms/MessageItem.tsx:234
 msgid "Failed to send"
 msgstr "전송 실패"
@@ -2775,7 +2840,7 @@ msgstr "전송 실패"
 msgid "Failed to submit appeal, please try again."
 msgstr "이의신청을 제출하지 못했습니다. 다시 시도해 주세요."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:224
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:226
 msgid "Failed to toggle thread mute, please try again"
 msgstr "스레드 뮤트를 전환하지 못했습니다. 다시 시도해 주세요"
 
@@ -2798,7 +2863,7 @@ msgstr "동영상을 업로드하지 못했습니다"
 msgid "Failed to verify handle. Please try again."
 msgstr "핸들을 인증하지 못했습니다. 다시 시도해 주세요."
 
-#: src/Navigation.tsx:232
+#: src/Navigation.tsx:249
 msgid "Feed"
 msgstr "피드"
 
@@ -2821,18 +2886,18 @@ msgstr "피드 켜기/끄기"
 msgid "Feedback"
 msgstr "피드백"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:266
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:275
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:268
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:277
 msgid "Feedback sent!"
 msgstr "피드백을 보냈습니다!"
 
-#: src/Navigation.tsx:404
+#: src/Navigation.tsx:421
 #: src/screens/StarterPack/StarterPackScreen.tsx:183
 #: src/view/screens/Feeds.tsx:508
 #: src/view/screens/Profile.tsx:238
 #: src/view/screens/SavedFeeds.tsx:96
-#: src/view/screens/Search/Search.tsx:522
-#: src/view/shell/desktop/LeftNav.tsx:640
+#: src/view/screens/Search/Search.tsx:525
+#: src/view/shell/desktop/LeftNav.tsx:643
 #: src/view/shell/Drawer.tsx:481
 msgid "Feeds"
 msgstr "피드"
@@ -2846,9 +2911,9 @@ msgstr "피드는 사용자가 약간의 코딩 전문 지식만으로 구축할
 msgid "Feeds updated!"
 msgstr "피드를 업데이트했습니다"
 
-#: src/screens/Search/components/ExploreRecommendations.tsx:54
+#: src/screens/Search/components/ExploreRecommendations.tsx:63
 msgid "Feeds we think you might like."
-msgstr "좋아하실 만한 피드를 모았습니다."
+msgstr "좋아할 만한 피드를 모았습니다."
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:43
 msgid "File saved successfully!"
@@ -2857,6 +2922,14 @@ msgstr "파일을 성공적으로 저장했습니다!"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
 msgstr "피드에서 필터링"
+
+#: src/view/screens/Search/Search.tsx:397
+msgid "Filter search by language"
+msgstr "언어별 검색 필터링"
+
+#: src/view/screens/Search/Search.tsx:367
+msgid "Filter search by language (currently: {currentLanguageLabel})"
+msgstr "언어별 검색 필터링 (현재: {currentLanguageLabel})"
 
 #: src/screens/Onboarding/StepFinished.tsx:303
 msgid "Finalizing"
@@ -2874,7 +2947,7 @@ msgstr "팔로우할 계정 찾아보기"
 msgid "Find people to follow"
 msgstr "팔로우할 사람 찾아보기"
 
-#: src/view/screens/Search/Search.tsx:588
+#: src/view/screens/Search/Search.tsx:586
 msgid "Find posts and users on Bluesky"
 msgstr "Bluesky에서 게시물 및 사용자 찾기"
 
@@ -2891,16 +2964,16 @@ msgid "Flexible"
 msgstr "유연성"
 
 #. User is not following this account, click to follow
-#: src/components/ProfileCard.tsx:363
+#: src/components/ProfileCard.tsx:366
 #: src/components/ProfileHoverCard/index.web.tsx:449
 #: src/components/ProfileHoverCard/index.web.tsx:460
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:234
-#: src/screens/VideoFeed/index.tsx:819
+#: src/screens/VideoFeed/index.tsx:823
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:132
 msgid "Follow"
 msgstr "팔로우"
 
-#: src/view/com/profile/FollowButton.tsx:69
+#: src/view/com/profile/FollowButton.tsx:72
 msgctxt "action"
 msgid "Follow"
 msgstr "팔로우"
@@ -2910,7 +2983,7 @@ msgstr "팔로우"
 msgid "Follow {0}"
 msgstr "{0} 님을 팔로우"
 
-#: src/screens/VideoFeed/index.tsx:798
+#: src/screens/VideoFeed/index.tsx:800
 msgid "Follow {handle}"
 msgstr "{handle} 님을 팔로우"
 
@@ -2927,8 +3000,8 @@ msgstr "10개 계정 팔로우하기"
 msgid "Follow 7 accounts"
 msgstr "7개 계정 팔로우하기"
 
-#: src/view/com/profile/ProfileMenu.tsx:222
-#: src/view/com/profile/ProfileMenu.tsx:233
+#: src/view/com/profile/ProfileMenu.tsx:249
+#: src/view/com/profile/ProfileMenu.tsx:260
 msgid "Follow Account"
 msgstr "계정 팔로우"
 
@@ -2942,12 +3015,12 @@ msgstr "모두 팔로우"
 msgid "Follow Back"
 msgstr "맞팔로우"
 
-#: src/view/com/profile/FollowButton.tsx:78
+#: src/view/com/profile/FollowButton.tsx:81
 msgctxt "action"
 msgid "Follow Back"
 msgstr "맞팔로우"
 
-#: src/view/screens/Search/Explore.tsx:368
+#: src/view/screens/Search/Explore.tsx:370
 msgid "Follow more accounts to get connected to your interests and build your network."
 msgstr "더 많은 계정을 팔로우하고 관심 주제를 연결하여 네트워크를 구축하세요."
 
@@ -2957,7 +3030,7 @@ msgstr "<0>{0}</0> 님이 팔로우함"
 
 #: src/components/KnownFollowers.tsx:218
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
-msgstr "<0>{0}</0> 님 외 {1, plural, other {#}}명이 팔로우함"
+msgstr "<0>{0}</0> 님 외 {1, plural, other {#명}}이 팔로우함"
 
 #: src/components/KnownFollowers.tsx:205
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
@@ -2965,13 +3038,9 @@ msgstr "<0>{0}</0> 님과 <1>{1}</1> 님이 팔로우함"
 
 #: src/components/KnownFollowers.tsx:187
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
-msgstr "<0>{0}</0> 님, <1>{1}</1> 님 외 {2, plural, other {#}}명이 팔로우함"
+msgstr "<0>{0}</0> 님, <1>{1}</1> 님 외 {2, plural, other {#명}}이 팔로우함"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:403
-msgid "Followed users"
-msgstr "팔로우한 사용자"
-
-#: src/Navigation.tsx:193
+#: src/Navigation.tsx:203
 msgid "Followers of @{0} that you know"
 msgstr "내가 아는 @{0} 님의 팔로워"
 
@@ -2981,23 +3050,23 @@ msgid "Followers you know"
 msgstr "내가 아는 팔로워"
 
 #. User is following this account, click to unfollow
-#: src/components/ProfileCard.tsx:357
+#: src/components/ProfileCard.tsx:360
 #: src/components/ProfileHoverCard/index.web.tsx:448
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
-#: src/screens/VideoFeed/index.tsx:817
+#: src/screens/VideoFeed/index.tsx:821
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:135
 #: src/view/screens/Feeds.tsx:599
 #: src/view/screens/SavedFeeds.tsx:422
 msgid "Following"
 msgstr "팔로우 중"
 
-#: src/components/ProfileCard.tsx:321
+#: src/components/ProfileCard.tsx:323
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
 msgid "Following {0}"
 msgstr "{0} 님을 팔로우했습니다"
 
-#: src/screens/VideoFeed/index.tsx:797
+#: src/screens/VideoFeed/index.tsx:799
 msgid "Following {handle}"
 msgstr "{handle} 님을 팔로우 중"
 
@@ -3010,7 +3079,7 @@ msgstr "{name} 님을 팔로우했습니다"
 msgid "Following feed preferences"
 msgstr "팔로우 중 피드 설정"
 
-#: src/Navigation.tsx:303
+#: src/Navigation.tsx:320
 #: src/screens/Settings/FollowingFeedPreferences.tsx:53
 msgid "Following Feed Preferences"
 msgstr "팔로우 중 피드 설정"
@@ -3052,16 +3121,16 @@ msgstr "최상의 경험을 위해 테마 글꼴을 사용하는 것을 추천�
 msgid "Forever"
 msgstr "무기한"
 
-#: src/screens/Login/index.tsx:126
-#: src/screens/Login/index.tsx:141
+#: src/screens/Login/index.tsx:153
+#: src/screens/Login/index.tsx:168
 msgid "Forgot Password"
 msgstr "비밀번호 분실"
 
-#: src/screens/Login/LoginForm.tsx:240
+#: src/screens/Login/LoginForm.tsx:248
 msgid "Forgot password?"
 msgstr "비밀번호를 잊으셨나요?"
 
-#: src/screens/Login/LoginForm.tsx:251
+#: src/screens/Login/LoginForm.tsx:259
 msgid "Forgot?"
 msgstr "분실"
 
@@ -3116,8 +3185,8 @@ msgstr "명백한 법률 또는 서비스 이용약관 위반 행위"
 #: src/components/moderation/ScreenHider.tsx:163
 #: src/screens/Profile/ProfileFeed/index.tsx:89
 #: src/screens/VideoFeed/components/Header.tsx:163
-#: src/screens/VideoFeed/index.tsx:1098
 #: src/screens/VideoFeed/index.tsx:1102
+#: src/screens/VideoFeed/index.tsx:1106
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
 #: src/view/screens/ProfileList.tsx:1009
@@ -3135,22 +3204,14 @@ msgstr "뒤로"
 msgid "Go Back"
 msgstr "뒤로"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:540
-msgid "Go back to previous page"
-msgstr "이전 페이지로 돌아갑니다"
-
 #: src/components/dms/ReportDialog.tsx:190
 #: src/components/ReportDialog/SelectReportOptionView.tsx:78
 #: src/components/ReportDialog/SubmitView.tsx:110
-#: src/screens/Onboarding/Layout.tsx:101
-#: src/screens/Onboarding/Layout.tsx:190
+#: src/screens/Onboarding/Layout.tsx:99
+#: src/screens/Onboarding/Layout.tsx:188
 #: src/screens/Signup/BackNextButtons.tsx:35
 msgid "Go back to previous step"
 msgstr "이전 단계로 돌아가기"
-
-#: src/screens/StarterPack/Wizard/index.tsx:287
-msgid "Go back to the previous step"
-msgstr "이전 단계로 돌아갑니다"
 
 #: src/view/screens/NotFound.tsx:57
 msgid "Go home"
@@ -3160,7 +3221,7 @@ msgstr "홈으로 이동"
 msgid "Go Home"
 msgstr "홈으로 이동"
 
-#: src/screens/Messages/components/ChatListItem.tsx:274
+#: src/screens/Messages/components/ChatListItem.tsx:282
 msgid "Go to conversation with {0}"
 msgstr "{0} 님과의 대화로 이동합니다"
 
@@ -3169,11 +3230,11 @@ msgstr "{0} 님과의 대화로 이동합니다"
 msgid "Go to next"
 msgstr "다음"
 
-#: src/components/dms/ConvoMenu.tsx:170
+#: src/components/dms/ConvoMenu.tsx:230
 msgid "Go to profile"
 msgstr "프로필로 가기"
 
-#: src/components/dms/ConvoMenu.tsx:167
+#: src/components/dms/ConvoMenu.tsx:227
 msgid "Go to user's profile"
 msgstr "사용자의 프로필로 가기"
 
@@ -3214,7 +3275,7 @@ msgstr "햅틱"
 msgid "Harassment, trolling, or intolerance"
 msgstr "괴롭힘, 분쟁 유발 또는 차별"
 
-#: src/Navigation.tsx:379
+#: src/Navigation.tsx:396
 msgid "Hashtag"
 msgstr "해시태그"
 
@@ -3265,7 +3326,7 @@ msgstr "숨겨진 리스트"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
 #: src/screens/Search/components/ExploreTrendingTopics.tsx:137
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:672
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:704
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "Hide"
 msgstr "숨기기"
@@ -3275,32 +3336,27 @@ msgctxt "action"
 msgid "Hide"
 msgstr "숨기기"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:523
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:529
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:533
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 msgid "Hide post for me"
 msgstr "나에게서 게시물 숨기기"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:540
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:550
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:560
 msgid "Hide reply for everyone"
 msgstr "모두에게서 답글 숨기기"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:522
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:528
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:532
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:538
 msgid "Hide reply for me"
 msgstr "나에게서 답글 숨기기"
 
-#: src/components/moderation/ContentHider.tsx:151
-#: src/components/moderation/PostHider.tsx:79
-msgid "Hide the content"
-msgstr "콘텐츠 숨기기"
-
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:699
 msgid "Hide this post?"
 msgstr "이 게시물을 숨기시겠습니까?"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:667
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:729
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:699
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:761
 msgid "Hide this reply?"
 msgstr "이 답글을 숨기시겠습니까?"
 
@@ -3324,6 +3380,11 @@ msgstr "인기 동영상을 숨기시겠습니까?"
 msgid "Hide user list"
 msgstr "사용자 리스트 숨기기"
 
+#: src/components/moderation/ContentHider.tsx:151
+#: src/components/moderation/PostHider.tsx:79
+msgid "Hides the content"
+msgstr "콘텐츠를 숨깁니다"
+
 #: src/view/com/posts/PostFeedErrorMessage.tsx:117
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
 msgstr "피드 서버에 연결하는 동안 어떤 문제가 발생했습니다. 피드 소유자에게 이 문제에 대해 알려주세요."
@@ -3344,7 +3405,7 @@ msgstr "피드 서버에서 잘못된 응답을 보냈습니다. 피드 소유�
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr "이 피드를 찾는 데 문제가 있습니다. 피드가 삭제되었을 수 있습니다."
 
-#: src/screens/Moderation/index.tsx:53
+#: src/screens/Moderation/index.tsx:54
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
 msgstr "이 데이터를 불러오는 데 문제가 있는 것 같습니다. 자세한 내용은 아래를 참조하세요. 이 문제가 지속되면 문의해 주세요."
 
@@ -3356,10 +3417,10 @@ msgstr "검토 서비스를 불러올 수 없습니다."
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "잠깐! 동영상에 대한 접근 권한이 점차적으로 제공되고 있지만 아직은 기다려야 합니다. 나중에 다시 확인해 주세요!"
 
-#: src/Navigation.tsx:603
-#: src/Navigation.tsx:623
+#: src/Navigation.tsx:620
+#: src/Navigation.tsx:640
 #: src/view/shell/bottom-bar/BottomBar.tsx:162
-#: src/view/shell/desktop/LeftNav.tsx:584
+#: src/view/shell/desktop/LeftNav.tsx:587
 #: src/view/shell/Drawer.tsx:396
 msgid "Home"
 msgstr "홈"
@@ -3369,7 +3430,7 @@ msgid "Host:"
 msgstr "호스트:"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:83
-#: src/screens/Login/LoginForm.tsx:176
+#: src/screens/Login/LoginForm.tsx:184
 msgid "Hosting provider"
 msgstr "호스팅 제공자"
 
@@ -3425,7 +3486,7 @@ msgstr "이 리스트를 삭제하면 다시 복구할 수 없습니다."
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
 msgstr "자체 도메인이 있는 경우 이를 핸들로 사용할 수 있으며, 이를 통해 본인임을 다른 사람들에게 알릴 수 있습니다. <0>더 알아보기</0>"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:690
 msgid "If you remove this post, you won't be able to recover it."
 msgstr "이 게시물을 삭제하면 다시 복구할 수 없습니다."
 
@@ -3433,7 +3494,7 @@ msgstr "이 게시물을 삭제하면 다시 복구할 수 없습니다."
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
 msgstr "비밀번호를 변경하고 싶다면 본인 계정임을 확인할 수 있는 코드를 보내드립니다."
 
-#: src/view/com/auth/server-input/index.tsx:168
+#: src/view/com/auth/server-input/index.tsx:208
 msgid "If you're a developer, you can host your own server."
 msgstr "개발자라면 직접 서버를 호스팅할 수 있습니다."
 
@@ -3465,11 +3526,11 @@ msgstr "사칭, 허위 정보 또는 허위 주장"
 msgid "Inappropriate messages or explicit links"
 msgstr "부적절한 메시지 또는 노골적인 링크"
 
-#: src/screens/Login/LoginForm.tsx:157
+#: src/screens/Login/LoginForm.tsx:164
 msgid "Incorrect username or password"
 msgstr "잘못된 사용자 이름 또는 비밀번호"
 
-#: src/screens/Login/SetNewPasswordForm.tsx:127
+#: src/screens/Login/SetNewPasswordForm.tsx:131
 msgid "Input code sent to your email for password reset"
 msgstr "비밀번호 재설정을 위해 이메일로 전송된 코드를 입력합니다"
 
@@ -3477,7 +3538,7 @@ msgstr "비밀번호 재설정을 위해 이메일로 전송된 코드를 입력
 msgid "Input confirmation code for account deletion"
 msgstr "계정 삭제를 위한 인증 코드를 입력합니다"
 
-#: src/screens/Login/SetNewPasswordForm.tsx:151
+#: src/screens/Login/SetNewPasswordForm.tsx:155
 msgid "Input new password"
 msgstr "새 비밀번호를 입력합니다"
 
@@ -3485,23 +3546,23 @@ msgstr "새 비밀번호를 입력합니다"
 msgid "Input password for account deletion"
 msgstr "계정을 삭제하기 위해 비밀번호를 입력합니다"
 
-#: src/screens/Login/LoginForm.tsx:281
+#: src/screens/Login/LoginForm.tsx:289
 msgid "Input the code which has been emailed to you"
 msgstr "이메일로 전송된 코드를 입력합니다"
 
-#: src/screens/Login/LoginForm.tsx:210
+#: src/screens/Login/LoginForm.tsx:218
 msgid "Input the username or email address you used at signup"
 msgstr "가입 시 사용한 사용자 이름 또는 이메일 주소를 입력합니다"
-
-#: src/screens/Login/LoginForm.tsx:235
-msgid "Input your password"
-msgstr "비밀번호를 입력합니다"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:49
 msgid "Interaction limited"
 msgstr "상호작용 제한됨"
 
-#: src/screens/Login/LoginForm.tsx:149
+#: src/screens/Moderation/index.tsx:209
+msgid "Interaction settings"
+msgstr "상호작용 설정"
+
+#: src/screens/Login/LoginForm.tsx:156
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
 msgstr "잘못된 2단계 인증 코드입니다."
@@ -3510,7 +3571,7 @@ msgstr "잘못된 2단계 인증 코드입니다."
 msgid "Invalid handle. Please try a different one."
 msgstr "잘못된 핸들입니다. 다른 핸들을 사용하세요."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:277
+#: src/view/com/post-thread/PostThreadItem.tsx:282
 msgid "Invalid or unsupported post record"
 msgstr "유효하지 않거나 지원되지 않는 게시물 기록"
 
@@ -3554,7 +3615,7 @@ msgstr "개인적인 초대"
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
 msgstr "이메일 주소를 잘못 입력한 것 같습니다. 올바른 주소가 맞나요?"
 
-#: src/screens/Signup/StepInfo/index.tsx:235
+#: src/screens/Signup/StepInfo/index.tsx:236
 msgid "It's correct"
 msgstr "올바른 주소입니다"
 
@@ -3562,7 +3623,7 @@ msgstr "올바른 주소입니다"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "아직은 나밖에 없습니다. 위에서 검색하여 스타터 팩에 더 많은 사람을 추가하세요."
 
-#: src/view/com/composer/Composer.tsx:1586
+#: src/view/com/composer/Composer.tsx:1594
 msgid "Job ID: {0}"
 msgstr "작업 ID: {0}"
 
@@ -3620,7 +3681,7 @@ msgstr "내 콘텐츠의 라벨"
 msgid "Language selection"
 msgstr "언어 선택"
 
-#: src/Navigation.tsx:166
+#: src/Navigation.tsx:176
 msgid "Language Settings"
 msgstr "언어 설정"
 
@@ -3636,7 +3697,7 @@ msgstr "큼"
 
 #: src/screens/Hashtag.tsx:95
 #: src/screens/Topic.tsx:77
-#: src/view/screens/Search/Search.tsx:506
+#: src/view/screens/Search/Search.tsx:509
 msgid "Latest"
 msgstr "최신"
 
@@ -3652,11 +3713,14 @@ msgstr "더 알아보기"
 msgid "Learn more about Bluesky"
 msgstr "Bluesky에 대해 더 알아보기"
 
-#: src/view/com/auth/server-input/index.tsx:178
+#: src/view/com/auth/server-input/index.tsx:218
 msgid "Learn more about self hosting your PDS."
 msgstr "PDS 셀프 호스팅에 대해 자세히 알아보세요."
 
 #: src/components/moderation/ContentHider.tsx:149
+msgid "Learn more about the moderation applied to this content"
+msgstr "이 콘텐츠에 적용된 검토 설정에 대해 자세히 알아보세요"
+
 #: src/components/moderation/ContentHider.tsx:215
 msgid "Learn more about the moderation applied to this content."
 msgstr "이 콘텐츠에 적용된 검토 설정에 대해 자세히 알아보세요."
@@ -3672,7 +3736,7 @@ msgid "Learn more about what is public on Bluesky."
 msgstr "Bluesky에서 공개되는 항목에 대해 자세히 알아보세요."
 
 #: src/components/moderation/ContentHider.tsx:239
-#: src/view/com/auth/server-input/index.tsx:180
+#: src/view/com/auth/server-input/index.tsx:220
 msgid "Learn more."
 msgstr "더 알아보기"
 
@@ -3680,15 +3744,15 @@ msgstr "더 알아보기"
 msgid "Leave"
 msgstr "나가기"
 
-#: src/components/dms/MessagesListBlockedFooter.tsx:66
 #: src/components/dms/MessagesListBlockedFooter.tsx:73
+#: src/components/dms/MessagesListBlockedFooter.tsx:80
 msgid "Leave chat"
 msgstr "대화 떠나기"
 
-#: src/components/dms/ConvoMenu.tsx:141
-#: src/components/dms/ConvoMenu.tsx:144
-#: src/components/dms/ConvoMenu.tsx:211
-#: src/components/dms/ConvoMenu.tsx:214
+#: src/components/dms/ConvoMenu.tsx:206
+#: src/components/dms/ConvoMenu.tsx:209
+#: src/components/dms/ConvoMenu.tsx:269
+#: src/components/dms/ConvoMenu.tsx:272
 #: src/components/dms/LeaveConvoPrompt.tsx:40
 msgid "Leave conversation"
 msgstr "대화 나가기"
@@ -3709,8 +3773,8 @@ msgstr "명 남았습니다."
 msgid "Let me choose"
 msgstr "직접 선택하기"
 
-#: src/screens/Login/index.tsx:127
-#: src/screens/Login/index.tsx:142
+#: src/screens/Login/index.tsx:154
+#: src/screens/Login/index.tsx:169
 msgid "Let's get your password reset!"
 msgstr "비밀번호를 재설정해 봅시다!"
 
@@ -3726,9 +3790,9 @@ msgstr "밝음"
 msgid "Like"
 msgstr "좋아요"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:311
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:321
 msgid "Like ({0, plural, one {# like} other {# likes}})"
-msgstr "좋아요 ({0, plural, other {#}}개)"
+msgstr "좋아요 ({0, plural, other {#개}})"
 
 #: src/components/ProgressGuide/List.tsx:63
 msgid "Like 10 posts"
@@ -3748,8 +3812,8 @@ msgid "Like this feed"
 msgstr "이 피드에 좋아요 표시"
 
 #: src/components/LikesDialog.tsx:85
-#: src/Navigation.tsx:237
-#: src/Navigation.tsx:242
+#: src/Navigation.tsx:254
+#: src/Navigation.tsx:259
 msgid "Liked by"
 msgstr "좋아요 표시한 사용자"
 
@@ -3762,14 +3826,14 @@ msgstr "좋아요 표시한 사용자"
 #: src/components/FeedCard.tsx:213
 #: src/view/com/feeds/FeedSourceCard.tsx:303
 msgid "Liked by {0, plural, one {# user} other {# users}}"
-msgstr "{0, plural, other {#}}명의 사용자가 좋아함"
+msgstr "{0, plural, other {#명}}의 사용자가 좋아함"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:489
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:295
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:309
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
-msgstr "{likeCount, plural, other {#}}명의 사용자가 좋아함"
+msgstr "{likeCount, plural, other {#명}}의 사용자가 좋아함"
 
 #: src/view/screens/Profile.tsx:237
 msgid "Likes"
@@ -3784,7 +3848,7 @@ msgstr "이 게시물을 좋아요 표시합니다"
 msgid "Linear"
 msgstr "일반"
 
-#: src/Navigation.tsx:199
+#: src/Navigation.tsx:209
 msgid "List"
 msgstr "리스트"
 
@@ -3837,11 +3901,11 @@ msgstr "리스트를 차단 해제했습니다"
 msgid "List unmuted"
 msgstr "리스트를 언뮤트했습니다"
 
-#: src/Navigation.tsx:136
+#: src/Navigation.tsx:138
 #: src/view/screens/Lists.tsx:62
 #: src/view/screens/Profile.tsx:232
 #: src/view/screens/Profile.tsx:240
-#: src/view/shell/desktop/LeftNav.tsx:658
+#: src/view/shell/desktop/LeftNav.tsx:661
 #: src/view/shell/Drawer.tsx:496
 msgid "Lists"
 msgstr "리스트"
@@ -3850,15 +3914,15 @@ msgstr "리스트"
 msgid "Lists blocking this user:"
 msgstr "이 사용자를 차단한 리스트:"
 
-#: src/view/screens/Search/Explore.tsx:134
+#: src/view/screens/Search/Explore.tsx:135
 msgid "Load more"
 msgstr "더 불러오기"
 
-#: src/view/screens/Search/Explore.tsx:223
+#: src/view/screens/Search/Explore.tsx:224
 msgid "Load more suggested feeds"
 msgstr "추천 피드 더 불러오기"
 
-#: src/view/screens/Search/Explore.tsx:221
+#: src/view/screens/Search/Explore.tsx:222
 msgid "Load more suggested follows"
 msgstr "추천 팔로우 더 불러오기"
 
@@ -3877,32 +3941,13 @@ msgstr "새 게시물 불러오기"
 msgid "Loading..."
 msgstr "불러오는 중…"
 
-#: src/Navigation.tsx:262
+#: src/Navigation.tsx:279
 msgid "Log"
 msgstr "로그"
-
-#: src/screens/Deactivated.tsx:202
-#: src/screens/Deactivated.tsx:208
-msgid "Log in or sign up"
-msgstr "로그인 또는 가입"
-
-#: src/screens/SignupQueued.tsx:93
-#: src/screens/SignupQueued.tsx:96
-#: src/screens/Takendown.tsx:85
-msgid "Log out"
-msgstr "로그아웃"
-
-#: src/screens/Takendown.tsx:88
-msgid "Log Out"
-msgstr "로그아웃"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:78
 msgid "Logged-out visibility"
 msgstr "로그아웃 표시"
-
-#: src/components/AccountList.tsx:65
-msgid "Login to account that is not listed"
-msgstr "목록에 없는 계정으로 로그인"
 
 #: src/view/shell/desktop/RightNav.tsx:121
 msgid "Logo by @sawaratsuki.bsky.social"
@@ -3917,7 +3962,7 @@ msgstr "<0>@sawaratsuki.bsky.social</0> 님의 로고"
 msgid "Long press to open tag menu for #{tag}"
 msgstr "길게 눌러 #{tag}에 대한 태그 메뉴를 엽니다"
 
-#: src/screens/Login/SetNewPasswordForm.tsx:116
+#: src/screens/Login/SetNewPasswordForm.tsx:120
 msgid "Looks like XXXXX-XXXXX"
 msgstr "XXXXX-XXXXX 형식"
 
@@ -3950,8 +3995,8 @@ msgstr "저장한 피드 관리"
 msgid "Manage your muted words and tags"
 msgstr "뮤트한 단어 및 태그 관리"
 
-#: src/components/dms/ConvoMenu.tsx:154
-#: src/components/dms/ConvoMenu.tsx:161
+#: src/components/dms/ConvoMenu.tsx:218
+#: src/components/dms/ConvoMenu.tsx:221
 msgid "Mark as read"
 msgstr "읽음으로 표시"
 
@@ -3963,11 +4008,11 @@ msgstr "미디어"
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr "일부 사용자에게 불쾌감을 주거나 부적절할 수 있는 미디어."
 
-#: src/components/WhoCanReply.tsx:254
+#: src/components/WhoCanReply.tsx:259
 msgid "mentioned users"
 msgstr "멘션한 사용자"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:423
 msgid "Mentioned users"
 msgstr "멘션한 사용자"
 
@@ -3976,7 +4021,6 @@ msgid "Mentions"
 msgstr "멘션"
 
 #: src/components/Menu/index.tsx:103
-#: src/view/screens/Search/Search.tsx:856
 msgid "Menu"
 msgstr "메뉴"
 
@@ -3985,7 +4029,7 @@ msgid "Message {0}"
 msgstr "{0} 님에게 메시지 보내기"
 
 #: src/components/dms/MessageMenu.tsx:72
-#: src/screens/Messages/components/ChatListItem.tsx:174
+#: src/screens/Messages/components/ChatListItem.tsx:180
 msgid "Message deleted"
 msgstr "메시지 삭제됨"
 
@@ -4002,9 +4046,9 @@ msgstr "메시지 입력 필드"
 msgid "Message is too long"
 msgstr "메시지가 너무 깁니다"
 
-#: src/Navigation.tsx:618
-#: src/screens/Messages/ChatList.tsx:270
-#: src/screens/Messages/ChatList.tsx:294
+#: src/Navigation.tsx:635
+#: src/screens/Messages/ChatList.tsx:269
+#: src/screens/Messages/ChatList.tsx:293
 msgid "Messages"
 msgstr "메시지"
 
@@ -4016,8 +4060,8 @@ msgstr "오해의 소지가 있는 계정"
 msgid "Misleading Post"
 msgstr "오해의 소지가 있는 게시물"
 
-#: src/Navigation.tsx:141
-#: src/screens/Moderation/index.tsx:88
+#: src/Navigation.tsx:143
+#: src/screens/Moderation/index.tsx:89
 #: src/screens/Settings/Settings.tsx:167
 #: src/screens/Settings/Settings.tsx:170
 msgid "Moderation"
@@ -4049,11 +4093,11 @@ msgstr "검토 리스트를 생성했습니다"
 msgid "Moderation list updated"
 msgstr "검토 리스트를 업데이트했습니다"
 
-#: src/screens/Moderation/index.tsx:223
+#: src/screens/Moderation/index.tsx:239
 msgid "Moderation lists"
 msgstr "검토 리스트"
 
-#: src/Navigation.tsx:146
+#: src/Navigation.tsx:148
 #: src/view/screens/ModerationModlists.tsx:62
 msgid "Moderation Lists"
 msgstr "검토 리스트"
@@ -4062,11 +4106,11 @@ msgstr "검토 리스트"
 msgid "moderation settings"
 msgstr "검토 설정"
 
-#: src/Navigation.tsx:252
+#: src/Navigation.tsx:269
 msgid "Moderation states"
 msgstr "검토 상태"
 
-#: src/screens/Moderation/index.tsx:192
+#: src/screens/Moderation/index.tsx:193
 msgid "Moderation tools"
 msgstr "검토 도구"
 
@@ -4075,7 +4119,7 @@ msgstr "검토 도구"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "검토자가 콘텐츠에 일반 경고를 설정했습니다."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:632
+#: src/view/com/post-thread/PostThreadItem.tsx:637
 msgid "More"
 msgstr "더 보기"
 
@@ -4084,7 +4128,7 @@ msgstr "더 보기"
 msgid "More feeds"
 msgstr "피드 더 보기"
 
-#: src/view/com/profile/ProfileMenu.tsx:179
+#: src/view/com/profile/ProfileMenu.tsx:197
 #: src/view/screens/ProfileList.tsx:721
 msgid "More options"
 msgstr "옵션 더 보기"
@@ -4118,8 +4162,8 @@ msgstr "음소거"
 msgid "Mute {tag}"
 msgstr "{tag} 뮤트"
 
-#: src/view/com/profile/ProfileMenu.tsx:259
-#: src/view/com/profile/ProfileMenu.tsx:266
+#: src/view/com/profile/ProfileMenu.tsx:286
+#: src/view/com/profile/ProfileMenu.tsx:293
 msgid "Mute Account"
 msgstr "계정 뮤트"
 
@@ -4127,8 +4171,8 @@ msgstr "계정 뮤트"
 msgid "Mute accounts"
 msgstr "계정 뮤트"
 
-#: src/components/dms/ConvoMenu.tsx:175
-#: src/components/dms/ConvoMenu.tsx:181
+#: src/components/dms/ConvoMenu.tsx:235
+#: src/components/dms/ConvoMenu.tsx:241
 msgid "Mute conversation"
 msgstr "대화 뮤트"
 
@@ -4168,21 +4212,21 @@ msgstr "태그에서만 이 단어 뮤트하기"
 msgid "Mute this word until you unmute it"
 msgstr "뮤트를 해제할 때까지 이 단어 뮤트하기"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:489
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:493
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:499
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
 msgid "Mute thread"
 msgstr "스레드 뮤트"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:505
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:513
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:515
 msgid "Mute words & tags"
 msgstr "단어 및 태그 뮤트"
 
-#: src/screens/Moderation/index.tsx:238
+#: src/screens/Moderation/index.tsx:254
 msgid "Muted accounts"
 msgstr "뮤트한 계정"
 
-#: src/Navigation.tsx:151
+#: src/Navigation.tsx:153
 #: src/view/screens/ModerationMutedAccounts.tsx:100
 msgid "Muted Accounts"
 msgstr "뮤트한 계정"
@@ -4195,7 +4239,7 @@ msgstr "계정을 뮤트하면 피드와 알림에서 해당 계정의 게시물
 msgid "Muted by \"{0}\""
 msgstr "\"{0}\"에 의해 뮤트됨"
 
-#: src/screens/Moderation/index.tsx:208
+#: src/screens/Moderation/index.tsx:224
 msgid "Muted words & tags"
 msgstr "뮤트한 단어 및 태그"
 
@@ -4237,7 +4281,7 @@ msgid "Navigate to {0}"
 msgstr "{0}(으)로 이동"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:166
-#: src/screens/Login/LoginForm.tsx:334
+#: src/screens/Login/LoginForm.tsx:344
 #: src/view/com/modals/ChangePassword.tsx:169
 msgid "Navigates to the next screen"
 msgstr "다음 화면으로 이동합니다"
@@ -4269,8 +4313,8 @@ msgid "New"
 msgstr "새로 만들기"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:65
-#: src/screens/Messages/ChatList.tsx:277
-#: src/screens/Messages/ChatList.tsx:284
+#: src/screens/Messages/ChatList.tsx:276
+#: src/screens/Messages/ChatList.tsx:283
 msgid "New chat"
 msgstr "새 대화"
 
@@ -4315,7 +4359,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "새 게시물"
 
-#: src/view/shell/desktop/LeftNav.tsx:504
+#: src/view/shell/desktop/LeftNav.tsx:507
 msgctxt "action"
 msgid "New Post"
 msgstr "새 게시물"
@@ -4342,10 +4386,10 @@ msgstr "뉴스"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:137
 #: src/screens/Login/ForgotPasswordForm.tsx:143
-#: src/screens/Login/LoginForm.tsx:333
-#: src/screens/Login/LoginForm.tsx:340
-#: src/screens/Login/SetNewPasswordForm.tsx:174
-#: src/screens/Login/SetNewPasswordForm.tsx:180
+#: src/screens/Login/LoginForm.tsx:343
+#: src/screens/Login/LoginForm.tsx:350
+#: src/screens/Login/SetNewPasswordForm.tsx:178
+#: src/screens/Login/SetNewPasswordForm.tsx:184
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
@@ -4384,7 +4428,7 @@ msgstr "피드를 찾을 수 없습니다. 다른 피드를 검색해 보세요.
 msgid "No likes yet"
 msgstr "아직 좋아요 없음"
 
-#: src/components/ProfileCard.tsx:342
+#: src/components/ProfileCard.tsx:345
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:119
 msgid "No longer following {0}"
 msgstr "더 이상 {0} 님을 팔로우하지 않음"
@@ -4393,7 +4437,7 @@ msgstr "더 이상 {0} 님을 팔로우하지 않음"
 msgid "No longer than {0} characters"
 msgstr "{0}자 이하"
 
-#: src/screens/Messages/components/ChatListItem.tsx:118
+#: src/screens/Messages/components/ChatListItem.tsx:124
 msgid "No messages yet"
 msgstr "아직 메시지가 없습니다"
 
@@ -4410,7 +4454,7 @@ msgstr "아직 알림이 없습니다"
 msgid "No one"
 msgstr "없음"
 
-#: src/components/WhoCanReply.tsx:237
+#: src/components/WhoCanReply.tsx:242
 msgid "No one but the author can quote this post."
 msgstr "이 게시물은 작성자 외에는 누구도 인용할 수 없습니다."
 
@@ -4445,9 +4489,9 @@ msgid "No results found for \"{query}\""
 msgstr "\"{query}\"에 대한 결과를 찾을 수 없습니다"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
-#: src/view/screens/Search/Search.tsx:227
-#: src/view/screens/Search/Search.tsx:265
-#: src/view/screens/Search/Search.tsx:310
+#: src/view/screens/Search/Search.tsx:231
+#: src/view/screens/Search/Search.tsx:269
+#: src/view/screens/Search/Search.tsx:314
 msgid "No results found for {query}"
 msgstr "{query}에 대한 결과를 찾을 수 없습니다"
 
@@ -4460,7 +4504,7 @@ msgstr "\"{search}\"에 대한 검색 결과를 찾을 수 없습니다."
 msgid "No thanks"
 msgstr "사용하지 않음"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:375
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:405
 msgid "Nobody"
 msgstr "없음"
 
@@ -4486,7 +4530,7 @@ msgstr "아무도 찾을 수 없습니다. 다른 사용자를 검색해 보세�
 msgid "Non-sexual Nudity"
 msgstr "선정적이지 않은 나체"
 
-#: src/Navigation.tsx:131
+#: src/Navigation.tsx:133
 #: src/view/screens/Profile.tsx:129
 msgid "Not Found"
 msgstr "찾을 수 없음"
@@ -4496,9 +4540,9 @@ msgstr "찾을 수 없음"
 msgid "Not right now"
 msgstr "나중에 하기"
 
-#: src/view/com/profile/ProfileMenu.tsx:348
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:686
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:357
+#: src/view/com/profile/ProfileMenu.tsx:400
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:718
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:367
 msgid "Note about sharing"
 msgstr "공유 관련 참고 사항"
 
@@ -4514,7 +4558,7 @@ msgstr "빈 페이지"
 msgid "Notification filters"
 msgstr "알림 필터"
 
-#: src/Navigation.tsx:399
+#: src/Navigation.tsx:416
 #: src/view/screens/Notifications.tsx:134
 msgid "Notification settings"
 msgstr "알림 설정"
@@ -4531,10 +4575,10 @@ msgstr "알림음"
 msgid "Notification Sounds"
 msgstr "알림음"
 
-#: src/Navigation.tsx:613
+#: src/Navigation.tsx:630
 #: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:230
-#: src/view/shell/desktop/LeftNav.tsx:621
+#: src/view/shell/desktop/LeftNav.tsx:624
 #: src/view/shell/Drawer.tsx:449
 msgid "Notifications"
 msgstr "알림"
@@ -4576,7 +4620,7 @@ msgid "OK"
 msgstr "확인"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/view/com/post-thread/PostThreadItem.tsx:864
+#: src/view/com/post-thread/PostThreadItem.tsx:869
 msgid "Okay"
 msgstr "확인"
 
@@ -4595,15 +4639,15 @@ msgstr "<0><1/><2><3/></2></0>"
 msgid "Onboarding reset"
 msgstr "온보딩 재설정"
 
-#: src/view/com/composer/Composer.tsx:338
+#: src/view/com/composer/Composer.tsx:346
 msgid "One or more GIFs is missing alt text."
 msgstr "하나 이상의 GIF에 대체 텍스트가 누락되었습니다."
 
-#: src/view/com/composer/Composer.tsx:335
+#: src/view/com/composer/Composer.tsx:343
 msgid "One or more images is missing alt text."
 msgstr "하나 이상의 이미지에 대체 텍스트가 누락되었습니다."
 
-#: src/view/com/composer/Composer.tsx:345
+#: src/view/com/composer/Composer.tsx:353
 msgid "One or more videos is missing alt text."
 msgstr "하나 이상의 동영상에 대체 텍스트가 누락되었습니다."
 
@@ -4611,7 +4655,7 @@ msgstr "하나 이상의 동영상에 대체 텍스트가 누락되었습니다.
 msgid "Only .jpg and .png files are supported"
 msgstr ".jpg 및 .png 파일만 지원됩니다"
 
-#: src/components/WhoCanReply.tsx:217
+#: src/components/WhoCanReply.tsx:222
 msgid "Only {0} can reply."
 msgstr "{0}만 답글을 달 수 있습니다."
 
@@ -4653,22 +4697,17 @@ msgstr "{name} 님의 프로필 단축 메뉴 열기"
 msgid "Open avatar creator"
 msgstr "아바타 생성기 열기"
 
-#: src/screens/Settings/AccountSettings.tsx:127
-msgid "Open change handle dialog"
-msgstr "핸들 변경 대화 상자를 엽니다"
-
-#: src/screens/Messages/components/ChatListItem.tsx:282
-#: src/screens/Messages/components/ChatListItem.tsx:283
+#: src/screens/Messages/components/ChatListItem.tsx:290
+#: src/screens/Messages/components/ChatListItem.tsx:291
 msgid "Open conversation options"
 msgstr "대화 옵션 열기"
 
-#: src/components/Layout/Header/index.tsx:149
+#: src/components/Layout/Header/index.tsx:150
 msgid "Open drawer menu"
 msgstr "서랍 메뉴 열기"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1235
-#: src/view/com/composer/Composer.tsx:1236
+#: src/view/com/composer/Composer.tsx:1243
 msgid "Open emoji picker"
 msgstr "이모티콘 선택기 열기"
 
@@ -4680,10 +4719,6 @@ msgstr "피드 정보 화면 열기"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:295
 msgid "Open feed options menu"
 msgstr "피드 옵션 메뉴 열기"
-
-#: src/screens/Settings/Settings.tsx:208
-msgid "Open helpdesk in browser"
-msgstr "브라우저에서 헬프데스크를 엽니다"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:71
 msgid "Open link to {niceUrl}"
@@ -4697,7 +4732,7 @@ msgstr "메시지 옵션 열기"
 msgid "Open moderation debug page"
 msgstr "검토 디버그 페이지 열기"
 
-#: src/screens/Moderation/index.tsx:204
+#: src/screens/Moderation/index.tsx:220
 msgid "Open muted words and tags settings"
 msgstr "뮤트한 단어 및 태그 설정 열기"
 
@@ -4738,6 +4773,10 @@ msgstr "디버그 항목에 대한 추가 세부 정보를 엽니다"
 msgid "Opens camera on device"
 msgstr "기기에서 카메라를 엽니다"
 
+#: src/screens/Settings/AccountSettings.tsx:127
+msgid "Opens change handle dialog"
+msgstr "핸들 변경 대화 상자를 엽니다"
+
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:35
 msgid "Opens composer"
 msgstr "답글 작성 상자를 엽니다"
@@ -4746,6 +4785,10 @@ msgstr "답글 작성 상자를 엽니다"
 msgid "Opens device photo gallery"
 msgstr "기기의 사진 갤러리를 엽니다"
 
+#: src/view/com/composer/Composer.tsx:1244
+msgid "Opens emoji picker"
+msgstr "이모티콘 선택기를 엽니다"
+
 #: src/view/com/auth/SplashScreen.tsx:49
 #: src/view/com/auth/SplashScreen.web.tsx:111
 msgid "Opens flow to create a new Bluesky account"
@@ -4753,18 +4796,22 @@ msgstr "새 Bluesky 계정을 만드는 플로를 엽니다"
 
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.web.tsx:125
-msgid "Opens flow to sign into your existing Bluesky account"
-msgstr "존재하는 Bluesky 계정에 로그인하는 플로를 엽니다"
+msgid "Opens flow to sign in to your existing Bluesky account"
+msgstr ""
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Opens GIF select dialog"
 msgstr "GIF 선택 대화 상자를 엽니다"
 
+#: src/screens/Settings/Settings.tsx:208
+msgid "Opens helpdesk in browser"
+msgstr "브라우저에서 지원 문서를 엽니다"
+
 #: src/view/com/modals/InviteCodes.tsx:173
 msgid "Opens list of invite codes"
 msgstr "초대 코드 목록을 엽니다"
 
-#: src/screens/Login/LoginForm.tsx:241
+#: src/screens/Login/LoginForm.tsx:249
 msgid "Opens password reset form"
 msgstr "비밀번호 재설정 양식을 엽니다"
 
@@ -4781,10 +4828,6 @@ msgstr "이 프로필을 엽니다"
 msgid "Opens video picker"
 msgstr "동영상 선택기를 엽니다"
 
-#: src/view/com/util/forms/DropdownButton.tsx:296
-msgid "Option {0} of {numItems}"
-msgstr "{numItems}개 중 {0}번째 옵션"
-
 #: src/components/dms/ReportDialog.tsx:219
 #: src/components/ReportDialog/SubmitView.tsx:168
 msgid "Optionally provide additional information below:"
@@ -4794,7 +4837,7 @@ msgstr "선택 사항으로 아래에 추가 정보를 입력하세요."
 msgid "Options:"
 msgstr "옵션:"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:418
 msgid "Or combine these options:"
 msgstr "또는 다음 옵션을 결합하세요."
 
@@ -4803,8 +4846,8 @@ msgid "Or, continue with another account."
 msgstr "또는 다른 계정으로 계속 진행하세요."
 
 #: src/screens/Deactivated.tsx:186
-msgid "Or, log into one of your other accounts."
-msgstr "또는 다른 계정 중 하나로 로그인하세요."
+msgid "Or, sign in to one of your other accounts."
+msgstr ""
 
 #: src/lib/moderation/useReportOptions.ts:27
 #: src/view/com/composer/labels/LabelsBtn.tsx:186
@@ -4820,7 +4863,7 @@ msgid "Other..."
 msgstr "기타…"
 
 #: src/components/dms/ReportDialog.tsx:339
-msgid "Our moderation team has recieved your report."
+msgid "Our moderation team has received your report."
 msgstr "Bluesky 검토 팀에서 신고를 접수했습니다."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:28
@@ -4836,7 +4879,7 @@ msgstr "페이지를 찾을 수 없음"
 msgid "Page Not Found"
 msgstr "페이지를 찾을 수 없음"
 
-#: src/screens/Login/LoginForm.tsx:220
+#: src/screens/Login/LoginForm.tsx:228
 #: src/screens/Settings/AccountSettings.tsx:117
 #: src/screens/Settings/AccountSettings.tsx:121
 #: src/screens/Signup/StepInfo/index.tsx:186
@@ -4849,7 +4892,7 @@ msgstr "비밀번호"
 msgid "Password Changed"
 msgstr "비밀번호 변경됨"
 
-#: src/screens/Login/index.tsx:154
+#: src/screens/Login/index.tsx:181
 msgid "Password updated"
 msgstr "비밀번호 변경됨"
 
@@ -4868,15 +4911,15 @@ msgid "Pause video"
 msgstr "동영상 일시 정지"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:182
-#: src/view/screens/Search/Search.tsx:516
+#: src/view/screens/Search/Search.tsx:519
 msgid "People"
 msgstr "사람들"
 
-#: src/Navigation.tsx:186
+#: src/Navigation.tsx:196
 msgid "People followed by @{0}"
-msgstr "@{0} 님이 팔로우한 사람들"
+msgstr "@{0} 님이 팔로우하는 사람들"
 
-#: src/Navigation.tsx:179
+#: src/Navigation.tsx:189
 msgid "People following @{0}"
 msgstr "@{0} 님을 팔로우하는 사람들"
 
@@ -4927,8 +4970,8 @@ msgstr "홈에 고정"
 msgid "Pin to Home"
 msgstr "홈에 고정"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:380
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:387
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:390
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:397
 msgid "Pin to your profile"
 msgstr "내 프로필에 고정"
 
@@ -4959,23 +5002,30 @@ msgstr "재생"
 msgid "Play {0}"
 msgstr "{0} 재생"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:42
-msgid "Play or pause the GIF"
-msgstr "GIP를 재생하거나 일시 정지합니다"
-
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:134
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:321
 msgid "Play video"
 msgstr "동영상 재생"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:58
-#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:59
 msgid "Play Video"
 msgstr "동영상 재생"
+
+#: src/view/com/util/post-embeds/GifEmbed.tsx:42
+msgid "Plays or pauses the GIF"
+msgstr "GIF를 재생하거나 일시 정지합니다"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
+msgid "Plays or pauses the video"
+msgstr "동영상을 재생하거나 일시 정지합니다"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:106
 msgid "Plays the GIF"
 msgstr "GIF를 재생합니다"
+
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:59
+msgid "Plays the video"
+msgstr "동영상을 재생합니다"
 
 #: src/screens/Signup/state.ts:217
 msgid "Please choose your handle."
@@ -4994,7 +5044,7 @@ msgstr "인증 캡차를 완료해 주세요."
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
 msgstr "이메일을 변경하기 전에 이메일을 확인해 주세요. 이는 이메일 변경 도구가 추가되는 동안 일시적으로 요구되는 사항이며 곧 제거될 예정입니다."
 
-#: src/screens/Login/SetNewPasswordForm.tsx:56
+#: src/screens/Login/SetNewPasswordForm.tsx:58
 msgid "Please enter a password."
 msgstr "비밀번호를 입력하세요."
 
@@ -5015,7 +5065,7 @@ msgstr "이메일을 입력하세요."
 msgid "Please enter your invite code."
 msgstr "초대 코드를 입력하세요."
 
-#: src/screens/Login/LoginForm.tsx:95
+#: src/screens/Login/LoginForm.tsx:99
 msgid "Please enter your password"
 msgstr "비밀번호를 입력하세요"
 
@@ -5023,7 +5073,7 @@ msgstr "비밀번호를 입력하세요"
 msgid "Please enter your password as well:"
 msgstr "비밀번호를 입력하세요."
 
-#: src/screens/Login/LoginForm.tsx:90
+#: src/screens/Login/LoginForm.tsx:94
 msgid "Please enter your username"
 msgstr "사용자 이름을 입력하세요"
 
@@ -5057,7 +5107,7 @@ msgstr "네트워크에서 인기 있는 동영상을 확인하세요."
 msgid "Porn"
 msgstr "음란물"
 
-#: src/view/com/composer/Composer.tsx:951
+#: src/view/com/composer/Composer.tsx:959
 msgctxt "action"
 msgid "Post"
 msgstr "게시하기"
@@ -5067,7 +5117,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "게시물"
 
-#: src/view/com/composer/Composer.tsx:949
+#: src/view/com/composer/Composer.tsx:957
 msgctxt "action"
 msgid "Post All"
 msgstr "모두 게시하기"
@@ -5076,14 +5126,14 @@ msgstr "모두 게시하기"
 msgid "Post by {0}"
 msgstr "{0} 님의 게시물"
 
-#: src/Navigation.tsx:205
-#: src/Navigation.tsx:212
-#: src/Navigation.tsx:219
-#: src/Navigation.tsx:226
+#: src/Navigation.tsx:222
+#: src/Navigation.tsx:229
+#: src/Navigation.tsx:236
+#: src/Navigation.tsx:243
 msgid "Post by @{0}"
 msgstr "@{0} 님의 게시물"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:175
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:177
 msgid "Post deleted"
 msgstr "게시물을 삭제했습니다"
 
@@ -5109,8 +5159,13 @@ msgstr "뮤트한 단어로 숨겨진 게시물"
 msgid "Post Hidden by You"
 msgstr "내가 숨긴 게시물"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:287
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
 msgid "Post interaction settings"
+msgstr "게시물 상호작용 설정"
+
+#: src/Navigation.tsx:164
+#: src/screens/ModerationInteractionSettings/index.tsx:34
+msgid "Post Interaction Settings"
 msgstr "게시물 상호작용 설정"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:89
@@ -5159,11 +5214,6 @@ msgstr "설정을 저장했습니다"
 msgid "Press to attempt reconnection"
 msgstr "다시 연결을 시도하려면 누르기"
 
-#: src/components/forms/HostingProvider.tsx:50
-#: src/components/forms/HostingProvider.tsx:66
-msgid "Press to change hosting provider"
-msgstr "호스팅 제공자를 변경하려면 누릅니다"
-
 #: src/components/Error.tsx:60
 #: src/components/Lists.tsx:99
 #: src/screens/Messages/components/MessageListError.tsx:24
@@ -5202,21 +5252,21 @@ msgstr "개인정보"
 msgid "Privacy and security"
 msgstr "개인정보 및 보안"
 
-#: src/Navigation.tsx:348
+#: src/Navigation.tsx:365
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:36
 msgid "Privacy and Security"
 msgstr "개인정보 및 보안"
 
-#: src/Navigation.tsx:272
-#: src/screens/Settings/AboutSettings.tsx:45
-#: src/screens/Settings/AboutSettings.tsx:48
+#: src/Navigation.tsx:289
+#: src/screens/Settings/AboutSettings.tsx:50
+#: src/screens/Settings/AboutSettings.tsx:53
 #: src/view/screens/PrivacyPolicy.tsx:31
 #: src/view/shell/Drawer.tsx:629
 #: src/view/shell/Drawer.tsx:630
 msgid "Privacy Policy"
 msgstr "개인정보 처리방침"
 
-#: src/view/com/composer/Composer.tsx:1649
+#: src/view/com/composer/Composer.tsx:1657
 msgid "Processing video..."
 msgstr "동영상 처리 중…"
 
@@ -5231,7 +5281,7 @@ msgid "profile"
 msgstr "프로필"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:275
-#: src/view/shell/desktop/LeftNav.tsx:676
+#: src/view/shell/desktop/LeftNav.tsx:679
 #: src/view/shell/Drawer.tsx:71
 #: src/view/shell/Drawer.tsx:521
 msgid "Profile"
@@ -5273,11 +5323,11 @@ msgstr "QR 코드를 사진 보관함에 저장했습니다."
 msgid "Quote post"
 msgstr "게시물 인용"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:303
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:305
 msgid "Quote post was re-attached"
 msgstr "인용을 다시 연결했습니다"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:302
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:304
 msgid "Quote post was successfully detached"
 msgstr "인용을 성공적으로 해제했습니다"
 
@@ -5288,7 +5338,7 @@ msgstr "인용을 성공적으로 해제했습니다"
 msgid "Quote posts disabled"
 msgstr "게시물 인용 비활성화됨"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:299
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:329
 msgid "Quote settings"
 msgstr "인용 설정"
 
@@ -5311,8 +5361,8 @@ msgstr "무작위"
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr "짧은 시간에 핸들 변경을 너무 많이 시도했습니다. 잠시 기다렸다가 다시 시도해 주세요."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:565
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:575
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:585
 msgid "Re-attach quote"
 msgstr "인용 다시 연결"
 
@@ -5320,11 +5370,11 @@ msgstr "인용 다시 연결"
 msgid "Reactivate your account"
 msgstr "계정 재활성화"
 
-#: src/screens/VideoFeed/index.tsx:932
+#: src/screens/VideoFeed/index.tsx:936
 msgid "Read less"
 msgstr "접기"
 
-#: src/screens/VideoFeed/index.tsx:932
+#: src/screens/VideoFeed/index.tsx:936
 msgid "Read more"
 msgstr "펼치기"
 
@@ -5351,11 +5401,11 @@ msgstr "이의신청 이유"
 msgid "Reason:"
 msgstr "이유:"
 
-#: src/view/screens/Search/Search.tsx:1034
+#: src/view/screens/Search/Search.tsx:1033
 msgid "Recent Searches"
 msgstr "최근 검색"
 
-#: src/screens/Search/components/ExploreRecommendations.tsx:50
+#: src/screens/Search/components/ExploreRecommendations.tsx:52
 msgid "Recommended"
 msgstr "추천"
 
@@ -5444,13 +5494,9 @@ msgstr "이미지 제거"
 msgid "Remove mute word from your list"
 msgstr "목록에서 뮤트한 단어 제거"
 
-#: src/view/screens/Search/Search.tsx:1082
+#: src/view/screens/Search/Search.tsx:1081
 msgid "Remove profile"
 msgstr "프로필 제거"
-
-#: src/view/screens/Search/Search.tsx:1084
-msgid "Remove profile from search history"
-msgstr "검색 기록에서 프로필을 제거합니다"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:285
 msgid "Remove quote"
@@ -5497,6 +5543,10 @@ msgstr "저장한 피드에서 제거했습니다"
 msgid "Removed from your feeds"
 msgstr "내 피드에서 제거했습니다"
 
+#: src/view/screens/Search/Search.tsx:1083
+msgid "Removes profile from search history"
+msgstr "검색 기록에서 프로필을 제거합니다"
+
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:286
 msgid "Removes quoted post"
 msgstr "인용된 게시물을 제거합니다"
@@ -5514,18 +5564,18 @@ msgstr "답글"
 msgid "Replies disabled"
 msgstr "답글 비활성화됨"
 
-#: src/components/WhoCanReply.tsx:215
+#: src/components/WhoCanReply.tsx:220
 msgid "Replies to this post are disabled."
 msgstr "이 게시물에 대한 답글은 비활성화되어 있습니다."
 
-#: src/view/com/composer/Composer.tsx:947
+#: src/view/com/composer/Composer.tsx:955
 msgctxt "action"
 msgid "Reply"
 msgstr "답글 게시하기"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:263
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:273
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
-msgstr "답글 ({0, plural, other {#}}개)"
+msgstr "답글 ({0, plural, other {#개}})"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:123
@@ -5537,11 +5587,11 @@ msgstr "스레드 작성자에 의해 답글 숨겨짐"
 msgid "Reply Hidden by You"
 msgstr "나에 의해 답글 숨겨짐"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:355
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:385
 msgid "Reply settings"
 msgstr "답글 설정"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:340
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:370
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "답글 설정은 스레드 작성자가 선택합니다"
 
@@ -5571,27 +5621,27 @@ msgctxt "description"
 msgid "Reply to you"
 msgstr "나에게 보내는 답글"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:333
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:335
 msgid "Reply visibility updated"
 msgstr "답글 표시 여부를 업데이트했습니다"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:332
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:334
 msgid "Reply was successfully hidden"
 msgstr "답글을 성공적으로 숨겼습니다"
 
 #: src/components/dms/MessageMenu.tsx:132
-#: src/components/dms/MessagesListBlockedFooter.tsx:77
 #: src/components/dms/MessagesListBlockedFooter.tsx:84
+#: src/components/dms/MessagesListBlockedFooter.tsx:91
 msgid "Report"
 msgstr "신고"
 
-#: src/view/com/profile/ProfileMenu.tsx:299
-#: src/view/com/profile/ProfileMenu.tsx:302
+#: src/view/com/profile/ProfileMenu.tsx:326
+#: src/view/com/profile/ProfileMenu.tsx:329
 msgid "Report Account"
 msgstr "계정 신고"
 
-#: src/components/dms/ConvoMenu.tsx:200
-#: src/components/dms/ConvoMenu.tsx:203
+#: src/components/dms/ConvoMenu.tsx:258
+#: src/components/dms/ConvoMenu.tsx:261
 #: src/components/dms/ReportConversationPrompt.tsx:17
 msgid "Report conversation"
 msgstr "대화 신고"
@@ -5613,8 +5663,8 @@ msgstr "리스트 신고"
 msgid "Report message"
 msgstr "메시지 신고"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:611
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:621
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:623
 msgid "Report post"
 msgstr "게시물 신고"
 
@@ -5670,7 +5720,7 @@ msgstr "재게시"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:74
 msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr "재게시 ({0, plural, other {#}}개)"
+msgstr "재게시 ({0, plural, other {#개}})"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:548
 #: src/view/com/util/post-ctrls/RepostButton.tsx:148
@@ -5716,8 +5766,8 @@ msgid "Require alt text before posting"
 msgstr "게시하기 전 대체 텍스트 필수"
 
 #: src/screens/Settings/components/Email2FAToggle.tsx:54
-msgid "Require an email code to log in to your account."
-msgstr "계정에 로그인할 때 이메일 코드를 요구합니다."
+msgid "Require an email code to sign in to your account."
+msgstr ""
 
 #: src/screens/Signup/StepInfo/index.tsx:153
 msgid "Required for this provider"
@@ -5759,11 +5809,11 @@ msgstr "온보딩 상태 초기화"
 msgid "Reset password"
 msgstr "비밀번호 재설정"
 
-#: src/screens/Login/LoginForm.tsx:314
-msgid "Retries login"
-msgstr "로그인을 다시 시도합니다"
+#: src/screens/Login/LoginForm.tsx:324
+msgid "Retries sign in"
+msgstr ""
 
-#: src/view/com/util/error/ErrorMessage.tsx:57
+#: src/view/com/util/error/ErrorMessage.tsx:62
 #: src/view/com/util/error/ErrorScreen.tsx:99
 msgid "Retries the last action, which errored out"
 msgstr "오류가 발생한 마지막 작업을 다시 시도합니다"
@@ -5772,14 +5822,14 @@ msgstr "오류가 발생한 마지막 작업을 다시 시도합니다"
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:110
 #: src/components/StarterPack/ProfileStarterPacks.tsx:335
-#: src/screens/Login/LoginForm.tsx:313
-#: src/screens/Login/LoginForm.tsx:320
+#: src/screens/Login/LoginForm.tsx:323
+#: src/screens/Login/LoginForm.tsx:330
 #: src/screens/Messages/ChatList.tsx:177
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Onboarding/StepInterests/index.tsx:217
 #: src/screens/Onboarding/StepInterests/index.tsx:220
 #: src/screens/Signup/BackNextButtons.tsx:53
-#: src/view/com/util/error/ErrorMessage.tsx:55
+#: src/view/com/util/error/ErrorMessage.tsx:60
 #: src/view/com/util/error/ErrorScreen.tsx:97
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoFallback.tsx:55
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoFallback.tsx:57
@@ -5789,7 +5839,6 @@ msgstr "다시 시도"
 #: src/components/Error.tsx:73
 #: src/screens/List/ListHiddenScreen.tsx:216
 #: src/screens/StarterPack/StarterPackScreen.tsx:752
-#: src/view/screens/ProfileList.tsx:1010
 msgid "Return to previous page"
 msgstr "이전 페이지로 돌아갑니다"
 
@@ -5798,14 +5847,20 @@ msgid "Returns to home page"
 msgstr "홈 페이지로 돌아갑니다"
 
 #: src/screens/Profile/ProfileFeed/index.tsx:90
-#: src/screens/VideoFeed/index.tsx:1099
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:540
+#: src/screens/VideoFeed/index.tsx:1103
 #: src/view/screens/NotFound.tsx:60
+#: src/view/screens/ProfileList.tsx:1010
 msgid "Returns to previous page"
 msgstr "이전 페이지로 돌아갑니다"
 
-#: src/components/dialogs/BirthDateSettings.tsx:124
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:438
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:444
+#: src/screens/StarterPack/Wizard/index.tsx:287
+msgid "Returns to the previous step"
+msgstr "이전 단계로 돌아갑니다"
+
+#: src/components/dialogs/BirthDateSettings.tsx:120
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:479
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:485
 #: src/components/StarterPack/QrCodeDialog.tsx:185
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
@@ -5828,7 +5883,7 @@ msgctxt "action"
 msgid "Save"
 msgstr "저장"
 
-#: src/components/dialogs/BirthDateSettings.tsx:118
+#: src/components/dialogs/BirthDateSettings.tsx:114
 msgid "Save birthday"
 msgstr "생년월일 저장"
 
@@ -5903,14 +5958,20 @@ msgstr "맨 위로 스크롤"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:487
 #: src/components/forms/SearchInput.tsx:34
 #: src/components/forms/SearchInput.tsx:36
-#: src/Navigation.tsx:608
+#: src/Navigation.tsx:625
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
-#: src/view/screens/Search/Search.tsx:570
+#: src/view/screens/Search/Search.tsx:568
+#: src/view/screens/Search/Search.tsx:845
 #: src/view/shell/bottom-bar/BottomBar.tsx:182
-#: src/view/shell/desktop/LeftNav.tsx:602
+#: src/view/shell/desktop/LeftNav.tsx:605
 #: src/view/shell/Drawer.tsx:370
 msgid "Search"
 msgstr "검색"
+
+#: src/Navigation.tsx:215
+#: src/screens/Profile/ProfileSearch.tsx:34
+msgid "Search @{0}'s posts"
+msgstr ""
 
 #: src/components/ProgressGuide/FollowDialog.tsx:745
 msgid "Search by name or interest"
@@ -5928,13 +5989,17 @@ msgstr "\"{interestsDisplayName}\" 검색{activeText}"
 msgid "Search for \"{query}\""
 msgstr "\"{query}\"에 대한 검색 결과"
 
-#: src/view/screens/Search/Search.tsx:980
+#: src/view/screens/Search/Search.tsx:979
 msgid "Search for \"{searchText}\""
 msgstr "\"{searchText}\"에 대한 검색 결과"
 
 #: src/screens/StarterPack/Wizard/index.tsx:474
 msgid "Search for feeds that you want to suggest to others."
 msgstr "다른 사람에게 추천할 피드를 검색하세요."
+
+#: src/view/screens/Search/Search.tsx:872
+msgid "Search for posts, users, or feeds"
+msgstr "게시물, 사용자 또는 피드 검색"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
 msgid "Search for users"
@@ -5944,16 +6009,32 @@ msgstr "사용자 검색하기"
 msgid "Search GIFs"
 msgstr "GIF 검색하기"
 
+#: src/screens/Profile/ProfileSearch.tsx:33
+msgid "Search my posts"
+msgstr ""
+
+#: src/view/com/profile/ProfileMenu.tsx:228
+#: src/view/com/profile/ProfileMenu.tsx:231
+msgid "Search Posts"
+msgstr ""
+
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:507
-#: src/components/dms/dialogs/SearchablePeopleList.tsx:508
 #: src/components/ProgressGuide/FollowDialog.tsx:764
-#: src/components/ProgressGuide/FollowDialog.tsx:765
 msgid "Search profiles"
 msgstr "프로필 검색"
 
 #: src/components/dialogs/GifSelect.tsx:178
 msgid "Search Tenor"
 msgstr "Tenor 검색"
+
+#: src/screens/Profile/ProfileSearch.tsx:35
+msgid "Search..."
+msgstr ""
+
+#: src/components/dms/dialogs/SearchablePeopleList.tsx:508
+#: src/components/ProgressGuide/FollowDialog.tsx:765
+msgid "Searches for profiles"
+msgstr "프로필을 검색합니다"
 
 #: src/view/com/modals/ChangeEmail.tsx:105
 msgid "Security Step Required"
@@ -6007,7 +6088,7 @@ msgstr "이모티콘 선택"
 msgid "Select content languages"
 msgstr "콘텐츠 언어 선택"
 
-#: src/screens/Login/index.tsx:117
+#: src/screens/Login/index.tsx:144
 msgid "Select from an existing account"
 msgstr "기존 계정에서 선택하기"
 
@@ -6075,6 +6156,10 @@ msgstr "아래 옵션에서 관심 주제를 선택하세요"
 msgid "Select your preferred language for translations in your feed."
 msgstr "피드에서 번역을 위해 선호하는 언어를 선택합니다."
 
+#: src/view/com/util/forms/DropdownButton.tsx:297
+msgid "Selects option {0} of {numItems}"
+msgstr "옵션 {numItems}개 중 {0}번째를 선택합니다"
+
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
 msgstr "멋진 웹사이트 링크를 보내 보세요!"
@@ -6130,8 +6215,8 @@ msgstr "{0} 님에게 신고 보내기"
 msgid "Send verification email"
 msgstr "인증 이메일 보내기"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:423
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:426
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:433
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:436
 msgid "Send via direct message"
 msgstr "다이렉트 메시지로 보내기"
 
@@ -6139,7 +6224,7 @@ msgstr "다이렉트 메시지로 보내기"
 msgid "Sends email with confirmation code for account deletion"
 msgstr "계정 삭제를 위한 확인 코드가 포함된 이메일을 전송합니다"
 
-#: src/view/com/auth/server-input/index.tsx:127
+#: src/view/com/auth/server-input/index.tsx:167
 msgid "Server address"
 msgstr "서버 주소"
 
@@ -6147,11 +6232,11 @@ msgstr "서버 주소"
 msgid "Set app icon to {0}"
 msgstr "앱 아이콘을 {0}(으)로 설정"
 
-#: src/screens/Moderation/index.tsx:290
+#: src/screens/Moderation/index.tsx:306
 msgid "Set birthdate"
 msgstr "생년월일 설정"
 
-#: src/screens/Login/SetNewPasswordForm.tsx:102
+#: src/screens/Login/SetNewPasswordForm.tsx:106
 msgid "Set new password"
 msgstr "새 비밀번호 설정"
 
@@ -6163,12 +6248,16 @@ msgstr "계정 설정하기"
 msgid "Sets email for password reset"
 msgstr "비밀번호 재설정을 위한 이메일을 설정합니다"
 
-#: src/Navigation.tsx:161
+#: src/Navigation.tsx:171
 #: src/screens/Settings/Settings.tsx:80
-#: src/view/shell/desktop/LeftNav.tsx:694
+#: src/view/shell/desktop/LeftNav.tsx:697
 #: src/view/shell/Drawer.tsx:534
 msgid "Settings"
 msgstr "설정"
+
+#: src/screens/ModerationInteractionSettings/index.tsx:102
+msgid "Settings saved"
+msgstr "설정을 저장했습니다"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Sexual activity or erotic nudity."
@@ -6183,11 +6272,11 @@ msgstr "외설적"
 #: src/screens/StarterPack/StarterPackScreen.tsx:423
 #: src/screens/StarterPack/StarterPackScreen.tsx:595
 #: src/screens/Topic.tsx:102
-#: src/view/com/profile/ProfileMenu.tsx:195
-#: src/view/com/profile/ProfileMenu.tsx:204
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:346
+#: src/view/com/profile/ProfileMenu.tsx:213
+#: src/view/com/profile/ProfileMenu.tsx:222
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:444
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:356
 #: src/view/screens/ProfileList.tsx:483
 msgid "Share"
 msgstr "공유"
@@ -6205,9 +6294,9 @@ msgstr "멋진 이야기를 전하세요!"
 msgid "Share a fun fact!"
 msgstr "재미있는 사실을 전하세요!"
 
-#: src/view/com/profile/ProfileMenu.tsx:353
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:691
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:362
+#: src/view/com/profile/ProfileMenu.tsx:405
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:723
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:372
 msgid "Share anyway"
 msgstr "무시하고 공유"
 
@@ -6247,7 +6336,7 @@ msgstr "이 스타터 팩을 공유하여 사람들이 Bluesky에서 커뮤니�
 msgid "Share your favorite feed!"
 msgstr "좋아하는 피드를 공유해 보세요!"
 
-#: src/Navigation.tsx:257
+#: src/Navigation.tsx:274
 msgid "Shared Preferences Tester"
 msgstr "공유 설정 테스터"
 
@@ -6286,12 +6375,8 @@ msgstr "배지 표시 및 피드에서 필터링"
 msgid "Show hidden replies"
 msgstr "숨겨진 답글 표시"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:805
-msgid "Show information about when this post was created"
-msgstr "이 게시물이 언제 작성되었는지에 대한 정보를 표시합니다"
-
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:473
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:475
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:483
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:485
 msgid "Show less like this"
 msgstr "이런 항목 덜 보기"
 
@@ -6299,24 +6384,20 @@ msgstr "이런 항목 덜 보기"
 msgid "Show list anyway"
 msgstr "무시하고 리스트 표시하기"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:592
+#: src/view/com/post-thread/PostThreadItem.tsx:597
 #: src/view/com/post/Post.tsx:242
 #: src/view/com/posts/PostFeedItem.tsx:509
 msgid "Show More"
 msgstr "더 보기"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:465
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:467
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:475
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:477
 msgid "Show more like this"
 msgstr "이런 항목 더 보기"
 
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:22
 msgid "Show muted replies"
 msgstr "뮤트된 답글 표시"
-
-#: src/screens/Settings/Settings.tsx:104
-msgid "Show other accounts you can switch to"
-msgstr "전환할 수 있는 다른 계정 표시"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:104
 #: src/screens/Settings/FollowingFeedPreferences.tsx:114
@@ -6340,8 +6421,8 @@ msgstr "스레드로 답글 표시"
 msgid "Show replies by people you follow before all other replies"
 msgstr "내가 팔로우하는 사람들의 답글을 다른 모든 답글보다 먼저 표시"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:549
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:559
 msgid "Show reply for everyone"
 msgstr "모두에게 답글 표시"
 
@@ -6355,11 +6436,6 @@ msgstr "재게시물 표시"
 msgid "Show samples of your saved feeds in your Following feed"
 msgstr "팔로우 중 피드에서 저장한 피드 샘플 보기"
 
-#: src/components/moderation/ContentHider.tsx:152
-#: src/components/moderation/PostHider.tsx:79
-msgid "Show the content"
-msgstr "콘텐츠 표시"
-
 #: src/lib/moderation/useLabelBehaviorDescription.ts:58
 msgid "Show warning"
 msgstr "경고 표시"
@@ -6368,11 +6444,24 @@ msgstr "경고 표시"
 msgid "Show warning and filter from feeds"
 msgstr "경고 표시 및 피드에서 필터링"
 
+#: src/view/com/post-thread/PostThreadItem.tsx:810
+msgid "Shows information about when this post was created"
+msgstr "이 게시물이 언제 작성되었는지에 대한 정보를 표시합니다"
+
+#: src/screens/Settings/Settings.tsx:104
+msgid "Shows other accounts you can switch to"
+msgstr "전환할 수 있는 다른 계정을 표시합니다"
+
+#: src/components/moderation/ContentHider.tsx:152
+#: src/components/moderation/PostHider.tsx:79
+msgid "Shows the content"
+msgstr "콘텐츠를 표시합니다"
+
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
-#: src/screens/Login/index.tsx:97
-#: src/screens/Login/index.tsx:116
-#: src/screens/Login/LoginForm.tsx:173
+#: src/screens/Login/index.tsx:122
+#: src/screens/Login/index.tsx:143
+#: src/screens/Login/LoginForm.tsx:181
 #: src/view/com/auth/SplashScreen.tsx:61
 #: src/view/com/auth/SplashScreen.tsx:69
 #: src/view/com/auth/SplashScreen.web.tsx:123
@@ -6398,18 +6487,34 @@ msgstr "로그인"
 msgid "Sign in or create your account to join the conversation!"
 msgstr "대화에 참여하려면 로그인하거나 계정을 만드세요!"
 
+#: src/screens/Deactivated.tsx:202
+#: src/screens/Deactivated.tsx:208
+msgid "Sign in or sign up"
+msgstr ""
+
+#: src/components/AccountList.tsx:65
+msgid "Sign in to account that is not listed"
+msgstr ""
+
 #: src/components/dialogs/Signin.tsx:46
-msgid "Sign into Bluesky or create a new account"
-msgstr "Bluesky에 로그인하거나 새 계정 만들기"
+msgid "Sign in to Bluesky or create a new account"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:225
 #: src/screens/Settings/Settings.tsx:227
 #: src/screens/Settings/Settings.tsx:259
+#: src/screens/SignupQueued.tsx:93
+#: src/screens/SignupQueued.tsx:96
+#: src/screens/Takendown.tsx:85
 #: src/view/shell/desktop/LeftNav.tsx:208
-#: src/view/shell/desktop/LeftNav.tsx:288
 #: src/view/shell/desktop/LeftNav.tsx:291
+#: src/view/shell/desktop/LeftNav.tsx:294
 msgid "Sign out"
 msgstr "로그아웃"
+
+#: src/screens/Takendown.tsx:88
+msgid "Sign Out"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:256
 #: src/view/shell/desktop/LeftNav.tsx:205
@@ -6431,7 +6536,7 @@ msgstr "@{0}(으)로 로그인했습니다"
 msgid "Signup without a starter pack"
 msgstr "스타터 팩 없이 가입하기"
 
-#: src/components/FeedInterstitials.tsx:314
+#: src/components/FeedInterstitials.tsx:335
 msgid "Similar accounts"
 msgstr "비슷한 계정"
 
@@ -6453,7 +6558,7 @@ msgstr "작음"
 msgid "Software Dev"
 msgstr "소프트웨어 개발"
 
-#: src/components/FeedInterstitials.tsx:449
+#: src/components/FeedInterstitials.tsx:470
 msgid "Some other feeds you might like"
 msgstr "좋아할 만한 다른 피드"
 
@@ -6461,7 +6566,7 @@ msgstr "좋아할 만한 다른 피드"
 msgid "Some people can reply"
 msgstr "일부 사람들이 답글을 달 수 있음"
 
-#: src/screens/Messages/Conversation.tsx:102
+#: src/screens/Messages/Conversation.tsx:112
 msgid "Something went wrong"
 msgstr "알 수 없는 오류가 발생했습니다"
 
@@ -6471,7 +6576,7 @@ msgid "Something went wrong, please try again"
 msgstr "알 수 없는 오류가 발생했습니다. 다시 시도해 주세요"
 
 #: src/components/ReportDialog/index.tsx:54
-#: src/screens/Moderation/index.tsx:96
+#: src/screens/Moderation/index.tsx:97
 #: src/screens/Profile/Sections/Labels.tsx:88
 msgid "Something went wrong, please try again."
 msgstr "알 수 없는 오류가 발생했습니다. 다시 시도해 주세요."
@@ -6487,8 +6592,8 @@ msgstr "문제가 발생했나요? 저희에게 알려주세요."
 
 #: src/App.native.tsx:121
 #: src/App.web.tsx:97
-msgid "Sorry! Your session expired. Please log in again."
-msgstr "죄송합니다. 세션이 만료되었습니다. 다시 로그인해 주세요."
+msgid "Sorry! Your session expired. Please sign in again."
+msgstr ""
 
 #: src/screens/Settings/ThreadPreferences.tsx:55
 msgid "Sort replies"
@@ -6538,8 +6643,8 @@ msgstr "사람들을 추가해 보세요!"
 msgid "Start chat with {displayName}"
 msgstr "{displayName} 님과 대화 시작하기"
 
-#: src/Navigation.tsx:409
-#: src/Navigation.tsx:414
+#: src/Navigation.tsx:426
+#: src/Navigation.tsx:431
 #: src/screens/StarterPack/Wizard/index.tsx:186
 msgid "Starter Pack"
 msgstr "스타터 팩"
@@ -6569,8 +6674,8 @@ msgstr "스타터 팩"
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "스타터 팩을 사용하면 좋아하는 피드와 사람들을 친구들과 쉽게 공유할 수 있습니다."
 
-#: src/screens/Settings/AboutSettings.tsx:53
-#: src/screens/Settings/AboutSettings.tsx:56
+#: src/screens/Settings/AboutSettings.tsx:58
+#: src/screens/Settings/AboutSettings.tsx:61
 msgid "Status Page"
 msgstr "상태 페이지"
 
@@ -6582,7 +6687,7 @@ msgstr "{1}단계 중 {0}단계"
 msgid "Storage cleared, you need to restart the app now."
 msgstr "스토리지가 지워졌으며 지금 앱을 다시 시작해야 합니다."
 
-#: src/Navigation.tsx:247
+#: src/Navigation.tsx:264
 #: src/screens/Settings/Settings.tsx:325
 msgid "Storybook"
 msgstr "스토리북"
@@ -6626,11 +6731,11 @@ msgstr "이 리스트 구독하기"
 msgid "Success!"
 msgstr "성공!"
 
-#: src/view/screens/Search/Explore.tsx:366
+#: src/view/screens/Search/Explore.tsx:368
 msgid "Suggested accounts"
 msgstr "추천 계정"
 
-#: src/components/FeedInterstitials.tsx:316
+#: src/components/FeedInterstitials.tsx:337
 msgid "Suggested for you"
 msgstr "나를 위한 추천"
 
@@ -6639,7 +6744,7 @@ msgstr "나를 위한 추천"
 msgid "Suggestive"
 msgstr "외설적"
 
-#: src/Navigation.tsx:267
+#: src/Navigation.tsx:284
 #: src/view/screens/Support.tsx:31
 #: src/view/screens/Support.tsx:34
 msgid "Support"
@@ -6648,7 +6753,7 @@ msgstr "지원"
 #: src/screens/Settings/Settings.tsx:102
 #: src/screens/Settings/Settings.tsx:116
 #: src/screens/Settings/Settings.tsx:412
-#: src/view/shell/desktop/LeftNav.tsx:243
+#: src/view/shell/desktop/LeftNav.tsx:246
 msgid "Switch account"
 msgstr "계정 전환"
 
@@ -6661,7 +6766,7 @@ msgstr "계정 전환"
 msgid "Switch accounts"
 msgstr "계정 전환"
 
-#: src/view/shell/desktop/LeftNav.tsx:251
+#: src/view/shell/desktop/LeftNav.tsx:254
 msgid "Switch to {0}"
 msgstr "{0}(으)로 전환"
 
@@ -6670,8 +6775,8 @@ msgstr "{0}(으)로 전환"
 msgid "System"
 msgstr "시스템"
 
-#: src/screens/Settings/AboutSettings.tsx:60
-#: src/screens/Settings/AboutSettings.tsx:63
+#: src/screens/Settings/AboutSettings.tsx:65
+#: src/screens/Settings/AboutSettings.tsx:68
 #: src/screens/Settings/Settings.tsx:318
 msgid "System log"
 msgstr "시스템 로그"
@@ -6680,43 +6785,9 @@ msgstr "시스템 로그"
 msgid "Tags only"
 msgstr "태그만"
 
-#: src/screens/Settings/AppIconSettings/index.tsx:216
-msgid "Tap to change app icon"
-msgstr "탭하여 앱 아이콘 변경"
-
-#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
-#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
-msgid "Tap to close the emoji picker"
-msgstr "탭하여 이모티콘 선택기 닫기"
-
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"
 msgstr "탭하여 닫기"
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
-msgid "Tap to enter full screen"
-msgstr "탭하여 전체화면으로 보기"
-
-#: src/screens/VideoFeed/index.tsx:931
-msgid "Tap to expand or collapse post text."
-msgstr "탭하여 게시물 텍스트를 펼치거나 접습니다"
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
-msgid "Tap to play or pause"
-msgstr "탭하여 재생/일시 정지"
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:158
-msgid "Tap to toggle sound"
-msgstr "탭하여 소리 켜기/끄기"
-
-#: src/view/com/util/images/AutoSizedImage.tsx:199
-#: src/view/com/util/images/AutoSizedImage.tsx:221
-msgid "Tap to view full image"
-msgstr "탭하여 전체 이미지를 봅니다"
-
-#: src/components/VideoPostCard.tsx:115
-msgid "Tap to view video in immersive mode."
-msgstr "탭하여 몰입형 모드로 동영상을 봅니다"
 
 #: src/state/shell/progress-guide.tsx:233
 msgid "Task complete - 10 follows!"
@@ -6752,9 +6823,9 @@ msgstr "좀 더 자세히 알려주세요"
 msgid "Terms"
 msgstr "이용약관"
 
-#: src/Navigation.tsx:277
-#: src/screens/Settings/AboutSettings.tsx:37
-#: src/screens/Settings/AboutSettings.tsx:40
+#: src/Navigation.tsx:294
+#: src/screens/Settings/AboutSettings.tsx:42
+#: src/screens/Settings/AboutSettings.tsx:45
 #: src/view/screens/TermsOfService.tsx:31
 #: src/view/shell/Drawer.tsx:622
 #: src/view/shell/Drawer.tsx:624
@@ -6814,12 +6885,12 @@ msgstr "스타터 팩을 찾을 수 없습니다."
 msgid "That's all, folks!"
 msgstr "이상입니다, 여러분!"
 
-#: src/screens/VideoFeed/index.tsx:1071
+#: src/screens/VideoFeed/index.tsx:1075
 msgid "That's everything!"
 msgstr "그게 다예요!"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
-#: src/view/com/profile/ProfileMenu.tsx:329
+#: src/view/com/profile/ProfileMenu.tsx:381
 msgid "The account will be able to interact with you after unblocking."
 msgstr "차단을 해제하면 이 계정이 나와 상호작용할 수 있게 됩니다."
 
@@ -6833,7 +6904,7 @@ msgstr "앱을 다시 시작합니다"
 msgid "The author of this thread has hidden this reply."
 msgstr "이 스레드의 작성자가 이 답글을 숨겼습니다."
 
-#: src/screens/Moderation/index.tsx:342
+#: src/screens/Moderation/index.tsx:358
 msgid "The Bluesky web application"
 msgstr "Bluesky 웹 애플리케이션"
 
@@ -6869,9 +6940,9 @@ msgstr "내 계정에 다음 라벨이 적용되었습니다."
 msgid "The following labels were applied to your content."
 msgstr "내 콘텐츠에 다음 라벨이 적용되었습니다."
 
-#: src/screens/Onboarding/Layout.tsx:57
-msgid "The following steps will help customize your Bluesky experience."
-msgstr "다음 단계는 Bluesky 환경을 맞춤 설정하는 데 도움이 됩니다."
+#: src/screens/ModerationInteractionSettings/index.tsx:42
+msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
+msgstr "새 게시물을 작성할 때 다음 설정이 기본값으로 사용됩니다. 작성기에서 특정 게시물에 대해 이러한 설정을 변경할 수 있습니다."
 
 #: src/view/com/post-thread/PostThread.tsx:262
 #: src/view/com/post-thread/PostThread.tsx:274
@@ -6980,17 +7051,17 @@ msgstr "피드를 업데이트하는 동안 문제가 발생했습니다. 인터
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:141
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:91
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:102
-#: src/view/com/profile/ProfileMenu.tsx:102
-#: src/view/com/profile/ProfileMenu.tsx:112
-#: src/view/com/profile/ProfileMenu.tsx:126
-#: src/view/com/profile/ProfileMenu.tsx:136
-#: src/view/com/profile/ProfileMenu.tsx:149
-#: src/view/com/profile/ProfileMenu.tsx:161
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:364
+#: src/view/com/profile/ProfileMenu.tsx:108
+#: src/view/com/profile/ProfileMenu.tsx:118
+#: src/view/com/profile/ProfileMenu.tsx:132
+#: src/view/com/profile/ProfileMenu.tsx:142
+#: src/view/com/profile/ProfileMenu.tsx:155
+#: src/view/com/profile/ProfileMenu.tsx:167
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:366
 msgid "There was an issue! {0}"
 msgstr "문제가 발생했습니다! {0}"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:182
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:217
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -7059,9 +7130,9 @@ msgstr "관련 사용자 중 한 명이 다른 사용자를 차단했기 때문�
 msgid "This content is not viewable without a Bluesky account."
 msgstr "이 콘텐츠는 Bluesky 계정이 없으면 볼 수 없습니다."
 
-#: src/screens/Messages/components/ChatListItem.tsx:276
-msgid "This conversation is with a deleted or a deactivated account. Press for options."
-msgstr "이 대화는 삭제되었거나 비활성화된 계정과의 대화입니다. 옵션을 보려면 누르세요."
+#: src/screens/Messages/components/ChatListItem.tsx:284
+msgid "This conversation is with a deleted or a deactivated account. Press for options"
+msgstr "이 대화는 삭제되었거나 비활성화된 계정과의 대화입니다. 옵션을 보려면 누르세요"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:94
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -7133,32 +7204,36 @@ msgstr "이 리스트는 비어 있습니다."
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "이 검토 서비스는 사용할 수 없습니다. 자세한 내용은 아래를 참조하세요. 이 문제가 지속되면 문의해 주세요."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:845
+#: src/view/com/post-thread/PostThreadItem.tsx:850
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "이 게시물은 <0>{0}</0>에 작성되었다고 주장하지만 Bluesky에서는 <1>{1}</1>에 처음 확인되었습니다."
+
+#: src/components/WhoCanReply.tsx:213
+msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
+msgstr "이 게시물에 알 수 없는 유형의 스레드게이트가 있습니다. 앱이 오래되었을 수 있습니다."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:152
 msgid "This post has been deleted."
 msgstr "이 게시물은 삭제되었습니다."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:359
-msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
-msgstr "이 게시물은 로그인한 사용자에게만 표시됩니다. 로그인하지 않은 사용자에게는 표시되지 않습니다."
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:720
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:369
+msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
+msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:701
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "이 게시물을 피드와 스레드에서 숨깁니다. 이 작업은 되돌릴 수 없습니다."
 
-#: src/view/com/composer/Composer.tsx:420
+#: src/view/com/composer/Composer.tsx:428
 msgid "This post's author has disabled quote posts."
 msgstr "이 게시물의 작성자가 인용 게시물을 비활성화했습니다."
 
-#: src/view/com/profile/ProfileMenu.tsx:350
-msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
-msgstr "이 프로필은 로그인한 사용자에게만 표시됩니다. 로그인하지 않은 사용자에게는 표시되지 않습니다."
+#: src/view/com/profile/ProfileMenu.tsx:402
+msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
+msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:731
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:763
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr "이 답글은 스레드 하단의 숨겨진 위치에 정렬되며 자신과 다른 사용자 모두의 후속 답글에 대한 알림이 뮤트됩니다."
 
@@ -7174,7 +7249,7 @@ msgstr "이 도메인에 레코드가 추가됩니다:"
 msgid "This user doesn't have any followers."
 msgstr "이 사용자는 팔로워가 없습니다."
 
-#: src/components/dms/MessagesListBlockedFooter.tsx:60
+#: src/components/dms/MessagesListBlockedFooter.tsx:67
 msgid "This user has blocked you"
 msgstr "이 사용자는 나를 차단했습니다"
 
@@ -7211,7 +7286,7 @@ msgstr "뮤트한 단어에서 \"{0}\"을(를) 삭제합니다. 나중에 언제
 msgid "This will remove @{0} from the quick access list."
 msgstr "빠른 액세스 목록에서 @{0}을(를) 제거합니다."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:721
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:753
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "모든 사용자의 인용 게시물에서 해당 게시물이 삭제되고 자리 표시자로 대체됩니다."
 
@@ -7238,7 +7313,7 @@ msgstr "스레드"
 msgid "Threaded mode"
 msgstr "스레드 모드"
 
-#: src/Navigation.tsx:310
+#: src/Navigation.tsx:327
 msgid "Threads Preferences"
 msgstr "스레드 설정"
 
@@ -7270,26 +7345,30 @@ msgstr "오늘"
 msgid "Toggle dropdown"
 msgstr "드롭다운 열기 및 닫기"
 
-#: src/screens/Moderation/index.tsx:319
+#: src/screens/Moderation/index.tsx:335
 msgid "Toggle to enable or disable adult content"
 msgstr "성인 콘텐츠 활성화 또는 비활성화 전환"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:158
+msgid "Toggles the sound"
+msgstr "소리를 켜거나 끕니다"
+
 #: src/screens/Hashtag.tsx:84
 #: src/screens/Topic.tsx:71
-#: src/view/screens/Search/Search.tsx:496
+#: src/view/screens/Search/Search.tsx:499
 msgid "Top"
 msgstr "인기"
 
-#: src/Navigation.tsx:384
+#: src/Navigation.tsx:401
 msgid "Topic"
 msgstr "주제"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:770
-#: src/view/com/post-thread/PostThreadItem.tsx:773
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:404
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:406
+#: src/view/com/post-thread/PostThreadItem.tsx:775
+#: src/view/com/post-thread/PostThreadItem.tsx:778
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:414
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:416
 msgid "Translate"
 msgstr "번역"
 
@@ -7341,9 +7420,9 @@ msgid "Unable to connect. Please check your internet connection and try again."
 msgstr "연결할 수 없습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:68
-#: src/screens/Login/index.tsx:76
-#: src/screens/Login/LoginForm.tsx:162
-#: src/screens/Login/SetNewPasswordForm.tsx:77
+#: src/screens/Login/index.tsx:79
+#: src/screens/Login/LoginForm.tsx:169
+#: src/screens/Login/SetNewPasswordForm.tsx:81
 #: src/screens/Signup/index.tsx:71
 #: src/view/com/modals/ChangePassword.tsx:71
 msgid "Unable to contact your service. Please check your Internet connection."
@@ -7353,13 +7432,13 @@ msgstr "서비스에 연결할 수 없습니다. 인터넷 연결을 확인하�
 msgid "Unable to delete"
 msgstr "삭제할 수 없음"
 
-#: src/components/dms/MessagesListBlockedFooter.tsx:89
 #: src/components/dms/MessagesListBlockedFooter.tsx:96
-#: src/components/dms/MessagesListBlockedFooter.tsx:104
+#: src/components/dms/MessagesListBlockedFooter.tsx:103
 #: src/components/dms/MessagesListBlockedFooter.tsx:111
+#: src/components/dms/MessagesListBlockedFooter.tsx:118
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:197
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
-#: src/view/com/profile/ProfileMenu.tsx:341
+#: src/view/com/profile/ProfileMenu.tsx:393
 #: src/view/screens/ProfileList.tsx:694
 msgid "Unblock"
 msgstr "차단 해제"
@@ -7369,18 +7448,18 @@ msgctxt "action"
 msgid "Unblock"
 msgstr "차단 해제"
 
-#: src/components/dms/ConvoMenu.tsx:191
-#: src/components/dms/ConvoMenu.tsx:195
+#: src/components/dms/ConvoMenu.tsx:250
+#: src/components/dms/ConvoMenu.tsx:253
 msgid "Unblock account"
 msgstr "계정 차단 해제"
 
-#: src/view/com/profile/ProfileMenu.tsx:279
-#: src/view/com/profile/ProfileMenu.tsx:285
+#: src/view/com/profile/ProfileMenu.tsx:306
+#: src/view/com/profile/ProfileMenu.tsx:312
 msgid "Unblock Account"
 msgstr "계정 차단 해제"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
-#: src/view/com/profile/ProfileMenu.tsx:323
+#: src/view/com/profile/ProfileMenu.tsx:375
 msgid "Unblock Account?"
 msgstr "계정을 차단 해제하시겠습니까?"
 
@@ -7391,9 +7470,9 @@ msgstr "재게시 취소"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:68
 msgid "Undo repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr "재게시 취소 ({0, plural, other {#}}개)"
+msgstr "재게시 취소 ({0, plural, other {#개}})"
 
-#: src/view/com/profile/FollowButton.tsx:60
+#: src/view/com/profile/FollowButton.tsx:63
 msgctxt "action"
 msgid "Unfollow"
 msgstr "언팔로우"
@@ -7402,22 +7481,22 @@ msgstr "언팔로우"
 msgid "Unfollow {0}"
 msgstr "{0} 님을 언팔로우"
 
-#: src/view/com/profile/ProfileMenu.tsx:221
-#: src/view/com/profile/ProfileMenu.tsx:231
+#: src/view/com/profile/ProfileMenu.tsx:248
+#: src/view/com/profile/ProfileMenu.tsx:258
 msgid "Unfollow Account"
 msgstr "계정 언팔로우"
 
-#: src/screens/VideoFeed/index.tsx:801
-msgid "Unfollow user"
+#: src/screens/VideoFeed/index.tsx:804
+msgid "Unfollows the user"
 msgstr "사용자를 언팔로우합니다"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Unlike"
 msgstr "좋아요 취소"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:305
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:315
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
-msgstr "좋아요 취소 ({0, plural, other {#}}개)"
+msgstr "좋아요 취소 ({0, plural, other {#개}})"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:155
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
@@ -7434,17 +7513,17 @@ msgstr "언뮤트"
 msgid "Unmute {tag}"
 msgstr "{tag} 언뮤트"
 
-#: src/view/com/profile/ProfileMenu.tsx:258
-#: src/view/com/profile/ProfileMenu.tsx:264
+#: src/view/com/profile/ProfileMenu.tsx:285
+#: src/view/com/profile/ProfileMenu.tsx:291
 msgid "Unmute Account"
 msgstr "계정 언뮤트"
 
-#: src/components/dms/ConvoMenu.tsx:179
+#: src/components/dms/ConvoMenu.tsx:239
 msgid "Unmute conversation"
-msgstr "알림 언뮤트"
+msgstr "대화 언뮤트"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:489
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:493
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:499
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:503
 msgid "Unmute thread"
 msgstr "스레드 언뮤트"
 
@@ -7466,8 +7545,8 @@ msgstr "피드 고정 해제"
 msgid "Unpin from home"
 msgstr "홈에서 고정 해제"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:379
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:386
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:389
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:396
 msgid "Unpin from profile"
 msgstr "프로필에서 고정 해제"
 
@@ -7500,7 +7579,7 @@ msgstr "이 라벨러 구독 취소하기"
 msgid "Unsubscribed from list"
 msgstr "리스트를 구독 취소했습니다"
 
-#: src/view/com/composer/Composer.tsx:773
+#: src/view/com/composer/Composer.tsx:781
 msgid "Unsupported video type"
 msgstr "지원되지 않는 동영상 유형"
 
@@ -7522,15 +7601,15 @@ msgstr "리스트에서 <0>{displayName}</0> 업데이트"
 msgid "Update to {domain}"
 msgstr "{domain}(으)로 변경"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:306
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:308
 msgid "Updating quote attachment failed"
 msgstr "인용 업데이트 실패"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:336
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:338
 msgid "Updating reply visibility failed"
 msgstr "답글 표시 여부 업데이트 실패"
 
-#: src/screens/Login/SetNewPasswordForm.tsx:186
+#: src/screens/Login/SetNewPasswordForm.tsx:190
 msgid "Updating..."
 msgstr "업데이트 중…"
 
@@ -7570,7 +7649,7 @@ msgstr "이미지 업로드 중…"
 msgid "Uploading link thumbnail..."
 msgstr "링크 미리보기 업로드 중…"
 
-#: src/view/com/composer/Composer.tsx:1646
+#: src/view/com/composer/Composer.tsx:1654
 msgid "Uploading video..."
 msgstr "동영상 업로드 중…"
 
@@ -7602,8 +7681,8 @@ msgid "Use recommended"
 msgstr "추천 사용"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:190
-msgid "Use this to sign into the other app along with your handle."
-msgstr "이 비밀번호와 핸들을 사용하여 다른 앱에 로그인하세요."
+msgid "Use this to sign in to the other app along with your handle."
+msgstr ""
 
 #: src/view/com/modals/InviteCodes.tsx:201
 msgid "Used by:"
@@ -7650,26 +7729,34 @@ msgstr "사용자 리스트를 생성했습니다"
 msgid "User list updated"
 msgstr "사용자 리스트를 업데이트했습니다"
 
-#: src/screens/Login/LoginForm.tsx:193
+#: src/screens/Login/LoginForm.tsx:201
 msgid "Username or email address"
 msgstr "사용자 이름 또는 이메일 주소"
 
-#: src/components/WhoCanReply.tsx:258
+#: src/components/WhoCanReply.tsx:276
 msgid "users followed by <0>@{0}</0>"
-msgstr "<0>@{0}</0> 님이 팔로우한 사용자"
+msgstr "<0>@{0}</0> 님이 팔로우하는 사용자"
+
+#: src/components/WhoCanReply.tsx:263
+msgid "users following <0>@{0}</0>"
+msgstr "<0>@{0}</0> 님을 팔로우하는 사용자"
 
 #: src/screens/Messages/Settings.tsx:92
 #: src/screens/Messages/Settings.tsx:95
 msgid "Users I follow"
 msgstr "내가 팔로우하는 사용자"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:416
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:456
 msgid "Users in \"{0}\""
 msgstr "\"{0}\"에 있는 사용자"
 
 #: src/components/LikesDialog.tsx:83
 msgid "Users that have liked this content or profile"
 msgstr "이 콘텐츠 또는 프로필을 좋아하는 사용자"
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:433
+msgid "Users you follow"
+msgstr "내가 팔로우하는 사용자"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:419
 msgid "Value:"
@@ -7713,8 +7800,8 @@ msgstr "이메일 인증하기"
 msgid "Verify Your Email"
 msgstr "이메일 인증하기"
 
-#: src/screens/Settings/AboutSettings.tsx:67
-#: src/screens/Settings/AboutSettings.tsx:77
+#: src/screens/Settings/AboutSettings.tsx:72
+#: src/screens/Settings/AboutSettings.tsx:91
 msgid "Version {appVersion}"
 msgstr "버전 {appVersion}"
 
@@ -7727,7 +7814,7 @@ msgstr "동영상"
 msgid "Video failed to process"
 msgstr "동영상을 처리하지 못했습니다"
 
-#: src/Navigation.tsx:430
+#: src/Navigation.tsx:447
 msgid "Video Feed"
 msgstr "동영상 피드"
 
@@ -7740,11 +7827,11 @@ msgstr "{0} 님의 동영상: {text}"
 msgid "Video Games"
 msgstr "비디오 게임"
 
-#: src/screens/VideoFeed/index.tsx:1029
+#: src/screens/VideoFeed/index.tsx:1033
 msgid "Video is paused"
 msgstr "동영상 일시 정지됨"
 
-#: src/screens/VideoFeed/index.tsx:1029
+#: src/screens/VideoFeed/index.tsx:1033
 msgid "Video is playing"
 msgstr "동영상 재생 중"
 
@@ -7756,7 +7843,7 @@ msgstr "동영상을 찾을 수 없습니다."
 msgid "Video settings"
 msgstr "동영상 설정"
 
-#: src/view/com/composer/Composer.tsx:1656
+#: src/view/com/composer/Composer.tsx:1664
 msgid "Video uploaded"
 msgstr "동영상 업로드됨"
 
@@ -7779,12 +7866,12 @@ msgstr "{0} 님의 아바타 보기"
 
 #: src/components/ProfileCard.tsx:110
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:450
-#: src/screens/VideoFeed/index.tsx:762
+#: src/screens/VideoFeed/index.tsx:763
 #: src/view/com/notifications/NotificationFeedItem.tsx:409
 msgid "View {0}'s profile"
 msgstr "{0} 님의 프로필 보기"
 
-#: src/components/dms/MessagesListHeader.tsx:167
+#: src/components/dms/MessagesListHeader.tsx:173
 msgid "View {displayName}'s profile"
 msgstr "{displayName} 님의 프로필 보기"
 
@@ -7851,22 +7938,35 @@ msgstr "이 피드를 좋아하는 사용자 보기"
 msgid "View video"
 msgstr "동영상 보기"
 
-#: src/screens/Moderation/index.tsx:248
+#: src/screens/Moderation/index.tsx:264
 msgid "View your blocked accounts"
 msgstr "내가 차단한 계정 보기"
+
+#: src/screens/Moderation/index.tsx:204
+msgid "View your default post interaction settings"
+msgstr "기본 게시물 상호작용 설정 보기"
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:56
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:77
 msgid "View your feeds and explore more"
 msgstr "내 피드를 보거나 새 피드 탐색하기"
 
-#: src/screens/Moderation/index.tsx:218
+#: src/screens/Moderation/index.tsx:234
 msgid "View your moderation lists"
 msgstr "내 검토 리스트 보기"
 
-#: src/screens/Moderation/index.tsx:233
+#: src/screens/Moderation/index.tsx:249
 msgid "View your muted accounts"
 msgstr "내가 뮤트한 계정 보기"
+
+#: src/view/com/util/images/AutoSizedImage.tsx:199
+#: src/view/com/util/images/AutoSizedImage.tsx:221
+msgid "Views full image"
+msgstr "전체 이미지를 봅니다"
+
+#: src/components/VideoPostCard.tsx:115
+msgid "Views video in immersive mode"
+msgstr "몰입형 모드로 동영상을 봅니다"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -7899,7 +7999,7 @@ msgstr "해당 해시태그에 대한 결과를 찾을 수 없습니다."
 msgid "We couldn't find any results for that topic."
 msgstr "해당 주제에 대한 결과를 찾을 수 없습니다."
 
-#: src/screens/Messages/Conversation.tsx:103
+#: src/screens/Messages/Conversation.tsx:113
 msgid "We couldn't load this conversation"
 msgstr "이 대화를 불러올 수 없습니다"
 
@@ -7917,7 +8017,7 @@ msgstr "즐거운 시간 되시기 바랍니다. Bluesky의 다음 특징을 기
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
-msgstr "팔로우한 사용자의 게시물이 부족합니다. 대신 <0/>의 최신 게시물을 표시합니다."
+msgstr "팔로우하는 사용자의 게시물이 부족합니다. 대신 <0/>의 최신 게시물을 표시합니다."
 
 #: src/view/com/composer/state/video.ts:417
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
@@ -7927,7 +8027,7 @@ msgstr "동영상을 업로드할 수 있는지 확인할 수 없습니다. 다�
 msgid "We were unable to load your birth date preferences. Please try again."
 msgstr "생년월일 설정을 불러올 수 없습니다. 다시 시도해 주세요."
 
-#: src/screens/Moderation/index.tsx:393
+#: src/screens/Moderation/index.tsx:409
 msgid "We were unable to load your configured labelers at this time."
 msgstr "현재 구성된 라벨러를 불러올 수 없습니다."
 
@@ -7960,11 +8060,11 @@ msgstr "죄송하지만 이 리스트를 불러올 수 없습니다. 이 문제�
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "죄송하지만 현재 뮤트한 단어를 불러올 수 없습니다. 다시 시도해 주세요."
 
-#: src/view/screens/Search/Search.tsx:201
+#: src/view/screens/Search/Search.tsx:205
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "죄송하지만 검색을 완료할 수 없습니다. 몇 분 후에 다시 시도해 주세요."
 
-#: src/view/com/composer/Composer.tsx:417
+#: src/view/com/composer/Composer.tsx:425
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "죄송하지만 답글을 달려는 게시물이 삭제되었습니다."
 
@@ -7999,7 +8099,7 @@ msgstr "사람들이 무엇에 대해 게시하고 있는지 살펴보세요."
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:736
+#: src/view/com/composer/Composer.tsx:744
 msgid "What's up?"
 msgstr "무슨 일이 일어나고 있나요?"
 
@@ -8066,11 +8166,11 @@ msgstr "이 사용자를 검토해야 하는 이유는 무엇인가요?"
 msgid "Write a message"
 msgstr "메시지를 입력하세요"
 
-#: src/view/com/composer/Composer.tsx:824
+#: src/view/com/composer/Composer.tsx:832
 msgid "Write post"
 msgstr "게시물 작성"
 
-#: src/view/com/composer/Composer.tsx:734
+#: src/view/com/composer/Composer.tsx:742
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:69
 msgid "Write your reply"
 msgstr "답글 작성하기"
@@ -8097,11 +8197,11 @@ msgstr "비활성화"
 msgid "Yes, delete this starter pack"
 msgstr "이 스타터 팩 삭제하기"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:724
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:756
 msgid "Yes, detach"
 msgstr "해제"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:734
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:766
 msgid "Yes, hide"
 msgstr "숨기기"
 
@@ -8146,7 +8246,7 @@ msgstr "대신 계정을 일시적으로 비활성화한 후 언제든지 재활
 msgid "You can continue ongoing conversations regardless of which setting you choose."
 msgstr "어떤 설정을 선택하든 진행 중인 대화를 계속할 수 있습니다."
 
-#: src/screens/Login/index.tsx:155
+#: src/screens/Login/index.tsx:182
 #: src/screens/Login/PasswordUpdatedForm.tsx:26
 msgid "You can now sign in with your new password."
 msgstr "이제 새 비밀번호로 로그인할 수 있습니다."
@@ -8154,6 +8254,10 @@ msgstr "이제 새 비밀번호로 로그인할 수 있습니다."
 #: src/screens/Deactivated.tsx:132
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
 msgstr "계정을 재활성화하여 로그인을 계속할 수 있습니다. 내 프로필과 글이 다른 사용자에게 표시됩니다."
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
+msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings</0>."
+msgstr "<0>설정 → 검토 → 상호작용 설정</0>에서 기본 상호작용 설정을 변경할 수 있습니다."
 
 #: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:139
@@ -8186,7 +8290,7 @@ msgstr "저장한 피드가 없습니다."
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "작성자를 차단했거나 작성자가 나를 차단했습니다."
 
-#: src/components/dms/MessagesListBlockedFooter.tsx:58
+#: src/components/dms/MessagesListBlockedFooter.tsx:65
 msgid "You have blocked this user"
 msgstr "이 사용자를 차단했습니다"
 
@@ -8196,8 +8300,8 @@ msgstr "이 사용자를 차단했습니다"
 msgid "You have blocked this user. You cannot view their content."
 msgstr "이 사용자를 차단했습니다. 해당 사용자의 콘텐츠를 볼 수 없습니다."
 
-#: src/screens/Login/SetNewPasswordForm.tsx:48
-#: src/screens/Login/SetNewPasswordForm.tsx:91
+#: src/screens/Login/SetNewPasswordForm.tsx:49
+#: src/screens/Login/SetNewPasswordForm.tsx:95
 #: src/view/com/modals/ChangePassword.tsx:88
 #: src/view/com/modals/ChangePassword.tsx:122
 msgid "You have entered an invalid code. It should look like XXXXX-XXXXX."
@@ -8311,27 +8415,27 @@ msgstr "이전에 @{0}을(를) 비활성화했습니다."
 msgid "You will be signed out of all your accounts."
 msgstr "모든 계정에서 로그아웃됩니다."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:217
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:219
 msgid "You will no longer receive notifications for this thread"
 msgstr "이 스레드에 대한 알림을 더 이상 받지 않습니다"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:213
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:215
 msgid "You will now receive notifications for this thread"
 msgstr "이제 이 스레드에 대한 알림을 받습니다"
 
-#: src/screens/Login/SetNewPasswordForm.tsx:104
+#: src/screens/Login/SetNewPasswordForm.tsx:108
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "\"재설정 코드\"가 포함된 이메일을 받게 되면 여기에 해당 코드를 입력한 다음 새 비밀번호를 입력하세요."
 
-#: src/screens/Messages/components/ChatListItem.tsx:133
+#: src/screens/Messages/components/ChatListItem.tsx:139
 msgid "You: {0}"
 msgstr "나: {0}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:162
+#: src/screens/Messages/components/ChatListItem.tsx:168
 msgid "You: {defaultEmbeddedContentMessage}"
 msgstr "나: {defaultEmbeddedContentMessage}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:155
+#: src/screens/Messages/components/ChatListItem.tsx:161
 msgid "You: {short}"
 msgstr "나: {short}"
 
@@ -8363,14 +8467,14 @@ msgstr "다음 피드를 구독하게 됩니다"
 msgid "You're in line"
 msgstr "대기 중입니다"
 
-#: src/screens/Deactivated.tsx:89
-#: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
-msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
-msgstr "앱 비밀번호로 로그인했습니다. 계정 비활성화를 계속하려면 원래 비밀번호로 로그인하세요."
-
 #: src/screens/Onboarding/StepFinished.tsx:242
 msgid "You're ready to go!"
 msgstr "준비가 끝났습니다!"
+
+#: src/screens/Deactivated.tsx:89
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
+msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:106
 #: src/lib/moderation/useModerationCauseDescription.ts:106
@@ -8393,7 +8497,7 @@ msgstr "동영상 업로드 일일 한도에 도달했습니다 (용량이 너�
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "동영상 업로드 일일 한도에 도달했습니다 (동영상 수가 너무 많음)"
 
-#: src/screens/VideoFeed/index.tsx:1080
+#: src/screens/VideoFeed/index.tsx:1084
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "시청할 동영상이 부족합니다. 잠시 쉬는 건 어떠신가요?"
 
@@ -8464,6 +8568,10 @@ msgstr "이메일이 아직 인증되지 않았습니다. 이는 중요한 보�
 msgid "Your first like!"
 msgstr "첫 좋아요!"
 
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:443
+msgid "Your followers"
+msgstr "내 팔로워"
+
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
 msgstr "팔로우 중 피드가 비어 있습니다. 더 많은 사용자를 팔로우하여 무슨 일이 일어나고 있는지 확인하세요."
@@ -8484,11 +8592,11 @@ msgstr "뮤트한 단어"
 msgid "Your password has been changed successfully!"
 msgstr "비밀번호를 성공적으로 변경했습니다."
 
-#: src/view/com/composer/Composer.tsx:477
+#: src/view/com/composer/Composer.tsx:485
 msgid "Your post has been published"
 msgstr "게시물을 게시했습니다"
 
-#: src/view/com/composer/Composer.tsx:474
+#: src/view/com/composer/Composer.tsx:482
 msgid "Your posts have been published"
 msgstr "게시물을 게시했습니다"
 
@@ -8500,9 +8608,9 @@ msgstr "게시물, 좋아요, 차단 목록은 공개됩니다. 뮤트 목록은
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "내 프로필, 글, 피드 및 리스트가 더 이상 다른 Bluesky 사용자에게 표시되지 않습니다. 언제든지 로그인하여 계정을 재활성화할 수 있습니다."
 
-#: src/view/com/composer/Composer.tsx:476
+#: src/view/com/composer/Composer.tsx:484
 msgid "Your reply has been published"
-msgstr "내 답글을 게시했습니다"
+msgstr "답글을 게시했습니다"
 
 #: src/components/dms/ReportDialog.tsx:198
 msgid "Your report will be sent to the Bluesky Moderation Service"

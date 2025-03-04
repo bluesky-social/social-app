@@ -13,11 +13,13 @@ export const router = new Router({
   ModerationModlists: '/moderation/modlists',
   ModerationMutedAccounts: '/moderation/muted-accounts',
   ModerationBlockedAccounts: '/moderation/blocked-accounts',
+  ModerationInteractionSettings: '/moderation/interaction-settings',
   // profiles, threads, lists
   Profile: ['/profile/:name', '/profile/:name/rss'],
   ProfileFollowers: '/profile/:name/followers',
   ProfileFollows: '/profile/:name/follows',
   ProfileKnownFollowers: '/profile/:name/known-followers',
+  ProfileSearch: '/profile/:name/search',
   ProfileList: '/profile/:name/lists/:rkey',
   PostThread: '/profile/:name/post/:rkey',
   PostLikedBy: '/profile/:name/post/:rkey/liked-by',
@@ -57,6 +59,7 @@ export const router = new Router({
   // DMs
   Messages: '/messages',
   MessagesSettings: '/messages/settings',
+  MessagesInbox: '/messages/inbox',
   MessagesConversation: '/messages/:conversation',
   // starter packs
   Start: '/start/:name/:rkey',

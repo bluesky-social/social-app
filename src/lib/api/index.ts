@@ -1,4 +1,5 @@
 import {
+  $Typed,
   AppBskyEmbedExternal,
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
@@ -74,7 +75,7 @@ export async function post(
   }
 
   const did = agent.assertDid
-  const writes: ComAtprotoRepoApplyWrites.Create[] = []
+  const writes: $Typed<ComAtprotoRepoApplyWrites.Create>[] = []
   const uris: string[] = []
 
   let now = new Date()
@@ -91,7 +92,7 @@ export async function post(
       draft,
       opts.onStateChange,
     )
-    let labels: ComAtprotoLabelDefs.SelfLabels | undefined
+    let labels: $Typed<ComAtprotoLabelDefs.SelfLabels> | undefined
     if (draft.labels.length) {
       labels = {
         $type: 'com.atproto.label.defs#selfLabels',
@@ -230,11 +231,11 @@ async function resolveEmbed(
   draft: PostDraft,
   onStateChange: ((state: string) => void) | undefined,
 ): Promise<
-  | AppBskyEmbedImages.Main
-  | AppBskyEmbedVideo.Main
-  | AppBskyEmbedExternal.Main
-  | AppBskyEmbedRecord.Main
-  | AppBskyEmbedRecordWithMedia.Main
+  | $Typed<AppBskyEmbedImages.Main>
+  | $Typed<AppBskyEmbedVideo.Main>
+  | $Typed<AppBskyEmbedExternal.Main>
+  | $Typed<AppBskyEmbedRecord.Main>
+  | $Typed<AppBskyEmbedRecordWithMedia.Main>
   | undefined
 > {
   if (draft.embed.quote) {
@@ -288,9 +289,9 @@ async function resolveMedia(
   embedDraft: EmbedDraft,
   onStateChange: ((state: string) => void) | undefined,
 ): Promise<
-  | AppBskyEmbedExternal.Main
-  | AppBskyEmbedImages.Main
-  | AppBskyEmbedVideo.Main
+  | $Typed<AppBskyEmbedExternal.Main>
+  | $Typed<AppBskyEmbedImages.Main>
+  | $Typed<AppBskyEmbedVideo.Main>
   | undefined
 > {
   if (embedDraft.media?.type === 'images') {

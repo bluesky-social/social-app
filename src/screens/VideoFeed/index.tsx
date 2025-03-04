@@ -90,6 +90,7 @@ import {ListFooter} from '#/components/Lists'
 import * as Hider from '#/components/moderation/Hider'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 import {Scrubber, VIDEO_PLAYER_BOTTOM_INSET} from './components/Scrubber'
 
 function createThreeVideoPlayers(
@@ -683,6 +684,7 @@ function Overlay({
   const {_} = useLingui()
   const t = useTheme()
   const {openComposer} = useComposerControls()
+  const {currentAccount} = useSession()
   const navigation = useNavigation<NavigationProp>()
   const seekingAnimationSV = useSharedValue(0)
 
@@ -693,7 +695,12 @@ function Overlay({
   )
 
   const rkey = new AtUri(post.uri).rkey
-  const record = AppBskyFeedPost.isRecord(post.record) ? post.record : undefined
+  const record = bsky.dangerousIsType<AppBskyFeedPost.Record>(
+    post.record,
+    AppBskyFeedPost.isRecord,
+  )
+    ? post.record
+    : undefined
   const richText = new RichTextAPI({
     text: record?.text || '',
     facets: record?.facets,
@@ -755,7 +762,7 @@ function Overlay({
               'rgba(0,0,0,0.95)',
             ]}
             style={[a.w_full, a.pt_md]}>
-            <Animated.View style={[a.px_xl, animatedStyle]}>
+            <Animated.View style={[a.px_md, animatedStyle]}>
               <View style={[a.w_full, a.flex_row, a.align_center, a.gap_md]}>
                 <Link
                   label={_(
@@ -790,37 +797,40 @@ function Overlay({
                   </View>
                 </Link>
                 {/* show button based on non-reactive version, so it doesn't hide on press */}
-                {!post.author.viewer?.following && (
-                  <Button
-                    label={
-                      profile.viewer?.following
-                        ? _(msg`Following ${handle}`)
-                        : _(msg`Follow ${handle}`)
-                    }
-                    accessibilityHint={
-                      profile.viewer?.following ? _(msg`Unfollow user`) : ''
-                    }
-                    size="small"
-                    variant="solid"
-                    color="secondary_inverted"
-                    style={[a.mb_xs]}
-                    onPress={() =>
-                      profile.viewer?.following
-                        ? queueUnfollow()
-                        : queueFollow()
-                    }>
-                    {!!profile.viewer?.following && (
-                      <ButtonIcon icon={CheckIcon} />
-                    )}
-                    <ButtonText>
-                      {profile.viewer?.following ? (
-                        <Trans>Following</Trans>
-                      ) : (
-                        <Trans>Follow</Trans>
+                {post.author.did !== currentAccount?.did &&
+                  !post.author.viewer?.following && (
+                    <Button
+                      label={
+                        profile.viewer?.following
+                          ? _(msg`Following ${handle}`)
+                          : _(msg`Follow ${handle}`)
+                      }
+                      accessibilityHint={
+                        profile.viewer?.following
+                          ? _(msg`Unfollows the user`)
+                          : ''
+                      }
+                      size="small"
+                      variant="solid"
+                      color="secondary_inverted"
+                      style={[a.mb_xs]}
+                      onPress={() =>
+                        profile.viewer?.following
+                          ? queueUnfollow()
+                          : queueFollow()
+                      }>
+                      {!!profile.viewer?.following && (
+                        <ButtonIcon icon={CheckIcon} />
                       )}
-                    </ButtonText>
-                  </Button>
-                )}
+                      <ButtonText>
+                        {profile.viewer?.following ? (
+                          <Trans>Following</Trans>
+                        ) : (
+                          <Trans>Follow</Trans>
+                        )}
+                      </ButtonText>
+                    </Button>
+                  )}
               </View>
               {record?.text?.trim() && (
                 <ExpandableRichTextView
@@ -928,7 +938,7 @@ function ExpandableRichTextView({
       />
       {constrained && !screenReaderEnabled && (
         <Pressable
-          accessibilityHint={_(msg`Tap to expand or collapse post text.`)}
+          accessibilityHint={_(msg`Expands or collapses post text`)}
           accessibilityLabel={expanded ? _(msg`Read less`) : _(msg`Read more`)}
           hitSlop={HITSLOP_20}
           onPress={() => setExpanded(prev => !prev)}

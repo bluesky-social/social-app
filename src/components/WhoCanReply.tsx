@@ -29,6 +29,7 @@ import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 import {PencilLine_Stroke2_Corner0_Rounded as PencilLine} from './icons/Pencil'
 
 interface WhoCanReplyProps {
@@ -48,7 +49,10 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
    * unexpectedly, we should check to make sure it's for sure the root URI.
    */
   const rootUri =
-    AppBskyFeedPost.isRecord(post.record) && post.record.reply?.root
+    bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      post.record,
+      AppBskyFeedPost.isRecord,
+    ) && post.record.reply?.root
       ? post.record.reply.root.uri
       : post.uri
   const settings = React.useMemo(() => {
@@ -209,7 +213,12 @@ function Rules({
           a.flex_wrap,
           t.atoms.text_contrast_medium,
         ]}>
-        {settings[0].type === 'everybody' ? (
+        {settings.length === 0 ? (
+          <Trans>
+            This post has an unknown type of threadgate on it. Your app may be
+            out of date.
+          </Trans>
+        ) : settings[0].type === 'everybody' ? (
           <Trans>Everybody can reply to this post.</Trans>
         ) : settings[0].type === 'nobody' ? (
           <Trans>Replies to this post are disabled.</Trans>
@@ -252,6 +261,19 @@ function Rule({
 }) {
   if (rule.type === 'mention') {
     return <Trans>mentioned users</Trans>
+  }
+  if (rule.type === 'followers') {
+    return (
+      <Trans>
+        users following{' '}
+        <InlineLinkText
+          label={`@${post.author.handle}`}
+          to={makeProfileLink(post.author)}
+          style={[a.text_sm, a.leading_snug]}>
+          @{post.author.handle}
+        </InlineLinkText>
+      </Trans>
+    )
   }
   if (rule.type === 'following') {
     return (

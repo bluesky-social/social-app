@@ -70,6 +70,7 @@ export const ExternalLinkEmbed = ({
     <Link
       label={link.title || _(msg`Open link to ${niceUrl}`)}
       to={link.uri}
+      shouldProxy={true}
       onPress={onOpen}
       onLongPress={onShareExternal}>
       {({hovered}) => (

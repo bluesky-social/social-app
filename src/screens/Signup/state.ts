@@ -31,6 +31,13 @@ type SubmitTask = {
   mutableProcessed: boolean // OK to mutate assuming it's never read in render.
 }
 
+type ErrorField =
+  | 'invite-code'
+  | 'email'
+  | 'handle'
+  | 'password'
+  | 'date-of-birth'
+
 export type SignupState = {
   hasPrev: boolean
   activeStep: SignupStep
@@ -45,6 +52,7 @@ export type SignupState = {
   handle: string
 
   error: string
+  errorField?: ErrorField
   isLoading: boolean
 
   pendingSubmit: null | SubmitTask
@@ -62,7 +70,8 @@ export type SignupAction =
   | {type: 'setDateOfBirth'; value: Date}
   | {type: 'setInviteCode'; value: string}
   | {type: 'setHandle'; value: string}
-  | {type: 'setError'; value: string}
+  | {type: 'setError'; value: string; field?: ErrorField}
+  | {type: 'clearError'}
   | {type: 'setIsLoading'; value: boolean}
   | {type: 'submit'; task: SubmitTask}
 
@@ -80,6 +89,7 @@ export const initialState: SignupState = {
   inviteCode: '',
 
   error: '',
+  errorField: undefined,
   isLoading: false,
 
   pendingSubmit: null,
@@ -102,6 +112,7 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         next.activeStep--
         next.error = ''
+        next.errorField = undefined
       }
       break
     }
@@ -110,6 +121,7 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         next.activeStep++
         next.error = ''
+        next.errorField = undefined
       }
       break
     }
@@ -156,6 +168,12 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
     }
     case 'setError': {
       next.error = a.value
+      next.errorField = a.field
+      break
+    }
+    case 'clearError': {
+      next.error = ''
+      next.errorField = undefined
       break
     }
     case 'submit': {

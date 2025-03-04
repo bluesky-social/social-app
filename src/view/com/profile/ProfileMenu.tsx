@@ -2,15 +2,18 @@ import React, {memo} from 'react'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
-import {shareUrl} from '#/lib/sharing'
+import {NavigationProp} from '#/lib/routes/types'
+import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
+import {useDevModeEnabled} from '#/state/preferences/dev-mode'
 import {
   RQKEY as profileQueryKey,
   useProfileBlockMutationQueue,
@@ -25,6 +28,7 @@ import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
+import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {PeopleRemove2_Stroke2_Corner0_Rounded as UserMinus} from '#/components/icons/PeopleRemove2'
 import {
@@ -34,8 +38,11 @@ import {
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import * as Menu from '#/components/Menu'
+import {
+  ReportDialog,
+  useReportDialogControl,
+} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
-import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 
 let ProfileMenu = ({
   profile,
@@ -47,11 +54,13 @@ let ProfileMenu = ({
   const {openModal} = useModalControls()
   const reportDialogControl = useReportDialogControl()
   const queryClient = useQueryClient()
+  const navigation = useNavigation<NavigationProp>()
   const isSelf = currentAccount?.did === profile.did
   const isFollowing = profile.viewer?.following
   const isBlocked = profile.viewer?.blocking || profile.viewer?.blockedBy
   const isFollowingBlockedAccount = isFollowing && isBlocked
   const isLabelerAndNotBlocked = !!profile.associated?.labeler && !isBlocked
+  const [devModeEnabled] = useDevModeEnabled()
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
@@ -167,6 +176,18 @@ let ProfileMenu = ({
     reportDialogControl.open()
   }, [reportDialogControl])
 
+  const onPressShareATUri = React.useCallback(() => {
+    shareText(`at://${profile.did}`)
+  }, [profile.did])
+
+  const onPressShareDID = React.useCallback(() => {
+    shareText(profile.did)
+  }, [profile.did])
+
+  const onPressSearch = React.useCallback(() => {
+    navigation.navigate('ProfileSearch', {name: profile.handle})
+  }, [navigation, profile.handle])
+
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
@@ -205,6 +226,15 @@ let ProfileMenu = ({
               </Menu.ItemText>
               <Menu.ItemIcon icon={Share} />
             </Menu.Item>
+            <Menu.Item
+              testID="profileHeaderDropdownSearchBtn"
+              label={_(msg`Search posts`)}
+              onPress={onPressSearch}>
+              <Menu.ItemText>
+                <Trans>Search posts</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={SearchIcon} />
+            </Menu.Item>
           </Menu.Group>
 
           {hasSession && (
@@ -218,8 +248,8 @@ let ProfileMenu = ({
                         testID="profileHeaderDropdownFollowBtn"
                         label={
                           isFollowing
-                            ? _(msg`Unfollow Account`)
-                            : _(msg`Follow Account`)
+                            ? _(msg`Unfollow account`)
+                            : _(msg`Follow account`)
                         }
                         onPress={
                           isFollowing
@@ -228,9 +258,9 @@ let ProfileMenu = ({
                         }>
                         <Menu.ItemText>
                           {isFollowing ? (
-                            <Trans>Unfollow Account</Trans>
+                            <Trans>Unfollow account</Trans>
                           ) : (
-                            <Trans>Follow Account</Trans>
+                            <Trans>Follow account</Trans>
                           )}
                         </Menu.ItemText>
                         <Menu.ItemIcon icon={isFollowing ? UserMinus : Plus} />
@@ -243,7 +273,7 @@ let ProfileMenu = ({
                   label={_(msg`Add to Lists`)}
                   onPress={onPressAddRemoveLists}>
                   <Menu.ItemText>
-                    <Trans>Add to Lists</Trans>
+                    <Trans>Add to lists</Trans>
                   </Menu.ItemText>
                   <Menu.ItemIcon icon={List} />
                 </Menu.Item>
@@ -255,15 +285,15 @@ let ProfileMenu = ({
                           testID="profileHeaderDropdownMuteBtn"
                           label={
                             profile.viewer?.muted
-                              ? _(msg`Unmute Account`)
-                              : _(msg`Mute Account`)
+                              ? _(msg`Unmute account`)
+                              : _(msg`Mute account`)
                           }
                           onPress={onPressMuteAccount}>
                           <Menu.ItemText>
                             {profile.viewer?.muted ? (
-                              <Trans>Unmute Account</Trans>
+                              <Trans>Unmute account</Trans>
                             ) : (
-                              <Trans>Mute Account</Trans>
+                              <Trans>Mute account</Trans>
                             )}
                           </Menu.ItemText>
                           <Menu.ItemIcon
@@ -276,15 +306,15 @@ let ProfileMenu = ({
                         testID="profileHeaderDropdownBlockBtn"
                         label={
                           profile.viewer
-                            ? _(msg`Unblock Account`)
-                            : _(msg`Block Account`)
+                            ? _(msg`Unblock account`)
+                            : _(msg`Block account`)
                         }
                         onPress={() => blockPromptControl.open()}>
                         <Menu.ItemText>
                           {profile.viewer?.blocking ? (
-                            <Trans>Unblock Account</Trans>
+                            <Trans>Unblock account</Trans>
                           ) : (
-                            <Trans>Block Account</Trans>
+                            <Trans>Block account</Trans>
                           )}
                         </Menu.ItemText>
                         <Menu.ItemIcon
@@ -296,10 +326,10 @@ let ProfileMenu = ({
                     )}
                     <Menu.Item
                       testID="profileHeaderDropdownReportBtn"
-                      label={_(msg`Report Account`)}
+                      label={_(msg`Report account`)}
                       onPress={onPressReportAccount}>
                       <Menu.ItemText>
-                        <Trans>Report Account</Trans>
+                        <Trans>Report account</Trans>
                       </Menu.ItemText>
                       <Menu.ItemIcon icon={Flag} />
                     </Menu.Item>
@@ -308,12 +338,40 @@ let ProfileMenu = ({
               </Menu.Group>
             </>
           )}
+          {devModeEnabled ? (
+            <>
+              <Menu.Divider />
+              <Menu.Group>
+                <Menu.Item
+                  testID="profileHeaderDropdownShareATURIBtn"
+                  label={_(msg`Copy at:// URI`)}
+                  onPress={onPressShareATUri}>
+                  <Menu.ItemText>
+                    <Trans>Copy at:// URI</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={Share} />
+                </Menu.Item>
+                <Menu.Item
+                  testID="profileHeaderDropdownShareDIDBtn"
+                  label={_(msg`Copy DID`)}
+                  onPress={onPressShareDID}>
+                  <Menu.ItemText>
+                    <Trans>Copy DID</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={Share} />
+                </Menu.Item>
+              </Menu.Group>
+            </>
+          ) : null}
         </Menu.Outer>
       </Menu.Root>
 
       <ReportDialog
         control={reportDialogControl}
-        params={{type: 'account', did: profile.did}}
+        subject={{
+          ...profile,
+          $type: 'app.bsky.actor.defs#profileViewDetailed',
+        }}
       />
 
       <Prompt.Basic
@@ -347,7 +405,7 @@ let ProfileMenu = ({
         control={loggedOutWarningPromptControl}
         title={_(msg`Note about sharing`)}
         description={_(
-          msg`This profile is only visible to logged-in users. It won't be visible to people who aren't logged in.`,
+          msg`This profile is only visible to logged-in users. It won't be visible to people who aren't signed in.`,
         )}
         onConfirm={onPressShare}
         confirmButtonCta={_(msg`Share anyway`)}

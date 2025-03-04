@@ -31,6 +31,18 @@ export const atoms = {
     right: 0,
     bottom: 0,
   },
+  top_0: {
+    top: 0,
+  },
+  right_0: {
+    right: 0,
+  },
+  bottom_0: {
+    bottom: 0,
+  },
+  left_0: {
+    left: 0,
+  },
   z_10: {
     zIndex: 10,
   },
@@ -50,6 +62,12 @@ export const atoms = {
   overflow_hidden: {
     overflow: 'hidden',
   },
+  /**
+   * @platform web
+   */
+  overflow_auto: web({
+    overflow: 'auto',
+  }),
 
   /*
    * Width
@@ -68,7 +86,6 @@ export const atoms = {
    * Used for the outermost components on screens, to ensure that they can fill
    * the screen and extend beyond.
    */
-  // @ts-ignore - web only minHeight string
   util_screen_outer: [
     web({
       minHeight: '100vh',
@@ -76,7 +93,7 @@ export const atoms = {
     native({
       height: '100%',
     }),
-  ] as ViewStyle,
+  ] as StyleProp<ViewStyle>,
 
   /*
    * Theme-independent bg colors
@@ -88,6 +105,9 @@ export const atoms = {
   /*
    * Border radius
    */
+  rounded_0: {
+    borderRadius: 0,
+  },
   rounded_2xs: {
     borderRadius: tokens.borderRadius._2xs,
   },
@@ -963,6 +983,34 @@ export const atoms = {
   }),
   transition_delay_50ms: web({
     transitionDelay: '50ms',
+  }),
+
+  /*
+   * Animaations
+   */
+  fade_in: web({
+    animation: 'fadeIn ease-out 0.15s',
+  }),
+  fade_out: web({
+    animation: 'fadeOut ease-out 0.15s',
+  }),
+  zoom_in: web({
+    animation: 'zoomIn ease-out 0.1s',
+  }),
+  zoom_out: web({
+    animation: 'zoomOut ease-out 0.1s',
+  }),
+  slide_in_left: web({
+    // exponential easing function
+    animation: 'slideInLeft cubic-bezier(0.16, 1, 0.3, 1) 0.5s',
+  }),
+  slide_out_left: web({
+    animation: 'slideOutLeft ease-in 0.15s',
+    animationFillMode: 'forwards',
+  }),
+  // special composite animation for dialogs
+  zoom_fade_in: web({
+    animation: 'zoomIn ease-out 0.1s, fadeIn ease-out 0.1s',
   }),
 
   /**

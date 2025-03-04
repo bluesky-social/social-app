@@ -21,6 +21,7 @@ import {
   POSTGATE_COLLECTION,
 } from '#/state/queries/postgate/util'
 import {useAgent} from '#/state/session'
+import * as bsky from '#/types/bsky'
 
 export async function getPostgateRecord({
   agent,
@@ -60,7 +61,10 @@ export async function getPostgateRecord({
         }),
     )
 
-    if (data.value && AppBskyFeedPostgate.isRecord(data.value)) {
+    if (
+      data.value &&
+      bsky.validate(data.value, AppBskyFeedPostgate.validateRecord)
+    ) {
       return data.value
     } else {
       return undefined

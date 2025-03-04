@@ -135,7 +135,7 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
         <Pressable
           accessible
           accessibilityLabel={_(msg`Close emoji picker`)}
-          accessibilityHint={_(msg`Tap to close the emoji picker`)}
+          accessibilityHint={_(msg`Closes the emoji picker`)}
           onPress={close}
           style={[a.fixed, a.inset_0]}
         />
@@ -171,7 +171,7 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
         <Pressable
           accessible
           accessibilityLabel={_(msg`Close emoji picker`)}
-          accessibilityHint={_(msg`Tap to close the emoji picker`)}
+          accessibilityHint={_(msg`Closes the emoji picker`)}
           onPress={close}
           style={[a.fixed, a.inset_0]}
         />

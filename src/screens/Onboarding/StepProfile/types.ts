@@ -3,7 +3,6 @@ import {Apple_Stroke2_Corner0_Rounded as Apple} from '#/components/icons/Apple'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Atom_Stroke2_Corner0_Rounded as Atom} from '#/components/icons/Atom'
 import {Celebrate_Stroke2_Corner0_Rounded as Celebrate} from '#/components/icons/Celebrate'
-import {Coffee_Stroke2_Corner0_Rounded as Coffee} from '#/components/icons/Coffee'
 import {
   EmojiArc_Stroke2_Corner0_Rounded as EmojiArc,
   EmojiHeartEyes_Stroke2_Corner0_Rounded as EmojiHeartEyes,
@@ -13,8 +12,6 @@ import {GameController_Stroke2_Corner0_Rounded as GameController} from '#/compon
 import {Lab_Stroke2_Corner0_Rounded as Lab} from '#/components/icons/Lab'
 import {Leaf_Stroke2_Corner0_Rounded as Leaf} from '#/components/icons/Leaf'
 import {MusicNote_Stroke2_Corner0_Rounded as MusicNote} from '#/components/icons/MusicNote'
-import {PiggyBank_Stroke2_Corner0_Rounded as PiggyBank} from '#/components/icons/PiggyBank'
-import {Poop_Stroke2_Corner0_Rounded as Poop} from '#/components/icons/Poop'
 import {Rose_Stroke2_Corner0_Rounded as Rose} from '#/components/icons/Rose'
 import {Shaka_Stroke2_Corner0_Rounded as Shaka} from '#/components/icons/Shaka'
 import {UFO_Stroke2_Corner0_Rounded as UFO} from '#/components/icons/UFO'
@@ -33,7 +30,6 @@ export const emojiNames = [
   'apple',
   'atom',
   'celebrate',
-  'coffee',
   'gameController',
   'leaf',
   'musicNote',
@@ -43,8 +39,6 @@ export const emojiNames = [
   'zap',
   'explosion',
   'lab',
-  'piggyBank',
-  'poop',
 ] as const
 export type EmojiName = (typeof emojiNames)[number]
 
@@ -81,10 +75,6 @@ export const emojiItems: Record<EmojiName, Emoji> = {
     name: 'celebrate',
     component: Celebrate,
   },
-  coffee: {
-    name: 'coffee',
-    component: Coffee,
-  },
   gameController: {
     name: 'gameController',
     component: GameController,
@@ -120,14 +110,6 @@ export const emojiItems: Record<EmojiName, Emoji> = {
   lab: {
     name: 'lab',
     component: Lab,
-  },
-  piggyBank: {
-    name: 'piggyBank',
-    component: PiggyBank,
-  },
-  poop: {
-    name: 'poop',
-    component: Poop,
   },
 }
 

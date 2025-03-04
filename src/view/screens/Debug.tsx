@@ -10,12 +10,11 @@ import {PaletteColorName, ThemeProvider} from '#/lib/ThemeContext'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
-import {Button, ButtonType} from '#/view/com/util/forms/Button'
+import {Button} from '#/view/com/util/forms/Button'
 import {
   DropdownButton,
   DropdownItem,
 } from '#/view/com/util/forms/DropdownButton'
-import {RadioGroup} from '#/view/com/util/forms/RadioGroup'
 import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 import * as LoadingPlaceholder from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
@@ -139,8 +138,6 @@ function ControlsView() {
       <DropdownButtonsView />
       <Heading label="Toggle Buttons" />
       <ToggleButtonsView />
-      <Heading label="Radio Buttons" />
-      <RadioButtonsView />
       <View style={s.footerSpacer} />
     </ScrollView>
   )
@@ -499,31 +496,6 @@ function ToggleButtonsView() {
         style={buttonStyles}
         isSelected={isSelected}
         onPress={onToggle}
-      />
-    </View>
-  )
-}
-
-const RADIO_BUTTON_ITEMS = [
-  {key: 'default-light', label: 'Default Light'},
-  {key: 'primary', label: 'Primary'},
-  {key: 'secondary', label: 'Secondary'},
-  {key: 'inverted', label: 'Inverted'},
-  {key: 'primary-outline', label: 'Primary Outline'},
-  {key: 'secondary-outline', label: 'Secondary Outline'},
-  {key: 'primary-light', label: 'Primary Light'},
-  {key: 'secondary-light', label: 'Secondary Light'},
-]
-function RadioButtonsView() {
-  const defaultPal = usePalette('default')
-  const [rgType, setRgType] = React.useState<ButtonType>('default-light')
-  return (
-    <View style={[defaultPal.view]}>
-      <RadioGroup
-        type={rgType}
-        items={RADIO_BUTTON_ITEMS}
-        initialSelection="default-light"
-        onSelect={v => setRgType(v as ButtonType)}
       />
     </View>
   )

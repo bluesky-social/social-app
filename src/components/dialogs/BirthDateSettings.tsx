@@ -4,6 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
+import {getDateAgo} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {
@@ -12,12 +13,12 @@ import {
   usePreferencesSetBirthDateMutation,
 } from '#/state/queries/preferences'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {DateInput} from '#/view/com/util/forms/DateInput'
 import {atoms as a, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
+import {DateField} from '#/components/forms/DateField'
 import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 import {Button, ButtonIcon, ButtonText} from '../Button'
-import {Text} from '../Typography'
 
 export function BirthDateSettingsDialog({
   control,
@@ -95,17 +96,13 @@ function BirthdayInner({
   return (
     <View style={a.gap_lg} testID="birthDateSettingsDialog">
       <View style={isIOS && [a.w_full, a.align_center]}>
-        <DateInput
-          handleAsUTC
+        <DateField
           testID="birthdayInput"
           value={date}
-          onChange={setDate}
-          buttonType="default-light"
-          buttonStyle={[a.rounded_sm]}
-          buttonLabelType="lg"
-          accessibilityLabel={_(msg`Birthday`)}
+          onChangeDate={newDate => setDate(new Date(newDate))}
+          label={_(msg`Birthday`)}
           accessibilityHint={_(msg`Enter your birth date`)}
-          accessibilityLabelledBy="birthDate"
+          maximumDate={getDateAgo(13)}
         />
       </View>
 

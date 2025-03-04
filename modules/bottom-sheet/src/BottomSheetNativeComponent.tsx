@@ -1,14 +1,17 @@
 import * as React from 'react'
 import {
   Dimensions,
+  LayoutChangeEvent,
   NativeSyntheticEvent,
   Platform,
   StyleProp,
   View,
   ViewStyle,
 } from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
+import {isIOS} from '#/platform/detection'
 import {BottomSheetState, BottomSheetViewProps} from './BottomSheet.types'
 import {BottomSheetPortalProvider} from './BottomSheetPortal'
 import {Context as PortalContext} from './BottomSheetPortal'
@@ -81,12 +84,10 @@ export class BottomSheetNativeComponent extends React.Component<
       return null
     }
 
-    const {children, backgroundColor, ...rest} = this.props
-    const cornerRadius = rest.cornerRadius ?? 0
-
     let extraStyles
     if (isIOS15 && this.state.viewHeight) {
       const {viewHeight} = this.state
+      const cornerRadius = this.props.cornerRadius ?? 0
       if (viewHeight < screenHeight / 2) {
         extraStyles = {
           height: viewHeight,
@@ -99,39 +100,70 @@ export class BottomSheetNativeComponent extends React.Component<
 
     return (
       <Portal>
-        <NativeView
-          {...rest}
+        <BottomSheetNativeComponentInner
+          {...this.props}
+          nativeViewRef={this.ref}
           onStateChange={this.onStateChange}
-          ref={this.ref}
-          style={{
-            position: 'absolute',
-            height: screenHeight,
-            width: '100%',
+          extraStyles={extraStyles}
+          onLayout={e => {
+            const {height} = e.nativeEvent.layout
+            this.setState({viewHeight: height})
+            this.updateLayout()
           }}
-          containerBackgroundColor={backgroundColor}>
-          <View
-            style={[
-              {
-                flex: 1,
-                backgroundColor,
-              },
-              Platform.OS === 'android' && {
-                borderTopLeftRadius: cornerRadius,
-                borderTopRightRadius: cornerRadius,
-              },
-              extraStyles,
-            ]}>
-            <View
-              onLayout={e => {
-                const {height} = e.nativeEvent.layout
-                this.setState({viewHeight: height})
-                this.updateLayout()
-              }}>
-              <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
-            </View>
-          </View>
-        </NativeView>
+        />
       </Portal>
     )
   }
+}
+
+function BottomSheetNativeComponentInner({
+  children,
+  backgroundColor,
+  onLayout,
+  onStateChange,
+  nativeViewRef,
+  extraStyles,
+  ...rest
+}: BottomSheetViewProps & {
+  extraStyles?: StyleProp<ViewStyle>
+  onStateChange: (
+    event: NativeSyntheticEvent<{state: BottomSheetState}>,
+  ) => void
+  nativeViewRef: React.RefObject<View>
+  onLayout: (event: LayoutChangeEvent) => void
+}) {
+  const insets = useSafeAreaInsets()
+  const cornerRadius = rest.cornerRadius ?? 0
+
+  const sheetHeight = isIOS ? screenHeight - insets.top : screenHeight
+
+  return (
+    <NativeView
+      {...rest}
+      onStateChange={onStateChange}
+      ref={nativeViewRef}
+      style={{
+        position: 'absolute',
+        height: sheetHeight,
+        width: '100%',
+      }}
+      containerBackgroundColor={backgroundColor}>
+      <View
+        style={[
+          {
+            flex: 1,
+            backgroundColor,
+          },
+          Platform.OS === 'android' && {
+            borderTopLeftRadius: cornerRadius,
+            borderTopRightRadius: cornerRadius,
+          },
+          extraStyles,
+        ]}>
+        <View onLayout={onLayout}>
+          <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
+        </View>
+      </View>
+    </NativeView>
+  )
 }

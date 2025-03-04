@@ -21,7 +21,7 @@ function renderItem({
   item,
   index,
 }: {
-  item: AppBskyActorDefs.ProfileViewBasic
+  item: AppBskyActorDefs.ProfileView
   index: number
 }) {
   return (

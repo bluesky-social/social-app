@@ -18,7 +18,7 @@ export function useUpdateActorDeclaration({
 
   return useMutation({
     mutationFn: async (allowIncoming: 'all' | 'none' | 'following') => {
-      if (!currentAccount) throw new Error('Not logged in')
+      if (!currentAccount) throw new Error('Not signed in')
       const result = await agent.api.com.atproto.repo.putRecord({
         repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
@@ -68,13 +68,11 @@ export function useDeleteActorDeclaration() {
 
   return useMutation({
     mutationFn: async () => {
-      if (!currentAccount) throw new Error('Not logged in')
-      // TODO(sam): remove validate: false once PDSes have the new lexicon
+      if (!currentAccount) throw new Error('Not signed in')
       const result = await agent.api.com.atproto.repo.deleteRecord({
         repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
         rkey: 'self',
-        validate: false,
       })
       return result
     },

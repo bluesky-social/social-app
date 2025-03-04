@@ -199,7 +199,6 @@ const styles = StyleSheet.create({
     height: 30,
     overflow: 'hidden',
     borderRadius: 15,
-    // @ts-ignore web only
     cursor: 'pointer',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     alignItems: 'center',

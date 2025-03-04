@@ -70,13 +70,14 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         msg`Expand or collapse the full post you are replying to`,
       )}
       accessibilityHint={_(
-        msg`Expand or collapse the full post you are replying to`,
+        msg`Expands or collapses the full post you are replying to`,
       )}>
       <PreviewableUserAvatar
         size={50}
         profile={replyTo.author}
         moderation={replyTo.moderation?.ui('avatar')}
         type={replyTo.author.associated?.labeler ? 'labeler' : 'user'}
+        disableNavigation={true}
       />
       <View style={styles.replyToPost}>
         <Text type="xl-medium" style={t.atoms.text} numberOfLines={1} emoji>

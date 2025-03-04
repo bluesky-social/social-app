@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {logger} from '#/logger'
-import {Shadow, useProfileShadow} from '#/state/cache/profile-shadow'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {
   useProfileFollowMutationQueue,
   useProfileQuery,
@@ -35,8 +35,7 @@ function PostThreadFollowBtnLoaded({
   const navigation = useNavigation()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
-  const profile: Shadow<AppBskyActorDefs.ProfileViewBasic> =
-    useProfileShadow(profileUnshadowed)
+  const profile = useProfileShadow(profileUnshadowed)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
     profile,
     'PostThreadItem',

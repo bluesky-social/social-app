@@ -75,8 +75,11 @@ import {useDialogControl} from '#/components/Dialog'
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import * as Layout from '#/components/Layout'
 import * as Hider from '#/components/moderation/Hider'
+import {
+  ReportDialog,
+  useReportDialogControl,
+} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
-import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {RichText} from '#/components/RichText'
 
 const SECTION_TITLES_CURATE = ['Posts', 'People']
@@ -672,10 +675,9 @@ function Header({
         avatarType="list">
         <ReportDialog
           control={reportDialogControl}
-          params={{
-            type: 'list',
-            uri: list.uri,
-            cid: list.cid,
+          subject={{
+            ...list,
+            $type: 'app.bsky.graph.defs#listView',
           }}
         />
         {isCurateList ? (
@@ -1007,7 +1009,7 @@ function ErrorScreen({error}: {error: string}) {
         <Button
           type="default"
           accessibilityLabel={_(msg`Go back`)}
-          accessibilityHint={_(msg`Return to previous page`)}
+          accessibilityHint={_(msg`Returns to previous page`)}
           onPress={onPressBack}
           style={{flexShrink: 1}}>
           <Text type="button" style={pal.text}>

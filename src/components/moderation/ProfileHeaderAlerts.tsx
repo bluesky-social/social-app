@@ -1,7 +1,7 @@
 import {StyleProp, ViewStyle} from 'react-native'
 import {ModerationDecision} from '@atproto/api'
 
-import {getModerationCauseKey} from '#/lib/moderation'
+import {getModerationCauseKey, unique} from '#/lib/moderation'
 import * as Pills from '#/components/Pills'
 
 export function ProfileHeaderAlerts({
@@ -17,14 +17,14 @@ export function ProfileHeaderAlerts({
 
   return (
     <Pills.Row size="lg">
-      {modui.alerts.map(cause => (
+      {modui.alerts.filter(unique).map(cause => (
         <Pills.Label
           size="lg"
           key={getModerationCauseKey(cause)}
           cause={cause}
         />
       ))}
-      {modui.informs.map(cause => (
+      {modui.informs.filter(unique).map(cause => (
         <Pills.Label
           size="lg"
           key={getModerationCauseKey(cause)}

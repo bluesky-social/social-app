@@ -17,8 +17,8 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
+import {createFullHandle, validateServiceHandle} from '#/lib/strings/handles'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {createFullHandle, validateHandle} from '#/lib/strings/handles'
 import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useServiceQuery} from '#/state/queries/service'
@@ -172,7 +172,7 @@ function ProvidedHandlePage({
   const host = serviceInfo.availableUserDomains[0]
 
   const validation = useMemo(
-    () => validateHandle(subdomain, host, true),
+    () => validateServiceHandle(subdomain, host),
     [subdomain, host],
   )
 
@@ -537,7 +537,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
 
         <Button
           label={_(msg`Use default provider`)}
-          accessibilityHint={_(msg`Go back to previous page`)}
+          accessibilityHint={_(msg`Returns to previous page`)}
           onPress={goToServiceHandle}
           variant="outline"
           color="secondary"

@@ -1,7 +1,6 @@
 import React from 'react'
 import {GestureResponderEvent, View} from 'react-native'
 import {
-  AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
   AtUri,
@@ -32,6 +31,7 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {RichText, RichTextProps} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 type Props = {
   view: AppBskyFeedDefs.GeneratorView
@@ -115,7 +115,7 @@ export function TitleAndByline({
   creator,
 }: {
   title: string
-  creator?: AppBskyActorDefs.ProfileViewBasic
+  creator?: bsky.profile.AnyProfileView
 }) {
   const t = useTheme()
 
@@ -271,7 +271,7 @@ function SaveButtonInner({
         }
         Toast.show(_(msg`Feeds updated!`))
       } catch (err: any) {
-        logger.error(err, {context: `FeedCard: failed to update feeds`, pin})
+        logger.error(err, {message: `FeedCard: failed to update feeds`, pin})
         Toast.show(_(msg`Failed to update feeds`), 'xmark')
       }
     },
@@ -307,7 +307,7 @@ function SaveButtonInner({
 
       <Prompt.Basic
         control={removePromptControl}
-        title={_(msg`Remove from my feeds?`)}
+        title={_(msg`Remove from your feeds?`)}
         description={_(
           msg`Are you sure you want to remove this from your feeds?`,
         )}

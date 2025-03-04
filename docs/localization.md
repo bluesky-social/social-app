@@ -1,11 +1,67 @@
 # Internationalization
 
-We want the official Bluesky app to be supported in as many languages as possible. If you want to help us translate the app, please open a PR or issue on the [Bluesky app repo on GitHub](https://github.com/bluesky-social/social-app)
+We want the official Bluesky app to be supported in as many languages as possible. If you want to help us translate the app, please get involved on [Crowdin](https://bluesky.crowdin.com/u/projects/1) or open an issue on the [Bluesky app repo on GitHub](https://github.com/bluesky-social/social-app).
 
 ## Tools
-We are using Lingui to manage translations. You can find the documentation [here](https://lingui.dev/).
+
+- We use Crowdin to manage translations.
+  - Bluesky Crowdin: https://bluesky.crowdin.com/u/projects/1
+  - Introduction to Crowdin: https://support.crowdin.com/for-translators/
+- We use Lingui to implement translations. You can find the documentation [here](https://lingui.dev/).
+
+## Translators
+
+Much of the app is translated by community contributions. (We <3 our translators!) If you want to participate in the translation of the app, read this section.
+
+### Using Crowdin
+
+[Crowdin](https://bluesky.crowdin.com/u/projects/1) is our primary tool for managing translations. There are two roles:
+
+- **Proof-readers**. Can create new translations and approve submitted translations.
+- **Translators**. Can create new translations.
+
+All translations must be approved by proof-readers before they are accepted into the app.
+
+### Using other platforms
+
+You may contribute PRs separately from Crowdin, however we strongly recommend using Crowdin to avoid conflicts.
+
+### Code of conduct on Crowdin
+
+Please treat everyone with respect. Proof-readers are given final say on translations. Translators who frequently come into conflict with other translators, or who contribute noticably incorrect translations, will have their membership to the Crowdin project revoked.
+
+### Adding a new language
+
+You can request a new language be added to the project by clicking **Request New Language** on Crowdin or you can create a [GitHub issue](https://github.com/bluesky-social/social-app/issues).
+
+Please only request a new language when you are certain you will be able to contribute a substantive portion of translations for the language.
+
+## Maintainers
+
+Install the [Crowdin CLI](https://crowdin.github.io/crowdin-cli/). You will need to [configure your API token](https://crowdin.github.io/crowdin-cli/configuration) to access the project.
+
+### English source-file sync with Crowdin
+
+Every night, a GitHub action will run `yarn intl:extract` to update the english `messages.po` file. This will be automatically synced with Crowdin. Crowdin should notify all subscribed users of new translations.
+
+### Release process
+
+1. Pull main and create a branch.
+1. Run `yarn intl:pull` to fetch all translation updates from Crowdin. Commit.
+1. Run `yarn intl:extract:all` to ensure all `.po` files are synced with the current state of the code. Commit.
+1. Create a PR, ensure the translations all look correct, and merge.
+1. If needed:
+  1. Merge all approved translation PRs (contributions from outside crowdin).
+  1. Run `yarn intl:push` to sync Crowdin with the state of the repo.
+
+### Testing the translations in Crowdin
+
+You can run `yarn intl:pull` to pull the currently-approved translations from Crowdin.
+
+## Developers
 
 ### Adding new strings
+
 When adding a new string, do it as follows:
 ```jsx
 // Before
@@ -61,6 +117,7 @@ So the workflow is as follows:
 6. Enjoy translated app!
 
 ### Common pitfalls
+
 These pitfalls are memoization pitfalls that will cause the components to not re-render when the locale is changed -- causing stale translations to be shown.
 
 ```jsx
@@ -111,9 +168,3 @@ export function Welcome() {
   return <div>{welcome}</div>;
 }
 ```
-
-
-### Credits
-Please check each individual `messages.po` file for the credits of the translators. We are very grateful for their help! 
-
-If you would like to translate the Bluesky app into your language, please open a PR or issue on this repo.
