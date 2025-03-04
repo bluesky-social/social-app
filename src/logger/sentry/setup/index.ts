@@ -36,5 +36,5 @@ init({
   environment: process.env.NODE_ENV,
   dist,
   release,
-  ignoreErrors: [`t is not defined`, `Can't find variable: t`],
+  // ignoreErrors: [`t is not defined`, `Can't find variable: t`],
 })
