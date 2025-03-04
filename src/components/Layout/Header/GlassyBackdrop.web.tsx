@@ -17,7 +17,15 @@ export function GlassyBackdrop() {
 
   return (
     <>
-      <View style={[a.absolute, a.inset_0, t.atoms.bg, {opacity: 0.9}]} />
+      <View
+        style={[
+          a.absolute,
+          a.inset_0,
+          t.atoms.bg,
+          a.pointer_events_none,
+          {opacity: 0.9},
+        ]}
+      />
       <View
         style={[
           a.absolute,

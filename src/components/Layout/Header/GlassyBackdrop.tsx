@@ -9,5 +9,7 @@ import {atoms as a, useTheme} from '#/alf'
  */
 export function GlassyBackdrop() {
   const t = useTheme()
-  return <View style={[a.absolute, a.inset_0, t.atoms.bg]} />
+  return (
+    <View style={[a.absolute, a.inset_0, t.atoms.bg, a.pointer_events_none]} />
+  )
 }
