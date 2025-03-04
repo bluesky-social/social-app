@@ -348,8 +348,17 @@ function SearchLanguageDropdown({
         if (aIsUser && !bIsUser) return -1
         if (bIsUser && !aIsUser) return 1
         // prioritize "common" langs in the network
-        const aIsCommon = !!APP_LANGUAGES.find(al => al.code2 === a.value)
-        const bIsCommon = !!APP_LANGUAGES.find(al => al.code2 === b.value)
+        const aIsCommon = !!APP_LANGUAGES.find(
+          al =>
+            // skip `ast`, because it uses a 3-letter code which conflicts with `as`
+            // it begins with `a` anyway so still is top of the list
+            al.code2 !== 'ast' && al.code2.startsWith(a.value),
+        )
+        const bIsCommon = !!APP_LANGUAGES.find(
+          al =>
+            // ditto
+            al.code2 !== 'ast' && al.code2.startsWith(b.value),
+        )
         if (aIsCommon && !bIsCommon) return -1
         if (bIsCommon && !aIsCommon) return 1
         // fall back to alphabetical
