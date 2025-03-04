@@ -94,7 +94,6 @@ export function MessagesList({
   hasAcceptOverride?: boolean
 }) {
   const convoState = useConvoActive()
-  console.log({hasAcceptOverride, convoState})
   const agent = useAgent()
   const getPost = useGetPost()
   const {embedUri, setEmbed} = useMessageEmbed()
