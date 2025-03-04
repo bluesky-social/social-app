@@ -6,7 +6,7 @@
 import {Platform} from 'react-native'
 import {init} from '@sentry/react-native'
 
-import {appVersion,IS_TESTFLIGHT} from '#/lib/app-info'
+import {appVersion, IS_TESTFLIGHT} from '#/lib/app-info'
 
 /**
  * Examples:

@@ -1,5 +1,8 @@
+require('dotenv').config()
+
 const path = require('path')
 const fs = require('fs')
+const exec = require('child_process').execSync
 
 const projectRoot = path.join(__dirname, '..')
 const templateFile = path.join(
@@ -9,6 +12,7 @@ const templateFile = path.join(
   'scripts.html',
 )
 
+const {version} = require(path.join(projectRoot, 'package.json'))
 const {entrypoints} = require(path.join(
   projectRoot,
   'web-build/asset-manifest.json',
@@ -47,3 +51,7 @@ function copyFiles(sourceDir, targetDir) {
 copyFiles('web-build/static/js', 'bskyweb/static/js')
 copyFiles('web-build/static/css', 'bskyweb/static/css')
 copyFiles('web-build/static/media', 'bskyweb/static/media')
+
+exec(
+  `yarn sentry-cli sourcemaps inject bskyweb/static/js && yarn sentry-cli sourcemaps upload bskyweb/static/js --org blueskyweb --project app --release ${version} --dist web.${version} --auth-token ${process.env.SENTRY_AUTH_TOKEN}`,
+)
