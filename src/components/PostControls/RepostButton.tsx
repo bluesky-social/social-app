@@ -52,16 +52,24 @@ let RepostButton = ({
         label={
           isReposted
             ? _(
-                msg`Undo repost (${plural(repostCount || 0, {
-                  one: '# repost',
-                  other: '# reposts',
-                })})`,
+                msg({
+                  message: `Undo repost (${plural(repostCount || 0, {
+                    one: '# repost',
+                    other: '# reposts',
+                  })})`,
+                  comment:
+                    'Accessibility label for the repost button when the post has been reposted, verb followed by number of reposts and noun',
+                }),
               )
             : _(
-                msg`Repost (${plural(repostCount || 0, {
-                  one: '# repost',
-                  other: '# reposts',
-                })})`,
+                msg({
+                  message: `Repost (${plural(repostCount || 0, {
+                    one: '# repost',
+                    other: '# reposts',
+                  })})`,
+                  comment:
+                    'Accessibility label for the repost button when the post has not been reposted, verb form followed by number of reposts and noun form',
+                }),
               )
         }>
         <PostControlButtonIcon icon={Repost} />

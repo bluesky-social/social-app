@@ -200,10 +200,14 @@ let PostControls = ({
             !replyDisabled ? () => requireAuth(() => onPressReply()) : undefined
           }
           label={_(
-            msg`Reply (${plural(post.replyCount || 0, {
-              one: '# reply',
-              other: '# replies',
-            })})`,
+            msg({
+              message: `Reply (${plural(post.replyCount || 0, {
+                one: '# reply',
+                other: '# replies',
+              })})`,
+              comment:
+                'Accessibility label for the reply button, verb form followed by number of replies and noun form',
+            }),
           )}
           big={big}>
           <PostControlButtonIcon icon={Bubble} />
@@ -232,16 +236,24 @@ let PostControls = ({
           label={
             post.viewer?.like
               ? _(
-                  msg`Unlike (${plural(post.likeCount || 0, {
-                    one: '# like',
-                    other: '# likes',
-                  })})`,
+                  msg({
+                    message: `Unlike (${plural(post.likeCount || 0, {
+                      one: '# like',
+                      other: '# likes',
+                    })})`,
+                    comment:
+                      'Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun',
+                  }),
                 )
               : _(
-                  msg`Like (${plural(post.likeCount || 0, {
-                    one: '# like',
-                    other: '# likes',
-                  })})`,
+                  msg({
+                    message: `Like (${plural(post.likeCount || 0, {
+                      one: '# like',
+                      other: '# likes',
+                    })})`,
+                    comment:
+                      'Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form',
+                  }),
                 )
           }>
           <AnimatedLikeIcon
