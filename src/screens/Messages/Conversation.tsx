@@ -7,7 +7,12 @@ import {
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useEmail} from '#/lib/hooks/useEmail'
@@ -40,7 +45,6 @@ export function MessagesConversationScreen({route}: Props) {
   const setMinimalShellMode = useSetMinimalShellMode()
 
   const convoId = route.params.conversation
-  const hasAccepted = !!route.params.accept
   const {setCurrentConvoId} = useCurrentConvoId()
 
   useEnableKeyboardControllerScreen(true)
@@ -64,7 +68,7 @@ export function MessagesConversationScreen({route}: Props) {
 
   return (
     <Layout.Screen testID="convoScreen" style={web([{minHeight: 0}, a.flex_1])}>
-      <ConvoProvider key={convoId} convoId={convoId} hasAccepted={hasAccepted}>
+      <ConvoProvider key={convoId} convoId={convoId}>
         <Inner />
       </ConvoProvider>
     </Layout.Screen>
@@ -173,6 +177,8 @@ function InnerReady({
   const {_} = useLingui()
   const convoState = useConvo()
   const navigation = useNavigation<NavigationProp>()
+  const {params} =
+    useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>()
   const verifyEmailControl = useDialogControl()
   const {needsEmailVerification} = useEmail()
 
@@ -190,6 +196,7 @@ function InnerReady({
           hasScrolled={hasScrolled}
           setHasScrolled={setHasScrolled}
           blocked={moderation?.blocked}
+          hasAcceptOverride={!!params.accept}
           footer={
             <MessagesListBlockedFooter
               recipient={recipient}

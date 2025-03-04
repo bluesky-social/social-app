@@ -14,7 +14,6 @@ export type ConvoParams = {
   placeholderData?: {
     convo: ChatBskyConvoDefs.ConvoView
   }
-  hasAccepted: boolean
 }
 
 export enum ConvoStatus {
