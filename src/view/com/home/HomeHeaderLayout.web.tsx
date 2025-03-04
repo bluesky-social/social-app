@@ -66,7 +66,7 @@ function HomeHeaderLayoutDesktopAndTablet({
       )}
       {tabBarAnchor}
       <Layout.Center
-        style={[a.sticky, a.z_10, a.align_center, t.atoms.bg, {top: 0}]}
+        style={[a.sticky, a.z_10, a.align_center, {top: 0}]}
         onLayout={e => {
           headerHeight.set(e.nativeEvent.layout.height)
         }}>
