@@ -3,14 +3,19 @@ import {
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
   type AppBskyFeedThreadgate,
+  AtUri,
   type RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type React from 'react'
 
+import {makeProfileLink} from '#/lib/routes/links'
+import {shareUrl} from '#/lib/sharing'
+import {toShareUrl} from '#/lib/strings/url-helpers'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {EventStopper} from '#/view/com/util/EventStopper'
+import {native} from '#/alf'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
 import {useMenuControl} from '#/components/Menu'
 import * as Menu from '#/components/Menu'
@@ -52,6 +57,15 @@ let ShareMenuButton = ({
     }),
     [menuControl, setHasBeenOpen],
   )
+
+  const onNativeLongPress = () => {
+    const urip = new AtUri(post.uri)
+    const href = makeProfileLink(post.author, 'post', urip.rkey)
+    const url = toShareUrl(href)
+    shareUrl(url)
+    onShare()
+  }
+
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root control={lazyMenuControl}>
@@ -62,7 +76,8 @@ let ShareMenuButton = ({
                 testID="postShareBtn"
                 big={big}
                 label={props.accessibilityLabel}
-                {...props}>
+                {...props}
+                onLongPress={native(onNativeLongPress)}>
                 <PostControlButtonIcon icon={ArrowOutOfBoxIcon} />
               </PostControlButton>
             )
