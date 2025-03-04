@@ -13,14 +13,18 @@ import {useGate} from '#/lib/statsig/statsig'
 import {useHomeBadge} from '#/state/home-badge'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
+import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Link} from '#/view/com/util/Link'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
+import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
@@ -35,10 +39,6 @@ import {
   Message_Stroke2_Corner0_Rounded as Message,
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message'
-import {
-  UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
-  UserCircle_Stroke2_Corner0_Rounded as UserCircle,
-} from '#/components/icons/UserCircle'
 import {Text} from '#/components/Typography'
 import {styles} from './BottomBarStyles'
 
@@ -49,6 +49,8 @@ export function BottomBarWeb() {
   const footerMinimalShellTransform = useMinimalShellFooterTransform()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
+  const accountSwitchControl = useDialogControl()
+  const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const iconWidth = 26
 
   const unreadMessageCount = useUnreadMessageCount()
@@ -67,161 +69,178 @@ export function BottomBarWeb() {
     // setShowLoggedOut(true)
   }, [requestSwitchToAccount, closeAllActiveElements])
 
-  return (
-    <Animated.View
-      role="navigation"
-      style={[
-        styles.bottomBar,
-        styles.bottomBarWeb,
-        t.atoms.bg,
-        t.atoms.border_contrast_low,
-        footerMinimalShellTransform,
-      ]}>
-      {hasSession ? (
-        <>
-          <NavItem
-            routeName="Home"
-            href="/"
-            hasNew={hasHomeBadge && gate('remove_show_latest_button')}>
-            {({isActive}) => {
-              const Icon = isActive ? HomeFilled : Home
-              return (
-                <Icon
-                  aria-hidden={true}
-                  width={iconWidth + 1}
-                  style={[styles.ctrlIcon, t.atoms.text, styles.homeIcon]}
-                />
-              )
-            }}
-          </NavItem>
-          <NavItem routeName="Search" href="/search">
-            {({isActive}) => {
-              const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass
-              return (
-                <Icon
-                  aria-hidden={true}
-                  width={iconWidth + 2}
-                  style={[styles.ctrlIcon, t.atoms.text, styles.searchIcon]}
-                />
-              )
-            }}
-          </NavItem>
+  const onLongPressProfile = React.useCallback(() => {
+    accountSwitchControl.open()
+  }, [accountSwitchControl])
 
-          {hasSession && (
-            <>
-              <NavItem
-                routeName="Messages"
-                href="/messages"
-                notificationCount={
-                  unreadMessageCount.count > 0
-                    ? unreadMessageCount.numUnread
-                    : undefined
-                }>
-                {({isActive}) => {
-                  const Icon = isActive ? MessageFilled : Message
-                  return (
-                    <Icon
-                      aria-hidden={true}
-                      width={iconWidth - 1}
-                      style={[
-                        styles.ctrlIcon,
-                        t.atoms.text,
-                        styles.messagesIcon,
-                      ]}
-                    />
-                  )
-                }}
-              </NavItem>
-              <NavItem
-                routeName="Notifications"
-                href="/notifications"
-                notificationCount={notificationCountStr}>
-                {({isActive}) => {
-                  const Icon = isActive ? BellFilled : Bell
-                  return (
-                    <Icon
-                      aria-hidden={true}
-                      width={iconWidth}
-                      style={[styles.ctrlIcon, t.atoms.text, styles.bellIcon]}
-                    />
-                  )
-                }}
-              </NavItem>
-              <NavItem
-                routeName="Profile"
-                href={
-                  currentAccount
-                    ? makeProfileLink({
-                        did: currentAccount.did,
-                        handle: currentAccount.handle,
-                      })
-                    : '/'
-                }>
-                {({isActive}) => {
-                  const Icon = isActive ? UserCircleFilled : UserCircle
-                  return (
-                    <Icon
-                      aria-hidden={true}
-                      width={iconWidth}
-                      style={[
-                        styles.ctrlIcon,
-                        t.atoms.text,
-                        styles.profileIcon,
-                      ]}
-                    />
-                  )
-                }}
-              </NavItem>
-            </>
-          )}
-        </>
-      ) : (
-        <>
-          <View
-            style={{
-              width: '100%',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingTop: 14,
-              paddingBottom: 14,
-              paddingLeft: 14,
-              paddingRight: 6,
-              gap: 8,
-            }}>
-            <View style={{flexDirection: 'row', alignItems: 'center', gap: 12}}>
-              <Logo width={32} />
-              <View style={{paddingTop: 4}}>
-                <Logotype width={80} fill={t.atoms.text.color} />
+  return (
+    <>
+      <SwitchAccountDialog control={accountSwitchControl} />
+
+      <Animated.View
+        role="navigation"
+        style={[
+          styles.bottomBar,
+          styles.bottomBarWeb,
+          t.atoms.bg,
+          t.atoms.border_contrast_low,
+          footerMinimalShellTransform,
+        ]}>
+        {hasSession ? (
+          <>
+            <NavItem
+              routeName="Home"
+              href="/"
+              hasNew={hasHomeBadge && gate('remove_show_latest_button')}>
+              {({isActive}) => {
+                const Icon = isActive ? HomeFilled : Home
+                return (
+                  <Icon
+                    aria-hidden={true}
+                    width={iconWidth + 1}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.homeIcon]}
+                  />
+                )
+              }}
+            </NavItem>
+            <NavItem routeName="Search" href="/search">
+              {({isActive}) => {
+                const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass
+                return (
+                  <Icon
+                    aria-hidden={true}
+                    width={iconWidth + 2}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.searchIcon]}
+                  />
+                )
+              }}
+            </NavItem>
+
+            {hasSession && (
+              <>
+                <NavItem
+                  routeName="Messages"
+                  href="/messages"
+                  notificationCount={
+                    unreadMessageCount.count > 0
+                      ? unreadMessageCount.numUnread
+                      : undefined
+                  }>
+                  {({isActive}) => {
+                    const Icon = isActive ? MessageFilled : Message
+                    return (
+                      <Icon
+                        aria-hidden={true}
+                        width={iconWidth - 1}
+                        style={[
+                          styles.ctrlIcon,
+                          t.atoms.text,
+                          styles.messagesIcon,
+                        ]}
+                      />
+                    )
+                  }}
+                </NavItem>
+                <NavItem
+                  routeName="Notifications"
+                  href="/notifications"
+                  notificationCount={notificationCountStr}>
+                  {({isActive}) => {
+                    const Icon = isActive ? BellFilled : Bell
+                    return (
+                      <Icon
+                        aria-hidden={true}
+                        width={iconWidth}
+                        style={[styles.ctrlIcon, t.atoms.text, styles.bellIcon]}
+                      />
+                    )
+                  }}
+                </NavItem>
+                <NavItem
+                  routeName="Profile"
+                  href={
+                    currentAccount
+                      ? makeProfileLink({
+                          did: currentAccount.did,
+                          handle: currentAccount.handle,
+                        })
+                      : '/'
+                  }
+                  onLongPress={onLongPressProfile}>
+                  {({isActive}) => (
+                    <View style={styles.ctrlIconSizingWrapper}>
+                      <View
+                        style={[
+                          styles.ctrlIcon,
+                          styles.profileIcon,
+                          isActive && [
+                            styles.onProfile,
+                            {borderColor: t.atoms.text.color},
+                          ],
+                        ]}>
+                        <UserAvatar
+                          avatar={profile?.avatar}
+                          size={iconWidth - 3}
+                          type={
+                            profile?.associated?.labeler ? 'labeler' : 'user'
+                          }
+                        />
+                      </View>
+                    </View>
+                  )}
+                </NavItem>
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            <View
+              style={{
+                width: '100%',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingTop: 14,
+                paddingBottom: 14,
+                paddingLeft: 14,
+                paddingRight: 6,
+                gap: 8,
+              }}>
+              <View
+                style={{flexDirection: 'row', alignItems: 'center', gap: 12}}>
+                <Logo width={32} />
+                <View style={{paddingTop: 4}}>
+                  <Logotype width={80} fill={t.atoms.text.color} />
+                </View>
+              </View>
+
+              <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
+                <Button
+                  onPress={showCreateAccount}
+                  label={_(msg`Create account`)}
+                  size="small"
+                  variant="solid"
+                  color="primary">
+                  <ButtonText>
+                    <Trans>Create account</Trans>
+                  </ButtonText>
+                </Button>
+                <Button
+                  onPress={showSignIn}
+                  label={_(msg`Sign in`)}
+                  size="small"
+                  variant="solid"
+                  color="secondary">
+                  <ButtonText>
+                    <Trans>Sign in</Trans>
+                  </ButtonText>
+                </Button>
               </View>
             </View>
-
-            <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
-              <Button
-                onPress={showCreateAccount}
-                label={_(msg`Create account`)}
-                size="small"
-                variant="solid"
-                color="primary">
-                <ButtonText>
-                  <Trans>Create account</Trans>
-                </ButtonText>
-              </Button>
-              <Button
-                onPress={showSignIn}
-                label={_(msg`Sign in`)}
-                size="small"
-                variant="solid"
-                color="secondary">
-                <ButtonText>
-                  <Trans>Sign in</Trans>
-                </ButtonText>
-              </Button>
-            </View>
-          </View>
-        </>
-      )}
-    </Animated.View>
+          </>
+        )}
+      </Animated.View>
+    </>
   )
 }
 
@@ -231,7 +250,8 @@ const NavItem: React.FC<{
   routeName: string
   hasNew?: boolean
   notificationCount?: string
-}> = ({children, href, routeName, hasNew, notificationCount}) => {
+  onLongPress?: () => void
+}> = ({children, href, routeName, hasNew, notificationCount, onLongPress}) => {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const currentRoute = useNavigationState(state => {
@@ -264,7 +284,8 @@ const NavItem: React.FC<{
       navigationAction={isOnDifferentProfile ? 'push' : 'navigate'}
       aria-role="link"
       aria-label={routeName}
-      accessible={true}>
+      accessible={true}
+      onLongPress={onLongPress}>
       {children({isActive})}
       {notificationCount ? (
         <View

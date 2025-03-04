@@ -12,7 +12,6 @@ import {useHaptics} from '#/lib/haptics'
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {clamp} from '#/lib/numbers'
 import {getTabState, TabState} from '#/lib/routes/helpers'
 import {useGate} from '#/lib/statsig/statsig'
@@ -29,7 +28,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
@@ -59,7 +58,7 @@ type TabOptions =
 
 export function BottomBar({navigation}: BottomTabBarProps) {
   const {hasSession, currentAccount} = useSession()
-  const pal = usePalette('default')
+  const t = useTheme()
   const {_} = useLingui()
   const safeAreaInsets = useSafeAreaInsets()
   const {footerHeight} = useShellLayout()
@@ -131,8 +130,8 @@ export function BottomBar({navigation}: BottomTabBarProps) {
       <Animated.View
         style={[
           styles.bottomBar,
-          pal.view,
-          pal.border,
+          t.atoms.bg,
+          t.atoms.border_contrast_low,
           {paddingBottom: clamp(safeAreaInsets.bottom, 15, 60)},
           footerMinimalShellTransform,
         ]}
@@ -147,12 +146,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 isAtHome ? (
                   <HomeFilled
                     width={iconWidth + 1}
-                    style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.homeIcon]}
                   />
                 ) : (
                   <Home
                     width={iconWidth + 1}
-                    style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.homeIcon]}
                   />
                 )
               }
@@ -167,13 +166,13 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 isAtSearch ? (
                   <MagnifyingGlassFilled
                     width={iconWidth + 2}
-                    style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.searchIcon]}
                   />
                 ) : (
                   <MagnifyingGlass
                     testID="bottomBarSearchBtn"
                     width={iconWidth + 2}
-                    style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.searchIcon]}
                   />
                 )
               }
@@ -188,12 +187,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 isAtMessages ? (
                   <MessageFilled
                     width={iconWidth - 1}
-                    style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.feedsIcon]}
                   />
                 ) : (
                   <Message
                     width={iconWidth - 1}
-                    style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.feedsIcon]}
                   />
                 )
               }
@@ -219,12 +218,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 isAtNotifications ? (
                   <BellFilled
                     width={iconWidth}
-                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.bellIcon]}
                   />
                 ) : (
                   <Bell
                     width={iconWidth}
-                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.bellIcon]}
                   />
                 )
               }
@@ -248,35 +247,23 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               testID="bottomBarProfileBtn"
               icon={
                 <View style={styles.ctrlIconSizingWrapper}>
-                  {isAtMyProfile ? (
-                    <View
-                      style={[
-                        styles.ctrlIcon,
-                        pal.text,
-                        styles.profileIcon,
+                  <View
+                    style={[
+                      styles.ctrlIcon,
+                      styles.profileIcon,
+                      isAtMyProfile && [
                         styles.onProfile,
-                        {borderColor: pal.text.color},
-                      ]}>
-                      <UserAvatar
-                        avatar={profile?.avatar}
-                        size={iconWidth - 3}
-                        // See https://github.com/bluesky-social/social-app/pull/1801:
-                        usePlainRNImage={true}
-                        type={profile?.associated?.labeler ? 'labeler' : 'user'}
-                      />
-                    </View>
-                  ) : (
-                    <View
-                      style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
-                      <UserAvatar
-                        avatar={profile?.avatar}
-                        size={iconWidth - 3}
-                        // See https://github.com/bluesky-social/social-app/pull/1801:
-                        usePlainRNImage={true}
-                        type={profile?.associated?.labeler ? 'labeler' : 'user'}
-                      />
-                    </View>
-                  )}
+                        {borderColor: t.atoms.text.color},
+                      ],
+                    ]}>
+                    <UserAvatar
+                      avatar={profile?.avatar}
+                      size={iconWidth - 3}
+                      // See https://github.com/bluesky-social/social-app/pull/1801:
+                      usePlainRNImage={true}
+                      type={profile?.associated?.labeler ? 'labeler' : 'user'}
+                    />
+                  </View>
                 </View>
               }
               onPress={onPressProfile}
@@ -304,7 +291,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
                 <Logo width={28} />
                 <View style={{paddingTop: 4}}>
-                  <Logotype width={80} fill={pal.text.color} />
+                  <Logotype width={80} fill={t.atoms.text.color} />
                 </View>
               </View>
 
