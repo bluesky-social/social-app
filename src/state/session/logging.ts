@@ -3,6 +3,7 @@ import {sha256} from 'js-sha256'
 import {Statsig} from 'statsig-react-native-expo'
 
 import {IS_INTERNAL} from '#/lib/app-info'
+import {logger} from '#/logger'
 import {Schema} from '../persisted'
 import {Action, State} from './reducer'
 import {SessionAccount} from './types'
@@ -89,6 +90,9 @@ export function addSessionErrorLog(did: string, event: AtpSessionEvent) {
 }
 
 export function addSessionDebugLog(log: Log) {
+  const {type, ...rest} = log
+  logger.info(type, rest)
+
   try {
     if (!Statsig.initializeCalled() || !Statsig.getStableID()) {
       // Drop these logs for now.
