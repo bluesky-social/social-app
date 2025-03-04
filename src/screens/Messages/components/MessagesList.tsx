@@ -85,11 +85,13 @@ export function MessagesList({
   setHasScrolled,
   blocked,
   footer,
+  hasAcceptOverride,
 }: {
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
   blocked?: boolean
   footer?: React.ReactNode
+  hasAcceptOverride?: boolean
 }) {
   const convoState = useConvoActive()
   const agent = useAgent()
@@ -457,7 +459,8 @@ export function MessagesList({
                     />
                   </MessageInput>
                 </>
-              ) : convoState.convo.status === 'request' ? (
+              ) : convoState.convo.status === 'request' &&
+                !hasAcceptOverride ? (
                 <ChatStatusInfo convoState={convoState} />
               ) : (
                 <MessageInput

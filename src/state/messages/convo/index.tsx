@@ -60,8 +60,7 @@ export function useConvoActive() {
 export function ConvoProvider({
   children,
   convoId,
-  hasAccepted,
-}: Pick<ConvoParams, 'convoId' | 'hasAccepted'> & {children: React.ReactNode}) {
+}: Pick<ConvoParams, 'convoId'> & {children: React.ReactNode}) {
   const queryClient = useQueryClient()
   const agent = useAgent()
   const events = useMessagesEventBus()
@@ -74,7 +73,6 @@ export function ConvoProvider({
       agent,
       events,
       placeholderData: placeholder ? {convo: placeholder} : undefined,
-      hasAccepted,
     })
   })
   const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot)
