@@ -13,10 +13,10 @@ import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Qu
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 import {Text} from '#/components/Typography'
 import {
-  PostCtrlButton,
-  PostCtrlButtonIcon,
-  PostCtrlButtonText,
-} from './PostCtrlButton'
+  PostControlButton,
+  PostControlButtonIcon,
+  PostControlButtonText,
+} from './PostControlButton'
 
 interface Props {
   isReposted: boolean
@@ -42,7 +42,7 @@ let RepostButton = ({
 
   return (
     <>
-      <PostCtrlButton
+      <PostControlButton
         testID="repostBtn"
         active={isReposted}
         activeColor={t.palette.positive_600}
@@ -64,13 +64,13 @@ let RepostButton = ({
                 })})`,
               )
         }>
-        <PostCtrlButtonIcon icon={Repost} />
+        <PostControlButtonIcon icon={Repost} />
         {typeof repostCount !== 'undefined' && repostCount > 0 && (
-          <PostCtrlButtonText testID="repostCount">
+          <PostControlButtonText testID="repostCount">
             {formatCount(i18n, repostCount)}
-          </PostCtrlButtonText>
+          </PostControlButtonText>
         )}
-      </PostCtrlButton>
+      </PostControlButton>
       <Dialog.Outer
         control={dialogControl}
         nativeOptions={{preventExpansion: true}}>

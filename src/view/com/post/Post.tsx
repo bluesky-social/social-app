@@ -37,7 +37,7 @@ import {atoms as a} from '#/alf'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
-import {PostCtrls} from '#/components/post-ctrls/PostCtrls'
+import {PostControls} from '#/components/PostControls'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
@@ -255,7 +255,7 @@ function PostInner({
               />
             ) : null}
           </ContentHider>
-          <PostCtrls
+          <PostControls
             post={post}
             record={record}
             richText={richText}

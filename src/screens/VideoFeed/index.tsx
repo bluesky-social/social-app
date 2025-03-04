@@ -96,7 +96,7 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import * as Hider from '#/components/moderation/Hider'
-import {PostCtrls} from '#/components/post-ctrls/PostCtrls'
+import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'
@@ -861,7 +861,7 @@ function Overlay({
               )}
               {record && (
                 <View style={[{left: -5}]}>
-                  <PostCtrls
+                  <PostControls
                     richText={richText}
                     post={post}
                     record={record}

@@ -8,14 +8,14 @@ import {Button, type ButtonProps} from '#/components/Button'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text, type TextProps} from '#/components/Typography'
 
-const PostCtrlContext = React.createContext<{
+const PostControlContext = React.createContext<{
   big?: boolean
   active?: boolean
   color?: {color: string}
 }>({})
 
 // Base button style, which the the other ones extend
-export const PostCtrlButton = React.forwardRef<
+export const PostControlButton = React.forwardRef<
   View,
   ButtonProps & {
     active?: boolean
@@ -83,33 +83,33 @@ export const PostCtrlButton = React.forwardRef<
         {...props}>
         {typeof children === 'function' ? (
           args => (
-            <PostCtrlContext.Provider value={ctx}>
+            <PostControlContext.Provider value={ctx}>
               {children(args)}
-            </PostCtrlContext.Provider>
+            </PostControlContext.Provider>
           )
         ) : (
-          <PostCtrlContext.Provider value={ctx}>
+          <PostControlContext.Provider value={ctx}>
             {children}
-          </PostCtrlContext.Provider>
+          </PostControlContext.Provider>
         )}
       </Button>
     )
   },
 )
-PostCtrlButton.displayName = 'PostCtrlButton'
+PostControlButton.displayName = 'PostControlButton'
 
-export function PostCtrlButtonIcon({
+export function PostControlButtonIcon({
   icon: Comp,
 }: {
   icon: React.ComponentType<SVGIconProps>
 }) {
-  const {big, color} = useContext(PostCtrlContext)
+  const {big, color} = useContext(PostControlContext)
 
   return <Comp style={[color, a.pointer_events_none]} width={big ? 22 : 18} />
 }
 
-export function PostCtrlButtonText({style, ...props}: TextProps) {
-  const {big, active, color} = useContext(PostCtrlContext)
+export function PostControlButtonText({style, ...props}: TextProps) {
+  const {big, active, color} = useContext(PostControlContext)
 
   return (
     <Text

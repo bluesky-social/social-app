@@ -11,34 +11,30 @@ import type React from 'react'
 
 import {type Shadow} from '#/state/cache/post-shadow'
 import {EventStopper} from '#/view/com/util/EventStopper'
-import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
 import {useMenuControl} from '#/components/Menu'
 import * as Menu from '#/components/Menu'
-import {PostCtrlButton, PostCtrlButtonIcon} from './PostCtrlButton'
-import {PostMenuItems} from './PostMenuItems'
+import {PostControlButton, PostControlButtonIcon} from '../PostControlButton'
+import {ShareMenuItems} from './ShareMenuItems'
 
-let PostMenuButton = ({
+let ShareMenuButton = ({
   testID,
   post,
-  postFeedContext,
-  postReqId,
   big,
   record,
   richText,
   timestamp,
   threadgateRecord,
-  onShowLess,
+  onShare,
 }: {
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
-  postFeedContext: string | undefined
-  postReqId: string | undefined
   big?: boolean
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
   timestamp: string
   threadgateRecord?: AppBskyFeedThreadgate.Record
-  onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
+  onShare: () => void
 }): React.ReactNode => {
   const {_} = useLingui()
 
@@ -59,31 +55,29 @@ let PostMenuButton = ({
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root control={lazyMenuControl}>
-        <Menu.Trigger label={_(msg`Open post options menu`)}>
+        <Menu.Trigger label={_(msg`Open share menu`)}>
           {({props}) => {
             return (
-              <PostCtrlButton
-                testID="postDropdownBtn"
+              <PostControlButton
+                testID="postShareBtn"
                 big={big}
                 label={props.accessibilityLabel}
                 {...props}>
-                <PostCtrlButtonIcon icon={DotsHorizontal} />
-              </PostCtrlButton>
+                <PostControlButtonIcon icon={ArrowOutOfBoxIcon} />
+              </PostControlButton>
             )
           }}
         </Menu.Trigger>
         {hasBeenOpen && (
           // Lazily initialized. Once mounted, they stay mounted.
-          <PostMenuItems
+          <ShareMenuItems
             testID={testID}
             post={post}
-            postFeedContext={postFeedContext}
-            postReqId={postReqId}
             record={record}
             richText={richText}
             timestamp={timestamp}
             threadgateRecord={threadgateRecord}
-            onShowLess={onShowLess}
+            onShare={onShare}
           />
         )}
       </Menu.Root>
@@ -91,5 +85,5 @@ let PostMenuButton = ({
   )
 }
 
-PostMenuButton = memo(PostMenuButton)
-export {PostMenuButton}
+ShareMenuButton = memo(ShareMenuButton)
+export {ShareMenuButton}

@@ -34,15 +34,15 @@ import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
 import {
-  PostCtrlButton,
-  PostCtrlButtonIcon,
-  PostCtrlButtonText,
-} from './PostCtrlButton'
-import {PostMenuButton} from './PostMenuButton'
+  PostControlButton,
+  PostControlButtonIcon,
+  PostControlButtonText,
+} from './PostControlButton'
+import {PostMenuButton} from './PostMenu'
 import {RepostButton} from './RepostButton'
-import {ShareMenuButton} from './ShareMenuButton'
+import {ShareMenuButton} from './ShareMenu'
 
-let PostCtrls = ({
+let PostControls = ({
   big,
   post,
   record,
@@ -194,7 +194,7 @@ let PostCtrls = ({
           big ? a.align_center : [a.flex_1, a.align_start, {marginLeft: -6}],
           replyDisabled ? {opacity: 0.5} : undefined,
         ]}>
-        <PostCtrlButton
+        <PostControlButton
           testID="replyBtn"
           onPress={
             !replyDisabled ? () => requireAuth(() => onPressReply()) : undefined
@@ -206,13 +206,13 @@ let PostCtrls = ({
             })})`,
           )}
           big={big}>
-          <PostCtrlButtonIcon icon={Bubble} />
+          <PostControlButtonIcon icon={Bubble} />
           {typeof post.replyCount !== 'undefined' && post.replyCount > 0 && (
-            <PostCtrlButtonText>
+            <PostControlButtonText>
               {formatCount(i18n, post.replyCount)}
-            </PostCtrlButtonText>
+            </PostControlButtonText>
           )}
-        </PostCtrlButton>
+        </PostControlButton>
       </View>
       <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
         <RepostButton
@@ -225,7 +225,7 @@ let PostCtrls = ({
         />
       </View>
       <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
-        <PostCtrlButton
+        <PostControlButton
           testID="likeBtn"
           big={big}
           onPress={() => requireAuth(() => onPressToggleLike())}
@@ -255,7 +255,7 @@ let PostCtrls = ({
             isLiked={Boolean(post.viewer?.like)}
             hasBeenToggled={hasLikeIconBeenToggled}
           />
-        </PostCtrlButton>
+        </PostControlButton>
       </View>
       <View
         style={
@@ -314,5 +314,5 @@ let PostCtrls = ({
     </View>
   )
 }
-PostCtrls = memo(PostCtrls)
-export {PostCtrls}
+PostControls = memo(PostControls)
+export {PostControls}

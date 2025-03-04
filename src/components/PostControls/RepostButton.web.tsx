@@ -10,10 +10,10 @@ import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Qu
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 import * as Menu from '#/components/Menu'
 import {
-  PostCtrlButton,
-  PostCtrlButtonIcon,
-  PostCtrlButtonText,
-} from './PostCtrlButton'
+  PostControlButton,
+  PostControlButtonIcon,
+  PostControlButtonText,
+} from './PostControlButton'
 
 interface Props {
   isReposted: boolean
@@ -43,20 +43,20 @@ export const RepostButton = ({
         <Menu.Trigger label={_(msg`Repost or quote post`)}>
           {({props}) => {
             return (
-              <PostCtrlButton
+              <PostControlButton
                 testID="repostBtn"
                 active={isReposted}
                 activeColor={t.palette.positive_600}
                 label={props.accessibilityLabel}
                 big={big}
                 {...props}>
-                <PostCtrlButtonIcon icon={Repost} />
+                <PostControlButtonIcon icon={Repost} />
                 {typeof repostCount !== 'undefined' && repostCount > 0 && (
-                  <PostCtrlButtonText testID="repostCount">
+                  <PostControlButtonText testID="repostCount">
                     {formatCount(i18n, repostCount)}
-                  </PostCtrlButtonText>
+                  </PostControlButtonText>
                 )}
-              </PostCtrlButton>
+              </PostControlButton>
             )
           }}
         </Menu.Trigger>
@@ -90,18 +90,18 @@ export const RepostButton = ({
       </Menu.Root>
     </EventStopper>
   ) : (
-    <PostCtrlButton
+    <PostControlButton
       onPress={() => requireAuth(() => {})}
       active={isReposted}
       activeColor={t.palette.positive_600}
       label={_(msg`Repost or quote post`)}
       big={big}>
-      <PostCtrlButtonIcon icon={Repost} />
+      <PostControlButtonIcon icon={Repost} />
       {typeof repostCount !== 'undefined' && repostCount > 0 && (
-        <PostCtrlButtonText testID="repostCount">
+        <PostControlButtonText testID="repostCount">
           {formatCount(i18n, repostCount)}
-        </PostCtrlButtonText>
+        </PostControlButtonText>
       )}
-    </PostCtrlButton>
+    </PostControlButton>
   )
 }
