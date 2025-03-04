@@ -36,8 +36,8 @@ module.exports = function (config) {
   const UPDATES_ENABLED = !!UPDATES_CHANNEL
 
   const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
-  const SENTRY_DIST = `${PLATFORM}.${VERSION}.${IS_TESTFLIGHT ? 'tf' : ''}${
-    IS_DEV ? 'dev' : ''
+  const SENTRY_DIST = `${PLATFORM}.${VERSION}${IS_TESTFLIGHT ? '.tf' : ''}${
+    IS_DEV ? '.dev' : ''
   }`
 
   return {
