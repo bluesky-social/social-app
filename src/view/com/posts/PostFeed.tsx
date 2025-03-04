@@ -16,7 +16,6 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
@@ -300,9 +299,9 @@ let PostFeed = ({
 
   const followProgressGuide = useProgressGuide('follow-10')
   const followAndLikeProgressGuide = useProgressGuide('like-10-and-follow-7')
-  const {isDesktop} = useWebMediaQueries()
+
   const showProgressIntersitial =
-    (followProgressGuide || followAndLikeProgressGuide) && !isDesktop
+    (followProgressGuide || followAndLikeProgressGuide) && !rightNavVisible
 
   const {trendingDisabled, trendingVideoDisabled} = useTrendingSettings()
 

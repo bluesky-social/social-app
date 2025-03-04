@@ -7,7 +7,12 @@ import {
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useEmail} from '#/lib/hooks/useEmail'
@@ -172,6 +177,8 @@ function InnerReady({
   const {_} = useLingui()
   const convoState = useConvo()
   const navigation = useNavigation<NavigationProp>()
+  const {params} =
+    useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>()
   const verifyEmailControl = useDialogControl()
   const {needsEmailVerification} = useEmail()
 
@@ -189,6 +196,7 @@ function InnerReady({
           hasScrolled={hasScrolled}
           setHasScrolled={setHasScrolled}
           blocked={moderation?.blocked}
+          hasAcceptOverride={!!params.accept}
           footer={
             <MessagesListBlockedFooter
               recipient={recipient}

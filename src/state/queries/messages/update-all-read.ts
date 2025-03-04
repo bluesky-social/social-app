@@ -4,20 +4,17 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useAgent} from '#/state/session'
-import {RQKEY_ROOT as CONVO_LIST_KEY} from './list-conversations'
+import {RQKEY as CONVO_LIST_KEY} from './list-conversations'
 
-export const RQKEY_ROOT = 'leave-convo'
-export function RQKEY(convoId: string | undefined) {
-  return [RQKEY_ROOT, convoId]
-}
-
-export function useLeaveConvo(
-  convoId: string | undefined,
+export function useUpdateAllRead(
+  status: 'accepted' | 'request',
   {
+    onSuccess,
     onMutate,
     onError,
   }: {
     onMutate?: () => void
+    onSuccess?: () => void
     onError?: (error: Error) => void
   },
 ) {
@@ -25,22 +22,18 @@ export function useLeaveConvo(
   const agent = useAgent()
 
   return useMutation({
-    mutationKey: RQKEY(convoId),
     mutationFn: async () => {
-      if (!convoId) throw new Error('No convoId provided')
-
-      const {data} = await agent.chat.bsky.convo.leaveConvo(
-        {convoId},
+      const {data} = await agent.chat.bsky.convo.updateAllRead(
+        {status},
         {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
       )
 
       return data
     },
-    onMutate: async () => {
-      await queryClient.cancelQueries({queryKey: [CONVO_LIST_KEY]})
+    onMutate: () => {
       let prevPages: ChatBskyConvoListConvos.OutputSchema[] = []
       queryClient.setQueryData(
-        [CONVO_LIST_KEY],
+        CONVO_LIST_KEY(status),
         (old?: {
           pageParams: Array<string | undefined>
           pages: Array<ChatBskyConvoListConvos.OutputSchema>
@@ -52,7 +45,31 @@ export function useLeaveConvo(
             pages: old.pages.map(page => {
               return {
                 ...page,
-                convos: page.convos.filter(convo => convo.id !== convoId),
+                convos: page.convos.map(convo => {
+                  return {
+                    ...convo,
+                    unreadCount: 0,
+                  }
+                }),
+              }
+            }),
+          }
+        },
+      )
+      // remove unread convos from the badge query
+      queryClient.setQueryData(
+        CONVO_LIST_KEY('all', 'unread'),
+        (old?: {
+          pageParams: Array<string | undefined>
+          pages: Array<ChatBskyConvoListConvos.OutputSchema>
+        }) => {
+          if (!old) return old
+          return {
+            ...old,
+            pages: old.pages.map(page => {
+              return {
+                ...page,
+                convos: page.convos.filter(convo => convo.status !== status),
               }
             }),
           }
@@ -61,10 +78,14 @@ export function useLeaveConvo(
       onMutate?.()
       return {prevPages}
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY(status)})
+      onSuccess?.()
+    },
     onError: (error, _, context) => {
       logger.error(error)
       queryClient.setQueryData(
-        [CONVO_LIST_KEY],
+        CONVO_LIST_KEY(status),
         (old?: {
           pageParams: Array<string | undefined>
           pages: Array<ChatBskyConvoListConvos.OutputSchema>
@@ -76,10 +97,9 @@ export function useLeaveConvo(
           }
         },
       )
+      queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY(status)})
+      queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY('all', 'unread')})
       onError?.(error)
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
     },
   })
 }

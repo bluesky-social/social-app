@@ -13,10 +13,12 @@ export function LeaveConvoPrompt({
   control,
   convoId,
   currentScreen,
+  hasMessages = true,
 }: {
   control: DialogOuterProps['control']
   convoId: string
   currentScreen: 'list' | 'conversation'
+  hasMessages?: boolean
 }) {
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
@@ -39,7 +41,9 @@ export function LeaveConvoPrompt({
       control={control}
       title={_(msg`Leave conversation`)}
       description={_(
-        msg`Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant.`,
+        hasMessages
+          ? msg`Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant.`
+          : msg`Are you sure you want to leave this conversation?`,
       )}
       confirmButtonCta={_(msg`Leave`)}
       confirmButtonColor="negative"

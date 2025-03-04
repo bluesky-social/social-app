@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
-import {ChatBskyConvoDefs} from '@atproto/api'
+import {ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
@@ -17,6 +17,7 @@ import {listenSoftReset} from '#/state/events'
 import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
+import {useSession} from '#/state/session'
 import {List, ListRef} from '#/view/com/util/List'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -34,20 +35,37 @@ import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {ChatListItem} from './components/ChatListItem'
+import {InboxPreview} from './components/InboxPreview'
+
+type ListItem =
+  | {
+      type: 'INBOX'
+      count: number
+      profiles: ChatBskyActorDefs.ProfileViewBasic[]
+    }
+  | {
+      type: 'CONVERSATION'
+      conversation: ChatBskyConvoDefs.ConvoView
+    }
+
+function renderItem({item}: {item: ListItem}) {
+  switch (item.type) {
+    case 'INBOX':
+      return <InboxPreview count={item.count} profiles={item.profiles} />
+    case 'CONVERSATION':
+      return <ChatListItem convo={item.conversation} />
+  }
+}
+
+function keyExtractor(item: ListItem) {
+  return item.type === 'INBOX' ? 'INBOX' : item.conversation.id
+}
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
-
-function renderItem({item}: {item: ChatBskyConvoDefs.ConvoView}) {
-  return <ChatListItem convo={item} />
-}
-
-function keyExtractor(item: ChatBskyConvoDefs.ConvoView) {
-  return item.id
-}
-
 export function MessagesScreen({navigation, route}: Props) {
   const {_} = useLingui()
   const t = useTheme()
+  const {currentAccount} = useSession()
   const newChatControl = useDialogControl()
   const scrollElRef: ListRef = useAnimatedRef()
   const pushToConversation = route.params?.pushToConversation
@@ -93,26 +111,53 @@ export function MessagesScreen({navigation, route}: Props) {
     isError,
     error,
     refetch,
-  } = useListConvosQuery()
+  } = useListConvosQuery({status: 'accepted'})
+
+  const {data: inboxData, refetch: refetchInbox} = useListConvosQuery({
+    status: 'request',
+  })
 
   useRefreshOnFocus(refetch)
+  useRefreshOnFocus(refetchInbox)
+
+  const inboxPreviewConvos = useMemo(() => {
+    const inbox =
+      inboxData?.pages
+        .flatMap(page => page.convos)
+        .filter(convo => !convo.muted && convo.unreadCount > 0) ?? []
+
+    return inbox
+      .map(x => x.members.find(y => y.did !== currentAccount?.did))
+      .filter(x => !!x)
+  }, [inboxData, currentAccount?.did])
 
   const conversations = useMemo(() => {
     if (data?.pages) {
-      return data.pages.flatMap(page => page.convos)
+      const flattendConvos = data.pages.flatMap(page => page.convos)
+
+      return [
+        {
+          type: 'INBOX',
+          count: inboxPreviewConvos.length,
+          profiles: inboxPreviewConvos.slice(0, 3),
+        },
+        ...flattendConvos.map(
+          convo => ({type: 'CONVERSATION', conversation: convo} as const),
+        ),
+      ] satisfies ListItem[]
     }
     return []
-  }, [data])
+  }, [data, inboxPreviewConvos])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
     try {
-      await refetch()
+      await Promise.all([refetch(), refetchInbox()])
     } catch (err) {
       logger.error('Failed to refresh conversations', {message: err})
     }
     setIsPTRing(false)
-  }, [refetch, setIsPTRing])
+  }, [refetch, refetchInbox, setIsPTRing])
 
   const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
@@ -149,7 +194,8 @@ export function MessagesScreen({navigation, route}: Props) {
     return listenSoftReset(onSoftReset)
   }, [onSoftReset, isScreenFocused])
 
-  if (conversations.length < 1) {
+  // Will always have 1 item - the inbox button
+  if (conversations.length < 2) {
     return (
       <Layout.Screen>
         <Header newChatControl={newChatControl} />
@@ -165,7 +211,7 @@ export function MessagesScreen({navigation, route}: Props) {
                   <View style={[a.pt_3xl, a.align_center]}>
                     <CircleInfo
                       width={48}
-                      fill={t.atoms.border_contrast_low.borderColor}
+                      fill={t.atoms.text_contrast_low.color}
                     />
                     <Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_bold]}>
                       <Trans>Whoops!</Trans>
@@ -179,13 +225,14 @@ export function MessagesScreen({navigation, route}: Props) {
                         t.atoms.text_contrast_medium,
                         {maxWidth: 360},
                       ]}>
-                      {cleanError(error)}
+                      {cleanError(error) ||
+                        _(msg`Failed to load conversations`)}
                     </Text>
 
                     <Button
                       label={_(msg`Reload conversations`)}
-                      size="large"
-                      color="secondary"
+                      size="small"
+                      color="secondary_inverted"
                       variant="solid"
                       onPress={() => refetch()}>
                       <ButtonText>
@@ -197,6 +244,10 @@ export function MessagesScreen({navigation, route}: Props) {
                 </>
               ) : (
                 <>
+                  <InboxPreview
+                    count={inboxPreviewConvos.length}
+                    profiles={inboxPreviewConvos}
+                  />
                   <View style={[a.pt_3xl, a.align_center]}>
                     <Message width={48} fill={t.palette.primary_500} />
                     <Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_bold]}>
@@ -245,8 +296,6 @@ export function MessagesScreen({navigation, route}: Props) {
             onRetry={fetchNextPage}
             style={{borderColor: 'transparent'}}
             hasNextPage={hasNextPage}
-            showEndMessage={true}
-            endMessageText={_(msg`No more conversations to show`)}
           />
         }
         onEndReachedThreshold={isNative ? 1.5 : 0}
@@ -282,7 +331,7 @@ function Header({newChatControl}: {newChatControl: DialogControlProps}) {
         <>
           <Layout.Header.Content>
             <Layout.Header.TitleText>
-              <Trans>Messages</Trans>
+              <Trans>Chats</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
 
@@ -306,7 +355,7 @@ function Header({newChatControl}: {newChatControl: DialogControlProps}) {
           <Layout.Header.MenuButton />
           <Layout.Header.Content>
             <Layout.Header.TitleText>
-              <Trans>Messages</Trans>
+              <Trans>Chats</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
           <Layout.Header.Slot>{settingsLink}</Layout.Header.Slot>
