@@ -144,7 +144,7 @@ export function CountWheel({
             <Text
               testID="likeCount"
               style={[
-                big ? a.text_md : {fontSize: 15},
+                big ? a.text_md : a.text_sm,
                 a.user_select_none,
                 isLiked
                   ? [a.font_bold, s.likeColor]
@@ -162,7 +162,7 @@ export function CountWheel({
               aria-disabled={true}>
               <Text
                 style={[
-                  big ? a.text_md : {fontSize: 15},
+                  big ? a.text_md : a.text_sm,
                   a.user_select_none,
                   isLiked
                     ? [a.font_bold, s.likeColor]
