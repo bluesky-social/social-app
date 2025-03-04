@@ -416,7 +416,7 @@ module.exports = function (config) {
             file: './postHooks/uploadSentrySourcemapsPostHook',
             config: {
               organization: 'blueskyweb',
-              project: 'react-native',
+              project: 'app',
               release: VERSION,
               dist: SENTRY_DIST,
             },

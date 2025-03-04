@@ -12,6 +12,7 @@ import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
 import {AllNavigatorParams} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
+import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
@@ -113,6 +114,11 @@ export function FeedPage({
 
   const onPressCompose = React.useCallback(() => {
     openComposer({})
+    try {
+      throw new Error('taco')
+    } catch (e) {
+      logger.error(e)
+    }
   }, [openComposer])
 
   const onPressLoadLatest = React.useCallback(() => {

@@ -1,3 +1,4 @@
+require('dotenv').config()
 const path = require('path')
 const fs = require('fs')
 const exec = require('child_process').execSync
@@ -50,6 +51,12 @@ copyFiles('web-build/static/js', 'bskyweb/static/js')
 copyFiles('web-build/static/css', 'bskyweb/static/css')
 copyFiles('web-build/static/media', 'bskyweb/static/media')
 
-exec(
-  `yarn sentry-cli sourcemaps inject bskyweb/static/js && yarn sentry-cli sourcemaps upload bskyweb/static/js --org blueskyweb --project app --release ${version} --dist web.${version} --auth-token ${process.env.SENTRY_AUTH_TOKEN}`,
-)
+try {
+  console.log('Uploading sourcemaps to Sentry...')
+  exec(
+    `yarn sentry-cli sourcemaps inject bskyweb/static/js && yarn sentry-cli sourcemaps upload bskyweb/static/js --org blueskyweb --project app --release ${version} --dist web.${version} --auth-token "${process.env.SENTRY_AUTH_TOKEN}"`,
+  )
+  console.log('Sourcemaps uploaded to Sentry.')
+} catch (e) {
+  console.error('Error uploading sourcemaps to Sentry:', e)
+}
