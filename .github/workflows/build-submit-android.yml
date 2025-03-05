@@ -47,6 +47,9 @@ jobs:
       - name: Authenticate Expo
         run: eas whoami || eas login --non-interactive --token ${{ secrets.EXPO_TOKEN }}
 
+      - name: Check Project Info
+        run: eas project:info
+
       - name: ⛏️ Setup EAS local builds
         run: yarn global add eas-cli-local-build-plugin
 
