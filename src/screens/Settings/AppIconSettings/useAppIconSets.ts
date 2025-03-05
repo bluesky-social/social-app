@@ -11,7 +11,7 @@ export function useAppIconSets() {
     const defaults = [
       {
         id: 'default_light',
-        name: _(msg`Light`),
+        name: _(msg({ context: 'Name of app icon variant', message: 'Light' })),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_default_light.png`)
         },
