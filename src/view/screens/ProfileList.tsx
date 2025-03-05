@@ -82,8 +82,6 @@ import {
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 
-const SECTION_TITLES_CURATE = ['Posts', 'People']
-
 interface SectionRef {
   scrollToTop: () => void
 }
@@ -214,7 +212,7 @@ function ProfileListScreenLoaded({
         <Hider.Content>
           <View style={s.hContentRegion}>
             <PagerWithHeader
-              items={SECTION_TITLES_CURATE}
+              items={[_(msg`Posts`), _(msg`People`)]}
               isHeaderReady={true}
               renderHeader={renderHeader}
               onCurrentPageSelected={onCurrentPageSelected}>
