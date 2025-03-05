@@ -46,10 +46,6 @@ module.exports = async function (env, argv) {
       }),
     )
   }
-  console.log({
-    sentry: process.env.SENTRY_AUTH_TOKEN,
-    bundleIdentifier: process.env.SENTRY_DIST,
-  })
   if (process.env.SENTRY_AUTH_TOKEN) {
     config.plugins.push(
       sentryWebpackPlugin({
