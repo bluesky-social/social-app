@@ -1,4 +1,5 @@
 import {useMemo} from 'react'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {AppIconSet} from '#/screens/Settings/AppIconSettings/types'
@@ -10,7 +11,7 @@ export function useAppIconSets() {
     const defaults = [
       {
         id: 'default_light',
-        name: _('Light'),
+        name: _(msg`Light`),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_default_light.png`)
         },
@@ -20,7 +21,7 @@ export function useAppIconSets() {
       },
       {
         id: 'default_dark',
-        name: _('Dark'),
+        name: _(msg`Dark`),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_default_dark.png`)
         },
@@ -36,7 +37,7 @@ export function useAppIconSets() {
     const core = [
       {
         id: 'core_aurora',
-        name: _('Aurora'),
+        name: _(msg`Aurora`),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_core_aurora.png`)
         },
@@ -46,7 +47,7 @@ export function useAppIconSets() {
       },
       // {
       //   id: 'core_bonfire',
-      //   name: _('Bonfire'),
+      //   name: _(msg`Bonfire`),
       //   iosImage: () => {
       //     return require(`../../../../assets/app-icons/ios_icon_core_bonfire.png`)
       //   },
@@ -56,7 +57,7 @@ export function useAppIconSets() {
       // },
       {
         id: 'core_sunrise',
-        name: _('Sunrise'),
+        name: _(msg`Sunrise`),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_core_sunrise.png`)
         },
@@ -66,7 +67,7 @@ export function useAppIconSets() {
       },
       {
         id: 'core_sunset',
-        name: _('Sunset'),
+        name: _(msg`Sunset`),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_core_sunset.png`)
         },
@@ -76,7 +77,7 @@ export function useAppIconSets() {
       },
       {
         id: 'core_midnight',
-        name: _('Midnight'),
+        name: _(msg`Midnight`),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_core_midnight.png`)
         },
@@ -86,7 +87,7 @@ export function useAppIconSets() {
       },
       {
         id: 'core_flat_blue',
-        name: _('Flat Blue'),
+        name: _(msg`Flat Blue`),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_core_flat_blue.png`)
         },
@@ -96,7 +97,7 @@ export function useAppIconSets() {
       },
       {
         id: 'core_flat_white',
-        name: _('Flat White'),
+        name: _(msg`Flat White`),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_core_flat_white.png`)
         },
@@ -106,7 +107,7 @@ export function useAppIconSets() {
       },
       {
         id: 'core_flat_black',
-        name: _('Flat Black'),
+        name: _(msg`Flat Black`),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_core_flat_black.png`)
         },
@@ -116,7 +117,7 @@ export function useAppIconSets() {
       },
       {
         id: 'core_classic',
-        name: _('Bluesky Classic™'),
+        name: _(msg`Bluesky Classic™`),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_core_classic.png`)
         },

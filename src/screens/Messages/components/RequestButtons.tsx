@@ -49,18 +49,18 @@ export function RejectMenu({
       }
     },
     onError: () => {
-      Toast.show(_('Failed to delete chat'), 'xmark')
+      Toast.show(_(msg`Failed to delete chat`), 'xmark')
     },
   })
   const [queueBlock] = useProfileBlockMutationQueue(shadowedProfile)
 
   const onPressDelete = useCallback(() => {
-    Toast.show(_('Chat deleted'), 'check')
+    Toast.show(_(msg`Chat deleted`), 'check')
     leaveConvo()
   }, [leaveConvo, _])
 
   const onPressBlock = useCallback(() => {
-    Toast.show(_('Account blocked'), 'check')
+    Toast.show(_(msg`Account blocked`), 'check')
     // block and also delete convo
     queueBlock()
     leaveConvo()
@@ -179,7 +179,7 @@ export function AcceptChatButton({
       // no difference if the request failed - when they send a message, the convo will be accepted
       // automatically. The only difference is that when they back out of the convo (without sending a message), the conversation will be rejected.
       // the list will still have this chat in it -sfn
-      Toast.show(_('Failed to accept chat'), 'xmark')
+      Toast.show(_(msg`Failed to accept chat`), 'xmark')
     },
   })
 
@@ -230,12 +230,12 @@ export function DeleteChatButton({
       }
     },
     onError: () => {
-      Toast.show(_('Failed to delete chat'), 'xmark')
+      Toast.show(_(msg`Failed to delete chat`), 'xmark')
     },
   })
 
   const onPressDelete = useCallback(() => {
-    Toast.show(_('Chat deleted'), 'check')
+    Toast.show(_(msg`Chat deleted`), 'check')
     leaveConvo()
   }, [leaveConvo, _])
 

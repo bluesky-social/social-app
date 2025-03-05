@@ -50,7 +50,8 @@ export function StepDetails() {
               value={state.name}
               onChangeText={text => dispatch({type: 'SetName', name: text})}
             />
-            <TextField.SuffixText label={_(`${state.name?.length} out of 50`)}>
+            <TextField.SuffixText
+              label={_(msg`${state.name?.length} out of 50`)}>
               <Text style={[t.atoms.text_contrast_medium]}>
                 {state.name?.length ?? 0}/50
               </Text>
