@@ -1,5 +1,5 @@
-import {memo, useEffect, useMemo, useRef, useState} from 'react'
-import {TextInput, View} from 'react-native'
+import {memo, useEffect, useMemo, useState} from 'react'
+import {View} from 'react-native'
 import {AppBskyActorDefs, AppBskyFeedPost, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -51,7 +51,6 @@ function EmbedDialogInner({
 }: Omit<EmbedDialogProps, 'control'>) {
   const t = useTheme()
   const {_, i18n} = useLingui()
-  const ref = useRef<TextInput>(null)
   const [copied, setCopied] = useState(false)
   const [showCustomisation, setShowCustomisation] = useState(false)
   const [colorMode, setColorMode] = useState<ColorModeValues>('system')
@@ -192,8 +191,6 @@ function EmbedDialogInner({
             variant="solid"
             size="large"
             onPress={() => {
-              ref.current?.focus()
-              ref.current?.setSelection(0, snippet.length)
               navigator.clipboard.writeText(snippet)
               setCopied(true)
             }}>
