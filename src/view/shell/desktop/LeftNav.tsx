@@ -18,7 +18,6 @@ import {CommonNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
-import {logger} from '#/logger'
 import {emitSoftReset} from '#/state/events'
 import {useHomeBadge} from '#/state/home-badge'
 import {useFetchHandle} from '#/state/queries/handle'
@@ -486,14 +485,8 @@ function ComposeBtn() {
     return undefined
   }
 
-  const onPressCompose = async () => {
+  const onPressCompose = async () =>
     openComposer({mention: await getProfileHandle()})
-    try {
-      throw new Error('taco')
-    } catch (e) {
-      logger.error(e)
-    }
-  }
 
   if (leftNavMinimal) {
     return null
