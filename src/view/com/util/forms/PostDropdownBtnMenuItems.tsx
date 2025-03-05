@@ -274,7 +274,7 @@ let PostDropdownMenuItems = ({
       item: postUri,
       feedContext: postFeedContext,
     })
-    Toast.show(_(msg`Feedback sent!`))
+    Toast.show(_(msg({message: 'Feedback sent!', context: 'toast'})))
   }, [feedFeedback, postUri, postFeedContext, _])
 
   const onPressShowLess = React.useCallback(() => {
@@ -283,7 +283,7 @@ let PostDropdownMenuItems = ({
       item: postUri,
       feedContext: postFeedContext,
     })
-    Toast.show(_(msg`Feedback sent!`))
+    Toast.show(_(msg({message: 'Feedback sent!', context: 'toast'})))
   }, [feedFeedback, postUri, postFeedContext, _])
 
   const onSelectChatToShareTo = React.useCallback(
