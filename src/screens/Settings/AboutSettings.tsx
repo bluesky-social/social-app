@@ -17,6 +17,7 @@ import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Glo
 import {Newspaper_Stroke2_Corner2_Rounded as NewspaperIcon} from '#/components/icons/Newspaper'
 import {Wrench_Stroke2_Corner2_Rounded as WrenchIcon} from '#/components/icons/Wrench'
 import * as Layout from '#/components/Layout'
+import {OTAInfo} from './components/OTAInfo'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AboutSettings'>
 export function AboutSettingsScreen({}: Props) {
@@ -92,6 +93,7 @@ export function AboutSettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <SettingsList.BadgeText>{bundleInfo}</SettingsList.BadgeText>
           </SettingsList.PressableItem>
+          {devModeEnabled && <OTAInfo />}
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>
