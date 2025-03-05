@@ -20,7 +20,8 @@ import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useSession} from '#/state/session'
 import {List, ListRef} from '#/view/com/util/List'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps, useDialogControl} from '#/components/Dialog'
 import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
@@ -33,7 +34,6 @@ import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
-import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {ChatListItem} from './components/ChatListItem'
 import {InboxPreview} from './components/InboxPreview'
@@ -211,10 +211,12 @@ export function MessagesScreen({navigation, route}: Props) {
       <Layout.Screen>
         <Header newChatControl={newChatControl} />
         <Layout.Center>
+          <InboxPreview
+            count={inboxPreviewConvos.length}
+            profiles={inboxPreviewConvos}
+          />
           {isLoading ? (
-            <View style={[a.align_center, a.pt_3xl, web({paddingTop: '10vh'})]}>
-              <Loader size="xl" />
-            </View>
+            <ChatListLoadingPlaceholder />
           ) : (
             <>
               {isError ? (
@@ -255,10 +257,6 @@ export function MessagesScreen({navigation, route}: Props) {
                 </>
               ) : (
                 <>
-                  <InboxPreview
-                    count={inboxPreviewConvos.length}
-                    profiles={inboxPreviewConvos}
-                  />
                   <View style={[a.pt_3xl, a.align_center]}>
                     <Message width={48} fill={t.palette.primary_500} />
                     <Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_bold]}>

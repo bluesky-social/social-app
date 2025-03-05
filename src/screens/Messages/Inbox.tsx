@@ -23,8 +23,9 @@ import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useUpdateAllRead} from '#/state/queries/messages/update-all-read'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {List} from '#/view/com/util/List'
+import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
@@ -34,7 +35,6 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components
 import {Message_Stroke2_Corner0_Rounded as MessageIcon} from '#/components/icons/Message'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
-import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {RequestListItem} from './components/RequestListItem'
 
@@ -157,9 +157,7 @@ function RequestList({
     return (
       <Layout.Center>
         {isLoading ? (
-          <View style={[a.align_center, a.pt_3xl, web({paddingTop: '10vh'})]}>
-            <Loader size="xl" />
-          </View>
+          <ChatListLoadingPlaceholder />
         ) : (
           <>
             {isError ? (
