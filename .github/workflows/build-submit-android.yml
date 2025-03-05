@@ -70,7 +70,7 @@ jobs:
       - name: Set build-time env vars
         id: vars
         run: |
-          echo "SENTRY_DIST=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "SENTRY_DIST=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
           echo "SENTRY_RELEASE=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
 
       - name: 🏗️ EAS Build
