@@ -65,12 +65,16 @@ jobs:
           echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
           echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
           echo "BITDRIFT_API_KEY=${{ secrets.BITDRIFT_API_KEY }}" >> .env
-          echo "SENTRY_DIST=$(git rev-parse --short HEAD)" >> .env
-          echo "SENTRY_RELEASE=$(jq -r '.version' package.json)" >> .env
           echo "$json" > google-services.json
 
+      - name: Set build-time env vars
+        id: vars
+        run: |
+          echo "SENTRY_DIST=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "SENTRY_RELEASE=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
+
       - name: 🏗️ EAS Build
-        run: yarn use-build-number-with-bump eas build -p android --profile ${{ inputs.profile || 'testflight-android' }} --local --output build.aab --non-interactive
+        run: SENTRY_DIST=${{ steps.vars.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.vars.outputs.SENTRY_RELEASE }} yarn use-build-number-with-bump eas build -p android --profile ${{ inputs.profile || 'testflight-android' }} --local --output build.aab --non-interactive
 
       - name: ✍️ Rename Testflight bundle
         if: ${{ inputs.profile != 'production' }}
