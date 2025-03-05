@@ -14,6 +14,7 @@ import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
 import {emitNetworkConfirmed, emitNetworkLost} from '../events'
+import {addSessionErrorLog} from './logging'
 import {
   configureModerationForAccount,
   configureModerationForGuest,
@@ -34,8 +35,6 @@ export async function createAgentAndResume(
     event: AtpSessionEvent,
   ) => void,
 ) {
-  logger.info(`session: createAgentAndResume`)
-
   const agent = new BskyAppAgent({service: storedAccount.service})
   if (storedAccount.pdsUrl) {
     agent.sessionManager.pdsUrl = new URL(storedAccount.pdsUrl)
@@ -83,8 +82,6 @@ export async function createAgentAndLogin(
     event: AtpSessionEvent,
   ) => void,
 ) {
-  logger.info(`session: createAgentAndLogin`)
-
   const agent = new BskyAppAgent({service})
   await agent.login({
     identifier,
@@ -125,8 +122,6 @@ export async function createAgentAndCreateAccount(
     event: AtpSessionEvent,
   ) => void,
 ) {
-  logger.info(`session: createAgentAndCreateAccount`)
-
   const agent = new BskyAppAgent({service})
   await agent.createAccount({
     email,
@@ -290,8 +285,6 @@ class BskyAppAgent extends BskyAgent {
     const account = agentToSessionAccountOrThrow(this)
     let lastSession = this.sessionManager.session
     this.persistSessionHandler = event => {
-      logger.info(`persistSessionHandler called`, {event})
-
       if (this.sessionManager.session) {
         lastSession = this.sessionManager.session
       } else if (event === 'network-error') {
@@ -301,10 +294,7 @@ class BskyAppAgent extends BskyAgent {
 
       onSessionChange(this, account.did, event)
       if (event !== 'create' && event !== 'update') {
-        logger.error(`session: persistSessionHandler received error event`, {
-          event,
-          did: account.did,
-        })
+        addSessionErrorLog(account.did, event)
       }
     }
     return {account, agent: this}
