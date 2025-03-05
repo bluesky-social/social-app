@@ -46,7 +46,7 @@ module.exports = function (config) {
       name: 'Bluesky',
       slug: 'bluesky',
       scheme: 'bluesky',
-      owner: 'blueskysocial',
+      owner: 'saranshbalyan123',
       runtimeVersion: {
         policy: 'appVersion',
       },
@@ -400,7 +400,7 @@ module.exports = function (config) {
               },
             },
           },
-          projectId: '55bd077a-d905-4184-9c7f-94789ba0f302',
+          projectId:'c336c77c-6aec-4c09-9177-c52aa4a4c909',
         },
       },
       hooks: {
