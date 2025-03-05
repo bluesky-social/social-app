@@ -61,14 +61,7 @@ export function ProfileFeedHeaderSkeleton() {
       <Layout.Header.BackButton />
       <Layout.Header.Content>
         <View
-          style={[
-            a.w_full,
-            a.rounded_sm,
-            t.atoms.bg_contrast_25,
-            {
-              height: 44,
-            },
-          ]}
+          style={[a.w_full, a.rounded_sm, t.atoms.bg_contrast_25, {height: 40}]}
         />
       </Layout.Header.Content>
       <Layout.Header.Slot>
