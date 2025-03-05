@@ -255,7 +255,7 @@ function AppealForm({
     },
     onSuccess: () => {
       control.close()
-      Toast.show(_(msg`Appeal submitted`))
+      Toast.show(_(msg({message: 'Appeal submitted', context: 'toast'})))
     },
   })
 
