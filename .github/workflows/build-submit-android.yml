@@ -44,15 +44,6 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Authenticate Expo
-        run: eas whoami || eas login --non-interactive --token ${{ secrets.EXPO_TOKEN }}
-
-      - name: Check expo config
-        run: npx expo config
-
-      - name: Check Project Info
-        run: eas project:info
-
       - name: ⛏️ Setup EAS local builds
         run: yarn global add eas-cli-local-build-plugin
 
@@ -63,6 +54,15 @@ jobs:
 
       - name: ⚙️ Install dependencies
         run: yarn install
+
+      - name: Authenticate Expo
+        run: eas whoami || eas login --non-interactive --token ${{ secrets.EXPO_TOKEN }}
+
+      - name: Check expo config
+        run: npx expo config
+
+      - name: Check Project Info
+        run: eas project:info
 
       - name: 🔤 Compile translations
         run: yarn intl:build
