@@ -14,8 +14,8 @@ import * as TextField from '#/components/forms/TextField'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {
+  ChevronBottom_Stroke2_Corner0_Rounded as ChevronBottomIcon,
   ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,
-  ChevronTop_Stroke2_Corner0_Rounded as ChevronTopIcon,
 } from '#/components/icons/Chevron'
 import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBracketsIcon} from '#/components/icons/CodeBrackets'
 import {Text} from '#/components/Typography'
@@ -139,7 +139,7 @@ function EmbedDialogInner({
               showCustomisation && t.atoms.bg_contrast_25,
             ]}>
             <ButtonIcon
-              icon={showCustomisation ? ChevronTopIcon : ChevronRightIcon}
+              icon={showCustomisation ? ChevronBottomIcon : ChevronRightIcon}
             />
             <ButtonText>
               <Trans>Customization options</Trans>
