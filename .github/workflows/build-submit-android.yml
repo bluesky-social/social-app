@@ -44,6 +44,9 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
+      - name: Authenticate Expo
+        run: eas whoami || eas login --non-interactive --token ${{ secrets.EXPO_TOKEN }}
+
       - name: ⛏️ Setup EAS local builds
         run: yarn global add eas-cli-local-build-plugin
 
