@@ -1,55 +1,49 @@
-import React, {memo, useMemo, useState} from 'react'
-import {
-  Pressable,
-  type PressableProps,
-  type StyleProp,
-  type ViewStyle,
-} from 'react-native'
+import {memo, useCallback, useMemo, useState} from 'react'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyFeedThreadgate,
+  AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useTheme} from '#/lib/ThemeContext'
+import {makeProfileLink} from '#/lib/routes/links'
+import {shareUrl} from '#/lib/sharing'
+import {toShareUrl} from '#/lib/strings/url-helpers'
 import {Shadow} from '#/state/cache/post-shadow'
-import {atoms as a, useTheme as useAlf} from '#/alf'
-import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
+import {EventStopper} from '#/view/com/util/EventStopper'
+import {native} from '#/alf'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
 import {useMenuControl} from '#/components/Menu'
 import * as Menu from '#/components/Menu'
-import {EventStopper} from '../EventStopper'
-import {PostDropdownMenuItems} from './PostDropdownBtnMenuItems'
+import {PostControlButton, PostControlButtonIcon} from '../PostControlButton'
+import {ShareMenuItems} from './ShareMenuItems'
 
-let PostDropdownBtn = ({
+let ShareMenuButton = ({
   testID,
   post,
   postFeedContext,
+  big,
   record,
   richText,
-  style,
-  hitSlop,
-  size,
   timestamp,
   threadgateRecord,
+  onShare,
 }: {
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
   postFeedContext: string | undefined
+  big?: boolean
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
-  style?: StyleProp<ViewStyle>
-  hitSlop?: PressableProps['hitSlop']
-  size?: 'lg' | 'md' | 'sm'
   timestamp: string
   threadgateRecord?: AppBskyFeedThreadgate.Record
+  onShare: () => void
 }): React.ReactNode => {
-  const theme = useTheme()
-  const alf = useAlf()
   const {_} = useLingui()
-  const defaultCtrlColor = theme.palette.default.postCtrl
+
   const menuControl = useMenuControl()
   const [hasBeenOpen, setHasBeenOpen] = useState(false)
   const lazyMenuControl = useMemo(
@@ -64,35 +58,35 @@ let PostDropdownBtn = ({
     }),
     [menuControl, setHasBeenOpen],
   )
+
+  const onNativeLongPress = useCallback(() => {
+    const urip = new AtUri(post.uri)
+    const href = makeProfileLink(post.author, 'post', urip.rkey)
+    const url = toShareUrl(href)
+    shareUrl(url)
+    onShare()
+  }, [post, onShare])
+
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root control={lazyMenuControl}>
-        <Menu.Trigger label={_(msg`Open post options menu`)}>
-          {({props, state}) => {
+        <Menu.Trigger label={_(msg`Open share menu`)}>
+          {({props}) => {
             return (
-              <Pressable
+              <PostControlButton
+                testID="postShareBtn"
+                big={big}
+                label={props.accessibilityLabel}
                 {...props}
-                hitSlop={hitSlop}
-                testID={testID}
-                style={[
-                  style,
-                  a.rounded_full,
-                  (state.hovered || state.pressed) && [
-                    alf.atoms.bg_contrast_25,
-                  ],
-                ]}>
-                <DotsHorizontal
-                  fill={defaultCtrlColor}
-                  style={{pointerEvents: 'none'}}
-                  size={size}
-                />
-              </Pressable>
+                onLongPress={native(onNativeLongPress)}>
+                <PostControlButtonIcon icon={ArrowOutOfBoxIcon} />
+              </PostControlButton>
             )
           }}
         </Menu.Trigger>
         {hasBeenOpen && (
           // Lazily initialized. Once mounted, they stay mounted.
-          <PostDropdownMenuItems
+          <ShareMenuItems
             testID={testID}
             post={post}
             postFeedContext={postFeedContext}
@@ -100,6 +94,7 @@ let PostDropdownBtn = ({
             richText={richText}
             timestamp={timestamp}
             threadgateRecord={threadgateRecord}
+            onShare={onShare}
           />
         )}
       </Menu.Root>
@@ -107,5 +102,5 @@ let PostDropdownBtn = ({
   )
 }
 
-PostDropdownBtn = memo(PostDropdownBtn)
-export {PostDropdownBtn}
+ShareMenuButton = memo(ShareMenuButton)
+export {ShareMenuButton}
