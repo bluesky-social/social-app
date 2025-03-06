@@ -77,7 +77,10 @@ export function SearchablePeopleList({
     isFetching,
   } = useActorAutocompleteQuery(searchText, true, 12)
   const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
-  const {data: convos} = useListConvosQuery({enabled: showRecentConvos})
+  const {data: convos} = useListConvosQuery({
+    enabled: showRecentConvos,
+    status: 'accepted',
+  })
 
   const items = useMemo(() => {
     let _items: Item[] = []
