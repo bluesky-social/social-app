@@ -11,7 +11,7 @@ export function useAppIconSets() {
     const defaults = [
       {
         id: 'default_light',
-        name: _(msg({ context: 'Name of app icon variant', message: 'Light' })),
+        name: _(msg({context: 'Name of app icon variant', message: 'Light'})),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_default_light.png`)
         },
@@ -21,7 +21,7 @@ export function useAppIconSets() {
       },
       {
         id: 'default_dark',
-        name: _(msg({ context: 'Name of app icon variant', message: 'Dark' })),
+        name: _(msg({context: 'Name of app icon variant', message: 'Dark'})),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_default_dark.png`)
         },
@@ -37,7 +37,7 @@ export function useAppIconSets() {
     const core = [
       {
         id: 'core_aurora',
-        name: _(msg({ context: 'Name of app icon variant', message: 'Aurora' })),
+        name: _(msg({context: 'Name of app icon variant', message: 'Aurora'})),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_core_aurora.png`)
         },
@@ -57,7 +57,7 @@ export function useAppIconSets() {
       // },
       {
         id: 'core_sunrise',
-        name: _(msg({ context: 'Name of app icon variant', message: 'Sunrise' })),
+        name: _(msg({context: 'Name of app icon variant', message: 'Sunrise'})),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_core_sunrise.png`)
         },
@@ -67,7 +67,7 @@ export function useAppIconSets() {
       },
       {
         id: 'core_sunset',
-        name: _(msg({ context: 'Name of app icon variant', message: 'Sunset' })),
+        name: _(msg({context: 'Name of app icon variant', message: 'Sunset'})),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_core_sunset.png`)
         },
@@ -77,7 +77,9 @@ export function useAppIconSets() {
       },
       {
         id: 'core_midnight',
-        name: _(msg({ context: 'Name of app icon variant', message: 'Midnight' })),
+        name: _(
+          msg({context: 'Name of app icon variant', message: 'Midnight'}),
+        ),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_core_midnight.png`)
         },
@@ -87,7 +89,9 @@ export function useAppIconSets() {
       },
       {
         id: 'core_flat_blue',
-        name: _(msg({ context: 'Name of app icon variant', message: 'Flat Blue' })),
+        name: _(
+          msg({context: 'Name of app icon variant', message: 'Flat Blue'}),
+        ),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_core_flat_blue.png`)
         },
@@ -97,7 +101,9 @@ export function useAppIconSets() {
       },
       {
         id: 'core_flat_white',
-        name: _(msg({ context: 'Name of app icon variant', message: 'Flat White' })),
+        name: _(
+          msg({context: 'Name of app icon variant', message: 'Flat White'}),
+        ),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_core_flat_white.png`)
         },
@@ -107,7 +113,9 @@ export function useAppIconSets() {
       },
       {
         id: 'core_flat_black',
-        name: _(msg({ context: 'Name of app icon variant', message: 'Flat Black' })),
+        name: _(
+          msg({context: 'Name of app icon variant', message: 'Flat Black'}),
+        ),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_core_flat_black.png`)
         },
@@ -117,7 +125,12 @@ export function useAppIconSets() {
       },
       {
         id: 'core_classic',
-        name: _(msg({ context: 'Name of app icon variant', message: 'Bluesky Classic™' })),
+        name: _(
+          msg({
+            context: 'Name of app icon variant',
+            message: 'Bluesky Classic™',
+          }),
+        ),
         iosImage: () => {
           return require(`../../../../assets/app-icons/ios_icon_core_classic.png`)
         },
