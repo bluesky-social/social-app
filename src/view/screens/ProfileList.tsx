@@ -393,6 +393,11 @@ function Header({
     try {
       await listMuteMutation.mutateAsync({uri: list.uri, mute: true})
       Toast.show(_(msg({message: 'List muted', context: 'toast'})))
+      logger.metric(
+        'moderation:subscribedToList',
+        {listType: 'mute'},
+        {statsig: true},
+      )
     } catch {
       Toast.show(
         _(
@@ -406,6 +411,11 @@ function Header({
     try {
       await listMuteMutation.mutateAsync({uri: list.uri, mute: false})
       Toast.show(_(msg({message: 'List unmuted', context: 'toast'})))
+      logger.metric(
+        'moderation:unsubscribedFromList',
+        {listType: 'mute'},
+        {statsig: true},
+      )
     } catch {
       Toast.show(
         _(
@@ -419,6 +429,11 @@ function Header({
     try {
       await listBlockMutation.mutateAsync({uri: list.uri, block: true})
       Toast.show(_(msg({message: 'List blocked', context: 'toast'})))
+      logger.metric(
+        'moderation:subscribedToList',
+        {listType: 'block'},
+        {statsig: true},
+      )
     } catch {
       Toast.show(
         _(
@@ -432,6 +447,11 @@ function Header({
     try {
       await listBlockMutation.mutateAsync({uri: list.uri, block: false})
       Toast.show(_(msg({message: 'List unblocked', context: 'toast'})))
+      logger.metric(
+        'moderation:unsubscribedFromList',
+        {listType: 'block'},
+        {statsig: true},
+      )
     } catch {
       Toast.show(
         _(
