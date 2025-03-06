@@ -57,7 +57,7 @@ export function RejectMenu({
           }),
         ),
         'xmark',
-      );
+      )
     },
   })
   const [queueBlock] = useProfileBlockMutationQueue(shadowedProfile)
@@ -71,7 +71,7 @@ export function RejectMenu({
         }),
       ),
       'check',
-    );
+    )
     leaveConvo()
   }, [leaveConvo, _])
 
@@ -84,7 +84,7 @@ export function RejectMenu({
         }),
       ),
       'check',
-    );
+    )
     // block and also delete convo
     queueBlock()
     leaveConvo()
@@ -211,7 +211,7 @@ export function AcceptChatButton({
           }),
         ),
         'xmark',
-      );
+      )
     },
   })
 
@@ -270,7 +270,7 @@ export function DeleteChatButton({
           }),
         ),
         'xmark',
-      );
+      )
     },
   })
 
@@ -281,9 +281,9 @@ export function DeleteChatButton({
           context: 'toast',
           message: 'Chat deleted',
         }),
-       ),
+      ),
       'check',
-    );
+    )
     leaveConvo()
   }, [leaveConvo, _])
 
