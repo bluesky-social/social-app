@@ -79,7 +79,7 @@ function SavedFeedsInner({
   const onSaveChanges = React.useCallback(async () => {
     try {
       await overwriteSavedFeeds(currentFeeds)
-      Toast.show(_(msg`Feeds updated!`))
+      Toast.show(_(msg({message: 'Feeds updated!', context: 'toast'})))
       navigation.navigate('Feeds')
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`), 'xmark')

@@ -99,7 +99,7 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
           threadgateAllowUISettingToAllowRecordValue(maybeEditedAllowUI),
         postgateEmbeddingRules: maybeEditedPostgate.embeddingRules ?? [],
       })
-      Toast.show(_(msg`Settings saved`))
+      Toast.show(_(msg({message: 'Settings saved', context: 'toast'})))
     } catch (e: any) {
       logger.error(`Failed to save post interaction settings`, {
         source: 'ModerationInteractionSettingsScreen',

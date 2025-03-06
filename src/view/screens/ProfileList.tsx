@@ -392,7 +392,7 @@ function Header({
   const onSubscribeMute = useCallback(async () => {
     try {
       await listMuteMutation.mutateAsync({uri: list.uri, mute: true})
-      Toast.show(_(msg`List muted`))
+      Toast.show(_(msg({message: 'List muted', context: 'toast'})))
     } catch {
       Toast.show(
         _(
@@ -405,7 +405,7 @@ function Header({
   const onUnsubscribeMute = useCallback(async () => {
     try {
       await listMuteMutation.mutateAsync({uri: list.uri, mute: false})
-      Toast.show(_(msg`List unmuted`))
+      Toast.show(_(msg({message: 'List unmuted', context: 'toast'})))
     } catch {
       Toast.show(
         _(
@@ -418,7 +418,7 @@ function Header({
   const onSubscribeBlock = useCallback(async () => {
     try {
       await listBlockMutation.mutateAsync({uri: list.uri, block: true})
-      Toast.show(_(msg`List blocked`))
+      Toast.show(_(msg({message: 'List blocked', context: 'toast'})))
     } catch {
       Toast.show(
         _(
@@ -431,7 +431,7 @@ function Header({
   const onUnsubscribeBlock = useCallback(async () => {
     try {
       await listBlockMutation.mutateAsync({uri: list.uri, block: false})
-      Toast.show(_(msg`List unblocked`))
+      Toast.show(_(msg({message: 'List unblocked', context: 'toast'})))
     } catch {
       Toast.show(
         _(
@@ -455,7 +455,7 @@ function Header({
       await removeSavedFeed(savedFeedConfig)
     }
 
-    Toast.show(_(msg`List deleted`))
+    Toast.show(_(msg({message: 'List deleted', context: 'toast'})))
     if (navigation.canGoBack()) {
       navigation.goBack()
     } else {

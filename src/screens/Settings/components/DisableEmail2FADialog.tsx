@@ -61,7 +61,7 @@ export function DisableEmail2FADialog({
           emailAuthFactor: false,
         })
         await agent.resumeSession(agent.session!)
-        Toast.show(_(msg`Email 2FA disabled`))
+        Toast.show(_(msg({message: 'Email 2FA disabled', context: 'toast'})))
       }
       control.close()
     } catch (e) {
