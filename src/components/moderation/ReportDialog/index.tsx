@@ -186,6 +186,7 @@ function Inner(props: ReportDialogProps) {
 
   return (
     <Dialog.ScrollableInner
+      testID="report:dialog"
       label={_(msg`Report dialog`)}
       ref={ref}
       style={[a.w_full, {maxWidth: 500}]}>
@@ -231,6 +232,7 @@ function Inner(props: ReportDialogProps) {
                     <OptionCard option={state.selectedOption} />
                   </View>
                   <Button
+                    testID="report:clearOption"
                     label={_(msg`Change report reason`)}
                     size="tiny"
                     variant="solid"
@@ -399,6 +401,7 @@ function Inner(props: ReportDialogProps) {
                 {state.detailsOpen && (
                   <View>
                     <Dialog.Input
+                      testID="report:details"
                       multiline
                       value={state.details}
                       onChangeText={details => {
@@ -426,6 +429,7 @@ function Inner(props: ReportDialogProps) {
                 )}
               </View>
               <Button
+                testID="report:submit"
                 label={_(msg`Submit report`)}
                 size="large"
                 variant="solid"
@@ -566,6 +570,7 @@ function OptionCard({
   }, [onSelect, option])
   return (
     <Button
+      testID={`report:option:${option.reason}`}
       label={_(msg`Create report for ${option.title}`)}
       onPress={onPress}
       disabled={!onSelect}>
@@ -629,6 +634,7 @@ function LabelerCard({
   })
   return (
     <Button
+      testID={`report:labeler:${labeler.creator.handle}`}
       label={_(msg`Send report to ${title}`)}
       onPress={onPress}
       disabled={!onSelect}>
