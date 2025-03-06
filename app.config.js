@@ -202,6 +202,7 @@ module.exports = function (config) {
           {
             organization: 'blueskyweb',
             project: 'app',
+            url: 'https://sentry.io/',
           },
         ],
         [
