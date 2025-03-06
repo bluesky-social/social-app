@@ -4,7 +4,7 @@ import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
 import {BskyAgent} from '@atproto/api'
 
 import {logEvent} from '#/lib/statsig/statsig'
-import {logger} from '#/logger'
+import {Logger} from '#/logger'
 import {devicePlatform, isAndroid, isNative} from '#/platform/detection'
 import {SessionAccount, useAgent, useSession} from '#/state/session'
 import BackgroundNotificationHandler from '../../../modules/expo-background-notification-handler'
@@ -13,6 +13,8 @@ const SERVICE_DID = (serviceUrl?: string) =>
   serviceUrl?.includes('staging')
     ? 'did:web:api.staging.bsky.dev'
     : 'did:web:api.bsky.app'
+
+const logger = Logger.create(Logger.Context.Notifications)
 
 async function registerPushToken(
   agent: BskyAgent,
@@ -26,14 +28,10 @@ async function registerPushToken(
       token: token.data,
       appId: 'xyz.blueskyweb.app',
     })
-    logger.debug(
-      'Notifications: Sent push token (init)',
-      {
-        tokenType: token.type,
-        token: token.data,
-      },
-      logger.DebugContext.notifications,
-    )
+    logger.debug('Notifications: Sent push token (init)', {
+      tokenType: token.type,
+      token: token.data,
+    })
   } catch (error) {
     logger.error('Notifications: Failed to set push token', {message: error})
   }

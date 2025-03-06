@@ -1,4 +1,4 @@
-export type LogEvents = {
+export type MetricEvents = {
   // App events
   init: {
     initMs: number
@@ -30,7 +30,9 @@ export type LogEvents = {
     secondsActive: number
   }
   'state:foreground': {}
-  'router:navigate:notifications': {}
+  'router:navigate': {
+    from?: string
+  }
   'deepLink:referrerReceived': {
     to: string
     referrer: string
@@ -49,6 +51,22 @@ export type LogEvents = {
   }
   'signup:captchaSuccess': {}
   'signup:captchaFailure': {}
+  'signin:hostingProviderPressed': {
+    hostingProviderDidChange: boolean
+  }
+  'signin:hostingProviderFailedResolution': {}
+  'signin:success': {
+    failedAttemptsCount: number
+    isUsingCustomProvider: boolean
+    timeTakenSeconds: number
+  }
+  'signin:backPressed': {
+    failedAttemptsCount: number
+  }
+  'signin:forgotPasswordPressed': {}
+  'signin:passwordReset': {}
+  'signin:passwordResetSuccess': {}
+  'signin:passwordResetFailure': {}
   'onboarding:interests:nextPressed': {
     selectedInterests: string[]
     selectedInterestsLength: number
@@ -300,4 +318,15 @@ export type LogEvents = {
   'moderation:unsubscribedFromList': {
     type: 'mute' | 'block'
   }
+
+  'reportDialog:open': {
+    subjectType: string
+  }
+  'reportDialog:close': {}
+  'reportDialog:success': {
+    reason: string
+    labeler: string
+    details: boolean
+  }
+  'reportDialog:failure': {}
 }

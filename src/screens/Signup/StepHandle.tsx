@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 import {logEvent} from '#/lib/statsig/statsig'
 import {
   createFullHandle,
-  maxServiceHandleLength,
+  MAX_SERVICE_HANDLE_LENGTH,
   validateServiceHandle,
 } from '#/lib/strings/handles'
 import {useAgent} from '#/state/session'
@@ -126,10 +126,12 @@ export function StepHandle() {
         </View>
         {draftValue !== '' && (
           <Text style={[a.text_md]}>
-            <Trans>Your full username will be</Trans>{' '}
-            <Text style={[a.text_md, a.font_bold]}>
-              @{createFullHandle(draftValue, state.userDomain)}
-            </Text>
+            <Trans>
+              Your full username will be{' '}
+              <Text style={[a.text_md, a.font_bold]}>
+                @{createFullHandle(draftValue, state.userDomain)}
+              </Text>
+            </Trans>
           </Text>
         )}
 
@@ -168,11 +170,11 @@ export function StepHandle() {
               <IsValidIcon
                 valid={validCheck.frontLength && validCheck.totalLength}
               />
-              {!validCheck.totalLength ? (
+              {!validCheck.totalLength ||
+              draftValue.length > MAX_SERVICE_HANDLE_LENGTH ? (
                 <Text style={[a.text_md, a.flex_1]}>
                   <Trans>
-                    No longer than {maxServiceHandleLength(state.userDomain)}{' '}
-                    characters
+                    No longer than {MAX_SERVICE_HANDLE_LENGTH} characters
                   </Trans>
                 </Text>
               ) : (

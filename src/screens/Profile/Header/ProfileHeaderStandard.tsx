@@ -134,7 +134,7 @@ let ProfileHeaderStandard = ({
   const unblockAccount = React.useCallback(async () => {
     try {
       await queueUnblock()
-      Toast.show(_(msg`Account unblocked`))
+      Toast.show(_(msg({message: 'Account unblocked', context: 'toast'})))
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('Failed to unblock account', {message: e})

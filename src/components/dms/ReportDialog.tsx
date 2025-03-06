@@ -1,6 +1,7 @@
 import React, {memo, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
+  $Typed,
   AppBskyActorDefs,
   ChatBskyConvoDefs,
   ComAtprotoModerationCreateReport,
@@ -154,15 +155,16 @@ function SubmitStep({
     mutationFn: async () => {
       if (params.type === 'convoMessage') {
         const {convoId, message} = params
+        const subject: $Typed<ChatBskyConvoDefs.MessageRef> = {
+          $type: 'chat.bsky.convo.defs#messageRef',
+          messageId: message.id,
+          convoId,
+          did: message.sender.did,
+        }
 
         const report = {
           reasonType: reportOption.reason,
-          subject: {
-            $type: 'chat.bsky.convo.defs#messageRef',
-            messageId: message.id,
-            convoId,
-            did: message.sender.did,
-          } satisfies ChatBskyConvoDefs.MessageRef,
+          subject,
           reason: details,
         } satisfies ComAtprotoModerationCreateReport.InputSchema
 
@@ -285,7 +287,7 @@ function DoneStep({
 }: {
   convoId: string
   currentScreen: 'list' | 'conversation'
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
@@ -309,6 +311,19 @@ function DoneStep({
     },
   })
 
+  let btnText = _(msg`Done`)
+  let toastMsg: string | undefined
+  if (actions.includes('leave') && actions.includes('block')) {
+    btnText = _(msg`Block and Delete`)
+    toastMsg = _(msg({message: 'Conversation deleted', context: 'toast'}))
+  } else if (actions.includes('leave')) {
+    btnText = _(msg`Delete Conversation`)
+    toastMsg = _(msg({message: 'Conversation deleted', context: 'toast'}))
+  } else if (actions.includes('block')) {
+    btnText = _(msg`Block User`)
+    toastMsg = _(msg({message: 'User blocked', context: 'toast'}))
+  }
+
   const onPressPrimaryAction = () => {
     control.close(() => {
       if (actions.includes('block')) {
@@ -317,16 +332,10 @@ function DoneStep({
       if (actions.includes('leave')) {
         leaveConvo()
       }
+      if (toastMsg) {
+        Toast.show(toastMsg, 'check')
+      }
     })
-  }
-
-  let btnText = _(msg`Done`)
-  if (actions.includes('leave') && actions.includes('block')) {
-    btnText = _(msg`Block and Delete`)
-  } else if (actions.includes('leave')) {
-    btnText = _(msg`Delete Conversation`)
-  } else if (actions.includes('block')) {
-    btnText = _(msg`Block User`)
   }
 
   return (

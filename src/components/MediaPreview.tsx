@@ -1,19 +1,15 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
-import {
-  AppBskyEmbedExternal,
-  AppBskyEmbedImages,
-  AppBskyEmbedRecordWithMedia,
-  AppBskyEmbedVideo,
-} from '@atproto/api'
+import {AppBskyFeedDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
-import {parseTenorGif} from '#/lib/strings/embed-player'
+import {isTenorGifUri} from '#/lib/strings/embed-player'
 import {atoms as a, useTheme} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
+import * as bsky from '#/types/bsky'
 
 /**
  * Streamlined MediaPreview component which just handles images, gifs, and videos
@@ -22,20 +18,17 @@ export function Embed({
   embed,
   style,
 }: {
-  embed?:
-    | AppBskyEmbedImages.View
-    | AppBskyEmbedRecordWithMedia.View
-    | AppBskyEmbedExternal.View
-    | AppBskyEmbedVideo.View
-    | {[k: string]: unknown}
+  embed: AppBskyFeedDefs.PostView['embed']
   style?: StyleProp<ViewStyle>
 }) {
-  let media = AppBskyEmbedRecordWithMedia.isView(embed) ? embed.media : embed
+  const e = bsky.post.parseEmbed(embed)
 
-  if (AppBskyEmbedImages.isView(media)) {
+  if (!e) return null
+
+  if (e.type === 'images') {
     return (
       <Outer style={style}>
-        {media.images.map(image => (
+        {e.view.images.map(image => (
           <ImageItem
             key={image.thumb}
             thumbnail={image.thumb}
@@ -44,28 +37,21 @@ export function Embed({
         ))}
       </Outer>
     )
-  } else if (AppBskyEmbedExternal.isView(media) && media.external.thumb) {
-    let url: URL | undefined
-    try {
-      url = new URL(media.external.uri)
-    } catch {}
-    if (url) {
-      const {success} = parseTenorGif(url)
-      if (success) {
-        return (
-          <Outer style={style}>
-            <GifItem
-              thumbnail={media.external.thumb}
-              alt={media.external.title}
-            />
-          </Outer>
-        )
-      }
-    }
-  } else if (AppBskyEmbedVideo.isView(media)) {
+  } else if (e.type === 'link') {
+    if (!e.view.external.thumb) return null
+    if (!isTenorGifUri(e.view.external.uri)) return null
     return (
       <Outer style={style}>
-        <VideoItem thumbnail={media.thumbnail} alt={media.alt} />
+        <GifItem
+          thumbnail={e.view.external.thumb}
+          alt={e.view.external.title}
+        />
+      </Outer>
+    )
+  } else if (e.type === 'video') {
+    return (
+      <Outer style={style}>
+        <VideoItem thumbnail={e.view.thumbnail} alt={e.view.alt} />
       </Outer>
     )
   }

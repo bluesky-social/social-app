@@ -9,3 +9,14 @@
 :root {
   color-scheme: light dark;
 }
+
+select {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' height='14px' width='14px' fill='none' viewBox='0 0 24 24'><path fill='black' fill-rule='evenodd' d='M3.293 8.293a1 1 0 0 1 1.414 0L12 15.586l7.293-7.293a1 1 0 1 1 1.414 1.414l-8 8a1 1 0 0 1-1.414 0l-8-8a1 1 0 0 1 0-1.414Z' clip-rule='evenodd'/></svg>");
+  background-repeat: no-repeat;
+  background-position: calc(100% - 0.75rem) center;
+  padding-right: 2rem;
+
+  @media (prefers-color-scheme: dark) {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' height='14px' width='14px' fill='none' viewBox='0 0 24 24'><path fill='white' fill-rule='evenodd' d='M3.293 8.293a1 1 0 0 1 1.414 0L12 15.586l7.293-7.293a1 1 0 1 1 1.414 1.414l-8 8a1 1 0 0 1-1.414 0l-8-8a1 1 0 0 1 0-1.414Z' clip-rule='evenodd'/></svg>");
+  }
+}

@@ -137,3 +137,15 @@ export function useLabelSubject({label}: {label: ComAtprotoLabelDefs.Label}): {
     }
   }, [label])
 }
+
+export function unique(
+  value: ModerationCause,
+  index: number,
+  array: ModerationCause[],
+) {
+  return (
+    array.findIndex(
+      item => getModerationCauseKey(item) === getModerationCauseKey(value),
+    ) === index
+  )
+}

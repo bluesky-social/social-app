@@ -14,6 +14,7 @@ import {
   TextStyleProp,
   useBreakpoints,
   useGutters,
+  useLayoutBreakpoints,
   useTheme,
   web,
 } from '#/alf'
@@ -23,6 +24,7 @@ import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {
   BUTTON_VISUAL_ALIGNMENT_OFFSET,
   HEADER_SLOT_SIZE,
+  SCROLLBAR_OFFSET,
 } from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import {Text} from '#/components/Typography'
@@ -42,6 +44,7 @@ export function Outer({
   const gutters = useGutters([0, 'base'])
   const {gtMobile} = useBreakpoints()
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
+  const {centerColumnOffset} = useLayoutBreakpoints()
 
   return (
     <View
@@ -60,7 +63,12 @@ export function Outer({
         }),
         t.atoms.border_contrast_low,
         gtMobile && [a.mx_auto, {maxWidth: 600}],
-        !isWithinOffsetView && a.scrollbar_offset,
+        !isWithinOffsetView && {
+          transform: [
+            {translateX: centerColumnOffset ? -150 : 0},
+            {translateX: web(SCROLLBAR_OFFSET) ?? 0},
+          ],
+        },
       ]}>
       {children}
     </View>

@@ -1,6 +1,6 @@
-import {AppBskyActorDefs} from '@atproto/api'
+import * as bsky from '#/types/bsky'
 
-export function canBeMessaged(profile: AppBskyActorDefs.ProfileView) {
+export function canBeMessaged(profile: bsky.profile.AnyProfileView) {
   switch (profile.associated?.chat?.allowIncoming) {
     case 'none':
       return false

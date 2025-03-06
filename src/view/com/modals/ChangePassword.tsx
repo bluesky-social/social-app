@@ -81,13 +81,22 @@ export function Component() {
 
   const onChangePassword = async () => {
     const formattedCode = checkAndFormatResetCode(resetCode)
-    // TODO Better password strength check
-    if (!formattedCode || !newPassword) {
+    if (!formattedCode) {
       setError(
         _(
           msg`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
         ),
       )
+      return
+    }
+    if (!newPassword) {
+      setError(
+        _(msg`Please enter a password. It must be at least 8 characters long.`),
+      )
+      return
+    }
+    if (newPassword.length < 8) {
+      setError(_(msg`Password must be at least 8 characters long.`))
       return
     }
 
@@ -104,7 +113,9 @@ export function Component() {
       logger.warn('Failed to set new password', {error: e})
       if (isNetworkError(e)) {
         setError(
-          'Unable to contact your service. Please check your Internet connection.',
+          _(
+            msg`Unable to contact your service. Please check your Internet connection.`,
+          ),
         )
       } else {
         setError(cleanError(errMsg))

@@ -281,7 +281,7 @@ let ProfileHeaderLabeler = ({
                   color="secondary"
                   variant="solid"
                   shape="round"
-                  label={_(msg`Like this feed`)}
+                  label={_(msg`Like this labeler`)}
                   disabled={!hasSession || isLikePending || isUnlikePending}
                   onPress={onToggleLiked}>
                   {likeUri ? (

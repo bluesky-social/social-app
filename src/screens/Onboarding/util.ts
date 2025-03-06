@@ -1,7 +1,9 @@
 import {
+  $Typed,
   AppBskyGraphFollow,
   AppBskyGraphGetFollows,
   BskyAgent,
+  ComAtprotoRepoApplyWrites,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import chunk from 'lodash.chunk'
@@ -15,7 +17,7 @@ export async function bulkWriteFollows(agent: BskyAgent, dids: string[]) {
     throw new Error(`bulkWriteFollows failed: no session`)
   }
 
-  const followRecords: AppBskyGraphFollow.Record[] = dids.map(did => {
+  const followRecords: $Typed<AppBskyGraphFollow.Record>[] = dids.map(did => {
     return {
       $type: 'app.bsky.graph.follow',
       subject: did,
@@ -23,12 +25,13 @@ export async function bulkWriteFollows(agent: BskyAgent, dids: string[]) {
     }
   })
 
-  const followWrites = followRecords.map(r => ({
-    $type: 'com.atproto.repo.applyWrites#create',
-    collection: 'app.bsky.graph.follow',
-    rkey: TID.nextStr(),
-    value: r,
-  }))
+  const followWrites: $Typed<ComAtprotoRepoApplyWrites.Create>[] =
+    followRecords.map(r => ({
+      $type: 'com.atproto.repo.applyWrites#create',
+      collection: 'app.bsky.graph.follow',
+      rkey: TID.nextStr(),
+      value: r,
+    }))
 
   const chunks = chunk(followWrites, 50)
   for (const chunk of chunks) {

@@ -18,6 +18,7 @@ export type CommonNavigatorParams = {
   ProfileFollowers: {name: string}
   ProfileFollows: {name: string}
   ProfileKnownFollowers: {name: string}
+  ProfileSearch: {name: string; q?: string}
   ProfileList: {name: string; rkey: string}
   PostThread: {name: string; rkey: string}
   PostLikedBy: {name: string; rkey: string}
@@ -55,8 +56,9 @@ export type CommonNavigatorParams = {
   Search: {q?: string}
   Hashtag: {tag: string; author?: string}
   Topic: {topic: string}
-  MessagesConversation: {conversation: string; embed?: string}
+  MessagesConversation: {conversation: string; embed?: string; accept?: true}
   MessagesSettings: undefined
+  MessagesInbox: undefined
   NotificationSettings: undefined
   Feeds: undefined
   Start: {name: string; rkey: string}

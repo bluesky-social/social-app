@@ -142,15 +142,18 @@ export function ListHiddenScreen({
                 Either the creator of this list has blocked you or you have
                 blocked the creator.
               </Trans>
+            ) : isOwner ? (
+              <Trans>
+                This list – created by you – contains possible violations of
+                Bluesky's community guidelines in its name or description.
+              </Trans>
             ) : (
               <Trans>
-                This list - created by{' '}
-                <Text style={[a.text_md, !isOwner && a.font_bold]}>
-                  {isOwner
-                    ? _(msg`you`)
-                    : sanitizeHandle(list.creator.handle, '@')}
+                This list – created by{' '}
+                <Text style={[a.font_bold]}>
+                  {sanitizeHandle(list.creator.handle, '@')}
                 </Text>{' '}
-                - contains possible violations of Bluesky's community guidelines
+                – contains possible violations of Bluesky's community guidelines
                 in its name or description.
               </Trans>
             )}

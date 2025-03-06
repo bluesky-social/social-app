@@ -1,4 +1,4 @@
-import '#/lib/sentry' // must be near top
+import '#/logger/sentry/setup' // must be near top
 import '#/view/icons'
 import './style.css'
 
@@ -94,7 +94,7 @@ function InnerApp() {
   useEffect(() => {
     return listenSessionDropped(() => {
       Toast.show(
-        _(msg`Sorry! Your session expired. Please log in again.`),
+        _(msg`Sorry! Your session expired. Please sign in again.`),
         'info',
       )
     })
