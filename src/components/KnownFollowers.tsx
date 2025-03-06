@@ -171,6 +171,7 @@ function KnownFollowersInner({
 
           <Text
             style={[
+              a.flex_shrink,
               textStyle,
               hovered && {
                 textDecorationLine: 'underline',
