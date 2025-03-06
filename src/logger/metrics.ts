@@ -313,10 +313,10 @@ export type MetricEvents = {
   }
 
   'moderation:subscribedToList': {
-    type: 'mute' | 'block'
+    listType: 'mute' | 'block'
   }
   'moderation:unsubscribedFromList': {
-    type: 'mute' | 'block'
+    listType: 'mute' | 'block'
   }
 
   'reportDialog:open': {
