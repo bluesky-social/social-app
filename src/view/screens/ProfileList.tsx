@@ -24,7 +24,6 @@ import {makeListLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {NavigationProp} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
-import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {s} from '#/lib/styles'
@@ -403,7 +402,11 @@ function Header({
       return
     }
     Toast.show(_(msg`List muted`))
-    logEvent('moderation:subscribedToList', {type: 'mute'})
+    logger.metric(
+      'moderation:subscribedToList',
+      {type: 'mute'},
+      {statsig: true},
+    )
   }, [list, listMuteMutation, _])
 
   const onUnsubscribeMute = useCallback(async () => {
@@ -419,7 +422,11 @@ function Header({
       return
     }
     Toast.show(_(msg`List unmuted`))
-    logEvent('moderation:unsubscribedFromList', {type: 'mute'})
+    logger.metric(
+      'moderation:unsubscribedFromList',
+      {type: 'mute'},
+      {statsig: true},
+    )
   }, [list, listMuteMutation, _])
 
   const onSubscribeBlock = useCallback(async () => {
@@ -435,7 +442,11 @@ function Header({
       return
     }
     Toast.show(_(msg`List blocked`))
-    logEvent('moderation:subscribedToList', {type: 'block'})
+    logger.metric(
+      'moderation:subscribedToList',
+      {type: 'block'},
+      {statsig: true},
+    )
   }, [list, listBlockMutation, _])
 
   const onUnsubscribeBlock = useCallback(async () => {
@@ -451,7 +462,11 @@ function Header({
       return
     }
     Toast.show(_(msg`List unblocked`))
-    logEvent('moderation:unsubscribedFromList', {type: 'block'})
+    logger.metric(
+      'moderation:unsubscribedFromList',
+      {type: 'block'},
+      {statsig: true},
+    )
   }, [list, listBlockMutation, _])
 
   const onPressEdit = useCallback(() => {

@@ -14,7 +14,6 @@ import {useLingui} from '@lingui/react'
 import {MAX_LABELERS} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {isAppLabeler} from '#/lib/moderation'
-import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -152,9 +151,13 @@ let ProfileHeaderLabeler = ({
         }
 
         if (willSubscribe) {
-          logEvent('moderation:subscribedToLabeler', {})
+          logger.metric('moderation:subscribedToLabeler', {}, {statsig: true})
         } else {
-          logEvent('moderation:unsubscribedFromLabeler', {})
+          logger.metric(
+            'moderation:unsubscribedFromLabeler',
+            {},
+            {statsig: true},
+          )
         }
       }),
     [
