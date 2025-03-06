@@ -134,12 +134,21 @@ let ProfileHeaderLabeler = ({
   const onPressSubscribe = React.useCallback(
     () =>
       requireAuth(async (): Promise<void> => {
-        const willSubscribe = !isSubscribed
+        const subscribe = !isSubscribed
+
         try {
           await toggleSubscription({
             did: profile.did,
-            subscribe: !isSubscribed,
+            subscribe,
           })
+
+          logger.metric(
+            subscribe
+              ? 'moderation:subscribedToLabeler'
+              : 'moderation:unsubscribedFromLabeler',
+            {},
+            {statsig: true},
+          )
         } catch (e: any) {
           reset()
           if (e.message === 'MAX_LABELERS') {
@@ -147,17 +156,6 @@ let ProfileHeaderLabeler = ({
             return
           }
           logger.error(`Failed to subscribe to labeler`, {message: e.message})
-          return
-        }
-
-        if (willSubscribe) {
-          logger.metric('moderation:subscribedToLabeler', {}, {statsig: true})
-        } else {
-          logger.metric(
-            'moderation:unsubscribedFromLabeler',
-            {},
-            {statsig: true},
-          )
         }
       }),
     [
