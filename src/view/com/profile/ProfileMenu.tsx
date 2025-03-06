@@ -191,7 +191,7 @@ let ProfileMenu = ({
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
-        <Menu.Trigger label={_(`More options`)}>
+        <Menu.Trigger label={_(msg`More options`)}>
           {({props}) => {
             return (
               <Button
