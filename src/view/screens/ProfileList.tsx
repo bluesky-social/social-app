@@ -401,7 +401,6 @@ function Header({
       )
       return
     }
-    Toast.show(_(msg`List muted`))
     logger.metric(
       'moderation:subscribedToList',
       {listType: 'mute'},
@@ -421,7 +420,6 @@ function Header({
       )
       return
     }
-    Toast.show(_(msg`List unmuted`))
     logger.metric(
       'moderation:unsubscribedFromList',
       {listType: 'mute'},
@@ -441,7 +439,6 @@ function Header({
       )
       return
     }
-    Toast.show(_(msg`List blocked`))
     logger.metric(
       'moderation:subscribedToList',
       {listType: 'block'},
@@ -461,7 +458,6 @@ function Header({
       )
       return
     }
-    Toast.show(_(msg`List unblocked`))
     logger.metric(
       'moderation:unsubscribedFromList',
       {listType: 'block'},
