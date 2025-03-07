@@ -8,7 +8,7 @@ msgstr ""
 "Language: cy\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-03-07 03:35\n"
+"PO-Revision-Date: 2025-03-07 16:40\n"
 "Last-Translator: \n"
 "Language-Team: Welsh\n"
 "Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n == 3) ? 3 : ((n == 6) ? 4 : 5))));\n"
@@ -138,7 +138,7 @@ msgstr "{0} o {1}"
 msgid "{0} people have used this starter pack!"
 msgstr "Mae {0} o bobl wedi defnyddio'r pecyn cychwyn hwn!"
 
-#: src/view/com/util/UserAvatar.tsx:464
+#: src/view/com/util/UserAvatar.tsx:445
 msgid "{0}'s avatar"
 msgstr "afatar {0}"
 
@@ -504,7 +504,7 @@ msgstr "Ychwanegu testun amgen (dewisol)"
 msgid "Add another account"
 msgstr "Ychwanegu cyfrif arall"
 
-#: src/view/com/composer/Composer.tsx:744
+#: src/view/com/composer/Composer.tsx:743
 msgid "Add another post"
 msgstr "Ychwanegu postiad arall"
 
@@ -531,7 +531,7 @@ msgstr "Ychwanegu gair mud gyda'r gosodiadau a ddewiswyd"
 msgid "Add muted words and tags"
 msgstr "Ychwanegu geiriau a thagiau wedi'u tewi"
 
-#: src/view/com/composer/Composer.tsx:1261
+#: src/view/com/composer/Composer.tsx:1258
 msgid "Add new post"
 msgstr "Ychwanegu post newydd"
 
@@ -925,11 +925,11 @@ msgstr "Ydych chi'n siŵr eich bod am dynnu {0} o'ch ffrydiau?"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Ydych chi'n siŵr eich bod am dynnu hwn o'ch ffrydiau?"
 
-#: src/view/com/composer/Composer.tsx:695
+#: src/view/com/composer/Composer.tsx:694
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "A ydych yn siŵr yr hoffech gael gwared ar y drafft hwn?"
 
-#: src/view/com/composer/Composer.tsx:872
+#: src/view/com/composer/Composer.tsx:868
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Ydych chi'n siŵr yr hoffech chi gael gwared ar y postiad hwn?"
 
@@ -1260,7 +1260,7 @@ msgstr "Camera"
 #: src/screens/Settings/Settings.tsx:260
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:935
+#: src/view/com/composer/Composer.tsx:931
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -1661,7 +1661,7 @@ msgstr "Cwblhewch yr her"
 msgid "Compose new post"
 msgstr "Cyfansoddi postiad newydd"
 
-#: src/view/com/composer/Composer.tsx:838
+#: src/view/com/composer/Composer.tsx:834
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "Cyfansoddwch bostiadau hyd at {MAX_GRAPHEME_LENGTH} nod"
 
@@ -1669,7 +1669,7 @@ msgstr "Cyfansoddwch bostiadau hyd at {MAX_GRAPHEME_LENGTH} nod"
 msgid "Compose reply"
 msgstr "Ysgrifennu ateb"
 
-#: src/view/com/composer/Composer.tsx:1644
+#: src/view/com/composer/Composer.tsx:1652
 msgid "Compressing video..."
 msgstr "Yn cywasgu fideo..."
 
@@ -2147,7 +2147,7 @@ msgstr "Dileu neges i mi"
 msgid "Delete my account"
 msgstr "Dileu fy ngyfrif"
 
-#: src/view/com/composer/Composer.tsx:846
+#: src/view/com/composer/Composer.tsx:842
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:709
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:711
 msgid "Delete post"
@@ -2259,8 +2259,8 @@ msgid "Disabled"
 msgstr "Analluogwyd"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:697
-#: src/view/com/composer/Composer.tsx:879
+#: src/view/com/composer/Composer.tsx:696
+#: src/view/com/composer/Composer.tsx:875
 msgid "Discard"
 msgstr "Dileu"
 
@@ -2268,11 +2268,11 @@ msgstr "Dileu"
 msgid "Discard changes?"
 msgstr "Dileu'r newidiadau?"
 
-#: src/view/com/composer/Composer.tsx:694
+#: src/view/com/composer/Composer.tsx:693
 msgid "Discard draft?"
 msgstr "Dileu'r drafft?"
 
-#: src/view/com/composer/Composer.tsx:871
+#: src/view/com/composer/Composer.tsx:867
 msgid "Discard post?"
 msgstr "Dileu'r postiad?"
 
@@ -2298,7 +2298,7 @@ msgstr "Darganfod Ffrydiau Newydd"
 msgid "Dismiss"
 msgstr "Cau"
 
-#: src/view/com/composer/Composer.tsx:1568
+#: src/view/com/composer/Composer.tsx:1576
 msgid "Dismiss error"
 msgstr "Cau'r gwall"
 
@@ -2469,7 +2469,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "Golygu"
 
-#: src/view/com/util/UserAvatar.tsx:363
+#: src/view/com/util/UserAvatar.tsx:344
 #: src/view/com/util/UserBanner.tsx:95
 msgid "Edit avatar"
 msgstr "Golygu afatar"
@@ -2749,7 +2749,7 @@ msgstr "Rhowch eich enw defnyddiwr a chyfrinair"
 msgid "Enters full screen"
 msgstr "Yn mynd i'r sgrin lawn"
 
-#: src/view/com/composer/Composer.tsx:1653
+#: src/view/com/composer/Composer.tsx:1661
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "Gwall"
@@ -3825,7 +3825,7 @@ msgstr "Mae'n gywir"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "Dim ond chi ar hyn o bryd! Ychwanegwch fwy o bobl at eich pecyn cychwyn trwy chwilio uchod."
 
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1595
 msgid "Job ID: {0}"
 msgstr "ID gwaith: {0}"
 
@@ -4953,7 +4953,7 @@ msgid "Open drawer menu"
 msgstr "Agor dewislen drôr"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1247
+#: src/view/com/composer/Composer.tsx:1244
 msgid "Open emoji picker"
 msgstr "Agor y dewisydd emojis"
 
@@ -5039,7 +5039,7 @@ msgstr "Yn agor y cyfansoddwr"
 msgid "Opens device photo gallery"
 msgstr "Yn agor oriel luniau dyfais"
 
-#: src/view/com/composer/Composer.tsx:1248
+#: src/view/com/composer/Composer.tsx:1245
 msgid "Opens emoji picker"
 msgstr "Yn agor y dewisydd emojis"
 
@@ -5074,7 +5074,7 @@ msgid "Opens the linked website"
 msgstr "Yn agor y wefan gysylltiedig"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:683
-#: src/view/com/util/UserAvatar.tsx:465
+#: src/view/com/util/UserAvatar.tsx:446
 msgid "Opens this profile"
 msgstr "Yn agor y proffil hwn"
 
@@ -5398,7 +5398,7 @@ msgstr "Fideos poblogaidd yn eich rhwydwaith."
 msgid "Porn"
 msgstr "Pornograffi"
 
-#: src/view/com/composer/Composer.tsx:963
+#: src/view/com/composer/Composer.tsx:959
 msgctxt "action"
 msgid "Post"
 msgstr "Postiad"
@@ -5408,7 +5408,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "Postiad"
 
-#: src/view/com/composer/Composer.tsx:961
+#: src/view/com/composer/Composer.tsx:957
 msgctxt "action"
 msgid "Post All"
 msgstr "Postio'r Cyfan"
@@ -5561,7 +5561,7 @@ msgstr "Preifatrwydd a Diogelwch"
 msgid "Privacy Policy"
 msgstr "Polisi Preifatwydd"
 
-#: src/view/com/composer/Composer.tsx:1650
+#: src/view/com/composer/Composer.tsx:1658
 msgid "Processing video..."
 msgstr "Yn prosesu fideo..."
 
@@ -5752,8 +5752,8 @@ msgstr "Tynnu cyfrif"
 msgid "Remove attachment"
 msgstr "Tynnu'r atodiad"
 
-#: src/view/com/util/UserAvatar.tsx:416
-#: src/view/com/util/UserAvatar.tsx:419
+#: src/view/com/util/UserAvatar.tsx:397
+#: src/view/com/util/UserAvatar.tsx:400
 msgid "Remove Avatar"
 msgstr "Tynnu'r Afatar"
 
@@ -5880,7 +5880,7 @@ msgstr "Analluogwyd atebion"
 msgid "Replies to this post are disabled."
 msgstr "Mae atebion i'r postiad hwn wedi'u hanalluogi."
 
-#: src/view/com/composer/Composer.tsx:959
+#: src/view/com/composer/Composer.tsx:955
 msgctxt "action"
 msgid "Reply"
 msgstr "Ateb"
@@ -7963,7 +7963,7 @@ msgstr "Dad-danysgrifio o'r labelwr hwn"
 msgid "Unsubscribed from list"
 msgstr "Wedi dad-danysgrifio o'r rhestr"
 
-#: src/view/com/composer/Composer.tsx:782
+#: src/view/com/composer/Composer.tsx:781
 msgid "Unsupported video type"
 msgstr "Math o fideo heb ei gefnogi"
 
@@ -8014,20 +8014,20 @@ msgstr "Llwythwch lun i fyny yn lle hynny"
 msgid "Upload a text file to:"
 msgstr "Llwythwch ffeil testun i fyny i:"
 
-#: src/view/com/util/UserAvatar.tsx:387
-#: src/view/com/util/UserAvatar.tsx:390
+#: src/view/com/util/UserAvatar.tsx:368
+#: src/view/com/util/UserAvatar.tsx:371
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "Llwythwch i fyny o'r Camera"
 
-#: src/view/com/util/UserAvatar.tsx:404
+#: src/view/com/util/UserAvatar.tsx:385
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "Llwytho i fyny o'r Ffeiliau"
 
-#: src/view/com/util/UserAvatar.tsx:398
-#: src/view/com/util/UserAvatar.tsx:402
+#: src/view/com/util/UserAvatar.tsx:379
+#: src/view/com/util/UserAvatar.tsx:383
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -8042,7 +8042,7 @@ msgstr "Wrthi'n lwytho lluniau i fyny..."
 msgid "Uploading link thumbnail..."
 msgstr "Wrthi'n lwytho dolen llun bach i fyny..."
 
-#: src/view/com/composer/Composer.tsx:1647
+#: src/view/com/composer/Composer.tsx:1655
 msgid "Uploading video..."
 msgstr "Wrthi'n llwytho fideo i fyny..."
 
@@ -8243,7 +8243,7 @@ msgstr "Fideo heb ei ganfod."
 msgid "Video settings"
 msgstr "Gosodiadau fideo"
 
-#: src/view/com/composer/Composer.tsx:1657
+#: src/view/com/composer/Composer.tsx:1665
 msgid "Video uploaded"
 msgstr "Fideo wedi'i lwytho i fyny"
 
@@ -8500,7 +8500,7 @@ msgstr "Am beth mae pobl yn postio amdano."
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:745
+#: src/view/com/composer/Composer.tsx:744
 msgid "What's up?"
 msgstr "Beth sy'n digwydd?"
 
@@ -8574,11 +8574,11 @@ msgstr "Pam dylai'r defnyddiwr hwn gael ei adolygu?"
 msgid "Write a message"
 msgstr "Ysgrifennwch neges"
 
-#: src/view/com/composer/Composer.tsx:836
+#: src/view/com/composer/Composer.tsx:832
 msgid "Write post"
 msgstr "Ysgrifennwch bostiad"
 
-#: src/view/com/composer/Composer.tsx:743
+#: src/view/com/composer/Composer.tsx:742
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:69
 msgid "Write your reply"
 msgstr "Ysgrifennwch eich ateb"

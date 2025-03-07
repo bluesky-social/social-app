@@ -138,7 +138,7 @@ msgstr "{0} of {1}"
 msgid "{0} people have used this starter pack!"
 msgstr "{0} people have used this starter pack!"
 
-#: src/view/com/util/UserAvatar.tsx:464
+#: src/view/com/util/UserAvatar.tsx:445
 msgid "{0}'s avatar"
 msgstr "{0}'s avatar"
 
@@ -504,7 +504,7 @@ msgstr "Add alt text (optional)"
 msgid "Add another account"
 msgstr "Add another account"
 
-#: src/view/com/composer/Composer.tsx:744
+#: src/view/com/composer/Composer.tsx:743
 msgid "Add another post"
 msgstr "Add another post"
 
@@ -531,7 +531,7 @@ msgstr "Add mute word with chosen settings"
 msgid "Add muted words and tags"
 msgstr "Add muted words and tags"
 
-#: src/view/com/composer/Composer.tsx:1261
+#: src/view/com/composer/Composer.tsx:1258
 msgid "Add new post"
 msgstr "Add new post"
 
@@ -925,11 +925,11 @@ msgstr "Are you sure you want to remove {0} from your feeds?"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Are you sure you want to remove this from your feeds?"
 
-#: src/view/com/composer/Composer.tsx:695
+#: src/view/com/composer/Composer.tsx:694
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "Are you sure you'd like to discard this draft?"
 
-#: src/view/com/composer/Composer.tsx:872
+#: src/view/com/composer/Composer.tsx:868
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Are you sure you'd like to discard this post?"
 
@@ -1260,7 +1260,7 @@ msgstr "Camera"
 #: src/screens/Settings/Settings.tsx:260
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:935
+#: src/view/com/composer/Composer.tsx:931
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -1661,7 +1661,7 @@ msgstr "Complete the challenge"
 msgid "Compose new post"
 msgstr "Compose new post"
 
-#: src/view/com/composer/Composer.tsx:838
+#: src/view/com/composer/Composer.tsx:834
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 
@@ -1669,7 +1669,7 @@ msgstr "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgid "Compose reply"
 msgstr "Compose reply"
 
-#: src/view/com/composer/Composer.tsx:1644
+#: src/view/com/composer/Composer.tsx:1652
 msgid "Compressing video..."
 msgstr "Compressing video..."
 
@@ -2147,7 +2147,7 @@ msgstr "Delete message for me"
 msgid "Delete my account"
 msgstr "Delete my account"
 
-#: src/view/com/composer/Composer.tsx:846
+#: src/view/com/composer/Composer.tsx:842
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:709
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:711
 msgid "Delete post"
@@ -2259,8 +2259,8 @@ msgid "Disabled"
 msgstr "Disabled"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:697
-#: src/view/com/composer/Composer.tsx:879
+#: src/view/com/composer/Composer.tsx:696
+#: src/view/com/composer/Composer.tsx:875
 msgid "Discard"
 msgstr "Discard"
 
@@ -2268,11 +2268,11 @@ msgstr "Discard"
 msgid "Discard changes?"
 msgstr "Discard changes?"
 
-#: src/view/com/composer/Composer.tsx:694
+#: src/view/com/composer/Composer.tsx:693
 msgid "Discard draft?"
 msgstr "Discard draft?"
 
-#: src/view/com/composer/Composer.tsx:871
+#: src/view/com/composer/Composer.tsx:867
 msgid "Discard post?"
 msgstr "Discard post?"
 
@@ -2298,7 +2298,7 @@ msgstr "Discover New Feeds"
 msgid "Dismiss"
 msgstr "Dismiss"
 
-#: src/view/com/composer/Composer.tsx:1568
+#: src/view/com/composer/Composer.tsx:1576
 msgid "Dismiss error"
 msgstr "Dismiss error"
 
@@ -2469,7 +2469,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "Edit"
 
-#: src/view/com/util/UserAvatar.tsx:363
+#: src/view/com/util/UserAvatar.tsx:344
 #: src/view/com/util/UserBanner.tsx:95
 msgid "Edit avatar"
 msgstr "Edit avatar"
@@ -2749,7 +2749,7 @@ msgstr "Enter your username and password"
 msgid "Enters full screen"
 msgstr "Enters fullscreen"
 
-#: src/view/com/composer/Composer.tsx:1653
+#: src/view/com/composer/Composer.tsx:1661
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "Error"
@@ -3825,7 +3825,7 @@ msgstr "It's correct"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "It's just you right now! Add more people to your starter pack by searching above."
 
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1595
 msgid "Job ID: {0}"
 msgstr "Job ID: {0}"
 
@@ -4953,7 +4953,7 @@ msgid "Open drawer menu"
 msgstr "Open drawer menu"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1247
+#: src/view/com/composer/Composer.tsx:1244
 msgid "Open emoji picker"
 msgstr "Open emoji picker"
 
@@ -5039,7 +5039,7 @@ msgstr "Opens composer"
 msgid "Opens device photo gallery"
 msgstr "Opens device photo gallery"
 
-#: src/view/com/composer/Composer.tsx:1248
+#: src/view/com/composer/Composer.tsx:1245
 msgid "Opens emoji picker"
 msgstr "Opens emoji picker"
 
@@ -5074,7 +5074,7 @@ msgid "Opens the linked website"
 msgstr "Opens the linked website"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:683
-#: src/view/com/util/UserAvatar.tsx:465
+#: src/view/com/util/UserAvatar.tsx:446
 msgid "Opens this profile"
 msgstr "Opens this profile"
 
@@ -5398,7 +5398,7 @@ msgstr "Popular videos in your network."
 msgid "Porn"
 msgstr "Porn"
 
-#: src/view/com/composer/Composer.tsx:963
+#: src/view/com/composer/Composer.tsx:959
 msgctxt "action"
 msgid "Post"
 msgstr "Post"
@@ -5408,7 +5408,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "Post"
 
-#: src/view/com/composer/Composer.tsx:961
+#: src/view/com/composer/Composer.tsx:957
 msgctxt "action"
 msgid "Post All"
 msgstr "Post All"
@@ -5561,7 +5561,7 @@ msgstr "Privacy and Security"
 msgid "Privacy Policy"
 msgstr "Privacy Policy"
 
-#: src/view/com/composer/Composer.tsx:1650
+#: src/view/com/composer/Composer.tsx:1658
 msgid "Processing video..."
 msgstr "Processing video..."
 
@@ -5752,8 +5752,8 @@ msgstr "Remove account"
 msgid "Remove attachment"
 msgstr "Remove attachment"
 
-#: src/view/com/util/UserAvatar.tsx:416
-#: src/view/com/util/UserAvatar.tsx:419
+#: src/view/com/util/UserAvatar.tsx:397
+#: src/view/com/util/UserAvatar.tsx:400
 msgid "Remove Avatar"
 msgstr "Remove Avatar"
 
@@ -5880,7 +5880,7 @@ msgstr "Replies disabled"
 msgid "Replies to this post are disabled."
 msgstr "Replies to this post are disabled."
 
-#: src/view/com/composer/Composer.tsx:959
+#: src/view/com/composer/Composer.tsx:955
 msgctxt "action"
 msgid "Reply"
 msgstr "Reply"
@@ -7963,7 +7963,7 @@ msgstr "Unsubscribe from this labeller"
 msgid "Unsubscribed from list"
 msgstr "Unsubscribed from list"
 
-#: src/view/com/composer/Composer.tsx:782
+#: src/view/com/composer/Composer.tsx:781
 msgid "Unsupported video type"
 msgstr "Unsupported video type"
 
@@ -8014,20 +8014,20 @@ msgstr "Upload a photo instead"
 msgid "Upload a text file to:"
 msgstr "Upload a text file to:"
 
-#: src/view/com/util/UserAvatar.tsx:387
-#: src/view/com/util/UserAvatar.tsx:390
+#: src/view/com/util/UserAvatar.tsx:368
+#: src/view/com/util/UserAvatar.tsx:371
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "Upload from Camera"
 
-#: src/view/com/util/UserAvatar.tsx:404
+#: src/view/com/util/UserAvatar.tsx:385
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "Upload from Files"
 
-#: src/view/com/util/UserAvatar.tsx:398
-#: src/view/com/util/UserAvatar.tsx:402
+#: src/view/com/util/UserAvatar.tsx:379
+#: src/view/com/util/UserAvatar.tsx:383
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -8042,7 +8042,7 @@ msgstr "Uploading images..."
 msgid "Uploading link thumbnail..."
 msgstr "Uploading link thumbnail..."
 
-#: src/view/com/composer/Composer.tsx:1647
+#: src/view/com/composer/Composer.tsx:1655
 msgid "Uploading video..."
 msgstr "Uploading video..."
 
@@ -8243,7 +8243,7 @@ msgstr "Video not found."
 msgid "Video settings"
 msgstr "Video settings"
 
-#: src/view/com/composer/Composer.tsx:1657
+#: src/view/com/composer/Composer.tsx:1665
 msgid "Video uploaded"
 msgstr "Video uploaded"
 
@@ -8500,7 +8500,7 @@ msgstr "What people are posting about."
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:745
+#: src/view/com/composer/Composer.tsx:744
 msgid "What's up?"
 msgstr "What's up?"
 
@@ -8574,11 +8574,11 @@ msgstr "Why should this user be reviewed?"
 msgid "Write a message"
 msgstr "Write a message"
 
-#: src/view/com/composer/Composer.tsx:836
+#: src/view/com/composer/Composer.tsx:832
 msgid "Write post"
 msgstr "Write post"
 
-#: src/view/com/composer/Composer.tsx:743
+#: src/view/com/composer/Composer.tsx:742
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:69
 msgid "Write your reply"
 msgstr "Write your reply"

@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-03-07 03:35\n"
+"PO-Revision-Date: 2025-03-07 16:40\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -138,7 +138,7 @@ msgstr "第 {0} 个（共 {1} 个）"
 msgid "{0} people have used this starter pack!"
 msgstr "{0} 人使用过此新手包！"
 
-#: src/view/com/util/UserAvatar.tsx:464
+#: src/view/com/util/UserAvatar.tsx:445
 msgid "{0}'s avatar"
 msgstr "{0}的头像"
 
@@ -504,7 +504,7 @@ msgstr "添加替代文本（可选）"
 msgid "Add another account"
 msgstr "添加其他账户"
 
-#: src/view/com/composer/Composer.tsx:744
+#: src/view/com/composer/Composer.tsx:743
 msgid "Add another post"
 msgstr "添加另一则帖文"
 
@@ -531,7 +531,7 @@ msgstr "使用所选配置添加隐藏字词"
 msgid "Add muted words and tags"
 msgstr "添加隐藏字词和标签"
 
-#: src/view/com/composer/Composer.tsx:1261
+#: src/view/com/composer/Composer.tsx:1258
 msgid "Add new post"
 msgstr "添加新帖文"
 
@@ -925,11 +925,11 @@ msgstr "你确定要从你的动态源中删除 {0} 吗？"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "你确定要将此从你的动态源中删除吗？"
 
-#: src/view/com/composer/Composer.tsx:695
+#: src/view/com/composer/Composer.tsx:694
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "你确定要舍弃这段草稿吗？"
 
-#: src/view/com/composer/Composer.tsx:872
+#: src/view/com/composer/Composer.tsx:868
 msgid "Are you sure you'd like to discard this post?"
 msgstr "你确定要放弃发布这则帖文吗？"
 
@@ -1260,7 +1260,7 @@ msgstr "相机"
 #: src/screens/Settings/Settings.tsx:260
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:935
+#: src/view/com/composer/Composer.tsx:931
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -1661,7 +1661,7 @@ msgstr "完成验证"
 msgid "Compose new post"
 msgstr "撰写新帖文"
 
-#: src/view/com/composer/Composer.tsx:838
+#: src/view/com/composer/Composer.tsx:834
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "帖文字数最多为 {MAX_GRAPHEME_LENGTH} 个字符"
 
@@ -1669,7 +1669,7 @@ msgstr "帖文字数最多为 {MAX_GRAPHEME_LENGTH} 个字符"
 msgid "Compose reply"
 msgstr "撰写回复"
 
-#: src/view/com/composer/Composer.tsx:1644
+#: src/view/com/composer/Composer.tsx:1652
 msgid "Compressing video..."
 msgstr "正在压缩视频……"
 
@@ -2147,7 +2147,7 @@ msgstr "仅为我删除私信"
 msgid "Delete my account"
 msgstr "删除我的账户"
 
-#: src/view/com/composer/Composer.tsx:846
+#: src/view/com/composer/Composer.tsx:842
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:709
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:711
 msgid "Delete post"
@@ -2259,8 +2259,8 @@ msgid "Disabled"
 msgstr "停用"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:697
-#: src/view/com/composer/Composer.tsx:879
+#: src/view/com/composer/Composer.tsx:696
+#: src/view/com/composer/Composer.tsx:875
 msgid "Discard"
 msgstr "舍弃"
 
@@ -2268,11 +2268,11 @@ msgstr "舍弃"
 msgid "Discard changes?"
 msgstr "要放弃更改吗？"
 
-#: src/view/com/composer/Composer.tsx:694
+#: src/view/com/composer/Composer.tsx:693
 msgid "Discard draft?"
 msgstr "要舍弃草稿吗？"
 
-#: src/view/com/composer/Composer.tsx:871
+#: src/view/com/composer/Composer.tsx:867
 msgid "Discard post?"
 msgstr "要放弃发布吗？"
 
@@ -2298,7 +2298,7 @@ msgstr "探索新的动态源"
 msgid "Dismiss"
 msgstr "跳过"
 
-#: src/view/com/composer/Composer.tsx:1568
+#: src/view/com/composer/Composer.tsx:1576
 msgid "Dismiss error"
 msgstr "忽略错误"
 
@@ -2469,7 +2469,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "编辑"
 
-#: src/view/com/util/UserAvatar.tsx:363
+#: src/view/com/util/UserAvatar.tsx:344
 #: src/view/com/util/UserBanner.tsx:95
 msgid "Edit avatar"
 msgstr "编辑头像"
@@ -2749,7 +2749,7 @@ msgstr "输入你的用户名和密码"
 msgid "Enters full screen"
 msgstr "进入全屏模式"
 
-#: src/view/com/composer/Composer.tsx:1653
+#: src/view/com/composer/Composer.tsx:1661
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "错误"
@@ -3825,7 +3825,7 @@ msgstr "这是正确的电子邮箱地址"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "现在只有你一个！通过上面的列表将更多人添加到你的新手包里面。"
 
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1595
 msgid "Job ID: {0}"
 msgstr "作业 ID：{0}"
 
@@ -4953,7 +4953,7 @@ msgid "Open drawer menu"
 msgstr "开启抽屉菜单"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1247
+#: src/view/com/composer/Composer.tsx:1244
 msgid "Open emoji picker"
 msgstr "开启表情符号选择器"
 
@@ -5039,7 +5039,7 @@ msgstr "开启编辑器"
 msgid "Opens device photo gallery"
 msgstr "开启设备相册"
 
-#: src/view/com/composer/Composer.tsx:1248
+#: src/view/com/composer/Composer.tsx:1245
 msgid "Opens emoji picker"
 msgstr "开启表情符号选择器"
 
@@ -5074,7 +5074,7 @@ msgid "Opens the linked website"
 msgstr "开启链接到的网页"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:683
-#: src/view/com/util/UserAvatar.tsx:465
+#: src/view/com/util/UserAvatar.tsx:446
 msgid "Opens this profile"
 msgstr "开启该个人资料"
 
@@ -5398,7 +5398,7 @@ msgstr "来自你社交网络的热门视频。"
 msgid "Porn"
 msgstr "色情"
 
-#: src/view/com/composer/Composer.tsx:963
+#: src/view/com/composer/Composer.tsx:959
 msgctxt "action"
 msgid "Post"
 msgstr "发布"
@@ -5408,7 +5408,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "发布"
 
-#: src/view/com/composer/Composer.tsx:961
+#: src/view/com/composer/Composer.tsx:957
 msgctxt "action"
 msgid "Post All"
 msgstr "全部发布"
@@ -5561,7 +5561,7 @@ msgstr "隐私与安全"
 msgid "Privacy Policy"
 msgstr "隐私政策"
 
-#: src/view/com/composer/Composer.tsx:1650
+#: src/view/com/composer/Composer.tsx:1658
 msgid "Processing video..."
 msgstr "正在处理视频……"
 
@@ -5752,8 +5752,8 @@ msgstr "移除账户"
 msgid "Remove attachment"
 msgstr "删除关联"
 
-#: src/view/com/util/UserAvatar.tsx:416
-#: src/view/com/util/UserAvatar.tsx:419
+#: src/view/com/util/UserAvatar.tsx:397
+#: src/view/com/util/UserAvatar.tsx:400
 msgid "Remove Avatar"
 msgstr "删除头像"
 
@@ -5880,7 +5880,7 @@ msgstr "已停用回复"
 msgid "Replies to this post are disabled."
 msgstr "这则帖文的回复已被停用。"
 
-#: src/view/com/composer/Composer.tsx:959
+#: src/view/com/composer/Composer.tsx:955
 msgctxt "action"
 msgid "Reply"
 msgstr "回复"
@@ -7963,7 +7963,7 @@ msgstr "取消订阅此标记者"
 msgid "Unsubscribed from list"
 msgstr "已从列表中取消订阅"
 
-#: src/view/com/composer/Composer.tsx:782
+#: src/view/com/composer/Composer.tsx:781
 msgid "Unsupported video type"
 msgstr "不支持的视频格式"
 
@@ -8014,20 +8014,20 @@ msgstr "上传图片"
 msgid "Upload a text file to:"
 msgstr "将文本文件上传至："
 
-#: src/view/com/util/UserAvatar.tsx:387
-#: src/view/com/util/UserAvatar.tsx:390
+#: src/view/com/util/UserAvatar.tsx:368
+#: src/view/com/util/UserAvatar.tsx:371
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "从相机上传"
 
-#: src/view/com/util/UserAvatar.tsx:404
+#: src/view/com/util/UserAvatar.tsx:385
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "从文件上传"
 
-#: src/view/com/util/UserAvatar.tsx:398
-#: src/view/com/util/UserAvatar.tsx:402
+#: src/view/com/util/UserAvatar.tsx:379
+#: src/view/com/util/UserAvatar.tsx:383
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -8042,7 +8042,7 @@ msgstr "正在上传图片……"
 msgid "Uploading link thumbnail..."
 msgstr "正在上传链接缩略图……"
 
-#: src/view/com/composer/Composer.tsx:1647
+#: src/view/com/composer/Composer.tsx:1655
 msgid "Uploading video..."
 msgstr "正在上传视频……"
 
@@ -8243,7 +8243,7 @@ msgstr "无法找到视频。"
 msgid "Video settings"
 msgstr "视频设置"
 
-#: src/view/com/composer/Composer.tsx:1657
+#: src/view/com/composer/Composer.tsx:1665
 msgid "Video uploaded"
 msgstr "已上传视频"
 
@@ -8500,7 +8500,7 @@ msgstr "大家都在讨论的焦点话题。"
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:745
+#: src/view/com/composer/Composer.tsx:744
 msgid "What's up?"
 msgstr "发生了什么新鲜事？"
 
@@ -8574,11 +8574,11 @@ msgstr "为什么应该审核此用户？"
 msgid "Write a message"
 msgstr "撰写私信"
 
-#: src/view/com/composer/Composer.tsx:836
+#: src/view/com/composer/Composer.tsx:832
 msgid "Write post"
 msgstr "撰写帖文"
 
-#: src/view/com/composer/Composer.tsx:743
+#: src/view/com/composer/Composer.tsx:742
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:69
 msgid "Write your reply"
 msgstr "撰写你的回复"

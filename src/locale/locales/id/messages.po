@@ -8,7 +8,7 @@ msgstr ""
 "Language: id\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-03-07 03:35\n"
+"PO-Revision-Date: 2025-03-07 16:40\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -138,7 +138,7 @@ msgstr "{0} dari {1}"
 msgid "{0} people have used this starter pack!"
 msgstr "{0} orang telah menggunakan paket pemula ini!"
 
-#: src/view/com/util/UserAvatar.tsx:464
+#: src/view/com/util/UserAvatar.tsx:445
 msgid "{0}'s avatar"
 msgstr "Avatar {0}"
 
@@ -412,13 +412,13 @@ msgstr ""
 #: src/view/com/profile/ProfileMenu.tsx:154
 msgctxt "toast"
 msgid "Account followed"
-msgstr ""
+msgstr "Akun diikuti"
 
 #: src/view/com/profile/ProfileMenu.tsx:117
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:398
 msgctxt "toast"
 msgid "Account muted"
-msgstr ""
+msgstr "Akun dibisukan"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:103
 #: src/lib/moderation/useModerationCauseDescription.ts:98
@@ -446,13 +446,13 @@ msgstr ""
 #: src/view/com/profile/ProfileMenu.tsx:166
 msgctxt "toast"
 msgid "Account unfollowed"
-msgstr ""
+msgstr "Akun tidak diikuti"
 
 #: src/view/com/profile/ProfileMenu.tsx:107
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:388
 msgctxt "toast"
 msgid "Account unmuted"
-msgstr ""
+msgstr "Akun tidak dibisukan"
 
 #: src/components/dialogs/MutedWords.tsx:328
 #: src/view/com/modals/ListAddRemoveUsers.tsx:269
@@ -504,7 +504,7 @@ msgstr "Tambahkan teks alt (opsional)"
 msgid "Add another account"
 msgstr "Tambahkan akun lain"
 
-#: src/view/com/composer/Composer.tsx:744
+#: src/view/com/composer/Composer.tsx:743
 msgid "Add another post"
 msgstr "Tambahkan postingan lain"
 
@@ -531,7 +531,7 @@ msgstr "Tambahkan kata bisu yang dipilih pengaturan"
 msgid "Add muted words and tags"
 msgstr "Tambah kata dan tagar untuk dibisukan"
 
-#: src/view/com/composer/Composer.tsx:1261
+#: src/view/com/composer/Composer.tsx:1258
 msgid "Add new post"
 msgstr "Tambahkan postingan baru"
 
@@ -817,7 +817,7 @@ msgstr "Sandi Aplikasi"
 #: src/screens/Settings/AppPasswords.tsx:147
 msgctxt "toast"
 msgid "App password deleted"
-msgstr ""
+msgstr "Sandi aplikasi dihapus"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:84
 msgid "App password name must be unique"
@@ -925,11 +925,11 @@ msgstr "Anda yakin ingin menghapus {0} dari daftar feed Anda?"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Anda yakin ingin menghapus ini dari daftar feed Anda?"
 
-#: src/view/com/composer/Composer.tsx:695
+#: src/view/com/composer/Composer.tsx:694
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "Anda yakin ingin membuang draf ini?"
 
-#: src/view/com/composer/Composer.tsx:872
+#: src/view/com/composer/Composer.tsx:868
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Anda yakin ingin membuang postingan ini?"
 
@@ -1260,7 +1260,7 @@ msgstr "Kamera"
 #: src/screens/Settings/Settings.tsx:260
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:935
+#: src/view/com/composer/Composer.tsx:931
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -1661,7 +1661,7 @@ msgstr "Selesaikan tantangan"
 msgid "Compose new post"
 msgstr "Tulis postingan baru"
 
-#: src/view/com/composer/Composer.tsx:838
+#: src/view/com/composer/Composer.tsx:834
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "Buat postingan dengan panjang hingga {MAX_GRAPHEME_LENGTH} karakter"
 
@@ -1669,7 +1669,7 @@ msgstr "Buat postingan dengan panjang hingga {MAX_GRAPHEME_LENGTH} karakter"
 msgid "Compose reply"
 msgstr "Tulis balasan"
 
-#: src/view/com/composer/Composer.tsx:1644
+#: src/view/com/composer/Composer.tsx:1652
 msgid "Compressing video..."
 msgstr "Mengompres video..."
 
@@ -2147,7 +2147,7 @@ msgstr "Hapus pesan untuk saya"
 msgid "Delete my account"
 msgstr "Hapus akun saya"
 
-#: src/view/com/composer/Composer.tsx:846
+#: src/view/com/composer/Composer.tsx:842
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:709
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:711
 msgid "Delete post"
@@ -2216,12 +2216,12 @@ msgstr "Lepaskan kutipan ini?"
 #: src/screens/Settings/AboutSettings.tsx:87
 msgctxt "toast"
 msgid "Developer mode disabled"
-msgstr ""
+msgstr "Mode pengembang dimatikan"
 
 #: src/screens/Settings/AboutSettings.tsx:81
 msgctxt "toast"
 msgid "Developer mode enabled"
-msgstr ""
+msgstr "Mode pengembang dinyalakan"
 
 #: src/screens/Settings/Settings.tsx:242
 #: src/screens/Settings/Settings.tsx:245
@@ -2259,8 +2259,8 @@ msgid "Disabled"
 msgstr "Dinonaktifkan"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:697
-#: src/view/com/composer/Composer.tsx:879
+#: src/view/com/composer/Composer.tsx:696
+#: src/view/com/composer/Composer.tsx:875
 msgid "Discard"
 msgstr "Buang"
 
@@ -2268,11 +2268,11 @@ msgstr "Buang"
 msgid "Discard changes?"
 msgstr "Buang perubahan?"
 
-#: src/view/com/composer/Composer.tsx:694
+#: src/view/com/composer/Composer.tsx:693
 msgid "Discard draft?"
 msgstr "Buang draf?"
 
-#: src/view/com/composer/Composer.tsx:871
+#: src/view/com/composer/Composer.tsx:867
 msgid "Discard post?"
 msgstr "Buang postingan?"
 
@@ -2298,7 +2298,7 @@ msgstr "Temukan Feed Baru"
 msgid "Dismiss"
 msgstr "Tutup"
 
-#: src/view/com/composer/Composer.tsx:1568
+#: src/view/com/composer/Composer.tsx:1576
 msgid "Dismiss error"
 msgstr "Abaikan kesalahan"
 
@@ -2469,7 +2469,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "Ubah"
 
-#: src/view/com/util/UserAvatar.tsx:363
+#: src/view/com/util/UserAvatar.tsx:344
 #: src/view/com/util/UserBanner.tsx:95
 msgid "Edit avatar"
 msgstr "Ubah avatar"
@@ -2587,7 +2587,7 @@ msgstr "Email Dikirim Ulang"
 #: src/view/com/modals/ChangeEmail.tsx:83
 msgctxt "toast"
 msgid "Email updated"
-msgstr ""
+msgstr "Email diperbarui"
 
 #: src/view/com/modals/ChangeEmail.tsx:106
 msgid "Email Updated"
@@ -2596,7 +2596,7 @@ msgstr "Email Diperbarui"
 #: src/view/com/modals/VerifyEmail.tsx:85
 msgctxt "toast"
 msgid "Email verified"
-msgstr ""
+msgstr "Email terverifikasi"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:79
 msgid "Email Verified"
@@ -2749,7 +2749,7 @@ msgstr "Masukkan nama pengguna dan kata sandi Anda"
 msgid "Enters full screen"
 msgstr "Masuk ke mode layar penuh"
 
-#: src/view/com/composer/Composer.tsx:1653
+#: src/view/com/composer/Composer.tsx:1661
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "Galat"
@@ -2905,7 +2905,7 @@ msgstr "Preferensi Media Eksternal"
 #: src/screens/Messages/components/RequestButtons.tsx:208
 msgctxt "toast"
 msgid "Failed to accept chat"
-msgstr ""
+msgstr "Gagal menerima obrolan"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:568
 msgid "Failed to change handle. Please try again."
@@ -2917,7 +2917,7 @@ msgstr "Gagal membuat sandi aplikasi. Silakan coba lagi."
 
 #: src/components/dms/MessageProfileButton.tsx:39
 msgid "Failed to create conversation"
-msgstr ""
+msgstr "Gagal membuat percakapan"
 
 #: src/screens/StarterPack/Wizard/index.tsx:233
 #: src/screens/StarterPack/Wizard/index.tsx:241
@@ -2932,7 +2932,7 @@ msgstr "Gagal membuat daftar. Periksa koneksi internet Anda dan coba lagi."
 #: src/screens/Messages/components/RequestButtons.tsx:267
 msgctxt "toast"
 msgid "Failed to delete chat"
-msgstr ""
+msgstr "Gagal menghapus obrolan"
 
 #: src/components/dms/MessageMenu.tsx:75
 msgid "Failed to delete message"
@@ -2949,7 +2949,7 @@ msgstr "Gagal menghapus paket pemula"
 #: src/screens/Messages/ChatList.tsx:242
 #: src/screens/Messages/Inbox.tsx:182
 msgid "Failed to load conversations"
-msgstr ""
+msgstr "Gagal memuat percakapan"
 
 #: src/view/screens/Search/Explore.tsx:463
 #: src/view/screens/Search/Explore.tsx:491
@@ -2976,7 +2976,7 @@ msgstr "Gagal memuat saran akun untuk diikuti"
 #: src/screens/Messages/Inbox.tsx:290
 #: src/screens/Messages/Inbox.tsx:313
 msgid "Failed to mark all requests as read"
-msgstr ""
+msgstr "Gagal menandai semua permintaan sebagai dibaca"
 
 #: src/state/queries/pinned-post.ts:75
 msgid "Failed to pin post"
@@ -3053,7 +3053,7 @@ msgstr "Masukan"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:286
 msgctxt "toast"
 msgid "Feedback sent!"
-msgstr ""
+msgstr "Masukan terkirim!"
 
 #: src/Navigation.tsx:428
 #: src/screens/StarterPack/StarterPackScreen.tsx:185
@@ -3825,7 +3825,7 @@ msgstr "Sudah benar"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "Hanya ada Anda saat ini! Tambahkan lebih banyak orang ke paket pemula Anda melalui pencarian di atas."
 
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1595
 msgid "Job ID: {0}"
 msgstr "ID Kerja: {0}"
 
@@ -4283,7 +4283,7 @@ msgstr "Pesan"
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:81
 msgctxt "Name of app icon variant"
 msgid "Midnight"
-msgstr ""
+msgstr "Tengah malam"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:47
 #: src/lib/moderation/useReportOptions.ts:47
@@ -4323,12 +4323,12 @@ msgstr "Daftar moderasi Anda"
 #: src/view/com/modals/CreateOrEditList.tsx:177
 msgctxt "toast"
 msgid "Moderation list created"
-msgstr ""
+msgstr "Daftar moderasi dibuat"
 
 #: src/view/com/modals/CreateOrEditList.tsx:163
 msgctxt "toast"
 msgid "Moderation list updated"
-msgstr ""
+msgstr "Daftar moderasi diperbarui"
 
 #: src/screens/Moderation/index.tsx:239
 msgid "Moderation lists"
@@ -4953,7 +4953,7 @@ msgid "Open drawer menu"
 msgstr "Buka menu geser"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1247
+#: src/view/com/composer/Composer.tsx:1244
 msgid "Open emoji picker"
 msgstr "Buka pemilih emoji"
 
@@ -5017,7 +5017,7 @@ msgstr "Membuka detail tambahan untuk entri debug"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:45
 msgid "Opens alt text dialog"
-msgstr ""
+msgstr "Membuka dialog teks alt"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:73
 msgid "Opens camera on device"
@@ -5039,7 +5039,7 @@ msgstr "Membuka penyusun postingan"
 msgid "Opens device photo gallery"
 msgstr "Membuka galeri foto perangkat"
 
-#: src/view/com/composer/Composer.tsx:1248
+#: src/view/com/composer/Composer.tsx:1245
 msgid "Opens emoji picker"
 msgstr "Membuka pemilih emoji"
 
@@ -5074,7 +5074,7 @@ msgid "Opens the linked website"
 msgstr "Membuka situs web tertaut"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:683
-#: src/view/com/util/UserAvatar.tsx:465
+#: src/view/com/util/UserAvatar.tsx:446
 msgid "Opens this profile"
 msgstr "Membuka profil ini"
 
@@ -5398,7 +5398,7 @@ msgstr "Video populer di jaringan Anda."
 msgid "Porn"
 msgstr "Pornografi"
 
-#: src/view/com/composer/Composer.tsx:963
+#: src/view/com/composer/Composer.tsx:959
 msgctxt "action"
 msgid "Post"
 msgstr "Posting"
@@ -5408,7 +5408,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "Posting"
 
-#: src/view/com/composer/Composer.tsx:961
+#: src/view/com/composer/Composer.tsx:957
 msgctxt "action"
 msgid "Post All"
 msgstr "Posting Semua"
@@ -5503,7 +5503,7 @@ msgstr "Tautan yang Mungkin Menyesatkan"
 #: src/state/queries/notifications/settings.ts:44
 msgctxt "toast"
 msgid "Preference saved"
-msgstr ""
+msgstr "Preferensi disimpan"
 
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
@@ -5561,7 +5561,7 @@ msgstr "Privasi dan Keamanan"
 msgid "Privacy Policy"
 msgstr "Kebijakan Privasi"
 
-#: src/view/com/composer/Composer.tsx:1650
+#: src/view/com/composer/Composer.tsx:1658
 msgid "Processing video..."
 msgstr "Memproses video..."
 
@@ -5586,7 +5586,7 @@ msgstr "Profil"
 #: src/view/com/modals/EditProfile.tsx:124
 msgctxt "toast"
 msgid "Profile updated"
-msgstr ""
+msgstr "Profil diperbarui"
 
 #: src/screens/Onboarding/StepFinished.tsx:264
 msgid "Public"
@@ -5752,8 +5752,8 @@ msgstr "Hapus akun"
 msgid "Remove attachment"
 msgstr "Hapus sisipan"
 
-#: src/view/com/util/UserAvatar.tsx:416
-#: src/view/com/util/UserAvatar.tsx:419
+#: src/view/com/util/UserAvatar.tsx:397
+#: src/view/com/util/UserAvatar.tsx:400
 msgid "Remove Avatar"
 msgstr "Hapus Avatar"
 
@@ -5880,7 +5880,7 @@ msgstr "Balasan dinonaktifkan"
 msgid "Replies to this post are disabled."
 msgstr "Balasan ke postingan ini dinonaktifkan."
 
-#: src/view/com/composer/Composer.tsx:959
+#: src/view/com/composer/Composer.tsx:955
 msgctxt "action"
 msgid "Reply"
 msgstr "Balas"
@@ -6596,7 +6596,7 @@ msgstr "Pengaturan"
 #: src/screens/ModerationInteractionSettings/index.tsx:102
 msgctxt "toast"
 msgid "Settings saved"
-msgstr ""
+msgstr "Pengaturan disimpan"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Sexual activity or erotic nudity."
@@ -7963,7 +7963,7 @@ msgstr "Berhenti langganan pelabel ini"
 msgid "Unsubscribed from list"
 msgstr "Telah berhenti berlangganan dari daftar"
 
-#: src/view/com/composer/Composer.tsx:782
+#: src/view/com/composer/Composer.tsx:781
 msgid "Unsupported video type"
 msgstr "Tipe video tidak didukung"
 
@@ -8014,20 +8014,20 @@ msgstr "Unggah foto saja"
 msgid "Upload a text file to:"
 msgstr "Unggah berkas teks ke:"
 
-#: src/view/com/util/UserAvatar.tsx:387
-#: src/view/com/util/UserAvatar.tsx:390
+#: src/view/com/util/UserAvatar.tsx:368
+#: src/view/com/util/UserAvatar.tsx:371
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "Unggah dari Kamera"
 
-#: src/view/com/util/UserAvatar.tsx:404
+#: src/view/com/util/UserAvatar.tsx:385
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "Unggah dari Berkas"
 
-#: src/view/com/util/UserAvatar.tsx:398
-#: src/view/com/util/UserAvatar.tsx:402
+#: src/view/com/util/UserAvatar.tsx:379
+#: src/view/com/util/UserAvatar.tsx:383
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -8042,7 +8042,7 @@ msgstr "Mengunggah gambar..."
 msgid "Uploading link thumbnail..."
 msgstr "Mengunggah keluku tautan..."
 
-#: src/view/com/composer/Composer.tsx:1647
+#: src/view/com/composer/Composer.tsx:1655
 msgid "Uploading video..."
 msgstr "Mengunggah video..."
 
@@ -8243,7 +8243,7 @@ msgstr "Video tidak ditemukan."
 msgid "Video settings"
 msgstr "Pengaturan video"
 
-#: src/view/com/composer/Composer.tsx:1657
+#: src/view/com/composer/Composer.tsx:1665
 msgid "Video uploaded"
 msgstr "Video diunggah"
 
@@ -8500,7 +8500,7 @@ msgstr "Apa yang sedang dibicarakan orang."
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:745
+#: src/view/com/composer/Composer.tsx:744
 msgid "What's up?"
 msgstr "Apa kabar?"
 
@@ -8574,11 +8574,11 @@ msgstr "Mengapa pengguna ini perlu ditinjau?"
 msgid "Write a message"
 msgstr "Tulis pesan"
 
-#: src/view/com/composer/Composer.tsx:836
+#: src/view/com/composer/Composer.tsx:832
 msgid "Write post"
 msgstr "Tulis postingan"
 
-#: src/view/com/composer/Composer.tsx:743
+#: src/view/com/composer/Composer.tsx:742
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:69
 msgid "Write your reply"
 msgstr "Tulis balasan Anda"

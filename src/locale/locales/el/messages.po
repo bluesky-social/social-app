@@ -138,7 +138,7 @@ msgstr "{0} από {1}"
 msgid "{0} people have used this starter pack!"
 msgstr "{0} άτομα έχουν χρησιμοποιήσει αυτό το Starter Pack!"
 
-#: src/view/com/util/UserAvatar.tsx:464
+#: src/view/com/util/UserAvatar.tsx:445
 msgid "{0}'s avatar"
 msgstr "Η εικόνα προφίλ του {0}"
 
@@ -504,7 +504,7 @@ msgstr "Προσθήκη εναλλακτικού κειμένου (προαιρ
 msgid "Add another account"
 msgstr "Προσθήκη άλλου λογαριασμού"
 
-#: src/view/com/composer/Composer.tsx:744
+#: src/view/com/composer/Composer.tsx:743
 msgid "Add another post"
 msgstr "Προσθήκη άλλης ανάρτησης"
 
@@ -531,7 +531,7 @@ msgstr ""
 msgid "Add muted words and tags"
 msgstr "Προσθήκη λέξεων και ετικετών που θα είναι σε σίγαση"
 
-#: src/view/com/composer/Composer.tsx:1261
+#: src/view/com/composer/Composer.tsx:1258
 msgid "Add new post"
 msgstr "Προσθήκη νέας ανάρτησης"
 
@@ -925,11 +925,11 @@ msgstr "Θέλετε σίγουρα να αφαιρέσετε τον/την {0} 
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Είστε σίγουροι ότι θέλετε να αφαιρέσετε αυτό από τις ροές σας;"
 
-#: src/view/com/composer/Composer.tsx:695
+#: src/view/com/composer/Composer.tsx:694
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "Είστε σίγουροι ότι θέλετε να απορρίψετε αυτό το προσχέδιο;"
 
-#: src/view/com/composer/Composer.tsx:872
+#: src/view/com/composer/Composer.tsx:868
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Είστε σίγουροι ότι θέλετε να απορρίψετε αυτήν την ανάρτηση;"
 
@@ -1260,7 +1260,7 @@ msgstr "Κάμερα"
 #: src/screens/Settings/Settings.tsx:260
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:935
+#: src/view/com/composer/Composer.tsx:931
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -1661,7 +1661,7 @@ msgstr "Ολοκλήρωση της πρόκλησης"
 msgid "Compose new post"
 msgstr "Σύνταξη νέας ανάρτησης"
 
-#: src/view/com/composer/Composer.tsx:838
+#: src/view/com/composer/Composer.tsx:834
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "Σύνταξη αναρτήσεων έως {MAX_GRAPHEME_LENGTH} χαρακτήρες σε μήκος"
 
@@ -1669,7 +1669,7 @@ msgstr "Σύνταξη αναρτήσεων έως {MAX_GRAPHEME_LENGTH} χαρ�
 msgid "Compose reply"
 msgstr "Σύνταξη απάντησης"
 
-#: src/view/com/composer/Composer.tsx:1644
+#: src/view/com/composer/Composer.tsx:1652
 msgid "Compressing video..."
 msgstr "Συμπίεση βίντεο..."
 
@@ -2147,7 +2147,7 @@ msgstr "Διαγραφή μηνύματος για μένα"
 msgid "Delete my account"
 msgstr "Διαγραφή του λογαριασμού μου"
 
-#: src/view/com/composer/Composer.tsx:846
+#: src/view/com/composer/Composer.tsx:842
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:709
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:711
 msgid "Delete post"
@@ -2259,8 +2259,8 @@ msgid "Disabled"
 msgstr "Απενεργοποιημένο"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:697
-#: src/view/com/composer/Composer.tsx:879
+#: src/view/com/composer/Composer.tsx:696
+#: src/view/com/composer/Composer.tsx:875
 msgid "Discard"
 msgstr "Απόρριψη"
 
@@ -2268,11 +2268,11 @@ msgstr "Απόρριψη"
 msgid "Discard changes?"
 msgstr "Απόρριψη αλλαγών;"
 
-#: src/view/com/composer/Composer.tsx:694
+#: src/view/com/composer/Composer.tsx:693
 msgid "Discard draft?"
 msgstr "Απόρριψη προσχεδίου;"
 
-#: src/view/com/composer/Composer.tsx:871
+#: src/view/com/composer/Composer.tsx:867
 msgid "Discard post?"
 msgstr "Απόρριψη ανάρτησης;"
 
@@ -2298,7 +2298,7 @@ msgstr "Ανακαλύψτε Νέες Ροές"
 msgid "Dismiss"
 msgstr "Απόρριψη"
 
-#: src/view/com/composer/Composer.tsx:1568
+#: src/view/com/composer/Composer.tsx:1576
 msgid "Dismiss error"
 msgstr "Απόρριψη σφάλματος"
 
@@ -2469,7 +2469,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "Επεξεργασία"
 
-#: src/view/com/util/UserAvatar.tsx:363
+#: src/view/com/util/UserAvatar.tsx:344
 #: src/view/com/util/UserBanner.tsx:95
 msgid "Edit avatar"
 msgstr "Επεξεργασία εικόνας προφίλ"
@@ -2749,7 +2749,7 @@ msgstr "Εισάγετε το όνομα χρήστη και τον κωδικό
 msgid "Enters full screen"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1653
+#: src/view/com/composer/Composer.tsx:1661
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "Σφάλμα"
@@ -3825,7 +3825,7 @@ msgstr "Είναι σωστό"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "Είστε μόνοι σας αυτή τη στιγμή! Προσθέστε περισσότερους ανθρώπους στο starter pack σας κάνοντας αναζήτηση παραπάνω."
 
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1595
 msgid "Job ID: {0}"
 msgstr "ID εργασίας: {0}"
 
@@ -4953,7 +4953,7 @@ msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1247
+#: src/view/com/composer/Composer.tsx:1244
 msgid "Open emoji picker"
 msgstr "Άνοιγμα επιλογέα emoji"
 
@@ -5039,7 +5039,7 @@ msgstr "Ανοίγει το εργαλείο σύνταξης κειμένου"
 msgid "Opens device photo gallery"
 msgstr "Ανοίγει τη συλλογή φωτογραφιών της συσκευής"
 
-#: src/view/com/composer/Composer.tsx:1248
+#: src/view/com/composer/Composer.tsx:1245
 msgid "Opens emoji picker"
 msgstr ""
 
@@ -5074,7 +5074,7 @@ msgid "Opens the linked website"
 msgstr "Ανοίγει τον συνδεδεμένο ιστότοπο"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:683
-#: src/view/com/util/UserAvatar.tsx:465
+#: src/view/com/util/UserAvatar.tsx:446
 msgid "Opens this profile"
 msgstr "Ανοίγει αυτό το προφίλ"
 
@@ -5398,7 +5398,7 @@ msgstr ""
 msgid "Porn"
 msgstr "Πορνογραφία"
 
-#: src/view/com/composer/Composer.tsx:963
+#: src/view/com/composer/Composer.tsx:959
 msgctxt "action"
 msgid "Post"
 msgstr "Δημοσίευση"
@@ -5408,7 +5408,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "Δημοσίευση"
 
-#: src/view/com/composer/Composer.tsx:961
+#: src/view/com/composer/Composer.tsx:957
 msgctxt "action"
 msgid "Post All"
 msgstr "Δημοσίευση Όλων"
@@ -5561,7 +5561,7 @@ msgstr "Απόρρητο και Ασφάλεια"
 msgid "Privacy Policy"
 msgstr "Πολιτική Απορρήτου"
 
-#: src/view/com/composer/Composer.tsx:1650
+#: src/view/com/composer/Composer.tsx:1658
 msgid "Processing video..."
 msgstr "Επεξεργασία βίντεο..."
 
@@ -5752,8 +5752,8 @@ msgstr "Αφαίρεση λογαριασμού"
 msgid "Remove attachment"
 msgstr "Αφαίρεση συνημμένου"
 
-#: src/view/com/util/UserAvatar.tsx:416
-#: src/view/com/util/UserAvatar.tsx:419
+#: src/view/com/util/UserAvatar.tsx:397
+#: src/view/com/util/UserAvatar.tsx:400
 msgid "Remove Avatar"
 msgstr "Αφαίρεση φωτογραφίας προφίλ"
 
@@ -5880,7 +5880,7 @@ msgstr "Οι απαντήσεις είναι απενεργοποιημένες"
 msgid "Replies to this post are disabled."
 msgstr "Οι απαντήσεις σε αυτή τη δημοσίευση είναι απενεργοποιημένες."
 
-#: src/view/com/composer/Composer.tsx:959
+#: src/view/com/composer/Composer.tsx:955
 msgctxt "action"
 msgid "Reply"
 msgstr "Απάντηση"
@@ -7963,7 +7963,7 @@ msgstr "Απεγγραφή από αυτόν τον ετικετογράφο"
 msgid "Unsubscribed from list"
 msgstr "Απεγγραφή από αυτήν την λίστα"
 
-#: src/view/com/composer/Composer.tsx:782
+#: src/view/com/composer/Composer.tsx:781
 msgid "Unsupported video type"
 msgstr ""
 
@@ -8014,20 +8014,20 @@ msgstr "Αντ'αυτού, ανεβάστε μια φωτογραφία"
 msgid "Upload a text file to:"
 msgstr "Ανεβάστε ένα αρχείο κειμένου στο:"
 
-#: src/view/com/util/UserAvatar.tsx:387
-#: src/view/com/util/UserAvatar.tsx:390
+#: src/view/com/util/UserAvatar.tsx:368
+#: src/view/com/util/UserAvatar.tsx:371
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "Ανεβάστε από την κάμερα"
 
-#: src/view/com/util/UserAvatar.tsx:404
+#: src/view/com/util/UserAvatar.tsx:385
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "Ανεβάστε από αρχεία"
 
-#: src/view/com/util/UserAvatar.tsx:398
-#: src/view/com/util/UserAvatar.tsx:402
+#: src/view/com/util/UserAvatar.tsx:379
+#: src/view/com/util/UserAvatar.tsx:383
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -8042,7 +8042,7 @@ msgstr "Ανεβάζω εικόνες..."
 msgid "Uploading link thumbnail..."
 msgstr "Ανεβάζω μικρογραφία συνδέσμου..."
 
-#: src/view/com/composer/Composer.tsx:1647
+#: src/view/com/composer/Composer.tsx:1655
 msgid "Uploading video..."
 msgstr "Ανεβάζω βίντεο..."
 
@@ -8243,7 +8243,7 @@ msgstr "Το βίντεο δεν βρέθηκε."
 msgid "Video settings"
 msgstr "Ρυθμίσεις βίντεο"
 
-#: src/view/com/composer/Composer.tsx:1657
+#: src/view/com/composer/Composer.tsx:1665
 msgid "Video uploaded"
 msgstr "Το βίντεο ανέβηκε"
 
@@ -8500,7 +8500,7 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:745
+#: src/view/com/composer/Composer.tsx:744
 msgid "What's up?"
 msgstr "Τι συμβαίνει;"
 
@@ -8574,11 +8574,11 @@ msgstr "Γιατί πρέπει να ελεγχθεί αυτός ο χρήστη
 msgid "Write a message"
 msgstr "Γράψτε ένα μήνυμα"
 
-#: src/view/com/composer/Composer.tsx:836
+#: src/view/com/composer/Composer.tsx:832
 msgid "Write post"
 msgstr "Γράψτε ανάρτηση"
 
-#: src/view/com/composer/Composer.tsx:743
+#: src/view/com/composer/Composer.tsx:742
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:69
 msgid "Write your reply"
 msgstr "Γράψτε την απάντησή σας"

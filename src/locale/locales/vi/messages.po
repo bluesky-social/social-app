@@ -138,7 +138,7 @@ msgstr "{0} trên {1}"
 msgid "{0} people have used this starter pack!"
 msgstr "{0} người đã sử dụng gói khởi đầu này!"
 
-#: src/view/com/util/UserAvatar.tsx:464
+#: src/view/com/util/UserAvatar.tsx:445
 msgid "{0}'s avatar"
 msgstr "hình đại diện của {0}"
 
@@ -504,7 +504,7 @@ msgstr "Thêm văn bản thay thế (không bắt buộc)"
 msgid "Add another account"
 msgstr "Thêm tài khoản khác"
 
-#: src/view/com/composer/Composer.tsx:744
+#: src/view/com/composer/Composer.tsx:743
 msgid "Add another post"
 msgstr "Thêm bài"
 
@@ -531,7 +531,7 @@ msgstr ""
 msgid "Add muted words and tags"
 msgstr "Thêm từ cấm và thẻ"
 
-#: src/view/com/composer/Composer.tsx:1261
+#: src/view/com/composer/Composer.tsx:1258
 msgid "Add new post"
 msgstr "Thêm bài mới"
 
@@ -925,11 +925,11 @@ msgstr "Bạn có chắc chắn muốn xóa {0} khỏi bảng tin của bạn kh
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Bạn có chắc chắn muốn xóa khỏi bảng tin của bạn không?"
 
-#: src/view/com/composer/Composer.tsx:695
+#: src/view/com/composer/Composer.tsx:694
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "Bạn có chắc chắn muốn hủy bỏ bản nháp này không?"
 
-#: src/view/com/composer/Composer.tsx:872
+#: src/view/com/composer/Composer.tsx:868
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Bạn có chắc chắn muốn hủy bỏ bài đăng này không?"
 
@@ -1260,7 +1260,7 @@ msgstr "Máy ảnh"
 #: src/screens/Settings/Settings.tsx:260
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:935
+#: src/view/com/composer/Composer.tsx:931
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -1661,7 +1661,7 @@ msgstr "Hoàn thành thử thách"
 msgid "Compose new post"
 msgstr "Soạn bài đăng mới"
 
-#: src/view/com/composer/Composer.tsx:838
+#: src/view/com/composer/Composer.tsx:834
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "Soạn bài đăng có độ dài tối đa {MAX_GRAPHEME_LENGTH} ký tự"
 
@@ -1669,7 +1669,7 @@ msgstr "Soạn bài đăng có độ dài tối đa {MAX_GRAPHEME_LENGTH} ký t�
 msgid "Compose reply"
 msgstr "Soạn trả lời"
 
-#: src/view/com/composer/Composer.tsx:1644
+#: src/view/com/composer/Composer.tsx:1652
 msgid "Compressing video..."
 msgstr "Đang nén video..."
 
@@ -2147,7 +2147,7 @@ msgstr "Xóa tin nhắn cho tôi"
 msgid "Delete my account"
 msgstr "Xóa tài khoản của tôi"
 
-#: src/view/com/composer/Composer.tsx:846
+#: src/view/com/composer/Composer.tsx:842
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:709
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:711
 msgid "Delete post"
@@ -2259,8 +2259,8 @@ msgid "Disabled"
 msgstr "Đã tắt"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:697
-#: src/view/com/composer/Composer.tsx:879
+#: src/view/com/composer/Composer.tsx:696
+#: src/view/com/composer/Composer.tsx:875
 msgid "Discard"
 msgstr "Hủy bỏ"
 
@@ -2268,11 +2268,11 @@ msgstr "Hủy bỏ"
 msgid "Discard changes?"
 msgstr "Hủy thay đổi?"
 
-#: src/view/com/composer/Composer.tsx:694
+#: src/view/com/composer/Composer.tsx:693
 msgid "Discard draft?"
 msgstr "Hủy bản nháp?"
 
-#: src/view/com/composer/Composer.tsx:871
+#: src/view/com/composer/Composer.tsx:867
 msgid "Discard post?"
 msgstr "Hủy bài đăng?"
 
@@ -2298,7 +2298,7 @@ msgstr "Khám phá bảng tin mới"
 msgid "Dismiss"
 msgstr "Bỏ qua"
 
-#: src/view/com/composer/Composer.tsx:1568
+#: src/view/com/composer/Composer.tsx:1576
 msgid "Dismiss error"
 msgstr "Bỏ qua lỗi "
 
@@ -2469,7 +2469,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "Chỉnh sửa"
 
-#: src/view/com/util/UserAvatar.tsx:363
+#: src/view/com/util/UserAvatar.tsx:344
 #: src/view/com/util/UserBanner.tsx:95
 msgid "Edit avatar"
 msgstr "Chỉnh sửa hình đại diện"
@@ -2749,7 +2749,7 @@ msgstr "Nhập tên đăng nhập và mật khẩu"
 msgid "Enters full screen"
 msgstr "Mở toàn màn hình"
 
-#: src/view/com/composer/Composer.tsx:1653
+#: src/view/com/composer/Composer.tsx:1661
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "Lỗi"
@@ -3825,7 +3825,7 @@ msgstr "Đúng"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "Chỉ mới có bạn thôi! Thêm người khác vào gói khởi đầu của bạn bằng cách tìm kiếm ở trên."
 
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1595
 msgid "Job ID: {0}"
 msgstr "ID công việc: {0}"
 
@@ -4953,7 +4953,7 @@ msgid "Open drawer menu"
 msgstr "Mở trình đơn"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1247
+#: src/view/com/composer/Composer.tsx:1244
 msgid "Open emoji picker"
 msgstr "Mở trình chọn biểu tượng cảm xúc"
 
@@ -5039,7 +5039,7 @@ msgstr "Mở trình soạn thảo"
 msgid "Opens device photo gallery"
 msgstr "Mở thư viện ảnh trên thiết bị"
 
-#: src/view/com/composer/Composer.tsx:1248
+#: src/view/com/composer/Composer.tsx:1245
 msgid "Opens emoji picker"
 msgstr "Mở trình chọn emoji"
 
@@ -5074,7 +5074,7 @@ msgid "Opens the linked website"
 msgstr "Mở trang web liên kết"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:683
-#: src/view/com/util/UserAvatar.tsx:465
+#: src/view/com/util/UserAvatar.tsx:446
 msgid "Opens this profile"
 msgstr "Mở hồ sơ này"
 
@@ -5398,7 +5398,7 @@ msgstr "Video thịnh hành trong mạng lưới của bạn."
 msgid "Porn"
 msgstr "Hình ảnh khiêu dâm"
 
-#: src/view/com/composer/Composer.tsx:963
+#: src/view/com/composer/Composer.tsx:959
 msgctxt "action"
 msgid "Post"
 msgstr "Đăng"
@@ -5408,7 +5408,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "Đăng"
 
-#: src/view/com/composer/Composer.tsx:961
+#: src/view/com/composer/Composer.tsx:957
 msgctxt "action"
 msgid "Post All"
 msgstr "Đăng tất cả"
@@ -5561,7 +5561,7 @@ msgstr "Quyền riêng tư và bảo mật"
 msgid "Privacy Policy"
 msgstr "Chính sách bảo mật"
 
-#: src/view/com/composer/Composer.tsx:1650
+#: src/view/com/composer/Composer.tsx:1658
 msgid "Processing video..."
 msgstr "Đang xử lý video..."
 
@@ -5752,8 +5752,8 @@ msgstr "Xóa tài khoản"
 msgid "Remove attachment"
 msgstr "Xóa tệp đính kèm"
 
-#: src/view/com/util/UserAvatar.tsx:416
-#: src/view/com/util/UserAvatar.tsx:419
+#: src/view/com/util/UserAvatar.tsx:397
+#: src/view/com/util/UserAvatar.tsx:400
 msgid "Remove Avatar"
 msgstr "Xóa hình đại diện"
 
@@ -5880,7 +5880,7 @@ msgstr "Trả lời đã bị tắt"
 msgid "Replies to this post are disabled."
 msgstr "Trả lời cho bài đăng này đã bị tắt."
 
-#: src/view/com/composer/Composer.tsx:959
+#: src/view/com/composer/Composer.tsx:955
 msgctxt "action"
 msgid "Reply"
 msgstr "Trả lời"
@@ -7963,7 +7963,7 @@ msgstr "Bỏ đăng ký dịch vụ gắn nhãn"
 msgid "Unsubscribed from list"
 msgstr "Đã bỏ đăng ký danh sách"
 
-#: src/view/com/composer/Composer.tsx:782
+#: src/view/com/composer/Composer.tsx:781
 msgid "Unsupported video type"
 msgstr "Định dạng video không được hỗ trợ"
 
@@ -8014,20 +8014,20 @@ msgstr "Tải lên ảnh"
 msgid "Upload a text file to:"
 msgstr "Tải lên tệp văn bản đến:"
 
-#: src/view/com/util/UserAvatar.tsx:387
-#: src/view/com/util/UserAvatar.tsx:390
+#: src/view/com/util/UserAvatar.tsx:368
+#: src/view/com/util/UserAvatar.tsx:371
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "Tải lên từ máy ảnh"
 
-#: src/view/com/util/UserAvatar.tsx:404
+#: src/view/com/util/UserAvatar.tsx:385
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "Tải lên từ Files"
 
-#: src/view/com/util/UserAvatar.tsx:398
-#: src/view/com/util/UserAvatar.tsx:402
+#: src/view/com/util/UserAvatar.tsx:379
+#: src/view/com/util/UserAvatar.tsx:383
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -8042,7 +8042,7 @@ msgstr "Đang tải lên hình..."
 msgid "Uploading link thumbnail..."
 msgstr "Đang tải lên hình cho liên kết..."
 
-#: src/view/com/composer/Composer.tsx:1647
+#: src/view/com/composer/Composer.tsx:1655
 msgid "Uploading video..."
 msgstr "Đang tải lên video..."
 
@@ -8243,7 +8243,7 @@ msgstr "Không tìm thấy video."
 msgid "Video settings"
 msgstr "Cài đặt video"
 
-#: src/view/com/composer/Composer.tsx:1657
+#: src/view/com/composer/Composer.tsx:1665
 msgid "Video uploaded"
 msgstr "Đã tải lên video"
 
@@ -8500,7 +8500,7 @@ msgstr "Chủ đề mà mọi người đang bàn luận."
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:745
+#: src/view/com/composer/Composer.tsx:744
 msgid "What's up?"
 msgstr "Có gì mới?"
 
@@ -8574,11 +8574,11 @@ msgstr "Tại sao người dùng này cần được xem xét?"
 msgid "Write a message"
 msgstr "Soạn một tin nhắn"
 
-#: src/view/com/composer/Composer.tsx:836
+#: src/view/com/composer/Composer.tsx:832
 msgid "Write post"
 msgstr "Soạn bài đăng"
 
-#: src/view/com/composer/Composer.tsx:743
+#: src/view/com/composer/Composer.tsx:742
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:69
 msgid "Write your reply"
 msgstr "Soạn trả lời"

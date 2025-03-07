@@ -138,7 +138,7 @@ msgstr "{0} จาก {1}"
 msgid "{0} people have used this starter pack!"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:464
+#: src/view/com/util/UserAvatar.tsx:445
 msgid "{0}'s avatar"
 msgstr ""
 
@@ -504,7 +504,7 @@ msgstr "เพิ่มข้อความแสดงแทน (ไม่บ�
 msgid "Add another account"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:744
+#: src/view/com/composer/Composer.tsx:743
 msgid "Add another post"
 msgstr ""
 
@@ -531,7 +531,7 @@ msgstr ""
 msgid "Add muted words and tags"
 msgstr "เพิ่มคำและแท็กที่ไม่ออกเสียง"
 
-#: src/view/com/composer/Composer.tsx:1261
+#: src/view/com/composer/Composer.tsx:1258
 msgid "Add new post"
 msgstr ""
 
@@ -925,11 +925,11 @@ msgstr "คุณแน่ใจหรือว่าต้องการลบ
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "คุณแน่ใจหรือว่าต้องการลบสิ่งนี้ออกจากฟีดของคุณ?"
 
-#: src/view/com/composer/Composer.tsx:695
+#: src/view/com/composer/Composer.tsx:694
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "คุณแน่ใจหรือว่าต้องการลบร่างนี้?"
 
-#: src/view/com/composer/Composer.tsx:872
+#: src/view/com/composer/Composer.tsx:868
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
@@ -1260,7 +1260,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:260
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:935
+#: src/view/com/composer/Composer.tsx:931
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -1661,7 +1661,7 @@ msgstr "ทำให้สำเร็จตามความท้าทาย
 msgid "Compose new post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:838
+#: src/view/com/composer/Composer.tsx:834
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "สร้างโพสต์ความยาวสูงสุด {MAX_GRAPHEME_LENGTH} ตัวอักษร"
 
@@ -1669,7 +1669,7 @@ msgstr "สร้างโพสต์ความยาวสูงสุด {M
 msgid "Compose reply"
 msgstr "สร้างการตอบกลับ"
 
-#: src/view/com/composer/Composer.tsx:1644
+#: src/view/com/composer/Composer.tsx:1652
 msgid "Compressing video..."
 msgstr ""
 
@@ -2147,7 +2147,7 @@ msgstr "ลบข้อความสำหรับฉัน"
 msgid "Delete my account"
 msgstr "ลบบัญชีของฉัน"
 
-#: src/view/com/composer/Composer.tsx:846
+#: src/view/com/composer/Composer.tsx:842
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:709
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:711
 msgid "Delete post"
@@ -2259,8 +2259,8 @@ msgid "Disabled"
 msgstr "ปิดใช้งาน"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:697
-#: src/view/com/composer/Composer.tsx:879
+#: src/view/com/composer/Composer.tsx:696
+#: src/view/com/composer/Composer.tsx:875
 msgid "Discard"
 msgstr "ละทิ้ง"
 
@@ -2268,11 +2268,11 @@ msgstr "ละทิ้ง"
 msgid "Discard changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:694
+#: src/view/com/composer/Composer.tsx:693
 msgid "Discard draft?"
 msgstr "ละทิ้งร่างข้อความหรือไม่?"
 
-#: src/view/com/composer/Composer.tsx:871
+#: src/view/com/composer/Composer.tsx:867
 msgid "Discard post?"
 msgstr ""
 
@@ -2298,7 +2298,7 @@ msgstr "ค้นพบฟีดใหม่"
 msgid "Dismiss"
 msgstr "ปิด"
 
-#: src/view/com/composer/Composer.tsx:1568
+#: src/view/com/composer/Composer.tsx:1576
 msgid "Dismiss error"
 msgstr "ปิดข้อผิดพลาด"
 
@@ -2469,7 +2469,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "แก้ไข"
 
-#: src/view/com/util/UserAvatar.tsx:363
+#: src/view/com/util/UserAvatar.tsx:344
 #: src/view/com/util/UserBanner.tsx:95
 msgid "Edit avatar"
 msgstr "แก้ไขรูปประจำตัว"
@@ -2749,7 +2749,7 @@ msgstr "ใส่ชื่อผู้ใช้ของคุณและรห
 msgid "Enters full screen"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1653
+#: src/view/com/composer/Composer.tsx:1661
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr ""
@@ -3825,7 +3825,7 @@ msgstr "ถูกต้อง"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "ตอนนี้มีแค่คุณแล้ว! เพิ่มผู้คนในชุดเริ่มต้นของคุณโดยการค้นหาด้านบนนี้"
 
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1595
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -4953,7 +4953,7 @@ msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1247
+#: src/view/com/composer/Composer.tsx:1244
 msgid "Open emoji picker"
 msgstr "เปิดการเลือกอีโมจิ"
 
@@ -5039,7 +5039,7 @@ msgstr "เปิด composer"
 msgid "Opens device photo gallery"
 msgstr "เปิดรูปแกลลอรี่ในอุปกรณ์"
 
-#: src/view/com/composer/Composer.tsx:1248
+#: src/view/com/composer/Composer.tsx:1245
 msgid "Opens emoji picker"
 msgstr ""
 
@@ -5074,7 +5074,7 @@ msgid "Opens the linked website"
 msgstr "เปิดเว็บไซต์ที่เชื่อมโยง"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:683
-#: src/view/com/util/UserAvatar.tsx:465
+#: src/view/com/util/UserAvatar.tsx:446
 msgid "Opens this profile"
 msgstr "เปิดโปรไฟล์นี้"
 
@@ -5398,7 +5398,7 @@ msgstr ""
 msgid "Porn"
 msgstr "สื่ออนาจาร"
 
-#: src/view/com/composer/Composer.tsx:963
+#: src/view/com/composer/Composer.tsx:959
 msgctxt "action"
 msgid "Post"
 msgstr "โพสต์"
@@ -5408,7 +5408,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "โพสต์"
 
-#: src/view/com/composer/Composer.tsx:961
+#: src/view/com/composer/Composer.tsx:957
 msgctxt "action"
 msgid "Post All"
 msgstr ""
@@ -5561,7 +5561,7 @@ msgstr ""
 msgid "Privacy Policy"
 msgstr "นโยบายความเป็นส่วนตัว"
 
-#: src/view/com/composer/Composer.tsx:1650
+#: src/view/com/composer/Composer.tsx:1658
 msgid "Processing video..."
 msgstr ""
 
@@ -5752,8 +5752,8 @@ msgstr "ลบบัญชี"
 msgid "Remove attachment"
 msgstr "ลบไฟล์แนบ"
 
-#: src/view/com/util/UserAvatar.tsx:416
-#: src/view/com/util/UserAvatar.tsx:419
+#: src/view/com/util/UserAvatar.tsx:397
+#: src/view/com/util/UserAvatar.tsx:400
 msgid "Remove Avatar"
 msgstr "ลบอวาตาร์"
 
@@ -5880,7 +5880,7 @@ msgstr "ปิดการตอบกลับแล้ว"
 msgid "Replies to this post are disabled."
 msgstr "การตอบกลับโพสต์นี้ถูกปิด"
 
-#: src/view/com/composer/Composer.tsx:959
+#: src/view/com/composer/Composer.tsx:955
 msgctxt "action"
 msgid "Reply"
 msgstr "การตอบกลับ"
@@ -7963,7 +7963,7 @@ msgstr "เลิกสมัครรับข้อมูลจากผู้
 msgid "Unsubscribed from list"
 msgstr "เลิกสมัครรับข้อมูลจากลิสต์แล้ว"
 
-#: src/view/com/composer/Composer.tsx:782
+#: src/view/com/composer/Composer.tsx:781
 msgid "Unsupported video type"
 msgstr ""
 
@@ -8014,20 +8014,20 @@ msgstr "อัปโหลดรูปภาพแทน"
 msgid "Upload a text file to:"
 msgstr "อัปโหลดไฟล์ข้อความไปที่:"
 
-#: src/view/com/util/UserAvatar.tsx:387
-#: src/view/com/util/UserAvatar.tsx:390
+#: src/view/com/util/UserAvatar.tsx:368
+#: src/view/com/util/UserAvatar.tsx:371
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "อัปโหลดจากกล้อง"
 
-#: src/view/com/util/UserAvatar.tsx:404
+#: src/view/com/util/UserAvatar.tsx:385
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "อัปโหลดจากไฟล์"
 
-#: src/view/com/util/UserAvatar.tsx:398
-#: src/view/com/util/UserAvatar.tsx:402
+#: src/view/com/util/UserAvatar.tsx:379
+#: src/view/com/util/UserAvatar.tsx:383
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -8042,7 +8042,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1647
+#: src/view/com/composer/Composer.tsx:1655
 msgid "Uploading video..."
 msgstr ""
 
@@ -8243,7 +8243,7 @@ msgstr "ไม่พบวิดีโอ"
 msgid "Video settings"
 msgstr "การตั้งค่าวิดีโอ"
 
-#: src/view/com/composer/Composer.tsx:1657
+#: src/view/com/composer/Composer.tsx:1665
 msgid "Video uploaded"
 msgstr ""
 
@@ -8500,7 +8500,7 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:745
+#: src/view/com/composer/Composer.tsx:744
 msgid "What's up?"
 msgstr "มีอะไรใหม่?"
 
@@ -8574,11 +8574,11 @@ msgstr "ทำไมผู้ใช้คนนี้จึงควรได้
 msgid "Write a message"
 msgstr "เขียนข้อความ"
 
-#: src/view/com/composer/Composer.tsx:836
+#: src/view/com/composer/Composer.tsx:832
 msgid "Write post"
 msgstr "เขียนโพสต์"
 
-#: src/view/com/composer/Composer.tsx:743
+#: src/view/com/composer/Composer.tsx:742
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:69
 msgid "Write your reply"
 msgstr "เขียนคำตอบของคุณ"

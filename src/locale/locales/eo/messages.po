@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-03-07 03:35\n"
+"PO-Revision-Date: 2025-03-07 16:40\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -49,11 +49,11 @@ msgstr "{0, plural, one {# horo} other {# horoj}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this account"
-msgstr ""
+msgstr "{0, plural, one {# etikedo estis metita} other {# etikedoj estis metitaj}} sur tiun konton"
 
 #: src/components/moderation/LabelsOnMe.tsx:62
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this content"
-msgstr ""
+msgstr "{0, plural, one {# etikedo estis metita} other {# etikedoj estis metitaj}} sur tiun enhavon"
 
 #: src/screens/Post/PostLikedBy.tsx:41
 msgid "{0, plural, one {# like} other {# likes}}"
@@ -114,12 +114,12 @@ msgstr "{0, plural, one {citaĵo} other {citaĵoj}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:420
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr ""
+msgstr "{0, plural, one {reafiŝo} other {reafiŝoj}}"
 
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
 msgid "{0} <0>in <1>tags</1></0>"
-msgstr ""
+msgstr "{0} <0>en <1>kradvortoj</1></0>"
 
 #. Pattern: {wordValue} in text, tags
 #: src/components/dialogs/MutedWords.tsx:465
@@ -136,15 +136,15 @@ msgstr "{0} el {1}"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:485
 msgid "{0} people have used this starter pack!"
-msgstr ""
+msgstr "{0} homoj uzis tiun startpakon!"
 
-#: src/view/com/util/UserAvatar.tsx:464
+#: src/view/com/util/UserAvatar.tsx:445
 msgid "{0}'s avatar"
 msgstr "Profilbildo de {0}"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:74
 msgid "{0}'s favorite feeds and people - join me!"
-msgstr ""
+msgstr "Plej ŝatataj fluoj kaj homoj de {0} - aliĝu al mi!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:46
 msgid "{0}'s starter pack"
@@ -189,23 +189,23 @@ msgstr "{estimatedTimeMins, plural, one {minuto} other {minutoj}}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:305
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
-msgstr ""
+msgstr "{firstAuthorLink} kaj <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} alia} other {{formattedAuthorsCount} aliaj}}</0> eksekvis vin"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:331
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
-msgstr ""
+msgstr "{firstAuthorLink} kaj <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} alia} other {{formattedAuthorsCount} aliaj}}</0> ŝatas vian propran fluon"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:224
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
-msgstr ""
+msgstr "{firstAuthorLink} kaj <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} alia} other {{formattedAuthorsCount} aliaj}}</0> ŝatas vian afiŝon"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:248
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
-msgstr ""
+msgstr "{firstAuthorLink} kaj <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} alia} other {{formattedAuthorsCount} aliaj}}</0> reafiŝis vian afiŝon"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:355
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
-msgstr ""
+msgstr "{firstAuthorLink} kaj <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} alia} other {{formattedAuthorsCount} aliaj}}</0> registriĝis kun via startpako"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:317
 msgid "{firstAuthorLink} followed you"
@@ -353,7 +353,7 @@ msgstr "24 horoj"
 
 #: src/screens/Login/LoginForm.tsx:268
 msgid "2FA Confirmation"
-msgstr ""
+msgstr "Konfirmo de la du-faza aŭtentikigo"
 
 #: src/components/dialogs/MutedWords.tsx:232
 msgid "30 days"
@@ -373,7 +373,7 @@ msgstr "Pri"
 #. Accept a chat request
 #: src/screens/Messages/components/RequestButtons.tsx:235
 msgid "Accept"
-msgstr ""
+msgstr "Akcepti"
 
 #: src/screens/Messages/components/RequestButtons.tsx:225
 msgid "Accept chat request"
@@ -382,7 +382,7 @@ msgstr ""
 #. Accept a chat request
 #: src/screens/Messages/components/RequestListItem.tsx:42
 msgid "Accept Request"
-msgstr ""
+msgstr "Akcepti peton"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:46
 #: src/screens/Settings/Settings.tsx:191
@@ -466,7 +466,7 @@ msgstr "Aldoni {0} pli por daŭrigi"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:59
 msgid "Add {displayName} to starter pack"
-msgstr ""
+msgstr "Aldoni {displayName} al la startpako"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:107
 #: src/view/com/composer/labels/LabelsBtn.tsx:112
@@ -491,11 +491,11 @@ msgstr "Aldoni konton"
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:88
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:93
 msgid "Add alt text"
-msgstr ""
+msgstr "Aldoni alternativan tekston"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:107
 msgid "Add alt text (optional)"
-msgstr ""
+msgstr "Aldoni alternativan tekston (nedeviga)"
 
 #: src/screens/Settings/Settings.tsx:373
 #: src/screens/Settings/Settings.tsx:376
@@ -504,7 +504,7 @@ msgstr ""
 msgid "Add another account"
 msgstr "Aldoni plian konton"
 
-#: src/view/com/composer/Composer.tsx:744
+#: src/view/com/composer/Composer.tsx:743
 msgid "Add another post"
 msgstr "Aldoni plian afiŝon"
 
@@ -521,7 +521,7 @@ msgstr "Aldoni apan pasvorton"
 #: src/components/moderation/ReportDialog/index.tsx:392
 #: src/components/moderation/ReportDialog/index.tsx:396
 msgid "Add more details (optional)"
-msgstr ""
+msgstr "Aldoni pli da detaloj (nedeviga)"
 
 #: src/components/dialogs/MutedWords.tsx:321
 msgid "Add mute word with chosen settings"
@@ -529,9 +529,9 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:112
 msgid "Add muted words and tags"
-msgstr ""
+msgstr "Aldoni silentigitajn vortojn kaj kradvortojn"
 
-#: src/view/com/composer/Composer.tsx:1261
+#: src/view/com/composer/Composer.tsx:1258
 msgid "Add new post"
 msgstr "Aldoni novan afiŝon"
 
@@ -583,7 +583,7 @@ msgstr "Aldonita al miaj fluoj"
 
 #: src/components/moderation/ReportDialog/index.tsx:410
 msgid "Additional details (limit 300 characters)"
-msgstr ""
+msgstr "Aldonaj detaloj (limo de 300 signoj)"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:160
 msgid "Adult"
@@ -607,11 +607,11 @@ msgstr "Poradolta enhavo estas malebligita."
 #: src/view/com/composer/labels/LabelsBtn.tsx:139
 #: src/view/com/composer/labels/LabelsBtn.tsx:197
 msgid "Adult Content labels"
-msgstr ""
+msgstr "Etikedoj pri poradolta enhavo"
 
 #: src/screens/Moderation/index.tsx:399
 msgid "Advanced"
-msgstr ""
+msgstr "Altnivela"
 
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
@@ -619,7 +619,7 @@ msgstr "Ĉiuj"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:381
 msgid "All accounts have been followed!"
-msgstr ""
+msgstr "Ĉiuj kontoj estas sekvataj!"
 
 #: src/view/screens/Search/Search.tsx:370
 #: src/view/screens/Search/Search.tsx:405
@@ -689,7 +689,7 @@ msgstr ""
 #: src/view/com/composer/GifAltText.tsx:179
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:139
 msgid "Alt text will be truncated. Limit: {0} characters."
-msgstr ""
+msgstr "Alternativa teksto estos distranĉita. Limigo: {0} signoj."
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:93
 #: src/view/com/modals/VerifyEmail.tsx:132
@@ -735,7 +735,7 @@ msgstr "Eraro okazis dum konservado de la QR-kodo!"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:83
 msgid "An error occurred while selecting the video"
-msgstr ""
+msgstr "Eraro okazis dum elekto de la videaĵo"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:347
 #: src/screens/StarterPack/StarterPackScreen.tsx:369
@@ -925,11 +925,11 @@ msgstr "Ĉu vi certas, ke vi volas forigi {0} el viaj fluoj?"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Ĉu vi certas, ke vi volas forigi tion el viaj fluoj?"
 
-#: src/view/com/composer/Composer.tsx:695
+#: src/view/com/composer/Composer.tsx:694
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "Ĉu vi certas, ke vi volas forĵeti tiun malneton?"
 
-#: src/view/com/composer/Composer.tsx:872
+#: src/view/com/composer/Composer.tsx:868
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Ĉu vi certas, ke vi volas forĵeti ĉi tiun afiŝon?"
 
@@ -994,7 +994,7 @@ msgstr ""
 #: src/view/screens/Lists.tsx:81
 #: src/view/screens/ModerationModlists.tsx:81
 msgid "Before creating a list, you must first verify your email."
-msgstr ""
+msgstr "Por krei liston vi devas unue konfirmi vian retpoŝtadreson."
 
 #: src/view/com/composer/Composer.tsx:621
 msgid "Before creating a post, you must first verify your email."
@@ -1060,11 +1060,11 @@ msgstr "Bloki liston"
 
 #: src/screens/Messages/components/ChatStatusInfo.tsx:46
 msgid "Block or report"
-msgstr ""
+msgstr "Bloki aŭ raporti"
 
 #: src/view/screens/ProfileList.tsx:777
 msgid "Block these accounts?"
-msgstr ""
+msgstr "Ĉu bloki tiujn kontojn?"
 
 #: src/components/dms/ReportDialog.tsx:356
 #: src/components/dms/ReportDialog.tsx:359
@@ -1190,7 +1190,7 @@ msgstr ""
 #: src/components/FeedInterstitials.tsx:490
 #: src/components/FeedInterstitials.tsx:493
 msgid "Browse more suggestions"
-msgstr ""
+msgstr "Foliumi pli da proponoj"
 
 #: src/components/FeedInterstitials.tsx:380
 #: src/components/FeedInterstitials.tsx:518
@@ -1233,11 +1233,11 @@ msgstr "De <0>{0}</0>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
-msgstr ""
+msgstr "Kreante konton vi konsentas pri la <0>Regularo pri privateco</0>."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:48
 msgid "By creating an account you agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>."
-msgstr ""
+msgstr "Kreante konton vi konsentas pri la <0>Uzokondiĉoj</0> kaj <1>Regularo pri privateco</1>."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:68
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
@@ -1245,7 +1245,7 @@ msgstr "Kreante konton vi konsentas pri la <0>Uzokondiĉoj</0>."
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:72
 msgid "Camera"
-msgstr ""
+msgstr "Fotilo"
 
 #: src/components/Menu/index.tsx:304
 #: src/components/Prompt.tsx:130
@@ -1260,7 +1260,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:260
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:935
+#: src/view/com/composer/Composer.tsx:931
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -1290,15 +1290,15 @@ msgstr "Nuligi"
 #: src/view/com/modals/DeleteAccount.tsx:166
 #: src/view/com/modals/DeleteAccount.tsx:274
 msgid "Cancel account deletion"
-msgstr ""
+msgstr "Nuligi forigon de konto"
 
 #: src/view/com/modals/CropImage.web.tsx:94
 msgid "Cancel image crop"
-msgstr ""
+msgstr "Nuligi stucon de bildo"
 
 #: src/view/com/modals/EditProfile.tsx:239
 msgid "Cancel profile editing"
-msgstr ""
+msgstr "Nuligi redakton de profilo"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:207
 msgid "Cancel quote post"
@@ -1380,7 +1380,7 @@ msgstr "Ŝanĝi lingvon de afiŝo al {suggestedLanguageName}"
 
 #: src/components/moderation/ReportDialog/index.tsx:236
 msgid "Change report reason"
-msgstr ""
+msgstr "Ŝanĝi kialon de raporto"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
@@ -1446,7 +1446,7 @@ msgstr ""
 #: src/screens/Messages/ChatList.tsx:343
 #: src/screens/Messages/ChatList.tsx:367
 msgid "Chats"
-msgstr ""
+msgstr "Babilejoj"
 
 #: src/screens/SignupQueued.tsx:78
 #: src/screens/SignupQueued.tsx:82
@@ -1455,11 +1455,11 @@ msgstr "Kontroli mian staton"
 
 #: src/screens/Login/LoginForm.tsx:301
 msgid "Check your email for a sign in code and enter it here."
-msgstr ""
+msgstr "Kontrolu vian retpoŝton por trovi ensalut-kodon kaj entajpu ĝin ĉi tie."
 
 #: src/view/com/modals/DeleteAccount.tsx:213
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr ""
+msgstr "En via ricevujo serĉu retmesaĝon kun konfirmkodo, kaj entajpu ĝin suben:"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:370
 msgid "Choose domain verification method"
@@ -1532,7 +1532,7 @@ msgstr "Alklaku por ebligi citaĵojn de tiu afiŝo."
 
 #: src/components/RichTextTag.tsx:54
 msgid "Click to open tag menu for {tag}"
-msgstr ""
+msgstr "Alklaku por malfermi etikedan menuon por {tag}"
 
 #: src/components/dms/MessageItem.tsx:241
 msgid "Click to retry failed message"
@@ -1565,7 +1565,7 @@ msgstr "Fermi"
 #: src/components/Dialog/index.web.tsx:113
 #: src/components/Dialog/index.web.tsx:261
 msgid "Close active dialog"
-msgstr ""
+msgstr "Fermi la aktivan dialogujon"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:31
 msgid "Close alert"
@@ -1577,7 +1577,7 @@ msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:275
 msgid "Close dialog"
-msgstr ""
+msgstr "Fermi la dialogujon"
 
 #: src/view/shell/index.web.tsx:83
 msgid "Close drawer menu"
@@ -1590,7 +1590,7 @@ msgstr "Fermi emoĝi-elektilon"
 
 #: src/components/dialogs/GifSelect.tsx:169
 msgid "Close GIF dialog"
-msgstr ""
+msgstr "Fermi la GIF-dialogujon"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:31
 msgid "Close image"
@@ -1661,7 +1661,7 @@ msgstr "Fini la defion"
 msgid "Compose new post"
 msgstr "Krei novan afiŝon"
 
-#: src/view/com/composer/Composer.tsx:838
+#: src/view/com/composer/Composer.tsx:834
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "Krei afiŝojn havantajn maksimume {MAX_GRAPHEME_LENGTH} signojn"
 
@@ -1669,13 +1669,13 @@ msgstr "Krei afiŝojn havantajn maksimume {MAX_GRAPHEME_LENGTH} signojn"
 msgid "Compose reply"
 msgstr "Krei respondon"
 
-#: src/view/com/composer/Composer.tsx:1644
+#: src/view/com/composer/Composer.tsx:1652
 msgid "Compressing video..."
 msgstr "Densigado de videaĵo..."
 
 #: src/components/moderation/LabelPreference.tsx:82
 msgid "Configure content filtering setting for category: {name}"
-msgstr ""
+msgstr "Konfiguru enhavan filtradon por kategorio: {name}"
 
 #: src/components/moderation/LabelPreference.tsx:244
 msgid "Configured in <0>moderation settings</0>."
@@ -1736,7 +1736,7 @@ msgstr "Konektado..."
 #: src/screens/Signup/index.tsx:179
 #: src/screens/Signup/index.tsx:182
 msgid "Contact support"
-msgstr ""
+msgstr "Kontakti subtenejon"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:50
 msgid "Content & Media"
@@ -1779,11 +1779,11 @@ msgstr "Enhavo ne disponebla"
 #: src/lib/moderation/useGlobalLabelStrings.ts:22
 #: src/lib/moderation/useModerationCauseDescription.ts:45
 msgid "Content Warning"
-msgstr ""
+msgstr "Averto de enhavo"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:60
 msgid "Content warnings"
-msgstr ""
+msgstr "Avertoj de enhavo"
 
 #: src/components/Menu/index.web.tsx:83
 msgid "Context menu backdrop, click to close the menu."
@@ -1828,7 +1828,7 @@ msgstr "Kopiita"
 
 #: src/screens/Settings/AboutSettings.tsx:98
 msgid "Copied build version to clipboard"
-msgstr ""
+msgstr "Versio kopiita al tondujo"
 
 #: src/components/dms/MessageMenu.tsx:57
 #: src/lib/sharing.ts:25
@@ -1879,7 +1879,7 @@ msgstr "Kopii DID-on"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:405
 msgid "Copy host"
-msgstr ""
+msgstr "Kopii gastiganton"
 
 #: src/components/StarterPack/ShareDialog.tsx:123
 msgid "Copy link"
@@ -1924,7 +1924,7 @@ msgstr ""
 #: src/Navigation.tsx:306
 #: src/view/screens/CopyrightPolicy.tsx:31
 msgid "Copyright Policy"
-msgstr ""
+msgstr "Regularo pri kopirajto"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:35
 #: src/components/dms/ReportDialog.tsx:310
@@ -2147,7 +2147,7 @@ msgstr "Forigi mesaĝon por mi"
 msgid "Delete my account"
 msgstr "Forigi mian konton"
 
-#: src/view/com/composer/Composer.tsx:846
+#: src/view/com/composer/Composer.tsx:842
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:709
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:711
 msgid "Delete post"
@@ -2156,32 +2156,32 @@ msgstr "Forigi afiŝon"
 #: src/screens/StarterPack/StarterPackScreen.tsx:585
 #: src/screens/StarterPack/StarterPackScreen.tsx:732
 msgid "Delete starter pack"
-msgstr ""
+msgstr "Forigi startpakon"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:635
 msgid "Delete starter pack?"
-msgstr ""
+msgstr "Ĉu forigi startpakon?"
 
 #: src/view/screens/ProfileList.tsx:756
 msgid "Delete this list?"
-msgstr ""
+msgstr "Ĉu forigi ĉi tiun liston?"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:745
 msgid "Delete this post?"
-msgstr ""
+msgstr "Ĉu forigi ĉi tiun afiŝon?"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:94
 msgid "Deleted"
-msgstr ""
+msgstr "Forigita"
 
 #: src/components/dms/MessagesListHeader.tsx:155
 #: src/screens/Messages/components/ChatListItem.tsx:123
 msgid "Deleted Account"
-msgstr ""
+msgstr "Forigita konto"
 
 #: src/view/com/post-thread/PostThread.tsx:454
 msgid "Deleted post."
-msgstr ""
+msgstr "Forigita afiŝo."
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:344
 #: src/view/com/modals/CreateOrEditList.tsx:280
@@ -2189,29 +2189,29 @@ msgstr ""
 #: src/view/com/modals/EditProfile.tsx:193
 #: src/view/com/modals/EditProfile.tsx:205
 msgid "Description"
-msgstr ""
+msgstr "Priskribo"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:364
 msgid "Description is too long"
-msgstr ""
+msgstr "Priskribo tro longas"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:365
 msgid "Description is too long. The maximum number of characters is {DESCRIPTION_MAX_GRAPHEMES}."
-msgstr ""
+msgstr "Priskribo tro longas. La maksimuma nombro de signoj estas {DESCRIPTION_MAX_GRAPHEMES}."
 
 #: src/view/com/composer/GifAltText.tsx:150
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:114
 msgid "Descriptive alt text"
-msgstr ""
+msgstr "Priskriba alternativa teksto"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:623
 msgid "Detach quote"
-msgstr ""
+msgstr "Malligi citaĵon"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:807
 msgid "Detach quote post?"
-msgstr ""
+msgstr "Ĉu malligi citatan afiŝon?"
 
 #: src/screens/Settings/AboutSettings.tsx:87
 msgctxt "toast"
@@ -2226,7 +2226,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:242
 #: src/screens/Settings/Settings.tsx:245
 msgid "Developer options"
-msgstr ""
+msgstr "Programistaj opcioj"
 
 #: src/components/WhoCanReply.tsx:179
 msgid "Dialog: adjust who can interact with this post"
@@ -2234,7 +2234,7 @@ msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:122
 msgid "Dim"
-msgstr ""
+msgstr "Malheligi"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:89
 msgid "Disable Email 2FA"
@@ -2247,7 +2247,7 @@ msgstr ""
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:386
 msgid "Disable subtitles"
-msgstr ""
+msgstr "Malŝalti subtekstojn"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
@@ -2256,30 +2256,30 @@ msgstr ""
 #: src/screens/Messages/Settings.tsx:142
 #: src/screens/Moderation/index.tsx:345
 msgid "Disabled"
-msgstr ""
+msgstr "Malŝaltita"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:697
-#: src/view/com/composer/Composer.tsx:879
+#: src/view/com/composer/Composer.tsx:696
+#: src/view/com/composer/Composer.tsx:875
 msgid "Discard"
-msgstr ""
+msgstr "Forĵeti"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:81
 msgid "Discard changes?"
-msgstr ""
+msgstr "Ĉu forĵeti ŝanĝojn?"
 
-#: src/view/com/composer/Composer.tsx:694
+#: src/view/com/composer/Composer.tsx:693
 msgid "Discard draft?"
-msgstr ""
+msgstr "Ĉu forĵeti malneton?"
 
-#: src/view/com/composer/Composer.tsx:871
+#: src/view/com/composer/Composer.tsx:867
 msgid "Discard post?"
-msgstr ""
+msgstr "Ĉu forĵeti afiŝon?"
 
 #: src/screens/Settings/components/PwiOptOut.tsx:87
 #: src/screens/Settings/components/PwiOptOut.tsx:91
 msgid "Discourage apps from showing my account to logged-out users"
-msgstr ""
+msgstr "Malinstigi apojn por ke ili ne montru mian konton al elsalutintaj uzantoj"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
@@ -2288,19 +2288,19 @@ msgstr ""
 
 #: src/view/screens/Search/Explore.tsx:425
 msgid "Discover new feeds"
-msgstr ""
+msgstr "Malkovri novajn fluojn"
 
 #: src/view/screens/Feeds.tsx:725
 msgid "Discover New Feeds"
-msgstr ""
+msgstr "Malkovri novajn fluojn"
 
 #: src/components/Dialog/index.tsx:323
 msgid "Dismiss"
-msgstr ""
+msgstr "Ignori"
 
-#: src/view/com/composer/Composer.tsx:1568
+#: src/view/com/composer/Composer.tsx:1576
 msgid "Dismiss error"
-msgstr ""
+msgstr "Ignori eraron"
 
 #: src/components/ProgressGuide/List.tsx:42
 msgid "Dismiss getting started guide"
@@ -2308,7 +2308,7 @@ msgstr ""
 
 #: src/components/interstitials/TrendingVideos.tsx:92
 msgid "Dismiss this section"
-msgstr ""
+msgstr "Ignori ĉi tiun sekcion"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:71
 #: src/screens/Settings/AccessibilitySettings.tsx:76
@@ -2320,24 +2320,24 @@ msgstr ""
 #: src/screens/Profile/Header/EditProfileDialog.tsx:351
 #: src/view/com/modals/EditProfile.tsx:187
 msgid "Display name"
-msgstr ""
+msgstr "Montrata nomo"
 
 #: src/view/com/modals/EditProfile.tsx:175
 msgid "Display Name"
-msgstr ""
+msgstr "Montrata nomo"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:333
 msgid "Display name is too long"
-msgstr ""
+msgstr "Montrata nomo tro longas"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:334
 msgid "Display name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
-msgstr ""
+msgstr "Montrata nomo tro longas. La maksimuma nombro de signoj estas {DISPLAY_NAME_MAX_GRAPHEMES}."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:373
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:375
 msgid "DNS Panel"
-msgstr ""
+msgstr "DNS-panelo"
 
 #: src/components/dialogs/MutedWords.tsx:302
 msgid "Do not apply this mute word to users you follow"
@@ -2345,15 +2345,15 @@ msgstr ""
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
-msgstr ""
+msgstr "Ne inkluzivas nudecon."
 
 #: src/screens/Signup/StepHandle.tsx:165
 msgid "Doesn't begin or end with a hyphen"
-msgstr ""
+msgstr "Ne komencas aŭ finas per dividstreko"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:488
 msgid "Domain verified!"
-msgstr ""
+msgstr "Domajno konfirmita!"
 
 #: src/components/dialogs/BirthDateSettings.tsx:115
 #: src/components/dialogs/BirthDateSettings.tsx:121
@@ -2375,14 +2375,14 @@ msgstr ""
 #: src/view/com/modals/InviteCodes.tsx:124
 #: src/view/com/modals/ListAddRemoveUsers.tsx:143
 msgid "Done"
-msgstr ""
+msgstr "Farite"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:145
 #: src/view/com/modals/UserAddRemoveLists.tsx:113
 #: src/view/com/modals/UserAddRemoveLists.tsx:116
 msgctxt "action"
 msgid "Done"
-msgstr ""
+msgstr "Farite"
 
 #: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:42
 msgid "Done{extraText}"
@@ -2390,11 +2390,11 @@ msgstr ""
 
 #: src/components/Dialog/index.tsx:324
 msgid "Double tap to close the dialog"
-msgstr ""
+msgstr "Duoble tuŝeti por fermi la dialogujon"
 
 #: src/screens/VideoFeed/index.tsx:1047
 msgid "Double tap to like"
-msgstr ""
+msgstr "Duoble tuŝeti por ŝati"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:321
 msgid "Download Bluesky"
@@ -2403,7 +2403,7 @@ msgstr ""
 #: src/screens/Settings/components/ExportCarDialog.tsx:79
 #: src/screens/Settings/components/ExportCarDialog.tsx:84
 msgid "Download CAR file"
-msgstr ""
+msgstr "Elŝuti CAR-dosieron"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:342
 msgid "Drop to add images"
@@ -2415,35 +2415,35 @@ msgstr "Daŭro:"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:211
 msgid "e.g. alice"
-msgstr ""
+msgstr "ekz. ludoviko"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:321
 msgid "e.g. Alice Lastname"
-msgstr ""
+msgstr "ekz. Ludoviko Familinomo"
 
 #: src/view/com/modals/EditProfile.tsx:180
 msgid "e.g. Alice Roberts"
-msgstr ""
+msgstr "ekz. Ludoviko Zamenhof"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:357
 msgid "e.g. alice.com"
-msgstr ""
+msgstr "ekz. ludoviko.com"
 
 #: src/view/com/modals/EditProfile.tsx:198
 msgid "e.g. Artist, dog-lover, and avid reader."
-msgstr ""
+msgstr "ekz. Artisto, hundo-amanto kaj legemulo."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
-msgstr ""
+msgstr "Ekz. artista nudeco."
 
 #: src/view/com/modals/CreateOrEditList.tsx:263
 msgid "e.g. Great Posters"
-msgstr ""
+msgstr "ekz. Plej bonaj kontoj"
 
 #: src/view/com/modals/CreateOrEditList.tsx:264
 msgid "e.g. Spammers"
-msgstr ""
+msgstr "ekz. Spamistoj"
 
 #: src/view/com/modals/CreateOrEditList.tsx:292
 msgid "e.g. The posters who never miss."
@@ -2451,11 +2451,11 @@ msgstr ""
 
 #: src/view/com/modals/CreateOrEditList.tsx:293
 msgid "e.g. Users that repeatedly reply with ads."
-msgstr ""
+msgstr "ekz. Uzantoj kiuj ripete respondas per reklamoj."
 
 #: src/view/com/modals/InviteCodes.tsx:97
 msgid "Each code works once. You'll receive more invite codes periodically."
-msgstr ""
+msgstr "Ĉiu kodo funkcias unufoje. Vi ricevos pli da invitaj kodoj periode."
 
 #: src/screens/Settings/AccountSettings.tsx:112
 #: src/screens/StarterPack/StarterPackScreen.tsx:580
@@ -2469,10 +2469,10 @@ msgctxt "action"
 msgid "Edit"
 msgstr "Redakti"
 
-#: src/view/com/util/UserAvatar.tsx:363
+#: src/view/com/util/UserAvatar.tsx:344
 #: src/view/com/util/UserBanner.tsx:95
 msgid "Edit avatar"
-msgstr ""
+msgstr "Redakti profilbildon"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:111
 msgid "Edit Feeds"
@@ -2487,11 +2487,11 @@ msgstr "Redakti bildon"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:690
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:703
 msgid "Edit interaction settings"
-msgstr ""
+msgstr "Redakti agordojn pri interagado"
 
 #: src/view/screens/ProfileList.tsx:537
 msgid "Edit list details"
-msgstr ""
+msgstr "Redakti detalojn de listo"
 
 #: src/view/com/modals/CreateOrEditList.tsx:230
 msgid "Edit Moderation List"
@@ -2500,7 +2500,7 @@ msgstr ""
 #: src/Navigation.tsx:316
 #: src/view/screens/Feeds.tsx:515
 msgid "Edit My Feeds"
-msgstr ""
+msgstr "Redakti miajn fluojn"
 
 #: src/view/com/modals/EditProfile.tsx:147
 msgid "Edit my profile"
@@ -2508,7 +2508,7 @@ msgstr "Redakti mian profilon"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:109
 msgid "Edit People"
-msgstr ""
+msgstr "Redakti homojn"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:69
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:239
@@ -2529,7 +2529,7 @@ msgstr "Redakti profilon"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:572
 msgid "Edit starter pack"
-msgstr ""
+msgstr "Redakti startpakon"
 
 #: src/view/com/modals/CreateOrEditList.tsx:225
 msgid "Edit User List"
@@ -2541,15 +2541,15 @@ msgstr ""
 
 #: src/view/com/modals/EditProfile.tsx:188
 msgid "Edit your display name"
-msgstr ""
+msgstr "Redakti vian montratan nomon"
 
 #: src/view/com/modals/EditProfile.tsx:206
 msgid "Edit your profile description"
-msgstr ""
+msgstr "Redakti priskribon de via profilo"
 
 #: src/Navigation.tsx:448
 msgid "Edit your starter pack"
-msgstr ""
+msgstr "Redakti vian startpakon"
 
 #: src/screens/Onboarding/index.tsx:31
 #: src/screens/Onboarding/state.ts:101
@@ -2564,7 +2564,7 @@ msgstr ""
 #: src/screens/Signup/StepInfo/index.tsx:190
 #: src/view/com/modals/ChangeEmail.tsx:136
 msgid "Email"
-msgstr ""
+msgstr "Retpoŝtadreso"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:64
 msgctxt "toast"
@@ -2591,7 +2591,7 @@ msgstr ""
 
 #: src/view/com/modals/ChangeEmail.tsx:106
 msgid "Email Updated"
-msgstr ""
+msgstr "Retpoŝtadreso ĝisdatigita"
 
 #: src/view/com/modals/VerifyEmail.tsx:85
 msgctxt "toast"
@@ -2600,18 +2600,18 @@ msgstr ""
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:79
 msgid "Email Verified"
-msgstr ""
+msgstr "Retpoŝtadreso konfirmita"
 
 #: src/components/dialogs/Embed.tsx:181
 msgid "Embed HTML code"
-msgstr ""
+msgstr "Enkorpigi HTML-kodon"
 
 #: src/components/dialogs/Embed.tsx:104
 #: src/components/dialogs/Embed.tsx:108
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:498
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:500
 msgid "Embed post"
-msgstr ""
+msgstr "Enkorpigi afiŝon"
 
 #: src/components/dialogs/Embed.tsx:112
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
@@ -2641,7 +2641,7 @@ msgstr ""
 #: src/components/dialogs/EmbedConsent.tsx:81
 #: src/components/dialogs/EmbedConsent.tsx:88
 msgid "Enable external media"
-msgstr ""
+msgstr "Ŝalti eksterajn aŭdvidaĵojn"
 
 #: src/screens/Settings/ExternalMediaPreferences.tsx:49
 msgid "Enable media players for"
@@ -2681,7 +2681,7 @@ msgstr "Ŝaltita"
 
 #: src/screens/Profile/Sections/Feed.tsx:116
 msgid "End of feed"
-msgstr ""
+msgstr "Fino de la fluo"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:159
 msgid "Ensure you have selected a language for each subtitle file."
@@ -2689,20 +2689,20 @@ msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:143
 msgid "Enter a password"
-msgstr ""
+msgstr "Entajpu pasvorton"
 
 #: src/components/dialogs/MutedWords.tsx:127
 #: src/components/dialogs/MutedWords.tsx:128
 msgid "Enter a word or tag"
-msgstr ""
+msgstr "Entajpu vorton aŭ kradvorton"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:89
 msgid "Enter Code"
-msgstr ""
+msgstr "Entajpu kodon"
 
 #: src/view/com/modals/VerifyEmail.tsx:113
 msgid "Enter Confirmation Code"
-msgstr ""
+msgstr "Entajpu konfirmkodon"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:405
 msgid "Enter fullscreen"
@@ -2710,11 +2710,11 @@ msgstr ""
 
 #: src/view/com/modals/ChangePassword.tsx:165
 msgid "Enter the code you received to change your password."
-msgstr ""
+msgstr "Entajpu la ricevitan kodon por ŝanĝi vian pasvorton."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:351
 msgid "Enter the domain you want to use"
-msgstr ""
+msgstr "Entajpu la domajnon, kiun vi volas uzi"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:113
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
@@ -2722,20 +2722,20 @@ msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:104
 msgid "Enter your birth date"
-msgstr ""
+msgstr "Entajpu vian naskiĝdaton"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
 #: src/screens/Signup/StepInfo/index.tsx:210
 msgid "Enter your email address"
-msgstr ""
+msgstr "Entajpu vian retpoŝtadreson"
 
 #: src/view/com/modals/ChangeEmail.tsx:42
 msgid "Enter your new email above"
-msgstr ""
+msgstr "Entajpu vian novan retpoŝtadreson supre"
 
 #: src/view/com/modals/ChangeEmail.tsx:112
 msgid "Enter your new email address below."
-msgstr ""
+msgstr "Entajpu vian novan retpoŝtadreson malsupre."
 
 #: src/screens/Login/LoginForm.tsx:243
 msgid "Enter your password"
@@ -2749,18 +2749,18 @@ msgstr "Entajpu vian uzantnomon kaj pasvorton"
 msgid "Enters full screen"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1653
+#: src/view/com/composer/Composer.tsx:1661
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "Eraro"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:47
 msgid "Error occurred while saving file"
-msgstr ""
+msgstr "Eraro okazis dum konservado de dosiero"
 
 #: src/screens/Signup/StepCaptcha/index.tsx:56
 msgid "Error receiving captcha response."
-msgstr ""
+msgstr "Eraro okazis ricevante la captcha-respondon."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:183
 #: src/view/screens/Search/Search.tsx:114
@@ -2773,7 +2773,7 @@ msgstr "Ĉiuj"
 
 #: src/components/WhoCanReply.tsx:71
 msgid "Everybody can reply"
-msgstr ""
+msgstr "Ĉiuj povas respondi"
 
 #: src/components/WhoCanReply.tsx:222
 msgid "Everybody can reply to this post."
@@ -3825,7 +3825,7 @@ msgstr "Ĝi ĝustas"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1595
 msgid "Job ID: {0}"
 msgstr "ID de laboro: {0}"
 
@@ -4953,7 +4953,7 @@ msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1247
+#: src/view/com/composer/Composer.tsx:1244
 msgid "Open emoji picker"
 msgstr ""
 
@@ -5039,7 +5039,7 @@ msgstr ""
 msgid "Opens device photo gallery"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1248
+#: src/view/com/composer/Composer.tsx:1245
 msgid "Opens emoji picker"
 msgstr ""
 
@@ -5074,7 +5074,7 @@ msgid "Opens the linked website"
 msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:683
-#: src/view/com/util/UserAvatar.tsx:465
+#: src/view/com/util/UserAvatar.tsx:446
 msgid "Opens this profile"
 msgstr ""
 
@@ -5398,7 +5398,7 @@ msgstr ""
 msgid "Porn"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:963
+#: src/view/com/composer/Composer.tsx:959
 msgctxt "action"
 msgid "Post"
 msgstr ""
@@ -5408,7 +5408,7 @@ msgctxt "description"
 msgid "Post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:961
+#: src/view/com/composer/Composer.tsx:957
 msgctxt "action"
 msgid "Post All"
 msgstr ""
@@ -5561,7 +5561,7 @@ msgstr ""
 msgid "Privacy Policy"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1650
+#: src/view/com/composer/Composer.tsx:1658
 msgid "Processing video..."
 msgstr ""
 
@@ -5676,7 +5676,7 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.web.tsx:171
 msgid "Read the Bluesky blog"
-msgstr ""
+msgstr "Legi la blogon de Bluesky"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:58
 #: src/screens/Signup/StepInfo/Policies.tsx:84
@@ -5752,8 +5752,8 @@ msgstr ""
 msgid "Remove attachment"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:416
-#: src/view/com/util/UserAvatar.tsx:419
+#: src/view/com/util/UserAvatar.tsx:397
+#: src/view/com/util/UserAvatar.tsx:400
 msgid "Remove Avatar"
 msgstr ""
 
@@ -5880,7 +5880,7 @@ msgstr ""
 msgid "Replies to this post are disabled."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:959
+#: src/view/com/composer/Composer.tsx:955
 msgctxt "action"
 msgid "Reply"
 msgstr "Respondi"
@@ -7963,7 +7963,7 @@ msgstr ""
 msgid "Unsubscribed from list"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:782
+#: src/view/com/composer/Composer.tsx:781
 msgid "Unsupported video type"
 msgstr ""
 
@@ -8014,20 +8014,20 @@ msgstr ""
 msgid "Upload a text file to:"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:387
-#: src/view/com/util/UserAvatar.tsx:390
+#: src/view/com/util/UserAvatar.tsx:368
+#: src/view/com/util/UserAvatar.tsx:371
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:404
+#: src/view/com/util/UserAvatar.tsx:385
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:398
-#: src/view/com/util/UserAvatar.tsx:402
+#: src/view/com/util/UserAvatar.tsx:379
+#: src/view/com/util/UserAvatar.tsx:383
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -8042,7 +8042,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1647
+#: src/view/com/composer/Composer.tsx:1655
 msgid "Uploading video..."
 msgstr ""
 
@@ -8243,7 +8243,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1657
+#: src/view/com/composer/Composer.tsx:1665
 msgid "Video uploaded"
 msgstr ""
 
@@ -8500,9 +8500,9 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:745
+#: src/view/com/composer/Composer.tsx:744
 msgid "What's up?"
-msgstr ""
+msgstr "Kio okazas?"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:80
 msgid "Which languages are used in this post?"
@@ -8574,11 +8574,11 @@ msgstr ""
 msgid "Write a message"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:836
+#: src/view/com/composer/Composer.tsx:832
 msgid "Write post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:743
+#: src/view/com/composer/Composer.tsx:742
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:69
 msgid "Write your reply"
 msgstr ""

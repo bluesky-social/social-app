@@ -138,7 +138,7 @@ msgstr "{0} को {1}"
 msgid "{0} people have used this starter pack!"
 msgstr "{0} जनाले यो स्टार्टर प्याक प्रयोग गरेका छन्!"
 
-#: src/view/com/util/UserAvatar.tsx:464
+#: src/view/com/util/UserAvatar.tsx:445
 msgid "{0}'s avatar"
 msgstr "{0} को अवतार"
 
@@ -504,7 +504,7 @@ msgstr "वैकल्पिक पाठ थप्नुहोस् (ऐच�
 msgid "Add another account"
 msgstr "अर्को खाता थप्नुहोस्"
 
-#: src/view/com/composer/Composer.tsx:744
+#: src/view/com/composer/Composer.tsx:743
 msgid "Add another post"
 msgstr "अर्को पोष्ट थप्नुहोस्"
 
@@ -531,7 +531,7 @@ msgstr ""
 msgid "Add muted words and tags"
 msgstr "म्यूट शब्दहरू र ट्यागहरू थप्नुहोस्"
 
-#: src/view/com/composer/Composer.tsx:1261
+#: src/view/com/composer/Composer.tsx:1258
 msgid "Add new post"
 msgstr "नयाँ पोष्ट थप्नुहोस्"
 
@@ -925,11 +925,11 @@ msgstr "के तपाईं {0} लाई आफ्नो फिडहरू�
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "के तपाईं यसलाई आफ्नो फिडहरूबाट हटाउन निश्चित हुनुहुन्छ?"
 
-#: src/view/com/composer/Composer.tsx:695
+#: src/view/com/composer/Composer.tsx:694
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "के तपाईं यस मस्यौदा हटाउन चाहनुहुन्छ?"
 
-#: src/view/com/composer/Composer.tsx:872
+#: src/view/com/composer/Composer.tsx:868
 msgid "Are you sure you'd like to discard this post?"
 msgstr "के तपाईं यस पोस्ट हटाउन चाहनुहुन्छ?"
 
@@ -1260,7 +1260,7 @@ msgstr "क्यामेरा"
 #: src/screens/Settings/Settings.tsx:260
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:935
+#: src/view/com/composer/Composer.tsx:931
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -1661,7 +1661,7 @@ msgstr "चुनौती पूरा गर्नुहोस्"
 msgid "Compose new post"
 msgstr "नयाँ पोस्ट तयार गर्नुहोस्"
 
-#: src/view/com/composer/Composer.tsx:838
+#: src/view/com/composer/Composer.tsx:834
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "पोस्टहरू {MAX_GRAPHEME_LENGTH} वर्ण लामोसम्म तयार गर्नुहोस्"
 
@@ -1669,7 +1669,7 @@ msgstr "पोस्टहरू {MAX_GRAPHEME_LENGTH} वर्ण लामो
 msgid "Compose reply"
 msgstr "जवाफ तयार गर्नुहोस्"
 
-#: src/view/com/composer/Composer.tsx:1644
+#: src/view/com/composer/Composer.tsx:1652
 msgid "Compressing video..."
 msgstr "भिडियो कम्प्रेस गर्दै..."
 
@@ -2147,7 +2147,7 @@ msgstr "मेरो लागि सन्देश मेटाउनुहो
 msgid "Delete my account"
 msgstr "मेरो खाता मेटाउनुहोस्"
 
-#: src/view/com/composer/Composer.tsx:846
+#: src/view/com/composer/Composer.tsx:842
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:709
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:711
 msgid "Delete post"
@@ -2259,8 +2259,8 @@ msgid "Disabled"
 msgstr "अक्षम गरियो"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:697
-#: src/view/com/composer/Composer.tsx:879
+#: src/view/com/composer/Composer.tsx:696
+#: src/view/com/composer/Composer.tsx:875
 msgid "Discard"
 msgstr "त्याग्नुहोस्"
 
@@ -2268,11 +2268,11 @@ msgstr "त्याग्नुहोस्"
 msgid "Discard changes?"
 msgstr "परिवर्तनहरू त्याग्नुहोस्?"
 
-#: src/view/com/composer/Composer.tsx:694
+#: src/view/com/composer/Composer.tsx:693
 msgid "Discard draft?"
 msgstr "मस्यौदा त्याग्नुहोस्?"
 
-#: src/view/com/composer/Composer.tsx:871
+#: src/view/com/composer/Composer.tsx:867
 msgid "Discard post?"
 msgstr "पोस्ट त्याग्नुहोस्?"
 
@@ -2298,7 +2298,7 @@ msgstr "नयाँ फिडहरू खोज्नुहोस्"
 msgid "Dismiss"
 msgstr "रद्द गर्नुहोस्"
 
-#: src/view/com/composer/Composer.tsx:1568
+#: src/view/com/composer/Composer.tsx:1576
 msgid "Dismiss error"
 msgstr "त्रुटि रद्द गर्नुहोस्"
 
@@ -2469,7 +2469,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "सम्पादन गर्नुहोस्"
 
-#: src/view/com/util/UserAvatar.tsx:363
+#: src/view/com/util/UserAvatar.tsx:344
 #: src/view/com/util/UserBanner.tsx:95
 msgid "Edit avatar"
 msgstr "अवतार सम्पादन गर्नुहोस्"
@@ -2749,7 +2749,7 @@ msgstr "तपाईंको प्रयोगकर्ता नाम र �
 msgid "Enters full screen"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1653
+#: src/view/com/composer/Composer.tsx:1661
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "त्रुटि"
@@ -3825,7 +3825,7 @@ msgstr "यो सहि छ"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "अहिले मात्र तपाईं हुनुहुन्छ! माथि खोजेर आफ्नो स्टार्टर प्याकमा थप मानिसहरू थप्नुहोस्।"
 
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1595
 msgid "Job ID: {0}"
 msgstr "जॉब आईडी: {0}"
 
@@ -4953,7 +4953,7 @@ msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1247
+#: src/view/com/composer/Composer.tsx:1244
 msgid "Open emoji picker"
 msgstr "इमोजी चयनकर्ता खोल्नुहोस्"
 
@@ -5039,7 +5039,7 @@ msgstr "कम्पोजर खोल्नुहोस्"
 msgid "Opens device photo gallery"
 msgstr "डिभाइस फोटो ग्यालरी खोल्नुहोस्"
 
-#: src/view/com/composer/Composer.tsx:1248
+#: src/view/com/composer/Composer.tsx:1245
 msgid "Opens emoji picker"
 msgstr ""
 
@@ -5074,7 +5074,7 @@ msgid "Opens the linked website"
 msgstr "लिङ्क गरिएको वेबसाइट खोल्नुहोस्"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:683
-#: src/view/com/util/UserAvatar.tsx:465
+#: src/view/com/util/UserAvatar.tsx:446
 msgid "Opens this profile"
 msgstr "यो प्रोफाइल खोल्नुहोस्"
 
@@ -5398,7 +5398,7 @@ msgstr ""
 msgid "Porn"
 msgstr "पोर्न"
 
-#: src/view/com/composer/Composer.tsx:963
+#: src/view/com/composer/Composer.tsx:959
 msgctxt "action"
 msgid "Post"
 msgstr "पोस्ट"
@@ -5408,7 +5408,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "पोस्ट"
 
-#: src/view/com/composer/Composer.tsx:961
+#: src/view/com/composer/Composer.tsx:957
 msgctxt "action"
 msgid "Post All"
 msgstr "सबै पोस्ट गर्नुहोस्"
@@ -5561,7 +5561,7 @@ msgstr "गोपनीयता र सुरक्षा"
 msgid "Privacy Policy"
 msgstr "गोपनीयता नीति"
 
-#: src/view/com/composer/Composer.tsx:1650
+#: src/view/com/composer/Composer.tsx:1658
 msgid "Processing video..."
 msgstr "भिडियो प्रशोधन हुँदैछ।"
 
@@ -5752,8 +5752,8 @@ msgstr "खाता हटाउनुहोस्"
 msgid "Remove attachment"
 msgstr "संलग्नक हटाउनुहोस्"
 
-#: src/view/com/util/UserAvatar.tsx:416
-#: src/view/com/util/UserAvatar.tsx:419
+#: src/view/com/util/UserAvatar.tsx:397
+#: src/view/com/util/UserAvatar.tsx:400
 msgid "Remove Avatar"
 msgstr "अवतार हटाउनुहोस्"
 
@@ -5880,7 +5880,7 @@ msgstr "उत्तरहरू निष्क्रिय गरियो"
 msgid "Replies to this post are disabled."
 msgstr "यो पोस्टका उत्तरहरू निष्क्रिय गरिएका छन्।"
 
-#: src/view/com/composer/Composer.tsx:959
+#: src/view/com/composer/Composer.tsx:955
 msgctxt "action"
 msgid "Reply"
 msgstr "उत्तर दिनुहोस्"
@@ -7963,7 +7963,7 @@ msgstr "यस लेबलरबाट सदस्यता समाप्त
 msgid "Unsubscribed from list"
 msgstr "सूचीबाट सदस्यता समाप्त गरिएको"
 
-#: src/view/com/composer/Composer.tsx:782
+#: src/view/com/composer/Composer.tsx:781
 msgid "Unsupported video type"
 msgstr "समर्थन नगर्ने भिडियो प्रकार"
 
@@ -8014,20 +8014,20 @@ msgstr "फोटो अपलोड गर्नुहोस्"
 msgid "Upload a text file to:"
 msgstr "टेक्स्ट फाइल अपलोड गर्नुहोस्:"
 
-#: src/view/com/util/UserAvatar.tsx:387
-#: src/view/com/util/UserAvatar.tsx:390
+#: src/view/com/util/UserAvatar.tsx:368
+#: src/view/com/util/UserAvatar.tsx:371
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "क्यामेरा बाट अपलोड गर्नुहोस्"
 
-#: src/view/com/util/UserAvatar.tsx:404
+#: src/view/com/util/UserAvatar.tsx:385
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "फाइल बाट अपलोड गर्नुहोस्"
 
-#: src/view/com/util/UserAvatar.tsx:398
-#: src/view/com/util/UserAvatar.tsx:402
+#: src/view/com/util/UserAvatar.tsx:379
+#: src/view/com/util/UserAvatar.tsx:383
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -8042,7 +8042,7 @@ msgstr "तस्विरहरू अपलोड गर्दै..."
 msgid "Uploading link thumbnail..."
 msgstr "लिंक थम्बनेल अपलोड गर्दै..."
 
-#: src/view/com/composer/Composer.tsx:1647
+#: src/view/com/composer/Composer.tsx:1655
 msgid "Uploading video..."
 msgstr "भिडियो अपलोड गर्दै..."
 
@@ -8243,7 +8243,7 @@ msgstr "भिडियो फेला पारिएन।"
 msgid "Video settings"
 msgstr "भिडियो सेटिङ्गहरू"
 
-#: src/view/com/composer/Composer.tsx:1657
+#: src/view/com/composer/Composer.tsx:1665
 msgid "Video uploaded"
 msgstr "भिडियो अपलोड गरियो"
 
@@ -8500,7 +8500,7 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:745
+#: src/view/com/composer/Composer.tsx:744
 msgid "What's up?"
 msgstr "के भइरहेको छ?"
 
@@ -8574,11 +8574,11 @@ msgstr "यो प्रयोगकर्ता किन समीक्षा
 msgid "Write a message"
 msgstr "सन्देश लेख्नुहोस्"
 
-#: src/view/com/composer/Composer.tsx:836
+#: src/view/com/composer/Composer.tsx:832
 msgid "Write post"
 msgstr "पोस्ट लेख्नुहोस्"
 
-#: src/view/com/composer/Composer.tsx:743
+#: src/view/com/composer/Composer.tsx:742
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:69
 msgid "Write your reply"
 msgstr "तपाईंको जवाफ लेख्नुहोस्"

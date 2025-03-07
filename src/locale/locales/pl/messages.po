@@ -138,7 +138,7 @@ msgstr "{0} z {1}"
 msgid "{0} people have used this starter pack!"
 msgstr "{0} osób skorzystało z tego pakietu startowego!"
 
-#: src/view/com/util/UserAvatar.tsx:464
+#: src/view/com/util/UserAvatar.tsx:445
 msgid "{0}'s avatar"
 msgstr "Zdjęcie profilowe {0}"
 
@@ -504,7 +504,7 @@ msgstr "Dodaj tekst alternatywny (opcjonalne)"
 msgid "Add another account"
 msgstr "Dodaj inne konto"
 
-#: src/view/com/composer/Composer.tsx:744
+#: src/view/com/composer/Composer.tsx:743
 msgid "Add another post"
 msgstr "Dodaj inny wpis"
 
@@ -531,7 +531,7 @@ msgstr ""
 msgid "Add muted words and tags"
 msgstr "Dodaj wyciszone słowa i tagi"
 
-#: src/view/com/composer/Composer.tsx:1261
+#: src/view/com/composer/Composer.tsx:1258
 msgid "Add new post"
 msgstr "Dodaj nowy wpis"
 
@@ -925,11 +925,11 @@ msgstr "Czy na pewno chcesz usunąć {0} ze swoich kanałów?"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Czy na pewno chcesz to usunąć ze swoich kanałów?"
 
-#: src/view/com/composer/Composer.tsx:695
+#: src/view/com/composer/Composer.tsx:694
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "Czy na pewno chcesz odrzucić ten szkic?"
 
-#: src/view/com/composer/Composer.tsx:872
+#: src/view/com/composer/Composer.tsx:868
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Czy na pewno chcesz odrzucić ten wpis?"
 
@@ -1260,7 +1260,7 @@ msgstr "Aparat"
 #: src/screens/Settings/Settings.tsx:260
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:935
+#: src/view/com/composer/Composer.tsx:931
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -1661,7 +1661,7 @@ msgstr "Ukończ wyzwanie"
 msgid "Compose new post"
 msgstr "Utwórz nowy wpis"
 
-#: src/view/com/composer/Composer.tsx:838
+#: src/view/com/composer/Composer.tsx:834
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "Twórz wpisy o maksymalnej długości {MAX_GRAPHEME_LENGTH} znaków"
 
@@ -1669,7 +1669,7 @@ msgstr "Twórz wpisy o maksymalnej długości {MAX_GRAPHEME_LENGTH} znaków"
 msgid "Compose reply"
 msgstr "Skomentuj"
 
-#: src/view/com/composer/Composer.tsx:1644
+#: src/view/com/composer/Composer.tsx:1652
 msgid "Compressing video..."
 msgstr "Kompresowanie wideo..."
 
@@ -2147,7 +2147,7 @@ msgstr "Usuń wiadomość dla mnie"
 msgid "Delete my account"
 msgstr "Usuń moje konto"
 
-#: src/view/com/composer/Composer.tsx:846
+#: src/view/com/composer/Composer.tsx:842
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:709
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:711
 msgid "Delete post"
@@ -2259,8 +2259,8 @@ msgid "Disabled"
 msgstr "Wyłączono"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:697
-#: src/view/com/composer/Composer.tsx:879
+#: src/view/com/composer/Composer.tsx:696
+#: src/view/com/composer/Composer.tsx:875
 msgid "Discard"
 msgstr "Odrzuć"
 
@@ -2268,11 +2268,11 @@ msgstr "Odrzuć"
 msgid "Discard changes?"
 msgstr "Odrzucić zmiany?"
 
-#: src/view/com/composer/Composer.tsx:694
+#: src/view/com/composer/Composer.tsx:693
 msgid "Discard draft?"
 msgstr "Odrzucić szkic?"
 
-#: src/view/com/composer/Composer.tsx:871
+#: src/view/com/composer/Composer.tsx:867
 msgid "Discard post?"
 msgstr "Odrzucić wpis?"
 
@@ -2298,7 +2298,7 @@ msgstr "Odkryj nowe kanały"
 msgid "Dismiss"
 msgstr "Pomiń"
 
-#: src/view/com/composer/Composer.tsx:1568
+#: src/view/com/composer/Composer.tsx:1576
 msgid "Dismiss error"
 msgstr "Pomiń błąd"
 
@@ -2469,7 +2469,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "Edytuj"
 
-#: src/view/com/util/UserAvatar.tsx:363
+#: src/view/com/util/UserAvatar.tsx:344
 #: src/view/com/util/UserBanner.tsx:95
 msgid "Edit avatar"
 msgstr "Edytuj zdjęcie profilowe"
@@ -2749,7 +2749,7 @@ msgstr "Wprowadź swoją nazwę i hasło"
 msgid "Enters full screen"
 msgstr "Przechodzi do trybu pełnoekranowego"
 
-#: src/view/com/composer/Composer.tsx:1653
+#: src/view/com/composer/Composer.tsx:1661
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "Błąd"
@@ -3825,7 +3825,7 @@ msgstr "Jest poprawny"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "W tej chwili jesteś tylko ty! Dodaj więcej osób do swojego pakietu startowego, wyszukując powyżej."
 
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1595
 msgid "Job ID: {0}"
 msgstr "ID: {0}"
 
@@ -4953,7 +4953,7 @@ msgid "Open drawer menu"
 msgstr "Otwórz menu"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1247
+#: src/view/com/composer/Composer.tsx:1244
 msgid "Open emoji picker"
 msgstr "Wybierz emoji"
 
@@ -5039,7 +5039,7 @@ msgstr "Otwiera kompozytor wpisu"
 msgid "Opens device photo gallery"
 msgstr "Otwiera galerię zdjęć"
 
-#: src/view/com/composer/Composer.tsx:1248
+#: src/view/com/composer/Composer.tsx:1245
 msgid "Opens emoji picker"
 msgstr "Otwiera selektor emoji"
 
@@ -5074,7 +5074,7 @@ msgid "Opens the linked website"
 msgstr "Otwiera link do strony internetowej"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:683
-#: src/view/com/util/UserAvatar.tsx:465
+#: src/view/com/util/UserAvatar.tsx:446
 msgid "Opens this profile"
 msgstr "Otwiera ten profil"
 
@@ -5398,7 +5398,7 @@ msgstr "Popularne klipy wideo w Twojej społeczności."
 msgid "Porn"
 msgstr "Pornografia"
 
-#: src/view/com/composer/Composer.tsx:963
+#: src/view/com/composer/Composer.tsx:959
 msgctxt "action"
 msgid "Post"
 msgstr "Opublikuj"
@@ -5408,7 +5408,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "Opublikuj"
 
-#: src/view/com/composer/Composer.tsx:961
+#: src/view/com/composer/Composer.tsx:957
 msgctxt "action"
 msgid "Post All"
 msgstr "Opublikuj wszystko"
@@ -5561,7 +5561,7 @@ msgstr "Prywatność i bezpieczeństwo"
 msgid "Privacy Policy"
 msgstr "Polityka prywatności"
 
-#: src/view/com/composer/Composer.tsx:1650
+#: src/view/com/composer/Composer.tsx:1658
 msgid "Processing video..."
 msgstr "Przetwarzanie wideo..."
 
@@ -5752,8 +5752,8 @@ msgstr "Usuń konto"
 msgid "Remove attachment"
 msgstr "Usuń załącznik"
 
-#: src/view/com/util/UserAvatar.tsx:416
-#: src/view/com/util/UserAvatar.tsx:419
+#: src/view/com/util/UserAvatar.tsx:397
+#: src/view/com/util/UserAvatar.tsx:400
 msgid "Remove Avatar"
 msgstr "Usuń zdjęcie profilowe"
 
@@ -5880,7 +5880,7 @@ msgstr "Komentarze zostały wyłączone"
 msgid "Replies to this post are disabled."
 msgstr "Komentarze do tego wpisu są wyłączone."
 
-#: src/view/com/composer/Composer.tsx:959
+#: src/view/com/composer/Composer.tsx:955
 msgctxt "action"
 msgid "Reply"
 msgstr "Skomentuj"
@@ -7963,7 +7963,7 @@ msgstr "Nie subskrybuj tej moderacji"
 msgid "Unsubscribed from list"
 msgstr "Nie subskrybujesz już listy"
 
-#: src/view/com/composer/Composer.tsx:782
+#: src/view/com/composer/Composer.tsx:781
 msgid "Unsupported video type"
 msgstr "Nieobsługiwany typ wideo"
 
@@ -8014,20 +8014,20 @@ msgstr "Zamiast tego prześlij zdjęcie"
 msgid "Upload a text file to:"
 msgstr "Prześlij plik tekstowy do:"
 
-#: src/view/com/util/UserAvatar.tsx:387
-#: src/view/com/util/UserAvatar.tsx:390
+#: src/view/com/util/UserAvatar.tsx:368
+#: src/view/com/util/UserAvatar.tsx:371
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "Prześlij z aparatu"
 
-#: src/view/com/util/UserAvatar.tsx:404
+#: src/view/com/util/UserAvatar.tsx:385
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "Prześlij z plików"
 
-#: src/view/com/util/UserAvatar.tsx:398
-#: src/view/com/util/UserAvatar.tsx:402
+#: src/view/com/util/UserAvatar.tsx:379
+#: src/view/com/util/UserAvatar.tsx:383
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -8042,7 +8042,7 @@ msgstr "Przesyłanie zdjęć..."
 msgid "Uploading link thumbnail..."
 msgstr "Przesyłanie miniatury..."
 
-#: src/view/com/composer/Composer.tsx:1647
+#: src/view/com/composer/Composer.tsx:1655
 msgid "Uploading video..."
 msgstr "Przesyłanie wideo..."
 
@@ -8243,7 +8243,7 @@ msgstr "Wideo nie zostało odnalezione."
 msgid "Video settings"
 msgstr "Ustawienia wideo"
 
-#: src/view/com/composer/Composer.tsx:1657
+#: src/view/com/composer/Composer.tsx:1665
 msgid "Video uploaded"
 msgstr "Wideo zostało przesłane"
 
@@ -8500,7 +8500,7 @@ msgstr "O czym piszą ludzie."
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:745
+#: src/view/com/composer/Composer.tsx:744
 msgid "What's up?"
 msgstr "Jak się masz?"
 
@@ -8574,11 +8574,11 @@ msgstr "Dlaczego ta osoba powinna zostać sprawdzona?"
 msgid "Write a message"
 msgstr "Napisz wiadomość"
 
-#: src/view/com/composer/Composer.tsx:836
+#: src/view/com/composer/Composer.tsx:832
 msgid "Write post"
 msgstr "Utwórz wpis"
 
-#: src/view/com/composer/Composer.tsx:743
+#: src/view/com/composer/Composer.tsx:742
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:69
 msgid "Write your reply"
 msgstr "Skomentuj"

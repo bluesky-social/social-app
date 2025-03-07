@@ -138,7 +138,7 @@ msgstr "{0} / {1}"
 msgid "{0} people have used this starter pack!"
 msgstr "{0}人がこのスターターパックを使用しました！"
 
-#: src/view/com/util/UserAvatar.tsx:464
+#: src/view/com/util/UserAvatar.tsx:445
 msgid "{0}'s avatar"
 msgstr "{0}のアバター"
 
@@ -504,7 +504,7 @@ msgstr "ALTテキストを追加（オプション）"
 msgid "Add another account"
 msgstr "他のアカウントを追加"
 
-#: src/view/com/composer/Composer.tsx:744
+#: src/view/com/composer/Composer.tsx:743
 msgid "Add another post"
 msgstr "他の投稿を追加"
 
@@ -531,7 +531,7 @@ msgstr "選択した設定でミュートワードを追加"
 msgid "Add muted words and tags"
 msgstr "ミュートするワードとタグを追加"
 
-#: src/view/com/composer/Composer.tsx:1261
+#: src/view/com/composer/Composer.tsx:1258
 msgid "Add new post"
 msgstr "新しい投稿を追加"
 
@@ -925,11 +925,11 @@ msgstr "あなたのフィードから{0}を削除してもよろしいですか
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "本当にこのフィードをあなたのフィードから削除したいですか？"
 
-#: src/view/com/composer/Composer.tsx:695
+#: src/view/com/composer/Composer.tsx:694
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "本当にこの下書きを削除しますか？"
 
-#: src/view/com/composer/Composer.tsx:872
+#: src/view/com/composer/Composer.tsx:868
 msgid "Are you sure you'd like to discard this post?"
 msgstr "本当にこの投稿を削除しますか？"
 
@@ -1260,7 +1260,7 @@ msgstr "カメラ"
 #: src/screens/Settings/Settings.tsx:260
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:935
+#: src/view/com/composer/Composer.tsx:931
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -1661,7 +1661,7 @@ msgstr "テストをクリアしてください"
 msgid "Compose new post"
 msgstr "新しい投稿を作成"
 
-#: src/view/com/composer/Composer.tsx:838
+#: src/view/com/composer/Composer.tsx:834
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "{MAX_GRAPHEME_LENGTH}文字までの投稿を作成"
 
@@ -1669,7 +1669,7 @@ msgstr "{MAX_GRAPHEME_LENGTH}文字までの投稿を作成"
 msgid "Compose reply"
 msgstr "返信を作成"
 
-#: src/view/com/composer/Composer.tsx:1644
+#: src/view/com/composer/Composer.tsx:1652
 msgid "Compressing video..."
 msgstr "ビデオを圧縮中…"
 
@@ -2147,7 +2147,7 @@ msgstr "メッセージの宛先から自分を削除"
 msgid "Delete my account"
 msgstr "アカウントを削除"
 
-#: src/view/com/composer/Composer.tsx:846
+#: src/view/com/composer/Composer.tsx:842
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:709
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:711
 msgid "Delete post"
@@ -2259,8 +2259,8 @@ msgid "Disabled"
 msgstr "無効"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:697
-#: src/view/com/composer/Composer.tsx:879
+#: src/view/com/composer/Composer.tsx:696
+#: src/view/com/composer/Composer.tsx:875
 msgid "Discard"
 msgstr "破棄"
 
@@ -2268,11 +2268,11 @@ msgstr "破棄"
 msgid "Discard changes?"
 msgstr "変更を破棄しますか？"
 
-#: src/view/com/composer/Composer.tsx:694
+#: src/view/com/composer/Composer.tsx:693
 msgid "Discard draft?"
 msgstr "下書きを削除しますか？"
 
-#: src/view/com/composer/Composer.tsx:871
+#: src/view/com/composer/Composer.tsx:867
 msgid "Discard post?"
 msgstr "投稿を削除しますか？"
 
@@ -2298,7 +2298,7 @@ msgstr "新しいフィードを探す"
 msgid "Dismiss"
 msgstr "消す"
 
-#: src/view/com/composer/Composer.tsx:1568
+#: src/view/com/composer/Composer.tsx:1576
 msgid "Dismiss error"
 msgstr "エラーを消す"
 
@@ -2469,7 +2469,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "編集"
 
-#: src/view/com/util/UserAvatar.tsx:363
+#: src/view/com/util/UserAvatar.tsx:344
 #: src/view/com/util/UserBanner.tsx:95
 msgid "Edit avatar"
 msgstr "アバターを編集"
@@ -2749,7 +2749,7 @@ msgstr "ユーザー名とパスワードを入力してください"
 msgid "Enters full screen"
 msgstr "フルスクリーンで表示"
 
-#: src/view/com/composer/Composer.tsx:1653
+#: src/view/com/composer/Composer.tsx:1661
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "エラー"
@@ -3825,7 +3825,7 @@ msgstr "合ってます"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "今はあなただけ！上で検索してスターターパックにより多くのユーザーを追加してください。"
 
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1595
 msgid "Job ID: {0}"
 msgstr "ジョブID：{0}"
 
@@ -4953,7 +4953,7 @@ msgid "Open drawer menu"
 msgstr "引き出しメニューを開く"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1247
+#: src/view/com/composer/Composer.tsx:1244
 msgid "Open emoji picker"
 msgstr "絵文字を入力"
 
@@ -5039,7 +5039,7 @@ msgstr "編集画面を開く"
 msgid "Opens device photo gallery"
 msgstr "デバイスのフォトギャラリーを開く"
 
-#: src/view/com/composer/Composer.tsx:1248
+#: src/view/com/composer/Composer.tsx:1245
 msgid "Opens emoji picker"
 msgstr "絵文字選択を開く"
 
@@ -5074,7 +5074,7 @@ msgid "Opens the linked website"
 msgstr "リンク先のウェブサイトを開く"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:683
-#: src/view/com/util/UserAvatar.tsx:465
+#: src/view/com/util/UserAvatar.tsx:446
 msgid "Opens this profile"
 msgstr "プロフィールを開く"
 
@@ -5398,7 +5398,7 @@ msgstr "あなたのネットワークで流行っているビデオ。"
 msgid "Porn"
 msgstr "ポルノ"
 
-#: src/view/com/composer/Composer.tsx:963
+#: src/view/com/composer/Composer.tsx:959
 msgctxt "action"
 msgid "Post"
 msgstr "投稿"
@@ -5408,7 +5408,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "投稿"
 
-#: src/view/com/composer/Composer.tsx:961
+#: src/view/com/composer/Composer.tsx:957
 msgctxt "action"
 msgid "Post All"
 msgstr "すべてポスト"
@@ -5561,7 +5561,7 @@ msgstr "プライバシーとセキュリティ"
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
 
-#: src/view/com/composer/Composer.tsx:1650
+#: src/view/com/composer/Composer.tsx:1658
 msgid "Processing video..."
 msgstr "ビデオを処理中…"
 
@@ -5752,8 +5752,8 @@ msgstr "アカウント切替リストから取り除く"
 msgid "Remove attachment"
 msgstr "添付を削除"
 
-#: src/view/com/util/UserAvatar.tsx:416
-#: src/view/com/util/UserAvatar.tsx:419
+#: src/view/com/util/UserAvatar.tsx:397
+#: src/view/com/util/UserAvatar.tsx:400
 msgid "Remove Avatar"
 msgstr "アバターを削除"
 
@@ -5880,7 +5880,7 @@ msgstr "返信できません"
 msgid "Replies to this post are disabled."
 msgstr "この投稿への返信は無効化されています。"
 
-#: src/view/com/composer/Composer.tsx:959
+#: src/view/com/composer/Composer.tsx:955
 msgctxt "action"
 msgid "Reply"
 msgstr "返信"
@@ -7963,7 +7963,7 @@ msgstr "このラベラーの登録を解除"
 msgid "Unsubscribed from list"
 msgstr "リストの登録を解除しました"
 
-#: src/view/com/composer/Composer.tsx:782
+#: src/view/com/composer/Composer.tsx:781
 msgid "Unsupported video type"
 msgstr "サポートしていないビデオ形式"
 
@@ -8014,20 +8014,20 @@ msgstr "代わりに写真をアップロード"
 msgid "Upload a text file to:"
 msgstr "テキストファイルのアップロード先："
 
-#: src/view/com/util/UserAvatar.tsx:387
-#: src/view/com/util/UserAvatar.tsx:390
+#: src/view/com/util/UserAvatar.tsx:368
+#: src/view/com/util/UserAvatar.tsx:371
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "カメラからアップロード"
 
-#: src/view/com/util/UserAvatar.tsx:404
+#: src/view/com/util/UserAvatar.tsx:385
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "ファイルからアップロード"
 
-#: src/view/com/util/UserAvatar.tsx:398
-#: src/view/com/util/UserAvatar.tsx:402
+#: src/view/com/util/UserAvatar.tsx:379
+#: src/view/com/util/UserAvatar.tsx:383
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -8042,7 +8042,7 @@ msgstr "画像をアップロード中…"
 msgid "Uploading link thumbnail..."
 msgstr "リンクのサムネイルをアップロード中…"
 
-#: src/view/com/composer/Composer.tsx:1647
+#: src/view/com/composer/Composer.tsx:1655
 msgid "Uploading video..."
 msgstr "ビデオをアップロード中…"
 
@@ -8243,7 +8243,7 @@ msgstr "ビデオが見つかりません。"
 msgid "Video settings"
 msgstr "ビデオの設定"
 
-#: src/view/com/composer/Composer.tsx:1657
+#: src/view/com/composer/Composer.tsx:1665
 msgid "Video uploaded"
 msgstr "ビデオをアップロードしました"
 
@@ -8500,7 +8500,7 @@ msgstr "みんなは何について投稿しているのか。"
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:745
+#: src/view/com/composer/Composer.tsx:744
 msgid "What's up?"
 msgstr "最近どう？"
 
@@ -8574,11 +8574,11 @@ msgstr "なぜこのユーザーをレビューする必要がありますか？
 msgid "Write a message"
 msgstr "メッセージを書く"
 
-#: src/view/com/composer/Composer.tsx:836
+#: src/view/com/composer/Composer.tsx:832
 msgid "Write post"
 msgstr "投稿を書く"
 
-#: src/view/com/composer/Composer.tsx:743
+#: src/view/com/composer/Composer.tsx:742
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:69
 msgid "Write your reply"
 msgstr "返信を書く"
