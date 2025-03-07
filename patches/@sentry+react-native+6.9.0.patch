@@ -1,8 +1,8 @@
 diff --git a/node_modules/@sentry/react-native/scripts/expo-upload-sourcemaps.js b/node_modules/@sentry/react-native/scripts/expo-upload-sourcemaps.js
-index 0e7b4b3..9929662 100755
+index c282ade..8777755 100755
 --- a/node_modules/@sentry/react-native/scripts/expo-upload-sourcemaps.js
 +++ b/node_modules/@sentry/react-native/scripts/expo-upload-sourcemaps.js
-@@ -194,7 +194,7 @@ for (const [assetGroupName, assets] of Object.entries(groupedAssets)) {
+@@ -215,7 +215,7 @@ for (const [assetGroupName, assets] of Object.entries(groupedAssets)) {
  
    const isHermes = assets.find(asset => asset.endsWith('.hbc'));
    const windowsCallback = process.platform === "win32" ? 'node ' : '';
