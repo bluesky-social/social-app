@@ -1,4 +1,4 @@
-jest.mock('rn-fetch-blob', () => {
+jest.mock('react-native-blob-util', () => {
   return {
     __esModule: true,
     default: {
