@@ -657,7 +657,6 @@ export const ComposePost = ({
             ref={scrollViewRef}
             layout={native(LinearTransition)}
             onScroll={scrollHandler}
-            contentContainerStyle={a.flex_grow}
             style={a.flex_1}
             keyboardShouldPersistTaps="always"
             onContentSizeChange={onScrollViewContentSizeChange}
@@ -796,22 +795,19 @@ let ComposerPost = React.memo(function ComposerPost({
   )
 
   return (
-    <View
-      style={[
-        a.mx_lg,
-        !isActive && styles.inactivePost,
-        isTextOnly && isNative && a.flex_grow,
-      ]}>
-      <View style={[a.flex_row, isNative && a.flex_1]}>
+    <View style={[styles.post, !isActive && styles.inactivePost]}>
+      <View
+        style={[
+          styles.textInputLayout,
+          isNative && styles.textInputLayoutMobile,
+        ]}>
         <UserAvatar
           avatar={currentProfile?.avatar}
           size={50}
           type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
-          style={[a.mt_xs]}
         />
         <TextInput
           ref={textInput}
-          style={[a.pt_xs]}
           richtext={richtext}
           placeholder={selectTextInputPlaceholder}
           autoFocus
@@ -1081,8 +1077,9 @@ function ComposerEmbeds({
           </Animated.View>
         )}
       </LayoutAnimationConfig>
-      {embed.quote?.uri ? (
-        <View style={!video ? [a.mt_md] : []}>
+
+      <View style={!video ? [a.mt_md] : []}>
+        {embed.quote?.uri ? (
           <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
             <View style={{pointerEvents: 'none'}}>
               <LazyQuoteEmbed uri={embed.quote.uri} />
@@ -1091,8 +1088,8 @@ function ComposerEmbeds({
               <QuoteX onRemove={() => dispatch({type: 'embed_remove_quote'})} />
             )}
           </View>
-        </View>
-      ) : null}
+        ) : null}
+      </View>
     </>
   )
 }
@@ -1472,6 +1469,7 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   stickyFooterWeb: {
+    // @ts-ignore web-only
     position: 'sticky',
     bottom: 0,
   },
@@ -1505,8 +1503,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 5,
   },
+  post: {
+    marginHorizontal: 16,
+  },
   inactivePost: {
     opacity: 0.5,
+  },
+  textInputLayout: {
+    flexDirection: 'row',
+    paddingTop: 4,
+  },
+  textInputLayoutMobile: {
+    flex: 1,
   },
   addExtLinkBtn: {
     borderWidth: 1,
