@@ -88,7 +88,6 @@ function Player({
         event.url.includes('www.youtube.com')),
     [params.playerUri, params.source],
   )
-
   // Don't show the player until it is active
   if (!isPlayerActive) return null
 
@@ -129,6 +128,9 @@ export function ExternalPlayer({
   const [isPlayerActive, setPlayerActive] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
 
+  // Add a state to track if user has manually activated the player
+  const [userActivated, setUserActivated] = React.useState(false)
+
   const aspect = React.useMemo(() => {
     return getPlayerAspect({
       type: params.type,
@@ -139,6 +141,9 @@ export function ExternalPlayer({
 
   const viewRef = useAnimatedRef()
   const frameCallback = useFrameCallback(() => {
+    // If user has manually activated the player, don't disable it based on visibility
+    if (userActivated) return
+
     const measurement = measure(viewRef)
     if (!measurement) return
 
@@ -162,15 +167,19 @@ export function ExternalPlayer({
     }
   }, false) // False here disables autostarting the callback
 
-  // watch for leaving the viewport due to scrolling
+  // Watch for leaving the viewport due to scrolling, but only if not user activated
   React.useEffect(() => {
-    // We don't want to do anything if the player isn't active
+    // Don't do anything if player isn't active
     if (!isPlayerActive) return
 
-    // Interval for scrolling works in most cases, However, for twitch embeds, if we navigate away from the screen the webview will
-    // continue playing. We need to watch for the blur event
+    // Skip visibility checking entirely if user has manually activated
+    if (userActivated) return
+
+    // Only watch for navigation changes
     const unsubscribe = navigation.addListener('blur', () => {
+      // Always stop playing when navigating away
       setPlayerActive(false)
+      setUserActivated(false)
     })
 
     // Start watching for changes
@@ -180,7 +189,7 @@ export function ExternalPlayer({
       unsubscribe()
       frameCallback.setActive(false)
     }
-  }, [navigation, isPlayerActive, frameCallback])
+  }, [navigation, isPlayerActive, frameCallback, userActivated])
 
   const onLoad = React.useCallback(() => {
     setIsLoading(false)
@@ -196,12 +205,15 @@ export function ExternalPlayer({
         return
       }
 
+      // Mark that user has explicitly activated this player
+      setUserActivated(true)
       setPlayerActive(true)
     },
     [externalEmbedsPrefs, consentDialogControl, params.source],
   )
 
   const onAcceptConsent = React.useCallback(() => {
+    setUserActivated(true)
     setPlayerActive(true)
   }, [])
 
