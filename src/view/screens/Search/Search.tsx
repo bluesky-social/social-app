@@ -735,12 +735,17 @@ export function SearchScreenShell({
     setShowAutocomplete(false)
     if (isWeb) {
       // Empty params resets the URL to be /search rather than /search?q=
-      navigation.replace('Search', {})
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const {q: _q, ...parameters} = (route.params ?? {}) as {
+        [key: string]: string
+      }
+      // @ts-expect-error route is not typesafe
+      navigation.replace(route.name, parameters)
     } else {
       setSearchText('')
       navigation.setParams({q: ''})
     }
-  }, [setShowAutocomplete, setSearchText, navigation])
+  }, [setShowAutocomplete, setSearchText, navigation, route.params, route.name])
 
   const onSubmit = React.useCallback(() => {
     navigateToItem(searchText)

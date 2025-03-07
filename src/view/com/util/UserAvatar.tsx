@@ -413,7 +413,7 @@ let EditableUserAvatar = ({
             <Menu.Group>
               <Menu.Item
                 testID="changeAvatarRemoveBtn"
-                label={_(`Remove Avatar`)}
+                label={_(msg`Remove Avatar`)}
                 onPress={onRemoveAvatar}>
                 <Menu.ItemText>
                   <Trans>Remove Avatar</Trans>

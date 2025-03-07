@@ -306,6 +306,19 @@ export type MetricEvents = {
   'progressGuide:hide': {}
   'progressGuide:followDialog:open': {}
 
+  'moderation:subscribedToLabeler': {}
+  'moderation:unsubscribedFromLabeler': {}
+  'moderation:changeLabelPreference': {
+    preference: string
+  }
+
+  'moderation:subscribedToList': {
+    listType: 'mute' | 'block'
+  }
+  'moderation:unsubscribedFromList': {
+    listType: 'mute' | 'block'
+  }
+
   'reportDialog:open': {
     subjectType: string
   }

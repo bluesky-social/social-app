@@ -127,6 +127,7 @@ function KnownFollowersInner({
       onPress={onLinkPress}
       to={makeProfileLink(profile, 'known-followers')}
       style={[
+        a.max_w_full,
         a.flex_row,
         minimal ? a.gap_sm : a.gap_md,
         a.align_center,
@@ -171,6 +172,7 @@ function KnownFollowersInner({
 
           <Text
             style={[
+              a.flex_shrink,
               textStyle,
               hovered && {
                 textDecorationLine: 'underline',

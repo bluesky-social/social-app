@@ -173,9 +173,9 @@ function MenuContent({
   const {mutate: muteConvo} = useMuteConvo(convoId, {
     onSuccess: data => {
       if (data.convo.muted) {
-        Toast.show(_(msg`Chat muted`))
+        Toast.show(_(msg({message: 'Chat muted', context: 'toast'})))
       } else {
-        Toast.show(_(msg`Chat unmuted`))
+        Toast.show(_(msg({message: 'Chat unmuted', context: 'toast'})))
       }
     },
     onError: () => {

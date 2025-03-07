@@ -269,7 +269,7 @@ function SaveButtonInner({
             },
           ])
         }
-        Toast.show(_(msg`Feeds updated!`))
+        Toast.show(_(msg({message: 'Feeds updated!', context: 'toast'})))
       } catch (err: any) {
         logger.error(err, {message: `FeedCard: failed to update feeds`, pin})
         Toast.show(_(msg`Failed to update feeds`), 'xmark')

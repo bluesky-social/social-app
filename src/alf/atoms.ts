@@ -70,7 +70,7 @@ export const atoms = {
   }),
 
   /*
-   * Width
+   * Width & Height
    */
   w_full: {
     width: '100%',
@@ -81,6 +81,12 @@ export const atoms = {
   h_full_vh: web({
     height: '100vh',
   }),
+  max_w_full: {
+    maxWidth: '100%',
+  },
+  max_h_full: {
+    maxHeight: '100%',
+  },
 
   /**
    * Used for the outermost components on screens, to ensure that they can fill

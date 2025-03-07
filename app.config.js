@@ -240,6 +240,7 @@ module.exports = function (config) {
           },
         ],
         './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
+        './plugins/withGradleJVMHeapSizeIncrease.js',
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidStylesAccentColorPlugin.js',
