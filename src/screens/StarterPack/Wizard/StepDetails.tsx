@@ -55,7 +55,7 @@ export function StepDetails() {
                 msg({
                   comment:
                     'Accessibility label describing how many characters the user has entered out of a 50-character limit in a text input field',
-                  message: '${state.name?.length} out of 50',
+                  message: `${state.name?.length} out of 50`,
                 }),
               )}>
               <Text style={[t.atoms.text_contrast_medium]}>
