@@ -404,7 +404,7 @@ module.exports = function (config) {
               },
             },
           },
-          projectId:'c336c77c-6aec-4c09-9177-c52aa4a4c909',
+          projectId: 'c336c77c-6aec-4c09-9177-c52aa4a4c909',
         },
       },
       hooks: {
