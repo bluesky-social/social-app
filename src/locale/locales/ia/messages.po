@@ -5966,57 +5966,57 @@ msgstr ""
 #: src/view/shell/desktop/LeftNav.tsx:605
 #: src/view/shell/Drawer.tsx:370
 msgid "Search"
-msgstr ""
+msgstr "Cercar"
 
 #: src/Navigation.tsx:215
 #: src/screens/Profile/ProfileSearch.tsx:34
 msgid "Search @{0}'s posts"
-msgstr ""
+msgstr "Cercar publicationes de @{0}"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:745
 msgid "Search by name or interest"
-msgstr ""
+msgstr "Cercar per nomine o interesse"
 
 #: src/view/screens/Feeds.tsx:441
 msgid "Search feeds"
-msgstr ""
+msgstr "Cercar fluxos"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:575
 msgid "Search for \"{interestsDisplayName}\"{activeText}"
-msgstr ""
+msgstr "Cercar \"{interestsDisplayName}\"{activeText}"
 
 #: src/view/shell/desktop/Search.tsx:201
 msgid "Search for \"{query}\""
-msgstr ""
+msgstr "Cercar \"{query}\""
 
 #: src/view/screens/Search/Search.tsx:979
 msgid "Search for \"{searchText}\""
-msgstr ""
+msgstr "Cercar \"{searchText}\""
 
 #: src/screens/StarterPack/Wizard/index.tsx:474
 msgid "Search for feeds that you want to suggest to others."
-msgstr ""
+msgstr "Cercar fluxos que tu vole suggerer a alteres."
 
 #: src/view/screens/Search/Search.tsx:872
 msgid "Search for posts, users, or feeds"
-msgstr ""
+msgstr "Cercar publicationes, usatores o fluxos"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
 msgid "Search for users"
-msgstr ""
+msgstr "Cercar usatores"
 
 #: src/components/dialogs/GifSelect.tsx:177
 msgid "Search GIFs"
-msgstr ""
+msgstr "Cercar GIFs"
 
 #: src/screens/Profile/ProfileSearch.tsx:33
 msgid "Search my posts"
-msgstr ""
+msgstr "Cercar mi publicationes"
 
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/profile/ProfileMenu.tsx:231
 msgid "Search Posts"
-msgstr ""
+msgstr "Cercar Publicationes"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:507
 #: src/components/ProgressGuide/FollowDialog.tsx:764
@@ -6025,16 +6025,16 @@ msgstr "Cercar profilos"
 
 #: src/components/dialogs/GifSelect.tsx:178
 msgid "Search Tenor"
-msgstr ""
+msgstr "Cercar Tenor"
 
 #: src/screens/Profile/ProfileSearch.tsx:35
 msgid "Search..."
-msgstr ""
+msgstr "Cercar..."
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:508
 #: src/components/ProgressGuide/FollowDialog.tsx:765
 msgid "Searches for profiles"
-msgstr "Cercas per profilos"
+msgstr "Cercas de profilos"
 
 #: src/view/com/modals/ChangeEmail.tsx:105
 msgid "Security Step Required"
@@ -6058,7 +6058,7 @@ msgstr "Vider le publicationes sur #{tag} per usator"
 
 #: src/view/com/auth/SplashScreen.web.tsx:176
 msgid "See jobs at Bluesky"
-msgstr ""
+msgstr "Vider offertas de empleo in Bluesky"
 
 #: src/view/screens/SavedFeeds.tsx:205
 msgid "See this guide"
@@ -6070,7 +6070,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
-msgstr "Selige un color"
+msgstr "Selectionar un color"
 
 #: src/screens/Login/ChooseAccountForm.tsx:77
 msgid "Select account"
@@ -6082,7 +6082,7 @@ msgstr "Selectionar un avatar"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:65
 msgid "Select an emoji"
-msgstr "Selectiona un emoji"
+msgstr "Selectionar un emoji"
 
 #: src/screens/Settings/LanguageSettings.tsx:262
 msgid "Select content languages"
@@ -6094,15 +6094,15 @@ msgstr "Selectiona desde un conto existente"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:35
 msgid "Select GIF"
-msgstr ""
+msgstr "Selectionar GIF"
 
 #: src/components/dialogs/GifSelect.tsx:306
 msgid "Select GIF \"{0}\""
-msgstr ""
+msgstr "Selectionar GIF \"{0}\""
 
 #: src/components/dialogs/MutedWords.tsx:142
 msgid "Select how long to mute this word for."
-msgstr ""
+msgstr "Selectionar per quanto tempore iste parola essera silentiate."
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:245
 msgid "Select language..."
@@ -6114,7 +6114,7 @@ msgstr "Selectionar linguas"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:28
 msgid "Select moderator"
-msgstr ""
+msgstr "Selectionar moderator"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:66
 msgid "Select subtitle file (.vtt)"
@@ -6122,7 +6122,7 @@ msgstr "Selectionar file de subtitulos (.vtt)"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
-msgstr ""
+msgstr "Selectionar le emoji {emojiName} como tu avatar"
 
 #: src/components/ReportDialog/SubmitView.tsx:141
 msgid "Select the moderation service(s) to report to"
@@ -6134,11 +6134,11 @@ msgstr "Selectionar video"
 
 #: src/components/dialogs/MutedWords.tsx:242
 msgid "Select what content this mute word should apply to."
-msgstr ""
+msgstr "Selectiona in qual contento iste parola debe esser silentiate."
 
 #: src/screens/Settings/LanguageSettings.tsx:255
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
-msgstr ""
+msgstr "Selectiona qual linguas tu vole que tu fluxos subscribite include. Si necun es selectionate, tote le linguas essera monstrate."
 
 #: src/screens/Settings/LanguageSettings.tsx:84
 msgid "Select your app language for the default text to display in the app."
@@ -6146,23 +6146,23 @@ msgstr "Selectiona tu lingua pro le texto predefinite a monstrar in le applicati
 
 #: src/screens/Signup/StepInfo/index.tsx:217
 msgid "Select your date of birth"
-msgstr ""
+msgstr "Selectionar tu data de nascentia"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:192
 msgid "Select your interests from the options below"
-msgstr ""
+msgstr "Selectiona tu interesses desde le optiones in basso"
 
 #: src/screens/Settings/LanguageSettings.tsx:171
 msgid "Select your preferred language for translations in your feed."
-msgstr ""
+msgstr "Selectiona tu lingua preferite pro traductiones in tu fluxo."
 
 #: src/view/com/util/forms/DropdownButton.tsx:297
 msgid "Selects option {0} of {numItems}"
-msgstr ""
+msgstr "Selectiona option {0} de {numItems}"
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
-msgstr ""
+msgstr "Invia un sito del web cool!"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
@@ -6226,7 +6226,7 @@ msgstr "Invia un e-posta con le codice de confirmation pro le suppresion del con
 
 #: src/view/com/auth/server-input/index.tsx:167
 msgid "Server address"
-msgstr "Adresse de servitor"
+msgstr "Adresse del servitor"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:178
 msgid "Set app icon to {0}"
@@ -6234,7 +6234,7 @@ msgstr "Definir le icone de application a {0}"
 
 #: src/screens/Moderation/index.tsx:306
 msgid "Set birthdate"
-msgstr ""
+msgstr "Definir data de nascentia"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:106
 msgid "Set new password"
@@ -6261,11 +6261,11 @@ msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Sexual activity or erotic nudity."
-msgstr ""
+msgstr "Activitate sexual o nuditate erotic."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:38
 msgid "Sexually Suggestive"
-msgstr ""
+msgstr "Sexualmente suggestive"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:175
 #: src/screens/Hashtag.tsx:126
@@ -6284,36 +6284,36 @@ msgstr ""
 #: src/view/com/lightbox/ImageViewing/index.tsx:631
 msgctxt "action"
 msgid "Share"
-msgstr ""
+msgstr "Compartir"
 
 #: src/components/dms/ChatEmptyPill.tsx:37
 msgid "Share a cool story!"
-msgstr ""
+msgstr "Comparti un historia cool!"
 
 #: src/components/dms/ChatEmptyPill.tsx:36
 msgid "Share a fun fact!"
-msgstr ""
+msgstr "Comparti un facto divertente!"
 
 #: src/view/com/profile/ProfileMenu.tsx:405
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:723
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:372
 msgid "Share anyway"
-msgstr ""
+msgstr "Compartir nonobstante"
 
 #: src/components/StarterPack/ShareDialog.tsx:123
 #: src/components/StarterPack/ShareDialog.tsx:130
 #: src/screens/StarterPack/StarterPackScreen.tsx:599
 msgid "Share link"
-msgstr ""
+msgstr "Compartir ligamine"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
 msgid "Share Link"
-msgstr ""
+msgstr "Compartir ligamine"
 
 #: src/components/StarterPack/ShareDialog.tsx:87
 msgid "Share link dialog"
-msgstr ""
+msgstr "Dialogo de compartition de ligamine"
 
 #: src/components/StarterPack/ShareDialog.tsx:134
 #: src/components/StarterPack/ShareDialog.tsx:145
@@ -6322,7 +6322,7 @@ msgstr "Compartir codice QR"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:470
 msgid "Share this feed"
-msgstr ""
+msgstr "Compartir iste fluxo"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:416
 msgid "Share this starter pack"
@@ -6334,15 +6334,15 @@ msgstr ""
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
-msgstr ""
+msgstr "Comparti tu fluxo favorite!"
 
 #: src/Navigation.tsx:274
 msgid "Shared Preferences Tester"
-msgstr ""
+msgstr "Testator de preferentias compartite"
 
 #: src/view/com/modals/LinkWarning.tsx:92
 msgid "Shares the linked website"
-msgstr ""
+msgstr "Comparti le sito del web ligate"
 
 #: src/components/moderation/ContentHider.tsx:200
 #: src/components/moderation/LabelPreference.tsx:137
@@ -6352,7 +6352,7 @@ msgstr "Monstrar"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:178
 msgid "Show alt text"
-msgstr ""
+msgstr "Monstrar texto alternative"
 
 #: src/components/moderation/ScreenHider.tsx:172
 #: src/components/moderation/ScreenHider.tsx:175
@@ -6360,7 +6360,7 @@ msgstr ""
 #: src/screens/VideoFeed/index.tsx:609
 #: src/screens/VideoFeed/index.tsx:615
 msgid "Show anyway"
-msgstr ""
+msgstr "Monstrar nonobstante"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:27
 #: src/lib/moderation/useLabelBehaviorDescription.ts:63
@@ -6378,11 +6378,11 @@ msgstr "Monstrar responsas celate"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:483
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:485
 msgid "Show less like this"
-msgstr ""
+msgstr "Monstrar minus como isto"
 
 #: src/screens/List/ListHiddenScreen.tsx:183
 msgid "Show list anyway"
-msgstr ""
+msgstr "Monstrar lista nonobstante"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:597
 #: src/view/com/post/Post.tsx:242
@@ -6402,7 +6402,7 @@ msgstr "Monstrar responsas silentiate"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:104
 #: src/screens/Settings/FollowingFeedPreferences.tsx:114
 msgid "Show quote posts"
-msgstr ""
+msgstr "Monstrar citationes"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:68
 #: src/screens/Settings/FollowingFeedPreferences.tsx:78
@@ -6411,15 +6411,15 @@ msgstr "Monstrar responsas"
 
 #: src/view/com/post-thread/PostThread.tsx:622
 msgid "Show replies as"
-msgstr ""
+msgstr "Monstrar responsas como"
 
 #: src/screens/Settings/ThreadPreferences.tsx:151
 msgid "Show replies as threaded"
-msgstr ""
+msgstr "Monstrar responsas como un filo"
 
 #: src/screens/Settings/ThreadPreferences.tsx:126
 msgid "Show replies by people you follow before all other replies"
-msgstr ""
+msgstr "Monstrar responsas de personas que tu seque ante le altere responsas"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:549
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:559
@@ -6429,12 +6429,12 @@ msgstr ""
 #: src/screens/Settings/FollowingFeedPreferences.tsx:86
 #: src/screens/Settings/FollowingFeedPreferences.tsx:96
 msgid "Show reposts"
-msgstr ""
+msgstr "Monstrar republicationes"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:129
 #: src/screens/Settings/FollowingFeedPreferences.tsx:139
 msgid "Show samples of your saved feeds in your Following feed"
-msgstr ""
+msgstr "Monstrar monstras de tu fluxos salvate in tu fluxo Following"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:58
 msgid "Show warning"
@@ -6446,16 +6446,16 @@ msgstr "Monstrar advertimento e filtrar desde fluxos"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:810
 msgid "Shows information about when this post was created"
-msgstr ""
+msgstr "Monstra information super quando iste publication esseva create"
 
 #: src/screens/Settings/Settings.tsx:104
 msgid "Shows other accounts you can switch to"
-msgstr ""
+msgstr "Monstra altere contos al quales tu pote cambiar"
 
 #: src/components/moderation/ContentHider.tsx:152
 #: src/components/moderation/PostHider.tsx:79
 msgid "Shows the content"
-msgstr ""
+msgstr "Monstra le contento"
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
@@ -6538,7 +6538,7 @@ msgstr ""
 
 #: src/components/FeedInterstitials.tsx:335
 msgid "Similar accounts"
-msgstr ""
+msgstr "Contos similar"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:231
 #: src/screens/StarterPack/Wizard/index.tsx:195
@@ -6547,11 +6547,11 @@ msgstr "Saltar"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:228
 msgid "Skip this flow"
-msgstr ""
+msgstr "Saltar iste fluxo"
 
 #: src/screens/Settings/AppearanceSettings.tsx:164
 msgid "Smaller"
-msgstr ""
+msgstr "Minor"
 
 #: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:100
@@ -6560,7 +6560,7 @@ msgstr "Disveloppamento de software"
 
 #: src/components/FeedInterstitials.tsx:470
 msgid "Some other feeds you might like"
-msgstr ""
+msgstr "Alicun altere fluxos que pote placer te"
 
 #: src/components/WhoCanReply.tsx:70
 msgid "Some people can reply"
@@ -6568,27 +6568,27 @@ msgstr "Alicun personas pote responder"
 
 #: src/screens/Messages/Conversation.tsx:112
 msgid "Something went wrong"
-msgstr ""
+msgstr "Alicun error occurreva"
 
 #: src/screens/Deactivated.tsx:94
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
 msgid "Something went wrong, please try again"
-msgstr ""
+msgstr "Alicun error occurreva, tenta de novo"
 
 #: src/components/ReportDialog/index.tsx:54
 #: src/screens/Moderation/index.tsx:97
 #: src/screens/Profile/Sections/Labels.tsx:88
 msgid "Something went wrong, please try again."
-msgstr ""
+msgstr "Alicun error occurreva, tenta de novo"
 
 #: src/components/Lists.tsx:174
 #: src/screens/Settings/NotificationSettings.tsx:55
 msgid "Something went wrong!"
-msgstr ""
+msgstr "Alicun error occurreva!"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:538
 msgid "Something wrong? Let us know."
-msgstr ""
+msgstr "Alique incorrecte? Informa nos."
 
 #: src/App.native.tsx:121
 #: src/App.web.tsx:97
@@ -6597,15 +6597,15 @@ msgstr ""
 
 #: src/screens/Settings/ThreadPreferences.tsx:55
 msgid "Sort replies"
-msgstr ""
+msgstr "Ordina le responsas"
 
 #: src/screens/Settings/ThreadPreferences.tsx:62
 msgid "Sort replies by"
-msgstr ""
+msgstr "Ordinar responsas per"
 
 #: src/screens/Settings/ThreadPreferences.tsx:59
 msgid "Sort replies to the same post by:"
-msgstr ""
+msgstr "Ordinar responsas al mesme publication per:"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:168
 msgid "Source:"
@@ -6614,30 +6614,30 @@ msgstr "Fonte:"
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
 msgid "Spam"
-msgstr ""
+msgstr "Spam"
 
 #: src/lib/moderation/useReportOptions.ts:55
 msgid "Spam; excessive mentions or replies"
-msgstr ""
+msgstr "Spam; mentiones o responsas excessive"
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:113
 msgid "Sports"
-msgstr ""
+msgstr "Sports"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:72
 msgid "Start a new chat"
-msgstr ""
+msgstr "Initiar un nove chat"
 
 #: src/view/screens/ProfileList.tsx:817
 #: src/view/screens/ProfileList.tsx:938
 msgid "Start adding people"
-msgstr ""
+msgstr "Comenciar a adder personas"
 
 #: src/view/screens/ProfileList.tsx:824
 #: src/view/screens/ProfileList.tsx:945
 msgid "Start adding people!"
-msgstr ""
+msgstr "Comenciar a adder personas!"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:353
 msgid "Start chat with {displayName}"
@@ -6681,7 +6681,7 @@ msgstr "Pagina de stato"
 
 #: src/screens/Signup/index.tsx:130
 msgid "Step {0} of {1}"
-msgstr ""
+msgstr "Passo {0} de {1}"
 
 #: src/screens/Settings/Settings.tsx:309
 msgid "Storage cleared, you need to restart the app now."
@@ -6697,15 +6697,15 @@ msgstr ""
 #: src/screens/Messages/components/ChatDisabled.tsx:142
 #: src/screens/Messages/components/ChatDisabled.tsx:143
 msgid "Submit"
-msgstr ""
+msgstr "Inviar"
 
 #: src/screens/Takendown.tsx:70
 msgid "Submit appeal"
-msgstr ""
+msgstr "Inviar appello"
 
 #: src/screens/Takendown.tsx:76
 msgid "Submit Appeal"
-msgstr ""
+msgstr "Inviar appello"
 
 #: src/view/screens/ProfileList.tsx:712
 msgid "Subscribe"
@@ -6713,15 +6713,15 @@ msgstr "Subscriber"
 
 #: src/screens/Profile/Sections/Labels.tsx:202
 msgid "Subscribe to @{0} to use these labels:"
-msgstr ""
+msgstr "Subscribe a @{0} pro usar iste etiquettas:"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:238
 msgid "Subscribe to Labeler"
-msgstr ""
+msgstr "Subscriber al etiquettator"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:204
 msgid "Subscribe to this labeler"
-msgstr ""
+msgstr "Subscriber a iste etiquettator"
 
 #: src/view/screens/ProfileList.tsx:708
 msgid "Subscribe to this list"
@@ -6729,20 +6729,20 @@ msgstr "Subscriber te a iste lista"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:95
 msgid "Success!"
-msgstr ""
+msgstr "Successo!"
 
 #: src/view/screens/Search/Explore.tsx:368
 msgid "Suggested accounts"
-msgstr ""
+msgstr "Contos suggerite"
 
 #: src/components/FeedInterstitials.tsx:337
 msgid "Suggested for you"
-msgstr ""
+msgstr "Suggerite pro te"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:145
 #: src/view/com/composer/labels/LabelsBtn.tsx:148
 msgid "Suggestive"
-msgstr ""
+msgstr "Suggestive"
 
 #: src/Navigation.tsx:284
 #: src/view/screens/Support.tsx:31
@@ -6755,12 +6755,12 @@ msgstr "Supporto"
 #: src/screens/Settings/Settings.tsx:412
 #: src/view/shell/desktop/LeftNav.tsx:246
 msgid "Switch account"
-msgstr "Cambiar conto"
+msgstr "Cambiar de conto"
 
 #: src/components/dialogs/SwitchAccount.tsx:46
 #: src/components/dialogs/SwitchAccount.tsx:49
 msgid "Switch Account"
-msgstr "Cambiar conto"
+msgstr "Cambiar de conto"
 
 #: src/view/shell/desktop/LeftNav.tsx:107
 msgid "Switch accounts"
@@ -6768,7 +6768,7 @@ msgstr "Cambiar contos"
 
 #: src/view/shell/desktop/LeftNav.tsx:254
 msgid "Switch to {0}"
-msgstr ""
+msgstr "Cambiar a {0}"
 
 #: src/screens/Settings/AppearanceSettings.tsx:97
 #: src/screens/Settings/AppearanceSettings.tsx:147
@@ -6791,37 +6791,37 @@ msgstr "Tocca pro clauder"
 
 #: src/state/shell/progress-guide.tsx:233
 msgid "Task complete - 10 follows!"
-msgstr ""
+msgstr "Labor complete - sequer 10 usatores!"
 
 #: src/state/shell/progress-guide.tsx:223
 msgid "Task complete - 10 likes!"
-msgstr ""
+msgstr "Labor complete - 10 me place!"
 
 #: src/components/ProgressGuide/List.tsx:64
 msgid "Teach our algorithm what you like"
-msgstr ""
+msgstr "Insenia a nostra algorithmo lo que te place"
 
 #: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:114
 msgid "Tech"
-msgstr ""
+msgstr "Technologia"
 
 #: src/components/dms/ChatEmptyPill.tsx:35
 msgid "Tell a joke!"
-msgstr ""
+msgstr "Conta un burla!"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:352
 msgid "Tell us a bit about yourself"
-msgstr ""
+msgstr "Conta nos un pauco super te"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:62
 msgid "Tell us a little more"
-msgstr ""
+msgstr "Conta nos un pauco plus"
 
 #: src/view/shell/desktop/RightNav.tsx:107
 #: src/view/shell/desktop/RightNav.tsx:108
 msgid "Terms"
-msgstr ""
+msgstr "Terminos"
 
 #: src/Navigation.tsx:294
 #: src/screens/Settings/AboutSettings.tsx:42
@@ -6830,14 +6830,14 @@ msgstr ""
 #: src/view/shell/Drawer.tsx:622
 #: src/view/shell/Drawer.tsx:624
 msgid "Terms of Service"
-msgstr ""
+msgstr "Terminos de servicio"
 
 #: src/lib/moderation/useReportOptions.ts:60
 #: src/lib/moderation/useReportOptions.ts:99
 #: src/lib/moderation/useReportOptions.ts:107
 #: src/lib/moderation/useReportOptions.ts:115
 msgid "Terms used violate community standards"
-msgstr ""
+msgstr "Terminos usate viola le standards del communitate"
 
 #: src/components/dialogs/MutedWords.tsx:266
 msgid "Text & tags"
@@ -6845,16 +6845,16 @@ msgstr "Texto e etiquettas"
 
 #: src/components/dms/ReportDialog.tsx:227
 msgid "Text field"
-msgstr ""
+msgstr "Campo de texto"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:263
 #: src/screens/Messages/components/ChatDisabled.tsx:108
 msgid "Text input field"
-msgstr ""
+msgstr "Campo de introduction de texto"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:96
 msgid "Thank you! Your email has been successfully verified."
-msgstr ""
+msgstr "Gratias! Tu email esseva verificate con successo."
 
 #: src/components/ReportDialog/SubmitView.tsx:83
 msgid "Thank you. Your report has been sent."
@@ -6862,7 +6862,7 @@ msgstr ""
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
-msgstr ""
+msgstr "Gratias, tu verificava tu adresse de email con successo. Tu pote clauder iste dialogo."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:468
 msgid "That contains the following:"
