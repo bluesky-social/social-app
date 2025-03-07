@@ -1,6 +1,6 @@
 export class VideoTooLargeError extends Error {
   constructor() {
-    super('Videos cannot be larger than 50mb')
+    super('Videos cannot be larger than 100 MB')
     this.name = 'VideoTooLargeError'
   }
 }
