@@ -12,7 +12,7 @@ import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {Logo} from '#/view/icons/Logo'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, useTheme} from '#/alf'
 import {ButtonIcon} from '#/components/Button'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
@@ -36,7 +36,7 @@ export function HomeHeaderLayoutMobile({
       style={[
         a.fixed,
         a.z_10,
-        t.atoms.bg,
+        native(t.atoms.bg),
         {
           top: 0,
           left: 0,
