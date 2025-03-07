@@ -75,8 +75,11 @@ jobs:
       - name: Prettier check
         run: yarn prettier --check .
 
-      - name: Check & compile i18n
-        run: yarn intl:build
+      - name: 🔤 Compile translations
+        run: yarn intl:build 2>&1 | tee i18n.log
+
+      - name: Check for i18n compilation errors
+        run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
 
       - name: Type check
         run: yarn typecheck
