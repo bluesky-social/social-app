@@ -55,15 +55,6 @@ jobs:
       - name: ⚙️ Install dependencies
         run: yarn install
 
-      - name: Authenticate Expo
-        run: eas whoami || eas login --non-interactive --token ${{ secrets.EXPO_TOKEN }}
-
-      - name: Check expo config
-        run: npx expo config
-
-      - name: Check Project Info
-        run: eas project:info
-
       - name: 🔤 Compile translations
         run: yarn intl:build
 
