@@ -249,11 +249,9 @@ export const TextInput = forwardRef(function TextInputImpl(
         multiline
         scrollEnabled={false}
         numberOfLines={2}
-        {...props}
         style={[
           inputTextStyle,
           a.w_full,
-          a.h_full,
           {
             textAlignVertical: 'top',
             minHeight: 60,
@@ -263,8 +261,8 @@ export const TextInput = forwardRef(function TextInputImpl(
             borderWidth: 1,
             borderColor: 'transparent',
           },
-          props.style,
-        ]}>
+        ]}
+        {...props}>
         {textDecorated}
       </PasteInput>
       <Autocomplete
