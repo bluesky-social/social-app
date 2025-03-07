@@ -134,6 +134,11 @@ msgstr "이번 주에 {0}명이 가입함"
 msgid "{0} of {1}"
 msgstr "{0}/{1}"
 
+#. Accessibility label describing how many characters the user has entered out of a 50-character limit in a text input field
+#: src/screens/StarterPack/Wizard/StepDetails.tsx:55
+msgid "{0} out of 50"
+msgstr ""
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:485
 msgid "{0} people have used this starter pack!"
 msgstr "{0}명이 이 스타터 팩을 사용했습니다!"
@@ -341,11 +346,6 @@ msgstr "<0>나</0>와<1> </1><2>{0} </2>님이 스타터 팩에 포함됩니다"
 #: src/screens/Profile/Header/Handle.tsx:52
 msgid "⚠Invalid Handle"
 msgstr "⚠잘못된 핸들"
-
-#. Accessibility label describing how many characters the user has entered out of a 50-character limit in a text input field
-#: src/screens/StarterPack/Wizard/StepDetails.tsx:55
-msgid "${state.name?.length} out of 50"
-msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:193
 msgid "24 hours"

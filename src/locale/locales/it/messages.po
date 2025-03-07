@@ -134,6 +134,11 @@ msgstr "{0} aggiunti questa settimana"
 msgid "{0} of {1}"
 msgstr "{0} di {1}"
 
+#. Accessibility label describing how many characters the user has entered out of a 50-character limit in a text input field
+#: src/screens/StarterPack/Wizard/StepDetails.tsx:55
+msgid "{0} out of 50"
+msgstr ""
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:485
 msgid "{0} people have used this starter pack!"
 msgstr "{0} persone hanno usato questo starter pack!"
@@ -341,11 +346,6 @@ msgstr "<0>Tu</0> e<1> </1><2>{0} </2>sono inclusi nel tuo starter pack"
 #: src/screens/Profile/Header/Handle.tsx:52
 msgid "⚠Invalid Handle"
 msgstr "⚠Nome utente non valido"
-
-#. Accessibility label describing how many characters the user has entered out of a 50-character limit in a text input field
-#: src/screens/StarterPack/Wizard/StepDetails.tsx:55
-msgid "${state.name?.length} out of 50"
-msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:193
 msgid "24 hours"

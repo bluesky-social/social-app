@@ -134,6 +134,11 @@ msgstr "{0} felhasználó csatlakozott ezen a héten"
 msgid "{0} of {1}"
 msgstr "{1}/{0}"
 
+#. Accessibility label describing how many characters the user has entered out of a 50-character limit in a text input field
+#: src/screens/StarterPack/Wizard/StepDetails.tsx:55
+msgid "{0} out of 50"
+msgstr ""
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:485
 msgid "{0} people have used this starter pack!"
 msgstr "Eddig {0} személy vette igénybe ezt a kezdőcsomagot."
@@ -341,11 +346,6 @@ msgstr "<0>Te</0> és<1> </1><2>{0} </2>szerepeltek a kezdőcsomagodban"
 #: src/screens/Profile/Header/Handle.tsx:52
 msgid "⚠Invalid Handle"
 msgstr "⚠Érvénytelen felhasználónév"
-
-#. Accessibility label describing how many characters the user has entered out of a 50-character limit in a text input field
-#: src/screens/StarterPack/Wizard/StepDetails.tsx:55
-msgid "${state.name?.length} out of 50"
-msgstr "50/${state.name?.length}"
 
 #: src/components/dialogs/MutedWords.tsx:193
 msgid "24 hours"

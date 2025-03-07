@@ -134,6 +134,11 @@ msgstr "本週加入了 {0} 人"
 msgid "{0} of {1}"
 msgstr "第 {0} 個 (共 {1} 個)"
 
+#. Accessibility label describing how many characters the user has entered out of a 50-character limit in a text input field
+#: src/screens/StarterPack/Wizard/StepDetails.tsx:55
+msgid "{0} out of 50"
+msgstr ""
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:485
 msgid "{0} people have used this starter pack!"
 msgstr "有 {0} 個人使用過這個新手包！"
@@ -341,11 +346,6 @@ msgstr "<0>您</0>和<1> </1><2>{0} </2>已包含在您的新手包中"
 #: src/screens/Profile/Header/Handle.tsx:52
 msgid "⚠Invalid Handle"
 msgstr "⚠無效的帳號代碼"
-
-#. Accessibility label describing how many characters the user has entered out of a 50-character limit in a text input field
-#: src/screens/StarterPack/Wizard/StepDetails.tsx:55
-msgid "${state.name?.length} out of 50"
-msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:193
 msgid "24 hours"
