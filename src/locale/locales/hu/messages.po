@@ -1395,7 +1395,7 @@ msgid "Changes app icon"
 msgstr "Alkalmazásikon megváltoztatása"
 
 #: src/components/forms/HostingProvider.tsx:50
-#: src/components/forms/HostingProvider.tsx:68
+#: src/components/forms/HostingProvider.tsx:70
 msgid "Changes hosting provider"
 msgstr "Tárhelyszolgáltató megváltoztatása"
 
@@ -2033,15 +2033,15 @@ msgstr "Add meg, hogy ki léphet kapcsolatba ezzel a bejegyzéssel!"
 msgid "Customizes your Bluesky experience"
 msgstr "A Bluseky-élményed testreszabása"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:24
-msgctxt "Name of app icon variant"
-msgid "Dark"
-msgstr "Sötét"
-
 #: src/components/dialogs/Embed.tsx:167
 #: src/components/dialogs/Embed.tsx:169
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
+msgid "Dark"
+msgstr "Sötét"
+
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:24
+msgctxt "Name of app icon variant"
 msgid "Dark"
 msgstr "Sötét"
 
@@ -3985,14 +3985,14 @@ msgstr "Állítsuk helyre a jelszavad!"
 msgid "Let's go!"
 msgstr "Gyerünk!"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:14
-msgctxt "Name of app icon variant"
-msgid "Light"
-msgstr "Világos"
-
 #: src/components/dialogs/Embed.tsx:162
 #: src/components/dialogs/Embed.tsx:164
 #: src/screens/Settings/AppearanceSettings.tsx:101
+msgid "Light"
+msgstr "Világos"
+
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:14
+msgctxt "Name of app icon variant"
 msgid "Light"
 msgstr "Világos"
 
@@ -7173,7 +7173,8 @@ msgstr "Feladat teljesítve – 10 kedvelés!"
 
 #: src/components/ProgressGuide/List.tsx:64
 msgid "Teach our algorithm what you like"
-msgstr "Tanítsd meg az algoritmusnak,\n"
+msgstr ""
+"Tanítsd meg az algoritmusnak,\n"
 "hogy mit szeretnél látni!"
 
 #: src/screens/Onboarding/index.tsx:36
@@ -8627,8 +8628,8 @@ msgid "You"
 msgstr "Te"
 
 #: src/components/forms/HostingProvider.tsx:46
-msgid "You are creating an account on <0><1>{0}</1><2/></0>"
-msgstr "Ez a fiók a(z) <0><1>{0}</1><2/></0>-tárhelyszolgáltatónál lesz létrehozva"
+msgid "You are creating an account on"
+msgstr ""
 
 #: src/screens/SignupQueued.tsx:157
 msgid "You are in line."
@@ -9036,4 +9037,3 @@ msgstr "A jelentés címzettje: <0>{0}</0>."
 #: src/components/dms/ReportDialog.tsx:200
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "Ez a jelentés a Bluesky moderálási szolgáltatásának lesz elküldve"
-

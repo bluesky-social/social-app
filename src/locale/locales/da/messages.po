@@ -1395,7 +1395,7 @@ msgid "Changes app icon"
 msgstr "Skifter appikon"
 
 #: src/components/forms/HostingProvider.tsx:50
-#: src/components/forms/HostingProvider.tsx:68
+#: src/components/forms/HostingProvider.tsx:70
 msgid "Changes hosting provider"
 msgstr "Skifter udbyder"
 
@@ -2033,15 +2033,15 @@ msgstr "Tilpas, hvem der kan interagere med dette opslag."
 msgid "Customizes your Bluesky experience"
 msgstr "Tilpas din Bluesky-oplevelse"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:24
-msgctxt "Name of app icon variant"
-msgid "Dark"
-msgstr "Mørk"
-
 #: src/components/dialogs/Embed.tsx:167
 #: src/components/dialogs/Embed.tsx:169
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
+msgid "Dark"
+msgstr "Mørk"
+
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:24
+msgctxt "Name of app icon variant"
 msgid "Dark"
 msgstr "Mørk"
 
@@ -3985,14 +3985,14 @@ msgstr "Lad os få nulstillet din adgangskode!"
 msgid "Let's go!"
 msgstr "Lad os komme i gang!"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:14
-msgctxt "Name of app icon variant"
-msgid "Light"
-msgstr "Lys"
-
 #: src/components/dialogs/Embed.tsx:162
 #: src/components/dialogs/Embed.tsx:164
 #: src/screens/Settings/AppearanceSettings.tsx:101
+msgid "Light"
+msgstr "Lys"
+
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:14
+msgctxt "Name of app icon variant"
 msgid "Light"
 msgstr "Lys"
 
@@ -8626,8 +8626,8 @@ msgid "You"
 msgstr "Dig"
 
 #: src/components/forms/HostingProvider.tsx:46
-msgid "You are creating an account on <0><1>{0}</1><2/></0>"
-msgstr "Du er ved at oprette en konto hos <0><1>{0}</1><2/></0>"
+msgid "You are creating an account on"
+msgstr ""
 
 #: src/screens/SignupQueued.tsx:157
 msgid "You are in line."
@@ -9035,4 +9035,3 @@ msgstr "Din anmeldelse vil blive sendt til <0>{0}</0>."
 #: src/components/dms/ReportDialog.tsx:200
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "Din anmeldelse vil blive sendt til Bluesky Moderationstjeneste"
-

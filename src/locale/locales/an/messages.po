@@ -1395,7 +1395,7 @@ msgid "Changes app icon"
 msgstr "Cambia l'icono de l'aplicación"
 
 #: src/components/forms/HostingProvider.tsx:50
-#: src/components/forms/HostingProvider.tsx:68
+#: src/components/forms/HostingProvider.tsx:70
 msgid "Changes hosting provider"
 msgstr "Cambia lo proveyedor d'alochamiento"
 
@@ -2033,15 +2033,15 @@ msgstr "Personaliza quí puede interactuar con esta publicación."
 msgid "Customizes your Bluesky experience"
 msgstr "Personaliza la tuya experiencia en Bluesky"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:24
-msgctxt "Name of app icon variant"
-msgid "Dark"
-msgstr "Fosco"
-
 #: src/components/dialogs/Embed.tsx:167
 #: src/components/dialogs/Embed.tsx:169
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
+msgid "Dark"
+msgstr "Fosco"
+
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:24
+msgctxt "Name of app icon variant"
 msgid "Dark"
 msgstr "Fosco"
 
@@ -3985,14 +3985,14 @@ msgstr "Imos a restablir la tuya clau!"
 msgid "Let's go!"
 msgstr "Imos!"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:14
-msgctxt "Name of app icon variant"
-msgid "Light"
-msgstr "Liuchero"
-
 #: src/components/dialogs/Embed.tsx:162
 #: src/components/dialogs/Embed.tsx:164
 #: src/screens/Settings/AppearanceSettings.tsx:101
+msgid "Light"
+msgstr "Liuchero"
+
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:14
+msgctxt "Name of app icon variant"
 msgid "Light"
 msgstr "Liuchero"
 
@@ -8626,8 +8626,8 @@ msgid "You"
 msgstr "Tu"
 
 #: src/components/forms/HostingProvider.tsx:46
-msgid "You are creating an account on <0><1>{0}</1><2/></0>"
-msgstr "Yes creando una cuenta en <0><1>{0}</1><2/></0>"
+msgid "You are creating an account on"
+msgstr ""
 
 #: src/screens/SignupQueued.tsx:157
 msgid "You are in line."
@@ -9035,4 +9035,3 @@ msgstr "La tuya denuncia se ninviará a <0>{0}</0>."
 #: src/components/dms/ReportDialog.tsx:200
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "Lo tuyo reporte s'ha ninviau a lo servicio de moderación de Bluesky"
-

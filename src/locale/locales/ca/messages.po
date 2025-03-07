@@ -1395,7 +1395,7 @@ msgid "Changes app icon"
 msgstr "Canvia la icona de l'aplicació"
 
 #: src/components/forms/HostingProvider.tsx:50
-#: src/components/forms/HostingProvider.tsx:68
+#: src/components/forms/HostingProvider.tsx:70
 msgid "Changes hosting provider"
 msgstr "Canvia el proveïdor d'allotjament"
 
@@ -2033,15 +2033,15 @@ msgstr "Personalitza qui pot interactuar amb aquesta publicació."
 msgid "Customizes your Bluesky experience"
 msgstr "Personalitza la teva experiència a Bluesky"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:24
-msgctxt "Name of app icon variant"
-msgid "Dark"
-msgstr "Fosc"
-
 #: src/components/dialogs/Embed.tsx:167
 #: src/components/dialogs/Embed.tsx:169
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
+msgid "Dark"
+msgstr "Fosc"
+
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:24
+msgctxt "Name of app icon variant"
 msgid "Dark"
 msgstr "Fosc"
 
@@ -3985,14 +3985,14 @@ msgstr "Restablirem la teva contrasenya!"
 msgid "Let's go!"
 msgstr "Som-hi!"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:14
-msgctxt "Name of app icon variant"
-msgid "Light"
-msgstr "Clar"
-
 #: src/components/dialogs/Embed.tsx:162
 #: src/components/dialogs/Embed.tsx:164
 #: src/screens/Settings/AppearanceSettings.tsx:101
+msgid "Light"
+msgstr "Clar"
+
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:14
+msgctxt "Name of app icon variant"
 msgid "Light"
 msgstr "Clar"
 
@@ -8626,8 +8626,8 @@ msgid "You"
 msgstr "Tu"
 
 #: src/components/forms/HostingProvider.tsx:46
-msgid "You are creating an account on <0><1>{0}</1><2/></0>"
-msgstr "Estàs creant un compte a <0><1>{0}</1><2/></0>"
+msgid "You are creating an account on"
+msgstr ""
 
 #: src/screens/SignupQueued.tsx:157
 msgid "You are in line."
@@ -9035,4 +9035,3 @@ msgstr "El teu informe s'enviarà a <0>{0}</0>."
 #: src/components/dms/ReportDialog.tsx:200
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "El teu informe s'enviarà al servei de moderació de Bluesky"
-

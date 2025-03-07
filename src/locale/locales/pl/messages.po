@@ -1395,7 +1395,7 @@ msgid "Changes app icon"
 msgstr "Zmienia ikonę aplikacji"
 
 #: src/components/forms/HostingProvider.tsx:50
-#: src/components/forms/HostingProvider.tsx:68
+#: src/components/forms/HostingProvider.tsx:70
 msgid "Changes hosting provider"
 msgstr "Zmienia dostawcę hostingu"
 
@@ -2033,15 +2033,15 @@ msgstr "Dostosuj, kto może wchodzić w interakcje z tym wpisem."
 msgid "Customizes your Bluesky experience"
 msgstr "Dostosowuje twoje doświadczenie w Bluesky"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:24
-msgctxt "Name of app icon variant"
-msgid "Dark"
-msgstr "Ciemny"
-
 #: src/components/dialogs/Embed.tsx:167
 #: src/components/dialogs/Embed.tsx:169
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
+msgid "Dark"
+msgstr "Ciemny"
+
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:24
+msgctxt "Name of app icon variant"
 msgid "Dark"
 msgstr "Ciemny"
 
@@ -3985,14 +3985,14 @@ msgstr "Zresetujmy twoje hasło!"
 msgid "Let's go!"
 msgstr "Do dzieła!"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:14
-msgctxt "Name of app icon variant"
-msgid "Light"
-msgstr "Jasny"
-
 #: src/components/dialogs/Embed.tsx:162
 #: src/components/dialogs/Embed.tsx:164
 #: src/screens/Settings/AppearanceSettings.tsx:101
+msgid "Light"
+msgstr "Jasny"
+
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:14
+msgctxt "Name of app icon variant"
 msgid "Light"
 msgstr "Jasny"
 
@@ -8626,7 +8626,7 @@ msgid "You"
 msgstr "Ty"
 
 #: src/components/forms/HostingProvider.tsx:46
-msgid "You are creating an account on <0><1>{0}</1><2/></0>"
+msgid "You are creating an account on"
 msgstr ""
 
 #: src/screens/SignupQueued.tsx:157
@@ -9035,4 +9035,3 @@ msgstr ""
 #: src/components/dms/ReportDialog.tsx:200
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "Twoje zgłoszenie zostanie przesłane do moderacji Bluesky"
-

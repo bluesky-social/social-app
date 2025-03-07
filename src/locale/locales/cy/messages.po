@@ -1395,7 +1395,7 @@ msgid "Changes app icon"
 msgstr "Yn newid eicon ap"
 
 #: src/components/forms/HostingProvider.tsx:50
-#: src/components/forms/HostingProvider.tsx:68
+#: src/components/forms/HostingProvider.tsx:70
 msgid "Changes hosting provider"
 msgstr "Yn newid darparwr gwesteiwr"
 
@@ -2033,15 +2033,15 @@ msgstr "Addasu pwy all ryngweithio â'r postiad hwn."
 msgid "Customizes your Bluesky experience"
 msgstr "Yn addasu eich profiad Bluesky"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:24
-msgctxt "Name of app icon variant"
-msgid "Dark"
-msgstr "Tywyll"
-
 #: src/components/dialogs/Embed.tsx:167
 #: src/components/dialogs/Embed.tsx:169
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
+msgid "Dark"
+msgstr "Tywyll"
+
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:24
+msgctxt "Name of app icon variant"
 msgid "Dark"
 msgstr "Tywyll"
 
@@ -3985,14 +3985,14 @@ msgstr "Gadewch i ni gael ailosod eich cyfrinair!"
 msgid "Let's go!"
 msgstr "Ffwrdd â ni!"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:14
-msgctxt "Name of app icon variant"
-msgid "Light"
-msgstr "Golau"
-
 #: src/components/dialogs/Embed.tsx:162
 #: src/components/dialogs/Embed.tsx:164
 #: src/screens/Settings/AppearanceSettings.tsx:101
+msgid "Light"
+msgstr "Golau"
+
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:14
+msgctxt "Name of app icon variant"
 msgid "Light"
 msgstr "Golau"
 
@@ -8626,8 +8626,8 @@ msgid "You"
 msgstr "Chi"
 
 #: src/components/forms/HostingProvider.tsx:46
-msgid "You are creating an account on <0><1>{0}</1><2/></0>"
-msgstr "Rydych yn creu cyfrif ar <0><1>{0}</1><2/></0>"
+msgid "You are creating an account on"
+msgstr ""
 
 #: src/screens/SignupQueued.tsx:157
 msgid "You are in line."
@@ -9035,4 +9035,3 @@ msgstr "Bydd eich adroddiad yn cael ei anfon at <0>{0}</0>."
 #: src/components/dms/ReportDialog.tsx:200
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "Bydd eich adroddiad yn cael ei anfon at Wasanaeth Cymedroli Bluesky"
-

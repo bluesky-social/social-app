@@ -1395,7 +1395,7 @@ msgid "Changes app icon"
 msgstr "Cambia el icono de la app"
 
 #: src/components/forms/HostingProvider.tsx:50
-#: src/components/forms/HostingProvider.tsx:68
+#: src/components/forms/HostingProvider.tsx:70
 msgid "Changes hosting provider"
 msgstr "Cambia el proveedor de alojamiento"
 
@@ -2033,15 +2033,15 @@ msgstr "Personaliza quién puede interactuar con esta publicación."
 msgid "Customizes your Bluesky experience"
 msgstr "Personaliza tu experiencia en Bluesky"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:24
-msgctxt "Name of app icon variant"
-msgid "Dark"
-msgstr "Oscuro"
-
 #: src/components/dialogs/Embed.tsx:167
 #: src/components/dialogs/Embed.tsx:169
 #: src/screens/Settings/AppearanceSettings.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:126
+msgid "Dark"
+msgstr "Oscuro"
+
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:24
+msgctxt "Name of app icon variant"
 msgid "Dark"
 msgstr "Oscuro"
 
@@ -3985,14 +3985,14 @@ msgstr "¡Vamos a restablecer tu contraseña!"
 msgid "Let's go!"
 msgstr "¡Vamos!"
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:14
-msgctxt "Name of app icon variant"
-msgid "Light"
-msgstr "Claro"
-
 #: src/components/dialogs/Embed.tsx:162
 #: src/components/dialogs/Embed.tsx:164
 #: src/screens/Settings/AppearanceSettings.tsx:101
+msgid "Light"
+msgstr "Claro"
+
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:14
+msgctxt "Name of app icon variant"
 msgid "Light"
 msgstr "Claro"
 
@@ -8626,8 +8626,8 @@ msgid "You"
 msgstr "Tú"
 
 #: src/components/forms/HostingProvider.tsx:46
-msgid "You are creating an account on <0><1>{0}</1><2/></0>"
-msgstr "Estás creando una cuenta en <0><1>{0}</1><2/></0>"
+msgid "You are creating an account on"
+msgstr ""
 
 #: src/screens/SignupQueued.tsx:157
 msgid "You are in line."
@@ -9035,4 +9035,3 @@ msgstr "Se enviará tu denuncia a <0>{0}</0>."
 #: src/components/dms/ReportDialog.tsx:200
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "Tu reporte ha sido enviado al servicio de moderación de Bluesky"
-
