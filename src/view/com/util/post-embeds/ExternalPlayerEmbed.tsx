@@ -169,6 +169,8 @@ export function ExternalPlayer({
 
     if (userActivated) return
 
+    // Interval for scrolling works in most cases, However, for twitch embeds, if we navigate away from the screen the webview will
+    // continue playing. We need to watch for the blur event
     const unsubscribe = navigation.addListener('blur', () => {
       setPlayerActive(false)
       setUserActivated(false)
