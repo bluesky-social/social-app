@@ -7,7 +7,7 @@ import {ComAtprotoAdminDefs, ComAtprotoModerationDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
-import Graphemer from 'graphemer'
+import {countGrapheme} from 'unicode-segmenter/grapheme'
 
 import {MAX_REPORT_REASON_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useEnableKeyboardController} from '#/lib/hooks/useEnableKeyboardController'
@@ -35,11 +35,7 @@ export function Takendown() {
   const agent = useAgent()
   const [isAppealling, setIsAppealling] = useState(false)
   const [reason, setReason] = useState('')
-  const graphemer = useMemo(() => new Graphemer(), [])
-
-  const reasonGraphemeLength = useMemo(() => {
-    return graphemer.countGraphemes(reason)
-  }, [graphemer, reason])
+  const reasonGraphemeLength = useMemo(() => countGrapheme(reason), [reason])
 
   const {
     mutate: submitAppeal,
