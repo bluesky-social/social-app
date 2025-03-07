@@ -127,8 +127,6 @@ export function ExternalPlayer({
 
   const [isPlayerActive, setPlayerActive] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
-
-  // Add a state to track if user has manually activated the player
   const [userActivated, setUserActivated] = React.useState(false)
 
   const aspect = React.useMemo(() => {
@@ -141,7 +139,6 @@ export function ExternalPlayer({
 
   const viewRef = useAnimatedRef()
   const frameCallback = useFrameCallback(() => {
-    // If user has manually activated the player, don't disable it based on visibility
     if (userActivated) return
 
     const measurement = measure(viewRef)
@@ -167,17 +164,12 @@ export function ExternalPlayer({
     }
   }, false) // False here disables autostarting the callback
 
-  // Watch for leaving the viewport due to scrolling, but only if not user activated
   React.useEffect(() => {
-    // Don't do anything if player isn't active
     if (!isPlayerActive) return
 
-    // Skip visibility checking entirely if user has manually activated
     if (userActivated) return
 
-    // Only watch for navigation changes
     const unsubscribe = navigation.addListener('blur', () => {
-      // Always stop playing when navigating away
       setPlayerActive(false)
       setUserActivated(false)
     })
@@ -205,7 +197,6 @@ export function ExternalPlayer({
         return
       }
 
-      // Mark that user has explicitly activated this player
       setUserActivated(true)
       setPlayerActive(true)
     },
