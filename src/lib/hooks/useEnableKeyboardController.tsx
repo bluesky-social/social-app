@@ -26,10 +26,7 @@ export function KeyboardControllerProvider({
   children: React.ReactNode
 }) {
   return (
-    <KeyboardProvider
-      enabled={false}
-      // I don't think this is necessary, but Chesterton's fence and all that -sfn
-      statusBarTranslucent={true}>
+    <KeyboardProvider enabled={false}>
       <KeyboardControllerProviderInner>
         {children}
       </KeyboardControllerProviderInner>
