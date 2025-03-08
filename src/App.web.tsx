@@ -51,7 +51,6 @@ import {Provider as TrendingConfigProvider} from '#/state/trending-config'
 import {Provider as ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoWebContext'
 import {Provider as VideoVolumeProvider} from '#/view/com/util/post-embeds/VideoVolumeContext'
 import * as Toast from '#/view/com/util/Toast'
-import {ToastContainer} from '#/view/com/util/Toast.web'
 import {Shell} from '#/view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
@@ -60,6 +59,7 @@ import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
+import {Toaster} from './components/Toast/Toaster'
 
 /**
  * Begin geolocation ASAP
@@ -149,7 +149,7 @@ function InnerApp() {
                     </StatsigProvider>
                   </ComposerProvider>
                 </QueryProvider>
-                <ToastContainer />
+                <Toaster />
               </React.Fragment>
             </ActiveVideoProvider>
           </VideoVolumeProvider>
