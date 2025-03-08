@@ -57,6 +57,16 @@ describe('detectLinkables', () => {
     'punctuation https://foo.com, https://bar.com/whatever; https://baz.com.',
     'parenthetical (https://foo.com)',
     'except for https://foo.com/thing_(cool)',
+    'https://foo.com이',
+    'https://foo.com/barは',
+    'https://foo.com/bar的',
+    'https://foo.com/barは(https://foo.com이)',
+    '@foo가',
+    '@fooは',
+    '@foo的',
+    '@foo가(https://foo.com이)',
+    '@fooは(https://foo.com/barは)',
+    '@foo的(https://foo.com/bar的)',
   ]
   const outputs = [
     ['no linkable'],
@@ -121,6 +131,16 @@ describe('detectLinkables', () => {
     ],
     ['parenthetical (', {link: 'https://foo.com'}, ')'],
     ['except for ', {link: 'https://foo.com/thing_(cool)'}],
+    [{link: 'https://foo.com'}, '이'],
+    [{link: 'https://foo.com/bar'}, 'は'],
+    [{link: 'https://foo.com/bar'}, '的'],
+    [{link: 'https://foo.com/bar'}, 'は(', {link: 'https://foo.com'}, '이)'],
+    [{link: '@foo'}, '가'],
+    [{link: '@foo'}, 'は'],
+    [{link: '@foo'}, '的'],
+    [{link: '@foo'}, '가(', {link: 'https://foo.com'}, '이)'],
+    [{link: '@foo'}, 'は(', {link: 'https://foo.com/bar'}, 'は)'],
+    [{link: '@foo'}, '的(', {link: 'https://foo.com/bar'}, '的)'],
   ]
   it('correctly handles a set of text inputs', () => {
     for (let i = 0; i < inputs.length; i++) {
