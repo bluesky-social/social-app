@@ -51,6 +51,10 @@ export function MessagesInboxScreen({}: Props) {
     if (data?.pages) {
       const convos = data.pages
         .flatMap(page => page.convos)
+        // filter out deleted convos
+        .filter(convo =>
+          convo.members.some(user => user.handle === 'missing.invalid'),
+        )
         // filter out convos that are actively being left
         .filter(convo => !leftConvos.includes(convo.id))
 
