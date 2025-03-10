@@ -11,7 +11,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {isNative} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
@@ -81,7 +81,7 @@ export function NewskieDialog({
         <Dialog.Handle />
         <Dialog.ScrollableInner
           label={_(msg`New user info dialog`)}
-          style={[{width: 'auto', maxWidth: 400, minWidth: 200}]}>
+          style={web({width: 'auto', maxWidth: 400, minWidth: 200})}>
           <View style={[a.gap_md]}>
             <View style={[a.align_center]}>
               <View
