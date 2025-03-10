@@ -51,10 +51,6 @@ export function MessagesInboxScreen({}: Props) {
     if (data?.pages) {
       const convos = data.pages
         .flatMap(page => page.convos)
-        // filter out deleted convos
-        .filter(convo =>
-          convo.members.some(user => user.handle === 'missing.invalid'),
-        )
         // filter out convos that are actively being left
         .filter(convo => !leftConvos.includes(convo.id))
 
@@ -64,7 +60,12 @@ export function MessagesInboxScreen({}: Props) {
   }, [data, leftConvos])
 
   const hasUnreadConvos = useMemo(() => {
-    return conversations.some(conversation => conversation.unreadCount > 0)
+    return conversations.some(
+      conversation =>
+        conversation.members.every(
+          member => member.handle !== 'missing.invalid',
+        ) && conversation.unreadCount > 0,
+    )
   }, [conversations])
 
   return (
