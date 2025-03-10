@@ -212,9 +212,9 @@ function ProfileScreenLoaded({
   const showFeedsTab = isMe || feedGenCount > 0
   const starterPackCount = profile.associated?.starterPacks || 0
   const showStarterPacksTab = isMe || starterPackCount > 0
-  const listCount = profile.associated?.lists || 0
   // subtract starterpack count from list count, since starterpacks are a type of list
-  const showListsTab = hasSession && (isMe || listCount - starterPackCount > 0)
+  const listCount = (profile.associated?.lists || 0) - starterPackCount
+  const showListsTab = hasSession && (isMe || listCount > 0)
 
   const sectionTitles = [
     showFiltersTab ? _(msg`Labels`) : undefined,
