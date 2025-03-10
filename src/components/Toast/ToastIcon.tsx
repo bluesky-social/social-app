@@ -14,7 +14,13 @@ export type IconName = 'check' | 'error' | 'warning' | 'info' | 'copied'
 
 export type LegacyIconName = Extract<
   FontAwesomeProps['icon'],
-  'xmark' | 'check' | 'clipboard-check' | 'warning' | 'info'
+  | 'xmark'
+  | 'check'
+  | 'clipboard-check'
+  | 'warning'
+  | 'info'
+  | 'circle-exclamation'
+  | 'exclamation-circle'
 >
 
 /**
@@ -30,6 +36,8 @@ export const compat_convertLegacyIcon = (icon?: LegacyIconName): IconName => {
     case 'clipboard-check':
       return 'copied'
     case 'warning':
+    case 'exclamation-circle':
+    case 'circle-exclamation':
       return 'warning'
     case 'info':
       return 'info'
