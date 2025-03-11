@@ -1,0 +1,49 @@
+name: Nightly Update Source Languages
+on:
+  schedule:
+    - cron: '0 2 * * *' # run at 2 AM UTC
+  workflow_dispatch:
+
+jobs:
+  extract-languages:
+    name: Nightly Update Source Languages
+    runs-on: ubuntu-latest
+
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # added or changed files to the repository.
+      contents: write
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+        with:
+          ssh-key: ${{secrets.GH_ACTION_DEPLOY_KEY}}
+      - name: Install node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Yarn install
+        uses: Wandalen/wretry.action@master
+        with:
+          command: yarn --frozen-lockfile
+          attempt_limit: 3
+          attempt_delay: 2000
+      - name: Extract language strings
+        run: yarn intl:extract
+      - name: Create commit
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Nightly source-language update
+          file_pattern: ./src/locale/locales/en/messages.po
+      - name: Push source lang to Crowdin
+        uses: crowdin/github-action@v2
+        with:
+          upload_sources: true
+          upload_sources_args: "-b main"
+          upload_translations: false
+          push_translations: false
+          push_sources: false
+          create_pull_request: false
+        env:
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}

@@ -16,7 +16,6 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
@@ -40,7 +39,7 @@ import {List, ListRef} from '#/view/com/util/List'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {VideoFeedSourceContext} from '#/screens/VideoFeed/types'
-import {useBreakpoints} from '#/alf'
+import {useBreakpoints, useLayoutBreakpoints} from '#/alf'
 import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
 import {
   PostFeedVideoGridRow,
@@ -197,7 +196,8 @@ let PostFeed = ({
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
   const [feedType, feedUriOrActorDid, feedTab] = feed.split('|')
-  const {gtMobile, gtTablet} = useBreakpoints()
+  const {gtMobile} = useBreakpoints()
+  const {rightNavVisible} = useLayoutBreakpoints()
   const areVideoFeedsEnabled = isNative
 
   const feedCacheKey = feedParams?.feedCacheKey
@@ -299,9 +299,9 @@ let PostFeed = ({
 
   const followProgressGuide = useProgressGuide('follow-10')
   const followAndLikeProgressGuide = useProgressGuide('like-10-and-follow-7')
-  const {isDesktop} = useWebMediaQueries()
+
   const showProgressIntersitial =
-    (followProgressGuide || followAndLikeProgressGuide) && !isDesktop
+    (followProgressGuide || followAndLikeProgressGuide) && !rightNavVisible
 
   const {trendingDisabled, trendingVideoDisabled} = useTrendingSettings()
 
@@ -396,7 +396,7 @@ let PostFeed = ({
                         key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                       })
                     }
-                    if (!gtTablet && !trendingDisabled) {
+                    if (!rightNavVisible && !trendingDisabled) {
                       arr.push({
                         type: 'interstitialTrending',
                         key:
@@ -512,7 +512,7 @@ let PostFeed = ({
     showProgressIntersitial,
     trendingDisabled,
     trendingVideoDisabled,
-    gtTablet,
+    rightNavVisible,
     gtMobile,
     isVideoFeed,
     areVideoFeedsEnabled,

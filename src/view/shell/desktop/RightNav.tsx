@@ -1,17 +1,23 @@
-import React from 'react'
+import {useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/core'
 
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
 import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
 import {DesktopSearch} from '#/view/shell/desktop/Search'
 import {SidebarTrendingTopics} from '#/view/shell/desktop/SidebarTrendingTopics'
-import {atoms as a, useGutters, useTheme, web} from '#/alf'
+import {
+  atoms as a,
+  useGutters,
+  useLayoutBreakpoints,
+  useTheme,
+  web,
+} from '#/alf'
+import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Divider} from '#/components/Divider'
 import {InlineLinkText} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
@@ -19,16 +25,15 @@ import {Text} from '#/components/Typography'
 
 function useWebQueryParams() {
   const navigation = useNavigation()
-  const [params, setParams] = React.useState<Record<string, string>>({})
+  const [params, setParams] = useState<Record<string, string>>({})
 
-  React.useEffect(() => {
+  useEffect(() => {
     return navigation.addListener('state', e => {
       try {
         const {state} = e.data
         const lastRoute = state.routes[state.routes.length - 1]
-        const {params} = lastRoute
-        setParams(params)
-      } catch (e) {}
+        setParams(lastRoute.params)
+      } catch (err) {}
     })
   }, [navigation, setParams])
 
@@ -45,9 +50,10 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   const webqueryParams = useWebQueryParams()
   const searchQuery = webqueryParams?.q
   const showTrending = !isSearchScreen || (isSearchScreen && !!searchQuery)
+  const {rightNavVisible, centerColumnOffset, leftNavMinimal} =
+    useLayoutBreakpoints()
 
-  const {isTablet} = useWebMediaQueries()
-  if (isTablet) {
+  if (!rightNavVisible) {
     return null
   }
 
@@ -60,9 +66,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           position: 'fixed',
           left: '50%',
           transform: [
-            {
-              translateX: 300,
-            },
+            {translateX: centerColumnOffset ? 150 : 300},
             ...a.scrollbar_offset.transform,
           ],
           width: 300 + gutters.paddingLeft,
@@ -124,6 +128,12 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
             </InlineLinkText>
           </Trans>
         </Text>
+      )}
+
+      {!hasSession && leftNavMinimal && (
+        <View style={[a.w_full, {height: 32}]}>
+          <AppLanguageDropdown style={{marginTop: 0}} />
+        </View>
       )}
     </View>
   )

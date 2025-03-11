@@ -58,6 +58,7 @@ import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text} from '#/components/Typography'
 import {WhoCanReply} from '#/components/WhoCanReply'
+import * as bsky from '#/types/bsky'
 
 export function PostThreadItem({
   post,
@@ -241,6 +242,11 @@ let PostThreadItemLoaded = ({
     return makeProfileLink(post.author, 'post', urip.rkey, 'quotes')
   }, [post.uri, post.author])
   const quotesTitle = _(msg`Quotes of this post`)
+  const onlyFollowersCanReply = !!threadgateRecord?.allow?.find(
+    rule => rule.$type === 'app.bsky.feed.threadgate#followerRule',
+  )
+  const showFollowButton =
+    currentAccount?.did !== post.author.did && !onlyFollowersCanReply
 
   const translatorUrl = getTranslatorLink(
     record?.text || '',
@@ -343,7 +349,7 @@ let PostThreadItemLoaded = ({
                 </Text>
               </Link>
             </View>
-            {currentAccount?.did !== post.author.did && (
+            {showFollowButton && (
               <View>
                 <PostThreadFollowBtn did={post.author.did} />
               </View>
@@ -369,6 +375,7 @@ let PostThreadItemLoaded = ({
                   value={richText}
                   style={[a.flex_1, a.text_xl]}
                   authorHandle={post.author.handle}
+                  shouldProxyLinks={true}
                 />
               ) : undefined}
               {post.embed && (
@@ -584,6 +591,7 @@ let PostThreadItemLoaded = ({
                     style={[a.flex_1, a.text_md]}
                     numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                     authorHandle={post.author.handle}
+                    shouldProxyLinks={true}
                   />
                 </View>
               ) : undefined}
@@ -785,7 +793,10 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
   const control = Prompt.usePromptControl()
 
   const indexedAt = new Date(post.indexedAt)
-  const createdAt = AppBskyFeedPost.isRecord(post.record)
+  const createdAt = bsky.dangerousIsType<AppBskyFeedPost.Record>(
+    post.record,
+    AppBskyFeedPost.isRecord,
+  )
     ? new Date(post.record.createdAt)
     : new Date(post.indexedAt)
 
@@ -802,7 +813,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
       <Button
         label={_(msg`Archived post`)}
         accessibilityHint={_(
-          msg`Show information about when this post was created`,
+          msg`Shows information about when this post was created`,
         )}
         onPress={e => {
           e.preventDefault()

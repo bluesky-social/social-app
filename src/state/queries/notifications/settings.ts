@@ -41,7 +41,7 @@ export function useNotificationSettingsMutation() {
       )
     },
     onSuccess: () => {
-      Toast.show(_(msg`Preference saved`))
+      Toast.show(_(msg({message: 'Preference saved', context: 'toast'})))
     },
     onSettled: () => {
       invalidateCachedUnreadPage()

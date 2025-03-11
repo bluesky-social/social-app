@@ -21,7 +21,7 @@ import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
-import {shareUrl} from '#/lib/sharing'
+import {shareText, shareUrl} from '#/lib/sharing'
 import {logEvent} from '#/lib/statsig/statsig'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
@@ -33,6 +33,7 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
+import {useDevModeEnabled} from '#/state/preferences/dev-mode'
 import {usePinnedPostMutation} from '#/state/queries/pinned-post'
 import {
   usePostDeleteMutation,
@@ -40,7 +41,10 @@ import {
 } from '#/state/queries/post'
 import {useToggleQuoteDetachmentMutation} from '#/state/queries/postgate'
 import {getMaybeDetachedQuoteEmbed} from '#/state/queries/postgate/util'
-import {useProfileBlockMutationQueue} from '#/state/queries/profile'
+import {
+  useProfileBlockMutationQueue,
+  useProfileMuteMutationQueue,
+} from '#/state/queries/profile'
 import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
@@ -64,18 +68,23 @@ import {
 import {Eye_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/Eye'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
+import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
 import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/Person'
 import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
+import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
+import {
+  ReportDialog,
+  useReportDialogControl,
+} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
-import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import * as Toast from '../Toast'
 
 let PostDropdownMenuItems = ({
@@ -122,6 +131,7 @@ let PostDropdownMenuItems = ({
   const hideReplyConfirmControl = useDialogControl()
   const {mutateAsync: toggleReplyVisibility} =
     useToggleReplyVisibilityMutation()
+  const [devModeEnabled] = useDevModeEnabled()
 
   const postUri = post.uri
   const postCid = post.cid
@@ -153,6 +163,7 @@ let PostDropdownMenuItems = ({
     useToggleQuoteDetachmentMutation()
 
   const [queueBlock] = useProfileBlockMutationQueue(postAuthor)
+  const [queueMute, queueUnmute] = useProfileMuteMutationQueue(postAuthor)
 
   const prefetchPostInteractionSettings = usePrefetchPostInteractionSettings({
     postUri: post.uri,
@@ -172,7 +183,7 @@ let PostDropdownMenuItems = ({
   const onDeletePost = React.useCallback(() => {
     deletePostMutate({uri: postUri}).then(
       () => {
-        Toast.show(_(msg`Post deleted`))
+        Toast.show(_(msg({message: 'Post deleted', context: 'toast'})))
 
         const route = getCurrentRoute(navigation.getState())
         if (route.name === 'PostThread') {
@@ -263,7 +274,7 @@ let PostDropdownMenuItems = ({
       item: postUri,
       feedContext: postFeedContext,
     })
-    Toast.show(_(msg`Feedback sent!`))
+    Toast.show(_(msg({message: 'Feedback sent!', context: 'toast'})))
   }, [feedFeedback, postUri, postFeedContext, _])
 
   const onPressShowLess = React.useCallback(() => {
@@ -272,7 +283,7 @@ let PostDropdownMenuItems = ({
       item: postUri,
       feedContext: postFeedContext,
     })
-    Toast.show(_(msg`Feedback sent!`))
+    Toast.show(_(msg({message: 'Feedback sent!', context: 'toast'})))
   }, [feedFeedback, postUri, postFeedContext, _])
 
   const onSelectChatToShareTo = React.useCallback(
@@ -303,7 +314,9 @@ let PostDropdownMenuItems = ({
           : _(msg`Quote post was re-attached`),
       )
     } catch (e: any) {
-      Toast.show(_(msg`Updating quote attachment failed`))
+      Toast.show(
+        _(msg({message: 'Updating quote attachment failed', context: 'toast'})),
+      )
       logger.error(`Failed to ${action} quote`, {safeMessage: e.message})
     }
   }, [_, quoteEmbed, post, toggleQuoteDetachment])
@@ -330,10 +343,12 @@ let PostDropdownMenuItems = ({
       Toast.show(
         isHide
           ? _(msg`Reply was successfully hidden`)
-          : _(msg`Reply visibility updated`),
+          : _(msg({message: 'Reply visibility updated', context: 'toast'})),
       )
     } catch (e: any) {
-      Toast.show(_(msg`Updating reply visibility failed`))
+      Toast.show(
+        _(msg({message: 'Updating reply visibility failed', context: 'toast'})),
+      )
       logger.error(`Failed to ${action} reply`, {safeMessage: e.message})
     }
   }, [
@@ -357,7 +372,7 @@ let PostDropdownMenuItems = ({
   const onBlockAuthor = useCallback(async () => {
     try {
       await queueBlock()
-      Toast.show(_(msg`Account blocked`))
+      Toast.show(_(msg({message: 'Account blocked', context: 'toast'})))
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('Failed to block account', {message: e})
@@ -365,6 +380,38 @@ let PostDropdownMenuItems = ({
       }
     }
   }, [_, queueBlock])
+
+  const onMuteAuthor = useCallback(async () => {
+    if (postAuthor.viewer?.muted) {
+      try {
+        await queueUnmute()
+        Toast.show(_(msg({message: 'Account unmuted', context: 'toast'})))
+      } catch (e: any) {
+        if (e?.name !== 'AbortError') {
+          logger.error('Failed to unmute account', {message: e})
+          Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
+        }
+      }
+    } else {
+      try {
+        await queueMute()
+        Toast.show(_(msg({message: 'Account muted', context: 'toast'})))
+      } catch (e: any) {
+        if (e?.name !== 'AbortError') {
+          logger.error('Failed to mute account', {message: e})
+          Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
+        }
+      }
+    }
+  }, [_, queueMute, queueUnmute, postAuthor.viewer?.muted])
+
+  const onShareATURI = useCallback(() => {
+    shareText(postUri)
+  }, [postUri])
+
+  const onShareAuthorDID = useCallback(() => {
+    shareText(postAuthor.did)
+  }, [postAuthor.did])
 
   return (
     <>
@@ -597,6 +644,25 @@ let PostDropdownMenuItems = ({
             <Menu.Group>
               {!isAuthor && (
                 <>
+                  <Menu.Item
+                    testID="postDropdownMuteBtn"
+                    label={
+                      postAuthor.viewer?.muted
+                        ? _(msg`Unmute account`)
+                        : _(msg`Mute account`)
+                    }
+                    onPress={onMuteAuthor}>
+                    <Menu.ItemText>
+                      {postAuthor.viewer?.muted
+                        ? _(msg`Unmute account`)
+                        : _(msg`Mute account`)}
+                    </Menu.ItemText>
+                    <Menu.ItemIcon
+                      icon={postAuthor.viewer?.muted ? UnmuteIcon : MuteIcon}
+                      position="right"
+                    />
+                  </Menu.Item>
+
                   {!postAuthor.viewer?.blocking && (
                     <Menu.Item
                       testID="postDropdownBlockBtn"
@@ -606,6 +672,7 @@ let PostDropdownMenuItems = ({
                       <Menu.ItemIcon icon={PersonX} position="right" />
                     </Menu.Item>
                   )}
+
                   <Menu.Item
                     testID="postDropdownReportBtn"
                     label={_(msg`Report post`)}
@@ -647,6 +714,28 @@ let PostDropdownMenuItems = ({
                 </>
               )}
             </Menu.Group>
+
+            {devModeEnabled ? (
+              <>
+                <Menu.Divider />
+                <Menu.Group>
+                  <Menu.Item
+                    testID="postAtUriShareBtn"
+                    label={_(msg`Copy post at:// URI`)}
+                    onPress={onShareATURI}>
+                    <Menu.ItemText>{_(msg`Copy post at:// URI`)}</Menu.ItemText>
+                    <Menu.ItemIcon icon={Share} position="right" />
+                  </Menu.Item>
+                  <Menu.Item
+                    testID="postAuthorDIDShareBtn"
+                    label={_(msg`Copy author DID`)}
+                    onPress={onShareAuthorDID}>
+                    <Menu.ItemText>{_(msg`Copy author DID`)}</Menu.ItemText>
+                    <Menu.ItemIcon icon={Share} position="right" />
+                  </Menu.Item>
+                </Menu.Group>
+              </>
+            ) : null}
           </>
         )}
       </Menu.Outer>
@@ -674,10 +763,9 @@ let PostDropdownMenuItems = ({
 
       <ReportDialog
         control={reportDialogControl}
-        params={{
-          type: 'post',
-          uri: postUri,
-          cid: postCid,
+        subject={{
+          ...post,
+          $type: 'app.bsky.feed.defs#postView',
         }}
       />
 
@@ -685,7 +773,7 @@ let PostDropdownMenuItems = ({
         control={loggedOutWarningPromptControl}
         title={_(msg`Note about sharing`)}
         description={_(
-          msg`This post is only visible to logged-in users. It won't be visible to people who aren't logged in.`,
+          msg`This post is only visible to logged-in users. It won't be visible to people who aren't signed in.`,
         )}
         onConfirm={onSharePost}
         confirmButtonCta={_(msg`Share anyway`)}

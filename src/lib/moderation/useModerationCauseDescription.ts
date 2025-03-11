@@ -7,6 +7,7 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {useLabelDefinitions} from '#/state/preferences'
 import {useSession} from '#/state/session'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
@@ -23,6 +24,7 @@ export interface ModerationCauseDescription {
   name: string
   description: string
   source?: string
+  sourceDisplayName?: string
   sourceType?: ModerationCauseSource['type']
   sourceAvi?: string
   sourceDid?: string
@@ -130,14 +132,16 @@ export function useModerationCauseDescription(
       const def = cause.labelDef || getDefinition(labelDefs, cause.label)
       const strings = getLabelStrings(i18n.locale, globalLabelStrings, def)
       const labeler = labelers.find(l => l.creator.did === cause.label.src)
-      let source =
-        labeler?.creator.displayName ||
-        (labeler?.creator.handle ? '@' + labeler?.creator.handle : undefined)
+      let source = labeler
+        ? sanitizeHandle(labeler.creator.handle, '@')
+        : undefined
+      let sourceDisplayName = labeler?.creator.displayName
       if (!source) {
         if (cause.label.src === BSKY_LABELER_DID) {
-          source = 'Bluesky Moderation Service'
+          source = 'moderation.bsky.app'
+          sourceDisplayName = 'Bluesky Moderation Service'
         } else {
-          source = cause.label.src
+          source = _(msg`an unknown labeler`)
         }
       }
       if (def.identifier === 'porn' || def.identifier === 'sexual') {
@@ -154,6 +158,7 @@ export function useModerationCauseDescription(
         name: strings.name,
         description: strings.description,
         source,
+        sourceDisplayName,
         sourceType: cause.source.type,
         sourceAvi: labeler?.creator.avatar,
         sourceDid: cause.label.src,

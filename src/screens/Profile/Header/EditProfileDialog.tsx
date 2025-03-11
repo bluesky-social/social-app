@@ -188,7 +188,7 @@ function DialogInner({
       })
       onUpdate?.()
       control.close()
-      Toast.show(_(msg`Profile updated`))
+      Toast.show(_(msg({message: 'Profile updated', context: 'toast'})))
     } catch (e: any) {
       logger.error('Failed to update user profile', {message: String(e)})
     }

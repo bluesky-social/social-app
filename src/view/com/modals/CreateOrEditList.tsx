@@ -159,8 +159,8 @@ export function Component({
         })
         Toast.show(
           isCurateList
-            ? _(msg`User list updated`)
-            : _(msg`Moderation list updated`),
+            ? _(msg({message: 'User list updated', context: 'toast'}))
+            : _(msg({message: 'Moderation list updated', context: 'toast'})),
         )
         onSave?.(list.uri)
       } else {
@@ -173,8 +173,8 @@ export function Component({
         })
         Toast.show(
           isCurateList
-            ? _(msg`User list created`)
-            : _(msg`Moderation list created`),
+            ? _(msg({message: 'User list created', context: 'toast'}))
+            : _(msg({message: 'Moderation list created', context: 'toast'})),
         )
         onSave?.(res.uri)
       }

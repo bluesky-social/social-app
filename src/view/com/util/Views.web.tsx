@@ -26,6 +26,8 @@ import Animated from 'react-native-reanimated'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {addStyle} from '#/lib/styles'
+import {useLayoutBreakpoints} from '#/alf'
+import {useDialogContext} from '#/components/Dialog'
 
 interface AddedProps {
   desktopFixedHeight?: boolean | number
@@ -46,8 +48,13 @@ export const CenteredView = React.forwardRef(function CenteredView(
 ) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
+  const {centerColumnOffset} = useLayoutBreakpoints()
+  const {isWithinDialog} = useDialogContext()
   if (!isMobile) {
     style = addStyle(style, styles.container)
+  }
+  if (centerColumnOffset && !isWithinDialog) {
+    style = addStyle(style, styles.containerOffset)
   }
   if (topBorder) {
     style = addStyle(style, {
@@ -71,11 +78,16 @@ export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
   ref: React.Ref<FlatList<ItemT>>,
 ) {
   const {isMobile} = useWebMediaQueries()
+  const {centerColumnOffset} = useLayoutBreakpoints()
+  const {isWithinDialog} = useDialogContext()
   if (!isMobile) {
     contentContainerStyle = addStyle(
       contentContainerStyle,
       styles.containerScroll,
     )
+  }
+  if (centerColumnOffset && !isWithinDialog) {
+    style = addStyle(style, styles.containerOffset)
   }
   if (contentOffset && contentOffset?.y !== 0) {
     // NOTE
@@ -92,7 +104,7 @@ export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
   }
   if (desktopFixedHeight) {
     if (typeof desktopFixedHeight === 'number') {
-      // @ts-ignore Web only -prf
+      // @ts-expect-error Web only -prf
       style = addStyle(style, {
         height: `calc(100vh - ${desktopFixedHeight}px)`,
       })
@@ -108,9 +120,9 @@ export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
       // around this, we set data-stable-gutters which can then be
       // styled in our external CSS.
       // -prf
-      // @ts-ignore web only -prf
+      // @ts-expect-error web only -prf
       props.dataSet = props.dataSet || {}
-      // @ts-ignore web only -prf
+      // @ts-expect-error web only -prf
       props.dataSet.stableGutters = '1'
     }
   }
@@ -133,16 +145,22 @@ export const ScrollView = React.forwardRef(function ScrollViewImpl(
   ref: React.Ref<Animated.ScrollView>,
 ) {
   const {isMobile} = useWebMediaQueries()
+  const {centerColumnOffset} = useLayoutBreakpoints()
   if (!isMobile) {
     contentContainerStyle = addStyle(
       contentContainerStyle,
       styles.containerScroll,
     )
   }
+  if (centerColumnOffset) {
+    contentContainerStyle = addStyle(
+      contentContainerStyle,
+      styles.containerOffset,
+    )
+  }
   return (
     <Animated.ScrollView
       contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
-      // @ts-ignore something is wrong with the reanimated types -prf
       ref={ref}
       {...props}
     />
@@ -151,7 +169,7 @@ export const ScrollView = React.forwardRef(function ScrollViewImpl(
 
 const styles = StyleSheet.create({
   contentContainer: {
-    // @ts-ignore web only
+    // @ts-expect-error web only
     minHeight: '100vh',
   },
   container: {
@@ -160,6 +178,9 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
+  containerOffset: {
+    transform: [{translateX: -150}],
+  },
   containerScroll: {
     width: '100%',
     maxWidth: 600,
@@ -167,7 +188,7 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
   fixedHeight: {
-    // @ts-ignore web only
+    // @ts-expect-error web only
     height: '100vh',
   },
 })

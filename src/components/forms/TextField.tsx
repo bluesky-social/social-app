@@ -15,6 +15,7 @@ import {
   android,
   applyFonts,
   atoms as a,
+  ios,
   TextStyleProp,
   useAlf,
   useTheme,
@@ -189,23 +190,19 @@ export function createInput(Component: typeof TextInput) {
       a.px_xs,
       {
         // paddingVertical doesn't work w/multiline - esb
-        paddingTop: 12,
-        paddingBottom: 13,
         lineHeight: a.text_md.fontSize * 1.1875,
         textAlignVertical: rest.multiline ? 'top' : undefined,
         minHeight: rest.multiline ? 80 : undefined,
         minWidth: 0,
       },
+      ios({paddingTop: 12, paddingBottom: 13}),
+      android(a.py_sm),
       // fix for autofill styles covering border
       web({
         paddingTop: 10,
         paddingBottom: 11,
         marginTop: 2,
         marginBottom: 2,
-      }),
-      android({
-        paddingTop: 8,
-        paddingBottom: 8,
       }),
       style,
     ])
@@ -226,6 +223,7 @@ export function createInput(Component: typeof TextInput) {
       <>
         <Component
           accessibilityHint={undefined}
+          hitSlop={HITSLOP_20}
           {...rest}
           accessibilityLabel={label}
           ref={refs}
@@ -242,7 +240,6 @@ export function createInput(Component: typeof TextInput) {
           placeholder={placeholder || label}
           placeholderTextColor={t.palette.contrast_500}
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
-          hitSlop={HITSLOP_20}
           style={flattened}
         />
 
@@ -355,17 +352,9 @@ export function SuffixText({
         a.pr_sm,
         a.text_md,
         t.atoms.text_contrast_medium,
-        {
-          pointerEvents: 'none',
-        },
-        web({
-          marginTop: -2,
-        }),
-        ctx.hovered || ctx.focused
-          ? {
-              color: t.palette.contrast_800,
-            }
-          : {},
+        a.pointer_events_none,
+        web([{marginTop: -2}, a.leading_snug]),
+        (ctx.hovered || ctx.focused) && {color: t.palette.contrast_800},
         style,
       ]}>
       {children}

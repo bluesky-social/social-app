@@ -144,7 +144,7 @@ function AppPasswordCard({
 
   const onDelete = useCallback(async () => {
     await deleteMutation({name: appPassword.name})
-    Toast.show(_(msg`App password deleted`))
+    Toast.show(_(msg({message: 'App password deleted', context: 'toast'})))
   }, [deleteMutation, appPassword.name, _])
 
   return (

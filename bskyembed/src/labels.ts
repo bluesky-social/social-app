@@ -13,6 +13,7 @@ export function labelsToInfo(
       return 'Adult Content'
     case 'nudity':
       return 'Non-sexual Nudity'
+    case 'gore':
     case 'graphic-media':
       return 'Graphic Media'
     default:

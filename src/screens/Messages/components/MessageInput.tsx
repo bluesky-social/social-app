@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {Pressable, TextInput, useWindowDimensions, View} from 'react-native'
 import {
   useFocusedInputHandler,
@@ -19,7 +19,7 @@ import Graphemer from 'graphemer'
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useEmail} from '#/lib/hooks/useEmail'
-import {isIOS} from '#/platform/detection'
+import {isIOS, isWeb} from '#/platform/detection'
 import {
   useMessageDraft,
   useSaveMessageDraft,
@@ -58,16 +58,17 @@ export function MessageInput({
   const isInputScrollable = useSharedValue(false)
 
   const inputStyles = useSharedInputStyles()
-  const [isFocused, setIsFocused] = React.useState(false)
-  const [message, setMessage] = React.useState(getDraft)
+  const [isFocused, setIsFocused] = useState(false)
+  const [message, setMessage] = useState(getDraft)
   const inputRef = useAnimatedRef<TextInput>()
+  const [shouldEnforceClear, setShouldEnforceClear] = useState(false)
 
   const {needsEmailVerification} = useEmail()
 
   useSaveMessageDraft(message)
   useExtractEmbedFromFacets(message, setEmbed)
 
-  const onSubmit = React.useCallback(() => {
+  const onSubmit = useCallback(() => {
     if (needsEmailVerification) {
       return
     }
@@ -81,14 +82,18 @@ export function MessageInput({
     clearDraft()
     onSendMessage(message)
     playHaptic()
-    setMessage('')
     setEmbed(undefined)
-
-    // Pressing the send button causes the text input to lose focus, so we need to
-    // re-focus it after sending
-    setTimeout(() => {
-      inputRef.current?.focus()
-    }, 100)
+    setMessage('')
+    if (isIOS) {
+      setShouldEnforceClear(true)
+    }
+    if (isWeb) {
+      // Pressing the send button causes the text input to lose focus, so we need to
+      // re-focus it after sending
+      setTimeout(() => {
+        inputRef.current?.focus()
+      }, 100)
+    }
   }, [
     needsEmailVerification,
     hasEmbed,
@@ -97,8 +102,8 @@ export function MessageInput({
     onSendMessage,
     playHaptic,
     setEmbed,
-    _,
     inputRef,
+    _,
   ])
 
   useFocusedInputHandler(
@@ -149,8 +154,21 @@ export function MessageInput({
           placeholder={_(msg`Write a message`)}
           placeholderTextColor={t.palette.contrast_500}
           value={message}
+          onChange={evt => {
+            // bit of a hack: iOS automatically accepts autocomplete suggestions when you tap anywhere on the screen
+            // including the button we just pressed - and this overrides clearing the input! so we watch for the
+            // next change and double make sure the input is cleared. It should *always* send an onChange event after
+            // clearing via setMessage('') that happens in onSubmit()
+            // -sfn
+            if (isIOS && shouldEnforceClear) {
+              setShouldEnforceClear(false)
+              setMessage('')
+              return
+            }
+            const text = evt.nativeEvent.text
+            setMessage(text)
+          }}
           multiline={true}
-          onChangeText={setMessage}
           style={[
             a.flex_1,
             a.text_md,
@@ -160,7 +178,7 @@ export function MessageInput({
             animatedStyle,
           ]}
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
-          blurOnSubmit={false}
+          submitBehavior="submit"
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           ref={inputRef}

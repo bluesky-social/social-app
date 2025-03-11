@@ -93,6 +93,7 @@ let PostCtrls = ({
       post.author.viewer?.blockedBy ||
       post.author.viewer?.blockingByList,
   )
+  const replyDisabled = post.viewer?.replyDisabled
 
   const shouldShowLoggedOutWarning = React.useMemo(() => {
     return (
@@ -247,13 +248,13 @@ let PostCtrls = ({
       <View
         style={[
           big ? a.align_center : [a.flex_1, a.align_start, {marginLeft: -6}],
-          post.viewer?.replyDisabled ? {opacity: 0.5} : undefined,
+          replyDisabled ? {opacity: 0.5} : undefined,
         ]}>
         <Pressable
           testID="replyBtn"
           style={btnStyle}
           onPress={() => {
-            if (!post.viewer?.replyDisabled) {
+            if (!replyDisabled) {
               playHaptic('Light')
               requireAuth(() => onPressReply())
             }
@@ -356,7 +357,7 @@ let PostCtrls = ({
             control={loggedOutWarningPromptControl}
             title={_(msg`Note about sharing`)}
             description={_(
-              msg`This post is only visible to logged-in users. It won't be visible to people who aren't logged in.`,
+              msg`This post is only visible to logged-in users. It won't be visible to people who aren't signed in.`,
             )}
             onConfirm={onShare}
             confirmButtonCta={_(msg`Share anyway`)}

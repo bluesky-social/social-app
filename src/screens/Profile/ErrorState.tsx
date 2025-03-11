@@ -60,7 +60,7 @@ export function ErrorState({error}: {error: string}) {
           color="secondary"
           variant="solid"
           label={_(msg`Go Back`)}
-          accessibilityHint="Return to previous page"
+          accessibilityHint="Returns to previous page"
           onPress={onPressBack}>
           <ButtonText>
             <Trans>Go Back</Trans>

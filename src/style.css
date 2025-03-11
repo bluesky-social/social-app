@@ -187,6 +187,7 @@ input:focus {
   animation: rotate 500ms linear infinite;
 }
 
+/* animations for atoms */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -203,6 +204,41 @@ input:focus {
   to {
     opacity: 0;
   }
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.95);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/* animating radix dropdowns requires knowing the data attributes */
+.dropdown-menu-transform-origin > * {
+  transform-origin: var(--radix-dropdown-menu-content-transform-origin);
+}
+.dropdown-menu-constrain-size > * {
+  max-height: var(--radix-dropdown-menu-content-available-height);
 }
 
 .force-no-clicks > *,

@@ -1,7 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react'
 import {GestureResponderEvent, View} from 'react-native'
 import {
-  AppBskyActorDefs,
   AppBskyEmbedRecord,
   ChatBskyConvoDefs,
   moderateProfile,
@@ -9,6 +8,7 @@ import {
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {GestureActionView} from '#/lib/custom-animations/GestureActionView'
 import {useHaptics} from '#/lib/haptics'
@@ -23,7 +23,11 @@ import {
 import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useMarkAsReadMutation} from '#/state/queries/messages/conversation'
+import {
+  precacheConvoQuery,
+  useMarkAsReadMutation,
+} from '#/state/queries/messages/conversation'
+import {precacheProfile} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
@@ -39,11 +43,16 @@ import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 export let ChatListItem = ({
   convo,
+  showMenu = true,
+  children,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
+  showMenu?: boolean
+  children?: React.ReactNode
 }): React.ReactNode => {
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
@@ -61,7 +70,9 @@ export let ChatListItem = ({
       convo={convo}
       profile={otherUser}
       moderationOpts={moderationOpts}
-    />
+      showMenu={showMenu}>
+      {children}
+    </ChatListItemReady>
   )
 }
 
@@ -71,10 +82,14 @@ function ChatListItemReady({
   convo,
   profile: profileUnshadowed,
   moderationOpts,
+  showMenu,
+  children,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
+  showMenu?: boolean
+  children?: React.ReactNode
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -89,6 +104,7 @@ function ChatListItemReady({
     [profile, moderationOpts],
   )
   const playHaptic = useHaptics()
+  const queryClient = useQueryClient()
   const isUnread = convo.unreadCount > 0
 
   const blockInfo = useMemo(() => {
@@ -198,6 +214,8 @@ function ChatListItemReady({
 
   const onPress = useCallback(
     (e: GestureResponderEvent) => {
+      precacheProfile(queryClient, profile)
+      precacheConvoQuery(queryClient, convo)
       decrementBadgeCount(convo.unreadCount)
       if (isDeletedAccount) {
         e.preventDefault()
@@ -207,7 +225,7 @@ function ChatListItemReady({
         logEvent('chat:open', {logContext: 'ChatsList'})
       }
     },
-    [convo.unreadCount, isDeletedAccount, menuControl],
+    [isDeletedAccount, menuControl, queryClient, profile, convo],
   )
 
   const onLongPress = useCallback(() => {
@@ -244,6 +262,8 @@ function ChatListItemReady({
         leftFirst: deleteAction,
       }
 
+  const hasUnread = convo.unreadCount > 0 && !isDeletedAccount
+
   return (
     <GestureActionView actions={actions}>
       <View
@@ -273,7 +293,7 @@ function ChatListItemReady({
             !isDeletedAccount
               ? _(msg`Go to conversation with ${profile.handle}`)
               : _(
-                  msg`This conversation is with a deleted or a deactivated account. Press for options.`,
+                  msg`This conversation is with a deleted or a deactivated account. Press for options`,
                 )
           }
           accessibilityActions={
@@ -297,7 +317,6 @@ function ChatListItemReady({
                 a.py_md,
                 a.gap_md,
                 (hovered || pressed || focused) && t.atoms.bg_contrast_25,
-                t.atoms.border_contrast_low,
               ]}>
               {/* Avatar goes here */}
               <View style={{width: 52, height: 52}} />
@@ -368,9 +387,7 @@ function ChatListItemReady({
                   style={[
                     a.text_sm,
                     a.leading_snug,
-                    convo.unreadCount > 0
-                      ? a.font_bold
-                      : t.atoms.text_contrast_high,
+                    hasUnread ? a.font_bold : t.atoms.text_contrast_high,
                     isDimStyle && t.atoms.text_contrast_medium,
                   ]}>
                   {lastMessage}
@@ -381,9 +398,11 @@ function ChatListItemReady({
                   size="lg"
                   style={[a.pt_xs]}
                 />
+
+                {children}
               </View>
 
-              {convo.unreadCount > 0 && (
+              {hasUnread && (
                 <View
                   style={[
                     a.absolute,
@@ -404,26 +423,28 @@ function ChatListItemReady({
           )}
         </Link>
 
-        <ConvoMenu
-          convo={convo}
-          profile={profile}
-          control={menuControl}
-          currentScreen="list"
-          showMarkAsRead={convo.unreadCount > 0}
-          hideTrigger={isNative}
-          blockInfo={blockInfo}
-          style={[
-            a.absolute,
-            a.h_full,
-            a.self_end,
-            a.justify_center,
-            {
-              right: tokens.space.lg,
-              opacity: !gtMobile || showActions || menuControl.isOpen ? 1 : 0,
-            },
-          ]}
-          latestReportableMessage={latestReportableMessage}
-        />
+        {showMenu && (
+          <ConvoMenu
+            convo={convo}
+            profile={profile}
+            control={menuControl}
+            currentScreen="list"
+            showMarkAsRead={convo.unreadCount > 0}
+            hideTrigger={isNative}
+            blockInfo={blockInfo}
+            style={[
+              a.absolute,
+              a.h_full,
+              a.self_end,
+              a.justify_center,
+              {
+                right: tokens.space.lg,
+                opacity: !gtMobile || showActions || menuControl.isOpen ? 1 : 0,
+              },
+            ]}
+            latestReportableMessage={latestReportableMessage}
+          />
+        )}
         <LeaveConvoPrompt
           control={leaveConvoControl}
           convoId={convo.id}
