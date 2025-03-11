@@ -6,7 +6,7 @@
   word-break: break-word;
 }
 
-:root {
+#app {
   color-scheme: light dark;
 }
 
