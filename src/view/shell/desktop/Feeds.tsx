@@ -7,6 +7,7 @@ import {getCurrentRoute} from '#/lib/routes/helpers'
 import {NavigationProp} from '#/lib/routes/types'
 import {emitSoftReset} from '#/state/events'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {atoms as a, useTheme, web} from '#/alf'
 import {createStaticClick, InlineLinkText} from '#/components/Link'
@@ -14,6 +15,7 @@ import {createStaticClick, InlineLinkText} from '#/components/Link'
 export function DesktopFeeds() {
   const t = useTheme()
   const {_} = useLingui()
+
   const {data: pinnedFeedInfos, error, isLoading} = usePinnedFeedsInfos()
   const selectedFeed = useSelectedFeed()
   const setSelectedFeed = useSetSelectedFeed()
@@ -25,15 +27,14 @@ export function DesktopFeeds() {
     return getCurrentRoute(state)
   })
 
+  const {data: preferences} = usePreferencesQuery()
+  const numberOfPins =
+    preferences?.savedFeeds.filter(feed => feed.pinned)?.length ?? 5
+
   if (isLoading) {
     return (
-      <View
-        style={[
-          {
-            gap: 12,
-          },
-        ]}>
-        {Array(5)
+      <View style={[a.gap_lg]}>
+        {Array(numberOfPins)
           .fill(0)
           .map((_, i) => (
             <View
