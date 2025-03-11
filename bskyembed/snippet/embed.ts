@@ -68,7 +68,9 @@ function scan(node = document) {
     if (ref_url.startsWith('http')) {
       searchParams.set('ref_url', encodeURIComponent(ref_url))
     }
-    searchParams.set('colorMode', embed.dataset.blueskyColorMode || 'system')
+    if (embed.dataset.blueskyEmbedColorMode) {
+      searchParams.set('colorMode', embed.dataset.blueskyEmbedColorMode)
+    }
 
     const iframe = document.createElement('iframe')
     iframe.setAttribute('data-bluesky-id', id)
