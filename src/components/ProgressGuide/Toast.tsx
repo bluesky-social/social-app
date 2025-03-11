@@ -159,7 +159,7 @@ export const ProgressGuideToast = React.forwardRef<
               fill={t.palette.primary_500}
               ref={animatedCheckRef}
             />
-            <View>
+            <View style={[a.flex_1]}>
               <Text style={[a.text_md, a.font_bold]}>{title}</Text>
               {subtitle && (
                 <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
