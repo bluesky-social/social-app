@@ -177,8 +177,8 @@ export function MessageInput({
             {paddingBottom: isIOS ? 5 : 0},
             animatedStyle,
           ]}
-          keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
-          submitBehavior="submit"
+          keyboardAppearance={t.scheme}
+          submitBehavior="newline"
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           ref={inputRef}
