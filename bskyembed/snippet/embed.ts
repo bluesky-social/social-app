@@ -68,8 +68,8 @@ function scan(node = document) {
     if (ref_url.startsWith('http')) {
       searchParams.set('ref_url', encodeURIComponent(ref_url))
     }
-    if (embed.dataset.blueskyColorMode) {
-      searchParams.set('colorMode', embed.dataset.blueskyColorMode)
+    if (embed.dataset.blueskyEmbedColorMode) {
+      searchParams.set('colorMode', embed.dataset.blueskyEmbedColorMode)
     }
 
     const iframe = document.createElement('iframe')
