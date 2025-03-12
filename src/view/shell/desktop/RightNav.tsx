@@ -12,6 +12,7 @@ import {DesktopSearch} from '#/view/shell/desktop/Search'
 import {SidebarTrendingTopics} from '#/view/shell/desktop/SidebarTrendingTopics'
 import {
   atoms as a,
+  CENTER_COLUMN_OFFSET,
   useGutters,
   useLayoutBreakpoints,
   useTheme,
@@ -66,7 +67,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           position: 'fixed',
           left: '50%',
           transform: [
-            {translateX: centerColumnOffset ? 150 : 300},
+            {translateX: 300 + (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0)},
             ...a.scrollbar_offset.transform,
           ],
           width: 300 + gutters.paddingLeft,

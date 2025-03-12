@@ -32,7 +32,13 @@ import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {atoms as a, tokens, useLayoutBreakpoints, useTheme} from '#/alf'
+import {
+  atoms as a,
+  CENTER_COLUMN_OFFSET,
+  tokens,
+  useLayoutBreakpoints,
+  useTheme,
+} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps} from '#/components/Dialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
@@ -559,7 +565,10 @@ export function DesktopLeftNav() {
         leftNavMinimal && styles.leftNavMinimal,
         {
           transform: [
-            {translateX: centerColumnOffset ? -450 : -300},
+            {
+              translateX:
+                -300 + (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0),
+            },
             {translateX: '-100%'},
             ...a.scrollbar_offset.transform,
           ],
