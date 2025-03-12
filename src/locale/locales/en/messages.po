@@ -7327,7 +7327,7 @@ msgid "The Privacy Policy has been moved to <0/>"
 msgstr ""
 
 #: src/view/com/composer/state/video.ts:395
-msgid "The selected video is larger than 50MB."
+msgid "The selected video is larger than 100 MB."
 msgstr ""
 
 #: src/lib/strings/errors.ts:18
