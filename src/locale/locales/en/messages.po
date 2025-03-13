@@ -555,12 +555,9 @@ msgstr ""
 msgid "Add this feed to your feeds"
 msgstr ""
 
+#: src/view/com/profile/ProfileMenu.tsx:273
 #: src/view/com/profile/ProfileMenu.tsx:276
 msgid "Add to lists"
-msgstr ""
-
-#: src/view/com/profile/ProfileMenu.tsx:273
-msgid "Add to Lists"
 msgstr ""
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
