@@ -274,7 +274,8 @@
     "@types/react": "^18",
     "**/expo-constants": "17.0.3",
     "**/expo-device": "7.0.1",
-    "**/zod": "3.23.8"
+    "**/zod": "3.23.8",
+    "statsig-js": "git+https://github.com/haileyok/statsig-js-client.git#main"
   },
   "jest": {
     "preset": "jest-expo/ios",
