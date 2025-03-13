@@ -82,8 +82,6 @@ import {
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 
-const SECTION_TITLES_CURATE = ['Posts', 'People']
-
 interface SectionRef {
   scrollToTop: () => void
 }
@@ -165,6 +163,7 @@ function ProfileListScreenLoaded({
   const isHidden = list.labels?.findIndex(l => l.val === '!hide') !== -1
   const isOwner = currentAccount?.did === list.creator.did
   const scrollElRef = useAnimatedRef()
+  const sectionTitlesCurate = [_(msg`Posts`), _(msg`People`)]
 
   const moderation = React.useMemo(() => {
     return moderateUserList(list, moderationOpts)
@@ -214,7 +213,7 @@ function ProfileListScreenLoaded({
         <Hider.Content>
           <View style={s.hContentRegion}>
             <PagerWithHeader
-              items={SECTION_TITLES_CURATE}
+              items={sectionTitlesCurate}
               isHeaderReady={true}
               renderHeader={renderHeader}
               onCurrentPageSelected={onCurrentPageSelected}>
