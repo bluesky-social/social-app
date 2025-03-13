@@ -54,6 +54,14 @@ export function Embed({
         <VideoItem thumbnail={e.view.thumbnail} alt={e.view.alt} />
       </Outer>
     )
+  } else if (
+    e.type === 'post_with_media' &&
+    // ignore further "nested" RecordWithMedia
+    e.media.type !== 'post_with_media' &&
+    // ignore any unknowns
+    e.media.view !== null
+  ) {
+    return <Embed embed={e.media.view} style={style} />
   }
 
   return null
