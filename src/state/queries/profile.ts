@@ -228,6 +228,9 @@ export function useProfileUpdateMutation() {
       queryClient.invalidateQueries({
         queryKey: RQKEY(variables.profile.did),
       })
+      queryClient.invalidateQueries({
+        queryKey: [profilesQueryKeyRoot, [variables.profile.did]],
+      })
     },
   })
 }
