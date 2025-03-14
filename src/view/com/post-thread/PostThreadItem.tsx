@@ -61,6 +61,9 @@ import {WhoCanReply} from '#/components/WhoCanReply'
 import * as bsky from '#/types/bsky'
 
 export function PostThreadItem({
+  isCollapsed,
+  isUnderCollapsed,
+  onCollapse,
   post,
   record,
   moderation,
@@ -78,6 +81,9 @@ export function PostThreadItem({
   hideTopBorder,
   threadgateRecord,
 }: {
+  isCollapsed: boolean
+  isUnderCollapsed: boolean
+  onCollapse: (uri: string) => void
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
   moderation: ModerationDecision | undefined
@@ -110,6 +116,9 @@ export function PostThreadItem({
   if (richText && moderation) {
     return (
       <PostThreadItemLoaded
+        isCollapsed={isCollapsed}
+        isUnderCollapsed={isUnderCollapsed}
+        onCollapse={onCollapse}
         // Safeguard from clobbering per-post state below:
         key={postShadowed.uri}
         post={postShadowed}
@@ -157,6 +166,9 @@ function PostThreadItemDeleted({hideTopBorder}: {hideTopBorder?: boolean}) {
 }
 
 let PostThreadItemLoaded = ({
+  isCollapsed,
+  isUnderCollapsed,
+  onCollapse,
   post,
   record,
   richText,
@@ -175,6 +187,9 @@ let PostThreadItemLoaded = ({
   hideTopBorder,
   threadgateRecord,
 }: {
+  isCollapsed: boolean
+  isUnderCollapsed: boolean
+  onCollapse: (uri: string) => void
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
@@ -282,6 +297,8 @@ let PostThreadItemLoaded = ({
   if (!record) {
     return <ErrorMessage message={_(msg`Invalid or unsupported post record`)} />
   }
+
+  if (isUnderCollapsed) return null
 
   if (isHighlightedPost) {
     return (
@@ -486,6 +503,47 @@ let PostThreadItemLoaded = ({
       isThreadedChild && prevPost?.ctx.depth === depth && depth !== 1
     const isThreadedChildAdjacentBot =
       isThreadedChild && nextPost?.ctx.depth === depth
+
+    if (isCollapsed) {
+      return (
+        <PostOuterWrapper
+          post={post}
+          depth={depth}
+          showParentReplyLine={!!showParentReplyLine}
+          treeView={treeView}
+          hasPrecedingItem={hasPrecedingItem}
+          hideTopBorder={hideTopBorder}>
+          <PostHider
+            testID={`postThreadItem-by-${post.author.handle}`}
+            href={postHref}
+            onLongPress={() => {
+              onCollapse(post.uri)
+            }}
+            disabled={overrideBlur}
+            modui={moderation.ui('contentList')}
+            iconSize={isThreadedChild ? 24 : 42}
+            iconStyles={
+              isThreadedChild
+                ? {marginRight: 4}
+                : {marginLeft: 2, marginRight: 2}
+            }
+            profile={post.author}
+            interpretFilterAsBlur>
+            <View style={[a.flex_row, a.py_xs, a.px_sm]}>
+              <PostMeta
+                author={post.author}
+                moderation={moderation}
+                timestamp={post.indexedAt}
+                postHref={postHref}
+                showHoverCard={false}
+                avatarSize={24}
+              />
+            </View>
+          </PostHider>
+        </PostOuterWrapper>
+      )
+    }
+
     return (
       <PostOuterWrapper
         post={post}
@@ -497,6 +555,9 @@ let PostThreadItemLoaded = ({
         <PostHider
           testID={`postThreadItem-by-${post.author.handle}`}
           href={postHref}
+          onLongPress={() => {
+            onCollapse(post.uri)
+          }}
           disabled={overrideBlur}
           modui={moderation.ui('contentList')}
           iconSize={isThreadedChild ? 24 : 42}
@@ -513,7 +574,7 @@ let PostThreadItemLoaded = ({
               height: isThreadedChildAdjacentTop ? 8 : 16,
             }}>
             <View style={{width: 42}}>
-              {!isThreadedChild && showParentReplyLine && (
+              {showParentReplyLine && !isThreadedChild && (
                 <View
                   style={[
                     styles.replyLine,
@@ -588,6 +649,9 @@ let PostThreadItemLoaded = ({
                   <RichText
                     enableTags
                     value={richText}
+                    onLinkLongPress={() => {
+                      onCollapse(post.uri)
+                    }}
                     style={[a.flex_1, a.text_md]}
                     numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                     authorHandle={post.author.handle}
@@ -603,7 +667,8 @@ let PostThreadItemLoaded = ({
                   href="#"
                 />
               ) : undefined}
-              {post.embed && (
+              {/* Never expand embeds for thread-view replies */}
+              {post.embed && shouldRenderEmbed(isThreadedChild, post.embed) && (
                 <View style={[a.pb_xs]}>
                   <PostEmbeds
                     embed={post.embed}
@@ -694,8 +759,8 @@ function PostOuterWrapper({
               a.ml_sm,
               t.atoms.border_contrast_low,
               {
-                borderLeftWidth: 2,
                 paddingLeft: a.pl_sm.paddingLeft - 2, // minus border
+                borderLeftWidth: 2,
               },
             ]}
           />
@@ -891,6 +956,16 @@ function getThreadAuthor(
   } catch {
     return ''
   }
+}
+
+function shouldRenderEmbed(
+  isThreadChild: boolean,
+  embed: AppBskyFeedDefs.PostView['embed'],
+) {
+  if (isThreadChild) {
+    return !embed?.external
+  }
+  return true
 }
 
 const styles = StyleSheet.create({
