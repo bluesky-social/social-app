@@ -301,7 +301,6 @@ export function Outer({
       if (diff > 0) {
         translationSV.set(-diff)
       }
-      console.log('measused, diff:', diff)
       setHasBeenMeasured(true)
     },
     [context.measurement, screenHeight, insets, translationSV],
