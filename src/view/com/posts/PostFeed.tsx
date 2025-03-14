@@ -226,6 +226,11 @@ let PostFeed = ({
   )
 
   const checkForNew = React.useCallback(async () => {
+    // Discover always has fresh content
+    if (feedUriOrActorDid === DISCOVER_FEED_URI) {
+      return onHasNew?.(true)
+    }
+
     if (!data?.pages[0] || isFetching || !onHasNew || !enabled || disablePoll) {
       return
     }
@@ -240,7 +245,17 @@ let PostFeed = ({
     } catch (e) {
       logger.error('Poll latest failed', {feed, message: String(e)})
     }
-  }, [feed, data, isFetching, isEmpty, onHasNew, enabled, disablePoll, refetch])
+  }, [
+    feed,
+    data,
+    isFetching,
+    isEmpty,
+    onHasNew,
+    enabled,
+    disablePoll,
+    refetch,
+    feedUriOrActorDid,
+  ])
 
   const myDid = currentAccount?.did || ''
   const onPostCreated = React.useCallback(() => {
