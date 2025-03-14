@@ -2,6 +2,7 @@ import {useCallback, useEffect, useRef} from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {GlassyBackdrop} from '#/components/Layout/Header/GlassyBackdrop'
 import {Text} from '#/components/Typography'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {DraggableScrollView} from './DraggableScrollView'
@@ -15,6 +16,7 @@ export interface TabBarProps {
 
   onSelect?: (index: number) => void
   onPressSelected?: (index: number) => void
+  glassEffect?: boolean
 }
 
 // How much of the previous/next item we're showing
@@ -27,6 +29,7 @@ export function TabBar({
   items,
   onSelect,
   onPressSelected,
+  glassEffect = true,
 }: TabBarProps) {
   const t = useTheme()
   const scrollElRef = useRef<ScrollView>(null)
@@ -92,8 +95,9 @@ export function TabBar({
   return (
     <View
       testID={testID}
-      style={[t.atoms.bg, styles.outer]}
+      style={[styles.outer, !glassEffect && t.atoms.bg]}
       accessibilityRole="tablist">
+      {glassEffect && <GlassyBackdrop />}
       <DraggableScrollView
         testID={`${testID}-selector`}
         horizontal={true}

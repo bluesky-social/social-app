@@ -28,6 +28,7 @@ import {
 } from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import {Text} from '#/components/Typography'
+import {GlassyBackdrop} from './GlassyBackdrop'
 
 export function Outer({
   children,
@@ -55,7 +56,7 @@ export function Outer({
         a.flex_row,
         a.align_center,
         a.gap_sm,
-        sticky && web([a.sticky, {top: 0}, a.z_10, t.atoms.bg]),
+        sticky && web([a.sticky, {top: 0}, a.z_10]),
         gutters,
         platform({
           native: [a.pb_xs, {minHeight: 48}],
@@ -70,6 +71,7 @@ export function Outer({
           ],
         },
       ]}>
+      {sticky && <GlassyBackdrop />}
       {children}
     </View>
   )
@@ -130,11 +132,7 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
         shape="square"
         onPress={onPressBack}
         hitSlop={HITSLOP_30}
-        style={[
-          {marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET},
-          a.bg_transparent,
-          style,
-        ]}
+        style={[{marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET}, style]}
         {...props}>
         <ButtonIcon icon={ArrowLeft} size="lg" />
       </Button>
