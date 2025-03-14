@@ -3345,7 +3345,7 @@ msgstr ""
 msgid "Getting started"
 msgstr ""
 
-#: src/components/MediaPreview.tsx:108
+#: src/components/MediaPreview.tsx:116
 msgid "GIF"
 msgstr ""
 
@@ -6934,8 +6934,8 @@ msgstr ""
 msgid "Something wrong? Let us know."
 msgstr ""
 
-#: src/App.native.tsx:121
-#: src/App.web.tsx:97
+#: src/App.native.tsx:122
+#: src/App.web.tsx:98
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr ""
 
