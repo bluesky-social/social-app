@@ -29,6 +29,7 @@ import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 import {PencilLine_Stroke2_Corner0_Rounded as PencilLine} from './icons/Pencil'
 
 interface WhoCanReplyProps {
@@ -48,7 +49,10 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
    * unexpectedly, we should check to make sure it's for sure the root URI.
    */
   const rootUri =
-    AppBskyFeedPost.isRecord(post.record) && post.record.reply?.root
+    bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      post.record,
+      AppBskyFeedPost.isRecord,
+    ) && post.record.reply?.root
       ? post.record.reply.root.uri
       : post.uri
   const settings = React.useMemo(() => {

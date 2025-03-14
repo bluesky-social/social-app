@@ -4,7 +4,11 @@ import {ImagePickerAsset} from 'expo-image-picker'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {SUPPORTED_MIME_TYPES, SupportedMimeTypes} from '#/lib/constants'
+import {
+  SUPPORTED_MIME_TYPES,
+  SupportedMimeTypes,
+  VIDEO_MAX_DURATION_MS,
+} from '#/lib/constants'
 import {BSKY_SERVICE} from '#/lib/constants'
 import {useVideoLibraryPermission} from '#/lib/hooks/usePermissions'
 import {getHostnameFromUrl} from '#/lib/strings/url-helpers'
@@ -18,8 +22,6 @@ import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {VideoClip_Stroke2_Corner0_Rounded as VideoClipIcon} from '#/components/icons/VideoClip'
 import * as Prompt from '#/components/Prompt'
 import {pickVideo} from './pickVideo'
-
-const VIDEO_MAX_DURATION = 60 * 1000 // 60s in milliseconds
 
 type Props = {
   onSelectVideo: (video: ImagePickerAsset) => void
@@ -54,8 +56,8 @@ export function SelectVideoBtn({onSelectVideo, disabled, setError}: Props) {
         try {
           if (isWeb) {
             // asset.duration is null for gifs (see the TODO in pickVideo.web.ts)
-            if (asset.duration && asset.duration > VIDEO_MAX_DURATION) {
-              throw Error(_(msg`Videos must be less than 60 seconds long`))
+            if (asset.duration && asset.duration > VIDEO_MAX_DURATION_MS) {
+              throw Error(_(msg`Videos must be less than 3 minutes long`))
             }
             // compression step on native converts to mp4, so no need to check there
             if (
@@ -69,8 +71,8 @@ export function SelectVideoBtn({onSelectVideo, disabled, setError}: Props) {
             if (typeof asset.duration !== 'number') {
               throw Error('Asset is not a video')
             }
-            if (asset.duration > VIDEO_MAX_DURATION) {
-              throw Error(_(msg`Videos must be less than 60 seconds long`))
+            if (asset.duration > VIDEO_MAX_DURATION_MS) {
+              throw Error(_(msg`Videos must be less than 3 minutes long`))
             }
           }
           onSelectVideo(asset)

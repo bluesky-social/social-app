@@ -97,6 +97,7 @@ const hideAvatarLabels = new Set([
   'nudity',
   'sexual-figurative',
   'graphic-media',
+  'gore',
   'self-harm',
   'sensitive',
   'security',

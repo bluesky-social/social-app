@@ -171,7 +171,7 @@ function Toast({
             onAccessibilityEscape={hideAndDestroyImmediately}
             style={[
               a.flex_1,
-              t.atoms.bg,
+              t.name === 'dark' ? t.atoms.bg_contrast_25 : t.atoms.bg,
               a.shadow_lg,
               t.atoms.border_contrast_medium,
               a.rounded_sm,
@@ -185,9 +185,14 @@ function Toast({
                     a.flex_shrink_0,
                     a.rounded_full,
                     {width: 32, height: 32},
-                    {backgroundColor: t.palette.primary_50},
                     a.align_center,
                     a.justify_center,
+                    {
+                      backgroundColor:
+                        t.name === 'dark'
+                          ? t.palette.black
+                          : t.palette.primary_50,
+                    },
                   ]}>
                   <FontAwesomeIcon
                     icon={icon}

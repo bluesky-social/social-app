@@ -1,13 +1,13 @@
 # Internationalization
 
-We want the official Bluesky app to be supported in as many languages as possible. If you want to help us translate the app, please open a PR or issue on the [Bluesky app repo on GitHub](https://github.com/bluesky-social/social-app)
+We want the official Bluesky app to be supported in as many languages as possible. If you want to help us translate the app, please get involved on [Crowdin](https://bluesky.crowdin.com/u/projects/1) or open an issue on the [Bluesky app repo on GitHub](https://github.com/bluesky-social/social-app).
 
 ## Tools
 
-- We use Lingui to implement translations. You can find the documentation [here](https://lingui.dev/).
 - We use Crowdin to manage translations.
-  - Bluesky Crowdin: https://crowdin.com/project/bluesky-social
+  - Bluesky Crowdin: https://bluesky.crowdin.com/u/projects/1
   - Introduction to Crowdin: https://support.crowdin.com/for-translators/
+- We use Lingui to implement translations. You can find the documentation [here](https://lingui.dev/).
 
 ## Translators
 
@@ -15,7 +15,7 @@ Much of the app is translated by community contributions. (We <3 our translators
 
 ### Using Crowdin
 
-[Crowdin](https://crowdin.com/project/bluesky-social) is our primary tool for managing translations. There are two roles:
+[Crowdin](https://bluesky.crowdin.com/u/projects/1) is our primary tool for managing translations. There are two roles:
 
 - **Proof-readers**. Can create new translations and approve submitted translations.
 - **Translators**. Can create new translations.
@@ -32,7 +32,7 @@ Please treat everyone with respect. Proof-readers are given final say on transla
 
 ### Adding a new language
 
-Create a new [Crowdin discussion](https://crowdin.com/project/bluesky-social/discussions) or [GitHub issue](https://github.com/bluesky-social/social-app/issues) requesting the new language be added to the project.
+You can request a new language be added to the project by clicking **Request New Language** on Crowdin or you can create a [GitHub issue](https://github.com/bluesky-social/social-app/issues).
 
 Please only request a new language when you are certain you will be able to contribute a substantive portion of translations for the language.
 
@@ -47,7 +47,8 @@ Every night, a GitHub action will run `yarn intl:extract` to update the english 
 ### Release process
 
 1. Pull main and create a branch.
-1. Run `yarn intl:pull` to fetch all translation updates from Crowdin.
+1. Run `yarn intl:pull` to fetch all translation updates from Crowdin. Commit.
+1. Run `yarn intl:extract:all` to ensure all `.po` files are synced with the current state of the code. Commit.
 1. Create a PR, ensure the translations all look correct, and merge.
 1. If needed:
   1. Merge all approved translation PRs (contributions from outside crowdin).

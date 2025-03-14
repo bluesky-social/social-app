@@ -1,4 +1,4 @@
-import '#/lib/sentry' // must be near top
+import '#/logger/sentry/setup' // must be near top
 import '#/view/icons'
 import './style.css'
 
@@ -7,6 +7,7 @@ import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import * as Sentry from '@sentry/react-native'
 
 import {QueryProvider} from '#/lib/react-query'
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
@@ -94,7 +95,7 @@ function InnerApp() {
   useEffect(() => {
     return listenSessionDropped(() => {
       Toast.show(
-        _(msg`Sorry! Your session expired. Please log in again.`),
+        _(msg`Sorry! Your session expired. Please sign in again.`),
         'info',
       )
     })
@@ -207,4 +208,4 @@ function App() {
   )
 }
 
-export default App
+export default Sentry.wrap(App)

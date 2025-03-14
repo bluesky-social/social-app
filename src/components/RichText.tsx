@@ -24,6 +24,7 @@ export type RichTextProps = TextStyleProp &
     onLinkLongPress?: LinkProps['onLongPress']
     interactiveStyle?: TextStyle
     emojiMultiplier?: number
+    shouldProxyLinks?: boolean
   }
 
 export function RichText({
@@ -41,6 +42,7 @@ export function RichText({
   emojiMultiplier = 1.85,
   onLayout,
   onTextLayout,
+  shouldProxyLinks,
 }: RichTextProps) {
   const richText = React.useMemo(
     () =>
@@ -113,6 +115,8 @@ export function RichText({
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
             onPress={onLinkPress}
+            shouldProxy={shouldProxyLinks}
+            onPress={onLinkPress}
             onLongPress={onLinkLongPress}>
             {segment.text}
           </InlineLinkText>
@@ -131,6 +135,7 @@ export function RichText({
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
             shareOnLongPress
+            shouldProxy={shouldProxyLinks}
             onPress={onLinkPress}
             emoji>
             {toShortUrl(segment.text)}

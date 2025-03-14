@@ -24,12 +24,10 @@ appId: xyz.blueskyweb.app
 - inputText: "example@test.com"
 - tapOn:
     id: "passwordInput"
-- inputText: "hunter2"
-- pressKey: Enter
+- inputText: "hunter22"
+- hideKeyboard
 - tapOn:
     id: "nextBtn"
-- tapOn:
-     id: "handleInput"
 - inputText: "e2e-test"
 - tapOn:
     id: "nextBtn"

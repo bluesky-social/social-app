@@ -59,6 +59,7 @@ export const router = new Router({
   // DMs
   Messages: '/messages',
   MessagesSettings: '/messages/settings',
+  MessagesInbox: '/messages/inbox',
   MessagesConversation: '/messages/:conversation',
   // starter packs
   Start: '/start/:name/:rkey',

@@ -44,6 +44,8 @@ export type DialogContextProps = {
   nativeSnapPoint: BottomSheetSnapPoint
   disableDrag: boolean
   setDisableDrag: React.Dispatch<React.SetStateAction<boolean>>
+  // in the event that the hook is used outside of a dialog
+  isWithinDialog: boolean
 }
 
 export type DialogControlOpenOptions = {
@@ -60,11 +62,16 @@ export type DialogOuterProps = {
   control: DialogControlProps
   onClose?: () => void
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
-  webOptions?: {}
+  webOptions?: {
+    alignCenter?: boolean
+  }
   testID?: string
 }
 
-type DialogInnerPropsBase<T> = React.PropsWithChildren<ViewStyleProp> & T
+type DialogInnerPropsBase<T> = React.PropsWithChildren<ViewStyleProp> &
+  T & {
+    testID?: string
+  }
 export type DialogInnerProps =
   | DialogInnerPropsBase<{
       label?: undefined

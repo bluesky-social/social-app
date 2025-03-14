@@ -1,30 +1,24 @@
 import React, {useCallback, useLayoutEffect, useMemo} from 'react'
 import {
   ActivityIndicator,
-  Image,
-  ImageStyle,
   Pressable,
   StyleProp,
   StyleSheet,
   TextInput,
   View,
+  ViewStyle,
 } from 'react-native'
 import {ScrollView as RNGHScrollView} from 'react-native-gesture-handler'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
 import {createHitslop, HITSLOP_20} from '#/lib/constants'
 import {HITSLOP_10} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
@@ -42,7 +36,10 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
-import {useProfilesQuery} from '#/state/queries/profile'
+import {
+  unstableCacheProfileView,
+  useProfilesQuery,
+} from '#/state/queries/profile'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
@@ -52,7 +49,7 @@ import {Post} from '#/view/com/post/Post'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {Link} from '#/view/com/util/Link'
 import {List} from '#/view/com/util/List'
-import {Text} from '#/view/com/util/text/Text'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Explore} from '#/view/screens/Search/Explore'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
 import {makeSearchQuery, Params, parseSearchQuery} from '#/screens/Search/utils'
@@ -73,9 +70,12 @@ import {
   ChevronTopBottom_Stroke2_Corner0_Rounded as ChevronUpDownIcon,
 } from '#/components/icons/Chevron'
 import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Globe'
+import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import * as Layout from '#/components/Layout'
 import * as Menu from '#/components/Menu'
+import {Text} from '#/components/Typography'
 import {account, useStorage} from '#/storage'
+import * as bsky from '#/types/bsky'
 
 function Loader() {
   return (
@@ -88,13 +88,13 @@ function Loader() {
 }
 
 function EmptyState({message, error}: {message: string; error?: string}) {
-  const pal = usePalette('default')
+  const t = useTheme()
 
   return (
     <Layout.Content>
       <View style={[a.p_xl]}>
-        <View style={[pal.viewLight, {padding: 18, borderRadius: 8}]}>
-          <Text style={[pal.text]}>{message}</Text>
+        <View style={[t.atoms.bg_contrast_25, a.rounded_sm, a.p_lg]}>
+          <Text style={[a.text_md]}>{message}</Text>
 
           {error && (
             <>
@@ -104,13 +104,13 @@ function EmptyState({message, error}: {message: string; error?: string}) {
                     marginVertical: 12,
                     height: 1,
                     width: '100%',
-                    backgroundColor: pal.text.color,
+                    backgroundColor: t.atoms.text.color,
                     opacity: 0.2,
                   },
                 ]}
               />
 
-              <Text style={[pal.textLight]}>
+              <Text style={[t.atoms.text_contrast_medium]}>
                 <Trans>Error:</Trans> {error}
               </Text>
             </>
@@ -348,8 +348,17 @@ function SearchLanguageDropdown({
         if (aIsUser && !bIsUser) return -1
         if (bIsUser && !aIsUser) return 1
         // prioritize "common" langs in the network
-        const aIsCommon = !!APP_LANGUAGES.find(al => al.code2 === a.value)
-        const bIsCommon = !!APP_LANGUAGES.find(al => al.code2 === b.value)
+        const aIsCommon = !!APP_LANGUAGES.find(
+          al =>
+            // skip `ast`, because it uses a 3-letter code which conflicts with `as`
+            // it begins with `a` anyway so still is top of the list
+            al.code2 !== 'ast' && al.code2.startsWith(a.value),
+        )
+        const bIsCommon = !!APP_LANGUAGES.find(
+          al =>
+            // ditto
+            al.code2 !== 'ast' && al.code2.startsWith(b.value),
+        )
         if (aIsCommon && !bIsCommon) return -1
         if (bIsCommon && !aIsCommon) return 1
         // fall back to alphabetical
@@ -389,10 +398,7 @@ function SearchLanguageDropdown({
           </Button>
         )}
       </Menu.Trigger>
-      <Menu.Outer
-        // HACKFIX: Currently there is no height limit for Radix dropdowns,
-        // so if it's too tall it just goes off screen. TODO: fix internally -sfn
-        style={web({maxHeight: '70vh'})}>
+      <Menu.Outer>
         <Menu.LabelText>
           <Trans>Filter search by language</Trans>
         </Menu.LabelText>
@@ -476,10 +482,10 @@ let SearchScreenInner = ({
   queryWithParams: string
   headerHeight: number
 }): React.ReactNode => {
-  const pal = usePalette('default')
+  const t = useTheme()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {hasSession} = useSession()
-  const {isDesktop} = useWebMediaQueries()
+  const {gtTablet} = useBreakpoints()
   const [activeTab, setActiveTab] = React.useState(0)
   const {_} = useLingui()
 
@@ -550,40 +556,30 @@ let SearchScreenInner = ({
     <Explore />
   ) : (
     <Layout.Center>
-      <View style={web({height: '100vh'})}>
-        {isDesktop && (
-          <Text
-            type="title"
+      <View style={a.flex_1}>
+        {gtTablet && (
+          <View
             style={[
-              pal.text,
-              pal.border,
-              {
-                display: 'flex',
-                paddingVertical: 12,
-                paddingHorizontal: 18,
-                fontWeight: '600',
-                borderBottomWidth: 1,
-              },
+              a.border_b,
+              t.atoms.border_contrast_low,
+              a.px_lg,
+              a.pt_sm,
+              a.pb_lg,
             ]}>
-            <Trans>Search</Trans>
-          </Text>
+            <Text style={[a.text_2xl, a.font_heavy]}>
+              <Trans>Search</Trans>
+            </Text>
+          </View>
         )}
 
-        <View
-          style={{
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingVertical: 30,
-            gap: 15,
-          }}>
+        <View style={[a.align_center, a.justify_center, a.py_4xl, a.gap_lg]}>
           <MagnifyingGlassIcon
             strokeWidth={3}
-            size={isDesktop ? 60 : 60}
-            style={pal.textLight}
+            size={60}
+            style={t.atoms.text_contrast_medium as StyleProp<ViewStyle>}
           />
-          <Text type="xl" style={[pal.textLight, {paddingHorizontal: 18}]}>
-            <Trans>Find posts and users on Bluesky</Trans>
+          <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
+            <Trans>Find posts, users, and feeds on Bluesky</Trans>
           </Text>
         </View>
       </View>
@@ -621,6 +617,7 @@ export function SearchScreenShell({
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {currentAccount} = useSession()
+  const queryClient = useQueryClient()
 
   // Query terms
   const [searchText, setSearchText] = React.useState<string>(queryParam)
@@ -656,7 +653,7 @@ export function SearchScreenShell({
   )
 
   const updateProfileHistory = useCallback(
-    async (item: AppBskyActorDefs.ProfileViewBasic) => {
+    async (item: bsky.profile.AnyProfileView) => {
       const newAccountHistory = [
         item.did,
         ...accountHistory.filter(p => p !== item.did),
@@ -673,7 +670,7 @@ export function SearchScreenShell({
     [termHistory, setTermHistory],
   )
   const deleteProfileHistoryItem = useCallback(
-    async (item: AppBskyActorDefs.ProfileViewBasic) => {
+    async (item: AppBskyActorDefs.ProfileViewDetailed) => {
       setAccountHistory(accountHistory.filter(p => p !== item.did))
     },
     [accountHistory, setAccountHistory],
@@ -738,12 +735,17 @@ export function SearchScreenShell({
     setShowAutocomplete(false)
     if (isWeb) {
       // Empty params resets the URL to be /search rather than /search?q=
-      navigation.replace('Search', {})
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const {q: _q, ...parameters} = (route.params ?? {}) as {
+        [key: string]: string
+      }
+      // @ts-expect-error route is not typesafe
+      navigation.replace(route.name, parameters)
     } else {
       setSearchText('')
       navigation.setParams({q: ''})
     }
-  }, [setShowAutocomplete, setSearchText, navigation])
+  }, [setShowAutocomplete, setSearchText, navigation, route.params, route.name])
 
   const onSubmit = React.useCallback(() => {
     navigateToItem(searchText)
@@ -766,13 +768,14 @@ export function SearchScreenShell({
   )
 
   const handleProfileClick = React.useCallback(
-    (profile: AppBskyActorDefs.ProfileViewBasic) => {
+    (profile: bsky.profile.AnyProfileView) => {
+      unstableCacheProfileView(queryClient, profile)
       // Slight delay to avoid updating during push nav animation.
       setTimeout(() => {
         updateProfileHistory(profile)
       }, 400)
     },
-    [updateProfileHistory],
+    [updateProfileHistory, queryClient],
   )
 
   const onSoftReset = React.useCallback(() => {
@@ -1013,23 +1016,23 @@ function SearchHistory({
   onRemoveProfileClick,
 }: {
   searchHistory: string[]
-  selectedProfiles: AppBskyActorDefs.ProfileViewBasic[]
+  selectedProfiles: AppBskyActorDefs.ProfileViewDetailed[]
   onItemClick: (item: string) => void
-  onProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
+  onProfileClick: (profile: AppBskyActorDefs.ProfileViewDetailed) => void
   onRemoveItemClick: (item: string) => void
-  onRemoveProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
+  onRemoveProfileClick: (profile: AppBskyActorDefs.ProfileViewDetailed) => void
 }) {
-  const {isMobile} = useWebMediaQueries()
-  const pal = usePalette('default')
+  const {gtMobile} = useBreakpoints()
+  const t = useTheme()
   const {_} = useLingui()
 
   return (
     <Layout.Content
       keyboardDismissMode="interactive"
       keyboardShouldPersistTaps="handled">
-      <View style={styles.searchHistoryContainer}>
+      <View style={[a.w_full, a.px_md]}>
         {(searchHistory.length > 0 || selectedProfiles.length > 0) && (
-          <Text style={[pal.text, styles.searchHistoryTitle]}>
+          <Text style={[a.text_md, a.font_bold, a.p_md]}>
             <Trans>Recent Searches</Trans>
           </Text>
         )}
@@ -1037,7 +1040,7 @@ function SearchHistory({
           <View
             style={[
               styles.selectedProfilesContainer,
-              isMobile && styles.selectedProfilesContainerMobile,
+              !gtMobile && styles.selectedProfilesContainerMobile,
             ]}>
             <RNGHScrollView
               keyboardShouldPersistTaps="handled"
@@ -1045,7 +1048,7 @@ function SearchHistory({
               style={[
                 a.flex_row,
                 a.flex_nowrap,
-                {marginHorizontal: -tokens.space._2xl},
+                {marginHorizontal: tokens.space._2xl * -1},
               ]}
               contentContainerStyle={[a.px_2xl, a.border_0]}>
               {selectedProfiles.slice(0, 5).map((profile, index) => (
@@ -1053,7 +1056,7 @@ function SearchHistory({
                   key={index}
                   style={[
                     styles.profileItem,
-                    isMobile && styles.profileItemMobile,
+                    !gtMobile && styles.profileItemMobile,
                   ]}>
                   <Link
                     href={makeProfileLink(profile)}
@@ -1061,15 +1064,15 @@ function SearchHistory({
                     asAnchor
                     anchorNoUnderline
                     onBeforePress={() => onProfileClick(profile)}
-                    style={styles.profilePressable}>
-                    <Image
-                      source={{uri: profile.avatar}}
-                      style={styles.profileAvatar as StyleProp<ImageStyle>}
-                      accessibilityIgnoresInvertColors
+                    style={[a.align_center, a.w_full]}>
+                    <UserAvatar
+                      avatar={profile.avatar}
+                      type={profile.associated?.labeler ? 'labeler' : 'user'}
+                      size={60}
                     />
                     <Text
                       emoji
-                      style={[pal.text, styles.profileName]}
+                      style={[a.text_xs, a.text_center, styles.profileName]}
                       numberOfLines={1}>
                       {sanitizeDisplayName(
                         profile.displayName || profile.handle,
@@ -1085,11 +1088,7 @@ function SearchHistory({
                     onPress={() => onRemoveProfileClick(profile)}
                     hitSlop={createHitslop(6)}
                     style={styles.profileRemoveBtn}>
-                    <FontAwesomeIcon
-                      icon="xmark"
-                      size={14}
-                      style={pal.textLight as FontAwesomeIconStyle}
-                    />
+                    <XIcon size="xs" style={t.atoms.text_contrast_low} />
                   </Pressable>
                 </View>
               ))}
@@ -1097,34 +1096,25 @@ function SearchHistory({
           </View>
         )}
         {searchHistory.length > 0 && (
-          <View style={styles.searchHistoryContent}>
+          <View style={[a.pl_md, a.pr_xs, a.mt_md]}>
             {searchHistory.slice(0, 5).map((historyItem, index) => (
-              <View
-                key={index}
-                style={[
-                  a.flex_row,
-                  a.mt_md,
-                  a.justify_center,
-                  a.justify_between,
-                ]}>
+              <View key={index} style={[a.flex_row, a.align_center, a.mt_xs]}>
                 <Pressable
                   accessibilityRole="button"
                   onPress={() => onItemClick(historyItem)}
                   hitSlop={HITSLOP_10}
-                  style={[a.flex_1, a.py_sm]}>
-                  <Text style={pal.text}>{historyItem}</Text>
+                  style={[a.flex_1, a.py_md]}>
+                  <Text style={[a.text_md]}>{historyItem}</Text>
                 </Pressable>
-                <Pressable
-                  accessibilityRole="button"
+                <Button
+                  label={_(msg`Remove ${historyItem}`)}
                   onPress={() => onRemoveItemClick(historyItem)}
-                  hitSlop={HITSLOP_10}
-                  style={[a.px_md, a.py_xs, a.justify_center]}>
-                  <FontAwesomeIcon
-                    icon="xmark"
-                    size={16}
-                    style={pal.textLight as FontAwesomeIconStyle}
-                  />
-                </Pressable>
+                  size="small"
+                  variant="ghost"
+                  color="secondary"
+                  shape="round">
+                  <ButtonIcon icon={XIcon} />
+                </Button>
               </View>
             ))}
           </View>
@@ -1141,41 +1131,6 @@ function scrollToTopWeb() {
 }
 
 const styles = StyleSheet.create({
-  headerMenuBtn: {
-    width: 30,
-    height: 30,
-    borderRadius: 30,
-    marginRight: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerSearchContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 30,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  headerSearchIcon: {
-    marginRight: 6,
-    alignSelf: 'center',
-  },
-  headerSearchInput: {
-    flex: 1,
-    fontSize: 17,
-    minWidth: 0,
-  },
-  headerCancelBtn: {
-    paddingLeft: 10,
-    alignSelf: 'center',
-    zIndex: -1,
-    elevation: -1, // For Android
-  },
-  searchHistoryContainer: {
-    width: '100%',
-    paddingHorizontal: 12,
-  },
   selectedProfilesContainer: {
     marginTop: 10,
     paddingHorizontal: 12,
@@ -1192,20 +1147,9 @@ const styles = StyleSheet.create({
   profileItemMobile: {
     width: 70,
   },
-  profilePressable: {
-    alignItems: 'center',
-    width: '100%',
-  },
-  profileAvatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 45,
-  },
   profileName: {
     width: 78,
-    fontSize: 12,
-    textAlign: 'center',
-    marginTop: 5,
+    marginTop: 6,
   },
   profileRemoveBtn: {
     position: 'absolute',
@@ -1217,14 +1161,5 @@ const styles = StyleSheet.create({
     height: 18,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  searchHistoryContent: {
-    paddingHorizontal: 10,
-    borderRadius: 8,
-  },
-  searchHistoryTitle: {
-    fontWeight: '600',
-    paddingVertical: 12,
-    paddingHorizontal: 10,
   },
 })

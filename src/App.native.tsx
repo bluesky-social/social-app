@@ -1,6 +1,6 @@
 import 'react-native-url-polyfill/auto'
-import '#/lib/sentry' // must be near top
-import '#/lib/bitdrift' // must be near top
+import '#/logger/sentry/setup'
+import '#/logger/bitdrift/setup'
 import '#/view/icons'
 
 import React, {useEffect, useState} from 'react'
@@ -15,6 +15,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import * as SystemUI from 'expo-system-ui'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import * as Sentry from '@sentry/react-native'
 
 import {KeyboardControllerProvider} from '#/lib/hooks/useEnableKeyboardController'
 import {QueryProvider} from '#/lib/react-query'
@@ -118,7 +119,7 @@ function InnerApp() {
   useEffect(() => {
     return listenSessionDropped(() => {
       Toast.show(
-        _(msg`Sorry! Your session expired. Please log in again.`),
+        _(msg`Sorry! Your session expired. Please sign in again.`),
         'info',
       )
     })
@@ -236,4 +237,4 @@ function App() {
   )
 }
 
-export default App
+export default Sentry.wrap(App)

@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {msg, Trans} from '@lingui/macro'
+import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigationState} from '@react-navigation/native'
 
@@ -112,11 +112,8 @@ export function BottomBarWeb() {
               <NavItem
                 routeName="Messages"
                 href="/messages"
-                notificationCount={
-                  unreadMessageCount.count > 0
-                    ? unreadMessageCount.numUnread
-                    : undefined
-                }>
+                notificationCount={unreadMessageCount.numUnread}
+                hasNew={unreadMessageCount.hasNew}>
                 {({isActive}) => {
                   const Icon = isActive ? MessageFilled : Message
                   return (
@@ -240,18 +237,28 @@ const NavItem: React.FC<{
     }
     return getCurrentRoute(state)
   })
+
+  // Checks whether we're on someone else's profile
+  const isOnDifferentProfile =
+    currentRoute.name === 'Profile' &&
+    routeName === 'Profile' &&
+    (currentRoute.params as CommonNavigatorParams['Profile']).name !==
+      currentAccount?.handle
+
   const isActive =
     currentRoute.name === 'Profile'
       ? isTab(currentRoute.name, routeName) &&
         (currentRoute.params as CommonNavigatorParams['Profile']).name ===
-          currentAccount?.handle
+          (routeName === 'Profile'
+            ? currentAccount?.handle
+            : (currentRoute.params as CommonNavigatorParams['Profile']).name)
       : isTab(currentRoute.name, routeName)
 
   return (
     <Link
       href={href}
       style={[styles.ctrl, a.pb_lg]}
-      navigationAction="navigate"
+      navigationAction={isOnDifferentProfile ? 'push' : 'navigate'}
       aria-role="link"
       aria-label={routeName}
       accessible={true}>
@@ -259,7 +266,12 @@ const NavItem: React.FC<{
       {notificationCount ? (
         <View
           style={styles.notificationCount}
-          aria-label={_(msg`${notificationCount} unread items`)}>
+          aria-label={_(
+            msg`${plural(notificationCount, {
+              one: '# unread item',
+              other: '# unread items',
+            })}`,
+          )}>
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
       ) : hasNew ? (

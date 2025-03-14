@@ -1,4 +1,4 @@
-export type LogEvents = {
+export type MetricEvents = {
   // App events
   init: {
     initMs: number
@@ -30,7 +30,7 @@ export type LogEvents = {
     secondsActive: number
   }
   'state:foreground': {}
-  'lake:router:navigate': {
+  'router:navigate': {
     from?: string
   }
   'deepLink:referrerReceived': {
@@ -305,4 +305,28 @@ export type LogEvents = {
 
   'progressGuide:hide': {}
   'progressGuide:followDialog:open': {}
+
+  'moderation:subscribedToLabeler': {}
+  'moderation:unsubscribedFromLabeler': {}
+  'moderation:changeLabelPreference': {
+    preference: string
+  }
+
+  'moderation:subscribedToList': {
+    listType: 'mute' | 'block'
+  }
+  'moderation:unsubscribedFromList': {
+    listType: 'mute' | 'block'
+  }
+
+  'reportDialog:open': {
+    subjectType: string
+  }
+  'reportDialog:close': {}
+  'reportDialog:success': {
+    reason: string
+    labeler: string
+    details: boolean
+  }
+  'reportDialog:failure': {}
 }
