@@ -1,6 +1,7 @@
-import React, {useMemo, useRef, useState} from 'react'
+import React, {useCallback, useMemo, useRef, useState} from 'react'
 import {
   Keyboard,
+  LayoutChangeEvent,
   Pressable,
   StyleProp,
   useWindowDimensions,
@@ -8,7 +9,17 @@ import {
   ViewStyle,
 } from 'react-native'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
-import {runOnJS} from 'react-native-reanimated'
+import Animated, {
+  clamp,
+  interpolate,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  WithSpringConfig,
+  withTiming,
+} from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {captureRef} from 'react-native-view-shot'
 import {Image} from 'expo-image'
 import {msg} from '@lingui/macro'
@@ -19,6 +30,7 @@ import flattenReactChildren from 'react-keyed-flatten-children'
 import {HITSLOP_10} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {isIOS} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {
   Context,
@@ -46,6 +58,13 @@ export {
 
 const {Provider: PortalProvider, Outlet, Portal} = createPortalGroup()
 
+const SPRING: WithSpringConfig = {
+  mass: isIOS ? 1.25 : 0.75,
+  damping: 150,
+  stiffness: 1000,
+  restDisplacementThreshold: 0.01,
+}
+
 export function Provider({children}: {children: React.ReactNode}) {
   return (
     <PortalProvider>
@@ -57,20 +76,40 @@ export function Provider({children}: {children: React.ReactNode}) {
 
 export function Root({children}: {children: React.ReactNode}) {
   const [measurement, setMeasurement] = useState<Measurement | null>(null)
+  const animationSV = useSharedValue(0)
+  const translationSV = useSharedValue(0)
   const isFocused = useIsFocused()
+
+  const clearMeasurement = useCallback(() => setMeasurement(null), [])
 
   const context = useMemo<ContextType>(
     () => ({
       isOpen: !!measurement && isFocused,
       measurement,
+      animationSV,
+      translationSV,
       open: (evt: Measurement) => {
         setMeasurement(evt)
+        animationSV.set(withSpring(1, SPRING))
       },
       close: () => {
-        setMeasurement(null)
+        animationSV.set(
+          withTiming(0, {duration: 150}, finished => {
+            if (finished) {
+              runOnJS(clearMeasurement)()
+            }
+          }),
+        )
       },
     }),
-    [measurement, setMeasurement, isFocused],
+    [
+      measurement,
+      setMeasurement,
+      isFocused,
+      animationSV,
+      translationSV,
+      clearMeasurement,
+    ],
   )
 
   return <Context.Provider value={context}>{children}</Context.Provider>
@@ -80,7 +119,6 @@ export function Trigger({children, label, style}: TriggerProps) {
   const context = useContextMenuContext()
   const playHaptic = useHaptics()
   const ref = useRef<View>(null)
-  const {_} = useLingui()
   const isFocused = useIsFocused()
   const [image, setImage] = useState<string | null>(null)
   const [pendingMeasurement, setPendingMeasurement] =
@@ -152,34 +190,56 @@ export function Trigger({children, label, style}: TriggerProps) {
       </GestureDetector>
       {isFocused && image && measurement && (
         <Portal>
-          <Image
+          <TriggerClone
+            image={image}
+            measurement={measurement}
             onDisplay={() => {
-              console.log('Image displayed')
               if (pendingMeasurement) {
                 context.open(pendingMeasurement)
                 setPendingMeasurement(null)
               }
             }}
-            source={image}
-            style={[
-              a.absolute,
-              {
-                top: measurement.y,
-                left: measurement.x,
-                width: measurement.width,
-                height: measurement.height,
-              },
-              a.z_10,
-            ]}
-            accessibilityLabel={_(msg`Context menu trigger`)}
-            accessibilityHint={_(
-              msg`The item that just triggered the context menu.`,
-            )}
-            accessibilityIgnoresInvertColors={false}
           />
         </Portal>
       )}
     </>
+  )
+}
+
+/**
+ * an image of the underlying trigger with a grow animation
+ */
+function TriggerClone({
+  image,
+  measurement,
+  onDisplay,
+}: {
+  image: string
+  measurement: Measurement
+  onDisplay: () => void
+}) {
+  const {_} = useLingui()
+
+  return (
+    <Image
+      onDisplay={() => {
+        onDisplay()
+      }}
+      source={image}
+      style={[
+        a.absolute,
+        {
+          top: measurement.y,
+          left: measurement.x,
+          width: measurement.width,
+          height: measurement.height,
+        },
+        a.z_10,
+      ]}
+      accessibilityLabel={_(msg`Context menu trigger`)}
+      accessibilityHint={_(msg`The item that just triggered the context menu.`)}
+      accessibilityIgnoresInvertColors={false}
+    />
   )
 }
 
@@ -194,24 +254,59 @@ export function Outer({
 }) {
   const t = useTheme()
   const context = useContextMenuContext()
-  const {width: screenWidth} = useWindowDimensions()
+  const {width: screenWidth, height: screenHeight} = useWindowDimensions()
+  const insets = useSafeAreaInsets()
+  const [hasBeenMeasured, setHasBeenMeasured] = useState(false)
 
-  if (!context.isOpen || !context.measurement) return null
+  const {animationSV, translationSV} = context
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: clamp(animationSV.get(), 0, 1),
+    transform: [
+      {scale: interpolate(animationSV.get(), [0, 1], [0.2, 1])},
+      {translateY: translationSV.get() * animationSV.get()},
+    ],
+  }))
+
+  const onLayout = useCallback(
+    (evt: LayoutChangeEvent) => {
+      if (!context.measurement) return // should not happen
+
+      const {height} = evt.nativeEvent.layout
+      const screenPosition =
+        context.measurement.y + context.measurement.height + 4
+      const bottomPosition = screenPosition + height
+      const safeAreaBottomLimit = screenHeight - insets.bottom - 20 // to be safe
+      const diff = bottomPosition - safeAreaBottomLimit
+      if (diff > 0) {
+        translationSV.set(-diff)
+      }
+      console.log('measused, diff:', diff)
+      setHasBeenMeasured(true)
+    },
+    [context.measurement, screenHeight, insets, translationSV],
+  )
+
+  if (!context.measurement) return null
 
   return (
     <Portal>
       <Context.Provider value={context}>
-        <Backdrop active={context.isOpen} onPress={context.close} />
-        <View
+        <Backdrop animation={animationSV} onPress={context.close} />
+        <Animated.View
+          onLayout={!hasBeenMeasured ? onLayout : undefined}
           style={[
             a.rounded_md,
             a.shadow_md,
             a.mt_xs,
             a.w_full,
-            {maxWidth: '60%'},
-            a.absolute,
-            {top: context.measurement.y + context.measurement.height},
             a.z_10,
+            a.absolute,
+            {
+              maxWidth: '60%',
+              transformOrigin: align === 'left' ? 'top left' : 'top right',
+              top: context.measurement.y + context.measurement.height,
+            },
             align === 'left'
               ? {left: context.measurement.x}
               : {
@@ -220,6 +315,7 @@ export function Outer({
                     context.measurement.x -
                     context.measurement.width,
                 },
+            hasBeenMeasured ? animatedStyle : {opacity: 0},
             style,
           ]}>
           <View
@@ -248,7 +344,7 @@ export function Outer({
               ) : null
             })}
           </View>
-        </View>
+        </Animated.View>
       </Context.Provider>
     </Portal>
   )

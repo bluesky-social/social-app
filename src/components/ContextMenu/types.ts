@@ -1,5 +1,6 @@
 import React from 'react'
 import {AccessibilityRole, StyleProp, ViewStyle} from 'react-native'
+import {SharedValue} from 'react-native-reanimated'
 
 import * as Dialog from '#/components/Dialog'
 import {RadixPassThroughTriggerProps} from '#/components/Menu/types'
@@ -21,6 +22,10 @@ export type Measurement = {
 export type ContextType = {
   isOpen: boolean
   measurement: Measurement | null
+  /* Spring animation between 0 and 1 */
+  animationSV: SharedValue<number>
+  /* Translation in Y axis to ensure everything's onscreen */
+  translationSV: SharedValue<number>
   open: (evt: Measurement) => void
   close: () => void
 }

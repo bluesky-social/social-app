@@ -1,56 +1,48 @@
-import {useEffect} from 'react'
 import {Pressable} from 'react-native'
 import Animated, {
+  Extrapolation,
+  interpolate,
+  SharedValue,
   useAnimatedProps,
-  useSharedValue,
-  withTiming,
 } from 'react-native-reanimated'
 import {BlurView} from 'expo-blur'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 
 export function Backdrop({
-  active,
-  intensity = 50,
-  onAnimationEnd,
+  animation,
+  intensity = 30,
   onPress,
 }: {
-  active: boolean
+  animation: SharedValue<number>
   intensity?: number
-  onAnimationEnd?: () => void
   onPress?: () => void
 }) {
+  const t = useTheme()
   const {_} = useLingui()
-  const intensitySV = useSharedValue(active ? intensity : 0)
-
-  useEffect(() => {
-    if (active) {
-      intensitySV.set(withTiming(intensity, {duration: 500}))
-
-      return () => {
-        intensitySV.set(
-          withTiming(0, {duration: 500}, finished => {
-            if (finished) {
-              onAnimationEnd?.()
-            }
-          }),
-        )
-      }
-    }
-  }, [intensitySV, active, intensity, onAnimationEnd])
 
   const animatedProps = useAnimatedProps(() => ({
-    intensity: intensitySV.get(),
+    intensity: interpolate(
+      animation.get(),
+      [0, 1],
+      [0, intensity],
+      Extrapolation.CLAMP,
+    ),
   }))
 
   return (
     <AnimatedBlurView
       animatedProps={animatedProps}
-      style={[a.absolute, a.inset_0]}>
+      style={[a.absolute, a.inset_0]}
+      tint={
+        t.scheme === 'light'
+          ? 'systemThinMaterialLight'
+          : 'systemThinMaterialDark'
+      }>
       <Pressable
         style={a.flex_1}
         accessibilityLabel={_(msg`Close menu`)}
