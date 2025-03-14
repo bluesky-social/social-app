@@ -15,7 +15,7 @@ const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 
 export function Backdrop({
   animation,
-  intensity = 30,
+  intensity = 50,
   onPress,
 }: {
   animation: SharedValue<number>

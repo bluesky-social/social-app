@@ -13,6 +13,7 @@ import Animated, {
   clamp,
   interpolate,
   runOnJS,
+  SharedValue,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -58,6 +59,8 @@ export {
 
 const {Provider: PortalProvider, Outlet, Portal} = createPortalGroup()
 
+const AnimatedImage = Animated.createAnimatedComponent(Image)
+
 const SPRING: WithSpringConfig = {
   mass: isIOS ? 1.25 : 0.75,
   damping: 150,
@@ -96,6 +99,7 @@ export function Root({children}: {children: React.ReactNode}) {
         animationSV.set(
           withTiming(0, {duration: 150}, finished => {
             if (finished) {
+              translationSV.set(0)
               runOnJS(clearMeasurement)()
             }
           }),
@@ -160,6 +164,8 @@ export function Trigger({children, label, style}: TriggerProps) {
     pressAndHoldGesture,
   )
 
+  const {translationSV, animationSV} = context
+
   const measurement = context.measurement || pendingMeasurement
 
   return (
@@ -191,6 +197,8 @@ export function Trigger({children, label, style}: TriggerProps) {
       {isFocused && image && measurement && (
         <Portal>
           <TriggerClone
+            translation={translationSV}
+            animation={animationSV}
             image={image}
             measurement={measurement}
             onDisplay={() => {
@@ -210,21 +218,27 @@ export function Trigger({children, label, style}: TriggerProps) {
  * an image of the underlying trigger with a grow animation
  */
 function TriggerClone({
+  translation,
+  animation,
   image,
   measurement,
   onDisplay,
 }: {
+  translation: SharedValue<number>
+  animation: SharedValue<number>
   image: string
   measurement: Measurement
   onDisplay: () => void
 }) {
   const {_} = useLingui()
 
+  const animatedStyles = useAnimatedStyle(() => ({
+    transform: [{translateY: translation.get() * animation.get()}],
+  }))
+
   return (
-    <Image
-      onDisplay={() => {
-        onDisplay()
-      }}
+    <AnimatedImage
+      onDisplay={onDisplay}
       source={image}
       style={[
         a.absolute,
@@ -235,6 +249,7 @@ function TriggerClone({
           height: measurement.height,
         },
         a.z_10,
+        animatedStyles,
       ]}
       accessibilityLabel={_(msg`Context menu trigger`)}
       accessibilityHint={_(msg`The item that just triggered the context menu.`)}
@@ -257,6 +272,11 @@ export function Outer({
   const {width: screenWidth, height: screenHeight} = useWindowDimensions()
   const insets = useSafeAreaInsets()
   const [hasBeenMeasured, setHasBeenMeasured] = useState(false)
+
+  // reset when context menu is closed
+  if (hasBeenMeasured && !context.isOpen) {
+    setHasBeenMeasured(false)
+  }
 
   const {animationSV, translationSV} = context
 
@@ -287,7 +307,7 @@ export function Outer({
     [context.measurement, screenHeight, insets, translationSV],
   )
 
-  if (!context.measurement) return null
+  if (!context.isOpen || !context.measurement) return null
 
   return (
     <Portal>
@@ -298,6 +318,7 @@ export function Outer({
           style={[
             a.rounded_md,
             a.shadow_md,
+            t.atoms.bg_contrast_25,
             a.mt_xs,
             a.w_full,
             a.z_10,
