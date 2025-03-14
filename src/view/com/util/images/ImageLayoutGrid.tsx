@@ -3,8 +3,8 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {AppBskyEmbedImages} from '@atproto/api'
 
 import {HandleRef, useHandleRef} from '#/lib/hooks/useHandleRef'
-import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
 import {atoms as a, useBreakpoints} from '#/alf'
+import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {Dimensions} from '../../lightbox/ImageViewing/@types'
 import {GalleryItem} from './Gallery'
 

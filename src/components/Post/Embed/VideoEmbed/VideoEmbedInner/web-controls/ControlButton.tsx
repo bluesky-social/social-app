@@ -1,8 +1,8 @@
 import React from 'react'
 import {SvgProps} from 'react-native-svg'
 
+import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {atoms as a, useTheme, web} from '#/alf'
-import {PressableWithHover} from '../../../PressableWithHover'
 
 export function ControlButton({
   active,
