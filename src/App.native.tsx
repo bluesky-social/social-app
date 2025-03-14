@@ -65,6 +65,7 @@ import * as Toast from '#/view/com/util/Toast'
 import {Shell} from '#/view/shell'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
+import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
@@ -216,7 +217,9 @@ function App() {
                                 <SafeAreaProvider
                                   initialMetrics={initialWindowMetrics}>
                                   <LightStatusBarProvider>
-                                    <InnerApp />
+                                    <ContextMenuProvider>
+                                      <InnerApp />
+                                    </ContextMenuProvider>
                                   </LightStatusBarProvider>
                                 </SafeAreaProvider>
                               </StarterPackProvider>
