@@ -270,7 +270,7 @@ let ProfileMenu = ({
                 )}
                 <Menu.Item
                   testID="profileHeaderDropdownListAddRemoveBtn"
-                  label={_(msg`Add to Lists`)}
+                  label={_(msg`Add to lists`)}
                   onPress={onPressAddRemoveLists}>
                   <Menu.ItemText>
                     <Trans>Add to lists</Trans>

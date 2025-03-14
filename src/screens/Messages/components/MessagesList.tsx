@@ -1,4 +1,4 @@
-import React, {useCallback, useRef} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {LayoutChangeEvent, View} from 'react-native'
 import {useKeyboardHandler} from 'react-native-keyboard-controller'
 import Animated, {
@@ -25,8 +25,12 @@ import {
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {isWeb} from '#/platform/detection'
-import {isConvoActive, useConvoActive} from '#/state/messages/convo'
-import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
+import {
+  ActiveConvoStates,
+  isConvoActive,
+  useConvoActive,
+} from '#/state/messages/convo'
+import {ConvoItem, ConvoState, ConvoStatus} from '#/state/messages/convo/types'
 import {useGetPost} from '#/state/queries/post'
 import {useAgent} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
@@ -100,16 +104,15 @@ export function MessagesList({
 
   const flatListRef = useAnimatedRef<ListMethods>()
 
-  const [newMessagesPill, setNewMessagesPill] = React.useState({
+  const [newMessagesPill, setNewMessagesPill] = useState({
     show: false,
     startContentOffset: 0,
   })
 
-  const [emojiPickerState, setEmojiPickerState] =
-    React.useState<EmojiPickerState>({
-      isOpen: false,
-      pos: {top: 0, left: 0, right: 0, bottom: 0, nextFocusRef: null},
-    })
+  const [emojiPickerState, setEmojiPickerState] = useState<EmojiPickerState>({
+    isOpen: false,
+    pos: {top: 0, left: 0, right: 0, bottom: 0, nextFocusRef: null},
+  })
 
   // We need to keep track of when the scroll offset is at the bottom of the list to know when to scroll as new items
   // are added to the list. For example, if the user is scrolled up to 1iew older messages, we don't want to scroll to
@@ -126,8 +129,8 @@ export function MessagesList({
 
   // -- Keep track of background state and positioning for new pill
   const layoutHeight = useSharedValue(0)
-  const didBackground = React.useRef(false)
-  React.useEffect(() => {
+  const didBackground = useRef(false)
+  useEffect(() => {
     if (convoState.status === ConvoStatus.Backgrounded) {
       didBackground.current = true
     }
@@ -218,7 +221,7 @@ export function MessagesList({
     }
   }, [convoState, hasScrolled, layoutHeight])
 
-  const onScroll = React.useCallback(
+  const onScroll = useCallback(
     (e: ReanimatedScrollEvent) => {
       'worklet'
       layoutHeight.set(e.layoutMeasurement.height)
@@ -376,7 +379,7 @@ export function MessagesList({
   )
 
   // -- List layout changes (opening emoji keyboard, etc.)
-  const onListLayout = React.useCallback(
+  const onListLayout = useCallback(
     (e: LayoutChangeEvent) => {
       layoutHeight.set(e.nativeEvent.layout.height)
 
@@ -395,12 +398,16 @@ export function MessagesList({
     ],
   )
 
-  const scrollToEndOnPress = React.useCallback(() => {
+  const scrollToEndOnPress = useCallback(() => {
     flatListRef.current?.scrollToOffset({
       offset: prevContentHeight.current,
       animated: true,
     })
   }, [flatListRef])
+
+  const onOpenEmojiPicker = useCallback((pos: any) => {
+    setEmojiPickerState({isOpen: true, pos})
+  }, [])
 
   return (
     <>
@@ -440,41 +447,17 @@ export function MessagesList({
         ) : blocked ? (
           footer
         ) : (
-          isConvoActive(convoState) &&
-          !convoState.isFetchingHistory && (
-            <>
-              {convoState.items.length === 0 ? (
-                <>
-                  <ChatEmptyPill />
-                  <MessageInput
-                    onSendMessage={onSendMessage}
-                    hasEmbed={!!embedUri}
-                    setEmbed={setEmbed}
-                    openEmojiPicker={pos =>
-                      setEmojiPickerState({isOpen: true, pos})
-                    }>
-                    <MessageInputEmbed
-                      embedUri={embedUri}
-                      setEmbed={setEmbed}
-                    />
-                  </MessageInput>
-                </>
-              ) : convoState.convo.status === 'request' &&
-                !hasAcceptOverride ? (
-                <ChatStatusInfo convoState={convoState} />
-              ) : (
-                <MessageInput
-                  onSendMessage={onSendMessage}
-                  hasEmbed={!!embedUri}
-                  setEmbed={setEmbed}
-                  openEmojiPicker={pos =>
-                    setEmojiPickerState({isOpen: true, pos})
-                  }>
-                  <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
-                </MessageInput>
-              )}
-            </>
-          )
+          <ConversationFooter
+            convoState={convoState}
+            hasAcceptOverride={hasAcceptOverride}>
+            <MessageInput
+              onSendMessage={onSendMessage}
+              hasEmbed={!!embedUri}
+              setEmbed={setEmbed}
+              openEmojiPicker={onOpenEmojiPicker}>
+              <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
+            </MessageInput>
+          </ConversationFooter>
         )}
       </Animated.View>
 
@@ -489,4 +472,57 @@ export function MessagesList({
       {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
     </>
   )
+}
+
+type FooterState = 'loading' | 'new-chat' | 'request' | 'standard'
+
+function getFooterState(
+  convoState: ActiveConvoStates,
+  hasAcceptOverride?: boolean,
+): FooterState {
+  if (convoState.items.length === 0) {
+    if (convoState.isFetchingHistory) {
+      return 'loading'
+    } else {
+      return 'new-chat'
+    }
+  }
+
+  if (convoState.convo.status === 'request' && !hasAcceptOverride) {
+    return 'request'
+  }
+
+  return 'standard'
+}
+
+function ConversationFooter({
+  convoState,
+  hasAcceptOverride,
+  children,
+}: {
+  convoState: ConvoState
+  hasAcceptOverride?: boolean
+  children?: React.ReactNode // message input
+}) {
+  if (!isConvoActive(convoState)) {
+    return null
+  }
+
+  const footerState = getFooterState(convoState, hasAcceptOverride)
+
+  switch (footerState) {
+    case 'loading':
+      return null
+    case 'new-chat':
+      return (
+        <>
+          <ChatEmptyPill />
+          {children}
+        </>
+      )
+    case 'request':
+      return <ChatStatusInfo convoState={convoState} />
+    case 'standard':
+      return children
+  }
 }
