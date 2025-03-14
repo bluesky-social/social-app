@@ -8,7 +8,11 @@ import {
   ViewStyle,
 } from 'react-native'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
-import Animated, {runOnJS} from 'react-native-reanimated'
+import {runOnJS} from 'react-native-reanimated'
+import {captureRef} from 'react-native-view-shot'
+import {Image} from 'expo-image'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useIsFocused} from '@react-navigation/native'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
@@ -76,13 +80,25 @@ export function Trigger({children, label, style}: TriggerProps) {
   const context = useContextMenuContext()
   const playHaptic = useHaptics()
   const ref = useRef<View>(null)
+  const {_} = useLingui()
+  const isFocused = useIsFocused()
+  const [image, setImage] = useState<string | null>(null)
+  const [pendingMeasurement, setPendingMeasurement] =
+    useState<Measurement | null>(null)
 
-  const open = useNonReactiveCallback(() => {
+  const open = useNonReactiveCallback(async () => {
     playHaptic()
     Keyboard.dismiss()
-    ref.current?.measure((x, y, width, height, pageX, pageY) =>
-      context.open({x, y, width, height, pageX, pageY}),
-    )
+    const [measurement, capture] = await Promise.all([
+      new Promise<Measurement>(resolve => {
+        ref.current?.measureInWindow((x, y, width, height) =>
+          resolve({x, y, width, height}),
+        )
+      }),
+      captureRef(ref, {result: 'data-uri'}),
+    ])
+    setImage(capture)
+    setPendingMeasurement(measurement)
   })
 
   const doubleTapGesture = useMemo(() => {
@@ -106,7 +122,7 @@ export function Trigger({children, label, style}: TriggerProps) {
     pressAndHoldGesture,
   )
 
-  console.log(context.measurement)
+  const measurement = context.measurement || pendingMeasurement
 
   return (
     <>
@@ -134,40 +150,33 @@ export function Trigger({children, label, style}: TriggerProps) {
           })}
         </View>
       </GestureDetector>
-      {context.isOpen && context.measurement && (
+      {isFocused && image && measurement && (
         <Portal>
-          <Animated.View
+          <Image
+            onDisplay={() => {
+              console.log('Image displayed')
+              if (pendingMeasurement) {
+                context.open(pendingMeasurement)
+                setPendingMeasurement(null)
+              }
+            }}
+            source={image}
             style={[
               a.absolute,
               {
-                top: context.measurement.pageY,
-                left: context.measurement.pageX,
-                width: context.measurement.width,
-                height: context.measurement.height,
+                top: measurement.y,
+                left: measurement.x,
+                width: measurement.width,
+                height: measurement.height,
               },
               a.z_10,
-            ]}>
-            {children({
-              isNative: true,
-              control: {isOpen: context.isOpen, open},
-              state: {
-                pressed: false,
-                hovered: false,
-                focused: false,
-              },
-              props: {
-                ref: null,
-                onPress: null,
-                onFocus: null,
-                onBlur: null,
-                onPressIn: null,
-                onPressOut: null,
-                accessibilityHint: null,
-                accessibilityLabel: label,
-                accessibilityRole: null,
-              },
-            })}
-          </Animated.View>
+            ]}
+            accessibilityLabel={_(msg`Context menu trigger`)}
+            accessibilityHint={_(
+              msg`The item that just triggered the context menu.`,
+            )}
+            accessibilityIgnoresInvertColors={false}
+          />
         </Portal>
       )}
     </>
@@ -196,43 +205,49 @@ export function Outer({
         <View
           style={[
             a.rounded_md,
-            a.overflow_hidden,
-            a.border,
-            t.atoms.border_contrast_low,
-            a.shadow_lg,
+            a.shadow_md,
             a.mt_xs,
             a.w_full,
             {maxWidth: '60%'},
             a.absolute,
-            {top: context.measurement.pageY + context.measurement.height},
+            {top: context.measurement.y + context.measurement.height},
             a.z_10,
             align === 'left'
-              ? {left: context.measurement.pageX}
+              ? {left: context.measurement.x}
               : {
                   right:
                     screenWidth -
-                    context.measurement.pageX -
+                    context.measurement.x -
                     context.measurement.width,
                 },
             style,
           ]}>
-          {flattenReactChildren(children).map((child, i) => {
-            return React.isValidElement(child) &&
-              (child.type === Item || child.type === Divider) ? (
-              <React.Fragment key={i}>
-                {i > 0 ? (
-                  <View style={[a.border_b, t.atoms.border_contrast_low]} />
-                ) : null}
-                {React.cloneElement(child, {
-                  // @ts-ignore
-                  style: {
-                    borderRadius: 0,
-                    borderWidth: 0,
-                  },
-                })}
-              </React.Fragment>
-            ) : null
-          })}
+          <View
+            style={[
+              a.flex_1,
+              a.rounded_md,
+              a.overflow_hidden,
+              a.border,
+              t.atoms.border_contrast_low,
+            ]}>
+            {flattenReactChildren(children).map((child, i) => {
+              return React.isValidElement(child) &&
+                (child.type === Item || child.type === Divider) ? (
+                <React.Fragment key={i}>
+                  {i > 0 ? (
+                    <View style={[a.border_b, t.atoms.border_contrast_low]} />
+                  ) : null}
+                  {React.cloneElement(child, {
+                    // @ts-ignore
+                    style: {
+                      borderRadius: 0,
+                      borderWidth: 0,
+                    },
+                  })}
+                </React.Fragment>
+              ) : null
+            })}
+          </View>
         </View>
       </Context.Provider>
     </Portal>

@@ -16,8 +16,6 @@ export type Measurement = {
   y: number
   width: number
   height: number
-  pageX: number
-  pageY: number
 }
 
 export type ContextType = {
