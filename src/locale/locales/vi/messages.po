@@ -3350,7 +3350,7 @@ msgstr "Bắt đầu"
 msgid "Getting started"
 msgstr "Bắt đầu"
 
-#: src/components/MediaPreview.tsx:108
+#: src/components/MediaPreview.tsx:116
 msgid "GIF"
 msgstr "GIF"
 
@@ -6939,8 +6939,8 @@ msgstr "Có lỗi xảy ra. Xin vui lòng thử lại."
 msgid "Something wrong? Let us know."
 msgstr "Có gì không đúng? Hãy cho chúng tôi biết."
 
-#: src/App.native.tsx:121
-#: src/App.web.tsx:97
+#: src/App.native.tsx:122
+#: src/App.web.tsx:98
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr "Sử dụng để đăng nhập vào ứng dụng khác cùng với tên người d...ùng của bạn."
 
@@ -9032,4 +9032,3 @@ msgstr "Báo cáo của bạn sẽ được gửi tới <0>{0}</0>."
 #: src/components/dms/ReportDialog.tsx:200
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "Báo cáo của bạn sẽ được gởi đến dịch vụ kiểm duyệt của Bluesky"
-

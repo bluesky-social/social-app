@@ -3350,7 +3350,7 @@ msgstr "시작하기"
 msgid "Getting started"
 msgstr "시작하기"
 
-#: src/components/MediaPreview.tsx:108
+#: src/components/MediaPreview.tsx:116
 msgid "GIF"
 msgstr "GIF"
 
@@ -6939,8 +6939,8 @@ msgstr "알 수 없는 오류가 발생했습니다. 다시 시도해 주세요.
 msgid "Something wrong? Let us know."
 msgstr "문제가 발생했나요? 저희에게 알려주세요."
 
-#: src/App.native.tsx:121
-#: src/App.web.tsx:97
+#: src/App.native.tsx:122
+#: src/App.web.tsx:98
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr "죄송합니다. 세션이 만료되었습니다. 다시 로그인해 주세요."
 
@@ -9032,4 +9032,3 @@ msgstr "신고를 <0>{0}</0>에게 보냅니다."
 #: src/components/dms/ReportDialog.tsx:200
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "신고를 Bluesky Moderation Service에게 보냅니다."
-

@@ -3350,7 +3350,7 @@ msgstr "Comença"
 msgid "Getting started"
 msgstr "Començant"
 
-#: src/components/MediaPreview.tsx:108
+#: src/components/MediaPreview.tsx:116
 msgid "GIF"
 msgstr "GIF"
 
@@ -6939,8 +6939,8 @@ msgstr "Alguna cosa ha fallat, torna-ho a provar."
 msgid "Something wrong? Let us know."
 msgstr "Alguna cosa no va a l'hora? Fes-nos-ho saber."
 
-#: src/App.native.tsx:121
-#: src/App.web.tsx:97
+#: src/App.native.tsx:122
+#: src/App.web.tsx:98
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr "La teva sessió ha caducat. Torna a iniciar-la."
 
@@ -9032,4 +9032,3 @@ msgstr "El teu informe s'enviarà a <0>{0}</0>."
 #: src/components/dms/ReportDialog.tsx:200
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "El teu informe s'enviarà al servei de moderació de Bluesky"
-

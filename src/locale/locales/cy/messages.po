@@ -3350,7 +3350,7 @@ msgstr "Cychwyn Arni"
 msgid "Getting started"
 msgstr "Dechrau arni"
 
-#: src/components/MediaPreview.tsx:108
+#: src/components/MediaPreview.tsx:116
 msgid "GIF"
 msgstr "GIF"
 
@@ -6939,8 +6939,8 @@ msgstr "Aeth rhywbeth o'i le. Ceisiwch eto."
 msgid "Something wrong? Let us know."
 msgstr "Rhywbeth o'i le? Rhowch wybod i ni."
 
-#: src/App.native.tsx:121
-#: src/App.web.tsx:97
+#: src/App.native.tsx:122
+#: src/App.web.tsx:98
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr "Sori! Daeth eich sesiwn i ben. Mewngofnodwch eto."
 
@@ -9032,4 +9032,3 @@ msgstr "Bydd eich adroddiad yn cael ei anfon at <0>{0}</0>."
 #: src/components/dms/ReportDialog.tsx:200
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "Bydd eich adroddiad yn cael ei anfon at Wasanaeth Cymedroli Bluesky"
-

@@ -3350,7 +3350,7 @@ msgstr "Gyorstalpaló"
 msgid "Getting started"
 msgstr "Gyorstalpaló"
 
-#: src/components/MediaPreview.tsx:108
+#: src/components/MediaPreview.tsx:116
 msgid "GIF"
 msgstr "GIF"
 
@@ -6939,8 +6939,8 @@ msgstr "Valami balul sült el. Próbáld újra!"
 msgid "Something wrong? Let us know."
 msgstr "Valami nem stimmel? Vedd fel velünk a kapcsolatot!"
 
-#: src/App.native.tsx:121
-#: src/App.web.tsx:97
+#: src/App.native.tsx:122
+#: src/App.web.tsx:98
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr "Sajnáljuk, de lejárt a munkameneted. Jelentkezz be újra!"
 
@@ -7170,7 +7170,8 @@ msgstr "Feladat teljesítve – 10 kedvelés!"
 
 #: src/components/ProgressGuide/List.tsx:64
 msgid "Teach our algorithm what you like"
-msgstr "Tanítsd meg az algoritmusnak,\n"
+msgstr ""
+"Tanítsd meg az algoritmusnak,\n"
 "hogy mit szeretnél látni!"
 
 #: src/screens/Onboarding/index.tsx:36
@@ -9033,4 +9034,3 @@ msgstr "A jelentés címzettje: <0>{0}</0>."
 #: src/components/dms/ReportDialog.tsx:200
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "Ez a jelentés a Bluesky moderálási szolgáltatásának lesz elküldve"
-
