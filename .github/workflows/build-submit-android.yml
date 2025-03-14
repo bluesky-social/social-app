@@ -70,8 +70,14 @@ jobs:
           echo "BITDRIFT_API_KEY=${{ secrets.BITDRIFT_API_KEY }}" >> .env
           echo "$json" > google-services.json
 
+      - name: Setup Sentry vars for build-time injection
+        id: sentry
+        run: |
+          echo "SENTRY_DIST=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          echo "SENTRY_RELEASE=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
+
       - name: 🏗️ EAS Build
-        run: yarn use-build-number-with-bump eas build -p android --profile ${{ inputs.profile || 'testflight-android' }} --local --output build.aab --non-interactive
+        run: SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} yarn use-build-number-with-bump eas build -p android --profile ${{ inputs.profile || 'testflight-android' }} --local --output build.aab --non-interactive
 
       - name: ✍️ Rename Testflight bundle
         if: ${{ inputs.profile != 'production' }}

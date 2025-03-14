@@ -110,9 +110,15 @@ jobs:
           echo "BITDRIFT_API_KEY=${{ secrets.BITDRIFT_API_KEY }}" >> .env
           echo "$json" > google-services.json
 
+      - name: Setup Sentry vars for build-time injection
+        id: sentry
+        run: |
+          echo "SENTRY_DIST=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          echo "SENTRY_RELEASE=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
+
       - name: 🏗️ Create Bundle
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
-        run: EXPO_PUBLIC_ENV="${{ inputs.channel || 'testflight' }}" yarn export
+        run: SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} EXPO_PUBLIC_ENV="${{ inputs.channel || 'testflight' }}" yarn export
 
       - name: 📦 Package Bundle and 🚀 Deploy
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
