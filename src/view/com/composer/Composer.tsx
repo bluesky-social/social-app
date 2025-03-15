@@ -953,14 +953,14 @@ function ComposerTopBar({
                     msg({
                       message: 'Publish reply or replies',
                       comment:
-                        'Accessibility label for button when publishing a reply or thread of replies',
+                        'Accessibility label for button to publish a reply or thread of replies',
                     }),
                   )
                 : _(
                     msg({
                       message: 'Publish post or posts',
                       comment:
-                        'Accessibility label for button when publishing a post or thread of posts',
+                        'Accessibility label for button to publish a post or thread of posts',
                     }),
                   )
             }
