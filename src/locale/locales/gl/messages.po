@@ -8,7 +8,7 @@ msgstr ""
 "Language: gl\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-03-07 03:35\n"
+"PO-Revision-Date: 2025-03-14 20:32\n"
 "Last-Translator: \n"
 "Language-Team: Galician\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -407,18 +407,18 @@ msgstr "Conta"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:375
 msgctxt "toast"
 msgid "Account blocked"
-msgstr ""
+msgstr "Conta bloqueada"
 
 #: src/view/com/profile/ProfileMenu.tsx:154
 msgctxt "toast"
 msgid "Account followed"
-msgstr ""
+msgstr "Conta seguida"
 
 #: src/view/com/profile/ProfileMenu.tsx:117
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:398
 msgctxt "toast"
 msgid "Account muted"
-msgstr ""
+msgstr "Conta silenciada"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:103
 #: src/lib/moderation/useModerationCauseDescription.ts:98
@@ -441,18 +441,18 @@ msgstr "Conta elimada de acceso rápido"
 #: src/view/com/profile/ProfileMenu.tsx:131
 msgctxt "toast"
 msgid "Account unblocked"
-msgstr ""
+msgstr "Conta desbloqueada"
 
 #: src/view/com/profile/ProfileMenu.tsx:166
 msgctxt "toast"
 msgid "Account unfollowed"
-msgstr ""
+msgstr "Deixaches de seguir esta conta"
 
 #: src/view/com/profile/ProfileMenu.tsx:107
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:388
 msgctxt "toast"
 msgid "Account unmuted"
-msgstr ""
+msgstr "Conta desenmudecida"
 
 #: src/components/dialogs/MutedWords.tsx:328
 #: src/view/com/modals/ListAddRemoveUsers.tsx:269
@@ -560,13 +560,10 @@ msgstr "Engade o seguinte rexistro DNS ao teu dominio:"
 msgid "Add this feed to your feeds"
 msgstr "Engade esta canle ás túas canles"
 
+#: src/view/com/profile/ProfileMenu.tsx:273
 #: src/view/com/profile/ProfileMenu.tsx:276
 msgid "Add to lists"
 msgstr ""
-
-#: src/view/com/profile/ProfileMenu.tsx:273
-msgid "Add to Lists"
-msgstr "Engadir ás listaxes"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
 msgid "Add to my feeds"
@@ -817,7 +814,7 @@ msgstr ""
 #: src/screens/Settings/AppPasswords.tsx:147
 msgctxt "toast"
 msgid "App password deleted"
-msgstr ""
+msgstr "Contrasinal de app eliminado"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:84
 msgid "App password name must be unique"
@@ -854,7 +851,7 @@ msgstr "Apelar a etiqueta de \"{0}\""
 #: src/screens/Messages/components/ChatDisabled.tsx:91
 msgctxt "toast"
 msgid "Appeal submitted"
-msgstr ""
+msgstr "Apelación enviada"
 
 #: src/screens/Takendown.tsx:111
 #: src/screens/Takendown.tsx:144
@@ -987,7 +984,7 @@ msgstr "Reprodución auto. de vídeos e GIFs"
 msgid "Back"
 msgstr "Atrás"
 
-#: src/screens/Messages/Inbox.tsx:233
+#: src/screens/Messages/Inbox.tsx:238
 msgid "Back to Chats"
 msgstr ""
 
@@ -1318,9 +1315,9 @@ msgid "Cancels opening the linked website"
 msgstr "Cancela apertura do sitio web vinculado"
 
 #: src/state/shell/composer/index.tsx:82
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:118
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:159
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:195
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:121
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:162
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:198
 msgid "Cannot interact with a blocked user"
 msgstr "Non se pode interactuar cunha conta bloqueada"
 
@@ -1423,14 +1420,14 @@ msgid "Chat request inbox"
 msgstr ""
 
 #: src/screens/Messages/components/InboxPreview.tsx:64
-#: src/screens/Messages/Inbox.tsx:72
+#: src/screens/Messages/Inbox.tsx:77
 msgid "Chat requests"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:75
 #: src/components/dms/MessageMenu.tsx:83
 #: src/Navigation.tsx:413
-#: src/screens/Messages/ChatList.tsx:327
+#: src/screens/Messages/ChatList.tsx:328
 msgid "Chat settings"
 msgstr "Axustes da conversa"
 
@@ -1443,8 +1440,8 @@ msgctxt "toast"
 msgid "Chat unmuted"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:343
-#: src/screens/Messages/ChatList.tsx:367
+#: src/screens/Messages/ChatList.tsx:344
+#: src/screens/Messages/ChatList.tsx:368
 msgid "Chats"
 msgstr ""
 
@@ -1835,7 +1832,7 @@ msgstr "Versión de compilación copiada ao portapapeis"
 #: src/lib/sharing.ts:41
 #: src/view/com/modals/InviteCodes.tsx:153
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:246
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:394
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:397
 msgid "Copied to clipboard"
 msgstr "Copiado ao portapapeis"
 
@@ -2216,12 +2213,12 @@ msgstr "Desvincular chío da cita?"
 #: src/screens/Settings/AboutSettings.tsx:87
 msgctxt "toast"
 msgid "Developer mode disabled"
-msgstr ""
+msgstr "Modo desenvolvedor deshabilitado"
 
 #: src/screens/Settings/AboutSettings.tsx:81
 msgctxt "toast"
 msgid "Developer mode enabled"
-msgstr ""
+msgstr "Modo desenvolvedor habilitado"
 
 #: src/screens/Settings/Settings.tsx:242
 #: src/screens/Settings/Settings.tsx:245
@@ -2569,7 +2566,7 @@ msgstr "Enderezo electrónico"
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:64
 msgctxt "toast"
 msgid "Email 2FA disabled"
-msgstr ""
+msgstr "Correo 2FA deshabilitado"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:54
 msgid "Email 2FA enabled"
@@ -2587,7 +2584,7 @@ msgstr "Correo electrónico reenviado"
 #: src/view/com/modals/ChangeEmail.tsx:83
 msgctxt "toast"
 msgid "Email updated"
-msgstr ""
+msgstr "Correo electrónico actualizado"
 
 #: src/view/com/modals/ChangeEmail.tsx:106
 msgid "Email Updated"
@@ -2596,7 +2593,7 @@ msgstr "Correo electrónico actualizado"
 #: src/view/com/modals/VerifyEmail.tsx:85
 msgctxt "toast"
 msgid "Email verified"
-msgstr ""
+msgstr "Correo electrónico verificado"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:79
 msgid "Email Verified"
@@ -2946,8 +2943,8 @@ msgstr "Error ao eliminar o chío, por favor, inténtao de novo."
 msgid "Failed to delete starter pack"
 msgstr "Error ao eliminar o paquete inicial."
 
-#: src/screens/Messages/ChatList.tsx:242
-#: src/screens/Messages/Inbox.tsx:182
+#: src/screens/Messages/ChatList.tsx:243
+#: src/screens/Messages/Inbox.tsx:187
 msgid "Failed to load conversations"
 msgstr ""
 
@@ -2973,8 +2970,8 @@ msgstr "Error ao cargar as canles suxeridas."
 msgid "Failed to load suggested follows"
 msgstr "Error ao cargar as suxerencias de seguimento."
 
-#: src/screens/Messages/Inbox.tsx:290
-#: src/screens/Messages/Inbox.tsx:313
+#: src/screens/Messages/Inbox.tsx:295
+#: src/screens/Messages/Inbox.tsx:318
 msgid "Failed to mark all requests as read"
 msgstr ""
 
@@ -3053,12 +3050,12 @@ msgstr "Comentarios"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:286
 msgctxt "toast"
 msgid "Feedback sent!"
-msgstr ""
+msgstr "Comentario enviado!"
 
 #: src/Navigation.tsx:428
 #: src/screens/StarterPack/StarterPackScreen.tsx:185
 #: src/view/screens/Feeds.tsx:508
-#: src/view/screens/Profile.tsx:225
+#: src/view/screens/Profile.tsx:227
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/screens/Search/Search.tsx:531
 #: src/view/shell/desktop/LeftNav.tsx:651
@@ -3074,7 +3071,7 @@ msgstr "As canles son algoritmos personalizados que as persoas constrúen cun po
 #: src/view/screens/SavedFeeds.tsx:82
 msgctxt "toast"
 msgid "Feeds updated!"
-msgstr ""
+msgstr "Canles actualizadas!"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:63
 msgid "Feeds we think you might like."
@@ -3353,7 +3350,7 @@ msgstr "Comezar"
 msgid "Getting started"
 msgstr "Comezando"
 
-#: src/components/MediaPreview.tsx:108
+#: src/components/MediaPreview.tsx:116
 msgid "GIF"
 msgstr "GIF"
 
@@ -3369,7 +3366,7 @@ msgstr "Violacións flagrantes da Lei ou dos Termos de servizo"
 #: src/components/Layout/Header/index.tsx:126
 #: src/components/moderation/ScreenHider.tsx:154
 #: src/components/moderation/ScreenHider.tsx:163
-#: src/screens/Messages/Inbox.tsx:223
+#: src/screens/Messages/Inbox.tsx:228
 #: src/screens/Profile/ProfileFeed/index.tsx:89
 #: src/screens/VideoFeed/components/Header.tsx:163
 #: src/screens/VideoFeed/index.tsx:1108
@@ -3724,7 +3721,7 @@ msgid "Inappropriate messages or explicit links"
 msgstr "Mensaxes inapropiadas ou ligazóns explícitas"
 
 #. Title message shown in chat requests inbox when it's empty
-#: src/screens/Messages/Inbox.tsx:203
+#: src/screens/Messages/Inbox.tsx:208
 msgid "Inbox zero!"
 msgstr ""
 
@@ -3860,7 +3857,7 @@ msgid "Labeled by the author."
 msgstr "Etiquetado pola persoa autora."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:75
-#: src/view/screens/Profile.tsx:218
+#: src/view/screens/Profile.tsx:220
 msgid "Labels"
 msgstr "Etiquetas"
 
@@ -4000,7 +3997,7 @@ msgstr "Claro"
 msgid "Like"
 msgstr ""
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:312
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:315
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -4045,7 +4042,7 @@ msgstr ""
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:224
+#: src/view/screens/Profile.tsx:226
 msgid "Likes"
 msgstr "Gústame"
 
@@ -4100,7 +4097,7 @@ msgstr "Listaxe oculta"
 #: src/view/screens/ProfileList.tsx:395
 msgctxt "toast"
 msgid "List muted"
-msgstr ""
+msgstr "Listaxe silenciada"
 
 #: src/view/com/modals/CreateOrEditList.tsx:255
 msgid "List Name"
@@ -4109,17 +4106,17 @@ msgstr "Nome da listaxe"
 #: src/view/screens/ProfileList.tsx:449
 msgctxt "toast"
 msgid "List unblocked"
-msgstr ""
+msgstr "Listaxe desbloqueada"
 
 #: src/view/screens/ProfileList.tsx:413
 msgctxt "toast"
 msgid "List unmuted"
-msgstr ""
+msgstr "A listaxe xa non está silenciada"
 
 #: src/Navigation.tsx:140
 #: src/view/screens/Lists.tsx:62
-#: src/view/screens/Profile.tsx:219
-#: src/view/screens/Profile.tsx:227
+#: src/view/screens/Profile.tsx:221
+#: src/view/screens/Profile.tsx:229
 #: src/view/shell/desktop/LeftNav.tsx:669
 #: src/view/shell/Drawer.tsx:501
 msgid "Lists"
@@ -4210,9 +4207,9 @@ msgstr ""
 msgid "Manage your muted words and tags"
 msgstr "Xestiona as túas palabras e etiquetas silenciadas"
 
-#: src/screens/Messages/Inbox.tsx:300
-#: src/screens/Messages/Inbox.tsx:319
-#: src/screens/Messages/Inbox.tsx:326
+#: src/screens/Messages/Inbox.tsx:305
+#: src/screens/Messages/Inbox.tsx:324
+#: src/screens/Messages/Inbox.tsx:331
 msgid "Mark all as read"
 msgstr ""
 
@@ -4221,12 +4218,12 @@ msgstr ""
 msgid "Mark as read"
 msgstr "Marcar como lido"
 
-#: src/screens/Messages/Inbox.tsx:287
-#: src/screens/Messages/Inbox.tsx:310
+#: src/screens/Messages/Inbox.tsx:292
+#: src/screens/Messages/Inbox.tsx:315
 msgid "Marked all as read"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:222
+#: src/view/screens/Profile.tsx:224
 msgid "Media"
 msgstr "Multimedia"
 
@@ -4323,12 +4320,12 @@ msgstr "Listaxe de moderación feita por ti"
 #: src/view/com/modals/CreateOrEditList.tsx:177
 msgctxt "toast"
 msgid "Moderation list created"
-msgstr ""
+msgstr "Listaxe de moderación creada"
 
 #: src/view/com/modals/CreateOrEditList.tsx:163
 msgctxt "toast"
 msgid "Moderation list updated"
-msgstr ""
+msgstr "Listaxe de moderación actualizada"
 
 #: src/screens/Moderation/index.tsx:239
 msgid "Moderation lists"
@@ -4558,8 +4555,8 @@ msgid "New"
 msgstr "Novo"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:65
-#: src/screens/Messages/ChatList.tsx:350
-#: src/screens/Messages/ChatList.tsx:357
+#: src/screens/Messages/ChatList.tsx:351
+#: src/screens/Messages/ChatList.tsx:358
 msgid "New chat"
 msgstr "Novo chat"
 
@@ -4593,7 +4590,7 @@ msgstr "Novo Contrasinal"
 #: src/screens/Profile/ProfileFeed/index.tsx:238
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
-#: src/view/screens/Profile.tsx:505
+#: src/view/screens/Profile.tsx:507
 #: src/view/screens/ProfileList.tsx:253
 #: src/view/screens/ProfileList.tsx:286
 msgid "New post"
@@ -4787,7 +4784,7 @@ msgstr "Non neste momento"
 
 #: src/view/com/profile/ProfileMenu.tsx:406
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:774
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:358
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:361
 msgid "Note about sharing"
 msgstr "Nota sobre compartir"
 
@@ -4795,7 +4792,7 @@ msgstr "Nota sobre compartir"
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "Nota: Bluesky é unha rede aberta e pública. Esta configuración só limita a visibilidade do teu contido na aplicación e no sitio web de Bluesky, e é posíbel que outras aplicacións non respecten esta configuración. O teu contido aínda se pode mostrar ás persoas que pecharon sesión por outras aplicacións e sitios web."
 
-#: src/screens/Messages/ChatList.tsx:263
+#: src/screens/Messages/ChatList.tsx:264
 msgid "Nothing here"
 msgstr "Non hai nada aquí"
 
@@ -5427,7 +5424,7 @@ msgstr "Chío de @{0}"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:186
 msgctxt "toast"
 msgid "Post deleted"
-msgstr ""
+msgstr "Chío eliminado"
 
 #: src/lib/api/index.ts:186
 msgid "Post failed to upload. Please check your Internet connection and try again."
@@ -5476,15 +5473,15 @@ msgstr "Non se encontrou o chío"
 #: src/state/queries/pinned-post.ts:59
 msgctxt "toast"
 msgid "Post pinned"
-msgstr ""
+msgstr "Chío fixado"
 
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
 msgid "Post unpinned"
-msgstr ""
+msgstr "Chío desfixado"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:186
-#: src/view/screens/Profile.tsx:220
+#: src/view/screens/Profile.tsx:222
 msgid "Posts"
 msgstr "Chíos"
 
@@ -5503,7 +5500,7 @@ msgstr "Ligazón potencialmente enganosa"
 #: src/state/queries/notifications/settings.ts:44
 msgctxt "toast"
 msgid "Preference saved"
-msgstr ""
+msgstr "Preferencias gardadas"
 
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
@@ -5571,7 +5568,7 @@ msgid "Processing..."
 msgstr "Procesando..."
 
 #: src/view/screens/DebugMod.tsx:920
-#: src/view/screens/Profile.tsx:359
+#: src/view/screens/Profile.tsx:361
 msgid "profile"
 msgstr "perfil"
 
@@ -5586,7 +5583,7 @@ msgstr "Perfil"
 #: src/view/com/modals/EditProfile.tsx:124
 msgctxt "toast"
 msgid "Profile updated"
-msgstr ""
+msgstr "Perfil actualizado"
 
 #: src/screens/Onboarding/StepFinished.tsx:264
 msgid "Public"
@@ -5718,8 +5715,8 @@ msgstr ""
 msgid "Reject chat request"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:246
-#: src/screens/Messages/Inbox.tsx:186
+#: src/screens/Messages/ChatList.tsx:247
+#: src/screens/Messages/Inbox.tsx:191
 msgid "Reload conversations"
 msgstr "Recargar as conversas"
 
@@ -5790,6 +5787,7 @@ msgid "Remove from quick access?"
 msgstr "Eliminar o acceso rápido?"
 
 #: src/screens/List/ListHiddenScreen.tsx:170
+#: src/screens/List/ListHiddenScreen.tsx:174
 msgid "Remove from saved feeds"
 msgstr "Eliminar das canles gardadas"
 
@@ -5845,7 +5843,6 @@ msgid "Removed from my feeds"
 msgstr "Eliminado das miñas canles"
 
 #: src/screens/List/ListHiddenScreen.tsx:94
-#: src/screens/List/ListHiddenScreen.tsx:174
 msgid "Removed from saved feeds"
 msgstr "Eliminado das miñas canles gardadas"
 
@@ -5868,7 +5865,7 @@ msgstr "Eliminar o chío citado"
 msgid "Replace with Discover"
 msgstr "Substitúeo por Discover"
 
-#: src/view/screens/Profile.tsx:221
+#: src/view/screens/Profile.tsx:223
 msgid "Replies"
 msgstr "Respostas"
 
@@ -5885,7 +5882,7 @@ msgctxt "action"
 msgid "Reply"
 msgstr "Responder"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:264
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:267
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr ""
 
@@ -5936,7 +5933,7 @@ msgstr "Responderche"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:346
 msgctxt "toast"
 msgid "Reply visibility updated"
-msgstr ""
+msgstr "Visibilidade da resposta actualizada"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:345
 msgid "Reply was successfully hidden"
@@ -6148,9 +6145,9 @@ msgstr "Tenta de novo a última acción, que errou"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:334
 #: src/screens/Login/LoginForm.tsx:323
 #: src/screens/Login/LoginForm.tsx:330
-#: src/screens/Messages/ChatList.tsx:252
+#: src/screens/Messages/ChatList.tsx:253
 #: src/screens/Messages/components/MessageListError.tsx:25
-#: src/screens/Messages/Inbox.tsx:192
+#: src/screens/Messages/Inbox.tsx:197
 #: src/screens/Onboarding/StepInterests/index.tsx:217
 #: src/screens/Onboarding/StepInterests/index.tsx:220
 #: src/screens/Signup/BackNextButtons.tsx:53
@@ -6596,7 +6593,7 @@ msgstr "Axustes"
 #: src/screens/ModerationInteractionSettings/index.tsx:102
 msgctxt "toast"
 msgid "Settings saved"
-msgstr ""
+msgstr "Preferencias gardadas"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Sexual activity or erotic nudity."
@@ -6615,7 +6612,7 @@ msgstr "Sexualmente suxestivo"
 #: src/view/com/profile/ProfileMenu.tsx:225
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:481
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:490
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:347
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:350
 #: src/view/screens/ProfileList.tsx:506
 msgid "Share"
 msgstr "Compartir"
@@ -6635,7 +6632,7 @@ msgstr "Comparte un dato curioso!"
 
 #: src/view/com/profile/ProfileMenu.tsx:411
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:779
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:363
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:366
 msgid "Share anyway"
 msgstr "Compartir de todas as maneiras"
 
@@ -6942,8 +6939,8 @@ msgstr ""
 msgid "Something wrong? Let us know."
 msgstr "Ocorreu un erro? Dínolo."
 
-#: src/App.native.tsx:121
-#: src/App.web.tsx:97
+#: src/App.native.tsx:122
+#: src/App.web.tsx:98
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr "Sentímolo! A túa sesión caducou. Inicia sesión de novo."
 
@@ -7022,7 +7019,7 @@ msgstr "Paquete de inicio creado por ti"
 msgid "Starter pack is invalid"
 msgstr "O paquete de inicio non é válido"
 
-#: src/view/screens/Profile.tsx:226
+#: src/view/screens/Profile.tsx:228
 msgid "Starter Packs"
 msgstr "Paquetes de inicio"
 
@@ -7332,8 +7329,8 @@ msgid "The Privacy Policy has been moved to <0/>"
 msgstr "A Política de Privacidade moveuse a <0/>"
 
 #: src/view/com/composer/state/video.ts:395
-msgid "The selected video is larger than 50MB."
-msgstr "O vídeo seleccionado pesa máis de 50 MB."
+msgid "The selected video is larger than 100 MB."
+msgstr ""
 
 #: src/lib/strings/errors.ts:18
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
@@ -7597,7 +7594,7 @@ msgid "This post has been deleted."
 msgstr "Este chío foi eliminado."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:776
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:360
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:363
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
@@ -7876,7 +7873,7 @@ msgstr ""
 msgid "Unlike"
 msgstr "No me gusta"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:306
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:309
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -7995,12 +7992,12 @@ msgstr "Actualizar para {domain}"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:318
 msgctxt "toast"
 msgid "Updating quote attachment failed"
-msgstr ""
+msgstr "Produciuse un erro ao actualizar o anexo da cotización"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:350
 msgctxt "toast"
 msgid "Updating reply visibility failed"
-msgstr ""
+msgstr "Produciuse un erro ao actualizar a visibilidade das respostas"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:190
 msgid "Updating..."
@@ -8122,12 +8119,12 @@ msgstr "Listaxe de persoas por ti"
 #: src/view/com/modals/CreateOrEditList.tsx:176
 msgctxt "toast"
 msgid "User list created"
-msgstr ""
+msgstr "Listaxe de persoas creada"
 
 #: src/view/com/modals/CreateOrEditList.tsx:162
 msgctxt "toast"
 msgid "User list updated"
-msgstr ""
+msgstr "Listaxe de persoas actualizada"
 
 #: src/screens/Login/LoginForm.tsx:201
 msgid "Username or email address"
@@ -8251,7 +8248,7 @@ msgstr "Vídeo cargado"
 msgid "Video: {0}"
 msgstr "Vídeo: {0}"
 
-#: src/view/screens/Profile.tsx:223
+#: src/view/screens/Profile.tsx:225
 msgid "Videos"
 msgstr "Vídeos"
 
@@ -8521,8 +8518,8 @@ msgid "Who can reply"
 msgstr "Quen pode responder"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
-#: src/screens/Messages/ChatList.tsx:230
-#: src/screens/Messages/Inbox.tsx:171
+#: src/screens/Messages/ChatList.tsx:231
+#: src/screens/Messages/Inbox.tsx:176
 msgid "Whoops!"
 msgstr "Vaia!"
 
@@ -8627,7 +8624,7 @@ msgstr "Ti"
 
 #: src/components/forms/HostingProvider.tsx:46
 msgid "You are creating an account on"
-msgstr ""
+msgstr "Estás a crear unha conta en"
 
 #: src/screens/SignupQueued.tsx:157
 msgid "You are in line."
@@ -8682,7 +8679,7 @@ msgstr "Non tes a ninguén que te siga."
 msgid "You don't follow any users who follow @{name}."
 msgstr "Non segues a ningunha persoa que siga a @{name}."
 
-#: src/screens/Messages/Inbox.tsx:215
+#: src/screens/Messages/Inbox.tsx:220
 msgid "You don't have any chat requests at the moment."
 msgstr ""
 
@@ -8736,7 +8733,7 @@ msgstr "Silenciaches esta conta."
 msgid "You have muted this user"
 msgstr "Silenciaches esta persoas"
 
-#: src/screens/Messages/ChatList.tsx:273
+#: src/screens/Messages/ChatList.tsx:274
 msgid "You have no conversations yet. Start one!"
 msgstr "Non tes ningunha conversa. Comeza a parolar!"
 
