@@ -49,7 +49,7 @@ import {
   RichText,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -831,7 +831,9 @@ let ComposerPost = React.memo(function ComposerPost({
           accessible={true}
           accessibilityLabel={_(msg`Write post`)}
           accessibilityHint={_(
-            msg`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`,
+            msg`Compose posts up to ${plural(MAX_GRAPHEME_LENGTH || 0, {
+              other: '# characters',
+            })} in length`,
           )}
         />
       </View>
@@ -913,20 +915,23 @@ function ComposerTopBar({
   children?: React.ReactNode
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   return (
     <Animated.View
       style={topBarAnimatedStyle}
       layout={native(LinearTransition)}>
       <View style={styles.topbarInner}>
         <Button
-          label="Cancel"
+          label={_(msg`Cancel`)}
           variant="ghost"
           color="primary"
           shape="default"
           size="small"
           style={[a.rounded_full, a.py_sm, {paddingLeft: 7, paddingRight: 7}]}
           onPress={onCancel}
-          accessibilityHint="Closes post composer and discards post draft">
+          accessibilityHint={_(
+            msg`Closes post composer and discards post draft`,
+          )}>
           <ButtonText style={[a.text_md]}>
             <Trans>Cancel</Trans>
           </ButtonText>
@@ -942,7 +947,7 @@ function ComposerTopBar({
         ) : (
           <Button
             testID="composerPublishBtn"
-            label={isReply ? 'Publish reply' : 'Publish post'}
+            label={isReply ? _(msg`Publish reply`) : _(msg`Publish post`)}
             variant="solid"
             color="primary"
             shape="default"
