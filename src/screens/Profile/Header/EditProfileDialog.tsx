@@ -335,7 +335,7 @@ function DialogInner({
                 Display name is too long.{' '}
                 <Plural
                   value={DISPLAY_NAME_MAX_GRAPHEMES}
-                  other={`The maximum number of characters is ${DISPLAY_NAME_MAX_GRAPHEMES}.`}
+                  other="The maximum number of characters is #."
                 />
               </Trans>
             </TextField.SuffixText>
@@ -369,7 +369,7 @@ function DialogInner({
                 Description is too long.{' '}
                 <Plural
                   value={DESCRIPTION_MAX_GRAPHEMES}
-                  other={`The maximum number of characters is ${DESCRIPTION_MAX_GRAPHEMES}.`}
+                  other="The maximum number of characters is #."
                 />
               </Trans>
             </TextField.SuffixText>
