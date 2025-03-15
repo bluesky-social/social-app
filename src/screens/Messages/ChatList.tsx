@@ -131,7 +131,8 @@ export function MessagesScreen({navigation, route}: Props) {
           convo =>
             !leftConvos.includes(convo.id) &&
             !convo.muted &&
-            convo.unreadCount > 0,
+            convo.unreadCount > 0 &&
+            convo.members.every(member => member.handle !== 'missing.invalid'),
         ) ?? []
 
     return inbox
