@@ -1,7 +1,7 @@
 import React from 'react'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
-import {msg} from '@lingui/macro'
+import {msg, plural} from '@lingui/macro'
 
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import {useSession} from '#/state/session'
@@ -73,8 +73,9 @@ function reducer(state: State, action: Action): State {
     case 'AddProfile':
       if (state.profiles.length > STARTER_PACK_MAX_SIZE) {
         Toast.show(
-          msg`You may only add up to ${STARTER_PACK_MAX_SIZE} profiles`
-            .message ?? '',
+          msg`You may only add up to ${plural(STARTER_PACK_MAX_SIZE, {
+            other: `${STARTER_PACK_MAX_SIZE} profiles`,
+          })}`.message ?? '',
           'info',
         )
       } else {
