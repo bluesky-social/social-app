@@ -169,7 +169,7 @@ export const LANGUAGES: Language[] = [
   {code3: 'cad', code2: '', name: 'Caddo'},
   {code3: 'cai', code2: '', name: 'Central American Indian languages'},
   {code3: 'car', code2: '', name: 'Galibi Carib'},
-  {code3: 'cat', code2: 'ca', name: 'Catalan'},
+  {code3: 'cat', code2: 'ca', name: 'Catalan-Valencian'},
   {code3: 'cau', code2: '', name: 'Caucasian languages'},
   {code3: 'ceb', code2: '', name: 'Cebuano'},
   {code3: 'cel', code2: '', name: 'Celtic languages'},
