@@ -949,16 +949,20 @@ function ComposerTopBar({
             testID="composerPublishBtn"
             label={
               isReply
-                ? _msg({
-                    message: 'Publish reply or replies',
-                    comment:
-                      'Accessibility label for button when publishing a reply or thread of replies',
-                  })
-                : _msg({
-                    message: 'Publish post or posts',
-                    comment:
-                      'Accessibility label for button when publishing a post or thread of posts',
-                  })
+                ? _(
+                    msg({
+                      message: 'Publish reply or replies',
+                      comment:
+                        'Accessibility label for button when publishing a reply or thread of replies',
+                    }),
+                  )
+                : _(
+                    msg({
+                      message: 'Publish post or posts',
+                      comment:
+                        'Accessibility label for button when publishing a post or thread of posts',
+                    }),
+                  )
             }
             variant="solid"
             color="primary"
