@@ -2,7 +2,7 @@ import {useCallback, useEffect, useState} from 'react'
 import {Dimensions, View} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {AppBskyActorDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {compressIfNeeded} from '#/lib/media/manip'
@@ -332,8 +332,11 @@ function DialogInner({
               ]}
               label={_(msg`Display name is too long`)}>
               <Trans>
-                Display name is too long. The maximum number of characters is{' '}
-                {DISPLAY_NAME_MAX_GRAPHEMES}.
+                Display name is too long.{' '}
+                <Plural
+                  value={DISPLAY_NAME_MAX_GRAPHEMES}
+                  other="The maximum number of characters is #."
+                />
               </Trans>
             </TextField.SuffixText>
           )}
@@ -363,8 +366,11 @@ function DialogInner({
               ]}
               label={_(msg`Description is too long`)}>
               <Trans>
-                Description is too long. The maximum number of characters is{' '}
-                {DESCRIPTION_MAX_GRAPHEMES}.
+                Description is too long.{' '}
+                <Plural
+                  value={DESCRIPTION_MAX_GRAPHEMES}
+                  other="The maximum number of characters is #."
+                />
               </Trans>
             </TextField.SuffixText>
           )}
