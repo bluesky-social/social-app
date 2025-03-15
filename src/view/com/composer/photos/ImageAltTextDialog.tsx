@@ -137,8 +137,11 @@ const ImageAltTextInner = ({
                   t.atoms.text_contrast_medium,
                 ]}>
                 <Trans>
-                  Alt text will be truncated. Limit: {i18n.number(MAX_ALT_TEXT)}{' '}
-                  characters.
+                  Alt text will be truncated.{' '}
+                    <Plural
+                      value={MAX_ALT_TEXT}
+                      other={`Limit: ${i18n.number(MAX_ALT_TEXT)} characters.`}
+                    />
                 </Trans>
               </Text>
             </View>
