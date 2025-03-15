@@ -138,10 +138,10 @@ const ImageAltTextInner = ({
                 ]}>
                 <Trans>
                   Alt text will be truncated.{' '}
-                    <Plural
-                      value={MAX_ALT_TEXT}
-                      other={`Limit: ${i18n.number(MAX_ALT_TEXT)} characters.`}
-                    />
+                  <Plural
+                    value={MAX_ALT_TEXT}
+                    other={`Limit: ${i18n.number(MAX_ALT_TEXT)} characters.`}
+                  />
                 </Trans>
               </Text>
             </View>
