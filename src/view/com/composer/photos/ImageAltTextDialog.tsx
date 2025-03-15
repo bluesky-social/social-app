@@ -1,7 +1,7 @@
 import React from 'react'
 import {ImageStyle, useWindowDimensions, View} from 'react-native'
 import {Image} from 'expo-image'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
