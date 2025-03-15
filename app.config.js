@@ -1,7 +1,5 @@
 const pkg = require('./package.json')
 
-const DARK_SPLASH_ANDROID_BACKGROUND = '#0f141b'
-
 module.exports = function (config) {
   /**
    * App version number. Should be incremented as part of a release cycle.
@@ -140,12 +138,10 @@ module.exports = function (config) {
       },
       androidStatusBar: {
         barStyle: 'light-content',
-        backgroundColor: '#00000000',
       },
       // Dark nav bar in light mode is better than light nav bar in dark mode
       androidNavigationBar: {
         barStyle: 'light-content',
-        backgroundColor: DARK_SPLASH_ANDROID_BACKGROUND,
       },
       android: {
         icon: './assets/app-icons/android_icon_default_light.png',
@@ -197,6 +193,10 @@ module.exports = function (config) {
       plugins: [
         'expo-video',
         'expo-localization',
+        [
+          'react-native-edge-to-edge',
+          {android: {enforceNavigationBarContrast: false}},
+        ],
         USE_SENTRY && [
           '@sentry/react-native/expo',
           {
@@ -240,7 +240,7 @@ module.exports = function (config) {
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidStylesAccentColorPlugin.js',
-        './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
+        './plugins/withAndroidDayNightThemePlugin.js',
         './plugins/withAndroidNoJitpackPlugin.js',
         './plugins/withNoBundleCompression.js',
         './plugins/shareExtension/withShareExtensions.js',
