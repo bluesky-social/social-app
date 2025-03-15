@@ -8,7 +8,7 @@ msgstr ""
 "Language: hi\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-03-07 03:35\n"
+"PO-Revision-Date: 2025-03-14 20:32\n"
 "Last-Translator: \n"
 "Language-Team: Hindi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -407,18 +407,18 @@ msgstr "खाता"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:375
 msgctxt "toast"
 msgid "Account blocked"
-msgstr ""
+msgstr "खाता अवरुद्ध"
 
 #: src/view/com/profile/ProfileMenu.tsx:154
 msgctxt "toast"
 msgid "Account followed"
-msgstr ""
+msgstr "खाता फ़ॉलो किया गया"
 
 #: src/view/com/profile/ProfileMenu.tsx:117
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:398
 msgctxt "toast"
 msgid "Account muted"
-msgstr ""
+msgstr "खाता म्यूट किया गया"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:103
 #: src/lib/moderation/useModerationCauseDescription.ts:98
@@ -441,18 +441,18 @@ msgstr "जल्द पहुँच से खाता हटाया गय�
 #: src/view/com/profile/ProfileMenu.tsx:131
 msgctxt "toast"
 msgid "Account unblocked"
-msgstr ""
+msgstr "खाता अनअवरुद्ध"
 
 #: src/view/com/profile/ProfileMenu.tsx:166
 msgctxt "toast"
 msgid "Account unfollowed"
-msgstr ""
+msgstr "खाता अनफ़ॉलो किया गया"
 
 #: src/view/com/profile/ProfileMenu.tsx:107
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:388
 msgctxt "toast"
 msgid "Account unmuted"
-msgstr ""
+msgstr "खाता अनम्यूट किया गया"
 
 #: src/components/dialogs/MutedWords.tsx:328
 #: src/view/com/modals/ListAddRemoveUsers.tsx:269
@@ -560,12 +560,9 @@ msgstr "अपने डोमेन में निम्नलिखित DN
 msgid "Add this feed to your feeds"
 msgstr "आपके फ़ीड मे यह फ़ीड जोड़ें"
 
+#: src/view/com/profile/ProfileMenu.tsx:273
 #: src/view/com/profile/ProfileMenu.tsx:276
 msgid "Add to lists"
-msgstr "सूचियों में जोड़ें"
-
-#: src/view/com/profile/ProfileMenu.tsx:273
-msgid "Add to Lists"
 msgstr "सूचियों में जोड़ें"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
@@ -817,7 +814,7 @@ msgstr "ऐप पासवर्ड"
 #: src/screens/Settings/AppPasswords.tsx:147
 msgctxt "toast"
 msgid "App password deleted"
-msgstr ""
+msgstr "ऐप पासवर्ड मिटाया गया"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:84
 msgid "App password name must be unique"
@@ -854,7 +851,7 @@ msgstr "\"{0}\" लेबल पर अपील करें"
 #: src/screens/Messages/components/ChatDisabled.tsx:91
 msgctxt "toast"
 msgid "Appeal submitted"
-msgstr ""
+msgstr "अपील जमा हुई"
 
 #: src/screens/Takendown.tsx:111
 #: src/screens/Takendown.tsx:144
@@ -987,7 +984,7 @@ msgstr "वीडियो और GIF स्वतः चलाएँ"
 msgid "Back"
 msgstr "वापस"
 
-#: src/screens/Messages/Inbox.tsx:233
+#: src/screens/Messages/Inbox.tsx:238
 msgid "Back to Chats"
 msgstr ""
 
@@ -1318,9 +1315,9 @@ msgid "Cancels opening the linked website"
 msgstr "लिंक वेबसाइट के खोलने को रद्द करता है"
 
 #: src/state/shell/composer/index.tsx:82
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:118
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:159
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:195
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:121
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:162
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:198
 msgid "Cannot interact with a blocked user"
 msgstr "अवरुद्ध उपयोगकर्ता से संपर्क नहीं कर सकते"
 
@@ -1415,7 +1412,7 @@ msgstr ""
 #: src/components/dms/ConvoMenu.tsx:176
 msgctxt "toast"
 msgid "Chat muted"
-msgstr ""
+msgstr "बातचीत म्यूट किया गया"
 
 #: src/Navigation.tsx:418
 #: src/screens/Messages/components/InboxPreview.tsx:24
@@ -1423,14 +1420,14 @@ msgid "Chat request inbox"
 msgstr ""
 
 #: src/screens/Messages/components/InboxPreview.tsx:64
-#: src/screens/Messages/Inbox.tsx:72
+#: src/screens/Messages/Inbox.tsx:77
 msgid "Chat requests"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:75
 #: src/components/dms/MessageMenu.tsx:83
 #: src/Navigation.tsx:413
-#: src/screens/Messages/ChatList.tsx:327
+#: src/screens/Messages/ChatList.tsx:328
 msgid "Chat settings"
 msgstr "बातचीत सेटिंग"
 
@@ -1441,10 +1438,10 @@ msgstr "बातचीत सेटिंग"
 #: src/components/dms/ConvoMenu.tsx:178
 msgctxt "toast"
 msgid "Chat unmuted"
-msgstr ""
+msgstr "बातचीत अनम्यूट किया गया"
 
-#: src/screens/Messages/ChatList.tsx:343
-#: src/screens/Messages/ChatList.tsx:367
+#: src/screens/Messages/ChatList.tsx:344
+#: src/screens/Messages/ChatList.tsx:368
 msgid "Chats"
 msgstr ""
 
@@ -1835,7 +1832,7 @@ msgstr "बिल्ड संस्कारण क्लिपबोर्ड 
 #: src/lib/sharing.ts:41
 #: src/view/com/modals/InviteCodes.tsx:153
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:246
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:394
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:397
 msgid "Copied to clipboard"
 msgstr "क्लिपबोर्ड पर कॉपी की गई"
 
@@ -2216,12 +2213,12 @@ msgstr "क्वोट पोस्ट अलग करें"
 #: src/screens/Settings/AboutSettings.tsx:87
 msgctxt "toast"
 msgid "Developer mode disabled"
-msgstr ""
+msgstr "डेवलपर मोड अक्षम"
 
 #: src/screens/Settings/AboutSettings.tsx:81
 msgctxt "toast"
 msgid "Developer mode enabled"
-msgstr ""
+msgstr "डेवलपर मोड सक्षम"
 
 #: src/screens/Settings/Settings.tsx:242
 #: src/screens/Settings/Settings.tsx:245
@@ -2569,7 +2566,7 @@ msgstr "ईमेल"
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:64
 msgctxt "toast"
 msgid "Email 2FA disabled"
-msgstr ""
+msgstr "ईमेल 2FA अक्षम करें"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:54
 msgid "Email 2FA enabled"
@@ -2587,7 +2584,7 @@ msgstr "ईमेल फिर से भेजा गया"
 #: src/view/com/modals/ChangeEmail.tsx:83
 msgctxt "toast"
 msgid "Email updated"
-msgstr ""
+msgstr "ईमेल अपडेट किया गया"
 
 #: src/view/com/modals/ChangeEmail.tsx:106
 msgid "Email Updated"
@@ -2596,7 +2593,7 @@ msgstr "ईमेल अपडेट किया गया"
 #: src/view/com/modals/VerifyEmail.tsx:85
 msgctxt "toast"
 msgid "Email verified"
-msgstr ""
+msgstr "ईमेल सत्यापित किया गया"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:79
 msgid "Email Verified"
@@ -2946,8 +2943,8 @@ msgstr "पोस्ट मिटाने में असफल, फिर स
 msgid "Failed to delete starter pack"
 msgstr "स्टार्टर पैक मिटाने में असफल"
 
-#: src/screens/Messages/ChatList.tsx:242
-#: src/screens/Messages/Inbox.tsx:182
+#: src/screens/Messages/ChatList.tsx:243
+#: src/screens/Messages/Inbox.tsx:187
 msgid "Failed to load conversations"
 msgstr ""
 
@@ -2973,8 +2970,8 @@ msgstr "अनुशंसित फ़ीड लोड करने में �
 msgid "Failed to load suggested follows"
 msgstr "अनुशंसित फ़ॉलो लोड करने में असफल"
 
-#: src/screens/Messages/Inbox.tsx:290
-#: src/screens/Messages/Inbox.tsx:313
+#: src/screens/Messages/Inbox.tsx:295
+#: src/screens/Messages/Inbox.tsx:318
 msgid "Failed to mark all requests as read"
 msgstr ""
 
@@ -3053,12 +3050,12 @@ msgstr "प्रतिक्रिया"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:286
 msgctxt "toast"
 msgid "Feedback sent!"
-msgstr ""
+msgstr "प्रतिक्रिया भेजी गई!"
 
 #: src/Navigation.tsx:428
 #: src/screens/StarterPack/StarterPackScreen.tsx:185
 #: src/view/screens/Feeds.tsx:508
-#: src/view/screens/Profile.tsx:225
+#: src/view/screens/Profile.tsx:227
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/screens/Search/Search.tsx:531
 #: src/view/shell/desktop/LeftNav.tsx:651
@@ -3074,7 +3071,7 @@ msgstr "फ़ीड कस्टम एल्गोरिथ्म हैं �
 #: src/view/screens/SavedFeeds.tsx:82
 msgctxt "toast"
 msgid "Feeds updated!"
-msgstr ""
+msgstr "फ़ीड अपडेट की गई!"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:63
 msgid "Feeds we think you might like."
@@ -3353,7 +3350,7 @@ msgstr "शुरू करें"
 msgid "Getting started"
 msgstr "शुरुआत"
 
-#: src/components/MediaPreview.tsx:108
+#: src/components/MediaPreview.tsx:116
 msgid "GIF"
 msgstr "GIF"
 
@@ -3369,7 +3366,7 @@ msgstr "क़ानून या सेवा की शर्तों का स
 #: src/components/Layout/Header/index.tsx:126
 #: src/components/moderation/ScreenHider.tsx:154
 #: src/components/moderation/ScreenHider.tsx:163
-#: src/screens/Messages/Inbox.tsx:223
+#: src/screens/Messages/Inbox.tsx:228
 #: src/screens/Profile/ProfileFeed/index.tsx:89
 #: src/screens/VideoFeed/components/Header.tsx:163
 #: src/screens/VideoFeed/index.tsx:1108
@@ -3724,7 +3721,7 @@ msgid "Inappropriate messages or explicit links"
 msgstr "अनुचित संदेश या अश्लील लिंक"
 
 #. Title message shown in chat requests inbox when it's empty
-#: src/screens/Messages/Inbox.tsx:203
+#: src/screens/Messages/Inbox.tsx:208
 msgid "Inbox zero!"
 msgstr ""
 
@@ -3860,7 +3857,7 @@ msgid "Labeled by the author."
 msgstr "रचयिता द्वारा लेबल किया गया।"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:75
-#: src/view/screens/Profile.tsx:218
+#: src/view/screens/Profile.tsx:220
 msgid "Labels"
 msgstr "लेबल"
 
@@ -4000,7 +3997,7 @@ msgstr "रोशन"
 msgid "Like"
 msgstr "पसंद"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:312
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:315
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr "पसंद करें ({0, plural, one {# पसंद} other {# पसंद}})"
 
@@ -4045,7 +4042,7 @@ msgstr "{0, plural, one {# उपयोगकर्ता} other {# उपयो
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr "{likeCount, plural, one {# उपयोगकर्ता} other {# उपयोगकर्ताओं}} ने पसंद किया"
 
-#: src/view/screens/Profile.tsx:224
+#: src/view/screens/Profile.tsx:226
 msgid "Likes"
 msgstr "पसंद"
 
@@ -4069,7 +4066,7 @@ msgstr "सूची अवतार"
 #: src/view/screens/ProfileList.tsx:431
 msgctxt "toast"
 msgid "List blocked"
-msgstr ""
+msgstr "सूची अवरुद्ध की गई"
 
 #: src/components/ListCard.tsx:150
 #: src/view/com/feeds/FeedSourceCard.tsx:255
@@ -4087,7 +4084,7 @@ msgstr "आपके द्वारा सूची"
 #: src/view/screens/ProfileList.tsx:478
 msgctxt "toast"
 msgid "List deleted"
-msgstr ""
+msgstr "सूची मिटाई गई"
 
 #: src/screens/List/ListHiddenScreen.tsx:129
 msgid "List has been hidden"
@@ -4100,7 +4097,7 @@ msgstr "सूची छिपाई गई"
 #: src/view/screens/ProfileList.tsx:395
 msgctxt "toast"
 msgid "List muted"
-msgstr ""
+msgstr "सूची म्यूट की गई"
 
 #: src/view/com/modals/CreateOrEditList.tsx:255
 msgid "List Name"
@@ -4109,17 +4106,17 @@ msgstr "सूची का नाम"
 #: src/view/screens/ProfileList.tsx:449
 msgctxt "toast"
 msgid "List unblocked"
-msgstr ""
+msgstr "सूची अनअवरुद्ध की गई"
 
 #: src/view/screens/ProfileList.tsx:413
 msgctxt "toast"
 msgid "List unmuted"
-msgstr ""
+msgstr "सूची अनम्यूट की गई"
 
 #: src/Navigation.tsx:140
 #: src/view/screens/Lists.tsx:62
-#: src/view/screens/Profile.tsx:219
-#: src/view/screens/Profile.tsx:227
+#: src/view/screens/Profile.tsx:221
+#: src/view/screens/Profile.tsx:229
 #: src/view/shell/desktop/LeftNav.tsx:669
 #: src/view/shell/Drawer.tsx:501
 msgid "Lists"
@@ -4210,9 +4207,9 @@ msgstr "सहेजे गए फ़ीड प्रबंधित करें"
 msgid "Manage your muted words and tags"
 msgstr "अपने म्यूट किए गए शब्द और टैग प्रबंधित करें"
 
-#: src/screens/Messages/Inbox.tsx:300
-#: src/screens/Messages/Inbox.tsx:319
-#: src/screens/Messages/Inbox.tsx:326
+#: src/screens/Messages/Inbox.tsx:305
+#: src/screens/Messages/Inbox.tsx:324
+#: src/screens/Messages/Inbox.tsx:331
 msgid "Mark all as read"
 msgstr ""
 
@@ -4221,12 +4218,12 @@ msgstr ""
 msgid "Mark as read"
 msgstr "पढ़ा हुआ मार्क करें"
 
-#: src/screens/Messages/Inbox.tsx:287
-#: src/screens/Messages/Inbox.tsx:310
+#: src/screens/Messages/Inbox.tsx:292
+#: src/screens/Messages/Inbox.tsx:315
 msgid "Marked all as read"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:222
+#: src/view/screens/Profile.tsx:224
 msgid "Media"
 msgstr "मीडिया"
 
@@ -4323,12 +4320,12 @@ msgstr "आपके द्वारा मॉडरेशन सूची"
 #: src/view/com/modals/CreateOrEditList.tsx:177
 msgctxt "toast"
 msgid "Moderation list created"
-msgstr ""
+msgstr "मॉडरेशन सूची बनाई गई"
 
 #: src/view/com/modals/CreateOrEditList.tsx:163
 msgctxt "toast"
 msgid "Moderation list updated"
-msgstr ""
+msgstr "मॉडरेशन सूची अपडेट की गई"
 
 #: src/screens/Moderation/index.tsx:239
 msgid "Moderation lists"
@@ -4558,8 +4555,8 @@ msgid "New"
 msgstr "नया"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:65
-#: src/screens/Messages/ChatList.tsx:350
-#: src/screens/Messages/ChatList.tsx:357
+#: src/screens/Messages/ChatList.tsx:351
+#: src/screens/Messages/ChatList.tsx:358
 msgid "New chat"
 msgstr "नया बातचीत"
 
@@ -4593,7 +4590,7 @@ msgstr "नया पासवर्ड"
 #: src/screens/Profile/ProfileFeed/index.tsx:238
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
-#: src/view/screens/Profile.tsx:505
+#: src/view/screens/Profile.tsx:507
 #: src/view/screens/ProfileList.tsx:253
 #: src/view/screens/ProfileList.tsx:286
 msgid "New post"
@@ -4787,7 +4784,7 @@ msgstr "अभी नहीं"
 
 #: src/view/com/profile/ProfileMenu.tsx:406
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:774
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:358
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:361
 msgid "Note about sharing"
 msgstr "साझा करने के बारे में"
 
@@ -4795,7 +4792,7 @@ msgstr "साझा करने के बारे में"
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "टिप्पणी: Bluesky एक खुला और सार्वजनिक नेटवर्क है। यह सेटिंग आपके सामग्री की दृश्यता केवल Bluesky ऐप और वेबसाइट पर सीमित करता है, और अन्य ऐप इस सेटिंग की अवमानना कर सकते हैं। अन्य ऐप और वेबसाइट पर आपके सामग्री को लॉग आउट उपयोगकर्ताओं को दिखा सकते हैं।"
 
-#: src/screens/Messages/ChatList.tsx:263
+#: src/screens/Messages/ChatList.tsx:264
 msgid "Nothing here"
 msgstr "यहाँ कुछ नहीं"
 
@@ -5427,7 +5424,7 @@ msgstr "@{0} द्वारा पोस्ट"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:186
 msgctxt "toast"
 msgid "Post deleted"
-msgstr ""
+msgstr "पोस्ट मिटाया गया"
 
 #: src/lib/api/index.ts:186
 msgid "Post failed to upload. Please check your Internet connection and try again."
@@ -5476,15 +5473,15 @@ msgstr "पोस्ट नहीं मिला"
 #: src/state/queries/pinned-post.ts:59
 msgctxt "toast"
 msgid "Post pinned"
-msgstr ""
+msgstr "पोस्ट पिन किया गया"
 
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
 msgid "Post unpinned"
-msgstr ""
+msgstr "पोस्ट पिन से हटाया गया"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:186
-#: src/view/screens/Profile.tsx:220
+#: src/view/screens/Profile.tsx:222
 msgid "Posts"
 msgstr "पोस्ट"
 
@@ -5503,7 +5500,7 @@ msgstr "संभावित भ्रामक लिंक"
 #: src/state/queries/notifications/settings.ts:44
 msgctxt "toast"
 msgid "Preference saved"
-msgstr ""
+msgstr "प्रतामिकता सहेजी गई"
 
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
@@ -5571,7 +5568,7 @@ msgid "Processing..."
 msgstr "प्रसंस्करण हो रहा है..."
 
 #: src/view/screens/DebugMod.tsx:920
-#: src/view/screens/Profile.tsx:359
+#: src/view/screens/Profile.tsx:361
 msgid "profile"
 msgstr "प्रोफ़ाइल"
 
@@ -5586,7 +5583,7 @@ msgstr "प्रोफ़ाइल"
 #: src/view/com/modals/EditProfile.tsx:124
 msgctxt "toast"
 msgid "Profile updated"
-msgstr ""
+msgstr "प्रोफ़ाइल अपडेट की गई"
 
 #: src/screens/Onboarding/StepFinished.tsx:264
 msgid "Public"
@@ -5718,8 +5715,8 @@ msgstr ""
 msgid "Reject chat request"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:246
-#: src/screens/Messages/Inbox.tsx:186
+#: src/screens/Messages/ChatList.tsx:247
+#: src/screens/Messages/Inbox.tsx:191
 msgid "Reload conversations"
 msgstr "बातचीत फिर लोड करें"
 
@@ -5790,6 +5787,7 @@ msgid "Remove from quick access?"
 msgstr "जल्द पहुँच से हटाएँ?"
 
 #: src/screens/List/ListHiddenScreen.tsx:170
+#: src/screens/List/ListHiddenScreen.tsx:174
 msgid "Remove from saved feeds"
 msgstr "सहेजे फ़ीड से हटाएँ"
 
@@ -5845,7 +5843,6 @@ msgid "Removed from my feeds"
 msgstr "मेरे फ़ीड से हटाया गया"
 
 #: src/screens/List/ListHiddenScreen.tsx:94
-#: src/screens/List/ListHiddenScreen.tsx:174
 msgid "Removed from saved feeds"
 msgstr "सहेजे फ़ीड से हटाया गया"
 
@@ -5868,7 +5865,7 @@ msgstr "क्वोट की गई पोस्ट हटाता है"
 msgid "Replace with Discover"
 msgstr "डिस्कवर से बदलें"
 
-#: src/view/screens/Profile.tsx:221
+#: src/view/screens/Profile.tsx:223
 msgid "Replies"
 msgstr "जवाब"
 
@@ -5885,7 +5882,7 @@ msgctxt "action"
 msgid "Reply"
 msgstr "जवाब दें"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:264
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:267
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr "जवाब दें ({0, plural, one {# जवाब} other {# जवाब}})"
 
@@ -5936,7 +5933,7 @@ msgstr "आपको जवाब"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:346
 msgctxt "toast"
 msgid "Reply visibility updated"
-msgstr ""
+msgstr "जवाब दृश्यता अपडेट की गई"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:345
 msgid "Reply was successfully hidden"
@@ -6148,9 +6145,9 @@ msgstr "पिछली क्रिया का फिर से प्रय�
 #: src/components/StarterPack/ProfileStarterPacks.tsx:334
 #: src/screens/Login/LoginForm.tsx:323
 #: src/screens/Login/LoginForm.tsx:330
-#: src/screens/Messages/ChatList.tsx:252
+#: src/screens/Messages/ChatList.tsx:253
 #: src/screens/Messages/components/MessageListError.tsx:25
-#: src/screens/Messages/Inbox.tsx:192
+#: src/screens/Messages/Inbox.tsx:197
 #: src/screens/Onboarding/StepInterests/index.tsx:217
 #: src/screens/Onboarding/StepInterests/index.tsx:220
 #: src/screens/Signup/BackNextButtons.tsx:53
@@ -6615,7 +6612,7 @@ msgstr "यौन रूप से भड़काऊ"
 #: src/view/com/profile/ProfileMenu.tsx:225
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:481
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:490
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:347
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:350
 #: src/view/screens/ProfileList.tsx:506
 msgid "Share"
 msgstr "साझा करें"
@@ -6635,7 +6632,7 @@ msgstr "मज़ेदार बात साझा करें!"
 
 #: src/view/com/profile/ProfileMenu.tsx:411
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:779
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:363
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:366
 msgid "Share anyway"
 msgstr "फिर भी साझा करें"
 
@@ -6942,8 +6939,8 @@ msgstr ""
 msgid "Something wrong? Let us know."
 msgstr "कुछ गड़बड़ है? हमें बताएँ।"
 
-#: src/App.native.tsx:121
-#: src/App.web.tsx:97
+#: src/App.native.tsx:122
+#: src/App.web.tsx:98
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr ""
 
@@ -7022,7 +7019,7 @@ msgstr "आपके द्वारा स्टार्टर पैक"
 msgid "Starter pack is invalid"
 msgstr "स्टार्टर पैक अमान्य है"
 
-#: src/view/screens/Profile.tsx:226
+#: src/view/screens/Profile.tsx:228
 msgid "Starter Packs"
 msgstr "स्टार्टर पैक"
 
@@ -7332,8 +7329,8 @@ msgid "The Privacy Policy has been moved to <0/>"
 msgstr "गोपनीयता नीति को <0/> पर स्थानांतरित किया गया है"
 
 #: src/view/com/composer/state/video.ts:395
-msgid "The selected video is larger than 50MB."
-msgstr "चयनित वीडियो 50 एमबी से बड़ा है।"
+msgid "The selected video is larger than 100 MB."
+msgstr ""
 
 #: src/lib/strings/errors.ts:18
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
@@ -7597,7 +7594,7 @@ msgid "This post has been deleted."
 msgstr "इस पोस्ट को मिटा दिया गया है।"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:776
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:360
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:363
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
@@ -7876,7 +7873,7 @@ msgstr ""
 msgid "Unlike"
 msgstr "नापसंद करें"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:306
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:309
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "नापसंद करें ({0, plural, one {# पसंद} other {# पसंद}})"
 
@@ -7995,12 +7992,12 @@ msgstr "{domain} को अपडेट करें"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:318
 msgctxt "toast"
 msgid "Updating quote attachment failed"
-msgstr ""
+msgstr "क्वोट अटैचमेंट का अपडेट असफल"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:350
 msgctxt "toast"
 msgid "Updating reply visibility failed"
-msgstr ""
+msgstr "जवाब दृश्यता का अपडेट असफल"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:190
 msgid "Updating..."
@@ -8122,12 +8119,12 @@ msgstr "आपके द्वारा उपयोगकर्ता सूच
 #: src/view/com/modals/CreateOrEditList.tsx:176
 msgctxt "toast"
 msgid "User list created"
-msgstr ""
+msgstr "उपयोगकर्ता सूची बनाई गई"
 
 #: src/view/com/modals/CreateOrEditList.tsx:162
 msgctxt "toast"
 msgid "User list updated"
-msgstr ""
+msgstr "उपयोगकर्ता सूची अपडेट की गई"
 
 #: src/screens/Login/LoginForm.tsx:201
 msgid "Username or email address"
@@ -8251,7 +8248,7 @@ msgstr "वीडियो अपलोड किया गया"
 msgid "Video: {0}"
 msgstr "वीडियो: {0}"
 
-#: src/view/screens/Profile.tsx:223
+#: src/view/screens/Profile.tsx:225
 msgid "Videos"
 msgstr ""
 
@@ -8521,8 +8518,8 @@ msgid "Who can reply"
 msgstr "कौन जवाब दे सकता है"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
-#: src/screens/Messages/ChatList.tsx:230
-#: src/screens/Messages/Inbox.tsx:171
+#: src/screens/Messages/ChatList.tsx:231
+#: src/screens/Messages/Inbox.tsx:176
 msgid "Whoops!"
 msgstr "उफ़!"
 
@@ -8682,7 +8679,7 @@ msgstr "आपके कोई फ़ॉलोअर नहीं हैं।"
 msgid "You don't follow any users who follow @{name}."
 msgstr "आप @{name} को फ़ॉलो करने वाले किसी को फ़ॉलो नहीं करते हैं।"
 
-#: src/screens/Messages/Inbox.tsx:215
+#: src/screens/Messages/Inbox.tsx:220
 msgid "You don't have any chat requests at the moment."
 msgstr ""
 
@@ -8736,7 +8733,7 @@ msgstr "आपने इस खाते को म्यूट किया ह
 msgid "You have muted this user"
 msgstr "आपने इस उपयोगकर्ता को म्यूट किया है"
 
-#: src/screens/Messages/ChatList.tsx:273
+#: src/screens/Messages/ChatList.tsx:274
 msgid "You have no conversations yet. Start one!"
 msgstr "आपके कोई बातचीत नहीं हैं। एक शुरू करें!"
 

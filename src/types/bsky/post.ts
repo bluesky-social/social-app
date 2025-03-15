@@ -1,4 +1,5 @@
 import {
+  $Typed,
   AppBskyEmbedExternal,
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
@@ -12,47 +13,47 @@ import {
 export type Embed =
   | {
       type: 'post'
-      view: AppBskyEmbedRecord.ViewRecord
+      view: $Typed<AppBskyEmbedRecord.ViewRecord>
     }
   | {
       type: 'post_not_found'
-      view: AppBskyEmbedRecord.ViewNotFound
+      view: $Typed<AppBskyEmbedRecord.ViewNotFound>
     }
   | {
       type: 'post_blocked'
-      view: AppBskyEmbedRecord.ViewBlocked
+      view: $Typed<AppBskyEmbedRecord.ViewBlocked>
     }
   | {
       type: 'post_detached'
-      view: AppBskyEmbedRecord.ViewDetached
+      view: $Typed<AppBskyEmbedRecord.ViewDetached>
     }
   | {
       type: 'feed'
-      view: AppBskyFeedDefs.GeneratorView
+      view: $Typed<AppBskyFeedDefs.GeneratorView>
     }
   | {
       type: 'list'
-      view: AppBskyGraphDefs.ListView
+      view: $Typed<AppBskyGraphDefs.ListView>
     }
   | {
       type: 'labeler'
-      view: AppBskyLabelerDefs.LabelerView
+      view: $Typed<AppBskyLabelerDefs.LabelerView>
     }
   | {
       type: 'starter_pack'
-      view: AppBskyGraphDefs.StarterPackViewBasic
+      view: $Typed<AppBskyGraphDefs.StarterPackViewBasic>
     }
   | {
       type: 'images'
-      view: AppBskyEmbedImages.View
+      view: $Typed<AppBskyEmbedImages.View>
     }
   | {
       type: 'link'
-      view: AppBskyEmbedExternal.View
+      view: $Typed<AppBskyEmbedExternal.View>
     }
   | {
       type: 'video'
-      view: AppBskyEmbedVideo.View
+      view: $Typed<AppBskyEmbedVideo.View>
     }
   | {
       type: 'post_with_media'

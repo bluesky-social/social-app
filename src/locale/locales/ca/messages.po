@@ -8,7 +8,7 @@ msgstr ""
 "Language: ca\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-03-07 03:35\n"
+"PO-Revision-Date: 2025-03-14 20:32\n"
 "Last-Translator: \n"
 "Language-Team: Catalan\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -137,7 +137,7 @@ msgstr "{0} de {1}"
 #. Accessibility label describing how many characters the user has entered out of a 50-character limit in a text input field
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:55
 msgid "{0} out of 50"
-msgstr ""
+msgstr "{0} de 50"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:485
 msgid "{0} people have used this starter pack!"
@@ -373,16 +373,16 @@ msgstr "Sobre"
 #. Accept a chat request
 #: src/screens/Messages/components/RequestButtons.tsx:235
 msgid "Accept"
-msgstr ""
+msgstr "Accepta"
 
 #: src/screens/Messages/components/RequestButtons.tsx:225
 msgid "Accept chat request"
-msgstr ""
+msgstr "Accepta la sol·licitud de xat"
 
 #. Accept a chat request
 #: src/screens/Messages/components/RequestListItem.tsx:42
 msgid "Accept Request"
-msgstr ""
+msgstr "Accepta la sol·licitud"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:46
 #: src/screens/Settings/Settings.tsx:191
@@ -407,18 +407,18 @@ msgstr "Compte"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:375
 msgctxt "toast"
 msgid "Account blocked"
-msgstr ""
+msgstr "Compte bloquejat"
 
 #: src/view/com/profile/ProfileMenu.tsx:154
 msgctxt "toast"
 msgid "Account followed"
-msgstr ""
+msgstr "Compte seguit"
 
 #: src/view/com/profile/ProfileMenu.tsx:117
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:398
 msgctxt "toast"
 msgid "Account muted"
-msgstr ""
+msgstr "Compte silenciat"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:103
 #: src/lib/moderation/useModerationCauseDescription.ts:98
@@ -441,18 +441,18 @@ msgstr "Compte eliminat de l'accés ràpid"
 #: src/view/com/profile/ProfileMenu.tsx:131
 msgctxt "toast"
 msgid "Account unblocked"
-msgstr ""
+msgstr "Compte desbloquejat"
 
 #: src/view/com/profile/ProfileMenu.tsx:166
 msgctxt "toast"
 msgid "Account unfollowed"
-msgstr ""
+msgstr "Compte no seguit"
 
 #: src/view/com/profile/ProfileMenu.tsx:107
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:388
 msgctxt "toast"
 msgid "Account unmuted"
-msgstr ""
+msgstr "Compte no silenciat"
 
 #: src/components/dialogs/MutedWords.tsx:328
 #: src/view/com/modals/ListAddRemoveUsers.tsx:269
@@ -560,12 +560,9 @@ msgstr "Afegeix el següent registre DNS al teu domini:"
 msgid "Add this feed to your feeds"
 msgstr "Afegeix aquest canal als teus canals"
 
+#: src/view/com/profile/ProfileMenu.tsx:273
 #: src/view/com/profile/ProfileMenu.tsx:276
 msgid "Add to lists"
-msgstr "Afegeix a les llistes"
-
-#: src/view/com/profile/ProfileMenu.tsx:273
-msgid "Add to Lists"
 msgstr "Afegeix a les llistes"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
@@ -817,7 +814,7 @@ msgstr "Contrasenya de l'aplicació"
 #: src/screens/Settings/AppPasswords.tsx:147
 msgctxt "toast"
 msgid "App password deleted"
-msgstr ""
+msgstr "Contrasenya de l'aplicació esborrada"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:84
 msgid "App password name must be unique"
@@ -854,7 +851,7 @@ msgstr "Apel·la \"{0}\" etiqueta"
 #: src/screens/Messages/components/ChatDisabled.tsx:91
 msgctxt "toast"
 msgid "Appeal submitted"
-msgstr ""
+msgstr "Apel·lació enviada"
 
 #: src/screens/Takendown.tsx:111
 #: src/screens/Takendown.tsx:144
@@ -911,7 +908,7 @@ msgstr "Estàs segur que vols descartar els canvis?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Are you sure you want to leave this conversation?"
-msgstr ""
+msgstr "Segur que vols abandonar la conversa?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:45
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
@@ -957,7 +954,7 @@ msgstr "Almenys 3 caràcters"
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:40
 msgctxt "Name of app icon variant"
 msgid "Aurora"
-msgstr ""
+msgstr "Aurora"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:105
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
@@ -987,9 +984,9 @@ msgstr "Reprodueix automàticament vídeos i GIFs"
 msgid "Back"
 msgstr "Endarrere"
 
-#: src/screens/Messages/Inbox.tsx:233
+#: src/screens/Messages/Inbox.tsx:238
 msgid "Back to Chats"
-msgstr ""
+msgstr "Torna als xats"
 
 #: src/view/screens/Lists.tsx:81
 #: src/view/screens/ModerationModlists.tsx:81
@@ -1060,7 +1057,7 @@ msgstr "Bloqueja una llista"
 
 #: src/screens/Messages/components/ChatStatusInfo.tsx:46
 msgid "Block or report"
-msgstr ""
+msgstr "Bloqueja o denuncia"
 
 #: src/view/screens/ProfileList.tsx:777
 msgid "Block these accounts?"
@@ -1129,7 +1126,7 @@ msgstr "Bluesky no pot confirmar l'autenticitat de la data declarada."
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:129
 msgctxt "Name of app icon variant"
 msgid "Bluesky Classic™"
-msgstr ""
+msgstr "Bluesky Classic™"
 
 #: src/view/com/auth/server-input/index.tsx:212
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
@@ -1318,9 +1315,9 @@ msgid "Cancels opening the linked website"
 msgstr "Cancel·la obrir la web enllaçada"
 
 #: src/state/shell/composer/index.tsx:82
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:118
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:159
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:195
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:121
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:162
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:198
 msgid "Cannot interact with a blocked user"
 msgstr "No pots interactuar amb un usuari bloquejat"
 
@@ -1410,27 +1407,27 @@ msgstr "Xat"
 #: src/screens/Messages/components/RequestButtons.tsx:280
 msgctxt "toast"
 msgid "Chat deleted"
-msgstr ""
+msgstr "Xat esborrat"
 
 #: src/components/dms/ConvoMenu.tsx:176
 msgctxt "toast"
 msgid "Chat muted"
-msgstr ""
+msgstr "Xat silenciat"
 
 #: src/Navigation.tsx:418
 #: src/screens/Messages/components/InboxPreview.tsx:24
 msgid "Chat request inbox"
-msgstr ""
+msgstr "Safata de sol·licituds de xat"
 
 #: src/screens/Messages/components/InboxPreview.tsx:64
-#: src/screens/Messages/Inbox.tsx:72
+#: src/screens/Messages/Inbox.tsx:77
 msgid "Chat requests"
-msgstr ""
+msgstr "Sol·licituds de xat"
 
 #: src/components/dms/ConvoMenu.tsx:75
 #: src/components/dms/MessageMenu.tsx:83
 #: src/Navigation.tsx:413
-#: src/screens/Messages/ChatList.tsx:327
+#: src/screens/Messages/ChatList.tsx:328
 msgid "Chat settings"
 msgstr "Configuració del xat"
 
@@ -1441,12 +1438,12 @@ msgstr "Configuració del xat"
 #: src/components/dms/ConvoMenu.tsx:178
 msgctxt "toast"
 msgid "Chat unmuted"
-msgstr ""
+msgstr "Xat no silenciat"
 
-#: src/screens/Messages/ChatList.tsx:343
-#: src/screens/Messages/ChatList.tsx:367
+#: src/screens/Messages/ChatList.tsx:344
+#: src/screens/Messages/ChatList.tsx:368
 msgid "Chats"
-msgstr ""
+msgstr "Xats"
 
 #: src/screens/SignupQueued.tsx:78
 #: src/screens/SignupQueued.tsx:82
@@ -1632,7 +1629,7 @@ msgstr "Mode de color"
 
 #: src/components/dialogs/Embed.tsx:151
 msgid "Color theme"
-msgstr ""
+msgstr "Color del tema"
 
 #: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:97
@@ -1835,7 +1832,7 @@ msgstr "Número de versió copiat en memòria"
 #: src/lib/sharing.ts:41
 #: src/view/com/modals/InviteCodes.tsx:153
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:246
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:394
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:397
 msgid "Copied to clipboard"
 msgstr "Copiat en memòria"
 
@@ -2023,7 +2020,7 @@ msgstr "Personalitzat"
 
 #: src/components/dialogs/Embed.tsx:144
 msgid "Customization options"
-msgstr ""
+msgstr "Opcions de personalització"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:103
 msgid "Customize who can interact with this post."
@@ -2110,7 +2107,7 @@ msgstr "Vols eliminar la contrasenya d'aplicació?"
 #: src/screens/Messages/components/RequestButtons.tsx:292
 #: src/screens/Messages/components/RequestButtons.tsx:299
 msgid "Delete chat"
-msgstr ""
+msgstr "Elimina el xat"
 
 #: src/screens/Settings/Settings.tsx:339
 msgid "Delete chat declaration record"
@@ -2216,12 +2213,12 @@ msgstr "Vols desenganxar la citació?"
 #: src/screens/Settings/AboutSettings.tsx:87
 msgctxt "toast"
 msgid "Developer mode disabled"
-msgstr ""
+msgstr "Mode desenvolupador deshabilitat"
 
 #: src/screens/Settings/AboutSettings.tsx:81
 msgctxt "toast"
 msgid "Developer mode enabled"
-msgstr ""
+msgstr "Mode desenvolupador habilitat"
 
 #: src/screens/Settings/Settings.tsx:242
 #: src/screens/Settings/Settings.tsx:245
@@ -2569,7 +2566,7 @@ msgstr "Correu"
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:64
 msgctxt "toast"
 msgid "Email 2FA disabled"
-msgstr ""
+msgstr "Correu 2FA desactivat"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:54
 msgid "Email 2FA enabled"
@@ -2587,7 +2584,7 @@ msgstr "S'ha tornat a enviar el correu"
 #: src/view/com/modals/ChangeEmail.tsx:83
 msgctxt "toast"
 msgid "Email updated"
-msgstr ""
+msgstr "Correu actualitzat"
 
 #: src/view/com/modals/ChangeEmail.tsx:106
 msgid "Email Updated"
@@ -2596,7 +2593,7 @@ msgstr "Correu actualitzat"
 #: src/view/com/modals/VerifyEmail.tsx:85
 msgctxt "toast"
 msgid "Email verified"
-msgstr ""
+msgstr "Correu verificat"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:79
 msgid "Email Verified"
@@ -2905,7 +2902,7 @@ msgstr "Preferència del contingut extern"
 #: src/screens/Messages/components/RequestButtons.tsx:208
 msgctxt "toast"
 msgid "Failed to accept chat"
-msgstr ""
+msgstr "No s'ha pogut acceptar el xat"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:568
 msgid "Failed to change handle. Please try again."
@@ -2917,7 +2914,7 @@ msgstr "No s'ha pogut crear la contrasenya d'aplicació. Torna-ho a provar."
 
 #: src/components/dms/MessageProfileButton.tsx:39
 msgid "Failed to create conversation"
-msgstr ""
+msgstr "No s'ha pogut crear la conversa"
 
 #: src/screens/StarterPack/Wizard/index.tsx:233
 #: src/screens/StarterPack/Wizard/index.tsx:241
@@ -2932,7 +2929,7 @@ msgstr "No s'ha pogut crear la llista. Comprova la teva connexió a internet i t
 #: src/screens/Messages/components/RequestButtons.tsx:267
 msgctxt "toast"
 msgid "Failed to delete chat"
-msgstr ""
+msgstr "No s'ha pogut esborrar el xat"
 
 #: src/components/dms/MessageMenu.tsx:75
 msgid "Failed to delete message"
@@ -2946,10 +2943,10 @@ msgstr "No s'ha pogut esborrar la publicació, torna-ho a provar"
 msgid "Failed to delete starter pack"
 msgstr "No s'ha pogut eliminar l'starter pack"
 
-#: src/screens/Messages/ChatList.tsx:242
-#: src/screens/Messages/Inbox.tsx:182
+#: src/screens/Messages/ChatList.tsx:243
+#: src/screens/Messages/Inbox.tsx:187
 msgid "Failed to load conversations"
-msgstr ""
+msgstr "No s'han pogut carregar les converses"
 
 #: src/view/screens/Search/Explore.tsx:463
 #: src/view/screens/Search/Explore.tsx:491
@@ -2973,10 +2970,10 @@ msgstr "No s'han pogut carregar els canals suggerits"
 msgid "Failed to load suggested follows"
 msgstr "No s'han pogut carregar els comptes suggerits"
 
-#: src/screens/Messages/Inbox.tsx:290
-#: src/screens/Messages/Inbox.tsx:313
+#: src/screens/Messages/Inbox.tsx:295
+#: src/screens/Messages/Inbox.tsx:318
 msgid "Failed to mark all requests as read"
-msgstr ""
+msgstr "No s'han pogut marcar totes les sol·licituds com a llegides"
 
 #: src/state/queries/pinned-post.ts:75
 msgid "Failed to pin post"
@@ -3053,12 +3050,12 @@ msgstr "Comentaris"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:286
 msgctxt "toast"
 msgid "Feedback sent!"
-msgstr ""
+msgstr "Comentaris enviats!"
 
 #: src/Navigation.tsx:428
 #: src/screens/StarterPack/StarterPackScreen.tsx:185
 #: src/view/screens/Feeds.tsx:508
-#: src/view/screens/Profile.tsx:225
+#: src/view/screens/Profile.tsx:227
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/screens/Search/Search.tsx:531
 #: src/view/shell/desktop/LeftNav.tsx:651
@@ -3074,7 +3071,7 @@ msgstr "Els canals són algoritmes personalitzats creats per usuaris que coneixe
 #: src/view/screens/SavedFeeds.tsx:82
 msgctxt "toast"
 msgid "Feeds updated!"
-msgstr ""
+msgstr "Canals actualitzats!"
 
 #: src/screens/Search/components/ExploreRecommendations.tsx:63
 msgid "Feeds we think you might like."
@@ -3082,7 +3079,7 @@ msgstr "Canals que creiem que t'agradaran."
 
 #: src/screens/Settings/components/OTAInfo.tsx:58
 msgid "Fetch update"
-msgstr ""
+msgstr "Cerca actualitzacions"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:43
 msgid "File saved successfully!"
@@ -3118,7 +3115,7 @@ msgstr "Troba gent per seguir"
 
 #: src/view/screens/Search/Search.tsx:582
 msgid "Find posts, users, and feeds on Bluesky"
-msgstr ""
+msgstr "Troba publicacions, usuaris i canals a Bluesky"
 
 #: src/screens/StarterPack/Wizard/index.tsx:195
 msgid "Finish"
@@ -3131,17 +3128,17 @@ msgstr "Exercici"
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:117
 msgctxt "Name of app icon variant"
 msgid "Flat Black"
-msgstr ""
+msgstr "Negre pla"
 
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:93
 msgctxt "Name of app icon variant"
 msgid "Flat Blue"
-msgstr ""
+msgstr "Blau pla"
 
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:105
 msgctxt "Name of app icon variant"
 msgid "Flat White"
-msgstr ""
+msgstr "Blanc pla"
 
 #: src/screens/Onboarding/StepFinished.tsx:294
 msgid "Flexible"
@@ -3353,7 +3350,7 @@ msgstr "Comença"
 msgid "Getting started"
 msgstr "Començant"
 
-#: src/components/MediaPreview.tsx:108
+#: src/components/MediaPreview.tsx:116
 msgid "GIF"
 msgstr "GIF"
 
@@ -3369,7 +3366,7 @@ msgstr "Infraccions flagrants de la llei o les condicions del servei"
 #: src/components/Layout/Header/index.tsx:126
 #: src/components/moderation/ScreenHider.tsx:154
 #: src/components/moderation/ScreenHider.tsx:163
-#: src/screens/Messages/Inbox.tsx:223
+#: src/screens/Messages/Inbox.tsx:228
 #: src/screens/Profile/ProfileFeed/index.tsx:89
 #: src/screens/VideoFeed/components/Header.tsx:163
 #: src/screens/VideoFeed/index.tsx:1108
@@ -3527,7 +3524,7 @@ msgstr "Amaga"
 
 #: src/components/dialogs/Embed.tsx:128
 msgid "Hide customization options"
-msgstr ""
+msgstr "Amaga les opcions de personalització"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:570
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:576
@@ -3724,9 +3721,9 @@ msgid "Inappropriate messages or explicit links"
 msgstr "Missatges inapropiats o enllaços explícits"
 
 #. Title message shown in chat requests inbox when it's empty
-#: src/screens/Messages/Inbox.tsx:203
+#: src/screens/Messages/Inbox.tsx:208
 msgid "Inbox zero!"
-msgstr ""
+msgstr "La safata està buida"
 
 #: src/screens/Login/LoginForm.tsx:164
 msgid "Incorrect username or password"
@@ -3860,7 +3857,7 @@ msgid "Labeled by the author."
 msgstr "Etiquetat per l'autor."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:75
-#: src/view/screens/Profile.tsx:218
+#: src/view/screens/Profile.tsx:220
 msgid "Labels"
 msgstr "Etiquetes"
 
@@ -4000,7 +3997,7 @@ msgstr "Clar"
 msgid "Like"
 msgstr "M'agrada"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:312
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:315
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr "M'agrada ({0, plural, one {# m'agrada} other {# m'agrades}})"
 
@@ -4045,7 +4042,7 @@ msgstr "Li ha agradat a {0, plural, one {# usuari} other {# usuaris}}"
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr "Li ha agradat a {likeCount, plural, one {# usuari} other {# usuaris}}"
 
-#: src/view/screens/Profile.tsx:224
+#: src/view/screens/Profile.tsx:226
 msgid "Likes"
 msgstr "M'agrades"
 
@@ -4069,7 +4066,7 @@ msgstr "Avatar de la llista"
 #: src/view/screens/ProfileList.tsx:431
 msgctxt "toast"
 msgid "List blocked"
-msgstr ""
+msgstr "Llista bloquejada"
 
 #: src/components/ListCard.tsx:150
 #: src/view/com/feeds/FeedSourceCard.tsx:255
@@ -4087,7 +4084,7 @@ msgstr "Llista teva"
 #: src/view/screens/ProfileList.tsx:478
 msgctxt "toast"
 msgid "List deleted"
-msgstr ""
+msgstr "Llista eliminada"
 
 #: src/screens/List/ListHiddenScreen.tsx:129
 msgid "List has been hidden"
@@ -4100,7 +4097,7 @@ msgstr "Llista amagada"
 #: src/view/screens/ProfileList.tsx:395
 msgctxt "toast"
 msgid "List muted"
-msgstr ""
+msgstr "Llista silenciada"
 
 #: src/view/com/modals/CreateOrEditList.tsx:255
 msgid "List Name"
@@ -4109,17 +4106,17 @@ msgstr "Nom de la llista"
 #: src/view/screens/ProfileList.tsx:449
 msgctxt "toast"
 msgid "List unblocked"
-msgstr ""
+msgstr "Llista desbloquejada"
 
 #: src/view/screens/ProfileList.tsx:413
 msgctxt "toast"
 msgid "List unmuted"
-msgstr ""
+msgstr "Llista no silenciada"
 
 #: src/Navigation.tsx:140
 #: src/view/screens/Lists.tsx:62
-#: src/view/screens/Profile.tsx:219
-#: src/view/screens/Profile.tsx:227
+#: src/view/screens/Profile.tsx:221
+#: src/view/screens/Profile.tsx:229
 #: src/view/shell/desktop/LeftNav.tsx:669
 #: src/view/shell/Drawer.tsx:501
 msgid "Lists"
@@ -4210,23 +4207,23 @@ msgstr "Gestiona els canals desats"
 msgid "Manage your muted words and tags"
 msgstr "Gestiona les teves etiquetes i paraules silenciades"
 
-#: src/screens/Messages/Inbox.tsx:300
-#: src/screens/Messages/Inbox.tsx:319
-#: src/screens/Messages/Inbox.tsx:326
+#: src/screens/Messages/Inbox.tsx:305
+#: src/screens/Messages/Inbox.tsx:324
+#: src/screens/Messages/Inbox.tsx:331
 msgid "Mark all as read"
-msgstr ""
+msgstr "Marca-ho tot com a llegit"
 
 #: src/components/dms/ConvoMenu.tsx:215
 #: src/components/dms/ConvoMenu.tsx:218
 msgid "Mark as read"
 msgstr "Marca com a llegit"
 
-#: src/screens/Messages/Inbox.tsx:287
-#: src/screens/Messages/Inbox.tsx:310
+#: src/screens/Messages/Inbox.tsx:292
+#: src/screens/Messages/Inbox.tsx:315
 msgid "Marked all as read"
-msgstr ""
+msgstr "S'ha marcat tot com a llegit"
 
-#: src/view/screens/Profile.tsx:222
+#: src/view/screens/Profile.tsx:224
 msgid "Media"
 msgstr "Contingut"
 
@@ -4283,7 +4280,7 @@ msgstr "Missatges"
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:81
 msgctxt "Name of app icon variant"
 msgid "Midnight"
-msgstr ""
+msgstr "Mitjanit"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:47
 #: src/lib/moderation/useReportOptions.ts:47
@@ -4323,12 +4320,12 @@ msgstr "Llista de moderació teva"
 #: src/view/com/modals/CreateOrEditList.tsx:177
 msgctxt "toast"
 msgid "Moderation list created"
-msgstr ""
+msgstr "S'ha creat la llista de moderació"
 
 #: src/view/com/modals/CreateOrEditList.tsx:163
 msgctxt "toast"
 msgid "Moderation list updated"
-msgstr ""
+msgstr "S'ha actualitzat la llista de moderació"
 
 #: src/screens/Moderation/index.tsx:239
 msgid "Moderation lists"
@@ -4558,8 +4555,8 @@ msgid "New"
 msgstr "Nova"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:65
-#: src/screens/Messages/ChatList.tsx:350
-#: src/screens/Messages/ChatList.tsx:357
+#: src/screens/Messages/ChatList.tsx:351
+#: src/screens/Messages/ChatList.tsx:358
 msgid "New chat"
 msgstr "Xat nou"
 
@@ -4593,7 +4590,7 @@ msgstr "Nova contrasenya"
 #: src/screens/Profile/ProfileFeed/index.tsx:238
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
-#: src/view/screens/Profile.tsx:505
+#: src/view/screens/Profile.tsx:507
 #: src/view/screens/ProfileList.tsx:253
 #: src/view/screens/ProfileList.tsx:286
 msgid "New post"
@@ -4773,7 +4770,7 @@ msgstr "Nuesa no sexual"
 
 #: src/components/KnownFollowers.tsx:255
 msgid "Not followed by anyone you're following"
-msgstr ""
+msgstr "No el segueix ningú a qui segueixes"
 
 #: src/Navigation.tsx:135
 #: src/view/screens/Profile.tsx:122
@@ -4787,7 +4784,7 @@ msgstr "Ara mateix no"
 
 #: src/view/com/profile/ProfileMenu.tsx:406
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:774
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:358
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:361
 msgid "Note about sharing"
 msgstr "Nota sobre compartir"
 
@@ -4795,7 +4792,7 @@ msgstr "Nota sobre compartir"
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "Nota: Bluesky és una xarxa oberta i pública. Aquesta configuració tan sols limita el teu contingut a l'aplicació de Bluesky i a la web, altres aplicacions poden no respectar-ho. El teu contingut pot ser mostrat a usuaris no connectats per altres aplicacions i webs."
 
-#: src/screens/Messages/ChatList.tsx:263
+#: src/screens/Messages/ChatList.tsx:264
 msgid "Nothing here"
 msgstr "Aquí no hi ha res"
 
@@ -5017,7 +5014,7 @@ msgstr "Obre detalls addicionals per una entrada de depuració"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:45
 msgid "Opens alt text dialog"
-msgstr ""
+msgstr "Obre el diàleg de text alternatiu"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:73
 msgid "Opens camera on device"
@@ -5025,7 +5022,7 @@ msgstr "Obre la càmera del dispositiu"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:44
 msgid "Opens captions and alt text dialog"
-msgstr ""
+msgstr "Obre el diàleg de subtítols i text alternatiu"
 
 #: src/screens/Settings/AccountSettings.tsx:127
 msgid "Opens change handle dialog"
@@ -5105,19 +5102,19 @@ msgstr "O inicia sessió en un altre dels teus comptes."
 
 #: src/screens/Settings/components/OTAInfo.tsx:52
 msgid "OTA status: ..."
-msgstr ""
+msgstr "Estat de l'OTA: ..."
 
 #: src/screens/Settings/components/OTAInfo.tsx:48
 msgid "OTA status: Available!"
-msgstr ""
+msgstr "Estat de l'OTA: Disponible!"
 
 #: src/screens/Settings/components/OTAInfo.tsx:50
 msgid "OTA status: Error fetching update"
-msgstr ""
+msgstr "Estat de l'OTA: No s'han pogut cercar actualitzacions"
 
 #: src/screens/Settings/components/OTAInfo.tsx:54
 msgid "OTA status: None available"
-msgstr ""
+msgstr "Estat de l'OTA: Cap disponible"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:27
 #: src/lib/moderation/useReportOptions.ts:27
@@ -5427,7 +5424,7 @@ msgstr "Publicació per @{0}"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:186
 msgctxt "toast"
 msgid "Post deleted"
-msgstr ""
+msgstr "Publicació eliminada"
 
 #: src/lib/api/index.ts:186
 msgid "Post failed to upload. Please check your Internet connection and try again."
@@ -5476,15 +5473,15 @@ msgstr "Publicació no trobada"
 #: src/state/queries/pinned-post.ts:59
 msgctxt "toast"
 msgid "Post pinned"
-msgstr ""
+msgstr "Publicació fixada"
 
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
 msgid "Post unpinned"
-msgstr ""
+msgstr "Publicació sense fixar"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:186
-#: src/view/screens/Profile.tsx:220
+#: src/view/screens/Profile.tsx:222
 msgid "Posts"
 msgstr "Publicacions"
 
@@ -5503,7 +5500,7 @@ msgstr "Enllaç potencialment enganyós"
 #: src/state/queries/notifications/settings.ts:44
 msgctxt "toast"
 msgid "Preference saved"
-msgstr ""
+msgstr "Preferència desada"
 
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
@@ -5571,7 +5568,7 @@ msgid "Processing..."
 msgstr "Processant…"
 
 #: src/view/screens/DebugMod.tsx:920
-#: src/view/screens/Profile.tsx:359
+#: src/view/screens/Profile.tsx:361
 msgid "profile"
 msgstr "perfil"
 
@@ -5586,7 +5583,7 @@ msgstr "Perfil"
 #: src/view/com/modals/EditProfile.tsx:124
 msgctxt "toast"
 msgid "Profile updated"
-msgstr ""
+msgstr "Perfil actualitzat"
 
 #: src/screens/Onboarding/StepFinished.tsx:264
 msgid "Public"
@@ -5712,14 +5709,14 @@ msgstr "Torna a connectar"
 #. Reject a chat request, this opens a menu with options
 #: src/screens/Messages/components/RequestButtons.tsx:114
 msgid "Reject"
-msgstr ""
+msgstr "Rebutja"
 
 #: src/screens/Messages/components/RequestButtons.tsx:102
 msgid "Reject chat request"
-msgstr ""
+msgstr "Rebutja la sol·licitud de xat"
 
-#: src/screens/Messages/ChatList.tsx:246
-#: src/screens/Messages/Inbox.tsx:186
+#: src/screens/Messages/ChatList.tsx:247
+#: src/screens/Messages/Inbox.tsx:191
 msgid "Reload conversations"
 msgstr "Carrega les converses de nou"
 
@@ -5741,7 +5738,7 @@ msgstr "Elimina a {displayName} de l'starter pack"
 
 #: src/view/screens/Search/Search.tsx:1110
 msgid "Remove {historyItem}"
-msgstr ""
+msgstr "Elimina {historyItem}"
 
 #: src/screens/Settings/Settings.tsx:447
 #: src/screens/Settings/Settings.tsx:450
@@ -5790,6 +5787,7 @@ msgid "Remove from quick access?"
 msgstr "Vols eliminar-lo de l'accés ràpid?"
 
 #: src/screens/List/ListHiddenScreen.tsx:170
+#: src/screens/List/ListHiddenScreen.tsx:174
 msgid "Remove from saved feeds"
 msgstr "Elimina'l dels canals desats"
 
@@ -5845,7 +5843,6 @@ msgid "Removed from my feeds"
 msgstr "Eliminat dels meus canals"
 
 #: src/screens/List/ListHiddenScreen.tsx:94
-#: src/screens/List/ListHiddenScreen.tsx:174
 msgid "Removed from saved feeds"
 msgstr "Eliminat dels canals desats"
 
@@ -5868,7 +5865,7 @@ msgstr "Elimina la publicació amb la citació"
 msgid "Replace with Discover"
 msgstr "Canvia amb Discover"
 
-#: src/view/screens/Profile.tsx:221
+#: src/view/screens/Profile.tsx:223
 msgid "Replies"
 msgstr "Respostes"
 
@@ -5885,7 +5882,7 @@ msgctxt "action"
 msgid "Reply"
 msgstr "Respon"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:264
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:267
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr "Respostes ({0, plural, one {# resposta} other {# respostes}})"
 
@@ -5936,7 +5933,7 @@ msgstr "Resposta a tu mateix"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:346
 msgctxt "toast"
 msgid "Reply visibility updated"
-msgstr ""
+msgstr "S'ha actualitzat la visibilitat de la resposta"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:345
 msgid "Reply was successfully hidden"
@@ -6148,9 +6145,9 @@ msgstr "Torna a intentar l'última acció, que ha donat error"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:334
 #: src/screens/Login/LoginForm.tsx:323
 #: src/screens/Login/LoginForm.tsx:330
-#: src/screens/Messages/ChatList.tsx:252
+#: src/screens/Messages/ChatList.tsx:253
 #: src/screens/Messages/components/MessageListError.tsx:25
-#: src/screens/Messages/Inbox.tsx:192
+#: src/screens/Messages/Inbox.tsx:197
 #: src/screens/Onboarding/StepInterests/index.tsx:217
 #: src/screens/Onboarding/StepInterests/index.tsx:220
 #: src/screens/Signup/BackNextButtons.tsx:53
@@ -6596,7 +6593,7 @@ msgstr "Configuració"
 #: src/screens/ModerationInteractionSettings/index.tsx:102
 msgctxt "toast"
 msgid "Settings saved"
-msgstr ""
+msgstr "Configuració desada"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Sexual activity or erotic nudity."
@@ -6615,7 +6612,7 @@ msgstr "Suggerent sexualment"
 #: src/view/com/profile/ProfileMenu.tsx:225
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:481
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:490
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:347
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:350
 #: src/view/screens/ProfileList.tsx:506
 msgid "Share"
 msgstr "Comparteix"
@@ -6635,7 +6632,7 @@ msgstr "Comparteix una dada divertida!"
 
 #: src/view/com/profile/ProfileMenu.tsx:411
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:779
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:363
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:366
 msgid "Share anyway"
 msgstr "Comparteix de totes maneres"
 
@@ -6712,7 +6709,7 @@ msgstr "Mostra la insígnia i filtra-ho dels canals"
 
 #: src/components/dialogs/Embed.tsx:129
 msgid "Show customization options"
-msgstr ""
+msgstr "Mostra les opcions de personalització"
 
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:22
 msgid "Show hidden replies"
@@ -6942,8 +6939,8 @@ msgstr "Alguna cosa ha fallat, torna-ho a provar."
 msgid "Something wrong? Let us know."
 msgstr "Alguna cosa no va a l'hora? Fes-nos-ho saber."
 
-#: src/App.native.tsx:121
-#: src/App.web.tsx:97
+#: src/App.native.tsx:122
+#: src/App.web.tsx:98
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr "La teva sessió ha caducat. Torna a iniciar-la."
 
@@ -7022,7 +7019,7 @@ msgstr "Starter pack fet per tu"
 msgid "Starter pack is invalid"
 msgstr "Aquest starter pack és invàlid"
 
-#: src/view/screens/Profile.tsx:226
+#: src/view/screens/Profile.tsx:228
 msgid "Starter Packs"
 msgstr "Starter packs"
 
@@ -7109,12 +7106,12 @@ msgstr "Suggerent"
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:60
 msgctxt "Name of app icon variant"
 msgid "Sunrise"
-msgstr ""
+msgstr "Alba"
 
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:70
 msgctxt "Name of app icon variant"
 msgid "Sunset"
-msgstr ""
+msgstr "Ocàs"
 
 #: src/Navigation.tsx:286
 #: src/view/screens/Support.tsx:31
@@ -7332,8 +7329,8 @@ msgid "The Privacy Policy has been moved to <0/>"
 msgstr "La política de privacitat ha estat traslladada a <0/>"
 
 #: src/view/com/composer/state/video.ts:395
-msgid "The selected video is larger than 50MB."
-msgstr "El vídeo triat és més gran de 50 MB."
+msgid "The selected video is larger than 100 MB."
+msgstr "El vídeo seleccionat supera els 100 MB."
 
 #: src/lib/strings/errors.ts:18
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
@@ -7597,7 +7594,7 @@ msgid "This post has been deleted."
 msgstr "Aquesta publicació ha estat esborrada."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:776
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:360
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:363
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr "Aquesta publicació només és visible per als usuaris que han iniciat sessió. No serà visible per a les persones que no hagin iniciat sessió."
 
@@ -7876,7 +7873,7 @@ msgstr "Malauradament, cap dels vostres etiquetadora subscrits admet aquest tipu
 msgid "Unlike"
 msgstr "Desfés el m'agrada"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:306
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:309
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "Desfés els m'agrades ({0, plural, one {# m'agrada} other {# m'agrades}})"
 
@@ -7981,7 +7978,7 @@ msgstr "Contingut sexual no desitjat"
 #: src/screens/Settings/components/OTAInfo.tsx:58
 #: src/screens/Settings/components/OTAInfo.tsx:74
 msgid "Update"
-msgstr ""
+msgstr "Actualitza"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
 msgid "Update <0>{displayName}</0> in Lists"
@@ -7995,12 +7992,12 @@ msgstr "Actualitza a {domain}"
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:318
 msgctxt "toast"
 msgid "Updating quote attachment failed"
-msgstr ""
+msgstr "No s'ha pogut actualitzar el fitxer adjunt de la citació"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:350
 msgctxt "toast"
 msgid "Updating reply visibility failed"
-msgstr ""
+msgstr "No s'ha pogut actualitzar la visibilitat de la resposta"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:190
 msgid "Updating..."
@@ -8084,7 +8081,7 @@ msgstr "Utilitzat per:"
 #: src/components/dms/ReportDialog.tsx:324
 msgctxt "toast"
 msgid "User blocked"
-msgstr ""
+msgstr "Usuari bloquejat"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:71
 #: src/lib/moderation/useModerationCauseDescription.ts:63
@@ -8122,12 +8119,12 @@ msgstr "Llista d'usuaris feta per tu"
 #: src/view/com/modals/CreateOrEditList.tsx:176
 msgctxt "toast"
 msgid "User list created"
-msgstr ""
+msgstr "Llista d'usuaris creada"
 
 #: src/view/com/modals/CreateOrEditList.tsx:162
 msgctxt "toast"
 msgid "User list updated"
-msgstr ""
+msgstr "Llista d'usuaris actualitzada"
 
 #: src/screens/Login/LoginForm.tsx:201
 msgid "Username or email address"
@@ -8251,14 +8248,14 @@ msgstr "Vídeo penjat"
 msgid "Video: {0}"
 msgstr "Vídeo: {0}"
 
-#: src/view/screens/Profile.tsx:223
+#: src/view/screens/Profile.tsx:225
 msgid "Videos"
 msgstr "Vídeos"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:60
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:75
 msgid "Videos must be less than 3 minutes long"
-msgstr ""
+msgstr "Els vídeos han de durar menys de 3 minuts"
 
 #: src/screens/Profile/Header/Shell.tsx:168
 msgid "View {0}'s avatar"
@@ -8521,8 +8518,8 @@ msgid "Who can reply"
 msgstr "Qui hi pot respondre"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
-#: src/screens/Messages/ChatList.tsx:230
-#: src/screens/Messages/Inbox.tsx:171
+#: src/screens/Messages/ChatList.tsx:231
+#: src/screens/Messages/Inbox.tsx:176
 msgid "Whoops!"
 msgstr "Vaja!"
 
@@ -8627,7 +8624,7 @@ msgstr "Tu"
 
 #: src/components/forms/HostingProvider.tsx:46
 msgid "You are creating an account on"
-msgstr ""
+msgstr "Estàs creant un compte a"
 
 #: src/screens/SignupQueued.tsx:157
 msgid "You are in line."
@@ -8682,9 +8679,9 @@ msgstr "No tens cap seguidor."
 msgid "You don't follow any users who follow @{name}."
 msgstr "No segueixes cap usuari que segueixi @{name}."
 
-#: src/screens/Messages/Inbox.tsx:215
+#: src/screens/Messages/Inbox.tsx:220
 msgid "You don't have any chat requests at the moment."
-msgstr ""
+msgstr "No tens cap sol·licitud de xat ara mateix."
 
 #: src/view/com/modals/InviteCodes.tsx:67
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
@@ -8736,7 +8733,7 @@ msgstr "Has silenciat aquest compte."
 msgid "You have muted this user"
 msgstr "Has silenciat aquest usuari"
 
-#: src/screens/Messages/ChatList.tsx:273
+#: src/screens/Messages/ChatList.tsx:274
 msgid "You have no conversations yet. Start one!"
 msgstr "Encara no tens cap conversa. Comença'n una!"
 
