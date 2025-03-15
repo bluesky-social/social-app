@@ -485,8 +485,9 @@ function Header({
                 <Trans comment="Number of users (always at least 25) who have joined Bluesky using a specific starter pack">
                   <Plural
                     value={starterPack.joinedAllTimeCount || 0}
-                    other="# people have used this starter pack!"
-                  />
+                    other="# people have"
+                  />{' '}
+                  used this starter pack!
                 </Trans>
               </Text>
             </View>
