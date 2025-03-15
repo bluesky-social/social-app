@@ -371,6 +371,7 @@ function DialogInner({
                   value={DESCRIPTION_MAX_GRAPHEMES}
                   other={`The maximum number of characters is ${DESCRIPTION_MAX_GRAPHEMES}.`}
                 />
+              </Trans>
             </TextField.SuffixText>
           )}
         </View>
