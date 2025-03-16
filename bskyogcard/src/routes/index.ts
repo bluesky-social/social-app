@@ -10,6 +10,6 @@ export * from './util.js'
 export default function (ctx: AppContext, app: Express) {
   app = health(ctx, app) // GET /_health
   app = starterPack(ctx, app) // GET /start/:actor/:rkey
-  app = post(ctx, app) // POST /post
+  app = post(ctx, app) // POST /profile/:handle/post/:rkey
   return app
 }

@@ -10,13 +10,15 @@ import {getPost} from '../data/getPost.js'
 import {getPostData} from '../data/getPostData.js'
 import {httpLogger} from '../logger.js'
 import {loadEmojiAsSvg} from '../util.js'
+import {
+  getRenderOptions,
+  parseDisplayOptionsFromQuery,
+} from '../util/postDisplayOptions.js'
 import {handler, originVerifyMiddleware} from './util.js'
-
-const WIDTH = 600
 
 export default function (ctx: AppContext, app: Express) {
   return app.get(
-    '/:actor/post/:rkey',
+    '/profile/:actor/post/:rkey',
     originVerifyMiddleware(ctx),
     handler(async (req, res) => {
       let {actor, rkey} = req.params
@@ -42,12 +44,19 @@ export default function (ctx: AppContext, app: Express) {
           getPostData(post),
           getModeratorData(ctx.appviewAgent),
         ])
+        const displayOptions = parseDisplayOptionsFromQuery(req.query)
+        const {width} = getRenderOptions(displayOptions)
 
         const svg = await satori(
-          <Post post={post} data={postData} moderatorData={moderatorData} />,
+          <Post
+            post={post}
+            data={postData}
+            moderatorData={moderatorData}
+            displayOptions={displayOptions}
+          />,
           {
             fonts: ctx.fonts,
-            width: WIDTH,
+            width,
             loadAdditionalAsset: async (code, text) => {
               if (code === 'emoji') {
                 return await loadEmojiAsSvg(text)
@@ -58,7 +67,7 @@ export default function (ctx: AppContext, app: Express) {
         const output = await resvg.renderAsync(svg, {
           fitTo: {
             mode: 'width',
-            value: WIDTH * 2,
+            value: width * 2,
           },
           logLevel: 'trace',
         })

@@ -35,6 +35,7 @@ export const borderRadius = {
   xs: 4,
   sm: 8,
   md: 12,
+  lg: 20,
   full: 999,
 } as const
 
@@ -98,6 +99,13 @@ export const gradients = {
       [0.4, '#755B62'],
       [0.8, '#CD7765'],
       [1, '#EF956E'],
+    ],
+    hover_value: '#755B62',
+  },
+  neutral: {
+    values: [
+      [0, '#E0E5EB'],
+      [1, '#EFF2F5'],
     ],
     hover_value: '#755B62',
   },

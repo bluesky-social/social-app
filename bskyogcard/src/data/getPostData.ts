@@ -1,4 +1,5 @@
 import {AppBskyFeedDefs} from '@atproto/api'
+import {Vibrant} from 'node-vibrant/node'
 
 import {httpLogger} from '../logger.js'
 import {getStarterPackImageUri} from '../util/getStarterPackImageUri.js'
@@ -6,6 +7,14 @@ import {Embed, parseEmbed} from '../util/parseEmbed.js'
 import {getImage} from './getImage.js'
 
 export type Metadata = {
+  colors?: {
+    vibrant: string
+    darkVibrant: string
+    lightVibrant: string
+    muted: string
+    darkMuted: string
+    lightMuted: string
+  }
   aspectRatio: {
     width: number
     height: number
@@ -123,11 +132,22 @@ export function getEmbedData(embed: Embed, images: Map<string, Metadata>) {
   }
 }
 
+export async function getImageColors(image: Buffer) {
+  const palette = await Vibrant.from(image).getPalette()
+  return {
+    vibrant: palette.Vibrant?.hex,
+    darkVibrant: palette.DarkVibrant?.hex,
+    lightVibrant: palette.LightVibrant?.hex,
+    muted: palette.Muted?.hex,
+    darkMuted: palette.DarkMuted?.hex,
+    lightMuted: palette.LightMuted?.hex,
+  }
+}
+
 export async function getPostData(
   post: AppBskyFeedDefs.PostView,
 ): Promise<PostData> {
   const images: Map<string, Metadata> = new Map()
-  console.log(JSON.stringify(post, null, 2))
 
   if (post.author.avatar) {
     images.set(post.author.avatar, {
@@ -146,12 +166,14 @@ export async function getPostData(
   const resolved = await Promise.all(
     deduped.map(async ([url, meta]) => {
       try {
-        const image = await getImage(url)
+        const imageData = await getImage(url)
+        const palette = await getImageColors(imageData.image)
         return [
           url,
           {
+            colors: palette,
             ...meta,
-            ...image,
+            ...imageData,
           },
         ] as const
       } catch (err) {

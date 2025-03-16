@@ -6,7 +6,7 @@ import {
 
 import {ModeratorData} from '../data/getModeratorData.js'
 import {PostData} from '../data/getPostData.js'
-import {atoms as a, gradient, theme as t} from '../theme/index.js'
+import {atoms as a, theme as t} from '../theme/index.js'
 import {formatCount} from '../util/formatCount.js'
 import {formatDate} from '../util/formatDate.js'
 import {moderatePost} from '../util/moderatePost.js'
@@ -24,13 +24,20 @@ export function Post({
   post,
   data,
   moderatorData,
+  displayOptions: opts = {
+    mat: false,
+  },
 }: {
   post: AppBskyFeedDefs.PostView
   data: PostData
   moderatorData: ModeratorData
+  displayOptions?: {
+    mat?: boolean
+  }
 }) {
   if (AppBskyFeedPost.isValidRecord(post.record)) {
     const avatar = data.images.get(post.author.avatar)
+    console.log(avatar.colors.vibrant)
     const rt = post.record.text
       ? new RichTextApi({
           text: post.record.text,
@@ -47,10 +54,13 @@ export function Post({
           a.align_center,
           a.w_full,
           a.h_full,
-          a.p_3xl,
-          {
-            backgroundImage: `linear-gradient(to bottom, ${gradient('sky')})`,
-          },
+          opts.mat && [
+            a.p_xl,
+            {
+              borderRadius: '22px',
+              backgroundImage: `linear-gradient(to bottom, ${avatar.colors.muted} 0%, ${avatar.colors.lightMuted} 100%)`,
+            },
+          ],
         ]}>
         <Box
           cx={[
