@@ -63,20 +63,15 @@ export function getEmbedData(embed: Embed, images: Map<string, Metadata>) {
         })
       }
       const player = parseEmbedPlayerFromUrl(embed.view.external.uri)
-      if (player.type === 'giphy_gif') {
-        images.set(player.playerUri, {
-          aspectRatio: {
-            width: 1000,
-            height: 1000,
-          },
-        })
-      } else if (player.type === 'tenor_gif') {
-        images.set(player.playerUri, {
-          aspectRatio: {
-            width: 1000,
-            height: 1000,
-          },
-        })
+      if (player) {
+        if (['giphy_gif', 'tenor_gif'].includes(player.type)) {
+          images.set(player.playerUri, {
+            aspectRatio: {
+              width: 1000,
+              height: 1000,
+            },
+          })
+        }
       }
       break
     }
