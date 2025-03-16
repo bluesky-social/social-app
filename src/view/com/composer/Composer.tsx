@@ -45,6 +45,7 @@ import {ImagePickerAsset} from 'expo-image-picker'
 import {
   AppBskyFeedDefs,
   AppBskyFeedGetPostThread,
+  AtUri,
   BskyAgent,
   RichText,
 } from '@atproto/api'
@@ -125,6 +126,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
+import {navigate} from '../../../Navigation'
 import {
   ComposerAction,
   composerReducer,
@@ -483,6 +485,14 @@ export const ComposePost = ({
         : replyTo
         ? _(msg`Your reply has been published`)
         : _(msg`Your post has been published`),
+      undefined,
+      () => {
+        const uri = new AtUri(postUri)
+        navigate('PostThread', {
+          name: uri.host,
+          rkey: uri.rkey,
+        })
+      },
     )
   }, [
     _,
