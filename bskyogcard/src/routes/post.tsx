@@ -3,7 +3,7 @@ import resvg from '@resvg/resvg-js'
 import {Express} from 'express'
 import satori from 'satori'
 
-import {Post} from '../components/Post.js'
+import {Post} from '../components/Post/index.js'
 import {AppContext} from '../context.js'
 import {getModeratorData} from '../data/getModeratorData.js'
 import {getPost} from '../data/getPost.js'
