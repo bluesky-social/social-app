@@ -9,9 +9,9 @@
   },
   "dependencies": {
     "@atproto/common": "^0.4.0",
-    "body-parser": "^1.20.2",
+    "body-parser": "^1.20.3",
     "cors": "^2.8.5",
-    "express": "^4.19.2",
+    "express": "^4.21.1",
     "http-terminator": "^3.2.0",
     "kysely": "^0.27.3",
     "pg": "^8.12.0",
