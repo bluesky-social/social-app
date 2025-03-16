@@ -37,7 +37,6 @@ export function Post({
 }) {
   if (AppBskyFeedPost.isValidRecord(post.record)) {
     const avatar = data.images.get(post.author.avatar)
-    console.log(avatar.colors.vibrant)
     const rt = post.record.text
       ? new RichTextApi({
           text: post.record.text,
@@ -76,7 +75,7 @@ export function Post({
           ]}>
           <Box cx={[a.flex_row, a.align_center, a.gap_sm, a.pb_sm]}>
             <Avatar
-              size={48}
+              size={42}
               image={avatar}
               profile={post.author}
               moderatorData={moderatorData}
