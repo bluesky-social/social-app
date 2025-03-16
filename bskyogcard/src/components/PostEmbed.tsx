@@ -234,6 +234,16 @@ export function LinkEmbed({
 }) {
   const {title, description, uri, thumb} = embed.view.external
   if (!thumb) return null
+  const modui = rest.moderation.ui('contentMedia')
+  const info = getModerationCauseInfo({
+    cause: modui.blurs.at(0),
+    moderatorData: rest.moderatorData,
+  })
+
+  if (info) {
+    return <ModeratedEmbed info={info} />
+  }
+
   const image = rest.data.images.get(thumb)
   const player = parseEmbedPlayerFromUrl(uri)
   const gif = rest.data.images.get(player?.playerUri)
