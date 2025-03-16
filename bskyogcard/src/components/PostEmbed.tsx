@@ -7,16 +7,20 @@ import {
 import {ModeratorData} from '../data/getModeratorData.js'
 import {Image as ImageSource, PostData} from '../data/getPostData.js'
 import {atoms as a, theme as t} from '../theme/index.js'
+import {getModerationCauseInfo} from '../util/getModerationCauseInfo.js'
 import {getStarterPackImageUri} from '../util/getStarterPackImageUri.js'
 import {Embed, EmbedType, parseEmbed} from '../util/parseEmbed.js'
+import {parseEmbedPlayerFromUrl} from '../util/parseEmbedPlayerFromUrl.js'
 import {sanitizeHandle} from '../util/sanitizeHandle.js'
 import {Box} from './Box.js'
 import {FeedCard} from './FeedCard.js'
 import * as Grid from './Grid.js'
+import {PlayFilled as Play} from './icons/Play.js'
 import {StarterPack} from './icons/StarterPack.js'
 import {Image, SquareImage} from './Image.js'
 import {LinkCard} from './LinkCard.js'
 import {ListCard} from './ListCard.js'
+import {ModeratedEmbed} from './ModeratedEmbed.js'
 import {NotQuotePost, QuotePost} from './PostEmbed/QuotePost.js'
 import {Text} from './Text.js'
 
@@ -76,7 +80,7 @@ export function MediaEmbeds({
       return <LinkEmbed embed={embed} {...rest} />
     }
     case 'video': {
-      return null
+      return <VideoEmbed embed={embed} {...rest} />
     }
     default:
       return null
@@ -231,9 +235,104 @@ export function LinkEmbed({
   const {title, description, uri, thumb} = embed.view.external
   if (!thumb) return null
   const image = rest.data.images.get(thumb)
+  const player = parseEmbedPlayerFromUrl(uri)
+  const gif = rest.data.images.get(player?.playerUri)
+  if (gif) {
+    return (
+      <Box cx={[a.rounded_sm, a.overflow_hidden]}>
+        <Image image={gif} />
+        <Box
+          cx={[
+            a.absolute,
+            a.inset_0,
+            {
+              top: '75%',
+              backgroundImage:
+                'linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.75))',
+            },
+          ]}
+        />
+        <Box
+          cx={[
+            a.absolute,
+            a.rounded_xs,
+            a.px_xs,
+            a.py_2xs,
+            {
+              backgroundColor: t.palette.contrast_25,
+              bottom: a.p_md.padding,
+              right: a.p_md.padding,
+            },
+          ]}>
+          <Text cx={[t.atoms.text, a.font_heavy, a.text_sm]}>GIF</Text>
+        </Box>
+      </Box>
+    )
+  }
   return (
     <LinkCard image={image} title={title} description={description} uri={uri} />
   )
+}
+
+export function VideoEmbed({
+  embed,
+  ...rest
+}: CommonProps & {
+  embed: EmbedType<'video'>
+}) {
+  const {thumbnail} = embed.view
+  const modui = rest.moderation.ui('contentMedia')
+  const info = getModerationCauseInfo({
+    cause: modui.blurs.at(0),
+    moderatorData: rest.moderatorData,
+  })
+
+  if (info) {
+    return <ModeratedEmbed info={info} />
+  }
+
+  const img = rest.data.images.get(thumbnail)
+  if (img) {
+    return (
+      <Box cx={[a.relative, a.rounded_sm, a.w_full, a.overflow_hidden]}>
+        <Image image={img} />
+        <Box
+          cx={[
+            a.absolute,
+            a.inset_0,
+            a.rounded_full,
+            {
+              margin: 'auto',
+              width: '48px',
+              height: '48px',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+            },
+          ]}>
+          <Box
+            cx={[
+              a.align_center,
+              a.justify_center,
+              a.absolute,
+              a.inset_0,
+              a.rounded_full,
+              {
+                margin: 'auto',
+                width: '48px',
+                height: '48px',
+                backgroundColor: t.palette.contrast_25,
+                opacity: 0.7,
+              },
+            ]}>
+            <Play size={32} />
+          </Box>
+        </Box>
+      </Box>
+    )
+  } else {
+    return null
+  }
 }
 
 export function ImagesEmbed({
@@ -242,8 +341,17 @@ export function ImagesEmbed({
 }: CommonProps & {
   embed: EmbedType<'images'>
 }) {
-  const {images} = embed.view
   const gutter = a.p_2xs.padding
+  const {images} = embed.view
+  const modui = rest.moderation.ui('contentMedia')
+  const info = getModerationCauseInfo({
+    cause: modui.blurs.at(0),
+    moderatorData: rest.moderatorData,
+  })
+
+  if (info) {
+    return <ModeratedEmbed info={info} />
+  }
 
   if (images.length > 0) {
     const imgs = images

@@ -4,6 +4,7 @@ import {Vibrant} from 'node-vibrant/node'
 import {httpLogger} from '../logger.js'
 import {getStarterPackImageUri} from '../util/getStarterPackImageUri.js'
 import {Embed, parseEmbed} from '../util/parseEmbed.js'
+import {parseEmbedPlayerFromUrl} from '../util/parseEmbedPlayerFromUrl.js'
 import {getImage} from './getImage.js'
 
 export type Metadata = {
@@ -58,6 +59,22 @@ export function getEmbedData(embed: Embed, images: Map<string, Metadata>) {
           aspectRatio: {
             width: 1200,
             height: 630,
+          },
+        })
+      }
+      const player = parseEmbedPlayerFromUrl(embed.view.external.uri)
+      if (player.type === 'giphy_gif') {
+        images.set(player.playerUri, {
+          aspectRatio: {
+            width: 1000,
+            height: 1000,
+          },
+        })
+      } else if (player.type === 'tenor_gif') {
+        images.set(player.playerUri, {
+          aspectRatio: {
+            width: 1000,
+            height: 1000,
           },
         })
       }
