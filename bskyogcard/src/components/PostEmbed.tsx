@@ -6,16 +6,19 @@ import {
 
 import {ModeratorData} from '../data/getModeratorData.js'
 import {Image as ImageSource, PostData} from '../data/getPostData.js'
-import {atoms as a} from '../theme/index.js'
+import {atoms as a, theme as t} from '../theme/index.js'
 import {getStarterPackImageUri} from '../util/getStarterPackImageUri.js'
 import {Embed, EmbedType, parseEmbed} from '../util/parseEmbed.js'
+import {sanitizeHandle} from '../util/sanitizeHandle.js'
 import {Box} from './Box.js'
 import {FeedCard} from './FeedCard.js'
 import * as Grid from './Grid.js'
+import {StarterPack} from './icons/StarterPack.js'
 import {Image, SquareImage} from './Image.js'
 import {LinkCard} from './LinkCard.js'
 import {ListCard} from './ListCard.js'
 import {NotQuotePost, QuotePost} from './PostEmbed/QuotePost.js'
+import {Text} from './Text.js'
 
 type CommonProps = {
   data: PostData
@@ -134,7 +137,59 @@ export function StarterPackEmbed({
   if (!AppBskyGraphStarterpack.isValidRecord(embed.view.record)) return null
   const {name, description} = embed.view.record
   const image = rest.data.images.get(uri)
-  return <LinkCard image={image} title={name} description={description} />
+  return (
+    <Box
+      cx={[
+        a.w_full,
+        a.rounded_sm,
+        a.overflow_hidden,
+        a.border,
+        t.atoms.border_contrast_low,
+      ]}>
+      {image && (
+        <Box
+          cx={[
+            a.relative,
+            a.w_full,
+            t.atoms.bg_contrast_25,
+            {paddingTop: (630 / 1200) * 100 + '%'},
+          ]}>
+          <Image
+            image={image}
+            cx={[
+              a.absolute,
+              a.inset_0,
+              {
+                objectFit: 'cover',
+              },
+            ]}
+          />
+        </Box>
+      )}
+      <Box cx={[a.px_md, a.py_sm, t.atoms.bg]}>
+        <Box cx={[a.w_full, a.gap_xs]}>
+          <Box cx={[a.flex_row, a.align_center, a.gap_xs, a.w_full]}>
+            <StarterPack size={40} fill={t.palette.primary_500} />
+            <Box cx={[a.flex_1]}>
+              <Text cx={[a.text_sm, a.font_bold, a.leading_snug]}>{name}</Text>
+              <Text
+                cx={[a.leading_snug, a.text_xs, t.atoms.text_contrast_medium]}>
+                Starter pack by {sanitizeHandle(embed.view.creator.handle, '@')}
+              </Text>
+            </Box>
+          </Box>
+          {description ? (
+            <Text cx={[a.leading_snug, a.text_xs]}>{description}</Text>
+          ) : null}
+          {embed.view.joinedAllTimeCount >= 50 && (
+            <Text cx={[a.font_bold, a.text_xs, t.atoms.text_contrast_medium]}>
+              {embed.view.joinedAllTimeCount} users have joined!
+            </Text>
+          )}
+        </Box>
+      </Box>
+    </Box>
+  )
 }
 
 export function ListEmbed({
