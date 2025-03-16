@@ -10,6 +10,7 @@ import {PostData} from '../../data/getPostData.js'
 import {atoms as a, theme as t} from '../../theme/index.js'
 import {getModerationCauseInfo} from '../../util/getModerationCauseInfo.js'
 import {moderatePost} from '../../util/moderatePost.js'
+import {sanitizeHandle} from '../../util/sanitizeHandle.js'
 import {viewRecordToPostView} from '../../util/viewRecordToPostView.js'
 import {Avatar} from '../Avatar.js'
 import {Box} from '../Box.js'
@@ -71,7 +72,7 @@ export function QuotePost({
             {author.displayName || author.handle}
           </Text>
           <Text cx={[a.text_xs, t.atoms.text_contrast_medium]}>
-            @{author.handle}
+            {sanitizeHandle(author.handle, '@')}
           </Text>
         </Box>
       </Box>

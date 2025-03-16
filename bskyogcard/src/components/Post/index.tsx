@@ -10,6 +10,7 @@ import {atoms as a, theme as t} from '../../theme/index.js'
 import {formatCount} from '../../util/formatCount.js'
 import {formatDate} from '../../util/formatDate.js'
 import {moderatePost} from '../../util/moderatePost.js'
+import {sanitizeHandle} from '../../util/sanitizeHandle.js'
 import {Avatar} from '../Avatar.js'
 import {Box} from '../Box.js'
 import {Heart} from '../icons/Heart.js'
@@ -85,7 +86,7 @@ export function Post({
                 {post.author.displayName || post.author.handle}
               </Text>
               <Text cx={[a.text_sm, t.atoms.text_contrast_medium]}>
-                @{post.author.handle}
+                {sanitizeHandle(post.author.handle, '@')}
               </Text>
             </Box>
           </Box>

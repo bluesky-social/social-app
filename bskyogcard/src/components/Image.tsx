@@ -1,8 +1,9 @@
 import React from 'react'
 
 import {Image as ImageSource} from '../data/getPostData.js'
-import {atoms as a, style as s, theme as t} from '../theme/index.js'
+import {atoms as a, style as s, StyleProp,theme as t} from '../theme/index.js'
 import {Box} from './Box.js'
+import {MediaInsetBorder} from './MediaInsetBorder.js'
 
 export type ImageProps = Omit<
   React.ImgHTMLAttributes<HTMLImageElement>,
@@ -23,16 +24,24 @@ export function Image({image, cx, ...rest}: ImageProps) {
   )
 }
 
-export function SquareImage({image}: {image: ImageSource}) {
+export function SquareImage({
+  image,
+  style,
+  insetBorderStyle,
+}: {
+  image: ImageSource
+  insetBorderStyle?: StyleProp['style']
+} & StyleProp) {
   return (
     <Box
       cx={[
         a.relative,
-        a.rounded_sm,
+        a.rounded_md,
         a.overflow_hidden,
         a.w_full,
         t.atoms.bg_contrast_25,
         {paddingTop: '100%'},
+        style,
       ]}>
       <Image
         image={image}
@@ -44,6 +53,7 @@ export function SquareImage({image}: {image: ImageSource}) {
           },
         ]}
       />
+      <MediaInsetBorder style={insetBorderStyle} />
     </Box>
   )
 }

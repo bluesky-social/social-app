@@ -7,7 +7,7 @@ export function Box({
   cx = [],
 }: {
   children?: React.ReactNode
-  cx?: Record<string, any>[]
+  cx?: (Record<string, any> | undefined)[]
 }) {
   return <div style={s([a.flex, a.flex_col, ...cx])}>{children}</div>
 }

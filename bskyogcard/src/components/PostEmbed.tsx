@@ -8,14 +8,14 @@ import {ModeratorData} from '../data/getModeratorData.js'
 import {Image as ImageSource, PostData} from '../data/getPostData.js'
 import {atoms as a} from '../theme/index.js'
 import {getStarterPackImageUri} from '../util/getStarterPackImageUri.js'
-import {Embed, EmbedType,parseEmbed} from '../util/parseEmbed.js'
+import {Embed, EmbedType, parseEmbed} from '../util/parseEmbed.js'
 import {Box} from './Box.js'
 import {FeedCard} from './FeedCard.js'
 import * as Grid from './Grid.js'
 import {Image, SquareImage} from './Image.js'
 import {LinkCard} from './LinkCard.js'
 import {ListCard} from './ListCard.js'
-import {NotQuotePost,QuotePost} from './PostEmbed/QuotePost.js'
+import {NotQuotePost, QuotePost} from './PostEmbed/QuotePost.js'
 
 type CommonProps = {
   data: PostData
@@ -188,6 +188,7 @@ export function ImagesEmbed({
   embed: EmbedType<'images'>
 }) {
   const {images} = embed.view
+  const gutter = a.p_2xs.padding
 
   if (images.length > 0) {
     const imgs = images
@@ -201,37 +202,139 @@ export function ImagesEmbed({
       )
     } else if (imgs.length === 2) {
       return (
-        <Grid.Row gutter={a.p_xs.padding}>
-          <Grid.Column gutter={a.p_xs.padding} width={1 / 2}>
-            <SquareImage image={imgs[0]} />
+        <Grid.Row gutter={gutter}>
+          <Grid.Column width={1 / 2} gutter={gutter}>
+            <SquareImage
+              image={imgs[0]}
+              style={{
+                borderTopRightRadius: 0,
+                borderBottomRightRadius: 0,
+              }}
+              insetBorderStyle={{
+                borderTopRightRadius: 0,
+                borderBottomRightRadius: 0,
+              }}
+            />
           </Grid.Column>
-          <Grid.Column gutter={a.p_xs.padding} width={1 / 2}>
-            <SquareImage image={imgs[1]} />
+          <Grid.Column width={1 / 2} gutter={gutter}>
+            <SquareImage
+              image={imgs[1]}
+              style={{
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+              }}
+              insetBorderStyle={{
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+              }}
+            />
           </Grid.Column>
         </Grid.Row>
       )
     } else if (imgs.length === 3) {
       return (
-        <Grid.Row gutter={a.p_xs.padding}>
-          <Grid.Column gutter={a.p_xs.padding} width={2 / 3}>
-            <SquareImage image={imgs[0]} />
+        <Grid.Row gutter={gutter}>
+          <Grid.Column gutter={gutter} width={2 / 3}>
+            <SquareImage
+              image={imgs[0]}
+              style={{
+                borderTopRightRadius: 0,
+                borderBottomRightRadius: 0,
+              }}
+              insetBorderStyle={{
+                borderTopRightRadius: 0,
+                borderBottomRightRadius: 0,
+              }}
+            />
           </Grid.Column>
-          <Grid.Column gutter={a.p_xs.padding} width={1 / 3} cx={[a.gap_sm]}>
-            <SquareImage image={imgs[1]} />
-            <SquareImage image={imgs[2]} />
+          <Grid.Column gutter={gutter} width={1 / 3} cx={[a.gap_xs]}>
+            <SquareImage
+              image={imgs[1]}
+              style={{
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+                borderBottomRightRadius: 0,
+              }}
+              insetBorderStyle={{
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+                borderBottomRightRadius: 0,
+              }}
+            />
+            <SquareImage
+              image={imgs[2]}
+              style={{
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+                borderTopRightRadius: 0,
+              }}
+              insetBorderStyle={{
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+                borderTopRightRadius: 0,
+              }}
+            />
           </Grid.Column>
         </Grid.Row>
       )
     } else {
       return (
-        <Grid.Row gutter={a.p_xs.padding}>
-          <Grid.Column gutter={a.p_xs.padding} width={1 / 2} cx={[a.gap_sm]}>
-            <SquareImage image={imgs[0]} />
-            <SquareImage image={imgs[1]} />
+        <Grid.Row gutter={gutter}>
+          <Grid.Column gutter={gutter} width={1 / 2} cx={[a.gap_xs]}>
+            <SquareImage
+              image={imgs[0]}
+              style={{
+                borderTopRightRadius: 0,
+                borderBottomRightRadius: 0,
+                borderBottomLeftRadius: 0,
+              }}
+              insetBorderStyle={{
+                borderTopRightRadius: 0,
+                borderBottomRightRadius: 0,
+                borderBottomLeftRadius: 0,
+              }}
+            />
+            <SquareImage
+              image={imgs[2]}
+              style={{
+                borderTopLeftRadius: 0,
+                borderBottomRightRadius: 0,
+                borderTopRightRadius: 0,
+              }}
+              insetBorderStyle={{
+                borderTopLeftRadius: 0,
+                borderBottomRightRadius: 0,
+                borderTopRightRadius: 0,
+              }}
+            />
           </Grid.Column>
-          <Grid.Column gutter={a.p_xs.padding} width={1 / 2} cx={[a.gap_sm]}>
-            <SquareImage image={imgs[2]} />
-            <SquareImage image={imgs[3]} />
+          <Grid.Column gutter={gutter} width={1 / 2} cx={[a.gap_xs]}>
+            <SquareImage
+              image={imgs[1]}
+              style={{
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+                borderBottomRightRadius: 0,
+              }}
+              insetBorderStyle={{
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+                borderBottomRightRadius: 0,
+              }}
+            />
+            <SquareImage
+              image={imgs[3]}
+              style={{
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+                borderTopRightRadius: 0,
+              }}
+              insetBorderStyle={{
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+                borderTopRightRadius: 0,
+              }}
+            />
           </Grid.Column>
         </Grid.Row>
       )

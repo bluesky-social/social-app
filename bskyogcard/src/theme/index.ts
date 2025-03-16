@@ -7,6 +7,7 @@ export * as tokens from './tokens.js'
 const fontFamily = 'Inter'
 
 export const theme = {
+  name: 'light',
   palette: colors,
   atoms: {
     text: {
@@ -86,7 +87,15 @@ export const theme = {
   },
 }
 
-export function style(styleObjects: Record<string, any>[]) {
+export type StyleObject = Record<string, any>
+
+export type StyleProp = {
+  style?: StyleObject
+}
+
+export function style(
+  styleObjects: (StyleObject | boolean | null | undefined)[],
+) {
   return Object.assign({}, ...styleObjects.filter(Boolean).flat())
 }
 

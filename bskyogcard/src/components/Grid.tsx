@@ -29,7 +29,7 @@ export function Row({
 
 export function Column({
   children,
-  gutter = 0,
+  gutter,
   cx,
   width = 1,
 }: {
