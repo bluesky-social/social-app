@@ -21,6 +21,10 @@ export function Text({
     a.leading_tight,
     a.tracking_wide,
     t.atoms.text,
+    {
+      fontFamily: 'Inter',
+      fontWeight: 400,
+    },
     ...(cx ?? []),
   ])
   styles.fontSize = (styles.fontSize || a.text_md.fontSize) * SCALE_MULTIPLIER

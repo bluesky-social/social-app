@@ -1,12 +1,7 @@
-import {readdirSync, readFileSync} from 'node:fs'
-import * as path from 'node:path'
-import {fileURLToPath} from 'node:url'
-
 import {AtpAgent} from '@atproto/api'
 
 import {Config} from './config.js'
-
-const __DIRNAME = path.dirname(fileURLToPath(import.meta.url))
+import {getFontFiles,readFonts} from './util/fonts.js'
 
 export type AppContextOptions = {
   cfg: Config
@@ -28,19 +23,8 @@ export class AppContext {
 
   static async fromConfig(cfg: Config, overrides?: Partial<AppContextOptions>) {
     const appviewAgent = new AtpAgent({service: cfg.service.appviewUrl})
-    const fontDirectory = path.join(__DIRNAME, 'assets', 'fonts')
-    const fontFiles = readdirSync(fontDirectory)
-    const fonts = fontFiles.map(file => {
-      const basename = path.basename(file, path.extname(file))
-      const italic = basename.includes('Italic')
-      const [weight, name] = basename.split('-')
-      return {
-        name,
-        data: readFileSync(path.join(fontDirectory, file)),
-        weight: parseInt(weight),
-        style: italic ? 'italic' : 'normal',
-      }
-    })
+    const fontFiles = getFontFiles()
+    const fonts = readFonts(fontFiles)
     return new AppContext({
       cfg,
       appviewAgent,

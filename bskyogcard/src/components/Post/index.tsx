@@ -81,7 +81,7 @@ export function Post({
               moderatorData={moderatorData}
             />
             <Box cx={[a.flex_col]}>
-              <Text cx={[a.text_md, a.font_bold, a.pb_2xs]}>
+              <Text cx={[a.text_md, a.font_heavy, a.pb_2xs]}>
                 {post.author.displayName || post.author.handle}
               </Text>
               <Text cx={[a.text_sm, t.atoms.text_contrast_medium]}>

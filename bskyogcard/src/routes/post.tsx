@@ -10,6 +10,7 @@ import {getPost} from '../data/getPost.js'
 import {getPostData} from '../data/getPostData.js'
 import {httpLogger} from '../logger.js'
 import {loadEmojiAsSvg} from '../util.js'
+import {getFontFiles} from '../util/fonts.js'
 import {
   getRenderOptions,
   parseDisplayOptionsFromQuery,
@@ -65,6 +66,10 @@ export default function (ctx: AppContext, app: Express) {
           },
         )
         const output = await resvg.renderAsync(svg, {
+          font: {
+            fontFiles: getFontFiles(),
+            defaultFontFamily: 'Inter',
+          },
           fitTo: {
             mode: 'width',
             value: width * 2,
