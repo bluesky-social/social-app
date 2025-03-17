@@ -3,12 +3,15 @@ import Animated, {
   Extrapolation,
   interpolate,
   SharedValue,
-  useAnimatedStyle,
+  useAnimatedProps,
 } from 'react-native-reanimated'
+import {BlurView} from 'expo-blur'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme} from '#/alf'
+
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 
 export function Backdrop({
   animation,
@@ -22,24 +25,30 @@ export function Backdrop({
   const t = useTheme()
   const {_} = useLingui()
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(
+  const animatedProps = useAnimatedProps(() => ({
+    intensity: interpolate(
       animation.get(),
       [0, 1],
-      [0, intensity / 100],
+      [0, intensity],
       Extrapolation.CLAMP,
     ),
   }))
 
   return (
-    <Animated.View
-      style={[a.absolute, a.inset_0, t.atoms.bg_contrast_975, animatedStyle]}>
+    <AnimatedBlurView
+      animatedProps={animatedProps}
+      style={[a.absolute, a.inset_0]}
+      tint={
+        t.scheme === 'light'
+          ? 'systemThinMaterialLight'
+          : 'systemThinMaterialDark'
+      }>
       <Pressable
         style={a.flex_1}
         accessibilityLabel={_(msg`Close menu`)}
         accessibilityHint={_(msg`Tap to close context menu`)}
         onPress={onPress}
       />
-    </Animated.View>
+    </AnimatedBlurView>
   )
 }

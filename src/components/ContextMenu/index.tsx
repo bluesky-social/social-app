@@ -31,7 +31,7 @@ import {HITSLOP_10} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {isIOS} from '#/platform/detection'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme} from '#/alf'
 import {
   Context,
   ItemContext,
@@ -57,8 +57,6 @@ export {
 } from '#/components/Dialog'
 
 const {Provider: PortalProvider, Outlet, Portal} = createPortalGroup()
-
-const AnimatedImage = Animated.createAnimatedComponent(Image)
 
 const SPRING: WithSpringConfig = {
   mass: isIOS ? 1.25 : 0.75,
@@ -121,6 +119,7 @@ export function Root({children}: {children: React.ReactNode}) {
 export function Trigger({children, label, contentLabel, style}: TriggerProps) {
   const context = useContextMenuContext()
   const playHaptic = useHaptics()
+  const {top: topInset} = useSafeAreaInsets()
   const ref = useRef<View>(null)
   const isFocused = useIsFocused()
   const [image, setImage] = useState<string | null>(null)
@@ -133,7 +132,17 @@ export function Trigger({children, label, contentLabel, style}: TriggerProps) {
     const [measurement, capture] = await Promise.all([
       new Promise<Measurement>(resolve => {
         ref.current?.measureInWindow((x, y, width, height) =>
-          resolve({x, y, width, height}),
+          resolve({
+            x,
+            y:
+              y +
+              platform({
+                default: 0,
+                android: topInset, // not included in measurement
+              }),
+            width,
+            height,
+          }),
         )
       }),
       captureRef(ref, {result: 'data-uri'}),
@@ -239,9 +248,7 @@ function TriggerClone({
   }))
 
   return (
-    <AnimatedImage
-      onDisplay={onDisplay}
-      source={image}
+    <Animated.View
       style={[
         a.absolute,
         {
@@ -251,13 +258,21 @@ function TriggerClone({
           height: measurement.height,
         },
         a.z_10,
+        a.pointer_events_none,
         animatedStyles,
-      ]}
-      accessibilityLabel={label}
-      accessibilityHint={_(msg`The subject of the context menu`)}
-      accessibilityIgnoresInvertColors={false}
-      pointerEvents="none"
-    />
+      ]}>
+      <Image
+        onDisplay={onDisplay}
+        source={image}
+        style={{
+          width: measurement.width,
+          height: measurement.height,
+        }}
+        accessibilityLabel={label}
+        accessibilityHint={_(msg`The subject of the context menu`)}
+        accessibilityIgnoresInvertColors={false}
+      />
+    </Animated.View>
   )
 }
 
@@ -300,7 +315,14 @@ export function Outer({
       const screenPosition =
         context.measurement.y + context.measurement.height + 4
       const bottomPosition = screenPosition + height
-      const safeAreaBottomLimit = screenHeight - insets.bottom - 20 // to be safe
+      const safeAreaBottomLimit =
+        screenHeight -
+        platform({
+          default: 0,
+          android: insets.top, // because we add it to the initial measurement
+        }) -
+        insets.bottom -
+        20 // to be safe
       const diff = bottomPosition - safeAreaBottomLimit
       if (diff > 0) {
         translation = -diff
@@ -321,6 +343,15 @@ export function Outer({
 
   if (!context.isOpen || !context.measurement) return null
 
+  console.log(
+    align === 'left'
+      ? {left: context.measurement.x}
+      : {
+          right:
+            screenWidth - context.measurement.x - context.measurement.width,
+        },
+  )
+
   return (
     <Portal>
       <Context.Provider value={context}>
@@ -336,7 +367,7 @@ export function Outer({
             a.z_10,
             a.absolute,
             {
-              maxWidth: '60%',
+              width: 250,
               transformOrigin: align === 'left' ? 'top left' : 'top right',
               top: context.measurement.y + context.measurement.height,
             },
@@ -348,7 +379,8 @@ export function Outer({
                     context.measurement.x -
                     context.measurement.width,
                 },
-            hasBeenMeasured ? animatedStyle : {opacity: 0},
+            animatedStyle,
+            !hasBeenMeasured && [{opacity: 0, transform: []}],
             style,
           ]}>
           <View
