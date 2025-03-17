@@ -1,5 +1,6 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
+  BackHandler,
   Keyboard,
   LayoutChangeEvent,
   Pressable,
@@ -32,7 +33,7 @@ import flattenReactChildren from 'react-keyed-flatten-children'
 import {HITSLOP_10} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {isIOS} from '#/platform/detection'
+import {isAndroid, isIOS} from '#/platform/detection'
 import {atoms as a, platform, useTheme} from '#/alf'
 import {
   Context,
@@ -117,6 +118,17 @@ export function Root({children}: {children: React.ReactNode}) {
       clearMeasurement,
     ],
   )
+
+  useEffect(() => {
+    if (isAndroid && context.isOpen) {
+      const listener = BackHandler.addEventListener('hardwareBackPress', () => {
+        context.close()
+        return true
+      })
+
+      return () => listener.remove()
+    }
+  }, [context])
 
   return <Context.Provider value={context}>{children}</Context.Provider>
 }
