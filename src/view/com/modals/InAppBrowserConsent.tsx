@@ -24,13 +24,13 @@ export function Component({href}: {href: string}) {
   const onUseIAB = React.useCallback(() => {
     setInAppBrowser(true)
     closeModal()
-    openLink(href, true, true)
+    openLink(href, true)
   }, [closeModal, setInAppBrowser, href, openLink])
 
   const onUseLinking = React.useCallback(() => {
     setInAppBrowser(false)
     closeModal()
-    openLink(href, false, true)
+    openLink(href, false)
   }, [closeModal, setInAppBrowser, href, openLink])
 
   return (
