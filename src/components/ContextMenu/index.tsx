@@ -388,7 +388,7 @@ export function Outer({
               a.shadow_md,
               t.atoms.bg_contrast_25,
               a.w_full,
-              // @ts-expect-error react-native-web expects string, and this file is platform-split -sfn
+              // @ts-ignore react-native-web expects string, and this file is platform-split -sfn
               {
                 transformOrigin:
                   align === 'left' ? [0, 0, 0] : [MENU_WIDTH, 0, 0],
