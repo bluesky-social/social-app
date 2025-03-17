@@ -128,55 +128,57 @@ function InnerApp() {
   return (
     <Alf theme={theme}>
       <ThemeProvider theme={theme}>
-        <Splash isReady={isReady && hasCheckedReferrer}>
-          <RootSiblingParent>
-            <VideoVolumeProvider>
-              <React.Fragment
-                // Resets the entire tree below when it changes:
-                key={currentAccount?.did}>
-                <QueryProvider currentDid={currentAccount?.did}>
-                  <ComposerProvider>
-                    <StatsigProvider>
-                      <MessagesProvider>
-                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                        <LabelDefsProvider>
-                          <ModerationOptsProvider>
-                            <LoggedOutViewProvider>
-                              <SelectedFeedProvider>
-                                <HiddenRepliesProvider>
-                                  <HomeBadgeProvider>
-                                    <UnreadNotifsProvider>
-                                      <BackgroundNotificationPreferencesProvider>
-                                        <MutedThreadsProvider>
-                                          <ProgressGuideProvider>
-                                            <TrendingConfigProvider>
-                                              <GestureHandlerRootView
-                                                style={s.h100pct}>
-                                                <IntentDialogProvider>
-                                                  <TestCtrls />
-                                                  <Shell />
-                                                  <NuxDialogs />
-                                                </IntentDialogProvider>
-                                              </GestureHandlerRootView>
-                                            </TrendingConfigProvider>
-                                          </ProgressGuideProvider>
-                                        </MutedThreadsProvider>
-                                      </BackgroundNotificationPreferencesProvider>
-                                    </UnreadNotifsProvider>
-                                  </HomeBadgeProvider>
-                                </HiddenRepliesProvider>
-                              </SelectedFeedProvider>
-                            </LoggedOutViewProvider>
-                          </ModerationOptsProvider>
-                        </LabelDefsProvider>
-                      </MessagesProvider>
-                    </StatsigProvider>
-                  </ComposerProvider>
-                </QueryProvider>
-              </React.Fragment>
-            </VideoVolumeProvider>
-          </RootSiblingParent>
-        </Splash>
+        <ContextMenuProvider>
+          <Splash isReady={isReady && hasCheckedReferrer}>
+            <RootSiblingParent>
+              <VideoVolumeProvider>
+                <React.Fragment
+                  // Resets the entire tree below when it changes:
+                  key={currentAccount?.did}>
+                  <QueryProvider currentDid={currentAccount?.did}>
+                    <ComposerProvider>
+                      <StatsigProvider>
+                        <MessagesProvider>
+                          {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                          <LabelDefsProvider>
+                            <ModerationOptsProvider>
+                              <LoggedOutViewProvider>
+                                <SelectedFeedProvider>
+                                  <HiddenRepliesProvider>
+                                    <HomeBadgeProvider>
+                                      <UnreadNotifsProvider>
+                                        <BackgroundNotificationPreferencesProvider>
+                                          <MutedThreadsProvider>
+                                            <ProgressGuideProvider>
+                                              <TrendingConfigProvider>
+                                                <GestureHandlerRootView
+                                                  style={s.h100pct}>
+                                                  <IntentDialogProvider>
+                                                    <TestCtrls />
+                                                    <Shell />
+                                                    <NuxDialogs />
+                                                  </IntentDialogProvider>
+                                                </GestureHandlerRootView>
+                                              </TrendingConfigProvider>
+                                            </ProgressGuideProvider>
+                                          </MutedThreadsProvider>
+                                        </BackgroundNotificationPreferencesProvider>
+                                      </UnreadNotifsProvider>
+                                    </HomeBadgeProvider>
+                                  </HiddenRepliesProvider>
+                                </SelectedFeedProvider>
+                              </LoggedOutViewProvider>
+                            </ModerationOptsProvider>
+                          </LabelDefsProvider>
+                        </MessagesProvider>
+                      </StatsigProvider>
+                    </ComposerProvider>
+                  </QueryProvider>
+                </React.Fragment>
+              </VideoVolumeProvider>
+            </RootSiblingParent>
+          </Splash>
+        </ContextMenuProvider>
       </ThemeProvider>
     </Alf>
   )
@@ -217,9 +219,7 @@ function App() {
                                 <SafeAreaProvider
                                   initialMetrics={initialWindowMetrics}>
                                   <LightStatusBarProvider>
-                                    <ContextMenuProvider>
-                                      <InnerApp />
-                                    </ContextMenuProvider>
+                                    <InnerApp />
                                   </LightStatusBarProvider>
                                 </SafeAreaProvider>
                               </StarterPackProvider>

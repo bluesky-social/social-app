@@ -9,7 +9,7 @@ import {BlurView} from 'expo-blur'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 
@@ -22,7 +22,6 @@ export function Backdrop({
   intensity?: number
   onPress?: () => void
 }) {
-  const t = useTheme()
   const {_} = useLingui()
 
   const animatedProps = useAnimatedProps(() => ({
@@ -38,11 +37,7 @@ export function Backdrop({
     <AnimatedBlurView
       animatedProps={animatedProps}
       style={[a.absolute, a.inset_0]}
-      tint={
-        t.scheme === 'light'
-          ? 'systemThinMaterialLight'
-          : 'systemThinMaterialDark'
-      }>
+      tint="systemThinMaterialDark">
       <Pressable
         style={a.flex_1}
         accessibilityLabel={_(msg`Close menu`)}

@@ -67,6 +67,9 @@ const SPRING: WithSpringConfig = {
   restDisplacementThreshold: 0.01,
 }
 
+/**
+ * Needs placing near the top of the provider stack, but BELOW the theme provider.
+ */
 export function Provider({children}: {children: React.ReactNode}) {
   return (
     <PortalProvider>
