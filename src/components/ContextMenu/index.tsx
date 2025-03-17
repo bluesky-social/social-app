@@ -276,6 +276,8 @@ function TriggerClone({
   )
 }
 
+const MENU_WIDTH = 230
+
 export function Outer({
   children,
   style,
@@ -289,21 +291,16 @@ export function Outer({
   const context = useContextMenuContext()
   const {width: screenWidth, height: screenHeight} = useWindowDimensions()
   const insets = useSafeAreaInsets()
-  const [hasBeenMeasured, setHasBeenMeasured] = useState(false)
-
-  // reset when context menu is closed
-  if (hasBeenMeasured && !context.isOpen) {
-    setHasBeenMeasured(false)
-  }
 
   const {animationSV, translationSV} = context
 
+  const animatedContainerStyle = useAnimatedStyle(() => ({
+    transform: [{translateY: translationSV.get() * animationSV.get()}],
+  }))
+
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: clamp(animationSV.get(), 0, 1),
-    transform: [
-      {scale: interpolate(animationSV.get(), [0, 1], [0.2, 1])},
-      {translateY: translationSV.get() * animationSV.get()},
-    ],
+    transform: [{scale: interpolate(animationSV.get(), [0, 1], [0.2, 1])}],
   }))
 
   const onLayout = useCallback(
@@ -336,39 +333,25 @@ export function Outer({
       if (translation !== 0) {
         translationSV.set(translation)
       }
-      setHasBeenMeasured(true)
     },
     [context.measurement, screenHeight, insets, translationSV],
   )
 
   if (!context.isOpen || !context.measurement) return null
 
-  console.log(
-    align === 'left'
-      ? {left: context.measurement.x}
-      : {
-          right:
-            screenWidth - context.measurement.x - context.measurement.width,
-        },
-  )
-
   return (
     <Portal>
       <Context.Provider value={context}>
         <Backdrop animation={animationSV} onPress={context.close} />
         <Animated.View
-          onLayout={!hasBeenMeasured ? onLayout : undefined}
+          onLayout={onLayout}
           style={[
-            a.rounded_md,
-            a.shadow_md,
-            t.atoms.bg_contrast_25,
-            a.mt_xs,
-            a.w_full,
-            a.z_10,
+            animatedContainerStyle,
             a.absolute,
+            a.z_10,
+            a.mt_xs,
             {
-              width: 250,
-              transformOrigin: align === 'left' ? 'top left' : 'top right',
+              width: MENU_WIDTH,
               top: context.measurement.y + context.measurement.height,
             },
             align === 'left'
@@ -379,36 +362,48 @@ export function Outer({
                     context.measurement.x -
                     context.measurement.width,
                 },
-            animatedStyle,
-            !hasBeenMeasured && [{opacity: 0, transform: []}],
-            style,
           ]}>
-          <View
+          <Animated.View
             style={[
-              a.flex_1,
               a.rounded_md,
-              a.overflow_hidden,
-              a.border,
-              t.atoms.border_contrast_low,
+              a.shadow_md,
+              t.atoms.bg_contrast_25,
+              a.w_full,
+              // @ts-expect-error react-native-web expects string, and this file is platform-split -sfn
+              {
+                transformOrigin:
+                  align === 'left' ? [0, 0, 0] : [MENU_WIDTH, 0, 0],
+              },
+              animatedStyle,
+              style,
             ]}>
-            {flattenReactChildren(children).map((child, i) => {
-              return React.isValidElement(child) &&
-                (child.type === Item || child.type === Divider) ? (
-                <React.Fragment key={i}>
-                  {i > 0 ? (
-                    <View style={[a.border_b, t.atoms.border_contrast_low]} />
-                  ) : null}
-                  {React.cloneElement(child, {
-                    // @ts-ignore
-                    style: {
-                      borderRadius: 0,
-                      borderWidth: 0,
-                    },
-                  })}
-                </React.Fragment>
-              ) : null
-            })}
-          </View>
+            <View
+              style={[
+                a.flex_1,
+                a.rounded_md,
+                a.overflow_hidden,
+                a.border,
+                t.atoms.border_contrast_low,
+              ]}>
+              {flattenReactChildren(children).map((child, i) => {
+                return React.isValidElement(child) &&
+                  (child.type === Item || child.type === Divider) ? (
+                  <React.Fragment key={i}>
+                    {i > 0 ? (
+                      <View style={[a.border_b, t.atoms.border_contrast_low]} />
+                    ) : null}
+                    {React.cloneElement(child, {
+                      // @ts-expect-error not typed
+                      style: {
+                        borderRadius: 0,
+                        borderWidth: 0,
+                      },
+                    })}
+                  </React.Fragment>
+                ) : null
+              })}
+            </View>
+          </Animated.View>
         </Animated.View>
       </Context.Provider>
     </Portal>
