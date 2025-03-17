@@ -545,7 +545,7 @@ function Header({
       })
       items.push({
         testID: 'listHeaderDropdownDeleteBtn',
-        label: _(msg`Delete List`),
+        label: _(msg`Delete list`),
         onPress: deleteListPromptControl.open,
         icon: {
           ios: {
@@ -559,7 +559,7 @@ function Header({
       items.push({label: 'separator'})
       items.push({
         testID: 'listHeaderDropdownReportBtn',
-        label: _(msg`Report List`),
+        label: _(msg`Report list`),
         onPress: onPressReport,
         icon: {
           ios: {
@@ -594,7 +594,7 @@ function Header({
       if (isMuting) {
         items.push({
           testID: 'listHeaderDropdownMuteBtn',
-          label: _(msg`Un-mute list`),
+          label: _(msg`Unmute list`),
           onPress: onUnsubscribeMute,
           icon: {
             ios: {
@@ -609,7 +609,7 @@ function Header({
       if (isBlocking) {
         items.push({
           testID: 'listHeaderDropdownBlockBtn',
-          label: _(msg`Un-block list`),
+          label: _(msg`Unblock list`),
           onPress: onUnsubscribeBlock,
           icon: {
             ios: {
