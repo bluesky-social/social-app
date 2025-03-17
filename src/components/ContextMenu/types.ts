@@ -37,6 +37,13 @@ export type ItemContextType = {
 export type TriggerProps = {
   children(props: TriggerChildProps): React.ReactNode
   label: string
+  /**
+   * When activated, this is the accessibility label for the entire thing that has been triggered.
+   * For example, if the trigger is a message bubble, use the message content.
+   *
+   * @platform ios, android
+   */
+  contentLabel: string
   hint?: string
   role?: AccessibilityRole
   style?: StyleProp<ViewStyle>

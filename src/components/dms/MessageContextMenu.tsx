@@ -70,10 +70,21 @@ export let MessageContextMenu = ({
       .catch(() => Toast.show(_(msg`Failed to delete message`)))
   }, [_, convo, message.id])
 
+  const sender = convo.convo.members.find(
+    member => member.did === message.sender.did,
+  )
+
   return (
     <>
       <ContextMenu.Root>
-        <ContextMenu.Trigger label={_(msg`Message options`)}>
+        <ContextMenu.Trigger
+          label={_(msg`Message options`)}
+          contentLabel={_(
+            msg`Message from @${
+              sender?.handle ?? // should always be defined
+              'unknown'
+            }: ${message.text}`,
+          )}>
           {children}
         </ContextMenu.Trigger>
 

@@ -18,7 +18,6 @@ import Animated, {
   useSharedValue,
   withSpring,
   WithSpringConfig,
-  withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {captureRef} from 'react-native-view-shot'
@@ -97,7 +96,7 @@ export function Root({children}: {children: React.ReactNode}) {
       },
       close: () => {
         animationSV.set(
-          withTiming(0, {duration: 150}, finished => {
+          withSpring(0, SPRING, finished => {
             if (finished) {
               translationSV.set(0)
               runOnJS(clearMeasurement)()
@@ -119,7 +118,7 @@ export function Root({children}: {children: React.ReactNode}) {
   return <Context.Provider value={context}>{children}</Context.Provider>
 }
 
-export function Trigger({children, label, style}: TriggerProps) {
+export function Trigger({children, label, contentLabel, style}: TriggerProps) {
   const context = useContextMenuContext()
   const playHaptic = useHaptics()
   const ref = useRef<View>(null)
@@ -197,6 +196,7 @@ export function Trigger({children, label, style}: TriggerProps) {
       {isFocused && image && measurement && (
         <Portal>
           <TriggerClone
+            label={contentLabel}
             translation={translationSV}
             animation={animationSV}
             image={image}
@@ -223,12 +223,14 @@ function TriggerClone({
   image,
   measurement,
   onDisplay,
+  label,
 }: {
   translation: SharedValue<number>
   animation: SharedValue<number>
   image: string
   measurement: Measurement
   onDisplay: () => void
+  label: string
 }) {
   const {_} = useLingui()
 
@@ -251,9 +253,10 @@ function TriggerClone({
         a.z_10,
         animatedStyles,
       ]}
-      accessibilityLabel={_(msg`Context menu trigger`)}
-      accessibilityHint={_(msg`The item that just triggered the context menu.`)}
+      accessibilityLabel={label}
+      accessibilityHint={_(msg`The subject of the context menu`)}
       accessibilityIgnoresInvertColors={false}
+      pointerEvents="none"
     />
   )
 }
@@ -291,6 +294,7 @@ export function Outer({
   const onLayout = useCallback(
     (evt: LayoutChangeEvent) => {
       if (!context.measurement) return // should not happen
+      let translation = 0
 
       const {height} = evt.nativeEvent.layout
       const screenPosition =
@@ -299,7 +303,16 @@ export function Outer({
       const safeAreaBottomLimit = screenHeight - insets.bottom - 20 // to be safe
       const diff = bottomPosition - safeAreaBottomLimit
       if (diff > 0) {
-        translationSV.set(-diff)
+        translation = -diff
+      } else {
+        const distanceMessageFromTop = context.measurement.y - insets.top - 80
+        if (distanceMessageFromTop < 0) {
+          translation = -Math.max(distanceMessageFromTop, diff)
+        }
+      }
+
+      if (translation !== 0) {
+        translationSV.set(translation)
       }
       setHasBeenMeasured(true)
     },
@@ -373,6 +386,7 @@ export function Outer({
 export function Item({children, label, style, onPress, ...rest}: ItemProps) {
   const t = useTheme()
   const context = useContextMenuContext()
+  const playHaptic = useHaptics()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
     state: pressed,
@@ -394,6 +408,7 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
       onPressIn={e => {
         onPressIn()
         rest.onPressIn?.(e)
+        playHaptic('Light')
       }}
       onPressOut={e => {
         onPressOut()
@@ -446,7 +461,7 @@ export function ItemIcon({icon: Comp}: ItemIconProps) {
   const {disabled} = useContextMenuItemContext()
   return (
     <Comp
-      size="lg"
+      size="md"
       fill={
         disabled
           ? t.atoms.text_contrast_low.color
