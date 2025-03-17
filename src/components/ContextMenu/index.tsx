@@ -4,7 +4,6 @@ import {
   LayoutChangeEvent,
   Pressable,
   StyleProp,
-  useWindowDimensions,
   View,
   ViewStyle,
 } from 'react-native'
@@ -19,7 +18,10 @@ import Animated, {
   withSpring,
   WithSpringConfig,
 } from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {
+  useSafeAreaFrame,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
 import {captureRef} from 'react-native-view-shot'
 import {Image} from 'expo-image'
 import {msg} from '@lingui/macro'
@@ -289,8 +291,8 @@ export function Outer({
 }) {
   const t = useTheme()
   const context = useContextMenuContext()
-  const {width: screenWidth, height: screenHeight} = useWindowDimensions()
   const insets = useSafeAreaInsets()
+  const frame = useSafeAreaFrame()
 
   const {animationSV, translationSV} = context
 
@@ -309,17 +311,15 @@ export function Outer({
       let translation = 0
 
       const {height} = evt.nativeEvent.layout
-      const screenPosition =
-        context.measurement.y + context.measurement.height + 4
-      const bottomPosition = screenPosition + height
+      const topPosition = context.measurement.y + context.measurement.height + 4
+      const bottomPosition = topPosition + height
       const safeAreaBottomLimit =
-        screenHeight -
+        frame.height -
         platform({
+          ios: insets.bottom + 20,
+          android: 12,
           default: 0,
-          android: insets.top, // because we add it to the initial measurement
-        }) -
-        insets.bottom -
-        20 // to be safe
+        })
       const diff = bottomPosition - safeAreaBottomLimit
       if (diff > 0) {
         translation = -diff
@@ -334,7 +334,7 @@ export function Outer({
         translationSV.set(translation)
       }
     },
-    [context.measurement, screenHeight, insets, translationSV],
+    [context.measurement, frame.height, insets, translationSV],
   )
 
   if (!context.isOpen || !context.measurement) return null
@@ -343,10 +343,11 @@ export function Outer({
     <Portal>
       <Context.Provider value={context}>
         <Backdrop animation={animationSV} onPress={context.close} />
+        {/* containing element - stays the same size, so we measure it
+         to determine if a translation is necessary. also has the positioning */}
         <Animated.View
           onLayout={onLayout}
           style={[
-            animatedContainerStyle,
             a.absolute,
             a.z_10,
             a.mt_xs,
@@ -358,11 +359,14 @@ export function Outer({
               ? {left: context.measurement.x}
               : {
                   right:
-                    screenWidth -
+                    frame.x +
+                    frame.width -
                     context.measurement.x -
                     context.measurement.width,
                 },
+            animatedContainerStyle,
           ]}>
+          {/* scaling element - has the scale/fade animation on it */}
           <Animated.View
             style={[
               a.rounded_md,
@@ -377,6 +381,8 @@ export function Outer({
               animatedStyle,
               style,
             ]}>
+            {/* innermost element - needs an overflow: hidden for children, but we also need a shadow,
+              so put the shadow on the scaling element and the overflow on the innermost element */}
             <View
               style={[
                 a.flex_1,
