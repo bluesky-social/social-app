@@ -483,14 +483,14 @@ function Footer({
               {
                 items.length === 1 ? (
                   <Trans>
-                    <BoldText>{getName(items[0])}</BoldText> is included
-                    in your starter pack
+                    <BoldText>{getName(items[0])}</BoldText> is included in your
+                    starter pack
                   </Trans>
                 ) : items.length === 2 ? (
                   <Trans>
                     <BoldText>{getName(items[0])}</BoldText> and{' '}
-                    <BoldText>{getName(items[1])}</BoldText> are included
-                    in your starter pack
+                    <BoldText>{getName(items[1])}</BoldText> are included in
+                    your starter pack
                   </Trans>
                 ) : items.length > 2 ? (
                   <Trans context="feeds">
