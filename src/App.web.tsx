@@ -53,7 +53,7 @@ import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialo
 import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdateOverlay'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext'
-import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
+import {Provider as VideoMuteProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import {ToastOutlet} from '#/components/Toast'
 import {Provider as AgeAssuranceV2Provider} from '#/ageAssurance'
 import {prefetchAgeAssuranceConfig} from '#/ageAssurance'
@@ -109,7 +109,7 @@ function InnerApp() {
     <Alf theme={theme}>
       <ThemeProvider theme={theme}>
         <ContextMenuProvider>
-          <VideoVolumeProvider>
+          <VideoMuteProvider>
             <ActiveVideoProvider>
               <React.Fragment
                 // Resets the entire tree below when it changes:
@@ -161,7 +161,7 @@ function InnerApp() {
                 </QueryProvider>
               </React.Fragment>
             </ActiveVideoProvider>
-          </VideoVolumeProvider>
+          </VideoMuteProvider>
         </ContextMenuProvider>
       </ThemeProvider>
     </Alf>
