@@ -123,6 +123,7 @@ const schema = z.object({
   kawaii: z.boolean().optional(),
   hasCheckedForStarterPack: z.boolean().optional(),
   subtitlesEnabled: z.boolean().optional(),
+  videoVolume: z.number(),
   /** @deprecated */
   mutedThreads: z.array(z.string()),
   trendingDisabled: z.boolean().optional(),
@@ -172,6 +173,7 @@ export const defaults: Schema = {
   kawaii: false,
   hasCheckedForStarterPack: false,
   subtitlesEnabled: true,
+  videoVolume: 1,
   trendingDisabled: false,
   trendingVideoDisabled: false,
 }
