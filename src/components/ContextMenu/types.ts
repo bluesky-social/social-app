@@ -24,6 +24,11 @@ export type ItemProps = Omit<MenuItemProps, 'onPress'> & {
   onPress: (evt?: GestureResponderEvent) => void
 }
 
+export type Position = {
+  x: number
+  y: number
+}
+
 export type Measurement = {
   x: number
   y: number
@@ -45,6 +50,14 @@ export type ContextType = {
     rect: Measurement,
     onTouchUp: () => void,
   ) => void
+  hoverablesSV: SharedValue<Record<string, {id: string; rect: Measurement}>>
+  hoveredMenuItem: string | null
+  setHoveredMenuItem: React.Dispatch<React.SetStateAction<string | null>>
+  onTouchUpMenuItem: (id: string) => void
+}
+
+export type MenuContextType = {
+  align: 'left' | 'right'
 }
 
 export type ItemContextType = {
