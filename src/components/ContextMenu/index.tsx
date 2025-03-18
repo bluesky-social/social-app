@@ -1,4 +1,11 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   BackHandler,
   Keyboard,
@@ -86,8 +93,18 @@ export function Root({children}: {children: React.ReactNode}) {
   const animationSV = useSharedValue(0)
   const translationSV = useSharedValue(0)
   const isFocused = useIsFocused()
+  const hoverables = useRef<
+    Map<string, {id: string; rect: Measurement; onTouchUp: () => void}>
+  >(new Map())
+  const uiThreadHoverables = useSharedValue<
+    Record<string, {id: string; rect: Measurement}>
+  >({})
+  const syncHoverablesThrottleRef = useRef<ReturnType<typeof setTimeout>>()
 
-  const clearMeasurement = useCallback(() => setMeasurement(null), [])
+  const onCompletedClose = useCallback(() => {
+    hoverables.current.clear()
+    setMeasurement(null)
+  }, [])
 
   const context = useMemo<ContextType>(
     () => ({
@@ -103,20 +120,44 @@ export function Root({children}: {children: React.ReactNode}) {
         animationSV.set(
           withSpring(0, SPRING, finished => {
             if (finished) {
+              uiThreadHoverables.set({})
               translationSV.set(0)
-              runOnJS(clearMeasurement)()
+              runOnJS(onCompletedClose)()
             }
           }),
         )
+      },
+      registerHoverable: (
+        id: string,
+        rect: Measurement,
+        onTouchUp: () => void,
+      ) => {
+        hoverables.current.set(id, {id, rect, onTouchUp})
+        // we need this data on the UI thread, but we want to limit cross-thread communication
+        // and this function will be called in quick succession, so we need to throttle it
+        if (syncHoverablesThrottleRef.current)
+          clearTimeout(syncHoverablesThrottleRef.current)
+        syncHoverablesThrottleRef.current = setTimeout(() => {
+          syncHoverablesThrottleRef.current = undefined
+          uiThreadHoverables.set(
+            Object.fromEntries(
+              [...hoverables.current.entries()].map(([id, {rect}]) => [
+                id,
+                {id, rect},
+              ]),
+            ),
+          )
+        }, 1)
       },
     }),
     [
       measurement,
       setMeasurement,
+      onCompletedClose,
       isFocused,
       animationSV,
       translationSV,
-      clearMeasurement,
+      uiThreadHoverables,
     ],
   )
 
@@ -184,7 +225,8 @@ export function Trigger({children, label, contentLabel, style}: TriggerProps) {
   }, [open])
 
   const pressAndHoldGesture = useMemo(() => {
-    return Gesture.LongPress()
+    return Gesture.Pan()
+      .activateAfterLongPress(500)
       .onStart(() => {
         runOnJS(open)()
       })
@@ -464,10 +506,14 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
     onIn: onPressIn,
     onOut: onPressOut,
   } = useInteractionState()
+  const id = useId()
 
   return (
     <Pressable
       {...rest}
+      onLayout={evt =>
+        context.registerHoverable(id, evt.nativeEvent.layout, onPress)
+      }
       accessibilityHint=""
       accessibilityLabel={label}
       onFocus={onFocus}
