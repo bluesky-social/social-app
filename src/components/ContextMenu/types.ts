@@ -24,11 +24,6 @@ export type ItemProps = Omit<MenuItemProps, 'onPress'> & {
   onPress: (evt?: GestureResponderEvent) => void
 }
 
-export type Position = {
-  x: number
-  y: number
-}
-
 export type Measurement = {
   x: number
   y: number
