@@ -15,7 +15,7 @@ let MessageItemEmbed = ({
 
   return (
     <MessageContextProvider>
-      <View style={[a.my_xs, t.atoms.bg, native({flexBasis: 0})]}>
+      <View style={[a.my_xs, t.atoms.bg, a.rounded_md, native({flexBasis: 0})]}>
         <PostEmbeds
           embed={embed}
           allowNestedQuotes
