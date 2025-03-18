@@ -126,6 +126,8 @@ export async function shareImageModal({uri}: {uri: string}) {
   safeDeleteAsync(imagePath)
 }
 
+const ALBUM_NAME = 'Bluesky'
+
 export async function saveImageToMediaLibrary({uri}: {uri: string}) {
   // download the file to cache
   // NOTE
@@ -142,16 +144,23 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
   try {
     const asset = await MediaLibrary.createAssetAsync(imagePath)
     if (isAndroid) {
-      const album = await MediaLibrary.getAlbumAsync('Bluesky')
+      const album = await MediaLibrary.getAlbumAsync(ALBUM_NAME)
       if (album) {
-        try {
-          await MediaLibrary.migrateAlbumIfNeededAsync(album)
-        } catch {
-          logger.warn(
-            'Failed to migrate album, image not moved to Bluesky folder',
-          )
-          return
+        // migrate album if needed
+        // https://docs.expo.dev/versions/latest/sdk/media-library/#why-do-you-need-to-migrate-files
+        if (await MediaLibrary.albumNeedsMigrationAsync(album)) {
+          logger.info('Migrating album')
+          try {
+            await MediaLibrary.migrateAlbumIfNeededAsync(album)
+          } catch (err) {
+            logger.error(err instanceof Error ? err : String(err), {
+              message:
+                'Failed to migrate album, image not moved to Bluesky folder',
+            })
+            return
+          }
         }
+        // add asset to album
         await MediaLibrary.addAssetsToAlbumAsync(
           [asset],
           album,
@@ -159,7 +168,8 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
           false,
         )
       } else {
-        await MediaLibrary.createAlbumAsync('Bluesky', asset, false)
+        // create album with asset (albums must always have at least one asset)
+        await MediaLibrary.createAlbumAsync(ALBUM_NAME, asset, false)
       }
     }
   } catch (err) {
