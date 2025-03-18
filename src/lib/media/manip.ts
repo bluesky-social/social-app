@@ -139,8 +139,36 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
   imagePath = normalizePath(await moveToPermanentPath(imagePath, '.png'), true)
 
   // save
-  await MediaLibrary.createAssetAsync(imagePath)
-  safeDeleteAsync(imagePath)
+  try {
+    const asset = await MediaLibrary.createAssetAsync(imagePath)
+    if (isAndroid) {
+      const album = await MediaLibrary.getAlbumAsync('Bluesky')
+      if (album) {
+        try {
+          await MediaLibrary.migrateAlbumIfNeededAsync(album)
+        } catch {
+          logger.warn(
+            'Failed to migrate album, image not moved to Bluesky folder',
+          )
+          return
+        }
+        await MediaLibrary.addAssetsToAlbumAsync(
+          [asset],
+          album,
+          // move asset, rather than copying
+          false,
+        )
+      } else {
+        await MediaLibrary.createAlbumAsync('Bluesky', asset, false)
+      }
+    }
+  } catch (err) {
+    logger.error(err instanceof Error ? err : String(err), {
+      message: 'Failed to save image to media library',
+    })
+  } finally {
+    safeDeleteAsync(imagePath)
+  }
 }
 
 export function getImageDim(path: string): Promise<Dimensions> {
