@@ -43,7 +43,7 @@ export default function (ctx: AppContext, app: Express) {
       res.type('html')
       res.status(200)
       return res.send(
-        `<html><head><meta http-equiv="refresh" content="0; URL='${url.href}'" /></head></html>`,
+        `<html><head><meta http-equiv="refresh" content="0; URL='${url.href}'" /><style>:root { color-scheme: light dark; }</style></head></html>`,
       )
     }),
   )
