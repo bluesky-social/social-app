@@ -62,9 +62,9 @@ export const envToCfg = (env: Environment): Config => {
     hostnames: env.hostnames,
     appHostname: env.appHostname || 'bsky.app',
   }
-  //if (!env.dbPostgresUrl) {
-  //  throw new Error('Must configure postgres url (LINK_DB_POSTGRES_URL)')
-  //}
+  if (!env.dbPostgresUrl) {
+    throw new Error('Must configure postgres url (LINK_DB_POSTGRES_URL)')
+  }
   const dbCfg: DbConfig = {
     url: env.dbPostgresUrl,
     migrationUrl: env.dbPostgresMigrationUrl,
