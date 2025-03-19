@@ -22,8 +22,11 @@ export function TimeElapsed({
   )
 
   const [prevTick, setPrevTick] = React.useState(tick)
-  if (prevTick !== tick) {
+  const [prevTimestamp, setPrevTimestamp] = React.useState(timestamp)
+
+  if (prevTick !== tick || prevTimestamp !== timestamp) {
     setPrevTick(tick)
+    setPrevTimestamp(timestamp)
     setTimeAgo(
       timeToString ? timeToString(i18n, timestamp) : ago(timestamp, tick),
     )
