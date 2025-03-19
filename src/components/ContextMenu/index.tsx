@@ -341,21 +341,26 @@ export function Outer({
       if (!context.measurement) return // should not happen
       let translation = 0
 
+      // pure vibes based
+      const TOP_INSET = insets.top + 80
+      const BOTTOM_INSET_IOS = insets.bottom + 20
+      const BOTTOM_INSET_ANDROID = 12 // TODO: revisit when edge-to-edge mode is enabled -sfn
+
       const {height} = evt.nativeEvent.layout
       const topPosition = context.measurement.y + context.measurement.height + 4
       const bottomPosition = topPosition + height
       const safeAreaBottomLimit =
         frame.height -
         platform({
-          ios: insets.bottom + 20,
-          android: 12,
+          ios: BOTTOM_INSET_IOS,
+          android: BOTTOM_INSET_ANDROID,
           default: 0,
         })
       const diff = bottomPosition - safeAreaBottomLimit
       if (diff > 0) {
         translation = -diff
       } else {
-        const distanceMessageFromTop = context.measurement.y - insets.top - 80
+        const distanceMessageFromTop = context.measurement.y - TOP_INSET
         if (distanceMessageFromTop < 0) {
           translation = -Math.max(distanceMessageFromTop, diff)
         }
