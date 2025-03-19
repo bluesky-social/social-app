@@ -24,7 +24,7 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
 import {captureRef} from 'react-native-view-shot'
-import {Image} from 'expo-image'
+import {Image, ImageErrorEventData} from 'expo-image'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useIsFocused} from '@react-navigation/native'
@@ -33,6 +33,7 @@ import flattenReactChildren from 'react-keyed-flatten-children'
 import {HITSLOP_10} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
 import {atoms as a, platform, useTheme} from '#/alf'
 import {
@@ -162,7 +163,13 @@ export function Trigger({children, label, contentLabel, style}: TriggerProps) {
           }),
         )
       }),
-      captureRef(ref, {result: 'data-uri'}),
+      captureRef(ref, {result: 'data-uri'}).catch(err => {
+        logger.error(err instanceof Error ? err : String(err), {
+          message: 'Failed to capture image of context menu trigger',
+        })
+        // will cause the image to fail to load, but it will get handled gracefully
+        return '<failed capture>'
+      }),
     ])
     setImage(capture)
     setPendingMeasurement(measurement)
@@ -264,6 +271,14 @@ function TriggerClone({
     transform: [{translateY: translation.get() * animation.get()}],
   }))
 
+  const handleError = useCallback(
+    (evt: ImageErrorEventData) => {
+      logger.error('Context menu image load error', {message: evt.error})
+      onDisplay()
+    },
+    [onDisplay],
+  )
+
   return (
     <Animated.View
       style={[
@@ -280,6 +295,7 @@ function TriggerClone({
       ]}>
       <Image
         onDisplay={onDisplay}
+        onError={handleError}
         source={image}
         style={{
           width: measurement.width,
