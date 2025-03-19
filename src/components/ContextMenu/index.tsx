@@ -176,7 +176,7 @@ export function Root({children}: {children: React.ReactNode}) {
         onTouchUpMenuItem: onHoverableTouchUp,
         hoveredMenuItem,
         setHoveredMenuItem: item => {
-          playHaptic('Light')
+          if (item) playHaptic('Light')
           setHoveredMenuItem(item)
         },
       } satisfies ContextType),
@@ -589,9 +589,6 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
       if (!measurement) return // should be impossible
 
       const layout = evt.nativeEvent.layout
-
-      console.log('layout', layout)
-      console.log('measurement', measurement)
 
       registerHoverable(
         id,
