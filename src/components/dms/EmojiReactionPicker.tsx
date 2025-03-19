@@ -1,5 +1,6 @@
 import {useMemo, useState} from 'react'
 import {Alert, useWindowDimensions, View} from 'react-native'
+import {EmojiPopup} from 'react-native-emoji-popup'
 import {ChatBskyConvoDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -11,6 +12,10 @@ import {
   useContextMenuContext,
   useContextMenuMenuContext,
 } from '#/components/ContextMenu/context'
+import {
+  EmojiHeartEyes_Stroke2_Corner0_Rounded as EmojiHeartEyesIcon,
+  EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon,
+} from '#/components/icons/Emoji'
 import {Text} from '#/components/Typography'
 
 export function EmojiReactionPicker({
@@ -22,10 +27,15 @@ export function EmojiReactionPicker({
   const {currentAccount} = useSession()
   const t = useTheme()
   const isFromSelf = message.sender?.did === currentAccount?.did
-  const {measurement} = useContextMenuContext()
+  const {measurement, close} = useContextMenuContext()
   const {align} = useContextMenuMenuContext()
   const [layout, setLayout] = useState({width: 0, height: 0})
   const {width: screenWidth} = useWindowDimensions()
+
+  // 1 in 100 chance of showing heart eyes icon
+  const EmojiIcon = useMemo(() => {
+    return Math.random() < 0.01 ? EmojiHeartEyesIcon : EmojiSmileIcon
+  }, [])
 
   const handleEmojiSelect = (emoji: string) => {
     Alert.alert(emoji)
@@ -55,6 +65,9 @@ export function EmojiReactionPicker({
         a.gap_xs,
         a.mb_xs,
         a.z_20,
+        a.border,
+        t.atoms.border_contrast_low,
+        a.shadow_md,
       ]}>
       {['👍', '😆', '❤️', '👀', '😢'].map(emoji => (
         <ContextMenu.Item
@@ -68,15 +81,35 @@ export function EmojiReactionPicker({
               style={[
                 a.rounded_full,
                 hovered && {backgroundColor: t.palette.primary_500},
-                a.p_2xs,
+                {height: 40, width: 40},
+                a.justify_center,
+                a.align_center,
               ]}>
-              <Text style={[a.text_center, {fontSize: 32}]} emoji>
+              <Text style={[a.text_center, {fontSize: 30}]} emoji>
                 {emoji}
               </Text>
             </View>
           )}
         </ContextMenu.Item>
       ))}
+      <EmojiPopup
+        onEmojiSelected={emoji => {
+          close()
+          handleEmojiSelect(emoji)
+        }}>
+        <View
+          style={[
+            a.rounded_full,
+            t.atoms.bg_contrast_25,
+            {height: 40, width: 40},
+            a.justify_center,
+            a.align_center,
+            a.border,
+            t.atoms.border_contrast_low,
+          ]}>
+          <EmojiIcon size="xl" fill={t.palette.contrast_400} />
+        </View>
+      </EmojiPopup>
     </View>
   )
 }
