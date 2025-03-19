@@ -26,7 +26,7 @@ export function Backdrop({
 
   const reduced = mode === 'auxillary-only'
 
-  const target = reduced ? intensity / 100 : 0.05
+  const target = reduced ? 0.05 : intensity / 100
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: interpolate(
