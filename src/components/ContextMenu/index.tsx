@@ -299,10 +299,12 @@ export function Trigger({children, label, contentLabel, style}: TriggerProps) {
         const item = getHoveredHoverable(evt, hoverablesSV, translationSV)
         hoveredItemSV.set(item)
       })
-      .onEnd(evt => {
+      .onEnd(() => {
         'worklet'
-        const item = getHoveredHoverable(evt, hoverablesSV, translationSV)
-        hoveredItemSV.set(null)
+        // don't recalculate hovered item - if they haven't moved their finger from
+        // the initial press, it's jarring to then select the item underneath
+        // as the menu may have slid into place beneath their finger
+        const item = hoveredItemSV.get()
         if (item) {
           runOnJS(onTouchUpMenuItem)(item)
         }
