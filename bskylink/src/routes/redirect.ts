@@ -40,8 +40,11 @@ export default function (ctx: AppContext, app: Express) {
       }
 
       res.setHeader('Cache-Control', `max-age=${(7 * DAY) / SECOND}`)
-      res.setHeader('Location', url.href)
-      return res.status(301).end()
+      res.type('html')
+      res.status(200)
+      return res.send(
+        `<html><head><meta http-equiv="refresh" content="0; URL='${url.href}'" /></head></html>`,
+      )
     }),
   )
 }
