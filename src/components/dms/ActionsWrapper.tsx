@@ -34,7 +34,7 @@ export function ActionsWrapper({
               accessibilityActions={[
                 {name: 'activate', label: _(msg`Open message options`)},
               ]}
-              onAccessibilityAction={trigger.control.open}>
+              onAccessibilityAction={() => trigger.control.open('full')}>
               {children}
             </View>
           </View>
