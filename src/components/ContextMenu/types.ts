@@ -48,7 +48,8 @@ export type ContextType = {
   animationSV: SharedValue<number>
   /* Translation in Y axis to ensure everything's onscreen */
   translationSV: SharedValue<number>
-  open: (evt: Measurement) => void
+  mode: 'full' | 'auxillary-only'
+  open: (evt: Measurement, mode: 'full' | 'auxillary-only') => void
   close: () => void
   registerHoverable: (
     id: string,
@@ -86,7 +87,10 @@ export type TriggerProps = {
 export type TriggerChildProps =
   | {
       isNative: true
-      control: {isOpen: boolean; open: () => void}
+      control: {
+        isOpen: boolean
+        open: (mode: 'full' | 'auxillary-only') => void
+      }
       state: {
         hovered: false
         focused: false
