@@ -16,12 +16,14 @@ import {
   EmojiHeartEyes_Stroke2_Corner0_Rounded as EmojiHeartEyesIcon,
   EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon,
 } from '#/components/icons/Emoji'
+import {TriggerProps} from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
 
 export function EmojiReactionPicker({
   message,
 }: {
   message: ChatBskyConvoDefs.MessageView
+  children?: TriggerProps['children']
 }) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
@@ -60,7 +62,6 @@ export function EmojiReactionPicker({
         isFromSelf ? a.right_0 : a.left_0,
         t.atoms.bg,
         a.flex_row,
-        a.shadow_lg,
         a.p_xs,
         a.gap_xs,
         a.mb_xs,
