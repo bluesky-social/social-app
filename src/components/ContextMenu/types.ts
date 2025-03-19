@@ -19,9 +19,19 @@ export type {
   ItemTextProps,
 } from '#/components/Menu/types'
 
-// Same as Menu.ItemProps, but onPress is not guaranteed to get an event
-export type ItemProps = Omit<MenuItemProps, 'onPress'> & {
+export type AuxillaryViewProps = {
+  children?: React.ReactNode
+  align?: 'left' | 'right'
+}
+
+export type ItemProps = Omit<MenuItemProps, 'onPress' | 'children'> & {
+  // remove default styles (i.e. for emoji reactions)
+  unstyled?: boolean
   onPress: (evt?: GestureResponderEvent) => void
+  children?: React.ReactNode | ((hovered: boolean) => React.ReactNode)
+  // absolute position of the parent element. if undefined, assumed to
+  // be in the context menu. use this if using AuxiliaryView
+  position?: Measurement
 }
 
 export type Measurement = {

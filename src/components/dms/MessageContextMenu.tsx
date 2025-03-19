@@ -21,6 +21,7 @@ import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import * as Prompt from '#/components/Prompt'
 import {usePromptControl} from '#/components/Prompt'
+import {EmojiReactionPicker} from './EmojiReactionPicker'
 
 export let MessageContextMenu = ({
   message,
@@ -77,6 +78,10 @@ export let MessageContextMenu = ({
   return (
     <>
       <ContextMenu.Root>
+        <ContextMenu.AuxillaryView align={isFromSelf ? 'right' : 'left'}>
+          <EmojiReactionPicker message={message} />
+        </ContextMenu.AuxillaryView>
+
         <ContextMenu.Trigger
           label={_(msg`Message options`)}
           contentLabel={_(
