@@ -10,6 +10,7 @@ export type Device = {
   }
   trendingBetaEnabled: boolean
   devMode: boolean
+  videoVolume: number
 }
 
 export type Account = {

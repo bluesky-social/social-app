@@ -1,5 +1,7 @@
 import React from 'react'
 
+import {device, useStorage} from '#/storage'
+
 const Context = React.createContext<{
   muted: boolean
   setMuted: (v: boolean) => void
@@ -25,4 +27,10 @@ export function useVideoMuteState() {
     throw new Error('useVideoMuteState must be used within a VideoMuteProvider')
   }
   return [context.muted, context.setMuted] as const
+}
+
+export function useVideoVolumeState() {
+  const [volume = 1, setVolume] = useStorage(device, ['videoVolume'])
+
+  return [volume, setVolume] as const
 }

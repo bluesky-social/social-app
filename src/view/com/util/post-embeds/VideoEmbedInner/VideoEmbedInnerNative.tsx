@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {useAutoplayDisabled} from '#/state/preferences'
-import {useVideoMuteState} from '#/state/video/mute'
+import {useVideoMuteState} from '#/state/video'
 import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
