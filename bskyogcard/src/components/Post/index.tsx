@@ -70,22 +70,23 @@ export function Post({
             a.p_xl,
             a.rounded_md,
             t.atoms.bg,
-            {
-              boxShadow: `0 0 20px rgb(0, 25, 51, 0.2)`,
-            },
+            {boxShadow: `0 0 20px rgb(0, 25, 51, 0.2)`},
           ]}>
-          <Box cx={[a.flex_row, a.align_center, a.gap_sm, a.pb_sm]}>
-            <Avatar
-              size={42}
-              image={avatar}
-              profile={post.author}
-              moderatorData={moderatorData}
-            />
-            <Box cx={[a.flex_col]}>
-              <Text cx={[a.text_md, a.font_heavy, a.pb_2xs]}>
+          <Box cx={[a.flex_row, a.align_center, a.gap_sm, a.pb_sm, a.w_full]}>
+            <Box cx={[a.flex_shrink_0]}>
+              <Avatar
+                size={42}
+                image={avatar}
+                profile={post.author}
+                moderatorData={moderatorData}
+              />
+            </Box>
+            <Box cx={[a.flex_col, a.flex_1]}>
+              <Text cx={[a.text_md, a.font_heavy, a.pb_2xs, a.line_clamp_2]}>
                 {post.author.displayName || post.author.handle}
               </Text>
-              <Text cx={[a.text_sm, t.atoms.text_contrast_medium]}>
+              <Text
+                cx={[a.text_sm, t.atoms.text_contrast_medium, a.line_clamp_1]}>
                 {sanitizeHandle(post.author.handle, '@')}
               </Text>
             </Box>

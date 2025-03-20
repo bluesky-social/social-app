@@ -32,6 +32,22 @@ export const atoms = {
   overflow_hidden: {
     overflow: 'hidden',
   },
+  line_clamp_1: {
+    display: 'block',
+    lineClamp: 1,
+  },
+  line_clamp_2: {
+    display: 'block',
+    lineClamp: 2,
+  },
+  line_clamp_3: {
+    display: 'block',
+    lineClamp: 3,
+  },
+  line_clamp_4: {
+    display: 'block',
+    lineClamp: 4,
+  },
 
   /*
    * Width
