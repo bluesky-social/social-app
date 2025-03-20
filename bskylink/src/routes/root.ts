@@ -8,7 +8,7 @@ export default function (ctx: AppContext, app: Express) {
     '/',
     handler(async (_req, res) => {
       res.setHeader('Location', `https://${ctx.cfg.service.appHostname}`)
-      return res.status(301)
+      return res.status(301).end()
     }),
   )
 }
