@@ -26,7 +26,7 @@ export function Backdrop(props: Props) {
   switch (mode) {
     case 'full':
       return <BlurredBackdrop {...props} />
-    case 'auxillary-only':
+    case 'auxilary-only':
       return <OpacityBackdrop {...props} />
   }
 }

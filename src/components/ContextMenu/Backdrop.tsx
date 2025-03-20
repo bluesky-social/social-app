@@ -24,7 +24,7 @@ export function Backdrop({
   const {_} = useLingui()
   const {mode} = useContextMenuContext()
 
-  const reduced = mode === 'auxillary-only'
+  const reduced = mode === 'auxilary-only'
 
   const target = reduced ? 0.05 : intensity / 100
 
