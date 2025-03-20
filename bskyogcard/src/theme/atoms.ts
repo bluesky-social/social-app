@@ -32,6 +32,12 @@ export const atoms = {
   overflow_hidden: {
     overflow: 'hidden',
   },
+  text_overflow_ellipsis: {
+    textOverflow: 'ellipsis',
+  },
+  text_overflow_clip: {
+    textOverflow: 'clip',
+  },
   line_clamp_1: {
     display: 'block',
     lineClamp: 1,
@@ -55,11 +61,17 @@ export const atoms = {
   w_full: {
     width: '100%',
   },
+  max_w_full: {
+    maxWidth: '100%',
+  },
   h_full: {
     height: '100%',
   },
   h_full_vh: {
     height: '100vh',
+  },
+  max_h_full: {
+    maxHeight: '100%',
   },
 
   /*
@@ -141,6 +153,9 @@ export const atoms = {
   },
   flex_wrap: {
     flexWrap: 'wrap',
+  },
+  flex_nowrap: {
+    flexWrap: 'nowrap',
   },
   flex_0: {
     flex: '0 0 auto',
