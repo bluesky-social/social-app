@@ -19,7 +19,7 @@ export type {
   ItemTextProps,
 } from '#/components/Menu/types'
 
-export type AuxilaryViewProps = {
+export type AuxiliaryViewProps = {
   children?: React.ReactNode
   align?: 'left' | 'right'
 }
@@ -48,8 +48,8 @@ export type ContextType = {
   animationSV: SharedValue<number>
   /* Translation in Y axis to ensure everything's onscreen */
   translationSV: SharedValue<number>
-  mode: 'full' | 'auxilary-only'
-  open: (evt: Measurement, mode: 'full' | 'auxilary-only') => void
+  mode: 'full' | 'auxiliary-only'
+  open: (evt: Measurement, mode: 'full' | 'auxiliary-only') => void
   close: () => void
   registerHoverable: (
     id: string,
@@ -89,7 +89,7 @@ export type TriggerChildProps =
       isNative: true
       control: {
         isOpen: boolean
-        open: (mode: 'full' | 'auxilary-only') => void
+        open: (mode: 'full' | 'auxiliary-only') => void
       }
       state: {
         hovered: false

@@ -60,7 +60,7 @@ import {
   useContextMenuMenuContext,
 } from '#/components/ContextMenu/context'
 import {
-  AuxilaryViewProps,
+  AuxiliaryViewProps,
   ContextType,
   ItemIconProps,
   ItemProps,
@@ -101,7 +101,7 @@ export function Provider({children}: {children: React.ReactNode}) {
 
 export function Root({children}: {children: React.ReactNode}) {
   const playHaptic = useHaptics()
-  const [mode, setMode] = useState<'full' | 'auxilary-only'>('full')
+  const [mode, setMode] = useState<'full' | 'auxiliary-only'>('full')
   const [measurement, setMeasurement] = useState<Measurement | null>(null)
   const animationSV = useSharedValue(0)
   const translationSV = useSharedValue(0)
@@ -137,7 +137,7 @@ export function Root({children}: {children: React.ReactNode}) {
         animationSV,
         translationSV,
         mode,
-        open: (evt: Measurement, mode: 'full' | 'auxilary-only') => {
+        open: (evt: Measurement, mode: 'full' | 'auxiliary-only') => {
           setMeasurement(evt)
           setMode(mode)
           animationSV.set(withSpring(1, SPRING))
@@ -223,11 +223,11 @@ export function Trigger({children, label, contentLabel, style}: TriggerProps) {
   const [image, setImage] = useState<string | null>(null)
   const [pendingMeasurement, setPendingMeasurement] = useState<{
     measurement: Measurement
-    mode: 'full' | 'auxilary-only'
+    mode: 'full' | 'auxiliary-only'
   } | null>(null)
 
   const open = useNonReactiveCallback(
-    async (mode: 'full' | 'auxilary-only') => {
+    async (mode: 'full' | 'auxiliary-only') => {
       playHaptic()
       Keyboard.dismiss()
       const [measurement, capture] = await Promise.all([
@@ -263,7 +263,7 @@ export function Trigger({children, label, contentLabel, style}: TriggerProps) {
     return Gesture.Tap()
       .numberOfTaps(2)
       .hitSlop(HITSLOP_10)
-      .onEnd(() => open('auxilary-only'))
+      .onEnd(() => open('auxiliary-only'))
       .runOnJS(true)
   }, [open])
 
@@ -430,7 +430,7 @@ function TriggerClone({
   )
 }
 
-export function AuxilaryView({children, align = 'left'}: AuxilaryViewProps) {
+export function AuxiliaryView({children, align = 'left'}: AuxiliaryViewProps) {
   const context = useContextMenuContext()
   const {width: screenWidth} = useWindowDimensions()
   const {top: topInset} = useSafeAreaInsets()
@@ -458,7 +458,7 @@ export function AuxilaryView({children, align = 'left'}: AuxilaryViewProps) {
     let translation = 0
 
     // vibes based, just assuming it'll fit within this space. revisit if we use
-    // AuxilaryView for something tall
+    // AuxiliaryView for something tall
     const TOP_INSET = topInset + 80
 
     const distanceMessageFromTop = measurement.y - TOP_INSET
@@ -467,8 +467,8 @@ export function AuxilaryView({children, align = 'left'}: AuxilaryViewProps) {
     }
 
     // normally, the context menu is responsible for measuring itself and moving everything into the right place
-    // however, in auxilary-only mode, that doesn't happen, so we need to do it ourselves here
-    if (mode === 'auxilary-only') {
+    // however, in auxiliary-only mode, that doesn't happen, so we need to do it ourselves here
+    if (mode === 'auxiliary-only') {
       translationSV.set(translation)
     }
     // however, we also need to make sure that for super tall triggers, we don't go off the screen

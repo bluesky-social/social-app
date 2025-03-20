@@ -80,9 +80,9 @@ export let MessageContextMenu = ({
     <>
       <ContextMenu.Root>
         {isNative && (
-          <ContextMenu.AuxilaryView align={isFromSelf ? 'right' : 'left'}>
+          <ContextMenu.AuxiliaryView align={isFromSelf ? 'right' : 'left'}>
             <EmojiReactionPicker message={message} />
-          </ContextMenu.AuxilaryView>
+          </ContextMenu.AuxiliaryView>
         )}
 
         <ContextMenu.Trigger

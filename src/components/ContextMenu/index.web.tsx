@@ -1,4 +1,4 @@
-import {AuxilaryViewProps} from './types'
+import {AuxiliaryViewProps} from './types'
 
 export * from '#/components/Menu'
 
@@ -7,6 +7,6 @@ export function Provider({children}: {children: React.ReactNode}) {
 }
 
 // native only
-export function AuxilaryView({}: AuxilaryViewProps) {
+export function AuxiliaryView({}: AuxiliaryViewProps) {
   return null
 }
