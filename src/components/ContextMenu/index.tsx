@@ -433,18 +433,50 @@ function TriggerClone({
 export function AuxillaryView({children, align = 'left'}: AuxillaryViewProps) {
   const context = useContextMenuContext()
   const {width: screenWidth} = useWindowDimensions()
+  const {top: topInset} = useSafeAreaInsets()
+  const ensureOnScreenTranslation = useSharedValue(0)
 
-  const {isOpen, measurement, translationSV, animationSV} = context
+  const {isOpen, mode, measurement, translationSV, animationSV} = context
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: clamp(animationSV.get(), 0, 1),
     transform: [
-      {translateY: translationSV.get() * animationSV.get()},
+      {
+        translateY:
+          Math.max(translationSV.get(), ensureOnScreenTranslation.get()) *
+          animationSV.get(),
+      },
       {scale: interpolate(animationSV.get(), [0, 1], [0.2, 1])},
     ],
   }))
 
   const menuContext = useMemo(() => ({align}), [align])
+
+  const onLayout = useCallback(() => {
+    if (!measurement) return
+
+    let translation = 0
+
+    // vibes based, just assuming it'll fit within this space. revisit if we use
+    // AuxillaryView for something tall
+    const TOP_INSET = topInset + 80
+
+    const distanceMessageFromTop = measurement.y - TOP_INSET
+    if (distanceMessageFromTop < 0) {
+      translation = -distanceMessageFromTop
+    }
+
+    // normally, the context menu is responsible for measuring itself and moving everything into the right place
+    // however, in auxillary-only mode, that doesn't happen, so we need to do it ourselves here
+    if (mode === 'auxillary-only') {
+      translationSV.set(translation)
+    }
+    // however, we also need to make sure that for super tall triggers, we don't go off the screen
+    // so we have an additional cap on the standard transform every other element has
+    else {
+      ensureOnScreenTranslation.set(translation)
+    }
+  }, [mode, measurement, translationSV, topInset, ensureOnScreenTranslation])
 
   if (!isOpen || !measurement) return null
 
@@ -453,6 +485,7 @@ export function AuxillaryView({children, align = 'left'}: AuxillaryViewProps) {
       <Context.Provider value={context}>
         <MenuContext.Provider value={menuContext}>
           <Animated.View
+            onLayout={onLayout}
             style={[
               a.absolute,
               {
@@ -464,7 +497,7 @@ export function AuxillaryView({children, align = 'left'}: AuxillaryViewProps) {
                 ? {left: measurement.x}
                 : {right: screenWidth - measurement.x - measurement.width},
               animatedStyle,
-              a.z_10,
+              a.z_20,
             ]}>
             {children}
           </Animated.View>
