@@ -117,6 +117,7 @@
     "base64-js": "^1.5.1",
     "bcp-47": "^2.1.0",
     "bcp-47-match": "^2.0.3",
+    "burnt": "^0.12.2",
     "date-fns": "^2.30.0",
     "deprecated-react-native-prop-types": "^5.0.0",
     "email-validator": "^2.0.4",
@@ -205,6 +206,7 @@
     "react-responsive": "^9.0.2",
     "react-textarea-autosize": "^8.5.3",
     "rn-fetch-blob": "^0.12.0",
+    "sf-symbols-typescript": "^2.1.0",
     "statsig-react-native-expo": "^4.6.1",
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
@@ -276,7 +278,8 @@
     "@types/react": "^18",
     "**/expo-constants": "17.0.3",
     "**/expo-device": "7.0.1",
-    "**/zod": "3.23.8"
+    "**/zod": "3.23.8",
+    "sonner": "^2.0.1"
   },
   "jest": {
     "preset": "jest-expo/ios",
