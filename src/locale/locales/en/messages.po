@@ -1526,7 +1526,7 @@ msgstr ""
 msgid "Click to open tag menu for {tag}"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:241
+#: src/components/dms/MessageItem.tsx:229
 msgid "Click to retry failed message"
 msgstr ""
 
@@ -2986,7 +2986,7 @@ msgstr ""
 msgid "Failed to save settings. Please try again."
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:234
+#: src/components/dms/MessageItem.tsx:222
 msgid "Failed to send"
 msgstr ""
 
@@ -4824,7 +4824,7 @@ msgstr ""
 msgid "now"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:198
+#: src/components/dms/MessageItem.tsx:186
 msgid "Now"
 msgstr ""
 
@@ -6133,7 +6133,7 @@ msgstr ""
 msgid "Retries the last action, which errored out"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:245
+#: src/components/dms/MessageItem.tsx:233
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:110
 #: src/components/moderation/ReportDialog/index.tsx:221
