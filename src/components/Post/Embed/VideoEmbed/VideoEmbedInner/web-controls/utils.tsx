@@ -68,22 +68,14 @@ export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
       setError(true)
     }
 
-    const handleCanPlay = async () => {
+    const handleCanPlay = () => {
       if (bufferingTimeout) clearTimeout(bufferingTimeout)
       setBuffering(false)
       setCanPlay(true)
 
       if (!ref.current) return
       if (playWhenReadyRef.current) {
-        try {
-          await ref.current.play()
-        } catch (e: any) {
-          if (
-            !e.message?.includes(`The request is not allowed by the user agent`)
-          ) {
-            throw e
-          }
-        }
+        ref.current.play()
         playWhenReadyRef.current = false
       }
     }
