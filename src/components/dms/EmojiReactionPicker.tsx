@@ -1,6 +1,5 @@
 import {useMemo, useState} from 'react'
 import {Alert, useWindowDimensions, View} from 'react-native'
-import {EmojiPopup} from 'react-native-emoji-popup'
 import {ChatBskyConvoDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -18,6 +17,7 @@ import {
 } from '#/components/icons/Emoji'
 import {TriggerProps} from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
+import {EmojiPopup} from './EmojiPopup'
 
 export function EmojiReactionPicker({
   message,
