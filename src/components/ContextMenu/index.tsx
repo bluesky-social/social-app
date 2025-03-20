@@ -473,6 +473,9 @@ export function AuxillaryView({children, align = 'left'}: AuxillaryViewProps) {
     }
     // however, we also need to make sure that for super tall triggers, we don't go off the screen
     // so we have an additional cap on the standard transform every other element has
+    // note: this breaks the press-and-hold gesture for the reaction items. unfortunately I think
+    // we'll just have to live with it for now, fixing it would be possible but be a large complexity
+    // increase for an edge case
     else {
       ensureOnScreenTranslation.set(translation)
     }
