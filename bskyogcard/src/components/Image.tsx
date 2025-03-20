@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {Image as ImageSource} from '../data/getPostData.js'
-import {atoms as a, style as s, StyleProp,theme as t} from '../theme/index.js'
+import {atoms as a, style as s, StyleProp, theme as t} from '../theme/index.js'
 import {Box} from './Box.js'
 import {MediaInsetBorder} from './MediaInsetBorder.js'
 

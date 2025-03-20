@@ -407,7 +407,7 @@ export function ImagesEmbed({
     } else if (imgs.length === 3) {
       return (
         <Grid.Row gutter={gutter}>
-          <Grid.Column gutter={gutter} width={2 / 3}>
+          <Grid.Column gutter={gutter} width={1 / 2}>
             <SquareImage
               image={imgs[0]}
               style={{
@@ -420,10 +420,12 @@ export function ImagesEmbed({
               }}
             />
           </Grid.Column>
-          <Grid.Column gutter={gutter} width={1 / 3} cx={[a.gap_xs]}>
+          <Grid.Column gutter={gutter} width={1 / 2} cx={[a.gap_xs]}>
             <SquareImage
               image={imgs[1]}
               style={{
+                // awkward number found through trial and error to account for gap
+                paddingTop: '48.75%',
                 borderTopLeftRadius: 0,
                 borderBottomLeftRadius: 0,
                 borderBottomRightRadius: 0,
@@ -437,6 +439,7 @@ export function ImagesEmbed({
             <SquareImage
               image={imgs[2]}
               style={{
+                paddingTop: '48.75%',
                 borderTopLeftRadius: 0,
                 borderBottomLeftRadius: 0,
                 borderTopRightRadius: 0,
@@ -457,6 +460,8 @@ export function ImagesEmbed({
             <SquareImage
               image={imgs[0]}
               style={{
+                // aspect ratio of 1.5 - matches app
+                paddingTop: '66.666%',
                 borderTopRightRadius: 0,
                 borderBottomRightRadius: 0,
                 borderBottomLeftRadius: 0,
@@ -470,6 +475,7 @@ export function ImagesEmbed({
             <SquareImage
               image={imgs[2]}
               style={{
+                paddingTop: '66.666%',
                 borderTopLeftRadius: 0,
                 borderBottomRightRadius: 0,
                 borderTopRightRadius: 0,
@@ -485,6 +491,7 @@ export function ImagesEmbed({
             <SquareImage
               image={imgs[1]}
               style={{
+                paddingTop: '66.666%',
                 borderTopLeftRadius: 0,
                 borderBottomLeftRadius: 0,
                 borderBottomRightRadius: 0,
@@ -498,6 +505,7 @@ export function ImagesEmbed({
             <SquareImage
               image={imgs[3]}
               style={{
+                paddingTop: '66.666%',
                 borderTopLeftRadius: 0,
                 borderBottomLeftRadius: 0,
                 borderTopRightRadius: 0,
