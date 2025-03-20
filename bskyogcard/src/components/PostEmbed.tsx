@@ -33,9 +33,11 @@ type CommonProps = {
 
 export function PostEmbed({
   embed: rawEmbed,
+  cx,
   ...rest
 }: CommonProps & {
   embed: AppBskyFeedDefs.PostView['embed']
+  cx?: (Record<string, any> | undefined)[]
 }) {
   const embed = parseEmbed(rawEmbed)
 
@@ -43,7 +45,11 @@ export function PostEmbed({
     case 'images':
     case 'link':
     case 'video':
-      return <MediaEmbeds embed={embed} {...rest} />
+      return (
+        <Box cx={cx}>
+          <MediaEmbeds embed={embed} {...rest} />
+        </Box>
+      )
     case 'feed':
     case 'list':
     case 'starter_pack':
@@ -51,10 +57,14 @@ export function PostEmbed({
     case 'post_blocked':
     case 'post_detached':
     case 'post_not_found':
-      return <RecordEmbeds embed={embed} {...rest} />
+      return rest.hideNestedEmbeds ? null : (
+        <Box cx={cx}>
+          <RecordEmbeds embed={embed} {...rest} />
+        </Box>
+      )
     case 'post_with_media':
       return (
-        <Box cx={[a.gap_md]}>
+        <Box cx={[a.gap_md, ...cx]}>
           <MediaEmbeds embed={embed.media} {...rest} />
           {!rest.hideNestedEmbeds && (
             <RecordEmbeds embed={embed.view} {...rest} hideNestedEmbeds />

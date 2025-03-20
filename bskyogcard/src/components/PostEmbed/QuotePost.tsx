@@ -64,7 +64,7 @@ export function QuotePost({
         cx={[
           a.flex_row,
           a.align_center,
-          a.gap_sm,
+          {gap: 6},
           a.pb_sm,
           a.w_full,
           a.overflow_hidden,
@@ -88,15 +88,14 @@ export function QuotePost({
       {rt && <RichText value={rt} cx={[a.text_sm]} />}
 
       {embeds && embeds.length && (
-        <Box cx={[a.pt_sm]}>
-          <PostEmbed
-            embed={embeds[0]}
-            data={data}
-            moderation={moderation}
-            moderatorData={moderatorData}
-            hideNestedEmbeds
-          />
-        </Box>
+        <PostEmbed
+          embed={embeds[0]}
+          data={data}
+          moderation={moderation}
+          moderatorData={moderatorData}
+          hideNestedEmbeds
+          cx={[a.pt_sm]}
+        />
       )}
     </Box>
   )

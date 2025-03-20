@@ -94,14 +94,13 @@ export function Post({
           {rt && <RichText value={rt} />}
 
           {post.embed && (
-            <Box cx={[a.pt_sm]}>
-              <PostEmbed
-                embed={post.embed}
-                data={data}
-                moderation={moderation}
-                moderatorData={moderatorData}
-              />
-            </Box>
+            <PostEmbed
+              embed={post.embed}
+              data={data}
+              moderation={moderation}
+              moderatorData={moderatorData}
+              cx={[a.pt_sm]}
+            />
           )}
 
           <Box cx={[a.flex_row, a.align_center, a.justify_between, a.pt_md]}>
