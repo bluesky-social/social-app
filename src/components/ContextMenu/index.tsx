@@ -620,7 +620,7 @@ export function Outer({
                   // in the typecheck CI - presumably because of RNW overriding the types
                   {
                     transformOrigin:
-                      // "top right" doesn't seem to work on android, so set explicity in pixels
+                      // "top right" doesn't seem to work on android, so set explicitly in pixels
                       align === 'left' ? [0, 0, 0] : [MENU_WIDTH, 0, 0],
                   },
                   animatedStyle,
