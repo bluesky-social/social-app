@@ -22,10 +22,11 @@ export function Avatar({
   const moderation = moderateProfile(profile, moderatorData.moderationOptions)
   const modui = moderation.ui('avatar')
   const blur = !!modui?.blurs[0]
+  const isLabeller = !!profile.associated?.labeler
   return (
     <Box
       cx={[
-        a.rounded_full,
+        isLabeller ? a.rounded_xs : a.rounded_full,
         a.overflow_hidden,
         t.atoms.bg_contrast_25,
         {

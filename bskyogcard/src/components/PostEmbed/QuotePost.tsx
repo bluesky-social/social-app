@@ -60,14 +60,22 @@ export function QuotePost({
         a.border,
         t.atoms.border_contrast_low,
       ]}>
-      <Box cx={[a.flex_row, a.align_center, a.gap_xs, a.pb_sm]}>
+      <Box
+        cx={[
+          a.flex_row,
+          a.align_center,
+          a.gap_sm,
+          a.pb_sm,
+          a.w_full,
+          a.overflow_hidden,
+        ]}>
         <Avatar
-          size={20}
+          size={18}
           image={avatar}
           profile={author}
           moderatorData={moderatorData}
         />
-        <Box cx={[a.flex_row, a.align_center, a.gap_xs]}>
+        <Box cx={[a.flex_row, a.align_center, a.gap_xs, a.pt_2xs]}>
           <Text cx={[a.text_sm, a.font_bold]}>
             {author.displayName || author.handle}
           </Text>
