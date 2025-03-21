@@ -9,6 +9,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme} from '#/alf'
+import {useContextMenuContext} from './context'
 
 export function Backdrop({
   animation,
@@ -21,12 +22,17 @@ export function Backdrop({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const {mode} = useContextMenuContext()
+
+  const reduced = mode === 'auxiliary-only'
+
+  const target = reduced ? 0.05 : intensity / 100
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: interpolate(
       animation.get(),
       [0, 1],
-      [0, intensity / 100],
+      [0, target],
       Extrapolation.CLAMP,
     ),
   }))

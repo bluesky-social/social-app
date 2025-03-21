@@ -30,6 +30,8 @@ export {
   useDialogControl as useMenuControl,
 } from '#/components/Dialog'
 
+export {useMenuContext}
+
 export function Root({
   children,
   control,

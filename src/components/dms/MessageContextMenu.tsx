@@ -8,6 +8,7 @@ import {useLingui} from '@lingui/react'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {getTranslatorLink} from '#/locale/helpers'
+import {isNative} from '#/platform/detection'
 import {useConvoActive} from '#/state/messages/convo'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useSession} from '#/state/session'
@@ -21,6 +22,7 @@ import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import * as Prompt from '#/components/Prompt'
 import {usePromptControl} from '#/components/Prompt'
+import {EmojiReactionPicker} from './EmojiReactionPicker'
 
 export let MessageContextMenu = ({
   message,
@@ -77,6 +79,12 @@ export let MessageContextMenu = ({
   return (
     <>
       <ContextMenu.Root>
+        {isNative && (
+          <ContextMenu.AuxiliaryView align={isFromSelf ? 'right' : 'left'}>
+            <EmojiReactionPicker message={message} />
+          </ContextMenu.AuxiliaryView>
+        )}
+
         <ContextMenu.Trigger
           label={_(msg`Message options`)}
           contentLabel={_(

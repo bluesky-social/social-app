@@ -4,7 +4,9 @@ import {ChatBskyConvoDefs} from '@atproto/api'
 
 import {atoms as a, useTheme} from '#/alf'
 import {MessageContextMenu} from '#/components/dms/MessageContextMenu'
-import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '../icons/DotGrid'
+import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
+import {EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
+import {EmojiReactionPicker} from './EmojiReactionPicker'
 
 export function ActionsWrapper({
   message,
@@ -47,10 +49,35 @@ export function ActionsWrapper({
       <View
         style={[
           a.justify_center,
+          a.flex_row,
+          a.align_center,
+          a.gap_xs,
           isFromSelf
-            ? [a.mr_xl, {marginLeft: 'auto'}]
-            : [a.ml_xl, {marginRight: 'auto'}],
+            ? [a.mr_md, {marginLeft: 'auto'}]
+            : [a.ml_md, {marginRight: 'auto'}],
         ]}>
+        <EmojiReactionPicker message={message}>
+          {({props, state, isNative, control}) => {
+            // always false, file is platform split
+            if (isNative) return null
+            const showMenuTrigger = showActions || control.isOpen ? 1 : 0
+            return (
+              <Pressable
+                {...props}
+                style={[
+                  {opacity: showMenuTrigger},
+                  a.p_xs,
+                  a.rounded_full,
+                  (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
+                ]}>
+                <EmojiSmileIcon
+                  size="md"
+                  style={t.atoms.text_contrast_medium}
+                />
+              </Pressable>
+            )
+          }}
+        </EmojiReactionPicker>
         <MessageContextMenu message={message}>
           {({props, state, isNative, control}) => {
             // always false, file is platform split
@@ -61,11 +88,14 @@ export function ActionsWrapper({
                 {...props}
                 style={[
                   {opacity: showMenuTrigger},
-                  a.p_sm,
+                  a.p_xs,
                   a.rounded_full,
                   (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
                 ]}>
-                <DotsHorizontalIcon size="md" style={t.atoms.text} />
+                <DotsHorizontalIcon
+                  size="md"
+                  style={t.atoms.text_contrast_medium}
+                />
               </Pressable>
             )
           }}
