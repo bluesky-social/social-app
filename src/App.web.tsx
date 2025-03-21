@@ -49,8 +49,8 @@ import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
 import {Provider as TrendingConfigProvider} from '#/state/trending-config'
+import {Provider as VideoMuteProvider} from '#/state/video'
 import {Provider as ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoWebContext'
-import {Provider as VideoVolumeProvider} from '#/view/com/util/post-embeds/VideoVolumeContext'
 import * as Toast from '#/view/com/util/Toast'
 import {ToastContainer} from '#/view/com/util/Toast.web'
 import {Shell} from '#/view/shell/index'
@@ -108,7 +108,7 @@ function InnerApp() {
     <Alf theme={theme}>
       <ThemeProvider theme={theme}>
         <RootSiblingParent>
-          <VideoVolumeProvider>
+          <VideoMuteProvider>
             <ActiveVideoProvider>
               <React.Fragment
                 // Resets the entire tree below when it changes:
@@ -153,7 +153,7 @@ function InnerApp() {
                 <ToastContainer />
               </React.Fragment>
             </ActiveVideoProvider>
-          </VideoVolumeProvider>
+          </VideoMuteProvider>
         </RootSiblingParent>
       </ThemeProvider>
     </Alf>
