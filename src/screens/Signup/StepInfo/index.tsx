@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
 import type tldts from 'tldts'
 
-import {logEvent} from '#/lib/statsig/statsig'
 import {isEmailMaybeInvalid} from '#/lib/strings/email'
 import {logger} from '#/logger'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
@@ -134,7 +133,7 @@ export function StepInfo({
     dispatch({type: 'setEmail', value: email})
     dispatch({type: 'setPassword', value: password})
     dispatch({type: 'next'})
-    logEvent('signup:nextPressed', {
+    logger.metric('signup:nextPressed', {
       activeStep: state.activeStep,
     })
   }
