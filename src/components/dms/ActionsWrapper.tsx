@@ -48,7 +48,9 @@ export function ActionsWrapper({
             <View
               style={[
                 {maxWidth: '80%'},
-                isFromSelf ? a.self_end : a.self_start,
+                isFromSelf
+                  ? [a.self_end, a.align_end]
+                  : [a.self_start, a.align_start],
               ]}
               accessible={true}
               accessibilityActions={[
