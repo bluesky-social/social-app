@@ -49,7 +49,7 @@ export function Autocomplete({
                 a.px_sm,
                 a.py_md,
               ]}
-              key={item.handle}>
+              key={item.did}>
               <PressableScale
                 testID="autocompleteButton"
                 style={[
