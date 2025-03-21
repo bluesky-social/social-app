@@ -71,7 +71,10 @@ export function ActionsWrapper({
           }}
         </MessageContextMenu>
       </View>
-      <View style={{maxWidth: '80%'}}>{children}</View>
+      <View
+        style={[{maxWidth: '80%'}, isFromSelf ? a.align_end : a.align_start]}>
+        {children}
+      </View>
     </View>
   )
 }
