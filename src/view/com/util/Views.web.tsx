@@ -26,7 +26,7 @@ import Animated from 'react-native-reanimated'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {addStyle} from '#/lib/styles'
-import {useLayoutBreakpoints} from '#/alf'
+import {CENTER_COLUMN_OFFSET, useLayoutBreakpoints} from '#/alf'
 import {useDialogContext} from '#/components/Dialog'
 
 interface AddedProps {
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
   containerOffset: {
-    transform: [{translateX: -150}],
+    transform: [{translateX: CENTER_COLUMN_OFFSET}],
   },
   containerScroll: {
     width: '100%',

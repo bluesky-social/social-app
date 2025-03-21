@@ -10,6 +10,7 @@ import {isIOS} from '#/platform/detection'
 import {useSetDrawerOpen} from '#/state/shell'
 import {
   atoms as a,
+  CENTER_COLUMN_OFFSET,
   platform,
   TextStyleProp,
   useBreakpoints,
@@ -65,7 +66,7 @@ export function Outer({
         gtMobile && [a.mx_auto, {maxWidth: 600}],
         !isWithinOffsetView && {
           transform: [
-            {translateX: centerColumnOffset ? -150 : 0},
+            {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
             {translateX: web(SCROLLBAR_OFFSET) ?? 0},
           ],
         },

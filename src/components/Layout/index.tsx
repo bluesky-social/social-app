@@ -15,6 +15,7 @@ import {isWeb} from '#/platform/detection'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {
   atoms as a,
+  CENTER_COLUMN_OFFSET,
   useBreakpoints,
   useLayoutBreakpoints,
   useTheme,
@@ -173,7 +174,7 @@ export const Center = React.memo(function LayoutContent({
                 centerColumnOffset &&
                 !ignoreTabletLayoutOffset &&
                 !isWithinDialog
-                  ? -150
+                  ? CENTER_COLUMN_OFFSET
                   : 0,
             },
             {translateX: web(SCROLLBAR_OFFSET) ?? 0},
@@ -209,7 +210,7 @@ const WebCenterBorders = React.memo(function LayoutContent() {
           left: '50%',
           transform: [
             {translateX: '-50%'},
-            {translateX: centerColumnOffset ? -150 : 0},
+            {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
             ...a.scrollbar_offset.transform,
           ],
         }),
