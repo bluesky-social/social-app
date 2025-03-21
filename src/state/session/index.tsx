@@ -105,7 +105,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         newAgent: agent,
         newAccount: account,
       })
-      logger.metrics('account:loggedIn', {logContext, withPassword: true})
+      logger.metric('account:loggedIn', {logContext, withPassword: true})
       addSessionDebugLog({type: 'method:end', method: 'login', account})
     },
     [onAgentSessionChange, cancelPendingTask],
@@ -120,7 +120,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       dispatch({
         type: 'logged-out-current-account',
       })
-      logger.metrics('account:loggedOut', {logContext, scope: 'current'})
+      logger.metric('account:loggedOut', {logContext, scope: 'current'})
       addSessionDebugLog({type: 'method:end', method: 'logout'})
     },
     [cancelPendingTask],
@@ -135,7 +135,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       dispatch({
         type: 'logged-out-every-account',
       })
-      logger.metrics('account:loggedOut', {logContext, scope: 'every'})
+      logger.metric('account:loggedOut', {logContext, scope: 'every'})
       addSessionDebugLog({type: 'method:end', method: 'logout'})
     },
     [cancelPendingTask],
