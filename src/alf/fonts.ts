@@ -38,6 +38,10 @@ export function setFontFamily(fontFamily: Device['fontFamily']) {
  * Unused fonts are commented out, but the files are there if we need them.
  */
 export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
+  if (style.fontFamily === 'monospace') {
+    return
+  }
+
   if (fontFamily === 'theme') {
     if (isAndroid) {
       style.fontFamily =
