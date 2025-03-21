@@ -34,7 +34,7 @@ export function Root({
   children,
   control,
 }: React.PropsWithChildren<{
-  control?: Dialog.DialogOuterProps['control']
+  control?: Dialog.DialogControlProps
 }>) {
   const defaultControl = Dialog.useDialogControl()
   const context = React.useMemo<ContextType>(
