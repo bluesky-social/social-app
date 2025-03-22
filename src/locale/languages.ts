@@ -1,6 +1,6 @@
 export interface Language {
-  code3: string
-  code2: string
+  code: string
+  aliases: string[]
   name: string
 }
 
@@ -628,15 +628,30 @@ export const LANGUAGES: Language[] = [
     name: 'Zaza; Dimili; Dimli; Kirdki; Kirmanjki; Zazaki',
   },
 ]
+  .map(({code3, code2, name}) => {
+    let code = code2 || code3
+    let aliases = [code2, code3].filter(c => !!c && c !== code)
+    return {
+      code,
+      aliases,
+      name,
+    }
+  })
+  .filter((lang, index, self) => {
+    // Merge dupes
+    let firstIndex = self.findIndex(t => t.code === lang.code)
+    if (index !== firstIndex) {
+      self[firstIndex].aliases.push(...self[index].aliases)
+      return false
+    }
+    return true
+  })
 
-export const LANGUAGES_MAP_CODE2 = Object.fromEntries(
-  LANGUAGES.map(lang => [lang.code2, lang]),
-)
+// `lande` outputs 'pes', meaning 'Iranian Persian' instead of 'Persian' in general, for some reason. Since there is no Iranian Persion language currently, map this to Persian.
+LANGUAGES.find(lang => lang.code === 'fa')?.aliases.push('pes')
 
-export const LANGUAGES_MAP_CODE3 = Object.fromEntries(
-  LANGUAGES.map(lang => [lang.code3, lang]),
+export const LANGUAGES_MAP = Object.fromEntries(
+  LANGUAGES.flatMap(lang =>
+    [lang.code].concat(lang.aliases).map(code => [code, lang]),
+  ),
 )
-// some additional manual mappings (not clear if these should be in the "official" mappings)
-if (LANGUAGES_MAP_CODE2.fa) {
-  LANGUAGES_MAP_CODE3.pes = LANGUAGES_MAP_CODE2.fa
-}
