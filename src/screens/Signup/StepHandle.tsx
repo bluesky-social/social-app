@@ -3,12 +3,12 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
 import {
   createFullHandle,
   MAX_SERVICE_HANDLE_LENGTH,
   validateServiceHandle,
 } from '#/lib/strings/handles'
+import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
@@ -53,7 +53,9 @@ export function StepHandle() {
         dispatch({
           type: 'setError',
           value: _(msg`That handle is already taken.`),
+          field: 'handle',
         })
+        logger.metric('signup:handleTaken', {})
         return
       }
     } catch (e) {
@@ -62,7 +64,7 @@ export function StepHandle() {
       dispatch({type: 'setIsLoading', value: false})
     }
 
-    logEvent('signup:nextPressed', {
+    logger.metric('signup:nextPressed', {
       activeStep: state.activeStep,
       phoneVerificationRequired:
         state.serviceDescription?.phoneVerificationRequired,
@@ -92,7 +94,7 @@ export function StepHandle() {
       value: handle,
     })
     dispatch({type: 'prev'})
-    logEvent('signup:backPressed', {
+    logger.metric('signup:backPressed', {
       activeStep: state.activeStep,
     })
   }, [dispatch, state.activeStep])

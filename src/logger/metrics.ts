@@ -51,6 +51,17 @@ export type MetricEvents = {
   }
   'signup:captchaSuccess': {}
   'signup:captchaFailure': {}
+  'signup:fieldError': {
+    field: string
+    errorCount: number
+    errorMessage: string
+    activeStep: number
+  }
+  'signup:backgrounded': {
+    activeStep: number
+    backgroundCount: number
+  }
+  'signup:handleTaken': {}
   'signin:hostingProviderPressed': {
     hostingProviderDidChange: boolean
   }
@@ -135,7 +146,11 @@ export type MetricEvents = {
 
   // Data events
   'account:create:begin': {}
-  'account:create:success': {}
+  'account:create:success': {
+    signupDuration: number
+    fieldErrorsTotal: number
+    backgroundCount: number
+  }
   'post:create': {
     imageCount: number
     isReply: boolean
