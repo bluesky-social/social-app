@@ -7,7 +7,7 @@ import {
 import {
   Action,
   ActionCrop,
-  manipulateAsync,
+  ImageManipulator,
   SaveFormat,
 } from 'expo-image-manipulator'
 import {nanoid} from 'nanoid/non-secure'
@@ -179,7 +179,24 @@ export async function manipulateImage(
   }
 
   const source = img.source
-  const result = await manipulateAsync(source.path, actions, {
+  const context = ImageManipulator.manipulate(source.path)
+  for (let action of actions) {
+    if ('resize' in action) {
+      context.resize(action.resize)
+    } else if ('rotate' in action) {
+      context.rotate(action.rotate)
+    } else if ('flip' in action) {
+      context.flip(action.flip)
+    } else if ('crop' in action) {
+      context.crop(action.crop)
+    } else if ('extent' in action) {
+      context.extent(action.extent)
+    }
+  }
+
+  const result = await (
+    await context.renderAsync()
+  ).saveAsync({
     format: SaveFormat.PNG,
   })
 
@@ -216,15 +233,15 @@ export async function compressImage(img: ComposerImage): Promise<ImageMeta> {
     // Float precision
     const factor = i / 10
 
-    const res = await manipulateAsync(
-      source.path,
-      [{resize: {width: w, height: h}}],
-      {
-        compress: factor,
-        format: SaveFormat.JPEG,
-        base64: true,
-      },
-    )
+    const res = await (
+      await ImageManipulator.manipulate(source.path)
+        .resize({width: w, height: h})
+        .renderAsync()
+    ).saveAsync({
+      compress: factor,
+      format: SaveFormat.JPEG,
+      base64: true,
+    })
 
     const base64 = res.base64
 
