@@ -889,7 +889,7 @@ msgstr ""
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr ""
 
-#: src/components/dms/MessageMenu.tsx:152
+#: src/components/dms/MessageContextMenu.tsx:142
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr ""
 
@@ -1420,7 +1420,6 @@ msgid "Chat requests"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:75
-#: src/components/dms/MessageMenu.tsx:83
 #: src/Navigation.tsx:413
 #: src/screens/Messages/ChatList.tsx:328
 msgid "Chat settings"
@@ -1590,6 +1589,11 @@ msgstr ""
 
 #: src/view/com/lightbox/Lightbox.web.tsx:109
 msgid "Close image viewer"
+msgstr ""
+
+#: src/components/ContextMenu/Backdrop.ios.tsx:43
+#: src/components/ContextMenu/Backdrop.tsx:39
+msgid "Close menu"
 msgstr ""
 
 #: src/components/Menu/index.tsx:298
@@ -1822,7 +1826,7 @@ msgstr ""
 msgid "Copied build version to clipboard"
 msgstr ""
 
-#: src/components/dms/MessageMenu.tsx:57
+#: src/components/dms/MessageContextMenu.tsx:52
 #: src/lib/sharing.ts:25
 #: src/lib/sharing.ts:41
 #: src/view/com/modals/InviteCodes.tsx:153
@@ -1890,8 +1894,8 @@ msgstr ""
 msgid "Copy link to post"
 msgstr ""
 
-#: src/components/dms/MessageMenu.tsx:112
-#: src/components/dms/MessageMenu.tsx:114
+#: src/components/dms/MessageContextMenu.tsx:103
+#: src/components/dms/MessageContextMenu.tsx:106
 msgid "Copy message text"
 msgstr ""
 
@@ -2071,7 +2075,7 @@ msgstr ""
 msgid "Default icons"
 msgstr ""
 
-#: src/components/dms/MessageMenu.tsx:154
+#: src/components/dms/MessageContextMenu.tsx:144
 #: src/screens/Messages/components/ChatStatusInfo.tsx:55
 #: src/screens/Settings/AppPasswords.tsx:212
 #: src/screens/StarterPack/StarterPackScreen.tsx:591
@@ -2119,7 +2123,7 @@ msgstr ""
 msgid "Delete Conversation"
 msgstr ""
 
-#: src/components/dms/MessageMenu.tsx:126
+#: src/components/dms/MessageContextMenu.tsx:117
 msgid "Delete for me"
 msgstr ""
 
@@ -2127,11 +2131,11 @@ msgstr ""
 msgid "Delete List"
 msgstr ""
 
-#: src/components/dms/MessageMenu.tsx:150
+#: src/components/dms/MessageContextMenu.tsx:140
 msgid "Delete message"
 msgstr ""
 
-#: src/components/dms/MessageMenu.tsx:124
+#: src/components/dms/MessageContextMenu.tsx:115
 msgid "Delete message for me"
 msgstr ""
 
@@ -2926,7 +2930,7 @@ msgctxt "toast"
 msgid "Failed to delete chat"
 msgstr ""
 
-#: src/components/dms/MessageMenu.tsx:75
+#: src/components/dms/MessageContextMenu.tsx:70
 msgid "Failed to delete message"
 msgstr ""
 
@@ -4246,13 +4250,17 @@ msgstr ""
 msgid "Message {0}"
 msgstr ""
 
-#: src/components/dms/MessageMenu.tsx:73
+#: src/components/dms/MessageContextMenu.tsx:68
 msgctxt "toast"
 msgid "Message deleted"
 msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:190
 msgid "Message deleted"
+msgstr ""
+
+#: src/components/dms/MessageContextMenu.tsx:83
+msgid "Message from @{0}: {1}"
 msgstr ""
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:201
@@ -4266,6 +4274,10 @@ msgstr ""
 #: src/screens/Messages/components/MessageInput.tsx:79
 #: src/screens/Messages/components/MessageInput.web.tsx:60
 msgid "Message is too long"
+msgstr ""
+
+#: src/components/dms/MessageContextMenu.tsx:81
+msgid "Message options"
 msgstr ""
 
 #: src/Navigation.tsx:642
@@ -4962,7 +4974,7 @@ msgstr ""
 msgid "Open link to {niceUrl}"
 msgstr ""
 
-#: src/components/dms/ActionsWrapper.tsx:90
+#: src/components/dms/ActionsWrapper.tsx:57
 msgid "Open message options"
 msgstr ""
 
@@ -5934,7 +5946,7 @@ msgstr ""
 msgid "Reply was successfully hidden"
 msgstr ""
 
-#: src/components/dms/MessageMenu.tsx:134
+#: src/components/dms/MessageContextMenu.tsx:125
 #: src/components/dms/MessagesListBlockedFooter.tsx:85
 #: src/components/dms/MessagesListBlockedFooter.tsx:92
 msgid "Report"
@@ -5968,7 +5980,7 @@ msgstr ""
 msgid "Report List"
 msgstr ""
 
-#: src/components/dms/MessageMenu.tsx:132
+#: src/components/dms/MessageContextMenu.tsx:123
 msgid "Report message"
 msgstr ""
 
@@ -6934,8 +6946,8 @@ msgstr ""
 msgid "Something wrong? Let us know."
 msgstr ""
 
-#: src/App.native.tsx:122
-#: src/App.web.tsx:98
+#: src/App.native.tsx:123
+#: src/App.web.tsx:99
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr ""
 
@@ -7151,6 +7163,11 @@ msgstr ""
 msgid "Tags only"
 msgstr ""
 
+#: src/components/ContextMenu/Backdrop.ios.tsx:44
+#: src/components/ContextMenu/Backdrop.tsx:40
+msgid "Tap to close context menu"
+msgstr ""
+
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"
 msgstr ""
@@ -7333,6 +7350,10 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:722
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
+msgstr ""
+
+#: src/components/ContextMenu/index.tsx:305
+msgid "The subject of the context menu"
 msgstr ""
 
 #: src/view/screens/Support.tsx:37
@@ -7735,8 +7756,8 @@ msgstr ""
 msgid "Topic"
 msgstr ""
 
-#: src/components/dms/MessageMenu.tsx:105
-#: src/components/dms/MessageMenu.tsx:107
+#: src/components/dms/MessageContextMenu.tsx:96
+#: src/components/dms/MessageContextMenu.tsx:98
 #: src/view/com/post-thread/PostThreadItem.tsx:778
 #: src/view/com/post-thread/PostThreadItem.tsx:781
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:451
