@@ -81,10 +81,10 @@ const styles = StyleSheet.create({
 
   feedsTip: {
     position: 'absolute',
-    left: 22,
+    Right: 22,
   },
   feedsTipArrow: {
-    marginLeft: 32,
+    marginRight: 32,
     marginTop: 8,
   },
 })

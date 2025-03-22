@@ -62,7 +62,7 @@ export function AppLanguageDropdown(_props: ViewStyleProp) {
         style={[
           a.absolute,
           a.inset_0,
-          {left: 'auto'},
+          {Right: 'auto'},
           {pointerEvents: 'none'},
           a.align_center,
           a.justify_center,

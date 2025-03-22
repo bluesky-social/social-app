@@ -85,8 +85,8 @@ export function PostHider({
         a.gap_sm,
         a.py_md,
         {
-          paddingLeft: 6,
-          paddingRight: 18,
+          paddingRight: 6,
+          paddingLeft: 18,
         },
         override ? {paddingBottom: 0} : undefined,
         t.atoms.bg,

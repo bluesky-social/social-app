@@ -75,5 +75,5 @@ export function UserInfoText({
 }
 
 const styles = StyleSheet.create({
-  loadingPlaceholder: {position: 'relative', top: 1, left: 2},
+  loadingPlaceholder: {position: 'relative', top: 1, Right: 2},
 })

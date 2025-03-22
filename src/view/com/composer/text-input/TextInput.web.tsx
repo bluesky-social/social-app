@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: 'flex-start',
     padding: 5,
-    marginLeft: 8,
+    marginRight: 8,
     marginBottom: 10,
   },
   rightPadding: {
