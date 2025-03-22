@@ -82,8 +82,6 @@ import {
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 
-const SECTION_TITLES_CURATE = ['Posts', 'People']
-
 interface SectionRef {
   scrollToTop: () => void
 }
@@ -165,6 +163,7 @@ function ProfileListScreenLoaded({
   const isHidden = list.labels?.findIndex(l => l.val === '!hide') !== -1
   const isOwner = currentAccount?.did === list.creator.did
   const scrollElRef = useAnimatedRef()
+  const sectionTitlesCurate = [_(msg`Posts`), _(msg`People`)]
 
   const moderation = React.useMemo(() => {
     return moderateUserList(list, moderationOpts)
@@ -214,7 +213,7 @@ function ProfileListScreenLoaded({
         <Hider.Content>
           <View style={s.hContentRegion}>
             <PagerWithHeader
-              items={SECTION_TITLES_CURATE}
+              items={sectionTitlesCurate}
               isHeaderReady={true}
               renderHeader={renderHeader}
               onCurrentPageSelected={onCurrentPageSelected}>
@@ -546,7 +545,7 @@ function Header({
       })
       items.push({
         testID: 'listHeaderDropdownDeleteBtn',
-        label: _(msg`Delete List`),
+        label: _(msg`Delete list`),
         onPress: deleteListPromptControl.open,
         icon: {
           ios: {
@@ -560,7 +559,7 @@ function Header({
       items.push({label: 'separator'})
       items.push({
         testID: 'listHeaderDropdownReportBtn',
-        label: _(msg`Report List`),
+        label: _(msg`Report list`),
         onPress: onPressReport,
         icon: {
           ios: {
@@ -595,7 +594,7 @@ function Header({
       if (isMuting) {
         items.push({
           testID: 'listHeaderDropdownMuteBtn',
-          label: _(msg`Un-mute list`),
+          label: _(msg`Unmute list`),
           onPress: onUnsubscribeMute,
           icon: {
             ios: {
@@ -610,7 +609,7 @@ function Header({
       if (isBlocking) {
         items.push({
           testID: 'listHeaderDropdownBlockBtn',
-          label: _(msg`Un-block list`),
+          label: _(msg`Unblock list`),
           onPress: onUnsubscribeBlock,
           icon: {
             ios: {
