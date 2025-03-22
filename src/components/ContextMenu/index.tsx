@@ -1,19 +1,34 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   BackHandler,
   Keyboard,
   LayoutChangeEvent,
   Pressable,
   StyleProp,
+  useWindowDimensions,
   View,
   ViewStyle,
 } from 'react-native'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
+import {
+  Gesture,
+  GestureDetector,
+  GestureStateChangeEvent,
+  GestureUpdateEvent,
+  PanGestureHandlerEventPayload,
+} from 'react-native-gesture-handler'
 import Animated, {
   clamp,
   interpolate,
   runOnJS,
   SharedValue,
+  useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -35,12 +50,14 @@ import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
-import {atoms as a, platform, useTheme} from '#/alf'
+import {atoms as a, platform, tokens, useTheme} from '#/alf'
 import {
   Context,
   ItemContext,
+  MenuContext,
   useContextMenuContext,
   useContextMenuItemContext,
+  useContextMenuMenuContext,
 } from '#/components/ContextMenu/context'
 import {
   ContextType,
@@ -82,41 +99,99 @@ export function Provider({children}: {children: React.ReactNode}) {
 }
 
 export function Root({children}: {children: React.ReactNode}) {
+  const playHaptic = useHaptics()
   const [measurement, setMeasurement] = useState<Measurement | null>(null)
   const animationSV = useSharedValue(0)
   const translationSV = useSharedValue(0)
   const isFocused = useIsFocused()
+  const hoverables = useRef<
+    Map<string, {id: string; rect: Measurement; onTouchUp: () => void}>
+  >(new Map())
+  const hoverablesSV = useSharedValue<
+    Record<string, {id: string; rect: Measurement}>
+  >({})
+  const syncHoverablesThrottleRef = useRef<ReturnType<typeof setTimeout>>()
+  const [hoveredMenuItem, setHoveredMenuItem] = useState<string | null>(null)
 
-  const clearMeasurement = useCallback(() => setMeasurement(null), [])
+  const onHoverableTouchUp = useCallback((id: string) => {
+    const hoverable = hoverables.current.get(id)
+    if (!hoverable) {
+      logger.warn(`No such hoverable with id ${id}`)
+      return
+    }
+    hoverable.onTouchUp()
+  }, [])
 
-  const context = useMemo<ContextType>(
-    () => ({
-      isOpen: !!measurement && isFocused,
-      measurement,
-      animationSV,
-      translationSV,
-      open: (evt: Measurement) => {
-        setMeasurement(evt)
-        animationSV.set(withSpring(1, SPRING))
-      },
-      close: () => {
-        animationSV.set(
-          withSpring(0, SPRING, finished => {
-            if (finished) {
-              translationSV.set(0)
-              runOnJS(clearMeasurement)()
-            }
-          }),
-        )
-      },
-    }),
+  const onCompletedClose = useCallback(() => {
+    hoverables.current.clear()
+    setMeasurement(null)
+  }, [])
+
+  const context = useMemo(
+    () =>
+      ({
+        isOpen: !!measurement && isFocused,
+        measurement,
+        animationSV,
+        translationSV,
+        open: (evt: Measurement) => {
+          setMeasurement(evt)
+          animationSV.set(withSpring(1, SPRING))
+        },
+        close: () => {
+          animationSV.set(
+            withSpring(0, SPRING, finished => {
+              if (finished) {
+                hoverablesSV.set({})
+                translationSV.set(0)
+                runOnJS(onCompletedClose)()
+              }
+            }),
+          )
+        },
+        registerHoverable: (
+          id: string,
+          rect: Measurement,
+          onTouchUp: () => void,
+        ) => {
+          hoverables.current.set(id, {id, rect, onTouchUp})
+          // we need this data on the UI thread, but we want to limit cross-thread communication
+          // and this function will be called in quick succession, so we need to throttle it
+          if (syncHoverablesThrottleRef.current)
+            clearTimeout(syncHoverablesThrottleRef.current)
+          syncHoverablesThrottleRef.current = setTimeout(() => {
+            syncHoverablesThrottleRef.current = undefined
+            hoverablesSV.set(
+              Object.fromEntries(
+                // eslint-ignore
+                [...hoverables.current.entries()].map(([id, {rect}]) => [
+                  id,
+                  {id, rect},
+                ]),
+              ),
+            )
+          }, 1)
+        },
+        hoverablesSV,
+        onTouchUpMenuItem: onHoverableTouchUp,
+        hoveredMenuItem,
+        setHoveredMenuItem: item => {
+          if (item) playHaptic('Light')
+          setHoveredMenuItem(item)
+        },
+      } satisfies ContextType),
     [
       measurement,
       setMeasurement,
+      onCompletedClose,
       isFocused,
       animationSV,
       translationSV,
-      clearMeasurement,
+      hoverablesSV,
+      onHoverableTouchUp,
+      hoveredMenuItem,
+      setHoveredMenuItem,
+      playHaptic,
     ],
   )
 
@@ -183,20 +258,52 @@ export function Trigger({children, label, contentLabel, style}: TriggerProps) {
       .runOnJS(true)
   }, [open])
 
+  const {
+    hoverablesSV,
+    setHoveredMenuItem,
+    onTouchUpMenuItem,
+    translationSV,
+    animationSV,
+  } = context
+  const hoveredItemSV = useSharedValue<string | null>(null)
+
+  useAnimatedReaction(
+    () => hoveredItemSV.get(),
+    (hovered, prev) => {
+      if (hovered !== prev) {
+        runOnJS(setHoveredMenuItem)(hovered)
+      }
+    },
+  )
+
   const pressAndHoldGesture = useMemo(() => {
-    return Gesture.LongPress()
+    return Gesture.Pan()
+      .activateAfterLongPress(500)
+      .cancelsTouchesInView(false)
+      .averageTouches(true)
       .onStart(() => {
+        'worklet'
         runOnJS(open)()
       })
-      .cancelsTouchesInView(false)
-  }, [open])
+      .onUpdate(evt => {
+        'worklet'
+        const item = getHoveredHoverable(evt, hoverablesSV, translationSV)
+        hoveredItemSV.set(item)
+      })
+      .onEnd(evt => {
+        'worklet'
+        const item = getHoveredHoverable(evt, hoverablesSV, translationSV)
+        hoveredItemSV.set(null)
+        if (item) {
+          runOnJS(onTouchUpMenuItem)(item)
+        }
+      })
+  }, [open, hoverablesSV, onTouchUpMenuItem, hoveredItemSV, translationSV])
 
   const composedGestures = Gesture.Exclusive(
     doubleTapGesture,
     pressAndHoldGesture,
   )
-
-  const {translationSV, animationSV} = context
 
   const measurement = context.measurement || pendingMeasurement
 
@@ -324,6 +431,7 @@ export function Outer({
   const context = useContextMenuContext()
   const insets = useSafeAreaInsets()
   const frame = useSafeAreaFrame()
+  const {width: screenWidth} = useWindowDimensions()
 
   const {animationSV, translationSV} = context
 
@@ -347,7 +455,8 @@ export function Outer({
       const BOTTOM_INSET_ANDROID = 12 // TODO: revisit when edge-to-edge mode is enabled -sfn
 
       const {height} = evt.nativeEvent.layout
-      const topPosition = context.measurement.y + context.measurement.height + 4
+      const topPosition =
+        context.measurement.y + context.measurement.height + tokens.space.xs
       const bottomPosition = topPosition + height
       const safeAreaBottomLimit =
         frame.height -
@@ -373,82 +482,88 @@ export function Outer({
     [context.measurement, frame.height, insets, translationSV],
   )
 
+  const menuContext = useMemo(() => ({align}), [align])
+
   if (!context.isOpen || !context.measurement) return null
 
   return (
     <Portal>
       <Context.Provider value={context}>
-        <Backdrop animation={animationSV} onPress={context.close} />
-        {/* containing element - stays the same size, so we measure it
-         to determine if a translation is necessary. also has the positioning */}
-        <Animated.View
-          onLayout={onLayout}
-          style={[
-            a.absolute,
-            a.z_10,
-            a.mt_xs,
-            {
-              width: MENU_WIDTH,
-              top: context.measurement.y + context.measurement.height,
-            },
-            align === 'left'
-              ? {left: context.measurement.x}
-              : {
-                  right:
-                    frame.x +
-                    frame.width -
-                    context.measurement.x -
-                    context.measurement.width,
-                },
-            animatedContainerStyle,
-          ]}>
-          {/* scaling element - has the scale/fade animation on it */}
+        <MenuContext.Provider value={menuContext}>
+          <Backdrop animation={animationSV} onPress={context.close} />
+          {/* containing element - stays the same size, so we measure it
+           to determine if a translation is necessary. also has the positioning */}
           <Animated.View
+            onLayout={onLayout}
             style={[
-              a.rounded_md,
-              a.shadow_md,
-              t.atoms.bg_contrast_25,
-              a.w_full,
-              // @ts-ignore react-native-web expects string, and this file is platform-split -sfn
-              // note: above @ts-ignore cannot be a @ts-expect-error because this does not cause an error
-              // in the typecheck CI - presumably because of RNW overriding the types
+              a.absolute,
+              a.z_10,
+              a.mt_xs,
               {
-                transformOrigin:
-                  align === 'left' ? [0, 0, 0] : [MENU_WIDTH, 0, 0],
+                width: MENU_WIDTH,
+                top: context.measurement.y + context.measurement.height,
               },
-              animatedStyle,
-              style,
+              align === 'left'
+                ? {left: context.measurement.x}
+                : {
+                    right:
+                      screenWidth -
+                      context.measurement.x -
+                      context.measurement.width,
+                  },
+              animatedContainerStyle,
             ]}>
-            {/* innermost element - needs an overflow: hidden for children, but we also need a shadow,
-              so put the shadow on the scaling element and the overflow on the innermost element */}
-            <View
+            {/* scaling element - has the scale/fade animation on it */}
+            <Animated.View
               style={[
-                a.flex_1,
                 a.rounded_md,
-                a.overflow_hidden,
-                a.border,
-                t.atoms.border_contrast_low,
+                a.shadow_md,
+                t.atoms.bg_contrast_25,
+                a.w_full,
+                // @ts-ignore react-native-web expects string, and this file is platform-split -sfn
+                // note: above @ts-ignore cannot be a @ts-expect-error because this does not cause an error
+                // in the typecheck CI - presumably because of RNW overriding the types
+                {
+                  transformOrigin:
+                    // "top right" doesn't seem to work on android, so set explicity in pixels
+                    align === 'left' ? [0, 0, 0] : [MENU_WIDTH, 0, 0],
+                },
+                animatedStyle,
+                style,
               ]}>
-              {flattenReactChildren(children).map((child, i) => {
-                return React.isValidElement(child) &&
-                  (child.type === Item || child.type === Divider) ? (
-                  <React.Fragment key={i}>
-                    {i > 0 ? (
-                      <View style={[a.border_b, t.atoms.border_contrast_low]} />
-                    ) : null}
-                    {React.cloneElement(child, {
-                      // @ts-expect-error not typed
-                      style: {
-                        borderRadius: 0,
-                        borderWidth: 0,
-                      },
-                    })}
-                  </React.Fragment>
-                ) : null
-              })}
-            </View>
+              {/* innermost element - needs an overflow: hidden for children, but we also need a shadow,
+                so put the shadow on the scaling element and the overflow on the innermost element */}
+              <View
+                style={[
+                  a.flex_1,
+                  a.rounded_md,
+                  a.overflow_hidden,
+                  a.border,
+                  t.atoms.border_contrast_low,
+                ]}>
+                {flattenReactChildren(children).map((child, i) => {
+                  return React.isValidElement(child) &&
+                    (child.type === Item || child.type === Divider) ? (
+                    <React.Fragment key={i}>
+                      {i > 0 ? (
+                        <View
+                          style={[a.border_b, t.atoms.border_contrast_low]}
+                        />
+                      ) : null}
+                      {React.cloneElement(child, {
+                        // @ts-expect-error not typed
+                        style: {
+                          borderRadius: 0,
+                          borderWidth: 0,
+                        },
+                      })}
+                    </React.Fragment>
+                  ) : null
+                })}
+              </View>
+            </Animated.View>
           </Animated.View>
-        </Animated.View>
+        </MenuContext.Provider>
       </Context.Provider>
     </Portal>
   )
@@ -464,16 +579,52 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
     onIn: onPressIn,
     onOut: onPressOut,
   } = useInteractionState()
+  const id = useId()
+  const {align} = useContextMenuMenuContext()
+
+  const {close, measurement, registerHoverable} = context
+
+  const handleLayout = useCallback(
+    (evt: LayoutChangeEvent) => {
+      if (!measurement) return // should be impossible
+
+      const layout = evt.nativeEvent.layout
+
+      registerHoverable(
+        id,
+        {
+          width: layout.width,
+          height: layout.height,
+          y: measurement.y + measurement.height + tokens.space.xs + layout.y,
+          x:
+            align === 'left'
+              ? measurement.x
+              : measurement.x + measurement.width - layout.width,
+        },
+        () => {
+          close()
+          onPress()
+        },
+      )
+    },
+    [id, measurement, registerHoverable, close, onPress, align],
+  )
+
+  const itemContext = useMemo(
+    () => ({disabled: Boolean(rest.disabled)}),
+    [rest.disabled],
+  )
 
   return (
     <Pressable
       {...rest}
+      onLayout={handleLayout}
       accessibilityHint=""
       accessibilityLabel={label}
       onFocus={onFocus}
       onBlur={onBlur}
       onPress={e => {
-        context.close()
+        close()
         onPress?.(e)
       }}
       onPressIn={e => {
@@ -497,9 +648,10 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
         t.atoms.border_contrast_low,
         {minHeight: 40},
         style,
-        (focused || pressed) && !rest.disabled && [t.atoms.bg_contrast_50],
+        (focused || pressed || context.hoveredMenuItem === id) &&
+          !rest.disabled && [t.atoms.bg_contrast_50],
       ]}>
-      <ItemContext.Provider value={{disabled: Boolean(rest.disabled)}}>
+      <ItemContext.Provider value={itemContext}>
         {children}
       </ItemContext.Provider>
     </Pressable>
@@ -588,4 +740,38 @@ export function Divider() {
       style={[t.atoms.border_contrast_low, a.flex_1, {borderTopWidth: 3}]}
     />
   )
+}
+
+function getHoveredHoverable(
+  evt:
+    | GestureStateChangeEvent<PanGestureHandlerEventPayload>
+    | GestureUpdateEvent<PanGestureHandlerEventPayload>,
+  hoverables: SharedValue<Record<string, {id: string; rect: Measurement}>>,
+  translation: SharedValue<number>,
+) {
+  'worklet'
+
+  const x = evt.absoluteX
+  const y = evt.absoluteY
+  const yOffset = translation.get()
+
+  const rects = Object.values(hoverables.get())
+
+  for (const {id, rect} of rects) {
+    const isWithinLeftBound = x >= rect.x
+    const isWithinRightBound = x <= rect.x + rect.width
+    const isWithinTopBound = y >= rect.y + yOffset
+    const isWithinBottomBound = y <= rect.y + rect.height + yOffset
+
+    if (
+      isWithinLeftBound &&
+      isWithinRightBound &&
+      isWithinTopBound &&
+      isWithinBottomBound
+    ) {
+      return id
+    }
+  }
+
+  return null
 }

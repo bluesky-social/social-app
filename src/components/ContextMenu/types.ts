@@ -1,16 +1,28 @@
 import React from 'react'
-import {AccessibilityRole, StyleProp, ViewStyle} from 'react-native'
+import {
+  AccessibilityRole,
+  GestureResponderEvent,
+  StyleProp,
+  ViewStyle,
+} from 'react-native'
 import {SharedValue} from 'react-native-reanimated'
 
 import * as Dialog from '#/components/Dialog'
-import {RadixPassThroughTriggerProps} from '#/components/Menu/types'
+import {
+  ItemProps as MenuItemProps,
+  RadixPassThroughTriggerProps,
+} from '#/components/Menu/types'
 
 export type {
   GroupProps,
   ItemIconProps,
-  ItemProps,
   ItemTextProps,
 } from '#/components/Menu/types'
+
+// Same as Menu.ItemProps, but onPress is not guaranteed to get an event
+export type ItemProps = Omit<MenuItemProps, 'onPress'> & {
+  onPress: (evt?: GestureResponderEvent) => void
+}
 
 export type Measurement = {
   x: number
@@ -28,6 +40,19 @@ export type ContextType = {
   translationSV: SharedValue<number>
   open: (evt: Measurement) => void
   close: () => void
+  registerHoverable: (
+    id: string,
+    rect: Measurement,
+    onTouchUp: () => void,
+  ) => void
+  hoverablesSV: SharedValue<Record<string, {id: string; rect: Measurement}>>
+  hoveredMenuItem: string | null
+  setHoveredMenuItem: React.Dispatch<React.SetStateAction<string | null>>
+  onTouchUpMenuItem: (id: string) => void
+}
+
+export type MenuContextType = {
+  align: 'left' | 'right'
 }
 
 export type ItemContextType = {
