@@ -62,6 +62,54 @@ This is NOT required when developing for web.
       - In "SDK Tools": "Android SDK Build-Tools" and "Android Emulator" are required.
       - Add `export ANDROID_HOME=/Users/<your_username>/Library/Android/sdk` to your `.zshrc` or `.bashrc` (and restart your terminal).
     - Setup an emulator (Android Studio > Tools > Device Manager).
+  - Common JDK Version Issue:
+    - If you encounter a build error like:
+
+      `BUILD FAILED Inconsistent JVM-target compatibility detected for tasks 'compileDebugJavaWithJavac' (<desired_version>) and 'compileDebugKotlin' (<your_local_jdk_version>).`
+
+    - *Note that these changes may affect your other Java, Android, or React Native projects that require different JDK versions. You'll likely encounter this issue if your `.zshrc` or `.bashrc` already has a different OpenJDK version in your PATH.*
+    - Follow these steps to fix JDK version mismatch (replace `<desired_version>` with the version number from the error):
+      1. Install the required JDK version:
+
+         ```
+         brew install openjdk@<desired_version>
+         ```
+
+      2. Create a symbolic link (requires admin privileges):
+
+         ```
+         sudo ln -sfn /opt/homebrew/opt/openjdk@<desired_version>/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-<desired_version>.jdk
+         ```
+
+      3. Add JDK to your path (for zsh or bash):
+
+         ```
+         # For zsh
+         echo 'export PATH="/opt/homebrew/opt/openjdk@<desired_version>/bin:$PATH"' >> ~/.zshrc
+         
+         # For bash
+         echo 'export PATH="/opt/homebrew/opt/openjdk@<desired_version>/bin:$PATH"' >> ~/.bashrc
+         ```
+
+      4. Set C/C++ flags for the JDK:
+
+         ```
+         export CPPFLAGS="-I/opt/homebrew/opt/openjdk@<desired_version>/include"
+         ```
+
+      5. Open and edit your shell config if needed:
+
+         ```
+         code ~/.zshrc   # or ~/.bashrc for bash users
+         ```
+
+      6. Apply changes and verify JDK version:
+
+         ```
+         source ~/.zshrc   # or ~/.bashrc for bash users
+         java --version
+         ```
+
 - Web: `yarn web` (see the top of this file).
 
 After you do `yarn ios` and `yarn android` once, you can later just run `yarn web` and then press either `i` or `a` to open iOS and Android emulators respectively which is much faster. However, if you make native changes, you'll have to do `yarn prebuild -p ios` and `yarn prebuild -p android` and then `yarn ios` and `yarn android` again before you can continue with the same workflow.
