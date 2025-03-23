@@ -1,11 +1,5 @@
-import React, {useCallback, useMemo, useRef} from 'react'
-import {
-  GestureResponderEvent,
-  LayoutAnimation,
-  StyleProp,
-  TextStyle,
-  View,
-} from 'react-native'
+import React, {useCallback, useMemo} from 'react'
+import {GestureResponderEvent, StyleProp, TextStyle, View} from 'react-native'
 import {
   AppBskyEmbedRecord,
   ChatBskyConvoDefs,
@@ -87,12 +81,6 @@ let MessageItem = ({
 
     return true
   }, [message, nextMessage, isPending])
-
-  const lastInGroupRef = useRef(isLastInGroup)
-  if (lastInGroupRef.current !== isLastInGroup) {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    lastInGroupRef.current = isLastInGroup
-  }
 
   const pendingColor = t.palette.primary_200
 
