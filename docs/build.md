@@ -125,6 +125,27 @@ After you do `yarn ios` and `yarn android` once, you can later just run `yarn we
   - For instance, the locally-hosted dev-wallet will need `adb reverse tcp:3001 tcp:3001`
 - For some reason, the typescript compiler chokes on platform-specific files (e.g. `foo.native.ts`) but only when compiling for Web thus far. Therefore we always have one version of the file that doesn't use a platform specifier, and that should be the Web version. ([More info](https://stackoverflow.com/questions/44001050/platform-specific-import-component-in-react-native-with-typescript).)
 
+### When in doubt, throw it out 🧨
+
+Sometimes the most effective fix for stubborn React Native/Expo issues is the nuclear option. If you've tried everything else and are still encountering mysterious errors:
+
+```
+# Clear Expo's cache
+npx expo start --clear
+
+# Remove platform-specific build directories
+rm -rf /ios     # For iOS issues
+rm -rf /android # For Android issues
+
+# The ultimate reset
+rm -rf /node_modules
+yarn install    # Don't forget to reinstall!
+```
+
+![Throwing garbage away](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzh6eTRhMjYyaGtqa2Z2anU2aTBueXR6aXRpNmQ4eXVlZHBrajJkbCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/p39qWGHTpfY0o/giphy.gif)
+
+Sometimes a fresh start is all you need... and much faster than debugging for hours!
+
 ### Running E2E Tests
 
 - Start in various console tabs:
