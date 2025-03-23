@@ -23,11 +23,17 @@ This is NOT required when developing for web.
     - `brew info cocoapods`
     - If output says `Installed`:
     - `brew remove cocoapods`
-  - If you have not installed `rbenv`:
+  - If you use asdf-vm, see instructions below, otherwise, if you have not installed `rbenv`:
     - `brew install rbenv`
     - `rbenv install 2.7.6`
     - `rbenv global 2.7.6`
     - Add `eval "$(rbenv init - zsh)"` to your `~/.zshrc`
+  - Alternatively, you can use ASDF for version management:
+    - A `.tool-versions` file is included in the repo
+    - [Install ASDF](https://asdf-vm.com/) according to their documentation
+    - Add the Ruby plugin: `asdf plugin add ruby`
+    - Install the required Ruby version: `asdf install`
+    - ASDF will automatically use the correct Ruby version based on the `.tool-versions` file
   - From inside the project directory:
     - `bundler install` (this will install Cocoapods)
 - After initial setup:
