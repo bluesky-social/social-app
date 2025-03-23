@@ -1,10 +1,10 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto/api'
 
-import {atoms as a} from '#/alf'
-import {MessageMenu} from '#/components/dms/MessageMenu'
-import {useMenuControl} from '#/components/Menu'
+import {atoms as a, useTheme} from '#/alf'
+import {MessageContextMenu} from '#/components/dms/MessageContextMenu'
+import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '../icons/DotGrid'
 
 export function ActionsWrapper({
   message,
@@ -15,8 +15,8 @@ export function ActionsWrapper({
   isFromSelf: boolean
   children: React.ReactNode
 }) {
-  const menuControl = useMenuControl()
   const viewRef = React.useRef(null)
+  const t = useTheme()
 
   const [showActions, setShowActions] = React.useState(false)
 
@@ -42,39 +42,39 @@ export function ActionsWrapper({
       onMouseLeave={onMouseLeave}
       onFocus={onFocus}
       onBlur={onMouseLeave}
-      style={StyleSheet.flatten([a.flex_1, a.flex_row])}
+      style={[a.flex_1, isFromSelf ? a.flex_row : a.flex_row_reverse]}
       ref={viewRef}>
-      {isFromSelf && (
-        <View
-          style={[
-            a.mr_xl,
-            a.justify_center,
-            {
-              marginLeft: 'auto',
-            },
-          ]}>
-          <MessageMenu
-            message={message}
-            control={menuControl}
-            triggerOpacity={showActions || menuControl.isOpen ? 1 : 0}
-          />
-        </View>
-      )}
       <View
-        style={{
-          maxWidth: '80%',
-        }}>
+        style={[
+          a.justify_center,
+          isFromSelf
+            ? [a.mr_xl, {marginLeft: 'auto'}]
+            : [a.ml_xl, {marginRight: 'auto'}],
+        ]}>
+        <MessageContextMenu message={message}>
+          {({props, state, isNative, control}) => {
+            // always false, file is platform split
+            if (isNative) return null
+            const showMenuTrigger = showActions || control.isOpen ? 1 : 0
+            return (
+              <Pressable
+                {...props}
+                style={[
+                  {opacity: showMenuTrigger},
+                  a.p_sm,
+                  a.rounded_full,
+                  (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
+                ]}>
+                <DotsHorizontalIcon size="md" style={t.atoms.text} />
+              </Pressable>
+            )
+          }}
+        </MessageContextMenu>
+      </View>
+      <View
+        style={[{maxWidth: '80%'}, isFromSelf ? a.align_end : a.align_start]}>
         {children}
       </View>
-      {!isFromSelf && (
-        <View style={[a.flex_row, a.align_center, a.ml_xl]}>
-          <MessageMenu
-            message={message}
-            control={menuControl}
-            triggerOpacity={showActions || menuControl.isOpen ? 1 : 0}
-          />
-        </View>
-      )}
     </View>
   )
 }
