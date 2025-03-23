@@ -122,7 +122,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
   const serverTreeViewEnabled = serverPrefs?.lab_treeViewEnabled ?? false
   const serverSortReplies = serverPrefs?.sort ?? 'hotness'
 
-  // However, we also need these to work locally for PWI (without persistance).
+  // However, we also need these to work locally for PWI (without persistence).
   // So we're mirroring them locally.
   const prioritizeFollowedUsers = serverPrioritizeFollowedUsers
   const [treeViewEnabled, setTreeViewEnabled] = useState(serverTreeViewEnabled)
@@ -566,7 +566,6 @@ export function PostThread({uri}: {uri: string | undefined}) {
               ? MAINTAIN_VISIBLE_CONTENT_POSITION
               : undefined
           }
-          // @ts-ignore our .web version only -prf
           desktopFixedHeight
           removeClippedSubviews={isAndroid ? false : undefined}
           ListFooterComponent={
