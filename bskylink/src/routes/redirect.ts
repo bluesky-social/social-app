@@ -1,6 +1,7 @@
 import assert from 'node:assert'
 
 import {DAY, SECOND} from '@atproto/common'
+import escapeHTML from 'escape-html'
 import {Express} from 'express'
 
 import {AppContext} from '../context.js'
@@ -40,8 +41,13 @@ export default function (ctx: AppContext, app: Express) {
       }
 
       res.setHeader('Cache-Control', `max-age=${(7 * DAY) / SECOND}`)
-      res.setHeader('Location', url.href)
-      return res.status(301).end()
+      res.type('html')
+      res.status(200)
+
+      const escaped = escapeHTML(url.href)
+      return res.send(
+        `<html><head><meta http-equiv="refresh" content="0; URL='${escaped}'" /><style>:root { color-scheme: light dark; }</style></head></html>`,
+      )
     }),
   )
 }
