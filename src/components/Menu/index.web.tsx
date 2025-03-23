@@ -50,7 +50,7 @@ export function Root({
   children,
   control,
 }: React.PropsWithChildren<{
-  control?: Dialog.DialogOuterProps['control']
+  control?: Dialog.DialogControlProps
 }>) {
   const {_} = useLingui()
   const defaultControl = useMenuControl()

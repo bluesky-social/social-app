@@ -15,6 +15,7 @@ module.exports = {
     'simple-import-sort',
     'bsky-internal',
     'eslint-plugin-react-compiler',
+    'import',
   ],
   rules: {
     'react/no-unescaped-entities': 0,
@@ -81,6 +82,16 @@ module.exports = {
     ],
     'simple-import-sort/exports': 'error',
     'react-compiler/react-compiler': 'warn',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {argsIgnorePattern: '^_', varsIgnorePattern: '^_'},
+    ],
+    '@typescript-eslint/consistent-type-imports': [
+      'warn',
+      {prefer: 'type-imports', fixStyle: 'inline-type-imports'},
+    ],
+    'import/consistent-type-specifier-style': ['warn', 'prefer-inline'],
   },
   ignorePatterns: [
     '**/__mocks__/*.ts',
