@@ -58,6 +58,8 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
     return null
   }
 
+  const width = centerColumnOffset ? 250 : 300
+
   return (
     <View
       style={[
@@ -67,10 +69,12 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           position: 'fixed',
           left: '50%',
           transform: [
-            {translateX: 300 + (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0)},
+            {
+              translateX: 300 + (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0),
+            },
             ...a.scrollbar_offset.transform,
           ],
-          width: 300 + gutters.paddingLeft,
+          width: width + gutters.paddingLeft,
           maxHeight: '100%',
           overflowY: 'auto',
         }),
