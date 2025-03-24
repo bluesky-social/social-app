@@ -54,10 +54,11 @@ This is NOT required when developing for web.
     - In addition, ensure Xcode Command Line Tools are installed using `xcode-select --install`.
   - Expo will require you to configure Xcode Signing. Follow the linked instructions. Error messages in Xcode related to the signing process can be safely ignored when installing on the iOS Simulator; Expo merely requires the profile to exist in order to install the app on the Simulator.
     - Make sure you do have a certificate: open Xcode > Settings > Accounts > (sign-in) > Manage Certificates > + > Apple Development > Done.
+    - For more information on setting up signing certificates: [Expo: Setup Code Signing Certificates in Xcode for Development](https://github.com/expo/fyi/blob/main/setup-xcode-signing.md)
     - If you still encounter issues, try `rm -rf ios` before trying to build again (`yarn ios`)
 - Android: `yarn android`
   - Install "Android Studio"
-    - Make sure you have the Android SDK installed (Android Studio > Tools > Android SDK).
+    - Make sure you have the Android SDK installed (`Android Studio > Settings > Tools > Android SDK`).
       - In "SDK Platforms": "Android x" (where x is Android's current version).
       - In "SDK Tools": "Android SDK Build-Tools" and "Android Emulator" are required.
       - Add `export ANDROID_HOME=/Users/<your_username>/Library/Android/sdk` to your `.zshrc` or `.bashrc` (and restart your terminal).
