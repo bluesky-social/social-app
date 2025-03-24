@@ -10,7 +10,6 @@ import {isIOS} from '#/platform/detection'
 import {useSetDrawerOpen} from '#/state/shell'
 import {
   atoms as a,
-  CENTER_COLUMN_OFFSET,
   platform,
   TextStyleProp,
   useBreakpoints,
@@ -24,6 +23,7 @@ import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {
   BUTTON_VISUAL_ALIGNMENT_OFFSET,
+  CENTER_COLUMN_OFFSET,
   HEADER_SLOT_SIZE,
   SCROLLBAR_OFFSET,
 } from '#/components/Layout/const'

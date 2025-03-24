@@ -26,8 +26,9 @@ import Animated from 'react-native-reanimated'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {addStyle} from '#/lib/styles'
-import {CENTER_COLUMN_OFFSET, useLayoutBreakpoints} from '#/alf'
+import {useLayoutBreakpoints} from '#/alf'
 import {useDialogContext} from '#/components/Dialog'
+import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 
 interface AddedProps {
   desktopFixedHeight?: boolean | number

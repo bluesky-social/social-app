@@ -27,8 +27,6 @@ export function useBreakpoints(): Record<Breakpoint, boolean> & {
   }, [gtPhone, gtMobile, gtTablet])
 }
 
-export const CENTER_COLUMN_OFFSET = -130
-
 /**
  * Fine-tuned breakpoints for the shell layout
  */

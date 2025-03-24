@@ -15,14 +15,13 @@ import {isWeb} from '#/platform/detection'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {
   atoms as a,
-  CENTER_COLUMN_OFFSET,
   useBreakpoints,
   useLayoutBreakpoints,
   useTheme,
   web,
 } from '#/alf'
 import {useDialogContext} from '#/components/Dialog'
-import {SCROLLBAR_OFFSET} from '#/components/Layout/const'
+import {CENTER_COLUMN_OFFSET, SCROLLBAR_OFFSET} from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 
 export * from '#/components/Layout/const'

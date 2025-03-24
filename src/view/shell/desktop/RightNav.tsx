@@ -12,7 +12,6 @@ import {DesktopSearch} from '#/view/shell/desktop/Search'
 import {SidebarTrendingTopics} from '#/view/shell/desktop/SidebarTrendingTopics'
 import {
   atoms as a,
-  CENTER_COLUMN_OFFSET,
   useGutters,
   useLayoutBreakpoints,
   useTheme,
@@ -20,6 +19,7 @@ import {
 } from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Divider} from '#/components/Divider'
+import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {Text} from '#/components/Typography'
