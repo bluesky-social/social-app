@@ -44,7 +44,7 @@ export function TrendingTopicRow({
         topic={raw}
         testID={`trendingTopic:${rank}`}
         onPress={onPress}
-        style={[a.border_t, t.atoms.border_contrast_low]}
+        style={native([a.border_t, t.atoms.border_contrast_low])}
         PressableComponent={Pressable}>
         {({hovered, focused, pressed}) => (
           <View

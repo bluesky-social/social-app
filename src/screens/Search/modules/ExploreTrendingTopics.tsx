@@ -5,7 +5,7 @@ import {logger} from '#/logger'
 import {useTrendingSettings} from '#/state/preferences/trending'
 import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
 import {useTrendingConfig} from '#/state/trending-config'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, useTheme} from '#/alf'
 import {
   TrendingTopicRow,
   TrendingTopicRowSkeleton,
@@ -25,7 +25,7 @@ function Inner() {
   const noTopics = !isLoading && !error && !trending?.topics?.length
 
   return error || noTopics ? null : (
-    <View style={[a.border_b, t.atoms.border_contrast_low]}>
+    <View style={native([a.border_b, t.atoms.border_contrast_low])}>
       {isLoading ? (
         Array.from({length: 5}).map((__, i) => (
           <TrendingTopicRowSkeleton key={i} withPosts={i === 0} />
