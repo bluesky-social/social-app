@@ -1,4 +1,3 @@
-import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
@@ -8,7 +7,6 @@ import {
   useTrendingTopics,
 } from '#/state/queries/trending/useTrendingTopics'
 import {useTrendingConfig} from '#/state/trending-config'
-import {atoms as a, native, useTheme} from '#/alf'
 import {
   TrendingTopicRow,
   TrendingTopicRowSkeleton,
@@ -25,13 +23,12 @@ export function ExploreTrendingTopics() {
 
 function Inner() {
   const {_} = useLingui()
-  const t = useTheme()
 
   const {data: trending, error, isLoading} = useTrendingTopics()
   const noTopics = !isLoading && !error && !trending?.topics?.length
 
   return error || noTopics ? null : (
-    <View style={native([a.border_b, t.atoms.border_contrast_low])}>
+    <>
       {isLoading ? (
         Array.from({length: SKELETON_COUNT}).map((__, i) => (
           <TrendingTopicRowSkeleton key={i} withPosts={i === 0} />
@@ -60,6 +57,6 @@ function Inner() {
             ))}
         </>
       )}
-    </View>
+    </>
   )
 }
