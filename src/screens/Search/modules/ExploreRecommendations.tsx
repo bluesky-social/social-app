@@ -1,8 +1,8 @@
 import {View} from 'react-native'
-import {AppBskyUnspeccedDefs} from '@atproto/api'
+import {type AppBskyUnspeccedDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
-import {logEvent} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {
   DEFAULT_LIMIT as RECOMMENDATIONS_COUNT,
@@ -86,7 +86,9 @@ function Inner() {
                   key={topic.link}
                   topic={topic}
                   onPress={() => {
-                    logEvent('recommendedTopic:click', {context: 'explore'})
+                    logger.metric('recommendedTopic:click', {
+                      context: 'explore',
+                    })
                   }}>
                   {({hovered}) => (
                     <TrendingTopic
