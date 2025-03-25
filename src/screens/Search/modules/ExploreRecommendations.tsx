@@ -12,9 +12,9 @@ import {useTrendingConfig} from '#/state/trending-config'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Hashtag_Stroke2_Corner0_Rounded} from '#/components/icons/Hashtag'
 import {
-  TrendingTopic,
   TrendingTopicLink,
-  TrendingTopicSkeleton,
+  TrendingTopicPill,
+  TrendingTopicPillSkeleton,
 } from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 
@@ -80,7 +80,7 @@ function Inner() {
           {isLoading ? (
             Array(RECOMMENDATIONS_COUNT)
               .fill(0)
-              .map((_, i) => <TrendingTopicSkeleton key={i} index={i} />)
+              .map((_, i) => <TrendingTopicPillSkeleton key={i} index={i} />)
           ) : !trending?.suggested ? null : (
             <>
               {trending.suggested.map(topic => (
@@ -93,7 +93,7 @@ function Inner() {
                     })
                   }}>
                   {({hovered}) => (
-                    <TrendingTopic
+                    <TrendingTopicPill
                       topic={topic}
                       style={[
                         hovered && [

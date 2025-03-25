@@ -1,22 +1,197 @@
-import React from 'react'
-import {View} from 'react-native'
-import {AtUri} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import React, {useMemo} from 'react'
+import {Pressable, View} from 'react-native'
+import {type AtUri} from '@atproto/api'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
-// import {makeProfileLink} from '#/lib/routes/links'
-// import {feedUriToHref} from '#/lib/strings/url-helpers'
-// import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
-// import {CloseQuote_Filled_Stroke2_Corner0_Rounded as Quote} from '#/components/icons/Quote'
-// import {UserAvatar} from '#/view/com/util/UserAvatar'
-import type {TrendingTopic} from '#/state/queries/trending/useTrendingTopics'
-import {atoms as a, native, useTheme, ViewStyleProp} from '#/alf'
+import {type TrendingTopic} from '#/state/queries/trending/useTrendingTopics'
+import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {
+  atoms as a,
+  native,
+  useGutters,
+  useTheme,
+  type ViewStyleProp,
+} from '#/alf'
 import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
-import {Link as InternalLink, LinkProps} from '#/components/Link'
+import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {AvatarStackWithFetch} from './AvatarStack'
+import {Flame_Stroke2_Corner1_Rounded as FlameIcon} from './icons/Flame'
+import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from './icons/Trending'
 
-export function TrendingTopic({
+export function TrendingTopicRow({
+  topic: raw,
+  rank,
+  children,
+  onPress,
+}: {
+  topic: TrendingTopic
+  rank: number
+  children?: React.ReactNode
+  onPress?: () => void
+}) {
+  const t = useTheme()
+  const topic = useTopic(raw)
+  const gutters = useGutters([0, 'base'])
+
+  const {description, randomProfiles} = useTempData()
+
+  return (
+    <>
+      <TrendingTopicLink
+        topic={raw}
+        testID={`trendingTopic:${rank}`}
+        onPress={onPress}
+        style={[a.border_t, t.atoms.border_contrast_low]}
+        PressableComponent={Pressable}>
+        {({hovered, focused, pressed}) => (
+          <View
+            style={[
+              a.flex_1,
+              a.flex_row,
+              a.gap_2xs,
+              gutters,
+              a.pt_md,
+              !children ? a.pb_md : a.pb_sm,
+              (hovered || focused || pressed) && t.atoms.bg_contrast_25,
+            ]}>
+            <View style={[a.flex_shrink_0, {minWidth: 20}]}>
+              <Text style={[a.text_md, a.font_bold]}>
+                <Trans comment='The starter pack rank, i.e. "1. March Madness", "2. The Bachelor"'>
+                  {rank}.
+                </Trans>
+              </Text>
+            </View>
+            <View style={[a.flex_1, a.flex_row, a.gap_sm, a.justify_between]}>
+              <View style={[a.flex_1]}>
+                <Text style={[a.text_md, a.font_bold]} numberOfLines={1}>
+                  {topic.displayName}
+                </Text>
+                <View style={[a.mt_xs, a.flex_row, a.gap_sm, a.align_center]}>
+                  <AvatarStackWithFetch size={16} profiles={randomProfiles} />
+                  <Text
+                    style={[a.text_sm, t.atoms.text_contrast_medium]}
+                    numberOfLines={1}>
+                    {description}
+                  </Text>
+                </View>
+              </View>
+              <View style={[a.flex_shrink_0]}>
+                <TrendingIndicator
+                  type={
+                    // TEMP
+                    (['hot', 'new', 3, 4, 'new'] as const)[rank - 1]
+                  }
+                />
+              </View>
+            </View>
+          </View>
+        )}
+      </TrendingTopicLink>
+      {children && (
+        <>
+          {children}
+          <View style={[a.flex_1, a.pb_md]} />
+        </>
+      )}
+    </>
+  )
+}
+
+type TrendingIndicatorType = 'hot' | 'new' | number
+
+function TrendingIndicator({type}: {type: TrendingIndicatorType | 'skeleton'}) {
+  const t = useTheme()
+
+  const pillStyle = [
+    a.flex_row,
+    a.align_center,
+    a.gap_xs,
+    {paddingHorizontal: 10, paddingVertical: 6},
+    a.rounded_full,
+  ]
+
+  const textStyle = [a.font_bold, a.text_sm]
+
+  switch (type) {
+    case 'hot': {
+      const color =
+        t.scheme === 'light' ? t.palette.negative_500 : t.palette.negative_950
+      const backgroundColor =
+        t.scheme === 'light' ? t.palette.negative_50 : t.palette.negative_200
+      return (
+        <View style={[pillStyle, {backgroundColor}]}>
+          <FlameIcon size="sm" style={{color}} />
+          <Text style={[textStyle, {color}]}>
+            <Trans>Hot</Trans>
+          </Text>
+        </View>
+      )
+    }
+    case 'new': {
+      return (
+        <View style={[pillStyle, {backgroundColor: t.palette.positive_50}]}>
+          <TrendingIcon size="sm" style={{color: t.palette.positive_700}} />
+          <Text style={[textStyle, {color: t.palette.positive_700}]}>
+            <Trans>New</Trans>
+          </Text>
+        </View>
+      )
+    }
+    case 'skeleton': {
+      return (
+        <View
+          style={[
+            pillStyle,
+            {backgroundColor: t.palette.contrast_25, width: 65, height: 28},
+          ]}
+        />
+      )
+    }
+    default: {
+      return (
+        <View style={[pillStyle, t.atoms.bg_contrast_25]}>
+          <Text style={[textStyle, t.atoms.text_contrast_medium]}>
+            <Trans comment="trending topic time spent trending. should be as short as possible to fit in a pill">
+              {type}h ago
+            </Trans>
+          </Text>
+        </View>
+      )
+    }
+  }
+}
+
+export function TrendingTopicRowSkeleton({}: {withPosts: boolean}) {
+  const gutters = useGutters([0, 'base'])
+
+  return (
+    <View style={[a.flex_1, a.flex_row, a.gap_xs, gutters, a.py_md]}>
+      <View style={[a.flex_shrink_0, {minWidth: 20}]}>
+        <LoadingPlaceholder width={16} height={16} />
+      </View>
+      <View style={[a.flex_1, a.flex_row, a.gap_sm, a.justify_between]}>
+        <View style={[a.flex_1]}>
+          <LoadingPlaceholder width={150} height={16} />
+          <View style={[a.mt_sm, a.flex_row, a.gap_sm, a.align_center]}>
+            <LoadingPlaceholder width={35} height={14} />
+            <LoadingPlaceholder width={45} height={14} />
+            <LoadingPlaceholder width={25} height={14} />
+          </View>
+        </View>
+        <View style={[a.flex_shrink_0]}>
+          <TrendingIndicator type="skeleton" />
+        </View>
+      </View>
+    </View>
+  )
+}
+
+// ==== LEGACY PILL FORM ====
+
+export function TrendingTopicPill({
   topic: raw,
   size,
   style,
@@ -101,7 +276,7 @@ export function TrendingTopic({
   )
 }
 
-export function TrendingTopicSkeleton({
+export function TrendingTopicPillSkeleton({
   size = 'large',
   index = 0,
 }: {
@@ -235,4 +410,47 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
       url: link,
     }
   }, [_, raw])
+}
+
+// TEMP
+function useTempData() {
+  const description = useMemo(() => {
+    const category = [
+      'News',
+      'Sports',
+      'Entertainment',
+      'Politics',
+      'Politics',
+    ][Math.floor(Math.random() * 5)]
+    return <>4,321 posts &middot; {category}</>
+  }, [])
+  const randomProfiles = useMemo(() => {
+    let tempRandomProfiles = [
+      'pfrazee.com',
+      'esb.lol',
+      'hailey.at',
+      'jay.bsky.team',
+      'jcsalterego.bsky.social',
+      'jaz.bsky.social',
+      'divy.zone',
+      'chadbourn.bsky.social',
+      'barackobama.bsky.social',
+      'retr0.id',
+      'atrupar.com',
+    ]
+    return Array.from({length: 3}, () => {
+      const random =
+        tempRandomProfiles[
+          Math.floor(Math.random() * tempRandomProfiles.length)
+        ]
+      tempRandomProfiles = tempRandomProfiles.filter(
+        profile => profile !== random,
+      )
+      return random
+    })
+  }, [])
+  return {
+    description,
+    randomProfiles,
+  }
 }
