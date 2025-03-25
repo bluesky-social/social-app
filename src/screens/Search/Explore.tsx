@@ -1,16 +1,15 @@
-import React from 'react'
+import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {
-  AppBskyActorDefs,
-  AppBskyFeedDefs,
+  type AppBskyActorDefs,
+  type AppBskyFeedDefs,
   moderateProfile,
-  ModerationDecision,
-  ModerationOpts,
+  type ModerationDecision,
+  type ModerationOpts,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
@@ -25,15 +24,15 @@ import {
   ProfileCardFeedLoadingPlaceholder,
 } from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {ExploreRecommendations} from '#/screens/Search/components/ExploreRecommendations'
-import {ExploreTrendingTopics} from '#/screens/Search/components/ExploreTrendingTopics'
-import {ExploreTrendingVideos} from '#/screens/Search/components/ExploreTrendingVideos'
-import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
+import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
+import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
+import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
+import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {ArrowBottom_Stroke2_Corner0_Rounded as ArrowBottom} from '#/components/icons/Arrow'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
 import {Loader} from '#/components/Loader'
@@ -101,7 +100,7 @@ function LoadMore({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const items: LoadMoreItem[] = React.useMemo(() => {
+  const items: LoadMoreItem[] = useMemo(() => {
     return item.items
       .map(_item => {
         let loadMoreItem: LoadMoreItem | undefined
@@ -312,7 +311,7 @@ export function Explore() {
   } = useGetPopularFeedsQuery({limit: 10})
 
   const isLoadingMoreProfiles = isFetchingNextProfilesPage && !isLoadingProfiles
-  const onLoadMoreProfiles = React.useCallback(async () => {
+  const onLoadMoreProfiles = useCallback(async () => {
     if (isFetchingNextProfilesPage || !hasNextProfilesPage || profilesError)
       return
     try {
@@ -328,7 +327,7 @@ export function Explore() {
   ])
 
   const isLoadingMoreFeeds = isFetchingNextFeedsPage && !isLoadingFeeds
-  const onLoadMoreFeeds = React.useCallback(async () => {
+  const onLoadMoreFeeds = useCallback(async () => {
     if (isFetchingNextFeedsPage || !hasNextFeedsPage || feedsError) return
     try {
       await fetchNextFeedsPage()
@@ -342,7 +341,7 @@ export function Explore() {
     fetchNextFeedsPage,
   ])
 
-  const items = React.useMemo<ExploreScreenItems[]>(() => {
+  const items = useMemo<ExploreScreenItems[]>(() => {
     const i: ExploreScreenItems[] = []
 
     i.push({
@@ -513,7 +512,7 @@ export function Explore() {
     hasNextFeedsPage,
   ])
 
-  const renderItem = React.useCallback(
+  const renderItem = useCallback(
     ({item, index}: {item: ExploreScreenItems; index: number}) => {
       switch (item.type) {
         case 'header': {
@@ -544,14 +543,14 @@ export function Explore() {
                 noBorder
                 showKnownFollowers
                 onPress={() => {
-                  logEvent('suggestedUser:press', {
+                  logger.metric('suggestedUser:press', {
                     logContext: 'Explore',
                     recId: item.recId,
                     position: index,
                   })
                 }}
                 onFollow={() => {
-                  logEvent('suggestedUser:follow', {
+                  logger.metric('suggestedUser:follow', {
                     logContext: 'Explore',
                     location: 'Card',
                     recId: item.recId,
@@ -631,7 +630,6 @@ export function Explore() {
       data={items}
       renderItem={renderItem}
       keyExtractor={item => item.key}
-      // @ts-ignore web only -prf
       desktopFixedHeight
       contentContainerStyle={{paddingBottom: 100}}
       keyboardShouldPersistTaps="handled"
