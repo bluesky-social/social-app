@@ -1,5 +1,4 @@
 import * as React from 'react'
-import {type JSX} from 'react/jsx-runtime'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {
