@@ -389,7 +389,6 @@ let NotificationFeedItem = ({
               borderColor: pal.colors.unreadNotifBorder,
             },
         {borderTopWidth: hideTopBorder ? 0 : StyleSheet.hairlineWidth},
-        a.overflow_hidden,
       ]}
       href={itemHref}
       noFeedback
