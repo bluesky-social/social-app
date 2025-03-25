@@ -14,12 +14,12 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending2'
+import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending'
 import * as Prompt from '#/components/Prompt'
 import {
-  TrendingTopic,
   TrendingTopicLink,
-  TrendingTopicSkeleton,
+  TrendingTopicPill,
+  TrendingTopicPillSkeleton,
 } from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 
@@ -74,7 +74,7 @@ function Inner() {
             Array(TRENDING_LIMIT)
               .fill(0)
               .map((_n, i) => (
-                <TrendingTopicSkeleton key={i} size="small" index={i} />
+                <TrendingTopicPillSkeleton key={i} size="small" index={i} />
               ))
           ) : !trending?.topics ? null : (
             <>
@@ -86,7 +86,7 @@ function Inner() {
                     logEvent('trendingTopic:click', {context: 'sidebar'})
                   }}>
                   {({hovered}) => (
-                    <TrendingTopic
+                    <TrendingTopicPill
                       size="small"
                       topic={topic}
                       style={[
