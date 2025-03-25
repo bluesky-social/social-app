@@ -1,11 +1,11 @@
 import {RichText} from '@atproto/api'
 
-import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
+import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
 import {
   createStarterPackGooglePlayUri,
   createStarterPackLinkFromAndroidReferrer,
   parseStarterPackUri,
-} from 'lib/strings/starter-pack'
+} from '#/lib/strings/starter-pack'
 import {cleanError} from '../../src/lib/strings/errors'
 import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
 import {enforceLen} from '../../src/lib/strings/helpers'
@@ -435,6 +435,13 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     'https://www.flickr.com/groups/898944@N23/',
     'https://www.flickr.com/groups',
+
+    'https://maxblansjaar.bandcamp.com/album/false-comforts',
+    'https://grmnygrmny.bandcamp.com/track/fluid',
+    'https://sufjanstevens.bandcamp.com/',
+    'https://sufjanstevens.bandcamp.com',
+    'https://bandcamp.com/',
+    'https://bandcamp.com',
   ]
 
   const outputs = [
@@ -806,6 +813,23 @@ describe('parseEmbedPlayerFromUrl', () => {
       playerUri: 'https://embedr.flickr.com/groups/898944@N23',
     },
 
+    undefined,
+    undefined,
+
+    {
+      type: 'bandcamp_album',
+      source: 'bandcamp',
+      playerUri:
+        'https://bandcamp.com/EmbeddedPlayer/url=https%3A%2F%2Fmaxblansjaar.bandcamp.com%2Falbum%2Ffalse-comforts/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/',
+    },
+    {
+      type: 'bandcamp_track',
+      source: 'bandcamp',
+      playerUri:
+        'https://bandcamp.com/EmbeddedPlayer/url=https%3A%2F%2Fgrmnygrmny.bandcamp.com%2Ftrack%2Ffluid/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/',
+    },
+    undefined,
+    undefined,
     undefined,
     undefined,
   ]
