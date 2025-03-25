@@ -1,5 +1,4 @@
-import {Pressable, StyleSheet, View} from 'react-native'
-import {ScrollView as RNGHScrollView} from 'react-native-gesture-handler'
+import {Pressable, ScrollView, StyleSheet, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -8,6 +7,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {Link} from '#/view/com/util/Link'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
@@ -50,57 +50,59 @@ export function SearchHistory({
               styles.selectedProfilesContainer,
               !gtMobile && styles.selectedProfilesContainerMobile,
             ]}>
-            <RNGHScrollView
-              keyboardShouldPersistTaps="handled"
-              horizontal={true}
-              style={[
-                a.flex_row,
-                a.flex_nowrap,
-                {marginHorizontal: tokens.space._2xl * -1},
-              ]}
-              contentContainerStyle={[a.px_2xl, a.border_0]}>
-              {selectedProfiles.slice(0, 5).map((profile, index) => (
-                <View
-                  key={index}
-                  style={[
-                    styles.profileItem,
-                    !gtMobile && styles.profileItemMobile,
-                  ]}>
-                  <Link
-                    href={makeProfileLink(profile)}
-                    title={profile.handle}
-                    asAnchor
-                    anchorNoUnderline
-                    onBeforePress={() => onProfileClick(profile)}
-                    style={[a.align_center, a.w_full]}>
-                    <UserAvatar
-                      avatar={profile.avatar}
-                      type={profile.associated?.labeler ? 'labeler' : 'user'}
-                      size={60}
-                    />
-                    <Text
-                      emoji
-                      style={[a.text_xs, a.text_center, styles.profileName]}
-                      numberOfLines={1}>
-                      {sanitizeDisplayName(
-                        profile.displayName || profile.handle,
+            <BlockDrawerGesture>
+              <ScrollView
+                horizontal
+                keyboardShouldPersistTaps="handled"
+                style={[
+                  a.flex_row,
+                  a.flex_nowrap,
+                  {marginHorizontal: tokens.space._2xl * -1},
+                ]}
+                contentContainerStyle={[a.px_2xl, a.border_0]}>
+                {selectedProfiles.slice(0, 5).map((profile, index) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.profileItem,
+                      !gtMobile && styles.profileItemMobile,
+                    ]}>
+                    <Link
+                      href={makeProfileLink(profile)}
+                      title={profile.handle}
+                      asAnchor
+                      anchorNoUnderline
+                      onBeforePress={() => onProfileClick(profile)}
+                      style={[a.align_center, a.w_full]}>
+                      <UserAvatar
+                        avatar={profile.avatar}
+                        type={profile.associated?.labeler ? 'labeler' : 'user'}
+                        size={60}
+                      />
+                      <Text
+                        emoji
+                        style={[a.text_xs, a.text_center, styles.profileName]}
+                        numberOfLines={1}>
+                        {sanitizeDisplayName(
+                          profile.displayName || profile.handle,
+                        )}
+                      </Text>
+                    </Link>
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel={_(msg`Remove profile`)}
+                      accessibilityHint={_(
+                        msg`Removes profile from search history`,
                       )}
-                    </Text>
-                  </Link>
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityLabel={_(msg`Remove profile`)}
-                    accessibilityHint={_(
-                      msg`Removes profile from search history`,
-                    )}
-                    onPress={() => onRemoveProfileClick(profile)}
-                    hitSlop={createHitslop(6)}
-                    style={styles.profileRemoveBtn}>
-                    <XIcon size="xs" style={t.atoms.text_contrast_low} />
-                  </Pressable>
-                </View>
-              ))}
-            </RNGHScrollView>
+                      onPress={() => onRemoveProfileClick(profile)}
+                      hitSlop={createHitslop(6)}
+                      style={styles.profileRemoveBtn}>
+                      <XIcon size="xs" style={t.atoms.text_contrast_low} />
+                    </Pressable>
+                  </View>
+                ))}
+              </ScrollView>
+            </BlockDrawerGesture>
           </View>
         )}
         {searchHistory.length > 0 && (
