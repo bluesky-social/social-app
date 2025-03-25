@@ -7,6 +7,7 @@ import {useLingui} from '@lingui/react'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {type TrendingTopic} from '#/state/queries/trending/useTrendingTopics'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {formatCount} from '#/view/com/util/numeric/format'
 import {
   atoms as a,
   native,
@@ -33,10 +34,19 @@ export function TrendingTopicRow({
   onPress?: () => void
 }) {
   const t = useTheme()
+  const {_, i18n} = useLingui()
   const topic = useTopic(raw)
   const gutters = useGutters([0, 'base'])
 
-  const {description, randomProfiles} = useTempData()
+  const {category, randomProfiles} = useTempData()
+
+  if (topic.type !== 'topic') return null
+
+  const postCount = topic.postCount
+    ? _(msg`${formatCount(i18n, topic.postCount)} posts`)
+    : null
+
+  const badgeType = rank === 1 ? 'hot' : topic.age < 3 ? 'new' : topic.age
 
   return (
     <>
@@ -74,17 +84,14 @@ export function TrendingTopicRow({
                   <Text
                     style={[a.text_sm, t.atoms.text_contrast_medium]}
                     numberOfLines={1}>
-                    {description}
+                    {postCount}
+                    {postCount && category && <> &middot; </>}
+                    {category}
                   </Text>
                 </View>
               </View>
               <View style={[a.flex_shrink_0]}>
-                <TrendingIndicator
-                  type={
-                    // TEMP
-                    (['hot', 'new', 3, 4, 'new'] as const)[rank - 1]
-                  }
-                />
+                <TrendingIndicator type={badgeType} />
               </View>
             </View>
           </View>
@@ -333,6 +340,8 @@ type ParsedTrendingTopic =
       displayName: string
       url: string
       uri: undefined
+      postCount: number
+      age: number
     }
   | {
       type: 'profile' | 'feed'
@@ -345,15 +354,22 @@ type ParsedTrendingTopic =
 export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
   const {_} = useLingui()
   return React.useMemo(() => {
-    const {topic: displayName, link} = raw
+    const {topic: displayName, link, postCount, startTime} = raw
+    // age of topic in hrs
+    const age = Math.floor(
+      (Date.now() - new Date(startTime || Date.now()).getTime()) /
+        (1000 * 60 * 60),
+    )
 
-    if (link.startsWith('/search')) {
+    if (link.startsWith('/profile/trending.bsky.app/feed/')) {
       return {
         type: 'topic',
         label: _(msg`Browse posts about ${displayName}`),
         displayName,
         uri: undefined,
         url: link,
+        postCount,
+        age,
       }
     } else if (link.startsWith('/hashtag')) {
       return {
@@ -363,6 +379,8 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
         // displayName: displayName.replace(/^#/, ''),
         uri: undefined,
         url: link,
+        postCount,
+        age,
       }
     } else if (link.startsWith('/starter-pack')) {
       return {
@@ -371,6 +389,8 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
         displayName,
         uri: undefined,
         url: link,
+        postCount,
+        age,
       }
     }
 
@@ -408,22 +428,21 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
       displayName,
       uri: undefined,
       url: link,
+      postCount,
+      age,
     }
   }, [_, raw])
 }
 
 // TEMP
 function useTempData() {
-  const description = useMemo(() => {
-    const category = [
-      'News',
-      'Sports',
-      'Entertainment',
-      'Politics',
-      'Politics',
-    ][Math.floor(Math.random() * 5)]
-    return <>4,321 posts &middot; {category}</>
-  }, [])
+  const category = useMemo(
+    () =>
+      ['News', 'Sports', 'Entertainment', 'Politics', 'Politics'][
+        Math.floor(Math.random() * 5)
+      ],
+    [],
+  )
   const randomProfiles = useMemo(() => {
     let tempRandomProfiles = [
       'pfrazee.com',
@@ -450,7 +469,7 @@ function useTempData() {
     })
   }, [])
   return {
-    description,
+    category,
     randomProfiles,
   }
 }
