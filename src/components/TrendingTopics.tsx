@@ -14,6 +14,7 @@ import {
   useGutters,
   useTheme,
   type ViewStyleProp,
+  web,
 } from '#/alf'
 import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
@@ -46,7 +47,7 @@ export function TrendingTopicRow({
     ? _(msg`${formatCount(i18n, topic.postCount)} posts`)
     : null
 
-  const badgeType = rank === 1 ? 'hot' : topic.age < 3 ? 'new' : topic.age
+  const badgeType = rank === 1 ? 'hot' : topic.age < 2 ? 'new' : topic.age
 
   return (
     <>
@@ -75,14 +76,20 @@ export function TrendingTopicRow({
               </Text>
             </View>
             <View style={[a.flex_1, a.flex_row, a.gap_sm, a.justify_between]}>
-              <View style={[a.flex_1]}>
-                <Text style={[a.text_md, a.font_bold]} numberOfLines={1}>
+              <View style={[a.flex_1, {gap: 6}]}>
+                <Text
+                  style={[a.text_md, a.font_bold, a.leading_snug]}
+                  numberOfLines={1}>
                   {topic.displayName}
                 </Text>
-                <View style={[a.mt_xs, a.flex_row, a.gap_sm, a.align_center]}>
+                <View style={[a.flex_row, a.gap_sm, a.align_center]}>
                   <AvatarStackWithFetch size={16} profiles={randomProfiles} />
                   <Text
-                    style={[a.text_sm, t.atoms.text_contrast_medium]}
+                    style={[
+                      a.text_sm,
+                      t.atoms.text_contrast_medium,
+                      web(a.leading_snug),
+                    ]}
                     numberOfLines={1}>
                     {postCount}
                     {postCount && category && <> &middot; </>}
@@ -159,7 +166,7 @@ function TrendingIndicator({type}: {type: TrendingIndicatorType | 'skeleton'}) {
     }
     default: {
       return (
-        <View style={[pillStyle, t.atoms.bg_contrast_25]}>
+        <View style={[pillStyle, t.atoms.bg_contrast_25, {minHeight: 28}]}>
           <Text style={[textStyle, t.atoms.text_contrast_medium]}>
             <Trans comment="trending topic time spent trending. should be as short as possible to fit in a pill">
               {type}h ago
