@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {
   useTrendingSettings,
@@ -43,7 +43,7 @@ function Inner() {
   const trendingPrompt = Prompt.usePromptControl()
 
   const onConfirmHide = React.useCallback(() => {
-    logEvent('trendingTopics:hide', {context: 'explore:trending'})
+    logger.metric('trendingTopics:hide', {context: 'explore:trending'})
     setTrendingDisabled(true)
   }, [setTrendingDisabled])
 
@@ -102,7 +102,7 @@ function Inner() {
           {isLoading ? (
             Array(TRENDING_TOPICS_COUNT)
               .fill(0)
-              .map((_, i) => <TrendingTopicSkeleton key={i} index={i} />)
+              .map((__, i) => <TrendingTopicSkeleton key={i} index={i} />)
           ) : !trending?.topics ? null : (
             <>
               {trending.topics.map(topic => (
@@ -110,7 +110,7 @@ function Inner() {
                   key={topic.link}
                   topic={topic}
                   onPress={() => {
-                    logEvent('trendingTopic:click', {context: 'explore'})
+                    logger.metric('trendingTopic:click', {context: 'explore'})
                   }}>
                   {({hovered}) => (
                     <TrendingTopic
