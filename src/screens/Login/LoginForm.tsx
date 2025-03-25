@@ -215,7 +215,7 @@ export const LoginForm = ({
               blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
               editable={!isProcessing}
               accessibilityHint={_(
-                msg`Input the username or email address you used at signup`,
+                msg`Enter the username or email address you used when you created your account`,
               )}
             />
           </TextField.Root>
