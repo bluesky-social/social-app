@@ -13,7 +13,6 @@ import {useLingui} from '@lingui/react'
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -29,7 +28,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
 import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
-import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {ArrowBottom_Stroke2_Corner0_Rounded as ArrowBottom} from '#/components/icons/Arrow'
@@ -39,45 +38,7 @@ import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/i
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-
-function SuggestedItemsHeader({
-  title,
-  description,
-  style,
-  icon: Icon,
-}: {
-  title: string
-  description: string
-  icon: React.ComponentType<SVGIconProps>
-} & ViewStyleProp) {
-  const t = useTheme()
-
-  return (
-    <View
-      style={[
-        isWeb
-          ? [a.flex_row, a.px_lg, a.py_lg, a.pt_2xl, a.gap_md]
-          : [{flexDirection: 'row-reverse'}, a.p_lg, a.pt_2xl, a.gap_md],
-        a.border_b,
-        t.atoms.border_contrast_low,
-        style,
-      ]}>
-      <View style={[a.flex_1, a.gap_sm]}>
-        <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-          <Icon
-            size="lg"
-            fill={t.palette.primary_500}
-            style={{marginLeft: -2}}
-          />
-          <Text style={[a.text_2xl, a.font_heavy, t.atoms.text]}>{title}</Text>
-        </View>
-        <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
-          {description}
-        </Text>
-      </View>
-    </View>
-  )
-}
+import * as ModuleHeader from './components/ModuleHeader'
 
 type LoadMoreItem =
   | {
@@ -241,9 +202,12 @@ type ExploreScreenItems =
       type: 'header'
       key: string
       title: string
-      description: string
-      style?: ViewStyleProp['style']
       icon: React.ComponentType<SVGIconProps>
+      searchButton?: {
+        label: string
+        metricsTag: 'suggestedFeeds' | 'suggestedAccounts'
+        tab: 'user' | 'profile' | 'feed'
+      }
     }
   | {
       type: 'trendingTopics'
@@ -290,7 +254,11 @@ type ExploreScreenItems =
       error: string
     }
 
-export function Explore() {
+export function Explore({
+  focusSearchInput,
+}: {
+  focusSearchInput: (tab: 'user' | 'profile' | 'feed') => void
+}) {
   const {_} = useLingui()
   const t = useTheme()
   const {data: preferences, error: preferencesError} = usePreferencesQuery()
@@ -367,11 +335,13 @@ export function Explore() {
       i.push({
         type: 'header',
         key: 'suggested-follows-header',
-        title: _(msg`Suggested accounts`),
-        description: _(
-          msg`Follow more accounts to get connected to your interests and build your network.`,
-        ),
+        title: _(msg`Suggested Accounts`),
         icon: Person,
+        searchButton: {
+          label: _(msg`Search for more accounts`),
+          metricsTag: 'suggestedAccounts',
+          tab: 'user',
+        },
       })
 
       if (profiles) {
@@ -426,12 +396,13 @@ export function Explore() {
       i.push({
         type: 'header',
         key: 'suggested-feeds-header',
-        title: _(msg`Discover new feeds`),
-        description: _(
-          msg`Choose your own timeline! Feeds built by the community help you find content you love.`,
-        ),
-        style: [a.pt_5xl],
+        title: _(msg`Discover Feeds`),
         icon: ListSparkle,
+        searchButton: {
+          label: _(msg`Search for more feeds`),
+          metricsTag: 'suggestedFeeds',
+          tab: 'feed',
+        },
       })
 
       if (feeds && preferences) {
@@ -539,12 +510,18 @@ export function Explore() {
       switch (item.type) {
         case 'header': {
           return (
-            <SuggestedItemsHeader
-              title={item.title}
-              description={item.description}
-              style={item.style}
-              icon={item.icon}
-            />
+            <ModuleHeader.Container>
+              <ModuleHeader.Icon icon={item.icon} />
+              <ModuleHeader.TitleText>{item.title}</ModuleHeader.TitleText>
+              {item.searchButton && (
+                <ModuleHeader.SearchButton
+                  {...item.searchButton}
+                  onPress={() =>
+                    focusSearchInput(item.searchButton?.tab || 'user')
+                  }
+                />
+              )}
+            </ModuleHeader.Container>
           )
         }
         case 'trendingTopics': {
@@ -642,7 +619,17 @@ export function Explore() {
         }
       }
     },
-    [t, moderationOpts],
+    [t, moderationOpts, focusSearchInput],
+  )
+
+  const stickyHeaderIndices = useMemo(
+    () =>
+      items.reduce(
+        (acc, curr) =>
+          curr.type === 'header' ? acc.concat(items.indexOf(curr)) : acc,
+        [] as number[],
+      ),
+    [items],
   )
 
   // note: actually not a screen, instead it's nested within
@@ -656,6 +643,7 @@ export function Explore() {
       contentContainerStyle={{paddingBottom: 100}}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
+      stickyHeaderIndices={stickyHeaderIndices}
     />
   )
 }

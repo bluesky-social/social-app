@@ -1,3 +1,5 @@
+import {type FeedDescriptor} from '#/state/queries/post-feed'
+
 export type MetricEvents = {
   // App events
   init: {
@@ -301,6 +303,19 @@ export type MetricEvents = {
   }
   'videoCard:click': {
     context: 'interstitial:discover' | 'interstitial:explore' | 'feed'
+  }
+
+  'explore:moduleView': {
+    module:
+      | 'trendingTopics'
+      | 'trendingVideos'
+      | 'suggestedAccounts'
+      | 'suggestedFeeds'
+      | 'suggestedStarterPacks'
+      | `feed:${FeedDescriptor}`
+  }
+  'explore:moduleSearchPress': {
+    module: 'suggestedAccounts' | 'suggestedFeeds'
   }
 
   'progressGuide:hide': {}
