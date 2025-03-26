@@ -99,8 +99,7 @@ export function FeatureGateDialog({
               onPress={() => {
                 setIsRestarting(true)
                 if (isWeb) {
-                  /* @ts-ignore web only */
-                  navigation.reload()
+                  location.reload()
                 } else {
                   Updates.reloadAsync()
                 }
