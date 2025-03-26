@@ -12,7 +12,7 @@ import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
+import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -349,12 +349,13 @@ export function Explore() {
       key: `trending-topics`,
     })
 
-    if (isNative) {
-      i.push({
-        type: 'trendingVideos',
-        key: `trending-videos`,
-      })
-    }
+    // temp - disable trending videos
+    // if (isNative) {
+    //   i.push({
+    //     type: 'trendingVideos',
+    //     key: `trending-videos`,
+    //   })
+    // }
 
     i.push({
       type: 'header',
