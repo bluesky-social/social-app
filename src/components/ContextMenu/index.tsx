@@ -80,7 +80,14 @@ export {
 
 const {Provider: PortalProvider, Outlet, Portal} = createPortalGroup()
 
-const SPRING: WithSpringConfig = {
+const SPRING_IN: WithSpringConfig = {
+  mass: isIOS ? 1.25 : 0.75,
+  damping: 50,
+  stiffness: 1100,
+  restDisplacementThreshold: 0.01,
+}
+
+const SPRING_OUT: WithSpringConfig = {
   mass: isIOS ? 1.25 : 0.75,
   damping: 150,
   stiffness: 1000,
@@ -140,11 +147,11 @@ export function Root({children}: {children: React.ReactNode}) {
         open: (evt: Measurement, mode: 'full' | 'auxiliary-only') => {
           setMeasurement(evt)
           setMode(mode)
-          animationSV.set(withSpring(1, SPRING))
+          animationSV.set(withSpring(1, SPRING_IN))
         },
         close: () => {
           animationSV.set(
-            withSpring(0, SPRING, finished => {
+            withSpring(0, SPRING_OUT, finished => {
               if (finished) {
                 hoverablesSV.set({})
                 translationSV.set(0)
@@ -510,7 +517,7 @@ export function AuxiliaryView({children, align = 'left'}: AuxiliaryViewProps) {
   )
 }
 
-const MENU_WIDTH = 250
+const MENU_WIDTH = 240
 
 export function Outer({
   children,
