@@ -1,15 +1,20 @@
 import React, {useCallback, useMemo} from 'react'
-import {GestureResponderEvent, StyleProp, TextStyle, View} from 'react-native'
+import {
+  type GestureResponderEvent,
+  type StyleProp,
+  type TextStyle,
+  View,
+} from 'react-native'
 import {
   AppBskyEmbedRecord,
   ChatBskyConvoDefs,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {I18n} from '@lingui/core'
+import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {ConvoItem} from '#/state/messages/convo/types'
+import {type ConvoItem} from '#/state/messages/convo/types'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {atoms as a, useTheme} from '#/alf'
@@ -133,6 +138,25 @@ let MessageItem = ({
             </View>
           )}
         </ActionsWrapper>
+
+        {message.reactions && message.reactions.length > 0 && (
+          <View
+            style={[
+              a.flex_row,
+              a.gap_sm,
+              a.justify_center,
+              isFromSelf ? a.justify_end : a.justify_start,
+              a.flex_wrap,
+            ]}>
+            {message.reactions
+              .filter((r, i, arr) => i === arr.indexOf(r))
+              .map(reaction => (
+                <Text key={reaction.value} emoji>
+                  {reaction.value}
+                </Text>
+              ))}
+          </View>
+        )}
 
         {isLastInGroup && (
           <MessageItemMetadata

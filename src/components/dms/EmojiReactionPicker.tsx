@@ -1,5 +1,5 @@
 import {useMemo, useState} from 'react'
-import {Alert, useWindowDimensions, View} from 'react-native'
+import {useWindowDimensions, View} from 'react-native'
 import {type ChatBskyConvoDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -21,9 +21,11 @@ import {EmojiPopup} from './EmojiPopup'
 
 export function EmojiReactionPicker({
   message,
+  onEmojiSelect,
 }: {
   message: ChatBskyConvoDefs.MessageView
   children?: TriggerProps['children']
+  onEmojiSelect: (emoji: string) => void
 }) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
@@ -38,10 +40,6 @@ export function EmojiReactionPicker({
   const EmojiIcon = useMemo(() => {
     return Math.random() < 0.01 ? EmojiHeartEyesIcon : EmojiSmileIcon
   }, [])
-
-  const handleEmojiSelect = (emoji: string) => {
-    Alert.alert(emoji)
-  }
 
   const position = useMemo(() => {
     return {
@@ -75,13 +73,19 @@ export function EmojiReactionPicker({
           position={position}
           label={_(msg`React with ${emoji}`)}
           key={emoji}
-          onPress={() => handleEmojiSelect(emoji)}
+          onPress={() => onEmojiSelect(emoji)}
           unstyled>
           {hovered => (
             <View
               style={[
                 a.rounded_full,
-                hovered && {backgroundColor: t.palette.primary_500},
+                hovered
+                  ? {backgroundColor: t.palette.primary_500}
+                  : !!message.reactions?.find(
+                      r =>
+                        r.sender.did === currentAccount?.did &&
+                        r.value === emoji,
+                    ) && {backgroundColor: t.palette.primary_100},
                 {height: 40, width: 40},
                 a.justify_center,
                 a.align_center,
@@ -96,7 +100,7 @@ export function EmojiReactionPicker({
       <EmojiPopup
         onEmojiSelected={emoji => {
           close()
-          handleEmojiSelect(emoji)
+          onEmojiSelect(emoji)
         }}>
         <View
           style={[
