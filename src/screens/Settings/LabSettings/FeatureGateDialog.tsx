@@ -126,7 +126,9 @@ export function FeatureGateDialog({
 
           <Divider style={[a.my_lg]} />
 
-          <Text style={[a.text_xl, a.font_bold, t.atoms.text]}>Feedback</Text>
+          <Text style={[a.text_xl, a.font_bold, t.atoms.text]}>
+            <Trans context="the.lab.dialog">Feedback</Trans>
+          </Text>
 
           <View style={[a.flex_row, a.gap_sm]}>
             <FeedbackButton gate={gate} feedback={FeedbackToken.LoveIt} />
