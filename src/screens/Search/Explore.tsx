@@ -92,7 +92,7 @@ function LoadMore({
   const type = items[0].type
 
   return (
-    <View style={[]}>
+    <View style={[a.pb_2xl]}>
       <Button
         label={_(msg`Load more`)}
         onPress={item.onLoadMore}

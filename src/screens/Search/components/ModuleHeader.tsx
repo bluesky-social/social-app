@@ -29,7 +29,7 @@ export function Container({
         a.flex_row,
         a.align_center,
         gutters,
-        a.pt_xs,
+        a.pt_2xs,
         a.pb_sm,
         a.gap_sm,
         style,
