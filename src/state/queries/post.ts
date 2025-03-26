@@ -5,11 +5,12 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {logEvent, LogEvents, toClout} from '#/lib/statsig/statsig'
 import {updatePostShadow} from '#/state/cache/post-shadow'
+import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {Shadow} from '#/state/cache/types'
 import {useAgent, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {useIsThreadMuted, useSetThreadMute} from '../cache/thread-mutes'
-import {findProfileQueryData} from './profile'
+import {findProfileQueryData, useProfileQuery} from './profile'
 
 const RQKEY_ROOT = 'post'
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri]
@@ -296,12 +297,21 @@ function usePostUnrepostMutation(
 export function usePostDeleteMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
+  const {currentAccount} = useSession()
+  const currentDid = currentAccount!.did
+  const {data: currentProfile} = useProfileQuery({did: currentDid})
+
   return useMutation<void, Error, {uri: string}>({
     mutationFn: async ({uri}) => {
       await agent.deletePost(uri)
     },
     onSuccess(_, variables) {
       updatePostShadow(queryClient, variables.uri, {isDeleted: true})
+      if (currentProfile) {
+        updateProfileShadow(queryClient, currentProfile?.did, {
+          postsCount: currentProfile?.postsCount - 1,
+        })
+      }
     },
   })
 }

@@ -27,6 +27,7 @@ export interface ProfileShadow {
   followingUri: string | undefined
   muted: boolean | undefined
   blockingUri: string | undefined
+  postsCount: number | undefined
 }
 
 const shadows: WeakMap<
@@ -122,6 +123,7 @@ function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
 ): Shadow<TProfileView> {
   return castAsShadow({
     ...profile,
+    postsCount: 'postsCount' in shadow ? shadow.postsCount : profile.postsCount,
     viewer: {
       ...(profile.viewer || {}),
       following:
