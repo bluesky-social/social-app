@@ -357,11 +357,6 @@ export function Explore() {
     }
 
     i.push({
-      type: 'recommendations',
-      key: `recommendations`,
-    })
-
-    i.push({
       type: 'header',
       key: 'suggested-follows-header',
       title: _(msg`Suggested accounts`),
