@@ -51,6 +51,7 @@ export function FeatureGateDialog({
   const desc = descriptions[gate]
 
   const onToggleGate = (v: boolean) => {
+    logger.metric('featureGate:override', {gate, enabled: v})
     setGateApi(gate, v)
     setEnabled(v)
   }
