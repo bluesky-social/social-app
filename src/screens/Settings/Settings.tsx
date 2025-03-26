@@ -11,7 +11,10 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {IS_INTERNAL} from '#/lib/app-info'
 import {HELP_DESK_URL} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
-import {type CommonNavigatorParams, type NavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {clearStorage} from '#/state/persisted'
