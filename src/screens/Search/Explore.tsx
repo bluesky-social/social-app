@@ -1,5 +1,5 @@
-import {useCallback, useMemo} from 'react'
-import {View} from 'react-native'
+import {useCallback, useMemo, useRef} from 'react'
+import {View, type ViewabilityConfig, type ViewToken} from 'react-native'
 import {
   type AppBskyActorDefs,
   type AppBskyFeedDefs,
@@ -13,6 +13,7 @@ import {useLingui} from '@lingui/react'
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {type MetricEvents} from '#/logger/metrics'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -205,7 +206,7 @@ type ExploreScreenItems =
       icon: React.ComponentType<SVGIconProps>
       searchButton?: {
         label: string
-        metricsTag: 'suggestedFeeds' | 'suggestedAccounts'
+        metricsTag: MetricEvents['explore:moduleSearchPress']['module']
         tab: 'user' | 'profile' | 'feed'
       }
     }
@@ -632,8 +633,35 @@ export function Explore({
     [items],
   )
 
-  // note: actually not a screen, instead it's nested within
-  // the search screen. so we don't need Layout.Screen
+  // track headers and report module viewability
+  const alreadyReportedRef = useRef<Map<string, string>>(new Map())
+  const onViewableItemsChanged = useCallback(
+    ({
+      viewableItems,
+    }: {
+      viewableItems: ViewToken<ExploreScreenItems>[]
+      changed: ViewToken<ExploreScreenItems>[]
+    }) => {
+      for (const {item} of viewableItems.filter(vi => vi.isViewable)) {
+        let module: MetricEvents['explore:moduleView']['module']
+        if (item.type === 'trendingTopics' || item.type === 'trendingVideos') {
+          module = item.type
+        } else if (item.type === 'profile') {
+          module = 'suggestedAccounts'
+        } else if (item.type === 'feed') {
+          module = 'suggestedFeeds'
+        } else {
+          continue
+        }
+        if (!alreadyReportedRef.current.has(module)) {
+          alreadyReportedRef.current.set(module, module)
+          logger.metric('explore:moduleView', {module})
+        }
+      }
+    },
+    [],
+  )
+
   return (
     <List
       data={items}
@@ -644,6 +672,12 @@ export function Explore({
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
       stickyHeaderIndices={stickyHeaderIndices}
+      viewabilityConfig={viewabilityConfig}
+      onViewableItemsChanged={onViewableItemsChanged}
     />
   )
+}
+
+const viewabilityConfig: ViewabilityConfig = {
+  itemVisiblePercentThreshold: 100,
 }
