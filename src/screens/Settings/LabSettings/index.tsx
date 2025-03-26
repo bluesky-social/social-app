@@ -1,22 +1,25 @@
-import {useState} from 'react'
-import {Alert, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {View} from 'react-native'
+import {Trans} from '@lingui/macro'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {PressableScale} from '#/lib/custom-animations/PressableScale'
-import {CommonNavigatorParams} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
+import {type Gate, useGateDescriptions} from '#/lib/statsig/gates'
+import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
-import * as Toggle from '#/components/forms/Toggle'
+import {useDialogControl} from '#/components/Dialog'
+import {Beaker_Stroke2_Corner2_Rounded as BeakerIcon} from '#/components/icons/Beaker'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import {FeatureGateDialog} from './FeatureGateDialog'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LabSettings'>
 export function LabSettingsScreen({}: Props) {
   const t = useTheme()
-  const {_} = useLingui()
-  const gate = useGate()
+  const descriptions = useGateDescriptions()
+
+  const gates: Gate[] = Object.entries(descriptions)
+    .filter(([_k, v]) => !!v)
+    .map(([k, _v]) => k as Gate)
 
   return (
     <Layout.Screen>
@@ -30,18 +33,42 @@ export function LabSettingsScreen({}: Props) {
         <Layout.Header.Slot />
       </Layout.Header.Outer>
 
-      <Layout.Content contentContainerStyle={[a.p_lg]}>
-        <Text
-          style={[
-            a.text_md,
-            a.mt_xl,
-            a.mb_sm,
-            a.font_bold,
-            t.atoms.text_contrast_medium,
-          ]}>
-          <Trans>The Lab (TODO)</Trans>
-        </Text>
+      <Layout.Content>
+        <View style={[a.p_lg, a.pb_0]}>
+          <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+            <Trans>Experimental features on Bluesky.</Trans>
+          </Text>
+        </View>
+        <SettingsList.Container>
+          {gates.map(gate => (
+            <ExperimentButton key={gate} gate={gate} enabled={true} />
+          ))}
+        </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>
+  )
+}
+
+function ExperimentButton({gate, enabled}: {gate: Gate; enabled: boolean}) {
+  const t = useTheme()
+  const ctrl = useDialogControl()
+  const descriptions = useGateDescriptions()
+  return (
+    <>
+      <SettingsList.Divider />
+      <SettingsList.PressableItem
+        label={descriptions[gate]?.title || ''}
+        onPress={() => ctrl.open()}>
+        <SettingsList.ItemIcon icon={BeakerIcon} />
+        <SettingsList.ItemText>
+          {descriptions[gate]?.title}
+        </SettingsList.ItemText>
+        <SettingsList.BadgeText
+          style={[a.flex_1, enabled && {color: t.palette.positive_400}]}>
+          {enabled ? <Trans>Enabled</Trans> : <Trans>Disabled</Trans>}
+        </SettingsList.BadgeText>
+      </SettingsList.PressableItem>
+      <FeatureGateDialog control={ctrl} gate={gate} />
+    </>
   )
 }
