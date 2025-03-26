@@ -10,6 +10,7 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
@@ -17,6 +18,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
+import {useProgressGuide} from '#/state/shell/progress-guide'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
 import {
@@ -293,6 +295,8 @@ export function Explore() {
   const t = useTheme()
   const {data: preferences, error: preferencesError} = usePreferencesQuery()
   const moderationOpts = useModerationOpts()
+  const gate = useGate()
+  const guide = useProgressGuide('follow-10')
   const {
     data: profiles,
     hasNextPage: hasNextProfilesPage,
@@ -344,151 +348,171 @@ export function Explore() {
   const items = useMemo<ExploreScreenItems[]>(() => {
     const i: ExploreScreenItems[] = []
 
-    i.push({
-      type: 'trendingTopics',
-      key: `trending-topics`,
-    })
+    const addTrendingTopicsModule = () => {
+      i.push({
+        type: 'trendingTopics',
+        key: `trending-topics`,
+      })
 
-    // temp - disable trending videos
-    // if (isNative) {
-    //   i.push({
-    //     type: 'trendingVideos',
-    //     key: `trending-videos`,
-    //   })
-    // }
+      // temp - disable trending videos
+      // if (isNative) {
+      //   i.push({
+      //     type: 'trendingVideos',
+      //     key: `trending-videos`,
+      //   })
+      // }
+    }
 
-    i.push({
-      type: 'header',
-      key: 'suggested-follows-header',
-      title: _(msg`Suggested accounts`),
-      description: _(
-        msg`Follow more accounts to get connected to your interests and build your network.`,
-      ),
-      icon: Person,
-    })
+    const addSuggestedFollowsModule = () => {
+      i.push({
+        type: 'header',
+        key: 'suggested-follows-header',
+        title: _(msg`Suggested accounts`),
+        description: _(
+          msg`Follow more accounts to get connected to your interests and build your network.`,
+        ),
+        icon: Person,
+      })
 
-    if (profiles) {
-      // Currently the responses contain duplicate items.
-      // Needs to be fixed on backend, but let's dedupe to be safe.
-      let seen = new Set()
-      const profileItems: ExploreScreenItems[] = []
-      for (const page of profiles.pages) {
-        for (const actor of page.actors) {
-          if (!seen.has(actor.did)) {
-            seen.add(actor.did)
-            profileItems.push({
-              type: 'profile',
-              key: actor.did,
-              profile: actor,
-              recId: page.recId,
-            })
+      if (profiles) {
+        // Currently the responses contain duplicate items.
+        // Needs to be fixed on backend, but let's dedupe to be safe.
+        let seen = new Set()
+        const profileItems: ExploreScreenItems[] = []
+        for (const page of profiles.pages) {
+          for (const actor of page.actors) {
+            if (!seen.has(actor.did)) {
+              seen.add(actor.did)
+              profileItems.push({
+                type: 'profile',
+                key: actor.did,
+                profile: actor,
+                recId: page.recId,
+              })
+            }
           }
         }
-      }
 
-      if (hasNextProfilesPage) {
-        // splice off 3 as previews if we have a next page
-        const previews = profileItems.splice(-3)
-        // push remainder
-        i.push(...profileItems)
-        i.push({
-          type: 'loadMore',
-          key: 'loadMoreProfiles',
-          isLoadingMore: isLoadingMoreProfiles,
-          onLoadMore: onLoadMoreProfiles,
-          items: previews,
-        })
+        if (hasNextProfilesPage) {
+          // splice off 3 as previews if we have a next page
+          const previews = profileItems.splice(-3)
+          // push remainder
+          i.push(...profileItems)
+          i.push({
+            type: 'loadMore',
+            key: 'loadMoreProfiles',
+            isLoadingMore: isLoadingMoreProfiles,
+            onLoadMore: onLoadMoreProfiles,
+            items: previews,
+          })
+        } else {
+          i.push(...profileItems)
+        }
       } else {
-        i.push(...profileItems)
-      }
-    } else {
-      if (profilesError) {
-        i.push({
-          type: 'error',
-          key: 'profilesError',
-          message: _(msg`Failed to load suggested follows`),
-          error: cleanError(profilesError),
-        })
-      } else {
-        i.push({type: 'profilePlaceholder', key: 'profilePlaceholder'})
+        if (profilesError) {
+          i.push({
+            type: 'error',
+            key: 'profilesError',
+            message: _(msg`Failed to load suggested follows`),
+            error: cleanError(profilesError),
+          })
+        } else {
+          i.push({type: 'profilePlaceholder', key: 'profilePlaceholder'})
+        }
       }
     }
 
-    i.push({
-      type: 'header',
-      key: 'suggested-feeds-header',
-      title: _(msg`Discover new feeds`),
-      description: _(
-        msg`Choose your own timeline! Feeds built by the community help you find content you love.`,
-      ),
-      style: [a.pt_5xl],
-      icon: ListSparkle,
-    })
+    const addSuggestedFeedsModule = () => {
+      i.push({
+        type: 'header',
+        key: 'suggested-feeds-header',
+        title: _(msg`Discover new feeds`),
+        description: _(
+          msg`Choose your own timeline! Feeds built by the community help you find content you love.`,
+        ),
+        style: [a.pt_5xl],
+        icon: ListSparkle,
+      })
 
-    if (feeds && preferences) {
-      // Currently the responses contain duplicate items.
-      // Needs to be fixed on backend, but let's dedupe to be safe.
-      let seen = new Set()
-      const feedItems: ExploreScreenItems[] = []
-      for (const page of feeds.pages) {
-        for (const feed of page.feeds) {
-          if (!seen.has(feed.uri)) {
-            seen.add(feed.uri)
-            feedItems.push({
-              type: 'feed',
-              key: feed.uri,
-              feed,
-            })
+      if (feeds && preferences) {
+        // Currently the responses contain duplicate items.
+        // Needs to be fixed on backend, but let's dedupe to be safe.
+        let seen = new Set()
+        const feedItems: ExploreScreenItems[] = []
+        for (const page of feeds.pages) {
+          for (const feed of page.feeds) {
+            if (!seen.has(feed.uri)) {
+              seen.add(feed.uri)
+              feedItems.push({
+                type: 'feed',
+                key: feed.uri,
+                feed,
+              })
+            }
           }
         }
-      }
 
-      // feeds errors can occur during pagination, so feeds is truthy
-      if (feedsError) {
-        i.push({
-          type: 'error',
-          key: 'feedsError',
-          message: _(msg`Failed to load suggested feeds`),
-          error: cleanError(feedsError),
-        })
-      } else if (preferencesError) {
-        i.push({
-          type: 'error',
-          key: 'preferencesError',
-          message: _(msg`Failed to load feeds preferences`),
-          error: cleanError(preferencesError),
-        })
-      } else if (hasNextFeedsPage) {
-        const preview = feedItems.splice(-3)
-        i.push(...feedItems)
-        i.push({
-          type: 'loadMore',
-          key: 'loadMoreFeeds',
-          isLoadingMore: isLoadingMoreFeeds,
-          onLoadMore: onLoadMoreFeeds,
-          items: preview,
-        })
+        // feeds errors can occur during pagination, so feeds is truthy
+        if (feedsError) {
+          i.push({
+            type: 'error',
+            key: 'feedsError',
+            message: _(msg`Failed to load suggested feeds`),
+            error: cleanError(feedsError),
+          })
+        } else if (preferencesError) {
+          i.push({
+            type: 'error',
+            key: 'preferencesError',
+            message: _(msg`Failed to load feeds preferences`),
+            error: cleanError(preferencesError),
+          })
+        } else if (hasNextFeedsPage) {
+          const preview = feedItems.splice(-3)
+          i.push(...feedItems)
+          i.push({
+            type: 'loadMore',
+            key: 'loadMoreFeeds',
+            isLoadingMore: isLoadingMoreFeeds,
+            onLoadMore: onLoadMoreFeeds,
+            items: preview,
+          })
+        } else {
+          i.push(...feedItems)
+        }
       } else {
-        i.push(...feedItems)
+        if (feedsError) {
+          i.push({
+            type: 'error',
+            key: 'feedsError',
+            message: _(msg`Failed to load suggested feeds`),
+            error: cleanError(feedsError),
+          })
+        } else if (preferencesError) {
+          i.push({
+            type: 'error',
+            key: 'preferencesError',
+            message: _(msg`Failed to load feeds preferences`),
+            error: cleanError(preferencesError),
+          })
+        } else {
+          i.push({type: 'feedPlaceholder', key: 'feedPlaceholder'})
+        }
       }
+    }
+
+    // Dynamic module ordering
+
+    if (guide?.guide === 'follow-10' && !guide.isComplete) {
+      addSuggestedFollowsModule()
+      addTrendingTopicsModule()
     } else {
-      if (feedsError) {
-        i.push({
-          type: 'error',
-          key: 'feedsError',
-          message: _(msg`Failed to load suggested feeds`),
-          error: cleanError(feedsError),
-        })
-      } else if (preferencesError) {
-        i.push({
-          type: 'error',
-          key: 'preferencesError',
-          message: _(msg`Failed to load feeds preferences`),
-          error: cleanError(preferencesError),
-        })
-      } else {
-        i.push({type: 'feedPlaceholder', key: 'feedPlaceholder'})
-      }
+      addTrendingTopicsModule()
+      addSuggestedFollowsModule()
+    }
+
+    if (gate('explore_show_suggested_feeds')) {
+      addSuggestedFeedsModule()
     }
 
     return i
@@ -506,6 +530,8 @@ export function Explore() {
     preferencesError,
     hasNextProfilesPage,
     hasNextFeedsPage,
+    guide,
+    gate,
   ])
 
   const renderItem = useCallback(
