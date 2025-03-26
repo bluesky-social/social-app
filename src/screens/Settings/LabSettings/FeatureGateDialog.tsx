@@ -1,9 +1,11 @@
 import {useState} from 'react'
 import {View} from 'react-native'
+import * as Updates from 'expo-updates'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {type Gate, useGateDescriptions} from '#/lib/statsig/gates'
+import {useGate, useSetLocalGateOverride} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -14,6 +16,7 @@ import {
   EmojiSad_Stroke2_Corner0_Rounded as EmojiSad,
   EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmile,
 } from '#/components/icons/Emoji'
+import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
 
 enum FeedbackToken {
@@ -37,9 +40,19 @@ export function FeatureGateDialog({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-
   const descriptions = useGateDescriptions()
+  const gateApi = useGate()
+  const setGateApi = useSetLocalGateOverride()
+
+  const [originalEnabled] = useState(() => gateApi(gate))
+  const [enabled, setEnabled] = useState(originalEnabled)
+  const [isRestarting, setIsRestarting] = useState(false)
   const desc = descriptions[gate]
+
+  const onToggleGate = v => {
+    setGateApi(gate, v)
+    setEnabled(v)
+  }
 
   if (!desc) {
     return null
@@ -66,15 +79,35 @@ export function FeatureGateDialog({
               name="quoteposts"
               type="checkbox"
               label={_(msg`Tap to toggle this experiment.`)}
-              value={true}
-              onChange={_v => {}}
+              value={enabled}
+              onChange={onToggleGate}
               style={[a.justify_between]}>
               <Text style={[t.atoms.text_contrast_high]}>
-                <Trans>Enable on this device</Trans>
+                <Trans>Enabled on this device</Trans>
               </Text>
               <Toggle.Switch />
             </Toggle.Item>
           </View>
+
+          {enabled !== originalEnabled ? (
+            <Button
+              variant="solid"
+              color="primary"
+              size="large"
+              onPress={() => {
+                setIsRestarting(true)
+                Updates.reloadAsync()
+              }}
+              label={_(msg`Restart to apply changes`)}
+              disabled={isRestarting}>
+              <ButtonText>
+                <Trans>Restart to apply changes</Trans>
+              </ButtonText>
+              {isRestarting ? (
+                <Loader size="sm" style={[{color: 'white'}]} />
+              ) : null}
+            </Button>
+          ) : null}
 
           {desc.help ? (
             <>

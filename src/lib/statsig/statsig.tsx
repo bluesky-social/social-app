@@ -1,17 +1,17 @@
 import React from 'react'
 import {Platform} from 'react-native'
-import {AppState, AppStateStatus} from 'react-native'
+import {AppState, type AppStateStatus} from 'react-native'
 import {Statsig, StatsigProvider} from 'statsig-react-native-expo'
 
 import {BUNDLE_DATE, BUNDLE_IDENTIFIER, IS_TESTFLIGHT} from '#/lib/app-info'
 import {logger} from '#/logger'
-import {MetricEvents} from '#/logger/metrics'
+import {type MetricEvents} from '#/logger/metrics'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 import {useSession} from '../../state/session'
 import {timeout} from '../async/timeout'
 import {useNonReactiveCallback} from '../hooks/useNonReactiveCallback'
-import {Gate} from './gates'
+import {type Gate} from './gates'
 
 const SDK_KEY = 'client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV'
 
@@ -180,25 +180,26 @@ export function useGate(): (gateName: Gate, options?: GateOptions) => boolean {
 }
 
 /**
- * Debugging tool to override a gate. USE ONLY IN E2E TESTS!
+ * Tool to override a gate on the local device
  */
-export function useDangerousSetGate(): (
+export function useSetLocalGateOverride(): (
   gateName: Gate,
   value: boolean,
 ) => void {
   const cache = React.useContext(GateCache)
   if (!cache) {
     throw Error(
-      'useDangerousSetGate() cannot be called outside StatsigProvider.',
+      'useSetLocalOverride() cannot be called outside StatsigProvider.',
     )
   }
-  const dangerousSetGate = React.useCallback(
+  const setGate = React.useCallback(
     (gateName: Gate, value: boolean) => {
       cache.set(gateName, value)
+      persisted.write('gateOverrides', Object.fromEntries(cache.entries()))
     },
     [cache],
   )
-  return dangerousSetGate
+  return setGate
 }
 
 function toStatsigUser(did: string | undefined): StatsigUser {
@@ -286,11 +287,11 @@ export function Provider({children}: {children: React.ReactNode}) {
 
   // Have our own cache in front of Statsig.
   // This ensures the results remain stable until the active DID changes.
-  const [gateCache, setGateCache] = React.useState(() => new Map())
+  const [gateCache, setGateCache] = React.useState(() => createGateCache())
   const [prevDid, setPrevDid] = React.useState(did)
   if (did !== prevDid) {
     setPrevDid(did)
-    setGateCache(new Map())
+    setGateCache(createGateCache())
   }
 
   // Periodically poll Statsig to get the current rule evaluations for all stored accounts.
@@ -322,4 +323,8 @@ export function Provider({children}: {children: React.ReactNode}) {
       </StatsigProvider>
     </GateCache.Provider>
   )
+}
+
+function createGateCache(): Map<string, boolean> {
+  return new Map(Object.entries(persisted.get('gateOverrides') || {}))
 }

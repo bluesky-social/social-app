@@ -4,6 +4,7 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {type Gate, useGateDescriptions} from '#/lib/statsig/gates'
+import {useGate} from '#/lib/statsig/statsig'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
@@ -41,7 +42,7 @@ export function LabSettingsScreen({}: Props) {
         </View>
         <SettingsList.Container>
           {gates.map(gate => (
-            <ExperimentButton key={gate} gate={gate} enabled={true} />
+            <ExperimentButton key={gate} gate={gate} />
           ))}
         </SettingsList.Container>
       </Layout.Content>
@@ -49,10 +50,12 @@ export function LabSettingsScreen({}: Props) {
   )
 }
 
-function ExperimentButton({gate, enabled}: {gate: Gate; enabled: boolean}) {
+function ExperimentButton({gate}: {gate: Gate}) {
   const t = useTheme()
   const ctrl = useDialogControl()
   const descriptions = useGateDescriptions()
+  const gateApi = useGate()
+  const enabled = gateApi(gate)
   return (
     <>
       <SettingsList.Divider />
