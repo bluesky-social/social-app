@@ -7,6 +7,7 @@ import {useLingui} from '@lingui/react'
 import {type Gate, useGateDescriptions} from '#/lib/statsig/gates'
 import {useGate, useSetLocalGateOverride} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -49,7 +50,7 @@ export function FeatureGateDialog({
   const [isRestarting, setIsRestarting] = useState(false)
   const desc = descriptions[gate]
 
-  const onToggleGate = v => {
+  const onToggleGate = (v: boolean) => {
     setGateApi(gate, v)
     setEnabled(v)
   }
@@ -96,7 +97,12 @@ export function FeatureGateDialog({
               size="large"
               onPress={() => {
                 setIsRestarting(true)
-                Updates.reloadAsync()
+                if (isWeb) {
+                  /* @ts-ignore web only */
+                  navigation.reload()
+                } else {
+                  Updates.reloadAsync()
+                }
               }}
               label={_(msg`Restart to apply changes`)}
               disabled={isRestarting}>

@@ -67,7 +67,15 @@ function ExperimentButton({gate}: {gate: Gate}) {
           {descriptions[gate]?.title}
         </SettingsList.ItemText>
         <SettingsList.BadgeText
-          style={[a.flex_1, enabled && {color: t.palette.positive_400}]}>
+          style={[
+            a.flex_1,
+            enabled && {
+              color:
+                t.scheme === 'dark'
+                  ? t.palette.positive_400
+                  : t.palette.positive_600,
+            },
+          ]}>
           {enabled ? <Trans>Enabled</Trans> : <Trans>Disabled</Trans>}
         </SettingsList.BadgeText>
       </SettingsList.PressableItem>
