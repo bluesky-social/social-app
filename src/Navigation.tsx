@@ -83,6 +83,7 @@ import {ProfileFollowsScreen} from '#/screens/Profile/ProfileFollows'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
 import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
 import {AppIconSettingsScreen} from '#/screens/Settings/AppIconSettings'
+import {LabSettingsScreen} from '#/screens/Settings/LabSettings'
 import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
 import {
   StarterPackScreen,
@@ -389,6 +390,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => AppIconSettingsScreen}
         options={{
           title: title(msg`App Icon`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="LabSettings"
+        getComponent={() => LabSettingsScreen}
+        options={{
+          title: title(msg`The Lab`),
           requireAuth: true,
         }}
       />
