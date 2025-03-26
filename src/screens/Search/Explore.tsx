@@ -206,7 +206,7 @@ type ExploreScreenItems =
       icon: React.ComponentType<SVGIconProps>
       searchButton?: {
         label: string
-        metricsTag: MetricEvents['explore:moduleSearchPress']['module']
+        metricsTag: MetricEvents['explore:module:searchButtonPress']['module']
         tab: 'user' | 'profile' | 'feed'
       }
     }
@@ -643,7 +643,7 @@ export function Explore({
       changed: ViewToken<ExploreScreenItems>[]
     }) => {
       for (const {item} of viewableItems.filter(vi => vi.isViewable)) {
-        let module: MetricEvents['explore:moduleView']['module']
+        let module: MetricEvents['explore:module:seen']['module']
         if (item.type === 'trendingTopics' || item.type === 'trendingVideos') {
           module = item.type
         } else if (item.type === 'profile') {
@@ -655,7 +655,7 @@ export function Explore({
         }
         if (!alreadyReportedRef.current.has(module)) {
           alreadyReportedRef.current.set(module, module)
-          logger.metric('explore:moduleView', {module})
+          logger.metric('explore:module:seen', {module})
         }
       }
     },

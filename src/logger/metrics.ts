@@ -305,7 +305,7 @@ export type MetricEvents = {
     context: 'interstitial:discover' | 'interstitial:explore' | 'feed'
   }
 
-  'explore:moduleView': {
+  'explore:module:seen': {
     module:
       | 'trendingTopics'
       | 'trendingVideos'
@@ -314,7 +314,7 @@ export type MetricEvents = {
       | 'suggestedStarterPacks'
       | `feed:${FeedDescriptor}`
   }
-  'explore:moduleSearchPress': {
+  'explore:module:searchButtonPress': {
     module: 'suggestedAccounts' | 'suggestedFeeds'
   }
 

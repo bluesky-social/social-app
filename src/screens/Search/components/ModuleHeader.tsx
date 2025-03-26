@@ -74,7 +74,7 @@ export function SearchButton({
       shape="round"
       PressableComponent={native(PressableScale)}
       onPress={() => {
-        logger.metric('explore:moduleSearchPress', {module: metricsTag})
+        logger.metric('explore:module:searchButtonPress', {module: metricsTag})
         onPress?.()
       }}>
       <ButtonIcon icon={SearchIcon} size="lg" />
