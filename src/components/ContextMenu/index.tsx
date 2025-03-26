@@ -441,21 +441,23 @@ export function AuxiliaryView({children, align = 'left'}: AuxiliaryViewProps) {
   const context = useContextMenuContext()
   const {width: screenWidth} = useWindowDimensions()
   const {top: topInset} = useSafeAreaInsets()
-  const ensureOnScreenTranslation = useSharedValue(0)
+  const ensureOnScreenTranslationSV = useSharedValue(0)
 
   const {isOpen, mode, measurement, translationSV, animationSV} = context
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: clamp(animationSV.get(), 0, 1),
-    transform: [
-      {
-        translateY:
-          Math.max(translationSV.get(), ensureOnScreenTranslation.get()) *
-          animationSV.get(),
-      },
-      {scale: interpolate(animationSV.get(), [0, 1], [0.2, 1])},
-    ],
-  }))
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: clamp(animationSV.get(), 0, 1),
+      transform: [
+        {
+          translateY:
+            (ensureOnScreenTranslationSV.get() || translationSV.get()) *
+            animationSV.get(),
+        },
+        {scale: interpolate(animationSV.get(), [0, 1], [0.2, 1])},
+      ],
+    }
+  })
 
   const menuContext = useMemo(() => ({align}), [align])
 
@@ -477,6 +479,7 @@ export function AuxiliaryView({children, align = 'left'}: AuxiliaryViewProps) {
     // however, in auxiliary-only mode, that doesn't happen, so we need to do it ourselves here
     if (mode === 'auxiliary-only') {
       translationSV.set(translation)
+      ensureOnScreenTranslationSV.set(0)
     }
     // however, we also need to make sure that for super tall triggers, we don't go off the screen
     // so we have an additional cap on the standard transform every other element has
@@ -484,9 +487,9 @@ export function AuxiliaryView({children, align = 'left'}: AuxiliaryViewProps) {
     // we'll just have to live with it for now, fixing it would be possible but be a large complexity
     // increase for an edge case
     else {
-      ensureOnScreenTranslation.set(translation)
+      ensureOnScreenTranslationSV.set(translation)
     }
-  }, [mode, measurement, translationSV, topInset, ensureOnScreenTranslation])
+  }, [mode, measurement, translationSV, topInset, ensureOnScreenTranslationSV])
 
   if (!isOpen || !measurement) return null
 
