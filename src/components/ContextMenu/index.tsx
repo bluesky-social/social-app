@@ -9,37 +9,37 @@ import React, {
 import {
   BackHandler,
   Keyboard,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   Pressable,
-  StyleProp,
+  type StyleProp,
   useWindowDimensions,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {
   Gesture,
   GestureDetector,
-  GestureStateChangeEvent,
-  GestureUpdateEvent,
-  PanGestureHandlerEventPayload,
+  type GestureStateChangeEvent,
+  type GestureUpdateEvent,
+  type PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler'
 import Animated, {
   clamp,
   interpolate,
   runOnJS,
-  SharedValue,
+  type SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  WithSpringConfig,
+  type WithSpringConfig,
 } from 'react-native-reanimated'
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
 import {captureRef} from 'react-native-view-shot'
-import {Image, ImageErrorEventData} from 'expo-image'
+import {Image, type ImageErrorEventData} from 'expo-image'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useIsFocused} from '@react-navigation/native'
@@ -60,13 +60,13 @@ import {
   useContextMenuMenuContext,
 } from '#/components/ContextMenu/context'
 import {
-  AuxiliaryViewProps,
-  ContextType,
-  ItemIconProps,
-  ItemProps,
-  ItemTextProps,
-  Measurement,
-  TriggerProps,
+  type AuxiliaryViewProps,
+  type ContextType,
+  type ItemIconProps,
+  type ItemProps,
+  type ItemTextProps,
+  type Measurement,
+  type TriggerProps,
 } from '#/components/ContextMenu/types'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {createPortalGroup} from '#/components/Portal'
@@ -510,7 +510,7 @@ export function AuxiliaryView({children, align = 'left'}: AuxiliaryViewProps) {
   )
 }
 
-const MENU_WIDTH = 230
+const MENU_WIDTH = 250
 
 export function Outer({
   children,
@@ -751,13 +751,12 @@ export function Item({
           a.flex_row,
           a.align_center,
           a.gap_sm,
-          a.py_sm,
           a.px_md,
           a.rounded_md,
           a.border,
           t.atoms.bg_contrast_25,
           t.atoms.border_contrast_low,
-          {minHeight: 40},
+          {minHeight: 44, paddingVertical: 10},
           (focused || pressed || context.hoveredMenuItem === id) &&
             !rest.disabled &&
             t.atoms.bg_contrast_50,
@@ -782,7 +781,7 @@ export function ItemText({children, style}: ItemTextProps) {
       ellipsizeMode="middle"
       style={[
         a.flex_1,
-        a.text_sm,
+        a.text_md,
         a.font_bold,
         t.atoms.text_contrast_high,
         {paddingTop: 3},
@@ -799,7 +798,7 @@ export function ItemIcon({icon: Comp}: ItemIconProps) {
   const {disabled} = useContextMenuItemContext()
   return (
     <Comp
-      size="md"
+      size="lg"
       fill={
         disabled
           ? t.atoms.text_contrast_low.color

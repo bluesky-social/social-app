@@ -1,6 +1,6 @@
 import {useMemo, useState} from 'react'
 import {Alert, useWindowDimensions, View} from 'react-native'
-import {ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatBskyConvoDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -15,7 +15,7 @@ import {
   EmojiHeartEyes_Stroke2_Corner0_Rounded as EmojiHeartEyesIcon,
   EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon,
 } from '#/components/icons/Emoji'
-import {TriggerProps} from '#/components/Menu/types'
+import {type TriggerProps} from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
 import {EmojiPopup} from './EmojiPopup'
 
@@ -60,7 +60,7 @@ export function EmojiReactionPicker({
         a.absolute,
         {bottom: '100%'},
         isFromSelf ? a.right_0 : a.left_0,
-        t.atoms.bg,
+        t.scheme === 'light' ? t.atoms.bg : t.atoms.bg_contrast_25,
         a.flex_row,
         a.p_xs,
         a.gap_xs,
@@ -101,7 +101,9 @@ export function EmojiReactionPicker({
         <View
           style={[
             a.rounded_full,
-            t.atoms.bg_contrast_25,
+            t.scheme === 'light'
+              ? t.atoms.bg_contrast_25
+              : t.atoms.bg_contrast_50,
             {height: 40, width: 40},
             a.justify_center,
             a.align_center,

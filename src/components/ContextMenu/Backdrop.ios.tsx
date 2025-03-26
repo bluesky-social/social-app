@@ -2,7 +2,7 @@ import {Pressable} from 'react-native'
 import Animated, {
   Extrapolation,
   interpolate,
-  SharedValue,
+  type SharedValue,
   useAnimatedProps,
   useAnimatedStyle,
 } from 'react-native-reanimated'
@@ -47,7 +47,7 @@ function BlurredBackdrop({animation, intensity = 50, onPress}: Props) {
     <AnimatedBlurView
       animatedProps={animatedProps}
       style={[a.absolute, a.inset_0]}
-      tint="systemThinMaterialDark">
+      tint="systemMaterialDark">
       <Pressable
         style={a.flex_1}
         accessibilityLabel={_(msg`Close menu`)}
