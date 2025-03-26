@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
 import {type AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -19,7 +19,7 @@ import {
 import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {AvatarStackWithFetch} from './AvatarStack'
+import {AvatarStack} from './AvatarStack'
 import {Flame_Stroke2_Corner1_Rounded as FlameIcon} from './icons/Flame'
 import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from './icons/Trending'
 
@@ -39,7 +39,7 @@ export function TrendingTopicRow({
   const topic = useTopic(raw)
   const gutters = useGutters([0, 'base'])
 
-  const {category, randomProfiles} = useTempData()
+  const category = useCategoryDisplayName(raw?.category || 'other')
 
   if (topic.type !== 'topic') return null
 
@@ -83,7 +83,15 @@ export function TrendingTopicRow({
                   {topic.displayName}
                 </Text>
                 <View style={[a.flex_row, a.gap_sm, a.align_center]}>
-                  <AvatarStackWithFetch size={16} profiles={randomProfiles} />
+                  {topic.images && (
+                    <AvatarStack
+                      size={16}
+                      profiles={topic.images.filter(
+                        // dedupe
+                        (img, i, arr) => i === arr.indexOf(img),
+                      )}
+                    />
+                  )}
                   <Text
                     style={[
                       a.text_sm,
@@ -201,6 +209,23 @@ export function TrendingTopicRowSkeleton({}: {withPosts: boolean}) {
       </View>
     </View>
   )
+}
+
+function useCategoryDisplayName(category: TrendingTopic['category']) {
+  const {_} = useLingui()
+
+  switch (category) {
+    case 'sports':
+      return _(msg`Sports`)
+    case 'politics':
+      return _(msg`Politics`)
+    case 'video-games':
+      return _(msg`Video Games`)
+    case 'pop-culture':
+      return _(msg`Entertainment`)
+    case 'other':
+      return null
+  }
 }
 
 // ==== LEGACY PILL FORM ====
@@ -347,6 +372,8 @@ type ParsedTrendingTopic =
       displayName: string
       url: string
       uri: undefined
+      category: TrendingTopic['category']
+      images?: string[]
       postCount: number
       age: number
     }
@@ -360,8 +387,15 @@ type ParsedTrendingTopic =
 
 export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
   const {_} = useLingui()
-  return React.useMemo(() => {
-    const {topic: displayName, link, postCount, startTime} = raw
+  return useMemo(() => {
+    const {
+      topic: displayName,
+      link,
+      postCount,
+      startTime,
+      category,
+      images,
+    } = raw
     // age of topic in hrs
     const age = Math.floor(
       (Date.now() - new Date(startTime || Date.now()).getTime()) /
@@ -375,6 +409,8 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
         displayName,
         uri: undefined,
         url: link,
+        category,
+        images,
         postCount,
         age,
       }
@@ -386,6 +422,8 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
         // displayName: displayName.replace(/^#/, ''),
         uri: undefined,
         url: link,
+        category,
+        images,
         postCount,
         age,
       }
@@ -396,6 +434,8 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
         displayName,
         uri: undefined,
         url: link,
+        category,
+        images,
         postCount,
         age,
       }
@@ -435,48 +475,10 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
       displayName,
       uri: undefined,
       url: link,
+      category,
+      images,
       postCount,
       age,
     }
   }, [_, raw])
-}
-
-// TEMP
-function useTempData() {
-  const category = useMemo(
-    () =>
-      ['News', 'Sports', 'Entertainment', 'Politics', 'Politics'][
-        Math.floor(Math.random() * 5)
-      ],
-    [],
-  )
-  const randomProfiles = useMemo(() => {
-    let tempRandomProfiles = [
-      'pfrazee.com',
-      'esb.lol',
-      'hailey.at',
-      'jay.bsky.team',
-      'jcsalterego.bsky.social',
-      'jaz.bsky.social',
-      'divy.zone',
-      'chadbourn.bsky.social',
-      'barackobama.bsky.social',
-      'retr0.id',
-      'atrupar.com',
-    ]
-    return Array.from({length: 3}, () => {
-      const random =
-        tempRandomProfiles[
-          Math.floor(Math.random() * tempRandomProfiles.length)
-        ]
-      tempRandomProfiles = tempRandomProfiles.filter(
-        profile => profile !== random,
-      )
-      return random
-    })
-  }, [])
-  return {
-    category,
-    randomProfiles,
-  }
 }

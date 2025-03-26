@@ -11,6 +11,8 @@ export type TrendingTopic = AppBskyUnspeccedDefs.TrendingTopic & {
   // TEMP, need @atproto/api release
   postCount: number
   startTime: string
+  category: 'sports' | 'politics' | 'pop-culture' | 'video-games' | 'other'
+  images?: string[]
 }
 
 type Response = {
