@@ -80,7 +80,7 @@ export function FeatureGateDialog({
             <Toggle.Item
               name="quoteposts"
               type="checkbox"
-              label={_(msg`Tap to toggle this experiment.`)}
+              label={_(msg`Tap to toggle this experiment on or off`)}
               value={enabled}
               onChange={onToggleGate}
               style={[a.justify_between]}>
