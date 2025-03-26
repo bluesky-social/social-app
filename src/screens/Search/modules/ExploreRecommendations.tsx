@@ -18,6 +18,8 @@ import {
 } from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 
+// Note: This module is not currently used and may be removed in the future.
+
 export function ExploreRecommendations() {
   const {enabled} = useTrendingConfig()
   return enabled ? <Inner /> : null
