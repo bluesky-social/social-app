@@ -39,6 +39,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a} from '#/alf'
 import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
+import {Zap_Stroke2_Corner0_Rounded as SponsoredIcon} from '#/components/icons/Zap'
 import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
@@ -56,6 +57,7 @@ interface FeedItemProps {
   reason:
     | AppBskyFeedDefs.ReasonRepost
     | AppBskyFeedDefs.ReasonPin
+    | AppBskyFeedDefs.ReasonPromoted
     | ReasonFeedSource
     | {[k: string]: unknown; $type: string}
     | undefined
@@ -229,6 +231,8 @@ let FeedItemInner = ({
     AppBskyFeedDefs.isReasonRepost(reason) &&
     reason.by.did === currentAccount?.did
 
+  const isPromoted = AppBskyFeedDefs.isReasonPromoted(reason)
+
   /**
    * If `post[0]` in this slice is the actual root post (not an orphan thread),
    * then we may have a threadgate record to reference
@@ -363,6 +367,73 @@ let FeedItemInner = ({
                 lineHeight={1.2}
                 numberOfLines={1}>
                 <Trans>Pinned</Trans>
+              </Text>
+            </View>
+          ) : AppBskyFeedDefs.isReasonPromoted(reason) ? (
+            <View style={styles.includeReason}>
+              <SponsoredIcon
+                style={{color: pal.colors.textLight, marginRight: 3}}
+                width={13}
+                height={13}
+              />
+              <Text
+                type="sm-bold"
+                style={pal.textLight}
+                lineHeight={1.2}
+                numberOfLines={1}>
+                {isOwner ? (
+                  <Trans>
+                    Promoted by you on
+                    <FeedNameText
+                      type="sm-bold"
+                      uri={reason.on}
+                      href={
+                        reason.href /* Not sure if this is right or how to provide this value */
+                      }
+                      lineHeight={1.2}
+                      numberOfLines={1}
+                      style={pal.textLight}
+                    />
+                  </Trans>
+                ) : (
+                  <Trans>
+                    Promoted by{' '}
+                    <ProfileHoverCard inline did={reason.by.did}>
+                      <TextLinkOnWebOnly
+                        type="sm-bold"
+                        style={pal.textLight}
+                        lineHeight={1.2}
+                        numberOfLines={1}
+                        text={
+                          <Text
+                            emoji
+                            type="sm-bold"
+                            style={pal.textLight}
+                            lineHeight={1.2}>
+                            {sanitizeDisplayName(
+                              reason.by.displayName ||
+                                sanitizeHandle(reason.by.handle),
+                              moderation.ui('displayName'),
+                            )}
+                          </Text>
+                        }
+                        href={makeProfileLink(reason.by)}
+                        onBeforePress={onOpenReposter}
+                      />
+                    </ProfileHoverCard>
+                    {' on '}
+                    <FeedNameText
+                      type="sm-bold"
+                      uri={reason.uri}
+                      href={
+                        reason.href /* Not sure if this is right or how to provide this value */
+                      }
+                      lineHeight={1.2}
+                      numberOfLines={1}
+                      style={pal.textLight}
+                    />
+                  </Trans>
+                )}
               </Text>
             </View>
           ) : null}
