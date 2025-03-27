@@ -1235,6 +1235,7 @@ export class Convo {
             reaction => reaction.value !== emoji,
           ),
         })
+        this.commit()
         restore = () => this.pastMessages.set(messageId, prevMessage)
       }
     } else if (this.newMessages.has(messageId)) {
@@ -1246,6 +1247,7 @@ export class Convo {
             reaction => reaction.value !== emoji,
           ),
         })
+        this.commit()
         restore = () => this.newMessages.set(messageId, prevMessage)
       }
     }

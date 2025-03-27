@@ -143,18 +143,31 @@ let MessageItem = ({
           <View
             style={[
               a.flex_row,
-              a.gap_sm,
+              a.gap_xs,
               a.justify_center,
               isFromSelf ? a.justify_end : a.justify_start,
               a.flex_wrap,
+              a.pb_xs,
             ]}>
-            {message.reactions
-              .filter((r, i, arr) => i === arr.indexOf(r))
-              .map(reaction => (
-                <Text key={reaction.value} emoji>
+            {message.reactions.map(reaction => (
+              <View
+                key={reaction.sender.did + reaction.value}
+                style={[
+                  a.rounded_sm,
+                  a.py_xs,
+                  a.border,
+                  a.border_transparent,
+                  reaction.sender.did === currentAccount?.did && [
+                    a.px_xs,
+                    t.atoms.bg_contrast_25,
+                    t.atoms.border_contrast_low,
+                  ],
+                ]}>
+                <Text emoji style={[a.text_md]}>
                   {reaction.value}
                 </Text>
-              ))}
+              </View>
+            ))}
           </View>
         )}
 
