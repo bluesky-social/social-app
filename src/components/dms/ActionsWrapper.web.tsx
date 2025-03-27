@@ -13,7 +13,7 @@ import {MessageContextMenu} from '#/components/dms/MessageContextMenu'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
 import {EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
-import {hasReachedReactionLimit} from './utils/reactions'
+import {hasReachedReactionLimit} from './util'
 
 export function ActionsWrapper({
   message,

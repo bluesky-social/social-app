@@ -18,7 +18,7 @@ import {
 import {type TriggerProps} from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
 import {EmojiPopup} from './EmojiPopup'
-import {hasAlreadyReacted, hasReachedReactionLimit} from './utils/reactions'
+import {hasAlreadyReacted, hasReachedReactionLimit} from './util'
 
 export function EmojiReactionPicker({
   message,
