@@ -9,6 +9,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {type MetricEvents} from '#/logger/metrics'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useActorSearchPaginated} from '#/state/queries/actor-search'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
@@ -166,13 +167,25 @@ export function Explore({
   const guide = useProgressGuide('follow-10')
   const [selectedInterest, setSelectedInterest] = useState<string | null>(null)
   const {
-    data: profiles,
-    hasNextPage: hasNextProfilesPage,
-    isLoading: isLoadingProfiles,
-    isFetchingNextPage: isFetchingNextProfilesPage,
-    error: profilesError,
-    fetchNextPage: fetchNextProfilesPage,
+    data: suggestedProfiles,
+    hasNextPage: hasNextSuggestedProfilesPage,
+    isLoading: isLoadingSuggestedProfiles,
+    isFetchingNextPage: isFetchingNextSuggestedProfilesPage,
+    error: suggestedProfilesError,
+    fetchNextPage: fetchNextSuggestedProfilesPage,
   } = useSuggestedFollowsQuery({limit: 3, subsequentPageLimit: 10})
+  const {
+    data: interestProfiles,
+    hasNextPage: hasNextInterestProfilesPage,
+    isLoading: isLoadingInterestProfiles,
+    isFetchingNextPage: isFetchingNextInterestProfilesPage,
+    error: interestProfilesError,
+    fetchNextPage: fetchNextInterestProfilesPage,
+  } = useActorSearchPaginated({
+    query: selectedInterest || '',
+    enabled: !!selectedInterest,
+    limit: 10,
+  })
   const {
     data: feeds,
     hasNextPage: hasNextFeedsPage,
@@ -181,6 +194,24 @@ export function Explore({
     error: feedsError,
     fetchNextPage: fetchNextFeedsPage,
   } = useGetPopularFeedsQuery({limit: 10})
+
+  const profiles: typeof suggestedProfiles & typeof interestProfiles =
+    !selectedInterest ? suggestedProfiles : interestProfiles
+  const hasNextProfilesPage = !selectedInterest
+    ? hasNextSuggestedProfilesPage
+    : hasNextInterestProfilesPage
+  const isLoadingProfiles = !selectedInterest
+    ? isLoadingSuggestedProfiles
+    : isLoadingInterestProfiles
+  const isFetchingNextProfilesPage = !selectedInterest
+    ? isFetchingNextSuggestedProfilesPage
+    : isFetchingNextInterestProfilesPage
+  const profilesError = !selectedInterest
+    ? suggestedProfilesError
+    : interestProfilesError
+  const fetchNextProfilesPage = !selectedInterest
+    ? fetchNextSuggestedProfilesPage
+    : fetchNextInterestProfilesPage
 
   const isLoadingMoreProfiles = isFetchingNextProfilesPage && !isLoadingProfiles
   const onLoadMoreProfiles = useCallback(async () => {
