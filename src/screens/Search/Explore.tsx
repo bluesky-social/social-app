@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useRef} from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 import {View, type ViewabilityConfig, type ViewToken} from 'react-native'
 import {type AppBskyActorDefs, type AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -32,7 +32,10 @@ import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/U
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import * as ModuleHeader from './components/ModuleHeader'
-import {SuggestedProfileCard} from './modules/ExploreSuggestedAccounts'
+import {
+  SuggestedAccountsTabBar,
+  SuggestedProfileCard,
+} from './modules/ExploreSuggestedAccounts'
 
 function LoadMore({item}: {item: ExploreScreenItems & {type: 'loadMore'}}) {
   const t = useTheme()
@@ -85,6 +88,17 @@ type ExploreScreenItems =
     }
   | {
       type: 'header'
+      key: string
+      title: string
+      icon: React.ComponentType<SVGIconProps>
+      searchButton?: {
+        label: string
+        metricsTag: MetricEvents['explore:module:searchButtonPress']['module']
+        tab: 'user' | 'profile' | 'feed'
+      }
+    }
+  | {
+      type: 'tabbedHeader'
       key: string
       title: string
       icon: React.ComponentType<SVGIconProps>
@@ -150,6 +164,7 @@ export function Explore({
   const moderationOpts = useModerationOpts()
   const gate = useGate()
   const guide = useProgressGuide('follow-10')
+  const [selectedInterest, setSelectedInterest] = useState<string | null>(null)
   const {
     data: profiles,
     hasNextPage: hasNextProfilesPage,
@@ -225,8 +240,8 @@ export function Explore({
 
     const addSuggestedFollowsModule = () => {
       i.push({
-        type: 'header',
-        key: 'suggested-follows-header',
+        type: 'tabbedHeader',
+        key: 'suggested-accounts-header',
         title: _(msg`Suggested Accounts`),
         icon: Person,
         searchButton: {
@@ -417,6 +432,34 @@ export function Explore({
             </ModuleHeader.Container>
           )
         }
+        case 'tabbedHeader': {
+          return (
+            <View
+              style={[
+                a.border_b,
+                t.atoms.border_contrast_low,
+                a.pb_md,
+                t.atoms.bg,
+              ]}>
+              <ModuleHeader.Container style={a.border_transparent}>
+                <ModuleHeader.Icon icon={item.icon} />
+                <ModuleHeader.TitleText>{item.title}</ModuleHeader.TitleText>
+                {item.searchButton && (
+                  <ModuleHeader.SearchButton
+                    {...item.searchButton}
+                    onPress={() =>
+                      focusSearchInput(item.searchButton?.tab || 'user')
+                    }
+                  />
+                )}
+              </ModuleHeader.Container>
+              <SuggestedAccountsTabBar
+                selectedInterest={selectedInterest}
+                onSelectInterest={setSelectedInterest}
+              />
+            </View>
+          )
+        }
         case 'trendingTopics': {
           return <ExploreTrendingTopics />
         }
@@ -495,14 +538,14 @@ export function Explore({
         }
       }
     },
-    [t, focusSearchInput, moderationOpts],
+    [t, focusSearchInput, moderationOpts, selectedInterest],
   )
 
   const stickyHeaderIndices = useMemo(
     () =>
       items.reduce(
         (acc, curr) =>
-          ['topBorder', 'header'].includes(curr.type)
+          ['topBorder', 'header', 'tabbedHeader'].includes(curr.type)
             ? acc.concat(items.indexOf(curr))
             : acc,
         [] as number[],

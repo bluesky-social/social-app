@@ -319,6 +319,9 @@ export type MetricEvents = {
   'explore:module:searchButtonPress': {
     module: 'suggestedAccounts' | 'suggestedFeeds'
   }
+  'explore:suggestedAccounts:tabPressed': {
+    tab: string
+  }
 
   'progressGuide:hide': {}
   'progressGuide:followDialog:open': {}
