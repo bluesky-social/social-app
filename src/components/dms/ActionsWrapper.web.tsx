@@ -46,11 +46,17 @@ export function ActionsWrapper({
 
   const onEmojiSelect = useCallback(
     (emoji: string) => {
-      convo
-        .addReaction(message.id, emoji)
-        .catch(() => Toast.show(_(msg`Failed to add emoji reaction`)))
+      if (message.reactions?.find(reaction => reaction.value === emoji)) {
+        convo
+          .removeReaction(message.id, emoji)
+          .catch(() => Toast.show(_(msg`Failed to remove emoji reaction`)))
+      } else {
+        convo
+          .addReaction(message.id, emoji)
+          .catch(() => Toast.show(_(msg`Failed to add emoji reaction`)))
+      }
     },
-    [_, convo, message.id],
+    [_, convo, message.id, message.reactions],
   )
 
   return (

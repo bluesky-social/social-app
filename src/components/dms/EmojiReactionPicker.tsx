@@ -85,7 +85,7 @@ export function EmojiReactionPicker({
                       r =>
                         r.sender.did === currentAccount?.did &&
                         r.value === emoji,
-                    ) && {backgroundColor: t.palette.primary_100},
+                    ) && {backgroundColor: t.palette.primary_200},
                 {height: 40, width: 40},
                 a.justify_center,
                 a.align_center,
