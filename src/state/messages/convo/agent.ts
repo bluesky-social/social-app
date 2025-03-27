@@ -1189,7 +1189,11 @@ export class Convo {
           ...prevMessage,
           reactions: [...(prevMessage.reactions ?? []), optimisticReaction],
         })
-        restore = () => this.pastMessages.set(messageId, prevMessage)
+        this.commit()
+        restore = () => {
+          this.pastMessages.set(messageId, prevMessage)
+          this.commit()
+        }
       }
     } else if (this.newMessages.has(messageId)) {
       const prevMessage = this.newMessages.get(messageId)
@@ -1203,11 +1207,16 @@ export class Convo {
           ...prevMessage,
           reactions: [...(prevMessage.reactions ?? []), optimisticReaction],
         })
-        restore = () => this.newMessages.set(messageId, prevMessage)
+        this.commit()
+        restore = () => {
+          this.newMessages.set(messageId, prevMessage)
+          this.commit()
+        }
       }
     }
 
     try {
+      logger.info(`Adding reaction ${emoji} to message ${messageId}`)
       await this.agent.chat.bsky.convo.addReaction(
         {messageId, value: emoji, convoId: this.convoId},
         {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
@@ -1232,11 +1241,16 @@ export class Convo {
         this.pastMessages.set(messageId, {
           ...prevMessage,
           reactions: prevMessage.reactions?.filter(
-            reaction => reaction.value !== emoji,
+            reaction =>
+              reaction.value !== emoji ||
+              reaction.sender.did !== this.senderUserDid,
           ),
         })
         this.commit()
-        restore = () => this.pastMessages.set(messageId, prevMessage)
+        restore = () => {
+          this.pastMessages.set(messageId, prevMessage)
+          this.commit()
+        }
       }
     } else if (this.newMessages.has(messageId)) {
       const prevMessage = this.newMessages.get(messageId)
@@ -1244,15 +1258,21 @@ export class Convo {
         this.newMessages.set(messageId, {
           ...prevMessage,
           reactions: prevMessage.reactions?.filter(
-            reaction => reaction.value !== emoji,
+            reaction =>
+              reaction.value !== emoji ||
+              reaction.sender.did !== this.senderUserDid,
           ),
         })
         this.commit()
-        restore = () => this.newMessages.set(messageId, prevMessage)
+        restore = () => {
+          this.newMessages.set(messageId, prevMessage)
+          this.commit()
+        }
       }
     }
 
     try {
+      logger.info(`Removing reaction ${emoji} from message ${messageId}`)
       await this.agent.chat.bsky.convo.removeReaction(
         {messageId, value: emoji, convoId: this.convoId},
         {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
