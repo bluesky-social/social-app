@@ -189,6 +189,7 @@ export type MetricEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'PostOnboardingFindFollows'
       | 'ImmersiveVideo'
+      | 'ExploreSuggestedAccounts'
   }
   'suggestedUser:follow': {
     logContext:
@@ -226,6 +227,7 @@ export type MetricEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'PostOnboardingFindFollows'
       | 'ImmersiveVideo'
+      | 'ExploreSuggestedAccounts'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
