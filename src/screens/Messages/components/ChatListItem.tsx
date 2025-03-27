@@ -192,10 +192,21 @@ function ChatListItemReady({
       if (ChatBskyConvoDefs.isMessageAndReactionView(convo.lastMessage)) {
         const isFromMe =
           convo.lastMessage.reaction.sender.did === currentAccount?.did
+        const lastMessageText = convo.lastMessage.message.text
+        const fallbackMessage = _(
+          msg({
+            message: 'a message',
+            comment: `If last message does not contain text, fall back to "{user} reacted to {a message}"`,
+          }),
+        )
 
         if (isFromMe) {
           lastMessage = _(
-            msg`You reacted ${convo.lastMessage.reaction.value} to "${convo.lastMessage.message.text}"`,
+            msg`You reacted ${convo.lastMessage.reaction.value} to ${
+              lastMessageText
+                ? `"${convo.lastMessage.message.text}"`
+                : fallbackMessage
+            }`,
           )
         } else {
           const senderDid = convo.lastMessage.reaction.sender.did
@@ -204,13 +215,19 @@ function ChatListItemReady({
             lastMessage = _(
               msg`${sanitizeDisplayName(
                 sender.displayName || sender.handle,
-              )} reacted ${convo.lastMessage.reaction.value} to "${
-                convo.lastMessage.message.text
-              }"`,
+              )} reacted ${convo.lastMessage.reaction.value} to ${
+                lastMessageText
+                  ? `"${convo.lastMessage.message.text}"`
+                  : fallbackMessage
+              }`,
             )
           } else {
             lastMessage = _(
-              msg`Someone reacted ${convo.lastMessage.reaction.value} to "${convo.lastMessage.message.text}"`,
+              msg`Someone reacted ${convo.lastMessage.reaction.value} to ${
+                lastMessageText
+                  ? `"${convo.lastMessage.message.text}"`
+                  : fallbackMessage
+              }`,
             )
           }
         }
