@@ -770,6 +770,22 @@ export class Convo {
               this.deletedMessages.delete(ev.message.id)
               needsCommit = true
             }
+          } else if (
+            (ChatBskyConvoDefs.isLogAddReaction(ev) ||
+              ChatBskyConvoDefs.isLogRemoveReaction(ev)) &&
+            ChatBskyConvoDefs.isMessageView(ev.message)
+          ) {
+            /*
+             * Update if we have this in state - replace message wholesale. If we don't, don't worry about it.
+             */
+            if (this.pastMessages.has(ev.message.id)) {
+              this.pastMessages.set(ev.message.id, ev.message)
+              needsCommit = true
+            }
+            if (this.newMessages.has(ev.message.id)) {
+              this.newMessages.set(ev.message.id, ev.message)
+              needsCommit = true
+            }
           }
         }
       }
@@ -1217,10 +1233,19 @@ export class Convo {
 
     try {
       logger.info(`Adding reaction ${emoji} to message ${messageId}`)
-      await this.agent.chat.bsky.convo.addReaction(
+      const {data} = await this.agent.chat.bsky.convo.addReaction(
         {messageId, value: emoji, convoId: this.convoId},
         {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
       )
+      if (ChatBskyConvoDefs.isMessageView(data.message)) {
+        if (this.pastMessages.has(messageId)) {
+          this.pastMessages.set(messageId, data.message)
+          this.commit()
+        } else if (this.newMessages.has(messageId)) {
+          this.newMessages.set(messageId, data.message)
+          this.commit()
+        }
+      }
     } catch (error) {
       if (restore) restore()
       throw error
