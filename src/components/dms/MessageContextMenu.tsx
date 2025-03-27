@@ -23,7 +23,7 @@ import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/War
 import * as Prompt from '#/components/Prompt'
 import {usePromptControl} from '#/components/Prompt'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
-import {hasReachedReactionLimit} from './utils/reactions'
+import {hasReachedReactionLimit} from './util'
 
 export let MessageContextMenu = ({
   message,

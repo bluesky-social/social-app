@@ -14,7 +14,7 @@ import {DotGrid_Stroke2_Corner0_Rounded as DotGridIcon} from '#/components/icons
 import * as Menu from '#/components/Menu'
 import {type TriggerProps} from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
-import {hasAlreadyReacted, hasReachedReactionLimit} from './utils/reactions'
+import {hasAlreadyReacted, hasReachedReactionLimit} from './util'
 
 export function EmojiReactionPicker({
   message,
