@@ -2,7 +2,7 @@ import React, {useCallback} from 'react'
 import {LayoutAnimation} from 'react-native'
 import {
   ComAtprotoServerCreateAccount,
-  ComAtprotoServerDescribeServer,
+  type ComAtprotoServerDescribeServer,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -192,12 +192,16 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
         next.fieldErrors[a.field] = (next.fieldErrors[a.field] || 0) + 1
 
         // Log the field error
-        logger.metric('signup:fieldError', {
-          field: a.field,
-          errorCount: next.fieldErrors[a.field],
-          errorMessage: a.value,
-          activeStep: next.activeStep,
-        })
+        logger.metric(
+          'signup:fieldError',
+          {
+            field: a.field,
+            errorCount: next.fieldErrors[a.field],
+            errorMessage: a.value,
+            activeStep: next.activeStep,
+          },
+          {statsig: true},
+        )
       }
       break
     }
@@ -214,10 +218,14 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
       next.backgroundCount = s.backgroundCount + 1
 
       // Log background/foreground event during signup
-      logger.metric('signup:backgrounded', {
-        activeStep: next.activeStep,
-        backgroundCount: next.backgroundCount,
-      })
+      logger.metric(
+        'signup:backgrounded',
+        {
+          activeStep: next.activeStep,
+          backgroundCount: next.backgroundCount,
+        },
+        {statsig: true},
+      )
       break
     }
   }

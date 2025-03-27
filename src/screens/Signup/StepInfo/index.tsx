@@ -1,5 +1,5 @@
 import React, {useRef} from 'react'
-import {TextInput, View} from 'react-native'
+import {type TextInput, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
@@ -12,7 +12,7 @@ import {is13, is18, useSignupContext} from '#/screens/Signup/state'
 import {Policies} from '#/screens/Signup/StepInfo/Policies'
 import {atoms as a, native} from '#/alf'
 import * as DateField from '#/components/forms/DateField'
-import {DateFieldRef} from '#/components/forms/DateField/types'
+import {type DateFieldRef} from '#/components/forms/DateField/types'
 import {FormError} from '#/components/forms/FormError'
 import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
@@ -133,9 +133,13 @@ export function StepInfo({
     dispatch({type: 'setEmail', value: email})
     dispatch({type: 'setPassword', value: password})
     dispatch({type: 'next'})
-    logger.metric('signup:nextPressed', {
-      activeStep: state.activeStep,
-    })
+    logger.metric(
+      'signup:nextPressed',
+      {
+        activeStep: state.activeStep,
+      },
+      {statsig: true},
+    )
   }
 
   return (

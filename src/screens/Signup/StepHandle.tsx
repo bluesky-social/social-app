@@ -64,11 +64,15 @@ export function StepHandle() {
       dispatch({type: 'setIsLoading', value: false})
     }
 
-    logger.metric('signup:nextPressed', {
-      activeStep: state.activeStep,
-      phoneVerificationRequired:
-        state.serviceDescription?.phoneVerificationRequired,
-    })
+    logger.metric(
+      'signup:nextPressed',
+      {
+        activeStep: state.activeStep,
+        phoneVerificationRequired:
+          state.serviceDescription?.phoneVerificationRequired,
+      },
+      {statsig: true},
+    )
     // phoneVerificationRequired is actually whether a captcha is required
     if (!state.serviceDescription?.phoneVerificationRequired) {
       dispatch({
@@ -94,9 +98,11 @@ export function StepHandle() {
       value: handle,
     })
     dispatch({type: 'prev'})
-    logger.metric('signup:backPressed', {
-      activeStep: state.activeStep,
-    })
+    logger.metric(
+      'signup:backPressed',
+      {activeStep: state.activeStep},
+      {statsig: true},
+    )
   }, [dispatch, state.activeStep])
 
   const validCheck = validateServiceHandle(draftValue, state.userDomain)

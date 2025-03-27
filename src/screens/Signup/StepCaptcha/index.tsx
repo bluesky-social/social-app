@@ -39,7 +39,7 @@ export function StepCaptcha() {
   const onSuccess = React.useCallback(
     (code: string) => {
       setCompleted(true)
-      logger.metric('signup:captchaSuccess', {})
+      logger.metric('signup:captchaSuccess', {}, {statsig: true})
       dispatch({
         type: 'submit',
         task: {verificationCode: code, mutableProcessed: false},
@@ -54,7 +54,7 @@ export function StepCaptcha() {
         type: 'setError',
         value: _(msg`Error receiving captcha response.`),
       })
-      logger.metric('signup:captchaFailure', {})
+      logger.metric('signup:captchaFailure', {}, {statsig: true})
       logger.error('Signup Flow Error', {
         registrationHandle: state.handle,
         error,
