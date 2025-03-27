@@ -17,7 +17,7 @@ import {useLingui} from '@lingui/react'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {InlineLinkText} from '#/components/Link'
@@ -159,8 +159,12 @@ let MessageItem = ({
                   a.border_transparent,
                   reaction.sender.did === currentAccount?.did && [
                     a.px_xs,
-                    t.atoms.bg_contrast_25,
-                    t.atoms.border_contrast_low,
+                    {
+                      borderColor: platform({
+                        native: t.palette.primary_500,
+                        web: t.palette.primary_100,
+                      }),
+                    },
                   ],
                 ]}>
                 <Text emoji style={[a.text_md]}>
