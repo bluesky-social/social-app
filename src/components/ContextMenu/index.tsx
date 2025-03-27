@@ -775,7 +775,10 @@ export function Item({
       ]}>
       <ItemContext.Provider value={itemContext}>
         {typeof children === 'function'
-          ? children(focused || pressed || context.hoveredMenuItem === id)
+          ? children(
+              (focused || pressed || context.hoveredMenuItem === id) &&
+                !rest.disabled,
+            )
           : children}
       </ItemContext.Provider>
     </Pressable>

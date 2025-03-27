@@ -23,6 +23,7 @@ import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/War
 import * as Prompt from '#/components/Prompt'
 import {usePromptControl} from '#/components/Prompt'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
+import {hasReachedReactionLimit} from './utils/reactions'
 
 export let MessageContextMenu = ({
   message,
@@ -74,11 +75,26 @@ export let MessageContextMenu = ({
 
   const onEmojiSelect = useCallback(
     (emoji: string) => {
-      convo
-        .addReaction(message.id, emoji)
-        .catch(() => Toast.show(_(msg`Failed to add emoji reaction`)))
+      if (
+        message.reactions?.find(
+          reaction =>
+            reaction.value === emoji &&
+            reaction.sender.did === currentAccount?.did,
+        )
+      ) {
+        convo
+          .removeReaction(message.id, emoji)
+          .catch(() => Toast.show(_(msg`Failed to remove emoji reaction`)))
+      } else {
+        if (hasReachedReactionLimit(message, currentAccount?.did)) return
+        convo
+          .addReaction(message.id, emoji)
+          .catch(() =>
+            Toast.show(_(msg`Failed to add emoji reaction`), 'xmark'),
+          )
+      }
     },
-    [_, convo, message.id],
+    [_, convo, message, currentAccount?.did],
   )
 
   const sender = convo.convo.members.find(

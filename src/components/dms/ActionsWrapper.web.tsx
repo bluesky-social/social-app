@@ -6,12 +6,14 @@ import {useLingui} from '@lingui/react'
 import type React from 'react'
 
 import {useConvoActive} from '#/state/messages/convo'
+import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {MessageContextMenu} from '#/components/dms/MessageContextMenu'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
 import {EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
+import {hasReachedReactionLimit} from './utils/reactions'
 
 export function ActionsWrapper({
   message,
@@ -26,6 +28,7 @@ export function ActionsWrapper({
   const t = useTheme()
   const {_} = useLingui()
   const convo = useConvoActive()
+  const {currentAccount} = useSession()
 
   const [showActions, setShowActions] = useState(false)
 
@@ -46,17 +49,26 @@ export function ActionsWrapper({
 
   const onEmojiSelect = useCallback(
     (emoji: string) => {
-      if (message.reactions?.find(reaction => reaction.value === emoji)) {
+      if (
+        message.reactions?.find(
+          reaction =>
+            reaction.value === emoji &&
+            reaction.sender.did === currentAccount?.did,
+        )
+      ) {
         convo
           .removeReaction(message.id, emoji)
           .catch(() => Toast.show(_(msg`Failed to remove emoji reaction`)))
       } else {
+        if (hasReachedReactionLimit(message, currentAccount?.did)) return
         convo
           .addReaction(message.id, emoji)
-          .catch(() => Toast.show(_(msg`Failed to add emoji reaction`)))
+          .catch(() =>
+            Toast.show(_(msg`Failed to add emoji reaction`), 'xmark'),
+          )
       }
     },
-    [_, convo, message.id, message.reactions],
+    [_, convo, message, currentAccount?.did],
   )
 
   return (

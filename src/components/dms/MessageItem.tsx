@@ -5,6 +5,12 @@ import {
   type TextStyle,
   View,
 } from 'react-native'
+import Animated, {
+  LayoutAnimationConfig,
+  LinearTransition,
+  ZoomIn,
+  ZoomOut,
+} from 'react-native-reanimated'
 import {
   AppBskyEmbedRecord,
   ChatBskyConvoDefs,
@@ -17,7 +23,7 @@ import {useLingui} from '@lingui/react'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
-import {atoms as a, platform, useTheme} from '#/alf'
+import {atoms as a, native, platform, useTheme} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {InlineLinkText} from '#/components/Link'
@@ -139,41 +145,46 @@ let MessageItem = ({
           )}
         </ActionsWrapper>
 
-        {message.reactions && message.reactions.length > 0 && (
-          <View
-            style={[
-              a.flex_row,
-              a.gap_xs,
-              a.justify_center,
-              isFromSelf ? a.justify_end : a.justify_start,
-              a.flex_wrap,
-              a.pb_xs,
-            ]}>
-            {message.reactions.map(reaction => (
-              <View
-                key={reaction.sender.did + reaction.value}
-                style={[
-                  a.rounded_sm,
-                  a.py_xs,
-                  a.border,
-                  a.border_transparent,
-                  reaction.sender.did === currentAccount?.did && [
-                    a.px_xs,
-                    {
-                      borderColor: platform({
-                        native: t.palette.primary_500,
-                        web: t.palette.primary_100,
-                      }),
-                    },
-                  ],
-                ]}>
-                <Text emoji style={[a.text_md]}>
-                  {reaction.value}
-                </Text>
-              </View>
-            ))}
-          </View>
-        )}
+        <LayoutAnimationConfig skipEntering skipExiting>
+          {message.reactions && message.reactions.length > 0 && (
+            <View
+              style={[
+                a.flex_row,
+                a.gap_xs,
+                a.justify_center,
+                isFromSelf ? a.justify_end : a.justify_start,
+                a.flex_wrap,
+                a.pb_xs,
+              ]}>
+              {message.reactions.map(reaction => (
+                <Animated.View
+                  entering={native(ZoomIn.springify(200).delay(400))}
+                  exiting={native(ZoomOut.delay(200))}
+                  layout={native(LinearTransition.delay(300))}
+                  key={reaction.sender.did + reaction.value}
+                  style={[
+                    a.rounded_sm,
+                    a.py_xs,
+                    a.border,
+                    a.border_transparent,
+                    reaction.sender.did === currentAccount?.did && [
+                      a.px_xs,
+                      {
+                        borderColor: platform({
+                          native: t.palette.primary_500,
+                          web: t.palette.primary_100,
+                        }),
+                      },
+                    ],
+                  ]}>
+                  <Text emoji style={[a.text_md]}>
+                    {reaction.value}
+                  </Text>
+                </Animated.View>
+              ))}
+            </View>
+          )}
+        </LayoutAnimationConfig>
 
         {isLastInGroup && (
           <MessageItemMetadata
