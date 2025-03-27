@@ -112,7 +112,7 @@ function Inner() {
     }
   }, [convoState.status])
 
-  if (convoState.status === ConvoStatus.Error || true) {
+  if (convoState.status === ConvoStatus.Error) {
     return (
       <>
         <Layout.Center style={[a.flex_1]}>
