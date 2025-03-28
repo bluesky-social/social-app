@@ -310,6 +310,7 @@ input[type='range'][orient='vertical']::-moz-range-thumb {
 .EmojiReactionPicker__Pressable:not(.__selected).__disabled {
   transform: scale(1) !important;
   border-color: transparent !important;
+  opacity: 0.7;
 }
 .EmojiReactionPicker__Pressable ~ button {
   cursor: pointer;
