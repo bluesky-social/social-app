@@ -230,8 +230,13 @@ export function Explore({
   ])
 
   const isLoadingMoreFeeds = isFetchingNextFeedsPage && !isLoadingFeeds
+  const [hasPressedLoadMoreFeeds, setHasPressedLoadMoreFeeds] = useState(false)
   const onLoadMoreFeeds = useCallback(async () => {
     if (isFetchingNextFeedsPage || !hasNextFeedsPage || feedsError) return
+    if (!hasPressedLoadMoreFeeds) {
+      setHasPressedLoadMoreFeeds(true)
+      return
+    }
     try {
       await fetchNextFeedsPage()
     } catch (err) {
@@ -242,6 +247,7 @@ export function Explore({
     hasNextFeedsPage,
     feedsError,
     fetchNextFeedsPage,
+    hasPressedLoadMoreFeeds,
   ])
 
   const items = useMemo<ExploreScreenItems[]>(() => {
@@ -301,15 +307,20 @@ export function Explore({
           }
         }
 
-        i.push(...profileItems)
-        if (hasNextProfilesPage) {
-          i.push({
-            type: 'loadMore',
-            key: 'loadMoreProfiles',
-            message: _(msg`Load more suggested accounts`),
-            isLoadingMore: isLoadingMoreProfiles,
-            onLoadMore: onLoadMoreProfiles,
-          })
+        if (profileItems.length === 0) {
+          // no items! remove the header
+          i.pop()
+        } else {
+          i.push(...profileItems)
+          if (hasNextProfilesPage) {
+            i.push({
+              type: 'loadMore',
+              key: 'loadMoreProfiles',
+              message: _(msg`Load more suggested accounts`),
+              isLoadingMore: isLoadingMoreProfiles,
+              onLoadMore: onLoadMoreProfiles,
+            })
+          }
         }
       } else {
         if (profilesError) {
@@ -372,15 +383,25 @@ export function Explore({
             error: cleanError(preferencesError),
           })
         } else {
-          i.push(...feedItems)
-          if (hasNextFeedsPage) {
-            i.push({
-              type: 'loadMore',
-              key: 'loadMoreFeeds',
-              message: _(msg`Load more suggested feeds`),
-              isLoadingMore: isLoadingMoreFeeds,
-              onLoadMore: onLoadMoreFeeds,
-            })
+          if (feedItems.length === 0) {
+            i.pop()
+          } else {
+            // This query doesn't follow the limit very well, so the first press of the
+            // load more button just unslices the array back to ~10 items
+            if (!hasPressedLoadMoreFeeds) {
+              i.push(...feedItems.slice(0, 3))
+            } else {
+              i.push(...feedItems)
+            }
+            if (hasNextFeedsPage) {
+              i.push({
+                type: 'loadMore',
+                key: 'loadMoreFeeds',
+                message: _(msg`Load more suggested feeds`),
+                isLoadingMore: isLoadingMoreFeeds,
+                onLoadMore: onLoadMoreFeeds,
+              })
+            }
           }
         }
       } else {
@@ -438,6 +459,7 @@ export function Explore({
     guide,
     gate,
     moderationOpts,
+    hasPressedLoadMoreFeeds,
   ])
 
   const renderItem = useCallback(
