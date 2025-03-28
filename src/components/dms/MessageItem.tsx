@@ -21,6 +21,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {isNative} from '#/platform/detection'
 import {useConvoActive} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useSession} from '#/state/session'
@@ -103,6 +104,74 @@ let MessageItem = ({
     return new RichTextAPI({text: message.text, facets: message.facets})
   }, [message.text, message.facets])
 
+  const appliedReactions = (
+    <LayoutAnimationConfig skipEntering skipExiting>
+      {message.reactions && message.reactions.length > 0 && (
+        <View
+          style={[isFromSelf ? a.align_end : a.align_start, a.px_sm, a.pb_2xs]}>
+          <View
+            style={[
+              a.flex_row,
+              a.gap_2xs,
+              a.py_xs,
+              a.px_xs,
+              a.justify_center,
+              isFromSelf ? a.justify_end : a.justify_start,
+              a.flex_wrap,
+              a.pb_xs,
+              t.atoms.bg_contrast_25,
+              a.border,
+              t.atoms.border_contrast_low,
+              a.rounded_lg,
+              t.atoms.shadow_sm,
+              {
+                // vibe coded number
+                transform: [{translateY: -11}],
+              },
+            ]}>
+            {message.reactions.map((reaction, _i, reactions) => {
+              let label
+              if (reaction.sender.did === currentAccount?.did) {
+                label = _(msg`You reacted ${reaction.value}`)
+              } else {
+                const senderDid = reaction.sender.did
+                const sender = convo.members.find(
+                  member => member.did === senderDid,
+                )
+                if (sender) {
+                  label = _(
+                    msg`${sanitizeDisplayName(
+                      sender.displayName || sender.handle,
+                    )} reacted ${reaction.value}`,
+                  )
+                } else {
+                  label = _(msg`Someone reacted ${reaction.value}`)
+                }
+              }
+              return (
+                <Animated.View
+                  entering={native(ZoomIn.springify(200).delay(400))}
+                  exiting={reactions.length > 1 && native(ZoomOut.delay(200))}
+                  layout={native(LinearTransition.delay(300))}
+                  key={reaction.sender.did + reaction.value}
+                  style={[a.p_2xs]}
+                  accessible={true}
+                  accessibilityLabel={label}
+                  accessibilityHint={_(
+                    msg`Double tap or long press the message to add a reaction`,
+                  )}>
+                  <Text emoji style={[a.text_sm]}>
+                    {reaction.value}
+                  </Text>
+                </Animated.View>
+              )
+            })}
+          </View>
+        </View>
+      )}
+    </LayoutAnimationConfig>
+  )
+
   return (
     <>
       {isNewDay && <DateDivider date={message.sentAt} />}
@@ -147,79 +216,11 @@ let MessageItem = ({
               />
             </View>
           )}
+
+          {isNative && appliedReactions}
         </ActionsWrapper>
 
-        <LayoutAnimationConfig skipEntering skipExiting>
-          {message.reactions && message.reactions.length > 0 && (
-            <View
-              style={[
-                isFromSelf ? a.align_end : a.align_start,
-                a.px_sm,
-                a.pb_2xs,
-              ]}>
-              <View
-                style={[
-                  a.flex_row,
-                  a.gap_2xs,
-                  a.py_xs,
-                  a.px_xs,
-                  a.justify_center,
-                  isFromSelf ? a.justify_end : a.justify_start,
-                  a.flex_wrap,
-                  a.pb_xs,
-                  t.atoms.bg_contrast_25,
-                  a.border,
-                  t.atoms.border_contrast_low,
-                  a.rounded_lg,
-                  t.atoms.shadow_sm,
-                  {
-                    // vibe coded number
-                    transform: [{translateY: -11}],
-                  },
-                ]}>
-                {message.reactions.map((reaction, _i, reactions) => {
-                  let label
-                  if (reaction.sender.did === currentAccount?.did) {
-                    label = _(msg`You reacted ${reaction.value}`)
-                  } else {
-                    const senderDid = reaction.sender.did
-                    const sender = convo.members.find(
-                      member => member.did === senderDid,
-                    )
-                    if (sender) {
-                      label = _(
-                        msg`${sanitizeDisplayName(
-                          sender.displayName || sender.handle,
-                        )} reacted ${reaction.value}`,
-                      )
-                    } else {
-                      label = _(msg`Someone reacted ${reaction.value}`)
-                    }
-                  }
-                  return (
-                    <Animated.View
-                      entering={native(ZoomIn.springify(200).delay(400))}
-                      exiting={
-                        reactions.length > 1 && native(ZoomOut.delay(200))
-                      }
-                      layout={native(LinearTransition.delay(300))}
-                      key={reaction.sender.did + reaction.value}
-                      style={[a.p_2xs]}
-                      accessible={true}
-                      accessibilityLabel={label}
-                      accessibilityHint={_(
-                        msg`Double tap or long press the message to add a reaction`,
-                      )}>
-                      <Text emoji style={[a.text_sm]}>
-                        {reaction.value}
-                      </Text>
-                    </Animated.View>
-                  )
-                })}
-              </View>
-            </View>
-          )}
-        </LayoutAnimationConfig>
+        {!isNative && appliedReactions}
 
         {isLastInGroup && (
           <MessageItemMetadata
