@@ -266,6 +266,10 @@ export function SearchScreenShell({
     }
   }, [setShowAutocomplete])
 
+  const focusSearchInput = useCallback(() => {
+    textInput.current?.focus()
+  }, [])
+
   const showHeader = !gtMobile || navButton !== 'menu'
 
   return (
@@ -399,6 +403,7 @@ export function SearchScreenShell({
           query={query}
           queryWithParams={queryWithParams}
           headerHeight={headerHeight}
+          focusSearchInput={focusSearchInput}
         />
       </View>
     </Layout.Screen>
@@ -409,10 +414,12 @@ let SearchScreenInner = ({
   query,
   queryWithParams,
   headerHeight,
+  focusSearchInput,
 }: {
   query: string
   queryWithParams: string
   headerHeight: number
+  focusSearchInput: () => void
 }): React.ReactNode => {
   const t = useTheme()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -438,7 +445,7 @@ let SearchScreenInner = ({
       onPageSelected={onPageSelected}
     />
   ) : hasSession ? (
-    <Explore />
+    <Explore focusSearchInput={focusSearchInput} />
   ) : (
     <Layout.Center>
       <View style={a.flex_1}>
