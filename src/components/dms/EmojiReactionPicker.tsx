@@ -1,5 +1,5 @@
 import {useMemo, useState} from 'react'
-import {Alert, useWindowDimensions, View} from 'react-native'
+import {useWindowDimensions, View} from 'react-native'
 import {type ChatBskyConvoDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -18,12 +18,15 @@ import {
 import {type TriggerProps} from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
 import {EmojiPopup} from './EmojiPopup'
+import {hasAlreadyReacted, hasReachedReactionLimit} from './util'
 
 export function EmojiReactionPicker({
   message,
+  onEmojiSelect,
 }: {
   message: ChatBskyConvoDefs.MessageView
   children?: TriggerProps['children']
+  onEmojiSelect: (emoji: string) => void
 }) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
@@ -39,10 +42,6 @@ export function EmojiReactionPicker({
     return Math.random() < 0.01 ? EmojiHeartEyesIcon : EmojiSmileIcon
   }, [])
 
-  const handleEmojiSelect = (emoji: string) => {
-    Alert.alert(emoji)
-  }
-
   const position = useMemo(() => {
     return {
       x: align === 'left' ? 12 : screenWidth - layout.width - 12,
@@ -51,6 +50,8 @@ export function EmojiReactionPicker({
       width: layout.width,
     }
   }, [measurement, align, screenWidth, layout])
+
+  const limitReacted = hasReachedReactionLimit(message, currentAccount?.did)
 
   return (
     <View
@@ -70,33 +71,49 @@ export function EmojiReactionPicker({
         t.atoms.border_contrast_low,
         a.shadow_md,
       ]}>
-      {['👍', '😆', '❤️', '👀', '😢'].map(emoji => (
-        <ContextMenu.Item
-          position={position}
-          label={_(msg`React with ${emoji}`)}
-          key={emoji}
-          onPress={() => handleEmojiSelect(emoji)}
-          unstyled>
-          {hovered => (
-            <View
-              style={[
-                a.rounded_full,
-                hovered && {backgroundColor: t.palette.primary_500},
-                {height: 40, width: 40},
-                a.justify_center,
-                a.align_center,
-              ]}>
-              <Text style={[a.text_center, {fontSize: 30}]} emoji>
-                {emoji}
-              </Text>
-            </View>
-          )}
-        </ContextMenu.Item>
-      ))}
+      {['👍', '😆', '❤️', '👀', '😢'].map(emoji => {
+        const alreadyReacted = hasAlreadyReacted(
+          message,
+          currentAccount?.did,
+          emoji,
+        )
+        return (
+          <ContextMenu.Item
+            position={position}
+            label={_(msg`React with ${emoji}`)}
+            key={emoji}
+            onPress={() => onEmojiSelect(emoji)}
+            unstyled
+            disabled={limitReacted ? !alreadyReacted : false}>
+            {hovered => (
+              <View
+                style={[
+                  a.rounded_full,
+                  hovered
+                    ? {
+                        backgroundColor: alreadyReacted
+                          ? t.palette.negative_100
+                          : t.palette.primary_500,
+                      }
+                    : alreadyReacted && {
+                        backgroundColor: t.palette.primary_200,
+                      },
+                  {height: 40, width: 40},
+                  a.justify_center,
+                  a.align_center,
+                ]}>
+                <Text style={[a.text_center, {fontSize: 30}]} emoji>
+                  {emoji}
+                </Text>
+              </View>
+            )}
+          </ContextMenu.Item>
+        )
+      })}
       <EmojiPopup
         onEmojiSelected={emoji => {
           close()
-          handleEmojiSelect(emoji)
+          onEmojiSelect(emoji)
         }}>
         <View
           style={[

@@ -1,4 +1,4 @@
-import React from 'react'
+import {memo, useCallback} from 'react'
 import {LayoutAnimation} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {type ChatBskyConvoDefs, RichText} from '@atproto/api'
@@ -23,6 +23,7 @@ import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/War
 import * as Prompt from '#/components/Prompt'
 import {usePromptControl} from '#/components/Prompt'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
+import {hasReachedReactionLimit} from './util'
 
 export let MessageContextMenu = ({
   message,
@@ -41,7 +42,7 @@ export let MessageContextMenu = ({
 
   const isFromSelf = message.sender?.did === currentAccount?.did
 
-  const onCopyMessage = React.useCallback(() => {
+  const onCopyMessage = useCallback(() => {
     const str = richTextToString(
       new RichText({
         text: message.text,
@@ -54,7 +55,7 @@ export let MessageContextMenu = ({
     Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
   }, [_, message.text, message.facets])
 
-  const onPressTranslateMessage = React.useCallback(() => {
+  const onPressTranslateMessage = useCallback(() => {
     const translatorUrl = getTranslatorLink(
       message.text,
       langPrefs.primaryLanguage,
@@ -62,7 +63,7 @@ export let MessageContextMenu = ({
     openLink(translatorUrl, true)
   }, [langPrefs.primaryLanguage, message.text, openLink])
 
-  const onDelete = React.useCallback(() => {
+  const onDelete = useCallback(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     convo
       .deleteMessage(message.id)
@@ -71,6 +72,30 @@ export let MessageContextMenu = ({
       )
       .catch(() => Toast.show(_(msg`Failed to delete message`)))
   }, [_, convo, message.id])
+
+  const onEmojiSelect = useCallback(
+    (emoji: string) => {
+      if (
+        message.reactions?.find(
+          reaction =>
+            reaction.value === emoji &&
+            reaction.sender.did === currentAccount?.did,
+        )
+      ) {
+        convo
+          .removeReaction(message.id, emoji)
+          .catch(() => Toast.show(_(msg`Failed to remove emoji reaction`)))
+      } else {
+        if (hasReachedReactionLimit(message, currentAccount?.did)) return
+        convo
+          .addReaction(message.id, emoji)
+          .catch(() =>
+            Toast.show(_(msg`Failed to add emoji reaction`), 'xmark'),
+          )
+      }
+    },
+    [_, convo, message, currentAccount?.did],
+  )
 
   const sender = convo.convo.members.find(
     member => member.did === message.sender.did,
@@ -81,7 +106,10 @@ export let MessageContextMenu = ({
       <ContextMenu.Root>
         {isNative && (
           <ContextMenu.AuxiliaryView align={isFromSelf ? 'right' : 'left'}>
-            <EmojiReactionPicker message={message} />
+            <EmojiReactionPicker
+              message={message}
+              onEmojiSelect={onEmojiSelect}
+            />
           </ContextMenu.AuxiliaryView>
         )}
 
@@ -156,4 +184,4 @@ export let MessageContextMenu = ({
     </>
   )
 }
-MessageContextMenu = React.memo(MessageContextMenu)
+MessageContextMenu = memo(MessageContextMenu)

@@ -1,4 +1,9 @@
-import {Platform, StyleProp, StyleSheet, ViewStyle} from 'react-native'
+import {
+  Platform,
+  type StyleProp,
+  StyleSheet,
+  type ViewStyle,
+} from 'react-native'
 
 import * as tokens from '#/alf/tokens'
 import {ios, native, platform, web} from '#/alf/util/platform'
@@ -125,6 +130,9 @@ export const atoms = {
   },
   rounded_md: {
     borderRadius: tokens.borderRadius.md,
+  },
+  rounded_lg: {
+    borderRadius: tokens.borderRadius.lg,
   },
   rounded_full: {
     borderRadius: tokens.borderRadius.full,
@@ -357,6 +365,9 @@ export const atoms = {
   },
   border_r: {
     borderRightWidth: StyleSheet.hairlineWidth,
+  },
+  border_transparent: {
+    borderColor: 'transparent',
   },
   curve_circular: ios({
     borderCurve: 'circular',

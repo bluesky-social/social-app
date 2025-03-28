@@ -1,12 +1,19 @@
-import React from 'react'
+import {useCallback, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatBskyConvoDefs} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import type React from 'react'
 
+import {useConvoActive} from '#/state/messages/convo'
+import {useSession} from '#/state/session'
+import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {MessageContextMenu} from '#/components/dms/MessageContextMenu'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
 import {EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
+import {hasReachedReactionLimit} from './util'
 
 export function ActionsWrapper({
   message,
@@ -17,25 +24,52 @@ export function ActionsWrapper({
   isFromSelf: boolean
   children: React.ReactNode
 }) {
-  const viewRef = React.useRef(null)
+  const viewRef = useRef(null)
   const t = useTheme()
+  const {_} = useLingui()
+  const convo = useConvoActive()
+  const {currentAccount} = useSession()
 
-  const [showActions, setShowActions] = React.useState(false)
+  const [showActions, setShowActions] = useState(false)
 
-  const onMouseEnter = React.useCallback(() => {
+  const onMouseEnter = useCallback(() => {
     setShowActions(true)
   }, [])
 
-  const onMouseLeave = React.useCallback(() => {
+  const onMouseLeave = useCallback(() => {
     setShowActions(false)
   }, [])
 
   // We need to handle the `onFocus` separately because we want to know if there is a related target (the element
   // that is losing focus). If there isn't that means the focus is coming from a dropdown that is now closed.
-  const onFocus = React.useCallback<React.FocusEventHandler>(e => {
+  const onFocus = useCallback<React.FocusEventHandler>(e => {
     if (e.nativeEvent.relatedTarget == null) return
     setShowActions(true)
   }, [])
+
+  const onEmojiSelect = useCallback(
+    (emoji: string) => {
+      if (
+        message.reactions?.find(
+          reaction =>
+            reaction.value === emoji &&
+            reaction.sender.did === currentAccount?.did,
+        )
+      ) {
+        convo
+          .removeReaction(message.id, emoji)
+          .catch(() => Toast.show(_(msg`Failed to remove emoji reaction`)))
+      } else {
+        if (hasReachedReactionLimit(message, currentAccount?.did)) return
+        convo
+          .addReaction(message.id, emoji)
+          .catch(() =>
+            Toast.show(_(msg`Failed to add emoji reaction`), 'xmark'),
+          )
+      }
+    },
+    [_, convo, message, currentAccount?.did],
+  )
 
   return (
     <View
@@ -56,7 +90,7 @@ export function ActionsWrapper({
             ? [a.mr_md, {marginLeft: 'auto'}]
             : [a.ml_md, {marginRight: 'auto'}],
         ]}>
-        <EmojiReactionPicker message={message}>
+        <EmojiReactionPicker message={message} onEmojiSelect={onEmojiSelect}>
           {({props, state, isNative, control}) => {
             // always false, file is platform split
             if (isNative) return null
