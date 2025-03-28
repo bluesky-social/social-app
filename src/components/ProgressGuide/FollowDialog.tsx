@@ -5,7 +5,7 @@ import Animated, {
   LinearTransition,
   ZoomInEasyDown,
 } from 'react-native-reanimated'
-import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
+import {type AppBskyActorDefs, type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -19,8 +19,8 @@ import {useActorSearchPaginated} from '#/state/queries/actor-search'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
-import {Follow10ProgressGuide} from '#/state/shell/progress-guide'
-import {ListMethods} from '#/view/com/util/List'
+import {type Follow10ProgressGuide} from '#/state/shell/progress-guide'
+import {type ListMethods} from '#/view/com/util/List'
 import {
   popularInterests,
   useInterestsDisplayNames,
@@ -31,7 +31,7 @@ import {
   tokens,
   useBreakpoints,
   useTheme,
-  ViewStyleProp,
+  type ViewStyleProp,
   web,
 } from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -452,12 +452,14 @@ let Tabs = ({
   selectedInterest,
   hasSearchText,
   interestsDisplayNames,
+  TabComponent = Tab,
 }: {
   onSelectTab: (tab: string) => void
   interests: string[]
   selectedInterest: string
   hasSearchText: boolean
   interestsDisplayNames: Record<string, string>
+  TabComponent?: React.ComponentType<React.ComponentProps<typeof Tab>>
 }): React.ReactNode => {
   const listRef = useRef<ScrollView>(null)
   const [scrollX, setScrollX] = useState(0)
@@ -532,7 +534,7 @@ let Tabs = ({
       {interests.map((interest, i) => {
         const active = interest === selectedInterest && !hasSearchText
         return (
-          <Tab
+          <TabComponent
             key={interest}
             onSelectTab={handleSelectTab}
             active={active}
@@ -547,6 +549,7 @@ let Tabs = ({
   )
 }
 Tabs = memo(Tabs)
+export {Tabs}
 
 let Tab = ({
   onSelectTab,
@@ -822,7 +825,7 @@ function Empty({message}: {message: string}) {
   )
 }
 
-function boostInterests(boosts?: string[]) {
+export function boostInterests(boosts?: string[]) {
   return (_a: string, _b: string) => {
     const indexA = boosts?.indexOf(_a) ?? -1
     const indexB = boosts?.indexOf(_b) ?? -1
