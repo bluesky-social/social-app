@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {Pressable, View} from 'react-native'
+import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -28,11 +28,13 @@ export function TrendingTopicRow({
   rank,
   children,
   onPress,
+  style,
 }: {
   topic: TrendingTopic
   rank: number
   children?: React.ReactNode
   onPress?: () => void
+  style?: StyleProp<ViewStyle>
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
@@ -55,7 +57,7 @@ export function TrendingTopicRow({
         topic={raw}
         testID={`trendingTopic:${rank}`}
         onPress={onPress}
-        style={native([a.border_t, t.atoms.border_contrast_low])}
+        style={[native([a.border_t, t.atoms.border_contrast_low]), style]}
         PressableComponent={Pressable}>
         {({hovered, focused, pressed}) => (
           <View
