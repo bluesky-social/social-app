@@ -9,6 +9,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import {useSession} from '#/state/session'
 import {type Emoji} from '#/view/com/composer/text-input/web/EmojiPicker.web'
 import {atoms as a, flatten, useTheme} from '#/alf'
+import {useWebPreloadEmoji} from '#/view/com/composer/text-input/web/useWebPreloadEmoji'
 import {DotGrid_Stroke2_Corner0_Rounded as DotGridIcon} from '#/components/icons/DotGrid'
 import * as Menu from '#/components/Menu'
 import {type TriggerProps} from '#/components/Menu/types'
@@ -49,6 +50,8 @@ function MenuInner({
   const t = useTheme()
   const {control} = Menu.useMenuContext()
   const {currentAccount} = useSession()
+
+  useWebPreloadEmoji({immediate: true})
 
   const [expanded, setExpanded] = useState(false)
 
