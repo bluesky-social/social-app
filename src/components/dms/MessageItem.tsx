@@ -173,7 +173,8 @@ let MessageItem = ({
                   a.rounded_lg,
                   t.atoms.shadow_sm,
                   {
-                    transform: [{translateY: '-40%'}],
+                    // vibe coded number
+                    transform: [{translateY: -11}],
                   },
                 ]}>
                 {message.reactions.map((reaction, _i, reactions) => {
