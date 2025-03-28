@@ -154,7 +154,7 @@ let MessageItem = ({
             <View
               style={[
                 isFromSelf ? a.align_end : a.align_start,
-                a.px_xs,
+                a.px_sm,
                 a.pb_2xs,
               ]}>
               <View
@@ -167,11 +167,15 @@ let MessageItem = ({
                   isFromSelf ? a.justify_end : a.justify_start,
                   a.flex_wrap,
                   a.pb_xs,
-                  t.atoms.bg,
-                  a.rounded_lg,
+                  t.atoms.bg_contrast_25,
                   a.border,
                   t.atoms.border_contrast_low,
-                  {marginTop: -6},
+                  a.rounded_lg,
+                  t.atoms.shadow_sm,
+                  {
+                    // vibe coded number
+                    transform: [{translateY: -11}],
+                  },
                 ]}>
                 {message.reactions.map((reaction, _i, reactions) => {
                   let label
