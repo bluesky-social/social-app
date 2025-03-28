@@ -55,6 +55,7 @@ function Inner() {
                 onPress={() => {
                   logger.metric('trendingTopic:click', {context: 'explore'})
                 }}
+                style={index === 0 && a.border_transparent}
               />
             ))}
         </>
