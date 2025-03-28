@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import {TouchableOpacity, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10, MAX_ALT_TEXT} from '#/lib/constants'
@@ -177,8 +177,11 @@ function AltTextInner({
                     t.atoms.text_contrast_medium,
                   ]}>
                   <Trans>
-                    Alt text will be truncated. Limit:{' '}
-                    {i18n.number(MAX_ALT_TEXT)} characters.
+                    Alt text will be truncated.{' '}
+                    <Plural
+                      value={MAX_ALT_TEXT}
+                      other={`Limit: ${i18n.number(MAX_ALT_TEXT)} characters.`}
+                    />
                   </Trans>
                 </Text>
               </View>
