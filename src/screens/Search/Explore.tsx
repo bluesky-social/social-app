@@ -1,13 +1,7 @@
-import {useCallback, useMemo, useRef} from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 import {View, type ViewabilityConfig, type ViewToken} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  moderateProfile,
-  type ModerationDecision,
-  type ModerationOpts,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {type AppBskyActorDefs, type AppBskyFeedDefs} from '@atproto/api'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useGate} from '#/lib/statsig/statsig'
@@ -15,24 +9,23 @@ import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {type MetricEvents} from '#/logger/metrics'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useActorSearchPaginated} from '#/state/queries/actor-search'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
 import {useProgressGuide} from '#/state/shell/progress-guide'
-import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
 import {
   FeedFeedLoadingPlaceholder,
   ProfileCardFeedLoadingPlaceholder,
 } from '#/view/com/util/LoadingPlaceholder'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
 import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
-import {ArrowBottom_Stroke2_Corner0_Rounded as ArrowBottom} from '#/components/icons/Arrow'
+import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
@@ -40,57 +33,14 @@ import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/U
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import * as ModuleHeader from './components/ModuleHeader'
+import {
+  SuggestedAccountsTabBar,
+  SuggestedProfileCard,
+} from './modules/ExploreSuggestedAccounts'
 
-type LoadMoreItem =
-  | {
-      type: 'profile'
-      key: string
-      avatar: string | undefined
-      moderation: ModerationDecision
-    }
-  | {
-      type: 'feed'
-      key: string
-      avatar: string | undefined
-      moderation: undefined
-    }
-
-function LoadMore({
-  item,
-  moderationOpts,
-}: {
-  item: ExploreScreenItems & {type: 'loadMore'}
-  moderationOpts?: ModerationOpts
-}) {
+function LoadMore({item}: {item: ExploreScreenItems & {type: 'loadMore'}}) {
   const t = useTheme()
   const {_} = useLingui()
-  const items: LoadMoreItem[] = useMemo(() => {
-    return item.items
-      .map(_item => {
-        let loadMoreItem: LoadMoreItem | undefined
-        if (_item.type === 'profile') {
-          loadMoreItem = {
-            type: 'profile',
-            key: _item.profile.did,
-            avatar: _item.profile.avatar,
-            moderation: moderateProfile(_item.profile, moderationOpts!),
-          }
-        } else if (_item.type === 'feed') {
-          loadMoreItem = {
-            type: 'feed',
-            key: _item.feed.uri,
-            avatar: _item.feed.avatar,
-            moderation: undefined,
-          }
-        }
-        return loadMoreItem
-      })
-      .filter(n => !!n)
-  }, [item.items, moderationOpts])
-
-  if (items.length === 0) return null
-
-  const type = items[0].type
 
   return (
     <View style={[a.pb_2xl]}>
@@ -104,93 +54,27 @@ function LoadMore({
               a.flex_1,
               a.flex_row,
               a.align_center,
+              a.justify_center,
               a.px_lg,
               a.py_md,
+              a.gap_sm,
               (hovered || pressed) && t.atoms.bg_contrast_25,
             ]}>
-            <View
-              style={[
-                a.relative,
-                {
-                  height: 32,
-                  width: 32 + 15 * items.length,
-                },
-              ]}>
-              <View
-                style={[
-                  a.align_center,
-                  a.justify_center,
-                  t.atoms.bg_contrast_25,
-                  a.absolute,
-                  {
-                    width: 30,
-                    height: 30,
-                    left: 0,
-                    borderWidth: 1,
-                    backgroundColor: t.palette.primary_500,
-                    borderColor: t.atoms.bg.backgroundColor,
-                    borderRadius: type === 'profile' ? 999 : 4,
-                    zIndex: 4,
-                  },
-                ]}>
-                <ArrowBottom fill={t.palette.white} />
-              </View>
-              {items.map((_item, i) => {
-                return (
-                  <View
-                    key={_item.key}
-                    style={[
-                      t.atoms.bg_contrast_25,
-                      a.absolute,
-                      {
-                        width: 30,
-                        height: 30,
-                        left: (i + 1) * 15,
-                        borderWidth: 1,
-                        borderColor: t.atoms.bg.backgroundColor,
-                        borderRadius: _item.type === 'profile' ? 999 : 4,
-                        zIndex: 3 - i,
-                      },
-                    ]}>
-                    {moderationOpts && (
-                      <>
-                        {_item.type === 'profile' ? (
-                          <UserAvatar
-                            size={28}
-                            avatar={_item.avatar}
-                            moderation={_item.moderation.ui('avatar')}
-                            type="user"
-                          />
-                        ) : _item.type === 'feed' ? (
-                          <UserAvatar
-                            size={28}
-                            avatar={_item.avatar}
-                            type="algo"
-                          />
-                        ) : null}
-                      </>
-                    )}
-                  </View>
-                )
-              })}
-            </View>
-
             <Text
               style={[
-                a.pl_sm,
                 a.leading_snug,
                 hovered ? t.atoms.text : t.atoms.text_contrast_medium,
               ]}>
-              {type === 'profile' ? (
-                <Trans>Load more suggested follows</Trans>
-              ) : (
-                <Trans>Load more suggested feeds</Trans>
-              )}
+              {item.message}
             </Text>
-
-            <View style={[a.flex_1, a.align_end]}>
-              {item.isLoadingMore && <Loader size="lg" />}
-            </View>
+            {item.isLoadingMore ? (
+              <Loader size="sm" />
+            ) : (
+              <ChevronDownIcon
+                size="sm"
+                style={hovered ? t.atoms.text : t.atoms.text_contrast_medium}
+              />
+            )}
           </View>
         )}
       </Button>
@@ -200,7 +84,22 @@ function LoadMore({
 
 type ExploreScreenItems =
   | {
+      type: 'topBorder'
+      key: string
+    }
+  | {
       type: 'header'
+      key: string
+      title: string
+      icon: React.ComponentType<SVGIconProps>
+      searchButton?: {
+        label: string
+        metricsTag: MetricEvents['explore:module:searchButtonPress']['module']
+        tab: 'user' | 'profile' | 'feed'
+      }
+    }
+  | {
+      type: 'tabbedHeader'
       key: string
       title: string
       icon: React.ComponentType<SVGIconProps>
@@ -236,9 +135,9 @@ type ExploreScreenItems =
   | {
       type: 'loadMore'
       key: string
+      message: string
       isLoadingMore: boolean
       onLoadMore: () => void
-      items: ExploreScreenItems[]
     }
   | {
       type: 'profilePlaceholder'
@@ -266,14 +165,27 @@ export function Explore({
   const moderationOpts = useModerationOpts()
   const gate = useGate()
   const guide = useProgressGuide('follow-10')
+  const [selectedInterest, setSelectedInterest] = useState<string | null>(null)
   const {
-    data: profiles,
-    hasNextPage: hasNextProfilesPage,
-    isLoading: isLoadingProfiles,
-    isFetchingNextPage: isFetchingNextProfilesPage,
-    error: profilesError,
-    fetchNextPage: fetchNextProfilesPage,
-  } = useSuggestedFollowsQuery({limit: 6, subsequentPageLimit: 10})
+    data: suggestedProfiles,
+    hasNextPage: hasNextSuggestedProfilesPage,
+    isLoading: isLoadingSuggestedProfiles,
+    isFetchingNextPage: isFetchingNextSuggestedProfilesPage,
+    error: suggestedProfilesError,
+    fetchNextPage: fetchNextSuggestedProfilesPage,
+  } = useSuggestedFollowsQuery({limit: 3, subsequentPageLimit: 10})
+  const {
+    data: interestProfiles,
+    hasNextPage: hasNextInterestProfilesPage,
+    isLoading: isLoadingInterestProfiles,
+    isFetchingNextPage: isFetchingNextInterestProfilesPage,
+    error: interestProfilesError,
+    fetchNextPage: fetchNextInterestProfilesPage,
+  } = useActorSearchPaginated({
+    query: selectedInterest || '',
+    enabled: !!selectedInterest,
+    limit: 10,
+  })
   const {
     data: feeds,
     hasNextPage: hasNextFeedsPage,
@@ -282,6 +194,24 @@ export function Explore({
     error: feedsError,
     fetchNextPage: fetchNextFeedsPage,
   } = useGetPopularFeedsQuery({limit: 10})
+
+  const profiles: typeof suggestedProfiles & typeof interestProfiles =
+    !selectedInterest ? suggestedProfiles : interestProfiles
+  const hasNextProfilesPage = !selectedInterest
+    ? hasNextSuggestedProfilesPage
+    : hasNextInterestProfilesPage
+  const isLoadingProfiles = !selectedInterest
+    ? isLoadingSuggestedProfiles
+    : isLoadingInterestProfiles
+  const isFetchingNextProfilesPage = !selectedInterest
+    ? isFetchingNextSuggestedProfilesPage
+    : isFetchingNextInterestProfilesPage
+  const profilesError = !selectedInterest
+    ? suggestedProfilesError
+    : interestProfilesError
+  const fetchNextProfilesPage = !selectedInterest
+    ? fetchNextSuggestedProfilesPage
+    : fetchNextInterestProfilesPage
 
   const isLoadingMoreProfiles = isFetchingNextProfilesPage && !isLoadingProfiles
   const onLoadMoreProfiles = useCallback(async () => {
@@ -300,8 +230,13 @@ export function Explore({
   ])
 
   const isLoadingMoreFeeds = isFetchingNextFeedsPage && !isLoadingFeeds
+  const [hasPressedLoadMoreFeeds, setHasPressedLoadMoreFeeds] = useState(false)
   const onLoadMoreFeeds = useCallback(async () => {
     if (isFetchingNextFeedsPage || !hasNextFeedsPage || feedsError) return
+    if (!hasPressedLoadMoreFeeds) {
+      setHasPressedLoadMoreFeeds(true)
+      return
+    }
     try {
       await fetchNextFeedsPage()
     } catch (err) {
@@ -312,10 +247,18 @@ export function Explore({
     hasNextFeedsPage,
     feedsError,
     fetchNextFeedsPage,
+    hasPressedLoadMoreFeeds,
   ])
 
   const items = useMemo<ExploreScreenItems[]>(() => {
     const i: ExploreScreenItems[] = []
+
+    const addTopBorder = () => {
+      i.push({
+        type: 'topBorder',
+        key: `top-border`,
+      })
+    }
 
     const addTrendingTopicsModule = () => {
       i.push({
@@ -334,8 +277,8 @@ export function Explore({
 
     const addSuggestedFollowsModule = () => {
       i.push({
-        type: 'header',
-        key: 'suggested-follows-header',
+        type: 'tabbedHeader',
+        key: 'suggested-accounts-header',
         title: _(msg`Suggested Accounts`),
         icon: Person,
         searchButton: {
@@ -345,7 +288,7 @@ export function Explore({
         },
       })
 
-      if (profiles) {
+      if (profiles && moderationOpts) {
         // Currently the responses contain duplicate items.
         // Needs to be fixed on backend, but let's dedupe to be safe.
         let seen = new Set()
@@ -364,20 +307,20 @@ export function Explore({
           }
         }
 
-        if (hasNextProfilesPage) {
-          // splice off 3 as previews if we have a next page
-          const previews = profileItems.splice(-3)
-          // push remainder
-          i.push(...profileItems)
-          i.push({
-            type: 'loadMore',
-            key: 'loadMoreProfiles',
-            isLoadingMore: isLoadingMoreProfiles,
-            onLoadMore: onLoadMoreProfiles,
-            items: previews,
-          })
+        if (profileItems.length === 0) {
+          // no items! remove the header
+          i.pop()
         } else {
           i.push(...profileItems)
+          if (hasNextProfilesPage) {
+            i.push({
+              type: 'loadMore',
+              key: 'loadMoreProfiles',
+              message: _(msg`Load more suggested accounts`),
+              isLoadingMore: isLoadingMoreProfiles,
+              onLoadMore: onLoadMoreProfiles,
+            })
+          }
         }
       } else {
         if (profilesError) {
@@ -439,18 +382,27 @@ export function Explore({
             message: _(msg`Failed to load feeds preferences`),
             error: cleanError(preferencesError),
           })
-        } else if (hasNextFeedsPage) {
-          const preview = feedItems.splice(-3)
-          i.push(...feedItems)
-          i.push({
-            type: 'loadMore',
-            key: 'loadMoreFeeds',
-            isLoadingMore: isLoadingMoreFeeds,
-            onLoadMore: onLoadMoreFeeds,
-            items: preview,
-          })
         } else {
-          i.push(...feedItems)
+          if (feedItems.length === 0) {
+            i.pop()
+          } else {
+            // This query doesn't follow the limit very well, so the first press of the
+            // load more button just unslices the array back to ~10 items
+            if (!hasPressedLoadMoreFeeds) {
+              i.push(...feedItems.slice(0, 3))
+            } else {
+              i.push(...feedItems)
+            }
+            if (hasNextFeedsPage) {
+              i.push({
+                type: 'loadMore',
+                key: 'loadMoreFeeds',
+                message: _(msg`Load more suggested feeds`),
+                isLoadingMore: isLoadingMoreFeeds,
+                onLoadMore: onLoadMoreFeeds,
+              })
+            }
+          }
         }
       } else {
         if (feedsError) {
@@ -474,6 +426,8 @@ export function Explore({
     }
 
     // Dynamic module ordering
+
+    addTopBorder()
 
     if (guide?.guide === 'follow-10' && !guide.isComplete) {
       addSuggestedFollowsModule()
@@ -504,11 +458,17 @@ export function Explore({
     hasNextFeedsPage,
     guide,
     gate,
+    moderationOpts,
+    hasPressedLoadMoreFeeds,
   ])
 
   const renderItem = useCallback(
     ({item, index}: {item: ExploreScreenItems; index: number}) => {
       switch (item.type) {
+        case 'topBorder':
+          return (
+            <View style={[a.w_full, t.atoms.border_contrast_low, a.border_t]} />
+          )
         case 'header': {
           return (
             <ModuleHeader.Container>
@@ -525,6 +485,34 @@ export function Explore({
             </ModuleHeader.Container>
           )
         }
+        case 'tabbedHeader': {
+          return (
+            <View
+              style={[
+                a.border_b,
+                t.atoms.border_contrast_low,
+                a.pb_md,
+                t.atoms.bg,
+              ]}>
+              <ModuleHeader.Container style={a.border_transparent}>
+                <ModuleHeader.Icon icon={item.icon} />
+                <ModuleHeader.TitleText>{item.title}</ModuleHeader.TitleText>
+                {item.searchButton && (
+                  <ModuleHeader.SearchButton
+                    {...item.searchButton}
+                    onPress={() =>
+                      focusSearchInput(item.searchButton?.tab || 'user')
+                    }
+                  />
+                )}
+              </ModuleHeader.Container>
+              <SuggestedAccountsTabBar
+                selectedInterest={selectedInterest}
+                onSelectInterest={setSelectedInterest}
+              />
+            </View>
+          )
+        }
         case 'trendingTopics': {
           return <ExploreTrendingTopics />
         }
@@ -536,29 +524,12 @@ export function Explore({
         }
         case 'profile': {
           return (
-            <View style={[a.border_b, t.atoms.border_contrast_low]}>
-              <ProfileCardWithFollowBtn
-                profile={item.profile}
-                noBg
-                noBorder
-                showKnownFollowers
-                onPress={() => {
-                  logger.metric('suggestedUser:press', {
-                    logContext: 'Explore',
-                    recId: item.recId,
-                    position: index,
-                  })
-                }}
-                onFollow={() => {
-                  logger.metric('suggestedUser:follow', {
-                    logContext: 'Explore',
-                    location: 'Card',
-                    recId: item.recId,
-                    position: index,
-                  })
-                }}
-              />
-            </View>
+            <SuggestedProfileCard
+              profile={item.profile}
+              moderationOpts={moderationOpts!}
+              recId={item.recId}
+              position={index}
+            />
           )
         }
         case 'feed': {
@@ -575,7 +546,7 @@ export function Explore({
           )
         }
         case 'loadMore': {
-          return <LoadMore item={item} moderationOpts={moderationOpts} />
+          return <LoadMore item={item} />
         }
         case 'profilePlaceholder': {
           return <ProfileCardFeedLoadingPlaceholder />
@@ -620,14 +591,16 @@ export function Explore({
         }
       }
     },
-    [t, moderationOpts, focusSearchInput],
+    [t, focusSearchInput, moderationOpts, selectedInterest],
   )
 
   const stickyHeaderIndices = useMemo(
     () =>
       items.reduce(
         (acc, curr) =>
-          curr.type === 'header' ? acc.concat(items.indexOf(curr)) : acc,
+          ['topBorder', 'header', 'tabbedHeader'].includes(curr.type)
+            ? acc.concat(items.indexOf(curr))
+            : acc,
         [] as number[],
       ),
     [items],
