@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {Pressable,View} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {type ChatBskyConvoDefs} from '@atproto/api'
 import EmojiPicker from '@emoji-mart/react'
 import {msg} from '@lingui/macro'
@@ -109,7 +109,8 @@ function MenuInner({
         <DropdownMenu.Item
           asChild
           className="EmojiReactionPicker__PickerButton">
-          <Pressable accessibilityRole="button"
+          <Pressable
+            accessibilityRole="button"
             role="button"
             onPress={() => setExpanded(true)}
             style={flatten([
