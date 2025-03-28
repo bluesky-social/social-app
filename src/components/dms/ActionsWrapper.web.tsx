@@ -85,10 +85,9 @@ export function ActionsWrapper({
           a.justify_center,
           a.flex_row,
           a.align_center,
-          a.gap_xs,
           isFromSelf
-            ? [a.mr_md, {marginLeft: 'auto'}]
-            : [a.ml_md, {marginRight: 'auto'}],
+            ? [a.mr_xs, {marginLeft: 'auto'}, a.flex_row_reverse]
+            : [a.ml_xs, {marginRight: 'auto'}],
         ]}>
         <EmojiReactionPicker message={message} onEmojiSelect={onEmojiSelect}>
           {({props, state, isNative, control}) => {
