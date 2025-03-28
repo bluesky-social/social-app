@@ -25,7 +25,7 @@ import {useConvoActive} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
-import {atoms as a, native, tokens, useTheme} from '#/alf'
+import {atoms as a, native, useTheme} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {InlineLinkText} from '#/components/Link'
@@ -171,7 +171,7 @@ let MessageItem = ({
                   a.rounded_lg,
                   a.border,
                   t.atoms.border_contrast_low,
-                  {marginTop: tokens.space.xs * -1},
+                  {marginTop: -6},
                 ]}>
                 {message.reactions.map((reaction, _i, reactions) => {
                   let label
