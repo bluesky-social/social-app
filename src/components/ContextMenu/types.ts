@@ -1,16 +1,16 @@
-import React from 'react'
 import {
-  AccessibilityRole,
-  GestureResponderEvent,
-  StyleProp,
-  ViewStyle,
+  type AccessibilityRole,
+  type GestureResponderEvent,
+  type StyleProp,
+  type ViewStyle,
 } from 'react-native'
-import {SharedValue} from 'react-native-reanimated'
+import {type SharedValue} from 'react-native-reanimated'
+import type React from 'react'
 
-import * as Dialog from '#/components/Dialog'
+import type * as Dialog from '#/components/Dialog'
 import {
-  ItemProps as MenuItemProps,
-  RadixPassThroughTriggerProps,
+  type ItemProps as MenuItemProps,
+  type RadixPassThroughTriggerProps,
 } from '#/components/Menu/types'
 
 export type {
@@ -19,9 +19,19 @@ export type {
   ItemTextProps,
 } from '#/components/Menu/types'
 
-// Same as Menu.ItemProps, but onPress is not guaranteed to get an event
-export type ItemProps = Omit<MenuItemProps, 'onPress'> & {
+export type AuxiliaryViewProps = {
+  children?: React.ReactNode
+  align?: 'left' | 'right'
+}
+
+export type ItemProps = Omit<MenuItemProps, 'onPress' | 'children'> & {
+  // remove default styles (i.e. for emoji reactions)
+  unstyled?: boolean
   onPress: (evt?: GestureResponderEvent) => void
+  children?: React.ReactNode | ((hovered: boolean) => React.ReactNode)
+  // absolute position of the parent element. if undefined, assumed to
+  // be in the context menu. use this if using AuxiliaryView
+  position?: Measurement
 }
 
 export type Measurement = {
@@ -38,7 +48,8 @@ export type ContextType = {
   animationSV: SharedValue<number>
   /* Translation in Y axis to ensure everything's onscreen */
   translationSV: SharedValue<number>
-  open: (evt: Measurement) => void
+  mode: 'full' | 'auxiliary-only'
+  open: (evt: Measurement, mode: 'full' | 'auxiliary-only') => void
   close: () => void
   registerHoverable: (
     id: string,
@@ -76,7 +87,10 @@ export type TriggerProps = {
 export type TriggerChildProps =
   | {
       isNative: true
-      control: {isOpen: boolean; open: () => void}
+      control: {
+        isOpen: boolean
+        open: (mode: 'full' | 'auxiliary-only') => void
+      }
       state: {
         hovered: false
         focused: false

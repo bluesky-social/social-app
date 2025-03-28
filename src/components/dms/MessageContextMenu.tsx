@@ -1,19 +1,20 @@
 import React from 'react'
 import {LayoutAnimation} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
-import {ChatBskyConvoDefs, RichText} from '@atproto/api'
+import {type ChatBskyConvoDefs, RichText} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {getTranslatorLink} from '#/locale/helpers'
+import {isNative} from '#/platform/detection'
 import {useConvoActive} from '#/state/messages/convo'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import * as ContextMenu from '#/components/ContextMenu'
-import {TriggerProps} from '#/components/ContextMenu/types'
+import {type TriggerProps} from '#/components/ContextMenu/types'
 import {ReportDialog} from '#/components/dms/ReportDialog'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
@@ -21,6 +22,7 @@ import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import * as Prompt from '#/components/Prompt'
 import {usePromptControl} from '#/components/Prompt'
+import {EmojiReactionPicker} from './EmojiReactionPicker'
 
 export let MessageContextMenu = ({
   message,
@@ -77,6 +79,12 @@ export let MessageContextMenu = ({
   return (
     <>
       <ContextMenu.Root>
+        {isNative && (
+          <ContextMenu.AuxiliaryView align={isFromSelf ? 'right' : 'left'}>
+            <EmojiReactionPicker message={message} />
+          </ContextMenu.AuxiliaryView>
+        )}
+
         <ContextMenu.Trigger
           label={_(msg`Message options`)}
           contentLabel={_(
