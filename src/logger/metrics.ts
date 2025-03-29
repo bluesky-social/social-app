@@ -1,3 +1,5 @@
+import {type FeedDescriptor} from '#/state/queries/post-feed'
+
 export type MetricEvents = {
   // App events
   init: {
@@ -202,6 +204,7 @@ export type MetricEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'PostOnboardingFindFollows'
       | 'ImmersiveVideo'
+      | 'ExploreSuggestedAccounts'
   }
   'suggestedUser:follow': {
     logContext:
@@ -239,6 +242,7 @@ export type MetricEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'PostOnboardingFindFollows'
       | 'ImmersiveVideo'
+      | 'ExploreSuggestedAccounts'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
@@ -316,6 +320,22 @@ export type MetricEvents = {
   }
   'videoCard:click': {
     context: 'interstitial:discover' | 'interstitial:explore' | 'feed'
+  }
+
+  'explore:module:seen': {
+    module:
+      | 'trendingTopics'
+      | 'trendingVideos'
+      | 'suggestedAccounts'
+      | 'suggestedFeeds'
+      | 'suggestedStarterPacks'
+      | `feed:${FeedDescriptor}`
+  }
+  'explore:module:searchButtonPress': {
+    module: 'suggestedAccounts' | 'suggestedFeeds'
+  }
+  'explore:suggestedAccounts:tabPressed': {
+    tab: string
   }
 
   'progressGuide:hide': {}

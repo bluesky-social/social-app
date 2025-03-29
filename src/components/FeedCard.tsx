@@ -1,8 +1,8 @@
 import React from 'react'
-import {GestureResponderEvent, View} from 'react-native'
+import {type GestureResponderEvent, View} from 'react-native'
 import {
-  AppBskyFeedDefs,
-  AppBskyGraphDefs,
+  type AppBskyFeedDefs,
+  type AppBskyGraphDefs,
   AtUri,
   RichText as RichTextApi,
 } from '@atproto/api'
@@ -23,15 +23,14 @@ import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
-import {Link as InternalLink, LinkProps} from '#/components/Link'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
+import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
-import {RichText, RichTextProps} from '#/components/RichText'
+import {RichText, type RichTextProps} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 
 type Props = {
   view: AppBskyFeedDefs.GeneratorView
@@ -294,14 +293,19 @@ function SaveButtonInner({
         disabled={isPending}
         label={_(msg`Add this feed to your feeds`)}
         size="small"
-        variant="ghost"
-        color="secondary"
-        shape="square"
+        variant="solid"
+        color={savedFeedConfig ? 'secondary' : 'primary'}
         onPress={savedFeedConfig ? onPrompRemoveFeed : toggleSave}>
         {savedFeedConfig ? (
-          <ButtonIcon size="md" icon={isPending ? Loader : Trash} />
+          <>
+            {isPending && <ButtonIcon size="md" icon={Loader} />}
+            <ButtonText>Unpin Feed</ButtonText>
+          </>
         ) : (
-          <ButtonIcon size="md" icon={isPending ? Loader : Plus} />
+          <>
+            <ButtonIcon size="md" icon={isPending ? Loader : PinIcon} />
+            <ButtonText>Pin Feed</ButtonText>
+          </>
         )}
       </Button>
 
