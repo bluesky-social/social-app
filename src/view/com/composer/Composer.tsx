@@ -73,6 +73,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {colors, s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
+import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
 import {ComposerImage, pasteImage} from '#/state/gallery'
@@ -161,6 +162,8 @@ export const ComposePost = ({
   const agent = useAgent()
   const queryClient = useQueryClient()
   const currentDid = currentAccount!.did
+  const {data: currentProfile} = useProfileQuery({did: currentDid})
+
   const {closeComposer} = useComposerControls()
   const {_} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
@@ -477,6 +480,12 @@ export const ComposePost = ({
       onPost?.(postUri)
     }
     onClose()
+    if (currentProfile?.did && currentProfile?.postsCount) {
+      updateProfileShadow(queryClient, currentProfile?.did, {
+        postsCount: (currentProfile?.postsCount || 0) + thread.posts.length,
+      })
+    }
+
     Toast.show(
       thread.posts.length > 1
         ? _(msg`Your posts have been published`)
@@ -497,6 +506,7 @@ export const ComposePost = ({
     replyTo,
     setLangPrefs,
     queryClient,
+    currentProfile,
   ])
 
   // Preserves the referential identity passed to each post item.
