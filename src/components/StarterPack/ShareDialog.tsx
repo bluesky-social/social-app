@@ -73,7 +73,7 @@ function ShareDialogInner({
 
     try {
       await saveImageToMediaLibrary({uri: imageUrl})
-      Toast.show(_(msg`Image saved to your camera roll!`))
+      Toast.show(_(msg`Image saved`))
       control.close()
     } catch (e: unknown) {
       Toast.show(_(msg`An error occurred while saving the QR code!`), 'xmark')
