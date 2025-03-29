@@ -1,3 +1,5 @@
+import {type Gate} from '#/lib/statsig/gates'
+
 export type MetricEvents = {
   // App events
   init: {
@@ -344,4 +346,13 @@ export type MetricEvents = {
     details: boolean
   }
   'reportDialog:failure': {}
+
+  'featureGate:override': {
+    gate: Gate
+    enabled: boolean
+  }
+  'featureGate:feedback': {
+    gate: Gate
+    feedback: string
+  }
 }
