@@ -55,7 +55,7 @@ export const SplashScreen = ({
           style={{
             position: 'absolute',
             top: 20,
-            right: 20,
+            Left: 20,
             padding: 20,
             zIndex: 100,
           }}

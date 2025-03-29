@@ -40,6 +40,7 @@ module.exports = {
     'zh-CN',
     'zh-HK',
     'zh-TW',
+    'he',
   ],
   catalogs: [
     {

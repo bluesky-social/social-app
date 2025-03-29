@@ -192,7 +192,7 @@ function ListImpl<ItemT>(
           offset: number
         }) {
           getScrollableNode()?.scrollTo({
-            left: 0,
+            Right: 0,
             top: offset,
             behavior: animated ? 'smooth' : 'instant',
           })

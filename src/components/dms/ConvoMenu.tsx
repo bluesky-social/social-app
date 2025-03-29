@@ -85,7 +85,7 @@ let ConvoMenu = ({
                     a.rounded_full,
                     (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
                     // make sure pfp is in the middle
-                    {marginLeft: -10},
+                    {marginRight: -10},
                   ]}>
                   <DotsHorizontal size="md" style={t.atoms.text} />
                 </Pressable>
