@@ -42,6 +42,7 @@ export interface TextInputRef {
 
 interface TextInputProps extends ComponentProps<typeof RNTextInput> {
   richtext: RichText
+  language: string
   placeholder: string
   webForceMinHeight: boolean
   hasRightPadding: boolean
