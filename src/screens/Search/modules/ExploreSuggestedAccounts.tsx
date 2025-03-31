@@ -39,7 +39,11 @@ export function SuggestedAccountsTabBar({
         interests={['all', ...interests]}
         selectedInterest={selectedInterest || 'all'}
         onSelectTab={tab => {
-          logger.metric('explore:suggestedAccounts:tabPressed', {tab: tab})
+          logger.metric(
+            'explore:suggestedAccounts:tabPressed',
+            {tab: tab},
+            {statsig: true},
+          )
           onSelectInterest(tab === 'all' ? null : tab)
         }}
         hasSearchText={false}
@@ -131,11 +135,15 @@ let SuggestedProfileCard = ({
       profile={profile}
       style={[a.flex_1]}
       onPress={() => {
-        logger.metric('suggestedUser:press', {
-          logContext: 'Explore',
-          recId,
-          position,
-        })
+        logger.metric(
+          'suggestedUser:press',
+          {
+            logContext: 'Explore',
+            recId,
+            position,
+          },
+          {statsig: true},
+        )
       }}>
       <View
         style={[
@@ -162,12 +170,16 @@ let SuggestedProfileCard = ({
               withIcon={false}
               logContext="ExploreSuggestedAccounts"
               onFollow={() => {
-                logger.metric('suggestedUser:follow', {
-                  logContext: 'Explore',
-                  location: 'Card',
-                  recId,
-                  position,
-                })
+                logger.metric(
+                  'suggestedUser:follow',
+                  {
+                    logContext: 'Explore',
+                    location: 'Card',
+                    recId,
+                    position,
+                  },
+                  {statsig: true},
+                )
               }}
             />
           </ProfileCard.Header>
