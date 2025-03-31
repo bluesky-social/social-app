@@ -128,7 +128,7 @@ function EmptyState({message, error}: {message: string; error?: string}) {
               />
 
               <Text style={[t.atoms.text_contrast_medium]}>
-                <Trans>Error:</Trans> {error}
+                <Trans>Error: {error}</Trans>
               </Text>
             </>
           )}

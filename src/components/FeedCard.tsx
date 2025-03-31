@@ -299,12 +299,16 @@ function SaveButtonInner({
         {savedFeedConfig ? (
           <>
             {isPending && <ButtonIcon size="md" icon={Loader} />}
-            <ButtonText>Unpin Feed</ButtonText>
+            <ButtonText>
+              <Trans>Unpin Feed</Trans>
+            </ButtonText>
           </>
         ) : (
           <>
             <ButtonIcon size="md" icon={isPending ? Loader : PinIcon} />
-            <ButtonText>Pin Feed</ButtonText>
+            <ButtonText>
+              <Trans>Pin Feed</Trans>
+            </ButtonText>
           </>
         )}
       </Button>
