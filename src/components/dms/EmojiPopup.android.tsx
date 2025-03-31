@@ -3,7 +3,7 @@ import {Modal, Pressable, View} from 'react-native'
 // @ts-expect-error internal component, not supposed to be used directly
 // waiting on more customisability: https://github.com/okwasniewski/react-native-emoji-popup/issues/1#issuecomment-2737463753
 import EmojiPopupView from 'react-native-emoji-popup/src/EmojiPopupViewNativeComponent'
-import {Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -25,7 +25,7 @@ export function EmojiPopup({
   return (
     <>
       <Pressable
-        accessibilityLabel={_('Open full emoji list')}
+        accessibilityLabel={_(msg`Open full emoji list`)}
         accessibilityHint=""
         accessibilityRole="button"
         onPress={() => setModalVisible(true)}>
@@ -55,7 +55,7 @@ export function EmojiPopup({
               <Trans>Add Reaction</Trans>
             </Text>
             <Button
-              label={_('Close')}
+              label={_(msg`Close`)}
               onPress={() => setModalVisible(false)}
               size="small"
               variant="ghost"
