@@ -43,7 +43,11 @@ function Inner() {
   const trendingPrompt = Prompt.usePromptControl()
 
   const onConfirmHide = React.useCallback(() => {
-    logger.metric('trendingTopics:hide', {context: 'explore:trending'})
+    logger.metric(
+      'trendingTopics:hide',
+      {context: 'explore:trending'},
+      {statsig: true},
+    )
     setTrendingDisabled(true)
   }, [setTrendingDisabled])
 
@@ -110,7 +114,11 @@ function Inner() {
                   key={topic.link}
                   topic={topic}
                   onPress={() => {
-                    logger.metric('trendingTopic:click', {context: 'explore'})
+                    logger.metric(
+                      'trendingTopic:click',
+                      {context: 'explore'},
+                      {statsig: true},
+                    )
                   }}>
                   {({hovered}) => (
                     <TrendingTopic

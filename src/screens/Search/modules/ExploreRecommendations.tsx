@@ -88,9 +88,11 @@ function Inner() {
                   key={topic.link}
                   topic={topic}
                   onPress={() => {
-                    logger.metric('recommendedTopic:click', {
-                      context: 'explore',
-                    })
+                    logger.metric(
+                      'recommendedTopic:click',
+                      {context: 'explore'},
+                      {statsig: true},
+                    )
                   }}>
                   {({hovered}) => (
                     <TrendingTopic

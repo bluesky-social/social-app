@@ -178,9 +178,11 @@ function VideoCards({
               sourceInterstitial: 'explore',
             }}
             onInteract={() => {
-              logger.metric('videoCard:click', {
-                context: 'interstitial:explore',
-              })
+              logger.metric(
+                'videoCard:click',
+                {context: 'interstitial:explore'},
+                {statsig: true},
+              )
             }}
           />
         </View>
