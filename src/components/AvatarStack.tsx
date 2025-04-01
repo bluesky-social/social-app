@@ -14,7 +14,7 @@ export function AvatarStack({
   numPending,
   backgroundColor,
 }: {
-  profiles: bsky.profile.AnyProfileView[] | string[]
+  profiles: bsky.profile.AnyProfileView[]
   size?: number
   numPending?: number
   backgroundColor?: string
@@ -31,19 +31,11 @@ export function AvatarStack({
         profile: null,
         moderation: null,
       }))
-    : profiles.map(item =>
-        typeof item === 'string'
-          ? {
-              key: item,
-              profile: item,
-              moderation: null,
-            }
-          : {
-              key: item.did,
-              profile: item,
-              moderation: moderateProfile(item, moderationOpts),
-            },
-      )
+    : profiles.map(item => ({
+        key: item.did,
+        profile: item,
+        moderation: moderateProfile(item, moderationOpts),
+      }))
 
   return (
     <View
@@ -69,17 +61,14 @@ export function AvatarStack({
               zIndex: 3 - i,
             },
           ]}>
-          {item.profile &&
-            (typeof item.profile === 'string' ? (
-              <UserAvatar size={size - 2} avatar={item.profile} type="user" />
-            ) : (
-              <UserAvatar
-                size={size - 2}
-                avatar={item.profile.avatar}
-                type={item.profile.associated?.labeler ? 'labeler' : 'user'}
-                moderation={item.moderation.ui('avatar')}
-              />
-            ))}
+          {item.profile && (
+            <UserAvatar
+              size={size - 2}
+              avatar={item.profile.avatar}
+              type={item.profile.associated?.labeler ? 'labeler' : 'user'}
+              moderation={item.moderation.ui('avatar')}
+            />
+          )}
         </View>
       ))}
     </View>

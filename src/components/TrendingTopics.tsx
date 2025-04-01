@@ -1,238 +1,22 @@
-import {useMemo} from 'react'
-import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
+import React from 'react'
+import {View} from 'react-native'
 import {type AtUri} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
-import {type TrendingTopic} from '#/state/queries/trending/useTrendingTopics'
-import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {formatCount} from '#/view/com/util/numeric/format'
-import {
-  atoms as a,
-  native,
-  useGutters,
-  useTheme,
-  type ViewStyleProp,
-  web,
-} from '#/alf'
+// import {makeProfileLink} from '#/lib/routes/links'
+// import {feedUriToHref} from '#/lib/strings/url-helpers'
+// import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
+// import {CloseQuote_Filled_Stroke2_Corner0_Rounded as Quote} from '#/components/icons/Quote'
+// import {UserAvatar} from '#/view/com/util/UserAvatar'
+import  {type TrendingTopic} from '#/state/queries/trending/useTrendingTopics'
+import {atoms as a, native, useTheme, type ViewStyleProp} from '#/alf'
 import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {AvatarStack} from './AvatarStack'
-import {Flame_Stroke2_Corner1_Rounded as FlameIcon} from './icons/Flame'
-import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from './icons/Trending'
 
-export function TrendingTopicRow({
-  topic: raw,
-  rank,
-  children,
-  onPress,
-  style,
-}: {
-  topic: TrendingTopic
-  rank: number
-  children?: React.ReactNode
-  onPress?: () => void
-  style?: StyleProp<ViewStyle>
-}) {
-  const t = useTheme()
-  const {_, i18n} = useLingui()
-  const topic = useTopic(raw)
-  const gutters = useGutters([0, 'base'])
-
-  const category = useCategoryDisplayName(raw?.category || 'other')
-
-  if (topic.type !== 'topic') return null
-
-  const postCount = topic.postCount
-    ? _(msg`${formatCount(i18n, topic.postCount)} posts`)
-    : null
-
-  const badgeType = rank === 1 ? 'hot' : topic.age < 2 ? 'new' : topic.age
-
-  return (
-    <>
-      <TrendingTopicLink
-        topic={raw}
-        testID={`trendingTopic:${rank}`}
-        onPress={onPress}
-        style={[native([a.border_t, t.atoms.border_contrast_low]), style]}
-        PressableComponent={Pressable}>
-        {({hovered, focused, pressed}) => (
-          <View
-            style={[
-              a.flex_1,
-              a.flex_row,
-              a.gap_2xs,
-              gutters,
-              a.pt_md,
-              !children ? a.pb_md : a.pb_sm,
-              (hovered || focused || pressed) && t.atoms.bg_contrast_25,
-            ]}>
-            <View style={[a.flex_shrink_0, {minWidth: 20}]}>
-              <Text style={[a.text_md, a.font_bold]}>
-                <Trans comment='The starter pack rank, i.e. "1. March Madness", "2. The Bachelor"'>
-                  {rank}.
-                </Trans>
-              </Text>
-            </View>
-            <View style={[a.flex_1, a.flex_row, a.gap_sm, a.justify_between]}>
-              <View style={[a.flex_1, {gap: 6}]}>
-                <Text
-                  style={[a.text_md, a.font_bold, a.leading_snug]}
-                  numberOfLines={1}>
-                  {topic.displayName}
-                </Text>
-                <View style={[a.flex_row, a.gap_sm, a.align_center]}>
-                  {topic.images && (
-                    <AvatarStack
-                      size={16}
-                      profiles={topic.images.filter(
-                        // dedupe
-                        (img, i, arr) => i === arr.indexOf(img),
-                      )}
-                    />
-                  )}
-                  <Text
-                    style={[
-                      a.text_sm,
-                      t.atoms.text_contrast_medium,
-                      web(a.leading_snug),
-                    ]}
-                    numberOfLines={1}>
-                    {postCount}
-                    {postCount && category && <> &middot; </>}
-                    {category}
-                  </Text>
-                </View>
-              </View>
-              <View style={[a.flex_shrink_0]}>
-                <TrendingIndicator type={badgeType} />
-              </View>
-            </View>
-          </View>
-        )}
-      </TrendingTopicLink>
-      {children && (
-        <>
-          {children}
-          <View style={[a.flex_1, a.pb_md]} />
-        </>
-      )}
-    </>
-  )
-}
-
-type TrendingIndicatorType = 'hot' | 'new' | number
-
-function TrendingIndicator({type}: {type: TrendingIndicatorType | 'skeleton'}) {
-  const t = useTheme()
-
-  const pillStyle = [
-    a.flex_row,
-    a.align_center,
-    a.gap_xs,
-    {paddingHorizontal: 10, paddingVertical: 6},
-    a.rounded_full,
-  ]
-
-  const textStyle = [a.font_bold, a.text_sm]
-
-  switch (type) {
-    case 'hot': {
-      const color =
-        t.scheme === 'light' ? t.palette.negative_500 : t.palette.negative_950
-      const backgroundColor =
-        t.scheme === 'light' ? t.palette.negative_50 : t.palette.negative_200
-      return (
-        <View style={[pillStyle, {backgroundColor}]}>
-          <FlameIcon size="sm" style={{color}} />
-          <Text style={[textStyle, {color}]}>
-            <Trans>Hot</Trans>
-          </Text>
-        </View>
-      )
-    }
-    case 'new': {
-      return (
-        <View style={[pillStyle, {backgroundColor: t.palette.positive_50}]}>
-          <TrendingIcon size="sm" style={{color: t.palette.positive_700}} />
-          <Text style={[textStyle, {color: t.palette.positive_700}]}>
-            <Trans>New</Trans>
-          </Text>
-        </View>
-      )
-    }
-    case 'skeleton': {
-      return (
-        <View
-          style={[
-            pillStyle,
-            {backgroundColor: t.palette.contrast_25, width: 65, height: 28},
-          ]}
-        />
-      )
-    }
-    default: {
-      return (
-        <View style={[pillStyle, t.atoms.bg_contrast_25, {minHeight: 28}]}>
-          <Text style={[textStyle, t.atoms.text_contrast_medium]}>
-            <Trans comment="trending topic time spent trending. should be as short as possible to fit in a pill">
-              {type}h ago
-            </Trans>
-          </Text>
-        </View>
-      )
-    }
-  }
-}
-
-export function TrendingTopicRowSkeleton({}: {withPosts: boolean}) {
-  const gutters = useGutters([0, 'base'])
-
-  return (
-    <View style={[a.flex_1, a.flex_row, a.gap_xs, gutters, a.py_md]}>
-      <View style={[a.flex_shrink_0, {minWidth: 20}]}>
-        <LoadingPlaceholder width={16} height={16} />
-      </View>
-      <View style={[a.flex_1, a.flex_row, a.gap_sm, a.justify_between]}>
-        <View style={[a.flex_1]}>
-          <LoadingPlaceholder width={150} height={16} />
-          <View style={[a.mt_sm, a.flex_row, a.gap_sm, a.align_center]}>
-            <LoadingPlaceholder width={35} height={14} />
-            <LoadingPlaceholder width={45} height={14} />
-            <LoadingPlaceholder width={25} height={14} />
-          </View>
-        </View>
-        <View style={[a.flex_shrink_0]}>
-          <TrendingIndicator type="skeleton" />
-        </View>
-      </View>
-    </View>
-  )
-}
-
-function useCategoryDisplayName(category: TrendingTopic['category']) {
-  const {_} = useLingui()
-
-  switch (category) {
-    case 'sports':
-      return _(msg`Sports`)
-    case 'politics':
-      return _(msg`Politics`)
-    case 'video-games':
-      return _(msg`Video Games`)
-    case 'pop-culture':
-      return _(msg`Entertainment`)
-    case 'other':
-      return null
-  }
-}
-
-// ==== LEGACY PILL FORM ====
-
-export function TrendingTopicPill({
+export function TrendingTopic({
   topic: raw,
   size,
   style,
@@ -317,7 +101,7 @@ export function TrendingTopicPill({
   )
 }
 
-export function TrendingTopicPillSkeleton({
+export function TrendingTopicSkeleton({
   size = 'large',
   index = 0,
 }: {
@@ -374,10 +158,6 @@ type ParsedTrendingTopic =
       displayName: string
       url: string
       uri: undefined
-      category: TrendingTopic['category']
-      images?: string[]
-      postCount: number
-      age: number
     }
   | {
       type: 'profile' | 'feed'
@@ -389,32 +169,16 @@ type ParsedTrendingTopic =
 
 export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
   const {_} = useLingui()
-  return useMemo(() => {
-    const {
-      topic: displayName,
-      link,
-      postCount,
-      startTime,
-      category,
-      images,
-    } = raw
-    // age of topic in hrs
-    const age = Math.floor(
-      (Date.now() - new Date(startTime || Date.now()).getTime()) /
-        (1000 * 60 * 60),
-    )
+  return React.useMemo(() => {
+    const {topic: displayName, link} = raw
 
-    if (link.startsWith('/profile/trending.bsky.app/feed/')) {
+    if (link.startsWith('/search')) {
       return {
         type: 'topic',
         label: _(msg`Browse posts about ${displayName}`),
         displayName,
         uri: undefined,
         url: link,
-        category,
-        images,
-        postCount,
-        age,
       }
     } else if (link.startsWith('/hashtag')) {
       return {
@@ -424,10 +188,6 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
         // displayName: displayName.replace(/^#/, ''),
         uri: undefined,
         url: link,
-        category,
-        images,
-        postCount,
-        age,
       }
     } else if (link.startsWith('/starter-pack')) {
       return {
@@ -436,10 +196,6 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
         displayName,
         uri: undefined,
         url: link,
-        category,
-        images,
-        postCount,
-        age,
       }
     }
 
@@ -477,10 +233,6 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
       displayName,
       uri: undefined,
       url: link,
-      category,
-      images,
-      postCount,
-      age,
     }
   }, [_, raw])
 }

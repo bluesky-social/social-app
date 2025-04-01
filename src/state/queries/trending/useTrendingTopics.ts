@@ -7,17 +7,11 @@ import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 
-export type TrendingTopic = AppBskyUnspeccedDefs.TrendingTopic & {
-  // TEMP, need @atproto/api release
-  postCount: number
-  startTime: string
-  category: 'sports' | 'politics' | 'pop-culture' | 'video-games' | 'other'
-  images?: string[]
-}
+export type TrendingTopic = AppBskyUnspeccedDefs.TrendingTopic
 
 type Response = {
-  topics?: TrendingTopic[]
-  suggested?: TrendingTopic[]
+  topics: TrendingTopic[]
+  suggested: TrendingTopic[]
 }
 
 export const DEFAULT_LIMIT = 14
@@ -35,22 +29,25 @@ export function useTrendingTopics() {
     refetchOnWindowFocus: true,
     staleTime: STALE.MINUTES.THREE,
     queryKey: trendingTopicsQueryKey,
-    queryFn: async () => {
-      const {data} = await agent.app.bsky.unspecced.getTrendingTopics({
+    async queryFn() {
+      const {data} = await agent.api.app.bsky.unspecced.getTrendingTopics({
         limit: DEFAULT_LIMIT,
       })
-      return data as Response
+      return {
+        topics: data.topics ?? [],
+        suggested: data.suggested ?? [],
+      }
     },
     select: React.useCallback(
       (data: Response) => {
         return {
-          topics: (data.topics ?? []).filter(t => {
+          topics: data.topics.filter(t => {
             return !hasMutedWord({
               mutedWords,
               text: t.topic + ' ' + t.displayName + ' ' + t.description,
             })
           }),
-          suggested: (data.suggested ?? []).filter(t => {
+          suggested: data.suggested.filter(t => {
             return !hasMutedWord({
               mutedWords,
               text: t.topic + ' ' + t.displayName + ' ' + t.description,
