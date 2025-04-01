@@ -24,7 +24,6 @@ export function NeueChar() {
   const nuxDialogs = useNuxDialogContext()
   const control = Dialog.useDialogControl()
   const {gtMobile} = useBreakpoints()
-  const [height, setHeight] = React.useState(0)
 
   Dialog.useAutoOpen(control, 3e3)
 
@@ -37,17 +36,14 @@ export function NeueChar() {
       <Dialog.Inner
         label={_(msg`Special announcement dialog for April Fool's day 2025`)}>
         <View
-          onLayout={e => {
-            setHeight(e.nativeEvent.layout.height)
-          }}
           style={[
             a.absolute,
             a.inset_0,
             a.overflow_hidden,
             {
-              backgroundColor: 'black',
               bottom: 'auto',
-              paddingTop: gtMobile ? '42%' : '60%',
+              aspectRatio: gtMobile ? 1 / 0.42 : 1 / 0.6,
+              backgroundColor: 'black',
               borderTopLeftRadius: a.rounded_md.borderRadius,
               borderTopRightRadius: a.rounded_md.borderRadius,
             },
@@ -74,17 +70,14 @@ export function NeueChar() {
           />
         </View>
 
-        <View
-          style={[
-            {
-              paddingTop: height - a.pt_2xl.paddingTop, // dialog padding
-            },
-          ]}
-        />
+        {/* approx the height of the main image - not quite accurate,
+          since the image excludes the padding. but if you inspect element,
+          it turns out to be close enough */}
+        <View style={{aspectRatio: gtMobile ? 1 / 0.42 : 1 / 0.6}} />
 
         <View
           style={[
-            gtMobile ? [a.py_3xl, a.pb_md] : [a.pt_xl, a.pb_sm],
+            gtMobile ? [a.py_3xl, a.pb_md] : [a.pt_2xl, a.pb_sm],
             a.mx_auto,
             {maxWidth: 360},
           ]}>
