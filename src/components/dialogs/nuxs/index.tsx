@@ -1,16 +1,17 @@
 import React from 'react'
-import {AppBskyActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
 
 import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {Nux, useNuxs, useResetNuxs, useSaveNux} from '#/state/queries/nuxs'
 import {
   usePreferencesQuery,
-  UsePreferencesQueryResponse,
+  type UsePreferencesQueryResponse,
 } from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
-import {SessionAccount, useSession} from '#/state/session'
+import {type SessionAccount, useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
+import {isEnabled, NeueChar} from '#/components/dialogs/nuxs/NeueChar'
 /*
  * NUXs
  */
@@ -29,7 +30,12 @@ const queuedNuxs: {
     currentProfile: AppBskyActorDefs.ProfileViewDetailed
     preferences: UsePreferencesQueryResponse
   }) => boolean
-}[] = []
+}[] = [
+  {
+    id: Nux.NeueChar,
+    enabled: isEnabled,
+  },
+]
 
 const Context = React.createContext<Context>({
   activeNux: undefined,
@@ -102,7 +108,7 @@ function Inner({
   }
 
   React.useEffect(() => {
-    if (snoozed) return
+    // if (snoozed) return
     if (!nuxs) return
 
     for (const {id, enabled} of queuedNuxs) {
@@ -110,7 +116,7 @@ function Inner({
 
       // check if completed first
       if (nux && nux.completed) {
-        continue
+        // continue
       }
 
       // then check gate (track exposure)
@@ -163,6 +169,7 @@ function Inner({
   return (
     <Context.Provider value={ctx}>
       {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
+      {activeNux === Nux.NeueChar && <NeueChar />}
     </Context.Provider>
   )
 }
