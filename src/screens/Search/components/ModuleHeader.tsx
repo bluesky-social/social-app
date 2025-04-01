@@ -97,7 +97,9 @@ export function Icon({
 }
 
 export function TitleText({style, ...props}: TextProps) {
-  return <Text style={[a.font_bold, a.flex_1, a.text_xl, style]} {...props} />
+  return (
+    <Text style={[a.font_bold, a.flex_1, a.text_xl, style]} emoji {...props} />
+  )
 }
 
 export function SubtitleText({style, ...props}: TextProps) {

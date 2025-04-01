@@ -537,6 +537,12 @@ export function Explore({
 
     const addFeedPreviews = () => {
       i.push(...feedPreviewSlices)
+      if (isFetchingNextPageFeedPreviews) {
+        i.push({
+          type: 'preview:loading',
+          key: 'preview-loading-more',
+        })
+      }
     }
 
     // Dynamic module ordering
@@ -582,6 +588,7 @@ export function Explore({
     isLoadingSuggestedSPs,
     suggestedSPsError,
     feedPreviewSlices,
+    isFetchingNextPageFeedPreviews,
   ])
 
   const renderItem = useCallback(
@@ -740,7 +747,11 @@ export function Explore({
           return null // what should we do here?
         }
         case 'preview:loading': {
-          return null // what should we do here?
+          return (
+            <View style={[a.py_2xl, a.flex_1, a.align_center]}>
+              <Loader size="lg" />
+            </View>
+          )
         }
         case 'preview:header': {
           return (
