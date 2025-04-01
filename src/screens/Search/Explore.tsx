@@ -753,7 +753,7 @@ export function Explore({
                 a.w_full,
                 t.atoms.border_contrast_low,
                 a.border_t,
-                a.pb_sm,
+                {paddingBottom: 6},
               ]}
             />
           )
