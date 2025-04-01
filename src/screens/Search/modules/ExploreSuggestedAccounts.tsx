@@ -1,8 +1,9 @@
-import {memo} from 'react'
+import {memo, useEffect} from 'react'
 import {View} from 'react-native'
-import {type ModerationOpts} from '@atproto/api'
+import {type AppBskyActorSearchActors, type ModerationOpts} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {type InfiniteData} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -18,6 +19,36 @@ import * as ProfileCard from '#/components/ProfileCard'
 import {boostInterests, Tabs} from '#/components/ProgressGuide/FollowDialog'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
+
+export function useLoadEnoughProfiles({
+  interest,
+  data,
+  isLoading,
+  isFetchingNextPage,
+  hasNextPage,
+  fetchNextPage,
+}: {
+  interest: string | null
+  data?: InfiniteData<AppBskyActorSearchActors.OutputSchema>
+  isLoading: boolean
+  isFetchingNextPage: boolean
+  hasNextPage: boolean
+  fetchNextPage: () => Promise<unknown>
+}) {
+  const profileCount =
+    data?.pages.flatMap(page =>
+      page.actors.filter(actor => !actor.viewer?.following),
+    ).length || 0
+  const isAnyLoading = isLoading || isFetchingNextPage
+  const isEnoughProfiles = profileCount > 3
+  const shouldFetchMore = !isEnoughProfiles && hasNextPage && !!interest
+  useEffect(() => {
+    if (shouldFetchMore && !isAnyLoading) {
+      logger.info('Not enough suggested accounts - fetching more')
+      fetchNextPage()
+    }
+  }, [shouldFetchMore, fetchNextPage, isAnyLoading, interest])
+}
 
 export function SuggestedAccountsTabBar({
   selectedInterest,
