@@ -49,7 +49,6 @@ export function NeueChar() {
             },
           ]}>
           <Image
-            //source={require('../../../../assets/misc/neue-char.jpg')}
             source={{
               uri: image,
             }}
