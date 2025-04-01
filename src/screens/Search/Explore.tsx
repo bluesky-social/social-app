@@ -1,6 +1,7 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {View, type ViewabilityConfig, type ViewToken} from 'react-native'
 import {
+  AtUri,
   type AppBskyActorDefs,
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
@@ -8,6 +9,7 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {makeCustomFeedLink} from '#/lib/routes/links'
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -36,7 +38,7 @@ import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
 import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
@@ -45,6 +47,7 @@ import {type Props as SVGIconProps} from '#/components/icons/common'
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {StarterPack} from '#/components/icons/StarterPack'
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
+import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import * as ModuleHeader from './components/ModuleHeader'
@@ -184,8 +187,10 @@ type ExploreScreenItems =
 
 export function Explore({
   focusSearchInput,
+  headerHeight,
 }: {
   focusSearchInput: (tab: 'user' | 'profile' | 'feed') => void
+  headerHeight: number
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -586,7 +591,18 @@ export function Explore({
       switch (item.type) {
         case 'topBorder':
           return (
-            <View style={[a.w_full, t.atoms.border_contrast_low, a.border_t]} />
+            <View
+              style={[
+                a.w_full,
+                t.atoms.border_contrast_low,
+                a.border_t,
+                headerHeight &&
+                  web({
+                    position: 'sticky',
+                    top: headerHeight,
+                  }),
+              ]}
+            />
           )
         case 'header': {
           return (
@@ -729,19 +745,37 @@ export function Explore({
           return null // what should we do here?
         }
         case 'preview:header': {
+          const {host: did, rkey} = new AtUri(item.feed.uri)
           return (
-            <ModuleHeader.Container>
-              <ModuleHeader.FeedAvatar feed={item.feed} />
-              <View style={[a.flex_1]}>
-                <ModuleHeader.TitleText>
-                  {item.feed.displayName}
-                </ModuleHeader.TitleText>
-                <ModuleHeader.SubtitleText>
-                  <Trans>
-                    By {sanitizeHandle(item.feed.creator.handle, '@')}
-                  </Trans>
-                </ModuleHeader.SubtitleText>
-              </View>
+            <ModuleHeader.Container headerHeight={headerHeight}>
+              <Link
+                to={makeCustomFeedLink(did, rkey)}
+                label={item.feed.displayName}
+                style={[a.flex_1]}>
+                {({focused, hovered, pressed}) => (
+                  <View
+                    style={[
+                      a.flex_1,
+                      a.flex_row,
+                      a.align_center,
+                      {gap: 10},
+                      a.rounded_xs,
+                      (focused || hovered || pressed) && t.atoms.bg_contrast_25,
+                    ]}>
+                    <ModuleHeader.FeedAvatar feed={item.feed} />
+                    <View style={[a.flex_1]}>
+                      <ModuleHeader.TitleText>
+                        {item.feed.displayName}
+                      </ModuleHeader.TitleText>
+                      <ModuleHeader.SubtitleText>
+                        <Trans>
+                          By {sanitizeHandle(item.feed.creator.handle, '@')}
+                        </Trans>
+                      </ModuleHeader.SubtitleText>
+                    </View>
+                  </View>
+                )}
+              </Link>
               <ModuleHeader.PinButton feed={item.feed} />
             </ModuleHeader.Container>
           )
@@ -806,6 +840,7 @@ export function Explore({
       selectedInterest,
       _,
       fetchNextPageFeedPreviews,
+      headerHeight,
     ],
   )
 
@@ -859,7 +894,7 @@ export function Explore({
       contentContainerStyle={{paddingBottom: 100}}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
-      stickyHeaderIndices={stickyHeaderIndices}
+      stickyHeaderIndices={native(stickyHeaderIndices)}
       viewabilityConfig={viewabilityConfig}
       onViewableItemsChanged={onViewableItemsChanged}
       onEndReached={onLoadMoreFeedPreviews}

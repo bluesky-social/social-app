@@ -445,7 +445,7 @@ let SearchScreenInner = ({
       onPageSelected={onPageSelected}
     />
   ) : hasSession ? (
-    <Explore focusSearchInput={focusSearchInput} />
+    <Explore focusSearchInput={focusSearchInput} headerHeight={headerHeight} />
   ) : (
     <Layout.Center>
       <View style={a.flex_1}>

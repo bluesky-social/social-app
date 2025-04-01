@@ -23,7 +23,12 @@ import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {
+  Button,
+  ButtonIcon,
+  type ButtonProps,
+  ButtonText,
+} from '#/components/Button'
 import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {Loader} from '#/components/Loader'
@@ -31,6 +36,7 @@ import * as Prompt from '#/components/Prompt'
 import {RichText, type RichTextProps} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
+import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from './icons/Trash'
 
 type Props = {
   view: AppBskyFeedDefs.GeneratorView
@@ -219,22 +225,27 @@ export function Likes({count}: {count: number}) {
 export function SaveButton({
   view,
   pin,
+  ...props
 }: {
   view: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
   pin?: boolean
-}) {
+  text?: boolean
+} & Partial<ButtonProps>) {
   const {hasSession} = useSession()
   if (!hasSession) return null
-  return <SaveButtonInner view={view} pin={pin} />
+  return <SaveButtonInner view={view} pin={pin} {...props} />
 }
 
 function SaveButtonInner({
   view,
   pin,
+  text = true,
+  ...buttonProps
 }: {
   view: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
   pin?: boolean
-}) {
+  text?: boolean
+} & Partial<ButtonProps>) {
   const {_} = useLingui()
   const {data: preferences} = usePreferencesQuery()
   const {isPending: isAddSavedFeedPending, mutateAsync: saveFeeds} =
@@ -295,20 +306,29 @@ function SaveButtonInner({
         size="small"
         variant="solid"
         color={savedFeedConfig ? 'secondary' : 'primary'}
-        onPress={savedFeedConfig ? onPrompRemoveFeed : toggleSave}>
+        onPress={savedFeedConfig ? onPrompRemoveFeed : toggleSave}
+        {...buttonProps}>
         {savedFeedConfig ? (
           <>
-            {isPending && <ButtonIcon size="md" icon={Loader} />}
-            <ButtonText>
-              <Trans>Unpin Feed</Trans>
-            </ButtonText>
+            {isPending ? (
+              <ButtonIcon size="md" icon={Loader} />
+            ) : (
+              !text && <ButtonIcon size="md" icon={TrashIcon} />
+            )}
+            {text && (
+              <ButtonText>
+                <Trans>Unpin Feed</Trans>
+              </ButtonText>
+            )}
           </>
         ) : (
           <>
             <ButtonIcon size="md" icon={isPending ? Loader : PinIcon} />
-            <ButtonText>
-              <Trans>Pin Feed</Trans>
-            </ButtonText>
+            {text && (
+              <ButtonText>
+                <Trans>Pin Feed</Trans>
+              </ButtonText>
+            )}
           </>
         )}
       </Button>

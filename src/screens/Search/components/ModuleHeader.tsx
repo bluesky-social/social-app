@@ -1,7 +1,5 @@
 import {View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {logger} from '#/logger'
@@ -12,17 +10,19 @@ import {
   useGutters,
   useTheme,
   type ViewStyleProp,
+  web,
 } from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
+import * as FeedCard from '#/components/FeedCard'
 import {sizes as iconSizes} from '#/components/icons/common'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
-import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {Text, type TextProps} from '#/components/Typography'
 
 export function Container({
   style,
   children,
-}: {children: React.ReactNode} & ViewStyleProp) {
+  headerHeight,
+}: {children: React.ReactNode; headerHeight?: number} & ViewStyleProp) {
   const t = useTheme()
   const gutters = useGutters([0, 'base'])
   return (
@@ -35,6 +35,7 @@ export function Container({
         a.pb_md,
         a.gap_sm,
         t.atoms.bg,
+        headerHeight && web({position: 'sticky', top: headerHeight}),
         style,
       ]}>
       {children}
@@ -44,7 +45,7 @@ export function Container({
 
 export function FeedAvatar({feed}: {feed: AppBskyFeedDefs.GeneratorView}) {
   return (
-    <View style={[a.z_20, {marginLeft: -2}, a.mr_xs]}>
+    <View style={[a.z_20, {marginLeft: -2}]}>
       <UserAvatar type="algo" size={42} avatar={feed.avatar} />
     </View>
   )
@@ -118,17 +119,15 @@ export function SearchButton({
   )
 }
 
-export function PinButton({}: {feed: AppBskyFeedDefs.GeneratorView}) {
-  const {_} = useLingui()
+export function PinButton({feed}: {feed: AppBskyFeedDefs.GeneratorView}) {
   return (
     <View style={[a.z_20, {marginRight: -2}]}>
-      <Button
-        label={_(msg`Pin Feed`)}
-        size="small"
+      <FeedCard.SaveButton
+        view={feed}
+        color="secondary"
         variant="ghost"
-        color="secondary">
-        <ButtonIcon icon={PinIcon} size="lg" />
-      </Button>
+        text={false}
+      />
     </View>
   )
 }
