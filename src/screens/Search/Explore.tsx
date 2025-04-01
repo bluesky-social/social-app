@@ -9,7 +9,6 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {makeCustomFeedLink} from '#/lib/routes/links'
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -47,7 +46,6 @@ import {type Props as SVGIconProps} from '#/components/icons/common'
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {StarterPack} from '#/components/icons/StarterPack'
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
-import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import * as ModuleHeader from './components/ModuleHeader'
@@ -745,37 +743,21 @@ export function Explore({
           return null // what should we do here?
         }
         case 'preview:header': {
-          const {host: did, rkey} = new AtUri(item.feed.uri)
           return (
             <ModuleHeader.Container headerHeight={headerHeight}>
-              <Link
-                to={makeCustomFeedLink(did, rkey)}
-                label={item.feed.displayName}
-                style={[a.flex_1]}>
-                {({focused, hovered, pressed}) => (
-                  <View
-                    style={[
-                      a.flex_1,
-                      a.flex_row,
-                      a.align_center,
-                      {gap: 10},
-                      a.rounded_xs,
-                      (focused || hovered || pressed) && t.atoms.bg_contrast_25,
-                    ]}>
-                    <ModuleHeader.FeedAvatar feed={item.feed} />
-                    <View style={[a.flex_1]}>
-                      <ModuleHeader.TitleText>
-                        {item.feed.displayName}
-                      </ModuleHeader.TitleText>
-                      <ModuleHeader.SubtitleText>
-                        <Trans>
-                          By {sanitizeHandle(item.feed.creator.handle, '@')}
-                        </Trans>
-                      </ModuleHeader.SubtitleText>
-                    </View>
-                  </View>
-                )}
-              </Link>
+              <ModuleHeader.FeedLink feed={item.feed}>
+                <ModuleHeader.FeedAvatar feed={item.feed} />
+                <View style={[a.flex_1]}>
+                  <ModuleHeader.TitleText style={[a.text_lg]}>
+                    {item.feed.displayName}
+                  </ModuleHeader.TitleText>
+                  <ModuleHeader.SubtitleText>
+                    <Trans>
+                      By {sanitizeHandle(item.feed.creator.handle, '@')}
+                    </Trans>
+                  </ModuleHeader.SubtitleText>
+                </View>
+              </ModuleHeader.FeedLink>
               <ModuleHeader.PinButton feed={item.feed} />
             </ModuleHeader.Container>
           )

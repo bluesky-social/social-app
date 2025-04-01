@@ -1,7 +1,9 @@
+import {useMemo} from 'react'
 import {View} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
+import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
+import {makeCustomFeedLink} from '#/lib/routes/links'
 import {logger} from '#/logger'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {
@@ -16,6 +18,7 @@ import {Button, ButtonIcon} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {sizes as iconSizes} from '#/components/icons/common'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
+import {Link} from '#/components/Link'
 import {Text, type TextProps} from '#/components/Typography'
 
 export function Container({
@@ -43,12 +46,41 @@ export function Container({
   )
 }
 
-export function FeedAvatar({feed}: {feed: AppBskyFeedDefs.GeneratorView}) {
+export function FeedLink({
+  feed,
+  children,
+}: {
+  feed: AppBskyFeedDefs.GeneratorView
+  children?: React.ReactNode
+}) {
+  const t = useTheme()
+  const {host: did, rkey} = useMemo(() => new AtUri(feed.uri), [feed.uri])
   return (
-    <View style={[a.z_20, {marginLeft: -2}]}>
-      <UserAvatar type="algo" size={42} avatar={feed.avatar} />
-    </View>
+    <Link
+      to={makeCustomFeedLink(did, rkey)}
+      label={feed.displayName}
+      style={[a.flex_1]}>
+      {({focused, hovered, pressed}) => (
+        <View
+          style={[
+            a.flex_1,
+            a.flex_row,
+            a.align_center,
+            {gap: 10},
+            a.rounded_md,
+            a.p_xs,
+            {marginLeft: -6},
+            (focused || hovered || pressed) && t.atoms.bg_contrast_25,
+          ]}>
+          {children}
+        </View>
+      )}
+    </Link>
   )
+}
+
+export function FeedAvatar({feed}: {feed: AppBskyFeedDefs.GeneratorView}) {
+  return <UserAvatar type="algo" size={38} avatar={feed.avatar} />
 }
 
 export function Icon({
