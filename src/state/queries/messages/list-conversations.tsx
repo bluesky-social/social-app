@@ -317,7 +317,7 @@ export function ListConvosProviderInner({
               (old?: ConvoListQueryData) =>
                 optimisticUpdate(logRef.convoId, old, convo => ({
                   ...convo,
-                  lastMessage: {
+                  lastReaction: {
                     $type: 'chat.bsky.convo.defs#messageAndReactionView',
                     reaction: logRef.reaction,
                     message: logRef.message,
@@ -326,41 +326,36 @@ export function ListConvosProviderInner({
                 })),
             )
           } else if (ChatBskyConvoDefs.isLogRemoveReaction(log)) {
-            if (ChatBskyConvoDefs.isMessageView(log.message)) {
-              for (const [_queryKey, queryData] of queryClient.getQueriesData<
-                InfiniteData<ChatBskyConvoListConvos.OutputSchema>
-              >({
-                queryKey: [RQKEY_ROOT],
-              })) {
-                if (!queryData?.pages) {
-                  continue
-                }
-
-                for (const page of queryData.pages) {
-                  for (const convo of page.convos) {
-                    if (
-                      // if the convo is the same
-                      log.convoId === convo.id &&
-                      ChatBskyConvoDefs.isMessageAndReactionView(
-                        convo.lastMessage,
-                      ) &&
-                      ChatBskyConvoDefs.isMessageView(
-                        convo.lastMessage.message,
-                      ) &&
-                      // ...and the message is the same
-                      convo.lastMessage.message.id === log.message.id &&
-                      // ...and the reaction is the same
-                      convo.lastMessage.reaction.sender.did ===
-                        log.reaction.sender.did &&
-                      convo.lastMessage.reaction.value === log.reaction.value
-                    ) {
-                      // refetch, because we don't know what the last message is now
-                      debouncedRefetch()
+            const logRef: ChatBskyConvoDefs.LogRemoveReaction = log
+            queryClient.setQueriesData(
+              {queryKey: [RQKEY_ROOT]},
+              (old?: ConvoListQueryData) =>
+                optimisticUpdate(logRef.convoId, old, convo => {
+                  if (
+                    // if the convo is the same
+                    logRef.convoId === convo.id &&
+                    ChatBskyConvoDefs.isMessageAndReactionView(
+                      convo.lastReaction,
+                    ) &&
+                    ChatBskyConvoDefs.isMessageView(logRef.message) &&
+                    // ...and the message is the same
+                    convo.lastReaction.message.id === logRef.message.id &&
+                    // ...and the reaction is the same
+                    convo.lastReaction.reaction.sender.did ===
+                      logRef.reaction.sender.did &&
+                    convo.lastReaction.reaction.value === logRef.reaction.value
+                  ) {
+                    return {
+                      ...convo,
+                      // ...remove the reaction. hopefully they didn't react twice in a row!
+                      lastReaction: undefined,
+                      rev: logRef.rev,
                     }
+                  } else {
+                    return convo
                   }
-                }
-              }
-            }
+                }),
+            )
           }
         }
       },
