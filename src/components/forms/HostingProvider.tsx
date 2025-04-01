@@ -41,7 +41,7 @@ export function HostingProvider({
         onSelect={onSelectServiceUrl}
       />
       {minimal ? (
-        <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_xs]}>
+        <View style={[a.flex_row, a.align_center, a.flex_wrap]}>
           <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
             <Trans>
               You are creating an account on{' '}
