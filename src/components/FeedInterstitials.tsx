@@ -360,35 +360,37 @@ export function ProfileGrid({
         </View>
       ) : (
         <BlockDrawerGesture>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
-            decelerationRate="fast">
-            <View style={[a.px_lg, a.pt_sm, a.pb_lg, a.flex_row, a.gap_md]}>
-              {content}
+          <View>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
+              decelerationRate="fast">
+              <View style={[a.px_lg, a.pt_sm, a.pb_lg, a.flex_row, a.gap_md]}>
+                {content}
 
-              <Button
-                label={_(msg`Browse more accounts on the Explore page`)}
-                onPress={() => {
-                  navigation.navigate('SearchTab')
-                }}>
-                <CardOuter style={[a.flex_1, {borderWidth: 0}]}>
-                  <View style={[a.flex_1, a.justify_center]}>
-                    <View style={[a.flex_row, a.px_lg]}>
-                      <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
-                        <Trans>
-                          Browse more suggestions on the Explore page
-                        </Trans>
-                      </Text>
+                <Button
+                  label={_(msg`Browse more accounts on the Explore page`)}
+                  onPress={() => {
+                    navigation.navigate('SearchTab')
+                  }}>
+                  <CardOuter style={[a.flex_1, {borderWidth: 0}]}>
+                    <View style={[a.flex_1, a.justify_center]}>
+                      <View style={[a.flex_row, a.px_lg]}>
+                        <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
+                          <Trans>
+                            Browse more suggestions on the Explore page
+                          </Trans>
+                        </Text>
 
-                      <Arrow size="xl" />
+                        <Arrow size="xl" />
+                      </View>
                     </View>
-                  </View>
-                </CardOuter>
-              </Button>
-            </View>
-          </ScrollView>
+                  </CardOuter>
+                </Button>
+              </View>
+            </ScrollView>
+          </View>
         </BlockDrawerGesture>
       )}
     </View>
