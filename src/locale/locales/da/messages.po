@@ -504,7 +504,7 @@ msgstr "Tilføj alt-tekst (valgfrit)"
 msgid "Add another account"
 msgstr "Tilføj endnu en konto"
 
-#: src/view/com/composer/Composer.tsx:743
+#: src/view/com/composer/Composer.tsx:757
 msgid "Add another post"
 msgstr "Tilføj endnu et opslag"
 
@@ -531,7 +531,7 @@ msgstr "Tilføj skjult ord med de angivne indstillinger"
 msgid "Add muted words and tags"
 msgstr "Tilføj skjulte ord og tags"
 
-#: src/view/com/composer/Composer.tsx:1258
+#: src/view/com/composer/Composer.tsx:1274
 msgid "Add new post"
 msgstr "Tilføj nyt opslag"
 
@@ -560,10 +560,13 @@ msgstr "Opret følgende DNS-record for dit domæne:"
 msgid "Add this feed to your feeds"
 msgstr "Føj dette feed til dine feeds"
 
-#: src/view/com/profile/ProfileMenu.tsx:273
 #: src/view/com/profile/ProfileMenu.tsx:276
 msgid "Add to lists"
 msgstr "Føj til lister"
+
+#: src/view/com/profile/ProfileMenu.tsx:273
+msgid "Add to Lists"
+msgstr ""
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
 msgid "Add to my feeds"
@@ -922,11 +925,11 @@ msgstr "Er du sikker på, du vil fjerne {0} fra dine feeds?"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Er du sikker på, du vil fjerne dette feed fra dine feeds?"
 
-#: src/view/com/composer/Composer.tsx:694
+#: src/view/com/composer/Composer.tsx:706
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "Er du sikker på, du vil kassere dette udkast?"
 
-#: src/view/com/composer/Composer.tsx:868
+#: src/view/com/composer/Composer.tsx:882
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Er du sikker på, du vil kassere dette opslag?"
 
@@ -984,7 +987,7 @@ msgstr "Afspil videoer og GIF'er automatisk"
 msgid "Back"
 msgstr "Tilbage"
 
-#: src/screens/Messages/Inbox.tsx:238
+#: src/screens/Messages/Inbox.tsx:233
 msgid "Back to Chats"
 msgstr "Tilbage til Chats"
 
@@ -993,7 +996,7 @@ msgstr "Tilbage til Chats"
 msgid "Before creating a list, you must first verify your email."
 msgstr "Før du opretter en liste, skal du bekræfte din e-mail."
 
-#: src/view/com/composer/Composer.tsx:621
+#: src/view/com/composer/Composer.tsx:632
 msgid "Before creating a post, you must first verify your email."
 msgstr "Før du opretter et opslag, skal du bekræfte din e-mail."
 
@@ -1257,7 +1260,7 @@ msgstr "Kamera"
 #: src/screens/Settings/Settings.tsx:260
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:931
+#: src/view/com/composer/Composer.tsx:945
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -1420,14 +1423,14 @@ msgid "Chat request inbox"
 msgstr "Indbakke for chatanmodninger"
 
 #: src/screens/Messages/components/InboxPreview.tsx:64
-#: src/screens/Messages/Inbox.tsx:77
+#: src/screens/Messages/Inbox.tsx:72
 msgid "Chat requests"
 msgstr "Chatanmodninger"
 
 #: src/components/dms/ConvoMenu.tsx:75
 #: src/components/dms/MessageMenu.tsx:83
 #: src/Navigation.tsx:413
-#: src/screens/Messages/ChatList.tsx:328
+#: src/screens/Messages/ChatList.tsx:327
 msgid "Chat settings"
 msgstr "Chatindstillinger"
 
@@ -1440,8 +1443,8 @@ msgctxt "toast"
 msgid "Chat unmuted"
 msgstr "Chat ikke længere skjult"
 
-#: src/screens/Messages/ChatList.tsx:344
-#: src/screens/Messages/ChatList.tsx:368
+#: src/screens/Messages/ChatList.tsx:343
+#: src/screens/Messages/ChatList.tsx:367
 msgid "Chats"
 msgstr "Chats"
 
@@ -1658,15 +1661,15 @@ msgstr "Løs opgaven"
 msgid "Compose new post"
 msgstr "Skriv nyt opslag"
 
-#: src/view/com/composer/Composer.tsx:834
-msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
-msgstr "Skriv opslag på op til {MAX_GRAPHEME_LENGTH} tegn"
+#: src/view/com/composer/Composer.tsx:848
+msgid "Compose posts up to {maxGraphemeLength} characters in length"
+msgstr ""
 
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:34
 msgid "Compose reply"
 msgstr "Skriv svar"
 
-#: src/view/com/composer/Composer.tsx:1652
+#: src/view/com/composer/Composer.tsx:1669
 msgid "Compressing video..."
 msgstr "Komprimerer video..."
 
@@ -2144,7 +2147,7 @@ msgstr "Slet besked for mig"
 msgid "Delete my account"
 msgstr "Slet min konto"
 
-#: src/view/com/composer/Composer.tsx:842
+#: src/view/com/composer/Composer.tsx:856
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:709
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:711
 msgid "Delete post"
@@ -2256,8 +2259,8 @@ msgid "Disabled"
 msgstr "Deaktiveret"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:696
-#: src/view/com/composer/Composer.tsx:875
+#: src/view/com/composer/Composer.tsx:708
+#: src/view/com/composer/Composer.tsx:889
 msgid "Discard"
 msgstr "Kasser"
 
@@ -2265,11 +2268,11 @@ msgstr "Kasser"
 msgid "Discard changes?"
 msgstr "Deaktiver ændringer?"
 
-#: src/view/com/composer/Composer.tsx:693
+#: src/view/com/composer/Composer.tsx:705
 msgid "Discard draft?"
 msgstr "Kasser udkast?"
 
-#: src/view/com/composer/Composer.tsx:867
+#: src/view/com/composer/Composer.tsx:881
 msgid "Discard post?"
 msgstr "Kasser opslag?"
 
@@ -2295,7 +2298,7 @@ msgstr "Find nye feeds"
 msgid "Dismiss"
 msgstr "Luk"
 
-#: src/view/com/composer/Composer.tsx:1576
+#: src/view/com/composer/Composer.tsx:1593
 msgid "Dismiss error"
 msgstr "Luk fejlbesked"
 
@@ -2746,7 +2749,7 @@ msgstr "Indtsat dit brugernavn og din adgangskode"
 msgid "Enters full screen"
 msgstr "Åbner i fuld skærm"
 
-#: src/view/com/composer/Composer.tsx:1661
+#: src/view/com/composer/Composer.tsx:1678
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "Fejl"
@@ -2943,8 +2946,8 @@ msgstr "Sletning af opslag fejlede, prøv igen"
 msgid "Failed to delete starter pack"
 msgstr "Sletning af startpakke fejlede"
 
-#: src/screens/Messages/ChatList.tsx:243
-#: src/screens/Messages/Inbox.tsx:187
+#: src/screens/Messages/ChatList.tsx:242
+#: src/screens/Messages/Inbox.tsx:182
 msgid "Failed to load conversations"
 msgstr "Kunne ikke indlæse samtaler"
 
@@ -2970,8 +2973,8 @@ msgstr "Indlæsning af foreslåede feeds fejlede"
 msgid "Failed to load suggested follows"
 msgstr "Indlæsning af foreslåede konti fejlede"
 
-#: src/screens/Messages/Inbox.tsx:295
-#: src/screens/Messages/Inbox.tsx:318
+#: src/screens/Messages/Inbox.tsx:290
+#: src/screens/Messages/Inbox.tsx:313
 msgid "Failed to mark all requests as read"
 msgstr "Kunne ikke markere alle anmodninger som læst"
 
@@ -3023,6 +3026,10 @@ msgstr "Upload af video fejlede"
 msgid "Failed to verify handle. Please try again."
 msgstr "Kunne ikke verificere handle. Prøv igen."
 
+#: src/components/dialogs/nuxs/NeueChar.tsx:66
+msgid "Fake conversation with the Bluesky app. Bluesky says: \"i ain't reading all that\", then \"I'm happy for you though\", and finally \"or sorry that happened\". This is in reference to a popular internet meme."
+msgstr ""
+
 #: src/Navigation.tsx:251
 msgid "Feed"
 msgstr "Feed"
@@ -3055,7 +3062,7 @@ msgstr "Feedback afsendt!"
 #: src/Navigation.tsx:428
 #: src/screens/StarterPack/StarterPackScreen.tsx:185
 #: src/view/screens/Feeds.tsx:508
-#: src/view/screens/Profile.tsx:227
+#: src/view/screens/Profile.tsx:225
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/screens/Search/Search.tsx:531
 #: src/view/shell/desktop/LeftNav.tsx:651
@@ -3286,6 +3293,10 @@ msgstr "Tekststørrelse"
 msgid "Food"
 msgstr "Mad"
 
+#: src/components/dialogs/nuxs/NeueChar.tsx:113
+msgid "For a limited time — just today ;)"
+msgstr ""
+
 #: src/view/com/modals/DeleteAccount.tsx:125
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
 msgstr "Af sikkerhedsgrunde sender vi en bekræftelseskode til din e-mailadresse."
@@ -3350,7 +3361,7 @@ msgstr "Kom godt i gang"
 msgid "Getting started"
 msgstr "Kom godt i gang"
 
-#: src/components/MediaPreview.tsx:116
+#: src/components/MediaPreview.tsx:108
 msgid "GIF"
 msgstr "GIF"
 
@@ -3366,7 +3377,7 @@ msgstr "Åbenlys overtrædelse af lovgivning eller tjenestevilkår"
 #: src/components/Layout/Header/index.tsx:126
 #: src/components/moderation/ScreenHider.tsx:154
 #: src/components/moderation/ScreenHider.tsx:163
-#: src/screens/Messages/Inbox.tsx:228
+#: src/screens/Messages/Inbox.tsx:223
 #: src/screens/Profile/ProfileFeed/index.tsx:89
 #: src/screens/VideoFeed/components/Header.tsx:163
 #: src/screens/VideoFeed/index.tsx:1108
@@ -3421,6 +3432,11 @@ msgstr "Gå til profil"
 #: src/components/dms/ConvoMenu.tsx:224
 msgid "Go to user's profile"
 msgstr "Gå til brugers profil"
+
+#: src/components/dialogs/nuxs/NeueChar.tsx:119
+#: src/components/dialogs/nuxs/NeueChar.tsx:124
+msgid "Got it!"
+msgstr ""
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/lib/moderation/useGlobalLabelStrings.ts:50
@@ -3721,7 +3737,7 @@ msgid "Inappropriate messages or explicit links"
 msgstr "Upassende beskeder eller links med seksuelt indhold"
 
 #. Title message shown in chat requests inbox when it's empty
-#: src/screens/Messages/Inbox.tsx:208
+#: src/screens/Messages/Inbox.tsx:203
 msgid "Inbox zero!"
 msgstr "Tom indbakke!"
 
@@ -3822,7 +3838,7 @@ msgstr "Ja, det er korrekt"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "Lige nu er der kun dig! Føj flere personer til din startpakke ved at søge herover."
 
-#: src/view/com/composer/Composer.tsx:1595
+#: src/view/com/composer/Composer.tsx:1612
 msgid "Job ID: {0}"
 msgstr "Job-ID: {0}"
 
@@ -3857,7 +3873,7 @@ msgid "Labeled by the author."
 msgstr "Mærkat tilføjet af forfatteren."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:75
-#: src/view/screens/Profile.tsx:220
+#: src/view/screens/Profile.tsx:218
 msgid "Labels"
 msgstr "Mærkater"
 
@@ -4042,7 +4058,7 @@ msgstr "Liket af {0, plural, one {# bruger} other {# brugere}}"
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr "Liket af {likeCount, plural, one {# bruger} other {# brugere}}"
 
-#: src/view/screens/Profile.tsx:226
+#: src/view/screens/Profile.tsx:224
 msgid "Likes"
 msgstr "Likes"
 
@@ -4115,8 +4131,8 @@ msgstr "Liste ikke længere skjult"
 
 #: src/Navigation.tsx:140
 #: src/view/screens/Lists.tsx:62
-#: src/view/screens/Profile.tsx:221
-#: src/view/screens/Profile.tsx:229
+#: src/view/screens/Profile.tsx:219
+#: src/view/screens/Profile.tsx:227
 #: src/view/shell/desktop/LeftNav.tsx:669
 #: src/view/shell/Drawer.tsx:501
 msgid "Lists"
@@ -4207,9 +4223,9 @@ msgstr "Adminstrer gemte feeds"
 msgid "Manage your muted words and tags"
 msgstr "Administrer dine skjulte ord og tags"
 
-#: src/screens/Messages/Inbox.tsx:305
-#: src/screens/Messages/Inbox.tsx:324
-#: src/screens/Messages/Inbox.tsx:331
+#: src/screens/Messages/Inbox.tsx:300
+#: src/screens/Messages/Inbox.tsx:319
+#: src/screens/Messages/Inbox.tsx:326
 msgid "Mark all as read"
 msgstr "Marker alle læst"
 
@@ -4218,12 +4234,12 @@ msgstr "Marker alle læst"
 msgid "Mark as read"
 msgstr "Marker som læst"
 
-#: src/screens/Messages/Inbox.tsx:292
-#: src/screens/Messages/Inbox.tsx:315
+#: src/screens/Messages/Inbox.tsx:287
+#: src/screens/Messages/Inbox.tsx:310
 msgid "Marked all as read"
 msgstr "Marker alle som læst"
 
-#: src/view/screens/Profile.tsx:224
+#: src/view/screens/Profile.tsx:222
 msgid "Media"
 msgstr "Medier"
 
@@ -4554,9 +4570,13 @@ msgctxt "action"
 msgid "New"
 msgstr "Ny"
 
+#: src/components/dialogs/nuxs/NeueChar.tsx:95
+msgid "New character limit 🎉"
+msgstr ""
+
 #: src/components/dms/dialogs/NewChatDialog.tsx:65
-#: src/screens/Messages/ChatList.tsx:351
-#: src/screens/Messages/ChatList.tsx:358
+#: src/screens/Messages/ChatList.tsx:350
+#: src/screens/Messages/ChatList.tsx:357
 msgid "New chat"
 msgstr "Ny chat"
 
@@ -4590,7 +4610,7 @@ msgstr "Ny adgangskode"
 #: src/screens/Profile/ProfileFeed/index.tsx:238
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
-#: src/view/screens/Profile.tsx:507
+#: src/view/screens/Profile.tsx:505
 #: src/view/screens/ProfileList.tsx:253
 #: src/view/screens/ProfileList.tsx:286
 msgid "New post"
@@ -4792,7 +4812,7 @@ msgstr "Note vedr. deling"
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "OBS: Bluesky er et åbent og offentligt netværk. Denne indstilling begrænser kun synligheden af dit indhold her på Bluesky. Andre apps og websites respekterer ikke nødvendigvis denne indstilling. Dit indhold kan stadig blive vist i andre apps og på andre websites til udloggede brugere."
 
-#: src/screens/Messages/ChatList.tsx:264
+#: src/screens/Messages/ChatList.tsx:263
 msgid "Nothing here"
 msgstr "Ingenting her"
 
@@ -4882,15 +4902,15 @@ msgstr "på<0><1/><2><3/></2></0>"
 msgid "Onboarding reset"
 msgstr "Nulstil velkomst"
 
-#: src/view/com/composer/Composer.tsx:346
+#: src/view/com/composer/Composer.tsx:356
 msgid "One or more GIFs is missing alt text."
 msgstr "En eller flere GIF'er mangler alt-tekst."
 
-#: src/view/com/composer/Composer.tsx:343
+#: src/view/com/composer/Composer.tsx:353
 msgid "One or more images is missing alt text."
 msgstr "En eller flere billeder mangler alt-tekst."
 
-#: src/view/com/composer/Composer.tsx:353
+#: src/view/com/composer/Composer.tsx:363
 msgid "One or more videos is missing alt text."
 msgstr "Et eller flere videoer mangler alt-tekst."
 
@@ -4950,7 +4970,7 @@ msgid "Open drawer menu"
 msgstr "Åbn navigation"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1244
+#: src/view/com/composer/Composer.tsx:1260
 msgid "Open emoji picker"
 msgstr "Åbn emojivælger"
 
@@ -5036,7 +5056,7 @@ msgstr "Åbner skrivefelt til nyt opslag"
 msgid "Opens device photo gallery"
 msgstr "Åbner enhedens fotogalleri"
 
-#: src/view/com/composer/Composer.tsx:1245
+#: src/view/com/composer/Composer.tsx:1261
 msgid "Opens emoji picker"
 msgstr "Åbner emojivælger"
 
@@ -5395,7 +5415,7 @@ msgstr "Populære videoer i dit netværk."
 msgid "Porn"
 msgstr "Porno"
 
-#: src/view/com/composer/Composer.tsx:959
+#: src/view/com/composer/Composer.tsx:973
 msgctxt "action"
 msgid "Post"
 msgstr "Slå op"
@@ -5405,7 +5425,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "Opslag"
 
-#: src/view/com/composer/Composer.tsx:957
+#: src/view/com/composer/Composer.tsx:971
 msgctxt "action"
 msgid "Post All"
 msgstr "Slå alle op"
@@ -5481,7 +5501,7 @@ msgid "Post unpinned"
 msgstr "Opslag blev frigjort"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:186
-#: src/view/screens/Profile.tsx:222
+#: src/view/screens/Profile.tsx:220
 msgid "Posts"
 msgstr "Opslag"
 
@@ -5558,7 +5578,7 @@ msgstr "Privatliv og sikkerhed"
 msgid "Privacy Policy"
 msgstr "Privatlivspolitik"
 
-#: src/view/com/composer/Composer.tsx:1658
+#: src/view/com/composer/Composer.tsx:1675
 msgid "Processing video..."
 msgstr "Behandler video..."
 
@@ -5568,7 +5588,7 @@ msgid "Processing..."
 msgstr "Behandler..."
 
 #: src/view/screens/DebugMod.tsx:920
-#: src/view/screens/Profile.tsx:361
+#: src/view/screens/Profile.tsx:359
 msgid "profile"
 msgstr "profil"
 
@@ -5715,8 +5735,8 @@ msgstr "Afvis"
 msgid "Reject chat request"
 msgstr "Afvis chatanmodning"
 
-#: src/screens/Messages/ChatList.tsx:247
-#: src/screens/Messages/Inbox.tsx:191
+#: src/screens/Messages/ChatList.tsx:246
+#: src/screens/Messages/Inbox.tsx:186
 msgid "Reload conversations"
 msgstr "Genindlæs samtaler"
 
@@ -5787,7 +5807,6 @@ msgid "Remove from quick access?"
 msgstr "Fjern fra kvikadgang?"
 
 #: src/screens/List/ListHiddenScreen.tsx:170
-#: src/screens/List/ListHiddenScreen.tsx:174
 msgid "Remove from saved feeds"
 msgstr "Fjern fra gemte feeds"
 
@@ -5843,6 +5862,7 @@ msgid "Removed from my feeds"
 msgstr "Fjernet fra mine feeds"
 
 #: src/screens/List/ListHiddenScreen.tsx:94
+#: src/screens/List/ListHiddenScreen.tsx:174
 msgid "Removed from saved feeds"
 msgstr "Fjernet fra gemte feeds"
 
@@ -5865,7 +5885,7 @@ msgstr "Fjerner citeret opslag"
 msgid "Replace with Discover"
 msgstr "Erstat med Discover"
 
-#: src/view/screens/Profile.tsx:223
+#: src/view/screens/Profile.tsx:221
 msgid "Replies"
 msgstr "Svar"
 
@@ -5877,7 +5897,7 @@ msgstr "Svar ikke tilladt"
 msgid "Replies to this post are disabled."
 msgstr "Svar til dette opslag er ikke tilladt."
 
-#: src/view/com/composer/Composer.tsx:955
+#: src/view/com/composer/Composer.tsx:969
 msgctxt "action"
 msgid "Reply"
 msgstr "Besvar"
@@ -6145,9 +6165,9 @@ msgstr "Prøver at gentage den seneste handling, der fejlede"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:334
 #: src/screens/Login/LoginForm.tsx:323
 #: src/screens/Login/LoginForm.tsx:330
-#: src/screens/Messages/ChatList.tsx:253
+#: src/screens/Messages/ChatList.tsx:252
 #: src/screens/Messages/components/MessageListError.tsx:25
-#: src/screens/Messages/Inbox.tsx:197
+#: src/screens/Messages/Inbox.tsx:192
 #: src/screens/Onboarding/StepInterests/index.tsx:217
 #: src/screens/Onboarding/StepInterests/index.tsx:220
 #: src/screens/Signup/BackNextButtons.tsx:53
@@ -6939,8 +6959,8 @@ msgstr "Noget gik galt. Prøv igen."
 msgid "Something wrong? Let us know."
 msgstr "Noget galt? Fortæl os om det."
 
-#: src/App.native.tsx:122
-#: src/App.web.tsx:98
+#: src/App.native.tsx:121
+#: src/App.web.tsx:97
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr "Desværre! Din session er udløbet. Log venligst ind igen."
 
@@ -6972,6 +6992,10 @@ msgstr "Spam"
 #: src/lib/moderation/useReportOptions.ts:55
 msgid "Spam; excessive mentions or replies"
 msgstr "Spam; for mange omtaler eller svar"
+
+#: src/components/dialogs/nuxs/NeueChar.tsx:36
+msgid "Special announcement dialog for April Fool's day 2025"
+msgstr ""
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:113
@@ -7019,7 +7043,7 @@ msgstr "Startpakke af dig"
 msgid "Starter pack is invalid"
 msgstr "Startpakke er ugyldig"
 
-#: src/view/screens/Profile.tsx:228
+#: src/view/screens/Profile.tsx:226
 msgid "Starter Packs"
 msgstr "Startpakker"
 
@@ -7385,7 +7409,7 @@ msgstr "Der kunne ikke skabes forbindelse til serveren"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Notifikationer kunne ikke indlæses. Tryk her for at prøve igen."
 
-#: src/view/com/posts/PostFeed.tsx:592
+#: src/view/com/posts/PostFeed.tsx:607
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "Opslag kunne ikke indlæses. Tryk her for at prøve igen."
 
@@ -7602,7 +7626,7 @@ msgstr "Dette opslag er kun synlig for indloggede brugere. Den vil ikke være sy
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Dette opslag vil blive skjult fra feeds og tråde. Denne handling kan ikke fortrydes."
 
-#: src/view/com/composer/Composer.tsx:428
+#: src/view/com/composer/Composer.tsx:438
 msgid "This post's author has disabled quote posts."
 msgstr "Dette opslags forfatter har ikke tilladt citatopslag."
 
@@ -7960,7 +7984,7 @@ msgstr "Afmeld abonnement på denne mærkningstjeneste"
 msgid "Unsubscribed from list"
 msgstr "Abonnement på liste afmeldt"
 
-#: src/view/com/composer/Composer.tsx:781
+#: src/view/com/composer/Composer.tsx:795
 msgid "Unsupported video type"
 msgstr "Videoformat ikke understøttet"
 
@@ -8039,7 +8063,7 @@ msgstr "Uploader billeder..."
 msgid "Uploading link thumbnail..."
 msgstr "Uploader forhåndsvisning af link..."
 
-#: src/view/com/composer/Composer.tsx:1655
+#: src/view/com/composer/Composer.tsx:1672
 msgid "Uploading video..."
 msgstr "Uploader video..."
 
@@ -8240,7 +8264,7 @@ msgstr "Video ikke fundet."
 msgid "Video settings"
 msgstr "Videoindstillinger"
 
-#: src/view/com/composer/Composer.tsx:1665
+#: src/view/com/composer/Composer.tsx:1682
 msgid "Video uploaded"
 msgstr "Video uploadet"
 
@@ -8248,7 +8272,7 @@ msgstr "Video uploadet"
 msgid "Video: {0}"
 msgstr "Video: {0}"
 
-#: src/view/screens/Profile.tsx:225
+#: src/view/screens/Profile.tsx:223
 msgid "Videos"
 msgstr "Videoer"
 
@@ -8446,6 +8470,10 @@ msgstr "Vi vil bruge dette til at tilpasse din oplevelse."
 msgid "We're having network issues, try again"
 msgstr "Vi har netværksproblemer, prøv igen."
 
+#: src/components/dialogs/nuxs/NeueChar.tsx:98
+msgid "We’re listening to your feedback and updating the character count. Posts are now limited to 299 characters!"
+msgstr ""
+
 #: src/screens/Signup/index.tsx:95
 msgid "We're so excited to have you join us!"
 msgstr "Vi er glade for at have dig med!"
@@ -8462,7 +8490,7 @@ msgstr "Beklager, men vi kunne ikke indlæse dine skjulte ord. Prøv igen."
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Beklager, men din søgning kunne ikke gennemføres. Prøv igen om lidt."
 
-#: src/view/com/composer/Composer.tsx:425
+#: src/view/com/composer/Composer.tsx:435
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "Beklager! Det opslag, du svarer på, er blevet slettet."
 
@@ -8497,7 +8525,7 @@ msgstr "Hvad folk skriver om."
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:744
+#: src/view/com/composer/Composer.tsx:758
 msgid "What's up?"
 msgstr "Hvad sker der?"
 
@@ -8518,8 +8546,8 @@ msgid "Who can reply"
 msgstr "Hvem kan svare"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
-#: src/screens/Messages/ChatList.tsx:231
-#: src/screens/Messages/Inbox.tsx:176
+#: src/screens/Messages/ChatList.tsx:230
+#: src/screens/Messages/Inbox.tsx:171
 msgid "Whoops!"
 msgstr "Ups!"
 
@@ -8571,11 +8599,11 @@ msgstr "Hvorfor skal denne bruger gennemgås?"
 msgid "Write a message"
 msgstr "Skriv en besked"
 
-#: src/view/com/composer/Composer.tsx:832
+#: src/view/com/composer/Composer.tsx:846
 msgid "Write post"
 msgstr "Skriv dit opslag"
 
-#: src/view/com/composer/Composer.tsx:742
+#: src/view/com/composer/Composer.tsx:756
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:69
 msgid "Write your reply"
 msgstr "Skriv dit svar"
@@ -8679,7 +8707,7 @@ msgstr "Du har ikke nogen følgere."
 msgid "You don't follow any users who follow @{name}."
 msgstr "Du følger ikke nogen brugere, som følger @{name}"
 
-#: src/screens/Messages/Inbox.tsx:220
+#: src/screens/Messages/Inbox.tsx:215
 msgid "You don't have any chat requests at the moment."
 msgstr "Du har pt. ingen chatanmodninger."
 
@@ -8733,7 +8761,7 @@ msgstr "Du har skjult denne konto."
 msgid "You have muted this user"
 msgstr "Du har skjult denne bruger"
 
-#: src/screens/Messages/ChatList.tsx:274
+#: src/screens/Messages/ChatList.tsx:273
 msgid "You have no conversations yet. Start one!"
 msgstr "Du har endnu ingen samtaler. Start en!"
 
@@ -9005,11 +9033,11 @@ msgstr "Din adgangskode blev ændret!"
 msgid "Your password must be at least 8 characters long."
 msgstr "Din adgangskode skal bestå af mindst 8 tegn."
 
-#: src/view/com/composer/Composer.tsx:485
+#: src/view/com/composer/Composer.tsx:495
 msgid "Your post has been published"
 msgstr "Dit opslag blev publiceret"
 
-#: src/view/com/composer/Composer.tsx:482
+#: src/view/com/composer/Composer.tsx:492
 msgid "Your posts have been published"
 msgstr "Dine opslag blev publiceret"
 
@@ -9021,7 +9049,7 @@ msgstr "Dine opslag, likes og blokeringer er offentlige. Dine skjulte ord, tags 
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "Din profil, dine opslag, feeds og lister vil ikke længere kunne ses af andre Bluesky-brugere. Du kan genaktivere din konto når som helst ved at logge ind."
 
-#: src/view/com/composer/Composer.tsx:484
+#: src/view/com/composer/Composer.tsx:494
 msgid "Your reply has been published"
 msgstr "Dit svar blev publiceret"
 

@@ -504,7 +504,7 @@ msgstr "Добавьте альтернативный текст (необяза
 msgid "Add another account"
 msgstr "Добавить другую учётную запись"
 
-#: src/view/com/composer/Composer.tsx:743
+#: src/view/com/composer/Composer.tsx:757
 msgid "Add another post"
 msgstr "Добавить другой пост"
 
@@ -531,7 +531,7 @@ msgstr ""
 msgid "Add muted words and tags"
 msgstr "Добавить игнорируемые слова и теги"
 
-#: src/view/com/composer/Composer.tsx:1258
+#: src/view/com/composer/Composer.tsx:1274
 msgid "Add new post"
 msgstr "Добавить новый пост"
 
@@ -560,10 +560,13 @@ msgstr "Добавьте следующую DNS-запись к вашему д�
 msgid "Add this feed to your feeds"
 msgstr "Добавьте эту ленту в свои ленты"
 
-#: src/view/com/profile/ProfileMenu.tsx:273
 #: src/view/com/profile/ProfileMenu.tsx:276
 msgid "Add to lists"
 msgstr "Добавить в списки"
+
+#: src/view/com/profile/ProfileMenu.tsx:273
+msgid "Add to Lists"
+msgstr ""
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
 msgid "Add to my feeds"
@@ -922,11 +925,11 @@ msgstr "Вы уверены, что хотите удалить {0} из сво�
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Вы уверены, что хотите удалить это из своих лент?"
 
-#: src/view/com/composer/Composer.tsx:694
+#: src/view/com/composer/Composer.tsx:706
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "Вы действительно хотите удалить этот черновик?"
 
-#: src/view/com/composer/Composer.tsx:868
+#: src/view/com/composer/Composer.tsx:882
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Вы действительно хотите удалить этот пост?"
 
@@ -984,7 +987,7 @@ msgstr "Автовоспроизведение видео и GIF-файлов"
 msgid "Back"
 msgstr "Назад"
 
-#: src/screens/Messages/Inbox.tsx:238
+#: src/screens/Messages/Inbox.tsx:233
 msgid "Back to Chats"
 msgstr ""
 
@@ -993,7 +996,7 @@ msgstr ""
 msgid "Before creating a list, you must first verify your email."
 msgstr "Чтобы создать список, необходимо сначала подтвердить свою электронную почту."
 
-#: src/view/com/composer/Composer.tsx:621
+#: src/view/com/composer/Composer.tsx:632
 msgid "Before creating a post, you must first verify your email."
 msgstr "Чтобы создать пост, необходимо сначала подтвердить свою электронную почту."
 
@@ -1257,7 +1260,7 @@ msgstr "Камера"
 #: src/screens/Settings/Settings.tsx:260
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:931
+#: src/view/com/composer/Composer.tsx:945
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -1420,14 +1423,14 @@ msgid "Chat request inbox"
 msgstr ""
 
 #: src/screens/Messages/components/InboxPreview.tsx:64
-#: src/screens/Messages/Inbox.tsx:77
+#: src/screens/Messages/Inbox.tsx:72
 msgid "Chat requests"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:75
 #: src/components/dms/MessageMenu.tsx:83
 #: src/Navigation.tsx:413
-#: src/screens/Messages/ChatList.tsx:328
+#: src/screens/Messages/ChatList.tsx:327
 msgid "Chat settings"
 msgstr "Настройки чата"
 
@@ -1440,8 +1443,8 @@ msgctxt "toast"
 msgid "Chat unmuted"
 msgstr "Чат со звуком"
 
-#: src/screens/Messages/ChatList.tsx:344
-#: src/screens/Messages/ChatList.tsx:368
+#: src/screens/Messages/ChatList.tsx:343
+#: src/screens/Messages/ChatList.tsx:367
 msgid "Chats"
 msgstr ""
 
@@ -1658,15 +1661,15 @@ msgstr "Выполните задание"
 msgid "Compose new post"
 msgstr "Составить новый пост"
 
-#: src/view/com/composer/Composer.tsx:834
-msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
-msgstr "Создавайте посты до {MAX_GRAPHEME_LENGTH} символов в длину"
+#: src/view/com/composer/Composer.tsx:848
+msgid "Compose posts up to {maxGraphemeLength} characters in length"
+msgstr ""
 
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:34
 msgid "Compose reply"
 msgstr "Составить ответ"
 
-#: src/view/com/composer/Composer.tsx:1652
+#: src/view/com/composer/Composer.tsx:1669
 msgid "Compressing video..."
 msgstr "Сжатие видео..."
 
@@ -2144,7 +2147,7 @@ msgstr "Удалите сообщение для меня"
 msgid "Delete my account"
 msgstr "Удалить мою учётную запись"
 
-#: src/view/com/composer/Composer.tsx:842
+#: src/view/com/composer/Composer.tsx:856
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:709
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:711
 msgid "Delete post"
@@ -2256,8 +2259,8 @@ msgid "Disabled"
 msgstr "Отключено"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:696
-#: src/view/com/composer/Composer.tsx:875
+#: src/view/com/composer/Composer.tsx:708
+#: src/view/com/composer/Composer.tsx:889
 msgid "Discard"
 msgstr "Удалить"
 
@@ -2265,11 +2268,11 @@ msgstr "Удалить"
 msgid "Discard changes?"
 msgstr "Удалить изменения?"
 
-#: src/view/com/composer/Composer.tsx:693
+#: src/view/com/composer/Composer.tsx:705
 msgid "Discard draft?"
 msgstr "Удалить черновик?"
 
-#: src/view/com/composer/Composer.tsx:867
+#: src/view/com/composer/Composer.tsx:881
 msgid "Discard post?"
 msgstr "Удалить пост?"
 
@@ -2295,7 +2298,7 @@ msgstr "Откройте для себя новые ленты"
 msgid "Dismiss"
 msgstr "Пропустить"
 
-#: src/view/com/composer/Composer.tsx:1576
+#: src/view/com/composer/Composer.tsx:1593
 msgid "Dismiss error"
 msgstr "Пропустить ошибку"
 
@@ -2746,7 +2749,7 @@ msgstr "Введите псевдоним и пароль"
 msgid "Enters full screen"
 msgstr "Переходит в полноэкранный режим"
 
-#: src/view/com/composer/Composer.tsx:1661
+#: src/view/com/composer/Composer.tsx:1678
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "Ошибка"
@@ -2943,8 +2946,8 @@ msgstr "Не удалось удалить пост, попробуйте ещё
 msgid "Failed to delete starter pack"
 msgstr "Не удалось удалить стартовый набор"
 
-#: src/screens/Messages/ChatList.tsx:243
-#: src/screens/Messages/Inbox.tsx:187
+#: src/screens/Messages/ChatList.tsx:242
+#: src/screens/Messages/Inbox.tsx:182
 msgid "Failed to load conversations"
 msgstr ""
 
@@ -2970,8 +2973,8 @@ msgstr "Не удалось загрузить предложенные лент
 msgid "Failed to load suggested follows"
 msgstr "Не удалось загрузить предложенные подписки"
 
-#: src/screens/Messages/Inbox.tsx:295
-#: src/screens/Messages/Inbox.tsx:318
+#: src/screens/Messages/Inbox.tsx:290
+#: src/screens/Messages/Inbox.tsx:313
 msgid "Failed to mark all requests as read"
 msgstr ""
 
@@ -3023,6 +3026,10 @@ msgstr "Не удалось загрузить видео"
 msgid "Failed to verify handle. Please try again."
 msgstr "Не удалось проверить псевдоним. Попробуйте ещё раз."
 
+#: src/components/dialogs/nuxs/NeueChar.tsx:66
+msgid "Fake conversation with the Bluesky app. Bluesky says: \"i ain't reading all that\", then \"I'm happy for you though\", and finally \"or sorry that happened\". This is in reference to a popular internet meme."
+msgstr ""
+
 #: src/Navigation.tsx:251
 msgid "Feed"
 msgstr "Лента"
@@ -3055,7 +3062,7 @@ msgstr "Обратная связь отправлена!"
 #: src/Navigation.tsx:428
 #: src/screens/StarterPack/StarterPackScreen.tsx:185
 #: src/view/screens/Feeds.tsx:508
-#: src/view/screens/Profile.tsx:227
+#: src/view/screens/Profile.tsx:225
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/screens/Search/Search.tsx:531
 #: src/view/shell/desktop/LeftNav.tsx:651
@@ -3286,6 +3293,10 @@ msgstr "Размер шрифта"
 msgid "Food"
 msgstr "Еда"
 
+#: src/components/dialogs/nuxs/NeueChar.tsx:113
+msgid "For a limited time — just today ;)"
+msgstr ""
+
 #: src/view/com/modals/DeleteAccount.tsx:125
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
 msgstr "По соображениям безопасности нам нужно будет отправить код подтверждения на вашу электронную почту."
@@ -3350,7 +3361,7 @@ msgstr "Приступить"
 msgid "Getting started"
 msgstr "Начало работы"
 
-#: src/components/MediaPreview.tsx:116
+#: src/components/MediaPreview.tsx:108
 msgid "GIF"
 msgstr "GIF"
 
@@ -3366,7 +3377,7 @@ msgstr "Грубые нарушения закона или условий ис�
 #: src/components/Layout/Header/index.tsx:126
 #: src/components/moderation/ScreenHider.tsx:154
 #: src/components/moderation/ScreenHider.tsx:163
-#: src/screens/Messages/Inbox.tsx:228
+#: src/screens/Messages/Inbox.tsx:223
 #: src/screens/Profile/ProfileFeed/index.tsx:89
 #: src/screens/VideoFeed/components/Header.tsx:163
 #: src/screens/VideoFeed/index.tsx:1108
@@ -3421,6 +3432,11 @@ msgstr "В профиль"
 #: src/components/dms/ConvoMenu.tsx:224
 msgid "Go to user's profile"
 msgstr "Перейти к профилю пользователя"
+
+#: src/components/dialogs/nuxs/NeueChar.tsx:119
+#: src/components/dialogs/nuxs/NeueChar.tsx:124
+msgid "Got it!"
+msgstr ""
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/lib/moderation/useGlobalLabelStrings.ts:50
@@ -3721,7 +3737,7 @@ msgid "Inappropriate messages or explicit links"
 msgstr "Неприемлемые сообщения или откровенные ссылки"
 
 #. Title message shown in chat requests inbox when it's empty
-#: src/screens/Messages/Inbox.tsx:208
+#: src/screens/Messages/Inbox.tsx:203
 msgid "Inbox zero!"
 msgstr ""
 
@@ -3822,7 +3838,7 @@ msgstr "Он правильный"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "Сейчас здесь только вы! Добавьте больше людей в свой стартовый набор, воспользовавшись поиском выше."
 
-#: src/view/com/composer/Composer.tsx:1595
+#: src/view/com/composer/Composer.tsx:1612
 msgid "Job ID: {0}"
 msgstr "ID вакансии: {0}"
 
@@ -3857,7 +3873,7 @@ msgid "Labeled by the author."
 msgstr "Метка добавлена автором."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:75
-#: src/view/screens/Profile.tsx:220
+#: src/view/screens/Profile.tsx:218
 msgid "Labels"
 msgstr "Метки"
 
@@ -4042,7 +4058,7 @@ msgstr "Понравилось {0, plural, one {# пользователю} othe
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr "Понравилось {likeCount, plural, one {# пользователю} other {# пользователям}}"
 
-#: src/view/screens/Profile.tsx:226
+#: src/view/screens/Profile.tsx:224
 msgid "Likes"
 msgstr "Нравится"
 
@@ -4115,8 +4131,8 @@ msgstr "Список больше не игнорируется"
 
 #: src/Navigation.tsx:140
 #: src/view/screens/Lists.tsx:62
-#: src/view/screens/Profile.tsx:221
-#: src/view/screens/Profile.tsx:229
+#: src/view/screens/Profile.tsx:219
+#: src/view/screens/Profile.tsx:227
 #: src/view/shell/desktop/LeftNav.tsx:669
 #: src/view/shell/Drawer.tsx:501
 msgid "Lists"
@@ -4207,9 +4223,9 @@ msgstr "Управление сохранёнными лентами"
 msgid "Manage your muted words and tags"
 msgstr "Настраивайте ваши игнорируемые слова и теги"
 
-#: src/screens/Messages/Inbox.tsx:305
-#: src/screens/Messages/Inbox.tsx:324
-#: src/screens/Messages/Inbox.tsx:331
+#: src/screens/Messages/Inbox.tsx:300
+#: src/screens/Messages/Inbox.tsx:319
+#: src/screens/Messages/Inbox.tsx:326
 msgid "Mark all as read"
 msgstr ""
 
@@ -4218,12 +4234,12 @@ msgstr ""
 msgid "Mark as read"
 msgstr "Отметить как прочитанное"
 
-#: src/screens/Messages/Inbox.tsx:292
-#: src/screens/Messages/Inbox.tsx:315
+#: src/screens/Messages/Inbox.tsx:287
+#: src/screens/Messages/Inbox.tsx:310
 msgid "Marked all as read"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:224
+#: src/view/screens/Profile.tsx:222
 msgid "Media"
 msgstr "Медиа"
 
@@ -4554,9 +4570,13 @@ msgctxt "action"
 msgid "New"
 msgstr "Новый"
 
+#: src/components/dialogs/nuxs/NeueChar.tsx:95
+msgid "New character limit 🎉"
+msgstr ""
+
 #: src/components/dms/dialogs/NewChatDialog.tsx:65
-#: src/screens/Messages/ChatList.tsx:351
-#: src/screens/Messages/ChatList.tsx:358
+#: src/screens/Messages/ChatList.tsx:350
+#: src/screens/Messages/ChatList.tsx:357
 msgid "New chat"
 msgstr "Новый чат"
 
@@ -4590,7 +4610,7 @@ msgstr "Новый Пароль"
 #: src/screens/Profile/ProfileFeed/index.tsx:238
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
-#: src/view/screens/Profile.tsx:507
+#: src/view/screens/Profile.tsx:505
 #: src/view/screens/ProfileList.tsx:253
 #: src/view/screens/ProfileList.tsx:286
 msgid "New post"
@@ -4792,7 +4812,7 @@ msgstr "Примечание по распространению"
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "Примечание: Bluesky является открытой и публичной сетью. Этот параметр ограничивает видимость вашего содержимого только в приложениях и на сайте Bluesky, но другие приложения могут этого не придерживаться. Ваш контент все ещё может быть показан посетителям без учётной записи другими приложениями и веб-сайтами."
 
-#: src/screens/Messages/ChatList.tsx:264
+#: src/screens/Messages/ChatList.tsx:263
 msgid "Nothing here"
 msgstr "Тут ничего нет"
 
@@ -4882,15 +4902,15 @@ msgstr "на<0><1/><2><3/></2></0>"
 msgid "Onboarding reset"
 msgstr "Сброс настроек"
 
-#: src/view/com/composer/Composer.tsx:346
+#: src/view/com/composer/Composer.tsx:356
 msgid "One or more GIFs is missing alt text."
 msgstr "В одном или нескольких GIF-файлах отсутствует альтернативный текст."
 
-#: src/view/com/composer/Composer.tsx:343
+#: src/view/com/composer/Composer.tsx:353
 msgid "One or more images is missing alt text."
 msgstr "Для одного или нескольких изображений отсутствует альтернативный текст."
 
-#: src/view/com/composer/Composer.tsx:353
+#: src/view/com/composer/Composer.tsx:363
 msgid "One or more videos is missing alt text."
 msgstr "В одном или нескольких видео отсутствует альтернативный текст."
 
@@ -4950,7 +4970,7 @@ msgid "Open drawer menu"
 msgstr "Открыть выдвижное меню"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1244
+#: src/view/com/composer/Composer.tsx:1260
 msgid "Open emoji picker"
 msgstr "Открыть подборщик эмодзи"
 
@@ -5036,7 +5056,7 @@ msgstr "Открывает редактор"
 msgid "Opens device photo gallery"
 msgstr "Открывает фотогалерею устройства"
 
-#: src/view/com/composer/Composer.tsx:1245
+#: src/view/com/composer/Composer.tsx:1261
 msgid "Opens emoji picker"
 msgstr "Открывает подборщик эмодзи"
 
@@ -5395,7 +5415,7 @@ msgstr "Популярные видео в вашей сети."
 msgid "Porn"
 msgstr "Порнография"
 
-#: src/view/com/composer/Composer.tsx:959
+#: src/view/com/composer/Composer.tsx:973
 msgctxt "action"
 msgid "Post"
 msgstr "Опубликовать"
@@ -5405,7 +5425,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "Опубликовать"
 
-#: src/view/com/composer/Composer.tsx:957
+#: src/view/com/composer/Composer.tsx:971
 msgctxt "action"
 msgid "Post All"
 msgstr "Опубликовать все"
@@ -5481,7 +5501,7 @@ msgid "Post unpinned"
 msgstr "Пост откреплён"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:186
-#: src/view/screens/Profile.tsx:222
+#: src/view/screens/Profile.tsx:220
 msgid "Posts"
 msgstr "Посты"
 
@@ -5558,7 +5578,7 @@ msgstr "Конфиденциальность и безопасность"
 msgid "Privacy Policy"
 msgstr "Политика конфиденциальности"
 
-#: src/view/com/composer/Composer.tsx:1658
+#: src/view/com/composer/Composer.tsx:1675
 msgid "Processing video..."
 msgstr "Обработка видео..."
 
@@ -5568,7 +5588,7 @@ msgid "Processing..."
 msgstr "Обработка..."
 
 #: src/view/screens/DebugMod.tsx:920
-#: src/view/screens/Profile.tsx:361
+#: src/view/screens/Profile.tsx:359
 msgid "profile"
 msgstr "профиль"
 
@@ -5715,8 +5735,8 @@ msgstr ""
 msgid "Reject chat request"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:247
-#: src/screens/Messages/Inbox.tsx:191
+#: src/screens/Messages/ChatList.tsx:246
+#: src/screens/Messages/Inbox.tsx:186
 msgid "Reload conversations"
 msgstr "Перезагрузить беседы"
 
@@ -5787,7 +5807,6 @@ msgid "Remove from quick access?"
 msgstr "Удалить из быстрого доступа?"
 
 #: src/screens/List/ListHiddenScreen.tsx:170
-#: src/screens/List/ListHiddenScreen.tsx:174
 msgid "Remove from saved feeds"
 msgstr "Удалить из сохранённых лент"
 
@@ -5843,6 +5862,7 @@ msgid "Removed from my feeds"
 msgstr "Удалено из моих лент"
 
 #: src/screens/List/ListHiddenScreen.tsx:94
+#: src/screens/List/ListHiddenScreen.tsx:174
 msgid "Removed from saved feeds"
 msgstr "Удалено из сохранённых лент"
 
@@ -5865,7 +5885,7 @@ msgstr "Удаляет процитированный пост"
 msgid "Replace with Discover"
 msgstr "Заменить на Discover"
 
-#: src/view/screens/Profile.tsx:223
+#: src/view/screens/Profile.tsx:221
 msgid "Replies"
 msgstr "Ответы"
 
@@ -5877,7 +5897,7 @@ msgstr "Ответы отключены"
 msgid "Replies to this post are disabled."
 msgstr "Ответы на этот пост отключены."
 
-#: src/view/com/composer/Composer.tsx:955
+#: src/view/com/composer/Composer.tsx:969
 msgctxt "action"
 msgid "Reply"
 msgstr "Ответить"
@@ -6145,9 +6165,9 @@ msgstr "Повторяет последнее действие, которое �
 #: src/components/StarterPack/ProfileStarterPacks.tsx:334
 #: src/screens/Login/LoginForm.tsx:323
 #: src/screens/Login/LoginForm.tsx:330
-#: src/screens/Messages/ChatList.tsx:253
+#: src/screens/Messages/ChatList.tsx:252
 #: src/screens/Messages/components/MessageListError.tsx:25
-#: src/screens/Messages/Inbox.tsx:197
+#: src/screens/Messages/Inbox.tsx:192
 #: src/screens/Onboarding/StepInterests/index.tsx:217
 #: src/screens/Onboarding/StepInterests/index.tsx:220
 #: src/screens/Signup/BackNextButtons.tsx:53
@@ -6939,8 +6959,8 @@ msgstr ""
 msgid "Something wrong? Let us know."
 msgstr "Что-то не так? Сообщите нам."
 
-#: src/App.native.tsx:122
-#: src/App.web.tsx:98
+#: src/App.native.tsx:121
+#: src/App.web.tsx:97
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr "Извините! Ваша сессия истекла. Пожалуйста, войдите снова."
 
@@ -6972,6 +6992,10 @@ msgstr "Спам"
 #: src/lib/moderation/useReportOptions.ts:55
 msgid "Spam; excessive mentions or replies"
 msgstr "Спам; чрезмерные упоминания или ответы"
+
+#: src/components/dialogs/nuxs/NeueChar.tsx:36
+msgid "Special announcement dialog for April Fool's day 2025"
+msgstr ""
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:113
@@ -7019,7 +7043,7 @@ msgstr "Стартовый набор от вас"
 msgid "Starter pack is invalid"
 msgstr "Стартовый набор недействителен"
 
-#: src/view/screens/Profile.tsx:228
+#: src/view/screens/Profile.tsx:226
 msgid "Starter Packs"
 msgstr "Наборы"
 
@@ -7385,7 +7409,7 @@ msgstr "При соединении с вашим сервером возник�
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Возникла проблема с загрузкой уведомлений. Нажмите здесь, чтобы повторить попытку."
 
-#: src/view/com/posts/PostFeed.tsx:592
+#: src/view/com/posts/PostFeed.tsx:607
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "Возникла проблема с загрузкой постов. Нажмите здесь, чтобы повторить попытку."
 
@@ -7602,7 +7626,7 @@ msgstr "Этот пост виден только вошедшим в систе
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Этот пост будет скрыт из лент и тем. Это невозможно отменить."
 
-#: src/view/com/composer/Composer.tsx:428
+#: src/view/com/composer/Composer.tsx:438
 msgid "This post's author has disabled quote posts."
 msgstr "Автор этого поста отключил цитирование постов."
 
@@ -7960,7 +7984,7 @@ msgstr "Отписаться от этого маркировщика"
 msgid "Unsubscribed from list"
 msgstr "Подписка на список отменена"
 
-#: src/view/com/composer/Composer.tsx:781
+#: src/view/com/composer/Composer.tsx:795
 msgid "Unsupported video type"
 msgstr "Неподдерживаемый тип видео"
 
@@ -8039,7 +8063,7 @@ msgstr "Загрузка изображений..."
 msgid "Uploading link thumbnail..."
 msgstr "Загрузка миниатюры ссылки..."
 
-#: src/view/com/composer/Composer.tsx:1655
+#: src/view/com/composer/Composer.tsx:1672
 msgid "Uploading video..."
 msgstr "Загрузка видео..."
 
@@ -8240,7 +8264,7 @@ msgstr "Видео не найдено."
 msgid "Video settings"
 msgstr "Настройки видео"
 
-#: src/view/com/composer/Composer.tsx:1665
+#: src/view/com/composer/Composer.tsx:1682
 msgid "Video uploaded"
 msgstr "Видео загружено"
 
@@ -8248,7 +8272,7 @@ msgstr "Видео загружено"
 msgid "Video: {0}"
 msgstr "Видео: {0}"
 
-#: src/view/screens/Profile.tsx:225
+#: src/view/screens/Profile.tsx:223
 msgid "Videos"
 msgstr "Видео"
 
@@ -8446,6 +8470,10 @@ msgstr "Мы воспользуемся этим, чтобы подстроит�
 msgid "We're having network issues, try again"
 msgstr "У нас проблемы с сетью, попробуйте ещё раз"
 
+#: src/components/dialogs/nuxs/NeueChar.tsx:98
+msgid "We’re listening to your feedback and updating the character count. Posts are now limited to 299 characters!"
+msgstr ""
+
 #: src/screens/Signup/index.tsx:95
 msgid "We're so excited to have you join us!"
 msgstr "Мы очень рады, что вы присоединились!"
@@ -8462,7 +8490,7 @@ msgstr "Нам очень жаль, мы не смогли сейчас загр
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Нам очень жаль, нам не удалось выполнить поиск по вашему запросу. Пожалуйста, попробуйте ещё раз через несколько минут."
 
-#: src/view/com/composer/Composer.tsx:425
+#: src/view/com/composer/Composer.tsx:435
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "Нам очень жаль! Пост, на который вы отвечаете, был удален."
 
@@ -8497,7 +8525,7 @@ msgstr "О чём люди постят."
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:744
+#: src/view/com/composer/Composer.tsx:758
 msgid "What's up?"
 msgstr "Как дела?"
 
@@ -8518,8 +8546,8 @@ msgid "Who can reply"
 msgstr "Кто может отвечать"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
-#: src/screens/Messages/ChatList.tsx:231
-#: src/screens/Messages/Inbox.tsx:176
+#: src/screens/Messages/ChatList.tsx:230
+#: src/screens/Messages/Inbox.tsx:171
 msgid "Whoops!"
 msgstr "Опаньки!"
 
@@ -8571,11 +8599,11 @@ msgstr "Почему следует просмотреть этого польз
 msgid "Write a message"
 msgstr "Написать сообщение"
 
-#: src/view/com/composer/Composer.tsx:832
+#: src/view/com/composer/Composer.tsx:846
 msgid "Write post"
 msgstr "Написать пост"
 
-#: src/view/com/composer/Composer.tsx:742
+#: src/view/com/composer/Composer.tsx:756
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:69
 msgid "Write your reply"
 msgstr "Написать ответ"
@@ -8679,7 +8707,7 @@ msgstr "У вас нет ни одного подписчика."
 msgid "You don't follow any users who follow @{name}."
 msgstr "Вы не подписаны ни на каких пользователей, которые подписаны на @{name}."
 
-#: src/screens/Messages/Inbox.tsx:220
+#: src/screens/Messages/Inbox.tsx:215
 msgid "You don't have any chat requests at the moment."
 msgstr ""
 
@@ -8733,7 +8761,7 @@ msgstr "Вы включили игнорирование этой учётной
 msgid "You have muted this user"
 msgstr "Вы включили игнорирование этого пользователя"
 
-#: src/screens/Messages/ChatList.tsx:274
+#: src/screens/Messages/ChatList.tsx:273
 msgid "You have no conversations yet. Start one!"
 msgstr "У вас ещё нет бесед. Создайте первую!"
 
@@ -9005,11 +9033,11 @@ msgstr "Ваш пароль успешно изменён!"
 msgid "Your password must be at least 8 characters long."
 msgstr "Ваш пароль должен состоять не менее чем из 8 символов."
 
-#: src/view/com/composer/Composer.tsx:485
+#: src/view/com/composer/Composer.tsx:495
 msgid "Your post has been published"
 msgstr "Пост опубликован"
 
-#: src/view/com/composer/Composer.tsx:482
+#: src/view/com/composer/Composer.tsx:492
 msgid "Your posts have been published"
 msgstr "Ваши посты были опубликованы"
 
@@ -9021,7 +9049,7 @@ msgstr "Ваши посты, лайки и блокировки являются
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "Ваш профиль, посты, ленты и списки больше не будут видны другим пользователям Bluesky. Вы можете реактивировать свою учётную запись в любое время, войдя в систему."
 
-#: src/view/com/composer/Composer.tsx:484
+#: src/view/com/composer/Composer.tsx:494
 msgid "Your reply has been published"
 msgstr "Ответ опубликован"
 
