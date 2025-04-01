@@ -118,7 +118,7 @@ jobs:
 
       - name: 🏗️ Create Bundle
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
-        run: SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} EXPO_PUBLIC_ENV="${{ inputs.channel || 'testflight' }}" yarn export
+        run: SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_DSN=${{ secrets.SENTRY_DSN }} EXPO_PUBLIC_ENV="${{ inputs.channel || 'testflight' }}" yarn export
 
       - name: 📦 Package Bundle and 🚀 Deploy
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
