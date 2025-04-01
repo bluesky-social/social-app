@@ -122,7 +122,7 @@ export function NeueChar() {
             <View style={[a.pt_2xl]}>
               <Button
                 label={_(msg`Got it!`)}
-                onPress={onClose}
+                onPress={() => control.close()}
                 size="large"
                 variant="solid"
                 color="primary">
