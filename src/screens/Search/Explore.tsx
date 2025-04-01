@@ -1,6 +1,6 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {View, type ViewabilityConfig, type ViewToken} from 'react-native'
-import {type AppBskyActorDefs, type AppBskyFeedDefs} from '@atproto/api'
+import {type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -25,10 +25,12 @@ import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVid
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
+import {StarterPackCard} from '#/screens/Search/components/StarterPackCard'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
+import {StarterPack} from '#/components/icons/StarterPack'
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -38,6 +40,7 @@ import {
   SuggestedProfileCard,
   useLoadEnoughProfiles,
 } from './modules/ExploreSuggestedAccounts'
+import {useSuggestedStarterPacksQuery} from '#/state/queries/useSuggestedStarterPacksQuery'
 
 function LoadMore({item}: {item: ExploreScreenItems & {type: 'loadMore'}}) {
   const t = useTheme()
@@ -152,6 +155,11 @@ type ExploreScreenItems =
       message: string
       error: string
     }
+  | {
+      type: 'starterPack',
+      key: string
+      view: AppBskyGraphDefs.StarterPackViewBasic
+    }
 
 export function Explore({
   focusSearchInput,
@@ -235,6 +243,11 @@ export function Explore({
     profilesError,
     fetchNextProfilesPage,
   ])
+  const {
+    data: suggestedSPs,
+    isLoading: isLoadingSuggestedSPs,
+    error: suggestedSPsError,
+  } = useSuggestedStarterPacksQuery()
 
   const isLoadingMoreFeeds = isFetchingNextFeedsPage && !isLoadingFeeds
   const [hasPressedLoadMoreFeeds, setHasPressedLoadMoreFeeds] = useState(false)
@@ -433,16 +446,47 @@ export function Explore({
       }
     }
 
+    const addSuggestedStarterPacksModule = () => {
+      i.push({
+        type: 'header',
+        key: 'suggested-starterPacks-header',
+        title: _(msg`Starter Packs`),
+        icon: StarterPack,
+      })
+
+      if (isLoadingSuggestedSPs) {
+        // nothing
+      } else if (suggestedSPsError || !suggestedSPs) {
+        i.pop()
+        // i.push({
+        //   type: 'error',
+        //   key: 'suggestedSPsError',
+        //   message: _(msg`Failed to load suggested starter packs`),
+        //   error: cleanError(suggestedSPsError),
+        // })
+      } else {
+        suggestedSPs.map(s => {
+          i.push({
+            type: 'starterPack',
+            key: s.uri,
+            view: s,
+          })
+        })
+      }
+    }
+
     // Dynamic module ordering
 
     addTopBorder()
 
     if (guide?.guide === 'follow-10' && !guide.isComplete) {
       addSuggestedFollowsModule()
+      addSuggestedStarterPacksModule()
       addTrendingTopicsModule()
     } else {
       addTrendingTopicsModule()
       addSuggestedFollowsModule()
+      addSuggestedStarterPacksModule()
     }
 
     if (gate('explore_show_suggested_feeds')) {
@@ -544,6 +588,19 @@ export function Explore({
                 a.py_lg,
               ]}>
               <FeedCard.Default view={item.feed} />
+            </View>
+          )
+        }
+        case 'starterPack': {
+          return (
+            <View
+              style={[
+                a.border_b,
+                t.atoms.border_contrast_low,
+                a.px_lg,
+                a.py_lg,
+              ]}>
+              <StarterPackCard view={item.view} />
             </View>
           )
         }
