@@ -8,6 +8,7 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useNuxDialogContext} from '#/components/dialogs/nuxs'
+import {image} from '#/components/dialogs/nuxs/temp'
 import {Text} from '#/components/Typography'
 
 // midnight PDT on April 1st, 2025
@@ -52,7 +53,10 @@ export function NeueChar() {
             },
           ]}>
           <Image
-            source={require('../../../../assets/misc/neue-char.jpg')}
+            //source={require('../../../../assets/misc/neue-char.jpg')}
+            source={{
+              uri: image,
+            }}
             style={[
               a.absolute,
               {
