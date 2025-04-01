@@ -36,6 +36,7 @@ import * as ModuleHeader from './components/ModuleHeader'
 import {
   SuggestedAccountsTabBar,
   SuggestedProfileCard,
+  useLoadEnoughProfiles,
 } from './modules/ExploreSuggestedAccounts'
 
 function LoadMore({item}: {item: ExploreScreenItems & {type: 'loadMore'}}) {
@@ -186,6 +187,14 @@ export function Explore({
     enabled: !!selectedInterest,
     limit: 10,
   })
+  useLoadEnoughProfiles({
+    interest: selectedInterest,
+    data: interestProfiles,
+    isLoading: isLoadingInterestProfiles,
+    isFetchingNextPage: isFetchingNextInterestProfilesPage,
+    hasNextPage: hasNextInterestProfilesPage,
+    fetchNextPage: fetchNextInterestProfilesPage,
+  })
   const {
     data: feeds,
     hasNextPage: hasNextFeedsPage,
@@ -295,7 +304,7 @@ export function Explore({
         const profileItems: ExploreScreenItems[] = []
         for (const page of profiles.pages) {
           for (const actor of page.actors) {
-            if (!seen.has(actor.did)) {
+            if (!seen.has(actor.did) && !actor.viewer?.following) {
               seen.add(actor.did)
               profileItems.push({
                 type: 'profile',
@@ -308,19 +317,21 @@ export function Explore({
         }
 
         if (profileItems.length === 0) {
-          // no items! remove the header
-          i.pop()
+          if (!hasNextProfilesPage) {
+            // no items! remove the header
+            i.pop()
+          }
         } else {
           i.push(...profileItems)
-          if (hasNextProfilesPage) {
-            i.push({
-              type: 'loadMore',
-              key: 'loadMoreProfiles',
-              message: _(msg`Load more suggested accounts`),
-              isLoadingMore: isLoadingMoreProfiles,
-              onLoadMore: onLoadMoreProfiles,
-            })
-          }
+        }
+        if (hasNextProfilesPage) {
+          i.push({
+            type: 'loadMore',
+            key: 'loadMoreProfiles',
+            message: _(msg`Load more suggested accounts`),
+            isLoadingMore: isLoadingMoreProfiles,
+            onLoadMore: onLoadMoreProfiles,
+          })
         }
       } else {
         if (profilesError) {
@@ -384,7 +395,9 @@ export function Explore({
           })
         } else {
           if (feedItems.length === 0) {
-            i.pop()
+            if (!hasNextFeedsPage) {
+              i.pop()
+            }
           } else {
             // This query doesn't follow the limit very well, so the first press of the
             // load more button just unslices the array back to ~10 items
@@ -393,15 +406,15 @@ export function Explore({
             } else {
               i.push(...feedItems)
             }
-            if (hasNextFeedsPage) {
-              i.push({
-                type: 'loadMore',
-                key: 'loadMoreFeeds',
-                message: _(msg`Load more suggested feeds`),
-                isLoadingMore: isLoadingMoreFeeds,
-                onLoadMore: onLoadMoreFeeds,
-              })
-            }
+          }
+          if (hasNextFeedsPage) {
+            i.push({
+              type: 'loadMore',
+              key: 'loadMoreFeeds',
+              message: _(msg`Load more suggested feeds`),
+              isLoadingMore: isLoadingMoreFeeds,
+              onLoadMore: onLoadMoreFeeds,
+            })
           }
         }
       } else {
