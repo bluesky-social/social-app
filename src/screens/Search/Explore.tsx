@@ -866,6 +866,8 @@ export function Explore({
           module = 'suggestedAccounts'
         } else if (item.type === 'feed') {
           module = 'suggestedFeeds'
+        } else if (item.type === 'preview:header') {
+          module = `feed:feedgen|${item.feed.uri}`
         } else {
           continue
         }
