@@ -3026,7 +3026,7 @@ msgstr "Error ao subir video"
 msgid "Failed to verify handle. Please try again."
 msgstr "Erro ao verificar nome de usuario. Téntao de novo."
 
-#: src/components/dialogs/nuxs/NeueChar.tsx:66
+#: src/components/dialogs/nuxs/NeueChar.tsx:67
 msgid "Fake conversation with the Bluesky app. Bluesky says: \"i ain't reading all that\", then \"I'm happy for you though\", and finally \"or sorry that happened\". This is in reference to a popular internet meme."
 msgstr ""
 
@@ -3293,7 +3293,7 @@ msgstr "Tamaño de fonte"
 msgid "Food"
 msgstr "Comida"
 
-#: src/components/dialogs/nuxs/NeueChar.tsx:113
+#: src/components/dialogs/nuxs/NeueChar.tsx:111
 msgid "For a limited time — just today ;)"
 msgstr ""
 
@@ -3433,8 +3433,8 @@ msgstr "Ir ao perfil"
 msgid "Go to user's profile"
 msgstr "Ir ao perfil da conta"
 
-#: src/components/dialogs/nuxs/NeueChar.tsx:119
-#: src/components/dialogs/nuxs/NeueChar.tsx:124
+#: src/components/dialogs/nuxs/NeueChar.tsx:117
+#: src/components/dialogs/nuxs/NeueChar.tsx:122
 msgid "Got it!"
 msgstr ""
 
@@ -4570,7 +4570,7 @@ msgctxt "action"
 msgid "New"
 msgstr "Novo"
 
-#: src/components/dialogs/nuxs/NeueChar.tsx:95
+#: src/components/dialogs/nuxs/NeueChar.tsx:93
 msgid "New character limit 🎉"
 msgstr ""
 
@@ -6993,7 +6993,7 @@ msgstr "Lixo"
 msgid "Spam; excessive mentions or replies"
 msgstr "Spam; mencións ou respostas excesivas"
 
-#: src/components/dialogs/nuxs/NeueChar.tsx:36
+#: src/components/dialogs/nuxs/NeueChar.tsx:37
 msgid "Special announcement dialog for April Fool's day 2025"
 msgstr ""
 
@@ -8470,7 +8470,7 @@ msgstr "Usarémolo para personalizar a túa experiencia."
 msgid "We're having network issues, try again"
 msgstr "Temos problemas de rede, téntao de novo"
 
-#: src/components/dialogs/nuxs/NeueChar.tsx:98
+#: src/components/dialogs/nuxs/NeueChar.tsx:96
 msgid "We’re listening to your feedback and updating the character count. Posts are now limited to 299 characters!"
 msgstr ""
 

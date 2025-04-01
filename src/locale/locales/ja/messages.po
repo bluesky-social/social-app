@@ -3026,7 +3026,7 @@ msgstr "ビデオのアップロードに失敗しました"
 msgid "Failed to verify handle. Please try again."
 msgstr "ハンドルの変更に失敗しました。もう一度試してください。"
 
-#: src/components/dialogs/nuxs/NeueChar.tsx:66
+#: src/components/dialogs/nuxs/NeueChar.tsx:67
 msgid "Fake conversation with the Bluesky app. Bluesky says: \"i ain't reading all that\", then \"I'm happy for you though\", and finally \"or sorry that happened\". This is in reference to a popular internet meme."
 msgstr "Blueskyアプリとの偽の会話。Blueskyはこう言います：「そんなに全部読む気ないよ」、次に「でも君のために嬉しいよ」、最後に「あるいは、それは大変だったね」。これはインターネットで人気のミームを参照しています。"
 
@@ -3293,7 +3293,7 @@ msgstr "フォントサイズ"
 msgid "Food"
 msgstr "食べ物"
 
-#: src/components/dialogs/nuxs/NeueChar.tsx:113
+#: src/components/dialogs/nuxs/NeueChar.tsx:111
 msgid "For a limited time — just today ;)"
 msgstr "期間限定 — 本日限り ;)"
 
@@ -3433,8 +3433,8 @@ msgstr "プロフィールへ"
 msgid "Go to user's profile"
 msgstr "ユーザーのプロフィールへ移動"
 
-#: src/components/dialogs/nuxs/NeueChar.tsx:119
-#: src/components/dialogs/nuxs/NeueChar.tsx:124
+#: src/components/dialogs/nuxs/NeueChar.tsx:117
+#: src/components/dialogs/nuxs/NeueChar.tsx:122
 msgid "Got it!"
 msgstr "了解です！"
 
@@ -4570,7 +4570,7 @@ msgctxt "action"
 msgid "New"
 msgstr "新規"
 
-#: src/components/dialogs/nuxs/NeueChar.tsx:95
+#: src/components/dialogs/nuxs/NeueChar.tsx:93
 msgid "New character limit 🎉"
 msgstr "新しい文字数制限（アルファベットの文字）🎉"
 
@@ -6993,7 +6993,7 @@ msgstr "スパム"
 msgid "Spam; excessive mentions or replies"
 msgstr "スパム、過剰なメンションや返信"
 
-#: src/components/dialogs/nuxs/NeueChar.tsx:36
+#: src/components/dialogs/nuxs/NeueChar.tsx:37
 msgid "Special announcement dialog for April Fool's day 2025"
 msgstr "2025年エイプリルフール特別発表ダイアログ"
 
@@ -8470,7 +8470,7 @@ msgstr "これはあなたの体験をカスタマイズするために使用さ
 msgid "We're having network issues, try again"
 msgstr "ネットワークで問題が発生しています。もう一度試してください"
 
-#: src/components/dialogs/nuxs/NeueChar.tsx:98
+#: src/components/dialogs/nuxs/NeueChar.tsx:96
 msgid "We’re listening to your feedback and updating the character count. Posts are now limited to 299 characters!"
 msgstr "皆さまのご意見を反映し、文字数制限を更新しました。投稿は現在299文字までとなっています！"
 

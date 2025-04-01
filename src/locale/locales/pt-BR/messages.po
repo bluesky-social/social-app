@@ -3026,7 +3026,7 @@ msgstr "Falha ao carregar o vídeo"
 msgid "Failed to verify handle. Please try again."
 msgstr "Não foi possível verificar o nome de usuário. Por favor tente novamente."
 
-#: src/components/dialogs/nuxs/NeueChar.tsx:66
+#: src/components/dialogs/nuxs/NeueChar.tsx:67
 msgid "Fake conversation with the Bluesky app. Bluesky says: \"i ain't reading all that\", then \"I'm happy for you though\", and finally \"or sorry that happened\". This is in reference to a popular internet meme."
 msgstr "Conversa falsa com o app Bluesky. O Bluesky diz: \"não vou ler tudo isso\", depois \"mas fico feliz por você\", e por fim \"ou sinto muito pelo que aconteceu\". Isso faz referência a um meme popular da internet."
 
@@ -3293,7 +3293,7 @@ msgstr "Tamanho da fonte"
 msgid "Food"
 msgstr "Comida"
 
-#: src/components/dialogs/nuxs/NeueChar.tsx:113
+#: src/components/dialogs/nuxs/NeueChar.tsx:111
 msgid "For a limited time — just today ;)"
 msgstr "Por tempo limitado — só hoje ;)"
 
@@ -3433,8 +3433,8 @@ msgstr "Ir para este perfil"
 msgid "Go to user's profile"
 msgstr "Ir para o perfil deste usuário"
 
-#: src/components/dialogs/nuxs/NeueChar.tsx:119
-#: src/components/dialogs/nuxs/NeueChar.tsx:124
+#: src/components/dialogs/nuxs/NeueChar.tsx:117
+#: src/components/dialogs/nuxs/NeueChar.tsx:122
 msgid "Got it!"
 msgstr "Entendi!"
 
@@ -4570,7 +4570,7 @@ msgctxt "action"
 msgid "New"
 msgstr "Novo"
 
-#: src/components/dialogs/nuxs/NeueChar.tsx:95
+#: src/components/dialogs/nuxs/NeueChar.tsx:93
 msgid "New character limit 🎉"
 msgstr "Novo limite de letras 🎉"
 
@@ -6993,7 +6993,7 @@ msgstr "Spam"
 msgid "Spam; excessive mentions or replies"
 msgstr "Spam; menções ou respostas excessivas"
 
-#: src/components/dialogs/nuxs/NeueChar.tsx:36
+#: src/components/dialogs/nuxs/NeueChar.tsx:37
 msgid "Special announcement dialog for April Fool's day 2025"
 msgstr "Janela de diálogo especial para o Dia da Mentira de 2025."
 
@@ -8470,7 +8470,7 @@ msgstr "Usaremos isto para personalizar a sua experiência."
 msgid "We're having network issues, try again"
 msgstr "Estamos com problemas de rede, tente novamente"
 
-#: src/components/dialogs/nuxs/NeueChar.tsx:98
+#: src/components/dialogs/nuxs/NeueChar.tsx:96
 msgid "We’re listening to your feedback and updating the character count. Posts are now limited to 299 characters!"
 msgstr "Estamos ouvindo o seu feedback e atualizando a contagem de letras. As postagens agora estão limitadas a 299 letras!"
 
