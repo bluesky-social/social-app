@@ -1,7 +1,11 @@
 import {View} from 'react-native'
+import {type AppBskyFeedDefs} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {logger} from '#/logger'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {
   atoms as a,
   native,
@@ -12,6 +16,7 @@ import {
 import {Button, ButtonIcon} from '#/components/Button'
 import {sizes as iconSizes} from '#/components/icons/common'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
+import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {Text, type TextProps} from '#/components/Typography'
 
 export function Container({
@@ -37,6 +42,14 @@ export function Container({
   )
 }
 
+export function FeedAvatar({feed}: {feed: AppBskyFeedDefs.GeneratorView}) {
+  return (
+    <View style={[a.z_20, {marginLeft: -2}, a.mr_xs]}>
+      <UserAvatar type="algo" size={42} avatar={feed.avatar} />
+    </View>
+  )
+}
+
 export function Icon({
   icon: Comp,
   size = 'lg',
@@ -52,6 +65,22 @@ export function Icon({
 
 export function TitleText({style, ...props}: TextProps) {
   return <Text style={[a.font_bold, a.flex_1, a.text_xl, style]} {...props} />
+}
+
+export function SubtitleText({style, ...props}: TextProps) {
+  const t = useTheme()
+  return (
+    <Text
+      style={[
+        t.atoms.text_contrast_low,
+        a.leading_tight,
+        a.flex_1,
+        a.text_sm,
+        style,
+      ]}
+      {...props}
+    />
+  )
 }
 
 export function SearchButton({
@@ -86,5 +115,20 @@ export function SearchButton({
       ]}>
       <ButtonIcon icon={SearchIcon} size="lg" />
     </Button>
+  )
+}
+
+export function PinButton({}: {feed: AppBskyFeedDefs.GeneratorView}) {
+  const {_} = useLingui()
+  return (
+    <View style={[a.z_20, {marginRight: -2}]}>
+      <Button
+        label={_(msg`Pin Feed`)}
+        size="small"
+        variant="ghost"
+        color="secondary">
+        <ButtonIcon icon={PinIcon} size="lg" />
+      </Button>
+    </View>
   )
 }

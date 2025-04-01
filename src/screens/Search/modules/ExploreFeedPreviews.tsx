@@ -1,10 +1,13 @@
 import {useMemo} from 'react'
 import {type AppBskyFeedDefs, moderatePost} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useInfiniteQuery} from '@tanstack/react-query'
 
 import {CustomFeedAPI} from '#/lib/api/feed/custom'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {FeedTuner} from '#/lib/api/feed-manip'
+import {cleanError} from '#/lib/strings/errors'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   type FeedPostSlice,
@@ -18,44 +21,52 @@ const RQKEY = (feeds: string[]) => [RQKEY_ROOT, feeds]
 
 const LIMIT = 6
 
-type FeedPreviewItem =
+export type FeedPreviewItem =
   | {
-      type: 'loading'
+      type: 'preview:loading'
       key: string
     }
   | {
-      type: 'error'
+      type: 'preview:error'
+      key: string
+      message: string
+      error: string
+    }
+  | {
+      type: 'preview:loadMoreError'
       key: string
     }
   | {
-      type: 'loadMoreError'
+      type: 'preview:empty'
       key: string
     }
   | {
-      type: 'empty'
-      key: string
-    }
-  | {
-      type: 'header'
+      type: 'preview:header'
       key: string
       feed: AppBskyFeedDefs.GeneratorView
     }
+  | {
+      type: 'preview:footer'
+      key: string
+    }
   // copied from PostFeed.tsx
   | {
-      type: 'sliceItem'
+      type: 'preview:sliceItem'
       key: string
       slice: FeedPostSlice
       indexInSlice: number
       showReplyTo: boolean
+      hideTopBorder: boolean
     }
   | {
-      type: 'sliceViewFullThread'
+      type: 'preview:sliceViewFullThread'
       key: string
       uri: string
     }
 
 export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
   const uris = feeds.map(feed => feed.uri)
+  const {_} = useLingui()
   const agent = useAgent()
   const {data: preferences} = usePreferencesQuery()
   const userInterests = aggregateUserInterests(preferences)
@@ -81,7 +92,7 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
       count < feeds.length ? count + 1 : undefined,
   })
 
-  const {data, isFetched, isError, isPending} = query
+  const {data, isFetched, isError, isPending, error} = query
 
   return {
     query,
@@ -94,12 +105,14 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
       if (isFetched) {
         if (isError && isEmpty) {
           items.push({
-            type: 'error',
+            type: 'preview:error',
             key: 'error',
+            message: _(msg`An error occurred while fetching the feed.`),
+            error: cleanError(error),
           })
         } else if (isEmpty) {
           items.push({
-            type: 'empty',
+            type: 'preview:empty',
             key: 'empty',
           })
         } else if (data) {
@@ -107,6 +120,8 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
             // default feed tuner - we just want it to slice up the feed
             const tuner = new FeedTuner([])
             const slices: FeedPreviewItem[] = []
+
+            let rowIndex = 0
             for (const item of tuner.tune(page.posts)) {
               if (item.isFallbackMarker) continue
 
@@ -147,50 +162,60 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
                 const beforeLast = slice.items.length - 2
                 const last = slice.items.length - 1
                 slices.push({
-                  type: 'sliceItem',
+                  type: 'preview:sliceItem',
                   key: slice.items[0]._reactKey,
                   slice: slice,
                   indexInSlice: 0,
                   showReplyTo: false,
+                  hideTopBorder: rowIndex === 0,
                 })
                 slices.push({
-                  type: 'sliceViewFullThread',
+                  type: 'preview:sliceViewFullThread',
                   key: slice._reactKey + '-viewFullThread',
                   uri: slice.items[0].uri,
                 })
                 slices.push({
-                  type: 'sliceItem',
+                  type: 'preview:sliceItem',
                   key: slice.items[beforeLast]._reactKey,
                   slice: slice,
                   indexInSlice: beforeLast,
                   showReplyTo:
                     slice.items[beforeLast].parentAuthor?.did !==
                     slice.items[beforeLast].post.author.did,
+                  hideTopBorder: false,
                 })
                 slices.push({
-                  type: 'sliceItem',
+                  type: 'preview:sliceItem',
                   key: slice.items[last]._reactKey,
                   slice: slice,
                   indexInSlice: last,
                   showReplyTo: false,
+                  hideTopBorder: false,
                 })
               } else {
                 for (let i = 0; i < slice.items.length; i++) {
                   slices.push({
-                    type: 'sliceItem',
+                    type: 'preview:sliceItem',
                     key: slice.items[i]._reactKey,
                     slice: slice,
                     indexInSlice: i,
                     showReplyTo: i === 0,
+                    hideTopBorder: i === 0 && rowIndex === 0,
                   })
                 }
               }
+
+              rowIndex++
             }
 
             if (slices.length > 0) {
               items.push(
                 {
-                  type: 'header',
+                  type: 'preview:footer',
+                  key: `footer-${page.feed.uri}`,
+                },
+                {
+                  type: 'preview:header',
                   key: `header-${page.feed.uri}`,
                   feed: page.feed,
                 },
@@ -200,18 +225,18 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
           }
         } else if (isError && !isEmpty) {
           items.push({
-            type: 'loadMoreError',
+            type: 'preview:loadMoreError',
             key: 'loadMoreError',
           })
         }
       } else {
         items.push({
-          type: 'loading',
+          type: 'preview:loading',
           key: 'loading',
         })
       }
 
       return items
-    }, [data, isFetched, isError, isPending, moderationOpts]),
+    }, [data, isFetched, isError, isPending, moderationOpts, _, error]),
   }
 }

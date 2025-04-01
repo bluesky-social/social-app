@@ -5,11 +5,12 @@ import {
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {type MetricEvents} from '#/logger/metrics'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -19,6 +20,9 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
 import {useSuggestedStarterPacksQuery} from '#/state/queries/useSuggestedStarterPacksQuery'
 import {useProgressGuide} from '#/state/shell/progress-guide'
+import {isThreadChildAt, isThreadParentAt} from '#/view/com/posts/PostFeed'
+import {PostFeedItem} from '#/view/com/posts/PostFeedItem'
+import {ViewFullThread} from '#/view/com/posts/ViewFullThread'
 import {List} from '#/view/com/util/List'
 import {
   FeedFeedLoadingPlaceholder,
@@ -28,6 +32,7 @@ import {
   StarterPackCard,
   StarterPackCardSkeleton,
 } from '#/screens/Search/components/StarterPackCard'
+import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
 import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
@@ -43,7 +48,10 @@ import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/U
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import * as ModuleHeader from './components/ModuleHeader'
-import {useFeedPreviews} from './modules/ExploreFeedPreviews'
+import {
+  type FeedPreviewItem,
+  useFeedPreviews,
+} from './modules/ExploreFeedPreviews'
 import {
   SuggestedAccountsTabBar,
   SuggestedProfileCard,
@@ -172,6 +180,7 @@ type ExploreScreenItems =
       type: 'starterPackSkeleton'
       key: string
     }
+  | FeedPreviewItem
 
 export function Explore({
   focusSearchInput,
@@ -523,6 +532,10 @@ export function Explore({
       }
     }
 
+    const addFeedPreviews = () => {
+      i.push(...feedPreviewSlices)
+    }
+
     // Dynamic module ordering
 
     addTopBorder()
@@ -540,6 +553,8 @@ export function Explore({
     if (gate('explore_show_suggested_feeds')) {
       addSuggestedFeedsModule()
     }
+
+    addFeedPreviews()
 
     return i
   }, [
@@ -563,6 +578,7 @@ export function Explore({
     suggestedSPs,
     isLoadingSuggestedSPs,
     suggestedSPsError,
+    feedPreviewSlices,
   ])
 
   const renderItem = useCallback(
@@ -669,7 +685,8 @@ export function Explore({
         case 'feedPlaceholder': {
           return <FeedFeedLoadingPlaceholder />
         }
-        case 'error': {
+        case 'error':
+        case 'preview:error': {
           return (
             <View
               style={[
@@ -704,16 +721,99 @@ export function Explore({
             </View>
           )
         }
+        // feed previews
+        case 'preview:empty': {
+          return null // what should we do here?
+        }
+        case 'preview:loading': {
+          return null // what should we do here?
+        }
+        case 'preview:header': {
+          return (
+            <ModuleHeader.Container>
+              <ModuleHeader.FeedAvatar feed={item.feed} />
+              <View style={[a.flex_1]}>
+                <ModuleHeader.TitleText>
+                  {item.feed.displayName}
+                </ModuleHeader.TitleText>
+                <ModuleHeader.SubtitleText>
+                  <Trans>
+                    By {sanitizeHandle(item.feed.creator.handle, '@')}
+                  </Trans>
+                </ModuleHeader.SubtitleText>
+              </View>
+              <ModuleHeader.PinButton feed={item.feed} />
+            </ModuleHeader.Container>
+          )
+        }
+        case 'preview:footer': {
+          return (
+            <View
+              style={[
+                a.w_full,
+                t.atoms.border_contrast_low,
+                a.border_t,
+                a.pb_sm,
+              ]}
+            />
+          )
+        }
+        case 'preview:sliceItem': {
+          const slice = item.slice
+          const indexInSlice = item.indexInSlice
+          const subItem = slice.items[indexInSlice]
+          return (
+            <PostFeedItem
+              post={subItem.post}
+              record={subItem.record}
+              reason={indexInSlice === 0 ? slice.reason : undefined}
+              feedContext={slice.feedContext}
+              moderation={subItem.moderation}
+              parentAuthor={subItem.parentAuthor}
+              showReplyTo={item.showReplyTo}
+              isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
+              isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
+              isThreadLastChild={
+                isThreadChildAt(slice.items, indexInSlice) &&
+                slice.items.length === indexInSlice + 1
+              }
+              isParentBlocked={subItem.isParentBlocked}
+              isParentNotFound={subItem.isParentNotFound}
+              hideTopBorder={item.hideTopBorder}
+              rootPost={slice.items[0].post}
+            />
+          )
+        }
+        case 'preview:sliceViewFullThread': {
+          return <ViewFullThread uri={item.uri} />
+        }
+        case 'preview:loadMoreError': {
+          return (
+            <LoadMoreRetryBtn
+              label={_(
+                msg`There was an issue fetching posts. Tap here to try again.`,
+              )}
+              onPress={fetchNextPageFeedPreviews}
+            />
+          )
+        }
       }
     },
-    [t, focusSearchInput, moderationOpts, selectedInterest],
+    [
+      t,
+      focusSearchInput,
+      moderationOpts,
+      selectedInterest,
+      _,
+      fetchNextPageFeedPreviews,
+    ],
   )
 
   const stickyHeaderIndices = useMemo(
     () =>
       items.reduce(
         (acc, curr) =>
-          ['topBorder'].includes(curr.type)
+        ['topBorder', 'preview:header'].includes(curr.type)
             ? acc.concat(items.indexOf(curr))
             : acc,
         [] as number[],
@@ -763,6 +863,7 @@ export function Explore({
       viewabilityConfig={viewabilityConfig}
       onViewableItemsChanged={onViewableItemsChanged}
       onEndReached={onLoadMoreFeedPreviews}
+      onEndReachedThreshold={2}
     />
   )
 }
