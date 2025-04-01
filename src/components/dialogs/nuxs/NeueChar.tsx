@@ -33,7 +33,8 @@ export function NeueChar() {
 
   return (
     <Dialog.Outer control={control} onClose={onClose}>
-      <Dialog.Inner label={_(msg`Special announcement dialog for April Fools`)}>
+      <Dialog.Inner
+        label={_(msg`Special announcement dialog for April Fool's day 2025`)}>
         <View
           onLayout={e => {
             setHeight(e.nativeEvent.layout.height)
