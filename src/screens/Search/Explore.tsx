@@ -43,6 +43,7 @@ import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/U
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import * as ModuleHeader from './components/ModuleHeader'
+import {useFeedPreviews} from './modules/ExploreFeedPreviews'
 import {
   SuggestedAccountsTabBar,
   SuggestedProfileCard,
@@ -279,6 +280,42 @@ export function Explore({
     feedsError,
     fetchNextFeedsPage,
     hasPressedLoadMoreFeeds,
+  ])
+
+  const feedsToPreview = useMemo(
+    () => feeds?.pages.flatMap(page => page.feeds),
+    [feeds],
+  )
+  const {
+    data: feedPreviewSlices,
+    query: {
+      isPending: isPendingFeedPreviews,
+      isFetchingNextPage: isFetchingNextPageFeedPreviews,
+      fetchNextPage: fetchNextPageFeedPreviews,
+      hasNextPage: hasNextPageFeedPreviews,
+      error: feedPreviewSlicesError,
+    },
+  } = useFeedPreviews(feedsToPreview ?? [])
+
+  const onLoadMoreFeedPreviews = useCallback(async () => {
+    if (
+      isPendingFeedPreviews ||
+      isFetchingNextPageFeedPreviews ||
+      !hasNextPageFeedPreviews ||
+      feedPreviewSlicesError
+    )
+      return
+    try {
+      await fetchNextPageFeedPreviews()
+    } catch (err) {
+      logger.error('Failed to load more feed previews', {message: err})
+    }
+  }, [
+    isPendingFeedPreviews,
+    isFetchingNextPageFeedPreviews,
+    hasNextPageFeedPreviews,
+    feedPreviewSlicesError,
+    fetchNextPageFeedPreviews,
   ])
 
   const items = useMemo<ExploreScreenItems[]>(() => {
@@ -725,6 +762,7 @@ export function Explore({
       stickyHeaderIndices={stickyHeaderIndices}
       viewabilityConfig={viewabilityConfig}
       onViewableItemsChanged={onViewableItemsChanged}
+      onEndReached={onLoadMoreFeedPreviews}
     />
   )
 }
