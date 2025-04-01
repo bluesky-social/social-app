@@ -1,6 +1,6 @@
 import React, {useRef} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {
@@ -182,7 +182,11 @@ export function StepHandle() {
               draftValue.length > MAX_SERVICE_HANDLE_LENGTH ? (
                 <Text style={[a.text_md, a.flex_1]}>
                   <Trans>
-                    No longer than {MAX_SERVICE_HANDLE_LENGTH} characters
+                    No longer than{' '}
+                    <Plural
+                      value={MAX_SERVICE_HANDLE_LENGTH}
+                      other="# characters"
+                    />
                   </Trans>
                 </Text>
               ) : (
