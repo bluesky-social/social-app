@@ -14,7 +14,7 @@ import {useAgent} from '#/state/session'
 
 export const DEFAULT_LIMIT = 5
 
-export const createGetTrendsQueryKey = () => ['trending-topics']
+export const createGetTrendsQueryKey = () => ['trends']
 
 export function useGetTrendsQuery() {
   const agent = useAgent()
