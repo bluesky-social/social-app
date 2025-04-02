@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {AccessibilityInfo, View} from 'react-native'
 import {
   Gesture,
@@ -31,13 +31,21 @@ const TIMEOUT = 2e3
 export function show(
   message: string,
   icon: FontAwesomeProps['icon'] = 'check',
+  onTap?: () => void,
 ) {
   if (process.env.NODE_ENV === 'test') {
     return
   }
   AccessibilityInfo.announceForAccessibility(message)
   const item = new RootSiblings(
-    <Toast message={message} icon={icon} destroy={() => item.destroy()} />,
+    (
+      <Toast
+        message={message}
+        icon={icon}
+        destroy={() => item.destroy()}
+        onTap={onTap}
+      />
+    ),
   )
 }
 
@@ -45,10 +53,12 @@ function Toast({
   message,
   icon,
   destroy,
+  onTap,
 }: {
   message: string
   icon: FontAwesomeProps['icon']
   destroy: () => void
+  onTap?: () => void
 }) {
   const t = useTheme()
   const {top} = useSafeAreaInsets()
@@ -61,12 +71,12 @@ function Toast({
   // so we need to wrap it in a view and unmount the toast ahead of time
   const [alive, setAlive] = useState(true)
 
-  const hideAndDestroyImmediately = () => {
+  const hideAndDestroyImmediately = useCallback(() => {
     setAlive(false)
     setTimeout(() => {
       destroy()
     }, 1e3)
-  }
+  }, [destroy])
 
   const destroyTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
   const hideAndDestroyAfterTimeout = useNonReactiveCallback(() => {
@@ -80,6 +90,16 @@ function Toast({
   useEffect(() => {
     hideAndDestroyAfterTimeout()
   }, [hideAndDestroyAfterTimeout])
+
+  const tapGesture = useMemo(() => {
+    return Gesture.Tap().onEnd(() => {
+      'worklet'
+      if (onTap) {
+        runOnJS(onTap)()
+      }
+      runOnJS(hideAndDestroyImmediately)()
+    })
+  }, [onTap, hideAndDestroyImmediately])
 
   const panGesture = useMemo(() => {
     return Gesture.Pan()
@@ -153,6 +173,8 @@ function Toast({
     }
   })
 
+  const combinedGestures = Gesture.Simultaneous(panGesture, tapGesture)
+
   return (
     <GestureHandlerRootView
       style={[a.absolute, {top: topOffset, left: 16, right: 16}]}
@@ -178,7 +200,7 @@ function Toast({
               a.border,
               animatedStyle,
             ]}>
-            <GestureDetector gesture={panGesture}>
+            <GestureDetector gesture={combinedGestures}>
               <View style={[a.flex_1, a.px_md, a.py_lg, a.flex_row, a.gap_md]}>
                 <View
                   style={[
