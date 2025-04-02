@@ -12,17 +12,17 @@ import {
   BackHandler,
   Keyboard,
   KeyboardAvoidingView,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   ScrollView,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle'
 import Animated, {
-  AnimatedRef,
+  type AnimatedRef,
   Easing,
   FadeIn,
   FadeOut,
@@ -41,12 +41,12 @@ import Animated, {
   ZoomOut,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {ImagePickerAsset} from 'expo-image-picker'
+import {type ImagePickerAsset} from 'expo-image-picker'
 import {
   AppBskyFeedDefs,
-  AppBskyFeedGetPostThread,
-  BskyAgent,
-  RichText,
+  type AppBskyFeedGetPostThread,
+  type BskyAgent,
+  type RichText,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, plural, Trans} from '@lingui/macro'
@@ -59,7 +59,7 @@ import {until} from '#/lib/async/until'
 import {
   MAX_GRAPHEME_LENGTH,
   SUPPORTED_MIME_TYPES,
-  SupportedMimeTypes,
+  type SupportedMimeTypes,
 } from '#/lib/constants'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useEmail} from '#/lib/hooks/useEmail'
@@ -75,7 +75,7 @@ import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
-import {ComposerImage, pasteImage} from '#/state/gallery'
+import {type ComposerImage, pasteImage} from '#/state/gallery'
 import {useModalControls} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
@@ -85,10 +85,10 @@ import {
 } from '#/state/preferences/languages'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
-import {Gif} from '#/state/queries/tenor'
+import {type Gif} from '#/state/queries/tenor'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
-import {ComposerOpts} from '#/state/shell/composer'
+import {type ComposerOpts} from '#/state/shell/composer'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {ComposerReplyTo} from '#/view/com/composer/ComposerReplyTo'
 import {
@@ -105,7 +105,7 @@ import {SelectLangBtn} from '#/view/com/composer/select-language/SelectLangBtn'
 import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
 // TODO: Prevent naming components that coincide with RN primitives
 // due to linting false positives
-import {TextInput, TextInputRef} from '#/view/com/composer/text-input/TextInput'
+import {TextInput, type TextInputRef} from '#/view/com/composer/text-input/TextInput'
 import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
 import {SelectVideoBtn} from '#/view/com/composer/videos/SelectVideoBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
@@ -126,16 +126,16 @@ import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
-  ComposerAction,
+  type ComposerAction,
   composerReducer,
   createComposerState,
-  EmbedDraft,
+  type EmbedDraft,
   MAX_IMAGES,
-  PostAction,
-  PostDraft,
-  ThreadDraft,
+  type PostAction,
+  type PostDraft,
+  type ThreadDraft,
 } from './state/composer'
-import {NO_VIDEO, NoVideoState, processVideo, VideoState} from './state/video'
+import {NO_VIDEO, type NoVideoState, processVideo, type VideoState} from './state/video'
 import {getVideoMetadata} from './videos/pickVideo'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 
@@ -969,20 +969,20 @@ function ComposerTopBar({
                       }),
                     )
                 : isThread
-                  ? _(
-                      msg({
-                        message: 'Publish posts',
-                        comment:
-                          'Accessibility label for button to publish multiple posts in a thread',
-                      }),
-                    )
-                  : _(
-                      msg({
-                        message: 'Publish post',
-                        comment:
-                          'Accessibility label for button to publish a single post',
-                      }),
-                    )
+                ? _(
+                    msg({
+                      message: 'Publish posts',
+                      comment:
+                        'Accessibility label for button to publish multiple posts in a thread',
+                    }),
+                  )
+                : _(
+                    msg({
+                      message: 'Publish post',
+                      comment:
+                        'Accessibility label for button to publish a single post',
+                    }),
+                  )
             }
             variant="solid"
             color="primary"
