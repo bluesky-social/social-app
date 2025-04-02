@@ -19,7 +19,7 @@ import {useAgent} from '#/state/session'
 const RQKEY_ROOT = 'feed-previews'
 const RQKEY = (feeds: string[]) => [RQKEY_ROOT, feeds]
 
-const LIMIT = 6
+const LIMIT = 8 // sliced to 6, overfetch to account for moderation
 
 export type FeedPreviewItem =
   | {
@@ -129,12 +129,10 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
                 moderatePost(item.post, moderationOpts!),
               )
 
-              // apply moderation filter
-              for (let i = 0; i < item.items.length; i++) {
-                if (moderations[i]?.ui('contentList').filter) {
-                  continue
-                }
-              }
+              // apply moderation filters
+              item.items = item.items.filter((_, i) => {
+                return !moderations[i]?.ui('contentList').filter
+              })
 
               const slice = {
                 _reactKey: item._reactKey,
@@ -144,7 +142,7 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
                 feedContext: item.feedContext,
                 reason: item.reason,
                 feedPostUri: item.feedPostUri,
-                items: item.items.map((subItem, i) => {
+                items: item.items.slice(0, 6).map((subItem, i) => {
                   const feedPostSliceItem: FeedPostSliceItem = {
                     _reactKey: `${item._reactKey}-${i}-${subItem.post.uri}`,
                     uri: subItem.post.uri,
