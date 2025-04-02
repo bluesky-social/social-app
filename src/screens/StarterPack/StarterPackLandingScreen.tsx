@@ -300,14 +300,14 @@ function LandingScreenLoaded({
             ) : null}
           </View>
           <Button
-            label={_(msg`Create account without a starter pack`)}
+            label={_(msg`Create an account without a starter pack`)}
             variant="solid"
             color="secondary"
             size="large"
             style={[a.py_lg]}
             onPress={onJoinWithoutPress}>
             <ButtonText>
-              <Trans>Create account without a starter pack</Trans>
+              <Trans>Create an account without a starter pack</Trans>
             </ButtonText>
           </Button>
         </View>
