@@ -13,7 +13,10 @@ import {precacheStarterPack} from '#/state/queries/starter-packs'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
-import {Link as BaseLink, type LinkProps as BaseLinkProps} from '#/components/Link'
+import {
+  Link as BaseLink,
+  type LinkProps as BaseLinkProps,
+} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'
 
