@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from 'react'
 import {MMKV} from 'react-native-mmkv'
 
-import {Account, Device} from '#/storage/schema'
+import {type Account, type Device, type Drafts} from '#/storage/schema'
 
 export * from '#/storage/schema'
 
@@ -145,10 +145,16 @@ export const device = new Storage<[], Device>({id: 'bsky_device'})
  */
 export const account = new Storage<[string], Account>({id: 'bsky_account'})
 
+/**
+ * Draft data that's specific to the account on this device
+ */
+export const draft = new Storage<[string], Drafts>({id: 'bsky_draft'})
+
 if (__DEV__ && typeof window !== 'undefined') {
   // @ts-expect-error - dev global
   window.bsky_storage = {
     device,
     account,
+    draft,
   }
 }
