@@ -472,15 +472,9 @@ export function Explore({
             key: `starterPackSkeleton-${index}`,
           }),
         )
-        // nothing
       } else if (suggestedSPsError || !suggestedSPs) {
+        // just get rid of the section
         i.pop()
-        // i.push({
-        //   type: 'error',
-        //   key: 'suggestedSPsError',
-        //   message: _(msg`Failed to load suggested starter packs`),
-        //   error: cleanError(suggestedSPsError),
-        // })
       } else {
         suggestedSPs.starterPacks.map(s => {
           i.push({
