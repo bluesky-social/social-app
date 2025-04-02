@@ -430,32 +430,45 @@ export const ComposePost = ({
       setError(err)
       setIsPublishing(false)
       return
-    } finally {
-      if (postUri) {
-        let index = 0
-        for (let post of thread.posts) {
-          logEvent('post:create', {
-            imageCount:
-              post.embed.media?.type === 'images'
-                ? post.embed.media.images.length
-                : 0,
-            isReply: index > 0 || !!replyTo,
-            isPartOfThread: thread.posts.length > 1,
-            hasLink: !!post.embed.link,
-            hasQuote: !!post.embed.quote,
-            langs: langPrefs.postLanguage,
-            logContext: 'Composer',
-          })
-          index++
-        }
-      }
-      if (thread.posts.length > 1) {
-        logEvent('thread:create', {
-          postCount: thread.posts.length,
-          isReply: !!replyTo,
+    }
+
+    if (postUri) {
+      let index = 0
+      for (let post of thread.posts) {
+        logEvent('post:create', {
+          imageCount:
+            post.embed.media?.type === 'images'
+              ? post.embed.media.images.length
+              : 0,
+          isReply: index > 0 || !!replyTo,
+          isPartOfThread: thread.posts.length > 1,
+          hasLink: !!post.embed.link,
+          hasQuote: !!post.embed.quote,
+          langs: langPrefs.postLanguage,
+          logContext: 'Composer',
         })
+        index++
       }
     }
+    if (thread.posts.length > 1) {
+      logEvent('thread:create', {
+        postCount: thread.posts.length,
+        isReply: !!replyTo,
+      })
+    }
+
+    // Invalidate profile feed queries to trigger a refresh
+    console.log('invalidating profile feed queries')
+    console.log(!!replyTo)
+    if (!replyTo) {
+      queryClient.invalidateQueries({
+        queryKey: ['profile-feed', `author|${currentDid}|posts_and_author_threads`],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['profile-feed', `author|${currentDid}|posts_with_replies`],
+      })
+    }
+
     if (postUri && !replyTo) {
       emitPostCreated()
     }
@@ -497,6 +510,7 @@ export const ComposePost = ({
     replyTo,
     setLangPrefs,
     queryClient,
+    currentDid,
   ])
 
   // Preserves the referential identity passed to each post item.
