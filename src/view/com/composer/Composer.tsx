@@ -105,7 +105,10 @@ import {SelectLangBtn} from '#/view/com/composer/select-language/SelectLangBtn'
 import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
 // TODO: Prevent naming components that coincide with RN primitives
 // due to linting false positives
-import {TextInput, type TextInputRef} from '#/view/com/composer/text-input/TextInput'
+import {
+  TextInput,
+  type TextInputRef,
+} from '#/view/com/composer/text-input/TextInput'
 import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
 import {SelectVideoBtn} from '#/view/com/composer/videos/SelectVideoBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
@@ -135,7 +138,12 @@ import {
   type PostDraft,
   type ThreadDraft,
 } from './state/composer'
-import {NO_VIDEO, type NoVideoState, processVideo, type VideoState} from './state/video'
+import {
+  NO_VIDEO,
+  type NoVideoState,
+  processVideo,
+  type VideoState,
+} from './state/video'
 import {getVideoMetadata} from './videos/pickVideo'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 
