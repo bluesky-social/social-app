@@ -125,7 +125,6 @@ export function useGetSuggestedFeedsQuery() {
       return {
         feeds: feeds.filter(feed => {
           const isSaved = !!savedFeeds?.find(s => s.value === feed.uri)
-          console.log({isSaved})
           return !isSaved
         }),
       }
