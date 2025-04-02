@@ -953,20 +953,36 @@ function ComposerTopBar({
             testID="composerPublishBtn"
             label={
               isReply
-                ? _(
-                    msg({
-                      message: 'Publish reply or replies',
-                      comment:
-                        'Accessibility label for button to publish a reply or thread of replies',
-                    }),
-                  )
-                : _(
-                    msg({
-                      message: 'Publish post or posts',
-                      comment:
-                        'Accessibility label for button to publish a post or thread of posts',
-                    }),
-                  )
+                ? isThread
+                  ? _(
+                      msg({
+                        message: 'Publish replies',
+                        comment:
+                          'Accessibility label for button to publish multiple replies in a thread',
+                      }),
+                    )
+                  : _(
+                      msg({
+                        message: 'Publish reply',
+                        comment:
+                          'Accessibility label for button to publish a single reply',
+                      }),
+                    )
+                : isThread
+                  ? _(
+                      msg({
+                        message: 'Publish posts',
+                        comment:
+                          'Accessibility label for button to publish multiple posts in a thread',
+                      }),
+                    )
+                  : _(
+                      msg({
+                        message: 'Publish post',
+                        comment:
+                          'Accessibility label for button to publish a single post',
+                      }),
+                    )
             }
             variant="solid"
             color="primary"
@@ -985,6 +1001,7 @@ function ComposerTopBar({
               )}
             </ButtonText>
           </Button>
+            }
         )}
       </View>
       {children}
