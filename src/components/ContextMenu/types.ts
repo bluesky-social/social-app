@@ -1,16 +1,38 @@
-import React from 'react'
-import {AccessibilityRole, StyleProp, ViewStyle} from 'react-native'
-import {SharedValue} from 'react-native-reanimated'
+import {
+  type AccessibilityRole,
+  type GestureResponderEvent,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native'
+import {type SharedValue} from 'react-native-reanimated'
+import type React from 'react'
 
-import * as Dialog from '#/components/Dialog'
-import {RadixPassThroughTriggerProps} from '#/components/Menu/types'
+import type * as Dialog from '#/components/Dialog'
+import {
+  type ItemProps as MenuItemProps,
+  type RadixPassThroughTriggerProps,
+} from '#/components/Menu/types'
 
 export type {
   GroupProps,
   ItemIconProps,
-  ItemProps,
   ItemTextProps,
 } from '#/components/Menu/types'
+
+export type AuxiliaryViewProps = {
+  children?: React.ReactNode
+  align?: 'left' | 'right'
+}
+
+export type ItemProps = Omit<MenuItemProps, 'onPress' | 'children'> & {
+  // remove default styles (i.e. for emoji reactions)
+  unstyled?: boolean
+  onPress: (evt?: GestureResponderEvent) => void
+  children?: React.ReactNode | ((hovered: boolean) => React.ReactNode)
+  // absolute position of the parent element. if undefined, assumed to
+  // be in the context menu. use this if using AuxiliaryView
+  position?: Measurement
+}
 
 export type Measurement = {
   x: number
@@ -26,8 +48,22 @@ export type ContextType = {
   animationSV: SharedValue<number>
   /* Translation in Y axis to ensure everything's onscreen */
   translationSV: SharedValue<number>
-  open: (evt: Measurement) => void
+  mode: 'full' | 'auxiliary-only'
+  open: (evt: Measurement, mode: 'full' | 'auxiliary-only') => void
   close: () => void
+  registerHoverable: (
+    id: string,
+    rect: Measurement,
+    onTouchUp: () => void,
+  ) => void
+  hoverablesSV: SharedValue<Record<string, {id: string; rect: Measurement}>>
+  hoveredMenuItem: string | null
+  setHoveredMenuItem: React.Dispatch<React.SetStateAction<string | null>>
+  onTouchUpMenuItem: (id: string) => void
+}
+
+export type MenuContextType = {
+  align: 'left' | 'right'
 }
 
 export type ItemContextType = {
@@ -51,7 +87,10 @@ export type TriggerProps = {
 export type TriggerChildProps =
   | {
       isNative: true
-      control: {isOpen: boolean; open: () => void}
+      control: {
+        isOpen: boolean
+        open: (mode: 'full' | 'auxiliary-only') => void
+      }
       state: {
         hovered: false
         focused: false

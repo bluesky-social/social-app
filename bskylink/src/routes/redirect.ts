@@ -21,7 +21,6 @@ export default function (ctx: AppContext, app: Express) {
         typeof link === 'string',
         'express guarantees link query parameter is a string',
       )
-      link = decodeURIComponent(link)
 
       let url: URL | undefined
       try {

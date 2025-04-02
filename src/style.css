@@ -290,3 +290,38 @@ input[type='range'][orient='vertical']::-moz-range-thumb {
   width: 16px;
   margin-left: -6px;
 }
+
+/*
+ * EmojiReactionPicker dropdown elements, within Radix components
+ */
+.EmojiReactionPicker__Pressable {
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.EmojiReactionPicker__Pressable:focus {
+  outline: none;
+  border-color: var(--text);
+}
+.EmojiReactionPicker__Pressable:hover {
+  outline: none;
+  transform: scale(1.1);
+  border-color: transparent;
+}
+.EmojiReactionPicker__Pressable:not(.__selected).__disabled {
+  transform: scale(1) !important;
+  border-color: transparent !important;
+  opacity: 0.7;
+}
+.EmojiReactionPicker__Pressable ~ button {
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.EmojiReactionPicker__Pressable ~ button:focus {
+  outline: none;
+  border-color: var(--text);
+}
+.EmojiReactionPicker__Pressable ~ button:hover {
+  outline: none;
+  background-color: var(--backgroundLight);
+  border-color: transparent;
+}

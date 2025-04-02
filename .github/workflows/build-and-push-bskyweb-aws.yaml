@@ -65,3 +65,4 @@ jobs:
             EXPO_PUBLIC_BUNDLE_IDENTIFIER=${{ steps.vars.outputs.sha_short }}
             SENTRY_DIST=${{ steps.vars.outputs.SENTRY_DIST }}
             SENTRY_RELEASE=${{ steps.vars.outputs.SENTRY_RELEASE }}
+            SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}

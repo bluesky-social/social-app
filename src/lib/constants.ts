@@ -1,5 +1,5 @@
-import {Insets, Platform} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
+import {type Insets, Platform} from 'react-native'
+import {type AppBskyActorDefs} from '@atproto/api'
 
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
@@ -190,3 +190,5 @@ export const SUPPORTED_MIME_TYPES = [
 ] as const
 
 export type SupportedMimeTypes = (typeof SUPPORTED_MIME_TYPES)[number]
+
+export const EMOJI_REACTION_LIMIT = 5
