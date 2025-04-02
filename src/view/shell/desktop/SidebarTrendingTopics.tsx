@@ -17,9 +17,9 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending'
 import * as Prompt from '#/components/Prompt'
 import {
+  TrendingTopic,
   TrendingTopicLink,
-  TrendingTopicPill,
-  TrendingTopicPillSkeleton,
+  TrendingTopicSkeleton,
 } from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 
@@ -74,7 +74,7 @@ function Inner() {
             Array(TRENDING_LIMIT)
               .fill(0)
               .map((_n, i) => (
-                <TrendingTopicPillSkeleton key={i} size="small" index={i} />
+                <TrendingTopicSkeleton key={i} size="small" index={i} />
               ))
           ) : !trending?.topics ? null : (
             <>
@@ -86,7 +86,7 @@ function Inner() {
                     logEvent('trendingTopic:click', {context: 'sidebar'})
                   }}>
                   {({hovered}) => (
-                    <TrendingTopicPill
+                    <TrendingTopic
                       size="small"
                       topic={topic}
                       style={[
