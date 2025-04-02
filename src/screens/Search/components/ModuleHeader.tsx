@@ -157,6 +157,7 @@ export function PinButton({feed}: {feed: AppBskyFeedDefs.GeneratorView}) {
   return (
     <View style={[a.z_20, {marginRight: -6}]}>
       <FeedCard.SaveButton
+        pin
         view={feed}
         size="large"
         color="secondary"

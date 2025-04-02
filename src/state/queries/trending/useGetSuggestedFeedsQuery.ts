@@ -22,7 +22,7 @@ export function useGetSuggestedFeedsQuery() {
   return useQuery({
     enabled: !!savedFeeds,
     refetchOnWindowFocus: true,
-    staleTime: STALE.MINUTES.THREE,
+    staleTime: STALE.MINUTES.ONE,
     queryKey: createGetTrendsQueryKey(),
     queryFn: async () => {
       /*
