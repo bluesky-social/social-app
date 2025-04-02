@@ -5,16 +5,17 @@ import {
   AppBskyGraphStarterpack,
   moderateProfile,
 } from '@atproto/api'
-import {msg,Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
+import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {ButtonText} from '#/components/Button'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {useStarterPackLink} from '#/components/StarterPack/StarterPackCard'
@@ -94,7 +95,7 @@ export function StarterPackCard({
           </Text>
           <Text
             emoji
-            style={[a.leading_snug, t.atoms.text_contrast_medium]}
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}
             numberOfLines={1}>
             {view.creator?.did === currentAccount?.did
               ? _(msg`By you`)
@@ -247,6 +248,47 @@ export function AvatarStack({
             </View>
           </View>
         </View>
+      </View>
+    </View>
+  )
+}
+
+export function StarterPackCardSkeleton() {
+  const t = useTheme()
+  const {gtPhone} = useBreakpoints()
+
+  const profileCount = gtPhone ? 11 : 8
+
+  return (
+    <View
+      style={[
+        a.w_full,
+        a.p_lg,
+        a.gap_md,
+        a.border,
+        a.rounded_sm,
+        a.overflow_hidden,
+        t.atoms.border_contrast_low,
+      ]}>
+      <AvatarStack profiles={[]} numPending={profileCount} />
+
+      <View
+        style={[
+          a.w_full,
+          a.flex_row,
+          a.align_start,
+          a.gap_lg,
+          web({
+            position: 'static',
+            zIndex: 'unset',
+          }),
+        ]}>
+        <View style={[a.flex_1, a.gap_xs]}>
+          <LoadingPlaceholder width={180} height={18} />
+          <LoadingPlaceholder width={120} height={14} />
+        </View>
+
+        <LoadingPlaceholder width={100} height={33} />
       </View>
     </View>
   )

@@ -24,7 +24,10 @@ import {
   FeedFeedLoadingPlaceholder,
   ProfileCardFeedLoadingPlaceholder,
 } from '#/view/com/util/LoadingPlaceholder'
-import {StarterPackCard} from '#/screens/Search/components/StarterPackCard'
+import {
+  StarterPackCard,
+  StarterPackCardSkeleton,
+} from '#/screens/Search/components/StarterPackCard'
 import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
 import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
@@ -163,6 +166,10 @@ type ExploreScreenItems =
       type: 'starterPack'
       key: string
       view: AppBskyGraphDefs.StarterPackView
+    }
+  | {
+      type: 'starterPackSkeleton'
+      key: string
     }
 
 export function Explore({
@@ -459,6 +466,12 @@ export function Explore({
       })
 
       if (isLoadingSuggestedSPs) {
+        Array.from({length: 3}).forEach((_, index) =>
+          i.push({
+            type: 'starterPackSkeleton',
+            key: `starterPackSkeleton-${index}`,
+          }),
+        )
         // nothing
       } else if (suggestedSPsError || !suggestedSPs) {
         i.pop()
@@ -600,8 +613,15 @@ export function Explore({
         }
         case 'starterPack': {
           return (
-            <View style={[a.px_lg, a.py_sm]}>
+            <View style={[a.px_lg, a.pb_lg]}>
               <StarterPackCard view={item.view} />
+            </View>
+          )
+        }
+        case 'starterPackSkeleton': {
+          return (
+            <View style={[a.px_lg, a.pb_lg]}>
+              <StarterPackCardSkeleton />
             </View>
           )
         }
