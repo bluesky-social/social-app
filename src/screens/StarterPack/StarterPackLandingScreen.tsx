@@ -300,7 +300,7 @@ function LandingScreenLoaded({
             ) : null}
           </View>
           <Button
-            label={_(msg`Create an account without a starter pack`)}
+            label={_(msg`Create an account without using this starter pack`)}
             variant="solid"
             color="secondary"
             size="large"
