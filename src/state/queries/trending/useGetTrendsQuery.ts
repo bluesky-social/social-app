@@ -3,6 +3,11 @@ import {type AppBskyUnspeccedGetTrends} from '@atproto/api'
 import {hasMutedWord} from '@atproto/api/dist/moderation/mutewords'
 import {useQuery} from '@tanstack/react-query'
 
+import {
+  aggregateUserInterests,
+  createBskyTopicsHeader,
+} from '#/lib/api/feed/utils'
+import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
@@ -23,10 +28,18 @@ export function useGetTrendsQuery() {
     staleTime: STALE.MINUTES.THREE,
     queryKey: createGetTrendsQueryKey(),
     queryFn: async () => {
-      // TODO interests
-      const {data} = await agent.app.bsky.unspecced.getTrends({
-        limit: DEFAULT_LIMIT,
-      })
+      const contentLangs = getContentLanguages().join(',')
+      const {data} = await agent.app.bsky.unspecced.getTrends(
+        {
+          limit: DEFAULT_LIMIT,
+        },
+        {
+          headers: {
+            ...createBskyTopicsHeader(aggregateUserInterests(preferences)),
+            'Accept-Language': contentLangs,
+          },
+        },
+      )
       return data
     },
     select: React.useCallback(
