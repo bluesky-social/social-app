@@ -1,23 +1,31 @@
+import {useMemo} from 'react'
 import {View} from 'react-native'
+import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
+import {makeCustomFeedLink} from '#/lib/routes/links'
 import {logger} from '#/logger'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {
   atoms as a,
   native,
   useGutters,
   useTheme,
   type ViewStyleProp,
+  web,
 } from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
+import * as FeedCard from '#/components/FeedCard'
 import {sizes as iconSizes} from '#/components/icons/common'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
+import {Link} from '#/components/Link'
 import {Text, type TextProps} from '#/components/Typography'
 
 export function Container({
   style,
   children,
-}: {children: React.ReactNode} & ViewStyleProp) {
+  headerHeight,
+}: {children: React.ReactNode; headerHeight?: number} & ViewStyleProp) {
   const t = useTheme()
   const gutters = useGutters([0, 'base'])
   return (
@@ -30,11 +38,49 @@ export function Container({
         a.pb_md,
         a.gap_sm,
         t.atoms.bg,
+        headerHeight && web({position: 'sticky', top: headerHeight}),
         style,
       ]}>
       {children}
     </View>
   )
+}
+
+export function FeedLink({
+  feed,
+  children,
+}: {
+  feed: AppBskyFeedDefs.GeneratorView
+  children?: React.ReactNode
+}) {
+  const t = useTheme()
+  const {host: did, rkey} = useMemo(() => new AtUri(feed.uri), [feed.uri])
+  return (
+    <Link
+      to={makeCustomFeedLink(did, rkey)}
+      label={feed.displayName}
+      style={[a.flex_1]}>
+      {({focused, hovered, pressed}) => (
+        <View
+          style={[
+            a.flex_1,
+            a.flex_row,
+            a.align_center,
+            {gap: 10},
+            a.rounded_md,
+            a.p_xs,
+            {marginLeft: -6},
+            (focused || hovered || pressed) && t.atoms.bg_contrast_25,
+          ]}>
+          {children}
+        </View>
+      )}
+    </Link>
+  )
+}
+
+export function FeedAvatar({feed}: {feed: AppBskyFeedDefs.GeneratorView}) {
+  return <UserAvatar type="algo" size={38} avatar={feed.avatar} />
 }
 
 export function Icon({
@@ -51,7 +97,25 @@ export function Icon({
 }
 
 export function TitleText({style, ...props}: TextProps) {
-  return <Text style={[a.font_bold, a.flex_1, a.text_xl, style]} {...props} />
+  return (
+    <Text style={[a.font_bold, a.flex_1, a.text_xl, style]} emoji {...props} />
+  )
+}
+
+export function SubtitleText({style, ...props}: TextProps) {
+  const t = useTheme()
+  return (
+    <Text
+      style={[
+        t.atoms.text_contrast_medium,
+        a.leading_tight,
+        a.flex_1,
+        a.text_sm,
+        style,
+      ]}
+      {...props}
+    />
+  )
 }
 
 export function SearchButton({
@@ -86,5 +150,20 @@ export function SearchButton({
       ]}>
       <ButtonIcon icon={SearchIcon} size="lg" />
     </Button>
+  )
+}
+
+export function PinButton({feed}: {feed: AppBskyFeedDefs.GeneratorView}) {
+  return (
+    <View style={[a.z_20, {marginRight: -6}]}>
+      <FeedCard.SaveButton
+        view={feed}
+        size="large"
+        color="secondary"
+        variant="ghost"
+        shape="square"
+        text={false}
+      />
+    </View>
   )
 }

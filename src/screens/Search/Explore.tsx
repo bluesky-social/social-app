@@ -5,11 +5,12 @@ import {
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {type MetricEvents} from '#/logger/metrics'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -19,11 +20,15 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
 import {useSuggestedStarterPacksQuery} from '#/state/queries/useSuggestedStarterPacksQuery'
 import {useProgressGuide} from '#/state/shell/progress-guide'
+import {isThreadChildAt, isThreadParentAt} from '#/view/com/posts/PostFeed'
+import {PostFeedItem} from '#/view/com/posts/PostFeedItem'
+import {ViewFullThread} from '#/view/com/posts/ViewFullThread'
 import {List} from '#/view/com/util/List'
 import {
   FeedFeedLoadingPlaceholder,
   ProfileCardFeedLoadingPlaceholder,
 } from '#/view/com/util/LoadingPlaceholder'
+import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {
   StarterPackCard,
   StarterPackCardSkeleton,
@@ -31,7 +36,7 @@ import {
 import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
 import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
@@ -43,6 +48,10 @@ import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/U
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import * as ModuleHeader from './components/ModuleHeader'
+import {
+  type FeedPreviewItem,
+  useFeedPreviews,
+} from './modules/ExploreFeedPreviews'
 import {
   SuggestedAccountsTabBar,
   SuggestedProfileCard,
@@ -171,11 +180,14 @@ type ExploreScreenItems =
       type: 'starterPackSkeleton'
       key: string
     }
+  | FeedPreviewItem
 
 export function Explore({
   focusSearchInput,
+  headerHeight,
 }: {
   focusSearchInput: (tab: 'user' | 'profile' | 'feed') => void
+  headerHeight: number
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -279,6 +291,42 @@ export function Explore({
     feedsError,
     fetchNextFeedsPage,
     hasPressedLoadMoreFeeds,
+  ])
+
+  const feedsToPreview = useMemo(
+    () => feeds?.pages.flatMap(page => page.feeds),
+    [feeds],
+  )
+  const {
+    data: feedPreviewSlices,
+    query: {
+      isPending: isPendingFeedPreviews,
+      isFetchingNextPage: isFetchingNextPageFeedPreviews,
+      fetchNextPage: fetchNextPageFeedPreviews,
+      hasNextPage: hasNextPageFeedPreviews,
+      error: feedPreviewSlicesError,
+    },
+  } = useFeedPreviews(feedsToPreview ?? [])
+
+  const onLoadMoreFeedPreviews = useCallback(async () => {
+    if (
+      isPendingFeedPreviews ||
+      isFetchingNextPageFeedPreviews ||
+      !hasNextPageFeedPreviews ||
+      feedPreviewSlicesError
+    )
+      return
+    try {
+      await fetchNextPageFeedPreviews()
+    } catch (err) {
+      logger.error('Failed to load more feed previews', {message: err})
+    }
+  }, [
+    isPendingFeedPreviews,
+    isFetchingNextPageFeedPreviews,
+    hasNextPageFeedPreviews,
+    feedPreviewSlicesError,
+    fetchNextPageFeedPreviews,
   ])
 
   const items = useMemo<ExploreScreenItems[]>(() => {
@@ -486,6 +534,16 @@ export function Explore({
       }
     }
 
+    const addFeedPreviews = () => {
+      i.push(...feedPreviewSlices)
+      if (isFetchingNextPageFeedPreviews) {
+        i.push({
+          type: 'preview:loading',
+          key: 'preview-loading-more',
+        })
+      }
+    }
+
     // Dynamic module ordering
 
     addTopBorder()
@@ -503,6 +561,8 @@ export function Explore({
     if (gate('explore_show_suggested_feeds')) {
       addSuggestedFeedsModule()
     }
+
+    addFeedPreviews()
 
     return i
   }, [
@@ -526,6 +586,8 @@ export function Explore({
     suggestedSPs,
     isLoadingSuggestedSPs,
     suggestedSPsError,
+    feedPreviewSlices,
+    isFetchingNextPageFeedPreviews,
   ])
 
   const renderItem = useCallback(
@@ -533,7 +595,18 @@ export function Explore({
       switch (item.type) {
         case 'topBorder':
           return (
-            <View style={[a.w_full, t.atoms.border_contrast_low, a.border_t]} />
+            <View
+              style={[
+                a.w_full,
+                t.atoms.border_contrast_low,
+                a.border_t,
+                headerHeight &&
+                  web({
+                    position: 'sticky',
+                    top: headerHeight,
+                  }),
+              ]}
+            />
           )
         case 'header': {
           return (
@@ -632,7 +705,8 @@ export function Explore({
         case 'feedPlaceholder': {
           return <FeedFeedLoadingPlaceholder />
         }
-        case 'error': {
+        case 'error':
+        case 'preview:error': {
           return (
             <View
               style={[
@@ -667,16 +741,99 @@ export function Explore({
             </View>
           )
         }
+        // feed previews
+        case 'preview:empty': {
+          return null // what should we do here?
+        }
+        case 'preview:loading': {
+          return (
+            <View style={[a.py_2xl, a.flex_1, a.align_center]}>
+              <Loader size="lg" />
+            </View>
+          )
+        }
+        case 'preview:header': {
+          return (
+            <ModuleHeader.Container
+              headerHeight={headerHeight}
+              style={[a.pt_xs, a.border_b, t.atoms.border_contrast_low]}>
+              <ModuleHeader.FeedLink feed={item.feed}>
+                <ModuleHeader.FeedAvatar feed={item.feed} />
+                <View style={[a.flex_1, a.gap_xs]}>
+                  <ModuleHeader.TitleText style={[a.text_lg]}>
+                    {item.feed.displayName}
+                  </ModuleHeader.TitleText>
+                  <ModuleHeader.SubtitleText>
+                    <Trans>
+                      By {sanitizeHandle(item.feed.creator.handle, '@')}
+                    </Trans>
+                  </ModuleHeader.SubtitleText>
+                </View>
+              </ModuleHeader.FeedLink>
+              <ModuleHeader.PinButton feed={item.feed} />
+            </ModuleHeader.Container>
+          )
+        }
+        case 'preview:footer': {
+          return <View style={[a.w_full, a.pt_2xl]} />
+        }
+        case 'preview:sliceItem': {
+          const slice = item.slice
+          const indexInSlice = item.indexInSlice
+          const subItem = slice.items[indexInSlice]
+          return (
+            <PostFeedItem
+              post={subItem.post}
+              record={subItem.record}
+              reason={indexInSlice === 0 ? slice.reason : undefined}
+              feedContext={slice.feedContext}
+              moderation={subItem.moderation}
+              parentAuthor={subItem.parentAuthor}
+              showReplyTo={item.showReplyTo}
+              isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
+              isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
+              isThreadLastChild={
+                isThreadChildAt(slice.items, indexInSlice) &&
+                slice.items.length === indexInSlice + 1
+              }
+              isParentBlocked={subItem.isParentBlocked}
+              isParentNotFound={subItem.isParentNotFound}
+              hideTopBorder={item.hideTopBorder}
+              rootPost={slice.items[0].post}
+            />
+          )
+        }
+        case 'preview:sliceViewFullThread': {
+          return <ViewFullThread uri={item.uri} />
+        }
+        case 'preview:loadMoreError': {
+          return (
+            <LoadMoreRetryBtn
+              label={_(
+                msg`There was an issue fetching posts. Tap here to try again.`,
+              )}
+              onPress={fetchNextPageFeedPreviews}
+            />
+          )
+        }
       }
     },
-    [t, focusSearchInput, moderationOpts, selectedInterest],
+    [
+      t,
+      focusSearchInput,
+      moderationOpts,
+      selectedInterest,
+      _,
+      fetchNextPageFeedPreviews,
+      headerHeight,
+    ],
   )
 
   const stickyHeaderIndices = useMemo(
     () =>
       items.reduce(
         (acc, curr) =>
-          ['topBorder'].includes(curr.type)
+          ['topBorder', 'preview:header'].includes(curr.type)
             ? acc.concat(items.indexOf(curr))
             : acc,
         [] as number[],
@@ -701,6 +858,8 @@ export function Explore({
           module = 'suggestedAccounts'
         } else if (item.type === 'feed') {
           module = 'suggestedFeeds'
+        } else if (item.type === 'preview:header') {
+          module = `feed:feedgen|${item.feed.uri}`
         } else {
           continue
         }
@@ -722,9 +881,11 @@ export function Explore({
       contentContainerStyle={{paddingBottom: 100}}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
-      stickyHeaderIndices={stickyHeaderIndices}
+      stickyHeaderIndices={native(stickyHeaderIndices)}
       viewabilityConfig={viewabilityConfig}
       onViewableItemsChanged={onViewableItemsChanged}
+      onEndReached={onLoadMoreFeedPreviews}
+      onEndReachedThreshold={2}
     />
   )
 }
