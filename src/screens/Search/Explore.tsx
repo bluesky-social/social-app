@@ -25,10 +25,7 @@ import {isThreadChildAt, isThreadParentAt} from '#/view/com/posts/PostFeed'
 import {PostFeedItem} from '#/view/com/posts/PostFeedItem'
 import {ViewFullThread} from '#/view/com/posts/ViewFullThread'
 import {List} from '#/view/com/util/List'
-import {
-  FeedFeedLoadingPlaceholder,
-  ProfileCardFeedLoadingPlaceholder,
-} from '#/view/com/util/LoadingPlaceholder'
+import {FeedFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {
   StarterPackCard,
@@ -47,6 +44,7 @@ import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/i
 import {StarterPack} from '#/components/icons/StarterPack'
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
 import {Loader} from '#/components/Loader'
+import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import * as ModuleHeader from './components/ModuleHeader'
 import {
@@ -217,7 +215,7 @@ export function Explore({
     enabled: !!selectedInterest,
     limit: 10,
   })
-  useLoadEnoughProfiles({
+  const {isReady: canShowSuggestedProfiles} = useLoadEnoughProfiles({
     interest: selectedInterest,
     data: interestProfiles,
     isLoading: isLoadingInterestProfiles,
@@ -241,10 +239,10 @@ export function Explore({
     : hasNextInterestProfilesPage
   const isLoadingProfiles = !selectedInterest
     ? isLoadingSuggestedProfiles
-    : isLoadingInterestProfiles
+    : !canShowSuggestedProfiles
   const isFetchingNextProfilesPage = !selectedInterest
     ? isFetchingNextSuggestedProfilesPage
-    : isFetchingNextInterestProfilesPage
+    : !canShowSuggestedProfiles
   const profilesError = !selectedInterest
     ? suggestedProfilesError
     : interestProfilesError
@@ -362,50 +360,56 @@ export function Explore({
         },
       })
 
-      if (profiles && moderationOpts) {
-        // Currently the responses contain duplicate items.
-        // Needs to be fixed on backend, but let's dedupe to be safe.
-        let seen = new Set()
-        const profileItems: ExploreScreenItems[] = []
-        for (const page of profiles.pages) {
-          for (const actor of page.actors) {
-            if (!seen.has(actor.did) && !actor.viewer?.following) {
-              seen.add(actor.did)
-              profileItems.push({
-                type: 'profile',
-                key: actor.did,
-                profile: actor,
-                recId: page.recId,
+      if (!canShowSuggestedProfiles) {
+        i.push({type: 'profilePlaceholder', key: 'profilePlaceholder'})
+      } else if (profilesError) {
+        i.push({
+          type: 'error',
+          key: 'profilesError',
+          message: _(msg`Failed to load suggested follows`),
+          error: cleanError(profilesError),
+        })
+      } else {
+        if (profiles !== undefined) {
+          if (profiles.pages.length > 0 && moderationOpts) {
+            // Currently the responses contain duplicate items.
+            // Needs to be fixed on backend, but let's dedupe to be safe.
+            let seen = new Set()
+            const profileItems: ExploreScreenItems[] = []
+            for (const page of profiles.pages) {
+              for (const actor of page.actors) {
+                if (!seen.has(actor.did) && !actor.viewer?.following) {
+                  seen.add(actor.did)
+                  profileItems.push({
+                    type: 'profile',
+                    key: actor.did,
+                    profile: actor,
+                    recId: page.recId,
+                  })
+                }
+              }
+            }
+
+            if (profileItems.length === 0) {
+              if (!hasNextProfilesPage) {
+                // no items! remove the header
+                i.pop()
+              }
+            } else {
+              i.push(...profileItems)
+            }
+            if (hasNextProfilesPage) {
+              i.push({
+                type: 'loadMore',
+                key: 'loadMoreProfiles',
+                message: _(msg`Load more suggested accounts`),
+                isLoadingMore: isLoadingMoreProfiles,
+                onLoadMore: onLoadMoreProfiles,
               })
             }
+          } else {
+            console.log('no pages')
           }
-        }
-
-        if (profileItems.length === 0) {
-          if (!hasNextProfilesPage) {
-            // no items! remove the header
-            i.pop()
-          }
-        } else {
-          i.push(...profileItems)
-        }
-        if (hasNextProfilesPage) {
-          i.push({
-            type: 'loadMore',
-            key: 'loadMoreProfiles',
-            message: _(msg`Load more suggested accounts`),
-            isLoadingMore: isLoadingMoreProfiles,
-            onLoadMore: onLoadMoreProfiles,
-          })
-        }
-      } else {
-        if (profilesError) {
-          i.push({
-            type: 'error',
-            key: 'profilesError',
-            message: _(msg`Failed to load suggested follows`),
-            error: cleanError(profilesError),
-          })
         } else {
           i.push({type: 'profilePlaceholder', key: 'profilePlaceholder'})
         }
@@ -586,6 +590,7 @@ export function Explore({
     suggestedSPsError,
     feedPreviewSlices,
     isFetchingNextPageFeedPreviews,
+    canShowSuggestedProfiles,
   ])
 
   const renderItem = useCallback(
@@ -702,7 +707,24 @@ export function Explore({
           )
         }
         case 'profilePlaceholder': {
-          return <ProfileCardFeedLoadingPlaceholder />
+          return Array.from({length: 3}).map((_, index) => (
+            <View
+              style={[
+                a.px_lg,
+                a.py_lg,
+                a.border_t,
+                t.atoms.border_contrast_low,
+              ]}
+              key={index}>
+              <ProfileCard.Outer>
+                <ProfileCard.Header>
+                  <ProfileCard.AvatarPlaceholder />
+                  <ProfileCard.NameAndHandlePlaceholder />
+                </ProfileCard.Header>
+                <ProfileCard.DescriptionPlaceholder numberOfLines={2} />
+              </ProfileCard.Outer>
+            </View>
+          ))
         }
         case 'feedPlaceholder': {
           return <FeedFeedLoadingPlaceholder />

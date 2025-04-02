@@ -12,7 +12,7 @@ import {
   popularInterests,
   useInterestsDisplayNames,
 } from '#/screens/Onboarding/state'
-import {useGutters, useTheme} from '#/alf'
+import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -48,6 +48,10 @@ export function useLoadEnoughProfiles({
       fetchNextPage()
     }
   }, [shouldFetchMore, fetchNextPage, isAnyLoading, interest])
+
+  return {
+    isReady: !shouldFetchMore,
+  }
 }
 
 export function SuggestedAccountsTabBar({
@@ -161,7 +165,6 @@ let SuggestedProfileCard = ({
   position: number
 }): React.ReactNode => {
   const t = useTheme()
-  const gutters = useGutters([0, 'base'])
   return (
     <ProfileCard.Link
       profile={profile}
@@ -180,8 +183,8 @@ let SuggestedProfileCard = ({
       <View
         style={[
           a.w_full,
-          gutters,
           a.py_lg,
+          a.px_lg,
           a.border_t,
           t.atoms.border_contrast_low,
           a.flex_1,

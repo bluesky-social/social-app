@@ -266,7 +266,7 @@ export function DescriptionPlaceholder({
 }) {
   const t = useTheme()
   return (
-    <View style={[{gap: 8}]}>
+    <View style={[a.pt_2xs, {gap: 6}]}>
       {Array(numberOfLines)
         .fill(0)
         .map((_, i) => (
