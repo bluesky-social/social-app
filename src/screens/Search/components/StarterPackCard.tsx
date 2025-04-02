@@ -132,6 +132,7 @@ export function AvatarStack({
   const t = useTheme()
   const {gtPhone} = useBreakpoints()
   const moderationOpts = useModerationOpts()
+  const computedTotal = (total ?? numPending) - numPending
   const circlesCount = numPending + 1 // add total at end
   const widthPerc = 100 / circlesCount
   const [size, setSize] = React.useState<number | null>(null)
@@ -230,7 +231,7 @@ export function AvatarStack({
                   backgroundColor: t.atoms.text_contrast_low.color,
                 },
               ]}>
-              {total ? (
+              {computedTotal > 0 ? (
                 <Text
                   style={[
                     gtPhone ? a.text_md : a.text_sm,
@@ -239,7 +240,7 @@ export function AvatarStack({
                     {color: 'white'},
                   ]}>
                   <Trans comment="Indicates the number of additional profiles are in the Starter Pack e.g. +12">
-                    +{total}
+                    +{computedTotal}
                   </Trans>
                 </Text>
               ) : (
