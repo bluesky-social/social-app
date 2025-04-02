@@ -307,7 +307,7 @@ function LandingScreenLoaded({
             style={[a.py_lg]}
             onPress={onJoinWithoutPress}>
             <ButtonText>
-              <Trans>Create an account without a starter pack</Trans>
+              <Trans>Create an account without using this starter pack</Trans>
             </ButtonText>
           </Button>
         </View>
