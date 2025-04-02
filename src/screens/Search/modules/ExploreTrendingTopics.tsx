@@ -69,7 +69,7 @@ export function TrendRow({
     (Date.now() - new Date(trend.startedAt || Date.now()).getTime()) /
       (1000 * 60 * 60),
   )
-  const badgeType = rank === 1 ? 'hot' : age < 2 ? 'new' : age
+  const badgeType = trend.status === 'hot' ? 'hot' : age < 2 ? 'new' : age
   const postCount = trend.postCount
     ? _(msg`${formatCount(i18n, trend.postCount)} posts`)
     : null
@@ -236,26 +236,6 @@ export function TrendingTopicRowSkeleton({}: {withPosts: boolean}) {
   const t = useTheme()
   const gutters = useGutters([0, 'base'])
 
-  // return (
-  //   <View style={[a.flex_1, a.flex_row, a.gap_xs, gutters, a.py_md]}>
-  //     <View style={[a.flex_shrink_0, {minWidth: 20}]}>
-  //       <LoadingPlaceholder width={16} height={16} />
-  //     </View>
-  //     <View style={[a.flex_1, a.flex_row, a.gap_sm, a.justify_between]}>
-  //       <View style={[a.flex_1]}>
-  //         <LoadingPlaceholder width={150} height={16} />
-  //         <View style={[a.mt_sm, a.flex_row, a.gap_sm, a.align_center]}>
-  //           <LoadingPlaceholder width={50} height={14} />
-  //           <LoadingPlaceholder width={35} height={14} />
-  //           <LoadingPlaceholder width={35} height={14} />
-  //         </View>
-  //       </View>
-  //       <View style={[a.flex_shrink_0]}>
-  //         <TrendingIndicator type="skeleton" />
-  //       </View>
-  //     </View>
-  //   </View>
-  // )
   return (
     <View
       style={[
