@@ -107,7 +107,7 @@ export function SubtitleText({style, ...props}: TextProps) {
   return (
     <Text
       style={[
-        t.atoms.text_contrast_low,
+        t.atoms.text_contrast_medium,
         a.leading_tight,
         a.flex_1,
         a.text_sm,
@@ -155,11 +155,13 @@ export function SearchButton({
 
 export function PinButton({feed}: {feed: AppBskyFeedDefs.GeneratorView}) {
   return (
-    <View style={[a.z_20, {marginRight: -2}]}>
+    <View style={[a.z_20, {marginRight: -6}]}>
       <FeedCard.SaveButton
         view={feed}
+        size="large"
         color="secondary"
         variant="ghost"
+        shape="square"
         text={false}
       />
     </View>

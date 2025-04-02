@@ -760,7 +760,7 @@ export function Explore({
               style={[a.pt_xs, a.border_b, t.atoms.border_contrast_low]}>
               <ModuleHeader.FeedLink feed={item.feed}>
                 <ModuleHeader.FeedAvatar feed={item.feed} />
-                <View style={[a.flex_1]}>
+                <View style={[a.flex_1, a.gap_xs]}>
                   <ModuleHeader.TitleText style={[a.text_lg]}>
                     {item.feed.displayName}
                   </ModuleHeader.TitleText>
