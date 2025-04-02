@@ -80,15 +80,15 @@
     tlds "^1.234.0"
     zod "^3.23.8"
 
-"@atproto/api@^0.14.7":
-  version "0.14.7"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.14.7.tgz#3ffa02d6b3baf9e265dab170367ffade08023567"
-  integrity sha512-YG2kvAtsgtajLlLrorYuHcxGgepG0c/RUB2/iJyBnwKjGqDLG8joOETf38JSNiGzs6NJbNKa9NHG6BQKourxBA==
+"@atproto/api@^0.14.16":
+  version "0.14.16"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.14.16.tgz#7b59eb83a27e906e0dc442d3de0f0d3869092b4a"
+  integrity sha512-xzUK3KVdp1TDJJ09Di2rvS/fisVctvMHO7Er0XhYviL3V4lxGQPNT3pHwbTbbb22QP7xH/d5ghCgfdIoS5Z8/A==
   dependencies:
     "@atproto/common-web" "^0.4.0"
-    "@atproto/lexicon" "^0.4.7"
-    "@atproto/syntax" "^0.3.3"
-    "@atproto/xrpc" "^0.6.9"
+    "@atproto/lexicon" "^0.4.9"
+    "@atproto/syntax" "^0.4.0"
+    "@atproto/xrpc" "^0.6.11"
     await-lock "^2.2.2"
     multiformats "^9.9.0"
     tlds "^1.234.0"
@@ -302,6 +302,17 @@
     multiformats "^9.9.0"
     zod "^3.23.8"
 
+"@atproto/lexicon@^0.4.9":
+  version "0.4.9"
+  resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.4.9.tgz#612951a85ecc1398366bd837cda6be89440f179d"
+  integrity sha512-/tmEuHQFr51V2V7EAVJzaA40sqJ7ylAZpR962VbOsPtmcdOHvezbjVHYEMXgfb927hS+xqbVyzBTbu5w9v8prA==
+  dependencies:
+    "@atproto/common-web" "^0.4.0"
+    "@atproto/syntax" "^0.4.0"
+    iso-datestring-validator "^2.2.2"
+    multiformats "^9.9.0"
+    zod "^3.23.8"
+
 "@atproto/oauth-provider@^0.2.17":
   version "0.2.17"
   resolved "https://registry.yarnpkg.com/@atproto/oauth-provider/-/oauth-provider-0.2.17.tgz#4644d391eedbbbbe5825ecc0e8cc03f1c6433b95"
@@ -446,6 +457,11 @@
   resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.3.3.tgz#6debe8983985378104822172a128e429931bf3f7"
   integrity sha512-F1LZweesNYdBbZBXVa72N/cSvchG8Q1tG4/209ZXbIuM3FwQtkgn+zgmmV4P4ORmhOeXPBNXvMBpcqiwx/gEQQ==
 
+"@atproto/syntax@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.4.0.tgz#bec71552087bb24c208a06ef418c0040b65542f2"
+  integrity sha512-b9y5ceHS8YKOfP3mdKmwAx5yVj9294UN7FG2XzP6V5aKUdFazEYRnR9m5n5ZQFKa3GNvz7de9guZCJ/sUTcOAA==
+
 "@atproto/xrpc-server@^0.7.11":
   version "0.7.11"
   resolved "https://registry.yarnpkg.com/@atproto/xrpc-server/-/xrpc-server-0.7.11.tgz#efadcfdaaaa0ff5576d1ee97e46dcbc6dafcb0b6"
@@ -462,6 +478,14 @@
     rate-limiter-flexible "^2.4.1"
     uint8arrays "3.0.0"
     ws "^8.12.0"
+    zod "^3.23.8"
+
+"@atproto/xrpc@^0.6.11":
+  version "0.6.11"
+  resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.6.11.tgz#54c527e39a2f5ddd2655b11f7cb99b8f303d8364"
+  integrity sha512-J2cZP8FjoDN0UkyTYBlCvKvxwBbDm4dld47u6FQK30RJy9YpSiUkdxJJ10NYqpi7JVny3M0qWQgpWJDV94+PdA==
+  dependencies:
+    "@atproto/lexicon" "^0.4.9"
     zod "^3.23.8"
 
 "@atproto/xrpc@^0.6.9":
@@ -16732,6 +16756,11 @@ react-native-drawer-layout@^4.1.1:
   integrity sha512-ob6O3ph7PZ3A2FpdlsSxHuMpHDXREZPR8A6S3q0dSxV7i6d+8Z6CPCTbegfN2QZyizSow9NLrKyXP93tlqZ3dA==
   dependencies:
     use-latest-callback "^0.2.1"
+
+react-native-emoji-popup@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-emoji-popup/-/react-native-emoji-popup-0.1.2.tgz#7cd3874ba0496031e6f3e24de77e0df895168ce6"
+  integrity sha512-YxuAwubxe6VLNfTyMlpw9g2WQVUIuJb4flWVZjfR7r6fmVvXw4Sxo6ZD6m/fG9AQP3pHkZptzNUr4gdF23m3ZQ==
 
 react-native-gesture-handler@2.20.2:
   version "2.20.2"

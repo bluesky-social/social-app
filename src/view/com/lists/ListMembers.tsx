@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react'
-import {Dimensions, StyleProp, View, ViewStyle} from 'react-native'
-import {AppBskyGraphDefs} from '@atproto/api'
+import {Dimensions, type StyleProp, View, type ViewStyle} from 'react-native'
+import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -10,14 +10,14 @@ import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
 import {useListMembersQuery} from '#/state/queries/list-members'
 import {useSession} from '#/state/session'
+import {ProfileCard} from '#/view/com/profile/ProfileCard'
+import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
+import {Button} from '#/view/com/util/forms/Button'
+import {List, type ListRef} from '#/view/com/util/List'
+import {ProfileCardFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {ListFooter} from '#/components/Lists'
-import * as bsky from '#/types/bsky'
-import {ProfileCard} from '../profile/ProfileCard'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {Button} from '../util/forms/Button'
-import {List, ListRef} from '../util/List'
-import {ProfileCardFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
+import type * as bsky from '#/types/bsky'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_ITEM = {_reactKey: '__empty__'}
@@ -202,9 +202,17 @@ export function ListMembers({
         error={cleanError(error)}
         isFetchingNextPage={isFetchingNextPage}
         onRetry={fetchNextPage}
+        height={180 + headerOffset}
       />
     )
-  }, [hasNextPage, error, isFetchingNextPage, fetchNextPage, isEmpty])
+  }, [
+    hasNextPage,
+    error,
+    isFetchingNextPage,
+    fetchNextPage,
+    isEmpty,
+    headerOffset,
+  ])
 
   return (
     <View testID={testID} style={style}>
@@ -226,7 +234,6 @@ export function ListMembers({
         onEndReached={onEndReached}
         onEndReachedThreshold={0.6}
         removeClippedSubviews={true}
-        // @ts-ignore our .web version only -prf
         desktopFixedHeight={desktopFixedHeightOffset || true}
       />
     </View>

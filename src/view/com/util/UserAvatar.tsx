@@ -1,5 +1,12 @@
 import React, {memo, useMemo} from 'react'
-import {Image, Pressable, StyleSheet, View} from 'react-native'
+import {
+  Image,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
 import {ModerationUI} from '@atproto/api'
@@ -48,6 +55,7 @@ interface UserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
   usePlainRNImage?: boolean
   onLoad?: () => void
+  style?: StyleProp<ViewStyle>
 }
 
 interface EditableUserAvatarProps extends BaseUserAvatarProps {
@@ -181,6 +189,7 @@ let UserAvatar = ({
   moderation,
   usePlainRNImage = false,
   onLoad,
+  style,
 }: UserAvatarProps): React.ReactNode => {
   const pal = usePalette('default')
   const backgroundColor = pal.colors.backgroundLight
@@ -218,9 +227,19 @@ let UserAvatar = ({
     )
   }, [moderation?.alert, size, pal])
 
+  const containerStyle = useMemo(() => {
+    return [
+      {
+        width: size,
+        height: size,
+      },
+      style,
+    ]
+  }, [size, style])
+
   return avatar &&
     !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
-    <View style={{width: size, height: size}}>
+    <View style={containerStyle}>
       {usePlainRNImage ? (
         <Image
           accessibilityIgnoresInvertColors
@@ -249,7 +268,7 @@ let UserAvatar = ({
       {alert}
     </View>
   ) : (
-    <View style={{width: size, height: size}}>
+    <View style={containerStyle}>
       <DefaultAvatar type={type} shape={finalShape} size={size} />
       {alert}
     </View>
