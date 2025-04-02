@@ -226,6 +226,8 @@ function useCategoryDisplayName(
       return _(msg`Video Games`)
     case 'pop-culture':
       return _(msg`Entertainment`)
+    case 'news':
+      return _(msg`News`)
     case 'other':
     default:
       return null
