@@ -457,17 +457,10 @@ export const ComposePost = ({
       })
     }
 
-    // Invalidate profile feed queries to trigger a refresh
-    console.log('invalidating profile feed queries')
-    console.log(!!replyTo)
-    if (!replyTo) {
-      queryClient.invalidateQueries({
-        queryKey: ['profile-feed', `author|${currentDid}|posts_and_author_threads`],
-      })
-      queryClient.invalidateQueries({
-        queryKey: ['profile-feed', `author|${currentDid}|posts_with_replies`],
-      })
-    }
+    // Invalidate the profile feed query to refresh the profile page
+    queryClient.invalidateQueries({
+      queryKey: ['post-feed', `author|${currentDid}|posts_and_author_threads`, {}],
+    })
 
     if (postUri && !replyTo) {
       emitPostCreated()
