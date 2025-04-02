@@ -23,28 +23,6 @@ export function ActionsWrapper({
         // will always be true, since this file is platform split
         trigger.isNative && (
           <View style={[a.flex_1, a.relative]}>
-            {/* {isNative && (
-              <View
-                style={[
-                  a.rounded_full,
-                  a.absolute,
-                  {bottom: '100%'},
-                  isFromSelf ? a.right_0 : a.left_0,
-                  t.atoms.bg,
-                  a.flex_row,
-                  a.shadow_lg,
-                  a.py_xs,
-                  a.px_md,
-                  a.gap_md,
-                  a.mb_xs,
-                ]}>
-                {['👍', '😆', '❤️', '👀', '😢'].map(emoji => (
-                  <Text key={emoji} style={[a.text_center, {fontSize: 32}]}>
-                    {emoji}
-                  </Text>
-                ))}
-              </View>
-            )} */}
             <View
               style={[
                 {maxWidth: '80%'},
@@ -56,7 +34,7 @@ export function ActionsWrapper({
               accessibilityActions={[
                 {name: 'activate', label: _(msg`Open message options`)},
               ]}
-              onAccessibilityAction={trigger.control.open}>
+              onAccessibilityAction={() => trigger.control.open('full')}>
               {children}
             </View>
           </View>

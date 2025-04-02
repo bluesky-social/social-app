@@ -21,7 +21,7 @@ import {
   web,
 } from '#/alf'
 import {useDialogContext} from '#/components/Dialog'
-import {SCROLLBAR_OFFSET} from '#/components/Layout/const'
+import {CENTER_COLUMN_OFFSET, SCROLLBAR_OFFSET} from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 
 export * from '#/components/Layout/const'
@@ -173,7 +173,7 @@ export const Center = React.memo(function LayoutContent({
                 centerColumnOffset &&
                 !ignoreTabletLayoutOffset &&
                 !isWithinDialog
-                  ? -150
+                  ? CENTER_COLUMN_OFFSET
                   : 0,
             },
             {translateX: web(SCROLLBAR_OFFSET) ?? 0},
@@ -209,7 +209,7 @@ const WebCenterBorders = React.memo(function LayoutContent() {
           left: '50%',
           transform: [
             {translateX: '-50%'},
-            {translateX: centerColumnOffset ? -150 : 0},
+            {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
             ...a.scrollbar_offset.transform,
           ],
         }),
