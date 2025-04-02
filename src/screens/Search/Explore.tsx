@@ -755,7 +755,9 @@ export function Explore({
         }
         case 'preview:header': {
           return (
-            <ModuleHeader.Container headerHeight={headerHeight}>
+            <ModuleHeader.Container
+              headerHeight={headerHeight}
+              style={[a.pt_xs, a.border_b, t.atoms.border_contrast_low]}>
               <ModuleHeader.FeedLink feed={item.feed}>
                 <ModuleHeader.FeedAvatar feed={item.feed} />
                 <View style={[a.flex_1]}>
@@ -774,41 +776,34 @@ export function Explore({
           )
         }
         case 'preview:footer': {
-          return (
-            <View
-              style={[
-                a.w_full,
-                t.atoms.border_contrast_low,
-                a.border_t,
-                {paddingBottom: 6},
-              ]}
-            />
-          )
+          return <View style={[a.w_full, a.pt_2xl]} />
         }
         case 'preview:sliceItem': {
           const slice = item.slice
           const indexInSlice = item.indexInSlice
           const subItem = slice.items[indexInSlice]
           return (
-            <PostFeedItem
-              post={subItem.post}
-              record={subItem.record}
-              reason={indexInSlice === 0 ? slice.reason : undefined}
-              feedContext={slice.feedContext}
-              moderation={subItem.moderation}
-              parentAuthor={subItem.parentAuthor}
-              showReplyTo={item.showReplyTo}
-              isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
-              isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
-              isThreadLastChild={
-                isThreadChildAt(slice.items, indexInSlice) &&
-                slice.items.length === indexInSlice + 1
-              }
-              isParentBlocked={subItem.isParentBlocked}
-              isParentNotFound={subItem.isParentNotFound}
-              hideTopBorder={item.hideTopBorder}
-              rootPost={slice.items[0].post}
-            />
+            <View style={[a.border_b, t.atoms.border_contrast_low]}>
+              <PostFeedItem
+                post={subItem.post}
+                record={subItem.record}
+                reason={indexInSlice === 0 ? slice.reason : undefined}
+                feedContext={slice.feedContext}
+                moderation={subItem.moderation}
+                parentAuthor={subItem.parentAuthor}
+                showReplyTo={item.showReplyTo}
+                isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
+                isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
+                isThreadLastChild={
+                  isThreadChildAt(slice.items, indexInSlice) &&
+                  slice.items.length === indexInSlice + 1
+                }
+                isParentBlocked={subItem.isParentBlocked}
+                isParentNotFound={subItem.isParentNotFound}
+                rootPost={slice.items[0].post}
+                hideTopBorder
+              />
+            </View>
           )
         }
         case 'preview:sliceViewFullThread': {
@@ -841,7 +836,7 @@ export function Explore({
     () =>
       items.reduce(
         (acc, curr) =>
-        ['topBorder', 'preview:header'].includes(curr.type)
+          ['topBorder', 'preview:header'].includes(curr.type)
             ? acc.concat(items.indexOf(curr))
             : acc,
         [] as number[],
