@@ -1001,7 +1001,6 @@ function ComposerTopBar({
               )}
             </ButtonText>
           </Button>
-            }
         )}
       </View>
       {children}
