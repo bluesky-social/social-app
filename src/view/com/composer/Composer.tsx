@@ -481,8 +481,8 @@ export const ComposePost = ({
       thread.posts.length > 1
         ? _(msg`Your posts have been published`)
         : replyTo
-          ? _(msg`Your reply has been published`)
-          : _(msg`Your post has been published`),
+        ? _(msg`Your reply has been published`)
+        : _(msg`Your post has been published`),
     )
   }, [
     _,
