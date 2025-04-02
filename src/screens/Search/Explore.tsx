@@ -647,7 +647,11 @@ export function Explore({
           )
         }
         case 'trendingTopics': {
-          return <ExploreTrendingTopics />
+          return (
+            <View style={[a.pb_md]}>
+              <ExploreTrendingTopics />
+            </View>
+          )
         }
         case 'trendingVideos': {
           return <ExploreTrendingVideos />
