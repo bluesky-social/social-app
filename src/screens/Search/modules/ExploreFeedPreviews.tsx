@@ -23,6 +23,10 @@ const LIMIT = 8 // sliced to 6, overfetch to account for moderation
 
 export type FeedPreviewItem =
   | {
+      type: 'topBorder'
+      key: string
+    }
+  | {
       type: 'preview:loading'
       key: string
     }
@@ -116,7 +120,8 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
             key: 'empty',
           })
         } else if (data) {
-          for (const page of data.pages) {
+          for (let pageIndex = 0; pageIndex < data.pages.length; pageIndex++) {
+            const page = data.pages[pageIndex]
             // default feed tuner - we just want it to slice up the feed
             const tuner = new FeedTuner([])
             const slices: FeedPreviewItem[] = []
@@ -207,6 +212,12 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
             }
 
             if (slices.length > 0) {
+              if (pageIndex > 0) {
+                items.push({
+                  type: 'topBorder',
+                  key: `topBorder-${page.feed.uri}`,
+                })
+              }
               items.push(
                 {
                   type: 'preview:footer',

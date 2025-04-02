@@ -1,7 +1,6 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {View, type ViewabilityConfig, type ViewToken} from 'react-native'
 import {
-  AtUri,
   type AppBskyActorDefs,
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
@@ -29,11 +28,11 @@ import {
   FeedFeedLoadingPlaceholder,
   ProfileCardFeedLoadingPlaceholder,
 } from '#/view/com/util/LoadingPlaceholder'
+import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {
   StarterPackCard,
   StarterPackCardSkeleton,
 } from '#/screens/Search/components/StarterPackCard'
-import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
 import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
@@ -783,27 +782,25 @@ export function Explore({
           const indexInSlice = item.indexInSlice
           const subItem = slice.items[indexInSlice]
           return (
-            <View style={[a.border_b, t.atoms.border_contrast_low]}>
-              <PostFeedItem
-                post={subItem.post}
-                record={subItem.record}
-                reason={indexInSlice === 0 ? slice.reason : undefined}
-                feedContext={slice.feedContext}
-                moderation={subItem.moderation}
-                parentAuthor={subItem.parentAuthor}
-                showReplyTo={item.showReplyTo}
-                isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
-                isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
-                isThreadLastChild={
-                  isThreadChildAt(slice.items, indexInSlice) &&
-                  slice.items.length === indexInSlice + 1
-                }
-                isParentBlocked={subItem.isParentBlocked}
-                isParentNotFound={subItem.isParentNotFound}
-                rootPost={slice.items[0].post}
-                hideTopBorder
-              />
-            </View>
+            <PostFeedItem
+              post={subItem.post}
+              record={subItem.record}
+              reason={indexInSlice === 0 ? slice.reason : undefined}
+              feedContext={slice.feedContext}
+              moderation={subItem.moderation}
+              parentAuthor={subItem.parentAuthor}
+              showReplyTo={item.showReplyTo}
+              isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
+              isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
+              isThreadLastChild={
+                isThreadChildAt(slice.items, indexInSlice) &&
+                slice.items.length === indexInSlice + 1
+              }
+              isParentBlocked={subItem.isParentBlocked}
+              isParentNotFound={subItem.isParentNotFound}
+              hideTopBorder={item.hideTopBorder}
+              rootPost={slice.items[0].post}
+            />
           )
         }
         case 'preview:sliceViewFullThread': {
