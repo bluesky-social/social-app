@@ -80,7 +80,7 @@ export function TrendRow({
       label={_(msg`Browse topic ${trend.displayName}`)}
       to={trend.link}
       onPress={onPress}
-      style={[a.border_t, t.atoms.border_contrast_low]}
+      style={[a.border_b, t.atoms.border_contrast_low]}
       PressableComponent={Pressable}>
       {({hovered, pressed}) => (
         <>
@@ -244,7 +244,7 @@ export function TrendingTopicRowSkeleton({}: {withPosts: boolean}) {
         a.py_lg,
         a.flex_row,
         a.gap_2xs,
-        a.border_t,
+        a.border_b,
         t.atoms.border_contrast_low,
       ]}>
       <View style={[a.flex_1, a.gap_sm]}>

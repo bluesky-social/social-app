@@ -260,6 +260,10 @@ export function Explore({
   const items = useMemo<ExploreScreenItems[]>(() => {
     const i: ExploreScreenItems[] = []
 
+    const addTopBorder = () => {
+      i.push({type: 'topBorder', key: 'top-border'})
+    }
+
     const addTrendingTopicsModule = () => {
       i.push({
         type: 'trendingTopics',
@@ -431,6 +435,8 @@ export function Explore({
 
     // Dynamic module ordering
 
+    addTopBorder()
+
     if (guide?.guide === 'follow-10' && !guide.isComplete) {
       addSuggestedFollowsModule()
       addTrendingTopicsModule()
@@ -543,7 +549,7 @@ export function Explore({
         }
         case 'loadMore': {
           return (
-            <View style={[a.border_t, t.atoms.border_contrast_low, a.pb_2xl]}>
+            <View style={[a.border_t, t.atoms.border_contrast_low]}>
               <LoadMore item={item} />
             </View>
           )
@@ -598,7 +604,9 @@ export function Explore({
     () =>
       items.reduce(
         (acc, curr) =>
-          [''].includes(curr.type) ? acc.concat(items.indexOf(curr)) : acc,
+          ['topBorder'].includes(curr.type)
+            ? acc.concat(items.indexOf(curr))
+            : acc,
         [] as number[],
       ),
     [items],
