@@ -1,25 +1,28 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
 import {
-  AppBskyActorDefs,
+  type AppBskyActorDefs,
   moderateProfile,
-  ModerationDecision,
+  type ModerationDecision,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
-  RouteProp,
+  type RouteProp,
   useFocusEffect,
   useNavigation,
   useRoute,
 } from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useEmail} from '#/lib/hooks/useEmail'
 import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
-import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {isWeb} from '#/platform/detection'
-import {Shadow, useMaybeProfileShadow} from '#/state/cache/profile-shadow'
+import {type Shadow, useMaybeProfileShadow} from '#/state/cache/profile-shadow'
 import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
@@ -111,15 +114,21 @@ function Inner() {
 
   if (convoState.status === ConvoStatus.Error) {
     return (
-      <Layout.Center style={[a.flex_1]}>
-        <MessagesListHeader />
+      <>
+        <Layout.Center style={[a.flex_1]}>
+          {moderation ? (
+            <MessagesListHeader moderation={moderation} profile={recipient} />
+          ) : (
+            <MessagesListHeader />
+          )}
+        </Layout.Center>
         <Error
           title={_(msg`Something went wrong`)}
           message={_(msg`We couldn't load this conversation`)}
           onRetry={() => convoState.error.retry()}
           sideBorders={false}
         />
-      </Layout.Center>
+      </>
     )
   }
 

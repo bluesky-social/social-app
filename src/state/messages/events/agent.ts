@@ -208,12 +208,17 @@ export class MessagesEventBus {
       }
       case MessagesEventBusStatus.Error: {
         switch (action.event) {
-          case MessagesEventBusDispatchEvent.UpdatePoll:
-          case MessagesEventBusDispatchEvent.Resume: {
+          case MessagesEventBusDispatchEvent.UpdatePoll: {
             // basically reset
             this.status = MessagesEventBusStatus.Initializing
             this.latestRev = undefined
             this.init()
+            break
+          }
+          case MessagesEventBusDispatchEvent.Resume: {
+            this.status = MessagesEventBusStatus.Ready
+            this.resetPoll()
+            this.emitter.emit('event', {type: 'connect'})
             break
           }
         }
@@ -329,7 +334,7 @@ export class MessagesEventBus {
 
     try {
       const response = await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.getLog(
+        return this.agent.chat.bsky.convo.getLog(
           {
             cursor: this.latestRev,
           },

@@ -58,7 +58,7 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "^0.14.7",
+    "@atproto/api": "^0.14.16",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
@@ -178,6 +178,7 @@
     "react-native-compressor": "1.10.3",
     "react-native-date-picker": "^5.0.7",
     "react-native-drawer-layout": "^4.1.1",
+    "react-native-emoji-popup": "^0.1.2",
     "react-native-gesture-handler": "2.20.2",
     "react-native-get-random-values": "~1.11.0",
     "react-native-image-crop-picker": "^0.41.6",

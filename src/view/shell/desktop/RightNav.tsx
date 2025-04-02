@@ -19,6 +19,7 @@ import {
 } from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Divider} from '#/components/Divider'
+import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {Text} from '#/components/Typography'
@@ -57,6 +58,8 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
     return null
   }
 
+  const width = centerColumnOffset ? 250 : 300
+
   return (
     <View
       style={[
@@ -66,10 +69,12 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           position: 'fixed',
           left: '50%',
           transform: [
-            {translateX: centerColumnOffset ? 150 : 300},
+            {
+              translateX: 300 + (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0),
+            },
             ...a.scrollbar_offset.transform,
           ],
-          width: 300 + gutters.paddingLeft,
+          width: width + gutters.paddingLeft,
           maxHeight: '100%',
           overflowY: 'auto',
         }),

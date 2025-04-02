@@ -1,19 +1,13 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-} from 'react'
+import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
 import {
   ChatBskyConvoDefs,
-  ChatBskyConvoListConvos,
+  type ChatBskyConvoListConvos,
   moderateProfile,
-  ModerationOpts,
+  type ModerationOpts,
 } from '@atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
+  type InfiniteData,
+  type QueryClient,
   useInfiniteQuery,
   useQueryClient,
 } from '@tanstack/react-query'
@@ -315,6 +309,52 @@ export function ListConvosProviderInner({
                   muted: false,
                   rev: logRef.rev,
                 })),
+            )
+          } else if (ChatBskyConvoDefs.isLogAddReaction(log)) {
+            const logRef: ChatBskyConvoDefs.LogAddReaction = log
+            queryClient.setQueriesData(
+              {queryKey: [RQKEY_ROOT]},
+              (old?: ConvoListQueryData) =>
+                optimisticUpdate(logRef.convoId, old, convo => ({
+                  ...convo,
+                  lastReaction: {
+                    $type: 'chat.bsky.convo.defs#messageAndReactionView',
+                    reaction: logRef.reaction,
+                    message: logRef.message,
+                  },
+                  rev: logRef.rev,
+                })),
+            )
+          } else if (ChatBskyConvoDefs.isLogRemoveReaction(log)) {
+            const logRef: ChatBskyConvoDefs.LogRemoveReaction = log
+            queryClient.setQueriesData(
+              {queryKey: [RQKEY_ROOT]},
+              (old?: ConvoListQueryData) =>
+                optimisticUpdate(logRef.convoId, old, convo => {
+                  if (
+                    // if the convo is the same
+                    logRef.convoId === convo.id &&
+                    ChatBskyConvoDefs.isMessageAndReactionView(
+                      convo.lastReaction,
+                    ) &&
+                    ChatBskyConvoDefs.isMessageView(logRef.message) &&
+                    // ...and the message is the same
+                    convo.lastReaction.message.id === logRef.message.id &&
+                    // ...and the reaction is the same
+                    convo.lastReaction.reaction.sender.did ===
+                      logRef.reaction.sender.did &&
+                    convo.lastReaction.reaction.value === logRef.reaction.value
+                  ) {
+                    return {
+                      ...convo,
+                      // ...remove the reaction. hopefully they didn't react twice in a row!
+                      lastReaction: undefined,
+                      rev: logRef.rev,
+                    }
+                  } else {
+                    return convo
+                  }
+                }),
             )
           }
         }
