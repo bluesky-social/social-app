@@ -1,57 +1,253 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyGraphDefs} from '@atproto/api'
-import {Image} from 'expo-image'
+import {
+  type AppBskyGraphDefs,
+  AppBskyGraphStarterpack,
+  moderateProfile,
+} from '@atproto/api'
+import {msg,Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {Trans, msg} from '@lingui/macro'
 
-import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
-import * as Card from '#/components/StarterPack/StarterPackCard'
-import {atoms as a, useTheme, useBreakpoints} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useSession} from '#/state/session'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {ButtonText} from '#/components/Button'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {Link} from '#/components/Link'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
+import {useStarterPackLink} from '#/components/StarterPack/StarterPackCard'
+import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
-export function StarterPackCard({view}: {view: AppBskyGraphDefs.StarterPackViewBasic}) {
+export function StarterPackCard({
+  view,
+}: {
+  view: AppBskyGraphDefs.StarterPackView
+}) {
   const t = useTheme()
   const {_} = useLingui()
-  const imageUri = getStarterPackOgCard(view)
+  const {currentAccount} = useSession()
   const {gtPhone} = useBreakpoints()
+  const link = useStarterPackLink({view})
+
+  if (
+    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+      view.record,
+      AppBskyGraphStarterpack.isRecord,
+    )
+  ) {
+    return null
+  }
+
+  const profileCount = gtPhone ? 11 : 8
+  const profiles = view.listItemsSample
+    ?.slice(0, profileCount)
+    .map(item => item.subject)
 
   return (
     <View
       style={[
+        a.w_full,
+        a.p_lg,
+        a.gap_md,
         a.border,
         a.rounded_sm,
         a.overflow_hidden,
         t.atoms.border_contrast_low,
       ]}>
-      <Card.Link starterPack={view}>
-        <View style={[a.w_full, gtPhone && [
-          a.flex_row, a.gap_lg,
-        ]]}>
-          <View style={[gtPhone && {
-            width: '50%',
-          }]}>
-            <Image
-              source={imageUri}
-              style={[a.w_full, {aspectRatio: 1.91}]}
-              accessibilityIgnoresInvertColors={true}
-            />
-          </View>
-          <View style={[a.flex_1, a.py_md, a.pr_md, !gtPhone && [a.px_md, a.flex_row, a.gap_sm, a.align_start]]}>
-            <View style={[a.flex_1]}>
-              <Card.Card starterPack={view} noIcon />
+      <View aria-hidden style={[a.absolute, a.inset_0, a.z_40]}>
+        <Link
+          to={link.to}
+          label={link.label}
+          style={[a.absolute, a.inset_0]}
+          onHoverIn={link.precache}
+          onPress={link.precache}>
+          <View />
+        </Link>
+      </View>
+
+      <AvatarStack
+        profiles={profiles ?? []}
+        numPending={profileCount}
+        total={view.list?.listItemCount}
+      />
+
+      <View
+        style={[
+          a.w_full,
+          a.flex_row,
+          a.align_start,
+          a.gap_lg,
+          web({
+            position: 'static',
+            zIndex: 'unset',
+          }),
+        ]}>
+        <View style={[a.flex_1]}>
+          <Text
+            emoji
+            style={[a.text_md, a.font_bold, a.leading_snug]}
+            numberOfLines={1}>
+            {view.record.name}
+          </Text>
+          <Text
+            emoji
+            style={[a.leading_snug, t.atoms.text_contrast_medium]}
+            numberOfLines={1}>
+            {view.creator?.did === currentAccount?.did
+              ? _(msg`By you`)
+              : _(msg`By ${sanitizeHandle(view.creator.handle, '@')}`)}
+          </Text>
+        </View>
+        <Link
+          to={link.to}
+          label={link.label}
+          onHoverIn={link.precache}
+          onPress={link.precache}
+          variant="solid"
+          color="secondary"
+          size="small"
+          style={[a.z_50]}>
+          <ButtonText>
+            <Trans>Open pack</Trans>
+          </ButtonText>
+        </Link>
+      </View>
+    </View>
+  )
+}
+
+export function AvatarStack({
+  profiles,
+  numPending,
+  total,
+}: {
+  profiles: bsky.profile.AnyProfileView[]
+  numPending: number
+  total?: number
+}) {
+  const t = useTheme()
+  const {gtPhone} = useBreakpoints()
+  const moderationOpts = useModerationOpts()
+  const circlesCount = numPending + 1 // add total at end
+  const widthPerc = 100 / circlesCount
+  const [size, setSize] = React.useState<number | null>(null)
+
+  const isPending = (numPending && profiles.length === 0) || !moderationOpts
+
+  const items = isPending
+    ? Array.from({length: numPending ?? circlesCount}).map((_, i) => ({
+        key: i,
+        profile: null,
+        moderation: null,
+      }))
+    : profiles.map(item => ({
+        key: item.did,
+        profile: item,
+        moderation: moderateProfile(item, moderationOpts),
+      }))
+
+  return (
+    <View
+      style={[
+        a.w_full,
+        a.flex_row,
+        a.align_center,
+        a.relative,
+        {width: `${100 - widthPerc * 0.2}%`},
+      ]}>
+      {items.map((item, i) => (
+        <View
+          key={item.key}
+          style={[
+            {
+              width: `${widthPerc}%`,
+              zIndex: 100 - i,
+            },
+          ]}>
+          <View
+            style={[
+              a.relative,
+              {
+                width: '120%',
+              },
+            ]}>
+            <View
+              onLayout={e => setSize(e.nativeEvent.layout.width)}
+              style={[
+                a.rounded_full,
+                t.atoms.bg_contrast_25,
+                {
+                  paddingTop: '100%',
+                },
+              ]}>
+              {size && item.profile ? (
+                <UserAvatar
+                  size={size}
+                  avatar={item.profile.avatar}
+                  type={item.profile.associated?.labeler ? 'labeler' : 'user'}
+                  moderation={item.moderation.ui('avatar')}
+                  style={[a.absolute, a.inset_0]}
+                />
+              ) : (
+                <MediaInsetBorder style={[a.rounded_full]} />
+              )}
             </View>
-            <Button
-              label={_(msg`Open pack`)}
-              variant='solid'
-              color='secondary'
-              size='small'
-            >
-              <ButtonText><Trans>Open pack</Trans></ButtonText>
-            </Button>
           </View>
         </View>
-      </Card.Link>
+      ))}
+      <View
+        style={[
+          {
+            width: `${widthPerc}%`,
+            zIndex: 1,
+          },
+        ]}>
+        <View
+          style={[
+            a.relative,
+            {
+              width: '120%',
+            },
+          ]}>
+          <View
+            style={[
+              {
+                paddingTop: '100%',
+              },
+            ]}>
+            <View
+              style={[
+                a.absolute,
+                a.inset_0,
+                a.rounded_full,
+                a.align_center,
+                a.justify_center,
+                {
+                  backgroundColor: t.atoms.text_contrast_low.color,
+                },
+              ]}>
+              {total ? (
+                <Text
+                  style={[
+                    gtPhone ? a.text_md : a.text_sm,
+                    a.font_bold,
+                    a.leading_snug,
+                    {color: 'white'},
+                  ]}>
+                  <Trans comment="Indicates the number of additional profiles are in the Starter Pack e.g. +12">
+                    +{total}
+                  </Trans>
+                </Text>
+              ) : (
+                <Plus fill="white" />
+              )}
+            </View>
+          </View>
+        </View>
+      </View>
     </View>
   )
 }
