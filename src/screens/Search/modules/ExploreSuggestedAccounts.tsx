@@ -12,7 +12,7 @@ import {
   popularInterests,
   useInterestsDisplayNames,
 } from '#/screens/Onboarding/state'
-import {useTheme} from '#/alf'
+import {useGutters,useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -161,6 +161,7 @@ let SuggestedProfileCard = ({
   position: number
 }): React.ReactNode => {
   const t = useTheme()
+  const gutters = useGutters([0, 'base'])
   return (
     <ProfileCard.Link
       profile={profile}
@@ -179,9 +180,9 @@ let SuggestedProfileCard = ({
       <View
         style={[
           a.w_full,
-          a.py_md,
-          a.px_lg,
-          a.border_b,
+          gutters,
+          a.py_lg,
+          a.border_t,
           t.atoms.border_contrast_low,
           a.flex_1,
         ]}>
@@ -214,7 +215,7 @@ let SuggestedProfileCard = ({
               }}
             />
           </ProfileCard.Header>
-          <ProfileCard.Description profile={profile} numberOfLines={3} />
+          <ProfileCard.Description profile={profile} numberOfLines={2} />
         </ProfileCard.Outer>
       </View>
     </ProfileCard.Link>

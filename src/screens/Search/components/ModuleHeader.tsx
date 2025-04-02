@@ -23,15 +23,13 @@ export function Container({
   return (
     <View
       style={[
-        t.atoms.bg,
-        a.border_b,
-        t.atoms.border_contrast_low,
+        gutters,
         a.flex_row,
         a.align_center,
-        gutters,
-        a.pt_2xs,
-        a.pb_sm,
+        a.pt_2xl,
+        a.pb_md,
         a.gap_sm,
+        t.atoms.bg,
         style,
       ]}>
       {children}
@@ -80,7 +78,12 @@ export function SearchButton({
           {statsig: true},
         )
         onPress?.()
-      }}>
+      }}
+      style={[
+        {
+          right: -4,
+        },
+      ]}>
       <ButtonIcon icon={SearchIcon} size="lg" />
     </Button>
   )

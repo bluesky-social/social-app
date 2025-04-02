@@ -44,42 +44,40 @@ function LoadMore({item}: {item: ExploreScreenItems & {type: 'loadMore'}}) {
   const {_} = useLingui()
 
   return (
-    <View style={[a.pb_2xl]}>
-      <Button
-        label={_(msg`Load more`)}
-        onPress={item.onLoadMore}
-        style={[a.relative, a.w_full]}>
-        {({hovered, pressed}) => (
-          <View
+    <Button
+      label={_(msg`Load more`)}
+      onPress={item.onLoadMore}
+      style={[a.relative, a.w_full]}>
+      {({hovered, pressed}) => (
+        <View
+          style={[
+            a.flex_1,
+            a.flex_row,
+            a.align_center,
+            a.justify_center,
+            a.px_lg,
+            a.py_md,
+            a.gap_sm,
+            (hovered || pressed) && t.atoms.bg_contrast_25,
+          ]}>
+          <Text
             style={[
-              a.flex_1,
-              a.flex_row,
-              a.align_center,
-              a.justify_center,
-              a.px_lg,
-              a.py_md,
-              a.gap_sm,
-              (hovered || pressed) && t.atoms.bg_contrast_25,
+              a.leading_snug,
+              hovered ? t.atoms.text : t.atoms.text_contrast_medium,
             ]}>
-            <Text
-              style={[
-                a.leading_snug,
-                hovered ? t.atoms.text : t.atoms.text_contrast_medium,
-              ]}>
-              {item.message}
-            </Text>
-            {item.isLoadingMore ? (
-              <Loader size="sm" />
-            ) : (
-              <ChevronDownIcon
-                size="sm"
-                style={hovered ? t.atoms.text : t.atoms.text_contrast_medium}
-              />
-            )}
-          </View>
-        )}
-      </Button>
-    </View>
+            {item.message}
+          </Text>
+          {item.isLoadingMore ? (
+            <Loader size="sm" />
+          ) : (
+            <ChevronDownIcon
+              size="sm"
+              style={hovered ? t.atoms.text : t.atoms.text_contrast_medium}
+            />
+          )}
+        </View>
+      )}
+    </Button>
   )
 }
 
@@ -262,13 +260,6 @@ export function Explore({
   const items = useMemo<ExploreScreenItems[]>(() => {
     const i: ExploreScreenItems[] = []
 
-    const addTopBorder = () => {
-      i.push({
-        type: 'topBorder',
-        key: `top-border`,
-      })
-    }
-
     const addTrendingTopicsModule = () => {
       i.push({
         type: 'trendingTopics',
@@ -440,8 +431,6 @@ export function Explore({
 
     // Dynamic module ordering
 
-    addTopBorder()
-
     if (guide?.guide === 'follow-10' && !guide.isComplete) {
       addSuggestedFollowsModule()
       addTrendingTopicsModule()
@@ -500,14 +489,8 @@ export function Explore({
         }
         case 'tabbedHeader': {
           return (
-            <View
-              style={[
-                a.border_b,
-                t.atoms.border_contrast_low,
-                a.pb_md,
-                t.atoms.bg,
-              ]}>
-              <ModuleHeader.Container style={a.border_transparent}>
+            <View style={[a.pb_md]}>
+              <ModuleHeader.Container style={[a.pb_xs]}>
                 <ModuleHeader.Icon icon={item.icon} />
                 <ModuleHeader.TitleText>{item.title}</ModuleHeader.TitleText>
                 {item.searchButton && (
@@ -549,7 +532,7 @@ export function Explore({
           return (
             <View
               style={[
-                a.border_b,
+                a.border_t,
                 t.atoms.border_contrast_low,
                 a.px_lg,
                 a.py_lg,
@@ -559,7 +542,11 @@ export function Explore({
           )
         }
         case 'loadMore': {
-          return <LoadMore item={item} />
+          return (
+            <View style={[a.border_t, t.atoms.border_contrast_low, a.pb_2xl]}>
+              <LoadMore item={item} />
+            </View>
+          )
         }
         case 'profilePlaceholder': {
           return <ProfileCardFeedLoadingPlaceholder />
@@ -611,9 +598,7 @@ export function Explore({
     () =>
       items.reduce(
         (acc, curr) =>
-          ['topBorder', 'header', 'tabbedHeader'].includes(curr.type)
-            ? acc.concat(items.indexOf(curr))
-            : acc,
+          [''].includes(curr.type) ? acc.concat(items.indexOf(curr)) : acc,
         [] as number[],
       ),
     [items],

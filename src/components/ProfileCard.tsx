@@ -138,7 +138,7 @@ export function Avatar({
 
   return (
     <UserAvatar
-      size={42}
+      size={40}
       avatar={profile.avatar}
       type={profile.associated?.labeler ? 'labeler' : 'user'}
       moderation={moderation.ui('avatar')}
@@ -154,8 +154,8 @@ export function AvatarPlaceholder() {
         a.rounded_full,
         t.atoms.bg_contrast_50,
         {
-          width: 42,
-          height: 42,
+          width: 40,
+          height: 40,
         },
       ]}
     />
