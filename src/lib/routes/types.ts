@@ -53,6 +53,7 @@ export type CommonNavigatorParams = {
   ContentAndMediaSettings: undefined
   AboutSettings: undefined
   AppIconSettings: undefined
+  LabSettings: undefined
   Search: {q?: string}
   Hashtag: {tag: string; author?: string}
   Topic: {topic: string}
