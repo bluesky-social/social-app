@@ -12,7 +12,7 @@ import {
   popularInterests,
   useInterestsDisplayNames,
 } from '#/screens/Onboarding/state'
-import {useGutters,useTheme} from '#/alf'
+import {useGutters, useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
 import * as ProfileCard from '#/components/ProfileCard'
