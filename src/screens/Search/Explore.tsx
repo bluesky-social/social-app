@@ -18,6 +18,7 @@ import {useActorSearchPaginated} from '#/state/queries/actor-search'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
+import {useGetSuggestedFeedsQuery} from '#/state/queries/trending/useGetSuggestedFeedsQuery'
 import {useSuggestedStarterPacksQuery} from '#/state/queries/useSuggestedStarterPacksQuery'
 import {useProgressGuide} from '#/state/shell/progress-guide'
 import {isThreadChildAt, isThreadParentAt} from '#/view/com/posts/PostFeed'
@@ -293,10 +294,7 @@ export function Explore({
     hasPressedLoadMoreFeeds,
   ])
 
-  const feedsToPreview = useMemo(
-    () => feeds?.pages.flatMap(page => page.feeds),
-    [feeds],
-  )
+  const {data: suggestedFeeds} = useGetSuggestedFeedsQuery()
   const {
     data: feedPreviewSlices,
     query: {
@@ -306,7 +304,7 @@ export function Explore({
       hasNextPage: hasNextPageFeedPreviews,
       error: feedPreviewSlicesError,
     },
-  } = useFeedPreviews(feedsToPreview ?? [])
+  } = useFeedPreviews(suggestedFeeds?.feeds ?? [])
 
   const onLoadMoreFeedPreviews = useCallback(async () => {
     if (

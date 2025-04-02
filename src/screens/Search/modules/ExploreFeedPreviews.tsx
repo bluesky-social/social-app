@@ -75,8 +75,10 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
   const {data: preferences} = usePreferencesQuery()
   const userInterests = aggregateUserInterests(preferences)
   const moderationOpts = useModerationOpts()
+  const enabled = feeds.length > 0
 
   const query = useInfiniteQuery({
+    enabled,
     queryKey: RQKEY(uris),
     queryFn: async ({pageParam}) => {
       const feed = feeds[pageParam]
@@ -102,6 +104,8 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
     query,
     data: useMemo<FeedPreviewItem[]>(() => {
       const items: FeedPreviewItem[] = []
+
+      if (!enabled) return items
 
       const isEmpty =
         !isPending && !data?.pages?.some(page => page.posts.length)
@@ -246,6 +250,15 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
       }
 
       return items
-    }, [data, isFetched, isError, isPending, moderationOpts, _, error]),
+    }, [
+      enabled,
+      data,
+      isFetched,
+      isError,
+      isPending,
+      moderationOpts,
+      _,
+      error,
+    ]),
   }
 }
