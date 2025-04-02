@@ -113,7 +113,7 @@ function DialogInner({
           </Text>
           <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
             <Trans>
-              Please add any content warning self-labels that are applicable for
+              Please add any content warning labels that are applicable for
               the media you are posting.
             </Trans>
           </Text>
