@@ -1,14 +1,14 @@
 import React from 'react'
-import {GestureResponderEvent, View} from 'react-native'
+import {type GestureResponderEvent, View} from 'react-native'
 import {
   moderateProfile,
-  ModerationOpts,
+  type ModerationOpts,
   RichText as RichTextApi,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {LogEvents} from '#/lib/statsig/statsig'
+import {type LogEvents} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -18,13 +18,18 @@ import {ProfileCardPills} from '#/view/com/profile/ProfileCard'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonProps, ButtonText} from '#/components/Button'
+import {
+  Button,
+  ButtonIcon,
+  type ButtonProps,
+  ButtonText,
+} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {Link as InternalLink, LinkProps} from '#/components/Link'
+import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 
 export function Default({
   profile,
@@ -133,7 +138,7 @@ export function Avatar({
 
   return (
     <UserAvatar
-      size={42}
+      size={40}
       avatar={profile.avatar}
       type={profile.associated?.labeler ? 'labeler' : 'user'}
       moderation={moderation.ui('avatar')}
@@ -149,8 +154,8 @@ export function AvatarPlaceholder() {
         a.rounded_full,
         t.atoms.bg_contrast_50,
         {
-          width: 42,
-          height: 42,
+          width: 40,
+          height: 40,
         },
       ]}
     />
@@ -261,7 +266,7 @@ export function DescriptionPlaceholder({
 }) {
   const t = useTheme()
   return (
-    <View style={[{gap: 8}]}>
+    <View style={[a.pt_2xs, {gap: 6}]}>
       {Array(numberOfLines)
         .fill(0)
         .map((_, i) => (
@@ -286,6 +291,7 @@ export type FollowButtonProps = {
     LogEvents['profile:unfollow']['logContext']
   colorInverted?: boolean
   onFollow?: () => void
+  withIcon?: boolean
 } & Partial<ButtonProps>
 
 export function FollowButton(props: FollowButtonProps) {
@@ -301,6 +307,7 @@ export function FollowButtonInner({
   onPress: onPressProp,
   onFollow,
   colorInverted,
+  withIcon = true,
   ...rest
 }: FollowButtonProps) {
   const {_} = useLingui()
@@ -386,7 +393,9 @@ export function FollowButtonInner({
           color="secondary"
           {...rest}
           onPress={onPressUnfollow}>
-          <ButtonIcon icon={Check} position={isRound ? undefined : 'left'} />
+          {withIcon && (
+            <ButtonIcon icon={Check} position={isRound ? undefined : 'left'} />
+          )}
           {isRound ? null : <ButtonText>{unfollowLabel}</ButtonText>}
         </Button>
       ) : (
@@ -397,7 +406,9 @@ export function FollowButtonInner({
           color={colorInverted ? 'secondary_inverted' : 'primary'}
           {...rest}
           onPress={onPressFollow}>
-          <ButtonIcon icon={Plus} position={isRound ? undefined : 'left'} />
+          {withIcon && (
+            <ButtonIcon icon={Plus} position={isRound ? undefined : 'left'} />
+          )}
           {isRound ? null : <ButtonText>{followLabel}</ButtonText>}
         </Button>
       )}
