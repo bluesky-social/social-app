@@ -4,6 +4,7 @@ import {useLingui} from '@lingui/react'
 
 import {useAgent, useSession} from '#/state/session'
 import {useDialogControl} from '#/components/Dialog'
+import {ChangeEmailDialog} from '#/components/dialogs/ChangeEmailDialog'
 import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import * as Prompt from '#/components/Prompt'
 import {DisableEmail2FADialog} from './DisableEmail2FADialog'
@@ -15,6 +16,7 @@ export function Email2FAToggle() {
   const disableDialogControl = useDialogControl()
   const enableDialogControl = useDialogControl()
   const verifyEmailDialogControl = useDialogControl()
+  const changeEmailDialogControl = useDialogControl()
   const agent = useAgent()
 
   const enableEmailAuthFactor = React.useCallback(async () => {
@@ -59,10 +61,15 @@ export function Email2FAToggle() {
       />
       <VerifyEmailDialog
         control={verifyEmailDialogControl}
+        changeEmailControl={changeEmailDialogControl}
         onCloseAfterVerifying={enableDialogControl.open}
         reasonText={_(
           msg`You'll need to verify your email address before enabling email 2FA.`,
         )}
+      />
+      <ChangeEmailDialog
+        control={changeEmailDialogControl}
+        verifyEmailControl={verifyEmailDialogControl}
       />
       <SettingsList.BadgeButton
         label={

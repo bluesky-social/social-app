@@ -1,133 +1,130 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
-import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
-import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
-export function VerifyEmailDialog({
+export function ChangeEmailDialog({
   control,
-  onCloseWithoutVerifying,
-  onCloseAfterVerifying,
-  reasonText,
-  changeEmailControl,
+  verifyEmailControl,
 }: {
   control: Dialog.DialogControlProps
-  onCloseWithoutVerifying?: () => void
-  onCloseAfterVerifying?: () => void
-  reasonText?: string
-  changeEmailControl: Dialog.DialogControlProps
+  verifyEmailControl: Dialog.DialogControlProps
 }) {
-  const agent = useAgent()
-
-  const [didVerify, setDidVerify] = React.useState(false)
-
   return (
-    <Dialog.Outer
-      control={control}
-      onClose={async () => {
-        if (!didVerify) {
-          onCloseWithoutVerifying?.()
-          return
-        }
-
-        try {
-          await agent.resumeSession(agent.session!)
-          onCloseAfterVerifying?.()
-        } catch (e: unknown) {
-          logger.error(String(e))
-          return
-        }
-      }}>
+    <Dialog.Outer control={control}>
       <Dialog.Handle />
-      <Inner
-        setDidVerify={setDidVerify}
-        reasonText={reasonText}
-        changeEmailControl={changeEmailControl}
-      />
+      <Inner verifyEmailControl={verifyEmailControl} />
     </Dialog.Outer>
   )
 }
 
 export function Inner({
-  setDidVerify,
-  reasonText,
-  changeEmailControl,
+  verifyEmailControl,
 }: {
-  setDidVerify: (value: boolean) => void
-  reasonText?: string
-  changeEmailControl: Dialog.DialogControlProps
+  verifyEmailControl: Dialog.DialogControlProps
 }) {
-  const control = Dialog.useDialogContext()
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const agent = useAgent()
+  const control = Dialog.useDialogContext()
   const {gtMobile} = useBreakpoints()
 
   const [currentStep, setCurrentStep] = React.useState<
     'StepOne' | 'StepTwo' | 'StepThree'
   >('StepOne')
-  const [confirmationCode, setConfirmationCode] = React.useState('')
-  const [isProcessing, setIsProcessing] = React.useState(false)
-  const [error, setError] = React.useState('')
+  const [email, setEmail] = useState(currentAccount?.email || '')
+  const [confirmationCode, setConfirmationCode] = useState('')
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [error, setError] = useState('')
 
+  const currentEmail = currentAccount?.email || '(no email)'
   const uiStrings = {
     StepOne: {
-      title: _(msg`Verify Your Email`),
+      title: _(msg`Change Your Email`),
       message: '',
     },
     StepTwo: {
-      title: _(msg`Enter Code`),
+      title: _(msg`Security Step Required`),
       message: _(
-        msg`An email has been sent! Please enter the confirmation code included in the email below.`,
+        msg` An email has been sent to your previous address, ${currentEmail}. It includes a confirmation code which you can enter below.`,
       ),
     },
     StepThree: {
-      title: _(msg`Success!`),
-      message: _(msg`Thank you! Your email has been successfully verified.`),
+      title: _(msg`Email Updated!`),
+      message: _(
+        msg`Your email has been updated but not verified. As a next step, please verify your new email.`,
+      ),
     },
   }
 
-  const onSendEmail = async () => {
+  const onRequestChange = async () => {
+    if (email === currentAccount?.email) {
+      setError(
+        _(
+          msg`The email address you entered is the same as your current email address.`,
+        ),
+      )
+      return
+    }
     setError('')
     setIsProcessing(true)
     try {
-      await agent.com.atproto.server.requestEmailConfirmation()
-      setCurrentStep('StepTwo')
-    } catch (e: unknown) {
-      setError(cleanError(e))
+      const res = await agent.com.atproto.server.requestEmailUpdate()
+      if (res.data.tokenRequired) {
+        setCurrentStep('StepTwo')
+      } else {
+        await agent.com.atproto.server.updateEmail({email: email.trim()})
+        await agent.resumeSession(agent.session!)
+        setCurrentStep('StepThree')
+      }
+    } catch (e) {
+      let err = cleanError(String(e))
+      // TEMP
+      // while rollout is occuring, we're giving a temporary error message
+      // you can remove this any time after Oct2023
+      // -prf
+      if (err === 'email must be confirmed (temporary)') {
+        err = _(
+          msg`Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed.`,
+        )
+      }
+      setError(err)
     } finally {
       setIsProcessing(false)
     }
   }
 
-  const onVerifyEmail = async () => {
+  const onConfirm = async () => {
     setError('')
     setIsProcessing(true)
     try {
-      await agent.com.atproto.server.confirmEmail({
-        email: (currentAccount?.email || '').trim(),
+      await agent.com.atproto.server.updateEmail({
+        email: email.trim(),
         token: confirmationCode.trim(),
       })
-    } catch (e: unknown) {
+      await agent.resumeSession(agent.session!)
+      setCurrentStep('StepThree')
+    } catch (e) {
       setError(cleanError(String(e)))
+    } finally {
       setIsProcessing(false)
-      return
     }
+  }
 
-    setIsProcessing(false)
-    setDidVerify(true)
-    setCurrentStep('StepThree')
+  const onVerify = async () => {
+    control.close(() => {
+      verifyEmailControl.open()
+    })
   }
 
   return (
@@ -149,55 +146,19 @@ export function Inner({
           ) : null}
           {currentStep === 'StepOne' ? (
             <View>
-              {reasonText ? (
-                <View style={[a.gap_sm]}>
-                  <Text style={[a.text_md, a.leading_snug]}>{reasonText}</Text>
-                  <Text style={[a.text_md, a.leading_snug]}>
-                    Don't have access to{' '}
-                    <Text style={[a.text_md, a.leading_snug, a.font_bold]}>
-                      {currentAccount?.email}
-                    </Text>
-                    ?{' '}
-                    <InlineLinkText
-                      to="#"
-                      label={_(msg`Change email address`)}
-                      style={[a.text_md, a.leading_snug]}
-                      onPress={e => {
-                        e.preventDefault()
-                        control.close(() => {
-                          changeEmailControl.open()
-                        })
-                        return false
-                      }}>
-                      <Trans>Change your email address</Trans>
-                    </InlineLinkText>
-                    .
-                  </Text>
-                </View>
-              ) : (
-                <Text style={[a.text_md, a.leading_snug]}>
-                  <Trans>
-                    You'll receive an email at{' '}
-                    <Text style={[a.text_md, a.leading_snug, a.font_bold]}>
-                      {currentAccount?.email}
-                    </Text>{' '}
-                    to verify it's you.
-                  </Trans>{' '}
-                  <InlineLinkText
-                    to="#"
-                    label={_(msg`Change email address`)}
-                    style={[a.text_md, a.leading_snug]}
-                    onPress={e => {
-                      e.preventDefault()
-                      control.close(() => {
-                        changeEmailControl.open()
-                      })
-                      return false
-                    }}>
-                    <Trans>Need to change it?</Trans>
-                  </InlineLinkText>
-                </Text>
-              )}
+              <TextField.LabelText>
+                <Trans>Enter your new email address below.</Trans>
+              </TextField.LabelText>
+              <TextField.Root>
+                <TextField.Input
+                  label={_(msg`New email address`)}
+                  placeholder="alice@example.com"
+                  defaultValue={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoComplete="email"
+                />
+              </TextField.Root>
             </View>
           ) : (
             <Text style={[a.text_md, a.leading_snug]}>
@@ -228,16 +189,16 @@ export function Inner({
                 color="primary"
                 size="large"
                 disabled={isProcessing}
-                onPress={onSendEmail}>
+                onPress={onRequestChange}>
                 <ButtonText>
-                  <Trans>Send Confirmation</Trans>
+                  <Trans>Request change</Trans>
                 </ButtonText>
                 {isProcessing ? (
                   <Loader size="sm" style={[{color: 'white'}]} />
                 ) : null}
               </Button>
               <Button
-                label={_(msg`I have a code`)}
+                label={_(msg`I Have a Code`)}
                 variant="solid"
                 color="secondary"
                 size="large"
@@ -256,7 +217,7 @@ export function Inner({
                 color="primary"
                 size="large"
                 disabled={isProcessing}
-                onPress={onVerifyEmail}>
+                onPress={onConfirm}>
                 <ButtonText>
                   <Trans>Confirm</Trans>
                 </ButtonText>
@@ -280,16 +241,28 @@ export function Inner({
               </Button>
             </>
           ) : currentStep === 'StepThree' ? (
-            <Button
-              label={_(msg`Confirm`)}
-              variant="solid"
-              color="primary"
-              size="large"
-              onPress={() => control.close()}>
-              <ButtonText>
-                <Trans>Close</Trans>
-              </ButtonText>
-            </Button>
+            <>
+              <Button
+                label={_(msg`Verify Email`)}
+                variant="solid"
+                color="primary"
+                size="large"
+                onPress={onVerify}>
+                <ButtonText>
+                  <Trans>Verify Email</Trans>
+                </ButtonText>
+              </Button>
+              <Button
+                label={_(msg`Close`)}
+                variant="solid"
+                color="secondary"
+                size="large"
+                onPress={() => control.close()}>
+                <ButtonText>
+                  <Trans>Close</Trans>
+                </ButtonText>
+              </Button>
+            </>
           ) : null}
         </View>
       </View>
