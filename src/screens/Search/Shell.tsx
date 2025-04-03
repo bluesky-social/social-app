@@ -302,7 +302,7 @@ export function SearchScreenShell({
                 )}
                 <Layout.Header.Content align="left">
                   <Layout.Header.TitleText>
-                    <Trans>Search</Trans>
+                    <Trans>Explore</Trans>
                   </Layout.Header.TitleText>
                 </Layout.Header.Content>
                 {showFilters ? (
