@@ -76,6 +76,7 @@ function LightboxInner({
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        e.preventDefault()
         onClose()
       } else if (e.key === 'ArrowLeft') {
         onPressLeft()
