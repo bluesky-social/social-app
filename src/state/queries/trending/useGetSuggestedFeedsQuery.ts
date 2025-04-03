@@ -19,7 +19,7 @@ export function useGetSuggestedFeedsQuery() {
   const savedFeeds = preferences?.savedFeeds
 
   return useQuery({
-    enabled: !!savedFeeds,
+    enabled: !!preferences,
     refetchOnWindowFocus: true,
     staleTime: STALE.MINUTES.ONE,
     queryKey: createGetTrendsQueryKey(),

@@ -24,6 +24,7 @@ export function useGetTrendsQuery() {
   }, [preferences?.moderationPrefs])
 
   return useQuery({
+    enabled: !!preferences,
     refetchOnWindowFocus: true,
     staleTime: STALE.MINUTES.THREE,
     queryKey: createGetTrendsQueryKey(),

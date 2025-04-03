@@ -19,6 +19,7 @@ export function useSuggestedStarterPacksQuery() {
   const contentLangs = getContentLanguages().join(',')
 
   return useQuery({
+    enabled: !!preferences,
     refetchOnWindowFocus: true,
     staleTime: STALE.MINUTES.ONE,
     queryKey: createSuggestedStarterPacksQueryKey(),
