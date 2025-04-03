@@ -92,7 +92,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
             label={_(msg`Content preferences`)}>
             <SettingsList.ItemIcon icon={CircleInfo} />
             <SettingsList.ItemText>
-              <Trans>Content preferences</Trans>
+              <Trans>Your interests</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.Divider />

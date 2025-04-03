@@ -1,10 +1,9 @@
 import {useMemo, useState} from 'react'
-import {type TextStyle,View, type ViewStyle} from 'react-native'
+import {type TextStyle, View, type ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 import debounce from 'lodash.debounce'
-import deepEqual from 'lodash.isequal'
 
 import {
   preferencesQueryKey,
@@ -13,7 +12,7 @@ import {
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useAgent} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useGutters,useTheme} from '#/alf'
+import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
@@ -22,36 +21,9 @@ import {Text} from '#/components/Typography'
 
 export function ContentPreferences() {
   const t = useTheme()
-  const {_} = useLingui()
-  const agent = useAgent()
-  const qc = useQueryClient()
   const gutters = useGutters(['base'])
   const {data: preferences} = usePreferencesQuery()
   const [isSaving, setIsSaving] = useState(false)
-  const saveInterests = useMemo(() => {
-    return debounce(async (interests: string[]) => {
-      setIsSaving(true)
-      try {
-        await agent.setInterestsPref({tags: interests})
-        await qc.invalidateQueries({queryKey: preferencesQueryKey})
-        Toast.show(
-          _(msg({message: 'Content preferences updated!', context: 'toast'})),
-        )
-      } catch (error) {
-        Toast.show(
-          _(
-            msg({
-              message: 'Failed to save content prefefences.',
-              context: 'toast',
-            }),
-          ),
-          'xmark',
-        )
-      } finally {
-        setIsSaving(false)
-      }
-    }, 1000)
-  }, [_, agent, setIsSaving, qc])
 
   return (
     <Layout.Screen>
@@ -59,7 +31,7 @@ export function ContentPreferences() {
         <Layout.Header.BackButton />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
-            <Trans>Content preferences</Trans>
+            <Trans>Your interests</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
         <Layout.Header.Slot>{isSaving && <Loader />}</Layout.Header.Slot>
@@ -82,7 +54,7 @@ export function ContentPreferences() {
           <Divider />
 
           {preferences ? (
-            <Inner preferences={preferences} saveInterests={saveInterests} />
+            <Inner preferences={preferences} setIsSaving={setIsSaving} />
           ) : (
             <View style={[a.flex_row, a.justify_center, a.p_lg]}>
               <Loader size="xl" />
@@ -96,21 +68,58 @@ export function ContentPreferences() {
 
 function Inner({
   preferences,
-  saveInterests,
+  setIsSaving,
 }: {
   preferences: UsePreferencesQueryResponse
-  saveInterests: (interests: string[]) => Promise<void>
+  setIsSaving: (isSaving: boolean) => void
 }) {
   const {_} = useLingui()
+  const agent = useAgent()
+  const qc = useQueryClient()
   const interestsDisplayNames = useInterestsDisplayNames()
-  const preselectedInterests = preferences.interests.tags || []
+  const preselectedInterests = useMemo(
+    () => preferences.interests.tags || [],
+    [preferences.interests.tags],
+  )
   const [interests, setInterests] = useState<string[]>(preselectedInterests)
+
+  const saveInterests = useMemo(() => {
+    return debounce(async (interests: string[]) => {
+      const noEdits =
+        interests.length === preselectedInterests.length &&
+        preselectedInterests.every(pre => {
+          return interests.find(int => int === pre)
+        })
+
+      if (noEdits) return
+
+      setIsSaving(true)
+
+      try {
+        await agent.setInterestsPref({tags: interests})
+        await qc.invalidateQueries({queryKey: preferencesQueryKey})
+        Toast.show(
+          _(msg({message: 'Content preferences updated!', context: 'toast'})),
+        )
+      } catch (error) {
+        Toast.show(
+          _(
+            msg({
+              message: 'Failed to save content prefefences.',
+              context: 'toast',
+            }),
+          ),
+          'xmark',
+        )
+      } finally {
+        setIsSaving(false)
+      }
+    }, 1500)
+  }, [_, agent, setIsSaving, qc, preselectedInterests])
 
   const onChangeInterests = async (interests: string[]) => {
     setInterests(interests)
-    const isEdited = !deepEqual(interests, preselectedInterests)
-    console.log(isEdited, {interests, preselectedInterests})
-    if (isEdited) saveInterests(interests)
+    saveInterests(interests)
   }
 
   return (
