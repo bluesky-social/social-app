@@ -364,7 +364,6 @@ export function Explore({
                     type: 'profile',
                     key: actor.did,
                     profile: actor,
-                    recId: page.recId,
                   })
                 }
               }
