@@ -1,5 +1,5 @@
 import {type NavigationState, type PartialState} from '@react-navigation/native'
-import  {type NativeStackNavigationProp} from '@react-navigation/native-stack'
+import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
 
 import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 
