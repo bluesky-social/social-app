@@ -707,24 +707,28 @@ export function Explore({
           )
         }
         case 'profilePlaceholder': {
-          return Array.from({length: 3}).map((_, index) => (
-            <View
-              style={[
-                a.px_lg,
-                a.py_lg,
-                a.border_t,
-                t.atoms.border_contrast_low,
-              ]}
-              key={index}>
-              <ProfileCard.Outer>
-                <ProfileCard.Header>
-                  <ProfileCard.AvatarPlaceholder />
-                  <ProfileCard.NameAndHandlePlaceholder />
-                </ProfileCard.Header>
-                <ProfileCard.DescriptionPlaceholder numberOfLines={2} />
-              </ProfileCard.Outer>
-            </View>
-          ))
+          return (
+            <>
+              {Array.from({length: 3}).map((_, index) => (
+                <View
+                  style={[
+                    a.px_lg,
+                    a.py_lg,
+                    a.border_t,
+                    t.atoms.border_contrast_low,
+                  ]}
+                  key={index}>
+                  <ProfileCard.Outer>
+                    <ProfileCard.Header>
+                      <ProfileCard.AvatarPlaceholder />
+                      <ProfileCard.NameAndHandlePlaceholder />
+                    </ProfileCard.Header>
+                    <ProfileCard.DescriptionPlaceholder numberOfLines={2} />
+                  </ProfileCard.Outer>
+                </View>
+              ))}
+            </>
+          )
         }
         case 'feedPlaceholder': {
           return <FeedFeedLoadingPlaceholder />
