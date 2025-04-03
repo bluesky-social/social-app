@@ -72,10 +72,12 @@ export function TrendRow({
   const badgeType = trend.status === 'hot' ? 'hot' : age < 2 ? 'new' : age
   const postCount = trend.postCount
     ? _(
-        msg(plural({
-          value: trend.postCount,
-          other: `${formatCount(i18n, trend.postCount)} posts`
-        }))
+        msg(
+          plural({
+            value: trend.postCount,
+            other: `${formatCount(i18n, trend.postCount)} posts`,
+          }),
+        ),
       )
     : null
 
