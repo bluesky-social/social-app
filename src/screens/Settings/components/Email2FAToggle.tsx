@@ -2,9 +2,9 @@ import React from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useModalControls} from '#/state/modals'
 import {useAgent, useSession} from '#/state/session'
 import {useDialogControl} from '#/components/Dialog'
+import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import * as Prompt from '#/components/Prompt'
 import {DisableEmail2FADialog} from './DisableEmail2FADialog'
 import * as SettingsList from './SettingsList'
@@ -12,9 +12,9 @@ import * as SettingsList from './SettingsList'
 export function Email2FAToggle() {
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const {openModal} = useModalControls()
   const disableDialogControl = useDialogControl()
   const enableDialogControl = useDialogControl()
+  const verifyEmailDialogControl = useDialogControl()
   const agent = useAgent()
 
   const enableEmailAuthFactor = React.useCallback(async () => {
@@ -35,15 +35,17 @@ export function Email2FAToggle() {
       disableDialogControl.open()
     } else {
       if (!currentAccount.emailConfirmed) {
-        openModal({
-          name: 'verify-email',
-          onSuccess: enableDialogControl.open,
-        })
+        verifyEmailDialogControl.open()
         return
       }
       enableDialogControl.open()
     }
-  }, [currentAccount, enableDialogControl, openModal, disableDialogControl])
+  }, [
+    currentAccount,
+    enableDialogControl,
+    verifyEmailDialogControl,
+    disableDialogControl,
+  ])
 
   return (
     <>
@@ -54,6 +56,13 @@ export function Email2FAToggle() {
         description={_(msg`Require an email code to sign in to your account.`)}
         onConfirm={enableEmailAuthFactor}
         confirmButtonCta={_(msg`Enable`)}
+      />
+      <VerifyEmailDialog
+        control={verifyEmailDialogControl}
+        onCloseAfterVerifying={enableDialogControl.open}
+        reasonText={_(
+          msg`You'll need to verify your email address before enabling email 2FA.`,
+        )}
       />
       <SettingsList.BadgeButton
         label={
