@@ -325,272 +325,268 @@ export function Explore({
     fetchNextPageFeedPreviews,
   ])
 
-  const items = useMemo<ExploreScreenItems[]>(() => {
+  const topBorder = useMemo(
+    () => ({type: 'topBorder', key: 'top-border'} as const),
+    [],
+  )
+  const trendingTopicsModule = useMemo(
+    () => ({type: 'trendingTopics', key: 'trending-topics'} as const),
+    [],
+  )
+  const suggestedFollowsModule = useMemo(() => {
     const i: ExploreScreenItems[] = []
+    i.push({
+      type: 'tabbedHeader',
+      key: 'suggested-accounts-header',
+      title: _(msg`Suggested Accounts`),
+      icon: Person,
+      searchButton: {
+        label: _(msg`Search for more accounts`),
+        metricsTag: 'suggestedAccounts',
+        tab: 'user',
+      },
+    })
 
-    const addTopBorder = () => {
-      i.push({type: 'topBorder', key: 'top-border'})
-    }
-
-    const addTrendingTopicsModule = () => {
+    if (!canShowSuggestedProfiles) {
+      i.push({type: 'profilePlaceholder', key: 'profilePlaceholder'})
+    } else if (profilesError) {
       i.push({
-        type: 'trendingTopics',
-        key: `trending-topics`,
+        type: 'error',
+        key: 'profilesError',
+        message: _(msg`Failed to load suggested follows`),
+        error: cleanError(profilesError),
       })
-
-      // temp - disable trending videos
-      // if (isNative) {
-      //   i.push({
-      //     type: 'trendingVideos',
-      //     key: `trending-videos`,
-      //   })
-      // }
-    }
-
-    const addSuggestedFollowsModule = () => {
-      i.push({
-        type: 'tabbedHeader',
-        key: 'suggested-accounts-header',
-        title: _(msg`Suggested Accounts`),
-        icon: Person,
-        searchButton: {
-          label: _(msg`Search for more accounts`),
-          metricsTag: 'suggestedAccounts',
-          tab: 'user',
-        },
-      })
-
-      if (!canShowSuggestedProfiles) {
-        i.push({type: 'profilePlaceholder', key: 'profilePlaceholder'})
-      } else if (profilesError) {
-        i.push({
-          type: 'error',
-          key: 'profilesError',
-          message: _(msg`Failed to load suggested follows`),
-          error: cleanError(profilesError),
-        })
-      } else {
-        if (profiles !== undefined) {
-          if (profiles.pages.length > 0 && moderationOpts) {
-            // Currently the responses contain duplicate items.
-            // Needs to be fixed on backend, but let's dedupe to be safe.
-            let seen = new Set()
-            const profileItems: ExploreScreenItems[] = []
-            for (const page of profiles.pages) {
-              for (const actor of page.actors) {
-                if (!seen.has(actor.did) && !actor.viewer?.following) {
-                  seen.add(actor.did)
-                  profileItems.push({
-                    type: 'profile',
-                    key: actor.did,
-                    profile: actor,
-                    recId: page.recId,
-                  })
-                }
+    } else {
+      if (profiles !== undefined) {
+        if (profiles.pages.length > 0 && moderationOpts) {
+          // Currently the responses contain duplicate items.
+          // Needs to be fixed on backend, but let's dedupe to be safe.
+          let seen = new Set()
+          const profileItems: ExploreScreenItems[] = []
+          for (const page of profiles.pages) {
+            for (const actor of page.actors) {
+              if (!seen.has(actor.did) && !actor.viewer?.following) {
+                seen.add(actor.did)
+                profileItems.push({
+                  type: 'profile',
+                  key: actor.did,
+                  profile: actor,
+                  recId: page.recId,
+                })
               }
             }
-
-            if (profileItems.length === 0) {
-              if (!hasNextProfilesPage) {
-                // no items! remove the header
-                i.pop()
-              }
-            } else {
-              i.push(...profileItems)
-            }
-            if (hasNextProfilesPage) {
-              i.push({
-                type: 'loadMore',
-                key: 'loadMoreProfiles',
-                message: _(msg`Load more suggested accounts`),
-                isLoadingMore: isLoadingMoreProfiles,
-                onLoadMore: onLoadMoreProfiles,
-              })
-            }
-          } else {
-            console.log('no pages')
           }
-        } else {
-          i.push({type: 'profilePlaceholder', key: 'profilePlaceholder'})
-        }
-      }
-    }
 
-    const addSuggestedFeedsModule = () => {
-      i.push({
-        type: 'header',
-        key: 'suggested-feeds-header',
-        title: _(msg`Discover Feeds`),
-        icon: ListSparkle,
-        searchButton: {
-          label: _(msg`Search for more feeds`),
-          metricsTag: 'suggestedFeeds',
-          tab: 'feed',
-        },
-      })
-
-      if (feeds && preferences) {
-        // Currently the responses contain duplicate items.
-        // Needs to be fixed on backend, but let's dedupe to be safe.
-        let seen = new Set()
-        const feedItems: ExploreScreenItems[] = []
-        for (const page of feeds.pages) {
-          for (const feed of page.feeds) {
-            if (!seen.has(feed.uri)) {
-              seen.add(feed.uri)
-              feedItems.push({
-                type: 'feed',
-                key: feed.uri,
-                feed,
-              })
-            }
-          }
-        }
-
-        // feeds errors can occur during pagination, so feeds is truthy
-        if (feedsError) {
-          i.push({
-            type: 'error',
-            key: 'feedsError',
-            message: _(msg`Failed to load suggested feeds`),
-            error: cleanError(feedsError),
-          })
-        } else if (preferencesError) {
-          i.push({
-            type: 'error',
-            key: 'preferencesError',
-            message: _(msg`Failed to load feeds preferences`),
-            error: cleanError(preferencesError),
-          })
-        } else {
-          if (feedItems.length === 0) {
-            if (!hasNextFeedsPage) {
+          if (profileItems.length === 0) {
+            if (!hasNextProfilesPage) {
+              // no items! remove the header
               i.pop()
             }
           } else {
-            // This query doesn't follow the limit very well, so the first press of the
-            // load more button just unslices the array back to ~10 items
-            if (!hasPressedLoadMoreFeeds) {
-              i.push(...feedItems.slice(0, 3))
-            } else {
-              i.push(...feedItems)
-            }
+            i.push(...profileItems)
           }
-          if (hasNextFeedsPage) {
+          if (hasNextProfilesPage) {
             i.push({
               type: 'loadMore',
-              key: 'loadMoreFeeds',
-              message: _(msg`Load more suggested feeds`),
-              isLoadingMore: isLoadingMoreFeeds,
-              onLoadMore: onLoadMoreFeeds,
+              key: 'loadMoreProfiles',
+              message: _(msg`Load more suggested accounts`),
+              isLoadingMore: isLoadingMoreProfiles,
+              onLoadMore: onLoadMoreProfiles,
+            })
+          }
+        } else {
+          console.log('no pages')
+        }
+      } else {
+        i.push({type: 'profilePlaceholder', key: 'profilePlaceholder'})
+      }
+    }
+    return i
+  }, [
+    profiles,
+    _,
+    canShowSuggestedProfiles,
+    hasNextProfilesPage,
+    isLoadingMoreProfiles,
+    moderationOpts,
+    onLoadMoreProfiles,
+    profilesError,
+  ])
+  const suggestedFeedsModule = useMemo(() => {
+    const i: ExploreScreenItems[] = []
+    i.push({
+      type: 'header',
+      key: 'suggested-feeds-header',
+      title: _(msg`Discover Feeds`),
+      icon: ListSparkle,
+      searchButton: {
+        label: _(msg`Search for more feeds`),
+        metricsTag: 'suggestedFeeds',
+        tab: 'feed',
+      },
+    })
+
+    if (feeds && preferences) {
+      // Currently the responses contain duplicate items.
+      // Needs to be fixed on backend, but let's dedupe to be safe.
+      let seen = new Set()
+      const feedItems: ExploreScreenItems[] = []
+      for (const page of feeds.pages) {
+        for (const feed of page.feeds) {
+          if (!seen.has(feed.uri)) {
+            seen.add(feed.uri)
+            feedItems.push({
+              type: 'feed',
+              key: feed.uri,
+              feed,
             })
           }
         }
+      }
+
+      // feeds errors can occur during pagination, so feeds is truthy
+      if (feedsError) {
+        i.push({
+          type: 'error',
+          key: 'feedsError',
+          message: _(msg`Failed to load suggested feeds`),
+          error: cleanError(feedsError),
+        })
+      } else if (preferencesError) {
+        i.push({
+          type: 'error',
+          key: 'preferencesError',
+          message: _(msg`Failed to load feeds preferences`),
+          error: cleanError(preferencesError),
+        })
       } else {
-        if (feedsError) {
-          i.push({
-            type: 'error',
-            key: 'feedsError',
-            message: _(msg`Failed to load suggested feeds`),
-            error: cleanError(feedsError),
-          })
-        } else if (preferencesError) {
-          i.push({
-            type: 'error',
-            key: 'preferencesError',
-            message: _(msg`Failed to load feeds preferences`),
-            error: cleanError(preferencesError),
-          })
+        if (feedItems.length === 0) {
+          if (!hasNextFeedsPage) {
+            i.pop()
+          }
         } else {
-          i.push({type: 'feedPlaceholder', key: 'feedPlaceholder'})
+          // This query doesn't follow the limit very well, so the first press of the
+          // load more button just unslices the array back to ~10 items
+          if (!hasPressedLoadMoreFeeds) {
+            i.push(...feedItems.slice(0, 3))
+          } else {
+            i.push(...feedItems)
+          }
+        }
+        if (hasNextFeedsPage) {
+          i.push({
+            type: 'loadMore',
+            key: 'loadMoreFeeds',
+            message: _(msg`Load more suggested feeds`),
+            isLoadingMore: isLoadingMoreFeeds,
+            onLoadMore: onLoadMoreFeeds,
+          })
         }
       }
-    }
-
-    const addSuggestedStarterPacksModule = () => {
-      i.push({
-        type: 'header',
-        key: 'suggested-starterPacks-header',
-        title: _(msg`Starter Packs`),
-        icon: StarterPack,
-      })
-
-      if (isLoadingSuggestedSPs) {
-        Array.from({length: 3}).forEach((_, index) =>
-          i.push({
-            type: 'starterPackSkeleton',
-            key: `starterPackSkeleton-${index}`,
-          }),
-        )
-      } else if (suggestedSPsError || !suggestedSPs) {
-        // just get rid of the section
-        i.pop()
-      } else {
-        suggestedSPs.starterPacks.map(s => {
-          i.push({
-            type: 'starterPack',
-            key: s.uri,
-            view: s,
-          })
-        })
-      }
-    }
-
-    const addFeedPreviews = () => {
-      i.push(...feedPreviewSlices)
-      if (isFetchingNextPageFeedPreviews) {
+    } else {
+      if (feedsError) {
         i.push({
-          type: 'preview:loading',
-          key: 'preview-loading-more',
+          type: 'error',
+          key: 'feedsError',
+          message: _(msg`Failed to load suggested feeds`),
+          error: cleanError(feedsError),
         })
+      } else if (preferencesError) {
+        i.push({
+          type: 'error',
+          key: 'preferencesError',
+          message: _(msg`Failed to load feeds preferences`),
+          error: cleanError(preferencesError),
+        })
+      } else {
+        i.push({type: 'feedPlaceholder', key: 'feedPlaceholder'})
       }
     }
+    return i
+  }, [
+    feeds,
+    _,
+    feedsError,
+    hasNextFeedsPage,
+    hasPressedLoadMoreFeeds,
+    isLoadingMoreFeeds,
+    onLoadMoreFeeds,
+    preferences,
+    preferencesError,
+  ])
+  const suggestedStarterPacksModule = useMemo(() => {
+    const i: ExploreScreenItems[] = []
+    i.push({
+      type: 'header',
+      key: 'suggested-starterPacks-header',
+      title: _(msg`Starter Packs`),
+      icon: StarterPack,
+    })
+
+    if (isLoadingSuggestedSPs) {
+      Array.from({length: 3}).forEach((__, index) =>
+        i.push({
+          type: 'starterPackSkeleton',
+          key: `starterPackSkeleton-${index}`,
+        }),
+      )
+    } else if (suggestedSPsError || !suggestedSPs) {
+      // just get rid of the section
+      i.pop()
+    } else {
+      suggestedSPs.starterPacks.map(s => {
+        i.push({
+          type: 'starterPack',
+          key: s.uri,
+          view: s,
+        })
+      })
+    }
+    return i
+  }, [suggestedSPs, _, isLoadingSuggestedSPs, suggestedSPsError])
+  const feedPreviewsModule = useMemo(() => {
+    const i: ExploreScreenItems[] = []
+    i.push(...feedPreviewSlices)
+    if (isFetchingNextPageFeedPreviews) {
+      i.push({
+        type: 'preview:loading',
+        key: 'preview-loading-more',
+      })
+    }
+    return i
+  }, [feedPreviewSlices, isFetchingNextPageFeedPreviews])
+
+  const isNewUser = guide?.guide === 'follow-10' && !guide.isComplete
+  const items = useMemo<ExploreScreenItems[]>(() => {
+    const i: ExploreScreenItems[] = []
 
     // Dynamic module ordering
 
-    addTopBorder()
-
-    if (guide?.guide === 'follow-10' && !guide.isComplete) {
-      addSuggestedFollowsModule()
-      addSuggestedStarterPacksModule()
-      addTrendingTopicsModule()
+    i.push(topBorder)
+    if (isNewUser) {
+      i.push(...suggestedFollowsModule)
+      i.push(...suggestedStarterPacksModule)
+      i.push(trendingTopicsModule)
     } else {
-      addTrendingTopicsModule()
-      addSuggestedFollowsModule()
-      addSuggestedStarterPacksModule()
+      i.push(trendingTopicsModule)
+      i.push(...suggestedFollowsModule)
+      i.push(...suggestedStarterPacksModule)
     }
-
     if (gate('explore_show_suggested_feeds')) {
-      addSuggestedFeedsModule()
+      i.push(...suggestedFeedsModule)
     }
-
-    addFeedPreviews()
+    i.push(...feedPreviewsModule)
 
     return i
   }, [
-    _,
-    profiles,
-    feeds,
-    preferences,
-    onLoadMoreFeeds,
-    onLoadMoreProfiles,
-    isLoadingMoreProfiles,
-    isLoadingMoreFeeds,
-    profilesError,
-    feedsError,
-    preferencesError,
-    hasNextProfilesPage,
-    hasNextFeedsPage,
-    guide,
+    topBorder,
+    isNewUser,
+    suggestedFollowsModule,
+    suggestedStarterPacksModule,
+    suggestedFeedsModule,
+    trendingTopicsModule,
+    feedPreviewsModule,
     gate,
-    moderationOpts,
-    hasPressedLoadMoreFeeds,
-    suggestedSPs,
-    isLoadingSuggestedSPs,
-    suggestedSPsError,
-    feedPreviewSlices,
-    isFetchingNextPageFeedPreviews,
-    canShowSuggestedProfiles,
   ])
 
   const renderItem = useCallback(
@@ -709,7 +705,7 @@ export function Explore({
         case 'profilePlaceholder': {
           return (
             <>
-              {Array.from({length: 3}).map((_, index) => (
+              {Array.from({length: 3}).map((__, i) => (
                 <View
                   style={[
                     a.px_lg,
@@ -717,7 +713,7 @@ export function Explore({
                     a.border_t,
                     t.atoms.border_contrast_low,
                   ]}
-                  key={index}>
+                  key={i}>
                   <ProfileCard.Outer>
                     <ProfileCard.Header>
                       <ProfileCard.AvatarPlaceholder />
