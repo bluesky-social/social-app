@@ -1,6 +1,6 @@
 import {Pressable, View} from 'react-native'
 import {type AppBskyUnspeccedDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
