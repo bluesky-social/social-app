@@ -17,7 +17,6 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorSearchPaginated} from '#/state/queries/actor-search'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
 import {useGetSuggestedFeedsQuery} from '#/state/queries/trending/useGetSuggestedFeedsQuery'
 import {useSuggestedStarterPacksQuery} from '#/state/queries/useSuggestedStarterPacksQuery'
 import {useProgressGuide} from '#/state/shell/progress-guide'
@@ -196,14 +195,6 @@ export function Explore({
   const guide = useProgressGuide('follow-10')
   const [selectedInterest, setSelectedInterest] = useState<string | null>(null)
   const {
-    data: suggestedProfiles,
-    hasNextPage: hasNextSuggestedProfilesPage,
-    isLoading: isLoadingSuggestedProfiles,
-    isFetchingNextPage: isFetchingNextSuggestedProfilesPage,
-    error: suggestedProfilesError,
-    fetchNextPage: fetchNextSuggestedProfilesPage,
-  } = useSuggestedFollowsQuery({limit: 3, subsequentPageLimit: 10})
-  const {
     data: interestProfiles,
     hasNextPage: hasNextInterestProfilesPage,
     isLoading: isLoadingInterestProfiles,
@@ -213,7 +204,7 @@ export function Explore({
   } = useActorSearchPaginated({
     query: selectedInterest || '',
     enabled: !!selectedInterest,
-    limit: 10,
+    limit: 8,
   })
   const {isReady: canShowSuggestedProfiles} = useLoadEnoughProfiles({
     interest: selectedInterest,
@@ -232,23 +223,12 @@ export function Explore({
     fetchNextPage: fetchNextFeedsPage,
   } = useGetPopularFeedsQuery({limit: 10})
 
-  const profiles: typeof suggestedProfiles & typeof interestProfiles =
-    !selectedInterest ? suggestedProfiles : interestProfiles
-  const hasNextProfilesPage = !selectedInterest
-    ? hasNextSuggestedProfilesPage
-    : hasNextInterestProfilesPage
-  const isLoadingProfiles = !selectedInterest
-    ? isLoadingSuggestedProfiles
-    : !canShowSuggestedProfiles
-  const isFetchingNextProfilesPage = !selectedInterest
-    ? isFetchingNextSuggestedProfilesPage
-    : !canShowSuggestedProfiles
-  const profilesError = !selectedInterest
-    ? suggestedProfilesError
-    : interestProfilesError
-  const fetchNextProfilesPage = !selectedInterest
-    ? fetchNextSuggestedProfilesPage
-    : fetchNextInterestProfilesPage
+  const profiles: typeof interestProfiles = interestProfiles
+  const hasNextProfilesPage = hasNextInterestProfilesPage
+  const isLoadingProfiles = !canShowSuggestedProfiles
+  const isFetchingNextProfilesPage = !canShowSuggestedProfiles
+  const profilesError = interestProfilesError
+  const fetchNextProfilesPage = fetchNextInterestProfilesPage
 
   const isLoadingMoreProfiles = isFetchingNextProfilesPage && !isLoadingProfiles
   const onLoadMoreProfiles = useCallback(async () => {
@@ -709,7 +689,7 @@ export function Explore({
         case 'profilePlaceholder': {
           return (
             <>
-              {Array.from({length: 3}).map((_, index) => (
+              {Array.from({length: 6}).map((_, index) => (
                 <View
                   style={[
                     a.px_lg,

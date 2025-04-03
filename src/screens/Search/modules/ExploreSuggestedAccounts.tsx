@@ -61,29 +61,32 @@ export function SuggestedAccountsTabBar({
   selectedInterest: string | null
   onSelectInterest: (interest: string | null) => void
 }) {
-  const {_} = useLingui()
   const interestsDisplayNames = useInterestsDisplayNames()
   const {data: preferences} = usePreferencesQuery()
   const personalizedInterests = preferences?.interests?.tags
   const interests = Object.keys(interestsDisplayNames)
     .sort(boostInterests(popularInterests))
     .sort(boostInterests(personalizedInterests))
+  useEffect(() => {
+    if (preferences && !selectedInterest) {
+      onSelectInterest(interests[0])
+    }
+  }, [selectedInterest, preferences, interests, onSelectInterest])
   return (
     <BlockDrawerGesture>
       <Tabs
-        interests={['all', ...interests]}
-        selectedInterest={selectedInterest || 'all'}
+        interests={interests}
+        selectedInterest={selectedInterest || interests[0]}
         onSelectTab={tab => {
           logger.metric(
             'explore:suggestedAccounts:tabPressed',
             {tab: tab},
             {statsig: true},
           )
-          onSelectInterest(tab === 'all' ? null : tab)
+          onSelectInterest(tab)
         }}
         hasSearchText={false}
         interestsDisplayNames={{
-          all: _(msg`All`),
           ...interestsDisplayNames,
         }}
         TabComponent={Tab}
