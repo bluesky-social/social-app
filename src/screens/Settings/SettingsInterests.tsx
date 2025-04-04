@@ -12,6 +12,7 @@ import {
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useAgent} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
+import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
@@ -223,36 +224,3 @@ const INTERESTS = [
   'tv',
   'writers',
 ]
-
-function useInterestsDisplayNames() {
-  const {_} = useLingui()
-
-  return useMemo<Record<string, string>>(() => {
-    return {
-      // Keep this alphabetized
-      animals: _(msg`Animals`),
-      art: _(msg`Art`),
-      books: _(msg`Books`),
-      comedy: _(msg`Comedy`),
-      comics: _(msg`Comics`),
-      culture: _(msg`Culture`),
-      dev: _(msg`Software Dev`),
-      education: _(msg`Education`),
-      food: _(msg`Food`),
-      gaming: _(msg`Video Games`),
-      journalism: _(msg`Journalism`),
-      movies: _(msg`Movies`),
-      music: _(msg`Music`),
-      nature: _(msg`Nature`),
-      news: _(msg`News`),
-      pets: _(msg`Pets`),
-      photography: _(msg`Photography`),
-      politics: _(msg`Politics`),
-      science: _(msg`Science`),
-      sports: _(msg`Sports`),
-      tech: _(msg`Tech`),
-      tv: _(msg`TV`),
-      writers: _(msg`Writers`),
-    }
-  }, [_])
-}
