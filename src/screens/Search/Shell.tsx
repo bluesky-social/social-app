@@ -318,7 +318,7 @@ export function SearchScreenShell({
               </Layout.Header.Outer>
             </View>
           )}
-          <View style={[a.px_md, a.pt_sm, a.pb_sm, a.overflow_hidden]}>
+          <View style={[a.px_lg, a.pt_sm, a.pb_sm, a.overflow_hidden]}>
             <View style={[a.gap_sm]}>
               <View style={[a.w_full, a.flex_row, a.align_stretch, a.gap_xs]}>
                 <View style={[a.flex_1]}>

@@ -87,6 +87,12 @@ export function SuggestedAccountsTabBar({
           ...interestsDisplayNames,
         }}
         TabComponent={Tab}
+        contentContainerStyle={[
+          {
+            // visual alignment
+            paddingLeft: a.px_md.paddingLeft,
+          },
+        ]}
       />
     </BlockDrawerGesture>
   )

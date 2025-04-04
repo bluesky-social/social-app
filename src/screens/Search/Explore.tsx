@@ -45,6 +45,7 @@ import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {type Props as IcoProps} from '#/components/icons/common'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {StarterPack} from '#/components/icons/StarterPack'
@@ -110,6 +111,7 @@ type ExploreScreenItems =
       key: string
       title: string
       icon: React.ComponentType<SVGIconProps>
+      iconSize?: IcoProps['size']
       searchButton?: {
         label: string
         metricsTag: MetricEvents['explore:module:searchButtonPress']['module']
@@ -461,6 +463,7 @@ export function Explore({
       key: 'suggested-starterPacks-header',
       title: _(msg`Starter Packs`),
       icon: StarterPack,
+      iconSize: 'xl',
     })
 
     if (isLoadingSuggestedSPs) {
@@ -562,7 +565,7 @@ export function Explore({
         case 'header': {
           return (
             <ModuleHeader.Container>
-              <ModuleHeader.Icon icon={item.icon} />
+              <ModuleHeader.Icon icon={item.icon} size={item.iconSize} />
               <ModuleHeader.TitleText>{item.title}</ModuleHeader.TitleText>
               {item.searchButton && (
                 <ModuleHeader.SearchButton
