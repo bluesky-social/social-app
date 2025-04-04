@@ -11,7 +11,7 @@ import {useAgent} from '#/state/session'
 
 export const DEFAULT_LIMIT = 5
 
-export const createGetTrendsQueryKey = () => ['suggested-feeds']
+export const createGetSuggestedFeedsQueryKey = () => ['suggested-feeds']
 
 export function useGetSuggestedFeedsQuery() {
   const agent = useAgent()
@@ -22,7 +22,7 @@ export function useGetSuggestedFeedsQuery() {
     enabled: !!preferences,
     refetchOnWindowFocus: true,
     staleTime: STALE.MINUTES.ONE,
-    queryKey: createGetTrendsQueryKey(),
+    queryKey: createGetSuggestedFeedsQueryKey(),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
       const {data} = await agent.app.bsky.unspecced.getSuggestedFeeds(
