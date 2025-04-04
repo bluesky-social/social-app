@@ -14,6 +14,7 @@ import {useAgent} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
 import {atoms as a, useGutters, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
@@ -47,8 +48,7 @@ export function SettingsInterests() {
               t.atoms.text_contrast_medium,
             ]}>
             <Trans>
-              Selecting interests from the list below helps us deliver you
-              higher quality content.
+              Your selected interests help us serve you content you care about.
             </Trans>
           </Text>
 
@@ -124,25 +124,33 @@ function Inner({
   }
 
   return (
-    <Toggle.Group
-      values={interests}
-      onChange={onChangeInterests}
-      label={_(msg`Select your interests from the options below`)}>
-      <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
-        {INTERESTS.map(interest => {
-          const name = interestsDisplayNames[interest]
-          if (!name) return null
-          return (
-            <Toggle.Item
-              key={interest}
-              name={interest}
-              label={interestsDisplayNames[interest]}>
-              <InterestButton interest={interest} />
-            </Toggle.Item>
-          )
-        })}
-      </View>
-    </Toggle.Group>
+    <>
+      {interests.length === 0 && (
+        <Admonition type="tip">
+          <Trans>We recommend selecting at least two interests.</Trans>
+        </Admonition>
+      )}
+
+      <Toggle.Group
+        values={interests}
+        onChange={onChangeInterests}
+        label={_(msg`Select your interests from the options below`)}>
+        <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
+          {INTERESTS.map(interest => {
+            const name = interestsDisplayNames[interest]
+            if (!name) return null
+            return (
+              <Toggle.Item
+                key={interest}
+                name={interest}
+                label={interestsDisplayNames[interest]}>
+                <InterestButton interest={interest} />
+              </Toggle.Item>
+            )
+          })}
+        </View>
+      </Toggle.Group>
+    </>
   )
 }
 
