@@ -55,12 +55,14 @@ export function SearchScreenShell({
   fixedParams,
   navButton = 'menu',
   inputPlaceholder,
+  isExplore,
 }: {
   queryParam: string
   testID: string
   fixedParams?: Params
   navButton?: 'back' | 'menu'
   inputPlaceholder?: string
+  isExplore?: boolean
 }) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
@@ -302,7 +304,7 @@ export function SearchScreenShell({
                 )}
                 <Layout.Header.Content align="left">
                   <Layout.Header.TitleText>
-                    <Trans>Search</Trans>
+                    {isExplore ? <Trans>Explore</Trans> : <Trans>Search</Trans>}
                   </Layout.Header.TitleText>
                 </Layout.Header.Content>
                 {showFilters ? (

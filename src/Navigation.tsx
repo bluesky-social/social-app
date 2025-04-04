@@ -637,7 +637,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Search"
         getComponent={() => SearchScreen}
-        options={{title: title(msg`Search`)}}
+        options={{title: title(msg`Explore`)}}
       />
       <Flat.Screen
         name="Notifications"

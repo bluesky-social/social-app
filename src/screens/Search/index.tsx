@@ -9,5 +9,11 @@ export function SearchScreen(
 ) {
   const queryParam = props.route?.params?.q ?? ''
 
-  return <SearchScreenShell queryParam={queryParam} testID="searchScreen" />
+  return (
+    <SearchScreenShell
+      queryParam={queryParam}
+      testID="searchScreen"
+      isExplore
+    />
+  )
 }
