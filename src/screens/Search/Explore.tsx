@@ -900,7 +900,7 @@ export function Explore({
     <List
       data={items}
       renderItem={renderItem}
-      keyExtractor={item => item.key}
+      keyExtractor={keyExtractor}
       desktopFixedHeight
       contentContainerStyle={{paddingBottom: 100}}
       keyboardShouldPersistTaps="handled"
@@ -912,6 +912,10 @@ export function Explore({
       onEndReachedThreshold={2}
     />
   )
+}
+
+function keyExtractor(item: FeedPreviewItem) {
+  return item.key
 }
 
 const viewabilityConfig: ViewabilityConfig = {
