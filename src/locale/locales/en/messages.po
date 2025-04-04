@@ -1268,7 +1268,7 @@ msgstr ""
 #: src/components/LabelingServiceCard/index.tsx:62
 #: src/components/moderation/ReportDialog/index.tsx:672
 #: src/screens/Search/components/StarterPackCard.tsx:102
-#: src/screens/Search/Explore.tsx:795
+#: src/screens/Search/Explore.tsx:791
 msgid "By {0}"
 msgstr ""
 
@@ -2341,7 +2341,7 @@ msgstr ""
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:423
+#: src/screens/Search/Explore.tsx:420
 msgid "Discover Feeds"
 msgstr ""
 
@@ -3031,8 +3031,8 @@ msgstr ""
 msgid "Failed to load conversations"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:462
-#: src/screens/Search/Explore.tsx:501
+#: src/screens/Search/Explore.tsx:459
+#: src/screens/Search/Explore.tsx:498
 msgid "Failed to load feeds preferences"
 msgstr ""
 
@@ -3044,12 +3044,12 @@ msgstr ""
 msgid "Failed to load past messages"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:455
-#: src/screens/Search/Explore.tsx:494
+#: src/screens/Search/Explore.tsx:452
+#: src/screens/Search/Explore.tsx:491
 msgid "Failed to load suggested feeds"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:369
+#: src/screens/Search/Explore.tsx:356
 msgid "Failed to load suggested follows"
 msgstr ""
 
@@ -4211,11 +4211,11 @@ msgstr ""
 msgid "Load more"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:405
+#: src/screens/Search/Explore.tsx:392
 msgid "Load more suggested accounts"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:483
+#: src/screens/Search/Explore.tsx:480
 msgid "Load more suggested feeds"
 msgstr ""
 
@@ -6453,11 +6453,11 @@ msgstr ""
 msgid "Search for feeds that you want to suggest to others."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:357
+#: src/screens/Search/Explore.tsx:344
 msgid "Search for more accounts"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:426
+#: src/screens/Search/Explore.tsx:423
 msgid "Search for more feeds"
 msgstr ""
 
@@ -7161,7 +7161,7 @@ msgstr ""
 msgid "Starter pack is invalid"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:514
+#: src/screens/Search/Explore.tsx:522
 #: src/view/screens/Profile.tsx:228
 msgid "Starter Packs"
 msgstr ""
@@ -7233,7 +7233,7 @@ msgstr ""
 msgid "Success!"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:354
+#: src/screens/Search/Explore.tsx:341
 msgid "Suggested Accounts"
 msgstr ""
 
@@ -7538,7 +7538,7 @@ msgstr ""
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:841
+#: src/screens/Search/Explore.tsx:837
 #: src/view/com/posts/PostFeed.tsx:607
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
