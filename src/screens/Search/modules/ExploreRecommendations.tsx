@@ -1,8 +1,8 @@
 import {View} from 'react-native'
-import {AppBskyUnspeccedDefs} from '@atproto/api'
+import {type AppBskyUnspeccedDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
-import {logEvent} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {
   DEFAULT_LIMIT as RECOMMENDATIONS_COUNT,
@@ -17,6 +17,8 @@ import {
   TrendingTopicSkeleton,
 } from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
+
+// Note: This module is not currently used and may be removed in the future.
 
 export function ExploreRecommendations() {
   const {enabled} = useTrendingConfig()
@@ -86,7 +88,11 @@ function Inner() {
                   key={topic.link}
                   topic={topic}
                   onPress={() => {
-                    logEvent('recommendedTopic:click', {context: 'explore'})
+                    logger.metric(
+                      'recommendedTopic:click',
+                      {context: 'explore'},
+                      {statsig: true},
+                    )
                   }}>
                   {({hovered}) => (
                     <TrendingTopic

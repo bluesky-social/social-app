@@ -69,7 +69,10 @@ jobs:
           key: ${{ runner.os }}-pods-${{ hashFiles('yarn.lock') }}
 
       - name: 🔤 Compile translations
-        run: yarn intl:build
+        run: yarn intl:build 2>&1 | tee i18n.log
+
+      - name: Check for i18n compilation errors
+        run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
 
       - name: ✏️ Write environment variables
         run: |
@@ -79,8 +82,14 @@ jobs:
           echo "BITDRIFT_API_KEY=${{ secrets.BITDRIFT_API_KEY }}" >> .env
           echo "${{ secrets.GOOGLE_SERVICES_TOKEN }}" > google-services.json
 
+      - name: Setup Sentry vars for build-time injection
+        id: sentry
+        run: |
+          echo "SENTRY_DIST=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          echo "SENTRY_RELEASE=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
+
       - name: 🏗️ EAS Build
-        run: yarn use-build-number-with-bump eas build -p ios --profile ${{ inputs.profile || 'testflight' }} --local --output build.ipa --non-interactive
+        run: SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} yarn use-build-number-with-bump eas build -p ios --profile ${{ inputs.profile || 'testflight' }} --local --output build.ipa --non-interactive
 
       - name: 🚀 Deploy
         run: eas submit -p ios --non-interactive --path build.ipa

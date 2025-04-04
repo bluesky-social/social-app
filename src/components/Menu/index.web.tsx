@@ -26,6 +26,8 @@ import {
 import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
+export {useMenuContext}
+
 export function useMenuControl(): Dialog.DialogControlProps {
   const id = React.useId()
   const [isOpen, setIsOpen] = React.useState(false)
@@ -50,7 +52,7 @@ export function Root({
   children,
   control,
 }: React.PropsWithChildren<{
-  control?: Dialog.DialogOuterProps['control']
+  control?: Dialog.DialogControlProps
 }>) {
   const {_} = useLingui()
   const defaultControl = useMenuControl()

@@ -3,38 +3,29 @@
  * avoid future conflicts and/or circular deps
  */
 
-import {Platform} from 'react-native'
-import {nativeApplicationVersion, nativeBuildVersion} from 'expo-application'
 import {init} from '@sentry/react-native'
 
-import {IS_TESTFLIGHT} from '#/lib/app-info'
+import {version} from '#/../package.json'
 
 /**
  * Examples:
  * - `dev`
- * - `1.57.0`
+ * - `1.99.0`
  */
-const release = nativeApplicationVersion ?? 'dev'
+const release = process.env.SENTRY_RELEASE || version
 
 /**
- * Examples:
- * - `web.dev`
- * - `ios.dev`
- * - `android.dev`
- * - `web.1.57.0`
- * - `ios.1.57.0.3`
- * - `android.1.57.0.46`
+ * The latest deployed commit hash
  */
-const dist = `${Platform.OS}.${nativeBuildVersion}.${
-  IS_TESTFLIGHT ? 'tf' : ''
-}${__DEV__ ? 'dev' : ''}`
+const dist = process.env.SENTRY_DIST || 'dev'
 
 init({
   enabled: !__DEV__,
   autoSessionTracking: false,
-  dsn: 'https://05bc3789bf994b81bd7ce20c86ccd3ae@o4505071687041024.ingest.sentry.io/4505071690514432',
+  dsn: 'https://8fb55ba4807fca137eedfc8403ee27ba@o4505071687041024.ingest.us.sentry.io/4508807082278912',
   debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
   environment: process.env.NODE_ENV,
   dist,
   release,
+  ignoreErrors: [`t is not defined`, `Can't find variable: t`],
 })

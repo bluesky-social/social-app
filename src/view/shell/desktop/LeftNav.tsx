@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
@@ -14,7 +14,7 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
@@ -24,7 +24,7 @@ import {useFetchHandle} from '#/state/queries/handle'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfilesQuery} from '#/state/queries/profile'
-import {SessionAccount, useSession, useSessionApi} from '#/state/session'
+import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -34,7 +34,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {atoms as a, tokens, useLayoutBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {DialogControlProps} from '#/components/Dialog'
+import {type DialogControlProps} from '#/components/Dialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
@@ -69,6 +69,7 @@ import {
   UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
   UserCircle_Stroke2_Corner0_Rounded as UserCircle,
 } from '#/components/icons/UserCircle'
+import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
@@ -559,7 +560,10 @@ export function DesktopLeftNav() {
         leftNavMinimal && styles.leftNavMinimal,
         {
           transform: [
-            {translateX: centerColumnOffset ? -450 : -300},
+            {
+              translateX:
+                -300 + (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0),
+            },
             {translateX: '-100%'},
             ...a.scrollbar_offset.transform,
           ],
@@ -610,7 +614,7 @@ export function DesktopLeftNav() {
                 width={NAV_ICON_WIDTH}
               />
             }
-            label={_(msg`Search`)}
+            label={_(msg`Explore`)}
           />
           <NavItem
             href="/notifications"

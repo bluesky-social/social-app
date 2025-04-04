@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-03-07 16:40\n"
+"PO-Revision-Date: 2025-03-14 20:33\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -57,7 +57,7 @@ msgstr "{0, plural, one {# etikett har} other {# etiketter har}} satts på det h
 
 #: src/screens/Post/PostLikedBy.tsx:41
 msgid "{0, plural, one {# like} other {# likes}}"
-msgstr "{0, plural, one {gillamarkering} other {gillamarkeringar}}"
+msgstr "{0, plural, one {# gillamarkering} other {# gillamarkeringar}}"
 
 #: src/lib/hooks/useTimeAgo.ts:149
 msgid "{0, plural, one {# minute} other {# minutes}}"
@@ -137,7 +137,7 @@ msgstr "{0} av {1}"
 #. Accessibility label describing how many characters the user has entered out of a 50-character limit in a text input field
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:55
 msgid "{0} out of 50"
-msgstr ""
+msgstr "{0} av 50"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:485
 msgid "{0} people have used this starter pack!"
@@ -560,12 +560,9 @@ msgstr "Lägg till följande DNS-post i din domän:"
 msgid "Add this feed to your feeds"
 msgstr "Lägg till bland dina flöden"
 
+#: src/view/com/profile/ProfileMenu.tsx:273
 #: src/view/com/profile/ProfileMenu.tsx:276
 msgid "Add to lists"
-msgstr "Lägg till i listor"
-
-#: src/view/com/profile/ProfileMenu.tsx:273
-msgid "Add to Lists"
 msgstr "Lägg till i listor"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
@@ -957,7 +954,7 @@ msgstr "Minst 3 tecken"
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:40
 msgctxt "Name of app icon variant"
 msgid "Aurora"
-msgstr "Polarsken"
+msgstr "Norrsken"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:105
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
@@ -987,7 +984,7 @@ msgstr "Spela upp videoklipp och gif-bilder automatiskt"
 msgid "Back"
 msgstr "Tillbaka"
 
-#: src/screens/Messages/Inbox.tsx:233
+#: src/screens/Messages/Inbox.tsx:238
 msgid "Back to Chats"
 msgstr "Tillbaka till chattar"
 
@@ -1162,7 +1159,7 @@ msgstr "Bluesky+"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:102
 msgid "Bluesky+ icons"
-msgstr "Ikoner för Bluesky+"
+msgstr "Bluesky+-ikoner"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
@@ -1318,9 +1315,9 @@ msgid "Cancels opening the linked website"
 msgstr "Avbryter öppningen av den länkade webbplatsen"
 
 #: src/state/shell/composer/index.tsx:82
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:118
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:159
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:195
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:121
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:162
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:198
 msgid "Cannot interact with a blocked user"
 msgstr "Det går inte att interagera med en blockerad användare"
 
@@ -1345,7 +1342,7 @@ msgstr "Ändra appikon"
 #: src/screens/Settings/AppIconSettings/index.tsx:38
 #: src/screens/Settings/AppIconSettings/index.tsx:221
 msgid "Change app icon to \"{0}\""
-msgstr "Ändra appikon till \"{0}\""
+msgstr "Ändra appikon till ”{0}”"
 
 #: src/screens/Settings/AccountSettings.tsx:97
 #: src/screens/Settings/AccountSettings.tsx:101
@@ -1423,14 +1420,14 @@ msgid "Chat request inbox"
 msgstr "Inkorg för chattförfrågningar"
 
 #: src/screens/Messages/components/InboxPreview.tsx:64
-#: src/screens/Messages/Inbox.tsx:72
+#: src/screens/Messages/Inbox.tsx:77
 msgid "Chat requests"
 msgstr "Chattförfrågningar"
 
 #: src/components/dms/ConvoMenu.tsx:75
 #: src/components/dms/MessageMenu.tsx:83
 #: src/Navigation.tsx:413
-#: src/screens/Messages/ChatList.tsx:327
+#: src/screens/Messages/ChatList.tsx:328
 msgid "Chat settings"
 msgstr "Chattinställningar"
 
@@ -1443,8 +1440,8 @@ msgctxt "toast"
 msgid "Chat unmuted"
 msgstr "Chatt inte längre ignorerad"
 
-#: src/screens/Messages/ChatList.tsx:343
-#: src/screens/Messages/ChatList.tsx:367
+#: src/screens/Messages/ChatList.tsx:344
+#: src/screens/Messages/ChatList.tsx:368
 msgid "Chats"
 msgstr "Chattar"
 
@@ -1835,7 +1832,7 @@ msgstr "Byggversion kopierad till urklipp"
 #: src/lib/sharing.ts:41
 #: src/view/com/modals/InviteCodes.tsx:153
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:246
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:394
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:397
 msgid "Copied to clipboard"
 msgstr "Kopierat till urklipp"
 
@@ -2043,7 +2040,7 @@ msgstr "Mörkt"
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:24
 msgctxt "Name of app icon variant"
 msgid "Dark"
-msgstr "Mörkt"
+msgstr "Mörk"
 
 #: src/view/screens/Debug.tsx:69
 msgid "Dark mode"
@@ -2946,8 +2943,8 @@ msgstr "Det gick inte att radera inlägget. Försök igen"
 msgid "Failed to delete starter pack"
 msgstr "Det gick inte att radera startpaketet"
 
-#: src/screens/Messages/ChatList.tsx:242
-#: src/screens/Messages/Inbox.tsx:182
+#: src/screens/Messages/ChatList.tsx:243
+#: src/screens/Messages/Inbox.tsx:187
 msgid "Failed to load conversations"
 msgstr "Det gick inte att läsa in konversationer"
 
@@ -2973,8 +2970,8 @@ msgstr "Det gick inte att läsa in föreslagna flöden"
 msgid "Failed to load suggested follows"
 msgstr "Det gick inte att läsa in föreslagna konton att följa"
 
-#: src/screens/Messages/Inbox.tsx:290
-#: src/screens/Messages/Inbox.tsx:313
+#: src/screens/Messages/Inbox.tsx:295
+#: src/screens/Messages/Inbox.tsx:318
 msgid "Failed to mark all requests as read"
 msgstr "Det gick inte att markera alla förfrågningar som lästa"
 
@@ -3058,7 +3055,7 @@ msgstr "Feedback skickad!"
 #: src/Navigation.tsx:428
 #: src/screens/StarterPack/StarterPackScreen.tsx:185
 #: src/view/screens/Feeds.tsx:508
-#: src/view/screens/Profile.tsx:225
+#: src/view/screens/Profile.tsx:227
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/screens/Search/Search.tsx:531
 #: src/view/shell/desktop/LeftNav.tsx:651
@@ -3131,12 +3128,12 @@ msgstr "Fitness"
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:117
 msgctxt "Name of app icon variant"
 msgid "Flat Black"
-msgstr "Matt blå"
+msgstr "Matt svart"
 
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:93
 msgctxt "Name of app icon variant"
 msgid "Flat Blue"
-msgstr "Matt svart"
+msgstr "Matt blå"
 
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:105
 msgctxt "Name of app icon variant"
@@ -3353,7 +3350,7 @@ msgstr "Kom igång"
 msgid "Getting started"
 msgstr "Kom igång"
 
-#: src/components/MediaPreview.tsx:108
+#: src/components/MediaPreview.tsx:116
 msgid "GIF"
 msgstr "Gif-bild"
 
@@ -3369,7 +3366,7 @@ msgstr "Uppenbara överträdelser av lagar eller användarvillkor"
 #: src/components/Layout/Header/index.tsx:126
 #: src/components/moderation/ScreenHider.tsx:154
 #: src/components/moderation/ScreenHider.tsx:163
-#: src/screens/Messages/Inbox.tsx:223
+#: src/screens/Messages/Inbox.tsx:228
 #: src/screens/Profile/ProfileFeed/index.tsx:89
 #: src/screens/VideoFeed/components/Header.tsx:163
 #: src/screens/VideoFeed/index.tsx:1108
@@ -3724,7 +3721,7 @@ msgid "Inappropriate messages or explicit links"
 msgstr "Olämpliga meddelanden eller explicita länkar"
 
 #. Title message shown in chat requests inbox when it's empty
-#: src/screens/Messages/Inbox.tsx:203
+#: src/screens/Messages/Inbox.tsx:208
 msgid "Inbox zero!"
 msgstr "Inkorgen är tom!"
 
@@ -3860,7 +3857,7 @@ msgid "Labeled by the author."
 msgstr "Märkt av användaren."
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:75
-#: src/view/screens/Profile.tsx:218
+#: src/view/screens/Profile.tsx:220
 msgid "Labels"
 msgstr "Etiketter"
 
@@ -3994,13 +3991,13 @@ msgstr "Ljust"
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:14
 msgctxt "Name of app icon variant"
 msgid "Light"
-msgstr "Ljust"
+msgstr "Ljus"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:510
 msgid "Like"
 msgstr "Gilla"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:312
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:315
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr "Gilla ({0, plural, one {# gillamarkering} other {# gillamarkeringar}})"
 
@@ -4045,7 +4042,7 @@ msgstr "Gillat av {0, plural, one {# användare} other {# användare}}"
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr "Gillat av {likeCount, plural, one {# användare} other {# användare}}"
 
-#: src/view/screens/Profile.tsx:224
+#: src/view/screens/Profile.tsx:226
 msgid "Likes"
 msgstr "Gillamarkeringar"
 
@@ -4118,8 +4115,8 @@ msgstr "Lista inte längre ignorerad"
 
 #: src/Navigation.tsx:140
 #: src/view/screens/Lists.tsx:62
-#: src/view/screens/Profile.tsx:219
-#: src/view/screens/Profile.tsx:227
+#: src/view/screens/Profile.tsx:221
+#: src/view/screens/Profile.tsx:229
 #: src/view/shell/desktop/LeftNav.tsx:669
 #: src/view/shell/Drawer.tsx:501
 msgid "Lists"
@@ -4210,9 +4207,9 @@ msgstr "Hantera sparade flöden"
 msgid "Manage your muted words and tags"
 msgstr "Hantera dina ignorerade ord och taggar"
 
-#: src/screens/Messages/Inbox.tsx:300
-#: src/screens/Messages/Inbox.tsx:319
-#: src/screens/Messages/Inbox.tsx:326
+#: src/screens/Messages/Inbox.tsx:305
+#: src/screens/Messages/Inbox.tsx:324
+#: src/screens/Messages/Inbox.tsx:331
 msgid "Mark all as read"
 msgstr "Markera alla som lästa"
 
@@ -4221,12 +4218,12 @@ msgstr "Markera alla som lästa"
 msgid "Mark as read"
 msgstr "Markera som läst"
 
-#: src/screens/Messages/Inbox.tsx:287
-#: src/screens/Messages/Inbox.tsx:310
+#: src/screens/Messages/Inbox.tsx:292
+#: src/screens/Messages/Inbox.tsx:315
 msgid "Marked all as read"
 msgstr "Markerade alla som lästa"
 
-#: src/view/screens/Profile.tsx:222
+#: src/view/screens/Profile.tsx:224
 msgid "Media"
 msgstr "Media"
 
@@ -4558,8 +4555,8 @@ msgid "New"
 msgstr "Ny"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:65
-#: src/screens/Messages/ChatList.tsx:350
-#: src/screens/Messages/ChatList.tsx:357
+#: src/screens/Messages/ChatList.tsx:351
+#: src/screens/Messages/ChatList.tsx:358
 msgid "New chat"
 msgstr "Ny chatt"
 
@@ -4593,7 +4590,7 @@ msgstr "Nytt lösenord"
 #: src/screens/Profile/ProfileFeed/index.tsx:238
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
-#: src/view/screens/Profile.tsx:505
+#: src/view/screens/Profile.tsx:507
 #: src/view/screens/ProfileList.tsx:253
 #: src/view/screens/ProfileList.tsx:286
 msgid "New post"
@@ -4727,7 +4724,7 @@ msgstr "Inget resultat hittades"
 
 #: src/view/screens/Feeds.tsx:470
 msgid "No results found for \"{query}\""
-msgstr "Inget resultat hittades för \"{query}\""
+msgstr "Inget resultat hittades för ”{query}”"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
 #: src/view/screens/Search/Search.tsx:231
@@ -4787,7 +4784,7 @@ msgstr "Inte just nu"
 
 #: src/view/com/profile/ProfileMenu.tsx:406
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:774
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:358
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:361
 msgid "Note about sharing"
 msgstr "Anmärkning om delning"
 
@@ -4795,7 +4792,7 @@ msgstr "Anmärkning om delning"
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "Obs: Bluesky är ett öppet och offentligt nätverk. Den här inställningen begränsar endast ditt kontos synlighet på Blueskys app och webbplats. Andra appar kanske inte respekterar den här inställningen. Ditt innehåll kan fortfarande visas för utloggade användare genom andra appar och webbplatser."
 
-#: src/screens/Messages/ChatList.tsx:263
+#: src/screens/Messages/ChatList.tsx:264
 msgid "Nothing here"
 msgstr "Här var det tomt"
 
@@ -5484,7 +5481,7 @@ msgid "Post unpinned"
 msgstr "Inlägg lossat"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:186
-#: src/view/screens/Profile.tsx:220
+#: src/view/screens/Profile.tsx:222
 msgid "Posts"
 msgstr "Inlägg"
 
@@ -5571,7 +5568,7 @@ msgid "Processing..."
 msgstr "Bearbetar…"
 
 #: src/view/screens/DebugMod.tsx:920
-#: src/view/screens/Profile.tsx:359
+#: src/view/screens/Profile.tsx:361
 msgid "profile"
 msgstr "profil"
 
@@ -5718,8 +5715,8 @@ msgstr "Avvisa"
 msgid "Reject chat request"
 msgstr "Avvisa chattförfrågan"
 
-#: src/screens/Messages/ChatList.tsx:246
-#: src/screens/Messages/Inbox.tsx:186
+#: src/screens/Messages/ChatList.tsx:247
+#: src/screens/Messages/Inbox.tsx:191
 msgid "Reload conversations"
 msgstr "Ladda om konversationer"
 
@@ -5790,6 +5787,7 @@ msgid "Remove from quick access?"
 msgstr "Ta bort från snabbåtkomst?"
 
 #: src/screens/List/ListHiddenScreen.tsx:170
+#: src/screens/List/ListHiddenScreen.tsx:174
 msgid "Remove from saved feeds"
 msgstr "Ta bort från sparade flöden"
 
@@ -5845,7 +5843,6 @@ msgid "Removed from my feeds"
 msgstr "Borttaget från mina flöden"
 
 #: src/screens/List/ListHiddenScreen.tsx:94
-#: src/screens/List/ListHiddenScreen.tsx:174
 msgid "Removed from saved feeds"
 msgstr "Borttaget från sparade flöden"
 
@@ -5868,7 +5865,7 @@ msgstr "Tar bort citerat inlägg"
 msgid "Replace with Discover"
 msgstr "Ersätt med Upptäck"
 
-#: src/view/screens/Profile.tsx:221
+#: src/view/screens/Profile.tsx:223
 msgid "Replies"
 msgstr "Svar"
 
@@ -5885,7 +5882,7 @@ msgctxt "action"
 msgid "Reply"
 msgstr "Svara"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:264
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:267
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr "Svar ({0, plural, one {# svar} other {# svar}})"
 
@@ -6148,9 +6145,9 @@ msgstr "Försöker igen med den senaste misslyckade åtgärden"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:334
 #: src/screens/Login/LoginForm.tsx:323
 #: src/screens/Login/LoginForm.tsx:330
-#: src/screens/Messages/ChatList.tsx:252
+#: src/screens/Messages/ChatList.tsx:253
 #: src/screens/Messages/components/MessageListError.tsx:25
-#: src/screens/Messages/Inbox.tsx:192
+#: src/screens/Messages/Inbox.tsx:197
 #: src/screens/Onboarding/StepInterests/index.tsx:217
 #: src/screens/Onboarding/StepInterests/index.tsx:220
 #: src/screens/Signup/BackNextButtons.tsx:53
@@ -6312,7 +6309,7 @@ msgstr "Sök flöden"
 
 #: src/components/ProgressGuide/FollowDialog.tsx:575
 msgid "Search for \"{interestsDisplayName}\"{activeText}"
-msgstr "Sök efter \"{interestsDisplayName}\"{activeText}"
+msgstr "Sök efter ”{interestsDisplayName}”{activeText}"
 
 #: src/view/shell/desktop/Search.tsx:201
 msgid "Search for \"{query}\""
@@ -6615,7 +6612,7 @@ msgstr "Sexuellt suggestivt"
 #: src/view/com/profile/ProfileMenu.tsx:225
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:481
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:490
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:347
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:350
 #: src/view/screens/ProfileList.tsx:506
 msgid "Share"
 msgstr "Dela"
@@ -6635,7 +6632,7 @@ msgstr "Dela med dig av något som är kul att veta!"
 
 #: src/view/com/profile/ProfileMenu.tsx:411
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:779
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:363
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:366
 msgid "Share anyway"
 msgstr "Dela ändå"
 
@@ -6942,8 +6939,8 @@ msgstr "Något gick fel. Försök igen."
 msgid "Something wrong? Let us know."
 msgstr "Är något på tok? Hör av dig till oss."
 
-#: src/App.native.tsx:121
-#: src/App.web.tsx:97
+#: src/App.native.tsx:122
+#: src/App.web.tsx:98
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr "Beklagar! Din session har löpt ut. Vänligen logga in igen."
 
@@ -7022,7 +7019,7 @@ msgstr "Startpaket av dig"
 msgid "Starter pack is invalid"
 msgstr "Startpaketet är ogiltigt"
 
-#: src/view/screens/Profile.tsx:226
+#: src/view/screens/Profile.tsx:228
 msgid "Starter Packs"
 msgstr "Startpaket"
 
@@ -7332,8 +7329,8 @@ msgid "The Privacy Policy has been moved to <0/>"
 msgstr "Integritetspolicyn har flyttats till <0/>"
 
 #: src/view/com/composer/state/video.ts:395
-msgid "The selected video is larger than 50MB."
-msgstr "Det valda videoklippet är större än 50 MB."
+msgid "The selected video is larger than 100 MB."
+msgstr "Det valda videoklippet är större än 100 MB."
 
 #: src/lib/strings/errors.ts:18
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
@@ -7597,7 +7594,7 @@ msgid "This post has been deleted."
 msgstr "Det här inlägget har raderats."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:776
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:360
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:363
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr "Det här inlägget är syns bara för inloggade användare. Det syns inte för personer som inte är inloggade."
 
@@ -7876,7 +7873,7 @@ msgstr "Tyvärr stöder ingen av de etikettsättare du prenumererar på den här
 msgid "Unlike"
 msgstr "Sluta gilla"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:306
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:309
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "Sluta gilla ({0, plural, one {# gillamarkering} other {# gillamarkeringar}})"
 
@@ -7888,7 +7885,7 @@ msgstr "Sätt på ljud"
 
 #: src/view/screens/ProfileList.tsx:723
 msgid "Unmute"
-msgstr "Sätt på ljud"
+msgstr "Sluta ignorera"
 
 #: src/components/RichTextTag.tsx:140
 #: src/components/RichTextTag.tsx:153
@@ -8251,7 +8248,7 @@ msgstr "Videoklipp uppladdat"
 msgid "Video: {0}"
 msgstr "Videoklipp: {0}"
 
-#: src/view/screens/Profile.tsx:223
+#: src/view/screens/Profile.tsx:225
 msgid "Videos"
 msgstr "Videoklipp"
 
@@ -8521,8 +8518,8 @@ msgid "Who can reply"
 msgstr "Vem kan svara"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
-#: src/screens/Messages/ChatList.tsx:230
-#: src/screens/Messages/Inbox.tsx:171
+#: src/screens/Messages/ChatList.tsx:231
+#: src/screens/Messages/Inbox.tsx:176
 msgid "Whoops!"
 msgstr "Hoppsan!"
 
@@ -8627,7 +8624,7 @@ msgstr "Du"
 
 #: src/components/forms/HostingProvider.tsx:46
 msgid "You are creating an account on"
-msgstr ""
+msgstr "Du skapar ett konto på"
 
 #: src/screens/SignupQueued.tsx:157
 msgid "You are in line."
@@ -8682,7 +8679,7 @@ msgstr "Du har inga följare."
 msgid "You don't follow any users who follow @{name}."
 msgstr "Du följer inga användare som följer @{name}."
 
-#: src/screens/Messages/Inbox.tsx:215
+#: src/screens/Messages/Inbox.tsx:220
 msgid "You don't have any chat requests at the moment."
 msgstr "Du har inga chattförfrågningar just nu."
 
@@ -8736,7 +8733,7 @@ msgstr "Du har ignorerat det här kontot."
 msgid "You have muted this user"
 msgstr "Du har ignorerat den här användaren"
 
-#: src/screens/Messages/ChatList.tsx:273
+#: src/screens/Messages/ChatList.tsx:274
 msgid "You have no conversations yet. Start one!"
 msgstr "Du har inga konversationer ännu. Starta en!"
 

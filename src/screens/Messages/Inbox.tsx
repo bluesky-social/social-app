@@ -60,7 +60,12 @@ export function MessagesInboxScreen({}: Props) {
   }, [data, leftConvos])
 
   const hasUnreadConvos = useMemo(() => {
-    return conversations.some(conversation => conversation.unreadCount > 0)
+    return conversations.some(
+      conversation =>
+        conversation.members.every(
+          member => member.handle !== 'missing.invalid',
+        ) && conversation.unreadCount > 0,
+    )
   }, [conversations])
 
   return (

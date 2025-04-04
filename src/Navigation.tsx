@@ -1,9 +1,8 @@
 import * as React from 'react'
-import {JSX} from 'react/jsx-runtime'
-import {i18n, MessageDescriptor} from '@lingui/core'
+import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {
-  BottomTabBarProps,
+  type BottomTabBarProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import {
@@ -20,16 +19,16 @@ import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
 import {buildStateObject} from '#/lib/routes/helpers'
 import {
-  AllNavigatorParams,
-  BottomTabNavigatorParams,
-  FlatNavigatorParams,
-  HomeTabNavigatorParams,
-  MessagesTabNavigatorParams,
-  MyProfileTabNavigatorParams,
-  NotificationsTabNavigatorParams,
-  SearchTabNavigatorParams,
+  type AllNavigatorParams,
+  type BottomTabNavigatorParams,
+  type FlatNavigatorParams,
+  type HomeTabNavigatorParams,
+  type MessagesTabNavigatorParams,
+  type MyProfileTabNavigatorParams,
+  type NotificationsTabNavigatorParams,
+  type SearchTabNavigatorParams,
 } from '#/lib/routes/types'
-import {RouteParams, State} from '#/lib/routes/types'
+import {type RouteParams, type State} from '#/lib/routes/types'
 import {attachRouteToLogEvents, logEvent} from '#/lib/statsig/statsig'
 import {bskyTitle} from '#/lib/strings/headings'
 import {logger} from '#/logger'
@@ -59,7 +58,6 @@ import {ProfileScreen} from '#/view/screens/Profile'
 import {ProfileFeedLikedByScreen} from '#/view/screens/ProfileFeedLikedBy'
 import {ProfileListScreen} from '#/view/screens/ProfileList'
 import {SavedFeeds} from '#/view/screens/SavedFeeds'
-import {SearchScreen} from '#/view/screens/Search'
 import {Storybook} from '#/view/screens/Storybook'
 import {SupportScreen} from '#/view/screens/Support'
 import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
@@ -81,9 +79,11 @@ import {ProfileFeedScreen} from '#/screens/Profile/ProfileFeed'
 import {ProfileFollowersScreen} from '#/screens/Profile/ProfileFollowers'
 import {ProfileFollowsScreen} from '#/screens/Profile/ProfileFollows'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
+import {SearchScreen} from '#/screens/Search'
 import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
 import {AppIconSettingsScreen} from '#/screens/Settings/AppIconSettings'
 import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
+import {SettingsInterests} from '#/screens/Settings/SettingsInterests'
 import {
   StarterPackScreen,
   StarterPackScreenShort,
@@ -377,6 +377,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         }}
       />
       <Stack.Screen
+        name="SettingsInterests"
+        getComponent={() => SettingsInterests}
+        options={{
+          title: title(msg`Your interests`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
         name="AboutSettings"
         getComponent={() => AboutSettingsScreen}
         options={{
@@ -629,7 +637,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Search"
         getComponent={() => SearchScreen}
-        options={{title: title(msg`Search`)}}
+        options={{title: title(msg`Explore`)}}
       />
       <Flat.Screen
         name="Notifications"

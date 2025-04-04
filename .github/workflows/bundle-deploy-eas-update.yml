@@ -75,8 +75,11 @@ jobs:
       - name: Prettier check
         run: yarn prettier --check .
 
-      - name: Check & compile i18n
-        run: yarn intl:build
+      - name: 🔤 Compile translations
+        run: yarn intl:build 2>&1 | tee i18n.log
+
+      - name: Check for i18n compilation errors
+        run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
 
       - name: Type check
         run: yarn typecheck
@@ -107,9 +110,15 @@ jobs:
           echo "BITDRIFT_API_KEY=${{ secrets.BITDRIFT_API_KEY }}" >> .env
           echo "$json" > google-services.json
 
+      - name: Setup Sentry vars for build-time injection
+        id: sentry
+        run: |
+          echo "SENTRY_DIST=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          echo "SENTRY_RELEASE=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
+
       - name: 🏗️ Create Bundle
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
-        run: EXPO_PUBLIC_ENV="${{ inputs.channel || 'testflight' }}" yarn export
+        run: SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} EXPO_PUBLIC_ENV="${{ inputs.channel || 'testflight' }}" yarn export
 
       - name: 📦 Package Bundle and 🚀 Deploy
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
