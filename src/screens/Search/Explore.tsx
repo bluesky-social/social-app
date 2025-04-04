@@ -8,6 +8,7 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -38,7 +39,7 @@ import {
 import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
 import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
-import {atoms as a, native, useTheme, web} from '#/alf'
+import {atoms as a, native, platform, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
@@ -190,6 +191,7 @@ export function Explore({
 }) {
   const {_} = useLingui()
   const t = useTheme()
+  const initialNumToRender = useInitialNumToRender()
   const {data: preferences, error: preferencesError} = usePreferencesQuery()
   const moderationOpts = useModerationOpts()
   const gate = useGate()
@@ -923,7 +925,11 @@ export function Explore({
       viewabilityConfig={viewabilityConfig}
       onViewableItemsChanged={onViewableItemsChanged}
       onEndReached={onLoadMoreFeedPreviews}
-      onEndReachedThreshold={2}
+      onEndReachedThreshold={3}
+      initialNumToRender={initialNumToRender}
+      windowSize={9}
+      maxToRenderPerBatch={platform({ios: 5, default: 1})}
+      updateCellsBatchingPeriod={40}
     />
   )
 }
