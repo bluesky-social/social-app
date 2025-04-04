@@ -173,7 +173,7 @@ export function useFeedPreviews(
               })
 
               const slice = {
-                _reactKey: item._reactKey,
+                _reactKey: page.feed.uri + item._reactKey,
                 _isFeedPostSlice: true,
                 isFallbackMarker: false,
                 isIncompleteThread: item.isIncompleteThread,
