@@ -234,7 +234,7 @@ export function AvatarStack({
               {computedTotal > 0 ? (
                 <Text
                   style={[
-                    gtPhone ? a.text_md : a.text_sm,
+                    gtPhone ? a.text_md : a.text_xs,
                     a.font_bold,
                     a.leading_snug,
                     {color: 'white'},
