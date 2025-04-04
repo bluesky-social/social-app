@@ -37,7 +37,7 @@ const LIMIT = 8 // sliced to 6, overfetch to account for moderation
 
 export type FeedPreviewItem =
   | {
-      type: 'topBorder'
+      type: 'preview:spacer'
       key: string
     }
   | {
@@ -130,6 +130,11 @@ export function useFeedPreviews(
       const items: FeedPreviewItem[] = []
 
       if (!enabled) return items
+
+      items.push({
+        type: 'preview:spacer',
+        key: 'spacer',
+      })
 
       const isEmpty =
         !isPending && !data?.pages?.some(page => page.posts.length)
@@ -240,23 +245,17 @@ export function useFeedPreviews(
             }
 
             if (slices.length > 0) {
-              if (pageIndex > 0) {
-                items.push({
-                  type: 'topBorder',
-                  key: `topBorder-${page.feed.uri}`,
-                })
-              }
               items.push(
-                {
-                  type: 'preview:footer',
-                  key: `footer-${page.feed.uri}`,
-                },
                 {
                   type: 'preview:header',
                   key: `header-${page.feed.uri}`,
                   feed: page.feed,
                 },
                 ...slices,
+                {
+                  type: 'preview:footer',
+                  key: `footer-${page.feed.uri}`,
+                },
               )
             }
           }
