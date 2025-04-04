@@ -874,7 +874,7 @@ export function Explore({
       viewableItems: ViewToken<ExploreScreenItems>[]
       changed: ViewToken<ExploreScreenItems>[]
     }) => {
-      for (const {item} of viewableItems.filter(vi => vi.isViewable)) {
+      for (const {item, index} of viewableItems.filter(vi => vi.isViewable)) {
         let module: MetricEvents['explore:module:seen']['module']
         if (item.type === 'trendingTopics' || item.type === 'trendingVideos') {
           module = item.type
@@ -891,7 +891,7 @@ export function Explore({
         }
         if (!alreadyReportedRef.current.has(module)) {
           alreadyReportedRef.current.set(module, module)
-          logger.metric('explore:module:seen', {module})
+          logger.metric('explore:module:seen', {module, index})
         }
       }
     },
