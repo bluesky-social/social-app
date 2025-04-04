@@ -1,10 +1,10 @@
 import React, {useCallback, useMemo, useState} from 'react'
-import {GestureResponderEvent, View} from 'react-native'
+import {type GestureResponderEvent, View} from 'react-native'
 import {
   AppBskyEmbedRecord,
   ChatBskyConvoDefs,
   moderateProfile,
-  ModerationOpts,
+  type ModerationOpts,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -43,7 +43,7 @@ import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 
 export let ChatListItem = ({
   convo,
@@ -185,9 +185,63 @@ function ChatListItemReady({
         lastMessageSentAt = convo.lastMessage.sentAt
       }
       if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
+        lastMessageSentAt = convo.lastMessage.sentAt
+
         lastMessage = isDeletedAccount
           ? _(msg`Conversation deleted`)
           : _(msg`Message deleted`)
+      }
+
+      if (ChatBskyConvoDefs.isMessageAndReactionView(convo.lastReaction)) {
+        if (
+          !lastMessageSentAt ||
+          new Date(lastMessageSentAt) <
+            new Date(convo.lastReaction.reaction.createdAt)
+        ) {
+          const isFromMe =
+            convo.lastReaction.reaction.sender.did === currentAccount?.did
+          const lastMessageText = convo.lastReaction.message.text
+          const fallbackMessage = _(
+            msg({
+              message: 'a message',
+              comment: `If last message does not contain text, fall back to "{user} reacted to {a message}"`,
+            }),
+          )
+
+          if (isFromMe) {
+            lastMessage = _(
+              msg`You reacted ${convo.lastReaction.reaction.value} to ${
+                lastMessageText
+                  ? `"${convo.lastReaction.message.text}"`
+                  : fallbackMessage
+              }`,
+            )
+          } else {
+            const senderDid = convo.lastReaction.reaction.sender.did
+            const sender = convo.members.find(
+              member => member.did === senderDid,
+            )
+            if (sender) {
+              lastMessage = _(
+                msg`${sanitizeDisplayName(
+                  sender.displayName || sender.handle,
+                )} reacted ${convo.lastReaction.reaction.value} to ${
+                  lastMessageText
+                    ? `"${convo.lastReaction.message.text}"`
+                    : fallbackMessage
+                }`,
+              )
+            } else {
+              lastMessage = _(
+                msg`Someone reacted ${convo.lastReaction.reaction.value} to ${
+                  lastMessageText
+                    ? `"${convo.lastReaction.message.text}"`
+                    : fallbackMessage
+                }`,
+              )
+            }
+          }
+        }
       }
 
       return {
@@ -195,7 +249,14 @@ function ChatListItemReady({
         lastMessageSentAt,
         latestReportableMessage,
       }
-    }, [_, convo.lastMessage, currentAccount?.did, isDeletedAccount])
+    }, [
+      _,
+      convo.lastMessage,
+      convo.lastReaction,
+      currentAccount?.did,
+      isDeletedAccount,
+      convo.members,
+    ])
 
   const [showActions, setShowActions] = useState(false)
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {ScrollView, View} from 'react-native'
 import {AppBskyEmbedVideo, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -8,18 +8,12 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {VIDEO_FEED_URI} from '#/lib/constants'
 import {makeCustomFeedLink} from '#/lib/routes/links'
-import {logEvent} from '#/lib/statsig/statsig'
-import {isWeb} from '#/platform/detection'
-import {useSavedFeeds} from '#/state/queries/feed'
+import {logger} from '#/logger'
 import {RQKEY, usePostFeedQuery} from '#/state/queries/post-feed'
-import {useAddSavedFeedsMutation} from '#/state/queries/preferences'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {GradientFill} from '#/components/GradientFill'
+import {ButtonIcon} from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {Pin_Stroke2_Corner0_Rounded as Pin} from '#/components/icons/Pin'
-import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending2'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {
@@ -37,7 +31,6 @@ const FEED_PARAMS: {
 }
 
 export function ExploreTrendingVideos() {
-  const t = useTheme()
   const {_} = useLingui()
   const gutters = useGutters([0, 'base'])
   const {data, isLoading, error} = usePostFeedQuery(FEED_DESC, FEED_PARAMS)
@@ -55,30 +48,30 @@ export function ExploreTrendingVideos() {
     }
   })
 
-  const {data: saved} = useSavedFeeds()
-  const isSavedAlready = React.useMemo(() => {
-    return !!saved?.feeds?.some(info => info.config.value === VIDEO_FEED_URI)
-  }, [saved])
+  // const {data: saved} = useSavedFeeds()
+  // const isSavedAlready = useMemo(() => {
+  //   return !!saved?.feeds?.some(info => info.config.value === VIDEO_FEED_URI)
+  // }, [saved])
 
-  const {mutateAsync: addSavedFeeds, isPending: isPinPending} =
-    useAddSavedFeedsMutation()
-  const pinFeed = React.useCallback(
-    (e: any) => {
-      e.preventDefault()
+  // const {mutateAsync: addSavedFeeds, isPending: isPinPending} =
+  //   useAddSavedFeedsMutation()
+  // const pinFeed = useCallback(
+  //   (e: any) => {
+  //     e.preventDefault()
 
-      addSavedFeeds([
-        {
-          type: 'feed',
-          value: VIDEO_FEED_URI,
-          pinned: true,
-        },
-      ])
+  //     addSavedFeeds([
+  //       {
+  //         type: 'feed',
+  //         value: VIDEO_FEED_URI,
+  //         pinned: true,
+  //       },
+  //     ])
 
-      // prevent navigation
-      return false
-    },
-    [addSavedFeeds],
-  )
+  //     // prevent navigation
+  //     return false
+  //   },
+  //   [addSavedFeeds],
+  // )
 
   if (error) {
     return null
@@ -86,38 +79,6 @@ export function ExploreTrendingVideos() {
 
   return (
     <View style={[a.pb_xl]}>
-      <View
-        style={[
-          a.flex_row,
-          isWeb
-            ? [a.px_lg, a.py_lg, a.pt_2xl, a.gap_md]
-            : [a.p_lg, a.pt_xl, a.gap_md],
-          a.border_b,
-          t.atoms.border_contrast_low,
-        ]}>
-        <View style={[a.flex_1, a.gap_sm]}>
-          <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-            <Graph
-              size="lg"
-              fill={t.palette.primary_500}
-              style={{marginLeft: -2}}
-            />
-            <Text style={[a.text_2xl, a.font_heavy, t.atoms.text]}>
-              <Trans>Trending Videos</Trans>
-            </Text>
-            <View style={[a.py_xs, a.px_sm, a.rounded_sm, a.overflow_hidden]}>
-              <GradientFill gradient={tokens.gradients.primary} />
-              <Text style={[a.text_sm, a.font_heavy, {color: 'white'}]}>
-                <Trans>BETA</Trans>
-              </Text>
-            </View>
-          </View>
-          <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
-            <Trans>Popular videos in your network.</Trans>
-          </Text>
-        </View>
-      </View>
-
       <BlockDrawerGesture>
         <ScrollView
           horizontal
@@ -153,7 +114,7 @@ export function ExploreTrendingVideos() {
         </ScrollView>
       </BlockDrawerGesture>
 
-      {!isSavedAlready && (
+      {/* {!isSavedAlready && (
         <View
           style={[
             gutters,
@@ -179,7 +140,7 @@ export function ExploreTrendingVideos() {
             <ButtonIcon icon={Pin} position="right" />
           </Button>
         </View>
-      )}
+      )} */}
     </View>
   )
 }
@@ -191,7 +152,7 @@ function VideoCards({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     return data.pages
       .flatMap(page => page.slices)
       .map(slice => slice.items[0])
@@ -199,7 +160,7 @@ function VideoCards({
       .filter(item => AppBskyEmbedVideo.isView(item.post.embed))
       .slice(0, 8)
   }, [data])
-  const href = React.useMemo(() => {
+  const href = useMemo(() => {
     const urip = new AtUri(VIDEO_FEED_URI)
     return makeCustomFeedLink(urip.host, urip.rkey, undefined, 'explore')
   }, [])
@@ -217,9 +178,11 @@ function VideoCards({
               sourceInterstitial: 'explore',
             }}
             onInteract={() => {
-              logEvent('videoCard:click', {
-                context: 'interstitial:explore',
-              })
+              logger.metric(
+                'videoCard:click',
+                {context: 'interstitial:explore'},
+                {statsig: true},
+              )
             }}
           />
         </View>
