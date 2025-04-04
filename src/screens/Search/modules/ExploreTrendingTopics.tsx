@@ -292,7 +292,7 @@ function useModerateTrendingActors(
     return actors
       .filter(actor => {
         const decision = moderateProfile(actor, moderationOpts)
-        return !decision.ui('avatar').filter
+        return !decision.ui('avatar').filter && !decision.ui('avatar').blur
       })
       .slice(0, 3)
   }, [actors, moderationOpts])
