@@ -1,18 +1,22 @@
 import {
-  AppBskyActorDefs,
-  AppBskyEmbedRecord,
+  type AppBskyActorDefs,
+  type AppBskyEmbedRecord,
   AppBskyFeedDefs,
-  AppBskyFeedGetPostThread,
+  type AppBskyFeedGetPostThread,
   AppBskyFeedPost,
   AtUri,
   moderatePost,
-  ModerationDecision,
-  ModerationOpts,
+  type ModerationDecision,
+  type ModerationOpts,
 } from '@atproto/api'
-import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
+import {type QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {
+  findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData,
+  findAllProfilesInQueryData as findAllProfilesInExploreFeedPreviewsQueryData,
+} from '#/state/queries/explore-feed-previews'
 import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
-import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
+import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {
   findAllPostsInQueryData as findAllPostsInSearchQueryData,
   findAllProfilesInQueryData as findAllProfilesInSearchQueryData,
@@ -495,6 +499,12 @@ export function* findAllPostsInQueryData(
   for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
     yield postViewToPlaceholderThread(post)
   }
+  for (let post of findAllPostsInExploreFeedPreviewsQueryData(
+    queryClient,
+    uri,
+  )) {
+    yield postViewToPlaceholderThread(post)
+  }
 }
 
 export function* findAllProfilesInQueryData(
@@ -527,6 +537,12 @@ export function* findAllProfilesInQueryData(
     yield profile
   }
   for (let profile of findAllProfilesInSearchQueryData(queryClient, did)) {
+    yield profile
+  }
+  for (let profile of findAllProfilesInExploreFeedPreviewsQueryData(
+    queryClient,
+    did,
+  )) {
     yield profile
   }
 }
