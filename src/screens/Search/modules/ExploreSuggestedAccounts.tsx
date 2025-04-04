@@ -90,7 +90,7 @@ export function SuggestedAccountsTabBar({
         contentContainerStyle={[
           {
             // visual alignment
-            paddingLeft: a.px_lg.paddingLeft - 2,
+            paddingLeft: a.px_md.paddingLeft,
           },
         ]}
       />
