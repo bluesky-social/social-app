@@ -6,7 +6,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 
 export function AvatarStack({
   profiles,

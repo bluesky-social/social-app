@@ -1,9 +1,11 @@
+import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
-import {type AppBskyUnspeccedDefs} from '@atproto/api'
+import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useTrendingSettings} from '#/state/preferences/trending'
 import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery'
 import {useTrendingConfig} from '#/state/trending-config'
@@ -78,6 +80,8 @@ export function TrendRow({
       )
     : null
 
+  const actors = useModerateTrendingActors(trend.actors)
+
   return (
     <Link
       testID={trend.link}
@@ -118,8 +122,8 @@ export function TrendRow({
                   a.align_center,
                   {paddingLeft: 20},
                 ]}>
-                {trend.actors.length > 0 && (
-                  <AvatarStack size={20} profiles={trend.actors} />
+                {actors.length > 0 && (
+                  <AvatarStack size={20} profiles={actors} />
                 )}
                 <Text
                   style={[
@@ -275,4 +279,21 @@ export function TrendingTopicRowSkeleton({}: {withPosts: boolean}) {
       </View>
     </View>
   )
+}
+
+function useModerateTrendingActors(
+  actors: AppBskyUnspeccedDefs.TrendView['actors'],
+) {
+  const moderationOpts = useModerationOpts()
+
+  return useMemo(() => {
+    if (!moderationOpts) return []
+
+    return actors
+      .filter(actor => {
+        const decision = moderateProfile(actor, moderationOpts)
+        return !decision.ui('avatar').filter && !decision.ui('avatar').blur
+      })
+      .slice(0, 3)
+  }, [actors, moderationOpts])
 }
