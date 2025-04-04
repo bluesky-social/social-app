@@ -41,6 +41,8 @@ export function Container({
         headerHeight && web({position: 'sticky', top: headerHeight}),
         style,
       ]}>
+      {/* Very non-scientific way to avoid small gap on scroll */}
+      <View style={[a.absolute, a.inset_0, t.atoms.bg, {top: -2}]} />
       {children}
     </View>
   )
