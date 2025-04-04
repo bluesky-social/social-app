@@ -46,8 +46,8 @@ export function ExploreInterestsCard() {
         )}
         confirmButtonCta={_(
           msg({
-            message: `Roger roger`,
-            comment: `Confirm button text. Can be a short cheeky phrase that means "OK" e.g. "roger roger" from Star Wars`,
+            message: `Copy that!`,
+            comment: `Confirm button text. Can be a short cheeky phrase that means "OK" e.g. "Copy that!"`,
           }),
         )}
         onConfirm={onConfirmClose}
