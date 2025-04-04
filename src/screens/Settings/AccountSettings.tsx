@@ -1,14 +1,15 @@
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
+import {ChangeEmailDialog} from '#/components/dialogs/ChangeEmailDialog'
 import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {At_Stroke2_Corner2_Rounded as AtIcon} from '#/components/icons/At'
 import {BirthdayCake_Stroke2_Corner2_Rounded as BirthdayCakeIcon} from '#/components/icons/BirthdayCake'
@@ -31,6 +32,7 @@ export function AccountSettingsScreen({}: Props) {
   const {currentAccount} = useSession()
   const {openModal} = useModalControls()
   const verifyEmailControl = useDialogControl()
+  const changeEmailControl = useDialogControl()
   const birthdayControl = useDialogControl()
   const changeHandleControl = useDialogControl()
   const exportCarControl = useDialogControl()
@@ -95,7 +97,7 @@ export function AccountSettingsScreen({}: Props) {
           )}
           <SettingsList.PressableItem
             label={_(msg`Change email`)}
-            onPress={() => openModal({name: 'change-email'})}>
+            onPress={() => changeEmailControl.open()}>
             <SettingsList.ItemIcon icon={PencilIcon} />
             <SettingsList.ItemText>
               <Trans>Change email</Trans>
@@ -165,7 +167,14 @@ export function AccountSettingsScreen({}: Props) {
         </SettingsList.Container>
       </Layout.Content>
 
-      <VerifyEmailDialog control={verifyEmailControl} />
+      <ChangeEmailDialog
+        control={changeEmailControl}
+        verifyEmailControl={verifyEmailControl}
+      />
+      <VerifyEmailDialog
+        control={verifyEmailControl}
+        changeEmailControl={changeEmailControl}
+      />
       <BirthDateSettingsDialog control={birthdayControl} />
       <ChangeHandleDialog control={changeHandleControl} />
       <ExportCarDialog control={exportCarControl} />

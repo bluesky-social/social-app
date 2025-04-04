@@ -2,23 +2,27 @@ import {useState} from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
 import {Linking} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
-import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
+import {msg, t, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {IS_INTERNAL} from '#/lib/app-info'
 import {HELP_DESK_URL} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
-import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
+import * as persisted from '#/state/persisted'
 import {clearStorage} from '#/state/persisted'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useDeleteActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useProfileQuery, useProfilesQuery} from '#/state/queries/profile'
-import {SessionAccount, useSession, useSessionApi} from '#/state/session'
+import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -309,6 +313,17 @@ function DevOptions() {
     Toast.show(_(msg`Storage cleared, you need to restart the app now.`))
   }
 
+  const onPressUnsnoozeReminder = () => {
+    const lastEmailConfirm = new Date()
+    // wind back 3 days
+    lastEmailConfirm.setDate(lastEmailConfirm.getDate() - 3)
+    persisted.write('reminders', {
+      ...persisted.get('reminders'),
+      lastEmailConfirm: lastEmailConfirm.toISOString(),
+    })
+    Toast.show(t`You probably want to restart the app now.`)
+  }
+
   return (
     <>
       <SettingsList.PressableItem
@@ -344,6 +359,13 @@ function DevOptions() {
         label={_(msg`Reset onboarding state`)}>
         <SettingsList.ItemText>
           <Trans>Reset onboarding state</Trans>
+        </SettingsList.ItemText>
+      </SettingsList.PressableItem>
+      <SettingsList.PressableItem
+        onPress={onPressUnsnoozeReminder}
+        label={_(msg`Unsnooze email reminder`)}>
+        <SettingsList.ItemText>
+          <Trans>Unsnooze email reminder</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
       <SettingsList.PressableItem

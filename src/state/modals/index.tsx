@@ -1,6 +1,6 @@
 import React from 'react'
-import {Image as RNImage} from 'react-native-image-crop-picker'
-import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
+import {type Image as RNImage} from 'react-native-image-crop-picker'
+import {type AppBskyActorDefs, type AppBskyGraphDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
@@ -64,16 +64,6 @@ export interface PostLanguagesSettingsModal {
   name: 'post-languages-settings'
 }
 
-export interface VerifyEmailModal {
-  name: 'verify-email'
-  showReminder?: boolean
-  onSuccess?: () => void
-}
-
-export interface ChangeEmailModal {
-  name: 'change-email'
-}
-
 export interface ChangePasswordModal {
   name: 'change-password'
 }
@@ -93,8 +83,6 @@ export interface InAppBrowserConsentModal {
 export type Modal =
   // Account
   | DeleteAccountModal
-  | VerifyEmailModal
-  | ChangeEmailModal
   | ChangePasswordModal
 
   // Temp
