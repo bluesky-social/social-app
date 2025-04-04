@@ -1,25 +1,26 @@
 import {useEffect, useMemo, useState} from 'react'
-import {QueryClient} from '@tanstack/react-query'
+import {type QueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
-import * as bsky from '#/types/bsky'
-import {findAllProfilesInQueryData as findAllProfilesInActorSearchQueryData} from '../queries/actor-search'
-import {findAllProfilesInQueryData as findAllProfilesInKnownFollowersQueryData} from '../queries/known-followers'
-import {findAllProfilesInQueryData as findAllProfilesInListMembersQueryData} from '../queries/list-members'
-import {findAllProfilesInQueryData as findAllProfilesInListConvosQueryData} from '../queries/messages/list-conversations'
-import {findAllProfilesInQueryData as findAllProfilesInMyBlockedAccountsQueryData} from '../queries/my-blocked-accounts'
-import {findAllProfilesInQueryData as findAllProfilesInMyMutedAccountsQueryData} from '../queries/my-muted-accounts'
-import {findAllProfilesInQueryData as findAllProfilesInFeedsQueryData} from '../queries/post-feed'
-import {findAllProfilesInQueryData as findAllProfilesInPostLikedByQueryData} from '../queries/post-liked-by'
-import {findAllProfilesInQueryData as findAllProfilesInPostQuotesQueryData} from '../queries/post-quotes'
-import {findAllProfilesInQueryData as findAllProfilesInPostRepostedByQueryData} from '../queries/post-reposted-by'
-import {findAllProfilesInQueryData as findAllProfilesInPostThreadQueryData} from '../queries/post-thread'
-import {findAllProfilesInQueryData as findAllProfilesInProfileQueryData} from '../queries/profile'
-import {findAllProfilesInQueryData as findAllProfilesInProfileFollowersQueryData} from '../queries/profile-followers'
-import {findAllProfilesInQueryData as findAllProfilesInProfileFollowsQueryData} from '../queries/profile-follows'
-import {findAllProfilesInQueryData as findAllProfilesInSuggestedFollowsQueryData} from '../queries/suggested-follows'
-import {castAsShadow, Shadow} from './types'
+import {findAllProfilesInQueryData as findAllProfilesInActorSearchQueryData} from '#/state/queries/actor-search'
+import {findAllProfilesInQueryData as findAllProfilesInExploreFeedPreviewsQueryData} from '#/state/queries/explore-feed-previews'
+import {findAllProfilesInQueryData as findAllProfilesInKnownFollowersQueryData} from '#/state/queries/known-followers'
+import {findAllProfilesInQueryData as findAllProfilesInListMembersQueryData} from '#/state/queries/list-members'
+import {findAllProfilesInQueryData as findAllProfilesInListConvosQueryData} from '#/state/queries/messages/list-conversations'
+import {findAllProfilesInQueryData as findAllProfilesInMyBlockedAccountsQueryData} from '#/state/queries/my-blocked-accounts'
+import {findAllProfilesInQueryData as findAllProfilesInMyMutedAccountsQueryData} from '#/state/queries/my-muted-accounts'
+import {findAllProfilesInQueryData as findAllProfilesInFeedsQueryData} from '#/state/queries/post-feed'
+import {findAllProfilesInQueryData as findAllProfilesInPostLikedByQueryData} from '#/state/queries/post-liked-by'
+import {findAllProfilesInQueryData as findAllProfilesInPostQuotesQueryData} from '#/state/queries/post-quotes'
+import {findAllProfilesInQueryData as findAllProfilesInPostRepostedByQueryData} from '#/state/queries/post-reposted-by'
+import {findAllProfilesInQueryData as findAllProfilesInPostThreadQueryData} from '#/state/queries/post-thread'
+import {findAllProfilesInQueryData as findAllProfilesInProfileQueryData} from '#/state/queries/profile'
+import {findAllProfilesInQueryData as findAllProfilesInProfileFollowersQueryData} from '#/state/queries/profile-followers'
+import {findAllProfilesInQueryData as findAllProfilesInProfileFollowsQueryData} from '#/state/queries/profile-follows'
+import {findAllProfilesInQueryData as findAllProfilesInSuggestedFollowsQueryData} from '#/state/queries/suggested-follows'
+import type * as bsky from '#/types/bsky'
+import {castAsShadow, type Shadow} from './types'
 
 export type {Shadow} from './types'
 
@@ -154,4 +155,5 @@ function* findProfilesInCache(
   yield* findAllProfilesInFeedsQueryData(queryClient, did)
   yield* findAllProfilesInPostThreadQueryData(queryClient, did)
   yield* findAllProfilesInKnownFollowersQueryData(queryClient, did)
+  yield* findAllProfilesInExploreFeedPreviewsQueryData(queryClient, did)
 }

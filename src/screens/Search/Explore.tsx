@@ -15,6 +15,10 @@ import {logger} from '#/logger'
 import {type MetricEvents} from '#/logger/metrics'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorSearchPaginated} from '#/state/queries/actor-search'
+import {
+  type FeedPreviewItem,
+  useFeedPreviews,
+} from '#/state/queries/explore-feed-previews'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
@@ -47,10 +51,6 @@ import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import * as ModuleHeader from './components/ModuleHeader'
-import {
-  type FeedPreviewItem,
-  useFeedPreviews,
-} from './modules/ExploreFeedPreviews'
 import {
   SuggestedAccountsTabBar,
   SuggestedProfileCard,
@@ -900,7 +900,7 @@ export function Explore({
     <List
       data={items}
       renderItem={renderItem}
-      keyExtractor={item => item.key}
+      keyExtractor={keyExtractor}
       desktopFixedHeight
       contentContainerStyle={{paddingBottom: 100}}
       keyboardShouldPersistTaps="handled"
@@ -912,6 +912,10 @@ export function Explore({
       onEndReachedThreshold={2}
     />
   )
+}
+
+function keyExtractor(item: FeedPreviewItem) {
+  return item.key
 }
 
 const viewabilityConfig: ViewabilityConfig = {
