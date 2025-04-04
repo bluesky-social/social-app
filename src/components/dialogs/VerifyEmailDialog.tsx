@@ -14,6 +14,7 @@ import * as TextField from '#/components/forms/TextField'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {ChangeEmailDialog} from './ChangeEmailDialog'
 
 export function VerifyEmailDialog({
   control,
@@ -26,36 +27,50 @@ export function VerifyEmailDialog({
   onCloseWithoutVerifying?: () => void
   onCloseAfterVerifying?: () => void
   reasonText?: string
-  changeEmailControl: Dialog.DialogControlProps
+  /**
+   * if a changeEmailControl for a ChangeEmailDialog is not provided,
+   * this component will create one for you. Using this prop
+   * helps reduce duplication, since these dialogs are often used together.
+   */
+  changeEmailControl?: Dialog.DialogControlProps
 }) {
   const agent = useAgent()
+  const fallbackChangeEmailControl = Dialog.useDialogControl()
 
   const [didVerify, setDidVerify] = React.useState(false)
 
   return (
-    <Dialog.Outer
-      control={control}
-      onClose={async () => {
-        if (!didVerify) {
-          onCloseWithoutVerifying?.()
-          return
-        }
+    <>
+      <Dialog.Outer
+        control={control}
+        onClose={async () => {
+          if (!didVerify) {
+            onCloseWithoutVerifying?.()
+            return
+          }
 
-        try {
-          await agent.resumeSession(agent.session!)
-          onCloseAfterVerifying?.()
-        } catch (e: unknown) {
-          logger.error(String(e))
-          return
-        }
-      }}>
-      <Dialog.Handle />
-      <Inner
-        setDidVerify={setDidVerify}
-        reasonText={reasonText}
-        changeEmailControl={changeEmailControl}
-      />
-    </Dialog.Outer>
+          try {
+            await agent.resumeSession(agent.session!)
+            onCloseAfterVerifying?.()
+          } catch (e: unknown) {
+            logger.error(String(e))
+            return
+          }
+        }}>
+        <Dialog.Handle />
+        <Inner
+          setDidVerify={setDidVerify}
+          reasonText={reasonText}
+          changeEmailControl={changeEmailControl ?? fallbackChangeEmailControl}
+        />
+      </Dialog.Outer>
+      {!changeEmailControl && (
+        <ChangeEmailDialog
+          control={fallbackChangeEmailControl}
+          verifyEmailControl={control}
+        />
+      )}
+    </>
   )
 }
 
