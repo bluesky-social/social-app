@@ -13,7 +13,10 @@ import {precacheStarterPack} from '#/state/queries/starter-packs'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
-import {Link as BaseLink, LinkProps as BaseLinkProps} from '#/components/Link'
+import {
+  Link as BaseLink,
+  type LinkProps as BaseLinkProps,
+} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'
 
@@ -102,6 +105,32 @@ export function Card({
       )}
     </View>
   )
+}
+
+export function useStarterPackLink({
+  view,
+}: {
+  view: bsky.starterPack.AnyStarterPackView
+}) {
+  const {_} = useLingui()
+  const qc = useQueryClient()
+  const {rkey, handleOrDid} = React.useMemo(() => {
+    const rkey = new AtUri(view.uri).rkey
+    const {creator} = view
+    return {rkey, handleOrDid: creator.handle || creator.did}
+  }, [view])
+  const precache = () => {
+    precacheResolvedUri(qc, view.creator.handle, view.creator.did)
+    precacheStarterPack(qc, view)
+  }
+
+  return {
+    to: `/starter-pack/${handleOrDid}/${rkey}`,
+    label: AppBskyGraphStarterpack.isRecord(view.record)
+      ? _(msg`Navigate to ${view.record.name}`)
+      : _(msg`Navigate to starter pack`),
+    precache,
+  }
 }
 
 export function Link({

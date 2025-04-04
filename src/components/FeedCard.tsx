@@ -1,8 +1,8 @@
 import React from 'react'
-import {GestureResponderEvent, View} from 'react-native'
+import {type GestureResponderEvent, View} from 'react-native'
 import {
-  AppBskyFeedDefs,
-  AppBskyGraphDefs,
+  type AppBskyFeedDefs,
+  type AppBskyGraphDefs,
   AtUri,
   RichText as RichTextApi,
 } from '@atproto/api'
@@ -23,15 +23,20 @@ import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
-import {Link as InternalLink, LinkProps} from '#/components/Link'
+import {
+  Button,
+  ButtonIcon,
+  type ButtonProps,
+  ButtonText,
+} from '#/components/Button'
+import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
+import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
-import {RichText, RichTextProps} from '#/components/RichText'
+import {RichText, type RichTextProps} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
+import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from './icons/Trash'
 
 type Props = {
   view: AppBskyFeedDefs.GeneratorView
@@ -81,11 +86,11 @@ export function Link({
 }
 
 export function Outer({children}: {children: React.ReactNode}) {
-  return <View style={[a.w_full, a.gap_md]}>{children}</View>
+  return <View style={[a.w_full, a.gap_sm]}>{children}</View>
 }
 
 export function Header({children}: {children: React.ReactNode}) {
-  return <View style={[a.flex_row, a.align_center, a.gap_md]}>{children}</View>
+  return <View style={[a.flex_row, a.align_center, a.gap_sm]}>{children}</View>
 }
 
 export type AvatarProps = {src: string | undefined; size?: number}
@@ -220,22 +225,27 @@ export function Likes({count}: {count: number}) {
 export function SaveButton({
   view,
   pin,
+  ...props
 }: {
   view: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
   pin?: boolean
-}) {
+  text?: boolean
+} & Partial<ButtonProps>) {
   const {hasSession} = useSession()
   if (!hasSession) return null
-  return <SaveButtonInner view={view} pin={pin} />
+  return <SaveButtonInner view={view} pin={pin} {...props} />
 }
 
 function SaveButtonInner({
   view,
   pin,
+  text = true,
+  ...buttonProps
 }: {
   view: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
   pin?: boolean
-}) {
+  text?: boolean
+} & Partial<ButtonProps>) {
   const {_} = useLingui()
   const {data: preferences} = usePreferencesQuery()
   const {isPending: isAddSavedFeedPending, mutateAsync: saveFeeds} =
@@ -294,14 +304,32 @@ function SaveButtonInner({
         disabled={isPending}
         label={_(msg`Add this feed to your feeds`)}
         size="small"
-        variant="ghost"
-        color="secondary"
-        shape="square"
-        onPress={savedFeedConfig ? onPrompRemoveFeed : toggleSave}>
+        variant="solid"
+        color={savedFeedConfig ? 'secondary' : 'primary'}
+        onPress={savedFeedConfig ? onPrompRemoveFeed : toggleSave}
+        {...buttonProps}>
         {savedFeedConfig ? (
-          <ButtonIcon size="md" icon={isPending ? Loader : Trash} />
+          <>
+            {isPending ? (
+              <ButtonIcon size="md" icon={Loader} />
+            ) : (
+              !text && <ButtonIcon size="md" icon={TrashIcon} />
+            )}
+            {text && (
+              <ButtonText>
+                <Trans>Unpin Feed</Trans>
+              </ButtonText>
+            )}
+          </>
         ) : (
-          <ButtonIcon size="md" icon={isPending ? Loader : Plus} />
+          <>
+            <ButtonIcon size="md" icon={isPending ? Loader : PinIcon} />
+            {text && (
+              <ButtonText>
+                <Trans>Pin Feed</Trans>
+              </ButtonText>
+            )}
+          </>
         )}
       </Button>
 
