@@ -82,7 +82,17 @@ export type FeedPreviewItem =
       uri: string
     }
 
-export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
+export function useFeedPreviews(
+  feedsMaybeWithDuplicates: AppBskyFeedDefs.GeneratorView[],
+) {
+  const feeds = useMemo(
+    () =>
+      feedsMaybeWithDuplicates.filter(
+        (f, i, a) => i === a.findIndex(f2 => f.uri === f2.uri),
+      ),
+    [feedsMaybeWithDuplicates],
+  )
+
   const uris = feeds.map(feed => feed.uri)
   const {_} = useLingui()
   const agent = useAgent()
