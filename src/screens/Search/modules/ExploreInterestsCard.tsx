@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 import {Nux, useSaveNux} from '#/state/queries/nuxs'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
-import {atoms as a, useGutters, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Link} from '#/components/Link'
@@ -16,7 +16,6 @@ import {Text} from '#/components/Typography'
 export function ExploreInterestsCard() {
   const t = useTheme()
   const {_} = useLingui()
-  const gutters = useGutters([0, 'base'])
   const {data: preferences} = usePreferencesQuery()
   const interestsDisplayNames = useInterestsDisplayNames()
   const {mutateAsync: saveNux} = useSaveNux()
@@ -53,7 +52,7 @@ export function ExploreInterestsCard() {
         onConfirm={onConfirmClose}
       />
 
-      <View style={[gutters, a.pt_lg, a.pb_2xs]}>
+      <View style={[a.p_lg, a.pb_2xs]}>
         <View
           style={[
             a.p_lg,
