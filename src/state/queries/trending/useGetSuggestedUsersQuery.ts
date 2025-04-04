@@ -1,5 +1,8 @@
-import {type AppBskyActorDefs, type AppBskyUnspeccedGetSuggestedUsers} from '@atproto/api'
-import {type QueryClient,useQuery} from '@tanstack/react-query'
+import {
+  type AppBskyActorDefs,
+  type AppBskyUnspeccedGetSuggestedUsers,
+} from '@atproto/api'
+import {type QueryClient, useQuery} from '@tanstack/react-query'
 
 import {
   aggregateUserInterests,
