@@ -21,6 +21,7 @@ import {
   useFeedPreviews,
 } from '#/state/queries/explore-feed-previews'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
+import {Nux, useNux} from '#/state/queries/nuxs'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
 import {useGetSuggestedFeedsQuery} from '#/state/queries/trending/useGetSuggestedFeedsQuery'
@@ -36,6 +37,7 @@ import {
   StarterPackCard,
   StarterPackCardSkeleton,
 } from '#/screens/Search/components/StarterPackCard'
+import {ExploreInterestsCard} from '#/screens/Search/modules/ExploreInterestsCard'
 import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
 import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
@@ -181,6 +183,10 @@ type ExploreScreenItems =
       key: string
     }
   | FeedPreviewItem
+  | {
+      type: 'interests-card'
+      key: 'interests-card'
+    }
 
 export function Explore({
   focusSearchInput,
@@ -233,6 +239,9 @@ export function Explore({
     error: feedsError,
     fetchNextPage: fetchNextFeedsPage,
   } = useGetPopularFeedsQuery({limit: 10})
+  const interestsNux = useNux(Nux.ExploreInterestsCard)
+  const showInterestsNux =
+    interestsNux.status === 'ready' && !interestsNux.nux?.completed
 
   const profiles: typeof suggestedProfiles & typeof interestProfiles =
     !selectedInterest ? suggestedProfiles : interestProfiles
@@ -558,6 +567,16 @@ export function Explore({
     return i
   }, [feedPreviewSlices, isFetchingNextPageFeedPreviews])
 
+  const interestsNuxModule = useMemo<ExploreScreenItems[]>(() => {
+    if (!showInterestsNux) return []
+    return [
+      {
+        type: 'interests-card',
+        key: 'interests-card',
+      },
+    ]
+  }, [showInterestsNux])
+
   const isNewUser = guide?.guide === 'follow-10' && !guide.isComplete
   const items = useMemo<ExploreScreenItems[]>(() => {
     const i: ExploreScreenItems[] = []
@@ -565,6 +584,7 @@ export function Explore({
     // Dynamic module ordering
 
     i.push(topBorder)
+    i.push(...interestsNuxModule)
     if (isNewUser) {
       i.push(...suggestedFollowsModule)
       i.push(...suggestedStarterPacksModule)
@@ -588,6 +608,7 @@ export function Explore({
     suggestedFeedsModule,
     trendingTopicsModule,
     feedPreviewsModule,
+    interestsNuxModule,
     gate,
   ])
 
@@ -853,6 +874,9 @@ export function Explore({
               onPress={fetchNextPageFeedPreviews}
             />
           )
+        }
+        case 'interests-card': {
+          return <ExploreInterestsCard />
         }
       }
     },
