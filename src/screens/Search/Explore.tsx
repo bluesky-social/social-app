@@ -766,6 +766,9 @@ export function Explore({
           )
         }
         // feed previews
+        case 'preview:spacer': {
+          return <View style={[a.w_full, a.pt_4xl]} />
+        }
         case 'preview:empty': {
           return null // what should we do here?
         }
@@ -799,7 +802,16 @@ export function Explore({
           )
         }
         case 'preview:footer': {
-          return <View style={[a.w_full, a.pt_2xl]} />
+          return (
+            <View
+              style={[
+                a.border_t,
+                t.atoms.border_contrast_low,
+                a.w_full,
+                a.pt_4xl,
+              ]}
+            />
+          )
         }
         case 'preview:sliceItem': {
           const slice = item.slice
