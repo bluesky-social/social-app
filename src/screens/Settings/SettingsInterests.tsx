@@ -19,7 +19,7 @@ import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
-export function ContentPreferences() {
+export function SettingsInterests() {
   const t = useTheme()
   const gutters = useGutters(['base'])
   const {data: preferences} = usePreferencesQuery()

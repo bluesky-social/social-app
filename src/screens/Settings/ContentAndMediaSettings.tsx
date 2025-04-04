@@ -88,8 +88,8 @@ export function ContentAndMediaSettingsScreen({}: Props) {
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
-            to="/settings/content-preferences"
-            label={_(msg`Content preferences`)}>
+            to="/settings/interests"
+            label={_(msg`Your interests`)}>
             <SettingsList.ItemIcon icon={CircleInfo} />
             <SettingsList.ItemText>
               <Trans>Your interests</Trans>

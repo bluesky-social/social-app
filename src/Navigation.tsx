@@ -82,8 +82,8 @@ import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLiked
 import {SearchScreen} from '#/screens/Search'
 import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
 import {AppIconSettingsScreen} from '#/screens/Settings/AppIconSettings'
-import {ContentPreferences} from '#/screens/Settings/ContentPreferences'
 import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
+import {SettingsInterests} from '#/screens/Settings/SettingsInterests'
 import {
   StarterPackScreen,
   StarterPackScreenShort,
@@ -377,10 +377,10 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         }}
       />
       <Stack.Screen
-        name="ContentPreferences"
-        getComponent={() => ContentPreferences}
+        name="SettingsInterests"
+        getComponent={() => SettingsInterests}
         options={{
-          title: title(msg`Content Preferences`),
+          title: title(msg`Your interests`),
           requireAuth: true,
         }}
       />
