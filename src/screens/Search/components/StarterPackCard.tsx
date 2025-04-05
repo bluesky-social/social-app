@@ -133,7 +133,8 @@ export function AvatarStack({
   const {gtPhone} = useBreakpoints()
   const moderationOpts = useModerationOpts()
   const computedTotal = (total ?? numPending) - numPending
-  const circlesCount = numPending + 1 // add total at end
+  const showLastCircle = computedTotal > 0
+  const circlesCount = numPending + (showLastCircle ? 1 : 0) // only add total at end if needed
   const widthPerc = 100 / circlesCount
   const [size, setSize] = React.useState<number | null>(null)
 
@@ -200,38 +201,38 @@ export function AvatarStack({
           </View>
         </View>
       ))}
-      <View
-        style={[
-          {
-            width: `${widthPerc}%`,
-            zIndex: 1,
-          },
-        ]}>
+      {showLastCircle && (
         <View
           style={[
-            a.relative,
             {
-              width: '120%',
+              width: `${widthPerc}%`,
+              zIndex: 1,
             },
           ]}>
           <View
             style={[
+              a.relative,
               {
-                paddingTop: '100%',
+                width: '120%',
               },
             ]}>
             <View
               style={[
-                a.absolute,
-                a.inset_0,
-                a.rounded_full,
-                a.align_center,
-                a.justify_center,
                 {
-                  backgroundColor: t.atoms.text_contrast_low.color,
+                  paddingTop: '100%',
                 },
               ]}>
-              {computedTotal > 0 ? (
+              <View
+                style={[
+                  a.absolute,
+                  a.inset_0,
+                  a.rounded_full,
+                  a.align_center,
+                  a.justify_center,
+                  {
+                    backgroundColor: t.atoms.text_contrast_low.color,
+                  },
+                ]}>
                 <Text
                   style={[
                     gtPhone ? a.text_md : a.text_xs,
@@ -243,13 +244,11 @@ export function AvatarStack({
                     +{computedTotal}
                   </Trans>
                 </Text>
-              ) : (
-                <Plus fill="white" />
-              )}
+              </View>
             </View>
           </View>
         </View>
-      </View>
+      )}
     </View>
   )
 }
