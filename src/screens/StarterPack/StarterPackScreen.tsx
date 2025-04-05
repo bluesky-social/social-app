@@ -24,6 +24,7 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
+import {isAndroid} from '#/platform/detection'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {getAllListMembers} from '#/state/queries/list-members'
@@ -46,8 +47,9 @@ import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {DivergingNodes_Stroke2_Corner0_Rounded as ShareAndroid} from '#/components/icons/DivergingNodes'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
@@ -606,7 +608,7 @@ function OverflowMenu({
                   <Menu.ItemText>
                     <Trans>Share link</Trans>
                   </Menu.ItemText>
-                  <Menu.ItemIcon icon={ArrowOutOfBox} position="right" />
+                  <Menu.ItemIcon icon={isAndroid ? ShareAndroid : Share} position="right" />
                 </Menu.Item>
               </Menu.Group>
 
