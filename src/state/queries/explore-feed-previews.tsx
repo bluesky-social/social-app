@@ -73,6 +73,7 @@ export type FeedPreviewItem =
       key: string
       slice: FeedPostSlice
       indexInSlice: number
+      feed: AppBskyFeedDefs.GeneratorView
       showReplyTo: boolean
       hideTopBorder: boolean
     }
@@ -202,6 +203,7 @@ export function useFeedPreviews(
                   key: slice.items[0]._reactKey,
                   slice: slice,
                   indexInSlice: 0,
+                  feed: page.feed,
                   showReplyTo: false,
                   hideTopBorder: rowIndex === 0,
                 })
@@ -215,6 +217,7 @@ export function useFeedPreviews(
                   key: slice.items[beforeLast]._reactKey,
                   slice: slice,
                   indexInSlice: beforeLast,
+                  feed: page.feed,
                   showReplyTo:
                     slice.items[beforeLast].parentAuthor?.did !==
                     slice.items[beforeLast].post.author.did,
@@ -225,6 +228,7 @@ export function useFeedPreviews(
                   key: slice.items[last]._reactKey,
                   slice: slice,
                   indexInSlice: last,
+                  feed: page.feed,
                   showReplyTo: false,
                   hideTopBorder: false,
                 })
@@ -235,6 +239,7 @@ export function useFeedPreviews(
                     key: slice.items[i]._reactKey,
                     slice: slice,
                     indexInSlice: i,
+                    feed: page.feed,
                     showReplyTo: i === 0,
                     hideTopBorder: i === 0 && rowIndex === 0,
                   })
