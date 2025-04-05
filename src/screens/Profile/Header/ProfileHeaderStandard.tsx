@@ -69,6 +69,7 @@ let ProfileHeaderStandard = ({
   )
   const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const unblockPromptControl = Prompt.usePromptControl()
+  const unfollowPromptControl = Prompt.usePromptControl()
   const requireAuth = useRequireAuth()
   const isBlockedUser =
     profile.viewer?.blocking ||
@@ -111,6 +112,10 @@ let ProfileHeaderStandard = ({
   }
 
   const onPressUnfollow = () => {
+    unfollowPromptControl.open()
+  }
+
+  const onConfirmUnfollow = () => {
     requireAuth(async () => {
       try {
         await queueUnfollow()
@@ -282,6 +287,16 @@ let ProfileHeaderStandard = ({
         confirmButtonCta={
           profile.viewer?.blocking ? _(msg`Unblock`) : _(msg`Block`)
         }
+        confirmButtonColor="negative"
+      />
+      <Prompt.Basic
+        control={unfollowPromptControl}
+        title={_(msg`Unfollow ${profile.displayName || profile.handle}?`)}
+        description={_(
+          msg`You will no longer see their posts in your Following feed. You can still view their profile.`,
+        )}
+        onConfirm={onConfirmUnfollow}
+        confirmButtonCta={_(msg`Unfollow`)}
         confirmButtonColor="negative"
       />
     </ProfileHeaderShell>
