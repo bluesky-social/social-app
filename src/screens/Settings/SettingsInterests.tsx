@@ -120,7 +120,12 @@ function Inner({
         ])
 
         Toast.show(
-          _(msg({message: 'Your interests have been updated!', context: 'toast'})),
+          _(
+            msg({
+              message: 'Your interests have been updated!',
+              context: 'toast',
+            }),
+          ),
         )
       } catch (error) {
         Toast.show(
