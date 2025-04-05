@@ -8,6 +8,7 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Shapes_Stroke2_Corner0_Rounded as Shapes} from '#/components/icons/Shapes'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Link} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
@@ -52,19 +53,20 @@ export function ExploreInterestsCard() {
         onConfirm={onConfirmClose}
       />
 
-      <View style={[a.p_lg, a.pb_2xs]}>
+      <View style={[a.pb_2xs]}>
         <View
           style={[
             a.p_lg,
-            a.rounded_md,
-            a.border,
-            a.gap_sm,
+            a.border_b,
+            a.gap_md,
             t.atoms.border_contrast_medium,
-            t.atoms.bg_contrast_25,
           ]}>
-          <Text style={[a.text_md, a.font_bold, a.leading_tight]}>
-            <Trans>Your interests</Trans>
-          </Text>
+          <View style={[a.flex_row, a.gap_sm, a.align_center]}>
+            <Shapes />
+            <Text style={[a.text_xl, a.font_bold, a.leading_tight]}>
+              <Trans>Your interests</Trans>
+            </Text>
+          </View>
 
           {preferences?.interests?.tags &&
           preferences.interests.tags.length > 0 ? (
@@ -76,12 +78,11 @@ export function ExploreInterestsCard() {
                     a.justify_center,
                     a.align_center,
                     a.rounded_full,
-                    a.border,
-                    t.atoms.border_contrast_medium,
+                    t.atoms.bg_contrast_25,
                     a.px_lg,
                     {height: 32},
                   ]}>
-                  <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                  <Text style={[a.text_sm, t.atoms.text_contrast_high]}>
                     {interestsDisplayNames[tag]}
                   </Text>
                 </View>
@@ -89,10 +90,8 @@ export function ExploreInterestsCard() {
             </View>
           ) : null}
 
-          <Text style={[a.text_sm, a.leading_snug, a.pb_xs]}>
-            <Trans>
-              Your selected interests help us serve you content you care about.
-            </Trans>
+          <Text style={[a.text_sm, a.leading_snug]}>
+            <Trans>Your interests help us find what you like!</Trans>
           </Text>
 
           <Link
@@ -110,15 +109,15 @@ export function ExploreInterestsCard() {
           <Button
             label={_(msg`Hide this card`)}
             size="small"
-            variant="solid"
+            variant="ghost"
             color="secondary"
             shape="round"
             onPress={onClose}
             style={[
               a.absolute,
-              {top: a.pt_xs.paddingTop, right: a.pr_xs.paddingRight},
+              {top: a.pt_sm.paddingTop, right: a.pr_sm.paddingRight},
             ]}>
-            <ButtonIcon icon={X} />
+            <ButtonIcon icon={X} size="md" />
           </Button>
         </View>
       </View>
