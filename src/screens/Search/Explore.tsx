@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
-import {View, type ViewabilityConfig, type ViewToken} from 'react-native'
+import {View, type ViewabilityConfig} from 'react-native'
 import {
   type AppBskyActorDefs,
   type AppBskyFeedDefs,
@@ -837,36 +837,26 @@ export function Explore({
 
   // track headers and report module viewability
   const alreadyReportedRef = useRef<Map<string, string>>(new Map())
-  const onViewableItemsChanged = useCallback(
-    ({
-      viewableItems,
-    }: {
-      viewableItems: ViewToken<ExploreScreenItems>[]
-      changed: ViewToken<ExploreScreenItems>[]
-    }) => {
-      for (const {item, index} of viewableItems.filter(vi => vi.isViewable)) {
-        let module: MetricEvents['explore:module:seen']['module']
-        if (item.type === 'trendingTopics' || item.type === 'trendingVideos') {
-          module = item.type
-        } else if (item.type === 'profile') {
-          module = 'suggestedAccounts'
-        } else if (item.type === 'feed') {
-          module = 'suggestedFeeds'
-        } else if (item.type === 'starterPack') {
-          module = 'suggestedStarterPacks'
-        } else if (item.type === 'preview:header') {
-          module = `feed:feedgen|${item.feed.uri}`
-        } else {
-          continue
-        }
-        if (!alreadyReportedRef.current.has(module)) {
-          alreadyReportedRef.current.set(module, module)
-          logger.metric('explore:module:seen', {module, index: index ?? -1})
-        }
-      }
-    },
-    [],
-  )
+  const onItemSeen = useCallback((item: ExploreScreenItems) => {
+    let module: MetricEvents['explore:module:seen']['module']
+    if (item.type === 'trendingTopics' || item.type === 'trendingVideos') {
+      module = item.type
+    } else if (item.type === 'profile') {
+      module = 'suggestedAccounts'
+    } else if (item.type === 'feed') {
+      module = 'suggestedFeeds'
+    } else if (item.type === 'starterPack') {
+      module = 'suggestedStarterPacks'
+    } else if (item.type === 'preview:sliceItem') {
+      module = `feed:feedgen|${item.feed.uri}`
+    } else {
+      return
+    }
+    if (!alreadyReportedRef.current.has(module)) {
+      alreadyReportedRef.current.set(module, module)
+      logger.metric('explore:module:seen', {module}) //, index: index ?? -1})
+    }
+  }, [])
 
   return (
     <List
@@ -879,7 +869,7 @@ export function Explore({
       keyboardDismissMode="on-drag"
       stickyHeaderIndices={native(stickyHeaderIndices)}
       viewabilityConfig={viewabilityConfig}
-      onViewableItemsChanged={onViewableItemsChanged}
+      onItemSeen={onItemSeen}
       onEndReached={onLoadMoreFeedPreviews}
       onEndReachedThreshold={3}
       initialNumToRender={initialNumToRender}
