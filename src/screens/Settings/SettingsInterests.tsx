@@ -120,13 +120,18 @@ function Inner({
         ])
 
         Toast.show(
-          _(msg({message: 'Content preferences updated!', context: 'toast'})),
+          _(
+            msg({
+              message: 'Your interests have been updated!',
+              context: 'toast',
+            }),
+          ),
         )
       } catch (error) {
         Toast.show(
           _(
             msg({
-              message: 'Failed to save content prefefences.',
+              message: 'Failed to save your interests.',
               context: 'toast',
             }),
           ),
