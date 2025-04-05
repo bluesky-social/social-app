@@ -1,14 +1,15 @@
-import {memo, useCallback, useMemo, useState} from 'react'
+import {memo, useCallback, useEffect, useMemo, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {XRPCError} from '@atproto/xrpc'
 
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
-import {useSession} from '#/state/session'
+import {useSession, useRequireAuth} from '#/state/session'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
@@ -161,6 +162,7 @@ let SearchScreenPostResults = ({
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const [isPTR, setIsPTR] = useState(false)
+  const requireAuth = useRequireAuth()
 
   const augmentedQuery = useMemo(() => {
     return augmentSearchQuery(query || '', {did: currentAccount?.did})
@@ -176,6 +178,14 @@ let SearchScreenPostResults = ({
     isFetchingNextPage,
     hasNextPage,
   } = useSearchPostsQuery({query: augmentedQuery, sort, enabled: active})
+
+  useEffect(() => {
+    if (error instanceof XRPCError) {
+      if (error.status == 1) {
+        requireAuth(() => {})
+      }
+    } 
+  }, [error, requireAuth])
 
   const onPullToRefresh = useCallback(async () => {
     setIsPTR(true)
@@ -216,7 +226,7 @@ let SearchScreenPostResults = ({
     return temp
   }, [posts, isFetchingNextPage])
 
-  return error ? (
+  return (error && !(error instanceof XRPCError && error.status == 1)) ? (
     <EmptyState
       message={_(
         msg`We're sorry, but your search could not be completed. Please try again in a few minutes.`,
