@@ -1514,7 +1514,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 6,
-    marginLeft: 12,
+    marginRight: 12,
   },
   stickyFooterWeb: {
     position: 'sticky',

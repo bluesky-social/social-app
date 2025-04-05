@@ -87,7 +87,7 @@ RUN cd bskyweb/ && \
 FROM debian:bullseye-slim
 
 ENV GODEBUG=netdns=go
-ENV TZ=Etc/UTC
+ENV TZ=Asia/Jerusalem
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install --yes \

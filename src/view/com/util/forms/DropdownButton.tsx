@@ -339,7 +339,7 @@ function isBtn(item: DropdownItem): item is DropdownItemButton {
 const styles = StyleSheet.create({
   bg: {
     position: 'absolute',
-    left: 0,
+    Right: 0,
     width: '100%',
     backgroundColor: 'rgba(0, 0, 0, 0.1)',
   },
@@ -353,8 +353,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 10,
-    paddingLeft: 15,
-    paddingRight: 40,
+    paddingRight: 15,
+    paddingLeft: 40,
   },
   menuItemBorder: {
     borderTopWidth: 1,
@@ -363,8 +363,8 @@ const styles = StyleSheet.create({
     paddingTop: 12,
   },
   icon: {
-    marginLeft: 2,
-    marginRight: 8,
+    marginRight: 2,
+    marginLeft: 8,
     flexShrink: 0,
   },
   label: {
@@ -380,8 +380,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     paddingVertical: 10,
-    paddingLeft: 15,
-    paddingRight: 20,
+    paddingRight: 15,
+    paddingLeft: 20,
     borderBottomWidth: 1,
     marginBottom: 6,
   },

@@ -50,5 +50,5 @@ export function FeedNameText({
 }
 
 const styles = StyleSheet.create({
-  loadingPlaceholder: {position: 'relative', top: 1, left: 2},
+  loadingPlaceholder: {position: 'relative', top: 1, Right: 2},
 })
