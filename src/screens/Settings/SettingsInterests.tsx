@@ -126,7 +126,7 @@ function Inner({
         Toast.show(
           _(
             msg({
-              message: 'Failed to save content prefefences.',
+              message: 'Failed to save content preferences.',
               context: 'toast',
             }),
           ),
