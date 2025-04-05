@@ -239,7 +239,7 @@ export function AvatarStack({
                     a.leading_snug,
                     {color: 'white'},
                   ]}>
-                  <Trans comment="Indicates the number of additional profiles are in the Starter Pack e.g. +12">
+                  <Trans comment="Indicates the number of additional profiles in the Starter Pack e.g. +12">
                     +{computedTotal}
                   </Trans>
                 </Text>
