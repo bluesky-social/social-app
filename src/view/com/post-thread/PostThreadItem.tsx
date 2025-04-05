@@ -5,6 +5,7 @@ import {
   Text as RNText,
   View,
 } from 'react-native'
+import * as Clipboard from 'expo-clipboard'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -24,8 +25,10 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {countLines} from '#/lib/strings/helpers'
 import {niceDate} from '#/lib/strings/time'
+import {toShareUrl} from '#/lib/strings/url-helpers'
 import {s} from '#/lib/styles'
 import {getTranslatorLink, isPostInLanguage} from '#/locale/helpers'
+import {shouldClickOpenNewTab} from '#/platform/urls'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {ThreadPost} from '#/state/queries/post-thread'
@@ -39,6 +42,7 @@ import {formatCount} from '#/view/com/util/numeric/format'
 import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {PostMeta} from '#/view/com/util/PostMeta'
+import * as Toast from '#/view/com/util/Toast'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {colors} from '#/components/Admonition'
@@ -390,6 +394,7 @@ let PostThreadItemLoaded = ({
             </ContentHider>
             <ExpandedPostDetails
               post={post}
+              postHref={postHref}
               isThreadAuthor={isThreadAuthor}
               translatorUrl={translatorUrl}
               needsTranslation={needsTranslation}
@@ -733,11 +738,13 @@ function PostOuterWrapper({
 
 function ExpandedPostDetails({
   post,
+  postHref,
   isThreadAuthor,
   needsTranslation,
   translatorUrl,
 }: {
   post: AppBskyFeedDefs.PostView
+  postHref: string
   isThreadAuthor: boolean
   needsTranslation: boolean
   translatorUrl: string
@@ -757,13 +764,29 @@ function ExpandedPostDetails({
     [openLink, translatorUrl],
   )
 
+  const onTimestampPress = React.useCallback(
+    e => {
+      if (!shouldClickOpenNewTab(e)) {
+        e.preventDefault()
+        Clipboard.setStringAsync(toShareUrl(postHref))
+        Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
+        return false
+      }
+    },
+    [_, postHref],
+  )
+
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
       <BackdatedPostIndicator post={post} />
       <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
-        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+        <InlineLinkText
+          to={postHref}
+          label={_(msg`Copy link to post`)}
+          style={[a.text_sm, t.atoms.text_contrast_medium]}
+          onPress={onTimestampPress}>
           {niceDate(i18n, post.indexedAt)}
-        </Text>
+        </InlineLinkText>
         {isRootPost && (
           <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
         )}
