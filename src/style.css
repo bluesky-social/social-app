@@ -108,11 +108,8 @@ a[role='link'][data-no-underline='1']:hover {
   height: 0;
   pointer-events: none;
 }
-.ProseMirror .mention {
-  color: #0085ff;
-}
 .ProseMirror a,
-.ProseMirror .autolink {
+.ProseMirror .facet {
   color: #0085ff;
 }
 /* OLLIE: TODO -- this is not accessible */

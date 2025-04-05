@@ -1,10 +1,12 @@
 import {forwardRef, useEffect, useImperativeHandle, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
+import {AppBskyActorDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
-import {ReactRenderer} from '@tiptap/react'
+import {Editor} from '@tiptap/core'
+import {Extension, ReactRenderer} from '@tiptap/react'
 import {
+  Suggestion,
   SuggestionKeyDownProps,
-  SuggestionOptions,
   SuggestionProps,
 } from '@tiptap/suggestion'
 import tippy, {Instance as TippyInstance} from 'tippy.js'
@@ -21,12 +23,45 @@ interface MentionListRef {
   onKeyDown: (props: SuggestionKeyDownProps) => boolean
 }
 
-export function createSuggestion({
-  autocomplete,
-}: {
-  autocomplete: ActorAutocompleteFn
-}): Omit<SuggestionOptions, 'editor'> {
-  return {
+export const Autocomplete = Extension.create({
+  name: 'autocomplete',
+  priority: 1001,
+
+  addProseMirrorPlugins() {
+    return [suggestionPlugin(this.editor, this.options.autocomplete)]
+  },
+})
+
+function suggestionPlugin(editor: Editor, autocomplete: ActorAutocompleteFn) {
+  return Suggestion<
+    AppBskyActorDefs.ProfileViewBasic,
+    AppBskyActorDefs.ProfileViewBasic
+  >({
+    editor,
+    char: '@',
+
+    allow: ({state}) => {
+      const node = state.selection.$to.nodeAfter
+      return !node || !node.text || node.text.startsWith(' ')
+    },
+
+    command: ({editor, range, props}) => {
+      // Include trailing space
+      const node = editor.view.state.selection.$to.nodeAfter
+      if (node?.text?.startsWith(' ')) {
+        range.to += 1
+      }
+
+      editor
+        .chain()
+        .focus()
+        .insertContentAt(range, {
+          type: 'text',
+          text: '@' + props.handle + ' ',
+        })
+        .run()
+    },
+
     async items({query}) {
       const suggestions = await autocomplete({query})
       return suggestions.slice(0, 8)
@@ -88,7 +123,7 @@ export function createSuggestion({
         },
       }
     },
-  }
+  })
 }
 
 const MentionList = forwardRef<MentionListRef, SuggestionProps>(
@@ -101,7 +136,7 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
       const item = props.items[index]
 
       if (item) {
-        props.command({id: item.handle})
+        props.command(item)
       }
     }
 
