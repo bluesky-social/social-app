@@ -10,6 +10,9 @@ import {
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
+import {createGetSuggestedFeedsQueryKey} from '#/state/queries/trending/useGetSuggestedFeedsQuery'
+import {createGetSuggestedUsersQueryKey} from '#/state/queries/trending/useGetSuggestedUsersQuery'
+import {createSuggestedStarterPacksQueryKey} from '#/state/queries/useSuggestedStarterPacksQuery'
 import {useAgent} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
@@ -98,7 +101,24 @@ function Inner({
 
       try {
         await agent.setInterestsPref({tags: interests})
-        await qc.invalidateQueries({queryKey: preferencesQueryKey})
+        qc.setQueriesData(
+          {queryKey: preferencesQueryKey},
+          (old?: UsePreferencesQueryResponse) => {
+            if (!old) return old
+            old.interests.tags = interests
+            return old
+          },
+        )
+        await Promise.all([
+          await qc.resetQueries({
+            queryKey: createSuggestedStarterPacksQueryKey(),
+          }),
+          await qc.resetQueries({queryKey: createGetSuggestedFeedsQueryKey()}),
+          await qc.resetQueries({
+            queryKey: createGetSuggestedUsersQueryKey({}),
+          }),
+        ])
+
         Toast.show(
           _(msg({message: 'Content preferences updated!', context: 'toast'})),
         )
