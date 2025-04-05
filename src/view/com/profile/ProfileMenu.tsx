@@ -46,8 +46,12 @@ import * as Prompt from '#/components/Prompt'
 
 let ProfileMenu = ({
   profile,
+  isQRCodeModalVisible,
+  setIsQRCodeModalVisible,
 }: {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  isQRCodeModalVisible: boolean
+  setIsQRCodeModalVisible: React.Dispatch<React.SetStateAction<boolean>>
 }): React.ReactNode => {
   const {_} = useLingui()
   const {currentAccount, hasSession} = useSession()
@@ -236,6 +240,15 @@ let ProfileMenu = ({
               <Menu.ItemIcon icon={SearchIcon} />
             </Menu.Item>
           </Menu.Group>
+
+          <Menu.Item
+            testID="qrcodeButton"
+            label={_(msg`Generate QR Code`)}
+            onPress={() => setIsQRCodeModalVisible(!isQRCodeModalVisible)}>
+            <Menu.ItemText>
+              <Trans>Generate QR Code</Trans>
+            </Menu.ItemText>
+          </Menu.Item>
 
           {hasSession && (
             <>
