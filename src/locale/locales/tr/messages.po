@@ -1443,7 +1443,7 @@ msgstr ""
 #: src/screens/Messages/ChatList.tsx:344
 #: src/screens/Messages/ChatList.tsx:368
 msgid "Chats"
-msgstr ""
+msgstr "Sohbetler"
 
 #: src/screens/SignupQueued.tsx:78
 #: src/screens/SignupQueued.tsx:82
@@ -4402,7 +4402,7 @@ msgstr ""
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:652
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
 msgid "Mute account"
-msgstr ""
+msgstr "Hesabı sessize al"
 
 #: src/view/screens/ProfileList.tsx:650
 msgid "Mute accounts"
@@ -5240,7 +5240,7 @@ msgstr "Ana ekrana sabitle"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:332
 msgid "Pin to Home"
-msgstr ""
+msgstr "Ana Ekrana Sabitle"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:427
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
@@ -5297,7 +5297,7 @@ msgstr "GIF'i oynatır"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:59
 msgid "Plays the video"
-msgstr ""
+msgstr "Videoyu oynatır"
 
 #: src/screens/Signup/state.ts:235
 msgid "Please choose your handle."
@@ -5322,11 +5322,11 @@ msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:58
 msgid "Please enter a password."
-msgstr ""
+msgstr "Lütfen bir şifre girin."
 
 #: src/view/com/modals/ChangePassword.tsx:94
 msgid "Please enter a password. It must be at least 8 characters long."
-msgstr ""
+msgstr "Lütfen bir şifre girin. En az 8 karakter uzunluğunda olmalı."
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:114
 msgid "Please enter a unique name for this app password or use our randomly generated one."
@@ -5347,7 +5347,7 @@ msgstr "Lütfen davet kodunuzu girin."
 
 #: src/screens/Login/LoginForm.tsx:99
 msgid "Please enter your password"
-msgstr ""
+msgstr "Lütfen şifrenizi girin"
 
 #: src/view/com/modals/DeleteAccount.tsx:235
 msgid "Please enter your password as well:"
@@ -5542,12 +5542,12 @@ msgstr "Gizlilik"
 #: src/screens/Settings/Settings.tsx:161
 #: src/screens/Settings/Settings.tsx:164
 msgid "Privacy and security"
-msgstr ""
+msgstr "Gizlilik ve güvenlik"
 
 #: src/Navigation.tsx:367
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:36
 msgid "Privacy and Security"
-msgstr ""
+msgstr "Gizlilik ve Güvenlik"
 
 #: src/Navigation.tsx:291
 #: src/screens/Settings/AboutSettings.tsx:51
@@ -6325,7 +6325,7 @@ msgstr ""
 
 #: src/view/screens/Search/Search.tsx:875
 msgid "Search for posts, users, or feeds"
-msgstr ""
+msgstr "Gönderileri, kullanıcıları veya beslemeleri arayın"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
 msgid "Search for users"
@@ -6333,7 +6333,7 @@ msgstr "Kullanıcıları ara"
 
 #: src/components/dialogs/GifSelect.tsx:177
 msgid "Search GIFs"
-msgstr ""
+msgstr "GIFleri ara"
 
 #: src/screens/Profile/ProfileSearch.tsx:33
 msgid "Search my posts"
@@ -6342,7 +6342,7 @@ msgstr ""
 #: src/view/com/profile/ProfileMenu.tsx:231
 #: src/view/com/profile/ProfileMenu.tsx:234
 msgid "Search posts"
-msgstr ""
+msgstr "Gönderileri ara"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:511
 #: src/components/ProgressGuide/FollowDialog.tsx:764
@@ -6980,7 +6980,7 @@ msgstr "Spor"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:72
 msgid "Start a new chat"
-msgstr ""
+msgstr "Yeni bir sohbet başlat"
 
 #: src/view/screens/ProfileList.tsx:839
 #: src/view/screens/ProfileList.tsx:960
@@ -7757,7 +7757,7 @@ msgstr ""
 #: src/components/interstitials/TrendingVideos.tsx:88
 #: src/screens/Search/components/ExploreTrendingVideos.tsx:106
 msgid "Trending Videos"
-msgstr ""
+msgstr "Trend Videolar"
 
 #: src/view/com/util/error/ErrorScreen.tsx:103
 msgctxt "action"
@@ -8250,7 +8250,7 @@ msgstr ""
 
 #: src/view/screens/Profile.tsx:225
 msgid "Videos"
-msgstr ""
+msgstr "Videolar"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:60
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:75
@@ -8288,7 +8288,7 @@ msgstr "Hata ayıklama girişini görüntüle"
 #: src/screens/VideoFeed/index.tsx:638
 #: src/screens/VideoFeed/index.tsx:656
 msgid "View details"
-msgstr ""
+msgstr "Detayları göster"
 
 #: src/components/moderation/ReportDialog/index.tsx:263
 #: src/components/ReportDialog/SelectReportOptionView.tsx:132
