@@ -152,7 +152,7 @@ export function AvatarPlaceholder() {
     <View
       style={[
         a.rounded_full,
-        t.atoms.bg_contrast_50,
+        t.atoms.bg_contrast_25,
         {
           width: 40,
           height: 40,
@@ -203,7 +203,7 @@ export function NameAndHandlePlaceholder() {
       <View
         style={[
           a.rounded_xs,
-          t.atoms.bg_contrast_50,
+          t.atoms.bg_contrast_25,
           {
             width: '60%',
             height: 14,
@@ -214,7 +214,7 @@ export function NameAndHandlePlaceholder() {
       <View
         style={[
           a.rounded_xs,
-          t.atoms.bg_contrast_50,
+          t.atoms.bg_contrast_25,
           {
             width: '40%',
             height: 10,
@@ -275,7 +275,7 @@ export function DescriptionPlaceholder({
             style={[
               a.rounded_xs,
               a.w_full,
-              t.atoms.bg_contrast_50,
+              t.atoms.bg_contrast_25,
               {height: 12, width: i + 1 === numberOfLines ? '60%' : '100%'},
             ]}
           />

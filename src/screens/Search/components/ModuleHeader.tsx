@@ -6,14 +6,7 @@ import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {makeCustomFeedLink} from '#/lib/routes/links'
 import {logger} from '#/logger'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {
-  atoms as a,
-  native,
-  useGutters,
-  useTheme,
-  type ViewStyleProp,
-  web,
-} from '#/alf'
+import {atoms as a, native, useTheme, type ViewStyleProp, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {sizes as iconSizes} from '#/components/icons/common'
@@ -27,13 +20,12 @@ export function Container({
   headerHeight,
 }: {children: React.ReactNode; headerHeight?: number} & ViewStyleProp) {
   const t = useTheme()
-  const gutters = useGutters([0, 'base'])
   return (
     <View
       style={[
-        gutters,
         a.flex_row,
         a.align_center,
+        a.px_lg,
         a.pt_2xl,
         a.pb_md,
         a.gap_sm,
