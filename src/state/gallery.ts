@@ -13,7 +13,7 @@ import {
 import {nanoid} from 'nanoid/non-secure'
 
 import {POST_IMG_MAX} from '#/lib/constants'
-import {getImageDim} from '#/lib/media/manip'
+import {getImageDim, safeDeleteAsync} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
 import {getDataUriSize} from '#/lib/media/util'
 import {isIOS, isNative} from '#/platform/detection'
@@ -244,7 +244,7 @@ export async function compressImage(img: ComposerImage): Promise<ImageMeta> {
     } else {
       maxQualityPercentage = qualityPercentage
       if (cacheDir) {
-        await deleteAsync(res.uri)
+        await safeDeleteAsync(res.uri)
       }
     }
   }
