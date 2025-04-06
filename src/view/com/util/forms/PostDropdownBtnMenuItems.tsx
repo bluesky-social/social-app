@@ -19,7 +19,7 @@ import {useNavigation} from '@react-navigation/native'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getCurrentRoute} from '#/lib/routes/helpers'
-import {makeProfileLink} from '#/lib/routes/links'
+import {makeProfileLink, makeProfileShareLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
 import {logEvent} from '#/lib/statsig/statsig'
@@ -34,6 +34,7 @@ import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
 import {useDevModeEnabled} from '#/state/preferences/dev-mode'
+import {useShareByDid} from '#/state/preferences/share-by-did'
 import {usePinnedPostMutation} from '#/state/queries/pinned-post'
 import {
   usePostDeleteMutation,
@@ -170,10 +171,12 @@ let PostDropdownMenuItems = ({
     rootPostUri: rootUri,
   })
 
+  const shareByDid = useShareByDid()
+
   const href = React.useMemo(() => {
     const urip = new AtUri(postUri)
-    return makeProfileLink(postAuthor, 'post', urip.rkey)
-  }, [postUri, postAuthor])
+    return makeProfileShareLink(postAuthor, shareByDid, 'post', urip.rkey)
+  }, [postUri, postAuthor, shareByDid])
 
   const translatorUrl = getTranslatorLink(
     record.text,

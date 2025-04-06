@@ -10,6 +10,7 @@ import {
   useInAppBrowser,
   useSetInAppBrowser,
 } from '#/state/preferences/in-app-browser'
+import {useSetShareByDid, useShareByDid} from '#/state/preferences/share-by-did'
 import {
   useTrendingSettings,
   useTrendingSettingsApi,
@@ -17,6 +18,7 @@ import {
 import {useTrendingConfig} from '#/state/trending-config'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import * as Toggle from '#/components/forms/Toggle'
+import {At_Stroke2_Corner2_Rounded as AtIcon} from '#/components/icons/At'
 import {Bubbles_Stroke2_Corner2_Rounded as BubblesIcon} from '#/components/icons/Bubble'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Hashtag_Stroke2_Corner0_Rounded as HashtagIcon} from '#/components/icons/Hashtag'
@@ -41,6 +43,8 @@ export function ContentAndMediaSettingsScreen({}: Props) {
   const {trendingDisabled, trendingVideoDisabled} = useTrendingSettings()
   const {setTrendingDisabled, setTrendingVideoDisabled} =
     useTrendingSettingsApi()
+  const shareByDidPref = useShareByDid()
+  const setShareByDidPref = useSetShareByDid()
 
   return (
     <Layout.Screen>
@@ -171,6 +175,20 @@ export function ContentAndMediaSettingsScreen({}: Props) {
               </Toggle.Item>
             </>
           )}
+          <SettingsList.Divider />
+          <Toggle.Item
+            name="share_by_did"
+            label={_(msg`Share with DID instead of handle`)}
+            value={shareByDidPref}
+            onChange={setShareByDidPref}>
+            <SettingsList.Item>
+              <SettingsList.ItemIcon icon={AtIcon} />
+              <SettingsList.ItemText>
+                <Trans>Share with DID instead of handle</Trans>
+              </SettingsList.ItemText>
+              <Toggle.Platform />
+            </SettingsList.Item>
+          </Toggle.Item>
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>

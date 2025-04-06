@@ -16,6 +16,21 @@ export function makeProfileLink(
   return [`/profile`, handleSegment, ...segments].join('/')
 }
 
+export function makeProfileShareLink(
+  info: {
+    did: string
+    handle: string
+  },
+  shareByDid: boolean,
+  ...segments: string[]
+) {
+  let handleSegment = info.did
+  if (!shareByDid && info.handle && !isInvalidHandle(info.handle)) {
+    handleSegment = info.handle
+  }
+  return [`/profile`, handleSegment, ...segments].join('/')
+}
+
 export function makeCustomFeedLink(
   did: string,
   rkey: string,

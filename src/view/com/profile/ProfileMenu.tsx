@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
-import {makeProfileLink} from '#/lib/routes/links'
+import {makeProfileShareLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
@@ -14,6 +14,7 @@ import {logger} from '#/logger'
 import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
 import {useDevModeEnabled} from '#/state/preferences/dev-mode'
+import {useShareByDid} from '#/state/preferences/share-by-did'
 import {
   RQKEY as profileQueryKey,
   useProfileBlockMutationQueue,
@@ -61,6 +62,7 @@ let ProfileMenu = ({
   const isFollowingBlockedAccount = isFollowing && isBlocked
   const isLabelerAndNotBlocked = !!profile.associated?.labeler && !isBlocked
   const [devModeEnabled] = useDevModeEnabled()
+  const shareByDid = useShareByDid()
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
@@ -86,8 +88,8 @@ let ProfileMenu = ({
   }, [queryClient, profile.did])
 
   const onPressShare = React.useCallback(() => {
-    shareUrl(toShareUrl(makeProfileLink(profile)))
-  }, [profile])
+    shareUrl(toShareUrl(makeProfileShareLink(profile, shareByDid)))
+  }, [profile, shareByDid])
 
   const onPressAddRemoveLists = React.useCallback(() => {
     openModal({
