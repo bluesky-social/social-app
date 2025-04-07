@@ -7,6 +7,7 @@ import {
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useGate} from '#/lib/statsig/statsig'
@@ -22,9 +23,19 @@ import {
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {Nux, useNux} from '#/state/queries/nuxs'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useGetSuggestedFeedsQuery} from '#/state/queries/trending/useGetSuggestedFeedsQuery'
-import {useGetSuggestedUsersQuery} from '#/state/queries/trending/useGetSuggestedUsersQuery'
-import {useSuggestedStarterPacksQuery} from '#/state/queries/useSuggestedStarterPacksQuery'
+import {
+  createGetSuggestedFeedsQueryKey,
+  useGetSuggestedFeedsQuery,
+} from '#/state/queries/trending/useGetSuggestedFeedsQuery'
+import {
+  getSuggestedUsersQueryKeyRoot,
+  useGetSuggestedUsersQuery,
+} from '#/state/queries/trending/useGetSuggestedUsersQuery'
+import {createGetTrendsQueryKey} from '#/state/queries/trending/useGetTrendsQuery'
+import {
+  createSuggestedStarterPacksQueryKey,
+  useSuggestedStarterPacksQuery,
+} from '#/state/queries/useSuggestedStarterPacksQuery'
 import {useProgressGuide} from '#/state/shell/progress-guide'
 import {isThreadChildAt, isThreadParentAt} from '#/view/com/posts/PostFeed'
 import {PostFeedItem} from '#/view/com/posts/PostFeedItem'
@@ -41,6 +52,7 @@ import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommenda
 import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
 import {atoms as a, native, platform, useTheme, web} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
@@ -49,9 +61,11 @@ import {type Props as IcoProps} from '#/components/icons/common'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {StarterPack} from '#/components/icons/StarterPack'
+import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending'
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
+import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import * as ModuleHeader from './components/ModuleHeader'
 import {
@@ -69,33 +83,26 @@ function LoadMore({item}: {item: ExploreScreenItems & {type: 'loadMore'}}) {
       onPress={item.onLoadMore}
       style={[a.relative, a.w_full]}>
       {({hovered, pressed}) => (
-        <View
-          style={[
-            a.flex_1,
-            a.flex_row,
-            a.align_center,
-            a.justify_center,
-            a.px_lg,
-            a.py_md,
-            a.gap_sm,
-            (hovered || pressed) && t.atoms.bg_contrast_25,
-          ]}>
-          <Text
+        <>
+          <SubtleHover hover={hovered || pressed} />
+          <View
             style={[
-              a.leading_snug,
-              hovered ? t.atoms.text : t.atoms.text_contrast_medium,
+              a.flex_1,
+              a.flex_row,
+              a.align_center,
+              a.justify_center,
+              a.px_lg,
+              a.py_md,
+              a.gap_sm,
             ]}>
-            {item.message}
-          </Text>
-          {item.isLoadingMore ? (
-            <Loader size="sm" />
-          ) : (
-            <ChevronDownIcon
-              size="sm"
-              style={hovered ? t.atoms.text : t.atoms.text_contrast_medium}
-            />
-          )}
-        </View>
+            <Text style={[a.leading_snug]}>{item.message}</Text>
+            {item.isLoadingMore ? (
+              <Loader size="sm" />
+            ) : (
+              <ChevronDownIcon size="sm" style={t.atoms.text_contrast_medium} />
+            )}
+          </View>
+        </>
       )}
     </Button>
   )
@@ -112,6 +119,7 @@ type ExploreScreenItems =
       title: string
       icon: React.ComponentType<SVGIconProps>
       iconSize?: IcoProps['size']
+      bottomBorder?: boolean
       searchButton?: {
         label: string
         metricsTag: MetricEvents['explore:module:searchButtonPress']['module']
@@ -146,6 +154,10 @@ type ExploreScreenItems =
       key: string
       profile: AppBskyActorDefs.ProfileViewBasic
       recId?: number
+    }
+  | {
+      type: 'profileEmpty'
+      key: 'profileEmpty'
     }
   | {
       type: 'feed'
@@ -203,11 +215,12 @@ export function Explore({
   const gate = useGate()
   const guide = useProgressGuide('follow-10')
   const [selectedInterest, setSelectedInterest] = useState<string | null>(null)
-  // TODO always get at least 10 back
+  // TODO always get at least 10 back TODO still
   const {
     data: suggestedUsers,
     isLoading: suggestedUsersIsLoading,
     error: suggestedUsersError,
+    isRefetching: suggestedUsersIsRefetching,
   } = useGetSuggestedUsersQuery({
     category: selectedInterest,
   })
@@ -227,6 +240,7 @@ export function Explore({
     data: suggestedSPs,
     isLoading: isLoadingSuggestedSPs,
     error: suggestedSPsError,
+    isRefetching: isRefetchingSuggestedSPs,
   } = useSuggestedStarterPacksQuery()
 
   const isLoadingMoreFeeds = isFetchingNextFeedsPage && !isLoadingFeeds
@@ -261,6 +275,27 @@ export function Explore({
       error: feedPreviewSlicesError,
     },
   } = useFeedPreviews(suggestedFeeds?.feeds ?? [])
+
+  const qc = useQueryClient()
+  const [isPTR, setIsPTR] = useState(false)
+  const onPTR = useCallback(async () => {
+    setIsPTR(true)
+    await Promise.all([
+      await qc.resetQueries({
+        queryKey: createGetTrendsQueryKey(),
+      }),
+      await qc.resetQueries({
+        queryKey: createSuggestedStarterPacksQueryKey(),
+      }),
+      await qc.resetQueries({
+        queryKey: [getSuggestedUsersQueryKeyRoot],
+      }),
+      await qc.resetQueries({
+        queryKey: createGetSuggestedFeedsQueryKey(),
+      }),
+    ])
+    setIsPTR(false)
+  }, [qc, setIsPTR])
 
   const onLoadMoreFeedPreviews = useCallback(async () => {
     if (
@@ -305,7 +340,7 @@ export function Explore({
       },
     })
 
-    if (suggestedUsersIsLoading) {
+    if (suggestedUsersIsLoading || suggestedUsersIsRefetching) {
       i.push({type: 'profilePlaceholder', key: 'profilePlaceholder'})
     } else if (suggestedUsersError) {
       i.push({
@@ -333,14 +368,18 @@ export function Explore({
           }
 
           if (profileItems.length === 0) {
-            // no items! remove the header
-            i.pop()
+            i.push({
+              type: 'profileEmpty',
+              key: 'profileEmpty',
+            })
           } else {
             i.push(...profileItems)
           }
         } else {
-          // no items! remove the header
-          i.pop()
+          i.push({
+            type: 'profileEmpty',
+            key: 'profileEmpty',
+          })
         }
       } else {
         i.push({type: 'profilePlaceholder', key: 'profilePlaceholder'})
@@ -352,6 +391,7 @@ export function Explore({
     moderationOpts,
     suggestedUsers,
     suggestedUsersIsLoading,
+    suggestedUsersIsRefetching,
     suggestedUsersError,
   ])
   const suggestedFeedsModule = useMemo(() => {
@@ -466,7 +506,7 @@ export function Explore({
       iconSize: 'xl',
     })
 
-    if (isLoadingSuggestedSPs) {
+    if (isLoadingSuggestedSPs || isRefetchingSuggestedSPs) {
       Array.from({length: 3}).forEach((__, index) =>
         i.push({
           type: 'starterPackSkeleton',
@@ -486,7 +526,13 @@ export function Explore({
       })
     }
     return i
-  }, [suggestedSPs, _, isLoadingSuggestedSPs, suggestedSPsError])
+  }, [
+    suggestedSPs,
+    _,
+    isLoadingSuggestedSPs,
+    suggestedSPsError,
+    isRefetchingSuggestedSPs,
+  ])
   const feedPreviewsModule = useMemo(() => {
     const i: ExploreScreenItems[] = []
     i.push(...feedPreviewSlices)
@@ -520,6 +566,13 @@ export function Explore({
     if (isNewUser) {
       i.push(...suggestedFollowsModule)
       i.push(...suggestedStarterPacksModule)
+      i.push({
+        type: 'header',
+        key: 'trending-topics-header',
+        title: _(msg`Trending topics`),
+        icon: Graph,
+        bottomBorder: true,
+      })
       i.push(trendingTopicsModule)
     } else {
       i.push(trendingTopicsModule)
@@ -533,6 +586,7 @@ export function Explore({
 
     return i
   }, [
+    _,
     topBorder,
     isNewUser,
     suggestedFollowsModule,
@@ -564,7 +618,7 @@ export function Explore({
           )
         case 'header': {
           return (
-            <ModuleHeader.Container>
+            <ModuleHeader.Container bottomBorder={item.bottomBorder}>
               <ModuleHeader.Icon icon={item.icon} size={item.iconSize} />
               <ModuleHeader.TitleText>{item.title}</ModuleHeader.TitleText>
               {item.searchButton && (
@@ -621,6 +675,15 @@ export function Explore({
               recId={item.recId}
               position={index}
             />
+          )
+        }
+        case 'profileEmpty': {
+          return (
+            <View style={[a.px_lg, a.pb_lg]}>
+              <Admonition>
+                <Trans>No results for "{selectedInterest}".</Trans>
+              </Admonition>
+            </View>
           )
         }
         case 'feed': {
@@ -738,7 +801,13 @@ export function Explore({
           return (
             <ModuleHeader.Container
               headerHeight={headerHeight}
-              style={[a.pt_xs, a.border_b, t.atoms.border_contrast_low]}>
+              style={[
+                a.pt_xs,
+                t.atoms.border_contrast_low,
+                native(a.border_b),
+              ]}>
+              {/* Very non-scientific way to avoid small gap on scroll */}
+              <View style={[a.absolute, a.inset_0, t.atoms.bg, {top: -2}]} />
               <ModuleHeader.FeedLink feed={item.feed}>
                 <ModuleHeader.FeedAvatar feed={item.feed} />
                 <View style={[a.flex_1, a.gap_xs]}>
@@ -876,6 +945,8 @@ export function Explore({
       windowSize={9}
       maxToRenderPerBatch={platform({ios: 5, default: 1})}
       updateCellsBatchingPeriod={40}
+      refreshing={isPTR}
+      onRefresh={onPTR}
     />
   )
 }

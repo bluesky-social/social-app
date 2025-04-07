@@ -18,7 +18,12 @@ export function Container({
   style,
   children,
   headerHeight,
-}: {children: React.ReactNode; headerHeight?: number} & ViewStyleProp) {
+  bottomBorder,
+}: {
+  children: React.ReactNode
+  headerHeight?: number
+  bottomBorder?: boolean
+} & ViewStyleProp) {
   const t = useTheme()
   return (
     <View
@@ -31,10 +36,9 @@ export function Container({
         a.gap_sm,
         t.atoms.bg,
         headerHeight && web({position: 'sticky', top: headerHeight}),
+        bottomBorder && [a.border_b, t.atoms.border_contrast_low],
         style,
       ]}>
-      {/* Very non-scientific way to avoid small gap on scroll */}
-      <View style={[a.absolute, a.inset_0, t.atoms.bg, {top: -2}]} />
       {children}
     </View>
   )

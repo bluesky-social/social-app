@@ -19,6 +19,7 @@ import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus
 import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {useStarterPackLink} from '#/components/StarterPack/StarterPackCard'
+import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'
 
@@ -48,75 +49,80 @@ export function StarterPackCard({
     .map(item => item.subject)
 
   return (
-    <View
-      style={[
-        a.w_full,
-        a.p_lg,
-        a.gap_md,
-        a.border,
-        a.rounded_sm,
-        a.overflow_hidden,
-        t.atoms.border_contrast_low,
-      ]}>
-      <View aria-hidden style={[a.absolute, a.inset_0, a.z_40]}>
-        <Link
-          to={link.to}
-          label={link.label}
-          style={[a.absolute, a.inset_0]}
-          onHoverIn={link.precache}
-          onPress={link.precache}>
-          <View />
-        </Link>
-      </View>
+    <Link
+      to={link.to}
+      label={link.label}
+      onHoverIn={link.precache}
+      onPress={link.precache}>
+      {s => (
+        <>
+          <SubtleHover hover={s.hovered || s.pressed} />
 
-      <AvatarStack
-        profiles={profiles ?? []}
-        numPending={profileCount}
-        total={view.list?.listItemCount}
-      />
+          <View
+            style={[
+              a.w_full,
+              a.p_lg,
+              a.gap_md,
+              a.border,
+              a.rounded_sm,
+              a.overflow_hidden,
+              t.atoms.border_contrast_low,
+            ]}>
+            <AvatarStack
+              profiles={profiles ?? []}
+              numPending={profileCount}
+              total={view.list?.listItemCount}
+            />
 
-      <View
-        style={[
-          a.w_full,
-          a.flex_row,
-          a.align_start,
-          a.gap_lg,
-          web({
-            position: 'static',
-            zIndex: 'unset',
-          }),
-        ]}>
-        <View style={[a.flex_1]}>
-          <Text
-            emoji
-            style={[a.text_md, a.font_bold, a.leading_snug]}
-            numberOfLines={1}>
-            {view.record.name}
-          </Text>
-          <Text
-            emoji
-            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}
-            numberOfLines={1}>
-            {view.creator?.did === currentAccount?.did
-              ? _(msg`By you`)
-              : _(msg`By ${sanitizeHandle(view.creator.handle, '@')}`)}
-          </Text>
-        </View>
-        <Link
-          to={link.to}
-          label={link.label}
-          onHoverIn={link.precache}
-          onPress={link.precache}
-          variant="solid"
-          color="secondary"
-          size="small"
-          style={[a.z_50]}>
-          <ButtonText>
-            <Trans>Open pack</Trans>
-          </ButtonText>
-        </Link>
-      </View>
-    </View>
+            <View
+              style={[
+                a.w_full,
+                a.flex_row,
+                a.align_start,
+                a.gap_lg,
+                web({
+                  position: 'static',
+                  zIndex: 'unset',
+                }),
+              ]}>
+              <View style={[a.flex_1]}>
+                <Text
+                  emoji
+                  style={[a.text_md, a.font_bold, a.leading_snug]}
+                  numberOfLines={1}>
+                  {view.record.name}
+                </Text>
+                <Text
+                  emoji
+                  style={[
+                    a.text_sm,
+                    a.leading_snug,
+                    t.atoms.text_contrast_medium,
+                  ]}
+                  numberOfLines={1}>
+                  {view.creator?.did === currentAccount?.did
+                    ? _(msg`By you`)
+                    : _(msg`By ${sanitizeHandle(view.creator.handle, '@')}`)}
+                </Text>
+              </View>
+              <Link
+                to={link.to}
+                label={link.label}
+                onHoverIn={link.precache}
+                onPress={link.precache}
+                variant="solid"
+                color="secondary"
+                size="small"
+                style={[a.z_50]}>
+                <ButtonText>
+                  <Trans>Open pack</Trans>
+                </ButtonText>
+              </Link>
+            </View>
+          </View>
+        </>
+      )}
+    </Link>
   )
 }
 
