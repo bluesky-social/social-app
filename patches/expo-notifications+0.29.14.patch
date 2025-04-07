@@ -1,5 +1,5 @@
 diff --git a/node_modules/expo-notifications/android/build.gradle b/node_modules/expo-notifications/android/build.gradle
-index 5dd0c61..bf536dd 100644
+index 13bffbb..5ebbede 100644
 --- a/node_modules/expo-notifications/android/build.gradle
 +++ b/node_modules/expo-notifications/android/build.gradle
 @@ -46,6 +46,7 @@ dependencies {

@@ -1,8 +1,8 @@
 diff --git a/node_modules/expo-media-library/android/src/main/java/expo/modules/medialibrary/MediaLibraryModule.kt b/node_modules/expo-media-library/android/src/main/java/expo/modules/medialibrary/MediaLibraryModule.kt
-index b928b8f..7175cf6 100644
+index 64e6efe..e61485e 100644
 --- a/node_modules/expo-media-library/android/src/main/java/expo/modules/medialibrary/MediaLibraryModule.kt
 +++ b/node_modules/expo-media-library/android/src/main/java/expo/modules/medialibrary/MediaLibraryModule.kt
-@@ -99,12 +99,12 @@ class MediaLibraryModule : Module() {
+@@ -111,12 +111,12 @@ class MediaLibraryModule : Module() {
      }
  
      AsyncFunction("createAssetAsync") { localUri: String, promise: Promise ->
