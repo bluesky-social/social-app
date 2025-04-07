@@ -7,24 +7,17 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import Animated, {
-  LayoutAnimationConfig,
-  LinearTransition,
-  ZoomInEasyDown,
-} from 'react-native-reanimated'
-import {type AppBskyActorDefs, type ModerationOpts} from '@atproto/api'
+import {type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {logEvent} from '#/lib/statsig/statsig'
-import {cleanError} from '#/lib/strings/errors'
-import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorSearchPaginated} from '#/state/queries/actor-search'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
+import {useGetSuggestedUsersQuery} from '#/state/queries/trending/useGetSuggestedUsersQuery'
 import {useSession} from '#/state/session'
 import {type Follow10ProgressGuide} from '#/state/shell/progress-guide'
 import {type ListMethods} from '#/view/com/util/List'
@@ -49,15 +42,14 @@ import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/componen
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import {ListFooter} from '../Lists'
+import type * as bsky from '#/types/bsky'
 import {ProgressGuideTask} from './Task'
 
 type Item =
   | {
       type: 'profile'
       key: string
-      profile: AppBskyActorDefs.ProfileView
-      isSuggestion: boolean
+      profile: bsky.profile.AnyProfileView
     }
   | {
       type: 'empty'
@@ -128,94 +120,38 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
   const inputRef = useRef<TextInput>(null)
   const [headerHeight, setHeaderHeight] = useState(0)
   const {currentAccount} = useSession()
-  const [suggestedAccounts, setSuggestedAccounts] = useState<
-    Map<string, AppBskyActorDefs.ProfileView[]>
-  >(() => new Map())
 
   useEffect(() => {
     lastSearchText = searchText
     lastSelectedInterest = selectedInterest
   }, [searchText, selectedInterest])
 
-  const query = searchText || selectedInterest
+  const {
+    data: suggestions,
+    isFetching: isFetchingSuggestions,
+    error: suggestionsError,
+  } = useGetSuggestedUsersQuery({
+    category: selectedInterest,
+  })
   const {
     data: searchResults,
-    isFetching,
-    error,
-    isError,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
+    isFetching: isFetchingSearchResults,
+    error: searchResultsError,
+    isError: isSearchResultsError,
   } = useActorSearchPaginated({
-    query,
+    enabled: !!searchText,
+    query: searchText,
   })
 
   const hasSearchText = !!searchText
-
+  const resultsKey = searchText || selectedInterest
   const items = useMemo(() => {
-    const results = searchResults?.pages.flatMap(r => r.actors)
+    const results = hasSearchText
+      ? searchResults?.pages.flatMap(p => p.actors)
+      : suggestions?.actors
     let _items: Item[] = []
-    const seen = new Set<string>()
 
-    if (isError) {
-      _items.push({
-        type: 'empty',
-        key: 'empty',
-        message: _(msg`We're having network issues, try again`),
-      })
-    } else if (results) {
-      // First pass: search results
-      for (const profile of results) {
-        if (profile.did === currentAccount?.did) continue
-        if (profile.viewer?.following) continue
-        // my sincere apologies to Jake Gold - your bio is too keyword-filled and
-        // your page-rank too high, so you're at the top of half the categories -sfn
-        if (
-          !hasSearchText &&
-          profile.did === 'did:plc:tpg43qhh4lw4ksiffs4nbda3' &&
-          // constrain to 'tech'
-          selectedInterest !== 'tech'
-        ) {
-          continue
-        }
-        seen.add(profile.did)
-        _items.push({
-          type: 'profile',
-          // Don't share identity across tabs or typing attempts
-          key: query + ':' + profile.did,
-          profile,
-          isSuggestion: false,
-        })
-      }
-      // Second pass: suggestions
-      _items = _items.flatMap(item => {
-        if (item.type !== 'profile') {
-          return item
-        }
-        const suggestions = suggestedAccounts.get(item.profile.did)
-        if (!suggestions) {
-          return item
-        }
-        const itemWithSuggestions = [item]
-        for (const suggested of suggestions) {
-          if (seen.has(suggested.did)) {
-            // Skip search results from previous step or already seen suggestions
-            continue
-          }
-          seen.add(suggested.did)
-          itemWithSuggestions.push({
-            type: 'profile',
-            key: suggested.did,
-            profile: suggested,
-            isSuggestion: true,
-          })
-          if (itemWithSuggestions.length === 1 + 3) {
-            break
-          }
-        }
-        return itemWithSuggestions
-      })
-    } else {
+    if (isFetchingSuggestions || isFetchingSearchResults) {
       const placeholders: Item[] = Array(10)
         .fill(0)
         .map((__, i) => ({
@@ -224,21 +160,54 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
         }))
 
       _items.push(...placeholders)
+    } else if (
+      (hasSearchText && searchResultsError) ||
+      (!hasSearchText && suggestionsError) ||
+      !results?.length
+    ) {
+      _items.push({
+        type: 'empty',
+        key: 'empty',
+        message: _(msg`We're having network issues, try again`),
+      })
+    } else {
+      const seen = new Set<string>()
+      for (const profile of results) {
+        if (seen.has(profile.did)) continue
+        if (profile.did === currentAccount?.did) continue
+        if (profile.viewer?.following) continue
+
+        seen.add(profile.did)
+
+        _items.push({
+          type: 'profile',
+          // Don't share identity across tabs or typing attempts
+          key: resultsKey + ':' + profile.did,
+          profile,
+        })
+      }
     }
 
     return _items
   }, [
     _,
+    suggestions,
+    suggestionsError,
+    isFetchingSuggestions,
     searchResults,
-    isError,
+    searchResultsError,
+    isFetchingSearchResults,
     currentAccount?.did,
     hasSearchText,
-    selectedInterest,
-    suggestedAccounts,
-    query,
+    resultsKey,
   ])
 
-  if (searchText && !isFetching && !items.length && !isError) {
+  if (
+    searchText &&
+    !isFetchingSearchResults &&
+    !items.length &&
+    !isSearchResultsError
+  ) {
     items.push({type: 'empty', key: 'empty', message: _(msg`No results`)})
   }
 
@@ -249,9 +218,7 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
           return (
             <FollowProfileCard
               profile={item.profile}
-              isSuggestion={item.isSuggestion}
               moderationOpts={moderationOpts!}
-              setSuggestedAccounts={setSuggestedAccounts}
               noBorder={index === 0}
             />
           )
@@ -297,15 +264,6 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
     />
   )
 
-  const onEndReached = useCallback(async () => {
-    if (isFetchingNextPage || !hasNextPage || isError) return
-    try {
-      await fetchNextPage()
-    } catch (err) {
-      logger.error('Failed to load more people to follow', {message: err})
-    }
-  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
-
   return (
     <Dialog.InnerFlatList
       ref={listRef}
@@ -325,15 +283,6 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
       scrollIndicatorInsets={{top: headerHeight}}
       initialNumToRender={8}
       maxToRenderPerBatch={8}
-      onEndReached={onEndReached}
-      itemLayoutAnimation={LinearTransition}
-      ListFooterComponent={
-        <ListFooter
-          isFetchingNextPage={isFetchingNextPage}
-          error={cleanError(error)}
-          onRetry={fetchNextPage}
-        />
-      }
     />
   )
 }
@@ -561,6 +510,7 @@ let Tab = ({
   interestsDisplayName: string
   onLayout: (index: number, x: number, width: number) => void
 }): React.ReactNode => {
+  const t = useTheme()
   const {_} = useLingui()
   const activeText = active ? _(msg` (active)`) : ''
   return (
@@ -571,12 +521,32 @@ let Tab = ({
       }>
       <Button
         label={_(msg`Search for "${interestsDisplayName}"${activeText}`)}
-        variant={active ? 'solid' : 'outline'}
-        color={active ? 'primary' : 'secondary'}
-        size="small"
         onPress={() => onSelectTab(index)}>
-        <ButtonIcon icon={SearchIcon} />
-        <ButtonText>{interestsDisplayName}</ButtonText>
+        {({hovered, pressed, focused}) => (
+          <View
+            style={[
+              a.rounded_full,
+              a.px_lg,
+              a.py_sm,
+              a.border,
+              active || hovered || pressed || focused
+                ? [
+                    t.atoms.bg_contrast_25,
+                    {borderColor: t.atoms.bg_contrast_25.backgroundColor},
+                  ]
+                : [t.atoms.bg, t.atoms.border_contrast_low],
+            ]}>
+            <Text
+              style={[
+                /* TODO: medium weight */
+                active || hovered || pressed || focused
+                  ? t.atoms.text
+                  : t.atoms.text_contrast_medium,
+              ]}>
+              {interestsDisplayName}
+            </Text>
+          </View>
+        )}
       </Button>
     </View>
   )
@@ -586,49 +556,18 @@ Tab = memo(Tab)
 let FollowProfileCard = ({
   profile,
   moderationOpts,
-  isSuggestion,
-  setSuggestedAccounts,
   noBorder,
 }: {
-  profile: AppBskyActorDefs.ProfileView
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
-  isSuggestion: boolean
-  setSuggestedAccounts: (
-    updater: (
-      v: Map<string, AppBskyActorDefs.ProfileView[]>,
-    ) => Map<string, AppBskyActorDefs.ProfileView[]>,
-  ) => void
   noBorder?: boolean
 }): React.ReactNode => {
-  const [hasFollowed, setHasFollowed] = useState(false)
-  const followupSuggestion = useSuggestedFollowsByActorQuery({
-    did: profile.did,
-    enabled: hasFollowed,
-  })
-  const candidates = followupSuggestion.data?.suggestions
-
-  useEffect(() => {
-    // TODO: Move out of effect.
-    if (hasFollowed && candidates && candidates.length > 0) {
-      setSuggestedAccounts(suggestions => {
-        const newSuggestions = new Map(suggestions)
-        newSuggestions.set(profile.did, candidates)
-        return newSuggestions
-      })
-    }
-  }, [hasFollowed, profile.did, candidates, setSuggestedAccounts])
-
   return (
-    <LayoutAnimationConfig skipEntering={!isSuggestion}>
-      <Animated.View entering={native(ZoomInEasyDown)}>
-        <FollowProfileCardInner
-          profile={profile}
-          moderationOpts={moderationOpts}
-          onFollow={() => setHasFollowed(true)}
-          noBorder={noBorder}
-        />
-      </Animated.View>
-    </LayoutAnimationConfig>
+    <FollowProfileCardInner
+      profile={profile}
+      moderationOpts={moderationOpts}
+      noBorder={noBorder}
+    />
   )
 }
 FollowProfileCard = memo(FollowProfileCard)
@@ -639,7 +578,7 @@ function FollowProfileCardInner({
   onFollow,
   noBorder,
 }: {
-  profile: AppBskyActorDefs.ProfileView
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   onFollow?: () => void
   noBorder?: boolean
@@ -656,7 +595,7 @@ function FollowProfileCardInner({
           style={[
             a.flex_1,
             noBorder && a.border_t_0,
-            (hovered || pressed) && t.atoms.border_contrast_high,
+            (hovered || pressed) && t.atoms.bg_contrast_25,
           ]}>
           <ProfileCard.Outer>
             <ProfileCard.Header>
