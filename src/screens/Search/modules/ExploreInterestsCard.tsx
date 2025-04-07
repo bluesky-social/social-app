@@ -42,7 +42,7 @@ export function ExploreInterestsCard() {
         control={trendingPrompt}
         title={_(msg`Dismiss interests`)}
         description={_(
-          msg`You can adjust your interests at any time from your "Content and media" settings.`,
+          msg`You can adjust your interests at any time from "Content and media" settings.`,
         )}
         confirmButtonCta={_(
           msg({
