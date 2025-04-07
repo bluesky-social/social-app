@@ -29,10 +29,10 @@ export function ExploreTrendingTopics() {
 }
 
 function Inner() {
-  const {data: trending, error, isLoading} = useGetTrendsQuery()
+  const {data: trending, error, isLoading, isRefetching} = useGetTrendsQuery()
   const noTopics = !isLoading && !error && !trending?.trends?.length
 
-  return isLoading ? (
+  return isLoading || isRefetching ? (
     Array.from({length: TOPIC_COUNT}).map((__, i) => (
       <TrendingTopicRowSkeleton key={i} withPosts={i === 0} />
     ))

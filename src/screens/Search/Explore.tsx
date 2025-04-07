@@ -197,11 +197,12 @@ export function Explore({
   const gate = useGate()
   const guide = useProgressGuide('follow-10')
   const [selectedInterest, setSelectedInterest] = useState<string | null>(null)
-  // TODO always get at least 10 back
+  // TODO always get at least 10 back TODO still
   const {
     data: suggestedUsers,
     isLoading: suggestedUsersIsLoading,
     error: suggestedUsersError,
+    isRefetching: suggestedUsersIsRefetching,
   } = useGetSuggestedUsersQuery({
     category: selectedInterest,
   })
@@ -221,6 +222,7 @@ export function Explore({
     data: suggestedSPs,
     isLoading: isLoadingSuggestedSPs,
     error: suggestedSPsError,
+    isRefetching: isRefetchingSuggestedSPs,
   } = useSuggestedStarterPacksQuery()
 
   const isLoadingMoreFeeds = isFetchingNextFeedsPage && !isLoadingFeeds
@@ -299,7 +301,7 @@ export function Explore({
       },
     })
 
-    if (suggestedUsersIsLoading) {
+    if (suggestedUsersIsLoading || suggestedUsersIsRefetching) {
       i.push({type: 'profilePlaceholder', key: 'profilePlaceholder'})
     } else if (suggestedUsersError) {
       i.push({
@@ -346,6 +348,7 @@ export function Explore({
     moderationOpts,
     suggestedUsers,
     suggestedUsersIsLoading,
+    suggestedUsersIsRefetching,
     suggestedUsersError,
   ])
   const suggestedFeedsModule = useMemo(() => {
@@ -460,7 +463,7 @@ export function Explore({
       iconSize: 'xl',
     })
 
-    if (isLoadingSuggestedSPs) {
+    if (isLoadingSuggestedSPs || isRefetchingSuggestedSPs) {
       Array.from({length: 3}).forEach((__, index) =>
         i.push({
           type: 'starterPackSkeleton',
@@ -480,7 +483,13 @@ export function Explore({
       })
     }
     return i
-  }, [suggestedSPs, _, isLoadingSuggestedSPs, suggestedSPsError])
+  }, [
+    suggestedSPs,
+    _,
+    isLoadingSuggestedSPs,
+    suggestedSPsError,
+    isRefetchingSuggestedSPs,
+  ])
   const feedPreviewsModule = useMemo(() => {
     const i: ExploreScreenItems[] = []
     i.push(...feedPreviewSlices)
