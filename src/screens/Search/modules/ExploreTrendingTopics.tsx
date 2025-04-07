@@ -98,13 +98,18 @@ export function TrendRow({
             <View style={[a.flex_1, a.gap_xs]}>
               <View style={[a.flex_row]}>
                 <Text
-                  style={[a.text_md, a.font_bold, a.leading_snug, {width: 20}]}>
+                  style={[
+                    a.text_md,
+                    a.font_bold,
+                    a.leading_tight,
+                    {width: 20},
+                  ]}>
                   <Trans comment='The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"'>
                     {rank}.
                   </Trans>
                 </Text>
                 <Text
-                  style={[a.text_md, a.font_bold, a.leading_snug]}
+                  style={[a.text_md, a.font_bold, a.leading_tight]}
                   numberOfLines={1}>
                   {trend.displayName}
                 </Text>
