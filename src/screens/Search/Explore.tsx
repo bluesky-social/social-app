@@ -854,7 +854,7 @@ export function Explore({
     }
     if (!alreadyReportedRef.current.has(module)) {
       alreadyReportedRef.current.set(module, module)
-      logger.metric('explore:module:seen', {module}) //, index: index ?? -1})
+      logger.metric('explore:module:seen', {module})
     }
   }, [])
 
