@@ -27,8 +27,7 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
 
   return useQuery({
     enabled: !!preferences,
-    refetchOnWindowFocus: true,
-    staleTime: STALE.MINUTES.ONE,
+    staleTime: STALE.MINUTES.THREE,
     queryKey: createGetSuggestedUsersQueryKey(props),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')

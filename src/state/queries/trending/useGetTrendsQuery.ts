@@ -25,8 +25,7 @@ export function useGetTrendsQuery() {
 
   return useQuery({
     enabled: !!preferences,
-    refetchOnWindowFocus: true,
-    staleTime: STALE.MINUTES.ONE,
+    staleTime: STALE.MINUTES.THREE,
     queryKey: createGetTrendsQueryKey(),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
