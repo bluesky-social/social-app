@@ -41,6 +41,7 @@ import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommenda
 import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
 import {atoms as a, native, platform, useTheme, web} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
@@ -140,6 +141,10 @@ type ExploreScreenItems =
       key: string
       profile: AppBskyActorDefs.ProfileViewBasic
       recId?: number
+    }
+  | {
+      type: 'profileEmpty'
+      key: 'profileEmpty'
     }
   | {
       type: 'feed'
@@ -329,14 +334,18 @@ export function Explore({
           }
 
           if (profileItems.length === 0) {
-            // no items! remove the header
-            i.pop()
+            i.push({
+              type: 'profileEmpty',
+              key: 'profileEmpty',
+            })
           } else {
             i.push(...profileItems)
           }
         } else {
-          // no items! remove the header
-          i.pop()
+          i.push({
+            type: 'profileEmpty',
+            key: 'profileEmpty',
+          })
         }
       } else {
         i.push({type: 'profilePlaceholder', key: 'profilePlaceholder'})
@@ -624,6 +633,15 @@ export function Explore({
               recId={item.recId}
               position={index}
             />
+          )
+        }
+        case 'profileEmpty': {
+          return (
+            <View style={[a.px_lg, a.pb_lg]}>
+              <Admonition>
+                <Trans>No results for "{selectedInterest}".</Trans>
+              </Admonition>
+            </View>
           )
         }
         case 'feed': {
