@@ -801,7 +801,11 @@ export function Explore({
           return (
             <ModuleHeader.Container
               headerHeight={headerHeight}
-              style={[a.pt_xs, a.border_b, t.atoms.border_contrast_low]}>
+              style={[
+                a.pt_xs,
+                t.atoms.border_contrast_low,
+                native(a.border_b),
+              ]}>
               {/* Very non-scientific way to avoid small gap on scroll */}
               <View style={[a.absolute, a.inset_0, t.atoms.bg, {top: -2}]} />
               <ModuleHeader.FeedLink feed={item.feed}>
