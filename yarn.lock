@@ -5703,10 +5703,10 @@
   resolved "https://registry.yarnpkg.com/@react-native-menu/menu/-/menu-1.1.7.tgz#47c345038951712fd61f2bbb7d591c181c7e9742"
   integrity sha512-TPu2iNrSK1Davw5BPhwzcSfMAI9NFggiISOgdlaeymA6L7aAjUGpsEaFVX+ZaHml/YtZUuC8U0zUJJc2/3VYAA==
 
-"@react-native-picker/picker@2.9.0":
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-2.9.0.tgz#0a7053ca174ec697388cb79032fb4c1445554e07"
-  integrity sha512-khEhIW/uhfMqq/+tvg4rEAiPGT8GX+Y6QydlP2TSMSmRHoSJK+ShXvXZXSr4Sii4imkj4BwvLunGywwtQDODqg==
+"@react-native-picker/picker@2.10.3":
+  version "2.10.3"
+  resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-2.10.3.tgz#6aa3604ec768f41484848025630c20346f353e54"
+  integrity sha512-dviSu+dgAMHBxB9vgXHUG6/mgU36bjcK7h5htYO8m2NrbUZnLXQIPIU3xqopW/eXkVHf2/QnYMMQtrxaTZXxhg==
 
 "@react-native/assets-registry@0.76.9":
   version "0.76.9"
