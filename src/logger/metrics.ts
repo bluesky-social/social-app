@@ -330,7 +330,6 @@ export type MetricEvents = {
       | 'suggestedFeeds'
       | 'suggestedStarterPacks'
       | `feed:${FeedDescriptor}`
-    index: number
   }
   'explore:module:searchButtonPress': {
     module: 'suggestedAccounts' | 'suggestedFeeds'
