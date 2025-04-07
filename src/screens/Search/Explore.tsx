@@ -737,7 +737,6 @@ export function Explore({
         case 'preview:header': {
           return (
             <ModuleHeader.Container
-              headerHeight={headerHeight}
               style={[a.pt_xs, a.border_b, t.atoms.border_contrast_low]}>
               <ModuleHeader.FeedLink feed={item.feed}>
                 <ModuleHeader.FeedAvatar feed={item.feed} />

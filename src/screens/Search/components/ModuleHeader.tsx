@@ -6,7 +6,7 @@ import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {makeCustomFeedLink} from '#/lib/routes/links'
 import {logger} from '#/logger'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, native, useTheme, type ViewStyleProp, web} from '#/alf'
+import {atoms as a, native, useTheme, type ViewStyleProp} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {sizes as iconSizes} from '#/components/icons/common'
@@ -17,8 +17,7 @@ import {Text, type TextProps} from '#/components/Typography'
 export function Container({
   style,
   children,
-  headerHeight,
-}: {children: React.ReactNode; headerHeight?: number} & ViewStyleProp) {
+}: {children: React.ReactNode} & ViewStyleProp) {
   const t = useTheme()
   return (
     <View
@@ -30,7 +29,6 @@ export function Container({
         a.pb_md,
         a.gap_sm,
         t.atoms.bg,
-        headerHeight && web({position: 'sticky', top: headerHeight}),
         style,
       ]}>
       {/* Very non-scientific way to avoid small gap on scroll */}
