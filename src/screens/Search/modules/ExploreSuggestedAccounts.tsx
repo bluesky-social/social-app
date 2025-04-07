@@ -186,47 +186,50 @@ let SuggestedProfileCard = ({
           {statsig: true},
         )
       }}>
-      <View
-        style={[
-          a.w_full,
-          a.py_lg,
-          a.px_lg,
-          a.border_t,
-          t.atoms.border_contrast_low,
-          a.flex_1,
-        ]}>
-        <ProfileCard.Outer>
-          <ProfileCard.Header>
-            <ProfileCard.Avatar
-              profile={profile}
-              moderationOpts={moderationOpts}
-            />
-            <ProfileCard.NameAndHandle
-              profile={profile}
-              moderationOpts={moderationOpts}
-            />
-            <ProfileCard.FollowButton
-              profile={profile}
-              moderationOpts={moderationOpts}
-              withIcon={false}
-              logContext="ExploreSuggestedAccounts"
-              onFollow={() => {
-                logger.metric(
-                  'suggestedUser:follow',
-                  {
-                    logContext: 'Explore',
-                    location: 'Card',
-                    recId,
-                    position,
-                  },
-                  {statsig: true},
-                )
-              }}
-            />
-          </ProfileCard.Header>
-          <ProfileCard.Description profile={profile} numberOfLines={2} />
-        </ProfileCard.Outer>
-      </View>
+      {s => (
+        <View
+          style={[
+            a.flex_1,
+            a.w_full,
+            a.py_lg,
+            a.px_lg,
+            a.border_t,
+            t.atoms.border_contrast_low,
+            (s.hovered || s.pressed) && [t.atoms.bg_contrast_25],
+          ]}>
+          <ProfileCard.Outer>
+            <ProfileCard.Header>
+              <ProfileCard.Avatar
+                profile={profile}
+                moderationOpts={moderationOpts}
+              />
+              <ProfileCard.NameAndHandle
+                profile={profile}
+                moderationOpts={moderationOpts}
+              />
+              <ProfileCard.FollowButton
+                profile={profile}
+                moderationOpts={moderationOpts}
+                withIcon={false}
+                logContext="ExploreSuggestedAccounts"
+                onFollow={() => {
+                  logger.metric(
+                    'suggestedUser:follow',
+                    {
+                      logContext: 'Explore',
+                      location: 'Card',
+                      recId,
+                      position,
+                    },
+                    {statsig: true},
+                  )
+                }}
+              />
+            </ProfileCard.Header>
+            <ProfileCard.Description profile={profile} numberOfLines={2} />
+          </ProfileCard.Outer>
+        </View>
+      )}
     </ProfileCard.Link>
   )
 }
