@@ -50,6 +50,7 @@ import {type Props as IcoProps} from '#/components/icons/common'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {StarterPack} from '#/components/icons/StarterPack'
+import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending'
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -107,6 +108,7 @@ type ExploreScreenItems =
       title: string
       icon: React.ComponentType<SVGIconProps>
       iconSize?: IcoProps['size']
+      bottomBorder?: boolean
       searchButton?: {
         label: string
         metricsTag: MetricEvents['explore:module:searchButtonPress']['module']
@@ -532,6 +534,13 @@ export function Explore({
     if (isNewUser) {
       i.push(...suggestedFollowsModule)
       i.push(...suggestedStarterPacksModule)
+      i.push({
+        type: 'header',
+        key: 'trending-topics-header',
+        title: _(msg`Trending topics`),
+        icon: Graph,
+        bottomBorder: true,
+      })
       i.push(trendingTopicsModule)
     } else {
       i.push(trendingTopicsModule)
@@ -545,6 +554,7 @@ export function Explore({
 
     return i
   }, [
+    _,
     topBorder,
     isNewUser,
     suggestedFollowsModule,
@@ -576,7 +586,7 @@ export function Explore({
           )
         case 'header': {
           return (
-            <ModuleHeader.Container>
+            <ModuleHeader.Container bottomBorder={item.bottomBorder}>
               <ModuleHeader.Icon icon={item.icon} size={item.iconSize} />
               <ModuleHeader.TitleText>{item.title}</ModuleHeader.TitleText>
               {item.searchButton && (
@@ -760,6 +770,8 @@ export function Explore({
             <ModuleHeader.Container
               headerHeight={headerHeight}
               style={[a.pt_xs, a.border_b, t.atoms.border_contrast_low]}>
+              {/* Very non-scientific way to avoid small gap on scroll */}
+              <View style={[a.absolute, a.inset_0, t.atoms.bg, {top: -2}]} />
               <ModuleHeader.FeedLink feed={item.feed}>
                 <ModuleHeader.FeedAvatar feed={item.feed} />
                 <View style={[a.flex_1, a.gap_xs]}>
