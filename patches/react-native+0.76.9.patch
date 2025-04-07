@@ -41,7 +41,7 @@ diff --git a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/Scro
 index 93af874..106f8ec 100644
 --- a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
 +++ b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
-@@ -66,28 +66,51 @@ - (void)preserveContentOffsetWithBlock:(void (^)())block
+@@ -66,28 +66,51 @@
   * ScrollView, we force it to be centered, but when you zoom or the content otherwise
   * becomes larger than the ScrollView, there is no padding around the content but it
   * can still fill the whole view.
@@ -103,7 +103,7 @@ index 93af874..106f8ec 100644
  - (BOOL)touchesShouldCancelInContentView:(UIView *)view
  {
    if ([_overridingDelegate respondsToSelector:@selector(touchesShouldCancelInContentView:)]) {
-@@ -257,6 +280,10 @@ - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView
+@@ -257,6 +280,10 @@
    }
  }
  
@@ -131,7 +131,7 @@ diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshCont
 index 53bfd04..ff1b1ed 100644
 --- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
 +++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
-@@ -23,6 +23,7 @@ @implementation RCTRefreshControl {
+@@ -23,6 +23,7 @@
    UIColor *_titleColor;
    CGFloat _progressViewOffset;
    BOOL _hasMovedToWindow;
@@ -139,7 +139,7 @@ index 53bfd04..ff1b1ed 100644
  }
  
  - (instancetype)init
-@@ -58,6 +59,12 @@ - (void)layoutSubviews
+@@ -58,6 +59,12 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder : (NSCoder *)aDecoder)
    _isInitialRender = false;
  }
  
@@ -152,7 +152,7 @@ index 53bfd04..ff1b1ed 100644
  - (void)didMoveToWindow
  {
    [super didMoveToWindow];
-@@ -221,4 +228,50 @@ - (void)refreshControlValueChanged
+@@ -221,4 +228,50 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder : (NSCoder *)aDecoder)
    }
  }
  
@@ -207,7 +207,7 @@ diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshCont
 index 40aaf9c..1c60164 100644
 --- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m
 +++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m
-@@ -22,11 +22,12 @@ - (UIView *)view
+@@ -22,11 +22,12 @@ RCT_EXPORT_MODULE()
  
  RCT_EXPORT_VIEW_PROPERTY(onRefresh, RCTDirectEventBlock)
  RCT_EXPORT_VIEW_PROPERTY(refreshing, BOOL)
@@ -222,10 +222,10 @@ index 40aaf9c..1c60164 100644
  {
    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
 diff --git a/node_modules/react-native/React/Views/ScrollView/RCTScrollView.m b/node_modules/react-native/React/Views/ScrollView/RCTScrollView.m
-index e9ce48c..84a6fca 100644
+index 6f41b5c..9b4f77f 100644
 --- a/node_modules/react-native/React/Views/ScrollView/RCTScrollView.m
 +++ b/node_modules/react-native/React/Views/ScrollView/RCTScrollView.m
-@@ -159,26 +159,8 @@ - (BOOL)touchesShouldCancelInContentView:(__unused UIView *)view
+@@ -159,26 +159,8 @@
    return !shouldDisableScrollInteraction;
  }
  
@@ -252,7 +252,7 @@ index e9ce48c..84a6fca 100644
    super.contentOffset = CGPointMake(
        RCTSanitizeNaNValue(contentOffset.x, @"scrollView.contentOffset.x"),
        RCTSanitizeNaNValue(contentOffset.y, @"scrollView.contentOffset.y"));
-@@ -427,6 +409,11 @@ - (void)setRemoveClippedSubviews:(__unused BOOL)removeClippedSubviews
+@@ -433,6 +415,11 @@ static inline void RCTApplyTransformationAccordingLayoutDirection(
    // Does nothing
  }
  
@@ -264,7 +264,7 @@ index e9ce48c..84a6fca 100644
  - (void)insertReactSubview:(UIView *)view atIndex:(NSInteger)atIndex
  {
    [super insertReactSubview:view atIndex:atIndex];
-@@ -443,6 +430,8 @@ - (void)insertReactSubview:(UIView *)view atIndex:(NSInteger)atIndex
+@@ -449,6 +436,8 @@ static inline void RCTApplyTransformationAccordingLayoutDirection(
      _contentView = view;
      RCTApplyTransformationAccordingLayoutDirection(_contentView, self.reactLayoutDirection);
      [_scrollView addSubview:view];
@@ -273,7 +273,7 @@ index e9ce48c..84a6fca 100644
    }
  }
  
-@@ -652,9 +641,46 @@ -(void)delegateMethod : (UIScrollView *)scrollView        \
+@@ -658,9 +647,46 @@ static inline void RCTApplyTransformationAccordingLayoutDirection(
    }
  
  RCT_SCROLL_EVENT_HANDLER(scrollViewWillBeginDecelerating, onMomentumScrollBegin)
@@ -321,7 +321,7 @@ index e9ce48c..84a6fca 100644
  - (void)addScrollListener:(NSObject<UIScrollViewDelegate> *)scrollListener
  {
    [_scrollListeners addObject:scrollListener];
-@@ -933,6 +959,7 @@ - (void)updateContentSizeIfNeeded
+@@ -939,6 +965,7 @@ RCT_SCROLL_EVENT_HANDLER(scrollViewDidScrollToTop, onScrollToTop)
    CGSize contentSize = self.contentSize;
    if (!CGSizeEqualToSize(_scrollView.contentSize, contentSize)) {
      _scrollView.contentSize = contentSize;
@@ -329,7 +329,7 @@ index e9ce48c..84a6fca 100644
    }
  }
  
-@@ -1055,6 +1082,22 @@ -(type)getter                                           \
+@@ -1061,6 +1088,22 @@ RCT_SET_AND_PRESERVE_OFFSET(setShowsHorizontalScrollIndicator, showsHorizontalSc
  RCT_SET_AND_PRESERVE_OFFSET(setShowsVerticalScrollIndicator, showsVerticalScrollIndicator, BOOL)
  RCT_SET_AND_PRESERVE_OFFSET(setZoomScale, zoomScale, CGFloat);
  
@@ -356,7 +356,7 @@ diff --git a/node_modules/react-native/React/Views/ScrollView/RCTScrollViewManag
 index cd1e7eb..c1d0172 100644
 --- a/node_modules/react-native/React/Views/ScrollView/RCTScrollViewManager.m
 +++ b/node_modules/react-native/React/Views/ScrollView/RCTScrollViewManager.m
-@@ -83,6 +83,7 @@ - (UIView *)view
+@@ -83,6 +83,7 @@ RCT_EXPORT_VIEW_PROPERTY(showsVerticalScrollIndicator, BOOL)
  RCT_EXPORT_VIEW_PROPERTY(scrollEventThrottle, NSTimeInterval)
  RCT_EXPORT_VIEW_PROPERTY(zoomScale, CGFloat)
  RCT_EXPORT_VIEW_PROPERTY(contentInset, UIEdgeInsets)
