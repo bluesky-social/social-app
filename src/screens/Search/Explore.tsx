@@ -7,6 +7,7 @@ import {
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useGate} from '#/lib/statsig/statsig'
@@ -22,9 +23,19 @@ import {
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {Nux, useNux} from '#/state/queries/nuxs'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useGetSuggestedFeedsQuery} from '#/state/queries/trending/useGetSuggestedFeedsQuery'
-import {useGetSuggestedUsersQuery} from '#/state/queries/trending/useGetSuggestedUsersQuery'
-import {useSuggestedStarterPacksQuery} from '#/state/queries/useSuggestedStarterPacksQuery'
+import {
+  createGetSuggestedFeedsQueryKey,
+  useGetSuggestedFeedsQuery,
+} from '#/state/queries/trending/useGetSuggestedFeedsQuery'
+import {
+  getSuggestedUsersQueryKeyRoot,
+  useGetSuggestedUsersQuery,
+} from '#/state/queries/trending/useGetSuggestedUsersQuery'
+import {createGetTrendsQueryKey} from '#/state/queries/trending/useGetTrendsQuery'
+import {
+  createSuggestedStarterPacksQueryKey,
+  useSuggestedStarterPacksQuery,
+} from '#/state/queries/useSuggestedStarterPacksQuery'
 import {useProgressGuide} from '#/state/shell/progress-guide'
 import {isThreadChildAt, isThreadParentAt} from '#/view/com/posts/PostFeed'
 import {PostFeedItem} from '#/view/com/posts/PostFeedItem'
@@ -264,6 +275,27 @@ export function Explore({
       error: feedPreviewSlicesError,
     },
   } = useFeedPreviews(suggestedFeeds?.feeds ?? [])
+
+  const qc = useQueryClient()
+  const [isPTR, setIsPTR] = useState(false)
+  const onPTR = useCallback(async () => {
+    setIsPTR(true)
+    await Promise.all([
+      await qc.resetQueries({
+        queryKey: createGetTrendsQueryKey(),
+      }),
+      await qc.resetQueries({
+        queryKey: createSuggestedStarterPacksQueryKey(),
+      }),
+      await qc.resetQueries({
+        queryKey: [getSuggestedUsersQueryKeyRoot],
+      }),
+      await qc.resetQueries({
+        queryKey: createGetSuggestedFeedsQueryKey(),
+      }),
+    ])
+    setIsPTR(false)
+  }, [qc, setIsPTR])
 
   const onLoadMoreFeedPreviews = useCallback(async () => {
     if (
@@ -909,6 +941,8 @@ export function Explore({
       windowSize={9}
       maxToRenderPerBatch={platform({ios: 5, default: 1})}
       updateCellsBatchingPeriod={40}
+      refreshing={isPTR}
+      onRefresh={onPTR}
     />
   )
 }
