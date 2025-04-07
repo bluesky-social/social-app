@@ -35,6 +35,7 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
       const {data} = await agent.app.bsky.unspecced.getSuggestedUsers(
         {
           category: props.category ?? undefined,
+          limit: 10,
         },
         {
           headers: {
