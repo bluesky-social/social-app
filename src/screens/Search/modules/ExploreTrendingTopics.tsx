@@ -17,6 +17,7 @@ import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Flame_Stroke2_Corner1_Rounded as FlameIcon} from '#/components/icons/Flame'
 import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
 import {Link} from '#/components/Link'
+import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 
 const TOPIC_COUNT = 5
@@ -92,15 +93,8 @@ export function TrendRow({
       PressableComponent={Pressable}>
       {({hovered, pressed}) => (
         <>
-          <View
-            style={[
-              gutters,
-              a.w_full,
-              a.py_lg,
-              a.flex_row,
-              a.gap_2xs,
-              (hovered || pressed) && t.atoms.bg_contrast_25,
-            ]}>
+          <SubtleHover hover={hovered || pressed} />
+          <View style={[gutters, a.w_full, a.py_lg, a.flex_row, a.gap_2xs]}>
             <View style={[a.flex_1, a.gap_xs]}>
               <View style={[a.flex_row]}>
                 <Text

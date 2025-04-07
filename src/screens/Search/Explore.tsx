@@ -52,6 +52,7 @@ import {StarterPack} from '#/components/icons/StarterPack'
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
+import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import * as ModuleHeader from './components/ModuleHeader'
 import {
@@ -69,33 +70,26 @@ function LoadMore({item}: {item: ExploreScreenItems & {type: 'loadMore'}}) {
       onPress={item.onLoadMore}
       style={[a.relative, a.w_full]}>
       {({hovered, pressed}) => (
-        <View
-          style={[
-            a.flex_1,
-            a.flex_row,
-            a.align_center,
-            a.justify_center,
-            a.px_lg,
-            a.py_md,
-            a.gap_sm,
-            (hovered || pressed) && t.atoms.bg_contrast_25,
-          ]}>
-          <Text
+        <>
+          <SubtleHover hover={hovered || pressed} />
+          <View
             style={[
-              a.leading_snug,
-              hovered ? t.atoms.text : t.atoms.text_contrast_medium,
+              a.flex_1,
+              a.flex_row,
+              a.align_center,
+              a.justify_center,
+              a.px_lg,
+              a.py_md,
+              a.gap_sm,
             ]}>
-            {item.message}
-          </Text>
-          {item.isLoadingMore ? (
-            <Loader size="sm" />
-          ) : (
-            <ChevronDownIcon
-              size="sm"
-              style={hovered ? t.atoms.text : t.atoms.text_contrast_medium}
-            />
-          )}
-        </View>
+            <Text style={[a.leading_snug]}>{item.message}</Text>
+            {item.isLoadingMore ? (
+              <Loader size="sm" />
+            ) : (
+              <ChevronDownIcon size="sm" style={t.atoms.text_contrast_medium} />
+            )}
+          </View>
+        </>
       )}
     </Button>
   )
