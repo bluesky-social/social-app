@@ -1,18 +1,18 @@
 import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {
-  AppBskyActorDefs,
-  AppBskyFeedDefs,
-  AppBskyGraphDefs,
-  AppBskyUnspeccedGetPopularFeedGenerators,
+  type AppBskyActorDefs,
+  type AppBskyFeedDefs,
+  type AppBskyGraphDefs,
+  type AppBskyUnspeccedGetPopularFeedGenerators,
   AtUri,
   moderateFeedGenerator,
   RichText,
 } from '@atproto/api'
 import {
-  InfiniteData,
+  type InfiniteData,
   keepPreviousData,
-  QueryClient,
-  QueryKey,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -28,7 +28,7 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent, useSession} from '#/state/session'
 import {router} from '#/routes'
 import {useModerationOpts} from '../preferences/moderation-opts'
-import {FeedDescriptor} from './post-feed'
+import {type FeedDescriptor} from './post-feed'
 import {precacheResolvedUri} from './resolve-uri'
 
 export type FeedSourceFeedInfo = {
@@ -203,12 +203,12 @@ export const KNOWN_AUTHED_ONLY_FEEDS = [
   'at://did:plc:vpkhqolt662uhesyj6nxm7ys/app.bsky.feed.generator/followpics', // the gram, by why
 ]
 
-type GetPopularFeedsOptions = {limit?: number}
+type GetPopularFeedsOptions = {limit?: number; enabled?: boolean}
 
 export function createGetPopularFeedsQueryKey(
   options?: GetPopularFeedsOptions,
 ) {
-  return ['getPopularFeeds', options]
+  return ['getPopularFeeds', options?.limit]
 }
 
 export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
@@ -237,7 +237,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
     QueryKey,
     string | undefined
   >({
-    enabled: Boolean(moderationOpts),
+    enabled: Boolean(moderationOpts) && options?.enabled !== false,
     queryKey: createGetPopularFeedsQueryKey(options),
     queryFn: async ({pageParam}) => {
       const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({

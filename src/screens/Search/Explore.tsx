@@ -252,7 +252,7 @@ export function Explore({
     isFetchingNextPage: isFetchingNextFeedsPage,
     error: feedsError,
     fetchNextPage: fetchNextFeedsPage,
-  } = useGetPopularFeedsQuery({limit: 10})
+  } = useGetPopularFeedsQuery({limit: 10, enabled: useFullExperience})
   const interestsNux = useNux(Nux.ExploreInterestsCard)
   const showInterestsNux =
     interestsNux.status === 'ready' && !interestsNux.nux?.completed
@@ -262,7 +262,7 @@ export function Explore({
     isLoading: isLoadingSuggestedSPs,
     error: suggestedSPsError,
     isRefetching: isRefetchingSuggestedSPs,
-  } = useSuggestedStarterPacksQuery()
+  } = useSuggestedStarterPacksQuery({enabled: useFullExperience})
 
   const isLoadingMoreFeeds = isFetchingNextFeedsPage && !isLoadingFeeds
   const [hasPressedLoadMoreFeeds, setHasPressedLoadMoreFeeds] = useState(false)
@@ -285,7 +285,9 @@ export function Explore({
     hasPressedLoadMoreFeeds,
   ])
 
-  const {data: suggestedFeeds} = useGetSuggestedFeedsQuery()
+  const {data: suggestedFeeds} = useGetSuggestedFeedsQuery({
+    enabled: useFullExperience,
+  })
   const {
     data: feedPreviewSlices,
     query: {
@@ -295,7 +297,7 @@ export function Explore({
       hasNextPage: hasNextPageFeedPreviews,
       error: feedPreviewSlicesError,
     },
-  } = useFeedPreviews(suggestedFeeds?.feeds ?? [])
+  } = useFeedPreviews(suggestedFeeds?.feeds ?? [], useFullExperience)
 
   const qc = useQueryClient()
   const [isPTR, setIsPTR] = useState(false)
