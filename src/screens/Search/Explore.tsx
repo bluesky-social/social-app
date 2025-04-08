@@ -215,7 +215,6 @@ export function Explore({
   const gate = useGate()
   const guide = useProgressGuide('follow-10')
   const [selectedInterest, setSelectedInterest] = useState<string | null>(null)
-  // TODO always get at least 10 back TODO still
   const {
     data: suggestedUsers,
     isLoading: suggestedUsersIsLoading,
@@ -373,7 +372,12 @@ export function Explore({
               key: 'profileEmpty',
             })
           } else {
-            i.push(...profileItems)
+            if (selectedInterest === null) {
+              // First "For You" tab, only show 5 to keep screen short
+              i.push(...profileItems.slice(0, 5))
+            } else {
+              i.push(...profileItems)
+            }
           }
         } else {
           i.push({
@@ -393,6 +397,7 @@ export function Explore({
     suggestedUsersIsLoading,
     suggestedUsersIsRefetching,
     suggestedUsersError,
+    selectedInterest,
   ])
   const suggestedFeedsModule = useMemo(() => {
     const i: ExploreScreenItems[] = []
