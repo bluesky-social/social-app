@@ -51,7 +51,7 @@ import {ExploreInterestsCard} from '#/screens/Search/modules/ExploreInterestsCar
 import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
 import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
-import {atoms as a, native, platform, useTheme, web} from '#/alf'
+import {atoms as a, native, platform, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
@@ -202,7 +202,6 @@ type ExploreScreenItems =
 
 export function Explore({
   focusSearchInput,
-  headerHeight,
 }: {
   focusSearchInput: (tab: 'user' | 'profile' | 'feed') => void
   headerHeight: number
@@ -608,18 +607,7 @@ export function Explore({
       switch (item.type) {
         case 'topBorder':
           return (
-            <View
-              style={[
-                a.w_full,
-                t.atoms.border_contrast_low,
-                a.border_t,
-                headerHeight &&
-                  web({
-                    position: 'sticky',
-                    top: headerHeight,
-                  }),
-              ]}
-            />
+            <View style={[a.w_full, t.atoms.border_contrast_low, a.border_t]} />
           )
         case 'header': {
           return (
@@ -805,7 +793,6 @@ export function Explore({
         case 'preview:header': {
           return (
             <ModuleHeader.Container
-              headerHeight={headerHeight}
               style={[
                 a.pt_xs,
                 t.atoms.border_contrast_low,
@@ -893,7 +880,6 @@ export function Explore({
       selectedInterest,
       _,
       fetchNextPageFeedPreviews,
-      headerHeight,
     ],
   )
 
