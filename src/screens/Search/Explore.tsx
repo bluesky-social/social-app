@@ -8,6 +8,7 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
+import * as bcp47Match from 'bcp-47-match'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useGate} from '#/lib/statsig/statsig'
@@ -15,6 +16,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {type MetricEvents} from '#/logger/metrics'
+import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   type FeedPreviewItem,
@@ -214,6 +216,10 @@ export function Explore({
   const gate = useGate()
   const guide = useProgressGuide('follow-10')
   const [selectedInterest, setSelectedInterest] = useState<string | null>(null)
+  const {contentLanguages} = useLanguagePrefs()
+  const userRequestsEnglish = useMemo(() => {
+    return bcp47Match.basicFilter('en', contentLanguages).length > 0
+  }, [contentLanguages])
   const {
     data: suggestedUsers,
     isLoading: suggestedUsersIsLoading,
@@ -567,26 +573,31 @@ export function Explore({
 
     i.push(topBorder)
     i.push(...interestsNuxModule)
-    if (isNewUser) {
-      i.push(...suggestedFollowsModule)
-      i.push(...suggestedStarterPacksModule)
-      i.push({
-        type: 'header',
-        key: 'trending-topics-header',
-        title: _(msg`Trending topics`),
-        icon: Graph,
-        bottomBorder: true,
-      })
-      i.push(trendingTopicsModule)
+
+    if (userRequestsEnglish) {
+      if (isNewUser) {
+        i.push(...suggestedFollowsModule)
+        i.push(...suggestedStarterPacksModule)
+        i.push({
+          type: 'header',
+          key: 'trending-topics-header',
+          title: _(msg`Trending topics`),
+          icon: Graph,
+          bottomBorder: true,
+        })
+        i.push(trendingTopicsModule)
+      } else {
+        i.push(trendingTopicsModule)
+        i.push(...suggestedFollowsModule)
+        i.push(...suggestedStarterPacksModule)
+      }
+      if (gate('explore_show_suggested_feeds')) {
+        i.push(...suggestedFeedsModule)
+      }
+      i.push(...feedPreviewsModule)
     } else {
-      i.push(trendingTopicsModule)
       i.push(...suggestedFollowsModule)
-      i.push(...suggestedStarterPacksModule)
     }
-    if (gate('explore_show_suggested_feeds')) {
-      i.push(...suggestedFeedsModule)
-    }
-    i.push(...feedPreviewsModule)
 
     return i
   }, [
@@ -600,6 +611,7 @@ export function Explore({
     feedPreviewsModule,
     interestsNuxModule,
     gate,
+    userRequestsEnglish,
   ])
 
   const renderItem = useCallback(
