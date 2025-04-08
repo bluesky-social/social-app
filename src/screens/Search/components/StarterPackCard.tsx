@@ -33,10 +33,11 @@ export function StarterPackCard({
   const {currentAccount} = useSession()
   const {gtPhone} = useBreakpoints()
   const link = useStarterPackLink({view})
+  const record = view.record
 
   if (
     !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-      view.record,
+      record,
       AppBskyGraphStarterpack.isRecord,
     )
   ) {
@@ -90,7 +91,7 @@ export function StarterPackCard({
                   emoji
                   style={[a.text_md, a.font_bold, a.leading_snug]}
                   numberOfLines={1}>
-                  {view.record.name}
+                  {record.name}
                 </Text>
                 <Text
                   emoji
