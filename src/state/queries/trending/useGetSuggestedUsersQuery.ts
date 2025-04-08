@@ -13,7 +13,11 @@ import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 
-export type QueryProps = {category?: string | null; limit?: number, enabled?: boolean}
+export type QueryProps = {
+  category?: string | null
+  limit?: number
+  enabled?: boolean
+}
 
 export const getSuggestedUsersQueryKeyRoot = 'unspecced-suggested-users'
 export const createGetSuggestedUsersQueryKey = (props: QueryProps) => [
