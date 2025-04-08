@@ -1,5 +1,12 @@
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {ScrollView, TextInput, useWindowDimensions, View} from 'react-native'
+import {
+  ScrollView,
+  type StyleProp,
+  TextInput,
+  useWindowDimensions,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import Animated, {
   LayoutAnimationConfig,
   LinearTransition,
@@ -453,6 +460,7 @@ let Tabs = ({
   hasSearchText,
   interestsDisplayNames,
   TabComponent = Tab,
+  contentContainerStyle,
 }: {
   onSelectTab: (tab: string) => void
   interests: string[]
@@ -460,9 +468,9 @@ let Tabs = ({
   hasSearchText: boolean
   interestsDisplayNames: Record<string, string>
   TabComponent?: React.ComponentType<React.ComponentProps<typeof Tab>>
+  contentContainerStyle?: StyleProp<ViewStyle>
 }): React.ReactNode => {
   const listRef = useRef<ScrollView>(null)
-  const [scrollX, setScrollX] = useState(0)
   const [totalWidth, setTotalWidth] = useState(0)
   const pendingTabOffsets = useRef<{x: number; width: number}[]>([])
   const [tabOffsets, setTabOffsets] = useState<{x: number; width: number}[]>([])
@@ -481,24 +489,11 @@ let Tabs = ({
   function scrollIntoViewIfNeeded(index: number) {
     const btnLayout = tabOffsets[index]
     if (!btnLayout) return
-
-    const viewportLeftEdge = scrollX
-    const viewportRightEdge = scrollX + totalWidth
-    const shouldScrollToLeftEdge = viewportLeftEdge > btnLayout.x
-    const shouldScrollToRightEdge =
-      viewportRightEdge < btnLayout.x + btnLayout.width
-
-    if (shouldScrollToLeftEdge) {
-      listRef.current?.scrollTo({
-        x: btnLayout.x - tokens.space.lg,
-        animated: true,
-      })
-    } else if (shouldScrollToRightEdge) {
-      listRef.current?.scrollTo({
-        x: btnLayout.x - totalWidth + btnLayout.width + tokens.space.lg,
-        animated: true,
-      })
-    }
+    listRef.current?.scrollTo({
+      // centered
+      x: btnLayout.x - (totalWidth / 2 - btnLayout.width / 2),
+      animated: true,
+    })
   }
 
   function handleSelectTab(index: number) {
@@ -520,7 +515,7 @@ let Tabs = ({
     <ScrollView
       ref={listRef}
       horizontal
-      contentContainerStyle={[a.gap_sm, a.px_lg]}
+      contentContainerStyle={[a.gap_sm, a.px_lg, contentContainerStyle]}
       showsHorizontalScrollIndicator={false}
       decelerationRate="fast"
       snapToOffsets={
@@ -530,7 +525,7 @@ let Tabs = ({
       }
       onLayout={evt => setTotalWidth(evt.nativeEvent.layout.width)}
       scrollEventThrottle={200} // big throttle
-      onScroll={evt => setScrollX(evt.nativeEvent.contentOffset.x)}>
+    >
       {interests.map((interest, i) => {
         const active = interest === selectedInterest && !hasSearchText
         return (

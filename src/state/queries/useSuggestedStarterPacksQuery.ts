@@ -20,8 +20,7 @@ export function useSuggestedStarterPacksQuery() {
 
   return useQuery({
     enabled: !!preferences,
-    refetchOnWindowFocus: true,
-    staleTime: STALE.MINUTES.ONE,
+    staleTime: STALE.MINUTES.THREE,
     queryKey: createSuggestedStarterPacksQueryKey(),
     async queryFn() {
       const {data} = await agent.app.bsky.unspecced.getSuggestedStarterPacks(
