@@ -132,6 +132,7 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
     error: suggestionsError,
   } = useGetSuggestedUsersQuery({
     category: selectedInterest,
+    limit: 50,
   })
   const {
     data: searchResults,
