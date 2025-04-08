@@ -51,7 +51,7 @@ import {ExploreInterestsCard} from '#/screens/Search/modules/ExploreInterestsCar
 import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
 import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
-import {atoms as a, native, platform, useTheme, web} from '#/alf'
+import {atoms as a, native, platform, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
@@ -202,7 +202,6 @@ type ExploreScreenItems =
 
 export function Explore({
   focusSearchInput,
-  headerHeight,
 }: {
   focusSearchInput: (tab: 'user' | 'profile' | 'feed') => void
   headerHeight: number
@@ -215,7 +214,6 @@ export function Explore({
   const gate = useGate()
   const guide = useProgressGuide('follow-10')
   const [selectedInterest, setSelectedInterest] = useState<string | null>(null)
-  // TODO always get at least 10 back TODO still
   const {
     data: suggestedUsers,
     isLoading: suggestedUsersIsLoading,
@@ -373,7 +371,12 @@ export function Explore({
               key: 'profileEmpty',
             })
           } else {
-            i.push(...profileItems)
+            if (selectedInterest === null) {
+              // First "For You" tab, only show 5 to keep screen short
+              i.push(...profileItems.slice(0, 5))
+            } else {
+              i.push(...profileItems)
+            }
           }
         } else {
           i.push({
@@ -393,6 +396,7 @@ export function Explore({
     suggestedUsersIsLoading,
     suggestedUsersIsRefetching,
     suggestedUsersError,
+    selectedInterest,
   ])
   const suggestedFeedsModule = useMemo(() => {
     const i: ExploreScreenItems[] = []
@@ -603,18 +607,7 @@ export function Explore({
       switch (item.type) {
         case 'topBorder':
           return (
-            <View
-              style={[
-                a.w_full,
-                t.atoms.border_contrast_low,
-                a.border_t,
-                headerHeight &&
-                  web({
-                    position: 'sticky',
-                    top: headerHeight,
-                  }),
-              ]}
-            />
+            <View style={[a.w_full, t.atoms.border_contrast_low, a.border_t]} />
           )
         case 'header': {
           return (
@@ -800,7 +793,6 @@ export function Explore({
         case 'preview:header': {
           return (
             <ModuleHeader.Container
-              headerHeight={headerHeight}
               style={[
                 a.pt_xs,
                 t.atoms.border_contrast_low,
@@ -888,7 +880,6 @@ export function Explore({
       selectedInterest,
       _,
       fetchNextPageFeedPreviews,
-      headerHeight,
     ],
   )
 
