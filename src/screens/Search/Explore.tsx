@@ -18,6 +18,7 @@ import {logger} from '#/logger'
 import {type MetricEvents} from '#/logger/metrics'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {RQKEY_ROOT_PAGINATED as useActorSearchPaginatedQueryKeyRoot} from '#/state/queries/actor-search'
 import {
   type FeedPreviewItem,
   useFeedPreviews,
@@ -29,10 +30,7 @@ import {
   createGetSuggestedFeedsQueryKey,
   useGetSuggestedFeedsQuery,
 } from '#/state/queries/trending/useGetSuggestedFeedsQuery'
-import {
-  getSuggestedUsersQueryKeyRoot,
-  useGetSuggestedUsersQuery,
-} from '#/state/queries/trending/useGetSuggestedUsersQuery'
+import {getSuggestedUsersQueryKeyRoot} from '#/state/queries/trending/useGetSuggestedUsersQuery'
 import {createGetTrendsQueryKey} from '#/state/queries/trending/useGetTrendsQuery'
 import {
   createSuggestedStarterPacksQueryKey,
@@ -46,6 +44,10 @@ import {List} from '#/view/com/util/List'
 import {FeedFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {
+  popularInterests,
+  useInterestsDisplayNames,
+} from '#/screens/Onboarding/state'
+import {
   StarterPackCard,
   StarterPackCardSkeleton,
 } from '#/screens/Search/components/StarterPackCard'
@@ -53,6 +55,7 @@ import {ExploreInterestsCard} from '#/screens/Search/modules/ExploreInterestsCar
 import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
 import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
+import {useSuggestedUsers} from '#/screens/Search/util/useSuggestedUsers'
 import {atoms as a, native, platform, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button} from '#/components/Button'
@@ -67,6 +70,7 @@ import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Tre
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
+import {boostInterests} from '#/components/ProgressGuide/FollowDialog'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import * as ModuleHeader from './components/ModuleHeader'
@@ -138,6 +142,7 @@ type ExploreScreenItems =
         metricsTag: MetricEvents['explore:module:searchButtonPress']['module']
         tab: 'user' | 'profile' | 'feed'
       }
+      hideDefaultTab?: boolean
     }
   | {
       type: 'trendingTopics'
@@ -216,18 +221,30 @@ export function Explore({
   const gate = useGate()
   const guide = useProgressGuide('follow-10')
   const [selectedInterest, setSelectedInterest] = useState<string | null>(null)
+
+  /*
+   * Begin special language handling
+   */
   const {contentLanguages} = useLanguagePrefs()
-  const userRequestsEnglish = useMemo(() => {
+  const useFullExperience = useMemo(() => {
     return bcp47Match.basicFilter('en', contentLanguages).length > 0
   }, [contentLanguages])
+  const personalizedInterests = preferences?.interests?.tags
+  const interestsDisplayNames = useInterestsDisplayNames()
+  const interests = Object.keys(interestsDisplayNames)
+    .sort(boostInterests(popularInterests))
+    .sort(boostInterests(personalizedInterests))
   const {
     data: suggestedUsers,
     isLoading: suggestedUsersIsLoading,
     error: suggestedUsersError,
     isRefetching: suggestedUsersIsRefetching,
-  } = useGetSuggestedUsersQuery({
-    category: selectedInterest,
+  } = useSuggestedUsers({
+    category: selectedInterest || (useFullExperience ? null : interests[0]),
+    search: !useFullExperience,
   })
+  /* End special language handling */
+
   const {
     data: feeds,
     hasNextPage: hasNextFeedsPage,
@@ -295,6 +312,9 @@ export function Explore({
         queryKey: [getSuggestedUsersQueryKeyRoot],
       }),
       await qc.resetQueries({
+        queryKey: [useActorSearchPaginatedQueryKeyRoot],
+      }),
+      await qc.resetQueries({
         queryKey: createGetSuggestedFeedsQueryKey(),
       }),
     ])
@@ -342,6 +362,7 @@ export function Explore({
         metricsTag: 'suggestedAccounts',
         tab: 'user',
       },
+      hideDefaultTab: !useFullExperience,
     })
 
     if (suggestedUsersIsLoading || suggestedUsersIsRefetching) {
@@ -361,6 +382,7 @@ export function Explore({
           let seen = new Set()
           const profileItems: ExploreScreenItems[] = []
           for (const actor of suggestedUsers.actors) {
+            // checking for following still necessary if search data is used
             if (!seen.has(actor.did) && !actor.viewer?.following) {
               seen.add(actor.did)
               profileItems.push({
@@ -377,7 +399,7 @@ export function Explore({
               key: 'profileEmpty',
             })
           } else {
-            if (selectedInterest === null) {
+            if (selectedInterest === null && useFullExperience) {
               // First "For You" tab, only show 5 to keep screen short
               i.push(...profileItems.slice(0, 5))
             } else {
@@ -403,6 +425,7 @@ export function Explore({
     suggestedUsersIsRefetching,
     suggestedUsersError,
     selectedInterest,
+    useFullExperience,
   ])
   const suggestedFeedsModule = useMemo(() => {
     const i: ExploreScreenItems[] = []
@@ -574,7 +597,7 @@ export function Explore({
     i.push(topBorder)
     i.push(...interestsNuxModule)
 
-    if (userRequestsEnglish) {
+    if (useFullExperience) {
       if (isNewUser) {
         i.push(...suggestedFollowsModule)
         i.push(...suggestedStarterPacksModule)
@@ -611,7 +634,7 @@ export function Explore({
     feedPreviewsModule,
     interestsNuxModule,
     gate,
-    userRequestsEnglish,
+    useFullExperience,
   ])
 
   const renderItem = useCallback(
@@ -655,6 +678,7 @@ export function Explore({
               <SuggestedAccountsTabBar
                 selectedInterest={selectedInterest}
                 onSelectInterest={setSelectedInterest}
+                hideDefaultTab={item.hideDefaultTab}
               />
             </View>
           )
@@ -686,7 +710,13 @@ export function Explore({
           return (
             <View style={[a.px_lg, a.pb_lg]}>
               <Admonition>
-                <Trans>No results for "{selectedInterest}".</Trans>
+                {selectedInterest ? (
+                  <Trans>
+                    No results for "{interestsDisplayNames[selectedInterest]}".
+                  </Trans>
+                ) : (
+                  <Trans>No results.</Trans>
+                )}
               </Admonition>
             </View>
           )
@@ -890,6 +920,7 @@ export function Explore({
       focusSearchInput,
       moderationOpts,
       selectedInterest,
+      interestsDisplayNames,
       _,
       fetchNextPageFeedPreviews,
     ],

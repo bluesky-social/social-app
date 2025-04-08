@@ -13,12 +13,12 @@ import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 
-export type QueryProps = {category?: string | null}
+export type QueryProps = {category?: string | null; enabled?: boolean}
 
 export const getSuggestedUsersQueryKeyRoot = 'unspecced-suggested-users'
 export const createGetSuggestedUsersQueryKey = (props: QueryProps) => [
   getSuggestedUsersQueryKeyRoot,
-  ...Object.values(props),
+  props.category,
 ]
 
 export function useGetSuggestedUsersQuery(props: QueryProps) {
@@ -26,7 +26,7 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
   const {data: preferences} = usePreferencesQuery()
 
   return useQuery({
-    enabled: !!preferences,
+    enabled: !!preferences && props.enabled,
     staleTime: STALE.MINUTES.THREE,
     queryKey: createGetSuggestedUsersQueryKey(props),
     queryFn: async () => {
