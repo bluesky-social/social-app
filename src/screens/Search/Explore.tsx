@@ -227,6 +227,7 @@ export function Explore({
    */
   const {contentLanguages} = useLanguagePrefs()
   const useFullExperience = useMemo(() => {
+    if (contentLanguages.length === 0) return true
     return bcp47Match.basicFilter('en', contentLanguages).length > 0
   }, [contentLanguages])
   const personalizedInterests = preferences?.interests?.tags
