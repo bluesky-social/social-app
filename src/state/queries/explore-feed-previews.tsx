@@ -34,6 +34,41 @@ const RQKEY_ROOT = 'feed-previews'
 const RQKEY = (feeds: string[]) => [RQKEY_ROOT, feeds]
 
 const LIMIT = 8 // sliced to 6, overfetch to account for moderation
+const PINNED_POST_URIS: Record<string, boolean> = {
+  // 📰 News
+  'at://did:plc:kkf4naxqmweop7dv4l2iqqf5/app.bsky.feed.post/3lgh27w2ngc2b':
+    true,
+  // Gardening
+  'at://did:plc:5rw2on4i56btlcajojaxwcat/app.bsky.feed.post/3kjorckgcwc27':
+    true,
+  // Web Development Trending
+  'at://did:plc:m2sjv3wncvsasdapla35hzwj/app.bsky.feed.post/3lfaw445axs22':
+    true,
+  // Anime & Manga EN
+  'at://did:plc:tazrmeme4dzahimsykusrwrk/app.bsky.feed.post/3knxx2gmkns2y':
+    true,
+  // 📽️ Film
+  'at://did:plc:2hwwem55ce6djnk6bn62cstr/app.bsky.feed.post/3llhpzhbq7c2g':
+    true,
+  // PopSky
+  'at://did:plc:lfdf4srj43iwdng7jn35tjsp/app.bsky.feed.post/3lbblgly65c2g':
+    true,
+  // Science
+  'at://did:plc:hu2obebw3nhfj667522dahfg/app.bsky.feed.post/3kl33otd6ob2s':
+    true,
+  // Birds! 🦉
+  'at://did:plc:ffkgesg3jsv2j7aagkzrtcvt/app.bsky.feed.post/3lbg4r57yk22d':
+    true,
+  // Astronomy
+  'at://did:plc:xy2zorw2ys47poflotxthlzg/app.bsky.feed.post/3kyzye4lujs2w':
+    true,
+  // What's Cooking 🍽️
+  'at://did:plc:geoqe3qls5mwezckxxsewys2/app.bsky.feed.post/3lfqhgvxbqc2q':
+    true,
+  // BookSky 💙📚 #booksky
+  'at://did:plc:geoqe3qls5mwezckxxsewys2/app.bsky.feed.post/3kgrm2rw5ww2e':
+    true,
+}
 
 export type FeedPreviewItem =
   | {
@@ -181,19 +216,24 @@ export function useFeedPreviews(
                 feedContext: item.feedContext,
                 reason: item.reason,
                 feedPostUri: item.feedPostUri,
-                items: item.items.slice(0, 6).map((subItem, i) => {
-                  const feedPostSliceItem: FeedPostSliceItem = {
-                    _reactKey: `${item._reactKey}-${i}-${subItem.post.uri}`,
-                    uri: subItem.post.uri,
-                    post: subItem.post,
-                    record: subItem.record,
-                    moderation: moderations[i],
-                    parentAuthor: subItem.parentAuthor,
-                    isParentBlocked: subItem.isParentBlocked,
-                    isParentNotFound: subItem.isParentNotFound,
-                  }
-                  return feedPostSliceItem
-                }),
+                items: item.items
+                  .slice(0, 6)
+                  .filter(subItem => {
+                    return !PINNED_POST_URIS[subItem.post.uri]
+                  })
+                  .map((subItem, i) => {
+                    const feedPostSliceItem: FeedPostSliceItem = {
+                      _reactKey: `${item._reactKey}-${i}-${subItem.post.uri}`,
+                      uri: subItem.post.uri,
+                      post: subItem.post,
+                      record: subItem.record,
+                      moderation: moderations[i],
+                      parentAuthor: subItem.parentAuthor,
+                      isParentBlocked: subItem.isParentBlocked,
+                      isParentNotFound: subItem.isParentNotFound,
+                    }
+                    return feedPostSliceItem
+                  }),
               }
               if (slice.isIncompleteThread && slice.items.length >= 3) {
                 const beforeLast = slice.items.length - 2

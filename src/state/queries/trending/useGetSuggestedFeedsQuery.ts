@@ -20,8 +20,7 @@ export function useGetSuggestedFeedsQuery() {
 
   return useQuery({
     enabled: !!preferences,
-    refetchOnWindowFocus: true,
-    staleTime: STALE.MINUTES.ONE,
+    staleTime: STALE.MINUTES.THREE,
     queryKey: createGetSuggestedFeedsQueryKey(),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')

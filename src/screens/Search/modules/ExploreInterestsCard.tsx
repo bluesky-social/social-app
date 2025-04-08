@@ -40,14 +40,14 @@ export function ExploreInterestsCard() {
     <>
       <Prompt.Basic
         control={trendingPrompt}
-        title={_(msg`Your interests`)}
+        title={_(msg`Dismiss interests`)}
         description={_(
-          msg`You can adjust your interests at any time from your "Content and media" settings.`,
+          msg`You can adjust your interests at any time from "Content and media" settings.`,
         )}
         confirmButtonCta={_(
           msg({
-            message: `Copy that!`,
-            comment: `Confirm button text. Can be a short cheeky phrase that means "OK" e.g. "Copy that!"`,
+            message: `OK`,
+            comment: `Confirm button text.`,
           }),
         )}
         onConfirm={onConfirmClose}

@@ -25,7 +25,6 @@ export function useGetTrendsQuery() {
 
   return useQuery({
     enabled: !!preferences,
-    refetchOnWindowFocus: true,
     staleTime: STALE.MINUTES.THREE,
     queryKey: createGetTrendsQueryKey(),
     queryFn: async () => {

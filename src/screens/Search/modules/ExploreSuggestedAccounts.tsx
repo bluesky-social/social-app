@@ -17,6 +17,7 @@ import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
 import * as ProfileCard from '#/components/ProfileCard'
 import {boostInterests, Tabs} from '#/components/ProgressGuide/FollowDialog'
+import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
 
@@ -133,10 +134,7 @@ let Tab = ({
               a.py_sm,
               a.border,
               active || hovered || pressed || focused
-                ? [
-                    t.atoms.bg_contrast_25,
-                    {borderColor: t.atoms.bg_contrast_25.backgroundColor},
-                  ]
+                ? [t.atoms.bg_contrast_25, t.atoms.border_contrast_medium]
                 : [t.atoms.bg, t.atoms.border_contrast_low],
             ]}>
             <Text
@@ -186,47 +184,52 @@ let SuggestedProfileCard = ({
           {statsig: true},
         )
       }}>
-      <View
-        style={[
-          a.w_full,
-          a.py_lg,
-          a.px_lg,
-          a.border_t,
-          t.atoms.border_contrast_low,
-          a.flex_1,
-        ]}>
-        <ProfileCard.Outer>
-          <ProfileCard.Header>
-            <ProfileCard.Avatar
-              profile={profile}
-              moderationOpts={moderationOpts}
-            />
-            <ProfileCard.NameAndHandle
-              profile={profile}
-              moderationOpts={moderationOpts}
-            />
-            <ProfileCard.FollowButton
-              profile={profile}
-              moderationOpts={moderationOpts}
-              withIcon={false}
-              logContext="ExploreSuggestedAccounts"
-              onFollow={() => {
-                logger.metric(
-                  'suggestedUser:follow',
-                  {
-                    logContext: 'Explore',
-                    location: 'Card',
-                    recId,
-                    position,
-                  },
-                  {statsig: true},
-                )
-              }}
-            />
-          </ProfileCard.Header>
-          <ProfileCard.Description profile={profile} numberOfLines={2} />
-        </ProfileCard.Outer>
-      </View>
+      {s => (
+        <>
+          <SubtleHover hover={s.hovered || s.pressed} />
+          <View
+            style={[
+              a.flex_1,
+              a.w_full,
+              a.py_lg,
+              a.px_lg,
+              a.border_t,
+              t.atoms.border_contrast_low,
+            ]}>
+            <ProfileCard.Outer>
+              <ProfileCard.Header>
+                <ProfileCard.Avatar
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                />
+                <ProfileCard.NameAndHandle
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                />
+                <ProfileCard.FollowButton
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                  withIcon={false}
+                  logContext="ExploreSuggestedAccounts"
+                  onFollow={() => {
+                    logger.metric(
+                      'suggestedUser:follow',
+                      {
+                        logContext: 'Explore',
+                        location: 'Card',
+                        recId,
+                        position,
+                      },
+                      {statsig: true},
+                    )
+                  }}
+                />
+              </ProfileCard.Header>
+              <ProfileCard.Description profile={profile} numberOfLines={2} />
+            </ProfileCard.Outer>
+          </View>
+        </>
+      )}
     </ProfileCard.Link>
   )
 }
