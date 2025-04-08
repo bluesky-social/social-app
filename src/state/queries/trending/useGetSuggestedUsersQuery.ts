@@ -13,12 +13,17 @@ import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 
-export type QueryProps = {category?: string | null; enabled?: boolean}
+export type QueryProps = {
+  category?: string | null
+  limit?: number
+  enabled?: boolean
+}
 
 export const getSuggestedUsersQueryKeyRoot = 'unspecced-suggested-users'
 export const createGetSuggestedUsersQueryKey = (props: QueryProps) => [
   getSuggestedUsersQueryKeyRoot,
   props.category,
+  props.limit,
 ]
 
 export function useGetSuggestedUsersQuery(props: QueryProps) {
@@ -26,7 +31,7 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
   const {data: preferences} = usePreferencesQuery()
 
   return useQuery({
-    enabled: !!preferences && props.enabled,
+    enabled: !!preferences && props.enabled !== false,
     staleTime: STALE.MINUTES.THREE,
     queryKey: createGetSuggestedUsersQueryKey(props),
     queryFn: async () => {
@@ -34,7 +39,7 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
       const {data} = await agent.app.bsky.unspecced.getSuggestedUsers(
         {
           category: props.category ?? undefined,
-          limit: 10,
+          limit: props.limit || 10,
         },
         {
           headers: {
