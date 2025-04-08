@@ -52,7 +52,7 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileViewBasic, void> {
+): Generator<AppBskyActorDefs.ProfileView, void> {
   const responses =
     queryClient.getQueriesData<AppBskyUnspeccedGetSuggestedUsers.OutputSchema>({
       queryKey: [getSuggestedUsersQueryKeyRoot],
