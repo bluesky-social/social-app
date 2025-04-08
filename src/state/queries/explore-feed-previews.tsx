@@ -120,6 +120,7 @@ export type FeedPreviewItem =
 
 export function useFeedPreviews(
   feedsMaybeWithDuplicates: AppBskyFeedDefs.GeneratorView[],
+  isEnabled: boolean = true,
 ) {
   const feeds = useMemo(
     () =>
@@ -135,7 +136,7 @@ export function useFeedPreviews(
   const {data: preferences} = usePreferencesQuery()
   const userInterests = aggregateUserInterests(preferences)
   const moderationOpts = useModerationOpts()
-  const enabled = feeds.length > 0
+  const enabled = feeds.length > 0 && isEnabled
 
   const query = useInfiniteQuery({
     enabled,
