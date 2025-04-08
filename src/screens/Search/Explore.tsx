@@ -9,7 +9,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -208,7 +207,6 @@ export function Explore({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const initialNumToRender = useInitialNumToRender()
   const {data: preferences, error: preferencesError} = usePreferencesQuery()
   const moderationOpts = useModerationOpts()
   const gate = useGate()
@@ -931,11 +929,26 @@ export function Explore({
       viewabilityConfig={viewabilityConfig}
       onItemSeen={onItemSeen}
       onEndReached={onLoadMoreFeedPreviews}
-      onEndReachedThreshold={3}
-      initialNumToRender={initialNumToRender}
-      windowSize={9}
-      maxToRenderPerBatch={platform({ios: 5, default: 1})}
-      updateCellsBatchingPeriod={40}
+      /**
+       * Default: 2
+       */
+      onEndReachedThreshold={4}
+      /**
+       * Default: 10
+       */
+      initialNumToRender={10}
+      /**
+       * Default: 21
+       */
+      windowSize={platform({android: 11})}
+      /**
+       * Default: 10
+       */
+      maxToRenderPerBatch={platform({android: 1})}
+      /**
+       * Default: 50
+       */
+      updateCellsBatchingPeriod={platform({android: 25})}
       refreshing={isPTR}
       onRefresh={onPTR}
     />
