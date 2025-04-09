@@ -27,7 +27,7 @@ import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
+import {isAndroid, isWeb} from '#/platform/detection'
 import {Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
@@ -61,6 +61,7 @@ import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBrackets} from '#/components/icons/CodeBrackets'
+import {DivergingNodes_Stroke2_Corner0_Rounded as ShareAndroid} from '#/components/icons/DivergingNodes'
 import {
   EmojiSad_Stroke2_Corner0_Rounded as EmojiSad,
   EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmile,
@@ -489,7 +490,7 @@ let PostDropdownMenuItems = ({
             <Menu.ItemText>
               {isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
             </Menu.ItemText>
-            <Menu.ItemIcon icon={Share} position="right" />
+            <Menu.ItemIcon icon={isAndroid ? ShareAndroid : Share} position="right" />
           </Menu.Item>
 
           {canEmbed && (
@@ -724,14 +725,14 @@ let PostDropdownMenuItems = ({
                     label={_(msg`Copy post at:// URI`)}
                     onPress={onShareATURI}>
                     <Menu.ItemText>{_(msg`Copy post at:// URI`)}</Menu.ItemText>
-                    <Menu.ItemIcon icon={Share} position="right" />
+                    <Menu.ItemIcon icon={isAndroid ? ShareAndroid : Share} position="right" />
                   </Menu.Item>
                   <Menu.Item
                     testID="postAuthorDIDShareBtn"
                     label={_(msg`Copy author DID`)}
                     onPress={onShareAuthorDID}>
                     <Menu.ItemText>{_(msg`Copy author DID`)}</Menu.ItemText>
-                    <Menu.ItemIcon icon={Share} position="right" />
+                    <Menu.ItemIcon icon={isAndroid ? ShareAndroid : Share} position="right" />
                   </Menu.Item>
                 </Menu.Group>
               </>

@@ -11,7 +11,7 @@ import {shareUrl} from '#/lib/sharing'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
+import {isAndroid, isWeb} from '#/platform/detection'
 import {FeedSourceFeedInfo} from '#/state/queries/feed'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {
@@ -31,6 +31,7 @@ import {Divider} from '#/components/Divider'
 import {useRichText} from '#/components/hooks/useRichText'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {DivergingNodes_Stroke2_Corner0_Rounded as ShareAndroid} from '#/components/icons/DivergingNodes'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
@@ -469,7 +470,7 @@ function DialogInner({
           color="secondary"
           shape="round"
           onPress={onPressShare}>
-          <ButtonIcon icon={Share} size="lg" />
+          <ButtonIcon icon={isAndroid ? ShareAndroid : Share} size="lg" />
         </Button>
       </View>
 

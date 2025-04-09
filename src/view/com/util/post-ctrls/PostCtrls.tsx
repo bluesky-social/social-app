@@ -26,6 +26,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
 import {useGate} from '#/lib/statsig/statsig'
 import {toShareUrl} from '#/lib/strings/url-helpers'
+import {isAndroid} from '#/platform/detection'
 import {Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {
@@ -40,8 +41,9 @@ import {
 } from '#/state/shell/progress-guide'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
+import {DivergingNodes_Stroke2_Corner0_Rounded as ShareAndroid} from '#/components/icons/DivergingNodes'
 import * as Prompt from '#/components/Prompt'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {formatCount} from '../numeric/format'
@@ -350,10 +352,17 @@ let PostCtrls = ({
               accessibilityLabel={_(msg`Share`)}
               accessibilityHint=""
               hitSlop={POST_CTRL_HITSLOP}>
-              <ArrowOutOfBox
-                style={[defaultCtrlColor, {pointerEvents: 'none'}]}
-                width={22}
-              />
+              {isAndroid ? (
+                <ShareAndroid
+                  style={[defaultCtrlColor, {pointerEvents: 'none'}]}
+                  width={22}
+                />
+              ) : (
+                <Share
+                  style={[defaultCtrlColor, {pointerEvents: 'none'}]}
+                  width={22}
+                />
+              )}
             </Pressable>
           </View>
           <Prompt.Basic
