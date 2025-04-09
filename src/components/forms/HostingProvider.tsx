@@ -41,7 +41,10 @@ export function HostingProvider({
         onSelect={onSelectServiceUrl}
       />
       {minimal ? (
-        <View style={[a.flex_row]}>
+        <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_xs]}>
+          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+            <Trans>You are creating an account on</Trans>
+          </Text>
           <Button
             label={toNiceDomain(serviceUrl)}
             accessibilityHint={_(msg`Changes hosting provider`)}
@@ -54,24 +57,8 @@ export function HostingProvider({
               {marginHorizontal: tokens.space.xs * -1},
               {paddingVertical: 0},
             ]}>
-            <ButtonText
-              style={[
-                a.text_sm,
-                t.atoms.text_contrast_medium,
-                a.font_normal,
-                a.text_left,
-              ]}>
-              <Trans>
-                You are creating an account on{' '}
-                <Text
-                  style={[
-                    a.text_sm,
-                    t.atoms.text_contrast_medium,
-                    a.font_bold,
-                  ]}>
-                  {toNiceDomain(serviceUrl)}
-                </Text>
-              </Trans>
+            <ButtonText style={[a.text_sm]}>
+              {toNiceDomain(serviceUrl)}
             </ButtonText>
             <ButtonIcon icon={PencilIcon} />
           </Button>
