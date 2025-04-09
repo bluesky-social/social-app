@@ -22,12 +22,13 @@ import {DISCOVER_DEBUG_DIDS, POST_CTRL_HITSLOP} from '#/lib/constants'
 import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
 import {useHaptics} from '#/lib/haptics'
-import {makeProfileLink} from '#/lib/routes/links'
+import {makeProfileShareLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
 import {useGate} from '#/lib/statsig/statsig'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {useShareByDid} from '#/state/preferences/share-by-did'
 import {
   usePostLikeMutationQueue,
   usePostRepostMutationQueue,
@@ -86,6 +87,7 @@ let PostCtrls = ({
   const {sendInteraction} = useFeedFeedbackContext()
   const {captureAction} = useProgressGuideControls()
   const playHaptic = useHaptics()
+  const shareByDid = useShareByDid()
   const gate = useGate()
   const isDiscoverDebugUser =
     IS_INTERNAL ||
@@ -222,7 +224,12 @@ let PostCtrls = ({
 
   const onShare = useCallback(() => {
     const urip = new AtUri(post.uri)
-    const href = makeProfileLink(post.author, 'post', urip.rkey)
+    const href = makeProfileShareLink(
+      post.author,
+      shareByDid,
+      'post',
+      urip.rkey,
+    )
     const url = toShareUrl(href)
     shareUrl(url)
     sendInteraction({
@@ -230,7 +237,7 @@ let PostCtrls = ({
       event: 'app.bsky.feed.defs#interactionShare',
       feedContext,
     })
-  }, [post.uri, post.author, sendInteraction, feedContext])
+  }, [post.uri, post.author, sendInteraction, feedContext, shareByDid])
 
   const btnStyle = React.useCallback(
     ({pressed, hovered}: PressableStateCallbackType) => [
