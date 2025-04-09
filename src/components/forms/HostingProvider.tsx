@@ -41,25 +41,40 @@ export function HostingProvider({
         onSelect={onSelectServiceUrl}
       />
       {minimal ? (
-        <View style={[a.flex_row, a.align_center, a.flex_wrap]}>
-          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-            <Trans>
-              You are creating an account on{' '}
-              <Button
-                label={toNiceDomain(serviceUrl)}
-                accessibilityHint={_(msg`Changes hosting provider`)}
-                onPress={onPressSelectService}
-                variant="ghost"
-                color="secondary"
-                size="tiny"
-                style={[a.px_xs, {margin: tokens.space.xs * -1}]}>
-                <ButtonText style={[a.text_sm]}>
+        <View style={[a.flex_row]}>
+          <Button
+            label={toNiceDomain(serviceUrl)}
+            accessibilityHint={_(msg`Changes hosting provider`)}
+            onPress={onPressSelectService}
+            variant="ghost"
+            color="secondary"
+            size="tiny"
+            style={[
+              a.px_xs,
+              {marginHorizontal: tokens.space.xs * -1},
+              {paddingVertical: 0},
+            ]}>
+            <ButtonText
+              style={[
+                a.text_sm,
+                t.atoms.text_contrast_medium,
+                a.font_normal,
+                a.text_left,
+              ]}>
+              <Trans>
+                You are creating an account on{' '}
+                <Text
+                  style={[
+                    a.text_sm,
+                    t.atoms.text_contrast_medium,
+                    a.font_bold,
+                  ]}>
                   {toNiceDomain(serviceUrl)}
-                </ButtonText>
-                <ButtonIcon icon={PencilIcon} />
-              </Button>
-            </Trans>
-          </Text>
+                </Text>
+              </Trans>
+            </ButtonText>
+            <ButtonIcon icon={PencilIcon} />
+          </Button>
         </View>
       ) : (
         <Button
