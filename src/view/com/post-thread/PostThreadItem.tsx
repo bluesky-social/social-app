@@ -27,7 +27,11 @@ import {niceDate} from '#/lib/strings/time'
 import {s} from '#/lib/styles'
 import {getTranslatorLink, isPostInLanguage} from '#/locale/helpers'
 import {logger} from '#/logger'
-import {POST_TOMBSTONE, type Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {
+  POST_TOMBSTONE,
+  type Shadow,
+  usePostShadow,
+} from '#/state/cache/post-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {type ThreadPost} from '#/state/queries/post-thread'
 import {useSession} from '#/state/session'
