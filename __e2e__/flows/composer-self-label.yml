@@ -17,7 +17,6 @@ appId: xyz.blueskyweb.app
 - inputText: "Post with an image"
 - tapOn:
     id: "openGalleryBtn"
-- tapOn: "Allow Full Access"
 - tapOn: "Content warnings"
 - tapOn: "Porn"
 - tapOn:
