@@ -364,4 +364,10 @@ export type MetricEvents = {
     details: boolean
   }
   'reportDialog:failure': {}
+
+  translate: {
+    sourceLanguages: string[]
+    targetLanguage: string
+    textLength: number
+  }
 }
