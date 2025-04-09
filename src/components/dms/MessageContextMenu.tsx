@@ -8,6 +8,7 @@ import {useLingui} from '@lingui/react'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {getTranslatorLink} from '#/locale/helpers'
+import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {useConvoActive} from '#/state/messages/convo'
 import {useLanguagePrefs} from '#/state/preferences'
@@ -61,6 +62,12 @@ export let MessageContextMenu = ({
       langPrefs.primaryLanguage,
     )
     openLink(translatorUrl, true)
+
+    logger.metric('translate', {
+      sourceLanguages: [],
+      targetLanguage: langPrefs.primaryLanguage,
+      textLength: message.text.length,
+    })
   }, [langPrefs.primaryLanguage, message.text, openLink])
 
   const onDelete = useCallback(() => {
