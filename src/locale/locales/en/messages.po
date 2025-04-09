@@ -13,8 +13,8 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:515
-#: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:119
+#: src/components/ProgressGuide/FollowDialog.tsx:516
+#: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:127
 msgid "(active)"
 msgstr ""
 
@@ -755,7 +755,7 @@ msgstr ""
 msgid "An error occurred while compressing the video."
 msgstr ""
 
-#: src/state/queries/explore-feed-previews.tsx:183
+#: src/state/queries/explore-feed-previews.tsx:184
 msgid "An error occurred while fetching the feed."
 msgstr ""
 
@@ -1267,7 +1267,7 @@ msgstr ""
 #: src/components/LabelingServiceCard/index.tsx:62
 #: src/components/moderation/ReportDialog/index.tsx:672
 #: src/screens/Search/components/StarterPackCard.tsx:106
-#: src/screens/Search/Explore.tsx:810
+#: src/screens/Search/Explore.tsx:853
 msgid "By {0}"
 msgstr ""
 
@@ -1443,8 +1443,8 @@ msgstr ""
 msgid "Changes app icon"
 msgstr ""
 
-#: src/components/forms/HostingProvider.tsx:50
-#: src/components/forms/HostingProvider.tsx:68
+#: src/components/forms/HostingProvider.tsx:47
+#: src/components/forms/HostingProvider.tsx:83
 msgid "Changes hosting provider"
 msgstr ""
 
@@ -1597,7 +1597,7 @@ msgstr ""
 #: src/components/dms/ReportDialog.tsx:390
 #: src/components/NewskieDialog.tsx:146
 #: src/components/NewskieDialog.tsx:153
-#: src/components/ProgressGuide/FollowDialog.tsx:385
+#: src/components/ProgressGuide/FollowDialog.tsx:386
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:117
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:123
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -2340,7 +2340,7 @@ msgstr ""
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:406
+#: src/screens/Search/Explore.tsx:436
 msgid "Discover Feeds"
 msgstr ""
 
@@ -3046,8 +3046,8 @@ msgstr ""
 msgid "Failed to load conversations"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:445
-#: src/screens/Search/Explore.tsx:484
+#: src/screens/Search/Explore.tsx:475
+#: src/screens/Search/Explore.tsx:514
 msgid "Failed to load feeds preferences"
 msgstr ""
 
@@ -3059,12 +3059,12 @@ msgstr ""
 msgid "Failed to load past messages"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:438
-#: src/screens/Search/Explore.tsx:477
+#: src/screens/Search/Explore.tsx:468
+#: src/screens/Search/Explore.tsx:507
 msgid "Failed to load suggested feeds"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:347
+#: src/screens/Search/Explore.tsx:375
 msgid "Failed to load suggested follows"
 msgstr ""
 
@@ -3217,7 +3217,7 @@ msgstr ""
 
 #: src/components/ProgressGuide/FollowDialog.tsx:77
 #: src/components/ProgressGuide/FollowDialog.tsx:87
-#: src/components/ProgressGuide/FollowDialog.tsx:373
+#: src/components/ProgressGuide/FollowDialog.tsx:374
 msgid "Find people to follow"
 msgstr ""
 
@@ -3402,7 +3402,7 @@ msgstr ""
 msgid "For the best experience, we recommend using the theme font."
 msgstr ""
 
-#: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:87
+#: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:94
 msgid "For You"
 msgstr ""
 
@@ -4235,11 +4235,11 @@ msgstr ""
 msgid "Lists blocking this user:"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:82
+#: src/screens/Search/Explore.tsx:87
 msgid "Load more"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:466
+#: src/screens/Search/Explore.tsx:496
 msgid "Load more suggested feeds"
 msgstr ""
 
@@ -4837,12 +4837,12 @@ msgid "No result"
 msgstr ""
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:204
-#: src/components/ProgressGuide/FollowDialog.tsx:211
+#: src/components/ProgressGuide/FollowDialog.tsx:212
 msgid "No results"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:677
-msgid "No results for \"{selectedInterest}\"."
+#: src/screens/Search/Explore.tsx:715
+msgid "No results for \"{0}\"."
 msgstr ""
 
 #: src/components/Lists.tsx:189
@@ -4858,6 +4858,10 @@ msgstr ""
 #: src/screens/Search/SearchResults.tsx:331
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
 msgid "No results found for {query}"
+msgstr ""
+
+#: src/screens/Search/Explore.tsx:719
+msgid "No results."
 msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:229
@@ -6455,7 +6459,7 @@ msgstr ""
 msgid "Search @{0}'s posts"
 msgstr ""
 
-#: src/components/ProgressGuide/FollowDialog.tsx:682
+#: src/components/ProgressGuide/FollowDialog.tsx:683
 msgid "Search by name or interest"
 msgstr ""
 
@@ -6463,8 +6467,8 @@ msgstr ""
 msgid "Search feeds"
 msgstr ""
 
-#: src/components/ProgressGuide/FollowDialog.tsx:523
-#: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:127
+#: src/components/ProgressGuide/FollowDialog.tsx:524
+#: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:135
 msgid "Search for \"{interestsDisplayName}\"{activeText}"
 msgstr ""
 
@@ -6480,11 +6484,11 @@ msgstr ""
 msgid "Search for feeds that you want to suggest to others."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:335
+#: src/screens/Search/Explore.tsx:362
 msgid "Search for more accounts"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:409
+#: src/screens/Search/Explore.tsx:439
 msgid "Search for more feeds"
 msgstr ""
 
@@ -6510,7 +6514,7 @@ msgid "Search posts"
 msgstr ""
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:511
-#: src/components/ProgressGuide/FollowDialog.tsx:701
+#: src/components/ProgressGuide/FollowDialog.tsx:702
 msgid "Search profiles"
 msgstr ""
 
@@ -6523,7 +6527,7 @@ msgid "Search..."
 msgstr ""
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:512
-#: src/components/ProgressGuide/FollowDialog.tsx:702
+#: src/components/ProgressGuide/FollowDialog.tsx:703
 msgid "Searches for profiles"
 msgstr ""
 
@@ -7189,7 +7193,7 @@ msgstr ""
 msgid "Starter pack is invalid"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:508
+#: src/screens/Search/Explore.tsx:538
 #: src/view/screens/Profile.tsx:228
 msgid "Starter Packs"
 msgstr ""
@@ -7261,7 +7265,7 @@ msgstr ""
 msgid "Success!"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:332
+#: src/screens/Search/Explore.tsx:359
 msgid "Suggested Accounts"
 msgstr ""
 
@@ -7566,7 +7570,7 @@ msgstr ""
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:865
+#: src/screens/Search/Explore.tsx:908
 #: src/view/com/posts/PostFeed.tsx:607
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
@@ -7935,7 +7939,7 @@ msgstr ""
 msgid "Trending"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:576
+#: src/screens/Search/Explore.tsx:608
 msgid "Trending topics"
 msgstr ""
 
@@ -8635,7 +8639,7 @@ msgid "We'll use this to help customize your experience."
 msgstr ""
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:92
-#: src/components/ProgressGuide/FollowDialog.tsx:171
+#: src/components/ProgressGuide/FollowDialog.tsx:172
 msgid "We're having network issues, try again"
 msgstr ""
 
@@ -8811,8 +8815,8 @@ msgstr ""
 msgid "You"
 msgstr ""
 
-#: src/components/forms/HostingProvider.tsx:46
-msgid "You are creating an account on <0><1>{0}</1><2/></0>"
+#: src/components/forms/HostingProvider.tsx:64
+msgid "You are creating an account on <0>{0}</0>"
 msgstr ""
 
 #: src/screens/SignupQueued.tsx:157

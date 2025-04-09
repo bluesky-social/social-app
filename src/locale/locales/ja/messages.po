@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-03-14 20:33\n"
+"PO-Revision-Date: 2025-04-09 00:50\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -18,7 +18,8 @@ msgstr ""
 "X-Crowdin-File: /main/src/locale/locales/en/messages.po\n"
 "X-Crowdin-File-ID: 11\n"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:567
+#: src/components/ProgressGuide/FollowDialog.tsx:516
+#: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:127
 msgid "(active)"
 msgstr "（アクティブ）"
 
@@ -116,6 +117,15 @@ msgstr "{0, plural, other {引用}}"
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, other {リポスト}}"
 
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:78
+msgid "{0, plural, other {{1} posts}}"
+msgstr "{0, plural, other {{1}件の投稿}}"
+
+#. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
+#: src/screens/StarterPack/StarterPackScreen.tsx:485
+msgid "{0, plural, other {# people have}} used this starter pack!"
+msgstr "{0, plural, other {#人が}}このスターターパックを使用しました！"
+
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
 msgid "{0} <0>in <1>tags</1></0>"
@@ -139,11 +149,15 @@ msgstr "{0} / {1}"
 msgid "{0} out of 50"
 msgstr "{0} / 50"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:485
-msgid "{0} people have used this starter pack!"
-msgstr "{0}人がこのスターターパックを使用しました！"
+#: src/components/dms/MessageItem.tsx:143
+msgid "{0} reacted {1}"
+msgstr "{0}が{1}とリアクションしました"
 
-#: src/view/com/util/UserAvatar.tsx:445
+#: src/screens/Messages/components/ChatListItem.tsx:226
+msgid "{0} reacted {1} to {2}"
+msgstr "{0}が{2}に{1}とリアクションしました"
+
+#: src/view/com/util/UserAvatar.tsx:464
 msgid "{0}'s avatar"
 msgstr "{0}のアバター"
 
@@ -175,7 +189,7 @@ msgstr "{0}分"
 msgid "{0}s"
 msgstr "{0}秒"
 
-#: src/view/shell/desktop/LeftNav.tsx:382
+#: src/view/shell/desktop/LeftNav.tsx:383
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, other {#件の未読}}"
 
@@ -289,6 +303,11 @@ msgstr "{following} フォロー"
 msgid "{handle} can't be messaged"
 msgstr "{handle}にメッセージを送れません"
 
+#. Number of users (always at least 50) who have joined Bluesky using a specific starter pack
+#: src/components/StarterPack/StarterPackCard.tsx:101
+msgid "{joinedAllTimeCount, plural, other {# users have}} joined!"
+msgstr "{joinedAllTimeCount, plural, other {#人のユーザーが}}参加しました！"
+
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:270
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
 msgstr "{notificationCount, plural, other {#件の未読}}"
@@ -300,6 +319,21 @@ msgstr "{profileName}はBlueskyに{0}前に参加しました"
 #: src/components/NewskieDialog.tsx:111
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
 msgstr "{profileName}はスターターパックを使って{0}前に参加しました"
+
+#. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:107
+msgid "{rank}."
+msgstr "{rank}."
+
+#. trending topic time spent trending. should be as short as possible to fit in a pill
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:202
+msgid "{type}h ago"
+msgstr "{type}時間前"
+
+#. Indicates the number of additional profiles are in the Starter Pack e.g. +12
+#: src/screens/Search/components/StarterPackCard.tsx:249
+msgid "+{computedTotal}"
+msgstr "+{computedTotal}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:449
 msgctxt "profiles"
@@ -363,7 +397,12 @@ msgstr "30日"
 msgid "7 days"
 msgstr "７日"
 
-#: src/Navigation.tsx:383
+#. If last message does not contain text, fall back to "{user} reacted to {a message}"
+#: src/screens/Messages/components/ChatListItem.tsx:205
+msgid "a message"
+msgstr "メッセージ"
+
+#: src/Navigation.tsx:391
 #: src/screens/Settings/AboutSettings.tsx:34
 #: src/screens/Settings/Settings.tsx:215
 #: src/screens/Settings/Settings.tsx:218
@@ -473,8 +512,8 @@ msgstr "{displayName}をスターターパックに加える"
 msgid "Add a content warning"
 msgstr "コンテンツの警告を追加"
 
-#: src/view/screens/ProfileList.tsx:917
-#: src/view/screens/ProfileList.tsx:935
+#: src/view/screens/ProfileList.tsx:916
+#: src/view/screens/ProfileList.tsx:934
 msgid "Add a user to this list"
 msgstr "リストにユーザーを追加"
 
@@ -485,7 +524,7 @@ msgstr "アカウントを追加"
 
 #: src/view/com/composer/GifAltText.tsx:76
 #: src/view/com/composer/GifAltText.tsx:144
-#: src/view/com/composer/GifAltText.tsx:207
+#: src/view/com/composer/GifAltText.tsx:210
 #: src/view/com/composer/photos/Gallery.tsx:169
 #: src/view/com/composer/photos/Gallery.tsx:216
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:88
@@ -499,12 +538,12 @@ msgstr "ALTテキストを追加（オプション）"
 
 #: src/screens/Settings/Settings.tsx:373
 #: src/screens/Settings/Settings.tsx:376
-#: src/view/shell/desktop/LeftNav.tsx:280
-#: src/view/shell/desktop/LeftNav.tsx:284
+#: src/view/shell/desktop/LeftNav.tsx:281
+#: src/view/shell/desktop/LeftNav.tsx:285
 msgid "Add another account"
 msgstr "他のアカウントを追加"
 
-#: src/view/com/composer/Composer.tsx:743
+#: src/view/com/composer/Composer.tsx:752
 msgid "Add another post"
 msgstr "他の投稿を追加"
 
@@ -517,6 +556,10 @@ msgstr "アプリパスワードを追加"
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:111
 msgid "Add App Password"
 msgstr "アプリパスワードを追加"
+
+#: src/components/dms/EmojiReactionPicker.web.tsx:35
+msgid "Add emoji reaction"
+msgstr "絵文字リアクションを追加"
 
 #: src/components/moderation/ReportDialog/index.tsx:392
 #: src/components/moderation/ReportDialog/index.tsx:396
@@ -531,14 +574,18 @@ msgstr "選択した設定でミュートワードを追加"
 msgid "Add muted words and tags"
 msgstr "ミュートするワードとタグを追加"
 
-#: src/view/com/composer/Composer.tsx:1258
+#: src/view/com/composer/Composer.tsx:1306
 msgid "Add new post"
 msgstr "新しい投稿を追加"
 
-#: src/view/screens/ProfileList.tsx:925
-#: src/view/screens/ProfileList.tsx:943
+#: src/view/screens/ProfileList.tsx:924
+#: src/view/screens/ProfileList.tsx:942
 msgid "Add people"
 msgstr "ユーザーを追加"
+
+#: src/components/dms/EmojiPopup.android.tsx:55
+msgid "Add Reaction"
+msgstr "リアクションを追加"
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
@@ -556,7 +603,7 @@ msgstr "フォローしているユーザーのみのデフォルトのフィー
 msgid "Add the following DNS record to your domain:"
 msgstr "次のDNSレコードをドメインに追加してください："
 
-#: src/components/FeedCard.tsx:295
+#: src/components/FeedCard.tsx:305
 msgid "Add this feed to your feeds"
 msgstr "このフィードをあなたのフィードに追加する"
 
@@ -582,14 +629,14 @@ msgstr "マイフィードに追加"
 msgid "Additional details (limit 300 characters)"
 msgstr "追加の詳細（300文字まで）"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:160
+#: src/view/com/composer/labels/LabelsBtn.tsx:159
 msgid "Adult"
 msgstr "成人向け（ポルノ等）"
 
 #: src/components/moderation/ContentHider.tsx:113
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/lib/moderation/useModerationCauseDescription.ts:148
-#: src/view/com/composer/labels/LabelsBtn.tsx:128
+#: src/view/com/composer/labels/LabelsBtn.tsx:127
 msgid "Adult Content"
 msgstr "成人向けコンテンツ"
 
@@ -601,8 +648,8 @@ msgstr "成人向けコンテンツは<0>bsky.app</0>のウェブ版からしか
 msgid "Adult content is disabled."
 msgstr "成人向けコンテンツは無効になっています。"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:139
-#: src/view/com/composer/labels/LabelsBtn.tsx:197
+#: src/view/com/composer/labels/LabelsBtn.tsx:138
+#: src/view/com/composer/labels/LabelsBtn.tsx:196
 msgid "Adult Content labels"
 msgstr "成人向けコンテンツのラベル"
 
@@ -618,9 +665,9 @@ msgstr "すべて"
 msgid "All accounts have been followed!"
 msgstr "すべてのアカウントをフォローしました！"
 
-#: src/view/screens/Search/Search.tsx:370
-#: src/view/screens/Search/Search.tsx:405
-#: src/view/screens/Search/Search.tsx:407
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:64
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:99
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:101
 msgid "All languages"
 msgstr "すべての言語"
 
@@ -685,8 +732,8 @@ msgstr "ALTテキストは、すべての人が文脈を理解できるように
 
 #: src/view/com/composer/GifAltText.tsx:179
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:139
-msgid "Alt text will be truncated. Limit: {0} characters."
-msgstr "ALTテキストは切り詰められます。上限：{0}文字。"
+msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} characters.}}"
+msgstr "ALTテキストは切り詰められます。{MAX_ALT_TEXT, plural, other {制限：{0}文字。}}"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:93
 #: src/view/com/modals/VerifyEmail.tsx:132
@@ -713,7 +760,11 @@ msgstr "エラーが発生しました"
 msgid "An error occurred while compressing the video."
 msgstr "ビデオの圧縮中にエラーが発生しました。"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:331
+#: src/state/queries/explore-feed-previews.tsx:184
+msgid "An error occurred while fetching the feed."
+msgstr "フィードの取得中にエラーが発生しました。"
+
+#: src/components/StarterPack/ProfileStarterPacks.tsx:336
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "スターターパックの生成中にエラーが発生しました。もう一度試しますか？"
 
@@ -758,8 +809,8 @@ msgstr "チャットを開始しようとした時に問題が発生しました
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
-#: src/components/ProfileCard.tsx:332
-#: src/components/ProfileCard.tsx:353
+#: src/components/ProfileCard.tsx:339
+#: src/components/ProfileCard.tsx:360
 #: src/view/com/profile/FollowButton.tsx:38
 #: src/view/com/profile/FollowButton.tsx:48
 msgid "An issue occurred, please try again."
@@ -796,7 +847,7 @@ msgstr "反社会的な行動"
 msgid "Anybody can interact"
 msgstr "誰でも反応可能"
 
-#: src/Navigation.tsx:391
+#: src/Navigation.tsx:399
 #: src/screens/Settings/AppIconSettings/index.tsx:67
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:18
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:23
@@ -894,11 +945,11 @@ msgstr "アーカイブ投稿"
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr "アプリパスワード「{0}」を本当に削除しますか？"
 
-#: src/components/dms/MessageMenu.tsx:152
+#: src/components/dms/MessageContextMenu.tsx:178
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr "このメッセージを本当に削除しますか？このメッセージはあなたからは削除したように見えますが、他の参加者からは削除されません。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:638
+#: src/screens/StarterPack/StarterPackScreen.tsx:641
 msgid "Are you sure you want to delete this starter pack?"
 msgstr "本当にこのスターターパックを削除したいですか？"
 
@@ -918,15 +969,15 @@ msgstr "この会話から退出しますか？あなたのメッセージはあ
 msgid "Are you sure you want to remove {0} from your feeds?"
 msgstr "あなたのフィードから{0}を削除してもよろしいですか？"
 
-#: src/components/FeedCard.tsx:312
+#: src/components/FeedCard.tsx:340
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "本当にこのフィードをあなたのフィードから削除したいですか？"
 
-#: src/view/com/composer/Composer.tsx:694
+#: src/view/com/composer/Composer.tsx:703
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "本当にこの下書きを削除しますか？"
 
-#: src/view/com/composer/Composer.tsx:868
+#: src/view/com/composer/Composer.tsx:882
 msgid "Are you sure you'd like to discard this post?"
 msgstr "本当にこの投稿を削除しますか？"
 
@@ -943,11 +994,11 @@ msgstr "<0>{suggestedLanguageName}</0>で書かれた投稿ですか？"
 msgid "Art"
 msgstr "アート"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:172
+#: src/view/com/composer/labels/LabelsBtn.tsx:171
 msgid "Artistic or non-erotic nudity."
 msgstr "芸術的または性的ではないヌード。"
 
-#: src/screens/Signup/StepHandle.tsx:182
+#: src/screens/Signup/StepHandle.tsx:194
 msgid "At least 3 characters"
 msgstr "少なくとも３文字"
 
@@ -960,8 +1011,8 @@ msgstr "オーロラ"
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
 msgstr "自動再生オプションは<0>コンテンツとメディアの設定</0>へ移動しました。"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:107
-#: src/screens/Settings/ContentAndMediaSettings.tsx:113
+#: src/screens/Settings/ContentAndMediaSettings.tsx:116
+#: src/screens/Settings/ContentAndMediaSettings.tsx:122
 msgid "Autoplay videos and GIFs"
 msgstr "ビデオとGIFの自動再生"
 
@@ -993,24 +1044,19 @@ msgstr "チャットへ戻る"
 msgid "Before creating a list, you must first verify your email."
 msgstr "リストを作る前に、まずメールアドレスを確認しなければなりません。"
 
-#: src/view/com/composer/Composer.tsx:621
+#: src/view/com/composer/Composer.tsx:629
 msgid "Before creating a post, you must first verify your email."
 msgstr "投稿する前に、まずメールアドレスを確認しなければなりません。"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:338
+#: src/components/StarterPack/ProfileStarterPacks.tsx:343
 msgid "Before creating a starter pack, you must first verify your email."
 msgstr "スターターパックを作る前に、まずメールアドレスを確認しなければなりません。"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:79
 #: src/components/dms/MessageProfileButton.tsx:110
-#: src/screens/Messages/Conversation.tsx:212
+#: src/screens/Messages/Conversation.tsx:221
 msgid "Before you may message another user, you must first verify your email."
 msgstr "他のユーザーにメッセージを送る前に、まずメールアドレスを確認しなければなりません。"
-
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:74
-#: src/screens/Search/components/ExploreTrendingVideos.tsx:111
-msgid "BETA"
-msgstr "ベータ"
 
 #: src/components/dialogs/BirthDateSettings.tsx:103
 #: src/screens/Settings/AccountSettings.tsx:109
@@ -1039,7 +1085,7 @@ msgstr "アカウントをブロック"
 msgid "Block Account?"
 msgstr "アカウントをブロックしますか？"
 
-#: src/view/screens/ProfileList.tsx:662
+#: src/view/screens/ProfileList.tsx:661
 msgid "Block accounts"
 msgstr "アカウントをブロック"
 
@@ -1051,7 +1097,7 @@ msgstr "ブロックと削除"
 msgid "Block and/or delete this conversation"
 msgstr "この会話をブロックして削除（あるいはどちらか）"
 
-#: src/view/screens/ProfileList.tsx:782
+#: src/view/screens/ProfileList.tsx:781
 msgid "Block list"
 msgstr "リストをブロック"
 
@@ -1059,7 +1105,7 @@ msgstr "リストをブロック"
 msgid "Block or report"
 msgstr "ブロックまたは報告"
 
-#: src/view/screens/ProfileList.tsx:777
+#: src/view/screens/ProfileList.tsx:776
 msgid "Block these accounts?"
 msgstr "これらのアカウントをブロックしますか？"
 
@@ -1102,7 +1148,7 @@ msgstr "投稿をブロックしました。"
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr "ブロックしてもこのラベラーがあなたのアカウントにラベルを適用することができます。"
 
-#: src/view/screens/ProfileList.tsx:779
+#: src/view/screens/ProfileList.tsx:778
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "ブロックしたことは公開されます。ブロック中のアカウントは、あなたのスレッドでの返信、あなたへのメンション、その他の方法であなたとやり取りすることはできません。"
 
@@ -1145,7 +1191,7 @@ msgstr "Blueskyは友達と一緒のほうが楽しい！"
 msgid "Bluesky Social Terms of Service"
 msgstr "Bluesky Social利用規約"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:298
+#: src/components/StarterPack/ProfileStarterPacks.tsx:303
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr "Blueskyはあなたのつながっているユーザーからおすすめのアカウントを選びます。"
 
@@ -1174,23 +1220,23 @@ msgstr "画像のぼかしとフィードからのフィルタリング"
 msgid "Books"
 msgstr "書籍"
 
-#: src/components/FeedInterstitials.tsx:372
+#: src/components/FeedInterstitials.tsx:373
 msgid "Browse more accounts on the Explore page"
 msgstr "検索ページでさらにアカウントを見る"
 
-#: src/components/FeedInterstitials.tsx:509
+#: src/components/FeedInterstitials.tsx:511
 msgid "Browse more feeds on the Explore page"
 msgstr "検索ページでさらにフィードを見る"
 
 #: src/components/FeedInterstitials.tsx:353
 #: src/components/FeedInterstitials.tsx:356
-#: src/components/FeedInterstitials.tsx:490
-#: src/components/FeedInterstitials.tsx:493
+#: src/components/FeedInterstitials.tsx:492
+#: src/components/FeedInterstitials.tsx:495
 msgid "Browse more suggestions"
 msgstr "さらにおすすめを見る"
 
-#: src/components/FeedInterstitials.tsx:380
-#: src/components/FeedInterstitials.tsx:518
+#: src/components/FeedInterstitials.tsx:381
+#: src/components/FeedInterstitials.tsx:520
 msgid "Browse more suggestions on the Explore page"
 msgstr "検索ページでさらにおすすめを見る"
 
@@ -1211,6 +1257,10 @@ msgstr "{displayName}のタグの付いた投稿を見る"
 msgid "Browse starter pack {displayName}"
 msgstr "{displayName}というスターターパックを見る"
 
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:89
+msgid "Browse topic {0}"
+msgstr "トピック「{0}」を見る"
+
 #: src/components/TrendingTopics.tsx:232
 msgid "Browse topic {displayName}"
 msgstr "{displayName}というトピックを見る"
@@ -1221,6 +1271,8 @@ msgstr "ビジネス"
 
 #: src/components/LabelingServiceCard/index.tsx:62
 #: src/components/moderation/ReportDialog/index.tsx:672
+#: src/screens/Search/components/StarterPackCard.tsx:106
+#: src/screens/Search/Explore.tsx:853
 msgid "By {0}"
 msgstr "作成者：{0}"
 
@@ -1240,16 +1292,21 @@ msgstr "アカウントを作成することで、<0>利用規約</0>と<1>プ�
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
 msgstr "アカウントを作成することで、<0>利用規約</0>に同意したものとみなされます。"
 
+#: src/screens/Search/components/StarterPackCard.tsx:105
+msgid "By you"
+msgstr "作成者：あなた"
+
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:72
 msgid "Camera"
 msgstr "カメラ"
 
-#: src/components/Menu/index.tsx:304
+#: src/components/Menu/index.tsx:306
 #: src/components/Prompt.tsx:130
 #: src/components/Prompt.tsx:132
 #: src/screens/Deactivated.tsx:158
 #: src/screens/Profile/Header/EditProfileDialog.tsx:220
 #: src/screens/Profile/Header/EditProfileDialog.tsx:228
+#: src/screens/Search/Shell.tsx:349
 #: src/screens/Settings/AppIconSettings/index.tsx:44
 #: src/screens/Settings/AppIconSettings/index.tsx:225
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:76
@@ -1257,7 +1314,8 @@ msgstr "カメラ"
 #: src/screens/Settings/Settings.tsx:260
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:931
+#: src/view/com/composer/Composer.tsx:937
+#: src/view/com/composer/Composer.tsx:948
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -1272,8 +1330,7 @@ msgstr "カメラ"
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:213
-#: src/view/screens/Search/Search.tsx:890
-#: src/view/shell/desktop/LeftNav.tsx:208
+#: src/view/shell/desktop/LeftNav.tsx:209
 msgid "Cancel"
 msgstr "キャンセル"
 
@@ -1305,8 +1362,8 @@ msgstr "引用をキャンセル"
 msgid "Cancel reactivation and sign out"
 msgstr "再有効化をキャンセルしてサインアウト"
 
+#: src/screens/Search/Shell.tsx:341
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/screens/Search/Search.tsx:882
 msgid "Cancel search"
 msgstr "検索をキャンセル"
 
@@ -1391,14 +1448,14 @@ msgstr "メールアドレスを変更"
 msgid "Changes app icon"
 msgstr "アプリアイコンを変更"
 
-#: src/components/forms/HostingProvider.tsx:50
-#: src/components/forms/HostingProvider.tsx:70
+#: src/components/forms/HostingProvider.tsx:47
+#: src/components/forms/HostingProvider.tsx:83
 msgid "Changes hosting provider"
 msgstr "ホスティングプロバイダーを変更"
 
-#: src/Navigation.tsx:408
+#: src/Navigation.tsx:416
 #: src/view/shell/bottom-bar/BottomBar.tsx:205
-#: src/view/shell/desktop/LeftNav.tsx:534
+#: src/view/shell/desktop/LeftNav.tsx:535
 #: src/view/shell/Drawer.tsx:422
 msgid "Chat"
 msgstr "チャット"
@@ -1414,7 +1471,7 @@ msgctxt "toast"
 msgid "Chat muted"
 msgstr "チャットをミュートしました"
 
-#: src/Navigation.tsx:418
+#: src/Navigation.tsx:426
 #: src/screens/Messages/components/InboxPreview.tsx:24
 msgid "Chat request inbox"
 msgstr "チャット要求の受信トレイ"
@@ -1425,8 +1482,7 @@ msgid "Chat requests"
 msgstr "チャットの要求"
 
 #: src/components/dms/ConvoMenu.tsx:75
-#: src/components/dms/MessageMenu.tsx:83
-#: src/Navigation.tsx:413
+#: src/Navigation.tsx:421
 #: src/screens/Messages/ChatList.tsx:328
 msgid "Chat settings"
 msgstr "チャットの設定"
@@ -1466,17 +1522,13 @@ msgstr "ドメイン名の確認方法を選択"
 msgid "Choose Feeds"
 msgstr "フィードの選択"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:306
+#: src/components/StarterPack/ProfileStarterPacks.tsx:311
 msgid "Choose for me"
 msgstr "私向けに選んで"
 
 #: src/screens/StarterPack/Wizard/index.tsx:190
 msgid "Choose People"
 msgstr "ユーザーの選択"
-
-#: src/view/com/composer/labels/LabelsBtn.tsx:115
-msgid "Choose self-labels that are applicable for the media you are posting. If none are selected, this post is suitable for all audiences."
-msgstr "投稿しようとしているメディアに適した自己ラベルを選んでください。何も選択しない場合は、この投稿はすべての閲覧者へ適したものとします。"
 
 #: src/screens/Onboarding/StepFinished.tsx:298
 msgid "Choose the algorithms that power your custom feeds."
@@ -1491,15 +1543,14 @@ msgid "Choose your account provider"
 msgstr "アカウントプロバイダーを選んでください"
 
 #: src/view/screens/Feeds.tsx:728
-#: src/view/screens/Search/Explore.tsx:427
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr "自分自身のタイムラインを選びましょう！コミュニティによって作成されたフィードは、あなたが好きなコンテンツを見つけるのに役立ちます。"
 
-#: src/screens/Signup/StepInfo/index.tsx:238
+#: src/screens/Signup/StepInfo/index.tsx:241
 msgid "Choose your password"
 msgstr "パスワードを入力"
 
-#: src/screens/Signup/index.tsx:146
+#: src/screens/Signup/index.tsx:160
 msgid "Choose your username"
 msgstr "ユーザー名を選んでください"
 
@@ -1531,7 +1582,7 @@ msgstr "クリックしてこの投稿の引用投稿を有効に。"
 msgid "Click to open tag menu for {tag}"
 msgstr "クリックして {tag} のタグメニューを表示"
 
-#: src/components/dms/MessageItem.tsx:241
+#: src/components/dms/MessageItem.tsx:317
 msgid "Click to retry failed message"
 msgstr "送信失敗したメッセージを再送信"
 
@@ -1546,11 +1597,12 @@ msgstr "パカラッ 🐴 パカラッ 🐴"
 #: src/components/dialogs/GifSelect.tsx:281
 #: src/components/dialogs/VerifyEmailDialog.tsx:289
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:269
+#: src/components/dms/EmojiPopup.android.tsx:58
 #: src/components/dms/ReportDialog.tsx:381
 #: src/components/dms/ReportDialog.tsx:390
 #: src/components/NewskieDialog.tsx:146
 #: src/components/NewskieDialog.tsx:153
-#: src/components/ProgressGuide/FollowDialog.tsx:429
+#: src/components/ProgressGuide/FollowDialog.tsx:386
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:117
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:123
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -1597,13 +1649,23 @@ msgstr "画像を閉じる"
 msgid "Close image viewer"
 msgstr "画像ビューアを閉じる"
 
-#: src/components/Menu/index.tsx:298
+#: src/components/ContextMenu/Backdrop.ios.tsx:53
+#: src/components/ContextMenu/Backdrop.ios.tsx:79
+#: src/components/ContextMenu/Backdrop.tsx:45
+msgid "Close menu"
+msgstr "メニューを閉じる"
+
+#: src/components/Menu/index.tsx:300
 msgid "Close this dialog"
 msgstr "このダイアログを閉じる"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:32
 msgid "Closes password update alert"
 msgstr "パスワード更新アラートを閉じる"
+
+#: src/view/com/composer/Composer.tsx:945
+msgid "Closes post composer and discards post draft"
+msgstr "投稿の編集画面を閉じて下書きを破棄"
 
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
@@ -1650,23 +1712,23 @@ msgstr "コミュニティガイドライン"
 msgid "Complete onboarding and start using your account"
 msgstr "初期設定を完了してアカウントを使い始める"
 
-#: src/screens/Signup/index.tsx:148
+#: src/screens/Signup/index.tsx:162
 msgid "Complete the challenge"
 msgstr "テストをクリアしてください"
 
-#: src/view/shell/desktop/LeftNav.tsx:499
+#: src/view/shell/desktop/LeftNav.tsx:500
 msgid "Compose new post"
 msgstr "新しい投稿を作成"
 
-#: src/view/com/composer/Composer.tsx:834
-msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
-msgstr "{MAX_GRAPHEME_LENGTH}文字までの投稿を作成"
+#: src/view/com/composer/Composer.tsx:846
+msgid "Compose posts up to {0, plural, other {# characters}} in length"
+msgstr "最大{0, plural, other {#文字}}まで投稿を編集"
 
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:34
 msgid "Compose reply"
 msgstr "返信を作成"
 
-#: src/view/com/composer/Composer.tsx:1652
+#: src/view/com/composer/Composer.tsx:1689
 msgid "Compressing video..."
 msgstr "ビデオを圧縮中…"
 
@@ -1730,12 +1792,12 @@ msgstr "確認コード"
 msgid "Connecting..."
 msgstr "接続中…"
 
-#: src/screens/Signup/index.tsx:179
-#: src/screens/Signup/index.tsx:182
+#: src/screens/Signup/index.tsx:193
+#: src/screens/Signup/index.tsx:196
 msgid "Contact support"
 msgstr "サポートに連絡"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:50
+#: src/screens/Settings/ContentAndMediaSettings.tsx:51
 msgid "Content & Media"
 msgstr "コンテンツ＆メディア"
 
@@ -1757,7 +1819,7 @@ msgstr "ブロックされたコンテンツ"
 msgid "Content filters"
 msgstr "コンテンツのフィルター"
 
-#: src/screens/Search/components/ExploreRecommendations.tsx:57
+#: src/screens/Search/modules/ExploreRecommendations.tsx:59
 msgid "Content from across the network we think you might like."
 msgstr "お好みかもしれないネットワークからのコンテンツ。"
 
@@ -1782,7 +1844,7 @@ msgstr "コンテンツの警告"
 msgid "Content warnings"
 msgstr "コンテンツの警告"
 
-#: src/components/Menu/index.web.tsx:83
+#: src/components/Menu/index.web.tsx:85
 msgid "Context menu backdrop, click to close the menu."
 msgstr "コンテキストメニューの背景をクリックし、メニューを閉じる。"
 
@@ -1811,7 +1873,7 @@ msgctxt "toast"
 msgid "Conversation deleted"
 msgstr "会話が削除されました"
 
-#: src/screens/Messages/components/ChatListItem.tsx:189
+#: src/screens/Messages/components/ChatListItem.tsx:191
 msgid "Conversation deleted"
 msgstr "会話が削除されました"
 
@@ -1827,7 +1889,7 @@ msgstr "コピーしました"
 msgid "Copied build version to clipboard"
 msgstr "ビルドバージョンをクリップボードにコピーしました"
 
-#: src/components/dms/MessageMenu.tsx:57
+#: src/components/dms/MessageContextMenu.tsx:55
 #: src/lib/sharing.ts:25
 #: src/lib/sharing.ts:41
 #: src/view/com/modals/InviteCodes.tsx:153
@@ -1886,7 +1948,7 @@ msgstr "リンクをコピー"
 msgid "Copy Link"
 msgstr "リンクをコピー"
 
-#: src/view/screens/ProfileList.tsx:506
+#: src/view/screens/ProfileList.tsx:505
 msgid "Copy link to list"
 msgstr "リストへのリンクをコピー"
 
@@ -1895,8 +1957,8 @@ msgstr "リストへのリンクをコピー"
 msgid "Copy link to post"
 msgstr "投稿へのリンクをコピー"
 
-#: src/components/dms/MessageMenu.tsx:112
-#: src/components/dms/MessageMenu.tsx:114
+#: src/components/dms/MessageContextMenu.tsx:139
+#: src/components/dms/MessageContextMenu.tsx:142
 msgid "Copy message text"
 msgstr "メッセージのテキストをコピー"
 
@@ -1932,7 +1994,7 @@ msgstr "チャットからの退出に失敗しました"
 msgid "Could not load feed"
 msgstr "フィードの読み込みに失敗しました"
 
-#: src/view/screens/ProfileList.tsx:1022
+#: src/view/screens/ProfileList.tsx:1021
 msgid "Could not load list"
 msgstr "リストの読み込みに失敗しました"
 
@@ -1944,7 +2006,7 @@ msgstr "チャットのミュートに失敗しました"
 msgid "Could not process your video"
 msgstr "ビデオを処理できませんでした"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:288
+#: src/components/StarterPack/ProfileStarterPacks.tsx:293
 msgid "Create"
 msgstr "作成"
 
@@ -1952,13 +2014,13 @@ msgstr "作成"
 msgid "Create a QR code for a starter pack"
 msgstr "スターターパックのQRコードを作成"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:173
-#: src/components/StarterPack/ProfileStarterPacks.tsx:269
-#: src/Navigation.tsx:443
+#: src/components/StarterPack/ProfileStarterPacks.tsx:178
+#: src/components/StarterPack/ProfileStarterPacks.tsx:274
+#: src/Navigation.tsx:451
 msgid "Create a starter pack"
 msgstr "スターターパックを作成"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:250
+#: src/components/StarterPack/ProfileStarterPacks.tsx:255
 msgid "Create a starter pack for me"
 msgstr "私向けのスターターパックを作成"
 
@@ -1973,7 +2035,7 @@ msgstr "私向けのスターターパックを作成"
 msgid "Create account"
 msgstr "アカウントを作成"
 
-#: src/screens/Signup/index.tsx:94
+#: src/screens/Signup/index.tsx:108
 msgid "Create Account"
 msgstr "アカウントを作成"
 
@@ -1982,11 +2044,16 @@ msgstr "アカウントを作成"
 msgid "Create an account"
 msgstr "アカウントを作成"
 
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:303
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:310
+msgid "Create an account without using this starter pack"
+msgstr "このスターターパックを使用せずにアカウントを作成する"
+
 #: src/screens/Onboarding/StepProfile/index.tsx:292
 msgid "Create an avatar instead"
 msgstr "代わりにアバターを作成"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:180
+#: src/components/StarterPack/ProfileStarterPacks.tsx:185
 msgid "Create another"
 msgstr "別のものを作成"
 
@@ -2050,7 +2117,7 @@ msgstr "ダークモード"
 msgid "Dark theme"
 msgstr "ダークテーマ"
 
-#: src/screens/Signup/StepInfo/index.tsx:266
+#: src/screens/Signup/StepInfo/index.tsx:269
 msgid "Date of birth"
 msgstr "生年月日"
 
@@ -2076,14 +2143,14 @@ msgstr "デフォルト"
 msgid "Default icons"
 msgstr "デフォルトアイコン"
 
-#: src/components/dms/MessageMenu.tsx:154
+#: src/components/dms/MessageContextMenu.tsx:180
 #: src/screens/Messages/components/ChatStatusInfo.tsx:55
 #: src/screens/Settings/AppPasswords.tsx:212
-#: src/screens/StarterPack/StarterPackScreen.tsx:591
-#: src/screens/StarterPack/StarterPackScreen.tsx:669
-#: src/screens/StarterPack/StarterPackScreen.tsx:741
+#: src/screens/StarterPack/StarterPackScreen.tsx:594
+#: src/screens/StarterPack/StarterPackScreen.tsx:672
+#: src/screens/StarterPack/StarterPackScreen.tsx:744
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:750
-#: src/view/screens/ProfileList.tsx:761
+#: src/view/screens/ProfileList.tsx:760
 msgid "Delete"
 msgstr "削除"
 
@@ -2124,19 +2191,19 @@ msgstr "会話を削除"
 msgid "Delete Conversation"
 msgstr "会話を削除"
 
-#: src/components/dms/MessageMenu.tsx:126
+#: src/components/dms/MessageContextMenu.tsx:153
 msgid "Delete for me"
 msgstr "自分宛を削除"
 
-#: src/view/screens/ProfileList.tsx:549
-msgid "Delete List"
+#: src/view/screens/ProfileList.tsx:548
+msgid "Delete list"
 msgstr "リストを削除"
 
-#: src/components/dms/MessageMenu.tsx:150
+#: src/components/dms/MessageContextMenu.tsx:176
 msgid "Delete message"
 msgstr "メッセージを削除"
 
-#: src/components/dms/MessageMenu.tsx:124
+#: src/components/dms/MessageContextMenu.tsx:151
 msgid "Delete message for me"
 msgstr "メッセージの宛先から自分を削除"
 
@@ -2144,22 +2211,22 @@ msgstr "メッセージの宛先から自分を削除"
 msgid "Delete my account"
 msgstr "アカウントを削除"
 
-#: src/view/com/composer/Composer.tsx:842
+#: src/view/com/composer/Composer.tsx:856
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:709
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:711
 msgid "Delete post"
 msgstr "投稿を削除"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:585
-#: src/screens/StarterPack/StarterPackScreen.tsx:732
+#: src/screens/StarterPack/StarterPackScreen.tsx:588
+#: src/screens/StarterPack/StarterPackScreen.tsx:735
 msgid "Delete starter pack"
 msgstr "スターターパックを削除"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:635
+#: src/screens/StarterPack/StarterPackScreen.tsx:638
 msgid "Delete starter pack?"
 msgstr "スターターパックを削除しますか？"
 
-#: src/view/screens/ProfileList.tsx:756
+#: src/view/screens/ProfileList.tsx:755
 msgid "Delete this list?"
 msgstr "このリストを削除しますか？"
 
@@ -2180,7 +2247,7 @@ msgstr "削除されたアカウント"
 msgid "Deleted post."
 msgstr "投稿を削除しました。"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:344
+#: src/screens/Profile/Header/EditProfileDialog.tsx:347
 #: src/view/com/modals/CreateOrEditList.tsx:280
 #: src/view/com/modals/CreateOrEditList.tsx:301
 #: src/view/com/modals/EditProfile.tsx:193
@@ -2188,13 +2255,13 @@ msgstr "投稿を削除しました。"
 msgid "Description"
 msgstr "説明"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:364
+#: src/screens/Profile/Header/EditProfileDialog.tsx:367
 msgid "Description is too long"
 msgstr "説明が長すぎます"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:365
-msgid "Description is too long. The maximum number of characters is {DESCRIPTION_MAX_GRAPHEMES}."
-msgstr "説明が長すぎます。最大{DESCRIPTION_MAX_GRAPHEMES}文字までです。"
+#: src/screens/Profile/Header/EditProfileDialog.tsx:368
+msgid "Description is too long. {DESCRIPTION_MAX_GRAPHEMES, plural, other {The maximum number of characters is #.}}"
+msgstr "説明が長すぎます。{DESCRIPTION_MAX_GRAPHEMES, plural, other {最大で#文字です。}}"
 
 #: src/view/com/composer/GifAltText.tsx:150
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:114
@@ -2256,8 +2323,8 @@ msgid "Disabled"
 msgstr "無効"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:84
-#: src/view/com/composer/Composer.tsx:696
-#: src/view/com/composer/Composer.tsx:875
+#: src/view/com/composer/Composer.tsx:705
+#: src/view/com/composer/Composer.tsx:889
 msgid "Discard"
 msgstr "破棄"
 
@@ -2265,11 +2332,11 @@ msgstr "破棄"
 msgid "Discard changes?"
 msgstr "変更を破棄しますか？"
 
-#: src/view/com/composer/Composer.tsx:693
+#: src/view/com/composer/Composer.tsx:702
 msgid "Discard draft?"
 msgstr "下書きを削除しますか？"
 
-#: src/view/com/composer/Composer.tsx:867
+#: src/view/com/composer/Composer.tsx:881
 msgid "Discard post?"
 msgstr "投稿を削除しますか？"
 
@@ -2278,14 +2345,14 @@ msgstr "投稿を削除しますか？"
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr "アプリがログアウトしたユーザーに自分のアカウントを表示しないようにする"
 
+#: src/screens/Search/Explore.tsx:436
+msgid "Discover Feeds"
+msgstr "フィードを探す"
+
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
 msgid "Discover new custom feeds"
 msgstr "新しいカスタムフィードを見つける"
-
-#: src/view/screens/Search/Explore.tsx:425
-msgid "Discover new feeds"
-msgstr "新しいフィードを探す"
 
 #: src/view/screens/Feeds.tsx:725
 msgid "Discover New Feeds"
@@ -2295,13 +2362,17 @@ msgstr "新しいフィードを探す"
 msgid "Dismiss"
 msgstr "消す"
 
-#: src/view/com/composer/Composer.tsx:1576
+#: src/view/com/composer/Composer.tsx:1613
 msgid "Dismiss error"
 msgstr "エラーを消す"
 
 #: src/components/ProgressGuide/List.tsx:42
 msgid "Dismiss getting started guide"
 msgstr "入門ガイドを消す"
+
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:43
+msgid "Dismiss interests"
+msgstr ""
 
 #: src/components/interstitials/TrendingVideos.tsx:92
 msgid "Dismiss this section"
@@ -2314,7 +2385,7 @@ msgstr "大きなALTテキストのバッジを表示"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:314
 #: src/screens/Profile/Header/EditProfileDialog.tsx:320
-#: src/screens/Profile/Header/EditProfileDialog.tsx:351
+#: src/screens/Profile/Header/EditProfileDialog.tsx:354
 #: src/view/com/modals/EditProfile.tsx:187
 msgid "Display name"
 msgstr "表示名"
@@ -2328,8 +2399,8 @@ msgid "Display name is too long"
 msgstr "表示名が長すぎます"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:334
-msgid "Display name is too long. The maximum number of characters is {DISPLAY_NAME_MAX_GRAPHEMES}."
-msgstr "表示名が長すぎます。最大{DISPLAY_NAME_MAX_GRAPHEMES}文字までです。"
+msgid "Display name is too long. {DISPLAY_NAME_MAX_GRAPHEMES, plural, other {The maximum number of characters is #.}}"
+msgstr "表示名が長すぎます。{DISPLAY_NAME_MAX_GRAPHEMES, plural, other {最大で#文字です。}}"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:373
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:375
@@ -2344,7 +2415,7 @@ msgstr "このミュートワードはフォローしているユーザーには
 msgid "Does not include nudity."
 msgstr "ヌードは含まれません。"
 
-#: src/screens/Signup/StepHandle.tsx:165
+#: src/screens/Signup/StepHandle.tsx:173
 msgid "Doesn't begin or end with a hyphen"
 msgstr "ハイフンで始まったり終ったりしない"
 
@@ -2363,8 +2434,8 @@ msgstr "ドメインを確認しました！"
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
 #: src/view/com/auth/server-input/index.tsx:233
-#: src/view/com/composer/labels/LabelsBtn.tsx:224
-#: src/view/com/composer/labels/LabelsBtn.tsx:231
+#: src/view/com/composer/labels/LabelsBtn.tsx:223
+#: src/view/com/composer/labels/LabelsBtn.tsx:230
 #: src/view/com/composer/videos/SubtitleDialog.tsx:169
 #: src/view/com/composer/videos/SubtitleDialog.tsx:179
 #: src/view/com/modals/CropImage.web.tsx:112
@@ -2384,6 +2455,10 @@ msgstr "完了"
 #: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:42
 msgid "Done{extraText}"
 msgstr "完了{extraText}"
+
+#: src/components/dms/MessageItem.tsx:161
+msgid "Double tap or long press the message to add a reaction"
+msgstr "メッセージをダブルタップか長押しでリアクションを追加"
 
 #: src/components/Dialog/index.tsx:324
 msgid "Double tap to close the dialog"
@@ -2424,7 +2499,7 @@ msgstr "例：山田 太郎"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:357
 msgid "e.g. alice.com"
-msgstr "例：taro.com"
+msgstr "例：example.com"
 
 #: src/view/com/modals/EditProfile.tsx:198
 msgid "e.g. Artist, dog-lover, and avid reader."
@@ -2455,7 +2530,7 @@ msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "それぞれのコードは一回限り有効です。定期的に追加の招待コードをお送りします。"
 
 #: src/screens/Settings/AccountSettings.tsx:112
-#: src/screens/StarterPack/StarterPackScreen.tsx:580
+#: src/screens/StarterPack/StarterPackScreen.tsx:583
 #: src/screens/StarterPack/Wizard/index.tsx:534
 #: src/screens/StarterPack/Wizard/index.tsx:541
 msgid "Edit"
@@ -2466,7 +2541,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "編集"
 
-#: src/view/com/util/UserAvatar.tsx:344
+#: src/view/com/util/UserAvatar.tsx:363
 #: src/view/com/util/UserBanner.tsx:95
 msgid "Edit avatar"
 msgstr "アバターを編集"
@@ -2486,7 +2561,12 @@ msgstr "画像を編集"
 msgid "Edit interaction settings"
 msgstr "反応関連の設定を編集"
 
-#: src/view/screens/ProfileList.tsx:537
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:98
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:105
+msgid "Edit interests"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:536
 msgid "Edit list details"
 msgstr "リストの詳細を編集"
 
@@ -2524,7 +2604,7 @@ msgstr "プロフィールを編集"
 msgid "Edit Profile"
 msgstr "プロフィールを編集"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:572
+#: src/screens/StarterPack/StarterPackScreen.tsx:575
 msgid "Edit starter pack"
 msgstr "スターターパックを編集"
 
@@ -2544,7 +2624,7 @@ msgstr "表示名を編集"
 msgid "Edit your profile description"
 msgstr "プロフィールの説明を編集"
 
-#: src/Navigation.tsx:448
+#: src/Navigation.tsx:456
 msgid "Edit your starter pack"
 msgstr "スターターパックを編集"
 
@@ -2558,7 +2638,7 @@ msgid "Either the creator of this list has blocked you or you have blocked the c
 msgstr "リストの作者にブロックされているか、作者をブロックしています。"
 
 #: src/screens/Settings/AccountSettings.tsx:60
-#: src/screens/Signup/StepInfo/index.tsx:190
+#: src/screens/Signup/StepInfo/index.tsx:193
 #: src/view/com/modals/ChangeEmail.tsx:136
 msgid "Email"
 msgstr "メールアドレス"
@@ -2657,16 +2737,16 @@ msgstr "サブタイトル（字幕）を有効にする"
 msgid "Enable this source only"
 msgstr "このソースのみ有効にする"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:123
-#: src/screens/Settings/ContentAndMediaSettings.tsx:137
+#: src/screens/Settings/ContentAndMediaSettings.tsx:132
+#: src/screens/Settings/ContentAndMediaSettings.tsx:146
 msgid "Enable trending topics"
 msgstr "トレンド・トピックを有効にする"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:158
+#: src/screens/Settings/ContentAndMediaSettings.tsx:167
 msgid "Enable trending videos in your Discover feed"
 msgstr "Discoverフィードでトレンド・ビデオを有効にする"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:144
+#: src/screens/Settings/ContentAndMediaSettings.tsx:153
 msgid "Enable trending videos in your Discover feed."
 msgstr "Discoverフィードでトレンド・ビデオを有効にする。"
 
@@ -2707,7 +2787,7 @@ msgstr "全画面表示にする"
 
 #: src/view/com/modals/ChangePassword.tsx:165
 msgid "Enter the code you received to change your password."
-msgstr "パスワードを変更するために受け取ったコードを入力してください。"
+msgstr "パスワードをリセットするために受け取ったコードを入力してください。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:351
 msgid "Enter the domain you want to use"
@@ -2717,12 +2797,16 @@ msgstr "使用するドメインを入力してください"
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "アカウントの作成に使用したメールアドレスを入力します。新しいパスワードを設定できるように、「リセットコード」をお送りします。"
 
+#: src/screens/Login/LoginForm.tsx:218
+msgid "Enter the username or email address you used when you created your account"
+msgstr "アカウント作成時に使用したユーザー名またはメールアドレスを入力してください"
+
 #: src/components/dialogs/BirthDateSettings.tsx:104
 msgid "Enter your birth date"
 msgstr "生年月日を入力してください"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
-#: src/screens/Signup/StepInfo/index.tsx:210
+#: src/screens/Signup/StepInfo/index.tsx:213
 msgid "Enter your email address"
 msgstr "メールアドレスを入力してください"
 
@@ -2746,7 +2830,11 @@ msgstr "ユーザー名とパスワードを入力してください"
 msgid "Enters full screen"
 msgstr "フルスクリーンで表示"
 
-#: src/view/com/composer/Composer.tsx:1661
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:235
+msgid "Entertainment"
+msgstr "エンターテインメント"
+
+#: src/view/com/composer/Composer.tsx:1698
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "エラー"
@@ -2755,14 +2843,17 @@ msgstr "エラー"
 msgid "Error occurred while saving file"
 msgstr "ファイルの保存中にエラーが発生しました"
 
-#: src/screens/Signup/StepCaptcha/index.tsx:56
+#: src/screens/Signup/StepCaptcha/index.tsx:55
 msgid "Error receiving captcha response."
 msgstr "CAPTCHAレスポンスの受信中にエラーが発生しました。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:183
-#: src/view/screens/Search/Search.tsx:114
 msgid "Error:"
 msgstr "エラー："
+
+#: src/screens/Search/SearchResults.tsx:131
+msgid "Error: {error}"
+msgstr "エラー：{error}"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:394
 msgid "Everybody"
@@ -2870,6 +2961,13 @@ msgstr "露骨な、または不愉快になる可能性のあるメディア。
 msgid "Explicit sexual images."
 msgstr "露骨な性的画像。"
 
+#: src/Navigation.tsx:640
+#: src/screens/Search/Shell.tsx:307
+#: src/view/shell/desktop/LeftNav.tsx:617
+#: src/view/shell/Drawer.tsx:370
+msgid "Explore"
+msgstr ""
+
 #: src/screens/Settings/AccountSettings.tsx:137
 #: src/screens/Settings/AccountSettings.tsx:141
 msgid "Export my data"
@@ -2879,8 +2977,8 @@ msgstr "私のデータをエクスポートする"
 msgid "Export My Data"
 msgstr "私のデータをエクスポートする"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:83
-#: src/screens/Settings/ContentAndMediaSettings.tsx:86
+#: src/screens/Settings/ContentAndMediaSettings.tsx:84
+#: src/screens/Settings/ContentAndMediaSettings.tsx:87
 msgid "External media"
 msgstr "外部メディア"
 
@@ -2903,6 +3001,11 @@ msgstr "外部メディアの設定"
 msgctxt "toast"
 msgid "Failed to accept chat"
 msgstr "チャットの受け入れに失敗しました"
+
+#: src/components/dms/ActionsWrapper.web.tsx:67
+#: src/components/dms/MessageContextMenu.tsx:93
+msgid "Failed to add emoji reaction"
+msgstr "絵文字リアクションを追加できませんでした"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:568
 msgid "Failed to change handle. Please try again."
@@ -2931,7 +3034,7 @@ msgctxt "toast"
 msgid "Failed to delete chat"
 msgstr "チャットの承認に失敗しました"
 
-#: src/components/dms/MessageMenu.tsx:75
+#: src/components/dms/MessageContextMenu.tsx:73
 msgid "Failed to delete message"
 msgstr "メッセージの削除に失敗しました"
 
@@ -2939,7 +3042,7 @@ msgstr "メッセージの削除に失敗しました"
 msgid "Failed to delete post, please try again"
 msgstr "投稿の削除に失敗しました。もう一度お試しください。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:703
+#: src/screens/StarterPack/StarterPackScreen.tsx:706
 msgid "Failed to delete starter pack"
 msgstr "スターターパックの削除に失敗しました"
 
@@ -2948,8 +3051,8 @@ msgstr "スターターパックの削除に失敗しました"
 msgid "Failed to load conversations"
 msgstr "会話の読み込みに失敗しました"
 
-#: src/view/screens/Search/Explore.tsx:463
-#: src/view/screens/Search/Explore.tsx:491
+#: src/screens/Search/Explore.tsx:475
+#: src/screens/Search/Explore.tsx:514
 msgid "Failed to load feeds preferences"
 msgstr "フィードの設定の読み込みに失敗しました"
 
@@ -2961,12 +3064,12 @@ msgstr "GIFの読み込みに失敗しました"
 msgid "Failed to load past messages"
 msgstr "過去のメッセージの読み込みに失敗しました"
 
-#: src/view/screens/Search/Explore.tsx:456
-#: src/view/screens/Search/Explore.tsx:484
+#: src/screens/Search/Explore.tsx:468
+#: src/screens/Search/Explore.tsx:507
 msgid "Failed to load suggested feeds"
 msgstr "おすすめのフィードの読み込みに失敗しました"
 
-#: src/view/screens/Search/Explore.tsx:414
+#: src/screens/Search/Explore.tsx:375
 msgid "Failed to load suggested follows"
 msgstr "おすすめのフォローの読み込みに失敗しました"
 
@@ -2978,6 +3081,11 @@ msgstr "すべての要求を既読としてマークできませんでした"
 #: src/state/queries/pinned-post.ts:75
 msgid "Failed to pin post"
 msgstr "投稿の固定に失敗しました"
+
+#: src/components/dms/ActionsWrapper.web.tsx:61
+#: src/components/dms/MessageContextMenu.tsx:87
+msgid "Failed to remove emoji reaction"
+msgstr "絵文字リアクションの削除に失敗しました"
 
 #: src/view/com/lightbox/Lightbox.tsx:46
 msgid "Failed to save image: {0}"
@@ -2991,7 +3099,12 @@ msgstr "通知の設定の保存に失敗しました。もう一度お試しく
 msgid "Failed to save settings. Please try again."
 msgstr "設定の保存に失敗しました。もう一度試してください。"
 
-#: src/components/dms/MessageItem.tsx:234
+#: src/screens/Settings/SettingsInterests.tsx:133
+msgctxt "toast"
+msgid "Failed to save your interests."
+msgstr ""
+
+#: src/components/dms/MessageItem.tsx:310
 msgid "Failed to send"
 msgstr "送信に失敗"
 
@@ -3004,7 +3117,7 @@ msgstr "異議申し立ての送信に失敗しました。もう一度お試し
 msgid "Failed to toggle thread mute, please try again"
 msgstr "スレッドのミュートの切り替えに失敗しました。もう一度お試しください"
 
-#: src/components/FeedCard.tsx:275
+#: src/components/FeedCard.tsx:285
 msgid "Failed to update feeds"
 msgstr "フィードの更新に失敗しました"
 
@@ -3027,7 +3140,7 @@ msgstr "ハンドルの変更に失敗しました。もう一度試してくだ
 msgid "Feed"
 msgstr "フィード"
 
-#: src/components/FeedCard.tsx:134
+#: src/components/FeedCard.tsx:139
 #: src/view/com/feeds/FeedSourceCard.tsx:253
 msgid "Feed by {0}"
 msgstr "{0}によるフィード"
@@ -3040,8 +3153,8 @@ msgstr "フィードメニュー"
 msgid "Feed toggle"
 msgstr "フィードの切り替え"
 
-#: src/view/shell/desktop/RightNav.tsx:97
-#: src/view/shell/desktop/RightNav.tsx:98
+#: src/view/shell/desktop/RightNav.tsx:102
+#: src/view/shell/desktop/RightNav.tsx:103
 #: src/view/shell/Drawer.tsx:324
 msgid "Feedback"
 msgstr "フィードバック"
@@ -3052,13 +3165,13 @@ msgctxt "toast"
 msgid "Feedback sent!"
 msgstr "フィードバックを送信しました！"
 
-#: src/Navigation.tsx:428
+#: src/Navigation.tsx:436
+#: src/screens/Search/SearchResults.tsx:68
 #: src/screens/StarterPack/StarterPackScreen.tsx:185
 #: src/view/screens/Feeds.tsx:508
 #: src/view/screens/Profile.tsx:227
 #: src/view/screens/SavedFeeds.tsx:96
-#: src/view/screens/Search/Search.tsx:531
-#: src/view/shell/desktop/LeftNav.tsx:651
+#: src/view/shell/desktop/LeftNav.tsx:655
 #: src/view/shell/Drawer.tsx:486
 msgid "Feeds"
 msgstr "フィード"
@@ -3067,13 +3180,13 @@ msgstr "フィード"
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "フィードはユーザーがプログラミングの専門知識を持って構築するカスタムアルゴリズムです。詳細については、<0/>を参照してください。"
 
-#: src/components/FeedCard.tsx:272
+#: src/components/FeedCard.tsx:282
 #: src/view/screens/SavedFeeds.tsx:82
 msgctxt "toast"
 msgid "Feeds updated!"
 msgstr "フィードを更新しました！"
 
-#: src/screens/Search/components/ExploreRecommendations.tsx:63
+#: src/screens/Search/modules/ExploreRecommendations.tsx:65
 msgid "Feeds we think you might like."
 msgstr "お気に入りになるかもしれないフィード。"
 
@@ -3089,11 +3202,11 @@ msgstr "ファイルの保存に成功しました！"
 msgid "Filter from feeds"
 msgstr "フィードからのフィルター"
 
-#: src/view/screens/Search/Search.tsx:403
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:97
 msgid "Filter search by language"
 msgstr "言語で検索をフィルター"
 
-#: src/view/screens/Search/Search.tsx:376
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:70
 msgid "Filter search by language (currently: {currentLanguageLabel})"
 msgstr "言語で検索をフィルター（現在の設定：{currentLanguageLabel}）"
 
@@ -3107,13 +3220,13 @@ msgstr "最後に"
 msgid "Find accounts to follow"
 msgstr "フォローするアカウントを探す"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:78
-#: src/components/ProgressGuide/FollowDialog.tsx:88
-#: src/components/ProgressGuide/FollowDialog.tsx:417
+#: src/components/ProgressGuide/FollowDialog.tsx:77
+#: src/components/ProgressGuide/FollowDialog.tsx:87
+#: src/components/ProgressGuide/FollowDialog.tsx:374
 msgid "Find people to follow"
 msgstr "フォローするユーザーを探す"
 
-#: src/view/screens/Search/Search.tsx:582
+#: src/screens/Search/Shell.tsx:476
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Blueskyの投稿、ユーザー、フィードを検索"
 
@@ -3145,7 +3258,7 @@ msgid "Flexible"
 msgstr "柔軟です"
 
 #. User is not following this account, click to follow
-#: src/components/ProfileCard.tsx:365
+#: src/components/ProfileCard.tsx:372
 #: src/components/ProfileHoverCard/index.web.tsx:449
 #: src/components/ProfileHoverCard/index.web.tsx:460
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:234
@@ -3201,10 +3314,6 @@ msgctxt "action"
 msgid "Follow Back"
 msgstr "フォローバック"
 
-#: src/view/screens/Search/Explore.tsx:370
-msgid "Follow more accounts to get connected to your interests and build your network."
-msgstr "もっとたくさんのアカウントをフォローして、興味あることにつながり、ネットワークを広げましょう。"
-
 #: src/components/KnownFollowers.tsx:234
 msgid "Followed by <0>{0}</0>"
 msgstr "<0>{0}</0>がフォロー中"
@@ -3231,7 +3340,7 @@ msgid "Followers you know"
 msgstr "あなたが知っているフォロワー"
 
 #. User is following this account, click to unfollow
-#: src/components/ProfileCard.tsx:359
+#: src/components/ProfileCard.tsx:366
 #: src/components/ProfileHoverCard/index.web.tsx:448
 #: src/components/ProfileHoverCard/index.web.tsx:459
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
@@ -3242,7 +3351,7 @@ msgstr "あなたが知っているフォロワー"
 msgid "Following"
 msgstr "フォロー中"
 
-#: src/components/ProfileCard.tsx:322
+#: src/components/ProfileCard.tsx:329
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
 msgid "Following {0}"
 msgstr "{0}をフォローしています"
@@ -3255,8 +3364,8 @@ msgstr "{handle}をフォローしています"
 msgid "Following {name}"
 msgstr "{name}をフォローしています"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:75
-#: src/screens/Settings/ContentAndMediaSettings.tsx:78
+#: src/screens/Settings/ContentAndMediaSettings.tsx:76
+#: src/screens/Settings/ContentAndMediaSettings.tsx:79
 msgid "Following feed preferences"
 msgstr "Followingフィードの設定"
 
@@ -3298,6 +3407,10 @@ msgstr "セキュリティ上の理由から、これを再度表示すること
 msgid "For the best experience, we recommend using the theme font."
 msgstr "ベストな体験のために、テーマフォントの使用をお勧めします。"
 
+#: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:94
+msgid "For You"
+msgstr ""
+
 #: src/components/dialogs/MutedWords.tsx:178
 msgid "Forever"
 msgstr "永久"
@@ -3333,7 +3446,7 @@ msgstr "<0/>から"
 msgid "Gallery"
 msgstr "ギャラリー"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:295
+#: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Generate a starter pack"
 msgstr "スターターパックを生成"
 
@@ -3363,7 +3476,7 @@ msgstr "プロフィールに顔をつける"
 msgid "Glaring violations of law or terms of service"
 msgstr "法律または利用規約への明らかな違反"
 
-#: src/components/Layout/Header/index.tsx:126
+#: src/components/Layout/Header/index.tsx:127
 #: src/components/moderation/ScreenHider.tsx:154
 #: src/components/moderation/ScreenHider.tsx:163
 #: src/screens/Messages/Inbox.tsx:228
@@ -3373,7 +3486,7 @@ msgstr "法律または利用規約への明らかな違反"
 #: src/screens/VideoFeed/index.tsx:1112
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
-#: src/view/screens/ProfileList.tsx:1031
+#: src/view/screens/ProfileList.tsx:1030
 msgid "Go back"
 msgstr "戻る"
 
@@ -3382,9 +3495,9 @@ msgstr "戻る"
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
 #: src/screens/Profile/ProfileFeed/index.tsx:94
-#: src/screens/StarterPack/StarterPackScreen.tsx:754
+#: src/screens/StarterPack/StarterPackScreen.tsx:757
 #: src/view/screens/NotFound.tsx:56
-#: src/view/screens/ProfileList.tsx:1036
+#: src/view/screens/ProfileList.tsx:1035
 msgid "Go Back"
 msgstr "戻る"
 
@@ -3405,7 +3518,7 @@ msgstr "ホームへ"
 msgid "Go Home"
 msgstr "ホームへ"
 
-#: src/screens/Messages/components/ChatListItem.tsx:294
+#: src/screens/Messages/components/ChatListItem.tsx:355
 msgid "Go to conversation with {0}"
 msgstr "{0}との会話へ"
 
@@ -3424,8 +3537,8 @@ msgstr "ユーザーのプロフィールへ移動"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/lib/moderation/useGlobalLabelStrings.ts:50
-#: src/view/com/composer/labels/LabelsBtn.tsx:202
-#: src/view/com/composer/labels/LabelsBtn.tsx:205
+#: src/view/com/composer/labels/LabelsBtn.tsx:201
+#: src/view/com/composer/labels/LabelsBtn.tsx:204
 msgid "Graphic Media"
 msgstr "生々しいメディア（グロ・事故・戦争・災害等）"
 
@@ -3461,7 +3574,7 @@ msgstr "触覚フィードバック"
 msgid "Harassment, trolling, or intolerance"
 msgstr "嫌がらせ、荒らし、不寛容"
 
-#: src/Navigation.tsx:398
+#: src/Navigation.tsx:406
 msgid "Hashtag"
 msgstr "ハッシュタグ"
 
@@ -3469,14 +3582,14 @@ msgstr "ハッシュタグ"
 msgid "Hashtag {tag}"
 msgstr "ハッシュタグ {tag}"
 
-#: src/screens/Signup/index.tsx:177
+#: src/screens/Signup/index.tsx:191
 msgid "Having trouble?"
 msgstr "なにか問題が発生しましたか？"
 
 #: src/screens/Settings/Settings.tsx:207
 #: src/screens/Settings/Settings.tsx:211
-#: src/view/shell/desktop/RightNav.tsx:115
-#: src/view/shell/desktop/RightNav.tsx:116
+#: src/view/shell/desktop/RightNav.tsx:120
+#: src/view/shell/desktop/RightNav.tsx:121
 #: src/view/shell/Drawer.tsx:337
 msgid "Help"
 msgstr "ヘルプ"
@@ -3506,12 +3619,11 @@ msgstr "非表示のリスト"
 #: src/components/interstitials/TrendingVideos.tsx:140
 #: src/components/moderation/ContentHider.tsx:200
 #: src/components/moderation/LabelPreference.tsx:135
-#: src/components/moderation/PostHider.tsx:122
+#: src/components/moderation/PostHider.tsx:124
 #: src/lib/moderation/useLabelBehaviorDescription.ts:15
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:137
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:761
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "Hide"
@@ -3541,6 +3653,10 @@ msgstr "返信を全員に非表示"
 msgid "Hide reply for me"
 msgstr "返信を自分には非表示"
 
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:110
+msgid "Hide this card"
+msgstr ""
+
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:756
 msgid "Hide this post?"
 msgstr "この投稿を非表示にしますか？"
@@ -3551,13 +3667,11 @@ msgid "Hide this reply?"
 msgstr "この返信を非表示にしますか？"
 
 #: src/components/interstitials/Trending.tsx:113
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:83
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:62
 msgid "Hide trending topics"
 msgstr "トレンド・トピックを非表示にする"
 
 #: src/components/interstitials/Trending.tsx:129
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:135
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:108
 msgid "Hide trending topics?"
 msgstr "トレンド・トピックを非表示にしますか？"
@@ -3607,10 +3721,10 @@ msgstr "そのモデレーションサービスを読み込めませんでした
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "待って！徐々にビデオへのアクセスを許可していますが、あなたの順番はまだです。しばらくしてもう一度確認を！"
 
-#: src/Navigation.tsx:627
-#: src/Navigation.tsx:647
+#: src/Navigation.tsx:635
+#: src/Navigation.tsx:655
 #: src/view/shell/bottom-bar/BottomBar.tsx:162
-#: src/view/shell/desktop/LeftNav.tsx:595
+#: src/view/shell/desktop/LeftNav.tsx:599
 #: src/view/shell/Drawer.tsx:396
 msgid "Home"
 msgstr "ホーム"
@@ -3624,10 +3738,14 @@ msgstr "ホスト："
 msgid "Hosting provider"
 msgstr "ホスティングプロバイダー"
 
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:190
+msgid "Hot"
+msgstr "ホット"
+
 #: src/screens/Settings/ThreadPreferences.tsx:67
 #: src/screens/Settings/ThreadPreferences.tsx:70
-#: src/view/com/post-thread/PostThread.tsx:656
-#: src/view/com/post-thread/PostThread.tsx:661
+#: src/view/com/post-thread/PostThread.tsx:655
+#: src/view/com/post-thread/PostThread.tsx:660
 msgid "Hot replies first"
 msgstr "ホットな返信を先頭に"
 
@@ -3664,11 +3782,11 @@ msgstr "理解した"
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "ALTテキストが長い場合、ALTテキストの展開状態を切り替える"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:110
+#: src/screens/Signup/StepInfo/Policies.tsx:112
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "あなたがお住いの国の法律においてまだ成人していない場合は、親権者または法定後見人があなたに代わって本規約をお読みください。"
 
-#: src/view/screens/ProfileList.tsx:758
+#: src/view/screens/ProfileList.tsx:757
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "このリストを削除すると、復元できなくなります。"
 
@@ -3749,10 +3867,6 @@ msgstr "アカウント削除のためにパスワードを入力"
 msgid "Input the code which has been emailed to you"
 msgstr "メールで送られたコードを入力"
 
-#: src/screens/Login/LoginForm.tsx:218
-msgid "Input the username or email address you used at signup"
-msgstr "サインアップ時に使用したユーザー名またはメールアドレスを入力"
-
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:49
 msgid "Interaction limited"
 msgstr "反応が制限されています"
@@ -3786,11 +3900,11 @@ msgstr "無効な確認コード"
 msgid "Invite a Friend"
 msgstr "友達を招待"
 
-#: src/screens/Signup/StepInfo/index.tsx:160
+#: src/screens/Signup/StepInfo/index.tsx:163
 msgid "Invite code"
 msgstr "招待コード"
 
-#: src/screens/Signup/state.ts:276
+#: src/screens/Signup/state.ts:339
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "招待コードが確認できません。正しく入力されていることを確認し、もう一度試してください。"
 
@@ -3814,7 +3928,7 @@ msgstr "お気に入りのフィードやユーザーをフォローするよう
 msgid "Invites, but personal"
 msgstr "招待、ただし個人的なもの"
 
-#: src/screens/Signup/StepInfo/index.tsx:286
+#: src/screens/Signup/StepInfo/index.tsx:289
 msgid "It's correct"
 msgstr "合ってます"
 
@@ -3822,7 +3936,7 @@ msgstr "合ってます"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "今はあなただけ！上で検索してスターターパックにより多くのユーザーを追加してください。"
 
-#: src/view/com/composer/Composer.tsx:1595
+#: src/view/com/composer/Composer.tsx:1632
 msgid "Job ID: {0}"
 msgstr "ジョブID：{0}"
 
@@ -3896,8 +4010,8 @@ msgid "Larger"
 msgstr "大きい"
 
 #: src/screens/Hashtag.tsx:95
+#: src/screens/Search/SearchResults.tsx:52
 #: src/screens/Topic.tsx:77
-#: src/view/screens/Search/Search.tsx:515
 msgid "Latest"
 msgstr "最新"
 
@@ -3969,7 +4083,7 @@ msgstr "Blueskyから離れる"
 msgid "left to go."
 msgstr "あと少しです。"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:311
+#: src/components/StarterPack/ProfileStarterPacks.tsx:316
 msgid "Let me choose"
 msgstr "選ばせて"
 
@@ -4030,7 +4144,7 @@ msgstr "いいねしたユーザー"
 msgid "Liked By"
 msgstr "いいねしたユーザー"
 
-#: src/components/FeedCard.tsx:213
+#: src/components/FeedCard.tsx:218
 #: src/view/com/feeds/FeedSourceCard.tsx:303
 msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr "{0, plural, other {#人のユーザー}}がいいね"
@@ -4050,8 +4164,8 @@ msgstr "いいね"
 msgid "Likes on this post"
 msgstr "この投稿をいいねする"
 
-#: src/view/com/post-thread/PostThread.tsx:630
-#: src/view/com/post-thread/PostThread.tsx:635
+#: src/view/com/post-thread/PostThread.tsx:629
+#: src/view/com/post-thread/PostThread.tsx:634
 msgid "Linear"
 msgstr "リニア"
 
@@ -4063,7 +4177,7 @@ msgstr "リスト"
 msgid "List Avatar"
 msgstr "リストのアバター"
 
-#: src/view/screens/ProfileList.tsx:431
+#: src/view/screens/ProfileList.tsx:430
 msgctxt "toast"
 msgid "List blocked"
 msgstr "リストをブロックしました"
@@ -4081,7 +4195,7 @@ msgstr "<0/>によるリスト"
 msgid "List by you"
 msgstr "あなたのリスト"
 
-#: src/view/screens/ProfileList.tsx:478
+#: src/view/screens/ProfileList.tsx:477
 msgctxt "toast"
 msgid "List deleted"
 msgstr "リストを削除しました"
@@ -4090,11 +4204,11 @@ msgstr "リストを削除しました"
 msgid "List has been hidden"
 msgstr "リストは非表示です"
 
-#: src/view/screens/ProfileList.tsx:173
+#: src/view/screens/ProfileList.tsx:172
 msgid "List Hidden"
 msgstr "非表示のリスト"
 
-#: src/view/screens/ProfileList.tsx:395
+#: src/view/screens/ProfileList.tsx:394
 msgctxt "toast"
 msgid "List muted"
 msgstr "リストをミュートしました"
@@ -4103,12 +4217,12 @@ msgstr "リストをミュートしました"
 msgid "List Name"
 msgstr "リストの名前"
 
-#: src/view/screens/ProfileList.tsx:449
+#: src/view/screens/ProfileList.tsx:448
 msgctxt "toast"
 msgid "List unblocked"
 msgstr "リストのブロックを解除しました"
 
-#: src/view/screens/ProfileList.tsx:413
+#: src/view/screens/ProfileList.tsx:412
 msgctxt "toast"
 msgid "List unmuted"
 msgstr "リストのミュートを解除しました"
@@ -4117,7 +4231,7 @@ msgstr "リストのミュートを解除しました"
 #: src/view/screens/Lists.tsx:62
 #: src/view/screens/Profile.tsx:221
 #: src/view/screens/Profile.tsx:229
-#: src/view/shell/desktop/LeftNav.tsx:669
+#: src/view/shell/desktop/LeftNav.tsx:673
 #: src/view/shell/Drawer.tsx:501
 msgid "Lists"
 msgstr "リスト"
@@ -4126,17 +4240,13 @@ msgstr "リスト"
 msgid "Lists blocking this user:"
 msgstr "このユーザーをブロックしているリスト："
 
-#: src/view/screens/Search/Explore.tsx:135
+#: src/screens/Search/Explore.tsx:87
 msgid "Load more"
 msgstr "さらに読み込む"
 
-#: src/view/screens/Search/Explore.tsx:224
+#: src/screens/Search/Explore.tsx:496
 msgid "Load more suggested feeds"
 msgstr "おすすめのフィードをさらに読み込む"
-
-#: src/view/screens/Search/Explore.tsx:222
-msgid "Load more suggested follows"
-msgstr "おすすめのフォローをさらに読み込む"
 
 #: src/view/screens/Notifications.tsx:270
 msgid "Load new notifications"
@@ -4145,7 +4255,7 @@ msgstr "最新の通知を読み込む"
 #: src/screens/Profile/ProfileFeed/index.tsx:221
 #: src/screens/Profile/Sections/Feed.tsx:98
 #: src/view/com/feeds/FeedPage.tsx:155
-#: src/view/screens/ProfileList.tsx:871
+#: src/view/screens/ProfileList.tsx:870
 msgid "Load new posts"
 msgstr "最新の投稿を読み込む"
 
@@ -4161,11 +4271,11 @@ msgstr "ログ"
 msgid "Logged-out visibility"
 msgstr "ログアウトしたユーザーからの可視性"
 
-#: src/view/shell/desktop/RightNav.tsx:125
+#: src/view/shell/desktop/RightNav.tsx:130
 msgid "Logo by @sawaratsuki.bsky.social"
 msgstr "@sawaratsuki.bsky.socialによるロゴ"
 
-#: src/view/shell/desktop/RightNav.tsx:122
+#: src/view/shell/desktop/RightNav.tsx:127
 #: src/view/shell/Drawer.tsx:639
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr "<0>@sawaratsuki.bsky.social</0>によるロゴ"
@@ -4190,7 +4300,7 @@ msgstr "すべてのフィードのピン留めを外したようですね。心
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
 msgstr "Followingフィードを消したようです。<0>ここをクリックして追加。</0>"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:264
+#: src/components/StarterPack/ProfileStarterPacks.tsx:269
 msgid "Make one for me"
 msgstr "私のために作って"
 
@@ -4198,8 +4308,8 @@ msgstr "私のために作って"
 msgid "Make sure this is where you intend to go!"
 msgstr "意図した場所であることを確認してください！"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:59
-#: src/screens/Settings/ContentAndMediaSettings.tsx:62
+#: src/screens/Settings/ContentAndMediaSettings.tsx:60
+#: src/screens/Settings/ContentAndMediaSettings.tsx:63
 msgid "Manage saved feeds"
 msgstr "保存されたフィードを管理"
 
@@ -4227,7 +4337,7 @@ msgstr "すべて既読にしました"
 msgid "Media"
 msgstr "メディア"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:211
+#: src/view/com/composer/labels/LabelsBtn.tsx:210
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr "一部の閲覧者にとっては困惑する、あるいは不適切なメディアです。"
 
@@ -4243,7 +4353,7 @@ msgstr "メンションされたユーザー"
 msgid "Mentions"
 msgstr "メンション"
 
-#: src/components/Menu/index.tsx:103
+#: src/components/Menu/index.tsx:105
 msgid "Menu"
 msgstr "メニュー"
 
@@ -4251,14 +4361,18 @@ msgstr "メニュー"
 msgid "Message {0}"
 msgstr "{0}へメッセージを送る"
 
-#: src/components/dms/MessageMenu.tsx:73
+#: src/components/dms/MessageContextMenu.tsx:71
 msgctxt "toast"
 msgid "Message deleted"
 msgstr "メッセージは削除されました"
 
-#: src/screens/Messages/components/ChatListItem.tsx:190
+#: src/screens/Messages/components/ChatListItem.tsx:192
 msgid "Message deleted"
 msgstr "メッセージは削除されました"
+
+#: src/components/dms/MessageContextMenu.tsx:119
+msgid "Message from @{0}: {1}"
+msgstr "@{0}からのメッセージ: {1}"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:201
 msgid "Message from server: {0}"
@@ -4273,7 +4387,11 @@ msgstr "メッセージを入力するフィールド"
 msgid "Message is too long"
 msgstr "メッセージが長すぎます"
 
-#: src/Navigation.tsx:642
+#: src/components/dms/MessageContextMenu.tsx:117
+msgid "Message options"
+msgstr "メッセージのオプション"
+
+#: src/Navigation.tsx:650
 msgid "Messages"
 msgstr "メッセージ"
 
@@ -4364,7 +4482,7 @@ msgstr "その他のフィード"
 
 #: src/view/com/profile/ProfileMenu.tsx:194
 #: src/view/com/profile/ProfileMenu.tsx:200
-#: src/view/screens/ProfileList.tsx:743
+#: src/view/screens/ProfileList.tsx:742
 msgid "More options"
 msgstr "その他のオプション"
 
@@ -4373,8 +4491,8 @@ msgid "Most-liked first"
 msgstr "いいねの数が多い順"
 
 #: src/screens/Settings/ThreadPreferences.tsx:91
-#: src/view/com/post-thread/PostThread.tsx:686
-#: src/view/com/post-thread/PostThread.tsx:691
+#: src/view/com/post-thread/PostThread.tsx:685
+#: src/view/com/post-thread/PostThread.tsx:690
 msgid "Most-liked replies first"
 msgstr "いいねの数が多い順に返信を表示"
 
@@ -4404,7 +4522,7 @@ msgstr "{tag} をミュート"
 msgid "Mute account"
 msgstr "アカウントをミュート"
 
-#: src/view/screens/ProfileList.tsx:650
+#: src/view/screens/ProfileList.tsx:649
 msgid "Mute accounts"
 msgstr "アカウントをミュート"
 
@@ -4417,11 +4535,11 @@ msgstr "会話をミュート"
 msgid "Mute in:"
 msgstr "ミュート対象："
 
-#: src/view/screens/ProfileList.tsx:772
+#: src/view/screens/ProfileList.tsx:771
 msgid "Mute list"
 msgstr "リストをミュート"
 
-#: src/view/screens/ProfileList.tsx:767
+#: src/view/screens/ProfileList.tsx:766
 msgid "Mute these accounts?"
 msgstr "これらのアカウントをミュートしますか？"
 
@@ -4480,7 +4598,7 @@ msgstr "「{0}」によってミュート中"
 msgid "Muted words & tags"
 msgstr "ミュートしたワードとタグ"
 
-#: src/view/screens/ProfileList.tsx:769
+#: src/view/screens/ProfileList.tsx:768
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr "ミュートの設定は非公開です。ミュート中のアカウントはあなたと引き続き関わることができますが、そのアカウントの投稿や通知を受信することはできません。"
 
@@ -4518,8 +4636,13 @@ msgid "Nature"
 msgstr "自然"
 
 #: src/components/StarterPack/StarterPackCard.tsx:130
+#: src/components/StarterPack/StarterPackCard.tsx:161
 msgid "Navigate to {0}"
 msgstr "{0}へ移動します"
+
+#: src/components/StarterPack/StarterPackCard.tsx:131
+msgid "Navigate to starter pack"
+msgstr "スターターパックに移動"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:166
 #: src/screens/Login/LoginForm.tsx:344
@@ -4547,6 +4670,10 @@ msgstr "フォロワーやデータへのアクセスを失うことはありま
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:548
 msgid "Nevermind, create a handle for me"
 msgstr "気にせずにハンドルを作成"
+
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:195
+msgid "New"
+msgstr "新規"
 
 #: src/view/screens/Lists.tsx:74
 #: src/view/screens/ModerationModlists.tsx:74
@@ -4591,8 +4718,8 @@ msgstr "新しいパスワード"
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
 #: src/view/screens/Profile.tsx:507
-#: src/view/screens/ProfileList.tsx:253
-#: src/view/screens/ProfileList.tsx:286
+#: src/view/screens/ProfileList.tsx:252
+#: src/view/screens/ProfileList.tsx:285
 msgid "New post"
 msgstr "新しい投稿"
 
@@ -4601,7 +4728,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "新しい投稿"
 
-#: src/view/shell/desktop/LeftNav.tsx:507
+#: src/view/shell/desktop/LeftNav.tsx:508
 msgctxt "action"
 msgid "New Post"
 msgstr "新しい投稿"
@@ -4616,13 +4743,14 @@ msgstr "新しいユーザーリスト"
 
 #: src/screens/Settings/ThreadPreferences.tsx:83
 #: src/screens/Settings/ThreadPreferences.tsx:86
-#: src/view/com/post-thread/PostThread.tsx:676
-#: src/view/com/post-thread/PostThread.tsx:681
+#: src/view/com/post-thread/PostThread.tsx:675
+#: src/view/com/post-thread/PostThread.tsx:680
 msgid "Newest replies first"
 msgstr "新しい順に返信を表示"
 
 #: src/screens/Onboarding/index.tsx:20
 #: src/screens/Onboarding/state.ts:108
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:237
 msgid "News"
 msgstr "ニュース"
 
@@ -4670,14 +4798,14 @@ msgstr "フィードが見つかりませんでした。他を探してみて。
 msgid "No likes yet"
 msgstr "いいねはありません"
 
-#: src/components/ProfileCard.tsx:344
+#: src/components/ProfileCard.tsx:351
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:119
 msgid "No longer following {0}"
 msgstr "{0}のフォローを解除しました"
 
-#: src/screens/Signup/StepHandle.tsx:176
-msgid "No longer than {MAX_SERVICE_HANDLE_LENGTH} characters"
-msgstr "{MAX_SERVICE_HANDLE_LENGTH}文字まで"
+#: src/screens/Signup/StepHandle.tsx:184
+msgid "No longer than {MAX_SERVICE_HANDLE_LENGTH, plural, other {# characters}}"
+msgstr "{MAX_SERVICE_HANDLE_LENGTH, plural, other {#文字}}まで"
 
 #: src/screens/Messages/components/ChatListItem.tsx:134
 msgid "No messages yet"
@@ -4714,9 +4842,13 @@ msgid "No result"
 msgstr "結果はありません"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:204
-#: src/components/ProgressGuide/FollowDialog.tsx:235
+#: src/components/ProgressGuide/FollowDialog.tsx:212
 msgid "No results"
 msgstr "結果はありません"
+
+#: src/screens/Search/Explore.tsx:715
+msgid "No results for \"{0}\"."
+msgstr ""
 
 #: src/components/Lists.tsx:189
 msgid "No results found"
@@ -4726,12 +4858,16 @@ msgstr "結果は見つかりません"
 msgid "No results found for \"{query}\""
 msgstr "「{query}」の検索結果はありません"
 
+#: src/screens/Search/SearchResults.tsx:248
+#: src/screens/Search/SearchResults.tsx:286
+#: src/screens/Search/SearchResults.tsx:331
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
-#: src/view/screens/Search/Search.tsx:231
-#: src/view/screens/Search/Search.tsx:269
-#: src/view/screens/Search/Search.tsx:314
 msgid "No results found for {query}"
 msgstr "「{query}」の検索結果はありません"
+
+#: src/screens/Search/Explore.tsx:719
+msgid "No results."
+msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:229
 msgid "No search results found for \"{search}\"."
@@ -4800,7 +4936,7 @@ msgstr "何もありません"
 msgid "Notification filters"
 msgstr "通知フィルター"
 
-#: src/Navigation.tsx:423
+#: src/Navigation.tsx:431
 #: src/view/screens/Notifications.tsx:134
 msgid "Notification settings"
 msgstr "通知設定"
@@ -4817,10 +4953,10 @@ msgstr "通知音"
 msgid "Notification Sounds"
 msgstr "通知音"
 
-#: src/Navigation.tsx:637
+#: src/Navigation.tsx:645
 #: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:236
-#: src/view/shell/desktop/LeftNav.tsx:632
+#: src/view/shell/desktop/LeftNav.tsx:636
 #: src/view/shell/Drawer.tsx:449
 msgid "Notifications"
 msgstr "通知"
@@ -4829,12 +4965,12 @@ msgstr "通知"
 msgid "now"
 msgstr "今"
 
-#: src/components/dms/MessageItem.tsx:198
+#: src/components/dms/MessageItem.tsx:274
 msgid "Now"
 msgstr "今"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:151
-#: src/view/com/composer/labels/LabelsBtn.tsx:154
+#: src/view/com/composer/labels/LabelsBtn.tsx:150
+#: src/view/com/composer/labels/LabelsBtn.tsx:153
 msgid "Nudity"
 msgstr "ヌード"
 
@@ -4856,7 +4992,9 @@ msgstr "ちょっと！"
 msgid "Oh no! Something went wrong."
 msgstr "ちょっと！何らかの問題が発生したようです。"
 
+#. Confirm button text.
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:362
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:48
 #: src/screens/Settings/AppIconSettings/index.tsx:48
 #: src/screens/Settings/AppIconSettings/index.tsx:229
 msgid "OK"
@@ -4869,8 +5007,8 @@ msgstr "OK"
 
 #: src/screens/Settings/ThreadPreferences.tsx:75
 #: src/screens/Settings/ThreadPreferences.tsx:78
-#: src/view/com/post-thread/PostThread.tsx:666
-#: src/view/com/post-thread/PostThread.tsx:671
+#: src/view/com/post-thread/PostThread.tsx:665
+#: src/view/com/post-thread/PostThread.tsx:670
 msgid "Oldest replies first"
 msgstr "古い順に返信を表示"
 
@@ -4882,15 +5020,15 @@ msgstr "<0><1/><2><3/></2></0>"
 msgid "Onboarding reset"
 msgstr "オンボーディングのリセット"
 
-#: src/view/com/composer/Composer.tsx:346
+#: src/view/com/composer/Composer.tsx:354
 msgid "One or more GIFs is missing alt text."
 msgstr "１つもしくは複数のGIFにALTテキストがありません。"
 
-#: src/view/com/composer/Composer.tsx:343
+#: src/view/com/composer/Composer.tsx:351
 msgid "One or more images is missing alt text."
 msgstr "１つもしくは複数の画像にALTテキストがありません。"
 
-#: src/view/com/composer/Composer.tsx:353
+#: src/view/com/composer/Composer.tsx:361
 msgid "One or more videos is missing alt text."
 msgstr "１つもしくは複数のビデオにALTテキストがありません。"
 
@@ -4902,7 +5040,7 @@ msgstr ".jpgと.pngファイルのみに対応しています"
 msgid "Only {0} can reply."
 msgstr "{0}のみ返信可能。"
 
-#: src/screens/Signup/StepHandle.tsx:158
+#: src/screens/Signup/StepHandle.tsx:166
 msgid "Only contains letters, numbers, and hyphens"
 msgstr "英数字とハイフンのみ"
 
@@ -4919,8 +5057,8 @@ msgid "Oops, something went wrong!"
 msgstr "おっと、何らかの問題が発生したようです！"
 
 #: src/components/Lists.tsx:173
-#: src/components/StarterPack/ProfileStarterPacks.tsx:320
-#: src/components/StarterPack/ProfileStarterPacks.tsx:329
+#: src/components/StarterPack/ProfileStarterPacks.tsx:325
+#: src/components/StarterPack/ProfileStarterPacks.tsx:334
 #: src/screens/Settings/AppPasswords.tsx:59
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:104
 #: src/screens/Settings/NotificationSettings.tsx:54
@@ -4940,17 +5078,17 @@ msgstr "{name}のプロフィールのショートカットメニューを開く
 msgid "Open avatar creator"
 msgstr "アバター・クリエイターを開く"
 
-#: src/screens/Messages/components/ChatListItem.tsx:302
-#: src/screens/Messages/components/ChatListItem.tsx:303
+#: src/screens/Messages/components/ChatListItem.tsx:363
+#: src/screens/Messages/components/ChatListItem.tsx:364
 msgid "Open conversation options"
 msgstr "会話のオプションを開く"
 
-#: src/components/Layout/Header/index.tsx:158
+#: src/components/Layout/Header/index.tsx:159
 msgid "Open drawer menu"
 msgstr "引き出しメニューを開く"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1244
+#: src/view/com/composer/Composer.tsx:1292
 msgid "Open emoji picker"
 msgstr "絵文字を入力"
 
@@ -4963,11 +5101,15 @@ msgstr "フィードを画面で開く"
 msgid "Open feed options menu"
 msgstr "フィードの設定メニューを開く"
 
-#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:71
+#: src/components/dms/EmojiPopup.android.tsx:28
+msgid "Open full emoji list"
+msgstr "全絵文字リストを開く"
+
+#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:79
 msgid "Open link to {niceUrl}"
 msgstr "{niceUrl}へのリンクを開く"
 
-#: src/components/dms/ActionsWrapper.tsx:90
+#: src/components/dms/ActionsWrapper.tsx:35
 msgid "Open message options"
 msgstr "メッセージのオプションを開く"
 
@@ -4979,11 +5121,15 @@ msgstr "モデレーションデバッグページを開く"
 msgid "Open muted words and tags settings"
 msgstr "ミュートしたワードとタグの設定を開く"
 
+#: src/screens/Search/components/StarterPackCard.tsx:119
+msgid "Open pack"
+msgstr "パックを開く"
+
 #: src/view/com/util/forms/PostDropdownBtn.tsx:70
 msgid "Open post options menu"
 msgstr "投稿のオプションを開く"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:558
+#: src/screens/StarterPack/StarterPackScreen.tsx:561
 msgid "Open starter pack menu"
 msgstr "スターターパックのメニューを開く"
 
@@ -5036,7 +5182,7 @@ msgstr "編集画面を開く"
 msgid "Opens device photo gallery"
 msgstr "デバイスのフォトギャラリーを開く"
 
-#: src/view/com/composer/Composer.tsx:1245
+#: src/view/com/composer/Composer.tsx:1293
 msgid "Opens emoji picker"
 msgstr "絵文字選択を開く"
 
@@ -5071,7 +5217,7 @@ msgid "Opens the linked website"
 msgstr "リンク先のウェブサイトを開く"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:683
-#: src/view/com/util/UserAvatar.tsx:446
+#: src/view/com/util/UserAvatar.tsx:465
 msgid "Opens this profile"
 msgstr "プロフィールを開く"
 
@@ -5118,7 +5264,7 @@ msgstr "OTA ステータス: 利用可能なものはありません"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:27
 #: src/lib/moderation/useReportOptions.ts:27
-#: src/view/com/composer/labels/LabelsBtn.tsx:186
+#: src/view/com/composer/labels/LabelsBtn.tsx:185
 msgid "Other"
 msgstr "その他"
 
@@ -5150,7 +5296,7 @@ msgstr "ページが見つかりません"
 #: src/screens/Login/LoginForm.tsx:228
 #: src/screens/Settings/AccountSettings.tsx:117
 #: src/screens/Settings/AccountSettings.tsx:121
-#: src/screens/Signup/StepInfo/index.tsx:225
+#: src/screens/Signup/StepInfo/index.tsx:228
 #: src/view/com/modals/DeleteAccount.tsx:239
 #: src/view/com/modals/DeleteAccount.tsx:246
 msgid "Password"
@@ -5182,8 +5328,9 @@ msgstr "一時停止"
 msgid "Pause video"
 msgstr "ビデオを一時停止"
 
+#: src/screens/Search/SearchResults.tsx:62
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
-#: src/view/screens/Search/Search.tsx:525
+#: src/view/screens/ProfileList.tsx:166
 msgid "People"
 msgstr "ユーザー"
 
@@ -5216,25 +5363,20 @@ msgstr "ペット"
 msgid "Photography"
 msgstr "写真"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:170
+#: src/view/com/composer/labels/LabelsBtn.tsx:169
 msgid "Pictures meant for adults."
 msgstr "成人向けの画像です。"
-
-#: src/screens/Search/components/ExploreTrendingVideos.tsx:173
-#: src/screens/Search/components/ExploreTrendingVideos.tsx:178
-msgid "Pin"
-msgstr "ピン"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:515
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:522
 msgid "Pin feed"
 msgstr "フィードをピン留め"
 
-#: src/screens/Search/components/ExploreTrendingVideos.tsx:167
-msgid "Pin the trending videos feed to your home screen for easy access"
-msgstr "簡単にアクセスできるようにトレンド・ビデオのフィードをホーム画面にピン留め"
+#: src/components/FeedCard.tsx:329
+msgid "Pin Feed"
+msgstr "フィードをピン留め"
 
-#: src/view/screens/ProfileList.tsx:707
+#: src/view/screens/ProfileList.tsx:706
 msgid "Pin to home"
 msgstr "ホームにピン留め"
 
@@ -5260,7 +5402,7 @@ msgstr "{0}をホームにピン留めしました"
 msgid "Pinned Feeds"
 msgstr "ピン留めされたフィード"
 
-#: src/view/screens/ProfileList.tsx:354
+#: src/view/screens/ProfileList.tsx:353
 msgid "Pinned to your feeds"
 msgstr "フィードにピン留めしました"
 
@@ -5299,16 +5441,20 @@ msgstr "GIFを再生"
 msgid "Plays the video"
 msgstr "ビデオを再生"
 
-#: src/screens/Signup/state.ts:235
+#: src/view/com/composer/labels/LabelsBtn.tsx:115
+msgid "Please add any content warning labels that are applicable for the media you are posting."
+msgstr "投稿するメディアに該当するコンテンツ警告ラベルを追加してください。"
+
+#: src/screens/Signup/state.ts:286
 msgid "Please choose your handle."
 msgstr "ハンドルをお選びください。"
 
-#: src/screens/Signup/state.ts:228
-#: src/screens/Signup/StepInfo/index.tsx:121
+#: src/screens/Signup/state.ts:278
+#: src/screens/Signup/StepInfo/index.tsx:120
 msgid "Please choose your password."
 msgstr "パスワードを選択してください。"
 
-#: src/screens/Signup/state.ts:249
+#: src/screens/Signup/state.ts:301
 msgid "Please complete the verification captcha."
 msgstr "CAPTCHA認証を完了してください。"
 
@@ -5316,7 +5462,7 @@ msgstr "CAPTCHA認証を完了してください。"
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
 msgstr "変更する前にメールを確認してください。これは、メールアップデートツールが追加されている間の一時的な要件であり、まもなく削除されます。"
 
-#: src/screens/Signup/StepInfo/index.tsx:110
+#: src/screens/Signup/StepInfo/index.tsx:109
 msgid "Please double-check that you have entered your email address correctly."
 msgstr "メールアドレスが正しく入力されていることを再確認してください。"
 
@@ -5336,12 +5482,12 @@ msgstr "このアプリパスワードに固有の名前を入力するか、ラ
 msgid "Please enter a valid word, tag, or phrase to mute"
 msgstr "ミュートにする有効な単語、タグ、フレーズを入力してください"
 
-#: src/screens/Signup/state.ts:214
-#: src/screens/Signup/StepInfo/index.tsx:92
+#: src/screens/Signup/state.ts:262
+#: src/screens/Signup/StepInfo/index.tsx:91
 msgid "Please enter your email."
 msgstr "メールアドレスを入力してください。"
 
-#: src/screens/Signup/StepInfo/index.tsx:85
+#: src/screens/Signup/StepInfo/index.tsx:84
 msgid "Please enter your invite code."
 msgstr "招待コードを入力してください。"
 
@@ -5384,18 +5530,15 @@ msgstr "メールアドレスを確認してください"
 
 #: src/screens/Onboarding/index.tsx:34
 #: src/screens/Onboarding/state.ts:111
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:231
 msgid "Politics"
 msgstr "政治"
 
-#: src/screens/Search/components/ExploreTrendingVideos.tsx:116
-msgid "Popular videos in your network."
-msgstr "あなたのネットワークで流行っているビデオ。"
-
-#: src/view/com/composer/labels/LabelsBtn.tsx:157
+#: src/view/com/composer/labels/LabelsBtn.tsx:156
 msgid "Porn"
 msgstr "ポルノ"
 
-#: src/view/com/composer/Composer.tsx:959
+#: src/view/com/composer/Composer.tsx:1008
 msgctxt "action"
 msgid "Post"
 msgstr "投稿"
@@ -5405,7 +5548,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "投稿"
 
-#: src/view/com/composer/Composer.tsx:957
+#: src/view/com/composer/Composer.tsx:1006
 msgctxt "action"
 msgid "Post All"
 msgstr "すべてポスト"
@@ -5482,6 +5625,7 @@ msgstr "投稿の固定を解除しました"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:186
 #: src/view/screens/Profile.tsx:222
+#: src/view/screens/ProfileList.tsx:166
 msgid "Posts"
 msgstr "投稿"
 
@@ -5534,8 +5678,8 @@ msgstr "あなたのフォローを優先"
 msgid "Priority notifications"
 msgstr "優先通知"
 
-#: src/view/shell/desktop/RightNav.tsx:105
-#: src/view/shell/desktop/RightNav.tsx:106
+#: src/view/shell/desktop/RightNav.tsx:110
+#: src/view/shell/desktop/RightNav.tsx:111
 msgid "Privacy"
 msgstr "プライバシー"
 
@@ -5558,7 +5702,7 @@ msgstr "プライバシーとセキュリティ"
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
 
-#: src/view/com/composer/Composer.tsx:1658
+#: src/view/com/composer/Composer.tsx:1695
 msgid "Processing video..."
 msgstr "ビデオを処理中…"
 
@@ -5573,7 +5717,7 @@ msgid "profile"
 msgstr "プロフィール"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:286
-#: src/view/shell/desktop/LeftNav.tsx:687
+#: src/view/shell/desktop/LeftNav.tsx:691
 #: src/view/shell/Drawer.tsx:71
 #: src/view/shell/Drawer.tsx:526
 msgid "Profile"
@@ -5596,6 +5740,26 @@ msgstr "ユーザーを一括でミュートまたはブロックする、公開
 #: src/view/com/lists/MyLists.tsx:72
 msgid "Public, sharable lists which can be used to drive feeds."
 msgstr "フィードとして見ることに使える、公開された共有可能なリスト"
+
+#. Accessibility label for button to publish a single post
+#: src/view/com/composer/Composer.tsx:988
+msgid "Publish post"
+msgstr "投稿を公開"
+
+#. Accessibility label for button to publish multiple posts in a thread
+#: src/view/com/composer/Composer.tsx:981
+msgid "Publish posts"
+msgstr "投稿を公開"
+
+#. Accessibility label for button to publish multiple replies in a thread
+#: src/view/com/composer/Composer.tsx:966
+msgid "Publish replies"
+msgstr "返信を公開"
+
+#. Accessibility label for button to publish a single reply
+#: src/view/com/composer/Composer.tsx:973
+msgid "Publish reply"
+msgstr "返信を公開"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:134
 msgid "QR code copied to your clipboard!"
@@ -5645,8 +5809,8 @@ msgstr "この投稿を引用する"
 
 #: src/screens/Settings/ThreadPreferences.tsx:99
 #: src/screens/Settings/ThreadPreferences.tsx:102
-#: src/view/com/post-thread/PostThread.tsx:696
-#: src/view/com/post-thread/PostThread.tsx:701
+#: src/view/com/post-thread/PostThread.tsx:695
+#: src/view/com/post-thread/PostThread.tsx:700
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "ランダムな順番で表示（別名「投稿者のルーレット」）"
 
@@ -5658,6 +5822,10 @@ msgstr "レート制限を超えました - 短い時間でハンドルを何度
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:622
 msgid "Re-attach quote"
 msgstr "引用を再度関連付ける"
+
+#: src/components/dms/EmojiReactionPicker.tsx:85
+msgid "React with {emoji}"
+msgstr "{emoji}でリアクションする"
 
 #: src/screens/Deactivated.tsx:141
 msgid "Reactivate your account"
@@ -5694,11 +5862,11 @@ msgstr "異議申し立ての理由"
 msgid "Reason:"
 msgstr "理由："
 
-#: src/view/screens/Search/Search.tsx:1036
+#: src/screens/Search/components/SearchHistory.tsx:44
 msgid "Recent Searches"
 msgstr "検索履歴"
 
-#: src/screens/Search/components/ExploreRecommendations.tsx:52
+#: src/screens/Search/modules/ExploreRecommendations.tsx:54
 msgid "Recommended"
 msgstr "おすすめ"
 
@@ -5721,7 +5889,7 @@ msgid "Reload conversations"
 msgstr "会話を再読み込み"
 
 #: src/components/dialogs/MutedWords.tsx:438
-#: src/components/FeedCard.tsx:315
+#: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:102
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:109
 #: src/screens/Settings/Settings.tsx:468
@@ -5736,7 +5904,7 @@ msgstr "削除"
 msgid "Remove {displayName} from starter pack"
 msgstr "{displayName}をスターターパックから削除"
 
-#: src/view/screens/Search/Search.tsx:1110
+#: src/screens/Search/components/SearchHistory.tsx:120
 msgid "Remove {historyItem}"
 msgstr "{historyItem}を削除"
 
@@ -5749,8 +5917,8 @@ msgstr "アカウント切替リストから取り除く"
 msgid "Remove attachment"
 msgstr "添付を削除"
 
-#: src/view/com/util/UserAvatar.tsx:397
-#: src/view/com/util/UserAvatar.tsx:400
+#: src/view/com/util/UserAvatar.tsx:416
+#: src/view/com/util/UserAvatar.tsx:419
 msgid "Remove Avatar"
 msgstr "アバターを削除"
 
@@ -5777,7 +5945,7 @@ msgstr "フィードを削除しますか？"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:320
 #: src/view/com/feeds/FeedSourceCard.tsx:190
 #: src/view/com/feeds/FeedSourceCard.tsx:268
-#: src/view/screens/ProfileList.tsx:521
+#: src/view/screens/ProfileList.tsx:520
 #: src/view/screens/SavedFeeds.tsx:342
 msgid "Remove from my feeds"
 msgstr "マイフィードから削除"
@@ -5791,7 +5959,7 @@ msgstr "クイックアクセスから削除しますか？"
 msgid "Remove from saved feeds"
 msgstr "保存されたフィードから削除"
 
-#: src/components/FeedCard.tsx:310
+#: src/components/FeedCard.tsx:338
 #: src/view/com/feeds/FeedSourceCard.tsx:317
 msgid "Remove from your feeds?"
 msgstr "フィードから削除しますか？"
@@ -5804,7 +5972,7 @@ msgstr "イメージを削除"
 msgid "Remove mute word from your list"
 msgstr "リストからミュートワードを削除"
 
-#: src/view/screens/Search/Search.tsx:1084
+#: src/screens/Search/components/SearchHistory.tsx:93
 msgid "Remove profile"
 msgstr "プロフィールを削除"
 
@@ -5848,11 +6016,11 @@ msgstr "保存されたフィードから削除しました"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:122
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
-#: src/view/screens/ProfileList.tsx:385
+#: src/view/screens/ProfileList.tsx:384
 msgid "Removed from your feeds"
 msgstr "あなたのフィードから削除しました"
 
-#: src/view/screens/Search/Search.tsx:1086
+#: src/screens/Search/components/SearchHistory.tsx:95
 msgid "Removes profile from search history"
 msgstr "検索履歴からプロフィールを削除する"
 
@@ -5877,7 +6045,7 @@ msgstr "返信できません"
 msgid "Replies to this post are disabled."
 msgstr "この投稿への返信は無効化されています。"
 
-#: src/view/com/composer/Composer.tsx:955
+#: src/view/com/composer/Composer.tsx:1004
 msgctxt "action"
 msgid "Reply"
 msgstr "返信"
@@ -5904,7 +6072,7 @@ msgstr "返信の設定"
 msgid "Reply settings are chosen by the author of the thread"
 msgstr "返信の設定はスレッドの投稿者によって選択されています"
 
-#: src/view/com/post-thread/PostThread.tsx:652
+#: src/view/com/post-thread/PostThread.tsx:651
 msgid "Reply sorting"
 msgstr "返信を並び替え"
 
@@ -5939,7 +6107,7 @@ msgstr "返信の表示設定を更新しました"
 msgid "Reply was successfully hidden"
 msgstr "返信を非表示にすることができました"
 
-#: src/components/dms/MessageMenu.tsx:134
+#: src/components/dms/MessageContextMenu.tsx:161
 #: src/components/dms/MessagesListBlockedFooter.tsx:85
 #: src/components/dms/MessagesListBlockedFooter.tsx:92
 msgid "Report"
@@ -5969,11 +6137,11 @@ msgstr "報告ダイアログ"
 msgid "Report feed"
 msgstr "フィードを報告"
 
-#: src/view/screens/ProfileList.tsx:563
-msgid "Report List"
+#: src/view/screens/ProfileList.tsx:562
+msgid "Report list"
 msgstr "リストを報告"
 
-#: src/components/dms/MessageMenu.tsx:132
+#: src/components/dms/MessageContextMenu.tsx:159
 msgid "Report message"
 msgstr "メッセージを報告"
 
@@ -5982,10 +6150,10 @@ msgstr "メッセージを報告"
 msgid "Report post"
 msgstr "投稿を報告"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:611
 #: src/screens/StarterPack/StarterPackScreen.tsx:614
+#: src/screens/StarterPack/StarterPackScreen.tsx:617
 msgid "Report starter pack"
-msgstr "スタータパックを報告"
+msgstr "スターターパックを報告"
 
 #: src/components/dms/ReportDialog.tsx:345
 msgid "Report submitted"
@@ -6042,7 +6210,7 @@ msgstr "リポスト"
 msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
 msgstr "リポストする（{0, plural, other {#件のリポスト}}）"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:553
+#: src/screens/StarterPack/StarterPackScreen.tsx:556
 #: src/view/com/util/post-ctrls/RepostButton.tsx:148
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:49
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:104
@@ -6089,7 +6257,7 @@ msgstr "画像投稿時にALTテキストを必須とする"
 msgid "Require an email code to sign in to your account."
 msgstr "アカウントにサインインするにはメールの確認コードが必要です。"
 
-#: src/screens/Signup/StepInfo/index.tsx:174
+#: src/screens/Signup/StepInfo/index.tsx:177
 msgid "Required for this provider"
 msgstr "このプロバイダーに必要"
 
@@ -6138,11 +6306,11 @@ msgstr "サインインを再試行"
 msgid "Retries the last action, which errored out"
 msgstr "エラーになった最後のアクションをやり直す"
 
-#: src/components/dms/MessageItem.tsx:245
+#: src/components/dms/MessageItem.tsx:321
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:110
 #: src/components/moderation/ReportDialog/index.tsx:221
-#: src/components/StarterPack/ProfileStarterPacks.tsx:334
+#: src/components/StarterPack/ProfileStarterPacks.tsx:339
 #: src/screens/Login/LoginForm.tsx:323
 #: src/screens/Login/LoginForm.tsx:330
 #: src/screens/Messages/ChatList.tsx:253
@@ -6164,7 +6332,7 @@ msgstr "報告オプションの読み込みを再試行する"
 
 #: src/components/Error.tsx:73
 #: src/screens/List/ListHiddenScreen.tsx:219
-#: src/screens/StarterPack/StarterPackScreen.tsx:748
+#: src/screens/StarterPack/StarterPackScreen.tsx:751
 msgid "Return to previous page"
 msgstr "前のページに戻る"
 
@@ -6176,7 +6344,7 @@ msgstr "ホームページに戻る"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:540
 #: src/screens/VideoFeed/index.tsx:1109
 #: src/view/screens/NotFound.tsx:60
-#: src/view/screens/ProfileList.tsx:1032
+#: src/view/screens/ProfileList.tsx:1031
 msgid "Returns to previous page"
 msgstr "前のページに戻る"
 
@@ -6191,12 +6359,12 @@ msgstr "前のステップに戻る"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:243
-#: src/view/com/composer/GifAltText.tsx:190
-#: src/view/com/composer/GifAltText.tsx:199
+#: src/view/com/composer/GifAltText.tsx:193
+#: src/view/com/composer/GifAltText.tsx:202
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:77
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:83
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:150
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:160
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:153
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:163
 #: src/view/com/modals/CreateOrEditList.tsx:317
 #: src/view/com/modals/EditProfile.tsx:219
 #: src/view/screens/SavedFeeds.tsx:109
@@ -6253,7 +6421,7 @@ msgid "Saved to your camera roll"
 msgstr "カメラロールに保存しました"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:131
-#: src/view/screens/ProfileList.tsx:365
+#: src/view/screens/ProfileList.tsx:364
 msgid "Saved to your feeds"
 msgstr "フィードを保存しました"
 
@@ -6277,29 +6445,26 @@ msgstr "よろしく！"
 msgid "Science"
 msgstr "科学"
 
-#: src/view/screens/ProfileList.tsx:989
+#: src/view/screens/ProfileList.tsx:988
 msgid "Scroll to top"
 msgstr "一番上までスクロール"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:491
 #: src/components/forms/SearchInput.tsx:34
 #: src/components/forms/SearchInput.tsx:36
-#: src/Navigation.tsx:632
+#: src/screens/Search/Shell.tsx:307
+#: src/screens/Search/Shell.tsx:464
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
-#: src/view/screens/Search/Search.tsx:570
-#: src/view/screens/Search/Search.tsx:848
 #: src/view/shell/bottom-bar/BottomBar.tsx:182
-#: src/view/shell/desktop/LeftNav.tsx:613
-#: src/view/shell/Drawer.tsx:370
 msgid "Search"
 msgstr "検索"
 
 #: src/Navigation.tsx:217
-#: src/screens/Profile/ProfileSearch.tsx:34
+#: src/screens/Profile/ProfileSearch.tsx:37
 msgid "Search @{0}'s posts"
 msgstr "@{0}の投稿を検索"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:745
+#: src/components/ProgressGuide/FollowDialog.tsx:683
 msgid "Search by name or interest"
 msgstr "名前や興味で検索"
 
@@ -6307,7 +6472,8 @@ msgstr "名前や興味で検索"
 msgid "Search feeds"
 msgstr "フィードを検索"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:575
+#: src/components/ProgressGuide/FollowDialog.tsx:524
+#: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:135
 msgid "Search for \"{interestsDisplayName}\"{activeText}"
 msgstr "「{interestsDisplayName}」{activeText}を検索"
 
@@ -6315,7 +6481,7 @@ msgstr "「{interestsDisplayName}」{activeText}を検索"
 msgid "Search for \"{query}\""
 msgstr "「{query}」を検索"
 
-#: src/view/screens/Search/Search.tsx:982
+#: src/screens/Search/components/AutocompleteResults.tsx:44
 msgid "Search for \"{searchText}\""
 msgstr "「{searchText}」を検索"
 
@@ -6323,7 +6489,15 @@ msgstr "「{searchText}」を検索"
 msgid "Search for feeds that you want to suggest to others."
 msgstr "他の人におすすめしたいフィードを検索。"
 
-#: src/view/screens/Search/Search.tsx:875
+#: src/screens/Search/Explore.tsx:362
+msgid "Search for more accounts"
+msgstr "もっとアカウントを検索"
+
+#: src/screens/Search/Explore.tsx:439
+msgid "Search for more feeds"
+msgstr "もっとフィードを検索"
+
+#: src/screens/Search/Shell.tsx:334
 msgid "Search for posts, users, or feeds"
 msgstr "投稿、ユーザー、フィードを検索"
 
@@ -6335,7 +6509,7 @@ msgstr "ユーザーを検索"
 msgid "Search GIFs"
 msgstr "GIFを検索"
 
-#: src/screens/Profile/ProfileSearch.tsx:33
+#: src/screens/Profile/ProfileSearch.tsx:36
 msgid "Search my posts"
 msgstr "自分の投稿を検索"
 
@@ -6345,7 +6519,7 @@ msgid "Search posts"
 msgstr "投稿を検索"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:511
-#: src/components/ProgressGuide/FollowDialog.tsx:764
+#: src/components/ProgressGuide/FollowDialog.tsx:702
 msgid "Search profiles"
 msgstr "プロフィールを検索"
 
@@ -6353,12 +6527,12 @@ msgstr "プロフィールを検索"
 msgid "Search Tenor"
 msgstr "Tenorを検索"
 
-#: src/screens/Profile/ProfileSearch.tsx:35
+#: src/screens/Profile/ProfileSearch.tsx:38
 msgid "Search..."
 msgstr "検索…"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:512
-#: src/components/ProgressGuide/FollowDialog.tsx:765
+#: src/components/ProgressGuide/FollowDialog.tsx:703
 msgid "Searches for profiles"
 msgstr "プロフィールを検索"
 
@@ -6475,11 +6649,12 @@ msgstr "アプリのユーザーインターフェースに使用する言語を
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr "登録されたフィードに含める言語を選択します。選択されていない場合は、すべての言語が表示されます。"
 
-#: src/screens/Signup/StepInfo/index.tsx:267
+#: src/screens/Signup/StepInfo/index.tsx:270
 msgid "Select your date of birth"
 msgstr "生年月日を選択"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:192
+#: src/screens/Settings/SettingsInterests.tsx:162
 msgid "Select your interests from the options below"
 msgstr "次のオプションから興味のあるものを選択してください"
 
@@ -6585,7 +6760,7 @@ msgstr "パスワードをリセットするためのメールアドレスを入
 
 #: src/Navigation.tsx:173
 #: src/screens/Settings/Settings.tsx:80
-#: src/view/shell/desktop/LeftNav.tsx:705
+#: src/view/shell/desktop/LeftNav.tsx:709
 #: src/view/shell/Drawer.tsx:539
 msgid "Settings"
 msgstr "設定"
@@ -6595,7 +6770,7 @@ msgctxt "toast"
 msgid "Settings saved"
 msgstr "設定を保存しました"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:174
+#: src/view/com/composer/labels/LabelsBtn.tsx:173
 msgid "Sexual activity or erotic nudity."
 msgstr "性的行為または性的なヌード。"
 
@@ -6606,14 +6781,14 @@ msgstr "性的にきわどい"
 #: src/components/StarterPack/QrCodeDialog.tsx:181
 #: src/screens/Hashtag.tsx:126
 #: src/screens/StarterPack/StarterPackScreen.tsx:428
-#: src/screens/StarterPack/StarterPackScreen.tsx:600
+#: src/screens/StarterPack/StarterPackScreen.tsx:603
 #: src/screens/Topic.tsx:102
 #: src/view/com/profile/ProfileMenu.tsx:216
 #: src/view/com/profile/ProfileMenu.tsx:225
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:481
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:490
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:350
-#: src/view/screens/ProfileList.tsx:506
+#: src/view/screens/ProfileList.tsx:505
 msgid "Share"
 msgstr "共有"
 
@@ -6638,7 +6813,7 @@ msgstr "とにかく共有"
 
 #: src/components/StarterPack/ShareDialog.tsx:123
 #: src/components/StarterPack/ShareDialog.tsx:130
-#: src/screens/StarterPack/StarterPackScreen.tsx:604
+#: src/screens/StarterPack/StarterPackScreen.tsx:607
 msgid "Share link"
 msgstr "リンクを共有"
 
@@ -6682,7 +6857,7 @@ msgstr "リンクしたウェブサイトを共有"
 
 #: src/components/moderation/ContentHider.tsx:200
 #: src/components/moderation/LabelPreference.tsx:137
-#: src/components/moderation/PostHider.tsx:122
+#: src/components/moderation/PostHider.tsx:124
 msgid "Show"
 msgstr "表示"
 
@@ -6749,7 +6924,7 @@ msgstr "引用を表示"
 msgid "Show replies"
 msgstr "返信を表示"
 
-#: src/view/com/post-thread/PostThread.tsx:626
+#: src/view/com/post-thread/PostThread.tsx:625
 msgid "Show replies as"
 msgstr "返信の表示方法"
 
@@ -6823,14 +6998,14 @@ msgstr "{0}としてサインイン"
 msgid "Sign in as..."
 msgstr "アカウントの選択"
 
+#: src/screens/Deactivated.tsx:203
+#: src/screens/Deactivated.tsx:209
+msgid "Sign in or create an account"
+msgstr "サインインまたはアカウントを作成"
+
 #: src/components/dialogs/Signin.tsx:75
 msgid "Sign in or create your account to join the conversation!"
 msgstr "会話に参加するにはサインインするか新しくアカウントを登録してください！"
-
-#: src/screens/Deactivated.tsx:203
-#: src/screens/Deactivated.tsx:209
-msgid "Sign in or sign up"
-msgstr "サインインまたはサインアップ"
 
 #: src/components/AccountList.tsx:65
 msgid "Sign in to account that is not listed"
@@ -6846,9 +7021,9 @@ msgstr "Blueskyにサインイン または 新規アカウントの登録"
 #: src/screens/SignupQueued.tsx:93
 #: src/screens/SignupQueued.tsx:96
 #: src/screens/Takendown.tsx:85
-#: src/view/shell/desktop/LeftNav.tsx:207
-#: src/view/shell/desktop/LeftNav.tsx:287
-#: src/view/shell/desktop/LeftNav.tsx:290
+#: src/view/shell/desktop/LeftNav.tsx:208
+#: src/view/shell/desktop/LeftNav.tsx:288
+#: src/view/shell/desktop/LeftNav.tsx:291
 msgid "Sign out"
 msgstr "サインアウト"
 
@@ -6857,7 +7032,7 @@ msgid "Sign Out"
 msgstr "サインアウト"
 
 #: src/screens/Settings/Settings.tsx:256
-#: src/view/shell/desktop/LeftNav.tsx:204
+#: src/view/shell/desktop/LeftNav.tsx:205
 msgid "Sign out?"
 msgstr "サインアウトしますか？"
 
@@ -6870,11 +7045,6 @@ msgstr "サインインが必要"
 #: src/screens/Login/ChooseAccountForm.tsx:53
 msgid "Signed in as @{0}"
 msgstr "@{0}でサインイン"
-
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:303
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:310
-msgid "Signup without a starter pack"
-msgstr "スターターパックを使わずにサインアップ"
 
 #: src/components/FeedInterstitials.tsx:337
 msgid "Similar accounts"
@@ -6898,7 +7068,7 @@ msgstr "小さい"
 msgid "Software Dev"
 msgstr "ソフトウェア開発"
 
-#: src/components/FeedInterstitials.tsx:472
+#: src/components/FeedInterstitials.tsx:474
 msgid "Some other feeds you might like"
 msgstr "お好みかもしれない他のフィード"
 
@@ -6906,11 +7076,19 @@ msgstr "お好みかもしれない他のフィード"
 msgid "Some people can reply"
 msgstr "一部の人が返信可能"
 
+#: src/components/dms/MessageItem.tsx:148
+msgid "Someone reacted {0}"
+msgstr "誰かが{0}とリアクションしました"
+
+#: src/screens/Messages/components/ChatListItem.tsx:236
+msgid "Someone reacted {0} to {1}"
+msgstr "誰かが{1}に{0}とリアクションしました"
+
 #: src/components/moderation/ReportDialog/index.tsx:76
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr "報告しようとしているデータに問題がありました。サポートに連絡してください。"
 
-#: src/screens/Messages/Conversation.tsx:117
+#: src/screens/Messages/Conversation.tsx:126
 msgid "Something went wrong"
 msgstr "何らかの問題が発生したようです"
 
@@ -6939,8 +7117,8 @@ msgstr "問題が発生しました。もう一度お試しください。"
 msgid "Something wrong? Let us know."
 msgstr "何か問題がありますか？お知らせください。"
 
-#: src/App.native.tsx:122
-#: src/App.web.tsx:98
+#: src/App.native.tsx:123
+#: src/App.web.tsx:99
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr "申し訳ありません！セッションの有効期限が切れました。もう一度サインインしてください。"
 
@@ -6975,6 +7153,7 @@ msgstr "スパム、過剰なメンションや返信"
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:113
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:229
 msgid "Sports"
 msgstr "スポーツ"
 
@@ -6982,13 +7161,13 @@ msgstr "スポーツ"
 msgid "Start a new chat"
 msgstr "新しいチャットを開始"
 
-#: src/view/screens/ProfileList.tsx:839
-#: src/view/screens/ProfileList.tsx:960
+#: src/view/screens/ProfileList.tsx:838
+#: src/view/screens/ProfileList.tsx:959
 msgid "Start adding people"
 msgstr "ユーザーを追加する"
 
-#: src/view/screens/ProfileList.tsx:846
-#: src/view/screens/ProfileList.tsx:967
+#: src/view/screens/ProfileList.tsx:845
+#: src/view/screens/ProfileList.tsx:966
 msgid "Start adding people!"
 msgstr "ユーザーを追加して！"
 
@@ -6996,13 +7175,13 @@ msgstr "ユーザーを追加して！"
 msgid "Start chat with {displayName}"
 msgstr "{displayName}とのチャットを開始"
 
-#: src/Navigation.tsx:433
-#: src/Navigation.tsx:438
+#: src/Navigation.tsx:441
+#: src/Navigation.tsx:446
 #: src/screens/StarterPack/Wizard/index.tsx:186
 msgid "Starter Pack"
 msgstr "スターターパック"
 
-#: src/components/StarterPack/StarterPackCard.tsx:87
+#: src/components/StarterPack/StarterPackCard.tsx:90
 msgid "Starter pack by {0}"
 msgstr "{0}によるスターターパック"
 
@@ -7010,20 +7189,21 @@ msgstr "{0}によるスターターパック"
 msgid "Starter pack by <0/>"
 msgstr "<0/>によるスターターパック"
 
-#: src/components/StarterPack/StarterPackCard.tsx:86
+#: src/components/StarterPack/StarterPackCard.tsx:89
 #: src/view/com/profile/ProfileSubpageHeader.tsx:180
 msgid "Starter pack by you"
 msgstr "自分のスターターパック"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:712
+#: src/screens/StarterPack/StarterPackScreen.tsx:715
 msgid "Starter pack is invalid"
 msgstr "スターターパックが無効です"
 
+#: src/screens/Search/Explore.tsx:538
 #: src/view/screens/Profile.tsx:228
 msgid "Starter Packs"
 msgstr "スターターパック"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:242
+#: src/components/StarterPack/ProfileStarterPacks.tsx:247
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "スターターパックを使ってお気に入りのフィードやユーザーを友人へ簡単に共有できます。"
 
@@ -7032,7 +7212,7 @@ msgstr "スターターパックを使ってお気に入りのフィードやユ
 msgid "Status Page"
 msgstr "ステータスページ"
 
-#: src/screens/Signup/index.tsx:134
+#: src/screens/Signup/index.tsx:148
 msgid "Step {0} of {1}"
 msgstr "ステップ {0} / {1}"
 
@@ -7066,7 +7246,7 @@ msgstr "異議申し立てを送信"
 msgid "Submit report"
 msgstr "報告を送信"
 
-#: src/view/screens/ProfileList.tsx:734
+#: src/view/screens/ProfileList.tsx:733
 msgid "Subscribe"
 msgstr "登録"
 
@@ -7082,7 +7262,7 @@ msgstr "ラベラーを登録する"
 msgid "Subscribe to this labeler"
 msgstr "このラベラーを登録"
 
-#: src/view/screens/ProfileList.tsx:730
+#: src/view/screens/ProfileList.tsx:729
 msgid "Subscribe to this list"
 msgstr "このリストに登録"
 
@@ -7090,16 +7270,16 @@ msgstr "このリストに登録"
 msgid "Success!"
 msgstr "成功！"
 
-#: src/view/screens/Search/Explore.tsx:368
-msgid "Suggested accounts"
-msgstr "おすすめのアカウント"
+#: src/screens/Search/Explore.tsx:359
+msgid "Suggested Accounts"
+msgstr "おすすめアカウント"
 
 #: src/components/FeedInterstitials.tsx:339
 msgid "Suggested for you"
 msgstr "あなたへのおすすめ"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:145
-#: src/view/com/composer/labels/LabelsBtn.tsx:148
+#: src/view/com/composer/labels/LabelsBtn.tsx:144
+#: src/view/com/composer/labels/LabelsBtn.tsx:147
 msgid "Suggestive"
 msgstr "きわどい"
 
@@ -7122,7 +7302,7 @@ msgstr "サポート"
 #: src/screens/Settings/Settings.tsx:102
 #: src/screens/Settings/Settings.tsx:116
 #: src/screens/Settings/Settings.tsx:412
-#: src/view/shell/desktop/LeftNav.tsx:242
+#: src/view/shell/desktop/LeftNav.tsx:243
 msgid "Switch account"
 msgstr "アカウントを切り替える"
 
@@ -7131,11 +7311,11 @@ msgstr "アカウントを切り替える"
 msgid "Switch Account"
 msgstr "アカウントを切り替える"
 
-#: src/view/shell/desktop/LeftNav.tsx:106
+#: src/view/shell/desktop/LeftNav.tsx:107
 msgid "Switch accounts"
 msgstr "アカウントを切り替える"
 
-#: src/view/shell/desktop/LeftNav.tsx:250
+#: src/view/shell/desktop/LeftNav.tsx:251
 msgid "Switch to {0}"
 msgstr "{0}へ切り替える"
 
@@ -7155,6 +7335,12 @@ msgstr "システムログ"
 #: src/components/dialogs/MutedWords.tsx:282
 msgid "Tags only"
 msgstr "タグのみ"
+
+#: src/components/ContextMenu/Backdrop.ios.tsx:54
+#: src/components/ContextMenu/Backdrop.ios.tsx:80
+#: src/components/ContextMenu/Backdrop.tsx:46
+msgid "Tap to close context menu"
+msgstr "タップしてコンテキストメニューを閉じる"
 
 #: src/components/ProgressGuide/Toast.tsx:156
 msgid "Tap to dismiss"
@@ -7181,7 +7367,7 @@ msgstr "テクノロジー"
 msgid "Tell a joke!"
 msgstr "ジョークを言って！"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:352
+#: src/screens/Profile/Header/EditProfileDialog.tsx:355
 msgid "Tell us a bit about yourself"
 msgstr "あなた自身について少し教えて"
 
@@ -7189,8 +7375,8 @@ msgstr "あなた自身について少し教えて"
 msgid "Tell us a little more"
 msgstr "もう少し教えて"
 
-#: src/view/shell/desktop/RightNav.tsx:111
-#: src/view/shell/desktop/RightNav.tsx:112
+#: src/view/shell/desktop/RightNav.tsx:116
+#: src/view/shell/desktop/RightNav.tsx:117
 msgid "Terms"
 msgstr "規約"
 
@@ -7336,9 +7522,13 @@ msgstr "選択したビデオのサイズが 100 MB を超えています。"
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr "サーバーで問題が発生しているようです。少し間をおいて再度試してください。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:722
+#: src/screens/StarterPack/StarterPackScreen.tsx:725
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr "見ようとしたスターターパックが無効です。代わりにスターターパックを削除してください。"
+
+#: src/components/ContextMenu/index.tsx:433
+msgid "The subject of the context menu"
+msgstr "コンテキストメニューの件名"
 
 #: src/view/screens/Support.tsx:37
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
@@ -7365,8 +7555,8 @@ msgid "There was an issue connecting to Tenor."
 msgstr "Tenorへの接続中に問題が発生しました。"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:173
-#: src/view/screens/ProfileList.tsx:368
-#: src/view/screens/ProfileList.tsx:387
+#: src/view/screens/ProfileList.tsx:367
+#: src/view/screens/ProfileList.tsx:386
 #: src/view/screens/SavedFeeds.tsx:85
 msgid "There was an issue contacting the server"
 msgstr "サーバーへの問い合わせ中に問題が発生しました"
@@ -7385,7 +7575,8 @@ msgstr "サーバーへの問い合わせ中に問題が発生しました"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "通知の取得中に問題が発生しました。もう一度試すにはこちらをタップしてください。"
 
-#: src/view/com/posts/PostFeed.tsx:592
+#: src/screens/Search/Explore.tsx:908
+#: src/view/com/posts/PostFeed.tsx:607
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "投稿の取得中に問題が発生しました。もう一度試すにはこちらをタップしてください。"
 
@@ -7397,8 +7588,8 @@ msgstr "リストの取得中に問題が発生しました。もう一度試す
 msgid "There was an issue fetching your app passwords"
 msgstr "アプリパスワードの取得中に問題が発生しました"
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:155
-#: src/view/com/lists/ProfileLists.tsx:154
+#: src/view/com/feeds/ProfileFeedgens.tsx:151
+#: src/view/com/lists/ProfileLists.tsx:150
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr "リストの取得中に問題が発生しました。もう一度試すにはこちらをタップしてください。"
 
@@ -7442,10 +7633,10 @@ msgstr "問題が発生しました！ {0}"
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
-#: src/view/screens/ProfileList.tsx:404
-#: src/view/screens/ProfileList.tsx:422
-#: src/view/screens/ProfileList.tsx:440
-#: src/view/screens/ProfileList.tsx:458
+#: src/view/screens/ProfileList.tsx:403
+#: src/view/screens/ProfileList.tsx:421
+#: src/view/screens/ProfileList.tsx:439
+#: src/view/screens/ProfileList.tsx:457
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "問題が発生しました。インターネットへの接続を確認の上、もう一度お試しください。"
 
@@ -7507,7 +7698,7 @@ msgstr "このコンテンツは関係するユーザーの一方が他方をブ
 msgid "This content is not viewable without a Bluesky account."
 msgstr "このコンテンツはBlueskyのアカウントがないと閲覧できません。"
 
-#: src/screens/Messages/components/ChatListItem.tsx:296
+#: src/screens/Messages/components/ChatListItem.tsx:357
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr "削除あるいは無効化されたアカウントとの会話です。押すと選択肢が表示されます"
 
@@ -7529,7 +7720,7 @@ msgstr "このフィードは空です！もっと多くのユーザーをフォ
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/screens/Profile/ProfileFeed/index.tsx:189
-#: src/view/screens/ProfileList.tsx:836
+#: src/view/screens/ProfileList.tsx:835
 msgid "This feed is empty."
 msgstr "このフィードは空です。"
 
@@ -7573,7 +7764,7 @@ msgstr "<0>{0}</0>が作成したこのリストは名前または説明がBlues
 msgid "This list – created by you – contains possible violations of Bluesky's community guidelines in its name or description."
 msgstr "あなたが作成したこのリストは名前または説明がBlueskyのコミュニティガイドラインに違反している可能性があります。"
 
-#: src/view/screens/ProfileList.tsx:955
+#: src/view/screens/ProfileList.tsx:954
 msgid "This list is empty."
 msgstr "このリストは空です。"
 
@@ -7602,7 +7793,7 @@ msgstr "この投稿はサインインしているユーザーにのみ表示さ
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "この投稿はフィードとスレッドから非表示になります。元に戻すことはできません。"
 
-#: src/view/com/composer/Composer.tsx:428
+#: src/view/com/composer/Composer.tsx:436
 msgid "This post's author has disabled quote posts."
 msgstr "この投稿の投稿者は引用投稿を無効にしています。"
 
@@ -7667,13 +7858,13 @@ msgstr "クイックアクセスのリストから@{0}を削除します。"
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "これによってあなたの投稿が全員に見える引用投稿からは削除され、プレースホルダーに置き換えられます。"
 
-#: src/view/com/post-thread/PostThread.tsx:610
-#: src/view/com/post-thread/PostThread.tsx:613
+#: src/view/com/post-thread/PostThread.tsx:609
+#: src/view/com/post-thread/PostThread.tsx:612
 msgid "Thread options"
 msgstr "スレッドのオプション"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:67
-#: src/screens/Settings/ContentAndMediaSettings.tsx:70
+#: src/screens/Settings/ContentAndMediaSettings.tsx:68
+#: src/screens/Settings/ContentAndMediaSettings.tsx:71
 msgid "Thread preferences"
 msgstr "スレッドの設定"
 
@@ -7681,8 +7872,8 @@ msgstr "スレッドの設定"
 msgid "Thread Preferences"
 msgstr "スレッドの設定"
 
-#: src/view/com/post-thread/PostThread.tsx:640
-#: src/view/com/post-thread/PostThread.tsx:645
+#: src/view/com/post-thread/PostThread.tsx:639
+#: src/view/com/post-thread/PostThread.tsx:644
 msgid "Threaded"
 msgstr "スレッド"
 
@@ -7731,17 +7922,17 @@ msgid "Toggles the sound"
 msgstr "音の切り替え"
 
 #: src/screens/Hashtag.tsx:84
+#: src/screens/Search/SearchResults.tsx:42
 #: src/screens/Topic.tsx:71
-#: src/view/screens/Search/Search.tsx:505
 msgid "Top"
 msgstr "トップ"
 
-#: src/Navigation.tsx:403
+#: src/Navigation.tsx:411
 msgid "Topic"
 msgstr "トピック"
 
-#: src/components/dms/MessageMenu.tsx:105
-#: src/components/dms/MessageMenu.tsx:107
+#: src/components/dms/MessageContextMenu.tsx:132
+#: src/components/dms/MessageContextMenu.tsx:134
 #: src/view/com/post-thread/PostThreadItem.tsx:778
 #: src/view/com/post-thread/PostThreadItem.tsx:781
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:451
@@ -7749,13 +7940,15 @@ msgstr "トピック"
 msgid "Translate"
 msgstr "翻訳"
 
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:69
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:59
 msgid "Trending"
 msgstr "トレンド"
 
+#: src/screens/Search/Explore.tsx:608
+msgid "Trending topics"
+msgstr ""
+
 #: src/components/interstitials/TrendingVideos.tsx:88
-#: src/screens/Search/components/ExploreTrendingVideos.tsx:106
 msgid "Trending Videos"
 msgstr "話題のビデオ"
 
@@ -7772,7 +7965,7 @@ msgstr "テレビ"
 msgid "Two-factor authentication (2FA)"
 msgstr "２要素認証（2FA）"
 
-#: src/screens/Signup/StepHandle.tsx:118
+#: src/screens/Signup/StepHandle.tsx:126
 msgid "Type your desired username"
 msgstr "希望するユーザー名をタイプしてください"
 
@@ -7783,14 +7976,6 @@ msgstr "ここにメッセージを入力する"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:413
 msgid "Type:"
 msgstr "タイプ："
-
-#: src/view/screens/ProfileList.tsx:613
-msgid "Un-block list"
-msgstr "リストでのブロックを解除"
-
-#: src/view/screens/ProfileList.tsx:598
-msgid "Un-mute list"
-msgstr "リストでのミュートを解除"
 
 #: src/lib/strings/errors.ts:11
 msgid "Unable to connect. Please check your internet connection and try again."
@@ -7806,7 +7991,7 @@ msgstr "接続できません。インターネットへの接続を確認して
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "あなたのサービスに接続できません。インターネットの接続を確認してください。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:654
+#: src/screens/StarterPack/StarterPackScreen.tsx:657
 msgid "Unable to delete"
 msgstr "削除できません"
 
@@ -7817,7 +8002,7 @@ msgstr "削除できません"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:197
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
 #: src/view/com/profile/ProfileMenu.tsx:399
-#: src/view/screens/ProfileList.tsx:716
+#: src/view/screens/ProfileList.tsx:715
 msgid "Unblock"
 msgstr "ブロックを解除"
 
@@ -7837,6 +8022,10 @@ msgstr "アカウントのブロックを解除"
 #: src/view/com/profile/ProfileMenu.tsx:381
 msgid "Unblock Account?"
 msgstr "アカウントのブロックを解除しますか？"
+
+#: src/view/screens/ProfileList.tsx:612
+msgid "Unblock list"
+msgstr "リストのブロックを解除"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:76
@@ -7883,7 +8072,7 @@ msgctxt "video"
 msgid "Unmute"
 msgstr "ミュートを解除"
 
-#: src/view/screens/ProfileList.tsx:723
+#: src/view/screens/ProfileList.tsx:722
 msgid "Unmute"
 msgstr "ミュートを解除"
 
@@ -7903,6 +8092,10 @@ msgstr "アカウントのミュートを解除"
 msgid "Unmute conversation"
 msgstr "会話のミュートを解除"
 
+#: src/view/screens/ProfileList.tsx:597
+msgid "Unmute list"
+msgstr "リストのミュートを解除"
+
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:536
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:540
 msgid "Unmute thread"
@@ -7912,13 +8105,17 @@ msgstr "スレッドのミュートを解除"
 msgid "Unmute video"
 msgstr "ビデオのミュートを解除"
 
-#: src/view/screens/ProfileList.tsx:707
+#: src/view/screens/ProfileList.tsx:706
 msgid "Unpin"
 msgstr "ピン留めを解除"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:515
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:522
 msgid "Unpin feed"
+msgstr "フィードのピン留めを外す"
+
+#: src/components/FeedCard.tsx:320
+msgid "Unpin Feed"
 msgstr "フィードのピン留めを外す"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:305
@@ -7931,7 +8128,7 @@ msgstr "ホームからピン留めを解除"
 msgid "Unpin from profile"
 msgstr "プロフィールから固定を解除"
 
-#: src/view/screens/ProfileList.tsx:578
+#: src/view/screens/ProfileList.tsx:577
 msgid "Unpin moderation list"
 msgstr "モデレーションリストのピン留めを解除"
 
@@ -7939,7 +8136,7 @@ msgstr "モデレーションリストのピン留めを解除"
 msgid "Unpinned {0} from Home"
 msgstr "{0}のピン留めを解除しました"
 
-#: src/view/screens/ProfileList.tsx:355
+#: src/view/screens/ProfileList.tsx:354
 msgid "Unpinned from your feeds"
 msgstr "フィードからピン留めを解除"
 
@@ -7960,7 +8157,7 @@ msgstr "このラベラーの登録を解除"
 msgid "Unsubscribed from list"
 msgstr "リストの登録を解除しました"
 
-#: src/view/com/composer/Composer.tsx:781
+#: src/view/com/composer/Composer.tsx:790
 msgid "Unsupported video type"
 msgstr "サポートしていないビデオ形式"
 
@@ -8011,20 +8208,20 @@ msgstr "代わりに写真をアップロード"
 msgid "Upload a text file to:"
 msgstr "テキストファイルのアップロード先："
 
-#: src/view/com/util/UserAvatar.tsx:368
-#: src/view/com/util/UserAvatar.tsx:371
+#: src/view/com/util/UserAvatar.tsx:387
+#: src/view/com/util/UserAvatar.tsx:390
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "カメラからアップロード"
 
-#: src/view/com/util/UserAvatar.tsx:385
+#: src/view/com/util/UserAvatar.tsx:404
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "ファイルからアップロード"
 
-#: src/view/com/util/UserAvatar.tsx:379
-#: src/view/com/util/UserAvatar.tsx:383
+#: src/view/com/util/UserAvatar.tsx:398
+#: src/view/com/util/UserAvatar.tsx:402
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -8039,7 +8236,7 @@ msgstr "画像をアップロード中…"
 msgid "Uploading link thumbnail..."
 msgstr "リンクのサムネイルをアップロード中…"
 
-#: src/view/com/composer/Composer.tsx:1655
+#: src/view/com/composer/Composer.tsx:1692
 msgid "Uploading video..."
 msgstr "ビデオをアップロード中…"
 
@@ -8056,8 +8253,8 @@ msgstr "デフォルトプロバイダーを使用"
 msgid "Use in-app browser"
 msgstr "アプリ内ブラウザを使用"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:93
-#: src/screens/Settings/ContentAndMediaSettings.tsx:99
+#: src/screens/Settings/ContentAndMediaSettings.tsx:102
+#: src/screens/Settings/ContentAndMediaSettings.tsx:108
 msgid "Use in-app browser to open links"
 msgstr "リンクを開く時にアプリ内ブラウザを使用"
 
@@ -8211,7 +8408,7 @@ msgstr "ビデオ"
 msgid "Video failed to process"
 msgstr "ビデオの処理に失敗"
 
-#: src/Navigation.tsx:454
+#: src/Navigation.tsx:462
 msgid "Video Feed"
 msgstr "ビデオフィード"
 
@@ -8221,6 +8418,7 @@ msgstr "{0}からのビデオ：{text}"
 
 #: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:233
 msgid "Video Games"
 msgstr "ビデオゲーム"
 
@@ -8240,7 +8438,7 @@ msgstr "ビデオが見つかりません。"
 msgid "Video settings"
 msgstr "ビデオの設定"
 
-#: src/view/com/composer/Composer.tsx:1665
+#: src/view/com/composer/Composer.tsx:1702
 msgid "Video uploaded"
 msgstr "ビデオをアップロードしました"
 
@@ -8261,7 +8459,7 @@ msgstr "ビデオは3分未満でなければなりません"
 msgid "View {0}'s avatar"
 msgstr "{0}のアバターを表示"
 
-#: src/components/ProfileCard.tsx:110
+#: src/components/ProfileCard.tsx:115
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:446
 #: src/screens/VideoFeed/index.tsx:769
 #: src/view/com/notifications/NotificationFeedItem.tsx:413
@@ -8305,8 +8503,8 @@ msgstr "これらのラベルに関する情報を見る"
 
 #: src/components/interstitials/TrendingVideos.tsx:191
 #: src/components/interstitials/TrendingVideos.tsx:210
-#: src/screens/Search/components/ExploreTrendingVideos.tsx:231
-#: src/screens/Search/components/ExploreTrendingVideos.tsx:250
+#: src/screens/Search/modules/ExploreTrendingVideos.tsx:194
+#: src/screens/Search/modules/ExploreTrendingVideos.tsx:213
 msgid "View more"
 msgstr "もっと表示"
 
@@ -8397,7 +8595,7 @@ msgstr "そのハッシュタグの検索結果は見つかりませんでした
 msgid "We couldn't find any results for that topic."
 msgstr "そのトピックについての検索結果は見つかりませんでした。"
 
-#: src/screens/Messages/Conversation.tsx:118
+#: src/screens/Messages/Conversation.tsx:127
 msgid "We couldn't load this conversation"
 msgstr "この会話を読み込めませんでした"
 
@@ -8416,6 +8614,10 @@ msgstr "素敵なひとときをお過ごしください。覚えておいてく
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr "あなたのフォロー中のユーザーの投稿を読み終わりました。フィード<0/>内の最新の投稿を表示します。"
+
+#: src/screens/Settings/SettingsInterests.tsx:155
+msgid "We recommend selecting at least two interests."
+msgstr ""
 
 #: src/view/com/composer/state/video.ts:417
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
@@ -8442,15 +8644,15 @@ msgid "We'll use this to help customize your experience."
 msgstr "これはあなたの体験をカスタマイズするために使用されます。"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:92
-#: src/components/ProgressGuide/FollowDialog.tsx:157
+#: src/components/ProgressGuide/FollowDialog.tsx:172
 msgid "We're having network issues, try again"
 msgstr "ネットワークで問題が発生しています。もう一度試してください"
 
-#: src/screens/Signup/index.tsx:95
+#: src/screens/Signup/index.tsx:109
 msgid "We're so excited to have you join us!"
 msgstr "私たちはあなたが参加してくれることをとても楽しみにしています！"
 
-#: src/view/screens/ProfileList.tsx:115
+#: src/view/screens/ProfileList.tsx:113
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
 msgstr "大変申し訳ありませんが、このリストを解決できませんでした。それでもこの問題が解決しない場合は、作成者の@{handleOrDid}までお問い合わせください。"
 
@@ -8458,11 +8660,11 @@ msgstr "大変申し訳ありませんが、このリストを解決できませ
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "大変申し訳ありませんが、現在ミュートされたワードを読み込むことができませんでした。もう一度お試しください。"
 
-#: src/view/screens/Search/Search.tsx:205
+#: src/screens/Search/SearchResults.tsx:222
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "大変申し訳ありませんが、検索を完了できませんでした。数分後にもう一度お試しください。"
 
-#: src/view/com/composer/Composer.tsx:425
+#: src/view/com/composer/Composer.tsx:433
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "大変申し訳ありません！返信しようとしている投稿は削除されました。"
 
@@ -8491,13 +8693,9 @@ msgstr "なにに興味がありますか？"
 msgid "What do you want to call your starter pack?"
 msgstr "あなたのスターターパックを何と呼びたいですか？"
 
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:79
-msgid "What people are posting about."
-msgstr "みんなは何について投稿しているのか。"
-
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:744
+#: src/view/com/composer/Composer.tsx:753
 msgid "What's up?"
 msgstr "最近どう？"
 
@@ -8524,7 +8722,7 @@ msgid "Whoops!"
 msgstr "おっと！"
 
 #: src/components/interstitials/TrendingVideos.tsx:127
-#: src/screens/Search/components/ExploreTrendingVideos.tsx:147
+#: src/screens/Search/modules/ExploreTrendingVideos.tsx:108
 msgid "Whoops! Trending videos failed to load."
 msgstr "おっと！トレンドビデオの読み込みに失敗しました。"
 
@@ -8571,11 +8769,11 @@ msgstr "なぜこのユーザーをレビューする必要がありますか？
 msgid "Write a message"
 msgstr "メッセージを書く"
 
-#: src/view/com/composer/Composer.tsx:832
+#: src/view/com/composer/Composer.tsx:844
 msgid "Write post"
 msgstr "投稿を書く"
 
-#: src/view/com/composer/Composer.tsx:742
+#: src/view/com/composer/Composer.tsx:751
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:69
 msgid "Write your reply"
 msgstr "返信を書く"
@@ -8598,7 +8796,7 @@ msgstr "はい"
 msgid "Yes, deactivate"
 msgstr "はい、無効化します"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:666
+#: src/screens/StarterPack/StarterPackScreen.tsx:669
 msgid "Yes, delete this starter pack"
 msgstr "はい、このスターターパックを削除します"
 
@@ -8622,9 +8820,9 @@ msgstr "昨日"
 msgid "You"
 msgstr "あなた"
 
-#: src/components/forms/HostingProvider.tsx:46
-msgid "You are creating an account on"
-msgstr "アカウントの作成場所："
+#: src/components/forms/HostingProvider.tsx:64
+msgid "You are creating an account on <0>{0}</0>"
+msgstr ""
 
 #: src/screens/SignupQueued.tsx:157
 msgid "You are in line."
@@ -8637,6 +8835,10 @@ msgstr "あなたはビデオのアップロードを許可されていません
 #: src/view/com/profile/ProfileFollows.tsx:94
 msgid "You are not following anyone."
 msgstr "あなたはまだだれもフォローしていません。"
+
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:45
+msgid "You can adjust your interests at any time from \"Content and media\" settings."
+msgstr ""
 
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
@@ -8666,7 +8868,6 @@ msgstr "デフォルトの反応の設定は、<0>設定 → モデレーショ�
 
 #: src/components/interstitials/Trending.tsx:130
 #: src/components/interstitials/TrendingVideos.tsx:139
-#: src/screens/Search/components/ExploreTrendingTopics.tsx:136
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:109
 msgid "You can update this later from your settings."
 msgstr "これは設定画面から後で変更できます。"
@@ -8737,12 +8938,12 @@ msgstr "このユーザーをミュートしました"
 msgid "You have no conversations yet. Start one!"
 msgstr "まだ会話していません。始めましょう！"
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:143
+#: src/view/com/feeds/ProfileFeedgens.tsx:139
 msgid "You have no feeds."
 msgstr "フィードがありません。"
 
 #: src/view/com/lists/MyLists.tsx:81
-#: src/view/com/lists/ProfileLists.tsx:139
+#: src/view/com/lists/ProfileLists.tsx:135
 msgid "You have no lists."
 msgstr "リストがありません。"
 
@@ -8762,7 +8963,7 @@ msgstr "最後まで到達しました"
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "ビデオのアップロードの制限に一時的に到達しました。時間をおいてもう一度お試しください。"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:239
+#: src/components/StarterPack/ProfileStarterPacks.tsx:244
 msgid "You haven't created a starter pack yet!"
 msgstr "スターターパックをまだ作成していません！"
 
@@ -8784,10 +8985,10 @@ msgid "You may appeal these labels if you feel they were placed in error."
 msgstr "これらのラベルが誤って適用されたと思った場合は、異議申し立てを行うことができます。"
 
 #: src/screens/StarterPack/Wizard/State.tsx:76
-msgid "You may only add up to {STARTER_PACK_MAX_SIZE} profiles"
-msgstr "{STARTER_PACK_MAX_SIZE}ユーザーまで追加できます"
+msgid "You may only add up to {STARTER_PACK_MAX_SIZE, plural, other {{STARTER_PACK_MAX_SIZE} profiles}}"
+msgstr "追加できるのは{STARTER_PACK_MAX_SIZE, plural, other {{STARTER_PACK_MAX_SIZE}人}}まで"
 
-#: src/screens/StarterPack/Wizard/State.tsx:94
+#: src/screens/StarterPack/Wizard/State.tsx:95
 msgid "You may only add up to 3 feeds"
 msgstr "３つまでフィードを追加できます"
 
@@ -8796,10 +8997,10 @@ msgid "You may only select up to 4 images"
 msgstr "画像は４枚まで選択できます"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:106
-msgid "You must be 13 years of age or older to sign up."
-msgstr "サインアップするには、13歳以上である必要があります。"
+msgid "You must be 13 years of age or older to create an account."
+msgstr "アカウントを作成するには、13歳以上である必要があります。"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:322
+#: src/components/StarterPack/ProfileStarterPacks.tsx:327
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr "スターターパックを作成するには、少なくとも７人をフォローしなければなりません。"
 
@@ -8819,8 +9020,16 @@ msgstr "報告をするには少なくとも１つのラベラーを選択する
 msgid "You previously deactivated @{0}."
 msgstr "以前、あなたは@{0}を無効化しました。"
 
+#: src/components/dms/MessageItem.tsx:135
+msgid "You reacted {0}"
+msgstr "あなたは{0}とリアクションしました"
+
+#: src/screens/Messages/components/ChatListItem.tsx:213
+msgid "You reacted {0} to {1}"
+msgstr "あなたは{1}に{0}とリアクションしました"
+
 #: src/screens/Settings/Settings.tsx:257
-#: src/view/shell/desktop/LeftNav.tsx:205
+#: src/view/shell/desktop/LeftNav.tsx:206
 msgid "You will be signed out of all your accounts."
 msgstr "すべてのアカウントからサインアウトします。"
 
@@ -8848,11 +9057,11 @@ msgstr "あなた： {defaultEmbeddedContentMessage}"
 msgid "You: {short}"
 msgstr "あなた： {short}"
 
-#: src/screens/Signup/index.tsx:111
+#: src/screens/Signup/index.tsx:125
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
 msgstr "アカウントの作成を完了するとおすすめのユーザーやフィードをフォローします！"
 
-#: src/screens/Signup/index.tsx:116
+#: src/screens/Signup/index.tsx:130
 msgid "You'll follow the suggested users once you finish creating your account!"
 msgstr "アカウントの作成を完了するとおすすめのユーザーをフォローします！"
 
@@ -8910,7 +9119,7 @@ msgstr "ビデオのアップロードの一日の上限に到達しました（
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "見るべきビデオがなくなりました。休憩を取ってもいい時間かも？"
 
-#: src/screens/Signup/index.tsx:144
+#: src/screens/Signup/index.tsx:158
 msgid "Your account"
 msgstr "あなたのアカウント"
 
@@ -8924,7 +9133,7 @@ msgstr "あなたのアカウントは停止されています"
 
 #: src/view/com/composer/state/video.ts:429
 msgid "Your account is not yet old enough to upload videos. Please try again later."
-msgstr "あなたのアカウントはまだ新しいのでビデオをアップロードできません。もう一度お試しください。"
+msgstr "あなたのアカウントは作成して間もないため動画をアップロードできません。もう一度お試しください。"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:67
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
@@ -8938,13 +9147,13 @@ msgstr "あなたのアカウントは<0>Bluesky Social利用規約</0>に違反
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
 msgstr "あなたの異議申し立てが送信されました。異議申し立てに成功していれば、あなたにメールが届きます。"
 
-#: src/screens/Signup/StepInfo/index.tsx:254
+#: src/screens/Signup/StepInfo/index.tsx:257
 msgid "Your birth date"
 msgstr "生年月日"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:195
 msgid "Your browser does not support the video format. Please try a different browser."
-msgstr "利用中のブラウザがこのビデオ形式をサポートしていません。他のブラウザをお試しください。"
+msgstr "使用中のブラウザが、このビデオ形式に対応していません。他のブラウザをお試しください。"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:25
 msgid "Your chats have been disabled"
@@ -8959,8 +9168,8 @@ msgid "Your current handle <0>{0}</0> will automatically remain reserved for you
 msgstr "あなたの現在のハンドル<0>{0}</0>は自動的に予約されたままになります。いつでもこのアカウントに戻すことができます。"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
-#: src/screens/Signup/state.ts:221
-#: src/screens/Signup/StepInfo/index.tsx:99
+#: src/screens/Signup/state.ts:270
+#: src/screens/Signup/StepInfo/index.tsx:98
 #: src/view/com/modals/ChangePassword.tsx:55
 msgid "Your email appears to be invalid."
 msgstr "メールアドレスが無効なようです。"
@@ -8989,9 +9198,26 @@ msgstr "Followingフィードは空です！もっと多くのユーザーをフ
 msgid "Your full handle will be <0>@{0}</0>"
 msgstr "フルハンドルは<0>@{0}</0>になります"
 
-#: src/screens/Signup/StepHandle.tsx:129
+#: src/screens/Signup/StepHandle.tsx:137
 msgid "Your full username will be <0>@{0}</0>"
 msgstr "あなたのフルユーザー名は <0>@{0}</0>になります"
+
+#: src/Navigation.tsx:383
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:67
+#: src/screens/Settings/ContentAndMediaSettings.tsx:92
+#: src/screens/Settings/ContentAndMediaSettings.tsx:95
+#: src/screens/Settings/SettingsInterests.tsx:39
+msgid "Your interests"
+msgstr ""
+
+#: src/screens/Settings/SettingsInterests.tsx:124
+msgctxt "toast"
+msgid "Your interests have been updated!"
+msgstr ""
+
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:94
+msgid "Your interests help us find what you like!"
+msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:369
 msgid "Your muted words"
@@ -9001,15 +9227,15 @@ msgstr "ミュートしたワード"
 msgid "Your password has been changed successfully!"
 msgstr "パスワードの変更が完了しました！"
 
-#: src/screens/Signup/StepInfo/index.tsx:128
+#: src/screens/Signup/StepInfo/index.tsx:127
 msgid "Your password must be at least 8 characters long."
 msgstr "パスワードは 8 文字以上である必要があります。"
 
-#: src/view/com/composer/Composer.tsx:485
+#: src/view/com/composer/Composer.tsx:493
 msgid "Your post has been published"
 msgstr "投稿を公開しました"
 
-#: src/view/com/composer/Composer.tsx:482
+#: src/view/com/composer/Composer.tsx:490
 msgid "Your posts have been published"
 msgstr "投稿が公開されました"
 
@@ -9021,7 +9247,7 @@ msgstr "投稿、いいね、ブロックは公開されます。ミュートは
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "あなたのプロフィール、投稿、フィード、そしてリストは他のBlueskyユーザーに見えなくなります。ログインすることでいつでもアカウントを再有効化できます。"
 
-#: src/view/com/composer/Composer.tsx:484
+#: src/view/com/composer/Composer.tsx:492
 msgid "Your reply has been published"
 msgstr "返信を公開しました"
 
@@ -9032,3 +9258,7 @@ msgstr "報告は <0>{0}</0>に送信されます。"
 #: src/components/dms/ReportDialog.tsx:200
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "あなたの報告はBluesky Moderation Serviceに送られます"
+
+#: src/screens/Settings/SettingsInterests.tsx:53
+msgid "Your selected interests help us serve you content you care about."
+msgstr ""
