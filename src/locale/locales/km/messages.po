@@ -8,7 +8,7 @@ msgstr ""
 "Language: km\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-04-09 00:50\n"
+"PO-Revision-Date: 2025-04-09 23:20\n"
 "Last-Translator: \n"
 "Language-Team: Khmer\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -101,7 +101,7 @@ msgstr "{0, plural, one {អ្នកតាម} other {អ្នកតាម}}"
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {អ្នកកំពុងតាម} other {អ្នកកំពុងតាម}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:454
+#: src/view/com/post-thread/PostThreadItem.tsx:459
 msgid "{0, plural, one {like} other {likes}}"
 msgstr ""
 
@@ -109,11 +109,11 @@ msgstr ""
 msgid "{0, plural, one {post} other {posts}}"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:438
+#: src/view/com/post-thread/PostThreadItem.tsx:443
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:420
+#: src/view/com/post-thread/PostThreadItem.tsx:425
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr ""
 
@@ -443,7 +443,7 @@ msgstr "គណនី"
 
 #: src/screens/Messages/components/RequestButtons.tsx:81
 #: src/view/com/profile/ProfileMenu.tsx:141
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:375
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:392
 msgctxt "toast"
 msgid "Account blocked"
 msgstr "គណនីត្រូវបានរារាំង"
@@ -454,7 +454,7 @@ msgid "Account followed"
 msgstr "គណនីបានធ្វើតាម"
 
 #: src/view/com/profile/ProfileMenu.tsx:117
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:398
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:415
 msgctxt "toast"
 msgid "Account muted"
 msgstr "គណនីត្រូវបានបិទសំឡេង"
@@ -488,7 +488,7 @@ msgid "Account unfollowed"
 msgstr "គណនី​មិន​បាន​តាម"
 
 #: src/view/com/profile/ProfileMenu.tsx:107
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:388
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:405
 msgctxt "toast"
 msgid "Account unmuted"
 msgstr "គណនីត្រូវបានបើក"
@@ -932,12 +932,12 @@ msgstr "រូបរាង"
 msgid "Apply default recommended feeds"
 msgstr "អនុវត្ត​មតិព័ត៌មាន​ដែល​បាន​ណែនាំ​លំនាំដើម"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:845
+#: src/view/com/post-thread/PostThreadItem.tsx:865
 msgid "Archived from {0}"
 msgstr "បានរក្សាទុកពី {0}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:814
-#: src/view/com/post-thread/PostThreadItem.tsx:853
+#: src/view/com/post-thread/PostThreadItem.tsx:834
+#: src/view/com/post-thread/PostThreadItem.tsx:873
 msgid "Archived post"
 msgstr ""
 
@@ -945,7 +945,7 @@ msgstr ""
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr "តើអ្នកប្រាកដថាចង់លុបពាក្យសម្ងាត់កម្មវិធី \"{0}\"?"
 
-#: src/components/dms/MessageContextMenu.tsx:178
+#: src/components/dms/MessageContextMenu.tsx:185
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr "តើអ្នកប្រាកដថាចង់លុបសារនេះទេ? សារនឹងត្រូវបានលុបសម្រាប់អ្នក ប៉ុន្តែមិនមែនសម្រាប់អ្នកចូលរួមផ្សេងទៀតទេ"
 
@@ -1065,7 +1065,7 @@ msgstr "ថ្ងៃកំណើត"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
 #: src/view/com/profile/ProfileMenu.tsx:399
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:832
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:849
 msgid "Block"
 msgstr "ទប់ស្កាត់"
 
@@ -1075,13 +1075,13 @@ msgstr "ទប់ស្កាត់"
 #: src/screens/Messages/components/RequestButtons.tsx:136
 #: src/view/com/profile/ProfileMenu.tsx:310
 #: src/view/com/profile/ProfileMenu.tsx:317
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:671
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:686
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
 msgid "Block account"
 msgstr "បិទគណនី"
 
 #: src/view/com/profile/ProfileMenu.tsx:382
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:827
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:844
 msgid "Block Account?"
 msgstr "បិទគណនី?"
 
@@ -1132,7 +1132,7 @@ msgid "Blocked Accounts"
 msgstr "គណនី​ដែល​បាន​ទប់ស្កាត់"
 
 #: src/view/com/profile/ProfileMenu.tsx:394
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:829
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:846
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "គណនី​ដែល​បាន​ទប់ស្កាត់​មិន​អាច​ឆ្លើយ​តប​ក្នុង​ខ្សែ​ស្រឡាយ​របស់​អ្នក លើក​ឡើង​ពី​អ្នក ឬ​ធ្វើ​អន្តរកម្ម​ជាមួយ​អ្នក"
 
@@ -1165,7 +1165,7 @@ msgstr "ប្លុក"
 msgid "Bluesky"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:870
+#: src/view/com/post-thread/PostThreadItem.tsx:890
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky មិនអាចបញ្ជាក់ពីភាពត្រឹមត្រូវនៃកាលបរិច្ឆេទដែលបានទាមទារនោះទេ"
 
@@ -1448,8 +1448,8 @@ msgstr "ផ្លាស់ប្តូរអាសយដ្ឋានអ៊ីម
 msgid "Changes app icon"
 msgstr ""
 
-#: src/components/forms/HostingProvider.tsx:47
-#: src/components/forms/HostingProvider.tsx:83
+#: src/components/forms/HostingProvider.tsx:50
+#: src/components/forms/HostingProvider.tsx:70
 msgid "Changes hosting provider"
 msgstr ""
 
@@ -1889,11 +1889,11 @@ msgstr "ចម្លង"
 msgid "Copied build version to clipboard"
 msgstr "បានចម្លងកំណែស្ថាបនាទៅ clipboard"
 
-#: src/components/dms/MessageContextMenu.tsx:55
+#: src/components/dms/MessageContextMenu.tsx:56
 #: src/lib/sharing.ts:25
 #: src/lib/sharing.ts:41
 #: src/view/com/modals/InviteCodes.tsx:153
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:246
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:250
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:397
 msgid "Copied to clipboard"
 msgstr "បានចម្លងទៅ clipboard"
@@ -1920,8 +1920,8 @@ msgstr "ចម្លងពាក្យសម្ងាត់កម្មវិធ
 msgid "Copy at:// URI"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:731
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:733
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:748
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:750
 msgid "Copy author DID"
 msgstr ""
 
@@ -1952,23 +1952,23 @@ msgstr "ចម្លងតំណ"
 msgid "Copy link to list"
 msgstr "ចម្លងតំណទៅបញ្ជី"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:481
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:490
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:498
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:507
 msgid "Copy link to post"
 msgstr "ចម្លងតំណទៅប្រកាស"
 
-#: src/components/dms/MessageContextMenu.tsx:139
-#: src/components/dms/MessageContextMenu.tsx:142
+#: src/components/dms/MessageContextMenu.tsx:146
+#: src/components/dms/MessageContextMenu.tsx:149
 msgid "Copy message text"
 msgstr "ចម្លងអត្ថបទសារ"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:724
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:726
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:741
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:743
 msgid "Copy post at:// URI"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:459
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:461
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:476
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:478
 msgid "Copy post text"
 msgstr "ចម្លងអត្ថបទអត្ថបទ"
 
@@ -2143,13 +2143,13 @@ msgstr "លំនាំដើម"
 msgid "Default icons"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:180
+#: src/components/dms/MessageContextMenu.tsx:187
 #: src/screens/Messages/components/ChatStatusInfo.tsx:55
 #: src/screens/Settings/AppPasswords.tsx:212
 #: src/screens/StarterPack/StarterPackScreen.tsx:594
 #: src/screens/StarterPack/StarterPackScreen.tsx:672
 #: src/screens/StarterPack/StarterPackScreen.tsx:744
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:750
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:767
 #: src/view/screens/ProfileList.tsx:760
 msgid "Delete"
 msgstr "លុប"
@@ -2191,7 +2191,7 @@ msgstr ""
 msgid "Delete Conversation"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:153
+#: src/components/dms/MessageContextMenu.tsx:160
 msgid "Delete for me"
 msgstr "លុបពីខ្ញុំ"
 
@@ -2199,11 +2199,11 @@ msgstr "លុបពីខ្ញុំ"
 msgid "Delete list"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:176
+#: src/components/dms/MessageContextMenu.tsx:183
 msgid "Delete message"
 msgstr "លុបសារ"
 
-#: src/components/dms/MessageContextMenu.tsx:151
+#: src/components/dms/MessageContextMenu.tsx:158
 msgid "Delete message for me"
 msgstr ""
 
@@ -2212,8 +2212,8 @@ msgid "Delete my account"
 msgstr "លុបសារពីខ្ញុំ"
 
 #: src/view/com/composer/Composer.tsx:856
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:709
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:711
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:726
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:728
 msgid "Delete post"
 msgstr "លុប post"
 
@@ -2230,7 +2230,7 @@ msgstr "លុបកញ្ចប់ចាប់ផ្តើម?"
 msgid "Delete this list?"
 msgstr "លុបបញ្ជីនេះ"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:745
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:762
 msgid "Delete this post?"
 msgstr "លុប post នេះ?"
 
@@ -2268,12 +2268,12 @@ msgstr ""
 msgid "Descriptive alt text"
 msgstr "អត្ថបទ alt ពិពណ៌នា"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:623
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:630
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:640
 msgid "Detach quote"
 msgstr "ផ្ដាច់សម្រង់"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:807
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:824
 msgid "Detach quote post?"
 msgstr "ផ្ដាច់សម្រង់ post?"
 
@@ -2556,8 +2556,8 @@ msgstr "កែសម្រួលមតិព័ត៌មាន"
 msgid "Edit image"
 msgstr "កែរូបភាព"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:690
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:703
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:707
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:720
 msgid "Edit interaction settings"
 msgstr "កែសម្រួលការកំណត់អន្តរកម្ម"
 
@@ -2685,8 +2685,8 @@ msgstr ""
 
 #: src/components/dialogs/Embed.tsx:104
 #: src/components/dialogs/Embed.tsx:108
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:498
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:500
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:515
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:517
 msgid "Embed post"
 msgstr ""
 
@@ -3003,7 +3003,7 @@ msgid "Failed to accept chat"
 msgstr ""
 
 #: src/components/dms/ActionsWrapper.web.tsx:67
-#: src/components/dms/MessageContextMenu.tsx:93
+#: src/components/dms/MessageContextMenu.tsx:100
 msgid "Failed to add emoji reaction"
 msgstr ""
 
@@ -3034,11 +3034,11 @@ msgctxt "toast"
 msgid "Failed to delete chat"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:73
+#: src/components/dms/MessageContextMenu.tsx:80
 msgid "Failed to delete message"
 msgstr "បរាជ័យក្នុងការលុបសារ"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:206
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:210
 msgid "Failed to delete post, please try again"
 msgstr "បរាជ័យក្នុងការលុបការបង្ហោះ សូមព្យាយាមម្តងទៀត"
 
@@ -3083,7 +3083,7 @@ msgid "Failed to pin post"
 msgstr "បរាជ័យក្នុងការខ្ទាស់ការបង្ហោះ"
 
 #: src/components/dms/ActionsWrapper.web.tsx:61
-#: src/components/dms/MessageContextMenu.tsx:87
+#: src/components/dms/MessageContextMenu.tsx:94
 msgid "Failed to remove emoji reaction"
 msgstr ""
 
@@ -3113,7 +3113,7 @@ msgstr "បរាជ័យក្នុងកាផ្ញើ"
 msgid "Failed to submit appeal, please try again."
 msgstr "បរាជ័យក្នុងការដាក់បណ្តឹងតវ៉ា សូមព្យាយាមម្តងទៀត"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:235
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:239
 msgid "Failed to toggle thread mute, please try again"
 msgstr "មិន​អាច​បិទ​បើក​បិទ​សំឡេង​បាន​ទេ សូម​ព្យាយាម​ម្ដង​ទៀត"
 
@@ -3159,8 +3159,8 @@ msgstr ""
 msgid "Feedback"
 msgstr "មតិកែលម្អ"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:277
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:286
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:294
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:303
 msgctxt "toast"
 msgid "Feedback sent!"
 msgstr "បានផ្ញើមតិកែលម្អ!"
@@ -3624,7 +3624,7 @@ msgstr "បញ្ជីដែលលាក់"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:761
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:778
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "Hide"
 msgstr "លាក់"
@@ -3638,18 +3638,18 @@ msgstr "លាក់"
 msgid "Hide customization options"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:570
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:576
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:587
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:593
 msgid "Hide post for me"
 msgstr "លាក់ post សម្រាប់ខ្ញុំ"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:587
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:597
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:604
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:614
 msgid "Hide reply for everyone"
 msgstr "លាក់ការឆ្លើយតបសម្រាប់អ្នករាល់គ្នា"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:569
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:575
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:586
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:592
 msgid "Hide reply for me"
 msgstr "លាក់ការឆ្លើយតបសម្រាប់ខ្ញុំ"
 
@@ -3657,12 +3657,12 @@ msgstr "លាក់ការឆ្លើយតបសម្រាប់ខ្ញ
 msgid "Hide this card"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:756
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:773
 msgid "Hide this post?"
 msgstr "លាក់ការបង្ហោះនេះ?"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:756
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:817
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:773
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:834
 msgid "Hide this reply?"
 msgstr "លាក់ការឆ្លើយតបនេះ?"
 
@@ -3794,7 +3794,7 @@ msgstr "ប្រសិនបើអ្នកលុបបញ្ជីនេះ �
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:747
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:764
 msgid "If you remove this post, you won't be able to recover it."
 msgstr "ប្រសិនបើអ្នកលុបការបង្ហោះនេះ អ្នកនឹងមិនអាចយកវាមកវិញបានទេ"
 
@@ -3884,7 +3884,7 @@ msgstr "លេខកូដបញ្ជាក់ 2FA មិនត្រឹមត�
 msgid "Invalid handle. Please try a different one."
 msgstr "ចំណុចទាញមិនត្រឹមត្រូវ។ សូមសាកល្បងមួយផ្សេងទៀត"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:283
+#: src/view/com/post-thread/PostThreadItem.tsx:288
 msgid "Invalid or unsupported post record"
 msgstr "កំណត់ត្រាប្រកាសមិនត្រឹមត្រូវ ឬមិនគាំទ្រ"
 
@@ -4160,7 +4160,7 @@ msgstr ""
 msgid "Likes"
 msgstr "ចូលចិត្ត"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:218
+#: src/view/com/post-thread/PostThreadItem.tsx:223
 msgid "Likes on this post"
 msgstr "ចូលចិត្តនៅលើប្រកាសនេះ"
 
@@ -4361,7 +4361,7 @@ msgstr "ម៉ឺនុយ"
 msgid "Message {0}"
 msgstr "សារ {0}"
 
-#: src/components/dms/MessageContextMenu.tsx:71
+#: src/components/dms/MessageContextMenu.tsx:78
 msgctxt "toast"
 msgid "Message deleted"
 msgstr "សារត្រូវបានលុប"
@@ -4370,7 +4370,7 @@ msgstr "សារត្រូវបានលុប"
 msgid "Message deleted"
 msgstr "សារត្រូវបានលុប"
 
-#: src/components/dms/MessageContextMenu.tsx:119
+#: src/components/dms/MessageContextMenu.tsx:126
 msgid "Message from @{0}: {1}"
 msgstr ""
 
@@ -4387,7 +4387,7 @@ msgstr "វាលបញ្ចូលសារ"
 msgid "Message is too long"
 msgstr "សារវែងពេក"
 
-#: src/components/dms/MessageContextMenu.tsx:117
+#: src/components/dms/MessageContextMenu.tsx:124
 msgid "Message options"
 msgstr ""
 
@@ -4471,7 +4471,7 @@ msgstr "ឧបករណ៍សំរបសំរួល"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "អ្នកសម្របសម្រួលបានជ្រើសរើសដើម្បីកំណត់ការព្រមានទូទៅលើខ្លឹមសារ"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:640
+#: src/view/com/post-thread/PostThreadItem.tsx:645
 msgid "More"
 msgstr "ច្រើនទៀត"
 
@@ -4517,8 +4517,8 @@ msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:289
 #: src/view/com/profile/ProfileMenu.tsx:296
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:652
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:675
 msgid "Mute account"
 msgstr ""
 
@@ -4567,13 +4567,13 @@ msgstr "បិទពាក្យនេះនៅក្នុងស្លាកត
 msgid "Mute this word until you unmute it"
 msgstr "បិទ​ពាក្យ​នេះ​រហូត​ដល់​អ្នក​បើក​សំឡេង​វា"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:536
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:540
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:553
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:557
 msgid "Mute thread"
 msgstr "បិទ thread"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:550
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:552
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:567
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:569
 msgid "Mute words & tags"
 msgstr "បិទពាក្យ & ស្លាក"
 
@@ -4919,7 +4919,7 @@ msgid "Not right now"
 msgstr "ពេលនេះទេ"
 
 #: src/view/com/profile/ProfileMenu.tsx:406
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:774
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:791
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:361
 msgid "Note about sharing"
 msgstr "ចំណាំអំពីការចែករំលែក"
@@ -5001,7 +5001,7 @@ msgid "OK"
 msgstr ""
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/view/com/post-thread/PostThreadItem.tsx:875
+#: src/view/com/post-thread/PostThreadItem.tsx:895
 msgid "Okay"
 msgstr ""
 
@@ -5384,8 +5384,8 @@ msgstr ""
 msgid "Pin to Home"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:427
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:444
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:451
 msgid "Pin to your profile"
 msgstr ""
 
@@ -5553,7 +5553,7 @@ msgctxt "action"
 msgid "Post All"
 msgstr "Post ទាំងអស់"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:210
+#: src/view/com/post-thread/PostThreadItem.tsx:215
 msgid "Post by {0}"
 msgstr "Post ដោយ {0}"
 
@@ -5564,7 +5564,7 @@ msgstr "Post ដោយ {0}"
 msgid "Post by @{0}"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:186
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:190
 msgctxt "toast"
 msgid "Post deleted"
 msgstr "Post ត្រូវាបានលុប"
@@ -5780,11 +5780,11 @@ msgstr "លេខកូដ QR ត្រូវបានរក្សាទុក�
 msgid "Quote post"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:314
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:331
 msgid "Quote post was re-attached"
 msgstr "Quote post ត្រូវបានភ្ជាប់ម្តងទៀត"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:313
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:330
 msgid "Quote post was successfully detached"
 msgstr "Quote post ត្រូវបានផ្ដាច់ដោយជោគជ័យ"
 
@@ -5803,7 +5803,7 @@ msgstr "កំណត់ Quote"
 msgid "Quotes"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:244
+#: src/view/com/post-thread/PostThreadItem.tsx:249
 msgid "Quotes of this post"
 msgstr ""
 
@@ -5818,8 +5818,8 @@ msgstr "ចៃដន្យ (ហៅកាត់ថា \"រ៉ូឡែតរប�
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr "លើសកម្រិតកំណត់ - អ្នកបានព្យាយាមផ្លាស់ប្តូរចំណុចទាញរបស់អ្នកច្រើនដងពេកក្នុងរយៈពេលខ្លី។ សូមរង់ចាំមួយភ្លែត មុនពេលព្យាយាមម្តងទៀត"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:612
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:622
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:629
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:639
 msgid "Re-attach quote"
 msgstr ""
 
@@ -6098,16 +6098,16 @@ msgctxt "description"
 msgid "Reply to you"
 msgstr "ឆ្លើយតបទៅអ្នក"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:346
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:363
 msgctxt "toast"
 msgid "Reply visibility updated"
 msgstr "បានធ្វើបច្ចុប្បន្នភាពភាពមើលឃើញនៃការឆ្លើយតប"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:345
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:362
 msgid "Reply was successfully hidden"
 msgstr "ការឆ្លើយតបត្រូវបានលាក់ដោយជោគជ័យ"
 
-#: src/components/dms/MessageContextMenu.tsx:161
+#: src/components/dms/MessageContextMenu.tsx:168
 #: src/components/dms/MessagesListBlockedFooter.tsx:85
 #: src/components/dms/MessagesListBlockedFooter.tsx:92
 msgid "Report"
@@ -6141,12 +6141,12 @@ msgstr "រាយការណ៍ព័ត៌មាន"
 msgid "Report list"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:159
+#: src/components/dms/MessageContextMenu.tsx:166
 msgid "Report message"
 msgstr "រាយការណ៍ពីសារ"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:678
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:680
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:695
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:697
 msgid "Report post"
 msgstr "រាយការណ៍ពី post"
 
@@ -6234,7 +6234,7 @@ msgstr "បង្ហោះឡើងវិញដោយ <0><1/></0>"
 msgid "Reposted by you"
 msgstr "ផ្សាយឡើងវិញដោយអ្នក"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:223
+#: src/view/com/post-thread/PostThreadItem.tsx:228
 msgid "Reposts of this post"
 msgstr "ការផ្សាយឡើងវិញនៃប្រកាសនេះ"
 
@@ -6725,8 +6725,8 @@ msgstr ""
 msgid "Send verification email"
 msgstr "ផ្ញើអ៊ីមែលផ្ទៀងផ្ទាត់"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:470
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:473
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:487
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:490
 msgid "Send via direct message"
 msgstr "ផ្ញើតាមសារផ្ទាល់"
 
@@ -6785,8 +6785,8 @@ msgstr "ចំណង់ផ្លូវភេទ"
 #: src/screens/Topic.tsx:102
 #: src/view/com/profile/ProfileMenu.tsx:216
 #: src/view/com/profile/ProfileMenu.tsx:225
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:481
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:490
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:498
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:507
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:350
 #: src/view/screens/ProfileList.tsx:505
 msgid "Share"
@@ -6806,7 +6806,7 @@ msgid "Share a fun fact!"
 msgstr "ចែករំលែកការពិតរីករាយ"
 
 #: src/view/com/profile/ProfileMenu.tsx:411
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:779
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:796
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:366
 msgid "Share anyway"
 msgstr "ចែករំលែក"
@@ -6890,8 +6890,8 @@ msgstr ""
 msgid "Show hidden replies"
 msgstr "បង្ហាញការឆ្លើយតបដែលលាក់"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:520
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:522
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:537
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 msgid "Show less like this"
 msgstr "បង្ហាញបែបនេះតិច"
 
@@ -6899,14 +6899,14 @@ msgstr "បង្ហាញបែបនេះតិច"
 msgid "Show list anyway"
 msgstr "ទោះយ៉ាងណាក៏ដោយ បង្ហាញបញ្ជី"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:600
+#: src/view/com/post-thread/PostThreadItem.tsx:605
 #: src/view/com/post/Post.tsx:243
 #: src/view/com/posts/PostFeedItem.tsx:515
 msgid "Show More"
 msgstr "បង្ហាញច្រើនទៀត"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:512
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:514
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:529
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:531
 msgid "Show more like this"
 msgstr "បង្ហាញច្រើនទៀតដូចនេះ"
 
@@ -6936,8 +6936,8 @@ msgstr ""
 msgid "Show replies by people you follow before all other replies"
 msgstr "បង្ហាញការឆ្លើយតបដោយមនុស្សដែលអ្នកតាមដាន មុនពេលការឆ្លើយតបផ្សេងទៀតទាំងអស់"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:586
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:596
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:603
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
 msgid "Show reply for everyone"
 msgstr "បង្ហាញការឆ្លើយតបសម្រាប់អ្នករាល់គ្នា"
 
@@ -6959,7 +6959,7 @@ msgstr "បង្ហាញការព្រមាន"
 msgid "Show warning and filter from feeds"
 msgstr "បង្ហាញការព្រមាន និងត្រងពីមតិព័ត៌មាន"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:816
+#: src/view/com/post-thread/PostThreadItem.tsx:836
 msgid "Shows information about when this post was created"
 msgstr ""
 
@@ -7623,9 +7623,9 @@ msgstr "មានបញ្ហាក្នុងការធ្វើបច្ច
 #: src/view/com/profile/ProfileMenu.tsx:145
 #: src/view/com/profile/ProfileMenu.tsx:158
 #: src/view/com/profile/ProfileMenu.tsx:170
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:379
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:392
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:402
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:396
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:409
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:419
 msgid "There was an issue! {0}"
 msgstr ""
 
@@ -7772,7 +7772,7 @@ msgstr ""
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "សេវាកម្មសម្របសម្រួលនេះមិនមានទេ។ សូមមើលខាងក្រោមសម្រាប់ព័ត៌មានលម្អិតបន្ថែម។ ប្រសិនបើបញ្ហានេះនៅតែបន្តកើតមាន សូមទាក់ទងមកយើងខ្ញុំ"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:856
+#: src/view/com/post-thread/PostThreadItem.tsx:876
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "ប្រកាសនេះអះអាងថាត្រូវបានបង្កើតឡើងនៅលើ <0>{0}</0> ប៉ុន្តែត្រូវបានមើលឃើញជាលើកដំបូងដោយ Bluesky នៅលើ <1>{1}</1>"
 
@@ -7780,16 +7780,16 @@ msgstr "ប្រកាសនេះអះអាងថាត្រូវបាន
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:153
+#: src/view/com/post-thread/PostThreadItem.tsx:158
 msgid "This post has been deleted."
 msgstr "ប្រកាសនេះត្រូវបានលុប"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:776
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:793
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:363
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:758
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:775
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "ប្រកាសនេះនឹងត្រូវបានលាក់ពីមតិព័ត៌មាន និងខ្សែស្រលាយ។ នេះមិនអាចត្រឡប់វិញបានទេ"
 
@@ -7801,7 +7801,7 @@ msgstr "អ្នកនិពន្ធនៃប្រកាសនេះបាន
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:819
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:836
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr "ការ​ឆ្លើយតប​នេះ​នឹង​ត្រូវ​បាន​តម្រៀប​ជា​ផ្នែក​ដែល​លាក់​នៅ​ផ្នែក​ខាង​ក្រោម​នៃ​ខ្សែ​ស្រឡាយ​របស់​អ្នក ហើយ​នឹង​បិទ​ការ​ជូន​ដំណឹង​សម្រាប់​ការ​ឆ្លើយតប​ជា​បន្ត​បន្ទាប់ - ទាំង​សម្រាប់​ខ្លួន​អ្នក​និង​អ្នក​ដទៃ"
 
@@ -7854,7 +7854,7 @@ msgstr "វានឹងលុប \"{0}\" ចេញពីពាក្យដែល
 msgid "This will remove @{0} from the quick access list."
 msgstr "វានឹងដក @{0} ចេញពីបញ្ជីចូលប្រើរហ័ស"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:809
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:826
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "វានឹងលុបការបង្ហោះរបស់អ្នកចេញពីប្រកាសសម្រង់នេះសម្រាប់អ្នកប្រើប្រាស់ទាំងអស់ ហើយជំនួសវាដោយកន្លែងដាក់"
 
@@ -7931,12 +7931,12 @@ msgstr "កំពូល"
 msgid "Topic"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:132
-#: src/components/dms/MessageContextMenu.tsx:134
-#: src/view/com/post-thread/PostThreadItem.tsx:778
-#: src/view/com/post-thread/PostThreadItem.tsx:781
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:451
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
+#: src/components/dms/MessageContextMenu.tsx:139
+#: src/components/dms/MessageContextMenu.tsx:141
+#: src/view/com/post-thread/PostThreadItem.tsx:798
+#: src/view/com/post-thread/PostThreadItem.tsx:801
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:468
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:470
 msgid "Translate"
 msgstr "បកប្រែ"
 
@@ -8083,8 +8083,8 @@ msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:288
 #: src/view/com/profile/ProfileMenu.tsx:294
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:651
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:657
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:668
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:674
 msgid "Unmute account"
 msgstr "បើកគណនី"
 
@@ -8096,8 +8096,8 @@ msgstr "បើកការសន្ទនា"
 msgid "Unmute list"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:536
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:540
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:553
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:557
 msgid "Unmute thread"
 msgstr ""
 
@@ -8123,8 +8123,8 @@ msgstr ""
 msgid "Unpin from home"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:426
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:433
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:450
 msgid "Unpin from profile"
 msgstr ""
 
@@ -8186,12 +8186,12 @@ msgstr "ធ្វើបច្ចុប្បន្នភាព <0>{displayName}<
 msgid "Update to {domain}"
 msgstr "ធ្វើបច្ចុប្បន្នភាពទៅ {domain}"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:318
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:335
 msgctxt "toast"
 msgid "Updating quote attachment failed"
 msgstr "ការធ្វើបច្ចុប្បន្នភាពឯកសារភ្ជាប់សម្រង់បានបរាជ័យ"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:350
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:367
 msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr "ការធ្វើបច្ចុប្បន្នភាពលទ្ធភាពមើលឃើញការឆ្លើយតបបានបរាជ័យ"
@@ -8800,11 +8800,11 @@ msgstr "បាទ បិទដំណើរការ"
 msgid "Yes, delete this starter pack"
 msgstr "បាទ/ចាស លុបកញ្ចប់ចាប់ផ្តើមនេះ"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:812
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:829
 msgid "Yes, detach"
 msgstr "បាទ ផ្ដាច់"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:822
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:839
 msgid "Yes, hide"
 msgstr "បាទ លាក់"
 
@@ -8820,8 +8820,8 @@ msgstr "ម្សិលមិញ"
 msgid "You"
 msgstr "អ្នក"
 
-#: src/components/forms/HostingProvider.tsx:64
-msgid "You are creating an account on <0>{0}</0>"
+#: src/components/forms/HostingProvider.tsx:46
+msgid "You are creating an account on"
 msgstr ""
 
 #: src/screens/SignupQueued.tsx:157
@@ -9033,11 +9033,11 @@ msgstr ""
 msgid "You will be signed out of all your accounts."
 msgstr "អ្នកនឹងត្រូវបានចេញពីគណនីរបស់អ្នកទាំងអស់"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:228
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:232
 msgid "You will no longer receive notifications for this thread"
 msgstr "អ្នក​នឹង​លែង​ទទួល​បាន​ការ​ជូន​ដំណឹង​សម្រាប់​ខ្សែ​នេះ​ទៀត​ហើយ"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:224
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:228
 msgid "You will now receive notifications for this thread"
 msgstr "ឥឡូវនេះ អ្នកនឹងទទួលបានការជូនដំណឹងសម្រាប់អត្ថបទនេះ"
 

@@ -8,7 +8,7 @@ msgstr ""
 "Language: tr\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-04-09 00:50\n"
+"PO-Revision-Date: 2025-04-09 23:20\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -58,19 +58,19 @@ msgstr ""
 
 #: src/screens/Post/PostLikedBy.tsx:41
 msgid "{0, plural, one {# like} other {# likes}}"
-msgstr ""
+msgstr "{0, plural, other {# beğeni}}"
 
 #: src/lib/hooks/useTimeAgo.ts:149
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr ""
+msgstr "{0, plural, other {# dakika}}"
 
 #: src/lib/hooks/useTimeAgo.ts:180
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr ""
+msgstr "{0, plural, other {# ay}}"
 
 #: src/screens/Post/PostQuotes.tsx:41
 msgid "{0, plural, one {# quote} other {# quotes}}"
-msgstr ""
+msgstr "{0, plural, other {# alıntı}}"
 
 #: src/screens/Post/PostRepostedBy.tsx:41
 msgid "{0, plural, one {# repost} other {# reposts}}"
@@ -78,7 +78,7 @@ msgstr "{0, plural, one {# yeniden gönderi} other {# yeniden gönderi}}"
 
 #: src/lib/hooks/useTimeAgo.ts:139
 msgid "{0, plural, one {# second} other {# seconds}}"
-msgstr ""
+msgstr "{0, plural, other {# saniye}}"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:209
 #: src/view/shell/bottom-bar/BottomBar.tsx:241
@@ -94,37 +94,37 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr ""
+msgstr "{0, plural, other {takipçi}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:454
+#: src/view/com/post-thread/PostThreadItem.tsx:459
 msgid "{0, plural, one {like} other {likes}}"
-msgstr ""
+msgstr "{0, plural, other {beğeni}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
-msgstr ""
+msgstr "{0, plural, other {gönderi}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:438
+#: src/view/com/post-thread/PostThreadItem.tsx:443
 msgid "{0, plural, one {quote} other {quotes}}"
-msgstr ""
+msgstr "{0, plural, other {alıntı}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:420
+#: src/view/com/post-thread/PostThreadItem.tsx:425
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr ""
 
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:78
 msgid "{0, plural, other {{1} posts}}"
-msgstr ""
+msgstr "{0, plural, other {{1} gönderi}}"
 
 #. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
 #: src/screens/StarterPack/StarterPackScreen.tsx:485
 msgid "{0, plural, other {# people have}} used this starter pack!"
-msgstr ""
+msgstr "{0, plural, other {# kişi}} bu başlangıç paketini kullandı!"
 
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
@@ -363,11 +363,11 @@ msgstr ""
 
 #: src/components/WhoCanReply.tsx:296
 msgid "<0>{0}</0> members"
-msgstr ""
+msgstr "<0>{0}</0> üyeleri"
 
 #: src/components/dms/DateDivider.tsx:69
 msgid "<0>{date}</0> at {time}"
-msgstr ""
+msgstr "<0>{date}</0> {time}"
 
 #: src/screens/Settings/NotificationSettings.tsx:85
 msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
@@ -443,7 +443,7 @@ msgstr "Hesap"
 
 #: src/screens/Messages/components/RequestButtons.tsx:81
 #: src/view/com/profile/ProfileMenu.tsx:141
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:375
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:392
 msgctxt "toast"
 msgid "Account blocked"
 msgstr "Hesap engellendi"
@@ -454,7 +454,7 @@ msgid "Account followed"
 msgstr "Hesap takip edildi"
 
 #: src/view/com/profile/ProfileMenu.tsx:117
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:398
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:415
 msgctxt "toast"
 msgid "Account muted"
 msgstr "Hesap susturuldu"
@@ -488,7 +488,7 @@ msgid "Account unfollowed"
 msgstr "Hesap takibi bırakıldı"
 
 #: src/view/com/profile/ProfileMenu.tsx:107
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:388
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:405
 msgctxt "toast"
 msgid "Account unmuted"
 msgstr "Hesap susturulması kaldırıldı"
@@ -797,7 +797,7 @@ msgstr "Video yüklenirken bir hata oluştu."
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:28
 #: src/lib/moderation/useReportOptions.ts:28
 msgid "An issue not included in these options"
-msgstr ""
+msgstr "Bu seçeneklerde yer almayan bir sorun"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:41
 msgid "An issue occurred starting the chat"
@@ -869,7 +869,7 @@ msgstr "Uygulama şifresi silindi"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:84
 msgid "App password name must be unique"
-msgstr ""
+msgstr "Uygulama şifresinin ismi benzersiz olmalıdır"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:62
 msgid "App password names can only contain letters, numbers, spaces, dashes, and underscores"
@@ -932,12 +932,12 @@ msgstr "Görünüm"
 msgid "Apply default recommended feeds"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:845
+#: src/view/com/post-thread/PostThreadItem.tsx:865
 msgid "Archived from {0}"
 msgstr "{0} kaynağından arşivlendi"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:814
-#: src/view/com/post-thread/PostThreadItem.tsx:853
+#: src/view/com/post-thread/PostThreadItem.tsx:834
+#: src/view/com/post-thread/PostThreadItem.tsx:873
 msgid "Archived post"
 msgstr "Arşivlenmiş gönderi"
 
@@ -945,7 +945,7 @@ msgstr "Arşivlenmiş gönderi"
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:178
+#: src/components/dms/MessageContextMenu.tsx:185
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr "Bu mesajı silmek istediğinize emin misiniz? Mesajınız sizin için silinecektir, ancak diğer katılımcı için silinmeyecektir."
 
@@ -1005,7 +1005,7 @@ msgstr "En az 3 karakter"
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:40
 msgctxt "Name of app icon variant"
 msgid "Aurora"
-msgstr ""
+msgstr "Kuzey Işıkları"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:105
 msgid "Autoplay options have moved to the <0>Content and Media settings</0>."
@@ -1065,7 +1065,7 @@ msgstr "Doğum günü"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
 #: src/view/com/profile/ProfileMenu.tsx:399
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:832
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:849
 msgid "Block"
 msgstr "Engelle"
 
@@ -1075,13 +1075,13 @@ msgstr "Engelle"
 #: src/screens/Messages/components/RequestButtons.tsx:136
 #: src/view/com/profile/ProfileMenu.tsx:310
 #: src/view/com/profile/ProfileMenu.tsx:317
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:671
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:686
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
 msgid "Block account"
 msgstr "Hesabı engelle"
 
 #: src/view/com/profile/ProfileMenu.tsx:382
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:827
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:844
 msgid "Block Account?"
 msgstr "Hesabı Engelle?"
 
@@ -1132,7 +1132,7 @@ msgid "Blocked Accounts"
 msgstr "Engellenen Hesaplar"
 
 #: src/view/com/profile/ProfileMenu.tsx:394
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:829
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:846
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Engellenen hesaplar, konularınıza yanıt veremez, sizi bahsedemez veya başka şekilde sizinle etkileşime giremez."
 
@@ -1165,7 +1165,7 @@ msgstr "Blog"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:870
+#: src/view/com/post-thread/PostThreadItem.tsx:890
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky iddia edilen tarihin doğruluğunu onaylayamaz."
 
@@ -1446,10 +1446,10 @@ msgstr ""
 
 #: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Changes app icon"
-msgstr ""
+msgstr "Uygulama simgesini değiştirir"
 
-#: src/components/forms/HostingProvider.tsx:47
-#: src/components/forms/HostingProvider.tsx:83
+#: src/components/forms/HostingProvider.tsx:50
+#: src/components/forms/HostingProvider.tsx:70
 msgid "Changes hosting provider"
 msgstr ""
 
@@ -1635,11 +1635,11 @@ msgstr ""
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
 msgid "Close emoji picker"
-msgstr ""
+msgstr "Emoji seçiciyi kapat"
 
 #: src/components/dialogs/GifSelect.tsx:169
 msgid "Close GIF dialog"
-msgstr ""
+msgstr "GIF diyalogunu kapat"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:31
 msgid "Close image"
@@ -1691,7 +1691,7 @@ msgstr "Renk modu"
 
 #: src/components/dialogs/Embed.tsx:151
 msgid "Color theme"
-msgstr ""
+msgstr "Renk teması"
 
 #: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:97
@@ -1889,11 +1889,11 @@ msgstr "Kopyalandı"
 msgid "Copied build version to clipboard"
 msgstr "Sürüm numarası panoya kopyalandı"
 
-#: src/components/dms/MessageContextMenu.tsx:55
+#: src/components/dms/MessageContextMenu.tsx:56
 #: src/lib/sharing.ts:25
 #: src/lib/sharing.ts:41
 #: src/view/com/modals/InviteCodes.tsx:153
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:246
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:250
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:397
 msgid "Copied to clipboard"
 msgstr "Panoya kopyalandı"
@@ -1920,8 +1920,8 @@ msgstr "Uygulama Şifresini Kopyala"
 msgid "Copy at:// URI"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:731
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:733
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:748
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:750
 msgid "Copy author DID"
 msgstr ""
 
@@ -1952,23 +1952,23 @@ msgstr "Bağlantıyı Kopyala"
 msgid "Copy link to list"
 msgstr "Liste bağlantısını kopyala"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:481
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:490
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:498
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:507
 msgid "Copy link to post"
 msgstr "Gönderi bağlantısını kopyala"
 
-#: src/components/dms/MessageContextMenu.tsx:139
-#: src/components/dms/MessageContextMenu.tsx:142
+#: src/components/dms/MessageContextMenu.tsx:146
+#: src/components/dms/MessageContextMenu.tsx:149
 msgid "Copy message text"
 msgstr "Mesajı kopyala"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:724
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:726
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:741
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:743
 msgid "Copy post at:// URI"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:459
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:461
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:476
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:478
 msgid "Copy post text"
 msgstr "Gönderi metnini kopyala"
 
@@ -2143,13 +2143,13 @@ msgstr "Varsayılan"
 msgid "Default icons"
 msgstr "Varsayılan simgeler"
 
-#: src/components/dms/MessageContextMenu.tsx:180
+#: src/components/dms/MessageContextMenu.tsx:187
 #: src/screens/Messages/components/ChatStatusInfo.tsx:55
 #: src/screens/Settings/AppPasswords.tsx:212
 #: src/screens/StarterPack/StarterPackScreen.tsx:594
 #: src/screens/StarterPack/StarterPackScreen.tsx:672
 #: src/screens/StarterPack/StarterPackScreen.tsx:744
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:750
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:767
 #: src/view/screens/ProfileList.tsx:760
 msgid "Delete"
 msgstr "Sil"
@@ -2191,7 +2191,7 @@ msgstr ""
 msgid "Delete Conversation"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:153
+#: src/components/dms/MessageContextMenu.tsx:160
 msgid "Delete for me"
 msgstr ""
 
@@ -2199,11 +2199,11 @@ msgstr ""
 msgid "Delete list"
 msgstr "Listeyi sil"
 
-#: src/components/dms/MessageContextMenu.tsx:176
+#: src/components/dms/MessageContextMenu.tsx:183
 msgid "Delete message"
 msgstr "Mesajı sil"
 
-#: src/components/dms/MessageContextMenu.tsx:151
+#: src/components/dms/MessageContextMenu.tsx:158
 msgid "Delete message for me"
 msgstr ""
 
@@ -2212,8 +2212,8 @@ msgid "Delete my account"
 msgstr "Hesabımı sil"
 
 #: src/view/com/composer/Composer.tsx:856
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:709
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:711
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:726
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:728
 msgid "Delete post"
 msgstr "Gönderiyi sil"
 
@@ -2230,7 +2230,7 @@ msgstr "Başlangıç paketi silinsin mi?"
 msgid "Delete this list?"
 msgstr "Liste silinsin mi?"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:745
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:762
 msgid "Delete this post?"
 msgstr "Bu gönderiyi sil?"
 
@@ -2268,12 +2268,12 @@ msgstr ""
 msgid "Descriptive alt text"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:623
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:630
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:640
 msgid "Detach quote"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:807
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:824
 msgid "Detach quote post?"
 msgstr ""
 
@@ -2556,8 +2556,8 @@ msgstr ""
 msgid "Edit image"
 msgstr "Resmi düzenle"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:690
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:703
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:707
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:720
 msgid "Edit interaction settings"
 msgstr "Etkileşim ayarlarını düzenle"
 
@@ -2685,8 +2685,8 @@ msgstr ""
 
 #: src/components/dialogs/Embed.tsx:104
 #: src/components/dialogs/Embed.tsx:108
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:498
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:500
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:515
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:517
 msgid "Embed post"
 msgstr ""
 
@@ -3003,7 +3003,7 @@ msgid "Failed to accept chat"
 msgstr ""
 
 #: src/components/dms/ActionsWrapper.web.tsx:67
-#: src/components/dms/MessageContextMenu.tsx:93
+#: src/components/dms/MessageContextMenu.tsx:100
 msgid "Failed to add emoji reaction"
 msgstr ""
 
@@ -3034,11 +3034,11 @@ msgctxt "toast"
 msgid "Failed to delete chat"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:73
+#: src/components/dms/MessageContextMenu.tsx:80
 msgid "Failed to delete message"
 msgstr "Mesaj silinemedi"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:206
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:210
 msgid "Failed to delete post, please try again"
 msgstr "Gönderi silinemedi, lütfen tekrar deneyin"
 
@@ -3083,7 +3083,7 @@ msgid "Failed to pin post"
 msgstr "Gönderi sabitlenemedi"
 
 #: src/components/dms/ActionsWrapper.web.tsx:61
-#: src/components/dms/MessageContextMenu.tsx:87
+#: src/components/dms/MessageContextMenu.tsx:94
 msgid "Failed to remove emoji reaction"
 msgstr ""
 
@@ -3097,7 +3097,7 @@ msgstr "Bildirim tercihleri kaydedilemedi, lütfen tekrar deneyin"
 
 #: src/screens/ModerationInteractionSettings/index.tsx:108
 msgid "Failed to save settings. Please try again."
-msgstr ""
+msgstr "Ayarlar kaydedilemedi. Lütfen tekrar deneyin."
 
 #: src/screens/Settings/SettingsInterests.tsx:133
 msgctxt "toast"
@@ -3113,7 +3113,7 @@ msgstr "Gönderilemedi"
 msgid "Failed to submit appeal, please try again."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:235
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:239
 msgid "Failed to toggle thread mute, please try again"
 msgstr ""
 
@@ -3159,8 +3159,8 @@ msgstr ""
 msgid "Feedback"
 msgstr "Geribildirim"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:277
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:286
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:294
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:303
 msgctxt "toast"
 msgid "Feedback sent!"
 msgstr "Geri bildirim gönderildi!"
@@ -3188,7 +3188,7 @@ msgstr ""
 
 #: src/screens/Search/modules/ExploreRecommendations.tsx:65
 msgid "Feeds we think you might like."
-msgstr ""
+msgstr "Beğeneceğinizi düşündüğümüz akışlar."
 
 #: src/screens/Settings/components/OTAInfo.tsx:58
 msgid "Fetch update"
@@ -3624,7 +3624,7 @@ msgstr "Gizli liste"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:761
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:778
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "Hide"
 msgstr "Gizle"
@@ -3638,18 +3638,18 @@ msgstr "Gizle"
 msgid "Hide customization options"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:570
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:576
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:587
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:593
 msgid "Hide post for me"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:587
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:597
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:604
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:614
 msgid "Hide reply for everyone"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:569
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:575
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:586
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:592
 msgid "Hide reply for me"
 msgstr ""
 
@@ -3657,12 +3657,12 @@ msgstr ""
 msgid "Hide this card"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:756
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:773
 msgid "Hide this post?"
 msgstr "Bu gönderiyi gizle?"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:756
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:817
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:773
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:834
 msgid "Hide this reply?"
 msgstr "Bu yanıtı gizle?"
 
@@ -3794,7 +3794,7 @@ msgstr ""
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:747
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:764
 msgid "If you remove this post, you won't be able to recover it."
 msgstr ""
 
@@ -3884,7 +3884,7 @@ msgstr "Geçersiz 2FA onay kodu."
 msgid "Invalid handle. Please try a different one."
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:283
+#: src/view/com/post-thread/PostThreadItem.tsx:288
 msgid "Invalid or unsupported post record"
 msgstr "Geçersiz veya desteklenmeyen gönderi kaydı"
 
@@ -3985,7 +3985,7 @@ msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:72
 msgid "Labels on your account"
-msgstr ""
+msgstr "Hesabınızdaki etiketler"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:74
 msgid "Labels on your content"
@@ -4160,7 +4160,7 @@ msgstr ""
 msgid "Likes"
 msgstr "Beğeniler"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:218
+#: src/view/com/post-thread/PostThreadItem.tsx:223
 msgid "Likes on this post"
 msgstr "Bu gönderideki beğeniler"
 
@@ -4361,7 +4361,7 @@ msgstr "Menü"
 msgid "Message {0}"
 msgstr "Mesaj {0}"
 
-#: src/components/dms/MessageContextMenu.tsx:71
+#: src/components/dms/MessageContextMenu.tsx:78
 msgctxt "toast"
 msgid "Message deleted"
 msgstr "Mesaj silindi"
@@ -4370,7 +4370,7 @@ msgstr "Mesaj silindi"
 msgid "Message deleted"
 msgstr "Mesaj silindi"
 
-#: src/components/dms/MessageContextMenu.tsx:119
+#: src/components/dms/MessageContextMenu.tsx:126
 msgid "Message from @{0}: {1}"
 msgstr ""
 
@@ -4387,7 +4387,7 @@ msgstr "Mesaj girdi alanı"
 msgid "Message is too long"
 msgstr "Mesaj çok uzun"
 
-#: src/components/dms/MessageContextMenu.tsx:117
+#: src/components/dms/MessageContextMenu.tsx:124
 msgid "Message options"
 msgstr ""
 
@@ -4471,7 +4471,7 @@ msgstr "Moderasyon araçları"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "Moderatör, içeriğe genel bir uyarı koymayı seçti."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:640
+#: src/view/com/post-thread/PostThreadItem.tsx:645
 msgid "More"
 msgstr "Daha fazla"
 
@@ -4517,8 +4517,8 @@ msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:289
 #: src/view/com/profile/ProfileMenu.tsx:296
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:652
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:675
 msgid "Mute account"
 msgstr ""
 
@@ -4567,13 +4567,13 @@ msgstr "Bu kelimeyi yalnızca etiketlerde sessize al"
 msgid "Mute this word until you unmute it"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:536
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:540
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:553
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:557
 msgid "Mute thread"
 msgstr "Konuyu sessize al"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:550
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:552
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:567
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:569
 msgid "Mute words & tags"
 msgstr "Kelimeleri ve etiketleri sustur"
 
@@ -4919,7 +4919,7 @@ msgid "Not right now"
 msgstr "Şu anda değil"
 
 #: src/view/com/profile/ProfileMenu.tsx:406
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:774
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:791
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:361
 msgid "Note about sharing"
 msgstr ""
@@ -5001,7 +5001,7 @@ msgid "OK"
 msgstr "Tamam"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/view/com/post-thread/PostThreadItem.tsx:875
+#: src/view/com/post-thread/PostThreadItem.tsx:895
 msgid "Okay"
 msgstr "Tamam"
 
@@ -5384,8 +5384,8 @@ msgstr "Ana ekrana sabitle"
 msgid "Pin to Home"
 msgstr "Ana Sayfaya Sabitle"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:427
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:444
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:451
 msgid "Pin to your profile"
 msgstr "Profiline sabitle"
 
@@ -5553,7 +5553,7 @@ msgctxt "action"
 msgid "Post All"
 msgstr "Hepsini Gönder"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:210
+#: src/view/com/post-thread/PostThreadItem.tsx:215
 msgid "Post by {0}"
 msgstr "{0} tarafından gönderi"
 
@@ -5564,7 +5564,7 @@ msgstr "{0} tarafından gönderi"
 msgid "Post by @{0}"
 msgstr "@{0} tarafından gönderi"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:186
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:190
 msgctxt "toast"
 msgid "Post deleted"
 msgstr "Gönderi silindi"
@@ -5780,11 +5780,11 @@ msgstr ""
 msgid "Quote post"
 msgstr "Gönderiyi alıntıla"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:314
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:331
 msgid "Quote post was re-attached"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:313
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:330
 msgid "Quote post was successfully detached"
 msgstr ""
 
@@ -5803,7 +5803,7 @@ msgstr "Alıntı ayarları"
 msgid "Quotes"
 msgstr "Alıntılar"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:244
+#: src/view/com/post-thread/PostThreadItem.tsx:249
 msgid "Quotes of this post"
 msgstr "Bu gönderinin alıntıları"
 
@@ -5818,8 +5818,8 @@ msgstr "Rastgele (yani \"Gönderenin Ruleti\")"
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:612
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:622
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:629
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:639
 msgid "Re-attach quote"
 msgstr ""
 
@@ -6098,16 +6098,16 @@ msgctxt "description"
 msgid "Reply to you"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:346
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:363
 msgctxt "toast"
 msgid "Reply visibility updated"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:345
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:362
 msgid "Reply was successfully hidden"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:161
+#: src/components/dms/MessageContextMenu.tsx:168
 #: src/components/dms/MessagesListBlockedFooter.tsx:85
 #: src/components/dms/MessagesListBlockedFooter.tsx:92
 msgid "Report"
@@ -6141,12 +6141,12 @@ msgstr "Beslemeyi raporla"
 msgid "Report list"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:159
+#: src/components/dms/MessageContextMenu.tsx:166
 msgid "Report message"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:678
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:680
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:695
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:697
 msgid "Report post"
 msgstr "Gönderiyi raporla"
 
@@ -6234,7 +6234,7 @@ msgstr "<0><1/></0> tarafından yeniden gönderildi"
 msgid "Reposted by you"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:223
+#: src/view/com/post-thread/PostThreadItem.tsx:228
 msgid "Reposts of this post"
 msgstr "Bu gönderinin yeniden gönderilmesi"
 
@@ -6725,8 +6725,8 @@ msgstr ""
 msgid "Send verification email"
 msgstr "Doğrulama e-postası gönder"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:470
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:473
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:487
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:490
 msgid "Send via direct message"
 msgstr "Doğrudan mesaj yoluyla gönder"
 
@@ -6785,8 +6785,8 @@ msgstr ""
 #: src/screens/Topic.tsx:102
 #: src/view/com/profile/ProfileMenu.tsx:216
 #: src/view/com/profile/ProfileMenu.tsx:225
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:481
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:490
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:498
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:507
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:350
 #: src/view/screens/ProfileList.tsx:505
 msgid "Share"
@@ -6806,7 +6806,7 @@ msgid "Share a fun fact!"
 msgstr "Eğlenceli bir gerçeği paylaş!"
 
 #: src/view/com/profile/ProfileMenu.tsx:411
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:779
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:796
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:366
 msgid "Share anyway"
 msgstr "Yine de paylaş"
@@ -6890,8 +6890,8 @@ msgstr ""
 msgid "Show hidden replies"
 msgstr "Gizli yanıtları göster"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:520
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:522
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:537
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 msgid "Show less like this"
 msgstr "Bunun gibi daha az göster"
 
@@ -6899,14 +6899,14 @@ msgstr "Bunun gibi daha az göster"
 msgid "Show list anyway"
 msgstr "Yine de listeyi göster"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:600
+#: src/view/com/post-thread/PostThreadItem.tsx:605
 #: src/view/com/post/Post.tsx:243
 #: src/view/com/posts/PostFeedItem.tsx:515
 msgid "Show More"
 msgstr "Daha Fazla Göster"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:512
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:514
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:529
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:531
 msgid "Show more like this"
 msgstr "Bunun gibi daha fazla göster"
 
@@ -6936,8 +6936,8 @@ msgstr ""
 msgid "Show replies by people you follow before all other replies"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:586
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:596
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:603
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
 msgid "Show reply for everyone"
 msgstr ""
 
@@ -6959,7 +6959,7 @@ msgstr "Uyarı göster"
 msgid "Show warning and filter from feeds"
 msgstr "Uyarı göster ve beslemelerden filtrele"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:816
+#: src/view/com/post-thread/PostThreadItem.tsx:836
 msgid "Shows information about when this post was created"
 msgstr ""
 
@@ -7623,9 +7623,9 @@ msgstr ""
 #: src/view/com/profile/ProfileMenu.tsx:145
 #: src/view/com/profile/ProfileMenu.tsx:158
 #: src/view/com/profile/ProfileMenu.tsx:170
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:379
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:392
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:402
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:396
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:409
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:419
 msgid "There was an issue! {0}"
 msgstr "Bir sorun oluştu! {0}"
 
@@ -7772,7 +7772,7 @@ msgstr ""
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:856
+#: src/view/com/post-thread/PostThreadItem.tsx:876
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
 
@@ -7780,16 +7780,16 @@ msgstr ""
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:153
+#: src/view/com/post-thread/PostThreadItem.tsx:158
 msgid "This post has been deleted."
 msgstr "Bu gönderi silindi."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:776
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:793
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:363
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:758
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:775
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr ""
 
@@ -7801,7 +7801,7 @@ msgstr ""
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:819
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:836
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr ""
 
@@ -7854,7 +7854,7 @@ msgstr ""
 msgid "This will remove @{0} from the quick access list."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:809
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:826
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr ""
 
@@ -7931,12 +7931,12 @@ msgstr ""
 msgid "Topic"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:132
-#: src/components/dms/MessageContextMenu.tsx:134
-#: src/view/com/post-thread/PostThreadItem.tsx:778
-#: src/view/com/post-thread/PostThreadItem.tsx:781
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:451
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
+#: src/components/dms/MessageContextMenu.tsx:139
+#: src/components/dms/MessageContextMenu.tsx:141
+#: src/view/com/post-thread/PostThreadItem.tsx:798
+#: src/view/com/post-thread/PostThreadItem.tsx:801
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:468
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:470
 msgid "Translate"
 msgstr "Çevir"
 
@@ -8083,8 +8083,8 @@ msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:288
 #: src/view/com/profile/ProfileMenu.tsx:294
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:651
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:657
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:668
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:674
 msgid "Unmute account"
 msgstr ""
 
@@ -8096,8 +8096,8 @@ msgstr "Görüşmeyi sessizden çıkar"
 msgid "Unmute list"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:536
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:540
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:553
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:557
 msgid "Unmute thread"
 msgstr "Konunun sessizliğini kaldır"
 
@@ -8123,8 +8123,8 @@ msgstr ""
 msgid "Unpin from home"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:426
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:433
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:450
 msgid "Unpin from profile"
 msgstr ""
 
@@ -8186,12 +8186,12 @@ msgstr ""
 msgid "Update to {domain}"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:318
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:335
 msgctxt "toast"
 msgid "Updating quote attachment failed"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:350
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:367
 msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr ""
@@ -8800,11 +8800,11 @@ msgstr ""
 msgid "Yes, delete this starter pack"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:812
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:829
 msgid "Yes, detach"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:822
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:839
 msgid "Yes, hide"
 msgstr ""
 
@@ -8820,8 +8820,8 @@ msgstr ""
 msgid "You"
 msgstr ""
 
-#: src/components/forms/HostingProvider.tsx:64
-msgid "You are creating an account on <0>{0}</0>"
+#: src/components/forms/HostingProvider.tsx:46
+msgid "You are creating an account on"
 msgstr ""
 
 #: src/screens/SignupQueued.tsx:157
@@ -9033,11 +9033,11 @@ msgstr ""
 msgid "You will be signed out of all your accounts."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:228
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:232
 msgid "You will no longer receive notifications for this thread"
 msgstr "Artık bu konu için bildirim almayacaksınız"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:224
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:228
 msgid "You will now receive notifications for this thread"
 msgstr "Artık bu konu için bildirim alacaksınız"
 

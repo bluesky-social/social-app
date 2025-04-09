@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-04-09 00:50\n"
+"PO-Revision-Date: 2025-04-09 23:20\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -101,7 +101,7 @@ msgstr "{0, plural, one {sekvanto} other {sekvantoj}}"
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {sekvata} other {sekvataj}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:454
+#: src/view/com/post-thread/PostThreadItem.tsx:459
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {ŝato} other {ŝatoj}}"
 
@@ -109,11 +109,11 @@ msgstr "{0, plural, one {ŝato} other {ŝatoj}}"
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {afiŝo} other {afiŝoj}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:438
+#: src/view/com/post-thread/PostThreadItem.tsx:443
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, one {citaĵo} other {citaĵoj}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:420
+#: src/view/com/post-thread/PostThreadItem.tsx:425
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {reafiŝo} other {reafiŝoj}}"
 
@@ -443,7 +443,7 @@ msgstr "Konto"
 
 #: src/screens/Messages/components/RequestButtons.tsx:81
 #: src/view/com/profile/ProfileMenu.tsx:141
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:375
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:392
 msgctxt "toast"
 msgid "Account blocked"
 msgstr "Konto blokita"
@@ -454,7 +454,7 @@ msgid "Account followed"
 msgstr "Konto eksekvita"
 
 #: src/view/com/profile/ProfileMenu.tsx:117
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:398
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:415
 msgctxt "toast"
 msgid "Account muted"
 msgstr "Konto silentigita"
@@ -488,7 +488,7 @@ msgid "Account unfollowed"
 msgstr "Konto ne plu sekvata"
 
 #: src/view/com/profile/ProfileMenu.tsx:107
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:388
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:405
 msgctxt "toast"
 msgid "Account unmuted"
 msgstr "Konto malsilentigita"
@@ -932,12 +932,12 @@ msgstr "Aspekto"
 msgid "Apply default recommended feeds"
 msgstr "Apliki defaŭltajn rekomenditajn fluojn"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:845
+#: src/view/com/post-thread/PostThreadItem.tsx:865
 msgid "Archived from {0}"
 msgstr "Arkivigita de {0}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:814
-#: src/view/com/post-thread/PostThreadItem.tsx:853
+#: src/view/com/post-thread/PostThreadItem.tsx:834
+#: src/view/com/post-thread/PostThreadItem.tsx:873
 msgid "Archived post"
 msgstr "Arkivigita afiŝo"
 
@@ -945,7 +945,7 @@ msgstr "Arkivigita afiŝo"
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr "Ĉu vi certas, ke vi volas forigi la apan pasvorton \"{0}\"?"
 
-#: src/components/dms/MessageContextMenu.tsx:178
+#: src/components/dms/MessageContextMenu.tsx:185
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr "Ĉu vi certas, ke vi volas forigi ĉi tiun mesaĝon? La mesaĝo estos forigita por vi, sed ne por la alia partoprenanto."
 
@@ -1065,7 +1065,7 @@ msgstr "Naskiĝtago"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
 #: src/view/com/profile/ProfileMenu.tsx:399
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:832
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:849
 msgid "Block"
 msgstr "Bloki"
 
@@ -1075,13 +1075,13 @@ msgstr "Bloki"
 #: src/screens/Messages/components/RequestButtons.tsx:136
 #: src/view/com/profile/ProfileMenu.tsx:310
 #: src/view/com/profile/ProfileMenu.tsx:317
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:671
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:686
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
 msgid "Block account"
 msgstr "Bloki konton"
 
 #: src/view/com/profile/ProfileMenu.tsx:382
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:827
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:844
 msgid "Block Account?"
 msgstr "Ĉu bloki konton?"
 
@@ -1132,7 +1132,7 @@ msgid "Blocked Accounts"
 msgstr "Blokitaj kontoj"
 
 #: src/view/com/profile/ProfileMenu.tsx:394
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:829
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:846
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Blokitaj kontoj ne povas respondi en viaj fadenoj, mencii vin nek alimaniere interagi kun vi."
 
@@ -1165,7 +1165,7 @@ msgstr "Blogo"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:870
+#: src/view/com/post-thread/PostThreadItem.tsx:890
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky ne povas konfirmi la aŭtentecon de la donita dato."
 
@@ -1448,8 +1448,8 @@ msgstr "Ŝanĝi vian retpoŝtadreson"
 msgid "Changes app icon"
 msgstr "Ŝanĝas apan piktogramon"
 
-#: src/components/forms/HostingProvider.tsx:47
-#: src/components/forms/HostingProvider.tsx:83
+#: src/components/forms/HostingProvider.tsx:50
+#: src/components/forms/HostingProvider.tsx:70
 msgid "Changes hosting provider"
 msgstr "Ŝanĝas la provizanton de gastigo"
 
@@ -1889,11 +1889,11 @@ msgstr "Kopiita"
 msgid "Copied build version to clipboard"
 msgstr "Versio kopiita al tondujo"
 
-#: src/components/dms/MessageContextMenu.tsx:55
+#: src/components/dms/MessageContextMenu.tsx:56
 #: src/lib/sharing.ts:25
 #: src/lib/sharing.ts:41
 #: src/view/com/modals/InviteCodes.tsx:153
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:246
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:250
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:397
 msgid "Copied to clipboard"
 msgstr "Kopiita al tondujo"
@@ -1920,8 +1920,8 @@ msgstr "Kopii apan pasvorton"
 msgid "Copy at:// URI"
 msgstr "Kopii URI-on at://"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:731
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:733
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:748
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:750
 msgid "Copy author DID"
 msgstr "Kopii la DID-on de la aŭtoro"
 
@@ -1952,23 +1952,23 @@ msgstr "Kopii ligilon"
 msgid "Copy link to list"
 msgstr "Kopii ligilon al listo"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:481
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:490
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:498
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:507
 msgid "Copy link to post"
 msgstr "Kopii ligilon al afiŝo"
 
-#: src/components/dms/MessageContextMenu.tsx:139
-#: src/components/dms/MessageContextMenu.tsx:142
+#: src/components/dms/MessageContextMenu.tsx:146
+#: src/components/dms/MessageContextMenu.tsx:149
 msgid "Copy message text"
 msgstr "Kopii mesaĝan tekston"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:724
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:726
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:741
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:743
 msgid "Copy post at:// URI"
 msgstr "Kopii URI-on at:// de afiŝo"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:459
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:461
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:476
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:478
 msgid "Copy post text"
 msgstr "Kopii afiŝan tekson"
 
@@ -2143,13 +2143,13 @@ msgstr "Defaŭlta"
 msgid "Default icons"
 msgstr "Defaŭltaj piktogramoj"
 
-#: src/components/dms/MessageContextMenu.tsx:180
+#: src/components/dms/MessageContextMenu.tsx:187
 #: src/screens/Messages/components/ChatStatusInfo.tsx:55
 #: src/screens/Settings/AppPasswords.tsx:212
 #: src/screens/StarterPack/StarterPackScreen.tsx:594
 #: src/screens/StarterPack/StarterPackScreen.tsx:672
 #: src/screens/StarterPack/StarterPackScreen.tsx:744
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:750
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:767
 #: src/view/screens/ProfileList.tsx:760
 msgid "Delete"
 msgstr "Forigi"
@@ -2191,7 +2191,7 @@ msgstr "Forigi konversacion"
 msgid "Delete Conversation"
 msgstr "Forigi konversacion"
 
-#: src/components/dms/MessageContextMenu.tsx:153
+#: src/components/dms/MessageContextMenu.tsx:160
 msgid "Delete for me"
 msgstr "Forigi por mi"
 
@@ -2199,11 +2199,11 @@ msgstr "Forigi por mi"
 msgid "Delete list"
 msgstr "Forigi liston"
 
-#: src/components/dms/MessageContextMenu.tsx:176
+#: src/components/dms/MessageContextMenu.tsx:183
 msgid "Delete message"
 msgstr "Forigi mesaĝon"
 
-#: src/components/dms/MessageContextMenu.tsx:151
+#: src/components/dms/MessageContextMenu.tsx:158
 msgid "Delete message for me"
 msgstr "Forigi mesaĝon por mi"
 
@@ -2212,8 +2212,8 @@ msgid "Delete my account"
 msgstr "Forigi mian konton"
 
 #: src/view/com/composer/Composer.tsx:856
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:709
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:711
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:726
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:728
 msgid "Delete post"
 msgstr "Forigi afiŝon"
 
@@ -2230,7 +2230,7 @@ msgstr "Ĉu forigi startpakon?"
 msgid "Delete this list?"
 msgstr "Ĉu forigi ĉi tiun liston?"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:745
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:762
 msgid "Delete this post?"
 msgstr "Ĉu forigi ĉi tiun afiŝon?"
 
@@ -2268,12 +2268,12 @@ msgstr "Priskribo estas tro longa. La maksimuma nombro da signoj estas {DESCRIPT
 msgid "Descriptive alt text"
 msgstr "Priskriba alternativa teksto"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:623
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:630
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:640
 msgid "Detach quote"
 msgstr "Malligi citaĵon"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:807
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:824
 msgid "Detach quote post?"
 msgstr "Ĉu malligi citatan afiŝon?"
 
@@ -2556,8 +2556,8 @@ msgstr "Redakti fluojn"
 msgid "Edit image"
 msgstr "Redakti bildon"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:690
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:703
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:707
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:720
 msgid "Edit interaction settings"
 msgstr "Redakti interagajn agordojn"
 
@@ -2685,8 +2685,8 @@ msgstr "Enkorpigi HTML-kodon"
 
 #: src/components/dialogs/Embed.tsx:104
 #: src/components/dialogs/Embed.tsx:108
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:498
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:500
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:515
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:517
 msgid "Embed post"
 msgstr "Enkorpigi afiŝon"
 
@@ -3003,7 +3003,7 @@ msgid "Failed to accept chat"
 msgstr "Malsukcesis akcepti babilejon"
 
 #: src/components/dms/ActionsWrapper.web.tsx:67
-#: src/components/dms/MessageContextMenu.tsx:93
+#: src/components/dms/MessageContextMenu.tsx:100
 msgid "Failed to add emoji reaction"
 msgstr "Malsukcesis aldoni emoĝian reagon"
 
@@ -3034,11 +3034,11 @@ msgctxt "toast"
 msgid "Failed to delete chat"
 msgstr "Malsukcesis forigi babilejon"
 
-#: src/components/dms/MessageContextMenu.tsx:73
+#: src/components/dms/MessageContextMenu.tsx:80
 msgid "Failed to delete message"
 msgstr "Malsukcesis forigi mesaĝon"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:206
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:210
 msgid "Failed to delete post, please try again"
 msgstr "Malsukcesis forigi afiŝon, bonvolu reprovi"
 
@@ -3083,7 +3083,7 @@ msgid "Failed to pin post"
 msgstr "Malsukcesis alpingli afiŝon"
 
 #: src/components/dms/ActionsWrapper.web.tsx:61
-#: src/components/dms/MessageContextMenu.tsx:87
+#: src/components/dms/MessageContextMenu.tsx:94
 msgid "Failed to remove emoji reaction"
 msgstr "Malsukcesis forigi emoĝian reagon"
 
@@ -3113,7 +3113,7 @@ msgstr "Malsukcesis sendi"
 msgid "Failed to submit appeal, please try again."
 msgstr "Malsukcesis sendi apelacion, bonvole reprovu."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:235
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:239
 msgid "Failed to toggle thread mute, please try again"
 msgstr "Malsukcesis baskuligi la silentigon de fadeno, bonvolu reprovi"
 
@@ -3159,8 +3159,8 @@ msgstr "Baskuligi fluon"
 msgid "Feedback"
 msgstr "Prikomentado"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:277
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:286
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:294
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:303
 msgctxt "toast"
 msgid "Feedback sent!"
 msgstr "Prikomento sendita!"
@@ -3624,7 +3624,7 @@ msgstr "Kaŝita listo"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:761
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:778
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "Hide"
 msgstr "Kaŝi"
@@ -3638,18 +3638,18 @@ msgstr "Kaŝi"
 msgid "Hide customization options"
 msgstr "Kaŝi tajloradajn opciojn"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:570
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:576
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:587
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:593
 msgid "Hide post for me"
 msgstr "Kaŝi afiŝon por mi"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:587
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:597
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:604
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:614
 msgid "Hide reply for everyone"
 msgstr "Kaŝi respondon por ĉiuj"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:569
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:575
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:586
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:592
 msgid "Hide reply for me"
 msgstr "Kaŝi respondon por mi"
 
@@ -3657,12 +3657,12 @@ msgstr "Kaŝi respondon por mi"
 msgid "Hide this card"
 msgstr "Kaŝi ĉi tiun karton"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:756
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:773
 msgid "Hide this post?"
 msgstr "Ĉu kaŝi ĉi tiun afiŝon?"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:756
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:817
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:773
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:834
 msgid "Hide this reply?"
 msgstr "Ĉu kaŝi ĉi tiun respondon?"
 
@@ -3794,7 +3794,7 @@ msgstr "Se vi forigos ĉi tiun liston, vi ne povos restaŭri ĝin."
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
 msgstr "Se vi havas vian propran domajnon, vi povas uzi ĝin kiel vian identigilon. Ĉi tio permesas al vi aŭtentikigi vin mem. <0>Eksciu pli.</0>"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:747
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:764
 msgid "If you remove this post, you won't be able to recover it."
 msgstr "Se vi forigos ĉi tiun afiŝon, vi ne povos restaŭri ĝin."
 
@@ -3884,7 +3884,7 @@ msgstr "Nevalida 2FA-konfirmkodo."
 msgid "Invalid handle. Please try a different one."
 msgstr "Nevalida nomo. Bonvolu uzi iun alian."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:283
+#: src/view/com/post-thread/PostThreadItem.tsx:288
 msgid "Invalid or unsupported post record"
 msgstr "Nevalida aŭ nesubtenita afiŝ-rikordo"
 
@@ -4160,7 +4160,7 @@ msgstr "Ŝatata de {likeCount, plural, one {# uzanto} other {# uzantoj}}"
 msgid "Likes"
 msgstr "Ŝatoj"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:218
+#: src/view/com/post-thread/PostThreadItem.tsx:223
 msgid "Likes on this post"
 msgstr "Ŝatoj de ĉi tiu afiŝo"
 
@@ -4361,7 +4361,7 @@ msgstr "Menuo"
 msgid "Message {0}"
 msgstr "Mesaĝo {0}"
 
-#: src/components/dms/MessageContextMenu.tsx:71
+#: src/components/dms/MessageContextMenu.tsx:78
 msgctxt "toast"
 msgid "Message deleted"
 msgstr "Mesaĝo forigita"
@@ -4370,7 +4370,7 @@ msgstr "Mesaĝo forigita"
 msgid "Message deleted"
 msgstr "Mesaĝo forigita"
 
-#: src/components/dms/MessageContextMenu.tsx:119
+#: src/components/dms/MessageContextMenu.tsx:126
 msgid "Message from @{0}: {1}"
 msgstr "Mesaĝo de @{0}: {1}"
 
@@ -4387,7 +4387,7 @@ msgstr "Enigujo de la mesaĝo"
 msgid "Message is too long"
 msgstr "Mesaĝo tro longas"
 
-#: src/components/dms/MessageContextMenu.tsx:117
+#: src/components/dms/MessageContextMenu.tsx:124
 msgid "Message options"
 msgstr "Opcioj de mesaĝo"
 
@@ -4471,7 +4471,7 @@ msgstr "Kontroladaj iloj"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "Kontrolanto decidis starigi ĝeneralan averton pri la enhavo."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:640
+#: src/view/com/post-thread/PostThreadItem.tsx:645
 msgid "More"
 msgstr "Pli"
 
@@ -4517,8 +4517,8 @@ msgstr "Silentigi kradvorton {tag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:289
 #: src/view/com/profile/ProfileMenu.tsx:296
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:652
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:675
 msgid "Mute account"
 msgstr "Silentigi konton"
 
@@ -4567,13 +4567,13 @@ msgstr "Silentigi ĉi tiun vorton nur en kradvortoj"
 msgid "Mute this word until you unmute it"
 msgstr "Silentigi ĉi tiun vorton ĝis kiam ĝi estos malsilentigita"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:536
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:540
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:553
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:557
 msgid "Mute thread"
 msgstr "Silentigi fadenon"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:550
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:552
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:567
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:569
 msgid "Mute words & tags"
 msgstr "Silentigi vortojn k kradvortojn"
 
@@ -4848,7 +4848,7 @@ msgstr "Sen rezultoj"
 
 #: src/screens/Search/Explore.tsx:715
 msgid "No results for \"{0}\"."
-msgstr ""
+msgstr "Sen rezultoj por \"{0}\"."
 
 #: src/components/Lists.tsx:189
 msgid "No results found"
@@ -4867,7 +4867,7 @@ msgstr "Neniu rezulto trovita por {query}"
 
 #: src/screens/Search/Explore.tsx:719
 msgid "No results."
-msgstr ""
+msgstr "Sen rezultoj."
 
 #: src/components/dialogs/GifSelect.tsx:229
 msgid "No search results found for \"{search}\"."
@@ -4919,7 +4919,7 @@ msgid "Not right now"
 msgstr "Ne nun"
 
 #: src/view/com/profile/ProfileMenu.tsx:406
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:774
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:791
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:361
 msgid "Note about sharing"
 msgstr "Noto pri kundivido"
@@ -5001,7 +5001,7 @@ msgid "OK"
 msgstr "Bone"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/view/com/post-thread/PostThreadItem.tsx:875
+#: src/view/com/post-thread/PostThreadItem.tsx:895
 msgid "Okay"
 msgstr "Bone"
 
@@ -5384,8 +5384,8 @@ msgstr "Alpingli al hejmo"
 msgid "Pin to Home"
 msgstr "Alpingli al hejmo"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:427
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:444
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:451
 msgid "Pin to your profile"
 msgstr "Alpingli al via profilo"
 
@@ -5553,7 +5553,7 @@ msgctxt "action"
 msgid "Post All"
 msgstr "Afiŝi ĉiujn"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:210
+#: src/view/com/post-thread/PostThreadItem.tsx:215
 msgid "Post by {0}"
 msgstr "Afiŝo de {0}"
 
@@ -5564,7 +5564,7 @@ msgstr "Afiŝo de {0}"
 msgid "Post by @{0}"
 msgstr "Afiŝo de @{0}"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:186
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:190
 msgctxt "toast"
 msgid "Post deleted"
 msgstr "Afiŝo forigita"
@@ -5780,11 +5780,11 @@ msgstr "QR-kodo konservita en via bildgalerio!"
 msgid "Quote post"
 msgstr "Citi afiŝon"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:314
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:331
 msgid "Quote post was re-attached"
 msgstr "La citafiŝo estis religita"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:313
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:330
 msgid "Quote post was successfully detached"
 msgstr "La citaĵo estis sukcese malligita"
 
@@ -5803,7 +5803,7 @@ msgstr "Agordoj de citado"
 msgid "Quotes"
 msgstr "Citaĵoj"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:244
+#: src/view/com/post-thread/PostThreadItem.tsx:249
 msgid "Quotes of this post"
 msgstr "Citaĵoj de ĉi tiu afiŝo"
 
@@ -5818,8 +5818,8 @@ msgstr "Hazarda (alinome \"Afiŝinta ruleto\")"
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr "Limo de operacioj transpasita – vi provis ŝanĝi vian identigilon tro multajn fojojn dum mallonga tempo. Bonvolu atendi minuton antaŭ provi denove."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:612
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:622
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:629
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:639
 msgid "Re-attach quote"
 msgstr "Religi citaĵon"
 
@@ -6098,16 +6098,16 @@ msgctxt "description"
 msgid "Reply to you"
 msgstr "Respondi al vi"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:346
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:363
 msgctxt "toast"
 msgid "Reply visibility updated"
 msgstr "Videbleco de respondoj ĝisdatiĝis"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:345
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:362
 msgid "Reply was successfully hidden"
 msgstr "Respondo estis sukcese kaŝita"
 
-#: src/components/dms/MessageContextMenu.tsx:161
+#: src/components/dms/MessageContextMenu.tsx:168
 #: src/components/dms/MessagesListBlockedFooter.tsx:85
 #: src/components/dms/MessagesListBlockedFooter.tsx:92
 msgid "Report"
@@ -6141,12 +6141,12 @@ msgstr "Raporti fluon"
 msgid "Report list"
 msgstr "Raporti liston"
 
-#: src/components/dms/MessageContextMenu.tsx:159
+#: src/components/dms/MessageContextMenu.tsx:166
 msgid "Report message"
 msgstr "Raporti mesaĝon"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:678
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:680
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:695
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:697
 msgid "Report post"
 msgstr "Raporti afiŝon"
 
@@ -6234,7 +6234,7 @@ msgstr "Reafiŝita de <0><1/></0>"
 msgid "Reposted by you"
 msgstr "Reafiŝita de vi"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:223
+#: src/view/com/post-thread/PostThreadItem.tsx:228
 msgid "Reposts of this post"
 msgstr "Reafiŝoj de ĉi tiu afiŝo"
 
@@ -6725,8 +6725,8 @@ msgstr "Sendi raporton al {title}"
 msgid "Send verification email"
 msgstr "Sendi konfirman retmesaĝon"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:470
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:473
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:487
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:490
 msgid "Send via direct message"
 msgstr "Sendi per rekta mesaĝo"
 
@@ -6785,8 +6785,8 @@ msgstr "Seksume sugesta"
 #: src/screens/Topic.tsx:102
 #: src/view/com/profile/ProfileMenu.tsx:216
 #: src/view/com/profile/ProfileMenu.tsx:225
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:481
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:490
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:498
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:507
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:350
 #: src/view/screens/ProfileList.tsx:505
 msgid "Share"
@@ -6806,7 +6806,7 @@ msgid "Share a fun fact!"
 msgstr "Konigu anekdoton!"
 
 #: src/view/com/profile/ProfileMenu.tsx:411
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:779
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:796
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:366
 msgid "Share anyway"
 msgstr "Diskonigi malgraŭ tio"
@@ -6890,8 +6890,8 @@ msgstr "Montru tajloradajn opciojn"
 msgid "Show hidden replies"
 msgstr "Montri kaŝitajn respondojn"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:520
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:522
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:537
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 msgid "Show less like this"
 msgstr "Montri malpli da similaj afiŝoj"
 
@@ -6899,14 +6899,14 @@ msgstr "Montri malpli da similaj afiŝoj"
 msgid "Show list anyway"
 msgstr "Montri liston ĉiuokaze"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:600
+#: src/view/com/post-thread/PostThreadItem.tsx:605
 #: src/view/com/post/Post.tsx:243
 #: src/view/com/posts/PostFeedItem.tsx:515
 msgid "Show More"
 msgstr "Montri pli"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:512
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:514
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:529
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:531
 msgid "Show more like this"
 msgstr "Montri pli da similaj afiŝoj"
 
@@ -6936,8 +6936,8 @@ msgstr "Montri respondojn fadene"
 msgid "Show replies by people you follow before all other replies"
 msgstr "Montri respondojn de miaj sekvatoj antaŭ ĉiuj aliaj respondoj"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:586
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:596
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:603
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
 msgid "Show reply for everyone"
 msgstr "Montri respondojn por ĉiuj"
 
@@ -6959,7 +6959,7 @@ msgstr "Montri averton"
 msgid "Show warning and filter from feeds"
 msgstr "Montri averton kaj elfiltri el fluoj"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:816
+#: src/view/com/post-thread/PostThreadItem.tsx:836
 msgid "Shows information about when this post was created"
 msgstr "Montri informojn pri kiam ĉi tiu afiŝo estis kreita"
 
@@ -7623,9 +7623,9 @@ msgstr "Estis problemo ĝisdatigante viajn fluojn, bonvolu kontroli vian interre
 #: src/view/com/profile/ProfileMenu.tsx:145
 #: src/view/com/profile/ProfileMenu.tsx:158
 #: src/view/com/profile/ProfileMenu.tsx:170
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:379
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:392
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:402
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:396
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:409
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:419
 msgid "There was an issue! {0}"
 msgstr "Estis problemo! {0}"
 
@@ -7772,7 +7772,7 @@ msgstr "Ĉi tiu listo malplenas."
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "Ĉi tiu kontrolservo neatingeblas. Vidu pli da detaloj sube. Se ĉi tiu problemo daŭras, kontaktu nin."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:856
+#: src/view/com/post-thread/PostThreadItem.tsx:876
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Ĉi tiu afiŝo asertas, ke ĝi estis kreita je <0>{0}</0>, sed ĝi estis unue vidita ĉe Bluesky je <1>{1}</1>."
 
@@ -7780,16 +7780,16 @@ msgstr "Ĉi tiu afiŝo asertas, ke ĝi estis kreita je <0>{0}</0>, sed ĝi estis
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr "Ĉi tiu afiŝo havas nekonatan tipon de fadenado. Via apo eble estas malaktuala."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:153
+#: src/view/com/post-thread/PostThreadItem.tsx:158
 msgid "This post has been deleted."
 msgstr "Ĉi tiu afiŝo estis forigita."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:776
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:793
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:363
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr "Ĉi tiu afiŝo estas nur videbla al ensalutintaj uzantoj. Ĝi ne estos videbla al ne ensalutintaj homoj."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:758
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:775
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Ĉi tiu afiŝo estos kaŝita el fluoj kaj fadenoj. Tio ne povas esti malfarita."
 
@@ -7801,7 +7801,7 @@ msgstr "La aŭtoro de ĉi tiu afiŝo malŝaltis citafiŝojn."
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr "Ĉi tiu profilo estas nur videbla al ensalutintaj uzantoj. Ĝi ne estos videbla al ne ensalutintaj homoj."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:819
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:836
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr "Ĉi tiu respondo estos ordigota en kaŝitan sekcion ĉe la subo de via fadeno kaj silentigos sciigojn pri sekvontaj respondoj - ambaŭ por vi kaj aliuloj."
 
@@ -7854,7 +7854,7 @@ msgstr "Ĉi tio forigos \"{0}\" de viaj silentigitaj vortoj. Vi ĉiam povos real
 msgid "This will remove @{0} from the quick access list."
 msgstr "Ĉi tio forigos @{0} el la listo de rapidatingo."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:809
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:826
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "Ĉi tio forigos vian afiŝon el ĉi tiu citafiŝo por ĉiuj uzantoj kaj anstataŭigos ĝin per lokokupilo."
 
@@ -7931,12 +7931,12 @@ msgstr "Plej popularaj"
 msgid "Topic"
 msgstr "Temo"
 
-#: src/components/dms/MessageContextMenu.tsx:132
-#: src/components/dms/MessageContextMenu.tsx:134
-#: src/view/com/post-thread/PostThreadItem.tsx:778
-#: src/view/com/post-thread/PostThreadItem.tsx:781
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:451
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
+#: src/components/dms/MessageContextMenu.tsx:139
+#: src/components/dms/MessageContextMenu.tsx:141
+#: src/view/com/post-thread/PostThreadItem.tsx:798
+#: src/view/com/post-thread/PostThreadItem.tsx:801
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:468
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:470
 msgid "Translate"
 msgstr "Traduki"
 
@@ -8083,8 +8083,8 @@ msgstr "Malsilentigi {tag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:288
 #: src/view/com/profile/ProfileMenu.tsx:294
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:651
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:657
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:668
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:674
 msgid "Unmute account"
 msgstr "Malsilentigi konton"
 
@@ -8096,8 +8096,8 @@ msgstr "Malsilentigi konversacion"
 msgid "Unmute list"
 msgstr "Malsilentigi liston"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:536
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:540
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:553
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:557
 msgid "Unmute thread"
 msgstr "Malsilentigi fadenon"
 
@@ -8123,8 +8123,8 @@ msgstr "Depingli fluon"
 msgid "Unpin from home"
 msgstr "Depingli de la hejmpaĝo"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:426
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:433
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:450
 msgid "Unpin from profile"
 msgstr "Depingli de la profilo"
 
@@ -8186,12 +8186,12 @@ msgstr "Ĝisdatigi <0>{displayName}</0> en listoj"
 msgid "Update to {domain}"
 msgstr "Ŝanĝi al {domain}"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:318
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:335
 msgctxt "toast"
 msgid "Updating quote attachment failed"
 msgstr "Ĝisdatigo de citaĵa aldonaĵo malsukcesis"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:350
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:367
 msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr "Ĝisdatigado de responda videbleco malsukcesis"
@@ -8800,11 +8800,11 @@ msgstr "Jes, malaktivigi"
 msgid "Yes, delete this starter pack"
 msgstr "Jes, forigu ĉi tiun startpakon"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:812
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:829
 msgid "Yes, detach"
 msgstr "Jes, malligi"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:822
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:839
 msgid "Yes, hide"
 msgstr "Jes, kaŝi"
 
@@ -8820,9 +8820,9 @@ msgstr "Hieraŭ"
 msgid "You"
 msgstr "Vi"
 
-#: src/components/forms/HostingProvider.tsx:64
-msgid "You are creating an account on <0>{0}</0>"
-msgstr ""
+#: src/components/forms/HostingProvider.tsx:46
+msgid "You are creating an account on"
+msgstr "Vi kreas konton ĉe"
 
 #: src/screens/SignupQueued.tsx:157
 msgid "You are in line."
@@ -9033,11 +9033,11 @@ msgstr "Vi reagis per {0} al {1}"
 msgid "You will be signed out of all your accounts."
 msgstr "Vi elsalutos el ĉiuj viaj kontoj."
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:228
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:232
 msgid "You will no longer receive notifications for this thread"
 msgstr "Vi ne plu ricevos sciigojn pri ĉi tiu fadeno"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:224
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:228
 msgid "You will now receive notifications for this thread"
 msgstr "Vi nun ricevos sciigojn pri ĉi tiu fadeno"
 

@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-04-09 00:50\n"
+"PO-Revision-Date: 2025-04-09 23:20\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -101,7 +101,7 @@ msgstr "{0, plural, one {关注者} other {关注者}}"
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {正在关注} other {正在关注}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:454
+#: src/view/com/post-thread/PostThreadItem.tsx:459
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {喜欢} other {喜欢}}"
 
@@ -109,11 +109,11 @@ msgstr "{0, plural, one {喜欢} other {喜欢}}"
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {帖文} other {帖文}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:438
+#: src/view/com/post-thread/PostThreadItem.tsx:443
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, one {引用} other {引用}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:420
+#: src/view/com/post-thread/PostThreadItem.tsx:425
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {转发} other {转发}}"
 
@@ -443,7 +443,7 @@ msgstr "账户"
 
 #: src/screens/Messages/components/RequestButtons.tsx:81
 #: src/view/com/profile/ProfileMenu.tsx:141
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:375
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:392
 msgctxt "toast"
 msgid "Account blocked"
 msgstr "已屏蔽该账户"
@@ -454,7 +454,7 @@ msgid "Account followed"
 msgstr "已关注该账户"
 
 #: src/view/com/profile/ProfileMenu.tsx:117
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:398
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:415
 msgctxt "toast"
 msgid "Account muted"
 msgstr "已隐藏该账户"
@@ -488,7 +488,7 @@ msgid "Account unfollowed"
 msgstr "已取消关注该账户"
 
 #: src/view/com/profile/ProfileMenu.tsx:107
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:388
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:405
 msgctxt "toast"
 msgid "Account unmuted"
 msgstr "已取消隐藏该账户"
@@ -932,12 +932,12 @@ msgstr "外观"
 msgid "Apply default recommended feeds"
 msgstr "使用默认推荐的动态源"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:845
+#: src/view/com/post-thread/PostThreadItem.tsx:865
 msgid "Archived from {0}"
 msgstr "自 {0} 起被归档"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:814
-#: src/view/com/post-thread/PostThreadItem.tsx:853
+#: src/view/com/post-thread/PostThreadItem.tsx:834
+#: src/view/com/post-thread/PostThreadItem.tsx:873
 msgid "Archived post"
 msgstr "已归档帖文"
 
@@ -945,7 +945,7 @@ msgstr "已归档帖文"
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr "你确定要删除此应用密码“{0}”吗？"
 
-#: src/components/dms/MessageContextMenu.tsx:178
+#: src/components/dms/MessageContextMenu.tsx:185
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr "你确定要删除这条私信吗？此操作将仅为你删除私信，而不会为其他参与者删除。"
 
@@ -1065,7 +1065,7 @@ msgstr "生日"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
 #: src/view/com/profile/ProfileMenu.tsx:399
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:832
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:849
 msgid "Block"
 msgstr "屏蔽"
 
@@ -1075,13 +1075,13 @@ msgstr "屏蔽"
 #: src/screens/Messages/components/RequestButtons.tsx:136
 #: src/view/com/profile/ProfileMenu.tsx:310
 #: src/view/com/profile/ProfileMenu.tsx:317
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:671
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:686
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
 msgid "Block account"
 msgstr "屏蔽账户"
 
 #: src/view/com/profile/ProfileMenu.tsx:382
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:827
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:844
 msgid "Block Account?"
 msgstr "要屏蔽账户吗？"
 
@@ -1132,7 +1132,7 @@ msgid "Blocked Accounts"
 msgstr "已屏蔽账户"
 
 #: src/view/com/profile/ProfileMenu.tsx:394
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:829
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:846
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "已被屏蔽的账户无法在你的帖文下回复、提及你或以其他方式与你互动。"
 
@@ -1165,7 +1165,7 @@ msgstr "博客"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:870
+#: src/view/com/post-thread/PostThreadItem.tsx:890
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky 无法确认帖文发布时间的真实性。"
 
@@ -1448,8 +1448,8 @@ msgstr "更改你的电子邮箱地址"
 msgid "Changes app icon"
 msgstr "更改应用图标"
 
-#: src/components/forms/HostingProvider.tsx:47
-#: src/components/forms/HostingProvider.tsx:83
+#: src/components/forms/HostingProvider.tsx:50
+#: src/components/forms/HostingProvider.tsx:70
 msgid "Changes hosting provider"
 msgstr "更改托管服务提供商"
 
@@ -1889,11 +1889,11 @@ msgstr "已复制"
 msgid "Copied build version to clipboard"
 msgstr "已复制构建版本号至剪贴板"
 
-#: src/components/dms/MessageContextMenu.tsx:55
+#: src/components/dms/MessageContextMenu.tsx:56
 #: src/lib/sharing.ts:25
 #: src/lib/sharing.ts:41
 #: src/view/com/modals/InviteCodes.tsx:153
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:246
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:250
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:397
 msgid "Copied to clipboard"
 msgstr "已复制至剪贴板"
@@ -1920,8 +1920,8 @@ msgstr "复制应用密码"
 msgid "Copy at:// URI"
 msgstr "复制 at:// 链接"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:731
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:733
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:748
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:750
 msgid "Copy author DID"
 msgstr "复制发布者 DID"
 
@@ -1952,23 +1952,23 @@ msgstr "复制链接"
 msgid "Copy link to list"
 msgstr "复制列表链接"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:481
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:490
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:498
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:507
 msgid "Copy link to post"
 msgstr "复制帖文链接"
 
-#: src/components/dms/MessageContextMenu.tsx:139
-#: src/components/dms/MessageContextMenu.tsx:142
+#: src/components/dms/MessageContextMenu.tsx:146
+#: src/components/dms/MessageContextMenu.tsx:149
 msgid "Copy message text"
 msgstr "复制私信文字"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:724
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:726
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:741
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:743
 msgid "Copy post at:// URI"
 msgstr "复制帖文 at:// 链接"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:459
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:461
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:476
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:478
 msgid "Copy post text"
 msgstr "复制帖文文字"
 
@@ -2143,13 +2143,13 @@ msgstr "默认"
 msgid "Default icons"
 msgstr "默认图标"
 
-#: src/components/dms/MessageContextMenu.tsx:180
+#: src/components/dms/MessageContextMenu.tsx:187
 #: src/screens/Messages/components/ChatStatusInfo.tsx:55
 #: src/screens/Settings/AppPasswords.tsx:212
 #: src/screens/StarterPack/StarterPackScreen.tsx:594
 #: src/screens/StarterPack/StarterPackScreen.tsx:672
 #: src/screens/StarterPack/StarterPackScreen.tsx:744
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:750
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:767
 #: src/view/screens/ProfileList.tsx:760
 msgid "Delete"
 msgstr "删除"
@@ -2191,7 +2191,7 @@ msgstr "删除对话"
 msgid "Delete Conversation"
 msgstr "删除对话"
 
-#: src/components/dms/MessageContextMenu.tsx:153
+#: src/components/dms/MessageContextMenu.tsx:160
 msgid "Delete for me"
 msgstr "仅为我删除"
 
@@ -2199,11 +2199,11 @@ msgstr "仅为我删除"
 msgid "Delete list"
 msgstr "删除列表"
 
-#: src/components/dms/MessageContextMenu.tsx:176
+#: src/components/dms/MessageContextMenu.tsx:183
 msgid "Delete message"
 msgstr "删除私信"
 
-#: src/components/dms/MessageContextMenu.tsx:151
+#: src/components/dms/MessageContextMenu.tsx:158
 msgid "Delete message for me"
 msgstr "仅为我删除私信"
 
@@ -2212,8 +2212,8 @@ msgid "Delete my account"
 msgstr "删除我的账户"
 
 #: src/view/com/composer/Composer.tsx:856
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:709
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:711
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:726
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:728
 msgid "Delete post"
 msgstr "删除帖文"
 
@@ -2230,7 +2230,7 @@ msgstr "要删除新手包吗？"
 msgid "Delete this list?"
 msgstr "要删除此列表吗？"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:745
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:762
 msgid "Delete this post?"
 msgstr "要删除这则帖文吗？"
 
@@ -2268,12 +2268,12 @@ msgstr "简介太长，{DESCRIPTION_MAX_GRAPHEMES, plural, other {不能超过 #
 msgid "Descriptive alt text"
 msgstr "扩充描述替代文本"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:623
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:630
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:640
 msgid "Detach quote"
 msgstr "分离引用"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:807
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:824
 msgid "Detach quote post?"
 msgstr "要分离引用帖文吗？"
 
@@ -2372,7 +2372,7 @@ msgstr "跳过入门指南"
 
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:43
 msgid "Dismiss interests"
-msgstr ""
+msgstr "忽略兴趣"
 
 #: src/components/interstitials/TrendingVideos.tsx:92
 msgid "Dismiss this section"
@@ -2556,8 +2556,8 @@ msgstr "编辑动态源"
 msgid "Edit image"
 msgstr "编辑图片"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:690
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:703
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:707
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:720
 msgid "Edit interaction settings"
 msgstr "编辑互动选项"
 
@@ -2685,8 +2685,8 @@ msgstr "嵌入 HTML 代码"
 
 #: src/components/dialogs/Embed.tsx:104
 #: src/components/dialogs/Embed.tsx:108
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:498
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:500
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:515
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:517
 msgid "Embed post"
 msgstr "嵌入帖文"
 
@@ -3003,7 +3003,7 @@ msgid "Failed to accept chat"
 msgstr "无法接受私信请求"
 
 #: src/components/dms/ActionsWrapper.web.tsx:67
-#: src/components/dms/MessageContextMenu.tsx:93
+#: src/components/dms/MessageContextMenu.tsx:100
 msgid "Failed to add emoji reaction"
 msgstr "无法添加表情符号反应"
 
@@ -3034,11 +3034,11 @@ msgctxt "toast"
 msgid "Failed to delete chat"
 msgstr "无法删除私信"
 
-#: src/components/dms/MessageContextMenu.tsx:73
+#: src/components/dms/MessageContextMenu.tsx:80
 msgid "Failed to delete message"
 msgstr "无法删除私信"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:206
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:210
 msgid "Failed to delete post, please try again"
 msgstr "无法删除帖文，请重试"
 
@@ -3083,7 +3083,7 @@ msgid "Failed to pin post"
 msgstr "无法固定帖文"
 
 #: src/components/dms/ActionsWrapper.web.tsx:61
-#: src/components/dms/MessageContextMenu.tsx:87
+#: src/components/dms/MessageContextMenu.tsx:94
 msgid "Failed to remove emoji reaction"
 msgstr "无法删除表情符号反应"
 
@@ -3102,7 +3102,7 @@ msgstr "无法保存设置，请再试一次。"
 #: src/screens/Settings/SettingsInterests.tsx:133
 msgctxt "toast"
 msgid "Failed to save your interests."
-msgstr ""
+msgstr "无法保存你的兴趣。"
 
 #: src/components/dms/MessageItem.tsx:310
 msgid "Failed to send"
@@ -3113,7 +3113,7 @@ msgstr "无法发送私信"
 msgid "Failed to submit appeal, please try again."
 msgstr "无法提交申诉，请重试。"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:235
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:239
 msgid "Failed to toggle thread mute, please try again"
 msgstr "无法隐藏讨论串，请重试"
 
@@ -3159,8 +3159,8 @@ msgstr "切换动态源"
 msgid "Feedback"
 msgstr "反馈"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:277
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:286
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:294
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:303
 msgctxt "toast"
 msgid "Feedback sent!"
 msgstr "已发送反馈！"
@@ -3624,7 +3624,7 @@ msgstr "隐藏列表"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:761
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:778
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "Hide"
 msgstr "隐藏"
@@ -3638,18 +3638,18 @@ msgstr "隐藏"
 msgid "Hide customization options"
 msgstr "隐藏自定义选项"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:570
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:576
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:587
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:593
 msgid "Hide post for me"
 msgstr "仅为我隐藏这则帖文"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:587
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:597
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:604
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:614
 msgid "Hide reply for everyone"
 msgstr "为所有人隐藏回复"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:569
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:575
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:586
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:592
 msgid "Hide reply for me"
 msgstr "仅为我隐藏回复"
 
@@ -3657,12 +3657,12 @@ msgstr "仅为我隐藏回复"
 msgid "Hide this card"
 msgstr "隐藏这张卡片"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:756
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:773
 msgid "Hide this post?"
 msgstr "要隐藏这则帖文吗？"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:756
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:817
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:773
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:834
 msgid "Hide this reply?"
 msgstr "要隐藏这则回复吗？"
 
@@ -3794,7 +3794,7 @@ msgstr "如果你删除此列表，则以后将无法恢复。"
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
 msgstr "若你拥有自己的域名，你可以将其用作自己的账户代码，这同时还能帮你验证身份。<0>了解详情。</0>"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:747
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:764
 msgid "If you remove this post, you won't be able to recover it."
 msgstr "如果你删除这则帖文，则以后将无法恢复。"
 
@@ -3884,7 +3884,7 @@ msgstr "两步验证码无效。"
 msgid "Invalid handle. Please try a different one."
 msgstr "账户代码无效，请尝试输入另一个。"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:283
+#: src/view/com/post-thread/PostThreadItem.tsx:288
 msgid "Invalid or unsupported post record"
 msgstr "帖文记录无效或不受支持"
 
@@ -4160,7 +4160,7 @@ msgstr "{likeCount, plural, one {# 位用户} other {# 位用户}}喜欢"
 msgid "Likes"
 msgstr "喜欢"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:218
+#: src/view/com/post-thread/PostThreadItem.tsx:223
 msgid "Likes on this post"
 msgstr "这则帖文的喜欢数"
 
@@ -4361,7 +4361,7 @@ msgstr "菜单"
 msgid "Message {0}"
 msgstr "传送私信给 {0}"
 
-#: src/components/dms/MessageContextMenu.tsx:71
+#: src/components/dms/MessageContextMenu.tsx:78
 msgctxt "toast"
 msgid "Message deleted"
 msgstr "已删除私信"
@@ -4370,7 +4370,7 @@ msgstr "已删除私信"
 msgid "Message deleted"
 msgstr "已删除私信"
 
-#: src/components/dms/MessageContextMenu.tsx:119
+#: src/components/dms/MessageContextMenu.tsx:126
 msgid "Message from @{0}: {1}"
 msgstr "来自 @{0} 的私信：{1}"
 
@@ -4387,7 +4387,7 @@ msgstr "私信输入框"
 msgid "Message is too long"
 msgstr "私信过长"
 
-#: src/components/dms/MessageContextMenu.tsx:117
+#: src/components/dms/MessageContextMenu.tsx:124
 msgid "Message options"
 msgstr "私信选项"
 
@@ -4471,7 +4471,7 @@ msgstr "内容审核工具"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "内容审核服务提供方已对该内容标记一般警告。"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:640
+#: src/view/com/post-thread/PostThreadItem.tsx:645
 msgid "More"
 msgstr "更多"
 
@@ -4517,8 +4517,8 @@ msgstr "隐藏 {tag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:289
 #: src/view/com/profile/ProfileMenu.tsx:296
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:652
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:658
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:675
 msgid "Mute account"
 msgstr "隐藏账户"
 
@@ -4567,13 +4567,13 @@ msgstr "仅隐藏包含该字词的标签"
 msgid "Mute this word until you unmute it"
 msgstr "将这个字词隐藏，直到你取消为止"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:536
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:540
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:553
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:557
 msgid "Mute thread"
 msgstr "隐藏讨论串"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:550
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:552
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:567
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:569
 msgid "Mute words & tags"
 msgstr "隐藏字词和标签"
 
@@ -4787,11 +4787,11 @@ msgstr "没有 DNS 面板"
 
 #: src/components/dialogs/GifSelect.tsx:231
 msgid "No featured GIFs found. There may be an issue with Tenor."
-msgstr "未找到精选 GIF，Tenor 可能存在问题。"
+msgstr "找不到精选 GIF，Tenor 可能存在问题。"
 
 #: src/screens/StarterPack/Wizard/StepFeeds.tsx:119
 msgid "No feeds found. Try searching for something else."
-msgstr "未找到动态源，尝试搜索点别的。"
+msgstr "找不到动态源，尝试搜索点别的。"
 
 #: src/components/LikedByList.tsx:84
 #: src/view/com/post-thread/PostLikedBy.tsx:84
@@ -4848,30 +4848,30 @@ msgstr "没有结果"
 
 #: src/screens/Search/Explore.tsx:715
 msgid "No results for \"{0}\"."
-msgstr ""
+msgstr "找不到符合“{0}”的结果。"
 
 #: src/components/Lists.tsx:189
 msgid "No results found"
-msgstr "未找到结果"
+msgstr "找不到结果"
 
 #: src/view/screens/Feeds.tsx:470
 msgid "No results found for \"{query}\""
-msgstr "未找到“{query}”的结果"
+msgstr "找不到符合“{query}”的结果"
 
 #: src/screens/Search/SearchResults.tsx:248
 #: src/screens/Search/SearchResults.tsx:286
 #: src/screens/Search/SearchResults.tsx:331
 #: src/view/com/modals/ListAddRemoveUsers.tsx:128
 msgid "No results found for {query}"
-msgstr "未找到 {query} 的结果"
+msgstr "找不到符合 {query} 的结果"
 
 #: src/screens/Search/Explore.tsx:719
 msgid "No results."
-msgstr ""
+msgstr "没有结果。"
 
 #: src/components/dialogs/GifSelect.tsx:229
 msgid "No search results found for \"{search}\"."
-msgstr "未找到“{search}”的搜索结果。"
+msgstr "找不到符合“{search}”的搜索结果。"
 
 #: src/components/dialogs/EmbedConsent.tsx:104
 #: src/components/dialogs/EmbedConsent.tsx:111
@@ -4911,7 +4911,7 @@ msgstr "没有任何你认识的人关注"
 #: src/Navigation.tsx:135
 #: src/view/screens/Profile.tsx:122
 msgid "Not Found"
-msgstr "未找到"
+msgstr "找不到"
 
 #: src/view/com/modals/VerifyEmail.tsx:254
 #: src/view/com/modals/VerifyEmail.tsx:260
@@ -4919,7 +4919,7 @@ msgid "Not right now"
 msgstr "暂时不需要"
 
 #: src/view/com/profile/ProfileMenu.tsx:406
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:774
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:791
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:361
 msgid "Note about sharing"
 msgstr "分享注意事项"
@@ -5001,7 +5001,7 @@ msgid "OK"
 msgstr "好的"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/view/com/post-thread/PostThreadItem.tsx:875
+#: src/view/com/post-thread/PostThreadItem.tsx:895
 msgid "Okay"
 msgstr "好的"
 
@@ -5384,8 +5384,8 @@ msgstr "固定到主页"
 msgid "Pin to Home"
 msgstr "固定到主页"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:427
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:434
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:444
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:451
 msgid "Pin to your profile"
 msgstr "固定到你的个人资料"
 
@@ -5553,7 +5553,7 @@ msgctxt "action"
 msgid "Post All"
 msgstr "全部发布"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:210
+#: src/view/com/post-thread/PostThreadItem.tsx:215
 msgid "Post by {0}"
 msgstr "{0} 的帖文"
 
@@ -5564,7 +5564,7 @@ msgstr "{0} 的帖文"
 msgid "Post by @{0}"
 msgstr "@{0} 的帖文"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:186
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:190
 msgctxt "toast"
 msgid "Post deleted"
 msgstr "已删除帖文"
@@ -5780,11 +5780,11 @@ msgstr "已保存二维码至照片图库！"
 msgid "Quote post"
 msgstr "引用帖文"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:314
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:331
 msgid "Quote post was re-attached"
 msgstr "已重新关联引用帖文"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:313
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:330
 msgid "Quote post was successfully detached"
 msgstr "已成功分离引用帖文"
 
@@ -5803,7 +5803,7 @@ msgstr "引用选项"
 msgid "Quotes"
 msgstr "引用"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:244
+#: src/view/com/post-thread/PostThreadItem.tsx:249
 msgid "Quotes of this post"
 msgstr "引用这则帖文"
 
@@ -5818,8 +5818,8 @@ msgstr "随机显示（又名“试试手气”）"
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr "超过速率限制——你在短时间内尝试修改账户代码的次数过多，请稍后再试。"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:612
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:622
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:629
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:639
 msgid "Re-attach quote"
 msgstr "重新关联引用帖文"
 
@@ -6098,16 +6098,16 @@ msgctxt "description"
 msgid "Reply to you"
 msgstr "对你进行回复"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:346
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:363
 msgctxt "toast"
 msgid "Reply visibility updated"
 msgstr "已更新回复可见性"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:345
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:362
 msgid "Reply was successfully hidden"
 msgstr "已成功隐藏回复"
 
-#: src/components/dms/MessageContextMenu.tsx:161
+#: src/components/dms/MessageContextMenu.tsx:168
 #: src/components/dms/MessagesListBlockedFooter.tsx:85
 #: src/components/dms/MessagesListBlockedFooter.tsx:92
 msgid "Report"
@@ -6141,12 +6141,12 @@ msgstr "举报动态源"
 msgid "Report list"
 msgstr "举报列表"
 
-#: src/components/dms/MessageContextMenu.tsx:159
+#: src/components/dms/MessageContextMenu.tsx:166
 msgid "Report message"
 msgstr "举报私信"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:678
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:680
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:695
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:697
 msgid "Report post"
 msgstr "举报帖文"
 
@@ -6234,7 +6234,7 @@ msgstr "由 <0><1/></0> 转发"
 msgid "Reposted by you"
 msgstr "你已转发"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:223
+#: src/view/com/post-thread/PostThreadItem.tsx:228
 msgid "Reposts of this post"
 msgstr "转发这则帖文"
 
@@ -6725,8 +6725,8 @@ msgstr "将举报提交给 {title}"
 msgid "Send verification email"
 msgstr "发送验证电子邮件"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:470
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:473
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:487
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:490
 msgid "Send via direct message"
 msgstr "通过私信发送"
 
@@ -6785,8 +6785,8 @@ msgstr "性暗示"
 #: src/screens/Topic.tsx:102
 #: src/view/com/profile/ProfileMenu.tsx:216
 #: src/view/com/profile/ProfileMenu.tsx:225
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:481
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:490
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:498
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:507
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:350
 #: src/view/screens/ProfileList.tsx:505
 msgid "Share"
@@ -6806,7 +6806,7 @@ msgid "Share a fun fact!"
 msgstr "分享一件趣闻吧！"
 
 #: src/view/com/profile/ProfileMenu.tsx:411
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:779
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:796
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:366
 msgid "Share anyway"
 msgstr "仍然分享"
@@ -6890,8 +6890,8 @@ msgstr "显示自定义选项"
 msgid "Show hidden replies"
 msgstr "显示已隐藏的回复"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:520
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:522
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:537
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
 msgid "Show less like this"
 msgstr "显示更少类似内容"
 
@@ -6899,14 +6899,14 @@ msgstr "显示更少类似内容"
 msgid "Show list anyway"
 msgstr "仍然显示列表"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:600
+#: src/view/com/post-thread/PostThreadItem.tsx:605
 #: src/view/com/post/Post.tsx:243
 #: src/view/com/posts/PostFeedItem.tsx:515
 msgid "Show More"
 msgstr "显示更多"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:512
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:514
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:529
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:531
 msgid "Show more like this"
 msgstr "显示更多类似内容"
 
@@ -6936,8 +6936,8 @@ msgstr "使用树形视图显示回复"
 msgid "Show replies by people you follow before all other replies"
 msgstr "将来自你关注的人的回复排在最前面"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:586
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:596
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:603
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:613
 msgid "Show reply for everyone"
 msgstr "公开显示回复"
 
@@ -6959,7 +6959,7 @@ msgstr "显示警告"
 msgid "Show warning and filter from feeds"
 msgstr "显示警告并从动态源中过滤"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:816
+#: src/view/com/post-thread/PostThreadItem.tsx:836
 msgid "Shows information about when this post was created"
 msgstr "显示这则帖文的创建时间"
 
@@ -7623,9 +7623,9 @@ msgstr "更新动态源时出现问题。请检查网络连接并重试。"
 #: src/view/com/profile/ProfileMenu.tsx:145
 #: src/view/com/profile/ProfileMenu.tsx:158
 #: src/view/com/profile/ProfileMenu.tsx:170
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:379
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:392
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:402
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:396
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:409
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:419
 msgid "There was an issue! {0}"
 msgstr "出现问题了！{0}"
 
@@ -7772,7 +7772,7 @@ msgstr "此列表为空。"
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "该内容审核提供服务不可用，请查看下方获取更多详情。如果问题持续存在，请联系我们。"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:856
+#: src/view/com/post-thread/PostThreadItem.tsx:876
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "这则帖文声称发布于 <0>{0}</0>，但首次出现在 Bluesky 的时间为 <1>{1}</1>。"
 
@@ -7780,16 +7780,16 @@ msgstr "这则帖文声称发布于 <0>{0}</0>，但首次出现在 Bluesky 的�
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr "此帖文存在未知的内容类型，你的应用版本可能已过时。"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:153
+#: src/view/com/post-thread/PostThreadItem.tsx:158
 msgid "This post has been deleted."
 msgstr "这则帖文已被删除。"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:776
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:793
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:363
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr "这则帖文只对已登录用户可见。未登录的用户将无法看到。"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:758
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:775
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "这则帖文将从动态源和讨论串中隐藏。注意：此操作无法撤消。"
 
@@ -7801,7 +7801,7 @@ msgstr "这则帖文的发布者已停用引用帖文。"
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr "此个人资料只对已登录用户可见，未登录的用户将无法看到。"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:819
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:836
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr "这则回复将被折叠到你讨论串底部的隐藏部分，并且会对你自己和其他人隐藏后续回复的通知。"
 
@@ -7854,7 +7854,7 @@ msgstr "这将从你的隐藏字词中删除“{0}”。你随时可以将其重
 msgid "This will remove @{0} from the quick access list."
 msgstr "这将从你的快速访问中移除 @{0}。"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:809
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:826
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "你的帖文将从这则引用中删除，并替换为一个占位符。"
 
@@ -7931,12 +7931,12 @@ msgstr "热门"
 msgid "Topic"
 msgstr "话题"
 
-#: src/components/dms/MessageContextMenu.tsx:132
-#: src/components/dms/MessageContextMenu.tsx:134
-#: src/view/com/post-thread/PostThreadItem.tsx:778
-#: src/view/com/post-thread/PostThreadItem.tsx:781
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:451
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
+#: src/components/dms/MessageContextMenu.tsx:139
+#: src/components/dms/MessageContextMenu.tsx:141
+#: src/view/com/post-thread/PostThreadItem.tsx:798
+#: src/view/com/post-thread/PostThreadItem.tsx:801
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:468
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:470
 msgid "Translate"
 msgstr "翻译"
 
@@ -7946,7 +7946,7 @@ msgstr "热门"
 
 #: src/screens/Search/Explore.tsx:608
 msgid "Trending topics"
-msgstr ""
+msgstr "流行趋势"
 
 #: src/components/interstitials/TrendingVideos.tsx:88
 msgid "Trending Videos"
@@ -8083,8 +8083,8 @@ msgstr "取消隐藏 {tag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:288
 #: src/view/com/profile/ProfileMenu.tsx:294
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:651
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:657
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:668
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:674
 msgid "Unmute account"
 msgstr "取消隐藏账户"
 
@@ -8096,8 +8096,8 @@ msgstr "取消隐藏对话"
 msgid "Unmute list"
 msgstr "取消隐藏列表"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:536
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:540
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:553
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:557
 msgid "Unmute thread"
 msgstr "取消隐藏讨论串"
 
@@ -8123,8 +8123,8 @@ msgstr "取消固定动态源"
 msgid "Unpin from home"
 msgstr "从主页取消固定"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:426
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:433
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:443
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:450
 msgid "Unpin from profile"
 msgstr "从个人资料取消固定"
 
@@ -8186,12 +8186,12 @@ msgstr "要把 <0>{displayName}</0> 更新或删除自哪些列表？"
 msgid "Update to {domain}"
 msgstr "更新至 {domain}"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:318
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:335
 msgctxt "toast"
 msgid "Updating quote attachment failed"
 msgstr "更新引用关联状态失败"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:350
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:367
 msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr "更新回复可见性失败"
@@ -8800,11 +8800,11 @@ msgstr "确定停用"
 msgid "Yes, delete this starter pack"
 msgstr "确定删除此新手包"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:812
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:829
 msgid "Yes, detach"
 msgstr "确定分离"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:822
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:839
 msgid "Yes, hide"
 msgstr "确定隐藏"
 
@@ -8820,9 +8820,9 @@ msgstr "昨天"
 msgid "You"
 msgstr "你"
 
-#: src/components/forms/HostingProvider.tsx:64
-msgid "You are creating an account on <0>{0}</0>"
-msgstr ""
+#: src/components/forms/HostingProvider.tsx:46
+msgid "You are creating an account on"
+msgstr "你的账户将创建在"
 
 #: src/screens/SignupQueued.tsx:157
 msgid "You are in line."
@@ -8838,7 +8838,7 @@ msgstr "你还没有关注任何账户。"
 
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:45
 msgid "You can adjust your interests at any time from \"Content and media\" settings."
-msgstr ""
+msgstr "你可以随时在设置“内容与媒体”中调整你的兴趣。"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
@@ -9033,11 +9033,11 @@ msgstr "你对 {1} 作出了 {0} 反应"
 msgid "You will be signed out of all your accounts."
 msgstr "你将登出所有账户。"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:228
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:232
 msgid "You will no longer receive notifications for this thread"
 msgstr "你将不再收到这条讨论串的通知"
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:224
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:228
 msgid "You will now receive notifications for this thread"
 msgstr "你将收到这条讨论串的通知"
 
@@ -9213,7 +9213,7 @@ msgstr "你的兴趣"
 #: src/screens/Settings/SettingsInterests.tsx:124
 msgctxt "toast"
 msgid "Your interests have been updated!"
-msgstr ""
+msgstr "已更新你的兴趣！"
 
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:94
 msgid "Your interests help us find what you like!"
