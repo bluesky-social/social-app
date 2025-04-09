@@ -1443,8 +1443,8 @@ msgstr ""
 msgid "Changes app icon"
 msgstr ""
 
-#: src/components/forms/HostingProvider.tsx:47
-#: src/components/forms/HostingProvider.tsx:83
+#: src/components/forms/HostingProvider.tsx:50
+#: src/components/forms/HostingProvider.tsx:70
 msgid "Changes hosting provider"
 msgstr ""
 
@@ -8815,8 +8815,8 @@ msgstr ""
 msgid "You"
 msgstr ""
 
-#: src/components/forms/HostingProvider.tsx:64
-msgid "You are creating an account on <0>{0}</0>"
+#: src/components/forms/HostingProvider.tsx:46
+msgid "You are creating an account on"
 msgstr ""
 
 #: src/screens/SignupQueued.tsx:157
