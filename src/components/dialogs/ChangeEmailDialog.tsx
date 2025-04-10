@@ -198,7 +198,7 @@ export function Inner({
                 ) : null}
               </Button>
               <Button
-                label={_(msg`I Have a Code`)}
+                label={_(msg`I have a code`)}
                 variant="solid"
                 color="secondary"
                 size="large"
