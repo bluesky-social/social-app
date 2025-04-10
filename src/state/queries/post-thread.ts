@@ -1,23 +1,28 @@
 import {
-  AppBskyActorDefs,
-  AppBskyEmbedRecord,
+  type AppBskyActorDefs,
+  type AppBskyEmbedRecord,
   AppBskyFeedDefs,
-  AppBskyFeedGetPostThread,
+  type AppBskyFeedGetPostThread,
   AppBskyFeedPost,
   AtUri,
-  ModerationDecision,
-  ModerationOpts,
+  moderatePost,
+  type ModerationDecision,
+  type ModerationOpts,
 } from '@atproto/api'
-import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
+import {type QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+import {
+  findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData,
+  findAllProfilesInQueryData as findAllProfilesInExploreFeedPreviewsQueryData,
+} from '#/state/queries/explore-feed-previews'
 import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
-import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
+import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {
   findAllPostsInQueryData as findAllPostsInSearchQueryData,
   findAllProfilesInQueryData as findAllProfilesInSearchQueryData,
 } from '#/state/queries/search-posts'
 import {useAgent} from '#/state/session'
+import * as bsky from '#/types/bsky'
 import {
   findAllPostsInQueryData as findAllPostsInNotifsQueryData,
   findAllProfilesInQueryData as findAllProfilesInNotifsQueryData,
@@ -332,8 +337,10 @@ function responseToThreadNodes(
 ): ThreadNode {
   if (
     AppBskyFeedDefs.isThreadViewPost(node) &&
-    AppBskyFeedPost.isRecord(node.post.record) &&
-    AppBskyFeedPost.validateRecord(node.post.record).success
+    bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      node.post.record,
+      AppBskyFeedPost.isRecord,
+    )
   ) {
     const post = node.post
     // These should normally be present. They're missing only for
@@ -364,7 +371,7 @@ function responseToThreadNodes(
         depth,
         isHighlightedPost: depth === 0,
         hasMore:
-          direction === 'down' && !node.replies?.length && !!node.replyCount,
+          direction === 'down' && !node.replies?.length && !!post.replyCount,
         isSelfThread: false, // populated `annotateSelfThread`
         hasMoreSelfThread: false, // populated in `annotateSelfThread`
       },
@@ -492,12 +499,18 @@ export function* findAllPostsInQueryData(
   for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
     yield postViewToPlaceholderThread(post)
   }
+  for (let post of findAllPostsInExploreFeedPreviewsQueryData(
+    queryClient,
+    uri,
+  )) {
+    yield postViewToPlaceholderThread(post)
+  }
 }
 
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<AppBskyActorDefs.ProfileViewBasic, void> {
   const queryDatas = queryClient.getQueriesData<PostThreadQueryData>({
     queryKey: [RQKEY_ROOT],
   })
@@ -524,6 +537,12 @@ export function* findAllProfilesInQueryData(
     yield profile
   }
   for (let profile of findAllProfilesInSearchQueryData(queryClient, did)) {
+    yield profile
+  }
+  for (let profile of findAllProfilesInExploreFeedPreviewsQueryData(
+    queryClient,
+    did,
+  )) {
     yield profile
   }
 }

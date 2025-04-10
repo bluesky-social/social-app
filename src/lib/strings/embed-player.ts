@@ -568,3 +568,12 @@ export function parseTenorGif(urlp: URL):
     dimensions,
   }
 }
+
+export function isTenorGifUri(url: URL | string) {
+  try {
+    return parseTenorGif(typeof url === 'string' ? new URL(url) : url).success
+  } catch {
+    // Invalid URL
+    return false
+  }
+}

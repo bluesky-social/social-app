@@ -114,7 +114,9 @@ export function PostHider({
           <desc.icon size="sm" fill={t.atoms.text_contrast_medium.color} />
         </View>
       </Pressable>
-      <Text style={[t.atoms.text_contrast_medium, a.flex_1]} numberOfLines={1}>
+      <Text
+        style={[t.atoms.text_contrast_medium, a.flex_1, a.leading_snug]}
+        numberOfLines={1}>
         {desc.name}
       </Text>
       {!modui.noOverride && (

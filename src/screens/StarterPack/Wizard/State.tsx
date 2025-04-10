@@ -1,15 +1,12 @@
 import React from 'react'
-import {
-  AppBskyActorDefs,
-  AppBskyGraphDefs,
-  AppBskyGraphStarterpack,
-} from '@atproto/api'
+import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
-import {msg} from '@lingui/macro'
+import {msg, plural} from '@lingui/macro'
 
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
+import * as bsky from '#/types/bsky'
 
 const steps = ['Details', 'Profiles', 'Feeds'] as const
 type Step = (typeof steps)[number]
@@ -20,7 +17,7 @@ type Action =
   | {type: 'SetCanNext'; canNext: boolean}
   | {type: 'SetName'; name: string}
   | {type: 'SetDescription'; description: string}
-  | {type: 'AddProfile'; profile: AppBskyActorDefs.ProfileViewBasic}
+  | {type: 'AddProfile'; profile: bsky.profile.AnyProfileView}
   | {type: 'RemoveProfile'; profileDid: string}
   | {type: 'AddFeed'; feed: GeneratorView}
   | {type: 'RemoveFeed'; feedUri: string}
@@ -32,7 +29,7 @@ interface State {
   currentStep: Step
   name?: string
   description?: string
-  profiles: AppBskyActorDefs.ProfileViewBasic[]
+  profiles: bsky.profile.AnyProfileView[]
   feeds: GeneratorView[]
   processing: boolean
   error?: string
@@ -76,8 +73,9 @@ function reducer(state: State, action: Action): State {
     case 'AddProfile':
       if (state.profiles.length > STARTER_PACK_MAX_SIZE) {
         Toast.show(
-          msg`You may only add up to ${STARTER_PACK_MAX_SIZE} profiles`
-            .message ?? '',
+          msg`You may only add up to ${plural(STARTER_PACK_MAX_SIZE, {
+            other: `${STARTER_PACK_MAX_SIZE} profiles`,
+          })}`.message ?? '',
           'info',
         )
       } else {
@@ -113,7 +111,6 @@ function reducer(state: State, action: Action): State {
   return updatedState
 }
 
-// TODO supply the initial state to this component
 export function Provider({
   starterPack,
   listItems,
@@ -126,7 +123,10 @@ export function Provider({
   const {currentAccount} = useSession()
 
   const createInitialState = (): State => {
-    if (starterPack && AppBskyGraphStarterpack.isRecord(starterPack.record)) {
+    if (
+      starterPack &&
+      bsky.validate(starterPack.record, AppBskyGraphStarterpack.validateRecord)
+    ) {
       return {
         canNext: true,
         currentStep: 'Details',

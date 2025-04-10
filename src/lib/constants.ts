@@ -1,5 +1,5 @@
-import {Insets, Platform} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
+import {type Insets, Platform} from 'react-native'
+import {type AppBskyActorDefs} from '@atproto/api'
 
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
@@ -22,6 +22,16 @@ export const STARTER_PACK_MAX_SIZE = 150
 // server route done.
 // -prf
 export const JOINED_THIS_WEEK = 560000 // estimate as of 12/18/24
+
+export const DISCOVER_DEBUG_DIDS: Record<string, true> = {
+  'did:plc:oisofpd7lj26yvgiivf3lxsi': true, // hailey.at
+  'did:plc:p2cp5gopk7mgjegy6wadk3ep': true, // samuel.bsky.team
+  'did:plc:ragtjsm2j2vknwkz3zp4oxrd': true, // pfrazee.com
+  'did:plc:vpkhqolt662uhesyj6nxm7ys': true, // why.bsky.team
+  'did:plc:3jpt2mvvsumj2r7eqk4gzzjz': true, // esb.lol
+  'did:plc:vjug55kidv6sye7ykr5faxxn': true, // emilyliu.me
+  'did:plc:tgqseeot47ymot4zro244fj3': true, // iwsmith.bsky.social
+}
 
 const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
 export function FEEDBACK_FORM_URL({
@@ -168,6 +178,9 @@ export const MAX_LABELERS = 20
 export const VIDEO_SERVICE = 'https://video.bsky.app'
 export const VIDEO_SERVICE_DID = 'did:web:video.bsky.app'
 
+export const VIDEO_MAX_DURATION_MS = 3 * 60 * 1000 // 3 minutes in milliseconds
+export const VIDEO_MAX_SIZE = 1000 * 1000 * 100 // 100mb
+
 export const SUPPORTED_MIME_TYPES = [
   'video/mp4',
   'video/mpeg',
@@ -177,3 +190,5 @@ export const SUPPORTED_MIME_TYPES = [
 ] as const
 
 export type SupportedMimeTypes = (typeof SUPPORTED_MIME_TYPES)[number]
+
+export const EMOJI_REACTION_LIMIT = 5

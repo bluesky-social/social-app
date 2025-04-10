@@ -4,6 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
+import {getDateAgo} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {
@@ -101,7 +102,7 @@ function BirthdayInner({
           onChangeDate={newDate => setDate(new Date(newDate))}
           label={_(msg`Birthday`)}
           accessibilityHint={_(msg`Enter your birth date`)}
-          maximumDate={new Date()}
+          maximumDate={getDateAgo(13)}
         />
       </View>
 

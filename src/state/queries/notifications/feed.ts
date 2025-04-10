@@ -22,6 +22,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
+  moderatePost,
 } from '@atproto/api'
 import {
   InfiniteData,
@@ -31,7 +32,6 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {useAgent} from '#/state/session'
 import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
 import {useModerationOpts} from '../../preferences/moderation-opts'
@@ -295,9 +295,11 @@ export function* findAllPostsInQueryData(
           }
         }
 
-        const quotedPost = getEmbeddedPost(item.subject?.embed)
-        if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
-          yield embedViewRecordToPostView(quotedPost!)
+        if (AppBskyFeedDefs.isPostView(item.subject)) {
+          const quotedPost = getEmbeddedPost(item.subject?.embed)
+          if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
+            yield embedViewRecordToPostView(quotedPost!)
+          }
         }
       }
     }
@@ -307,7 +309,7 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<AppBskyActorDefs.ProfileViewBasic, void> {
   const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
     queryKey: [RQKEY_ROOT],
   })
@@ -323,9 +325,11 @@ export function* findAllProfilesInQueryData(
         ) {
           yield item.subject.author
         }
-        const quotedPost = getEmbeddedPost(item.subject?.embed)
-        if (quotedPost?.author.did === did) {
-          yield quotedPost.author
+        if (AppBskyFeedDefs.isPostView(item.subject)) {
+          const quotedPost = getEmbeddedPost(item.subject?.embed)
+          if (quotedPost?.author.did === did) {
+            yield quotedPost.author
+          }
         }
       }
     }

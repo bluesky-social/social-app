@@ -14,7 +14,6 @@ export const styles = StyleSheet.create({
     paddingRight: 10,
   },
   bottomBarWeb: {
-    // @ts-ignore web-only
     position: 'fixed',
   },
   ctrl: {
@@ -46,7 +45,7 @@ export const styles = StyleSheet.create({
   },
   hasNewBadge: {
     position: 'absolute',
-    left: '52%',
+    left: '54%',
     marginLeft: 4,
     top: 10,
     width: 8,

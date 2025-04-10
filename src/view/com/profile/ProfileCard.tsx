@@ -24,6 +24,7 @@ import {
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
 import * as Pills from '#/components/Pills'
+import * as bsky from '#/types/bsky'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
@@ -41,12 +42,12 @@ export function ProfileCard({
   showKnownFollowers,
 }: {
   testID?: string
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: bsky.profile.AnyProfileView
   noModFilter?: boolean
   noBg?: boolean
   noBorder?: boolean
   renderButton?: (
-    profile: Shadow<AppBskyActorDefs.ProfileViewBasic>,
+    profile: Shadow<bsky.profile.AnyProfileView>,
   ) => React.ReactNode
   onPress?: () => void
   style?: StyleProp<ViewStyle>
@@ -76,6 +77,7 @@ export function ProfileCard({
     showKnownFollowers &&
     shouldShowKnownFollowers(profile.viewer?.knownFollowers) &&
     moderationOpts
+  const hasDescription = 'description' in profile
 
   return (
     <Link
@@ -126,9 +128,9 @@ export function ProfileCard({
           <View style={styles.layoutButton}>{renderButton(profile)}</View>
         ) : undefined}
       </View>
-      {profile.description || knownFollowersVisible ? (
+      {hasDescription || knownFollowersVisible ? (
         <View style={styles.details}>
-          {profile.description ? (
+          {hasDescription && profile.description ? (
             <Text emoji style={pal.text} numberOfLines={4}>
               {profile.description as string}
             </Text>
@@ -139,7 +141,7 @@ export function ProfileCard({
                 a.flex_row,
                 a.align_center,
                 a.gap_sm,
-                !!profile.description && a.mt_md,
+                !!hasDescription && a.mt_md,
               ]}>
               <KnownFollowers
                 minimal

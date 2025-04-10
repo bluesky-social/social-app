@@ -14,6 +14,7 @@ export const Context = React.createContext<DialogContextProps>({
   nativeSnapPoint: BottomSheetSnapPoint.Hidden,
   disableDrag: false,
   setDisableDrag: () => {},
+  isWithinDialog: false,
 })
 
 export function useDialogContext() {

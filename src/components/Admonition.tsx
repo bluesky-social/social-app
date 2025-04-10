@@ -2,6 +2,7 @@ import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Button as BaseButton, ButtonProps} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
 import {Eye_Stroke2_Corner0_Rounded as InfoIcon} from '#/components/icons/Eye'
 import {Leaf_Stroke2_Corner0_Rounded as TipIcon} from '#/components/icons/Leaf'
@@ -49,22 +50,29 @@ export function Text({
   return (
     <BaseText
       {...rest}
-      style={[
-        a.flex_1,
-        a.text_sm,
-        a.leading_snug,
-        {
-          paddingTop: 1,
-        },
-        style,
-      ]}>
+      style={[a.flex_1, a.text_sm, a.leading_snug, a.pr_md, style]}>
       {children}
     </BaseText>
   )
 }
 
+export function Button({
+  children,
+  ...props
+}: Omit<ButtonProps, 'size' | 'variant' | 'color'>) {
+  return (
+    <BaseButton size="tiny" variant="outline" color="secondary" {...props}>
+      {children}
+    </BaseButton>
+  )
+}
+
 export function Row({children}: {children: React.ReactNode}) {
-  return <View style={[a.flex_row, a.gap_sm]}>{children}</View>
+  return (
+    <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
+      {children}
+    </View>
+  )
 }
 
 export function Outer({

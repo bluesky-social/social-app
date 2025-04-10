@@ -70,7 +70,7 @@ export function usePostQuotesQuery(resolvedUri: string | undefined) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<AppBskyActorDefs.ProfileViewBasic, void> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyFeedGetQuotes.OutputSchema>
   >({

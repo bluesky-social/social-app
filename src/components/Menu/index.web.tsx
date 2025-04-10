@@ -26,6 +26,8 @@ import {
 import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
+export {useMenuContext}
+
 export function useMenuControl(): Dialog.DialogControlProps {
   const id = React.useId()
   const [isOpen, setIsOpen] = React.useState(false)
@@ -50,7 +52,7 @@ export function Root({
   children,
   control,
 }: React.PropsWithChildren<{
-  control?: Dialog.DialogOuterProps['control']
+  control?: Dialog.DialogControlProps
 }>) {
   const {_} = useLingui()
   const defaultControl = useMenuControl()
@@ -187,7 +189,7 @@ export function Outer({
         collisionPadding={{left: 5, right: 5, bottom: 5}}
         loop
         aria-label="Test"
-        className="dropdown-menu-transform-origin">
+        className="dropdown-menu-transform-origin dropdown-menu-constrain-size">
         <View
           style={[
             a.rounded_sm,

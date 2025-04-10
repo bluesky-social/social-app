@@ -45,6 +45,7 @@ export const router = new Router({
   AccountSettings: '/settings/account',
   PrivacyAndSecuritySettings: '/settings/privacy-and-security',
   ContentAndMediaSettings: '/settings/content-and-media',
+  SettingsInterests: '/settings/interests',
   AboutSettings: '/settings/about',
   AppIconSettings: '/settings/app-icon',
   // support
@@ -59,6 +60,7 @@ export const router = new Router({
   // DMs
   Messages: '/messages',
   MessagesSettings: '/messages/settings',
+  MessagesInbox: '/messages/inbox',
   MessagesConversation: '/messages/:conversation',
   // starter packs
   Start: '/start/:name/:rkey',

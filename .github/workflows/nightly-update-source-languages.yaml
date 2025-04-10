@@ -36,3 +36,14 @@ jobs:
         with:
           commit_message: Nightly source-language update
           file_pattern: ./src/locale/locales/en/messages.po
+      - name: Push source lang to Crowdin
+        uses: crowdin/github-action@v2
+        with:
+          upload_sources: true
+          upload_sources_args: "-b main"
+          upload_translations: false
+          push_translations: false
+          push_sources: false
+          create_pull_request: false
+        env:
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}

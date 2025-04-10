@@ -101,7 +101,7 @@ export function useListMembershipAddMutation() {
   >({
     mutationFn: async ({listUri, actorDid}) => {
       if (!currentAccount) {
-        throw new Error('Not logged in')
+        throw new Error('Not signed in')
       }
       const res = await agent.app.bsky.graph.listitem.create(
         {repo: currentAccount.did},
@@ -160,7 +160,7 @@ export function useListMembershipRemoveMutation() {
   >({
     mutationFn: async ({membershipUri}) => {
       if (!currentAccount) {
-        throw new Error('Not logged in')
+        throw new Error('Not signed in')
       }
       const membershipUrip = new AtUri(membershipUri)
       await agent.app.bsky.graph.listitem.delete({

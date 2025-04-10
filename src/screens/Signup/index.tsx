@@ -1,5 +1,5 @@
-import React from 'react'
-import {View} from 'react-native'
+import {useEffect, useReducer, useState} from 'react'
+import {AppState, type AppStateStatus, View} from 'react-native'
 import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import {AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -26,11 +26,12 @@ import {Divider} from '#/components/Divider'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 export function Signup({onPressBack}: {onPressBack: () => void}) {
   const {_} = useLingui()
   const t = useTheme()
-  const [state, dispatch] = React.useReducer(reducer, initialState)
+  const [state, dispatch] = useReducer(reducer, initialState)
   const {gtMobile} = useBreakpoints()
   const submit = useSubmitSignup()
 
@@ -43,7 +44,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     uri: activeStarterPack?.uri,
   })
 
-  const [isFetchedAtMount] = React.useState(starterPack != null)
+  const [isFetchedAtMount] = useState(starterPack != null)
   const showStarterPackCard =
     activeStarterPack?.uri && !isFetchingStarterPack && starterPack
 
@@ -54,7 +55,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     refetch,
   } = useServiceQuery(state.serviceUrl)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isFetching) {
       dispatch({type: 'setIsLoading', value: true})
     } else if (!isFetching) {
@@ -62,7 +63,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     }
   }, [isFetching])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isError) {
       dispatch({type: 'setServiceDescription', value: undefined})
       dispatch({
@@ -77,7 +78,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     }
   }, [_, serviceInfo, isError])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (state.pendingSubmit) {
       if (!state.pendingSubmit.mutableProcessed) {
         state.pendingSubmit.mutableProcessed = true
@@ -85,6 +86,20 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
       }
     }
   }, [state, dispatch, submit])
+
+  // Track app backgrounding during signup
+  useEffect(() => {
+    const subscription = AppState.addEventListener(
+      'change',
+      (nextAppState: AppStateStatus) => {
+        if (nextAppState === 'background') {
+          dispatch({type: 'incrementBackgroundCount'})
+        }
+      },
+    )
+
+    return () => subscription.remove()
+  }, [])
 
   return (
     <SignupContext.Provider value={{state, dispatch}}>
@@ -95,7 +110,10 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
         scrollable>
         <View testID="createAccount" style={a.flex_1}>
           {showStarterPackCard &&
-          AppBskyGraphStarterpack.isRecord(starterPack.record) ? (
+          bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+            starterPack.record,
+            AppBskyGraphStarterpack.isRecord,
+          ) ? (
             <Animated.View entering={!isFetchedAtMount ? FadeIn : undefined}>
               <LinearGradientBackground
                 style={[a.mx_lg, a.p_lg, a.gap_sm, a.rounded_sm]}>

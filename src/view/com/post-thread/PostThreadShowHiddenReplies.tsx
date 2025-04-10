@@ -51,7 +51,7 @@ export function PostThreadShowHiddenReplies({
             <EyeSlash size="sm" fill={t.atoms.text_contrast_medium.color} />
           </View>
           <Text
-            style={[t.atoms.text_contrast_medium, a.flex_1]}
+            style={[t.atoms.text_contrast_medium, a.flex_1, a.leading_snug]}
             numberOfLines={1}>
             {label}
           </Text>

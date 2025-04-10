@@ -41,6 +41,7 @@ export function Outer({
   children,
   control,
   onClose,
+  webOptions,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
@@ -96,6 +97,7 @@ export function Outer({
       nativeSnapPoint: 0,
       disableDrag: false,
       setDisableDrag: () => {},
+      isWithinDialog: true,
     }),
     [close],
   )
@@ -115,20 +117,26 @@ export function Outer({
                   web(a.fixed),
                   a.inset_0,
                   a.z_10,
+                  a.px_xl,
+                  webOptions?.alignCenter ? a.justify_center : undefined,
                   a.align_center,
-                  gtMobile ? a.p_lg : a.p_md,
-                  {overflowY: 'auto'},
+                  {
+                    overflowY: 'auto',
+                    paddingVertical: gtMobile ? '10vh' : a.pt_xl.paddingTop,
+                  },
                 ]}>
                 <Backdrop />
+                {/**
+                 * This is needed to prevent centered dialogs from overflowing
+                 * above the screen, and provides a "natural" centering so that
+                 * stacked dialogs appear relatively aligned.
+                 */}
                 <View
                   style={[
                     a.w_full,
                     a.z_20,
-                    a.justify_center,
                     a.align_center,
-                    {
-                      minHeight: web('calc(90vh - 36px)') || undefined,
-                    },
+                    web({minHeight: '60vh', position: 'static'}),
                   ]}>
                   {children}
                 </View>
@@ -217,8 +225,8 @@ export const InnerFlatList = React.forwardRef<
       style={[
         a.overflow_hidden,
         a.px_0,
-        // @ts-expect-error web only -sfn
-        {maxHeight: 'calc(-36px + 100vh)'},
+        // 100 minus 10vh of paddingVertical
+        web({maxHeight: '80vh'}),
         webInnerStyle,
       ]}
       contentContainerStyle={[a.px_0, webInnerContentContainerStyle]}>

@@ -82,10 +82,10 @@ export function Takendown() {
         variant="solid"
         size="large"
         color="secondary_inverted"
-        label={_(msg`Log out`)}
+        label={_(msg`Sign out`)}
         onPress={() => logoutCurrentAccount('Takendown')}>
         <ButtonText>
-          <Trans>Log Out</Trans>
+          <Trans>Sign Out</Trans>
         </ButtonText>
       </Button>
     )

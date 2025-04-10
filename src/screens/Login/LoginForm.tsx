@@ -215,7 +215,7 @@ export const LoginForm = ({
               blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
               editable={!isProcessing}
               accessibilityHint={_(
-                msg`Input the username or email address you used at signup`,
+                msg`Enter the username or email address you used when you created your account`,
               )}
             />
           </TextField.Root>
@@ -298,7 +298,9 @@ export const LoginForm = ({
             />
           </TextField.Root>
           <Text style={[a.text_sm, t.atoms.text_contrast_medium, a.mt_sm]}>
-            <Trans>Check your email for a login code and enter it here.</Trans>
+            <Trans>
+              Check your email for a sign in code and enter it here.
+            </Trans>
           </Text>
         </View>
       )}
@@ -319,7 +321,7 @@ export const LoginForm = ({
           <Button
             testID="loginRetryButton"
             label={_(msg`Retry`)}
-            accessibilityHint={_(msg`Retries login`)}
+            accessibilityHint={_(msg`Retries signing in`)}
             variant="solid"
             color="secondary"
             size="large"

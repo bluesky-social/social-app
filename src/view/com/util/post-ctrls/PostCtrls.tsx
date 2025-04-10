@@ -18,7 +18,7 @@ import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {IS_INTERNAL} from '#/lib/app-info'
-import {POST_CTRL_HITSLOP} from '#/lib/constants'
+import {DISCOVER_DEBUG_DIDS, POST_CTRL_HITSLOP} from '#/lib/constants'
 import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
 import {useHaptics} from '#/lib/haptics'
@@ -26,7 +26,6 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
 import {useGate} from '#/lib/statsig/statsig'
 import {toShareUrl} from '#/lib/strings/url-helpers'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {
@@ -88,21 +87,16 @@ let PostCtrls = ({
   const {captureAction} = useProgressGuideControls()
   const playHaptic = useHaptics()
   const gate = useGate()
-  const isDiscoverDebugUser = IS_INTERNAL || gate('debug_show_feedcontext')
+  const isDiscoverDebugUser =
+    IS_INTERNAL ||
+    DISCOVER_DEBUG_DIDS[currentAccount?.did || ''] ||
+    gate('debug_show_feedcontext')
   const isBlocked = Boolean(
     post.author.viewer?.blocking ||
       post.author.viewer?.blockedBy ||
       post.author.viewer?.blockingByList,
   )
-
-  const shadowedAuthor = useProfileShadow(post.author)
-  const followersCanReply = !!threadgateRecord?.allow?.find(
-    rule => rule.$type === 'app.bsky.feed.threadgate#followerRule',
-  )
-  const canOverrideReplyDisabled =
-    followersCanReply &&
-    shadowedAuthor.viewer?.following?.startsWith('at://did')
-  const replyDisabled = post.viewer?.replyDisabled && !canOverrideReplyDisabled
+  const replyDisabled = post.viewer?.replyDisabled
 
   const shouldShowLoggedOutWarning = React.useMemo(() => {
     return (
@@ -366,7 +360,7 @@ let PostCtrls = ({
             control={loggedOutWarningPromptControl}
             title={_(msg`Note about sharing`)}
             description={_(
-              msg`This post is only visible to logged-in users. It won't be visible to people who aren't logged in.`,
+              msg`This post is only visible to logged-in users. It won't be visible to people who aren't signed in.`,
             )}
             onConfirm={onShare}
             confirmButtonCta={_(msg`Share anyway`)}

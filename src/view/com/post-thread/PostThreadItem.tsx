@@ -1,16 +1,16 @@
 import React, {memo, useMemo} from 'react'
 import {
-  GestureResponderEvent,
+  type GestureResponderEvent,
   StyleSheet,
   Text as RNText,
   View,
 } from 'react-native'
 import {
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
-  AppBskyFeedThreadgate,
+  type AppBskyFeedThreadgate,
   AtUri,
-  ModerationDecision,
+  type ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
@@ -26,9 +26,14 @@ import {countLines} from '#/lib/strings/helpers'
 import {niceDate} from '#/lib/strings/time'
 import {s} from '#/lib/styles'
 import {getTranslatorLink, isPostInLanguage} from '#/locale/helpers'
-import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {logger} from '#/logger'
+import {
+  POST_TOMBSTONE,
+  type Shadow,
+  usePostShadow,
+} from '#/state/cache/post-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
-import {ThreadPost} from '#/state/queries/post-thread'
+import {type ThreadPost} from '#/state/queries/post-thread'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
@@ -52,12 +57,13 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {PostHider} from '#/components/moderation/PostHider'
-import {AppModerationCause} from '#/components/Pills'
+import {type AppModerationCause} from '#/components/Pills'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text} from '#/components/Typography'
 import {WhoCanReply} from '#/components/WhoCanReply'
+import * as bsky from '#/types/bsky'
 
 export function PostThreadItem({
   post,
@@ -374,6 +380,7 @@ let PostThreadItemLoaded = ({
                   value={richText}
                   style={[a.flex_1, a.text_xl]}
                   authorHandle={post.author.handle}
+                  shouldProxyLinks={true}
                 />
               ) : undefined}
               {post.embed && (
@@ -589,6 +596,7 @@ let PostThreadItemLoaded = ({
                     style={[a.flex_1, a.text_md]}
                     numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                     authorHandle={post.author.handle}
+                    shouldProxyLinks={true}
                   />
                 </View>
               ) : undefined}
@@ -744,14 +752,29 @@ function ExpandedPostDetails({
   const {_, i18n} = useLingui()
   const openLink = useOpenLink()
   const isRootPost = !('reply' in post.record)
+  const langPrefs = useLanguagePrefs()
 
   const onTranslatePress = React.useCallback(
     (e: GestureResponderEvent) => {
       e.preventDefault()
       openLink(translatorUrl, true)
+
+      if (
+        bsky.dangerousIsType<AppBskyFeedPost.Record>(
+          post.record,
+          AppBskyFeedPost.isRecord,
+        )
+      ) {
+        logger.metric('translate', {
+          sourceLanguages: post.record.langs ?? [],
+          targetLanguage: langPrefs.primaryLanguage,
+          textLength: post.record.text.length,
+        })
+      }
+
       return false
     },
-    [openLink, translatorUrl],
+    [openLink, translatorUrl, langPrefs, post],
   )
 
   return (
@@ -790,7 +813,10 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
   const control = Prompt.usePromptControl()
 
   const indexedAt = new Date(post.indexedAt)
-  const createdAt = AppBskyFeedPost.isRecord(post.record)
+  const createdAt = bsky.dangerousIsType<AppBskyFeedPost.Record>(
+    post.record,
+    AppBskyFeedPost.isRecord,
+  )
     ? new Date(post.record.createdAt)
     : new Date(post.indexedAt)
 
