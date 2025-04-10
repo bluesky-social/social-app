@@ -56,7 +56,7 @@ export function Inner({
     StepTwo: {
       title: _(msg`Security Step Required`),
       message: _(
-        msg` An email has been sent to your previous address, ${currentEmail}. It includes a confirmation code which you can enter below.`,
+        msg`An email has been sent to your previous address, ${currentEmail}. It includes a confirmation code which you can enter below.`,
       ),
     },
     StepThree: {
