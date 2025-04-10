@@ -64,7 +64,7 @@ export function Email2FAToggle() {
         changeEmailControl={changeEmailDialogControl}
         onCloseAfterVerifying={enableDialogControl.open}
         reasonText={_(
-          msg`You'll need to verify your email address before enabling email 2FA.`,
+          msg`You need to verify your email address before you can enable email 2FA.`,
         )}
       />
       <ChangeEmailDialog
