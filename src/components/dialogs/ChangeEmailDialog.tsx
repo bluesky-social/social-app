@@ -62,7 +62,7 @@ export function Inner({
     StepThree: {
       title: _(msg`Email Updated!`),
       message: _(
-        msg`Your email has been updated but not verified. As a next step, please verify your new email.`,
+        msg`Your email address has been updated but it is not yet verified. As a next step, please verify your new email.`,
       ),
     },
   }
