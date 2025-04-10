@@ -243,7 +243,7 @@ export function Inner({
           ) : currentStep === 'StepThree' ? (
             <>
               <Button
-                label={_(msg`Verify Email`)}
+                label={_(msg`Verify email`)}
                 variant="solid"
                 color="primary"
                 size="large"
