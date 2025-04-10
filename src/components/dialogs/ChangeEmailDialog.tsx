@@ -236,7 +236,7 @@ export function Inner({
                   setCurrentStep('StepOne')
                 }}>
                 <ButtonText>
-                  <Trans>Resend Email</Trans>
+                  <Trans>Resend email</Trans>
                 </ButtonText>
               </Button>
             </>
