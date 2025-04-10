@@ -25,6 +25,7 @@ export interface TabBarProps {
   onPressSelected?: (index: number) => void
   dragProgress: SharedValue<number>
   dragState: SharedValue<'idle' | 'dragging' | 'settling'>
+  glassEffect?: boolean
 }
 
 const ITEM_PADDING = 10
