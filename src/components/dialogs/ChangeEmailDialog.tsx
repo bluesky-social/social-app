@@ -226,7 +226,7 @@ export function Inner({
                 ) : null}
               </Button>
               <Button
-                label={_(msg`Resend Email`)}
+                label={_(msg`Resend email`)}
                 variant="solid"
                 color="secondary"
                 size="large"
