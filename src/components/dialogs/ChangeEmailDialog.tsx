@@ -169,7 +169,7 @@ export function Inner({
         {currentStep === 'StepTwo' ? (
           <View>
             <TextField.LabelText>
-              <Trans>Confirmation Code</Trans>
+              <Trans>Confirmation code</Trans>
             </TextField.LabelText>
             <TextField.Root>
               <TextField.Input
