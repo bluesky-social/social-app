@@ -249,7 +249,7 @@ export function Inner({
                 size="large"
                 onPress={onVerify}>
                 <ButtonText>
-                  <Trans>Verify Email</Trans>
+                  <Trans>Verify email</Trans>
                 </ButtonText>
               </Button>
               <Button
