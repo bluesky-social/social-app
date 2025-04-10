@@ -1,16 +1,28 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
+import {
+  type AppBskyActorDefs,
+  moderateProfile,
+  type ModerationDecision,
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {
+  type RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useEmail} from '#/lib/hooks/useEmail'
 import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
-import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {isWeb} from '#/platform/detection'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {type Shadow, useMaybeProfileShadow} from '#/state/cache/profile-shadow'
 import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
@@ -72,9 +84,15 @@ function Inner() {
   const {_} = useLingui()
 
   const moderationOpts = useModerationOpts()
-  const {data: recipient} = useProfileQuery({
+  const {data: recipientUnshadowed} = useProfileQuery({
     did: convoState.recipients?.[0].did,
   })
+  const recipient = useMaybeProfileShadow(recipientUnshadowed)
+
+  const moderation = React.useMemo(() => {
+    if (!recipient || !moderationOpts) return null
+    return moderateProfile(recipient, moderationOpts)
+  }, [recipient, moderationOpts])
 
   // Because we want to give the list a chance to asynchronously scroll to the end before it is visible to the user,
   // we use `hasScrolled` to determine when to render. With that said however, there is a chance that the chat will be
@@ -96,25 +114,36 @@ function Inner() {
 
   if (convoState.status === ConvoStatus.Error) {
     return (
-      <Layout.Center style={[a.flex_1]}>
-        <MessagesListHeader />
+      <>
+        <Layout.Center style={[a.flex_1]}>
+          {moderation ? (
+            <MessagesListHeader moderation={moderation} profile={recipient} />
+          ) : (
+            <MessagesListHeader />
+          )}
+        </Layout.Center>
         <Error
           title={_(msg`Something went wrong`)}
           message={_(msg`We couldn't load this conversation`)}
           onRetry={() => convoState.error.retry()}
           sideBorders={false}
         />
-      </Layout.Center>
+      </>
     )
   }
 
   return (
     <Layout.Center style={[a.flex_1]}>
-      {!readyToShow && <MessagesListHeader />}
+      {!readyToShow &&
+        (moderation ? (
+          <MessagesListHeader moderation={moderation} profile={recipient} />
+        ) : (
+          <MessagesListHeader />
+        ))}
       <View style={[a.flex_1]}>
-        {moderationOpts && recipient ? (
+        {moderation && recipient ? (
           <InnerReady
-            moderationOpts={moderationOpts}
+            moderation={moderation}
             recipient={recipient}
             hasScrolled={hasScrolled}
             setHasScrolled={setHasScrolled}
@@ -144,37 +173,23 @@ function Inner() {
 }
 
 function InnerReady({
-  moderationOpts,
-  recipient: recipientUnshadowed,
+  moderation,
+  recipient,
   hasScrolled,
   setHasScrolled,
 }: {
-  moderationOpts: ModerationOpts
-  recipient: AppBskyActorDefs.ProfileViewBasic
+  moderation: ModerationDecision
+  recipient: Shadow<AppBskyActorDefs.ProfileViewDetailed>
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
 }) {
   const {_} = useLingui()
   const convoState = useConvo()
   const navigation = useNavigation<NavigationProp>()
-  const recipient = useProfileShadow(recipientUnshadowed)
+  const {params} =
+    useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>()
   const verifyEmailControl = useDialogControl()
   const {needsEmailVerification} = useEmail()
-
-  const moderation = React.useMemo(() => {
-    return moderateProfile(recipient, moderationOpts)
-  }, [recipient, moderationOpts])
-
-  const blockInfo = React.useMemo(() => {
-    const modui = moderation.ui('profileView')
-    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
-    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
-    const userBlock = blocks.find(alert => alert.source.type === 'user')
-    return {
-      listBlocks,
-      userBlock,
-    }
-  }, [moderation])
 
   React.useEffect(() => {
     if (needsEmailVerification) {
@@ -184,22 +199,19 @@ function InnerReady({
 
   return (
     <>
-      <MessagesListHeader
-        profile={recipient}
-        moderation={moderation}
-        blockInfo={blockInfo}
-      />
+      <MessagesListHeader profile={recipient} moderation={moderation} />
       {isConvoActive(convoState) && (
         <MessagesList
           hasScrolled={hasScrolled}
           setHasScrolled={setHasScrolled}
           blocked={moderation?.blocked}
+          hasAcceptOverride={!!params.accept}
           footer={
             <MessagesListBlockedFooter
               recipient={recipient}
               convoId={convoState.convo.id}
               hasMessages={convoState.items.length > 0}
-              blockInfo={blockInfo}
+              moderation={moderation}
             />
           }
         />

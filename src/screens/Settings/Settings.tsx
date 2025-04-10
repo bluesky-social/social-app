@@ -28,7 +28,7 @@ import {ProfileHeaderDisplayName} from '#/screens/Profile/Header/DisplayName'
 import {ProfileHeaderHandle} from '#/screens/Profile/Header/Handle'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, tokens, useTheme} from '#/alf'
-import {AvatarStack} from '#/components/AvatarStack'
+import {AvatarStackWithFetch} from '#/components/AvatarStack'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
@@ -101,7 +101,7 @@ export function SettingsScreen({}: Props) {
               <SettingsList.PressableItem
                 label={_(msg`Switch account`)}
                 accessibilityHint={_(
-                  msg`Show other accounts you can switch to`,
+                  msg`Shows other accounts you can switch to`,
                 )}
                 onPress={() => {
                   if (!reducedMotion) {
@@ -118,7 +118,7 @@ export function SettingsScreen({}: Props) {
                 {showAccounts ? (
                   <SettingsList.ItemIcon icon={ChevronUpIcon} size="md" />
                 ) : (
-                  <AvatarStack
+                  <AvatarStackWithFetch
                     profiles={accounts
                       .map(acc => acc.did)
                       .filter(did => did !== currentAccount?.did)
@@ -205,7 +205,7 @@ export function SettingsScreen({}: Props) {
           <SettingsList.PressableItem
             onPress={() => Linking.openURL(HELP_DESK_URL)}
             label={_(msg`Help`)}
-            accessibilityHint={_(msg`Open helpdesk in browser`)}>
+            accessibilityHint={_(msg`Opens helpdesk in browser`)}>
             <SettingsList.ItemIcon icon={CircleQuestionIcon} />
             <SettingsList.ItemText>
               <Trans>Help</Trans>
@@ -284,6 +284,7 @@ function ProfilePreview({
         size={80}
         avatar={shadow.avatar}
         moderation={moderation.ui('avatar')}
+        type={shadow.associated?.labeler ? 'labeler' : 'user'}
       />
       <ProfileHeaderDisplayName profile={shadow} moderation={moderation} />
       <ProfileHeaderHandle profile={shadow} />
@@ -414,12 +415,13 @@ function AccountRow({
             size={28}
             avatar={profile.avatar}
             moderation={moderateProfile(profile, moderationOpts).ui('avatar')}
+            type={profile.associated?.labeler ? 'labeler' : 'user'}
           />
         ) : (
           <View style={[{width: 28}]} />
         )}
         <SettingsList.ItemText>
-          <Trans>{sanitizeHandle(account.handle, '@')}</Trans>
+          {sanitizeHandle(account.handle, '@')}
         </SettingsList.ItemText>
         {pendingDid === account.did && <SettingsList.ItemIcon icon={Loader} />}
       </SettingsList.PressableItem>

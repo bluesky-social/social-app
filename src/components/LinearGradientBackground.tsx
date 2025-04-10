@@ -6,12 +6,18 @@ import {gradients} from '#/alf/tokens'
 
 export function LinearGradientBackground({
   style,
+  gradient = 'sky',
   children,
+  start,
+  end,
 }: {
-  style: StyleProp<ViewStyle>
-  children: React.ReactNode
+  style?: StyleProp<ViewStyle>
+  gradient?: keyof typeof gradients
+  children?: React.ReactNode
+  start?: [number, number]
+  end?: [number, number]
 }) {
-  const gradient = gradients.sky.values.map(([_, color]) => {
+  const colors = gradients[gradient].values.map(([_, color]) => {
     return color
   }) as [string, string, ...string[]]
 
@@ -20,7 +26,7 @@ export function LinearGradientBackground({
   }
 
   return (
-    <LinearGradient colors={gradient} style={style}>
+    <LinearGradient colors={colors} style={style} start={start} end={end}>
       {children}
     </LinearGradient>
   )

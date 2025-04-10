@@ -1,6 +1,6 @@
 // Learn more https://docs.expo.io/guides/customizing-metro
-const {getDefaultConfig} = require('expo/metro-config')
-const cfg = getDefaultConfig(__dirname)
+const {getSentryExpoConfig} = require('@sentry/react-native/metro')
+const cfg = getSentryExpoConfig(__dirname)
 
 cfg.resolver.sourceExts = process.env.RN_SRC_EXT
   ? process.env.RN_SRC_EXT.split(',').concat(cfg.resolver.sourceExts)
@@ -13,6 +13,8 @@ if (cfg.resolver.resolveRequest) {
 if (process.env.BSKY_PROFILE) {
   cfg.cacheVersion += ':PROFILE'
 }
+
+cfg.resolver.assetExts = [...cfg.resolver.assetExts, 'woff2']
 
 cfg.resolver.resolveRequest = (context, moduleName, platform) => {
   // HACK: manually resolve a few packages that use `exports` in `package.json`.

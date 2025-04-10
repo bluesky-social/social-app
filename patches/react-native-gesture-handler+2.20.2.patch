@@ -1,0 +1,36 @@
+diff --git a/node_modules/react-native-gesture-handler/apple/RNGestureHandler.mm b/node_modules/react-native-gesture-handler/apple/RNGestureHandler.mm
+index 43d11b4..5bf0d32 100644
+--- a/node_modules/react-native-gesture-handler/apple/RNGestureHandler.mm
++++ b/node_modules/react-native-gesture-handler/apple/RNGestureHandler.mm
+@@ -461,16 +461,23 @@ - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+ - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+     shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+ {
+-  if ([_handlersToWaitFor count]) {
+-    RNGestureHandler *handler = [RNGestureHandler findGestureHandlerByRecognizer:otherGestureRecognizer];
+-    if (handler != nil) {
+-      for (NSNumber *handlerTag in _handlersToWaitFor) {
+-        if ([handler.tag isEqual:handlerTag]) {
+-          return YES;
+-        }
+-      }
++  RNGestureHandler *handler = [RNGestureHandler findGestureHandlerByRecognizer:otherGestureRecognizer];
++  if (handler == nil) {
++    return NO;
++  }
++
++  for (NSNumber *handlerTag in _handlersToWaitFor) {
++    if ([handler.tag isEqual:handlerTag]) {
++      return YES;
+     }
+   }
++
++  for (NSNumber *handlerTag in handler->_handlersThatShouldWait) {
++    if ([_tag isEqual:handlerTag]) {
++      return YES;
++    }
++  }
++
+   return NO;
+ }
+ 

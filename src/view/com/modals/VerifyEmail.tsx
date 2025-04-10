@@ -82,7 +82,7 @@ export function Component({
         token: confirmationCode.trim(),
       })
       await agent.resumeSession(agent.session!)
-      Toast.show(_(msg`Email verified`))
+      Toast.show(_(msg({message: 'Email verified', context: 'toast'})))
       closeModal()
       onSuccess?.()
     } catch (e) {

@@ -15,9 +15,9 @@ module.exports = function (config) {
    */
   const PLATFORM = process.env.EAS_BUILD_PLATFORM
 
-  const IS_DEV = process.env.EXPO_PUBLIC_ENV === 'development'
   const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
   const IS_PRODUCTION = process.env.EXPO_PUBLIC_ENV === 'production'
+  const IS_DEV = !IS_TESTFLIGHT || !IS_PRODUCTION
 
   const ASSOCIATED_DOMAINS = [
     'applinks:bsky.app',
@@ -36,9 +36,6 @@ module.exports = function (config) {
   const UPDATES_ENABLED = !!UPDATES_CHANNEL
 
   const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
-  const SENTRY_DIST = `${PLATFORM}.${VERSION}.${IS_TESTFLIGHT ? 'tf' : ''}${
-    IS_DEV ? 'dev' : ''
-  }`
 
   return {
     expo: {
@@ -50,7 +47,6 @@ module.exports = function (config) {
       runtimeVersion: {
         policy: 'appVersion',
       },
-      orientation: 'portrait',
       icon: './assets/app-icons/ios_icon_default_light.png',
       userInterfaceStyle: 'automatic',
       primaryColor: '#1083fe',
@@ -76,27 +72,38 @@ module.exports = function (config) {
             'an',
             'ast',
             'ca',
+            'cy',
+            'da',
             'de',
+            'el',
+            'eo',
             'es',
+            'eu',
             'fi',
             'fr',
             'ga',
+            'gd',
             'gl',
             'hi',
             'hu',
+            'ia',
             'id',
             'it',
             'ja',
+            'km',
             'ko',
+            'ne',
             'nl',
             'pl',
             'pt-BR',
+            'ro',
             'ru',
+            'sv',
             'th',
             'tr',
             'uk',
             'vi',
-            'yue-Hant',
+            'yue',
             'zh-Hans',
             'zh-Hant',
           ],
@@ -188,14 +195,14 @@ module.exports = function (config) {
         channel: UPDATES_CHANNEL,
       },
       plugins: [
+        'expo-video',
         'expo-localization',
         USE_SENTRY && [
           '@sentry/react-native/expo',
           {
             organization: 'blueskyweb',
-            project: 'react-native',
-            release: VERSION,
-            dist: SENTRY_DIST,
+            project: 'app',
+            url: 'https://sentry.io',
           },
         ],
         [
@@ -222,11 +229,20 @@ module.exports = function (config) {
           },
         ],
         'react-native-compressor',
+        [
+          '@bitdrift/react-native',
+          {
+            networkInstrumentation: true,
+          },
+        ],
         './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
+        './plugins/withGradleJVMHeapSizeIncrease.js',
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
+        './plugins/withAndroidNoJitpackPlugin.js',
+        './plugins/withNoBundleCompression.js',
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
         './plugins/withAppDelegateReferrer.js',
@@ -234,8 +250,8 @@ module.exports = function (config) {
           'expo-font',
           {
             fonts: [
-              './assets/fonts/inter/InterVariable.ttf',
-              './assets/fonts/inter/InterVariable-Italic.ttf',
+              './assets/fonts/inter/InterVariable.woff2',
+              './assets/fonts/inter/InterVariable-Italic.woff2',
               // Android only
               './assets/fonts/inter/Inter-Regular.otf',
               './assets/fonts/inter/Inter-Italic.otf',
@@ -340,6 +356,17 @@ module.exports = function (config) {
             },
           },
         ],
+        ['expo-screen-orientation', {initialOrientation: 'PORTRAIT_UP'}],
+        [
+          'react-native-vision-camera',
+          {
+            enableLocation: false,
+            cameraPermissionText: 'Bluesky needs access to your camera.',
+            enableMicrophonePermission: true,
+            microphonePermissionText:
+              'Bluesky needs access to your microphone.',
+          },
+        ],
       ].filter(Boolean),
       extra: {
         eas: {
@@ -375,22 +402,6 @@ module.exports = function (config) {
           },
           projectId: '55bd077a-d905-4184-9c7f-94789ba0f302',
         },
-      },
-      hooks: {
-        postPublish: [
-          /*
-           * @see https://docs.expo.dev/guides/using-sentry/#app-configuration
-           */
-          {
-            file: './postHooks/uploadSentrySourcemapsPostHook',
-            config: {
-              organization: 'blueskyweb',
-              project: 'react-native',
-              release: VERSION,
-              dist: SENTRY_DIST,
-            },
-          },
-        ],
       },
     },
   }

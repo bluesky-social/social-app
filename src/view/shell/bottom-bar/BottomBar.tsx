@@ -2,7 +2,7 @@ import React, {ComponentProps} from 'react'
 import {GestureResponderEvent, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, Trans} from '@lingui/macro'
+import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {StackActions} from '@react-navigation/native'
@@ -15,21 +15,22 @@ import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {clamp} from '#/lib/numbers'
 import {getTabState, TabState} from '#/lib/routes/helpers'
-import {s} from '#/lib/styles'
+import {useGate} from '#/lib/statsig/statsig'
 import {emitSoftReset} from '#/state/events'
-import {useUnreadMessageCount} from '#/state/queries/messages/list-converations'
+import {useHomeBadge} from '#/state/home-badge'
+import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useCloseAllActiveElements} from '#/state/util'
-import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {
@@ -73,6 +74,8 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const dedupe = useDedupe()
   const accountSwitchControl = useDialogControl()
   const playHaptic = useHaptics()
+  const hasHomeBadge = useHomeBadge()
+  const gate = useGate()
   const iconWidth = 28
 
   const showSignIn = React.useCallback(() => {
@@ -130,7 +133,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
           styles.bottomBar,
           pal.view,
           pal.border,
-          {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
+          {paddingBottom: clamp(safeAreaInsets.bottom, 15, 60)},
           footerMinimalShellTransform,
         ]}
         onLayout={e => {
@@ -153,6 +156,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   />
                 )
               }
+              hasNew={hasHomeBadge && gate('remove_show_latest_button')}
               onPress={onPressHome}
               accessibilityRole="tab"
               accessibilityLabel={_(msg`Home`)}
@@ -195,12 +199,18 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               }
               onPress={onPressMessages}
               notificationCount={numUnreadMessages.numUnread}
+              hasNew={numUnreadMessages.hasNew}
               accessible={true}
               accessibilityRole="tab"
               accessibilityLabel={_(msg`Chat`)}
               accessibilityHint={
                 numUnreadMessages.count > 0
-                  ? _(msg`${numUnreadMessages.numUnread} unread items`)
+                  ? _(
+                      msg`${plural(numUnreadMessages.numUnread ?? 0, {
+                        one: '# unread item',
+                        other: '# unread items',
+                      })}` || '',
+                    )
                   : ''
               }
             />
@@ -227,7 +237,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               accessibilityHint={
                 numUnreadNotifications === ''
                   ? ''
-                  : _(msg`${numUnreadNotifications} unread items`)
+                  : _(
+                      msg`${plural(numUnreadNotifications ?? 0, {
+                        one: '# unread item',
+                        other: '# unread items',
+                      })}` || '',
+                    )
               }
             />
             <Btn
@@ -294,25 +309,26 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 </View>
               </View>
 
-              <View
-                style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
+              <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
                 <Button
                   onPress={showCreateAccount}
-                  accessibilityHint={_(msg`Sign up`)}
-                  accessibilityLabel={_(msg`Sign up`)}>
-                  <Text type="md" style={[{color: 'white'}, s.bold]}>
-                    <Trans>Sign up</Trans>
-                  </Text>
+                  label={_(msg`Create account`)}
+                  size="small"
+                  variant="solid"
+                  color="primary">
+                  <ButtonText>
+                    <Trans>Create account</Trans>
+                  </ButtonText>
                 </Button>
-
                 <Button
-                  type="default"
                   onPress={showSignIn}
-                  accessibilityHint={_(msg`Sign in`)}
-                  accessibilityLabel={_(msg`Sign in`)}>
-                  <Text type="md" style={[pal.text, s.bold]}>
+                  label={_(msg`Sign in`)}
+                  size="small"
+                  variant="solid"
+                  color="secondary">
+                  <ButtonText>
                     <Trans>Sign in</Trans>
-                  </Text>
+                  </ButtonText>
                 </Button>
               </View>
             </View>
@@ -334,6 +350,7 @@ interface BtnProps
   testID?: string
   icon: JSX.Element
   notificationCount?: string
+  hasNew?: boolean
   onPress?: (event: GestureResponderEvent) => void
   onLongPress?: (event: GestureResponderEvent) => void
 }
@@ -341,6 +358,7 @@ interface BtnProps
 function Btn({
   testID,
   icon,
+  hasNew,
   notificationCount,
   onPress,
   onLongPress,
@@ -363,7 +381,9 @@ function Btn({
         <View style={[styles.notificationCount, a.rounded_full]}>
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
-      ) : undefined}
+      ) : hasNew ? (
+        <View style={[styles.hasNewBadge, a.rounded_full]} />
+      ) : null}
     </PressableScale>
   )
 }

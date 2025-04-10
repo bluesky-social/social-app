@@ -23,7 +23,9 @@ export class AuthorFeedAPI implements FeedAPI {
 
   get params() {
     const params = {...this._params}
-    params.includePins = params.filter !== 'posts_with_media'
+    params.includePins =
+      params.filter === 'posts_with_replies' ||
+      params.filter === 'posts_and_author_threads'
     return params
   }
 

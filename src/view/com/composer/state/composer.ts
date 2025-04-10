@@ -1,5 +1,10 @@
 import {ImagePickerAsset} from 'expo-image-picker'
-import {AppBskyFeedPostgate, AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {
+  AppBskyFeedPostgate,
+  AppBskyRichtextFacet,
+  BskyPreferences,
+  RichText,
+} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
 import {SelfLabel} from '#/lib/moderation'
@@ -13,7 +18,7 @@ import {
 import {ComposerImage, createInitialImages} from '#/state/gallery'
 import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {Gif} from '#/state/queries/tenor'
-import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate'
+import {threadgateRecordToAllowUISetting} from '#/state/queries/threadgate'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {ComposerOpts} from '#/state/shell/composer'
 import {
@@ -477,11 +482,15 @@ export function createComposerState({
   initMention,
   initImageUris,
   initQuoteUri,
+  initInteractionSettings,
 }: {
   initText: string | undefined
   initMention: string | undefined
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
+  initInteractionSettings:
+    | BskyPreferences['postInteractionSettings']
+    | undefined
 }): ComposerState {
   let media: ImagesMedia | undefined
   if (initImageUris?.length) {
@@ -591,8 +600,16 @@ export function createComposerState({
           },
         },
       ],
-      postgate: createPostgateRecord({post: ''}),
-      threadgate: threadgateViewToAllowUISetting(undefined),
+      postgate: createPostgateRecord({
+        post: '',
+        embeddingRules: initInteractionSettings?.postgateEmbeddingRules || [],
+      }),
+      threadgate: threadgateRecordToAllowUISetting({
+        $type: 'app.bsky.feed.threadgate',
+        post: '',
+        createdAt: new Date().toString(),
+        allow: initInteractionSettings?.threadgateAllowRules,
+      }),
     },
   }
 }

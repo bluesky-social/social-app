@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isFirefox} from '#/lib/browser'
+import {isFirefox, isTouchDevice} from '#/lib/browser'
 import {clamp} from '#/lib/numbers'
 import {atoms as a, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -148,7 +148,11 @@ export function Scrubber({
   return (
     <View
       testID="scrubber"
-      style={[{height: 18, width: '100%'}, a.flex_shrink_0, a.px_xs]}
+      style={[
+        {height: isTouchDevice ? 32 : 18, width: '100%'},
+        a.flex_shrink_0,
+        a.px_xs,
+      ]}
       onPointerEnter={onStartHover}
       onPointerLeave={onEndHover}>
       <div

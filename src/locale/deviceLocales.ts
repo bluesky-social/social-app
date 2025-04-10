@@ -41,17 +41,19 @@ export function getLocales() {
     }
 
     if (typeof locale.languageTag === 'string') {
-      if (locale.languageTag.startsWith('zh-Hans')) {
-        // Simplified Chinese to zh-CN
-        locale.languageTag = 'zh-CN'
+      if (
+        locale.languageTag.startsWith('zh-Hans') ||
+        locale.languageTag === 'zh-CN'
+      ) {
+        // Simplified Chinese to zh-Hans-CN
+        locale.languageTag = 'zh-Hans-CN'
       }
-      if (locale.languageTag.startsWith('zh-Hant')) {
-        // Traditional Chinese to zh-TW
-        locale.languageTag = 'zh-TW'
-      }
-      if (locale.languageTag.startsWith('yue')) {
-        // Cantonese (Yue) to zh-HK
-        locale.languageTag = 'zh-HK'
+      if (
+        locale.languageTag.startsWith('zh-Hant') ||
+        locale.languageTag === 'zh-TW'
+      ) {
+        // Traditional Chinese to zh-Hant-TW
+        locale.languageTag = 'zh-Hant-TW'
       }
     }
 

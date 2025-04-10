@@ -1,11 +1,6 @@
 import React, {useCallback, useEffect} from 'react'
 import {NativeScrollEvent} from 'react-native'
-import {
-  interpolate,
-  makeMutable,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated'
+import {interpolate, useSharedValue, withSpring} from 'react-native-reanimated'
 import EventEmitter from 'eventemitter3'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
@@ -20,18 +15,6 @@ function clamp(num: number, min: number, max: number) {
   return Math.min(Math.max(num, min), max)
 }
 
-const V0 = makeMutable(
-  withSpring(0, {
-    overshootClamping: true,
-  }),
-)
-
-const V1 = makeMutable(
-  withSpring(1, {
-    overshootClamping: true,
-  }),
-)
-
 export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const {headerHeight} = useShellLayout()
   const {headerMode} = useMinimalShellMode()
@@ -42,7 +25,11 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const setMode = React.useCallback(
     (v: boolean) => {
       'worklet'
-      headerMode.set(v ? V1.get() : V0.get())
+      headerMode.set(() =>
+        withSpring(v ? 1 : 0, {
+          overshootClamping: true,
+        }),
+      )
     },
     [headerMode],
   )

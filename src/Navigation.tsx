@@ -1,9 +1,8 @@
 import * as React from 'react'
-import {JSX} from 'react/jsx-runtime'
-import {i18n, MessageDescriptor} from '@lingui/core'
+import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {
-  BottomTabBarProps,
+  type BottomTabBarProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import {
@@ -20,18 +19,19 @@ import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
 import {buildStateObject} from '#/lib/routes/helpers'
 import {
-  AllNavigatorParams,
-  BottomTabNavigatorParams,
-  FlatNavigatorParams,
-  HomeTabNavigatorParams,
-  MessagesTabNavigatorParams,
-  MyProfileTabNavigatorParams,
-  NotificationsTabNavigatorParams,
-  SearchTabNavigatorParams,
+  type AllNavigatorParams,
+  type BottomTabNavigatorParams,
+  type FlatNavigatorParams,
+  type HomeTabNavigatorParams,
+  type MessagesTabNavigatorParams,
+  type MyProfileTabNavigatorParams,
+  type NotificationsTabNavigatorParams,
+  type SearchTabNavigatorParams,
 } from '#/lib/routes/types'
-import {RouteParams, State} from '#/lib/routes/types'
+import {type RouteParams, type State} from '#/lib/routes/types'
 import {attachRouteToLogEvents, logEvent} from '#/lib/statsig/statsig'
 import {bskyTitle} from '#/lib/strings/headings'
+import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
@@ -55,13 +55,9 @@ import {NotificationsScreen} from '#/view/screens/Notifications'
 import {PostThreadScreen} from '#/view/screens/PostThread'
 import {PrivacyPolicyScreen} from '#/view/screens/PrivacyPolicy'
 import {ProfileScreen} from '#/view/screens/Profile'
-import {ProfileFeedScreen} from '#/view/screens/ProfileFeed'
 import {ProfileFeedLikedByScreen} from '#/view/screens/ProfileFeedLikedBy'
-import {ProfileFollowersScreen} from '#/view/screens/ProfileFollowers'
-import {ProfileFollowsScreen} from '#/view/screens/ProfileFollows'
 import {ProfileListScreen} from '#/view/screens/ProfileList'
 import {SavedFeeds} from '#/view/screens/SavedFeeds'
-import {SearchScreen} from '#/view/screens/Search'
 import {Storybook} from '#/view/screens/Storybook'
 import {SupportScreen} from '#/view/screens/Support'
 import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
@@ -71,24 +67,33 @@ import {SharedPreferencesTesterScreen} from '#/screens/E2E/SharedPreferencesTest
 import HashtagScreen from '#/screens/Hashtag'
 import {MessagesScreen} from '#/screens/Messages/ChatList'
 import {MessagesConversationScreen} from '#/screens/Messages/Conversation'
+import {MessagesInboxScreen} from '#/screens/Messages/Inbox'
 import {MessagesSettingsScreen} from '#/screens/Messages/Settings'
 import {ModerationScreen} from '#/screens/Moderation'
+import {Screen as ModerationInteractionSettings} from '#/screens/ModerationInteractionSettings'
 import {PostLikedByScreen} from '#/screens/Post/PostLikedBy'
 import {PostQuotesScreen} from '#/screens/Post/PostQuotes'
 import {PostRepostedByScreen} from '#/screens/Post/PostRepostedBy'
 import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
+import {ProfileFeedScreen} from '#/screens/Profile/ProfileFeed'
+import {ProfileFollowersScreen} from '#/screens/Profile/ProfileFollowers'
+import {ProfileFollowsScreen} from '#/screens/Profile/ProfileFollows'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
+import {SearchScreen} from '#/screens/Search'
 import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
 import {AppIconSettingsScreen} from '#/screens/Settings/AppIconSettings'
 import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
+import {SettingsInterests} from '#/screens/Settings/SettingsInterests'
 import {
   StarterPackScreen,
   StarterPackScreenShort,
 } from '#/screens/StarterPack/StarterPackScreen'
 import {Wizard} from '#/screens/StarterPack/Wizard'
+import {VideoFeed} from '#/screens/VideoFeed'
 import {useTheme} from '#/alf'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import {ProfileSearchScreen} from './screens/Profile/ProfileSearch'
 import {AboutSettingsScreen} from './screens/Settings/AboutSettings'
 import {AccessibilitySettingsScreen} from './screens/Settings/AccessibilitySettings'
 import {AccountSettingsScreen} from './screens/Settings/AccountSettings'
@@ -100,6 +105,7 @@ import {LanguageSettingsScreen} from './screens/Settings/LanguageSettings'
 import {PrivacyAndSecuritySettingsScreen} from './screens/Settings/PrivacyAndSecuritySettings'
 import {SettingsScreen} from './screens/Settings/Settings'
 import {ThreadPreferencesScreen} from './screens/Settings/ThreadPreferences'
+import TopicScreen from './screens/Topic'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -154,6 +160,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title(msg`Blocked Accounts`), requireAuth: true}}
       />
       <Stack.Screen
+        name="ModerationInteractionSettings"
+        getComponent={() => ModerationInteractionSettings}
+        options={{
+          title: title(msg`Post Interaction Settings`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
         name="Settings"
         getComponent={() => SettingsScreen}
         options={{title: title(msg`Settings`), requireAuth: true}}
@@ -195,6 +209,13 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="ProfileList"
         getComponent={() => ProfileListScreen}
         options={{title: title(msg`List`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="ProfileSearch"
+        getComponent={() => ProfileSearchScreen}
+        options={({route}) => ({
+          title: title(msg`Search @${route.params.name}'s posts`),
+        })}
       />
       <Stack.Screen
         name="PostThread"
@@ -356,6 +377,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         }}
       />
       <Stack.Screen
+        name="SettingsInterests"
+        getComponent={() => SettingsInterests}
+        options={{
+          title: title(msg`Your interests`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
         name="AboutSettings"
         getComponent={() => AboutSettingsScreen}
         options={{
@@ -377,6 +406,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title(msg`Hashtag`)}}
       />
       <Stack.Screen
+        name="Topic"
+        getComponent={() => TopicScreen}
+        options={{title: title(msg`Topic`)}}
+      />
+      <Stack.Screen
         name="MessagesConversation"
         getComponent={() => MessagesConversationScreen}
         options={{title: title(msg`Chat`), requireAuth: true}}
@@ -385,6 +419,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="MessagesSettings"
         getComponent={() => MessagesSettingsScreen}
         options={{title: title(msg`Chat settings`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="MessagesInbox"
+        getComponent={() => MessagesInboxScreen}
+        options={{title: title(msg`Chat request inbox`), requireAuth: true}}
       />
       <Stack.Screen
         name="NotificationSettings"
@@ -415,6 +454,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="StarterPackEdit"
         getComponent={() => Wizard}
         options={{title: title(msg`Edit your starter pack`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="VideoFeed"
+        getComponent={() => VideoFeed}
+        options={{
+          title: title(msg`Video Feed`),
+          requireAuth: true,
+        }}
       />
     </>
   )
@@ -590,7 +637,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Search"
         getComponent={() => SearchScreen}
-        options={{title: title(msg`Search`)}}
+        options={{title: title(msg`Explore`)}}
       />
       <Flat.Screen
         name="Notifications"
@@ -697,15 +744,16 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       linking={LINKING}
       theme={theme}
       onStateChange={() => {
-        const routeName = getCurrentRouteName()
-        if (routeName === 'Notifications') {
-          logEvent('router:navigate:notifications', {})
-        }
+        logger.metric('router:navigate', {
+          from: prevLoggedRouteName.current,
+        })
+        prevLoggedRouteName.current = getCurrentRouteName()
       }}
       onReady={() => {
         attachRouteToLogEvents(getCurrentRouteName)
         logModuleInitTime()
         onReady()
+        logger.metric('router:navigate', {})
       }}>
       {children}
     </NavigationContainer>

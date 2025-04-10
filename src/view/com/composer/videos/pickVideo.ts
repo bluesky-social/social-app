@@ -1,18 +1,20 @@
 import {
   ImagePickerAsset,
   launchImageLibraryAsync,
-  MediaTypeOptions,
   UIImagePickerPreferredAssetRepresentationMode,
 } from 'expo-image-picker'
+
+import {VIDEO_MAX_DURATION_MS} from '#/lib/constants'
 
 export async function pickVideo() {
   return await launchImageLibraryAsync({
     exif: false,
-    mediaTypes: MediaTypeOptions.Videos,
+    mediaTypes: ['videos'],
     quality: 1,
     legacy: true,
     preferredAssetRepresentationMode:
       UIImagePickerPreferredAssetRepresentationMode.Current,
+    videoMaxDuration: VIDEO_MAX_DURATION_MS / 1000,
   })
 }
 

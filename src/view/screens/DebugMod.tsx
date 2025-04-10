@@ -44,9 +44,9 @@ import {
 import * as Layout from '#/components/Layout'
 import {H1, H3, P, Text} from '#/components/Typography'
 import {ScreenHider} from '../../components/moderation/ScreenHider'
-import {FeedItem as NotifFeedItem} from '../com/notifications/FeedItem'
+import {NotificationFeedItem} from '../com/notifications/NotificationFeedItem'
 import {PostThreadItem} from '../com/post-thread/PostThreadItem'
-import {FeedItem} from '../com/posts/FeedItem'
+import {PostFeedItem} from '../com/posts/PostFeedItem'
 import {ProfileCard} from '../com/profile/ProfileCard'
 
 const LABEL_VALUES: (keyof typeof LABELS)[] = Object.keys(
@@ -133,6 +133,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
     })
     mockedProfile.did = did
     mockedProfile.avatar = 'https://bsky.social/about/images/favicon-32x32.png'
+    // @ts-expect-error ProfileViewBasic is close enough -esb
     mockedProfile.banner =
       'https://bsky.social/about/images/social-card-default-gradient.png'
     return mockedProfile
@@ -378,9 +379,9 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                           <Toggle.Checkbox />
                           <Toggle.LabelText>Adult disabled</Toggle.LabelText>
                         </Toggle.Item>
-                        <Toggle.Item name="loggedOut" label="Logged out">
+                        <Toggle.Item name="loggedOut" label="Signed out">
                           <Toggle.Checkbox />
-                          <Toggle.LabelText>Logged out</Toggle.LabelText>
+                          <Toggle.LabelText>Signed out</Toggle.LabelText>
                         </Toggle.Item>
                       </View>
                     </Toggle.Group>
@@ -817,7 +818,7 @@ function MockPostFeedItem({
     )
   }
   return (
-    <FeedItem
+    <PostFeedItem
       post={post}
       record={post.record as AppBskyFeedPost.Record}
       moderation={moderation}
@@ -872,7 +873,13 @@ function MockNotifItem({
       </P>
     )
   }
-  return <NotifFeedItem item={notif} moderationOpts={moderationOpts} />
+  return (
+    <NotificationFeedItem
+      item={notif}
+      moderationOpts={moderationOpts}
+      highlightUnread
+    />
+  )
 }
 
 function MockAccountCard({
@@ -916,6 +923,7 @@ function MockAccountScreen({
           // @ts-ignore ProfileViewBasic is close enough -prf
           profile={profile}
           moderationOpts={moderationOpts}
+          // @ts-ignore ProfileViewBasic is close enough -esb
           descriptionRT={new RichText({text: profile.description as string})}
         />
       </ScreenHider>

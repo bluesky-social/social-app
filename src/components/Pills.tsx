@@ -126,7 +126,7 @@ export function Label({
                 fill={t.atoms.text_contrast_medium.color}
               />
             ) : (
-              <UserAvatar avatar={desc.sourceAvi} size={avi} />
+              <UserAvatar avatar={desc.sourceAvi} type="user" size={avi} />
             )}
 
             <Text

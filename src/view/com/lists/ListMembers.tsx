@@ -1,12 +1,6 @@
-import React from 'react'
-import {
-  ActivityIndicator,
-  Dimensions,
-  StyleProp,
-  View,
-  ViewStyle,
-} from 'react-native'
-import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
+import React, {useCallback} from 'react'
+import {Dimensions, type StyleProp, View, type ViewStyle} from 'react-native'
+import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -16,12 +10,14 @@ import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
 import {useListMembersQuery} from '#/state/queries/list-members'
 import {useSession} from '#/state/session'
-import {ProfileCard} from '../profile/ProfileCard'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {Button} from '../util/forms/Button'
-import {List, ListRef} from '../util/List'
-import {ProfileCardFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
+import {ProfileCard} from '#/view/com/profile/ProfileCard'
+import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
+import {Button} from '#/view/com/util/forms/Button'
+import {List, type ListRef} from '#/view/com/util/List'
+import {ProfileCardFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
+import {ListFooter} from '#/components/Lists'
+import type * as bsky from '#/types/bsky'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_ITEM = {_reactKey: '__empty__'}
@@ -66,6 +62,7 @@ export function ListMembers({
     refetch,
     fetchNextPage,
     hasNextPage,
+    isFetchingNextPage,
   } = useListMembersQuery(list)
   const isEmpty = !isFetching && !data?.pages[0].items.length
   const isOwner =
@@ -120,7 +117,7 @@ export function ListMembers({
   }, [fetchNextPage])
 
   const onPressEditMembership = React.useCallback(
-    (profile: AppBskyActorDefs.ProfileViewBasic) => {
+    (profile: bsky.profile.AnyProfileView) => {
       openModal({
         name: 'user-add-remove-lists',
         subject: profile.did,
@@ -135,7 +132,7 @@ export function ListMembers({
   // =
 
   const renderMemberButton = React.useCallback(
-    (profile: AppBskyActorDefs.ProfileViewBasic) => {
+    (profile: bsky.profile.AnyProfileView) => {
       if (!isOwner) {
         return null
       }
@@ -197,14 +194,25 @@ export function ListMembers({
     ],
   )
 
-  const Footer = React.useCallback(
-    () => (
-      <View style={{paddingTop: 20, paddingBottom: 400}}>
-        {isFetching && <ActivityIndicator />}
-      </View>
-    ),
-    [isFetching],
-  )
+  const renderFooter = useCallback(() => {
+    if (isEmpty) return null
+    return (
+      <ListFooter
+        hasNextPage={hasNextPage}
+        error={cleanError(error)}
+        isFetchingNextPage={isFetchingNextPage}
+        onRetry={fetchNextPage}
+        height={180 + headerOffset}
+      />
+    )
+  }, [
+    hasNextPage,
+    error,
+    isFetchingNextPage,
+    fetchNextPage,
+    isEmpty,
+    headerOffset,
+  ])
 
   return (
     <View testID={testID} style={style}>
@@ -214,8 +222,8 @@ export function ListMembers({
         data={items}
         keyExtractor={(item: any) => item.subject?.did || item._reactKey}
         renderItem={renderItem}
-        ListHeaderComponent={renderHeader}
-        ListFooterComponent={Footer}
+        ListHeaderComponent={!isEmpty ? renderHeader : undefined}
+        ListFooterComponent={renderFooter}
         refreshing={isRefreshing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
@@ -226,7 +234,6 @@ export function ListMembers({
         onEndReached={onEndReached}
         onEndReachedThreshold={0.6}
         removeClippedSubviews={true}
-        // @ts-ignore our .web version only -prf
         desktopFixedHeight={desktopFixedHeightOffset || true}
       />
     </View>

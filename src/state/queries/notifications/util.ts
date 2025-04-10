@@ -14,6 +14,7 @@ import {QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
 import {labelIsHideableOffense} from '#/lib/moderation'
+import * as bsky from '#/types/bsky'
 import {precacheProfile} from '../profile'
 import {FeedNotification, FeedPage, NotificationType} from './types'
 
@@ -31,6 +32,7 @@ export async function fetchPage({
   queryClient,
   moderationOpts,
   fetchAdditionalData,
+  reasons,
 }: {
   agent: BskyAgent
   cursor: string | undefined
@@ -38,7 +40,7 @@ export async function fetchPage({
   queryClient: QueryClient
   moderationOpts: ModerationOpts | undefined
   fetchAdditionalData: boolean
-  priority?: boolean
+  reasons: string[]
 }): Promise<{
   page: FeedPage
   indexedAt: string | undefined
@@ -46,7 +48,7 @@ export async function fetchPage({
   const res = await agent.listNotifications({
     limit,
     cursor,
-    // priority,
+    reasons,
   })
 
   const indexedAt = res.data.notifications[0]?.indexedAt
@@ -204,12 +206,9 @@ async function fetchSubjects(
     ),
   )
   const postsMap = new Map<string, AppBskyFeedDefs.PostView>()
-  const packsMap = new Map<string, AppBskyGraphDefs.StarterPackView>()
+  const packsMap = new Map<string, AppBskyGraphDefs.StarterPackViewBasic>()
   for (const post of postsChunks.flat()) {
-    if (
-      AppBskyFeedPost.isRecord(post.record) &&
-      AppBskyFeedPost.validateRecord(post.record).success
-    ) {
+    if (AppBskyFeedPost.isRecord(post.record)) {
       postsMap.set(post.uri, post)
     }
   }
@@ -254,8 +253,14 @@ function getSubjectUri(
     return notif.uri
   } else if (type === 'post-like' || type === 'repost') {
     if (
-      AppBskyFeedRepost.isRecord(notif.record) ||
-      AppBskyFeedLike.isRecord(notif.record)
+      bsky.dangerousIsType<AppBskyFeedRepost.Record>(
+        notif.record,
+        AppBskyFeedRepost.isRecord,
+      ) ||
+      bsky.dangerousIsType<AppBskyFeedLike.Record>(
+        notif.record,
+        AppBskyFeedLike.isRecord,
+      )
     ) {
       return typeof notif.record.subject?.uri === 'string'
         ? notif.record.subject?.uri

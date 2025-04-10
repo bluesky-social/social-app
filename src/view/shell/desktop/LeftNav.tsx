@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {type AppBskyActorDefs} from '@atproto/api'
+import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
   useLinkProps,
@@ -9,26 +9,33 @@ import {
   useNavigationState,
 } from '@react-navigation/native'
 
+import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
-import {CommonNavigatorParams} from '#/lib/routes/types'
-import {isInvalidHandle} from '#/lib/strings/handles'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
+import {useHomeBadge} from '#/state/home-badge'
 import {useFetchHandle} from '#/state/queries/handle'
-import {useUnreadMessageCount} from '#/state/queries/messages/list-converations'
+import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
-import {useProfileQuery} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
+import {useProfilesQuery} from '#/state/queries/profile'
+import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
-import {Link} from '#/view/com/util/Link'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, tokens, useLayoutBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {type DialogControlProps} from '#/components/Dialog'
+import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
@@ -37,6 +44,7 @@ import {
   BulletList_Filled_Corner0_Rounded as ListFilled,
   BulletList_Stroke2_Corner0_Rounded as List,
 } from '#/components/icons/BulletList'
+import {DotGrid_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {EditBig_Stroke2_Corner0_Rounded as EditBig} from '#/components/icons/EditBig'
 import {
   Hashtag_Filled_Corner0_Rounded as HashtagFilled,
@@ -52,6 +60,7 @@ import {
   Message_Stroke2_Corner0_Rounded as Message,
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {
   SettingsGear2_Filled_Corner0_Rounded as SettingsFilled,
   SettingsGear2_Stroke2_Corner0_Rounded as Settings,
@@ -60,57 +69,245 @@ import {
   UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
   UserCircle_Stroke2_Corner0_Rounded as UserCircle,
 } from '#/components/icons/UserCircle'
+import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
+import * as Menu from '#/components/Menu'
+import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
 import {router} from '../../../routes'
 
 const NAV_ICON_WIDTH = 28
 
 function ProfileCard() {
-  const {currentAccount} = useSession()
-  const {isLoading, data: profile} = useProfileQuery({did: currentAccount!.did})
-  const {isDesktop} = useWebMediaQueries()
+  const {currentAccount, accounts} = useSession()
+  const {logoutEveryAccount} = useSessionApi()
+  const {isLoading, data} = useProfilesQuery({
+    handles: accounts.map(acc => acc.did),
+  })
+  const profiles = data?.profiles
+  const signOutPromptControl = Prompt.usePromptControl()
+  const {leftNavMinimal} = useLayoutBreakpoints()
   const {_} = useLingui()
+  const t = useTheme()
+
   const size = 48
 
-  return !isLoading && profile ? (
-    <Link
-      href={makeProfileLink({
-        did: currentAccount!.did,
-        handle: currentAccount!.handle,
-      })}
-      style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}
-      title={_(msg`My Profile`)}
-      asAnchor>
-      <UserAvatar
-        avatar={profile.avatar}
-        size={size}
-        type={profile?.associated?.labeler ? 'labeler' : 'user'}
-      />
-    </Link>
-  ) : (
-    <View style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}>
-      <LoadingPlaceholder
-        width={size}
-        height={size}
-        style={{borderRadius: size}}
+  const profile = profiles?.find(p => p.did === currentAccount!.did)
+  const otherAccounts = accounts
+    .filter(acc => acc.did !== currentAccount!.did)
+    .map(account => ({
+      account,
+      profile: profiles?.find(p => p.did === account.did),
+    }))
+
+  return (
+    <View style={[a.my_md, !leftNavMinimal && [a.w_full, a.align_start]]}>
+      {!isLoading && profile ? (
+        <Menu.Root>
+          <Menu.Trigger label={_(msg`Switch accounts`)}>
+            {({props, state, control}) => {
+              const active = state.hovered || state.focused || control.isOpen
+              return (
+                <Button
+                  label={props.accessibilityLabel}
+                  {...props}
+                  style={[
+                    a.w_full,
+                    a.transition_color,
+                    active ? t.atoms.bg_contrast_25 : a.transition_delay_50ms,
+                    a.rounded_full,
+                    a.justify_between,
+                    a.align_center,
+                    a.flex_row,
+                    {gap: 6},
+                    !leftNavMinimal && [a.pl_lg, a.pr_md],
+                  ]}>
+                  <View
+                    style={[
+                      !PlatformInfo.getIsReducedMotionEnabled() && [
+                        a.transition_transform,
+                        {transitionDuration: '250ms'},
+                        !active && a.transition_delay_50ms,
+                      ],
+                      a.relative,
+                      a.z_10,
+                      active && {
+                        transform: [
+                          {scale: !leftNavMinimal ? 2 / 3 : 0.8},
+                          {translateX: !leftNavMinimal ? -22 : 0},
+                        ],
+                      },
+                    ]}>
+                    <UserAvatar
+                      avatar={profile.avatar}
+                      size={size}
+                      type={profile?.associated?.labeler ? 'labeler' : 'user'}
+                    />
+                  </View>
+                  {!leftNavMinimal && (
+                    <>
+                      <View
+                        style={[
+                          a.flex_1,
+                          a.transition_opacity,
+                          !active && a.transition_delay_50ms,
+                          {
+                            marginLeft: tokens.space.xl * -1,
+                            opacity: active ? 1 : 0,
+                          },
+                        ]}>
+                        <Text
+                          style={[a.font_heavy, a.text_sm, a.leading_snug]}
+                          numberOfLines={1}>
+                          {sanitizeDisplayName(
+                            profile.displayName || profile.handle,
+                          )}
+                        </Text>
+                        <Text
+                          style={[
+                            a.text_xs,
+                            a.leading_snug,
+                            t.atoms.text_contrast_medium,
+                          ]}
+                          numberOfLines={1}>
+                          {sanitizeHandle(profile.handle, '@')}
+                        </Text>
+                      </View>
+                      <EllipsisIcon
+                        aria-hidden={true}
+                        style={[
+                          t.atoms.text_contrast_medium,
+                          a.transition_opacity,
+                          {opacity: active ? 1 : 0},
+                        ]}
+                        size="sm"
+                      />
+                    </>
+                  )}
+                </Button>
+              )
+            }}
+          </Menu.Trigger>
+          <SwitchMenuItems
+            accounts={otherAccounts}
+            signOutPromptControl={signOutPromptControl}
+          />
+        </Menu.Root>
+      ) : (
+        <LoadingPlaceholder
+          width={size}
+          height={size}
+          style={[{borderRadius: size}, !leftNavMinimal && a.ml_lg]}
+        />
+      )}
+      <Prompt.Basic
+        control={signOutPromptControl}
+        title={_(msg`Sign out?`)}
+        description={_(msg`You will be signed out of all your accounts.`)}
+        onConfirm={() => logoutEveryAccount('Settings')}
+        confirmButtonCta={_(msg`Sign out`)}
+        cancelButtonCta={_(msg`Cancel`)}
+        confirmButtonColor="negative"
       />
     </View>
   )
 }
 
+function SwitchMenuItems({
+  accounts,
+  signOutPromptControl,
+}: {
+  accounts:
+    | {
+        account: SessionAccount
+        profile?: AppBskyActorDefs.ProfileViewDetailed
+      }[]
+    | undefined
+  signOutPromptControl: DialogControlProps
+}) {
+  const {_} = useLingui()
+  const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const closeEverything = useCloseAllActiveElements()
+
+  const onAddAnotherAccount = () => {
+    setShowLoggedOut(true)
+    closeEverything()
+  }
+  return (
+    <Menu.Outer>
+      {accounts && accounts.length > 0 && (
+        <>
+          <Menu.Group>
+            <Menu.LabelText>
+              <Trans>Switch account</Trans>
+            </Menu.LabelText>
+            {accounts.map(other => (
+              <Menu.Item
+                disabled={!!pendingDid}
+                style={[{minWidth: 150}]}
+                key={other.account.did}
+                label={_(
+                  msg`Switch to ${sanitizeHandle(
+                    other.profile?.handle ?? other.account.handle,
+                    '@',
+                  )}`,
+                )}
+                onPress={() =>
+                  onPressSwitchAccount(other.account, 'SwitchAccount')
+                }>
+                <View style={[{marginLeft: tokens.space._2xs * -1}]}>
+                  <UserAvatar
+                    avatar={other.profile?.avatar}
+                    size={20}
+                    type={
+                      other.profile?.associated?.labeler ? 'labeler' : 'user'
+                    }
+                  />
+                </View>
+                <Menu.ItemText>
+                  {sanitizeHandle(
+                    other.profile?.handle ?? other.account.handle,
+                    '@',
+                  )}
+                </Menu.ItemText>
+              </Menu.Item>
+            ))}
+          </Menu.Group>
+          <Menu.Divider />
+        </>
+      )}
+      <Menu.Item
+        label={_(msg`Add another account`)}
+        onPress={onAddAnotherAccount}>
+        <Menu.ItemIcon icon={PlusIcon} />
+        <Menu.ItemText>
+          <Trans>Add another account</Trans>
+        </Menu.ItemText>
+      </Menu.Item>
+      <Menu.Item label={_(msg`Sign out`)} onPress={signOutPromptControl.open}>
+        <Menu.ItemIcon icon={LeaveIcon} />
+        <Menu.ItemText>
+          <Trans>Sign out</Trans>
+        </Menu.ItemText>
+      </Menu.Item>
+    </Menu.Outer>
+  )
+}
+
 interface NavItemProps {
   count?: string
+  hasNew?: boolean
   href: string
   icon: JSX.Element
   iconFilled: JSX.Element
   label: string
 }
-function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
+function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const {gtMobile, gtTablet} = useBreakpoints()
-  const isTablet = gtMobile && !gtTablet
+  const {leftNavMinimal} = useLayoutBreakpoints()
   const [pathName] = React.useMemo(() => router.matchPath(href), [href])
   const currentRouteInfo = useNavigationState(state => {
     if (!state) {
@@ -152,9 +349,8 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
         a.transition_color,
       ]}
       hoverStyle={t.atoms.bg_contrast_25}
-      // @ts-ignore the function signature differs on web -prf
+      // @ts-expect-error the function signature differs on web -prf
       onPress={onPressWrapped}
-      // @ts-ignore web only -prf
       href={href}
       dataSet={{noUnderline: 1}}
       role="link"
@@ -169,7 +365,7 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
             width: 24,
             height: 24,
           },
-          isTablet && {
+          leftNavMinimal && {
             width: 40,
             height: 40,
           },
@@ -183,7 +379,12 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
               {right: -20}, // more breathing room
             ]}>
             <Text
-              accessibilityLabel={_(msg`${count} unread items`)}
+              accessibilityLabel={_(
+                msg`${plural(count, {
+                  one: '# unread item',
+                  other: '# unread items',
+                })}`,
+              )}
               accessibilityHint=""
               accessible={true}
               numberOfLines={1}
@@ -204,7 +405,7 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
                   paddingVertical: 1,
                   minWidth: 16,
                 },
-                isTablet && [
+                leftNavMinimal && [
                   {
                     top: '10%',
                     left: count.length === 1 ? 20 : 16,
@@ -214,9 +415,27 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
               {count}
             </Text>
           </View>
+        ) : hasNew ? (
+          <View
+            style={[
+              a.absolute,
+              a.rounded_full,
+              {
+                backgroundColor: t.palette.primary_500,
+                width: 8,
+                height: 8,
+                right: -2,
+                top: -4,
+              },
+              leftNavMinimal && {
+                right: 4,
+                top: 2,
+              },
+            ]}
+          />
         ) : null}
       </View>
-      {gtTablet && (
+      {!leftNavMinimal && (
         <Text style={[a.text_xl, isCurrent ? a.font_heavy : a.font_normal]}>
           {label}
         </Text>
@@ -230,7 +449,7 @@ function ComposeBtn() {
   const {getState} = useNavigation()
   const {openComposer} = useComposerControls()
   const {_} = useLingui()
-  const {isTablet} = useWebMediaQueries()
+  const {leftNavMinimal} = useLayoutBreakpoints()
   const [isFetchingHandle, setIsFetchingHandle] = React.useState(false)
   const fetchHandle = useFetchHandle()
 
@@ -270,9 +489,10 @@ function ComposeBtn() {
   const onPressCompose = async () =>
     openComposer({mention: await getProfileHandle()})
 
-  if (isTablet) {
+  if (leftNavMinimal) {
     return null
   }
+
   return (
     <View style={[a.flex_row, a.pl_md, a.pt_xl]}>
       <Button
@@ -301,6 +521,7 @@ function ChatNavItem() {
     <NavItem
       href="/messages"
       count={numUnreadMessages.numUnread}
+      hasNew={numUnreadMessages.hasNew}
       icon={
         <Message style={pal.text} aria-hidden={true} width={NAV_ICON_WIDTH} />
       }
@@ -320,8 +541,11 @@ export function DesktopLeftNav() {
   const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isDesktop, isTablet} = useWebMediaQueries()
+  const {isDesktop} = useWebMediaQueries()
+  const {leftNavMinimal, centerColumnOffset} = useLayoutBreakpoints()
   const numUnreadNotifications = useUnreadNotifications()
+  const hasHomeBadge = useHomeBadge()
+  const gate = useGate()
 
   if (!hasSession && !isDesktop) {
     return null
@@ -333,8 +557,17 @@ export function DesktopLeftNav() {
       style={[
         a.px_xl,
         styles.leftNav,
-        isTablet && styles.leftNavTablet,
-        pal.border,
+        leftNavMinimal && styles.leftNavMinimal,
+        {
+          transform: [
+            {
+              translateX:
+                -300 + (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0),
+            },
+            {translateX: '-100%'},
+            ...a.scrollbar_offset.transform,
+          ],
+        },
       ]}>
       {hasSession ? (
         <ProfileCard />
@@ -348,6 +581,7 @@ export function DesktopLeftNav() {
         <>
           <NavItem
             href="/"
+            hasNew={hasHomeBadge && gate('remove_show_latest_button')}
             icon={
               <Home
                 aria-hidden={true}
@@ -380,7 +614,7 @@ export function DesktopLeftNav() {
                 width={NAV_ICON_WIDTH}
               />
             }
-            label={_(msg`Search`)}
+            label={_(msg`Explore`)}
           />
           <NavItem
             href="/notifications"
@@ -406,14 +640,14 @@ export function DesktopLeftNav() {
             href="/feeds"
             icon={
               <Hashtag
-                style={pal.text as FontAwesomeIconStyle}
+                style={pal.text}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
             }
             iconFilled={
               <HashtagFilled
-                style={pal.text as FontAwesomeIconStyle}
+                style={pal.text}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
@@ -484,47 +718,26 @@ export function DesktopLeftNav() {
 
 const styles = StyleSheet.create({
   leftNav: {
-    // @ts-ignore web only
     position: 'fixed',
-    top: 10,
-    // @ts-ignore web only
+    top: 0,
+    paddingTop: 10,
+    paddingBottom: 10,
     left: '50%',
-    transform: [
-      {
-        translateX: -300,
-      },
-      {
-        translateX: '-100%',
-      },
-      ...a.scrollbar_offset.transform,
-    ],
     width: 240,
-    // @ts-ignore web only
-    maxHeight: 'calc(100vh - 10px)',
+    // @ts-expect-error web only
+    maxHeight: '100vh',
     overflowY: 'auto',
   },
-  leftNavTablet: {
-    top: 0,
-    left: 0,
-    right: 'auto',
-    borderRightWidth: 1,
-    height: '100%',
-    width: 76,
+  leftNavMinimal: {
+    paddingTop: 0,
+    paddingBottom: 0,
     paddingLeft: 0,
     paddingRight: 0,
+    height: '100%',
+    width: 86,
     alignItems: 'center',
-    transform: [],
+    overflowX: 'hidden',
   },
-
-  profileCard: {
-    marginVertical: 10,
-    width: 90,
-    paddingLeft: 12,
-  },
-  profileCardTablet: {
-    width: 70,
-  },
-
   backBtn: {
     position: 'absolute',
     top: 12,

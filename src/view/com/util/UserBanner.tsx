@@ -149,7 +149,7 @@ export function UserBanner({
               <Menu.Group>
                 <Menu.Item
                   testID="changeBannerRemoveBtn"
-                  label={_(`Remove Banner`)}
+                  label={_(msg`Remove Banner`)}
                   onPress={onRemoveBanner}>
                   <Menu.ItemText>
                     <Trans>Remove Banner</Trans>
@@ -170,7 +170,7 @@ export function UserBanner({
         styles.bannerImage,
         {backgroundColor: theme.palette.default.backgroundLight},
       ]}
-      resizeMode="cover"
+      contentFit="cover"
       source={{uri: banner}}
       blurRadius={moderation?.blur ? 100 : 0}
       accessible={true}

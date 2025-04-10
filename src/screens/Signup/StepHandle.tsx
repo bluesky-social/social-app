@@ -1,10 +1,14 @@
 import React, {useRef} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
-import {createFullHandle, validateHandle} from '#/lib/strings/handles'
+import {
+  createFullHandle,
+  MAX_SERVICE_HANDLE_LENGTH,
+  validateServiceHandle,
+} from '#/lib/strings/handles'
+import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
@@ -33,7 +37,7 @@ export function StepHandle() {
       value: handle,
     })
 
-    const newValidCheck = validateHandle(handle, state.userDomain)
+    const newValidCheck = validateServiceHandle(handle, state.userDomain)
     if (!newValidCheck.overall) {
       return
     }
@@ -49,7 +53,9 @@ export function StepHandle() {
         dispatch({
           type: 'setError',
           value: _(msg`That handle is already taken.`),
+          field: 'handle',
         })
+        logger.metric('signup:handleTaken', {})
         return
       }
     } catch (e) {
@@ -58,11 +64,15 @@ export function StepHandle() {
       dispatch({type: 'setIsLoading', value: false})
     }
 
-    logEvent('signup:nextPressed', {
-      activeStep: state.activeStep,
-      phoneVerificationRequired:
-        state.serviceDescription?.phoneVerificationRequired,
-    })
+    logger.metric(
+      'signup:nextPressed',
+      {
+        activeStep: state.activeStep,
+        phoneVerificationRequired:
+          state.serviceDescription?.phoneVerificationRequired,
+      },
+      {statsig: true},
+    )
     // phoneVerificationRequired is actually whether a captcha is required
     if (!state.serviceDescription?.phoneVerificationRequired) {
       dispatch({
@@ -88,12 +98,14 @@ export function StepHandle() {
       value: handle,
     })
     dispatch({type: 'prev'})
-    logEvent('signup:backPressed', {
-      activeStep: state.activeStep,
-    })
+    logger.metric(
+      'signup:backPressed',
+      {activeStep: state.activeStep},
+      {statsig: true},
+    )
   }, [dispatch, state.activeStep])
 
-  const validCheck = validateHandle(draftValue, state.userDomain)
+  const validCheck = validateServiceHandle(draftValue, state.userDomain)
   return (
     <ScreenTransition>
       <View style={[a.gap_lg]}>
@@ -111,7 +123,7 @@ export function StepHandle() {
                 handleValueRef.current = val
                 setDraftValue(val)
               }}
-              label={_(msg`Input your user handle`)}
+              label={_(msg`Type your desired username`)}
               defaultValue={draftValue}
               autoCapitalize="none"
               autoCorrect={false}
@@ -122,10 +134,12 @@ export function StepHandle() {
         </View>
         {draftValue !== '' && (
           <Text style={[a.text_md]}>
-            <Trans>Your full handle will be</Trans>{' '}
-            <Text style={[a.text_md, a.font_bold]}>
-              @{createFullHandle(draftValue, state.userDomain)}
-            </Text>
+            <Trans>
+              Your full username will be{' '}
+              <Text style={[a.text_md, a.font_bold]}>
+                @{createFullHandle(draftValue, state.userDomain)}
+              </Text>
+            </Trans>
           </Text>
         )}
 
@@ -164,9 +178,16 @@ export function StepHandle() {
               <IsValidIcon
                 valid={validCheck.frontLength && validCheck.totalLength}
               />
-              {!validCheck.totalLength ? (
+              {!validCheck.totalLength ||
+              draftValue.length > MAX_SERVICE_HANDLE_LENGTH ? (
                 <Text style={[a.text_md, a.flex_1]}>
-                  <Trans>No longer than 253 characters</Trans>
+                  <Trans>
+                    No longer than{' '}
+                    <Plural
+                      value={MAX_SERVICE_HANDLE_LENGTH}
+                      other="# characters"
+                    />
+                  </Trans>
                 </Text>
               ) : (
                 <Text style={[a.text_md, a.flex_1]}>

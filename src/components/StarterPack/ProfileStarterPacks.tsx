@@ -1,46 +1,49 @@
-import React from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from 'react'
 import {
   findNodeHandle,
-  ListRenderItemInfo,
-  StyleProp,
+  type ListRenderItemInfo,
+  type StyleProp,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
-import {AppBskyGraphDefs, AppBskyGraphGetActorStarterPacks} from '@atproto/api'
+import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
-import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
 
 import {useGenerateStarterPackMutation} from '#/lib/generate-starterpack'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useEmail} from '#/lib/hooks/useEmail'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {parseStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
-import {List, ListRef} from '#/view/com/util/List'
-import {Text} from '#/view/com/util/text/Text'
+import {useActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
+import {List, type ListRef} from '#/view/com/util/List'
+import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, ios, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
+import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
-import {VerifyEmailDialog} from '../dialogs/VerifyEmailDialog'
-import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '../icons/Plus'
+import {Text} from '#/components/Typography'
 
 interface SectionRef {
   scrollToTop: () => void
 }
 
 interface ProfileFeedgensProps {
-  starterPacksQuery: UseInfiniteQueryResult<
-    InfiniteData<AppBskyGraphGetActorStarterPacks.OutputSchema, unknown>,
-    Error
-  >
   scrollElRef: ListRef
+  did: string
   headerOffset: number
   enabled?: boolean
   style?: StyleProp<ViewStyle>
@@ -58,8 +61,8 @@ export const ProfileStarterPacks = React.forwardRef<
   ProfileFeedgensProps
 >(function ProfileFeedgensImpl(
   {
-    starterPacksQuery: query,
     scrollElRef,
+    did,
     headerOffset,
     enabled,
     style,
@@ -71,17 +74,24 @@ export const ProfileStarterPacks = React.forwardRef<
 ) {
   const t = useTheme()
   const bottomBarOffset = useBottomBarOffset(100)
-  const [isPTRing, setIsPTRing] = React.useState(false)
-  const {data, refetch, isFetching, hasNextPage, fetchNextPage} = query
+  const [isPTRing, setIsPTRing] = useState(false)
+  const {
+    data,
+    refetch,
+    isError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useActorStarterPacksQuery({did, enabled})
   const {isTabletOrDesktop} = useWebMediaQueries()
 
   const items = data?.pages.flatMap(page => page.starterPacks)
 
-  React.useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, () => ({
     scrollToTop: () => {},
   }))
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setIsPTRing(true)
     try {
       await refetch()
@@ -92,37 +102,36 @@ export const ProfileStarterPacks = React.forwardRef<
   }, [refetch, setIsPTRing])
 
   const onEndReached = React.useCallback(async () => {
-    if (isFetching || !hasNextPage) return
-
+    if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()
     } catch (err) {
       logger.error('Failed to load more starter packs', {message: err})
     }
-  }, [isFetching, hasNextPage, fetchNextPage])
+  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (enabled && scrollElRef.current) {
       const nativeTag = findNodeHandle(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }
   }, [enabled, scrollElRef, setScrollViewTag])
 
-  const renderItem = ({
-    item,
-    index,
-  }: ListRenderItemInfo<AppBskyGraphDefs.StarterPackView>) => {
-    return (
-      <View
-        style={[
-          a.p_lg,
-          (isTabletOrDesktop || index !== 0) && a.border_t,
-          t.atoms.border_contrast_low,
-        ]}>
-        <StarterPackCard starterPack={item} />
-      </View>
-    )
-  }
+  const renderItem = useCallback(
+    ({item, index}: ListRenderItemInfo<AppBskyGraphDefs.StarterPackView>) => {
+      return (
+        <View
+          style={[
+            a.p_lg,
+            (isTabletOrDesktop || index !== 0) && a.border_t,
+            t.atoms.border_contrast_low,
+          ]}>
+          <StarterPackCard starterPack={item} />
+        </View>
+      )
+    },
+    [isTabletOrDesktop, t.atoms.border_contrast_low],
+  )
 
   return (
     <View testID={testID} style={style}>
@@ -136,14 +145,15 @@ export const ProfileStarterPacks = React.forwardRef<
         headerOffset={headerOffset}
         progressViewOffset={ios(0)}
         contentContainerStyle={{paddingBottom: headerOffset + bottomBarOffset}}
-        indicatorStyle={t.name === 'light' ? 'black' : 'white'}
         removeClippedSubviews={true}
         desktopFixedHeight
         onEndReached={onEndReached}
         onRefresh={onRefresh}
-        ListEmptyComponent={Empty}
+        ListEmptyComponent={
+          data ? (isMe ? Empty : undefined) : FeedLoadingPlaceholder
+        }
         ListFooterComponent={
-          items?.length !== 0 && isMe ? CreateAnother : undefined
+          !!data && items?.length !== 0 && isMe ? CreateAnother : undefined
         }
       />
     </View>
@@ -182,7 +192,6 @@ function CreateAnother() {
 
 function Empty() {
   const {_} = useLingui()
-  const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
   const confirmDialogControl = useDialogControl()
   const followersDialogControl = useDialogControl()
@@ -191,7 +200,7 @@ function Empty() {
   const {needsEmailVerification} = useEmail()
   const verifyEmailControl = useDialogControl()
 
-  const [isGenerating, setIsGenerating] = React.useState(false)
+  const [isGenerating, setIsGenerating] = useState(false)
 
   const {mutate: generateStarterPack} = useGenerateStarterPackMutation({
     onSuccess: ({uri}) => {
@@ -228,16 +237,10 @@ function Empty() {
         a.justify_between,
         a.gap_lg,
         a.shadow_lg,
-        {marginTop: 2},
+        {marginTop: a.border.borderWidth},
       ]}>
       <View style={[a.gap_xs]}>
-        <Text
-          style={[
-            a.font_bold,
-            a.text_lg,
-            t.atoms.text_contrast_medium,
-            {color: 'white'},
-          ]}>
+        <Text style={[a.font_bold, a.text_lg, {color: 'white'}]}>
           <Trans>You haven't created a starter pack yet!</Trans>
         </Text>
         <Text style={[a.text_md, {color: 'white'}]}>

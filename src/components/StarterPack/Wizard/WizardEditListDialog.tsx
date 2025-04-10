@@ -38,7 +38,7 @@ export function WizardEditListDialog({
   state: WizardState
   dispatch: (action: WizardAction) => void
   moderationOpts: ModerationOpts
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
   const {_} = useLingui()
   const t = useTheme()

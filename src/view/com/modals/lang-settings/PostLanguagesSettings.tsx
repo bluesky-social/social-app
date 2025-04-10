@@ -5,6 +5,7 @@ import {Trans} from '@lingui/macro'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {deviceLanguageCodes} from '#/locale/deviceLocales'
+import {languageName} from '#/locale/helpers'
 import {useModalControls} from '#/state/modals'
 import {
   hasPostLanguage,
@@ -91,7 +92,7 @@ export function Component() {
           return (
             <ToggleButton
               key={lang.code2}
-              label={lang.name}
+              label={languageName(lang, langPrefs.appLanguage)}
               isSelected={isSelected}
               onPress={() => (isDisabled ? undefined : onPress(lang.code2))}
               style={[

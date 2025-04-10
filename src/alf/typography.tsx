@@ -110,9 +110,7 @@ export function renderChildrenWithEmoji(
     return child.split(EMOJI).map((stringPart, index) => [
       stringPart,
       emojis[index] ? (
-        <UITextView
-          {...props}
-          style={[props?.style, {color: 'black', fontFamily: 'System'}]}>
+        <UITextView {...props} style={[props?.style, {fontFamily: 'System'}]}>
           {emojis[index]}
         </UITextView>
       ) : null,

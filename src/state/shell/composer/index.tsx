@@ -1,7 +1,6 @@
 import React from 'react'
 import {
   AppBskyActorDefs,
-  AppBskyEmbedRecord,
   AppBskyFeedDefs,
   ModerationDecision,
 } from '@atproto/api'
@@ -13,6 +12,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {postUriToRelativePath, toBskyAppUrl} from '#/lib/strings/url-helpers'
 import {purgeTemporaryImageFiles} from '#/state/gallery'
 import {precacheResolveLinkQuery} from '#/state/queries/resolve-link'
+import type {EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker.web'
 import * as Toast from '#/view/com/util/Toast'
 
 export interface ComposerOptsPostRef {
@@ -20,7 +20,7 @@ export interface ComposerOptsPostRef {
   cid: string
   text: string
   author: AppBskyActorDefs.ProfileViewBasic
-  embed?: AppBskyEmbedRecord.ViewRecord['embed']
+  embed?: AppBskyFeedDefs.PostView['embed']
   moderation?: ModerationDecision
 }
 
@@ -29,7 +29,7 @@ export interface ComposerOpts {
   onPost?: (postUri: string | undefined) => void
   quote?: AppBskyFeedDefs.PostView
   mention?: string // handle of user to mention
-  openEmojiPicker?: (pos: DOMRect | undefined) => void
+  openEmojiPicker?: (pos: EmojiPickerPosition | undefined) => void
   text?: string
   imageUris?: {uri: string; width: number; height: number; altText?: string}[]
   videoUri?: {uri: string; width: number; height: number}
@@ -83,7 +83,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         'exclamation-circle',
       )
     } else {
-      setState(opts)
+      setState(prevOpts => {
+        if (prevOpts) {
+          // Never replace an already open composer.
+          return prevOpts
+        }
+        return opts
+      })
     }
   })
 

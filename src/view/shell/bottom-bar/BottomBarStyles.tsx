@@ -14,7 +14,6 @@ export const styles = StyleSheet.create({
     paddingRight: 10,
   },
   bottomBarWeb: {
-    // @ts-ignore web-only
     position: 'fixed',
   },
   ctrl: {
@@ -43,6 +42,17 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     color: colors.white,
     fontVariant: ['tabular-nums'],
+  },
+  hasNewBadge: {
+    position: 'absolute',
+    left: '54%',
+    marginLeft: 4,
+    top: 10,
+    width: 8,
+    height: 8,
+    backgroundColor: colors.blue3,
+    borderRadius: 6,
+    zIndex: 1,
   },
   ctrlIcon: {
     marginLeft: 'auto',

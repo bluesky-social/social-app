@@ -62,11 +62,21 @@ let RepostButton = ({
           {padding: 5},
         ]}
         hoverStyle={t.atoms.bg_contrast_25}
-        label={`${
+        label={
           isReposted
-            ? _(msg`Undo repost`)
-            : _(msg({message: 'Repost', context: 'action'}))
-        } (${plural(repostCount || 0, {one: '# repost', other: '# reposts'})})`}
+            ? _(
+                msg`Undo repost (${plural(repostCount || 0, {
+                  one: '# repost',
+                  other: '# reposts',
+                })})`,
+              )
+            : _(
+                msg`Repost (${plural(repostCount || 0, {
+                  one: '# repost',
+                  other: '# reposts',
+                })})`,
+              )
+        }
         shape="round"
         variant="ghost"
         color="secondary"

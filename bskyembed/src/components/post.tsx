@@ -38,7 +38,7 @@ export function Post({thread}: Props) {
       <div className="flex-1 flex-col flex gap-2" lang={record?.langs?.[0]}>
         <div className="flex gap-2.5 items-center cursor-pointer">
           <Link href={`/profile/${post.author.did}`} className="rounded-full">
-            <div className="w-10 h-10 overflow-hidden rounded-full bg-neutral-300 shrink-0">
+            <div className="w-10 h-10 overflow-hidden rounded-full bg-neutral-300 dark:bg-slate-700 shrink-0">
               <img
                 src={post.author.avatar}
                 style={isAuthorLabeled ? {filter: 'blur(2.5px)'} : undefined}
@@ -53,7 +53,7 @@ export function Post({thread}: Props) {
             </Link>
             <Link
               href={`/profile/${post.author.did}`}
-              className="text-[15px] text-textLight hover:underline line-clamp-1">
+              className="text-[15px] text-textLight dark:text-textDimmed hover:underline line-clamp-1">
               <p>@{post.author.handle}</p>
             </Link>
           </div>
@@ -69,15 +69,15 @@ export function Post({thread}: Props) {
         <Link href={href}>
           <time
             datetime={new Date(post.indexedAt).toISOString()}
-            className="text-textLight mt-1 text-sm hover:underline">
+            className="text-textLight dark:text-textDimmed mt-1 text-sm hover:underline">
             {niceDate(post.indexedAt)}
           </time>
         </Link>
-        <div className="border-t w-full pt-2.5 flex items-center gap-5 text-sm cursor-pointer">
+        <div className="border-t dark:border-slate-600 w-full pt-2.5 flex items-center gap-5 text-sm cursor-pointer">
           {!!post.likeCount && (
             <div className="flex items-center gap-2 cursor-pointer">
               <img src={likeIcon} className="w-5 h-5" />
-              <p className="font-bold text-neutral-500 mb-px">
+              <p className="font-bold text-neutral-500 dark:text-neutral-300 mb-px">
                 {prettyNumber(post.likeCount)}
               </p>
             </div>
@@ -85,17 +85,19 @@ export function Post({thread}: Props) {
           {!!post.repostCount && (
             <div className="flex items-center gap-2 cursor-pointer">
               <img src={repostIcon} className="w-5 h-5" />
-              <p className="font-bold text-neutral-500 mb-px">
+              <p className="font-bold text-neutral-500 dark:text-neutral-300 mb-px">
                 {prettyNumber(post.repostCount)}
               </p>
             </div>
           )}
           <div className="flex items-center gap-2 cursor-pointer">
             <img src={replyIcon} className="w-5 h-5" />
-            <p className="font-bold text-neutral-500 mb-px">Reply</p>
+            <p className="font-bold text-neutral-500 dark:text-neutral-300 mb-px">
+              Reply
+            </p>
           </div>
           <div className="flex-1" />
-          <p className="cursor-pointer text-brand font-bold hover:underline hidden min-[450px]:inline">
+          <p className="cursor-pointer text-brand dark:text-brandLighten font-bold hover:underline hidden min-[450px]:inline">
             {post.replyCount
               ? `Read ${prettyNumber(post.replyCount)} ${
                   post.replyCount > 1 ? 'replies' : 'reply'

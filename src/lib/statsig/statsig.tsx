@@ -1,20 +1,21 @@
 import React from 'react'
 import {Platform} from 'react-native'
 import {AppState, AppStateStatus} from 'react-native'
-import {sha256} from 'js-sha256'
 import {Statsig, StatsigProvider} from 'statsig-react-native-expo'
 
 import {BUNDLE_DATE, BUNDLE_IDENTIFIER, IS_TESTFLIGHT} from '#/lib/app-info'
 import {logger} from '#/logger'
+import {MetricEvents} from '#/logger/metrics'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 import {useSession} from '../../state/session'
 import {timeout} from '../async/timeout'
 import {useNonReactiveCallback} from '../hooks/useNonReactiveCallback'
-import {LogEvents} from './events'
 import {Gate} from './gates'
 
 const SDK_KEY = 'client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV'
+
+export const initPromise = initialize()
 
 type StatsigUser = {
   userID: string | undefined
@@ -41,7 +42,7 @@ if (isWeb && typeof window !== 'undefined') {
   refUrl = decodeURIComponent(params.get('ref_url') ?? '')
 }
 
-export type {LogEvents}
+export type {MetricEvents as LogEvents}
 
 function createStatsigOptions(prefetchUsers: StatsigUser[]) {
   return {
@@ -90,22 +91,56 @@ export function toClout(n: number | null | undefined): number | undefined {
   }
 }
 
-export function logEvent<E extends keyof LogEvents>(
+/**
+ * @deprecated use `logger.metric()` instead
+ */
+export function logEvent<E extends keyof MetricEvents>(
   eventName: E & string,
-  rawMetadata: LogEvents[E] & FlatJSONRecord,
+  rawMetadata: MetricEvents[E] & FlatJSONRecord,
+  options: {
+    /**
+     * Send to our data lake only, not to StatSig
+     */
+    lake?: boolean
+  } = {lake: false},
 ) {
   try {
-    const fullMetadata = {
-      ...rawMetadata,
-    } as Record<string, string> // Statsig typings are unnecessarily strict here.
+    const fullMetadata = toStringRecord(rawMetadata)
     fullMetadata.routeName = getCurrentRouteName() ?? '(Uninitialized)'
     if (Statsig.initializeCalled()) {
-      Statsig.logEvent(eventName, null, fullMetadata)
+      let ev: string = eventName
+      if (options.lake) {
+        ev = `lake:${ev}`
+      }
+      Statsig.logEvent(ev, null, fullMetadata)
+    }
+    /**
+     * All datalake events should be sent using `logger.metric`, and we don't
+     * want to double-emit logs to other transports.
+     */
+    if (!options.lake) {
+      logger.info(eventName, fullMetadata)
     }
   } catch (e) {
     // A log should never interrupt the calling code, whatever happens.
     logger.error('Failed to log an event', {message: e})
   }
+}
+
+function toStringRecord<E extends keyof MetricEvents>(
+  metadata: MetricEvents[E] & FlatJSONRecord,
+): Record<string, string> {
+  const record: Record<string, string> = {}
+  for (let key in metadata) {
+    if (metadata.hasOwnProperty(key)) {
+      if (typeof metadata[key] === 'string') {
+        record[key] = metadata[key]
+      } else {
+        record[key] = JSON.stringify(metadata[key])
+      }
+    }
+  }
+  return record
 }
 
 // We roll our own cache in front of Statsig because it is a singleton
@@ -167,13 +202,9 @@ export function useDangerousSetGate(): (
 }
 
 function toStatsigUser(did: string | undefined): StatsigUser {
-  let userID: string | undefined
-  if (did) {
-    userID = sha256(did)
-  }
   const languagePrefs = persisted.get('languagePrefs')
   return {
-    userID,
+    userID: did,
     platform: Platform.OS as 'ios' | 'android' | 'web',
     custom: {
       refSrc,
@@ -219,9 +250,6 @@ export async function tryFetchGates(
       // Use this for less common operations where the user would be OK with a delay.
       timeoutMs = 1500
     }
-    // Note: This condition is currently false the very first render because
-    // Statsig has not initialized yet. In the future, we can fix this by
-    // doing the initialization ourselves instead of relying on the provider.
     if (Statsig.initializeCalled()) {
       await Promise.race([
         timeout(timeoutMs),

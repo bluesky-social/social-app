@@ -1,0 +1,15 @@
+diff --git a/node_modules/expo-modules-core/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt b/node_modules/expo-modules-core/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
+index 47c4d15..afe138d 100644
+--- a/node_modules/expo-modules-core/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
++++ b/node_modules/expo-modules-core/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
+@@ -125,6 +125,10 @@ internal fun peekResponseBody(
+ }
+ 
+ internal fun shouldParseBody(response: Response): Boolean {
++  if (response.request.url.encodedPath == "/bitdrift_public.protobuf.client.v1.ApiService/Mux") {
++    return false
++  }
++
+   // Check for Content-Type
+   val skipContentTypes = listOf(
+     "text/event-stream", // Server Sent Events

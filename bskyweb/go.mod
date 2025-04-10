@@ -1,8 +1,8 @@
 module github.com/bluesky-social/social-app/bskyweb
 
-go 1.22
+go 1.23
 
-toolchain go1.22.4
+toolchain go1.23.4
 
 require (
 	github.com/bluesky-social/indigo v0.0.0-20240624223826-fd66f93ce141

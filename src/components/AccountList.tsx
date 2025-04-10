@@ -62,7 +62,7 @@ export function AccountList({
         testID="chooseAddAccountBtn"
         style={[a.flex_1]}
         onPress={pendingDid ? undefined : onPressAddAccount}
-        label={_(msg`Login to account that is not listed`)}>
+        label={_(msg`Sign in to account that is not listed`)}>
         {({hovered, pressed}) => (
           <View
             style={[
@@ -131,7 +131,11 @@ function AccountItem({
             (hovered || pressed || isPendingAccount) && t.atoms.bg_contrast_25,
           ]}>
           <View style={a.p_md}>
-            <UserAvatar avatar={profile?.avatar} size={24} />
+            <UserAvatar
+              avatar={profile?.avatar}
+              size={24}
+              type={profile?.associated?.labeler ? 'labeler' : 'user'}
+            />
           </View>
           <Text style={[a.align_baseline, a.flex_1, a.flex_row, a.py_sm]}>
             <Text emoji style={[a.font_bold]}>

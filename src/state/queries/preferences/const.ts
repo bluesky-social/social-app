@@ -39,4 +39,8 @@ export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
     activeProgressGuide: undefined,
     nuxs: [],
   },
+  postInteractionSettings: {
+    threadgateAllowRules: undefined,
+    postgateEmbeddingRules: [],
+  },
 }

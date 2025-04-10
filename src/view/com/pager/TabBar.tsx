@@ -13,6 +13,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
+import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
@@ -51,6 +52,7 @@ export function TabBar({
   const containerSize = useSharedValue(0)
   const scrollX = useSharedValue(0)
   const layouts = useSharedValue<{x: number; width: number}[]>([])
+  const textLayouts = useSharedValue<{width: number}[]>([])
   const itemsLength = items.length
 
   const scrollToOffsetJS = useCallback(
@@ -211,21 +213,53 @@ export function TabBar({
     [layouts],
   )
 
+  const onTextLayout = useCallback(
+    (i: number, layout: {width: number}) => {
+      'worklet'
+      textLayouts.modify(ls => {
+        ls[i] = layout
+        return ls
+      })
+    },
+    [textLayouts],
+  )
+
   const indicatorStyle = useAnimatedStyle(() => {
     if (!_WORKLET) {
       return {opacity: 0}
     }
     const layoutsValue = layouts.get()
+    const textLayoutsValue = textLayouts.get()
     if (
       layoutsValue.length !== itemsLength ||
-      layoutsValue.some(l => l === undefined)
+      textLayoutsValue.length !== itemsLength
     ) {
       return {
         opacity: 0,
       }
     }
-    if (layoutsValue.length === 1) {
-      return {opacity: 1}
+
+    function getScaleX(index: number) {
+      const textWidth = textLayoutsValue[index].width
+      const itemWidth = layoutsValue[index].width
+      const minIndicatorWidth = 45
+      const maxIndicatorWidth = itemWidth - 2 * CONTENT_PADDING
+      const indicatorWidth = Math.min(
+        Math.max(minIndicatorWidth, textWidth),
+        maxIndicatorWidth,
+      )
+      return indicatorWidth / contentSize.get()
+    }
+
+    if (textLayoutsValue.length === 1) {
+      return {
+        opacity: 1,
+        transform: [
+          {
+            scaleX: getScaleX(0),
+          },
+        ],
+      }
     }
     return {
       opacity: 1,
@@ -240,10 +274,8 @@ export function TabBar({
         {
           scaleX: interpolate(
             dragProgress.get(),
-            layoutsValue.map((l, i) => i),
-            layoutsValue.map(
-              l => (l.width - ITEM_PADDING * 2) / contentSize.get(),
-            ),
+            textLayoutsValue.map((l, i) => i),
+            textLayoutsValue.map((l, i) => getScaleX(i)),
           ),
         },
       ],
@@ -266,56 +298,59 @@ export function TabBar({
       testID={testID}
       style={[t.atoms.bg, a.flex_row]}
       accessibilityRole="tablist">
-      <ScrollView
-        testID={`${testID}-selector`}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        ref={scrollElRef}
-        contentContainerStyle={styles.contentContainer}
-        onLayout={e => {
-          containerSize.set(e.nativeEvent.layout.width)
-        }}
-        onScrollBeginDrag={() => {
-          // Remember that you've manually messed with the tabbar scroll.
-          // This will disable auto-adjustment until after next pager swipe or item tap.
-          syncScrollState.set('unsynced')
-        }}
-        onScroll={e => {
-          scrollX.value = Math.round(e.nativeEvent.contentOffset.x)
-        }}>
-        <Animated.View
+      <BlockDrawerGesture>
+        <ScrollView
+          testID={`${testID}-selector`}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          ref={scrollElRef}
+          contentContainerStyle={styles.contentContainer}
           onLayout={e => {
-            contentSize.set(e.nativeEvent.layout.width)
+            containerSize.set(e.nativeEvent.layout.width)
           }}
-          style={{flexDirection: 'row'}}>
-          {items.map((item, i) => {
-            return (
-              <TabBarItem
-                key={i}
-                index={i}
-                testID={testID}
-                dragProgress={dragProgress}
-                item={item}
-                onPressItem={onPressItem}
-                onItemLayout={onItemLayout}
-              />
-            )
-          })}
+          onScrollBeginDrag={() => {
+            // Remember that you've manually messed with the tabbar scroll.
+            // This will disable auto-adjustment until after next pager swipe or item tap.
+            syncScrollState.set('unsynced')
+          }}
+          onScroll={e => {
+            scrollX.value = Math.round(e.nativeEvent.contentOffset.x)
+          }}>
           <Animated.View
-            style={[
-              indicatorStyle,
-              {
-                position: 'absolute',
-                left: 0,
-                bottom: 0,
-                right: 0,
-                borderBottomWidth: 2,
-                borderColor: t.palette.primary_500,
-              },
-            ]}
-          />
-        </Animated.View>
-      </ScrollView>
+            onLayout={e => {
+              contentSize.set(e.nativeEvent.layout.width)
+            }}
+            style={{flexDirection: 'row', flexGrow: 1}}>
+            {items.map((item, i) => {
+              return (
+                <TabBarItem
+                  key={i}
+                  index={i}
+                  testID={testID}
+                  dragProgress={dragProgress}
+                  item={item}
+                  onPressItem={onPressItem}
+                  onItemLayout={onItemLayout}
+                  onTextLayout={onTextLayout}
+                />
+              )
+            })}
+            <Animated.View
+              style={[
+                indicatorStyle,
+                {
+                  position: 'absolute',
+                  left: 0,
+                  bottom: 0,
+                  right: 0,
+                  borderBottomWidth: 2,
+                  borderColor: t.palette.primary_500,
+                },
+              ]}
+            />
+          </Animated.View>
+        </ScrollView>
+      </BlockDrawerGesture>
       <View style={[t.atoms.border_contrast_low, styles.outerBottomBorder]} />
     </View>
   )
@@ -328,6 +363,7 @@ function TabBarItem({
   item,
   onPressItem,
   onItemLayout,
+  onTextLayout,
 }: {
   index: number
   testID: string | undefined
@@ -335,6 +371,7 @@ function TabBarItem({
   item: string
   onPressItem: (index: number) => void
   onItemLayout: (index: number, layout: {x: number; width: number}) => void
+  onTextLayout: (index: number, layout: {width: number}) => void
 }) {
   const t = useTheme()
   const style = useAnimatedStyle(() => {
@@ -358,8 +395,15 @@ function TabBarItem({
     [index, onItemLayout],
   )
 
+  const handleTextLayout = useCallback(
+    (e: LayoutChangeEvent) => {
+      runOnUI(onTextLayout)(index, e.nativeEvent.layout)
+    },
+    [index, onTextLayout],
+  )
+
   return (
-    <View onLayout={handleLayout}>
+    <View onLayout={handleLayout} style={{flexGrow: 1}}>
       <PressableWithHover
         testID={`${testID}-selector-${index}`}
         style={styles.item}
@@ -370,7 +414,8 @@ function TabBarItem({
           <Text
             emoji
             testID={testID ? `${testID}-${item}` : undefined}
-            style={[t.atoms.text, a.text_md, a.font_bold, {lineHeight: 20}]}>
+            style={[styles.itemText, t.atoms.text, a.text_md, a.font_bold]}
+            onLayout={handleTextLayout}>
             {item}
           </Text>
         </Animated.View>
@@ -381,18 +426,26 @@ function TabBarItem({
 
 const styles = StyleSheet.create({
   contentContainer: {
+    flexGrow: 1,
     backgroundColor: 'transparent',
     paddingHorizontal: CONTENT_PADDING,
   },
   item: {
+    flexGrow: 1,
     paddingTop: 10,
     paddingHorizontal: ITEM_PADDING,
     justifyContent: 'center',
   },
   itemInner: {
+    alignItems: 'center',
+    flexGrow: 1,
     paddingBottom: 10,
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
+  },
+  itemText: {
+    lineHeight: 20,
+    textAlign: 'center',
   },
   outerBottomBorder: {
     position: 'absolute',

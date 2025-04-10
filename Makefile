@@ -20,7 +20,7 @@ build-web-embed: ## Compile web embed bundle, copy to bskyweb/embedr* directorie
 
 .PHONY: test
 test: ## Run all tests
-	NODE_ENV=test EXPO_PUBLIC_ENV=test yarn test
+	NODE_ENV=test yarn test
 
 .PHONY: lint
 lint: ## Run style checks and verify syntax
@@ -37,6 +37,6 @@ deps: ## Installs dependent libs using 'yarn install'
 
 .PHONY: nvm-setup
 nvm-setup: ## Use NVM to install and activate node+yarn
-	nvm install 18
-	nvm use 18
+	nvm install 20
+	nvm use 20
 	npm install --global yarn

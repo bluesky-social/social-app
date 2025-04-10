@@ -83,7 +83,12 @@ export async function createAgentAndLogin(
   ) => void,
 ) {
   const agent = new BskyAppAgent({service})
-  await agent.login({identifier, password, authFactorToken})
+  await agent.login({
+    identifier,
+    password,
+    authFactorToken,
+    allowTakendown: true,
+  })
 
   const account = agentToSessionAccountOrThrow(agent)
   const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
@@ -161,7 +166,7 @@ export async function createAgentAndCreateAccount(
       })
     } catch (e: any) {
       logger.error(e, {
-        context: `session: createAgentAndCreateAccount failed to save personal details and feeds`,
+        message: `session: createAgentAndCreateAccount failed to save personal details and feeds`,
       })
     }
   } else {
@@ -172,7 +177,7 @@ export async function createAgentAndCreateAccount(
     // snooze first prompt after signup, defer to next prompt
     snoozeEmailConfirmationPrompt()
   } catch (e: any) {
-    logger.error(e, {context: `session: failed snoozeEmailConfirmationPrompt`})
+    logger.error(e, {message: `session: failed snoozeEmailConfirmationPrompt`})
   }
 
   return agent.prepare(gates, moderation, onSessionChange)

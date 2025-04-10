@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react'
 import {TextInput, View} from 'react-native'
-import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
+import {moderateProfile, ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -15,7 +15,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
-import {useListConvosQuery} from '#/state/queries/messages/list-converations'
+import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {ListMethods} from '#/view/com/util/List'
@@ -28,13 +28,14 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 type Item =
   | {
       type: 'profile'
       key: string
       enabled: boolean
-      profile: AppBskyActorDefs.ProfileView
+      profile: bsky.profile.AnyProfileView
     }
   | {
       type: 'empty'
@@ -63,6 +64,7 @@ export function SearchablePeopleList({
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const control = Dialog.useDialogContext()
+  const [headerHeight, setHeaderHeight] = useState(0)
   const listRef = useRef<ListMethods>(null)
   const {currentAccount} = useSession()
   const inputRef = useRef<TextInput>(null)
@@ -75,7 +77,10 @@ export function SearchablePeopleList({
     isFetching,
   } = useActorAutocompleteQuery(searchText, true, 12)
   const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
-  const {data: convos} = useListConvosQuery({enabled: showRecentConvos})
+  const {data: convos} = useListConvosQuery({
+    enabled: showRecentConvos,
+    status: 'accepted',
+  })
 
   const items = useMemo(() => {
     let _items: Item[] = []
@@ -237,6 +242,7 @@ export function SearchablePeopleList({
   const listHeader = useMemo(() => {
     return (
       <View
+        onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}
         style={[
           a.relative,
           web(a.pt_lg),
@@ -315,6 +321,7 @@ export function SearchablePeopleList({
       ]}
       webInnerContentContainerStyle={a.py_0}
       webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
+      scrollIndicatorInsets={{top: headerHeight}}
       keyboardDismissMode="on-drag"
     />
   )
@@ -327,7 +334,7 @@ function ProfileCard({
   onPress,
 }: {
   enabled: boolean
-  profile: AppBskyActorDefs.ProfileView
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   onPress: (did: string) => void
 }) {
@@ -502,7 +509,7 @@ function SearchInput({
         autoCapitalize="none"
         autoFocus
         accessibilityLabel={_(msg`Search profiles`)}
-        accessibilityHint={_(msg`Search profiles`)}
+        accessibilityHint={_(msg`Searches for profiles`)}
       />
     </View>
   )

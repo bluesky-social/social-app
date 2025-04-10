@@ -24,6 +24,7 @@ import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
 import {useHaptics} from '#/lib/haptics'
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
+import {useGate} from '#/lib/statsig/statsig'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
@@ -68,7 +69,7 @@ let PostCtrls = ({
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
   onPostReply?: (postUri: string | undefined) => void
-  logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+  logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const t = useTheme()
@@ -85,13 +86,17 @@ let PostCtrls = ({
   const {sendInteraction} = useFeedFeedbackContext()
   const {captureAction} = useProgressGuideControls()
   const playHaptic = useHaptics()
+  const gate = useGate()
   const isDiscoverDebugUser =
-    IS_INTERNAL || DISCOVER_DEBUG_DIDS[currentAccount?.did ?? '']
+    IS_INTERNAL ||
+    DISCOVER_DEBUG_DIDS[currentAccount?.did || ''] ||
+    gate('debug_show_feedcontext')
   const isBlocked = Boolean(
     post.author.viewer?.blocking ||
       post.author.viewer?.blockedBy ||
       post.author.viewer?.blockingByList,
   )
+  const replyDisabled = post.viewer?.replyDisabled
 
   const shouldShowLoggedOutWarning = React.useMemo(() => {
     return (
@@ -246,22 +251,24 @@ let PostCtrls = ({
       <View
         style={[
           big ? a.align_center : [a.flex_1, a.align_start, {marginLeft: -6}],
-          post.viewer?.replyDisabled ? {opacity: 0.5} : undefined,
+          replyDisabled ? {opacity: 0.5} : undefined,
         ]}>
         <Pressable
           testID="replyBtn"
           style={btnStyle}
           onPress={() => {
-            if (!post.viewer?.replyDisabled) {
+            if (!replyDisabled) {
               playHaptic('Light')
               requireAuth(() => onPressReply())
             }
           }}
           accessibilityRole="button"
-          accessibilityLabel={plural(post.replyCount || 0, {
-            one: 'Reply (# reply)',
-            other: 'Reply (# replies)',
-          })}
+          accessibilityLabel={_(
+            msg`Reply (${plural(post.replyCount || 0, {
+              one: '# reply',
+              other: '# replies',
+            })})`,
+          )}
           accessibilityHint=""
           hitSlop={POST_CTRL_HITSLOP}>
           <Bubble
@@ -298,14 +305,18 @@ let PostCtrls = ({
           accessibilityRole="button"
           accessibilityLabel={
             post.viewer?.like
-              ? plural(post.likeCount || 0, {
-                  one: 'Unlike (# like)',
-                  other: 'Unlike (# likes)',
-                })
-              : plural(post.likeCount || 0, {
-                  one: 'Like (# like)',
-                  other: 'Like (# likes)',
-                })
+              ? _(
+                  msg`Unlike (${plural(post.likeCount || 0, {
+                    one: '# like',
+                    other: '# likes',
+                  })})`,
+                )
+              : _(
+                  msg`Like (${plural(post.likeCount || 0, {
+                    one: '# like',
+                    other: '# likes',
+                  })})`,
+                )
           }
           accessibilityHint=""
           hitSlop={POST_CTRL_HITSLOP}>
@@ -349,7 +360,7 @@ let PostCtrls = ({
             control={loggedOutWarningPromptControl}
             title={_(msg`Note about sharing`)}
             description={_(
-              msg`This post is only visible to logged-in users. It won't be visible to people who aren't logged in.`,
+              msg`This post is only visible to logged-in users. It won't be visible to people who aren't signed in.`,
             )}
             onConfirm={onShare}
             confirmButtonCta={_(msg`Share anyway`)}

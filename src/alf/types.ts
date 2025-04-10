@@ -12,6 +12,7 @@ export type ThemeName = 'light' | 'dim' | 'dark'
 export type Palette = {
   white: string
   black: string
+  like: string
 
   contrast_25: string
   contrast_50: string

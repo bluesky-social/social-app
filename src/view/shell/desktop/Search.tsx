@@ -225,12 +225,12 @@ export function DesktopSearch() {
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    width: 300,
+    width: '100%',
   },
   resultsContainer: {
     marginTop: 10,
     flexDirection: 'column',
-    width: 300,
+    width: '100%',
     borderWidth: 1,
     borderRadius: 6,
   },

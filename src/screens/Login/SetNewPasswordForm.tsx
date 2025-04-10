@@ -4,6 +4,7 @@ import {BskyAgent} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import {isNetworkError} from '#/lib/strings/errors'
 import {cleanError} from '#/lib/strings/errors'
 import {checkAndFormatResetCode} from '#/lib/strings/password'
@@ -41,13 +42,20 @@ export const SetNewPasswordForm = ({
     // Check that the code is correct. We do this again just incase the user enters the code after their pw and we
     // don't get to call onBlur first
     const formattedCode = checkAndFormatResetCode(resetCode)
-    // TODO Better password strength check
-    if (!formattedCode || !password) {
+
+    if (!formattedCode) {
       setError(
         _(
           msg`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
         ),
       )
+      logEvent('signin:passwordResetFailure', {})
+      return
+    }
+
+    // TODO Better password strength check
+    if (!password) {
+      setError(_(msg`Please enter a password.`))
       return
     }
 
@@ -61,9 +69,11 @@ export const SetNewPasswordForm = ({
         password,
       })
       onPasswordSet()
+      logEvent('signin:passwordResetSuccess', {})
     } catch (e: any) {
       const errMsg = e.toString()
       logger.warn('Failed to set new password', {error: e})
+      logEvent('signin:passwordResetFailure', {})
       setIsProcessing(false)
       if (isNetworkError(e)) {
         setError(

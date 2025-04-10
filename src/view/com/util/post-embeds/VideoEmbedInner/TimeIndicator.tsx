@@ -1,6 +1,6 @@
 import {StyleProp, ViewStyle} from 'react-native'
 import {View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -30,7 +30,12 @@ export function TimeIndicator({
   return (
     <View
       pointerEvents="none"
-      accessibilityLabel={_(msg`Time remaining: ${time} seconds`)}
+      accessibilityLabel={_(
+        msg`Time remaining: ${plural(Number(time) || 0, {
+          one: '# second',
+          other: '# seconds',
+        })}`,
+      )}
       accessibilityHint=""
       style={[
         {

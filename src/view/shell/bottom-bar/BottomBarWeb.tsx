@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {msg, Trans} from '@lingui/macro'
+import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigationState} from '@react-navigation/native'
 
@@ -9,17 +9,18 @@ import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransfo
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams} from '#/lib/routes/types'
-import {useUnreadMessageCount} from '#/state/queries/messages/list-converations'
+import {useGate} from '#/lib/statsig/statsig'
+import {useHomeBadge} from '#/state/home-badge'
+import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
-import {Button} from '#/view/com/util/forms/Button'
 import {Link} from '#/view/com/util/Link'
-import {Text} from '#/view/com/util/text/Text'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
@@ -38,6 +39,7 @@ import {
   UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
   UserCircle_Stroke2_Corner0_Rounded as UserCircle,
 } from '#/components/icons/UserCircle'
+import {Text} from '#/components/Typography'
 import {styles} from './BottomBarStyles'
 
 export function BottomBarWeb() {
@@ -51,6 +53,8 @@ export function BottomBarWeb() {
 
   const unreadMessageCount = useUnreadMessageCount()
   const notificationCountStr = useUnreadNotifications()
+  const hasHomeBadge = useHomeBadge()
+  const gate = useGate()
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
@@ -75,7 +79,10 @@ export function BottomBarWeb() {
       ]}>
       {hasSession ? (
         <>
-          <NavItem routeName="Home" href="/">
+          <NavItem
+            routeName="Home"
+            href="/"
+            hasNew={hasHomeBadge && gate('remove_show_latest_button')}>
             {({isActive}) => {
               const Icon = isActive ? HomeFilled : Home
               return (
@@ -105,11 +112,8 @@ export function BottomBarWeb() {
               <NavItem
                 routeName="Messages"
                 href="/messages"
-                badge={
-                  unreadMessageCount.count > 0
-                    ? unreadMessageCount.numUnread
-                    : undefined
-                }>
+                notificationCount={unreadMessageCount.numUnread}
+                hasNew={unreadMessageCount.hasNew}>
                 {({isActive}) => {
                   const Icon = isActive ? MessageFilled : Message
                   return (
@@ -128,7 +132,7 @@ export function BottomBarWeb() {
               <NavItem
                 routeName="Notifications"
                 href="/notifications"
-                badge={notificationCountStr}>
+                notificationCount={notificationCountStr}>
                 {({isActive}) => {
                   const Icon = isActive ? BellFilled : Bell
                   return (
@@ -189,24 +193,26 @@ export function BottomBarWeb() {
               </View>
             </View>
 
-            <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
+            <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
               <Button
                 onPress={showCreateAccount}
-                accessibilityHint={_(msg`Sign up`)}
-                accessibilityLabel={_(msg`Sign up`)}>
-                <Text type="md" style={[{color: 'white'}, a.font_bold]}>
-                  <Trans>Sign up</Trans>
-                </Text>
+                label={_(msg`Create account`)}
+                size="small"
+                variant="solid"
+                color="primary">
+                <ButtonText>
+                  <Trans>Create account</Trans>
+                </ButtonText>
               </Button>
-
               <Button
-                type="default"
                 onPress={showSignIn}
-                accessibilityHint={_(msg`Sign in`)}
-                accessibilityLabel={_(msg`Sign in`)}>
-                <Text type="md" style={[t.atoms.text, a.font_bold]}>
+                label={_(msg`Sign in`)}
+                size="small"
+                variant="solid"
+                color="secondary">
+                <ButtonText>
                   <Trans>Sign in</Trans>
-                </Text>
+                </ButtonText>
               </Button>
             </View>
           </View>
@@ -220,8 +226,9 @@ const NavItem: React.FC<{
   children: (props: {isActive: boolean}) => React.ReactChild
   href: string
   routeName: string
-  badge?: string
-}> = ({children, href, routeName, badge}) => {
+  hasNew?: boolean
+  notificationCount?: string
+}> = ({children, href, routeName, hasNew, notificationCount}) => {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const currentRoute = useNavigationState(state => {
@@ -230,29 +237,46 @@ const NavItem: React.FC<{
     }
     return getCurrentRoute(state)
   })
+
+  // Checks whether we're on someone else's profile
+  const isOnDifferentProfile =
+    currentRoute.name === 'Profile' &&
+    routeName === 'Profile' &&
+    (currentRoute.params as CommonNavigatorParams['Profile']).name !==
+      currentAccount?.handle
+
   const isActive =
     currentRoute.name === 'Profile'
       ? isTab(currentRoute.name, routeName) &&
         (currentRoute.params as CommonNavigatorParams['Profile']).name ===
-          currentAccount?.handle
+          (routeName === 'Profile'
+            ? currentAccount?.handle
+            : (currentRoute.params as CommonNavigatorParams['Profile']).name)
       : isTab(currentRoute.name, routeName)
 
   return (
     <Link
       href={href}
       style={[styles.ctrl, a.pb_lg]}
-      navigationAction="navigate"
+      navigationAction={isOnDifferentProfile ? 'push' : 'navigate'}
       aria-role="link"
       aria-label={routeName}
       accessible={true}>
       {children({isActive})}
-      {!!badge && (
+      {notificationCount ? (
         <View
           style={styles.notificationCount}
-          aria-label={_(msg`${badge} unread items`)}>
-          <Text style={styles.notificationCountLabel}>{badge}</Text>
+          aria-label={_(
+            msg`${plural(notificationCount, {
+              one: '# unread item',
+              other: '# unread items',
+            })}`,
+          )}>
+          <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
-      )}
+      ) : hasNew ? (
+        <View style={styles.hasNewBadge} />
+      ) : null}
     </Link>
   )
 }

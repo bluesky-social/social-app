@@ -15,8 +15,9 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {isWeb} from '#/platform/detection'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {Shadow} from '#/state/cache/profile-shadow'
 import {isConvoActive, useConvo} from '#/state/messages/convo'
+import {ConvoItem} from '#/state/messages/convo/types'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
@@ -30,25 +31,32 @@ const PFP_SIZE = isWeb ? 40 : 34
 export let MessagesListHeader = ({
   profile,
   moderation,
-  blockInfo,
 }: {
-  profile?: AppBskyActorDefs.ProfileViewBasic
+  profile?: Shadow<AppBskyActorDefs.ProfileViewDetailed>
   moderation?: ModerationDecision
-  blockInfo?: {
-    listBlocks: ModerationCause[]
-    userBlock?: ModerationCause
-  }
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
 
+  const blockInfo = React.useMemo(() => {
+    if (!moderation) return
+    const modui = moderation.ui('profileView')
+    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
+    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
+    const userBlock = blocks.find(alert => alert.source.type === 'user')
+    return {
+      listBlocks,
+      userBlock,
+    }
+  }, [moderation])
+
   const onPressBack = useCallback(() => {
-    if (isWeb) {
-      navigation.replace('Messages', {})
-    } else {
+    if (navigation.canGoBack()) {
       navigation.goBack()
+    } else {
+      navigation.navigate('Messages', {})
     }
   }, [navigation])
 
@@ -127,11 +135,11 @@ export let MessagesListHeader = ({
 MessagesListHeader = React.memo(MessagesListHeader)
 
 function HeaderReady({
-  profile: profileUnshadowed,
+  profile,
   moderation,
   blockInfo,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
   moderation: ModerationDecision
   blockInfo: {
     listBlocks: ModerationCause[]
@@ -141,7 +149,6 @@ function HeaderReady({
   const {_} = useLingui()
   const t = useTheme()
   const convoState = useConvo()
-  const profile = useProfileShadow(profileUnshadowed)
 
   const isDeletedAccount = profile?.handle === 'missing.invalid'
   const displayName = isDeletedAccount
@@ -150,6 +157,17 @@ function HeaderReady({
         profile.displayName || profile.handle,
         moderation.ui('displayName'),
       )
+
+  // @ts-ignore findLast is polyfilled - esb
+  const latestMessageFromOther = convoState.items.findLast(
+    (item: ConvoItem) =>
+      item.type === 'message' && item.message.sender.did === profile.did,
+  )
+
+  const latestReportableMessage =
+    latestMessageFromOther?.type === 'message'
+      ? latestMessageFromOther.message
+      : undefined
 
   return (
     <View style={[a.flex_1]}>
@@ -208,6 +226,7 @@ function HeaderReady({
             profile={profile}
             currentScreen="conversation"
             blockInfo={blockInfo}
+            latestReportableMessage={latestReportableMessage}
           />
         )}
       </View>

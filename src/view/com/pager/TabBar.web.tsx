@@ -25,16 +25,12 @@ export function TabBar({
   testID,
   selectedPage,
   items,
-  indicatorColor,
   onSelect,
   onPressSelected,
 }: TabBarProps) {
   const t = useTheme()
   const scrollElRef = useRef<ScrollView>(null)
   const itemRefs = useRef<Array<Element>>([])
-  const indicatorStyle = {
-    borderBottomColor: indicatorColor || t.palette.primary_500,
-  }
   const {gtMobile} = useBreakpoints()
   const styles = gtMobile ? desktopStyles : mobileStyles
 
@@ -115,17 +111,26 @@ export function TabBar({
               hoverStyle={t.atoms.bg_contrast_25}
               onPress={() => onPressItem(i)}
               accessibilityRole="tab">
-              <View style={[styles.itemInner, selected && indicatorStyle]}>
+              <View style={styles.itemInner}>
                 <Text
                   emoji
                   testID={testID ? `${testID}-${item}` : undefined}
                   style={[
+                    styles.itemText,
                     selected ? t.atoms.text : t.atoms.text_contrast_medium,
                     a.text_md,
                     a.font_bold,
                     {lineHeight: 20},
                   ]}>
                   {item}
+                  <View
+                    style={[
+                      styles.itemIndicator,
+                      selected && {
+                        backgroundColor: t.palette.primary_500,
+                      },
+                    ]}
+                  />
                 </Text>
               </View>
             </PressableWithHover>
@@ -140,21 +145,36 @@ export function TabBar({
 const desktopStyles = StyleSheet.create({
   outer: {
     flexDirection: 'row',
-    width: 598,
+    width: 600,
   },
   contentContainer: {
+    flexGrow: 1,
     paddingHorizontal: 0,
     backgroundColor: 'transparent',
   },
   item: {
+    flexGrow: 1,
+    alignItems: 'stretch',
     paddingTop: 14,
     paddingHorizontal: 14,
     justifyContent: 'center',
   },
   itemInner: {
-    paddingBottom: 12,
-    borderBottomWidth: 3,
-    borderBottomColor: 'transparent',
+    alignItems: 'center',
+    overflowX: 'hidden',
+  },
+  itemText: {
+    textAlign: 'center',
+    paddingBottom: 10 + 3,
+  },
+  itemIndicator: {
+    position: 'absolute',
+    bottom: 0,
+    height: 3,
+    left: '50%',
+    transform: 'translateX(-50%)',
+    minWidth: 45,
+    width: '100%',
   },
   outerBottomBorder: {
     position: 'absolute',
@@ -170,18 +190,34 @@ const mobileStyles = StyleSheet.create({
     flexDirection: 'row',
   },
   contentContainer: {
+    flexGrow: 1,
     backgroundColor: 'transparent',
     paddingHorizontal: 6,
   },
   item: {
+    flexGrow: 1,
+    alignItems: 'stretch',
     paddingTop: 10,
     paddingHorizontal: 10,
     justifyContent: 'center',
   },
   itemInner: {
-    paddingBottom: 10,
-    borderBottomWidth: 2,
-    borderBottomColor: 'transparent',
+    flexGrow: 1,
+    alignItems: 'center',
+    overflowX: 'hidden',
+  },
+  itemText: {
+    textAlign: 'center',
+    paddingBottom: 10 + 3,
+  },
+  itemIndicator: {
+    position: 'absolute',
+    bottom: 0,
+    height: 3,
+    left: '50%',
+    transform: 'translateX(-50%)',
+    minWidth: 45,
+    width: '100%',
   },
   outerBottomBorder: {
     position: 'absolute',

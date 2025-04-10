@@ -13,7 +13,15 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {isWeb} from '#/platform/detection'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {
+  atoms as a,
+  useBreakpoints,
+  useLayoutBreakpoints,
+  useTheme,
+  web,
+} from '#/alf'
+import {useDialogContext} from '#/components/Dialog'
+import {CENTER_COLUMN_OFFSET, SCROLLBAR_OFFSET} from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 
 export * from '#/components/Layout/const'
@@ -21,6 +29,7 @@ export * as Header from '#/components/Layout/Header'
 
 export type ScreenProps = React.ComponentProps<typeof View> & {
   style?: StyleProp<ViewStyle>
+  noInsetTop?: boolean
 }
 
 /**
@@ -28,6 +37,7 @@ export type ScreenProps = React.ComponentProps<typeof View> & {
  */
 export const Screen = React.memo(function Screen({
   style,
+  noInsetTop,
   ...props
 }: ScreenProps) {
   const {top} = useSafeAreaInsets()
@@ -35,7 +45,7 @@ export const Screen = React.memo(function Screen({
     <>
       {isWeb && <WebCenterBorders />}
       <View
-        style={[a.util_screen_outer, {paddingTop: top}, style]}
+        style={[a.util_screen_outer, {paddingTop: noInsetTop ? 0 : top}, style]}
         {...props}
       />
     </>
@@ -45,6 +55,7 @@ export const Screen = React.memo(function Screen({
 export type ContentProps = AnimatedScrollViewProps & {
   style?: StyleProp<ViewStyle>
   contentContainerStyle?: StyleProp<ViewStyle>
+  ignoreTabletLayoutOffset?: boolean
 }
 
 /**
@@ -54,8 +65,10 @@ export const Content = React.memo(function Content({
   children,
   style,
   contentContainerStyle,
+  ignoreTabletLayoutOffset,
   ...props
 }: ContentProps) {
+  const t = useTheme()
   const {footerHeight} = useShellLayout()
   const animatedProps = useAnimatedProps(() => {
     return {
@@ -71,6 +84,7 @@ export const Content = React.memo(function Content({
     <Animated.ScrollView
       id="content"
       automaticallyAdjustsScrollIndicatorInsets={false}
+      indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
       // sets the scroll inset to the height of the footer
       animatedProps={animatedProps}
       style={[scrollViewStyles.common, style]}
@@ -80,8 +94,10 @@ export const Content = React.memo(function Content({
       ]}
       {...props}>
       {isWeb ? (
-        // @ts-ignore web only -esb
-        <Center>{children}</Center>
+        <Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>
+          {/* @ts-expect-error web only -esb */}
+          {children}
+        </Center>
       ) : (
         children
       )}
@@ -134,10 +150,13 @@ export const KeyboardAwareContent = React.memo(function LayoutScrollView({
 export const Center = React.memo(function LayoutContent({
   children,
   style,
+  ignoreTabletLayoutOffset,
   ...props
-}: ViewProps) {
+}: ViewProps & {ignoreTabletLayoutOffset?: boolean}) {
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
   const {gtMobile} = useBreakpoints()
+  const {centerColumnOffset} = useLayoutBreakpoints()
+  const {isWithinDialog} = useDialogContext()
   const ctx = useMemo(() => ({isWithinOffsetView: true}), [])
   return (
     <View
@@ -147,8 +166,20 @@ export const Center = React.memo(function LayoutContent({
         gtMobile && {
           maxWidth: 600,
         },
+        !isWithinOffsetView && {
+          transform: [
+            {
+              translateX:
+                centerColumnOffset &&
+                !ignoreTabletLayoutOffset &&
+                !isWithinDialog
+                  ? CENTER_COLUMN_OFFSET
+                  : 0,
+            },
+            {translateX: web(SCROLLBAR_OFFSET) ?? 0},
+          ],
+        },
         style,
-        !isWithinOffsetView && a.scrollbar_offset,
       ]}
       {...props}>
       <ScrollbarOffsetContext.Provider value={ctx}>
@@ -164,6 +195,7 @@ export const Center = React.memo(function LayoutContent({
 const WebCenterBorders = React.memo(function LayoutContent() {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
+  const {centerColumnOffset} = useLayoutBreakpoints()
   return gtMobile ? (
     <View
       style={[
@@ -176,9 +208,8 @@ const WebCenterBorders = React.memo(function LayoutContent() {
           width: 602,
           left: '50%',
           transform: [
-            {
-              translateX: '-50%',
-            },
+            {translateX: '-50%'},
+            {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
             ...a.scrollbar_offset.transform,
           ],
         }),

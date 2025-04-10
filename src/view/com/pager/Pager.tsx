@@ -130,7 +130,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
       [parentOnPageScrollStateChanged],
     )
 
-    const drawerGesture = useContext(DrawerGestureContext)!
+    const drawerGesture = useContext(DrawerGestureContext) ?? Gesture.Native() // noop for web
     const nativeGesture =
       Gesture.Native().requireExternalGestureToFail(drawerGesture)
 

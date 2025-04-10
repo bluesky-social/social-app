@@ -15,7 +15,6 @@ import {useOnboardingState} from '#/state/shell'
  * NUXs
  */
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
-import {IS_DEV} from '#/env'
 
 type Context = {
   activeNux: Nux | undefined
@@ -93,10 +92,10 @@ function Inner({
     setActiveNux(undefined)
   }, [activeNux, setActiveNux])
 
-  if (IS_DEV && typeof window !== 'undefined') {
+  if (__DEV__ && typeof window !== 'undefined') {
     // @ts-ignore
     window.clearNuxDialog = (id: Nux) => {
-      if (!IS_DEV || !id) return
+      if (!__DEV__ || !id) return
       resetNuxs([id])
       unsnooze()
     }

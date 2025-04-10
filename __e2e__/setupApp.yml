@@ -6,6 +6,8 @@ appId: xyz.blueskyweb.app
 - waitForAnimationToEnd
 - tapOn: "http://localhost:8081"
 - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "Continue"
 - swipe:
    from: "Bluesky"
    direction: DOWN

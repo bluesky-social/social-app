@@ -3,10 +3,12 @@ import {
   AccessibilityProps,
   GestureResponderEvent,
   MouseEvent,
+  NativeSyntheticEvent,
   Pressable,
   PressableProps,
   StyleProp,
   StyleSheet,
+  TargetedEvent,
   TextProps,
   TextStyle,
   View,
@@ -76,6 +78,8 @@ export type ButtonProps = Pick<
   | 'onHoverOut'
   | 'onPressIn'
   | 'onPressOut'
+  | 'onFocus'
+  | 'onBlur'
 > &
   AccessibilityProps &
   VariantProps & {
@@ -116,6 +120,12 @@ export const Button = React.forwardRef<View, ButtonProps>(
       style,
       hoverStyle: hoverStyleProp,
       PressableComponent = Pressable,
+      onPressIn: onPressInOuter,
+      onPressOut: onPressOutOuter,
+      onHoverIn: onHoverInOuter,
+      onHoverOut: onHoverOutOuter,
+      onFocus: onFocusOuter,
+      onBlur: onBlurOuter,
       ...rest
     },
     ref,
@@ -127,7 +137,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
       focused: false,
     })
 
-    const onPressInOuter = rest.onPressIn
     const onPressIn = React.useCallback(
       (e: GestureResponderEvent) => {
         setState(s => ({
@@ -138,7 +147,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
       },
       [setState, onPressInOuter],
     )
-    const onPressOutOuter = rest.onPressOut
     const onPressOut = React.useCallback(
       (e: GestureResponderEvent) => {
         setState(s => ({
@@ -149,7 +157,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
       },
       [setState, onPressOutOuter],
     )
-    const onHoverInOuter = rest.onHoverIn
     const onHoverIn = React.useCallback(
       (e: MouseEvent) => {
         setState(s => ({
@@ -160,7 +167,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
       },
       [setState, onHoverInOuter],
     )
-    const onHoverOutOuter = rest.onHoverOut
     const onHoverOut = React.useCallback(
       (e: MouseEvent) => {
         setState(s => ({
@@ -171,18 +177,26 @@ export const Button = React.forwardRef<View, ButtonProps>(
       },
       [setState, onHoverOutOuter],
     )
-    const onFocus = React.useCallback(() => {
-      setState(s => ({
-        ...s,
-        focused: true,
-      }))
-    }, [setState])
-    const onBlur = React.useCallback(() => {
-      setState(s => ({
-        ...s,
-        focused: false,
-      }))
-    }, [setState])
+    const onFocus = React.useCallback(
+      (e: NativeSyntheticEvent<TargetedEvent>) => {
+        setState(s => ({
+          ...s,
+          focused: true,
+        }))
+        onFocusOuter?.(e)
+      },
+      [setState, onFocusOuter],
+    )
+    const onBlur = React.useCallback(
+      (e: NativeSyntheticEvent<TargetedEvent>) => {
+        setState(s => ({
+          ...s,
+          focused: false,
+        }))
+        onBlurOuter?.(e)
+      },
+      [setState, onBlurOuter],
+    )
 
     const {baseStyles, hoverStyles} = React.useMemo(() => {
       const baseStyles: ViewStyle[] = []

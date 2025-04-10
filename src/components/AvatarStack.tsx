@@ -1,37 +1,37 @@
 import {View} from 'react-native'
 import {moderateProfile} from '@atproto/api'
 
+import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
+import type * as bsky from '#/types/bsky'
 
 export function AvatarStack({
   profiles,
   size = 26,
+  numPending,
+  backgroundColor,
 }: {
-  profiles: string[]
+  profiles: bsky.profile.AnyProfileView[]
   size?: number
+  numPending?: number
+  backgroundColor?: string
 }) {
-  const halfSize = size / 2
-  const {data, error} = useProfilesQuery({handles: profiles})
+  const translation = size / 3 // overlap by 1/3
   const t = useTheme()
   const moderationOpts = useModerationOpts()
 
-  if (error) {
-    console.error(error)
-    return null
-  }
-
-  const isPending = !data || !moderationOpts
+  const isPending = (numPending && profiles.length === 0) || !moderationOpts
 
   const items = isPending
-    ? Array.from({length: profiles.length}).map((_, i) => ({
+    ? Array.from({length: numPending ?? profiles.length}).map((_, i) => ({
         key: i,
         profile: null,
         moderation: null,
       }))
-    : data.profiles.map(item => ({
+    : profiles.map(item => ({
         key: item.did,
         profile: item,
         moderation: moderateProfile(item, moderationOpts),
@@ -43,7 +43,7 @@ export function AvatarStack({
         a.flex_row,
         a.align_center,
         a.relative,
-        {width: size + (items.length - 1) * halfSize},
+        {width: size + (items.length - 1) * (size - translation)},
       ]}>
       {items.map((item, i) => (
         <View
@@ -54,9 +54,9 @@ export function AvatarStack({
             {
               width: size,
               height: size,
-              left: i * -halfSize,
+              left: i * -translation,
               borderWidth: 1,
-              borderColor: t.atoms.bg.backgroundColor,
+              borderColor: backgroundColor ?? t.atoms.bg.backgroundColor,
               borderRadius: 999,
               zIndex: 3 - i,
             },
@@ -65,11 +65,42 @@ export function AvatarStack({
             <UserAvatar
               size={size - 2}
               avatar={item.profile.avatar}
+              type={item.profile.associated?.labeler ? 'labeler' : 'user'}
               moderation={item.moderation.ui('avatar')}
             />
           )}
         </View>
       ))}
     </View>
+  )
+}
+
+export function AvatarStackWithFetch({
+  profiles,
+  size,
+  backgroundColor,
+}: {
+  profiles: string[]
+  size?: number
+  backgroundColor?: string
+}) {
+  const {data, error} = useProfilesQuery({handles: profiles})
+
+  if (error) {
+    if (error.name !== 'AbortError') {
+      logger.error('Error fetching profiles for AvatarStack', {
+        safeMessage: error,
+      })
+    }
+    return null
+  }
+
+  return (
+    <AvatarStack
+      numPending={profiles.length}
+      profiles={data?.profiles || []}
+      size={size}
+      backgroundColor={backgroundColor}
+    />
   )
 }

@@ -1,0 +1,20 @@
+appId: xyz.blueskyweb.app
+---
+- runScript:
+    file: ../setupServer.js
+    env:
+        SERVER_PATH: "?users&follows&posts"
+- runFlow:
+    file: ../setupApp.yml
+- tapOn:
+    id: "e2eSignInAlice"
+
+- tapOn:
+    id: "postDropdownBtn"
+    index: 0
+- tapOn:
+    id: "postDropdownReportBtn"
+- tapOn: "Create report for Misleading Post"
+- tapOn: "Send report to Dev-env Moderation"
+- tapOn:
+    point: "50%,90%"

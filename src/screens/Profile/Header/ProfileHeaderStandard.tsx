@@ -134,7 +134,7 @@ let ProfileHeaderStandard = ({
   const unblockAccount = React.useCallback(async () => {
     try {
       await queueUnblock()
-      Toast.show(_(msg`Account unblocked`))
+      Toast.show(_(msg({message: 'Account unblocked', context: 'toast'})))
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('Failed to unblock account', {message: e})
@@ -244,7 +244,7 @@ let ProfileHeaderStandard = ({
           <ProfileHeaderHandle profile={profile} />
         </View>
         {!isPlaceholderProfile && !isBlockedUser && (
-          <>
+          <View style={a.gap_md}>
             <ProfileHeaderMetrics profile={profile} />
             {descriptionRT && !moderation.ui('profileView').blur ? (
               <View pointerEvents="auto">
@@ -262,14 +262,14 @@ let ProfileHeaderStandard = ({
             {!isMe &&
               !isBlockedUser &&
               shouldShowKnownFollowers(profile.viewer?.knownFollowers) && (
-                <View style={[a.flex_row, a.align_center, a.gap_sm, a.pt_md]}>
+                <View style={[a.flex_row, a.align_center, a.gap_sm]}>
                   <KnownFollowers
                     profile={profile}
                     moderationOpts={moderationOpts}
                   />
                 </View>
               )}
-          </>
+          </View>
         )}
       </View>
       <Prompt.Basic
