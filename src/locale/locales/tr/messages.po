@@ -1992,7 +1992,7 @@ msgstr "Sohbetten ayrılınamadı"
 
 #: src/screens/Profile/ProfileFeed/index.tsx:80
 msgid "Could not load feed"
-msgstr "Besleme yüklenemedi"
+msgstr "Feed yüklenemedi"
 
 #: src/view/screens/ProfileList.tsx:1021
 msgid "Could not load list"
@@ -2577,7 +2577,7 @@ msgstr "Düzenleme Listesini Düzenle"
 #: src/Navigation.tsx:316
 #: src/view/screens/Feeds.tsx:515
 msgid "Edit My Feeds"
-msgstr "Beslemelerimi Düzenle"
+msgstr "Feedlerimi Düzenle"
 
 #: src/view/com/modals/EditProfile.tsx:147
 msgid "Edit my profile"
@@ -2758,7 +2758,7 @@ msgstr "Etkinleştirildi"
 
 #: src/screens/Profile/Sections/Feed.tsx:116
 msgid "End of feed"
-msgstr "Beslemenin sonu"
+msgstr "Feed'in sonu"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:159
 msgid "Ensure you have selected a language for each subtitle file."
@@ -3138,12 +3138,12 @@ msgstr ""
 
 #: src/Navigation.tsx:251
 msgid "Feed"
-msgstr "Besleme"
+msgstr "Feed"
 
 #: src/components/FeedCard.tsx:139
 #: src/view/com/feeds/FeedSourceCard.tsx:253
 msgid "Feed by {0}"
-msgstr "{0} tarafından besleme"
+msgstr "{0} tarafından feed"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:349
 msgid "Feed menu"
@@ -3174,11 +3174,11 @@ msgstr "Geri bildirim gönderildi!"
 #: src/view/shell/desktop/LeftNav.tsx:655
 #: src/view/shell/Drawer.tsx:486
 msgid "Feeds"
-msgstr "Beslemeler"
+msgstr "Feedler"
 
 #: src/view/screens/SavedFeeds.tsx:198
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
-msgstr "Beslemeler, kullanıcıların biraz kodlama uzmanlığı ile oluşturduğu özel algoritmalardır. Daha fazla bilgi için <0/>."
+msgstr "Feedler, kullanıcıların biraz kodlama uzmanlığı ile oluşturduğu özel algoritmalardır. Daha fazla bilgi için <0/>."
 
 #: src/components/FeedCard.tsx:282
 #: src/view/screens/SavedFeeds.tsx:82
@@ -3691,23 +3691,23 @@ msgstr "İçeriği gizler"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:117
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
-msgstr "Hmm, besleme sunucusuna ulaşırken bir tür sorun oluştu. Lütfen bu konuda besleme sahibini bilgilendirin."
+msgstr "Hmm, feed sunucusuna ulaşırken bir tür sorun oluştu. Lütfen bu konuda feed sahibini bilgilendirin."
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:105
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
-msgstr "Hmm, besleme sunucusunun yanlış yapılandırılmış görünüyor. Lütfen bu konuda besleme sahibini bilgilendirin."
+msgstr "Hmm, feed sunucusunun yanlış yapılandırılmış görünüyor. Lütfen bu konuda feed sahibini bilgilendirin."
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:111
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
-msgstr "Hmm, besleme sunucusunun çevrimdışı görünüyor. Lütfen bu konuda besleme sahibini bilgilendirin."
+msgstr "Hmm, feed sunucusunun çevrimdışı görünüyor. Lütfen bu konuda feed sahibini bilgilendirin."
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:108
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
-msgstr "Hmm, besleme sunucusu kötü bir yanıt verdi. Lütfen bu konuda besleme sahibini bilgilendirin."
+msgstr "Hmm, feed sunucusu kötü bir yanıt verdi. Lütfen bu konuda feed sahibini bilgilendirin."
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:102
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
-msgstr "Hmm, bu beslemeyi bulmakta sorun yaşıyoruz. Silinmiş olabilir."
+msgstr "Hmm, bu feed'i bulmakta sorun yaşıyoruz. Silinmiş olabilir."
 
 #: src/screens/Moderation/index.tsx:54
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
@@ -4126,7 +4126,7 @@ msgstr "Keşfet akışını eğitmek için 10 gönderiyi beğen"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:497
 msgid "Like this feed"
-msgstr "Bu beslemeyi beğen"
+msgstr "Bu feed'i beğen"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:285
 msgid "Like this labeler"
@@ -4478,7 +4478,7 @@ msgstr "Daha fazla"
 #: src/view/shell/desktop/Feeds.tsx:102
 #: src/view/shell/desktop/Feeds.tsx:105
 msgid "More feeds"
-msgstr "Daha fazla besleme"
+msgstr "Daha fazla feed"
 
 #: src/view/com/profile/ProfileMenu.tsx:194
 #: src/view/com/profile/ProfileMenu.tsx:200
@@ -4588,7 +4588,7 @@ msgstr "Sessize Alınan Hesaplar"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:112
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "Sessize alınan hesapların gönderileri beslemenizden ve bildirimlerinizden kaldırılır. Sessizlik tamamen özeldir."
+msgstr "Sessize alınan hesapların gönderileri feedlerinizden ve bildirimlerinizden kaldırılır. Sessizlik tamamen özeldir."
 
 #: src/lib/moderation/useModerationCauseDescription.ts:92
 msgid "Muted by \"{0}\""
@@ -4609,7 +4609,7 @@ msgstr "Doğum Günüm"
 
 #: src/view/screens/Feeds.tsx:699
 msgid "My Feeds"
-msgstr "Beslemelerim"
+msgstr "Feedlerim"
 
 #: src/view/com/modals/CreateOrEditList.tsx:270
 msgid "Name"
@@ -5400,7 +5400,7 @@ msgstr ""
 
 #: src/view/screens/SavedFeeds.tsx:123
 msgid "Pinned Feeds"
-msgstr "Sabitleme Beslemeleri"
+msgstr "Sabitlenmiş Feedlerim"
 
 #: src/view/screens/ProfileList.tsx:353
 msgid "Pinned to your feeds"
@@ -5935,7 +5935,7 @@ msgstr ""
 #: src/view/com/posts/FeedShutdownMsg.tsx:120
 #: src/view/com/posts/PostFeedErrorMessage.tsx:169
 msgid "Remove feed"
-msgstr "Beslemeyi kaldır"
+msgstr "Feed'i kaldır"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:210
 msgid "Remove feed?"
@@ -5948,7 +5948,7 @@ msgstr ""
 #: src/view/screens/ProfileList.tsx:520
 #: src/view/screens/SavedFeeds.tsx:342
 msgid "Remove from my feeds"
-msgstr "Beslemelerimden kaldır"
+msgstr "Feedlerimden kaldır"
 
 #: src/screens/Settings/Settings.tsx:460
 msgid "Remove from quick access?"
@@ -6008,7 +6008,7 @@ msgstr "Listeden kaldırıldı"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:138
 msgid "Removed from my feeds"
-msgstr "Beslemelerimden kaldırıldı"
+msgstr "Feedlerimden kaldırıldı"
 
 #: src/screens/List/ListHiddenScreen.tsx:94
 msgid "Removed from saved feeds"
@@ -6135,7 +6135,7 @@ msgstr ""
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:538
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:544
 msgid "Report feed"
-msgstr "Beslemeyi raporla"
+msgstr "Feed'i raporla"
 
 #: src/view/screens/ProfileList.tsx:562
 msgid "Report list"
@@ -6414,7 +6414,7 @@ msgstr ""
 
 #: src/view/screens/SavedFeeds.tsx:164
 msgid "Saved Feeds"
-msgstr "Kayıtlı Beslemeler"
+msgstr "Kayıtlı Feedler"
 
 #: src/view/com/lightbox/Lightbox.tsx:44
 msgid "Saved to your camera roll"
@@ -8843,7 +8843,7 @@ msgstr ""
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
 msgid "You can also discover new Custom Feeds to follow."
-msgstr "Ayrıca takip edebileceğiniz yeni Özel Beslemeler keşfedebilirsiniz."
+msgstr "Ayrıca takip edebileceğiniz yeni Özel Feedler keşfedebilirsiniz."
 
 #: src/view/com/modals/DeleteAccount.tsx:198
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
@@ -8890,11 +8890,11 @@ msgstr "Henüz hiç davet kodunuz yok! Bluesky'de biraz daha uzun süre kaldıkt
 
 #: src/view/screens/SavedFeeds.tsx:137
 msgid "You don't have any pinned feeds."
-msgstr "Sabitlemiş beslemeniz yok."
+msgstr "Sabitlemiş feediniz yok."
 
 #: src/view/screens/SavedFeeds.tsx:177
 msgid "You don't have any saved feeds."
-msgstr "Kaydedilmiş beslemeniz yok."
+msgstr "Kaydedilmiş feediniz yok."
 
 #: src/view/com/post-thread/PostThread.tsx:271
 msgid "You have blocked the author or you have been blocked by the author."
@@ -8940,7 +8940,7 @@ msgstr "Henüz hiç görüşmeniz yok. Bir tane başlatın!"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:139
 msgid "You have no feeds."
-msgstr "Beslemeniz yok."
+msgstr "Feedleriniz yok."
 
 #: src/view/com/lists/MyLists.tsx:81
 #: src/view/com/lists/ProfileLists.tsx:135
@@ -9079,7 +9079,7 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:274
 msgid "You'll stay updated with these feeds"
-msgstr "Bu beslemelerden haberdar edileceksiniz"
+msgstr "Bu feedlerden haberdar edileceksiniz"
 
 #: src/screens/SignupQueued.tsx:127
 msgid "You're in line"
@@ -9105,7 +9105,7 @@ msgstr ""
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
-msgstr "Beslemenizin sonuna ulaştınız! Takip edebileceğiniz daha fazla hesap bulun."
+msgstr "Feedinizin sonuna ulaştınız! Takip edebileceğiniz daha fazla hesap bulun."
 
 #: src/view/com/composer/state/video.ts:421
 msgid "You've reached your daily limit for video uploads (too many bytes)"
