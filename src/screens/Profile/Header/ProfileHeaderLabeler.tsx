@@ -1,11 +1,11 @@
 import React, {memo, useMemo} from 'react'
 import {View} from 'react-native'
 import {
-  AppBskyActorDefs,
-  AppBskyLabelerDefs,
+  type AppBskyActorDefs,
+  type AppBskyLabelerDefs,
   moderateProfile,
-  ModerationOpts,
-  RichText as RichTextAPI,
+  type ModerationOpts,
+  type RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg, Plural, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -17,7 +17,7 @@ import {isAppLabeler} from '#/lib/moderation'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {Shadow} from '#/state/cache/types'
+import {type Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
 import {useLabelerSubscriptionMutation} from '#/state/queries/labeler'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
@@ -27,7 +27,7 @@ import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import {DialogOuterProps, useDialogControl} from '#/components/Dialog'
+import {type DialogOuterProps, useDialogControl} from '#/components/Dialog'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
   Heart2_Stroke2_Corner0_Rounded as Heart,
@@ -255,7 +255,9 @@ let ProfileHeaderLabeler = ({
           ) : null}
           <ProfileMenu profile={profile} />
         </View>
-        <View style={[a.flex_col, a.gap_2xs, a.pt_2xs, a.pb_md]}>
+        <View
+          style={[a.flex_col, a.gap_2xs, a.pt_2xs, a.pb_md]}
+          pointerEvents="none">
           <ProfileHeaderDisplayName profile={profile} moderation={moderation} />
           <ProfileHeaderHandle profile={profile} />
         </View>

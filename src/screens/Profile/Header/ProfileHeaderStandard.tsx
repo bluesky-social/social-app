@@ -1,5 +1,5 @@
 import React, {memo, useMemo} from 'react'
-import {View} from 'react-native'
+import {Text as RNText,View} from 'react-native'
 import {
   type AppBskyActorDefs,
   moderateProfile,
@@ -33,6 +33,7 @@ import {
 } from '#/components/KnownFollowers'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
+import {VerificationCheck} from '#/components/verification/ProfileHeaderVerificationCheck'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
@@ -238,7 +239,16 @@ let ProfileHeaderStandard = ({
           <ProfileMenu profile={profile} />
         </View>
         <View style={[a.flex_col, a.gap_2xs, a.pt_2xs, a.pb_sm]}>
-          <ProfileHeaderDisplayName profile={profile} moderation={moderation} />
+          <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
+            <RNText>
+              <ProfileHeaderDisplayName
+                profile={profile}
+                moderation={moderation}
+              />
+
+              <VerificationCheck profile={profile} />
+            </RNText>
+          </View>
           <ProfileHeaderHandle profile={profile} />
         </View>
         {!isPlaceholderProfile && !isBlockedUser && (

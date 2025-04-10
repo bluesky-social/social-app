@@ -1,5 +1,5 @@
 import React, {memo} from 'react'
-import {AppBskyActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -7,11 +7,11 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
-import {Shadow} from '#/state/cache/types'
+import {type Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
 import {useDevModeEnabled} from '#/state/preferences/dev-mode'
 import {
@@ -25,6 +25,8 @@ import {EventStopper} from '#/view/com/util/EventStopper'
 import * as Toast from '#/view/com/util/Toast'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheck} from '#/components/icons/CircleCheck'
+import {CircleX_Stroke2_Corner0_Rounded as CircleX} from '#/components/icons/CircleX'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
@@ -43,6 +45,7 @@ import {
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
+import {useVerificationStateForProfile} from '#/components/verification'
 
 let ProfileMenu = ({
   profile,
@@ -61,6 +64,7 @@ let ProfileMenu = ({
   const isFollowingBlockedAccount = isFollowing && isBlocked
   const isLabelerAndNotBlocked = !!profile.associated?.labeler && !isBlocked
   const [devModeEnabled] = useDevModeEnabled()
+  const verificationState = useVerificationStateForProfile({profile})
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
@@ -188,6 +192,9 @@ let ProfileMenu = ({
     navigation.navigate('ProfileSearch', {name: profile.handle})
   }, [navigation, profile.handle])
 
+  const verificationCreate = React.useCallback(() => {}, [])
+  const verificationRemove = React.useCallback(() => {}, [])
+
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
@@ -277,6 +284,29 @@ let ProfileMenu = ({
                   </Menu.ItemText>
                   <Menu.ItemIcon icon={List} />
                 </Menu.Item>
+                {verificationState.viewer.isVerifier &&
+                  !verificationState.profile.isSelf &&
+                  (verificationState.viewer.hasIssuedVerification ? (
+                    <Menu.Item
+                      testID="profileHeaderDropdownVerificationRemoveButton"
+                      label={_(msg`Remove verification`)}
+                      onPress={verificationRemove}>
+                      <Menu.ItemText>
+                        <Trans>Remove verification</Trans>
+                      </Menu.ItemText>
+                      <Menu.ItemIcon icon={CircleX} />
+                    </Menu.Item>
+                  ) : (
+                    <Menu.Item
+                      testID="profileHeaderDropdownVerificationCreateButton"
+                      label={_(msg`Verify account`)}
+                      onPress={verificationCreate}>
+                      <Menu.ItemText>
+                        <Trans>Verify account</Trans>
+                      </Menu.ItemText>
+                      <Menu.ItemIcon icon={CircleCheck} />
+                    </Menu.Item>
+                  ))}
                 {!isSelf && (
                   <>
                     {!profile.viewer?.blocking &&
