@@ -597,7 +597,7 @@ msgstr ""
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
-msgstr ""
+msgstr "Sadece takip ettiğin kişilerin varsayılan feed'ini ekle"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:387
 msgid "Add the following DNS record to your domain:"
@@ -605,7 +605,7 @@ msgstr "Alan adınıza aşağıdaki DNS kaydını ekleyin:"
 
 #: src/components/FeedCard.tsx:305
 msgid "Add this feed to your feeds"
-msgstr ""
+msgstr "Bu feed'i feedlerine ekle"
 
 #: src/view/com/profile/ProfileMenu.tsx:273
 #: src/view/com/profile/ProfileMenu.tsx:276
@@ -614,7 +614,7 @@ msgstr "Listelere ekle"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
 msgid "Add to my feeds"
-msgstr "Beslemelerime ekle"
+msgstr "Feedime ekle"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:192
 #: src/view/com/modals/UserAddRemoveLists.tsx:162
@@ -623,11 +623,11 @@ msgstr "Listeye eklendi"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Added to my feeds"
-msgstr "Beslemelerime eklendi"
+msgstr "Feedlerime eklendi"
 
 #: src/components/moderation/ReportDialog/index.tsx:410
 msgid "Additional details (limit 300 characters)"
-msgstr ""
+msgstr "Ek bilgi (300 karakterle sınırlı)"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:159
 msgid "Adult"
@@ -669,11 +669,11 @@ msgstr "Tüm hesaplar takip edildi!"
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:99
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:101
 msgid "All languages"
-msgstr "Tüm Diller"
+msgstr "Tüm diller"
 
 #: src/view/screens/Feeds.tsx:702
 msgid "All the feeds you've saved, right in one place."
-msgstr ""
+msgstr "Kaydettiğin tüm feed'ler tek bir yerde."
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:146
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:153
@@ -733,7 +733,7 @@ msgstr "Alternatif metin, görme engelli ve düşük görme yeteneğine sahip ku
 #: src/view/com/composer/GifAltText.tsx:179
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:139
 msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} characters.}}"
-msgstr ""
+msgstr "Alternatif metin kırpılacak. {MAX_ALT_TEXT, plural, other {Sınır: {0} karakter.}}"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:93
 #: src/view/com/modals/VerifyEmail.tsx:132
@@ -758,11 +758,11 @@ msgstr "Bir hata oluştu"
 
 #: src/view/com/composer/state/video.ts:398
 msgid "An error occurred while compressing the video."
-msgstr "Video sıkıştırılırken bir hata oluştu."
+msgstr "Video sıkıştırılırken bir hata oluştu"
 
 #: src/state/queries/explore-feed-previews.tsx:184
 msgid "An error occurred while fetching the feed."
-msgstr ""
+msgstr "Feed yüklenirken bir hata oluştu."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:336
 msgid "An error occurred while generating your starter pack. Want to try again?"
@@ -823,7 +823,7 @@ msgstr "bilinmeyen bir hata oluştu"
 #: src/components/moderation/ModerationDetailsDialog.tsx:134
 #: src/lib/moderation/useModerationCauseDescription.ts:144
 msgid "an unknown labeler"
-msgstr ""
+msgstr "bilinmeyen bir etiketleyici"
 
 #: src/components/WhoCanReply.tsx:317
 msgid "and"
@@ -873,11 +873,11 @@ msgstr "Uygulama şifresinin ismi benzersiz olmalıdır"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:62
 msgid "App password names can only contain letters, numbers, spaces, dashes, and underscores"
-msgstr ""
+msgstr "Uygulama parola adları yalnızca harf, sayı, boşluk, tire ve alt çizgi içerebilir"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:80
 msgid "App password names must be at least 4 characters long"
-msgstr ""
+msgstr "Uygulama parola adları en az 4 karakter uzunluğunda olmalı"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:63
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:66
@@ -907,7 +907,7 @@ msgstr "İtiraz gönderildi"
 #: src/screens/Takendown.tsx:111
 #: src/screens/Takendown.tsx:144
 msgid "Appeal suspension"
-msgstr ""
+msgstr "Askıya alma işlemine itiraz et"
 
 #: src/screens/Takendown.tsx:114
 msgid "Appeal Suspension"
@@ -1653,7 +1653,7 @@ msgstr "Resim görüntüleyiciyi kapat"
 #: src/components/ContextMenu/Backdrop.ios.tsx:79
 #: src/components/ContextMenu/Backdrop.tsx:45
 msgid "Close menu"
-msgstr ""
+msgstr "Menüyü kapat"
 
 #: src/components/Menu/index.tsx:300
 msgid "Close this dialog"
@@ -1665,12 +1665,12 @@ msgstr "Şifre güncelleme uyarısını kapatır"
 
 #: src/view/com/composer/Composer.tsx:945
 msgid "Closes post composer and discards post draft"
-msgstr ""
+msgstr "Gönderi düzenleyiciyi kapatır ve gönderi taslağını siler"
 
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
 msgid "Closes the emoji picker"
-msgstr ""
+msgstr "Emoji seçicisini kapatır"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:32
 msgid "Closes viewer for header image"
@@ -1678,7 +1678,7 @@ msgstr "Başlık resmi görüntüleyicisini kapatır"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:405
 msgid "Collapse list of users"
-msgstr ""
+msgstr "Kullanıcı listesini küçült"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:598
 msgid "Collapses list of users for a given notification"
@@ -1714,7 +1714,7 @@ msgstr "Onboarding'i tamamlayın ve hesabınızı kullanmaya başlayın"
 
 #: src/screens/Signup/index.tsx:162
 msgid "Complete the challenge"
-msgstr ""
+msgstr "Meydan okumayı tamamla"
 
 #: src/view/shell/desktop/LeftNav.tsx:500
 msgid "Compose new post"
@@ -1730,7 +1730,7 @@ msgstr "Yanıt oluştur"
 
 #: src/view/com/composer/Composer.tsx:1689
 msgid "Compressing video..."
-msgstr ""
+msgstr "Video sıkıştırılıyor..."
 
 #: src/components/moderation/LabelPreference.tsx:82
 msgid "Configure content filtering setting for category: {name}"
@@ -1799,7 +1799,7 @@ msgstr "Destek ile iletişime geçin"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:51
 msgid "Content & Media"
-msgstr ""
+msgstr "İçerik & Medya"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:109
 #: src/screens/Settings/Settings.tsx:175
@@ -1813,7 +1813,7 @@ msgstr "İçerik ve Medya"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:18
 msgid "Content Blocked"
-msgstr ""
+msgstr "İçerik Engellendi"
 
 #: src/screens/Moderation/index.tsx:287
 msgid "Content filters"
@@ -1923,7 +1923,7 @@ msgstr ""
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:748
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:750
 msgid "Copy author DID"
-msgstr ""
+msgstr "Yazar DID'sini kopyala"
 
 #: src/components/dialogs/Embed.tsx:189
 #: src/components/dialogs/Embed.tsx:206
@@ -1934,7 +1934,7 @@ msgstr "Kodu kopyala"
 #: src/view/com/profile/ProfileMenu.tsx:356
 #: src/view/com/profile/ProfileMenu.tsx:359
 msgid "Copy DID"
-msgstr ""
+msgstr "DID'yi kopyala"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:405
 msgid "Copy host"
@@ -2047,7 +2047,7 @@ msgstr "Bir hesap oluştur"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:303
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:310
 msgid "Create an account without using this starter pack"
-msgstr ""
+msgstr "Bu başlangıç paketi olmadan yeni bir hesap oluştur"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:292
 msgid "Create an avatar instead"
@@ -2065,7 +2065,7 @@ msgstr "Yeni hesap oluştur"
 #: src/components/moderation/ReportDialog/index.tsx:574
 #: src/components/ReportDialog/SelectReportOptionView.tsx:99
 msgid "Create report for {0}"
-msgstr ""
+msgstr "{0} için rapor oluştur"
 
 #: src/screens/Settings/AppPasswords.tsx:174
 msgid "Created {0}"
@@ -2073,7 +2073,7 @@ msgstr "{0} oluşturuldu"
 
 #: src/screens/List/ListHiddenScreen.tsx:127
 msgid "Creator has been blocked"
-msgstr ""
+msgstr "Kullanıcı engellendi"
 
 #: src/screens/Onboarding/index.tsx:26
 #: src/screens/Onboarding/state.ts:99
@@ -2095,7 +2095,7 @@ msgstr "Bu gönderiyle kimin etkileşime geçebileceğini özelleştirin."
 
 #: src/screens/Onboarding/Layout.tsx:56
 msgid "Customizes your Bluesky experience"
-msgstr ""
+msgstr "Bluesky deneyimini kişiselleştir"
 
 #: src/components/dialogs/Embed.tsx:167
 #: src/components/dialogs/Embed.tsx:169
@@ -2161,7 +2161,7 @@ msgstr "Hesabı sil"
 
 #: src/view/com/modals/DeleteAccount.tsx:101
 msgid "Delete Account <0>\"</0><1>{0}</1><2>\"</2>"
-msgstr ""
+msgstr "Hesabı Sil"
 
 #: src/screens/Settings/AppPasswords.tsx:187
 msgid "Delete app password"
@@ -2169,31 +2169,31 @@ msgstr "Uygulama şifresini sil"
 
 #: src/screens/Settings/AppPasswords.tsx:207
 msgid "Delete app password?"
-msgstr ""
+msgstr "Uygulama şifresini silmek mi istiyorsun?"
 
 #: src/screens/Messages/components/RequestButtons.tsx:292
 #: src/screens/Messages/components/RequestButtons.tsx:299
 msgid "Delete chat"
-msgstr ""
+msgstr "Sohbeti sil"
 
 #: src/screens/Settings/Settings.tsx:339
 msgid "Delete chat declaration record"
-msgstr ""
+msgstr "Sohbet beyan kaydını sil"
 
 #: src/components/dms/ReportDialog.tsx:362
 #: src/components/dms/ReportDialog.tsx:365
 #: src/screens/Messages/components/RequestButtons.tsx:126
 #: src/screens/Messages/components/RequestButtons.tsx:129
 msgid "Delete conversation"
-msgstr ""
+msgstr "Konuşmayı sil"
 
 #: src/components/dms/ReportDialog.tsx:320
 msgid "Delete Conversation"
-msgstr ""
+msgstr "Konuşmayı Sil"
 
 #: src/components/dms/MessageContextMenu.tsx:160
 msgid "Delete for me"
-msgstr ""
+msgstr "Benden sil"
 
 #: src/view/screens/ProfileList.tsx:548
 msgid "Delete list"
@@ -2205,7 +2205,7 @@ msgstr "Mesajı sil"
 
 #: src/components/dms/MessageContextMenu.tsx:158
 msgid "Delete message for me"
-msgstr ""
+msgstr "Benim için mesajı sil"
 
 #: src/view/com/modals/DeleteAccount.tsx:267
 msgid "Delete my account"
@@ -2271,7 +2271,7 @@ msgstr ""
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:630
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:640
 msgid "Detach quote"
-msgstr ""
+msgstr "Alıntıyı çıkar"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:824
 msgid "Detach quote post?"
@@ -2294,7 +2294,7 @@ msgstr "Geliştirici seçenekleri"
 
 #: src/components/WhoCanReply.tsx:179
 msgid "Dialog: adjust who can interact with this post"
-msgstr ""
+msgstr "Diyalog: kimlerin bu gönderi ile etkileşim kurabileceğini seç"
 
 #: src/screens/Settings/AppearanceSettings.tsx:122
 msgid "Dim"
@@ -2347,12 +2347,12 @@ msgstr "Uygulamaların hesabımı oturum açmamış kullanıcılara göstermesin
 
 #: src/screens/Search/Explore.tsx:436
 msgid "Discover Feeds"
-msgstr ""
+msgstr "Feedleri keşfet"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
 msgid "Discover new custom feeds"
-msgstr "Yeni özel beslemeler keşfet"
+msgstr "Yeni özel feddleri keşfet"
 
 #: src/view/screens/Feeds.tsx:725
 msgid "Discover New Feeds"
@@ -2368,7 +2368,7 @@ msgstr "Hatayı yok say"
 
 #: src/components/ProgressGuide/List.tsx:42
 msgid "Dismiss getting started guide"
-msgstr ""
+msgstr "Başlangıç rehberini yok say"
 
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:43
 msgid "Dismiss interests"
@@ -2376,7 +2376,7 @@ msgstr ""
 
 #: src/components/interstitials/TrendingVideos.tsx:92
 msgid "Dismiss this section"
-msgstr ""
+msgstr "Bu kısmı yok say"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:71
 #: src/screens/Settings/AccessibilitySettings.tsx:76
@@ -2466,7 +2466,7 @@ msgstr ""
 
 #: src/screens/VideoFeed/index.tsx:1047
 msgid "Double tap to like"
-msgstr ""
+msgstr "Beğenmek için çift tıkla"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:321
 msgid "Download Bluesky"
@@ -2475,7 +2475,7 @@ msgstr "Bluesky'ı İndir"
 #: src/screens/Settings/components/ExportCarDialog.tsx:79
 #: src/screens/Settings/components/ExportCarDialog.tsx:84
 msgid "Download CAR file"
-msgstr ""
+msgstr "CAR dosyasını indir"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:342
 msgid "Drop to add images"
@@ -2548,7 +2548,7 @@ msgstr "Avatarı düzenle"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:111
 msgid "Edit Feeds"
-msgstr ""
+msgstr "Feedleri düzenle"
 
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:58
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:62
