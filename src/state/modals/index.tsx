@@ -1,6 +1,6 @@
 import React from 'react'
-import {Image as RNImage} from 'react-native-image-crop-picker'
-import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
+import {type Image as RNImage} from 'react-native-image-crop-picker'
+import {type AppBskyActorDefs, type AppBskyGraphDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
