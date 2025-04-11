@@ -231,6 +231,8 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.zh_HK
       case 'zh-Hant-TW':
         return AppLanguage.zh_TW
+      case 'he':
+        return AppLanguage.he
       default:
         continue
     }

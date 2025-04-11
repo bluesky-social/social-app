@@ -8,7 +8,7 @@ import {isNative} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlassIcon} from '#/components/icons/MagnifyingGlass2'
+import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Speaker} from '#/components/icons/Speaker'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 
 type SearchInputProps = Omit<TextField.InputProps, 'label'> & {
@@ -28,7 +28,7 @@ export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
     return (
       <View style={[a.w_full, a.relative]}>
         <TextField.Root>
-          <TextField.Icon icon={MagnifyingGlassIcon} />
+          <TextField.Icon icon={Speaker} />
           <TextField.Input
             inputRef={ref}
             label={label || _(msg`Search`)}

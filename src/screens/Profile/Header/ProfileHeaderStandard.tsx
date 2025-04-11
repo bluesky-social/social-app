@@ -162,7 +162,7 @@ let ProfileHeaderStandard = ({
             {paddingLeft: 90},
             a.flex_row,
             a.align_center,
-            a.justify_end,
+            a.justify_start,
             a.gap_xs,
             a.pb_sm,
             a.flex_wrap,
