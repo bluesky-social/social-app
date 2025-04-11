@@ -1,5 +1,5 @@
 import React, {memo, useMemo} from 'react'
-import {Text as RNText,View} from 'react-native'
+import {View} from 'react-native'
 import {
   type AppBskyActorDefs,
   moderateProfile,
@@ -240,14 +240,11 @@ let ProfileHeaderStandard = ({
         </View>
         <View style={[a.flex_col, a.gap_2xs, a.pt_2xs, a.pb_sm]}>
           <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
-            <RNText>
-              <ProfileHeaderDisplayName
-                profile={profile}
-                moderation={moderation}
-              />
-
-              <VerificationCheck profile={profile} />
-            </RNText>
+            <ProfileHeaderDisplayName
+              profile={profile}
+              moderation={moderation}
+            />
+            <VerificationCheck profile={profile} />
           </View>
           <ProfileHeaderHandle profile={profile} />
         </View>

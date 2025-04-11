@@ -4,9 +4,10 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {type Shadow} from '#/state/cache/types'
-import {atoms as a, useBreakpoints,useTheme} from '#/alf'
+import {atoms as a, platform,useBreakpoints} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {VerificationCheck as VerificationCheckIcon} from '#/components/icons/VerificationCheck'
 import {
   type ProfileVerificationState,
   useVerificationStateForProfile,
@@ -41,10 +42,10 @@ export function Badge({
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
   verificationState: ProfileVerificationState
 }) {
-  const t = useTheme()
   const {_} = useLingui()
   const verificationsDialogControl = useDialogControl()
   const {gtPhone} = useBreakpoints()
+  const size = gtPhone ? 20 : 16
 
   return (
     <>
@@ -56,26 +57,26 @@ export function Badge({
         }
         hitSlop={20}
         onPress={() => verificationsDialogControl.open()}
-        style={[gtPhone ? {width: 32, height: 32} : {width: 26, height: 26}]}>
+        style={[]}>
         {({hovered}) => (
           <View
             style={[
-              a.w_full,
-              a.rounded_full,
+              a.justify_end,
+              a.align_end,
               a.transition_transform,
               {
-                backgroundColor: state.profile.wasVerified
-                  ? t.atoms.bg_contrast_100.backgroundColor
-                  : t.palette.primary_500,
-                paddingTop: '100%',
+                top: platform({android: 2}),
+                width: size,
+                height: size,
                 transform: [
                   {
                     scale: hovered ? 1.1 : 1,
                   },
                 ],
               },
-            ]}
-          />
+            ]}>
+            <VerificationCheckIcon width={size} />
+          </View>
         )}
       </Button>
       <VerificationCheckDialog
