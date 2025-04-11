@@ -15,6 +15,14 @@ import (
 // time.RFC822Z, but with four digit year. used for RSS pubData.
 var FullYearRFC822Z = "02 Jan 2006 15:04 -0700"
 
+// Enclosure represents an RSS enclosure element for media (e.g. an image)
+type Enclosure struct {
+	XMLName xml.Name `xml:"enclosure"`
+	URL     string   `xml:"url,attr"`
+	Type    string   `xml:"type,attr"`
+	Length  int64    `xml:"length,attr"`
+}
+
 type ItemGUID struct {
 	XMLName xml.Name `xml:"guid"`
 	Value   string   `xml:",chardata"`
@@ -29,6 +37,7 @@ type Item struct {
 	Description string `xml:"description,omitempty"`
 	PubDate     string `xml:"pubDate,omitempty"`
 	GUID        ItemGUID
+	Enclosure   *Enclosure `xml:"enclosure,omitempty"`
 }
 
 type rss struct {
@@ -38,6 +47,37 @@ type rss struct {
 	Title       string `xml:"channel>title"`
 
 	Item []Item `xml:"channel>item"`
+}
+
+// getPostEnclosure extracts enclosure information (images or videos) from a post
+func getPostEnclosure(p *appbsky.FeedDefs_FeedViewPost, rec *appbsky.FeedPost) *Enclosure {
+	// Both p.Post.Embed and rec.Embed must be present
+	if p.Post.Embed == nil || rec.Embed == nil {
+		return nil
+	}
+
+	// Handle image embeds
+	if p.Post.Embed.EmbedImages_View != nil && len(p.Post.Embed.EmbedImages_View.Images) > 0 {
+		// Make sure the matching rec.Embed structure exists
+		if rec.Embed.EmbedImages != nil && len(rec.Embed.EmbedImages.Images) > 0 {
+			return &Enclosure{
+				URL:    p.Post.Embed.EmbedImages_View.Images[0].Fullsize,
+				Type:   rec.Embed.EmbedImages.Images[0].Image.MimeType,
+				Length: rec.Embed.EmbedImages.Images[0].Image.Size,
+			}
+		}
+	} else if p.Post.Embed.EmbedVideo_View != nil {
+		if rec.Embed.EmbedVideo != nil && rec.Embed.EmbedVideo.Video != nil {
+			return &Enclosure{
+				URL:    p.Post.Embed.EmbedVideo_View.Playlist,
+				Type:   rec.Embed.EmbedVideo.Video.MimeType,
+				Length: rec.Embed.EmbedVideo.Video.Size,
+			}
+		}
+	}
+
+	// No supported embed found
+	return nil
 }
 
 func (srv *Server) WebProfileRSS(c echo.Context) error {
@@ -82,7 +122,7 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 		}
 	}
 
-	af, err := appbsky.FeedGetAuthorFeed(ctx, srv.xrpcc, did.String(), "", "posts_no_replies", 30)
+	af, err := appbsky.FeedGetAuthorFeed(ctx, srv.xrpcc, did.String(), "", "posts_no_replies", false, 30)
 	if err != nil {
 		log.Warn("failed to fetch author feed", "did", did, "err", err)
 		return err
@@ -111,6 +151,7 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 		if nil == err {
 			pubDate = createdAt.Time().Format(FullYearRFC822Z)
 		}
+
 		posts = append(posts, Item{
 			Link:        fmt.Sprintf("https://%s/profile/%s/post/%s", req.Host, pv.Handle, aturi.RecordKey().String()),
 			Description: ExpandPostText(rec),
@@ -119,6 +160,7 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 				Value:   aturi.String(),
 				IsPerma: false,
 			},
+			Enclosure: getPostEnclosure(p, rec),
 		})
 	}
 
