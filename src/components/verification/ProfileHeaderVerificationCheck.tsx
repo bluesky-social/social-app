@@ -4,7 +4,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {type Shadow} from '#/state/cache/types'
-import {atoms as a, platform,useBreakpoints} from '#/alf'
+import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {VerificationCheck as VerificationCheckIcon} from '#/components/icons/VerificationCheck'
@@ -42,6 +42,7 @@ export function Badge({
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
   verificationState: ProfileVerificationState
 }) {
+  const t = useTheme()
   const {_} = useLingui()
   const verificationsDialogControl = useDialogControl()
   const {gtPhone} = useBreakpoints()
@@ -75,7 +76,14 @@ export function Badge({
                 ],
               },
             ]}>
-            <VerificationCheckIcon width={size} />
+            <VerificationCheckIcon
+              width={size}
+              fill={
+                state.profile.isVerified
+                  ? t.palette.primary_500
+                  : t.atoms.bg_contrast_100.backgroundColor
+              }
+            />
           </View>
         )}
       </Button>
