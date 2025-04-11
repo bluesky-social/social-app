@@ -10,7 +10,7 @@ import Animated, {
   SlideOutLeft,
   SlideOutRight,
 } from 'react-native-reanimated'
-import {ComAtprotoServerDescribeServer} from '@atproto/api'
+import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
@@ -197,6 +197,17 @@ function ProvidedHandlePage({
         <Animated.View
           layout={native(LinearTransition)}
           style={[a.flex_1, a.gap_md]}>
+          <Admonition type="error">
+            <Trans>
+              You are verified. If you change your handle, you will lose your
+              verification status.{' '}
+              <InlineLinkText
+                label={_(msg`Learn more`)}
+                to={`https://bsky.social/about`}>
+                <Trans>Learn more.</Trans>
+              </InlineLinkText>
+            </Trans>
+          </Admonition>
           <View>
             <TextField.LabelText>
               <Trans>New handle</Trans>
