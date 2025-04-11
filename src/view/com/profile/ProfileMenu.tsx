@@ -1,5 +1,4 @@
 import React, {memo} from 'react'
-import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -25,7 +24,6 @@ import {
 import {useSession} from '#/state/session'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheck} from '#/components/icons/CircleCheck'
@@ -42,7 +40,6 @@ import {
 } from '#/components/icons/Person'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
-import {VerificationCheck} from '#/components/icons/VerificationCheck'
 import * as Menu from '#/components/Menu'
 import {
   ReportDialog,
@@ -50,6 +47,7 @@ import {
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import {useVerificationStateForProfile} from '#/components/verification'
+import {VerificationCreatePrompt} from '#/components/verification/VerificationCreatePrompt'
 import {VerificationRemovePrompt} from '#/components/verification/VerificationRemovePrompt'
 
 let ProfileMenu = ({
@@ -200,7 +198,6 @@ let ProfileMenu = ({
   const userName = getUserDisplayName(profile)
   const verificationCreatePromptControl = Prompt.usePromptControl()
   const verificationRemovePromptControl = Prompt.usePromptControl()
-  const verificationCreate = React.useCallback(() => {}, [])
 
   return (
     <EventStopper onKeyDown={false}>
@@ -448,26 +445,10 @@ let ProfileMenu = ({
         confirmButtonCta={_(msg`Share anyway`)}
       />
 
-      <Prompt.Outer control={verificationCreatePromptControl}>
-        <View style={[a.flex_row, a.align_center, a.gap_sm, a.pb_sm]}>
-          <VerificationCheck width={18} />
-          <Prompt.TitleText style={[a.pb_0]}>
-            {_(msg`Verify ${userName}`)}
-          </Prompt.TitleText>
-        </View>
-        <Prompt.DescriptionText>
-          {_(
-            msg`Would you like to verify ${userName}’s account? This can be undone at anytime.`,
-          )}
-        </Prompt.DescriptionText>
-        <Prompt.Actions>
-          <Prompt.Action
-            cta={_(msg`Verify account`)}
-            onPress={verificationCreate}
-          />
-          <Prompt.Cancel />
-        </Prompt.Actions>
-      </Prompt.Outer>
+      <VerificationCreatePrompt
+        control={verificationCreatePromptControl}
+        userName={userName}
+      />
       <VerificationRemovePrompt
         control={verificationRemovePromptControl}
         userName={userName}
