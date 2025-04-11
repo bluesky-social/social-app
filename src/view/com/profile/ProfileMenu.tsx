@@ -50,6 +50,7 @@ import {
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import {useVerificationStateForProfile} from '#/components/verification'
+import {VerificationRemovePrompt} from '#/components/verification/VerificationRemovePrompt'
 
 let ProfileMenu = ({
   profile,
@@ -200,7 +201,6 @@ let ProfileMenu = ({
   const verificationCreatePromptControl = Prompt.usePromptControl()
   const verificationRemovePromptControl = Prompt.usePromptControl()
   const verificationCreate = React.useCallback(() => {}, [])
-  const verificationRemove = React.useCallback(() => {}, [])
 
   return (
     <EventStopper onKeyDown={false}>
@@ -468,15 +468,9 @@ let ProfileMenu = ({
           <Prompt.Cancel />
         </Prompt.Actions>
       </Prompt.Outer>
-      <Prompt.Basic
+      <VerificationRemovePrompt
         control={verificationRemovePromptControl}
-        title={_(msg`Remove verification for ${userName}?`)}
-        description={_(
-          msg`Would you like to remove your verification from ${userName}?`,
-        )}
-        onConfirm={verificationRemove}
-        confirmButtonCta={_(msg`Remove verification`)}
-        confirmButtonColor="negative"
+        userName={userName}
       />
     </EventStopper>
   )

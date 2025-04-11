@@ -25,7 +25,7 @@ export function useVerificationStateForProfile({
 
   return useMemo(() => {
     const verifications: any[] = [] // profile.verifications
-    const isVerified = false
+    const isVerified = true
     const isVerifier = false // currentAccount?.verifier
     const hasIssuedVerification = isVerifier && false // verifications?.find(v => v.issuerDid === currentAccount?.did)
 
