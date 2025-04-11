@@ -1,4 +1,5 @@
 import React, {memo} from 'react'
+import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -6,6 +7,7 @@ import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
+import {getUserDisplayName} from '#/lib/getUserDisplayName'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
@@ -23,6 +25,7 @@ import {
 import {useSession} from '#/state/session'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import * as Toast from '#/view/com/util/Toast'
+import {atoms as a} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheck} from '#/components/icons/CircleCheck'
@@ -39,6 +42,7 @@ import {
 } from '#/components/icons/Person'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
+import {VerificationCheck} from '#/components/icons/VerificationCheck'
 import * as Menu from '#/components/Menu'
 import {
   ReportDialog,
@@ -192,6 +196,9 @@ let ProfileMenu = ({
     navigation.navigate('ProfileSearch', {name: profile.handle})
   }, [navigation, profile.handle])
 
+  const userName = getUserDisplayName(profile)
+  const verificationCreatePromptControl = Prompt.usePromptControl()
+  const verificationRemovePromptControl = Prompt.usePromptControl()
   const verificationCreate = React.useCallback(() => {}, [])
   const verificationRemove = React.useCallback(() => {}, [])
 
@@ -290,7 +297,7 @@ let ProfileMenu = ({
                     <Menu.Item
                       testID="profileHeaderDropdownVerificationRemoveButton"
                       label={_(msg`Remove verification`)}
-                      onPress={verificationRemove}>
+                      onPress={() => verificationRemovePromptControl.open()}>
                       <Menu.ItemText>
                         <Trans>Remove verification</Trans>
                       </Menu.ItemText>
@@ -300,7 +307,7 @@ let ProfileMenu = ({
                     <Menu.Item
                       testID="profileHeaderDropdownVerificationCreateButton"
                       label={_(msg`Verify account`)}
-                      onPress={verificationCreate}>
+                      onPress={() => verificationCreatePromptControl.open()}>
                       <Menu.ItemText>
                         <Trans>Verify account</Trans>
                       </Menu.ItemText>
@@ -439,6 +446,37 @@ let ProfileMenu = ({
         )}
         onConfirm={onPressShare}
         confirmButtonCta={_(msg`Share anyway`)}
+      />
+
+      <Prompt.Outer control={verificationCreatePromptControl}>
+        <View style={[a.flex_row, a.align_center, a.gap_sm, a.pb_sm]}>
+          <VerificationCheck width={18} />
+          <Prompt.TitleText style={[a.pb_0]}>
+            {_(msg`Verify ${userName}`)}
+          </Prompt.TitleText>
+        </View>
+        <Prompt.DescriptionText>
+          {_(
+            msg`Would you like to verify ${userName}’s account? This can be undone at anytime.`,
+          )}
+        </Prompt.DescriptionText>
+        <Prompt.Actions>
+          <Prompt.Action
+            cta={_(msg`Verify account`)}
+            onPress={verificationCreate}
+          />
+          <Prompt.Cancel />
+        </Prompt.Actions>
+      </Prompt.Outer>
+      <Prompt.Basic
+        control={verificationRemovePromptControl}
+        title={_(msg`Remove verification for ${userName}?`)}
+        description={_(
+          msg`Would you like to remove your verification from ${userName}?`,
+        )}
+        onConfirm={verificationRemove}
+        confirmButtonCta={_(msg`Remove verification`)}
+        confirmButtonColor="negative"
       />
     </EventStopper>
   )
