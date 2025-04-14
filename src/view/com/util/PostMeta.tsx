@@ -1,9 +1,10 @@
-import React, {memo, useCallback} from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
-import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
+import {memo, useCallback} from 'react'
+import {type StyleProp, Text as RNText,View, type ViewStyle} from 'react-native'
+import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
+import type React from 'react';
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {forceLTR} from '#/lib/strings/bidi'
@@ -13,7 +14,8 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
 import {isAndroid} from '#/platform/detection'
 import {precacheProfile} from '#/state/queries/profile'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, platform,useTheme, web} from '#/alf'
+import {VerificationCheck} from '#/components/icons/VerificationCheck'
 import {WebOnlyInlineLinkText} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
@@ -88,6 +90,15 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
               )}
             </Text>
           </WebOnlyInlineLinkText>
+          <RNText>
+            {' '}
+            <VerificationCheck
+              width={14}
+              style={platform({
+                web: {position: 'relative', top: 1},
+              })}
+            />
+          </RNText>
           <WebOnlyInlineLinkText
             to={profileLink}
             label={_(msg`View profile`)}

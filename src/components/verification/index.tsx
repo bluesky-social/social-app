@@ -1,7 +1,6 @@
 import {useMemo} from 'react'
 import {type AppBskyActorDefs} from '@atproto/api'
 
-import {type Shadow} from '#/state/cache/types'
 import {useSession} from '#/state/session'
 
 export type ProfileVerificationState = {
@@ -19,7 +18,7 @@ export type ProfileVerificationState = {
 export function useVerificationStateForProfile({
   profile,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
   const {currentAccount} = useSession()
 
