@@ -90,16 +90,19 @@ export function ModerationBlockedAccounts({}: Props) {
   }: {
     item: ActorDefs.ProfileView
     index: number
-  }) => (
-    <View style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]}>
-      <ProfileCard.Default
-        testID={`blockedAccount-${index}`}
-        key={item.did}
-        profile={item}
-        moderationOpts={moderationOpts!}
-      />
-    </View>
-  )
+  }) => {
+    if (!moderationOpts) return null
+    return (
+      <View style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]}>
+        <ProfileCard.Default
+          testID={`blockedAccount-${index}`}
+          key={item.did}
+          profile={item}
+          moderationOpts={moderationOpts}
+        />
+      </View>
+    )
+  }
   return (
     <Layout.Screen testID="blockedAccountsScreen">
       <Layout.Center style={[a.flex_1, {paddingBottom: 100}]}>

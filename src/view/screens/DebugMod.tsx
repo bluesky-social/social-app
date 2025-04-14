@@ -1,4 +1,3 @@
- 
 import React from 'react'
 import {View} from 'react-native'
 import {
@@ -21,7 +20,10 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
-import {type CommonNavigatorParams, type NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {moderationOptsOverrideContext} from '#/state/preferences/moderation-opts'
 import {type FeedNotification} from '#/state/queries/notifications/types'
@@ -893,6 +895,8 @@ function MockAccountCard({
   const t = useTheme()
   const moderationOpts = useModerationOpts()
 
+  if (!moderationOpts) return null
+
   if (moderation.ui('profileList').filter) {
     return (
       <P style={[t.atoms.bg_contrast_25, a.px_lg, a.py_md, a.mb_lg]}>
@@ -901,7 +905,7 @@ function MockAccountCard({
     )
   }
 
-  return <ProfileCard.Card profile={profile} moderationOpts={moderationOpts!} />
+  return <ProfileCard.Card profile={profile} moderationOpts={moderationOpts} />
 }
 
 function MockAccountScreen({
