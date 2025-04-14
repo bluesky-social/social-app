@@ -7,16 +7,16 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {isNative} from '#/platform/detection'
-import {FeedDescriptor} from '#/state/queries/post-feed'
+import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {PostFeed} from '#/view/com/posts/PostFeed'
 import {EmptyState} from '#/view/com/util/EmptyState'
-import {ListRef} from '#/view/com/util/List'
+import {type ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {Text} from '#/view/com/util/text/Text'
 import {ios} from '#/alf'
-import {SectionRef} from './types'
+import {type SectionRef} from './types'
 
 interface FeedSectionProps {
   feed: FeedDescriptor
@@ -58,6 +58,7 @@ export const ProfileFeedSection = React.forwardRef<
     truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
     setHasNew(false)
   }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
+
   React.useImperativeHandle(ref, () => ({
     scrollToTop: onScrollToTop,
   }))
