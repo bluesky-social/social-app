@@ -12,16 +12,16 @@ import {
   toNiceDomain,
 } from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
-import {useModalControls} from '#/state/modals'
 import {useInAppBrowser} from '#/state/preferences/in-app-browser'
 import {useTheme} from '#/alf'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 
 export function useOpenLink() {
-  const {openModal} = useModalControls()
   const enabled = useInAppBrowser()
   const t = useTheme()
   const sheetWrapper = useSheetWrapper()
+  const {inAppBrowserConsentControl} = useGlobalDialogsControlContext()
 
   const openLink = useCallback(
     async (url: string, override?: boolean, shouldProxy?: boolean) => {
@@ -42,10 +42,7 @@ export function useOpenLink() {
 
       if (isNative && !url.startsWith('mailto:')) {
         if (override === undefined && enabled === undefined) {
-          openModal({
-            name: 'in-app-browser-consent',
-            href: url,
-          })
+          inAppBrowserConsentControl.open(url)
           return
         } else if (override ?? enabled) {
           await sheetWrapper(
@@ -62,7 +59,7 @@ export function useOpenLink() {
       }
       Linking.openURL(url)
     },
-    [enabled, openModal, t, sheetWrapper],
+    [enabled, inAppBrowserConsentControl, t, sheetWrapper],
   )
 
   return openLink
