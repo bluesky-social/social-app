@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
+import {type AppBskyActorDefs, moderateProfile, type ModerationOpts} from '@atproto/api'
 import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -23,6 +23,7 @@ import {useFollowMethods} from '#/components/hooks/useFollowMethods'
 import {useRichText} from '#/components/hooks/useRichText'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {VerificationCheck} from '#/components/icons/VerificationCheck'
 import {
   KnownFollowers,
   shouldShowKnownFollowers,
@@ -33,7 +34,7 @@ import * as Pills from '#/components/Pills'
 import {Portal} from '#/components/Portal'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {ProfileHoverCardProps} from './types'
+import {type ProfileHoverCardProps} from './types'
 
 const floatingMiddlewares = [
   offset(4),
@@ -413,6 +414,9 @@ function Inner({
   )
   const isLabeler = profile.associated?.labeler
 
+  // TODO
+  const isVerified = false
+
   return (
     <View>
       <View style={[a.flex_row, a.justify_between, a.align_start]}>
@@ -465,13 +469,21 @@ function Inner({
 
       <Link to={profileURL} label={_(msg`View profile`)} onPress={hide}>
         <View style={[a.pb_sm, a.flex_1]}>
-          <Text
-            style={[a.pt_md, a.pb_xs, a.text_lg, a.font_bold, a.self_start]}>
-            {sanitizeDisplayName(
-              profile.displayName || sanitizeHandle(profile.handle),
-              moderation.ui('displayName'),
+          <View style={[a.flex_row, a.align_center, a.pt_md, a.pb_xs]}>
+            <Text
+              numberOfLines={1}
+              style={[a.text_lg, a.font_bold, a.self_start]}>
+              {sanitizeDisplayName(
+                profile.displayName || sanitizeHandle(profile.handle),
+                moderation.ui('displayName'),
+              )}
+            </Text>
+            {isVerified && (
+              <View style={[a.pl_xs]}>
+                <VerificationCheck width={16} />
+              </View>
             )}
-          </Text>
+          </View>
 
           <ProfileHeaderHandle profile={profileShadow} disableTaps />
         </View>

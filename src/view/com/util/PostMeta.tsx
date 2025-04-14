@@ -1,10 +1,10 @@
 import {memo, useCallback} from 'react'
-import {type StyleProp, Text as RNText,View, type ViewStyle} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
-import type React from 'react';
+import type React from 'react'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {forceLTR} from '#/lib/strings/bidi'
@@ -14,7 +14,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
 import {isAndroid} from '#/platform/detection'
 import {precacheProfile} from '#/state/queries/profile'
-import {atoms as a, platform,useTheme, web} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {VerificationCheck} from '#/components/icons/VerificationCheck'
 import {WebOnlyInlineLinkText} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -52,6 +52,9 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
 
   const timestampLabel = niceDate(i18n, opts.timestamp)
 
+  // TODO
+  const isVerified = false
+
   return (
     <View
       style={[
@@ -60,7 +63,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         a.align_center,
         a.pb_2xs,
         a.gap_xs,
-        a.z_10,
+        a.z_20,
         opts.style,
       ]}>
       {opts.showAvatar && (
@@ -73,77 +76,89 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           />
         </View>
       )}
-      <ProfileHoverCard inline did={opts.author.did}>
-        <Text numberOfLines={1} style={[isAndroid ? a.flex_1 : a.flex_shrink]}>
-          <WebOnlyInlineLinkText
-            to={profileLink}
-            label={_(msg`View profile`)}
-            disableMismatchWarning
-            onPress={onBeforePressAuthor}
-            style={[t.atoms.text]}>
-            <Text emoji style={[a.text_md, a.font_bold, a.leading_snug]}>
+      <View style={[a.flex_row, a.align_end, a.flex_shrink]}>
+        <ProfileHoverCard inline did={opts.author.did}>
+          <View style={[a.flex_row, a.align_end, a.flex_shrink]}>
+            <WebOnlyInlineLinkText
+              emoji
+              numberOfLines={1}
+              to={profileLink}
+              label={_(msg`View profile`)}
+              disableMismatchWarning
+              onPress={onBeforePressAuthor}
+              style={[
+                a.text_md,
+                a.font_bold,
+                t.atoms.text,
+                a.leading_tight,
+                {maxWidth: '70%', flexShrink: 0},
+              ]}>
               {forceLTR(
                 sanitizeDisplayName(
                   displayName,
                   opts.moderation?.ui('displayName'),
                 ),
               )}
-            </Text>
-          </WebOnlyInlineLinkText>
-          <RNText>
-            {' '}
-            <VerificationCheck
-              width={14}
-              style={platform({
-                web: {position: 'relative', top: 1},
-              })}
-            />
-          </RNText>
-          <WebOnlyInlineLinkText
-            to={profileLink}
-            label={_(msg`View profile`)}
-            disableMismatchWarning
-            disableUnderline
-            onPress={onBeforePressAuthor}
-            style={[a.text_md, t.atoms.text_contrast_medium, a.leading_snug]}>
-            <Text
-              emoji
-              style={[a.text_md, t.atoms.text_contrast_medium, a.leading_snug]}>
+            </WebOnlyInlineLinkText>
+            {isVerified && (
+              <View style={[a.pl_xs, a.self_center]}>
+                <VerificationCheck width={14} />
+              </View>
+            )}
+            <WebOnlyInlineLinkText
+              numberOfLines={1}
+              to={profileLink}
+              label={_(msg`View profile`)}
+              disableMismatchWarning
+              disableUnderline
+              onPress={onBeforePressAuthor}
+              style={[
+                a.text_md,
+                t.atoms.text_contrast_medium,
+                a.leading_tight,
+                {flexShrink: 10},
+              ]}>
               {NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
-            </Text>
-          </WebOnlyInlineLinkText>
-        </Text>
-      </ProfileHoverCard>
+            </WebOnlyInlineLinkText>
+          </View>
+        </ProfileHoverCard>
 
-      {!isAndroid && (
-        <Text
-          style={[a.text_md, t.atoms.text_contrast_medium]}
-          accessible={false}>
-          &middot;
-        </Text>
-      )}
-
-      <TimeElapsed timestamp={opts.timestamp}>
-        {({timeElapsed}) => (
-          <WebOnlyInlineLinkText
-            to={opts.postHref}
-            label={timestampLabel}
-            title={timestampLabel}
-            disableMismatchWarning
-            disableUnderline
-            onPress={onBeforePressPost}
-            style={[
-              a.text_md,
-              t.atoms.text_contrast_medium,
-              a.leading_snug,
-              web({
-                whiteSpace: 'nowrap',
-              }),
-            ]}>
-            {timeElapsed}
-          </WebOnlyInlineLinkText>
-        )}
-      </TimeElapsed>
+        <TimeElapsed timestamp={opts.timestamp}>
+          {({timeElapsed}) => (
+            <WebOnlyInlineLinkText
+              to={opts.postHref}
+              label={timestampLabel}
+              title={timestampLabel}
+              disableMismatchWarning
+              disableUnderline
+              onPress={onBeforePressPost}
+              style={[
+                a.pl_xs,
+                a.text_md,
+                a.leading_tight,
+                isAndroid && a.flex_grow,
+                a.text_right,
+                t.atoms.text_contrast_medium,
+                web({
+                  whiteSpace: 'nowrap',
+                }),
+              ]}>
+              {!isAndroid && (
+                <Text
+                  style={[
+                    a.text_md,
+                    a.leading_tight,
+                    t.atoms.text_contrast_medium,
+                  ]}
+                  accessible={false}>
+                  &middot;{' '}
+                </Text>
+              )}
+              {timeElapsed}
+            </WebOnlyInlineLinkText>
+          )}
+        </TimeElapsed>
+      </View>
     </View>
   )
 }
