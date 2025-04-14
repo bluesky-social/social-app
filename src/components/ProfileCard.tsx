@@ -31,17 +31,21 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
 
+export {ProfileCardPills} from '#/view/com/profile/ProfileCard'
+
 export function Default({
   profile,
   moderationOpts,
   logContext = 'ProfileCard',
+  testID,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
+  testID?: string
 }) {
   return (
-    <Link profile={profile}>
+    <Link testID={testID} profile={profile}>
       <Card
         profile={profile}
         moderationOpts={moderationOpts}
@@ -87,7 +91,7 @@ export function Card({
 export function Outer({
   children,
 }: {
-  children: React.ReactElement | React.ReactElement[]
+  children: React.ReactNode | React.ReactNode[]
 }) {
   return <View style={[a.w_full, a.flex_1, a.gap_xs]}>{children}</View>
 }
@@ -95,7 +99,7 @@ export function Outer({
 export function Header({
   children,
 }: {
-  children: React.ReactElement | React.ReactElement[]
+  children: React.ReactNode | React.ReactNode[]
 }) {
   return <View style={[a.flex_row, a.align_center, a.gap_sm]}>{children}</View>
 }
