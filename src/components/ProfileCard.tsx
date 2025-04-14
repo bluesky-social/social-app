@@ -16,7 +16,7 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {
   Button,
@@ -135,10 +135,9 @@ export function Avatar({
   const moderation = moderateProfile(profile, moderationOpts)
 
   return (
-    <UserAvatar
+    <PreviewableUserAvatar
       size={40}
-      avatar={profile.avatar}
-      type={profile.associated?.labeler ? 'labeler' : 'user'}
+      profile={profile}
       moderation={moderation.ui('avatar')}
     />
   )
