@@ -15,12 +15,14 @@ import (
 // time.RFC822Z, but with four digit year. used for RSS pubData.
 var FullYearRFC822Z = "02 Jan 2006 15:04 -0700"
 
-// Enclosure represents an RSS enclosure element for media (e.g. an image)
-type Enclosure struct {
-	XMLName xml.Name `xml:"enclosure"`
-	URL     string   `xml:"url,attr"`
-	Type    string   `xml:"type,attr"`
-	Length  int64    `xml:"length,attr"`
+// MediaContent represents a Media RSS content element.
+type MediaContent struct {
+	XMLName     xml.Name `xml:"media:content"`
+	URL         string   `xml:"url,attr"`
+	Type        string   `xml:"type,attr"`
+	FileSize    int64    `xml:"fileSize,attr"`               // Use FileSize instead of Length
+	Title       string   `xml:"media:title,omitempty"`       // Holds alt or caption text
+	Description string   `xml:"media:description,omitempty"` // Optional longer description
 }
 
 type ItemGUID struct {
@@ -29,55 +31,123 @@ type ItemGUID struct {
 	IsPerma bool     `xml:"isPermaLink,attr"`
 }
 
+// AtomLink represents an Atom link element, used for self referencing in RSS feeds.
+type AtomLink struct {
+	Rel  string `xml:"rel,attr"`
+	Type string `xml:"type,attr"`
+	Href string `xml:"href,attr"`
+}
+
 // We don't actually populate the title for "posts".
 // Some background: https://book.micro.blog/rss-for-microblogs/
 type Item struct {
-	Title       string `xml:"title,omitempty"`
-	Link        string `xml:"link,omitempty"`
-	Description string `xml:"description,omitempty"`
-	PubDate     string `xml:"pubDate,omitempty"`
-	GUID        ItemGUID
-	Enclosure   *Enclosure `xml:"enclosure,omitempty"`
+	Title              string `xml:"title,omitempty"`
+	Link               string `xml:"link,omitempty"`
+	Description        string `xml:"description,omitempty"`
+	PubDate            string `xml:"pubDate,omitempty"`
+	GUID               ItemGUID
+	MediaContentSingle *MediaContent `xml:"media:content,omitempty"`
+	MediaGroup         *MediaGroup   `xml:"media:group,omitempty"`
 }
 
+// rss represents the root RSS element with a nested channel element and includes the Media RSS and Atom namespaces.
 type rss struct {
-	Version     string `xml:"version,attr"`
-	Description string `xml:"channel>description,omitempty"`
-	Link        string `xml:"channel>link"`
-	Title       string `xml:"channel>title"`
-
-	Item []Item `xml:"channel>item"`
+	XMLName    xml.Name `xml:"rss"`
+	Version    string   `xml:"version,attr"`
+	XMLNSMedia string   `xml:"xmlns:media,attr"`
+	XMLNSAtom  string   `xml:"xmlns:atom,attr"`
+	Channel    channel  `xml:"channel"`
 }
 
-// getPostEnclosure extracts enclosure information (images or videos) from a post
-func getPostEnclosure(p *appbsky.FeedDefs_FeedViewPost, rec *appbsky.FeedPost) *Enclosure {
-	// Both p.Post.Embed and rec.Embed must be present
+type channel struct {
+	AtomLink    AtomLink `xml:"atom:link"`
+	Title       string   `xml:"title"`
+	Link        string   `xml:"link"`
+	Description string   `xml:"description,omitempty"`
+	Item        []Item   `xml:"item"`
+}
+
+// MediaGroup represents a group of MediaContent items using the Media RSS extension.
+type MediaGroup struct {
+	XMLName       xml.Name        `xml:"media:group"`
+	MediaContents []*MediaContent `xml:"media:content,omitempty"`
+}
+
+// getPostMediaContents extracts media content (images and videos) from a post and builds Media RSS elements.
+func getPostMediaContents(p *appbsky.FeedDefs_FeedViewPost, rec *appbsky.FeedPost) []*MediaContent {
+	var contents []*MediaContent
+
+	// Return early if there is no embed at all
 	if p.Post.Embed == nil || rec.Embed == nil {
 		return nil
 	}
 
-	// Handle image embeds
-	if p.Post.Embed.EmbedImages_View != nil && len(p.Post.Embed.EmbedImages_View.Images) > 0 {
-		// Make sure the matching rec.Embed structure exists
-		if rec.Embed.EmbedImages != nil && len(rec.Embed.EmbedImages.Images) > 0 {
-			return &Enclosure{
-				URL:    p.Post.Embed.EmbedImages_View.Images[0].Fullsize,
-				Type:   rec.Embed.EmbedImages.Images[0].Image.MimeType,
-				Length: rec.Embed.EmbedImages.Images[0].Image.Size,
+	extractImages := func(viewImages []*appbsky.EmbedImages_ViewImage, recImages []*appbsky.EmbedImages_Image) []*MediaContent {
+		var imageContents []*MediaContent
+		for i, viewImg := range viewImages {
+			// Ensure there's a matching image in the record
+			if i >= len(recImages) {
+				break
 			}
+			recImg := recImages[i]
+			imageContents = append(imageContents, &MediaContent{
+				URL:      viewImg.Fullsize,
+				Type:     recImg.Image.MimeType,
+				FileSize: recImg.Image.Size,
+				// Use media:title to supply alternate text or caption
+				Title: viewImg.Alt,
+			})
 		}
-	} else if p.Post.Embed.EmbedVideo_View != nil {
-		if rec.Embed.EmbedVideo != nil && rec.Embed.EmbedVideo.Video != nil {
-			return &Enclosure{
-				URL:    p.Post.Embed.EmbedVideo_View.Playlist,
-				Type:   rec.Embed.EmbedVideo.Video.MimeType,
-				Length: rec.Embed.EmbedVideo.Video.Size,
-			}
+		return imageContents
+	}
+
+	extractVideo := func(videoView *appbsky.EmbedVideo_View, videoEmbed *appbsky.EmbedVideo) *MediaContent {
+		title := ""
+		if videoEmbed.Alt != nil {
+			title = *videoEmbed.Alt
+		}
+		return &MediaContent{
+			URL:      videoView.Playlist,
+			Type:     videoEmbed.Video.MimeType,
+			FileSize: videoEmbed.Video.Size,
+			Title:    title,
 		}
 	}
 
-	// No supported embed found
-	return nil
+	// Process image embeds: add one media content for each image.
+	if p.Post.Embed.EmbedImages_View != nil && rec.Embed.EmbedImages != nil &&
+		len(p.Post.Embed.EmbedImages_View.Images) == len(rec.Embed.EmbedImages.Images) {
+		contents = append(contents, extractImages(p.Post.Embed.EmbedImages_View.Images, rec.Embed.EmbedImages.Images)...)
+	} else if p.Post.Embed.EmbedVideo_View != nil && rec.Embed.EmbedVideo != nil &&
+		rec.Embed.EmbedVideo.Video != nil {
+		contents = append(contents, extractVideo(p.Post.Embed.EmbedVideo_View, rec.Embed.EmbedVideo))
+	} else if p.Post.Embed.EmbedRecordWithMedia_View != nil && rec.Embed.EmbedRecordWithMedia.Media != nil {
+		// this is similar to the images or video case but there is a quote tweet
+		// so process as if `EmbedImages_View` or `EmbedVideo_View`
+
+		// Check if it's an image embed in the quote post
+		if p.Post.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil &&
+			rec.Embed.EmbedRecordWithMedia.Media.EmbedImages != nil {
+			contents = append(contents,
+				extractImages(
+					p.Post.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images,
+					rec.Embed.EmbedRecordWithMedia.Media.EmbedImages.Images,
+				)...)
+		} else if p.Post.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View != nil &&
+			rec.Embed.EmbedRecordWithMedia.Media.EmbedVideo != nil &&
+			rec.Embed.EmbedRecordWithMedia.Media.EmbedVideo.Video != nil {
+			contents = append(contents,
+				extractVideo(
+					p.Post.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View,
+					rec.Embed.EmbedRecordWithMedia.Media.EmbedVideo,
+				))
+		}
+	}
+
+	if len(contents) == 0 {
+		return nil
+	}
+	return contents
 }
 
 func (srv *Server) WebProfileRSS(c echo.Context) error {
@@ -152,6 +222,17 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 			pubDate = createdAt.Time().Format(FullYearRFC822Z)
 		}
 
+		mediaContents := getPostMediaContents(p, rec)
+		var mediaGroup *MediaGroup = nil
+		var mediaContentSingle *MediaContent = nil
+		if len(mediaContents) > 1 {
+			mediaGroup = &MediaGroup{
+				MediaContents: mediaContents,
+			}
+		} else if len(mediaContents) == 1 {
+			mediaContentSingle = mediaContents[0]
+		}
+
 		posts = append(posts, Item{
 			Link:        fmt.Sprintf("https://%s/profile/%s/post/%s", req.Host, pv.Handle, aturi.RecordKey().String()),
 			Description: ExpandPostText(rec),
@@ -160,7 +241,8 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 				Value:   aturi.String(),
 				IsPerma: false,
 			},
-			Enclosure: getPostEnclosure(p, rec),
+			MediaContentSingle: mediaContentSingle,
+			MediaGroup:         mediaGroup,
 		})
 	}
 
@@ -173,11 +255,20 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 		desc = *pv.Description
 	}
 	feed := &rss{
-		Version:     "2.0",
-		Description: desc,
-		Link:        fmt.Sprintf("https://%s/profile/%s", req.Host, pv.Handle),
-		Title:       title,
-		Item:        posts,
+		Version:    "2.0",
+		XMLNSMedia: "http://search.yahoo.com/mrss/",
+		XMLNSAtom:  "http://www.w3.org/2005/Atom",
+		Channel: channel{
+			AtomLink: AtomLink{
+				Rel:  "self",
+				Type: "application/rss+xml",
+				Href: fmt.Sprintf("https://%s%s", req.Host, req.RequestURI),
+			},
+			Title:       title,
+			Link:        fmt.Sprintf("https://%s/profile/%s", req.Host, pv.Handle),
+			Description: desc,
+			Item:        posts,
+		},
 	}
 	return c.XML(http.StatusOK, feed)
 }
