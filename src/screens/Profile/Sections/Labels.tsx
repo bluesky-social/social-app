@@ -99,7 +99,7 @@ export const ProfileLabelsSection = React.forwardRef<
   }, [isFocused, scrollElRef, setScrollViewTag])
 
   return (
-    <Layout.Center style={{flex: 1, minHeight}}>
+    <Layout.Center style={{minHeight}}>
       <Layout.Content
         ref={scrollElRef as React.Ref<Animated.ScrollView>}
         scrollEventThrottle={1}
