@@ -271,8 +271,8 @@ export function Inner({
                 </ButtonText>
               </Button>
               <Button
-                label={_(msg`Maybe layer`)}
-                accessibilityHint={_(msg`Snooze reminder`)}
+                label={_(msg`Maybe later`)}
+                accessibilityHint={_(msg`Snoozes the reminder`)}
                 variant="ghost"
                 color="secondary"
                 size="large"
