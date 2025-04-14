@@ -39,11 +39,12 @@ import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
 import {Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen} from '#/components/icons/EnveopeOpen'
 import {Trash_Stroke2_Corner0_Rounded} from '#/components/icons/Trash'
-import {VerificationCheck} from '#/components/icons/VerificationCheck'
 import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import type * as bsky from '#/types/bsky'
 
 export let ChatListItem = ({
@@ -107,6 +108,9 @@ function ChatListItemReady({
   const playHaptic = useHaptics()
   const queryClient = useQueryClient()
   const isUnread = convo.unreadCount > 0
+  const verification = useSimpleVerificationState({
+    profile,
+  })
 
   const blockInfo = useMemo(() => {
     const modui = moderation.ui('profileView')
@@ -326,9 +330,6 @@ function ChatListItemReady({
 
   const hasUnread = convo.unreadCount > 0 && !isDeletedAccount
 
-  // TODO
-  const isVerified = false
-
   return (
     <GestureActionView actions={actions}>
       <View
@@ -403,9 +404,9 @@ function ChatListItemReady({
                       {displayName}
                     </Text>
                   </View>
-                  {isVerified && (
+                  {verification.verified && (
                     <View style={[a.pl_xs, a.self_center]}>
-                      <VerificationCheck width={14} />
+                      <VerificationCheck width={14} {...verification} />
                     </View>
                   )}
                   {lastMessageSentAt && (

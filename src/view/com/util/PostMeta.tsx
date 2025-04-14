@@ -15,10 +15,11 @@ import {niceDate} from '#/lib/strings/time'
 import {isAndroid} from '#/platform/detection'
 import {precacheProfile} from '#/state/queries/profile'
 import {atoms as a, useTheme, web} from '#/alf'
-import {VerificationCheck} from '#/components/icons/VerificationCheck'
 import {WebOnlyInlineLinkText} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {TimeElapsed} from './TimeElapsed'
 import {PreviewableUserAvatar} from './UserAvatar'
 
@@ -51,9 +52,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   }, [queryClient, opts.author])
 
   const timestampLabel = niceDate(i18n, opts.timestamp)
-
-  // TODO
-  const isVerified = false
+  const verification = useSimpleVerificationState({profile: opts.author})
 
   return (
     <View
@@ -100,9 +99,9 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 ),
               )}
             </WebOnlyInlineLinkText>
-            {isVerified && (
+            {verification.verified && (
               <View style={[a.pl_xs, a.self_center]}>
-                <VerificationCheck width={14} />
+                <VerificationCheck width={14} {...verification} />
               </View>
             )}
             <WebOnlyInlineLinkText

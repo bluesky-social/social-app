@@ -1,6 +1,10 @@
 import React from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs, moderateProfile, type ModerationOpts} from '@atproto/api'
+import {
+  type AppBskyActorDefs,
+  moderateProfile,
+  type ModerationOpts,
+} from '@atproto/api'
 import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -23,7 +27,6 @@ import {useFollowMethods} from '#/components/hooks/useFollowMethods'
 import {useRichText} from '#/components/hooks/useRichText'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {VerificationCheck} from '#/components/icons/VerificationCheck'
 import {
   KnownFollowers,
   shouldShowKnownFollowers,
@@ -34,6 +37,8 @@ import * as Pills from '#/components/Pills'
 import {Portal} from '#/components/Portal'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {type ProfileHoverCardProps} from './types'
 
 const floatingMiddlewares = [
@@ -413,9 +418,7 @@ function Inner({
     [currentAccount, profile],
   )
   const isLabeler = profile.associated?.labeler
-
-  // TODO
-  const isVerified = false
+  const verification = useSimpleVerificationState({profile})
 
   return (
     <View>
@@ -478,9 +481,9 @@ function Inner({
                 moderation.ui('displayName'),
               )}
             </Text>
-            {isVerified && (
+            {verification.verified && (
               <View style={[a.pl_xs]}>
-                <VerificationCheck width={16} />
+                <VerificationCheck width={16} {...verification} />
               </View>
             )}
           </View>

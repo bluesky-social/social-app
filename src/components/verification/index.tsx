@@ -1,7 +1,8 @@
 import {useMemo} from 'react'
-import {type AppBskyActorDefs} from '@atproto/api'
 
 import {useSession} from '#/state/session'
+import {type SimpleVerificationState} from '#/components/verification/types'
+import type * as bsky from '#/types/bsky'
 
 export type ProfileVerificationState = {
   profile: {
@@ -18,7 +19,7 @@ export type ProfileVerificationState = {
 export function useVerificationStateForProfile({
   profile,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: bsky.profile.AnyProfileView
 }) {
   const {currentAccount} = useSession()
 
@@ -40,4 +41,26 @@ export function useVerificationStateForProfile({
       },
     }
   }, [profile, currentAccount])
+}
+
+export function getSimpleVerificationState({}: {
+  profile: bsky.profile.AnyProfileView
+}) {
+  const verified = false
+  const verifier = false // currentAccount?.verifier
+
+  return {
+    verified,
+    verifier,
+  }
+}
+
+export function useSimpleVerificationState({
+  profile,
+}: {
+  profile: bsky.profile.AnyProfileView
+}): SimpleVerificationState {
+  return useMemo(() => {
+    return getSimpleVerificationState({profile})
+  }, [profile])
 }

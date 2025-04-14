@@ -25,7 +25,8 @@ import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/
 import {Link} from '#/components/Link'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
-import {VerificationCheck} from '../icons/VerificationCheck'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 
 const PFP_SIZE = isWeb ? 40 : 34
 
@@ -150,6 +151,9 @@ function HeaderReady({
   const {_} = useLingui()
   const t = useTheme()
   const convoState = useConvo()
+  const verification = useSimpleVerificationState({
+    profile,
+  })
 
   const isDeletedAccount = profile?.handle === 'missing.invalid'
   const displayName = isDeletedAccount
@@ -169,9 +173,6 @@ function HeaderReady({
     latestMessageFromOther?.type === 'message'
       ? latestMessageFromOther.message
       : undefined
-
-  // TODO
-  const isVerified = false
 
   return (
     <View style={[a.flex_1]}>
@@ -201,9 +202,9 @@ function HeaderReady({
                 numberOfLines={1}>
                 {displayName}
               </Text>
-              {isVerified && (
+              {verification.verified && (
                 <View style={[a.pl_xs]}>
-                  <VerificationCheck width={14} />
+                  <VerificationCheck width={14} {...verification} />
                 </View>
               )}
             </View>
