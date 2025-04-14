@@ -275,9 +275,7 @@ let SearchScreenUserResults = ({
       {results.length ? (
         <List
           data={results}
-          renderItem={({item}) => (
-            <ProfileCardWithFollowBtn profile={item} noBg />
-          )}
+          renderItem={({item}) => <ProfileCardWithFollowBtn profile={item} />}
           keyExtractor={item => item.did}
           desktopFixedHeight
           contentContainerStyle={{paddingBottom: 100}}
