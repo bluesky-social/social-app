@@ -253,9 +253,9 @@ function ImageEmbed({
           <img
             src={content.images[0].thumb}
             alt={content.images[0].alt}
-            className="flex-[3] object-cover rounded-sm"
+            className="flex-1 aspect-square object-cover rounded-sm"
           />
-          <div className="flex flex-col gap-1 flex-[2]">
+          <div className="flex flex-col gap-1 flex-1 aspect-square">
             {content.images.slice(1).map((image, i) => (
               <img
                 key={i}
@@ -275,7 +275,7 @@ function ImageEmbed({
               key={i}
               src={image.thumb}
               alt={image.alt}
-              className="aspect-square w-full object-cover rounded-sm"
+              className="aspect-video w-full object-cover rounded-sm"
             />
           ))}
         </div>
