@@ -12,7 +12,7 @@ import {Statsig} from 'statsig-react-native-expo'
 import {appVersion, BUNDLE_DATE, bundleInfo} from '#/lib/app-info'
 import {STATUS_PAGE_URL} from '#/lib/constants'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
-import {isNative} from '#/platform/detection'
+import {isAndroid, isNative} from '#/platform/detection'
 import {useDevModeEnabled} from '#/state/preferences/dev-mode'
 import * as Toast from '#/view/com/util/Toast'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
@@ -41,18 +41,22 @@ export function AboutSettingsScreen({}: Props) {
         return spaceDiff * -1
       },
       onSuccess: sizeDiffBytes => {
-        Toast.show(
-          _(
-            msg`Image cache cleared, freed ${i18n.number(
-              Math.abs(sizeDiffBytes / 1024 / 1024),
-              {
-                notation: 'compact',
-                style: 'unit',
-                unit: 'megabyte',
-              },
-            )}`,
-          ),
-        )
+        if (isAndroid) {
+          Toast.show(
+            _(
+              msg`Image cache cleared, freed ${i18n.number(
+                Math.abs(sizeDiffBytes / 1024 / 1024),
+                {
+                  notation: 'compact',
+                  style: 'unit',
+                  unit: 'megabyte',
+                },
+              )}`,
+            ),
+          )
+        } else {
+          Toast.show(_(msg`Image cache cleared`))
+        }
       },
     })
 
