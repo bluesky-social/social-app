@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react'
 import {Dimensions, type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AppBskyGraphDefs, moderateProfile} from '@atproto/api'
+import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -159,7 +159,6 @@ export function ListMembers({
 
       const profile = (item as AppBskyGraphDefs.ListItemView).subject
       if (!moderationOpts) return null
-      const moderation = moderateProfile(profile, moderationOpts)
 
       return (
         <View
@@ -187,9 +186,9 @@ export function ListMembers({
                 )}
               </ProfileCard.Header>
 
-              <ProfileCard.ProfileCardPills
-                followedBy={Boolean(profile.viewer?.followedBy)}
-                moderation={moderation}
+              <ProfileCard.Labels
+                profile={profile}
+                moderationOpts={moderationOpts}
               />
 
               <ProfileCard.Description profile={profile} />
