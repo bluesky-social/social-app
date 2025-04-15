@@ -8,15 +8,15 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {getModerationCauseKey} from '#/lib/moderation'
 import {type LogEvents} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {ProfileCardPills} from '#/view/com/profile/ProfileCard'
 import * as Toast from '#/view/com/util/Toast'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {
   Button,
@@ -27,6 +27,7 @@ import {
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
+import * as Pills from '#/components/Pills'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
@@ -35,13 +36,15 @@ export function Default({
   profile,
   moderationOpts,
   logContext = 'ProfileCard',
+  testID,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
+  testID?: string
 }) {
   return (
-    <Link profile={profile}>
+    <Link testID={testID} profile={profile}>
       <Card
         profile={profile}
         moderationOpts={moderationOpts}
@@ -60,8 +63,6 @@ export function Card({
   moderationOpts: ModerationOpts
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
 }) {
-  const moderation = moderateProfile(profile, moderationOpts)
-
   return (
     <Outer>
       <Header>
@@ -74,10 +75,7 @@ export function Card({
         />
       </Header>
 
-      <ProfileCardPills
-        followedBy={Boolean(profile.viewer?.followedBy)}
-        moderation={moderation}
-      />
+      <Labels profile={profile} moderationOpts={moderationOpts} />
 
       <Description profile={profile} />
     </Outer>
@@ -87,7 +85,7 @@ export function Card({
 export function Outer({
   children,
 }: {
-  children: React.ReactElement | React.ReactElement[]
+  children: React.ReactNode | React.ReactNode[]
 }) {
   return <View style={[a.w_full, a.flex_1, a.gap_xs]}>{children}</View>
 }
@@ -95,7 +93,7 @@ export function Outer({
 export function Header({
   children,
 }: {
-  children: React.ReactElement | React.ReactElement[]
+  children: React.ReactNode | React.ReactNode[]
 }) {
   return <View style={[a.flex_row, a.align_center, a.gap_sm]}>{children}</View>
 }
@@ -137,10 +135,9 @@ export function Avatar({
   const moderation = moderateProfile(profile, moderationOpts)
 
   return (
-    <UserAvatar
+    <PreviewableUserAvatar
       size={40}
-      avatar={profile.avatar}
-      type={profile.associated?.labeler ? 'labeler' : 'user'}
+      profile={profile}
       moderation={moderation.ui('avatar')}
     />
   )
@@ -413,5 +410,33 @@ export function FollowButtonInner({
         </Button>
       )}
     </View>
+  )
+}
+
+export function Labels({
+  profile,
+  moderationOpts,
+}: {
+  profile: bsky.profile.AnyProfileView
+  moderationOpts: ModerationOpts
+}) {
+  const moderation = moderateProfile(profile, moderationOpts)
+  const modui = moderation.ui('profileList')
+  const followedBy = profile.viewer?.followedBy
+
+  if (!followedBy && !modui.inform && !modui.alert) {
+    return null
+  }
+
+  return (
+    <Pills.Row style={[a.pt_xs]}>
+      {followedBy && <Pills.FollowsYou />}
+      {modui.alerts.map(alert => (
+        <Pills.Label key={getModerationCauseKey(alert)} cause={alert} />
+      ))}
+      {modui.informs.map(inform => (
+        <Pills.Label key={getModerationCauseKey(inform)} cause={inform} />
+      ))}
+    </Pills.Row>
   )
 }
