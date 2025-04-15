@@ -33,7 +33,6 @@ import {attachRouteToLogEvents, logEvent} from '#/lib/statsig/statsig'
 import {bskyTitle} from '#/lib/strings/headings'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
-import {useModalControls} from '#/state/modals'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
 import {
@@ -79,33 +78,35 @@ import {ProfileFeedScreen} from '#/screens/Profile/ProfileFeed'
 import {ProfileFollowersScreen} from '#/screens/Profile/ProfileFollowers'
 import {ProfileFollowsScreen} from '#/screens/Profile/ProfileFollows'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
+import {ProfileSearchScreen} from '#/screens/Profile/ProfileSearch'
 import {SearchScreen} from '#/screens/Search'
+import {AboutSettingsScreen} from '#/screens/Settings/AboutSettings'
+import {AccessibilitySettingsScreen} from '#/screens/Settings/AccessibilitySettings'
+import {AccountSettingsScreen} from '#/screens/Settings/AccountSettings'
 import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
 import {AppIconSettingsScreen} from '#/screens/Settings/AppIconSettings'
+import {AppPasswordsScreen} from '#/screens/Settings/AppPasswords'
+import {ContentAndMediaSettingsScreen} from '#/screens/Settings/ContentAndMediaSettings'
+import {ExternalMediaPreferencesScreen} from '#/screens/Settings/ExternalMediaPreferences'
+import {FollowingFeedPreferencesScreen} from '#/screens/Settings/FollowingFeedPreferences'
+import {LanguageSettingsScreen} from '#/screens/Settings/LanguageSettings'
 import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
+import {PrivacyAndSecuritySettingsScreen} from '#/screens/Settings/PrivacyAndSecuritySettings'
+import {SettingsScreen} from '#/screens/Settings/Settings'
 import {SettingsInterests} from '#/screens/Settings/SettingsInterests'
+import {ThreadPreferencesScreen} from '#/screens/Settings/ThreadPreferences'
 import {
   StarterPackScreen,
   StarterPackScreenShort,
 } from '#/screens/StarterPack/StarterPackScreen'
 import {Wizard} from '#/screens/StarterPack/Wizard'
+import TopicScreen from '#/screens/Topic'
 import {VideoFeed} from '#/screens/VideoFeed'
 import {useTheme} from '#/alf'
+import {useDialogControl} from '#/components/Dialog'
+import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
-import {ProfileSearchScreen} from './screens/Profile/ProfileSearch'
-import {AboutSettingsScreen} from './screens/Settings/AboutSettings'
-import {AccessibilitySettingsScreen} from './screens/Settings/AccessibilitySettings'
-import {AccountSettingsScreen} from './screens/Settings/AccountSettings'
-import {AppPasswordsScreen} from './screens/Settings/AppPasswords'
-import {ContentAndMediaSettingsScreen} from './screens/Settings/ContentAndMediaSettings'
-import {ExternalMediaPreferencesScreen} from './screens/Settings/ExternalMediaPreferences'
-import {FollowingFeedPreferencesScreen} from './screens/Settings/FollowingFeedPreferences'
-import {LanguageSettingsScreen} from './screens/Settings/LanguageSettings'
-import {PrivacyAndSecuritySettingsScreen} from './screens/Settings/PrivacyAndSecuritySettings'
-import {SettingsScreen} from './screens/Settings/Settings'
-import {ThreadPreferencesScreen} from './screens/Settings/ThreadPreferences'
-import TopicScreen from './screens/Topic'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -727,36 +728,39 @@ const LINKING = {
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
   const {currentAccount} = useSession()
-  const {openModal} = useModalControls()
   const prevLoggedRouteName = React.useRef<string | undefined>(undefined)
+  const verifyEmailDialogControl = useDialogControl()
 
   function onReady() {
     prevLoggedRouteName.current = getCurrentRouteName()
     if (currentAccount && shouldRequestEmailConfirmation(currentAccount)) {
-      openModal({name: 'verify-email', showReminder: true})
+      verifyEmailDialogControl.open()
       snoozeEmailConfirmationPrompt()
     }
   }
 
   return (
-    <NavigationContainer
-      ref={navigationRef}
-      linking={LINKING}
-      theme={theme}
-      onStateChange={() => {
-        logger.metric('router:navigate', {
-          from: prevLoggedRouteName.current,
-        })
-        prevLoggedRouteName.current = getCurrentRouteName()
-      }}
-      onReady={() => {
-        attachRouteToLogEvents(getCurrentRouteName)
-        logModuleInitTime()
-        onReady()
-        logger.metric('router:navigate', {})
-      }}>
-      {children}
-    </NavigationContainer>
+    <>
+      <NavigationContainer
+        ref={navigationRef}
+        linking={LINKING}
+        theme={theme}
+        onStateChange={() => {
+          logger.metric('router:navigate', {
+            from: prevLoggedRouteName.current,
+          })
+          prevLoggedRouteName.current = getCurrentRouteName()
+        }}
+        onReady={() => {
+          attachRouteToLogEvents(getCurrentRouteName)
+          logModuleInitTime()
+          onReady()
+          logger.metric('router:navigate', {})
+        }}>
+        {children}
+      </NavigationContainer>
+      <VerifyEmailDialog control={verifyEmailDialogControl} reminder />
+    </>
   )
 }
 
