@@ -93,13 +93,28 @@ export function ModerationMutedAccounts({}: Props) {
   }) => {
     if (!moderationOpts) return null
     return (
-      <View style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]}>
-        <ProfileCard.Default
-          testID={`mutedAccount-${index}`}
-          key={item.did}
-          profile={item}
-          moderationOpts={moderationOpts}
-        />
+      <View
+        style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]}
+        key={item.did}>
+        <ProfileCard.Link profile={item} testID={`mutedAccount-${index}`}>
+          <ProfileCard.Outer>
+            <ProfileCard.Header>
+              <ProfileCard.Avatar
+                profile={item}
+                moderationOpts={moderationOpts}
+              />
+              <ProfileCard.NameAndHandle
+                profile={item}
+                moderationOpts={moderationOpts}
+              />
+            </ProfileCard.Header>
+            <ProfileCard.Labels
+              profile={item}
+              moderationOpts={moderationOpts}
+            />
+            <ProfileCard.Description profile={item} />
+          </ProfileCard.Outer>
+        </ProfileCard.Link>
       </View>
     )
   }
