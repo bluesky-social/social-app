@@ -1,15 +1,15 @@
-import {Text as RNText,View} from 'react-native'
+import {Text as RNText, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {getUserDisplayName} from '#/lib/getUserDisplayName'
 import {useSession} from '#/state/session'
-import {atoms as a, useBreakpoints,useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
-import {VerificationCheck} from '#/components/icons/VerificationCheck'
+import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type ProfileVerificationState} from '#/components/verification'
@@ -77,7 +77,7 @@ function Inner({
           <Trans>
             Verified accounts with this blue check mark{' '}
             <RNText>
-              <VerificationCheck width={12} />
+              <VerifiedCheck width={12} />
             </RNText>{' '}
             next to their name. These accounts have been verified by a trusted
             verifier. These verifiers are picked by Bluesky.

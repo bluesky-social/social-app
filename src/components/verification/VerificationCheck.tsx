@@ -1,5 +1,6 @@
 import {type Props} from '#/components/icons/common'
-import {VerificationCheck as VerifiedIcon} from '#/components/icons/VerificationCheck'
+import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
+import {VerifierCheck} from '#/components/icons/VerifierCheck'
 import {type SimpleVerificationState} from '#/components/verification/types'
 
 export function VerificationCheck({
@@ -11,8 +12,8 @@ export function VerificationCheck({
 
   return verifier ? (
     // TODO
-    <VerifiedIcon {...rest} />
+    <VerifierCheck {...rest} />
   ) : (
-    <VerifiedIcon {...rest} />
+    <VerifiedCheck {...rest} />
   )
 }

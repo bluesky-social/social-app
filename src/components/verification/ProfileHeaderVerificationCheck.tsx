@@ -7,7 +7,7 @@ import {type Shadow} from '#/state/cache/types'
 import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {VerificationCheck as VerificationCheckIcon} from '#/components/icons/VerificationCheck'
+import {VerifiedCheck as VerificationCheckIcon} from '#/components/icons/VerifiedCheck'
 import {
   type ProfileVerificationState,
   useVerificationStateForProfile,
