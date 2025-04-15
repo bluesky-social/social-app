@@ -60,7 +60,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         a.flex_1,
         a.flex_row,
         a.align_center,
-        a.pb_2xs,
+        a.pb_xs,
         a.gap_xs,
         a.z_20,
         opts.style,
