@@ -10,6 +10,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -22,7 +23,7 @@ import {
 import {useRequireAuth, useSession} from '#/state/session'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
@@ -33,8 +34,8 @@ import {
 } from '#/components/KnownFollowers'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
+import {Text} from '#/components/Typography'
 import {VerificationCheck} from '#/components/verification/ProfileHeaderVerificationCheck'
-import {ProfileHeaderDisplayName} from './DisplayName'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
@@ -55,6 +56,8 @@ let ProfileHeaderStandard = ({
   hideBackButton = false,
   isPlaceholderProfile,
 }: Props): React.ReactNode => {
+  const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
   const {currentAccount, hasSession} = useSession()
@@ -240,11 +243,23 @@ let ProfileHeaderStandard = ({
         </View>
         <View style={[a.flex_col, a.gap_2xs, a.pt_2xs, a.pb_sm]}>
           <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
-            <ProfileHeaderDisplayName
-              profile={profile}
-              moderation={moderation}
-            />
-            <VerificationCheck profile={profile} />
+            <Text
+              emoji
+              testID="profileHeaderDisplayName"
+              style={[
+                t.atoms.text,
+                gtMobile ? a.text_4xl : a.text_3xl,
+                a.self_start,
+                a.font_heavy,
+              ]}>
+              {sanitizeDisplayName(
+                profile.displayName || sanitizeHandle(profile.handle),
+                moderation.ui('displayName'),
+              )}
+              <View style={[a.pl_xs]}>
+                <VerificationCheck profile={profile} />
+              </View>
+            </Text>
           </View>
           <ProfileHeaderHandle profile={profile} />
         </View>

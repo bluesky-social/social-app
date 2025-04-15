@@ -43,7 +43,7 @@ export function Badge({
   const {_} = useLingui()
   const verificationsDialogControl = useDialogControl()
   const {gtPhone} = useBreakpoints()
-  const size = gtPhone ? 20 : 16
+  const size = gtPhone ? 20 : 18
 
   return (
     <>
@@ -63,7 +63,7 @@ export function Badge({
               a.align_end,
               a.transition_transform,
               {
-                top: platform({android: 2}),
+                top: platform({android: 1, ios: -2}),
                 width: size,
                 height: size,
                 transform: [
