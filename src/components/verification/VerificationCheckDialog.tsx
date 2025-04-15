@@ -1,5 +1,4 @@
 import {Text as RNText, View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -8,7 +7,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonIcon,ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
@@ -18,6 +17,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {type ProfileVerificationState} from '#/components/verification'
 import {VerificationRemovePrompt} from '#/components/verification/VerificationRemovePrompt'
+import type * as bsky from '#/types/bsky'
 
 export {useDialogControl} from '#/components/Dialog'
 
@@ -27,7 +27,7 @@ export function VerificationCheckDialog({
   verificationState,
 }: {
   control: Dialog.DialogControlProps
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: bsky.profile.AnyProfileView
   verificationState: ProfileVerificationState
 }) {
   return (
@@ -47,7 +47,7 @@ function Inner({
   control,
 }: {
   control: Dialog.DialogControlProps
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: bsky.profile.AnyProfileView
   verificationState: ProfileVerificationState
 }) {
   const t = useTheme()

@@ -23,7 +23,7 @@ import {
 import {useRequireAuth, useSession} from '#/state/session'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
@@ -35,7 +35,7 @@ import {
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {VerificationCheck} from '#/components/verification/ProfileHeaderVerificationCheck'
+import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
@@ -256,8 +256,14 @@ let ProfileHeaderStandard = ({
                 profile.displayName || sanitizeHandle(profile.handle),
                 moderation.ui('displayName'),
               )}
-              <View style={[a.pl_xs]}>
-                <VerificationCheck profile={profile} />
+              <View
+                style={[
+                  a.pl_xs,
+                  {
+                    marginTop: platform({ios: 2}),
+                  },
+                ]}>
+                <VerificationCheckButton profile={profile} size="lg" />
               </View>
             </Text>
           </View>
