@@ -1,10 +1,10 @@
 import React, {memo, useMemo} from 'react'
 import {View} from 'react-native'
 import {
-  AppBskyActorDefs,
+  type AppBskyActorDefs,
   moderateProfile,
-  ModerationOpts,
-  RichText as RichTextAPI,
+  type ModerationOpts,
+  type RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -13,7 +13,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {Shadow} from '#/state/cache/types'
+import {type Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
 import {
   useProfileBlockMutationQueue,
@@ -26,7 +26,6 @@ import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {
   KnownFollowers,
@@ -221,10 +220,9 @@ let ProfileHeaderStandard = ({
                   profile.viewer?.following ? onPressUnfollow : onPressFollow
                 }
                 style={[a.rounded_full]}>
-                <ButtonIcon
-                  position="left"
-                  icon={profile.viewer?.following ? Check : Plus}
-                />
+                {!profile.viewer?.following && (
+                  <ButtonIcon position="left" icon={Plus} />
+                )}
                 <ButtonText>
                   {profile.viewer?.following ? (
                     <Trans>Following</Trans>
