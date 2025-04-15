@@ -277,7 +277,7 @@ function ImageEmbed({
               key={i}
               src={image.thumb}
               alt={image.alt}
-              className="aspect-video w-full object-cover rounded-sm"
+              className="aspect-[3/2] w-full object-cover rounded-sm"
             />
           ))}
         </div>
