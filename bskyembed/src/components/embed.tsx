@@ -250,18 +250,20 @@ function ImageEmbed({
     case 3:
       return (
         <div className="flex gap-1 rounded-xl overflow-hidden w-full aspect-[2/1]">
-          <img
-            src={content.images[0].thumb}
-            alt={content.images[0].alt}
-            className="flex-1 aspect-square object-cover rounded-sm"
-          />
-          <div className="flex flex-col gap-1 flex-1 aspect-square">
+          <div className="flex-1 aspect-square">
+            <img
+              src={content.images[0].thumb}
+              alt={content.images[0].alt}
+              className="w-full h-full object-cover rounded-sm"
+            />
+          </div>
+          <div className="flex flex-col gap-1 flex-1">
             {content.images.slice(1).map((image, i) => (
               <img
                 key={i}
                 src={image.thumb}
                 alt={image.alt}
-                className="w-full h-full object-cover rounded-sm"
+                className="flex-1 object-cover rounded-sm min-h-0"
               />
             ))}
           </div>
@@ -275,7 +277,7 @@ function ImageEmbed({
               key={i}
               src={image.thumb}
               alt={image.alt}
-              className="aspect-video w-full object-cover rounded-sm"
+              className="aspect-[3/2] w-full object-cover rounded-sm"
             />
           ))}
         </div>
