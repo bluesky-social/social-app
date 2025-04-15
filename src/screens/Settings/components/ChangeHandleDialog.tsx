@@ -21,6 +21,7 @@ import {createFullHandle, validateServiceHandle} from '#/lib/strings/handles'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
+import {useProfileQuery} from '#/state/queries/profile'
 import {useServiceQuery} from '#/state/queries/service'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
@@ -40,6 +41,7 @@ import {SquareBehindSquare4_Stroke2_Corner0_Rounded as CopyIcon} from '#/compone
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {getSimpleVerificationState} from '#/components/verification'
 import {CopyButton} from './CopyButton'
 
 export function ChangeHandleDialog({
@@ -152,6 +154,12 @@ function ProvidedHandlePage({
   const control = Dialog.useDialogContext()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
+  const {data: profile} = useProfileQuery({did: currentAccount?.did})
+  const verification = profile
+    ? getSimpleVerificationState({
+        profile,
+      })
+    : undefined
 
   const {
     mutate: changeHandle,
@@ -197,17 +205,19 @@ function ProvidedHandlePage({
         <Animated.View
           layout={native(LinearTransition)}
           style={[a.flex_1, a.gap_md]}>
-          <Admonition type="error">
-            <Trans>
-              You are verified. If you change your handle, you will lose your
-              verification status.{' '}
-              <InlineLinkText
-                label={_(msg`Learn more`)}
-                to={`https://bsky.social/about`}>
-                <Trans>Learn more.</Trans>
-              </InlineLinkText>
-            </Trans>
-          </Admonition>
+          {verification?.verified && (
+            <Admonition type="error">
+              <Trans>
+                You are verified. If you change your handle, you will lose your
+                verification status.{' '}
+                <InlineLinkText
+                  label={_(msg`Learn more`)}
+                  to={`https://bsky.social/about`}>
+                  <Trans>Learn more.</Trans>
+                </InlineLinkText>
+              </Trans>
+            </Admonition>
+          )}
           <View>
             <TextField.LabelText>
               <Trans>New handle</Trans>

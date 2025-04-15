@@ -32,7 +32,7 @@ import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
 import {Admonition} from '#/components/Admonition'
 import {InlineLinkText} from '#/components/Link'
-import {useVerificationStateForProfile} from '#/components/verification'
+import {useSimpleVerificationState} from '#/components/verification'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 
 const AnimatedTouchableOpacity =
@@ -142,8 +142,7 @@ export function Component({
     setImageError,
     _,
   ])
-
-  const verificationState = useVerificationStateForProfile({
+  const verification = useSimpleVerificationState({
     profile,
   })
   const [touchedDisplayName, setTouchedDisplayName] = useState(false)
@@ -197,7 +196,7 @@ export function Component({
               onFocus={() => setTouchedDisplayName(true)}
             />
 
-            {verificationState.profile.isVerified && touchedDisplayName && (
+            {verification.verified && touchedDisplayName && (
               <View style={{paddingTop: 8}}>
                 <Admonition type="error">
                   <Trans>

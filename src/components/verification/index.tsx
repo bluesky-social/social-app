@@ -46,7 +46,7 @@ export function useVerificationStateForProfile({
 export function getSimpleVerificationState({}: {
   profile: bsky.profile.AnyProfileView
 }) {
-  const verified = true
+  const verified = false
   const verifier = false // currentAccount?.verifier
 
   return {
