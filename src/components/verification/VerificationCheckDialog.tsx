@@ -4,13 +4,17 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {getUserDisplayName} from '#/lib/getUserDisplayName'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon,ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
+import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
 import {Link} from '#/components/Link'
+import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {type ProfileVerificationState} from '#/components/verification'
 import {VerificationRemovePrompt} from '#/components/verification/VerificationRemovePrompt'
@@ -50,7 +54,6 @@ function Inner({
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
-  const verificationRemovePromptControl = useDialogControl()
 
   const isSelf = profile.did === currentAccount?.did
   const userName = getUserDisplayName(profile)
@@ -72,7 +75,9 @@ function Inner({
       <Dialog.Handle />
 
       <View style={[a.gap_sm, a.pb_lg]}>
-        <Text style={[a.text_2xl, a.font_bold]}>{label}</Text>
+        <Text style={[a.text_2xl, a.font_bold, a.pr_4xl, a.leading_tight]}>
+          {label}
+        </Text>
         <Text style={[a.text_md, a.leading_snug]}>
           <Trans>
             Verified accounts with this blue check mark{' '}
@@ -85,16 +90,21 @@ function Inner({
         </Text>
       </View>
 
-      <View style={[a.pb_xl, a.gap_sm]}>
+      <View style={[a.pb_xl, a.gap_md]}>
         <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
           <Trans>Verified by:</Trans>
         </Text>
 
-        <View style={[a.gap_sm]}>
-          {Array.from({length: 3}).map((_, i) => (
-            <View
-              key={i}
-              style={[a.rounded_sm, t.atoms.bg_contrast_25, {height: 50}]}
+        <View style={[a.gap_lg]}>
+          {[
+            'did:plc:3jpt2mvvsumj2r7eqk4gzzjz',
+            'did:plc:3jpt2mvvsumj2r7eqk4gzzjz',
+          ].map(did => (
+            <VerifierCard
+              key={did}
+              did={did}
+              isSelf={did === currentAccount?.did}
+              verifiedUserName={userName}
             />
           ))}
         </View>
@@ -135,11 +145,67 @@ function Inner({
       </View>
 
       <Dialog.Close />
+    </Dialog.ScrollableInner>
+  )
+}
+
+function VerifierCard({
+  did,
+  isSelf,
+  verifiedUserName,
+}: {
+  did: string
+  isSelf: boolean
+  verifiedUserName: string
+}) {
+  const {_} = useLingui()
+  const moderationOpts = useModerationOpts()
+  const {data: profile} = useProfileQuery({did})
+  const verificationRemovePromptControl = useDialogControl()
+
+  return (
+    <View>
+      <ProfileCard.Outer>
+        <ProfileCard.Header>
+          {profile && moderationOpts ? (
+            <>
+              <ProfileCard.Avatar
+                profile={profile}
+                moderationOpts={moderationOpts}
+              />
+              <ProfileCard.NameAndHandle
+                profile={profile}
+                moderationOpts={moderationOpts}
+              />
+              {isSelf && (
+                <View>
+                  <Button
+                    label={_(msg`Remove verification`)}
+                    size="small"
+                    variant="outline"
+                    color="negative"
+                    shape="round"
+                    onPress={() => {
+                      verificationRemovePromptControl.open()
+                    }}>
+                    <ButtonIcon icon={TrashIcon} />
+                  </Button>
+                </View>
+              )}
+            </>
+          ) : (
+            <>
+              <ProfileCard.AvatarPlaceholder />
+              <ProfileCard.NameAndHandlePlaceholder />
+            </>
+          )}
+        </ProfileCard.Header>
+      </ProfileCard.Outer>
 
       <VerificationRemovePrompt
         control={verificationRemovePromptControl}
-        userName={userName}
+        userName={verifiedUserName}
       />
-    </Dialog.ScrollableInner>
+    </View>
   )
 }

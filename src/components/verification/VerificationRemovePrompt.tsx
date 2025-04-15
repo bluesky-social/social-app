@@ -5,6 +5,8 @@ import {useLingui} from '@lingui/react'
 import {type DialogControlProps} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
 
+export {useDialogControl as usePromptControl} from '#/components/Dialog'
+
 export function VerificationRemovePrompt({
   control,
   userName,
