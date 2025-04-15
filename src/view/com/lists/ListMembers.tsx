@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react'
 import {Dimensions, type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AppBskyGraphDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
@@ -11,11 +11,11 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useListMembersQuery} from '#/state/queries/list-members'
 import {useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {Button} from '#/view/com/util/forms/Button'
 import {List, type ListRef} from '#/view/com/util/List'
 import {ProfileCardFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import {ListFooter} from '#/components/Lists'
 import * as ProfileCard from '#/components/ProfileCard'
 import type * as bsky from '#/types/bsky'
@@ -175,14 +175,17 @@ export function ListMembers({
                   moderationOpts={moderationOpts}
                 />
                 {isOwner && (
-                  <View>
-                    <Button
-                      testID={`user-${profile.handle}-editBtn`}
-                      type="default"
-                      label={_(msg({message: 'Edit', context: 'action'}))}
-                      onPress={() => onPressEditMembership(profile)}
-                    />
-                  </View>
+                  <Button
+                    testID={`user-${profile.handle}-editBtn`}
+                    label={_(msg({message: 'Edit', context: 'action'}))}
+                    onPress={() => onPressEditMembership(profile)}
+                    size="small"
+                    variant="solid"
+                    color="secondary">
+                    <ButtonText>
+                      <Trans context="action">Edit</Trans>
+                    </ButtonText>
+                  </Button>
                 )}
               </ProfileCard.Header>
 
