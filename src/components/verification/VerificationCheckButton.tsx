@@ -6,10 +6,11 @@ import {type Shadow} from '#/state/cache/types'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {VerifiedCheck as VerificationCheckIcon} from '#/components/icons/VerifiedCheck'
 import {useFullVerificationState} from '#/components/verification'
 import {type FullVerificationState} from '#/components/verification/types'
-import {VerificationCheckDialog} from '#/components/verification/VerificationCheckDialog'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {VerificationsDialog} from '#/components/verification/VerificationsDialog'
+import {VerifierDialog} from '#/components/verification/VerifierDialog'
 import type * as bsky from '#/types/bsky'
 
 export function VerificationCheckButton({
@@ -46,6 +47,7 @@ export function Badge({
   const t = useTheme()
   const {_} = useLingui()
   const verificationsDialogControl = useDialogControl()
+  const verifierDialogControl = useDialogControl()
   const {gtPhone} = useBreakpoints()
   let dimensions = 12
   if (size === 'lg') {
@@ -63,7 +65,13 @@ export function Badge({
             : _(msg`View this user's verifications`)
         }
         hitSlop={20}
-        onPress={() => verificationsDialogControl.open()}
+        onPress={() => {
+          if (state.profile.isVerifier) {
+            verifierDialogControl.open()
+          } else {
+            verificationsDialogControl.open()
+          }
+        }}
         style={[]}>
         {({hovered}) => (
           <View
@@ -81,19 +89,27 @@ export function Badge({
                 ],
               },
             ]}>
-            <VerificationCheckIcon
+            <VerificationCheck
               width={dimensions}
               fill={
                 state.profile.isVerified
                   ? t.palette.primary_500
                   : t.atoms.bg_contrast_100.backgroundColor
               }
+              isVerified={state.profile.isVerified}
+              isVerifier={state.profile.isVerifier}
             />
           </View>
         )}
       </Button>
-      <VerificationCheckDialog
+      <VerificationsDialog
         control={verificationsDialogControl}
+        profile={profile}
+        verificationState={state}
+      />
+
+      <VerifierDialog
+        control={verifierDialogControl}
         profile={profile}
         verificationState={state}
       />

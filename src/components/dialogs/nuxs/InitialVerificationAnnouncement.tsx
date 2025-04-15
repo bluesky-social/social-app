@@ -79,6 +79,9 @@ export function InitialVerificationAnnouncement() {
                   aspectRatio: 353 / 160,
                 },
               ]}
+              alt={_(
+                msg`An illustration a verified user showing their avatar and a blue check mark next to their name.`,
+              )}
             />
           </View>
 
@@ -111,6 +114,9 @@ export function InitialVerificationAnnouncement() {
                   aspectRatio: 353 / 160,
                 },
               ]}
+              alt={_(
+                msg`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`,
+              )}
             />
           </View>
 

@@ -2,7 +2,9 @@ import {Text as RNText, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {urls} from '#/lib/constants'
 import {getUserDisplayName} from '#/lib/getUserDisplayName'
+import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -21,7 +23,7 @@ import type * as bsky from '#/types/bsky'
 
 export {useDialogControl} from '#/components/Dialog'
 
-export function VerificationCheckDialog({
+export function VerificationsDialog({
   control,
   profile,
   verificationState,
@@ -80,10 +82,12 @@ function Inner({
         </Text>
         <Text style={[a.text_md, a.leading_snug]}>
           <Trans>
-            Verified accounts with this blue check mark{' '}
+            Verified accounts with this blue check mark
             <RNText>
-              <VerifiedCheck width={12} />
-            </RNText>{' '}
+              {NON_BREAKING_SPACE}
+              <VerifiedCheck width={14} />
+              {NON_BREAKING_SPACE}
+            </RNText>
             next to their name. These accounts have been verified by a trusted
             verifier. These verifiers are picked by Bluesky.
           </Trans>
@@ -132,7 +136,7 @@ function Inner({
           </ButtonText>
         </Button>
         <Link
-          to={`https://bsky.social/about`} // TODO
+          to={urls.website.blog.initialVerificationAnnouncement}
           label={_(msg`Learn more about verification on Bluesky`)}
           size="small"
           variant="solid"
