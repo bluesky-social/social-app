@@ -1,7 +1,7 @@
 import {Image as RNImage} from 'react-native-image-crop-picker'
 
 import {Dimensions} from './types'
-import {blobToDataUri, getDataUriSize} from './util'
+import {blobToDataUri, getDataUriSize, isPngDataUrl} from './util'
 
 export async function compressIfNeeded(
   img: RNImage,
@@ -72,12 +72,16 @@ interface DoResizeOpts {
 async function doResize(dataUri: string, opts: DoResizeOpts): Promise<RNImage> {
   let newDataUri
 
+  // Handle transparency correctly for png images, otherwise default to jpeg
+  const mime = isPngDataUrl(dataUri) ? 'image/png' : 'image/jpeg'
+
   for (let i = 0; i <= 10; i++) {
     newDataUri = await createResizedImage(dataUri, {
       width: opts.width,
       height: opts.height,
       quality: 1 - i * 0.1,
       mode: opts.mode,
+      mime: mime,
     })
     if (getDataUriSize(newDataUri) < opts.maxSize) {
       break
@@ -88,7 +92,7 @@ async function doResize(dataUri: string, opts: DoResizeOpts): Promise<RNImage> {
   }
   return {
     path: newDataUri,
-    mime: 'image/jpeg',
+    mime: mime,
     size: getDataUriSize(newDataUri),
     width: opts.width,
     height: opts.height,
@@ -102,11 +106,13 @@ function createResizedImage(
     height,
     quality,
     mode,
+    mime,
   }: {
     width: number
     height: number
     quality: number
     mode: 'contain' | 'cover' | 'stretch'
+    mime: string
   },
 ): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -131,7 +137,8 @@ function createResizedImage(
       canvas.height = h
 
       ctx.drawImage(img, 0, 0, w, h)
-      resolve(canvas.toDataURL('image/jpeg', quality))
+      if (mime === 'image/png') resolve(canvas.toDataURL('image/png', quality))
+      else resolve(canvas.toDataURL('image/jpeg', quality))
     })
     img.addEventListener('error', ev => {
       reject(ev.error)
