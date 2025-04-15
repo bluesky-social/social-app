@@ -399,8 +399,8 @@ msgstr ""
 
 #: src/Navigation.tsx:391
 #: src/screens/Settings/AboutSettings.tsx:34
-#: src/screens/Settings/Settings.tsx:215
 #: src/screens/Settings/Settings.tsx:218
+#: src/screens/Settings/Settings.tsx:221
 msgid "About"
 msgstr ""
 
@@ -419,8 +419,8 @@ msgid "Accept Request"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:46
-#: src/screens/Settings/Settings.tsx:191
 #: src/screens/Settings/Settings.tsx:194
+#: src/screens/Settings/Settings.tsx:197
 msgid "Accessibility"
 msgstr ""
 
@@ -431,8 +431,8 @@ msgstr ""
 #: src/Navigation.tsx:359
 #: src/screens/Login/LoginForm.tsx:194
 #: src/screens/Settings/AccountSettings.tsx:45
-#: src/screens/Settings/Settings.tsx:153
 #: src/screens/Settings/Settings.tsx:156
+#: src/screens/Settings/Settings.tsx:159
 msgid "Account"
 msgstr ""
 
@@ -463,11 +463,11 @@ msgstr ""
 msgid "Account Muted by List"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:430
+#: src/screens/Settings/Settings.tsx:451
 msgid "Account options"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:466
+#: src/screens/Settings/Settings.tsx:487
 msgid "Account removed from quick access"
 msgstr ""
 
@@ -531,8 +531,8 @@ msgstr ""
 msgid "Add alt text (optional)"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:373
-#: src/screens/Settings/Settings.tsx:376
+#: src/screens/Settings/Settings.tsx:394
+#: src/screens/Settings/Settings.tsx:397
 #: src/view/shell/desktop/LeftNav.tsx:281
 #: src/view/shell/desktop/LeftNav.tsx:285
 msgid "Add another account"
@@ -917,8 +917,8 @@ msgstr ""
 
 #: src/Navigation.tsx:351
 #: src/screens/Settings/AppearanceSettings.tsx:85
-#: src/screens/Settings/Settings.tsx:183
 #: src/screens/Settings/Settings.tsx:186
+#: src/screens/Settings/Settings.tsx:189
 msgid "Appearance"
 msgstr ""
 
@@ -1139,7 +1139,7 @@ msgstr ""
 msgid "Blocked post."
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:173
+#: src/screens/Profile/Sections/Labels.tsx:170
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr ""
 
@@ -1306,7 +1306,7 @@ msgstr ""
 #: src/screens/Settings/AppIconSettings/index.tsx:225
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:76
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:83
-#: src/screens/Settings/Settings.tsx:260
+#: src/screens/Settings/Settings.tsx:263
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
 #: src/view/com/composer/Composer.tsx:937
@@ -1443,8 +1443,8 @@ msgstr ""
 msgid "Changes app icon"
 msgstr ""
 
-#: src/components/forms/HostingProvider.tsx:50
-#: src/components/forms/HostingProvider.tsx:70
+#: src/components/forms/HostingProvider.tsx:49
+#: src/components/forms/HostingProvider.tsx:69
 msgid "Changes hosting provider"
 msgstr ""
 
@@ -1549,11 +1549,11 @@ msgstr ""
 msgid "Choose your username"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:351
+#: src/screens/Settings/Settings.tsx:372
 msgid "Clear all storage data"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:353
+#: src/screens/Settings/Settings.tsx:374
 msgid "Clear all storage data (restart after this)"
 msgstr ""
 
@@ -1797,8 +1797,8 @@ msgid "Content & Media"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:109
-#: src/screens/Settings/Settings.tsx:175
 #: src/screens/Settings/Settings.tsx:178
+#: src/screens/Settings/Settings.tsx:181
 msgid "Content and media"
 msgstr ""
 
@@ -2122,7 +2122,7 @@ msgstr ""
 msgid "Deactivate account"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:332
+#: src/screens/Settings/Settings.tsx:353
 msgid "Debug Moderation"
 msgstr ""
 
@@ -2171,7 +2171,7 @@ msgstr ""
 msgid "Delete chat"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:339
+#: src/screens/Settings/Settings.tsx:360
 msgid "Delete chat declaration record"
 msgstr ""
 
@@ -2282,8 +2282,8 @@ msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:242
 #: src/screens/Settings/Settings.tsx:245
+#: src/screens/Settings/Settings.tsx:248
 msgid "Developer options"
 msgstr ""
 
@@ -2751,7 +2751,7 @@ msgstr ""
 msgid "Enabled"
 msgstr ""
 
-#: src/screens/Profile/Sections/Feed.tsx:116
+#: src/screens/Profile/Sections/Feed.tsx:113
 msgid "End of feed"
 msgstr ""
 
@@ -3581,8 +3581,8 @@ msgstr ""
 msgid "Having trouble?"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:207
-#: src/screens/Settings/Settings.tsx:211
+#: src/screens/Settings/Settings.tsx:210
+#: src/screens/Settings/Settings.tsx:214
 #: src/view/shell/desktop/RightNav.tsx:120
 #: src/view/shell/desktop/RightNav.tsx:121
 #: src/view/shell/Drawer.tsx:337
@@ -3974,7 +3974,7 @@ msgstr ""
 msgid "Labels added"
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:163
+#: src/screens/Profile/Sections/Labels.tsx:160
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr ""
 
@@ -3995,8 +3995,8 @@ msgid "Language Settings"
 msgstr ""
 
 #: src/screens/Settings/LanguageSettings.tsx:71
-#: src/screens/Settings/Settings.tsx:199
 #: src/screens/Settings/Settings.tsx:202
+#: src/screens/Settings/Settings.tsx:205
 msgid "Languages"
 msgstr ""
 
@@ -4407,8 +4407,8 @@ msgstr ""
 
 #: src/Navigation.tsx:145
 #: src/screens/Moderation/index.tsx:89
-#: src/screens/Settings/Settings.tsx:167
 #: src/screens/Settings/Settings.tsx:170
+#: src/screens/Settings/Settings.tsx:173
 msgid "Moderation"
 msgstr ""
 
@@ -5011,7 +5011,7 @@ msgstr ""
 msgid "on<0><1/><2><3/></2></0>"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:304
+#: src/screens/Settings/Settings.tsx:325
 msgid "Onboarding reset"
 msgstr ""
 
@@ -5108,7 +5108,7 @@ msgstr ""
 msgid "Open message options"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:330
+#: src/screens/Settings/Settings.tsx:351
 msgid "Open moderation debug page"
 msgstr ""
 
@@ -5128,12 +5128,12 @@ msgstr ""
 msgid "Open starter pack menu"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:323
-#: src/screens/Settings/Settings.tsx:337
+#: src/screens/Settings/Settings.tsx:344
+#: src/screens/Settings/Settings.tsx:358
 msgid "Open storybook page"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:316
+#: src/screens/Settings/Settings.tsx:337
 msgid "Open system log"
 msgstr ""
 
@@ -5195,7 +5195,7 @@ msgstr ""
 msgid "Opens GIF select dialog"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:208
+#: src/screens/Settings/Settings.tsx:211
 msgid "Opens helpdesk in browser"
 msgstr ""
 
@@ -5678,8 +5678,8 @@ msgstr ""
 msgid "Privacy"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:161
 #: src/screens/Settings/Settings.tsx:164
+#: src/screens/Settings/Settings.tsx:167
 msgid "Privacy and security"
 msgstr ""
 
@@ -5887,7 +5887,7 @@ msgstr ""
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:102
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:109
-#: src/screens/Settings/Settings.tsx:468
+#: src/screens/Settings/Settings.tsx:489
 #: src/view/com/feeds/FeedSourceCard.tsx:322
 #: src/view/com/modals/ListAddRemoveUsers.tsx:269
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
@@ -5903,8 +5903,8 @@ msgstr ""
 msgid "Remove {historyItem}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:447
-#: src/screens/Settings/Settings.tsx:450
+#: src/screens/Settings/Settings.tsx:468
+#: src/screens/Settings/Settings.tsx:471
 msgid "Remove account"
 msgstr ""
 
@@ -5945,7 +5945,7 @@ msgstr ""
 msgid "Remove from my feeds"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:460
+#: src/screens/Settings/Settings.tsx:481
 msgid "Remove from quick access?"
 msgstr ""
 
@@ -6283,8 +6283,8 @@ msgstr ""
 msgid "Reset Code"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:344
-#: src/screens/Settings/Settings.tsx:346
+#: src/screens/Settings/Settings.tsx:365
+#: src/screens/Settings/Settings.tsx:367
 msgid "Reset onboarding state"
 msgstr ""
 
@@ -6754,7 +6754,7 @@ msgid "Sets email for password reset"
 msgstr ""
 
 #: src/Navigation.tsx:173
-#: src/screens/Settings/Settings.tsx:80
+#: src/screens/Settings/Settings.tsx:83
 #: src/view/shell/desktop/LeftNav.tsx:709
 #: src/view/shell/Drawer.tsx:539
 msgid "Settings"
@@ -6958,7 +6958,7 @@ msgstr ""
 msgid "Shows information about when this post was created"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:104
+#: src/screens/Settings/Settings.tsx:107
 msgid "Shows other accounts you can switch to"
 msgstr ""
 
@@ -7010,9 +7010,9 @@ msgstr ""
 msgid "Sign in to Bluesky or create a new account"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:225
-#: src/screens/Settings/Settings.tsx:227
-#: src/screens/Settings/Settings.tsx:259
+#: src/screens/Settings/Settings.tsx:228
+#: src/screens/Settings/Settings.tsx:230
+#: src/screens/Settings/Settings.tsx:262
 #: src/screens/SignupQueued.tsx:93
 #: src/screens/SignupQueued.tsx:96
 #: src/screens/Takendown.tsx:85
@@ -7026,7 +7026,7 @@ msgstr ""
 msgid "Sign Out"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:256
+#: src/screens/Settings/Settings.tsx:259
 #: src/view/shell/desktop/LeftNav.tsx:205
 msgid "Sign out?"
 msgstr ""
@@ -7095,7 +7095,7 @@ msgstr ""
 
 #: src/components/ReportDialog/index.tsx:54
 #: src/screens/Moderation/index.tsx:97
-#: src/screens/Profile/Sections/Labels.tsx:87
+#: src/screens/Profile/Sections/Labels.tsx:121
 msgid "Something went wrong, please try again."
 msgstr ""
 
@@ -7211,12 +7211,12 @@ msgstr ""
 msgid "Step {0} of {1}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:309
+#: src/screens/Settings/Settings.tsx:330
 msgid "Storage cleared, you need to restart the app now."
 msgstr ""
 
 #: src/Navigation.tsx:266
-#: src/screens/Settings/Settings.tsx:325
+#: src/screens/Settings/Settings.tsx:346
 msgid "Storybook"
 msgstr ""
 
@@ -7245,7 +7245,7 @@ msgstr ""
 msgid "Subscribe"
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:201
+#: src/screens/Profile/Sections/Labels.tsx:198
 msgid "Subscribe to @{0} to use these labels:"
 msgstr ""
 
@@ -7294,9 +7294,9 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:102
-#: src/screens/Settings/Settings.tsx:116
-#: src/screens/Settings/Settings.tsx:412
+#: src/screens/Settings/Settings.tsx:105
+#: src/screens/Settings/Settings.tsx:119
+#: src/screens/Settings/Settings.tsx:433
 #: src/view/shell/desktop/LeftNav.tsx:243
 msgid "Switch account"
 msgstr ""
@@ -7323,7 +7323,7 @@ msgstr ""
 
 #: src/screens/Settings/AboutSettings.tsx:66
 #: src/screens/Settings/AboutSettings.tsx:69
-#: src/screens/Settings/Settings.tsx:318
+#: src/screens/Settings/Settings.tsx:339
 msgid "System log"
 msgstr ""
 
@@ -7743,7 +7743,7 @@ msgstr ""
 msgid "This label was applied by you."
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:188
+#: src/screens/Profile/Sections/Labels.tsx:185
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr ""
 
@@ -7845,7 +7845,7 @@ msgstr ""
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:462
+#: src/screens/Settings/Settings.tsx:483
 msgid "This will remove @{0} from the quick access list."
 msgstr ""
 
@@ -8815,7 +8815,7 @@ msgstr ""
 msgid "You"
 msgstr ""
 
-#: src/components/forms/HostingProvider.tsx:46
+#: src/components/forms/HostingProvider.tsx:45
 msgid "You are creating an account on"
 msgstr ""
 
@@ -9023,7 +9023,7 @@ msgstr ""
 msgid "You reacted {0} to {1}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:257
+#: src/screens/Settings/Settings.tsx:260
 #: src/view/shell/desktop/LeftNav.tsx:206
 msgid "You will be signed out of all your accounts."
 msgstr ""
