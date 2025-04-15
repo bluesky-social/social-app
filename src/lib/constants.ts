@@ -192,3 +192,12 @@ export const SUPPORTED_MIME_TYPES = [
 export type SupportedMimeTypes = (typeof SUPPORTED_MIME_TYPES)[number]
 
 export const EMOJI_REACTION_LIMIT = 5
+
+export const urls = {
+  website: {
+    blog: {
+      // TODO
+      initialVerificationAnnouncement: `https://bsky.social/about`,
+    },
+  },
+}
