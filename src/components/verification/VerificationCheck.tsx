@@ -4,16 +4,11 @@ import {VerifierCheck} from '#/components/icons/VerifierCheck'
 import {type SimpleVerificationState} from '#/components/verification/types'
 
 export function VerificationCheck({
-  verified,
-  verifier,
+  isVerified,
+  isVerifier,
   ...rest
 }: Props & SimpleVerificationState) {
-  if (!verified) return null
+  if (!isVerified) return null
 
-  return verifier ? (
-    // TODO
-    <VerifierCheck {...rest} />
-  ) : (
-    <VerifiedCheck {...rest} />
-  )
+  return isVerifier ? <VerifierCheck {...rest} /> : <VerifiedCheck {...rest} />
 }

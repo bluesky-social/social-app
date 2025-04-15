@@ -46,7 +46,7 @@ import {
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
-import {useVerificationStateForProfile} from '#/components/verification'
+import {useFullVerificationState} from '#/components/verification'
 import {VerificationCreatePrompt} from '#/components/verification/VerificationCreatePrompt'
 import {VerificationRemovePrompt} from '#/components/verification/VerificationRemovePrompt'
 
@@ -67,7 +67,7 @@ let ProfileMenu = ({
   const isFollowingBlockedAccount = isFollowing && isBlocked
   const isLabelerAndNotBlocked = !!profile.associated?.labeler && !isBlocked
   const [devModeEnabled] = useDevModeEnabled()
-  const verificationState = useVerificationStateForProfile({profile})
+  const verification = useFullVerificationState({profile})
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
@@ -288,9 +288,9 @@ let ProfileMenu = ({
                   </Menu.ItemText>
                   <Menu.ItemIcon icon={List} />
                 </Menu.Item>
-                {verificationState.viewer.isVerifier &&
-                  !verificationState.profile.isSelf &&
-                  (verificationState.viewer.hasIssuedVerification ? (
+                {verification.viewer.isVerifier &&
+                  !verification.profile.isSelf &&
+                  (verification.viewer.hasIssuedVerification ? (
                     <Menu.Item
                       testID="profileHeaderDropdownVerificationRemoveButton"
                       label={_(msg`Remove verification`)}

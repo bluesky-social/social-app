@@ -148,9 +148,6 @@ let ProfileHeaderStandard = ({
     [currentAccount, profile],
   )
 
-  // TODO
-  const isVerified = false
-
   return (
     <ProfileHeaderShell
       profile={profile}
@@ -247,7 +244,7 @@ let ProfileHeaderStandard = ({
               profile={profile}
               moderation={moderation}
             />
-            {isVerified && <VerificationCheck profile={profile} />}
+            <VerificationCheck profile={profile} />
           </View>
           <ProfileHeaderHandle profile={profile} />
         </View>

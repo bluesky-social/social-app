@@ -1,4 +1,14 @@
 export type SimpleVerificationState = {
-  verified: boolean
-  verifier: boolean
+  isVerified: boolean
+  isVerifier: boolean
+}
+
+export type FullVerificationState = {
+  profile: SimpleVerificationState & {
+    isSelf: boolean
+    wasVerified: boolean
+  }
+  viewer: Pick<SimpleVerificationState, 'isVerifier'> & {
+    hasIssuedVerification: boolean
+  }
 }

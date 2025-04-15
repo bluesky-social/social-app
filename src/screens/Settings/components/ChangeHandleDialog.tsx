@@ -21,8 +21,8 @@ import {createFullHandle, validateServiceHandle} from '#/lib/strings/handles'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
-import {useProfileQuery} from '#/state/queries/profile'
 import {useServiceQuery} from '#/state/queries/service'
+import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {atoms as a, native, useBreakpoints, useTheme} from '#/alf'
@@ -154,7 +154,7 @@ function ProvidedHandlePage({
   const control = Dialog.useDialogContext()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
-  const {data: profile} = useProfileQuery({did: currentAccount?.did})
+  const profile = useCurrentAccountProfile()
   const verification = profile
     ? getSimpleVerificationState({
         profile,
@@ -205,7 +205,7 @@ function ProvidedHandlePage({
         <Animated.View
           layout={native(LinearTransition)}
           style={[a.flex_1, a.gap_md]}>
-          {verification?.verified && (
+          {verification?.isVerified && (
             <Admonition type="error">
               <Trans>
                 You are verified. If you change your handle, you will lose your

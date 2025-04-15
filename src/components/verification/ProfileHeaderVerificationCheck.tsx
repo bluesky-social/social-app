@@ -8,10 +8,8 @@ import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {VerifiedCheck as VerificationCheckIcon} from '#/components/icons/VerifiedCheck'
-import {
-  type ProfileVerificationState,
-  useVerificationStateForProfile,
-} from '#/components/verification'
+import {useFullVerificationState} from '#/components/verification'
+import {type FullVerificationState} from '#/components/verification/types'
 import {VerificationCheckDialog} from '#/components/verification/VerificationCheckDialog'
 
 export function VerificationCheck({
@@ -19,7 +17,7 @@ export function VerificationCheck({
 }: {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
 }) {
-  const state = useVerificationStateForProfile({
+  const state = useFullVerificationState({
     profile,
   })
 
@@ -38,9 +36,8 @@ export function Badge({
   profile,
   verificationState: state,
 }: {
-  // TODO optimistic
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
-  verificationState: ProfileVerificationState
+  verificationState: FullVerificationState
 }) {
   const t = useTheme()
   const {_} = useLingui()

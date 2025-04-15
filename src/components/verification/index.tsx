@@ -1,8 +1,12 @@
 import {useMemo} from 'react'
 
 import {useSession} from '#/state/session'
-import {type SimpleVerificationState} from '#/components/verification/types'
+import {
+  type FullVerificationState,
+  type SimpleVerificationState,
+} from '#/components/verification/types'
 import type * as bsky from '#/types/bsky'
+// import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 
 export type ProfileVerificationState = {
   profile: {
@@ -16,27 +20,43 @@ export type ProfileVerificationState = {
   }
 }
 
-export function useVerificationStateForProfile({
+export function useFullVerificationState({
   profile,
 }: {
   profile: bsky.profile.AnyProfileView
-}) {
+}): FullVerificationState {
   const {currentAccount} = useSession()
-
+  // const currentAccountProfile = useCurrentAccountProfile()
   return useMemo(() => {
-    const verifications: any[] = [] // profile.verifications
-    const isVerified = true
-    const isVerifier = false // currentAccount?.verifier
-    const hasIssuedVerification = isVerifier && false // verifications?.find(v => v.issuerDid === currentAccount?.did)
+    /*
+     * Profile state
+     */
+    const verifications: any[] = [
+      // {issuer: currentAccount?.did}
+    ] // profile.verifications
+    const {isVerified, isVerifier} = getSimpleVerificationState({profile})
+    const wasVerified = !isVerifier && !isVerified && verifications.length > 0
+
+    /*
+     * Viewer state
+     */
+    const isViewerVerifier = true
+    // currentAccountProfile
+    // ? getSimpleVerificationState({profile: currentAccountProfile}).isVerifier
+    // : undefined
+    const hasIssuedVerification =
+      isViewerVerifier &&
+      verifications.find(v => v.issuer === currentAccount?.did)
 
     return {
       profile: {
         isSelf: profile.did === currentAccount?.did,
         isVerified,
-        wasVerified: !isVerified && verifications.length > 0,
+        wasVerified,
+        isVerifier,
       },
       viewer: {
-        isVerifier,
+        isVerifier: !!isViewerVerifier,
         hasIssuedVerification,
       },
     }
@@ -45,13 +65,13 @@ export function useVerificationStateForProfile({
 
 export function getSimpleVerificationState({}: {
   profile: bsky.profile.AnyProfileView
-}) {
-  const verified = false
-  const verifier = false // currentAccount?.verifier
+}): SimpleVerificationState {
+  const isVerified = true
+  const isVerifier = false
 
   return {
-    verified,
-    verifier,
+    isVerified,
+    isVerifier,
   }
 }
 

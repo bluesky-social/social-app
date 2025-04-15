@@ -196,7 +196,7 @@ export function Component({
               onFocus={() => setTouchedDisplayName(true)}
             />
 
-            {verification.verified && touchedDisplayName && (
+            {verification.isVerified && touchedDisplayName && (
               <View style={{paddingTop: 8}}>
                 <Admonition type="error">
                   <Trans>
