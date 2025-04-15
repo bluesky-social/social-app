@@ -162,16 +162,34 @@ function VerifierCard({
   isSelf: boolean
   verifiedUserName: string
 }) {
+  const t = useTheme()
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
-  const {data: profile} = useProfileQuery({did})
+  const {data: profile, error} = useProfileQuery({did})
   const verificationRemovePromptControl = useDialogControl()
 
   return (
     <View>
       <ProfileCard.Outer>
         <ProfileCard.Header>
-          {profile && moderationOpts ? (
+          {error ? (
+            <>
+              <ProfileCard.AvatarPlaceholder />
+              <View style={[a.flex_1]}>
+                <Text
+                  style={[a.text_md, a.font_bold, a.leading_snug]}
+                  numberOfLines={1}>
+                  <Trans>Unknown verifier</Trans>
+                </Text>
+                <Text
+                  emoji
+                  style={[a.leading_snug, t.atoms.text_contrast_medium]}
+                  numberOfLines={1}>
+                  {did}
+                </Text>
+              </View>
+            </>
+          ) : profile && moderationOpts ? (
             <>
               <ProfileCard.Avatar
                 profile={profile}
