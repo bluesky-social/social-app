@@ -1,5 +1,5 @@
 import React from 'react'
-import {ImageStyle, useWindowDimensions, View} from 'react-native'
+import {type ImageStyle, useWindowDimensions, View} from 'react-native'
 import {Image} from 'expo-image'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -7,12 +7,12 @@ import {useLingui} from '@lingui/react'
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {enforceLen} from '#/lib/strings/helpers'
 import {isAndroid, isWeb} from '#/platform/detection'
-import {ComposerImage} from '#/state/gallery'
+import {type ComposerImage} from '#/state/gallery'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {DialogControlProps} from '#/components/Dialog'
+import {type DialogControlProps} from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Text} from '#/components/Typography'
@@ -85,7 +85,13 @@ const ImageAltTextInner = ({
   }, [image, windim])
 
   return (
-    <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
+    <Dialog.ScrollableInner
+      label={_(msg`Add alt text`)}
+      // make sure that the save button is visible when the dialog is opened.
+      // the keyboardawarescrollview will scroll to make the text input visible
+      // on mount, and the text input is autofocusing. adding extra bottomOffset
+      // makes sure that input is scrolled far enough to show the save button -sfn
+      bottomOffset={100}>
       <Dialog.Close />
 
       <View>
