@@ -12,7 +12,7 @@ import {getTabState, TabState} from '#/lib/routes/helpers'
 import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {colors} from '#/lib/styles'
-import {isWeb} from '#/platform/detection'
+import {isAndroid,isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
@@ -51,6 +51,8 @@ import {
 } from '#/components/icons/UserCircle'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {getSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 
 const iconWidth = 26
 
@@ -64,6 +66,9 @@ let DrawerProfileCard = ({
   const {_, i18n} = useLingui()
   const t = useTheme()
   const {data: profile} = useProfileQuery({did: account.did})
+  const verification = profile
+    ? getSimpleVerificationState({profile})
+    : undefined
 
   return (
     <TouchableOpacity
@@ -71,7 +76,7 @@ let DrawerProfileCard = ({
       accessibilityLabel={_(msg`Profile`)}
       accessibilityHint={_(msg`Navigates to your profile`)}
       onPress={onPressProfile}
-      style={[a.gap_sm]}>
+      style={[a.gap_sm, a.pr_lg]}>
       <UserAvatar
         size={52}
         avatar={profile?.avatar}
@@ -80,12 +85,32 @@ let DrawerProfileCard = ({
         type={profile?.associated?.labeler ? 'labeler' : 'user'}
       />
       <View style={[a.gap_2xs]}>
-        <Text
-          emoji
-          style={[a.font_heavy, a.text_xl, a.mt_2xs, a.leading_tight]}
-          numberOfLines={1}>
-          {profile?.displayName || account.handle}
-        </Text>
+        <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
+          <Text
+            emoji
+            style={[
+              a.font_heavy,
+              a.text_xl,
+              a.mt_2xs,
+              a.leading_tight,
+              isAndroid ? a.flex_1 : a.flex_shrink,
+            ]}
+            numberOfLines={1}>
+            {profile?.displayName || account.handle}
+          </Text>
+          {verification?.isValid && (
+            <View
+              style={{
+                top: 1,
+              }}>
+              {/* @ts-ignore TODO new types */}
+              <VerificationCheck
+                width={16}
+                verifier={verification.role === 'verifier'}
+              />
+            </View>
+          )}
+        </View>
         <Text
           emoji
           style={[t.atoms.text_contrast_medium, a.text_md, a.leading_tight]}
