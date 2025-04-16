@@ -29,6 +29,7 @@ import {
   unstableCacheProfileView,
   useUnstableProfileViewCache,
 } from '#/state/queries/unstable-profile-cache'
+import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
 import * as userActionHistory from '#/state/userActionHistory'
 import type * as bsky from '#/types/bsky'
 import {updateProfileShadow} from '../cache/profile-shadow'
@@ -137,6 +138,7 @@ interface ProfileUpdateParams {
 export function useProfileUpdateMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
+  const updateProfileVerificationCache = useUpdateProfileVerificationCache()
   return useMutation<void, Error, ProfileUpdateParams>({
     mutationFn: async ({
       profile,
@@ -223,7 +225,7 @@ export function useProfileUpdateMutation() {
           }),
       )
     },
-    onSuccess(data, variables) {
+    async onSuccess(_, variables) {
       // invalidate cache
       queryClient.invalidateQueries({
         queryKey: RQKEY(variables.profile.did),
@@ -231,6 +233,7 @@ export function useProfileUpdateMutation() {
       queryClient.invalidateQueries({
         queryKey: [profilesQueryKeyRoot, [variables.profile.did]],
       })
+      await updateProfileVerificationCache({profile: variables.profile})
     },
   })
 }

@@ -3,18 +3,17 @@ import {
   type AppBskyActorGetProfile,
   AtUri,
 } from '@atproto/api'
-import {useMutation, useQueryClient} from '@tanstack/react-query'
+import {useMutation} from '@tanstack/react-query'
 
 import {until} from '#/lib/async/until'
-import {logger} from '#/logger'
-import {updateProfileShadow} from '#/state/cache/profile-shadow'
+import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
 import {useAgent, useSession} from '#/state/session'
 import * as bsky from '#/types/bsky'
 
 export function useVerificationsRemoveMutation() {
-  const qc = useQueryClient()
   const agent = useAgent()
   const {currentAccount} = useSession()
+  const updateProfileVerificationCache = useUpdateProfileVerificationCache()
 
   return useMutation({
     async mutationFn({
@@ -63,22 +62,7 @@ export function useVerificationsRemoveMutation() {
       )
     },
     async onSuccess(_, {profile}) {
-      try {
-        const {data: updated} = await agent.getProfile({
-          actor: profile.did ?? '',
-        })
-        updateProfileShadow(qc, profile.did, {
-          // @ts-expect-error TODO lexicons will fix this
-          verification: updated.verification,
-        })
-      } catch (e) {
-        logger.error(
-          `useVerificationRemoveMutation profile-cache update failed`,
-          {
-            safeMessage: e,
-          },
-        )
-      }
+      await updateProfileVerificationCache({profile})
     },
   })
 }
