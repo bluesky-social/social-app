@@ -14,12 +14,12 @@ import {SystemBars} from 'react-native-edge-to-edge'
 import {Gesture} from 'react-native-gesture-handler'
 import PagerView from 'react-native-pager-view'
 import Animated, {
-  AnimatedRef,
+  type AnimatedRef,
   cancelAnimation,
   interpolate,
   measure,
   runOnJS,
-  SharedValue,
+  type SharedValue,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
@@ -27,7 +27,7 @@ import Animated, {
   useSharedValue,
   withDecay,
   withSpring,
-  WithSpringConfig,
+  type WithSpringConfig,
 } from 'react-native-reanimated'
 import {
   SafeAreaView,
@@ -38,17 +38,17 @@ import * as ScreenOrientation from 'expo-screen-orientation'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 
-import {Dimensions} from '#/lib/media/types'
+import {type Dimensions} from '#/lib/media/types'
 import {colors, s} from '#/lib/styles'
 import {isIOS} from '#/platform/detection'
-import {Lightbox} from '#/state/lightbox'
+import {type Lightbox} from '#/state/lightbox'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
-import {ios, useTheme} from '#/alf'
+import {useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
-import {ImageSource, Transform} from './@types'
+import {type ImageSource, type Transform} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
 
@@ -326,8 +326,10 @@ function ImageView({
     <Animated.View style={[styles.container, containerStyle]}>
       <SystemBars
         style={{statusBar: 'light', navigationBar: 'light'}}
-        // hiding causes layout shifts on android
-        hidden={ios(isScaled || !showControls)}
+        hidden={{
+          statusBar: isScaled || !showControls,
+          navigationBar: false,
+        }}
       />
       <Animated.View
         style={[styles.backdrop, backdropStyle]}
