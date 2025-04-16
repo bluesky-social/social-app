@@ -8,6 +8,7 @@ import {
 } from 'react'
 import {
   Animated,
+  type GestureResponderEvent,
   Pressable,
   StyleSheet,
   TouchableOpacity,
@@ -115,7 +116,8 @@ let NotificationFeedItem = ({
     return ''
   }, [item])
 
-  const onToggleAuthorsExpanded = () => {
+  const onToggleAuthorsExpanded = (e: GestureResponderEvent) => {
+    e.stopPropagation()
     setAuthorsExpanded(currentlyExpanded => !currentlyExpanded)
   }
 
@@ -413,7 +415,7 @@ let NotificationFeedItem = ({
           onBeforePress()
         }
         if (e.nativeEvent.actionName === 'toggleAuthorsExpanded') {
-          onToggleAuthorsExpanded()
+          onToggleAuthorsExpanded(e)
         }
       }}>
       {({hovered}) => (
@@ -514,7 +516,7 @@ function ExpandListPressable({
 }: {
   hasMultipleAuthors: boolean
   children: React.ReactNode
-  onToggleAuthorsExpanded: () => void
+  onToggleAuthorsExpanded: (e: GestureResponderEvent) => void
 }) {
   if (hasMultipleAuthors) {
     return (
@@ -585,7 +587,7 @@ function CondensedAuthorsList({
 }: {
   visible: boolean
   authors: Author[]
-  onToggleAuthorsExpanded: () => void
+  onToggleAuthorsExpanded: (e: GestureResponderEvent) => void
   showDmButton?: boolean
 }) {
   const t = useTheme()
