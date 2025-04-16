@@ -13,7 +13,7 @@ import * as Dialog from '#/components/Dialog'
 import {VerifierCheck} from '#/components/icons/VerifierCheck'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {type ProfileVerificationState} from '#/components/verification'
+import {type FullVerificationState} from '#/components/verification'
 import type * as bsky from '#/types/bsky'
 
 export {useDialogControl} from '#/components/Dialog'
@@ -25,7 +25,7 @@ export function VerifierDialog({
 }: {
   control: Dialog.DialogControlProps
   profile: bsky.profile.AnyProfileView
-  verificationState: ProfileVerificationState
+  verificationState: FullVerificationState
 }) {
   return (
     <Dialog.Outer control={control}>
@@ -45,7 +45,7 @@ function Inner({
 }: {
   control: Dialog.DialogControlProps
   profile: bsky.profile.AnyProfileView
-  verificationState: ProfileVerificationState
+  verificationState: FullVerificationState
 }) {
   const t = useTheme()
   const {_} = useLingui()

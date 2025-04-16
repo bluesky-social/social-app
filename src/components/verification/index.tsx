@@ -1,77 +1,113 @@
 import {useMemo} from 'react'
+import {AppBskyActorDefs, ChatBskyActorDefs, type Un$Typed} from '@atproto/api'
 
+import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {useSession} from '#/state/session'
-import {
-  type FullVerificationState,
-  type SimpleVerificationState,
-} from '#/components/verification/types'
-import type * as bsky from '#/types/bsky'
-// import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
+import * as bsky from '#/types/bsky'
 
-export type ProfileVerificationState = {
-  profile: {
-    isSelf: boolean
-    isVerified: boolean
-    wasVerified: boolean
-  }
-  viewer: {
-    isVerifier: boolean
-    hasIssuedVerification: boolean
-  }
-}
+export type FullVerificationState = ReturnType<typeof useFullVerificationState>
 
 export function useFullVerificationState({
   profile,
 }: {
   profile: bsky.profile.AnyProfileView
-}): FullVerificationState {
+}) {
   const {currentAccount} = useSession()
-  // const currentAccountProfile = useCurrentAccountProfile()
+  const currentAccountProfile = useCurrentAccountProfile()
   return useMemo(() => {
-    /*
-     * Profile state
-     */
-    const verifications: any[] = [
-      // {issuer: currentAccount?.did}
-    ] // profile.verifications
-    const {isVerified, isVerifier} = getSimpleVerificationState({profile})
-    const wasVerified = !isVerifier && !isVerified && verifications.length > 0
+    const profileState = getSimpleVerificationState({profile})
+    const viewerState = currentAccountProfile
+      ? getSimpleVerificationState({profile: currentAccountProfile})
+      : undefined
 
-    /*
-     * Viewer state
-     */
-    const isViewerVerifier = true
-    // currentAccountProfile
-    // ? getSimpleVerificationState({profile: currentAccountProfile}).isVerifier
-    // : undefined
+    const wasValid =
+      profileState.role === 'default' &&
+      !profileState.isValid &&
+      profileState.verifications.length > 0
     const hasIssuedVerification =
-      isViewerVerifier &&
-      verifications.find(v => v.issuer === currentAccount?.did)
+      viewerState &&
+      viewerState.role === 'verifier' &&
+      profileState.role === 'default' &&
+      profileState.verifications.find(v => v.issuer === currentAccount?.did)
 
     return {
       profile: {
+        ...profileState,
         isSelf: profile.did === currentAccount?.did,
-        isVerified,
-        wasVerified,
-        isVerifier,
+        wasValid,
       },
-      viewer: {
-        isVerifier: !!isViewerVerifier,
-        hasIssuedVerification,
-      },
+      viewer: viewerState
+        ? {
+            ...viewerState,
+            hasIssuedVerification,
+          }
+        : undefined,
     }
-  }, [profile, currentAccount])
+  }, [profile, currentAccount, currentAccountProfile])
 }
 
-export function getSimpleVerificationState({}: {
-  profile: bsky.profile.AnyProfileView
-}): SimpleVerificationState {
-  const isVerified = true
-  const isVerifier = false
+export const DEFAULT_USER_STATE: AppBskyActorDefs.VerificationStateDefault = {
+  role: 'default',
+  isValid: false,
+  verifications: [],
+}
 
-  return {
-    isVerified,
-    isVerifier,
+export const DEFAULT_VERIFIER_STATE: AppBskyActorDefs.VerificationStateVerifier =
+  {
+    role: 'verifier',
+    isValid: true,
+  }
+
+export type SimpleVerificationState = ReturnType<
+  typeof getSimpleVerificationState
+>
+
+export function getSimpleVerificationState({
+  profile,
+}: {
+  profile: bsky.profile.AnyProfileView
+}):
+  | Un$Typed<AppBskyActorDefs.VerificationStateDefault>
+  | Un$Typed<AppBskyActorDefs.VerificationStateVerifier> {
+  if (
+    bsky.dangerousIsType<ChatBskyActorDefs.ProfileViewBasic>(
+      profile,
+      ChatBskyActorDefs.isProfileViewBasic,
+    )
+  ) {
+    return DEFAULT_USER_STATE
+  }
+
+  if (!profile.verification) {
+    return DEFAULT_USER_STATE
+    // return DEFAULT_VERIFIER_STATE
+  }
+
+  if (
+    bsky.dangerousIsType<AppBskyActorDefs.VerificationStateDefault>(
+      profile.verification,
+      AppBskyActorDefs.isVerificationStateDefault,
+    )
+  ) {
+    const {verification} = profile
+    return {
+      role: verification.role,
+      isValid: verification.isValid,
+      verifications: verification.verifications,
+    }
+  } else if (
+    bsky.dangerousIsType<AppBskyActorDefs.VerificationStateVerifier>(
+      profile.verification,
+      AppBskyActorDefs.isVerificationStateVerifier,
+    )
+  ) {
+    const {verification} = profile
+    return {
+      role: verification.role,
+      isValid: verification.isValid,
+    }
+  } else {
+    return DEFAULT_USER_STATE
   }
 }
 
@@ -79,7 +115,7 @@ export function useSimpleVerificationState({
   profile,
 }: {
   profile: bsky.profile.AnyProfileView
-}): SimpleVerificationState {
+}) {
   return useMemo(() => {
     return getSimpleVerificationState({profile})
   }, [profile])

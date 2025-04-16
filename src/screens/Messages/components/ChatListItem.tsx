@@ -404,9 +404,12 @@ function ChatListItemReady({
                       {displayName}
                     </Text>
                   </View>
-                  {verification.isVerified && (
+                  {verification.isValid && (
                     <View style={[a.pl_xs, a.self_center]}>
-                      <VerificationCheck width={14} {...verification} />
+                      <VerificationCheck
+                        width={14}
+                        verifier={verification.role === 'verifier'}
+                      />
                     </View>
                   )}
                   {lastMessageSentAt && (

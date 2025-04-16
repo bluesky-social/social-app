@@ -196,21 +196,23 @@ export function Component({
               onFocus={() => setTouchedDisplayName(true)}
             />
 
-            {verification.isVerified && touchedDisplayName && (
-              <View style={{paddingTop: 8}}>
-                <Admonition type="error">
-                  <Trans>
-                    You are verified. If you change your display name, you will
-                    lose your verification status.{' '}
-                    <InlineLinkText
-                      label={_(msg`Learn more`)}
-                      to={`https://bsky.social/about`}>
-                      <Trans>Learn more.</Trans>
-                    </InlineLinkText>
-                  </Trans>
-                </Admonition>
-              </View>
-            )}
+            {verification.isValid &&
+              verification.role === 'default' &&
+              touchedDisplayName && (
+                <View style={{paddingTop: 8}}>
+                  <Admonition type="error">
+                    <Trans>
+                      You are verified. If you change your display name, you
+                      will lose your verification status.{' '}
+                      <InlineLinkText
+                        label={_(msg`Learn more`)}
+                        to={`https://bsky.social/about`}>
+                        <Trans>Learn more.</Trans>
+                      </InlineLinkText>
+                    </Trans>
+                  </Admonition>
+                </View>
+              )}
           </View>
           <View style={s.pb10}>
             <Text style={[styles.label, pal.text]}>

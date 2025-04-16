@@ -205,7 +205,7 @@ function ProvidedHandlePage({
         <Animated.View
           layout={native(LinearTransition)}
           style={[a.flex_1, a.gap_md]}>
-          {verification?.isVerified && (
+          {verification?.isValid && verification?.role === 'default' && (
             <Admonition type="error">
               <Trans>
                 You are verified. If you change your handle, you will lose your

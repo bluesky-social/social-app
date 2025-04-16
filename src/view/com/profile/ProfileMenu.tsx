@@ -288,7 +288,7 @@ let ProfileMenu = ({
                   </Menu.ItemText>
                   <Menu.ItemIcon icon={List} />
                 </Menu.Item>
-                {verification.viewer.isVerifier &&
+                {verification.viewer?.role === 'verifier' &&
                   !verification.profile.isSelf &&
                   (verification.viewer.hasIssuedVerification ? (
                     <Menu.Item

@@ -481,9 +481,12 @@ function Inner({
                 moderation.ui('displayName'),
               )}
             </Text>
-            {verification.isVerified && (
+            {verification.isValid && (
               <View style={[a.pl_xs]}>
-                <VerificationCheck width={16} {...verification} />
+                <VerificationCheck
+                  width={16}
+                  verifier={verification.role === 'verifier'}
+                />
               </View>
             )}
           </View>

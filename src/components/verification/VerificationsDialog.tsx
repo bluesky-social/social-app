@@ -17,7 +17,7 @@ import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
 import {Link} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import {type ProfileVerificationState} from '#/components/verification'
+import {type FullVerificationState} from '#/components/verification'
 import {VerificationRemovePrompt} from '#/components/verification/VerificationRemovePrompt'
 import type * as bsky from '#/types/bsky'
 
@@ -30,7 +30,7 @@ export function VerificationsDialog({
 }: {
   control: Dialog.DialogControlProps
   profile: bsky.profile.AnyProfileView
-  verificationState: ProfileVerificationState
+  verificationState: FullVerificationState
 }) {
   return (
     <Dialog.Outer control={control}>
@@ -50,7 +50,7 @@ function Inner({
 }: {
   control: Dialog.DialogControlProps
   profile: bsky.profile.AnyProfileView
-  verificationState: ProfileVerificationState
+  verificationState: FullVerificationState
 }) {
   const t = useTheme()
   const {_} = useLingui()

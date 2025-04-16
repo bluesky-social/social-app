@@ -7,7 +7,7 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {useFullVerificationState} from '#/components/verification'
-import {type FullVerificationState} from '#/components/verification/types'
+import {type FullVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {VerificationsDialog} from '#/components/verification/VerificationsDialog'
 import {VerifierDialog} from '#/components/verification/VerifierDialog'
@@ -25,9 +25,12 @@ export function VerificationCheckButton({
   })
 
   if (
-    state.profile.isVerified ||
-    (state.profile.isSelf && state.profile.wasVerified) ||
-    (state.viewer.isVerifier && state.viewer.hasIssuedVerification)
+    (state.profile.role === 'default' &&
+      (state.profile.isValid ||
+        (state.profile.isSelf && state.profile.wasValid))) ||
+    (state.viewer &&
+      state.viewer.role === 'verifier' &&
+      state.viewer.hasIssuedVerification)
   ) {
     return <Badge profile={profile} verificationState={state} size={size} />
   }
@@ -66,7 +69,7 @@ export function Badge({
         }
         hitSlop={20}
         onPress={() => {
-          if (state.profile.isVerifier) {
+          if (state.profile.role === 'verifier') {
             verifierDialogControl.open()
           } else {
             verificationsDialogControl.open()
@@ -92,12 +95,11 @@ export function Badge({
             <VerificationCheck
               width={dimensions}
               fill={
-                state.profile.isVerified
+                state.profile.isValid
                   ? t.palette.primary_500
                   : t.atoms.bg_contrast_100.backgroundColor
               }
-              isVerified={state.profile.isVerified}
-              isVerifier={state.profile.isVerifier}
+              verifier={state.profile.role === 'verifier'}
             />
           </View>
         )}
