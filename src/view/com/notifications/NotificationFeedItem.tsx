@@ -59,12 +59,16 @@ import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled} from '#/compon
 import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {StarterPack} from '#/components/icons/StarterPack'
+import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
+import {VerifierCheck} from '#/components/icons/VerifierCheck'
 import {InlineLinkText, Link} from '#/components/Link'
 import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text} from '#/components/Typography'
+import {getSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import * as bsky from '#/types/bsky'
 
 const MAX_AUTHORS = 5
@@ -366,6 +370,58 @@ let NotificationFeedItem = ({
         <StarterPack width={30} gradient="sky" />
       </View>
     )
+    // @ts-ignore TODO
+  } else if (item.type === 'verified') {
+    a11yLabel = hasMultipleAuthors
+      ? _(
+          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+            one: `${formattedAuthorsCount} other`,
+            other: `${formattedAuthorsCount} others`,
+          })} verified you`,
+        )
+      : _(msg`${firstAuthorName} verified you`)
+    notificationContent = hasMultipleAuthors ? (
+      <Trans>
+        {firstAuthorLink} and{' '}
+        <Text style={[pal.text, s.bold]}>
+          <Plural
+            value={additionalAuthorsCount}
+            one={`${formattedAuthorsCount} other`}
+            other={`${formattedAuthorsCount} others`}
+          />
+        </Text>{' '}
+        verified you
+      </Trans>
+    ) : (
+      <Trans>{firstAuthorLink} verified you</Trans>
+    )
+    icon = <VerifiedCheck size="xl" />
+    // @ts-ignore TODO
+  } else if (item.type === 'verifier') {
+    a11yLabel = hasMultipleAuthors
+      ? _(
+          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+            one: `${formattedAuthorsCount} other`,
+            other: `${formattedAuthorsCount} others`,
+          })} made you a trusted verifier`,
+        )
+      : _(msg`${firstAuthorName} made you a trusted verifier`)
+    notificationContent = hasMultipleAuthors ? (
+      <Trans>
+        {firstAuthorLink} and{' '}
+        <Text style={[pal.text, s.bold]}>
+          <Plural
+            value={additionalAuthorsCount}
+            one={`${formattedAuthorsCount} other`}
+            other={`${formattedAuthorsCount} others`}
+          />
+        </Text>{' '}
+        made you a trusted verifier
+      </Trans>
+    ) : (
+      <Trans>{firstAuthorLink} made you a trusted verifier</Trans>
+    )
+    icon = <VerifierCheck size="xl" />
   } else {
     return null
   }
@@ -691,56 +747,71 @@ function ExpandedAuthorsList({
   return (
     <Animated.View style={[a.overflow_hidden, heightStyle]}>
       {visible &&
-        authors.map(author => (
-          <Link
-            key={author.profile.did}
-            label={author.profile.displayName || author.profile.handle}
-            accessibilityHint={_(msg`Opens this profile`)}
-            to={makeProfileLink({
-              did: author.profile.did,
-              handle: author.profile.handle,
-            })}
-            style={styles.expandedAuthor}>
-            <View style={[a.mr_sm]}>
-              <ProfileHoverCard did={author.profile.did}>
-                <UserAvatar
-                  size={35}
-                  avatar={author.profile.avatar}
-                  moderation={author.moderation.ui('avatar')}
-                  type={author.profile.associated?.labeler ? 'labeler' : 'user'}
-                />
-              </ProfileHoverCard>
-            </View>
-            <View style={[a.flex_1]}>
-              <View style={[a.flex_row, a.align_end]}>
-                <Text
-                  numberOfLines={1}
-                  emoji
-                  style={[
-                    a.text_md,
-                    a.font_bold,
-                    a.leading_tight,
-                    {maxWidth: '70%'},
-                  ]}>
-                  {sanitizeDisplayName(
-                    author.profile.displayName || author.profile.handle,
-                  )}
-                </Text>
-                <Text
-                  numberOfLines={1}
-                  style={[
-                    a.pl_xs,
-                    a.text_md,
-                    a.leading_tight,
-                    a.flex_shrink,
-                    t.atoms.text_contrast_medium,
-                  ]}>
-                  {sanitizeHandle(author.profile.handle, '@')}
-                </Text>
+        authors.map(author => {
+          const verification = getSimpleVerificationState({
+            profile: author.profile,
+          })
+          return (
+            <Link
+              key={author.profile.did}
+              label={author.profile.displayName || author.profile.handle}
+              accessibilityHint={_(msg`Opens this profile`)}
+              to={makeProfileLink({
+                did: author.profile.did,
+                handle: author.profile.handle,
+              })}
+              style={styles.expandedAuthor}>
+              <View style={[a.mr_sm]}>
+                <ProfileHoverCard did={author.profile.did}>
+                  <UserAvatar
+                    size={35}
+                    avatar={author.profile.avatar}
+                    moderation={author.moderation.ui('avatar')}
+                    type={
+                      author.profile.associated?.labeler ? 'labeler' : 'user'
+                    }
+                  />
+                </ProfileHoverCard>
               </View>
-            </View>
-          </Link>
-        ))}
+              <View style={[a.flex_1]}>
+                <View style={[a.flex_row, a.align_end]}>
+                  <Text
+                    numberOfLines={1}
+                    emoji
+                    style={[
+                      a.text_md,
+                      a.font_bold,
+                      a.leading_tight,
+                      {maxWidth: '70%'},
+                    ]}>
+                    {sanitizeDisplayName(
+                      author.profile.displayName || author.profile.handle,
+                    )}
+                  </Text>
+                  {verification.isValid && (
+                    <View style={[a.pl_xs, a.self_center]}>
+                      <VerificationCheck
+                        width={14}
+                        verifier={verification.role === 'verifier'}
+                      />
+                    </View>
+                  )}
+                  <Text
+                    numberOfLines={1}
+                    style={[
+                      a.pl_xs,
+                      a.text_md,
+                      a.leading_tight,
+                      a.flex_shrink,
+                      t.atoms.text_contrast_medium,
+                    ]}>
+                    {sanitizeHandle(author.profile.handle, '@')}
+                  </Text>
+                </View>
+              </View>
+            </Link>
+          )
+        })}
     </Animated.View>
   )
 }
