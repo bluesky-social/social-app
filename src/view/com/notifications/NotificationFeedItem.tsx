@@ -116,9 +116,11 @@ let NotificationFeedItem = ({
     return ''
   }, [item])
 
-  const onToggleAuthorsExpanded = (e: GestureResponderEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
+  const onToggleAuthorsExpanded = (e?: GestureResponderEvent) => {
+    if (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
     setAuthorsExpanded(currentlyExpanded => !currentlyExpanded)
   }
 
@@ -416,7 +418,7 @@ let NotificationFeedItem = ({
           onBeforePress()
         }
         if (e.nativeEvent.actionName === 'toggleAuthorsExpanded') {
-          onToggleAuthorsExpanded(e)
+          onToggleAuthorsExpanded()
         }
       }}>
       {({hovered}) => (
