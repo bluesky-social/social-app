@@ -1,12 +1,13 @@
-import {AppBskyActorDefs,type AppBskyActorGetProfile, AtUri} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  type AppBskyActorGetProfile,
+  AtUri,
+} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {until} from '#/lib/async/until'
-import {RQKEY_ROOT as postThreadQueryKeyRoot} from '#/state/queries/post-thread'
-import {
-  profilesQueryKeyRoot,
-  RQKEY as profileQueryKey,
-} from '#/state/queries/profile'
+import {logger} from '#/logger'
+import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useAgent, useSession} from '#/state/session'
 import * as bsky from '#/types/bsky'
 
@@ -17,10 +18,10 @@ export function useVerificationsRemoveMutation() {
 
   return useMutation({
     async mutationFn({
-      did,
+      profile,
       verifications,
     }: {
-      did: string
+      profile: bsky.profile.AnyProfileView
       verifications: AppBskyActorDefs.VerificationView[]
     }) {
       if (!currentAccount) {
@@ -57,21 +58,27 @@ export function useVerificationsRemoveMutation() {
           return false
         },
         () => {
-          return agent.getProfile({actor: did ?? ''})
+          return agent.getProfile({actor: profile.did ?? ''})
         },
       )
     },
-    onSuccess(_, {did}) {
-      // TODO where do we draw the line here
-      qc.invalidateQueries({
-        queryKey: profileQueryKey(did),
-      })
-      qc.invalidateQueries({
-        queryKey: [profilesQueryKeyRoot],
-      })
-      qc.invalidateQueries({
-        queryKey: [postThreadQueryKeyRoot],
-      })
+    async onSuccess(_, {profile}) {
+      try {
+        const {data: updated} = await agent.getProfile({
+          actor: profile.did ?? '',
+        })
+        updateProfileShadow(qc, profile.did, {
+          // @ts-expect-error TODO lexicons will fix this
+          verification: updated.verification,
+        })
+      } catch (e) {
+        logger.error(
+          `useVerificationRemoveMutation profile-cache update failed`,
+          {
+            safeMessage: e,
+          },
+        )
+      }
     },
   })
 }

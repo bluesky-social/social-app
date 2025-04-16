@@ -25,11 +25,7 @@ export function VerificationCreatePrompt({
   const {mutateAsync: create} = useVerificationCreateMutation()
   const onConfirm = useCallback(async () => {
     try {
-      await create({
-        did: profile.did,
-        handle: profile.handle,
-        displayName: profile.displayName || '',
-      })
+      await create({profile})
       Toast.show(_(msg`Successfully verified`))
     } catch (e) {
       Toast.show(_(msg`Failed to create a verification`), 'xmark')

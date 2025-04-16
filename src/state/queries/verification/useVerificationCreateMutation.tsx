@@ -1,12 +1,9 @@
-import {AppBskyActorDefs,type AppBskyActorGetProfile} from '@atproto/api'
+import {AppBskyActorDefs, type AppBskyActorGetProfile} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {until} from '#/lib/async/until'
-import {RQKEY_ROOT as postThreadQueryKeyRoot} from '#/state/queries/post-thread'
-import {
-  profilesQueryKeyRoot,
-  RQKEY as profileQueryKey,
-} from '#/state/queries/profile'
+import {logger} from '#/logger'
+import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useAgent, useSession} from '#/state/session'
 import * as bsky from '#/types/bsky'
 
@@ -16,20 +13,13 @@ export function useVerificationCreateMutation() {
   const {currentAccount} = useSession()
 
   return useMutation({
-    async mutationFn({
-      did,
-      handle,
-      displayName,
-    }: {
-      did: string
-      handle: string
-      displayName: string
-    }) {
+    async mutationFn({profile}: {profile: bsky.profile.AnyProfileView}) {
       if (!currentAccount) {
         throw new Error('User not logged in')
       }
 
       const uri = ''
+      const {did, handle, displayName} = profile
       console.log('create', {handle, displayName})
       // const {uri} = await agent.app.bsky.graph.verification.create(
       //   {repo: currentAccount.did},
@@ -62,17 +52,23 @@ export function useVerificationCreateMutation() {
         },
       )
     },
-    onSuccess(_, {did}) {
-      // TODO where do we draw the line here
-      qc.invalidateQueries({
-        queryKey: profileQueryKey(did),
-      })
-      qc.invalidateQueries({
-        queryKey: [profilesQueryKeyRoot],
-      })
-      qc.invalidateQueries({
-        queryKey: [postThreadQueryKeyRoot],
-      })
+    async onSuccess(_, {profile}) {
+      try {
+        const {data: updated} = await agent.getProfile({
+          actor: profile.did ?? '',
+        })
+        updateProfileShadow(qc, profile.did, {
+          // @ts-expect-error TODO lexicons will fix this
+          verification: updated.verification,
+        })
+      } catch (e) {
+        logger.error(
+          `useVerificationCreateMutation profile-cache update failed`,
+          {
+            safeMessage: e,
+          },
+        )
+      }
     },
   })
 }

@@ -27,10 +27,7 @@ export function VerificationRemovePrompt({
   const {mutateAsync: remove} = useVerificationsRemoveMutation()
   const onConfirm = useCallback(async () => {
     try {
-      await remove({
-        did: profile.did,
-        verifications,
-      })
+      await remove({profile, verifications})
       Toast.show(_(msg`Removed verification`))
     } catch (e) {
       Toast.show(_(msg`Failed to remove verification`), 'xmark')
