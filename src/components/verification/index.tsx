@@ -48,7 +48,7 @@ export function useFullVerificationState({
 
 export const DEFAULT_USER_STATE: AppBskyActorDefs.VerificationStateDefault = {
   role: 'default',
-  isValid: false,
+  isValid: true,
   verifications: [],
 }
 

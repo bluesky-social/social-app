@@ -49,7 +49,7 @@ import {Post} from '#/view/com/post/Post'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, platform,useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
@@ -149,6 +149,9 @@ let NotificationFeedItem = ({
 
   const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
   const firstAuthor = authors[0]
+  const firstAuthorVerification = getSimpleVerificationState({
+    profile: firstAuthor.profile,
+  })
   const firstAuthorName = sanitizeDisplayName(
     firstAuthor.profile.displayName || firstAuthor.profile.handle,
   )
@@ -190,6 +193,21 @@ let NotificationFeedItem = ({
       emoji
       label={_(msg`Go to ${firstAuthorName}'s profile`)}>
       {forceLTR(firstAuthorName)}
+      {firstAuthorVerification.isValid && (
+        <View
+          style={[
+            a.relative,
+            {
+              paddingTop: platform({android: 2}),
+              marginBottom: platform({ios: -7}),
+              top: platform({web: 1}),
+              paddingLeft: 3,
+              paddingRight: 2,
+            },
+          ]}>
+          <VerificationCheck width={14} {...firstAuthorVerification} />
+        </View>
+      )}
     </InlineLinkText>
   )
   const additionalAuthorsCount = authors.length - 1
