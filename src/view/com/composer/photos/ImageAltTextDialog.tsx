@@ -29,10 +29,12 @@ export const ImageAltTextDialog = ({
   onChange,
 }: Props): React.ReactNode => {
   const [altText, setAltText] = React.useState(image.alt)
+  const {height} = useWindowDimensions()
 
   return (
     <Dialog.Outer
       control={control}
+      nativeOptions={{minHeight: height}}
       onClose={() => {
         onChange({
           ...image,
