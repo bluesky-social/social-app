@@ -448,10 +448,13 @@ let ProfileMenu = ({
       <VerificationCreatePrompt
         control={verificationCreatePromptControl}
         userName={userName}
+        profile={profile}
       />
       <VerificationRemovePrompt
         control={verificationRemovePromptControl}
         userName={userName}
+        profile={profile}
+        verifications={[]} // TODO
       />
     </EventStopper>
   )

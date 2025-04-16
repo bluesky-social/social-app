@@ -109,6 +109,7 @@ function Inner({
               did={did}
               isSelf={did === currentAccount?.did}
               verifiedUserName={userName}
+              subject={profile}
             />
           ))}
         </View>
@@ -157,10 +158,12 @@ function VerifierCard({
   did,
   isSelf,
   verifiedUserName,
+  subject,
 }: {
   did: string
   isSelf: boolean
   verifiedUserName: string
+  subject: bsky.profile.AnyProfileView
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -227,6 +230,8 @@ function VerifierCard({
       <VerificationRemovePrompt
         control={verificationRemovePromptControl}
         userName={verifiedUserName}
+        profile={subject}
+        verifications={[]} // TODO
       />
     </View>
   )

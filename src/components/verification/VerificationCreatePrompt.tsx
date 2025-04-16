@@ -3,20 +3,41 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logger} from '#/logger'
+import {useVerificationCreateMutation} from '#/state/queries/verification/useVerificationCreateMutation'
+import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {type DialogControlProps} from '#/components/Dialog'
 import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
 import * as Prompt from '#/components/Prompt'
+import type * as bsky from '#/types/bsky'
 
 export function VerificationCreatePrompt({
   control,
   userName,
+  profile,
 }: {
   control: DialogControlProps
   userName: string
+  profile: bsky.profile.AnyProfileView
 }) {
   const {_} = useLingui()
-  const onConfirm = useCallback(() => {}, [])
+  const {mutateAsync: create} = useVerificationCreateMutation()
+  const onConfirm = useCallback(async () => {
+    try {
+      await create({
+        did: profile.did,
+        handle: profile.handle,
+        displayName: profile.displayName || '',
+      })
+      Toast.show(_(msg`Successfully verified`))
+    } catch (e) {
+      Toast.show(_(msg`Failed to create a verification`), 'xmark')
+      logger.error('Failed to create a verification', {
+        safeMessage: e,
+      })
+    }
+  }, [_, profile, create])
 
   return (
     <Prompt.Outer control={control}>
