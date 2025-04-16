@@ -117,6 +117,7 @@ let NotificationFeedItem = ({
   }, [item])
 
   const onToggleAuthorsExpanded = (e: GestureResponderEvent) => {
+    e.preventDefault()
     e.stopPropagation()
     setAuthorsExpanded(currentlyExpanded => !currentlyExpanded)
   }
