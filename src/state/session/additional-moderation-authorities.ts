@@ -6,7 +6,7 @@ import {device} from '#/storage'
 export const BR_LABELER = 'did:plc:ekitcvx7uwnauoqy5oest3hm' // Brazil
 export const DE_LABELER = 'did:plc:r55ow3tocux5kafs5dq445fy' // Germany
 export const RU_LABELER = 'did:plc:crm2agcxvvlj6hilnjdc4hox' // Russia
-export const UK_LABELER = 'did:plc:gvkp7euswjjrctjmqwhhfzif' // United Kingdom
+export const GB_LABELER = 'did:plc:gvkp7euswjjrctjmqwhhfzif' // United Kingdom
 export const AU_LABELER = 'did:plc:dsynw7isrf2eqlhcjx3ffnmt' // Australia
 export const TR_LABELER = 'did:plc:cquoj7aozvmkud2gifeinkda' // Turkey
 export const JP_LABELER = 'did:plc:vhgppeyjwgrr37vm4v6ggd5a' // Japan
@@ -24,7 +24,7 @@ const MODERATION_AUTHORITIES: {
 } = {
   BR: [BR_LABELER], // Brazil
   RU: [RU_LABELER], // Russia
-  UK: [UK_LABELER], // United Kingdom
+  GB: [GB_LABELER], // United Kingdom
   AU: [AU_LABELER], // Australia
   TR: [TR_LABELER], // Turkey
   JP: [JP_LABELER], // Japan
