@@ -246,7 +246,10 @@ function ListMember({
               <Button
                 testID={`user-${profile.handle}-editBtn`}
                 label={_(msg({message: 'Edit', context: 'action'}))}
-                onPress={editMembershipDialogControl.open}
+                onPress={evt => {
+                  evt.preventDefault()
+                  editMembershipDialogControl.open()
+                }}
                 size="small"
                 variant="solid"
                 color="secondary">
