@@ -1,12 +1,12 @@
-import React, {useContext, useMemo} from 'react'
-import {StyleSheet, View, ViewProps, ViewStyle} from 'react-native'
-import {StyleProp} from 'react-native'
+import {forwardRef, memo, useContext, useMemo} from 'react'
+import {StyleSheet, View, type ViewProps, type ViewStyle} from 'react-native'
+import {type StyleProp} from 'react-native'
 import {
   KeyboardAwareScrollView,
-  KeyboardAwareScrollViewProps,
+  type KeyboardAwareScrollViewProps,
 } from 'react-native-keyboard-controller'
 import Animated, {
-  AnimatedScrollViewProps,
+  type AnimatedScrollViewProps,
   useAnimatedProps,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -35,7 +35,7 @@ export type ScreenProps = React.ComponentProps<typeof View> & {
 /**
  * Outermost component of every screen
  */
-export const Screen = React.memo(function Screen({
+export const Screen = memo(function Screen({
   style,
   noInsetTop,
   ...props
@@ -61,49 +61,55 @@ export type ContentProps = AnimatedScrollViewProps & {
 /**
  * Default scroll view for simple pages
  */
-export const Content = React.memo(function Content({
-  children,
-  style,
-  contentContainerStyle,
-  ignoreTabletLayoutOffset,
-  ...props
-}: ContentProps) {
-  const t = useTheme()
-  const {footerHeight} = useShellLayout()
-  const animatedProps = useAnimatedProps(() => {
-    return {
-      scrollIndicatorInsets: {
-        bottom: footerHeight.get(),
-        top: 0,
-        right: 1,
-      },
-    } satisfies AnimatedScrollViewProps
-  })
+export const Content = memo(
+  forwardRef<Animated.ScrollView, ContentProps>(function Content(
+    {
+      children,
+      style,
+      contentContainerStyle,
+      ignoreTabletLayoutOffset,
+      ...props
+    },
+    ref,
+  ) {
+    const t = useTheme()
+    const {footerHeight} = useShellLayout()
+    const animatedProps = useAnimatedProps(() => {
+      return {
+        scrollIndicatorInsets: {
+          bottom: footerHeight.get(),
+          top: 0,
+          right: 1,
+        },
+      } satisfies AnimatedScrollViewProps
+    })
 
-  return (
-    <Animated.ScrollView
-      id="content"
-      automaticallyAdjustsScrollIndicatorInsets={false}
-      indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
-      // sets the scroll inset to the height of the footer
-      animatedProps={animatedProps}
-      style={[scrollViewStyles.common, style]}
-      contentContainerStyle={[
-        scrollViewStyles.contentContainer,
-        contentContainerStyle,
-      ]}
-      {...props}>
-      {isWeb ? (
-        <Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>
-          {/* @ts-expect-error web only -esb */}
-          {children}
-        </Center>
-      ) : (
-        children
-      )}
-    </Animated.ScrollView>
-  )
-})
+    return (
+      <Animated.ScrollView
+        ref={ref}
+        id="content"
+        automaticallyAdjustsScrollIndicatorInsets={false}
+        indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
+        // sets the scroll inset to the height of the footer
+        animatedProps={animatedProps}
+        style={[scrollViewStyles.common, style]}
+        contentContainerStyle={[
+          scrollViewStyles.contentContainer,
+          contentContainerStyle,
+        ]}
+        {...props}>
+        {isWeb ? (
+          <Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>
+            {/* @ts-expect-error web only -esb */}
+            {children}
+          </Center>
+        ) : (
+          children
+        )}
+      </Animated.ScrollView>
+    )
+  }),
+)
 
 const scrollViewStyles = StyleSheet.create({
   common: {
@@ -124,7 +130,7 @@ export type KeyboardAwareContentProps = KeyboardAwareScrollViewProps & {
  *
  * BE SURE TO TEST THIS WHEN USING, it's untested as of writing this comment.
  */
-export const KeyboardAwareContent = React.memo(function LayoutScrollView({
+export const KeyboardAwareContent = memo(function LayoutKeyboardAwareContent({
   children,
   style,
   contentContainerStyle,
@@ -147,7 +153,7 @@ export const KeyboardAwareContent = React.memo(function LayoutScrollView({
 /**
  * Utility component to center content within the screen
  */
-export const Center = React.memo(function LayoutContent({
+export const Center = memo(function LayoutCenter({
   children,
   style,
   ignoreTabletLayoutOffset,
@@ -192,7 +198,7 @@ export const Center = React.memo(function LayoutContent({
 /**
  * Only used within `Layout.Screen`, not for reuse
  */
-const WebCenterBorders = React.memo(function LayoutContent() {
+const WebCenterBorders = memo(function LayoutWebCenterBorders() {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {centerColumnOffset} = useLayoutBreakpoints()

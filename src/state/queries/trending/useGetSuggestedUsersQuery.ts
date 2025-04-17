@@ -13,12 +13,17 @@ import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 
-export type QueryProps = {category?: string | null}
+export type QueryProps = {
+  category?: string | null
+  limit?: number
+  enabled?: boolean
+}
 
 export const getSuggestedUsersQueryKeyRoot = 'unspecced-suggested-users'
 export const createGetSuggestedUsersQueryKey = (props: QueryProps) => [
   getSuggestedUsersQueryKeyRoot,
-  ...Object.values(props),
+  props.category,
+  props.limit,
 ]
 
 export function useGetSuggestedUsersQuery(props: QueryProps) {
@@ -26,7 +31,7 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
   const {data: preferences} = usePreferencesQuery()
 
   return useQuery({
-    enabled: !!preferences,
+    enabled: !!preferences && props.enabled !== false,
     staleTime: STALE.MINUTES.THREE,
     queryKey: createGetSuggestedUsersQueryKey(props),
     queryFn: async () => {
@@ -34,7 +39,7 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
       const {data} = await agent.app.bsky.unspecced.getSuggestedUsers(
         {
           category: props.category ?? undefined,
-          limit: 10,
+          limit: props.limit || 10,
         },
         {
           headers: {
@@ -52,7 +57,7 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileViewBasic, void> {
+): Generator<AppBskyActorDefs.ProfileView, void> {
   const responses =
     queryClient.getQueriesData<AppBskyUnspeccedGetSuggestedUsers.OutputSchema>({
       queryKey: [getSuggestedUsersQueryKeyRoot],

@@ -139,7 +139,7 @@ jobs:
 
       - name: 🏗️ Build Production APK
         if: ${{ inputs.profile == 'production' }}
-        run: yarn use-build-number-with-bump eas build -p android --profile production-apk --local --output build.apk --non-interactive
+        run: SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} yarn use-build-number-with-bump eas build -p android --profile production-apk --local --output build.apk --non-interactive
 
       - name: 🚀 Upload Production APK Artifact
         id: upload-artifact-production-apk

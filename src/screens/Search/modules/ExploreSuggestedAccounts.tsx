@@ -58,9 +58,11 @@ export function useLoadEnoughProfiles({
 export function SuggestedAccountsTabBar({
   selectedInterest,
   onSelectInterest,
+  hideDefaultTab,
 }: {
   selectedInterest: string | null
   onSelectInterest: (interest: string | null) => void
+  hideDefaultTab?: boolean
 }) {
   const {_} = useLingui()
   const interestsDisplayNames = useInterestsDisplayNames()
@@ -72,8 +74,10 @@ export function SuggestedAccountsTabBar({
   return (
     <BlockDrawerGesture>
       <Tabs
-        interests={['all', ...interests]}
-        selectedInterest={selectedInterest || 'all'}
+        interests={hideDefaultTab ? interests : ['all', ...interests]}
+        selectedInterest={
+          selectedInterest || (hideDefaultTab ? interests[0] : 'all')
+        }
         onSelectTab={tab => {
           logger.metric(
             'explore:suggestedAccounts:tabPressed',
@@ -83,10 +87,14 @@ export function SuggestedAccountsTabBar({
           onSelectInterest(tab === 'all' ? null : tab)
         }}
         hasSearchText={false}
-        interestsDisplayNames={{
-          all: _(msg`For You`),
-          ...interestsDisplayNames,
-        }}
+        interestsDisplayNames={
+          hideDefaultTab
+            ? interestsDisplayNames
+            : {
+                all: _(msg`For You`),
+                ...interestsDisplayNames,
+              }
+        }
         TabComponent={Tab}
         contentContainerStyle={[
           {
