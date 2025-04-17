@@ -240,8 +240,8 @@ function DialogInner({
       data={items}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
-      style={[web(a.px_0)]}
-      webInnerStyle={[web({minHeight: '80vh'})]}
+      style={[web([{height: '80vh', maxHeight: 600}, a.px_0])]}
+      webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
       webInnerContentContainerStyle={[web(a.py_0)]}
       contentContainerStyle={[web(a.pb_xl)]}
       stickyHeaderIndices={[0]}
