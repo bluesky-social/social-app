@@ -196,8 +196,7 @@ export const EMOJI_REACTION_LIMIT = 5
 export const urls = {
   website: {
     blog: {
-      // TODO
-      initialVerificationAnnouncement: `https://bsky.social/about`,
+      initialVerificationAnnouncement: `https://bsky.social/about/blog/04-21-2025-verification`,
     },
   },
 }
