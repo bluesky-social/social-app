@@ -44,14 +44,17 @@ export function AboutSettingsScreen({}: Props) {
         if (isAndroid) {
           Toast.show(
             _(
-              msg`Image cache cleared, freed ${i18n.number(
-                Math.abs(sizeDiffBytes / 1024 / 1024),
-                {
-                  notation: 'compact',
-                  style: 'unit',
-                  unit: 'megabyte',
-                },
-              )}`,
+              msg({
+                message: `Image cache cleared, freed ${i18n.number(
+                  Math.abs(sizeDiffBytes / 1024 / 1024),
+                  {
+                    notation: 'compact',
+                    style: 'unit',
+                    unit: 'megabyte',
+                  },
+                )}`,
+                comment: `Android-only toast message which includes amount of space freed using localized number formatting`,
+              }),
             ),
           )
         } else {
