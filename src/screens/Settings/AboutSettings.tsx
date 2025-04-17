@@ -16,9 +16,9 @@ import {isAndroid, isNative} from '#/platform/detection'
 import {useDevModeEnabled} from '#/state/preferences/dev-mode'
 import * as Toast from '#/view/com/util/Toast'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
+import {BroomSparkle_Stroke2_Corner2_Rounded as BroomSparkleIcon} from '#/components/icons/BroomSparkle'
 import {CodeLines_Stroke2_Corner2_Rounded as CodeLinesIcon} from '#/components/icons/CodeLines'
 import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
-import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {Newspaper_Stroke2_Corner2_Rounded as NewspaperIcon} from '#/components/icons/Newspaper'
 import {Wrench_Stroke2_Corner2_Rounded as WrenchIcon} from '#/components/icons/Wrench'
 import * as Layout from '#/components/Layout'
@@ -109,7 +109,7 @@ export function AboutSettingsScreen({}: Props) {
               onPress={() => onClearImageCache()}
               label={_(msg`Clear image cache`)}
               disabled={isClearingImageCache}>
-              <SettingsList.ItemIcon icon={ImageIcon} />
+              <SettingsList.ItemIcon icon={BroomSparkleIcon} />
               <SettingsList.ItemText>
                 <Trans>Clear image cache</Trans>
               </SettingsList.ItemText>
