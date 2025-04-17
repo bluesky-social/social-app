@@ -114,6 +114,7 @@ export function Badge({
           </View>
         )}
       </Button>
+
       <VerificationsDialog
         control={verificationsDialogControl}
         profile={profile}

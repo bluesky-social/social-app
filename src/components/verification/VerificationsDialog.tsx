@@ -1,4 +1,6 @@
+import {useState} from 'react'
 import {Text as RNText, View} from 'react-native'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -15,6 +17,7 @@ import {useDialogControl} from '#/components/Dialog'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
 import {Link} from '#/components/Link'
+import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {type FullVerificationState} from '#/components/verification'
@@ -100,18 +103,11 @@ function Inner({
         </Text>
 
         <View style={[a.gap_lg]}>
-          {[
-            'did:plc:3jpt2mvvsumj2r7eqk4gzzjz',
-            'did:plc:3jpt2mvvsumj2r7eqk4gzzjz',
-          ].map(did => (
-            <VerifierCard
-              key={did}
-              did={did}
-              isSelf={did === currentAccount?.did}
-              verifiedUserName={userName}
-              subject={profile}
-            />
-          ))}
+          {profile.verification
+            ? profile.verification?.verifications.map(v => (
+                <VerifierCard key={v.uri} verification={v} subject={profile} />
+              ))
+            : null}
         </View>
       </View>
 
@@ -155,21 +151,20 @@ function Inner({
 }
 
 function VerifierCard({
-  did,
-  isSelf,
-  verifiedUserName,
+  verification,
   subject,
 }: {
-  did: string
-  isSelf: boolean
-  verifiedUserName: string
+  verification: AppBskyActorDefs.VerificationView
   subject: bsky.profile.AnyProfileView
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
-  const {data: profile, error} = useProfileQuery({did})
+  const {data: profile, error} = useProfileQuery({did: verification.issuer})
   const verificationRemovePromptControl = useDialogControl()
+  const canAdminister = verification.issuer === currentAccount?.did
+  const [pending, setPending] = useState(false)
 
   return (
     <View>
@@ -188,7 +183,7 @@ function VerifierCard({
                   emoji
                   style={[a.leading_snug, t.atoms.text_contrast_medium]}
                   numberOfLines={1}>
-                  {did}
+                  {verification.issuer}
                 </Text>
               </View>
             </>
@@ -202,7 +197,7 @@ function VerifierCard({
                 profile={profile}
                 moderationOpts={moderationOpts}
               />
-              {isSelf && (
+              {canAdminister && (
                 <View>
                   <Button
                     label={_(msg`Remove verification`)}
@@ -213,7 +208,7 @@ function VerifierCard({
                     onPress={() => {
                       verificationRemovePromptControl.open()
                     }}>
-                    <ButtonIcon icon={TrashIcon} />
+                    <ButtonIcon icon={pending ? Loader : TrashIcon} />
                   </Button>
                 </View>
               )}
@@ -229,9 +224,9 @@ function VerifierCard({
 
       <VerificationRemovePrompt
         control={verificationRemovePromptControl}
-        userName={verifiedUserName}
         profile={subject}
-        verifications={[]} // TODO
+        verifications={[verification]}
+        onConfirm={() => setPending(true)}
       />
     </View>
   )

@@ -31,12 +31,10 @@ export function useVerificationsRemoveMutation() {
 
       await Promise.all(
         uris.map(uri => {
-          const rkey = new AtUri(uri).rkey
-          console.log('delete', rkey)
-          // agent.app.bsky.graph.verification.delete({
-          //   repo: currentAccount.did,
-          //   rkey: new AtUri(uri).rkey,
-          // }),
+          return agent.app.bsky.graph.verification.delete({
+            repo: currentAccount.did,
+            rkey: new AtUri(uri).rkey,
+          })
         }),
       )
 
@@ -45,8 +43,7 @@ export function useVerificationsRemoveMutation() {
         1e3,
         ({data: profile}: AppBskyActorGetProfile.Response) => {
           if (
-            profile.verification &&
-            profile.verification.verifications.every(v => !uris.includes(v.uri))
+            !profile.verification?.verifications.some(v => uris.includes(v.uri))
           ) {
             return true
           }

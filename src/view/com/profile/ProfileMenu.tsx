@@ -6,7 +6,6 @@ import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
-import {getUserDisplayName} from '#/lib/getUserDisplayName'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
@@ -195,9 +194,12 @@ let ProfileMenu = ({
     navigation.navigate('ProfileSearch', {name: profile.handle})
   }, [navigation, profile.handle])
 
-  const userName = getUserDisplayName(profile)
   const verificationCreatePromptControl = Prompt.usePromptControl()
   const verificationRemovePromptControl = Prompt.usePromptControl()
+  const currentAccountVerifications =
+    profile.verification?.verifications?.filter(v => {
+      return v.issuer === currentAccount?.did
+    }) ?? []
 
   return (
     <EventStopper onKeyDown={false}>
@@ -447,14 +449,12 @@ let ProfileMenu = ({
 
       <VerificationCreatePrompt
         control={verificationCreatePromptControl}
-        userName={userName}
         profile={profile}
       />
       <VerificationRemovePrompt
         control={verificationRemovePromptControl}
-        userName={userName}
         profile={profile}
-        verifications={[]} // TODO
+        verifications={currentAccountVerifications}
       />
     </EventStopper>
   )

@@ -17,18 +17,15 @@ export function useVerificationCreateMutation() {
         throw new Error('User not logged in')
       }
 
-      const uri = ''
-      const {did, handle, displayName} = profile
-      console.log('create', {handle, displayName})
-      // const {uri} = await agent.app.bsky.graph.verification.create(
-      //   {repo: currentAccount.did},
-      //   {
-      //     subject: did,
-      //     createdAt: new Date().toISOString(),
-      //     handle,
-      //     displayName,
-      //   },
-      // )
+      const {uri} = await agent.app.bsky.graph.verification.create(
+        {repo: currentAccount.did},
+        {
+          subject: profile.did,
+          createdAt: new Date().toISOString(),
+          handle: profile.handle,
+          displayName: profile.displayName || '',
+        },
+      )
 
       await until(
         5,
@@ -43,7 +40,7 @@ export function useVerificationCreateMutation() {
           return false
         },
         () => {
-          return agent.getProfile({actor: did ?? ''})
+          return agent.getProfile({actor: profile.did ?? ''})
         },
       )
     },

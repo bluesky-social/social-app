@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {getUserDisplayName} from '#/lib/getUserDisplayName'
 import {logger} from '#/logger'
 import {useVerificationCreateMutation} from '#/state/queries/verification/useVerificationCreateMutation'
 import * as Toast from '#/view/com/util/Toast'
@@ -14,11 +15,9 @@ import type * as bsky from '#/types/bsky'
 
 export function VerificationCreatePrompt({
   control,
-  userName,
   profile,
 }: {
   control: DialogControlProps
-  userName: string
   profile: bsky.profile.AnyProfileView
 }) {
   const {_} = useLingui()
@@ -34,6 +33,8 @@ export function VerificationCreatePrompt({
       })
     }
   }, [_, profile, create])
+
+  const userName = getUserDisplayName(profile)
 
   return (
     <Prompt.Outer control={control}>
