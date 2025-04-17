@@ -62,6 +62,7 @@ function SendViaChatDialogInner({
       title={_(msg`Send post to...`)}
       onSelectChat={onCreateChat}
       showRecentConvos
+      sortByMessageDeclaration
     />
   )
 }

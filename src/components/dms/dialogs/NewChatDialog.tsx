@@ -71,6 +71,7 @@ export function NewChat({
         <SearchablePeopleList
           title={_(msg`Start a new chat`)}
           onSelectChat={onCreateChat}
+          sortByMessageDeclaration
         />
       </Dialog.Outer>
 
