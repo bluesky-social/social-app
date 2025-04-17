@@ -99,11 +99,9 @@ function DialogInner({
     } else if (isEmpty) {
       _items = _items.concat([EMPTY])
     } else if (data) {
+      // TODO: Add starter packs! -sfn
       const curateLists = data.filter(
         list => list.purpose === 'app.bsky.graph.defs#curatelist',
-      )
-      const starterPacks = data.filter(
-        list => list.purpose === 'app.bsky.graph.defs#referencelist',
       )
       const modLists = data.filter(
         list => list.purpose === 'app.bsky.graph.defs#modlist',
@@ -116,16 +114,6 @@ function DialogInner({
             _reactKey: 'curatelist',
           },
           curateLists.map(list => ({type: 'list', list})),
-        )
-      }
-      if (starterPacks.length > 0) {
-        _items = _items.concat(
-          {
-            type: 'section-header',
-            title: _(msg`Starter packs`),
-            _reactKey: 'referencelist',
-          },
-          starterPacks.map(list => ({type: 'list', list})),
         )
       }
       if (modLists.length > 0) {
