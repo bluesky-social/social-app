@@ -20,7 +20,7 @@ import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {type ListMethods} from '#/view/com/util/List'
-import {atoms as a, native, useTheme, web} from '#/alf'
+import {android, atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {canBeMessaged} from '#/components/dms/util'
@@ -269,6 +269,10 @@ export function SearchablePeopleList({
           a.relative,
           web(a.pt_lg),
           native(a.pt_4xl),
+          android({
+            borderTopLeftRadius: a.rounded_md.borderRadius,
+            borderTopRightRadius: a.rounded_md.borderRadius,
+          }),
           a.pb_xs,
           a.px_lg,
           a.border_b,
