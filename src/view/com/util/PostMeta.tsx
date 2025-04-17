@@ -13,6 +13,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
 import {isAndroid} from '#/platform/detection'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {precacheProfile} from '#/state/queries/profile'
 import {atoms as a, useTheme, web} from '#/alf'
 import {WebOnlyInlineLinkText} from '#/components/Link'
@@ -38,21 +39,22 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const t = useTheme()
   const {i18n, _} = useLingui()
 
-  const displayName = opts.author.displayName || opts.author.handle
-  const handle = opts.author.handle
-  const profileLink = makeProfileLink(opts.author)
+  const author = useProfileShadow(opts.author)
+  const displayName = author.displayName || author.handle
+  const handle = author.handle
+  const profileLink = makeProfileLink(author)
   const queryClient = useQueryClient()
   const onOpenAuthor = opts.onOpenAuthor
   const onBeforePressAuthor = useCallback(() => {
-    precacheProfile(queryClient, opts.author)
+    precacheProfile(queryClient, author)
     onOpenAuthor?.()
-  }, [queryClient, opts.author, onOpenAuthor])
+  }, [queryClient, author, onOpenAuthor])
   const onBeforePressPost = useCallback(() => {
-    precacheProfile(queryClient, opts.author)
-  }, [queryClient, opts.author])
+    precacheProfile(queryClient, author)
+  }, [queryClient, author])
 
   const timestampLabel = niceDate(i18n, opts.timestamp)
-  const verification = useSimpleVerificationState({profile: opts.author})
+  const verification = useSimpleVerificationState({profile: author})
 
   return (
     <View
@@ -69,14 +71,14 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         <View style={[a.self_center, a.mr_2xs]}>
           <PreviewableUserAvatar
             size={opts.avatarSize || 16}
-            profile={opts.author}
+            profile={author}
             moderation={opts.moderation?.ui('avatar')}
-            type={opts.author.associated?.labeler ? 'labeler' : 'user'}
+            type={author.associated?.labeler ? 'labeler' : 'user'}
           />
         </View>
       )}
       <View style={[a.flex_row, a.align_end, a.flex_shrink]}>
-        <ProfileHoverCard inline did={opts.author.did}>
+        <ProfileHoverCard inline did={author.did}>
           <View style={[a.flex_row, a.align_end, a.flex_shrink]}>
             <WebOnlyInlineLinkText
               emoji
