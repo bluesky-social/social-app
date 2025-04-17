@@ -31,7 +31,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
 
-type ProfileItem = {
+export type ProfileItem = {
   type: 'profile'
   key: string
   profile: bsky.profile.AnyProfileView
