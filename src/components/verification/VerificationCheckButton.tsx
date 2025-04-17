@@ -30,7 +30,15 @@ export function shouldShowVerificationCheckButton(
       ok = true
     }
   } else if (state.profile.role === 'verifier') {
-    ok = true
+    if (state.profile.isViewer) {
+      ok = true
+    } else if (state.profile.isVerified) {
+      ok = true
+    }
+  }
+
+  if (!state.profile.showBadge && !state.profile.isViewer) {
+    ok = false
   }
 
   return ok
@@ -75,6 +83,8 @@ export function Badge({
     dimensions = 14
   }
 
+  const verifiedByHidden = !state.profile.showBadge && state.profile.isViewer
+
   return (
     <>
       <Button
@@ -111,7 +121,9 @@ export function Badge({
             <VerificationCheck
               width={dimensions}
               fill={
-                state.profile.isVerified
+                verifiedByHidden
+                  ? t.atoms.bg_contrast_100.backgroundColor
+                  : state.profile.isVerified
                   ? t.palette.primary_500
                   : t.atoms.bg_contrast_100.backgroundColor
               }

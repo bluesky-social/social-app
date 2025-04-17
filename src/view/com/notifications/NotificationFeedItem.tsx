@@ -66,10 +66,7 @@ import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text} from '#/components/Typography'
-import {
-  getSimpleVerificationState,
-  useSimpleVerificationState,
-} from '#/components/verification'
+import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import * as bsky from '#/types/bsky'
 
@@ -195,7 +192,7 @@ let NotificationFeedItem = ({
       emoji
       label={_(msg`Go to ${firstAuthorName}'s profile`)}>
       {forceLTR(firstAuthorName)}
-      {firstAuthorVerification.isVerified && (
+      {firstAuthorVerification.showBadge && (
         <View
           style={[
             a.relative,
@@ -753,8 +750,6 @@ function ExpandedAuthorsList({
   visible: boolean
   authors: Author[]
 }) {
-  const {_} = useLingui()
-  const t = useTheme()
   const heightInterp = useAnimatedValue(visible ? 1 : 0)
   const targetHeight =
     authors.length * (EXPANDED_AUTHOR_EL_HEIGHT + 10) /*10=margin*/
@@ -772,72 +767,76 @@ function ExpandedAuthorsList({
   return (
     <Animated.View style={[a.overflow_hidden, heightStyle]}>
       {visible &&
-        authors.map(author => {
-          const verification = getSimpleVerificationState({
-            profile: author.profile,
-          })
-          return (
-            <Link
-              key={author.profile.did}
-              label={author.profile.displayName || author.profile.handle}
-              accessibilityHint={_(msg`Opens this profile`)}
-              to={makeProfileLink({
-                did: author.profile.did,
-                handle: author.profile.handle,
-              })}
-              style={styles.expandedAuthor}>
-              <View style={[a.mr_sm]}>
-                <ProfileHoverCard did={author.profile.did}>
-                  <UserAvatar
-                    size={35}
-                    avatar={author.profile.avatar}
-                    moderation={author.moderation.ui('avatar')}
-                    type={
-                      author.profile.associated?.labeler ? 'labeler' : 'user'
-                    }
-                  />
-                </ProfileHoverCard>
-              </View>
-              <View style={[a.flex_1]}>
-                <View style={[a.flex_row, a.align_end]}>
-                  <Text
-                    numberOfLines={1}
-                    emoji
-                    style={[
-                      a.text_md,
-                      a.font_bold,
-                      a.leading_tight,
-                      {maxWidth: '70%'},
-                    ]}>
-                    {sanitizeDisplayName(
-                      author.profile.displayName || author.profile.handle,
-                    )}
-                  </Text>
-                  {verification.isVerified && (
-                    <View style={[a.pl_xs, a.self_center]}>
-                      <VerificationCheck
-                        width={14}
-                        verifier={verification.role === 'verifier'}
-                      />
-                    </View>
-                  )}
-                  <Text
-                    numberOfLines={1}
-                    style={[
-                      a.pl_xs,
-                      a.text_md,
-                      a.leading_tight,
-                      a.flex_shrink,
-                      t.atoms.text_contrast_medium,
-                    ]}>
-                    {sanitizeHandle(author.profile.handle, '@')}
-                  </Text>
-                </View>
-              </View>
-            </Link>
-          )
-        })}
+        authors.map(author => (
+          <ExpandedAuthorCard key={author.profile.did} author={author} />
+        ))}
     </Animated.View>
+  )
+}
+
+function ExpandedAuthorCard({author}: {author: Author}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const verification = useSimpleVerificationState({
+    profile: author.profile,
+  })
+  return (
+    <Link
+      key={author.profile.did}
+      label={author.profile.displayName || author.profile.handle}
+      accessibilityHint={_(msg`Opens this profile`)}
+      to={makeProfileLink({
+        did: author.profile.did,
+        handle: author.profile.handle,
+      })}
+      style={styles.expandedAuthor}>
+      <View style={[a.mr_sm]}>
+        <ProfileHoverCard did={author.profile.did}>
+          <UserAvatar
+            size={35}
+            avatar={author.profile.avatar}
+            moderation={author.moderation.ui('avatar')}
+            type={author.profile.associated?.labeler ? 'labeler' : 'user'}
+          />
+        </ProfileHoverCard>
+      </View>
+      <View style={[a.flex_1]}>
+        <View style={[a.flex_row, a.align_end]}>
+          <Text
+            numberOfLines={1}
+            emoji
+            style={[
+              a.text_md,
+              a.font_bold,
+              a.leading_tight,
+              {maxWidth: '70%'},
+            ]}>
+            {sanitizeDisplayName(
+              author.profile.displayName || author.profile.handle,
+            )}
+          </Text>
+          {verification.showBadge && (
+            <View style={[a.pl_xs, a.self_center]}>
+              <VerificationCheck
+                width={14}
+                verifier={verification.role === 'verifier'}
+              />
+            </View>
+          )}
+          <Text
+            numberOfLines={1}
+            style={[
+              a.pl_xs,
+              a.text_md,
+              a.leading_tight,
+              a.flex_shrink,
+              t.atoms.text_contrast_medium,
+            ]}>
+            {sanitizeHandle(author.profile.handle, '@')}
+          </Text>
+        </View>
+      </View>
+    </Link>
   )
 }
 

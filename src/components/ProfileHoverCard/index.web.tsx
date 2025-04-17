@@ -481,7 +481,7 @@ function Inner({
                 moderation.ui('displayName'),
               )}
             </Text>
-            {verification.isVerified && (
+            {verification.showBadge && (
               <View style={[a.pl_xs]}>
                 <VerificationCheck
                   width={16}

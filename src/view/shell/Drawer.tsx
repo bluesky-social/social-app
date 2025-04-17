@@ -90,7 +90,7 @@ let DrawerProfileCard = ({
             numberOfLines={1}>
             {profile?.displayName || account.handle}
           </Text>
-          {verification.isVerified && (
+          {verification.showBadge && (
             <View
               style={{
                 top: 1,

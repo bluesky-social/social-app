@@ -101,7 +101,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 ),
               )}
             </WebOnlyInlineLinkText>
-            {verification.isVerified && (
+            {verification.showBadge && (
               <View style={[a.pl_xs, a.self_center]}>
                 <VerificationCheck
                   width={14}

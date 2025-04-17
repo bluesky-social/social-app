@@ -197,7 +197,7 @@ export function Name({
         numberOfLines={1}>
         {name}
       </Text>
-      {verification.isVerified && (
+      {verification.showBadge && (
         <View style={[a.pl_xs]}>
           <VerificationCheck
             width={14}

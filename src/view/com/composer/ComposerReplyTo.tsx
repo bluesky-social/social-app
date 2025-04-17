@@ -101,7 +101,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
                 sanitizeHandle(replyTo.author.handle),
             )}
           </Text>
-          {verification.isVerified && (
+          {verification.showBadge && (
             <View style={[a.pl_xs]}>
               <VerificationCheck
                 width={14}

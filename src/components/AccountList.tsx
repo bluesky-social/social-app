@@ -153,7 +153,7 @@ function AccountItem({
                   profile?.displayName || profile?.handle || account.handle,
                 )}
               </Text>
-              {verification.isVerified && (
+              {verification.showBadge && (
                 <View>
                   <VerificationCheck
                     width={12}
