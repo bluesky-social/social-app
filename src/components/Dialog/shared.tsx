@@ -63,7 +63,7 @@ export function HeaderText({
   style?: StyleProp<TextStyle>
 }) {
   return (
-    <Text style={[a.text_lg, a.text_center, a.font_bold, style]}>
+    <Text style={[a.text_lg, a.text_center, a.font_heavy, style]}>
       {children}
     </Text>
   )
