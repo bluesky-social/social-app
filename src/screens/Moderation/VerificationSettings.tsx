@@ -3,11 +3,12 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {urls} from '#/lib/constants'
+import {logger} from '#/logger'
 import {
   usePreferencesQuery,
   type UsePreferencesQueryResponse,
 } from '#/state/queries/preferences'
-import {useSetFeedViewPreferencesMutation} from '#/state/queries/preferences'
+import {useSetVerificationPrefsMutation} from '#/state/queries/preferences'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useGutters} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -42,7 +43,12 @@ export function Screen() {
                 platforms.{' '}
                 <InlineLinkText
                   to={urls.website.blog.initialVerificationAnnouncement}
-                  label={_(msg`Learn more`)}>
+                  label={_(msg`Learn more`)}
+                  onPress={() => {
+                    logger.metric('verification:learn-more', {
+                      location: 'verificationSettings',
+                    })
+                  }}>
                   Learn more here.
                 </InlineLinkText>
               </Trans>
@@ -65,7 +71,7 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
   const {_} = useLingui()
   const {hideBadges} = preferences.verificationPrefs
   const {mutate: setVerificationPrefs, isPending} =
-    useSetFeedViewPreferencesMutation()
+    useSetVerificationPrefsMutation()
 
   return (
     <Toggle.Item

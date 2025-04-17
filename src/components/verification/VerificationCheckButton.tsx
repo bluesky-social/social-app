@@ -2,6 +2,7 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/types'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
@@ -95,6 +96,7 @@ export function Badge({
         }
         hitSlop={20}
         onPress={() => {
+          logger.metric('verification:badge:click', {})
           if (state.profile.role === 'verifier') {
             verifierDialogControl.open()
           } else {

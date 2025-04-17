@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {urls} from '#/lib/constants'
 import {getUserDisplayName} from '#/lib/getUserDisplayName'
+import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -151,7 +152,12 @@ function Inner({
           size="small"
           variant="solid"
           color="secondary"
-          style={[a.justify_center]}>
+          style={[a.justify_center]}
+          onPress={() => {
+            logger.metric('verification:learn-more', {
+              location: 'verificationsDialog',
+            })
+          }}>
           <ButtonText>
             <Trans>Learn more</Trans>
           </ButtonText>

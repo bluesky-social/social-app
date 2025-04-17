@@ -5,6 +5,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {urls} from '#/lib/constants'
+import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -13,7 +14,7 @@ import {useNuxDialogContext} from '#/components/dialogs/nuxs'
 import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
 import {VerifierCheck} from '#/components/icons/VerifierCheck'
 import {Link} from '#/components/Link'
-import {Span,Text} from '#/components/Typography'
+import {Span, Text} from '#/components/Typography'
 
 export function InitialVerificationAnnouncement() {
   const t = useTheme()
@@ -157,7 +158,12 @@ export function InitialVerificationAnnouncement() {
               size="small"
               variant="solid"
               color="primary"
-              style={[a.justify_center, a.w_full]}>
+              style={[a.justify_center, a.w_full]}
+              onPress={() => {
+                logger.metric('verification:learn-more', {
+                  location: 'initialAnnouncementeNux',
+                })
+              }}>
               <ButtonText>
                 <Trans>Read blog post</Trans>
               </ButtonText>

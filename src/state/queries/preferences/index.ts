@@ -167,9 +167,13 @@ export function useSetFeedViewPreferencesMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
-  return useMutation<void, unknown, AppBskyActorDefs.VerificationPrefs>({
+  return useMutation<void, unknown, Partial<BskyFeedViewPreference>>({
     mutationFn: async prefs => {
-      await agent.setVerificationPrefs(prefs)
+      /*
+       * special handling here, merged into `feedViewPrefs` above, since
+       * following was previously called `home`
+       */
+      await agent.setFeedViewPrefs('home', prefs)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -408,13 +412,14 @@ export function useSetVerificationPrefsMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
-  return useMutation<void, unknown, Partial<BskyFeedViewPreference>>({
+  return useMutation<void, unknown, AppBskyActorDefs.VerificationPrefs>({
     mutationFn: async prefs => {
-      /*
-       * special handling here, merged into `feedViewPrefs` above, since
-       * following was previously called `home`
-       */
-      await agent.setFeedViewPrefs('home', prefs)
+      await agent.setVerificationPrefs(prefs)
+      if (prefs.hideBadges) {
+        logger.metric('verification:settings:hideBadges', {})
+      } else {
+        logger.metric('verification:settings:unHideBadges', {})
+      }
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
