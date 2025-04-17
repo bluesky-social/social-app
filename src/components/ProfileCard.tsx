@@ -166,29 +166,47 @@ export function NameAndHandle({
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
-  const t = useTheme()
+  return (
+    <View style={[a.flex_1]}>
+      <Name profile={profile} moderationOpts={moderationOpts} />
+      <Handle profile={profile} />
+    </View>
+  )
+}
+
+export function Name({
+  profile,
+  moderationOpts,
+}: {
+  profile: bsky.profile.AnyProfileView
+  moderationOpts: ModerationOpts
+}) {
   const moderation = moderateProfile(profile, moderationOpts)
   const name = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),
     moderation.ui('displayName'),
   )
+  return (
+    <Text
+      emoji
+      style={[a.text_md, a.font_bold, a.leading_snug, a.self_start]}
+      numberOfLines={1}>
+      {name}
+    </Text>
+  )
+}
+
+export function Handle({profile}: {profile: bsky.profile.AnyProfileView}) {
+  const t = useTheme()
   const handle = sanitizeHandle(profile.handle, '@')
 
   return (
-    <View style={[a.flex_1]}>
-      <Text
-        emoji
-        style={[a.text_md, a.font_bold, a.leading_snug, a.self_start]}
-        numberOfLines={1}>
-        {name}
-      </Text>
-      <Text
-        emoji
-        style={[a.leading_snug, t.atoms.text_contrast_medium]}
-        numberOfLines={1}>
-        {handle}
-      </Text>
-    </View>
+    <Text
+      emoji
+      style={[a.leading_snug, t.atoms.text_contrast_medium]}
+      numberOfLines={1}>
+      {handle}
+    </Text>
   )
 }
 

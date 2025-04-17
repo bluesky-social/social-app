@@ -1,4 +1,5 @@
-import React, {
+import {
+  Fragment,
   useCallback,
   useLayoutEffect,
   useMemo,
@@ -6,7 +7,7 @@ import React, {
   useState,
 } from 'react'
 import {TextInput, View} from 'react-native'
-import {moderateProfile, ModerationOpts} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -18,48 +19,62 @@ import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
-import {ListMethods} from '#/view/com/util/List'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, native, useTheme, web} from '#/alf'
+import {type ListMethods} from '#/view/com/util/List'
+import {android, atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {canBeMessaged} from '#/components/dms/util'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 
-type Item =
-  | {
-      type: 'profile'
-      key: string
-      enabled: boolean
-      profile: bsky.profile.AnyProfileView
-    }
-  | {
-      type: 'empty'
-      key: string
-      message: string
-    }
-  | {
-      type: 'placeholder'
-      key: string
-    }
-  | {
-      type: 'error'
-      key: string
-    }
+export type ProfileItem = {
+  type: 'profile'
+  key: string
+  profile: bsky.profile.AnyProfileView
+}
+
+type EmptyItem = {
+  type: 'empty'
+  key: string
+  message: string
+}
+
+type PlaceholderItem = {
+  type: 'placeholder'
+  key: string
+}
+
+type ErrorItem = {
+  type: 'error'
+  key: string
+}
+
+type Item = ProfileItem | EmptyItem | PlaceholderItem | ErrorItem
 
 export function SearchablePeopleList({
   title,
-  onSelectChat,
   showRecentConvos,
+  sortByMessageDeclaration,
+  onSelectChat,
+  renderProfileCard,
 }: {
   title: string
-  onSelectChat: (did: string) => void
   showRecentConvos?: boolean
-}) {
+  sortByMessageDeclaration?: boolean
+} & (
+  | {
+      renderProfileCard: (item: ProfileItem) => React.ReactNode
+      onSelectChat?: undefined
+    }
+  | {
+      onSelectChat: (did: string) => void
+      renderProfileCard?: undefined
+    }
+)) {
   const t = useTheme()
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -98,15 +113,17 @@ export function SearchablePeopleList({
           _items.push({
             type: 'profile',
             key: profile.did,
-            enabled: canBeMessaged(profile),
             profile,
           })
         }
 
-        _items = _items.sort(item => {
-          // @ts-ignore
-          return item.enabled ? -1 : 1
-        })
+        if (sortByMessageDeclaration) {
+          _items = _items.sort(item => {
+            return item.type === 'profile' && canBeMessaged(item.profile)
+              ? -1
+              : 1
+          })
+        }
       }
     } else {
       const placeholders: Item[] = Array(10)
@@ -134,14 +151,13 @@ export function SearchablePeopleList({
                 _items.push({
                   type: 'profile',
                   key: profile.did,
-                  enabled: true,
                   profile,
                 })
               }
             }
           }
 
-          let followsItems: typeof _items = []
+          let followsItems: ProfileItem[] = []
 
           for (const page of follows.pages) {
             for (const profile of page.follows) {
@@ -150,17 +166,17 @@ export function SearchablePeopleList({
               followsItems.push({
                 type: 'profile',
                 key: profile.did,
-                enabled: canBeMessaged(profile),
                 profile,
               })
             }
           }
 
-          // only sort follows
-          followsItems = followsItems.sort(item => {
-            // @ts-ignore
-            return item.enabled ? -1 : 1
-          })
+          if (sortByMessageDeclaration) {
+            // only sort follows
+            followsItems = followsItems.sort(item => {
+              return canBeMessaged(item.profile) ? -1 : 1
+            })
+          }
 
           // then append
           _items.push(...followsItems)
@@ -173,16 +189,18 @@ export function SearchablePeopleList({
             _items.push({
               type: 'profile',
               key: profile.did,
-              enabled: canBeMessaged(profile),
               profile,
             })
           }
         }
 
-        _items = _items.sort(item => {
-          // @ts-ignore
-          return item.enabled ? -1 : 1
-        })
+        if (sortByMessageDeclaration) {
+          _items = _items.sort(item => {
+            return item.type === 'profile' && canBeMessaged(item.profile)
+              ? -1
+              : 1
+          })
+        }
       } else {
         _items.push(...placeholders)
       }
@@ -198,6 +216,7 @@ export function SearchablePeopleList({
     follows,
     convos,
     showRecentConvos,
+    sortByMessageDeclaration,
   ])
 
   if (searchText && !isFetching && !items.length && !isError) {
@@ -208,15 +227,18 @@ export function SearchablePeopleList({
     ({item}: {item: Item}) => {
       switch (item.type) {
         case 'profile': {
-          return (
-            <ProfileCard
-              key={item.key}
-              enabled={item.enabled}
-              profile={item.profile}
-              moderationOpts={moderationOpts!}
-              onPress={onSelectChat}
-            />
-          )
+          if (renderProfileCard) {
+            return <Fragment key={item.key}>{renderProfileCard(item)}</Fragment>
+          } else {
+            return (
+              <DefaultProfileCard
+                key={item.key}
+                profile={item.profile}
+                moderationOpts={moderationOpts!}
+                onPress={onSelectChat}
+              />
+            )
+          }
         }
         case 'placeholder': {
           return <ProfileCardSkeleton key={item.key} />
@@ -228,7 +250,7 @@ export function SearchablePeopleList({
           return null
       }
     },
-    [moderationOpts, onSelectChat],
+    [moderationOpts, onSelectChat, renderProfileCard],
   )
 
   useLayoutEffect(() => {
@@ -247,6 +269,10 @@ export function SearchablePeopleList({
           a.relative,
           web(a.pt_lg),
           native(a.pt_4xl),
+          android({
+            borderTopLeftRadius: a.rounded_md.borderRadius,
+            borderTopRightRadius: a.rounded_md.borderRadius,
+          }),
           a.pb_xs,
           a.px_lg,
           a.border_b,
@@ -327,19 +353,18 @@ export function SearchablePeopleList({
   )
 }
 
-function ProfileCard({
-  enabled,
+function DefaultProfileCard({
   profile,
   moderationOpts,
   onPress,
 }: {
-  enabled: boolean
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   onPress: (did: string) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const enabled = canBeMessaged(profile)
   const moderation = moderateProfile(profile, moderationOpts)
   const handle = sanitizeHandle(profile.handle, '@')
   const displayName = sanitizeDisplayName(
@@ -360,38 +385,35 @@ function ProfileCard({
         <View
           style={[
             a.flex_1,
-            a.py_md,
+            a.py_sm,
             a.px_lg,
-            a.gap_md,
-            a.align_center,
-            a.flex_row,
             !enabled
               ? {opacity: 0.5}
-              : pressed || focused
+              : pressed || focused || hovered
               ? t.atoms.bg_contrast_25
-              : hovered
-              ? t.atoms.bg_contrast_50
               : t.atoms.bg,
           ]}>
-          <UserAvatar
-            size={42}
-            avatar={profile.avatar}
-            moderation={moderation.ui('avatar')}
-            type={profile.associated?.labeler ? 'labeler' : 'user'}
-          />
-          <View style={[a.flex_1, a.gap_2xs]}>
-            <Text
-              style={[t.atoms.text, a.font_bold, a.leading_tight, a.self_start]}
-              numberOfLines={1}
-              emoji>
-              {displayName}
-            </Text>
-            <Text
-              style={[a.leading_tight, t.atoms.text_contrast_high]}
-              numberOfLines={2}>
-              {!enabled ? <Trans>{handle} can't be messaged</Trans> : handle}
-            </Text>
-          </View>
+          <ProfileCard.Header>
+            <ProfileCard.Avatar
+              profile={profile}
+              moderationOpts={moderationOpts}
+            />
+            <View style={[a.flex_1]}>
+              <ProfileCard.Name
+                profile={profile}
+                moderationOpts={moderationOpts}
+              />
+              {enabled ? (
+                <ProfileCard.Handle profile={profile} />
+              ) : (
+                <Text
+                  style={[a.leading_snug, t.atoms.text_contrast_high]}
+                  numberOfLines={2}>
+                  <Trans>{handle} can't be messaged</Trans>
+                </Text>
+              )}
+            </View>
+          </ProfileCard.Header>
         </View>
       )}
     </Button>
