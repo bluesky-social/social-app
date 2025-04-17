@@ -60,7 +60,6 @@ import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/com
 import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {StarterPack} from '#/components/icons/StarterPack'
 import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
-import {VerifierCheck} from '#/components/icons/VerifierCheck'
 import {InlineLinkText, Link} from '#/components/Link'
 import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -421,15 +420,15 @@ let NotificationFeedItem = ({
     )
     icon = <VerifiedCheck size="xl" />
     // @ts-ignore TODO
-  } else if (item.type === 'verifier') {
+  } else if (item.type === 'unverified') {
     a11yLabel = hasMultipleAuthors
       ? _(
           msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
             one: `${formattedAuthorsCount} other`,
             other: `${formattedAuthorsCount} others`,
-          })} made you a trusted verifier`,
+          })} removed their verifications from your account`,
         )
-      : _(msg`${firstAuthorName} made you a trusted verifier`)
+      : _(msg`${firstAuthorName} removed their verification from your account`)
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
@@ -440,12 +439,14 @@ let NotificationFeedItem = ({
             other={`${formattedAuthorsCount} others`}
           />
         </Text>{' '}
-        made you a trusted verifier
+        removed their verifications from your account
       </Trans>
     ) : (
-      <Trans>{firstAuthorLink} made you a trusted verifier</Trans>
+      <Trans>
+        {firstAuthorLink} removed their verification from your account
+      </Trans>
     )
-    icon = <VerifierCheck size="xl" />
+    icon = <VerifiedCheck size="xl" fill={t.palette.contrast_500} />
   } else {
     return null
   }
