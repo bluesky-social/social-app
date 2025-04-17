@@ -1,8 +1,17 @@
 import {useMemo} from 'react'
-import {type AppBskyFeedDefs, moderatePost} from '@atproto/api'
+import {
+  type AppBskyActorDefs,
+  AppBskyFeedDefs,
+  AtUri,
+  moderatePost,
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useInfiniteQuery} from '@tanstack/react-query'
+import {
+  type InfiniteData,
+  type QueryClient,
+  useInfiniteQuery,
+} from '@tanstack/react-query'
 
 import {CustomFeedAPI} from '#/lib/api/feed/custom'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
@@ -14,16 +23,56 @@ import {
   type FeedPostSliceItem,
 } from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
+import {
+  didOrHandleUriMatches,
+  embedViewRecordToPostView,
+  getEmbeddedPost,
+} from '#/state/queries/util'
 import {useAgent} from '#/state/session'
 
 const RQKEY_ROOT = 'feed-previews'
 const RQKEY = (feeds: string[]) => [RQKEY_ROOT, feeds]
 
 const LIMIT = 8 // sliced to 6, overfetch to account for moderation
+const PINNED_POST_URIS: Record<string, boolean> = {
+  // 📰 News
+  'at://did:plc:kkf4naxqmweop7dv4l2iqqf5/app.bsky.feed.post/3lgh27w2ngc2b':
+    true,
+  // Gardening
+  'at://did:plc:5rw2on4i56btlcajojaxwcat/app.bsky.feed.post/3kjorckgcwc27':
+    true,
+  // Web Development Trending
+  'at://did:plc:m2sjv3wncvsasdapla35hzwj/app.bsky.feed.post/3lfaw445axs22':
+    true,
+  // Anime & Manga EN
+  'at://did:plc:tazrmeme4dzahimsykusrwrk/app.bsky.feed.post/3knxx2gmkns2y':
+    true,
+  // 📽️ Film
+  'at://did:plc:2hwwem55ce6djnk6bn62cstr/app.bsky.feed.post/3llhpzhbq7c2g':
+    true,
+  // PopSky
+  'at://did:plc:lfdf4srj43iwdng7jn35tjsp/app.bsky.feed.post/3lbblgly65c2g':
+    true,
+  // Science
+  'at://did:plc:hu2obebw3nhfj667522dahfg/app.bsky.feed.post/3kl33otd6ob2s':
+    true,
+  // Birds! 🦉
+  'at://did:plc:ffkgesg3jsv2j7aagkzrtcvt/app.bsky.feed.post/3lbg4r57yk22d':
+    true,
+  // Astronomy
+  'at://did:plc:xy2zorw2ys47poflotxthlzg/app.bsky.feed.post/3kyzye4lujs2w':
+    true,
+  // What's Cooking 🍽️
+  'at://did:plc:geoqe3qls5mwezckxxsewys2/app.bsky.feed.post/3lfqhgvxbqc2q':
+    true,
+  // BookSky 💙📚 #booksky
+  'at://did:plc:geoqe3qls5mwezckxxsewys2/app.bsky.feed.post/3kgrm2rw5ww2e':
+    true,
+}
 
 export type FeedPreviewItem =
   | {
-      type: 'topBorder'
+      type: 'preview:spacer'
       key: string
     }
   | {
@@ -59,6 +108,7 @@ export type FeedPreviewItem =
       key: string
       slice: FeedPostSlice
       indexInSlice: number
+      feed: AppBskyFeedDefs.GeneratorView
       showReplyTo: boolean
       hideTopBorder: boolean
     }
@@ -68,14 +118,25 @@ export type FeedPreviewItem =
       uri: string
     }
 
-export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
+export function useFeedPreviews(
+  feedsMaybeWithDuplicates: AppBskyFeedDefs.GeneratorView[],
+  isEnabled: boolean = true,
+) {
+  const feeds = useMemo(
+    () =>
+      feedsMaybeWithDuplicates.filter(
+        (f, i, a) => i === a.findIndex(f2 => f.uri === f2.uri),
+      ),
+    [feedsMaybeWithDuplicates],
+  )
+
   const uris = feeds.map(feed => feed.uri)
   const {_} = useLingui()
   const agent = useAgent()
   const {data: preferences} = usePreferencesQuery()
   const userInterests = aggregateUserInterests(preferences)
   const moderationOpts = useModerationOpts()
-  const enabled = feeds.length > 0
+  const enabled = feeds.length > 0 && isEnabled
 
   const query = useInfiniteQuery({
     enabled,
@@ -106,6 +167,11 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
       const items: FeedPreviewItem[] = []
 
       if (!enabled) return items
+
+      items.push({
+        type: 'preview:spacer',
+        key: 'spacer',
+      })
 
       const isEmpty =
         !isPending && !data?.pages?.some(page => page.posts.length)
@@ -144,26 +210,31 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
               })
 
               const slice = {
-                _reactKey: item._reactKey,
+                _reactKey: page.feed.uri + item._reactKey,
                 _isFeedPostSlice: true,
                 isFallbackMarker: false,
                 isIncompleteThread: item.isIncompleteThread,
                 feedContext: item.feedContext,
                 reason: item.reason,
                 feedPostUri: item.feedPostUri,
-                items: item.items.slice(0, 6).map((subItem, i) => {
-                  const feedPostSliceItem: FeedPostSliceItem = {
-                    _reactKey: `${item._reactKey}-${i}-${subItem.post.uri}`,
-                    uri: subItem.post.uri,
-                    post: subItem.post,
-                    record: subItem.record,
-                    moderation: moderations[i],
-                    parentAuthor: subItem.parentAuthor,
-                    isParentBlocked: subItem.isParentBlocked,
-                    isParentNotFound: subItem.isParentNotFound,
-                  }
-                  return feedPostSliceItem
-                }),
+                items: item.items
+                  .slice(0, 6)
+                  .filter(subItem => {
+                    return !PINNED_POST_URIS[subItem.post.uri]
+                  })
+                  .map((subItem, i) => {
+                    const feedPostSliceItem: FeedPostSliceItem = {
+                      _reactKey: `${item._reactKey}-${i}-${subItem.post.uri}`,
+                      uri: subItem.post.uri,
+                      post: subItem.post,
+                      record: subItem.record,
+                      moderation: moderations[i],
+                      parentAuthor: subItem.parentAuthor,
+                      isParentBlocked: subItem.isParentBlocked,
+                      isParentNotFound: subItem.isParentNotFound,
+                    }
+                    return feedPostSliceItem
+                  }),
               }
               if (slice.isIncompleteThread && slice.items.length >= 3) {
                 const beforeLast = slice.items.length - 2
@@ -173,6 +244,7 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
                   key: slice.items[0]._reactKey,
                   slice: slice,
                   indexInSlice: 0,
+                  feed: page.feed,
                   showReplyTo: false,
                   hideTopBorder: rowIndex === 0,
                 })
@@ -186,6 +258,7 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
                   key: slice.items[beforeLast]._reactKey,
                   slice: slice,
                   indexInSlice: beforeLast,
+                  feed: page.feed,
                   showReplyTo:
                     slice.items[beforeLast].parentAuthor?.did !==
                     slice.items[beforeLast].post.author.did,
@@ -196,6 +269,7 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
                   key: slice.items[last]._reactKey,
                   slice: slice,
                   indexInSlice: last,
+                  feed: page.feed,
                   showReplyTo: false,
                   hideTopBorder: false,
                 })
@@ -206,6 +280,7 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
                     key: slice.items[i]._reactKey,
                     slice: slice,
                     indexInSlice: i,
+                    feed: page.feed,
                     showReplyTo: i === 0,
                     hideTopBorder: i === 0 && rowIndex === 0,
                   })
@@ -216,23 +291,17 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
             }
 
             if (slices.length > 0) {
-              if (pageIndex > 0) {
-                items.push({
-                  type: 'topBorder',
-                  key: `topBorder-${page.feed.uri}`,
-                })
-              }
               items.push(
-                {
-                  type: 'preview:footer',
-                  key: `footer-${page.feed.uri}`,
-                },
                 {
                   type: 'preview:header',
                   key: `header-${page.feed.uri}`,
                   feed: page.feed,
                 },
                 ...slices,
+                {
+                  type: 'preview:footer',
+                  key: `footer-${page.feed.uri}`,
+                },
               )
             }
           }
@@ -260,5 +329,105 @@ export function useFeedPreviews(feeds: AppBskyFeedDefs.GeneratorView[]) {
       _,
       error,
     ]),
+  }
+}
+
+export function* findAllPostsInQueryData(
+  queryClient: QueryClient,
+  uri: string,
+): Generator<AppBskyFeedDefs.PostView, undefined> {
+  const atUri = new AtUri(uri)
+
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<{
+      feed: AppBskyFeedDefs.GeneratorView
+      posts: AppBskyFeedDefs.FeedViewPost[]
+    }>
+  >({
+    queryKey: [RQKEY_ROOT],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData?.pages) {
+      for (const item of page.posts) {
+        if (didOrHandleUriMatches(atUri, item.post)) {
+          yield item.post
+        }
+
+        const quotedPost = getEmbeddedPost(item.post.embed)
+        if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
+          yield embedViewRecordToPostView(quotedPost)
+        }
+
+        if (AppBskyFeedDefs.isPostView(item.reply?.parent)) {
+          if (didOrHandleUriMatches(atUri, item.reply.parent)) {
+            yield item.reply.parent
+          }
+
+          const parentQuotedPost = getEmbeddedPost(item.reply.parent.embed)
+          if (
+            parentQuotedPost &&
+            didOrHandleUriMatches(atUri, parentQuotedPost)
+          ) {
+            yield embedViewRecordToPostView(parentQuotedPost)
+          }
+        }
+
+        if (AppBskyFeedDefs.isPostView(item.reply?.root)) {
+          if (didOrHandleUriMatches(atUri, item.reply.root)) {
+            yield item.reply.root
+          }
+
+          const rootQuotedPost = getEmbeddedPost(item.reply.root.embed)
+          if (rootQuotedPost && didOrHandleUriMatches(atUri, rootQuotedPost)) {
+            yield embedViewRecordToPostView(rootQuotedPost)
+          }
+        }
+      }
+    }
+  }
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<AppBskyActorDefs.ProfileViewBasic, undefined> {
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<{
+      feed: AppBskyFeedDefs.GeneratorView
+      posts: AppBskyFeedDefs.FeedViewPost[]
+    }>
+  >({
+    queryKey: [RQKEY_ROOT],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData?.pages) {
+      for (const item of page.posts) {
+        if (item.post.author.did === did) {
+          yield item.post.author
+        }
+        const quotedPost = getEmbeddedPost(item.post.embed)
+        if (quotedPost?.author.did === did) {
+          yield quotedPost.author
+        }
+        if (
+          AppBskyFeedDefs.isPostView(item.reply?.parent) &&
+          item.reply?.parent?.author.did === did
+        ) {
+          yield item.reply.parent.author
+        }
+        if (
+          AppBskyFeedDefs.isPostView(item.reply?.root) &&
+          item.reply?.root?.author.did === did
+        ) {
+          yield item.reply.root.author
+        }
+      }
+    }
   }
 }

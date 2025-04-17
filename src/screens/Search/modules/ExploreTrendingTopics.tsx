@@ -1,9 +1,11 @@
+import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
-import {type AppBskyUnspeccedDefs} from '@atproto/api'
+import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useTrendingSettings} from '#/state/preferences/trending'
 import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery'
 import {useTrendingConfig} from '#/state/trending-config'
@@ -15,6 +17,7 @@ import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Flame_Stroke2_Corner1_Rounded as FlameIcon} from '#/components/icons/Flame'
 import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
 import {Link} from '#/components/Link'
+import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 
 const TOPIC_COUNT = 5
@@ -26,10 +29,10 @@ export function ExploreTrendingTopics() {
 }
 
 function Inner() {
-  const {data: trending, error, isLoading} = useGetTrendsQuery()
+  const {data: trending, error, isLoading, isRefetching} = useGetTrendsQuery()
   const noTopics = !isLoading && !error && !trending?.trends?.length
 
-  return isLoading ? (
+  return isLoading || isRefetching ? (
     Array.from({length: TOPIC_COUNT}).map((__, i) => (
       <TrendingTopicRowSkeleton key={i} withPosts={i === 0} />
     ))
@@ -78,6 +81,8 @@ export function TrendRow({
       )
     : null
 
+  const actors = useModerateTrendingActors(trend.actors)
+
   return (
     <Link
       testID={trend.link}
@@ -88,25 +93,23 @@ export function TrendRow({
       PressableComponent={Pressable}>
       {({hovered, pressed}) => (
         <>
-          <View
-            style={[
-              gutters,
-              a.w_full,
-              a.py_lg,
-              a.flex_row,
-              a.gap_2xs,
-              (hovered || pressed) && t.atoms.bg_contrast_25,
-            ]}>
+          <SubtleHover hover={hovered || pressed} />
+          <View style={[gutters, a.w_full, a.py_lg, a.flex_row, a.gap_2xs]}>
             <View style={[a.flex_1, a.gap_xs]}>
               <View style={[a.flex_row]}>
                 <Text
-                  style={[a.text_md, a.font_bold, a.leading_snug, {width: 20}]}>
+                  style={[
+                    a.text_md,
+                    a.font_bold,
+                    a.leading_tight,
+                    {width: 20},
+                  ]}>
                   <Trans comment='The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"'>
                     {rank}.
                   </Trans>
                 </Text>
                 <Text
-                  style={[a.text_md, a.font_bold, a.leading_snug]}
+                  style={[a.text_md, a.font_bold, a.leading_tight]}
                   numberOfLines={1}>
                   {trend.displayName}
                 </Text>
@@ -118,8 +121,8 @@ export function TrendRow({
                   a.align_center,
                   {paddingLeft: 20},
                 ]}>
-                {trend.actors.length > 0 && (
-                  <AvatarStack size={20} profiles={trend.actors} />
+                {actors.length > 0 && (
+                  <AvatarStack size={20} profiles={actors} />
                 )}
                 <Text
                   style={[
@@ -275,4 +278,21 @@ export function TrendingTopicRowSkeleton({}: {withPosts: boolean}) {
       </View>
     </View>
   )
+}
+
+function useModerateTrendingActors(
+  actors: AppBskyUnspeccedDefs.TrendView['actors'],
+) {
+  const moderationOpts = useModerationOpts()
+
+  return useMemo(() => {
+    if (!moderationOpts) return []
+
+    return actors
+      .filter(actor => {
+        const decision = moderateProfile(actor, moderationOpts)
+        return !decision.ui('avatar').filter && !decision.ui('avatar').blur
+      })
+      .slice(0, 3)
+  }, [actors, moderationOpts])
 }

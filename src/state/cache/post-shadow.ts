@@ -2,18 +2,19 @@ import {useEffect, useMemo, useState} from 'react'
 import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
 } from '@atproto/api'
-import {QueryClient} from '@tanstack/react-query'
+import {type QueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
-import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '../queries/notifications/feed'
-import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '../queries/post-feed'
-import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '../queries/post-quotes'
-import {findAllPostsInQueryData as findAllPostsInThreadQueryData} from '../queries/post-thread'
-import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '../queries/search-posts'
-import {castAsShadow, Shadow} from './types'
+import {findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData} from '#/state/queries/explore-feed-previews'
+import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '#/state/queries/notifications/feed'
+import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '#/state/queries/post-feed'
+import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
+import {findAllPostsInQueryData as findAllPostsInThreadQueryData} from '#/state/queries/post-thread'
+import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '#/state/queries/search-posts'
+import {castAsShadow, type Shadow} from './types'
 export type {Shadow} from './types'
 
 export interface PostShadow {
@@ -152,6 +153,12 @@ function* findPostsInCache(
     yield post
   }
   for (let post of findAllPostsInQuoteQueryData(queryClient, uri)) {
+    yield post
+  }
+  for (let post of findAllPostsInExploreFeedPreviewsQueryData(
+    queryClient,
+    uri,
+  )) {
     yield post
   }
 }

@@ -13,15 +13,14 @@ export const createSuggestedStarterPacksQueryKey = () => [
   'suggested-starter-packs',
 ]
 
-export function useSuggestedStarterPacksQuery() {
+export function useSuggestedStarterPacksQuery({enabled}: {enabled?: boolean}) {
   const agent = useAgent()
   const {data: preferences} = usePreferencesQuery()
   const contentLangs = getContentLanguages().join(',')
 
   return useQuery({
-    enabled: !!preferences,
-    refetchOnWindowFocus: true,
-    staleTime: STALE.MINUTES.ONE,
+    enabled: !!preferences && enabled !== false,
+    staleTime: STALE.MINUTES.THREE,
     queryKey: createSuggestedStarterPacksQueryKey(),
     async queryFn() {
       const {data} = await agent.app.bsky.unspecced.getSuggestedStarterPacks(
