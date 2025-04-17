@@ -172,7 +172,7 @@ function GifList({
           </Button>
         )}
 
-        <TextField.Root>
+        <TextField.Root style={[!gtMobile && isWeb && a.flex_1]}>
           <TextField.Icon icon={Search} />
           <TextField.Input
             label={_(msg`Search GIFs`)}
@@ -206,11 +206,9 @@ function GifList({
         renderItem={renderItem}
         numColumns={gtMobile ? 3 : 2}
         columnWrapperStyle={[a.gap_sm]}
-        contentContainerStyle={[
-          native([a.px_xl, {minHeight: height}]),
-          web(a.h_full_vh),
-        ]}
-        style={[web(a.h_full_vh)]}
+        contentContainerStyle={[native([a.px_xl, {minHeight: height}])]}
+        webInnerStyle={[web({minHeight: '80vh'})]}
+        webInnerContentContainerStyle={[web(a.pb_0)]}
         ListHeaderComponent={
           <>
             {listHeader}
