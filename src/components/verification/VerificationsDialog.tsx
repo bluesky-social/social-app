@@ -15,7 +15,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
-import {InlineLinkText, Link} from '#/components/Link'
+import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
@@ -115,15 +115,7 @@ function Inner({
           {profile.verification.verifications.some(v => !v.isValid) &&
             state.profile.isViewer && (
               <Admonition type="warning" style={[a.mt_xs]}>
-                <Trans>
-                  Some of your verifications are invalid.{' '}
-                  <InlineLinkText
-                    label={_(msg`Learn more about verification on Bluesky`)}
-                    to={urls.website.blog.initialVerificationAnnouncement}>
-                    Click here
-                  </InlineLinkText>{' '}
-                  to learn more.
-                </Trans>
+                <Trans>Some of your verifications are invalid.</Trans>
               </Admonition>
             )}
         </View>
