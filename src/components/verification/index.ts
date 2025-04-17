@@ -82,7 +82,7 @@ export function getSimpleVerificationState({
   if (!profile || !profile.verification) {
     return {
       role: 'default',
-      isVerified: false,
+      isVerified: true,
     }
   }
 

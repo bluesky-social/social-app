@@ -12,7 +12,7 @@ import {getTabState, TabState} from '#/lib/routes/helpers'
 import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {colors} from '#/lib/styles'
-import {isAndroid, isWeb} from '#/platform/detection'
+import {isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
@@ -86,13 +86,7 @@ let DrawerProfileCard = ({
         <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
           <Text
             emoji
-            style={[
-              a.font_heavy,
-              a.text_xl,
-              a.mt_2xs,
-              a.leading_tight,
-              isAndroid ? a.flex_1 : a.flex_shrink,
-            ]}
+            style={[a.font_heavy, a.text_xl, a.mt_2xs, a.leading_tight]}
             numberOfLines={1}>
             {profile?.displayName || account.handle}
           </Text>

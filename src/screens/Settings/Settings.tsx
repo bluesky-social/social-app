@@ -300,20 +300,12 @@ function ProfilePreview({
         type={shadow.associated?.labeler ? 'labeler' : 'user'}
       />
 
-      <View
-        style={[
-          a.flex_row,
-          a.gap_sm,
-          a.align_center,
-          a.justify_center,
-          a.w_full,
-        ]}>
+      <View style={[a.flex_row, a.gap_xs, a.align_center]}>
         <Text
           emoji
           testID="profileHeaderDisplayName"
           numberOfLines={1}
           style={[
-            a.flex_shrink,
             a.pt_sm,
             t.atoms.text,
             gtMobile ? a.text_4xl : a.text_3xl,
@@ -328,7 +320,7 @@ function ProfilePreview({
           <View
             style={[
               {
-                marginTop: platform({web: 10, ios: 2}),
+                marginTop: platform({web: 10, ios: 9, android: 13}),
               },
             ]}>
             <VerificationCheckButton profile={shadow} size="lg" />
