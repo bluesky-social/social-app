@@ -17,7 +17,6 @@ import * as InviteCodesModal from './InviteCodes'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as LinkWarningModal from './LinkWarning'
-import * as UserAddRemoveListsModal from './UserAddRemoveLists'
 import * as VerifyEmailModal from './VerifyEmail'
 
 const DEFAULT_SNAPPOINTS = ['90%']
@@ -57,9 +56,6 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'create-or-edit-list') {
     snapPoints = CreateOrEditListModal.snapPoints
     element = <CreateOrEditListModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'user-add-remove-lists') {
-    snapPoints = UserAddRemoveListsModal.snapPoints
-    element = <UserAddRemoveListsModal.Component {...activeModal} />
   } else if (activeModal?.name === 'delete-account') {
     snapPoints = DeleteAccountModal.snapPoints
     element = <DeleteAccountModal.Component />

@@ -16,7 +16,6 @@ import * as InviteCodesModal from './InviteCodes'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as LinkWarningModal from './LinkWarning'
-import * as UserAddRemoveLists from './UserAddRemoveLists'
 import * as VerifyEmailModal from './VerifyEmail'
 
 export function ModalsContainer() {
@@ -62,8 +61,6 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <EditProfileModal.Component {...modal} />
   } else if (modal.name === 'create-or-edit-list') {
     element = <CreateOrEditListModal.Component {...modal} />
-  } else if (modal.name === 'user-add-remove-lists') {
-    element = <UserAddRemoveLists.Component {...modal} />
   } else if (modal.name === 'crop-image') {
     element = <CropImageModal.Component {...modal} />
   } else if (modal.name === 'delete-account') {
