@@ -385,7 +385,7 @@ function DefaultProfileCard({
         <View
           style={[
             a.flex_1,
-            a.py_md,
+            a.py_sm,
             a.px_lg,
             !enabled
               ? {opacity: 0.5}
@@ -398,7 +398,7 @@ function DefaultProfileCard({
               profile={profile}
               moderationOpts={moderationOpts}
             />
-            <View style={[a.mb_2xs]}>
+            <View style={[a.flex_1]}>
               <ProfileCard.Name
                 profile={profile}
                 moderationOpts={moderationOpts}

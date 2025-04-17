@@ -142,10 +142,10 @@ function UserResult({
   if (!moderationOpts) return null
 
   return (
-    <View style={[a.flex_1, a.py_md, a.px_lg]}>
+    <View style={[a.flex_1, a.py_sm, a.px_lg]}>
       <ProfileCard.Header>
         <ProfileCard.Avatar profile={profile} moderationOpts={moderationOpts} />
-        <View style={[a.mb_2xs, a.flex_1]}>
+        <View style={[a.flex_1]}>
           <ProfileCard.Name profile={profile} moderationOpts={moderationOpts} />
           <ProfileCard.Handle profile={profile} />
         </View>
