@@ -1,4 +1,3 @@
-import {useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -16,7 +15,6 @@ import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
-import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {type FullVerificationState} from '#/components/verification'
@@ -108,7 +106,12 @@ function Inner({
 
           <View style={[a.gap_lg]}>
             {profile.verification.verifications.map(v => (
-              <VerifierCard key={v.uri} verification={v} subject={profile} />
+              <VerifierCard
+                key={v.uri}
+                verification={v}
+                subject={profile}
+                outerDialogControl={control}
+              />
             ))}
           </View>
 
@@ -163,9 +166,11 @@ function Inner({
 function VerifierCard({
   verification,
   subject,
+  outerDialogControl,
 }: {
   verification: AppBskyActorDefs.VerificationView
   subject: bsky.profile.AnyProfileView
+  outerDialogControl: Dialog.DialogControlProps
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -174,7 +179,6 @@ function VerifierCard({
   const {data: profile, error} = useProfileQuery({did: verification.issuer})
   const verificationRemovePromptControl = useDialogControl()
   const canAdminister = verification.issuer === currentAccount?.did
-  const [pending, setPending] = useState(false)
 
   return (
     <View
@@ -221,7 +225,7 @@ function VerifierCard({
                     onPress={() => {
                       verificationRemovePromptControl.open()
                     }}>
-                    <ButtonIcon icon={pending ? Loader : TrashIcon} />
+                    <ButtonIcon icon={TrashIcon} />
                   </Button>
                 </View>
               )}
@@ -239,7 +243,7 @@ function VerifierCard({
         control={verificationRemovePromptControl}
         profile={subject}
         verifications={[verification]}
-        onConfirm={() => setPending(true)}
+        onConfirm={() => outerDialogControl.close()}
       />
     </View>
   )
