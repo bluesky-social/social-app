@@ -28,6 +28,8 @@ export function Header({
     <View
       onLayout={onLayout}
       style={[
+        a.sticky,
+        a.top_0,
         a.relative,
         a.w_full,
         a.py_sm,
@@ -41,7 +43,8 @@ export function Header({
         {borderTopLeftRadius: a.rounded_md.borderRadius},
         {borderTopRightRadius: a.rounded_md.borderRadius},
         style,
-      ]}>
+      ]}
+      onLayout={onLayout}>
       {renderLeft && (
         <View style={[a.absolute, {left: 6}]}>{renderLeft()}</View>
       )}
