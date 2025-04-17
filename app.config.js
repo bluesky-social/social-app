@@ -81,6 +81,7 @@ module.exports = function (config) {
             'eu',
             'fi',
             'fr',
+            'fy',
             'ga',
             'gd',
             'gl',
