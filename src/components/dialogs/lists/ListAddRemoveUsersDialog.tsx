@@ -76,7 +76,7 @@ function DialogInner({
 
   return (
     <SearchablePeopleList
-      title={_(msg`Send post to...`)}
+      title={_(msg`Add people to list`)}
       renderProfileCard={renderProfileCard}
     />
   )
@@ -145,30 +145,35 @@ function UserResult({
     <View style={[a.flex_1, a.py_md, a.px_lg]}>
       <ProfileCard.Header>
         <ProfileCard.Avatar profile={profile} moderationOpts={moderationOpts} />
-        <View style={[a.mb_2xs]}>
+        <View style={[a.mb_2xs, a.flex_1]}>
           <ProfileCard.Name profile={profile} moderationOpts={moderationOpts} />
           <ProfileCard.Handle profile={profile} />
         </View>
-        <Button
-          label={
-            membership === false
-              ? _(msg`Add user to list`)
-              : _(msg`Remove user from list`)
-          }
-          onPress={onToggleMembership}
-          disabled={isMutating}>
-          {isMutating ? (
-            <ButtonIcon icon={Loader} />
-          ) : (
-            <ButtonText>
-              {membership === false ? (
-                <Trans>Add</Trans>
-              ) : (
-                <Trans>Remove</Trans>
-              )}
-            </ButtonText>
-          )}
-        </Button>
+        {membership !== undefined && (
+          <Button
+            label={
+              membership === false
+                ? _(msg`Add user to list`)
+                : _(msg`Remove user from list`)
+            }
+            onPress={onToggleMembership}
+            disabled={isMutating}
+            size="small"
+            variant="solid"
+            color="secondary">
+            {isMutating ? (
+              <ButtonIcon icon={Loader} />
+            ) : (
+              <ButtonText>
+                {membership === false ? (
+                  <Trans>Add</Trans>
+                ) : (
+                  <Trans>Remove</Trans>
+                )}
+              </ButtonText>
+            )}
+          </Button>
+        )}
       </ProfileCard.Header>
     </View>
   )
