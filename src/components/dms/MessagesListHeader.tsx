@@ -202,7 +202,7 @@ function HeaderReady({
                 numberOfLines={1}>
                 {displayName}
               </Text>
-              {verification.isValid && (
+              {verification.isVerified && (
                 <View style={[a.pl_xs]}>
                   <VerificationCheck
                     width={14}

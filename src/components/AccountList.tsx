@@ -12,7 +12,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {ChevronRight_Stroke2_Corner0_Rounded as Chevron} from '#/components/icons/Chevron'
-import {getSimpleVerificationState} from '#/components/verification'
+import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {Button} from './Button'
 import {Text} from './Typography'
@@ -109,9 +109,7 @@ function AccountItem({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const verification = profile
-    ? getSimpleVerificationState({profile})
-    : undefined
+  const verification = useSimpleVerificationState({profile})
 
   const onPress = useCallback(() => {
     onSelect(account)
@@ -155,11 +153,11 @@ function AccountItem({
                   profile?.displayName || profile?.handle || account.handle,
                 )}
               </Text>
-              {verification?.isValid && (
+              {verification.isVerified && (
                 <View>
                   <VerificationCheck
                     width={12}
-                    verifier={verification?.role === 'verifier'}
+                    verifier={verification.role === 'verifier'}
                   />
                 </View>
               )}

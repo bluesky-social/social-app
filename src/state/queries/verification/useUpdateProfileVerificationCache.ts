@@ -22,7 +22,6 @@ export function useUpdateProfileVerificationCache() {
           actor: profile.did ?? '',
         })
         updateProfileShadow(qc, profile.did, {
-          // @ts-expect-error TODO lexicons will fix this
           verification: updated.verification,
         })
       } catch (e) {

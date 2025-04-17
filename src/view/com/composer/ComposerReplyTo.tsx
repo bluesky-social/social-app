@@ -103,7 +103,10 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
           </Text>
           {verification.isVerified && (
             <View style={[a.pl_xs]}>
-              <VerificationCheck width={14} {...verification} />
+              <VerificationCheck
+                width={14}
+                verifier={verification.role === 'verifier'}
+              />
             </View>
           )}
         </View>

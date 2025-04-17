@@ -49,7 +49,7 @@ import {Post} from '#/view/com/post/Post'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, platform,useTheme} from '#/alf'
+import {atoms as a, platform, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
@@ -67,7 +67,10 @@ import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text} from '#/components/Typography'
-import {getSimpleVerificationState} from '#/components/verification'
+import {
+  getSimpleVerificationState,
+  useSimpleVerificationState,
+} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import * as bsky from '#/types/bsky'
 
@@ -149,7 +152,7 @@ let NotificationFeedItem = ({
 
   const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
   const firstAuthor = authors[0]
-  const firstAuthorVerification = getSimpleVerificationState({
+  const firstAuthorVerification = useSimpleVerificationState({
     profile: firstAuthor.profile,
   })
   const firstAuthorName = sanitizeDisplayName(
@@ -193,7 +196,7 @@ let NotificationFeedItem = ({
       emoji
       label={_(msg`Go to ${firstAuthorName}'s profile`)}>
       {forceLTR(firstAuthorName)}
-      {firstAuthorVerification.isValid && (
+      {firstAuthorVerification.isVerified && (
         <View
           style={[
             a.relative,
@@ -205,7 +208,10 @@ let NotificationFeedItem = ({
               paddingRight: 2,
             },
           ]}>
-          <VerificationCheck width={14} {...firstAuthorVerification} />
+          <VerificationCheck
+            width={14}
+            verifier={firstAuthorVerification.role === 'verifier'}
+          />
         </View>
       )}
     </InlineLinkText>
@@ -806,7 +812,7 @@ function ExpandedAuthorsList({
                       author.profile.displayName || author.profile.handle,
                     )}
                   </Text>
-                  {verification.isValid && (
+                  {verification.isVerified && (
                     <View style={[a.pl_xs, a.self_center]}>
                       <VerificationCheck
                         width={14}

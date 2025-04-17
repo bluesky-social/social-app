@@ -30,9 +30,7 @@ export interface ProfileShadow {
   followingUri: string | undefined
   muted: boolean | undefined
   blockingUri: string | undefined
-  verification:
-    | AppBskyActorDefs.VerificationStateDefault
-    | AppBskyActorDefs.VerificationStateVerifier
+  verification: AppBskyActorDefs.VerificationState
 }
 
 const shadows: WeakMap<
@@ -139,7 +137,6 @@ function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
         'blockingUri' in shadow ? shadow.blockingUri : profile.viewer?.blocking,
     },
     verification:
-      // @ts-expect-error TODO need to update chat lexicons
       'verification' in shadow ? shadow.verification : profile.verification,
   })
 }

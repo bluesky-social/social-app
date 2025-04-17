@@ -288,8 +288,8 @@ let ProfileMenu = ({
                   </Menu.ItemText>
                   <Menu.ItemIcon icon={List} />
                 </Menu.Item>
-                {verification.viewer?.role === 'verifier' &&
-                  !verification.profile.isSelf &&
+                {verification.viewer.role === 'verifier' &&
+                  !verification.profile.isViewer &&
                   (verification.viewer.hasIssuedVerification ? (
                     <Menu.Item
                       testID="profileHeaderDropdownVerificationRemoveButton"

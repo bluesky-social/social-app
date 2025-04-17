@@ -12,7 +12,7 @@ import {getTabState, TabState} from '#/lib/routes/helpers'
 import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {colors} from '#/lib/styles'
-import {isAndroid,isWeb} from '#/platform/detection'
+import {isAndroid, isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
@@ -51,7 +51,7 @@ import {
 } from '#/components/icons/UserCircle'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {getSimpleVerificationState} from '#/components/verification'
+import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 
 const iconWidth = 26
@@ -66,9 +66,7 @@ let DrawerProfileCard = ({
   const {_, i18n} = useLingui()
   const t = useTheme()
   const {data: profile} = useProfileQuery({did: account.did})
-  const verification = profile
-    ? getSimpleVerificationState({profile})
-    : undefined
+  const verification = useSimpleVerificationState({profile})
 
   return (
     <TouchableOpacity
@@ -98,12 +96,11 @@ let DrawerProfileCard = ({
             numberOfLines={1}>
             {profile?.displayName || account.handle}
           </Text>
-          {verification?.isValid && (
+          {verification.isVerified && (
             <View
               style={{
                 top: 1,
               }}>
-              {/* @ts-ignore TODO new types */}
               <VerificationCheck
                 width={16}
                 verifier={verification.role === 'verifier'}

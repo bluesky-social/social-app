@@ -24,14 +24,24 @@ export function VerificationCheckButton({
     profile,
   })
 
-  if (
-    (state.profile.role === 'default' &&
-      (state.profile.isValid ||
-        (state.profile.isSelf && state.profile.wasValid))) ||
-    (state.viewer &&
+  let ok = false
+
+  if (state.profile.role === 'default') {
+    if (state.profile.isVerified) {
+      ok = true
+    } else if (state.profile.isViewer && state.profile.wasVerified) {
+      ok = true
+    } else if (
       state.viewer.role === 'verifier' &&
-      state.viewer.hasIssuedVerification)
-  ) {
+      state.viewer.hasIssuedVerification
+    ) {
+      ok = true
+    }
+  } else if (state.profile.role === 'verifier') {
+    ok = true
+  }
+
+  if (ok) {
     return <Badge profile={profile} verificationState={state} size={size} />
   }
 
@@ -63,7 +73,7 @@ export function Badge({
     <>
       <Button
         label={
-          state.profile.isSelf
+          state.profile.isViewer
             ? _(msg`View your verifications`)
             : _(msg`View this user's verifications`)
         }
@@ -95,7 +105,7 @@ export function Badge({
             <VerificationCheck
               width={dimensions}
               fill={
-                state.profile.isValid
+                state.profile.isVerified
                   ? t.palette.primary_500
                   : t.atoms.bg_contrast_100.backgroundColor
               }

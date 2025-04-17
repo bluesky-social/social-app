@@ -196,7 +196,7 @@ export function Component({
               onFocus={() => setTouchedDisplayName(true)}
             />
 
-            {verification.isValid &&
+            {verification.isVerified &&
               verification.role === 'default' &&
               touchedDisplayName && (
                 <View style={{paddingTop: 8}}>

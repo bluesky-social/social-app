@@ -1,5 +1,5 @@
 import {
-  AppBskyActorDefs,
+  type AppBskyActorDefs,
   type AppBskyActorGetProfile,
   AtUri,
 } from '@atproto/api'
@@ -8,7 +8,7 @@ import {useMutation} from '@tanstack/react-query'
 import {until} from '#/lib/async/until'
 import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
 import {useAgent, useSession} from '#/state/session'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 
 export function useVerificationsRemoveMutation() {
   const agent = useAgent()
@@ -46,10 +46,6 @@ export function useVerificationsRemoveMutation() {
         ({data: profile}: AppBskyActorGetProfile.Response) => {
           if (
             profile.verification &&
-            bsky.dangerousIsType<AppBskyActorDefs.VerificationStateDefault>(
-              profile.verification,
-              AppBskyActorDefs.isVerificationStateDefault,
-            ) &&
             profile.verification.verifications.every(v => !uris.includes(v.uri))
           ) {
             return true

@@ -41,7 +41,7 @@ import {SquareBehindSquare4_Stroke2_Corner0_Rounded as CopyIcon} from '#/compone
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {getSimpleVerificationState} from '#/components/verification'
+import {useSimpleVerificationState} from '#/components/verification'
 import {CopyButton} from './CopyButton'
 
 export function ChangeHandleDialog({
@@ -155,11 +155,9 @@ function ProvidedHandlePage({
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   const profile = useCurrentAccountProfile()
-  const verification = profile
-    ? getSimpleVerificationState({
-        profile,
-      })
-    : undefined
+  const verification = useSimpleVerificationState({
+    profile,
+  })
 
   const {
     mutate: changeHandle,
@@ -205,7 +203,7 @@ function ProvidedHandlePage({
         <Animated.View
           layout={native(LinearTransition)}
           style={[a.flex_1, a.gap_md]}>
-          {verification?.isValid && verification?.role === 'default' && (
+          {verification.isVerified && verification.role === 'default' && (
             <Admonition type="error">
               <Trans>
                 You are verified. If you change your handle, you will lose your

@@ -404,7 +404,7 @@ function ChatListItemReady({
                       {displayName}
                     </Text>
                   </View>
-                  {verification.isValid && (
+                  {verification.isVerified && (
                     <View style={[a.pl_xs, a.self_center]}>
                       <VerificationCheck
                         width={14}
