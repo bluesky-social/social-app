@@ -11,12 +11,13 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
-import {Link} from '#/components/Link'
+import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
@@ -97,19 +98,33 @@ function Inner({
         </Text>
       </View>
 
-      <View style={[a.pb_xl, a.gap_md]}>
-        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          <Trans>Verified by:</Trans>
-        </Text>
+      {profile.verification ? (
+        <View style={[a.pb_xl, a.gap_md]}>
+          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+            <Trans>Verified by:</Trans>
+          </Text>
 
-        <View style={[a.gap_lg]}>
-          {profile.verification
-            ? profile.verification?.verifications.map(v => (
-                <VerifierCard key={v.uri} verification={v} subject={profile} />
-              ))
-            : null}
+          <View style={[a.gap_lg]}>
+            {profile.verification.verifications.map(v => (
+              <VerifierCard key={v.uri} verification={v} subject={profile} />
+            ))}
+          </View>
+
+          {profile.verification.verifications.some(v => !v.isValid) && (
+            <Admonition type="warning">
+              <Trans>
+                Some of your verifications are invalid.{' '}
+                <InlineLinkText
+                  label={_(msg`Learn more about verification on Bluesky`)}
+                  to={urls.website.blog.initialVerificationAnnouncement}>
+                  Click here
+                </InlineLinkText>{' '}
+                to learn more.
+              </Trans>
+            </Admonition>
+          )}
         </View>
-      </View>
+      ) : null}
 
       <View
         style={[
@@ -167,7 +182,10 @@ function VerifierCard({
   const [pending, setPending] = useState(false)
 
   return (
-    <View>
+    <View
+      style={{
+        opacity: verification.isValid ? 1 : 0.5,
+      }}>
       <ProfileCard.Outer>
         <ProfileCard.Header>
           {error ? (
