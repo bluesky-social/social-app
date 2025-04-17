@@ -10,15 +10,6 @@ export interface CreateOrEditListModal {
   onSave?: (uri: string) => void
 }
 
-export interface UserAddRemoveListsModal {
-  name: 'user-add-remove-lists'
-  subject: string
-  handle: string
-  displayName: string
-  onAdd?: (listUri: string) => void
-  onRemove?: (listUri: string) => void
-}
-
 export interface DeleteAccountModal {
   name: 'delete-account'
 }
@@ -54,7 +45,6 @@ export type Modal =
 
   // Lists
   | CreateOrEditListModal
-  | UserAddRemoveListsModal
 
   // Bluesky access
   | WaitlistModal

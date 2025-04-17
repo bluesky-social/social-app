@@ -1,12 +1,11 @@
 import React, {useCallback} from 'react'
 import {Dimensions, type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AppBskyGraphDefs} from '@atproto/api'
+import {type AppBskyGraphDefs, type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {useModalControls} from '#/state/modals'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useListMembersQuery} from '#/state/queries/list-members'
 import {useSession} from '#/state/session'
@@ -16,6 +15,8 @@ import {ProfileCardFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlacehol
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
+import {UserAddRemoveListsDialog} from '#/components/dialogs/lists/UserAddRemoveListsDialog'
 import {ListFooter} from '#/components/Lists'
 import * as ProfileCard from '#/components/ProfileCard'
 import type * as bsky from '#/types/bsky'
@@ -48,10 +49,8 @@ export function ListMembers({
   headerOffset?: number
   desktopFixedHeightOffset?: number
 }) {
-  const t = useTheme()
   const {_} = useLingui()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
-  const {openModal} = useModalControls()
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
 
@@ -118,18 +117,6 @@ export function ListMembers({
     fetchNextPage()
   }, [fetchNextPage])
 
-  const onPressEditMembership = React.useCallback(
-    (profile: bsky.profile.AnyProfileView) => {
-      openModal({
-        name: 'user-add-remove-lists',
-        subject: profile.did,
-        displayName: profile.displayName || profile.handle,
-        handle: profile.handle,
-      })
-    },
-    [openModal],
-  )
-
   // rendering
   // =
 
@@ -161,43 +148,12 @@ export function ListMembers({
       if (!moderationOpts) return null
 
       return (
-        <View
-          style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]}>
-          <ProfileCard.Link profile={profile}>
-            <ProfileCard.Outer>
-              <ProfileCard.Header>
-                <ProfileCard.Avatar
-                  profile={profile}
-                  moderationOpts={moderationOpts}
-                />
-                <ProfileCard.NameAndHandle
-                  profile={profile}
-                  moderationOpts={moderationOpts}
-                />
-                {isOwner && (
-                  <Button
-                    testID={`user-${profile.handle}-editBtn`}
-                    label={_(msg({message: 'Edit', context: 'action'}))}
-                    onPress={() => onPressEditMembership(profile)}
-                    size="small"
-                    variant="solid"
-                    color="secondary">
-                    <ButtonText>
-                      <Trans context="action">Edit</Trans>
-                    </ButtonText>
-                  </Button>
-                )}
-              </ProfileCard.Header>
-
-              <ProfileCard.Labels
-                profile={profile}
-                moderationOpts={moderationOpts}
-              />
-
-              <ProfileCard.Description profile={profile} />
-            </ProfileCard.Outer>
-          </ProfileCard.Link>
-        </View>
+        <ListMember
+          profile={profile}
+          moderationOpts={moderationOpts}
+          isOwner={isOwner}
+          list={list}
+        />
       )
     },
     [
@@ -207,9 +163,8 @@ export function ListMembers({
       onPressRetryLoadMore,
       moderationOpts,
       isOwner,
-      onPressEditMembership,
       _,
-      t,
+      list,
     ],
   )
 
@@ -254,6 +209,71 @@ export function ListMembers({
         onEndReachedThreshold={0.6}
         removeClippedSubviews={true}
         desktopFixedHeight={desktopFixedHeightOffset || true}
+      />
+    </View>
+  )
+}
+
+function ListMember({
+  profile,
+  moderationOpts,
+  isOwner,
+  list,
+}: {
+  profile: bsky.profile.AnyProfileView
+  moderationOpts: ModerationOpts
+  isOwner?: boolean
+  list: string
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const editMembershipDialogControl = useDialogControl()
+
+  return (
+    <View style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]}>
+      <ProfileCard.Link profile={profile}>
+        <ProfileCard.Outer>
+          <ProfileCard.Header>
+            <ProfileCard.Avatar
+              profile={profile}
+              moderationOpts={moderationOpts}
+            />
+            <ProfileCard.NameAndHandle
+              profile={profile}
+              moderationOpts={moderationOpts}
+            />
+            {isOwner && (
+              <Button
+                testID={`user-${profile.handle}-editBtn`}
+                label={_(msg({message: 'Edit', context: 'action'}))}
+                onPress={editMembershipDialogControl.open}
+                size="small"
+                variant="solid"
+                color="secondary">
+                <ButtonText>
+                  <Trans context="action">Edit</Trans>
+                </ButtonText>
+              </Button>
+            )}
+          </ProfileCard.Header>
+
+          <ProfileCard.Labels
+            profile={profile}
+            moderationOpts={moderationOpts}
+          />
+
+          <ProfileCard.Description profile={profile} />
+        </ProfileCard.Outer>
+      </ProfileCard.Link>
+
+      <UserAddRemoveListsDialog
+        control={editMembershipDialogControl}
+        profile={profile}
+        onChange={(type, {uri}) => {
+          if (type === 'remove' && uri === list) {
+            editMembershipDialogControl.close()
+          }
+        }}
       />
     </View>
   )
