@@ -29,7 +29,7 @@ import {useCloseAllActiveElements} from '#/state/util'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
-import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, platform, tokens, useBreakpoints, useTheme} from '#/alf'
 import {AvatarStackWithFetch} from '#/components/AvatarStack'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
@@ -55,6 +55,11 @@ import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {useFullVerificationState} from '#/components/verification'
+import {
+  shouldShowVerificationCheckButton,
+  VerificationCheckButton,
+} from '#/components/verification/VerificationCheckButton'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
@@ -278,6 +283,9 @@ function ProfilePreview({
   const {gtMobile} = useBreakpoints()
   const shadow = useProfileShadow(profile)
   const moderationOpts = useModerationOpts()
+  const verificationState = useFullVerificationState({
+    profile: shadow,
+  })
 
   if (!moderationOpts) return null
 
@@ -292,20 +300,41 @@ function ProfilePreview({
         type={shadow.associated?.labeler ? 'labeler' : 'user'}
       />
 
-      <Text
-        emoji
-        testID="profileHeaderDisplayName"
+      <View
         style={[
-          a.pt_sm,
-          t.atoms.text,
-          gtMobile ? a.text_4xl : a.text_3xl,
-          a.font_heavy,
+          a.flex_row,
+          a.gap_sm,
+          a.align_center,
+          a.justify_center,
+          a.w_full,
         ]}>
-        {sanitizeDisplayName(
-          profile.displayName || sanitizeHandle(profile.handle),
-          moderation.ui('displayName'),
+        <Text
+          emoji
+          testID="profileHeaderDisplayName"
+          numberOfLines={1}
+          style={[
+            a.flex_shrink,
+            a.pt_sm,
+            t.atoms.text,
+            gtMobile ? a.text_4xl : a.text_3xl,
+            a.font_heavy,
+          ]}>
+          {sanitizeDisplayName(
+            profile.displayName || sanitizeHandle(profile.handle),
+            moderation.ui('displayName'),
+          )}
+        </Text>
+        {shouldShowVerificationCheckButton(verificationState) && (
+          <View
+            style={[
+              {
+                marginTop: platform({web: 10, ios: 2}),
+              },
+            ]}>
+            <VerificationCheckButton profile={shadow} size="lg" />
+          </View>
         )}
-      </Text>
+      </View>
       <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
         {sanitizeHandle(profile.handle, '@')}
       </Text>

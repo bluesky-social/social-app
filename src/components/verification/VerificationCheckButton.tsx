@@ -13,17 +13,9 @@ import {VerificationsDialog} from '#/components/verification/VerificationsDialog
 import {VerifierDialog} from '#/components/verification/VerifierDialog'
 import type * as bsky from '#/types/bsky'
 
-export function VerificationCheckButton({
-  profile,
-  size,
-}: {
-  profile: Shadow<bsky.profile.AnyProfileView>
-  size: 'lg' | 'md' | 'sm'
-}) {
-  const state = useFullVerificationState({
-    profile,
-  })
-
+export function shouldShowVerificationCheckButton(
+  state: FullVerificationState,
+) {
   let ok = false
 
   if (state.profile.role === 'default') {
@@ -41,7 +33,21 @@ export function VerificationCheckButton({
     ok = true
   }
 
-  if (ok) {
+  return ok
+}
+
+export function VerificationCheckButton({
+  profile,
+  size,
+}: {
+  profile: Shadow<bsky.profile.AnyProfileView>
+  size: 'lg' | 'md' | 'sm'
+}) {
+  const state = useFullVerificationState({
+    profile,
+  })
+
+  if (shouldShowVerificationCheckButton(state)) {
     return <Badge profile={profile} verificationState={state} size={size} />
   }
 
