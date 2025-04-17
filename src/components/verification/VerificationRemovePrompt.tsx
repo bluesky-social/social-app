@@ -3,7 +3,6 @@ import {type AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {getUserDisplayName} from '#/lib/getUserDisplayName'
 import {logger} from '#/logger'
 import {useVerificationsRemoveMutation} from '#/state/queries/verification/useVerificationsRemoveMutation'
 import * as Toast from '#/view/com/util/Toast'
@@ -39,15 +38,10 @@ export function VerificationRemovePrompt({
     }
   }, [_, profile, verifications, remove, onConfirmInner])
 
-  const userName = getUserDisplayName(profile)
-
   return (
     <Prompt.Basic
       control={control}
-      title={_(msg`Remove verification of ${userName}?`)}
-      description={_(
-        msg`Would you like to remove your verification of ${userName}?`,
-      )}
+      title={_(msg`Remove your verification for this account?`)}
       onConfirm={onConfirm}
       confirmButtonCta={_(msg`Remove verification`)}
       confirmButtonColor="negative"

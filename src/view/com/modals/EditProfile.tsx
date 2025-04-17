@@ -202,8 +202,8 @@ export function Component({
                 <View style={{paddingTop: 8}}>
                   <Admonition type="error">
                     <Trans>
-                      You are verified. If you change your display name, you
-                      will lose your verification status.{' '}
+                      You are verified. You will lose your verification status
+                      if you change your display name.{' '}
                       <InlineLinkText
                         label={_(msg`Learn more`)}
                         to={`https://bsky.social/about`}>

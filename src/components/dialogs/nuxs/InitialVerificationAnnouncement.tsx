@@ -13,7 +13,7 @@ import {useNuxDialogContext} from '#/components/dialogs/nuxs'
 import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
 import {VerifierCheck} from '#/components/icons/VerifierCheck'
 import {Link} from '#/components/Link'
-import {Text} from '#/components/Typography'
+import {Span,Text} from '#/components/Typography'
 
 export function InitialVerificationAnnouncement() {
   const t = useTheme()
@@ -37,7 +37,7 @@ export function InitialVerificationAnnouncement() {
         style={[
           gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
         ]}>
-        <View style={[a.align_start, a.gap_lg]}>
+        <View style={[a.align_start, a.gap_xl]}>
           <View
             style={[
               a.pl_sm,
@@ -80,20 +80,19 @@ export function InitialVerificationAnnouncement() {
                 },
               ]}
               alt={_(
-                msg`An illustration a verified user showing their avatar and a blue check mark next to their name.`,
+                msg`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`,
               )}
             />
           </View>
 
           <View style={[a.gap_xs]}>
             <Text style={[a.text_2xl, a.font_bold, a.leading_snug]}>
-              <Trans>Verification</Trans>
+              <Trans>A new form of verification</Trans>
             </Text>
             <Text style={[a.leading_snug, a.text_md]}>
               <Trans>
-                Some accounts — like government officials, journalists, public
-                figures, or organizations — benefit from a verification badge
-                that indicates their account is authentic.
+                We’re introducing a new layer of verification on Bluesky — a
+                user-friendly, easily recognizable blue check.
               </Trans>
             </Text>
           </View>
@@ -111,31 +110,44 @@ export function InitialVerificationAnnouncement() {
               source={require('../../../../assets/images/initial_verification_announcement_2.png')}
               style={[
                 {
-                  aspectRatio: 353 / 160,
+                  aspectRatio: 353 / 196,
                 },
               ]}
               alt={_(
-                msg`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`,
+                msg`An mockup of a iPhone showing the Bluesky app open to the profile of a verified user with a blue checkmark next to their display name.`,
               )}
             />
           </View>
 
-          <View style={[a.gap_xs]}>
+          <View style={[a.gap_sm]}>
             <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <VerifierCheck width={18} />
-              <Text style={[a.text_2xl, a.font_bold, a.leading_snug]}>
+              <VerifierCheck width={14} />
+              <Text style={[a.text_lg, a.font_bold, a.leading_snug]}>
                 <Trans>Who can verify?</Trans>
               </Text>
             </View>
-            <Text style={[a.leading_snug, a.text_md]}>
-              <Trans>
-                Bluesky maintains a list of trusted verifiers — accounts whose
-                vouches are automatically trusted. Bluesky itself can also
-                verify individual accounts. If your account receives a vouch
-                from one of these sources, you’ll get a blue checkmark on your
-                profile and posts.
-              </Trans>
-            </Text>
+            <View style={[a.gap_sm]}>
+              <Text style={[a.leading_snug, a.text_md]}>
+                <Trans>
+                  Bluesky will proactively verify notable and authentic
+                  accounts.
+                </Trans>
+              </Text>
+              <Text style={[a.leading_snug, a.text_md]}>
+                <Trans>
+                  Trust emerges from relationships, communities, and shared
+                  context, so we’re also enabling{' '}
+                  <Span style={[a.font_bold]}>trusted verifiers</Span>:
+                  organizations that can directly issue blue checks.
+                </Trans>
+              </Text>
+              <Text style={[a.leading_snug, a.text_md]}>
+                <Trans>
+                  When you tap on a check, you’ll see which organizations have
+                  granted verification.
+                </Trans>
+              </Text>
+            </View>
           </View>
 
           <View style={[a.w_full, a.gap_md]}>

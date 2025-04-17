@@ -200,7 +200,7 @@ export function Basic({
 }: React.PropsWithChildren<{
   control: Dialog.DialogOuterProps['control']
   title: string
-  description: string
+  description?: string
   cancelButtonCta?: string
   confirmButtonCta?: string
   /**
@@ -217,7 +217,7 @@ export function Basic({
   return (
     <Outer control={control} testID="confirmModal">
       <TitleText>{title}</TitleText>
-      <DescriptionText>{description}</DescriptionText>
+      {description && <DescriptionText>{description}</DescriptionText>}
       <Actions>
         <Action
           cta={confirmButtonCta}

@@ -77,7 +77,7 @@ function Inner({
           ]}>
           <Image
             accessibilityIgnoresInvertColors
-            source={require('../../../assets/images/initial_verification_announcement_2.png')}
+            source={require('../../../assets/images/initial_verification_announcement_1.png')}
             style={[
               {
                 aspectRatio: 353 / 160,

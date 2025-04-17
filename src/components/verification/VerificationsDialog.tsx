@@ -1,12 +1,11 @@
 import {useState} from 'react'
-import {Text as RNText, View} from 'react-native'
+import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {urls} from '#/lib/constants'
 import {getUserDisplayName} from '#/lib/getUserDisplayName'
-import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -16,7 +15,6 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
-import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -51,6 +49,7 @@ export function VerificationsDialog({
 function Inner({
   profile,
   control,
+  verificationState: state,
 }: {
   control: Dialog.DialogControlProps
   profile: bsky.profile.AnyProfileView
@@ -59,12 +58,14 @@ function Inner({
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
-  const {currentAccount} = useSession()
 
-  const isSelf = profile.did === currentAccount?.did
   const userName = getUserDisplayName(profile)
-  const label = isSelf
-    ? _(msg`Your verifications`)
+  const label = state.profile.isViewer
+    ? state.profile.isVerified
+      ? _(msg`You are verified`)
+      : _(msg`Your verifications`)
+    : state.profile.isVerified
+    ? _(msg`${userName} is verified`)
     : _(
         msg({
           message: `${userName}'s verifications`,
@@ -85,16 +86,17 @@ function Inner({
           {label}
         </Text>
         <Text style={[a.text_md, a.leading_snug]}>
-          <Trans>
-            Verified accounts with this blue check mark
-            <RNText>
-              {NON_BREAKING_SPACE}
-              <VerifiedCheck width={14} />
-              {NON_BREAKING_SPACE}
-            </RNText>
-            next to their name. These accounts have been verified by a trusted
-            verifier. These verifiers are picked by Bluesky.
-          </Trans>
+          {state.profile.isVerified ? (
+            <Trans>
+              This account has a blue check because it's been verified by
+              trusted sources.
+            </Trans>
+          ) : (
+            <Trans>
+              This account has one or more verifications, but it is not
+              currently verified.
+            </Trans>
+          )}
         </Text>
       </View>
 
@@ -110,19 +112,20 @@ function Inner({
             ))}
           </View>
 
-          {profile.verification.verifications.some(v => !v.isValid) && (
-            <Admonition type="warning">
-              <Trans>
-                Some of your verifications are invalid.{' '}
-                <InlineLinkText
-                  label={_(msg`Learn more about verification on Bluesky`)}
-                  to={urls.website.blog.initialVerificationAnnouncement}>
-                  Click here
-                </InlineLinkText>{' '}
-                to learn more.
-              </Trans>
-            </Admonition>
-          )}
+          {profile.verification.verifications.some(v => !v.isValid) &&
+            state.profile.isViewer && (
+              <Admonition type="warning" style={[a.mt_xs]}>
+                <Trans>
+                  Some of your verifications are invalid.{' '}
+                  <InlineLinkText
+                    label={_(msg`Learn more about verification on Bluesky`)}
+                    to={urls.website.blog.initialVerificationAnnouncement}>
+                    Click here
+                  </InlineLinkText>{' '}
+                  to learn more.
+                </Trans>
+              </Admonition>
+            )}
         </View>
       ) : null}
 
