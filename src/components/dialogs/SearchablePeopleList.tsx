@@ -1,12 +1,6 @@
-import React, {
-  useCallback,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import {useCallback, useLayoutEffect, useMemo, useRef, useState} from 'react'
 import {TextInput, View} from 'react-native'
-import {moderateProfile, ModerationOpts} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -18,7 +12,7 @@ import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
-import {ListMethods} from '#/view/com/util/List'
+import {type ListMethods} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
@@ -28,7 +22,7 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 
 type Item =
   | {

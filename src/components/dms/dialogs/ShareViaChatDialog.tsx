@@ -7,7 +7,7 @@ import {logger} from '#/logger'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
 import * as Toast from '#/view/com/util/Toast'
 import * as Dialog from '#/components/Dialog'
-import {SearchablePeopleList} from './SearchablePeopleList'
+import {SearchablePeopleList} from '#/components/dialogs/SearchablePeopleList'
 
 export function SendViaChatDialog({
   control,

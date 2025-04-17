@@ -11,9 +11,9 @@ import * as Toast from '#/view/com/util/Toast'
 import {useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
+import {SearchablePeopleList} from '#/components/dialogs/SearchablePeopleList'
 import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {SearchablePeopleList} from './SearchablePeopleList'
 
 export function NewChat({
   control,
