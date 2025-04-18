@@ -33,7 +33,6 @@ import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
-import {useModalControls} from '#/state/modals'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   useListBlockMutation,
@@ -75,6 +74,7 @@ import {ListHiddenScreen} from '#/screens/List/ListHiddenScreen'
 import {atoms as a} from '#/alf'
 import {Button as NewButton, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {CreateOrEditListDialog} from '#/components/dialogs/lists/CreateOrEditListDialog'
 import {ListAddRemoveUsersDialog} from '#/components/dialogs/lists/ListAddRemoveUsersDialog'
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import * as Layout from '#/components/Layout'
@@ -314,7 +314,7 @@ function Header({
   const navigation = useNavigation<NavigationProp>()
   const {currentAccount} = useSession()
   const reportDialogControl = useReportDialogControl()
-  const {openModal} = useModalControls()
+  const editListDialogControl = useDialogControl()
   const listMuteMutation = useListMuteMutation()
   const listBlockMutation = useListBlockMutation()
   const listDeleteMutation = useListDeleteMutation()
@@ -468,13 +468,6 @@ function Header({
     }
   }, [list, listBlockMutation, _])
 
-  const onPressEdit = useCallback(() => {
-    openModal({
-      name: 'create-or-edit-list',
-      list,
-    })
-  }, [openModal, list])
-
   const onPressDelete = useCallback(async () => {
     await listDeleteMutation.mutateAsync({uri: list.uri})
 
@@ -542,7 +535,7 @@ function Header({
       items.push({
         testID: 'listHeaderDropdownEditBtn',
         label: _(msg`Edit list details`),
-        onPress: onPressEdit,
+        onPress: editListDialogControl.open,
         icon: {
           ios: {
             name: 'pencil',
@@ -637,8 +630,8 @@ function Header({
     isModList,
     isPinned,
     isCurateList,
-    onPressEdit,
-    deleteListPromptControl.open,
+    editListDialogControl,
+    deleteListPromptControl,
     onPressReport,
     isPending,
     isBlocking,
@@ -757,6 +750,8 @@ function Header({
             />
           </View>
         </NativeDropdown>
+
+        <CreateOrEditListDialog control={editListDialogControl} list={list} />
 
         <Prompt.Basic
           control={deleteListPromptControl}

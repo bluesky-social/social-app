@@ -1,18 +1,21 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
 import {useEmail} from '#/lib/hooks/useEmail'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
-import {NavigationProp} from '#/lib/routes/types'
-import {useModalControls} from '#/state/modals'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {MyLists} from '#/view/com/lists/MyLists'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {CreateOrEditListDialog} from '#/components/dialogs/lists/CreateOrEditListDialog'
 import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Layout from '#/components/Layout'
@@ -22,36 +25,40 @@ export function ListsScreen({}: Props) {
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const navigation = useNavigation<NavigationProp>()
-  const {openModal} = useModalControls()
   const {needsEmailVerification} = useEmail()
-  const control = useDialogControl()
+  const verifyEmailDialogControl = useDialogControl()
+  const createListDialogControl = useDialogControl()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )
 
-  const onPressNewList = React.useCallback(() => {
+  const onPressNewList = useCallback(() => {
     if (needsEmailVerification) {
-      control.open()
-      return
+      verifyEmailDialogControl.open()
+    } else {
+      createListDialogControl.open()
     }
+  }, [
+    needsEmailVerification,
+    verifyEmailDialogControl,
+    createListDialogControl,
+  ])
 
-    openModal({
-      name: 'create-or-edit-list',
-      purpose: 'app.bsky.graph.defs#curatelist',
-      onSave: (uri: string) => {
-        try {
-          const urip = new AtUri(uri)
-          navigation.navigate('ProfileList', {
-            name: urip.hostname,
-            rkey: urip.rkey,
-          })
-        } catch {}
-      },
-    })
-  }, [needsEmailVerification, control, openModal, navigation])
+  const onCreateList = useCallback(
+    (uri: string) => {
+      try {
+        const urip = new AtUri(uri)
+        navigation.navigate('ProfileList', {
+          name: urip.hostname,
+          rkey: urip.rkey,
+        })
+      } catch {}
+    },
+    [navigation],
+  )
 
   return (
     <Layout.Screen testID="listsScreen">
@@ -75,12 +82,20 @@ export function ListsScreen({}: Props) {
           </ButtonText>
         </Button>
       </Layout.Header.Outer>
+
       <MyLists filter="curate" style={a.flex_grow} />
+
       <VerifyEmailDialog
         reasonText={_(
           msg`Before creating a list, you must first verify your email.`,
         )}
-        control={control}
+        control={verifyEmailDialogControl}
+      />
+
+      <CreateOrEditListDialog
+        purpose="app.bsky.graph.defs#curatelist"
+        control={createListDialogControl}
+        onSave={onCreateList}
       />
     </Layout.Screen>
   )
