@@ -210,7 +210,9 @@ export function useLink({
 }
 
 export type LinkProps = Omit<BaseLinkProps, 'disableMismatchWarning'> &
-  Omit<ButtonProps, 'onPress' | 'disabled'>
+  Omit<ButtonProps, 'onPress' | 'disabled'> & {
+    overridePresentation?: boolean
+  }
 
 /**
  * A interactive element that renders as a `<a>` tag on the web. On mobile it
@@ -228,6 +230,7 @@ export function Link({
   onLongPress: outerOnLongPress,
   download,
   shouldProxy,
+  overridePresentation,
   ...rest
 }: LinkProps) {
   const {href, isExternal, onPress, onLongPress} = useLink({
@@ -237,6 +240,7 @@ export function Link({
     onPress: outerOnPress,
     onLongPress: outerOnLongPress,
     shouldProxy: shouldProxy,
+    overridePresentation,
   })
 
   return (

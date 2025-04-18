@@ -34,7 +34,7 @@ export function InitialVerificationAnnouncement() {
       <Dialog.Handle />
 
       <Dialog.ScrollableInner
-        label={_(msg`Annoucing verification on Bluesky`)}
+        label={_(msg`Announcing verification on Bluesky`)}
         style={[
           gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
         ]}>
@@ -60,7 +60,7 @@ export function InitialVerificationAnnouncement() {
                   color: t.palette.primary_700,
                 },
               ]}>
-              New Feature
+              <Trans>New Feature</Trans>
             </Text>
           </View>
 
@@ -153,6 +153,7 @@ export function InitialVerificationAnnouncement() {
 
           <View style={[a.w_full, a.gap_md]}>
             <Link
+              overridePresentation
               to={urls.website.blog.initialVerificationAnnouncement}
               label={_(msg`Read blog post`)}
               size="small"
