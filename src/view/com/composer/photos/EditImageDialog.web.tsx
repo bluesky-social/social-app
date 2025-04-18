@@ -11,7 +11,7 @@ import {
   type ImageTransformation,
   manipulateImage,
 } from '#/state/gallery'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
@@ -114,6 +114,7 @@ function EditImageInner({
   Omit<EditImageDialogProps, 'control' | 'image'> & {
     saveRef: React.RefObject<{save: () => Promise<void>}>
   }) {
+  const t = useTheme()
   const [isDragging, setIsDragging] = useState(false)
   const {_} = useLingui()
   const control = Dialog.useDialogContext()
@@ -150,7 +151,15 @@ function EditImageInner({
   )
 
   return (
-    <View style={[a.align_center]}>
+    <View
+      style={[
+        a.mx_auto,
+        a.border,
+        t.atoms.border_contrast_low,
+        a.rounded_xs,
+        a.overflow_hidden,
+        a.align_center,
+      ]}>
       <ReactCrop
         crop={crop}
         aspect={aspectRatio}
