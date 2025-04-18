@@ -5219,7 +5219,7 @@ msgstr ""
 #: src/view/com/notifications/NotificationFeedItem.tsx:683
 #: src/view/com/util/UserAvatar.tsx:465
 msgid "Opens this profile"
-msgstr ""
+msgstr "Bu profili açar"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:103
 msgid "Opens video picker"
@@ -5361,7 +5361,7 @@ msgstr "Evcil Hayvanlar"
 
 #: src/screens/Onboarding/state.ts:110
 msgid "Photography"
-msgstr ""
+msgstr "Fotoğrafçılık"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:169
 msgid "Pictures meant for adults."
