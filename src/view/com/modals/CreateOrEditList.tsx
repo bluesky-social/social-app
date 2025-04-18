@@ -15,24 +15,23 @@ import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {compressIfNeeded} from '#/lib/media/manip'
-import {type PickerImage} from '#/lib/media/picker.shared'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {enforceLen} from '#/lib/strings/helpers'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {colors, gradients, s} from '#/lib/styles'
 import {useTheme} from '#/lib/ThemeContext'
+import {type ImageMeta} from '#/state/gallery'
 import {useModalControls} from '#/state/modals'
 import {
   useListCreateMutation,
   useListMetadataMutation,
 } from '#/state/queries/list'
 import {useAgent} from '#/state/session'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {Text} from '../util/text/Text'
-import * as Toast from '../util/Toast'
-import {EditableUserAvatar} from '../util/UserAvatar'
+import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
+import {Text} from '#/view/com/util/text/Text'
+import * as Toast from '#/view/com/util/Toast'
+import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
 
 const MAX_NAME = 64 // todo
 const MAX_DESCRIPTION = 300 // todo
@@ -95,7 +94,7 @@ export function Component({
   const isDescriptionOver = graphemeLength > MAX_DESCRIPTION
 
   const [avatar, setAvatar] = useState<string | undefined>(list?.avatar)
-  const [newAvatar, setNewAvatar] = useState<PickerImage | undefined | null>()
+  const [newAvatar, setNewAvatar] = useState<ImageMeta | undefined | null>()
 
   const onDescriptionChange = useCallback(
     (newText: string) => {
@@ -112,16 +111,15 @@ export function Component({
   }, [closeModal])
 
   const onSelectNewAvatar = useCallback(
-    async (img: PickerImage | null) => {
+    (img: ImageMeta | null) => {
       if (!img) {
         setNewAvatar(null)
         setAvatar(undefined)
         return
       }
       try {
-        const finalImg = await compressIfNeeded(img, 1000000)
-        setNewAvatar(finalImg)
-        setAvatar(finalImg.path)
+        setNewAvatar(img)
+        setAvatar(img.path)
       } catch (e: any) {
         setError(cleanError(e))
       }

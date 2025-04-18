@@ -14,9 +14,9 @@ import chunk from 'lodash.chunk'
 
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
-import {type PickerImage} from '#/lib/media/picker.shared'
+import {type ImageMeta} from '#/state/gallery'
 import {STALE} from '#/state/queries'
-import {useAgent, useSession} from '../session'
+import {useAgent, useSession} from '#/state/session'
 import {invalidate as invalidateMyLists} from './my-lists'
 import {RQKEY as PROFILE_LISTS_RQKEY} from './profile-lists'
 
@@ -47,7 +47,7 @@ export interface ListCreateMutateParams {
   name: string
   description: string
   descriptionFacets: Facet[] | undefined
-  avatar: PickerImage | null | undefined
+  avatar: ImageMeta | null | undefined
 }
 export function useListCreateMutation() {
   const {currentAccount} = useSession()
@@ -115,7 +115,7 @@ export interface ListMetadataMutateParams {
   name: string
   description: string
   descriptionFacets: Facet[] | undefined
-  avatar: PickerImage | null | undefined
+  avatar: ImageMeta | null | undefined
 }
 export function useListMetadataMutation() {
   const {currentAccount} = useSession()
