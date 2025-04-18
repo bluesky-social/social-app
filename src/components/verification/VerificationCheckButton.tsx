@@ -38,7 +38,11 @@ export function shouldShowVerificationCheckButton(
     }
   }
 
-  if (!state.profile.showBadge && !state.profile.isViewer) {
+  if (
+    !state.profile.showBadge &&
+    !state.profile.isViewer &&
+    !(state.viewer.role === 'verifier' && state.viewer.hasIssuedVerification)
+  ) {
     ok = false
   }
 
