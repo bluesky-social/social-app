@@ -27,7 +27,7 @@ export const LoggedOutLayout = ({
   const contentBg = useColorSchemeStyle(pal.view, {
     backgroundColor: pal.colors.background,
     borderColor: pal.colors.border,
-    borderLeftWidth: 1,
+    borderRightWidth: 1,
   })
 
   const [isKeyboardVisible] = useIsKeyboardVisible()
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   descriptionText: {
     maxWidth: 400,
     marginTop: 10,
-    marginLeft: 'auto',
+    marginRight: 'auto',
     textAlign: 'right',
   },
   contentWrapper: {

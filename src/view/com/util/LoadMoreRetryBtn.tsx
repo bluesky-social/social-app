@@ -19,7 +19,7 @@ export function LoadMoreRetryBtn({
   return (
     <Button type="default-light" onPress={onPress} style={styles.loadMoreRetry}>
       <FontAwesomeIcon
-        icon="arrow-rotate-left"
+        icon="arrow-rotate-Right"
         style={pal.textLight as FontAwesomeIconStyle}
         size={18}
       />

@@ -169,12 +169,12 @@ function ContentHiderActive({
             <desc.icon
               size="md"
               fill={t.atoms.text_contrast_medium.color}
-              style={{marginLeft: -2}}
+              style={{marginRight: -2}}
             />
             <Text
               style={[
                 a.flex_1,
-                a.text_left,
+                a.text_right,
                 a.font_bold,
                 a.leading_snug,
                 gtMobile && [a.font_bold],
@@ -223,7 +223,7 @@ function ContentHiderActive({
                 a.font_normal,
                 a.leading_snug,
                 t.atoms.text_contrast_medium,
-                a.text_left,
+                a.text_right,
               ]}>
               {desc.sourceType === 'user' ? (
                 <Trans>Labeled by the author.</Trans>
