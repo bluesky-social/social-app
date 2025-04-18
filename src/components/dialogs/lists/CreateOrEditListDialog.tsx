@@ -19,7 +19,7 @@ import {useAgent} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import * as Toast from '#/view/com/util/Toast'
 import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -352,7 +352,7 @@ function DialogInner({
   return (
     <Dialog.ScrollableInner
       label={title}
-      style={[a.overflow_hidden]}
+      style={[a.overflow_hidden, web({maxWidth: 500})]}
       contentContainerStyle={[a.px_0, a.pt_0]}
       header={
         <Dialog.Header renderLeft={cancelButton} renderRight={saveButton}>
