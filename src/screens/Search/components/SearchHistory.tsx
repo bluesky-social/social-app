@@ -1,18 +1,23 @@
 import {Pressable, ScrollView, StyleSheet, View} from 'react-native'
+import {moderateProfile, type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {createHitslop, HITSLOP_10} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {Link} from '#/view/com/util/Link'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import type * as bsky from '#/types/bsky'
 
 export function SearchHistory({
@@ -31,8 +36,8 @@ export function SearchHistory({
   onRemoveProfileClick: (profile: bsky.profile.AnyProfileView) => void
 }) {
   const {gtMobile} = useBreakpoints()
-  const t = useTheme()
   const {_} = useLingui()
+  const moderationOpts = useModerationOpts()
 
   return (
     <Layout.Content
@@ -54,53 +59,25 @@ export function SearchHistory({
               <ScrollView
                 horizontal
                 keyboardShouldPersistTaps="handled"
+                showsHorizontalScrollIndicator={false}
                 style={[
                   a.flex_row,
                   a.flex_nowrap,
                   {marginHorizontal: tokens.space._2xl * -1},
                 ]}
                 contentContainerStyle={[a.px_2xl, a.border_0]}>
-                {selectedProfiles.slice(0, 5).map((profile, index) => (
-                  <View
-                    key={index}
-                    style={[
-                      styles.profileItem,
-                      !gtMobile && styles.profileItemMobile,
-                    ]}>
-                    <Link
-                      href={makeProfileLink(profile)}
-                      title={profile.handle}
-                      asAnchor
-                      anchorNoUnderline
-                      onBeforePress={() => onProfileClick(profile)}
-                      style={[a.align_center, a.w_full]}>
-                      <UserAvatar
-                        avatar={profile.avatar}
-                        type={profile.associated?.labeler ? 'labeler' : 'user'}
-                        size={60}
+                {moderationOpts &&
+                  selectedProfiles
+                    .slice(0, 5)
+                    .map(profile => (
+                      <RecentProfileItem
+                        key={profile.did}
+                        profile={profile}
+                        moderationOpts={moderationOpts}
+                        onPress={() => onProfileClick(profile)}
+                        onRemove={() => onRemoveProfileClick(profile)}
                       />
-                      <Text
-                        emoji
-                        style={[a.text_xs, a.text_center, styles.profileName]}
-                        numberOfLines={1}>
-                        {sanitizeDisplayName(
-                          profile.displayName || profile.handle,
-                        )}
-                      </Text>
-                    </Link>
-                    <Pressable
-                      accessibilityRole="button"
-                      accessibilityLabel={_(msg`Remove profile`)}
-                      accessibilityHint={_(
-                        msg`Removes profile from search history`,
-                      )}
-                      onPress={() => onRemoveProfileClick(profile)}
-                      hitSlop={createHitslop(6)}
-                      style={styles.profileRemoveBtn}>
-                      <XIcon size="xs" style={t.atoms.text_contrast_low} />
-                    </Pressable>
-                  </View>
-                ))}
+                    ))}
               </ScrollView>
             </BlockDrawerGesture>
           </View>
@@ -131,6 +108,81 @@ export function SearchHistory({
         )}
       </View>
     </Layout.Content>
+  )
+}
+
+function RecentProfileItem({
+  profile,
+  moderationOpts,
+  onPress,
+  onRemove,
+}: {
+  profile: bsky.profile.AnyProfileView
+  moderationOpts: ModerationOpts
+  onPress: () => void
+  onRemove: () => void
+}) {
+  const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
+  const t = useTheme()
+
+  const moderation = moderateProfile(profile, moderationOpts)
+  const name = sanitizeDisplayName(
+    profile.displayName || sanitizeHandle(profile.handle),
+    moderation.ui('displayName'),
+  )
+  const verification = useSimpleVerificationState({profile})
+
+  return (
+    <View style={[styles.profileItem, !gtMobile && styles.profileItemMobile]}>
+      <Link
+        href={makeProfileLink(profile)}
+        title={profile.handle}
+        asAnchor
+        anchorNoUnderline
+        onBeforePress={onPress}
+        style={[a.align_center, a.w_full]}>
+        <UserAvatar
+          avatar={profile.avatar}
+          type={profile.associated?.labeler ? 'labeler' : 'user'}
+          size={60}
+          moderation={moderation.ui('avatar')}
+        />
+        <View style={styles.profileName}>
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.justify_center,
+              web([a.flex_1]),
+            ]}>
+            <Text
+              emoji
+              style={[a.text_xs, a.leading_snug, a.self_start]}
+              numberOfLines={1}>
+              {name}
+            </Text>
+            {verification.showBadge && (
+              <View style={[a.pl_xs]}>
+                <VerificationCheck
+                  width={12}
+                  verifier={verification.role === 'verifier'}
+                />
+              </View>
+            )}
+          </View>
+        </View>
+      </Link>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`Remove profile`)}
+        accessibilityHint={_(msg`Removes profile from search history`)}
+        hitSlop={createHitslop(6)}
+        style={styles.profileRemoveBtn}
+        onPress={onRemove}>
+        <XIcon size="xs" style={t.atoms.text_contrast_low} />
+      </Pressable>
+    </View>
   )
 }
 
