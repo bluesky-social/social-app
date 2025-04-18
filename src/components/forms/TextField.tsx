@@ -1,12 +1,13 @@
 import React from 'react'
 import {
-  AccessibilityProps,
+  type AccessibilityProps,
+  type StyleProp,
   StyleSheet,
   TextInput,
-  TextInputProps,
-  TextStyle,
+  type TextInputProps,
+  type TextStyle,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 
 import {HITSLOP_20} from '#/lib/constants'
@@ -16,13 +17,13 @@ import {
   applyFonts,
   atoms as a,
   ios,
-  TextStyleProp,
+  type TextStyleProp,
   useAlf,
   useTheme,
   web,
 } from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
 const Context = React.createContext<{
@@ -45,9 +46,12 @@ const Context = React.createContext<{
   onBlur: () => {},
 })
 
-export type RootProps = React.PropsWithChildren<{isInvalid?: boolean}>
+export type RootProps = React.PropsWithChildren<{
+  isInvalid?: boolean
+  style?: StyleProp<ViewStyle>
+}>
 
-export function Root({children, isInvalid = false}: RootProps) {
+export function Root({children, isInvalid = false, style}: RootProps) {
   const inputRef = React.useRef<TextInput>(null)
   const {
     state: hovered,
@@ -82,7 +86,14 @@ export function Root({children, isInvalid = false}: RootProps) {
   return (
     <Context.Provider value={context}>
       <View
-        style={[a.flex_row, a.align_center, a.relative, a.w_full, a.px_md]}
+        style={[
+          a.flex_row,
+          a.align_center,
+          a.relative,
+          a.w_full,
+          a.px_md,
+          style,
+        ]}
         {...web({
           onClick: () => inputRef.current?.focus(),
           onMouseOver: onHoverIn,

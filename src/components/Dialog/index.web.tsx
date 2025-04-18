@@ -1,11 +1,11 @@
 import React, {useImperativeHandle} from 'react'
 import {
   FlatList,
-  FlatListProps,
-  StyleProp,
+  type FlatListProps,
+  type StyleProp,
   TouchableWithoutFeedback,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -21,9 +21,9 @@ import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {Context} from '#/components/Dialog/context'
 import {
-  DialogControlProps,
-  DialogInnerProps,
-  DialogOuterProps,
+  type DialogControlProps,
+  type DialogInnerProps,
+  type DialogOuterProps,
 } from '#/components/Dialog/types'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Portal} from '#/components/Portal'
@@ -195,7 +195,7 @@ export function Inner({
           onInteractOutside={preventDefault}
           onFocusOutside={preventDefault}
           onDismiss={close}
-          style={{display: 'flex', flexDirection: 'column'}}>
+          style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
           {header}
           <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
             {children}
@@ -229,10 +229,10 @@ export const InnerFlatList = React.forwardRef<
         web({maxHeight: '80vh'}),
         webInnerStyle,
       ]}
-      contentContainerStyle={[a.px_0, webInnerContentContainerStyle]}>
+      contentContainerStyle={[a.h_full, a.px_0, webInnerContentContainerStyle]}>
       <FlatList
         ref={ref}
-        style={[gtMobile ? a.px_2xl : a.px_xl, flatten(style)]}
+        style={[a.h_full, gtMobile ? a.px_2xl : a.px_xl, flatten(style)]}
         {...props}
       />
     </Inner>
