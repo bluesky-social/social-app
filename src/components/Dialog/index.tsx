@@ -248,24 +248,25 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     }
 
     return (
-      <KeyboardAwareScrollView
-        contentContainerStyle={[
-          a.pt_2xl,
-          a.px_xl,
-          {paddingBottom},
-          contentContainerStyle,
-        ]}
-        ref={ref}
-        {...props}
-        bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
-        bottomOffset={30}
-        scrollEventThrottle={50}
-        onScroll={isAndroid ? onScroll : undefined}
-        keyboardShouldPersistTaps="handled"
-        stickyHeaderIndices={header ? [0] : undefined}>
+      <>
         {header}
-        {children}
-      </KeyboardAwareScrollView>
+        <KeyboardAwareScrollView
+          contentContainerStyle={[
+            a.pt_2xl,
+            a.px_xl,
+            {paddingBottom},
+            contentContainerStyle,
+          ]}
+          ref={ref}
+          {...props}
+          bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
+          bottomOffset={30}
+          scrollEventThrottle={50}
+          onScroll={isAndroid ? onScroll : undefined}
+          keyboardShouldPersistTaps="handled">
+          {children}
+        </KeyboardAwareScrollView>
+      </>
     )
   },
 )
