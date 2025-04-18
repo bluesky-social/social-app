@@ -6,7 +6,10 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {getLabelingServiceTitle} from '#/lib/moderation'
-import {type CommonNavigatorParams, type NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
 import {

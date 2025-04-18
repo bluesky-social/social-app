@@ -16,7 +16,11 @@ import chunk from 'lodash.chunk'
 import {labelIsHideableOffense} from '#/lib/moderation'
 import * as bsky from '#/types/bsky'
 import {precacheProfile} from '../profile'
-import {type FeedNotification, type FeedPage, type NotificationType} from './types'
+import {
+  type FeedNotification,
+  type FeedPage,
+  type NotificationType,
+} from './types'
 
 const GROUPABLE_REASONS = ['like', 'repost', 'follow']
 const MS_1HR = 1e3 * 60 * 60
