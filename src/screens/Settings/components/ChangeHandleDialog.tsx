@@ -15,7 +15,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {HITSLOP_10} from '#/lib/constants'
+import {HITSLOP_10, urls} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle, validateServiceHandle} from '#/lib/strings/handles'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -210,7 +210,7 @@ function ProvidedHandlePage({
                 change your handle.{' '}
                 <InlineLinkText
                   label={_(msg`Learn more`)}
-                  to={`https://bsky.social/about`}>
+                  to={urls.website.blog.initialVerificationAnnouncement}>
                   <Trans>Learn more.</Trans>
                 </InlineLinkText>
               </Trans>

@@ -15,7 +15,7 @@ import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {MAX_DESCRIPTION, MAX_DISPLAY_NAME} from '#/lib/constants'
+import {MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {compressIfNeeded} from '#/lib/media/manip'
 import {cleanError} from '#/lib/strings/errors'
@@ -206,7 +206,7 @@ export function Component({
                       if you change your display name.{' '}
                       <InlineLinkText
                         label={_(msg`Learn more`)}
-                        to={`https://bsky.social/about`}>
+                        to={urls.website.blog.initialVerificationAnnouncement}>
                         <Trans>Learn more.</Trans>
                       </InlineLinkText>
                     </Trans>
