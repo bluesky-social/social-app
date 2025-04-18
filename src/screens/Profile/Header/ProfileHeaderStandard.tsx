@@ -37,8 +37,8 @@ import {ProfileHeaderDisplayName} from './DisplayName'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
+import QRCodeModal from './QRModal'
 import {ProfileHeaderShell} from './Shell'
-
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
   descriptionRT: RichTextAPI | null
@@ -46,7 +46,6 @@ interface Props {
   hideBackButton?: boolean
   isPlaceholderProfile?: boolean
 }
-
 let ProfileHeaderStandard = ({
   profile: profileUnshadowed,
   descriptionRT,
@@ -146,6 +145,7 @@ let ProfileHeaderStandard = ({
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )
+  const [qrModalVisible, setQRModalVisible] = React.useState(false)
 
   return (
     <ProfileHeaderShell
@@ -235,8 +235,19 @@ let ProfileHeaderStandard = ({
               </Button>
             </>
           ) : null}
-          <ProfileMenu profile={profile} />
+          <ProfileMenu
+            profile={profile}
+            isQRCodeModalVisible={qrModalVisible}
+            setIsQRCodeModalVisible={setQRModalVisible}
+          />
         </View>
+
+        <QRCodeModal
+          profile_={profile}
+          visible={qrModalVisible}
+          setVisible={setQRModalVisible}
+        />
+
         <View style={[a.flex_col, a.gap_2xs, a.pt_2xs, a.pb_sm]}>
           <ProfileHeaderDisplayName profile={profile} moderation={moderation} />
           <ProfileHeaderHandle profile={profile} />
