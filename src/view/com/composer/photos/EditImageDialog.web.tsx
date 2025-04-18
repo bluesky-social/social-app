@@ -11,7 +11,7 @@ import {
   type ImageTransformation,
   manipulateImage,
 } from '#/state/gallery'
-import {atoms as a, tokens} from '#/alf'
+import {atoms as a, flatten} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
@@ -114,6 +114,7 @@ function EditImageInner({
   Omit<EditImageDialogProps, 'control' | 'image'> & {
     saveRef: React.RefObject<{save: () => Promise<void>}>
   }) {
+  const [isDragging, setIsDragging] = useState(false)
   const {_} = useLingui()
   const control = Dialog.useDialogContext()
 
@@ -155,12 +156,17 @@ function EditImageInner({
         aspect={aspectRatio}
         circularCrop={circularCrop}
         onChange={(_pixelCrop, percentCrop) => setCrop(percentCrop)}
-        className="ReactCrop--no-animate">
+        className="ReactCrop--no-animate"
+        onDragStart={() => setIsDragging(true)}
+        onDragEnd={() => setIsDragging(false)}>
         <img
           src={source.path}
-          style={{maxHeight: `50vh`, borderRadius: tokens.borderRadius.xs}}
+          style={flatten([{maxHeight: `50vh`}, a.rounded_xs])}
         />
       </ReactCrop>
+      {/* Eat clicks when dragging, otherwise mousing up over the backdrop
+        causes the dialog to close */}
+      {isDragging && <View style={[a.fixed, a.inset_0]} />}
     </View>
   )
 }
