@@ -482,7 +482,13 @@ function Inner({
               )}
             </Text>
             {verification.showBadge && (
-              <View style={[a.pl_xs]}>
+              <View
+                style={[
+                  a.pl_xs,
+                  {
+                    marginTop: -2,
+                  },
+                ]}>
                 <VerificationCheck
                   width={16}
                   verifier={verification.role === 'verifier'}

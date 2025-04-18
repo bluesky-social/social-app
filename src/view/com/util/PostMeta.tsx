@@ -15,7 +15,7 @@ import {niceDate} from '#/lib/strings/time'
 import {isAndroid} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {precacheProfile} from '#/state/queries/profile'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, platform, useTheme, web} from '#/alf'
 import {WebOnlyInlineLinkText} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
@@ -102,7 +102,14 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
               )}
             </WebOnlyInlineLinkText>
             {verification.showBadge && (
-              <View style={[a.pl_xs, a.self_center]}>
+              <View
+                style={[
+                  a.pl_2xs,
+                  a.self_center,
+                  {
+                    marginTop: platform({web: -1, ios: -1, android: -2}),
+                  },
+                ]}>
                 <VerificationCheck
                   width={14}
                   verifier={verification.role === 'verifier'}
