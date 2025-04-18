@@ -96,14 +96,14 @@ function Inner({
           </Text>
           <Text style={[a.text_md, a.leading_snug]}>
             <Trans>
-              Accounts with this blue check mark
+              Accounts with a scalloped blue check mark
               <RNText>
                 {NON_BREAKING_SPACE}
                 <VerifierCheck width={14} />
                 {NON_BREAKING_SPACE}
               </RNText>
-              are trusted verifiers. These accounts are chosen by Bluesky and
-              have the ability to verify other accounts.
+              can verify others. These trusted verifiers are selected by
+              Bluesky.
             </Trans>
           </Text>
         </View>
@@ -116,6 +116,7 @@ function Inner({
             gtMobile ? [a.flex_row, a.justify_end] : [a.flex_col],
           ]}>
           <Link
+            overridePresentation
             to={urls.website.blog.initialVerificationAnnouncement}
             label={_(msg`Learn more about verification on Bluesky`)}
             size="small"

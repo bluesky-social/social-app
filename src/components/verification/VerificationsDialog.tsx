@@ -147,6 +147,7 @@ function Inner({
           </ButtonText>
         </Button>
         <Link
+          overridePresentation
           to={urls.website.blog.initialVerificationAnnouncement}
           label={_(msg`Learn more about verification on Bluesky`)}
           size="small"
