@@ -305,8 +305,10 @@ let EditableUserAvatar = ({
 
   const sheetWrapper = useSheetWrapper()
 
+  const circular = type !== 'algo' && type !== 'list'
+
   const aviStyle = useMemo(() => {
-    if (type === 'algo' || type === 'list') {
+    if (!circular) {
       return {
         width: size,
         height: size,
@@ -318,7 +320,7 @@ let EditableUserAvatar = ({
       height: size,
       borderRadius: Math.floor(size / 2),
     }
-  }, [type, size])
+  }, [circular, size])
 
   const onOpenCamera = React.useCallback(async () => {
     if (!(await requestCameraAccessIfNeeded())) {
@@ -355,7 +357,7 @@ let EditableUserAvatar = ({
           await compressIfNeeded(
             await openCropper({
               imageUri: item.path,
-              shape: 'circle',
+              shape: circular ? 'circle' : 'rectangle',
               aspectRatio: 1,
             }),
           ),
@@ -375,6 +377,7 @@ let EditableUserAvatar = ({
     requestPhotoAccessIfNeeded,
     sheetWrapper,
     editImageDialogControl,
+    circular,
   ])
 
   const onRemoveAvatar = React.useCallback(() => {
@@ -469,7 +472,7 @@ let EditableUserAvatar = ({
         image={rawImage}
         onChange={onChangeEditImage}
         aspectRatio={1}
-        circularCrop
+        circularCrop={circular}
       />
     </>
   )
