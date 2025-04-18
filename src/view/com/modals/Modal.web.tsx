@@ -4,7 +4,7 @@ import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import type {Modal as ModalIface} from '#/state/modals'
+import {type Modal as ModalIface} from '#/state/modals'
 import {useModalControls, useModals} from '#/state/modals'
 import * as ChangeEmailModal from './ChangeEmail'
 import * as ChangePasswordModal from './ChangePassword'
@@ -16,7 +16,6 @@ import * as InviteCodesModal from './InviteCodes'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as LinkWarningModal from './LinkWarning'
-import * as ListAddUserModal from './ListAddRemoveUsers'
 import * as UserAddRemoveLists from './UserAddRemoveLists'
 import * as VerifyEmailModal from './VerifyEmail'
 
@@ -65,8 +64,6 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <CreateOrEditListModal.Component {...modal} />
   } else if (modal.name === 'user-add-remove-lists') {
     element = <UserAddRemoveLists.Component {...modal} />
-  } else if (modal.name === 'list-add-remove-users') {
-    element = <ListAddUserModal.Component {...modal} />
   } else if (modal.name === 'crop-image') {
     element = <CropImageModal.Component {...modal} />
   } else if (modal.name === 'delete-account') {
