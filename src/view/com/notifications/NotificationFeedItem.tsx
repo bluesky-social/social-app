@@ -525,7 +525,6 @@ let NotificationFeedItem = ({
                 style={[
                   a.flex_row,
                   a.flex_wrap,
-                  a.pb_2xs,
                   {paddingTop: 6},
                   a.self_start,
                   a.text_md,
@@ -553,7 +552,9 @@ let NotificationFeedItem = ({
               </Text>
             </ExpandListPressable>
             {item.type === 'post-like' || item.type === 'repost' ? (
-              <AdditionalPostText post={item.subject} />
+              <View style={[a.pt_2xs]}>
+                <AdditionalPostText post={item.subject} />
+              </View>
             ) : null}
             {item.type === 'feedgen-like' && item.subjectUri ? (
               <FeedSourceCard
@@ -856,7 +857,7 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
         {text?.length > 0 && (
           <Text
             emoji
-            style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
             {text}
           </Text>
         )}
