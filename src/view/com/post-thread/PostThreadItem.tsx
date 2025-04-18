@@ -354,7 +354,7 @@ let PostThreadItemLoaded = ({
                   </Text>
                 </Link>
 
-                <View style={[a.pl_xs]}>
+                <View style={[{paddingLeft: 3, top: -1}]}>
                   <VerificationCheckButton
                     profile={shadowedPostAuthor}
                     size="md"

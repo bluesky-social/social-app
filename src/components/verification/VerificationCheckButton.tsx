@@ -81,7 +81,7 @@ export function Badge({
   if (size === 'lg') {
     dimensions = gtPhone ? 20 : 18
   } else if (size === 'md') {
-    dimensions = 14
+    dimensions = 16
   }
 
   const verifiedByHidden = !state.profile.showBadge && state.profile.isViewer

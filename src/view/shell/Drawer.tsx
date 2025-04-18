@@ -93,7 +93,7 @@ let DrawerProfileCard = ({
           {verification.showBadge && (
             <View
               style={{
-                top: 1,
+                top: 0,
               }}>
               <VerificationCheck
                 width={16}

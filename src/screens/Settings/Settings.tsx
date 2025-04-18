@@ -320,7 +320,7 @@ function ProfilePreview({
           <View
             style={[
               {
-                marginTop: platform({web: 10, ios: 9, android: 13}),
+                marginTop: platform({web: 8, ios: 8, android: 10}),
               },
             ]}>
             <VerificationCheckButton profile={shadow} size="lg" />
