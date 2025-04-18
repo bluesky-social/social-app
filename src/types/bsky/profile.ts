@@ -7,6 +7,4 @@ export type AnyProfileView =
   | AppBskyActorDefs.ProfileViewBasic
   | AppBskyActorDefs.ProfileView
   | AppBskyActorDefs.ProfileViewDetailed
-  | (ChatBskyActorDefs.ProfileViewBasic & {
-      verification?: AppBskyActorDefs.VerificationState
-    })
+  | ChatBskyActorDefs.ProfileViewBasic
