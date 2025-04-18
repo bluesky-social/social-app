@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 import {DropdownMenu} from 'radix-ui'
 
 import {useSession} from '#/state/session'
-import {type Emoji} from '#/view/com/composer/text-input/web/EmojiPicker.web'
+import {type Emoji} from '#/view/com/composer/text-input/web/EmojiPicker'
 import {useWebPreloadEmoji} from '#/view/com/composer/text-input/web/useWebPreloadEmoji'
 import {atoms as a, flatten, useTheme} from '#/alf'
 import {DotGrid_Stroke2_Corner0_Rounded as DotGridIcon} from '#/components/icons/DotGrid'

@@ -10,7 +10,7 @@ import {
   EmojiPicker,
   type EmojiPickerPosition,
   type EmojiPickerState,
-} from '#/view/com/composer/text-input/web/EmojiPicker.web'
+} from '#/view/com/composer/text-input/web/EmojiPicker'
 import {atoms as a, flatten, useBreakpoints, useTheme} from '#/alf'
 import {ComposePost, useComposerCancelRef} from '../com/composer/Composer'
 
