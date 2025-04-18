@@ -42,6 +42,7 @@ export function Screen() {
                 Verifications on Bluesky work differently than on other
                 platforms.{' '}
                 <InlineLinkText
+                  overridePresentation
                   to={urls.website.blog.initialVerificationAnnouncement}
                   label={_(msg`Learn more`)}
                   onPress={() => {
@@ -76,8 +77,8 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
   return (
     <Toggle.Item
       type="checkbox"
-      name="show-replies"
-      label={_(msg`Show replies`)}
+      name="hideBadges"
+      label={_(msg`Hide blue checks`)}
       value={hideBadges}
       disabled={isPending}
       onChange={value => {
