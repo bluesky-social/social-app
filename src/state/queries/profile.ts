@@ -1,18 +1,17 @@
 import {useCallback} from 'react'
-import {Image as RNImage} from 'react-native-image-crop-picker'
 import {
-  AppBskyActorDefs,
-  AppBskyActorGetProfile,
-  AppBskyActorGetProfiles,
-  AppBskyActorProfile,
+  type AppBskyActorDefs,
+  type AppBskyActorGetProfile,
+  type AppBskyActorGetProfiles,
+  type AppBskyActorProfile,
   AtUri,
-  BskyAgent,
-  ComAtprotoRepoUploadBlob,
-  Un$Typed,
+  type BskyAgent,
+  type ComAtprotoRepoUploadBlob,
+  type Un$Typed,
 } from '@atproto/api'
 import {
   keepPreviousData,
-  QueryClient,
+  type QueryClient,
   useMutation,
   useQuery,
   useQueryClient,
@@ -21,18 +20,19 @@ import {
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
-import {logEvent, LogEvents, toClout} from '#/lib/statsig/statsig'
-import {Shadow} from '#/state/cache/types'
+import {logEvent, type LogEvents, toClout} from '#/lib/statsig/statsig'
+import {updateProfileShadow} from '#/state/cache/profile-shadow'
+import {type Shadow} from '#/state/cache/types'
+import {type ImageMeta} from '#/state/gallery'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {
   unstableCacheProfileView,
   useUnstableProfileViewCache,
 } from '#/state/queries/unstable-profile-cache'
+import {useAgent, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
-import * as bsky from '#/types/bsky'
-import {updateProfileShadow} from '../cache/profile-shadow'
-import {useAgent, useSession} from '../session'
+import type * as bsky from '#/types/bsky'
 import {
   ProgressGuideAction,
   useProgressGuideControls,
@@ -130,8 +130,8 @@ interface ProfileUpdateParams {
     | ((
         existing: Un$Typed<AppBskyActorProfile.Record>,
       ) => Un$Typed<AppBskyActorProfile.Record>)
-  newUserAvatar?: RNImage | undefined | null
-  newUserBanner?: RNImage | undefined | null
+  newUserAvatar?: ImageMeta | undefined | null
+  newUserBanner?: ImageMeta | undefined | null
   checkCommitted?: (res: AppBskyActorGetProfile.Response) => boolean
 }
 export function useProfileUpdateMutation() {

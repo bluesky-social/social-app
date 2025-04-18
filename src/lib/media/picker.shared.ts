@@ -1,9 +1,7 @@
 import {
-  ImagePickerOptions,
+  type ImagePickerOptions,
   launchImageLibraryAsync,
-  MediaTypeOptions,
 } from 'expo-image-picker'
-// TODO: replace global i18n instance with one returned from useLingui -sfn
 import {t} from '@lingui/macro'
 
 import * as Toast from '#/view/com/util/Toast'
@@ -12,7 +10,7 @@ import {getDataUriSize} from './util'
 export async function openPicker(opts?: ImagePickerOptions) {
   const response = await launchImageLibraryAsync({
     exif: false,
-    mediaTypes: MediaTypeOptions.Images,
+    mediaTypes: ['images'],
     quality: 1,
     ...opts,
     legacy: true,

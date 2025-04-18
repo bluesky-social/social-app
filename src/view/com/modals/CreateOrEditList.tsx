@@ -8,21 +8,20 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {Image as RNImage} from 'react-native-image-crop-picker'
 import {LinearGradient} from 'expo-linear-gradient'
-import {AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
+import {type AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {compressIfNeeded} from '#/lib/media/manip'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {enforceLen} from '#/lib/strings/helpers'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {colors, gradients, s} from '#/lib/styles'
 import {useTheme} from '#/lib/ThemeContext'
+import {type ImageMeta} from '#/state/gallery'
 import {useModalControls} from '#/state/modals'
 import {
   useListCreateMutation,
@@ -95,7 +94,7 @@ export function Component({
   const isDescriptionOver = graphemeLength > MAX_DESCRIPTION
 
   const [avatar, setAvatar] = useState<string | undefined>(list?.avatar)
-  const [newAvatar, setNewAvatar] = useState<RNImage | undefined | null>()
+  const [newAvatar, setNewAvatar] = useState<ImageMeta | undefined | null>()
 
   const onDescriptionChange = useCallback(
     (newText: string) => {
@@ -112,16 +111,15 @@ export function Component({
   }, [closeModal])
 
   const onSelectNewAvatar = useCallback(
-    async (img: RNImage | null) => {
+    (img: ImageMeta | null) => {
       if (!img) {
         setNewAvatar(null)
         setAvatar(undefined)
         return
       }
       try {
-        const finalImg = await compressIfNeeded(img, 1000000)
-        setNewAvatar(finalImg)
-        setAvatar(finalImg.path)
+        setNewAvatar(img)
+        setAvatar(img.path)
       } catch (e: any) {
         setError(cleanError(e))
       }

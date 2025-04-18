@@ -11,10 +11,9 @@ import {useLingui} from '@lingui/react'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {logger} from '#/logger'
-import {isIOS, isWeb} from '#/platform/detection'
+import {isIOS} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {type Shadow} from '#/state/cache/types'
-import {useModalControls} from '#/state/modals'
 import {
   useProfileBlockMutationQueue,
   useProfileFollowMutationQueue,
@@ -74,19 +73,7 @@ let ProfileHeaderStandard = ({
     profile.viewer?.blockedBy ||
     profile.viewer?.blockingByList
 
-  const {openModal} = useModalControls()
   const editProfileControl = useDialogControl()
-  const onPressEditProfile = React.useCallback(() => {
-    if (isWeb) {
-      // temp, while we figure out the nested dialog bug
-      openModal({
-        name: 'edit-profile',
-        profile,
-      })
-    } else {
-      editProfileControl.open()
-    }
-  }, [editProfileControl, openModal, profile])
 
   const onPressFollow = () => {
     requireAuth(async () => {
@@ -174,7 +161,7 @@ let ProfileHeaderStandard = ({
                 size="small"
                 color="secondary"
                 variant="solid"
-                onPress={onPressEditProfile}
+                onPress={editProfileControl.open}
                 label={_(msg`Edit profile`)}
                 style={[a.rounded_full]}>
                 <ButtonText>

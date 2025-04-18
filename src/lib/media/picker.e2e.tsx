@@ -1,5 +1,5 @@
 import {
-  Image as RNImage,
+  type Image as RNImage,
   openCropper as openCropperFn,
 } from 'react-native-image-crop-picker'
 import {
@@ -9,7 +9,7 @@ import {
 } from 'expo-file-system'
 
 import {compressIfNeeded} from './manip'
-import {CropperOptions} from './types'
+import {type CropperOptions} from './types'
 
 async function getFile() {
   const imagesDir = documentDirectory!

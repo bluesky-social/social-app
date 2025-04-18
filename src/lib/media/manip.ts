@@ -1,5 +1,5 @@
 import {Image as RNImage, Share as RNShare} from 'react-native'
-import {Image} from 'react-native-image-crop-picker'
+import {type Image} from 'react-native-image-crop-picker'
 import uuid from 'react-native-uuid'
 import {
   cacheDirectory,
@@ -20,11 +20,11 @@ import RNFetchBlob from 'rn-fetch-blob'
 import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
-import {Dimensions} from './types'
+import {type Dimensions} from './types'
 
 export async function compressIfNeeded(
   img: Image,
-  maxSize: number = 1000000,
+  maxSize: number = POST_IMG_MAX.size,
 ): Promise<Image> {
   const origUri = `file://${img.path}`
   if (img.size < maxSize) {

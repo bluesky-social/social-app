@@ -1,10 +1,10 @@
 import {
-  Image as RNImage,
+  type Image as RNImage,
   openCamera as openCameraFn,
   openCropper as openCropperFn,
 } from 'react-native-image-crop-picker'
 
-import {CameraOpts, CropperOptions} from './types'
+import {type CameraOpts, type CropperOptions} from './types'
 export {openPicker} from './picker.shared'
 
 export async function openCamera(opts: CameraOpts): Promise<RNImage> {

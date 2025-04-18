@@ -1,24 +1,24 @@
 import {useCallback, useEffect, useState} from 'react'
 import {Dimensions, View} from 'react-native'
-import {Image as RNImage} from 'react-native-image-crop-picker'
-import {AppBskyActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {compressIfNeeded} from '#/lib/media/manip'
 import {cleanError} from '#/lib/strings/errors'
 import {useWarnMaxGraphemeCount} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
+import {type ImageMeta} from '#/state/gallery'
 import {useProfileUpdateMutation} from '#/state/queries/profile'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import * as Toast from '#/view/com/util/Toast'
 import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
@@ -120,10 +120,10 @@ function DialogInner({
     profile.avatar,
   )
   const [newUserBanner, setNewUserBanner] = useState<
-    RNImage | undefined | null
+    ImageMeta | undefined | null
   >()
   const [newUserAvatar, setNewUserAvatar] = useState<
-    RNImage | undefined | null
+    ImageMeta | undefined | null
   >()
 
   const dirty =
@@ -137,7 +137,7 @@ function DialogInner({
   }, [dirty, setDirty])
 
   const onSelectNewAvatar = useCallback(
-    async (img: RNImage | null) => {
+    (img: ImageMeta | null) => {
       setImageError('')
       if (img === null) {
         setNewUserAvatar(null)
@@ -145,9 +145,8 @@ function DialogInner({
         return
       }
       try {
-        const finalImg = await compressIfNeeded(img, 1000000)
-        setNewUserAvatar(finalImg)
-        setUserAvatar(finalImg.path)
+        setNewUserAvatar(img)
+        setUserAvatar(img.path)
       } catch (e: any) {
         setImageError(cleanError(e))
       }
@@ -156,7 +155,7 @@ function DialogInner({
   )
 
   const onSelectNewBanner = useCallback(
-    async (img: RNImage | null) => {
+    (img: ImageMeta | null) => {
       setImageError('')
       if (!img) {
         setNewUserBanner(null)
@@ -164,9 +163,8 @@ function DialogInner({
         return
       }
       try {
-        const finalImg = await compressIfNeeded(img, 1000000)
-        setNewUserBanner(finalImg)
-        setUserBanner(finalImg.path)
+        setNewUserBanner(img)
+        setUserBanner(img.path)
       } catch (e: any) {
         setImageError(cleanError(e))
       }
@@ -251,6 +249,7 @@ function DialogInner({
         <ButtonText style={[a.text_md, !dirty && t.atoms.text_contrast_low]}>
           <Trans>Save</Trans>
         </ButtonText>
+        {isUpdatingProfile && <ButtonIcon icon={Loader} />}
       </Button>
     ),
     [
