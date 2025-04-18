@@ -136,7 +136,7 @@ function DialogInner({
         case 'empty': {
           return (
             <View
-              style={[a.flex_1, a.align_center, a.gap_sm, a.px_xl, a.pt_xl]}>
+              style={[a.flex_1, a.align_center, a.gap_sm, a.px_xl, a.pt_5xl]}>
               <View
                 style={[
                   a.align_center,
