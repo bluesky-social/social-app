@@ -242,7 +242,9 @@ function toKnownType(
     notif.reason === 'reply' ||
     notif.reason === 'quote' ||
     notif.reason === 'follow' ||
-    notif.reason === 'starterpack-joined'
+    notif.reason === 'starterpack-joined' ||
+    notif.reason === 'verified' ||
+    notif.reason === 'unverified'
   ) {
     return notif.reason as NotificationType
   }
