@@ -115,7 +115,7 @@ export function InitialVerificationAnnouncement() {
                 },
               ]}
               alt={_(
-                msg`An mockup of a iPhone showing the Bluesky app open to the profile of a verified user with a blue checkmark next to their display name.`,
+                msg`A mockup of an iPhone showing the Bluesky app open to the profile of a verified user with a blue checkmark next to their display name.`,
               )}
             />
           </View>
