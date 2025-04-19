@@ -1,23 +1,23 @@
 import React from 'react'
 import {
-  AccessibilityProps,
-  GestureResponderEvent,
-  MouseEvent,
-  NativeSyntheticEvent,
+  type AccessibilityProps,
+  type GestureResponderEvent,
+  type MouseEvent,
+  type NativeSyntheticEvent,
   Pressable,
-  PressableProps,
-  StyleProp,
+  type PressableProps,
+  type StyleProp,
   StyleSheet,
-  TargetedEvent,
-  TextProps,
-  TextStyle,
+  type TargetedEvent,
+  type TextProps,
+  type TextStyle,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
 
 import {atoms as a, flatten, select, tokens, useTheme} from '#/alf'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
 export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'
@@ -597,7 +597,7 @@ export function useSharedButtonTextStyles() {
       if (variant === 'solid' || variant === 'gradient') {
         if (!disabled) {
           baseStyles.push({
-            color: t.palette.contrast_100,
+            color: t.palette.contrast_50,
           })
         } else {
           baseStyles.push({

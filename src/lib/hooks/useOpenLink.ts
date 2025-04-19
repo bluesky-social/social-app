@@ -12,16 +12,18 @@ import {
   toNiceDomain,
 } from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
-import {useModalControls} from '#/state/modals'
 import {useInAppBrowser} from '#/state/preferences/in-app-browser'
 import {useTheme} from '#/alf'
+import {useDialogContext} from '#/components/Dialog'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 
 export function useOpenLink() {
-  const {openModal} = useModalControls()
   const enabled = useInAppBrowser()
   const t = useTheme()
   const sheetWrapper = useSheetWrapper()
+  const dialogContext = useDialogContext()
+  const {inAppBrowserConsentControl} = useGlobalDialogsControlContext()
 
   const openLink = useCallback(
     async (url: string, override?: boolean, shouldProxy?: boolean) => {
@@ -42,10 +44,17 @@ export function useOpenLink() {
 
       if (isNative && !url.startsWith('mailto:')) {
         if (override === undefined && enabled === undefined) {
-          openModal({
-            name: 'in-app-browser-consent',
-            href: url,
-          })
+          // consent dialog is a global dialog, and while it's possible to nest dialogs,
+          // the actual components need to be nested. sibling dialogs on iOS are not supported.
+          // thus, check if we're in a dialog, and if so, close the existing dialog before opening the
+          // consent dialog -sfn
+          if (dialogContext.isWithinDialog) {
+            dialogContext.close(() => {
+              inAppBrowserConsentControl.open(url)
+            })
+          } else {
+            inAppBrowserConsentControl.open(url)
+          }
           return
         } else if (override ?? enabled) {
           await sheetWrapper(
@@ -62,7 +71,7 @@ export function useOpenLink() {
       }
       Linking.openURL(url)
     },
-    [enabled, openModal, t, sheetWrapper],
+    [enabled, inAppBrowserConsentControl, t, sheetWrapper, dialogContext],
   )
 
   return openLink
