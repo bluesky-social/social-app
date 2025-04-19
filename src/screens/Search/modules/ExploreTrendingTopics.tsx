@@ -265,12 +265,12 @@ export function TrendingTopicRowSkeleton({}: {withPosts: boolean}) {
               style={[a.rounded_full]}
             />
           </View>
-          <LoadingPlaceholder width={90} height={18} />
+          <LoadingPlaceholder width={90} height={17} />
         </View>
         <View style={[a.flex_row, a.gap_sm, a.align_center, {paddingLeft: 20}]}>
-          <LoadingPlaceholder width={70} height={18} />
-          <LoadingPlaceholder width={40} height={18} />
-          <LoadingPlaceholder width={60} height={18} />
+          <LoadingPlaceholder width={70} height={16} />
+          <LoadingPlaceholder width={40} height={16} />
+          <LoadingPlaceholder width={60} height={16} />
         </View>
       </View>
       <View style={[a.flex_shrink_0]}>
