@@ -78,7 +78,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         t.atoms.border_contrast_medium,
       ]}
       onPress={onPress}
-      accessibilityRole="button"
+      accessibilityRole="text"
       accessibilityLabel={_(
         msg`Expand or collapse the full post you are replying to`,
       )}
