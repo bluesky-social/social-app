@@ -1,18 +1,18 @@
 import {useCallback} from 'react'
-import {Image as RNImage} from 'react-native-image-crop-picker'
+import {type Image as RNImage} from 'react-native-image-crop-picker'
 import {
-  AppBskyActorDefs,
-  AppBskyActorGetProfile,
-  AppBskyActorGetProfiles,
-  AppBskyActorProfile,
+  type AppBskyActorDefs,
+  type AppBskyActorGetProfile,
+  type AppBskyActorGetProfiles,
+  type AppBskyActorProfile,
   AtUri,
-  BskyAgent,
-  ComAtprotoRepoUploadBlob,
-  Un$Typed,
+  type BskyAgent,
+  type ComAtprotoRepoUploadBlob,
+  type Un$Typed,
 } from '@atproto/api'
 import {
   keepPreviousData,
-  QueryClient,
+  type QueryClient,
   useMutation,
   useQuery,
   useQueryClient,
@@ -21,16 +21,17 @@ import {
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
-import {logEvent, LogEvents, toClout} from '#/lib/statsig/statsig'
-import {Shadow} from '#/state/cache/types'
+import {logEvent, type LogEvents, toClout} from '#/lib/statsig/statsig'
+import {type Shadow} from '#/state/cache/types'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {
   unstableCacheProfileView,
   useUnstableProfileViewCache,
 } from '#/state/queries/unstable-profile-cache'
+import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
 import * as userActionHistory from '#/state/userActionHistory'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 import {updateProfileShadow} from '../cache/profile-shadow'
 import {useAgent, useSession} from '../session'
 import {
@@ -50,7 +51,7 @@ export const precacheProfile = unstableCacheProfileView
 const RQKEY_ROOT = 'profile'
 export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
-const profilesQueryKeyRoot = 'profiles'
+export const profilesQueryKeyRoot = 'profiles'
 export const profilesQueryKey = (handles: string[]) => [
   profilesQueryKeyRoot,
   handles,
@@ -137,6 +138,7 @@ interface ProfileUpdateParams {
 export function useProfileUpdateMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
+  const updateProfileVerificationCache = useUpdateProfileVerificationCache()
   return useMutation<void, Error, ProfileUpdateParams>({
     mutationFn: async ({
       profile,
@@ -223,7 +225,7 @@ export function useProfileUpdateMutation() {
           }),
       )
     },
-    onSuccess(data, variables) {
+    async onSuccess(_, variables) {
       // invalidate cache
       queryClient.invalidateQueries({
         queryKey: RQKEY(variables.profile.did),
@@ -231,6 +233,7 @@ export function useProfileUpdateMutation() {
       queryClient.invalidateQueries({
         queryKey: [profilesQueryKeyRoot, [variables.profile.did]],
       })
+      await updateProfileVerificationCache({profile: variables.profile})
     },
   })
 }

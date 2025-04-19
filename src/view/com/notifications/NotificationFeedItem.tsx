@@ -49,7 +49,7 @@ import {Post} from '#/view/com/post/Post'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
@@ -59,12 +59,15 @@ import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled} from '#/compon
 import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {StarterPack} from '#/components/icons/StarterPack'
+import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
 import {InlineLinkText, Link} from '#/components/Link'
 import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import * as bsky from '#/types/bsky'
 
 const MAX_AUTHORS = 5
@@ -145,6 +148,9 @@ let NotificationFeedItem = ({
 
   const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
   const firstAuthor = authors[0]
+  const firstAuthorVerification = useSimpleVerificationState({
+    profile: firstAuthor.profile,
+  })
   const firstAuthorName = sanitizeDisplayName(
     firstAuthor.profile.displayName || firstAuthor.profile.handle,
   )
@@ -186,6 +192,24 @@ let NotificationFeedItem = ({
       emoji
       label={_(msg`Go to ${firstAuthorName}'s profile`)}>
       {forceLTR(firstAuthorName)}
+      {firstAuthorVerification.showBadge && (
+        <View
+          style={[
+            a.relative,
+            {
+              paddingTop: platform({android: 2}),
+              marginBottom: platform({ios: -7}),
+              top: platform({web: 1}),
+              paddingLeft: 3,
+              paddingRight: 2,
+            },
+          ]}>
+          <VerificationCheck
+            width={14}
+            verifier={firstAuthorVerification.role === 'verifier'}
+          />
+        </View>
+      )}
     </InlineLinkText>
   )
   const additionalAuthorsCount = authors.length - 1
@@ -366,6 +390,60 @@ let NotificationFeedItem = ({
         <StarterPack width={30} gradient="sky" />
       </View>
     )
+    // @ts-ignore TODO
+  } else if (item.type === 'verified') {
+    a11yLabel = hasMultipleAuthors
+      ? _(
+          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+            one: `${formattedAuthorsCount} other`,
+            other: `${formattedAuthorsCount} others`,
+          })} verified you`,
+        )
+      : _(msg`${firstAuthorName} verified you`)
+    notificationContent = hasMultipleAuthors ? (
+      <Trans>
+        {firstAuthorLink} and{' '}
+        <Text style={[pal.text, s.bold]}>
+          <Plural
+            value={additionalAuthorsCount}
+            one={`${formattedAuthorsCount} other`}
+            other={`${formattedAuthorsCount} others`}
+          />
+        </Text>{' '}
+        verified you
+      </Trans>
+    ) : (
+      <Trans>{firstAuthorLink} verified you</Trans>
+    )
+    icon = <VerifiedCheck size="xl" />
+    // @ts-ignore TODO
+  } else if (item.type === 'unverified') {
+    a11yLabel = hasMultipleAuthors
+      ? _(
+          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+            one: `${formattedAuthorsCount} other`,
+            other: `${formattedAuthorsCount} others`,
+          })} removed their verifications from your account`,
+        )
+      : _(msg`${firstAuthorName} removed their verification from your account`)
+    notificationContent = hasMultipleAuthors ? (
+      <Trans>
+        {firstAuthorLink} and{' '}
+        <Text style={[pal.text, s.bold]}>
+          <Plural
+            value={additionalAuthorsCount}
+            one={`${formattedAuthorsCount} other`}
+            other={`${formattedAuthorsCount} others`}
+          />
+        </Text>{' '}
+        removed their verifications from your account
+      </Trans>
+    ) : (
+      <Trans>
+        {firstAuthorLink} removed their verification from your account
+      </Trans>
+    )
+    icon = <VerifiedCheck size="xl" fill={t.palette.contrast_500} />
   } else {
     return null
   }
@@ -447,7 +525,6 @@ let NotificationFeedItem = ({
                 style={[
                   a.flex_row,
                   a.flex_wrap,
-                  a.pb_2xs,
                   {paddingTop: 6},
                   a.self_start,
                   a.text_md,
@@ -475,7 +552,9 @@ let NotificationFeedItem = ({
               </Text>
             </ExpandListPressable>
             {item.type === 'post-like' || item.type === 'repost' ? (
-              <AdditionalPostText post={item.subject} />
+              <View style={[a.pt_2xs]}>
+                <AdditionalPostText post={item.subject} />
+              </View>
             ) : null}
             {item.type === 'feedgen-like' && item.subjectUri ? (
               <FeedSourceCard
@@ -672,8 +751,6 @@ function ExpandedAuthorsList({
   visible: boolean
   authors: Author[]
 }) {
-  const {_} = useLingui()
-  const t = useTheme()
   const heightInterp = useAnimatedValue(visible ? 1 : 0)
   const targetHeight =
     authors.length * (EXPANDED_AUTHOR_EL_HEIGHT + 10) /*10=margin*/
@@ -692,56 +769,75 @@ function ExpandedAuthorsList({
     <Animated.View style={[a.overflow_hidden, heightStyle]}>
       {visible &&
         authors.map(author => (
-          <Link
-            key={author.profile.did}
-            label={author.profile.displayName || author.profile.handle}
-            accessibilityHint={_(msg`Opens this profile`)}
-            to={makeProfileLink({
-              did: author.profile.did,
-              handle: author.profile.handle,
-            })}
-            style={styles.expandedAuthor}>
-            <View style={[a.mr_sm]}>
-              <ProfileHoverCard did={author.profile.did}>
-                <UserAvatar
-                  size={35}
-                  avatar={author.profile.avatar}
-                  moderation={author.moderation.ui('avatar')}
-                  type={author.profile.associated?.labeler ? 'labeler' : 'user'}
-                />
-              </ProfileHoverCard>
-            </View>
-            <View style={[a.flex_1]}>
-              <View style={[a.flex_row, a.align_end]}>
-                <Text
-                  numberOfLines={1}
-                  emoji
-                  style={[
-                    a.text_md,
-                    a.font_bold,
-                    a.leading_tight,
-                    {maxWidth: '70%'},
-                  ]}>
-                  {sanitizeDisplayName(
-                    author.profile.displayName || author.profile.handle,
-                  )}
-                </Text>
-                <Text
-                  numberOfLines={1}
-                  style={[
-                    a.pl_xs,
-                    a.text_md,
-                    a.leading_tight,
-                    a.flex_shrink,
-                    t.atoms.text_contrast_medium,
-                  ]}>
-                  {sanitizeHandle(author.profile.handle, '@')}
-                </Text>
-              </View>
-            </View>
-          </Link>
+          <ExpandedAuthorCard key={author.profile.did} author={author} />
         ))}
     </Animated.View>
+  )
+}
+
+function ExpandedAuthorCard({author}: {author: Author}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const verification = useSimpleVerificationState({
+    profile: author.profile,
+  })
+  return (
+    <Link
+      key={author.profile.did}
+      label={author.profile.displayName || author.profile.handle}
+      accessibilityHint={_(msg`Opens this profile`)}
+      to={makeProfileLink({
+        did: author.profile.did,
+        handle: author.profile.handle,
+      })}
+      style={styles.expandedAuthor}>
+      <View style={[a.mr_sm]}>
+        <ProfileHoverCard did={author.profile.did}>
+          <UserAvatar
+            size={35}
+            avatar={author.profile.avatar}
+            moderation={author.moderation.ui('avatar')}
+            type={author.profile.associated?.labeler ? 'labeler' : 'user'}
+          />
+        </ProfileHoverCard>
+      </View>
+      <View style={[a.flex_1]}>
+        <View style={[a.flex_row, a.align_end]}>
+          <Text
+            numberOfLines={1}
+            emoji
+            style={[
+              a.text_md,
+              a.font_bold,
+              a.leading_tight,
+              {maxWidth: '70%'},
+            ]}>
+            {sanitizeDisplayName(
+              author.profile.displayName || author.profile.handle,
+            )}
+          </Text>
+          {verification.showBadge && (
+            <View style={[a.pl_xs, a.self_center]}>
+              <VerificationCheck
+                width={14}
+                verifier={verification.role === 'verifier'}
+              />
+            </View>
+          )}
+          <Text
+            numberOfLines={1}
+            style={[
+              a.pl_xs,
+              a.text_md,
+              a.leading_tight,
+              a.flex_shrink,
+              t.atoms.text_contrast_medium,
+            ]}>
+            {sanitizeHandle(author.profile.handle, '@')}
+          </Text>
+        </View>
+      </View>
+    </Link>
   )
 }
 
@@ -761,7 +857,7 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
         {text?.length > 0 && (
           <Text
             emoji
-            style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
             {text}
           </Text>
         )}

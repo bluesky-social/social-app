@@ -30,6 +30,8 @@ import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import * as Pills from '#/components/Pills'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import type * as bsky from '#/types/bsky'
 
 export function Default({
@@ -186,13 +188,24 @@ export function Name({
     profile.displayName || sanitizeHandle(profile.handle),
     moderation.ui('displayName'),
   )
+  const verification = useSimpleVerificationState({profile})
   return (
-    <Text
-      emoji
-      style={[a.text_md, a.font_bold, a.leading_snug, a.self_start]}
-      numberOfLines={1}>
-      {name}
-    </Text>
+    <View style={[a.flex_row, a.align_center]}>
+      <Text
+        emoji
+        style={[a.text_md, a.font_bold, a.leading_snug, a.self_start]}
+        numberOfLines={1}>
+        {name}
+      </Text>
+      {verification.showBadge && (
+        <View style={[a.pl_xs]}>
+          <VerificationCheck
+            width={14}
+            verifier={verification.role === 'verifier'}
+          />
+        </View>
+      )}
+    </View>
   )
 }
 

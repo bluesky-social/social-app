@@ -10,18 +10,19 @@ import Animated, {
   SlideOutLeft,
   SlideOutRight,
 } from 'react-native-reanimated'
-import {ComAtprotoServerDescribeServer} from '@atproto/api'
+import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {HITSLOP_10} from '#/lib/constants'
+import {HITSLOP_10, urls} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle, validateServiceHandle} from '#/lib/strings/handles'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useServiceQuery} from '#/state/queries/service'
+import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {atoms as a, native, useBreakpoints, useTheme} from '#/alf'
@@ -40,6 +41,7 @@ import {SquareBehindSquare4_Stroke2_Corner0_Rounded as CopyIcon} from '#/compone
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
 import {CopyButton} from './CopyButton'
 
 export function ChangeHandleDialog({
@@ -152,6 +154,10 @@ function ProvidedHandlePage({
   const control = Dialog.useDialogContext()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
+  const profile = useCurrentAccountProfile()
+  const verification = useSimpleVerificationState({
+    profile,
+  })
 
   const {
     mutate: changeHandle,
@@ -197,6 +203,19 @@ function ProvidedHandlePage({
         <Animated.View
           layout={native(LinearTransition)}
           style={[a.flex_1, a.gap_md]}>
+          {verification.isVerified && verification.role === 'default' && (
+            <Admonition type="error">
+              <Trans>
+                You are verified. You will lose your verification status if you
+                change your handle.{' '}
+                <InlineLinkText
+                  label={_(msg`Learn more`)}
+                  to={urls.website.blog.initialVerificationAnnouncement}>
+                  <Trans>Learn more.</Trans>
+                </InlineLinkText>
+              </Trans>
+            </Admonition>
+          )}
           <View>
             <TextField.LabelText>
               <Trans>New handle</Trans>
