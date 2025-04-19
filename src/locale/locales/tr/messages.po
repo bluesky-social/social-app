@@ -1665,12 +1665,12 @@ msgstr "Şifre güncelleme uyarısını kapatır"
 
 #: src/view/com/composer/Composer.tsx:945
 msgid "Closes post composer and discards post draft"
-msgstr ""
+msgstr "Gönderi düzenleyicisini kapatır ve taslağı siler"
 
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
 #: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
 msgid "Closes the emoji picker"
-msgstr ""
+msgstr "Emoji seçiciyi kapatır"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:32
 msgid "Closes viewer for header image"
