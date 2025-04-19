@@ -2511,6 +2511,10 @@ msgstr "Ní thosaíonn ná chríochnaíonn sé le fleiscín"
 msgid "Domain verified!"
 msgstr "Fearann dearbhaithe!"
 
+#: src/components/dialogs/VerifyEmailDialog.tsx:155
+msgid "Don't have access to"
+msgstr ""
+
 #: src/components/dialogs/BirthDateSettings.tsx:115
 #: src/components/dialogs/BirthDateSettings.tsx:121
 #: src/components/dms/ReportDialog.tsx:314

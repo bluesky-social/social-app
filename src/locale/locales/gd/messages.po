@@ -2511,6 +2511,10 @@ msgstr "Chan eil e a’ tòiseachadh no a’ crìochnachadh le tàthan"
 msgid "Domain verified!"
 msgstr "Chaidh an àrainn a dhearbhadh!"
 
+#: src/components/dialogs/VerifyEmailDialog.tsx:155
+msgid "Don't have access to"
+msgstr ""
+
 #: src/components/dialogs/BirthDateSettings.tsx:115
 #: src/components/dialogs/BirthDateSettings.tsx:121
 #: src/components/dms/ReportDialog.tsx:314

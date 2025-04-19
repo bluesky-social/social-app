@@ -2511,6 +2511,10 @@ msgstr "មិនចាប់ផ្តើម ឬបញ្ចប់ដោយស�
 msgid "Domain verified!"
 msgstr "បានផ្ទៀងផ្ទាត់ Domain"
 
+#: src/components/dialogs/VerifyEmailDialog.tsx:155
+msgid "Don't have access to"
+msgstr ""
+
 #: src/components/dialogs/BirthDateSettings.tsx:115
 #: src/components/dialogs/BirthDateSettings.tsx:121
 #: src/components/dms/ReportDialog.tsx:314

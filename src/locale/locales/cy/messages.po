@@ -2511,6 +2511,10 @@ msgstr "Nid yw'n dechrau nac yn gorffen gyda chysylltnod"
 msgid "Domain verified!"
 msgstr "Parth wedi'i wirio!"
 
+#: src/components/dialogs/VerifyEmailDialog.tsx:155
+msgid "Don't have access to"
+msgstr ""
+
 #: src/components/dialogs/BirthDateSettings.tsx:115
 #: src/components/dialogs/BirthDateSettings.tsx:121
 #: src/components/dms/ReportDialog.tsx:314
