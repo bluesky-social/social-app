@@ -2511,6 +2511,10 @@ msgstr "Doesn't begin or end with a hyphen"
 msgid "Domain verified!"
 msgstr "Domain verified!"
 
+#: src/components/dialogs/VerifyEmailDialog.tsx:155
+msgid "Don't have access to"
+msgstr ""
+
 #: src/components/dialogs/BirthDateSettings.tsx:115
 #: src/components/dialogs/BirthDateSettings.tsx:121
 #: src/components/dms/ReportDialog.tsx:314

@@ -2511,6 +2511,10 @@ msgstr "Kısa çizgi ile başlayamaz veya bitemez"
 msgid "Domain verified!"
 msgstr "Alan adı doğrulandı!"
 
+#: src/components/dialogs/VerifyEmailDialog.tsx:155
+msgid "Don't have access to"
+msgstr "Bu adrese erişiminiz yok mu "
+
 #: src/components/dialogs/BirthDateSettings.tsx:115
 #: src/components/dialogs/BirthDateSettings.tsx:121
 #: src/components/dms/ReportDialog.tsx:314
