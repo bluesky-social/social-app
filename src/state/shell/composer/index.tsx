@@ -1,8 +1,8 @@
 import React from 'react'
 import {
-  AppBskyActorDefs,
-  AppBskyFeedDefs,
-  ModerationDecision,
+  type AppBskyActorDefs,
+  type AppBskyFeedDefs,
+  type ModerationDecision,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -12,7 +12,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {postUriToRelativePath, toBskyAppUrl} from '#/lib/strings/url-helpers'
 import {purgeTemporaryImageFiles} from '#/state/gallery'
 import {precacheResolveLinkQuery} from '#/state/queries/resolve-link'
-import type {EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker.web'
+import {type EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker'
 import * as Toast from '#/view/com/util/Toast'
 
 export interface ComposerOptsPostRef {
