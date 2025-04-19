@@ -92,8 +92,8 @@ export function InitialVerificationAnnouncement() {
             </Text>
             <Text style={[a.leading_snug, a.text_md]}>
               <Trans>
-                We’re introducing a new layer of verification on Bluesky — a
-                user-friendly, easily recognizable blue check.
+                We’re introducing a new layer of verification on Bluesky — an
+                easy-to-see checkmark.
               </Trans>
             </Text>
           </View>
@@ -139,7 +139,7 @@ export function InitialVerificationAnnouncement() {
                   Trust emerges from relationships, communities, and shared
                   context, so we’re also enabling{' '}
                   <Span style={[a.font_bold]}>trusted verifiers</Span>:
-                  organizations that can directly issue blue checks.
+                  organizations that can directly issue verification.
                 </Trans>
               </Text>
               <Text style={[a.leading_snug, a.text_md]}>

@@ -78,7 +78,7 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
     <Toggle.Item
       type="checkbox"
       name="hideBadges"
-      label={_(msg`Hide blue checks`)}
+      label={_(msg`Hide verification badges`)}
       value={hideBadges}
       disabled={isPending}
       onChange={value => {
@@ -87,7 +87,7 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
       <SettingsList.Item>
         <SettingsList.ItemIcon icon={CircleCheck} />
         <SettingsList.ItemText>
-          <Trans>Hide blue checks</Trans>
+          <Trans>Hide verification badges</Trans>
         </SettingsList.ItemText>
         <Toggle.Platform />
       </SettingsList.Item>
