@@ -15,7 +15,6 @@ import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {ButtonText} from '#/components/Button'
-import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {useStarterPackLink} from '#/components/StarterPack/StarterPackCard'
@@ -140,7 +139,8 @@ export function AvatarStack({
   const {gtPhone} = useBreakpoints()
   const moderationOpts = useModerationOpts()
   const computedTotal = (total ?? numPending) - numPending
-  const circlesCount = numPending + 1 // add total at end
+  const showLastCircle = computedTotal > 0
+  const circlesCount = numPending + (showLastCircle ? 1 : 0) // only add total at end if needed
   const widthPerc = 100 / circlesCount
   const [size, setSize] = React.useState<number | null>(null)
 
@@ -207,38 +207,38 @@ export function AvatarStack({
           </View>
         </View>
       ))}
-      <View
-        style={[
-          {
-            width: `${widthPerc}%`,
-            zIndex: 1,
-          },
-        ]}>
+      {showLastCircle && (
         <View
           style={[
-            a.relative,
             {
-              width: '120%',
+              width: `${widthPerc}%`,
+              zIndex: 1,
             },
           ]}>
           <View
             style={[
+              a.relative,
               {
-                paddingTop: '100%',
+                width: '120%',
               },
             ]}>
             <View
               style={[
-                a.absolute,
-                a.inset_0,
-                a.rounded_full,
-                a.align_center,
-                a.justify_center,
                 {
-                  backgroundColor: t.atoms.text_contrast_low.color,
+                  paddingTop: '100%',
                 },
               ]}>
-              {computedTotal > 0 ? (
+              <View
+                style={[
+                  a.absolute,
+                  a.inset_0,
+                  a.rounded_full,
+                  a.align_center,
+                  a.justify_center,
+                  {
+                    backgroundColor: t.atoms.text_contrast_low.color,
+                  },
+                ]}>
                 <Text
                   style={[
                     gtPhone ? a.text_md : a.text_xs,
@@ -246,17 +246,15 @@ export function AvatarStack({
                     a.leading_snug,
                     {color: 'white'},
                   ]}>
-                  <Trans comment="Indicates the number of additional profiles are in the Starter Pack e.g. +12">
+                  <Trans comment="Indicates the number of additional profiles in the Starter Pack e.g. +12">
                     +{computedTotal}
                   </Trans>
                 </Text>
-              ) : (
-                <Plus fill="white" />
-              )}
+              </View>
             </View>
           </View>
         </View>
-      </View>
+      )}
     </View>
   )
 }
