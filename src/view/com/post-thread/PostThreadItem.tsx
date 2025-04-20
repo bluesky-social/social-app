@@ -51,7 +51,6 @@ import {colors} from '#/components/Admonition'
 import {Button} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {InlineLinkText} from '#/components/Link'
 import {ContentHider} from '#/components/moderation/ContentHider'
@@ -76,7 +75,6 @@ export function PostThreadItem({
   prevPost,
   nextPost,
   isHighlightedPost,
-  hasMore,
   showChildReplyLine,
   showParentReplyLine,
   hasPrecedingItem,
@@ -93,7 +91,6 @@ export function PostThreadItem({
   prevPost: ThreadPost | undefined
   nextPost: ThreadPost | undefined
   isHighlightedPost?: boolean
-  hasMore?: boolean
   showChildReplyLine?: boolean
   showParentReplyLine?: boolean
   hasPrecedingItem: boolean
@@ -128,7 +125,6 @@ export function PostThreadItem({
         treeView={treeView}
         depth={depth}
         isHighlightedPost={isHighlightedPost}
-        hasMore={hasMore}
         showChildReplyLine={showChildReplyLine}
         showParentReplyLine={showParentReplyLine}
         hasPrecedingItem={hasPrecedingItem}
@@ -173,7 +169,6 @@ let PostThreadItemLoaded = ({
   prevPost,
   nextPost,
   isHighlightedPost,
-  hasMore,
   showChildReplyLine,
   showParentReplyLine,
   hasPrecedingItem,
@@ -191,7 +186,6 @@ let PostThreadItemLoaded = ({
   prevPost: ThreadPost | undefined
   nextPost: ThreadPost | undefined
   isHighlightedPost?: boolean
-  hasMore?: boolean
   showChildReplyLine?: boolean
   showParentReplyLine?: boolean
   hasPrecedingItem: boolean
@@ -215,7 +209,6 @@ let PostThreadItemLoaded = ({
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
-  const itemTitle = _(msg`Post by ${post.author.handle}`)
   const authorHref = makeProfileLink(post.author)
   const authorTitle = post.author.handle
   const isThreadAuthor = getThreadAuthor(post, record) === currentAccount?.did
@@ -647,29 +640,6 @@ let PostThreadItemLoaded = ({
               />
             </View>
           </View>
-          {hasMore ? (
-            <Link
-              style={[
-                styles.loadMore,
-                {
-                  paddingLeft: treeView ? 8 : 70,
-                  paddingTop: 0,
-                  paddingBottom: treeView ? 4 : 12,
-                },
-              ]}
-              href={postHref}
-              title={itemTitle}
-              noFeedback>
-              <Text
-                style={[t.atoms.text_contrast_medium, a.font_bold, a.text_sm]}>
-                <Trans>More</Trans>
-              </Text>
-              <ChevronRightIcon
-                size="xs"
-                style={[t.atoms.text_contrast_medium]}
-              />
-            </Link>
-          ) : undefined}
         </PostHider>
       </PostOuterWrapper>
     )

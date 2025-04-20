@@ -45,7 +45,6 @@ type ThreadViewNode = AppBskyFeedGetPostThread.OutputSchema['thread']
 export interface ThreadCtx {
   depth: number
   isHighlightedPost?: boolean
-  hasMore?: boolean
   isParentLoading?: boolean
   isChildLoading?: boolean
   isSelfThread?: boolean
@@ -370,8 +369,6 @@ function responseToThreadNodes(
       ctx: {
         depth,
         isHighlightedPost: depth === 0,
-        hasMore:
-          direction === 'down' && !node.replies?.length && !!post.replyCount,
         isSelfThread: false, // populated `annotateSelfThread`
         hasMoreSelfThread: false, // populated in `annotateSelfThread`
       },
@@ -579,7 +576,6 @@ function threadNodeToPlaceholderThread(
     ctx: {
       depth: 0,
       isHighlightedPost: true,
-      hasMore: false,
       isParentLoading: !!node.record.reply,
       isChildLoading: !!node.post.replyCount,
     },
@@ -601,7 +597,6 @@ function postViewToPlaceholderThread(
     ctx: {
       depth: 0,
       isHighlightedPost: true,
-      hasMore: false,
       isParentLoading: !!(post.record as AppBskyFeedPost.Record).reply,
       isChildLoading: true, // assume yes (show the spinner) just in case
     },
@@ -623,7 +618,6 @@ function embedViewRecordToPlaceholderThread(
     ctx: {
       depth: 0,
       isHighlightedPost: true,
-      hasMore: false,
       isParentLoading: !!(record.value as AppBskyFeedPost.Record).reply,
       isChildLoading: true, // not available, so assume yes (to show the spinner)
     },
