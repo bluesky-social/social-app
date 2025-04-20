@@ -220,7 +220,8 @@ msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, other {{formatt
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:430
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> removed their verifications from your account"
-msgstr ""
+msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} kişi} other {{formattedAuthorsCount} kişi}}</0> hesabınızdan doğrulamasını kaldırdı"
+
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:267
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
@@ -232,7 +233,7 @@ msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, other {{formatt
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:404
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
-msgstr ""
+msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} kişi} other {{formattedAuthorsCount} kişi}}</0> sizi doğruladı"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:336
 msgid "{firstAuthorLink} followed you"
@@ -252,7 +253,7 @@ msgstr "{firstAuthorLink} gönderini beğendi"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:442
 msgid "{firstAuthorLink} removed their verification from your account"
-msgstr ""
+msgstr "{firstAuthorLink}, hesabınızdan doğrulamasını kaldırdı"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:279
 msgid "{firstAuthorLink} reposted your post"
@@ -264,7 +265,7 @@ msgstr "{firstAuthorLink} sizin başlangıç paketinizle kaydoldu"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:416
 msgid "{firstAuthorLink} verified you"
-msgstr ""
+msgstr "{firstAuthorLink} sizi doğruladı"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:317
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
@@ -280,7 +281,7 @@ msgstr "{firstAuthorName} ve {additionalAuthorsCount, plural, other {{formattedA
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:423
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} removed their verifications from your account"
-msgstr ""
+msgstr "{firstAuthorName} ve {additionalAuthorsCount, plural, one {{formattedAuthorsCount} kişi} other {{formattedAuthorsCount} kişi}} hesabınızdan doğrulamasını kaldırdı"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:260
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
@@ -292,7 +293,7 @@ msgstr "{firstAuthorName} ve {additionalAuthorsCount, plural, other {{formattedA
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:397
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
-msgstr ""
+msgstr "{firstAuthorName} ve {additionalAuthorsCount, plural, one {{formattedAuthorsCount} kişi} other {{formattedAuthorsCount} kişi}} sizi doğruladı"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:322
 msgid "{firstAuthorName} followed you"
@@ -312,7 +313,7 @@ msgstr "{firstAuthorName} gönderini beğendi"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:428
 msgid "{firstAuthorName} removed their verification from your account"
-msgstr ""
+msgstr "{firstAuthorName}, hesabınızdan doğrulamasını kaldırdı"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:265
 msgid "{firstAuthorName} reposted your post"
@@ -324,7 +325,7 @@ msgstr "{firstAuthorName} senin başlangıç paketin ile kaydoldu"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:402
 msgid "{firstAuthorName} verified you"
-msgstr ""
+msgstr "{firstAuthorName} sizi doğruladı"
 
 #: src/components/ProfileHoverCard/index.web.tsx:532
 #: src/screens/Profile/Header/Metrics.tsx:49
@@ -364,16 +365,16 @@ msgstr "{type}s önce"
 
 #: src/components/verification/VerifierDialog.tsx:60
 msgid "{userName} is a trusted verifier"
-msgstr ""
+msgstr "{userName} güvenilir bir doğrulayıcıdır"
 
 #: src/components/verification/VerificationsDialog.tsx:67
 msgid "{userName} is verified"
-msgstr ""
+msgstr "{userName} doğrulandı"
 
 #. Possessive, meaning "the verifications of {userName}"
 #: src/components/verification/VerificationsDialog.tsx:69
 msgid "{userName}'s verifications"
-msgstr ""
+msgstr "{userName} kullanıcısının doğrulamaları"
 
 #. Indicates the number of additional profiles are in the Starter Pack e.g. +12
 #: src/screens/Search/components/StarterPackCard.tsx:249
@@ -449,7 +450,7 @@ msgstr "bir mesaj"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:91
 msgid "A new form of verification"
-msgstr ""
+msgstr "Yeni bir doğrulama biçimi"
 
 #: src/Navigation.tsx:400
 #: src/screens/Settings/AboutSettings.tsx:72
@@ -544,7 +545,7 @@ msgstr "Hesap susturulması kaldırıldı"
 
 #: src/components/verification/VerifierDialog.tsx:98
 msgid "Accounts with a scalloped blue check mark<0>{NON_BREAKING_SPACE}<1/>{NON_BREAKING_SPACE}</0>can verify others. These trusted verifiers are selected by Bluesky."
-msgstr ""
+msgstr "Dalgalı mavi onay işaretine sahip hesaplar<0>{NON_BREAKING_SPACE}<1/>{NON_BREAKING_SPACE}</0>başkalarını doğrulayabilir. Bu güvenilir doğrulayıcılar Bluesky tarafından seçilmektedir."
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
@@ -858,7 +859,7 @@ msgstr "Video yüklenirken bir hata oluştu."
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:84
 #: src/components/verification/VerifierDialog.tsx:88
 msgid "An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
-msgstr ""
+msgstr "Bluesky'nin güvenilir doğrulayıcıları seçtiğini ve bu doğrulayıcıların da bireysel kullanıcı hesaplarını doğruladığını gösteren bir çizim."
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:28
 #: src/lib/moderation/useReportOptions.ts:28
@@ -884,7 +885,7 @@ msgstr "Bir sorun oluştu, lütfen tekrar deneyin."
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:118
 msgid "An mockup of a iPhone showing the Bluesky app open to the profile of a verified user with a blue checkmark next to their display name."
-msgstr ""
+msgstr "Doğrulanmış bir kullanıcının profilinin açık olduğu Bluesky uygulamasını gösteren bir iPhone arayüzü örneği; kullanıcı adının yanında mavi onay işareti yer almakta."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:185
 msgid "an unknown error occurred"
@@ -910,7 +911,7 @@ msgstr "Animasyonlu GIF"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:37
 msgid "Announcing verification on Bluesky"
-msgstr ""
+msgstr "Bluesky'de doğrulama sisteminin duyurusu"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:33
 #: src/lib/moderation/useReportOptions.ts:33
@@ -1275,7 +1276,7 @@ msgstr "Bluesky, profilinizi ve gönderilerinizi oturum açmamış kullanıcıla
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:132
 msgid "Bluesky will proactively verify notable and authentic accounts."
-msgstr ""
+msgstr "Bluesky, önemli ve gerçek hesapları proaktif şekilde doğrulayacaktır."
 
 #: src/screens/Settings/AppIconSettings/index.tsx:99
 msgid "Bluesky+"
@@ -1947,7 +1948,7 @@ msgstr "{0} olarak devam et (giriş yapılmış)"
 
 #: src/view/com/post-thread/PostThreadLoadMore.tsx:60
 msgid "Continue thread..."
-msgstr ""
+msgstr "Konuyu devam ettir..."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:241
 #: src/screens/Onboarding/StepProfile/index.tsx:275
@@ -3092,7 +3093,7 @@ msgstr "Kullanıcı adı değiştirilemedi. Lütfen tekrar deneyin."
 
 #: src/components/verification/VerificationCreatePrompt.tsx:32
 msgid "Failed to create a verification"
-msgstr ""
+msgstr "Doğrulama oluşturulamadı"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:173
 msgid "Failed to create app password. Please try again."
@@ -3172,7 +3173,7 @@ msgstr "Emoji tepkisi kaldırılamadı"
 
 #: src/components/verification/VerificationRemovePrompt.tsx:34
 msgid "Failed to remove verification"
-msgstr ""
+msgstr "Doğrulama kaldırılamadı"
 
 #: src/view/com/lightbox/Lightbox.tsx:46
 msgid "Failed to save image: {0}"
@@ -3778,7 +3779,7 @@ msgstr "Kullanıcı listesini gizle"
 #: src/screens/Moderation/VerificationSettings.tsx:81
 #: src/screens/Moderation/VerificationSettings.tsx:90
 msgid "Hide verification badges"
-msgstr ""
+msgstr "Doğrulama rozetlerini gizle"
 
 #: src/components/moderation/ContentHider.tsx:151
 #: src/components/moderation/PostHider.tsx:79
@@ -4131,7 +4132,7 @@ msgstr "daha fazla öğren"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:212
 #: src/view/com/modals/EditProfile.tsx:208
 msgid "Learn more"
-msgstr ""
+msgstr "Daha Fazla Bilgi Edinin"
 
 #: src/components/moderation/ScreenHider.tsx:140
 msgid "Learn More"
@@ -4161,7 +4162,7 @@ msgstr "Bu uyarı hakkında daha fazla bilgi edinin"
 #: src/components/verification/VerificationsDialog.tsx:152
 #: src/components/verification/VerifierDialog.tsx:121
 msgid "Learn more about verification on Bluesky"
-msgstr ""
+msgstr "Bluesky'deki doğrulama hakkında daha fazla bilgi edinin"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:99
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:102
@@ -4433,7 +4434,7 @@ msgstr "Kayıtlı akışları yönet"
 
 #: src/screens/Moderation/index.tsx:283
 msgid "Manage verification settings"
-msgstr ""
+msgstr "Doğrulama ayarlarını yönet"
 
 #: src/components/dialogs/MutedWords.tsx:108
 msgid "Manage your muted words and tags"
@@ -4811,7 +4812,7 @@ msgstr "Yeni sohbet"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:63
 msgid "New Feature"
-msgstr ""
+msgstr "Yeni Özellik"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:221
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:229
@@ -5958,7 +5959,7 @@ msgstr "Hesabınızı yeniden etkinleştirin"
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:158
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:169
 msgid "Read blog post"
-msgstr ""
+msgstr "Blog gönderisini okuyun"
 
 #: src/screens/VideoFeed/index.tsx:942
 msgid "Read less"
@@ -6131,11 +6132,11 @@ msgstr "Kullanıcıyı listeden çıkar"
 #: src/view/com/profile/ProfileMenu.tsx:298
 #: src/view/com/profile/ProfileMenu.tsx:301
 msgid "Remove verification"
-msgstr ""
+msgstr "Doğrulamayı kaldır"
 
 #: src/components/verification/VerificationRemovePrompt.tsx:44
 msgid "Remove your verification for this account?"
-msgstr ""
+msgstr "Bu hesap için doğrulamanızı kaldırmak istiyor musunuz?"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:110
 msgid "Removed by author"
@@ -6166,7 +6167,7 @@ msgstr "Akışlarınızdan kaldırıldı"
 
 #: src/components/verification/VerificationRemovePrompt.tsx:32
 msgid "Removed verification"
-msgstr ""
+msgstr "Doğrulama kaldırıldı"
 
 #: src/screens/Search/components/SearchHistory.tsx:179
 msgid "Removes profile from search history"
@@ -6205,7 +6206,7 @@ msgstr "Yanıtla ({0, plural, other {# yanıt}})"
 #: src/components/moderation/ModerationDetailsDialog.tsx:116
 #: src/lib/moderation/useModerationCauseDescription.ts:125
 msgid "Reply Hidden by Thread Author"
-msgstr ""
+msgstr "Yanıt Konu Yazarı Tarafından Gizlenmiş"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:115
 #: src/lib/moderation/useModerationCauseDescription.ts:124
@@ -6218,7 +6219,7 @@ msgstr "Yanıt ayarları"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:370
 msgid "Reply settings are chosen by the author of the thread"
-msgstr ""
+msgstr "Yanıt ayarları başlığın yazarı tarafından seçilir"
 
 #: src/view/com/post-thread/PostThread.tsx:651
 msgid "Reply sorting"
@@ -6259,12 +6260,12 @@ msgstr "Yanıt başarıyla gizlendi"
 #: src/components/dms/MessagesListBlockedFooter.tsx:85
 #: src/components/dms/MessagesListBlockedFooter.tsx:92
 msgid "Report"
-msgstr ""
+msgstr "Bildir"
 
 #: src/view/com/profile/ProfileMenu.tsx:365
 #: src/view/com/profile/ProfileMenu.tsx:368
 msgid "Report account"
-msgstr ""
+msgstr "Hesabı bildir"
 
 #: src/components/dms/ConvoMenu.tsx:255
 #: src/components/dms/ConvoMenu.tsx:258
@@ -6287,11 +6288,11 @@ msgstr "Akışı raporla"
 
 #: src/view/screens/ProfileList.tsx:570
 msgid "Report list"
-msgstr ""
+msgstr "Listeyi bildir"
 
 #: src/components/dms/MessageContextMenu.tsx:166
 msgid "Report message"
-msgstr ""
+msgstr "Mesajı bildir"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:695
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:697
@@ -6301,47 +6302,47 @@ msgstr "Gönderiyi raporla"
 #: src/screens/StarterPack/StarterPackScreen.tsx:614
 #: src/screens/StarterPack/StarterPackScreen.tsx:617
 msgid "Report starter pack"
-msgstr ""
+msgstr "Başlangıç paketini bildir"
 
 #: src/components/dms/ReportDialog.tsx:345
 msgid "Report submitted"
-msgstr ""
+msgstr "Bildiriminiz gönderildi"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:41
 msgid "Report this content"
-msgstr ""
+msgstr "Bu içeriği bildir"
 
 #: src/components/moderation/ReportDialog/copy.ts:31
 #: src/components/ReportDialog/SelectReportOptionView.tsx:54
 msgid "Report this feed"
-msgstr ""
+msgstr "Bu akışı bildir"
 
 #: src/components/moderation/ReportDialog/copy.ts:25
 #: src/components/ReportDialog/SelectReportOptionView.tsx:51
 msgid "Report this list"
-msgstr ""
+msgstr "Bu listeyi bildir"
 
 #: src/components/dms/ReportDialog.tsx:59
 #: src/components/dms/ReportDialog.tsx:180
 #: src/components/moderation/ReportDialog/copy.ts:43
 #: src/components/ReportDialog/SelectReportOptionView.tsx:60
 msgid "Report this message"
-msgstr ""
+msgstr "Bu mesajı bildir"
 
 #: src/components/moderation/ReportDialog/copy.ts:19
 #: src/components/ReportDialog/SelectReportOptionView.tsx:48
 msgid "Report this post"
-msgstr ""
+msgstr "Bu gönderiyi bildir"
 
 #: src/components/moderation/ReportDialog/copy.ts:37
 #: src/components/ReportDialog/SelectReportOptionView.tsx:57
 msgid "Report this starter pack"
-msgstr ""
+msgstr "Bu başlangıç paketini bildir"
 
 #: src/components/moderation/ReportDialog/copy.ts:13
 #: src/components/ReportDialog/SelectReportOptionView.tsx:45
 msgid "Report this user"
-msgstr ""
+msgstr "Bu kullanıcıyı bildir"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:156
 #: src/view/com/util/post-ctrls/RepostButton.tsx:167
@@ -7092,7 +7093,7 @@ msgstr "Yeniden gönderileri göster"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:129
 #: src/screens/Settings/FollowingFeedPreferences.tsx:139
 msgid "Show samples of your saved feeds in your Following feed"
-msgstr ""
+msgstr "Kaydedilmiş yayınlarınızdan örnekleri Takip Edilenler akışınızda göster"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:58
 msgid "Show warning"
@@ -7104,7 +7105,7 @@ msgstr "Uyarı göster ve akışlardan filtrele"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:856
 msgid "Shows information about when this post was created"
-msgstr ""
+msgstr "Bu gönderinin ne zaman oluşturulduğu hakkında bilgi gösterir"
 
 #: src/screens/Settings/Settings.tsx:112
 msgid "Shows other accounts you can switch to"
@@ -7213,7 +7214,7 @@ msgstr "Yazılım Geliştirme"
 
 #: src/components/verification/VerificationsDialog.tsx:122
 msgid "Some of your verifications are invalid."
-msgstr ""
+msgstr "Doğrulamalarınızdan bazıları geçersiz."
 
 #: src/components/FeedInterstitials.tsx:474
 msgid "Some other feeds you might like"
@@ -7291,12 +7292,12 @@ msgstr "Kaynak: <0>{sourceName}</0>"
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
 msgid "Spam"
-msgstr ""
+msgstr "Spam"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:55
 #: src/lib/moderation/useReportOptions.ts:55
 msgid "Spam; excessive mentions or replies"
-msgstr ""
+msgstr "Spam; aşırı bahsetme veya yanıt"
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:113
@@ -7419,7 +7420,7 @@ msgstr "Başarılı!"
 
 #: src/components/verification/VerificationCreatePrompt.tsx:30
 msgid "Successfully verified"
-msgstr ""
+msgstr "Başarıyla doğrulandı"
 
 #: src/screens/Search/Explore.tsx:359
 msgid "Suggested Accounts"
@@ -7570,7 +7571,7 @@ msgstr "Teşekkür ederiz! E-posta adresiniz başarıyla doğrulandı."
 
 #: src/components/ReportDialog/SubmitView.tsx:83
 msgid "Thank you. Your report has been sent."
-msgstr ""
+msgstr "Teşekkürler. Raporunuz gönderildi."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
@@ -7614,7 +7615,7 @@ msgstr "Uygulama yeniden başlatılacaktır"
 #: src/components/moderation/ModerationDetailsDialog.tsx:119
 #: src/lib/moderation/useModerationCauseDescription.ts:128
 msgid "The author of this thread has hidden this reply."
-msgstr ""
+msgstr "Bu başlığın yazarı bu yanıtı gizledi."
 
 #: src/screens/Moderation/index.tsx:377
 msgid "The Bluesky web application"
@@ -7654,7 +7655,7 @@ msgstr "İçeriğinize şu işaretler uygulanmış."
 
 #: src/screens/ModerationInteractionSettings/index.tsx:42
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
-msgstr ""
+msgstr "Aşağıdaki ayarlar, yeni gönderiler oluştururken varsayılanlarınız olarak kullanılacaktır. Bunları besteciden belirli bir gönderi için düzenleyebilirsiniz."
 
 #: src/view/com/post-thread/PostThread.tsx:265
 #: src/view/com/post-thread/PostThread.tsx:277
@@ -7810,11 +7811,11 @@ msgstr "Bu {screenDescription} işaretlendi:"
 
 #: src/components/verification/VerificationsDialog.tsx:89
 msgid "This account has a checkmark because it's been verified by trusted sources."
-msgstr ""
+msgstr "Bu hesap, güvenilir kaynaklar tarafından doğrulandığı için bir onay işaretine sahip."
 
 #: src/components/verification/VerificationsDialog.tsx:94
 msgid "This account has one or more verifications, but it is not currently verified."
-msgstr ""
+msgstr "Bu hesabın bir veya daha fazla doğrulaması var, ancak şu anda doğrulanmamış."
 
 #: src/components/moderation/ScreenHider.tsx:106
 msgid "This account has requested that users sign in to view their profile."
@@ -7826,7 +7827,7 @@ msgstr "Bu hesap moderasyon listelerinizden birkaçı tarafından engellenmiş. 
 
 #: src/components/verification/VerificationCreatePrompt.tsx:48
 msgid "This action can be undone at any time."
-msgstr ""
+msgstr "Bu işlem herhangi bir zaman geri alınabilir."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:271
 msgid "This appeal will be sent to <0>{sourceName}</0>."
@@ -8024,12 +8025,12 @@ msgstr "Bu işlem, gönderinizin bu alıntıyla ilişiğini tüm kullanıcılar 
 #: src/view/com/post-thread/PostThread.tsx:609
 #: src/view/com/post-thread/PostThread.tsx:612
 msgid "Thread options"
-msgstr ""
+msgstr "Başlık seçenekleri"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:68
 #: src/screens/Settings/ContentAndMediaSettings.tsx:71
 msgid "Thread preferences"
-msgstr ""
+msgstr "Başlık tercihleri"
 
 #: src/screens/Settings/ThreadPreferences.tsx:45
 msgid "Thread Preferences"
@@ -8117,7 +8118,7 @@ msgstr "Gündemdeki Videolar"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:138
 msgid "Trust emerges from relationships, communities, and shared context, so we’re also enabling <0>trusted verifiers</0>: organizations that can directly issue verification."
-msgstr ""
+msgstr "Güven, ilişkilerden, topluluklardan ve paylaşılan bağlamdan doğar, bu nedenle <0>güvenilir doğrulayıcıları</0> da etkinleştiriyoruz: doğrudan doğrulama sağlayabilen kuruluşlar."
 
 #: src/view/com/util/error/ErrorScreen.tsx:103
 msgctxt "action"
@@ -8227,7 +8228,7 @@ msgstr "Maalesef abone olduğunuz işaretleyicilerin hiçbiri bu rapor türünü
 
 #: src/components/verification/VerificationsDialog.tsx:204
 msgid "Unknown verifier"
-msgstr ""
+msgstr "Bilinmeyen doğrulayıcı"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:510
 msgid "Unlike"
@@ -8525,20 +8526,20 @@ msgstr "Değer:"
 
 #: src/screens/Moderation/index.tsx:288
 msgid "Verification settings"
-msgstr ""
+msgstr "Doğrulama ayarları"
 
 #: src/Navigation.tsx:175
 #: src/screens/Moderation/VerificationSettings.tsx:32
 msgid "Verification Settings"
-msgstr ""
+msgstr "Doğrulama Ayarları"
 
 #: src/screens/Moderation/VerificationSettings.tsx:41
 msgid "Verifications on Bluesky work differently than on other platforms. <0>Learn more here.</0>"
-msgstr ""
+msgstr "Bluesky'daki doğrulamalar diğer platformlardan farklı çalışır. <0>Buradan daha fazla bilgi edinin.</0>"
 
 #: src/components/verification/VerificationsDialog.tsx:105
 msgid "Verified by:"
-msgstr ""
+msgstr "Doğrulayan:"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:127
 msgid "Verified email required"
@@ -8548,7 +8549,7 @@ msgstr "Onaylı e-posta gerekli"
 #: src/view/com/profile/ProfileMenu.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:311
 msgid "Verify account"
-msgstr ""
+msgstr "Hesabı doğrula"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:528
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:549
@@ -8576,7 +8577,7 @@ msgstr "Metin Dosyasını Doğrula"
 
 #: src/components/verification/VerificationCreatePrompt.tsx:44
 msgid "Verify this account?"
-msgstr ""
+msgstr "Bu hesabı doğrula?"
 
 #: src/screens/Settings/AccountSettings.tsx:75
 #: src/screens/Settings/AccountSettings.tsx:91
@@ -8723,7 +8724,7 @@ msgstr "@{0} tarafından sağlanan işaretleme hizmetini gör"
 
 #: src/components/verification/VerificationCheckButton.tsx:99
 msgid "View this user's verifications"
-msgstr ""
+msgstr "Bu kullanıcının doğrulamalarını görüntüle"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:481
 msgid "View users who like this feed"
@@ -8756,7 +8757,7 @@ msgstr "Sessize aldığınız hesapları görün"
 
 #: src/components/verification/VerificationCheckButton.tsx:98
 msgid "View your verifications"
-msgstr ""
+msgstr "Doğrulamalarınızı görüntüle"
 
 #: src/view/com/util/images/AutoSizedImage.tsx:199
 #: src/view/com/util/images/AutoSizedImage.tsx:221
@@ -8853,7 +8854,7 @@ msgstr "Ağ sorunları yaşıyoruz, tekrar deneyin"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:94
 msgid "We’re introducing a new layer of verification on Bluesky — an easy-to-see checkmark."
-msgstr ""
+msgstr "Bluesky'da yeni bir doğrulama katmanı sunuyoruz - kolayca görülebilen bir onay işareti."
 
 #: src/screens/Signup/index.tsx:109
 msgid "We're so excited to have you join us!"
@@ -8908,7 +8909,7 @@ msgstr "Nasılsınız?"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:146
 msgid "When you tap on a check, you’ll see which organizations have granted verification."
-msgstr ""
+msgstr "Bir işarete dokunduğunuzda, hangi kuruluşların doğrulama verdiğini göreceksiniz."
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:80
 msgid "Which languages are used in this post?"
@@ -8928,7 +8929,7 @@ msgstr "Kimler yanıtlayabilir"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:127
 msgid "Who can verify?"
-msgstr ""
+msgstr "Kimler doğrulayabilir?"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
 #: src/screens/Messages/ChatList.tsx:231
@@ -9037,7 +9038,7 @@ msgstr "Siz"
 
 #: src/components/verification/VerifierDialog.tsx:59
 msgid "You are a trusted verifier"
-msgstr ""
+msgstr "Siz güvenilir bir doğrulayıcısınız"
 
 #: src/components/forms/HostingProvider.tsx:45
 msgid "You are creating an account on"
@@ -9057,16 +9058,16 @@ msgstr "Kimseyi takip etmiyorsunuz."
 
 #: src/components/verification/VerificationsDialog.tsx:64
 msgid "You are verified"
-msgstr ""
+msgstr "Doğrulanmış durumdasınız"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:356
 #: src/view/com/modals/EditProfile.tsx:204
 msgid "You are verified. You will lose your verification status if you change your display name. <0>Learn more.</0>"
-msgstr ""
+msgstr "Doğrulanmış durumdasınız. Görünen adınızı değiştirirseniz doğrulama durumunuzu kaybedersiniz. <0>Daha fazla bilgi edinin.</0>"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:208
 msgid "You are verified. You will lose your verification status if you change your handle. <0>Learn more.</0>"
-msgstr ""
+msgstr "Doğrulanmış durumdasınız. Kullanıcı adınızı değiştirirseniz doğrulama durumunuzu kaybedersiniz. <0>Daha fazla bilgi edinin.</0>"
 
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:45
 msgid "You can adjust your interests at any time from \"Content and media\" settings."
@@ -9497,4 +9498,4 @@ msgstr "Seçtiğiniz ilgi alanları, önemsediğiniz içerikleri size sunmamıza
 
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
-msgstr ""
+msgstr "Doğrulamalarınız"
