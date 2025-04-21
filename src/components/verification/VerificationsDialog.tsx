@@ -178,7 +178,7 @@ function VerifierCard({
   outerDialogControl: Dialog.DialogControlProps
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
   const {data: profile, error} = useProfileQuery({did: verification.issuer})
@@ -222,10 +222,20 @@ function VerifierCard({
                   moderationOpts={moderationOpts}
                   disabledPreview
                 />
-                <ProfileCard.NameAndHandle
-                  profile={profile}
-                  moderationOpts={moderationOpts}
-                />
+                <View style={[a.flex_1]}>
+                  <ProfileCard.Name
+                    profile={profile}
+                    moderationOpts={moderationOpts}
+                  />
+                  <Text
+                    emoji
+                    style={[a.leading_snug, t.atoms.text_contrast_medium]}
+                    numberOfLines={1}>
+                    {i18n.date(new Date(verification.createdAt), {
+                      dateStyle: 'long',
+                    })}
+                  </Text>
+                </View>
               </ProfileCard.Link>
               {canAdminister && (
                 <View>
