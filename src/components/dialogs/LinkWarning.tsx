@@ -6,8 +6,7 @@ import {useLingui} from '@lingui/react'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {shareUrl} from '#/lib/sharing'
 import {isPossiblyAUrl, splitApexDomain} from '#/lib/strings/url-helpers'
-import {isWeb} from '#/platform/detection'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Text} from '#/components/Typography'
@@ -16,12 +15,11 @@ import {useGlobalDialogsControlContext} from './Context'
 export function LinkWarningDialog() {
   const {linkWarningDialogControl} = useGlobalDialogsControlContext()
 
-  if (isWeb) return null
-
   return (
     <Dialog.Outer
       control={linkWarningDialogControl.control}
       nativeOptions={{preventExpansion: true}}
+      webOptions={{alignCenter: true}}
       onClose={linkWarningDialogControl.clear}>
       <Dialog.Handle />
       <InAppBrowserConsentInner link={linkWarningDialogControl.value} />
@@ -38,6 +36,7 @@ function InAppBrowserConsentInner({
   const {_} = useLingui()
   const t = useTheme()
   const openLink = useOpenLink()
+  const {gtMobile} = useBreakpoints()
 
   const potentiallyMisleading = useMemo(
     () => link && isPossiblyAUrl(link.displayText),
@@ -61,6 +60,7 @@ function InAppBrowserConsentInner({
 
   return (
     <Dialog.ScrollableInner
+      style={web({maxWidth: 450})}
       label={
         potentiallyMisleading
           ? _(msg`Potentially misleading link warning`)
@@ -86,7 +86,12 @@ function InAppBrowserConsentInner({
             </Text>
           )}
         </View>
-        <View style={[a.gap_sm]}>
+        <View
+          style={[
+            a.flex_1,
+            a.gap_sm,
+            gtMobile && [a.flex_row_reverse, a.justify_start],
+          ]}>
           <Button
             label={link?.share ? _(msg`Share link`) : _(msg`Visit site`)}
             accessibilityHint={_(msg`Opens link ${link?.href ?? ''}`)}
@@ -103,17 +108,18 @@ function InAppBrowserConsentInner({
             </ButtonText>
           </Button>
           <Button
-            label={_(msg`Cancel`)}
+            label={_(msg`Go back`)}
             onPress={onCancel}
             size="large"
             variant="ghost"
             color="secondary">
             <ButtonText>
-              <Trans>Cancel</Trans>
+              <Trans>Go back</Trans>
             </ButtonText>
           </Button>
         </View>
       </View>
+      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
