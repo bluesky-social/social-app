@@ -1,5 +1,6 @@
 import {View} from 'react-native'
 import Animated, {FadeInDown, FadeOut} from 'react-native-reanimated'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
@@ -9,6 +10,8 @@ import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 
 export function Autocomplete({
   prefix,
@@ -42,51 +45,15 @@ export function Autocomplete({
       {suggestions?.length ? (
         suggestions.slice(0, 5).map((item, index, arr) => {
           return (
-            <View
-              style={[
-                index !== arr.length - 1 && a.border_b,
-                t.atoms.border_contrast_high,
-                a.px_sm,
-                a.py_md,
-              ]}
-              key={item.did}>
-              <PressableScale
-                testID="autocompleteButton"
-                style={[
-                  a.flex_row,
-                  a.gap_sm,
-                  a.justify_between,
-                  a.align_center,
-                ]}
-                onPress={() => onSelect(item.handle)}
-                accessibilityLabel={`Select ${item.handle}`}
-                accessibilityHint="">
-                <View style={[a.flex_row, a.gap_sm, a.align_center]}>
-                  <UserAvatar
-                    avatar={item.avatar ?? null}
-                    size={24}
-                    type={item.associated?.labeler ? 'labeler' : 'user'}
-                  />
-                  <Text
-                    style={[a.flex_1, a.text_md, a.font_bold]}
-                    emoji
-                    numberOfLines={1}>
-                    {sanitizeDisplayName(
-                      item.displayName || sanitizeHandle(item.handle),
-                    )}
-                  </Text>
-                  <Text
-                    style={[
-                      t.atoms.text_contrast_medium,
-                      a.text_right,
-                      {maxWidth: '50%'},
-                    ]}
-                    numberOfLines={1}>
-                    {sanitizeHandle(item.handle, '@')}
-                  </Text>
-                </View>
-              </PressableScale>
-            </View>
+            <AutocompleteProfileCard
+              key={item.did}
+              profile={item}
+              itemIndex={index}
+              totalItems={arr.length}
+              onPress={() => {
+                onSelect(item.handle)
+              }}
+            />
           )
         })
       ) : (
@@ -95,5 +62,66 @@ export function Autocomplete({
         </Text>
       )}
     </Animated.View>
+  )
+}
+
+function AutocompleteProfileCard({
+  profile,
+  itemIndex,
+  totalItems,
+  onPress,
+}: {
+  profile: AppBskyActorDefs.ProfileViewBasic
+  itemIndex: number
+  totalItems: number
+  onPress: () => void
+}) {
+  const t = useTheme()
+  const state = useSimpleVerificationState({profile})
+  const displayName = sanitizeDisplayName(
+    profile.displayName || sanitizeHandle(profile.handle),
+  )
+  return (
+    <View
+      style={[
+        itemIndex !== totalItems - 1 && a.border_b,
+        t.atoms.border_contrast_high,
+        a.px_sm,
+        a.py_md,
+      ]}
+      key={profile.did}>
+      <PressableScale
+        testID="autocompleteButton"
+        style={[a.flex_row, a.gap_lg, a.justify_between, a.align_center]}
+        onPress={onPress}
+        accessibilityLabel={`Select ${profile.handle}`}
+        accessibilityHint="">
+        <View style={[a.flex_row, a.gap_sm, a.align_center, a.flex_1]}>
+          <UserAvatar
+            avatar={profile.avatar ?? null}
+            size={24}
+            type={profile.associated?.labeler ? 'labeler' : 'user'}
+          />
+          <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
+            <Text style={[a.text_md, a.font_bold]} emoji numberOfLines={1}>
+              {displayName}
+            </Text>
+            {state.isVerified && (
+              <View>
+                <VerificationCheck
+                  width={12}
+                  verifier={state.role === 'verifier'}
+                />
+              </View>
+            )}
+          </View>
+        </View>
+        <Text
+          style={[t.atoms.text_contrast_medium, a.text_right]}
+          numberOfLines={1}>
+          {sanitizeHandle(profile.handle, '@')}
+        </Text>
+      </PressableScale>
+    </View>
   )
 }
