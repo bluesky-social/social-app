@@ -128,6 +128,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
+import LanguageNudgeDialog from './LanguageNudge'
 import {
   type ComposerAction,
   composerReducer,
@@ -376,136 +377,156 @@ export const ComposePost = ({
         ),
     )
 
-  const onPressPublish = React.useCallback(async () => {
-    if (isPublishing) {
-      return
-    }
+  const languageNudgeControl = useDialogControl()
 
-    if (!canPost) {
-      return
-    }
-
-    if (
-      thread.posts.some(
-        post =>
-          post.embed.media?.type === 'video' &&
-          post.embed.media.video.asset &&
-          post.embed.media.video.status !== 'done',
-      )
-    ) {
-      setPublishOnUpload(true)
-      return
-    }
-
-    setError('')
-    setIsPublishing(true)
-
-    let postUri
-    try {
-      postUri = (
-        await apilib.post(agent, queryClient, {
-          thread,
-          replyTo: replyTo?.uri,
-          onStateChange: setPublishingStage,
-          langs: toPostLanguages(langPrefs.postLanguage),
-        })
-      ).uris[0]
-      try {
-        await whenAppViewReady(agent, postUri, res => {
-          const postedThread = res.data.thread
-          return AppBskyFeedDefs.isThreadViewPost(postedThread)
-        })
-      } catch (waitErr: any) {
-        logger.error(waitErr, {
-          message: `Waiting for app view failed`,
-        })
-        // Keep going because the post *was* published.
+  const onPressPublish = useCallback(
+    async (bypassNudge = false) => {
+      if (isPublishing) {
+        return
       }
-    } catch (e: any) {
-      logger.error(e, {
-        message: `Composer: create post failed`,
-        hasImages: thread.posts.some(p => p.embed.media?.type === 'images'),
-      })
 
-      let err = cleanError(e.message)
-      if (err.includes('not locate record')) {
-        err = _(
-          msg`We're sorry! The post you are replying to has been deleted.`,
+      if (!canPost) {
+        return
+      }
+
+      if (
+        thread.posts.some(
+          post =>
+            post.embed.media?.type === 'video' &&
+            post.embed.media.video.asset &&
+            post.embed.media.video.status !== 'done',
         )
-      } else if (e instanceof EmbeddingDisabledError) {
-        err = _(msg`This post's author has disabled quote posts.`)
+      ) {
+        setPublishOnUpload(true)
+        return
       }
-      setError(err)
-      setIsPublishing(false)
-      return
-    } finally {
-      if (postUri) {
-        let index = 0
-        for (let post of thread.posts) {
-          logEvent('post:create', {
-            imageCount:
-              post.embed.media?.type === 'images'
-                ? post.embed.media.images.length
-                : 0,
-            isReply: index > 0 || !!replyTo,
-            isPartOfThread: thread.posts.length > 1,
-            hasLink: !!post.embed.link,
-            hasQuote: !!post.embed.quote,
-            langs: langPrefs.postLanguage,
-            logContext: 'Composer',
+
+      setError('')
+      setIsPublishing(true)
+
+      if (!bypassNudge) {
+        // api call goes here
+        await new Promise(res => setTimeout(res, 500))
+        if (true) {
+          setIsPublishing(false)
+          languageNudgeControl.open()
+          return
+        }
+      }
+
+      let postUri
+      try {
+        postUri = (
+          await apilib.post(agent, queryClient, {
+            thread,
+            replyTo: replyTo?.uri,
+            onStateChange: setPublishingStage,
+            langs: toPostLanguages(langPrefs.postLanguage),
           })
-          index++
+        ).uris[0]
+        try {
+          await whenAppViewReady(agent, postUri, res => {
+            const postedThread = res.data.thread
+            return AppBskyFeedDefs.isThreadViewPost(postedThread)
+          })
+        } catch (waitErr: any) {
+          logger.error(waitErr, {
+            message: `Waiting for app view failed`,
+          })
+          // Keep going because the post *was* published.
         }
-      }
-      if (thread.posts.length > 1) {
-        logEvent('thread:create', {
-          postCount: thread.posts.length,
-          isReply: !!replyTo,
+      } catch (e: any) {
+        logger.error(e, {
+          message: `Composer: create post failed`,
+          hasImages: thread.posts.some(p => p.embed.media?.type === 'images'),
         })
-      }
-    }
-    if (postUri && !replyTo) {
-      emitPostCreated()
-    }
-    setLangPrefs.savePostLanguageToHistory()
-    if (initQuote) {
-      // We want to wait for the quote count to update before we call `onPost`, which will refetch data
-      whenAppViewReady(agent, initQuote.uri, res => {
-        const quotedThread = res.data.thread
-        if (
-          AppBskyFeedDefs.isThreadViewPost(quotedThread) &&
-          quotedThread.post.quoteCount !== initQuote.quoteCount
-        ) {
-          onPost?.(postUri)
-          return true
+
+        let err = cleanError(e.message)
+        if (err.includes('not locate record')) {
+          err = _(
+            msg`We're sorry! The post you are replying to has been deleted.`,
+          )
+        } else if (e instanceof EmbeddingDisabledError) {
+          err = _(msg`This post's author has disabled quote posts.`)
         }
-        return false
-      })
-    } else {
-      onPost?.(postUri)
-    }
-    onClose()
-    Toast.show(
-      thread.posts.length > 1
-        ? _(msg`Your posts have been published`)
-        : replyTo
-        ? _(msg`Your reply has been published`)
-        : _(msg`Your post has been published`),
-    )
-  }, [
-    _,
-    agent,
-    thread,
-    canPost,
-    isPublishing,
-    langPrefs.postLanguage,
-    onClose,
-    onPost,
-    initQuote,
-    replyTo,
-    setLangPrefs,
-    queryClient,
-  ])
+        setError(err)
+        setIsPublishing(false)
+        return
+      } finally {
+        if (postUri) {
+          let index = 0
+          for (let post of thread.posts) {
+            logEvent('post:create', {
+              imageCount:
+                post.embed.media?.type === 'images'
+                  ? post.embed.media.images.length
+                  : 0,
+              isReply: index > 0 || !!replyTo,
+              isPartOfThread: thread.posts.length > 1,
+              hasLink: !!post.embed.link,
+              hasQuote: !!post.embed.quote,
+              langs: langPrefs.postLanguage,
+              logContext: 'Composer',
+            })
+            index++
+          }
+        }
+        if (thread.posts.length > 1) {
+          logEvent('thread:create', {
+            postCount: thread.posts.length,
+            isReply: !!replyTo,
+          })
+        }
+      }
+      if (postUri && !replyTo) {
+        emitPostCreated()
+      }
+      setLangPrefs.savePostLanguageToHistory()
+      if (initQuote) {
+        // We want to wait for the quote count to update before we call `onPost`, which will refetch data
+        whenAppViewReady(agent, initQuote.uri, res => {
+          const quotedThread = res.data.thread
+          if (
+            AppBskyFeedDefs.isThreadViewPost(quotedThread) &&
+            quotedThread.post.quoteCount !== initQuote.quoteCount
+          ) {
+            onPost?.(postUri)
+            return true
+          }
+          return false
+        })
+      } else {
+        onPost?.(postUri)
+      }
+      onClose()
+      Toast.show(
+        thread.posts.length > 1
+          ? _(msg`Your posts have been published`)
+          : replyTo
+          ? _(msg`Your reply has been published`)
+          : _(msg`Your post has been published`),
+      )
+    },
+    [
+      _,
+      agent,
+      thread,
+      canPost,
+      isPublishing,
+      langPrefs.postLanguage,
+      onClose,
+      onPost,
+      initQuote,
+      replyTo,
+      setLangPrefs,
+      queryClient,
+      languageNudgeControl,
+    ],
+  )
+
+  const postAnyway = useCallback(() => {
+    return onPressPublish(true)
+  }, [onPressPublish])
 
   // Preserves the referential identity passed to each post item.
   // Avoids re-rendering all posts on each keystroke.
@@ -696,6 +717,15 @@ export const ComposePost = ({
           </Animated.ScrollView>
           {!isWebFooterSticky && footer}
         </View>
+
+        <LanguageNudgeDialog
+          // TODO: account for threads - will need to thread through API response
+          postText={thread.posts[0].richtext}
+          replyToUri={replyTo?.uri}
+          control={languageNudgeControl}
+          postAnyway={postAnyway}
+          discardReply={onClose}
+        />
 
         <Prompt.Basic
           control={discardPromptControl}
@@ -997,7 +1027,7 @@ function ComposerTopBar({
             shape="default"
             size="small"
             style={[a.rounded_full, a.py_sm]}
-            onPress={onPublish}
+            onPress={() => onPublish()}
             disabled={!canPost || isPublishQueued}>
             <ButtonText style={[a.text_md]}>
               {isReply ? (

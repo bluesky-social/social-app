@@ -146,6 +146,11 @@ export type MetricEvents = {
   'composer:gif:open': {}
   'composer:gif:select': {}
 
+  'composer:nudge:feedback': {
+    replyTo?: string
+    text: string
+  }
+
   // Data events
   'account:create:begin': {}
   'account:create:success': {

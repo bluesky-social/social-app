@@ -195,6 +195,10 @@ export const EMOJI_REACTION_LIMIT = 5
 
 export const urls = {
   website: {
+    support: {
+      communityGuidelines:
+        'https://bsky.social/about/support/community-guidelines',
+    },
     blog: {
       initialVerificationAnnouncement: `https://bsky.social/about/blog/04-21-2025-verification`,
     },
