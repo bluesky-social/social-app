@@ -8,7 +8,6 @@ import {useModalControls, useModals} from '#/state/modals'
 import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import * as DeleteAccountModal from './DeleteAccount'
-import * as InviteCodesModal from './InviteCodes'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as UserAddRemoveListsModal from './UserAddRemoveLists'
 
@@ -49,9 +48,6 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'delete-account') {
     snapPoints = DeleteAccountModal.snapPoints
     element = <DeleteAccountModal.Component />
-  } else if (activeModal?.name === 'invite-codes') {
-    snapPoints = InviteCodesModal.snapPoints
-    element = <InviteCodesModal.Component />
   } else if (activeModal?.name === 'content-languages-settings') {
     snapPoints = ContentLanguagesSettingsModal.snapPoints
     element = <ContentLanguagesSettingsModal.Component />
