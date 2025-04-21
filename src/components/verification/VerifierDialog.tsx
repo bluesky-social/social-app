@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 
 import {urls} from '#/lib/constants'
 import {getUserDisplayName} from '#/lib/getUserDisplayName'
-import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
 import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -95,12 +94,10 @@ function Inner({
           </Text>
           <Text style={[a.text_md, a.leading_snug]}>
             <Trans>
-              Accounts with a scalloped blue check mark
+              Accounts with a scalloped blue check mark{' '}
               <RNText>
-                {NON_BREAKING_SPACE}
                 <VerifierCheck width={14} />
-                {NON_BREAKING_SPACE}
-              </RNText>
+              </RNText>{' '}
               can verify others. These trusted verifiers are selected by
               Bluesky.
             </Trans>
