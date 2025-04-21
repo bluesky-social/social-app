@@ -211,14 +211,22 @@ function VerifierCard({
             </>
           ) : profile && moderationOpts ? (
             <>
-              <ProfileCard.Avatar
+              <ProfileCard.Link
                 profile={profile}
-                moderationOpts={moderationOpts}
-              />
-              <ProfileCard.NameAndHandle
-                profile={profile}
-                moderationOpts={moderationOpts}
-              />
+                style={[a.flex_row, a.align_center, a.gap_sm, a.flex_1]}
+                onPress={() => {
+                  outerDialogControl.close()
+                }}>
+                <ProfileCard.Avatar
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                  disabledPreview
+                />
+                <ProfileCard.NameAndHandle
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                />
+              </ProfileCard.Link>
               {canAdminister && (
                 <View>
                   <Button
