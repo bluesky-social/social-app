@@ -1,5 +1,6 @@
 {
-  "project_id": "664276",
+  "project_id": "1",
+  "base_url": "https://bluesky.api.crowdin.com",
   "base_path": ".",
   "preserve_hierarchy": true,
   "files": [

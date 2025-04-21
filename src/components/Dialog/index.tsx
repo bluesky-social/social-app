@@ -1,20 +1,20 @@
 import React, {useImperativeHandle} from 'react'
 import {
-  NativeScrollEvent,
-  NativeSyntheticEvent,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
   Pressable,
-  ScrollView,
-  StyleProp,
+  type ScrollView,
+  type StyleProp,
   TextInput,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {
   KeyboardAwareScrollView,
   useKeyboardHandler,
 } from 'react-native-keyboard-controller'
 import {runOnJS} from 'react-native-reanimated'
-import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
+import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -25,28 +25,28 @@ import {logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
-import {List, ListMethods, ListProps} from '#/view/com/util/List'
-import {atoms as a, useTheme} from '#/alf'
+import {List, type ListMethods, type ListProps} from '#/view/com/util/List'
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {useThemeName} from '#/alf/util/useColorModeTheme'
 import {Context, useDialogContext} from '#/components/Dialog/context'
 import {
-  DialogControlProps,
-  DialogInnerProps,
-  DialogOuterProps,
+  type DialogControlProps,
+  type DialogInnerProps,
+  type DialogOuterProps,
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
 import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
 import {
-  BottomSheetSnapPointChangeEvent,
-  BottomSheetStateChangeEvent,
+  type BottomSheetSnapPointChangeEvent,
+  type BottomSheetStateChangeEvent,
 } from '../../../modules/bottom-sheet/src/BottomSheet.types'
-import {BottomSheetNativeComponent} from '../../../modules/bottom-sheet/src/BottomSheetNativeComponent'
+import {type BottomSheetNativeComponent} from '../../../modules/bottom-sheet/src/BottomSheetNativeComponent'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/shared'
 export * from '#/components/Dialog/types'
 export * from '#/components/Dialog/utils'
-// @ts-ignore
+
 export const Input = createInput(TextInput)
 
 export function Outer({
@@ -154,6 +154,7 @@ export function Outer({
       nativeSnapPoint: snapPoint,
       disableDrag,
       setDisableDrag,
+      isWithinDialog: true,
     }),
     [close, snapPoint, disableDrag, setDisableDrag],
   )
@@ -168,7 +169,9 @@ export function Outer({
       onStateChange={onStateChange}
       disableDrag={disableDrag}>
       <Context.Provider value={context}>
-        <View testID={testID}>{children}</View>
+        <View testID={testID} style={[a.relative]}>
+          {children}
+        </View>
       </Context.Provider>
     </BottomSheet>
   )
@@ -196,7 +199,7 @@ export function Inner({children, style, header}: DialogInnerProps) {
 
 export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
   function ScrollableInner(
-    {children, style, contentContainerStyle, header, ...props},
+    {children, contentContainerStyle, header, ...props},
     ref,
   ) {
     const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
@@ -216,13 +219,21 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
       [],
     )
 
-    const basePading =
-      (isIOS ? 30 : 50) + (isIOS ? keyboardHeight / 4 : keyboardHeight)
-    const fullPaddingBase = insets.bottom + insets.top + basePading
-    const fullPadding = isIOS ? fullPaddingBase : fullPaddingBase + 50
-
-    const paddingBottom =
-      nativeSnapPoint === BottomSheetSnapPoint.Full ? fullPadding : basePading
+    let paddingBottom = 0
+    if (isIOS) {
+      paddingBottom += keyboardHeight / 4
+      if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
+        paddingBottom += insets.bottom + tokens.space.md
+      }
+      paddingBottom = Math.max(paddingBottom, tokens.space._2xl)
+    } else {
+      paddingBottom += keyboardHeight
+      if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
+        paddingBottom += insets.top
+      }
+      paddingBottom +=
+        Math.max(insets.bottom, tokens.space._5xl) + tokens.space._2xl
+    }
 
     const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       if (!isAndroid) {
@@ -238,7 +249,6 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
 
     return (
       <KeyboardAwareScrollView
-        style={[style]}
         contentContainerStyle={[
           a.pt_2xl,
           a.px_xl,
@@ -289,7 +299,7 @@ export const InnerFlatList = React.forwardRef<
         keyboardShouldPersistTaps="handled"
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
         ListFooterComponent={
-          <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
+          <View style={{height: insets.bottom + a.pt_5xl.paddingTop + 50}} />
         }
         ref={ref}
         {...props}
@@ -316,7 +326,7 @@ export function Handle() {
           style={[
             a.rounded_sm,
             {
-              top: 10,
+              top: tokens.space._2xl / 2 - 2.5,
               width: 35,
               height: 5,
               alignSelf: 'center',

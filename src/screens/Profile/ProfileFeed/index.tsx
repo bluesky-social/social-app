@@ -102,16 +102,16 @@ export function ProfileFeedScreen(props: Props) {
   }
 
   return resolvedUri ? (
-    <Layout.Screen>
+    <Layout.Screen testID="profileFeedScreen">
       <ProfileFeedScreenIntermediate
         feedUri={resolvedUri.uri}
         feedParams={feedParams}
       />
     </Layout.Screen>
   ) : (
-    <Layout.Screen>
+    <Layout.Screen testID="profileFeedScreen">
+      <ProfileFeedHeaderSkeleton />
       <Layout.Content>
-        <ProfileFeedHeaderSkeleton />
         <PostFeedLoadingPlaceholder />
       </Layout.Content>
     </Layout.Screen>

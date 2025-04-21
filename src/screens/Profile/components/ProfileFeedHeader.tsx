@@ -46,7 +46,10 @@ import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import * as Menu from '#/components/Menu'
-import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
+import {
+  ReportDialog,
+  useReportDialogControl,
+} from '#/components/moderation/ReportDialog'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 
@@ -58,14 +61,7 @@ export function ProfileFeedHeaderSkeleton() {
       <Layout.Header.BackButton />
       <Layout.Header.Content>
         <View
-          style={[
-            a.w_full,
-            a.rounded_sm,
-            t.atoms.bg_contrast_25,
-            {
-              height: 44,
-            },
-          ]}
+          style={[a.w_full, a.rounded_sm, t.atoms.bg_contrast_25, {height: 40}]}
         />
       </Layout.Header.Content>
       <Layout.Header.Slot>
@@ -498,7 +494,7 @@ function DialogInner({
           <View style={[a.flex_row, a.gap_sm, a.align_center, a.pt_sm]}>
             <Button
               disabled={isLikePending || isUnlikePending}
-              label={_(msg`Like feed`)}
+              label={_(msg`Like this feed`)}
               size="small"
               variant="solid"
               color="secondary"
@@ -551,14 +547,15 @@ function DialogInner({
               </Button>
             </View>
 
-            <ReportDialog
-              control={reportDialogControl}
-              params={{
-                type: 'feedgen',
-                uri: info.uri,
-                cid: info.cid,
-              }}
-            />
+            {info.view && (
+              <ReportDialog
+                control={reportDialogControl}
+                subject={{
+                  ...info.view,
+                  $type: 'app.bsky.feed.defs#generatorView',
+                }}
+              />
+            )}
           </View>
         </>
       )}

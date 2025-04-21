@@ -5,6 +5,8 @@ import {forceLTR} from '#/lib/strings/bidi'
 const VALIDATE_REGEX =
   /^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/
 
+export const MAX_SERVICE_HANDLE_LENGTH = 18
+
 export function makeValidHandle(str: string): string {
   if (str.length > 20) {
     str = str.slice(0, 20)
@@ -17,10 +19,6 @@ export function createFullHandle(name: string, domain: string): string {
   name = (name || '').replace(/[.]+$/, '')
   domain = (domain || '').replace(/^[.]+/, '')
   return `${name}.${domain}`
-}
-
-export function maxServiceHandleLength(domain: string): number {
-  return 30 - `.${(domain || '').replace(/^[.]+/, '')}`.length
 }
 
 export function isInvalidHandle(handle: string): boolean {
@@ -52,7 +50,7 @@ export function validateServiceHandle(
     handleChars:
       !str || (VALIDATE_REGEX.test(fullHandle) && !str.includes('.')),
     hyphenStartOrEnd: !str.startsWith('-') && !str.endsWith('-'),
-    frontLength: str.length >= 3 && str.length <= 18,
+    frontLength: str.length >= 3 && str.length <= MAX_SERVICE_HANDLE_LENGTH,
     totalLength: fullHandle.length <= 253,
   }
 

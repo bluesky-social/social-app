@@ -30,11 +30,13 @@ export {
   useDialogControl as useMenuControl,
 } from '#/components/Dialog'
 
+export {useMenuContext}
+
 export function Root({
   children,
   control,
 }: React.PropsWithChildren<{
-  control?: Dialog.DialogOuterProps['control']
+  control?: Dialog.DialogControlProps
 }>) {
   const defaultControl = Dialog.useDialogControl()
   const context = React.useMemo<ContextType>(
@@ -100,7 +102,7 @@ export function Outer({
       <Dialog.Handle />
       {/* Re-wrap with context since Dialogs are portal-ed to root */}
       <Context.Provider value={context}>
-        <Dialog.ScrollableInner label={_(msg`Menu`)} style={[a.py_sm]}>
+        <Dialog.ScrollableInner label={_(msg`Menu`)}>
           <View style={[a.gap_lg]}>
             {children}
             {isNative && showCancel && <Cancel />}

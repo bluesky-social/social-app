@@ -2,7 +2,7 @@ import React, {useCallback} from 'react'
 import {LayoutAnimation} from 'react-native'
 import {
   ComAtprotoServerCreateAccount,
-  ComAtprotoServerDescribeServer,
+  type ComAtprotoServerDescribeServer,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -31,6 +31,13 @@ type SubmitTask = {
   mutableProcessed: boolean // OK to mutate assuming it's never read in render.
 }
 
+type ErrorField =
+  | 'invite-code'
+  | 'email'
+  | 'handle'
+  | 'password'
+  | 'date-of-birth'
+
 export type SignupState = {
   hasPrev: boolean
   activeStep: SignupStep
@@ -45,9 +52,15 @@ export type SignupState = {
   handle: string
 
   error: string
+  errorField?: ErrorField
   isLoading: boolean
 
   pendingSubmit: null | SubmitTask
+
+  // Tracking
+  signupStartTime: number
+  fieldErrors: Record<ErrorField, number>
+  backgroundCount: number
 }
 
 export type SignupAction =
@@ -62,9 +75,11 @@ export type SignupAction =
   | {type: 'setDateOfBirth'; value: Date}
   | {type: 'setInviteCode'; value: string}
   | {type: 'setHandle'; value: string}
-  | {type: 'setError'; value: string}
+  | {type: 'setError'; value: string; field?: ErrorField}
+  | {type: 'clearError'}
   | {type: 'setIsLoading'; value: boolean}
   | {type: 'submit'; task: SubmitTask}
+  | {type: 'incrementBackgroundCount'}
 
 export const initialState: SignupState = {
   hasPrev: false,
@@ -80,9 +95,21 @@ export const initialState: SignupState = {
   inviteCode: '',
 
   error: '',
+  errorField: undefined,
   isLoading: false,
 
   pendingSubmit: null,
+
+  // Tracking
+  signupStartTime: Date.now(),
+  fieldErrors: {
+    'invite-code': 0,
+    email: 0,
+    handle: 0,
+    password: 0,
+    'date-of-birth': 0,
+  },
+  backgroundCount: 0,
 }
 
 export function is13(date: Date) {
@@ -102,6 +129,7 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         next.activeStep--
         next.error = ''
+        next.errorField = undefined
       }
       break
     }
@@ -110,6 +138,7 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         next.activeStep++
         next.error = ''
+        next.errorField = undefined
       }
       break
     }
@@ -156,10 +185,47 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
     }
     case 'setError': {
       next.error = a.value
+      next.errorField = a.field
+
+      // Track field errors
+      if (a.field) {
+        next.fieldErrors[a.field] = (next.fieldErrors[a.field] || 0) + 1
+
+        // Log the field error
+        logger.metric(
+          'signup:fieldError',
+          {
+            field: a.field,
+            errorCount: next.fieldErrors[a.field],
+            errorMessage: a.value,
+            activeStep: next.activeStep,
+          },
+          {statsig: true},
+        )
+      }
+      break
+    }
+    case 'clearError': {
+      next.error = ''
+      next.errorField = undefined
       break
     }
     case 'submit': {
       next.pendingSubmit = a.task
+      break
+    }
+    case 'incrementBackgroundCount': {
+      next.backgroundCount = s.backgroundCount + 1
+
+      // Log background/foreground event during signup
+      logger.metric(
+        'signup:backgrounded',
+        {
+          activeStep: next.activeStep,
+          backgroundCount: next.backgroundCount,
+        },
+        {statsig: true},
+      )
       break
     }
   }
@@ -194,6 +260,7 @@ export function useSubmitSignup() {
         return dispatch({
           type: 'setError',
           value: _(msg`Please enter your email.`),
+          field: 'email',
         })
       }
       if (!EmailValidator.validate(state.email)) {
@@ -201,6 +268,7 @@ export function useSubmitSignup() {
         return dispatch({
           type: 'setError',
           value: _(msg`Your email appears to be invalid.`),
+          field: 'email',
         })
       }
       if (!state.password) {
@@ -208,6 +276,7 @@ export function useSubmitSignup() {
         return dispatch({
           type: 'setError',
           value: _(msg`Please choose your password.`),
+          field: 'password',
         })
       }
       if (!state.handle) {
@@ -215,6 +284,7 @@ export function useSubmitSignup() {
         return dispatch({
           type: 'setError',
           value: _(msg`Please choose your handle.`),
+          field: 'handle',
         })
       }
       if (
@@ -235,15 +305,26 @@ export function useSubmitSignup() {
       dispatch({type: 'setIsLoading', value: true})
 
       try {
-        await createAccount({
-          service: state.serviceUrl,
-          email: state.email,
-          handle: createFullHandle(state.handle, state.userDomain),
-          password: state.password,
-          birthDate: state.dateOfBirth,
-          inviteCode: state.inviteCode.trim(),
-          verificationCode: state.pendingSubmit?.verificationCode,
-        })
+        await createAccount(
+          {
+            service: state.serviceUrl,
+            email: state.email,
+            handle: createFullHandle(state.handle, state.userDomain),
+            password: state.password,
+            birthDate: state.dateOfBirth,
+            inviteCode: state.inviteCode.trim(),
+            verificationCode: state.pendingSubmit?.verificationCode,
+          },
+          {
+            signupDuration: Date.now() - state.signupStartTime,
+            fieldErrorsTotal: Object.values(state.fieldErrors).reduce(
+              (a, b) => a + b,
+              0,
+            ),
+            backgroundCount: state.backgroundCount,
+          },
+        )
+
         /*
          * Must happen last so that if the user has multiple tabs open and
          * createAccount fails, one tab is not stuck in onboarding — Eric
@@ -257,6 +338,7 @@ export function useSubmitSignup() {
             value: _(
               msg`Invite code not accepted. Check that you input it correctly and try again.`,
             ),
+            field: 'invite-code',
           })
           dispatch({type: 'setStep', value: SignupStep.INFO})
           return
@@ -266,7 +348,11 @@ export function useSubmitSignup() {
         const isHandleError = error.toLowerCase().includes('handle')
 
         dispatch({type: 'setIsLoading', value: false})
-        dispatch({type: 'setError', value: error})
+        dispatch({
+          type: 'setError',
+          value: error,
+          field: isHandleError ? 'handle' : undefined,
+        })
         dispatch({type: 'setStep', value: isHandleError ? 2 : 1})
 
         logger.error('Signup Flow Error', {

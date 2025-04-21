@@ -1,10 +1,11 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import {KeyboardAvoidingView} from 'react-native'
 import {LayoutAnimationConfig} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {DEFAULT_SERVICE} from '#/lib/constants'
+import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
 import {SessionAccount, useSession} from '#/state/session'
@@ -28,6 +29,8 @@ enum Forms {
 
 export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   const {_} = useLingui()
+  const failedAttemptCountRef = useRef(0)
+  const startTimeRef = useRef(Date.now())
 
   const {accounts} = useSession()
   const {requestedAccountSwitchTo} = useLoggedOutView()
@@ -79,6 +82,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
       logger.warn(`Failed to fetch service description for ${serviceUrl}`, {
         error: String(serviceError),
       })
+      logEvent('signin:hostingProviderFailedResolution', {})
     } else {
       setError('')
     }
@@ -86,6 +90,27 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
 
   const onPressForgotPassword = () => {
     setCurrentForm(Forms.ForgotPassword)
+    logEvent('signin:forgotPasswordPressed', {})
+  }
+
+  const handlePressBack = () => {
+    onPressBack()
+    logEvent('signin:backPressed', {
+      failedAttemptsCount: failedAttemptCountRef.current,
+    })
+  }
+
+  const onAttemptSuccess = () => {
+    logEvent('signin:success', {
+      isUsingCustomProvider: serviceUrl !== DEFAULT_SERVICE,
+      timeTakenSeconds: Math.round((Date.now() - startTimeRef.current) / 1000),
+      failedAttemptsCount: failedAttemptCountRef.current,
+    })
+    setCurrentForm(Forms.Login)
+  }
+
+  const onAttemptFailed = () => {
+    failedAttemptCountRef.current += 1
   }
 
   let content = null
@@ -103,9 +128,11 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           serviceDescription={serviceDescription}
           initialHandle={initialHandle}
           setError={setError}
+          onAttemptFailed={onAttemptFailed}
+          onAttemptSuccess={onAttemptSuccess}
           setServiceUrl={setServiceUrl}
           onPressBack={() =>
-            accounts.length ? gotoForm(Forms.ChooseAccount) : onPressBack()
+            accounts.length ? gotoForm(Forms.ChooseAccount) : handlePressBack()
           }
           onPressForgotPassword={onPressForgotPassword}
           onPressRetryConnect={refetchService}
@@ -118,7 +145,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
       content = (
         <ChooseAccountForm
           onSelectAccount={onSelectAccount}
-          onPressBack={onPressBack}
+          onPressBack={handlePressBack}
         />
       )
       break

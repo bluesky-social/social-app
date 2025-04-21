@@ -34,6 +34,7 @@ const Input = TextField.createInput(InputBase as unknown as typeof TextInput)
 
 export function DateField({
   value,
+  inputRef,
   onChangeDate,
   label,
   isInvalid,
@@ -58,9 +59,9 @@ export function DateField({
       <TextField.Icon icon={CalendarDays} />
       <Input
         value={toSimpleDateString(value)}
+        inputRef={inputRef as React.Ref<TextInput>}
         label={label}
         onChange={handleOnChange}
-        onChangeText={() => {}}
         testID={testID}
         accessibilityHint={accessibilityHint}
         // @ts-expect-error not typed as <input type="date"> even though it is one

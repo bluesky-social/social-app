@@ -5,6 +5,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {BSKY_SERVICE} from '#/lib/constants'
+import {logEvent} from '#/lib/statsig/statsig'
 import * as persisted from '#/state/persisted'
 import {useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -39,7 +40,10 @@ export function ServerInputDialog({
         setPreviousCustomAddress(result)
       }
     }
-  }, [onSelect])
+    logEvent('signin:hostingProviderPressed', {
+      hostingProviderDidChange: fixedOption !== BSKY_SERVICE,
+    })
+  }, [onSelect, fixedOption])
 
   return (
     <Dialog.Outer

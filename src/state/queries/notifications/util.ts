@@ -1,21 +1,26 @@
 import {
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedLike,
   AppBskyFeedPost,
   AppBskyFeedRepost,
-  AppBskyGraphDefs,
+  type AppBskyGraphDefs,
   AppBskyGraphStarterpack,
-  AppBskyNotificationListNotifications,
-  BskyAgent,
+  type AppBskyNotificationListNotifications,
+  type BskyAgent,
   moderateNotification,
-  ModerationOpts,
+  type ModerationOpts,
 } from '@atproto/api'
-import {QueryClient} from '@tanstack/react-query'
+import {type QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
 import {labelIsHideableOffense} from '#/lib/moderation'
+import * as bsky from '#/types/bsky'
 import {precacheProfile} from '../profile'
-import {FeedNotification, FeedPage, NotificationType} from './types'
+import {
+  type FeedNotification,
+  type FeedPage,
+  type NotificationType,
+} from './types'
 
 const GROUPABLE_REASONS = ['like', 'repost', 'follow']
 const MS_1HR = 1e3 * 60 * 60
@@ -154,14 +159,14 @@ export function groupNotifications(
       const type = toKnownType(notif)
       if (type !== 'starterpack-joined') {
         groupedNotifs.push({
-          _reactKey: `notif-${notif.uri}`,
+          _reactKey: `notif-${notif.uri}-${notif.reason}`,
           type,
           notification: notif,
           subjectUri: getSubjectUri(type, notif),
         })
       } else {
         groupedNotifs.push({
-          _reactKey: `notif-${notif.uri}`,
+          _reactKey: `notif-${notif.uri}-${notif.reason}`,
           type: 'starterpack-joined',
           notification: notif,
           subjectUri: notif.uri,
@@ -205,12 +210,9 @@ async function fetchSubjects(
     ),
   )
   const postsMap = new Map<string, AppBskyFeedDefs.PostView>()
-  const packsMap = new Map<string, AppBskyGraphDefs.StarterPackView>()
+  const packsMap = new Map<string, AppBskyGraphDefs.StarterPackViewBasic>()
   for (const post of postsChunks.flat()) {
-    if (
-      AppBskyFeedPost.isRecord(post.record) &&
-      AppBskyFeedPost.validateRecord(post.record).success
-    ) {
+    if (AppBskyFeedPost.isRecord(post.record)) {
       postsMap.set(post.uri, post)
     }
   }
@@ -240,7 +242,9 @@ function toKnownType(
     notif.reason === 'reply' ||
     notif.reason === 'quote' ||
     notif.reason === 'follow' ||
-    notif.reason === 'starterpack-joined'
+    notif.reason === 'starterpack-joined' ||
+    notif.reason === 'verified' ||
+    notif.reason === 'unverified'
   ) {
     return notif.reason as NotificationType
   }
@@ -255,8 +259,14 @@ function getSubjectUri(
     return notif.uri
   } else if (type === 'post-like' || type === 'repost') {
     if (
-      AppBskyFeedRepost.isRecord(notif.record) ||
-      AppBskyFeedLike.isRecord(notif.record)
+      bsky.dangerousIsType<AppBskyFeedRepost.Record>(
+        notif.record,
+        AppBskyFeedRepost.isRecord,
+      ) ||
+      bsky.dangerousIsType<AppBskyFeedLike.Record>(
+        notif.record,
+        AppBskyFeedLike.isRecord,
+      )
     ) {
       return typeof notif.record.subject?.uri === 'string'
         ? notif.record.subject?.uri

@@ -1,11 +1,10 @@
 import React, {useCallback, useMemo, useState} from 'react'
-import {GestureResponderEvent, View} from 'react-native'
+import {type GestureResponderEvent, View} from 'react-native'
 import {
-  AppBskyActorDefs,
   AppBskyEmbedRecord,
   ChatBskyConvoDefs,
   moderateProfile,
-  ModerationOpts,
+  type ModerationOpts,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -44,11 +43,18 @@ import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import type * as bsky from '#/types/bsky'
 
 export let ChatListItem = ({
   convo,
+  showMenu = true,
+  children,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
+  showMenu?: boolean
+  children?: React.ReactNode
 }): React.ReactNode => {
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
@@ -66,7 +72,9 @@ export let ChatListItem = ({
       convo={convo}
       profile={otherUser}
       moderationOpts={moderationOpts}
-    />
+      showMenu={showMenu}>
+      {children}
+    </ChatListItemReady>
   )
 }
 
@@ -76,10 +84,14 @@ function ChatListItemReady({
   convo,
   profile: profileUnshadowed,
   moderationOpts,
+  showMenu,
+  children,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
+  showMenu?: boolean
+  children?: React.ReactNode
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -96,6 +108,9 @@ function ChatListItemReady({
   const playHaptic = useHaptics()
   const queryClient = useQueryClient()
   const isUnread = convo.unreadCount > 0
+  const verification = useSimpleVerificationState({
+    profile,
+  })
 
   const blockInfo = useMemo(() => {
     const modui = moderation.ui('profileView')
@@ -175,9 +190,63 @@ function ChatListItemReady({
         lastMessageSentAt = convo.lastMessage.sentAt
       }
       if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
+        lastMessageSentAt = convo.lastMessage.sentAt
+
         lastMessage = isDeletedAccount
           ? _(msg`Conversation deleted`)
           : _(msg`Message deleted`)
+      }
+
+      if (ChatBskyConvoDefs.isMessageAndReactionView(convo.lastReaction)) {
+        if (
+          !lastMessageSentAt ||
+          new Date(lastMessageSentAt) <
+            new Date(convo.lastReaction.reaction.createdAt)
+        ) {
+          const isFromMe =
+            convo.lastReaction.reaction.sender.did === currentAccount?.did
+          const lastMessageText = convo.lastReaction.message.text
+          const fallbackMessage = _(
+            msg({
+              message: 'a message',
+              comment: `If last message does not contain text, fall back to "{user} reacted to {a message}"`,
+            }),
+          )
+
+          if (isFromMe) {
+            lastMessage = _(
+              msg`You reacted ${convo.lastReaction.reaction.value} to ${
+                lastMessageText
+                  ? `"${convo.lastReaction.message.text}"`
+                  : fallbackMessage
+              }`,
+            )
+          } else {
+            const senderDid = convo.lastReaction.reaction.sender.did
+            const sender = convo.members.find(
+              member => member.did === senderDid,
+            )
+            if (sender) {
+              lastMessage = _(
+                msg`${sanitizeDisplayName(
+                  sender.displayName || sender.handle,
+                )} reacted ${convo.lastReaction.reaction.value} to ${
+                  lastMessageText
+                    ? `"${convo.lastReaction.message.text}"`
+                    : fallbackMessage
+                }`,
+              )
+            } else {
+              lastMessage = _(
+                msg`Someone reacted ${convo.lastReaction.reaction.value} to ${
+                  lastMessageText
+                    ? `"${convo.lastReaction.message.text}"`
+                    : fallbackMessage
+                }`,
+              )
+            }
+          }
+        }
       }
 
       return {
@@ -185,7 +254,14 @@ function ChatListItemReady({
         lastMessageSentAt,
         latestReportableMessage,
       }
-    }, [_, convo.lastMessage, currentAccount?.did, isDeletedAccount])
+    }, [
+      _,
+      convo.lastMessage,
+      convo.lastReaction,
+      currentAccount?.did,
+      isDeletedAccount,
+      convo.members,
+    ])
 
   const [showActions, setShowActions] = useState(false)
 
@@ -252,6 +328,8 @@ function ChatListItemReady({
         leftFirst: deleteAction,
       }
 
+  const hasUnread = convo.unreadCount > 0 && !isDeletedAccount
+
   return (
     <GestureActionView actions={actions}>
       <View
@@ -281,7 +359,7 @@ function ChatListItemReady({
             !isDeletedAccount
               ? _(msg`Go to conversation with ${profile.handle}`)
               : _(
-                  msg`This conversation is with a deleted or a deactivated account. Press for options.`,
+                  msg`This conversation is with a deleted or a deactivated account. Press for options`,
                 )
           }
           accessibilityActions={
@@ -305,7 +383,6 @@ function ChatListItemReady({
                 a.py_md,
                 a.gap_md,
                 (hovered || pressed || focused) && t.atoms.bg_contrast_25,
-                t.atoms.border_contrast_low,
               ]}>
               {/* Avatar goes here */}
               <View style={{width: 52, height: 52}} />
@@ -313,11 +390,10 @@ function ChatListItemReady({
               <View
                 style={[a.flex_1, a.justify_center, web({paddingRight: 45})]}>
                 <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
-                  <Text
-                    numberOfLines={1}
-                    style={[{maxWidth: '85%'}, web([a.leading_normal])]}>
+                  <View style={[a.flex_shrink]}>
                     <Text
                       emoji
+                      numberOfLines={1}
                       style={[
                         a.text_md,
                         t.atoms.text,
@@ -327,22 +403,31 @@ function ChatListItemReady({
                       ]}>
                       {displayName}
                     </Text>
-                  </Text>
+                  </View>
+                  {verification.showBadge && (
+                    <View style={[a.pl_xs, a.self_center]}>
+                      <VerificationCheck
+                        width={14}
+                        verifier={verification.role === 'verifier'}
+                      />
+                    </View>
+                  )}
                   {lastMessageSentAt && (
-                    <TimeElapsed timestamp={lastMessageSentAt}>
-                      {({timeElapsed}) => (
-                        <Text
-                          style={[
-                            a.text_sm,
-                            {lineHeight: 21},
-                            t.atoms.text_contrast_medium,
-                            web({whiteSpace: 'preserve nowrap'}),
-                          ]}>
-                          {' '}
-                          &middot; {timeElapsed}
-                        </Text>
-                      )}
-                    </TimeElapsed>
+                    <View style={[a.pl_xs]}>
+                      <TimeElapsed timestamp={lastMessageSentAt}>
+                        {({timeElapsed}) => (
+                          <Text
+                            style={[
+                              a.text_sm,
+                              {lineHeight: 21},
+                              t.atoms.text_contrast_medium,
+                              web({whiteSpace: 'preserve nowrap'}),
+                            ]}>
+                            &middot; {timeElapsed}
+                          </Text>
+                        )}
+                      </TimeElapsed>
+                    </View>
                   )}
                   {(convo.muted || moderation.blocked) && (
                     <Text
@@ -376,9 +461,7 @@ function ChatListItemReady({
                   style={[
                     a.text_sm,
                     a.leading_snug,
-                    convo.unreadCount > 0
-                      ? a.font_bold
-                      : t.atoms.text_contrast_high,
+                    hasUnread ? a.font_bold : t.atoms.text_contrast_high,
                     isDimStyle && t.atoms.text_contrast_medium,
                   ]}>
                   {lastMessage}
@@ -389,9 +472,11 @@ function ChatListItemReady({
                   size="lg"
                   style={[a.pt_xs]}
                 />
+
+                {children}
               </View>
 
-              {convo.unreadCount > 0 && (
+              {hasUnread && (
                 <View
                   style={[
                     a.absolute,
@@ -412,26 +497,28 @@ function ChatListItemReady({
           )}
         </Link>
 
-        <ConvoMenu
-          convo={convo}
-          profile={profile}
-          control={menuControl}
-          currentScreen="list"
-          showMarkAsRead={convo.unreadCount > 0}
-          hideTrigger={isNative}
-          blockInfo={blockInfo}
-          style={[
-            a.absolute,
-            a.h_full,
-            a.self_end,
-            a.justify_center,
-            {
-              right: tokens.space.lg,
-              opacity: !gtMobile || showActions || menuControl.isOpen ? 1 : 0,
-            },
-          ]}
-          latestReportableMessage={latestReportableMessage}
-        />
+        {showMenu && (
+          <ConvoMenu
+            convo={convo}
+            profile={profile}
+            control={menuControl}
+            currentScreen="list"
+            showMarkAsRead={convo.unreadCount > 0}
+            hideTrigger={isNative}
+            blockInfo={blockInfo}
+            style={[
+              a.absolute,
+              a.h_full,
+              a.self_end,
+              a.justify_center,
+              {
+                right: tokens.space.lg,
+                opacity: !gtMobile || showActions || menuControl.isOpen ? 1 : 0,
+              },
+            ]}
+            latestReportableMessage={latestReportableMessage}
+          />
+        )}
         <LeaveConvoPrompt
           control={leaveConvoControl}
           convoId={convo.id}

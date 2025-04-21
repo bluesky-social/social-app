@@ -4,14 +4,13 @@ import {AppState, AppStateStatus} from 'react-native'
 import {Statsig, StatsigProvider} from 'statsig-react-native-expo'
 
 import {BUNDLE_DATE, BUNDLE_IDENTIFIER, IS_TESTFLIGHT} from '#/lib/app-info'
-import * as bitdrift from '#/lib/bitdrift'
 import {logger} from '#/logger'
+import {MetricEvents} from '#/logger/metrics'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 import {useSession} from '../../state/session'
 import {timeout} from '../async/timeout'
 import {useNonReactiveCallback} from '../hooks/useNonReactiveCallback'
-import {LogEvents} from './events'
 import {Gate} from './gates'
 
 const SDK_KEY = 'client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV'
@@ -43,7 +42,7 @@ if (isWeb && typeof window !== 'undefined') {
   refUrl = decodeURIComponent(params.get('ref_url') ?? '')
 }
 
-export type {LogEvents}
+export type {MetricEvents as LogEvents}
 
 function createStatsigOptions(prefetchUsers: StatsigUser[]) {
   return {
@@ -92,29 +91,44 @@ export function toClout(n: number | null | undefined): number | undefined {
   }
 }
 
-export function logEvent<E extends keyof LogEvents>(
+/**
+ * @deprecated use `logger.metric()` instead
+ */
+export function logEvent<E extends keyof MetricEvents>(
   eventName: E & string,
-  rawMetadata: LogEvents[E] & FlatJSONRecord,
+  rawMetadata: MetricEvents[E] & FlatJSONRecord,
+  options: {
+    /**
+     * Send to our data lake only, not to StatSig
+     */
+    lake?: boolean
+  } = {lake: false},
 ) {
   try {
     const fullMetadata = toStringRecord(rawMetadata)
     fullMetadata.routeName = getCurrentRouteName() ?? '(Uninitialized)'
     if (Statsig.initializeCalled()) {
-      Statsig.logEvent(eventName, null, fullMetadata)
+      let ev: string = eventName
+      if (options.lake) {
+        ev = `lake:${ev}`
+      }
+      Statsig.logEvent(ev, null, fullMetadata)
     }
-    // Intentionally bypass the logger abstraction to log rich objects.
-    console.groupCollapsed(eventName)
-    console.log(fullMetadata)
-    console.groupEnd()
-    bitdrift.info(eventName, fullMetadata)
+    /**
+     * All datalake events should be sent using `logger.metric`, and we don't
+     * want to double-emit logs to other transports.
+     */
+    if (!options.lake) {
+      logger.info(eventName, fullMetadata)
+    }
   } catch (e) {
     // A log should never interrupt the calling code, whatever happens.
     logger.error('Failed to log an event', {message: e})
   }
 }
 
-function toStringRecord<E extends keyof LogEvents>(
-  metadata: LogEvents[E] & FlatJSONRecord,
+function toStringRecord<E extends keyof MetricEvents>(
+  metadata: MetricEvents[E] & FlatJSONRecord,
 ): Record<string, string> {
   const record: Record<string, string> = {}
   for (let key in metadata) {

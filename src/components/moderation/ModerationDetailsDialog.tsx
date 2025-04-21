@@ -3,14 +3,14 @@ import {ModerationCause} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {makeProfileLink} from '#/lib/routes/links'
 import {listUriToHref} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
 import {useSession} from '#/state/session'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useGutters, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
-import {Divider} from '#/components/Divider'
 import {InlineLinkText} from '#/components/Link'
 import {AppModerationCause} from '#/components/Pills'
 import {Text} from '#/components/Typography'
@@ -38,9 +38,11 @@ function ModerationDetailsDialogInner({
   control: Dialog.DialogOuterProps['control']
 }) {
   const t = useTheme()
+  const xGutters = useGutters([0, 'base'])
   const {_} = useLingui()
   const desc = useModerationCauseDescription(modcause)
   const {currentAccount} = useSession()
+  const timeDiff = useGetTimeAgo({future: true})
 
   let name
   let description
@@ -128,37 +130,88 @@ function ModerationDetailsDialogInner({
     description = ''
   }
 
+  const sourceName =
+    desc.source || desc.sourceDisplayName || _(msg`an unknown labeler`)
+
   return (
-    <Dialog.ScrollableInner label={_(msg`Moderation details`)}>
-      <Text emoji style={[t.atoms.text, a.text_2xl, a.font_bold, a.mb_sm]}>
-        {name}
-      </Text>
-      <Text style={[t.atoms.text, a.text_md, a.leading_snug]}>
-        {description}
-      </Text>
+    <Dialog.ScrollableInner
+      label={_(msg`Moderation details`)}
+      contentContainerStyle={{
+        paddingLeft: 0,
+        paddingRight: 0,
+        paddingBottom: 0,
+      }}>
+      <View style={[xGutters, a.pb_lg]}>
+        <Text emoji style={[t.atoms.text, a.text_2xl, a.font_heavy, a.mb_sm]}>
+          {name}
+        </Text>
+        <Text style={[t.atoms.text, a.text_sm, a.leading_snug]}>
+          {description}
+        </Text>
+      </View>
 
       {modcause?.type === 'label' && (
-        <View style={[a.pt_lg]}>
-          <Divider />
+        <View
+          style={[
+            xGutters,
+            a.py_md,
+            a.border_t,
+            !isNative && t.atoms.bg_contrast_25,
+            t.atoms.border_contrast_low,
+            {
+              borderBottomLeftRadius: a.rounded_md.borderRadius,
+              borderBottomRightRadius: a.rounded_md.borderRadius,
+            },
+          ]}>
           {modcause.source.type === 'user' ? (
-            <Text style={[t.atoms.text, a.text_md, a.leading_snug, a.mt_lg]}>
+            <Text style={[t.atoms.text, a.text_md, a.leading_snug]}>
               <Trans>This label was applied by the author.</Trans>
             </Text>
           ) : (
             <>
-              <Text style={[t.atoms.text, a.text_md, a.leading_snug, a.mt_lg]}>
-                <Trans>
-                  This label was applied by{' '}
-                  <InlineLinkText
-                    label={desc.source || _(msg`an unknown labeler`)}
-                    to={makeProfileLink({did: modcause.label.src, handle: ''})}
-                    onPress={() => control.close()}
-                    style={a.text_md}>
-                    {desc.source || _(msg`an unknown labeler`)}
-                  </InlineLinkText>
-                  .
-                </Trans>
-              </Text>
+              <View
+                style={[
+                  a.flex_row,
+                  a.justify_between,
+                  a.gap_xl,
+                  {paddingBottom: 1},
+                ]}>
+                <Text
+                  style={[
+                    a.flex_1,
+                    a.leading_snug,
+                    t.atoms.text_contrast_medium,
+                  ]}
+                  numberOfLines={1}>
+                  <Trans>
+                    Source:{' '}
+                    <InlineLinkText
+                      label={sourceName}
+                      to={makeProfileLink({
+                        did: modcause.label.src,
+                        handle: '',
+                      })}
+                      onPress={() => control.close()}>
+                      {sourceName}
+                    </InlineLinkText>
+                  </Trans>
+                </Text>
+                {modcause.label.exp && (
+                  <View>
+                    <Text
+                      style={[
+                        a.leading_snug,
+                        a.text_sm,
+                        a.italic,
+                        t.atoms.text_contrast_medium,
+                      ]}>
+                      <Trans>
+                        Expires in {timeDiff(Date.now(), modcause.label.exp)}
+                      </Trans>
+                    </Text>
+                  </View>
+                )}
+              </View>
             </>
           )}
         </View>

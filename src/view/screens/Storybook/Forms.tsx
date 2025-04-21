@@ -1,5 +1,5 @@
 import React from 'react'
-import {View} from 'react-native'
+import {TextInput, View} from 'react-native'
 
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -19,6 +19,8 @@ export function Forms() {
   const [value, setValue] = React.useState('')
   const [date, setDate] = React.useState('2001-01-01')
 
+  const inputRef = React.useRef<TextInput>(null)
+
   return (
     <View style={[a.gap_4xl, a.align_start]}>
       <H1>Forms</H1>
@@ -33,22 +35,23 @@ export function Forms() {
         />
 
         <View style={[a.flex_row, a.align_start, a.gap_sm]}>
-          <View
-            style={[
-              {
-                width: '50%',
-              },
-            ]}>
+          <View style={[a.flex_1]}>
             <TextField.Root>
               <TextField.Icon icon={Globe} />
               <TextField.Input
+                inputRef={inputRef}
                 value={value}
                 onChangeText={setValue}
                 label="Text field"
               />
             </TextField.Root>
           </View>
-          <Button label="Submit" size="large" variant="solid" color="primary">
+          <Button
+            label="Submit"
+            size="large"
+            variant="solid"
+            color="primary"
+            onPress={() => inputRef.current?.clear()}>
             <ButtonText>Submit</ButtonText>
           </Button>
         </View>

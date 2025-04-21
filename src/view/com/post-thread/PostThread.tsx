@@ -3,7 +3,11 @@ import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {AppBskyFeedDefs, AppBskyFeedThreadgate} from '@atproto/api'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedThreadgate,
+  moderatePost,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -12,7 +16,6 @@ import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {clamp} from '#/lib/numbers'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -119,7 +122,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
   const serverTreeViewEnabled = serverPrefs?.lab_treeViewEnabled ?? false
   const serverSortReplies = serverPrefs?.sort ?? 'hotness'
 
-  // However, we also need these to work locally for PWI (without persistance).
+  // However, we also need these to work locally for PWI (without persistence).
   // So we're mirroring them locally.
   const prioritizeFollowedUsers = serverPrioritizeFollowedUsers
   const [treeViewEnabled, setTreeViewEnabled] = useState(serverTreeViewEnabled)
@@ -403,10 +406,11 @@ export function PostThread({uri}: {uri: string | undefined}) {
         text: thread.record.text,
         author: thread.post.author,
         embed: thread.post.embed,
+        moderation: threadModerationCache.get(thread),
       },
       onPost: onPostReply,
     })
-  }, [openComposer, thread, onPostReply])
+  }, [openComposer, thread, onPostReply, threadModerationCache])
 
   const canReply = !error && rootPost && !rootPost.viewer?.replyDisabled
   const hasParents =
@@ -562,7 +566,6 @@ export function PostThread({uri}: {uri: string | undefined}) {
               ? MAINTAIN_VISIBLE_CONTENT_POSITION
               : undefined
           }
-          // @ts-ignore our .web version only -prf
           desktopFixedHeight
           removeClippedSubviews={isAndroid ? false : undefined}
           ListFooterComponent={

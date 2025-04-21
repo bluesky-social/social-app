@@ -18,7 +18,7 @@ import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {IS_INTERNAL} from '#/lib/app-info'
-import {POST_CTRL_HITSLOP} from '#/lib/constants'
+import {DISCOVER_DEBUG_DIDS, POST_CTRL_HITSLOP} from '#/lib/constants'
 import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
 import {useHaptics} from '#/lib/haptics'
@@ -87,12 +87,16 @@ let PostCtrls = ({
   const {captureAction} = useProgressGuideControls()
   const playHaptic = useHaptics()
   const gate = useGate()
-  const isDiscoverDebugUser = IS_INTERNAL || gate('debug_show_feedcontext')
+  const isDiscoverDebugUser =
+    IS_INTERNAL ||
+    DISCOVER_DEBUG_DIDS[currentAccount?.did || ''] ||
+    gate('debug_show_feedcontext')
   const isBlocked = Boolean(
     post.author.viewer?.blocking ||
       post.author.viewer?.blockedBy ||
       post.author.viewer?.blockingByList,
   )
+  const replyDisabled = post.viewer?.replyDisabled
 
   const shouldShowLoggedOutWarning = React.useMemo(() => {
     return (
@@ -247,13 +251,13 @@ let PostCtrls = ({
       <View
         style={[
           big ? a.align_center : [a.flex_1, a.align_start, {marginLeft: -6}],
-          post.viewer?.replyDisabled ? {opacity: 0.5} : undefined,
+          replyDisabled ? {opacity: 0.5} : undefined,
         ]}>
         <Pressable
           testID="replyBtn"
           style={btnStyle}
           onPress={() => {
-            if (!post.viewer?.replyDisabled) {
+            if (!replyDisabled) {
               playHaptic('Light')
               requireAuth(() => onPressReply())
             }
@@ -356,7 +360,7 @@ let PostCtrls = ({
             control={loggedOutWarningPromptControl}
             title={_(msg`Note about sharing`)}
             description={_(
-              msg`This post is only visible to logged-in users. It won't be visible to people who aren't logged in.`,
+              msg`This post is only visible to logged-in users. It won't be visible to people who aren't signed in.`,
             )}
             onConfirm={onShare}
             confirmButtonCta={_(msg`Share anyway`)}

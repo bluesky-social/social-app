@@ -9,7 +9,7 @@ import {
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -24,7 +24,6 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {getAllListMembers} from '#/state/queries/list-members'
@@ -43,7 +42,6 @@ import {useSetActiveStarterPack} from '#/state/shell/starter-pack'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from '#/view/com/profile/ProfileSubpageHeader'
 import * as Toast from '#/view/com/util/Toast'
-import {CenteredView} from '#/view/com/util/Views'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -57,8 +55,11 @@ import * as Layout from '#/components/Layout'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
+import {
+  ReportDialog,
+  useReportDialogControl,
+} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
-import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {RichText} from '#/components/RichText'
 import {FeedsList} from '#/components/StarterPack/Main/FeedsList'
 import {PostsList} from '#/components/StarterPack/Main/PostsList'
@@ -66,6 +67,7 @@ import {ProfilesList} from '#/components/StarterPack/Main/ProfilesList'
 import {QrCodeDialog} from '#/components/StarterPack/QrCodeDialog'
 import {ShareDialog} from '#/components/StarterPack/ShareDialog'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 type StarterPackScreeProps = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -221,55 +223,53 @@ function StarterPackScreenLoaded({
   }, [onOpenShareDialog, routeParams.new, shareDialogControl])
 
   return (
-    <CenteredView style={[a.h_full_vh]}>
-      <View style={isWeb ? {minHeight: '100%'} : {height: '100%'}}>
-        <PagerWithHeader
-          items={tabs}
-          isHeaderReady={true}
-          renderHeader={() => (
-            <Header
-              starterPack={starterPack}
-              routeParams={routeParams}
-              onOpenShareDialog={onOpenShareDialog}
-            />
-          )}>
-          {showPeopleTab
-            ? ({headerHeight, scrollElRef}) => (
-                <ProfilesList
-                  // Validated above
-                  listUri={starterPack!.list!.uri}
-                  headerHeight={headerHeight}
-                  // @ts-expect-error
-                  scrollElRef={scrollElRef}
-                  moderationOpts={moderationOpts}
-                />
-              )
-            : null}
-          {showFeedsTab
-            ? ({headerHeight, scrollElRef}) => (
-                <FeedsList
-                  // @ts-expect-error ?
-                  feeds={starterPack?.feeds}
-                  headerHeight={headerHeight}
-                  // @ts-expect-error
-                  scrollElRef={scrollElRef}
-                />
-              )
-            : null}
-          {showPostsTab
-            ? ({headerHeight, scrollElRef}) => (
-                <PostsList
-                  // Validated above
-                  listUri={starterPack!.list!.uri}
-                  headerHeight={headerHeight}
-                  // @ts-expect-error
-                  scrollElRef={scrollElRef}
-                  moderationOpts={moderationOpts}
-                />
-              )
-            : null}
-        </PagerWithHeader>
-      </View>
+    <>
+      <PagerWithHeader
+        items={tabs}
+        isHeaderReady={true}
+        renderHeader={() => (
+          <Header
+            starterPack={starterPack}
+            routeParams={routeParams}
+            onOpenShareDialog={onOpenShareDialog}
+          />
+        )}>
+        {showPeopleTab
+          ? ({headerHeight, scrollElRef}) => (
+              <ProfilesList
+                // Validated above
+                listUri={starterPack!.list!.uri}
+                headerHeight={headerHeight}
+                // @ts-expect-error
+                scrollElRef={scrollElRef}
+                moderationOpts={moderationOpts}
+              />
+            )
+          : null}
+        {showFeedsTab
+          ? ({headerHeight, scrollElRef}) => (
+              <FeedsList
+                // @ts-expect-error ?
+                feeds={starterPack?.feeds}
+                headerHeight={headerHeight}
+                // @ts-expect-error
+                scrollElRef={scrollElRef}
+              />
+            )
+          : null}
+        {showPostsTab
+          ? ({headerHeight, scrollElRef}) => (
+              <PostsList
+                // Validated above
+                listUri={starterPack!.list!.uri}
+                headerHeight={headerHeight}
+                // @ts-expect-error
+                scrollElRef={scrollElRef}
+                moderationOpts={moderationOpts}
+              />
+            )
+          : null}
+      </PagerWithHeader>
 
       <QrCodeDialog
         control={qrCodeDialogControl}
@@ -283,7 +283,7 @@ function StarterPackScreenLoaded({
         link={link}
         imageLoaded={imageLoaded}
       />
-    </CenteredView>
+    </>
   )
 }
 
@@ -387,7 +387,12 @@ function Header({
     })
   }
 
-  if (!AppBskyGraphStarterpack.isRecord(record)) {
+  if (
+    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+      record,
+      AppBskyGraphStarterpack.isRecord,
+    )
+  ) {
     return null
   }
 
@@ -477,9 +482,12 @@ function Header({
               />
               <Text
                 style={[a.font_bold, a.text_sm, t.atoms.text_contrast_medium]}>
-                <Trans>
-                  {starterPack.joinedAllTimeCount || 0} people have used this
-                  starter pack!
+                <Trans comment="Number of users (always at least 25) who have joined Bluesky using a specific starter pack">
+                  <Plural
+                    value={starterPack.joinedAllTimeCount || 0}
+                    other="# people have"
+                  />{' '}
+                  used this starter pack!
                 </Trans>
               </Text>
             </View>
@@ -618,10 +626,9 @@ function OverflowMenu({
       {starterPack.list && (
         <ReportDialog
           control={reportDialogControl}
-          params={{
-            type: 'starterpack',
-            uri: starterPack.uri,
-            cid: starterPack.cid,
+          subject={{
+            ...starterPack,
+            $type: 'app.bsky.graph.defs#starterPackView',
           }}
         />
       )}
@@ -701,64 +708,57 @@ function InvalidStarterPack({rkey}: {rkey: string}) {
   })
 
   return (
-    <CenteredView
-      style={[
-        a.flex_1,
-        a.align_center,
-        a.gap_5xl,
-        !gtMobile && a.justify_between,
-        t.atoms.border_contrast_low,
-        {paddingTop: 175, paddingBottom: 110},
-      ]}
-      sideBorders={true}>
-      <View style={[a.w_full, a.align_center, a.gap_lg]}>
-        <Text style={[a.font_bold, a.text_3xl]}>
-          <Trans>Starter pack is invalid</Trans>
-        </Text>
-        <Text
-          style={[
-            a.text_md,
-            a.text_center,
-            t.atoms.text_contrast_high,
-            {lineHeight: 1.4},
-            gtMobile ? {width: 450} : [a.w_full, a.px_lg],
-          ]}>
-          <Trans>
-            The starter pack that you are trying to view is invalid. You may
-            delete this starter pack instead.
-          </Trans>
-        </Text>
+    <Layout.Content centerContent>
+      <View style={[a.py_4xl, a.px_xl, a.align_center, a.gap_5xl]}>
+        <View style={[a.w_full, a.align_center, a.gap_lg]}>
+          <Text style={[a.font_bold, a.text_3xl]}>
+            <Trans>Starter pack is invalid</Trans>
+          </Text>
+          <Text
+            style={[
+              a.text_md,
+              a.text_center,
+              t.atoms.text_contrast_high,
+              {lineHeight: 1.4},
+              gtMobile ? {width: 450} : [a.w_full, a.px_lg],
+            ]}>
+            <Trans>
+              The starter pack that you are trying to view is invalid. You may
+              delete this starter pack instead.
+            </Trans>
+          </Text>
+        </View>
+        <View style={[a.gap_md, gtMobile ? {width: 350} : [a.w_full, a.px_lg]]}>
+          <Button
+            variant="solid"
+            color="primary"
+            label={_(msg`Delete starter pack`)}
+            size="large"
+            style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}
+            disabled={isProcessing}
+            onPress={() => {
+              setIsProcessing(true)
+              deleteStarterPack({rkey})
+            }}>
+            <ButtonText>
+              <Trans>Delete</Trans>
+            </ButtonText>
+            {isProcessing && <Loader size="xs" color="white" />}
+          </Button>
+          <Button
+            variant="solid"
+            color="secondary"
+            label={_(msg`Return to previous page`)}
+            size="large"
+            style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}
+            disabled={isProcessing}
+            onPress={goBack}>
+            <ButtonText>
+              <Trans>Go Back</Trans>
+            </ButtonText>
+          </Button>
+        </View>
       </View>
-      <View style={[a.gap_md, gtMobile ? {width: 350} : [a.w_full, a.px_lg]]}>
-        <Button
-          variant="solid"
-          color="primary"
-          label={_(msg`Delete starter pack`)}
-          size="large"
-          style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}
-          disabled={isProcessing}
-          onPress={() => {
-            setIsProcessing(true)
-            deleteStarterPack({rkey})
-          }}>
-          <ButtonText>
-            <Trans>Delete</Trans>
-          </ButtonText>
-          {isProcessing && <Loader size="xs" color="white" />}
-        </Button>
-        <Button
-          variant="solid"
-          color="secondary"
-          label={_(msg`Return to previous page`)}
-          size="large"
-          style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}
-          disabled={isProcessing}
-          onPress={goBack}>
-          <ButtonText>
-            <Trans>Go Back</Trans>
-          </ButtonText>
-        </Button>
-      </View>
-    </CenteredView>
+    </Layout.Content>
   )
 }

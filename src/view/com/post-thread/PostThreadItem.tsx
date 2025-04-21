@@ -1,16 +1,16 @@
 import React, {memo, useMemo} from 'react'
 import {
-  GestureResponderEvent,
+  type GestureResponderEvent,
   StyleSheet,
   Text as RNText,
   View,
 } from 'react-native'
 import {
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
-  AppBskyFeedThreadgate,
+  type AppBskyFeedThreadgate,
   AtUri,
-  ModerationDecision,
+  type ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
@@ -26,9 +26,15 @@ import {countLines} from '#/lib/strings/helpers'
 import {niceDate} from '#/lib/strings/time'
 import {s} from '#/lib/styles'
 import {getTranslatorLink, isPostInLanguage} from '#/locale/helpers'
-import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {logger} from '#/logger'
+import {
+  POST_TOMBSTONE,
+  type Shadow,
+  usePostShadow,
+} from '#/state/cache/post-shadow'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
-import {ThreadPost} from '#/state/queries/post-thread'
+import {type ThreadPost} from '#/state/queries/post-thread'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
@@ -52,12 +58,14 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {PostHider} from '#/components/moderation/PostHider'
-import {AppModerationCause} from '#/components/Pills'
+import {type AppModerationCause} from '#/components/Pills'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text} from '#/components/Typography'
+import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import {WhoCanReply} from '#/components/WhoCanReply'
+import * as bsky from '#/types/bsky'
 
 export function PostThreadItem({
   post,
@@ -201,6 +209,7 @@ let PostThreadItemLoaded = ({
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
   const {currentAccount} = useSession()
+  const shadowedPostAuthor = useProfileShadow(post.author)
   const rootUri = record.reply?.root?.uri || post.uri
   const postHref = React.useMemo(() => {
     const urip = new AtUri(post.uri)
@@ -241,6 +250,11 @@ let PostThreadItemLoaded = ({
     return makeProfileLink(post.author, 'post', urip.rkey, 'quotes')
   }, [post.uri, post.author])
   const quotesTitle = _(msg`Quotes of this post`)
+  const onlyFollowersCanReply = !!threadgateRecord?.allow?.find(
+    rule => rule.$type === 'app.bsky.feed.threadgate#followerRule',
+  )
+  const showFollowButton =
+    currentAccount?.did !== post.author.did && !onlyFollowersCanReply
 
   const translatorUrl = getTranslatorLink(
     record?.text || '',
@@ -318,18 +332,35 @@ let PostThreadItemLoaded = ({
               type={post.author.associated?.labeler ? 'labeler' : 'user'}
             />
             <View style={[a.flex_1]}>
-              <Link style={s.flex1} href={authorHref} title={authorTitle}>
-                <Text
-                  emoji
-                  style={[a.text_lg, a.font_bold, a.leading_snug, a.self_start]}
-                  numberOfLines={1}>
-                  {sanitizeDisplayName(
-                    post.author.displayName ||
-                      sanitizeHandle(post.author.handle),
-                    moderation.ui('displayName'),
-                  )}
-                </Text>
-              </Link>
+              <View style={[a.flex_row, a.align_center]}>
+                <Link
+                  style={[a.flex_shrink]}
+                  href={authorHref}
+                  title={authorTitle}>
+                  <Text
+                    emoji
+                    style={[
+                      a.text_lg,
+                      a.font_bold,
+                      a.leading_snug,
+                      a.self_start,
+                    ]}
+                    numberOfLines={1}>
+                    {sanitizeDisplayName(
+                      post.author.displayName ||
+                        sanitizeHandle(post.author.handle),
+                      moderation.ui('displayName'),
+                    )}
+                  </Text>
+                </Link>
+
+                <View style={[{paddingLeft: 3, top: -1}]}>
+                  <VerificationCheckButton
+                    profile={shadowedPostAuthor}
+                    size="md"
+                  />
+                </View>
+              </View>
               <Link style={s.flex1} href={authorHref} title={authorTitle}>
                 <Text
                   emoji
@@ -343,7 +374,7 @@ let PostThreadItemLoaded = ({
                 </Text>
               </Link>
             </View>
-            {currentAccount?.did !== post.author.did && (
+            {showFollowButton && (
               <View>
                 <PostThreadFollowBtn did={post.author.did} />
               </View>
@@ -369,6 +400,7 @@ let PostThreadItemLoaded = ({
                   value={richText}
                   style={[a.flex_1, a.text_xl]}
                   authorHandle={post.author.handle}
+                  shouldProxyLinks={true}
                 />
               ) : undefined}
               {post.embed && (
@@ -584,6 +616,7 @@ let PostThreadItemLoaded = ({
                     style={[a.flex_1, a.text_md]}
                     numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                     authorHandle={post.author.handle}
+                    shouldProxyLinks={true}
                   />
                 </View>
               ) : undefined}
@@ -739,14 +772,29 @@ function ExpandedPostDetails({
   const {_} = useLingui()
   const openLink = useOpenLink()
   const isRootPost = !('reply' in post.record)
+  const langPrefs = useLanguagePrefs()
 
   const onTranslatePress = React.useCallback(
     (e: GestureResponderEvent) => {
       e.preventDefault()
       openLink(translatorUrl, true)
+
+      if (
+        bsky.dangerousIsType<AppBskyFeedPost.Record>(
+          post.record,
+          AppBskyFeedPost.isRecord,
+        )
+      ) {
+        logger.metric('translate', {
+          sourceLanguages: post.record.langs ?? [],
+          targetLanguage: langPrefs.primaryLanguage,
+          textLength: post.record.text.length,
+        })
+      }
+
       return false
     },
-    [openLink, translatorUrl],
+    [openLink, translatorUrl, langPrefs, post],
   )
 
   const indexedAt = new Date(post.indexedAt)
@@ -806,7 +854,10 @@ function PostDateArchived({post}: {post: AppBskyFeedDefs.PostView}) {
   const control = Prompt.usePromptControl()
 
   const indexedAt = new Date(post.indexedAt)
-  const createdAt = AppBskyFeedPost.isRecord(post.record)
+  const createdAt = bsky.dangerousIsType<AppBskyFeedPost.Record>(
+    post.record,
+    AppBskyFeedPost.isRecord,
+  )
     ? new Date(post.record.createdAt)
     : new Date(post.indexedAt)
 
@@ -817,7 +868,7 @@ function PostDateArchived({post}: {post: AppBskyFeedDefs.PostView}) {
       <Button
         label={_(msg`Archived post`)}
         accessibilityHint={_(
-          msg`Show information about when this post was created`,
+          msg`Shows information about when this post was created`,
         )}
         onPress={e => {
           e.preventDefault()
