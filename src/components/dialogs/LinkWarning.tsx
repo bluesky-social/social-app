@@ -88,14 +88,18 @@ function InAppBrowserConsentInner({
         </View>
         <View style={[a.gap_sm]}>
           <Button
-            label={_(msg`Visit site`)}
+            label={link?.share ? _(msg`Share link`) : _(msg`Visit site`)}
             accessibilityHint={_(msg`Opens link ${link?.href ?? ''}`)}
             onPress={onPressVisit}
             size="large"
             variant="solid"
             color={potentiallyMisleading ? 'secondary_inverted' : 'primary'}>
             <ButtonText>
-              <Trans>Visit site</Trans>
+              {link?.share ? (
+                <Trans>Share link</Trans>
+              ) : (
+                <Trans>Visit site</Trans>
+              )}
             </ButtonText>
           </Button>
           <Button
