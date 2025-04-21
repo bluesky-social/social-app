@@ -76,6 +76,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         a.mx_lg,
         a.border_b,
         t.atoms.border_contrast_medium,
+        a.user_select_text,
       ]}
       onPress={onPress}
       accessibilityRole="button"
@@ -113,7 +114,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         <View style={[a.flex_row, a.gap_md]}>
           <View style={[a.flex_1, a.flex_grow]}>
             <Text
-              style={[a.text_md]}
+              style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}
               numberOfLines={!showFull ? 6 : undefined}
               emoji>
               {replyTo.text}
