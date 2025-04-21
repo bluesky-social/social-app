@@ -361,7 +361,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
         if (variant === 'solid') {
           if (!disabled) {
             baseStyles.push({
-              backgroundColor: t.palette.negative_50,
+              backgroundColor: t.palette.negative_25,
             })
             hoverStyles.push({
               backgroundColor: t.palette.negative_100,
