@@ -35,6 +35,7 @@ export function VerificationsDialog({
 }) {
   return (
     <Dialog.Outer control={control}>
+      <Dialog.Handle />
       <Inner
         control={control}
         profile={profile}
@@ -78,8 +79,6 @@ function Inner({
       style={[
         gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
       ]}>
-      <Dialog.Handle />
-
       <View style={[a.gap_sm, a.pb_lg]}>
         <Text style={[a.text_2xl, a.font_bold, a.pr_4xl, a.leading_tight]}>
           {label}
