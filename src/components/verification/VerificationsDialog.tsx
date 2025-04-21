@@ -90,8 +90,8 @@ function Inner({
             </Trans>
           ) : (
             <Trans>
-              This account has one or more verifications, but it is not
-              currently verified.
+              This account has one or more attempted verifications, but it is
+              not currently verified.
             </Trans>
           )}
         </Text>
