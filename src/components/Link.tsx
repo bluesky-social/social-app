@@ -24,6 +24,7 @@ import {Button, type ButtonProps} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text, type TextProps} from '#/components/Typography'
 import {router} from '#/routes'
+import {useGlobalDialogsControlContext} from './dialogs/Context'
 
 /**
  * Only available within a `Link`, since that inherits from `Button`.
@@ -111,7 +112,8 @@ export function useLink({
   }
 
   const isExternal = isExternalUrl(href)
-  const {openModal, closeModal} = useModalControls()
+  const {closeModal} = useModalControls()
+  const {linkWarningDialogControl} = useGlobalDialogsControlContext()
   const openLink = useOpenLink()
 
   const onPress = React.useCallback(
@@ -132,10 +134,9 @@ export function useLink({
       }
 
       if (requiresWarning) {
-        openModal({
-          name: 'link-warning',
-          text: displayText,
-          href: href,
+        linkWarningDialogControl.open({
+          displayText,
+          href,
         })
       } else {
         if (isExternal) {
@@ -176,13 +177,13 @@ export function useLink({
       displayText,
       isExternal,
       href,
-      openModal,
       openLink,
       closeModal,
       action,
       navigation,
       overridePresentation,
       shouldProxy,
+      linkWarningDialogControl,
     ],
   )
 
@@ -195,16 +196,21 @@ export function useLink({
     )
 
     if (requiresWarning) {
-      openModal({
-        name: 'link-warning',
-        text: displayText,
-        href: href,
+      linkWarningDialogControl.open({
+        displayText,
+        href,
         share: true,
       })
     } else {
       shareUrl(href)
     }
-  }, [disableMismatchWarning, displayText, href, isExternal, openModal])
+  }, [
+    disableMismatchWarning,
+    displayText,
+    href,
+    isExternal,
+    linkWarningDialogControl,
+  ])
 
   const onLongPress = React.useCallback(
     (e: GestureResponderEvent) => {
