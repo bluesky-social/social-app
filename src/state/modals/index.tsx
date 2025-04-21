@@ -39,10 +39,6 @@ export interface DeleteAccountModal {
   name: 'delete-account'
 }
 
-export interface WaitlistModal {
-  name: 'waitlist'
-}
-
 export interface InviteCodesModal {
   name: 'invite-codes'
 }
@@ -86,7 +82,6 @@ export type Modal =
   | CropImageModal
 
   // Bluesky access
-  | WaitlistModal
   | InviteCodesModal
 
   // Generic
