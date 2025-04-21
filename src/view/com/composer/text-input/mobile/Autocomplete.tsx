@@ -8,7 +8,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
@@ -102,12 +102,26 @@ function AutocompleteProfileCard({
             size={24}
             type={profile.associated?.labeler ? 'labeler' : 'user'}
           />
-          <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
-            <Text style={[a.text_md, a.font_bold]} emoji numberOfLines={1}>
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.gap_xs,
+              platform({ios: a.flex_1}),
+            ]}>
+            <Text
+              style={[a.text_md, a.font_bold, a.leading_snug]}
+              emoji
+              numberOfLines={1}>
               {displayName}
             </Text>
             {state.isVerified && (
-              <View>
+              <View
+                style={[
+                  {
+                    marginTop: platform({android: -2}),
+                  },
+                ]}>
                 <VerificationCheck
                   width={12}
                   verifier={state.role === 'verifier'}
@@ -117,7 +131,7 @@ function AutocompleteProfileCard({
           </View>
         </View>
         <Text
-          style={[t.atoms.text_contrast_medium, a.text_right]}
+          style={[t.atoms.text_contrast_medium, a.text_right, a.leading_snug]}
           numberOfLines={1}>
           {sanitizeHandle(profile.handle, '@')}
         </Text>
