@@ -146,8 +146,6 @@ function Inner({
           </Button>
         </View>
       </View>
-
-      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
