@@ -2,9 +2,13 @@ import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
 import {urls} from '#/lib/constants'
 import {getUserDisplayName} from '#/lib/getUserDisplayName'
+import {type NavigationProp} from '#/lib/routes/types'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -33,9 +37,11 @@ export function VerificationsDialog({
   profile: bsky.profile.AnyProfileView
   verificationState: FullVerificationState
 }) {
+  const navigation = useNavigation<NavigationProp>()
   return (
     <Dialog.Outer control={control}>
       <Inner
+        navigation={navigation}
         control={control}
         profile={profile}
         verificationState={verificationState}
@@ -46,10 +52,12 @@ export function VerificationsDialog({
 }
 
 function Inner({
+  navigation,
   profile,
   control,
   verificationState: state,
 }: {
+  navigation: NavigationProp
   control: Dialog.DialogControlProps
   profile: bsky.profile.AnyProfileView
   verificationState: FullVerificationState
@@ -109,9 +117,9 @@ function Inner({
             {profile.verification.verifications.map(v => (
               <VerifierCard
                 key={v.uri}
+                navigation={navigation}
                 verification={v}
                 subject={profile}
-                outerDialogControl={control}
               />
             ))}
           </View>
@@ -171,14 +179,15 @@ function Inner({
 }
 
 function VerifierCard({
+  navigation,
   verification,
   subject,
-  outerDialogControl,
 }: {
+  navigation: NavigationProp
   verification: AppBskyActorDefs.VerificationView
   subject: bsky.profile.AnyProfileView
-  outerDialogControl: Dialog.DialogControlProps
 }) {
+  const outerDialogControl = Dialog.useDialogContext()
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
@@ -192,59 +201,77 @@ function VerifierCard({
       style={{
         opacity: verification.isValid ? 1 : 0.5,
       }}>
-      <ProfileCard.Outer>
-        <ProfileCard.Header>
-          {error ? (
-            <>
-              <ProfileCard.AvatarPlaceholder />
-              <View style={[a.flex_1]}>
-                <Text
-                  style={[a.text_md, a.font_bold, a.leading_snug]}
-                  numberOfLines={1}>
-                  <Trans>Unknown verifier</Trans>
-                </Text>
-                <Text
-                  emoji
-                  style={[a.leading_snug, t.atoms.text_contrast_medium]}
-                  numberOfLines={1}>
-                  {verification.issuer}
-                </Text>
-              </View>
-            </>
-          ) : profile && moderationOpts ? (
-            <>
-              <ProfileCard.Avatar
-                profile={profile}
-                moderationOpts={moderationOpts}
-              />
-              <ProfileCard.NameAndHandle
-                profile={profile}
-                moderationOpts={moderationOpts}
-              />
-              {canAdminister && (
-                <View>
-                  <Button
-                    label={_(msg`Remove verification`)}
-                    size="small"
-                    variant="outline"
-                    color="negative"
-                    shape="round"
-                    onPress={() => {
-                      verificationRemovePromptControl.open()
-                    }}>
-                    <ButtonIcon icon={TrashIcon} />
-                  </Button>
-                </View>
+      <View style={[a.flex_row, a.flex_1, a.justify_between, a.gap_xs]}>
+        <Button
+          label={
+            profile
+              ? sanitizeDisplayName(
+                  profile.displayName || sanitizeHandle(profile.handle),
+                )
+              : _(msg`Loading verifier`)
+          }
+          accessibilityHint={_(msg`Go to verifier's profile`)}
+          onPress={() =>
+            outerDialogControl.close(() =>
+              navigation.push('Profile', {name: verification.issuer}),
+            )
+          }
+          style={[a.flex_1]}>
+          <ProfileCard.Outer>
+            <ProfileCard.Header>
+              {error ? (
+                <>
+                  <ProfileCard.AvatarPlaceholder />
+                  <View style={[a.flex_1]}>
+                    <Text
+                      style={[a.text_md, a.font_bold, a.leading_snug]}
+                      numberOfLines={1}>
+                      <Trans>Unknown verifier</Trans>
+                    </Text>
+                    <Text
+                      emoji
+                      style={[a.leading_snug, t.atoms.text_contrast_medium]}
+                      numberOfLines={1}>
+                      {verification.issuer}
+                    </Text>
+                  </View>
+                </>
+              ) : profile && moderationOpts ? (
+                <>
+                  <ProfileCard.Avatar
+                    profile={profile}
+                    moderationOpts={moderationOpts}
+                  />
+                  <ProfileCard.NameAndHandle
+                    profile={profile}
+                    moderationOpts={moderationOpts}
+                  />
+                </>
+              ) : (
+                <>
+                  <ProfileCard.AvatarPlaceholder />
+                  <ProfileCard.NameAndHandlePlaceholder />
+                </>
               )}
-            </>
-          ) : (
-            <>
-              <ProfileCard.AvatarPlaceholder />
-              <ProfileCard.NameAndHandlePlaceholder />
-            </>
-          )}
-        </ProfileCard.Header>
-      </ProfileCard.Outer>
+            </ProfileCard.Header>
+          </ProfileCard.Outer>
+        </Button>
+        {canAdminister && (
+          <View>
+            <Button
+              label={_(msg`Remove verification`)}
+              size="small"
+              variant="outline"
+              color="negative"
+              shape="round"
+              onPress={() => {
+                verificationRemovePromptControl.open()
+              }}>
+              <ButtonIcon icon={TrashIcon} />
+            </Button>
+          </View>
+        )}
+      </View>
 
       <VerificationRemovePrompt
         control={verificationRemovePromptControl}
