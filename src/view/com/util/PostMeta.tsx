@@ -15,6 +15,8 @@ import {isAndroid} from '#/platform/detection'
 import {precacheProfile} from '#/state/queries/profile'
 import {atoms as a, useTheme, web} from '#/alf'
 import {WebOnlyInlineLinkText} from '#/components/Link'
+import {colors} from '#/components/Admonition'
+import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
 import {TimeElapsed} from './TimeElapsed'
@@ -27,6 +29,7 @@ interface PostMetaOpts {
   timestamp: string
   showAvatar?: boolean
   avatarSize?: number
+  isBackdated?: boolean
   onOpenAuthor?: () => void
   style?: StyleProp<ViewStyle>
 }
@@ -34,6 +37,7 @@ interface PostMetaOpts {
 let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const t = useTheme()
   const {i18n, _} = useLingui()
+  const danger = t.name === 'light' ? colors.danger.dark : colors.danger.light
 
   const displayName = opts.author.displayName || opts.author.handle
   const handle = opts.author.handle
@@ -127,8 +131,14 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
               a.leading_snug,
               web({
                 whiteSpace: 'nowrap',
-              }),
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 4,
+                }),
             ]}>
+             {opts.isBackdated && (
+               <CalendarClockIcon fill={danger} size="sm" aria-hidden style={web({ verticalAlign: 'middle' })}/>
+             )}
             {timeElapsed}
           </WebOnlyInlineLinkText>
         )}

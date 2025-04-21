@@ -242,6 +242,12 @@ let FeedItemInner = ({
     ? rootPost.threadgate.record
     : undefined
 
+  const indexedAt = new Date(post.indexedAt)
+  const createdAt2 = new Date(post.record.createdAt)
+
+  const isBackdated =
+      indexedAt.getTime() - createdAt2.getTime() > 24 * 60 * 60 * 1000
+
   const [hover, setHover] = useState(false)
   return (
     <Link
@@ -402,6 +408,7 @@ let FeedItemInner = ({
             timestamp={createdAt}
             postHref={href}
             onOpenAuthor={onOpenAuthor}
+            isBackdated={isBackdated}
           />
           {showReplyTo &&
             (parentAuthor || isParentBlocked || isParentNotFound) && (
