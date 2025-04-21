@@ -11,7 +11,6 @@ import * as CreateOrEditListModal from './CreateOrEditList'
 import * as CropImageModal from './CropImage.web'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as EditProfileModal from './EditProfile'
-import * as InviteCodesModal from './InviteCodes'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as LinkWarningModal from './LinkWarning'
@@ -66,8 +65,6 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <CropImageModal.Component {...modal} />
   } else if (modal.name === 'delete-account') {
     element = <DeleteAccountModal.Component />
-  } else if (modal.name === 'invite-codes') {
-    element = <InviteCodesModal.Component />
   } else if (modal.name === 'content-languages-settings') {
     element = <ContentLanguagesSettingsModal.Component />
   } else if (modal.name === 'post-languages-settings') {
