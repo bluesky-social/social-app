@@ -53,6 +53,7 @@ export function Component({
   const {closeModal} = useModalControls()
   const updateMutation = useProfileUpdateMutation()
   const [imageError, setImageError] = useState<string>('')
+  const initialDisplayName = profile.displayName || ''
   const [displayName, setDisplayName] = useState<string>(
     profile.displayName || '',
   )
@@ -145,7 +146,6 @@ export function Component({
   const verification = useSimpleVerificationState({
     profile,
   })
-  const [touchedDisplayName, setTouchedDisplayName] = useState(false)
 
   return (
     <KeyboardAvoidingView style={s.flex1} behavior="height">
@@ -193,12 +193,11 @@ export function Component({
               accessible={true}
               accessibilityLabel={_(msg`Display name`)}
               accessibilityHint={_(msg`Edit your display name`)}
-              onFocus={() => setTouchedDisplayName(true)}
             />
 
             {verification.isVerified &&
               verification.role === 'default' &&
-              touchedDisplayName && (
+              displayName !== initialDisplayName && (
                 <View style={{paddingTop: 8}}>
                   <Admonition type="error">
                     <Trans>
