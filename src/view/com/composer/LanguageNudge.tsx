@@ -211,8 +211,8 @@ function DialogInner({
           label={replyToUri ? _(msg`Discard reply`) : _(msg`Discard post`)}
           onPress={() => control.close(discardReply)}
           size="large"
-          color="negative"
-          variant="outline">
+          color="negative_secondary"
+          variant="solid">
           <ButtonText>
             {replyToUri ? (
               <Trans>Discard reply</Trans>
