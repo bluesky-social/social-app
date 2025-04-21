@@ -43,13 +43,6 @@ export interface ChangePasswordModal {
   name: 'change-password'
 }
 
-export interface LinkWarningModal {
-  name: 'link-warning'
-  text: string
-  href: string
-  share?: boolean
-}
-
 export type Modal =
   // Account
   | DeleteAccountModal
@@ -66,9 +59,6 @@ export type Modal =
   // Bluesky access
   | WaitlistModal
   | InviteCodesModal
-
-  // Generic
-  | LinkWarningModal
 
 const ModalContext = React.createContext<{
   isModalActive: boolean
