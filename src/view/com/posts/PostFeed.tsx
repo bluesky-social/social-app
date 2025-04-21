@@ -3,20 +3,19 @@ import {
   ActivityIndicator,
   AppState,
   Dimensions,
-  ListRenderItemInfo,
-  StyleProp,
+  type ListRenderItemInfo,
+  type StyleProp,
   StyleSheet,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
-import {AppBskyActorDefs, AppBskyEmbedVideo} from '@atproto/api'
+import {type AppBskyActorDefs, AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
@@ -25,22 +24,22 @@ import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useTrendingSettings} from '#/state/preferences/trending'
 import {STALE} from '#/state/queries'
 import {
-  AuthorFilter,
-  FeedDescriptor,
-  FeedParams,
-  FeedPostSlice,
-  FeedPostSliceItem,
+  type AuthorFilter,
+  type FeedDescriptor,
+  type FeedParams,
+  type FeedPostSlice,
+  type FeedPostSliceItem,
   pollLatest,
   RQKEY,
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
 import {useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
-import {List, ListRef} from '#/view/com/util/List'
+import {List, type ListRef} from '#/view/com/util/List'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
-import {VideoFeedSourceContext} from '#/screens/VideoFeed/types'
-import {useBreakpoints} from '#/alf'
+import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
+import {useBreakpoints, useLayoutBreakpoints} from '#/alf'
 import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
 import {
   PostFeedVideoGridRow,
@@ -197,7 +196,8 @@ let PostFeed = ({
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
   const [feedType, feedUriOrActorDid, feedTab] = feed.split('|')
-  const {gtMobile, gtTablet} = useBreakpoints()
+  const {gtMobile} = useBreakpoints()
+  const {rightNavVisible} = useLayoutBreakpoints()
   const areVideoFeedsEnabled = isNative
 
   const feedCacheKey = feedParams?.feedCacheKey
@@ -226,6 +226,11 @@ let PostFeed = ({
   )
 
   const checkForNew = React.useCallback(async () => {
+    // Discover always has fresh content
+    if (feedUriOrActorDid === DISCOVER_FEED_URI) {
+      return onHasNew?.(true)
+    }
+
     if (!data?.pages[0] || isFetching || !onHasNew || !enabled || disablePoll) {
       return
     }
@@ -240,7 +245,17 @@ let PostFeed = ({
     } catch (e) {
       logger.error('Poll latest failed', {feed, message: String(e)})
     }
-  }, [feed, data, isFetching, isEmpty, onHasNew, enabled, disablePoll, refetch])
+  }, [
+    feed,
+    data,
+    isFetching,
+    isEmpty,
+    onHasNew,
+    enabled,
+    disablePoll,
+    refetch,
+    feedUriOrActorDid,
+  ])
 
   const myDid = currentAccount?.did || ''
   const onPostCreated = React.useCallback(() => {
@@ -299,9 +314,9 @@ let PostFeed = ({
 
   const followProgressGuide = useProgressGuide('follow-10')
   const followAndLikeProgressGuide = useProgressGuide('like-10-and-follow-7')
-  const {isDesktop} = useWebMediaQueries()
+
   const showProgressIntersitial =
-    (followProgressGuide || followAndLikeProgressGuide) && !isDesktop
+    (followProgressGuide || followAndLikeProgressGuide) && !rightNavVisible
 
   const {trendingDisabled, trendingVideoDisabled} = useTrendingSettings()
 
@@ -396,7 +411,7 @@ let PostFeed = ({
                         key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                       })
                     }
-                    if (!gtTablet && !trendingDisabled) {
+                    if (!rightNavVisible && !trendingDisabled) {
                       arr.push({
                         type: 'interstitialTrending',
                         key:
@@ -512,7 +527,7 @@ let PostFeed = ({
     showProgressIntersitial,
     trendingDisabled,
     trendingVideoDisabled,
-    gtTablet,
+    rightNavVisible,
     gtMobile,
     isVideoFeed,
     areVideoFeedsEnabled,
@@ -752,14 +767,14 @@ const styles = StyleSheet.create({
   feedFooter: {paddingTop: 20},
 })
 
-function isThreadParentAt<T>(arr: Array<T>, i: number) {
+export function isThreadParentAt<T>(arr: Array<T>, i: number) {
   if (arr.length === 1) {
     return false
   }
   return i < arr.length - 1
 }
 
-function isThreadChildAt<T>(arr: Array<T>, i: number) {
+export function isThreadChildAt<T>(arr: Array<T>, i: number) {
   if (arr.length === 1) {
     return false
   }

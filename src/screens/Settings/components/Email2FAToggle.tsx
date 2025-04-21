@@ -51,7 +51,7 @@ export function Email2FAToggle() {
       <Prompt.Basic
         control={enableDialogControl}
         title={_(msg`Enable Email 2FA`)}
-        description={_(msg`Require an email code to log in to your account.`)}
+        description={_(msg`Require an email code to sign in to your account.`)}
         onConfirm={enableEmailAuthFactor}
         confirmButtonCta={_(msg`Enable`)}
       />

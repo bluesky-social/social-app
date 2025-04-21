@@ -1,6 +1,7 @@
 import React from 'react'
-import {ScrollView, View} from 'react-native'
-import {AppBskyActorDefs, AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {View} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
+import {AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -26,6 +27,7 @@ import {PersonPlus_Stroke2_Corner0_Rounded as Person} from '#/components/icons/P
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 import {ProgressGuideList} from './ProgressGuide/List'
 
 const MOBILE_CARD_WIDTH = 300
@@ -227,7 +229,7 @@ export function ProfileGrid({
   viewContext = 'feed',
 }: {
   isSuggestionsLoading: boolean
-  profiles: AppBskyActorDefs.ProfileViewDetailed[]
+  profiles: bsky.profile.AnyProfileView[]
   recId?: number
   error: Error | null
   viewContext: 'profile' | 'feed'
@@ -358,35 +360,37 @@ export function ProfileGrid({
         </View>
       ) : (
         <BlockDrawerGesture>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
-            decelerationRate="fast">
-            <View style={[a.px_lg, a.pt_sm, a.pb_lg, a.flex_row, a.gap_md]}>
-              {content}
+          <View>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
+              decelerationRate="fast">
+              <View style={[a.px_lg, a.pt_sm, a.pb_lg, a.flex_row, a.gap_md]}>
+                {content}
 
-              <Button
-                label={_(msg`Browse more accounts on the Explore page`)}
-                onPress={() => {
-                  navigation.navigate('SearchTab')
-                }}>
-                <CardOuter style={[a.flex_1, {borderWidth: 0}]}>
-                  <View style={[a.flex_1, a.justify_center]}>
-                    <View style={[a.flex_row, a.px_lg]}>
-                      <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
-                        <Trans>
-                          Browse more suggestions on the Explore page
-                        </Trans>
-                      </Text>
+                <Button
+                  label={_(msg`Browse more accounts on the Explore page`)}
+                  onPress={() => {
+                    navigation.navigate('SearchTab')
+                  }}>
+                  <CardOuter style={[a.flex_1, {borderWidth: 0}]}>
+                    <View style={[a.flex_1, a.justify_center]}>
+                      <View style={[a.flex_row, a.px_lg]}>
+                        <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
+                          <Trans>
+                            Browse more suggestions on the Explore page
+                          </Trans>
+                        </Text>
 
-                      <Arrow size="xl" />
+                        <Arrow size="xl" />
+                      </View>
                     </View>
-                  </View>
-                </CardOuter>
-              </Button>
-            </View>
-          </ScrollView>
+                  </CardOuter>
+                </Button>
+              </View>
+            </ScrollView>
+          </View>
         </BlockDrawerGesture>
       )}
     </View>

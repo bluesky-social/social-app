@@ -1,16 +1,19 @@
 import React, {memo} from 'react'
-import {AppBskyActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
-import {shareUrl} from '#/lib/sharing'
+import {type NavigationProp} from '#/lib/routes/types'
+import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
-import {Shadow} from '#/state/cache/types'
+import {type Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
+import {useDevModeEnabled} from '#/state/preferences/dev-mode'
 import {
   RQKEY as profileQueryKey,
   useProfileBlockMutationQueue,
@@ -22,9 +25,12 @@ import {EventStopper} from '#/view/com/util/EventStopper'
 import * as Toast from '#/view/com/util/Toast'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheck} from '#/components/icons/CircleCheck'
+import {CircleX_Stroke2_Corner0_Rounded as CircleX} from '#/components/icons/CircleX'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
+import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {PeopleRemove2_Stroke2_Corner0_Rounded as UserMinus} from '#/components/icons/PeopleRemove2'
 import {
@@ -34,8 +40,14 @@ import {
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import * as Menu from '#/components/Menu'
+import {
+  ReportDialog,
+  useReportDialogControl,
+} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
-import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
+import {useFullVerificationState} from '#/components/verification'
+import {VerificationCreatePrompt} from '#/components/verification/VerificationCreatePrompt'
+import {VerificationRemovePrompt} from '#/components/verification/VerificationRemovePrompt'
 
 let ProfileMenu = ({
   profile,
@@ -47,11 +59,14 @@ let ProfileMenu = ({
   const {openModal} = useModalControls()
   const reportDialogControl = useReportDialogControl()
   const queryClient = useQueryClient()
+  const navigation = useNavigation<NavigationProp>()
   const isSelf = currentAccount?.did === profile.did
   const isFollowing = profile.viewer?.following
   const isBlocked = profile.viewer?.blocking || profile.viewer?.blockedBy
   const isFollowingBlockedAccount = isFollowing && isBlocked
   const isLabelerAndNotBlocked = !!profile.associated?.labeler && !isBlocked
+  const [devModeEnabled] = useDevModeEnabled()
+  const verification = useFullVerificationState({profile})
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
@@ -95,7 +110,7 @@ let ProfileMenu = ({
     if (profile.viewer?.muted) {
       try {
         await queueUnmute()
-        Toast.show(_(msg`Account unmuted`))
+        Toast.show(_(msg({message: 'Account unmuted', context: 'toast'})))
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to unmute account', {message: e})
@@ -105,7 +120,7 @@ let ProfileMenu = ({
     } else {
       try {
         await queueMute()
-        Toast.show(_(msg`Account muted`))
+        Toast.show(_(msg({message: 'Account muted', context: 'toast'})))
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to mute account', {message: e})
@@ -119,7 +134,7 @@ let ProfileMenu = ({
     if (profile.viewer?.blocking) {
       try {
         await queueUnblock()
-        Toast.show(_(msg`Account unblocked`))
+        Toast.show(_(msg({message: 'Account unblocked', context: 'toast'})))
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to unblock account', {message: e})
@@ -129,7 +144,7 @@ let ProfileMenu = ({
     } else {
       try {
         await queueBlock()
-        Toast.show(_(msg`Account blocked`))
+        Toast.show(_(msg({message: 'Account blocked', context: 'toast'})))
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to block account', {message: e})
@@ -142,7 +157,7 @@ let ProfileMenu = ({
   const onPressFollowAccount = React.useCallback(async () => {
     try {
       await queueFollow()
-      Toast.show(_(msg`Account followed`))
+      Toast.show(_(msg({message: 'Account followed', context: 'toast'})))
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('Failed to follow account', {message: e})
@@ -154,7 +169,7 @@ let ProfileMenu = ({
   const onPressUnfollowAccount = React.useCallback(async () => {
     try {
       await queueUnfollow()
-      Toast.show(_(msg`Account unfollowed`))
+      Toast.show(_(msg({message: 'Account unfollowed', context: 'toast'})))
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('Failed to unfollow account', {message: e})
@@ -167,10 +182,29 @@ let ProfileMenu = ({
     reportDialogControl.open()
   }, [reportDialogControl])
 
+  const onPressShareATUri = React.useCallback(() => {
+    shareText(`at://${profile.did}`)
+  }, [profile.did])
+
+  const onPressShareDID = React.useCallback(() => {
+    shareText(profile.did)
+  }, [profile.did])
+
+  const onPressSearch = React.useCallback(() => {
+    navigation.navigate('ProfileSearch', {name: profile.handle})
+  }, [navigation, profile.handle])
+
+  const verificationCreatePromptControl = Prompt.usePromptControl()
+  const verificationRemovePromptControl = Prompt.usePromptControl()
+  const currentAccountVerifications =
+    profile.verification?.verifications?.filter(v => {
+      return v.issuer === currentAccount?.did
+    }) ?? []
+
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
-        <Menu.Trigger label={_(`More options`)}>
+        <Menu.Trigger label={_(msg`More options`)}>
           {({props}) => {
             return (
               <Button
@@ -205,6 +239,15 @@ let ProfileMenu = ({
               </Menu.ItemText>
               <Menu.ItemIcon icon={Share} />
             </Menu.Item>
+            <Menu.Item
+              testID="profileHeaderDropdownSearchBtn"
+              label={_(msg`Search posts`)}
+              onPress={onPressSearch}>
+              <Menu.ItemText>
+                <Trans>Search posts</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={SearchIcon} />
+            </Menu.Item>
           </Menu.Group>
 
           {hasSession && (
@@ -218,8 +261,8 @@ let ProfileMenu = ({
                         testID="profileHeaderDropdownFollowBtn"
                         label={
                           isFollowing
-                            ? _(msg`Unfollow Account`)
-                            : _(msg`Follow Account`)
+                            ? _(msg`Unfollow account`)
+                            : _(msg`Follow account`)
                         }
                         onPress={
                           isFollowing
@@ -228,9 +271,9 @@ let ProfileMenu = ({
                         }>
                         <Menu.ItemText>
                           {isFollowing ? (
-                            <Trans>Unfollow Account</Trans>
+                            <Trans>Unfollow account</Trans>
                           ) : (
-                            <Trans>Follow Account</Trans>
+                            <Trans>Follow account</Trans>
                           )}
                         </Menu.ItemText>
                         <Menu.ItemIcon icon={isFollowing ? UserMinus : Plus} />
@@ -240,13 +283,36 @@ let ProfileMenu = ({
                 )}
                 <Menu.Item
                   testID="profileHeaderDropdownListAddRemoveBtn"
-                  label={_(msg`Add to Lists`)}
+                  label={_(msg`Add to lists`)}
                   onPress={onPressAddRemoveLists}>
                   <Menu.ItemText>
-                    <Trans>Add to Lists</Trans>
+                    <Trans>Add to lists</Trans>
                   </Menu.ItemText>
                   <Menu.ItemIcon icon={List} />
                 </Menu.Item>
+                {verification.viewer.role === 'verifier' &&
+                  !verification.profile.isViewer &&
+                  (verification.viewer.hasIssuedVerification ? (
+                    <Menu.Item
+                      testID="profileHeaderDropdownVerificationRemoveButton"
+                      label={_(msg`Remove verification`)}
+                      onPress={() => verificationRemovePromptControl.open()}>
+                      <Menu.ItemText>
+                        <Trans>Remove verification</Trans>
+                      </Menu.ItemText>
+                      <Menu.ItemIcon icon={CircleX} />
+                    </Menu.Item>
+                  ) : (
+                    <Menu.Item
+                      testID="profileHeaderDropdownVerificationCreateButton"
+                      label={_(msg`Verify account`)}
+                      onPress={() => verificationCreatePromptControl.open()}>
+                      <Menu.ItemText>
+                        <Trans>Verify account</Trans>
+                      </Menu.ItemText>
+                      <Menu.ItemIcon icon={CircleCheck} />
+                    </Menu.Item>
+                  ))}
                 {!isSelf && (
                   <>
                     {!profile.viewer?.blocking &&
@@ -255,15 +321,15 @@ let ProfileMenu = ({
                           testID="profileHeaderDropdownMuteBtn"
                           label={
                             profile.viewer?.muted
-                              ? _(msg`Unmute Account`)
-                              : _(msg`Mute Account`)
+                              ? _(msg`Unmute account`)
+                              : _(msg`Mute account`)
                           }
                           onPress={onPressMuteAccount}>
                           <Menu.ItemText>
                             {profile.viewer?.muted ? (
-                              <Trans>Unmute Account</Trans>
+                              <Trans>Unmute account</Trans>
                             ) : (
-                              <Trans>Mute Account</Trans>
+                              <Trans>Mute account</Trans>
                             )}
                           </Menu.ItemText>
                           <Menu.ItemIcon
@@ -276,15 +342,15 @@ let ProfileMenu = ({
                         testID="profileHeaderDropdownBlockBtn"
                         label={
                           profile.viewer
-                            ? _(msg`Unblock Account`)
-                            : _(msg`Block Account`)
+                            ? _(msg`Unblock account`)
+                            : _(msg`Block account`)
                         }
                         onPress={() => blockPromptControl.open()}>
                         <Menu.ItemText>
                           {profile.viewer?.blocking ? (
-                            <Trans>Unblock Account</Trans>
+                            <Trans>Unblock account</Trans>
                           ) : (
-                            <Trans>Block Account</Trans>
+                            <Trans>Block account</Trans>
                           )}
                         </Menu.ItemText>
                         <Menu.ItemIcon
@@ -296,10 +362,10 @@ let ProfileMenu = ({
                     )}
                     <Menu.Item
                       testID="profileHeaderDropdownReportBtn"
-                      label={_(msg`Report Account`)}
+                      label={_(msg`Report account`)}
                       onPress={onPressReportAccount}>
                       <Menu.ItemText>
-                        <Trans>Report Account</Trans>
+                        <Trans>Report account</Trans>
                       </Menu.ItemText>
                       <Menu.ItemIcon icon={Flag} />
                     </Menu.Item>
@@ -308,12 +374,40 @@ let ProfileMenu = ({
               </Menu.Group>
             </>
           )}
+          {devModeEnabled ? (
+            <>
+              <Menu.Divider />
+              <Menu.Group>
+                <Menu.Item
+                  testID="profileHeaderDropdownShareATURIBtn"
+                  label={_(msg`Copy at:// URI`)}
+                  onPress={onPressShareATUri}>
+                  <Menu.ItemText>
+                    <Trans>Copy at:// URI</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={Share} />
+                </Menu.Item>
+                <Menu.Item
+                  testID="profileHeaderDropdownShareDIDBtn"
+                  label={_(msg`Copy DID`)}
+                  onPress={onPressShareDID}>
+                  <Menu.ItemText>
+                    <Trans>Copy DID</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={Share} />
+                </Menu.Item>
+              </Menu.Group>
+            </>
+          ) : null}
         </Menu.Outer>
       </Menu.Root>
 
       <ReportDialog
         control={reportDialogControl}
-        params={{type: 'account', did: profile.did}}
+        subject={{
+          ...profile,
+          $type: 'app.bsky.actor.defs#profileViewDetailed',
+        }}
       />
 
       <Prompt.Basic
@@ -347,10 +441,20 @@ let ProfileMenu = ({
         control={loggedOutWarningPromptControl}
         title={_(msg`Note about sharing`)}
         description={_(
-          msg`This profile is only visible to logged-in users. It won't be visible to people who aren't logged in.`,
+          msg`This profile is only visible to logged-in users. It won't be visible to people who aren't signed in.`,
         )}
         onConfirm={onPressShare}
         confirmButtonCta={_(msg`Share anyway`)}
+      />
+
+      <VerificationCreatePrompt
+        control={verificationCreatePromptControl}
+        profile={profile}
+      />
+      <VerificationRemovePrompt
+        control={verificationRemovePromptControl}
+        profile={profile}
+        verifications={currentAccountVerifications}
       />
     </EventStopper>
   )

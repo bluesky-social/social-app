@@ -268,6 +268,7 @@ export function LabelerLabelPreference({
                 a.rounded_sm,
                 a.border,
                 t.atoms.border_contrast_low,
+                a.self_start,
               ]}>
               <Text emoji style={[a.font_bold, t.atoms.text_contrast_low]}>
                 {currentPrefLabel}

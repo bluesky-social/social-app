@@ -213,7 +213,7 @@ function AppIcon({icon, size = 50}: {icon: AppIconSet; size: number}) {
   return (
     <PressableScale
       accessibilityLabel={icon.name}
-      accessibilityHint={_(msg`Tap to change app icon`)}
+      accessibilityHint={_(msg`Changes app icon`)}
       targetScale={0.95}
       onPress={() => {
         if (isAndroid) {

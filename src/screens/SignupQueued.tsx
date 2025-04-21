@@ -90,10 +90,10 @@ export function SignupQueued() {
       variant="ghost"
       size="large"
       color="primary"
-      label={_(msg`Log out`)}
+      label={_(msg`Sign out`)}
       onPress={() => logoutCurrentAccount('SignupQueued')}>
       <ButtonText>
-        <Trans>Log out</Trans>
+        <Trans>Sign out</Trans>
       </ButtonText>
     </Button>
   )

@@ -51,7 +51,7 @@ function DeactivateAccountDialogInner({
         case 'Bad token scope':
           setError(
             _(
-              msg`You're logged in with an App Password. Please log in with your main password to continue deactivating your account.`,
+              msg`You're signed in with an App Password. Please sign in with your main password to continue deactivating your account.`,
             ),
           )
           break
@@ -61,7 +61,7 @@ function DeactivateAccountDialogInner({
       }
 
       logger.error(e, {
-        context: 'Failed to deactivate account',
+        message: 'Failed to deactivate account',
       })
     } finally {
       setPending(false)

@@ -1,17 +1,9 @@
-import {AppBskyActorDefs} from '@atproto/api'
+import * as bsky from '#/types/bsky'
 
-export function isBlockedOrBlocking(
-  profile:
-    | AppBskyActorDefs.ProfileViewBasic
-    | AppBskyActorDefs.ProfileViewDetailed,
-) {
+export function isBlockedOrBlocking(profile: bsky.profile.AnyProfileView) {
   return profile.viewer?.blockedBy || profile.viewer?.blocking
 }
 
-export function isMuted(
-  profile:
-    | AppBskyActorDefs.ProfileViewBasic
-    | AppBskyActorDefs.ProfileViewDetailed,
-) {
+export function isMuted(profile: bsky.profile.AnyProfileView) {
   return profile.viewer?.muted || profile.viewer?.mutedByList
 }

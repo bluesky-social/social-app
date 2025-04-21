@@ -1,10 +1,10 @@
 import {StyleProp, TextStyle, View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {Shadow} from '#/state/cache/types'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
+import * as bsky from '#/types/bsky'
 import {Button, ButtonType} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
 
@@ -18,7 +18,7 @@ export function FollowButton({
 }: {
   unfollowedType?: ButtonType
   followedType?: ButtonType
-  profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
+  profile: Shadow<bsky.profile.AnyProfileView>
   labelStyle?: StyleProp<TextStyle>
   logContext: 'ProfileCard' | 'StarterPackProfilesList'
   onFollow?: () => void

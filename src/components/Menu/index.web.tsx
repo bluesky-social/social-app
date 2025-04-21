@@ -4,6 +4,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
+import {useA11y} from '#/state/a11y'
 import {atoms as a, flatten, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -24,6 +25,8 @@ import {
 } from '#/components/Menu/types'
 import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
+
+export {useMenuContext}
 
 export function useMenuControl(): Dialog.DialogControlProps {
   const id = React.useId()
@@ -49,7 +52,7 @@ export function Root({
   children,
   control,
 }: React.PropsWithChildren<{
-  control?: Dialog.DialogOuterProps['control']
+  control?: Dialog.DialogControlProps
 }>) {
   const {_} = useLingui()
   const defaultControl = useMenuControl()
@@ -177,10 +180,16 @@ export function Outer({
   style?: StyleProp<ViewStyle>
 }>) {
   const t = useTheme()
+  const {reduceMotionEnabled} = useA11y()
 
   return (
     <DropdownMenu.Portal>
-      <DropdownMenu.Content sideOffset={5} loop aria-label="Test">
+      <DropdownMenu.Content
+        sideOffset={5}
+        collisionPadding={{left: 5, right: 5, bottom: 5}}
+        loop
+        aria-label="Test"
+        className="dropdown-menu-transform-origin dropdown-menu-constrain-size">
         <View
           style={[
             a.rounded_sm,
@@ -189,6 +198,8 @@ export function Outer({
             t.name === 'light' ? t.atoms.bg : t.atoms.bg_contrast_25,
             t.atoms.shadow_md,
             t.atoms.border_contrast_low,
+            a.overflow_auto,
+            !reduceMotionEnabled && a.zoom_fade_in,
             style,
           ]}>
           {children}
@@ -373,9 +384,8 @@ export function Divider() {
       style={flatten([
         a.my_xs,
         t.atoms.bg_contrast_100,
-        {
-          height: 1,
-        },
+        a.flex_shrink_0,
+        {height: 1},
       ])}
     />
   )

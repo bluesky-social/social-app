@@ -9,8 +9,10 @@
   },
   "dependencies": {
     "@atproto/common": "^0.4.0",
+    "@types/escape-html": "^1.0.4",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
+    "escape-html": "^1.0.3",
     "express": "^4.19.2",
     "http-terminator": "^3.2.0",
     "kysely": "^0.27.3",

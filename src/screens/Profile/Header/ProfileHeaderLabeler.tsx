@@ -134,11 +134,21 @@ let ProfileHeaderLabeler = ({
   const onPressSubscribe = React.useCallback(
     () =>
       requireAuth(async (): Promise<void> => {
+        const subscribe = !isSubscribed
+
         try {
           await toggleSubscription({
             did: profile.did,
-            subscribe: !isSubscribed,
+            subscribe,
           })
+
+          logger.metric(
+            subscribe
+              ? 'moderation:subscribedToLabeler'
+              : 'moderation:unsubscribedFromLabeler',
+            {},
+            {statsig: true},
+          )
         } catch (e: any) {
           reset()
           if (e.message === 'MAX_LABELERS') {
@@ -272,7 +282,7 @@ let ProfileHeaderLabeler = ({
                   color="secondary"
                   variant="solid"
                   shape="round"
-                  label={_(msg`Like this feed`)}
+                  label={_(msg`Like this labeler`)}
                   disabled={!hasSession || isLikePending || isUnlikePending}
                   onPress={onToggleLiked}>
                   {likeUri ? (

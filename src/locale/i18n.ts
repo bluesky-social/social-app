@@ -14,19 +14,23 @@ import {AppLanguage} from '#/locale/languages'
 import {messages as messagesAn} from '#/locale/locales/an/messages'
 import {messages as messagesAst} from '#/locale/locales/ast/messages'
 import {messages as messagesCa} from '#/locale/locales/ca/messages'
+import {messages as messagesCy} from '#/locale/locales/cy/messages'
 import {messages as messagesDa} from '#/locale/locales/da/messages'
 import {messages as messagesDe} from '#/locale/locales/de/messages'
 import {messages as messagesEl} from '#/locale/locales/el/messages'
 import {messages as messagesEn} from '#/locale/locales/en/messages'
 import {messages as messagesEn_GB} from '#/locale/locales/en-GB/messages'
+import {messages as messagesEo} from '#/locale/locales/eo/messages'
 import {messages as messagesEs} from '#/locale/locales/es/messages'
 import {messages as messagesEu} from '#/locale/locales/eu/messages'
 import {messages as messagesFi} from '#/locale/locales/fi/messages'
 import {messages as messagesFr} from '#/locale/locales/fr/messages'
 import {messages as messagesGa} from '#/locale/locales/ga/messages'
+import {messages as messagesGd} from '#/locale/locales/gd/messages'
 import {messages as messagesGl} from '#/locale/locales/gl/messages'
 import {messages as messagesHi} from '#/locale/locales/hi/messages'
 import {messages as messagesHu} from '#/locale/locales/hu/messages'
+import {messages as messagesIa} from '#/locale/locales/ia/messages'
 import {messages as messagesId} from '#/locale/locales/id/messages'
 import {messages as messagesIt} from '#/locale/locales/it/messages'
 import {messages as messagesJa} from '#/locale/locales/ja/messages'
@@ -77,6 +81,14 @@ export async function dynamicActivate(locale: AppLanguage) {
       ])
       break
     }
+    case AppLanguage.cy: {
+      i18n.loadAndActivate({locale, messages: messagesCy})
+      await Promise.all([
+        import('@formatjs/intl-pluralrules/locale-data/cy'),
+        import('@formatjs/intl-numberformat/locale-data/cy'),
+      ])
+      break
+    }
     case AppLanguage.da: {
       i18n.loadAndActivate({locale, messages: messagesDa})
       await Promise.all([
@@ -106,6 +118,14 @@ export async function dynamicActivate(locale: AppLanguage) {
       await Promise.all([
         import('@formatjs/intl-pluralrules/locale-data/en'),
         import('@formatjs/intl-numberformat/locale-data/en-GB'),
+      ])
+      break
+    }
+    case AppLanguage.eo: {
+      i18n.loadAndActivate({locale, messages: messagesEo})
+      await Promise.all([
+        import('@formatjs/intl-pluralrules/locale-data/eo'),
+        import('@formatjs/intl-numberformat/locale-data/eo'),
       ])
       break
     }
@@ -149,6 +169,14 @@ export async function dynamicActivate(locale: AppLanguage) {
       ])
       break
     }
+    case AppLanguage.gd: {
+      i18n.loadAndActivate({locale, messages: messagesGd})
+      await Promise.all([
+        import('@formatjs/intl-pluralrules/locale-data/gd'),
+        import('@formatjs/intl-numberformat/locale-data/gd'),
+      ])
+      break
+    }
     case AppLanguage.gl: {
       i18n.loadAndActivate({locale, messages: messagesGl})
       await Promise.all([
@@ -170,6 +198,14 @@ export async function dynamicActivate(locale: AppLanguage) {
       await Promise.all([
         import('@formatjs/intl-pluralrules/locale-data/hu'),
         import('@formatjs/intl-numberformat/locale-data/hu'),
+      ])
+      break
+    }
+    case AppLanguage.ia: {
+      i18n.loadAndActivate({locale, messages: messagesIa})
+      await Promise.all([
+        import('@formatjs/intl-pluralrules/locale-data/ia'),
+        import('@formatjs/intl-numberformat/locale-data/ia'),
       ])
       break
     }
