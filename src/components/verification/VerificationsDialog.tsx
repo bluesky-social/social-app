@@ -41,7 +41,6 @@ export function VerificationsDialog({
         profile={profile}
         verificationState={verificationState}
       />
-      <Dialog.Close />
     </Dialog.Outer>
   )
 }
