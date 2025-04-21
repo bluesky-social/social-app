@@ -53,6 +53,15 @@ function MenuInner({
 
   const [expanded, setExpanded] = useState(false)
 
+  const [prevOpen, setPrevOpen] = useState(control.isOpen)
+
+  if (control.isOpen !== prevOpen) {
+    setPrevOpen(control.isOpen)
+    if (!control.isOpen) {
+      setExpanded(false)
+    }
+  }
+
   const handleEmojiPickerResponse = (emoji: Emoji) => {
     handleEmojiSelect(emoji.native)
   }
