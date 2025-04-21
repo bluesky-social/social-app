@@ -134,46 +134,52 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 {flexShrink: 10},
               ]}>
               {NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
-            </Text>
-          </WebOnlyInlineLinkText>
-        </Text>
-      </ProfileHoverCard>
+            </WebOnlyInlineLinkText>
+          </View>
+        </ProfileHoverCard>
 
-      {!isAndroid && (
-        <Text
-          style={[a.text_md, t.atoms.text_contrast_medium]}
-          accessible={false}>
-          &middot;
-        </Text>
-      )}
-
-      <TimeElapsed timestamp={opts.timestamp}>
-        {({timeElapsed}) => (
-          <WebOnlyInlineLinkText
-            to={opts.postHref}
-            label={timestampLabel}
-            title={timestampLabel}
-            disableMismatchWarning
-            disableUnderline
-            onPress={onBeforePressPost}
-            style={[
-              a.text_md,
-              t.atoms.text_contrast_medium,
-              a.leading_snug,
-              web({
-                whiteSpace: 'nowrap',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 4,
+        <TimeElapsed timestamp={opts.timestamp}>
+          {({timeElapsed}) => (
+            <WebOnlyInlineLinkText
+              to={opts.postHref}
+              label={timestampLabel}
+              title={timestampLabel}
+              disableMismatchWarning
+              disableUnderline
+              onPress={onBeforePressPost}
+              style={[
+                a.pl_xs,
+                a.text_md,
+                a.leading_tight,
+                isAndroid && a.flex_grow,
+                a.text_right,
+                t.atoms.text_contrast_medium,
+                web({
+                  whiteSpace: 'nowrap',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 4,
                 }),
-            ]}>
+              ]}>
+              {!isAndroid && (
+                <Text
+                  style={[
+                    a.text_md,
+                    a.leading_tight,
+                    t.atoms.text_contrast_medium,
+                  ]}
+                  accessible={false}>
+                  &middot;{' '}
+                </Text>
+              )}
              {opts.isBackdated && (
                <CalendarClockIcon fill={danger} size="sm" aria-hidden style={web({ verticalAlign: 'middle' })}/>
              )}
-            {timeElapsed}
-          </WebOnlyInlineLinkText>
-        )}
-      </TimeElapsed>
+              {timeElapsed}
+            </WebOnlyInlineLinkText>
+          )}
+        </TimeElapsed>
+      </View>
     </View>
   )
 }
