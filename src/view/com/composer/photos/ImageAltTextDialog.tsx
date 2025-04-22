@@ -1,18 +1,18 @@
 import React from 'react'
-import {ImageStyle, useWindowDimensions, View} from 'react-native'
+import {type ImageStyle, useWindowDimensions, View} from 'react-native'
 import {Image} from 'expo-image'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {enforceLen} from '#/lib/strings/helpers'
-import {isAndroid, isWeb} from '#/platform/detection'
-import {ComposerImage} from '#/state/gallery'
+import {isWeb} from '#/platform/detection'
+import {type ComposerImage} from '#/state/gallery'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {DialogControlProps} from '#/components/Dialog'
+import {type DialogControlProps} from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Text} from '#/components/Typography'
@@ -165,8 +165,6 @@ const ImageAltTextInner = ({
           </Button>
         </AltTextCounterWrapper>
       </View>
-      {/* Maybe fix this later -h */}
-      {isAndroid ? <View style={{height: 300}} /> : null}
     </Dialog.ScrollableInner>
   )
 }

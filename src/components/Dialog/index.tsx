@@ -208,6 +208,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     useEnableKeyboardController(isIOS)
 
     const [keyboardHeight, setKeyboardHeight] = React.useState(0)
+    const keyboardVisible = keyboardHeight > 0
 
     useKeyboardHandler(
       {
@@ -219,21 +220,26 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
       [],
     )
 
-    let paddingBottom = 0
-    if (isIOS) {
-      paddingBottom += keyboardHeight / 4
-      if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
-        paddingBottom += insets.bottom + tokens.space.md
-      }
-      paddingBottom = Math.max(paddingBottom, tokens.space._2xl)
-    } else {
-      paddingBottom += keyboardHeight
-      if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
-        paddingBottom += insets.top
-      }
-      paddingBottom +=
-        Math.max(insets.bottom, tokens.space._5xl) + tokens.space._2xl
-    }
+    // Standardized padding calculation across platforms
+
+    // Only add safe area insets when the sheet is at full height
+    // For partial sheets, the sheet already positions above the safe area
+    const basePadding =
+      nativeSnapPoint === BottomSheetSnapPoint.Full ? insets.bottom : 0
+
+    // Standard buffer for all dialogs to ensure content isn't cut off
+    const standardBuffer = tokens.space._2xl
+
+    // Add keyboard offset when keyboard is visible
+    // iOS handles keyboard overlays more gracefully so we use a smaller factor
+    const keyboardOffset = keyboardVisible
+      ? isIOS
+        ? keyboardHeight / 3
+        : keyboardHeight
+      : 0
+
+    // Calculate final padding
+    const paddingBottom = basePadding + standardBuffer + keyboardOffset
 
     const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       if (!isAndroid) {
@@ -249,10 +255,12 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
 
     return (
       <KeyboardAwareScrollView
+        style={{backgroundColor: 'blue'}}
         contentContainerStyle={[
           a.pt_2xl,
           a.px_xl,
           {paddingBottom},
+          {backgroundColor: 'red'},
           contentContainerStyle,
         ]}
         ref={ref}
@@ -280,6 +288,23 @@ export const InnerFlatList = React.forwardRef<
   const insets = useSafeAreaInsets()
   const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
 
+  // Customized padding for InnerFlatList
+  // FlatLists are typically used for more complex content like profile/card lists
+  // and need more bottom padding to ensure content isn't cut off when scrolling
+
+  // Enhanced buffer for FlatLists to ensure content is fully visible when scrolled to bottom
+  // Using 4xl space (much larger than the 2xl used in ScrollableInner)
+  const flatListBuffer = tokens.space._5xl
+
+  // Only add safe area insets when the sheet is at full height
+  const basePadding =
+    nativeSnapPoint === BottomSheetSnapPoint.Full
+      ? insets.bottom + flatListBuffer
+      : 0
+
+  // Add additional padding for complex list components
+  const footerHeight = basePadding + tokens.space._2xl
+
   const onScroll = (e: ReanimatedScrollEvent) => {
     'worklet'
     if (!isAndroid) {
@@ -293,13 +318,15 @@ export const InnerFlatList = React.forwardRef<
     }
   }
 
+  console.log('footerHeight', footerHeight)
+
   return (
     <ScrollProvider onScroll={onScroll}>
       <List
         keyboardShouldPersistTaps="handled"
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
         ListFooterComponent={
-          <View style={{height: insets.bottom + a.pt_5xl.paddingTop + 50}} />
+          <View style={{height: footerHeight, backgroundColor: 'green'}} />
         }
         ref={ref}
         {...props}
