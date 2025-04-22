@@ -36,7 +36,6 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
-import {useDevModeEnabled} from '#/state/preferences/dev-mode'
 import {usePinnedPostMutation} from '#/state/queries/pinned-post'
 import {
   usePostDeleteMutation,
@@ -88,6 +87,7 @@ import {
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
+import {useDevMode} from '#/storage/hooks/dev-mode'
 import * as bsky from '#/types/bsky'
 import * as Toast from '../Toast'
 
@@ -135,7 +135,7 @@ let PostDropdownMenuItems = ({
   const hideReplyConfirmControl = useDialogControl()
   const {mutateAsync: toggleReplyVisibility} =
     useToggleReplyVisibilityMutation()
-  const [devModeEnabled] = useDevModeEnabled()
+  const [devModeEnabled] = useDevMode()
 
   const postUri = post.uri
   const postCid = post.cid

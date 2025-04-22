@@ -1,7 +1,7 @@
 import {
-  AppBskyFeedDefs,
-  AppBskyGraphDefs,
-  AppBskyNotificationListNotifications,
+  type AppBskyFeedDefs,
+  type AppBskyGraphDefs,
+  type AppBskyNotificationListNotifications,
 } from '@atproto/api'
 
 export type NotificationType =
@@ -44,6 +44,8 @@ type OtherNotificationType =
   | 'quote'
   | 'follow'
   | 'feedgen-like'
+  | 'verified'
+  | 'unverified'
   | 'unknown'
 
 type FeedNotificationBase = {

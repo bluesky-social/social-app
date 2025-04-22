@@ -1464,8 +1464,7 @@ function useKeyboardVerticalOffset() {
 
   // Android etc
   if (!isIOS) {
-    // if Android <35 or web, bottom is 0 anyway. if >=35, this is needed to account
-    // for the edge-to-edge nav bar
+    // need to account for the edge-to-edge nav bar
     return bottom * -1
   }
 

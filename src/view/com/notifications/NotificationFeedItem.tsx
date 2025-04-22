@@ -102,7 +102,11 @@ let NotificationFeedItem = ({
         const urip = new AtUri(item.subjectUri)
         return `/profile/${urip.host}/post/${urip.rkey}`
       }
-    } else if (item.type === 'follow') {
+    } else if (
+      item.type === 'follow' ||
+      item.type === 'verified' ||
+      item.type === 'unverified'
+    ) {
       return makeProfileLink(item.notification.author)
     } else if (item.type === 'reply') {
       const urip = new AtUri(item.notification.uri)
@@ -390,7 +394,6 @@ let NotificationFeedItem = ({
         <StarterPack width={30} gradient="sky" />
       </View>
     )
-    // @ts-ignore TODO
   } else if (item.type === 'verified') {
     a11yLabel = hasMultipleAuthors
       ? _(
@@ -416,7 +419,6 @@ let NotificationFeedItem = ({
       <Trans>{firstAuthorLink} verified you</Trans>
     )
     icon = <VerifiedCheck size="xl" />
-    // @ts-ignore TODO
   } else if (item.type === 'unverified') {
     a11yLabel = hasMultipleAuthors
       ? _(

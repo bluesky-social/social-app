@@ -16,7 +16,7 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {
   Button,
@@ -130,17 +130,29 @@ export function Link({
 export function Avatar({
   profile,
   moderationOpts,
+  onPress,
+  disabledPreview,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
+  onPress?: () => void
+  disabledPreview?: boolean
 }) {
   const moderation = moderateProfile(profile, moderationOpts)
 
-  return (
+  return disabledPreview ? (
+    <UserAvatar
+      size={40}
+      avatar={profile.avatar}
+      type={profile.associated?.labeler ? 'labeler' : 'user'}
+      moderation={moderation.ui('avatar')}
+    />
+  ) : (
     <PreviewableUserAvatar
       size={40}
       profile={profile}
       moderation={moderation.ui('avatar')}
+      onBeforePress={onPress}
     />
   )
 }

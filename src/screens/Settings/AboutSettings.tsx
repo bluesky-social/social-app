@@ -13,7 +13,6 @@ import {appVersion, BUNDLE_DATE, bundleInfo} from '#/lib/app-info'
 import {STATUS_PAGE_URL} from '#/lib/constants'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {isAndroid, isNative} from '#/platform/detection'
-import {useDevModeEnabled} from '#/state/preferences/dev-mode'
 import * as Toast from '#/view/com/util/Toast'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {BroomSparkle_Stroke2_Corner2_Rounded as BroomSparkleIcon} from '#/components/icons/BroomSparkle'
@@ -23,12 +22,13 @@ import {Newspaper_Stroke2_Corner2_Rounded as NewspaperIcon} from '#/components/i
 import {Wrench_Stroke2_Corner2_Rounded as WrenchIcon} from '#/components/icons/Wrench'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import {useDevMode} from '#/storage/hooks/dev-mode'
 import {OTAInfo} from './components/OTAInfo'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AboutSettings'>
 export function AboutSettingsScreen({}: Props) {
   const {_, i18n} = useLingui()
-  const [devModeEnabled, setDevModeEnabled] = useDevModeEnabled()
+  const [devModeEnabled, setDevModeEnabled] = useDevMode()
   const stableID = useMemo(() => Statsig.getStableID(), [])
 
   const {mutate: onClearImageCache, isPending: isClearingImageCache} =

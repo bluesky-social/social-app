@@ -46,14 +46,13 @@ import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation
 import {Provider as UnreadNotifsProvider} from '#/state/queries/notifications/unread'
 import {
   Provider as SessionProvider,
-  SessionAccount,
+  type SessionAccount,
   useSession,
   useSessionApi,
 } from '#/state/session'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
-import {Provider as LightStatusBarProvider} from '#/state/shell/light-status-bar'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
@@ -219,9 +218,7 @@ function App() {
                               <StarterPackProvider>
                                 <SafeAreaProvider
                                   initialMetrics={initialWindowMetrics}>
-                                  <LightStatusBarProvider>
-                                    <InnerApp />
-                                  </LightStatusBarProvider>
+                                  <InnerApp />
                                 </SafeAreaProvider>
                               </StarterPackProvider>
                             </BottomSheetProvider>
