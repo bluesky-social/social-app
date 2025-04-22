@@ -11067,14 +11067,6 @@ expo-modules-core@^2.1.1:
   dependencies:
     invariant "^2.2.4"
 
-expo-navigation-bar@~4.0.9:
-  version "4.0.9"
-  resolved "https://registry.yarnpkg.com/expo-navigation-bar/-/expo-navigation-bar-4.0.9.tgz#e0409c2db8f6384d12c87f45c2674effc9fae1b6"
-  integrity sha512-dCJ04yPixFOUixJaWlmCZafGeQ1L1g6vWn+oX8rqPnYN9kYCMUz2aRNnhRRoK5MBGFTK/nue2D49TE/AwwWt9w==
-  dependencies:
-    "@react-native/normalize-colors" "0.76.8"
-    debug "^4.3.2"
-
 expo-notifications@~0.29.14:
   version "0.29.14"
   resolved "https://registry.yarnpkg.com/expo-notifications/-/expo-notifications-0.29.14.tgz#77beb6bc74b1b1abfa3adcab77fb6c9ea5d7d1b0"
@@ -11114,11 +11106,6 @@ expo-splash-screen@~0.29.22:
   integrity sha512-f+bPpF06bqiuW1Fbrd3nxeaSsmTVTBEKEYe3epYt4IE6y4Ulli3qEUamMLlRQiDGuIXPU6zQlscpy2mdBUI5cA==
   dependencies:
     "@expo/prebuild-config" "^8.0.27"
-
-expo-status-bar@~2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/expo-status-bar/-/expo-status-bar-2.0.1.tgz#fc07726346dc30fbb68aadb0d7890b34fba42eee"
-  integrity sha512-AkIPX7jWHRPp83UBZ1iXtVvyr0g+DgBVvIXTtlmPtmUsm8Vq9Bb5IGj86PW8osuFlgoTVAg7HI/+Ok7yEYwiRg==
 
 expo-structured-headers@~4.0.0:
   version "4.0.0"
@@ -16761,6 +16748,11 @@ react-native-drawer-layout@^4.1.1:
   dependencies:
     use-latest-callback "^0.2.1"
 
+react-native-edge-to-edge@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-edge-to-edge/-/react-native-edge-to-edge-1.6.0.tgz#2ba63b941704a7f713e298185c26cde4d9e4b973"
+  integrity sha512-2WCNdE3Qd6Fwg9+4BpbATUxCLcouF6YRY7K+J36KJ4l3y+tWN6XCqAC4DuoGblAAbb2sLkhEDp4FOlbOIot2Og==
+
 react-native-emoji-popup@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/react-native-emoji-popup/-/react-native-emoji-popup-0.1.2.tgz#7cd3874ba0496031e6f3e24de77e0df895168ce6"
@@ -16807,10 +16799,10 @@ react-native-is-edge-to-edge@^1.1.6:
   resolved "https://registry.yarnpkg.com/react-native-is-edge-to-edge/-/react-native-is-edge-to-edge-1.1.6.tgz#69ec13f70d76e9245e275eed4140d0873a78f902"
   integrity sha512-1pHnFTlBahins6UAajXUqeCOHew9l9C2C8tErnpGC3IyLJzvxD+TpYAixnCbrVS52f7+NvMttbiSI290XfwN0w==
 
-react-native-keyboard-controller@^1.14.5:
-  version "1.14.5"
-  resolved "https://registry.yarnpkg.com/react-native-keyboard-controller/-/react-native-keyboard-controller-1.14.5.tgz#ec1e7d1fb8ee18b69ced4d8ddd6fd99bdaaf14bb"
-  integrity sha512-Cx7+SWI/P50i4PKJZN4T43RqoFkJ3GBoxjQ5ysrzZGoImHTF4j3atSwcBQGMmunKCem1yGOOQ84or+Vbcor6wQ==
+react-native-keyboard-controller@^1.17.1:
+  version "1.17.1"
+  resolved "https://registry.yarnpkg.com/react-native-keyboard-controller/-/react-native-keyboard-controller-1.17.1.tgz#46efe148c1bdd0ee22094dcb2660f70f81e6544e"
+  integrity sha512-YM3GYvtkuWimCKkZFURn5hIb1WiKOQqi2DijdwZSF5QSSzGqfqwzEEC3bm1xCN8HGHAEIXAaWIBUsc3Xp5L+Ng==
   dependencies:
     react-native-is-edge-to-edge "^1.1.6"
 
