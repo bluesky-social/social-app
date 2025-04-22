@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -7,7 +7,6 @@ import {logger} from '#/logger'
 import {useAgent, useSessionApi} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {type DialogOuterProps} from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Loader} from '#/components/Loader'
@@ -17,7 +16,7 @@ import {Text} from '#/components/Typography'
 export function DeactivateAccountDialog({
   control,
 }: {
-  control: DialogOuterProps['control']
+  control: Prompt.PromptControlProps
 }) {
   return (
     <Prompt.Outer control={control}>
@@ -29,17 +28,17 @@ export function DeactivateAccountDialog({
 function DeactivateAccountDialogInner({
   control,
 }: {
-  control: DialogOuterProps['control']
+  control: Prompt.PromptControlProps
 }) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
   const agent = useAgent()
   const {logoutCurrentAccount} = useSessionApi()
-  const [pending, setPending] = React.useState(false)
-  const [error, setError] = React.useState<string | undefined>()
+  const [pending, setPending] = useState(false)
+  const [error, setError] = useState<string | undefined>()
 
-  const handleDeactivate = React.useCallback(async () => {
+  const handleDeactivate = useCallback(async () => {
     try {
       setPending(true)
       await agent.com.atproto.server.deactivateAccount({})
