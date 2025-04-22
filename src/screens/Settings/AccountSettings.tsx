@@ -10,6 +10,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {ChangeEmailDialog} from '#/components/dialogs/ChangeEmailDialog'
+import {ChangePasswordDialog} from '#/components/dialogs/ChangePasswordDialog'
 import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {At_Stroke2_Corner2_Rounded as AtIcon} from '#/components/icons/At'
 import {BirthdayCake_Stroke2_Corner2_Rounded as BirthdayCakeIcon} from '#/components/icons/BirthdayCake'
@@ -35,6 +36,7 @@ export function AccountSettingsScreen({}: Props) {
   const changeEmailControl = useDialogControl()
   const birthdayControl = useDialogControl()
   const changeHandleControl = useDialogControl()
+  const changePasswordControl = useDialogControl()
   const exportCarControl = useDialogControl()
   const deactivateAccountControl = useDialogControl()
 
@@ -117,7 +119,7 @@ export function AccountSettingsScreen({}: Props) {
           </SettingsList.Item>
           <SettingsList.PressableItem
             label={_(msg`Password`)}
-            onPress={() => openModal({name: 'change-password'})}>
+            onPress={() => changePasswordControl.open()}>
             <SettingsList.ItemIcon icon={LockIcon} />
             <SettingsList.ItemText>
               <Trans>Password</Trans>
@@ -177,6 +179,7 @@ export function AccountSettingsScreen({}: Props) {
       />
       <BirthDateSettingsDialog control={birthdayControl} />
       <ChangeHandleDialog control={changeHandleControl} />
+      <ChangePasswordDialog control={changePasswordControl} />
       <ExportCarDialog control={exportCarControl} />
       <DeactivateAccountDialog control={deactivateAccountControl} />
     </Layout.Screen>
