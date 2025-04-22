@@ -5,6 +5,7 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
+import {DeleteAccountDialog} from '#/screens/Settings/components/DeleteAccountDialog'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
@@ -35,6 +36,7 @@ export function AccountSettingsScreen({}: Props) {
   const changeEmailControl = useDialogControl()
   const birthdayControl = useDialogControl()
   const changeHandleControl = useDialogControl()
+  const deleteAccountControl = useDialogControl()
   const exportCarControl = useDialogControl()
   const deactivateAccountControl = useDialogControl()
 
@@ -156,7 +158,7 @@ export function AccountSettingsScreen({}: Props) {
           </SettingsList.PressableItem>
           <SettingsList.PressableItem
             label={_(msg`Delete account`)}
-            onPress={() => openModal({name: 'delete-account'})}
+            onPress={() => deleteAccountControl.open()}
             destructive>
             <SettingsList.ItemIcon icon={Trash_Stroke2_Corner2_Rounded} />
             <SettingsList.ItemText>
@@ -177,6 +179,10 @@ export function AccountSettingsScreen({}: Props) {
       />
       <BirthDateSettingsDialog control={birthdayControl} />
       <ChangeHandleDialog control={changeHandleControl} />
+      <DeleteAccountDialog
+        control={deleteAccountControl}
+        deactivateDialogControl={deactivateAccountControl}
+      />
       <ExportCarDialog control={exportCarControl} />
       <DeactivateAccountDialog control={deactivateAccountControl} />
     </Layout.Screen>
