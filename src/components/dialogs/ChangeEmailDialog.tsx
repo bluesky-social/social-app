@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -39,10 +39,10 @@ export function Inner({
   const control = Dialog.useDialogContext()
   const {gtMobile} = useBreakpoints()
 
-  const [currentStep, setCurrentStep] = React.useState<
+  const [currentStep, setCurrentStep] = useState<
     'StepOne' | 'StepTwo' | 'StepThree'
   >('StepOne')
-  const [email, setEmail] = useState(currentAccount?.email || '')
+  const [email, setEmail] = useState('')
   const [confirmationCode, setConfirmationCode] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState('')
