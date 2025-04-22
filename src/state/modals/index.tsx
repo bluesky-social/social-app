@@ -39,14 +39,9 @@ export interface PostLanguagesSettingsModal {
   name: 'post-languages-settings'
 }
 
-export interface ChangePasswordModal {
-  name: 'change-password'
-}
-
 export type Modal =
   // Account
   | DeleteAccountModal
-  | ChangePasswordModal
 
   // Curation
   | ContentLanguagesSettingsModal
