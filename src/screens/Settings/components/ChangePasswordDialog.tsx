@@ -225,14 +225,14 @@ function Inner() {
                 </Button>
               )}
               <Button
-                label={_(msg`Request Code`)}
+                label={_(msg`Request code`)}
                 variant="solid"
                 color="primary"
                 size="large"
                 disabled={isProcessing}
                 onPress={onRequestCode}>
                 <ButtonText>
-                  <Trans>Request Code</Trans>
+                  <Trans>Request code</Trans>
                 </ButtonText>
                 {isProcessing && <ButtonIcon icon={Loader} />}
               </Button>
@@ -265,14 +265,14 @@ function Inner() {
           ) : stage === Stages.ChangePassword ? (
             <>
               <Button
-                label={_(msg`Change Password`)}
+                label={_(msg`Change password`)}
                 variant="solid"
                 color="primary"
                 size="large"
                 disabled={isProcessing}
                 onPress={onChangePassword}>
                 <ButtonText>
-                  <Trans>Change Password</Trans>
+                  <Trans>Change password</Trans>
                 </ButtonText>
                 {isProcessing && <ButtonIcon icon={Loader} />}
               </Button>
