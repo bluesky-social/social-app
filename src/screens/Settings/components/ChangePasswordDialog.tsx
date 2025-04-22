@@ -211,6 +211,19 @@ function Inner() {
         <View style={[a.gap_sm, gtMobile && [a.flex_row_reverse, a.ml_auto]]}>
           {stage === Stages.RequestCode ? (
             <>
+              {!gtMobile && (
+                <Button
+                  label={_(msg`Already have a code?`)}
+                  onPress={() => setStage(Stages.ChangePassword)}
+                  size="large"
+                  color="primary"
+                  variant="ghost"
+                  disabled={isProcessing}>
+                  <ButtonText>
+                    <Trans>Already have a code?</Trans>
+                  </ButtonText>
+                </Button>
+              )}
               <Button
                 label={_(msg`Request Code`)}
                 variant="solid"
@@ -228,8 +241,8 @@ function Inner() {
                   label={_(msg`Already have a code?`)}
                   onPress={() => setStage(Stages.ChangePassword)}
                   size="large"
-                  color="primary"
-                  variant="ghost"
+                  color="secondary"
+                  variant="solid"
                   disabled={isProcessing}>
                   <ButtonText>
                     <Trans>Already have a code?</Trans>
