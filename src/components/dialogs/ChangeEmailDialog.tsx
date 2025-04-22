@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 import {cleanError} from '#/lib/strings/errors'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {atoms as a, useBreakpoints} from '#/alf'
+import {atoms as a, useBreakpoints, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -130,9 +130,7 @@ export function Inner({
   return (
     <Dialog.ScrollableInner
       label={_(msg`Verify email dialog`)}
-      style={[
-        gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
-      ]}>
+      style={web({maxWidth: 450})}>
       <Dialog.Close />
       <View style={[a.gap_xl]}>
         <View style={[a.gap_sm]}>
