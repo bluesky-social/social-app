@@ -419,7 +419,7 @@ function FollowingFeedCard() {
       <View
         style={{flex: 1, flexDirection: 'row', gap: 8, alignItems: 'center'}}>
         <Text type="lg-medium" style={[t.atoms.text]} numberOfLines={1}>
-          <Trans>Following</Trans>
+          <Trans context="feed-name">Following</Trans>
         </Text>
       </View>
     </View>
