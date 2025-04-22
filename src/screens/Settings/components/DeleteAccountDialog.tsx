@@ -55,6 +55,7 @@ function Inner({
   const [isProcessing, setIsProcessing] = useState(false)
   const [confirmCode, setConfirmCode] = useState('')
   const [password, setPassword] = useState('')
+  const [handleInput, setHandleInput] = useState('')
   const [error, setError] = useState('')
 
   const onPressSendEmail = async () => {
@@ -74,18 +75,38 @@ function Inner({
       throw new Error(`DeleteAccount modal: currentAccount.did is undefined`)
     }
 
+    if (!confirmCode) {
+      setError(_(msg`Please enter the confirmation code sent to your email.`))
+      return
+    }
+
+    if (!password) {
+      setError(_(msg`Please enter your password to confirm.`))
+      return
+    }
+
+    // Remove any @ symbol at the beginning and trim whitespace
+    const cleanedHandle = handleInput.replace(/^@/, '').trim()
+
+    if (!cleanedHandle) {
+      setError(_(msg`Please enter your handle to confirm deletion.`))
+      return
+    }
+
+    if (cleanedHandle.toLowerCase() !== currentAccount.handle.toLowerCase()) {
+      setError(_(msg`Handle doesn't match. Please enter your exact handle.`))
+      return
+    }
+
     setError('')
     setIsProcessing(true)
     const token = confirmCode.replace(/\s/g, '')
 
     try {
       // inform chat service of intent to delete account
-      const {success} = await agent.api.chat.bsky.actor.deleteAccount(
-        undefined,
-        {
-          headers: DM_SERVICE_HEADERS,
-        },
-      )
+      const {success} = await agent.chat.bsky.actor.deleteAccount(undefined, {
+        headers: DM_SERVICE_HEADERS,
+      })
       if (!success) {
         throw new Error('Failed to inform chat service of account deletion')
       }
@@ -94,10 +115,11 @@ function Inner({
         password,
         token,
       })
-      Toast.show(_(msg`Your account has been deleted`))
-      resetToTab('HomeTab')
-      removeAccount(currentAccount)
-      control.close()
+      control.close(() => {
+        Toast.show(_(msg`Your account has been deleted`))
+        resetToTab('HomeTab')
+        removeAccount(currentAccount)
+      })
     } catch (e: any) {
       setError(cleanError(e))
     }
@@ -187,6 +209,21 @@ function Inner({
                   secureTextEntry
                   autoCapitalize="none"
                   autoComplete="password"
+                />
+              </TextField.Root>
+            </View>
+            <View>
+              <TextField.LabelText>
+                <Trans>Handle of the account you want to delete</Trans>
+              </TextField.LabelText>
+              <TextField.Root>
+                <TextField.Input
+                  label={_(msg`Your handle`)}
+                  placeholder={currentAccount?.handle}
+                  value={handleInput}
+                  onChangeText={setHandleInput}
+                  autoCapitalize="none"
+                  autoCorrect={false}
                 />
               </TextField.Root>
             </View>
