@@ -510,6 +510,125 @@ export const DEMO_FEED = {
         labels: [],
       },
     },
+    {
+      post: {
+        uri: 'at://did:plc:fpruhuo22xkm5o7ttr2ktxdo/app.bsky.feed.post/3lng5izl7kc2c',
+        cid: 'bafyreicsich65s4rq526rek5jmvd6djtcmr7kdavw26rrnf424awgvia7i',
+        author: {
+          did: 'did:plc:fpruhuo22xkm5o7ttr2ktxdo',
+          handle: 'danabra.mov',
+          displayName: 'dan',
+          avatar:
+            'https://cdn.bsky.app/img/avatar/plain/did:plc:fpruhuo22xkm5o7ttr2ktxdo/bafkreif43mhqajnbnl62u3ezf37g6x22nd762im54thxbil4ga46eugcga@jpeg',
+          associated: {
+            chat: {
+              allowIncoming: 'all',
+            },
+          },
+          viewer: {
+            muted: false,
+            blockedBy: false,
+            following:
+              'at://did:plc:p2cp5gopk7mgjegy6wadk3ep/app.bsky.graph.follow/3jtdzgbbysa2y',
+            followedBy:
+              'at://did:plc:fpruhuo22xkm5o7ttr2ktxdo/app.bsky.graph.follow/3k7ht6lwu6t2a',
+          },
+          labels: [],
+          createdAt: '2023-04-08T20:19:22.589Z',
+          verification: {
+            verifications: [
+              {
+                issuer: 'did:plc:z72i7hdynmk6r22z27h6tvur',
+                uri: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.graph.verification/3lndpxompy32z',
+                isValid: true,
+                createdAt: '2025-04-21T10:48:53.876Z',
+              },
+            ],
+            verifiedStatus: 'valid',
+            trustedVerifierStatus: 'none',
+          },
+        },
+        record: {
+          $type: 'app.bsky.feed.post',
+          createdAt: '2025-04-22T16:56:34.198Z',
+          langs: ['en'],
+          text: 'maybe i should write something about vercel at some point',
+        },
+        replyCount: 10,
+        repostCount: 1,
+        likeCount: 84,
+        quoteCount: 1,
+        indexedAt: '2025-04-22T16:56:34.356Z',
+        viewer: {
+          threadMuted: false,
+          replyDisabled: false,
+          embeddingDisabled: false,
+        },
+        labels: [],
+        threadgate: {
+          uri: 'at://did:plc:fpruhuo22xkm5o7ttr2ktxdo/app.bsky.feed.threadgate/3lng5izl7kc2c',
+          cid: 'bafyreic4wpsh5wrmjvbngt7som5436xzjhdnld3mxnkzyhj2i4vh6lpefa',
+          record: {
+            $type: 'app.bsky.feed.threadgate',
+            allow: [
+              {
+                $type: 'app.bsky.feed.threadgate#followerRule',
+              },
+              {
+                $type: 'app.bsky.feed.threadgate#followingRule',
+              },
+              {
+                $type: 'app.bsky.feed.threadgate#mentionRule',
+              },
+            ],
+            createdAt: '2025-04-22T16:56:34.200Z',
+            hiddenReplies: [],
+            post: 'at://did:plc:fpruhuo22xkm5o7ttr2ktxdo/app.bsky.feed.post/3lng5izl7kc2c',
+          },
+          lists: [],
+        },
+      },
+    },
+    {
+      post: {
+        uri: 'at://did:plc:77tdak46psveqneyegsdyc7l/app.bsky.feed.post/3lnft75ivlc27',
+        cid: 'bafyreic24reeweaymcfe6hdsuhmffazdpa5hoqyculxrdp2sr7xkoehgay',
+        author: {
+          did: 'did:plc:77tdak46psveqneyegsdyc7l',
+          handle: 'werd.io',
+          displayName: 'Ben Werdmuller',
+          avatar:
+            'https://cdn.bsky.app/img/avatar/plain/did:plc:77tdak46psveqneyegsdyc7l/bafkreicoqtayuefjlw73nrx4c7sioc3ujq74uisgbh4ddmuamevjwzt4fu@jpeg',
+          associated: {
+            chat: {
+              allowIncoming: 'following',
+            },
+          },
+          viewer: {
+            muted: false,
+            blockedBy: false,
+          },
+          labels: [],
+          createdAt: '2023-03-07T15:40:54.229Z',
+        },
+        record: {
+          $type: 'app.bsky.feed.post',
+          createdAt: '2025-04-22T13:52:05.353Z',
+          langs: ['en'],
+          text: 'This is obvious, but if people broadly rely on a black box to give them answers that help them understand the world, whoever controls the black box controls those answers and therefore the understanding that comes from them.\n\nOpenness is safety.',
+        },
+        replyCount: 10,
+        repostCount: 84,
+        likeCount: 432,
+        quoteCount: 2,
+        indexedAt: '2025-04-22T13:52:05.755Z',
+        viewer: {
+          threadMuted: false,
+          embeddingDisabled: false,
+        },
+        labels: [],
+      },
+    },
   ],
 } satisfies AppBskyFeedGetFeed.OutputSchema
 
