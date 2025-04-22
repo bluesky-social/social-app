@@ -255,12 +255,11 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
 
     return (
       <KeyboardAwareScrollView
-        style={{backgroundColor: 'blue'}}
         contentContainerStyle={[
           a.pt_2xl,
           a.px_xl,
           {paddingBottom},
-          {backgroundColor: 'red'},
+
           contentContainerStyle,
         ]}
         ref={ref}
@@ -318,16 +317,12 @@ export const InnerFlatList = React.forwardRef<
     }
   }
 
-  console.log('footerHeight', footerHeight)
-
   return (
     <ScrollProvider onScroll={onScroll}>
       <List
         keyboardShouldPersistTaps="handled"
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
-        ListFooterComponent={
-          <View style={{height: footerHeight, backgroundColor: 'green'}} />
-        }
+        ListFooterComponent={<View style={{height: footerHeight}} />}
         ref={ref}
         {...props}
         style={[style]}
