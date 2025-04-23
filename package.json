@@ -174,7 +174,7 @@
     "react-keyed-flatten-children": "^3.0.0",
     "react-native": "0.76.9",
     "react-native-compressor": "1.10.3",
-    "react-native-date-picker": "^5.0.7",
+    "react-native-date-picker": "^5.0.8",
     "react-native-drawer-layout": "^4.1.1",
     "react-native-edge-to-edge": "^1.6.0",
     "react-native-emoji-popup": "^0.1.2",

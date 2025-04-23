@@ -16729,10 +16729,10 @@ react-native-compressor@1.10.3:
   resolved "https://registry.yarnpkg.com/react-native-compressor/-/react-native-compressor-1.10.3.tgz#4e44fa8395de17fd6dc63c074e5a8c2ef06b80a1"
   integrity sha512-i51DfTwfLcKorWbTXtnPOcQC4SQDuC+DqKkSl9wF9qAUmNS9PtipYZCXOvWShYFnX0mmcWw5vwEp2b2V73PaDQ==
 
-react-native-date-picker@^5.0.7:
-  version "5.0.7"
-  resolved "https://registry.yarnpkg.com/react-native-date-picker/-/react-native-date-picker-5.0.7.tgz#24161d30c6dca8627afe1aa5a55a389421fdfba4"
-  integrity sha512-/RodyCZWjb+f3f4YHqKbWFYczGm+tNngwbVSB6MLGgt5Kl7LQXpv4QE6ybnHW+DM4LteTP8A6lj8LEkQ7+usLQ==
+react-native-date-picker@^5.0.8:
+  version "5.0.8"
+  resolved "https://registry.yarnpkg.com/react-native-date-picker/-/react-native-date-picker-5.0.8.tgz#1820fccc194bfa6907ea4382f94677f11e831b92"
+  integrity sha512-1l4w4+iLuhOZUSyQrt5DclXnNx3RwEyp+wUrSaBfaHr/3FWtRWjLjS0E9FL4FWuq6vn09Hy9hn8lZJ1DmPc9YQ==
 
 react-native-dotenv@^3.4.11:
   version "3.4.11"
