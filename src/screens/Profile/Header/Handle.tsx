@@ -51,7 +51,7 @@ export function ProfileHeaderHandle({
         ]}>
         {invalidHandle
           ? _(msg`⚠Invalid Handle`)
-          : `@${sanitizeHandle(profile.handle)}`}
+          : sanitizeHandle(profile.handle, '@')}
       </Text>
     </View>
   )
