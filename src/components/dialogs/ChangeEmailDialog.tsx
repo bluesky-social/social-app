@@ -182,7 +182,7 @@ export function Inner({
           {currentStep === 'StepOne' ? (
             <>
               <Button
-                label={_(msg`Send confirmation email`)}
+                label={_(msg`Request change`)}
                 variant="solid"
                 color="primary"
                 size="large"
