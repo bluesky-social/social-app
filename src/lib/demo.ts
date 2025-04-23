@@ -17,8 +17,7 @@ export const DEMO_FEED = {
           did: 'did:plc:pvooorihapc2lf2pijehgrdf',
           handle: 'forkedriverband.bsky.social',
           displayName: 'Forked River Band',
-          avatar:
-            'https://cdn.bsky.app/img/avatar/plain/did:plc:pvooorihapc2lf2pijehgrdf/bafkreiarkmzr3wa6ty75qigkkbvtgbler2yiqgfdrupmimy4whcnesu4d4@jpeg',
+          avatar: 'https://bsky.social/about/adi/post_1_avi.jpg',
           viewer: {
             muted: false,
             blockedBy: false,
@@ -70,10 +69,8 @@ export const DEMO_FEED = {
           $type: 'app.bsky.embed.images#view',
           images: [
             {
-              thumb:
-                'https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:pvooorihapc2lf2pijehgrdf/bafkreig7gnirmz5guhhjutf3mqbjjzxzi3w4wvs5qy2gnxma5g3brbaidi@jpeg',
-              fullsize:
-                'https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:pvooorihapc2lf2pijehgrdf/bafkreig7gnirmz5guhhjutf3mqbjjzxzi3w4wvs5qy2gnxma5g3brbaidi@jpeg',
+              thumb: 'https://bsky.social/about/adi/post_1_image.jpg',
+              fullsize: 'https://bsky.social/about/adi/post_1_image.jpg',
               alt: 'Fake flier for Sebastapol Bluegrass Fest',
               aspectRatio: {
                 height: 1350,
@@ -102,8 +99,7 @@ export const DEMO_FEED = {
           did: 'did:plc:fhhqii56ppgyh5qcm2b3mokf',
           handle: 'dinh-designs.bsky.social',
           displayName: 'Dinh Designs',
-          avatar:
-            'https://cdn.bsky.app/img/avatar/plain/did:plc:fhhqii56ppgyh5qcm2b3mokf/bafkreidou2xiwmwgq4rz7jj3myyhtvvcd47v5rrmj5xpp5w3nst6tmeoxi@jpeg',
+          avatar: 'https://bsky.social/about/adi/post_2_avi.jpg',
           viewer: {
             muted: false,
             blockedBy: false,
@@ -143,10 +139,8 @@ export const DEMO_FEED = {
           $type: 'app.bsky.embed.images#view',
           images: [
             {
-              thumb:
-                'https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:fhhqii56ppgyh5qcm2b3mokf/bafkreidcjc6bjb4jjjejruin5cldhj5zovsuu4tydulenyprneziq5rfeu@jpeg',
-              fullsize:
-                'https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:fhhqii56ppgyh5qcm2b3mokf/bafkreidcjc6bjb4jjjejruin5cldhj5zovsuu4tydulenyprneziq5rfeu@jpeg',
+              thumb: 'https://bsky.social/about/adi/post_2_image.jpg',
+              fullsize: 'https://bsky.social/about/adi/post_2_image.jpg',
               alt: 'Placeholder image of interior design',
               aspectRatio: {
                 height: 872,
@@ -174,9 +168,8 @@ export const DEMO_FEED = {
         author: {
           did: 'did:plc:h7fwnfejmmifveeea5eyxgkc',
           handle: 'visionprofan.bsky.social',
-          displayName: 'Sammy',
-          avatar:
-            'https://cdn.bsky.app/img/avatar/plain/did:plc:h7fwnfejmmifveeea5eyxgkc/bafkreia4fxcfoiny44sc5nujs7fpqxcxustuzepovxpsrq3e5cibcmscz4@jpeg',
+          displayName: 'Sebastian',
+          avatar: 'https://bsky.social/about/adi/user_avi.jpg',
           viewer: {
             muted: false,
             blockedBy: false,
@@ -206,5 +199,4 @@ export const DEMO_FEED = {
   ],
 } satisfies AppBskyFeedGetFeed.OutputSchema
 
-export const BOTTOM_BAR_AVI =
-  'https://cdn.bsky.app/img/avatar/plain/did:plc:nz5fbenzdvllhkgqblvuobbx/bafkreifiodbgqfmn3n36xum2qjjzfbgnvnyhk54tlul6hpa5d7p5q36jd4@jpeg'
+export const BOTTOM_BAR_AVI = 'https://bsky.social/about/adi/user_avi.jpg'
