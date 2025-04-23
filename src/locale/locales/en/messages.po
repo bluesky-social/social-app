@@ -1811,7 +1811,7 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1689
+#: src/view/com/composer/Composer.tsx:1688
 msgid "Compressing video..."
 msgstr ""
 
@@ -2445,7 +2445,7 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1613
+#: src/view/com/composer/Composer.tsx:1612
 msgid "Dismiss error"
 msgstr ""
 
@@ -2545,7 +2545,7 @@ msgstr ""
 msgid "Double tap to close the dialog"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1047
+#: src/screens/VideoFeed/index.tsx:1049
 msgid "Double tap to like"
 msgstr ""
 
@@ -2916,7 +2916,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1698
+#: src/view/com/composer/Composer.tsx:1697
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr ""
@@ -3000,7 +3000,7 @@ msgstr ""
 msgid "Expand or collapse the full post you are replying to"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:941
+#: src/screens/VideoFeed/index.tsx:943
 msgid "Expands or collapses post text"
 msgstr ""
 
@@ -3344,7 +3344,7 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.web.tsx:456
 #: src/components/ProfileHoverCard/index.web.tsx:467
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:236
-#: src/screens/VideoFeed/index.tsx:829
+#: src/screens/VideoFeed/index.tsx:831
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:131
 msgid "Follow"
 msgstr ""
@@ -3359,7 +3359,7 @@ msgstr ""
 msgid "Follow {0}"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:806
+#: src/screens/VideoFeed/index.tsx:808
 msgid "Follow {handle}"
 msgstr ""
 
@@ -3426,7 +3426,7 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.web.tsx:455
 #: src/components/ProfileHoverCard/index.web.tsx:466
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:232
-#: src/screens/VideoFeed/index.tsx:827
+#: src/screens/VideoFeed/index.tsx:829
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:134
 #: src/view/screens/Feeds.tsx:599
 #: src/view/screens/SavedFeeds.tsx:422
@@ -3438,7 +3438,7 @@ msgstr ""
 msgid "Following {0}"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:805
+#: src/screens/VideoFeed/index.tsx:807
 msgid "Following {handle}"
 msgstr ""
 
@@ -3564,8 +3564,8 @@ msgstr ""
 #: src/screens/Messages/Inbox.tsx:228
 #: src/screens/Profile/ProfileFeed/index.tsx:89
 #: src/screens/VideoFeed/components/Header.tsx:163
-#: src/screens/VideoFeed/index.tsx:1108
-#: src/screens/VideoFeed/index.tsx:1112
+#: src/screens/VideoFeed/index.tsx:1110
+#: src/screens/VideoFeed/index.tsx:1114
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
 #: src/view/screens/ProfileList.tsx:1038
@@ -3693,7 +3693,7 @@ msgstr ""
 msgid "Hidden"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:607
+#: src/screens/VideoFeed/index.tsx:609
 msgid "Hidden by your moderation settings."
 msgstr ""
 
@@ -4036,7 +4036,7 @@ msgstr ""
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1632
+#: src/view/com/composer/Composer.tsx:1631
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -5692,7 +5692,7 @@ msgstr ""
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:512
+#: src/screens/VideoFeed/index.tsx:514
 msgid "Post has been deleted"
 msgstr ""
 
@@ -5821,7 +5821,7 @@ msgstr ""
 msgid "Privacy Policy"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1695
+#: src/view/com/composer/Composer.tsx:1694
 msgid "Processing video..."
 msgstr ""
 
@@ -5955,11 +5955,11 @@ msgstr ""
 msgid "Read blog post"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:942
+#: src/screens/VideoFeed/index.tsx:944
 msgid "Read less"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:942
+#: src/screens/VideoFeed/index.tsx:944
 msgid "Read more"
 msgstr ""
 
@@ -6481,7 +6481,7 @@ msgstr ""
 
 #: src/screens/Profile/ProfileFeed/index.tsx:90
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:559
-#: src/screens/VideoFeed/index.tsx:1109
+#: src/screens/VideoFeed/index.tsx:1111
 #: src/view/screens/NotFound.tsx:60
 #: src/view/screens/ProfileList.tsx:1039
 msgid "Returns to previous page"
@@ -6510,7 +6510,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:622
+#: src/view/com/lightbox/ImageViewing/index.tsx:608
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -6830,7 +6830,7 @@ msgstr ""
 msgid "Send feedback"
 msgstr ""
 
-#: src/screens/Messages/components/MessageInput.tsx:191
+#: src/screens/Messages/components/MessageInput.tsx:192
 #: src/screens/Messages/components/MessageInput.web.tsx:235
 msgid "Send message"
 msgstr ""
@@ -6926,7 +6926,7 @@ msgstr ""
 msgid "Share"
 msgstr ""
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:631
+#: src/view/com/lightbox/ImageViewing/index.tsx:617
 msgctxt "action"
 msgid "Share"
 msgstr ""
@@ -7002,8 +7002,8 @@ msgstr ""
 #: src/components/moderation/ScreenHider.tsx:172
 #: src/components/moderation/ScreenHider.tsx:175
 #: src/screens/List/ListHiddenScreen.tsx:190
-#: src/screens/VideoFeed/index.tsx:610
-#: src/screens/VideoFeed/index.tsx:616
+#: src/screens/VideoFeed/index.tsx:612
+#: src/screens/VideoFeed/index.tsx:618
 msgid "Show anyway"
 msgstr ""
 
@@ -7255,8 +7255,8 @@ msgstr ""
 msgid "Something wrong? Let us know."
 msgstr ""
 
-#: src/App.native.tsx:123
-#: src/App.web.tsx:99
+#: src/App.native.tsx:122
+#: src/App.web.tsx:98
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr ""
 
@@ -7588,7 +7588,7 @@ msgstr ""
 msgid "That's all, folks!"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1081
+#: src/screens/VideoFeed/index.tsx:1083
 msgid "That's everything!"
 msgstr ""
 
@@ -8208,7 +8208,7 @@ msgstr ""
 msgid "Unfollow account"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:810
+#: src/screens/VideoFeed/index.tsx:812
 msgid "Unfollows the user"
 msgstr ""
 
@@ -8398,7 +8398,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1692
+#: src/view/com/composer/Composer.tsx:1691
 msgid "Uploading video..."
 msgstr ""
 
@@ -8607,11 +8607,11 @@ msgstr ""
 msgid "Video Games"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1039
+#: src/screens/VideoFeed/index.tsx:1041
 msgid "Video is paused"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1039
+#: src/screens/VideoFeed/index.tsx:1041
 msgid "Video is playing"
 msgstr ""
 
@@ -8623,7 +8623,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1702
+#: src/view/com/composer/Composer.tsx:1701
 msgid "Video uploaded"
 msgstr ""
 
@@ -8647,7 +8647,7 @@ msgstr ""
 #: src/components/ProfileCard.tsx:115
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:446
 #: src/screens/Search/components/SearchProfileCard.tsx:36
-#: src/screens/VideoFeed/index.tsx:769
+#: src/screens/VideoFeed/index.tsx:771
 #: src/view/com/notifications/NotificationFeedItem.tsx:489
 msgid "View {0}'s profile"
 msgstr ""
@@ -8669,8 +8669,8 @@ msgid "View debug entry"
 msgstr ""
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:137
-#: src/screens/VideoFeed/index.tsx:638
-#: src/screens/VideoFeed/index.tsx:656
+#: src/screens/VideoFeed/index.tsx:640
+#: src/screens/VideoFeed/index.tsx:658
 msgid "View details"
 msgstr ""
 
@@ -9338,7 +9338,7 @@ msgstr ""
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1090
+#: src/screens/VideoFeed/index.tsx:1092
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr ""
 
