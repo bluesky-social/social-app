@@ -107,11 +107,11 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                   a.pl_2xs,
                   a.self_center,
                   {
-                    marginTop: platform({web: 0, ios: 0, android: -2}),
+                    marginTop: platform({web: 0, ios: 0, android: -1}),
                   },
                 ]}>
                 <VerificationCheck
-                  width={12}
+                  width={platform({android: 13, default: 12})}
                   verifier={verification.role === 'verifier'}
                 />
               </View>
