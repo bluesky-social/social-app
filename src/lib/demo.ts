@@ -1,17 +1,23 @@
 import {type AppBskyFeedGetFeed} from '@atproto/api'
+import {subDays,subMinutes} from 'date-fns'
+
+const DID = `did:plc:z72i7hdynmk6r22z27h6tvur`
+const NOW = new Date()
+const POST_1_DATE = subMinutes(NOW, 2).toISOString()
+const POST_2_DATE = subMinutes(NOW, 4).toISOString()
+const POST_3_DATE = subMinutes(NOW, 5).toISOString()
 
 export const DEMO_FEED = {
   feed: [
     {
       post: {
-        uri: 'at://did:plc:vwzwgnygau7ed7b7wt5ux7y2/app.bsky.feed.post/3lng6kvb6uc2a',
-        cid: 'bafyreifqyej7jivzucaagu22f7jj7rvjcpbzv2kxo27wt47ktduwwdpdae',
+        uri: `at://${DID}/app.bsky.feed.post/post1`,
+        cid: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
         author: {
-          did: 'did:plc:vwzwgnygau7ed7b7wt5ux7y2',
-          handle: 'someoneelse.bsky.social',
-          displayName: 'Not David',
-          avatar:
-            'https://cdn.bsky.app/img/avatar/plain/did:plc:vwzwgnygau7ed7b7wt5ux7y2/bafkreifrtz3ngpzz5qmhjliv5toj4nvyjovijxs5e2la67wddhmdhro5he@jpeg',
+          did: DID,
+          handle: 'forkedriver.blsky',
+          displayName: 'Forked River Band',
+          avatar: 'https://bsky.social/about/adi/post_1_avi.jpg',
           associated: {
             chat: {
               allowIncoming: 'following',
@@ -20,261 +26,102 @@ export const DEMO_FEED = {
           viewer: {
             muted: false,
             blockedBy: false,
-            following:
-              'at://did:plc:p2cp5gopk7mgjegy6wadk3ep/app.bsky.graph.follow/3kcvvfzq6o32a',
-            followedBy:
-              'at://did:plc:vwzwgnygau7ed7b7wt5ux7y2/app.bsky.graph.follow/3jwawchotz22h',
+            following: `at://${DID}/app.bsky.graph.follow/post1`,
           },
           labels: [],
-          createdAt: '2023-04-27T09:23:54.423Z',
+          createdAt: POST_1_DATE,
           verification: {
             verifications: [
               {
-                issuer: 'did:plc:z72i7hdynmk6r22z27h6tvur',
-                uri: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.graph.verification/3lndpxt7ur22f',
+                issuer: DID,
+                uri: `at://${DID}/app.bsky.graph.verification/post1`,
                 isValid: true,
-                createdAt: '2025-04-21T10:48:58.775Z',
+                createdAt: subDays(NOW, 11).toISOString(),
               },
             ],
             verifiedStatus: 'valid',
             trustedVerifierStatus: 'none',
           },
         },
+        embed: {
+          $type: 'app.bsky.embed.images#view',
+          images: [
+            {
+              thumb: 'https://bsky.social/about/adi/post_1_image.jpg',
+              fullsize: 'https://bsky.social/about/adi/post_1_image.jpg',
+              alt: '',
+              aspectRatio: {
+                height: 1350,
+                width: 900,
+              },
+            },
+          ],
+        },
         record: {
           $type: 'app.bsky.feed.post',
-          createdAt: '2025-04-22T17:15:30.525Z',
+          createdAt: POST_1_DATE,
           langs: ['en'],
-          reply: {
-            parent: {
-              cid: 'bafyreic7wmhywvu5fi4lupswxpmyydqn2gl5kwnt4n4jxvb3lpej2l72ku',
-              uri: 'at://did:plc:vc7f4oafdgxsihk4cry2xpze/app.bsky.feed.post/3lng66dkzu222',
-            },
-            root: {
-              cid: 'bafyreic7wmhywvu5fi4lupswxpmyydqn2gl5kwnt4n4jxvb3lpej2l72ku',
-              uri: 'at://did:plc:vc7f4oafdgxsihk4cry2xpze/app.bsky.feed.post/3lng66dkzu222',
-            },
-          },
-          text: 'sometimes I go to the apple store just to look at them',
+          text: 'Sonoma County folks: Come tip your hats our way and see us play new and old tunes at Sebastopol Bluegrass Fest on June 14th.',
         },
-        replyCount: 0,
-        repostCount: 0,
-        likeCount: 6,
+        replyCount: 1,
+        repostCount: 4,
+        likeCount: 18,
         quoteCount: 0,
-        indexedAt: '2025-04-22T17:15:31.251Z',
+        indexedAt: POST_1_DATE,
         viewer: {
           threadMuted: false,
           embeddingDisabled: false,
         },
         labels: [],
       },
-      reply: {
-        root: {
-          uri: 'at://did:plc:vc7f4oafdgxsihk4cry2xpze/app.bsky.feed.post/3lng66dkzu222',
-          cid: 'bafyreic7wmhywvu5fi4lupswxpmyydqn2gl5kwnt4n4jxvb3lpej2l72ku',
-          author: {
-            did: 'did:plc:vc7f4oafdgxsihk4cry2xpze',
-            handle: 'jasalterego.bsky.social',
-            displayName: 'Jerry Appleseed',
-            avatar:
-              'https://cdn.bsky.app/img/avatar/plain/did:plc:vc7f4oafdgxsihk4cry2xpze/bafkreicwxwecqiko2rwwln5y3fqqb2zx6wfg5rxf5r7lukakkq2slqy5hy@jpeg',
-            associated: {
-              chat: {
-                allowIncoming: 'following',
-              },
-            },
-            viewer: {
-              muted: false,
-              blockedBy: false,
-              following:
-                'at://did:plc:p2cp5gopk7mgjegy6wadk3ep/app.bsky.graph.follow/3jx4rnvlnhl25',
-              followedBy:
-                'at://did:plc:vc7f4oafdgxsihk4cry2xpze/app.bsky.graph.follow/3jx4siiniuc2e',
-            },
-            labels: [
-              {
-                cts: '2024-05-17T21:53:59.049Z',
-                src: 'did:plc:skibpmllbhxvbvwgtjxl3uao',
-                uri: 'did:plc:vc7f4oafdgxsihk4cry2xpze',
-                val: 'cringe',
-                ver: 1,
-              },
-              {
-                cts: '2024-05-17T21:53:59.049Z',
-                src: 'did:plc:skibpmllbhxvbvwgtjxl3uao',
-                uri: 'did:plc:vc7f4oafdgxsihk4cry2xpze',
-                val: 'elder-watch',
-                ver: 1,
-              },
-              {
-                src: 'did:plc:vc7f4oafdgxsihk4cry2xpze',
-                uri: 'at://did:plc:vc7f4oafdgxsihk4cry2xpze/app.bsky.actor.profile/self',
-                cid: 'bafyreidfiuv3c22vliyu2onazf23zrp35rr7i3upsqa2dsn5cqimmlgugm',
-                val: '!no-unauthenticated',
-                cts: '1970-01-01T00:00:00.000Z',
-              },
-            ],
-            createdAt: '2023-04-23T20:11:04.375Z',
-          },
-          record: {
-            $type: 'app.bsky.feed.post',
-            createdAt: '2025-04-22T17:08:29.321Z',
-            langs: ['en'],
-            text: "(studying the blade) ow that's the sharp side",
-          },
-          replyCount: 8,
-          repostCount: 37,
-          likeCount: 252,
-          quoteCount: 1,
-          indexedAt: '2025-04-22T17:08:29.458Z',
-          viewer: {
-            threadMuted: false,
-            embeddingDisabled: false,
-          },
-          labels: [],
-          $type: 'app.bsky.feed.defs#postView',
-        },
-        parent: {
-          uri: 'at://did:plc:vc7f4oafdgxsihk4cry2xpze/app.bsky.feed.post/3lng66dkzu222',
-          cid: 'bafyreic7wmhywvu5fi4lupswxpmyydqn2gl5kwnt4n4jxvb3lpej2l72ku',
-          author: {
-            did: 'did:plc:vc7f4oafdgxsihk4cry2xpze',
-            handle: 'jasalterego.bsky.social',
-            displayName: 'Jerry Appleseed',
-            avatar:
-              'https://cdn.bsky.app/img/avatar/plain/did:plc:vc7f4oafdgxsihk4cry2xpze/bafkreicwxwecqiko2rwwln5y3fqqb2zx6wfg5rxf5r7lukakkq2slqy5hy@jpeg',
-            associated: {
-              chat: {
-                allowIncoming: 'following',
-              },
-            },
-            viewer: {
-              muted: false,
-              blockedBy: false,
-              following:
-                'at://did:plc:p2cp5gopk7mgjegy6wadk3ep/app.bsky.graph.follow/3jx4rnvlnhl25',
-              followedBy:
-                'at://did:plc:vc7f4oafdgxsihk4cry2xpze/app.bsky.graph.follow/3jx4siiniuc2e',
-            },
-            labels: [
-              {
-                cts: '2024-05-17T21:53:59.049Z',
-                src: 'did:plc:skibpmllbhxvbvwgtjxl3uao',
-                uri: 'did:plc:vc7f4oafdgxsihk4cry2xpze',
-                val: 'cringe',
-                ver: 1,
-              },
-              {
-                cts: '2024-05-17T21:53:59.049Z',
-                src: 'did:plc:skibpmllbhxvbvwgtjxl3uao',
-                uri: 'did:plc:vc7f4oafdgxsihk4cry2xpze',
-                val: 'elder-watch',
-                ver: 1,
-              },
-              {
-                src: 'did:plc:vc7f4oafdgxsihk4cry2xpze',
-                uri: 'at://did:plc:vc7f4oafdgxsihk4cry2xpze/app.bsky.actor.profile/self',
-                cid: 'bafyreidfiuv3c22vliyu2onazf23zrp35rr7i3upsqa2dsn5cqimmlgugm',
-                val: '!no-unauthenticated',
-                cts: '1970-01-01T00:00:00.000Z',
-              },
-            ],
-            createdAt: '2023-04-23T20:11:04.375Z',
-          },
-          record: {
-            $type: 'app.bsky.feed.post',
-            createdAt: '2025-04-22T17:08:29.321Z',
-            langs: ['en'],
-            text: '*sees the studio display* i think i hauve covid',
-          },
-          replyCount: 8,
-          repostCount: 37,
-          likeCount: 252,
-          quoteCount: 1,
-          indexedAt: '2025-04-22T17:08:29.458Z',
-          viewer: {
-            threadMuted: false,
-            embeddingDisabled: false,
-          },
-          labels: [],
-          $type: 'app.bsky.feed.defs#postView',
-        },
-      },
     },
     {
       post: {
-        uri: 'at://did:plc:qvzn322kmcvd7xtnips5xaun/app.bsky.feed.post/3lnehbwkvzk2z',
-        cid: 'bafyreidshyla4xoolb7fexhtlqcjjbn6ts7z4xja7gnlinroms5cuqg3fq',
+        uri: `at://${DID}/app.bsky.feed.post/post2`,
+        cid: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
         author: {
-          did: 'did:plc:qvzn322kmcvd7xtnips5xaun',
-          handle: 'scalzi.com',
-          displayName: 'John Scalzi',
-          avatar:
-            'https://cdn.bsky.app/img/avatar/plain/did:plc:qvzn322kmcvd7xtnips5xaun/bafkreih4dn5gllculyzb6wlqcqparkax35zloe3bzn2nufeqeilz4sutsu@jpeg',
+          did: DID,
+          handle: 'dinh-designs.blsky',
+          displayName: 'Dinh Designs',
+          avatar: 'https://bsky.social/about/adi/post_2_avi.jpg',
           associated: {
             chat: {
               allowIncoming: 'following',
             },
           },
-
           viewer: {
             muted: false,
             blockedBy: false,
-            following:
-              'at://did:plc:p2cp5gopk7mgjegy6wadk3ep/app.bsky.graph.follow/3kcvvfzq6o32a',
-            followedBy:
-              'at://did:plc:vwzwgnygau7ed7b7wt5ux7y2/app.bsky.graph.follow/3jwawchotz22h',
+            following: `at://${DID}/app.bsky.graph.follow/post2`,
           },
           labels: [],
-          createdAt: '2023-04-27T16:05:17.859Z',
-        },
-        record: {
-          $type: 'app.bsky.feed.post',
-          createdAt: '2025-04-22T00:46:14.095Z',
-          embed: {
-            $type: 'app.bsky.embed.images',
-            images: [
-              {
-                alt: 'Smudge napping on the Eames chair, which is covered in a blanket to avoid getting cat hair on it. ',
-                aspectRatio: {
-                  height: 2000,
-                  width: 1505,
-                },
-                image: {
-                  $type: 'blob',
-                  ref: {
-                    $link:
-                      'bafkreigkfbcmttc4r4avknp4y2mlcjlws3sdcat6jcyd2mjr7yvz6sje4q',
-                  },
-                  mimeType: 'image/jpeg',
-                  size: 833834,
-                },
-              },
-            ],
-          },
-          langs: ['en'],
-          text: 'Smudge found the Eames chair',
+          createdAt: POST_2_DATE,
         },
         embed: {
           $type: 'app.bsky.embed.images#view',
           images: [
             {
-              thumb:
-                'https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:qvzn322kmcvd7xtnips5xaun/bafkreigkfbcmttc4r4avknp4y2mlcjlws3sdcat6jcyd2mjr7yvz6sje4q@jpeg',
-              fullsize:
-                'https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:qvzn322kmcvd7xtnips5xaun/bafkreigkfbcmttc4r4avknp4y2mlcjlws3sdcat6jcyd2mjr7yvz6sje4q@jpeg',
-              alt: 'Smudge napping on the Eames chair, which is covered in a blanket to avoid getting cat hair on it. ',
+              thumb: 'https://bsky.social/about/adi/post_2_image.jpg',
+              fullsize: 'https://bsky.social/about/adi/post_2_image.jpg',
+              alt: '',
               aspectRatio: {
-                height: 2000,
-                width: 1505,
+                height: 872,
+                width: 598,
               },
             },
           ],
         },
-        replyCount: 47,
-        repostCount: 31,
-        likeCount: 1543,
+        record: {
+          $type: 'app.bsky.feed.post',
+          createdAt: POST_2_DATE,
+          langs: ['en'],
+          text: 'Details from our install at the Lucas residence in Joshua Tree. We populated the space with rich, earthy tones and locally-sourced materials to suit the landscape.',
+        },
+        replyCount: 3,
+        repostCount: 1,
+        likeCount: 4,
         quoteCount: 0,
-        indexedAt: '2025-04-22T00:46:17.457Z',
+        indexedAt: POST_2_DATE,
         viewer: {
           threadMuted: false,
           embeddingDisabled: false,
@@ -284,145 +131,37 @@ export const DEMO_FEED = {
     },
     {
       post: {
-        uri: 'at://did:plc:jb2q4yqmgpmefxd4xx66gepm/app.bsky.feed.post/3lng4m2memc2k',
-        cid: 'bafyreicvgwkd5xkbtu3eh756yodnynqbxoegzzqhhees5ou45t3gq3j6um',
+        uri: `at://${DID}/app.bsky.feed.post/post3`,
+        cid: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
         author: {
-          did: 'did:plc:jb2q4yqmgpmefxd4xx66gepm',
-          handle: 'visionprofan.bsky.social',
+          did: DID,
+          handle: 'visionprofan.blsky',
           displayName: 'Visionary',
           avatar:
-            'https://cdn.bsky.app/img/avatar/plain/did:plc:jb2q4yqmgpmefxd4xx66gepm/bafkreibqdpwilgj43m37ksjilzcnzqx2g3njcyiyifvazdar23rs5hlokm@jpeg',
+            'https://cdn.bsky.app/img/avatar/plain/did:plc:p2cp5gopk7mgjegy6wadk3ep/bafkreiaqsy36o6lpbpnonb4n46cvntfs6zoxbav35raix2sxhqgopxcjge@jpeg',
           associated: {
             chat: {
               allowIncoming: 'following',
             },
           },
-
           viewer: {
             muted: false,
             blockedBy: false,
-            following:
-              'at://did:plc:p2cp5gopk7mgjegy6wadk3ep/app.bsky.graph.follow/3kcvvfzq6o32a',
-            followedBy:
-              'at://did:plc:vwzwgnygau7ed7b7wt5ux7y2/app.bsky.graph.follow/3jwawchotz22h',
+            following: `at://${DID}/app.bsky.graph.follow/post3`,
           },
-          labels: [
-            {
-              cts: '2024-07-14T04:31:55.599Z',
-              src: 'did:plc:skibpmllbhxvbvwgtjxl3uao',
-              uri: 'did:plc:jb2q4yqmgpmefxd4xx66gepm',
-              val: 'cringe',
-              ver: 1,
-            },
-          ],
-          createdAt: '2023-04-13T05:48:48.827Z',
+          createdAt: POST_3_DATE,
         },
         record: {
           $type: 'app.bsky.feed.post',
-          createdAt: '2025-04-22T16:40:22.205Z',
-          embed: {
-            $type: 'app.bsky.embed.record',
-            record: {
-              cid: 'bafyreif6ks7dhjrgrio5guztdhf3byoygbwebbvehi4al2c5kmkevlqdky',
-              uri: 'at://did:plc:4llrhdclvdlmmynkwsmg5tdc/app.bsky.feed.post/3lnfspxzdd42p',
-            },
-          },
+          createdAt: POST_3_DATE,
           langs: ['en'],
           text: 'Just got my Vision Pro! 🤯\n\nAny recommendations for apps to try out?',
-        },
-        embed: {
-          $type: 'app.bsky.embed.record#view',
-          record: {
-            $type: 'app.bsky.embed.record#viewRecord',
-            uri: 'at://did:plc:4llrhdclvdlmmynkwsmg5tdc/app.bsky.feed.post/3lnfspxzdd42p',
-            cid: 'bafyreif6ks7dhjrgrio5guztdhf3byoygbwebbvehi4al2c5kmkevlqdky',
-            author: {
-              did: 'did:plc:4llrhdclvdlmmynkwsmg5tdc',
-              handle: 'atrupar.com',
-              displayName: 'Aaron Rupar',
-              avatar:
-                'https://cdn.bsky.app/img/avatar/plain/did:plc:4llrhdclvdlmmynkwsmg5tdc/bafkreibmhm3h6ar52pogvolisrzjdhwa2myras5vkxzj67twxn2l6pogwu@jpeg',
-              associated: {
-                chat: {
-                  allowIncoming: 'following',
-                },
-              },
-              viewer: {
-                muted: false,
-                blockedBy: false,
-                following:
-                  'at://did:plc:p2cp5gopk7mgjegy6wadk3ep/app.bsky.graph.follow/3l7eals2t4g2k',
-              },
-              labels: [],
-              createdAt: '2023-04-28T00:47:57.437Z',
-            },
-            value: {
-              $type: 'app.bsky.feed.post',
-              createdAt: '2025-04-22T13:43:36.261Z',
-              embed: {
-                $type: 'app.bsky.embed.video',
-                alt: '',
-                aspectRatio: {
-                  height: 720,
-                  width: 1280,
-                },
-                captions: [
-                  {
-                    $type: 'app.bsky.embed.video#caption',
-                    file: {
-                      $type: 'blob',
-                      ref: {
-                        $link:
-                          'bafkreihm7npnefqxqmn7d45lcbxzn4wnowc2abe5hxmd63qlob7fbszola',
-                      },
-                      mimeType: 'text/vtt',
-                      size: 1339,
-                    },
-                    lang: 'en',
-                  },
-                ],
-                video: {
-                  $type: 'blob',
-                  ref: {
-                    $link:
-                      'bafkreihovdkyvql2yswuimm5m35lqyo7tgsfiujm7vrxtfmi4gwej4hkpa',
-                  },
-                  mimeType: 'video/mp4',
-                  size: 6026932,
-                },
-              },
-              facets: [],
-              langs: ['en'],
-              text: 'Austin Scott previews how House Rs plan to cut Medicaid: "The federal govt is paying 90% of the Medicaid expansion. What we\'ve talked about is moving that 90% level of the expansion back... nobody would be kicked off Medicaid as long as governors decided they wanted to continue to fund the program"',
-            },
-            labels: [],
-            likeCount: 880,
-            replyCount: 230,
-            repostCount: 347,
-            quoteCount: 145,
-            indexedAt: '2025-04-22T13:43:37.350Z',
-            embeds: [
-              {
-                $type: 'app.bsky.embed.video#view',
-                cid: 'bafkreihovdkyvql2yswuimm5m35lqyo7tgsfiujm7vrxtfmi4gwej4hkpa',
-                playlist:
-                  'https://video.bsky.app/watch/did%3Aplc%3A4llrhdclvdlmmynkwsmg5tdc/bafkreihovdkyvql2yswuimm5m35lqyo7tgsfiujm7vrxtfmi4gwej4hkpa/playlist.m3u8',
-                thumbnail:
-                  'https://video.bsky.app/watch/did%3Aplc%3A4llrhdclvdlmmynkwsmg5tdc/bafkreihovdkyvql2yswuimm5m35lqyo7tgsfiujm7vrxtfmi4gwej4hkpa/thumbnail.jpg',
-                alt: '',
-                aspectRatio: {
-                  height: 720,
-                  width: 1280,
-                },
-              },
-            ],
-          },
         },
         replyCount: 11,
         repostCount: 97,
         likeCount: 399,
         quoteCount: 3,
-        indexedAt: '2025-04-22T16:40:22.648Z',
+        indexedAt: POST_3_DATE,
         viewer: {
           threadMuted: false,
           embeddingDisabled: false,
@@ -430,6 +169,7 @@ export const DEMO_FEED = {
         labels: [],
       },
     },
+    /*
     {
       post: {
         uri: 'at://did:plc:5o6k7jvowuyaquloafzn3cfw/app.bsky.feed.post/3lng6lkuhxc2s',
@@ -629,6 +369,7 @@ export const DEMO_FEED = {
         labels: [],
       },
     },
+    */
   ],
 } satisfies AppBskyFeedGetFeed.OutputSchema
 
