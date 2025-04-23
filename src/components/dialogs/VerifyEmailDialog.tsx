@@ -171,7 +171,6 @@ export function Inner({
               a.justify_center,
               {height: 150},
               t.atoms.bg_contrast_100,
-              web(a.mt_2xl),
             ]}>
             <EnvelopeIcon width={64} fill="white" />
           </View>
@@ -356,7 +355,6 @@ export function Inner({
           ) : null}
         </View>
       </View>
-      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
