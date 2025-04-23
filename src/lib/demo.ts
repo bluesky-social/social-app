@@ -207,4 +207,4 @@ export const DEMO_FEED = {
 } satisfies AppBskyFeedGetFeed.OutputSchema
 
 export const BOTTOM_BAR_AVI =
-  'https://cdn.bsky.app/img/avatar/plain/did:plc:p2cp5gopk7mgjegy6wadk3ep/bafkreiaqsy36o6lpbpnonb4n46cvntfs6zoxbav35raix2sxhqgopxcjge@jpeg'
+  'https://cdn.bsky.app/img/avatar/plain/did:plc:nz5fbenzdvllhkgqblvuobbx/bafkreifiodbgqfmn3n36xum2qjjzfbgnvnyhk54tlul6hpa5d7p5q36jd4@jpeg'
