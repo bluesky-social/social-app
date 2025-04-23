@@ -150,7 +150,7 @@ export function Inner({
               <TextField.Root>
                 <TextField.Input
                   label={_(msg`New email address`)}
-                  placeholder="alice@example.com"
+                  placeholder={_(msg`alice@example.com`)}
                   defaultValue={email}
                   onChangeText={setEmail}
                   keyboardType="email-address"
