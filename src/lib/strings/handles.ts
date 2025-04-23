@@ -1,7 +1,6 @@
 // Regex from the go implementation
 // https://github.com/bluesky-social/indigo/blob/main/atproto/syntax/handle.go#L10
 import {I18n} from '@lingui/core'
-
 import {forceLTR} from '#/lib/strings/bidi'
 
 const VALIDATE_REGEX =

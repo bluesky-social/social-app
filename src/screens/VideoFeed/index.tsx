@@ -1,18 +1,18 @@
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
   LayoutAnimation,
-  type ListRenderItem,
+  ListRenderItem,
   Pressable,
   ScrollView,
   View,
-  type ViewabilityConfig,
-  type ViewToken,
+  ViewabilityConfig,
+  ViewToken,
 } from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {
   Gesture,
   GestureDetector,
-  type NativeGesture,
+  NativeGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
   useAnimatedStyle,
@@ -24,38 +24,38 @@ import {
 } from 'react-native-safe-area-context'
 import {useEvent} from 'expo'
 import {useEventListener} from 'expo'
-import {Image, type ImageStyle} from 'expo-image'
+import {Image, ImageStyle} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
-import {createVideoPlayer, type VideoPlayer, VideoView} from 'expo-video'
+import {createVideoPlayer, VideoPlayer, VideoView} from 'expo-video'
 import {
   AppBskyEmbedVideo,
-  type AppBskyFeedDefs,
+  AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
-  type ModerationDecision,
+  ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
-  type RouteProp,
+  RouteProp,
   useFocusEffect,
   useIsFocused,
   useNavigation,
   useRoute,
 } from '@react-navigation/native'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {type CommonNavigatorParams, type NavigationProp} from '#/lib/routes/types'
+import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isAndroid} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
-import {POST_TOMBSTONE, type Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {
   FeedFeedbackProvider,
@@ -64,8 +64,8 @@ import {
 import {useFeedFeedback} from '#/state/feed-feedback'
 import {usePostLikeMutationQueue} from '#/state/queries/post'
 import {
-  type AuthorFilter,
-  type FeedPostSliceItem,
+  AuthorFilter,
+  FeedPostSliceItem,
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'

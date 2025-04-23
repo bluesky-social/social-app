@@ -12,7 +12,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
-import {type FeedSourceFeedInfo} from '#/state/queries/feed'
+import {FeedSourceFeedInfo} from '#/state/queries/feed'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {
   useAddSavedFeedsMutation,
