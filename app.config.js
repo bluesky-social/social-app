@@ -259,6 +259,8 @@ module.exports = function (_config) {
               './assets/fonts/inter/Inter-SemiBoldItalic.otf',
               './assets/fonts/inter/Inter-ExtraBold.otf',
               './assets/fonts/inter/Inter-ExtraBoldItalic.otf',
+              // Verification
+              './assets/fonts/verification/Verification.ttf',
             ],
           },
         ],

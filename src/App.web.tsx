@@ -61,6 +61,7 @@ import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
+import {loadVerificationCheckFonts} from '#/components/verification/VerificationCheck'
 
 /**
  * Begin geolocation ASAP
@@ -74,6 +75,7 @@ function InnerApp() {
   const theme = useColorModeTheme()
   const {_} = useLingui()
   const hasCheckedReferrer = useStarterPackEntry()
+  const [verificationChecksFontLoaded] = loadVerificationCheckFonts()
 
   // init
   useEffect(() => {
@@ -103,6 +105,7 @@ function InnerApp() {
 
   // wait for session to resume
   if (!isReady || !hasCheckedReferrer) return null
+  if (!verificationChecksFontLoaded) return null
 
   return (
     <Alf theme={theme}>

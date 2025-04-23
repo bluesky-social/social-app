@@ -20,7 +20,7 @@ import {WebOnlyInlineLinkText} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {VerificationCheck, VerificationCheckIcon} from '#/components/verification/VerificationCheck'
 import {TimeElapsed} from './TimeElapsed'
 import {PreviewableUserAvatar} from './UserAvatar'
 
@@ -100,22 +100,18 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                   opts.moderation?.ui('displayName'),
                 ),
               )}
-            </WebOnlyInlineLinkText>
-            {verification.showBadge && (
-              <View
-                style={[
-                  a.pl_2xs,
-                  a.self_center,
-                  {
-                    marginTop: platform({web: -1, ios: -1, android: -2}),
-                  },
-                ]}>
-                <VerificationCheck
-                  width={14}
-                  verifier={verification.role === 'verifier'}
+              {verification.showBadge && (
+                <>
+                  {' '}
+                <VerificationCheckIcon
+                  name='Verification-verifiedCheck'
+                  style={{
+                    color: t.palette.primary_500,
+                  }}
                 />
-              </View>
-            )}
+                </>
+              )}
+            </WebOnlyInlineLinkText>
             <WebOnlyInlineLinkText
               numberOfLines={1}
               to={profileLink}
