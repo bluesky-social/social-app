@@ -61,7 +61,7 @@ let ProfileHeaderStandard = ({
   const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
   const {currentAccount, hasSession} = useSession()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
@@ -253,7 +253,7 @@ let ProfileHeaderStandard = ({
                 a.font_heavy,
               ]}>
               {sanitizeDisplayName(
-                profile.displayName || sanitizeHandle(profile.handle),
+                profile.displayName || sanitizeHandle(i18n, profile.handle),
                 moderation.ui('displayName'),
               )}
               <View

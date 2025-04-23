@@ -1,8 +1,8 @@
 import React from 'react'
 import {
   BSKY_LABELER_DID,
-  ModerationCause,
-  ModerationCauseSource,
+  type ModerationCause,
+  type ModerationCauseSource,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -12,10 +12,10 @@ import {useLabelDefinitions} from '#/state/preferences'
 import {useSession} from '#/state/session'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
-import {AppModerationCause} from '#/components/Pills'
+import {type AppModerationCause} from '#/components/Pills'
 import {useGlobalLabelStrings} from './useGlobalLabelStrings'
 import {getDefinition, getLabelStrings} from './useLabelInfo'
 
@@ -133,7 +133,7 @@ export function useModerationCauseDescription(
       const strings = getLabelStrings(i18n.locale, globalLabelStrings, def)
       const labeler = labelers.find(l => l.creator.did === cause.label.src)
       let source = labeler
-        ? sanitizeHandle(labeler.creator.handle, '@')
+        ? sanitizeHandle(i18n, labeler.creator.handle, '@')
         : undefined
       let sourceDisplayName = labeler?.creator.displayName
       if (!source) {
@@ -176,7 +176,7 @@ export function useModerationCauseDescription(
     globalLabelStrings,
     cause,
     _,
-    i18n.locale,
+    i18n,
     currentAccount?.did,
   ])
 }

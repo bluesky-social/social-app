@@ -12,7 +12,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
-import {FeedSourceFeedInfo} from '#/state/queries/feed'
+import {type FeedSourceFeedInfo} from '#/state/queries/feed'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {
   useAddSavedFeedsMutation,
@@ -245,7 +245,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                             t.atoms.text_contrast_medium,
                           ]}
                           numberOfLines={1}>
-                          {sanitizeHandle(info.creatorHandle, '@')}
+                          {sanitizeHandle(i18n, info.creatorHandle, '@')}
                         </Text>
                         <View style={[a.flex_row, a.align_center, {gap: 2}]}>
                           <HeartFilled
@@ -381,7 +381,7 @@ function DialogInner({
   isFeedStateChangePending: boolean
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {hasSession} = useSession()
   const playHaptic = useHaptics()
   const control = Dialog.useDialogContext()
@@ -456,7 +456,7 @@ function DialogInner({
                 ]}
                 numberOfLines={1}
                 onPress={() => control.close()}>
-                {sanitizeHandle(info.creatorHandle, '@')}
+                {sanitizeHandle(i18n, info.creatorHandle, '@')}
               </InlineLinkText>
             </Trans>
           </Text>

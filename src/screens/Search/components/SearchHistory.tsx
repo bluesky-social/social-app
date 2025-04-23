@@ -119,12 +119,12 @@ function RecentProfileItem({
   onPress: () => void
   onRemove: () => void
 }) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const width = 80
 
   const moderation = moderateProfile(profile, moderationOpts)
   const name = sanitizeDisplayName(
-    profile.displayName || sanitizeHandle(profile.handle),
+    profile.displayName || sanitizeHandle(i18n, profile.handle),
     moderation.ui('displayName'),
   )
   const verification = useSimpleVerificationState({profile})
