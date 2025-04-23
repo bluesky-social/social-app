@@ -1,13 +1,13 @@
-import '#/lib/sentry' // must be near top
+import '#/logger/sentry/setup' // must be near top
 import '#/view/icons'
 import './style.css'
 
 import React, {useEffect, useState} from 'react'
-import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import * as Sentry from '@sentry/react-native'
 
 import {QueryProvider} from '#/lib/react-query'
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
@@ -23,6 +23,7 @@ import {
   ensureGeolocationResolved,
   Provider as GeolocationProvider,
 } from '#/state/geolocation'
+import {Provider as HomeBadgeProvider} from '#/state/home-badge'
 import {Provider as InvitesStateProvider} from '#/state/invites'
 import {Provider as LightboxStateProvider} from '#/state/lightbox'
 import {MessagesProvider} from '#/state/messages'
@@ -34,7 +35,7 @@ import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation
 import {Provider as UnreadNotifsProvider} from '#/state/queries/notifications/unread'
 import {
   Provider as SessionProvider,
-  SessionAccount,
+  type SessionAccount,
   useSession,
   useSessionApi,
 } from '#/state/session'
@@ -46,6 +47,7 @@ import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
+import {Provider as TrendingConfigProvider} from '#/state/trending-config'
 import {Provider as ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoWebContext'
 import {Provider as VideoVolumeProvider} from '#/view/com/util/post-embeds/VideoVolumeContext'
 import * as Toast from '#/view/com/util/Toast'
@@ -53,6 +55,7 @@ import {ToastContainer} from '#/view/com/util/Toast.web'
 import {Shell} from '#/view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
+import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
@@ -92,7 +95,7 @@ function InnerApp() {
   useEffect(() => {
     return listenSessionDropped(() => {
       Toast.show(
-        _(msg`Sorry! Your session expired. Please log in again.`),
+        _(msg`Sorry! Your session expired. Please sign in again.`),
         'info',
       )
     })
@@ -102,9 +105,9 @@ function InnerApp() {
   if (!isReady || !hasCheckedReferrer) return null
 
   return (
-    <KeyboardProvider enabled={false}>
-      <Alf theme={theme}>
-        <ThemeProvider theme={theme}>
+    <Alf theme={theme}>
+      <ThemeProvider theme={theme}>
+        <ContextMenuProvider>
           <RootSiblingParent>
             <VideoVolumeProvider>
               <ActiveVideoProvider>
@@ -121,18 +124,24 @@ function InnerApp() {
                               <LoggedOutViewProvider>
                                 <SelectedFeedProvider>
                                   <HiddenRepliesProvider>
-                                    <UnreadNotifsProvider>
-                                      <BackgroundNotificationPreferencesProvider>
-                                        <MutedThreadsProvider>
-                                          <SafeAreaProvider>
-                                            <ProgressGuideProvider>
-                                              <Shell />
-                                              <NuxDialogs />
-                                            </ProgressGuideProvider>
-                                          </SafeAreaProvider>
-                                        </MutedThreadsProvider>
-                                      </BackgroundNotificationPreferencesProvider>
-                                    </UnreadNotifsProvider>
+                                    <HomeBadgeProvider>
+                                      <UnreadNotifsProvider>
+                                        <BackgroundNotificationPreferencesProvider>
+                                          <MutedThreadsProvider>
+                                            <SafeAreaProvider>
+                                              <ProgressGuideProvider>
+                                                <TrendingConfigProvider>
+                                                  <IntentDialogProvider>
+                                                    <Shell />
+                                                    <NuxDialogs />
+                                                  </IntentDialogProvider>
+                                                </TrendingConfigProvider>
+                                              </ProgressGuideProvider>
+                                            </SafeAreaProvider>
+                                          </MutedThreadsProvider>
+                                        </BackgroundNotificationPreferencesProvider>
+                                      </UnreadNotifsProvider>
+                                    </HomeBadgeProvider>
                                   </HiddenRepliesProvider>
                                 </SelectedFeedProvider>
                               </LoggedOutViewProvider>
@@ -147,9 +156,9 @@ function InnerApp() {
               </ActiveVideoProvider>
             </VideoVolumeProvider>
           </RootSiblingParent>
-        </ThemeProvider>
-      </Alf>
-    </KeyboardProvider>
+        </ContextMenuProvider>
+      </ThemeProvider>
+    </Alf>
   )
 }
 
@@ -183,9 +192,7 @@ function App() {
                       <LightboxStateProvider>
                         <PortalProvider>
                           <StarterPackProvider>
-                            <IntentDialogProvider>
-                              <InnerApp />
-                            </IntentDialogProvider>
+                            <InnerApp />
                           </StarterPackProvider>
                         </PortalProvider>
                       </LightboxStateProvider>
@@ -201,4 +208,4 @@ function App() {
   )
 }
 
-export default App
+export default Sentry.wrap(App)

@@ -31,6 +31,7 @@ export type ButtonType =
 // Augment type for react-native-web (see https://github.com/necolas/react-native-web/issues/1684#issuecomment-766451866)
 declare module 'react-native' {
   interface PressableStateCallbackType {
+    // @ts-ignore web only
     hovered?: boolean
     focused?: boolean
   }

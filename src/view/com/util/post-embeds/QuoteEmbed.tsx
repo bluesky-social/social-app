@@ -14,6 +14,7 @@ import {
   AppBskyEmbedVideo,
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  moderatePost,
   ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -26,7 +27,6 @@ import {useQueryClient} from '@tanstack/react-query'
 import {HITSLOP_20} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {InfoCircleIcon} from '#/lib/icons'
-import {moderatePost_wrapped} from '#/lib/moderatePost_wrapped'
 import {makeProfileLink} from '#/lib/routes/links'
 import {s} from '#/lib/styles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -36,6 +36,7 @@ import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
+import * as bsky from '#/types/bsky'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
 import {PostAlerts} from '../../../../components/moderation/PostAlerts'
 import {Link} from '../Link'
@@ -134,9 +135,7 @@ function QuoteEmbedModerated({
     [viewRecord],
   )
   const moderation = React.useMemo(() => {
-    return moderationOpts
-      ? moderatePost_wrapped(postView, moderationOpts)
-      : undefined
+    return moderationOpts ? moderatePost(postView, moderationOpts) : undefined
   }, [postView, moderationOpts])
 
   return (
@@ -173,10 +172,14 @@ export function QuoteEmbed({
   const itemTitle = `Post by ${quote.author.handle}`
 
   const richText = React.useMemo(() => {
-    const text = AppBskyFeedPost.isRecord(quote.record) ? quote.record.text : ''
-    const facets = AppBskyFeedPost.isRecord(quote.record)
-      ? quote.record.facets
-      : undefined
+    if (
+      !bsky.dangerousIsType<AppBskyFeedPost.Record>(
+        quote.record,
+        AppBskyFeedPost.isRecord,
+      )
+    )
+      return undefined
+    const {text, facets} = quote.record
     return text.trim()
       ? new RichTextAPI({text: text, facets: facets})
       : undefined
@@ -295,10 +298,14 @@ export function QuoteX({onRemove}: {onRemove: () => void}) {
 
 export function LazyQuoteEmbed({uri}: {uri: string}) {
   const {data} = useResolveLinkQuery(uri)
+  const moderationOpts = useModerationOpts()
   if (!data || data.type !== 'record' || data.kind !== 'post') {
     return null
   }
-  return <QuoteEmbed quote={data.view} />
+  const moderation = moderationOpts
+    ? moderatePost(data.view, moderationOpts)
+    : undefined
+  return <QuoteEmbed quote={data.view} moderation={moderation} />
 }
 
 function viewRecordToPostView(

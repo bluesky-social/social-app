@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import {useCallback} from 'react'
 import * as MediaLibrary from 'expo-media-library'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'

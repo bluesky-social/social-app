@@ -35,12 +35,12 @@ export function NewMessagesPill({
 
   const onPressIn = React.useCallback(() => {
     if (isWeb) return
-    scale.value = withTiming(1.075, {duration: 100})
+    scale.set(() => withTiming(1.075, {duration: 100}))
   }, [scale])
 
   const onPressOut = React.useCallback(() => {
     if (isWeb) return
-    scale.value = withTiming(1, {duration: 100})
+    scale.set(() => withTiming(1, {duration: 100}))
   }, [scale])
 
   const onPress = React.useCallback(() => {
@@ -49,7 +49,7 @@ export function NewMessagesPill({
   }, [onPressInner, playHaptic])
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{scale: scale.value}],
+    transform: [{scale: scale.get()}],
   }))
 
   return (

@@ -13,11 +13,14 @@ export const router = new Router({
   ModerationModlists: '/moderation/modlists',
   ModerationMutedAccounts: '/moderation/muted-accounts',
   ModerationBlockedAccounts: '/moderation/blocked-accounts',
+  ModerationInteractionSettings: '/moderation/interaction-settings',
+  ModerationVerificationSettings: '/moderation/verification-settings',
   // profiles, threads, lists
   Profile: ['/profile/:name', '/profile/:name/rss'],
   ProfileFollowers: '/profile/:name/followers',
   ProfileFollows: '/profile/:name/follows',
   ProfileKnownFollowers: '/profile/:name/known-followers',
+  ProfileSearch: '/profile/:name/search',
   ProfileList: '/profile/:name/lists/:rkey',
   PostThread: '/profile/:name/post/:rkey',
   PostLikedBy: '/profile/:name/post/:rkey/liked-by',
@@ -43,7 +46,9 @@ export const router = new Router({
   AccountSettings: '/settings/account',
   PrivacyAndSecuritySettings: '/settings/privacy-and-security',
   ContentAndMediaSettings: '/settings/content-and-media',
+  SettingsInterests: '/settings/interests',
   AboutSettings: '/settings/about',
+  AppIconSettings: '/settings/app-icon',
   // support
   Support: '/support',
   PrivacyPolicy: '/support/privacy',
@@ -52,9 +57,11 @@ export const router = new Router({
   CopyrightPolicy: '/support/copyright',
   // hashtags
   Hashtag: '/hashtag/:tag',
+  Topic: '/topic/:topic',
   // DMs
   Messages: '/messages',
   MessagesSettings: '/messages/settings',
+  MessagesInbox: '/messages/inbox',
   MessagesConversation: '/messages/:conversation',
   // starter packs
   Start: '/start/:name/:rkey',
@@ -62,4 +69,5 @@ export const router = new Router({
   StarterPack: '/starter-pack/:name/:rkey',
   StarterPackShort: '/starter-pack-short/:code',
   StarterPackWizard: '/starter-pack/create',
+  VideoFeed: '/video-feed',
 })

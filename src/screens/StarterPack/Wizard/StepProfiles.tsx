@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 import {ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
@@ -16,6 +16,7 @@ import {Loader} from '#/components/Loader'
 import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
 import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
   return item?.did ?? ''
@@ -50,7 +51,7 @@ export function StepProfiles({
 
   const renderItem = ({
     item,
-  }: ListRenderItemInfo<AppBskyActorDefs.ProfileViewBasic>) => {
+  }: ListRenderItemInfo<bsky.profile.AnyProfileView>) => {
     return (
       <WizardProfileCard
         profile={item}
@@ -86,6 +87,7 @@ export function StepProfiles({
           !query && !screenReaderEnabled ? () => fetchNextPage() : undefined
         }
         onEndReachedThreshold={isNative ? 2 : 0.25}
+        keyboardDismissMode="on-drag"
         ListEmptyComponent={
           <View style={[a.flex_1, a.align_center, a.mt_lg, a.px_lg]}>
             {isLoading ? (

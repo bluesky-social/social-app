@@ -3,6 +3,7 @@ import {Pressable, StyleSheet, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import Graphemer from 'graphemer'
+import {flushSync} from 'react-dom'
 import TextareaAutosize from 'react-textarea-autosize'
 
 import {isSafari, isTouchDevice} from '#/lib/browser'
@@ -38,7 +39,7 @@ export function MessageInput({
   children?: React.ReactNode
   openEmojiPicker?: (pos: EmojiPickerPosition) => void
 }) {
-  const {isTabletOrDesktop} = useWebMediaQueries()
+  const {isMobile} = useWebMediaQueries()
   const {_} = useLingui()
   const t = useTheme()
   const {getDraft, clearDraft} = useMessageDraft()
@@ -106,11 +107,19 @@ export function MessageInput({
 
   const onEmojiInserted = React.useCallback(
     (emoji: Emoji) => {
-      const position = textAreaRef.current?.selectionStart ?? 0
-      setMessage(
-        message =>
-          message.slice(0, position) + emoji.native + message.slice(position),
-      )
+      if (!textAreaRef.current) {
+        return
+      }
+      const position = textAreaRef.current.selectionStart ?? 0
+      textAreaRef.current.focus()
+      flushSync(() => {
+        setMessage(
+          message =>
+            message.slice(0, position) + emoji.native + message.slice(position),
+        )
+      })
+      textAreaRef.current.selectionStart = position + emoji.native.length
+      textAreaRef.current.selectionEnd = position + emoji.native.length
     },
     [setMessage],
   )
@@ -148,7 +157,14 @@ export function MessageInput({
         <Button
           onPress={e => {
             e.currentTarget.measure((_fx, _fy, _width, _height, px, py) => {
-              openEmojiPicker?.({top: py, left: px, right: px, bottom: py})
+              openEmojiPicker?.({
+                top: py,
+                left: px,
+                right: px,
+                bottom: py,
+                nextFocusRef:
+                  textAreaRef as unknown as React.MutableRefObject<HTMLElement>,
+              })
             })
           }}
           style={[
@@ -212,7 +228,7 @@ export function MessageInput({
           onChange={onChange}
           // On mobile web phones, we want to keep the same behavior as the native app. Do not submit the message
           // in these cases.
-          onKeyDown={isTouchDevice && isTabletOrDesktop ? undefined : onKeyDown}
+          onKeyDown={isTouchDevice && isMobile ? undefined : onKeyDown}
         />
         <Pressable
           accessibilityRole="button"

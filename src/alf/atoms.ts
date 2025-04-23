@@ -1,7 +1,13 @@
-import {Platform, StyleProp, StyleSheet, ViewStyle} from 'react-native'
+import {
+  Platform,
+  type StyleProp,
+  StyleSheet,
+  type ViewStyle,
+} from 'react-native'
 
 import * as tokens from '#/alf/tokens'
-import {native, web} from '#/alf/util/platform'
+import {ios, native, platform, web} from '#/alf/util/platform'
+import * as Layout from '#/components/Layout'
 
 export const atoms = {
   debug: {
@@ -21,11 +27,26 @@ export const atoms = {
   relative: {
     position: 'relative',
   },
+  sticky: web({
+    position: 'sticky',
+  }),
   inset_0: {
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
+  },
+  top_0: {
+    top: 0,
+  },
+  right_0: {
+    right: 0,
+  },
+  bottom_0: {
+    bottom: 0,
+  },
+  left_0: {
+    left: 0,
   },
   z_10: {
     zIndex: 10,
@@ -46,9 +67,15 @@ export const atoms = {
   overflow_hidden: {
     overflow: 'hidden',
   },
+  /**
+   * @platform web
+   */
+  overflow_auto: web({
+    overflow: 'auto',
+  }),
 
   /*
-   * Width
+   * Width & Height
    */
   w_full: {
     width: '100%',
@@ -59,6 +86,12 @@ export const atoms = {
   h_full_vh: web({
     height: '100vh',
   }),
+  max_w_full: {
+    maxWidth: '100%',
+  },
+  max_h_full: {
+    maxHeight: '100%',
+  },
 
   /**
    * Used for the outermost components on screens, to ensure that they can fill
@@ -71,7 +104,7 @@ export const atoms = {
     native({
       height: '100%',
     }),
-  ] as ViewStyle,
+  ] as StyleProp<ViewStyle>,
 
   /*
    * Theme-independent bg colors
@@ -83,6 +116,9 @@ export const atoms = {
   /*
    * Border radius
    */
+  rounded_0: {
+    borderRadius: 0,
+  },
   rounded_2xs: {
     borderRadius: tokens.borderRadius._2xs,
   },
@@ -94,6 +130,9 @@ export const atoms = {
   },
   rounded_md: {
     borderRadius: tokens.borderRadius.md,
+  },
+  rounded_lg: {
+    borderRadius: tokens.borderRadius.lg,
   },
   rounded_full: {
     borderRadius: tokens.borderRadius.full,
@@ -152,6 +191,9 @@ export const atoms = {
   },
   flex_wrap: {
     flexWrap: 'wrap',
+  },
+  flex_nowrap: {
+    flexWrap: 'nowrap',
   },
   flex_0: {
     flex: web('0 0 auto') || (native(0) as number),
@@ -297,6 +339,18 @@ export const atoms = {
   border_0: {
     borderWidth: 0,
   },
+  border_t_0: {
+    borderTopWidth: 0,
+  },
+  border_b_0: {
+    borderBottomWidth: 0,
+  },
+  border_l_0: {
+    borderLeftWidth: 0,
+  },
+  border_r_0: {
+    borderRightWidth: 0,
+  },
   border: {
     borderWidth: StyleSheet.hairlineWidth,
   },
@@ -312,6 +366,15 @@ export const atoms = {
   border_r: {
     borderRightWidth: StyleSheet.hairlineWidth,
   },
+  border_transparent: {
+    borderColor: 'transparent',
+  },
+  curve_circular: ios({
+    borderCurve: 'circular',
+  }),
+  curve_continuous: ios({
+    borderCurve: 'continuous',
+  }),
 
   /*
    * Shadow
@@ -935,4 +998,51 @@ export const atoms = {
     transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
     transitionDuration: '100ms',
   }),
+  transition_delay_50ms: web({
+    transitionDelay: '50ms',
+  }),
+
+  /*
+   * Animaations
+   */
+  fade_in: web({
+    animation: 'fadeIn ease-out 0.15s',
+  }),
+  fade_out: web({
+    animation: 'fadeOut ease-out 0.15s',
+  }),
+  zoom_in: web({
+    animation: 'zoomIn ease-out 0.1s',
+  }),
+  zoom_out: web({
+    animation: 'zoomOut ease-out 0.1s',
+  }),
+  slide_in_left: web({
+    // exponential easing function
+    animation: 'slideInLeft cubic-bezier(0.16, 1, 0.3, 1) 0.5s',
+  }),
+  slide_out_left: web({
+    animation: 'slideOutLeft ease-in 0.15s',
+    animationFillMode: 'forwards',
+  }),
+  // special composite animation for dialogs
+  zoom_fade_in: web({
+    animation: 'zoomIn ease-out 0.1s, fadeIn ease-out 0.1s',
+  }),
+
+  /**
+   * {@link Layout.SCROLLBAR_OFFSET}
+   */
+  scrollbar_offset: platform({
+    web: {
+      transform: [
+        {
+          translateX: Layout.SCROLLBAR_OFFSET,
+        },
+      ],
+    },
+    native: {
+      transform: [],
+    },
+  }) as {transform: Exclude<ViewStyle['transform'], string | undefined>},
 } as const

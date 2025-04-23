@@ -134,11 +134,21 @@ let ProfileHeaderLabeler = ({
   const onPressSubscribe = React.useCallback(
     () =>
       requireAuth(async (): Promise<void> => {
+        const subscribe = !isSubscribed
+
         try {
           await toggleSubscription({
             did: profile.did,
-            subscribe: !isSubscribed,
+            subscribe,
           })
+
+          logger.metric(
+            subscribe
+              ? 'moderation:subscribedToLabeler'
+              : 'moderation:unsubscribedFromLabeler',
+            {},
+            {statsig: true},
+          )
         } catch (e: any) {
           reset()
           if (e.message === 'MAX_LABELERS') {
@@ -272,7 +282,7 @@ let ProfileHeaderLabeler = ({
                   color="secondary"
                   variant="solid"
                   shape="round"
-                  label={_(msg`Like this feed`)}
+                  label={_(msg`Like this labeler`)}
                   disabled={!hasSession || isLikePending || isUnlikePending}
                   onPress={onToggleLiked}>
                   {likeUri ? (
@@ -291,10 +301,12 @@ let ProfileHeaderLabeler = ({
                       },
                     }}
                     size="tiny"
-                    label={plural(likeCount, {
-                      one: 'Liked by # user',
-                      other: 'Liked by # users',
-                    })}>
+                    label={_(
+                      msg`Liked by ${plural(likeCount, {
+                        one: '# user',
+                        other: '# users',
+                      })}`,
+                    )}>
                     {({hovered, focused, pressed}) => (
                       <Text
                         style={[
@@ -304,11 +316,14 @@ let ProfileHeaderLabeler = ({
                           (hovered || focused || pressed) &&
                             t.atoms.text_contrast_high,
                         ]}>
-                        <Plural
-                          value={likeCount}
-                          one="Liked by # user"
-                          other="Liked by # users"
-                        />
+                        <Trans>
+                          Liked by{' '}
+                          <Plural
+                            value={likeCount}
+                            one="# user"
+                            other="# users"
+                          />
+                        </Trans>
                       </Text>
                     )}
                   </Link>

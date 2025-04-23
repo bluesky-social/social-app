@@ -23,9 +23,10 @@ appId: xyz.blueskyweb.app
     id: "editDescriptionInput"
 - inputText: "They good"
 - tapOn: "Save"
+- tapOn: "Save"
 - assertNotVisible:
     id: "createOrEditListModal"
-- tapOn: "About"
+- tapOn: "People"
 - assertVisible: "Good Ppl"
 - assertVisible: "They good"
 
@@ -45,6 +46,7 @@ appId: xyz.blueskyweb.app
 - eraseText
 - inputText: "They bad"
 - tapOn: "Save"
+- tapOn: "Save"
 - assertNotVisible:
     id: "createOrEditListModal"
 - assertVisible: Bad Ppl
@@ -60,6 +62,7 @@ appId: xyz.blueskyweb.app
     id: "editDescriptionInput"
 - eraseText
 - tapOn: "Save"
+- tapOn: "Save"
 - assertNotVisible:
     id: "createOrEditListModal"
 - assertNotVisible:
@@ -71,7 +74,6 @@ appId: xyz.blueskyweb.app
 - tapOn: "Delete List"
 - tapOn:
     id: "confirmBtn"
-- assertVisible: "This list is empty!"
 
 - tapOn:
     label: "Create a new curatelist"
@@ -87,16 +89,15 @@ appId: xyz.blueskyweb.app
     id: "editDescriptionInput"
 - inputText: "They good"
 - tapOn: "Save"
+- tapOn: "Save"
 - assertNotVisible:
     id: "createOrEditListModal"
-- tapOn: "About"
+- tapOn: "People"
 - assertVisible: "Good Ppl"
 - assertVisible: "They good"
-- tapOn: "About"
+- tapOn: "People"
 
-- tapOn:
-    label: "Adds users on curatelists from the list"
-    id: "addUserBtn"
+- tapOn: "Start adding people"
 - assertVisible:
     id: "listAddUserModal"
 - tapOn:
@@ -141,7 +142,7 @@ appId: xyz.blueskyweb.app
     id: "e2eGotoLists"
 - tapOn: "Good Ppl"
 
-- tapOn: "About"
+- tapOn: "People"
 - assertVisible:
     label: "Removes users on curatelists from the list"
     id: "user-bob.test"
@@ -159,7 +160,7 @@ appId: xyz.blueskyweb.app
 - tapOn:
     label: "Adds and removes users on curatelists from the profile"
     id: "bottomBarSearchBtn"
-- tapOn: "Search"
+- tapOn: "Search for posts, users, or feeds"
 - inputText: "bob"
 - tapOn:
     id: "searchAutoCompleteResult-bob.test"

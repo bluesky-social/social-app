@@ -1,4 +1,4 @@
-import React, {ComponentProps} from 'react'
+import {ComponentProps} from 'react'
 import {StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'

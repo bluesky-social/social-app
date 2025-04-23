@@ -1,4 +1,3 @@
-import React from 'react'
 import {Keyboard, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -114,9 +113,8 @@ function DialogInner({
           </Text>
           <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
             <Trans>
-              Choose self-labels that are applicable for the media you are
-              posting. If none are selected, this post is suitable for all
-              audiences.
+              Please add any content warning labels that are applicable for the
+              media you are posting.
             </Trans>
           </Text>
         </View>
@@ -158,22 +156,26 @@ function DialogInner({
                   <Toggle.Item name="porn" label={_(msg`Porn`)}>
                     <Toggle.Checkbox />
                     <Toggle.LabelText>
-                      <Trans>Porn</Trans>
+                      <Trans>Adult</Trans>
                     </Toggle.LabelText>
                   </Toggle.Item>
                 </View>
               </Toggle.Group>
-              <Text style={[a.mt_sm, t.atoms.text_contrast_medium]}>
-                {labels.includes('sexual') ? (
-                  <Trans>Pictures meant for adults.</Trans>
-                ) : labels.includes('nudity') ? (
-                  <Trans>Artistic or non-erotic nudity.</Trans>
-                ) : labels.includes('porn') ? (
-                  <Trans>Sexual activity or erotic nudity.</Trans>
-                ) : (
-                  <Trans>Does not contain adult content.</Trans>
-                )}
-              </Text>
+              {labels.includes('sexual') ||
+              labels.includes('nudity') ||
+              labels.includes('porn') ? (
+                <Text style={[a.mt_sm, t.atoms.text_contrast_medium]}>
+                  {labels.includes('sexual') ? (
+                    <Trans>Pictures meant for adults.</Trans>
+                  ) : labels.includes('nudity') ? (
+                    <Trans>Artistic or non-erotic nudity.</Trans>
+                  ) : labels.includes('porn') ? (
+                    <Trans>Sexual activity or erotic nudity.</Trans>
+                  ) : (
+                    ''
+                  )}
+                </Text>
+              ) : null}
             </View>
           </View>
           <View>
@@ -203,16 +205,14 @@ function DialogInner({
                   </Toggle.LabelText>
                 </Toggle.Item>
               </Toggle.Group>
-              <Text style={[a.mt_sm, t.atoms.text_contrast_medium]}>
-                {labels.includes('graphic-media') ? (
+              {labels.includes('graphic-media') ? (
+                <Text style={[a.mt_sm, t.atoms.text_contrast_medium]}>
                   <Trans>
                     Media that may be disturbing or inappropriate for some
                     audiences.
                   </Trans>
-                ) : (
-                  <Trans>Does not contain graphic or disturbing content.</Trans>
-                )}
-              </Text>
+                </Text>
+              ) : null}
             </View>
           </View>
         </View>

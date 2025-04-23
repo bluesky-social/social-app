@@ -1,18 +1,18 @@
 import React, {useRef} from 'react'
-import {View} from 'react-native'
+import {type TextInput, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
 import type tldts from 'tldts'
 
-import {logEvent} from '#/lib/statsig/statsig'
 import {isEmailMaybeInvalid} from '#/lib/strings/email'
 import {logger} from '#/logger'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {is13, is18, useSignupContext} from '#/screens/Signup/state'
 import {Policies} from '#/screens/Signup/StepInfo/Policies'
-import {atoms as a} from '#/alf'
+import {atoms as a, native} from '#/alf'
 import * as DateField from '#/components/forms/DateField'
+import {type DateFieldRef} from '#/components/forms/DateField/types'
 import {FormError} from '#/components/forms/FormError'
 import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
@@ -51,6 +51,10 @@ export function StepInfo({
   const prevEmailValueRef = useRef<string>(state.email)
   const passwordValueRef = useRef<string>(state.password)
 
+  const emailInputRef = useRef<TextInput>(null)
+  const passwordInputRef = useRef<TextInput>(null)
+  const birthdateInputRef = useRef<DateFieldRef>(null)
+
   const [hasWarnedEmail, setHasWarnedEmail] = React.useState<boolean>(false)
 
   const tldtsRef = React.useRef<typeof tldts>()
@@ -70,22 +74,6 @@ export function StepInfo({
     const emailChanged = prevEmailValueRef.current !== email
     const password = passwordValueRef.current
 
-    if (emailChanged && tldtsRef.current) {
-      if (isEmailMaybeInvalid(email, tldtsRef.current)) {
-        prevEmailValueRef.current = email
-        setHasWarnedEmail(true)
-        return dispatch({
-          type: 'setError',
-          value: _(
-            msg`It looks like you may have entered your email address incorrectly. Are you sure it's right?`,
-          ),
-        })
-      }
-    } else if (hasWarnedEmail) {
-      setHasWarnedEmail(false)
-    }
-    prevEmailValueRef.current = email
-
     if (!is13(state.dateOfBirth)) {
       return
     }
@@ -94,24 +82,50 @@ export function StepInfo({
       return dispatch({
         type: 'setError',
         value: _(msg`Please enter your invite code.`),
+        field: 'invite-code',
       })
     }
     if (!email) {
       return dispatch({
         type: 'setError',
         value: _(msg`Please enter your email.`),
+        field: 'email',
       })
     }
     if (!EmailValidator.validate(email)) {
       return dispatch({
         type: 'setError',
         value: _(msg`Your email appears to be invalid.`),
+        field: 'email',
       })
     }
+    if (emailChanged && tldtsRef.current) {
+      if (isEmailMaybeInvalid(email, tldtsRef.current)) {
+        prevEmailValueRef.current = email
+        setHasWarnedEmail(true)
+        return dispatch({
+          type: 'setError',
+          value: _(
+            msg`Please double-check that you have entered your email address correctly.`,
+          ),
+        })
+      }
+    } else if (hasWarnedEmail) {
+      setHasWarnedEmail(false)
+    }
+    prevEmailValueRef.current = email
     if (!password) {
       return dispatch({
         type: 'setError',
         value: _(msg`Please choose your password.`),
+        field: 'password',
+      })
+    }
+    if (password.length < 8) {
+      return dispatch({
+        type: 'setError',
+        value: _(msg`Your password must be at least 8 characters long.`),
+        field: 'password',
       })
     }
 
@@ -119,26 +133,24 @@ export function StepInfo({
     dispatch({type: 'setEmail', value: email})
     dispatch({type: 'setPassword', value: password})
     dispatch({type: 'next'})
-    logEvent('signup:nextPressed', {
-      activeStep: state.activeStep,
-    })
+    logger.metric(
+      'signup:nextPressed',
+      {
+        activeStep: state.activeStep,
+      },
+      {statsig: true},
+    )
   }
 
   return (
     <ScreenTransition>
       <View style={[a.gap_md]}>
         <FormError error={state.error} />
-        <View>
-          <TextField.LabelText>
-            <Trans>Hosting provider</Trans>
-          </TextField.LabelText>
-          <HostingProvider
-            serviceUrl={state.serviceUrl}
-            onSelectServiceUrl={v =>
-              dispatch({type: 'setServiceUrl', value: v})
-            }
-          />
-        </View>
+        <HostingProvider
+          minimal
+          serviceUrl={state.serviceUrl}
+          onSelectServiceUrl={v => dispatch({type: 'setServiceUrl', value: v})}
+        />
         {state.isLoading || isLoadingStarterPack ? (
           <View style={[a.align_center]}>
             <Loader size="xl" />
@@ -150,17 +162,28 @@ export function StepInfo({
                 <TextField.LabelText>
                   <Trans>Invite code</Trans>
                 </TextField.LabelText>
-                <TextField.Root>
+                <TextField.Root isInvalid={state.errorField === 'invite-code'}>
                   <TextField.Icon icon={Ticket} />
                   <TextField.Input
                     onChangeText={value => {
                       inviteCodeValueRef.current = value.trim()
+                      if (
+                        state.errorField === 'invite-code' &&
+                        value.trim().length > 0
+                      ) {
+                        dispatch({type: 'clearError'})
+                      }
                     }}
                     label={_(msg`Required for this provider`)}
                     defaultValue={state.inviteCode}
                     autoCapitalize="none"
                     autoComplete="email"
                     keyboardType="email-address"
+                    returnKeyType="next"
+                    submitBehavior={native('submit')}
+                    onSubmitEditing={native(() =>
+                      emailInputRef.current?.focus(),
+                    )}
                   />
                 </TextField.Root>
               </View>
@@ -169,14 +192,22 @@ export function StepInfo({
               <TextField.LabelText>
                 <Trans>Email</Trans>
               </TextField.LabelText>
-              <TextField.Root>
+              <TextField.Root isInvalid={state.errorField === 'email'}>
                 <TextField.Icon icon={Envelope} />
                 <TextField.Input
                   testID="emailInput"
+                  inputRef={emailInputRef}
                   onChangeText={value => {
                     emailValueRef.current = value.trim()
                     if (hasWarnedEmail) {
                       setHasWarnedEmail(false)
+                    }
+                    if (
+                      state.errorField === 'email' &&
+                      value.trim().length > 0 &&
+                      EmailValidator.validate(value.trim())
+                    ) {
+                      dispatch({type: 'clearError'})
                     }
                   }}
                   label={_(msg`Enter your email address`)}
@@ -184,6 +215,11 @@ export function StepInfo({
                   autoCapitalize="none"
                   autoComplete="email"
                   keyboardType="email-address"
+                  returnKeyType="next"
+                  submitBehavior={native('submit')}
+                  onSubmitEditing={native(() =>
+                    passwordInputRef.current?.focus(),
+                  )}
                 />
               </TextField.Root>
             </View>
@@ -191,18 +227,28 @@ export function StepInfo({
               <TextField.LabelText>
                 <Trans>Password</Trans>
               </TextField.LabelText>
-              <TextField.Root>
+              <TextField.Root isInvalid={state.errorField === 'password'}>
                 <TextField.Icon icon={Lock} />
                 <TextField.Input
                   testID="passwordInput"
+                  inputRef={passwordInputRef}
                   onChangeText={value => {
                     passwordValueRef.current = value
+                    if (state.errorField === 'password' && value.length >= 8) {
+                      dispatch({type: 'clearError'})
+                    }
                   }}
                   label={_(msg`Choose your password`)}
                   defaultValue={state.password}
                   secureTextEntry
                   autoComplete="new-password"
                   autoCapitalize="none"
+                  returnKeyType="next"
+                  submitBehavior={native('blurAndSubmit')}
+                  onSubmitEditing={native(() =>
+                    birthdateInputRef.current?.focus(),
+                  )}
+                  passwordRules="minlength: 8;"
                 />
               </TextField.Root>
             </View>
@@ -212,7 +258,8 @@ export function StepInfo({
               </DateField.LabelText>
               <DateField.DateField
                 testID="date"
-                value={DateField.utils.toSimpleDateString(state.dateOfBirth)}
+                inputRef={birthdateInputRef}
+                value={state.dateOfBirth}
                 onChangeDate={date => {
                   dispatch({
                     type: 'setDateOfBirth',
@@ -221,6 +268,7 @@ export function StepInfo({
                 }}
                 label={_(msg`Date of birth`)}
                 accessibilityHint={_(msg`Select your date of birth`)}
+                maximumDate={new Date()}
               />
             </View>
             <Policies

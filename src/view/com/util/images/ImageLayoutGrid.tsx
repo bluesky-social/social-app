@@ -1,8 +1,8 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {AnimatedRef, useAnimatedRef} from 'react-native-reanimated'
 import {AppBskyEmbedImages} from '@atproto/api'
 
+import {HandleRef, useHandleRef} from '#/lib/hooks/useHandleRef'
 import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Dimensions} from '../../lightbox/ImageViewing/@types'
@@ -12,7 +12,7 @@ interface ImageLayoutGridProps {
   images: AppBskyEmbedImages.ViewImage[]
   onPress?: (
     index: number,
-    containerRefs: AnimatedRef<React.Component<{}, {}, any>>[],
+    containerRefs: HandleRef[],
     fetchedDims: (Dimensions | null)[],
   ) => void
   onLongPress?: (index: number) => void
@@ -43,7 +43,7 @@ interface ImageLayoutGridInnerProps {
   images: AppBskyEmbedImages.ViewImage[]
   onPress?: (
     index: number,
-    containerRefs: AnimatedRef<React.Component<{}, {}, any>>[],
+    containerRefs: HandleRef[],
     fetchedDims: (Dimensions | null)[],
   ) => void
   onLongPress?: (index: number) => void
@@ -56,10 +56,10 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
   const gap = props.gap
   const count = props.images.length
 
-  const containerRef1 = useAnimatedRef()
-  const containerRef2 = useAnimatedRef()
-  const containerRef3 = useAnimatedRef()
-  const containerRef4 = useAnimatedRef()
+  const containerRef1 = useHandleRef()
+  const containerRef2 = useHandleRef()
+  const containerRef3 = useHandleRef()
+  const containerRef4 = useHandleRef()
   const thumbDimsRef = React.useRef<(Dimensions | null)[]>([])
 
   switch (count) {

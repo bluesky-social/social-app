@@ -1,10 +1,10 @@
 import React from 'react'
 import {
   findNodeHandle,
-  ListRenderItemInfo,
-  StyleProp,
+  type ListRenderItemInfo,
+  type StyleProp,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -15,12 +15,13 @@ import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {RQKEY, useProfileListsQuery} from '#/state/queries/profile-lists'
 import {EmptyState} from '#/view/com/util/EmptyState'
+import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
+import {List, type ListRef} from '#/view/com/util/List'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {atoms as a, ios, useTheme} from '#/alf'
 import * as ListCard from '#/components/ListCard'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {List, ListRef} from '../util/List'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
+import {ListFooter} from '#/components/Lists'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -52,22 +53,22 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
     const opts = React.useMemo(() => ({enabled}), [enabled])
     const {
       data,
-      isFetching,
-      isFetched,
+      isPending,
       hasNextPage,
       fetchNextPage,
+      isFetchingNextPage,
       isError,
       error,
       refetch,
     } = useProfileListsQuery(did, opts)
-    const isEmpty = !isFetching && !data?.pages[0]?.lists.length
+    const isEmpty = !isPending && !data?.pages[0]?.lists.length
 
     const items = React.useMemo(() => {
       let items: any[] = []
       if (isError && isEmpty) {
         items = items.concat([ERROR_ITEM])
       }
-      if (!isFetched && isFetching) {
+      if (isPending) {
         items = items.concat([LOADING])
       } else if (isEmpty) {
         items = items.concat([EMPTY])
@@ -80,7 +81,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
         items = items.concat([LOAD_MORE_ERROR_ITEM])
       }
       return items
-    }, [isError, isEmpty, isFetched, isFetching, data])
+    }, [isError, isEmpty, isPending, data])
 
     // events
     // =
@@ -110,13 +111,13 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
     }, [refetch, setIsPTRing])
 
     const onEndReached = React.useCallback(async () => {
-      if (isFetching || !hasNextPage || isError) return
+      if (isFetchingNextPage || !hasNextPage || isError) return
       try {
         await fetchNextPage()
       } catch (err) {
         logger.error('Failed to load more lists', {message: err})
       }
-    }, [isFetching, hasNextPage, isError, fetchNextPage])
+    }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
     const onPressRetryLoadMore = React.useCallback(() => {
       fetchNextPage()
@@ -176,24 +177,32 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       }
     }, [enabled, scrollElRef, setScrollViewTag])
 
+    const ProfileListsFooter = React.useCallback(() => {
+      return (
+        <ListFooter
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          onRetry={fetchNextPage}
+          error={cleanError(error)}
+          height={180 + headerOffset}
+        />
+      )
+    }, [hasNextPage, error, isFetchingNextPage, headerOffset, fetchNextPage])
+
     return (
       <View testID={testID} style={style}>
         <List
           testID={testID ? `${testID}-flatlist` : undefined}
           ref={scrollElRef}
           data={items}
-          keyExtractor={(item: any) => item._reactKey || item.uri}
+          keyExtractor={keyExtractor}
           renderItem={renderItemInner}
+          ListFooterComponent={ProfileListsFooter}
           refreshing={isPTRing}
           onRefresh={onRefresh}
           headerOffset={headerOffset}
           progressViewOffset={ios(0)}
-          contentContainerStyle={
-            isNative && {paddingBottom: headerOffset + 100}
-          }
-          indicatorStyle={t.name === 'light' ? 'black' : 'white'}
           removeClippedSubviews={true}
-          // @ts-ignore our .web version only -prf
           desktopFixedHeight
           onEndReached={onEndReached}
         />
@@ -201,3 +210,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
     )
   },
 )
+
+function keyExtractor(item: any) {
+  return item._reactKey || item.uri
+}

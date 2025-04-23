@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 
+import {isSafari} from '#/lib/browser'
 import {useVideoVolumeState} from '../../VideoVolumeContext'
 
 export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
@@ -37,6 +38,12 @@ export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
     const handleTimeUpdate = () => {
       if (!ref.current) return
       setCurrentTime(round(ref.current.currentTime) || 0)
+      // HACK: Safari randomly fires `stalled` events when changing between segments
+      // let's just clear the buffering state if the video is still progressing -sfn
+      if (isSafari) {
+        if (bufferingTimeout) clearTimeout(bufferingTimeout)
+        setBuffering(false)
+      }
     }
 
     const handleDurationChange = () => {
@@ -61,14 +68,22 @@ export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
       setError(true)
     }
 
-    const handleCanPlay = () => {
+    const handleCanPlay = async () => {
       if (bufferingTimeout) clearTimeout(bufferingTimeout)
       setBuffering(false)
       setCanPlay(true)
 
       if (!ref.current) return
       if (playWhenReadyRef.current) {
-        ref.current.play()
+        try {
+          await ref.current.play()
+        } catch (e: any) {
+          if (
+            !e.message?.includes(`The request is not allowed by the user agent`)
+          ) {
+            throw e
+          }
+        }
         playWhenReadyRef.current = false
       }
     }
@@ -140,9 +155,6 @@ export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
       signal: abortController.signal,
     })
     ref.current.addEventListener('ended', handleEnded, {
-      signal: abortController.signal,
-    })
-    ref.current.addEventListener('volumechange', handleVolumeChange, {
       signal: abortController.signal,
     })
 

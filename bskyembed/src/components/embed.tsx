@@ -9,7 +9,6 @@ import {
   AppBskyGraphDefs,
   AppBskyGraphStarterpack,
   AppBskyLabelerDefs,
-  AtUri,
 } from '@atproto/api'
 import {ComponentChildren, h} from 'preact'
 import {useMemo} from 'preact/hooks'
@@ -79,9 +78,9 @@ export function Embed({
         return (
           <Link
             href={`/profile/${record.author.did}/post/${getRkey(record)}`}
-            className="transition-colors hover:bg-neutral-100 border rounded-lg p-2 gap-1.5 w-full flex flex-col">
+            className="transition-colors hover:bg-neutral-100 dark:hover:bg-slate-700 border dark:border-slate-600 rounded-xl p-2 gap-1.5 w-full flex flex-col">
             <div className="flex gap-1.5 items-center">
-              <div className="w-4 h-4 overflow-hidden rounded-full bg-neutral-300 shrink-0">
+              <div className="w-4 h-4 overflow-hidden rounded-full bg-neutral-300 dark:bg-slate-700 shrink-0">
                 <img
                   src={record.author.avatar}
                   style={isAuthorLabeled ? {filter: 'blur(1.5px)'} : undefined}
@@ -89,7 +88,7 @@ export function Embed({
               </div>
               <p className="line-clamp-1 text-sm">
                 <span className="font-bold">{record.author.displayName}</span>
-                <span className="text-textLight ml-1">
+                <span className="text-textLight dark:text-textDimmed ml-1">
                   @{record.author.handle}
                 </span>
               </p>
@@ -208,9 +207,9 @@ export function Embed({
 
 function Info({children}: {children: ComponentChildren}) {
   return (
-    <div className="w-full rounded-lg border py-2 px-2.5 flex-row flex gap-2 bg-neutral-50">
+    <div className="w-full rounded-xl border py-2 px-2.5 flex-row flex gap-2 bg-neutral-50">
       <img src={infoIcon} className="w-4 h-4 shrink-0 mt-0.5" />
-      <p className="text-sm text-textLight">{children}</p>
+      <p className="text-sm text-textLight dark:text-textDimmed">{children}</p>
     </div>
   )
 }
@@ -232,12 +231,12 @@ function ImageEmbed({
         <img
           src={content.images[0].thumb}
           alt={content.images[0].alt}
-          className="w-full rounded-lg overflow-hidden object-cover h-auto max-h-[1000px]"
+          className="w-full rounded-xl overflow-hidden object-cover h-auto max-h-[1000px]"
         />
       )
     case 2:
       return (
-        <div className="flex gap-1 rounded-lg overflow-hidden w-full aspect-[2/1]">
+        <div className="flex gap-1 rounded-xl overflow-hidden w-full aspect-[2/1]">
           {content.images.map((image, i) => (
             <img
               key={i}
@@ -250,19 +249,21 @@ function ImageEmbed({
       )
     case 3:
       return (
-        <div className="flex gap-1 rounded-lg overflow-hidden w-full aspect-[2/1]">
-          <img
-            src={content.images[0].thumb}
-            alt={content.images[0].alt}
-            className="flex-[3] object-cover rounded-sm"
-          />
-          <div className="flex flex-col gap-1 flex-[2]">
+        <div className="flex gap-1 rounded-xl overflow-hidden w-full aspect-[2/1]">
+          <div className="flex-1 aspect-square">
+            <img
+              src={content.images[0].thumb}
+              alt={content.images[0].alt}
+              className="w-full h-full object-cover rounded-sm"
+            />
+          </div>
+          <div className="flex flex-col gap-1 flex-1">
             {content.images.slice(1).map((image, i) => (
               <img
                 key={i}
                 src={image.thumb}
                 alt={image.alt}
-                className="w-full h-full object-cover rounded-sm"
+                className="flex-1 object-cover rounded-sm min-h-0"
               />
             ))}
           </div>
@@ -270,13 +271,13 @@ function ImageEmbed({
       )
     case 4:
       return (
-        <div className="grid grid-cols-2 gap-1 rounded-lg overflow-hidden">
+        <div className="grid grid-cols-2 gap-1 rounded-xl overflow-hidden">
           {content.images.map((image, i) => (
             <img
               key={i}
               src={image.thumb}
               alt={image.alt}
-              className="aspect-square w-full object-cover rounded-sm"
+              className="aspect-[3/2] w-full object-cover rounded-sm"
             />
           ))}
         </div>
@@ -309,7 +310,7 @@ function ExternalEmbed({
   return (
     <Link
       href={content.external.uri}
-      className="w-full rounded-lg overflow-hidden border flex flex-col items-stretch"
+      className="w-full rounded-xl overflow-hidden border dark:border-slate-600 flex flex-col items-stretch"
       disableTracking>
       {content.external.thumb && (
         <img
@@ -318,11 +319,11 @@ function ExternalEmbed({
         />
       )}
       <div className="py-3 px-4">
-        <p className="text-sm text-textLight line-clamp-1">
+        <p className="text-sm text-textLight dark:text-textDimmed line-clamp-1">
           {toNiceDomain(content.external.uri)}
         </p>
         <p className="font-semibold line-clamp-3">{content.external.title}</p>
-        <p className="text-sm text-textLight line-clamp-2 mt-0.5">
+        <p className="text-sm text-textLight dark:text-textDimmed line-clamp-2 mt-0.5">
           {content.external.description}
         </p>
       </div>
@@ -346,23 +347,29 @@ function GenericWithImageEmbed({
   return (
     <Link
       href={href}
-      className="w-full rounded-lg border py-2 px-3 flex flex-col gap-2">
+      className="w-full rounded-xl border dark:border-slate-600 py-2 px-3 flex flex-col gap-2">
       <div className="flex gap-2.5 items-center">
         {image ? (
           <img
             src={image}
             alt={title}
-            className="w-8 h-8 rounded-md bg-neutral-300 shrink-0"
+            className="w-8 h-8 rounded-md bg-neutral-300 dark:bg-slate-700 shrink-0"
           />
         ) : (
           <div className="w-8 h-8 rounded-md bg-brand shrink-0" />
         )}
         <div className="flex-1">
           <p className="font-bold text-sm">{title}</p>
-          <p className="text-textLight text-sm">{subtitle}</p>
+          <p className="text-textLight dark:text-textDimmed text-sm">
+            {subtitle}
+          </p>
         </div>
       </div>
-      {description && <p className="text-textLight text-sm">{description}</p>}
+      {description && (
+        <p className="text-textLight dark:text-textDimmed text-sm">
+          {description}
+        </p>
+      )}
     </Link>
   )
 }
@@ -378,7 +385,7 @@ function VideoEmbed({content}: {content: AppBskyEmbedVideo.View}) {
 
   return (
     <div
-      className="w-full overflow-hidden rounded-lg aspect-square relative"
+      className="w-full overflow-hidden rounded-xl aspect-square relative"
       style={{aspectRatio: `${aspectRatio} / 1`}}>
       <img
         src={content.thumbnail}
@@ -407,7 +414,7 @@ function StarterPackEmbed({
   return (
     <Link
       href={starterPackHref}
-      className="w-full rounded-lg overflow-hidden border flex flex-col items-stretch">
+      className="w-full rounded-xl overflow-hidden border dark:border-slate-600 flex flex-col items-stretch">
       <img src={imageUri} className="aspect-[1.91/1] object-cover" />
       <div className="py-3 px-4">
         <div className="flex space-x-2 items-center">
@@ -416,7 +423,7 @@ function StarterPackEmbed({
             <p className="font-semibold leading-[21px]">
               {content.record.name}
             </p>
-            <p className="text-sm text-textLight line-clamp-2 leading-[18px]">
+            <p className="text-sm text-textLight dark:text-textDimmed line-clamp-2 leading-[18px]">
               Starter pack by{' '}
               {content.creator.displayName || `@${content.creator.handle}`}
             </p>
@@ -426,7 +433,7 @@ function StarterPackEmbed({
           <p className="text-sm mt-1">{content.record.description}</p>
         )}
         {!!content.joinedAllTimeCount && content.joinedAllTimeCount > 50 && (
-          <p className="text-sm font-semibold text-textLight mt-1">
+          <p className="text-sm font-semibold text-textLight dark:text-textDimmed mt-1">
             {content.joinedAllTimeCount} users have joined!
           </p>
         )}
@@ -437,14 +444,14 @@ function StarterPackEmbed({
 
 // from #/lib/strings/starter-pack.ts
 function getStarterPackImage(starterPack: AppBskyGraphDefs.StarterPackView) {
-  const rkey = new AtUri(starterPack.uri).rkey
+  const rkey = getRkey({uri: starterPack.uri})
   return `https://ogcard.cdn.bsky.app/start/${starterPack.creator.did}/${rkey}`
 }
 
 function getStarterPackHref(
   starterPack: AppBskyGraphDefs.StarterPackViewBasic,
 ) {
-  const rkey = new AtUri(starterPack.uri).rkey
+  const rkey = getRkey({uri: starterPack.uri})
   const handleOrDid = starterPack.creator.handle || starterPack.creator.did
   return `/starter-pack/${handleOrDid}/${rkey}`
 }

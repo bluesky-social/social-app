@@ -1,23 +1,28 @@
 import {
-  AppBskyActorDefs,
-  AppBskyEmbedRecord,
+  type AppBskyActorDefs,
+  type AppBskyEmbedRecord,
   AppBskyFeedDefs,
-  AppBskyFeedGetPostThread,
+  type AppBskyFeedGetPostThread,
   AppBskyFeedPost,
   AtUri,
-  ModerationDecision,
-  ModerationOpts,
+  moderatePost,
+  type ModerationDecision,
+  type ModerationOpts,
 } from '@atproto/api'
-import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
+import {type QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+import {
+  findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData,
+  findAllProfilesInQueryData as findAllProfilesInExploreFeedPreviewsQueryData,
+} from '#/state/queries/explore-feed-previews'
 import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
-import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
+import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {
   findAllPostsInQueryData as findAllPostsInSearchQueryData,
   findAllProfilesInQueryData as findAllProfilesInSearchQueryData,
 } from '#/state/queries/search-posts'
 import {useAgent} from '#/state/session'
+import * as bsky from '#/types/bsky'
 import {
   findAllPostsInQueryData as findAllPostsInNotifsQueryData,
   findAllProfilesInQueryData as findAllProfilesInNotifsQueryData,
@@ -53,8 +58,9 @@ export type ThreadPost = {
   uri: string
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
-  parent?: ThreadNode
-  replies?: ThreadNode[]
+  parent: ThreadNode | undefined
+  replies: ThreadNode[] | undefined
+  hasOPLike: boolean | undefined
   ctx: ThreadCtx
 }
 
@@ -150,6 +156,9 @@ export function sortThread(
   currentDid: string | undefined,
   justPostedUris: Set<string>,
   threadgateRecordHiddenReplies: Set<string>,
+  fetchedAtCache: Map<string, number>,
+  fetchedAt: number,
+  randomCache: Map<string, number>,
 ): ThreadNode {
   if (node.type !== 'post') {
     return node
@@ -216,6 +225,17 @@ export function sortThread(
         }
       }
 
+      const aPin = Boolean(a.record.text.trim() === '📌')
+      const bPin = Boolean(b.record.text.trim() === '📌')
+      if (aPin !== bPin) {
+        if (aPin) {
+          return 1
+        }
+        if (bPin) {
+          return -1
+        }
+      }
+
       if (opts.prioritizeFollowedUsers) {
         const af = a.post.author.viewer?.following
         const bf = b.post.author.viewer?.following
@@ -226,7 +246,25 @@ export function sortThread(
         }
       }
 
-      if (opts.sort === 'oldest') {
+      // Split items from different fetches into separate generations.
+      let aFetchedAt = fetchedAtCache.get(a.uri)
+      if (aFetchedAt === undefined) {
+        fetchedAtCache.set(a.uri, fetchedAt)
+        aFetchedAt = fetchedAt
+      }
+      let bFetchedAt = fetchedAtCache.get(b.uri)
+      if (bFetchedAt === undefined) {
+        fetchedAtCache.set(b.uri, fetchedAt)
+        bFetchedAt = fetchedAt
+      }
+
+      if (aFetchedAt !== bFetchedAt) {
+        return aFetchedAt - bFetchedAt // older fetches first
+      } else if (opts.sort === 'hotness') {
+        const aHotness = getHotness(a, aFetchedAt)
+        const bHotness = getHotness(b, bFetchedAt /* same as aFetchedAt */)
+        return bHotness - aHotness
+      } else if (opts.sort === 'oldest') {
         return a.post.indexedAt.localeCompare(b.post.indexedAt)
       } else if (opts.sort === 'newest') {
         return b.post.indexedAt.localeCompare(a.post.indexedAt)
@@ -237,9 +275,21 @@ export function sortThread(
           return (b.post.likeCount || 0) - (a.post.likeCount || 0) // most likes
         }
       } else if (opts.sort === 'random') {
-        return 0.5 - Math.random() // this is vaguely criminal but we can get away with it
+        let aRandomScore = randomCache.get(a.uri)
+        if (aRandomScore === undefined) {
+          aRandomScore = Math.random()
+          randomCache.set(a.uri, aRandomScore)
+        }
+        let bRandomScore = randomCache.get(b.uri)
+        if (bRandomScore === undefined) {
+          bRandomScore = Math.random()
+          randomCache.set(b.uri, bRandomScore)
+        }
+        // this is vaguely criminal but we can get away with it
+        return aRandomScore - bRandomScore
+      } else {
+        return b.post.indexedAt.localeCompare(a.post.indexedAt)
       }
-      return b.post.indexedAt.localeCompare(a.post.indexedAt)
     })
     node.replies.forEach(reply =>
       sortThread(
@@ -249,6 +299,9 @@ export function sortThread(
         currentDid,
         justPostedUris,
         threadgateRecordHiddenReplies,
+        fetchedAtCache,
+        fetchedAt,
+        randomCache,
       ),
     )
   }
@@ -258,6 +311,25 @@ export function sortThread(
 // internal methods
 // =
 
+// Inspired by https://join-lemmy.org/docs/contributors/07-ranking-algo.html
+// We want to give recent comments a real chance (and not bury them deep below the fold)
+// while also surfacing well-liked comments from the past. In the future, we can explore
+// something more sophisticated, but we don't have much data on the client right now.
+function getHotness(threadPost: ThreadPost, fetchedAt: number) {
+  const {post, hasOPLike} = threadPost
+  const hoursAgo = Math.max(
+    0,
+    (new Date(fetchedAt).getTime() - new Date(post.indexedAt).getTime()) /
+      (1000 * 60 * 60),
+  )
+  const likeCount = post.likeCount ?? 0
+  const likeOrder = Math.log(3 + likeCount) * (hasOPLike ? 1.45 : 1.0)
+  const timePenaltyExponent = 1.5 + 1.5 / (1 + Math.log(1 + likeCount))
+  const opLikeBoost = hasOPLike ? 0.8 : 1.0
+  const timePenalty = Math.pow(hoursAgo + 2, timePenaltyExponent * opLikeBoost)
+  return likeOrder / timePenalty
+}
+
 function responseToThreadNodes(
   node: ThreadViewNode,
   depth = 0,
@@ -265,8 +337,10 @@ function responseToThreadNodes(
 ): ThreadNode {
   if (
     AppBskyFeedDefs.isThreadViewPost(node) &&
-    AppBskyFeedPost.isRecord(node.post.record) &&
-    AppBskyFeedPost.validateRecord(node.post.record).success
+    bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      node.post.record,
+      AppBskyFeedPost.isRecord,
+    )
   ) {
     const post = node.post
     // These should normally be present. They're missing only for
@@ -292,11 +366,12 @@ function responseToThreadNodes(
               // do not show blocked posts in replies
               .filter(node => node.type !== 'blocked')
           : undefined,
+      hasOPLike: Boolean(node?.threadContext?.rootAuthorLike),
       ctx: {
         depth,
         isHighlightedPost: depth === 0,
         hasMore:
-          direction === 'down' && !node.replies?.length && !!node.replyCount,
+          direction === 'down' && !node.replies?.length && !!post.replyCount,
         isSelfThread: false, // populated `annotateSelfThread`
         hasMoreSelfThread: false, // populated in `annotateSelfThread`
       },
@@ -424,12 +499,18 @@ export function* findAllPostsInQueryData(
   for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
     yield postViewToPlaceholderThread(post)
   }
+  for (let post of findAllPostsInExploreFeedPreviewsQueryData(
+    queryClient,
+    uri,
+  )) {
+    yield postViewToPlaceholderThread(post)
+  }
 }
 
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<AppBskyActorDefs.ProfileViewBasic, void> {
   const queryDatas = queryClient.getQueriesData<PostThreadQueryData>({
     queryKey: [RQKEY_ROOT],
   })
@@ -456,6 +537,12 @@ export function* findAllProfilesInQueryData(
     yield profile
   }
   for (let profile of findAllProfilesInSearchQueryData(queryClient, did)) {
+    yield profile
+  }
+  for (let profile of findAllProfilesInExploreFeedPreviewsQueryData(
+    queryClient,
+    did,
+  )) {
     yield profile
   }
 }
@@ -488,6 +575,7 @@ function threadNodeToPlaceholderThread(
     record: node.record,
     parent: undefined,
     replies: undefined,
+    hasOPLike: undefined,
     ctx: {
       depth: 0,
       isHighlightedPost: true,
@@ -509,6 +597,7 @@ function postViewToPlaceholderThread(
     record: post.record as AppBskyFeedPost.Record, // validated in notifs
     parent: undefined,
     replies: undefined,
+    hasOPLike: undefined,
     ctx: {
       depth: 0,
       isHighlightedPost: true,
@@ -530,6 +619,7 @@ function embedViewRecordToPlaceholderThread(
     record: record.value as AppBskyFeedPost.Record, // validated in getEmbeddedPost
     parent: undefined,
     replies: undefined,
+    hasOPLike: undefined,
     ctx: {
       depth: 0,
       isHighlightedPost: true,

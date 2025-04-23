@@ -1,6 +1,6 @@
 import React from 'react'
-import {Image as RNImage} from 'react-native-image-crop-picker'
-import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
+import {type Image as RNImage} from 'react-native-image-crop-picker'
+import {type AppBskyActorDefs, type AppBskyGraphDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
@@ -24,15 +24,6 @@ export interface UserAddRemoveListsModal {
   displayName: string
   onAdd?: (listUri: string) => void
   onRemove?: (listUri: string) => void
-}
-
-export interface ListAddRemoveUsersModal {
-  name: 'list-add-remove-users'
-  list: AppBskyGraphDefs.ListView
-  onChange?: (
-    type: 'add' | 'remove',
-    profile: AppBskyActorDefs.ProfileViewBasic,
-  ) => void
 }
 
 export interface CropImageModal {
@@ -107,7 +98,6 @@ export type Modal =
   // Lists
   | CreateOrEditListModal
   | UserAddRemoveListsModal
-  | ListAddRemoveUsersModal
 
   // Posts
   | CropImageModal

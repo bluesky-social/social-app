@@ -6,6 +6,7 @@ import {
   AppBskyFeedPost,
   AtUri,
   BskyAgent,
+  moderatePost,
   ModerationDecision,
 } from '@atproto/api'
 import {
@@ -27,13 +28,12 @@ import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {FeedTuner, FeedTunerFn} from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {BSKY_FEED_OWNER_DIDS} from '#/lib/constants'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {useAgent} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
-import {KnownError} from '#/view/com/posts/FeedErrorMessage'
+import {KnownError} from '#/view/com/posts/PostFeedErrorMessage'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from '../preferences/moderation-opts'
 import {usePreferencesQuery} from './preferences'
@@ -44,11 +44,12 @@ import {
 } from './util'
 
 type ActorDid = string
-type AuthorFilter =
+export type AuthorFilter =
   | 'posts_with_replies'
   | 'posts_no_replies'
   | 'posts_and_author_threads'
   | 'posts_with_media'
+  | 'posts_with_video'
 type FeedUri = string
 type ListUri = string
 
@@ -61,6 +62,7 @@ export type FeedDescriptor =
 export interface FeedParams {
   mergeFeedEnabled?: boolean
   mergeFeedSources?: string[]
+  feedCacheKey?: 'discover' | 'explore' | undefined
 }
 
 type RQPageParam = {cursor: string | undefined; api: FeedAPI} | undefined
@@ -88,6 +90,7 @@ export interface FeedPostSlice {
   isIncompleteThread: boolean
   isFallbackMarker: boolean
   feedContext: string | undefined
+  feedPostUri: string
   reason?:
     | AppBskyFeedDefs.ReasonRepost
     | AppBskyFeedDefs.ReasonPin
@@ -144,11 +147,8 @@ export function usePostFeedQuery(
   /**
    * The number of posts to fetch in a single request. Because we filter
    * unwanted content, we may over-fetch here to try and fill pages by
-   * `MIN_POSTS`.
+   * `MIN_POSTS`. But if you're doing this, ask @why if it's ok first.
    */
-
-  // TEMPORARILY DISABLING GATE TO PREVENT EVENT CONSUMPTION @TODO EME-GATE
-  // const fetchLimit = gate('post_feed_lang_window') ? 100 : MIN_POSTS
   const fetchLimit = MIN_POSTS
 
   // Make sure this doesn't invalidate unless really needed.
@@ -332,6 +332,7 @@ export function usePostFeedQuery(
                     isFallbackMarker: slice.isFallbackMarker,
                     feedContext: slice.feedContext,
                     reason: slice.reason,
+                    feedPostUri: slice.feedPostUri,
                     items: slice.items.map((item, i) => {
                       const feedPostSliceItem: FeedPostSliceItem = {
                         _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
@@ -546,7 +547,7 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, undefined> {
+): Generator<AppBskyActorDefs.ProfileViewBasic, undefined> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<FeedPageUnselected>
   >({
@@ -602,7 +603,7 @@ function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
   }
 
   if (!somePostsPassModeration) {
-    throw new Error(KnownError.FeedNSFPublic)
+    throw new Error(KnownError.FeedSignedInOnly)
   }
 }
 

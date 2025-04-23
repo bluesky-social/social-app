@@ -1,4 +1,4 @@
-import React, {forwardRef, PropsWithChildren} from 'react'
+import {forwardRef, PropsWithChildren} from 'react'
 import {Pressable, PressableProps, StyleProp, ViewStyle} from 'react-native'
 import {View} from 'react-native'
 

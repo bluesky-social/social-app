@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {ComAtprotoModerationDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -88,7 +88,7 @@ function DialogInner() {
     },
     onSuccess: () => {
       control.close()
-      Toast.show(_(msg`Appeal submitted`))
+      Toast.show(_(msg({message: 'Appeal submitted', context: 'toast'})))
     },
   })
 

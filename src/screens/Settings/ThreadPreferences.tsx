@@ -1,4 +1,3 @@
-import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -39,7 +38,15 @@ export function ThreadPreferencesScreen({}: Props) {
 
   return (
     <Layout.Screen testID="threadPreferencesScreen">
-      <Layout.Header title={_(msg`Thread Preferences`)} />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Thread Preferences</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
           <SettingsList.Group>
@@ -57,6 +64,12 @@ export function ThreadPreferencesScreen({}: Props) {
                 values={sortReplies ? [sortReplies] : []}
                 onChange={values => setThreadViewPrefs({sort: values[0]})}>
                 <View style={[a.gap_sm, a.flex_1]}>
+                  <Toggle.Item name="hotness" label={_(msg`Hot replies first`)}>
+                    <Toggle.Radio />
+                    <Toggle.LabelText>
+                      <Trans>Hot replies first</Trans>
+                    </Toggle.LabelText>
+                  </Toggle.Item>
                   <Toggle.Item
                     name="oldest"
                     label={_(msg`Oldest replies first`)}>
@@ -135,7 +148,7 @@ export function ThreadPreferencesScreen({}: Props) {
               }
               style={[a.w_full, a.gap_md]}>
               <Toggle.LabelText style={[a.flex_1]}>
-                <Trans>Show replies in a threaded view</Trans>
+                <Trans>Show replies as threaded</Trans>
               </Toggle.LabelText>
               <Toggle.Platform />
             </Toggle.Item>

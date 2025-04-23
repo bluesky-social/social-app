@@ -1,4 +1,3 @@
-import React from 'react'
 import {LogBox, Pressable, View} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 

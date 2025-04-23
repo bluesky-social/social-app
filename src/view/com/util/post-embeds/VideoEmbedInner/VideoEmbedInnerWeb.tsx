@@ -1,6 +1,8 @@
 import React, {useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {AppBskyEmbedVideo} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import type * as HlsTypes from 'hls.js'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -13,11 +15,13 @@ export function VideoEmbedInnerWeb({
   active,
   setActive,
   onScreen,
+  lastKnownTime,
 }: {
   embed: AppBskyEmbedVideo.View
   active: boolean
   setActive: () => void
   onScreen: boolean
+  lastKnownTime: React.MutableRefObject<number | undefined>
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -25,6 +29,7 @@ export function VideoEmbedInnerWeb({
   const [hasSubtitleTrack, setHasSubtitleTrack] = useState(false)
   const [hlsLoading, setHlsLoading] = React.useState(false)
   const figId = useId()
+  const {_} = useLingui()
 
   // send error up to error boundary
   const [error, setError] = useState<Error | null>(null)
@@ -40,8 +45,17 @@ export function VideoEmbedInnerWeb({
     setHlsLoading,
   })
 
+  useEffect(() => {
+    if (lastKnownTime.current && videoRef.current) {
+      videoRef.current.currentTime = lastKnownTime.current
+    }
+  }, [lastKnownTime])
+
   return (
-    <View style={[a.flex_1, a.rounded_md, a.overflow_hidden]}>
+    <View
+      style={[a.flex_1, a.rounded_md, a.overflow_hidden]}
+      accessibilityLabel={_(msg`Embedded video player`)}
+      accessibilityHint="">
       <div ref={containerRef} style={{height: '100%', width: '100%'}}>
         <figure style={{margin: 0, position: 'absolute', inset: 0}}>
           <video
@@ -52,6 +66,9 @@ export function VideoEmbedInnerWeb({
             preload="none"
             muted={!focused}
             aria-labelledby={embed.alt ? figId : undefined}
+            onTimeUpdate={e => {
+              lastKnownTime.current = e.currentTarget.currentTime
+            }}
           />
           {embed.alt && (
             <figcaption

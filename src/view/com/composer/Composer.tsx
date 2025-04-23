@@ -12,17 +12,17 @@ import {
   BackHandler,
   Keyboard,
   KeyboardAvoidingView,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   ScrollView,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle'
 import Animated, {
-  AnimatedRef,
+  type AnimatedRef,
   Easing,
   FadeIn,
   FadeOut,
@@ -41,27 +41,33 @@ import Animated, {
   ZoomOut,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {ImagePickerAsset} from 'expo-image-picker'
+import {type ImagePickerAsset} from 'expo-image-picker'
 import {
   AppBskyFeedDefs,
-  AppBskyFeedGetPostThread,
-  BskyAgent,
-  RichText,
+  type AppBskyFeedGetPostThread,
+  type BskyAgent,
+  type RichText,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
 import {EmbeddingDisabledError} from '#/lib/api/resolve'
 import {until} from '#/lib/async/until'
-import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
+import {
+  MAX_GRAPHEME_LENGTH,
+  SUPPORTED_MIME_TYPES,
+  type SupportedMimeTypes,
+} from '#/lib/constants'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
+import {useEmail} from '#/lib/hooks/useEmail'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {mimeToExt} from '#/lib/media/video/util'
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {colors, s} from '#/lib/styles'
@@ -69,7 +75,7 @@ import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
-import {ComposerImage, pasteImage} from '#/state/gallery'
+import {type ComposerImage, pasteImage} from '#/state/gallery'
 import {useModalControls} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
@@ -77,11 +83,12 @@ import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
-import {Gif} from '#/state/queries/tenor'
+import {type Gif} from '#/state/queries/tenor'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
-import {ComposerOpts} from '#/state/shell/composer'
+import {type ComposerOpts} from '#/state/shell/composer'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {ComposerReplyTo} from '#/view/com/composer/ComposerReplyTo'
 import {
@@ -98,7 +105,10 @@ import {SelectLangBtn} from '#/view/com/composer/select-language/SelectLangBtn'
 import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
 // TODO: Prevent naming components that coincide with RN primitives
 // due to linting false positives
-import {TextInput, TextInputRef} from '#/view/com/composer/text-input/TextInput'
+import {
+  TextInput,
+  type TextInputRef,
+} from '#/view/com/composer/text-input/TextInput'
 import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
 import {SelectVideoBtn} from '#/view/com/composer/videos/SelectVideoBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
@@ -110,6 +120,8 @@ import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
+import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
@@ -117,16 +129,23 @@ import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
-  ComposerAction,
+  type ComposerAction,
   composerReducer,
   createComposerState,
-  EmbedDraft,
+  type EmbedDraft,
   MAX_IMAGES,
-  PostAction,
-  PostDraft,
-  ThreadDraft,
+  type PostAction,
+  type PostDraft,
+  type ThreadDraft,
 } from './state/composer'
-import {NO_VIDEO, NoVideoState, processVideo, VideoState} from './state/video'
+import {
+  NO_VIDEO,
+  type NoVideoState,
+  processVideo,
+  type VideoState,
+} from './state/video'
+import {getVideoMetadata} from './videos/pickVideo'
+import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 
 type CancelRef = {
   onPressCancel: () => void
@@ -159,6 +178,7 @@ export const ComposePost = ({
   const discardPromptControl = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
   const {closeAllModals} = useModalControls()
+  const {data: preferences} = usePreferencesQuery()
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isPublishing, setIsPublishing] = useState(false)
@@ -167,7 +187,13 @@ export const ComposePost = ({
 
   const [composerState, composerDispatch] = useReducer(
     composerReducer,
-    {initImageUris, initQuoteUri: initQuote?.uri, initText, initMention},
+    {
+      initImageUris,
+      initQuoteUri: initQuote?.uri,
+      initText,
+      initMention,
+      initInteractionSettings: preferences?.postInteractionSettings,
+    },
     createComposerState,
   )
 
@@ -246,14 +272,22 @@ export const ComposePost = ({
 
   const onClose = useCallback(() => {
     closeComposer()
-  }, [closeComposer])
+    clearThumbnailCache(queryClient)
+  }, [closeComposer, queryClient])
 
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
     () => ({
       paddingTop: isAndroid ? insets.top : 0,
       paddingBottom:
-        isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
+        // iOS - when keyboard is closed, keep the bottom bar in the safe area
+        (isIOS && !isKeyboardVisible) ||
+        // Android - Android >=35 KeyboardAvoidingView adds double padding when
+        // keyboard is closed, so we subtract that in the offset and add it back
+        // here when the keyboard is open
+        (isAndroid && isKeyboardVisible)
+          ? insets.bottom
+          : 0,
     }),
     [insets, isKeyboardVisible],
   )
@@ -296,6 +330,15 @@ export const ComposePost = ({
       backHandler.remove()
     }
   }, [onPressCancel, closeAllDialogs, closeAllModals])
+
+  const {needsEmailVerification} = useEmail()
+  const emailVerificationControl = useDialogControl()
+
+  useEffect(() => {
+    if (needsEmailVerification) {
+      emailVerificationControl.open()
+    }
+  }, [needsEmailVerification, emailVerificationControl])
 
   const missingAltError = useMemo(() => {
     if (!requireAltTextEnabled) {
@@ -510,7 +553,14 @@ export const ComposePost = ({
   }
 
   const onEmojiButtonPress = useCallback(() => {
-    openEmojiPicker?.(textInput.current?.getCursorPosition())
+    const rect = textInput.current?.getCursorPosition()
+    if (rect) {
+      openEmojiPicker?.({
+        ...rect,
+        nextFocusRef:
+          textInput as unknown as React.MutableRefObject<HTMLElement>,
+      })
+    }
   }, [openEmojiPicker])
 
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
@@ -570,6 +620,15 @@ export const ComposePost = ({
   const isWebFooterSticky = !isNative && thread.posts.length > 1
   return (
     <BottomSheetPortalProvider>
+      <VerifyEmailDialog
+        control={emailVerificationControl}
+        onCloseWithoutVerifying={() => {
+          onClose()
+        }}
+        reasonText={_(
+          msg`Before creating a post, you must first verify your email.`,
+        )}
+      />
       <KeyboardAvoidingView
         testID="composePostView"
         behavior={isIOS ? 'padding' : 'height'}
@@ -606,7 +665,8 @@ export const ComposePost = ({
             ref={scrollViewRef}
             layout={native(LinearTransition)}
             onScroll={scrollHandler}
-            style={styles.scrollView}
+            contentContainerStyle={a.flex_grow}
+            style={a.flex_1}
             keyboardShouldPersistTaps="always"
             onContentSizeChange={onScrollViewContentSizeChange}
             onLayout={onScrollViewLayout}>
@@ -723,30 +783,43 @@ let ComposerPost = React.memo(function ComposerPost({
 
   const onPhotoPasted = useCallback(
     async (uri: string) => {
-      if (uri.startsWith('data:video/')) {
-        onSelectVideo(post.id, {uri, type: 'video', height: 0, width: 0})
+      if (uri.startsWith('data:video/') || uri.startsWith('data:image/gif')) {
+        if (isNative) return // web only
+        const [mimeType] = uri.slice('data:'.length).split(';')
+        if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
+          Toast.show(_(msg`Unsupported video type`), 'xmark')
+          return
+        }
+        const name = `pasted.${mimeToExt(mimeType)}`
+        const file = await fetch(uri)
+          .then(res => res.blob())
+          .then(blob => new File([blob], name, {type: mimeType}))
+        onSelectVideo(post.id, await getVideoMetadata(file))
       } else {
         const res = await pasteImage(uri)
         onImageAdd([res])
       }
     },
-    [post.id, onSelectVideo, onImageAdd],
+    [post.id, onSelectVideo, onImageAdd, _],
   )
 
   return (
-    <View style={[styles.post, !isActive && styles.inactivePost]}>
-      <View
-        style={[
-          styles.textInputLayout,
-          isNative && styles.textInputLayoutMobile,
-        ]}>
+    <View
+      style={[
+        a.mx_lg,
+        !isActive && styles.inactivePost,
+        isTextOnly && isNative && a.flex_grow,
+      ]}>
+      <View style={[a.flex_row, isNative && a.flex_1]}>
         <UserAvatar
           avatar={currentProfile?.avatar}
           size={50}
           type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
+          style={[a.mt_xs]}
         />
         <TextInput
           ref={textInput}
+          style={[a.pt_xs]}
           richtext={richtext}
           placeholder={selectTextInputPlaceholder}
           autoFocus
@@ -770,7 +843,9 @@ let ComposerPost = React.memo(function ComposerPost({
           accessible={true}
           accessibilityLabel={_(msg`Write post`)}
           accessibilityHint={_(
-            msg`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`,
+            msg`Compose posts up to ${plural(MAX_GRAPHEME_LENGTH || 0, {
+              other: '# characters',
+            })} in length`,
           )}
         />
       </View>
@@ -852,20 +927,23 @@ function ComposerTopBar({
   children?: React.ReactNode
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   return (
     <Animated.View
       style={topBarAnimatedStyle}
       layout={native(LinearTransition)}>
       <View style={styles.topbarInner}>
         <Button
-          label="Cancel"
+          label={_(msg`Cancel`)}
           variant="ghost"
           color="primary"
           shape="default"
           size="small"
           style={[a.rounded_full, a.py_sm, {paddingLeft: 7, paddingRight: 7}]}
           onPress={onCancel}
-          accessibilityHint="Closes post composer and discards post draft">
+          accessibilityHint={_(
+            msg`Closes post composer and discards post draft`,
+          )}>
           <ButtonText style={[a.text_md]}>
             <Trans>Cancel</Trans>
           </ButtonText>
@@ -881,7 +959,39 @@ function ComposerTopBar({
         ) : (
           <Button
             testID="composerPublishBtn"
-            label={isReply ? 'Publish reply' : 'Publish post'}
+            label={
+              isReply
+                ? isThread
+                  ? _(
+                      msg({
+                        message: 'Publish replies',
+                        comment:
+                          'Accessibility label for button to publish multiple replies in a thread',
+                      }),
+                    )
+                  : _(
+                      msg({
+                        message: 'Publish reply',
+                        comment:
+                          'Accessibility label for button to publish a single reply',
+                      }),
+                    )
+                : isThread
+                ? _(
+                    msg({
+                      message: 'Publish posts',
+                      comment:
+                        'Accessibility label for button to publish multiple posts in a thread',
+                    }),
+                  )
+                : _(
+                    msg({
+                      message: 'Publish post',
+                      comment:
+                        'Accessibility label for button to publish a single post',
+                    }),
+                  )
+            }
             variant="solid"
             color="primary"
             shape="default"
@@ -986,17 +1096,6 @@ function ComposerEmbeds({
                   asset={video.asset}
                   video={video.video}
                   isActivePost={isActivePost}
-                  setDimensions={(width: number, height: number) => {
-                    dispatch({
-                      type: 'embed_update_video',
-                      videoAction: {
-                        type: 'update_dimensions',
-                        width,
-                        height,
-                        signal: video.abortController.signal,
-                      },
-                    })
-                  }}
                   clear={clearVideo}
                 />
               ) : null)}
@@ -1027,9 +1126,8 @@ function ComposerEmbeds({
           </Animated.View>
         )}
       </LayoutAnimationConfig>
-
-      <View style={!video ? [a.mt_md] : []}>
-        {embed.quote?.uri ? (
+      {embed.quote?.uri ? (
+        <View style={!video ? [a.mt_md] : []}>
           <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
             <View style={{pointerEvents: 'none'}}>
               <LazyQuoteEmbed uri={embed.quote.uri} />
@@ -1038,8 +1136,8 @@ function ComposerEmbeds({
               <QuoteX onRemove={() => dispatch({type: 'embed_remove_quote'})} />
             )}
           </View>
-        ) : null}
-      </View>
+        </View>
+      ) : null}
     </>
   )
 }
@@ -1074,6 +1172,7 @@ function ComposerPills({
         contentContainerStyle={[a.gap_sm]}
         horizontal={true}
         bounces={false}
+        keyboardShouldPersistTaps="always"
         showsHorizontalScrollIndicator={false}>
         {isReply ? null : (
           <ThreadgateBtn
@@ -1191,7 +1290,7 @@ function ComposerFooter({
                 onPress={onEmojiButtonPress}
                 style={a.p_sm}
                 label={_(msg`Open emoji picker`)}
-                accessibilityHint={_(msg`Open emoji picker`)}
+                accessibilityHint={_(msg`Opens emoji picker`)}
                 variant="ghost"
                 shape="round"
                 color="primary">
@@ -1244,12 +1343,12 @@ function useScrollTracker({
   const contentHeight = useSharedValue(0)
 
   const hasScrolledToTop = useDerivedValue(() =>
-    withTiming(contentOffset.value === 0 ? 1 : 0),
+    withTiming(contentOffset.get() === 0 ? 1 : 0),
   )
 
   const hasScrolledToBottom = useDerivedValue(() =>
     withTiming(
-      contentHeight.value - contentOffset.value - 5 <= scrollViewHeight.value
+      contentHeight.get() - contentOffset.get() - 5 <= scrollViewHeight.get()
         ? 1
         : 0,
     ),
@@ -1267,11 +1366,11 @@ function useScrollTracker({
     }) => {
       'worklet'
       if (typeof newContentHeight === 'number')
-        contentHeight.value = Math.floor(newContentHeight)
+        contentHeight.set(Math.floor(newContentHeight))
       if (typeof newContentOffset === 'number')
-        contentOffset.value = Math.floor(newContentOffset)
+        contentOffset.set(Math.floor(newContentOffset))
       if (typeof newScrollViewHeight === 'number')
-        scrollViewHeight.value = Math.floor(newScrollViewHeight)
+        scrollViewHeight.set(Math.floor(newScrollViewHeight))
     },
     [contentHeight, contentOffset, scrollViewHeight],
   )
@@ -1287,21 +1386,22 @@ function useScrollTracker({
     },
   })
 
-  const onScrollViewContentSizeChange = useCallback(
-    (_width: number, height: number) => {
-      if (stickyBottom && height > contentHeight.value) {
+  const onScrollViewContentSizeChangeUIThread = useCallback(
+    (newContentHeight: number) => {
+      'worklet'
+      const oldContentHeight = contentHeight.get()
+      let shouldScrollToBottom = false
+      if (stickyBottom && newContentHeight > oldContentHeight) {
         const isFairlyCloseToBottom =
-          contentHeight.value - contentOffset.value - 100 <=
-          scrollViewHeight.value
+          oldContentHeight - contentOffset.get() - 100 <= scrollViewHeight.get()
         if (isFairlyCloseToBottom) {
-          runOnUI(() => {
-            scrollTo(scrollViewRef, 0, contentHeight.value, true)
-          })()
+          shouldScrollToBottom = true
         }
       }
-      showHideBottomBorder({
-        newContentHeight: height,
-      })
+      showHideBottomBorder({newContentHeight})
+      if (shouldScrollToBottom) {
+        scrollTo(scrollViewRef, 0, newContentHeight, true)
+      }
     },
     [
       showHideBottomBorder,
@@ -1311,6 +1411,13 @@ function useScrollTracker({
       contentOffset,
       scrollViewHeight,
     ],
+  )
+
+  const onScrollViewContentSizeChange = useCallback(
+    (_width: number, height: number) => {
+      runOnUI(onScrollViewContentSizeChangeUIThread)(height)
+    },
+    [onScrollViewContentSizeChangeUIThread],
   )
 
   const onScrollViewLayout = useCallback(
@@ -1326,7 +1433,7 @@ function useScrollTracker({
     return {
       borderBottomWidth: StyleSheet.hairlineWidth,
       borderColor: interpolateColor(
-        hasScrolledToTop.value,
+        hasScrolledToTop.get(),
         [0, 1],
         [t.atoms.border_contrast_medium.borderColor, 'transparent'],
       ),
@@ -1336,7 +1443,7 @@ function useScrollTracker({
     return {
       borderTopWidth: StyleSheet.hairlineWidth,
       borderColor: interpolateColor(
-        hasScrolledToBottom.value,
+        hasScrolledToBottom.get(),
         [0, 1],
         [t.atoms.border_contrast_medium.borderColor, 'transparent'],
       ),
@@ -1353,10 +1460,13 @@ function useScrollTracker({
 }
 
 function useKeyboardVerticalOffset() {
-  const {top} = useSafeAreaInsets()
+  const {top, bottom} = useSafeAreaInsets()
 
   // Android etc
-  if (!isIOS) return 0
+  if (!isIOS) {
+    // need to account for the edge-to-edge nav bar
+    return bottom * -1
+  }
 
   // iPhone SE
   if (top === 20) return 40
@@ -1406,7 +1516,6 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   stickyFooterWeb: {
-    // @ts-ignore web-only
     position: 'sticky',
     bottom: 0,
   },
@@ -1440,21 +1549,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 5,
   },
-  post: {
-    marginHorizontal: 16,
-  },
   inactivePost: {
     opacity: 0.5,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  textInputLayout: {
-    flexDirection: 'row',
-    paddingTop: 4,
-  },
-  textInputLayoutMobile: {
-    flex: 1,
   },
   addExtLinkBtn: {
     borderWidth: 1,
@@ -1581,7 +1677,7 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [{rotateZ: `${rotate.value}deg`}],
+      transform: [{rotateZ: `${rotate.get()}deg`}],
     }
   })
 

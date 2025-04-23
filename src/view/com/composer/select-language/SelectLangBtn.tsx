@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react'
+import {useCallback, useMemo} from 'react'
 import {Keyboard, StyleSheet} from 'react-native'
 import {
   FontAwesomeIcon,
@@ -48,7 +48,7 @@ export function SelectLangBtn() {
     function add(commaSeparatedLangCodes: string) {
       const langCodes = commaSeparatedLangCodes.split(',')
       const langName = langCodes
-        .map(code => codeToLanguageName(code))
+        .map(code => codeToLanguageName(code, langPrefs.appLanguage))
         .join(' + ')
 
       /*
@@ -108,7 +108,9 @@ export function SelectLangBtn() {
       accessibilityHint="">
       {postLanguagesPref.length > 0 ? (
         <Text type="lg-bold" style={[pal.link, styles.label]} numberOfLines={1}>
-          {postLanguagesPref.map(lang => codeToLanguageName(lang)).join(', ')}
+          {postLanguagesPref
+            .map(lang => codeToLanguageName(lang, langPrefs.appLanguage))
+            .join(', ')}
         </Text>
       ) : (
         <FontAwesomeIcon

@@ -1,10 +1,11 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {Dimensions, View} from 'react-native'
-import {Image as RNImage} from 'react-native-image-crop-picker'
-import {AppBskyActorDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {type Image as RNImage} from 'react-native-image-crop-picker'
+import {type AppBskyActorDefs} from '@atproto/api'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {urls} from '#/lib/constants'
 import {compressIfNeeded} from '#/lib/media/manip'
 import {cleanError} from '#/lib/strings/errors'
 import {useWarnMaxGraphemeCount} from '#/lib/strings/helpers'
@@ -16,10 +17,13 @@ import * as Toast from '#/view/com/util/Toast'
 import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
 import {atoms as a, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {InlineLinkText} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
+import {useSimpleVerificationState} from '#/components/verification'
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
 const DESCRIPTION_MAX_GRAPHEMES = 256
@@ -102,6 +106,9 @@ function DialogInner({
   const {_} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogContext()
+  const verification = useSimpleVerificationState({
+    profile,
+  })
   const {
     mutateAsync: updateProfileMutation,
     error: updateProfileError,
@@ -188,7 +195,7 @@ function DialogInner({
       })
       onUpdate?.()
       control.close()
-      Toast.show(_(msg`Profile updated`))
+      Toast.show(_(msg({message: 'Profile updated', context: 'toast'})))
     } catch (e: any) {
       logger.error('Failed to update user profile', {message: String(e)})
     }
@@ -332,12 +339,31 @@ function DialogInner({
               ]}
               label={_(msg`Display name is too long`)}>
               <Trans>
-                Display name is too long. The maximum number of characters is{' '}
-                {DISPLAY_NAME_MAX_GRAPHEMES}.
+                Display name is too long.{' '}
+                <Plural
+                  value={DISPLAY_NAME_MAX_GRAPHEMES}
+                  other="The maximum number of characters is #."
+                />
               </Trans>
             </TextField.SuffixText>
           )}
         </View>
+
+        {verification.isVerified &&
+          verification.role === 'default' &&
+          displayName !== initialDisplayName && (
+            <Admonition type="error">
+              <Trans>
+                You are verified. You will lose your verification status if you
+                change your display name.{' '}
+                <InlineLinkText
+                  label={_(msg`Learn more`)}
+                  to={urls.website.blog.initialVerificationAnnouncement}>
+                  <Trans>Learn more.</Trans>
+                </InlineLinkText>
+              </Trans>
+            </Admonition>
+          )}
 
         <View>
           <TextField.LabelText>
@@ -363,8 +389,11 @@ function DialogInner({
               ]}
               label={_(msg`Description is too long`)}>
               <Trans>
-                Description is too long. The maximum number of characters is{' '}
-                {DESCRIPTION_MAX_GRAPHEMES}.
+                Description is too long.{' '}
+                <Plural
+                  value={DESCRIPTION_MAX_GRAPHEMES}
+                  other="The maximum number of characters is #."
+                />
               </Trans>
             </TextField.SuffixText>
           )}

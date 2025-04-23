@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 import {ActivityIndicator, SafeAreaView, StyleSheet, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -51,7 +51,7 @@ export function Component() {
       } else {
         await agent.com.atproto.server.updateEmail({email: email.trim()})
         await agent.resumeSession(agent.session!)
-        Toast.show(_(msg`Email updated`))
+        Toast.show(_(msg({message: 'Email updated', context: 'toast'})))
         setStage(Stages.Done)
       }
     } catch (e) {
@@ -80,7 +80,7 @@ export function Component() {
         token: confirmationCode.trim(),
       })
       await agent.resumeSession(agent.session!)
-      Toast.show(_(msg`Email updated`))
+      Toast.show(_(msg({message: 'Email updated', context: 'toast'})))
       setStage(Stages.Done)
     } catch (e) {
       setError(cleanError(String(e)))

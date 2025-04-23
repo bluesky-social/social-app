@@ -1,5 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
+// @ts-expect-error missing types
 import QRCode from 'react-native-qrcode-styled'
 import type ViewShot from 'react-native-view-shot'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
@@ -12,6 +13,7 @@ import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 const LazyViewShot = React.lazy(
   // @ts-expect-error dynamic import
@@ -29,7 +31,12 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
 ) {
   const {record} = starterPack
 
-  if (!AppBskyGraphStarterpack.isRecord(record)) {
+  if (
+    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+      record,
+      AppBskyGraphStarterpack.isRecord,
+    )
+  ) {
     return null
   }
 

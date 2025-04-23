@@ -1,16 +1,16 @@
 import {
-  AppBskyActorDefs,
-  BskyAgent,
+  type AtpAgent,
+  type ChatBskyActorDefs,
   ChatBskyConvoDefs,
-  ChatBskyConvoGetLog,
-  ChatBskyConvoSendMessage,
+  type ChatBskyConvoGetLog,
+  type ChatBskyConvoSendMessage,
 } from '@atproto/api'
 import {XRPCError} from '@atproto/xrpc'
 import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
-import {logger} from '#/logger'
+import {Logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {
   ACTIVE_POLL_INTERVAL,
@@ -19,20 +19,22 @@ import {
   NETWORK_FAILURE_STATUSES,
 } from '#/state/messages/convo/const'
 import {
-  ConvoDispatch,
+  type ConvoDispatch,
   ConvoDispatchEvent,
-  ConvoError,
+  type ConvoError,
   ConvoErrorCode,
-  ConvoEvent,
-  ConvoItem,
+  type ConvoEvent,
+  type ConvoItem,
   ConvoItemError,
-  ConvoParams,
-  ConvoState,
+  type ConvoParams,
+  type ConvoState,
   ConvoStatus,
 } from '#/state/messages/convo/types'
-import {MessagesEventBus} from '#/state/messages/events/agent'
-import {MessagesEventBusError} from '#/state/messages/events/types'
+import {type MessagesEventBus} from '#/state/messages/events/agent'
+import {type MessagesEventBusError} from '#/state/messages/events/types'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
+
+const logger = Logger.create(Logger.Context.ConversationAgent)
 
 export function isConvoItemMessage(
   item: ConvoItem,
@@ -48,7 +50,7 @@ export function isConvoItemMessage(
 export class Convo {
   private id: string
 
-  private agent: BskyAgent
+  private agent: AtpAgent
   private events: MessagesEventBus
   private senderUserDid: string
 
@@ -80,8 +82,8 @@ export class Convo {
 
   convoId: string
   convo: ChatBskyConvoDefs.ConvoView | undefined
-  sender: AppBskyActorDefs.ProfileViewBasic | undefined
-  recipients: AppBskyActorDefs.ProfileViewBasic[] | undefined = undefined
+  sender: ChatBskyActorDefs.ProfileViewBasic | undefined
+  recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
   snapshot: ConvoState | undefined
 
   constructor(params: ConvoParams) {
@@ -91,6 +93,10 @@ export class Convo {
     this.events = params.events
     this.senderUserDid = params.agent.session?.did!
 
+    if (params.placeholderData) {
+      this.setupPlaceholderData(params.placeholderData)
+    }
+
     this.subscribe = this.subscribe.bind(this)
     this.getSnapshot = this.getSnapshot.bind(this)
     this.sendMessage = this.sendMessage.bind(this)
@@ -99,6 +105,9 @@ export class Convo {
     this.ingestFirehose = this.ingestFirehose.bind(this)
     this.onFirehoseConnect = this.onFirehoseConnect.bind(this)
     this.onFirehoseError = this.onFirehoseError.bind(this)
+    this.markConvoAccepted = this.markConvoAccepted.bind(this)
+    this.addReaction = this.addReaction.bind(this)
+    this.removeReaction = this.removeReaction.bind(this)
   }
 
   private commit() {
@@ -121,7 +130,7 @@ export class Convo {
 
   getSnapshot(): ConvoState {
     if (!this.snapshot) this.snapshot = this.generateSnapshot()
-    // logger.debug('Convo: snapshotted', {}, logger.DebugContext.convo)
+    // logger.debug('Convo: snapshotted', {})
     return this.snapshot
   }
 
@@ -131,14 +140,17 @@ export class Convo {
         return {
           status: ConvoStatus.Initializing,
           items: [],
-          convo: undefined,
+          convo: this.convo,
           error: undefined,
-          sender: undefined,
-          recipients: undefined,
+          sender: this.sender,
+          recipients: this.recipients,
           isFetchingHistory: this.isFetchingHistory,
           deleteMessage: undefined,
           sendMessage: undefined,
           fetchMessageHistory: undefined,
+          markConvoAccepted: undefined,
+          addReaction: undefined,
+          removeReaction: undefined,
         }
       }
       case ConvoStatus.Disabled:
@@ -156,6 +168,9 @@ export class Convo {
           deleteMessage: this.deleteMessage,
           sendMessage: this.sendMessage,
           fetchMessageHistory: this.fetchMessageHistory,
+          markConvoAccepted: this.markConvoAccepted,
+          addReaction: this.addReaction,
+          removeReaction: this.removeReaction,
         }
       }
       case ConvoStatus.Error: {
@@ -170,20 +185,26 @@ export class Convo {
           deleteMessage: undefined,
           sendMessage: undefined,
           fetchMessageHistory: undefined,
+          markConvoAccepted: undefined,
+          addReaction: undefined,
+          removeReaction: undefined,
         }
       }
       default: {
         return {
           status: ConvoStatus.Uninitialized,
           items: [],
-          convo: undefined,
+          convo: this.convo,
           error: undefined,
-          sender: undefined,
-          recipients: undefined,
+          sender: this.sender,
+          recipients: this.recipients,
           isFetchingHistory: false,
           deleteMessage: undefined,
           sendMessage: undefined,
           fetchMessageHistory: undefined,
+          markConvoAccepted: undefined,
+          addReaction: undefined,
+          removeReaction: undefined,
         }
       }
     }
@@ -371,15 +392,11 @@ export class Convo {
         break
     }
 
-    logger.debug(
-      `Convo: dispatch '${action.event}'`,
-      {
-        id: this.id,
-        prev: prevStatus,
-        next: this.status,
-      },
-      logger.DebugContext.convo,
-    )
+    logger.debug(`Convo: dispatch '${action.event}'`, {
+      id: this.id,
+      prev: prevStatus,
+      next: this.status,
+    })
 
     this.updateLastActiveTimestamp()
     this.commit()
@@ -424,6 +441,20 @@ export class Convo {
     }
   }
 
+  /**
+   * Initialises the convo with placeholder data, if provided. We still refetch it before rendering the convo,
+   * but this allows us to render the convo header immediately.
+   */
+  private setupPlaceholderData(
+    data: NonNullable<ConvoParams['placeholderData']>,
+  ) {
+    this.convo = data.convo
+    this.sender = data.convo.members.find(m => m.did === this.senderUserDid)
+    this.recipients = data.convo.members.filter(
+      m => m.did !== this.senderUserDid,
+    )
+  }
+
   private async setup() {
     try {
       const {convo, sender, recipients} = await this.fetchConvo()
@@ -445,7 +476,7 @@ export class Convo {
         throw new Error('Convo: could not find recipients in convo')
       }
 
-      const userIsDisabled = this.sender.chatDisabled as boolean
+      const userIsDisabled = Boolean(this.sender.chatDisabled)
 
       if (userIsDisabled) {
         this.dispatch({event: ConvoDispatchEvent.Disable})
@@ -453,7 +484,7 @@ export class Convo {
         this.dispatch({event: ConvoDispatchEvent.Ready})
       }
     } catch (e: any) {
-      logger.error(e, {context: 'Convo: setup failed'})
+      logger.error(e, {message: 'Convo: setup failed'})
 
       this.dispatch({
         event: ConvoDispatchEvent.Error,
@@ -511,8 +542,8 @@ export class Convo {
   private pendingFetchConvo:
     | Promise<{
         convo: ChatBskyConvoDefs.ConvoView
-        sender: AppBskyActorDefs.ProfileViewBasic | undefined
-        recipients: AppBskyActorDefs.ProfileViewBasic[]
+        sender: ChatBskyActorDefs.ProfileViewBasic | undefined
+        recipients: ChatBskyActorDefs.ProfileViewBasic[]
       }>
     | undefined
   async fetchConvo() {
@@ -520,8 +551,8 @@ export class Convo {
 
     this.pendingFetchConvo = new Promise<{
       convo: ChatBskyConvoDefs.ConvoView
-      sender: AppBskyActorDefs.ProfileViewBasic | undefined
-      recipients: AppBskyActorDefs.ProfileViewBasic[]
+      sender: ChatBskyActorDefs.ProfileViewBasic | undefined
+      recipients: ChatBskyActorDefs.ProfileViewBasic[]
     }>(async (resolve, reject) => {
       try {
         const response = await networkRetry(2, () => {
@@ -558,7 +589,7 @@ export class Convo {
       this.sender = sender || this.sender
       this.recipients = recipients || this.recipients
     } catch (e: any) {
-      logger.error(e, {context: `Convo: failed to refresh convo`})
+      logger.error(e, {message: `Convo: failed to refresh convo`})
     }
   }
 
@@ -568,7 +599,7 @@ export class Convo {
       }
     | undefined
   async fetchMessageHistory() {
-    logger.debug('Convo: fetch message history', {}, logger.DebugContext.convo)
+    logger.debug('Convo: fetch message history', {})
 
     /*
      * If oldestRev is null, we've fetched all history.
@@ -686,7 +717,7 @@ export class Convo {
        * If there's a rev, we should handle it. If there's not a rev, we don't
        * know what it is.
        */
-      if (typeof ev.rev === 'string') {
+      if ('rev' in ev && typeof ev.rev === 'string') {
         const isUninitialized = !this.latestRev
         const isNewEvent = this.latestRev && ev.rev > this.latestRev
 
@@ -739,6 +770,22 @@ export class Convo {
               this.deletedMessages.delete(ev.message.id)
               needsCommit = true
             }
+          } else if (
+            (ChatBskyConvoDefs.isLogAddReaction(ev) ||
+              ChatBskyConvoDefs.isLogRemoveReaction(ev)) &&
+            ChatBskyConvoDefs.isMessageView(ev.message)
+          ) {
+            /*
+             * Update if we have this in state - replace message wholesale. If we don't, don't worry about it.
+             */
+            if (this.pastMessages.has(ev.message.id)) {
+              this.pastMessages.set(ev.message.id, ev.message)
+              needsCommit = true
+            }
+            if (this.newMessages.has(ev.message.id)) {
+              this.newMessages.set(ev.message.id, ev.message)
+              needsCommit = true
+            }
           }
         }
       }
@@ -755,7 +802,7 @@ export class Convo {
     // Ignore empty messages for now since they have no other purpose atm
     if (!message.text.trim() && !message.embed) return
 
-    logger.debug('Convo: send message', {}, logger.DebugContext.convo)
+    logger.debug('Convo: send message', {})
 
     const tempId = nanoid()
 
@@ -764,6 +811,12 @@ export class Convo {
       id: tempId,
       message,
     })
+    if (this.convo?.status === 'request') {
+      this.convo = {
+        ...this.convo,
+        status: 'accepted',
+      }
+    }
     this.commit()
 
     if (!this.isProcessingPendingMessages && !this.pendingMessageFailure) {
@@ -771,11 +824,20 @@ export class Convo {
     }
   }
 
+  markConvoAccepted() {
+    if (this.convo) {
+      this.convo = {
+        ...this.convo,
+        status: 'accepted',
+      }
+    }
+    this.commit()
+  }
+
   async processPendingMessages() {
     logger.debug(
       `Convo: processing messages (${this.pendingMessages.size} remaining)`,
       {},
-      logger.DebugContext.convo,
     )
 
     const pendingMessage = Array.from(this.pendingMessages.values()).shift()
@@ -819,7 +881,7 @@ export class Convo {
       // continue queue processing
       await this.processPendingMessages()
     } catch (e: any) {
-      logger.error(e, {context: `Convo: failed to send message`})
+      logger.error(e, {message: `Convo: failed to send message`})
       this.handleSendMessageFailure(e)
       this.isProcessingPendingMessages = false
     }
@@ -865,7 +927,7 @@ export class Convo {
     } else {
       this.pendingMessageFailure = 'unrecoverable'
       logger.error(e, {
-        context: `Convo handleSendMessageFailure received unknown error`,
+        message: `Convo handleSendMessageFailure received unknown error`,
       })
     }
 
@@ -884,7 +946,6 @@ export class Convo {
     logger.debug(
       `Convo: batch retrying ${this.pendingMessages.size} pending messages`,
       {},
-      logger.DebugContext.convo,
     )
 
     try {
@@ -919,16 +980,15 @@ export class Convo {
       logger.debug(
         `Convo: sent ${this.pendingMessages.size} pending messages`,
         {},
-        logger.DebugContext.convo,
       )
     } catch (e: any) {
-      logger.error(e, {context: `Convo: failed to batch retry messages`})
+      logger.error(e, {message: `Convo: failed to batch retry messages`})
       this.handleSendMessageFailure(e)
     }
   }
 
   async deleteMessage(messageId: string) {
-    logger.debug('Convo: delete message', {}, logger.DebugContext.convo)
+    logger.debug('Convo: delete message', {})
 
     this.deletedMessages.add(messageId)
     this.commit()
@@ -944,7 +1004,7 @@ export class Convo {
         )
       })
     } catch (e: any) {
-      logger.error(e, {context: `Convo: failed to delete message`})
+      logger.error(e, {message: `Convo: failed to delete message`})
       this.deletedMessages.delete(messageId)
       this.commit()
       throw e
@@ -1031,7 +1091,10 @@ export class Convo {
            * `getItems` is only run in "active" status states, where
            * `this.sender` is defined
            */
-          sender: this.sender!,
+          sender: {
+            $type: 'chat.bsky.convo.defs#messageViewSender',
+            did: this.sender!.did,
+          },
         },
         nextMessage: null,
         prevMessage: null,
@@ -1103,5 +1166,145 @@ export class Convo {
 
         return item
       })
+  }
+
+  /**
+   * Add an emoji reaction to a message
+   *
+   * @param messageId - the id of the message to add the reaction to
+   * @param emoji - must be one grapheme
+   */
+  async addReaction(messageId: string, emoji: string) {
+    const optimisticReaction = {
+      value: emoji,
+      sender: {did: this.senderUserDid},
+      createdAt: new Date().toISOString(),
+    }
+    let restore: null | (() => void) = null
+    if (this.pastMessages.has(messageId)) {
+      const prevMessage = this.pastMessages.get(messageId)
+      if (
+        ChatBskyConvoDefs.isMessageView(prevMessage) &&
+        // skip optimistic update if reaction already exists
+        !prevMessage.reactions?.find(
+          reaction =>
+            reaction.sender.did === this.senderUserDid &&
+            reaction.value === emoji,
+        )
+      ) {
+        if (prevMessage.reactions) {
+          if (
+            prevMessage.reactions.filter(
+              reaction => reaction.sender.did === this.senderUserDid,
+            ).length >= 5
+          ) {
+            throw new Error('Maximum reactions reached')
+          }
+        }
+        this.pastMessages.set(messageId, {
+          ...prevMessage,
+          reactions: [...(prevMessage.reactions ?? []), optimisticReaction],
+        })
+        this.commit()
+        restore = () => {
+          this.pastMessages.set(messageId, prevMessage)
+          this.commit()
+        }
+      }
+    } else if (this.newMessages.has(messageId)) {
+      const prevMessage = this.newMessages.get(messageId)
+      if (
+        ChatBskyConvoDefs.isMessageView(prevMessage) &&
+        !prevMessage.reactions?.find(reaction => reaction.value === emoji)
+      ) {
+        if (prevMessage.reactions && prevMessage.reactions.length >= 5)
+          throw new Error('Maximum reactions reached')
+        this.newMessages.set(messageId, {
+          ...prevMessage,
+          reactions: [...(prevMessage.reactions ?? []), optimisticReaction],
+        })
+        this.commit()
+        restore = () => {
+          this.newMessages.set(messageId, prevMessage)
+          this.commit()
+        }
+      }
+    }
+
+    try {
+      logger.info(`Adding reaction ${emoji} to message ${messageId}`)
+      const {data} = await this.agent.chat.bsky.convo.addReaction(
+        {messageId, value: emoji, convoId: this.convoId},
+        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
+      )
+      if (ChatBskyConvoDefs.isMessageView(data.message)) {
+        if (this.pastMessages.has(messageId)) {
+          this.pastMessages.set(messageId, data.message)
+          this.commit()
+        } else if (this.newMessages.has(messageId)) {
+          this.newMessages.set(messageId, data.message)
+          this.commit()
+        }
+      }
+    } catch (error) {
+      if (restore) restore()
+      throw error
+    }
+  }
+
+  /*
+   * Remove a reaction from a message.
+   *
+   * @param messageId - The ID of the message to remove the reaction from.
+   * @param emoji - The emoji to remove.
+   */
+  async removeReaction(messageId: string, emoji: string) {
+    let restore: null | (() => void) = null
+    if (this.pastMessages.has(messageId)) {
+      const prevMessage = this.pastMessages.get(messageId)
+      if (ChatBskyConvoDefs.isMessageView(prevMessage)) {
+        this.pastMessages.set(messageId, {
+          ...prevMessage,
+          reactions: prevMessage.reactions?.filter(
+            reaction =>
+              reaction.value !== emoji ||
+              reaction.sender.did !== this.senderUserDid,
+          ),
+        })
+        this.commit()
+        restore = () => {
+          this.pastMessages.set(messageId, prevMessage)
+          this.commit()
+        }
+      }
+    } else if (this.newMessages.has(messageId)) {
+      const prevMessage = this.newMessages.get(messageId)
+      if (ChatBskyConvoDefs.isMessageView(prevMessage)) {
+        this.newMessages.set(messageId, {
+          ...prevMessage,
+          reactions: prevMessage.reactions?.filter(
+            reaction =>
+              reaction.value !== emoji ||
+              reaction.sender.did !== this.senderUserDid,
+          ),
+        })
+        this.commit()
+        restore = () => {
+          this.newMessages.set(messageId, prevMessage)
+          this.commit()
+        }
+      }
+    }
+
+    try {
+      logger.info(`Removing reaction ${emoji} from message ${messageId}`)
+      await this.agent.chat.bsky.convo.removeReaction(
+        {messageId, value: emoji, convoId: this.convoId},
+        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
+      )
+    } catch (error) {
+      if (restore) restore()
+      throw error
+    }
   }
 }

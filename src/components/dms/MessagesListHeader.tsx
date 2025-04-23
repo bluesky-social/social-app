@@ -1,9 +1,9 @@
 import React, {useCallback} from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {
-  AppBskyActorDefs,
-  ModerationCause,
-  ModerationDecision,
+  type AppBskyActorDefs,
+  type ModerationCause,
+  type ModerationDecision,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
@@ -12,11 +12,12 @@ import {useNavigation} from '@react-navigation/native'
 
 import {BACK_HITSLOP} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {isWeb} from '#/platform/detection'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {type Shadow} from '#/state/cache/profile-shadow'
 import {isConvoActive, useConvo} from '#/state/messages/convo'
+import {type ConvoItem} from '#/state/messages/convo/types'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
@@ -24,31 +25,40 @@ import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/
 import {Link} from '#/components/Link'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 
 const PFP_SIZE = isWeb ? 40 : 34
 
 export let MessagesListHeader = ({
   profile,
   moderation,
-  blockInfo,
 }: {
-  profile?: AppBskyActorDefs.ProfileViewBasic
+  profile?: Shadow<AppBskyActorDefs.ProfileViewDetailed>
   moderation?: ModerationDecision
-  blockInfo?: {
-    listBlocks: ModerationCause[]
-    userBlock?: ModerationCause
-  }
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
 
+  const blockInfo = React.useMemo(() => {
+    if (!moderation) return
+    const modui = moderation.ui('profileView')
+    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
+    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
+    const userBlock = blocks.find(alert => alert.source.type === 'user')
+    return {
+      listBlocks,
+      userBlock,
+    }
+  }, [moderation])
+
   const onPressBack = useCallback(() => {
-    if (isWeb) {
-      navigation.replace('Messages', {})
-    } else {
+    if (navigation.canGoBack()) {
       navigation.goBack()
+    } else {
+      navigation.navigate('Messages', {})
     }
   }, [navigation])
 
@@ -65,25 +75,23 @@ export let MessagesListHeader = ({
         a.pr_lg,
         a.py_sm,
       ]}>
-      {!gtTablet && (
-        <TouchableOpacity
-          testID="conversationHeaderBackBtn"
-          onPress={onPressBack}
-          hitSlop={BACK_HITSLOP}
-          style={{width: 30, height: 30, marginTop: isWeb ? 6 : 4}}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Back`)}
-          accessibilityHint="">
-          <FontAwesomeIcon
-            size={18}
-            icon="angle-left"
-            style={{
-              marginTop: 6,
-            }}
-            color={t.atoms.text.color}
-          />
-        </TouchableOpacity>
-      )}
+      <TouchableOpacity
+        testID="conversationHeaderBackBtn"
+        onPress={onPressBack}
+        hitSlop={BACK_HITSLOP}
+        style={{width: 30, height: 30, marginTop: isWeb ? 6 : 4}}
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`Back`)}
+        accessibilityHint="">
+        <FontAwesomeIcon
+          size={18}
+          icon="angle-left"
+          style={{
+            marginTop: 6,
+          }}
+          color={t.atoms.text.color}
+        />
+      </TouchableOpacity>
 
       {profile && moderation && blockInfo ? (
         <HeaderReady
@@ -129,11 +137,11 @@ export let MessagesListHeader = ({
 MessagesListHeader = React.memo(MessagesListHeader)
 
 function HeaderReady({
-  profile: profileUnshadowed,
+  profile,
   moderation,
   blockInfo,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
   moderation: ModerationDecision
   blockInfo: {
     listBlocks: ModerationCause[]
@@ -143,15 +151,28 @@ function HeaderReady({
   const {_} = useLingui()
   const t = useTheme()
   const convoState = useConvo()
-  const profile = useProfileShadow(profileUnshadowed)
+  const verification = useSimpleVerificationState({
+    profile,
+  })
 
   const isDeletedAccount = profile?.handle === 'missing.invalid'
   const displayName = isDeletedAccount
-    ? 'Deleted Account'
+    ? _(msg`Deleted Account`)
     : sanitizeDisplayName(
         profile.displayName || profile.handle,
         moderation.ui('displayName'),
       )
+
+  // @ts-ignore findLast is polyfilled - esb
+  const latestMessageFromOther = convoState.items.findLast(
+    (item: ConvoItem) =>
+      item.type === 'message' && item.message.sender.did === profile.did,
+  )
+
+  const latestReportableMessage =
+    latestMessageFromOther?.type === 'message'
+      ? latestMessageFromOther.message
+      : undefined
 
   return (
     <View style={[a.flex_1]}>
@@ -169,17 +190,27 @@ function HeaderReady({
             />
           </View>
           <View style={a.flex_1}>
-            <Text
-              emoji
-              style={[
-                a.text_md,
-                a.font_bold,
-                a.self_start,
-                web(a.leading_normal),
-              ]}
-              numberOfLines={1}>
-              {displayName}
-            </Text>
+            <View style={[a.flex_row, a.align_center]}>
+              <Text
+                emoji
+                style={[
+                  a.text_md,
+                  a.font_bold,
+                  a.self_start,
+                  web(a.leading_normal),
+                ]}
+                numberOfLines={1}>
+                {displayName}
+              </Text>
+              {verification.showBadge && (
+                <View style={[a.pl_xs]}>
+                  <VerificationCheck
+                    width={14}
+                    verifier={verification.role === 'verifier'}
+                  />
+                </View>
+              )}
+            </View>
             {!isDeletedAccount && (
               <Text
                 style={[
@@ -210,6 +241,7 @@ function HeaderReady({
             profile={profile}
             currentScreen="conversation"
             blockInfo={blockInfo}
+            latestReportableMessage={latestReportableMessage}
           />
         )}
       </View>

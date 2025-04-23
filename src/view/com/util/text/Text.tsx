@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, Text as RNText, TextProps} from 'react-native'
+import {StyleSheet, TextProps} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
 
 import {lh, s} from '#/lib/styles'
@@ -9,11 +9,9 @@ import {isIOS, isWeb} from '#/platform/detection'
 import {applyFonts, useAlf} from '#/alf'
 import {
   childHasEmoji,
-  childIsString,
   renderChildrenWithEmoji,
   StringChild,
-} from '#/components/Typography'
-import {IS_DEV} from '#/env'
+} from '#/alf/typography'
 
 export type CustomTextProps = Omit<TextProps, 'children'> & {
   type?: TypographyVariant
@@ -32,7 +30,11 @@ export type CustomTextProps = Omit<TextProps, 'children'> & {
       }
   )
 
-export function Text({
+export {Text_DEPRECATED as Text}
+/**
+ * @deprecated use Text from Typography instead.
+ */
+function Text_DEPRECATED({
   type = 'md',
   children,
   emoji,
@@ -46,15 +48,11 @@ export function Text({
   const theme = useTheme()
   const {fonts} = useAlf()
 
-  if (IS_DEV) {
+  if (__DEV__) {
     if (!emoji && childHasEmoji(children)) {
       logger.warn(
         `Text: emoji detected but emoji not enabled: "${children}"\n\nPlease add <Text emoji />'`,
       )
-    }
-
-    if (emoji && !childIsString(children)) {
-      logger.error('Text: when <Text emoji />, children can only be strings.')
     }
   }
 
@@ -103,19 +101,9 @@ export function Text({
     type,
   ])
 
-  if (selectable && isIOS) {
-    return (
-      <UITextView {...textProps}>
-        {isIOS && emoji
-          ? renderChildrenWithEmoji(children, textProps)
-          : children}
-      </UITextView>
-    )
-  }
-
   return (
-    <RNText {...textProps}>
-      {isIOS && emoji ? renderChildrenWithEmoji(children, textProps) : children}
-    </RNText>
+    <UITextView {...textProps}>
+      {renderChildrenWithEmoji(children, textProps, emoji ?? false)}
+    </UITextView>
   )
 }

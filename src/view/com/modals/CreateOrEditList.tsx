@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -8,9 +8,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {Image as RNImage} from 'react-native-image-crop-picker'
+import {type Image as RNImage} from 'react-native-image-crop-picker'
 import {LinearGradient} from 'expo-linear-gradient'
-import {AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
+import {type AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -159,8 +159,8 @@ export function Component({
         })
         Toast.show(
           isCurateList
-            ? _(msg`User list updated`)
-            : _(msg`Moderation list updated`),
+            ? _(msg({message: 'User list updated', context: 'toast'}))
+            : _(msg({message: 'Moderation list updated', context: 'toast'})),
         )
         onSave?.(list.uri)
       } else {
@@ -173,8 +173,8 @@ export function Component({
         })
         Toast.show(
           isCurateList
-            ? _(msg`User list created`)
-            : _(msg`Moderation list created`),
+            ? _(msg({message: 'User list created', context: 'toast'}))
+            : _(msg({message: 'Moderation list created', context: 'toast'})),
         )
         onSave?.(res.uri)
       }

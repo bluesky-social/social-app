@@ -31,7 +31,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const openLightbox = useNonReactiveCallback(
     (lightbox: Omit<Lightbox, 'id'>) => {
-      setActiveLightbox({...lightbox, id: nanoid()})
+      setActiveLightbox(prevLightbox => {
+        if (prevLightbox) {
+          // Ignore duplicate open requests. If it's already open,
+          // the user has to explicitly close the previous one first.
+          return prevLightbox
+        } else {
+          return {...lightbox, id: nanoid()}
+        }
+      })
     },
   )
 

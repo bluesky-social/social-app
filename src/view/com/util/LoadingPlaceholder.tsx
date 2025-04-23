@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {
   DimensionValue,
   StyleProp,
@@ -24,7 +24,7 @@ export function LoadingPlaceholder({
   style,
 }: {
   width: DimensionValue
-  height: DimensionValue
+  height: DimensionValue | undefined
   style?: StyleProp<ViewStyle>
 }) {
   const theme = useTheme()
@@ -140,7 +140,7 @@ export function NotificationLoadingPlaceholder({
   const pal = usePalette('default')
   return (
     <View style={[styles.notification, pal.view, style]}>
-      <View style={[{width: 70}, a.align_end, a.pr_sm, a.pt_2xs]}>
+      <View style={[{width: 60}, a.align_end, a.pr_sm, a.pt_2xs]}>
         <HeartIconFilled
           size="xl"
           style={{color: pal.colors.backgroundLight}}
@@ -149,8 +149,8 @@ export function NotificationLoadingPlaceholder({
       <View style={{flex: 1}}>
         <View style={[a.flex_row, s.mb10]}>
           <LoadingPlaceholder
-            width={30}
-            height={30}
+            width={35}
+            height={35}
             style={styles.smallAvatar}
           />
         </View>
@@ -283,6 +283,47 @@ export function FeedFeedLoadingPlaceholder() {
   )
 }
 
+export function ChatListItemLoadingPlaceholder({
+  style,
+}: {
+  style?: StyleProp<ViewStyle>
+}) {
+  const t = useTheme_NEW()
+  const random = useMemo(() => Math.random(), [])
+  return (
+    <View style={[a.flex_row, a.gap_md, a.px_lg, a.mt_lg, t.atoms.bg, style]}>
+      <LoadingPlaceholder width={52} height={52} style={a.rounded_full} />
+      <View>
+        <LoadingPlaceholder width={140} height={12} style={a.mt_xs} />
+        <LoadingPlaceholder width={120} height={8} style={a.mt_sm} />
+        <LoadingPlaceholder
+          width={80 + random * 100}
+          height={8}
+          style={a.mt_sm}
+        />
+      </View>
+    </View>
+  )
+}
+
+export function ChatListLoadingPlaceholder() {
+  return (
+    <>
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+    </>
+  )
+}
+
 const styles = StyleSheet.create({
   loadingPlaceholder: {
     borderRadius: 6,
@@ -310,7 +351,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   avatar: {
-    borderRadius: 26,
+    borderRadius: 999,
     marginRight: 10,
     marginLeft: 8,
   },
@@ -324,11 +365,11 @@ const styles = StyleSheet.create({
     margin: 1,
   },
   profileCardAvi: {
-    borderRadius: 20,
+    borderRadius: 999,
     marginRight: 10,
   },
   smallAvatar: {
-    borderRadius: 15,
+    borderRadius: 999,
     marginRight: 10,
   },
 })

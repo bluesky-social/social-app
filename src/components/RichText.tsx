@@ -1,24 +1,19 @@
 import React from 'react'
 import {TextStyle} from 'react-native'
 import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
 import {toShortUrl} from '#/lib/strings/url-helpers'
-import {isNative} from '#/platform/detection'
-import {atoms as a, flatten, native, TextStyleProp, useTheme, web} from '#/alf'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {atoms as a, flatten, TextStyleProp} from '#/alf'
+import {isOnlyEmoji} from '#/alf/typography'
 import {InlineLinkText, LinkProps} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
+import {RichTextTag} from '#/components/RichTextTag'
 import {Text, TextProps} from '#/components/Typography'
 
 const WORD_WRAP = {wordWrap: 1}
 
 export type RichTextProps = TextStyleProp &
-  Pick<TextProps, 'selectable'> & {
+  Pick<TextProps, 'selectable' | 'onLayout' | 'onTextLayout'> & {
     value: RichTextAPI | string
     testID?: string
     numberOfLines?: number
@@ -28,6 +23,7 @@ export type RichTextProps = TextStyleProp &
     onLinkPress?: LinkProps['onPress']
     interactiveStyle?: TextStyle
     emojiMultiplier?: number
+    shouldProxyLinks?: boolean
   }
 
 export function RichText({
@@ -42,6 +38,9 @@ export function RichText({
   onLinkPress,
   interactiveStyle,
   emojiMultiplier = 1.85,
+  onLayout,
+  onTextLayout,
+  shouldProxyLinks,
 }: RichTextProps) {
   const richText = React.useMemo(
     () =>
@@ -53,7 +52,6 @@ export function RichText({
   const plainStyles = [a.leading_snug, flattenedStyle]
   const interactiveStyles = [
     a.leading_snug,
-    a.pointer_events_auto,
     flatten(interactiveStyle),
     flattenedStyle,
   ]
@@ -70,6 +68,8 @@ export function RichText({
           selectable={selectable}
           testID={testID}
           style={[plainStyles, {fontSize}]}
+          onLayout={onLayout}
+          onTextLayout={onTextLayout}
           // @ts-ignore web only -prf
           dataSet={WORD_WRAP}>
           {text}
@@ -83,6 +83,8 @@ export function RichText({
         testID={testID}
         style={plainStyles}
         numberOfLines={numberOfLines}
+        onLayout={onLayout}
+        onTextLayout={onTextLayout}
         // @ts-ignore web only -prf
         dataSet={WORD_WRAP}>
         {text}
@@ -110,6 +112,7 @@ export function RichText({
             style={interactiveStyles}
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
+            shouldProxy={shouldProxyLinks}
             onPress={onLinkPress}>
             {segment.text}
           </InlineLinkText>
@@ -128,6 +131,7 @@ export function RichText({
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
             shareOnLongPress
+            shouldProxy={shouldProxyLinks}
             onPress={onLinkPress}
             emoji>
             {toShortUrl(segment.text)}
@@ -143,123 +147,30 @@ export function RichText({
       els.push(
         <RichTextTag
           key={key}
-          text={segment.text}
+          display={segment.text}
           tag={tag.tag}
-          style={interactiveStyles}
-          selectable={selectable}
+          textStyle={interactiveStyles}
           authorHandle={authorHandle}
         />,
       )
     } else {
-      els.push(
-        <Text key={key} emoji style={plainStyles}>
-          {segment.text}
-        </Text>,
-      )
+      els.push(segment.text)
     }
     key++
   }
 
   return (
     <Text
+      emoji
       selectable={selectable}
       testID={testID}
       style={plainStyles}
       numberOfLines={numberOfLines}
+      onLayout={onLayout}
+      onTextLayout={onTextLayout}
       // @ts-ignore web only -prf
       dataSet={WORD_WRAP}>
       {els}
     </Text>
-  )
-}
-
-function RichTextTag({
-  text,
-  tag,
-  style,
-  selectable,
-  authorHandle,
-}: {
-  text: string
-  tag: string
-  selectable?: boolean
-  authorHandle?: string
-} & TextStyleProp) {
-  const t = useTheme()
-  const {_} = useLingui()
-  const control = useTagMenuControl()
-  const {
-    state: hovered,
-    onIn: onHoverIn,
-    onOut: onHoverOut,
-  } = useInteractionState()
-  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
-  const {
-    state: pressed,
-    onIn: onPressIn,
-    onOut: onPressOut,
-  } = useInteractionState()
-  const navigation = useNavigation<NavigationProp>()
-
-  const navigateToPage = React.useCallback(() => {
-    navigation.push('Hashtag', {
-      tag: encodeURIComponent(tag),
-    })
-  }, [navigation, tag])
-
-  const openDialog = React.useCallback(() => {
-    control.open()
-  }, [control])
-
-  /*
-   * N.B. On web, this is wrapped in another pressable comopnent with a11y
-   * labels, etc. That's why only some of these props are applied here.
-   */
-
-  return (
-    <React.Fragment>
-      <TagMenu control={control} tag={tag} authorHandle={authorHandle}>
-        <Text
-          emoji
-          selectable={selectable}
-          {...native({
-            accessibilityLabel: _(msg`Hashtag: #${tag}`),
-            accessibilityHint: _(msg`Long press to open tag menu for #${tag}`),
-            accessibilityRole: isNative ? 'button' : undefined,
-            onPress: navigateToPage,
-            onLongPress: openDialog,
-            onPressIn: onPressIn,
-            onPressOut: onPressOut,
-          })}
-          {...web({
-            onMouseEnter: onHoverIn,
-            onMouseLeave: onHoverOut,
-          })}
-          // @ts-ignore
-          onFocus={onFocus}
-          onBlur={onBlur}
-          style={[
-            web({
-              cursor: 'pointer',
-            }),
-            {color: t.palette.primary_500},
-            (hovered || focused || pressed) && {
-              ...web({outline: 0}),
-              textDecorationLine: 'underline',
-              textDecorationColor: t.palette.primary_500,
-            },
-            style,
-          ]}>
-          {text}
-        </Text>
-      </TagMenu>
-    </React.Fragment>
-  )
-}
-
-export function isOnlyEmoji(text: string) {
-  return (
-    text.length <= 15 &&
-    /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]+$/u.test(text)
   )
 }

@@ -1,19 +1,16 @@
-import React from 'react'
-import {BackHandler, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {useCallback, useEffect, useState} from 'react'
+import {BackHandler, useWindowDimensions, View} from 'react-native'
 import {Drawer} from 'react-native-drawer-layout'
-import Animated from 'react-native-reanimated'
+import {SystemBars} from 'react-native-edge-to-edge'
+import {Gesture} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import * as NavigationBar from 'expo-navigation-bar'
-import {StatusBar} from 'expo-status-bar'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {useNotificationsHandler} from '#/lib/hooks/useNotificationHandler'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useNotificationsRegistration} from '#/lib/notifications/notifications'
 import {isStateAtTabRoot} from '#/lib/routes/helpers'
-import {useTheme} from '#/lib/ThemeContext'
 import {isAndroid, isIOS} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {useSession} from '#/state/session'
@@ -26,30 +23,31 @@ import {useCloseAnyActiveElement} from '#/state/util'
 import {Lightbox} from '#/view/com/lightbox/Lightbox'
 import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {atoms as a, select, useTheme as useNewTheme} from '#/alf'
+import {atoms as a, select, useTheme} from '#/alf'
+import {setSystemUITheme} from '#/alf/util/systemUI'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {Outlet as PortalOutlet} from '#/components/Portal'
+import {RoutesContainer, TabsNavigator} from '#/Navigation'
 import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
 import {updateActiveViewAsync} from '../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
-import {RoutesContainer, TabsNavigator} from '../../Navigation'
 import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
 
 function ShellInner() {
-  const t = useNewTheme()
+  const t = useTheme()
   const isDrawerOpen = useIsDrawerOpen()
   const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
   const setIsDrawerOpen = useSetDrawerOpen()
   const winDim = useWindowDimensions()
   const insets = useSafeAreaInsets()
 
-  const renderDrawerContent = React.useCallback(() => <DrawerContent />, [])
-  const onOpenDrawer = React.useCallback(
+  const renderDrawerContent = useCallback(() => <DrawerContent />, [])
+  const onOpenDrawer = useCallback(
     () => setIsDrawerOpen(true),
     [setIsDrawerOpen],
   )
-  const onCloseDrawer = React.useCallback(
+  const onCloseDrawer = useCallback(
     () => setIsDrawerOpen(false),
     [setIsDrawerOpen],
   )
@@ -60,7 +58,7 @@ function ShellInner() {
   useNotificationsRegistration()
   useNotificationsHandler()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAndroid) {
       const listener = BackHandler.addEventListener('hardwareBackPress', () => {
         return closeAnyActiveElement()
@@ -80,7 +78,7 @@ function ShellInner() {
   // To be certain though, we will also dedupe these calls.
   const navigation = useNavigation()
   const dedupe = useDedupe(1000)
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isAndroid) return
     const onFocusOrBlur = () => {
       setTimeout(() => {
@@ -93,19 +91,49 @@ function ShellInner() {
     }
   }, [dedupe, navigation])
 
+  const swipeEnabled = !canGoBack && hasSession && !isDrawerSwipeDisabled
+  const [trendingScrollGesture] = useState(() => Gesture.Native())
   return (
     <>
-      <Animated.View style={[a.h_full]}>
+      <View style={[a.h_full]}>
         <ErrorBoundary
           style={{paddingTop: insets.top, paddingBottom: insets.bottom}}>
           <Drawer
             renderDrawerContent={renderDrawerContent}
             drawerStyle={{width: Math.min(400, winDim.width * 0.8)}}
+            configureGestureHandler={handler => {
+              handler = handler.requireExternalGestureToFail(
+                trendingScrollGesture,
+              )
+
+              if (swipeEnabled) {
+                if (isDrawerOpen) {
+                  return handler.activeOffsetX([-1, 1])
+                } else {
+                  return (
+                    handler
+                      // Any movement to the left is a pager swipe
+                      // so fail the drawer gesture immediately.
+                      .failOffsetX(-1)
+                      // Don't rush declaring that a movement to the right
+                      // is a drawer swipe. It could be a vertical scroll.
+                      .activeOffsetX(5)
+                  )
+                }
+              } else {
+                // Fail the gesture immediately.
+                // This seems more reliable than the `swipeEnabled` prop.
+                // With `swipeEnabled` alone, the gesture may freeze after toggling off/on.
+                return handler.failOffsetX([0, 0]).failOffsetY([0, 0])
+              }
+            }}
             open={isDrawerOpen}
             onOpen={onOpenDrawer}
             onClose={onCloseDrawer}
-            swipeEdgeWidth={winDim.width / 2}
-            swipeEnabled={!canGoBack && hasSession && !isDrawerSwipeDisabled}
+            swipeEdgeWidth={winDim.width}
+            swipeMinVelocity={100}
+            swipeMinDistance={10}
+            drawerType={isIOS ? 'slide' : 'front'}
             overlayStyle={{
               backgroundColor: select(t.name, {
                 light: 'rgba(0, 57, 117, 0.1)',
@@ -118,7 +146,7 @@ function ShellInner() {
             <TabsNavigator />
           </Drawer>
         </ErrorBoundary>
-      </Animated.View>
+      </View>
       <Composer winHeight={winDim.height} />
       <ModalsContainer />
       <MutedWordsDialog />
@@ -132,28 +160,23 @@ function ShellInner() {
 
 export const Shell: React.FC = function ShellImpl() {
   const {fullyExpandedCount} = useDialogStateControlContext()
-  const pal = usePalette('default')
-  const theme = useTheme()
+  const t = useTheme()
   useIntentHandler()
 
-  React.useEffect(() => {
-    if (isAndroid) {
-      NavigationBar.setBackgroundColorAsync(theme.palette.default.background)
-      NavigationBar.setBorderColorAsync(theme.palette.default.background)
-      NavigationBar.setButtonStyleAsync(
-        theme.colorScheme === 'dark' ? 'light' : 'dark',
-      )
-    }
-  }, [theme])
+  useEffect(() => {
+    setSystemUITheme('theme', t)
+  }, [t])
+
   return (
-    <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
-      <StatusBar
-        style={
-          theme.colorScheme === 'dark' || (isIOS && fullyExpandedCount > 0)
-            ? 'light'
-            : 'dark'
-        }
-        animated
+    <View testID="mobileShellView" style={[a.h_full, t.atoms.bg]}>
+      <SystemBars
+        style={{
+          statusBar:
+            t.name !== 'light' || (isIOS && fullyExpandedCount > 0)
+              ? 'light'
+              : 'dark',
+          navigationBar: t.name !== 'light' ? 'light' : 'dark',
+        }}
       />
       <RoutesContainer>
         <ShellInner />
@@ -161,9 +184,3 @@ export const Shell: React.FC = function ShellImpl() {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  outerContainer: {
-    height: '100%',
-  },
-})

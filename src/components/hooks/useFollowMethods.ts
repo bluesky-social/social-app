@@ -1,5 +1,4 @@
 import React from 'react'
-import {AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -9,14 +8,15 @@ import {Shadow} from '#/state/cache/types'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useRequireAuth} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
+import * as bsky from '#/types/bsky'
 
 export function useFollowMethods({
   profile,
   logContext,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
-  logContext: LogEvents['profile:follow:sampled']['logContext'] &
-    LogEvents['profile:unfollow:sampled']['logContext']
+  profile: Shadow<bsky.profile.AnyProfileView>
+  logContext: LogEvents['profile:follow']['logContext'] &
+    LogEvents['profile:unfollow']['logContext']
 }) {
   const {_} = useLingui()
   const requireAuth = useRequireAuth()

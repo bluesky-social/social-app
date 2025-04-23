@@ -1,12 +1,12 @@
-import React, {useEffect} from 'react'
+import {useEffect, useLayoutEffect, useState} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
+import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
-import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {NavigationProp} from '#/lib/routes/types'
 import {colors} from '#/lib/styles'
@@ -32,8 +32,22 @@ function ShellInner() {
   const navigator = useNavigation<NavigationProp>()
   const closeAllActiveElements = useCloseAllActiveElements()
   const {_} = useLingui()
+  const showDrawer = !isDesktop && isDrawerOpen
+  const [showDrawerDelayedExit, setShowDrawerDelayedExit] = useState(showDrawer)
 
-  useWebBodyScrollLock(isDrawerOpen)
+  useLayoutEffect(() => {
+    if (showDrawer !== showDrawerDelayedExit) {
+      if (showDrawer) {
+        setShowDrawerDelayedExit(true)
+      } else {
+        const timeout = setTimeout(() => {
+          setShowDrawerDelayedExit(false)
+        }, 160)
+        return () => clearTimeout(timeout)
+      }
+    }
+  }, [showDrawer, showDrawerDelayedExit])
+
   useComposerKeyboardShortcut()
   useIntentHandler()
 
@@ -56,32 +70,42 @@ function ShellInner() {
       <Lightbox />
       <PortalOutlet />
 
-      {!isDesktop && isDrawerOpen && (
-        <TouchableWithoutFeedback
-          onPress={ev => {
-            // Only close if press happens outside of the drawer
-            if (ev.target === ev.currentTarget) {
-              setDrawerOpen(false)
-            }
-          }}
-          accessibilityLabel={_(msg`Close navigation footer`)}
-          accessibilityHint={_(msg`Closes bottom navigation bar`)}>
-          <View
-            style={[
-              styles.drawerMask,
-              {
-                backgroundColor: select(t.name, {
-                  light: 'rgba(0, 57, 117, 0.1)',
-                  dark: 'rgba(1, 82, 168, 0.1)',
-                  dim: 'rgba(10, 13, 16, 0.8)',
-                }),
-              },
-            ]}>
-            <View style={styles.drawerContainer}>
-              <DrawerContent />
+      {showDrawerDelayedExit && (
+        <>
+          <RemoveScrollBar />
+          <TouchableWithoutFeedback
+            onPress={ev => {
+              // Only close if press happens outside of the drawer
+              if (ev.target === ev.currentTarget) {
+                setDrawerOpen(false)
+              }
+            }}
+            accessibilityLabel={_(msg`Close drawer menu`)}
+            accessibilityHint="">
+            <View
+              style={[
+                styles.drawerMask,
+                {
+                  backgroundColor: showDrawer
+                    ? select(t.name, {
+                        light: 'rgba(0, 57, 117, 0.1)',
+                        dark: 'rgba(1, 82, 168, 0.1)',
+                        dim: 'rgba(10, 13, 16, 0.8)',
+                      })
+                    : 'transparent',
+                },
+                a.transition_color,
+              ]}>
+              <View
+                style={[
+                  styles.drawerContainer,
+                  showDrawer ? a.slide_in_left : a.slide_out_left,
+                ]}>
+                <DrawerContent />
+              </View>
             </View>
-          </View>
-        </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback>
+        </>
       )}
     </>
   )
@@ -106,7 +130,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black, // TODO
   },
   drawerMask: {
-    // @ts-ignore web only
     position: 'fixed',
     width: '100%',
     height: '100%',
@@ -115,10 +138,11 @@ const styles = StyleSheet.create({
   },
   drawerContainer: {
     display: 'flex',
-    // @ts-ignore web only
     position: 'fixed',
     top: 0,
     left: 0,
     height: '100%',
+    width: 330,
+    maxWidth: '80%',
   },
 })

@@ -45,7 +45,7 @@ function GrowableAvatarInner({
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        scale: interpolate(scrollY.value, [-150, 0], [1.2, 1], {
+        scale: interpolate(scrollY.get(), [-150, 0], [1.2, 1], {
           extrapolateRight: Extrapolation.CLAMP,
         }),
       },

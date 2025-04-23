@@ -6,13 +6,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {
-  AnimatedRef,
-  measure,
-  MeasuredDimensions,
-  runOnJS,
-  runOnUI,
-} from 'react-native-reanimated'
+import {MeasuredDimensions, runOnJS, runOnUI} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {
   AppBskyEmbedExternal,
@@ -27,6 +21,7 @@ import {
   ModerationDecision,
 } from '@atproto/api'
 
+import {HandleRef, measureHandle} from '#/lib/hooks/useHandleRef'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useLightboxControls} from '#/state/lightbox'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -163,12 +158,13 @@ export function PostEmbeds({
       }
       const onPress = (
         index: number,
-        refs: AnimatedRef<React.Component<{}, {}, any>>[],
+        refs: HandleRef[],
         fetchedDims: (Dimensions | null)[],
       ) => {
+        const handles = refs.map(r => r.current)
         runOnUI(() => {
           'worklet'
-          const rects = refs.map(ref => (ref ? measure(ref) : null))
+          const rects = handles.map(measureHandle)
           runOnJS(_openLightbox)(index, rects, fetchedDims)
         })()
       }
@@ -241,7 +237,16 @@ export function PostEmbeds({
   if (AppBskyEmbedVideo.isView(embed)) {
     return (
       <ContentHider modui={moderation?.ui('contentMedia')}>
-        <VideoEmbed embed={embed} />
+        <VideoEmbed
+          embed={embed}
+          crop={
+            viewContext === PostEmbedViewContext.ThreadHighlighted
+              ? 'none'
+              : viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
+              ? 'square'
+              : 'constrained'
+          }
+        />
       </ContentHider>
     )
   }

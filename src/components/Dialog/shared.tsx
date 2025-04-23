@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleProp, TextStyle, View, ViewStyle} from 'react-native'
 
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
 export function Header({
@@ -29,10 +29,8 @@ export function Header({
         a.border_b,
         t.atoms.border_contrast_medium,
         t.atoms.bg,
-        web([
-          {borderRadiusTopLeft: a.rounded_md.borderRadius},
-          {borderRadiusTopRight: a.rounded_md.borderRadius},
-        ]),
+        {borderTopLeftRadius: a.rounded_md.borderRadius},
+        {borderTopRightRadius: a.rounded_md.borderRadius},
         style,
       ]}>
       {renderLeft && (

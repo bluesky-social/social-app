@@ -1,15 +1,15 @@
-import React, {ComponentProps} from 'react'
+import React, {type ComponentProps} from 'react'
 import {Linking, ScrollView, TouchableOpacity, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg, Plural, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
-import {PressableScale} from '#/lib/custom-animations/PressableScale'
+import {type PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {getTabState, TabState} from '#/lib/routes/helpers'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {colors} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
@@ -17,12 +17,12 @@ import {emitSoftReset} from '#/state/events'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
-import {SessionAccount, useSession} from '#/state/session'
+import {type SessionAccount, useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, tokens, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {
@@ -51,6 +51,8 @@ import {
 } from '#/components/icons/UserCircle'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 
 const iconWidth = 26
 
@@ -64,6 +66,7 @@ let DrawerProfileCard = ({
   const {_, i18n} = useLingui()
   const t = useTheme()
   const {data: profile} = useProfileQuery({did: account.did})
+  const verification = useSimpleVerificationState({profile})
 
   return (
     <TouchableOpacity
@@ -71,7 +74,7 @@ let DrawerProfileCard = ({
       accessibilityLabel={_(msg`Profile`)}
       accessibilityHint={_(msg`Navigates to your profile`)}
       onPress={onPressProfile}
-      style={[a.gap_sm]}>
+      style={[a.gap_sm, a.pr_lg]}>
       <UserAvatar
         size={52}
         avatar={profile?.avatar}
@@ -80,12 +83,25 @@ let DrawerProfileCard = ({
         type={profile?.associated?.labeler ? 'labeler' : 'user'}
       />
       <View style={[a.gap_2xs]}>
-        <Text
-          emoji
-          style={[a.font_heavy, a.text_xl, a.mt_2xs, a.leading_tight]}
-          numberOfLines={1}>
-          {profile?.displayName || account.handle}
-        </Text>
+        <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
+          <Text
+            emoji
+            style={[a.font_heavy, a.text_xl, a.mt_2xs, a.leading_tight]}
+            numberOfLines={1}>
+            {profile?.displayName || account.handle}
+          </Text>
+          {verification.showBadge && (
+            <View
+              style={{
+                top: 0,
+              }}>
+              <VerificationCheck
+                width={16}
+                verifier={verification.role === 'verifier'}
+              />
+            </View>
+          )}
+        </View>
         <Text
           emoji
           style={[t.atoms.text_contrast_medium, a.text_md, a.leading_tight]}
@@ -122,9 +138,8 @@ let DrawerProfileCard = ({
 DrawerProfileCard = React.memo(DrawerProfileCard)
 export {DrawerProfileCard}
 
-let DrawerContent = ({}: {}): React.ReactNode => {
+let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   const t = useTheme()
-  const {_} = useLingui()
   const insets = useSafeAreaInsets()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
@@ -137,7 +152,6 @@ let DrawerContent = ({}: {}): React.ReactNode => {
     isAtMessages,
   } = useNavigationTabState()
   const {hasSession, currentAccount} = useSession()
-  const kawaii = useKawaiiMode()
 
   // events
   // =
@@ -277,34 +291,7 @@ let DrawerContent = ({}: {}): React.ReactNode => {
 
         <View style={[a.px_xl]}>
           <Divider style={[a.mb_xl, a.mt_sm]} />
-
-          <View style={[a.flex_col, a.gap_md, a.flex_wrap]}>
-            <InlineLinkText
-              style={[a.text_md]}
-              label={_(msg`Terms of Service`)}
-              to="https://bsky.social/about/support/tos">
-              <Trans>Terms of Service</Trans>
-            </InlineLinkText>
-            <InlineLinkText
-              style={[a.text_md]}
-              to="https://bsky.social/about/support/privacy-policy"
-              label={_(msg`Privacy Policy`)}>
-              <Trans>Privacy Policy</Trans>
-            </InlineLinkText>
-            {kawaii && (
-              <Text style={t.atoms.text_contrast_medium}>
-                <Trans>
-                  Logo by{' '}
-                  <InlineLinkText
-                    style={[a.text_md]}
-                    to="/profile/sawaratsuki.bsky.social"
-                    label="@sawaratsuki.bsky.social">
-                    @sawaratsuki.bsky.social
-                  </InlineLinkText>
-                </Trans>
-              </Text>
-            )}
-          </View>
+          <ExtraLinks />
         </View>
       </ScrollView>
 
@@ -335,7 +322,12 @@ let DrawerFooter = ({
         a.flex_wrap,
         a.pl_xl,
         a.pt_md,
-        {paddingBottom: Math.max(insets.bottom, a.pb_xl.paddingBottom)},
+        {
+          paddingBottom: Math.max(
+            insets.bottom + tokens.space.xs,
+            tokens.space.xl,
+          ),
+        },
       ]}>
       <Button
         label={_(msg`Send feedback`)}
@@ -391,7 +383,7 @@ let SearchMenuItem = ({
           <MagnifyingGlass style={[t.atoms.text]} width={iconWidth} />
         )
       }
-      label={_(msg`Search`)}
+      label={_(msg`Explore`)}
       bold={isActive}
       onPress={onPress}
     />
@@ -474,7 +466,12 @@ let NotificationsMenuItem = ({
       accessibilityHint={
         numUnreadNotifications === ''
           ? ''
-          : _(msg`${numUnreadNotifications} unread`)
+          : _(
+              msg`${plural(numUnreadNotifications ?? 0, {
+                one: '# unread item',
+                other: '# unread items',
+              })}` || '',
+            )
       }
       count={numUnreadNotifications}
       bold={isActive}
@@ -631,5 +628,41 @@ function MenuItem({icon, label, count, bold, onPress}: MenuItemProps) {
         </View>
       )}
     </Button>
+  )
+}
+
+function ExtraLinks() {
+  const {_} = useLingui()
+  const t = useTheme()
+  const kawaii = useKawaiiMode()
+
+  return (
+    <View style={[a.flex_col, a.gap_md, a.flex_wrap]}>
+      <InlineLinkText
+        style={[a.text_md]}
+        label={_(msg`Terms of Service`)}
+        to="https://bsky.social/about/support/tos">
+        <Trans>Terms of Service</Trans>
+      </InlineLinkText>
+      <InlineLinkText
+        style={[a.text_md]}
+        to="https://bsky.social/about/support/privacy-policy"
+        label={_(msg`Privacy Policy`)}>
+        <Trans>Privacy Policy</Trans>
+      </InlineLinkText>
+      {kawaii && (
+        <Text style={t.atoms.text_contrast_medium}>
+          <Trans>
+            Logo by{' '}
+            <InlineLinkText
+              style={[a.text_md]}
+              to="/profile/sawaratsuki.bsky.social"
+              label="@sawaratsuki.bsky.social">
+              @sawaratsuki.bsky.social
+            </InlineLinkText>
+          </Trans>
+        </Text>
+      )}
+    </View>
   )
 }

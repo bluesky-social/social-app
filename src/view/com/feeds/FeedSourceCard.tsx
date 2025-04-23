@@ -17,7 +17,6 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
-import {shouldClickOpenNewTab} from '#/platform/urls'
 import {FeedSourceInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {
   useAddSavedFeedsMutation,
@@ -29,6 +28,7 @@ import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import * as Toast from '#/view/com/util/Toast'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
+import {shouldClickOpenNewTab} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '../util/text/Text'
@@ -162,7 +162,10 @@ export function FeedSourceCardLoaded({
         style={[
           pal.border,
           {
-            borderTopWidth: showMinimalPlaceholder || hideTopBorder ? 0 : 1,
+            borderTopWidth:
+              showMinimalPlaceholder || hideTopBorder
+                ? 0
+                : StyleSheet.hairlineWidth,
             flexDirection: 'row',
             alignItems: 'center',
             flex: 1,
@@ -301,18 +304,21 @@ export function FeedSourceCardLoaded({
 
         {showLikes && feed.type === 'feed' ? (
           <Text type="sm-medium" style={[pal.text, pal.textLight]}>
-            <Plural
-              value={feed.likeCount || 0}
-              one="Liked by # user"
-              other="Liked by # users"
-            />
+            <Trans>
+              Liked by{' '}
+              <Plural
+                value={feed.likeCount || 0}
+                one="# user"
+                other="# users"
+              />
+            </Trans>
           </Text>
         ) : null}
       </Pressable>
 
       <Prompt.Basic
         control={removePromptControl}
-        title={_(msg`Remove from my feeds?`)}
+        title={_(msg`Remove from your feeds?`)}
         description={_(
           msg`Are you sure you want to remove ${feed.displayName} from your feeds?`,
         )}

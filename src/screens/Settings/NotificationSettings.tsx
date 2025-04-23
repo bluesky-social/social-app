@@ -1,4 +1,3 @@
-import React from 'react'
 import {Text} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -19,7 +18,13 @@ type Props = NativeStackScreenProps<AllNavigatorParams, 'NotificationSettings'>
 export function NotificationSettingsScreen({}: Props) {
   const {_} = useLingui()
 
-  const {data, isError: isQueryError, refetch} = useNotificationFeedQuery()
+  const {
+    data,
+    isError: isQueryError,
+    refetch,
+  } = useNotificationFeedQuery({
+    filter: 'all',
+  })
   const serverPriority = data?.pages.at(0)?.priority
 
   const {
@@ -34,7 +39,15 @@ export function NotificationSettingsScreen({}: Props) {
 
   return (
     <Layout.Screen>
-      <Layout.Header title={_(msg`Notification Settings`)} />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Notification Settings</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
         {isQueryError ? (
           <Error

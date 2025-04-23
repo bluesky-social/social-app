@@ -88,7 +88,7 @@ repositories {
 
 dependencies {
   implementation 'androidx.appcompat:appcompat:1.6.1'
-    def GLIDE_VERSION = "4.13.2"
+    def GLIDE_VERSION = "4.16.0"
 
   implementation project(':expo-modules-core')
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${getKotlinVersion()}"

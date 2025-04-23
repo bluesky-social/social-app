@@ -1,4 +1,3 @@
-import React from 'react'
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 
 import {choose} from '#/lib/functions'

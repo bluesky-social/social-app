@@ -6,7 +6,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
-import {logger} from '#/logger'
+import {Logger} from '#/logger'
 import {isAndroid} from '#/platform/detection'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
@@ -49,6 +49,8 @@ const DEFAULT_HANDLER_OPTIONS = {
 // These need to stay outside the hook to persist between account switches
 let storedPayload: NotificationPayload | undefined
 let prevDate = 0
+
+const logger = Logger.create(Logger.Context.Notifications)
 
 export function useNotificationsHandler() {
   const queryClient = useQueryClient()
@@ -177,13 +179,16 @@ export function useNotificationsHandler() {
 
     Notifications.setNotificationHandler({
       handleNotification: async e => {
-        if (e.request.trigger.type !== 'push') return DEFAULT_HANDLER_OPTIONS
+        if (
+          e.request.trigger == null ||
+          typeof e.request.trigger !== 'object' ||
+          !('type' in e.request.trigger) ||
+          e.request.trigger.type !== 'push'
+        ) {
+          return DEFAULT_HANDLER_OPTIONS
+        }
 
-        logger.debug(
-          'Notifications: received',
-          {e},
-          logger.DebugContext.notifications,
-        )
+        logger.debug('Notifications: received', {e})
 
         const payload = e.request.trigger.payload as NotificationPayload
         if (
@@ -210,33 +215,38 @@ export function useNotificationsHandler() {
         }
         prevDate = e.notification.date
 
-        logger.debug(
-          'Notifications: response received',
-          {
-            actionIdentifier: e.actionIdentifier,
-          },
-          logger.DebugContext.notifications,
-        )
+        logger.debug('Notifications: response received', {
+          actionIdentifier: e.actionIdentifier,
+        })
 
         if (
           e.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER &&
+          e.notification.request.trigger != null &&
+          typeof e.notification.request.trigger === 'object' &&
+          'type' in e.notification.request.trigger &&
           e.notification.request.trigger.type === 'push'
         ) {
           logger.debug(
             'User pressed a notification, opening notifications tab',
             {},
-            logger.DebugContext.notifications,
           )
           logEvent('notifications:openApp', {})
           invalidateCachedUnreadPage()
-          truncateAndInvalidate(queryClient, RQKEY_NOTIFS())
+          const payload = e.notification.request.trigger
+            .payload as NotificationPayload
+          truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
+          if (
+            payload.reason === 'mention' ||
+            payload.reason === 'quote' ||
+            payload.reason === 'reply'
+          ) {
+            truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
+          }
           logger.debug('Notifications: handleNotification', {
             content: e.notification.request.content,
             payload: e.notification.request.trigger.payload,
           })
-          handleNotification(
-            e.notification.request.trigger.payload as NotificationPayload,
-          )
+          handleNotification(payload)
           Notifications.dismissAllNotificationsAsync()
         }
       })

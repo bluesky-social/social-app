@@ -1,7 +1,12 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
-import {SavedFeed} from '@atproto/api/dist/client/types/app/bsky/actor/defs'
+import {
+  type AppBskyActorProfile,
+  type AppBskyGraphDefs,
+  AppBskyGraphStarterpack,
+  type Un$Typed,
+} from '@atproto/api'
+import {type SavedFeed} from '@atproto/api/dist/client/types/app/bsky/actor/defs'
 import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -12,9 +17,10 @@ import {
   BSKY_APP_ACCOUNT_DID,
   DISCOVER_SAVED_FEED,
   TIMELINE_SAVED_FEED,
+  VIDEO_SAVED_FEED,
 } from '#/lib/constants'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {getAllListMembers} from '#/state/queries/list-members'
@@ -40,9 +46,10 @@ import {IconCircle} from '#/components/IconCircle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
 import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
-import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending2'
+import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
 
 export function StepFinished() {
   const {_} = useLingui()
@@ -57,6 +64,7 @@ export function StepFinished() {
   const setActiveStarterPack = useSetActiveStarterPack()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
   const {startProgressGuide} = useProgressGuideControls()
+  const gate = useGate()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
@@ -110,6 +118,12 @@ export function StepFinished() {
               id: TID.nextStr(),
             },
           ]
+          if (gate('onboarding_add_video_feed')) {
+            feedsToSave.push({
+              ...VIDEO_SAVED_FEED,
+              id: TID.nextStr(),
+            })
+          }
 
           // Any starter pack feeds will be pinned _after_ the defaults
           if (starterPack && starterPack.feeds?.length) {
@@ -127,31 +141,36 @@ export function StepFinished() {
         })(),
         (async () => {
           const {imageUri, imageMime} = profileStepResults
-          if (imageUri && imageMime) {
-            const blobPromise = uploadBlob(agent, imageUri, imageMime)
-            await agent.upsertProfile(async existing => {
-              existing = existing ?? {}
+          const blobPromise =
+            imageUri && imageMime
+              ? uploadBlob(agent, imageUri, imageMime)
+              : undefined
+
+          await agent.upsertProfile(async existing => {
+            let next: Un$Typed<AppBskyActorProfile.Record> = existing ?? {}
+
+            if (blobPromise) {
               const res = await blobPromise
               if (res.data.blob) {
-                existing.avatar = res.data.blob
+                next.avatar = res.data.blob
               }
+            }
 
-              if (starterPack) {
-                existing.joinedViaStarterPack = {
-                  uri: starterPack.uri,
-                  cid: starterPack.cid,
-                }
+            if (starterPack) {
+              next.joinedViaStarterPack = {
+                uri: starterPack.uri,
+                cid: starterPack.cid,
               }
+            }
 
-              existing.displayName = ''
-              // HACKFIX
-              // creating a bunch of identical profile objects is breaking the relay
-              // tossing this unspecced field onto it to reduce the size of the problem
-              // -prf
-              existing.createdAt = new Date().toISOString()
-              return existing
-            })
-          }
+            next.displayName = ''
+            // HACKFIX
+            // creating a bunch of identical profile objects is breaking the relay
+            // tossing this unspecced field onto it to reduce the size of the problem
+            // -prf
+            next.createdAt = new Date().toISOString()
+            return next
+          })
 
           logEvent('onboarding:finished:avatarResult', {
             avatarResult: profileStepResults.isCreatedAvatar
@@ -185,14 +204,21 @@ export function StepFinished() {
     setSaving(false)
     setActiveStarterPack(undefined)
     setHasCheckedForStarterPack(true)
-    startProgressGuide('like-10-and-follow-7')
+    startProgressGuide(
+      gate('old_postonboarding') ? 'like-10-and-follow-7' : 'follow-10',
+    )
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
     logEvent('onboarding:finished:nextPressed', {
       usedStarterPack: Boolean(starterPack),
-      starterPackName: AppBskyGraphStarterpack.isRecord(starterPack?.record)
-        ? starterPack.record.name
-        : undefined,
+      starterPackName:
+        starterPack &&
+        bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+          starterPack.record,
+          AppBskyGraphStarterpack.isRecord,
+        )
+          ? starterPack.record.name
+          : undefined,
       starterPackCreator: starterPack?.creator.did,
       starterPackUri: starterPack?.uri,
       profilesFollowed: listItems?.length ?? 0,
@@ -216,6 +242,7 @@ export function StepFinished() {
     setActiveStarterPack,
     setHasCheckedForStarterPack,
     startProgressGuide,
+    gate,
   ])
 
   return (

@@ -6,35 +6,38 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useMyMutedAccountsQuery} from '#/state/queries/my-muted-accounts'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {ProfileCard} from '#/view/com/profile/ProfileCard'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {Text} from '#/view/com/util/text/Text'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView} from '#/view/com/util/Views'
+import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
+import * as ProfileCard from '#/components/ProfileCard'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'ModerationMutedAccounts'
 >
 export function ModerationMutedAccounts({}: Props) {
+  const t = useTheme()
   const pal = usePalette('default')
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {isTabletOrDesktop} = useWebMediaQueries()
+  const moderationOpts = useModerationOpts()
 
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {
@@ -87,31 +90,47 @@ export function ModerationMutedAccounts({}: Props) {
   }: {
     item: ActorDefs.ProfileView
     index: number
-  }) => (
-    <ProfileCard
-      testID={`mutedAccount-${index}`}
-      key={item.did}
-      profile={item}
-      noModFilter
-    />
-  )
+  }) => {
+    if (!moderationOpts) return null
+    return (
+      <View
+        style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]}
+        key={item.did}>
+        <ProfileCard.Link profile={item} testID={`mutedAccount-${index}`}>
+          <ProfileCard.Outer>
+            <ProfileCard.Header>
+              <ProfileCard.Avatar
+                profile={item}
+                moderationOpts={moderationOpts}
+              />
+              <ProfileCard.NameAndHandle
+                profile={item}
+                moderationOpts={moderationOpts}
+              />
+            </ProfileCard.Header>
+            <ProfileCard.Labels
+              profile={item}
+              moderationOpts={moderationOpts}
+            />
+            <ProfileCard.Description profile={item} />
+          </ProfileCard.Outer>
+        </ProfileCard.Link>
+      </View>
+    )
+  }
   return (
     <Layout.Screen testID="mutedAccountsScreen">
-      <CenteredView
-        style={[
-          styles.container,
-          isTabletOrDesktop && styles.containerDesktop,
-          pal.view,
-          pal.border,
-        ]}
-        testID="mutedAccountsScreen">
-        <ViewHeader title={_(msg`Muted Accounts`)} showOnDesktop />
+      <ViewHeader title={_(msg`Muted Accounts`)} showOnDesktop />
+      <Layout.Center style={[a.flex_1, {paddingBottom: 100}]}>
         <Text
           type="sm"
           style={[
             styles.description,
             pal.text,
             isTabletOrDesktop && styles.descriptionDesktop,
+            {
+              marginTop: 20,
+            },
           ]}>
           <Trans>
             Muted accounts have their posts removed from your feed and from your
@@ -119,7 +138,7 @@ export function ModerationMutedAccounts({}: Props) {
           </Trans>
         </Text>
         {isEmpty ? (
-          <View style={[pal.border, !isTabletOrDesktop && styles.flex1]}>
+          <View style={[pal.border]}>
             {isError ? (
               <ErrorScreen
                 title="Oops!"
@@ -165,21 +184,12 @@ export function ModerationMutedAccounts({}: Props) {
             desktopFixedHeight
           />
         )}
-      </CenteredView>
+      </Layout.Center>
     </Layout.Screen>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingBottom: 100,
-  },
-  containerDesktop: {
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    paddingBottom: 0,
-  },
   title: {
     textAlign: 'center',
     marginTop: 12,

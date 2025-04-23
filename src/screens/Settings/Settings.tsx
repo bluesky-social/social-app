@@ -1,34 +1,36 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
 import {Linking} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
-import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
+import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {IS_INTERNAL} from '#/lib/app-info'
 import {HELP_DESK_URL} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
-import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {clearStorage} from '#/state/persisted'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useDeleteActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useProfileQuery, useProfilesQuery} from '#/state/queries/profile'
-import {SessionAccount, useSession, useSessionApi} from '#/state/session'
+import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {ProfileHeaderDisplayName} from '#/screens/Profile/Header/DisplayName'
-import {ProfileHeaderHandle} from '#/screens/Profile/Header/Handle'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
-import {atoms as a, tokens, useTheme} from '#/alf'
-import {AvatarStack} from '#/components/AvatarStack'
+import {atoms as a, platform, tokens, useBreakpoints, useTheme} from '#/alf'
+import {AvatarStackWithFetch} from '#/components/AvatarStack'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
@@ -52,6 +54,12 @@ import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
+import {Text} from '#/components/Typography'
+import {useFullVerificationState} from '#/components/verification'
+import {
+  shouldShowVerificationCheckButton,
+  VerificationCheckButton,
+} from '#/components/verification/VerificationCheckButton'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
@@ -73,7 +81,15 @@ export function SettingsScreen({}: Props) {
 
   return (
     <Layout.Screen>
-      <Layout.Header title={_(msg`Settings`)} />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Settings</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
           <View
@@ -93,7 +109,7 @@ export function SettingsScreen({}: Props) {
               <SettingsList.PressableItem
                 label={_(msg`Switch account`)}
                 accessibilityHint={_(
-                  msg`Show other accounts you can switch to`,
+                  msg`Shows other accounts you can switch to`,
                 )}
                 onPress={() => {
                   if (!reducedMotion) {
@@ -110,7 +126,7 @@ export function SettingsScreen({}: Props) {
                 {showAccounts ? (
                   <SettingsList.ItemIcon icon={ChevronUpIcon} size="md" />
                 ) : (
-                  <AvatarStack
+                  <AvatarStackWithFetch
                     profiles={accounts
                       .map(acc => acc.did)
                       .filter(did => did !== currentAccount?.did)
@@ -197,7 +213,7 @@ export function SettingsScreen({}: Props) {
           <SettingsList.PressableItem
             onPress={() => Linking.openURL(HELP_DESK_URL)}
             label={_(msg`Help`)}
-            accessibilityHint={_(msg`Open helpdesk in browser`)}>
+            accessibilityHint={_(msg`Opens helpdesk in browser`)}>
             <SettingsList.ItemIcon icon={CircleQuestionIcon} />
             <SettingsList.ItemText>
               <Trans>Help</Trans>
@@ -263,12 +279,22 @@ function ProfilePreview({
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
+  const {i18n} = useLingui()
+  const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const shadow = useProfileShadow(profile)
   const moderationOpts = useModerationOpts()
+  const verificationState = useFullVerificationState({
+    profile: shadow,
+  })
 
   if (!moderationOpts) return null
 
   const moderation = moderateProfile(profile, moderationOpts)
+  const displayName = sanitizeDisplayName(
+    profile.displayName || sanitizeHandle(i18n, profile.handle),
+    moderation.ui('displayName'),
+  )
 
   return (
     <>
@@ -276,9 +302,43 @@ function ProfilePreview({
         size={80}
         avatar={shadow.avatar}
         moderation={moderation.ui('avatar')}
+        type={shadow.associated?.labeler ? 'labeler' : 'user'}
       />
-      <ProfileHeaderDisplayName profile={shadow} moderation={moderation} />
-      <ProfileHeaderHandle profile={shadow} />
+
+      <View
+        style={[
+          a.flex_row,
+          a.gap_xs,
+          a.align_center,
+          a.justify_center,
+          a.w_full,
+        ]}>
+        <Text
+          emoji
+          testID="profileHeaderDisplayName"
+          numberOfLines={1}
+          style={[
+            a.pt_sm,
+            t.atoms.text,
+            gtMobile ? a.text_4xl : a.text_3xl,
+            a.font_heavy,
+          ]}>
+          {displayName}
+        </Text>
+        {shouldShowVerificationCheckButton(verificationState) && (
+          <View
+            style={[
+              {
+                marginTop: platform({web: 8, ios: 8, android: 10}),
+              },
+            ]}>
+            <VerificationCheckButton profile={shadow} size="lg" />
+          </View>
+        )}
+      </View>
+      <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
+        {sanitizeHandle(i18n, profile.handle, '@')}
+      </Text>
     </>
   )
 }
@@ -406,6 +466,7 @@ function AccountRow({
             size={28}
             avatar={profile.avatar}
             moderation={moderateProfile(profile, moderationOpts).ui('avatar')}
+            type={profile.associated?.labeler ? 'labeler' : 'user'}
           />
         ) : (
           <View style={[{width: 28}]} />

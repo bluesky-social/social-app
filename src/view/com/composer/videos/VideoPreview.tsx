@@ -20,7 +20,6 @@ export function VideoPreview({
   asset: ImagePickerAsset
   video: CompressedVideo
   isActivePost: boolean
-  setDimensions: (width: number, height: number) => void
   clear: () => void
 }) {
   const t = useTheme()

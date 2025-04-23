@@ -27,13 +27,21 @@
 
   let player
   function onYouTubeIframeAPIReady() {
+    let videoId = url.searchParams.get('videoId')
+    videoId = decodeURIComponent(videoId)
+    videoId = videoId.replace(/[^a-zA-Z0-9_-]/g, "")
+    if (videoId.length !== 11) throw new Error("Invalid video ID")
+
+    let start = url.searchParams.get('start')
+    start = start.replace(/[^0-9]/g, "")
+
     player = new YT.Player('player', {
       width: "1000",
       height: "1000",
-      videoId: url.searchParams.get('videoId'),
+      videoId,
       playerVars: {
         autoplay: 1,
-        start: url.searchParams.get('start'),
+        start,
         rel: 0,
         loop: 0,
         playsinline: 1,

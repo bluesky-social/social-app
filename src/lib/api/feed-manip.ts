@@ -6,6 +6,7 @@ import {
   AppBskyFeedPost,
 } from '@atproto/api'
 
+import * as bsky from '#/types/bsky'
 import {isPostInLanguage} from '../../locale/helpers'
 import {FALLBACK_MARKER_POST} from './feed/home'
 import {ReasonFeedSource} from './feed/types'
@@ -41,6 +42,7 @@ export class FeedViewPostsSlice {
   isFallbackMarker: boolean
   isOrphan: boolean
   rootUri: string
+  feedPostUri: string
 
   constructor(feedPost: FeedViewPost) {
     const {post, reply, reason} = feedPost
@@ -48,6 +50,7 @@ export class FeedViewPostsSlice {
     this.isIncompleteThread = false
     this.isFallbackMarker = false
     this.isOrphan = false
+    this.feedPostUri = post.uri
     if (AppBskyFeedDefs.isPostView(reply?.root)) {
       this.rootUri = reply.root.uri
     } else {
@@ -55,7 +58,9 @@ export class FeedViewPostsSlice {
     }
     this._feedPost = feedPost
     this._reactKey = `slice-${post.uri}-${
-      feedPost.reason?.indexedAt || post.indexedAt
+      feedPost.reason && 'indexedAt' in feedPost.reason
+        ? feedPost.reason.indexedAt
+        : post.indexedAt
     }`
     if (feedPost.post.uri === FALLBACK_MARKER_POST.post.uri) {
       this.isFallbackMarker = true
@@ -63,7 +68,7 @@ export class FeedViewPostsSlice {
     }
     if (
       !AppBskyFeedPost.isRecord(post.record) ||
-      !AppBskyFeedPost.validateRecord(post.record).success
+      !bsky.validate(post.record, AppBskyFeedPost.validateRecord)
     ) {
       return
     }
@@ -95,7 +100,7 @@ export class FeedViewPostsSlice {
     if (
       !AppBskyFeedDefs.isPostView(parent) ||
       !AppBskyFeedPost.isRecord(parent.record) ||
-      !AppBskyFeedPost.validateRecord(parent.record).success
+      !bsky.validate(parent.record, AppBskyFeedPost.validateRecord)
     ) {
       this.isOrphan = true
       return
@@ -137,7 +142,7 @@ export class FeedViewPostsSlice {
     if (
       !AppBskyFeedDefs.isPostView(root) ||
       !AppBskyFeedPost.isRecord(root.record) ||
-      !AppBskyFeedPost.validateRecord(root.record).success
+      !bsky.validate(root.record, AppBskyFeedPost.validateRecord)
     ) {
       this.isOrphan = true
       return

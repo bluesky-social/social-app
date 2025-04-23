@@ -13,7 +13,7 @@ appId: xyz.blueskyweb.app
 - tapOn: "Select an avatar"
 - waitForAnimationToEnd
 - tapOn:
-    point: "16%,22%"
+    point: "50%,22%"
 - waitForAnimationToEnd
 - tapOn: "Choose"
 - waitForAnimationToEnd

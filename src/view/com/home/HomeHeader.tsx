@@ -1,7 +1,6 @@
 import React from 'react'
 import {useNavigation} from '@react-navigation/native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {NavigationProp} from '#/lib/routes/types'
 import {FeedSourceInfo} from '#/state/queries/feed'
 import {useSession} from '#/state/session'
@@ -19,7 +18,6 @@ export function HomeHeader(
   const {feeds} = props
   const {hasSession} = useSession()
   const navigation = useNavigation<NavigationProp>()
-  const pal = usePalette('default')
 
   const hasPinnedCustom = React.useMemo<boolean>(() => {
     if (!hasSession) return false
@@ -61,7 +59,8 @@ export function HomeHeader(
         onSelect={onSelect}
         testID={props.testID}
         items={items}
-        indicatorColor={pal.colors.link}
+        dragProgress={props.dragProgress}
+        dragState={props.dragState}
       />
     </HomeHeaderLayout>
   )

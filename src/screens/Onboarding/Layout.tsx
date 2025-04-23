@@ -1,12 +1,11 @@
 import React from 'react'
-import {View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isWeb} from '#/platform/detection'
 import {useOnboardingDispatch} from '#/state/shell'
-import {ScrollView} from '#/view/com/util/Views'
 import {Context} from '#/screens/Onboarding/state'
 import {
   atoms as a,
@@ -17,11 +16,11 @@ import {
   useTheme,
   web,
 } from '#/alf'
+import {leading} from '#/alf/typography'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {createPortalGroup} from '#/components/Portal'
-import {leading, P, Text} from '#/components/Typography'
-import {IS_DEV} from '#/env'
+import {P, Text} from '#/components/Typography'
 
 const COL_WIDTH = 420
 
@@ -54,9 +53,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
       aria-role="dialog"
       aria-label={dialogLabel}
       accessibilityLabel={dialogLabel}
-      accessibilityHint={_(
-        msg`The following steps will help customize your Bluesky experience.`,
-      )}
+      accessibilityHint={_(msg`Customizes your Bluesky experience`)}
       style={[
         // @ts-ignore web only -prf
         isWeb ? a.fixed : a.absolute,
@@ -64,7 +61,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
         a.flex_1,
         t.atoms.bg,
       ]}>
-      {IS_DEV && (
+      {__DEV__ && (
         <View style={[a.absolute, a.p_xl, a.z_10, {right: 0, top: insets.top}]}>
           <Button
             variant="ghost"

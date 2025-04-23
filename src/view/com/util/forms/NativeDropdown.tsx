@@ -5,10 +5,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as DropdownMenu from 'zeego/dropdown-menu'
 import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
 
-import {HITSLOP_10} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useTheme} from '#/lib/ThemeContext'
-import {isIOS, isWeb} from '#/platform/detection'
+import {isIOS} from '#/platform/detection'
 import {Portal} from '#/components/Portal'
 
 // Custom Dropdown Menu Components
@@ -30,31 +29,18 @@ export const DropdownMenuTrigger = DropdownMenu.create(
   (props: TriggerProps) => {
     const theme = useTheme()
     const defaultCtrlColor = theme.palette.default.postCtrl
-    const ref = React.useRef<View>(null)
-
-    // HACK
-    // fire a click event on the keyboard press to trigger the dropdown
-    // -prf
-    const onPress = isWeb
-      ? (evt: any) => {
-          if (evt instanceof KeyboardEvent) {
-            // @ts-ignore web only -prf
-            ref.current?.click()
-          }
-        }
-      : undefined
 
     return (
+      // This Pressable doesn't actually do anything other than
+      // provide the "pressed state" visual feedback.
       <Pressable
         testID={props.testID}
         accessibilityRole="button"
         accessibilityLabel={props.accessibilityLabel}
         accessibilityHint={props.accessibilityHint}
-        style={({pressed}) => [{opacity: pressed ? 0.5 : 1}]}
-        hitSlop={HITSLOP_10}
-        onPress={onPress}>
+        style={({pressed}) => [{opacity: pressed ? 0.8 : 1}]}>
         <DropdownMenu.Trigger action="press">
-          <View ref={ref}>
+          <View>
             {props.children ? (
               props.children
             ) : (

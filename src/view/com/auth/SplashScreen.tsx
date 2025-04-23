@@ -1,4 +1,3 @@
-import React from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
@@ -61,7 +60,7 @@ export const SplashScreen = ({
             onPress={onPressSignin}
             label={_(msg`Sign in`)}
             accessibilityHint={_(
-              msg`Opens flow to sign into your existing Bluesky account`,
+              msg`Opens flow to sign in to your existing Bluesky account`,
             )}
             size="large"
             variant="solid"

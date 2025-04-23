@@ -1,8 +1,9 @@
 module.exports = {
   root: true,
   extends: [
-    '@react-native-community',
+    '@react-native',
     'plugin:react/recommended',
+    'plugin:react/jsx-runtime',
     'plugin:react-native-a11y/ios',
     'prettier',
   ],
@@ -14,11 +15,11 @@ module.exports = {
     'simple-import-sort',
     'bsky-internal',
     'eslint-plugin-react-compiler',
+    'import',
   ],
   rules: {
-    // Temporary until https://github.com/facebook/react-native/pull/43756 gets into a release.
-    'prettier/prettier': 0,
     'react/no-unescaped-entities': 0,
+    'react/prop-types': 0,
     'react-native/no-inline-styles': 0,
     'bsky-internal/avoid-unwrapped-text': [
       'error',
@@ -32,6 +33,8 @@ module.exports = {
           'H6',
           'P',
           'Admonition',
+          'Admonition.Admonition',
+          'Span',
         ],
         impliedTextProps: [],
         suggestedTextWrappers: {
@@ -79,21 +82,17 @@ module.exports = {
       },
     ],
     'simple-import-sort/exports': 'error',
-    // TODO: Reenable when we figure out why it gets stuck on CI.
-    // 'react-compiler/react-compiler': 'error',
-    'no-restricted-imports': [
+    'react-compiler/react-compiler': 'warn',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': [
       'error',
-      {
-        paths: [
-          {
-            name: '@atproto/api',
-            importNames: ['moderatePost'],
-            message:
-              'Please use `moderatePost_wrapped` from `#/lib/moderatePost_wrapped` instead.',
-          },
-        ],
-      },
+      {argsIgnorePattern: '^_', varsIgnorePattern: '^_'},
     ],
+    '@typescript-eslint/consistent-type-imports': [
+      'warn',
+      {prefer: 'type-imports', fixStyle: 'inline-type-imports'},
+    ],
+    'import/consistent-type-specifier-style': ['warn', 'prefer-inline'],
   },
   ignorePatterns: [
     '**/__mocks__/*.ts',
@@ -105,9 +104,9 @@ module.exports = {
     '*.lock',
     '.husky',
     'patches',
-    'bskyweb',
     '*.html',
     'bskyweb',
+    'bskyembed',
     'src/locale/locales/_build/',
     'src/locale/locales/**/*.js',
   ],

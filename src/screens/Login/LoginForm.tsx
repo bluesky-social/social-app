@@ -45,6 +45,8 @@ export const LoginForm = ({
   onPressRetryConnect,
   onPressBack,
   onPressForgotPassword,
+  onAttemptSuccess,
+  onAttemptFailed,
 }: {
   error: string
   serviceUrl: string
@@ -55,11 +57,15 @@ export const LoginForm = ({
   onPressRetryConnect: () => void
   onPressBack: () => void
   onPressForgotPassword: () => void
+  onAttemptSuccess: () => void
+  onAttemptFailed: () => void
 }) => {
   const t = useTheme()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] =
     useState<boolean>(false)
+  const [isAuthFactorTokenValueEmpty, setIsAuthFactorTokenValueEmpty] =
+    useState<boolean>(true)
   const identifierValueRef = useRef<string>(initialHandle || '')
   const passwordValueRef = useRef<string>('')
   const authFactorTokenValueRef = useRef<string>('')
@@ -84,8 +90,13 @@ export const LoginForm = ({
     const password = passwordValueRef.current
     const authFactorToken = authFactorTokenValueRef.current
 
-    if (!identifier || !password) {
-      setError(_(msg`Invalid username or password`))
+    if (!identifier) {
+      setError(_(msg`Please enter your username`))
+      return
+    }
+
+    if (!password) {
+      setError(_(msg`Please enter your password`))
       return
     }
 
@@ -124,6 +135,7 @@ export const LoginForm = ({
         },
         'LoginForm',
       )
+      onAttemptSuccess()
       setShowLoggedOut(false)
       setHasCheckedForStarterPack(true)
       requestNotificationsPermission('Login')
@@ -135,26 +147,32 @@ export const LoginForm = ({
         e instanceof ComAtprotoServerCreateSession.AuthFactorTokenRequiredError
       ) {
         setIsAuthFactorTokenNeeded(true)
-      } else if (errMsg.includes('Token is invalid')) {
-        logger.debug('Failed to login due to invalid 2fa token', {
-          error: errMsg,
-        })
-        setError(_(msg`Invalid 2FA confirmation code.`))
-      } else if (errMsg.includes('Authentication Required')) {
-        logger.debug('Failed to login due to invalid credentials', {
-          error: errMsg,
-        })
-        setError(_(msg`Invalid username or password`))
-      } else if (isNetworkError(e)) {
-        logger.warn('Failed to login due to network error', {error: errMsg})
-        setError(
-          _(
-            msg`Unable to contact your service. Please check your Internet connection.`,
-          ),
-        )
       } else {
-        logger.warn('Failed to login', {error: errMsg})
-        setError(cleanError(errMsg))
+        onAttemptFailed()
+        if (errMsg.includes('Token is invalid')) {
+          logger.debug('Failed to login due to invalid 2fa token', {
+            error: errMsg,
+          })
+          setError(_(msg`Invalid 2FA confirmation code.`))
+        } else if (
+          errMsg.includes('Authentication Required') ||
+          errMsg.includes('Invalid identifier or password')
+        ) {
+          logger.debug('Failed to login due to invalid credentials', {
+            error: errMsg,
+          })
+          setError(_(msg`Incorrect username or password`))
+        } else if (isNetworkError(e)) {
+          logger.warn('Failed to login due to network error', {error: errMsg})
+          setError(
+            _(
+              msg`Unable to contact your service. Please check your Internet connection.`,
+            ),
+          )
+        } else {
+          logger.warn('Failed to login', {error: errMsg})
+          setError(cleanError(errMsg))
+        }
       }
     }
   }
@@ -197,7 +215,7 @@ export const LoginForm = ({
               blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
               editable={!isProcessing}
               accessibilityHint={_(
-                msg`Input the username or email address you used at signup`,
+                msg`Enter the username or email address you used when you created your account`,
               )}
             />
           </TextField.Root>
@@ -222,7 +240,7 @@ export const LoginForm = ({
               onSubmitEditing={onPressNext}
               blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
               editable={!isProcessing}
-              accessibilityHint={_(msg`Input your password`)}
+              accessibilityHint={_(msg`Enter your password`)}
             />
             <Button
               testID="forgotPasswordButton"
@@ -257,11 +275,12 @@ export const LoginForm = ({
               autoCapitalize="none"
               autoFocus
               autoCorrect={false}
-              autoComplete="off"
+              autoComplete="one-time-code"
               returnKeyType="done"
               textContentType="username"
               blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
               onChangeText={v => {
+                setIsAuthFactorTokenValueEmpty(v === '')
                 authFactorTokenValueRef.current = v
               }}
               onSubmitEditing={onPressNext}
@@ -269,10 +288,19 @@ export const LoginForm = ({
               accessibilityHint={_(
                 msg`Input the code which has been emailed to you`,
               )}
+              style={[
+                {
+                  textTransform: isAuthFactorTokenValueEmpty
+                    ? 'none'
+                    : 'uppercase',
+                },
+              ]}
             />
           </TextField.Root>
           <Text style={[a.text_sm, t.atoms.text_contrast_medium, a.mt_sm]}>
-            <Trans>Check your email for a login code and enter it here.</Trans>
+            <Trans>
+              Check your email for a sign in code and enter it here.
+            </Trans>
           </Text>
         </View>
       )}
@@ -293,7 +321,7 @@ export const LoginForm = ({
           <Button
             testID="loginRetryButton"
             label={_(msg`Retry`)}
-            accessibilityHint={_(msg`Retries login`)}
+            accessibilityHint={_(msg`Retries signing in`)}
             variant="solid"
             color="secondary"
             size="large"

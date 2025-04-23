@@ -1,28 +1,6 @@
 const pkg = require('./package.json')
 
-const SPLASH_CONFIG = {
-  backgroundColor: '#ffffff',
-  image: './assets/splash.png',
-  resizeMode: 'cover',
-}
-const DARK_SPLASH_CONFIG = {
-  backgroundColor: '#001429',
-  image: './assets/splash-dark.png',
-  resizeMode: 'cover',
-}
-
-const SPLASH_CONFIG_ANDROID = {
-  backgroundColor: '#0c7cff',
-  image: './assets/splash.png',
-  resizeMode: 'cover',
-}
-const DARK_SPLASH_CONFIG_ANDROID = {
-  backgroundColor: '#0f141b',
-  image: './assets/splash-dark.png',
-  resizeMode: 'cover',
-}
-
-module.exports = function (config) {
+module.exports = function (_config) {
   /**
    * App version number. Should be incremented as part of a release cycle.
    */
@@ -35,9 +13,9 @@ module.exports = function (config) {
    */
   const PLATFORM = process.env.EAS_BUILD_PLATFORM
 
-  const IS_DEV = process.env.EXPO_PUBLIC_ENV === 'development'
   const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
   const IS_PRODUCTION = process.env.EXPO_PUBLIC_ENV === 'production'
+  const IS_DEV = !IS_TESTFLIGHT || !IS_PRODUCTION
 
   const ASSOCIATED_DOMAINS = [
     'applinks:bsky.app',
@@ -56,9 +34,6 @@ module.exports = function (config) {
   const UPDATES_ENABLED = !!UPDATES_CHANNEL
 
   const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
-  const SENTRY_DIST = `${PLATFORM}.${VERSION}.${IS_TESTFLIGHT ? 'tf' : ''}${
-    IS_DEV ? 'dev' : ''
-  }`
 
   return {
     expo: {
@@ -70,11 +45,8 @@ module.exports = function (config) {
       runtimeVersion: {
         policy: 'appVersion',
       },
-      orientation: 'portrait',
-      icon: './assets/icon.png',
+      icon: './assets/app-icons/ios_icon_default_light.png',
       userInterfaceStyle: 'automatic',
-      splash: SPLASH_CONFIG,
-      // hsl(211, 99%, 53%), same as palette.default.brandText
       primaryColor: '#1083fe',
       ios: {
         supportsTablet: false,
@@ -92,12 +64,49 @@ module.exports = function (config) {
             'Used to save images to your library.',
           NSPhotoLibraryUsageDescription:
             'Used for profile pictures, posts, and other kinds of content',
+          CFBundleSpokenName: 'Blue Sky',
+          CFBundleLocalizations: [
+            'en',
+            'an',
+            'ast',
+            'ca',
+            'cy',
+            'da',
+            'de',
+            'el',
+            'eo',
+            'es',
+            'eu',
+            'fi',
+            'fr',
+            'ga',
+            'gd',
+            'gl',
+            'hi',
+            'hu',
+            'ia',
+            'id',
+            'it',
+            'ja',
+            'km',
+            'ko',
+            'ne',
+            'nl',
+            'pl',
+            'pt-BR',
+            'ro',
+            'ru',
+            'sv',
+            'th',
+            'tr',
+            'uk',
+            'vi',
+            'yue',
+            'zh-Hans',
+            'zh-Hant',
+          ],
         },
         associatedDomains: ASSOCIATED_DOMAINS,
-        splash: {
-          ...SPLASH_CONFIG,
-          dark: DARK_SPLASH_CONFIG,
-        },
         entitlements: {
           'com.apple.developer.kernel.increased-memory-limit': true,
           'com.apple.developer.kernel.extended-virtual-addressing': true,
@@ -129,15 +138,13 @@ module.exports = function (config) {
       },
       androidStatusBar: {
         barStyle: 'light-content',
-        backgroundColor: '#00000000',
       },
       // Dark nav bar in light mode is better than light nav bar in dark mode
       androidNavigationBar: {
         barStyle: 'light-content',
-        backgroundColor: DARK_SPLASH_CONFIG_ANDROID.backgroundColor,
       },
       android: {
-        icon: './assets/icon.png',
+        icon: './assets/app-icons/android_icon_default_light.png',
         adaptiveIcon: {
           foregroundImage: './assets/icon-android-foreground.png',
           monochromeImage: './assets/icon-android-foreground.png',
@@ -163,10 +170,6 @@ module.exports = function (config) {
             category: ['BROWSABLE', 'DEFAULT'],
           },
         ],
-        splash: {
-          ...SPLASH_CONFIG_ANDROID,
-          dark: DARK_SPLASH_CONFIG_ANDROID,
-        },
       },
       web: {
         favicon: './assets/favicon.png',
@@ -188,14 +191,18 @@ module.exports = function (config) {
         channel: UPDATES_CHANNEL,
       },
       plugins: [
+        'expo-video',
         'expo-localization',
+        [
+          'react-native-edge-to-edge',
+          {android: {enforceNavigationBarContrast: false}},
+        ],
         USE_SENTRY && [
           '@sentry/react-native/expo',
           {
             organization: 'blueskyweb',
-            project: 'react-native',
-            release: VERSION,
-            dist: SENTRY_DIST,
+            project: 'app',
+            url: 'https://sentry.io',
           },
         ],
         [
@@ -206,10 +213,9 @@ module.exports = function (config) {
               newArchEnabled: false,
             },
             android: {
-              compileSdkVersion: 34,
-              targetSdkVersion: 34,
-              buildToolsVersion: '34.0.0',
-              kotlinVersion: '1.8.0',
+              compileSdkVersion: 35,
+              targetSdkVersion: 35,
+              buildToolsVersion: '35.0.0',
               newArchEnabled: false,
             },
           },
@@ -223,12 +229,20 @@ module.exports = function (config) {
           },
         ],
         'react-native-compressor',
+        [
+          '@bitdrift/react-native',
+          {
+            networkInstrumentation: true,
+          },
+        ],
         './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
+        './plugins/withGradleJVMHeapSizeIncrease.js',
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
-        './plugins/withAndroidStylesWindowBackgroundPlugin.js',
         './plugins/withAndroidStylesAccentColorPlugin.js',
-        './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
+        './plugins/withAndroidDayNightThemePlugin.js',
+        './plugins/withAndroidNoJitpackPlugin.js',
+        './plugins/withNoBundleCompression.js',
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
         './plugins/withAppDelegateReferrer.js',
@@ -236,8 +250,8 @@ module.exports = function (config) {
           'expo-font',
           {
             fonts: [
-              './assets/fonts/inter/InterVariable.ttf',
-              './assets/fonts/inter/InterVariable-Italic.ttf',
+              './assets/fonts/inter/InterVariable.woff2',
+              './assets/fonts/inter/InterVariable-Italic.woff2',
               // Android only
               './assets/fonts/inter/Inter-Regular.otf',
               './assets/fonts/inter/Inter-Italic.otf',
@@ -248,6 +262,101 @@ module.exports = function (config) {
             ],
           },
         ],
+        [
+          'expo-splash-screen',
+          {
+            ios: {
+              enableFullScreenImage_legacy: true,
+              backgroundColor: '#ffffff',
+              image: './assets/splash.png',
+              resizeMode: 'cover',
+              dark: {
+                enableFullScreenImage_legacy: true,
+                backgroundColor: '#001429',
+                image: './assets/splash-dark.png',
+                resizeMode: 'cover',
+              },
+            },
+            android: {
+              backgroundColor: '#0c7cff',
+              image: './assets/splash-android-icon.png',
+              imageWidth: 150,
+              dark: {
+                backgroundColor: '#0c2a49',
+                image: './assets/splash-android-icon-dark.png',
+                imageWidth: 150,
+              },
+            },
+          },
+        ],
+        [
+          '@mozzius/expo-dynamic-app-icon',
+          {
+            /**
+             * Default set
+             */
+            default_light: {
+              ios: './assets/app-icons/ios_icon_default_light.png',
+              android: './assets/app-icons/android_icon_default_light.png',
+              prerendered: true,
+            },
+            default_dark: {
+              ios: './assets/app-icons/ios_icon_default_dark.png',
+              android: './assets/app-icons/android_icon_default_dark.png',
+              prerendered: true,
+            },
+
+            /**
+             * Bluesky+ core set
+             */
+            core_aurora: {
+              ios: './assets/app-icons/ios_icon_core_aurora.png',
+              android: './assets/app-icons/android_icon_core_aurora.png',
+              prerendered: true,
+            },
+            core_bonfire: {
+              ios: './assets/app-icons/ios_icon_core_bonfire.png',
+              android: './assets/app-icons/android_icon_core_bonfire.png',
+              prerendered: true,
+            },
+            core_sunrise: {
+              ios: './assets/app-icons/ios_icon_core_sunrise.png',
+              android: './assets/app-icons/android_icon_core_sunrise.png',
+              prerendered: true,
+            },
+            core_sunset: {
+              ios: './assets/app-icons/ios_icon_core_sunset.png',
+              android: './assets/app-icons/android_icon_core_sunset.png',
+              prerendered: true,
+            },
+            core_midnight: {
+              ios: './assets/app-icons/ios_icon_core_midnight.png',
+              android: './assets/app-icons/android_icon_core_midnight.png',
+              prerendered: true,
+            },
+            core_flat_blue: {
+              ios: './assets/app-icons/ios_icon_core_flat_blue.png',
+              android: './assets/app-icons/android_icon_core_flat_blue.png',
+              prerendered: true,
+            },
+            core_flat_white: {
+              ios: './assets/app-icons/ios_icon_core_flat_white.png',
+              android: './assets/app-icons/android_icon_core_flat_white.png',
+              prerendered: true,
+            },
+            core_flat_black: {
+              ios: './assets/app-icons/ios_icon_core_flat_black.png',
+              android: './assets/app-icons/android_icon_core_flat_black.png',
+              prerendered: true,
+            },
+            core_classic: {
+              ios: './assets/app-icons/ios_icon_core_classic.png',
+              android: './assets/app-icons/android_icon_core_classic.png',
+              prerendered: true,
+            },
+          },
+        ],
+        ['expo-screen-orientation', {initialOrientation: 'PORTRAIT_UP'}],
       ].filter(Boolean),
       extra: {
         eas: {
@@ -283,22 +392,6 @@ module.exports = function (config) {
           },
           projectId: '55bd077a-d905-4184-9c7f-94789ba0f302',
         },
-      },
-      hooks: {
-        postPublish: [
-          /*
-           * @see https://docs.expo.dev/guides/using-sentry/#app-configuration
-           */
-          {
-            file: './postHooks/uploadSentrySourcemapsPostHook',
-            config: {
-              organization: 'blueskyweb',
-              project: 'react-native',
-              release: VERSION,
-              dist: SENTRY_DIST,
-            },
-          },
-        ],
       },
     },
   }

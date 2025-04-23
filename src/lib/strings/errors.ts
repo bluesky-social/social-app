@@ -1,3 +1,5 @@
+import {t} from '@lingui/macro'
+
 export function cleanError(str: any): string {
   if (!str) {
     return ''
@@ -6,13 +8,17 @@ export function cleanError(str: any): string {
     str = str.toString()
   }
   if (isNetworkError(str)) {
-    return 'Unable to connect. Please check your internet connection and try again.'
+    return t`Unable to connect. Please check your internet connection and try again.`
   }
-  if (str.includes('Upstream Failure')) {
-    return 'The server appears to be experiencing issues. Please try again in a few moments.'
+  if (
+    str.includes('Upstream Failure') ||
+    str.includes('NotEnoughResources') ||
+    str.includes('pipethrough network error')
+  ) {
+    return t`The server appears to be experiencing issues. Please try again in a few moments.`
   }
   if (str.includes('Bad token scope')) {
-    return 'This feature is not available while using an App Password. Please sign in with your main password.'
+    return t`This feature is not available while using an App Password. Please sign in with your main password.`
   }
   if (str.startsWith('Error: ')) {
     return str.slice('Error: '.length)

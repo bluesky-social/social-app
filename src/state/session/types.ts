@@ -10,16 +10,19 @@ export type SessionStateContext = {
 }
 
 export type SessionApiContext = {
-  createAccount: (props: {
-    service: string
-    email: string
-    password: string
-    handle: string
-    birthDate: Date
-    inviteCode?: string
-    verificationPhone?: string
-    verificationCode?: string
-  }) => Promise<void>
+  createAccount: (
+    props: {
+      service: string
+      email: string
+      password: string
+      handle: string
+      birthDate: Date
+      inviteCode?: string
+      verificationPhone?: string
+      verificationCode?: string
+    },
+    metrics: LogEvents['account:create:success'],
+  ) => Promise<void>
   login: (
     props: {
       service: string

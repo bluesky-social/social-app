@@ -87,7 +87,7 @@ export function DropdownButton({
 }: PropsWithChildren<DropdownButtonProps>) {
   const {_} = useLingui()
 
-  const ref1 = useRef<TouchableOpacity>(null)
+  const ref1 = useRef<View>(null)
   const ref2 = useRef<View>(null)
 
   const onPress = (e: GestureResponderEvent) => {
@@ -293,7 +293,9 @@ const DropdownItems = ({
                 onPress={() => onPressItem(index)}
                 accessibilityRole="button"
                 accessibilityLabel={item.label}
-                accessibilityHint={_(msg`Option ${index + 1} of ${numItems}`)}>
+                accessibilityHint={_(
+                  msg`Selects option ${index + 1} of ${numItems}`,
+                )}>
                 {item.icon && (
                   <FontAwesomeIcon
                     style={styles.icon}

@@ -1,4 +1,3 @@
-import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -41,7 +40,6 @@ export function PostThreadComposePrompt({
         t.atoms.border_contrast_low,
         t.atoms.bg,
       ]}
-      onPressIn={ios(() => playHaptic('Light'))}
       onPress={() => {
         onPressCompose()
         playHaptic('Light')

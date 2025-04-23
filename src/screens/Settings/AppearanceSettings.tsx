@@ -5,11 +5,15 @@ import Animated, {
   LayoutAnimationConfig,
   LinearTransition,
 } from 'react-native-reanimated'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {IS_INTERNAL} from '#/lib/app-info'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
+import {isNative} from '#/platform/detection'
 import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
+import {SettingsListItem as AppIconSettingsListItem} from '#/screens/Settings/AppIconSettings/SettingsListItem'
 import {atoms as a, native, useAlf, useTheme} from '#/alf'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Props as SVGIconProps} from '#/components/icons/common'
@@ -25,6 +29,7 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>
 export function AppearanceSettingsScreen({}: Props) {
   const {_} = useLingui()
   const {fonts} = useAlf()
+  const gate = useGate()
 
   const {colorMode, darkTheme} = useThemePrefs()
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
@@ -73,7 +78,15 @@ export function AppearanceSettingsScreen({}: Props) {
   return (
     <LayoutAnimationConfig skipExiting skipEntering>
       <Layout.Screen testID="preferencesThreadsScreen">
-        <Layout.Header title={_(msg`Appearance`)} />
+        <Layout.Header.Outer>
+          <Layout.Header.BackButton />
+          <Layout.Header.Content>
+            <Layout.Header.TitleText>
+              <Trans>Appearance</Trans>
+            </Layout.Header.TitleText>
+          </Layout.Header.Content>
+          <Layout.Header.Slot />
+        </Layout.Header.Outer>
         <Layout.Content>
           <SettingsList.Container>
             <AppearanceToggleButtonGroup
@@ -121,6 +134,8 @@ export function AppearanceSettingsScreen({}: Props) {
             )}
 
             <Animated.View layout={native(LinearTransition)}>
+              <SettingsList.Divider />
+
               <AppearanceToggleButtonGroup
                 title={_(msg`Font`)}
                 description={_(
@@ -161,6 +176,13 @@ export function AppearanceSettingsScreen({}: Props) {
                 values={[fonts.scale]}
                 onChange={onChangeFontScale}
               />
+
+              {isNative && IS_INTERNAL && gate('debug_subscriptions') && (
+                <>
+                  <SettingsList.Divider />
+                  <AppIconSettingsListItem />
+                </>
+              )}
             </Animated.View>
           </SettingsList.Container>
         </Layout.Content>

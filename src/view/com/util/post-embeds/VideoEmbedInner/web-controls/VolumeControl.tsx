@@ -77,6 +77,7 @@ export function VolumeControl({
               min={0}
               max={100}
               value={sliderVolume}
+              aria-label={_(msg`Volume`)}
               style={
                 // Ridiculous safari hack for old version of safari. Fixed in sonoma beta -h
                 isSafari ? {height: 92, minHeight: '100%'} : {height: '100%'}

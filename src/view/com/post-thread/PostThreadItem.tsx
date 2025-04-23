@@ -1,14 +1,18 @@
 import React, {memo, useMemo} from 'react'
-import {StyleSheet, View} from 'react-native'
 import {
-  AppBskyFeedDefs,
+  type GestureResponderEvent,
+  StyleSheet,
+  Text as RNText,
+  View,
+} from 'react-native'
+import {
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
-  AppBskyFeedThreadgate,
+  type AppBskyFeedThreadgate,
   AtUri,
-  ModerationDecision,
+  type ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -21,33 +25,47 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {countLines} from '#/lib/strings/helpers'
 import {niceDate} from '#/lib/strings/time'
 import {s} from '#/lib/styles'
-import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {getTranslatorLink, isPostInLanguage} from '#/locale/helpers'
+import {logger} from '#/logger'
+import {
+  POST_TOMBSTONE,
+  type Shadow,
+  usePostShadow,
+} from '#/state/cache/post-shadow'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
-import {ThreadPost} from '#/state/queries/post-thread'
+import {type ThreadPost} from '#/state/queries/post-thread'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
+import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
+import {Link, TextLink} from '#/view/com/util/Link'
+import {formatCount} from '#/view/com/util/numeric/format'
+import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
+import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
+import {PostMeta} from '#/view/com/util/PostMeta'
+import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
+import {colors} from '#/components/Admonition'
+import {Button} from '#/components/Button'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
+import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {InlineLinkText} from '#/components/Link'
-import {AppModerationCause} from '#/components/Pills'
+import {ContentHider} from '#/components/moderation/ContentHider'
+import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
+import {PostAlerts} from '#/components/moderation/PostAlerts'
+import {PostHider} from '#/components/moderation/PostHider'
+import {type AppModerationCause} from '#/components/Pills'
+import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
-import {Text as NewText} from '#/components/Typography'
-import {ContentHider} from '../../../components/moderation/ContentHider'
-import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
-import {PostAlerts} from '../../../components/moderation/PostAlerts'
-import {PostHider} from '../../../components/moderation/PostHider'
-import {WhoCanReply} from '../../../components/WhoCanReply'
-import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {Link, TextLink} from '../util/Link'
-import {formatCount} from '../util/numeric/format'
-import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostEmbeds, PostEmbedViewContext} from '../util/post-embeds'
-import {PostMeta} from '../util/PostMeta'
-import {Text} from '../util/text/Text'
-import {PreviewableUserAvatar} from '../util/UserAvatar'
+import {Text} from '#/components/Typography'
+import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
+import {WhoCanReply} from '#/components/WhoCanReply'
+import * as bsky from '#/types/bsky'
 
 export function PostThreadItem({
   post,
@@ -125,19 +143,20 @@ export function PostThreadItem({
 }
 
 function PostThreadItemDeleted({hideTopBorder}: {hideTopBorder?: boolean}) {
-  const pal = usePalette('default')
+  const t = useTheme()
   return (
     <View
       style={[
-        styles.outer,
-        pal.border,
-        pal.view,
-        s.p20,
-        s.flexRow,
-        hideTopBorder && styles.noTopBorder,
+        t.atoms.bg,
+        t.atoms.border_contrast_low,
+        a.p_xl,
+        a.pl_lg,
+        a.flex_row,
+        a.gap_md,
+        !hideTopBorder && a.border_t,
       ]}>
-      <FontAwesomeIcon icon={['far', 'trash-can']} color={pal.colors.icon} />
-      <Text style={[pal.textLight, s.ml10]}>
+      <TrashIcon style={[t.atoms.text]} />
+      <Text style={[t.atoms.text_contrast_medium, a.mt_2xs]}>
         <Trans>This post has been deleted.</Trans>
       </Text>
     </View>
@@ -190,6 +209,7 @@ let PostThreadItemLoaded = ({
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
   const {currentAccount} = useSession()
+  const shadowedPostAuthor = useProfileShadow(post.author)
   const rootUri = record.reply?.root?.uri || post.uri
   const postHref = React.useMemo(() => {
     const urip = new AtUri(post.uri)
@@ -230,6 +250,11 @@ let PostThreadItemLoaded = ({
     return makeProfileLink(post.author, 'post', urip.rkey, 'quotes')
   }, [post.uri, post.author])
   const quotesTitle = _(msg`Quotes of this post`)
+  const onlyFollowersCanReply = !!threadgateRecord?.allow?.find(
+    rule => rule.$type === 'app.bsky.feed.threadgate#followerRule',
+  )
+  const showFollowButton =
+    currentAccount?.did !== post.author.did && !onlyFollowersCanReply
 
   const translatorUrl = getTranslatorLink(
     record?.text || '',
@@ -307,20 +332,37 @@ let PostThreadItemLoaded = ({
               type={post.author.associated?.labeler ? 'labeler' : 'user'}
             />
             <View style={[a.flex_1]}>
+              <View style={[a.flex_row, a.align_center]}>
+                <Link
+                  style={[a.flex_shrink]}
+                  href={authorHref}
+                  title={authorTitle}>
+                  <Text
+                    emoji
+                    style={[
+                      a.text_lg,
+                      a.font_bold,
+                      a.leading_snug,
+                      a.self_start,
+                    ]}
+                    numberOfLines={1}>
+                    {sanitizeDisplayName(
+                      post.author.displayName ||
+                        sanitizeHandle(i18n, post.author.handle),
+                      moderation.ui('displayName'),
+                    )}
+                  </Text>
+                </Link>
+
+                <View style={[{paddingLeft: 3, top: -1}]}>
+                  <VerificationCheckButton
+                    profile={shadowedPostAuthor}
+                    size="md"
+                  />
+                </View>
+              </View>
               <Link style={s.flex1} href={authorHref} title={authorTitle}>
-                <NewText
-                  emoji
-                  style={[a.text_lg, a.font_bold, a.leading_snug, a.self_start]}
-                  numberOfLines={1}>
-                  {sanitizeDisplayName(
-                    post.author.displayName ||
-                      sanitizeHandle(i18n, post.author.handle),
-                    moderation.ui('displayName'),
-                  )}
-                </NewText>
-              </Link>
-              <Link style={s.flex1} href={authorHref} title={authorTitle}>
-                <NewText
+                <Text
                   emoji
                   style={[
                     a.text_md,
@@ -329,10 +371,10 @@ let PostThreadItemLoaded = ({
                   ]}
                   numberOfLines={1}>
                   {sanitizeHandle(i18n, post.author.handle, '@')}
-                </NewText>
+                </Text>
               </Link>
             </View>
-            {currentAccount?.did !== post.author.did && (
+            {showFollowButton && (
               <View>
                 <PostThreadFollowBtn did={post.author.did} />
               </View>
@@ -358,6 +400,7 @@ let PostThreadItemLoaded = ({
                   value={richText}
                   style={[a.flex_1, a.text_xl]}
                   authorHandle={post.author.handle}
+                  shouldProxyLinks={true}
                 />
               ) : undefined}
               {post.embed && (
@@ -393,48 +436,48 @@ let PostThreadItemLoaded = ({
                 ]}>
                 {post.repostCount != null && post.repostCount !== 0 ? (
                   <Link href={repostsHref} title={repostsTitle}>
-                    <NewText
+                    <Text
                       testID="repostCount-expanded"
                       style={[a.text_md, t.atoms.text_contrast_medium]}>
-                      <NewText style={[a.text_md, a.font_bold, t.atoms.text]}>
+                      <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
                         {formatCount(i18n, post.repostCount)}
-                      </NewText>{' '}
+                      </Text>{' '}
                       <Plural
                         value={post.repostCount}
                         one="repost"
                         other="reposts"
                       />
-                    </NewText>
+                    </Text>
                   </Link>
                 ) : null}
                 {post.quoteCount != null &&
                 post.quoteCount !== 0 &&
                 !post.viewer?.embeddingDisabled ? (
                   <Link href={quotesHref} title={quotesTitle}>
-                    <NewText
+                    <Text
                       testID="quoteCount-expanded"
                       style={[a.text_md, t.atoms.text_contrast_medium]}>
-                      <NewText style={[a.text_md, a.font_bold, t.atoms.text]}>
+                      <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
                         {formatCount(i18n, post.quoteCount)}
-                      </NewText>{' '}
+                      </Text>{' '}
                       <Plural
                         value={post.quoteCount}
                         one="quote"
                         other="quotes"
                       />
-                    </NewText>
+                    </Text>
                   </Link>
                 ) : null}
                 {post.likeCount != null && post.likeCount !== 0 ? (
                   <Link href={likesHref} title={likesTitle}>
-                    <NewText
+                    <Text
                       testID="likeCount-expanded"
                       style={[a.text_md, t.atoms.text_contrast_medium]}>
-                      <NewText style={[a.text_md, a.font_bold, t.atoms.text]}>
+                      <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
                         {formatCount(i18n, post.likeCount)}
-                      </NewText>{' '}
+                      </Text>{' '}
                       <Plural value={post.likeCount} one="like" other="likes" />
-                    </NewText>
+                    </Text>
                   </Link>
                 ) : null}
               </View>
@@ -556,7 +599,6 @@ let PostThreadItemLoaded = ({
                 timestamp={post.indexedAt}
                 postHref={postHref}
                 showAvatar={isThreadedChild}
-                avatarModeration={moderation.ui('avatar')}
                 avatarSize={24}
                 style={[a.pb_xs]}
               />
@@ -574,6 +616,7 @@ let PostThreadItemLoaded = ({
                     style={[a.flex_1, a.text_md]}
                     numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                     authorHandle={post.author.handle}
+                    shouldProxyLinks={true}
                   />
                 </View>
               ) : undefined}
@@ -617,13 +660,13 @@ let PostThreadItemLoaded = ({
               href={postHref}
               title={itemTitle}
               noFeedback>
-              <Text type="sm-medium" style={pal.textLight}>
+              <Text
+                style={[t.atoms.text_contrast_medium, a.font_bold, a.text_sm]}>
                 <Trans>More</Trans>
               </Text>
-              <FontAwesomeIcon
-                icon="angle-right"
-                color={pal.colors.textLight}
-                size={14}
+              <ChevronRightIcon
+                size="xs"
+                style={[t.atoms.text_contrast_medium]}
               />
             </Link>
           ) : undefined}
@@ -651,26 +694,24 @@ function PostOuterWrapper({
   hideTopBorder?: boolean
 }>) {
   const t = useTheme()
-  const [hover, setHover] = React.useState(false)
+  const {
+    state: hover,
+    onIn: onHoverIn,
+    onOut: onHoverOut,
+  } = useInteractionState()
   if (treeView && depth > 0) {
     return (
       <View
         style={[
           a.flex_row,
           a.px_sm,
+          a.flex_row,
           t.atoms.border_contrast_low,
           styles.cursor,
-          {
-            flexDirection: 'row',
-            borderTopWidth: depth === 1 ? a.border_t.borderTopWidth : 0,
-          },
+          depth === 1 && a.border_t,
         ]}
-        onPointerEnter={() => {
-          setHover(true)
-        }}
-        onPointerLeave={() => {
-          setHover(false)
-        }}>
+        onPointerEnter={onHoverIn}
+        onPointerLeave={onHoverOut}>
         {Array.from(Array(depth - 1)).map((_, n: number) => (
           <View
             key={`${post.uri}-padding-${n}`}
@@ -684,18 +725,23 @@ function PostOuterWrapper({
             ]}
           />
         ))}
-        <View style={{flex: 1}}>{children}</View>
+        <View style={a.flex_1}>
+          <SubtleWebHover
+            hover={hover}
+            style={{
+              left: (depth === 1 ? 0 : 2) - a.pl_sm.paddingLeft,
+              right: -a.pr_sm.paddingRight,
+            }}
+          />
+          {children}
+        </View>
       </View>
     )
   }
   return (
     <View
-      onPointerEnter={() => {
-        setHover(true)
-      }}
-      onPointerLeave={() => {
-        setHover(false)
-      }}
+      onPointerEnter={onHoverIn}
+      onPointerLeave={onHoverOut}
       style={[
         a.border_t,
         a.px_sm,
@@ -726,35 +772,150 @@ function ExpandedPostDetails({
   const {_, i18n} = useLingui()
   const openLink = useOpenLink()
   const isRootPost = !('reply' in post.record)
+  const langPrefs = useLanguagePrefs()
 
-  const onTranslatePress = React.useCallback(() => {
-    openLink(translatorUrl)
-  }, [openLink, translatorUrl])
+  const onTranslatePress = React.useCallback(
+    (e: GestureResponderEvent) => {
+      e.preventDefault()
+      openLink(translatorUrl, true)
+
+      if (
+        bsky.dangerousIsType<AppBskyFeedPost.Record>(
+          post.record,
+          AppBskyFeedPost.isRecord,
+        )
+      ) {
+        logger.metric('translate', {
+          sourceLanguages: post.record.langs ?? [],
+          targetLanguage: langPrefs.primaryLanguage,
+          textLength: post.record.text.length,
+        })
+      }
+
+      return false
+    },
+    [openLink, translatorUrl, langPrefs, post],
+  )
 
   return (
-    <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm, a.pt_md]}>
-      <NewText style={[a.text_sm, t.atoms.text_contrast_medium]}>
-        {niceDate(i18n, post.indexedAt)}
-      </NewText>
-      {isRootPost && (
-        <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
-      )}
-      {needsTranslation && (
-        <>
-          <NewText style={[a.text_sm, t.atoms.text_contrast_medium]}>
-            &middot;
-          </NewText>
+    <View style={[a.gap_md, a.pt_md, a.align_start]}>
+      <BackdatedPostIndicator post={post} />
+      <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
+        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+          {niceDate(i18n, post.indexedAt)}
+        </Text>
+        {isRootPost && (
+          <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
+        )}
+        {needsTranslation && (
+          <>
+            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+              &middot;
+            </Text>
 
-          <InlineLinkText
-            to="#"
-            label={_(msg`Translate`)}
-            style={[a.text_sm, pal.link]}
-            onPress={onTranslatePress}>
-            <Trans>Translate</Trans>
-          </InlineLinkText>
-        </>
-      )}
+            <InlineLinkText
+              to={translatorUrl}
+              label={_(msg`Translate`)}
+              style={[a.text_sm, pal.link]}
+              onPress={onTranslatePress}>
+              <Trans>Translate</Trans>
+            </InlineLinkText>
+          </>
+        )}
+      </View>
     </View>
+  )
+}
+
+function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
+  const t = useTheme()
+  const {_, i18n} = useLingui()
+  const control = Prompt.usePromptControl()
+
+  const indexedAt = new Date(post.indexedAt)
+  const createdAt = bsky.dangerousIsType<AppBskyFeedPost.Record>(
+    post.record,
+    AppBskyFeedPost.isRecord,
+  )
+    ? new Date(post.record.createdAt)
+    : new Date(post.indexedAt)
+
+  // backdated if createdAt is 24 hours or more before indexedAt
+  const isBackdated =
+    indexedAt.getTime() - createdAt.getTime() > 24 * 60 * 60 * 1000
+
+  if (!isBackdated) return null
+
+  const orange = t.name === 'light' ? colors.warning.dark : colors.warning.light
+
+  return (
+    <>
+      <Button
+        label={_(msg`Archived post`)}
+        accessibilityHint={_(
+          msg`Shows information about when this post was created`,
+        )}
+        onPress={e => {
+          e.preventDefault()
+          e.stopPropagation()
+          control.open()
+        }}>
+        {({hovered, pressed}) => (
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.rounded_full,
+              t.atoms.bg_contrast_25,
+              (hovered || pressed) && t.atoms.bg_contrast_50,
+              {
+                gap: 3,
+                paddingHorizontal: 6,
+                paddingVertical: 3,
+              },
+            ]}>
+            <CalendarClockIcon fill={orange} size="sm" aria-hidden />
+            <Text
+              style={[
+                a.text_xs,
+                a.font_bold,
+                a.leading_tight,
+                t.atoms.text_contrast_medium,
+              ]}>
+              <Trans>Archived from {niceDate(i18n, createdAt)}</Trans>
+            </Text>
+          </View>
+        )}
+      </Button>
+
+      <Prompt.Outer control={control}>
+        <Prompt.TitleText>
+          <Trans>Archived post</Trans>
+        </Prompt.TitleText>
+        <Prompt.DescriptionText>
+          <Trans>
+            This post claims to have been created on{' '}
+            <RNText style={[a.font_bold]}>{niceDate(i18n, createdAt)}</RNText>,
+            but was first seen by Bluesky on{' '}
+            <RNText style={[a.font_bold]}>{niceDate(i18n, indexedAt)}</RNText>.
+          </Trans>
+        </Prompt.DescriptionText>
+        <Text
+          style={[
+            a.text_md,
+            a.leading_snug,
+            t.atoms.text_contrast_high,
+            a.pb_xl,
+          ]}>
+          <Trans>
+            Bluesky cannot confirm the authenticity of the claimed date.
+          </Trans>
+        </Text>
+        <Prompt.Actions>
+          <Prompt.Action cta={_(msg`Okay`)} onPress={() => {}} />
+        </Prompt.Actions>
+      </Prompt.Outer>
+    </>
   )
 }
 

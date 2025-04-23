@@ -112,8 +112,8 @@ func serve(cctx *cli.Context) error {
 		Skipper: middleware.DefaultSkipper,
 		Store: middleware.NewRateLimiterMemoryStoreWithConfig(
 			middleware.RateLimiterMemoryStoreConfig{
-				Rate:      10,              // requests per second
-				Burst:     30,              // allow bursts
+				Rate:      20,              // requests per second
+				Burst:     150,             // allow bursts
 				ExpiresIn: 3 * time.Minute, // garbage collect entries older than 3 minutes
 			},
 		),

@@ -1,11 +1,11 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import {DimensionValue, Pressable, View} from 'react-native'
-import Animated, {AnimatedRef, useAnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {HandleRef, useHandleRef} from '#/lib/hooks/useHandleRef'
 import type {Dimensions} from '#/lib/media/types'
 import {isNative} from '#/platform/detection'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
@@ -68,21 +68,18 @@ export function AutoSizedImage({
   image: AppBskyEmbedImages.ViewImage
   crop?: 'none' | 'square' | 'constrained'
   hideBadge?: boolean
-  onPress?: (
-    containerRef: AnimatedRef<React.Component<{}, {}, any>>,
-    fetchedDims: Dimensions | null,
-  ) => void
+  onPress?: (containerRef: HandleRef, fetchedDims: Dimensions | null) => void
   onLongPress?: () => void
   onPressIn?: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
   const largeAlt = useLargeAltBadgeEnabled()
-  const containerRef = useAnimatedRef()
+  const containerRef = useHandleRef()
+  const fetchedDimsRef = useRef<{width: number; height: number} | null>(null)
 
-  const [fetchedDims, setFetchedDims] = React.useState<Dimensions | null>(null)
-  const dims = fetchedDims ?? image.aspectRatio
   let aspectRatio: number | undefined
+  const dims = image.aspectRatio
   if (dims) {
     aspectRatio = dims.width / dims.height
     if (Number.isNaN(aspectRatio)) {
@@ -102,11 +99,13 @@ export function AutoSizedImage({
 
   const cropDisabled = crop === 'none'
   const isCropped = rawIsCropped && !cropDisabled
+  const isContain = aspectRatio === undefined
   const hasAlt = !!image.alt
 
   const contents = (
-    <Animated.View ref={containerRef} collapsable={false} style={{flex: 1}}>
+    <View ref={containerRef} collapsable={false} style={{flex: 1}}>
       <Image
+        contentFit={isContain ? 'contain' : 'cover'}
         style={[a.w_full, a.h_full]}
         source={image.thumb}
         accessible={true} // Must set for `accessibilityLabel` to work
@@ -114,7 +113,12 @@ export function AutoSizedImage({
         accessibilityLabel={image.alt}
         accessibilityHint=""
         onLoad={e => {
-          setFetchedDims({width: e.source.width, height: e.source.height})
+          if (!isContain) {
+            fetchedDimsRef.current = {
+              width: e.source.width,
+              height: e.source.height,
+            }
+          }
         }}
       />
       <MediaInsetBorder />
@@ -181,18 +185,18 @@ export function AutoSizedImage({
           )}
         </View>
       ) : null}
-    </Animated.View>
+    </View>
   )
 
   if (cropDisabled) {
     return (
       <Pressable
-        onPress={() => onPress?.(containerRef, fetchedDims)}
+        onPress={() => onPress?.(containerRef, fetchedDimsRef.current)}
         onLongPress={onLongPress}
         onPressIn={onPressIn}
         // alt here is what screen readers actually use
         accessibilityLabel={image.alt}
-        accessibilityHint={_(msg`Tap to view full image`)}
+        accessibilityHint={_(msg`Views full image`)}
         style={[
           a.w_full,
           a.rounded_md,
@@ -209,12 +213,12 @@ export function AutoSizedImage({
         fullBleed={crop === 'square'}
         aspectRatio={constrained ?? 1}>
         <Pressable
-          onPress={() => onPress?.(containerRef, fetchedDims)}
+          onPress={() => onPress?.(containerRef, fetchedDimsRef.current)}
           onLongPress={onLongPress}
           onPressIn={onPressIn}
           // alt here is what screen readers actually use
           accessibilityLabel={image.alt}
-          accessibilityHint={_(msg`Tap to view full image`)}
+          accessibilityHint={_(msg`Views full image`)}
           style={[a.h_full]}>
           {contents}
         </Pressable>
