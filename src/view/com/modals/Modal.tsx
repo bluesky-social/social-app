@@ -7,7 +7,6 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useModalControls, useModals} from '#/state/modals'
 import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
-import * as ChangeEmailModal from './ChangeEmail'
 import * as ChangePasswordModal from './ChangePassword'
 import * as CreateOrEditListModal from './CreateOrEditList'
 import * as DeleteAccountModal from './DeleteAccount'
@@ -18,7 +17,6 @@ import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguages
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as LinkWarningModal from './LinkWarning'
 import * as UserAddRemoveListsModal from './UserAddRemoveLists'
-import * as VerifyEmailModal from './VerifyEmail'
 
 const DEFAULT_SNAPPOINTS = ['90%']
 const HANDLE_HEIGHT = 24
@@ -72,12 +70,6 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'post-languages-settings') {
     snapPoints = PostLanguagesSettingsModal.snapPoints
     element = <PostLanguagesSettingsModal.Component />
-  } else if (activeModal?.name === 'verify-email') {
-    snapPoints = VerifyEmailModal.snapPoints
-    element = <VerifyEmailModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'change-email') {
-    snapPoints = ChangeEmailModal.snapPoints
-    element = <ChangeEmailModal.Component />
   } else if (activeModal?.name === 'change-password') {
     snapPoints = ChangePasswordModal.snapPoints
     element = <ChangePasswordModal.Component />
