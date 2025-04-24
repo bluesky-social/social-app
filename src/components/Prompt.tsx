@@ -52,9 +52,7 @@ export function Outer({
         <Dialog.ScrollableInner
           accessibilityLabelledBy={titleId}
           accessibilityDescribedBy={descriptionId}
-          style={[
-            gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
-          ]}>
+          style={[gtMobile ? {width: 400} : a.w_full]}>
           {children}
         </Dialog.ScrollableInner>
       </Context.Provider>
