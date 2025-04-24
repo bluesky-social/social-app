@@ -78,7 +78,7 @@ index 120d8d3..f8aa49c 100644
  
  export default ExpoImageManipulator.Context as typeof ImageManipulatorContext;
 diff --git a/node_modules/expo-image-manipulator/src/web/ImageManipulatorContext.web.ts b/node_modules/expo-image-manipulator/src/web/ImageManipulatorContext.web.ts
-index 428848c..363a57a 100644
+index 8386cbc..ac64da9 100644
 --- a/node_modules/expo-image-manipulator/src/web/ImageManipulatorContext.web.ts
 +++ b/node_modules/expo-image-manipulator/src/web/ImageManipulatorContext.web.ts
 @@ -41,7 +41,7 @@ export default class ImageManipulatorContext extends SharedObject {
@@ -86,16 +86,19 @@ index 428848c..363a57a 100644
    }
  
 -  async renderAsync(): Promise<ImageManipulatorImageRef> {
-+  async renderAsync(compress?: number): Promise<ImageManipulatorImageRef> {
++  async renderAsync(compress: number): Promise<ImageManipulatorImageRef> {
      const canvas = await this.currentTask;
  
-     return new Promise((resolve) => {
-@@ -49,7 +49,7 @@ export default class ImageManipulatorContext extends SharedObject {
-         const url = blob ? URL.createObjectURL(blob) : canvas.toDataURL();
+     // We're copying the canvas so ref's `saveAsync` can safely use `toBlob` again with the desired format and quality.
+@@ -62,9 +62,8 @@ export default class ImageManipulatorContext extends SharedObject {
  
-         resolve(new ImageManipulatorImageRef(url, canvas.width, canvas.height));
--      });
-+      }, typeof compress === 'number' ? 'image/jpeg' : undefined, compress);
+           resolve(image);
+         },
+-        // Use PNG format so the result is of the best quality.
+-        // If you need another format, see `saveAsync` function on the image ref.
+-        'image/png'
++        typeof compress === 'number' ? 'image/jpeg' : undefined,
++        compress
+       );
      });
    }
- 
