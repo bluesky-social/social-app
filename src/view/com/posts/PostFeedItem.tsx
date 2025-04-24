@@ -229,10 +229,6 @@ let FeedItemInner = ({
     AppBskyFeedDefs.isReasonRepost(reason) &&
     reason.by.did === currentAccount?.did
 
-  const createdAt = AppBskyFeedPost.isRecord(post.record)
-      ? post.record.createdAt
-      : post.indexedAt
-
   /**
    * If `post[0]` in this slice is the actual root post (not an orphan thread),
    * then we may have a threadgate record to reference
@@ -244,11 +240,10 @@ let FeedItemInner = ({
     ? rootPost.threadgate.record
     : undefined
 
-  const indexedAt = new Date(post.indexedAt)
-  const createdAt2 = new Date(post.record.createdAt)
-
-  const isBackdated =
-      indexedAt.getTime() - createdAt2.getTime() > 24 * 60 * 60 * 1000
+  const indexedAt = post.indexedAt
+  const createdAt = AppBskyFeedPost.isRecord(post.record)
+      ? post.record.createdAt
+      : post.indexedAt
 
   const [hover, setHover] = useState(false)
   return (
@@ -407,10 +402,10 @@ let FeedItemInner = ({
           <PostMeta
             author={post.author}
             moderation={moderation}
-            timestamp={createdAt}
+            indexedAt={indexedAt}
+            createdAt={createdAt}
             postHref={href}
             onOpenAuthor={onOpenAuthor}
-            isBackdated={isBackdated}
           />
           {showReplyTo &&
             (parentAuthor || isParentBlocked || isParentNotFound) && (

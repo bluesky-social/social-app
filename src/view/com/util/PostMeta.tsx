@@ -17,23 +17,21 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {precacheProfile} from '#/state/queries/profile'
 import {atoms as a, platform, useTheme, web} from '#/alf'
 import {WebOnlyInlineLinkText} from '#/components/Link'
-import {colors} from '#/components/Admonition'
-import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
-import {TimeElapsed} from './TimeElapsed'
+import {FeedDate, FeedDateArchived} from '#/view/com/post-thread/PostThreadItem.tsx'
 import {PreviewableUserAvatar} from './UserAvatar'
 
 interface PostMetaOpts {
   author: AppBskyActorDefs.ProfileViewBasic
   moderation: ModerationDecision | undefined
   postHref: string
-  timestamp: string
+  indexedAt: string
+  createdAt?: string
   showAvatar?: boolean
   avatarSize?: number
-  isBackdated?: boolean
   onOpenAuthor?: () => void
   style?: StyleProp<ViewStyle>
 }
@@ -41,7 +39,6 @@ interface PostMetaOpts {
 let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const t = useTheme()
   const {i18n, _} = useLingui()
-  const danger = t.name === 'light' ? colors.danger.dark : colors.danger.light
 
   const author = useProfileShadow(opts.author)
   const displayName = author.displayName || author.handle
@@ -57,8 +54,18 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
     precacheProfile(queryClient, author)
   }, [queryClient, author])
 
-  const timestampLabel = niceDate(i18n, opts.timestamp)
   const verification = useSimpleVerificationState({profile: author})
+
+  const timestampLabel = niceDate(i18n, opts.indexedAt)
+
+  // Backdated if createdAt is 24 hours or more before indexedAt
+  const ONE_DAY = 24 * 60 * 60 * 1000
+  const isBackdated =
+        Date.parse(opts.indexedAt) - Date.parse(opts.createdAt) > ONE_DAY
+
+  const dateEl = isBackdated
+    ? <FeedDateArchived indexedAt={opts.indexedAt} createdAt={opts.createdAt} />
+    : <FeedDate timestamp={opts.indexedAt} createdAt={opts.createdAt} />
 
   return (
     <View
@@ -138,8 +145,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           </View>
         </ProfileHoverCard>
 
-        <TimeElapsed timestamp={opts.timestamp}>
-          {({timeElapsed}) => (
+        <View>
             <WebOnlyInlineLinkText
               to={opts.postHref}
               label={timestampLabel}
@@ -156,9 +162,6 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 t.atoms.text_contrast_medium,
                 web({
                   whiteSpace: 'nowrap',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 4,
                 }),
               ]}>
               {!isAndroid && (
@@ -172,13 +175,9 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                   &middot;{' '}
                 </Text>
               )}
-             {opts.isBackdated && (
-               <CalendarClockIcon fill={danger} size="sm" aria-hidden style={web({ verticalAlign: 'middle' })}/>
-             )}
-              {timeElapsed}
+            {dateEl}
             </WebOnlyInlineLinkText>
-          )}
-        </TimeElapsed>
+        </View>
       </View>
     </View>
   )

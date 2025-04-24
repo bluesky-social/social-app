@@ -245,7 +245,7 @@ export function QuoteEmbed({
               moderation={moderation}
               showAvatar
               postHref={itemHref}
-              timestamp={quote.indexedAt}
+              indexedAt={quote.indexedAt}
             />
           </View>
           {moderation ? (

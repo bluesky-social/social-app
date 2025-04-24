@@ -177,7 +177,7 @@ export function MessageInputEmbed({
             showAvatar
             author={post.author}
             moderation={moderation}
-            timestamp={post.indexedAt}
+            indexedAt={post.indexedAt}
             postHref={itemHref}
             style={a.flex_0}
           />

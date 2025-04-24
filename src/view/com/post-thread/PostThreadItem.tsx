@@ -65,6 +65,7 @@ import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text} from '#/components/Typography'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import {WhoCanReply} from '#/components/WhoCanReply'
+import {TimeElapsed} from '../util/TimeElapsed'
 import * as bsky from '#/types/bsky'
 
 export function PostThreadItem({
@@ -596,7 +597,7 @@ let PostThreadItemLoaded = ({
               <PostMeta
                 author={post.author}
                 moderation={moderation}
-                timestamp={post.indexedAt}
+                indexedAt={post.indexedAt}
                 postHref={postHref}
                 showAvatar={isThreadedChild}
                 avatarSize={24}
@@ -797,19 +798,19 @@ function ExpandedPostDetails({
     [openLink, translatorUrl, langPrefs, post],
   )
 
-  const indexedAt = new Date(post.indexedAt)
+  const indexedAt = post.indexedAt
   const createdAt = AppBskyFeedPost.isRecord(post.record)
-      ? new Date(post.record.createdAt)
-      : new Date(post.indexedAt)
+      ? post.record.createdAt
+      : post.indexedAt
 
-  // backdated if createdAt is 24 hours or more before indexedAt
+  // Backdated if createdAt is 24 hours or more before indexedAt
+  const ONE_DAY = 24 * 60 * 60 * 1000
   const isBackdated =
-      indexedAt.getTime() - createdAt.getTime() > 24 * 60 * 60 * 1000
+      Date.parse(indexedAt) - Date.parse(createdAt) > ONE_DAY
 
-  let dateEl = <PostDate post={post} />
-  if(isBackdated){
-    dateEl = <PostDateArchived post={post} />
-  }
+  const dateEl = isBackdated
+      ? <PostDateArchived indexedAt={indexedAt} createdAt={createdAt} />
+      : <PostDate timestamp={indexedAt} />
 
   return (
     <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm, a.pt_md]}>
@@ -836,30 +837,32 @@ function ExpandedPostDetails({
   )
 }
 
-function PostDate({post}: {post: AppBskyFeedDefs.PostView}) {
-  const t = useTheme()
+export function PostDate({timestamp}: { timestamp: string }) {
   const {i18n} = useLingui()
 
-  const indexedAt = new Date(post.indexedAt)
   return (
-    <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-      {niceDate(i18n, indexedAt)}
+    <Text>
+      {niceDate(i18n, timestamp)}
     </Text>
   )
 }
 
-function PostDateArchived({post}: {post: AppBskyFeedDefs.PostView}) {
-  const t = useTheme()
-  const {_, i18n} = useLingui()
-  const control = Prompt.usePromptControl()
-
-  const indexedAt = new Date(post.indexedAt)
-  const createdAt = bsky.dangerousIsType<AppBskyFeedPost.Record>(
-    post.record,
-    AppBskyFeedPost.isRecord,
+export function FeedDate({timestamp}: { timestamp: string }) {
+  return (
+      <TimeElapsed timestamp={timestamp}>
+        {({timeElapsed}) => (
+            <>
+              { timeElapsed }
+            </>
+        )}
+      </TimeElapsed>
   )
-    ? new Date(post.record.createdAt)
-    : new Date(post.indexedAt)
+}
+
+export function PostDateArchived({indexedAt, createdAt}: { indexedAt: string, createdAt: string }) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const control = Prompt.usePromptControl()
 
   const danger = t.name === 'light' ? colors.danger.dark : colors.danger.light
 
@@ -886,17 +889,70 @@ function PostDateArchived({post}: {post: AppBskyFeedDefs.PostView}) {
               {
                 gap: 3,
                 paddingHorizontal: 6,
-                paddingVertical: 3,
+                paddingVertical: 2,
+                top: 2,
               },
             ]}>
             <CalendarClockIcon fill={danger} size="sm" aria-hidden />
-            <Text>
-              Archived from {niceDate(i18n, createdAt)}
-            </Text>
+            <PostDate timestamp={createdAt} />
           </View>
         )}
       </Button>
+      <ArchivedPostPrompt indexedAt={indexedAt} createdAt={createdAt} control={control} />
+    </>
+  )
+}
 
+export function FeedDateArchived({indexedAt, createdAt}: { indexedAt: string, createdAt: string }) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const control = Prompt.usePromptControl()
+
+  const danger = t.name === 'light' ? colors.danger.dark : colors.danger.light
+
+  return (
+      <>
+        <Button
+            label={_(msg`Archived post`)}
+            accessibilityHint={_(
+                msg`Shows information about when this post was created`,
+            )}
+            onPress={e => {
+              e.preventDefault()
+              e.stopPropagation()
+              control.open()
+            }}>
+          {({hovered, pressed}) => (
+              <View
+                  style={[
+                    a.flex_row,
+                    a.align_center,
+                    a.rounded_full,
+                    t.atoms.bg_contrast_25,
+                    (hovered || pressed) && t.atoms.bg_contrast_50,
+                    {
+                      gap: 3,
+                      paddingHorizontal: 6,
+                      paddingVertical: 2,
+                      top: 2,
+                    },
+                  ]}
+              >
+                <CalendarClockIcon fill={danger} size="sm" aria-hidden />
+                <FeedDate timestamp={createdAt} />
+              </View>
+          )}
+        </Button>
+        <ArchivedPostPrompt indexedAt={indexedAt} createdAt={createdAt} control={control} />
+      </>
+  )
+}
+
+export function ArchivedPostPrompt({indexedAt, createdAt, control}: { indexedAt: string, createdAt: string, control }) {
+  const t = useTheme()
+  const {_, i18n} = useLingui()
+
+  return (
       <Prompt.Outer control={control}>
         <Prompt.TitleText>
           <Trans>Archived post</Trans>
@@ -924,7 +980,6 @@ function PostDateArchived({post}: {post: AppBskyFeedDefs.PostView}) {
           <Prompt.Action cta={_(msg`Okay`)} onPress={() => {}} />
         </Prompt.Actions>
       </Prompt.Outer>
-    </>
   )
 }
 
