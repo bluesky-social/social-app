@@ -7,8 +7,9 @@ import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {isWeb} from '#/platform/detection'
 import {useSetInAppBrowser} from '#/state/preferences/in-app-browser'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {SquareArrowTopRight_Stroke2_Corner0_Rounded as External} from '#/components/icons/SquareArrowTopRight'
 import {Text} from '#/components/Typography'
 import {useGlobalDialogsControlContext} from './Context'
 
@@ -77,7 +78,7 @@ function InAppBrowserConsentInner({href}: {href?: string}) {
             onPress={onUseIAB}
             size="large"
             variant="solid"
-            color="secondary_inverted">
+            color="primary">
             <ButtonText>
               <Trans>Use in-app browser</Trans>
             </ButtonText>
@@ -87,10 +88,11 @@ function InAppBrowserConsentInner({href}: {href?: string}) {
             onPress={onUseLinking}
             size="large"
             variant="solid"
-            color="secondary_inverted">
+            color="secondary">
             <ButtonText>
               <Trans>Use my default browser</Trans>
             </ButtonText>
+            <ButtonIcon position="right" icon={External} />
           </Button>
           <Button
             label={_(msg`Cancel`)}
