@@ -8,7 +8,7 @@ msgstr ""
 "Language: id\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-04-19 04:09\n"
+"PO-Revision-Date: 2025-04-24 19:13\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -151,11 +151,11 @@ msgstr "{0} dari 50"
 
 #: src/components/dms/MessageItem.tsx:143
 msgid "{0} reacted {1}"
-msgstr "{0} bereaksi {1}"
+msgstr "{0} menanggapi {1}"
 
 #: src/screens/Messages/components/ChatListItem.tsx:231
 msgid "{0} reacted {1} to {2}"
-msgstr "{0} bereaksi {1} pada {2}"
+msgstr "{0} menanggapi {1} pada {2}"
 
 #: src/view/com/util/UserAvatar.tsx:464
 msgid "{0}'s avatar"
@@ -206,125 +206,125 @@ msgstr "{estimatedTimeHrs, plural, other {jam}}"
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr "{estimatedTimeMins, plural, other {menit}}"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:324
+#: src/view/com/notifications/NotificationFeedItem.tsx:328
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
 msgstr "{firstAuthorLink} dan <0>{additionalAuthorsCount, plural, other {{formattedAuthorsCount} lainnya}}</0> mengikuti Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:350
+#: src/view/com/notifications/NotificationFeedItem.tsx:354
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
 msgstr "{firstAuthorLink} dan <0>{additionalAuthorsCount, plural, other {{formattedAuthorsCount} lainnya}}</0> menyukai feed kustom Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:243
+#: src/view/com/notifications/NotificationFeedItem.tsx:247
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
 msgstr "{firstAuthorLink} dan <0>{additionalAuthorsCount, plural, other {{formattedAuthorsCount} lainnya}}</0> menyukai postingan Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:430
+#: src/view/com/notifications/NotificationFeedItem.tsx:432
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> removed their verifications from your account"
-msgstr ""
+msgstr "{firstAuthorLink} dan <0>{additionalAuthorsCount, plural, other {{formattedAuthorsCount} lainnya}}</0> menghapus verifikasi mereka dari akun Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:267
+#: src/view/com/notifications/NotificationFeedItem.tsx:271
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
 msgstr "{firstAuthorLink} dan <0>{additionalAuthorsCount, plural, other {{formattedAuthorsCount} lainnya}}</0> memposting ulang postingan Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:374
+#: src/view/com/notifications/NotificationFeedItem.tsx:378
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
 msgstr "{firstAuthorLink} dan <0>{additionalAuthorsCount, plural, other {{formattedAuthorsCount} lainnya}}</0> mendaftar dengan paket pemula Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:404
+#: src/view/com/notifications/NotificationFeedItem.tsx:407
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
-msgstr ""
+msgstr "{firstAuthorLink} dan <0>{additionalAuthorsCount, plural, other {{formattedAuthorsCount} lainnya}}</0> memverifikasi Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:336
+#: src/view/com/notifications/NotificationFeedItem.tsx:340
 msgid "{firstAuthorLink} followed you"
 msgstr "{firstAuthorLink} mengikuti Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:313
+#: src/view/com/notifications/NotificationFeedItem.tsx:317
 msgid "{firstAuthorLink} followed you back"
 msgstr "{firstAuthorLink} mengikuti Anda kembali"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:362
+#: src/view/com/notifications/NotificationFeedItem.tsx:366
 msgid "{firstAuthorLink} liked your custom feed"
 msgstr "{firstAuthorLink} menyukai feed kustom Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:255
+#: src/view/com/notifications/NotificationFeedItem.tsx:259
 msgid "{firstAuthorLink} liked your post"
 msgstr "{firstAuthorLink} menyukai postingan Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:442
+#: src/view/com/notifications/NotificationFeedItem.tsx:444
 msgid "{firstAuthorLink} removed their verification from your account"
-msgstr ""
+msgstr "{firstAuthorLink} menghapus verifikasi mereka dari akun Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:279
+#: src/view/com/notifications/NotificationFeedItem.tsx:283
 msgid "{firstAuthorLink} reposted your post"
 msgstr "{firstAuthorLink} memposting ulang postingan Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:386
+#: src/view/com/notifications/NotificationFeedItem.tsx:390
 msgid "{firstAuthorLink} signed up with your starter pack"
 msgstr "{firstAuthorLink} mendaftar dengan paket pemula Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:416
+#: src/view/com/notifications/NotificationFeedItem.tsx:419
 msgid "{firstAuthorLink} verified you"
-msgstr ""
+msgstr "{firstAuthorLink} memverfikasi Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:317
+#: src/view/com/notifications/NotificationFeedItem.tsx:321
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
 msgstr "{firstAuthorName} dan {additionalAuthorsCount, plural, other {{formattedAuthorsCount} lainnya}} mengikuti Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:343
+#: src/view/com/notifications/NotificationFeedItem.tsx:347
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
 msgstr "{firstAuthorName} dan {additionalAuthorsCount, plural, other {{formattedAuthorsCount} lainnya}} menyukai feed kustom Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:236
+#: src/view/com/notifications/NotificationFeedItem.tsx:240
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
 msgstr "{firstAuthorName} dan {additionalAuthorsCount, plural, other {{formattedAuthorsCount} lainnya}} menyukai postingan Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:423
+#: src/view/com/notifications/NotificationFeedItem.tsx:425
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} removed their verifications from your account"
-msgstr ""
+msgstr "{firstAuthorName} dan {additionalAuthorsCount, plural, other {{formattedAuthorsCount} lainnya}} menghapus verifikasi mereka dari akun Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:260
+#: src/view/com/notifications/NotificationFeedItem.tsx:264
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
 msgstr "{firstAuthorName} dan {additionalAuthorsCount, plural, other {{formattedAuthorsCount} lainnya}} memposting ulang postingan Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:367
+#: src/view/com/notifications/NotificationFeedItem.tsx:371
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
 msgstr "{firstAuthorName} dan {additionalAuthorsCount, plural, other {{formattedAuthorsCount} lainnya}} mendaftar dengan paket pemula Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:397
+#: src/view/com/notifications/NotificationFeedItem.tsx:400
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
-msgstr ""
+msgstr "{firstAuthorName} dan {additionalAuthorsCount, plural, other {{formattedAuthorsCount} lainnya}} memverifikasi Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:322
+#: src/view/com/notifications/NotificationFeedItem.tsx:326
 msgid "{firstAuthorName} followed you"
 msgstr "{firstAuthorName} mengikuti Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:312
+#: src/view/com/notifications/NotificationFeedItem.tsx:316
 msgid "{firstAuthorName} followed you back"
 msgstr "{firstAuthorName} mengikuti Anda kembali"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:348
+#: src/view/com/notifications/NotificationFeedItem.tsx:352
 msgid "{firstAuthorName} liked your custom feed"
 msgstr "{firstAuthorName} menyukai feed kustom Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:241
+#: src/view/com/notifications/NotificationFeedItem.tsx:245
 msgid "{firstAuthorName} liked your post"
 msgstr "{firstAuthorName} menyukai postingan Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:428
+#: src/view/com/notifications/NotificationFeedItem.tsx:430
 msgid "{firstAuthorName} removed their verification from your account"
-msgstr ""
+msgstr "{firstAuthorName} menghapus verifikasi mereka dari akun Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:265
+#: src/view/com/notifications/NotificationFeedItem.tsx:269
 msgid "{firstAuthorName} reposted your post"
 msgstr "{firstAuthorName} memposting ulang postingan Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:372
+#: src/view/com/notifications/NotificationFeedItem.tsx:376
 msgid "{firstAuthorName} signed up with your starter pack"
 msgstr "{firstAuthorName} mendaftar dengan paket pemula Anda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:402
+#: src/view/com/notifications/NotificationFeedItem.tsx:405
 msgid "{firstAuthorName} verified you"
-msgstr ""
+msgstr "{firstAuthorName} memverifikasi Anda"
 
 #: src/components/ProfileHoverCard/index.web.tsx:532
 #: src/screens/Profile/Header/Metrics.tsx:49
@@ -355,20 +355,20 @@ msgstr "{profileName} bergabung di Bluesky menggunakan paket pemula {0} yang lal
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:107
 msgid "{rank}."
-msgstr ""
+msgstr "{rank}."
 
 #. trending topic time spent trending. should be as short as possible to fit in a pill
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:202
 msgid "{type}h ago"
-msgstr ""
+msgstr "{type}j yang lalu"
 
 #: src/components/verification/VerifierDialog.tsx:60
 msgid "{userName} is a trusted verifier"
-msgstr ""
+msgstr "{userName} adalah verifikator terpercaya"
 
 #: src/components/verification/VerificationsDialog.tsx:67
 msgid "{userName} is verified"
-msgstr ""
+msgstr "{userName} telah diverifikasi"
 
 #. Possessive, meaning "the verifications of {userName}"
 #: src/components/verification/VerificationsDialog.tsx:69
@@ -378,7 +378,7 @@ msgstr ""
 #. Indicates the number of additional profiles are in the Starter Pack e.g. +12
 #: src/screens/Search/components/StarterPackCard.tsx:249
 msgid "+{computedTotal}"
-msgstr ""
+msgstr "+{computedTotal}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:449
 msgctxt "profiles"
@@ -517,11 +517,11 @@ msgstr "Akun Dibisukan"
 msgid "Account Muted by List"
 msgstr "Akun Dibisukan oleh Daftar"
 
-#: src/screens/Settings/Settings.tsx:472
+#: src/screens/Settings/Settings.tsx:480
 msgid "Account options"
 msgstr "Pengaturan akun"
 
-#: src/screens/Settings/Settings.tsx:508
+#: src/screens/Settings/Settings.tsx:516
 msgid "Account removed from quick access"
 msgstr "Akun dihapus dari akses cepat"
 
@@ -542,8 +542,8 @@ msgctxt "toast"
 msgid "Account unmuted"
 msgstr "Akun tidak dibisukan"
 
-#: src/components/verification/VerifierDialog.tsx:98
-msgid "Accounts with a scalloped blue check mark<0>{NON_BREAKING_SPACE}<1/>{NON_BREAKING_SPACE}</0>can verify others. These trusted verifiers are selected by Bluesky."
+#: src/components/verification/VerifierDialog.tsx:96
+msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. These trusted verifiers are selected by Bluesky."
 msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
@@ -589,8 +589,8 @@ msgstr "Tambahkan teks alt"
 msgid "Add alt text (optional)"
 msgstr "Tambahkan teks alt (opsional)"
 
-#: src/screens/Settings/Settings.tsx:415
-#: src/screens/Settings/Settings.tsx:418
+#: src/screens/Settings/Settings.tsx:423
+#: src/screens/Settings/Settings.tsx:426
 #: src/view/shell/desktop/LeftNav.tsx:281
 #: src/view/shell/desktop/LeftNav.tsx:285
 msgid "Add another account"
@@ -638,7 +638,7 @@ msgstr "Tambahkan orang"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:79
 msgid "Add people to list"
-msgstr ""
+msgstr "Tambahkan orang ke daftar"
 
 #: src/components/dms/EmojiPopup.android.tsx:55
 msgid "Add Reaction"
@@ -675,7 +675,7 @@ msgstr "Tambahkan ke daftar feed saya"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:156
 msgid "Add user to list"
-msgstr ""
+msgstr "Tambahkan pengguna ke daftar"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:109
 #: src/view/com/modals/UserAddRemoveLists.tsx:162
@@ -794,7 +794,7 @@ msgstr "Teks alt menjelaskan gambar untuk pengguna tunanetra dan pengguna dengan
 #: src/view/com/composer/GifAltText.tsx:179
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:139
 msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} characters.}}"
-msgstr ""
+msgstr "Teks alt akan disingkat. {MAX_ALT_TEXT, plural, other {Batas: {0} karakter.}}"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:93
 #: src/view/com/modals/VerifyEmail.tsx:132
@@ -803,7 +803,7 @@ msgstr "Email telah dikirim ke {0}. Email tersebut berisi kode konfirmasi yang d
 
 #: src/view/com/modals/ChangeEmail.tsx:114
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
-msgstr "Email telah dikirim ke alamat Anda sebelumnya, {0}. Email tersebut berisi kode konfirmasi yang dapat Anda masukkan di bawah ini."
+msgstr ""
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:91
 msgid "An email has been sent! Please enter the confirmation code included in the email below."
@@ -856,9 +856,9 @@ msgid "An error occurred while uploading the video."
 msgstr "Terjadi kesalahan saat mengunggah video."
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:84
-#: src/components/verification/VerifierDialog.tsx:88
+#: src/components/verification/VerifierDialog.tsx:86
 msgid "An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
-msgstr ""
+msgstr "Sebuah ilustrasi menampilkan Bluesky memilih verifikator terpercaya, dan verifikator terpercaya pada waktunya memverifikasi akun pengguna individual."
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:28
 #: src/lib/moderation/useReportOptions.ts:28
@@ -875,8 +875,8 @@ msgstr "Terjadi masalah saat mencoba membuka obrolan"
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
-#: src/components/ProfileCard.tsx:367
-#: src/components/ProfileCard.tsx:388
+#: src/components/ProfileCard.tsx:379
+#: src/components/ProfileCard.tsx:400
 #: src/view/com/profile/FollowButton.tsx:38
 #: src/view/com/profile/FollowButton.tsx:48
 msgid "An issue occurred, please try again."
@@ -1379,8 +1379,8 @@ msgid "Camera"
 msgstr "Kamera"
 
 #: src/components/Menu/index.tsx:306
+#: src/components/Prompt.tsx:138
 #: src/components/Prompt.tsx:140
-#: src/components/Prompt.tsx:142
 #: src/screens/Deactivated.tsx:158
 #: src/screens/Profile/Header/EditProfileDialog.tsx:227
 #: src/screens/Profile/Header/EditProfileDialog.tsx:235
@@ -1400,7 +1400,7 @@ msgstr "Kamera"
 #: src/view/com/modals/ChangePassword.tsx:282
 #: src/view/com/modals/CreateOrEditList.tsx:335
 #: src/view/com/modals/CropImage.web.tsx:97
-#: src/view/com/modals/EditProfile.tsx:270
+#: src/view/com/modals/EditProfile.tsx:269
 #: src/view/com/modals/InAppBrowserConsent.tsx:75
 #: src/view/com/modals/InAppBrowserConsent.tsx:77
 #: src/view/com/modals/LinkWarning.tsx:105
@@ -1428,7 +1428,7 @@ msgstr "Batal menghapus akun"
 msgid "Cancel image crop"
 msgstr "Batal memotong gambar"
 
-#: src/view/com/modals/EditProfile.tsx:265
+#: src/view/com/modals/EditProfile.tsx:264
 msgid "Cancel profile editing"
 msgstr "Batal mengedit profil"
 
@@ -1499,7 +1499,7 @@ msgstr "Ubah layanan moderasi"
 
 #: src/view/com/modals/VerifyEmail.tsx:155
 msgid "Change my email"
-msgstr "Ubah email saya"
+msgstr ""
 
 #: src/view/com/modals/ChangePassword.tsx:153
 msgid "Change Password"
@@ -1631,18 +1631,18 @@ msgstr "Pilih kata sandi Anda"
 msgid "Choose your username"
 msgstr "Panggilan Anda"
 
-#: src/screens/Settings/Settings.tsx:393
+#: src/screens/Settings/Settings.tsx:401
 msgid "Clear all storage data"
 msgstr "Hapus semua data penyimpanan"
 
-#: src/screens/Settings/Settings.tsx:395
+#: src/screens/Settings/Settings.tsx:403
 msgid "Clear all storage data (restart after this)"
 msgstr "Hapus semua data penyimpanan (mulai ulang setelah ini)"
 
 #: src/screens/Settings/AboutSettings.tsx:113
 #: src/screens/Settings/AboutSettings.tsx:117
 msgid "Clear image cache"
-msgstr ""
+msgstr "Hapus tembolok gambar"
 
 #: src/components/forms/SearchInput.tsx:70
 msgid "Clear search query"
@@ -1689,8 +1689,8 @@ msgstr "Keletak 🐴 keletuk 🐴"
 #: src/components/ProgressGuide/FollowDialog.tsx:386
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:117
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:123
-#: src/components/verification/VerificationsDialog.tsx:146
-#: src/components/verification/VerifierDialog.tsx:144
+#: src/components/verification/VerificationsDialog.tsx:144
+#: src/components/verification/VerifierDialog.tsx:140
 #: src/view/com/modals/ChangePassword.tsx:279
 #: src/view/com/modals/ChangePassword.tsx:282
 #: src/view/com/util/post-embeds/GifEmbed.tsx:197
@@ -1711,8 +1711,8 @@ msgid "Close bottom drawer"
 msgstr "Tutup kotak bawah"
 
 #: src/components/dialogs/GifSelect.tsx:275
-#: src/components/verification/VerificationsDialog.tsx:138
-#: src/components/verification/VerifierDialog.tsx:136
+#: src/components/verification/VerificationsDialog.tsx:136
+#: src/components/verification/VerifierDialog.tsx:132
 msgid "Close dialog"
 msgstr "Tutup dialog"
 
@@ -1764,11 +1764,11 @@ msgstr "Menutup pemilih emoji"
 msgid "Closes viewer for header image"
 msgstr "Menutup penampil gambar header"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:479
+#: src/view/com/notifications/NotificationFeedItem.tsx:481
 msgid "Collapse list of users"
 msgstr "Ciutkan daftar pengguna"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:687
+#: src/view/com/notifications/NotificationFeedItem.tsx:689
 msgid "Collapses list of users for a given notification"
 msgstr "Menciutkan daftar pengguna untuk notifikasi tertentu"
 
@@ -1831,8 +1831,8 @@ msgstr "Diatur pada <0>pengaturan moderasi</0>."
 #: src/components/dialogs/VerifyEmailDialog.tsx:253
 #: src/components/dialogs/VerifyEmailDialog.tsx:260
 #: src/components/dialogs/VerifyEmailDialog.tsx:283
-#: src/components/Prompt.tsx:183
-#: src/components/Prompt.tsx:186
+#: src/components/Prompt.tsx:181
+#: src/components/Prompt.tsx:184
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:185
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:188
 #: src/view/com/modals/VerifyEmail.tsx:239
@@ -1843,7 +1843,7 @@ msgstr "Konfirmasi"
 #: src/view/com/modals/ChangeEmail.tsx:188
 #: src/view/com/modals/ChangeEmail.tsx:190
 msgid "Confirm Change"
-msgstr "Konfirmasi Perubahan"
+msgstr ""
 
 #: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:34
 msgid "Confirm content language settings"
@@ -2215,7 +2215,7 @@ msgstr "Tanggal lahir"
 msgid "Deactivate account"
 msgstr "Nonaktifkan akun"
 
-#: src/screens/Settings/Settings.tsx:374
+#: src/screens/Settings/Settings.tsx:382
 msgid "Debug Moderation"
 msgstr "Debug Moderasi"
 
@@ -2264,7 +2264,7 @@ msgstr "Hapus kata sandi aplikasi?"
 msgid "Delete chat"
 msgstr "Hapus obrolan"
 
-#: src/screens/Settings/Settings.tsx:381
+#: src/screens/Settings/Settings.tsx:389
 msgid "Delete chat declaration record"
 msgstr "Hapus catatan deklarasi obrolan"
 
@@ -2338,8 +2338,8 @@ msgstr "Postingan dihapus."
 #: src/screens/Profile/Header/EditProfileDialog.tsx:370
 #: src/view/com/modals/CreateOrEditList.tsx:280
 #: src/view/com/modals/CreateOrEditList.tsx:301
-#: src/view/com/modals/EditProfile.tsx:219
-#: src/view/com/modals/EditProfile.tsx:231
+#: src/view/com/modals/EditProfile.tsx:218
+#: src/view/com/modals/EditProfile.tsx:230
 msgid "Description"
 msgstr "Deskripsi"
 
@@ -2349,7 +2349,7 @@ msgstr "Deskripsi terlalu panjang"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:391
 msgid "Description is too long. {DESCRIPTION_MAX_GRAPHEMES, plural, other {The maximum number of characters is #.}}"
-msgstr ""
+msgstr "Deskripsi terlalu panjang. {DESCRIPTION_MAX_GRAPHEMES, plural, other {Maksimum jumlah karakter adalah #.}}"
 
 #: src/view/com/composer/GifAltText.tsx:150
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:114
@@ -2460,7 +2460,7 @@ msgstr "Tutup panduan memulai"
 
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:43
 msgid "Dismiss interests"
-msgstr ""
+msgstr "Abaikan minat"
 
 #: src/components/interstitials/TrendingVideos.tsx:92
 msgid "Dismiss this section"
@@ -2587,7 +2587,7 @@ msgstr "contoh: Langit Kresna"
 msgid "e.g. alice.com"
 msgstr "contoh: kresna.com"
 
-#: src/view/com/modals/EditProfile.tsx:224
+#: src/view/com/modals/EditProfile.tsx:223
 msgid "e.g. Artist, dog-lover, and avid reader."
 msgstr "contoh: Penulis, penyiar radio, dan sejarawan."
 
@@ -2651,7 +2651,7 @@ msgstr "Ubah pengaturan interaksi"
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:98
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:105
 msgid "Edit interests"
-msgstr ""
+msgstr "Ubah minat"
 
 #: src/view/screens/ProfileList.tsx:544
 msgid "Edit list details"
@@ -2707,7 +2707,7 @@ msgstr "Ubah siapa yang dapat membalas"
 msgid "Edit your display name"
 msgstr "Ubah nama tampilan Anda"
 
-#: src/view/com/modals/EditProfile.tsx:232
+#: src/view/com/modals/EditProfile.tsx:231
 msgid "Edit your profile description"
 msgstr "Sunting deskripsi profil Anda"
 
@@ -2751,16 +2751,16 @@ msgstr "Email Dikirim Ulang"
 #: src/view/com/modals/ChangeEmail.tsx:83
 msgctxt "toast"
 msgid "Email updated"
-msgstr "Email diperbarui"
+msgstr ""
 
 #: src/view/com/modals/ChangeEmail.tsx:106
 msgid "Email Updated"
-msgstr "Email Diperbarui"
+msgstr ""
 
 #: src/view/com/modals/VerifyEmail.tsx:85
 msgctxt "toast"
 msgid "Email verified"
-msgstr "Email terverifikasi"
+msgstr ""
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:79
 msgid "Email Verified"
@@ -2866,7 +2866,7 @@ msgstr "Masukkan Kode"
 
 #: src/view/com/modals/VerifyEmail.tsx:113
 msgid "Enter Confirmation Code"
-msgstr "Masukkan Kode Konfirmasi"
+msgstr ""
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:405
 msgid "Enter fullscreen"
@@ -2899,7 +2899,7 @@ msgstr "Masukkan alamat email Anda"
 
 #: src/view/com/modals/ChangeEmail.tsx:42
 msgid "Enter your new email above"
-msgstr "Masukkan email baru Anda di atas"
+msgstr ""
 
 #: src/view/com/modals/ChangeEmail.tsx:112
 msgid "Enter your new email address below."
@@ -2940,7 +2940,7 @@ msgstr "Galat:"
 
 #: src/screens/Search/SearchResults.tsx:131
 msgid "Error: {error}"
-msgstr ""
+msgstr "Kesalahan: {error}"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:394
 msgid "Everybody"
@@ -2997,11 +2997,11 @@ msgstr "Keluar dari tampilan gambar"
 msgid "Expand alt text"
 msgstr "Bentangkan teks alt"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:480
+#: src/view/com/notifications/NotificationFeedItem.tsx:482
 msgid "Expand list of users"
 msgstr "Bentangkan daftar pengguna"
 
-#: src/view/com/composer/ComposerReplyTo.tsx:83
+#: src/view/com/composer/ComposerReplyTo.tsx:84
 msgid "Expand or collapse the full post you are replying to"
 msgstr "Bentangkan atau ciutkan postingan lengkap yang Anda balas"
 
@@ -3045,7 +3045,7 @@ msgstr "Gambar seksual eksplisit."
 #: src/view/shell/desktop/LeftNav.tsx:617
 #: src/view/shell/Drawer.tsx:386
 msgid "Explore"
-msgstr ""
+msgstr "Jelajahi"
 
 #: src/screens/Settings/AccountSettings.tsx:137
 #: src/screens/Settings/AccountSettings.tsx:141
@@ -3089,10 +3089,6 @@ msgstr "Gagal menambahkan emoji reaksi"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:587
 msgid "Failed to change handle. Please try again."
 msgstr "Gagal mengubah panggilan. Silakan coba lagi."
-
-#: src/components/verification/VerificationCreatePrompt.tsx:32
-msgid "Failed to create a verification"
-msgstr ""
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:173
 msgid "Failed to create app password. Please try again."
@@ -3172,7 +3168,7 @@ msgstr "Gagal menghapus emoji reaksi"
 
 #: src/components/verification/VerificationRemovePrompt.tsx:34
 msgid "Failed to remove verification"
-msgstr ""
+msgstr "Gagal menghapus verifikasi"
 
 #: src/view/com/lightbox/Lightbox.tsx:46
 msgid "Failed to save image: {0}"
@@ -3189,7 +3185,7 @@ msgstr "Gagal menyimpan pengaturan. Silakan coba lagi."
 #: src/screens/Settings/SettingsInterests.tsx:133
 msgctxt "toast"
 msgid "Failed to save your interests."
-msgstr ""
+msgstr "Gagal untuk menyimpan minat Anda."
 
 #: src/components/dms/MessageItem.tsx:310
 msgid "Failed to send"
@@ -3345,7 +3341,7 @@ msgid "Flexible"
 msgstr "Fleksibel"
 
 #. User is not following this account, click to follow
-#: src/components/ProfileCard.tsx:400
+#: src/components/ProfileCard.tsx:412
 #: src/components/ProfileHoverCard/index.web.tsx:456
 #: src/components/ProfileHoverCard/index.web.tsx:467
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:236
@@ -3427,7 +3423,7 @@ msgid "Followers you know"
 msgstr "Pengikut yang Anda kenal"
 
 #. User is following this account, click to unfollow
-#: src/components/ProfileCard.tsx:394
+#: src/components/ProfileCard.tsx:406
 #: src/components/ProfileHoverCard/index.web.tsx:455
 #: src/components/ProfileHoverCard/index.web.tsx:466
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:232
@@ -3438,7 +3434,7 @@ msgstr "Pengikut yang Anda kenal"
 msgid "Following"
 msgstr "Mengikuti"
 
-#: src/components/ProfileCard.tsx:357
+#: src/components/ProfileCard.tsx:369
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:101
 msgid "Following {0}"
 msgstr "Mengikuti {0}"
@@ -3496,7 +3492,7 @@ msgstr "Untuk pengalaman terbaik, kami sarankan menggunakan font tema."
 
 #: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:94
 msgid "For You"
-msgstr ""
+msgstr "Untuk Anda"
 
 #: src/components/dialogs/MutedWords.tsx:178
 msgid "Forever"
@@ -3544,7 +3540,7 @@ msgstr "Dapatkan bantuan"
 #: src/view/com/modals/VerifyEmail.tsx:197
 #: src/view/com/modals/VerifyEmail.tsx:199
 msgid "Get Started"
-msgstr "Mulai"
+msgstr ""
 
 #: src/components/ProgressGuide/List.tsx:35
 msgid "Getting started"
@@ -3605,7 +3601,7 @@ msgstr "Kembali ke beranda"
 msgid "Go Home"
 msgstr "Ke Beranda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:193
+#: src/view/com/notifications/NotificationFeedItem.tsx:197
 msgid "Go to {firstAuthorName}'s profile"
 msgstr ""
 
@@ -3720,7 +3716,7 @@ msgstr "Daftar yang disembunyikan"
 msgid "Hide"
 msgstr "Sembunyikan"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:694
+#: src/view/com/notifications/NotificationFeedItem.tsx:696
 msgctxt "action"
 msgid "Hide"
 msgstr "Sembunyikan"
@@ -3746,7 +3742,7 @@ msgstr "Sembunyikan balasan untuk saya"
 
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:110
 msgid "Hide this card"
-msgstr ""
+msgstr "Sembunyikan kartu ini"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:773
 msgid "Hide this post?"
@@ -3771,14 +3767,14 @@ msgstr "Sembunyikan tren topik?"
 msgid "Hide trending videos?"
 msgstr "Sembunyikan tren video?"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:685
+#: src/view/com/notifications/NotificationFeedItem.tsx:687
 msgid "Hide user list"
 msgstr "Sembunyikan daftar pengguna"
 
 #: src/screens/Moderation/VerificationSettings.tsx:81
 #: src/screens/Moderation/VerificationSettings.tsx:90
 msgid "Hide verification badges"
-msgstr ""
+msgstr "Sembunyikan lencana verifikasi"
 
 #: src/components/moderation/ContentHider.tsx:151
 #: src/components/moderation/PostHider.tsx:79
@@ -3836,7 +3832,7 @@ msgstr "Penyedia hosting"
 
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:190
 msgid "Hot"
-msgstr ""
+msgstr "Sedang hangat"
 
 #: src/screens/Settings/ThreadPreferences.tsx:67
 #: src/screens/Settings/ThreadPreferences.tsx:70
@@ -3858,11 +3854,11 @@ msgstr "Saya punya kode"
 #: src/components/dialogs/VerifyEmailDialog.tsx:239
 #: src/components/dialogs/VerifyEmailDialog.tsx:246
 msgid "I Have a Code"
-msgstr "Saya Mempunyai Kode"
+msgstr ""
 
 #: src/view/com/modals/VerifyEmail.tsx:224
 msgid "I have a confirmation code"
-msgstr "Saya punya kode konfirmasi"
+msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:280
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:286
@@ -3917,12 +3913,12 @@ msgstr "Gambar"
 
 #: src/screens/Settings/AboutSettings.tsx:61
 msgid "Image cache cleared"
-msgstr ""
+msgstr "Tembolok gambar dibersihkan"
 
 #. Android-only toast message which includes amount of space freed using localized number formatting
 #: src/screens/Settings/AboutSettings.tsx:47
 msgid "Image cache cleared, freed {0}"
-msgstr ""
+msgstr "Tembolok gambar dibersihkan, sisa {0}"
 
 #: src/components/StarterPack/ShareDialog.tsx:76
 msgid "Image saved to your camera roll!"
@@ -4124,14 +4120,14 @@ msgstr "Terbaru"
 msgid "learn more"
 msgstr "pelajari lebih lanjut"
 
-#: src/components/verification/VerificationsDialog.tsx:163
-#: src/components/verification/VerifierDialog.tsx:132
+#: src/components/verification/VerificationsDialog.tsx:161
+#: src/components/verification/VerifierDialog.tsx:128
 #: src/screens/Moderation/VerificationSettings.tsx:47
 #: src/screens/Profile/Header/EditProfileDialog.tsx:360
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:212
-#: src/view/com/modals/EditProfile.tsx:208
+#: src/view/com/modals/EditProfile.tsx:207
 msgid "Learn more"
-msgstr ""
+msgstr "Pelajari selengkapnya"
 
 #: src/components/moderation/ScreenHider.tsx:140
 msgid "Learn More"
@@ -4158,10 +4154,10 @@ msgstr "Pelajari lebih lanjut tentang moderasi yang diterapkan pada konten ini."
 msgid "Learn more about this warning"
 msgstr "Pelajari lebih lanjut tentang peringatan ini"
 
-#: src/components/verification/VerificationsDialog.tsx:152
-#: src/components/verification/VerifierDialog.tsx:121
+#: src/components/verification/VerificationsDialog.tsx:150
+#: src/components/verification/VerifierDialog.tsx:117
 msgid "Learn more about verification on Bluesky"
-msgstr ""
+msgstr "Pelajari selengkapnya mengenai verifikasi di Bluesky (dalam bahasa Inggris)"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:99
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:102
@@ -4377,7 +4373,7 @@ msgstr "Muat notifikasi baru"
 msgid "Load new posts"
 msgstr "Muat postingan baru"
 
-#: src/view/com/composer/text-input/mobile/Autocomplete.tsx:94
+#: src/view/com/composer/text-input/mobile/Autocomplete.tsx:61
 msgid "Loading..."
 msgstr "Memuat..."
 
@@ -4433,7 +4429,7 @@ msgstr "Kelola feed tersimpan"
 
 #: src/screens/Moderation/index.tsx:283
 msgid "Manage verification settings"
-msgstr ""
+msgstr "Kelola pengaturan verifikasi"
 
 #: src/components/dialogs/MutedWords.tsx:108
 msgid "Manage your muted words and tags"
@@ -4494,7 +4490,7 @@ msgstr "Pesan dihapus"
 
 #: src/components/dms/MessageContextMenu.tsx:126
 msgid "Message from @{0}: {1}"
-msgstr ""
+msgstr "Pesan dari @{0}: {1}"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:201
 msgid "Message from server: {0}"
@@ -4811,7 +4807,7 @@ msgstr "Obrolan baru"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:63
 msgid "New Feature"
-msgstr ""
+msgstr "Fitur Baru"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:221
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:229
@@ -4924,14 +4920,14 @@ msgstr "Tidak ditemukan feed apa pun. Coba pencarian lain."
 msgid "No likes yet"
 msgstr "Belum ada yang menyukai"
 
-#: src/components/ProfileCard.tsx:379
+#: src/components/ProfileCard.tsx:391
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:122
 msgid "No longer following {0}"
 msgstr "Tidak lagi mengikuti {0}"
 
 #: src/screens/Signup/StepHandle.tsx:184
 msgid "No longer than {MAX_SERVICE_HANDLE_LENGTH, plural, other {# characters}}"
-msgstr ""
+msgstr "Tidak lebih dari {MAX_SERVICE_HANDLE_LENGTH, plural, other {# karakter}}"
 
 #: src/screens/Messages/components/ChatListItem.tsx:139
 msgid "No messages yet"
@@ -4962,8 +4958,8 @@ msgstr "Belum ada kutipan"
 msgid "No reposts yet"
 msgstr "Belum ada postingan ulang"
 
-#: src/view/com/composer/text-input/mobile/Autocomplete.tsx:94
-#: src/view/com/composer/text-input/web/Autocomplete.tsx:195
+#: src/view/com/composer/text-input/mobile/Autocomplete.tsx:61
+#: src/view/com/composer/text-input/web/Autocomplete.tsx:172
 msgid "No result"
 msgstr "Tidak ada hasil"
 
@@ -4974,7 +4970,7 @@ msgstr "Tidak ada hasil"
 
 #: src/screens/Search/Explore.tsx:715
 msgid "No results for \"{0}\"."
-msgstr ""
+msgstr "Tidak ada hasil untuk \"{0}\"."
 
 #: src/components/Lists.tsx:189
 msgid "No results found"
@@ -4992,7 +4988,7 @@ msgstr "Tidak ditemukan hasil untuk {query}"
 
 #: src/screens/Search/Explore.tsx:719
 msgid "No results."
-msgstr ""
+msgstr "Tidak ada hasil."
 
 #: src/components/dialogs/GifSelect.tsx:229
 msgid "No search results found for \"{search}\"."
@@ -5040,7 +5036,7 @@ msgstr "Tidak Ditemukan"
 #: src/view/com/modals/VerifyEmail.tsx:254
 #: src/view/com/modals/VerifyEmail.tsx:260
 msgid "Not right now"
-msgstr "Jangan sekarang"
+msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:442
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:791
@@ -5140,7 +5136,7 @@ msgstr "Balasan terlama lebih dulu"
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "di<0><1/><2><3/></2></0>"
 
-#: src/screens/Settings/Settings.tsx:346
+#: src/screens/Settings/Settings.tsx:354
 msgid "Onboarding reset"
 msgstr "Pengaturan ulang orientasi"
 
@@ -5227,7 +5223,7 @@ msgstr "Buka menu opsi feed"
 
 #: src/components/dms/EmojiPopup.android.tsx:28
 msgid "Open full emoji list"
-msgstr ""
+msgstr "Buka daftar emoji lengkap"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:79
 msgid "Open link to {niceUrl}"
@@ -5237,7 +5233,7 @@ msgstr "Buka tautan {niceUrl}"
 msgid "Open message options"
 msgstr "Buka opsi pesan"
 
-#: src/screens/Settings/Settings.tsx:372
+#: src/screens/Settings/Settings.tsx:380
 msgid "Open moderation debug page"
 msgstr "Buka halaman debug moderasi"
 
@@ -5257,12 +5253,12 @@ msgstr "Buka menu opsi postingan"
 msgid "Open starter pack menu"
 msgstr "Buka menu paket pemula"
 
-#: src/screens/Settings/Settings.tsx:365
-#: src/screens/Settings/Settings.tsx:379
+#: src/screens/Settings/Settings.tsx:373
+#: src/screens/Settings/Settings.tsx:387
 msgid "Open storybook page"
 msgstr "Buka halaman buku cerita"
 
-#: src/screens/Settings/Settings.tsx:358
+#: src/screens/Settings/Settings.tsx:366
 msgid "Open system log"
 msgstr "Buka log sistem"
 
@@ -5340,7 +5336,7 @@ msgstr "Membuka formulir pengaturan ulang kata sandi"
 msgid "Opens the linked website"
 msgstr "Membuka situs web tertaut"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:788
+#: src/view/com/notifications/NotificationFeedItem.tsx:790
 #: src/view/com/util/UserAvatar.tsx:465
 msgid "Opens this profile"
 msgstr "Membuka profil ini"
@@ -5584,7 +5580,7 @@ msgstr "Mohon selesaikan verifikasi captcha."
 
 #: src/view/com/modals/ChangeEmail.tsx:65
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
-msgstr "Harap konfirmasi email Anda sebelum mengubahnya. Ini adalah persyaratan sementara selama alat pembaruan email ditambahkan, dan akan segera dihapus."
+msgstr ""
 
 #: src/screens/Signup/StepInfo/index.tsx:109
 msgid "Please double-check that you have entered your email address correctly."
@@ -5848,7 +5844,7 @@ msgid "Profile"
 msgstr "Profil"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:198
-#: src/view/com/modals/EditProfile.tsx:127
+#: src/view/com/modals/EditProfile.tsx:128
 msgctxt "toast"
 msgid "Profile updated"
 msgstr "Profil diperbarui"
@@ -5958,7 +5954,7 @@ msgstr "Aktifkan kembali akun Anda"
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:158
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:169
 msgid "Read blog post"
-msgstr ""
+msgstr "Baca blog postingan (dalam bahasa Inggris)"
 
 #: src/screens/VideoFeed/index.tsx:942
 msgid "Read less"
@@ -6022,7 +6018,7 @@ msgstr "Memuat ulang percakapan"
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:102
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:109
-#: src/screens/Settings/Settings.tsx:510
+#: src/screens/Settings/Settings.tsx:518
 #: src/view/com/feeds/FeedSourceCard.tsx:322
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 #: src/view/com/posts/PostFeedErrorMessage.tsx:213
@@ -6037,8 +6033,8 @@ msgstr "Hapus {displayName} dari paket pemula"
 msgid "Remove {historyItem}"
 msgstr "Hapus {historyItem}"
 
-#: src/screens/Settings/Settings.tsx:489
-#: src/screens/Settings/Settings.tsx:492
+#: src/screens/Settings/Settings.tsx:497
+#: src/screens/Settings/Settings.tsx:500
 msgid "Remove account"
 msgstr "Hapus akun"
 
@@ -6079,7 +6075,7 @@ msgstr "Hapus feed?"
 msgid "Remove from my feeds"
 msgstr "Hapus dari daftar feed saya"
 
-#: src/screens/Settings/Settings.tsx:502
+#: src/screens/Settings/Settings.tsx:510
 msgid "Remove from quick access?"
 msgstr "Hapus dari akses cepat?"
 
@@ -6124,18 +6120,18 @@ msgstr "Hapus feed ini dari feed tersimpan Anda"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:157
 msgid "Remove user from list"
-msgstr ""
+msgstr "Hapus pengguna dari daftar"
 
 #: src/components/verification/VerificationRemovePrompt.tsx:46
-#: src/components/verification/VerificationsDialog.tsx:227
+#: src/components/verification/VerificationsDialog.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:298
 #: src/view/com/profile/ProfileMenu.tsx:301
 msgid "Remove verification"
-msgstr ""
+msgstr "Hapus verifikasi"
 
 #: src/components/verification/VerificationRemovePrompt.tsx:44
 msgid "Remove your verification for this account?"
-msgstr ""
+msgstr "Hapus verifikasi Anda dari akun ini?"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:110
 msgid "Removed by author"
@@ -6166,11 +6162,11 @@ msgstr "Dihapus dari daftar feed Anda"
 
 #: src/components/verification/VerificationRemovePrompt.tsx:32
 msgid "Removed verification"
-msgstr ""
+msgstr "Hapus verifikasi"
 
 #: src/screens/Search/components/SearchHistory.tsx:179
 msgid "Removes profile from search history"
-msgstr "Menghapus profil dari riwayat pencarian"
+msgstr ""
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:291
 msgid "Removes quoted post"
@@ -6389,7 +6385,7 @@ msgstr "Postingan ulang postingan ini"
 #: src/view/com/modals/ChangeEmail.tsx:176
 #: src/view/com/modals/ChangeEmail.tsx:178
 msgid "Request Change"
-msgstr "Ajukan Perubahan"
+msgstr ""
 
 #: src/view/com/modals/ChangePassword.tsx:253
 #: src/view/com/modals/ChangePassword.tsx:255
@@ -6436,8 +6432,8 @@ msgstr "Kode reset"
 msgid "Reset Code"
 msgstr "Kode Reset"
 
-#: src/screens/Settings/Settings.tsx:386
-#: src/screens/Settings/Settings.tsx:388
+#: src/screens/Settings/Settings.tsx:394
+#: src/screens/Settings/Settings.tsx:396
 msgid "Reset onboarding state"
 msgstr "Reset status orientasi"
 
@@ -6514,7 +6510,7 @@ msgstr "Kembali ke langkah sebelumnya"
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:153
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:163
 #: src/view/com/modals/CreateOrEditList.tsx:317
-#: src/view/com/modals/EditProfile.tsx:245
+#: src/view/com/modals/EditProfile.tsx:244
 #: src/view/screens/SavedFeeds.tsx:109
 msgid "Save"
 msgstr "Simpan"
@@ -6534,7 +6530,7 @@ msgstr "Simpan tanggal lahir"
 msgid "Save changes"
 msgstr "Simpan perubahan"
 
-#: src/view/com/modals/EditProfile.tsx:253
+#: src/view/com/modals/EditProfile.tsx:252
 msgid "Save Changes"
 msgstr "Simpan Perubahan"
 
@@ -6573,7 +6569,7 @@ msgstr "Disimpan ke rol kamera Anda"
 msgid "Saved to your feeds"
 msgstr "Disimpan ke daftar feed Anda"
 
-#: src/view/com/modals/EditProfile.tsx:246
+#: src/view/com/modals/EditProfile.tsx:245
 msgid "Saves any changes to your profile"
 msgstr "Simpan setiap perubahan pada profil Anda"
 
@@ -6583,8 +6579,8 @@ msgstr "Menyimpan pengaturan pemangkasan gambar"
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 #: src/components/NewskieDialog.tsx:105
-#: src/view/com/notifications/NotificationFeedItem.tsx:633
-#: src/view/com/notifications/NotificationFeedItem.tsx:658
+#: src/view/com/notifications/NotificationFeedItem.tsx:635
+#: src/view/com/notifications/NotificationFeedItem.tsx:660
 msgid "Say hello!"
 msgstr "Katakan halo!"
 
@@ -6815,7 +6811,7 @@ msgstr "Kirimkan situs web yang bagus!"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:232
 msgid "Send Confirmation"
-msgstr "Kirim Konfirmasi"
+msgstr ""
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:225
 msgid "Send confirmation email"
@@ -6824,7 +6820,7 @@ msgstr "Kirim email konfirmasi"
 #: src/view/com/modals/VerifyEmail.tsx:210
 #: src/view/com/modals/VerifyEmail.tsx:212
 msgid "Send Confirmation Email"
-msgstr "Kirim Email Konfirmasi"
+msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:145
 msgid "Send email"
@@ -7144,7 +7140,7 @@ msgstr "Masuk sebagai..."
 #: src/screens/Deactivated.tsx:203
 #: src/screens/Deactivated.tsx:209
 msgid "Sign in or create an account"
-msgstr ""
+msgstr "Masuk atau buat akun"
 
 #: src/components/dialogs/Signin.tsx:75
 msgid "Sign in or create your account to join the conversation!"
@@ -7211,9 +7207,9 @@ msgstr "Lebih kecil"
 msgid "Software Dev"
 msgstr "Pengembang Perangkat Lunak"
 
-#: src/components/verification/VerificationsDialog.tsx:122
+#: src/components/verification/VerificationsDialog.tsx:120
 msgid "Some of your verifications are invalid."
-msgstr ""
+msgstr "Beberapa dari verifikasi Anda tidak valid."
 
 #: src/components/FeedInterstitials.tsx:474
 msgid "Some other feeds you might like"
@@ -7225,11 +7221,11 @@ msgstr "Beberapa orang dapat membalas"
 
 #: src/components/dms/MessageItem.tsx:148
 msgid "Someone reacted {0}"
-msgstr ""
+msgstr "Seseorang menanggapi {0}"
 
 #: src/screens/Messages/components/ChatListItem.tsx:241
 msgid "Someone reacted {0} to {1}"
-msgstr ""
+msgstr "Seseorang menanggapi {0} ke {1}"
 
 #: src/components/moderation/ReportDialog/index.tsx:76
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
@@ -7363,12 +7359,12 @@ msgstr "Halaman Status"
 msgid "Step {0} of {1}"
 msgstr "Langkah {0} dari {1}"
 
-#: src/screens/Settings/Settings.tsx:351
+#: src/screens/Settings/Settings.tsx:359
 msgid "Storage cleared, you need to restart the app now."
 msgstr "Penyimpanan dibersihkan, Anda perlu memulai ulang aplikasi sekarang."
 
 #: src/Navigation.tsx:275
-#: src/screens/Settings/Settings.tsx:367
+#: src/screens/Settings/Settings.tsx:375
 msgid "Storybook"
 msgstr "Storybook"
 
@@ -7417,13 +7413,13 @@ msgstr "Berlangganan ke daftar ini"
 msgid "Success!"
 msgstr "Sukses!"
 
-#: src/components/verification/VerificationCreatePrompt.tsx:30
+#: src/components/verification/VerificationCreatePrompt.tsx:36
 msgid "Successfully verified"
-msgstr ""
+msgstr "Berhasil diverifikasi"
 
 #: src/screens/Search/Explore.tsx:359
 msgid "Suggested Accounts"
-msgstr ""
+msgstr "Akun yang disarankan"
 
 #: src/components/FeedInterstitials.tsx:339
 msgid "Suggested for you"
@@ -7452,7 +7448,7 @@ msgstr "Dukungan"
 
 #: src/screens/Settings/Settings.tsx:110
 #: src/screens/Settings/Settings.tsx:124
-#: src/screens/Settings/Settings.tsx:454
+#: src/screens/Settings/Settings.tsx:462
 #: src/view/shell/desktop/LeftNav.tsx:243
 msgid "Switch account"
 msgstr "Ganti akun"
@@ -7479,7 +7475,7 @@ msgstr "Sistem"
 
 #: src/screens/Settings/AboutSettings.tsx:104
 #: src/screens/Settings/AboutSettings.tsx:107
-#: src/screens/Settings/Settings.tsx:360
+#: src/screens/Settings/Settings.tsx:368
 msgid "System log"
 msgstr "Log sistem"
 
@@ -7808,13 +7804,13 @@ msgstr "Pengaturan ini hanya berlaku untuk feed Mengikuti."
 msgid "This {screenDescription} has been flagged:"
 msgstr "{screenDescription} ini telah ditandai:"
 
-#: src/components/verification/VerificationsDialog.tsx:89
+#: src/components/verification/VerificationsDialog.tsx:87
 msgid "This account has a checkmark because it's been verified by trusted sources."
-msgstr ""
+msgstr "Akun ini memiliki tanda centang karena telah diverifikasi oleh sumber terpercaya."
 
-#: src/components/verification/VerificationsDialog.tsx:94
-msgid "This account has one or more verifications, but it is not currently verified."
-msgstr ""
+#: src/components/verification/VerificationsDialog.tsx:92
+msgid "This account has one or more attempted verifications, but it is not currently verified."
+msgstr "Akun ini memiliki satu atau beberapa kali upaya verifikasi, namun saat ini belum terverifikasi."
 
 #: src/components/moderation/ScreenHider.tsx:106
 msgid "This account has requested that users sign in to view their profile."
@@ -7824,9 +7820,9 @@ msgstr "Akun ini mewajibkan pengguna untuk masuk agar bisa melihat profilnya."
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
 msgstr "Akun ini diblokir oleh satu atau lebih daftar moderasi Anda. Untuk membuka blokir, silakan kunjungi daftar tersebut secara langsung dan hapus pengguna ini."
 
-#: src/components/verification/VerificationCreatePrompt.tsx:48
+#: src/components/verification/VerificationCreatePrompt.tsx:55
 msgid "This action can be undone at any time."
-msgstr ""
+msgstr "Tindakan ini dapat dibatalkan kapan saja."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:271
 msgid "This appeal will be sent to <0>{sourceName}</0>."
@@ -7901,7 +7897,7 @@ msgstr "Informasi ini tidak akan dibagikan ke pengguna lain."
 
 #: src/view/com/modals/VerifyEmail.tsx:127
 msgid "This is important in case you ever need to change your email or reset your password."
-msgstr "Ini penting dilakukan untuk berjaga-jaga jika Anda perlu mengubah email atau mengatur ulang kata sandi."
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:168
 msgid "This label was applied by the author."
@@ -7976,6 +7972,10 @@ msgstr "Layanan ini tidak menyediakan ketentuan layanan atau kebijakan privasi."
 msgid "This should create a domain record at:"
 msgstr "Ini akan membuat catatan domain di:"
 
+#: src/components/verification/VerificationCreatePrompt.tsx:93
+msgid "This user does not have a display name, and therefore cannot be verified."
+msgstr ""
+
 #: src/view/com/profile/ProfileFollowers.tsx:95
 msgid "This user doesn't have any followers."
 msgstr "Pengguna ini tidak memiliki pengikut."
@@ -8013,7 +8013,7 @@ msgstr "Pengguna ini tidak mengikuti siapa pun."
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr "Ini akan menghapus \"{0}\" dari daftar kata yang Anda bisukan. Anda tetap dapat menambahkannya lagi nanti."
 
-#: src/screens/Settings/Settings.tsx:504
+#: src/screens/Settings/Settings.tsx:512
 msgid "This will remove @{0} from the quick access list."
 msgstr "Ini akan menghapus @{0} dari daftar akses cepat."
 
@@ -8109,7 +8109,7 @@ msgstr "Trending"
 
 #: src/screens/Search/Explore.tsx:608
 msgid "Trending topics"
-msgstr ""
+msgstr "Topik trending"
 
 #: src/components/interstitials/TrendingVideos.tsx:88
 msgid "Trending Videos"
@@ -8192,7 +8192,7 @@ msgstr "Buka Blokir Akun?"
 
 #: src/view/screens/ProfileList.tsx:620
 msgid "Unblock list"
-msgstr ""
+msgstr "Buka blokir daftar"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:76
@@ -8225,9 +8225,9 @@ msgstr "Berhenti mengikuti pengguna"
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr "Sayangnya, tidak ada dari labeler yang Anda langgani mendukung tipe laporan ini."
 
-#: src/components/verification/VerificationsDialog.tsx:204
+#: src/components/verification/VerificationsDialog.tsx:202
 msgid "Unknown verifier"
-msgstr ""
+msgstr "Verifikator tidak diketahui"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:510
 msgid "Unlike"
@@ -8265,7 +8265,7 @@ msgstr "Bunyikan percakapan"
 
 #: src/view/screens/ProfileList.tsx:605
 msgid "Unmute list"
-msgstr ""
+msgstr "Bunyikan daftar"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:553
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:557
@@ -8287,7 +8287,7 @@ msgstr "Lepaskan feed"
 
 #: src/components/FeedCard.tsx:320
 msgid "Unpin Feed"
-msgstr ""
+msgstr "Lepaskan Feed"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:305
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:307
@@ -8523,32 +8523,37 @@ msgstr "Pengguna yang saya ikuti"
 msgid "Value:"
 msgstr "Nilai:"
 
+#: src/components/verification/VerificationCreatePrompt.tsx:39
+msgid "Verification failed, please try again."
+msgstr ""
+
 #: src/screens/Moderation/index.tsx:288
 msgid "Verification settings"
-msgstr ""
+msgstr "Pengaturan verifikasi"
 
 #: src/Navigation.tsx:175
 #: src/screens/Moderation/VerificationSettings.tsx:32
 msgid "Verification Settings"
-msgstr ""
+msgstr "Pengaturan Verifikasi"
 
 #: src/screens/Moderation/VerificationSettings.tsx:41
 msgid "Verifications on Bluesky work differently than on other platforms. <0>Learn more here.</0>"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:105
+#: src/components/verification/VerificationsDialog.tsx:103
 msgid "Verified by:"
-msgstr ""
+msgstr "Diverifikasi oleh:"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:127
 msgid "Verified email required"
 msgstr "Diperlukan email yang terverifikasi"
 
-#: src/components/verification/VerificationCreatePrompt.tsx:65
+#: src/components/verification/VerificationCreatePrompt.tsx:84
+#: src/components/verification/VerificationCreatePrompt.tsx:86
 #: src/view/com/profile/ProfileMenu.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:311
 msgid "Verify account"
-msgstr ""
+msgstr "Verifikasi akun"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:528
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:549
@@ -8563,7 +8568,7 @@ msgstr "Dialog verifikasi email"
 #: src/view/com/modals/ChangeEmail.tsx:200
 #: src/view/com/modals/ChangeEmail.tsx:202
 msgid "Verify New Email"
-msgstr "Verifikasi Email Baru"
+msgstr ""
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:131
 msgid "Verify now"
@@ -8574,9 +8579,9 @@ msgstr "Verifikasi sekarang"
 msgid "Verify Text File"
 msgstr "Verifikasi Berkas"
 
-#: src/components/verification/VerificationCreatePrompt.tsx:44
+#: src/components/verification/VerificationCreatePrompt.tsx:51
 msgid "Verify this account?"
-msgstr ""
+msgstr "Verifikasi akun ini?"
 
 #: src/screens/Settings/AccountSettings.tsx:75
 #: src/screens/Settings/AccountSettings.tsx:91
@@ -8657,7 +8662,7 @@ msgstr "Lihat avatar {0}"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:446
 #: src/screens/Search/components/SearchProfileCard.tsx:36
 #: src/screens/VideoFeed/index.tsx:769
-#: src/view/com/notifications/NotificationFeedItem.tsx:487
+#: src/view/com/notifications/NotificationFeedItem.tsx:489
 msgid "View {0}'s profile"
 msgstr "Lihat profil {0}"
 
@@ -8723,7 +8728,7 @@ msgstr "Lihat layanan pelabelan yang disediakan oleh @{0}"
 
 #: src/components/verification/VerificationCheckButton.tsx:99
 msgid "View this user's verifications"
-msgstr ""
+msgstr "Lihat verifikasi pengguna ini"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:481
 msgid "View users who like this feed"
@@ -8756,7 +8761,7 @@ msgstr "Lihat daftar akun yang Anda bisukan"
 
 #: src/components/verification/VerificationCheckButton.tsx:98
 msgid "View your verifications"
-msgstr ""
+msgstr "Lihat verifikasi Anda"
 
 #: src/view/com/util/images/AutoSizedImage.tsx:199
 #: src/view/com/util/images/AutoSizedImage.tsx:221
@@ -8820,7 +8825,7 @@ msgstr "Kami kehabisan postingan dari akun yang Anda ikuti. Inilah yang terbaru 
 
 #: src/screens/Settings/SettingsInterests.tsx:155
 msgid "We recommend selecting at least two interests."
-msgstr ""
+msgstr "Kami sarankan memilih setidaknya dua minat."
 
 #: src/view/com/composer/state/video.ts:417
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
@@ -8853,7 +8858,7 @@ msgstr "Kami mengalami masalah jaringan, coba lagi"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:94
 msgid "We’re introducing a new layer of verification on Bluesky — an easy-to-see checkmark."
-msgstr ""
+msgstr "Kami memperkenalkan lapisan verifikasi baru di Bluesky — tanda centang yang mudah dilihat."
 
 #: src/screens/Signup/index.tsx:109
 msgid "We're so excited to have you join us!"
@@ -8908,7 +8913,7 @@ msgstr "Apa kabar?"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:146
 msgid "When you tap on a check, you’ll see which organizations have granted verification."
-msgstr ""
+msgstr "Saat Anda ketuk pada tanda centang, Anda akan melihat organisasi mana yang telah memberikan verifikasi."
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:80
 msgid "Which languages are used in this post?"
@@ -8928,7 +8933,7 @@ msgstr "Siapa yang dapat membalas"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:127
 msgid "Who can verify?"
-msgstr ""
+msgstr "Siapa yang dapat memverifikasi?"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
 #: src/screens/Messages/ChatList.tsx:231
@@ -9037,11 +9042,11 @@ msgstr "Anda"
 
 #: src/components/verification/VerifierDialog.tsx:59
 msgid "You are a trusted verifier"
-msgstr ""
+msgstr "Anda adalah verifikator terpercaya"
 
 #: src/components/forms/HostingProvider.tsx:45
 msgid "You are creating an account on"
-msgstr ""
+msgstr "Anda akan membuat akun pada"
 
 #: src/screens/SignupQueued.tsx:157
 msgid "You are in line."
@@ -9057,20 +9062,20 @@ msgstr "Anda tidak mengikuti siapa pun."
 
 #: src/components/verification/VerificationsDialog.tsx:64
 msgid "You are verified"
-msgstr ""
+msgstr "Anda telah diverifikasi"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:356
-#: src/view/com/modals/EditProfile.tsx:204
+#: src/view/com/modals/EditProfile.tsx:203
 msgid "You are verified. You will lose your verification status if you change your display name. <0>Learn more.</0>"
-msgstr ""
+msgstr "Anda telah diverfikasi. Status verifikasi Anda akan hilang jika Anda mengganti nama tampilan Anda. <0>Pelajari selengkapnya. (dalam bahasa Inggris)</0>"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:208
 msgid "You are verified. You will lose your verification status if you change your handle. <0>Learn more.</0>"
-msgstr ""
+msgstr "Anda telah diverfikasi. Status verifikasi Anda akan hilang jika Anda mengganti nama panggilan Anda. <0>Pelajari selengkapnya.</0>"
 
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:45
 msgid "You can adjust your interests at any time from \"Content and media\" settings."
-msgstr ""
+msgstr "Anda dapat menyesuaikan minat Anda kapan saja melalui pengaturan \"Konten dan Media\"."
 
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
@@ -9254,11 +9259,11 @@ msgstr "Anda telah menonaktifkan @{0} sebelumnya."
 
 #: src/components/dms/MessageItem.tsx:135
 msgid "You reacted {0}"
-msgstr "Anda bereaksi {0}"
+msgstr "Anda menanggapi {0}"
 
 #: src/screens/Messages/components/ChatListItem.tsx:218
 msgid "You reacted {0} to {1}"
-msgstr "Anda bereaksi {0} pada {1}"
+msgstr "Anda menanggapi {0} pada {1}"
 
 #: src/screens/Settings/Settings.tsx:265
 #: src/view/shell/desktop/LeftNav.tsx:206
@@ -9408,7 +9413,7 @@ msgstr "Email Anda tidak valid."
 
 #: src/view/com/modals/ChangeEmail.tsx:120
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
-msgstr "Alamat email Anda telah diperbarui namun belum diverifikasi. Silakan verifikasi alamat email baru Anda."
+msgstr ""
 
 #: src/view/com/modals/VerifyEmail.tsx:122
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
@@ -9440,16 +9445,16 @@ msgstr "Nama pengguna lengkap Anda akan menjadi <0> {0} </0>"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:95
 #: src/screens/Settings/SettingsInterests.tsx:39
 msgid "Your interests"
-msgstr ""
+msgstr "Minat Anda"
 
 #: src/screens/Settings/SettingsInterests.tsx:124
 msgctxt "toast"
 msgid "Your interests have been updated!"
-msgstr ""
+msgstr "Minat Anda telah diperbarui!"
 
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:94
 msgid "Your interests help us find what you like!"
-msgstr ""
+msgstr "Minat Anda membantu kami mencari apa yang Anda sukai!"
 
 #: src/components/dialogs/MutedWords.tsx:369
 msgid "Your muted words"
@@ -9493,8 +9498,8 @@ msgstr "Laporan Anda akan dikirim ke Layanan Moderasi Bluesky"
 
 #: src/screens/Settings/SettingsInterests.tsx:53
 msgid "Your selected interests help us serve you content you care about."
-msgstr ""
+msgstr "Minat yang anda pilih membantu kami menyajikan konten yang Anda inginkan."
 
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
-msgstr ""
+msgstr "Verifikasi Anda"
