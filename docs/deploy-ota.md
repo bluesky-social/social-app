@@ -1,9 +1,5 @@
 # OTA Deployments
 
-## Overview
-
-![OTA Deployment](./img/ota-flow.png)
-
 ## Automatic internal OTAs
 
 OTA deployments to TestFlight/APK installs happen automatically upon all merges
@@ -14,7 +10,7 @@ changes, a new client build will automatically be ran and deployed to TestFlight
 ## Production OTAs
 
 > [!NOTE]
-> 
+> If you're using a TestFlight build, in order to reference the correct build number and to verify the success of an OTA, you will need to delete the TestFlight app itself, delete the Bluesky app entirely, and re-install from the App Store.
 
 ### Prerequisites
 
@@ -98,3 +94,6 @@ In about five minutes, the new deployment should be available for download. To t
 - Reset both platforms build numbers to what they were before the OTA
     deployment. These values should have been logged by the EAS CLI when you
     reset them to the production values prior to OTA.
+
+## Overview diagram
+![OTA Deployment](./img/ota-flow.png)
