@@ -4,21 +4,26 @@
 
 ![OTA Deployment](./img/ota-flow.png)
 
-## Internal Deployments
+## Automatic internal OTAs
 
-Internal OTA deployments should be performed automatically upon all merges into main. In cases where the fingerprint
-diff results in incompatible native changes, a new client build will automatically be ran and deployed to TestFlight 
+OTA deployments to TestFlight/APK installs happen automatically upon all merges
+into main. In cases where the fingerprint diff shows incompatible native
+changes, a new client build will automatically be ran and deployed to TestFlight
 (iOS) or delivered in Slack (Android).
 
-## Production Deployments
+## Production OTAs
+
+> [!NOTE]
+> 
 
 ### Prerequisites
 
-- Find the latest production build number for both iOS and Android in Slack. These are listed in #client-builds
-  - Production builds always send the Version Number and Build Number in the Slack message. Search for the latest
-  production version number, and you should find the correct information.
-  
-    ![slack-build-info](./img/slack-build-info.png)
+Find the latest production build numbers for iOS and Android in Slack. These
+are spit out into `#bot-client-builds` after each release.
+
+![slack-build-info](./img/slack-build-info.png)
+
+You can find this information under the `About` section in app settings.
 
 - It may also be useful to check the current production clients for these values. This will also help for testing. Note
 that you will need to _fully_ remove the existing internal client build from your device, otherwise the given values in
