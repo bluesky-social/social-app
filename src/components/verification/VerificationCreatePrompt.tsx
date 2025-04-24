@@ -9,7 +9,7 @@ import {useVerificationCreateMutation} from '#/state/queries/verification/useVer
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Admonition} from '#/components/Admonition'
-import {Button, ButtonIcon,ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps} from '#/components/Dialog'
 import * as Dialog from '#/components/Dialog'
 import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
