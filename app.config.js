@@ -240,7 +240,6 @@ module.exports = function (_config) {
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidStylesAccentColorPlugin.js',
-        './plugins/withAndroidDayNightThemePlugin.js',
         './plugins/withAndroidNoJitpackPlugin.js',
         './plugins/withNoBundleCompression.js',
         './plugins/shareExtension/withShareExtensions.js',
