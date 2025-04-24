@@ -17,7 +17,7 @@ changes, a new client build will automatically be ran and deployed to TestFlight
 Find the latest production build numbers for iOS and Android in Slack. These
 are spit out into `#bot-client-builds` after each release.
 
-![slack-build-info](./img/slack-build-info.png)
+![slack-build-info](./img/slack_client_builds.jpeg)
 
 You can find this information under the `About` section in app settings.
 
@@ -25,7 +25,7 @@ You can find this information under the `About` section in app settings.
 that you will need to _fully_ remove the existing internal client build from your device, otherwise the given values in
 the app may differ from the actual production values.
 
-  ![app-build-number](./img/app-build-number.png)
+  ![app-build-number](./img/ios_build_number.png)
 
 - You should have signed in to EAS locally through npx eas login. You will need to modify the build number in a
 subsequent step.
