@@ -5,13 +5,11 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
-import {ChangePasswordDialog} from '#/screens/Settings/components/ChangePasswordDialog'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import {AgeAssuranceAccountCard} from '#/components/ageAssurance/AgeAssuranceAccountCard'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
-import {ChangePasswordDialog} from '#/components/dialogs/ChangePasswordDialog'
 import {
   EmailDialogScreenID,
   useEmailDialogControl,
@@ -27,6 +25,7 @@ import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/ic
 import {Trash_Stroke2_Corner2_Rounded} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
 import {ChangeHandleDialog} from './components/ChangeHandleDialog'
+import {ChangePasswordDialog} from './components/ChangePasswordDialog'
 import {DeactivateAccountDialog} from './components/DeactivateAccountDialog'
 import {ExportCarDialog} from './components/ExportCarDialog'
 
