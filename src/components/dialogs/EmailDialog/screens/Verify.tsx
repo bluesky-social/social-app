@@ -10,6 +10,8 @@ import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ResendEmailText} from '#/components/dialogs/EmailDialog/components/ResendEmailText'
+import {TokenField} from '#/components/dialogs/EmailDialog/components/TokenField'
+import {useConfirmEmail} from '#/components/dialogs/EmailDialog/data/useConfirmEmail'
 import {useRequestEmailVerification} from '#/components/dialogs/EmailDialog/data/useRequestEmailVerification'
 import {type Screen} from '#/components/dialogs/EmailDialog/types'
 import {Divider} from '#/components/Divider'
@@ -25,9 +27,17 @@ export function Verify(_props: {config: Exclude<Screen, {id: 'Update'}>}) {
   const {currentAccount} = useSession()
   const [error, setError] = useState('')
 
-  const [sentEmail, setSentEmail] = useState(false)
+  const [step, setStep] = useState<
+    'default' | 'sent' | 'token' | 'tokenConfirmed'
+  >('default')
   const [sendingStatus, setSendingStatus] = useState<'sending' | null>(null)
   const {mutateAsync: requestEmailVerification} = useRequestEmailVerification()
+
+  const [token, setToken] = useState('')
+  const [confirmingStatus, setConfirmingStatus] = useState<'sending' | null>(
+    null,
+  )
+  const {mutateAsync: confirmEmail} = useConfirmEmail()
 
   const handleRequestEmailVerification = async () => {
     setError('')
@@ -35,7 +45,7 @@ export function Verify(_props: {config: Exclude<Screen, {id: 'Update'}>}) {
 
     try {
       await wait(1000, requestEmailVerification())
-      setSentEmail(true)
+      setStep('sent')
     } catch (e) {
       logger.error('EmailDialog: sending verification email failed', {
         safeMessage: e,
@@ -46,16 +56,40 @@ export function Verify(_props: {config: Exclude<Screen, {id: 'Update'}>}) {
     }
   }
 
+  const handleConfirmEmail = async () => {
+    setError('')
+    setConfirmingStatus('sending')
+
+    try {
+      await wait(1000, confirmEmail({token}))
+      setStep('tokenConfirmed')
+    } catch (e) {
+      logger.error('EmailDialog: confirming email failed', {
+        safeMessage: e,
+      })
+      setError(_(msg`Failed to verify email, please try again.`))
+    } finally {
+      setConfirmingStatus(null)
+    }
+  }
+
   return (
     <View style={[a.gap_lg]}>
       <View style={[a.gap_sm]}>
         <Text style={[a.text_xl, a.font_heavy]}>
-          {sentEmail ? (
+          {step === 'sent' ? (
             <>
               <Span style={{top: 1}}>
                 <Check size="sm" fill={t.palette.positive_500} />
               </Span>{' '}
               <Trans>Email sent!</Trans>
+            </>
+          ) : step === 'tokenConfirmed' ? (
+            <>
+              <Span style={{top: 1}}>
+                <Check size="sm" fill={t.palette.positive_500} />
+              </Span>{' '}
+              <Trans>Email verification complete</Trans>
             </>
           ) : (
             <Trans>Verify email</Trans>
@@ -63,7 +97,7 @@ export function Verify(_props: {config: Exclude<Screen, {id: 'Update'}>}) {
         </Text>
 
         <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
-          {sentEmail ? (
+          {step === 'sent' ? (
             <Trans>
               We sent an email to{' '}
               <Span style={[a.font_bold, t.atoms.text]}>
@@ -71,6 +105,19 @@ export function Verify(_props: {config: Exclude<Screen, {id: 'Update'}>}) {
               </Span>{' '}
               containing a link. Click on it to complete the email verification
               process.
+            </Trans>
+          ) : step === 'token' ? (
+            <Trans>
+              Enter the code we sent to{' '}
+              <Span style={[a.font_bold, t.atoms.text]}>
+                {currentAccount!.email}
+              </Span>{' '}
+              below.
+            </Trans>
+          ) : step === 'tokenConfirmed' ? (
+            <Trans>
+              You have successfully verified your email address. You can close
+              this dialog.
             </Trans>
           ) : (
             <Trans>
@@ -84,10 +131,12 @@ export function Verify(_props: {config: Exclude<Screen, {id: 'Update'}>}) {
           )}
         </Text>
 
-        {sentEmail && <ResendEmailText onPress={requestEmailVerification} />}
+        {step === 'sent' && (
+          <ResendEmailText onPress={requestEmailVerification} />
+        )}
       </View>
 
-      {!sentEmail && (
+      {step === 'default' ? (
         <>
           {error && <Admonition type="error"> {error} </Admonition>}
 
@@ -95,7 +144,7 @@ export function Verify(_props: {config: Exclude<Screen, {id: 'Update'}>}) {
             label={_(msg`Send verification email`)}
             size="large"
             variant="solid"
-            color={'primary'}
+            color="primary"
             onPress={handleRequestEmailVerification}
             disabled={sendingStatus === 'sending'}>
             <ButtonText>
@@ -114,13 +163,38 @@ export function Verify(_props: {config: Exclude<Screen, {id: 'Update'}>}) {
               Have a code?{' '}
               <InlineLinkText
                 label={_(msg`Enter code`)}
-                {...createStaticClick(() => {})}>
+                {...createStaticClick(() => {
+                  setStep('token')
+                })}>
                 Click here.
               </InlineLinkText>
             </Trans>
           </Text>
         </>
-      )}
+      ) : step === 'token' ? (
+        <>
+          <TokenField
+            value={token}
+            onChangeText={setToken}
+            onSubmitEditing={() => {}}
+          />
+
+          {error && <Admonition type="error"> {error} </Admonition>}
+
+          <Button
+            label={_(msg`Verify`)}
+            size="large"
+            variant="solid"
+            color="primary"
+            onPress={handleConfirmEmail}
+            disabled={!token || confirmingStatus === 'sending'}>
+            <ButtonText>
+              <Trans>Verify code</Trans>
+            </ButtonText>
+            {confirmingStatus === 'sending' && <ButtonIcon icon={Loader} />}
+          </Button>
+        </>
+      ) : null}
     </View>
   )
 }
