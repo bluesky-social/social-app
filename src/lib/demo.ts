@@ -167,9 +167,9 @@ export const DEMO_FEED = {
         cid: 'bafyreiepn7obmlshliori4j34texpaukrqkyyu7cq6nmpzk4lkis7nqeae',
         author: {
           did: 'did:plc:h7fwnfejmmifveeea5eyxgkc',
-          handle: 'visionprofan.bsky.social',
-          displayName: 'Sebastian',
-          avatar: 'https://bsky.social/about/adi/user_avi.jpg',
+          handle: 'rodyalbuerne.bsky.social',
+          displayName: 'Rody Albuerne',
+          avatar: 'https://bsky.social/about/adi/post_3_avi.jpg',
           viewer: {
             muted: false,
             blockedBy: false,
@@ -182,7 +182,7 @@ export const DEMO_FEED = {
           $type: 'app.bsky.feed.post',
           createdAt: POST_3_DATE,
           langs: ['en'],
-          text: 'Just got my Vision Pro! 🤯\n\nAny recommendations for apps to try out?',
+          text: 'Tinkering with the basics of traditional wooden joinery in my shop lately. Starting small with this ox, made using simple mortise and tenon joints.',
         },
         replyCount: 11,
         repostCount: 97,
