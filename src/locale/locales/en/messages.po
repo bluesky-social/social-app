@@ -1198,7 +1198,7 @@ msgid "Blocked accounts"
 msgstr ""
 
 #: src/Navigation.tsx:162
-#: src/view/screens/ModerationBlockedAccounts.tsx:110
+#: src/view/screens/ModerationBlockedAccounts.tsx:104
 msgid "Blocked Accounts"
 msgstr ""
 
@@ -1207,7 +1207,7 @@ msgstr ""
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr ""
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:121
+#: src/view/screens/ModerationBlockedAccounts.tsx:190
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr ""
 
@@ -1375,9 +1375,11 @@ msgstr ""
 msgid "Camera"
 msgstr ""
 
+#: src/components/dialogs/InAppBrowserConsent.tsx:98
+#: src/components/dialogs/InAppBrowserConsent.tsx:104
 #: src/components/Menu/index.tsx:306
+#: src/components/Prompt.tsx:138
 #: src/components/Prompt.tsx:140
-#: src/components/Prompt.tsx:142
 #: src/screens/Deactivated.tsx:158
 #: src/screens/Profile/Header/EditProfileDialog.tsx:227
 #: src/screens/Profile/Header/EditProfileDialog.tsx:235
@@ -1396,8 +1398,6 @@ msgstr ""
 #: src/view/com/modals/CreateOrEditList.tsx:335
 #: src/view/com/modals/CropImage.web.tsx:97
 #: src/view/com/modals/EditProfile.tsx:269
-#: src/view/com/modals/InAppBrowserConsent.tsx:75
-#: src/view/com/modals/InAppBrowserConsent.tsx:77
 #: src/view/com/modals/LinkWarning.tsx:105
 #: src/view/com/modals/LinkWarning.tsx:107
 #: src/view/com/util/post-ctrls/RepostButton.tsx:213
@@ -1688,8 +1688,8 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: src/components/Dialog/index.web.tsx:113
-#: src/components/Dialog/index.web.tsx:261
+#: src/components/Dialog/index.web.tsx:111
+#: src/components/Dialog/index.web.tsx:259
 msgid "Close active dialog"
 msgstr ""
 
@@ -1711,8 +1711,8 @@ msgstr ""
 msgid "Close drawer menu"
 msgstr ""
 
-#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
-#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:136
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:172
 msgid "Close emoji picker"
 msgstr ""
 
@@ -1746,8 +1746,8 @@ msgstr ""
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
-#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:138
-#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:174
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:137
+#: src/view/com/composer/text-input/web/EmojiPicker.web.tsx:173
 msgid "Closes the emoji picker"
 msgstr ""
 
@@ -1823,8 +1823,8 @@ msgstr ""
 #: src/components/dialogs/ChangeEmailDialog.tsx:210
 #: src/components/dialogs/VerifyEmailDialog.tsx:316
 #: src/components/dialogs/VerifyEmailDialog.tsx:323
-#: src/components/Prompt.tsx:183
-#: src/components/Prompt.tsx:186
+#: src/components/Prompt.tsx:181
+#: src/components/Prompt.tsx:184
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:185
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:188
 msgid "Confirm"
@@ -3055,10 +3055,6 @@ msgstr ""
 msgid "Failed to change handle. Please try again."
 msgstr ""
 
-#: src/components/verification/VerificationCreatePrompt.tsx:32
-msgid "Failed to create a verification"
-msgstr ""
-
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:173
 msgid "Failed to create app password. Please try again."
 msgstr ""
@@ -3810,7 +3806,8 @@ msgstr ""
 msgid "Hot replies first"
 msgstr ""
 
-#: src/view/com/modals/InAppBrowserConsent.tsx:41
+#: src/components/dialogs/InAppBrowserConsent.tsx:62
+#: src/components/dialogs/InAppBrowserConsent.tsx:66
 msgid "How should we open this link?"
 msgstr ""
 
@@ -4668,11 +4665,11 @@ msgid "Muted accounts"
 msgstr ""
 
 #: src/Navigation.tsx:157
-#: src/view/screens/ModerationMutedAccounts.tsx:123
+#: src/view/screens/ModerationMutedAccounts.tsx:118
 msgid "Muted Accounts"
 msgstr ""
 
-#: src/view/screens/ModerationMutedAccounts.tsx:135
+#: src/view/screens/ModerationMutedAccounts.tsx:204
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
 msgstr ""
 
@@ -7373,7 +7370,7 @@ msgstr ""
 msgid "Success!"
 msgstr ""
 
-#: src/components/verification/VerificationCreatePrompt.tsx:30
+#: src/components/verification/VerificationCreatePrompt.tsx:36
 msgid "Successfully verified"
 msgstr ""
 
@@ -7784,7 +7781,7 @@ msgstr ""
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
 msgstr ""
 
-#: src/components/verification/VerificationCreatePrompt.tsx:48
+#: src/components/verification/VerificationCreatePrompt.tsx:55
 msgid "This action can be undone at any time."
 msgstr ""
 
@@ -7930,6 +7927,10 @@ msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:456
 msgid "This should create a domain record at:"
+msgstr ""
+
+#: src/components/verification/VerificationCreatePrompt.tsx:93
+msgid "This user does not have a display name, and therefore cannot be verified."
 msgstr ""
 
 #: src/view/com/profile/ProfileFollowers.tsx:95
@@ -8380,8 +8381,8 @@ msgstr ""
 msgid "Use default provider"
 msgstr ""
 
-#: src/view/com/modals/InAppBrowserConsent.tsx:53
-#: src/view/com/modals/InAppBrowserConsent.tsx:55
+#: src/components/dialogs/InAppBrowserConsent.tsx:77
+#: src/components/dialogs/InAppBrowserConsent.tsx:83
 msgid "Use in-app browser"
 msgstr ""
 
@@ -8390,8 +8391,8 @@ msgstr ""
 msgid "Use in-app browser to open links"
 msgstr ""
 
-#: src/view/com/modals/InAppBrowserConsent.tsx:63
-#: src/view/com/modals/InAppBrowserConsent.tsx:65
+#: src/components/dialogs/InAppBrowserConsent.tsx:87
+#: src/components/dialogs/InAppBrowserConsent.tsx:93
 msgid "Use my default browser"
 msgstr ""
 
@@ -8484,6 +8485,10 @@ msgstr ""
 msgid "Value:"
 msgstr ""
 
+#: src/components/verification/VerificationCreatePrompt.tsx:39
+msgid "Verification failed, please try again."
+msgstr ""
+
 #: src/screens/Moderation/index.tsx:288
 msgid "Verification settings"
 msgstr ""
@@ -8505,7 +8510,8 @@ msgstr ""
 msgid "Verified email required"
 msgstr ""
 
-#: src/components/verification/VerificationCreatePrompt.tsx:65
+#: src/components/verification/VerificationCreatePrompt.tsx:84
+#: src/components/verification/VerificationCreatePrompt.tsx:86
 #: src/view/com/profile/ProfileMenu.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:311
 msgid "Verify account"
@@ -8536,7 +8542,7 @@ msgstr ""
 msgid "Verify Text File"
 msgstr ""
 
-#: src/components/verification/VerificationCreatePrompt.tsx:44
+#: src/components/verification/VerificationCreatePrompt.tsx:51
 msgid "Verify this account?"
 msgstr ""
 
@@ -9140,11 +9146,11 @@ msgstr ""
 msgid "You have no lists."
 msgstr ""
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:138
+#: src/view/screens/ModerationBlockedAccounts.tsx:164
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
 msgstr ""
 
-#: src/view/screens/ModerationMutedAccounts.tsx:151
+#: src/view/screens/ModerationMutedAccounts.tsx:179
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr ""
 
@@ -9360,8 +9366,8 @@ msgstr ""
 msgid "Your chats have been disabled"
 msgstr ""
 
-#: src/view/com/modals/InAppBrowserConsent.tsx:44
-msgid "Your choice will be saved, but can be changed later in settings."
+#: src/components/dialogs/InAppBrowserConsent.tsx:69
+msgid "Your choice will be remembered for future links. You can change it at any time in settings."
 msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:513
