@@ -65,7 +65,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
 
   const dateEl = isBackdated
     ? <FeedDateArchived indexedAt={opts.indexedAt} createdAt={opts.createdAt} />
-    : <FeedDate timestamp={opts.indexedAt} createdAt={opts.createdAt} />
+    : <FeedDate timestamp={opts.indexedAt} />
 
   return (
     <View

@@ -241,7 +241,7 @@ let FeedItemInner = ({
     : undefined
 
   const indexedAt = post.indexedAt
-  const createdAt = AppBskyFeedPost.isRecord(post.record)
+  const createdAt: string = AppBskyFeedPost.isRecord(post.record)
       ? post.record.createdAt
       : post.indexedAt
 

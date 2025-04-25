@@ -67,6 +67,7 @@ import {VerificationCheckButton} from '#/components/verification/VerificationChe
 import {WhoCanReply} from '#/components/WhoCanReply'
 import {TimeElapsed} from '../util/TimeElapsed'
 import * as bsky from '#/types/bsky'
+import * as Dialog from "#/components/Dialog";
 
 export function PostThreadItem({
   post,
@@ -799,7 +800,7 @@ function ExpandedPostDetails({
   )
 
   const indexedAt = post.indexedAt
-  const createdAt = AppBskyFeedPost.isRecord(post.record)
+  const createdAt: string = AppBskyFeedPost.isRecord(post.record)
       ? post.record.createdAt
       : post.indexedAt
 
@@ -948,7 +949,7 @@ export function FeedDateArchived({indexedAt, createdAt}: { indexedAt: string, cr
   )
 }
 
-export function ArchivedPostPrompt({indexedAt, createdAt, control}: { indexedAt: string, createdAt: string, control }) {
+export function ArchivedPostPrompt({indexedAt, createdAt, control}: { indexedAt: string, createdAt: string, control: Dialog.DialogControlProps }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
 
