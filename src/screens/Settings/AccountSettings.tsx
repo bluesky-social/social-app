@@ -24,6 +24,7 @@ import * as Layout from '#/components/Layout'
 import {ChangeHandleDialog} from './components/ChangeHandleDialog'
 import {DeactivateAccountDialog} from './components/DeactivateAccountDialog'
 import {ExportCarDialog} from './components/ExportCarDialog'
+import {EmailDialog, ScreenID} from '#/components/dialogs/EmailDialog'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AccountSettings'>
 export function AccountSettingsScreen({}: Props) {
@@ -167,10 +168,16 @@ export function AccountSettingsScreen({}: Props) {
         </SettingsList.Container>
       </Layout.Content>
 
+      <EmailDialog
+        control={changeEmailControl}
+        initialScreen={{id: ScreenID.Update}}
+      />
+      {/*
       <ChangeEmailDialog
         control={changeEmailControl}
         verifyEmailControl={verifyEmailControl}
       />
+        */}
       <VerifyEmailDialog
         control={verifyEmailControl}
         changeEmailControl={changeEmailControl}

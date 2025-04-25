@@ -9,7 +9,7 @@ export type EmailDialogProps = {
 export type EmailDialogInnerProps = EmailDialogProps & {}
 
 export type Screen = {
-  id: ScreenID.ChangeEmail
+  id: ScreenID.Update
 } | {
   id: ScreenID.EnterCode
   /**
@@ -29,7 +29,7 @@ export type Screen = {
 }
 
 export enum ScreenID {
-  ChangeEmail = 'ChangeEmail', // normal, instructs to click link first
+  Update = 'Update', // normal, instructs to click link first
   EnterCode = 'EnterCode', // if user elects to enter a code
   VerifyEmail = 'VerifyEmail', // as a separate step, instructs to click link first
 }
