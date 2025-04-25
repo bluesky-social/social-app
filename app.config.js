@@ -242,7 +242,6 @@ module.exports = function (_config) {
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidDayNightThemePlugin.js',
         './plugins/withAndroidNoJitpackPlugin.js',
-        './plugins/withNoBundleCompression.js',
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
         './plugins/withAppDelegateReferrer.js',
