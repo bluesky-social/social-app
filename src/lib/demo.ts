@@ -63,7 +63,7 @@ export const DEMO_FEED = {
           //   ],
           // },
           langs: ['en'],
-          text: 'Sonoma County folks: Come tip your hats our way and see us play new and old tunes at Sebastopol Bluegrass Fest on June 14th.',
+          text: 'Sonoma County folks: Come tip your hats our way and see us play new and old bluegrass tunes at Sebastopol Solstice Fest on June 20th.',
         },
         embed: {
           $type: 'app.bsky.embed.images#view',
@@ -98,7 +98,7 @@ export const DEMO_FEED = {
         author: {
           did: 'did:plc:fhhqii56ppgyh5qcm2b3mokf',
           handle: 'dinh-designs.bsky.social',
-          displayName: 'Dinh Designs',
+          displayName: 'Rich Dinh Designs',
           avatar: 'https://bsky.social/about/adi/post_2_avi.jpg',
           viewer: {
             muted: false,
