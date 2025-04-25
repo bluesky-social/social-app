@@ -44,15 +44,6 @@ jest.mock('expo-file-system', () => ({
   deleteAsync: jest.fn(),
 }))
 
-jest.mock('expo-image-manipulator', () => ({
-  manipulateAsync: jest.fn().mockResolvedValue({
-    uri: 'file://resized-image',
-  }),
-  SaveFormat: {
-    JPEG: 'jpeg',
-  },
-}))
-
 jest.mock('expo-camera', () => ({
   Camera: {
     useCameraPermissions: jest.fn(() => [true]),
