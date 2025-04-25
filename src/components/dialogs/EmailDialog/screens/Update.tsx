@@ -19,6 +19,7 @@ import {wait} from '#/lib/async/wait'
 
 import {useUpdateEmail} from '#/components/dialogs/EmailDialog/data/useUpdateEmail'
 import {useRequestEmailUpdate} from '#/components/dialogs/EmailDialog/data/useRequestEmailUpdate'
+import {useRequestEmailVerification} from '#/components/dialogs/EmailDialog/data/useRequestEmailVerification'
 import {TokenField} from '#/components/dialogs/EmailDialog/components/TokenField'
 
 export function Update() {
@@ -40,6 +41,8 @@ export function Update() {
     'sending' | 'success' | null
   >(null)
   const {mutateAsync: requestEmailUpdate} = useRequestEmailUpdate()
+
+  const {mutateAsync: requestEmailVerification} = useRequestEmailVerification()
 
   const handleResendRequestEmailUpdate = async () => {
     setResendStatus('sending')
@@ -86,6 +89,11 @@ export function Update() {
         setTokenRequired(true)
       } else if (status === 'success') {
         setSuccess(true)
+
+        try {
+          // fire off a confirmation email immediately
+          await requestEmailVerification()
+        } catch {}
       }
     } catch (e) {
       logger.error('EmailDialog: update email failed', {safeMessage: e})
