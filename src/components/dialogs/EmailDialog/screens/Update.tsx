@@ -3,26 +3,28 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import * as TextField from '#/components/forms/TextField'
-import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
-import {Text, Span} from '#/components/Typography'
-import {atoms as a, useTheme} from '#/alf'
-import {Divider} from '#/components/Divider'
-import {Loader} from '#/components/Loader'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {logger} from '#/logger'
-import {Admonition} from '#/components/Admonition'
-import {useSession} from '#/state/session'
-import {CheckThick_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {InlineLinkText, createStaticClick} from '#/components/Link'
 import {wait} from '#/lib/async/wait'
-
-import {useUpdateEmail} from '#/components/dialogs/EmailDialog/data/useUpdateEmail'
+import {logger} from '#/logger'
+import {useSession} from '#/state/session'
+import {atoms as a, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {ResendEmailText} from '#/components/dialogs/EmailDialog/components/ResendEmailText'
+import {TokenField} from '#/components/dialogs/EmailDialog/components/TokenField'
 import {useRequestEmailUpdate} from '#/components/dialogs/EmailDialog/data/useRequestEmailUpdate'
 import {useRequestEmailVerification} from '#/components/dialogs/EmailDialog/data/useRequestEmailVerification'
-import {TokenField} from '#/components/dialogs/EmailDialog/components/TokenField'
+import {useUpdateEmail} from '#/components/dialogs/EmailDialog/data/useUpdateEmail'
+import {type Screen} from '#/components/dialogs/EmailDialog/types'
+import {Divider} from '#/components/Divider'
+import * as TextField from '#/components/forms/TextField'
+import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
+import {CheckThick_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 
-export function Update() {
+export function Update(_props: {
+  config: Exclude<Screen, {id: 'Verify' | 'EnterCode'}>
+}) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
@@ -34,27 +36,9 @@ export function Update() {
   const [tokenRequired, setTokenRequired] = useState(false)
 
   const [updateStatus, setUpdateStatus] = useState<'sending' | null>(null)
-  const {mutateAsync: updateEmail, isPending: isUpdateEmailPending} =
-    useUpdateEmail()
-
-  const [resendStatus, setResendStatus] = useState<
-    'sending' | 'success' | null
-  >(null)
+  const {mutateAsync: updateEmail} = useUpdateEmail()
   const {mutateAsync: requestEmailUpdate} = useRequestEmailUpdate()
-
   const {mutateAsync: requestEmailVerification} = useRequestEmailVerification()
-
-  const handleResendRequestEmailUpdate = async () => {
-    setResendStatus('sending')
-    try {
-      await wait(1000, requestEmailUpdate())
-      setResendStatus('success')
-    } finally {
-      setTimeout(() => {
-        setResendStatus(null)
-      }, 1000)
-    }
-  }
 
   const handleEmailChange = (email: string) => {
     setEmail(email)
@@ -144,31 +128,10 @@ export function Update() {
                 onSubmitEditing={handleUpdateEmail}
               />
               {!success && (
-                <Text
-                  style={[
-                    a.italic,
-                    a.pt_sm,
-                    a.leading_snug,
-                    t.atoms.text_contrast_medium,
-                  ]}>
-                  <Trans>
-                    Don't see an email?{' '}
-                    <InlineLinkText
-                      label={_(msg`Resend`)}
-                      {...createStaticClick(() => {
-                        handleResendRequestEmailUpdate()
-                      })}>
-                      Click here to resend.
-                    </InlineLinkText>
-                  </Trans>{' '}
-                  <Span style={{top: 1}}>
-                    {resendStatus === 'sending' ? (
-                      <Loader size="xs" />
-                    ) : resendStatus === 'success' ? (
-                      <Check size="xs" fill={t.palette.positive_500} />
-                    ) : null}
-                  </Span>
-                </Text>
+                <ResendEmailText
+                  onPress={requestEmailUpdate}
+                  style={[a.pt_sm]}
+                />
               )}
             </View>
           </>
@@ -207,7 +170,7 @@ export function Update() {
           disabled={
             !email ||
             (tokenRequired && !token) ||
-            isUpdateEmailPending ||
+            updateStatus === 'sending' ||
             success
           }>
           <ButtonText>

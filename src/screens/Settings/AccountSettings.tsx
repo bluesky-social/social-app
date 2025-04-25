@@ -9,8 +9,11 @@ import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
-import {ChangeEmailDialog} from '#/components/dialogs/ChangeEmailDialog'
-import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
+import {
+  EmailDialog,
+  EmailDialogScreenID,
+  useEmailDialogControl,
+} from '#/components/dialogs/EmailDialog'
 import {At_Stroke2_Corner2_Rounded as AtIcon} from '#/components/icons/At'
 import {BirthdayCake_Stroke2_Corner2_Rounded as BirthdayCakeIcon} from '#/components/icons/BirthdayCake'
 import {Car_Stroke2_Corner2_Rounded as CarIcon} from '#/components/icons/Car'
@@ -24,7 +27,6 @@ import * as Layout from '#/components/Layout'
 import {ChangeHandleDialog} from './components/ChangeHandleDialog'
 import {DeactivateAccountDialog} from './components/DeactivateAccountDialog'
 import {ExportCarDialog} from './components/ExportCarDialog'
-import {EmailDialog, ScreenID} from '#/components/dialogs/EmailDialog'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AccountSettings'>
 export function AccountSettingsScreen({}: Props) {
@@ -32,8 +34,7 @@ export function AccountSettingsScreen({}: Props) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const {openModal} = useModalControls()
-  const verifyEmailControl = useDialogControl()
-  const changeEmailControl = useDialogControl()
+  const emailDialogControl = useEmailDialogControl()
   const birthdayControl = useDialogControl()
   const changeHandleControl = useDialogControl()
   const exportCarControl = useDialogControl()
@@ -76,7 +77,11 @@ export function AccountSettingsScreen({}: Props) {
           {currentAccount && !currentAccount.emailConfirmed && (
             <SettingsList.PressableItem
               label={_(msg`Verify your email`)}
-              onPress={() => verifyEmailControl.open()}
+              onPress={() =>
+                emailDialogControl.open({
+                  id: EmailDialogScreenID.Verify,
+                })
+              }
               style={[
                 a.my_xs,
                 a.mx_lg,
@@ -98,7 +103,11 @@ export function AccountSettingsScreen({}: Props) {
           )}
           <SettingsList.PressableItem
             label={_(msg`Change email`)}
-            onPress={() => changeEmailControl.open()}>
+            onPress={() =>
+              emailDialogControl.open({
+                id: EmailDialogScreenID.Update,
+              })
+            }>
             <SettingsList.ItemIcon icon={PencilIcon} />
             <SettingsList.ItemText>
               <Trans>Change email</Trans>
@@ -168,20 +177,7 @@ export function AccountSettingsScreen({}: Props) {
         </SettingsList.Container>
       </Layout.Content>
 
-      <EmailDialog
-        control={changeEmailControl}
-        initialScreen={{id: ScreenID.Update}}
-      />
-      {/*
-      <ChangeEmailDialog
-        control={changeEmailControl}
-        verifyEmailControl={verifyEmailControl}
-      />
-        */}
-      <VerifyEmailDialog
-        control={verifyEmailControl}
-        changeEmailControl={changeEmailControl}
-      />
+      <EmailDialog control={emailDialogControl} />
       <BirthDateSettingsDialog control={birthdayControl} />
       <ChangeHandleDialog control={changeHandleControl} />
       <ExportCarDialog control={exportCarControl} />

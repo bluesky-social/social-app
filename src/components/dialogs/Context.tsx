@@ -48,7 +48,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-function useStatefulDialogControl<T>(initialValue?: T): StatefulControl<T> {
+export function useStatefulDialogControl<T>(
+  initialValue?: T,
+): StatefulControl<T> {
   const [value, setValue] = useState(initialValue)
   const control = Dialog.useDialogControl()
   return useMemo(
