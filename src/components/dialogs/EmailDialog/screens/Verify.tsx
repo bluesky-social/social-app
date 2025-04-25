@@ -21,7 +21,7 @@ import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Span, Text} from '#/components/Typography'
 
-export function Verify(_props: {config: Exclude<Screen, {id: 'Update'}>}) {
+export function Verify({config}: {config: Exclude<Screen, {id: 'Update'}>}) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
@@ -96,6 +96,22 @@ export function Verify(_props: {config: Exclude<Screen, {id: 'Update'}>}) {
           )}
         </Text>
 
+        {step === 'default' && (
+          <>
+            {config.instructions?.map((int, i) => (
+              <Text
+                key={i}
+                style={[
+                  a.text_sm,
+                  a.leading_snug,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                {int}
+              </Text>
+            ))}
+          </>
+        )}
+
         <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
           {step === 'sent' ? (
             <Trans>
@@ -136,6 +152,26 @@ export function Verify(_props: {config: Exclude<Screen, {id: 'Update'}>}) {
         )}
       </View>
 
+      {step === 'sent' && (
+        <>
+          <Divider />
+
+          <Text
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+            <Trans>
+              Have a code?{' '}
+              <InlineLinkText
+                label={_(msg`Enter code`)}
+                {...createStaticClick(() => {
+                  setStep('token')
+                })}>
+                Click here.
+              </InlineLinkText>
+            </Trans>
+          </Text>
+        </>
+      )}
+
       {step === 'default' ? (
         <>
           {error && <Admonition type="error"> {error} </Admonition>}
@@ -155,21 +191,29 @@ export function Verify(_props: {config: Exclude<Screen, {id: 'Update'}>}) {
             />
           </Button>
 
-          <Divider />
+          {!config.hideInitialCodeButton && (
+            <>
+              <Divider />
 
-          <Text
-            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
-            <Trans>
-              Have a code?{' '}
-              <InlineLinkText
-                label={_(msg`Enter code`)}
-                {...createStaticClick(() => {
-                  setStep('token')
-                })}>
-                Click here.
-              </InlineLinkText>
-            </Trans>
-          </Text>
+              <Text
+                style={[
+                  a.text_sm,
+                  a.leading_snug,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                <Trans>
+                  Have a code?{' '}
+                  <InlineLinkText
+                    label={_(msg`Enter code`)}
+                    {...createStaticClick(() => {
+                      setStep('token')
+                    })}>
+                    Click here.
+                  </InlineLinkText>
+                </Trans>
+              </Text>
+            </>
+          )}
         </>
       ) : step === 'token' ? (
         <>

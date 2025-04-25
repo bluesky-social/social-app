@@ -14,13 +14,8 @@ export type Screen =
     }
   | {
       id: ScreenID.Verify
-      /**
-       * - default flow
-       * - new user blockers (x5)
-       */
       instructions?: ReactNode[]
-      // onCloseWithoutVerifying,
-      // onCloseAfterVerifying,
+      hideInitialCodeButton?: boolean
     }
 
 export enum ScreenID {

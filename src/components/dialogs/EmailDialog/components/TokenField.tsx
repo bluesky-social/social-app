@@ -1,4 +1,4 @@
-import {View, TextInputProps} from 'react-native'
+import {type TextInputProps,View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -14,6 +14,7 @@ export function normalizeCode(value: string) {
 export function TokenField({
   value,
   onChangeText,
+  onSubmitEditing,
 }: Pick<TextInputProps, 'value' | 'onChangeText' | 'onSubmitEditing'>) {
   const {_} = useLingui()
 
@@ -30,6 +31,7 @@ export function TokenField({
           placeholder="XXXXX-XXXXX"
           value={value}
           onChangeText={handleOnChangeText}
+          onSubmitEditing={onSubmitEditing}
         />
       </TextField.Root>
     </View>
