@@ -15,13 +15,11 @@ import {type Screen} from '#/components/dialogs/EmailDialog/types'
 import {Divider} from '#/components/Divider'
 import {CheckThick_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
-import {createStaticClick,InlineLinkText} from '#/components/Link'
+import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
-import {Span,Text} from '#/components/Typography'
+import {Span, Text} from '#/components/Typography'
 
-export function Verify(_props: {
-  config: Exclude<Screen, {id: 'Update' | 'EnterCode'}>
-}) {
+export function Verify(_props: {config: Exclude<Screen, {id: 'Update'}>}) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()

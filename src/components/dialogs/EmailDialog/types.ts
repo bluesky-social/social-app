@@ -13,14 +13,6 @@ export type Screen =
       id: ScreenID.Update
     }
   | {
-      id: ScreenID.EnterCode
-      /**
-       * - email was sent earlier
-       * - email was _just_ sent
-       */
-      instructions: ReactNode[]
-    }
-  | {
       id: ScreenID.Verify
       /**
        * - default flow
@@ -33,6 +25,5 @@ export type Screen =
 
 export enum ScreenID {
   Update = 'Update', // normal, instructs to click link first
-  EnterCode = 'EnterCode', // if user elects to enter a code
   Verify = 'Verify', // as a separate step, instructs to click link first
 }

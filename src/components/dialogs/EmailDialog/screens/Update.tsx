@@ -22,9 +22,7 @@ import {CheckThick_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Ch
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
-export function Update(_props: {
-  config: Exclude<Screen, {id: 'Verify' | 'EnterCode'}>
-}) {
+export function Update(_props: {config: Exclude<Screen, {id: 'Verify'}>}) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
