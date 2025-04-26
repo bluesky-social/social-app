@@ -1,21 +1,16 @@
-require 'json'
-
-package = JSON.parse(File.read(File.join(__dir__, '..', 'package.json')))
-
 Pod::Spec.new do |s|
   s.name           = 'EmojiPickerModule'
-  s.version        = package['version']
-  s.summary        = package['description']
-  s.description    = package['description']
-  s.license        = package['license']
-  s.author         = package['author']
-  s.homepage       = package['homepage']
+  s.version        = '1.0.0'
+  s.summary        = 'An emoji picker for use in Bluesky'
+  s.description    = 'An emoji picker for use in Bluesky'
+  s.author         = 'alanjhughes'
+  s.homepage       = 'https://github.com/bluesky-social/social-app'
   s.platforms      = {
     :ios => '15.1',
     :tvos => '15.1'
   }
+  s.source         = { git: '' }
   s.swift_version  = '5.4'
-  s.source         = { git: 'https://github.com/alanjhughes/expo-emoji-picker' }
   s.static_framework = true
 
   s.dependency 'ExpoModulesCore'
