@@ -5,15 +5,15 @@ import {
   moveAsync,
 } from 'expo-file-system'
 import {
-  Action,
-  ActionCrop,
+  type Action,
+  type ActionCrop,
   manipulateAsync,
   SaveFormat,
 } from 'expo-image-manipulator'
 import {nanoid} from 'nanoid/non-secure'
 
 import {POST_IMG_MAX} from '#/lib/constants'
-import {getImageDim, safeDeleteAsync} from '#/lib/media/manip'
+import {getImageDim} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
 import {getDataUriSize} from '#/lib/media/util'
 import {isIOS, isNative} from '#/platform/detection'
@@ -210,7 +210,6 @@ export async function compressImage(img: ComposerImage): Promise<ImageMeta> {
   const source = img.transformed || img.source
 
   const [w, h] = containImageRes(source.width, source.height, POST_IMG_MAX)
-  const cacheDir = isNative && getImageCacheDirectory()
 
   let minQualityPercentage = 0
   let maxQualityPercentage = 101 // exclusive
@@ -243,9 +242,6 @@ export async function compressImage(img: ComposerImage): Promise<ImageMeta> {
       }
     } else {
       maxQualityPercentage = qualityPercentage
-      if (cacheDir) {
-        await safeDeleteAsync(res.uri)
-      }
     }
   }
 
