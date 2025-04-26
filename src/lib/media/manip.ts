@@ -1,5 +1,5 @@
 import {Image as RNImage, Share as RNShare} from 'react-native'
-import {Image} from 'react-native-image-crop-picker'
+import {type Image} from 'react-native-image-crop-picker'
 import uuid from 'react-native-uuid'
 import {
   cacheDirectory,
@@ -11,7 +11,7 @@ import {
   StorageAccessFramework,
   writeAsStringAsync,
 } from 'expo-file-system'
-import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
+import {ImageManipulator, SaveFormat} from 'expo-image-manipulator'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
 import {Buffer} from 'buffer'
@@ -20,7 +20,7 @@ import RNFetchBlob from 'rn-fetch-blob'
 import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
-import {Dimensions} from './types'
+import {type Dimensions} from './types'
 
 export async function compressIfNeeded(
   img: Image,
@@ -172,23 +172,23 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
   // Now instead, we have to supply the final dimensions to the manipulation function instead.
   // Performing an "empty" manipulation lets us get the dimensions of the original image. React Native's Image.getSize()
   // does not work for local files...
-  const imageRes = await manipulateAsync(localUri, [], {})
+  const context = ImageManipulator.manipulate(localUri)
+  const imageRes = await context.renderAsync()
   const newDimensions = getResizedDimensions({
     width: imageRes.width,
     height: imageRes.height,
   })
+  imageRes.release()
+  context.resize(newDimensions)
+  const resizedImage = await context.renderAsync()
 
   for (let i = 0; i < 9; i++) {
     // nearest 10th
     const quality = Math.round((1 - 0.1 * i) * 10) / 10
-    const resizeRes = await manipulateAsync(
-      localUri,
-      [{resize: newDimensions}],
-      {
-        format: SaveFormat.JPEG,
-        compress: quality,
-      },
-    )
+    const resizeRes = await resizedImage.saveAsync({
+      format: SaveFormat.JPEG,
+      compress: quality,
+    })
 
     const fileInfo = await getInfoAsync(resizeRes.uri)
     if (!fileInfo.exists) {
@@ -198,7 +198,7 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
     }
 
     if (fileInfo.size < opts.maxSize) {
-      safeDeleteAsync(imageRes.uri)
+      resizedImage.release()
       return {
         path: normalizePath(resizeRes.uri),
         mime: 'image/jpeg',
