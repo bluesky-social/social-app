@@ -55,6 +55,7 @@ export function Update(_props: {config: Exclude<Screen, {id: 'Verify'}>}) {
 
     if (email === currentAccount!.email) {
       setTip(_(msg`This email is already associated with your account.`))
+      setUpdateStatus(null)
       return
     }
 
