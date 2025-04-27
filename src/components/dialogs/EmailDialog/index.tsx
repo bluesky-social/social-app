@@ -13,13 +13,11 @@ import {useRefreshSession} from '#/components/dialogs/EmailDialog/data/useRefres
  */
 import {Update} from '#/components/dialogs/EmailDialog/screens/Update'
 import {Verify} from '#/components/dialogs/EmailDialog/screens/Verify'
-import {type Screen,ScreenID} from '#/components/dialogs/EmailDialog/types'
+import {type Screen, ScreenID} from '#/components/dialogs/EmailDialog/types'
 
 export {useDialogControl} from '#/components/Dialog'
-export {
-  ScreenID as EmailDialogScreenID,
-  type Screen,
-} from '#/components/dialogs/EmailDialog/types'
+export type {Screen} from '#/components/dialogs/EmailDialog/types'
+export {ScreenID as EmailDialogScreenID} from '#/components/dialogs/EmailDialog/types'
 
 export function useEmailDialogControl() {
   return useStatefulDialogControl<Screen>()

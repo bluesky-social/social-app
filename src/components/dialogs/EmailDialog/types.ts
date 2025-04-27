@@ -17,8 +17,16 @@ export type Screen =
       instructions?: ReactNode[]
       hideInitialCodeButton?: boolean
     }
+  | {
+      id: ScreenID.Enable2FA
+    }
+  | {
+      id: ScreenID.Disable2FA
+    }
 
 export enum ScreenID {
-  Update = 'Update', // normal, instructs to click link first
-  Verify = 'Verify', // as a separate step, instructs to click link first
+  Update = 'Update',
+  Verify = 'Verify',
+  Enable2FA = 'Enable2FA',
+  Disable2FA = 'Disable2FA',
 }
