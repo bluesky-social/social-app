@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -89,12 +89,41 @@ export function TabBar({
     [onSelect, selectedPage, onPressSelected],
   )
 
+  const [scrollX, setScrollX] = useState(0)
+  const [scrollViewWidth, setScrollViewWidth] = useState(0)
+  const [contentWidth, setContentWidth] = useState(0)
+  const barWidth = scrollViewWidth * (scrollViewWidth / contentWidth)
+
+  const clamp = (value: number, min: number, max: number): number => {
+    return Math.min(Math.max(value, min), max)
+  }
+
+  const handleScroll = (event: any) => {
+    const horizontalScrollPosition = event.nativeEvent.contentOffset.x
+
+    // Apply clamping based on the content width and the scroll view width
+    const adjustedScrollX = clamp(
+      horizontalScrollPosition,
+      0,
+      contentWidth - scrollViewWidth,
+    )
+    setScrollX(adjustedScrollX)
+  }
+
   return (
     <View
       testID={testID}
       style={[t.atoms.bg, styles.outer]}
       accessibilityRole="tablist">
       <DraggableScrollView
+        onLayout={event => {
+          const {width} = event.nativeEvent.layout
+          setScrollViewWidth(width) // Get the width of the ScrollView (the visible area)
+        }}
+        onScroll={handleScroll}
+        onContentSizeChange={width => {
+          setContentWidth(width)
+        }}
         testID={`${testID}-selector`}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
@@ -136,6 +165,14 @@ export function TabBar({
             </PressableWithHover>
           )
         })}
+        <View
+          style={{
+            transform: [{translateX: scrollX}],
+            width: barWidth,
+            left: scrollX * 0.9,
+            ...desktopStyles.scrollbar,
+          }}
+        />
       </DraggableScrollView>
       <View style={[t.atoms.border_contrast_low, styles.outerBottomBorder]} />
     </View>
@@ -143,6 +180,12 @@ export function TabBar({
 }
 
 const desktopStyles = StyleSheet.create({
+  scrollbar: {
+    position: 'absolute',
+    bottom: 0,
+    height: 4,
+    backgroundColor: 'rgba(212, 214, 215, 0.2)',
+  },
   outer: {
     flexDirection: 'row',
     width: 600,
