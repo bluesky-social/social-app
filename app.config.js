@@ -1,6 +1,6 @@
 const pkg = require('./package.json')
 
-module.exports = function (config) {
+module.exports = function (_config) {
   /**
    * App version number. Should be incremented as part of a release cycle.
    */
@@ -357,16 +357,6 @@ module.exports = function (config) {
           },
         ],
         ['expo-screen-orientation', {initialOrientation: 'PORTRAIT_UP'}],
-        [
-          'react-native-vision-camera',
-          {
-            enableLocation: false,
-            cameraPermissionText: 'Bluesky needs access to your camera.',
-            enableMicrophonePermission: true,
-            microphonePermissionText:
-              'Bluesky needs access to your microphone.',
-          },
-        ],
       ].filter(Boolean),
       extra: {
         eas: {

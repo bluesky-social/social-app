@@ -571,7 +571,7 @@ export function DesktopLeftNav() {
       ]}>
       {hasSession ? (
         <ProfileCard />
-      ) : isDesktop ? (
+      ) : !leftNavMinimal ? (
         <View style={[a.pt_xl]}>
           <NavSignupCard />
         </View>
