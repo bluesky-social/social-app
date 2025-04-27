@@ -5,8 +5,8 @@ import {
   moveAsync,
 } from 'expo-file-system'
 import {
-  Action,
-  ActionCrop,
+  type Action,
+  type ActionCrop,
   manipulateAsync,
   SaveFormat,
 } from 'expo-image-manipulator'
@@ -210,17 +210,21 @@ export async function compressImage(img: ComposerImage): Promise<ImageMeta> {
   const source = img.transformed || img.source
 
   const [w, h] = containImageRes(source.width, source.height, POST_IMG_MAX)
-  const cacheDir = isNative && getImageCacheDirectory()
 
-  for (let i = 10; i > 0; i--) {
-    // Float precision
-    const factor = i / 10
+  let minQualityPercentage = 0
+  let maxQualityPercentage = 101 // exclusive
+  let newDataUri
+
+  while (maxQualityPercentage - minQualityPercentage > 1) {
+    const qualityPercentage = Math.round(
+      (maxQualityPercentage + minQualityPercentage) / 2,
+    )
 
     const res = await manipulateAsync(
       source.path,
       [{resize: {width: w, height: h}}],
       {
-        compress: factor,
+        compress: qualityPercentage / 100,
         format: SaveFormat.JPEG,
         base64: true,
       },
@@ -229,17 +233,20 @@ export async function compressImage(img: ComposerImage): Promise<ImageMeta> {
     const base64 = res.base64
 
     if (base64 !== undefined && getDataUriSize(base64) <= POST_IMG_MAX.size) {
-      return {
+      minQualityPercentage = qualityPercentage
+      newDataUri = {
         path: await moveIfNecessary(res.uri),
         width: res.width,
         height: res.height,
         mime: 'image/jpeg',
       }
+    } else {
+      maxQualityPercentage = qualityPercentage
     }
+  }
 
-    if (cacheDir) {
-      await deleteAsync(res.uri)
-    }
+  if (newDataUri) {
+    return newDataUri
   }
 
   throw new Error(`Unable to compress image`)

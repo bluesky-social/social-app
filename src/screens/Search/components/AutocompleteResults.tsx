@@ -49,7 +49,7 @@ let AutocompleteResults = ({
                 ? undefined
                 : `/search?q=${encodeURIComponent(searchText)}`
             }
-            style={{borderBottomWidth: 1}}
+            style={a.border_b}
           />
           {autocompleteData?.map(item => (
             <SearchProfileCard

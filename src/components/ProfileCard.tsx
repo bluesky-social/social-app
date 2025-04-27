@@ -16,7 +16,7 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {
   Button,
@@ -30,6 +30,8 @@ import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import * as Pills from '#/components/Pills'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import type * as bsky from '#/types/bsky'
 
 export function Default({
@@ -128,17 +130,29 @@ export function Link({
 export function Avatar({
   profile,
   moderationOpts,
+  onPress,
+  disabledPreview,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
+  onPress?: () => void
+  disabledPreview?: boolean
 }) {
   const moderation = moderateProfile(profile, moderationOpts)
 
-  return (
+  return disabledPreview ? (
+    <UserAvatar
+      size={40}
+      avatar={profile.avatar}
+      type={profile.associated?.labeler ? 'labeler' : 'user'}
+      moderation={moderation.ui('avatar')}
+    />
+  ) : (
     <PreviewableUserAvatar
       size={40}
       profile={profile}
       moderation={moderation.ui('avatar')}
+      onBeforePress={onPress}
     />
   )
 }
@@ -186,13 +200,24 @@ export function Name({
     profile.displayName || sanitizeHandle(profile.handle),
     moderation.ui('displayName'),
   )
+  const verification = useSimpleVerificationState({profile})
   return (
-    <Text
-      emoji
-      style={[a.text_md, a.font_bold, a.leading_snug, a.self_start]}
-      numberOfLines={1}>
-      {name}
-    </Text>
+    <View style={[a.flex_row, a.align_center]}>
+      <Text
+        emoji
+        style={[a.text_md, a.font_bold, a.leading_snug, a.self_start]}
+        numberOfLines={1}>
+        {name}
+      </Text>
+      {verification.showBadge && (
+        <View style={[a.pl_xs]}>
+          <VerificationCheck
+            width={14}
+            verifier={verification.role === 'verifier'}
+          />
+        </View>
+      )}
+    </View>
   )
 }
 

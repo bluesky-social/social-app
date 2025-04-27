@@ -1,7 +1,7 @@
 import {
-  AppBskyActorDefs,
-  BskyFeedViewPreference,
-  LabelPreference,
+  type AppBskyActorDefs,
+  type BskyFeedViewPreference,
+  type LabelPreference,
 } from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
@@ -16,8 +16,8 @@ import {
   DEFAULT_THREAD_VIEW_PREFS,
 } from '#/state/queries/preferences/const'
 import {
-  ThreadViewPreferences,
-  UsePreferencesQueryResponse,
+  type ThreadViewPreferences,
+  type UsePreferencesQueryResponse,
 } from '#/state/queries/preferences/types'
 import {useAgent} from '#/state/session'
 import {saveLabelers} from '#/state/session/agent-config'
@@ -400,6 +400,26 @@ export function useSetActiveProgressGuideMutation() {
       guide: AppBskyActorDefs.BskyAppProgressGuide | undefined,
     ) => {
       await agent.bskyAppSetActiveProgressGuide(guide)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useSetVerificationPrefsMutation() {
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+
+  return useMutation<void, unknown, AppBskyActorDefs.VerificationPrefs>({
+    mutationFn: async prefs => {
+      await agent.setVerificationPrefs(prefs)
+      if (prefs.hideBadges) {
+        logger.metric('verification:settings:hideBadges', {})
+      } else {
+        logger.metric('verification:settings:unHideBadges', {})
+      }
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,

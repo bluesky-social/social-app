@@ -14,6 +14,7 @@ export const router = new Router({
   ModerationMutedAccounts: '/moderation/muted-accounts',
   ModerationBlockedAccounts: '/moderation/blocked-accounts',
   ModerationInteractionSettings: '/moderation/interaction-settings',
+  ModerationVerificationSettings: '/moderation/verification-settings',
   // profiles, threads, lists
   Profile: ['/profile/:name', '/profile/:name/rss'],
   ProfileFollowers: '/profile/:name/followers',

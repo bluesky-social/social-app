@@ -8,7 +8,7 @@ msgstr ""
 "Language: eu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-04-09 23:20\n"
+"PO-Revision-Date: 2025-04-19 04:09\n"
 "Last-Translator: \n"
 "Language-Team: Basque\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -23,7 +23,7 @@ msgstr ""
 msgid "(active)"
 msgstr "(aktiboa)"
 
-#: src/screens/Messages/components/ChatListItem.tsx:155
+#: src/screens/Messages/components/ChatListItem.tsx:160
 msgid "(contains embedded content)"
 msgstr "(kapsulatutako edukia dauka)"
 
@@ -82,7 +82,7 @@ msgstr "{0, plural, one {segundu #} other {# segundu}}"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:209
 #: src/view/shell/bottom-bar/BottomBar.tsx:241
-#: src/view/shell/Drawer.tsx:454
+#: src/view/shell/Drawer.tsx:470
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr "{0, plural, one {Elementu bat} other {# elementu}} irakurri gabe"
 
@@ -91,17 +91,17 @@ msgstr "{0, plural, one {Elementu bat} other {# elementu}} irakurri gabe"
 msgid "{0, plural, one {#mo} other {#mo}}"
 msgstr "{0, plural, other {# hilabete}}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:398
+#: src/components/ProfileHoverCard/index.web.tsx:404
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr "{0, plural, one {jarraitzaile} other {jarraitzaile}}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:402
+#: src/components/ProfileHoverCard/index.web.tsx:408
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {jarraitzen} other {jarraitzen}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:459
+#: src/view/com/post-thread/PostThreadItem.tsx:479
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {gogoko} other {gogoko}}"
 
@@ -109,11 +109,11 @@ msgstr "{0, plural, one {gogoko} other {gogoko}}"
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {post} other {post}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:443
+#: src/view/com/post-thread/PostThreadItem.tsx:463
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, one {aipamen} other {aipamen}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:425
+#: src/view/com/post-thread/PostThreadItem.tsx:445
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {berpost} other {berpost}}"
 
@@ -153,7 +153,7 @@ msgstr "50etik {0}"
 msgid "{0} reacted {1}"
 msgstr "{0} erreakzioantu du {1}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:226
+#: src/screens/Messages/components/ChatListItem.tsx:231
 msgid "{0} reacted {1} to {2}"
 msgstr "{0} erreakzioantu du {1} {2}-i"
 
@@ -206,100 +206,132 @@ msgstr "{estimatedTimeHrs, plural, one {ordu} other {ordu}}"
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr "{estimatedTimeMins, plural, one {minutu} other {minutu}}"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:305
+#: src/view/com/notifications/NotificationFeedItem.tsx:324
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
 msgstr "{firstAuthorLink} eta <0>{additionalAuthorsCount, plural, one {beste {formattedAuthorsCount} } other {beste {formattedAuthorsCount}}}</0> jarraitzen dizute"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:331
+#: src/view/com/notifications/NotificationFeedItem.tsx:350
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
 msgstr "{firstAuthorLink} eta <0>{additionalAuthorsCount, plural, one {beste {formattedAuthorsCount} } other {beste {formattedAuthorsCount}}}</0> zure neurrira egindako feeda gogoko dute"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:224
+#: src/view/com/notifications/NotificationFeedItem.tsx:243
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
 msgstr "{firstAuthorLink} eta <0>{additionalAuthorsCount, plural, one {beste {formattedAuthorsCount} } other {beste {formattedAuthorsCount}}}</0> zure posta gogoko dute"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:248
+#: src/view/com/notifications/NotificationFeedItem.tsx:430
+msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> removed their verifications from your account"
+msgstr ""
+
+#: src/view/com/notifications/NotificationFeedItem.tsx:267
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
 msgstr "{firstAuthorLink} eta <0>{additionalAuthorsCount, plural, one {beste {formattedAuthorsCount} } other {beste {formattedAuthorsCount}}}</0> zure postari berpost egin diote"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:355
+#: src/view/com/notifications/NotificationFeedItem.tsx:374
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
 msgstr "{firstAuthorLink} eta <0>{additionalAuthorsCount, plural, one {beste {formattedAuthorsCount} } other {beste {formattedAuthorsCount}}}</0> zure abio multzoan izena eman dute"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:317
+#: src/view/com/notifications/NotificationFeedItem.tsx:404
+msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
+msgstr ""
+
+#: src/view/com/notifications/NotificationFeedItem.tsx:336
 msgid "{firstAuthorLink} followed you"
 msgstr "{firstAuthorLink} jarraitzen dizu"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:294
+#: src/view/com/notifications/NotificationFeedItem.tsx:313
 msgid "{firstAuthorLink} followed you back"
 msgstr "{firstAuthorLink} bueltan jarraitzen dizu"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:343
+#: src/view/com/notifications/NotificationFeedItem.tsx:362
 msgid "{firstAuthorLink} liked your custom feed"
 msgstr "{firstAuthorLink} zure neurrira egindako feeda gustoko du"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:236
+#: src/view/com/notifications/NotificationFeedItem.tsx:255
 msgid "{firstAuthorLink} liked your post"
 msgstr "{firstAuthorLink} zure posta gogoko du"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:260
+#: src/view/com/notifications/NotificationFeedItem.tsx:442
+msgid "{firstAuthorLink} removed their verification from your account"
+msgstr ""
+
+#: src/view/com/notifications/NotificationFeedItem.tsx:279
 msgid "{firstAuthorLink} reposted your post"
 msgstr "{firstAuthorLink} zure postari berpost egin dio"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:367
+#: src/view/com/notifications/NotificationFeedItem.tsx:386
 msgid "{firstAuthorLink} signed up with your starter pack"
 msgstr "{firstAuthorLink} zure abio multzoan izena eman du"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:298
+#: src/view/com/notifications/NotificationFeedItem.tsx:416
+msgid "{firstAuthorLink} verified you"
+msgstr ""
+
+#: src/view/com/notifications/NotificationFeedItem.tsx:317
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
 msgstr "{firstAuthorName} eta {additionalAuthorsCount, plural, one {beste {formattedAuthorsCount} } other {beste {formattedAuthorsCount}}} jarraitzen dizute"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:324
+#: src/view/com/notifications/NotificationFeedItem.tsx:343
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
 msgstr "{firstAuthorName} eta {additionalAuthorsCount, plural, one {beste {formattedAuthorsCount} } other {beste {formattedAuthorsCount}}} zure neurrira egindako feeda gogoko dute"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:217
+#: src/view/com/notifications/NotificationFeedItem.tsx:236
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
 msgstr "{firstAuthorName} eta {additionalAuthorsCount, plural, one {beste {formattedAuthorsCount} } other {beste {formattedAuthorsCount}}} zure posta gogoko dute"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:241
+#: src/view/com/notifications/NotificationFeedItem.tsx:423
+msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} removed their verifications from your account"
+msgstr ""
+
+#: src/view/com/notifications/NotificationFeedItem.tsx:260
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
 msgstr "{firstAuthorName} eta {additionalAuthorsCount, plural, one {beste {formattedAuthorsCount} } other {beste {formattedAuthorsCount}}} zure postari berpost egin diote"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:348
+#: src/view/com/notifications/NotificationFeedItem.tsx:367
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
 msgstr "{firstAuthorName} eta {additionalAuthorsCount, plural, one {beste {formattedAuthorsCount} } other {beste {formattedAuthorsCount}}} zure abio multzoan izena eman dute"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:303
+#: src/view/com/notifications/NotificationFeedItem.tsx:397
+msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
+msgstr ""
+
+#: src/view/com/notifications/NotificationFeedItem.tsx:322
 msgid "{firstAuthorName} followed you"
 msgstr "{firstAuthorName} jarraitzen dizu"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:293
+#: src/view/com/notifications/NotificationFeedItem.tsx:312
 msgid "{firstAuthorName} followed you back"
 msgstr "{firstAuthorName} bueltan jarraitzen dizu"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:329
+#: src/view/com/notifications/NotificationFeedItem.tsx:348
 msgid "{firstAuthorName} liked your custom feed"
 msgstr "{firstAuthorName} zure neurrira egindako feeda gustoko du"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:222
+#: src/view/com/notifications/NotificationFeedItem.tsx:241
 msgid "{firstAuthorName} liked your post"
 msgstr "{firstAuthorName} zure posta gogoko du"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:246
+#: src/view/com/notifications/NotificationFeedItem.tsx:428
+msgid "{firstAuthorName} removed their verification from your account"
+msgstr ""
+
+#: src/view/com/notifications/NotificationFeedItem.tsx:265
 msgid "{firstAuthorName} reposted your post"
 msgstr "{firstAuthorName} zure postari berpost egin dio"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:353
+#: src/view/com/notifications/NotificationFeedItem.tsx:372
 msgid "{firstAuthorName} signed up with your starter pack"
 msgstr "{firstAuthorName} zure abio multzoan izena eman du"
 
-#: src/components/ProfileHoverCard/index.web.tsx:508
+#: src/view/com/notifications/NotificationFeedItem.tsx:402
+msgid "{firstAuthorName} verified you"
+msgstr ""
+
+#: src/components/ProfileHoverCard/index.web.tsx:532
 #: src/screens/Profile/Header/Metrics.tsx:49
 msgid "{following} following"
 msgstr "{following} jarraitzen"
 
-#: src/components/dms/dialogs/SearchablePeopleList.tsx:392
+#: src/components/dialogs/SearchablePeopleList.tsx:412
 msgid "{handle} can't be messaged"
 msgstr "{handle} ezin zaio mezua bidali"
 
@@ -330,6 +362,19 @@ msgstr "{rank}."
 msgid "{type}h ago"
 msgstr "Duela {type} ordu"
 
+#: src/components/verification/VerifierDialog.tsx:60
+msgid "{userName} is a trusted verifier"
+msgstr ""
+
+#: src/components/verification/VerificationsDialog.tsx:67
+msgid "{userName} is verified"
+msgstr ""
+
+#. Possessive, meaning "the verifications of {userName}"
+#: src/components/verification/VerificationsDialog.tsx:69
+msgid "{userName}'s verifications"
+msgstr ""
+
 #. Indicates the number of additional profiles are in the Starter Pack e.g. +12
 #: src/screens/Search/components/StarterPackCard.tsx:249
 msgid "+{computedTotal}"
@@ -345,11 +390,11 @@ msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "<0>{0}, </0><1>{1}, </1>eta {2, plural, one {beste #} other {beste #}} zure abio multzoan daude"
 
-#: src/view/shell/Drawer.tsx:97
+#: src/view/shell/Drawer.tsx:113
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
 msgstr "<0>{0}</0> {1, plural, one {jarraitzaile} other {jarraitzaile}}"
 
-#: src/view/shell/Drawer.tsx:108
+#: src/view/shell/Drawer.tsx:124
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr "<0>{0}</0> {1, plural, one {jarraitzen} other {jarraitzen}}"
 
@@ -398,14 +443,18 @@ msgid "7 days"
 msgstr "7 egun"
 
 #. If last message does not contain text, fall back to "{user} reacted to {a message}"
-#: src/screens/Messages/components/ChatListItem.tsx:205
+#: src/screens/Messages/components/ChatListItem.tsx:210
 msgid "a message"
 msgstr "mezu bat"
 
-#: src/Navigation.tsx:391
-#: src/screens/Settings/AboutSettings.tsx:34
-#: src/screens/Settings/Settings.tsx:215
-#: src/screens/Settings/Settings.tsx:218
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:91
+msgid "A new form of verification"
+msgstr ""
+
+#: src/Navigation.tsx:400
+#: src/screens/Settings/AboutSettings.tsx:72
+#: src/screens/Settings/Settings.tsx:223
+#: src/screens/Settings/Settings.tsx:226
 msgid "About"
 msgstr "Honi buruz"
 
@@ -424,36 +473,36 @@ msgid "Accept Request"
 msgstr "Onartu Eskaera"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:46
-#: src/screens/Settings/Settings.tsx:191
-#: src/screens/Settings/Settings.tsx:194
+#: src/screens/Settings/Settings.tsx:199
+#: src/screens/Settings/Settings.tsx:202
 msgid "Accessibility"
 msgstr "Erabilerraztasun"
 
-#: src/Navigation.tsx:343
+#: src/Navigation.tsx:352
 msgid "Accessibility Settings"
 msgstr "Erabilerraztasun Doikuntzak"
 
-#: src/Navigation.tsx:359
+#: src/Navigation.tsx:368
 #: src/screens/Login/LoginForm.tsx:194
 #: src/screens/Settings/AccountSettings.tsx:45
-#: src/screens/Settings/Settings.tsx:153
-#: src/screens/Settings/Settings.tsx:156
+#: src/screens/Settings/Settings.tsx:161
+#: src/screens/Settings/Settings.tsx:164
 msgid "Account"
 msgstr "Kontua"
 
 #: src/screens/Messages/components/RequestButtons.tsx:81
-#: src/view/com/profile/ProfileMenu.tsx:141
+#: src/view/com/profile/ProfileMenu.tsx:147
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:392
 msgctxt "toast"
 msgid "Account blocked"
 msgstr "Kontua blokeatuta"
 
-#: src/view/com/profile/ProfileMenu.tsx:154
+#: src/view/com/profile/ProfileMenu.tsx:160
 msgctxt "toast"
 msgid "Account followed"
 msgstr "Kontua jarraituta"
 
-#: src/view/com/profile/ProfileMenu.tsx:117
+#: src/view/com/profile/ProfileMenu.tsx:123
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:415
 msgctxt "toast"
 msgid "Account muted"
@@ -468,33 +517,37 @@ msgstr "Kontua Mututua"
 msgid "Account Muted by List"
 msgstr "Kontua Mututua Zerrendagatik"
 
-#: src/screens/Settings/Settings.tsx:430
+#: src/screens/Settings/Settings.tsx:472
 msgid "Account options"
 msgstr "Kontuaren aukerak"
 
-#: src/screens/Settings/Settings.tsx:466
+#: src/screens/Settings/Settings.tsx:508
 msgid "Account removed from quick access"
 msgstr "Kontua ezabatua sarrera azkarretik"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:137
-#: src/view/com/profile/ProfileMenu.tsx:131
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:140
+#: src/view/com/profile/ProfileMenu.tsx:137
 msgctxt "toast"
 msgid "Account unblocked"
 msgstr "Kontua desblokeatuta"
 
-#: src/view/com/profile/ProfileMenu.tsx:166
+#: src/view/com/profile/ProfileMenu.tsx:172
 msgctxt "toast"
 msgid "Account unfollowed"
 msgstr "Kontua jarraitzeari utzita"
 
-#: src/view/com/profile/ProfileMenu.tsx:107
+#: src/view/com/profile/ProfileMenu.tsx:113
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:405
 msgctxt "toast"
 msgid "Account unmuted"
 msgstr "Kontua desmutututa"
 
+#: src/components/verification/VerifierDialog.tsx:98
+msgid "Accounts with a scalloped blue check mark<0>{NON_BREAKING_SPACE}<1/>{NON_BREAKING_SPACE}</0>can verify others. These trusted verifiers are selected by Bluesky."
+msgstr ""
+
+#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
-#: src/view/com/modals/ListAddRemoveUsers.tsx:269
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 msgid "Add"
 msgstr "Gehitu"
@@ -512,8 +565,8 @@ msgstr "Gehitu {displayName} abio multzora"
 msgid "Add a content warning"
 msgstr "Gehitu eduki abisu bat"
 
-#: src/view/screens/ProfileList.tsx:916
-#: src/view/screens/ProfileList.tsx:934
+#: src/view/screens/ProfileList.tsx:924
+#: src/view/screens/ProfileList.tsx:942
 msgid "Add a user to this list"
 msgstr "Gehitu erabiltzaile bat zerrenda honi"
 
@@ -536,8 +589,8 @@ msgstr "Gehitu aukerazko testua"
 msgid "Add alt text (optional)"
 msgstr "Gehitu aukerazko testua (hautazkoa)"
 
-#: src/screens/Settings/Settings.tsx:373
-#: src/screens/Settings/Settings.tsx:376
+#: src/screens/Settings/Settings.tsx:415
+#: src/screens/Settings/Settings.tsx:418
 #: src/view/shell/desktop/LeftNav.tsx:281
 #: src/view/shell/desktop/LeftNav.tsx:285
 msgid "Add another account"
@@ -578,10 +631,14 @@ msgstr "Gehitu hitz mutuak eta etiketak"
 msgid "Add new post"
 msgstr "Gehitu post berria"
 
-#: src/view/screens/ProfileList.tsx:924
-#: src/view/screens/ProfileList.tsx:942
+#: src/view/screens/ProfileList.tsx:932
+#: src/view/screens/ProfileList.tsx:950
 msgid "Add people"
 msgstr "Gehitu jendea"
+
+#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:79
+msgid "Add people to list"
+msgstr "Gehitu jendea zerrendara"
 
 #: src/components/dms/EmojiPopup.android.tsx:55
 msgid "Add Reaction"
@@ -599,7 +656,7 @@ msgstr "Gehitu feed batzuk zure abio multzoari!"
 msgid "Add the default feed of only people you follow"
 msgstr "Gehitu zuk bakarrik jarraitzen duzun jendearen lehenetsitako feeda"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:387
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:406
 msgid "Add the following DNS record to your domain:"
 msgstr "Gehitu honako DNS agiria zure domeinuan:"
 
@@ -607,8 +664,8 @@ msgstr "Gehitu honako DNS agiria zure domeinuan:"
 msgid "Add this feed to your feeds"
 msgstr "Gehitu feed hau zure feedetara"
 
-#: src/view/com/profile/ProfileMenu.tsx:273
-#: src/view/com/profile/ProfileMenu.tsx:276
+#: src/view/com/profile/ProfileMenu.tsx:286
+#: src/view/com/profile/ProfileMenu.tsx:289
 msgid "Add to lists"
 msgstr "Gehitu zerrendetara"
 
@@ -616,7 +673,11 @@ msgstr "Gehitu zerrendetara"
 msgid "Add to my feeds"
 msgstr "Gehitu nire feedetara"
 
-#: src/view/com/modals/ListAddRemoveUsers.tsx:192
+#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:156
+msgid "Add user to list"
+msgstr "Gehitu erabiltzailea zerrendara"
+
+#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:109
 #: src/view/com/modals/UserAddRemoveLists.tsx:162
 msgid "Added to list"
 msgstr "Zerrendara gehitua"
@@ -640,7 +701,7 @@ msgstr "Heldua"
 msgid "Adult Content"
 msgstr "Eduki heldua"
 
-#: src/screens/Moderation/index.tsx:355
+#: src/screens/Moderation/index.tsx:374
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
 msgstr "Eduki heldua <0>bsky.app</0> Web bidez bakarrik gaitu daiteke."
 
@@ -653,7 +714,7 @@ msgstr "Eduki heldua desgaitua dago."
 msgid "Adult Content labels"
 msgstr "Eduki Heldu etiketak"
 
-#: src/screens/Moderation/index.tsx:399
+#: src/screens/Moderation/index.tsx:418
 msgid "Advanced"
 msgstr "Aurreratua"
 
@@ -794,6 +855,11 @@ msgstr "Errore bat gertatu da guztiak jarraitzen saiatzean"
 msgid "An error occurred while uploading the video."
 msgstr "Errore bat gertatu da bideoa igotzean."
 
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:84
+#: src/components/verification/VerifierDialog.tsx:88
+msgid "An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
+msgstr ""
+
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:28
 #: src/lib/moderation/useReportOptions.ts:28
 msgid "An issue not included in these options"
@@ -809,12 +875,16 @@ msgstr "Arazo bat gertatu da txata irekitzen saiatzean"
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
-#: src/components/ProfileCard.tsx:339
-#: src/components/ProfileCard.tsx:360
+#: src/components/ProfileCard.tsx:367
+#: src/components/ProfileCard.tsx:388
 #: src/view/com/profile/FollowButton.tsx:38
 #: src/view/com/profile/FollowButton.tsx:48
 msgid "An issue occurred, please try again."
 msgstr "Arazo bat gertatu da. Mesedez, saiatu berriro."
+
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:118
+msgid "An mockup of a iPhone showing the Bluesky app open to the profile of a verified user with a blue checkmark next to their display name."
+msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:185
 msgid "an unknown error occurred"
@@ -838,6 +908,10 @@ msgstr "Animaliak"
 msgid "Animated GIF"
 msgstr "GIF animatuak"
 
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:37
+msgid "Announcing verification on Bluesky"
+msgstr ""
+
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:33
 #: src/lib/moderation/useReportOptions.ts:33
 msgid "Anti-Social Behavior"
@@ -847,7 +921,7 @@ msgstr "Gizartearen Aurkako Portaera"
 msgid "Anybody can interact"
 msgstr "Edozeinek elkarreragin dezake"
 
-#: src/Navigation.tsx:399
+#: src/Navigation.tsx:408
 #: src/screens/Settings/AppIconSettings/index.tsx:67
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:18
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:23
@@ -884,7 +958,7 @@ msgstr "Aplikazioaren pasahitzaren izenek 4 karaktere izan behar dituzte gutxien
 msgid "App passwords"
 msgstr "Aplikazio pasahitzak"
 
-#: src/Navigation.tsx:311
+#: src/Navigation.tsx:320
 #: src/screens/Settings/AppPasswords.tsx:51
 msgid "App Passwords"
 msgstr "Aplikazio Pasahitzak"
@@ -920,10 +994,10 @@ msgstr "Apelazioa Geldiarazi"
 msgid "Appeal this decision"
 msgstr "Apelatu erabaki hau"
 
-#: src/Navigation.tsx:351
+#: src/Navigation.tsx:360
 #: src/screens/Settings/AppearanceSettings.tsx:85
-#: src/screens/Settings/Settings.tsx:183
-#: src/screens/Settings/Settings.tsx:186
+#: src/screens/Settings/Settings.tsx:191
+#: src/screens/Settings/Settings.tsx:194
 msgid "Appearance"
 msgstr "Itxura"
 
@@ -932,12 +1006,12 @@ msgstr "Itxura"
 msgid "Apply default recommended feeds"
 msgstr "Aplikatu gomendatutako feed lehenetsiak"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:865
+#: src/view/com/post-thread/PostThreadItem.tsx:885
 msgid "Archived from {0}"
 msgstr "{0}-tik artxibatuta"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:834
-#: src/view/com/post-thread/PostThreadItem.tsx:873
+#: src/view/com/post-thread/PostThreadItem.tsx:854
+#: src/view/com/post-thread/PostThreadItem.tsx:893
 msgid "Archived post"
 msgstr "Gordetako posta"
 
@@ -953,7 +1027,7 @@ msgstr "Ziur zaude mezu hau ezabatu nahi duzula? Mezua zuretzako ezabatuko da, b
 msgid "Are you sure you want to delete this starter pack?"
 msgstr "Ziur zaude abio multzo hau ezabatu nahi duzula?"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:82
+#: src/screens/Profile/Header/EditProfileDialog.tsx:86
 msgid "Are you sure you want to discard your changes?"
 msgstr "Ziur zaude zure aldaketak baztertu nahi dituzula?"
 
@@ -1016,7 +1090,7 @@ msgstr "Erreprodukzio automatikoko aukerak <0>Edukia eta Multimedia ezarpenetara
 msgid "Autoplay videos and GIFs"
 msgstr "Bideo eta GIF erreprodukzio automatikoa"
 
-#: src/components/dms/MessagesListHeader.tsx:82
+#: src/components/dms/MessagesListHeader.tsx:84
 #: src/components/moderation/LabelsOnMeDialog.tsx:315
 #: src/components/moderation/LabelsOnMeDialog.tsx:316
 #: src/screens/Login/ChooseAccountForm.tsx:90
@@ -1052,7 +1126,7 @@ msgstr "Post bat sortu aurretik, zure posta elektronikoa egiaztatu behar duzu."
 msgid "Before creating a starter pack, you must first verify your email."
 msgstr "Abio multzo bat sortu aurretik, zure posta elektronikoa egiaztatu behar duzu."
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:79
+#: src/components/dms/dialogs/NewChatDialog.tsx:80
 #: src/components/dms/MessageProfileButton.tsx:110
 #: src/screens/Messages/Conversation.tsx:221
 msgid "Before you may message another user, you must first verify your email."
@@ -1063,8 +1137,8 @@ msgstr "Beste erabiltzaile bati mezua bidali aurretik, zure posta elektronikoa e
 msgid "Birthday"
 msgstr "Urtebetetzea"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
-#: src/view/com/profile/ProfileMenu.tsx:399
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:309
+#: src/view/com/profile/ProfileMenu.tsx:435
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:849
 msgid "Block"
 msgstr "Blokeatu"
@@ -1073,19 +1147,19 @@ msgstr "Blokeatu"
 #: src/components/dms/ConvoMenu.tsx:250
 #: src/screens/Messages/components/RequestButtons.tsx:134
 #: src/screens/Messages/components/RequestButtons.tsx:136
-#: src/view/com/profile/ProfileMenu.tsx:310
-#: src/view/com/profile/ProfileMenu.tsx:317
+#: src/view/com/profile/ProfileMenu.tsx:346
+#: src/view/com/profile/ProfileMenu.tsx:353
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:686
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:688
 msgid "Block account"
 msgstr "Kontua blokeatu"
 
-#: src/view/com/profile/ProfileMenu.tsx:382
+#: src/view/com/profile/ProfileMenu.tsx:418
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:844
 msgid "Block Account?"
 msgstr "Kontua Blokeatu?"
 
-#: src/view/screens/ProfileList.tsx:661
+#: src/view/screens/ProfileList.tsx:669
 msgid "Block accounts"
 msgstr "Kontuak blokeatu"
 
@@ -1097,7 +1171,7 @@ msgstr "Blokeatu eta Ezabatu"
 msgid "Block and/or delete this conversation"
 msgstr "Blokeatu eta/edo ezabatu elkarrizketa hau"
 
-#: src/view/screens/ProfileList.tsx:781
+#: src/view/screens/ProfileList.tsx:789
 msgid "Block list"
 msgstr "Blokeo zerrenda"
 
@@ -1105,7 +1179,7 @@ msgstr "Blokeo zerrenda"
 msgid "Block or report"
 msgstr "Blokeatu edo salatu"
 
-#: src/view/screens/ProfileList.tsx:776
+#: src/view/screens/ProfileList.tsx:784
 msgid "Block these accounts?"
 msgstr "Kontu hauek blokeatu?"
 
@@ -1122,21 +1196,21 @@ msgstr "Blokeatu Erabiltzailea"
 msgid "Blocked"
 msgstr "Blokeatua"
 
-#: src/screens/Moderation/index.tsx:269
+#: src/screens/Moderation/index.tsx:273
 msgid "Blocked accounts"
 msgstr "Blokeatutako kontuak"
 
-#: src/Navigation.tsx:160
-#: src/view/screens/ModerationBlockedAccounts.tsx:101
+#: src/Navigation.tsx:161
+#: src/view/screens/ModerationBlockedAccounts.tsx:110
 msgid "Blocked Accounts"
 msgstr "Blokeatutako Kontuak"
 
-#: src/view/com/profile/ProfileMenu.tsx:394
+#: src/view/com/profile/ProfileMenu.tsx:430
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:846
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Blokeatutako kontuek ezin dute zure harietan erantzun, zu aipatu edo zurekin elkarreragin."
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:112
+#: src/view/screens/ModerationBlockedAccounts.tsx:121
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "Blokeatutako kontuek ezin dute zure harietan erantzun, zu aipatu edo zurekin elkarreragin. Ez duzu haien edukia ikusiko eta zurea ikustea galaraziko zaie."
 
@@ -1144,15 +1218,15 @@ msgstr "Blokeatutako kontuek ezin dute zure harietan erantzun, zu aipatu edo zur
 msgid "Blocked post."
 msgstr "Post blokeatua."
 
-#: src/screens/Profile/Sections/Labels.tsx:173
+#: src/screens/Profile/Sections/Labels.tsx:170
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr "Blokeatzeak ez dio etiketatzaile honi eragotziko etiketak zure kontuan aplikatzea."
 
-#: src/view/screens/ProfileList.tsx:778
+#: src/view/screens/ProfileList.tsx:786
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Blokeatzea publikoa da. Blokeatutako kontuek ezin dute zure harietan erantzun, zu aipatu edo zurekin elkarreragin."
 
-#: src/view/com/profile/ProfileMenu.tsx:391
+#: src/view/com/profile/ProfileMenu.tsx:427
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
 msgstr "Blokeatzeak ez du eragotziko etiketak zure kontuan aplikatzea, baina kontu honek zure harietan erantzutea edo zurekin elkarreragitea eragotziko du."
 
@@ -1165,7 +1239,7 @@ msgstr "Blog-a"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:890
+#: src/view/com/post-thread/PostThreadItem.tsx:910
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky-k ezin du baieztatu erreklamatutako dataren benetakotasuna."
 
@@ -1198,6 +1272,10 @@ msgstr "Bluesky-k zure sareko pertsonen artean gomendatutako kontu multzo bat au
 #: src/screens/Settings/components/PwiOptOut.tsx:99
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "Bluesky-k ez die zure profila eta postak erakutsiko saioa hasita ez duten erabiltzaileei. Baliteke beste aplikazio batzuek eskaera hau ez onartzea. Horrek ez du zure kontua pribatu bihurtzen."
+
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:132
+msgid "Bluesky will proactively verify notable and authentic accounts."
+msgstr ""
 
 #: src/screens/Settings/AppIconSettings/index.tsx:99
 msgid "Bluesky+"
@@ -1301,17 +1379,17 @@ msgid "Camera"
 msgstr "Kamera"
 
 #: src/components/Menu/index.tsx:306
-#: src/components/Prompt.tsx:130
-#: src/components/Prompt.tsx:132
+#: src/components/Prompt.tsx:140
+#: src/components/Prompt.tsx:142
 #: src/screens/Deactivated.tsx:158
-#: src/screens/Profile/Header/EditProfileDialog.tsx:220
-#: src/screens/Profile/Header/EditProfileDialog.tsx:228
+#: src/screens/Profile/Header/EditProfileDialog.tsx:227
+#: src/screens/Profile/Header/EditProfileDialog.tsx:235
 #: src/screens/Search/Shell.tsx:349
 #: src/screens/Settings/AppIconSettings/index.tsx:44
 #: src/screens/Settings/AppIconSettings/index.tsx:225
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:76
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:83
-#: src/screens/Settings/Settings.tsx:260
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:78
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:85
+#: src/screens/Settings/Settings.tsx:268
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
 #: src/view/com/composer/Composer.tsx:937
@@ -1322,7 +1400,7 @@ msgstr "Kamera"
 #: src/view/com/modals/ChangePassword.tsx:282
 #: src/view/com/modals/CreateOrEditList.tsx:335
 #: src/view/com/modals/CropImage.web.tsx:97
-#: src/view/com/modals/EditProfile.tsx:244
+#: src/view/com/modals/EditProfile.tsx:270
 #: src/view/com/modals/InAppBrowserConsent.tsx:75
 #: src/view/com/modals/InAppBrowserConsent.tsx:77
 #: src/view/com/modals/LinkWarning.tsx:105
@@ -1350,7 +1428,7 @@ msgstr "Utzi kontua ezabatzea"
 msgid "Cancel image crop"
 msgstr "Utzi irudiaren mozketa"
 
-#: src/view/com/modals/EditProfile.tsx:239
+#: src/view/com/modals/EditProfile.tsx:265
 msgid "Cancel profile editing"
 msgstr "Utzi profilaren edizioa"
 
@@ -1363,7 +1441,6 @@ msgid "Cancel reactivation and sign out"
 msgstr "Utzi berriro aktibatzea eta amaitu saioa"
 
 #: src/screens/Search/Shell.tsx:341
-#: src/view/com/modals/ListAddRemoveUsers.tsx:88
 msgid "Cancel search"
 msgstr "Utzi bilaketa"
 
@@ -1411,8 +1488,8 @@ msgstr "Aldatu e-posta"
 msgid "Change email address"
 msgstr "Aldatu e-posta helbidea"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:92
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:96
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:94
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:98
 msgid "Change Handle"
 msgstr "Aldatu Erabiltzailea"
 
@@ -1448,15 +1525,15 @@ msgstr "Aldatu zure e-posta helbidea"
 msgid "Changes app icon"
 msgstr "Aplikazioaren ikonoa aldatzen du"
 
-#: src/components/forms/HostingProvider.tsx:50
-#: src/components/forms/HostingProvider.tsx:70
+#: src/components/forms/HostingProvider.tsx:49
+#: src/components/forms/HostingProvider.tsx:69
 msgid "Changes hosting provider"
 msgstr "Hostatze-hornitzailea aldatzen du"
 
-#: src/Navigation.tsx:416
+#: src/Navigation.tsx:425
 #: src/view/shell/bottom-bar/BottomBar.tsx:205
 #: src/view/shell/desktop/LeftNav.tsx:535
-#: src/view/shell/Drawer.tsx:422
+#: src/view/shell/Drawer.tsx:438
 msgid "Chat"
 msgstr "Txateatu"
 
@@ -1471,7 +1548,7 @@ msgctxt "toast"
 msgid "Chat muted"
 msgstr "Txata mutututa"
 
-#: src/Navigation.tsx:426
+#: src/Navigation.tsx:435
 #: src/screens/Messages/components/InboxPreview.tsx:24
 msgid "Chat request inbox"
 msgstr "Txateatzeko eskaeren sarrera-ontzia"
@@ -1482,7 +1559,7 @@ msgid "Chat requests"
 msgstr "Txateatzeko eskaerak"
 
 #: src/components/dms/ConvoMenu.tsx:75
-#: src/Navigation.tsx:421
+#: src/Navigation.tsx:430
 #: src/screens/Messages/ChatList.tsx:328
 msgid "Chat settings"
 msgstr "Txataren ezarpenak"
@@ -1514,7 +1591,7 @@ msgstr "Egiaztatu zure e-posta, saioa hasteko kodea hartu eta sartu hemen."
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "Egiaztatu zure sarrera-ontzia, baieztapen kodea hartu eta sartu hemen:"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:370
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:389
 msgid "Choose domain verification method"
 msgstr "Aukeratu domeinua egiaztatzeko metodoa"
 
@@ -1554,13 +1631,18 @@ msgstr "Aukeratu zure pasahitza"
 msgid "Choose your username"
 msgstr "Aukeratu zure erabiltzaile-izena"
 
-#: src/screens/Settings/Settings.tsx:351
+#: src/screens/Settings/Settings.tsx:393
 msgid "Clear all storage data"
 msgstr "Garbitu biltegiratze-datu guztiak"
 
-#: src/screens/Settings/Settings.tsx:353
+#: src/screens/Settings/Settings.tsx:395
 msgid "Clear all storage data (restart after this)"
 msgstr "Garbitu biltegiratze-datu guztiak (berrabiarazi hau egin ondoren)"
+
+#: src/screens/Settings/AboutSettings.tsx:113
+#: src/screens/Settings/AboutSettings.tsx:117
+msgid "Clear image cache"
+msgstr "Garbitu irudien cachea"
 
 #: src/components/forms/SearchInput.tsx:70
 msgid "Clear search query"
@@ -1595,8 +1677,10 @@ msgid "Clip 🐴 clop 🐴"
 msgstr "Klip 🐴 klop 🐴"
 
 #: src/components/dialogs/GifSelect.tsx:281
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:174
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:183
+#: src/components/dialogs/SearchablePeopleList.tsx:295
 #: src/components/dialogs/VerifyEmailDialog.tsx:289
-#: src/components/dms/dialogs/SearchablePeopleList.tsx:269
 #: src/components/dms/EmojiPopup.android.tsx:58
 #: src/components/dms/ReportDialog.tsx:381
 #: src/components/dms/ReportDialog.tsx:390
@@ -1605,6 +1689,8 @@ msgstr "Klip 🐴 klop 🐴"
 #: src/components/ProgressGuide/FollowDialog.tsx:386
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:117
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:123
+#: src/components/verification/VerificationsDialog.tsx:146
+#: src/components/verification/VerifierDialog.tsx:144
 #: src/view/com/modals/ChangePassword.tsx:279
 #: src/view/com/modals/ChangePassword.tsx:282
 #: src/view/com/util/post-embeds/GifEmbed.tsx:197
@@ -1625,6 +1711,8 @@ msgid "Close bottom drawer"
 msgstr "Itxi beheko tiradera"
 
 #: src/components/dialogs/GifSelect.tsx:275
+#: src/components/verification/VerificationsDialog.tsx:138
+#: src/components/verification/VerifierDialog.tsx:136
 msgid "Close dialog"
 msgstr "Itxi elkarrizketa-koadroa"
 
@@ -1676,11 +1764,11 @@ msgstr "Emoji-hautatzailea ixten du"
 msgid "Closes viewer for header image"
 msgstr "Goiburuko irudiaren ikuslea ixten du"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:405
+#: src/view/com/notifications/NotificationFeedItem.tsx:479
 msgid "Collapse list of users"
 msgstr "Tolestu erabiltzaileen zerrenda"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:598
+#: src/view/com/notifications/NotificationFeedItem.tsx:687
 msgid "Collapses list of users for a given notification"
 msgstr "Jakinarazpen jakin baterako erabiltzaileen zerrenda tolesten du"
 
@@ -1703,7 +1791,7 @@ msgstr "Komedia"
 msgid "Comics"
 msgstr "Komikiak"
 
-#: src/Navigation.tsx:301
+#: src/Navigation.tsx:310
 #: src/view/screens/CommunityGuidelines.tsx:34
 msgid "Community Guidelines"
 msgstr "Komunitate-gidalerroak"
@@ -1743,8 +1831,8 @@ msgstr "<0>Moderazio-ezarpenetan</0> konfiguratuta."
 #: src/components/dialogs/VerifyEmailDialog.tsx:253
 #: src/components/dialogs/VerifyEmailDialog.tsx:260
 #: src/components/dialogs/VerifyEmailDialog.tsx:283
-#: src/components/Prompt.tsx:173
-#: src/components/Prompt.tsx:176
+#: src/components/Prompt.tsx:183
+#: src/components/Prompt.tsx:186
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:185
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:188
 #: src/view/com/modals/VerifyEmail.tsx:239
@@ -1765,11 +1853,11 @@ msgstr "Berretsi edukiaren hizkuntza-ezarpenak"
 msgid "Confirm delete account"
 msgstr "Berretsi kontua ezabatzea"
 
-#: src/screens/Moderation/index.tsx:303
+#: src/screens/Moderation/index.tsx:322
 msgid "Confirm your age:"
 msgstr "Egiaztatu zure adina:"
 
-#: src/screens/Moderation/index.tsx:294
+#: src/screens/Moderation/index.tsx:313
 msgid "Confirm your birthdate"
 msgstr "Berretsi zure jaioteguna"
 
@@ -1802,12 +1890,12 @@ msgid "Content & Media"
 msgstr "Edukiak eta Media"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:109
-#: src/screens/Settings/Settings.tsx:175
-#: src/screens/Settings/Settings.tsx:178
+#: src/screens/Settings/Settings.tsx:183
+#: src/screens/Settings/Settings.tsx:186
 msgid "Content and media"
 msgstr "Edukiak eta media"
 
-#: src/Navigation.tsx:375
+#: src/Navigation.tsx:384
 msgid "Content and Media"
 msgstr "Edukiak eta Media"
 
@@ -1815,7 +1903,7 @@ msgstr "Edukiak eta Media"
 msgid "Content Blocked"
 msgstr "Edukia Blokeatuta"
 
-#: src/screens/Moderation/index.tsx:287
+#: src/screens/Moderation/index.tsx:306
 msgid "Content filters"
 msgstr "Eduki-iragazkiak"
 
@@ -1853,7 +1941,7 @@ msgstr "Testuinguru-menuaren atzeko planoa, egin klik menua ixteko."
 msgid "Continue"
 msgstr "Jarraitu"
 
-#: src/components/AccountList.tsx:121
+#: src/components/AccountList.tsx:126
 msgid "Continue as {0} (currently signed in)"
 msgstr "Jarraitu {0} gisa (une honetan saioa hasita)"
 
@@ -1873,7 +1961,7 @@ msgctxt "toast"
 msgid "Conversation deleted"
 msgstr "Elkarrizketa ezabatuta"
 
-#: src/screens/Messages/components/ChatListItem.tsx:191
+#: src/screens/Messages/components/ChatListItem.tsx:196
 msgid "Conversation deleted"
 msgstr "Elkarrizketa ezabatuta"
 
@@ -1885,7 +1973,7 @@ msgstr "Sukaldatzen"
 msgid "Copied"
 msgstr "Kopiatua"
 
-#: src/screens/Settings/AboutSettings.tsx:98
+#: src/screens/Settings/AboutSettings.tsx:148
 msgid "Copied build version to clipboard"
 msgstr "Konpilazio bertsioa arbelean kopiatu da"
 
@@ -1903,7 +1991,7 @@ msgstr "Arbelean kopiatua"
 msgid "Copied!"
 msgstr "Kopiatuta!"
 
-#: src/screens/Settings/AboutSettings.tsx:74
+#: src/screens/Settings/AboutSettings.tsx:124
 msgid "Copies build version to clipboard"
 msgstr "Eraikitze-bertsioa arbelean kopiatzen du"
 
@@ -1915,8 +2003,8 @@ msgstr "Kopiatu"
 msgid "Copy App Password"
 msgstr "Kopiatu Aplikazioaren Pasahitza"
 
-#: src/view/com/profile/ProfileMenu.tsx:347
-#: src/view/com/profile/ProfileMenu.tsx:350
+#: src/view/com/profile/ProfileMenu.tsx:383
+#: src/view/com/profile/ProfileMenu.tsx:386
 msgid "Copy at:// URI"
 msgstr "Kopiatu at:// URI"
 
@@ -1930,13 +2018,13 @@ msgstr "Kopiatu egilearen DID"
 msgid "Copy code"
 msgstr "Kopiatu kodea"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:472
-#: src/view/com/profile/ProfileMenu.tsx:356
-#: src/view/com/profile/ProfileMenu.tsx:359
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:491
+#: src/view/com/profile/ProfileMenu.tsx:392
+#: src/view/com/profile/ProfileMenu.tsx:395
 msgid "Copy DID"
 msgstr "Kopiatu DID"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:405
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:424
 msgid "Copy host"
 msgstr "Kopiatu ostalaria"
 
@@ -1948,7 +2036,7 @@ msgstr "Kopiatu esteka"
 msgid "Copy Link"
 msgstr "Kopiatu Esteka"
 
-#: src/view/screens/ProfileList.tsx:505
+#: src/view/screens/ProfileList.tsx:513
 msgid "Copy link to list"
 msgstr "Kopiatu esteka zerrendara"
 
@@ -1976,11 +2064,11 @@ msgstr "Kopiatu postaren testua"
 msgid "Copy QR code"
 msgstr "Kopiatu QR kodea"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:426
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:445
 msgid "Copy TXT record value"
 msgstr "Kopiatu TXT erregistroaren balioa"
 
-#: src/Navigation.tsx:306
+#: src/Navigation.tsx:315
 #: src/view/screens/CopyrightPolicy.tsx:31
 msgid "Copyright Policy"
 msgstr "Copyright Politika"
@@ -1994,7 +2082,7 @@ msgstr "Ezin izan da txata utzi"
 msgid "Could not load feed"
 msgstr "Ezin izan da feeda kargatu"
 
-#: src/view/screens/ProfileList.tsx:1021
+#: src/view/screens/ProfileList.tsx:1029
 msgid "Could not load list"
 msgstr "Ezin izan da zerrenda kargatu"
 
@@ -2016,7 +2104,7 @@ msgstr "Sortu QR kodea abio multzo baterako"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:178
 #: src/components/StarterPack/ProfileStarterPacks.tsx:274
-#: src/Navigation.tsx:451
+#: src/Navigation.tsx:460
 msgid "Create a starter pack"
 msgstr "Sortu abio multzo bat"
 
@@ -2127,7 +2215,7 @@ msgstr "Jaiotze data"
 msgid "Deactivate account"
 msgstr "Desaktibatu kontua"
 
-#: src/screens/Settings/Settings.tsx:332
+#: src/screens/Settings/Settings.tsx:374
 msgid "Debug Moderation"
 msgstr "Arazketa Moderazioa"
 
@@ -2150,7 +2238,7 @@ msgstr "Ikono lehenetsiak"
 #: src/screens/StarterPack/StarterPackScreen.tsx:672
 #: src/screens/StarterPack/StarterPackScreen.tsx:744
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:767
-#: src/view/screens/ProfileList.tsx:760
+#: src/view/screens/ProfileList.tsx:768
 msgid "Delete"
 msgstr "Ezabatu"
 
@@ -2176,7 +2264,7 @@ msgstr "Aplikazioaren pasahitza ezabatu nahi duzu?"
 msgid "Delete chat"
 msgstr "Ezabatu txata"
 
-#: src/screens/Settings/Settings.tsx:339
+#: src/screens/Settings/Settings.tsx:381
 msgid "Delete chat declaration record"
 msgstr "Ezabatu txat-adierazpenaren erregistroa"
 
@@ -2195,7 +2283,7 @@ msgstr "Ezabatu Elkarrizketa"
 msgid "Delete for me"
 msgstr "Ezabatu niretzat"
 
-#: src/view/screens/ProfileList.tsx:548
+#: src/view/screens/ProfileList.tsx:556
 msgid "Delete list"
 msgstr "Ezabatu zerrenda"
 
@@ -2226,7 +2314,7 @@ msgstr "Ezabatu abio multzoa"
 msgid "Delete starter pack?"
 msgstr "Abio multzoa ezabatu nahi duzu?"
 
-#: src/view/screens/ProfileList.tsx:755
+#: src/view/screens/ProfileList.tsx:763
 msgid "Delete this list?"
 msgstr "Zerrenda hau ezabatu nahi duzu?"
 
@@ -2238,8 +2326,8 @@ msgstr "Post hau ezabatu nahi duzu?"
 msgid "Deleted"
 msgstr "Ezabatu da"
 
-#: src/components/dms/MessagesListHeader.tsx:155
-#: src/screens/Messages/components/ChatListItem.tsx:123
+#: src/components/dms/MessagesListHeader.tsx:160
+#: src/screens/Messages/components/ChatListItem.tsx:128
 msgid "Deleted Account"
 msgstr "Ezabatutako Kontua"
 
@@ -2247,19 +2335,19 @@ msgstr "Ezabatutako Kontua"
 msgid "Deleted post."
 msgstr "Ezabatutako posta."
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:347
+#: src/screens/Profile/Header/EditProfileDialog.tsx:370
 #: src/view/com/modals/CreateOrEditList.tsx:280
 #: src/view/com/modals/CreateOrEditList.tsx:301
-#: src/view/com/modals/EditProfile.tsx:193
-#: src/view/com/modals/EditProfile.tsx:205
+#: src/view/com/modals/EditProfile.tsx:219
+#: src/view/com/modals/EditProfile.tsx:231
 msgid "Description"
 msgstr "Deskribapena"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:367
+#: src/screens/Profile/Header/EditProfileDialog.tsx:390
 msgid "Description is too long"
 msgstr "Deskribapena luzeegia da"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:368
+#: src/screens/Profile/Header/EditProfileDialog.tsx:391
 msgid "Description is too long. {DESCRIPTION_MAX_GRAPHEMES, plural, other {The maximum number of characters is #.}}"
 msgstr "Deskribapena luzeegia da. {DESCRIPTION_MAX_GRAPHEMES, plural, other {Gehienezko karaktere kopurua # da.}}"
 
@@ -2277,18 +2365,18 @@ msgstr "Kendu aipamena"
 msgid "Detach quote post?"
 msgstr "Postaren aipamena kendu?"
 
-#: src/screens/Settings/AboutSettings.tsx:87
+#: src/screens/Settings/AboutSettings.tsx:137
 msgctxt "toast"
 msgid "Developer mode disabled"
 msgstr "Garatzaile modua desgaituta"
 
-#: src/screens/Settings/AboutSettings.tsx:81
+#: src/screens/Settings/AboutSettings.tsx:131
 msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr "Garatzaile modua gaituta"
 
-#: src/screens/Settings/Settings.tsx:242
-#: src/screens/Settings/Settings.tsx:245
+#: src/screens/Settings/Settings.tsx:250
+#: src/screens/Settings/Settings.tsx:253
 msgid "Developer options"
 msgstr "Garatzaile aukerak"
 
@@ -2318,17 +2406,17 @@ msgstr "Desgaitu azpitituluak"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:68
 #: src/screens/Messages/Settings.tsx:139
 #: src/screens/Messages/Settings.tsx:142
-#: src/screens/Moderation/index.tsx:345
+#: src/screens/Moderation/index.tsx:364
 msgid "Disabled"
 msgstr "Desgaituta"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:84
+#: src/screens/Profile/Header/EditProfileDialog.tsx:88
 #: src/view/com/composer/Composer.tsx:705
 #: src/view/com/composer/Composer.tsx:889
 msgid "Discard"
 msgstr "Baztertu"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:81
+#: src/screens/Profile/Header/EditProfileDialog.tsx:85
 msgid "Discard changes?"
 msgstr "Aldaketak baztertu?"
 
@@ -2383,27 +2471,27 @@ msgstr "Baztertu atal hau"
 msgid "Display larger alt text badges"
 msgstr "Erakutsi aukerazko testu bereizgarri handiagoak"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:314
-#: src/screens/Profile/Header/EditProfileDialog.tsx:320
-#: src/screens/Profile/Header/EditProfileDialog.tsx:354
-#: src/view/com/modals/EditProfile.tsx:187
+#: src/screens/Profile/Header/EditProfileDialog.tsx:321
+#: src/screens/Profile/Header/EditProfileDialog.tsx:327
+#: src/screens/Profile/Header/EditProfileDialog.tsx:377
+#: src/view/com/modals/EditProfile.tsx:194
 msgid "Display name"
 msgstr "Bistaratzeko izena"
 
-#: src/view/com/modals/EditProfile.tsx:175
+#: src/view/com/modals/EditProfile.tsx:182
 msgid "Display Name"
 msgstr "Bistaratzeko Izena"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:333
+#: src/screens/Profile/Header/EditProfileDialog.tsx:340
 msgid "Display name is too long"
 msgstr "Bistaratzeko izena luzeegia da"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:334
+#: src/screens/Profile/Header/EditProfileDialog.tsx:341
 msgid "Display name is too long. {DISPLAY_NAME_MAX_GRAPHEMES, plural, other {The maximum number of characters is #.}}"
 msgstr "Bistaratzeko izena luzeegia da. {DISPLAY_NAME_MAX_GRAPHEMES, plural, other {Gehienezko karaktere kopurua # da.}}"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:373
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:375
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:392
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:394
 msgid "DNS Panel"
 msgstr "DNS Panela"
 
@@ -2419,7 +2507,7 @@ msgstr "Ez du biluztasunik."
 msgid "Doesn't begin or end with a hyphen"
 msgstr "Ez da marratxo batekin hasten edo amaitzen"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:488
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:507
 msgid "Domain verified!"
 msgstr "Domeinua egiaztatu da!"
 
@@ -2441,11 +2529,9 @@ msgstr "Domeinua egiaztatu da!"
 #: src/view/com/modals/CropImage.web.tsx:112
 #: src/view/com/modals/InviteCodes.tsx:81
 #: src/view/com/modals/InviteCodes.tsx:124
-#: src/view/com/modals/ListAddRemoveUsers.tsx:143
 msgid "Done"
 msgstr "Eginda"
 
-#: src/view/com/modals/ListAddRemoveUsers.tsx:145
 #: src/view/com/modals/UserAddRemoveLists.tsx:113
 #: src/view/com/modals/UserAddRemoveLists.tsx:116
 msgctxt "action"
@@ -2485,23 +2571,23 @@ msgstr "Jausi irudiak gehitzeko"
 msgid "Duration:"
 msgstr "Iraupena:"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:211
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:230
 msgid "e.g. alice"
 msgstr "adib. alice"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:321
+#: src/screens/Profile/Header/EditProfileDialog.tsx:328
 msgid "e.g. Alice Lastname"
 msgstr "adib. Alice Abizena"
 
-#: src/view/com/modals/EditProfile.tsx:180
+#: src/view/com/modals/EditProfile.tsx:187
 msgid "e.g. Alice Roberts"
 msgstr "adib. Alice Roberts"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:357
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:376
 msgid "e.g. alice.com"
 msgstr "adib. alice.com"
 
-#: src/view/com/modals/EditProfile.tsx:198
+#: src/view/com/modals/EditProfile.tsx:224
 msgid "e.g. Artist, dog-lover, and avid reader."
 msgstr "adib. Artista, txakur-zalea eta irakurle amorratua."
 
@@ -2536,7 +2622,8 @@ msgstr "Kode bakoitzak behin funtzionatzen du. Aldian-aldian gonbidapen-kode geh
 msgid "Edit"
 msgstr "Editatu"
 
-#: src/view/com/lists/ListMembers.tsx:143
+#: src/view/com/lists/ListMembers.tsx:180
+#: src/view/com/lists/ListMembers.tsx:186
 msgctxt "action"
 msgid "Edit"
 msgstr "Editatu"
@@ -2566,7 +2653,7 @@ msgstr "Editatu interakzio-ezarpenak"
 msgid "Edit interests"
 msgstr "Editatu interesak"
 
-#: src/view/screens/ProfileList.tsx:536
+#: src/view/screens/ProfileList.tsx:544
 msgid "Edit list details"
 msgstr "Editatu zerrendaren xehetasunak"
 
@@ -2574,12 +2661,12 @@ msgstr "Editatu zerrendaren xehetasunak"
 msgid "Edit Moderation List"
 msgstr "Editatu Moderazio-Zerrenda"
 
-#: src/Navigation.tsx:316
+#: src/Navigation.tsx:325
 #: src/view/screens/Feeds.tsx:515
 msgid "Edit My Feeds"
 msgstr "Editatu Nire Feedak"
 
-#: src/view/com/modals/EditProfile.tsx:147
+#: src/view/com/modals/EditProfile.tsx:154
 msgid "Edit my profile"
 msgstr "Editatu nire profila"
 
@@ -2592,15 +2679,15 @@ msgstr "Editatu Jendea"
 msgid "Edit post interaction settings"
 msgstr "Editatu posten interakzio-ezarpenak"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:269
-#: src/screens/Profile/Header/EditProfileDialog.tsx:275
+#: src/screens/Profile/Header/EditProfileDialog.tsx:276
+#: src/screens/Profile/Header/EditProfileDialog.tsx:282
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:196
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:179
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:182
 msgid "Edit profile"
 msgstr "Editatu profila"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:199
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:182
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:185
 msgid "Edit Profile"
 msgstr "Editatu Profila"
 
@@ -2616,15 +2703,15 @@ msgstr "Editatu Erabiltzaileen Zerrenda"
 msgid "Edit who can reply"
 msgstr "Editatu nork erantzun dezakeen"
 
-#: src/view/com/modals/EditProfile.tsx:188
+#: src/view/com/modals/EditProfile.tsx:195
 msgid "Edit your display name"
 msgstr "Editatu zure bistaratzeko izena"
 
-#: src/view/com/modals/EditProfile.tsx:206
+#: src/view/com/modals/EditProfile.tsx:232
 msgid "Edit your profile description"
 msgstr "Editatu zure profileko deskribapena"
 
-#: src/Navigation.tsx:456
+#: src/Navigation.tsx:465
 msgid "Edit your starter pack"
 msgstr "Editatu zure abio multzoa"
 
@@ -2707,7 +2794,7 @@ msgstr "Gaitu"
 msgid "Enable {0} only"
 msgstr "Gaitu {0} soilik"
 
-#: src/screens/Moderation/index.tsx:332
+#: src/screens/Moderation/index.tsx:351
 msgid "Enable adult content"
 msgstr "Gaitu helduentzako edukia"
 
@@ -2752,11 +2839,11 @@ msgstr "Gaitu joera bideoak zure Aurkitu feedean."
 
 #: src/screens/Messages/Settings.tsx:130
 #: src/screens/Messages/Settings.tsx:133
-#: src/screens/Moderation/index.tsx:343
+#: src/screens/Moderation/index.tsx:362
 msgid "Enabled"
 msgstr "Gaituta"
 
-#: src/screens/Profile/Sections/Feed.tsx:116
+#: src/screens/Profile/Sections/Feed.tsx:113
 msgid "End of feed"
 msgstr "Feedaren amaiera"
 
@@ -2789,7 +2876,7 @@ msgstr "Sartu pantaila osoan"
 msgid "Enter the code you received to change your password."
 msgstr "Sartu jaso duzun kodea pasahitza aldatzeko."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:351
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:370
 msgid "Enter the domain you want to use"
 msgstr "Sartu erabili nahi duzun domeinua"
 
@@ -2906,29 +2993,21 @@ msgstr "Irudiak mozteko prozesutik irteten da"
 msgid "Exits image view"
 msgstr "Irudiaren ikuspegitik irteten da"
 
-#: src/view/com/modals/ListAddRemoveUsers.tsx:89
-msgid "Exits inputting search query"
-msgstr "Bilaketa-kontsulta sartzetik irteten da"
-
 #: src/view/com/lightbox/Lightbox.web.tsx:184
 msgid "Expand alt text"
 msgstr "Zabaldu aukerazko testua"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:406
+#: src/view/com/notifications/NotificationFeedItem.tsx:480
 msgid "Expand list of users"
 msgstr "Zabaldu erabiltzaileen zerrenda"
 
-#: src/view/com/composer/ComposerReplyTo.tsx:70
+#: src/view/com/composer/ComposerReplyTo.tsx:83
 msgid "Expand or collapse the full post you are replying to"
 msgstr "Zabaldu edo tolestu erantzuten ari zaren post osoa"
 
 #: src/screens/VideoFeed/index.tsx:941
 msgid "Expands or collapses post text"
 msgstr "Postaren testua zabaldu edo tolesten du"
-
-#: src/view/com/composer/ComposerReplyTo.tsx:73
-msgid "Expands or collapses the full post you are replying to"
-msgstr "Erantzuten ari zaren post osoa zabaldu edo tolesten du"
 
 #: src/lib/api/index.ts:406
 msgid "Expected uri to resolve to a record"
@@ -2961,10 +3040,10 @@ msgstr "Esplizituak edo kezkagarriak izan daitezkeen multimediak."
 msgid "Explicit sexual images."
 msgstr "Sexu-irudi esplizituak."
 
-#: src/Navigation.tsx:640
+#: src/Navigation.tsx:649
 #: src/screens/Search/Shell.tsx:307
 #: src/view/shell/desktop/LeftNav.tsx:617
-#: src/view/shell/Drawer.tsx:370
+#: src/view/shell/Drawer.tsx:386
 msgid "Explore"
 msgstr "Arakatu"
 
@@ -2992,7 +3071,7 @@ msgstr "Kanpoko Multimedia"
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
 msgstr "Kanpoko multimediak webguneek zuri eta zure gailuari buruzko informazioa biltzeko aukera izan dezake. Ez da informaziorik bidali edo eskatzen \"play\" botoia sakatu arte."
 
-#: src/Navigation.tsx:335
+#: src/Navigation.tsx:344
 #: src/screens/Settings/ExternalMediaPreferences.tsx:31
 msgid "External Media Preferences"
 msgstr "Kanpoko Multimedia Hobespenak"
@@ -3007,9 +3086,13 @@ msgstr "Ezin izan da txata onartu"
 msgid "Failed to add emoji reaction"
 msgstr "Errorea emoji erreakzioa gehitzean"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:568
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:587
 msgid "Failed to change handle. Please try again."
 msgstr "Ezin izan da handle-a aldatu. Mesedez, saiatu berriro."
+
+#: src/components/verification/VerificationCreatePrompt.tsx:32
+msgid "Failed to create a verification"
+msgstr ""
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:173
 msgid "Failed to create app password. Please try again."
@@ -3087,6 +3170,10 @@ msgstr "Ezin izan da posta ainguratu"
 msgid "Failed to remove emoji reaction"
 msgstr "Errorea emoji errakzioa kentzerakoan"
 
+#: src/components/verification/VerificationRemovePrompt.tsx:34
+msgid "Failed to remove verification"
+msgstr ""
+
 #: src/view/com/lightbox/Lightbox.tsx:46
 msgid "Failed to save image: {0}"
 msgstr "Ezin izan da irudia gorde: {0}"
@@ -3132,11 +3219,11 @@ msgstr "Ezin izan dira ezarpenak eguneratu"
 msgid "Failed to upload video"
 msgstr "Ezin izan da bideoa kargatu"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:341
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:360
 msgid "Failed to verify handle. Please try again."
 msgstr "Ezin izan da handle-a egiaztatu. Mesedez, saiatu berriro."
 
-#: src/Navigation.tsx:251
+#: src/Navigation.tsx:260
 msgid "Feed"
 msgstr "Feeda"
 
@@ -3155,7 +3242,7 @@ msgstr "Feeda aktibatu/desaktibatu"
 
 #: src/view/shell/desktop/RightNav.tsx:102
 #: src/view/shell/desktop/RightNav.tsx:103
-#: src/view/shell/Drawer.tsx:324
+#: src/view/shell/Drawer.tsx:340
 msgid "Feedback"
 msgstr "Feedbacka"
 
@@ -3165,14 +3252,14 @@ msgctxt "toast"
 msgid "Feedback sent!"
 msgstr "Feedbacka bidalita!"
 
-#: src/Navigation.tsx:436
+#: src/Navigation.tsx:445
 #: src/screens/Search/SearchResults.tsx:68
 #: src/screens/StarterPack/StarterPackScreen.tsx:185
 #: src/view/screens/Feeds.tsx:508
 #: src/view/screens/Profile.tsx:227
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/shell/desktop/LeftNav.tsx:655
-#: src/view/shell/Drawer.tsx:486
+#: src/view/shell/Drawer.tsx:502
 msgid "Feeds"
 msgstr "Feedak"
 
@@ -3258,10 +3345,10 @@ msgid "Flexible"
 msgstr "Malgua"
 
 #. User is not following this account, click to follow
-#: src/components/ProfileCard.tsx:372
-#: src/components/ProfileHoverCard/index.web.tsx:449
-#: src/components/ProfileHoverCard/index.web.tsx:460
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:234
+#: src/components/ProfileCard.tsx:400
+#: src/components/ProfileHoverCard/index.web.tsx:456
+#: src/components/ProfileHoverCard/index.web.tsx:467
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:236
 #: src/screens/VideoFeed/index.tsx:829
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:131
 msgid "Follow"
@@ -3272,7 +3359,7 @@ msgctxt "action"
 msgid "Follow"
 msgstr "Jarraitu"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:218
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:221
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:113
 msgid "Follow {0}"
 msgstr "Jarraitu {0}"
@@ -3294,8 +3381,8 @@ msgstr "Jarraitu 10 kontu"
 msgid "Follow 7 accounts"
 msgstr "Jarraitu 7 kontu"
 
-#: src/view/com/profile/ProfileMenu.tsx:252
-#: src/view/com/profile/ProfileMenu.tsx:263
+#: src/view/com/profile/ProfileMenu.tsx:265
+#: src/view/com/profile/ProfileMenu.tsx:276
 msgid "Follow account"
 msgstr "Jarraitu kontua"
 
@@ -3304,7 +3391,7 @@ msgstr "Jarraitu kontua"
 msgid "Follow all"
 msgstr "Jarraitu denak"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:232
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:234
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:129
 msgid "Follow Back"
 msgstr "Jarraitu Bueltan"
@@ -3330,7 +3417,7 @@ msgstr "Jarraitua <0>{0}</0>-gatik eta <1>{1}</1>-gatik"
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr "Jarraitua <0>{0}</0>-gatik, <1>{1}</1>-gatik eta {2, plural, one {#-gatik} other {#-gatik}}"
 
-#: src/Navigation.tsx:205
+#: src/Navigation.tsx:214
 msgid "Followers of @{0} that you know"
 msgstr "Ezagutzen dituzun @{0}-ren jarraitzaileak"
 
@@ -3340,10 +3427,10 @@ msgid "Followers you know"
 msgstr "Ezagutzen dituzun jarraitzaileak"
 
 #. User is following this account, click to unfollow
-#: src/components/ProfileCard.tsx:366
-#: src/components/ProfileHoverCard/index.web.tsx:448
-#: src/components/ProfileHoverCard/index.web.tsx:459
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
+#: src/components/ProfileCard.tsx:394
+#: src/components/ProfileHoverCard/index.web.tsx:455
+#: src/components/ProfileHoverCard/index.web.tsx:466
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:232
 #: src/screens/VideoFeed/index.tsx:827
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:134
 #: src/view/screens/Feeds.tsx:599
@@ -3351,8 +3438,8 @@ msgstr "Ezagutzen dituzun jarraitzaileak"
 msgid "Following"
 msgstr "Jarraitzen"
 
-#: src/components/ProfileCard.tsx:329
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
+#: src/components/ProfileCard.tsx:357
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:101
 msgid "Following {0}"
 msgstr "Jarraitzen {0}"
 
@@ -3369,7 +3456,7 @@ msgstr "Jarraitzen {name}"
 msgid "Following feed preferences"
 msgstr "Jarraitzen dituzun feeden hobespenak"
 
-#: src/Navigation.tsx:322
+#: src/Navigation.tsx:331
 #: src/screens/Settings/FollowingFeedPreferences.tsx:53
 msgid "Following Feed Preferences"
 msgstr "Jarraitzen dituzun Feeden Hobespenak"
@@ -3450,7 +3537,7 @@ msgstr "Galeria"
 msgid "Generate a starter pack"
 msgstr "Abio multzo bat sortu"
 
-#: src/view/shell/Drawer.tsx:328
+#: src/view/shell/Drawer.tsx:344
 msgid "Get help"
 msgstr "Laguntza"
 
@@ -3486,7 +3573,7 @@ msgstr "Legearen edo zerbitzu-baldintzen urraketa nabarmenak"
 #: src/screens/VideoFeed/index.tsx:1112
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
-#: src/view/screens/ProfileList.tsx:1030
+#: src/view/screens/ProfileList.tsx:1038
 msgid "Go back"
 msgstr "Itzuli"
 
@@ -3497,7 +3584,7 @@ msgstr "Itzuli"
 #: src/screens/Profile/ProfileFeed/index.tsx:94
 #: src/screens/StarterPack/StarterPackScreen.tsx:757
 #: src/view/screens/NotFound.tsx:56
-#: src/view/screens/ProfileList.tsx:1035
+#: src/view/screens/ProfileList.tsx:1043
 msgid "Go Back"
 msgstr "Itzuli"
 
@@ -3518,7 +3605,11 @@ msgstr "Joan hasierara"
 msgid "Go Home"
 msgstr "Joan Hasierara"
 
-#: src/screens/Messages/components/ChatListItem.tsx:355
+#: src/view/com/notifications/NotificationFeedItem.tsx:193
+msgid "Go to {firstAuthorName}'s profile"
+msgstr "Joan {firstAuthorName}-ren profilera"
+
+#: src/screens/Messages/components/ChatListItem.tsx:360
 msgid "Go to conversation with {0}"
 msgstr "Joan {0}rekin elkarrizketara"
 
@@ -3552,16 +3643,16 @@ msgstr "Bide erdia!"
 msgid "Handle"
 msgstr "Handle-a"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:572
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:591
 msgid "Handle already taken. Please try a different one."
 msgstr "Handle-a dagoeneko hartua. Mesedez, saiatu beste bat."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:189
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:325
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:195
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:344
 msgid "Handle changed!"
 msgstr "Handle aldatua!"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:576
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:595
 msgid "Handle too long. Please try a shorter one."
 msgstr "Handle luzeegia. Mesedez, saiatu laburrago batekin."
 
@@ -3574,7 +3665,7 @@ msgstr "Haptikoak"
 msgid "Harassment, trolling, or intolerance"
 msgstr "Jazarpena, troleoa edo intolerantzia"
 
-#: src/Navigation.tsx:406
+#: src/Navigation.tsx:415
 msgid "Hashtag"
 msgstr "Traola"
 
@@ -3586,11 +3677,11 @@ msgstr "{tag} traola"
 msgid "Having trouble?"
 msgstr "Arazoak dituzu?"
 
-#: src/screens/Settings/Settings.tsx:207
-#: src/screens/Settings/Settings.tsx:211
+#: src/screens/Settings/Settings.tsx:215
+#: src/screens/Settings/Settings.tsx:219
 #: src/view/shell/desktop/RightNav.tsx:120
 #: src/view/shell/desktop/RightNav.tsx:121
-#: src/view/shell/Drawer.tsx:337
+#: src/view/shell/Drawer.tsx:353
 msgid "Help"
 msgstr "Laguntza"
 
@@ -3629,7 +3720,7 @@ msgstr "Ezkutuko zerrenda"
 msgid "Hide"
 msgstr "Ezkutatu"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:605
+#: src/view/com/notifications/NotificationFeedItem.tsx:694
 msgctxt "action"
 msgid "Hide"
 msgstr "Ezkutatu"
@@ -3680,9 +3771,14 @@ msgstr "Joera-gaiak ezkutatu?"
 msgid "Hide trending videos?"
 msgstr "Joera-bideoak ezkutatu?"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:596
+#: src/view/com/notifications/NotificationFeedItem.tsx:685
 msgid "Hide user list"
 msgstr "Ezkutatu erabiltzaile zerrenda"
+
+#: src/screens/Moderation/VerificationSettings.tsx:81
+#: src/screens/Moderation/VerificationSettings.tsx:90
+msgid "Hide verification badges"
+msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:151
 #: src/components/moderation/PostHider.tsx:79
@@ -3709,7 +3805,7 @@ msgstr "Mmm, feed zerbitzariak erantzun txarra eman du. Mesedez, jakinarazi feed
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr "Mmm, arazoak ditugu feed hau aurkitzeko. Baliteke ezabatu izana."
 
-#: src/screens/Moderation/index.tsx:54
+#: src/screens/Moderation/index.tsx:58
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
 msgstr "Mmmmm, badirudi arazoak ditugula datu hauek kargatzeko. Ikus behean xehetasun gehiagorako. Arazo honek jarraitzen badu, jar zaitez gurekin harremanetan."
 
@@ -3721,15 +3817,15 @@ msgstr "Mmmmm, ezin izan dugu kargatu moderazio-zerbitzu hori."
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "Eutsi! Pixkanaka bideorako sarbidea ematen ari gara, eta ilaran zain zaude oraindik. Begiratu berriro laster!"
 
-#: src/Navigation.tsx:635
-#: src/Navigation.tsx:655
+#: src/Navigation.tsx:644
+#: src/Navigation.tsx:664
 #: src/view/shell/bottom-bar/BottomBar.tsx:162
 #: src/view/shell/desktop/LeftNav.tsx:599
-#: src/view/shell/Drawer.tsx:396
+#: src/view/shell/Drawer.tsx:412
 msgid "Home"
 msgstr "Hasiera"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:398
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:417
 msgid "Host:"
 msgstr "Hostalaria:"
 
@@ -3768,8 +3864,8 @@ msgstr "Kode bat daukat"
 msgid "I have a confirmation code"
 msgstr "Baieztapen kode bat daukat"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:261
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:267
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:280
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:286
 msgid "I have my own domain"
 msgstr "Nire domeinua daukat"
 
@@ -3786,11 +3882,11 @@ msgstr "Autazko testua luzea bada, autazko testuaren hedapen egoera aldatzen du"
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "Zure herrialdeko legeen arabera oraindik heldua ez bazara, zure gurasoek edo legezko tutoreek Baldintza hauek irakurri beharko dituzte zure izenean."
 
-#: src/view/screens/ProfileList.tsx:757
+#: src/view/screens/ProfileList.tsx:765
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "Zerrenda hau ezabatzen baduzu, ezin izango duzu berreskuratu."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:248
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:267
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
 msgstr "Zure domeinua baduzu, hori erabil dezakezu handle gisa. Honek zure nortasuna egiaztatzeko aukera ematen dizu. <0>Lortu informazio gehiago hemen.</0>"
 
@@ -3818,6 +3914,15 @@ msgstr "Legez kanpokoa eta Premiazkoa"
 #: src/view/com/util/images/Gallery.tsx:71
 msgid "Image"
 msgstr "Irudia"
+
+#: src/screens/Settings/AboutSettings.tsx:61
+msgid "Image cache cleared"
+msgstr "Irudien cachea garbituta"
+
+#. Android-only toast message which includes amount of space freed using localized number formatting
+#: src/screens/Settings/AboutSettings.tsx:47
+msgid "Image cache cleared, freed {0}"
+msgstr "Irudien cachea garbituta, {0} askatuta"
 
 #: src/components/StarterPack/ShareDialog.tsx:76
 msgid "Image saved to your camera roll!"
@@ -3871,7 +3976,7 @@ msgstr "Sartu posta elektronikoz bidali zaizun kodea"
 msgid "Interaction limited"
 msgstr "Elkarrekintza mugatua"
 
-#: src/screens/Moderation/index.tsx:209
+#: src/screens/Moderation/index.tsx:213
 msgid "Interaction settings"
 msgstr "Interakzio ezarpenak"
 
@@ -3880,11 +3985,11 @@ msgstr "Interakzio ezarpenak"
 msgid "Invalid 2FA confirmation code."
 msgstr "2FA baieztapen kode baliogabea."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:578
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:597
 msgid "Invalid handle. Please try a different one."
 msgstr "Handle baliogabea. Mesedez, saiatu beste bat."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:288
+#: src/view/com/post-thread/PostThreadItem.tsx:291
 msgid "Invalid or unsupported post record"
 msgstr "Post erregistro baliogabea edo onartzen ez duena"
 
@@ -3979,7 +4084,7 @@ msgstr "Etiketak"
 msgid "Labels added"
 msgstr "Etiketak gehitu dira"
 
-#: src/screens/Profile/Sections/Labels.tsx:163
+#: src/screens/Profile/Sections/Labels.tsx:160
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr "Etiketak erabiltzaileei eta edukiei buruzko oharrak dira. Ezkutatzeko, abisatzeko eta sarea sailkatzeko erabil daitezke."
 
@@ -3995,13 +4100,13 @@ msgstr "Etiketak zure edukian"
 msgid "Language selection"
 msgstr "Hizkuntza hautatzea"
 
-#: src/Navigation.tsx:178
+#: src/Navigation.tsx:187
 msgid "Language Settings"
 msgstr "Hizkuntza Ezarpenak"
 
 #: src/screens/Settings/LanguageSettings.tsx:71
-#: src/screens/Settings/Settings.tsx:199
-#: src/screens/Settings/Settings.tsx:202
+#: src/screens/Settings/Settings.tsx:207
+#: src/screens/Settings/Settings.tsx:210
 msgid "Languages"
 msgstr "Hizkuntzak"
 
@@ -4015,9 +4120,18 @@ msgstr "Handiagoa"
 msgid "Latest"
 msgstr "Azkena"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:252
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:271
 msgid "learn more"
 msgstr "gehiago ikasi"
+
+#: src/components/verification/VerificationsDialog.tsx:163
+#: src/components/verification/VerifierDialog.tsx:132
+#: src/screens/Moderation/VerificationSettings.tsx:47
+#: src/screens/Profile/Header/EditProfileDialog.tsx:360
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:212
+#: src/view/com/modals/EditProfile.tsx:208
+msgid "Learn more"
+msgstr ""
 
 #: src/components/moderation/ScreenHider.tsx:140
 msgid "Learn More"
@@ -4043,6 +4157,11 @@ msgstr "Gehiago ikasi eduki honi aplikatutako moderazioari buruz."
 #: src/components/moderation/ScreenHider.tsx:127
 msgid "Learn more about this warning"
 msgstr "Gehiago ikasi abisu honi buruz"
+
+#: src/components/verification/VerificationsDialog.tsx:152
+#: src/components/verification/VerifierDialog.tsx:121
+msgid "Learn more about verification on Bluesky"
+msgstr ""
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:99
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:102
@@ -4132,9 +4251,8 @@ msgstr "Feed hau gogoko dut"
 msgid "Like this labeler"
 msgstr "Etiketatzaile hau gogoko dut"
 
-#: src/components/LikesDialog.tsx:85
-#: src/Navigation.tsx:256
-#: src/Navigation.tsx:261
+#: src/Navigation.tsx:265
+#: src/Navigation.tsx:270
 msgid "Liked by"
 msgstr "Gogoko du"
 
@@ -4160,7 +4278,7 @@ msgstr "Gogoko du {likeCount, plural, one {# erabiltzaileak} other {# erabiltzai
 msgid "Likes"
 msgstr "Gogoko"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:223
+#: src/view/com/post-thread/PostThreadItem.tsx:226
 msgid "Likes on this post"
 msgstr "Gogoko post honetan"
 
@@ -4169,7 +4287,7 @@ msgstr "Gogoko post honetan"
 msgid "Linear"
 msgstr "Lineala"
 
-#: src/Navigation.tsx:211
+#: src/Navigation.tsx:220
 msgid "List"
 msgstr "Zerrenda"
 
@@ -4177,7 +4295,7 @@ msgstr "Zerrenda"
 msgid "List Avatar"
 msgstr "Zerrenda Abatarra"
 
-#: src/view/screens/ProfileList.tsx:430
+#: src/view/screens/ProfileList.tsx:438
 msgctxt "toast"
 msgid "List blocked"
 msgstr "Zerrenda blokeatuta"
@@ -4195,7 +4313,7 @@ msgstr "<0/>-ren zerrenda"
 msgid "List by you"
 msgstr "Zure zerrenda"
 
-#: src/view/screens/ProfileList.tsx:477
+#: src/view/screens/ProfileList.tsx:485
 msgctxt "toast"
 msgid "List deleted"
 msgstr "Zerrenda ezabatuta"
@@ -4204,11 +4322,11 @@ msgstr "Zerrenda ezabatuta"
 msgid "List has been hidden"
 msgstr "Zerrenda ezkutatu egin da"
 
-#: src/view/screens/ProfileList.tsx:172
+#: src/view/screens/ProfileList.tsx:176
 msgid "List Hidden"
 msgstr "Zerrenda Ezkutua"
 
-#: src/view/screens/ProfileList.tsx:394
+#: src/view/screens/ProfileList.tsx:402
 msgctxt "toast"
 msgid "List muted"
 msgstr "Zerrenda mutututa"
@@ -4217,22 +4335,22 @@ msgstr "Zerrenda mutututa"
 msgid "List Name"
 msgstr "Zerrenda Izena"
 
-#: src/view/screens/ProfileList.tsx:448
+#: src/view/screens/ProfileList.tsx:456
 msgctxt "toast"
 msgid "List unblocked"
 msgstr "Zerrenda desblokeatuta"
 
-#: src/view/screens/ProfileList.tsx:412
+#: src/view/screens/ProfileList.tsx:420
 msgctxt "toast"
 msgid "List unmuted"
 msgstr "Zerrenda desmutututa"
 
-#: src/Navigation.tsx:140
+#: src/Navigation.tsx:141
 #: src/view/screens/Lists.tsx:62
 #: src/view/screens/Profile.tsx:221
 #: src/view/screens/Profile.tsx:229
 #: src/view/shell/desktop/LeftNav.tsx:673
-#: src/view/shell/Drawer.tsx:501
+#: src/view/shell/Drawer.tsx:517
 msgid "Lists"
 msgstr "Zerrendak"
 
@@ -4255,7 +4373,7 @@ msgstr "Kargatu jakinarazpen berriak"
 #: src/screens/Profile/ProfileFeed/index.tsx:221
 #: src/screens/Profile/Sections/Feed.tsx:98
 #: src/view/com/feeds/FeedPage.tsx:155
-#: src/view/screens/ProfileList.tsx:870
+#: src/view/screens/ProfileList.tsx:878
 msgid "Load new posts"
 msgstr "Kargatu post berriak"
 
@@ -4263,7 +4381,7 @@ msgstr "Kargatu post berriak"
 msgid "Loading..."
 msgstr "Kargatzen..."
 
-#: src/Navigation.tsx:281
+#: src/Navigation.tsx:290
 msgid "Log"
 msgstr "Erregistroa"
 
@@ -4276,7 +4394,7 @@ msgid "Logo by @sawaratsuki.bsky.social"
 msgstr "@sawaratsuki.bsky.social-ren logotipoa"
 
 #: src/view/shell/desktop/RightNav.tsx:127
-#: src/view/shell/Drawer.tsx:639
+#: src/view/shell/Drawer.tsx:655
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr "<0>@sawaratsuki.bsky.social</0>-ren logotipoa"
 
@@ -4312,6 +4430,10 @@ msgstr "Ziurtatu hori dela joan nahi duzun tokia!"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:63
 msgid "Manage saved feeds"
 msgstr "Kudeatu gordetako feedak"
+
+#: src/screens/Moderation/index.tsx:283
+msgid "Manage verification settings"
+msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:108
 msgid "Manage your muted words and tags"
@@ -4366,7 +4488,7 @@ msgctxt "toast"
 msgid "Message deleted"
 msgstr "Mezua ezabatuta"
 
-#: src/screens/Messages/components/ChatListItem.tsx:192
+#: src/screens/Messages/components/ChatListItem.tsx:197
 msgid "Message deleted"
 msgstr "Mezua ezabatuta"
 
@@ -4391,7 +4513,7 @@ msgstr "Mezua luzeegia da"
 msgid "Message options"
 msgstr "Mezuaren aukerak"
 
-#: src/Navigation.tsx:650
+#: src/Navigation.tsx:659
 msgid "Messages"
 msgstr "Mezuak"
 
@@ -4410,10 +4532,10 @@ msgstr "Kontu Engainagarria"
 msgid "Misleading Post"
 msgstr "Post engainagarria"
 
-#: src/Navigation.tsx:145
-#: src/screens/Moderation/index.tsx:89
-#: src/screens/Settings/Settings.tsx:167
-#: src/screens/Settings/Settings.tsx:170
+#: src/Navigation.tsx:146
+#: src/screens/Moderation/index.tsx:93
+#: src/screens/Settings/Settings.tsx:175
+#: src/screens/Settings/Settings.tsx:178
 msgid "Moderation"
 msgstr "Moderazioa"
 
@@ -4445,11 +4567,11 @@ msgctxt "toast"
 msgid "Moderation list updated"
 msgstr "Moderazio-zerrenda eguneratuta"
 
-#: src/screens/Moderation/index.tsx:239
+#: src/screens/Moderation/index.tsx:243
 msgid "Moderation lists"
 msgstr "Moderazio zerrendak"
 
-#: src/Navigation.tsx:150
+#: src/Navigation.tsx:151
 #: src/view/screens/ModerationModlists.tsx:62
 msgid "Moderation Lists"
 msgstr "Moderazio Zerrendak"
@@ -4458,11 +4580,11 @@ msgstr "Moderazio Zerrendak"
 msgid "moderation settings"
 msgstr "moderazio ezarpenak"
 
-#: src/Navigation.tsx:271
+#: src/Navigation.tsx:280
 msgid "Moderation states"
 msgstr "Moderazio-egoerak"
 
-#: src/screens/Moderation/index.tsx:193
+#: src/screens/Moderation/index.tsx:197
 msgid "Moderation tools"
 msgstr "Moderazio tresnak"
 
@@ -4471,7 +4593,7 @@ msgstr "Moderazio tresnak"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "Moderatzaileak edukiari buruzko abisu orokor bat ezartzea aukeratu du."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:645
+#: src/view/com/post-thread/PostThreadItem.tsx:665
 msgid "More"
 msgstr "Gehiago"
 
@@ -4480,9 +4602,9 @@ msgstr "Gehiago"
 msgid "More feeds"
 msgstr "Feed gehiago"
 
-#: src/view/com/profile/ProfileMenu.tsx:194
-#: src/view/com/profile/ProfileMenu.tsx:200
-#: src/view/screens/ProfileList.tsx:742
+#: src/view/com/profile/ProfileMenu.tsx:207
+#: src/view/com/profile/ProfileMenu.tsx:213
+#: src/view/screens/ProfileList.tsx:750
 msgid "More options"
 msgstr "Aukera gehiago"
 
@@ -4515,14 +4637,14 @@ msgstr "Mututu"
 msgid "Mute {tag}"
 msgstr "Mututu {tag}"
 
-#: src/view/com/profile/ProfileMenu.tsx:289
-#: src/view/com/profile/ProfileMenu.tsx:296
+#: src/view/com/profile/ProfileMenu.tsx:325
+#: src/view/com/profile/ProfileMenu.tsx:332
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:669
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:675
 msgid "Mute account"
 msgstr "Mututu kontua"
 
-#: src/view/screens/ProfileList.tsx:649
+#: src/view/screens/ProfileList.tsx:657
 msgid "Mute accounts"
 msgstr "Mututu kontuak"
 
@@ -4535,11 +4657,11 @@ msgstr "Mututu elkarrizketa"
 msgid "Mute in:"
 msgstr "Mututu:"
 
-#: src/view/screens/ProfileList.tsx:771
+#: src/view/screens/ProfileList.tsx:779
 msgid "Mute list"
 msgstr "Mututu zerrenda"
 
-#: src/view/screens/ProfileList.tsx:766
+#: src/view/screens/ProfileList.tsx:774
 msgid "Mute these accounts?"
 msgstr "Kontu hauek mututu?"
 
@@ -4577,16 +4699,16 @@ msgstr "Mututu haria"
 msgid "Mute words & tags"
 msgstr "Mututu hitzak eta etiketak"
 
-#: src/screens/Moderation/index.tsx:254
+#: src/screens/Moderation/index.tsx:258
 msgid "Muted accounts"
 msgstr "Mutututako kontuak"
 
-#: src/Navigation.tsx:155
-#: src/view/screens/ModerationMutedAccounts.tsx:100
+#: src/Navigation.tsx:156
+#: src/view/screens/ModerationMutedAccounts.tsx:123
 msgid "Muted Accounts"
 msgstr "Mutututako Kontuak"
 
-#: src/view/screens/ModerationMutedAccounts.tsx:112
+#: src/view/screens/ModerationMutedAccounts.tsx:135
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
 msgstr "Mutututako kontuei postak kendu zaizkie zure feedetatik eta jakinarazpenetatik. Mutututakoak guztiz pribatuak dira."
 
@@ -4594,11 +4716,11 @@ msgstr "Mutututako kontuei postak kendu zaizkie zure feedetatik eta jakinarazpen
 msgid "Muted by \"{0}\""
 msgstr "\"{0}\"-k mututua"
 
-#: src/screens/Moderation/index.tsx:224
+#: src/screens/Moderation/index.tsx:228
 msgid "Muted words & tags"
 msgstr "Mutututako hitzak eta etiketak"
 
-#: src/view/screens/ProfileList.tsx:768
+#: src/view/screens/ProfileList.tsx:776
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr "Mututzea pribatua da. Mutututako kontuek zurekin elkarreragin dezakete, baina ez dituzu haien postak ikusiko ezta haien jakinarazpenik jasoko."
 
@@ -4650,7 +4772,7 @@ msgstr "Joan abio multzora"
 msgid "Navigates to the next screen"
 msgstr "Hurrengo pantailara nabigatzen da"
 
-#: src/view/shell/Drawer.tsx:72
+#: src/view/shell/Drawer.tsx:75
 msgid "Navigates to your profile"
 msgstr "Zure profilera nabigatzen du"
 
@@ -4667,7 +4789,7 @@ msgstr "Copyright-urraketa baten berri eman behar al duzu?"
 msgid "Never lose access to your followers or data."
 msgstr "Ez galdu inoiz zure jarraitzaile edo datuetarako sarbidea."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:548
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:567
 msgid "Nevermind, create a handle for me"
 msgstr "Ez dio axola, sortu handle bat niretzako"
 
@@ -4687,9 +4809,13 @@ msgstr "Berria"
 msgid "New chat"
 msgstr "Txat berria"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:202
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:210
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:356
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:63
+msgid "New Feature"
+msgstr ""
+
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:221
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:229
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:375
 msgid "New handle"
 msgstr "Handle berria"
 
@@ -4718,8 +4844,8 @@ msgstr "Pasahitz Berria"
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Notifications.tsx:165
 #: src/view/screens/Profile.tsx:507
-#: src/view/screens/ProfileList.tsx:252
-#: src/view/screens/ProfileList.tsx:285
+#: src/view/screens/ProfileList.tsx:250
+#: src/view/screens/ProfileList.tsx:288
 msgid "New post"
 msgstr "Post berria"
 
@@ -4780,8 +4906,8 @@ msgstr "Hurrengo irudia"
 msgid "No app passwords yet"
 msgstr "Oraindik ez dago aplikazioen pasahitzik"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:378
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:380
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:397
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:399
 msgid "No DNS Panel"
 msgstr "DNS Panelik gabe"
 
@@ -4798,8 +4924,8 @@ msgstr "Ez da feedik aurkitu. Saiatu beste zerbait bilatzen."
 msgid "No likes yet"
 msgstr "Ez dago gogokorik oraindik"
 
-#: src/components/ProfileCard.tsx:351
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:119
+#: src/components/ProfileCard.tsx:379
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:122
 msgid "No longer following {0}"
 msgstr "Jada ez da {0} jarraitzen"
 
@@ -4807,7 +4933,7 @@ msgstr "Jada ez da {0} jarraitzen"
 msgid "No longer than {MAX_SERVICE_HANDLE_LENGTH, plural, other {# characters}}"
 msgstr "Ezin da {MAX_SERVICE_HANDLE_LENGTH, plural, other {# karaktere}} baino luzeagoa izan"
 
-#: src/screens/Messages/components/ChatListItem.tsx:134
+#: src/screens/Messages/components/ChatListItem.tsx:139
 msgid "No messages yet"
 msgstr "Oraindik ez dago mezurik"
 
@@ -4841,7 +4967,7 @@ msgstr "Oraindik ez dago berpostik"
 msgid "No result"
 msgstr "Ez dago emaitzarik"
 
-#: src/components/dms/dialogs/SearchablePeopleList.tsx:204
+#: src/components/dialogs/SearchablePeopleList.tsx:223
 #: src/components/ProgressGuide/FollowDialog.tsx:212
 msgid "No results"
 msgstr "Ez dago emaitzarik"
@@ -4859,9 +4985,8 @@ msgid "No results found for \"{query}\""
 msgstr "Ez da emaitzarik aurkitu \"{query}\"-rentzat"
 
 #: src/screens/Search/SearchResults.tsx:248
-#: src/screens/Search/SearchResults.tsx:286
-#: src/screens/Search/SearchResults.tsx:331
-#: src/view/com/modals/ListAddRemoveUsers.tsx:128
+#: src/screens/Search/SearchResults.tsx:284
+#: src/screens/Search/SearchResults.tsx:329
 msgid "No results found for {query}"
 msgstr "Ez da emaitzarik aurkitu {query}-rentzat"
 
@@ -4883,7 +5008,6 @@ msgid "Nobody"
 msgstr "Inor"
 
 #: src/components/LikedByList.tsx:86
-#: src/components/LikesDialog.tsx:97
 #: src/view/com/post-thread/PostLikedBy.tsx:86
 msgid "Nobody has liked this yet. Maybe you should be the first!"
 msgstr "Inork ez du oraindik hau gogoko. Agian lehena izan beharko zenuke!"
@@ -4908,7 +5032,7 @@ msgstr "Biluztasun ez sexuala"
 msgid "Not followed by anyone you're following"
 msgstr "Ez dio jarraitzen zuk jarraitzen diozun inork"
 
-#: src/Navigation.tsx:135
+#: src/Navigation.tsx:136
 #: src/view/screens/Profile.tsx:122
 msgid "Not Found"
 msgstr "Ez da aurkitu"
@@ -4918,7 +5042,7 @@ msgstr "Ez da aurkitu"
 msgid "Not right now"
 msgstr "Oraintxe ez"
 
-#: src/view/com/profile/ProfileMenu.tsx:406
+#: src/view/com/profile/ProfileMenu.tsx:442
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:791
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:361
 msgid "Note about sharing"
@@ -4936,7 +5060,7 @@ msgstr "Hemen ezer ez"
 msgid "Notification filters"
 msgstr "Jakinarazpen-iragazkiak"
 
-#: src/Navigation.tsx:431
+#: src/Navigation.tsx:440
 #: src/view/screens/Notifications.tsx:134
 msgid "Notification settings"
 msgstr "Jakinarazpen-ezarpenak"
@@ -4953,11 +5077,11 @@ msgstr "Jakinarazpen soinuak"
 msgid "Notification Sounds"
 msgstr "Jakinarazpen Soinuak"
 
-#: src/Navigation.tsx:645
+#: src/Navigation.tsx:654
 #: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:236
 #: src/view/shell/desktop/LeftNav.tsx:636
-#: src/view/shell/Drawer.tsx:449
+#: src/view/shell/Drawer.tsx:465
 msgid "Notifications"
 msgstr "Jakinarazpenak"
 
@@ -5001,7 +5125,7 @@ msgid "OK"
 msgstr "Ados"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/view/com/post-thread/PostThreadItem.tsx:895
+#: src/view/com/post-thread/PostThreadItem.tsx:915
 msgid "Okay"
 msgstr "Ados"
 
@@ -5016,7 +5140,7 @@ msgstr "Erantzun zaharrenak lehenik"
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "<0><1/><2><3/></2></0>-n"
 
-#: src/screens/Settings/Settings.tsx:304
+#: src/screens/Settings/Settings.tsx:346
 msgid "Onboarding reset"
 msgstr "Sartzea berrezarri"
 
@@ -5060,7 +5184,7 @@ msgstr "Arazoren bat izan da!"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:325
 #: src/components/StarterPack/ProfileStarterPacks.tsx:334
 #: src/screens/Settings/AppPasswords.tsx:59
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:104
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:106
 #: src/screens/Settings/NotificationSettings.tsx:54
 #: src/view/screens/Profile.tsx:122
 msgid "Oops!"
@@ -5078,8 +5202,8 @@ msgstr "Ireki {name} profilaren laster-menua"
 msgid "Open avatar creator"
 msgstr "Ireki abatar sortzailea"
 
-#: src/screens/Messages/components/ChatListItem.tsx:363
-#: src/screens/Messages/components/ChatListItem.tsx:364
+#: src/screens/Messages/components/ChatListItem.tsx:368
+#: src/screens/Messages/components/ChatListItem.tsx:369
 msgid "Open conversation options"
 msgstr "Ireki elkarrizketa aukerak"
 
@@ -5113,11 +5237,11 @@ msgstr "Ireki esteka {niceUrl}"
 msgid "Open message options"
 msgstr "Ireki mezuen aukerak"
 
-#: src/screens/Settings/Settings.tsx:330
+#: src/screens/Settings/Settings.tsx:372
 msgid "Open moderation debug page"
 msgstr "Ireki moderazioaren arazketa orria"
 
-#: src/screens/Moderation/index.tsx:220
+#: src/screens/Moderation/index.tsx:224
 msgid "Open muted words and tags settings"
 msgstr "Ireki mutututako hitzen eta etiketen ezarpenak"
 
@@ -5133,12 +5257,12 @@ msgstr "Ireki post aukeren menua"
 msgid "Open starter pack menu"
 msgstr "Ireki abio multzoaren menua"
 
-#: src/screens/Settings/Settings.tsx:323
-#: src/screens/Settings/Settings.tsx:337
+#: src/screens/Settings/Settings.tsx:365
+#: src/screens/Settings/Settings.tsx:379
 msgid "Open storybook page"
 msgstr "Ireki ipuin liburuaren orria"
 
-#: src/screens/Settings/Settings.tsx:316
+#: src/screens/Settings/Settings.tsx:358
 msgid "Open system log"
 msgstr "Ireki sistemaren erregistroa"
 
@@ -5200,7 +5324,7 @@ msgstr "Fluxua irekitzen du lehendik duzun Bluesky kontuan saioa hasteko"
 msgid "Opens GIF select dialog"
 msgstr "GIF hautatzeko elkarrizketa-koadroa irekitzen du"
 
-#: src/screens/Settings/Settings.tsx:208
+#: src/screens/Settings/Settings.tsx:216
 msgid "Opens helpdesk in browser"
 msgstr "Laguntza-zerbitzua arakatzailean irekitzen du"
 
@@ -5216,7 +5340,7 @@ msgstr "Pasahitza berrezartzeko formularioa irekitzen du"
 msgid "Opens the linked website"
 msgstr "Estekatutako webgunea irekitzen du"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:683
+#: src/view/com/notifications/NotificationFeedItem.tsx:788
 #: src/view/com/util/UserAvatar.tsx:465
 msgid "Opens this profile"
 msgstr "Profil hau irekitzen du"
@@ -5268,7 +5392,7 @@ msgstr "OTA egoera: Ez dago bat ere eskuragarri"
 msgid "Other"
 msgstr "Beste bat"
 
-#: src/components/AccountList.tsx:83
+#: src/components/AccountList.tsx:87
 msgid "Other account"
 msgstr "Beste kontu bat"
 
@@ -5330,15 +5454,15 @@ msgstr "Pausatu bideoa"
 
 #: src/screens/Search/SearchResults.tsx:62
 #: src/screens/StarterPack/StarterPackScreen.tsx:184
-#: src/view/screens/ProfileList.tsx:166
+#: src/view/screens/ProfileList.tsx:170
 msgid "People"
 msgstr "Jendea"
 
-#: src/Navigation.tsx:198
+#: src/Navigation.tsx:207
 msgid "People followed by @{0}"
 msgstr "@{0}-k jarraitzen duen jendea"
 
-#: src/Navigation.tsx:191
+#: src/Navigation.tsx:200
 msgid "People following @{0}"
 msgstr "@{0}-ri jarraitzen dion jendea"
 
@@ -5376,7 +5500,7 @@ msgstr "Ainguratu feeda"
 msgid "Pin Feed"
 msgstr "Ainguratu Feeda"
 
-#: src/view/screens/ProfileList.tsx:706
+#: src/view/screens/ProfileList.tsx:714
 msgid "Pin to home"
 msgstr "Ainguratu hasierara"
 
@@ -5402,7 +5526,7 @@ msgstr "{0} Hasierara ainguratua"
 msgid "Pinned Feeds"
 msgstr "Ainguratutako Feedak"
 
-#: src/view/screens/ProfileList.tsx:353
+#: src/view/screens/ProfileList.tsx:361
 msgid "Pinned to your feeds"
 msgstr "Ainguratua zure feedetara"
 
@@ -5553,14 +5677,14 @@ msgctxt "action"
 msgid "Post All"
 msgstr "Posteatu Dena"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:215
+#: src/view/com/post-thread/PostThreadItem.tsx:218
 msgid "Post by {0}"
 msgstr "{0}-ren posta"
 
-#: src/Navigation.tsx:224
-#: src/Navigation.tsx:231
-#: src/Navigation.tsx:238
-#: src/Navigation.tsx:245
+#: src/Navigation.tsx:233
+#: src/Navigation.tsx:240
+#: src/Navigation.tsx:247
+#: src/Navigation.tsx:254
 msgid "Post by @{0}"
 msgstr "@{0}-ren posta"
 
@@ -5595,7 +5719,7 @@ msgstr "Zuk Ezkututako Posta"
 msgid "Post interaction settings"
 msgstr "Postaren elkarrekintza-ezarpenak"
 
-#: src/Navigation.tsx:166
+#: src/Navigation.tsx:167
 #: src/screens/ModerationInteractionSettings/index.tsx:34
 msgid "Post Interaction Settings"
 msgstr "Postaren Interakzio-Ezarpenak"
@@ -5625,7 +5749,7 @@ msgstr "Postaren aingura kendu da"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:186
 #: src/view/screens/Profile.tsx:222
-#: src/view/screens/ProfileList.tsx:166
+#: src/view/screens/ProfileList.tsx:170
 msgid "Posts"
 msgstr "Postak"
 
@@ -5683,22 +5807,22 @@ msgstr "Lehentasunezko jakinarazpenak"
 msgid "Privacy"
 msgstr "Pribatutasuna"
 
-#: src/screens/Settings/Settings.tsx:161
-#: src/screens/Settings/Settings.tsx:164
+#: src/screens/Settings/Settings.tsx:169
+#: src/screens/Settings/Settings.tsx:172
 msgid "Privacy and security"
 msgstr "Pribatutasuna eta segurtasuna"
 
-#: src/Navigation.tsx:367
+#: src/Navigation.tsx:376
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:36
 msgid "Privacy and Security"
 msgstr "Pribatutasuna eta Segurtasuna"
 
-#: src/Navigation.tsx:291
-#: src/screens/Settings/AboutSettings.tsx:51
-#: src/screens/Settings/AboutSettings.tsx:54
+#: src/Navigation.tsx:300
+#: src/screens/Settings/AboutSettings.tsx:89
+#: src/screens/Settings/AboutSettings.tsx:92
 #: src/view/screens/PrivacyPolicy.tsx:31
-#: src/view/shell/Drawer.tsx:634
-#: src/view/shell/Drawer.tsx:635
+#: src/view/shell/Drawer.tsx:650
+#: src/view/shell/Drawer.tsx:651
 msgid "Privacy Policy"
 msgstr "Pribatutasun Politika"
 
@@ -5711,20 +5835,20 @@ msgstr "Bideoa prozesatzen..."
 msgid "Processing..."
 msgstr "Prozesatzen..."
 
-#: src/view/screens/DebugMod.tsx:920
+#: src/view/screens/DebugMod.tsx:926
 #: src/view/screens/Profile.tsx:361
 msgid "profile"
 msgstr "profila"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:286
 #: src/view/shell/desktop/LeftNav.tsx:691
-#: src/view/shell/Drawer.tsx:71
-#: src/view/shell/Drawer.tsx:526
+#: src/view/shell/Drawer.tsx:74
+#: src/view/shell/Drawer.tsx:542
 msgid "Profile"
 msgstr "Profila"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:191
-#: src/view/com/modals/EditProfile.tsx:124
+#: src/screens/Profile/Header/EditProfileDialog.tsx:198
+#: src/view/com/modals/EditProfile.tsx:127
 msgctxt "toast"
 msgid "Profile updated"
 msgstr "Profila eguneratu da"
@@ -5803,7 +5927,7 @@ msgstr "Aipamen ezarpenak"
 msgid "Quotes"
 msgstr "Aipamenak"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:249
+#: src/view/com/post-thread/PostThreadItem.tsx:252
 msgid "Quotes of this post"
 msgstr "Post honen aipamenak"
 
@@ -5814,7 +5938,7 @@ msgstr "Post honen aipamenak"
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "Ausazko (\"Poster-en erruleta\" bezala ezagutua)"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:581
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:600
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr "Saiakera muga gainditu da. Gehiegitan saiatu zara handle-a aldatzen denbora laburrean. Mesedez, itxaron minutu bat berriro saiatu aurretik."
 
@@ -5830,6 +5954,11 @@ msgstr "Erreakzionatu {emoji}-rekin"
 #: src/screens/Deactivated.tsx:141
 msgid "Reactivate your account"
 msgstr "Berriz aktibatu zure kontua"
+
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:158
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:169
+msgid "Read blog post"
+msgstr ""
 
 #: src/screens/VideoFeed/index.tsx:942
 msgid "Read less"
@@ -5862,7 +5991,7 @@ msgstr "Apelazio arrazoia"
 msgid "Reason:"
 msgstr "Arrazoia:"
 
-#: src/screens/Search/components/SearchHistory.tsx:44
+#: src/screens/Search/components/SearchHistory.tsx:49
 msgid "Recent Searches"
 msgstr "Azken Bilaketak"
 
@@ -5888,13 +6017,13 @@ msgstr "Baztertu txateatzeko eskaera"
 msgid "Reload conversations"
 msgstr "Berriz kargatu elkarrizketak"
 
+#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:171
 #: src/components/dialogs/MutedWords.tsx:438
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:102
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:109
-#: src/screens/Settings/Settings.tsx:468
+#: src/screens/Settings/Settings.tsx:510
 #: src/view/com/feeds/FeedSourceCard.tsx:322
-#: src/view/com/modals/ListAddRemoveUsers.tsx:269
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 #: src/view/com/posts/PostFeedErrorMessage.tsx:213
 msgid "Remove"
@@ -5904,12 +6033,12 @@ msgstr "Kendu"
 msgid "Remove {displayName} from starter pack"
 msgstr "Kendu {displayName} abio multzotik"
 
-#: src/screens/Search/components/SearchHistory.tsx:120
+#: src/screens/Search/components/SearchHistory.tsx:97
 msgid "Remove {historyItem}"
 msgstr "Kendu {historyItem}"
 
-#: src/screens/Settings/Settings.tsx:447
-#: src/screens/Settings/Settings.tsx:450
+#: src/screens/Settings/Settings.tsx:489
+#: src/screens/Settings/Settings.tsx:492
 msgid "Remove account"
 msgstr "Kendu kontua"
 
@@ -5945,12 +6074,12 @@ msgstr "Feeda kendu?"
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:320
 #: src/view/com/feeds/FeedSourceCard.tsx:190
 #: src/view/com/feeds/FeedSourceCard.tsx:268
-#: src/view/screens/ProfileList.tsx:520
+#: src/view/screens/ProfileList.tsx:528
 #: src/view/screens/SavedFeeds.tsx:342
 msgid "Remove from my feeds"
 msgstr "Kendu nire feedetatik"
 
-#: src/screens/Settings/Settings.tsx:460
+#: src/screens/Settings/Settings.tsx:502
 msgid "Remove from quick access?"
 msgstr "Sarrera azkarretik kendu?"
 
@@ -5972,7 +6101,7 @@ msgstr "Kendu irudia"
 msgid "Remove mute word from your list"
 msgstr "Kendu hitz mututua zure zerrendatik"
 
-#: src/screens/Search/components/SearchHistory.tsx:93
+#: src/screens/Search/components/SearchHistory.tsx:178
 msgid "Remove profile"
 msgstr "Kendu profila"
 
@@ -5993,6 +6122,21 @@ msgstr "Kendu azpitituluen fitxategia"
 msgid "Remove this feed from your saved feeds"
 msgstr "Kendu feed hau gordetako zure feedetatik"
 
+#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:157
+msgid "Remove user from list"
+msgstr "Kendu erabiltzailea zerrendatik"
+
+#: src/components/verification/VerificationRemovePrompt.tsx:46
+#: src/components/verification/VerificationsDialog.tsx:227
+#: src/view/com/profile/ProfileMenu.tsx:298
+#: src/view/com/profile/ProfileMenu.tsx:301
+msgid "Remove verification"
+msgstr ""
+
+#: src/components/verification/VerificationRemovePrompt.tsx:44
+msgid "Remove your verification for this account?"
+msgstr ""
+
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:110
 msgid "Removed by author"
 msgstr "Egileak kenduta"
@@ -6001,7 +6145,7 @@ msgstr "Egileak kenduta"
 msgid "Removed by you"
 msgstr "Zuk kenduta"
 
-#: src/view/com/modals/ListAddRemoveUsers.tsx:200
+#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:117
 #: src/view/com/modals/UserAddRemoveLists.tsx:170
 msgid "Removed from list"
 msgstr "Zerrendatik kenduta"
@@ -6016,11 +6160,15 @@ msgstr "Gordetako feedetatik kenduta"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:122
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
-#: src/view/screens/ProfileList.tsx:384
+#: src/view/screens/ProfileList.tsx:392
 msgid "Removed from your feeds"
 msgstr "Zure feedetatik kenduta"
 
-#: src/screens/Search/components/SearchHistory.tsx:95
+#: src/components/verification/VerificationRemovePrompt.tsx:32
+msgid "Removed verification"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:179
 msgid "Removes profile from search history"
 msgstr "Bilaketa historiatik profila kentzen du"
 
@@ -6113,8 +6261,8 @@ msgstr "Erantzuna behar bezala ezkutatu da"
 msgid "Report"
 msgstr "Salatu"
 
-#: src/view/com/profile/ProfileMenu.tsx:329
-#: src/view/com/profile/ProfileMenu.tsx:332
+#: src/view/com/profile/ProfileMenu.tsx:365
+#: src/view/com/profile/ProfileMenu.tsx:368
 msgid "Report account"
 msgstr "Salatu kontua"
 
@@ -6137,7 +6285,7 @@ msgstr "Salaketaren elkarrizketa-koadroa"
 msgid "Report feed"
 msgstr "Salatu feeda"
 
-#: src/view/screens/ProfileList.tsx:562
+#: src/view/screens/ProfileList.tsx:570
 msgid "Report list"
 msgstr "Salatu zerrenda"
 
@@ -6234,7 +6382,7 @@ msgstr "<0><1/></0>-k berpostatua"
 msgid "Reposted by you"
 msgstr "Zuk berpostatua"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:228
+#: src/view/com/post-thread/PostThreadItem.tsx:231
 msgid "Reposts of this post"
 msgstr "Berpostatu post hau"
 
@@ -6288,8 +6436,8 @@ msgstr "Berrezarri kodea"
 msgid "Reset Code"
 msgstr "Berrezarri Kodea"
 
-#: src/screens/Settings/Settings.tsx:344
-#: src/screens/Settings/Settings.tsx:346
+#: src/screens/Settings/Settings.tsx:386
+#: src/screens/Settings/Settings.tsx:388
 msgid "Reset onboarding state"
 msgstr "Berrezarri sartze-egoera"
 
@@ -6341,10 +6489,10 @@ msgid "Returns to home page"
 msgstr "Hasierako orrira itzultzen da"
 
 #: src/screens/Profile/ProfileFeed/index.tsx:90
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:540
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:559
 #: src/screens/VideoFeed/index.tsx:1109
 #: src/view/screens/NotFound.tsx:60
-#: src/view/screens/ProfileList.tsx:1031
+#: src/view/screens/ProfileList.tsx:1039
 msgid "Returns to previous page"
 msgstr "Aurreko orrialdera itzultzen da"
 
@@ -6356,9 +6504,9 @@ msgstr "Aurreko urratsera itzultzen da"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:479
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:485
 #: src/components/StarterPack/QrCodeDialog.tsx:191
-#: src/screens/Profile/Header/EditProfileDialog.tsx:238
-#: src/screens/Profile/Header/EditProfileDialog.tsx:252
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:243
+#: src/screens/Profile/Header/EditProfileDialog.tsx:245
+#: src/screens/Profile/Header/EditProfileDialog.tsx:259
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:262
 #: src/view/com/composer/GifAltText.tsx:193
 #: src/view/com/composer/GifAltText.tsx:202
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:77
@@ -6366,7 +6514,7 @@ msgstr "Aurreko urratsera itzultzen da"
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:153
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:163
 #: src/view/com/modals/CreateOrEditList.tsx:317
-#: src/view/com/modals/EditProfile.tsx:219
+#: src/view/com/modals/EditProfile.tsx:245
 #: src/view/screens/SavedFeeds.tsx:109
 msgid "Save"
 msgstr "Gorde"
@@ -6386,7 +6534,7 @@ msgstr "Gorde jaiotze data"
 msgid "Save changes"
 msgstr "Gorde aldaketak"
 
-#: src/view/com/modals/EditProfile.tsx:227
+#: src/view/com/modals/EditProfile.tsx:253
 msgid "Save Changes"
 msgstr "Gorde Aldaketak"
 
@@ -6399,7 +6547,7 @@ msgstr "Gorde irudia"
 msgid "Save image crop"
 msgstr "Gorde irudiaren mozketa"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:229
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:248
 msgid "Save new handle"
 msgstr "Gorde handle berria"
 
@@ -6421,11 +6569,11 @@ msgid "Saved to your camera roll"
 msgstr "Zure kameran gordeta"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:131
-#: src/view/screens/ProfileList.tsx:364
+#: src/view/screens/ProfileList.tsx:372
 msgid "Saved to your feeds"
 msgstr "Zure feedetan gordeta"
 
-#: src/view/com/modals/EditProfile.tsx:220
+#: src/view/com/modals/EditProfile.tsx:246
 msgid "Saves any changes to your profile"
 msgstr "Zure profilean edozein aldaketa gordetzen du"
 
@@ -6435,8 +6583,8 @@ msgstr "Irudi mozketa ezarpenak gordetzen ditu"
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 #: src/components/NewskieDialog.tsx:105
-#: src/view/com/notifications/NotificationFeedItem.tsx:544
-#: src/view/com/notifications/NotificationFeedItem.tsx:569
+#: src/view/com/notifications/NotificationFeedItem.tsx:633
+#: src/view/com/notifications/NotificationFeedItem.tsx:658
 msgid "Say hello!"
 msgstr "Esan kaixo!"
 
@@ -6445,21 +6593,20 @@ msgstr "Esan kaixo!"
 msgid "Science"
 msgstr "Zientzia"
 
-#: src/view/screens/ProfileList.tsx:988
+#: src/view/screens/ProfileList.tsx:996
 msgid "Scroll to top"
 msgstr "Joan gora"
 
-#: src/components/dms/dialogs/SearchablePeopleList.tsx:491
+#: src/components/dialogs/SearchablePeopleList.tsx:513
 #: src/components/forms/SearchInput.tsx:34
 #: src/components/forms/SearchInput.tsx:36
 #: src/screens/Search/Shell.tsx:307
 #: src/screens/Search/Shell.tsx:464
-#: src/view/com/modals/ListAddRemoveUsers.tsx:76
 #: src/view/shell/bottom-bar/BottomBar.tsx:182
 msgid "Search"
 msgstr "Bilatu"
 
-#: src/Navigation.tsx:217
+#: src/Navigation.tsx:226
 #: src/screens/Profile/ProfileSearch.tsx:37
 msgid "Search @{0}'s posts"
 msgstr "Bilatu @{0}-ren postak"
@@ -6477,11 +6624,11 @@ msgstr "Bilatu feedak"
 msgid "Search for \"{interestsDisplayName}\"{activeText}"
 msgstr "Bilatu \"{interestsDisplayName}\"{activeText}"
 
-#: src/view/shell/desktop/Search.tsx:201
+#: src/view/shell/desktop/Search.tsx:131
 msgid "Search for \"{query}\""
 msgstr "Bilatu \"{query}\""
 
-#: src/screens/Search/components/AutocompleteResults.tsx:44
+#: src/screens/Search/components/AutocompleteResults.tsx:45
 msgid "Search for \"{searchText}\""
 msgstr "Bilatu \"{searchText}\""
 
@@ -6501,10 +6648,6 @@ msgstr "Bilatu feed gehiago"
 msgid "Search for posts, users, or feeds"
 msgstr "Bilatu postak, erabiltzaileak edo feedak"
 
-#: src/view/com/modals/ListAddRemoveUsers.tsx:71
-msgid "Search for users"
-msgstr "Bilatu erabiltzaileak"
-
 #: src/components/dialogs/GifSelect.tsx:177
 msgid "Search GIFs"
 msgstr "Bilatu GIF-ak"
@@ -6513,12 +6656,12 @@ msgstr "Bilatu GIF-ak"
 msgid "Search my posts"
 msgstr "Bilatu nire postak"
 
-#: src/view/com/profile/ProfileMenu.tsx:231
-#: src/view/com/profile/ProfileMenu.tsx:234
+#: src/view/com/profile/ProfileMenu.tsx:244
+#: src/view/com/profile/ProfileMenu.tsx:247
 msgid "Search posts"
 msgstr "Bilatu postak"
 
-#: src/components/dms/dialogs/SearchablePeopleList.tsx:511
+#: src/components/dialogs/SearchablePeopleList.tsx:533
 #: src/components/ProgressGuide/FollowDialog.tsx:702
 msgid "Search profiles"
 msgstr "Bilatu profilak"
@@ -6531,7 +6674,7 @@ msgstr "Bilatu Tenor-en"
 msgid "Search..."
 msgstr "Bilatu..."
 
-#: src/components/dms/dialogs/SearchablePeopleList.tsx:512
+#: src/components/dialogs/SearchablePeopleList.tsx:534
 #: src/components/ProgressGuide/FollowDialog.tsx:703
 msgid "Searches for profiles"
 msgstr "Profilak bilatzen ditu"
@@ -6692,7 +6835,7 @@ msgctxt "action"
 msgid "Send Email"
 msgstr "Bidali Mezu Elektronikoa"
 
-#: src/view/shell/Drawer.tsx:317
+#: src/view/shell/Drawer.tsx:333
 msgid "Send feedback"
 msgstr "Bidali iritzia"
 
@@ -6742,7 +6885,7 @@ msgstr "Zerbitzariaren helbidea"
 msgid "Set app icon to {0}"
 msgstr "Ezarri {0} aplikazio ikono gisa"
 
-#: src/screens/Moderation/index.tsx:306
+#: src/screens/Moderation/index.tsx:325
 msgid "Set birthdate"
 msgstr "Ezarri jaiotze-data"
 
@@ -6758,10 +6901,10 @@ msgstr "Konfiguratu zure kontua"
 msgid "Sets email for password reset"
 msgstr "Pasahitza berrezartzeko posta elektronikoa ezartzen du"
 
-#: src/Navigation.tsx:173
-#: src/screens/Settings/Settings.tsx:80
+#: src/Navigation.tsx:182
+#: src/screens/Settings/Settings.tsx:88
 #: src/view/shell/desktop/LeftNav.tsx:709
-#: src/view/shell/Drawer.tsx:539
+#: src/view/shell/Drawer.tsx:555
 msgid "Settings"
 msgstr "Ezarpenak"
 
@@ -6783,12 +6926,12 @@ msgstr "Sexu Lizuna"
 #: src/screens/StarterPack/StarterPackScreen.tsx:428
 #: src/screens/StarterPack/StarterPackScreen.tsx:603
 #: src/screens/Topic.tsx:102
-#: src/view/com/profile/ProfileMenu.tsx:216
-#: src/view/com/profile/ProfileMenu.tsx:225
+#: src/view/com/profile/ProfileMenu.tsx:229
+#: src/view/com/profile/ProfileMenu.tsx:238
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:498
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:507
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:350
-#: src/view/screens/ProfileList.tsx:505
+#: src/view/screens/ProfileList.tsx:513
 msgid "Share"
 msgstr "Partekatu"
 
@@ -6805,7 +6948,7 @@ msgstr "Partekatu istorio polit bat!"
 msgid "Share a fun fact!"
 msgstr "Partekatu datu dibertigarri bat!"
 
-#: src/view/com/profile/ProfileMenu.tsx:411
+#: src/view/com/profile/ProfileMenu.tsx:447
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:796
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:366
 msgid "Share anyway"
@@ -6847,7 +6990,7 @@ msgstr "Partekatu abio multzo hau eta lagundu jendea zure Bluesky komunitatean s
 msgid "Share your favorite feed!"
 msgstr "Partekatu zure feed gogokoena!"
 
-#: src/Navigation.tsx:276
+#: src/Navigation.tsx:285
 msgid "Shared Preferences Tester"
 msgstr "Partekatutako Hobespenen Probatzailea"
 
@@ -6899,7 +7042,7 @@ msgstr "Erakutsi honelako gutxiago"
 msgid "Show list anyway"
 msgstr "Erakutsi zerrenda hala ere"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:605
+#: src/view/com/post-thread/PostThreadItem.tsx:625
 #: src/view/com/post/Post.tsx:243
 #: src/view/com/posts/PostFeedItem.tsx:515
 msgid "Show More"
@@ -6959,11 +7102,11 @@ msgstr "Erakutsi abisua"
 msgid "Show warning and filter from feeds"
 msgstr "Erakutsi feedetako abisua eta iragazkia"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:836
+#: src/view/com/post-thread/PostThreadItem.tsx:856
 msgid "Shows information about when this post was created"
 msgstr "Post hau noiz sortu zenari buruzko informazioa erakusten du"
 
-#: src/screens/Settings/Settings.tsx:104
+#: src/screens/Settings/Settings.tsx:112
 msgid "Shows other accounts you can switch to"
 msgstr "Alda ditzakezun beste kontu batzuk erakusten ditu"
 
@@ -6990,7 +7133,7 @@ msgstr "Edukia erakusten du"
 msgid "Sign in"
 msgstr "Hasi saioa"
 
-#: src/components/AccountList.tsx:122
+#: src/components/AccountList.tsx:127
 msgid "Sign in as {0}"
 msgstr "Hasi saioa {0} gisa"
 
@@ -7007,7 +7150,7 @@ msgstr "Hasi saioa edo sortu kontua"
 msgid "Sign in or create your account to join the conversation!"
 msgstr "Hasi saioa edo sortu zure kontua elkarrizketan sartzeko!"
 
-#: src/components/AccountList.tsx:65
+#: src/components/AccountList.tsx:67
 msgid "Sign in to account that is not listed"
 msgstr "Hasi saioa zerrendan ez dagoen kontuan"
 
@@ -7015,9 +7158,9 @@ msgstr "Hasi saioa zerrendan ez dagoen kontuan"
 msgid "Sign in to Bluesky or create a new account"
 msgstr "Hasi saioa Bluesky-n edo sortu kontu berri bat"
 
-#: src/screens/Settings/Settings.tsx:225
-#: src/screens/Settings/Settings.tsx:227
-#: src/screens/Settings/Settings.tsx:259
+#: src/screens/Settings/Settings.tsx:233
+#: src/screens/Settings/Settings.tsx:235
+#: src/screens/Settings/Settings.tsx:267
 #: src/screens/SignupQueued.tsx:93
 #: src/screens/SignupQueued.tsx:96
 #: src/screens/Takendown.tsx:85
@@ -7031,7 +7174,7 @@ msgstr "Amaitu saioa"
 msgid "Sign Out"
 msgstr "Amaitu saioa"
 
-#: src/screens/Settings/Settings.tsx:256
+#: src/screens/Settings/Settings.tsx:264
 #: src/view/shell/desktop/LeftNav.tsx:205
 msgid "Sign out?"
 msgstr "Saioa amaitu?"
@@ -7068,6 +7211,10 @@ msgstr "Txikiagoa"
 msgid "Software Dev"
 msgstr "Software Garatzailea"
 
+#: src/components/verification/VerificationsDialog.tsx:122
+msgid "Some of your verifications are invalid."
+msgstr ""
+
 #: src/components/FeedInterstitials.tsx:474
 msgid "Some other feeds you might like"
 msgstr "Gustatuko litzaizukeen beste feed batzuk"
@@ -7080,7 +7227,7 @@ msgstr "Batzuek erantzun dezakete"
 msgid "Someone reacted {0}"
 msgstr "Norbaitek erreakzionatu du {0}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:236
+#: src/screens/Messages/components/ChatListItem.tsx:241
 msgid "Someone reacted {0} to {1}"
 msgstr "Norbaitek erreakzionatu du {0} {1}-i"
 
@@ -7099,8 +7246,8 @@ msgid "Something went wrong, please try again"
 msgstr "Arazoren bat izan da. Mesedez, saiatu berriro"
 
 #: src/components/ReportDialog/index.tsx:54
-#: src/screens/Moderation/index.tsx:97
-#: src/screens/Profile/Sections/Labels.tsx:87
+#: src/screens/Moderation/index.tsx:101
+#: src/screens/Profile/Sections/Labels.tsx:121
 msgid "Something went wrong, please try again."
 msgstr "Arazoren bat izan da. Mesedez, saiatu berriro."
 
@@ -7161,22 +7308,22 @@ msgstr "Kirolak"
 msgid "Start a new chat"
 msgstr "Txat berria hasi"
 
-#: src/view/screens/ProfileList.tsx:838
-#: src/view/screens/ProfileList.tsx:959
+#: src/view/screens/ProfileList.tsx:846
+#: src/view/screens/ProfileList.tsx:967
 msgid "Start adding people"
 msgstr "Hasi jendea gehitzen"
 
-#: src/view/screens/ProfileList.tsx:845
-#: src/view/screens/ProfileList.tsx:966
+#: src/view/screens/ProfileList.tsx:853
+#: src/view/screens/ProfileList.tsx:974
 msgid "Start adding people!"
 msgstr "Hasi jendea gehitzen!"
 
-#: src/components/dms/dialogs/SearchablePeopleList.tsx:357
+#: src/components/dialogs/SearchablePeopleList.tsx:382
 msgid "Start chat with {displayName}"
 msgstr "Txat berria hasi {displayName}-rekin"
 
-#: src/Navigation.tsx:441
-#: src/Navigation.tsx:446
+#: src/Navigation.tsx:450
+#: src/Navigation.tsx:455
 #: src/screens/StarterPack/Wizard/index.tsx:186
 msgid "Starter Pack"
 msgstr "Abio Multzoa"
@@ -7207,8 +7354,8 @@ msgstr "Abio Multzoak"
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "Abio multzoek zure gogoko feedak eta jendea zure lagunekin erraz partekatzeko aukera ematen dizu."
 
-#: src/screens/Settings/AboutSettings.tsx:59
-#: src/screens/Settings/AboutSettings.tsx:62
+#: src/screens/Settings/AboutSettings.tsx:97
+#: src/screens/Settings/AboutSettings.tsx:100
 msgid "Status Page"
 msgstr "Egoera Orria"
 
@@ -7216,12 +7363,12 @@ msgstr "Egoera Orria"
 msgid "Step {0} of {1}"
 msgstr "{0}/{1} urratsa"
 
-#: src/screens/Settings/Settings.tsx:309
+#: src/screens/Settings/Settings.tsx:351
 msgid "Storage cleared, you need to restart the app now."
 msgstr "Biltegia garbitu da, aplikazioa berrabiarazi behar duzu orain."
 
-#: src/Navigation.tsx:266
-#: src/screens/Settings/Settings.tsx:325
+#: src/Navigation.tsx:275
+#: src/screens/Settings/Settings.tsx:367
 msgid "Storybook"
 msgstr "Ipuin liburua"
 
@@ -7246,11 +7393,11 @@ msgstr "Bidali Apelazioa"
 msgid "Submit report"
 msgstr "Bidali salaketa"
 
-#: src/view/screens/ProfileList.tsx:733
+#: src/view/screens/ProfileList.tsx:741
 msgid "Subscribe"
 msgstr "Harpidetu"
 
-#: src/screens/Profile/Sections/Labels.tsx:201
+#: src/screens/Profile/Sections/Labels.tsx:198
 msgid "Subscribe to @{0} to use these labels:"
 msgstr "Harpidetu @{0}-ra etiketa hauek erabiltzeko:"
 
@@ -7262,13 +7409,17 @@ msgstr "Harpidetu Etiketatzailera"
 msgid "Subscribe to this labeler"
 msgstr "Harpidetu etiketatzaile honetara"
 
-#: src/view/screens/ProfileList.tsx:729
+#: src/view/screens/ProfileList.tsx:737
 msgid "Subscribe to this list"
 msgstr "Harpidetu zerrenda honetara"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:95
 msgid "Success!"
 msgstr "Arrakasta!"
+
+#: src/components/verification/VerificationCreatePrompt.tsx:30
+msgid "Successfully verified"
+msgstr ""
 
 #: src/screens/Search/Explore.tsx:359
 msgid "Suggested Accounts"
@@ -7293,15 +7444,15 @@ msgctxt "Name of app icon variant"
 msgid "Sunset"
 msgstr "Ilunabarra"
 
-#: src/Navigation.tsx:286
+#: src/Navigation.tsx:295
 #: src/view/screens/Support.tsx:31
 #: src/view/screens/Support.tsx:34
 msgid "Support"
 msgstr "Laguntza"
 
-#: src/screens/Settings/Settings.tsx:102
-#: src/screens/Settings/Settings.tsx:116
-#: src/screens/Settings/Settings.tsx:412
+#: src/screens/Settings/Settings.tsx:110
+#: src/screens/Settings/Settings.tsx:124
+#: src/screens/Settings/Settings.tsx:454
 #: src/view/shell/desktop/LeftNav.tsx:243
 msgid "Switch account"
 msgstr "Aldatu kontua"
@@ -7326,9 +7477,9 @@ msgstr "Aldatu {0}-ra"
 msgid "System"
 msgstr "Sistema"
 
-#: src/screens/Settings/AboutSettings.tsx:66
-#: src/screens/Settings/AboutSettings.tsx:69
-#: src/screens/Settings/Settings.tsx:318
+#: src/screens/Settings/AboutSettings.tsx:104
+#: src/screens/Settings/AboutSettings.tsx:107
+#: src/screens/Settings/Settings.tsx:360
 msgid "System log"
 msgstr "Sistemaren erregistroa"
 
@@ -7367,7 +7518,7 @@ msgstr "Teknologia"
 msgid "Tell a joke!"
 msgstr "Kontatu txantxa bat!"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:355
+#: src/screens/Profile/Header/EditProfileDialog.tsx:378
 msgid "Tell us a bit about yourself"
 msgstr "Kontaiguzu zure buruari buruz pixka bat"
 
@@ -7380,12 +7531,12 @@ msgstr "Kontaiguzu apur bat gehiago"
 msgid "Terms"
 msgstr "Baldintzak"
 
-#: src/Navigation.tsx:296
-#: src/screens/Settings/AboutSettings.tsx:43
-#: src/screens/Settings/AboutSettings.tsx:46
+#: src/Navigation.tsx:305
+#: src/screens/Settings/AboutSettings.tsx:81
+#: src/screens/Settings/AboutSettings.tsx:84
 #: src/view/screens/TermsOfService.tsx:31
-#: src/view/shell/Drawer.tsx:627
-#: src/view/shell/Drawer.tsx:629
+#: src/view/shell/Drawer.tsx:643
+#: src/view/shell/Drawer.tsx:645
 msgid "Terms of Service"
 msgstr "Zerbitzu-Baldintzak"
 
@@ -7425,7 +7576,7 @@ msgstr "Eskerrik asko. Zure salaketa bidali da."
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr "Eskerrik asko, zure helbide elektronikoa behar bezala egiaztatu duzu. Leiho hau itxi dezakezu."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:468
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:487
 msgid "That contains the following:"
 msgstr "Horrek honako hauek ditu:"
 
@@ -7450,8 +7601,8 @@ msgstr "Hori da guztia, lagunok!"
 msgid "That's everything!"
 msgstr "Hori da dena!"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
-#: src/view/com/profile/ProfileMenu.tsx:387
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:305
+#: src/view/com/profile/ProfileMenu.tsx:423
 msgid "The account will be able to interact with you after unblocking."
 msgstr "Kontua zurekin elkarreragin ahal izango du desblokeatu ondoren."
 
@@ -7465,7 +7616,7 @@ msgstr "Aplikazioa berrabiaraziko da"
 msgid "The author of this thread has hidden this reply."
 msgstr "Hari honen egileak erantzun hau ezkutatu du."
 
-#: src/screens/Moderation/index.tsx:358
+#: src/screens/Moderation/index.tsx:377
 msgid "The Bluesky web application"
 msgstr "Bluesky web aplikazioa"
 
@@ -7555,8 +7706,8 @@ msgid "There was an issue connecting to Tenor."
 msgstr "Arazo bat izan da Tenor-era konektatzean."
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:173
-#: src/view/screens/ProfileList.tsx:367
-#: src/view/screens/ProfileList.tsx:386
+#: src/view/screens/ProfileList.tsx:375
+#: src/view/screens/ProfileList.tsx:394
 #: src/view/screens/SavedFeeds.tsx:85
 msgid "There was an issue contacting the server"
 msgstr "Arazo bat izan da zerbitzariarekin harremanetan jartzeko"
@@ -7580,7 +7731,7 @@ msgstr "Arazo bat izan da jakinarazpenak eskuratzean. Sakatu hemen berriro saiat
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "Arazo bat izan da postak eskuratzean. Sakatu hemen berriro saiatzeko."
 
-#: src/view/com/lists/ListMembers.tsx:166
+#: src/view/com/lists/ListMembers.tsx:151
 msgid "There was an issue fetching the list. Tap here to try again."
 msgstr "Arazo bat izan da zerrenda eskuratzean. Sakatu hemen berriro saiatzeko."
 
@@ -7593,7 +7744,7 @@ msgstr "Arazo bat izan da aplikazio pasahitzak eskuratzean"
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr "Arazo bat izan da zure zerrendak eskuratzean. Sakatu hemen berriro saiatzeko."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:105
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:107
 msgid "There was an issue fetching your service info"
 msgstr "Arazo bat izan da zure zerbitzu informazioa eskuratzean"
 
@@ -7612,17 +7763,17 @@ msgstr "Arazo bat izan da zure salaketa bidaltzean. Mesedez, egiaztatu zure Inte
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
 msgstr "Arazo bat izan da feedak eguneratzean. Egiaztatu Interneteko konexioa eta saiatu berriro."
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:107
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:128
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:141
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:110
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:131
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:144
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:90
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:101
-#: src/view/com/profile/ProfileMenu.tsx:111
-#: src/view/com/profile/ProfileMenu.tsx:121
-#: src/view/com/profile/ProfileMenu.tsx:135
-#: src/view/com/profile/ProfileMenu.tsx:145
-#: src/view/com/profile/ProfileMenu.tsx:158
-#: src/view/com/profile/ProfileMenu.tsx:170
+#: src/view/com/profile/ProfileMenu.tsx:117
+#: src/view/com/profile/ProfileMenu.tsx:127
+#: src/view/com/profile/ProfileMenu.tsx:141
+#: src/view/com/profile/ProfileMenu.tsx:151
+#: src/view/com/profile/ProfileMenu.tsx:164
+#: src/view/com/profile/ProfileMenu.tsx:176
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:396
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:409
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:419
@@ -7633,10 +7784,10 @@ msgstr "Arazo bat egon da! {0}"
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
-#: src/view/screens/ProfileList.tsx:403
-#: src/view/screens/ProfileList.tsx:421
-#: src/view/screens/ProfileList.tsx:439
-#: src/view/screens/ProfileList.tsx:457
+#: src/view/screens/ProfileList.tsx:411
+#: src/view/screens/ProfileList.tsx:429
+#: src/view/screens/ProfileList.tsx:447
+#: src/view/screens/ProfileList.tsx:465
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "Arazo bat egon da. Mesedez, egiaztatu Interneteko konexioa eta saiatu berriro."
 
@@ -7657,6 +7808,14 @@ msgstr "Ezarpen hauek Jarraitzen feedari soilik aplikatzen zaizkio."
 msgid "This {screenDescription} has been flagged:"
 msgstr "{screenDescription} hau markatu da:"
 
+#: src/components/verification/VerificationsDialog.tsx:89
+msgid "This account has a checkmark because it's been verified by trusted sources."
+msgstr ""
+
+#: src/components/verification/VerificationsDialog.tsx:94
+msgid "This account has one or more verifications, but it is not currently verified."
+msgstr ""
+
 #: src/components/moderation/ScreenHider.tsx:106
 msgid "This account has requested that users sign in to view their profile."
 msgstr "Kontu honen profila saioa hasitako erabiltzaileek bakarrik ikus dezakete."
@@ -7664,6 +7823,10 @@ msgstr "Kontu honen profila saioa hasitako erabiltzaileek bakarrik ikus dezakete
 #: src/components/dms/BlockedByListDialog.tsx:34
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
 msgstr "Kontu hau zure moderazio-zerrenda batek edo gehiagok blokeatzen du. Desblokeatzeko, mesedez bisitatu zerrendak zuzenean eta kendu erabiltzaile hau."
+
+#: src/components/verification/VerificationCreatePrompt.tsx:48
+msgid "This action can be undone at any time."
+msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:271
 msgid "This appeal will be sent to <0>{sourceName}</0>."
@@ -7698,7 +7861,7 @@ msgstr "Eduki hau ez dago erabilgarri inplikatutako erabiltzaileetako batek best
 msgid "This content is not viewable without a Bluesky account."
 msgstr "Eduki hau ezin da ikusi Bluesky konturik gabe."
 
-#: src/screens/Messages/components/ChatListItem.tsx:357
+#: src/screens/Messages/components/ChatListItem.tsx:362
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr "Elkarrizketa ezabatuta edo desaktibatuta dagoen kontu batekin da. Sakatu aukerak ikusteko"
 
@@ -7720,7 +7883,7 @@ msgstr "Feed hau hutsik dago! Baliteke erabiltzaile gehiago jarraitu behar izate
 
 #: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/screens/Profile/ProfileFeed/index.tsx:189
-#: src/view/screens/ProfileList.tsx:835
+#: src/view/screens/ProfileList.tsx:843
 msgid "This feed is empty."
 msgstr "Feed hau hutsik dago."
 
@@ -7728,7 +7891,7 @@ msgstr "Feed hau hutsik dago."
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
 msgstr "Feed hau jada ez dago sarean. <0>Ezagutu</0> erakusten ari gara horren ordez."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:574
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:593
 msgid "This handle is reserved. Please try a different one."
 msgstr "Handle hau erreserbatuta dago. Mesedez, saiatu beste bat."
 
@@ -7748,7 +7911,7 @@ msgstr "Etiketa hau egileak aplikatu du."
 msgid "This label was applied by you."
 msgstr "Etiketa hau zuk aplikatu duzu."
 
-#: src/screens/Profile/Sections/Labels.tsx:188
+#: src/screens/Profile/Sections/Labels.tsx:185
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr "Etiketatzaile honek ez du deklaratu zein etiketa argitaratzen dituen, eta baliteke aktibo ez egotea."
 
@@ -7764,7 +7927,7 @@ msgstr "<0>{0}</0>-(e)k sortutako zerrenda honen izenak edo deskribapenak Bluesk
 msgid "This list – created by you – contains possible violations of Bluesky's community guidelines in its name or description."
 msgstr "Zuk sortutako zerrenda honen izenak edo deskribapenak Bluesky-ren komunitate-gidalerroak urratu ditzake."
 
-#: src/view/screens/ProfileList.tsx:954
+#: src/view/screens/ProfileList.tsx:962
 msgid "This list is empty."
 msgstr "Zerrenda hau hutsik dago."
 
@@ -7772,7 +7935,7 @@ msgstr "Zerrenda hau hutsik dago."
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "Moderazio-zerbitzu hau ez dago erabilgarri. Ikus behean xehetasun gehiagorako. Arazo honek jarraitzen badu, jarri gurekin harremanetan."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:876
+#: src/view/com/post-thread/PostThreadItem.tsx:896
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Post honek <0>{0}</0>-n sortu dela dio, baina Bluesky-k <1>{1}</1>-n ikusi zuen lehen aldiz."
 
@@ -7780,7 +7943,7 @@ msgstr "Post honek <0>{0}</0>-n sortu dela dio, baina Bluesky-k <1>{1}</1>-n iku
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr "Post honek hari mota ezezagun bat du. Baliteke zure aplikazioa zaharkituta egotea."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:158
+#: src/view/com/post-thread/PostThreadItem.tsx:160
 msgid "This post has been deleted."
 msgstr "Post hau ezabatu da."
 
@@ -7797,7 +7960,7 @@ msgstr "Post hau feed eta harietatik ezkutatuta egongo da. Hau ezin da desegin."
 msgid "This post's author has disabled quote posts."
 msgstr "Post honen egileak aipamenak desgaitu ditu."
 
-#: src/view/com/profile/ProfileMenu.tsx:408
+#: src/view/com/profile/ProfileMenu.tsx:444
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr "Profil hau saioa hasitako erabiltzaileek soilik ikus dezakete. Saioa hasita ez dagoen jendearentzat ez da ikusgai egongo."
 
@@ -7809,7 +7972,7 @@ msgstr "Erantzun hau zure hariaren beheko aldean ezkutuko atal batean ordenatuko
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Zerbitzu honek ez du zerbitzu-baldintzarik edo pribatutasun-politikarik eman."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:437
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:456
 msgid "This should create a domain record at:"
 msgstr "Honek domeinu-erregistro bat sortu beharko luke hemen:"
 
@@ -7850,7 +8013,7 @@ msgstr "Erabiltzaile hau ez du inor jarraitzen."
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr "Honek \"{0}\" ezabatuko du mutututa dauden hitzetatik. Geroago gehi dezakezu beti."
 
-#: src/screens/Settings/Settings.tsx:462
+#: src/screens/Settings/Settings.tsx:504
 msgid "This will remove @{0} from the quick access list."
 msgstr "Honek @{0} sarbide azkarreko zerrendatik kenduko du."
 
@@ -7881,7 +8044,7 @@ msgstr "Harikatua"
 msgid "Threaded mode"
 msgstr "Haridun modua"
 
-#: src/Navigation.tsx:329
+#: src/Navigation.tsx:338
 msgid "Threads Preferences"
 msgstr "Harien Hobespenak"
 
@@ -7913,7 +8076,7 @@ msgstr "Gaur"
 msgid "Toggle dropdown"
 msgstr "Aldatu goitibeherako aukera"
 
-#: src/screens/Moderation/index.tsx:335
+#: src/screens/Moderation/index.tsx:354
 msgid "Toggle to enable or disable adult content"
 msgstr "Aldatu helduentzako edukia gaitzeko edo desgaitzeko"
 
@@ -7927,14 +8090,14 @@ msgstr "Soinua aktibatu/desaktibatzen du"
 msgid "Top"
 msgstr "Joan gora"
 
-#: src/Navigation.tsx:411
+#: src/Navigation.tsx:420
 msgid "Topic"
 msgstr "Gaia"
 
 #: src/components/dms/MessageContextMenu.tsx:139
 #: src/components/dms/MessageContextMenu.tsx:141
-#: src/view/com/post-thread/PostThreadItem.tsx:798
-#: src/view/com/post-thread/PostThreadItem.tsx:801
+#: src/view/com/post-thread/PostThreadItem.tsx:818
+#: src/view/com/post-thread/PostThreadItem.tsx:821
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:468
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:470
 msgid "Translate"
@@ -7951,6 +8114,10 @@ msgstr "Joera-gaiak"
 #: src/components/interstitials/TrendingVideos.tsx:88
 msgid "Trending Videos"
 msgstr "Joera Bideoak"
+
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:138
+msgid "Trust emerges from relationships, communities, and shared context, so we’re also enabling <0>trusted verifiers</0>: organizations that can directly issue verification."
+msgstr ""
 
 #: src/view/com/util/error/ErrorScreen.tsx:103
 msgctxt "action"
@@ -7973,7 +8140,7 @@ msgstr "Idatzi nahi duzun erabiltzaile-izena"
 msgid "Type your message here"
 msgstr "Idatzi zure mezua hemen"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:413
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:432
 msgid "Type:"
 msgstr "Mota:"
 
@@ -7999,31 +8166,31 @@ msgstr "Ezin da ezabatu"
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
 #: src/components/dms/MessagesListBlockedFooter.tsx:112
 #: src/components/dms/MessagesListBlockedFooter.tsx:119
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:197
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
-#: src/view/com/profile/ProfileMenu.tsx:399
-#: src/view/screens/ProfileList.tsx:715
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:200
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:309
+#: src/view/com/profile/ProfileMenu.tsx:435
+#: src/view/screens/ProfileList.tsx:723
 msgid "Unblock"
 msgstr "Desblokeatu"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:202
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:205
 msgctxt "action"
 msgid "Unblock"
 msgstr "Desblokeatu"
 
 #: src/components/dms/ConvoMenu.tsx:247
 #: src/components/dms/ConvoMenu.tsx:250
-#: src/view/com/profile/ProfileMenu.tsx:309
-#: src/view/com/profile/ProfileMenu.tsx:315
+#: src/view/com/profile/ProfileMenu.tsx:345
+#: src/view/com/profile/ProfileMenu.tsx:351
 msgid "Unblock account"
 msgstr "Desblokeatu kontua"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:277
-#: src/view/com/profile/ProfileMenu.tsx:381
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:303
+#: src/view/com/profile/ProfileMenu.tsx:417
 msgid "Unblock Account?"
 msgstr "Kontua Desblokeatu?"
 
-#: src/view/screens/ProfileList.tsx:612
+#: src/view/screens/ProfileList.tsx:620
 msgid "Unblock list"
 msgstr "Desblokeatu zerrenda"
 
@@ -8041,12 +8208,12 @@ msgctxt "action"
 msgid "Unfollow"
 msgstr "Jarraitzen utzi"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:217
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:220
 msgid "Unfollow {0}"
 msgstr "{0} jarraitzen utzi"
 
-#: src/view/com/profile/ProfileMenu.tsx:251
-#: src/view/com/profile/ProfileMenu.tsx:261
+#: src/view/com/profile/ProfileMenu.tsx:264
+#: src/view/com/profile/ProfileMenu.tsx:274
 msgid "Unfollow account"
 msgstr "Utzi kontua jarraitzeari"
 
@@ -8057,6 +8224,10 @@ msgstr "Erabiltzailea jarraitzeari uzten dio"
 #: src/components/moderation/ReportDialog/index.tsx:361
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr "Zoritxarrez, harpidetutako etiketatzaileetako batek ere ez du onartzen salaketa mota hau."
+
+#: src/components/verification/VerificationsDialog.tsx:204
+msgid "Unknown verifier"
+msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:510
 msgid "Unlike"
@@ -8072,7 +8243,7 @@ msgctxt "video"
 msgid "Unmute"
 msgstr "Desmututu"
 
-#: src/view/screens/ProfileList.tsx:722
+#: src/view/screens/ProfileList.tsx:730
 msgid "Unmute"
 msgstr "Mututzea utzi"
 
@@ -8081,8 +8252,8 @@ msgstr "Mututzea utzi"
 msgid "Unmute {tag}"
 msgstr "{tag} ez mututu"
 
-#: src/view/com/profile/ProfileMenu.tsx:288
-#: src/view/com/profile/ProfileMenu.tsx:294
+#: src/view/com/profile/ProfileMenu.tsx:324
+#: src/view/com/profile/ProfileMenu.tsx:330
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:668
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:674
 msgid "Unmute account"
@@ -8092,7 +8263,7 @@ msgstr "Desmututu kontua"
 msgid "Unmute conversation"
 msgstr "Elkarrizketa ez mututu"
 
-#: src/view/screens/ProfileList.tsx:597
+#: src/view/screens/ProfileList.tsx:605
 msgid "Unmute list"
 msgstr "Desmututu zerrenda"
 
@@ -8105,7 +8276,7 @@ msgstr "Haria ez mututu"
 msgid "Unmute video"
 msgstr "Bideoa ez mututu"
 
-#: src/view/screens/ProfileList.tsx:706
+#: src/view/screens/ProfileList.tsx:714
 msgid "Unpin"
 msgstr "Aingura kendu"
 
@@ -8128,7 +8299,7 @@ msgstr "Aingura kendu hasieratik"
 msgid "Unpin from profile"
 msgstr "Aingura kendu profiletik"
 
-#: src/view/screens/ProfileList.tsx:577
+#: src/view/screens/ProfileList.tsx:585
 msgid "Unpin moderation list"
 msgstr "Moderazio zerrendari aingura kendu"
 
@@ -8136,7 +8307,7 @@ msgstr "Moderazio zerrendari aingura kendu"
 msgid "Unpinned {0} from Home"
 msgstr "{0}-ri aingura kendu Hasieratik"
 
-#: src/view/screens/ProfileList.tsx:354
+#: src/view/screens/ProfileList.tsx:362
 msgid "Unpinned from your feeds"
 msgstr "Aingura kendu zure feedetatik"
 
@@ -8181,8 +8352,8 @@ msgstr "Eguneratu"
 msgid "Update <0>{displayName}</0> in Lists"
 msgstr "Eguneratu <0>{displayName}</0> Zerrendetan"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:507
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:528
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:526
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:547
 msgid "Update to {domain}"
 msgstr "Eguneratu {domain}ra"
 
@@ -8204,7 +8375,7 @@ msgstr "Eguneratzen..."
 msgid "Upload a photo instead"
 msgstr "Kargatu argazki bat ordez"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:453
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:472
 msgid "Upload a text file to:"
 msgstr "Kargatu testu-fitxategi bat hona:"
 
@@ -8244,7 +8415,7 @@ msgstr "Bideoa kargatzen..."
 msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
 msgstr "Erabili aplikazioen pasahitzak beste Bluesky bezeroetan saioa hasteko, zure konturako edo pasahitzerako sarbide osoa eman gabe."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:539
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:558
 msgid "Use default provider"
 msgstr "Erabili hornitzaile lehenetsia"
 
@@ -8344,24 +8515,43 @@ msgstr "Nik jarraitzen ditudan erabiltzaileak"
 msgid "Users in \"{0}\""
 msgstr "\"{0}\"-n dauden erabiltzaileak"
 
-#: src/components/LikesDialog.tsx:83
-msgid "Users that have liked this content or profile"
-msgstr "Eduki edo profil hau gustoko duten erabiltzaileak"
-
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:433
 msgid "Users you follow"
 msgstr "Nik jarraitzen ditudan erabiltzaileak"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:419
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:438
 msgid "Value:"
 msgstr "Balioa:"
+
+#: src/screens/Moderation/index.tsx:288
+msgid "Verification settings"
+msgstr ""
+
+#: src/Navigation.tsx:175
+#: src/screens/Moderation/VerificationSettings.tsx:32
+msgid "Verification Settings"
+msgstr ""
+
+#: src/screens/Moderation/VerificationSettings.tsx:41
+msgid "Verifications on Bluesky work differently than on other platforms. <0>Learn more here.</0>"
+msgstr ""
+
+#: src/components/verification/VerificationsDialog.tsx:105
+msgid "Verified by:"
+msgstr ""
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:127
 msgid "Verified email required"
 msgstr "Egiaztatutako helbide elektronikoa behar da"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:509
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:530
+#: src/components/verification/VerificationCreatePrompt.tsx:65
+#: src/view/com/profile/ProfileMenu.tsx:308
+#: src/view/com/profile/ProfileMenu.tsx:311
+msgid "Verify account"
+msgstr ""
+
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:528
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:549
 msgid "Verify DNS Record"
 msgstr "Egiaztatu DNS erregistroa"
 
@@ -8379,10 +8569,14 @@ msgstr "Egiaztatu posta elektroniko berria"
 msgid "Verify now"
 msgstr "Egiaztatu orain"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:510
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:532
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:529
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:551
 msgid "Verify Text File"
 msgstr "Egiaztatu testu-fitxategia"
+
+#: src/components/verification/VerificationCreatePrompt.tsx:44
+msgid "Verify this account?"
+msgstr ""
 
 #: src/screens/Settings/AccountSettings.tsx:75
 #: src/screens/Settings/AccountSettings.tsx:91
@@ -8394,8 +8588,8 @@ msgstr "Egiaztatu zure posta elektronikoa"
 msgid "Verify Your Email"
 msgstr "Egiaztatu zure posta elektronikoa"
 
-#: src/screens/Settings/AboutSettings.tsx:73
-#: src/screens/Settings/AboutSettings.tsx:102
+#: src/screens/Settings/AboutSettings.tsx:123
+#: src/screens/Settings/AboutSettings.tsx:152
 msgid "Version {appVersion}"
 msgstr "{appVersion} bertsioa"
 
@@ -8408,7 +8602,7 @@ msgstr "Bideoa"
 msgid "Video failed to process"
 msgstr "Ezin izan da prozesatu bideoa"
 
-#: src/Navigation.tsx:462
+#: src/Navigation.tsx:471
 msgid "Video Feed"
 msgstr "Bideo Feeda"
 
@@ -8461,16 +8655,17 @@ msgstr "Ikusi {0}-ren abatarra"
 
 #: src/components/ProfileCard.tsx:115
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:446
+#: src/screens/Search/components/SearchProfileCard.tsx:36
 #: src/screens/VideoFeed/index.tsx:769
-#: src/view/com/notifications/NotificationFeedItem.tsx:413
+#: src/view/com/notifications/NotificationFeedItem.tsx:487
 msgid "View {0}'s profile"
 msgstr "Ikusi {0}-ren profila"
 
-#: src/components/dms/MessagesListHeader.tsx:176
+#: src/components/dms/MessagesListHeader.tsx:181
 msgid "View {displayName}'s profile"
 msgstr "Ikusi {displayName}-ren profila"
 
-#: src/components/ProfileHoverCard/index.web.tsx:433
+#: src/components/ProfileHoverCard/index.web.tsx:440
 msgid "View blocked user's profile"
 msgstr "Ikusi blokeatutako erabiltzailearen profila"
 
@@ -8508,13 +8703,13 @@ msgstr "Ikusi etiketa hauei buruzko informazioa"
 msgid "View more"
 msgstr "Ikusi gehiago"
 
-#: src/components/ProfileHoverCard/index.web.tsx:419
-#: src/components/ProfileHoverCard/index.web.tsx:439
-#: src/components/ProfileHoverCard/index.web.tsx:466
+#: src/components/ProfileHoverCard/index.web.tsx:426
+#: src/components/ProfileHoverCard/index.web.tsx:446
+#: src/components/ProfileHoverCard/index.web.tsx:473
 #: src/view/com/posts/AviFollowButton.tsx:55
 #: src/view/com/posts/PostFeedErrorMessage.tsx:175
-#: src/view/com/util/PostMeta.tsx:78
-#: src/view/com/util/PostMeta.tsx:93
+#: src/view/com/util/PostMeta.tsx:87
+#: src/view/com/util/PostMeta.tsx:122
 msgid "View profile"
 msgstr "Ikusi profila"
 
@@ -8526,6 +8721,10 @@ msgstr "Ikusi abatarra"
 msgid "View the labeling service provided by @{0}"
 msgstr "Ikusi @{0}-k eskaintzen duen etiketa-zerbitzua"
 
+#: src/components/verification/VerificationCheckButton.tsx:99
+msgid "View this user's verifications"
+msgstr ""
+
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:481
 msgid "View users who like this feed"
 msgstr "Ikusi feed hau gogoko duten erabiltzaileak"
@@ -8534,11 +8733,11 @@ msgstr "Ikusi feed hau gogoko duten erabiltzaileak"
 msgid "View video"
 msgstr "Bideoa ikusi"
 
-#: src/screens/Moderation/index.tsx:264
+#: src/screens/Moderation/index.tsx:268
 msgid "View your blocked accounts"
 msgstr "Ikusi zuk blokeatutako kontuak"
 
-#: src/screens/Moderation/index.tsx:204
+#: src/screens/Moderation/index.tsx:208
 msgid "View your default post interaction settings"
 msgstr "Ikusi post interakzio-ezarpen lehenetsiak"
 
@@ -8547,13 +8746,17 @@ msgstr "Ikusi post interakzio-ezarpen lehenetsiak"
 msgid "View your feeds and explore more"
 msgstr "Ikusi zure feedak eta arakatu gehiago"
 
-#: src/screens/Moderation/index.tsx:234
+#: src/screens/Moderation/index.tsx:238
 msgid "View your moderation lists"
 msgstr "Ikusi zure moderazio zerrendak"
 
-#: src/screens/Moderation/index.tsx:249
+#: src/screens/Moderation/index.tsx:253
 msgid "View your muted accounts"
 msgstr "Ikusi zuk mutututako kontuak"
+
+#: src/components/verification/VerificationCheckButton.tsx:98
+msgid "View your verifications"
+msgstr ""
 
 #: src/view/com/util/images/AutoSizedImage.tsx:199
 #: src/view/com/util/images/AutoSizedImage.tsx:221
@@ -8627,7 +8830,7 @@ msgstr "Ezin izan dugu zehaztu bideoak kargatzeko baimena duzun ala ez. Mesedez,
 msgid "We were unable to load your birth date preferences. Please try again."
 msgstr "Ezin izan ditugu kargatu zure jaiotze dataren hobespenak. Mesedez, saiatu berriro."
 
-#: src/screens/Moderation/index.tsx:409
+#: src/screens/Moderation/index.tsx:428
 msgid "We were unable to load your configured labelers at this time."
 msgstr "Une honetan ezin izan ditugu kargatu konfiguratutako etiketatzaileak."
 
@@ -8643,16 +8846,20 @@ msgstr "Zure kontua prest dagoenean jakinaraziko dizugu."
 msgid "We'll use this to help customize your experience."
 msgstr "Hau erabiliko dugu zure esperientzia pertsonalizatzeko."
 
-#: src/components/dms/dialogs/SearchablePeopleList.tsx:92
+#: src/components/dialogs/SearchablePeopleList.tsx:107
 #: src/components/ProgressGuide/FollowDialog.tsx:172
 msgid "We're having network issues, try again"
 msgstr "Sare arazoak ditugu, saiatu berriro"
+
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:94
+msgid "We’re introducing a new layer of verification on Bluesky — an easy-to-see checkmark."
+msgstr ""
 
 #: src/screens/Signup/index.tsx:109
 msgid "We're so excited to have you join us!"
 msgstr "Pozik gaude gurekin bat egin izanagatik!"
 
-#: src/view/screens/ProfileList.tsx:113
+#: src/view/screens/ProfileList.tsx:117
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
 msgstr "Sentitzen dugu, baina ezin izan dugu zerrenda hau konpondu. Honek jarraitzen badu, jarri harremanetan zerrendaren sortzailearekin, @{handleOrDid}."
 
@@ -8699,6 +8906,10 @@ msgstr "Nola deitu nahi diozu zure abio multzoari?"
 msgid "What's up?"
 msgstr "Zer da?"
 
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:146
+msgid "When you tap on a check, you’ll see which organizations have granted verification."
+msgstr ""
+
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:80
 msgid "Which languages are used in this post?"
 msgstr "Zein hizkuntza erabiltzen dira post honetan?"
@@ -8714,6 +8925,10 @@ msgstr "Nork elkarreragin dezake post honekin?"
 #: src/components/WhoCanReply.tsx:91
 msgid "Who can reply"
 msgstr "Nork erantzun dezake"
+
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:127
+msgid "Who can verify?"
+msgstr ""
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
 #: src/screens/Messages/ChatList.tsx:231
@@ -8783,7 +8998,7 @@ msgstr "Idatzi zure erantzuna"
 msgid "Writers"
 msgstr "Idazleak"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:337
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:356
 msgid "Wrong DID returned from server. Received: {0}"
 msgstr "Zerbitzariak DID ez zuzena erantzun du. Jasotakoa: {0}"
 
@@ -8820,7 +9035,11 @@ msgstr "Atzo"
 msgid "You"
 msgstr "Zu"
 
-#: src/components/forms/HostingProvider.tsx:46
+#: src/components/verification/VerifierDialog.tsx:59
+msgid "You are a trusted verifier"
+msgstr ""
+
+#: src/components/forms/HostingProvider.tsx:45
 msgid "You are creating an account on"
 msgstr "Kontua sortzen ari zara hemen"
 
@@ -8835,6 +9054,19 @@ msgstr "Ezin dituzu bideoak kargatu."
 #: src/view/com/profile/ProfileFollows.tsx:94
 msgid "You are not following anyone."
 msgstr "Ez zara inor jarraitzen ari."
+
+#: src/components/verification/VerificationsDialog.tsx:64
+msgid "You are verified"
+msgstr ""
+
+#: src/screens/Profile/Header/EditProfileDialog.tsx:356
+#: src/view/com/modals/EditProfile.tsx:204
+msgid "You are verified. You will lose your verification status if you change your display name. <0>Learn more.</0>"
+msgstr ""
+
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:208
+msgid "You are verified. You will lose your verification status if you change your handle. <0>Learn more.</0>"
+msgstr ""
 
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:45
 msgid "You can adjust your interests at any time from \"Content and media\" settings."
@@ -8947,11 +9179,11 @@ msgstr "Ez duzu feedik."
 msgid "You have no lists."
 msgstr "Ez duzu zerrendarik."
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:129
+#: src/view/screens/ModerationBlockedAccounts.tsx:138
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
 msgstr "Oraindik ez duzu konturik blokeatu. Kontu bat blokeatzeko, joan bere profilera eta hautatu \"Blokeatu kontua\" bere kontuko menuan."
 
-#: src/view/screens/ModerationMutedAccounts.tsx:128
+#: src/view/screens/ModerationMutedAccounts.tsx:151
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr "Oraindik ez duzu mututu konturik. Kontu bat mututzeko, joan bere profilera eta hautatu \"Mututu kontua\" bere kontuko menuan."
 
@@ -9024,11 +9256,11 @@ msgstr "Aurretik @{0} desaktibatu zenuen."
 msgid "You reacted {0}"
 msgstr "Erreakzionatu duzu {0}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:213
+#: src/screens/Messages/components/ChatListItem.tsx:218
 msgid "You reacted {0} to {1}"
 msgstr "Erreakzionatu duzu {0} {1}-i"
 
-#: src/screens/Settings/Settings.tsx:257
+#: src/screens/Settings/Settings.tsx:265
 #: src/view/shell/desktop/LeftNav.tsx:206
 msgid "You will be signed out of all your accounts."
 msgstr "Zure kontu guztietatik aterako zara."
@@ -9045,15 +9277,15 @@ msgstr "Hari honen jakinarazpenak jasoko dituzu orain"
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "\"Berrezarpen kodea\" duen mezu elektroniko bat jasoko duzu. Sartu kode hori hemen, eta ondoren sartu pasahitz berria."
 
-#: src/screens/Messages/components/ChatListItem.tsx:149
+#: src/screens/Messages/components/ChatListItem.tsx:154
 msgid "You: {0}"
 msgstr "Zu: {0}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:178
+#: src/screens/Messages/components/ChatListItem.tsx:183
 msgid "You: {defaultEmbeddedContentMessage}"
 msgstr "Zu: {defaultEmbeddedContentMessage}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:171
+#: src/screens/Messages/components/ChatListItem.tsx:176
 msgid "You: {short}"
 msgstr "Zu: {short}"
 
@@ -9163,7 +9395,7 @@ msgstr "Zure txatak desaktibatu dira"
 msgid "Your choice will be saved, but can be changed later in settings."
 msgstr "Zure aukera gordeko da, baina geroago alda daiteke ezarpenetan."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:494
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:513
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
 msgstr "Zure oraingo handlea <0>{0}</0> zuretzako automatikoki erreserbatuko da. Edozein momentutan berriro aukeratu dezakezu kontu honetatik."
 
@@ -9194,7 +9426,7 @@ msgstr "Zure jarraitzaileak"
 msgid "Your following feed is empty! Follow more users to see what's happening."
 msgstr "Zure jarraitzen feeda hutsik dago! Jarraitu erabiltzaile gehiago zer gertatzen ari den ikusteko."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:221
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:240
 msgid "Your full handle will be <0>@{0}</0>"
 msgstr "Zure handle osoa <0>@{0}</0> da"
 
@@ -9202,7 +9434,7 @@ msgstr "Zure handle osoa <0>@{0}</0> da"
 msgid "Your full username will be <0>@{0}</0>"
 msgstr "Zure erabiltzaile-izen osoa <0>@{0}</0> izango da"
 
-#: src/Navigation.tsx:383
+#: src/Navigation.tsx:392
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:67
 #: src/screens/Settings/ContentAndMediaSettings.tsx:92
 #: src/screens/Settings/ContentAndMediaSettings.tsx:95
@@ -9262,3 +9494,7 @@ msgstr "Zure salaketa Bluesky Moderazio Zerbitzura bidaliko da"
 #: src/screens/Settings/SettingsInterests.tsx:53
 msgid "Your selected interests help us serve you content you care about."
 msgstr "Aukeratutako interesek gogoko duzun edukia zerbitzatzen laguntzen digute."
+
+#: src/components/verification/VerificationsDialog.tsx:65
+msgid "Your verifications"
+msgstr ""

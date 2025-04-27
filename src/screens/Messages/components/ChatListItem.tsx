@@ -43,6 +43,8 @@ import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import type * as bsky from '#/types/bsky'
 
 export let ChatListItem = ({
@@ -106,6 +108,9 @@ function ChatListItemReady({
   const playHaptic = useHaptics()
   const queryClient = useQueryClient()
   const isUnread = convo.unreadCount > 0
+  const verification = useSimpleVerificationState({
+    profile,
+  })
 
   const blockInfo = useMemo(() => {
     const modui = moderation.ui('profileView')
@@ -385,11 +390,10 @@ function ChatListItemReady({
               <View
                 style={[a.flex_1, a.justify_center, web({paddingRight: 45})]}>
                 <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
-                  <Text
-                    numberOfLines={1}
-                    style={[{maxWidth: '85%'}, web([a.leading_normal])]}>
+                  <View style={[a.flex_shrink]}>
                     <Text
                       emoji
+                      numberOfLines={1}
                       style={[
                         a.text_md,
                         t.atoms.text,
@@ -399,22 +403,31 @@ function ChatListItemReady({
                       ]}>
                       {displayName}
                     </Text>
-                  </Text>
+                  </View>
+                  {verification.showBadge && (
+                    <View style={[a.pl_xs, a.self_center]}>
+                      <VerificationCheck
+                        width={14}
+                        verifier={verification.role === 'verifier'}
+                      />
+                    </View>
+                  )}
                   {lastMessageSentAt && (
-                    <TimeElapsed timestamp={lastMessageSentAt}>
-                      {({timeElapsed}) => (
-                        <Text
-                          style={[
-                            a.text_sm,
-                            {lineHeight: 21},
-                            t.atoms.text_contrast_medium,
-                            web({whiteSpace: 'preserve nowrap'}),
-                          ]}>
-                          {' '}
-                          &middot; {timeElapsed}
-                        </Text>
-                      )}
-                    </TimeElapsed>
+                    <View style={[a.pl_xs]}>
+                      <TimeElapsed timestamp={lastMessageSentAt}>
+                        {({timeElapsed}) => (
+                          <Text
+                            style={[
+                              a.text_sm,
+                              {lineHeight: 21},
+                              t.atoms.text_contrast_medium,
+                              web({whiteSpace: 'preserve nowrap'}),
+                            ]}>
+                            &middot; {timeElapsed}
+                          </Text>
+                        )}
+                      </TimeElapsed>
+                    </View>
                   )}
                   {(convo.muted || moderation.blocked) && (
                     <Text
