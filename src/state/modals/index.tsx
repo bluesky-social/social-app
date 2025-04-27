@@ -55,16 +55,6 @@ export interface PostLanguagesSettingsModal {
   name: 'post-languages-settings'
 }
 
-export interface VerifyEmailModal {
-  name: 'verify-email'
-  showReminder?: boolean
-  onSuccess?: () => void
-}
-
-export interface ChangeEmailModal {
-  name: 'change-email'
-}
-
 export interface ChangePasswordModal {
   name: 'change-password'
 }
@@ -76,16 +66,9 @@ export interface LinkWarningModal {
   share?: boolean
 }
 
-export interface InAppBrowserConsentModal {
-  name: 'in-app-browser-consent'
-  href: string
-}
-
 export type Modal =
   // Account
   | DeleteAccountModal
-  | VerifyEmailModal
-  | ChangeEmailModal
   | ChangePasswordModal
 
   // Temp
@@ -108,7 +91,6 @@ export type Modal =
 
   // Generic
   | LinkWarningModal
-  | InAppBrowserConsentModal
 
 const ModalContext = React.createContext<{
   isModalActive: boolean

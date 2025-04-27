@@ -18,12 +18,12 @@ export const VerifiedCheck = React.forwardRef<Svg, Props>(function LogoImpl(
       width={size}
       height={size}
       style={[style]}>
-      <Circle cx="12" cy="12" r="12" fill={fill} />
+      <Circle cx="12" cy="12" r="11.5" fill={fill} />
       <Path
         fill="#fff"
         fillRule="evenodd"
         clipRule="evenodd"
-        d="M18.311 7.421a1.437 1.437 0 0 1 0 2.033l-6.571 6.571a1.437 1.437 0 0 1-2.033 0L6.42 12.74a1.438 1.438 0 0 1 2.033-2.033l2.27 2.269 5.554-5.555a1.437 1.437 0 0 1 2.033 0Z"
+        d="M17.659 8.175a1.361 1.361 0 0 1 0 1.925l-6.224 6.223a1.361 1.361 0 0 1-1.925 0L6.4 13.212a1.361 1.361 0 0 1 1.925-1.925l2.149 2.148 5.26-5.26a1.361 1.361 0 0 1 1.925 0Z"
       />
     </Svg>
   )
