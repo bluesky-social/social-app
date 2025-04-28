@@ -1,9 +1,9 @@
 import React, {useCallback} from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {
-  AppBskyActorDefs,
-  ModerationCause,
-  ModerationDecision,
+  type AppBskyActorDefs,
+  type ModerationCause,
+  type ModerationDecision,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
@@ -12,12 +12,12 @@ import {useNavigation} from '@react-navigation/native'
 
 import {BACK_HITSLOP} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {isWeb} from '#/platform/detection'
-import {Shadow} from '#/state/cache/profile-shadow'
+import {type Shadow} from '#/state/cache/profile-shadow'
 import {isConvoActive, useConvo} from '#/state/messages/convo'
-import {ConvoItem} from '#/state/messages/convo/types'
+import {type ConvoItem} from '#/state/messages/convo/types'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
@@ -25,6 +25,8 @@ import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/
 import {Link} from '#/components/Link'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 
 const PFP_SIZE = isWeb ? 40 : 34
 
@@ -149,6 +151,9 @@ function HeaderReady({
   const {_} = useLingui()
   const t = useTheme()
   const convoState = useConvo()
+  const verification = useSimpleVerificationState({
+    profile,
+  })
 
   const isDeletedAccount = profile?.handle === 'missing.invalid'
   const displayName = isDeletedAccount
@@ -185,17 +190,27 @@ function HeaderReady({
             />
           </View>
           <View style={a.flex_1}>
-            <Text
-              emoji
-              style={[
-                a.text_md,
-                a.font_bold,
-                a.self_start,
-                web(a.leading_normal),
-              ]}
-              numberOfLines={1}>
-              {displayName}
-            </Text>
+            <View style={[a.flex_row, a.align_center]}>
+              <Text
+                emoji
+                style={[
+                  a.text_md,
+                  a.font_bold,
+                  a.self_start,
+                  web(a.leading_normal),
+                ]}
+                numberOfLines={1}>
+                {displayName}
+              </Text>
+              {verification.showBadge && (
+                <View style={[a.pl_xs]}>
+                  <VerificationCheck
+                    width={14}
+                    verifier={verification.role === 'verifier'}
+                  />
+                </View>
+              )}
+            </View>
             {!isDeletedAccount && (
               <Text
                 style={[

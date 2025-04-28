@@ -1,11 +1,12 @@
 import React, {useCallback} from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
-import {AppBskyEmbedExternal} from '@atproto/api'
+import {type AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
+import {useHaptics} from '#/lib/haptics'
 import {shareUrl} from '#/lib/sharing'
 import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
@@ -33,6 +34,7 @@ export const ExternalLinkEmbed = ({
 }) => {
   const {_} = useLingui()
   const t = useTheme()
+  const playHaptic = useHaptics()
   const externalEmbedPrefs = useExternalEmbedsPrefs()
   const niceUrl = toNiceDomain(link.uri)
   const imageUri = link.thumb
@@ -45,11 +47,17 @@ export const ExternalLinkEmbed = ({
   }, [link.uri, externalEmbedPrefs])
   const hasMedia = Boolean(imageUri || embedPlayerParams)
 
+  const onPress = useCallback(() => {
+    playHaptic('Light')
+    onOpen?.()
+  }, [playHaptic, onOpen])
+
   const onShareExternal = useCallback(() => {
     if (link.uri && isNative) {
+      playHaptic('Heavy')
       shareUrl(link.uri)
     }
-  }, [link.uri])
+  }, [link.uri, playHaptic])
 
   if (embedPlayerParams?.source === 'tenor') {
     const parsedAlt = parseAltFromGIFDescription(link.description)
@@ -71,7 +79,7 @@ export const ExternalLinkEmbed = ({
       label={link.title || _(msg`Open link to ${niceUrl}`)}
       to={link.uri}
       shouldProxy={true}
-      onPress={onOpen}
+      onPress={onPress}
       onLongPress={onShareExternal}>
       {({hovered}) => (
         <View

@@ -1,4 +1,4 @@
-import {version} from '../../package.json'
+import packageDotJson from '../../package.json'
 
 export const IS_TESTFLIGHT = false
 export const IS_INTERNAL = __DEV__
@@ -14,5 +14,5 @@ export const BUNDLE_DATE = __DEV__
   ? 0
   : Number(process.env.EXPO_PUBLIC_BUNDLE_DATE)
 
-export const appVersion = version
+export const appVersion = packageDotJson.version
 export const bundleInfo = `${BUNDLE_IDENTIFIER} (${__DEV__ ? 'dev' : 'prod'})`

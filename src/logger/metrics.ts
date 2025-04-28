@@ -1,3 +1,5 @@
+import {type FeedDescriptor} from '#/state/queries/post-feed'
+
 export type MetricEvents = {
   // App events
   init: {
@@ -51,6 +53,17 @@ export type MetricEvents = {
   }
   'signup:captchaSuccess': {}
   'signup:captchaFailure': {}
+  'signup:fieldError': {
+    field: string
+    errorCount: number
+    errorMessage: string
+    activeStep: number
+  }
+  'signup:backgrounded': {
+    activeStep: number
+    backgroundCount: number
+  }
+  'signup:handleTaken': {}
   'signin:hostingProviderPressed': {
     hostingProviderDidChange: boolean
   }
@@ -135,7 +148,11 @@ export type MetricEvents = {
 
   // Data events
   'account:create:begin': {}
-  'account:create:success': {}
+  'account:create:success': {
+    signupDuration: number
+    fieldErrorsTotal: number
+    backgroundCount: number
+  }
   'post:create': {
     imageCount: number
     isReply: boolean
@@ -187,6 +204,7 @@ export type MetricEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'PostOnboardingFindFollows'
       | 'ImmersiveVideo'
+      | 'ExploreSuggestedAccounts'
   }
   'suggestedUser:follow': {
     logContext:
@@ -224,6 +242,7 @@ export type MetricEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'PostOnboardingFindFollows'
       | 'ImmersiveVideo'
+      | 'ExploreSuggestedAccounts'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
@@ -303,8 +322,37 @@ export type MetricEvents = {
     context: 'interstitial:discover' | 'interstitial:explore' | 'feed'
   }
 
+  'explore:module:seen': {
+    module:
+      | 'trendingTopics'
+      | 'trendingVideos'
+      | 'suggestedAccounts'
+      | 'suggestedFeeds'
+      | 'suggestedStarterPacks'
+      | `feed:${FeedDescriptor}`
+  }
+  'explore:module:searchButtonPress': {
+    module: 'suggestedAccounts' | 'suggestedFeeds'
+  }
+  'explore:suggestedAccounts:tabPressed': {
+    tab: string
+  }
+
   'progressGuide:hide': {}
   'progressGuide:followDialog:open': {}
+
+  'moderation:subscribedToLabeler': {}
+  'moderation:unsubscribedFromLabeler': {}
+  'moderation:changeLabelPreference': {
+    preference: string
+  }
+
+  'moderation:subscribedToList': {
+    listType: 'mute' | 'block'
+  }
+  'moderation:unsubscribedFromList': {
+    listType: 'mute' | 'block'
+  }
 
   'reportDialog:open': {
     subjectType: string
@@ -316,4 +364,23 @@ export type MetricEvents = {
     details: boolean
   }
   'reportDialog:failure': {}
+
+  translate: {
+    sourceLanguages: string[]
+    targetLanguage: string
+    textLength: number
+  }
+
+  'verification:create': {}
+  'verification:revoke': {}
+  'verification:badge:click': {}
+  'verification:learn-more': {
+    location:
+      | 'initialAnnouncementeNux'
+      | 'verificationsDialog'
+      | 'verifierDialog'
+      | 'verificationSettings'
+  }
+  'verification:settings:hideBadges': {}
+  'verification:settings:unHideBadges': {}
 }

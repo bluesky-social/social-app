@@ -392,7 +392,7 @@ function getCompressErrorMessage(e: unknown, _: I18n['_']): string | null {
     return null
   }
   if (e instanceof VideoTooLargeError) {
-    return _(msg`The selected video is larger than 50MB.`)
+    return _(msg`The selected video is larger than 100 MB.`)
   }
   logger.error('Error compressing video', {safeMessage: e})
   return _(msg`An error occurred while compressing the video.`)

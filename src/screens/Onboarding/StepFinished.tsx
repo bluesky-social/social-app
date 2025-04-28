@@ -1,12 +1,12 @@
 import React from 'react'
 import {View} from 'react-native'
 import {
-  AppBskyActorProfile,
-  AppBskyGraphDefs,
+  type AppBskyActorProfile,
+  type AppBskyGraphDefs,
   AppBskyGraphStarterpack,
-  Un$Typed,
+  type Un$Typed,
 } from '@atproto/api'
-import {SavedFeed} from '@atproto/api/dist/client/types/app/bsky/actor/defs'
+import {type SavedFeed} from '@atproto/api/dist/client/types/app/bsky/actor/defs'
 import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -46,7 +46,7 @@ import {IconCircle} from '#/components/IconCircle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
 import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
-import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending2'
+import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'

@@ -1,30 +1,28 @@
 import React from 'react'
 import {
-  ActivityIndicator,
   findNodeHandle,
-  ListRenderItemInfo,
-  StyleProp,
-  StyleSheet,
+  type ListRenderItemInfo,
+  type StyleProp,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {RQKEY, useProfileFeedgensQuery} from '#/state/queries/profile-feedgens'
 import {EmptyState} from '#/view/com/util/EmptyState'
+import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
+import {List, type ListRef} from '#/view/com/util/List'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {atoms as a, ios, useTheme} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {List, ListRef} from '../util/List'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
+import {ListFooter} from '#/components/Lists'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -58,8 +56,7 @@ export const ProfileFeedgens = React.forwardRef<
   const opts = React.useMemo(() => ({enabled}), [enabled])
   const {
     data,
-    isFetching,
-    isFetched,
+    isPending,
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
@@ -67,16 +64,15 @@ export const ProfileFeedgens = React.forwardRef<
     error,
     refetch,
   } = useProfileFeedgensQuery(did, opts)
-  const isEmpty = !isFetching && !data?.pages[0]?.feeds.length
+  const isEmpty = !isPending && !data?.pages[0]?.feeds.length
   const {data: preferences} = usePreferencesQuery()
-  const {isMobile} = useWebMediaQueries()
 
   const items = React.useMemo(() => {
     let items: any[] = []
     if (isError && isEmpty) {
       items = items.concat([ERROR_ITEM])
     }
-    if (!isFetched || isFetching) {
+    if (isPending) {
       items = items.concat([LOADING])
     } else if (isEmpty) {
       items = items.concat([EMPTY])
@@ -88,7 +84,7 @@ export const ProfileFeedgens = React.forwardRef<
       items = items.concat([LOAD_MORE_ERROR_ITEM])
     }
     return items
-  }, [isError, isEmpty, isFetched, isFetching, data])
+  }, [isError, isEmpty, isPending, data])
 
   // events
   // =
@@ -118,14 +114,14 @@ export const ProfileFeedgens = React.forwardRef<
   }, [refetch, setIsPTRing])
 
   const onEndReached = React.useCallback(async () => {
-    if (isFetching || !hasNextPage || isError) return
+    if (isFetchingNextPage || !hasNextPage || isError) return
 
     try {
       await fetchNextPage()
     } catch (err) {
       logger.error('Failed to load more feeds', {message: err})
     }
-  }, [isFetching, hasNextPage, isError, fetchNextPage])
+  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
   const onPressRetryLoadMore = React.useCallback(() => {
     fetchNextPage()
@@ -186,10 +182,16 @@ export const ProfileFeedgens = React.forwardRef<
   }, [enabled, scrollElRef, setScrollViewTag])
 
   const ProfileFeedgensFooter = React.useCallback(() => {
-    return isFetchingNextPage ? (
-      <ActivityIndicator style={[styles.footer]} />
-    ) : null
-  }, [isFetchingNextPage])
+    return (
+      <ListFooter
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        onRetry={fetchNextPage}
+        error={cleanError(error)}
+        height={180 + headerOffset}
+      />
+    )
+  }, [hasNextPage, error, isFetchingNextPage, headerOffset, fetchNextPage])
 
   return (
     <View testID={testID} style={style}>
@@ -197,14 +199,13 @@ export const ProfileFeedgens = React.forwardRef<
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
         data={items}
-        keyExtractor={(item: any) => item._reactKey || item.uri}
+        keyExtractor={keyExtractor}
         renderItem={renderItem}
         ListFooterComponent={ProfileFeedgensFooter}
         refreshing={isPTRing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
         progressViewOffset={ios(0)}
-        contentContainerStyle={isMobile && {paddingBottom: headerOffset + 100}}
         removeClippedSubviews={true}
         desktopFixedHeight
         onEndReached={onEndReached}
@@ -213,6 +214,6 @@ export const ProfileFeedgens = React.forwardRef<
   )
 })
 
-const styles = StyleSheet.create({
-  footer: {paddingTop: 20},
-})
+function keyExtractor(item: any) {
+  return item._reactKey || item.uri
+}

@@ -12,14 +12,14 @@ import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text as TiptapText} from '@tiptap/extension-text'
 import {generateJSON} from '@tiptap/html'
 import {Fragment, Node, Slice} from '@tiptap/pm/model'
-import {EditorContent, JSONContent, useEditor} from '@tiptap/react'
+import {EditorContent, type JSONContent, useEditor} from '@tiptap/react'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {blobToDataUri, isUriImage} from '#/lib/media/util'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {
-  LinkFacetMatch,
+  type LinkFacetMatch,
   suggestLinkCardUri,
 } from '#/view/com/composer/text-input/text-input-util'
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
@@ -28,7 +28,7 @@ import {normalizeTextStyles} from '#/alf/typography'
 import {Portal} from '#/components/Portal'
 import {Text} from '../../util/text/Text'
 import {createSuggestion} from './web/Autocomplete'
-import {Emoji} from './web/EmojiPicker.web'
+import {type Emoji} from './web/EmojiPicker'
 import {LinkDecorator} from './web/LinkDecorator'
 import {TagDecorator} from './web/TagDecorator'
 

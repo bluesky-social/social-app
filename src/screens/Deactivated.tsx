@@ -200,13 +200,13 @@ export function Deactivated() {
                 <Trans>Or, continue with another account.</Trans>
               </Text>
               <Button
-                label={_(msg`Sign in or sign up`)}
+                label={_(msg`Sign in or create an account`)}
                 size="large"
                 variant="solid"
                 color="secondary"
                 onPress={() => setShowLoggedOut(true)}>
                 <ButtonText>
-                  <Trans>Sign in or sign up</Trans>
+                  <Trans>Sign in or create an account</Trans>
                 </ButtonText>
               </Button>
             </>

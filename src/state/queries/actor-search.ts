@@ -1,9 +1,12 @@
-import {AppBskyActorDefs, AppBskyActorSearchActors} from '@atproto/api'
 import {
-  InfiniteData,
+  type AppBskyActorDefs,
+  type AppBskyActorSearchActors,
+} from '@atproto/api'
+import {
+  type InfiniteData,
   keepPreviousData,
-  QueryClient,
-  QueryKey,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
   useQuery,
 } from '@tanstack/react-query'
@@ -14,8 +17,12 @@ import {useAgent} from '#/state/session'
 const RQKEY_ROOT = 'actor-search'
 export const RQKEY = (query: string) => [RQKEY_ROOT, query]
 
-const RQKEY_ROOT_PAGINATED = `${RQKEY_ROOT}_paginated`
-export const RQKEY_PAGINATED = (query: string) => [RQKEY_ROOT_PAGINATED, query]
+export const RQKEY_ROOT_PAGINATED = `${RQKEY_ROOT}_paginated`
+export const RQKEY_PAGINATED = (query: string, limit?: number) => [
+  RQKEY_ROOT_PAGINATED,
+  query,
+  limit,
+]
 
 export function useActorSearch({
   query,
@@ -42,10 +49,12 @@ export function useActorSearchPaginated({
   query,
   enabled,
   maintainData,
+  limit = 25,
 }: {
   query: string
   enabled?: boolean
   maintainData?: boolean
+  limit?: number
 }) {
   const agent = useAgent()
   return useInfiniteQuery<
@@ -56,11 +65,11 @@ export function useActorSearchPaginated({
     string | undefined
   >({
     staleTime: STALE.MINUTES.FIVE,
-    queryKey: RQKEY_PAGINATED(query),
+    queryKey: RQKEY_PAGINATED(query, limit),
     queryFn: async ({pageParam}) => {
       const res = await agent.searchActors({
         q: query,
-        limit: 25,
+        limit,
         cursor: pageParam,
       })
       return res.data

@@ -7,11 +7,11 @@ import {
 } from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
-  AppBskyFeedThreadgate,
+  type AppBskyFeedThreadgate,
   AtUri,
-  RichText as RichTextAPI,
+  type RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -20,7 +20,10 @@ import {useNavigation} from '@react-navigation/native'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
-import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
 import {logEvent} from '#/lib/statsig/statsig'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
@@ -28,12 +31,11 @@ import {toShareUrl} from '#/lib/strings/url-helpers'
 import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
-import {Shadow} from '#/state/cache/post-shadow'
+import {type Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
-import {useDevModeEnabled} from '#/state/preferences/dev-mode'
 import {usePinnedPostMutation} from '#/state/queries/pinned-post'
 import {
   usePostDeleteMutation,
@@ -85,6 +87,8 @@ import {
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
+import {useDevMode} from '#/storage/hooks/dev-mode'
+import * as bsky from '#/types/bsky'
 import * as Toast from '../Toast'
 
 let PostDropdownMenuItems = ({
@@ -131,7 +135,7 @@ let PostDropdownMenuItems = ({
   const hideReplyConfirmControl = useDialogControl()
   const {mutateAsync: toggleReplyVisibility} =
     useToggleReplyVisibilityMutation()
-  const [devModeEnabled] = useDevModeEnabled()
+  const [devModeEnabled] = useDevMode()
 
   const postUri = post.uri
   const postCid = post.cid
@@ -183,7 +187,7 @@ let PostDropdownMenuItems = ({
   const onDeletePost = React.useCallback(() => {
     deletePostMutate({uri: postUri}).then(
       () => {
-        Toast.show(_(msg`Post deleted`))
+        Toast.show(_(msg({message: 'Post deleted', context: 'toast'})))
 
         const route = getCurrentRoute(navigation.getState())
         if (route.name === 'PostThread') {
@@ -248,7 +252,20 @@ let PostDropdownMenuItems = ({
 
   const onPressTranslate = React.useCallback(async () => {
     await openLink(translatorUrl, true)
-  }, [openLink, translatorUrl])
+
+    if (
+      bsky.dangerousIsType<AppBskyFeedPost.Record>(
+        post.record,
+        AppBskyFeedPost.isRecord,
+      )
+    ) {
+      logger.metric('translate', {
+        sourceLanguages: post.record.langs ?? [],
+        targetLanguage: langPrefs.primaryLanguage,
+        textLength: post.record.text.length,
+      })
+    }
+  }, [openLink, translatorUrl, langPrefs, post])
 
   const onHidePost = React.useCallback(() => {
     hidePost({uri: postUri})
@@ -274,7 +291,7 @@ let PostDropdownMenuItems = ({
       item: postUri,
       feedContext: postFeedContext,
     })
-    Toast.show(_(msg`Feedback sent!`))
+    Toast.show(_(msg({message: 'Feedback sent!', context: 'toast'})))
   }, [feedFeedback, postUri, postFeedContext, _])
 
   const onPressShowLess = React.useCallback(() => {
@@ -283,7 +300,7 @@ let PostDropdownMenuItems = ({
       item: postUri,
       feedContext: postFeedContext,
     })
-    Toast.show(_(msg`Feedback sent!`))
+    Toast.show(_(msg({message: 'Feedback sent!', context: 'toast'})))
   }, [feedFeedback, postUri, postFeedContext, _])
 
   const onSelectChatToShareTo = React.useCallback(
@@ -314,7 +331,9 @@ let PostDropdownMenuItems = ({
           : _(msg`Quote post was re-attached`),
       )
     } catch (e: any) {
-      Toast.show(_(msg`Updating quote attachment failed`))
+      Toast.show(
+        _(msg({message: 'Updating quote attachment failed', context: 'toast'})),
+      )
       logger.error(`Failed to ${action} quote`, {safeMessage: e.message})
     }
   }, [_, quoteEmbed, post, toggleQuoteDetachment])
@@ -341,10 +360,12 @@ let PostDropdownMenuItems = ({
       Toast.show(
         isHide
           ? _(msg`Reply was successfully hidden`)
-          : _(msg`Reply visibility updated`),
+          : _(msg({message: 'Reply visibility updated', context: 'toast'})),
       )
     } catch (e: any) {
-      Toast.show(_(msg`Updating reply visibility failed`))
+      Toast.show(
+        _(msg({message: 'Updating reply visibility failed', context: 'toast'})),
+      )
       logger.error(`Failed to ${action} reply`, {safeMessage: e.message})
     }
   }, [
@@ -368,7 +389,7 @@ let PostDropdownMenuItems = ({
   const onBlockAuthor = useCallback(async () => {
     try {
       await queueBlock()
-      Toast.show(_(msg`Account blocked`))
+      Toast.show(_(msg({message: 'Account blocked', context: 'toast'})))
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('Failed to block account', {message: e})
@@ -381,7 +402,7 @@ let PostDropdownMenuItems = ({
     if (postAuthor.viewer?.muted) {
       try {
         await queueUnmute()
-        Toast.show(_(msg`Account unmuted`))
+        Toast.show(_(msg({message: 'Account unmuted', context: 'toast'})))
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to unmute account', {message: e})
@@ -391,7 +412,7 @@ let PostDropdownMenuItems = ({
     } else {
       try {
         await queueMute()
-        Toast.show(_(msg`Account muted`))
+        Toast.show(_(msg({message: 'Account muted', context: 'toast'})))
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to mute account', {message: e})

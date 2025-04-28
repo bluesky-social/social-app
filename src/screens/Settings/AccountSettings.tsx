@@ -1,14 +1,15 @@
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
+import {ChangeEmailDialog} from '#/components/dialogs/ChangeEmailDialog'
 import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {At_Stroke2_Corner2_Rounded as AtIcon} from '#/components/icons/At'
 import {BirthdayCake_Stroke2_Corner2_Rounded as BirthdayCakeIcon} from '#/components/icons/BirthdayCake'
@@ -17,8 +18,8 @@ import {Envelope_Stroke2_Corner2_Rounded as EnvelopeIcon} from '#/components/ico
 import {Freeze_Stroke2_Corner2_Rounded as FreezeIcon} from '#/components/icons/Freeze'
 import {Lock_Stroke2_Corner2_Rounded as LockIcon} from '#/components/icons/Lock'
 import {PencilLine_Stroke2_Corner2_Rounded as PencilIcon} from '#/components/icons/Pencil'
+import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
 import {Trash_Stroke2_Corner2_Rounded} from '#/components/icons/Trash'
-import {Verified_Stroke2_Corner2_Rounded as VerifiedIcon} from '#/components/icons/Verified'
 import * as Layout from '#/components/Layout'
 import {ChangeHandleDialog} from './components/ChangeHandleDialog'
 import {DeactivateAccountDialog} from './components/DeactivateAccountDialog'
@@ -31,6 +32,7 @@ export function AccountSettingsScreen({}: Props) {
   const {currentAccount} = useSession()
   const {openModal} = useModalControls()
   const verifyEmailControl = useDialogControl()
+  const changeEmailControl = useDialogControl()
   const birthdayControl = useDialogControl()
   const changeHandleControl = useDialogControl()
   const exportCarControl = useDialogControl()
@@ -65,7 +67,7 @@ export function AccountSettingsScreen({}: Props) {
                   {currentAccount.email || <Trans>(no email)</Trans>}
                 </SettingsList.BadgeText>
                 {currentAccount.emailConfirmed && (
-                  <VerifiedIcon fill={t.palette.primary_500} size="md" />
+                  <ShieldIcon fill={t.palette.primary_500} size="md" />
                 )}
               </>
             )}
@@ -83,7 +85,7 @@ export function AccountSettingsScreen({}: Props) {
               hoverStyle={[{backgroundColor: t.palette.primary_100}]}
               contentContainerStyle={[a.rounded_md, a.px_lg]}>
               <SettingsList.ItemIcon
-                icon={VerifiedIcon}
+                icon={ShieldIcon}
                 color={t.palette.primary_500}
               />
               <SettingsList.ItemText
@@ -95,7 +97,7 @@ export function AccountSettingsScreen({}: Props) {
           )}
           <SettingsList.PressableItem
             label={_(msg`Change email`)}
-            onPress={() => openModal({name: 'change-email'})}>
+            onPress={() => changeEmailControl.open()}>
             <SettingsList.ItemIcon icon={PencilIcon} />
             <SettingsList.ItemText>
               <Trans>Change email</Trans>
@@ -165,7 +167,14 @@ export function AccountSettingsScreen({}: Props) {
         </SettingsList.Container>
       </Layout.Content>
 
-      <VerifyEmailDialog control={verifyEmailControl} />
+      <ChangeEmailDialog
+        control={changeEmailControl}
+        verifyEmailControl={verifyEmailControl}
+      />
+      <VerifyEmailDialog
+        control={verifyEmailControl}
+        changeEmailControl={changeEmailControl}
+      />
       <BirthDateSettingsDialog control={birthdayControl} />
       <ChangeHandleDialog control={changeHandleControl} />
       <ExportCarDialog control={exportCarControl} />

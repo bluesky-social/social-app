@@ -14,3 +14,8 @@ export const BUTTON_VISUAL_ALIGNMENT_OFFSET = 3
  * Corresponds to the width of a small square or round button
  */
 export const HEADER_SLOT_SIZE = 34
+
+/**
+ * How far to shift the center column when in the tablet breakpoint
+ */
+export const CENTER_COLUMN_OFFSET = -105

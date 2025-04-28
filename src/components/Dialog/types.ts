@@ -68,7 +68,10 @@ export type DialogOuterProps = {
   testID?: string
 }
 
-type DialogInnerPropsBase<T> = React.PropsWithChildren<ViewStyleProp> & T
+type DialogInnerPropsBase<T> = React.PropsWithChildren<ViewStyleProp> &
+  T & {
+    testID?: string
+  }
 export type DialogInnerProps =
   | DialogInnerPropsBase<{
       label?: undefined

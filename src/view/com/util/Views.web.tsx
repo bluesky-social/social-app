@@ -28,6 +28,7 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {addStyle} from '#/lib/styles'
 import {useLayoutBreakpoints} from '#/alf'
 import {useDialogContext} from '#/components/Dialog'
+import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 
 interface AddedProps {
   desktopFixedHeight?: boolean | number
@@ -179,7 +180,7 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
   containerOffset: {
-    transform: [{translateX: -150}],
+    transform: [{translateX: CENTER_COLUMN_OFFSET}],
   },
   containerScroll: {
     width: '100%',

@@ -144,7 +144,8 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   }
 
   func updateLayout() {
-    if self.prevLayoutDetentIdentifier == self.selectedDetentIdentifier,
+    // Allow updates either when identifiers match OR when prevLayoutDetentIdentifier is nil (first real content update)
+    if (self.prevLayoutDetentIdentifier == self.selectedDetentIdentifier || self.prevLayoutDetentIdentifier == nil),
        let contentHeight = self.innerView?.subviews.first?.frame.size.height {
       self.sheetVc?.updateDetents(contentHeight: self.clampHeight(contentHeight),
                                   preventExpansion: self.preventExpansion)

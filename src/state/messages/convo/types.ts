@@ -1,11 +1,11 @@
 import {
-  BskyAgent,
-  ChatBskyActorDefs,
-  ChatBskyConvoDefs,
-  ChatBskyConvoSendMessage,
+  type BskyAgent,
+  type ChatBskyActorDefs,
+  type ChatBskyConvoDefs,
+  type ChatBskyConvoSendMessage,
 } from '@atproto/api'
 
-import {MessagesEventBus} from '#/state/messages/events/agent'
+import {type MessagesEventBus} from '#/state/messages/events/agent'
 
 export type ConvoParams = {
   convoId: string
@@ -142,6 +142,8 @@ type SendMessage = (
 ) => void
 type FetchMessageHistory = () => Promise<void>
 type MarkConvoAccepted = () => void
+type AddReaction = (messageId: string, reaction: string) => Promise<void>
+type RemoveReaction = (messageId: string, reaction: string) => Promise<void>
 
 export type ConvoStateUninitialized = {
   status: ConvoStatus.Uninitialized
@@ -155,6 +157,8 @@ export type ConvoStateUninitialized = {
   sendMessage: undefined
   fetchMessageHistory: undefined
   markConvoAccepted: undefined
+  addReaction: undefined
+  removeReaction: undefined
 }
 export type ConvoStateInitializing = {
   status: ConvoStatus.Initializing
@@ -168,6 +172,8 @@ export type ConvoStateInitializing = {
   sendMessage: undefined
   fetchMessageHistory: undefined
   markConvoAccepted: undefined
+  addReaction: undefined
+  removeReaction: undefined
 }
 export type ConvoStateReady = {
   status: ConvoStatus.Ready
@@ -181,6 +187,8 @@ export type ConvoStateReady = {
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
   markConvoAccepted: MarkConvoAccepted
+  addReaction: AddReaction
+  removeReaction: RemoveReaction
 }
 export type ConvoStateBackgrounded = {
   status: ConvoStatus.Backgrounded
@@ -194,6 +202,8 @@ export type ConvoStateBackgrounded = {
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
   markConvoAccepted: MarkConvoAccepted
+  addReaction: AddReaction
+  removeReaction: RemoveReaction
 }
 export type ConvoStateSuspended = {
   status: ConvoStatus.Suspended
@@ -207,6 +217,8 @@ export type ConvoStateSuspended = {
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
   markConvoAccepted: MarkConvoAccepted
+  addReaction: AddReaction
+  removeReaction: RemoveReaction
 }
 export type ConvoStateError = {
   status: ConvoStatus.Error
@@ -220,6 +232,8 @@ export type ConvoStateError = {
   sendMessage: undefined
   fetchMessageHistory: undefined
   markConvoAccepted: undefined
+  addReaction: undefined
+  removeReaction: undefined
 }
 export type ConvoStateDisabled = {
   status: ConvoStatus.Disabled
@@ -233,6 +247,8 @@ export type ConvoStateDisabled = {
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
   markConvoAccepted: MarkConvoAccepted
+  addReaction: AddReaction
+  removeReaction: RemoveReaction
 }
 export type ConvoState =
   | ConvoStateUninitialized

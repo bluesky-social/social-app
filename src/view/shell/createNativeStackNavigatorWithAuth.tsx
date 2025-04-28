@@ -5,21 +5,21 @@ import {View} from 'react-native'
 // Copyright (c) 2017 React Navigation Contributors
 import {
   createNavigatorFactory,
-  EventArg,
-  ParamListBase,
-  StackActionHelpers,
+  type EventArg,
+  type ParamListBase,
+  type StackActionHelpers,
   StackActions,
-  StackNavigationState,
+  type StackNavigationState,
   StackRouter,
-  StackRouterOptions,
+  type StackRouterOptions,
   useNavigationBuilder,
 } from '@react-navigation/native'
-import type {
-  NativeStackNavigationEventMap,
-  NativeStackNavigationOptions,
+import {
+  type NativeStackNavigationEventMap,
+  type NativeStackNavigationOptions,
 } from '@react-navigation/native-stack'
 import {NativeStackView} from '@react-navigation/native-stack'
-import type {NativeStackNavigatorProps} from '@react-navigation/native-stack/src/types'
+import {type NativeStackNavigatorProps} from '@react-navigation/native-stack/src/types'
 
 import {PWI_ENABLED} from '#/lib/build-flags'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -35,7 +35,7 @@ import {Deactivated} from '#/screens/Deactivated'
 import {Onboarding} from '#/screens/Onboarding'
 import {SignupQueued} from '#/screens/SignupQueued'
 import {Takendown} from '#/screens/Takendown'
-import {atoms as a} from '#/alf'
+import {atoms as a, useLayoutBreakpoints} from '#/alf'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
@@ -101,7 +101,8 @@ function NativeStackNavigator({
   const onboardingState = useOnboardingState()
   const {showLoggedOut} = useLoggedOutView()
   const {setShowLoggedOut} = useLoggedOutViewControls()
-  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
+  const {isMobile} = useWebMediaQueries()
+  const {leftNavMinimal} = useLayoutBreakpoints()
   if (!hasSession && (!PWI_ENABLED || activeRouteRequiresAuth || isNative)) {
     return <LoggedOut />
   }
@@ -137,8 +138,8 @@ function NativeStackNavigator({
   }
 
   // Show the bottom bar if we have a session only on mobile web. If we don't have a session, we want to show it
-  // on both tablet and mobile web so that we see the sign up CTA.
-  const showBottomBar = hasSession ? isMobile : isTabletOrMobile
+  // on both tablet and mobile web so that we see the create account CTA.
+  const showBottomBar = hasSession ? isMobile : leftNavMinimal
 
   return (
     <NavigationContent>

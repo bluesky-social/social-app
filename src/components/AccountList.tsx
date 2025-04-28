@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -12,6 +12,8 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {ChevronRight_Stroke2_Corner0_Rounded as Chevron} from '#/components/icons/Chevron'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {Button} from './Button'
 import {Text} from './Typography'
 
@@ -74,11 +76,13 @@ export function AccountList({
             ]}>
             <Text
               style={[
-                a.align_baseline,
+                a.font_bold,
                 a.flex_1,
                 a.flex_row,
                 a.py_sm,
-                {paddingLeft: 48},
+                a.leading_tight,
+                t.atoms.text_contrast_medium,
+                {paddingLeft: 56},
               ]}>
               {otherLabel ?? <Trans>Other account</Trans>}
             </Text>
@@ -105,6 +109,7 @@ function AccountItem({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const verification = useSimpleVerificationState({profile})
 
   const onPress = useCallback(() => {
     onSelect(account)
@@ -114,7 +119,7 @@ function AccountItem({
     <Button
       testID={`chooseAccountBtn-${account.handle}`}
       key={account.did}
-      style={[a.flex_1]}
+      style={[a.w_full]}
       onPress={onPress}
       label={
         isCurrentAccount
@@ -127,33 +132,45 @@ function AccountItem({
             a.flex_1,
             a.flex_row,
             a.align_center,
-            {height: 48},
+            a.px_md,
+            a.gap_sm,
+            {height: 56},
             (hovered || pressed || isPendingAccount) && t.atoms.bg_contrast_25,
           ]}>
-          <View style={a.p_md}>
-            <UserAvatar
-              avatar={profile?.avatar}
-              size={24}
-              type={profile?.associated?.labeler ? 'labeler' : 'user'}
-            />
-          </View>
-          <Text style={[a.align_baseline, a.flex_1, a.flex_row, a.py_sm]}>
-            <Text emoji style={[a.font_bold]}>
-              {sanitizeDisplayName(
-                profile?.displayName || profile?.handle || account.handle,
+          <UserAvatar
+            avatar={profile?.avatar}
+            size={36}
+            type={profile?.associated?.labeler ? 'labeler' : 'user'}
+          />
+
+          <View style={[a.flex_1, a.gap_2xs, a.pr_2xl]}>
+            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <Text
+                emoji
+                style={[a.font_bold, a.leading_tight]}
+                numberOfLines={1}>
+                {sanitizeDisplayName(
+                  profile?.displayName || profile?.handle || account.handle,
+                )}
+              </Text>
+              {verification.showBadge && (
+                <View>
+                  <VerificationCheck
+                    width={12}
+                    verifier={verification.role === 'verifier'}
+                  />
+                </View>
               )}
-            </Text>{' '}
-            <Text emoji style={[t.atoms.text_contrast_medium]}>
-              {sanitizeHandle(account.handle)}
+            </View>
+            <Text style={[a.leading_tight, t.atoms.text_contrast_medium]}>
+              {sanitizeHandle(account.handle, '@')}
             </Text>
-          </Text>
+          </View>
+
           {isCurrentAccount ? (
-            <Check
-              size="sm"
-              style={[{color: t.palette.positive_600}, a.mr_md]}
-            />
+            <Check size="sm" style={[{color: t.palette.positive_600}]} />
           ) : (
-            <Chevron size="sm" style={[t.atoms.text, a.mr_md]} />
+            <Chevron size="sm" style={[t.atoms.text]} />
           )}
         </View>
       )}

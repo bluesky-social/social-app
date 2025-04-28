@@ -56,9 +56,9 @@ export function usePinnedPostMutation() {
         })
 
         if (pinCurrentPost) {
-          Toast.show(_(msg`Post pinned`))
+          Toast.show(_(msg({message: 'Post pinned', context: 'toast'})))
         } else {
-          Toast.show(_(msg`Post unpinned`))
+          Toast.show(_(msg({message: 'Post unpinned', context: 'toast'})))
         }
 
         queryClient.invalidateQueries({

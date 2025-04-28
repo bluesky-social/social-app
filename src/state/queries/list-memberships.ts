@@ -90,7 +90,13 @@ export function getMembership(
   return membership ? membership.membershipUri : false
 }
 
-export function useListMembershipAddMutation() {
+export function useListMembershipAddMutation({
+  onSuccess,
+  onError,
+}: {
+  onSuccess?: (data: {uri: string; cid: string}) => void
+  onError?: (error: Error) => void
+} = {}) {
   const {currentAccount} = useSession()
   const agent = useAgent()
   const queryClient = useQueryClient()
@@ -117,7 +123,7 @@ export function useListMembershipAddMutation() {
       // -prf
       return res
     },
-    onSuccess(data, variables) {
+    onSuccess: (data, variables) => {
       // manually update the cache; a refetch is too expensive
       let memberships = queryClient.getQueryData<ListMembersip[]>(RQKEY())
       if (memberships) {
@@ -145,11 +151,19 @@ export function useListMembershipAddMutation() {
           queryKey: LIST_MEMBERS_RQKEY(variables.listUri),
         })
       }, 1e3)
+      onSuccess?.(data)
     },
+    onError,
   })
 }
 
-export function useListMembershipRemoveMutation() {
+export function useListMembershipRemoveMutation({
+  onSuccess,
+  onError,
+}: {
+  onSuccess?: (data: void) => void
+  onError?: (error: Error) => void
+} = {}) {
   const {currentAccount} = useSession()
   const agent = useAgent()
   const queryClient = useQueryClient()
@@ -172,7 +186,7 @@ export function useListMembershipRemoveMutation() {
       // query for that, so we use a timeout below
       // -prf
     },
-    onSuccess(data, variables) {
+    onSuccess: (data, variables) => {
       // manually update the cache; a refetch is too expensive
       let memberships = queryClient.getQueryData<ListMembersip[]>(RQKEY())
       if (memberships) {
@@ -192,6 +206,8 @@ export function useListMembershipRemoveMutation() {
           queryKey: LIST_MEMBERS_RQKEY(variables.listUri),
         })
       }, 1e3)
+      onSuccess?.(data)
     },
+    onError,
   })
 }

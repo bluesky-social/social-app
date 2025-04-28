@@ -39,7 +39,7 @@ export function Component({
     if (share) {
       shareUrl(href)
     } else {
-      openLink(href)
+      openLink(href, false, true)
     }
   }
 

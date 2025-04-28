@@ -7,6 +7,7 @@ import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import * as Sentry from '@sentry/react-native'
 
 import {QueryProvider} from '#/lib/react-query'
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
@@ -34,14 +35,13 @@ import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation
 import {Provider as UnreadNotifsProvider} from '#/state/queries/notifications/unread'
 import {
   Provider as SessionProvider,
-  SessionAccount,
+  type SessionAccount,
   useSession,
   useSessionApi,
 } from '#/state/session'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
-import {Provider as LightStatusBarProvider} from '#/state/shell/light-status-bar'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
@@ -55,6 +55,7 @@ import {ToastContainer} from '#/view/com/util/Toast.web'
 import {Shell} from '#/view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
+import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
@@ -106,54 +107,56 @@ function InnerApp() {
   return (
     <Alf theme={theme}>
       <ThemeProvider theme={theme}>
-        <RootSiblingParent>
-          <VideoVolumeProvider>
-            <ActiveVideoProvider>
-              <React.Fragment
-                // Resets the entire tree below when it changes:
-                key={currentAccount?.did}>
-                <QueryProvider currentDid={currentAccount?.did}>
-                  <ComposerProvider>
-                    <StatsigProvider>
-                      <MessagesProvider>
-                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                        <LabelDefsProvider>
-                          <ModerationOptsProvider>
-                            <LoggedOutViewProvider>
-                              <SelectedFeedProvider>
-                                <HiddenRepliesProvider>
-                                  <HomeBadgeProvider>
-                                    <UnreadNotifsProvider>
-                                      <BackgroundNotificationPreferencesProvider>
-                                        <MutedThreadsProvider>
-                                          <SafeAreaProvider>
-                                            <ProgressGuideProvider>
-                                              <TrendingConfigProvider>
-                                                <IntentDialogProvider>
-                                                  <Shell />
-                                                  <NuxDialogs />
-                                                </IntentDialogProvider>
-                                              </TrendingConfigProvider>
-                                            </ProgressGuideProvider>
-                                          </SafeAreaProvider>
-                                        </MutedThreadsProvider>
-                                      </BackgroundNotificationPreferencesProvider>
-                                    </UnreadNotifsProvider>
-                                  </HomeBadgeProvider>
-                                </HiddenRepliesProvider>
-                              </SelectedFeedProvider>
-                            </LoggedOutViewProvider>
-                          </ModerationOptsProvider>
-                        </LabelDefsProvider>
-                      </MessagesProvider>
-                    </StatsigProvider>
-                  </ComposerProvider>
-                </QueryProvider>
-                <ToastContainer />
-              </React.Fragment>
-            </ActiveVideoProvider>
-          </VideoVolumeProvider>
-        </RootSiblingParent>
+        <ContextMenuProvider>
+          <RootSiblingParent>
+            <VideoVolumeProvider>
+              <ActiveVideoProvider>
+                <React.Fragment
+                  // Resets the entire tree below when it changes:
+                  key={currentAccount?.did}>
+                  <QueryProvider currentDid={currentAccount?.did}>
+                    <ComposerProvider>
+                      <StatsigProvider>
+                        <MessagesProvider>
+                          {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                          <LabelDefsProvider>
+                            <ModerationOptsProvider>
+                              <LoggedOutViewProvider>
+                                <SelectedFeedProvider>
+                                  <HiddenRepliesProvider>
+                                    <HomeBadgeProvider>
+                                      <UnreadNotifsProvider>
+                                        <BackgroundNotificationPreferencesProvider>
+                                          <MutedThreadsProvider>
+                                            <SafeAreaProvider>
+                                              <ProgressGuideProvider>
+                                                <TrendingConfigProvider>
+                                                  <IntentDialogProvider>
+                                                    <Shell />
+                                                    <NuxDialogs />
+                                                  </IntentDialogProvider>
+                                                </TrendingConfigProvider>
+                                              </ProgressGuideProvider>
+                                            </SafeAreaProvider>
+                                          </MutedThreadsProvider>
+                                        </BackgroundNotificationPreferencesProvider>
+                                      </UnreadNotifsProvider>
+                                    </HomeBadgeProvider>
+                                  </HiddenRepliesProvider>
+                                </SelectedFeedProvider>
+                              </LoggedOutViewProvider>
+                            </ModerationOptsProvider>
+                          </LabelDefsProvider>
+                        </MessagesProvider>
+                      </StatsigProvider>
+                    </ComposerProvider>
+                  </QueryProvider>
+                  <ToastContainer />
+                </React.Fragment>
+              </ActiveVideoProvider>
+            </VideoVolumeProvider>
+          </RootSiblingParent>
+        </ContextMenuProvider>
       </ThemeProvider>
     </Alf>
   )
@@ -189,9 +192,7 @@ function App() {
                       <LightboxStateProvider>
                         <PortalProvider>
                           <StarterPackProvider>
-                            <LightStatusBarProvider>
-                              <InnerApp />
-                            </LightStatusBarProvider>
+                            <InnerApp />
                           </StarterPackProvider>
                         </PortalProvider>
                       </LightboxStateProvider>
@@ -207,4 +208,4 @@ function App() {
   )
 }
 
-export default App
+export default Sentry.wrap(App)

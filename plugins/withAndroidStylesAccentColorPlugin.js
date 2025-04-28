@@ -12,7 +12,7 @@ module.exports = function withAndroidStylesAccentColorPlugin(appConfig) {
         decoratedAppConfig.modResults,
         {
           add: true,
-          parent: AndroidConfig.Styles.getAppThemeLightNoActionBarGroup(),
+          parent: AndroidConfig.Styles.getAppThemeGroup(),
           name: 'colorAccent',
           value: '@color/colorPrimary',
         },

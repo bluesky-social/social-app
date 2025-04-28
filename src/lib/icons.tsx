@@ -1,4 +1,4 @@
-import {StyleProp, TextStyle, ViewStyle} from 'react-native'
+import {type StyleProp, type TextStyle, type ViewStyle} from 'react-native'
 import Svg, {Ellipse, Line, Path, Rect} from 'react-native-svg'
 
 // Copyright (c) 2020 Refactoring UI Inc.

@@ -323,7 +323,7 @@ export function createBskyAppAbsoluteUrl(path: string): string {
 export function createProxiedUrl(url: string): string {
   let u
   try {
-    u = URL.parse(url)
+    u = new URL(url)
   } catch {
     return url
   }
@@ -332,7 +332,7 @@ export function createProxiedUrl(url: string): string {
     return url
   }
 
-  return `https://go.bsky.app/redirect?u=${url}`
+  return `https://go.bsky.app/redirect?u=${encodeURIComponent(url)}`
 }
 
 export function isShortLink(url: string): boolean {

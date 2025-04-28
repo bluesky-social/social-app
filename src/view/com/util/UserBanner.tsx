@@ -149,7 +149,7 @@ export function UserBanner({
               <Menu.Group>
                 <Menu.Item
                   testID="changeBannerRemoveBtn"
-                  label={_(`Remove Banner`)}
+                  label={_(msg`Remove Banner`)}
                   onPress={onRemoveBanner}>
                   <Menu.ItemText>
                     <Trans>Remove Banner</Trans>

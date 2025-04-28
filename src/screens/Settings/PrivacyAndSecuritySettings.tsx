@@ -1,9 +1,9 @@
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useAppPasswordsQuery} from '#/state/queries/app-passwords'
 import {useSession} from '#/state/session'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
@@ -11,7 +11,7 @@ import {atoms as a, useTheme} from '#/alf'
 import * as Admonition from '#/components/Admonition'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlashIcon} from '#/components/icons/EyeSlash'
 import {Key_Stroke2_Corner2_Rounded as KeyIcon} from '#/components/icons/Key'
-import {Verified_Stroke2_Corner2_Rounded as VerifiedIcon} from '#/components/icons/Verified'
+import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Email2FAToggle} from './components/Email2FAToggle'
@@ -42,7 +42,7 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
         <SettingsList.Container>
           <SettingsList.Item>
             <SettingsList.ItemIcon
-              icon={VerifiedIcon}
+              icon={ShieldIcon}
               color={
                 currentAccount?.emailAuthFactor
                   ? t.palette.primary_500

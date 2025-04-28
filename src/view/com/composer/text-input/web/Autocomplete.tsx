@@ -1,20 +1,24 @@
 import {forwardRef, useEffect, useImperativeHandle, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 import {ReactRenderer} from '@tiptap/react'
 import {
-  SuggestionKeyDownProps,
-  SuggestionOptions,
-  SuggestionProps,
+  type SuggestionKeyDownProps,
+  type SuggestionOptions,
+  type SuggestionProps,
 } from '@tiptap/suggestion'
-import tippy, {Instance as TippyInstance} from 'tippy.js'
+import tippy, {type Instance as TippyInstance} from 'tippy.js'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {ActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
+import {type ActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {atoms as a} from '#/alf'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {useGrapheme} from '../hooks/useGrapheme'
 
 interface MentionListRef {
@@ -95,7 +99,6 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
   function MentionListImpl(props: SuggestionProps, ref) {
     const [selectedIndex, setSelectedIndex] = useState(0)
     const pal = usePalette('default')
-    const {getGraphemeString} = useGrapheme()
 
     const selectItem = (index: number) => {
       const item = props.items[index]
@@ -149,45 +152,19 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
         <View style={[pal.borderDark, pal.view, styles.container]}>
           {items.length > 0 ? (
             items.map((item, index) => {
-              const {name: displayName} = getGraphemeString(
-                sanitizeDisplayName(
-                  item.displayName || sanitizeHandle(item.handle),
-                ),
-                30, // Heuristic value; can be modified
-              )
               const isSelected = selectedIndex === index
 
               return (
-                <Pressable
+                <AutocompleteProfileCard
                   key={item.handle}
-                  style={[
-                    isSelected ? pal.viewLight : undefined,
-                    pal.borderDark,
-                    styles.mentionContainer,
-                    index === 0
-                      ? styles.firstMention
-                      : index === items.length - 1
-                      ? styles.lastMention
-                      : undefined,
-                  ]}
+                  profile={item}
+                  isSelected={isSelected}
+                  itemIndex={index}
+                  totalItems={items.length}
                   onPress={() => {
                     selectItem(index)
                   }}
-                  accessibilityRole="button">
-                  <View style={styles.avatarAndDisplayName}>
-                    <UserAvatar
-                      avatar={item.avatar ?? null}
-                      size={26}
-                      type={item.associated?.labeler ? 'labeler' : 'user'}
-                    />
-                    <Text emoji style={pal.text} numberOfLines={1}>
-                      {displayName}
-                    </Text>
-                  </View>
-                  <Text type="xs" style={pal.textLight} numberOfLines={1}>
-                    {sanitizeHandle(item.handle, '@')}
-                  </Text>
-                </Pressable>
+                />
               )
             })
           ) : (
@@ -200,6 +177,71 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
     )
   },
 )
+
+function AutocompleteProfileCard({
+  profile,
+  isSelected,
+  itemIndex,
+  totalItems,
+  onPress,
+}: {
+  profile: AppBskyActorDefs.ProfileViewBasic
+  isSelected: boolean
+  itemIndex: number
+  totalItems: number
+  onPress: () => void
+}) {
+  const pal = usePalette('default')
+  const {getGraphemeString} = useGrapheme()
+  const {name: displayName} = getGraphemeString(
+    sanitizeDisplayName(profile.displayName || sanitizeHandle(profile.handle)),
+    30, // Heuristic value; can be modified
+  )
+  const state = useSimpleVerificationState({
+    profile,
+  })
+  return (
+    <Pressable
+      style={[
+        isSelected ? pal.viewLight : undefined,
+        pal.borderDark,
+        styles.mentionContainer,
+        itemIndex === 0
+          ? styles.firstMention
+          : itemIndex === totalItems - 1
+          ? styles.lastMention
+          : undefined,
+      ]}
+      onPress={onPress}
+      accessibilityRole="button">
+      <View style={[styles.avatarAndDisplayName, a.flex_1]}>
+        <UserAvatar
+          avatar={profile.avatar ?? null}
+          size={26}
+          type={profile.associated?.labeler ? 'labeler' : 'user'}
+        />
+        <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
+          <Text emoji style={[pal.text]} numberOfLines={1}>
+            {displayName}
+          </Text>
+          {state.isVerified && (
+            <View>
+              <VerificationCheck
+                width={12}
+                verifier={state.role === 'verifier'}
+              />
+            </View>
+          )}
+        </View>
+      </View>
+      <View>
+        <Text type="xs" style={pal.textLight} numberOfLines={1}>
+          {sanitizeHandle(profile.handle, '@')}
+        </Text>
+      </View>
+    </Pressable>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -216,7 +258,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 12,
     paddingVertical: 8,
-    gap: 4,
+    gap: 16,
   },
   firstMention: {
     borderTopLeftRadius: 2,

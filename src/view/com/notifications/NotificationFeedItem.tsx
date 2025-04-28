@@ -1,25 +1,27 @@
-import React, {
+import {
   memo,
   type ReactElement,
+  useCallback,
   useEffect,
   useMemo,
   useState,
 } from 'react'
 import {
   Animated,
+  type GestureResponderEvent,
   Pressable,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native'
 import {
-  AppBskyActorDefs,
-  AppBskyFeedDefs,
+  type AppBskyActorDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyGraphFollow,
   moderateProfile,
-  ModerationDecision,
-  ModerationOpts,
+  type ModerationDecision,
+  type ModerationOpts,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {TID} from '@atproto/common-web'
@@ -31,19 +33,23 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {forceLTR} from '#/lib/strings/bidi'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
-import {colors, s} from '#/lib/styles'
+import {s} from '#/lib/styles'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
-import {FeedNotification} from '#/state/queries/notifications/feed'
-import {precacheProfile} from '#/state/queries/profile'
+import {type FeedNotification} from '#/state/queries/notifications/feed'
+import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useAgent} from '#/state/session'
-import {atoms as a, useTheme} from '#/alf'
+import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
+import {Post} from '#/view/com/post/Post'
+import {formatCount} from '#/view/com/util/numeric/format'
+import {TimeElapsed} from '#/view/com/util/TimeElapsed'
+import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
+import {atoms as a, platform, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
@@ -53,19 +59,16 @@ import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled} from '#/compon
 import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {StarterPack} from '#/components/icons/StarterPack'
-import {Link as NewLink} from '#/components/Link'
+import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
+import {InlineLinkText, Link} from '#/components/Link'
 import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
+import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import * as bsky from '#/types/bsky'
-import {FeedSourceCard} from '../feeds/FeedSourceCard'
-import {Post} from '../post/Post'
-import {Link, TextLink} from '../util/Link'
-import {formatCount} from '../util/numeric/format'
-import {Text} from '../util/text/Text'
-import {TimeElapsed} from '../util/TimeElapsed'
-import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
 
 const MAX_AUTHORS = 5
 
@@ -90,8 +93,8 @@ let NotificationFeedItem = ({
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
-  const {_, i18n} = useLingui()
   const t = useTheme()
+  const {_, i18n} = useLingui()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
     if (item.type === 'post-like' || item.type === 'repost') {
@@ -99,7 +102,11 @@ let NotificationFeedItem = ({
         const urip = new AtUri(item.subjectUri)
         return `/profile/${urip.host}/post/${urip.rkey}`
       }
-    } else if (item.type === 'follow') {
+    } else if (
+      item.type === 'follow' ||
+      item.type === 'verified' ||
+      item.type === 'unverified'
+    ) {
       return makeProfileLink(item.notification.author)
     } else if (item.type === 'reply') {
       const urip = new AtUri(item.notification.uri)
@@ -116,12 +123,16 @@ let NotificationFeedItem = ({
     return ''
   }, [item])
 
-  const onToggleAuthorsExpanded = () => {
+  const onToggleAuthorsExpanded = (e?: GestureResponderEvent) => {
+    if (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
     setAuthorsExpanded(currentlyExpanded => !currentlyExpanded)
   }
 
-  const onBeforePress = React.useCallback(() => {
-    precacheProfile(queryClient, item.notification.author)
+  const onBeforePress = useCallback(() => {
+    unstableCacheProfileView(queryClient, item.notification.author)
   }, [queryClient, item.notification.author])
 
   const authors: Author[] = useMemo(() => {
@@ -139,7 +150,14 @@ let NotificationFeedItem = ({
     ]
   }, [item, moderationOpts])
 
-  const [hover, setHover] = React.useState(false)
+  const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
+  const firstAuthor = authors[0]
+  const firstAuthorVerification = useSimpleVerificationState({
+    profile: firstAuthor.profile,
+  })
+  const firstAuthorName = sanitizeDisplayName(
+    firstAuthor.profile.displayName || firstAuthor.profile.handle,
+  )
 
   if (item.subjectUri && !item.subject && item.type !== 'feedgen-like') {
     // don't render anything if the target post was deleted or unfindable
@@ -156,42 +174,47 @@ let NotificationFeedItem = ({
     }
     const isHighlighted = highlightUnread && !item.notification.isRead
     return (
-      <Link
-        testID={`feedItem-by-${item.notification.author.handle}`}
-        href={itemHref}
-        noFeedback
-        accessible={false}>
-        <Post
-          post={item.subject}
-          style={
-            isHighlighted && {
-              backgroundColor: pal.colors.unreadNotifBg,
-              borderColor: pal.colors.unreadNotifBorder,
-            }
+      <Post
+        post={item.subject}
+        style={
+          isHighlighted && {
+            backgroundColor: pal.colors.unreadNotifBg,
+            borderColor: pal.colors.unreadNotifBorder,
           }
-          hideTopBorder={hideTopBorder}
-        />
-      </Link>
+        }
+        hideTopBorder={hideTopBorder}
+      />
     )
   }
 
-  const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
-  const firstAuthor = authors[0]
-  const firstAuthorName = sanitizeDisplayName(
-    firstAuthor.profile.displayName || firstAuthor.profile.handle,
-  )
   const firstAuthorLink = (
-    <TextLink
+    <InlineLinkText
       key={firstAuthor.href}
-      style={[pal.text, s.bold]}
-      href={firstAuthor.href}
-      text={
-        <Text emoji style={[pal.text, s.bold]}>
-          {forceLTR(firstAuthorName)}
-        </Text>
-      }
+      style={[t.atoms.text, a.font_bold, a.text_md, a.leading_tight]}
+      to={firstAuthor.href}
       disableMismatchWarning
-    />
+      emoji
+      label={_(msg`Go to ${firstAuthorName}'s profile`)}>
+      {forceLTR(firstAuthorName)}
+      {firstAuthorVerification.showBadge && (
+        <View
+          style={[
+            a.relative,
+            {
+              paddingTop: platform({android: 2}),
+              marginBottom: platform({ios: -7}),
+              top: platform({web: 1}),
+              paddingLeft: 3,
+              paddingRight: 2,
+            },
+          ]}>
+          <VerificationCheck
+            width={14}
+            verifier={firstAuthorVerification.role === 'verifier'}
+          />
+        </View>
+      )}
+    </InlineLinkText>
   )
   const additionalAuthorsCount = authors.length - 1
   const hasMultipleAuthors = additionalAuthorsCount > 0
@@ -223,7 +246,7 @@ let NotificationFeedItem = ({
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
-        <Text style={[pal.text, s.bold]}>
+        <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
           <Plural
             value={additionalAuthorsCount}
             one={`${formattedAuthorsCount} other`}
@@ -247,7 +270,7 @@ let NotificationFeedItem = ({
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
-        <Text style={[pal.text, s.bold]}>
+        <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
           <Plural
             value={additionalAuthorsCount}
             one={`${formattedAuthorsCount} other`}
@@ -304,7 +327,7 @@ let NotificationFeedItem = ({
       notificationContent = hasMultipleAuthors ? (
         <Trans>
           {firstAuthorLink} and{' '}
-          <Text style={[pal.text, s.bold]}>
+          <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
             <Plural
               value={additionalAuthorsCount}
               one={`${formattedAuthorsCount} other`}
@@ -330,7 +353,7 @@ let NotificationFeedItem = ({
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
-        <Text style={[pal.text, s.bold]}>
+        <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
           <Plural
             value={additionalAuthorsCount}
             one={`${formattedAuthorsCount} other`}
@@ -354,7 +377,7 @@ let NotificationFeedItem = ({
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
-        <Text style={[pal.text, s.bold]}>
+        <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
           <Plural
             value={additionalAuthorsCount}
             one={`${formattedAuthorsCount} other`}
@@ -371,6 +394,58 @@ let NotificationFeedItem = ({
         <StarterPack width={30} gradient="sky" />
       </View>
     )
+  } else if (item.type === 'verified') {
+    a11yLabel = hasMultipleAuthors
+      ? _(
+          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+            one: `${formattedAuthorsCount} other`,
+            other: `${formattedAuthorsCount} others`,
+          })} verified you`,
+        )
+      : _(msg`${firstAuthorName} verified you`)
+    notificationContent = hasMultipleAuthors ? (
+      <Trans>
+        {firstAuthorLink} and{' '}
+        <Text style={[pal.text, s.bold]}>
+          <Plural
+            value={additionalAuthorsCount}
+            one={`${formattedAuthorsCount} other`}
+            other={`${formattedAuthorsCount} others`}
+          />
+        </Text>{' '}
+        verified you
+      </Trans>
+    ) : (
+      <Trans>{firstAuthorLink} verified you</Trans>
+    )
+    icon = <VerifiedCheck size="xl" />
+  } else if (item.type === 'unverified') {
+    a11yLabel = hasMultipleAuthors
+      ? _(
+          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+            one: `${formattedAuthorsCount} other`,
+            other: `${formattedAuthorsCount} others`,
+          })} removed their verifications from your account`,
+        )
+      : _(msg`${firstAuthorName} removed their verification from your account`)
+    notificationContent = hasMultipleAuthors ? (
+      <Trans>
+        {firstAuthorLink} and{' '}
+        <Text style={[pal.text, s.bold]}>
+          <Plural
+            value={additionalAuthorsCount}
+            one={`${formattedAuthorsCount} other`}
+            other={`${formattedAuthorsCount} others`}
+          />
+        </Text>{' '}
+        removed their verifications from your account
+      </Trans>
+    ) : (
+      <Trans>
+        {firstAuthorLink} removed their verification from your account
+      </Trans>
+    )
+    icon = <VerifiedCheck size="xl" fill={t.palette.contrast_500} />
   } else {
     return null
   }
@@ -378,23 +453,24 @@ let NotificationFeedItem = ({
 
   return (
     <Link
+      label={a11yLabel}
       testID={`feedItem-by-${item.notification.author.handle}`}
       style={[
-        styles.outer,
-        pal.border,
+        a.flex_row,
+        a.align_start,
+        {padding: 10},
+        a.pr_lg,
+        t.atoms.border_contrast_low,
         item.notification.isRead
           ? undefined
           : {
               backgroundColor: pal.colors.unreadNotifBg,
               borderColor: pal.colors.unreadNotifBorder,
             },
-        {borderTopWidth: hideTopBorder ? 0 : StyleSheet.hairlineWidth},
+        !hideTopBorder && a.border_t,
         a.overflow_hidden,
       ]}
-      href={itemHref}
-      noFeedback
-      accessibilityHint=""
-      accessibilityLabel={a11yLabel}
+      to={itemHref}
       accessible={!isAuthorsExpanded}
       accessibilityActions={
         hasMultipleAuthors
@@ -424,78 +500,93 @@ let NotificationFeedItem = ({
         if (e.nativeEvent.actionName === 'toggleAuthorsExpanded') {
           onToggleAuthorsExpanded()
         }
-      }}
-      onPointerEnter={() => {
-        setHover(true)
-      }}
-      onPointerLeave={() => {
-        setHover(false)
       }}>
-      <SubtleWebHover hover={hover} />
-      <View style={[styles.layoutIcon, a.pr_sm]}>
-        {/* TODO: Prevent conditional rendering and move toward composable
-        notifications for clearer accessibility labeling */}
-        {icon}
-      </View>
-      <View style={styles.layoutContent}>
-        <ExpandListPressable
-          hasMultipleAuthors={hasMultipleAuthors}
-          onToggleAuthorsExpanded={onToggleAuthorsExpanded}>
-          <CondensedAuthorsList
-            visible={!isAuthorsExpanded}
-            authors={authors}
-            onToggleAuthorsExpanded={onToggleAuthorsExpanded}
-            showDmButton={item.type === 'starterpack-joined'}
-          />
-          <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
-          <Text
-            style={[styles.meta, a.self_start, pal.text]}
-            accessibilityHint=""
-            accessibilityLabel={a11yLabel}>
-            {notificationContent}
-            <TimeElapsed timestamp={item.notification.indexedAt}>
-              {({timeElapsed}) => (
-                <>
-                  {/* make sure there's whitespace around the middot -sfn */}
-                  <Text style={[pal.textLight]}> &middot; </Text>
-                  <Text style={[pal.textLight]} title={niceTimestamp}>
-                    {timeElapsed}
-                  </Text>
-                </>
-              )}
-            </TimeElapsed>
-          </Text>
-        </ExpandListPressable>
-        {item.type === 'post-like' || item.type === 'repost' ? (
-          <AdditionalPostText post={item.subject} />
-        ) : null}
-        {item.type === 'feedgen-like' && item.subjectUri ? (
-          <FeedSourceCard
-            feedUri={item.subjectUri}
-            style={[
-              t.atoms.bg,
-              t.atoms.border_contrast_low,
-              a.border,
-              styles.feedcard,
-            ]}
-            showLikes
-          />
-        ) : null}
-        {item.type === 'starterpack-joined' ? (
-          <View>
-            <View
-              style={[
-                a.border,
-                a.p_sm,
-                a.rounded_sm,
-                a.mt_sm,
-                t.atoms.border_contrast_low,
-              ]}>
-              <StarterPackCard starterPack={item.subject} />
-            </View>
+      {({hovered}) => (
+        <>
+          <SubtleWebHover hover={hovered} />
+          <View style={[styles.layoutIcon, a.pr_sm]}>
+            {/* TODO: Prevent conditional rendering and move toward composable
+          notifications for clearer accessibility labeling */}
+            {icon}
           </View>
-        ) : null}
-      </View>
+          <View style={[a.flex_1]}>
+            <ExpandListPressable
+              hasMultipleAuthors={hasMultipleAuthors}
+              onToggleAuthorsExpanded={onToggleAuthorsExpanded}>
+              <CondensedAuthorsList
+                visible={!isAuthorsExpanded}
+                authors={authors}
+                onToggleAuthorsExpanded={onToggleAuthorsExpanded}
+                showDmButton={item.type === 'starterpack-joined'}
+              />
+              <ExpandedAuthorsList
+                visible={isAuthorsExpanded}
+                authors={authors}
+              />
+              <Text
+                style={[
+                  a.flex_row,
+                  a.flex_wrap,
+                  {paddingTop: 6},
+                  a.self_start,
+                  a.text_md,
+                  a.leading_snug,
+                ]}
+                accessibilityHint=""
+                accessibilityLabel={a11yLabel}>
+                {notificationContent}
+                <TimeElapsed timestamp={item.notification.indexedAt}>
+                  {({timeElapsed}) => (
+                    <>
+                      {/* make sure there's whitespace around the middot -sfn */}
+                      <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+                        {' '}
+                        &middot;{' '}
+                      </Text>
+                      <Text
+                        style={[a.text_md, t.atoms.text_contrast_medium]}
+                        title={niceTimestamp}>
+                        {timeElapsed}
+                      </Text>
+                    </>
+                  )}
+                </TimeElapsed>
+              </Text>
+            </ExpandListPressable>
+            {item.type === 'post-like' || item.type === 'repost' ? (
+              <View style={[a.pt_2xs]}>
+                <AdditionalPostText post={item.subject} />
+              </View>
+            ) : null}
+            {item.type === 'feedgen-like' && item.subjectUri ? (
+              <FeedSourceCard
+                feedUri={item.subjectUri}
+                style={[
+                  t.atoms.bg,
+                  t.atoms.border_contrast_low,
+                  a.border,
+                  styles.feedcard,
+                ]}
+                showLikes
+              />
+            ) : null}
+            {item.type === 'starterpack-joined' ? (
+              <View>
+                <View
+                  style={[
+                    a.border,
+                    a.p_sm,
+                    a.rounded_sm,
+                    a.mt_sm,
+                    t.atoms.border_contrast_low,
+                  ]}>
+                  <StarterPackCard starterPack={item.subject} />
+                </View>
+              </View>
+            ) : null}
+          </View>
+        </>
+      )}
     </Link>
   )
 }
@@ -509,7 +600,7 @@ function ExpandListPressable({
 }: {
   hasMultipleAuthors: boolean
   children: React.ReactNode
-  onToggleAuthorsExpanded: () => void
+  onToggleAuthorsExpanded: (e: GestureResponderEvent) => void
 }) {
   if (hasMultipleAuthors) {
     return (
@@ -529,7 +620,7 @@ function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileView}) {
   const {_} = useLingui()
   const agent = useAgent()
   const navigation = useNavigation<NavigationProp>()
-  const [isLoading, setIsLoading] = React.useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   if (
     profile.associated?.chat?.allowIncoming === 'none' ||
@@ -580,15 +671,15 @@ function CondensedAuthorsList({
 }: {
   visible: boolean
   authors: Author[]
-  onToggleAuthorsExpanded: () => void
+  onToggleAuthorsExpanded: (e: GestureResponderEvent) => void
   showDmButton?: boolean
 }) {
-  const pal = usePalette('default')
+  const t = useTheme()
   const {_} = useLingui()
 
   if (!visible) {
     return (
-      <View style={styles.avis}>
+      <View style={[a.flex_row, a.align_center]}>
         <TouchableOpacity
           style={styles.expandedAuthorsCloseBtn}
           onPress={onToggleAuthorsExpanded}
@@ -599,9 +690,9 @@ function CondensedAuthorsList({
           )}>
           <ChevronUpIcon
             size="md"
-            style={[styles.expandedAuthorsCloseBtnIcon, pal.text]}
+            style={[a.ml_xs, a.mr_md, t.atoms.text_contrast_high]}
           />
-          <Text type="sm-medium" style={pal.text}>
+          <Text style={[a.text_md, t.atoms.text_contrast_high]}>
             <Trans context="action">Hide</Trans>
           </Text>
         </TouchableOpacity>
@@ -610,7 +701,7 @@ function CondensedAuthorsList({
   }
   if (authors.length === 1) {
     return (
-      <View style={[styles.avis]}>
+      <View style={[a.flex_row, a.align_center]}>
         <PreviewableUserAvatar
           size={35}
           profile={authors[0].profile}
@@ -625,7 +716,7 @@ function CondensedAuthorsList({
     <TouchableOpacity
       accessibilityRole="none"
       onPress={onToggleAuthorsExpanded}>
-      <View style={styles.avis}>
+      <View style={[a.flex_row, a.align_center]}>
         {authors.slice(0, MAX_AUTHORS).map(author => (
           <View key={author.href} style={s.mr5}>
             <PreviewableUserAvatar
@@ -637,13 +728,18 @@ function CondensedAuthorsList({
           </View>
         ))}
         {authors.length > MAX_AUTHORS ? (
-          <Text style={[styles.aviExtraCount, pal.textLight]}>
+          <Text
+            style={[
+              a.font_bold,
+              {paddingLeft: 6},
+              t.atoms.text_contrast_medium,
+            ]}>
             +{authors.length - MAX_AUTHORS}
           </Text>
         ) : undefined}
         <ChevronDownIcon
           size="md"
-          style={[styles.expandedAuthorsCloseBtnIcon, pal.textLight]}
+          style={[a.mx_xs, t.atoms.text_contrast_medium]}
         />
       </View>
     </TouchableOpacity>
@@ -657,8 +753,6 @@ function ExpandedAuthorsList({
   visible: boolean
   authors: Author[]
 }) {
-  const {_} = useLingui()
-  const pal = usePalette('default')
   const heightInterp = useAnimatedValue(visible ? 1 : 0)
   const targetHeight =
     authors.length * (EXPANDED_AUTHOR_EL_HEIGHT + 10) /*10=margin*/
@@ -677,49 +771,80 @@ function ExpandedAuthorsList({
     <Animated.View style={[a.overflow_hidden, heightStyle]}>
       {visible &&
         authors.map(author => (
-          <NewLink
-            key={author.profile.did}
-            label={author.profile.displayName || author.profile.handle}
-            accessibilityHint={_(msg`Opens this profile`)}
-            to={makeProfileLink({
-              did: author.profile.did,
-              handle: author.profile.handle,
-            })}
-            style={styles.expandedAuthor}>
-            <View style={styles.expandedAuthorAvi}>
-              <ProfileHoverCard did={author.profile.did}>
-                <UserAvatar
-                  size={35}
-                  avatar={author.profile.avatar}
-                  moderation={author.moderation.ui('avatar')}
-                  type={author.profile.associated?.labeler ? 'labeler' : 'user'}
-                />
-              </ProfileHoverCard>
-            </View>
-            <View style={s.flex1}>
-              <Text
-                type="lg-bold"
-                numberOfLines={1}
-                style={pal.text}
-                lineHeight={1.2}>
-                <Text emoji type="lg-bold" style={pal.text} lineHeight={1.2}>
-                  {sanitizeDisplayName(
-                    author.profile.displayName || author.profile.handle,
-                  )}
-                </Text>{' '}
-                <Text style={[pal.textLight]} lineHeight={1.2}>
-                  {sanitizeHandle(author.profile.handle, '@')}
-                </Text>
-              </Text>
-            </View>
-          </NewLink>
+          <ExpandedAuthorCard key={author.profile.did} author={author} />
         ))}
     </Animated.View>
   )
 }
 
+function ExpandedAuthorCard({author}: {author: Author}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const verification = useSimpleVerificationState({
+    profile: author.profile,
+  })
+  return (
+    <Link
+      key={author.profile.did}
+      label={author.profile.displayName || author.profile.handle}
+      accessibilityHint={_(msg`Opens this profile`)}
+      to={makeProfileLink({
+        did: author.profile.did,
+        handle: author.profile.handle,
+      })}
+      style={styles.expandedAuthor}>
+      <View style={[a.mr_sm]}>
+        <ProfileHoverCard did={author.profile.did}>
+          <UserAvatar
+            size={35}
+            avatar={author.profile.avatar}
+            moderation={author.moderation.ui('avatar')}
+            type={author.profile.associated?.labeler ? 'labeler' : 'user'}
+          />
+        </ProfileHoverCard>
+      </View>
+      <View style={[a.flex_1]}>
+        <View style={[a.flex_row, a.align_end]}>
+          <Text
+            numberOfLines={1}
+            emoji
+            style={[
+              a.text_md,
+              a.font_bold,
+              a.leading_tight,
+              {maxWidth: '70%'},
+            ]}>
+            {sanitizeDisplayName(
+              author.profile.displayName || author.profile.handle,
+            )}
+          </Text>
+          {verification.showBadge && (
+            <View style={[a.pl_xs, a.self_center]}>
+              <VerificationCheck
+                width={14}
+                verifier={verification.role === 'verifier'}
+              />
+            </View>
+          )}
+          <Text
+            numberOfLines={1}
+            style={[
+              a.pl_xs,
+              a.text_md,
+              a.leading_tight,
+              a.flex_shrink,
+              t.atoms.text_contrast_medium,
+            ]}>
+            {sanitizeHandle(author.profile.handle, '@')}
+          </Text>
+        </View>
+      </View>
+    </Link>
+  )
+}
+
 function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
-  const pal = usePalette('default')
+  const t = useTheme()
   if (
     post &&
     bsky.dangerousIsType<AppBskyFeedPost.Record>(
@@ -732,7 +857,9 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
     return (
       <>
         {text?.length > 0 && (
-          <Text emoji style={pal.textLight}>
+          <Text
+            emoji
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
             {text}
           </Text>
         )}
@@ -746,18 +873,6 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
 }
 
 const styles = StyleSheet.create({
-  pointer: isWeb
-    ? {
-        // @ts-ignore web only
-        cursor: 'pointer',
-      }
-    : {},
-
-  outer: {
-    padding: 10,
-    paddingRight: 15,
-    flexDirection: 'row',
-  },
   layoutIcon: {
     width: 60,
     alignItems: 'flex-end',
@@ -766,27 +881,6 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 10,
     marginTop: 4,
-  },
-  layoutContent: {
-    flex: 1,
-  },
-  avis: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  aviExtraCount: {
-    fontWeight: '600',
-    paddingLeft: 6,
-  },
-  meta: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingTop: 6,
-    paddingBottom: 2,
-  },
-  postText: {
-    paddingBottom: 5,
-    color: colors.black,
   },
   additionalPostImages: {
     marginTop: 5,
@@ -798,7 +892,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginTop: 6,
   },
-
   addedContainer: {
     paddingTop: 4,
     paddingLeft: 36,
@@ -812,17 +905,10 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 6,
   },
-  expandedAuthorsCloseBtnIcon: {
-    marginLeft: 4,
-    marginRight: 4,
-  },
   expandedAuthor: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 10,
     height: EXPANDED_AUTHOR_EL_HEIGHT,
-  },
-  expandedAuthorAvi: {
-    marginRight: 5,
   },
 })

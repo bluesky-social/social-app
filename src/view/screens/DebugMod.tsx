@@ -1,29 +1,32 @@
-/* eslint-disable no-restricted-imports */
 import React from 'react'
 import {View} from 'react-native'
 import {
-  AppBskyActorDefs,
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-  ComAtprotoLabelDefs,
+  type AppBskyActorDefs,
+  type AppBskyFeedDefs,
+  type AppBskyFeedPost,
+  type ComAtprotoLabelDefs,
   interpretLabelValueDefinition,
-  LabelPreference,
+  type LabelPreference,
   LABELS,
   mock,
   moderatePost,
   moderateProfile,
-  ModerationBehavior,
-  ModerationDecision,
-  ModerationOpts,
+  type ModerationBehavior,
+  type ModerationDecision,
+  type ModerationOpts,
   RichText,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {moderationOptsOverrideContext} from '#/state/preferences/moderation-opts'
-import {FeedNotification} from '#/state/queries/notifications/types'
+import {type FeedNotification} from '#/state/queries/notifications/types'
 import {
   groupNotifications,
   shouldFilterNotif,
@@ -42,12 +45,12 @@ import {
   ChevronTop_Stroke2_Corner0_Rounded as ChevronTop,
 } from '#/components/icons/Chevron'
 import * as Layout from '#/components/Layout'
+import * as ProfileCard from '#/components/ProfileCard'
 import {H1, H3, P, Text} from '#/components/Typography'
 import {ScreenHider} from '../../components/moderation/ScreenHider'
 import {NotificationFeedItem} from '../com/notifications/NotificationFeedItem'
 import {PostThreadItem} from '../com/post-thread/PostThreadItem'
 import {PostFeedItem} from '../com/posts/PostFeedItem'
-import {ProfileCard} from '../com/profile/ProfileCard'
 
 const LABEL_VALUES: (keyof typeof LABELS)[] = Object.keys(
   LABELS,
@@ -890,6 +893,9 @@ function MockAccountCard({
   moderation: ModerationDecision
 }) {
   const t = useTheme()
+  const moderationOpts = useModerationOpts()
+
+  if (!moderationOpts) return null
 
   if (moderation.ui('profileList').filter) {
     return (
@@ -899,7 +905,7 @@ function MockAccountCard({
     )
   }
 
-  return <ProfileCard profile={profile} />
+  return <ProfileCard.Card profile={profile} moderationOpts={moderationOpts} />
 }
 
 function MockAccountScreen({

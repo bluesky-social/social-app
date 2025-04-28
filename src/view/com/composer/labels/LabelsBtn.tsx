@@ -113,9 +113,8 @@ function DialogInner({
           </Text>
           <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
             <Trans>
-              Choose self-labels that are applicable for the media you are
-              posting. If none are selected, this post is suitable for all
-              audiences.
+              Please add any content warning labels that are applicable for the
+              media you are posting.
             </Trans>
           </Text>
         </View>

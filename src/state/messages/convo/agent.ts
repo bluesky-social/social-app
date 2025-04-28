@@ -1,9 +1,9 @@
 import {
-  BskyAgent,
-  ChatBskyActorDefs,
+  type AtpAgent,
+  type ChatBskyActorDefs,
   ChatBskyConvoDefs,
-  ChatBskyConvoGetLog,
-  ChatBskyConvoSendMessage,
+  type ChatBskyConvoGetLog,
+  type ChatBskyConvoSendMessage,
 } from '@atproto/api'
 import {XRPCError} from '@atproto/xrpc'
 import EventEmitter from 'eventemitter3'
@@ -19,19 +19,19 @@ import {
   NETWORK_FAILURE_STATUSES,
 } from '#/state/messages/convo/const'
 import {
-  ConvoDispatch,
+  type ConvoDispatch,
   ConvoDispatchEvent,
-  ConvoError,
+  type ConvoError,
   ConvoErrorCode,
-  ConvoEvent,
-  ConvoItem,
+  type ConvoEvent,
+  type ConvoItem,
   ConvoItemError,
-  ConvoParams,
-  ConvoState,
+  type ConvoParams,
+  type ConvoState,
   ConvoStatus,
 } from '#/state/messages/convo/types'
-import {MessagesEventBus} from '#/state/messages/events/agent'
-import {MessagesEventBusError} from '#/state/messages/events/types'
+import {type MessagesEventBus} from '#/state/messages/events/agent'
+import {type MessagesEventBusError} from '#/state/messages/events/types'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 
 const logger = Logger.create(Logger.Context.ConversationAgent)
@@ -50,7 +50,7 @@ export function isConvoItemMessage(
 export class Convo {
   private id: string
 
-  private agent: BskyAgent
+  private agent: AtpAgent
   private events: MessagesEventBus
   private senderUserDid: string
 
@@ -106,6 +106,8 @@ export class Convo {
     this.onFirehoseConnect = this.onFirehoseConnect.bind(this)
     this.onFirehoseError = this.onFirehoseError.bind(this)
     this.markConvoAccepted = this.markConvoAccepted.bind(this)
+    this.addReaction = this.addReaction.bind(this)
+    this.removeReaction = this.removeReaction.bind(this)
   }
 
   private commit() {
@@ -147,6 +149,8 @@ export class Convo {
           sendMessage: undefined,
           fetchMessageHistory: undefined,
           markConvoAccepted: undefined,
+          addReaction: undefined,
+          removeReaction: undefined,
         }
       }
       case ConvoStatus.Disabled:
@@ -165,6 +169,8 @@ export class Convo {
           sendMessage: this.sendMessage,
           fetchMessageHistory: this.fetchMessageHistory,
           markConvoAccepted: this.markConvoAccepted,
+          addReaction: this.addReaction,
+          removeReaction: this.removeReaction,
         }
       }
       case ConvoStatus.Error: {
@@ -180,6 +186,8 @@ export class Convo {
           sendMessage: undefined,
           fetchMessageHistory: undefined,
           markConvoAccepted: undefined,
+          addReaction: undefined,
+          removeReaction: undefined,
         }
       }
       default: {
@@ -195,6 +203,8 @@ export class Convo {
           sendMessage: undefined,
           fetchMessageHistory: undefined,
           markConvoAccepted: undefined,
+          addReaction: undefined,
+          removeReaction: undefined,
         }
       }
     }
@@ -760,6 +770,22 @@ export class Convo {
               this.deletedMessages.delete(ev.message.id)
               needsCommit = true
             }
+          } else if (
+            (ChatBskyConvoDefs.isLogAddReaction(ev) ||
+              ChatBskyConvoDefs.isLogRemoveReaction(ev)) &&
+            ChatBskyConvoDefs.isMessageView(ev.message)
+          ) {
+            /*
+             * Update if we have this in state - replace message wholesale. If we don't, don't worry about it.
+             */
+            if (this.pastMessages.has(ev.message.id)) {
+              this.pastMessages.set(ev.message.id, ev.message)
+              needsCommit = true
+            }
+            if (this.newMessages.has(ev.message.id)) {
+              this.newMessages.set(ev.message.id, ev.message)
+              needsCommit = true
+            }
           }
         }
       }
@@ -1140,5 +1166,145 @@ export class Convo {
 
         return item
       })
+  }
+
+  /**
+   * Add an emoji reaction to a message
+   *
+   * @param messageId - the id of the message to add the reaction to
+   * @param emoji - must be one grapheme
+   */
+  async addReaction(messageId: string, emoji: string) {
+    const optimisticReaction = {
+      value: emoji,
+      sender: {did: this.senderUserDid},
+      createdAt: new Date().toISOString(),
+    }
+    let restore: null | (() => void) = null
+    if (this.pastMessages.has(messageId)) {
+      const prevMessage = this.pastMessages.get(messageId)
+      if (
+        ChatBskyConvoDefs.isMessageView(prevMessage) &&
+        // skip optimistic update if reaction already exists
+        !prevMessage.reactions?.find(
+          reaction =>
+            reaction.sender.did === this.senderUserDid &&
+            reaction.value === emoji,
+        )
+      ) {
+        if (prevMessage.reactions) {
+          if (
+            prevMessage.reactions.filter(
+              reaction => reaction.sender.did === this.senderUserDid,
+            ).length >= 5
+          ) {
+            throw new Error('Maximum reactions reached')
+          }
+        }
+        this.pastMessages.set(messageId, {
+          ...prevMessage,
+          reactions: [...(prevMessage.reactions ?? []), optimisticReaction],
+        })
+        this.commit()
+        restore = () => {
+          this.pastMessages.set(messageId, prevMessage)
+          this.commit()
+        }
+      }
+    } else if (this.newMessages.has(messageId)) {
+      const prevMessage = this.newMessages.get(messageId)
+      if (
+        ChatBskyConvoDefs.isMessageView(prevMessage) &&
+        !prevMessage.reactions?.find(reaction => reaction.value === emoji)
+      ) {
+        if (prevMessage.reactions && prevMessage.reactions.length >= 5)
+          throw new Error('Maximum reactions reached')
+        this.newMessages.set(messageId, {
+          ...prevMessage,
+          reactions: [...(prevMessage.reactions ?? []), optimisticReaction],
+        })
+        this.commit()
+        restore = () => {
+          this.newMessages.set(messageId, prevMessage)
+          this.commit()
+        }
+      }
+    }
+
+    try {
+      logger.info(`Adding reaction ${emoji} to message ${messageId}`)
+      const {data} = await this.agent.chat.bsky.convo.addReaction(
+        {messageId, value: emoji, convoId: this.convoId},
+        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
+      )
+      if (ChatBskyConvoDefs.isMessageView(data.message)) {
+        if (this.pastMessages.has(messageId)) {
+          this.pastMessages.set(messageId, data.message)
+          this.commit()
+        } else if (this.newMessages.has(messageId)) {
+          this.newMessages.set(messageId, data.message)
+          this.commit()
+        }
+      }
+    } catch (error) {
+      if (restore) restore()
+      throw error
+    }
+  }
+
+  /*
+   * Remove a reaction from a message.
+   *
+   * @param messageId - The ID of the message to remove the reaction from.
+   * @param emoji - The emoji to remove.
+   */
+  async removeReaction(messageId: string, emoji: string) {
+    let restore: null | (() => void) = null
+    if (this.pastMessages.has(messageId)) {
+      const prevMessage = this.pastMessages.get(messageId)
+      if (ChatBskyConvoDefs.isMessageView(prevMessage)) {
+        this.pastMessages.set(messageId, {
+          ...prevMessage,
+          reactions: prevMessage.reactions?.filter(
+            reaction =>
+              reaction.value !== emoji ||
+              reaction.sender.did !== this.senderUserDid,
+          ),
+        })
+        this.commit()
+        restore = () => {
+          this.pastMessages.set(messageId, prevMessage)
+          this.commit()
+        }
+      }
+    } else if (this.newMessages.has(messageId)) {
+      const prevMessage = this.newMessages.get(messageId)
+      if (ChatBskyConvoDefs.isMessageView(prevMessage)) {
+        this.newMessages.set(messageId, {
+          ...prevMessage,
+          reactions: prevMessage.reactions?.filter(
+            reaction =>
+              reaction.value !== emoji ||
+              reaction.sender.did !== this.senderUserDid,
+          ),
+        })
+        this.commit()
+        restore = () => {
+          this.newMessages.set(messageId, prevMessage)
+          this.commit()
+        }
+      }
+    }
+
+    try {
+      logger.info(`Removing reaction ${emoji} from message ${messageId}`)
+      await this.agent.chat.bsky.convo.removeReaction(
+        {messageId, value: emoji, convoId: this.convoId},
+        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
+      )
+    } catch (error) {
+      if (restore) restore()
+      throw error
+    }
   }
 }

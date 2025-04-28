@@ -14,7 +14,7 @@ import {PaintRoller_Stroke2_Corner2_Rounded as PaintRollerIcon} from '#/componen
 import {Person_Stroke2_Corner2_Rounded as PersonIcon} from '#/components/icons/Person'
 import {Pizza_Stroke2_Corner0_Rounded as PizzaIcon} from '#/components/icons/Pizza'
 import {RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon} from '#/components/icons/RaisingHand'
-import {Verified_Stroke2_Corner2_Rounded as VerifiedIcon} from '#/components/icons/Verified'
+import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
 import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/Window'
 import {Text} from '#/components/Typography'
 
@@ -102,7 +102,7 @@ export function Settings() {
         hoverStyle={[{backgroundColor: t.palette.primary_100}]}
         contentContainerStyle={[a.rounded_md, a.px_lg]}>
         <SettingsList.ItemIcon
-          icon={VerifiedIcon}
+          icon={ShieldIcon}
           color={t.palette.primary_500}
         />
         <SettingsList.ItemText

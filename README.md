@@ -42,7 +42,7 @@ The Bluesky Social application encompasses a set of schemas and APIs built in th
 - Open an issue and give some time for discussion before submitting a PR.
 - Stay away from PRs like...
   - Changing "Post" to "Skeet."
-  - Refactoring the codebase, e.g., to replace MobX with Redux or something.
+  - Refactoring the codebase, e.g., to replace React Query with Redux Toolkit or something.
   - Adding entirely new features without prior discussion. 
 
 Remember, we serve a wide community of users. Our day-to-day involves us constantly asking "which top priority is our top priority." If you submit well-written PRs that solve problems concisely, that's an awesome contribution. Otherwise, as much as we'd love to accept your ideas and contributions, we really don't have the bandwidth. That's what forking is for!

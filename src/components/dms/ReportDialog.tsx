@@ -315,13 +315,13 @@ function DoneStep({
   let toastMsg: string | undefined
   if (actions.includes('leave') && actions.includes('block')) {
     btnText = _(msg`Block and Delete`)
-    toastMsg = _(msg`Conversation deleted`)
+    toastMsg = _(msg({message: 'Conversation deleted', context: 'toast'}))
   } else if (actions.includes('leave')) {
     btnText = _(msg`Delete Conversation`)
-    toastMsg = _(msg`Conversation deleted`)
+    toastMsg = _(msg({message: 'Conversation deleted', context: 'toast'}))
   } else if (actions.includes('block')) {
     btnText = _(msg`Block User`)
-    toastMsg = _(msg`User blocked`)
+    toastMsg = _(msg({message: 'User blocked', context: 'toast'}))
   }
 
   const onPressPrimaryAction = () => {

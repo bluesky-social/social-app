@@ -1,15 +1,15 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
-import {ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatBskyActorDefs, type ChatBskyConvoDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useAppState} from '#/lib/hooks/useAppState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {MessagesTabNavigatorParams} from '#/lib/routes/types'
+import {type MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
@@ -18,21 +18,21 @@ import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useSession} from '#/state/session'
-import {List, ListRef} from '#/view/com/util/List'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {List, type ListRef} from '#/view/com/util/List'
+import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {DialogControlProps, useDialogControl} from '#/components/Dialog'
+import {type DialogControlProps, useDialogControl} from '#/components/Dialog'
 import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
-import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Retry} from '#/components/icons/ArrowRotateCounterClockwise'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {Message_Stroke2_Corner0_Rounded as Message} from '#/components/icons/Message'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
+import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotateCounterClockwise'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
+import {Message_Stroke2_Corner0_Rounded as MessageIcon} from '#/components/icons/Message'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
-import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {ChatListItem} from './components/ChatListItem'
 import {InboxPreview} from './components/InboxPreview'
@@ -124,7 +124,12 @@ export function MessagesScreen({navigation, route}: Props) {
     const inbox =
       inboxData?.pages
         .flatMap(page => page.convos)
-        .filter(convo => !convo.muted && convo.unreadCount > 0) ?? []
+        .filter(
+          convo =>
+            !convo.muted &&
+            convo.unreadCount > 0 &&
+            convo.members.every(member => member.handle !== 'missing.invalid'),
+        ) ?? []
 
     return inbox
       .map(x => x.members.find(y => y.did !== currentAccount?.did))
@@ -200,16 +205,18 @@ export function MessagesScreen({navigation, route}: Props) {
       <Layout.Screen>
         <Header newChatControl={newChatControl} />
         <Layout.Center>
+          <InboxPreview
+            count={inboxPreviewConvos.length}
+            profiles={inboxPreviewConvos}
+          />
           {isLoading ? (
-            <View style={[a.align_center, a.pt_3xl, web({paddingTop: '10vh'})]}>
-              <Loader size="xl" />
-            </View>
+            <ChatListLoadingPlaceholder />
           ) : (
             <>
               {isError ? (
                 <>
                   <View style={[a.pt_3xl, a.align_center]}>
-                    <CircleInfo
+                    <CircleInfoIcon
                       width={48}
                       fill={t.atoms.text_contrast_low.color}
                     />
@@ -238,18 +245,14 @@ export function MessagesScreen({navigation, route}: Props) {
                       <ButtonText>
                         <Trans>Retry</Trans>
                       </ButtonText>
-                      <ButtonIcon icon={Retry} position="right" />
+                      <ButtonIcon icon={RetryIcon} position="right" />
                     </Button>
                   </View>
                 </>
               ) : (
                 <>
-                  <InboxPreview
-                    count={inboxPreviewConvos.length}
-                    profiles={inboxPreviewConvos}
-                  />
                   <View style={[a.pt_3xl, a.align_center]}>
-                    <Message width={48} fill={t.palette.primary_500} />
+                    <MessageIcon width={48} fill={t.palette.primary_500} />
                     <Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_bold]}>
                       <Trans>Nothing here</Trans>
                     </Text>
@@ -319,9 +322,9 @@ function Header({newChatControl}: {newChatControl: DialogControlProps}) {
       size="small"
       variant="ghost"
       color="secondary"
-      shape="square"
+      shape="round"
       style={[a.justify_center]}>
-      <ButtonIcon icon={SettingsSlider} size="md" />
+      <ButtonIcon icon={SettingsIcon} size="lg" />
     </Link>
   )
 
@@ -343,7 +346,7 @@ function Header({newChatControl}: {newChatControl: DialogControlProps}) {
               size="small"
               variant="solid"
               onPress={newChatControl.open}>
-              <ButtonIcon icon={Plus} position="left" />
+              <ButtonIcon icon={PlusIcon} position="left" />
               <ButtonText>
                 <Trans>New chat</Trans>
               </ButtonText>

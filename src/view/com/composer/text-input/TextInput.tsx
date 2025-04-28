@@ -253,7 +253,7 @@ export const TextInput = forwardRef(function TextInputImpl(
         style={[
           inputTextStyle,
           a.w_full,
-          a.h_full,
+          !autocompletePrefix && a.h_full,
           {
             textAlignVertical: 'top',
             minHeight: 60,

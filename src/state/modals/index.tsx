@@ -1,6 +1,6 @@
 import React from 'react'
-import {Image as RNImage} from 'react-native-image-crop-picker'
-import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
+import {type Image as RNImage} from 'react-native-image-crop-picker'
+import {type AppBskyActorDefs, type AppBskyGraphDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
@@ -24,15 +24,6 @@ export interface UserAddRemoveListsModal {
   displayName: string
   onAdd?: (listUri: string) => void
   onRemove?: (listUri: string) => void
-}
-
-export interface ListAddRemoveUsersModal {
-  name: 'list-add-remove-users'
-  list: AppBskyGraphDefs.ListView
-  onChange?: (
-    type: 'add' | 'remove',
-    profile: AppBskyActorDefs.ProfileViewBasic,
-  ) => void
 }
 
 export interface CropImageModal {
@@ -64,16 +55,6 @@ export interface PostLanguagesSettingsModal {
   name: 'post-languages-settings'
 }
 
-export interface VerifyEmailModal {
-  name: 'verify-email'
-  showReminder?: boolean
-  onSuccess?: () => void
-}
-
-export interface ChangeEmailModal {
-  name: 'change-email'
-}
-
 export interface ChangePasswordModal {
   name: 'change-password'
 }
@@ -85,16 +66,9 @@ export interface LinkWarningModal {
   share?: boolean
 }
 
-export interface InAppBrowserConsentModal {
-  name: 'in-app-browser-consent'
-  href: string
-}
-
 export type Modal =
   // Account
   | DeleteAccountModal
-  | VerifyEmailModal
-  | ChangeEmailModal
   | ChangePasswordModal
 
   // Temp
@@ -107,7 +81,6 @@ export type Modal =
   // Lists
   | CreateOrEditListModal
   | UserAddRemoveListsModal
-  | ListAddRemoveUsersModal
 
   // Posts
   | CropImageModal
@@ -118,7 +91,6 @@ export type Modal =
 
   // Generic
   | LinkWarningModal
-  | InAppBrowserConsentModal
 
 const ModalContext = React.createContext<{
   isModalActive: boolean

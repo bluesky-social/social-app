@@ -23,6 +23,7 @@ import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {
   BUTTON_VISUAL_ALIGNMENT_OFFSET,
+  CENTER_COLUMN_OFFSET,
   HEADER_SLOT_SIZE,
   SCROLLBAR_OFFSET,
 } from '#/components/Layout/const'
@@ -65,7 +66,7 @@ export function Outer({
         gtMobile && [a.mx_auto, {maxWidth: 600}],
         !isWithinOffsetView && {
           transform: [
-            {translateX: centerColumnOffset ? -150 : 0},
+            {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
             {translateX: web(SCROLLBAR_OFFSET) ?? 0},
           ],
         },

@@ -171,7 +171,7 @@ export function ListHiddenScreen({
               onPress={onRemoveList}
               disabled={isProcessing}>
               <ButtonText>
-                <Trans>Removed from saved feeds</Trans>
+                <Trans>Remove from saved feeds</Trans>
               </ButtonText>
               {isProcessing ? (
                 <ButtonIcon icon={Loader} position="right" />
