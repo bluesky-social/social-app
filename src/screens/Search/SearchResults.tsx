@@ -1,11 +1,11 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
+import {type AppBskyActorDefs, type AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {augmentSearchQuery} from '#/lib/strings/helpers'
-import {useActorSearch} from '#/state/queries/actor-search'
+import {useActorSearchPaginated} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSession} from '#/state/session'
@@ -138,7 +138,7 @@ function EmptyState({message, error}: {message: string; error?: string}) {
   )
 }
 
-type SearchResultSlice =
+type SearchPostResultSlice =
   | {
       type: 'post'
       key: string
@@ -191,7 +191,7 @@ let SearchScreenPostResults = ({
     return results?.pages.flatMap(page => page.posts) || []
   }, [results])
   const items = useMemo(() => {
-    let temp: SearchResultSlice[] = []
+    let temp: SearchPostResultSlice[] = []
 
     const seenUris = new Set()
     for (const post of posts) {
@@ -256,6 +256,17 @@ let SearchScreenPostResults = ({
 }
 SearchScreenPostResults = memo(SearchScreenPostResults)
 
+type SearchActorResultSlice =
+  | {
+      type: 'actor'
+      key: string
+      actor: AppBskyActorDefs.ProfileView
+    }
+  | {
+      type: 'loadingMore'
+      key: string
+    }
+
 let SearchScreenUserResults = ({
   query,
   active,
@@ -264,28 +275,94 @@ let SearchScreenUserResults = ({
   active: boolean
 }): React.ReactNode => {
   const {_} = useLingui()
+  const [isPTR, setIsPTR] = useState(false)
 
-  const {data: results, isFetched} = useActorSearch({
-    query,
-    enabled: active,
-  })
+  const {
+    isFetched,
+    data: results,
+    isFetching,
+    error,
+    refetch,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useActorSearchPaginated({query, enabled: active})
 
-  return isFetched && results ? (
+  const onPullToRefresh = useCallback(async () => {
+    setIsPTR(true)
+    await refetch()
+    setIsPTR(false)
+  }, [setIsPTR, refetch])
+  const onEndReached = useCallback(() => {
+    if (isFetching || !hasNextPage || error) return
+    fetchNextPage()
+  }, [isFetching, error, hasNextPage, fetchNextPage])
+
+  const actors = useMemo(() => {
+    return results?.pages.flatMap(page => page.actors) || []
+  }, [results])
+  const items = useMemo(() => {
+    let temp: SearchActorResultSlice[] = []
+
+    const seenUris = new Set()
+    for (const actor of actors) {
+      if (seenUris.has(actor.did)) {
+        continue
+      }
+      temp.push({
+        type: 'actor',
+        key: actor.did,
+        actor,
+      })
+      seenUris.add(actor.did)
+    }
+
+    if (isFetchingNextPage) {
+      temp.push({
+        type: 'loadingMore',
+        key: 'loadingMore',
+      })
+    }
+
+    return temp
+  }, [actors, isFetchingNextPage])
+
+  return error ? (
+    <EmptyState
+      message={_(
+        msg`We're sorry, but your search could not be completed. Please try again in a few minutes.`,
+      )}
+      error={error.toString()}
+    />
+  ) : (
     <>
-      {results.length ? (
-        <List
-          data={results}
-          renderItem={({item}) => <ProfileCardWithFollowBtn profile={item} />}
-          keyExtractor={item => item.did}
-          desktopFixedHeight
-          contentContainerStyle={{paddingBottom: 100}}
-        />
+      {isFetched ? (
+        <>
+          {actors.length ? (
+            <List
+              data={items}
+              renderItem={({item}) => {
+                if (item.type === 'actor') {
+                  return <ProfileCardWithFollowBtn profile={item.actor} />
+                } else {
+                  return null
+                }
+              }}
+              keyExtractor={item => item.key}
+              refreshing={isPTR}
+              onRefresh={onPullToRefresh}
+              onEndReached={onEndReached}
+              desktopFixedHeight
+              contentContainerStyle={{paddingBottom: 100}}
+            />
+          ) : (
+            <EmptyState message={_(msg`No results found for ${query}`)} />
+          )}
+        </>
       ) : (
-        <EmptyState message={_(msg`No results found for ${query}`)} />
+        <Loader />
       )}
     </>
-  ) : (
-    <Loader />
   )
 }
 SearchScreenUserResults = memo(SearchScreenUserResults)
