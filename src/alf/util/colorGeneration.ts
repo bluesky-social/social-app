@@ -1,5 +1,5 @@
-export const BLUE_HUE = 211
-export const RED_HUE = 346
+export const BLUE_HUE = 8
+export const RED_HUE = 354
 export const GREEN_HUE = 152
 
 /**
