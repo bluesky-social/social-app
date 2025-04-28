@@ -13,6 +13,7 @@ import {Manage2FA} from '#/components/dialogs/EmailDialog/screens/Manage2FA'
  * Steps
  */
 import {Update} from '#/components/dialogs/EmailDialog/screens/Update'
+import {VerificationReminder} from '#/components/dialogs/EmailDialog/screens/VerificationReminder'
 import {Verify} from '#/components/dialogs/EmailDialog/screens/Verify'
 import {type Screen, ScreenID} from '#/components/dialogs/EmailDialog/types'
 
@@ -57,10 +58,13 @@ function Inner({control}: {control: StatefulControl<Screen>}) {
 
   switch (screen.id) {
     case ScreenID.Update: {
-      return <Update config={screen} />
+      return <Update config={screen} showScreen={showScreen} />
     }
     case ScreenID.Verify: {
-      return <Verify config={screen} />
+      return <Verify config={screen} showScreen={showScreen} />
+    }
+    case ScreenID.VerificationReminder: {
+      return <VerificationReminder config={screen} showScreen={showScreen} />
     }
     case ScreenID.Manage2FA: {
       return <Manage2FA config={screen} showScreen={showScreen} />

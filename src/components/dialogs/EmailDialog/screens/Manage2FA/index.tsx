@@ -4,18 +4,13 @@ import {Trans} from '@lingui/macro'
 import {useSession} from '#/state/session'
 import {useIsEmailVerified} from '#/components/dialogs/EmailDialog/data/useIsEmailVerified'
 import {Disable} from '#/components/dialogs/EmailDialog/screens/Manage2FA/Disable'
-/**
- * Sub-screens
- */
 import {Enable} from '#/components/dialogs/EmailDialog/screens/Manage2FA/Enable'
-import {type Screen, ScreenID} from '#/components/dialogs/EmailDialog/types'
+import {
+  ScreenID,
+  type ScreenProps,
+} from '#/components/dialogs/EmailDialog/types'
 
-export function Manage2FA({
-  showScreen,
-}: {
-  config: Extract<Screen, {id: 'Manage2FA'}>
-  showScreen: (screen: Screen) => void
-}) {
+export function Manage2FA({showScreen}: ScreenProps<ScreenID.Manage2FA>) {
   const [requestedAction, setRequestedAction] = useState<
     'enable' | 'disable' | null
   >(null)

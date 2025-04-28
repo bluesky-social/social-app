@@ -19,11 +19,20 @@ export type Screen =
       onVerify?: () => void
     }
   | {
+      id: ScreenID.VerificationReminder
+    }
+  | {
       id: ScreenID.Manage2FA
     }
 
 export enum ScreenID {
   Update = 'Update',
   Verify = 'Verify',
+  VerificationReminder = 'VerificationReminder',
   Manage2FA = 'Manage2FA',
+}
+
+export type ScreenProps<T extends ScreenID> = {
+  config: Extract<Screen, {id: T}>
+  showScreen: (screen: Screen) => void
 }

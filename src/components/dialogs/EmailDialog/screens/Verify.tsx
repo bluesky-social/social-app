@@ -14,7 +14,10 @@ import {TokenField} from '#/components/dialogs/EmailDialog/components/TokenField
 import {useConfirmEmail} from '#/components/dialogs/EmailDialog/data/useConfirmEmail'
 import {useIsEmailVerified} from '#/components/dialogs/EmailDialog/data/useIsEmailVerified'
 import {useRequestEmailVerification} from '#/components/dialogs/EmailDialog/data/useRequestEmailVerification'
-import {type Screen} from '#/components/dialogs/EmailDialog/types'
+import {
+  type ScreenID,
+  type ScreenProps,
+} from '#/components/dialogs/EmailDialog/types'
 import {Divider} from '#/components/Divider'
 import {CheckThick_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
@@ -81,7 +84,7 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-export function Verify({config}: {config: Extract<Screen, {id: 'Verify'}>}) {
+export function Verify({config}: ScreenProps<ScreenID.Verify>) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()

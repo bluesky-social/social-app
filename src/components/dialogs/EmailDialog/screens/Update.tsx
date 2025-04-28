@@ -15,7 +15,10 @@ import {TokenField} from '#/components/dialogs/EmailDialog/components/TokenField
 import {useRequestEmailUpdate} from '#/components/dialogs/EmailDialog/data/useRequestEmailUpdate'
 import {useRequestEmailVerification} from '#/components/dialogs/EmailDialog/data/useRequestEmailVerification'
 import {useUpdateEmail} from '#/components/dialogs/EmailDialog/data/useUpdateEmail'
-import {type Screen} from '#/components/dialogs/EmailDialog/types'
+import {
+  type ScreenID,
+  type ScreenProps,
+} from '#/components/dialogs/EmailDialog/types'
 import {Divider} from '#/components/Divider'
 import * as TextField from '#/components/forms/TextField'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
@@ -96,7 +99,7 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-export function Update(_props: {config: Exclude<Screen, {id: 'Verify'}>}) {
+export function Update(_props: ScreenProps<ScreenID.Update>) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
