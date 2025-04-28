@@ -98,13 +98,15 @@ export function Enable() {
 
       <View style={[a.gap_sm, gtPhone && [a.flex_row_reverse]]}>
         <Button
-          label={_(msg`Send verification email`)}
+          label={_(msg`Enable`)}
           size="large"
           variant="solid"
           color="primary"
           onPress={handleManageEmail2FA}
           disabled={state.status === 'pending'}>
-          <ButtonText>Enable</ButtonText>
+          <ButtonText>
+            <Trans>Enable</Trans>
+          </ButtonText>
           <ButtonIcon
             position="right"
             icon={
@@ -117,12 +119,14 @@ export function Enable() {
           />
         </Button>
         <Button
-          label={_(msg`Send verification email`)}
+          label={_(msg`Cancel`)}
           size="large"
           variant="solid"
           color="secondary"
           onPress={() => control.close()}>
-          <ButtonText>Cancel</ButtonText>
+          <ButtonText>
+            <Trans>Cancel</Trans>
+          </ButtonText>
         </Button>
       </View>
     </View>

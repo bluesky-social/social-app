@@ -216,7 +216,7 @@ export function Disable() {
           {state.error && <Admonition type="error">{state.error}</Admonition>}
 
           <Button
-            label={_(msg`Disable 2FAVerify`)}
+            label={_(msg`Disable 2FA`)}
             size="large"
             variant="solid"
             color="primary"
