@@ -19,35 +19,35 @@ import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
-import {Span,Text} from '#/components/Typography'
+import {Span, Text} from '#/components/Typography'
 
 type State = {
   error: string
-  stage: 'email' | 'token'
+  step: 'email' | 'token'
   emailStatus: 'pending' | 'success' | 'error' | 'default'
   tokenStatus: 'pending' | 'success' | 'error' | 'default'
 }
 
 type Action =
   | {
-      id: 'setError'
+      type: 'setError'
       error: string
     }
   | {
-      id: 'setStage'
-      stage: 'email' | 'token'
+      type: 'setStep'
+      step: 'email' | 'token'
     }
   | {
-      id: 'setEmailStatus'
+      type: 'setEmailStatus'
       status: State['emailStatus']
     }
   | {
-      id: 'setTokenStatus'
+      type: 'setTokenStatus'
       status: State['tokenStatus']
     }
 
 function reducer(state: State, action: Action): State {
-  switch (action.id) {
+  switch (action.type) {
     case 'setError': {
       return {
         ...state,
@@ -56,11 +56,11 @@ function reducer(state: State, action: Action): State {
         tokenStatus: 'error',
       }
     }
-    case 'setStage': {
+    case 'setStep': {
       return {
         ...state,
         error: '',
-        stage: action.stage,
+        step: action.step,
       }
     }
     case 'setEmailStatus': {
@@ -94,18 +94,18 @@ export function Disable() {
   const [token, setToken] = useState('')
   const [state, dispatch] = useReducer(reducer, {
     error: '',
-    stage: 'email',
+    step: 'email',
     emailStatus: 'default',
     tokenStatus: 'default',
   })
 
   const handleSendEmail = async () => {
-    dispatch({id: 'setEmailStatus', status: 'pending'})
+    dispatch({type: 'setEmailStatus', status: 'pending'})
     try {
       await wait(1000, requestEmailUpdate())
-      dispatch({id: 'setEmailStatus', status: 'success'})
+      dispatch({type: 'setEmailStatus', status: 'success'})
       setTimeout(() => {
-        dispatch({id: 'setStage', stage: 'token'})
+        dispatch({type: 'setStep', step: 'token'})
       }, 1000)
     } catch (e) {
       logger.error('Manage2FA: email update code request failed', {
@@ -113,25 +113,25 @@ export function Disable() {
       })
       // TODO rate limit
       dispatch({
-        id: 'setError',
+        type: 'setError',
         error: _(msg`Failed to send email, please try again.`),
       })
     }
   }
 
   const handleManageEmail2FA = async () => {
-    dispatch({id: 'setTokenStatus', status: 'pending'})
+    dispatch({type: 'setTokenStatus', status: 'pending'})
 
     try {
       await wait(1000, manageEmail2FA({enabled: false, token}))
-      dispatch({id: 'setTokenStatus', status: 'success'})
+      dispatch({type: 'setTokenStatus', status: 'success'})
       setTimeout(() => {
         control.close()
       }, 1000)
     } catch (e) {
       logger.error('Manage2FA: disable email 2FA failed', {safeMessage: e})
       dispatch({
-        id: 'setError',
+        type: 'setError',
         error: _(msg`Update to email 2FA settings failed`),
       })
     }
@@ -143,7 +143,7 @@ export function Disable() {
         <Trans>Disable email 2FA</Trans>
       </Text>
 
-      {state.stage === 'email' ? (
+      {state.step === 'email' ? (
         <>
           <Text
             style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
@@ -186,7 +186,7 @@ export function Disable() {
                 <InlineLinkText
                   label={_(msg`Enter code`)}
                   {...createStaticClick(() => {
-                    dispatch({id: 'setStage', stage: 'token'})
+                    dispatch({type: 'setStep', step: 'token'})
                   })}>
                   Click here.
                 </InlineLinkText>

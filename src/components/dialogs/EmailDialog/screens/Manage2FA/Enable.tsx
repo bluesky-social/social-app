@@ -22,16 +22,16 @@ type State = {
 
 type Action =
   | {
-      id: 'setError'
+      type: 'setError'
       error: string
     }
   | {
-      id: 'setStatus'
+      type: 'setStatus'
       status: State['status']
     }
 
 function reducer(state: State, action: Action): State {
-  switch (action.id) {
+  switch (action.type) {
     case 'setError': {
       return {
         ...state,
@@ -65,18 +65,18 @@ export function Enable() {
   })
 
   const handleManageEmail2FA = async () => {
-    dispatch({id: 'setStatus', status: 'pending'})
+    dispatch({type: 'setStatus', status: 'pending'})
 
     try {
       await wait(1000, manageEmail2FA({enabled: true}))
-      dispatch({id: 'setStatus', status: 'success'})
+      dispatch({type: 'setStatus', status: 'success'})
       setTimeout(() => {
         control.close()
       }, 1000)
     } catch (e) {
       logger.error('Manage2FA: enable email 2FA failed', {safeMessage: e})
       dispatch({
-        id: 'setError',
+        type: 'setError',
         error: _(msg`Update to email 2FA settings failed`),
       })
     }
