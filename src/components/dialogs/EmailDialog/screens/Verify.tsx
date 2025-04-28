@@ -11,8 +11,8 @@ import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ResendEmailText} from '#/components/dialogs/EmailDialog/components/ResendEmailText'
 import {TokenField} from '#/components/dialogs/EmailDialog/components/TokenField'
+import {useAccountEmailState} from '#/components/dialogs/EmailDialog/data/useAccountEmailState'
 import {useConfirmEmail} from '#/components/dialogs/EmailDialog/data/useConfirmEmail'
-import {useIsEmailVerified} from '#/components/dialogs/EmailDialog/data/useIsEmailVerified'
 import {useRequestEmailVerification} from '#/components/dialogs/EmailDialog/data/useRequestEmailVerification'
 import {
   type ScreenID,
@@ -108,7 +108,7 @@ export function Verify({config}: ScreenProps<ScreenID.Verify>) {
       })
     }
   }, [config, dispatch])
-  useIsEmailVerified({onVerify})
+  useAccountEmailState({onVerify})
 
   const handleRequestEmailVerification = async () => {
     dispatch({

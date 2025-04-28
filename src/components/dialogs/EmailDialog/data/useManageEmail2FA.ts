@@ -1,10 +1,13 @@
 import {useMutation} from '@tanstack/react-query'
 
 import {useAgent, useSession} from '#/state/session'
+import {useUpdateAccountEmailStateQueryCache} from '#/components/dialogs/EmailDialog/data/useAccountEmailState'
 
 export function useManageEmail2FA() {
   const agent = useAgent()
   const {currentAccount} = useSession()
+  const updateAccountEmailStateQueryCache =
+    useUpdateAccountEmailStateQueryCache()
 
   return useMutation({
     mutationFn: async ({
@@ -22,7 +25,11 @@ export function useManageEmail2FA() {
         emailAuthFactor: enabled,
         token,
       })
-      await agent.resumeSession(agent.session!)
+      const {data} = await agent.resumeSession(agent.session!)
+      updateAccountEmailStateQueryCache({
+        isEmailVerified: !!data.emailConfirmed,
+        email2FAEnabled: !!data.emailAuthFactor,
+      })
     },
   })
 }

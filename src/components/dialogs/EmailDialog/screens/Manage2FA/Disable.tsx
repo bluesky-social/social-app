@@ -228,7 +228,7 @@ export function Disable() {
             {state.tokenStatus === 'pending' ? (
               <ButtonIcon icon={Loader} />
             ) : state.tokenStatus === 'success' ? (
-              <ButtonIcon icon={Loader} />
+              <ButtonIcon icon={Check} />
             ) : null}
           </Button>
         </>

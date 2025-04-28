@@ -3,19 +3,40 @@ import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
 
-export const isEmailVerifiedQueryKey = ['isEmailVerified'] as const
+export type AccountEmailState = {
+  isEmailVerified: boolean
+  email2FAEnabled: boolean
+}
 
-export function useInvalidateIsEmailVerified() {
+export const accountEmailStateQueryKey = ['isEmailVerified'] as const
+
+export function useInvalidateAccountEmailState() {
   const qc = useQueryClient()
 
   return useCallback(() => {
     return qc.invalidateQueries({
-      queryKey: isEmailVerifiedQueryKey,
+      queryKey: accountEmailStateQueryKey,
     })
   }, [qc])
 }
 
-export function useIsEmailVerified({
+export function useUpdateAccountEmailStateQueryCache() {
+  const qc = useQueryClient()
+
+  return useCallback(
+    (data: AccountEmailState) => {
+      return qc.setQueriesData(
+        {
+          queryKey: accountEmailStateQueryKey,
+        },
+        data,
+      )
+    },
+    [qc],
+  )
+}
+
+export function useAccountEmailState({
   onVerify,
 }: {
   onVerify?: () => void
@@ -24,16 +45,20 @@ export function useIsEmailVerified({
   const [prevIsEmailVerified, setPrevEmailIsVerified] = useState(
     !!agent.session?.emailConfirmed,
   )
-  const query = useQuery({
+  const query = useQuery<AccountEmailState>({
     enabled: !!agent.session,
-    initialData: {isEmailVerified: !!agent.session?.emailConfirmed},
+    initialData: {
+      isEmailVerified: !!agent.session?.emailConfirmed,
+      email2FAEnabled: !!agent.session?.emailAuthFactor,
+    },
     refetchOnWindowFocus: true,
-    queryKey: isEmailVerifiedQueryKey,
+    queryKey: accountEmailStateQueryKey,
     queryFn: async () => {
       // will also trigger updates to `#/state/session` data
       const {data} = await agent.resumeSession(agent.session!)
       return {
         isEmailVerified: !!data.emailConfirmed,
+        email2FAEnabled: !!data.emailAuthFactor,
       }
     },
   })

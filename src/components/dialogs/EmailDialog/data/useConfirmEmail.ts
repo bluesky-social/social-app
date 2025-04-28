@@ -1,12 +1,13 @@
 import {useMutation} from '@tanstack/react-query'
 
 import {useAgent, useSession} from '#/state/session'
-import {useInvalidateIsEmailVerified} from '#/components/dialogs/EmailDialog/data/useIsEmailVerified'
+import {useUpdateAccountEmailStateQueryCache} from '#/components/dialogs/EmailDialog/data/useAccountEmailState'
 
 export function useConfirmEmail() {
   const agent = useAgent()
   const {currentAccount} = useSession()
-  const invalidateIsEmailVerified = useInvalidateIsEmailVerified()
+  const updateAccountEmailStateQueryCache =
+    useUpdateAccountEmailStateQueryCache()
 
   return useMutation({
     mutationFn: async ({token}: {token: string}) => {
@@ -18,8 +19,11 @@ export function useConfirmEmail() {
         email: currentAccount.email,
         token: token.trim(),
       })
-      await agent.resumeSession(agent.session!)
-      await invalidateIsEmailVerified()
+      const {data} = await agent.resumeSession(agent.session!)
+      updateAccountEmailStateQueryCache({
+        isEmailVerified: !!data.emailConfirmed,
+        email2FAEnabled: !!data.emailAuthFactor,
+      })
     },
   })
 }

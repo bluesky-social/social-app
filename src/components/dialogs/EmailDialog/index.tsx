@@ -7,7 +7,7 @@ import {
   type StatefulControl,
   useStatefulDialogControl,
 } from '#/components/dialogs/Context'
-import {useIsEmailVerified} from '#/components/dialogs/EmailDialog/data/useIsEmailVerified'
+import {useAccountEmailState} from '#/components/dialogs/EmailDialog/data/useAccountEmailState'
 import {Manage2FA} from '#/components/dialogs/EmailDialog/screens/Manage2FA'
 import {Update} from '#/components/dialogs/EmailDialog/screens/Update'
 import {VerificationReminder} from '#/components/dialogs/EmailDialog/screens/VerificationReminder'
@@ -24,7 +24,7 @@ export function useEmailDialogControl() {
 
 export function EmailDialog({control}: {control: StatefulControl<Screen>}) {
   const {_} = useLingui()
-  const {isEmailVerified} = useIsEmailVerified()
+  const {isEmailVerified} = useAccountEmailState()
   const onClose = useCallback(() => {
     if (!isEmailVerified) {
       if (control.value?.id === ScreenID.Verify) {
