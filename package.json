@@ -6,6 +6,17 @@
     "node": ">=20"
   },
   "packageManager": "yarn@1.22.22",
+  "expo": {
+    "autolinking": {
+      "android": {
+        "buildFromSource": [
+          "expo-notifications",
+          "expo-haptics",
+          "expo-media-library"
+        ]
+      }
+    }
+  },
   "scripts": {
     "prepare": "is-ci || husky install",
     "postinstall": "patch-package && yarn intl:compile",
