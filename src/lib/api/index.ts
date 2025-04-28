@@ -1,26 +1,25 @@
 import {
-  $Typed,
-  AppBskyEmbedExternal,
-  AppBskyEmbedImages,
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-  AppBskyEmbedVideo,
-  AppBskyFeedPost,
+  type $Typed,
+  type AppBskyEmbedExternal,
+  type AppBskyEmbedImages,
+  type AppBskyEmbedRecord,
+  type AppBskyEmbedRecordWithMedia,
+  type AppBskyEmbedVideo,
+  type AppBskyFeedPost,
   AtUri,
   BlobRef,
-  BskyAgent,
-  ComAtprotoLabelDefs,
-  ComAtprotoRepoApplyWrites,
-  ComAtprotoRepoStrongRef,
+  type BskyAgent,
+  type ComAtprotoLabelDefs,
+  type ComAtprotoRepoApplyWrites,
+  type ComAtprotoRepoStrongRef,
   RichText,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import * as dcbor from '@ipld/dag-cbor'
 import {t} from '@lingui/macro'
-import {QueryClient} from '@tanstack/react-query'
+import {type QueryClient} from '@tanstack/react-query'
 import {sha256} from 'js-sha256'
-import {CID} from 'multiformats/cid'
-import * as Hasher from 'multiformats/hashes/hasher'
+import {CID, hasher} from 'multiformats'
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
@@ -35,9 +34,9 @@ import {
   threadgateAllowUISettingToAllowRecordValue,
 } from '#/state/queries/threadgate'
 import {
-  EmbedDraft,
-  PostDraft,
-  ThreadDraft,
+  type EmbedDraft,
+  type PostDraft,
+  type ThreadDraft,
 } from '#/view/com/composer/state/composer'
 import {createGIFDescription} from '../gif-alt-text'
 import {uploadBlob} from './upload-blob'
@@ -410,7 +409,7 @@ async function resolveRecord(
 
 // The built-in hashing functions from multiformats (`multiformats/hashes/sha2`)
 // are meant for Node.js, this is the cross-platform equivalent.
-const mf_sha256 = Hasher.from({
+const mf_sha256 = hasher.from({
   name: 'sha2-256',
   code: 0x12,
   encode: input => {
