@@ -4,6 +4,7 @@
     "jsx": "react-jsx",
     "module": "esnext",
     "types": ["node", "jest"],
+    "baseUrl": ".",
     "paths": {
       "#/*": ["./src/*"],
       "lib/*": ["./src/lib/*"],
