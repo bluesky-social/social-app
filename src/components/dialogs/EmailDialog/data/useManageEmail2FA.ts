@@ -1,25 +1,28 @@
 import {useMutation} from '@tanstack/react-query'
 
 import {useAgent, useSession} from '#/state/session'
-import {useInvalidateIsEmailVerified} from '#/components/dialogs/EmailDialog/data/useIsEmailVerified'
 
-export function useConfirmEmail() {
+export function useManageEmail2FA() {
   const agent = useAgent()
   const {currentAccount} = useSession()
-  const invalidateIsEmailVerified = useInvalidateIsEmailVerified()
 
   return useMutation({
-    mutationFn: async ({token}: {token: string}) => {
+    mutationFn: async ({
+      enabled,
+      token,
+    }:
+      | {enabled: true; token?: undefined}
+      | {enabled: false; token: string}) => {
       if (!currentAccount?.email) {
         throw new Error('No email found for the current account')
       }
 
-      await agent.com.atproto.server.confirmEmail({
+      await agent.com.atproto.server.updateEmail({
         email: currentAccount.email,
-        token: token.trim(),
+        emailAuthFactor: enabled,
+        token,
       })
       await agent.resumeSession(agent.session!)
-      await invalidateIsEmailVerified()
     },
   })
 }

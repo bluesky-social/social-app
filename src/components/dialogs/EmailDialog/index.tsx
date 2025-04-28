@@ -1,4 +1,4 @@
-import {useCallback} from 'react'
+import {useCallback, useState} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -8,6 +8,7 @@ import {
   useStatefulDialogControl,
 } from '#/components/dialogs/Context'
 import {useRefreshSession} from '#/components/dialogs/EmailDialog/data/useRefreshSession'
+import {Manage2FA} from '#/components/dialogs/EmailDialog/screens/Manage2FA'
 /*
  * Steps
  */
@@ -50,14 +51,19 @@ export function EmailDialog({control}: {control: StatefulControl<Screen>}) {
 }
 
 function Inner({control}: {control: StatefulControl<Screen>}) {
-  if (!control.value) return null
+  const [screen, showScreen] = useState(() => control.value)
 
-  switch (control.value.id) {
+  if (!screen) return null
+
+  switch (screen.id) {
     case ScreenID.Update: {
-      return <Update config={control.value} />
+      return <Update config={screen} />
     }
     case ScreenID.Verify: {
-      return <Verify config={control.value} />
+      return <Verify config={screen} />
+    }
+    case ScreenID.Manage2FA: {
+      return <Manage2FA config={screen} showScreen={showScreen} />
     }
     default: {
       return null

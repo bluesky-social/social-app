@@ -12,6 +12,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ResendEmailText} from '#/components/dialogs/EmailDialog/components/ResendEmailText'
 import {TokenField} from '#/components/dialogs/EmailDialog/components/TokenField'
 import {useConfirmEmail} from '#/components/dialogs/EmailDialog/data/useConfirmEmail'
+import {useIsEmailVerified} from '#/components/dialogs/EmailDialog/data/useIsEmailVerified'
 import {useRequestEmailVerification} from '#/components/dialogs/EmailDialog/data/useRequestEmailVerification'
 import {type Screen} from '#/components/dialogs/EmailDialog/types'
 import {Divider} from '#/components/Divider'
@@ -21,7 +22,7 @@ import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Span, Text} from '#/components/Typography'
 
-export function Verify({config}: {config: Exclude<Screen, {id: 'Update'}>}) {
+export function Verify({config}: {config: Extract<Screen, {id: 'Verify'}>}) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
@@ -38,6 +39,12 @@ export function Verify({config}: {config: Exclude<Screen, {id: 'Update'}>}) {
     null,
   )
   const {mutateAsync: confirmEmail} = useConfirmEmail()
+
+  useIsEmailVerified({
+    onEmailVerified: () => {
+      config.onVerify?.()
+    },
+  })
 
   const handleRequestEmailVerification = async () => {
     setError('')

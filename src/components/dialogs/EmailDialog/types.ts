@@ -16,17 +16,14 @@ export type Screen =
       id: ScreenID.Verify
       instructions?: ReactNode[]
       hideInitialCodeButton?: boolean
+      onVerify?: () => void
     }
   | {
-      id: ScreenID.Enable2FA
-    }
-  | {
-      id: ScreenID.Disable2FA
+      id: ScreenID.Manage2FA
     }
 
 export enum ScreenID {
   Update = 'Update',
   Verify = 'Verify',
-  Enable2FA = 'Enable2FA',
-  Disable2FA = 'Disable2FA',
+  Manage2FA = 'Manage2FA',
 }
