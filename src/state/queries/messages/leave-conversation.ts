@@ -74,8 +74,6 @@ export function useLeaveConvo(
       return {prevConvoListQueries, prevRequestsQueries}
     },
     onSuccess: data => {
-      void queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
-      void queryClient.invalidateQueries({queryKey: [REQUESTS_RQKEY_ROOT]})
       if (convoId) {
         void invalidateJoinLinkPreviewsForConvo(queryClient, convoId)
       }
@@ -93,9 +91,13 @@ export function useLeaveConvo(
           queryClient.setQueryData(queryKey, prevData)
         }
       }
-      void queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
-      void queryClient.invalidateQueries({queryKey: [REQUESTS_RQKEY_ROOT]})
       onError?.(error)
+    },
+    onSettled: () => {
+      if (queryClient.isMutating({mutationKey: [RQKEY_ROOT]}) === 1) {
+        void queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
+        void queryClient.invalidateQueries({queryKey: [REQUESTS_RQKEY_ROOT]})
+      }
     },
   })
 }
