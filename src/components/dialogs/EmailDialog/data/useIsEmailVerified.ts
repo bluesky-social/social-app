@@ -16,9 +16,9 @@ export function useInvalidateIsEmailVerified() {
 }
 
 export function useIsEmailVerified({
-  onEmailVerified,
+  onVerify,
 }: {
-  onEmailVerified?: () => void
+  onVerify?: () => void
 } = {}) {
   const agent = useAgent()
   const prevIsEmailVerified = useRef(!!agent.session?.emailConfirmed)
@@ -39,7 +39,7 @@ export function useIsEmailVerified({
   if (query.data.isEmailVerified && !prevIsEmailVerified.current) {
     console.log('fire')
     prevIsEmailVerified.current = true
-    onEmailVerified?.()
+    onVerify?.()
   } else if (prevIsEmailVerified.current && !query.data.isEmailVerified) {
     console.log('reset')
     prevIsEmailVerified.current = false

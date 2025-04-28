@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useCallback, useReducer} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -22,93 +22,187 @@ import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Span, Text} from '#/components/Typography'
 
+type State = {
+  step: 'email' | 'token' | 'success'
+  mutationStatus: 'pending' | 'success' | 'error' | 'default'
+  error: string
+  token: string
+}
+
+type Action =
+  | {
+      type: 'setStep'
+      step: State['step']
+    }
+  | {
+      type: 'setError'
+      error: string
+    }
+  | {
+      type: 'setMutationStatus'
+      status: State['mutationStatus']
+    }
+  | {
+      type: 'setToken'
+      value: string
+    }
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'setStep': {
+      return {
+        ...state,
+        error: '',
+        mutationStatus: 'default',
+        step: action.step,
+      }
+    }
+    case 'setError': {
+      return {
+        ...state,
+        error: action.error,
+        mutationStatus: 'error',
+      }
+    }
+    case 'setMutationStatus': {
+      return {
+        ...state,
+        error: '',
+        mutationStatus: action.status,
+      }
+    }
+    case 'setToken': {
+      return {
+        ...state,
+        error: '',
+        token: action.value,
+      }
+    }
+  }
+}
+
 export function Verify({config}: {config: Extract<Screen, {id: 'Verify'}>}) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const [error, setError] = useState('')
-
-  const [step, setStep] = useState<
-    'default' | 'sent' | 'token' | 'tokenConfirmed'
-  >('default')
-  const [sendingStatus, setSendingStatus] = useState<'sending' | null>(null)
-  const {mutateAsync: requestEmailVerification} = useRequestEmailVerification()
-
-  const [token, setToken] = useState('')
-  const [confirmingStatus, setConfirmingStatus] = useState<'sending' | null>(
-    null,
-  )
-  const {mutateAsync: confirmEmail} = useConfirmEmail()
-
-  useIsEmailVerified({
-    onEmailVerified: () => {
-      config.onVerify?.()
-    },
+  const [state, dispatch] = useReducer(reducer, {
+    step: 'email',
+    mutationStatus: 'default',
+    error: '',
+    token: '',
   })
 
+  const {mutateAsync: requestEmailVerification} = useRequestEmailVerification()
+  const {mutateAsync: confirmEmail} = useConfirmEmail()
+
+  const onVerify = useCallback(() => {
+    if (config.onVerify) {
+      config.onVerify()
+    } else {
+      dispatch({
+        type: 'setStep',
+        step: 'success',
+      })
+    }
+  }, [config, dispatch])
+  useIsEmailVerified({onVerify})
+
   const handleRequestEmailVerification = async () => {
-    setError('')
-    setSendingStatus('sending')
+    dispatch({
+      type: 'setMutationStatus',
+      status: 'pending',
+    })
 
     try {
       await wait(1000, requestEmailVerification())
-      setStep('sent')
+      dispatch({
+        type: 'setMutationStatus',
+        status: 'success',
+      })
     } catch (e) {
       logger.error('EmailDialog: sending verification email failed', {
         safeMessage: e,
       })
-      setError(_(msg`Failed to send email, please try again.`))
-    } finally {
-      setSendingStatus(null)
+      dispatch({
+        type: 'setError',
+        error: _(msg`Failed to send email, please try again.`),
+      })
     }
   }
 
   const handleConfirmEmail = async () => {
-    setError('')
-    setConfirmingStatus('sending')
+    dispatch({
+      type: 'setMutationStatus',
+      status: 'pending',
+    })
 
     try {
-      await wait(1000, confirmEmail({token}))
-      setStep('tokenConfirmed')
+      await wait(1000, confirmEmail({token: state.token}))
+      dispatch({
+        type: 'setStep',
+        step: 'success',
+      })
     } catch (e) {
       logger.error('EmailDialog: confirming email failed', {
         safeMessage: e,
       })
-      setError(_(msg`Failed to verify email, please try again.`))
-    } finally {
-      setConfirmingStatus(null)
+      dispatch({
+        type: 'setError',
+        error: _(msg`Failed to verify email, please try again.`),
+      })
     }
+  }
+
+  if (state.step === 'success') {
+    return (
+      <View style={[a.gap_lg]}>
+        <View style={[a.gap_sm]}>
+          <Text style={[a.text_xl, a.font_heavy]}>
+            <Span style={{top: 1}}>
+              <Check size="sm" fill={t.palette.positive_500} />
+            </Span>{' '}
+            <Trans>Email verification complete!</Trans>
+          </Text>
+
+          <Text
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+            <Trans>
+              You have successfully verified your email address. You can close
+              this dialog.
+            </Trans>
+          </Text>
+        </View>
+      </View>
+    )
   }
 
   return (
     <View style={[a.gap_lg]}>
       <View style={[a.gap_sm]}>
         <Text style={[a.text_xl, a.font_heavy]}>
-          {step === 'sent' ? (
-            <>
-              <Span style={{top: 1}}>
-                <Check size="sm" fill={t.palette.positive_500} />
-              </Span>{' '}
-              <Trans>Email sent!</Trans>
-            </>
-          ) : step === 'tokenConfirmed' ? (
-            <>
-              <Span style={{top: 1}}>
-                <Check size="sm" fill={t.palette.positive_500} />
-              </Span>{' '}
-              <Trans>Email verification complete</Trans>
-            </>
+          {state.step === 'email' ? (
+            state.mutationStatus === 'success' ? (
+              <>
+                <Span style={{top: 1}}>
+                  <Check size="sm" fill={t.palette.positive_500} />
+                </Span>{' '}
+                <Trans>Email sent!</Trans>
+              </>
+            ) : (
+              <Trans>Verify email</Trans>
+            )
           ) : (
-            <Trans>Verify email</Trans>
+            <Trans>Confirm email code</Trans>
           )}
         </Text>
 
-        {step === 'default' && (
+        {state.step === 'email' && state.mutationStatus !== 'success' && (
           <>
             {config.instructions?.map((int, i) => (
               <Text
                 key={i}
                 style={[
+                  a.italic,
                   a.text_sm,
                   a.leading_snug,
                   t.atoms.text_contrast_medium,
@@ -120,16 +214,27 @@ export function Verify({config}: {config: Extract<Screen, {id: 'Verify'}>}) {
         )}
 
         <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
-          {step === 'sent' ? (
-            <Trans>
-              We sent an email to{' '}
-              <Span style={[a.font_bold, t.atoms.text]}>
-                {currentAccount!.email}
-              </Span>{' '}
-              containing a link. Click on it to complete the email verification
-              process.
-            </Trans>
-          ) : step === 'token' ? (
+          {state.step === 'email' ? (
+            state.mutationStatus === 'success' ? (
+              <Trans>
+                We sent an email to{' '}
+                <Span style={[a.font_bold, t.atoms.text]}>
+                  {currentAccount!.email}
+                </Span>{' '}
+                containing a link. Click on it to complete the email
+                verification process.
+              </Trans>
+            ) : (
+              <Trans>
+                We'll send you an email to{' '}
+                <Span style={[a.font_bold, t.atoms.text]}>
+                  {currentAccount!.email}
+                </Span>{' '}
+                containing a link. Click on it to complete the email
+                verification process.
+              </Trans>
+            )
+          ) : (
             <Trans>
               Enter the code we sent to{' '}
               <Span style={[a.font_bold, t.atoms.text]}>
@@ -137,29 +242,35 @@ export function Verify({config}: {config: Extract<Screen, {id: 'Verify'}>}) {
               </Span>{' '}
               below.
             </Trans>
-          ) : step === 'tokenConfirmed' ? (
-            <Trans>
-              You have successfully verified your email address. You can close
-              this dialog.
-            </Trans>
-          ) : (
-            <Trans>
-              We'll send you an email to{' '}
-              <Span style={[a.font_bold, t.atoms.text]}>
-                {currentAccount!.email}
-              </Span>{' '}
-              containing a link. Click on it to complete the email verification
-              process.
-            </Trans>
           )}
         </Text>
 
-        {step === 'sent' && (
+        {state.step === 'email' && state.mutationStatus === 'success' && (
           <ResendEmailText onPress={requestEmailVerification} />
         )}
       </View>
 
-      {step === 'sent' && (
+      {state.step === 'email' && state.mutationStatus !== 'success' ? (
+        <>
+          {state.error && <Admonition type="error">{state.error}</Admonition>}
+          <Button
+            label={_(msg`Send verification email`)}
+            size="large"
+            variant="solid"
+            color="primary"
+            onPress={handleRequestEmailVerification}
+            disabled={state.mutationStatus === 'pending'}>
+            <ButtonText>
+              <Trans>Send email</Trans>
+            </ButtonText>
+            <ButtonIcon
+              icon={state.mutationStatus === 'pending' ? Loader : Envelope}
+            />
+          </Button>
+        </>
+      ) : null}
+
+      {state.step === 'email' && (
         <>
           <Divider />
 
@@ -170,7 +281,10 @@ export function Verify({config}: {config: Extract<Screen, {id: 'Verify'}>}) {
               <InlineLinkText
                 label={_(msg`Enter code`)}
                 {...createStaticClick(() => {
-                  setStep('token')
+                  dispatch({
+                    type: 'setStep',
+                    step: 'token',
+                  })
                 })}>
                 Click here.
               </InlineLinkText>
@@ -179,58 +293,20 @@ export function Verify({config}: {config: Extract<Screen, {id: 'Verify'}>}) {
         </>
       )}
 
-      {step === 'default' ? (
-        <>
-          {error && <Admonition type="error"> {error} </Admonition>}
-
-          <Button
-            label={_(msg`Send verification email`)}
-            size="large"
-            variant="solid"
-            color="primary"
-            onPress={handleRequestEmailVerification}
-            disabled={sendingStatus === 'sending'}>
-            <ButtonText>
-              <Trans>Send email</Trans>
-            </ButtonText>
-            <ButtonIcon
-              icon={sendingStatus === 'sending' ? Loader : Envelope}
-            />
-          </Button>
-
-          {!config.hideInitialCodeButton && (
-            <>
-              <Divider />
-
-              <Text
-                style={[
-                  a.text_sm,
-                  a.leading_snug,
-                  t.atoms.text_contrast_medium,
-                ]}>
-                <Trans>
-                  Have a code?{' '}
-                  <InlineLinkText
-                    label={_(msg`Enter code`)}
-                    {...createStaticClick(() => {
-                      setStep('token')
-                    })}>
-                    Click here.
-                  </InlineLinkText>
-                </Trans>
-              </Text>
-            </>
-          )}
-        </>
-      ) : step === 'token' ? (
+      {state.step === 'token' ? (
         <>
           <TokenField
-            value={token}
-            onChangeText={setToken}
+            value={state.token}
+            onChangeText={token => {
+              dispatch({
+                type: 'setToken',
+                value: token,
+              })
+            }}
             onSubmitEditing={() => {}}
           />
 
-          {error && <Admonition type="error"> {error} </Admonition>}
+          {state.error && <Admonition type="error">{state.error}</Admonition>}
 
           <Button
             label={_(msg`Verify`)}
@@ -238,12 +314,31 @@ export function Verify({config}: {config: Extract<Screen, {id: 'Verify'}>}) {
             variant="solid"
             color="primary"
             onPress={handleConfirmEmail}
-            disabled={!token || confirmingStatus === 'sending'}>
+            disabled={!state.token || state.mutationStatus === 'pending'}>
             <ButtonText>
               <Trans>Verify code</Trans>
             </ButtonText>
-            {confirmingStatus === 'sending' && <ButtonIcon icon={Loader} />}
+            {state.mutationStatus === 'pending' && <ButtonIcon icon={Loader} />}
           </Button>
+
+          <Divider />
+
+          <Text
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+            <Trans>
+              Don't have a code?{' '}
+              <InlineLinkText
+                label={_(msg`Enter code`)}
+                {...createStaticClick(() => {
+                  dispatch({
+                    type: 'setStep',
+                    step: 'email',
+                  })
+                })}>
+                Click here.
+              </InlineLinkText>
+            </Trans>
+          </Text>
         </>
       ) : null}
     </View>

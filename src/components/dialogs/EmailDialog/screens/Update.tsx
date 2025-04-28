@@ -89,6 +89,7 @@ function reducer(state: State, action: Action): State {
     case 'setToken': {
       return {
         ...state,
+        error: '',
         token: action.value,
       }
     }
@@ -99,7 +100,6 @@ export function Update(_props: {config: Exclude<Screen, {id: 'Verify'}>}) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
-
   const [state, dispatch] = useReducer(reducer, {
     step: 'email',
     mutationStatus: 'default',
