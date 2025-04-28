@@ -1,11 +1,5 @@
-
-import {
-  type ChatBskyConvoListConvos,
-} from '@atproto/api'
-import {
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query'
+import {type ChatBskyConvoListConvos} from '@atproto/api'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
@@ -13,12 +7,13 @@ import {useAgent} from '#/state/session'
 import {RQKEY_ROOT as CONVO_LIST_KEY} from './list-conversations'
 
 export const RQKEY_ROOT = 'leave-convo'
-export function RQKEY(convoId: string | undefined) {
-  return [RQKEY_ROOT, convoId]
+
+export function RQKEY(convoId: string) {
+  return [RQKEY_ROOT, convoId] as const
 }
 
 export function useLeaveConvo(
-  convoId: string | undefined,
+  convoId: string,
   {
     onMutate,
     onError,
@@ -43,7 +38,7 @@ export function useLeaveConvo(
       return data
     },
     onMutate: async () => {
-      await queryClient.cancelQueries({queryKey: CONVO_LIST_KEY})
+      await queryClient.cancelQueries({queryKey: [CONVO_LIST_KEY]})
       let prevPages: ChatBskyConvoListConvos.OutputSchema[] = []
       queryClient.setQueryData(
         [CONVO_LIST_KEY],
@@ -85,7 +80,9 @@ export function useLeaveConvo(
       onError?.(error)
     },
     onSettled: () => {
-      queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY})
+      if (queryClient.isMutating({mutationKey: RQKEY(convoId)}) === 1) {
+        queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
+      }
     },
   })
 }
