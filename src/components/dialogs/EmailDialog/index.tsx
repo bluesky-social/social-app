@@ -31,7 +31,7 @@ export function EmailDialog({control}: {control: StatefulControl<Screen>}) {
         control.value.onCloseWithoutVerifying?.()
       }
     }
-  }, [isEmailVerified, control, ,])
+  }, [isEmailVerified, control])
 
   return (
     <Dialog.Outer control={control.control} onClose={onClose}>
