@@ -5185,7 +5185,7 @@ msgstr ""
 msgid "Open feed options menu"
 msgstr ""
 
-#: src/components/dms/EmojiPopup.android.tsx:27
+#: src/components/dms/EmojiPopup.android.tsx:28
 msgid "Open full emoji list"
 msgstr ""
 
@@ -8655,7 +8655,7 @@ msgstr ""
 msgid "View details for reporting a copyright violation"
 msgstr ""
 
-#: src/view/com/posts/ViewFullThread.tsx:59
+#: src/view/com/posts/ViewFullThread.tsx:56
 msgid "View full thread"
 msgstr ""
 
