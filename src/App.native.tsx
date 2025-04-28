@@ -61,6 +61,7 @@ import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-repli
 import {Provider as TrendingConfigProvider} from '#/state/trending-config'
 import {TestCtrls} from '#/view/com/testing/TestCtrls'
 import {Provider as VideoVolumeProvider} from '#/view/com/util/post-embeds/VideoVolumeContext'
+import {ToastContainer} from '#/view/com/util/Toast'
 import * as Toast from '#/view/com/util/Toast'
 import {Shell} from '#/view/shell'
 import {ThemeProvider as Alf} from '#/alf'
@@ -157,6 +158,7 @@ function InnerApp() {
                                                     <TestCtrls />
                                                     <Shell />
                                                     <NuxDialogs />
+                                                    <ToastContainer />
                                                   </IntentDialogProvider>
                                                 </GestureHandlerRootView>
                                               </TrendingConfigProvider>
