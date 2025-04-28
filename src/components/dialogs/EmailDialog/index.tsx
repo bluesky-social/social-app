@@ -7,11 +7,7 @@ import {
   type StatefulControl,
   useStatefulDialogControl,
 } from '#/components/dialogs/Context'
-import {useRefreshSession} from '#/components/dialogs/EmailDialog/data/useRefreshSession'
 import {Manage2FA} from '#/components/dialogs/EmailDialog/screens/Manage2FA'
-/*
- * Steps
- */
 import {Update} from '#/components/dialogs/EmailDialog/screens/Update'
 import {VerificationReminder} from '#/components/dialogs/EmailDialog/screens/VerificationReminder'
 import {Verify} from '#/components/dialogs/EmailDialog/screens/Verify'
@@ -27,15 +23,7 @@ export function useEmailDialogControl() {
 
 export function EmailDialog({control}: {control: StatefulControl<Screen>}) {
   const {_} = useLingui()
-  const refreshSession = useRefreshSession()
-  const onClose = useCallback(() => {
-    /**
-     * If link in any verification email is clicked, it will open a new tab.
-     * When the user returns to this tab, we'll refresh their account state
-     * when the dialog closes.
-     */
-    refreshSession()
-  }, [refreshSession])
+  const onClose = useCallback(() => {}, [])
 
   return (
     <Dialog.Outer control={control.control} onClose={onClose}>

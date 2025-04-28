@@ -1,4 +1,4 @@
-import {useCallback, useRef} from 'react'
+import {useCallback, useState} from 'react'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
@@ -21,28 +21,28 @@ export function useIsEmailVerified({
   onVerify?: () => void
 } = {}) {
   const agent = useAgent()
-  const prevIsEmailVerified = useRef(!!agent.session?.emailConfirmed)
+  const [prevIsEmailVerified, setPrevEmailIsVerified] = useState(
+    !!agent.session?.emailConfirmed,
+  )
   const query = useQuery({
     enabled: !!agent.session,
     initialData: {isEmailVerified: !!agent.session?.emailConfirmed},
     refetchOnWindowFocus: true,
     queryKey: isEmailVerifiedQueryKey,
     queryFn: async () => {
-      const {data} = await agent.com.atproto.server.getSession()
+      // will also trigger updates to `#/state/session` data
+      const {data} = await agent.resumeSession(agent.session!)
       return {
         isEmailVerified: !!data.emailConfirmed,
       }
     },
   })
 
-  // TODO double check racing?
-  if (query.data.isEmailVerified && !prevIsEmailVerified.current) {
-    console.log('fire')
-    prevIsEmailVerified.current = true
+  if (query.data.isEmailVerified && !prevIsEmailVerified) {
+    setPrevEmailIsVerified(true)
     onVerify?.()
-  } else if (prevIsEmailVerified.current && !query.data.isEmailVerified) {
-    console.log('reset')
-    prevIsEmailVerified.current = false
+  } else if (!query.data.isEmailVerified && prevIsEmailVerified) {
+    setPrevEmailIsVerified(false)
   }
 
   return query.data

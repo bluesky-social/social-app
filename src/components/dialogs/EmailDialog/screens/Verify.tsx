@@ -163,7 +163,8 @@ export function Verify({config}: ScreenProps<ScreenID.Verify>) {
           <Text style={[a.text_xl, a.font_heavy]}>
             <Span style={{top: 1}}>
               <Check size="sm" fill={t.palette.positive_500} />
-            </Span>{' '}
+            </Span>
+            {'  '}
             <Trans>Email verification complete!</Trans>
           </Text>
 
@@ -188,7 +189,8 @@ export function Verify({config}: ScreenProps<ScreenID.Verify>) {
               <>
                 <Span style={{top: 1}}>
                   <Check size="sm" fill={t.palette.positive_500} />
-                </Span>{' '}
+                </Span>
+                {'  '}
                 <Trans>Email sent!</Trans>
               </>
             ) : (
