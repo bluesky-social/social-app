@@ -38,8 +38,8 @@ module.exports = function (_config) {
   return {
     expo: {
       version: VERSION,
-      name: 'Bluesky',
-      slug: 'bluesky',
+      name: 'KRYPT',
+      slug: 'krypt',
       scheme: 'bluesky',
       owner: 'blueskysocial',
       runtimeVersion: {
