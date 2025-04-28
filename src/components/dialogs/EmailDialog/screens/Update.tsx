@@ -1,7 +1,8 @@
-import {useState} from 'react'
+import {useReducer} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {validate as validateEmail} from 'email-validator'
 
 import {wait} from '#/lib/async/wait'
 import {logger} from '#/logger'
@@ -22,40 +23,122 @@ import {CheckThick_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Ch
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
+type State = {
+  step: 'email' | 'token'
+  mutationStatus: 'pending' | 'success' | 'error' | 'default'
+  error: string
+  emailValid: boolean
+  email: string
+  token: string
+}
+
+type Action =
+  | {
+      type: 'setStep'
+      step: State['step']
+    }
+  | {
+      type: 'setError'
+      error: string
+    }
+  | {
+      type: 'setMutationStatus'
+      status: State['mutationStatus']
+    }
+  | {
+      type: 'setEmail'
+      value: string
+    }
+  | {
+      type: 'setToken'
+      value: string
+    }
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'setStep': {
+      return {
+        ...state,
+        step: action.step,
+      }
+    }
+    case 'setError': {
+      return {
+        ...state,
+        error: action.error,
+        mutationStatus: 'error',
+      }
+    }
+    case 'setMutationStatus': {
+      return {
+        ...state,
+        error: '',
+        mutationStatus: action.status,
+      }
+    }
+    case 'setEmail': {
+      const emailValid = validateEmail(action.value)
+      return {
+        ...state,
+        step: 'email',
+        token: '',
+        email: action.value,
+        emailValid,
+      }
+    }
+    case 'setToken': {
+      return {
+        ...state,
+        token: action.value,
+      }
+    }
+  }
+}
+
 export function Update(_props: {config: Exclude<Screen, {id: 'Verify'}>}) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const [email, setEmail] = useState('')
-  const [token, setToken] = useState('')
-  const [error, setError] = useState('')
-  const [tip, setTip] = useState('')
-  const [success, setSuccess] = useState(false)
-  const [tokenRequired, setTokenRequired] = useState(false)
 
-  const [updateStatus, setUpdateStatus] = useState<'sending' | null>(null)
+  const [state, dispatch] = useReducer(reducer, {
+    step: 'email',
+    mutationStatus: 'default',
+    error: '',
+    email: '',
+    emailValid: true,
+    token: '',
+  })
+
   const {mutateAsync: updateEmail} = useUpdateEmail()
   const {mutateAsync: requestEmailUpdate} = useRequestEmailUpdate()
   const {mutateAsync: requestEmailVerification} = useRequestEmailVerification()
 
   const handleEmailChange = (email: string) => {
-    setEmail(email)
-
-    // reset if email is edited
-    if (tokenRequired) {
-      setToken('')
-      setTokenRequired(false)
-    }
+    dispatch({
+      type: 'setEmail',
+      value: email,
+    })
   }
 
   const handleUpdateEmail = async () => {
-    setError('')
-    setTip('')
-    setUpdateStatus('sending')
+    dispatch({
+      type: 'setMutationStatus',
+      status: 'pending',
+    })
 
-    if (email === currentAccount!.email) {
-      setTip(_(msg`This email is already associated with your account.`))
-      setUpdateStatus(null)
+    if (state.emailValid === false) {
+      dispatch({
+        type: 'setError',
+        error: _(msg`Please enter a valid email address.`),
+      })
+      return
+    }
+
+    if (state.email === currentAccount!.email) {
+      dispatch({
+        type: 'setError',
+        error: _(msg`This email is already associated with your account.`),
+      })
       return
     }
 
@@ -63,15 +146,25 @@ export function Update(_props: {config: Exclude<Screen, {id: 'Verify'}>}) {
       const {status} = await wait(
         1000,
         updateEmail({
-          email,
-          token,
+          email: state.email,
+          token: state.token,
         }),
       )
 
       if (status === 'tokenRequired') {
-        setTokenRequired(true)
+        dispatch({
+          type: 'setStep',
+          step: 'token',
+        })
+        dispatch({
+          type: 'setMutationStatus',
+          status: 'default',
+        })
       } else if (status === 'success') {
-        setSuccess(true)
+        dispatch({
+          type: 'setMutationStatus',
+          status: 'success',
+        })
 
         try {
           // fire off a confirmation email immediately
@@ -80,9 +173,10 @@ export function Update(_props: {config: Exclude<Screen, {id: 'Verify'}>}) {
       }
     } catch (e) {
       logger.error('EmailDialog: update email failed', {safeMessage: e})
-      setError(_(msg`Email updated failed, please try again.`))
-    } finally {
-      setUpdateStatus(null)
+      dispatch({
+        type: 'setError',
+        error: _(msg`Email updated failed, please try again.`),
+      })
     }
   }
 
@@ -102,8 +196,12 @@ export function Update(_props: {config: Exclude<Screen, {id: 'Verify'}>}) {
             <TextField.Input
               label={_(msg`New email address`)}
               placeholder={_(msg`alice@example.com`)}
-              defaultValue={email}
-              onChangeText={success ? undefined : handleEmailChange}
+              defaultValue={state.email}
+              onChangeText={
+                state.mutationStatus === 'success'
+                  ? undefined
+                  : handleEmailChange
+              }
               keyboardType="email-address"
               autoComplete="email"
               onSubmitEditing={handleUpdateEmail}
@@ -111,7 +209,7 @@ export function Update(_props: {config: Exclude<Screen, {id: 'Verify'}>}) {
           </TextField.Root>
         </View>
 
-        {tokenRequired && (
+        {state.step === 'token' && (
           <>
             <Divider />
             <View>
@@ -122,11 +220,20 @@ export function Update(_props: {config: Exclude<Screen, {id: 'Verify'}>}) {
                 <Trans>Check your email for a security code.</Trans>
               </Text>
               <TokenField
-                value={token}
-                onChangeText={success ? undefined : setToken}
+                value={state.token}
+                onChangeText={
+                  state.mutationStatus === 'success'
+                    ? undefined
+                    : token => {
+                        dispatch({
+                          type: 'setToken',
+                          value: token,
+                        })
+                      }
+                }
                 onSubmitEditing={handleUpdateEmail}
               />
-              {!success && (
+              {state.mutationStatus !== 'success' && (
                 <ResendEmailText
                   onPress={requestEmailUpdate}
                   style={[a.pt_sm]}
@@ -136,12 +243,10 @@ export function Update(_props: {config: Exclude<Screen, {id: 'Verify'}>}) {
           </>
         )}
 
-        {error && <Admonition type="error">{error}</Admonition>}
-
-        {tip && <Admonition type="tip">{tip}</Admonition>}
+        {state.error && <Admonition type="error">{state.error}</Admonition>}
       </View>
 
-      {success ? (
+      {state.mutationStatus === 'success' ? (
         <>
           <Divider />
           <View style={[a.gap_sm]}>
@@ -164,18 +269,17 @@ export function Update(_props: {config: Exclude<Screen, {id: 'Verify'}>}) {
           label={_(msg`Update email`)}
           size="large"
           variant="solid"
-          color={success ? 'secondary' : 'primary'}
+          color="primary"
           onPress={handleUpdateEmail}
           disabled={
-            !email ||
-            (tokenRequired && !token) ||
-            updateStatus === 'sending' ||
-            success
+            !state.email ||
+            (state.step === 'token' && !state.token) ||
+            state.mutationStatus === 'pending'
           }>
           <ButtonText>
             <Trans>Update email</Trans>
           </ButtonText>
-          {updateStatus === 'sending' && <ButtonIcon icon={Loader} />}
+          {state.mutationStatus === 'pending' && <ButtonIcon icon={Loader} />}
         </Button>
       )}
     </View>
