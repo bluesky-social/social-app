@@ -7,12 +7,9 @@
     "baseUrl": ".",
     "paths": {
       "#/*": ["./src/*"],
-      "lib/*": ["./src/lib/*"],
-      "platform/*": ["./src/platform/*"],
-      "state/*": ["./src/state/*"],
-      "view/*": ["./src/view/*"],
       "crypto": ["./src/platform/crypto.ts"],
-      "multiformats": ["node_modules/multiformats/types/src/index.d.ts"]
+      "multiformats/cid": ["node_modules/multiformats/types/src/cid.d.ts"],
+      "multiformats/hashes/hasher": ["node_modules/multiformats/types/src/hashes/hasher.d.ts"]
     }
   },
   "exclude": ["bskyweb", "bskyembed", "web-build"]
