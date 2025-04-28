@@ -142,35 +142,25 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
 
   // save
   try {
-    const asset = await MediaLibrary.createAssetAsync(imagePath)
     if (isAndroid) {
+      // android triggers an annoying permission prompt if you try and move an image
+      // between albums. therefore, we need to either create the album with the image
+      // as the starting image, or put it directly into the album
       const album = await MediaLibrary.getAlbumAsync(ALBUM_NAME)
       if (album) {
-        // migrate album if needed
-        // https://docs.expo.dev/versions/latest/sdk/media-library/#why-do-you-need-to-migrate-files
-        if (await MediaLibrary.albumNeedsMigrationAsync(album)) {
-          logger.info('Migrating album')
-          try {
-            await MediaLibrary.migrateAlbumIfNeededAsync(album)
-          } catch (err) {
-            logger.error(err instanceof Error ? err : String(err), {
-              message:
-                'Failed to migrate album, image not moved to Bluesky folder',
-            })
-            return
-          }
-        }
-        // add asset to album
-        await MediaLibrary.addAssetsToAlbumAsync(
-          [asset],
-          album,
-          // move asset, rather than copying
-          false,
-        )
+        // if album exists, put the image straight in there
+        await MediaLibrary.createAssetAsync(imagePath, album)
       } else {
-        // create album with asset (albums must always have at least one asset)
-        await MediaLibrary.createAlbumAsync(ALBUM_NAME, asset, false)
+        // otherwise, create album with asset (albums must always have at least one asset)
+        await MediaLibrary.createAlbumAsync(
+          ALBUM_NAME,
+          undefined,
+          undefined,
+          imagePath,
+        )
       }
+    } else {
+      await MediaLibrary.createAssetAsync(imagePath)
     }
   } catch (err) {
     logger.error(err instanceof Error ? err : String(err), {
