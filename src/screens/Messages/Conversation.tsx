@@ -5,7 +5,7 @@ import {
   moderateProfile,
   type ModerationDecision,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
   type RouteProp,
@@ -31,8 +31,11 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
-import {useDialogControl} from '#/components/Dialog'
-import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
+import {
+  EmailDialog,
+  EmailDialogScreenID,
+  useEmailDialogControl,
+} from '#/components/dialogs/EmailDialog'
 import {MessagesListBlockedFooter} from '#/components/dms/MessagesListBlockedFooter'
 import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
 import {Error} from '#/components/Error'
@@ -183,19 +186,29 @@ function InnerReady({
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
 }) {
-  const {_} = useLingui()
   const convoState = useConvo()
   const navigation = useNavigation<NavigationProp>()
   const {params} =
     useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>()
-  const verifyEmailControl = useDialogControl()
   const {needsEmailVerification} = useEmail()
+  const emailDialogControl = useEmailDialogControl()
 
   React.useEffect(() => {
     if (needsEmailVerification) {
-      verifyEmailControl.open()
+      emailDialogControl.open({
+        id: EmailDialogScreenID.Verify,
+        instructions: [
+          <Trans key="pre-compose">
+            Before you may message another user, you must first verify your
+            email.
+          </Trans>,
+        ],
+        onCloseWithoutVerifying: () => {
+          navigation.navigate('Home')
+        },
+      })
     }
-  }, [needsEmailVerification, verifyEmailControl])
+  }, [needsEmailVerification, emailDialogControl, navigation])
 
   return (
     <>
@@ -216,15 +229,7 @@ function InnerReady({
           }
         />
       )}
-      <VerifyEmailDialog
-        reasonText={_(
-          msg`Before you may message another user, you must first verify your email.`,
-        )}
-        control={verifyEmailControl}
-        onCloseWithoutVerifying={() => {
-          navigation.navigate('Home')
-        }}
-      />
+      <EmailDialog control={emailDialogControl} />
     </>
   )
 }

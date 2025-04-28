@@ -120,8 +120,11 @@ import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
-import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
+import {
+  EmailDialog,
+  EmailDialogScreenID,
+  useEmailDialogControl,
+} from '#/components/dialogs/EmailDialog'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
@@ -332,13 +335,23 @@ export const ComposePost = ({
   }, [onPressCancel, closeAllDialogs, closeAllModals])
 
   const {needsEmailVerification} = useEmail()
-  const emailVerificationControl = useDialogControl()
+  const emailDialogControl = useEmailDialogControl()
 
   useEffect(() => {
     if (needsEmailVerification) {
-      emailVerificationControl.open()
+      emailDialogControl.open({
+        id: EmailDialogScreenID.Verify,
+        instructions: [
+          <Trans key="pre-compose">
+            Before creating a post, you must first verify your email.
+          </Trans>,
+        ],
+        onCloseWithoutVerifying: () => {
+          onClose()
+        },
+      })
     }
-  }, [needsEmailVerification, emailVerificationControl])
+  }, [needsEmailVerification, emailDialogControl, onClose])
 
   const missingAltError = useMemo(() => {
     if (!requireAltTextEnabled) {
@@ -620,15 +633,7 @@ export const ComposePost = ({
   const isWebFooterSticky = !isNative && thread.posts.length > 1
   return (
     <BottomSheetPortalProvider>
-      <VerifyEmailDialog
-        control={emailVerificationControl}
-        onCloseWithoutVerifying={() => {
-          onClose()
-        }}
-        reasonText={_(
-          msg`Before creating a post, you must first verify your email.`,
-        )}
-      />
+      <EmailDialog control={emailDialogControl} />
       <KeyboardAvoidingView
         testID="composePostView"
         behavior={isIOS ? 'padding' : 'height'}

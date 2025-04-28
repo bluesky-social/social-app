@@ -15,8 +15,8 @@ export type Screen =
   | {
       id: ScreenID.Verify
       instructions?: ReactNode[]
-      hideInitialCodeButton?: boolean
       onVerify?: () => void
+      onCloseWithoutVerifying?: () => void
     }
   | {
       id: ScreenID.VerificationReminder
