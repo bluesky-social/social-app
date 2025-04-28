@@ -1,4 +1,4 @@
-import {type TextInputProps,View} from 'react-native'
+import {type TextInputProps, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

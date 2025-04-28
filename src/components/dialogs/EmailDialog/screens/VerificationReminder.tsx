@@ -2,7 +2,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {atoms as a, tokens,useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogContext} from '#/components/Dialog'
 import {
