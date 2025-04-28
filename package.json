@@ -222,7 +222,7 @@
     "@react-native/typescript-config": "^0.76.9",
     "@sentry/webpack-plugin": "^3.2.2",
     "@testing-library/jest-native": "^5.4.3",
-    "@testing-library/react-native": "^12.8.1",
+    "@testing-library/react-native": "^13.2.0",
     "@types/jest": "^29.4.0",
     "@types/lodash.chunk": "^4.2.7",
     "@types/lodash.debounce": "^4.0.7",
@@ -279,8 +279,7 @@
   "jest": {
     "preset": "jest-expo/ios",
     "setupFilesAfterEnv": [
-      "./jest/jestSetup.js",
-      "@testing-library/jest-native/extend-expect"
+      "./jest/jestSetup.js"
     ],
     "moduleFileExtensions": [
       "ts",
