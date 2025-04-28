@@ -37,7 +37,6 @@ export function ToastContainer() {
 
   useEffect(() => {
     const listener = ({message, icon}: ToastProps) => {
-      console.log('Adding toast', message)
       setToasts(prev => [...prev, {message, icon, key: nanoid()}])
     }
     ToastEventEmitter.on(SHOW_TOAST, listener)
@@ -45,8 +44,6 @@ export function ToastContainer() {
       ToastEventEmitter.off(SHOW_TOAST, listener)
     }
   }, [])
-
-  console.log('toasts', toasts.length)
 
   return toasts.map(toast => (
     <Toast
