@@ -124,6 +124,7 @@ import {
   EmailDialogScreenID,
   useEmailDialogControl,
 } from '#/components/dialogs/EmailDialog'
+import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
@@ -336,7 +337,7 @@ export const ComposePost = ({
   const {needsEmailVerification} = useEmail()
   const emailDialogControl = useEmailDialogControl()
 
-  useEffect(() => {
+  const open = useNonReactiveCallback(() => {
     if (needsEmailVerification) {
       emailDialogControl.open({
         id: EmailDialogScreenID.Verify,
@@ -350,7 +351,8 @@ export const ComposePost = ({
         },
       })
     }
-  }, [needsEmailVerification, emailDialogControl, onClose])
+  })
+  useEffect(open, [open])
 
   const missingAltError = useMemo(() => {
     if (!requireAltTextEnabled) {
@@ -708,6 +710,7 @@ export const ComposePost = ({
           confirmButtonCta={_(msg`Discard`)}
           confirmButtonColor="negative"
         />
+        <EmailDialog />
       </KeyboardAvoidingView>
     </BottomSheetPortalProvider>
   )
