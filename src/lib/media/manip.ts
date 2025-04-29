@@ -340,9 +340,7 @@ function createPath(ext: string) {
 async function downloadImage(uri: string, path: string, timeout: number) {
   const dlResumable = createDownloadResumable(uri, path, {cache: true})
 
-  const to1 = setTimeout(() => {
-    dlResumable.cancelAsync(), timeout
-  })
+  const to1 = setTimeout(() => dlResumable.cancelAsync(), timeout)
 
   const dlRes = await dlResumable.downloadAsync()
   clearTimeout(to1)
