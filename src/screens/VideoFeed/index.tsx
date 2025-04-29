@@ -50,13 +50,20 @@ import {HITSLOP_20} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {type CommonNavigatorParams, type NavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isAndroid} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
-import {POST_TOMBSTONE, type Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {
+  POST_TOMBSTONE,
+  type Shadow,
+  usePostShadow,
+} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {
   FeedFeedbackProvider,

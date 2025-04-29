@@ -15,7 +15,10 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {ComposeIcon2} from '#/lib/icons'
-import {type CommonNavigatorParams, type NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {combinedDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {isInvalidHandle} from '#/lib/strings/handles'

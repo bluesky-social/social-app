@@ -10,7 +10,10 @@ import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {ComposeIcon2} from '#/lib/icons'
-import {type CommonNavigatorParams, type NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {s} from '#/lib/styles'
 import {isNative, isWeb} from '#/platform/detection'

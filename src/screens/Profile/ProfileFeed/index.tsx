@@ -20,7 +20,10 @@ import {s} from '#/lib/styles'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
-import {type FeedSourceFeedInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
+import {
+  type FeedSourceFeedInfo,
+  useFeedSourceInfoQuery,
+} from '#/state/queries/feed'
 import {type FeedDescriptor, type FeedParams} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {

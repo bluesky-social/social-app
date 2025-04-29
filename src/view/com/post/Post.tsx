@@ -19,7 +19,11 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {countLines} from '#/lib/strings/helpers'
 import {colors, s} from '#/lib/styles'
-import {POST_TOMBSTONE, type Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {
+  POST_TOMBSTONE,
+  type Shadow,
+  usePostShadow,
+} from '#/state/cache/post-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {precacheProfile} from '#/state/queries/profile'
 import {useSession} from '#/state/session'

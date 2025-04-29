@@ -26,7 +26,11 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {countLines} from '#/lib/strings/helpers'
 import {s} from '#/lib/styles'
-import {POST_TOMBSTONE, type Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {
+  POST_TOMBSTONE,
+  type Shadow,
+  usePostShadow,
+} from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {precacheProfile} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
