@@ -2,6 +2,7 @@ import React from 'react'
 import * as Linking from 'expo-linking'
 
 import {logEvent} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell'
@@ -73,6 +74,9 @@ export function useIntentHandler() {
 
     if (incomingUrl) {
       if (previousIntentUrl === incomingUrl) {
+        logger.debug(`useIntentHandler: ignoring duplicate incoming URL`, {
+          incomingUrl,
+        })
         return
       }
       handleIncomingURL(incomingUrl)
