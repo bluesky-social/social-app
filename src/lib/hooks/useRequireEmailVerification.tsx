@@ -2,7 +2,7 @@ import {useCallback} from 'react'
 import {Keyboard} from 'react-native'
 
 import {useEmail} from '#/lib/hooks/useEmail'
-import {useRequireAuth,useSession} from '#/state/session'
+import {useRequireAuth, useSession} from '#/state/session'
 import {useCloseAllActiveElements} from '#/state/util'
 import {
   EmailDialogScreenID,
