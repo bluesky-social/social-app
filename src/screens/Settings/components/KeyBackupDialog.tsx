@@ -15,7 +15,7 @@ import * as TextField from '#/components/forms/TextField'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
-import {Secp256k1Keypair, randomStr} from '@atproto/crypto'
+import {Secp256k1Keypair} from '@atproto/crypto'
 import base64 from 'base64-js'
 
 enum Stages {
@@ -48,10 +48,11 @@ export function KeyBackupDialog({
 
   useEffect(() => {
     if (backupKey) {
-      (async () => {
-        let privateKey: Uint8Array = await backupKey.export();
-        // if web, use btoa, otherwise use Buffer.from
-        let privateKeyBase64 = isNative ? Buffer.from(privateKey).toString('base64') : base64.fromByteArray(privateKey)
+      ;(async () => {
+        let privateKey: Uint8Array = await backupKey.export()
+        let privateKeyBase64 = isNative
+          ? Buffer.from(privateKey).toString('base64')
+          : base64.fromByteArray(privateKey)
         setPrivateKey(privateKeyBase64)
         setDid(backupKey.did())
       })()
@@ -84,6 +85,7 @@ export function KeyBackupDialog({
       const generatedKey = await Secp256k1Keypair.create({exportable: true})
       let success = await addRotationKey(generatedKey.did(), {
         token: confirmationCode,
+        insertFirst: true,
       })
 
       if (!success) {
@@ -169,7 +171,6 @@ export function KeyBackupDialog({
       token: token,
     })
 
-    // 4. Submit the signed operation
     await agent.com.atproto.identity.submitPlcOperation({
       operation: signedOp.data.operation,
     })
@@ -309,12 +310,8 @@ export function KeyBackupDialog({
                   </Trans>
                 </TextField.LabelText>
                 <View style={[a.flex_col, a.gap_sm]}>
-                  <Text /*style={[a.font_mono, a.text_sm, a.word_break]}*/>
-                    {did}
-                  </Text>
-                  <Text>
-                    {privateKey}
-                  </Text>
+                  <Text>{did}</Text>
+                  <Text>{privateKey}</Text>
                 </View>
               </View>
               <View
@@ -327,7 +324,10 @@ export function KeyBackupDialog({
                   variant="solid"
                   color="primary"
                   size={gtMobile ? 'small' : 'large'}
-                  onPress={() => control.close()}
+                  onPress={() => {
+                    setStage(Stages.Email)
+                    control.close()
+                  }}
                   label={_(msg`Close`)}>
                   <ButtonText>
                     <Trans>Close</Trans>
