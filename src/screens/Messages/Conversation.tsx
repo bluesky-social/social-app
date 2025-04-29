@@ -193,6 +193,10 @@ function InnerReady({
   const {needsEmailVerification} = useEmail()
   const emailDialogControl = useEmailDialogControl()
 
+  /**
+   * Must be non-reactive, otherwise the update to open the global dialog will
+   * cause a re-render loop.
+   */
   const maybeBlockForEmailVerification = useNonReactiveCallback(() => {
     if (needsEmailVerification) {
       emailDialogControl.open({
