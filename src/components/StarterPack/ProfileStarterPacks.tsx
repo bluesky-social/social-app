@@ -34,7 +34,7 @@ import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
-import {Span, Text} from '#/components/Typography'
+import {Text} from '#/components/Typography'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -241,11 +241,9 @@ function Empty() {
   }, [navigation])
   const wrappedNavToWizard = requireEmailVerification(navToWizard, {
     instructions: [
-      <Span key="nav">
-        <Trans>
-          Before creating a starter pack, you must first verify your email.
-        </Trans>
-      </Span>,
+      <Trans key="nav">
+        Before creating a starter pack, you must first verify your email.
+      </Trans>,
     ],
   })
 
