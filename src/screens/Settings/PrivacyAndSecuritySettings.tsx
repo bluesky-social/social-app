@@ -16,6 +16,7 @@ import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Email2FAToggle} from './components/Email2FAToggle'
 import {PwiOptOut} from './components/PwiOptOut'
+import {RegisterKeyBackup} from './components/RegisterKeyBackup'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -57,6 +58,13 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
               )}
             </SettingsList.ItemText>
             <Email2FAToggle />
+          </SettingsList.Item>
+          <SettingsList.Item>
+            <SettingsList.ItemIcon icon={ShieldIcon} />
+            <SettingsList.ItemText>
+              <Trans>Backup Recovery Key</Trans>
+            </SettingsList.ItemText>
+            <RegisterKeyBackup />
           </SettingsList.Item>
           <SettingsList.LinkItem
             to="/settings/app-passwords"
