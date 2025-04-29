@@ -1,4 +1,4 @@
-import {useCallback, useReducer} from 'react'
+import {useReducer} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -11,9 +11,9 @@ import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ResendEmailText} from '#/components/dialogs/EmailDialog/components/ResendEmailText'
 import {TokenField} from '#/components/dialogs/EmailDialog/components/TokenField'
-import {useAccountEmailState} from '#/components/dialogs/EmailDialog/data/useAccountEmailState'
 import {useConfirmEmail} from '#/components/dialogs/EmailDialog/data/useConfirmEmail'
 import {useRequestEmailVerification} from '#/components/dialogs/EmailDialog/data/useRequestEmailVerification'
+import {useOnEmailVerified} from '#/components/dialogs/EmailDialog/events'
 import {
   type ScreenID,
   type ScreenProps,
@@ -98,7 +98,7 @@ export function Verify({config}: ScreenProps<ScreenID.Verify>) {
   const {mutateAsync: requestEmailVerification} = useRequestEmailVerification()
   const {mutateAsync: confirmEmail} = useConfirmEmail()
 
-  const onVerify = useCallback(() => {
+  useOnEmailVerified(() => {
     if (config.onVerify) {
       config.onVerify()
     } else {
@@ -107,8 +107,7 @@ export function Verify({config}: ScreenProps<ScreenID.Verify>) {
         step: 'success',
       })
     }
-  }, [config, dispatch])
-  useAccountEmailState({onVerify})
+  })
 
   const handleRequestEmailVerification = async () => {
     dispatch({

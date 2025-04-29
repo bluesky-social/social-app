@@ -207,6 +207,7 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
               }
               keyboardType="email-address"
               autoComplete="email"
+              autoCapitalize="none"
               onSubmitEditing={handleUpdateEmail}
             />
           </TextField.Root>

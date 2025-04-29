@@ -1,14 +1,15 @@
-import {useCallback, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
+import {emitEmailVerified} from '#/components/dialogs/EmailDialog/events'
 
 export type AccountEmailState = {
   isEmailVerified: boolean
   email2FAEnabled: boolean
 }
 
-export const accountEmailStateQueryKey = ['isEmailVerified'] as const
+export const accountEmailStateQueryKey = ['accountEmailState'] as const
 
 export function useInvalidateAccountEmailState() {
   const qc = useQueryClient()
@@ -36,21 +37,17 @@ export function useUpdateAccountEmailStateQueryCache() {
   )
 }
 
-export function useAccountEmailState({
-  onVerify,
-}: {
-  onVerify?: () => void
-} = {}) {
+export function useAccountEmailState() {
   const agent = useAgent()
   const [prevIsEmailVerified, setPrevEmailIsVerified] = useState(
     !!agent.session?.emailConfirmed,
   )
+  const fallbackData: AccountEmailState = {
+    isEmailVerified: !!agent.session?.emailConfirmed,
+    email2FAEnabled: !!agent.session?.emailAuthFactor,
+  }
   const query = useQuery<AccountEmailState>({
     enabled: !!agent.session,
-    initialData: {
-      isEmailVerified: !!agent.session?.emailConfirmed,
-      email2FAEnabled: !!agent.session?.emailAuthFactor,
-    },
     refetchOnWindowFocus: true,
     queryKey: accountEmailStateQueryKey,
     queryFn: async () => {
@@ -63,12 +60,20 @@ export function useAccountEmailState({
     },
   })
 
-  if (query.data.isEmailVerified && !prevIsEmailVerified) {
-    setPrevEmailIsVerified(true)
-    onVerify?.()
-  } else if (!query.data.isEmailVerified && prevIsEmailVerified) {
-    setPrevEmailIsVerified(false)
-  }
+  const state = query.data ?? fallbackData
 
-  return query.data
+  /*
+   * This will emit `n` times for each instance of this hook. So the listeners
+   * all use `once` to prevent multiple handlers firing.
+   */
+  useEffect(() => {
+    if (state.isEmailVerified && !prevIsEmailVerified) {
+      setPrevEmailIsVerified(true)
+      emitEmailVerified()
+    } else if (!state.isEmailVerified && prevIsEmailVerified) {
+      setPrevEmailIsVerified(false)
+    }
+  }, [state, prevIsEmailVerified])
+
+  return state
 }
