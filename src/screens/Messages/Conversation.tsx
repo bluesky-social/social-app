@@ -17,6 +17,7 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useEmail} from '#/lib/hooks/useEmail'
 import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
@@ -192,7 +193,7 @@ function InnerReady({
   const {needsEmailVerification} = useEmail()
   const emailDialogControl = useEmailDialogControl()
 
-  React.useEffect(() => {
+  const maybeBlockForEmailVerification = useNonReactiveCallback(() => {
     if (needsEmailVerification) {
       emailDialogControl.open({
         id: EmailDialogScreenID.Verify,
@@ -207,7 +208,10 @@ function InnerReady({
         },
       })
     }
-  }, [needsEmailVerification, emailDialogControl, navigation])
+  })
+  React.useEffect(maybeBlockForEmailVerification, [
+    maybeBlockForEmailVerification,
+  ])
 
   return (
     <>
