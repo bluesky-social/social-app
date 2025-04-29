@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {validate as validateEmail} from 'email-validator'
 
 import {wait} from '#/lib/async/wait'
+import {useCleanError} from '#/lib/hooks/useCleanError'
 import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
@@ -102,6 +103,7 @@ function reducer(state: State, action: Action): State {
 export function Update(_props: ScreenProps<ScreenID.Update>) {
   const t = useTheme()
   const {_} = useLingui()
+  const cleanError = useCleanError()
   const {currentAccount} = useSession()
   const [state, dispatch] = useReducer(reducer, {
     step: 'email',
@@ -176,9 +178,10 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
       }
     } catch (e) {
       logger.error('EmailDialog: update email failed', {safeMessage: e})
+      const {clean} = cleanError(e)
       dispatch({
         type: 'setError',
-        error: _(msg`Email updated failed, please try again.`),
+        error: clean || _(msg`Email updated failed, please try again.`),
       })
     }
   }

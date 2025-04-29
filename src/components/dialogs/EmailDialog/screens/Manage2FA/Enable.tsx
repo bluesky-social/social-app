@@ -4,6 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {wait} from '#/lib/async/wait'
+import {useCleanError} from '#/lib/hooks/useCleanError'
 import {logger} from '#/logger'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -55,6 +56,7 @@ function reducer(state: State, action: Action): State {
 export function Enable() {
   const t = useTheme()
   const {_} = useLingui()
+  const cleanError = useCleanError()
   const {gtPhone} = useBreakpoints()
   const {mutateAsync: manageEmail2FA} = useManageEmail2FA()
   const control = useDialogContext()
@@ -75,9 +77,10 @@ export function Enable() {
       }, 1000)
     } catch (e) {
       logger.error('Manage2FA: enable email 2FA failed', {safeMessage: e})
+      const {clean} = cleanError(e)
       dispatch({
         type: 'setError',
-        error: _(msg`Update to email 2FA settings failed`),
+        error: clean || _(msg`Update to email 2FA settings failed`),
       })
     }
   }

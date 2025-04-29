@@ -4,6 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {wait} from '#/lib/async/wait'
+import {useCleanError} from '#/lib/hooks/useCleanError'
 import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
@@ -87,6 +88,7 @@ function reducer(state: State, action: Action): State {
 export function Verify({config}: ScreenProps<ScreenID.Verify>) {
   const t = useTheme()
   const {_} = useLingui()
+  const cleanError = useCleanError()
   const {currentAccount} = useSession()
   const [state, dispatch] = useReducer(reducer, {
     step: 'email',
@@ -125,9 +127,10 @@ export function Verify({config}: ScreenProps<ScreenID.Verify>) {
       logger.error('EmailDialog: sending verification email failed', {
         safeMessage: e,
       })
+      const {clean} = cleanError(e)
       dispatch({
         type: 'setError',
-        error: _(msg`Failed to send email, please try again.`),
+        error: clean || _(msg`Failed to send email, please try again.`),
       })
     }
   }
@@ -148,9 +151,10 @@ export function Verify({config}: ScreenProps<ScreenID.Verify>) {
       logger.error('EmailDialog: confirming email failed', {
         safeMessage: e,
       })
+      const {clean} = cleanError(e)
       dispatch({
         type: 'setError',
-        error: _(msg`Failed to verify email, please try again.`),
+        error: clean || _(msg`Failed to verify email, please try again.`),
       })
     }
   }

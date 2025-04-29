@@ -4,6 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {wait} from '#/lib/async/wait'
+import {useCleanError} from '#/lib/hooks/useCleanError'
 import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
@@ -86,6 +87,7 @@ function reducer(state: State, action: Action): State {
 export function Disable() {
   const t = useTheme()
   const {_} = useLingui()
+  const cleanError = useCleanError()
   const {currentAccount} = useSession()
   const {mutateAsync: requestEmailUpdate} = useRequestEmailUpdate()
   const {mutateAsync: manageEmail2FA} = useManageEmail2FA()
@@ -111,10 +113,10 @@ export function Disable() {
       logger.error('Manage2FA: email update code request failed', {
         safeMessage: e,
       })
-      // TODO rate limit
+      const {clean} = cleanError(e)
       dispatch({
         type: 'setError',
-        error: _(msg`Failed to send email, please try again.`),
+        error: clean || _(msg`Failed to send email, please try again.`),
       })
     }
   }
@@ -130,9 +132,10 @@ export function Disable() {
       }, 1000)
     } catch (e) {
       logger.error('Manage2FA: disable email 2FA failed', {safeMessage: e})
+      const {clean} = cleanError(e)
       dispatch({
         type: 'setError',
-        error: _(msg`Update to email 2FA settings failed`),
+        error: clean || _(msg`Update to email 2FA settings failed`),
       })
     }
   }
