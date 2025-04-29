@@ -62,7 +62,6 @@ import {
   type SupportedMimeTypes,
 } from '#/lib/constants'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {useEmail} from '#/lib/hooks/useEmail'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -120,10 +119,6 @@ import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {
-  EmailDialogScreenID,
-  useEmailDialogControl,
-} from '#/components/dialogs/EmailDialog'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
@@ -333,26 +328,6 @@ export const ComposePost = ({
       backHandler.remove()
     }
   }, [onPressCancel, closeAllDialogs, closeAllModals])
-
-  const {needsEmailVerification} = useEmail()
-  const emailDialogControl = useEmailDialogControl()
-
-  const open = useNonReactiveCallback(() => {
-    if (needsEmailVerification) {
-      emailDialogControl.open({
-        id: EmailDialogScreenID.Verify,
-        instructions: [
-          <Trans key="pre-compose">
-            Before creating a post, you must first verify your email.
-          </Trans>,
-        ],
-        onCloseWithoutVerifying: () => {
-          onClose()
-        },
-      })
-    }
-  })
-  useEffect(open, [open])
 
   const missingAltError = useMemo(() => {
     if (!requireAltTextEnabled) {
