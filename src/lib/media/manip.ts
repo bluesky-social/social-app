@@ -348,7 +348,7 @@ async function downloadImage(uri: string, path: string, timeout: number) {
   clearTimeout(to1)
 
   if (!dlRes?.uri) {
-    throw new Error()
+    throw new Error('Failed to download image - dlRes is undefined')
   }
 
   return normalizePath(dlRes.uri)
