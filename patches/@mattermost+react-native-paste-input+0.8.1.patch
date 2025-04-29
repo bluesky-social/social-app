@@ -194,19 +194,20 @@ index dd50053..dcf5f72 100644
  
    return submitBehaviorDefaultable;
 diff --git a/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputSpecs/Props.cpp b/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputSpecs/Props.cpp
-index 29e094f..4cbc94e 100644
+index 29e094f..7ef519a 100644
 --- a/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputSpecs/Props.cpp
 +++ b/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputSpecs/Props.cpp
-@@ -23,7 +23,7 @@ PasteTextInputProps::PasteTextInputProps(
+@@ -22,8 +22,7 @@ PasteTextInputProps::PasteTextInputProps(
+     const PropsParserContext &context,
      const PasteTextInputProps &sourceProps,
      const RawProps& rawProps)
-     : ViewProps(context, sourceProps, rawProps),
+-    : ViewProps(context, sourceProps, rawProps),
 -    BaseTextProps(context, sourceProps, rawProps),
-+    BaseTextInputProps(context, sourceProps, rawProps),
++    : BaseTextInputProps(context, sourceProps, rawProps),
      traits(convertRawProp(context, rawProps, sourceProps.traits, {})),
      smartPunctuation(convertRawProp(context, rawProps, "smartPunctuation", sourceProps.smartPunctuation, {})),
      disableCopyPaste(convertRawProp(context, rawProps, "disableCopyPaste", sourceProps.disableCopyPaste, {false})),
-@@ -133,7 +133,7 @@ TextAttributes PasteTextInputProps::getEffectiveTextAttributes(Float fontSizeMul
+@@ -133,7 +132,7 @@ TextAttributes PasteTextInputProps::getEffectiveTextAttributes(Float fontSizeMul
  ParagraphAttributes PasteTextInputProps::getEffectiveParagraphAttributes() const {
      auto result = paragraphAttributes;
  
