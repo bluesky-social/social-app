@@ -224,7 +224,6 @@
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@babel/runtime": "^7.26.0",
-    "@did-plc/server": "^0.0.1",
     "@expo/config-plugins": "9.1.7",
     "@lingui/cli": "^4.14.1",
     "@lingui/macro": "^4.14.1",
