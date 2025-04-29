@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 import {useDialogControl} from '#/components/Dialog'
 import {
-  EmailDialog,
   EmailDialogScreenID,
   useEmailDialogControl,
 } from '#/components/dialogs/EmailDialog'
@@ -27,7 +26,6 @@ export function Email2FAToggle() {
   return (
     <>
       <DisableEmail2FADialog control={disableDialogControl} />
-      <EmailDialog control={emailDialogControl} />
       <SettingsList.BadgeButton
         label={
           currentAccount?.emailAuthFactor ? _(msg`Change`) : _(msg`Enable`)

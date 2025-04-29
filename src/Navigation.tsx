@@ -105,7 +105,6 @@ import TopicScreen from '#/screens/Topic'
 import {VideoFeed} from '#/screens/VideoFeed'
 import {useTheme} from '#/alf'
 import {
-  EmailDialog,
   EmailDialogScreenID,
   useEmailDialogControl,
 } from '#/components/dialogs/EmailDialog'
@@ -773,7 +772,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
         }}>
         {children}
       </NavigationContainer>
-      <EmailDialog control={emailDialogControl} />
     </>
   )
 }

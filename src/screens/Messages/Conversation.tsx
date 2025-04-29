@@ -32,7 +32,6 @@ import {useSetMinimalShellMode} from '#/state/shell'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {
-  EmailDialog,
   EmailDialogScreenID,
   useEmailDialogControl,
 } from '#/components/dialogs/EmailDialog'
@@ -229,7 +228,6 @@ function InnerReady({
           }
         />
       )}
-      <EmailDialog control={emailDialogControl} />
     </>
   )
 }

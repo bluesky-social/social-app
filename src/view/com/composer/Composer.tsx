@@ -121,7 +121,6 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {
-  EmailDialog,
   EmailDialogScreenID,
   useEmailDialogControl,
 } from '#/components/dialogs/EmailDialog'
@@ -633,7 +632,6 @@ export const ComposePost = ({
   const isWebFooterSticky = !isNative && thread.posts.length > 1
   return (
     <BottomSheetPortalProvider>
-      <EmailDialog control={emailDialogControl} />
       <KeyboardAvoidingView
         testID="composePostView"
         behavior={isIOS ? 'padding' : 'height'}

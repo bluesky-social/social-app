@@ -10,7 +10,6 @@ import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {
-  EmailDialog,
   EmailDialogScreenID,
   useEmailDialogControl,
 } from '#/components/dialogs/EmailDialog'
@@ -177,7 +176,6 @@ export function AccountSettingsScreen({}: Props) {
         </SettingsList.Container>
       </Layout.Content>
 
-      <EmailDialog control={emailDialogControl} />
       <BirthDateSettingsDialog control={birthdayControl} />
       <ChangeHandleDialog control={changeHandleControl} />
       <ExportCarDialog control={exportCarControl} />

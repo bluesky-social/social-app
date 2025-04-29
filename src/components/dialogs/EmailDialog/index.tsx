@@ -3,10 +3,8 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import * as Dialog from '#/components/Dialog'
-import {
-  type StatefulControl,
-  useStatefulDialogControl,
-} from '#/components/dialogs/Context'
+import {type StatefulControl} from '#/components/dialogs/Context'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {useAccountEmailState} from '#/components/dialogs/EmailDialog/data/useAccountEmailState'
 import {Manage2FA} from '#/components/dialogs/EmailDialog/screens/Manage2FA'
 import {Update} from '#/components/dialogs/EmailDialog/screens/Update'
@@ -14,33 +12,33 @@ import {VerificationReminder} from '#/components/dialogs/EmailDialog/screens/Ver
 import {Verify} from '#/components/dialogs/EmailDialog/screens/Verify'
 import {type Screen, ScreenID} from '#/components/dialogs/EmailDialog/types'
 
-export {useDialogControl} from '#/components/Dialog'
 export type {Screen} from '#/components/dialogs/EmailDialog/types'
 export {ScreenID as EmailDialogScreenID} from '#/components/dialogs/EmailDialog/types'
 
 export function useEmailDialogControl() {
-  return useStatefulDialogControl<Screen>()
+  return useGlobalDialogsControlContext().emailDialogControl
 }
 
-export function EmailDialog({control}: {control: StatefulControl<Screen>}) {
+export function EmailDialog() {
   const {_} = useLingui()
+  const emailDialogControl = useEmailDialogControl()
   const {isEmailVerified} = useAccountEmailState()
   const onClose = useCallback(() => {
     if (!isEmailVerified) {
-      if (control.value?.id === ScreenID.Verify) {
-        control.value.onCloseWithoutVerifying?.()
+      if (emailDialogControl.value?.id === ScreenID.Verify) {
+        emailDialogControl.value.onCloseWithoutVerifying?.()
       }
     }
-  }, [isEmailVerified, control])
+  }, [isEmailVerified, emailDialogControl])
 
   return (
-    <Dialog.Outer control={control.control} onClose={onClose}>
+    <Dialog.Outer control={emailDialogControl.control} onClose={onClose}>
       <Dialog.Handle />
 
       <Dialog.ScrollableInner
         label={_(msg`Make adjustments to your account email settings`)}
         style={[{maxWidth: 400}]}>
-        <Inner control={control} />
+        <Inner control={emailDialogControl} />
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
