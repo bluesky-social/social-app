@@ -12,7 +12,6 @@ import {useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {SearchablePeopleList} from '#/components/dialogs/SearchablePeopleList'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {Span} from '#/components/Typography'
 
 export function NewChat({
   control,
@@ -52,11 +51,9 @@ export function NewChat({
   }, [control])
   const wrappedOnPress = requireEmailVerification(onPress, {
     instructions: [
-      <Span key="new-chat">
-        <Trans>
-          Before you may message another user, you must first verify your email.
-        </Trans>
-      </Span>,
+      <Trans key="new-chat">
+        Before you may message another user, you must first verify your email.
+      </Trans>,
     ],
   })
 

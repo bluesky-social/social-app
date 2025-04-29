@@ -15,7 +15,6 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {canBeMessaged} from '#/components/dms/util'
 import {Message_Stroke2_Corner0_Rounded as Message} from '#/components/icons/Message'
-import {Span} from '#/components/Typography'
 
 export function MessageProfileButton({
   profile,
@@ -56,11 +55,9 @@ export function MessageProfileButton({
 
   const wrappedOnPress = requireEmailVerification(onPress, {
     instructions: [
-      <Span key="message">
-        <Trans>
-          Before you may message another user, you must first verify your email.
-        </Trans>
-      </Span>,
+      <Trans key="message">
+        Before you may message another user, you must first verify your email.
+      </Trans>,
     ],
   })
 

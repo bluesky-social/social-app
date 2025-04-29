@@ -34,7 +34,7 @@ import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
-import {Span,Text} from '#/components/Typography'
+import {Span, Text} from '#/components/Typography'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -231,11 +231,9 @@ function Empty() {
   }, [confirmDialogControl])
   const wrappedOpenConfirmDialog = requireEmailVerification(openConfirmDialog, {
     instructions: [
-      <Span key="confirm">
-        <Trans>
-          Before creating a starter pack, you must first verify your email.
-        </Trans>
-      </Span>,
+      <Trans key="confirm">
+        Before creating a starter pack, you must first verify your email.
+      </Trans>,
     ],
   })
   const navToWizard = useCallback(() => {

@@ -5,7 +5,10 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
-import {type CommonNavigatorParams, type NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useModalControls} from '#/state/modals'
 import {useSetMinimalShellMode} from '#/state/shell'
@@ -14,7 +17,6 @@ import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Layout from '#/components/Layout'
-import {Span} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ModerationModlists'>
 export function ModerationModlistsScreen({}: Props) {
@@ -48,9 +50,9 @@ export function ModerationModlistsScreen({}: Props) {
 
   const wrappedOnPressNewList = requireEmailVerification(onPressNewList, {
     instructions: [
-      <Span key="modlist">
-        <Trans>Before creating a list, you must first verify your email.</Trans>
-      </Span>,
+      <Trans key="modlist">
+        Before creating a list, you must first verify your email.
+      </Trans>,
     ],
   })
 

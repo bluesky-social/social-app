@@ -1,6 +1,6 @@
 import {useCallback} from 'react'
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {
@@ -9,13 +9,11 @@ import {
   VIDEO_MAX_DURATION_MS,
 } from '#/lib/constants'
 import {useVideoLibraryPermission} from '#/lib/hooks/usePermissions'
-import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {isWeb} from '#/platform/detection'
 import {isNative} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {VideoClip_Stroke2_Corner0_Rounded as VideoClipIcon} from '#/components/icons/VideoClip'
-import {Span} from '#/components/Typography'
 import {pickVideo} from './pickVideo'
 
 type Props = {
@@ -28,7 +26,6 @@ export function SelectVideoBtn({onSelectVideo, disabled, setError}: Props) {
   const {_} = useLingui()
   const t = useTheme()
   const {requestVideoAccessIfNeeded} = useVideoLibraryPermission()
-  const requireEmailVerification = useRequireEmailVerification()
 
   const onPressSelectVideo = useCallback(async () => {
     if (isNative && !(await requestVideoAccessIfNeeded())) {
@@ -69,24 +66,11 @@ export function SelectVideoBtn({onSelectVideo, disabled, setError}: Props) {
     }
   }, [requestVideoAccessIfNeeded, setError, _, onSelectVideo])
 
-  const wrappedOnPressSelectVideo = requireEmailVerification(
-    onPressSelectVideo,
-    {
-      instructions: [
-        <Span key="video-verification">
-          <Trans>
-            To upload videos to Bluesky, you must first verify your email.
-          </Trans>
-        </Span>,
-      ],
-    },
-  )
-
   return (
     <>
       <Button
         testID="openGifBtn"
-        onPress={wrappedOnPressSelectVideo}
+        onPress={onPressSelectVideo}
         label={_(msg`Select video`)}
         accessibilityHint={_(msg`Opens video picker`)}
         style={a.p_sm}
