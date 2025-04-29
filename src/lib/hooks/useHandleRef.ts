@@ -1,5 +1,4 @@
 import {useState} from 'react'
-import {AnimatedRef, measure, MeasuredDimensions} from 'react-native-reanimated'
 
 export type HandleRef = {
   (node: any): void
@@ -24,16 +23,4 @@ export function useHandleRef(): HandleRef {
     ref.current = null
     return ref
   })[0] as HandleRef
-}
-
-// When using this version, you need to read ref.current on the JS thread, and pass it to UI.
-export function measureHandle(
-  current: number | null,
-): MeasuredDimensions | null {
-  'worklet'
-  if (current !== null) {
-    return measure((() => current) as AnimatedRef<any>)
-  } else {
-    return null
-  }
 }
