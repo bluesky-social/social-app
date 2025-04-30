@@ -57,6 +57,7 @@
     "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 yarn build-web",
     "icons:optimize": "svgo -f ./assets/icons",
     "lexicons:sync": "rm -rf lexicons && degit bluesky-social/atproto/lexicons#main lexicons",
+    "lexicons:codegen": "lex gen-api --yes ./src/agent ./lexicons/com/atproto/*/* ./lexicons/app/bsky/*/* ./lexicons/chat/bsky/*/* ./lexicons/tools/ozone/*/* && prettier -w ./src/agent/**/*.*"
   },
   "dependencies": {
     "@atproto/api": "^0.15.3",
