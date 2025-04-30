@@ -1,17 +1,22 @@
 import React, {memo} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
-import {MeasuredDimensions, runOnJS, runOnUI} from 'react-native-reanimated'
+import Animated, {
+  measure,
+  type MeasuredDimensions,
+  runOnJS,
+  runOnUI,
+  useAnimatedRef,
+} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
+import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {BACK_HITSLOP} from '#/lib/constants'
-import {measureHandle, useHandleRef} from '#/lib/hooks/useHandleRef'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {isIOS} from '#/platform/detection'
-import {Shadow} from '#/state/cache/types'
+import {type Shadow} from '#/state/cache/types'
 import {useLightboxControls} from '#/state/lightbox'
 import {useSession} from '#/state/session'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
@@ -46,7 +51,7 @@ let ProfileHeaderShell = ({
   const navigation = useNavigation<NavigationProp>()
   const {top: topInset} = useSafeAreaInsets()
 
-  const aviRef = useHandleRef()
+  const aviRef = useAnimatedRef()
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -83,10 +88,9 @@ let ProfileHeaderShell = ({
     const modui = moderation.ui('avatar')
     const avatar = profile.avatar
     if (avatar && !(modui.blur && modui.noOverride)) {
-      const aviHandle = aviRef.current
       runOnUI(() => {
         'worklet'
-        const rect = measureHandle(aviHandle)
+        const rect = measure(aviRef)
         runOnJS(_openLightbox)(avatar, rect)
       })()
     }
@@ -174,14 +178,14 @@ let ProfileHeaderShell = ({
               styles.avi,
               profile.associated?.labeler && styles.aviLabeler,
             ]}>
-            <View ref={aviRef} collapsable={false}>
+            <Animated.View ref={aviRef} collapsable={false}>
               <UserAvatar
                 type={profile.associated?.labeler ? 'labeler' : 'user'}
                 size={90}
                 avatar={profile.avatar}
                 moderation={moderation.ui('avatar')}
               />
-            </View>
+            </Animated.View>
           </View>
         </TouchableWithoutFeedback>
       </GrowableAvatar>
