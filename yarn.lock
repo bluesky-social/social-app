@@ -11389,7 +11389,7 @@ expo-sharing@~13.1.4:
   resolved "https://registry.yarnpkg.com/expo-sharing/-/expo-sharing-13.1.4.tgz#e303592df81f133ee5836c3894d5f3584824d8f7"
   integrity sha512-r+U2MDrrsEbPc8yDDnxVo7HuMZcFku1bhxzYn5v6kD8cbXuJ+T+eO9Vb9eGKQuQRe+hw7gSBVIuB5NpUdulUpQ==
 
-expo-splash-screen@~0.30.6:
+expo-splash-screen@0.30.6:
   version "0.30.6"
   resolved "https://registry.yarnpkg.com/expo-splash-screen/-/expo-splash-screen-0.30.6.tgz#34cddb0e04989d9784314c4555efc7458c2f8376"
   integrity sha512-b/CoB+Bob5j/TQY96VWjIIlj3vDCu0FO54RNZLbT2XX4arZUNAuns2yyxQdObIzZiRig2oaFNtJcV8tbucctig==
