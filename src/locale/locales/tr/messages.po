@@ -6293,16 +6293,16 @@ msgstr "Akışı raporla"
 
 #: src/view/screens/ProfileList.tsx:570
 msgid "Report list"
-msgstr ""
+msgstr "Listeyi bildir"
 
 #: src/components/dms/MessageContextMenu.tsx:166
 msgid "Report message"
-msgstr ""
+msgstr "Mesajı bildir"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:695
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:697
 msgid "Report post"
-msgstr "Gönderiyi raporla"
+msgstr "Gönderiyi bildir"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:614
 #: src/screens/StarterPack/StarterPackScreen.tsx:617
@@ -6332,7 +6332,7 @@ msgstr ""
 #: src/components/moderation/ReportDialog/copy.ts:43
 #: src/components/ReportDialog/SelectReportOptionView.tsx:60
 msgid "Report this message"
-msgstr ""
+msgstr "Bu mesajı bildir"
 
 #: src/components/moderation/ReportDialog/copy.ts:19
 #: src/components/ReportDialog/SelectReportOptionView.tsx:48
@@ -6347,7 +6347,7 @@ msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:13
 #: src/components/ReportDialog/SelectReportOptionView.tsx:45
-msgid "Report this user"
+msgid "Bu kullanıcıyı bildir"
 msgstr ""
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:156
@@ -7111,7 +7111,7 @@ msgstr "Uyarı göster ve akışlardan filtrele"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:856
 msgid "Shows information about when this post was created"
-msgstr ""
+msgstr "Bu gönderinin oluşturulma zamanını gösterir"
 
 #: src/screens/Settings/Settings.tsx:112
 msgid "Shows other accounts you can switch to"
@@ -7220,7 +7220,7 @@ msgstr "Yazılım Geliştirme"
 
 #: src/components/verification/VerificationsDialog.tsx:122
 msgid "Some of your verifications are invalid."
-msgstr ""
+msgstr "Bazı doğrulamalarınız geçersiz."
 
 #: src/components/FeedInterstitials.tsx:474
 msgid "Some other feeds you might like"
@@ -7298,12 +7298,12 @@ msgstr "Kaynak: <0>{sourceName}</0>"
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
 msgid "Spam"
-msgstr ""
+msgstr "Spam"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:55
 #: src/lib/moderation/useReportOptions.ts:55
 msgid "Spam; excessive mentions or replies"
-msgstr ""
+msgstr "Spam; aşırı etiketleme veya yanıt gönderme"
 
 #: src/screens/Onboarding/index.tsx:27
 #: src/screens/Onboarding/state.ts:113
@@ -7426,7 +7426,7 @@ msgstr "Başarılı!"
 
 #: src/components/verification/VerificationCreatePrompt.tsx:30
 msgid "Successfully verified"
-msgstr ""
+msgstr "Başarılı doğrulama"
 
 #: src/screens/Search/Explore.tsx:359
 msgid "Suggested Accounts"
@@ -7577,7 +7577,7 @@ msgstr "Teşekkür ederiz! E-posta adresiniz başarıyla doğrulandı."
 
 #: src/components/ReportDialog/SubmitView.tsx:83
 msgid "Thank you. Your report has been sent."
-msgstr ""
+msgstr "Teşekkürler. Bildiriminiz gönderildi."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
@@ -7621,7 +7621,7 @@ msgstr "Uygulama yeniden başlatılacaktır"
 #: src/components/moderation/ModerationDetailsDialog.tsx:119
 #: src/lib/moderation/useModerationCauseDescription.ts:128
 msgid "The author of this thread has hidden this reply."
-msgstr ""
+msgstr "Bu gönderinin yazarı bu yanıtı gizledi."
 
 #: src/screens/Moderation/index.tsx:377
 msgid "The Bluesky web application"
@@ -7661,7 +7661,8 @@ msgstr "İçeriğinize şu işaretler uygulanmış."
 
 #: src/screens/ModerationInteractionSettings/index.tsx:42
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
-msgstr ""
+msgstr "Yeni gönderiler oluştururken varsayılan olarak aşağıdaki ayarlar kullanılacaktır. İsterseniz bu ayarları, gönderi oluşturucusundan her gönderi için ayrı ayrı düzenleyebilirsiniz."
+
 
 #: src/view/com/post-thread/PostThread.tsx:265
 #: src/view/com/post-thread/PostThread.tsx:277
@@ -7817,7 +7818,8 @@ msgstr "Bu {screenDescription} işaretlendi:"
 
 #: src/components/verification/VerificationsDialog.tsx:89
 msgid "This account has a checkmark because it's been verified by trusted sources."
-msgstr ""
+msgstr "Bu hesap, güvenilir kaynaklar tarafından doğrulandığı için onay işaretine sahiptir."
+
 
 #: src/components/verification/VerificationsDialog.tsx:94
 msgid "This account has one or more verifications, but it is not currently verified."
@@ -7833,7 +7835,8 @@ msgstr "Bu hesap moderasyon listelerinizden birkaçı tarafından engellenmiş. 
 
 #: src/components/verification/VerificationCreatePrompt.tsx:48
 msgid "This action can be undone at any time."
-msgstr ""
+msgstr "Bu işlem istediğiniz zaman geri alınabilir."
+
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:271
 msgid "This appeal will be sent to <0>{sourceName}</0>."
@@ -8234,7 +8237,7 @@ msgstr "Maalesef abone olduğunuz işaretleyicilerin hiçbiri bu rapor türünü
 
 #: src/components/verification/VerificationsDialog.tsx:204
 msgid "Unknown verifier"
-msgstr ""
+msgstr "Bilinmeyen doğrulayıcı"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:510
 msgid "Unlike"
