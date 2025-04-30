@@ -1,0 +1,170 @@
+[
+  {
+    "identifier": "!hide",
+    "configurable": false,
+    "defaultSetting": "hide",
+    "flags": ["no-override", "no-self"],
+    "severity": "alert",
+    "blurs": "content",
+    "behaviors": {
+      "account": {
+        "profileList": "blur",
+        "profileView": "blur",
+        "avatar": "blur",
+        "banner": "blur",
+        "displayName": "blur",
+        "contentList": "blur",
+        "contentView": "blur"
+      },
+      "profile": {
+        "avatar": "blur",
+        "banner": "blur",
+        "displayName": "blur"
+      },
+      "content": {
+        "contentList": "blur",
+        "contentView": "blur"
+      }
+    }
+  },
+  {
+    "identifier": "!warn",
+    "configurable": false,
+    "defaultSetting": "warn",
+    "flags": ["no-self"],
+    "severity": "none",
+    "blurs": "content",
+    "behaviors": {
+      "account": {
+        "profileList": "blur",
+        "profileView": "blur",
+        "avatar": "blur",
+        "banner": "blur",
+        "contentList": "blur",
+        "contentView": "blur"
+      },
+      "profile": {
+        "avatar": "blur",
+        "banner": "blur",
+        "displayName": "blur"
+      },
+      "content": {
+        "contentList": "blur",
+        "contentView": "blur"
+      }
+    }
+  },
+  {
+    "identifier": "!no-unauthenticated",
+    "configurable": false,
+    "defaultSetting": "hide",
+    "flags": ["no-override", "unauthed"],
+    "severity": "none",
+    "blurs": "content",
+    "behaviors": {
+      "account": {
+        "profileList": "blur",
+        "profileView": "blur",
+        "avatar": "blur",
+        "banner": "blur",
+        "displayName": "blur",
+        "contentList": "blur",
+        "contentView": "blur"
+      },
+      "profile": {
+        "avatar": "blur",
+        "banner": "blur",
+        "displayName": "blur"
+      },
+      "content": {
+        "contentList": "blur",
+        "contentView": "blur"
+      }
+    }
+  },
+  {
+    "identifier": "porn",
+    "configurable": true,
+    "defaultSetting": "hide",
+    "flags": ["adult"],
+    "severity": "none",
+    "blurs": "media",
+    "behaviors": {
+      "account": {
+        "avatar": "blur",
+        "banner": "blur"
+      },
+      "profile": {
+        "avatar": "blur",
+        "banner": "blur"
+      },
+      "content": {
+        "contentMedia": "blur"
+      }
+    }
+  },
+  {
+    "identifier": "sexual",
+    "configurable": true,
+    "defaultSetting": "warn",
+    "flags": ["adult"],
+    "severity": "none",
+    "blurs": "media",
+    "behaviors": {
+      "account": {
+        "avatar": "blur",
+        "banner": "blur"
+      },
+      "profile": {
+        "avatar": "blur",
+        "banner": "blur"
+      },
+      "content": {
+        "contentMedia": "blur"
+      }
+    }
+  },
+  {
+    "identifier": "nudity",
+    "configurable": true,
+    "defaultSetting": "ignore",
+    "flags": [],
+    "severity": "none",
+    "blurs": "media",
+    "behaviors": {
+      "account": {
+        "avatar": "blur",
+        "banner": "blur"
+      },
+      "profile": {
+        "avatar": "blur",
+        "banner": "blur"
+      },
+      "content": {
+        "contentMedia": "blur"
+      }
+    }
+  },
+  {
+    "identifier": "graphic-media",
+    "alias": ["gore"],
+    "flags": ["adult"],
+    "configurable": true,
+    "defaultSetting": "warn",
+    "severity": "none",
+    "blurs": "media",
+    "behaviors": {
+      "account": {
+        "avatar": "blur",
+        "banner": "blur"
+      },
+      "profile": {
+        "avatar": "blur",
+        "banner": "blur"
+      },
+      "content": {
+        "contentMedia": "blur"
+      }
+    }
+  }
+]

@@ -56,11 +56,15 @@
     "generate-webpack-stats-file": "EXPO_PUBLIC_GENERATE_STATS=1 yarn build-web",
     "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 yarn build-web",
     "icons:optimize": "svgo -f ./assets/icons",
-    "lexicons:sync": "rm -rf lexicons && degit bluesky-social/atproto/lexicons#main lexicons",
-    "lexicons:codegen": "lex gen-api --yes ./src/agent ./lexicons/com/atproto/*/* ./lexicons/app/bsky/*/* ./lexicons/chat/bsky/*/* ./lexicons/tools/ozone/*/* && prettier -w ./src/agent/**/*.*"
+    "lexicons:sync": "rm -rf lexicons definitions scripts/code scripts/generate-code.mjs && degit bluesky-social/atproto/lexicons#main lexicons && degit bluesky-social/atproto/packages/api/scripts#main scripts --force && degit bluesky-social/atproto/packages/api/definitions#main definitions",
+    "lexicons:codegen": "node node ./scripts/generate-code.mjs && lex gen-api --yes ./src/agent ./lexicons/com/atproto/*/* ./lexicons/app/bsky/*/* ./lexicons/chat/bsky/*/* ./lexicons/tools/ozone/*/* && eslint --fix && prettier -w ./src/agent/**/*.*"
   },
   "dependencies": {
     "@atproto/api": "^0.15.3",
+    "@atproto/common-web": "^0.4.1",
+    "@atproto/lexicon": "^0.4.10",
+    "@atproto/syntax": "^0.4.0",
+    "@atproto/xrpc": "^0.6.12",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
