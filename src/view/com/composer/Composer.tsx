@@ -118,7 +118,7 @@ import {LazyQuoteEmbed, QuoteX} from '#/view/com/util/post-embeds/QuoteEmbed'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, native, useTheme, web} from '#/alf'
+import {atoms as a, native, platform, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
@@ -279,15 +279,15 @@ export const ComposePost = ({
   const viewStyles = useMemo(
     () => ({
       paddingTop: isAndroid ? insets.top : 0,
-      paddingBottom:
+      paddingBottom: platform({
         // iOS - when keyboard is closed, keep the bottom bar in the safe area
-        (isIOS && !isKeyboardVisible) ||
-        // Android - Android >=35 KeyboardAvoidingView adds double padding when
+        ios: isIOS && !isKeyboardVisible ? insets.bottom : 0,
+        // Android - Android KeyboardAvoidingView adds double padding when
         // keyboard is closed, so we subtract that in the offset and add it back
         // here when the keyboard is open
-        (isAndroid && isKeyboardVisible)
-          ? insets.bottom
-          : 0,
+        android: isAndroid && isKeyboardVisible ? insets.bottom : 0,
+        default: 0,
+      }),
     }),
     [insets, isKeyboardVisible],
   )
