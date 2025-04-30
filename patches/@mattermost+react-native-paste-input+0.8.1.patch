@@ -156,7 +156,7 @@ index e916023..5049c33 100644
        @"zoomScale": @(scrollView.zoomScale ?: 1),
      });
 diff --git a/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInput.mm b/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInput.mm
-index dd50053..dcf5f72 100644
+index dd50053..593db13 100644
 --- a/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInput.mm
 +++ b/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInput.mm
 @@ -122,8 +122,8 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
@@ -194,7 +194,7 @@ index dd50053..dcf5f72 100644
  
    return submitBehaviorDefaultable;
 diff --git a/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputSpecs/Props.cpp b/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputSpecs/Props.cpp
-index 29e094f..7ef519a 100644
+index 29e094f..3c59520 100644
 --- a/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputSpecs/Props.cpp
 +++ b/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputSpecs/Props.cpp
 @@ -22,8 +22,7 @@ PasteTextInputProps::PasteTextInputProps(
@@ -210,14 +210,14 @@ index 29e094f..7ef519a 100644
 @@ -133,7 +132,7 @@ TextAttributes PasteTextInputProps::getEffectiveTextAttributes(Float fontSizeMul
  ParagraphAttributes PasteTextInputProps::getEffectiveParagraphAttributes() const {
      auto result = paragraphAttributes;
- 
+     
 -    if (!traits.multiline) {
 +    if (!multiline) {
          result.maximumNumberOfLines = 1;
      }
- 
+     
 diff --git a/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputSpecs/Props.h b/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputSpecs/Props.h
-index 723d00c..31cfe66 100644
+index 723d00c..e871cd7 100644
 --- a/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputSpecs/Props.h
 +++ b/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputSpecs/Props.h
 @@ -15,6 +15,7 @@
@@ -237,3 +237,50 @@ index 723d00c..31cfe66 100644
  public:
      PasteTextInputProps() = default;
      PasteTextInputProps(const PropsParserContext& context, const PasteTextInputProps& sourceProps, const RawProps& rawProps);
+diff --git a/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputSpecs/ShadowNodes.cpp b/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputSpecs/ShadowNodes.cpp
+index 31e07e3..28ca408 100644
+--- a/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputSpecs/ShadowNodes.cpp
++++ b/node_modules/@mattermost/react-native-paste-input/ios/PasteTextInputSpecs/ShadowNodes.cpp
+@@ -85,28 +85,25 @@ void PasteTextInputShadowNode::setTextLayoutManager(
+ 
+ void PasteTextInputShadowNode::updateStateIfNeeded(
+     const LayoutContext& layoutContext) {
+-  ensureUnsealed();
+-
+-  auto reactTreeAttributedString = getAttributedString(layoutContext);
+-  const auto& state = getStateData();
+ 
+-  react_native_assert(textLayoutManager_);
+-  react_native_assert(
+-      (!state.layoutManager || state.layoutManager == textLayoutManager_) &&
+-      "`StateData` refers to a different `TextLayoutManager`");
++  ensureUnsealed();
++  const auto& stateData = getStateData();
++  const auto& reactTreeAttributedString = getAttributedString(layoutContext);
+ 
+-  if (state.reactTreeAttributedString == reactTreeAttributedString &&
+-      state.layoutManager == textLayoutManager_) {
++  // if the text didn’t change, do nothing
++  if (stateData.reactTreeAttributedString.isContentEqual(
++        reactTreeAttributedString)) {
+     return;
+   }
+ 
+-  auto newState = TextInputState{};
+-  newState.attributedStringBox = AttributedStringBox{reactTreeAttributedString};
+-  newState.paragraphAttributes = getConcreteProps().paragraphAttributes;
+-  newState.reactTreeAttributedString = reactTreeAttributedString;
+-  newState.layoutManager = textLayoutManager_;
+-  newState.mostRecentEventCount = getConcreteProps().mostRecentEventCount;
+-  setStateData(std::move(newState));
++  // otherwise, update with the new text, paragraphAttributes & eventCount
++  const auto& props = getConcreteProps();
++  setStateData(TextInputState{
++    /* attributedStringBox */      AttributedStringBox{reactTreeAttributedString},
++    /* reactTreeAttributedString */reactTreeAttributedString,
++    /* paragraphAttributes */      props.paragraphAttributes,
++    /* mostRecentEventCount */     props.mostRecentEventCount
++  });
+ }
+ 
+ #pragma mark - LayoutableShadowNode
