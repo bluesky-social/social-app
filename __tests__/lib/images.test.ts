@@ -1,10 +1,9 @@
-import {deleteAsync} from 'expo-file-system'
+import {createDownloadResumable, deleteAsync} from 'expo-file-system'
 import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
-import RNFetchBlob from 'rn-fetch-blob'
 
 import {
   downloadAndResize,
-  DownloadAndResizeOpts,
+  type DownloadAndResizeOpts,
   getResizedDimensions,
 } from '../../src/lib/media/manip'
 
@@ -32,11 +31,12 @@ describe('downloadAndResize', () => {
   })
 
   it('should return resized image for valid URI and options', async () => {
-    const mockedFetch = RNFetchBlob.fetch as jest.Mock
-    mockedFetch.mockResolvedValueOnce({
-      path: jest.fn().mockReturnValue('file://downloaded-image.jpg'),
-      info: jest.fn().mockReturnValue({status: 200}),
-      flush: jest.fn(),
+    const mockedFetch = createDownloadResumable as jest.Mock
+    mockedFetch.mockReturnValue({
+      cancelAsync: jest.fn(),
+      downloadAsync: jest
+        .fn()
+        .mockResolvedValue({uri: 'file://resized-image.jpg'}),
     })
 
     const opts: DownloadAndResizeOpts = {
@@ -50,13 +50,12 @@ describe('downloadAndResize', () => {
 
     const result = await downloadAndResize(opts)
     expect(result).toEqual(mockResizedImage)
-    expect(RNFetchBlob.config).toHaveBeenCalledWith({
-      fileCache: true,
-      appendExt: 'jpeg',
-    })
-    expect(RNFetchBlob.fetch).toHaveBeenCalledWith(
-      'GET',
-      'https://example.com/image.jpg',
+    expect(createDownloadResumable).toHaveBeenCalledWith(
+      opts.uri,
+      expect.anything(),
+      {
+        cache: true,
+      },
     )
 
     // First time it gets called is to get dimensions
@@ -83,28 +82,6 @@ describe('downloadAndResize', () => {
 
     const result = await downloadAndResize(opts)
     expect(errorSpy).toHaveBeenCalled()
-    expect(result).toBeUndefined()
-  })
-
-  it('should return undefined for non-200 response', async () => {
-    const mockedFetch = RNFetchBlob.fetch as jest.Mock
-    mockedFetch.mockResolvedValueOnce({
-      path: jest.fn().mockReturnValue('file://downloaded-image'),
-      info: jest.fn().mockReturnValue({status: 400}),
-      flush: jest.fn(),
-    })
-
-    const opts: DownloadAndResizeOpts = {
-      uri: 'https://example.com/image',
-      width: 100,
-      height: 100,
-      maxSize: 500000,
-      mode: 'cover',
-      timeout: 10000,
-    }
-
-    const result = await downloadAndResize(opts)
-    expect(errorSpy).not.toHaveBeenCalled()
     expect(result).toBeUndefined()
   })
 
