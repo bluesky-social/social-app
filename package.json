@@ -57,7 +57,7 @@
     "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 yarn build-web",
     "icons:optimize": "svgo -f ./assets/icons",
     "lexicons:sync": "rm -rf lexicons definitions scripts/code scripts/generate-code.mjs && degit bluesky-social/atproto/lexicons#main lexicons && degit bluesky-social/atproto/packages/api/scripts#main scripts --force && degit bluesky-social/atproto/packages/api/definitions#main definitions",
-    "lexicons:codegen": "node node ./scripts/generate-code.mjs && lex gen-api --yes ./src/agent ./lexicons/com/atproto/*/* ./lexicons/app/bsky/*/* ./lexicons/chat/bsky/*/* ./lexicons/tools/ozone/*/* && eslint --fix && prettier -w ./src/agent/**/*.*"
+    "lexicons:codegen": "node ./scripts/generate-code.mjs && lex gen-api --yes ./src/agent ./lexicons/com/atproto/*/* ./lexicons/app/bsky/*/* ./lexicons/chat/bsky/*/* ./lexicons/tools/ozone/*/* && eslint --fix && prettier -w ./src/agent/**/*.*"
   },
   "dependencies": {
     "@atproto/api": "^0.15.3",
