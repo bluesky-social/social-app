@@ -1,0 +1,45 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.actor.searchActorsTypeahead",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Find actor suggestions for a prefix search term. Expected use is for auto-completion during text field entry. Does not require auth.",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "term": {
+            "type": "string",
+            "description": "DEPRECATED: use 'q' instead."
+          },
+          "q": {
+            "type": "string",
+            "description": "Search query prefix; not a full query string."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 10
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["actors"],
+          "properties": {
+            "actors": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "app.bsky.actor.defs#profileViewBasic"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

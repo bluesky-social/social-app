@@ -1,0 +1,61 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.setting.listOptions",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "List settings with optional filtering",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string",
+            "knownValues": ["instance", "personal"],
+            "default": "instance"
+          },
+          "prefix": {
+            "type": "string",
+            "description": "Filter keys by prefix"
+          },
+          "keys": {
+            "type": "array",
+            "maxLength": 100,
+            "items": {
+              "type": "string",
+              "format": "nsid"
+            },
+            "description": "Filter for only the specified keys. Ignored if prefix is provided"
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["options"],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "tools.ozone.setting.defs#option"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

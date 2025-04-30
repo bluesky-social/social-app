@@ -1,0 +1,31 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.server.refreshSession",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Refresh an authentication session. Requires auth using the 'refreshJwt' (not the 'accessJwt').",
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["accessJwt", "refreshJwt", "handle", "did"],
+          "properties": {
+            "accessJwt": { "type": "string" },
+            "refreshJwt": { "type": "string" },
+            "handle": { "type": "string", "format": "handle" },
+            "did": { "type": "string", "format": "did" },
+            "didDoc": { "type": "unknown" },
+            "active": { "type": "boolean" },
+            "status": {
+              "type": "string",
+              "description": "Hosting status of the account. If not specified, then assume 'active'.",
+              "knownValues": ["takendown", "suspended", "deactivated"]
+            }
+          }
+        }
+      },
+      "errors": [{ "name": "AccountTakedown" }]
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.server.confirmEmail",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Confirm an email using a token from com.atproto.server.requestEmailConfirmation.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["email", "token"],
+          "properties": {
+            "email": { "type": "string" },
+            "token": { "type": "string" }
+          }
+        }
+      },
+      "errors": [
+        { "name": "AccountNotFound" },
+        { "name": "ExpiredToken" },
+        { "name": "InvalidToken" },
+        { "name": "InvalidEmail" }
+      ]
+    }
+  }
+}

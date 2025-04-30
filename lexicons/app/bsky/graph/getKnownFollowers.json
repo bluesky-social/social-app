@@ -1,0 +1,45 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.graph.getKnownFollowers",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Enumerates accounts which follow a specified account (actor) and are followed by the viewer.",
+      "parameters": {
+        "type": "params",
+        "required": ["actor"],
+        "properties": {
+          "actor": { "type": "string", "format": "at-identifier" },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "cursor": { "type": "string" }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["subject", "followers"],
+          "properties": {
+            "subject": {
+              "type": "ref",
+              "ref": "app.bsky.actor.defs#profileView"
+            },
+            "cursor": { "type": "string" },
+            "followers": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "app.bsky.actor.defs#profileView"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.communication.updateTemplate",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Administrative action to update an existing communication template. Allows passing partial fields to patch specific fields only.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["id"],
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "ID of the template to be updated."
+            },
+            "name": {
+              "type": "string",
+              "description": "Name of the template."
+            },
+            "lang": {
+              "type": "string",
+              "format": "language",
+              "description": "Message language."
+            },
+            "contentMarkdown": {
+              "type": "string",
+              "description": "Content of the template, markdown supported, can contain variable placeholders."
+            },
+            "subject": {
+              "type": "string",
+              "description": "Subject of the message, used in emails."
+            },
+            "updatedBy": {
+              "type": "string",
+              "format": "did",
+              "description": "DID of the user who is updating the template."
+            },
+            "disabled": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "ref",
+          "ref": "tools.ozone.communication.defs#templateView"
+        }
+      },
+      "errors": [{ "name": "DuplicateTemplateName" }]
+    }
+  }
+}

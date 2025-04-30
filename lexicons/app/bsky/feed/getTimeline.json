@@ -1,0 +1,43 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.feed.getTimeline",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get a view of the requesting account's home timeline. This is expected to be some form of reverse-chronological feed.",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "algorithm": {
+            "type": "string",
+            "description": "Variant 'algorithm' for timeline. Implementation-specific. NOTE: most feed flexibility has been moved to feed generator mechanism."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "cursor": { "type": "string" }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["feed"],
+          "properties": {
+            "cursor": { "type": "string" },
+            "feed": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "app.bsky.feed.defs#feedViewPost"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

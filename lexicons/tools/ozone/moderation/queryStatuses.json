@@ -1,0 +1,209 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.moderation.queryStatuses",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "View moderation statuses of subjects (record or repo).",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "queueCount": {
+            "type": "integer",
+            "description": "Number of queues being used by moderators. Subjects will be split among all queues."
+          },
+          "queueIndex": {
+            "type": "integer",
+            "description": "Index of the queue to fetch subjects from. Works only when queueCount value is specified."
+          },
+          "queueSeed": {
+            "type": "string",
+            "description": "A seeder to shuffle/balance the queue items."
+          },
+          "includeAllUserRecords": {
+            "type": "boolean",
+            "description": "All subjects, or subjects from given 'collections' param, belonging to the account specified in the 'subject' param will be returned."
+          },
+          "subject": {
+            "type": "string",
+            "format": "uri",
+            "description": "The subject to get the status for."
+          },
+          "comment": {
+            "type": "string",
+            "description": "Search subjects by keyword from comments"
+          },
+          "reportedAfter": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Search subjects reported after a given timestamp"
+          },
+          "reportedBefore": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Search subjects reported before a given timestamp"
+          },
+          "reviewedAfter": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Search subjects reviewed after a given timestamp"
+          },
+          "hostingDeletedAfter": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Search subjects where the associated record/account was deleted after a given timestamp"
+          },
+          "hostingDeletedBefore": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Search subjects where the associated record/account was deleted before a given timestamp"
+          },
+          "hostingUpdatedAfter": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Search subjects where the associated record/account was updated after a given timestamp"
+          },
+          "hostingUpdatedBefore": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Search subjects where the associated record/account was updated before a given timestamp"
+          },
+          "hostingStatuses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Search subjects by the status of the associated record/account"
+          },
+          "reviewedBefore": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Search subjects reviewed before a given timestamp"
+          },
+          "includeMuted": {
+            "type": "boolean",
+            "description": "By default, we don't include muted subjects in the results. Set this to true to include them."
+          },
+          "onlyMuted": {
+            "type": "boolean",
+            "description": "When set to true, only muted subjects and reporters will be returned."
+          },
+          "reviewState": {
+            "type": "string",
+            "description": "Specify when fetching subjects in a certain state"
+          },
+          "ignoreSubjects": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "lastReviewedBy": {
+            "type": "string",
+            "format": "did",
+            "description": "Get all subject statuses that were reviewed by a specific moderator"
+          },
+          "sortField": {
+            "type": "string",
+            "default": "lastReportedAt",
+            "enum": [
+              "lastReviewedAt",
+              "lastReportedAt",
+              "reportedRecordsCount",
+              "takendownRecordsCount",
+              "priorityScore"
+            ]
+          },
+          "sortDirection": {
+            "type": "string",
+            "default": "desc",
+            "enum": ["asc", "desc"]
+          },
+          "takendown": {
+            "type": "boolean",
+            "description": "Get subjects that were taken down"
+          },
+          "appealed": {
+            "type": "boolean",
+            "description": "Get subjects in unresolved appealed status"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "tags": {
+            "type": "array",
+            "maxLength": 25,
+            "items": {
+              "type": "string",
+              "description": "Items in this array are applied with OR filters. To apply AND filter, put all tags in the same string and separate using && characters"
+            }
+          },
+          "excludeTags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "collections": {
+            "type": "array",
+            "maxLength": 20,
+            "description": "If specified, subjects belonging to the given collections will be returned. When subjectType is set to 'account', this will be ignored.",
+            "items": {
+              "type": "string",
+              "format": "nsid"
+            }
+          },
+          "subjectType": {
+            "type": "string",
+            "description": "If specified, subjects of the given type (account or record) will be returned. When this is set to 'account' the 'collections' parameter will be ignored. When includeAllUserRecords or subject is set, this will be ignored.",
+            "knownValues": ["account", "record"]
+          },
+          "minAccountSuspendCount": {
+            "type": "integer",
+            "description": "If specified, only subjects that belong to an account that has at least this many suspensions will be returned."
+          },
+          "minReportedRecordsCount": {
+            "type": "integer",
+            "description": "If specified, only subjects that belong to an account that has at least this many reported records will be returned."
+          },
+          "minTakendownRecordsCount": {
+            "type": "integer",
+            "description": "If specified, only subjects that belong to an account that has at least this many taken down records will be returned."
+          },
+          "minPriorityScore": {
+            "minimum": 0,
+            "maximum": 100,
+            "type": "integer",
+            "description": "If specified, only subjects that have priority score value above the given value will be returned."
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["subjectStatuses"],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "subjectStatuses": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "tools.ozone.moderation.defs#subjectStatusView"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

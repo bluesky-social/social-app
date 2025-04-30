@@ -1,0 +1,44 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.admin.getInviteCodes",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get an admin view of invite codes.",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "sort": {
+            "type": "string",
+            "knownValues": ["recent", "usage"],
+            "default": "recent"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 500,
+            "default": 100
+          },
+          "cursor": { "type": "string" }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["codes"],
+          "properties": {
+            "cursor": { "type": "string" },
+            "codes": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "com.atproto.server.defs#inviteCode"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

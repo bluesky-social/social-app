@@ -1,0 +1,30 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.convo.leaveConvo",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convoId"],
+          "properties": {
+            "convoId": { "type": "string" }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convoId", "rev"],
+          "properties": {
+            "convoId": { "type": "string" },
+            "rev": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

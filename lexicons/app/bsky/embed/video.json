@@ -1,0 +1,67 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.embed.video",
+  "description": "A video embedded in a Bluesky record (eg, a post).",
+  "defs": {
+    "main": {
+      "type": "object",
+      "required": ["video"],
+      "properties": {
+        "video": {
+          "type": "blob",
+          "description": "The mp4 video file. May be up to 100mb, formerly limited to 50mb.",
+          "accept": ["video/mp4"],
+          "maxSize": 100000000
+        },
+        "captions": {
+          "type": "array",
+          "items": { "type": "ref", "ref": "#caption" },
+          "maxLength": 20
+        },
+        "alt": {
+          "type": "string",
+          "description": "Alt text description of the video, for accessibility.",
+          "maxGraphemes": 1000,
+          "maxLength": 10000
+        },
+        "aspectRatio": {
+          "type": "ref",
+          "ref": "app.bsky.embed.defs#aspectRatio"
+        }
+      }
+    },
+    "caption": {
+      "type": "object",
+      "required": ["lang", "file"],
+      "properties": {
+        "lang": {
+          "type": "string",
+          "format": "language"
+        },
+        "file": {
+          "type": "blob",
+          "accept": ["text/vtt"],
+          "maxSize": 20000
+        }
+      }
+    },
+    "view": {
+      "type": "object",
+      "required": ["cid", "playlist"],
+      "properties": {
+        "cid": { "type": "string", "format": "cid" },
+        "playlist": { "type": "string", "format": "uri" },
+        "thumbnail": { "type": "string", "format": "uri" },
+        "alt": {
+          "type": "string",
+          "maxGraphemes": 1000,
+          "maxLength": 10000
+        },
+        "aspectRatio": {
+          "type": "ref",
+          "ref": "app.bsky.embed.defs#aspectRatio"
+        }
+      }
+    }
+  }
+}

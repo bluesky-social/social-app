@@ -1,0 +1,37 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.sync.getRecord",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get data blocks needed to prove the existence or non-existence of record in the current version of repo. Does not require auth.",
+      "parameters": {
+        "type": "params",
+        "required": ["did", "collection", "rkey"],
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did",
+            "description": "The DID of the repo."
+          },
+          "collection": { "type": "string", "format": "nsid" },
+          "rkey": {
+            "type": "string",
+            "description": "Record Key",
+            "format": "record-key"
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/vnd.ipld.car"
+      },
+      "errors": [
+        { "name": "RecordNotFound" },
+        { "name": "RepoNotFound" },
+        { "name": "RepoTakendown" },
+        { "name": "RepoSuspended" },
+        { "name": "RepoDeactivated" }
+      ]
+    }
+  }
+}

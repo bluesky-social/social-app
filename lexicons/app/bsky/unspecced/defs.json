@@ -1,0 +1,91 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.unspecced.defs",
+  "defs": {
+    "skeletonSearchPost": {
+      "type": "object",
+      "required": ["uri"],
+      "properties": {
+        "uri": { "type": "string", "format": "at-uri" }
+      }
+    },
+    "skeletonSearchActor": {
+      "type": "object",
+      "required": ["did"],
+      "properties": {
+        "did": { "type": "string", "format": "did" }
+      }
+    },
+    "skeletonSearchStarterPack": {
+      "type": "object",
+      "required": ["uri"],
+      "properties": {
+        "uri": { "type": "string", "format": "at-uri" }
+      }
+    },
+    "trendingTopic": {
+      "type": "object",
+      "required": ["topic", "link"],
+      "properties": {
+        "topic": { "type": "string" },
+        "displayName": { "type": "string" },
+        "description": { "type": "string" },
+        "link": { "type": "string" }
+      }
+    },
+    "skeletonTrend": {
+      "type": "object",
+      "required": [
+        "topic",
+        "displayName",
+        "link",
+        "startedAt",
+        "postCount",
+        "dids"
+      ],
+      "properties": {
+        "topic": { "type": "string" },
+        "displayName": { "type": "string" },
+        "link": { "type": "string" },
+        "startedAt": { "type": "string", "format": "datetime" },
+        "postCount": { "type": "integer" },
+        "status": { "type": "string", "knownValues": ["hot"] },
+        "category": { "type": "string" },
+        "dids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "did"
+          }
+        }
+      }
+    },
+    "trendView": {
+      "type": "object",
+      "required": [
+        "topic",
+        "displayName",
+        "link",
+        "startedAt",
+        "postCount",
+        "actors"
+      ],
+      "properties": {
+        "topic": { "type": "string" },
+        "displayName": { "type": "string" },
+        "link": { "type": "string" },
+        "startedAt": { "type": "string", "format": "datetime" },
+        "postCount": { "type": "integer" },
+        "status": { "type": "string", "knownValues": ["hot"] },
+        "category": { "type": "string" },
+        "actors": {
+          "type": "array",
+          "items": {
+            "type": "ref",
+            "ref": "app.bsky.actor.defs#profileViewBasic"
+          }
+        }
+      }
+    }
+  }
+}

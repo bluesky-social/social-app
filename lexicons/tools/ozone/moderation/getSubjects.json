@@ -1,0 +1,40 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.moderation.getSubjects",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get details about subjects.",
+      "parameters": {
+        "type": "params",
+        "required": ["subjects"],
+        "properties": {
+          "subjects": {
+            "type": "array",
+            "maxLength": 100,
+            "minLength": 1,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["subjects"],
+          "properties": {
+            "subjects": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "tools.ozone.moderation.defs#subjectView"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

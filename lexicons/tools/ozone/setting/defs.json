@@ -1,0 +1,64 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.setting.defs",
+  "defs": {
+    "option": {
+      "type": "object",
+      "required": [
+        "key",
+        "value",
+        "did",
+        "scope",
+        "createdBy",
+        "lastUpdatedBy"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "format": "nsid"
+        },
+        "did": {
+          "type": "string",
+          "format": "did"
+        },
+        "value": {
+          "type": "unknown"
+        },
+        "description": {
+          "type": "string",
+          "maxGraphemes": 1024,
+          "maxLength": 10240
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "managerRole": {
+          "type": "string",
+          "knownValues": [
+            "tools.ozone.team.defs#roleModerator",
+            "tools.ozone.team.defs#roleTriage",
+            "tools.ozone.team.defs#roleAdmin",
+            "tools.ozone.team.defs#roleVerifier"
+          ]
+        },
+        "scope": {
+          "type": "string",
+          "knownValues": ["instance", "personal"]
+        },
+        "createdBy": {
+          "type": "string",
+          "format": "did"
+        },
+        "lastUpdatedBy": {
+          "type": "string",
+          "format": "did"
+        }
+      }
+    }
+  }
+}

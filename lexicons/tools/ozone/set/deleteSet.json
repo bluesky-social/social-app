@@ -1,0 +1,36 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.set.deleteSet",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Delete an entire set. Attempting to delete a set that does not exist will result in an error.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["name"],
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Name of the set to delete"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "errors": [
+        {
+          "name": "SetNotFound",
+          "description": "set with the given name does not exist"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.feed.getActorFeeds",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get a list of feeds (feed generator records) created by the actor (in the actor's repo).",
+      "parameters": {
+        "type": "params",
+        "required": ["actor"],
+        "properties": {
+          "actor": { "type": "string", "format": "at-identifier" },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "cursor": { "type": "string" }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["feeds"],
+          "properties": {
+            "cursor": { "type": "string" },
+            "feeds": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "app.bsky.feed.defs#generatorView"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

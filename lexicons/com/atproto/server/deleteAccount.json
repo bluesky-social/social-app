@@ -1,0 +1,23 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.server.deleteAccount",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Delete an actor's account with a token and password. Can only be called after requesting a deletion token. Requires auth.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["did", "password", "token"],
+          "properties": {
+            "did": { "type": "string", "format": "did" },
+            "password": { "type": "string" },
+            "token": { "type": "string" }
+          }
+        }
+      },
+      "errors": [{ "name": "ExpiredToken" }, { "name": "InvalidToken" }]
+    }
+  }
+}

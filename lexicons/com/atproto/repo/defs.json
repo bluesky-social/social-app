@@ -1,0 +1,14 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.repo.defs",
+  "defs": {
+    "commitMeta": {
+      "type": "object",
+      "required": ["cid", "rev"],
+      "properties": {
+        "cid": { "type": "string", "format": "cid" },
+        "rev": { "type": "string", "format": "tid" }
+      }
+    }
+  }
+}

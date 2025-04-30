@@ -1,0 +1,54 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.feed.generator",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "Record declaring of the existence of a feed generator, and containing metadata about it. The record can exist in any repository.",
+      "key": "any",
+      "record": {
+        "type": "object",
+        "required": ["did", "displayName", "createdAt"],
+        "properties": {
+          "did": { "type": "string", "format": "did" },
+          "displayName": {
+            "type": "string",
+            "maxGraphemes": 24,
+            "maxLength": 240
+          },
+          "description": {
+            "type": "string",
+            "maxGraphemes": 300,
+            "maxLength": 3000
+          },
+          "descriptionFacets": {
+            "type": "array",
+            "items": { "type": "ref", "ref": "app.bsky.richtext.facet" }
+          },
+          "avatar": {
+            "type": "blob",
+            "accept": ["image/png", "image/jpeg"],
+            "maxSize": 1000000
+          },
+          "acceptsInteractions": {
+            "type": "boolean",
+            "description": "Declaration that a feed accepts feedback interactions from a client through app.bsky.feed.sendInteractions"
+          },
+          "labels": {
+            "type": "union",
+            "description": "Self-label values",
+            "refs": ["com.atproto.label.defs#selfLabels"]
+          },
+          "contentMode": {
+            "type": "string",
+            "knownValues": [
+              "app.bsky.feed.defs#contentModeUnspecified",
+              "app.bsky.feed.defs#contentModeVideo"
+            ]
+          },
+          "createdAt": { "type": "string", "format": "datetime" }
+        }
+      }
+    }
+  }
+}

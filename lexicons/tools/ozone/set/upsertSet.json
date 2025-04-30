@@ -1,0 +1,24 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.set.upsertSet",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Create or update set metadata",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "ref",
+          "ref": "tools.ozone.set.defs#set"
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "ref",
+          "ref": "tools.ozone.set.defs#setView"
+        }
+      }
+    }
+  }
+}

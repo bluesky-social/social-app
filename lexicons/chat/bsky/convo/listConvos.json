@@ -1,0 +1,46 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.convo.listConvos",
+  "defs": {
+    "main": {
+      "type": "query",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "cursor": { "type": "string" },
+          "readState": {
+            "type": "string",
+            "knownValues": ["unread"]
+          },
+          "status": {
+            "type": "string",
+            "knownValues": ["request", "accepted"]
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convos"],
+          "properties": {
+            "cursor": { "type": "string" },
+            "convos": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "chat.bsky.convo.defs#convoView"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

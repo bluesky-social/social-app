@@ -1,0 +1,36 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.feed.getFeedGenerators",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get information about a list of feed generators.",
+      "parameters": {
+        "type": "params",
+        "required": ["feeds"],
+        "properties": {
+          "feeds": {
+            "type": "array",
+            "items": { "type": "string", "format": "at-uri" }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["feeds"],
+          "properties": {
+            "feeds": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "app.bsky.feed.defs#generatorView"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

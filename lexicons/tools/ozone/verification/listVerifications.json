@@ -1,0 +1,83 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.verification.listVerifications",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "List verifications",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "cursor": {
+            "type": "string",
+            "description": "Pagination cursor"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of results to return",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "createdAfter": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Filter to verifications created after this timestamp"
+          },
+          "createdBefore": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Filter to verifications created before this timestamp"
+          },
+          "issuers": {
+            "type": "array",
+            "maxLength": 100,
+            "description": "Filter to verifications from specific issuers",
+            "items": {
+              "type": "string",
+              "format": "did"
+            }
+          },
+          "subjects": {
+            "type": "array",
+            "description": "Filter to specific verified DIDs",
+            "maxLength": 100,
+            "items": {
+              "type": "string",
+              "format": "did"
+            }
+          },
+          "sortDirection": {
+            "type": "string",
+            "description": "Sort direction for creation date",
+            "enum": ["asc", "desc"],
+            "default": "desc"
+          },
+          "isRevoked": {
+            "type": "boolean",
+            "description": "Filter to verifications that are revoked or not. By default, includes both."
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["verifications"],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "verifications": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "tools.ozone.verification.defs#verificationView"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

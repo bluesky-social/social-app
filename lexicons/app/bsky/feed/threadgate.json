@@ -1,0 +1,69 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.feed.threadgate",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "description": "Record defining interaction gating rules for a thread (aka, reply controls). The record key (rkey) of the threadgate record must match the record key of the thread's root post, and that record must be in the same repository.",
+      "record": {
+        "type": "object",
+        "required": ["post", "createdAt"],
+        "properties": {
+          "post": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "Reference (AT-URI) to the post record."
+          },
+          "allow": {
+            "description": "List of rules defining who can reply to this post. If value is an empty array, no one can reply. If value is undefined, anyone can reply.",
+            "type": "array",
+            "maxLength": 5,
+            "items": {
+              "type": "union",
+              "refs": [
+                "#mentionRule",
+                "#followerRule",
+                "#followingRule",
+                "#listRule"
+              ]
+            }
+          },
+          "createdAt": { "type": "string", "format": "datetime" },
+          "hiddenReplies": {
+            "type": "array",
+            "maxLength": 50,
+            "items": {
+              "type": "string",
+              "format": "at-uri"
+            },
+            "description": "List of hidden reply URIs."
+          }
+        }
+      }
+    },
+    "mentionRule": {
+      "type": "object",
+      "description": "Allow replies from actors mentioned in your post.",
+      "properties": {}
+    },
+    "followerRule": {
+      "type": "object",
+      "description": "Allow replies from actors who follow you.",
+      "properties": {}
+    },
+    "followingRule": {
+      "type": "object",
+      "description": "Allow replies from actors you follow.",
+      "properties": {}
+    },
+    "listRule": {
+      "type": "object",
+      "description": "Allow replies from actors on a list.",
+      "required": ["list"],
+      "properties": {
+        "list": { "type": "string", "format": "at-uri" }
+      }
+    }
+  }
+}

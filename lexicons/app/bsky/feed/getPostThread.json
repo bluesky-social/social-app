@@ -1,0 +1,57 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.feed.getPostThread",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get posts in a thread. Does not require auth, but additional metadata and filtering will be applied for authed requests.",
+      "parameters": {
+        "type": "params",
+        "required": ["uri"],
+        "properties": {
+          "uri": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "Reference (AT-URI) to post record."
+          },
+          "depth": {
+            "type": "integer",
+            "description": "How many levels of reply depth should be included in response.",
+            "default": 6,
+            "minimum": 0,
+            "maximum": 1000
+          },
+          "parentHeight": {
+            "type": "integer",
+            "description": "How many levels of parent (and grandparent, etc) post to include.",
+            "default": 80,
+            "minimum": 0,
+            "maximum": 1000
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["thread"],
+          "properties": {
+            "thread": {
+              "type": "union",
+              "refs": [
+                "app.bsky.feed.defs#threadViewPost",
+                "app.bsky.feed.defs#notFoundPost",
+                "app.bsky.feed.defs#blockedPost"
+              ]
+            },
+            "threadgate": {
+              "type": "ref",
+              "ref": "app.bsky.feed.defs#threadgateView"
+            }
+          }
+        }
+      },
+      "errors": [{ "name": "NotFound" }]
+    }
+  }
+}

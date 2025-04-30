@@ -1,0 +1,27 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.convo.deleteMessageForSelf",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convoId", "messageId"],
+          "properties": {
+            "convoId": { "type": "string" },
+            "messageId": { "type": "string" }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "ref",
+          "ref": "chat.bsky.convo.defs#deletedMessageView"
+        }
+      }
+    }
+  }
+}

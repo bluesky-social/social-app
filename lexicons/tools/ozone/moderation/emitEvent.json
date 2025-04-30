@@ -1,0 +1,63 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.moderation.emitEvent",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Take a moderation action on an actor.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["event", "subject", "createdBy"],
+          "properties": {
+            "event": {
+              "type": "union",
+              "refs": [
+                "tools.ozone.moderation.defs#modEventTakedown",
+                "tools.ozone.moderation.defs#modEventAcknowledge",
+                "tools.ozone.moderation.defs#modEventEscalate",
+                "tools.ozone.moderation.defs#modEventComment",
+                "tools.ozone.moderation.defs#modEventLabel",
+                "tools.ozone.moderation.defs#modEventReport",
+                "tools.ozone.moderation.defs#modEventMute",
+                "tools.ozone.moderation.defs#modEventUnmute",
+                "tools.ozone.moderation.defs#modEventMuteReporter",
+                "tools.ozone.moderation.defs#modEventUnmuteReporter",
+                "tools.ozone.moderation.defs#modEventReverseTakedown",
+                "tools.ozone.moderation.defs#modEventResolveAppeal",
+                "tools.ozone.moderation.defs#modEventEmail",
+                "tools.ozone.moderation.defs#modEventDivert",
+                "tools.ozone.moderation.defs#modEventTag",
+                "tools.ozone.moderation.defs#accountEvent",
+                "tools.ozone.moderation.defs#identityEvent",
+                "tools.ozone.moderation.defs#recordEvent",
+                "tools.ozone.moderation.defs#modEventPriorityScore"
+              ]
+            },
+            "subject": {
+              "type": "union",
+              "refs": [
+                "com.atproto.admin.defs#repoRef",
+                "com.atproto.repo.strongRef"
+              ]
+            },
+            "subjectBlobCids": {
+              "type": "array",
+              "items": { "type": "string", "format": "cid" }
+            },
+            "createdBy": { "type": "string", "format": "did" }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "ref",
+          "ref": "tools.ozone.moderation.defs#modEventView"
+        }
+      },
+      "errors": [{ "name": "SubjectHasAction" }]
+    }
+  }
+}

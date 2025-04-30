@@ -1,0 +1,53 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.convo.sendMessageBatch",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["items"],
+          "properties": {
+            "items": {
+              "type": "array",
+              "maxLength": 100,
+              "items": {
+                "type": "ref",
+                "ref": "#batchItem"
+              }
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["items"],
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "chat.bsky.convo.defs#messageView"
+              }
+            }
+          }
+        }
+      }
+    },
+    "batchItem": {
+      "type": "object",
+      "required": ["convoId", "message"],
+      "properties": {
+        "convoId": { "type": "string" },
+        "message": {
+          "type": "ref",
+          "ref": "chat.bsky.convo.defs#messageInput"
+        }
+      }
+    }
+  }
+}

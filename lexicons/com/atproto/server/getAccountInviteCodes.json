@@ -1,0 +1,38 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.server.getAccountInviteCodes",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get all invite codes for the current account. Requires auth.",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "includeUsed": { "type": "boolean", "default": true },
+          "createAvailable": {
+            "type": "boolean",
+            "default": true,
+            "description": "Controls whether any new 'earned' but not 'created' invites should be created."
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["codes"],
+          "properties": {
+            "codes": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "com.atproto.server.defs#inviteCode"
+              }
+            }
+          }
+        }
+      },
+      "errors": [{ "name": "DuplicateCreate" }]
+    }
+  }
+}

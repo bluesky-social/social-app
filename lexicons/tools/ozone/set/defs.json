@@ -1,0 +1,49 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.set.defs",
+  "defs": {
+    "set": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 128
+        },
+        "description": {
+          "type": "string",
+          "maxGraphemes": 1024,
+          "maxLength": 10240
+        }
+      }
+    },
+    "setView": {
+      "type": "object",
+      "required": ["name", "setSize", "createdAt", "updatedAt"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 128
+        },
+        "description": {
+          "type": "string",
+          "maxGraphemes": 1024,
+          "maxLength": 10240
+        },
+        "setSize": {
+          "type": "integer"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "datetime"
+        }
+      }
+    }
+  }
+}

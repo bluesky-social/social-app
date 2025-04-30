@@ -1,0 +1,10 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.notification.defs",
+  "defs": {
+    "recordDeleted": {
+      "type": "object",
+      "properties": {}
+    }
+  }
+}

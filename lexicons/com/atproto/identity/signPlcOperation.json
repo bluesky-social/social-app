@@ -1,0 +1,45 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.identity.signPlcOperation",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Signs a PLC operation to update some value(s) in the requesting DID's document.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "token": {
+              "description": "A token received through com.atproto.identity.requestPlcOperationSignature",
+              "type": "string"
+            },
+            "rotationKeys": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "alsoKnownAs": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "verificationMethods": { "type": "unknown" },
+            "services": { "type": "unknown" }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["operation"],
+          "properties": {
+            "operation": {
+              "type": "unknown",
+              "description": "A signed DID PLC operation."
+            }
+          }
+        }
+      }
+    }
+  }
+}

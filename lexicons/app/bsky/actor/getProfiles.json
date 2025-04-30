@@ -1,0 +1,37 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.actor.getProfiles",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get detailed profile views of multiple actors.",
+      "parameters": {
+        "type": "params",
+        "required": ["actors"],
+        "properties": {
+          "actors": {
+            "type": "array",
+            "items": { "type": "string", "format": "at-identifier" },
+            "maxLength": 25
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["profiles"],
+          "properties": {
+            "profiles": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "app.bsky.actor.defs#profileViewDetailed"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

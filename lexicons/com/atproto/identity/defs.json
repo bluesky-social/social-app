@@ -1,0 +1,22 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.identity.defs",
+  "defs": {
+    "identityInfo": {
+      "type": "object",
+      "required": ["did", "handle", "didDoc"],
+      "properties": {
+        "did": { "type": "string", "format": "did" },
+        "handle": {
+          "type": "string",
+          "format": "handle",
+          "description": "The validated handle of the account; or 'handle.invalid' if the handle did not bi-directionally match the DID document."
+        },
+        "didDoc": {
+          "type": "unknown",
+          "description": "The complete DID document for the identity."
+        }
+      }
+    }
+  }
+}

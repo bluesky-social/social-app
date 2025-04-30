@@ -1,0 +1,21 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.admin.updateAccountHandle",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Administrative action to update an account's handle.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["did", "handle"],
+          "properties": {
+            "did": { "type": "string", "format": "did" },
+            "handle": { "type": "string", "format": "handle" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.graph.getBlocks",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Enumerates which accounts the requesting account is currently blocking. Requires auth.",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "cursor": { "type": "string" }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["blocks"],
+          "properties": {
+            "cursor": { "type": "string" },
+            "blocks": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "app.bsky.actor.defs#profileView"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

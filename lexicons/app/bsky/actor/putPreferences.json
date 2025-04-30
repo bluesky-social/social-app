@@ -1,0 +1,23 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.actor.putPreferences",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Set the private preferences attached to the account.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["preferences"],
+          "properties": {
+            "preferences": {
+              "type": "ref",
+              "ref": "app.bsky.actor.defs#preferences"
+            }
+          }
+        }
+      }
+    }
+  }
+}

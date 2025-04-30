@@ -1,0 +1,56 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.sync.listHosts",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Enumerates upstream hosts (eg, PDS or relay instances) that this service consumes from. Implemented by relays.",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000,
+            "default": 200
+          },
+          "cursor": { "type": "string" }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["hosts"],
+          "properties": {
+            "cursor": { "type": "string" },
+            "hosts": {
+              "type": "array",
+              "items": { "type": "ref", "ref": "#host" },
+              "description": "Sort order is not formally specified. Recommended order is by time host was first seen by the server, with oldest first."
+            }
+          }
+        }
+      }
+    },
+    "host": {
+      "type": "object",
+      "required": ["hostname"],
+      "properties": {
+        "hostname": {
+          "type": "string",
+          "description": "hostname of server; not a URL (no scheme)"
+        },
+        "seq": {
+          "type": "integer",
+          "description": "Recent repo stream event sequence number. May be delayed from actual stream processing (eg, persisted cursor not in-memory cursor)."
+        },
+        "accountCount": { "type": "integer" },
+        "status": {
+          "type": "ref",
+          "ref": "com.atproto.sync.defs#hostStatus"
+        }
+      }
+    }
+  }
+}

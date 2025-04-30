@@ -1,0 +1,53 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.sync.listBlobs",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "List blob CIDs for an account, since some repo revision. Does not require auth; implemented by PDS.",
+      "parameters": {
+        "type": "params",
+        "required": ["did"],
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did",
+            "description": "The DID of the repo."
+          },
+          "since": {
+            "type": "string",
+            "format": "tid",
+            "description": "Optional revision of the repo to list blobs since."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000,
+            "default": 500
+          },
+          "cursor": { "type": "string" }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["cids"],
+          "properties": {
+            "cursor": { "type": "string" },
+            "cids": {
+              "type": "array",
+              "items": { "type": "string", "format": "cid" }
+            }
+          }
+        }
+      },
+      "errors": [
+        { "name": "RepoNotFound" },
+        { "name": "RepoTakendown" },
+        { "name": "RepoSuspended" },
+        { "name": "RepoDeactivated" }
+      ]
+    }
+  }
+}

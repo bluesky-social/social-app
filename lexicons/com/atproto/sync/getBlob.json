@@ -1,0 +1,36 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.sync.getBlob",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get a blob associated with a given account. Returns the full blob as originally uploaded. Does not require auth; implemented by PDS.",
+      "parameters": {
+        "type": "params",
+        "required": ["did", "cid"],
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did",
+            "description": "The DID of the account."
+          },
+          "cid": {
+            "type": "string",
+            "format": "cid",
+            "description": "The CID of the blob to fetch"
+          }
+        }
+      },
+      "output": {
+        "encoding": "*/*"
+      },
+      "errors": [
+        { "name": "BlobNotFound" },
+        { "name": "RepoNotFound" },
+        { "name": "RepoTakendown" },
+        { "name": "RepoSuspended" },
+        { "name": "RepoDeactivated" }
+      ]
+    }
+  }
+}

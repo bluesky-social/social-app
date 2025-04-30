@@ -1,0 +1,35 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.temp.fetchLabels",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "DEPRECATED: use queryLabels or subscribeLabels instead -- Fetch all labels from a labeler created after a certain date.",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "since": { "type": "integer" },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 250,
+            "default": 50
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["labels"],
+          "properties": {
+            "labels": {
+              "type": "array",
+              "items": { "type": "ref", "ref": "com.atproto.label.defs#label" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

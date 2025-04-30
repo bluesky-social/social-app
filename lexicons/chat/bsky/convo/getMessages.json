@@ -1,0 +1,43 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.convo.getMessages",
+  "defs": {
+    "main": {
+      "type": "query",
+      "parameters": {
+        "type": "params",
+        "required": ["convoId"],
+        "properties": {
+          "convoId": { "type": "string" },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "cursor": { "type": "string" }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["messages"],
+          "properties": {
+            "cursor": { "type": "string" },
+            "messages": {
+              "type": "array",
+              "items": {
+                "type": "union",
+                "refs": [
+                  "chat.bsky.convo.defs#messageView",
+                  "chat.bsky.convo.defs#deletedMessageView"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

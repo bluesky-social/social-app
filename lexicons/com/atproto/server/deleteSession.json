@@ -1,0 +1,10 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.server.deleteSession",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Delete the current session. Requires auth."
+    }
+  }
+}

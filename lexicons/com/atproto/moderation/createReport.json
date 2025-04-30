@@ -1,0 +1,71 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.moderation.createReport",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Submit a moderation report regarding an atproto account or record. Implemented by moderation services (with PDS proxying), and requires auth.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["reasonType", "subject"],
+          "properties": {
+            "reasonType": {
+              "type": "ref",
+              "description": "Indicates the broad category of violation the report is for.",
+              "ref": "com.atproto.moderation.defs#reasonType"
+            },
+            "reason": {
+              "type": "string",
+              "maxGraphemes": 2000,
+              "maxLength": 20000,
+              "description": "Additional context about the content and violation."
+            },
+            "subject": {
+              "type": "union",
+              "refs": [
+                "com.atproto.admin.defs#repoRef",
+                "com.atproto.repo.strongRef"
+              ]
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": [
+            "id",
+            "reasonType",
+            "subject",
+            "reportedBy",
+            "createdAt"
+          ],
+          "properties": {
+            "id": { "type": "integer" },
+            "reasonType": {
+              "type": "ref",
+              "ref": "com.atproto.moderation.defs#reasonType"
+            },
+            "reason": {
+              "type": "string",
+              "maxGraphemes": 2000,
+              "maxLength": 20000
+            },
+            "subject": {
+              "type": "union",
+              "refs": [
+                "com.atproto.admin.defs#repoRef",
+                "com.atproto.repo.strongRef"
+              ]
+            },
+            "reportedBy": { "type": "string", "format": "did" },
+            "createdAt": { "type": "string", "format": "datetime" }
+          }
+        }
+      }
+    }
+  }
+}

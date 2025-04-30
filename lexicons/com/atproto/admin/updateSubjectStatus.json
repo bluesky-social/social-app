@@ -1,0 +1,56 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.admin.updateSubjectStatus",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Update the service-specific admin status of a subject (account, record, or blob).",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["subject"],
+          "properties": {
+            "subject": {
+              "type": "union",
+              "refs": [
+                "com.atproto.admin.defs#repoRef",
+                "com.atproto.repo.strongRef",
+                "com.atproto.admin.defs#repoBlobRef"
+              ]
+            },
+            "takedown": {
+              "type": "ref",
+              "ref": "com.atproto.admin.defs#statusAttr"
+            },
+            "deactivated": {
+              "type": "ref",
+              "ref": "com.atproto.admin.defs#statusAttr"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["subject"],
+          "properties": {
+            "subject": {
+              "type": "union",
+              "refs": [
+                "com.atproto.admin.defs#repoRef",
+                "com.atproto.repo.strongRef",
+                "com.atproto.admin.defs#repoBlobRef"
+              ]
+            },
+            "takedown": {
+              "type": "ref",
+              "ref": "com.atproto.admin.defs#statusAttr"
+            }
+          }
+        }
+      }
+    }
+  }
+}

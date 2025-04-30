@@ -1,0 +1,43 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.embed.recordWithMedia",
+  "description": "A representation of a record embedded in a Bluesky record (eg, a post), alongside other compatible embeds. For example, a quote post and image, or a quote post and external URL card.",
+  "defs": {
+    "main": {
+      "type": "object",
+      "required": ["record", "media"],
+      "properties": {
+        "record": {
+          "type": "ref",
+          "ref": "app.bsky.embed.record"
+        },
+        "media": {
+          "type": "union",
+          "refs": [
+            "app.bsky.embed.images",
+            "app.bsky.embed.video",
+            "app.bsky.embed.external"
+          ]
+        }
+      }
+    },
+    "view": {
+      "type": "object",
+      "required": ["record", "media"],
+      "properties": {
+        "record": {
+          "type": "ref",
+          "ref": "app.bsky.embed.record#view"
+        },
+        "media": {
+          "type": "union",
+          "refs": [
+            "app.bsky.embed.images#view",
+            "app.bsky.embed.video#view",
+            "app.bsky.embed.external#view"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.set.getValues",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get a specific set and its values",
+      "parameters": {
+        "type": "params",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000,
+            "default": 100
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["set", "values"],
+          "properties": {
+            "set": {
+              "type": "ref",
+              "ref": "tools.ozone.set.defs#setView"
+            },
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "cursor": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "errors": [
+        {
+          "name": "SetNotFound",
+          "description": "set with the given name does not exist"
+        }
+      ]
+    }
+  }
+}

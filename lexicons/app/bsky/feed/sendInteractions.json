@@ -1,0 +1,33 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.feed.sendInteractions",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Send information about interactions with feed items back to the feed generator that served them.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["interactions"],
+          "properties": {
+            "interactions": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "app.bsky.feed.defs#interaction"
+              }
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      }
+    }
+  }
+}

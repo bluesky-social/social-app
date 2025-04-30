@@ -1,0 +1,26 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.video.uploadVideo",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Upload a video to be processed then stored on the PDS.",
+      "input": {
+        "encoding": "video/mp4"
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["jobStatus"],
+          "properties": {
+            "jobStatus": {
+              "type": "ref",
+              "ref": "app.bsky.video.defs#jobStatus"
+            }
+          }
+        }
+      }
+    }
+  }
+}

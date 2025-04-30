@@ -1,0 +1,51 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.moderation.defs",
+  "defs": {
+    "reasonType": {
+      "type": "string",
+      "knownValues": [
+        "com.atproto.moderation.defs#reasonSpam",
+        "com.atproto.moderation.defs#reasonViolation",
+        "com.atproto.moderation.defs#reasonMisleading",
+        "com.atproto.moderation.defs#reasonSexual",
+        "com.atproto.moderation.defs#reasonRude",
+        "com.atproto.moderation.defs#reasonOther",
+        "com.atproto.moderation.defs#reasonAppeal"
+      ]
+    },
+    "reasonSpam": {
+      "type": "token",
+      "description": "Spam: frequent unwanted promotion, replies, mentions"
+    },
+    "reasonViolation": {
+      "type": "token",
+      "description": "Direct violation of server rules, laws, terms of service"
+    },
+    "reasonMisleading": {
+      "type": "token",
+      "description": "Misleading identity, affiliation, or content"
+    },
+    "reasonSexual": {
+      "type": "token",
+      "description": "Unwanted or mislabeled sexual content"
+    },
+    "reasonRude": {
+      "type": "token",
+      "description": "Rude, harassing, explicit, or otherwise unwelcoming behavior"
+    },
+    "reasonOther": {
+      "type": "token",
+      "description": "Other: reports not falling under another report category"
+    },
+    "reasonAppeal": {
+      "type": "token",
+      "description": "Appeal: appeal a previously taken moderation action"
+    },
+    "subjectType": {
+      "type": "string",
+      "description": "Tag describing a type of subject that might be reported.",
+      "knownValues": ["account", "record", "chat"]
+    }
+  }
+}

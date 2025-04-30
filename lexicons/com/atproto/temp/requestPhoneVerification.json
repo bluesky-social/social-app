@@ -1,0 +1,20 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.temp.requestPhoneVerification",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Request a verification code to be sent to the supplied phone number",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["phoneNumber"],
+          "properties": {
+            "phoneNumber": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

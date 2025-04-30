@@ -1,0 +1,21 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.actor.declaration",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "A declaration of a Bluesky chat account.",
+      "key": "literal:self",
+      "record": {
+        "type": "object",
+        "required": ["allowIncoming"],
+        "properties": {
+          "allowIncoming": {
+            "type": "string",
+            "knownValues": ["all", "none", "following"]
+          }
+        }
+      }
+    }
+  }
+}

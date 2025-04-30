@@ -1,0 +1,21 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.moderation.updateActorAccess",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["actor", "allowAccess"],
+          "properties": {
+            "actor": { "type": "string", "format": "did" },
+            "allowAccess": { "type": "boolean" },
+            "ref": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

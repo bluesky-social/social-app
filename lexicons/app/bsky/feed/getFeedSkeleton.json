@@ -1,0 +1,46 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.feed.getFeedSkeleton",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get a skeleton of a feed provided by a feed generator. Auth is optional, depending on provider requirements, and provides the DID of the requester. Implemented by Feed Generator Service.",
+      "parameters": {
+        "type": "params",
+        "required": ["feed"],
+        "properties": {
+          "feed": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "Reference to feed generator record describing the specific feed being requested."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "cursor": { "type": "string" }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["feed"],
+          "properties": {
+            "cursor": { "type": "string" },
+            "feed": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "app.bsky.feed.defs#skeletonFeedPost"
+              }
+            }
+          }
+        }
+      },
+      "errors": [{ "name": "UnknownFeed" }]
+    }
+  }
+}

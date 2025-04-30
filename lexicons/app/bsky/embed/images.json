@@ -1,0 +1,72 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.embed.images",
+  "description": "A set of images embedded in a Bluesky record (eg, a post).",
+  "defs": {
+    "main": {
+      "type": "object",
+      "required": ["images"],
+      "properties": {
+        "images": {
+          "type": "array",
+          "items": { "type": "ref", "ref": "#image" },
+          "maxLength": 4
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "required": ["image", "alt"],
+      "properties": {
+        "image": {
+          "type": "blob",
+          "accept": ["image/*"],
+          "maxSize": 1000000
+        },
+        "alt": {
+          "type": "string",
+          "description": "Alt text description of the image, for accessibility."
+        },
+        "aspectRatio": {
+          "type": "ref",
+          "ref": "app.bsky.embed.defs#aspectRatio"
+        }
+      }
+    },
+    "view": {
+      "type": "object",
+      "required": ["images"],
+      "properties": {
+        "images": {
+          "type": "array",
+          "items": { "type": "ref", "ref": "#viewImage" },
+          "maxLength": 4
+        }
+      }
+    },
+    "viewImage": {
+      "type": "object",
+      "required": ["thumb", "fullsize", "alt"],
+      "properties": {
+        "thumb": {
+          "type": "string",
+          "format": "uri",
+          "description": "Fully-qualified URL where a thumbnail of the image can be fetched. For example, CDN location provided by the App View."
+        },
+        "fullsize": {
+          "type": "string",
+          "format": "uri",
+          "description": "Fully-qualified URL where a large version of the image can be fetched. May or may not be the exact original blob. For example, CDN location provided by the App View."
+        },
+        "alt": {
+          "type": "string",
+          "description": "Alt text description of the image, for accessibility."
+        },
+        "aspectRatio": {
+          "type": "ref",
+          "ref": "app.bsky.embed.defs#aspectRatio"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.moderation.queryEvents",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "List moderation events related to a subject.",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "types": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The types of events (fully qualified string in the format of tools.ozone.moderation.defs#modEvent<name>) to filter by. If not specified, all events are returned."
+          },
+          "createdBy": {
+            "type": "string",
+            "format": "did"
+          },
+          "sortDirection": {
+            "type": "string",
+            "default": "desc",
+            "enum": ["asc", "desc"],
+            "description": "Sort direction for the events. Defaults to descending order of created at timestamp."
+          },
+          "createdAfter": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Retrieve events created after a given timestamp"
+          },
+          "createdBefore": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Retrieve events created before a given timestamp"
+          },
+          "subject": {
+            "type": "string",
+            "format": "uri"
+          },
+          "collections": {
+            "type": "array",
+            "maxLength": 20,
+            "description": "If specified, only events where the subject belongs to the given collections will be returned. When subjectType is set to 'account', this will be ignored.",
+            "items": {
+              "type": "string",
+              "format": "nsid"
+            }
+          },
+          "subjectType": {
+            "type": "string",
+            "description": "If specified, only events where the subject is of the given type (account or record) will be returned. When this is set to 'account' the 'collections' parameter will be ignored. When includeAllUserRecords or subject is set, this will be ignored.",
+            "knownValues": ["account", "record"]
+          },
+          "includeAllUserRecords": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true, events on all record types (posts, lists, profile etc.) or records from given 'collections' param, owned by the did are returned."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "hasComment": {
+            "type": "boolean",
+            "description": "If true, only events with comments are returned"
+          },
+          "comment": {
+            "type": "string",
+            "description": "If specified, only events with comments containing the keyword are returned. Apply || separator to use multiple keywords and match using OR condition."
+          },
+          "addedLabels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "If specified, only events where all of these labels were added are returned"
+          },
+          "removedLabels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "If specified, only events where all of these labels were removed are returned"
+          },
+          "addedTags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "If specified, only events where all of these tags were added are returned"
+          },
+          "removedTags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "If specified, only events where all of these tags were removed are returned"
+          },
+          "reportTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "policies": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "If specified, only events where the action policies match any of the given policies are returned"
+            }
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["events"],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "events": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "tools.ozone.moderation.defs#modEventView"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

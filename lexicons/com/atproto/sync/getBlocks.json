@@ -1,0 +1,35 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.sync.getBlocks",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get data blocks from a given repo, by CID. For example, intermediate MST nodes, or records. Does not require auth; implemented by PDS.",
+      "parameters": {
+        "type": "params",
+        "required": ["did", "cids"],
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did",
+            "description": "The DID of the repo."
+          },
+          "cids": {
+            "type": "array",
+            "items": { "type": "string", "format": "cid" }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/vnd.ipld.car"
+      },
+      "errors": [
+        { "name": "BlockNotFound" },
+        { "name": "RepoNotFound" },
+        { "name": "RepoTakendown" },
+        { "name": "RepoSuspended" },
+        { "name": "RepoDeactivated" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.sync.getLatestCommit",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get the current commit CID & revision of the specified repo. Does not require auth.",
+      "parameters": {
+        "type": "params",
+        "required": ["did"],
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did",
+            "description": "The DID of the repo."
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["cid", "rev"],
+          "properties": {
+            "cid": { "type": "string", "format": "cid" },
+            "rev": { "type": "string", "format": "tid" }
+          }
+        }
+      },
+      "errors": [
+        { "name": "RepoNotFound" },
+        { "name": "RepoTakendown" },
+        { "name": "RepoSuspended" },
+        { "name": "RepoDeactivated" }
+      ]
+    }
+  }
+}

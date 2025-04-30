@@ -1,0 +1,32 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.sync.getHead",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "DEPRECATED - please use com.atproto.sync.getLatestCommit instead",
+      "parameters": {
+        "type": "params",
+        "required": ["did"],
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did",
+            "description": "The DID of the repo."
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["root"],
+          "properties": {
+            "root": { "type": "string", "format": "cid" }
+          }
+        }
+      },
+      "errors": [{ "name": "HeadNotFound" }]
+    }
+  }
+}

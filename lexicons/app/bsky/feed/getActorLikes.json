@@ -1,0 +1,42 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.feed.getActorLikes",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get a list of posts liked by an actor. Requires auth, actor must be the requesting account.",
+      "parameters": {
+        "type": "params",
+        "required": ["actor"],
+        "properties": {
+          "actor": { "type": "string", "format": "at-identifier" },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "cursor": { "type": "string" }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["feed"],
+          "properties": {
+            "cursor": { "type": "string" },
+            "feed": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "app.bsky.feed.defs#feedViewPost"
+              }
+            }
+          }
+        }
+      },
+      "errors": [{ "name": "BlockedActor" }, { "name": "BlockedByActor" }]
+    }
+  }
+}

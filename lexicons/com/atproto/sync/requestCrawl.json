@@ -1,0 +1,24 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.sync.requestCrawl",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Request a service to persistently crawl hosted repos. Expected use is new PDS instances declaring their existence to Relays. Does not require auth.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["hostname"],
+          "properties": {
+            "hostname": {
+              "type": "string",
+              "description": "Hostname of the current service (eg, PDS) that is requesting to be crawled."
+            }
+          }
+        }
+      },
+      "errors": [{ "name": "HostBanned" }]
+    }
+  }
+}

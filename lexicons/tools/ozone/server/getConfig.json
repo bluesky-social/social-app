@@ -1,0 +1,66 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.server.getConfig",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get details about ozone's server configuration.",
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "appview": {
+              "type": "ref",
+              "ref": "#serviceConfig"
+            },
+            "pds": {
+              "type": "ref",
+              "ref": "#serviceConfig"
+            },
+            "blobDivert": {
+              "type": "ref",
+              "ref": "#serviceConfig"
+            },
+            "chat": {
+              "type": "ref",
+              "ref": "#serviceConfig"
+            },
+            "viewer": {
+              "type": "ref",
+              "ref": "#viewerConfig"
+            },
+            "verifierDid": {
+              "type": "string",
+              "format": "did",
+              "description": "The did of the verifier used for verification."
+            }
+          }
+        }
+      }
+    },
+    "serviceConfig": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "viewerConfig": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string",
+          "knownValues": [
+            "tools.ozone.team.defs#roleAdmin",
+            "tools.ozone.team.defs#roleModerator",
+            "tools.ozone.team.defs#roleTriage",
+            "tools.ozone.team.defs#roleVerifier"
+          ]
+        }
+      }
+    }
+  }
+}

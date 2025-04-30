@@ -1,0 +1,20 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.graph.unmuteActorList",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Unmutes the specified list of accounts. Requires auth.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["list"],
+          "properties": {
+            "list": { "type": "string", "format": "at-uri" }
+          }
+        }
+      }
+    }
+  }
+}

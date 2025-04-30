@@ -1,0 +1,29 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.convo.getConvo",
+  "defs": {
+    "main": {
+      "type": "query",
+      "parameters": {
+        "type": "params",
+        "required": ["convoId"],
+        "properties": {
+          "convoId": { "type": "string" }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convo"],
+          "properties": {
+            "convo": {
+              "type": "ref",
+              "ref": "chat.bsky.convo.defs#convoView"
+            }
+          }
+        }
+      }
+    }
+  }
+}

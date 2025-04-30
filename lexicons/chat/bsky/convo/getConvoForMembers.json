@@ -1,0 +1,37 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.convo.getConvoForMembers",
+  "defs": {
+    "main": {
+      "type": "query",
+      "parameters": {
+        "type": "params",
+        "required": ["members"],
+        "properties": {
+          "members": {
+            "type": "array",
+            "minLength": 1,
+            "maxLength": 10,
+            "items": {
+              "type": "string",
+              "format": "did"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convo"],
+          "properties": {
+            "convo": {
+              "type": "ref",
+              "ref": "chat.bsky.convo.defs#convoView"
+            }
+          }
+        }
+      }
+    }
+  }
+}

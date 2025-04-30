@@ -1,0 +1,51 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.convo.removeReaction",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Removes an emoji reaction from a message. Requires authentication. It is idempotent, so multiple calls from the same user with the same emoji result in that reaction not being present, even if it already wasn't.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convoId", "messageId", "value"],
+          "properties": {
+            "convoId": { "type": "string" },
+            "messageId": { "type": "string" },
+            "value": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "minGraphemes": 1,
+              "maxGraphemes": 1
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["message"],
+          "properties": {
+            "message": {
+              "type": "ref",
+              "ref": "chat.bsky.convo.defs#messageView"
+            }
+          }
+        }
+      },
+      "errors": [
+        {
+          "name": "ReactionMessageDeleted",
+          "description": "Indicates that the message has been deleted and reactions can no longer be added/removed."
+        },
+        {
+          "name": "ReactionInvalidValue",
+          "description": "Indicates the value for the reaction is not acceptable. In general, this means it is not an emoji."
+        }
+      ]
+    }
+  }
+}

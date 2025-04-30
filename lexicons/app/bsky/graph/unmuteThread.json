@@ -1,0 +1,20 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.graph.unmuteThread",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Unmutes the specified thread. Requires auth.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["root"],
+          "properties": {
+            "root": { "type": "string", "format": "at-uri" }
+          }
+        }
+      }
+    }
+  }
+}

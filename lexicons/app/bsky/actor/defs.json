@@ -1,0 +1,577 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.actor.defs",
+  "defs": {
+    "profileViewBasic": {
+      "type": "object",
+      "required": ["did", "handle"],
+      "properties": {
+        "did": { "type": "string", "format": "did" },
+        "handle": { "type": "string", "format": "handle" },
+        "displayName": {
+          "type": "string",
+          "maxGraphemes": 64,
+          "maxLength": 640
+        },
+        "avatar": { "type": "string", "format": "uri" },
+        "associated": {
+          "type": "ref",
+          "ref": "#profileAssociated"
+        },
+        "viewer": { "type": "ref", "ref": "#viewerState" },
+        "labels": {
+          "type": "array",
+          "items": { "type": "ref", "ref": "com.atproto.label.defs#label" }
+        },
+        "createdAt": { "type": "string", "format": "datetime" },
+        "verification": {
+          "type": "ref",
+          "ref": "#verificationState"
+        }
+      }
+    },
+    "profileView": {
+      "type": "object",
+      "required": ["did", "handle"],
+      "properties": {
+        "did": { "type": "string", "format": "did" },
+        "handle": { "type": "string", "format": "handle" },
+        "displayName": {
+          "type": "string",
+          "maxGraphemes": 64,
+          "maxLength": 640
+        },
+        "description": {
+          "type": "string",
+          "maxGraphemes": 256,
+          "maxLength": 2560
+        },
+        "avatar": { "type": "string", "format": "uri" },
+        "associated": {
+          "type": "ref",
+          "ref": "#profileAssociated"
+        },
+        "indexedAt": { "type": "string", "format": "datetime" },
+        "createdAt": { "type": "string", "format": "datetime" },
+        "viewer": { "type": "ref", "ref": "#viewerState" },
+        "labels": {
+          "type": "array",
+          "items": { "type": "ref", "ref": "com.atproto.label.defs#label" }
+        },
+        "verification": {
+          "type": "ref",
+          "ref": "#verificationState"
+        }
+      }
+    },
+    "profileViewDetailed": {
+      "type": "object",
+      "required": ["did", "handle"],
+      "properties": {
+        "did": { "type": "string", "format": "did" },
+        "handle": { "type": "string", "format": "handle" },
+        "displayName": {
+          "type": "string",
+          "maxGraphemes": 64,
+          "maxLength": 640
+        },
+        "description": {
+          "type": "string",
+          "maxGraphemes": 256,
+          "maxLength": 2560
+        },
+        "avatar": { "type": "string", "format": "uri" },
+        "banner": { "type": "string", "format": "uri" },
+        "followersCount": { "type": "integer" },
+        "followsCount": { "type": "integer" },
+        "postsCount": { "type": "integer" },
+        "associated": {
+          "type": "ref",
+          "ref": "#profileAssociated"
+        },
+        "joinedViaStarterPack": {
+          "type": "ref",
+          "ref": "app.bsky.graph.defs#starterPackViewBasic"
+        },
+        "indexedAt": { "type": "string", "format": "datetime" },
+        "createdAt": { "type": "string", "format": "datetime" },
+        "viewer": { "type": "ref", "ref": "#viewerState" },
+        "labels": {
+          "type": "array",
+          "items": { "type": "ref", "ref": "com.atproto.label.defs#label" }
+        },
+        "pinnedPost": {
+          "type": "ref",
+          "ref": "com.atproto.repo.strongRef"
+        },
+        "verification": {
+          "type": "ref",
+          "ref": "#verificationState"
+        }
+      }
+    },
+    "profileAssociated": {
+      "type": "object",
+      "properties": {
+        "lists": { "type": "integer" },
+        "feedgens": { "type": "integer" },
+        "starterPacks": { "type": "integer" },
+        "labeler": { "type": "boolean" },
+        "chat": { "type": "ref", "ref": "#profileAssociatedChat" }
+      }
+    },
+    "profileAssociatedChat": {
+      "type": "object",
+      "required": ["allowIncoming"],
+      "properties": {
+        "allowIncoming": {
+          "type": "string",
+          "knownValues": ["all", "none", "following"]
+        }
+      }
+    },
+    "viewerState": {
+      "type": "object",
+      "description": "Metadata about the requesting account's relationship with the subject account. Only has meaningful content for authed requests.",
+      "properties": {
+        "muted": { "type": "boolean" },
+        "mutedByList": {
+          "type": "ref",
+          "ref": "app.bsky.graph.defs#listViewBasic"
+        },
+        "blockedBy": { "type": "boolean" },
+        "blocking": { "type": "string", "format": "at-uri" },
+        "blockingByList": {
+          "type": "ref",
+          "ref": "app.bsky.graph.defs#listViewBasic"
+        },
+        "following": { "type": "string", "format": "at-uri" },
+        "followedBy": { "type": "string", "format": "at-uri" },
+        "knownFollowers": {
+          "type": "ref",
+          "ref": "#knownFollowers"
+        }
+      }
+    },
+    "knownFollowers": {
+      "type": "object",
+      "description": "The subject's followers whom you also follow",
+      "required": ["count", "followers"],
+      "properties": {
+        "count": { "type": "integer" },
+        "followers": {
+          "type": "array",
+          "minLength": 0,
+          "maxLength": 5,
+          "items": {
+            "type": "ref",
+            "ref": "#profileViewBasic"
+          }
+        }
+      }
+    },
+    "verificationState": {
+      "type": "object",
+      "description": "Represents the verification information about the user this object is attached to.",
+      "required": ["verifications", "verifiedStatus", "trustedVerifierStatus"],
+      "properties": {
+        "verifications": {
+          "type": "array",
+          "description": "All verifications issued by trusted verifiers on behalf of this user. Verifications by untrusted verifiers are not included.",
+          "items": { "type": "ref", "ref": "#verificationView" }
+        },
+        "verifiedStatus": {
+          "type": "string",
+          "description": "The user's status as a verified account.",
+          "knownValues": ["valid", "invalid", "none"]
+        },
+        "trustedVerifierStatus": {
+          "type": "string",
+          "description": "The user's status as a trusted verifier.",
+          "knownValues": ["valid", "invalid", "none"]
+        }
+      }
+    },
+    "verificationView": {
+      "type": "object",
+      "description": "An individual verification for an associated subject.",
+      "required": ["issuer", "uri", "isValid", "createdAt"],
+      "properties": {
+        "issuer": {
+          "type": "string",
+          "description": "The user who issued this verification.",
+          "format": "did"
+        },
+        "uri": {
+          "type": "string",
+          "description": "The AT-URI of the verification record.",
+          "format": "at-uri"
+        },
+        "isValid": {
+          "type": "boolean",
+          "description": "True if the verification passes validation, otherwise false."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the verification was created.",
+          "format": "datetime"
+        }
+      }
+    },
+    "preferences": {
+      "type": "array",
+      "items": {
+        "type": "union",
+        "refs": [
+          "#adultContentPref",
+          "#contentLabelPref",
+          "#savedFeedsPref",
+          "#savedFeedsPrefV2",
+          "#personalDetailsPref",
+          "#feedViewPref",
+          "#threadViewPref",
+          "#interestsPref",
+          "#mutedWordsPref",
+          "#hiddenPostsPref",
+          "#bskyAppStatePref",
+          "#labelersPref",
+          "#postInteractionSettingsPref",
+          "#verificationPrefs"
+        ]
+      }
+    },
+    "adultContentPref": {
+      "type": "object",
+      "required": ["enabled"],
+      "properties": {
+        "enabled": { "type": "boolean", "default": false }
+      }
+    },
+    "contentLabelPref": {
+      "type": "object",
+      "required": ["label", "visibility"],
+      "properties": {
+        "labelerDid": {
+          "type": "string",
+          "description": "Which labeler does this preference apply to? If undefined, applies globally.",
+          "format": "did"
+        },
+        "label": { "type": "string" },
+        "visibility": {
+          "type": "string",
+          "knownValues": ["ignore", "show", "warn", "hide"]
+        }
+      }
+    },
+    "savedFeed": {
+      "type": "object",
+      "required": ["id", "type", "value", "pinned"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "knownValues": ["feed", "list", "timeline"]
+        },
+        "value": {
+          "type": "string"
+        },
+        "pinned": {
+          "type": "boolean"
+        }
+      }
+    },
+    "savedFeedsPrefV2": {
+      "type": "object",
+      "required": ["items"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "ref",
+            "ref": "app.bsky.actor.defs#savedFeed"
+          }
+        }
+      }
+    },
+    "savedFeedsPref": {
+      "type": "object",
+      "required": ["pinned", "saved"],
+      "properties": {
+        "pinned": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "at-uri"
+          }
+        },
+        "saved": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "at-uri"
+          }
+        },
+        "timelineIndex": {
+          "type": "integer"
+        }
+      }
+    },
+    "personalDetailsPref": {
+      "type": "object",
+      "properties": {
+        "birthDate": {
+          "type": "string",
+          "format": "datetime",
+          "description": "The birth date of account owner."
+        }
+      }
+    },
+    "feedViewPref": {
+      "type": "object",
+      "required": ["feed"],
+      "properties": {
+        "feed": {
+          "type": "string",
+          "description": "The URI of the feed, or an identifier which describes the feed."
+        },
+        "hideReplies": {
+          "type": "boolean",
+          "description": "Hide replies in the feed."
+        },
+        "hideRepliesByUnfollowed": {
+          "type": "boolean",
+          "description": "Hide replies in the feed if they are not by followed users.",
+          "default": true
+        },
+        "hideRepliesByLikeCount": {
+          "type": "integer",
+          "description": "Hide replies in the feed if they do not have this number of likes."
+        },
+        "hideReposts": {
+          "type": "boolean",
+          "description": "Hide reposts in the feed."
+        },
+        "hideQuotePosts": {
+          "type": "boolean",
+          "description": "Hide quote posts in the feed."
+        }
+      }
+    },
+    "threadViewPref": {
+      "type": "object",
+      "properties": {
+        "sort": {
+          "type": "string",
+          "description": "Sorting mode for threads.",
+          "knownValues": ["oldest", "newest", "most-likes", "random", "hotness"]
+        },
+        "prioritizeFollowedUsers": {
+          "type": "boolean",
+          "description": "Show followed users at the top of all replies."
+        }
+      }
+    },
+    "interestsPref": {
+      "type": "object",
+      "required": ["tags"],
+      "properties": {
+        "tags": {
+          "type": "array",
+          "maxLength": 100,
+          "items": { "type": "string", "maxLength": 640, "maxGraphemes": 64 },
+          "description": "A list of tags which describe the account owner's interests gathered during onboarding."
+        }
+      }
+    },
+    "mutedWordTarget": {
+      "type": "string",
+      "knownValues": ["content", "tag"],
+      "maxLength": 640,
+      "maxGraphemes": 64
+    },
+    "mutedWord": {
+      "type": "object",
+      "description": "A word that the account owner has muted.",
+      "required": ["value", "targets"],
+      "properties": {
+        "id": { "type": "string" },
+        "value": {
+          "type": "string",
+          "description": "The muted word itself.",
+          "maxLength": 10000,
+          "maxGraphemes": 1000
+        },
+        "targets": {
+          "type": "array",
+          "description": "The intended targets of the muted word.",
+          "items": {
+            "type": "ref",
+            "ref": "app.bsky.actor.defs#mutedWordTarget"
+          }
+        },
+        "actorTarget": {
+          "type": "string",
+          "description": "Groups of users to apply the muted word to. If undefined, applies to all users.",
+          "knownValues": ["all", "exclude-following"],
+          "default": "all"
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "The date and time at which the muted word will expire and no longer be applied."
+        }
+      }
+    },
+    "mutedWordsPref": {
+      "type": "object",
+      "required": ["items"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "ref",
+            "ref": "app.bsky.actor.defs#mutedWord"
+          },
+          "description": "A list of words the account owner has muted."
+        }
+      }
+    },
+    "hiddenPostsPref": {
+      "type": "object",
+      "required": ["items"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": { "type": "string", "format": "at-uri" },
+          "description": "A list of URIs of posts the account owner has hidden."
+        }
+      }
+    },
+    "labelersPref": {
+      "type": "object",
+      "required": ["labelers"],
+      "properties": {
+        "labelers": {
+          "type": "array",
+          "items": {
+            "type": "ref",
+            "ref": "#labelerPrefItem"
+          }
+        }
+      }
+    },
+    "labelerPrefItem": {
+      "type": "object",
+      "required": ["did"],
+      "properties": {
+        "did": {
+          "type": "string",
+          "format": "did"
+        }
+      }
+    },
+    "bskyAppStatePref": {
+      "description": "A grab bag of state that's specific to the bsky.app program. Third-party apps shouldn't use this.",
+      "type": "object",
+      "properties": {
+        "activeProgressGuide": {
+          "type": "ref",
+          "ref": "#bskyAppProgressGuide"
+        },
+        "queuedNudges": {
+          "description": "An array of tokens which identify nudges (modals, popups, tours, highlight dots) that should be shown to the user.",
+          "type": "array",
+          "maxLength": 1000,
+          "items": { "type": "string", "maxLength": 100 }
+        },
+        "nuxs": {
+          "description": "Storage for NUXs the user has encountered.",
+          "type": "array",
+          "maxLength": 100,
+          "items": {
+            "type": "ref",
+            "ref": "app.bsky.actor.defs#nux"
+          }
+        }
+      }
+    },
+    "bskyAppProgressGuide": {
+      "description": "If set, an active progress guide. Once completed, can be set to undefined. Should have unspecced fields tracking progress.",
+      "type": "object",
+      "required": ["guide"],
+      "properties": {
+        "guide": { "type": "string", "maxLength": 100 }
+      }
+    },
+    "nux": {
+      "type": "object",
+      "description": "A new user experiences (NUX) storage object",
+      "required": ["id", "completed"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "completed": {
+          "type": "boolean",
+          "default": false
+        },
+        "data": {
+          "description": "Arbitrary data for the NUX. The structure is defined by the NUX itself. Limited to 300 characters.",
+          "type": "string",
+          "maxLength": 3000,
+          "maxGraphemes": 300
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "The date and time at which the NUX will expire and should be considered completed."
+        }
+      }
+    },
+    "verificationPrefs": {
+      "type": "object",
+      "description": "Preferences for how verified accounts appear in the app.",
+      "required": [],
+      "properties": {
+        "hideBadges": {
+          "description": "Hide the blue check badges for verified accounts and trusted verifiers.",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "postInteractionSettingsPref": {
+      "type": "object",
+      "description": "Default post interaction settings for the account. These values should be applied as default values when creating new posts. These refs should mirror the threadgate and postgate records exactly.",
+      "required": [],
+      "properties": {
+        "threadgateAllowRules": {
+          "description": "Matches threadgate record. List of rules defining who can reply to this users posts. If value is an empty array, no one can reply. If value is undefined, anyone can reply.",
+          "type": "array",
+          "maxLength": 5,
+          "items": {
+            "type": "union",
+            "refs": [
+              "app.bsky.feed.threadgate#mentionRule",
+              "app.bsky.feed.threadgate#followerRule",
+              "app.bsky.feed.threadgate#followingRule",
+              "app.bsky.feed.threadgate#listRule"
+            ]
+          }
+        },
+        "postgateEmbeddingRules": {
+          "description": "Matches postgate record. List of rules defining who can embed this users posts. If value is an empty array or is undefined, no particular rules apply and anyone can embed.",
+          "type": "array",
+          "maxLength": 5,
+          "items": {
+            "type": "union",
+            "refs": ["app.bsky.feed.postgate#disableRule"]
+          }
+        }
+      }
+    }
+  }
+}

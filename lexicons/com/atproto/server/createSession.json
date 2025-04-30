@@ -1,0 +1,56 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.server.createSession",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Create an authentication session.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["identifier", "password"],
+          "properties": {
+            "identifier": {
+              "type": "string",
+              "description": "Handle or other identifier supported by the server for the authenticating user."
+            },
+            "password": { "type": "string" },
+            "authFactorToken": { "type": "string" },
+            "allowTakendown": {
+              "type": "boolean",
+              "description": "When true, instead of throwing error for takendown accounts, a valid response with a narrow scoped token will be returned"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["accessJwt", "refreshJwt", "handle", "did"],
+          "properties": {
+            "accessJwt": { "type": "string" },
+            "refreshJwt": { "type": "string" },
+            "handle": { "type": "string", "format": "handle" },
+            "did": { "type": "string", "format": "did" },
+            "didDoc": { "type": "unknown" },
+            "email": { "type": "string" },
+            "emailConfirmed": { "type": "boolean" },
+            "emailAuthFactor": { "type": "boolean" },
+            "active": { "type": "boolean" },
+            "status": {
+              "type": "string",
+              "description": "If active=false, this optional field indicates a possible reason for why the account is not active. If active=false and no status is supplied, then the host makes no claim for why the repository is no longer being hosted.",
+              "knownValues": ["takendown", "suspended", "deactivated"]
+            }
+          }
+        }
+      },
+      "errors": [
+        { "name": "AccountTakedown" },
+        { "name": "AuthFactorTokenRequired" }
+      ]
+    }
+  }
+}

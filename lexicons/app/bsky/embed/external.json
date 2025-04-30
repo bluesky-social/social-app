@@ -1,0 +1,51 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.embed.external",
+  "defs": {
+    "main": {
+      "type": "object",
+      "description": "A representation of some externally linked content (eg, a URL and 'card'), embedded in a Bluesky record (eg, a post).",
+      "required": ["external"],
+      "properties": {
+        "external": {
+          "type": "ref",
+          "ref": "#external"
+        }
+      }
+    },
+    "external": {
+      "type": "object",
+      "required": ["uri", "title", "description"],
+      "properties": {
+        "uri": { "type": "string", "format": "uri" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "thumb": {
+          "type": "blob",
+          "accept": ["image/*"],
+          "maxSize": 1000000
+        }
+      }
+    },
+    "view": {
+      "type": "object",
+      "required": ["external"],
+      "properties": {
+        "external": {
+          "type": "ref",
+          "ref": "#viewExternal"
+        }
+      }
+    },
+    "viewExternal": {
+      "type": "object",
+      "required": ["uri", "title", "description"],
+      "properties": {
+        "uri": { "type": "string", "format": "uri" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "thumb": { "type": "string", "format": "uri" }
+      }
+    }
+  }
+}

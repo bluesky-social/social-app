@@ -1,0 +1,24 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.admin.getAccountInfo",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get details about an account.",
+      "parameters": {
+        "type": "params",
+        "required": ["did"],
+        "properties": {
+          "did": { "type": "string", "format": "did" }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "ref",
+          "ref": "com.atproto.admin.defs#accountView"
+        }
+      }
+    }
+  }
+}

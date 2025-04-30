@@ -1,0 +1,42 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.unspecced.getTrendsSkeleton",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get the skeleton of trends on the network. Intended to be called and then hydrated through app.bsky.unspecced.getTrends",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "viewer": {
+            "type": "string",
+            "format": "did",
+            "description": "DID of the account making the request (not included for public/unauthenticated queries)."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 25,
+            "default": 10
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["trends"],
+          "properties": {
+            "trends": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "app.bsky.unspecced.defs#skeletonTrend"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

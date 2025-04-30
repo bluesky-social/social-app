@@ -1,0 +1,35 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.sync.getRepo",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Download a repository export as CAR file. Optionally only a 'diff' since a previous revision. Does not require auth; implemented by PDS.",
+      "parameters": {
+        "type": "params",
+        "required": ["did"],
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did",
+            "description": "The DID of the repo."
+          },
+          "since": {
+            "type": "string",
+            "format": "tid",
+            "description": "The revision ('rev') of the repo to create a diff from."
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/vnd.ipld.car"
+      },
+      "errors": [
+        { "name": "RepoNotFound" },
+        { "name": "RepoTakendown" },
+        { "name": "RepoSuspended" },
+        { "name": "RepoDeactivated" }
+      ]
+    }
+  }
+}
