@@ -220,7 +220,6 @@ msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, other {{formatt
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:430
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> removed their verifications from your account"
-
 msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} kişi daha} other {{formattedAuthorsCount} kişi daha}}</0> doğrulamalarını hesabınızdan kaldırdı"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:267
@@ -233,7 +232,8 @@ msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, other {{formatt
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:404
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
-msgstr ""
+msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} kişi daha} other {{formattedAuthorsCount} kişi daha}}</0> sizi doğruladı"
+
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:336
 msgid "{firstAuthorLink} followed you"
@@ -253,7 +253,9 @@ msgstr "{firstAuthorLink} gönderini beğendi"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:442
 msgid "{firstAuthorLink} removed their verification from your account"
-msgstr ""
+msgstr "{firstAuthorLink}, hesabınızdaki doğrulamasını kaldırdı"
+
+
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:279
 msgid "{firstAuthorLink} reposted your post"
@@ -265,7 +267,7 @@ msgstr "{firstAuthorLink} sizin başlangıç paketinizle kaydoldu"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:416
 msgid "{firstAuthorLink} verified you"
-msgstr ""
+msgstr "{firstAuthorLink} sizi doğruladı"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:317
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
@@ -281,7 +283,8 @@ msgstr "{firstAuthorName} ve {additionalAuthorsCount, plural, other {{formattedA
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:423
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} removed their verifications from your account"
-msgstr ""
+msgstr "{firstAuthorName} ve {additionalAuthorsCount, plural, one {{formattedAuthorsCount} kişi daha} other {{formattedAuthorsCount} kişi daha}} hesabınızdaki doğrulamalarını kaldırdı"
+
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:260
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
@@ -293,7 +296,8 @@ msgstr "{firstAuthorName} ve {additionalAuthorsCount, plural, other {{formattedA
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:397
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
-msgstr ""
+msgstr "{firstAuthorName} ve {additionalAuthorsCount, plural, one {{formattedAuthorsCount} kişi daha} other {{formattedAuthorsCount} kişi daha}} sizi doğruladı"
+
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:322
 msgid "{firstAuthorName} followed you"
@@ -313,7 +317,8 @@ msgstr "{firstAuthorName} gönderini beğendi"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:428
 msgid "{firstAuthorName} removed their verification from your account"
-msgstr ""
+msgstr "{firstAuthorName}, hesabınızdaki doğrulamasını kaldırdı"
+
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:265
 msgid "{firstAuthorName} reposted your post"
@@ -325,7 +330,7 @@ msgstr "{firstAuthorName} senin başlangıç paketin ile kaydoldu"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:402
 msgid "{firstAuthorName} verified you"
-msgstr ""
+msgstr "{firstAuthorName} sizi doğruladı"
 
 #: src/components/ProfileHoverCard/index.web.tsx:532
 #: src/screens/Profile/Header/Metrics.tsx:49
@@ -369,7 +374,7 @@ msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:67
 msgid "{userName} is verified"
-msgstr ""
+msgstr "{userName} doğrulandı"
 
 #. Possessive, meaning "the verifications of {userName}"
 #: src/components/verification/VerificationsDialog.tsx:69
@@ -911,7 +916,7 @@ msgstr "Animasyonlu GIF"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:37
 msgid "Announcing verification on Bluesky"
-msgstr ""
+msgstr "Bluesky'da doğrulama duyurusu"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:33
 #: src/lib/moderation/useReportOptions.ts:33
@@ -1276,7 +1281,7 @@ msgstr "Bluesky, profilinizi ve gönderilerinizi oturum açmamış kullanıcıla
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:132
 msgid "Bluesky will proactively verify notable and authentic accounts."
-msgstr ""
+msgstr "Bluesky, öne çıkan ve gerçek hesapları proaktif olarak doğrulayacaktır."
 
 #: src/screens/Settings/AppIconSettings/index.tsx:99
 msgid "Bluesky+"
@@ -1948,7 +1953,7 @@ msgstr "{0} olarak devam et (giriş yapılmış)"
 
 #: src/view/com/post-thread/PostThreadLoadMore.tsx:60
 msgid "Continue thread..."
-msgstr ""
+msgstr "Daha fazla göster..."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:241
 #: src/screens/Onboarding/StepProfile/index.tsx:275
@@ -3093,7 +3098,7 @@ msgstr "Kullanıcı adı değiştirilemedi. Lütfen tekrar deneyin."
 
 #: src/components/verification/VerificationCreatePrompt.tsx:32
 msgid "Failed to create a verification"
-msgstr ""
+msgstr "Doğrulama oluşturulurken bir hata oluştu"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:173
 msgid "Failed to create app password. Please try again."
@@ -4132,7 +4137,7 @@ msgstr "daha fazla öğren"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:212
 #: src/view/com/modals/EditProfile.tsx:208
 msgid "Learn more"
-msgstr ""
+msgstr "Daha fazla bilgi edinin"
 
 #: src/components/moderation/ScreenHider.tsx:140
 msgid "Learn More"
@@ -4812,7 +4817,7 @@ msgstr "Yeni sohbet"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:63
 msgid "New Feature"
-msgstr ""
+msgstr "Yeni Özellik"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:221
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:229
@@ -5959,7 +5964,7 @@ msgstr "Hesabınızı yeniden etkinleştirin"
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:158
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:169
 msgid "Read blog post"
-msgstr ""
+msgstr "Blog yazısını oku"
 
 #: src/screens/VideoFeed/index.tsx:942
 msgid "Read less"
@@ -6315,7 +6320,7 @@ msgstr ""
 #: src/components/moderation/ReportDialog/copy.ts:31
 #: src/components/ReportDialog/SelectReportOptionView.tsx:54
 msgid "Report this feed"
-msgstr ""
+msgstr "Bu akışı bildir"
 
 #: src/components/moderation/ReportDialog/copy.ts:25
 #: src/components/ReportDialog/SelectReportOptionView.tsx:51
@@ -6332,7 +6337,8 @@ msgstr ""
 #: src/components/moderation/ReportDialog/copy.ts:19
 #: src/components/ReportDialog/SelectReportOptionView.tsx:48
 msgid "Report this post"
-msgstr ""
+msgstr "Bu gönderiyi bildir"
+
 
 #: src/components/moderation/ReportDialog/copy.ts:37
 #: src/components/ReportDialog/SelectReportOptionView.tsx:57
