@@ -220,7 +220,8 @@ msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, other {{formatt
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:430
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> removed their verifications from your account"
-msgstr ""
+
+msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} kişi daha} other {{formattedAuthorsCount} kişi daha}}</0> doğrulamalarını hesabınızdan kaldırdı"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:267
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
