@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useEffect} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyActorDefs,
@@ -199,23 +199,27 @@ function InnerReady({
    */
   const maybeBlockForEmailVerification = useNonReactiveCallback(() => {
     if (needsEmailVerification) {
-      emailDialogControl.open({
-        id: EmailDialogScreenID.Verify,
-        instructions: [
-          <Trans key="pre-compose">
-            Before you may message another user, you must first verify your
-            email.
-          </Trans>,
-        ],
-        onCloseWithoutVerifying: () => {
-          navigation.navigate('Home')
-        },
-      })
+      // HACKFIX: load bearing timeout, otherwise it doesn't trigger when navigating to the screen -sfn
+      setTimeout(() =>
+        emailDialogControl.open({
+          id: EmailDialogScreenID.Verify,
+          instructions: [
+            <Trans key="pre-compose">
+              Before you may message another user, you must first verify your
+              email.
+            </Trans>,
+          ],
+          onCloseWithoutVerifying: () => {
+            navigation.navigate('Home')
+          },
+        }),
+      )
     }
   })
-  React.useEffect(maybeBlockForEmailVerification, [
-    maybeBlockForEmailVerification,
-  ])
+
+  useEffect(() => {
+    maybeBlockForEmailVerification()
+  }, [maybeBlockForEmailVerification])
 
   return (
     <>
