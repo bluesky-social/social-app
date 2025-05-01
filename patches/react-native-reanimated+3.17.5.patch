@@ -1,0 +1,44 @@
+diff --git a/node_modules/react-native-reanimated/android/src/main/cpp/reanimated/android/NativeProxy.cpp b/node_modules/react-native-reanimated/android/src/main/cpp/reanimated/android/NativeProxy.cpp
+index eae3989..432745a 100644
+--- a/node_modules/react-native-reanimated/android/src/main/cpp/reanimated/android/NativeProxy.cpp
++++ b/node_modules/react-native-reanimated/android/src/main/cpp/reanimated/android/NativeProxy.cpp
+@@ -416,6 +416,10 @@ void NativeProxy::progressLayoutAnimation(
+       tag, newPropsJNI, isSharedTransition);
+ }
+ 
++void NativeProxy::endLayoutAnimation(int tag, bool shouldRemove) {
++  layoutAnimations_->cthis()->endLayoutAnimation(tag, shouldRemove);
++}
++
+ PlatformDepMethodsHolder NativeProxy::getPlatformDependentMethods() {
+ #ifdef RCT_NEW_ARCH_ENABLED
+   // nothing
+@@ -455,14 +459,7 @@ PlatformDepMethodsHolder NativeProxy::getPlatformDependentMethods() {
+   auto progressLayoutAnimation =
+       bindThis(&NativeProxy::progressLayoutAnimation);
+ 
+-  auto endLayoutAnimation = [weakThis = weak_from_this()](
+-                                int tag, bool removeView) {
+-    auto strongThis = weakThis.lock();
+-    if (!strongThis) {
+-      return;
+-    }
+-    strongThis->layoutAnimations_->cthis()->endLayoutAnimation(tag, removeView);
+-  };
++  auto endLayoutAnimation = bindThis(&NativeProxy::endLayoutAnimation);
+ 
+   auto maybeFlushUiUpdatesQueueFunction =
+       bindThis(&NativeProxy::maybeFlushUIUpdatesQueue);
+diff --git a/node_modules/react-native-reanimated/android/src/main/cpp/reanimated/android/NativeProxy.h b/node_modules/react-native-reanimated/android/src/main/cpp/reanimated/android/NativeProxy.h
+index 2ee2cc8..2edb5c9 100644
+--- a/node_modules/react-native-reanimated/android/src/main/cpp/reanimated/android/NativeProxy.h
++++ b/node_modules/react-native-reanimated/android/src/main/cpp/reanimated/android/NativeProxy.h
+@@ -234,6 +234,8 @@ class NativeProxy : public jni::HybridClass<NativeProxy>,
+       const jsi::Object &newProps,
+       bool isSharedTransition);
+ 
++  void endLayoutAnimation(int tag, bool shouldRemove);
++
+   /***
+    * Wraps a method of `NativeProxy` in a function object capturing `this`
+    * @tparam TReturn return type of passed method
