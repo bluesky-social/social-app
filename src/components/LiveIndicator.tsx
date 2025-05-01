@@ -23,9 +23,12 @@ export function LiveIndicator({size = 'small'}: {size?: 'small' | 'large'}) {
       ]}>
       <View
         style={[
-          a.p_2xs,
           a.rounded_xs,
-          {backgroundColor: t.palette.negative_500},
+          {
+            backgroundColor: t.palette.negative_500,
+            paddingVertical: 1,
+            paddingHorizontal: 3,
+          },
         ]}>
         <Text
           style={[

@@ -250,6 +250,8 @@ let FeedItemInner = ({
     ? rootPost.threadgate.record
     : undefined
 
+  const live = true
+
   return (
     <Link
       testID={`feedItem-by-${post.author.handle}`}
@@ -386,7 +388,7 @@ let FeedItemInner = ({
             moderation={moderation.ui('avatar')}
             type={post.author.associated?.labeler ? 'labeler' : 'user'}
             onBeforePress={onOpenAuthor}
-            live
+            live={live}
           />
           {isThreadParent && (
             <View
@@ -395,7 +397,7 @@ let FeedItemInner = ({
                 {
                   flexGrow: 1,
                   backgroundColor: pal.colors.replyLine,
-                  marginTop: 4,
+                  marginTop: live ? 8 : 4,
                 },
               ]}
             />
