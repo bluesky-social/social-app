@@ -237,14 +237,11 @@ export function AcceptChatButton({
             email.
           </Trans>,
         ],
-        onCloseWithoutVerifying: () => {
-          navigation.navigate('Home')
-        },
       })
     } else {
       acceptConvo()
     }
-  }, [acceptConvo, needsEmailVerification, emailDialogControl, navigation])
+  }, [acceptConvo, needsEmailVerification, emailDialogControl])
 
   return (
     <Button
