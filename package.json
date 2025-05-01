@@ -226,6 +226,7 @@
     "@lingui/cli": "^4.14.1",
     "@lingui/macro": "^4.14.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
+    "@react-native/babel-preset": "0.79.2",
     "@react-native/eslint-config": "^0.79.2",
     "@react-native/typescript-config": "^0.79.2",
     "@react-native/babel-preset": "0.79.2",
