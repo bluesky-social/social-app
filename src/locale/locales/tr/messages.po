@@ -6297,7 +6297,7 @@ msgstr "Listeyi bildir"
 
 #: src/components/dms/MessageContextMenu.tsx:166
 msgid "Report message"
-msgstr "Mesajı bildir"
+msgstr "Mesajı bildir" 
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:695
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:697
