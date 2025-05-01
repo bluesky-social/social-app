@@ -1,8 +1,9 @@
-import {AtpSessionData, AtpSessionEvent, BskyAgent} from '@atproto/api'
+import {type AtpSessionData, type AtpSessionEvent, BskyAgent} from '@atproto/api'
 import {TID} from '@atproto/common-web'
 
 import {networkRetry} from '#/lib/async/retry'
 import {
+  APPVIEW_DID_PROXY,
   BSKY_SERVICE,
   DISCOVER_SAVED_FEED,
   IS_PROD_SERVICE,
@@ -19,7 +20,7 @@ import {
   configureModerationForAccount,
   configureModerationForGuest,
 } from './moderation'
-import {SessionAccount} from './types'
+import {type SessionAccount} from './types'
 import {isSessionExpired, isSignupQueued} from './util'
 
 export function createPublicAgent() {
@@ -266,6 +267,10 @@ class BskyAppAgent extends BskyAgent {
         }
       },
     })
+
+    if (APPVIEW_DID_PROXY) {
+      this.configureProxy(APPVIEW_DID_PROXY)
+    }
   }
 
   async prepare(
