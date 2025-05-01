@@ -1,17 +1,21 @@
 import React, {memo} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
-import {MeasuredDimensions, runOnJS, runOnUI} from 'react-native-reanimated'
+import {
+  type MeasuredDimensions,
+  runOnJS,
+  runOnUI,
+} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
+import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {BACK_HITSLOP} from '#/lib/constants'
 import {measureHandle, useHandleRef} from '#/lib/hooks/useHandleRef'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {isIOS} from '#/platform/detection'
-import {Shadow} from '#/state/cache/types'
+import {type Shadow} from '#/state/cache/types'
 import {useLightboxControls} from '#/state/lightbox'
 import {useSession} from '#/state/session'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
@@ -19,6 +23,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
 import {atoms as a, platform, useTheme} from '#/alf'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
+import {LiveIndicator} from '#/components/LiveIndicator'
 import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
 import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
 import {GrowableAvatar} from './GrowableAvatar'
@@ -97,6 +102,8 @@ let ProfileHeaderShell = ({
     [currentAccount, profile],
   )
 
+  const live = true
+
   return (
     <View style={t.atoms.bg} pointerEvents={isIOS ? 'auto' : 'box-none'}>
       <View
@@ -170,7 +177,11 @@ let ProfileHeaderShell = ({
           <View
             style={[
               t.atoms.bg,
-              {borderColor: t.atoms.bg.backgroundColor},
+              {
+                borderColor: live
+                  ? t.palette.negative_500
+                  : t.atoms.bg.backgroundColor,
+              },
               styles.avi,
               profile.associated?.labeler && styles.aviLabeler,
             ]}>
@@ -181,6 +192,7 @@ let ProfileHeaderShell = ({
                 avatar={profile.avatar}
                 moderation={moderation.ui('avatar')}
               />
+              <LiveIndicator size="large" />
             </View>
           </View>
         </TouchableWithoutFeedback>

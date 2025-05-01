@@ -1,7 +1,7 @@
 import {View} from 'react-native'
 import {Trans} from '@lingui/macro'
 
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
 export function LiveIndicator({size = 'small'}: {size?: 'small' | 'large'}) {
@@ -9,7 +9,7 @@ export function LiveIndicator({size = 'small'}: {size?: 'small' | 'large'}) {
 
   const fontSize = {
     small: a.text_2xs,
-    large: a.text_sm,
+    large: a.text_xs,
   }[size]
 
   return (
@@ -19,17 +19,15 @@ export function LiveIndicator({size = 'small'}: {size?: 'small' | 'large'}) {
         a.w_full,
         a.align_center,
         a.pointer_events_none,
-        {bottom: -5},
+        {bottom: size === 'small' ? -5 : -8},
       ]}>
       <View
-        style={[
-          a.rounded_xs,
-          {
-            backgroundColor: t.palette.negative_500,
-            paddingVertical: 1,
-            paddingHorizontal: 3,
-          },
-        ]}>
+        style={{
+          backgroundColor: t.palette.negative_500,
+          paddingVertical: size === 'small' ? 1 : 2,
+          paddingHorizontal: size === 'small' ? 3 : 4,
+          borderRadius: size === 'small' ? tokens.borderRadius.xs : 5,
+        }}>
         <Text
           style={[
             a.text_center,
