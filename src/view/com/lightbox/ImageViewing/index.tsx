@@ -510,20 +510,22 @@ function LightboxImage({
           // This is a bug in Reanimated, but for now we'll work around it like this.
           dismissSwipeTranslateY.set(1)
         }
-        dismissSwipeTranslateY.set(() =>
-          withDecay({
+        dismissSwipeTranslateY.set(() => {
+          'worklet'
+          return withDecay({
             velocity: e.velocityY,
             velocityFactor: Math.max(3500 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
             deceleration: 1, // Danger! This relies on the reaction below stopping it.
-          }),
-        )
+          })
+        })
       } else {
-        dismissSwipeTranslateY.set(() =>
-          withSpring(0, {
+        dismissSwipeTranslateY.set(() => {
+          'worklet'
+          return withSpring(0, {
             stiffness: 700,
             damping: 50,
-          }),
-        )
+          })
+        })
       }
     })
 
