@@ -210,7 +210,11 @@ function InnerReady({
             </Trans>,
           ],
           onCloseWithoutVerifying: () => {
-            navigation.navigate('Home')
+            if (navigation.canGoBack()) {
+              navigation.goBack()
+            } else {
+              navigation.navigate('Messages', {animation: 'pop'})
+            }
           },
         }),
       )
