@@ -42,6 +42,7 @@ import {
 import {StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
+import {LiveIndicator} from '#/components/LiveIndicator'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -54,6 +55,7 @@ interface BaseUserAvatarProps {
   shape?: 'circle' | 'square'
   size: number
   avatar?: string | null
+  live?: boolean
 }
 
 interface UserAvatarProps extends BaseUserAvatarProps {
@@ -196,27 +198,36 @@ let UserAvatar = ({
   usePlainRNImage = false,
   onLoad,
   style,
+  live,
 }: UserAvatarProps): React.ReactNode => {
   const t = useTheme()
-  const backgroundColor = t.palette.contrast_25
   const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
 
   const aviStyle = useMemo(() => {
+    let borderRadius
     if (finalShape === 'square') {
-      return {
-        width: size,
-        height: size,
-        borderRadius: size > 32 ? 8 : 3,
-        backgroundColor,
-      }
+      borderRadius = size > 32 ? 8 : 3
+    } else {
+      borderRadius = Math.floor(size / 2)
     }
+
     return {
       width: size,
       height: size,
-      borderRadius: Math.floor(size / 2),
-      backgroundColor,
+      borderRadius,
+      backgroundColor: t.palette.contrast_25,
     }
-  }, [finalShape, size, backgroundColor])
+  }, [finalShape, size, t])
+
+  const borderStyle = useMemo(() => {
+    return [
+      {borderRadius: aviStyle.borderRadius},
+      live && {
+        borderColor: t.palette.negative_500,
+        borderWidth: 1,
+      },
+    ]
+  }, [aviStyle.borderRadius, live, t])
 
   const alert = useMemo(() => {
     if (!moderation?.alert) {
@@ -277,12 +288,15 @@ let UserAvatar = ({
           onLoad={onLoad}
         />
       )}
-      <MediaInsetBorder style={[{borderRadius: aviStyle.borderRadius}]} />
+      <MediaInsetBorder style={borderStyle} />
+      {live && <LiveIndicator />}
       {alert}
     </View>
   ) : (
     <View style={containerStyle}>
       <DefaultAvatar type={type} shape={finalShape} size={size} />
+      <MediaInsetBorder style={borderStyle} />
+      {live && <LiveIndicator />}
       {alert}
     </View>
   )

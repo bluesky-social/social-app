@@ -53,7 +53,6 @@ import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import * as bsky from '#/types/bsky'
 import {Link, TextLink, TextLinkOnWebOnly} from '../util/Link'
-import {AviFollowButton} from './AviFollowButton'
 
 interface FeedItemProps {
   record: AppBskyFeedPost.Record
@@ -381,15 +380,14 @@ let FeedItemInner = ({
 
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <AviFollowButton author={post.author} moderation={moderation}>
-            <PreviewableUserAvatar
-              size={42}
-              profile={post.author}
-              moderation={moderation.ui('avatar')}
-              type={post.author.associated?.labeler ? 'labeler' : 'user'}
-              onBeforePress={onOpenAuthor}
-            />
-          </AviFollowButton>
+          <PreviewableUserAvatar
+            size={42}
+            profile={post.author}
+            moderation={moderation.ui('avatar')}
+            type={post.author.associated?.labeler ? 'labeler' : 'user'}
+            onBeforePress={onOpenAuthor}
+            live
+          />
           {isThreadParent && (
             <View
               style={[
