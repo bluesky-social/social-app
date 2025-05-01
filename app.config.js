@@ -193,6 +193,7 @@ module.exports = function (_config) {
       plugins: [
         'expo-video',
         'expo-localization',
+        'expo-web-browser',
         [
           'react-native-edge-to-edge',
           {android: {enforceNavigationBarContrast: false}},
