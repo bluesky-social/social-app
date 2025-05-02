@@ -9,6 +9,7 @@ import {
   type FontAwesomeIconStyle,
   type Props as FontAwesomeProps,
 } from '@fortawesome/react-native-fontawesome'
+import type React from 'react';
 
 const DURATION = 3500
 
@@ -25,7 +26,8 @@ let toastTimeout: NodeJS.Timeout | undefined
 
 // components
 // =
-export function ToastContainer() {
+type ToastContainerProps = {}
+export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
   const [activeToast, setActiveToast] = useState<ActiveToast | undefined>()
   useEffect(() => {
     globalSetActiveToast = (t: ActiveToast | undefined) => {
