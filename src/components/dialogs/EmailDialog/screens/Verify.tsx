@@ -165,7 +165,7 @@ export function Verify({config}: ScreenProps<ScreenID.Verify>) {
         <View style={[a.gap_sm]}>
           <Text style={[a.text_xl, a.font_heavy]}>
             <Span style={{top: 1}}>
-              <Check size="sm" fill={t.palette.positive_500} />
+              <Check size="sm" fill={t.palette.positive_600} />
             </Span>
             {'  '}
             <Trans>Email verification complete!</Trans>
@@ -191,7 +191,7 @@ export function Verify({config}: ScreenProps<ScreenID.Verify>) {
             state.mutationStatus === 'success' ? (
               <>
                 <Span style={{top: 1}}>
-                  <Check size="sm" fill={t.palette.positive_500} />
+                  <Check size="sm" fill={t.palette.positive_600} />
                 </Span>
                 {'  '}
                 <Trans>Email sent!</Trans>
