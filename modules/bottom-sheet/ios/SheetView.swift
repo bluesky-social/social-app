@@ -5,7 +5,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   // Views
   private var sheetVc: SheetViewController?
   private var innerView: UIView?
-  private var touchHandler: RCTTouchHandler?
+  private var touchHandler: RCTSurfaceTouchHandler?
 
   // Events
   private let onAttemptDismiss = EventDispatcher()
@@ -73,33 +73,35 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   required init (appContext: AppContext? = nil) {
     super.init(appContext: appContext)
     self.maxHeight = Util.getScreenHeight()
-    self.touchHandler = RCTTouchHandler(bridge: appContext?.reactBridge)
+    self.touchHandler = RCTSurfaceTouchHandler()
     SheetManager.shared.add(self)
   }
 
   deinit {
     self.destroy()
   }
-
-  // We don't want this view to actually get added to the tree, so we'll simply store it for adding
-  // to the SheetViewController
-  override func insertReactSubview(_ subview: UIView!, at atIndex: Int) {
-    self.touchHandler?.attach(to: subview)
-    self.innerView = subview
+  
+  override func mountChildComponentView(
+    _ childComponentView: UIView,
+    index: Int
+  ) {
+    self.innerView = childComponentView
+    touchHandler?.attach(to: childComponentView)
+  }
+  
+  override func unmountChildComponentView(
+    _ childComponentView: UIView,
+    index: Int
+  ) {
+    touchHandler?.detach(from: childComponentView)
+    if self.innerView === childComponentView {
+      self.innerView = nil
+    }
   }
 
   // We'll grab the content height from here so we know the initial detent to set
   override func layoutSubviews() {
     super.layoutSubviews()
-
-    guard let innerView = self.innerView else {
-      return
-    }
-
-    if innerView.subviews.count != 1 {
-      return
-    }
-
     self.present()
   }
 
@@ -107,7 +109,6 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     self.isClosing = false
     self.isOpen = false
     self.sheetVc = nil
-    self.touchHandler?.detach(from: self.innerView)
     self.touchHandler = nil
     self.innerView = nil
     SheetManager.shared.remove(self)
