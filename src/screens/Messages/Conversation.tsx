@@ -199,7 +199,13 @@ function InnerReady({
    */
   const maybeBlockForEmailVerification = useNonReactiveCallback(() => {
     if (needsEmailVerification) {
-      // HACKFIX: load bearing timeout, otherwise it doesn't trigger when navigating to the screen -sfn
+      /*
+       * HACKFIX
+       *
+       * Load bearing timeout, to bump this state update until the after the
+       * `navigator.addListener('state')` handler closes elements from
+       * `shell/index.*.tsx`  - sfn & esb
+       */
       setTimeout(() =>
         emailDialogControl.open({
           id: EmailDialogScreenID.Verify,
