@@ -83,3 +83,17 @@ export function useMergedThreadgateHiddenReplies({
     return set
   }, [uris, recentlyUnhiddenUris, threadgateRecord])
 }
+
+export function useMergeThreadgateHiddenReplies() {
+  const {uris, recentlyUnhiddenUris} = useThreadgateHiddenReplyUris()
+  return React.useCallback(
+    (threadgate?: AppBskyFeedThreadgate.Record) => {
+      const set = new Set([...(threadgate?.hiddenReplies || []), ...uris])
+      for (const uri of recentlyUnhiddenUris) {
+        set.delete(uri)
+      }
+      return set
+    },
+    [uris, recentlyUnhiddenUris],
+  )
+}
