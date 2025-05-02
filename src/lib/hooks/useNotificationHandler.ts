@@ -4,7 +4,7 @@ import {CommonActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {Logger} from '#/logger'
 import {isAndroid} from '#/platform/detection'
@@ -41,10 +41,11 @@ type NotificationPayload =
     }
 
 const DEFAULT_HANDLER_OPTIONS = {
-  shouldShowAlert: false,
+  shouldShowBanner: false,
+  shouldShowList: false,
   shouldPlaySound: false,
   shouldSetBadge: true,
-}
+} satisfies Notifications.NotificationBehavior
 
 // These need to stay outside the hook to persist between account switches
 let storedPayload: NotificationPayload | undefined
@@ -195,11 +196,13 @@ export function useNotificationsHandler() {
           payload.reason === 'chat-message' &&
           payload.recipientDid === currentAccount?.did
         ) {
+          const shouldAlert = payload.convoId !== currentConvoId
           return {
-            shouldShowAlert: payload.convoId !== currentConvoId,
+            shouldShowList: shouldAlert,
+            shouldShowBanner: shouldAlert,
             shouldPlaySound: false,
             shouldSetBadge: false,
-          }
+          } satisfies Notifications.NotificationBehavior
         }
 
         // Any notification other than a chat message should invalidate the unread page

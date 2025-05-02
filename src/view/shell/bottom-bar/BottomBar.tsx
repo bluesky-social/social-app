@@ -1,13 +1,14 @@
-import React, {ComponentProps} from 'react'
-import {GestureResponderEvent, View} from 'react-native'
+import React, {type ComponentProps} from 'react'
+import {type GestureResponderEvent, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
+import {type BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {StackActions} from '@react-navigation/native'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
+import {BOTTOM_BAR_AVI} from '#/lib/demo'
 import {useHaptics} from '#/lib/haptics'
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
@@ -47,6 +48,7 @@ import {
   Message_Stroke2_Corner0_Rounded as Message,
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message'
+import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {styles} from './BottomBarStyles'
 
 type TabOptions =
@@ -123,6 +125,8 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     playHaptic()
     accountSwitchControl.open()
   }, [accountSwitchControl, playHaptic])
+
+  const [demoMode] = useDemoMode()
 
   return (
     <>
@@ -259,7 +263,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                         {borderColor: pal.text.color},
                       ]}>
                       <UserAvatar
-                        avatar={profile?.avatar}
+                        avatar={demoMode ? BOTTOM_BAR_AVI : profile?.avatar}
                         size={iconWidth - 3}
                         // See https://github.com/bluesky-social/social-app/pull/1801:
                         usePlainRNImage={true}
@@ -270,7 +274,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                     <View
                       style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
                       <UserAvatar
-                        avatar={profile?.avatar}
+                        avatar={demoMode ? BOTTOM_BAR_AVI : profile?.avatar}
                         size={iconWidth - 3}
                         // See https://github.com/bluesky-social/social-app/pull/1801:
                         usePlainRNImage={true}

@@ -15,7 +15,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {type ComposerOptsPostRef} from '#/state/shell/composer'
 import {MaybeQuoteEmbed} from '#/view/com/util/post-embeds/QuoteEmbed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
@@ -76,7 +76,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         a.mx_lg,
         a.border_b,
         t.atoms.border_contrast_medium,
-        a.user_select_text,
+        web(a.user_select_text),
       ]}
       onPress={onPress}
       accessibilityRole="button"
