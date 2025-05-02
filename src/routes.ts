@@ -36,6 +36,7 @@ export const router = new Router({
   // settings
   LanguageSettings: '/settings/language',
   AppPasswords: '/settings/app-passwords',
+  KeyBackups: '/settings/key-backups',
   PreferencesFollowingFeed: '/settings/following-feed',
   PreferencesThreads: '/settings/threads',
   PreferencesExternalEmbeds: '/settings/external-embeds',

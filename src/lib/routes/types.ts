@@ -43,6 +43,7 @@ export type CommonNavigatorParams = {
   CopyrightPolicy: undefined
   LanguageSettings: undefined
   AppPasswords: undefined
+  KeyBackups: undefined
   SavedFeeds: undefined
   PreferencesFollowingFeed: undefined
   PreferencesThreads: undefined

@@ -60,14 +60,6 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <Email2FAToggle />
           </SettingsList.Item>
-          <SettingsList.Item>
-            <SettingsList.ItemIcon icon={ShieldIcon} />
-            <SettingsList.ItemText>
-              <Trans>Backup Recovery Key</Trans>
-            </SettingsList.ItemText>
-            <RegisterKeyBackup />
-          </SettingsList.Item>
-
           <SettingsList.LinkItem
             to="/settings/app-passwords"
             label={_(msg`App passwords`)}>
@@ -81,6 +73,13 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
               </SettingsList.BadgeText>
             )}
           </SettingsList.LinkItem>
+          <SettingsList.Item>
+            <SettingsList.ItemIcon icon={ShieldIcon} />
+            <SettingsList.ItemText>
+              <Trans>Backup Recovery Key</Trans>
+            </SettingsList.ItemText>
+            <RegisterKeyBackup />
+          </SettingsList.Item>
           {isNative && (
             <SettingsList.LinkItem
               to="/settings/key-backups"
@@ -89,11 +88,6 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
               <SettingsList.ItemText>
                 <Trans>Key backups</Trans>
               </SettingsList.ItemText>
-              {/* {appPasswords && appPasswords.length > 0 && (
-              <SettingsList.BadgeText>
-                {appPasswords.length}
-              </SettingsList.BadgeText>
-              )} */}
             </SettingsList.LinkItem>
           )}
           <SettingsList.Divider />
