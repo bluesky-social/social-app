@@ -29,6 +29,7 @@ export function EmailDialog() {
         emailDialogControl.value.onCloseWithoutVerifying?.()
       }
     }
+    emailDialogControl.clear()
   }, [isEmailVerified, emailDialogControl])
 
   return (
