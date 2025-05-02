@@ -257,6 +257,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     fetchedAt,
     randomCache,
   ])
+  console.log({thread, skeleton})
 
   const error = React.useMemo(() => {
     if (AppBskyFeedDefs.isNotFoundPost(thread)) {
