@@ -9,7 +9,7 @@ import {
   type FontAwesomeIconStyle,
   type Props as FontAwesomeProps,
 } from '@fortawesome/react-native-fontawesome'
-import type React from 'react';
+import type React from 'react'
 
 const DURATION = 3500
 
