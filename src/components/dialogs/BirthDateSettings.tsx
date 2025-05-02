@@ -9,11 +9,11 @@ import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {
   usePreferencesQuery,
-  UsePreferencesQueryResponse,
+  type UsePreferencesQueryResponse,
   usePreferencesSetBirthDateMutation,
 } from '#/state/queries/preferences'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {DateField} from '#/components/forms/DateField'
 import {Loader} from '#/components/Loader'
@@ -32,7 +32,9 @@ export function BirthDateSettingsDialog({
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
-      <Dialog.ScrollableInner label={_(msg`My Birthday`)}>
+      <Dialog.ScrollableInner
+        label={_(msg`My Birthday`)}
+        style={web({maxWidth: 400})}>
         <View style={[a.gap_sm, a.pb_lg]}>
           <Text style={[a.text_2xl, a.font_bold]}>
             <Trans>My Birthday</Trans>
@@ -113,7 +115,10 @@ function BirthdayInner({
       <View style={isWeb && [a.flex_row, a.justify_end]}>
         <Button
           label={hasChanged ? _(msg`Save birthday`) : _(msg`Done`)}
-          size="large"
+          size={platform({
+            native: 'large',
+            web: 'small',
+          })}
           onPress={onSave}
           variant="solid"
           color="primary">
