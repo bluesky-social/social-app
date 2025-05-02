@@ -192,6 +192,14 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
         <Trans>Update email</Trans>
       </Text>
 
+      {currentAccount?.emailAuthFactor && (
+        <Admonition type="warning">
+          <Trans>
+            If you update your email address, email 2FA will be disabled.
+          </Trans>
+        </Admonition>
+      )}
+
       <View style={[a.gap_md]}>
         <View>
           <Text style={[a.pb_sm, t.atoms.text_contrast_medium]}>
