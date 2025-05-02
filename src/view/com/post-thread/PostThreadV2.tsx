@@ -5,7 +5,7 @@ import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   AppBskyFeedDefs,
-  type AppBskyFeedThreadgate,
+  AppBskyFeedThreadgate,
   moderatePost,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -14,7 +14,6 @@ import {useLingui} from '@lingui/react'
 import {HITSLOP_10} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
@@ -26,18 +25,19 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   fillThreadModerationCache,
   sortThread,
-  type ThreadBlocked,
-  type ThreadModerationCache,
-  type ThreadNode,
-  type ThreadNotFound,
-  type ThreadPost,
+  ThreadBlocked,
+  ThreadModerationCache,
+  ThreadNode,
+  ThreadNotFound,
+  ThreadPost,
   usePostThreadQuery,
 } from '#/state/queries/post-thread'
 import {useSetThreadViewPreferencesMutation} from '#/state/queries/preferences'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
+import {useComposerControls} from '#/state/shell'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {List, type ListMethods} from '#/view/com/util/List'
+import {List, ListMethods} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
@@ -90,7 +90,6 @@ type ThreadSkeletonParts = {
 }
 
 const keyExtractor = (item: RowItem) => {
-  console.log(item._reactKey)
   return item._reactKey
 }
 
@@ -340,11 +339,8 @@ export function PostThread({uri}: {uri: string | undefined}) {
       const headerNode = headerRef.current
       if (postNode && headerNode) {
         let pageY = (postNode as any as Element).getBoundingClientRect().top
-      console.log({pageY})
         pageY -= (headerNode as any as Element).getBoundingClientRect().height
-      console.log({pageY})
         pageY = Math.max(0, pageY)
-      console.log({pageY})
         ref.current?.scrollToOffset({
           animated: false,
           offset: pageY,
@@ -399,7 +395,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     [refetch],
   )
 
-  const {openComposer} = useOpenComposer()
+  const {openComposer} = useComposerControls()
   const onPressReply = React.useCallback(() => {
     if (thread?.type !== 'post') {
       return
