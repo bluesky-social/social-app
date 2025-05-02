@@ -22,8 +22,8 @@ import {
 } from '#/components/dialogs/EmailDialog/types'
 import {Divider} from '#/components/Divider'
 import * as TextField from '#/components/forms/TextField'
-import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {CheckThick_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -198,7 +198,7 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
             <Trans>Enter your new email address below.</Trans>
           </Text>
           <TextField.Root>
-            <TextField.Icon icon={At} />
+            <TextField.Icon icon={Envelope} />
             <TextField.Input
               label={_(msg`New email address`)}
               placeholder={_(msg`alice@example.com`)}
