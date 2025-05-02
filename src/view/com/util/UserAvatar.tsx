@@ -42,7 +42,7 @@ import {
 import {StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
-import {LiveIndicator} from '#/components/LiveIndicator'
+import {LiveIndicator} from '#/components/live/LiveIndicator'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -289,14 +289,14 @@ let UserAvatar = ({
         />
       )}
       <MediaInsetBorder style={borderStyle} />
-      {live && <LiveIndicator size={size < 16 ? 'small' : 'tiny'} />}
+      {live && <LiveIndicator size={size > 26 ? 'small' : 'tiny'} />}
       {alert}
     </View>
   ) : (
     <View style={containerStyle}>
       <DefaultAvatar type={type} shape={finalShape} size={size} />
       <MediaInsetBorder style={borderStyle} />
-      {live && <LiveIndicator size={size < 16 ? 'small' : 'tiny'} />}
+      {live && <LiveIndicator size={size > 26 ? 'small' : 'tiny'} />}
       {alert}
     </View>
   )

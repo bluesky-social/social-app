@@ -24,7 +24,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
 import {atoms as a, platform, useTheme} from '#/alf'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
-import {LiveIndicator} from '#/components/LiveIndicator'
+import {LiveIndicator} from '#/components/live/LiveIndicator'
 import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
 import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
 import {GrowableAvatar} from './GrowableAvatar'
@@ -193,7 +193,7 @@ let ProfileHeaderShell = ({
                 avatar={profile.avatar}
                 moderation={moderation.ui('avatar')}
               />
-              <LiveIndicator size="large" />
+              {live && <LiveIndicator size="large" />}
             </View>
           </View>
         </TouchableWithoutFeedback>
