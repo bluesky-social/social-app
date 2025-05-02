@@ -2,7 +2,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, platform, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogContext} from '#/components/Dialog'
 import {
@@ -19,23 +19,39 @@ export function VerificationReminder({
 }: ScreenProps<ScreenID.VerificationReminder>) {
   const t = useTheme()
   const {_} = useLingui()
-  const {gtPhone} = useBreakpoints()
+  const {gtPhone, gtMobile} = useBreakpoints()
   const control = useDialogContext()
+
+  const dialogPadding = gtMobile ? a.p_2xl.padding : a.p_xl.padding
 
   return (
     <View style={[a.gap_lg]}>
       <View
         style={[
-          a.rounded_sm,
-          a.align_center,
-          a.justify_center,
-          a.overflow_hidden,
-          t.atoms.bg_contrast_100,
-          {height: 150},
+          a.absolute,
+          {
+            top: platform({web: dialogPadding, default: a.p_2xl.padding}) * -1,
+            left: dialogPadding * -1,
+            right: dialogPadding * -1,
+            height: 150,
+          },
         ]}>
-        <GradientFill gradient={tokens.gradients.primary} />
-        <ShieldIcon width={64} fill="white" style={[a.z_10]} />
+        <View
+          style={[
+            a.absolute,
+            a.inset_0,
+            a.align_center,
+            a.justify_center,
+            a.overflow_hidden,
+            a.pt_md,
+            t.atoms.bg_contrast_100,
+          ]}>
+          <GradientFill gradient={tokens.gradients.primary} />
+          <ShieldIcon width={64} fill="white" style={[a.z_10]} />
+        </View>
       </View>
+
+      <View style={[a.mb_xs, {height: 150 - dialogPadding}]} />
 
       <View style={[a.gap_sm]}>
         <Text style={[a.text_xl, a.font_heavy]}>
