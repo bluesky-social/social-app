@@ -1,4 +1,3 @@
-import 'react-native-url-polyfill/auto'
 import '#/logger/sentry/setup'
 import '#/logger/bitdrift/setup'
 import '#/view/icons'

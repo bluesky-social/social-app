@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {isNative} from '#/platform/detection'
+import {isIOS, isNative} from '#/platform/detection'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
@@ -67,7 +67,7 @@ export const ProfileFeedSection = React.forwardRef<
   }, [_])
 
   React.useEffect(() => {
-    if (isFocused && scrollElRef.current) {
+    if (isIOS && isFocused && scrollElRef.current) {
       const nativeTag = findNodeHandle(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }

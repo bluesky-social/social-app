@@ -951,8 +951,8 @@ export const atoms = {
     userSelect: 'all',
   },
   outline_inset_1: {
-    outlineOffset: '-1px',
-  } as StyleProp<ViewStyle>,
+    outlineOffset: -1,
+  },
 
   /*
    * Text decoration
