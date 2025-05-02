@@ -12,9 +12,10 @@ import {Statsig} from 'statsig-react-native-expo'
 import {appVersion, BUNDLE_DATE, bundleInfo} from '#/lib/app-info'
 import {STATUS_PAGE_URL} from '#/lib/constants'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
-import {isAndroid, isNative} from '#/platform/detection'
+import {isAndroid, isIOS, isNative} from '#/platform/detection'
 import * as Toast from '#/view/com/util/Toast'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
+import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
 import {BroomSparkle_Stroke2_Corner2_Rounded as BroomSparkleIcon} from '#/components/icons/BroomSparkle'
 import {CodeLines_Stroke2_Corner2_Rounded as CodeLinesIcon} from '#/components/icons/CodeLines'
 import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
@@ -22,6 +23,7 @@ import {Newspaper_Stroke2_Corner2_Rounded as NewspaperIcon} from '#/components/i
 import {Wrench_Stroke2_Corner2_Rounded as WrenchIcon} from '#/components/icons/Wrench'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {OTAInfo} from './components/OTAInfo'
 
@@ -29,6 +31,7 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'AboutSettings'>
 export function AboutSettingsScreen({}: Props) {
   const {_, i18n} = useLingui()
   const [devModeEnabled, setDevModeEnabled] = useDevMode()
+  const [demoModeEnabled, setDemoModeEnabled] = useDemoMode()
   const stableID = useMemo(() => Statsig.getStableID(), [])
 
   const {mutate: onClearImageCache, isPending: isClearingImageCache} =
@@ -153,7 +156,31 @@ export function AboutSettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <SettingsList.BadgeText>{bundleInfo}</SettingsList.BadgeText>
           </SettingsList.PressableItem>
-          {devModeEnabled && <OTAInfo />}
+          {devModeEnabled && (
+            <>
+              <OTAInfo />
+              {isIOS && (
+                <SettingsList.PressableItem
+                  onPress={() => {
+                    const newDemoModeEnabled = !demoModeEnabled
+                    setDemoModeEnabled(newDemoModeEnabled)
+                    Toast.show(
+                      'Demo mode ' +
+                        (newDemoModeEnabled ? 'enabled' : 'disabled'),
+                    )
+                  }}
+                  label={
+                    demoModeEnabled ? 'Disable demo mode' : 'Enable demo mode'
+                  }
+                  disabled={isClearingImageCache}>
+                  <SettingsList.ItemIcon icon={AtomIcon} />
+                  <SettingsList.ItemText>
+                    {demoModeEnabled ? 'Disable demo mode' : 'Enable demo mode'}
+                  </SettingsList.ItemText>
+                </SettingsList.PressableItem>
+              )}
+            </>
+          )}
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>

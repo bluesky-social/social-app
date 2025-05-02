@@ -23,6 +23,7 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type NavigationProp} from '#/lib/routes/types'
 import {parseStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
+import {isIOS} from '#/platform/detection'
 import {useActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
 import {List, type ListRef} from '#/view/com/util/List'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
@@ -111,7 +112,7 @@ export const ProfileStarterPacks = React.forwardRef<
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
   useEffect(() => {
-    if (enabled && scrollElRef.current) {
+    if (isIOS && enabled && scrollElRef.current) {
       const nativeTag = findNodeHandle(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }
