@@ -32,7 +32,7 @@ import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {atoms as a, tokens, useLayoutBreakpoints, useTheme} from '#/alf'
+import {atoms as a, tokens, useLayoutBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps} from '#/components/Dialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
@@ -718,7 +718,7 @@ export function DesktopLeftNav() {
 
 const styles = StyleSheet.create({
   leftNav: {
-    position: 'fixed',
+    ...a.fixed,
     top: 0,
     paddingTop: 10,
     paddingBottom: 10,
@@ -736,7 +736,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: 86,
     alignItems: 'center',
-    overflowX: 'hidden',
+    ...web({overflowX: 'hidden'}),
   },
   backBtn: {
     position: 'absolute',
