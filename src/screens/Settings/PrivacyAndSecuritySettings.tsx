@@ -4,6 +4,7 @@ import {useLingui} from '@lingui/react'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
+import {isNative} from '#/platform/detection'
 import {useAppPasswordsQuery} from '#/state/queries/app-passwords'
 import {useSession} from '#/state/session'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
@@ -66,6 +67,7 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <RegisterKeyBackup />
           </SettingsList.Item>
+
           <SettingsList.LinkItem
             to="/settings/app-passwords"
             label={_(msg`App passwords`)}>
@@ -79,6 +81,21 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
               </SettingsList.BadgeText>
             )}
           </SettingsList.LinkItem>
+          {isNative && (
+            <SettingsList.LinkItem
+              to="/settings/key-backups"
+              label={_(msg`Key backups`)}>
+              <SettingsList.ItemIcon icon={KeyIcon} />
+              <SettingsList.ItemText>
+                <Trans>Key backups</Trans>
+              </SettingsList.ItemText>
+              {/* {appPasswords && appPasswords.length > 0 && (
+              <SettingsList.BadgeText>
+                {appPasswords.length}
+              </SettingsList.BadgeText>
+              )} */}
+            </SettingsList.LinkItem>
+          )}
           <SettingsList.Divider />
           <SettingsList.Group>
             <SettingsList.ItemIcon icon={EyeSlashIcon} />
