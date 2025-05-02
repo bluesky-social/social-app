@@ -181,7 +181,7 @@
     "react-image-crop": "^11.0.7",
     "react-is": "19",
     "react-keyed-flatten-children": "^5.0.0",
-    "react-native": "0.79.2",
+    "react-native": "^0.79.2",
     "react-native-compressor": "1.11.0",
     "react-native-date-picker": "^5.0.12",
     "react-native-drawer-layout": "^4.1.6",
