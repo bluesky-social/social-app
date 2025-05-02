@@ -17,6 +17,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {isReasonFeedSource, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -250,7 +251,7 @@ let FeedItemInner = ({
     ? rootPost.threadgate.record
     : undefined
 
-  const live = true
+  const {live} = useActorStatus(post.author)
 
   return (
     <Link

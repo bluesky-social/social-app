@@ -11,6 +11,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {BACK_HITSLOP} from '#/lib/constants'
 import {measureHandle, useHandleRef} from '#/lib/hooks/useHandleRef'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -102,7 +103,7 @@ let ProfileHeaderShell = ({
     [currentAccount, profile],
   )
 
-  const live = true
+  const {live} = useActorStatus(profile)
 
   return (
     <View style={t.atoms.bg} pointerEvents={isIOS ? 'auto' : 'box-none'}>

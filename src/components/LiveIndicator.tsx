@@ -4,10 +4,15 @@ import {Trans} from '@lingui/macro'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
-export function LiveIndicator({size = 'small'}: {size?: 'small' | 'large'}) {
+export function LiveIndicator({
+  size = 'small',
+}: {
+  size?: 'tiny' | 'small' | 'large'
+}) {
   const t = useTheme()
 
   const fontSize = {
+    tiny: {fontSize: 7, letterSpacing: tokens.TRACKING},
     small: a.text_2xs,
     large: a.text_xs,
   }[size]
@@ -19,14 +24,14 @@ export function LiveIndicator({size = 'small'}: {size?: 'small' | 'large'}) {
         a.w_full,
         a.align_center,
         a.pointer_events_none,
-        {bottom: size === 'small' ? -5 : -8},
+        {bottom: size === 'large' ? -8 : -5},
       ]}>
       <View
         style={{
           backgroundColor: t.palette.negative_500,
-          paddingVertical: size === 'small' ? 1 : 2,
-          paddingHorizontal: size === 'small' ? 3 : 4,
-          borderRadius: size === 'small' ? tokens.borderRadius.xs : 5,
+          paddingVertical: size === 'large' ? 2 : 1,
+          paddingHorizontal: size === 'large' ? 4 : 3,
+          borderRadius: size === 'large' ? 5 : tokens.borderRadius.xs,
         }}>
         <Text
           style={[

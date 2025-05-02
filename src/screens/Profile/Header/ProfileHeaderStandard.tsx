@@ -9,6 +9,7 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
@@ -138,7 +139,7 @@ let ProfileHeaderStandard = ({
     [currentAccount, profile],
   )
 
-  const live = true
+  const {live} = useActorStatus(profile)
 
   return (
     <ProfileHeaderShell
