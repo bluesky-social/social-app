@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useEffect} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyActorDefs,
@@ -17,6 +17,7 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useEmail} from '#/lib/hooks/useEmail'
 import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
@@ -192,22 +193,43 @@ function InnerReady({
   const {needsEmailVerification} = useEmail()
   const emailDialogControl = useEmailDialogControl()
 
-  React.useEffect(() => {
+  /**
+   * Must be non-reactive, otherwise the update to open the global dialog will
+   * cause a re-render loop.
+   */
+  const maybeBlockForEmailVerification = useNonReactiveCallback(() => {
     if (needsEmailVerification) {
-      emailDialogControl.open({
-        id: EmailDialogScreenID.Verify,
-        instructions: [
-          <Trans key="pre-compose">
-            Before you may message another user, you must first verify your
-            email.
-          </Trans>,
-        ],
-        onCloseWithoutVerifying: () => {
-          navigation.navigate('Home')
-        },
-      })
+      /*
+       * HACKFIX
+       *
+       * Load bearing timeout, to bump this state update until the after the
+       * `navigator.addListener('state')` handler closes elements from
+       * `shell/index.*.tsx`  - sfn & esb
+       */
+      setTimeout(() =>
+        emailDialogControl.open({
+          id: EmailDialogScreenID.Verify,
+          instructions: [
+            <Trans key="pre-compose">
+              Before you may message another user, you must first verify your
+              email.
+            </Trans>,
+          ],
+          onCloseWithoutVerifying: () => {
+            if (navigation.canGoBack()) {
+              navigation.goBack()
+            } else {
+              navigation.navigate('Messages', {animation: 'pop'})
+            }
+          },
+        }),
+      )
     }
-  }, [needsEmailVerification, emailDialogControl, navigation])
+  })
+
+  useEffect(() => {
+    maybeBlockForEmailVerification()
+  }, [maybeBlockForEmailVerification])
 
   return (
     <>
