@@ -4,7 +4,6 @@ import {useLingui} from '@lingui/react'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
-import {isNative} from '#/platform/detection'
 import {useAppPasswordsQuery} from '#/state/queries/app-passwords'
 import {useSession} from '#/state/session'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
@@ -17,7 +16,6 @@ import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Email2FAToggle} from './components/Email2FAToggle'
 import {PwiOptOut} from './components/PwiOptOut'
-import {RegisterKeyBackup} from './components/RegisterKeyBackup'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -73,23 +71,14 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
               </SettingsList.BadgeText>
             )}
           </SettingsList.LinkItem>
-          <SettingsList.Item>
-            <SettingsList.ItemIcon icon={ShieldIcon} />
+          <SettingsList.LinkItem
+            to="/settings/key-backups"
+            label={_(msg`Key backups`)}>
+            <SettingsList.ItemIcon icon={KeyIcon} />
             <SettingsList.ItemText>
-              <Trans>Backup Recovery Key</Trans>
+              <Trans>Key backups</Trans>
             </SettingsList.ItemText>
-            <RegisterKeyBackup />
-          </SettingsList.Item>
-          {isNative && (
-            <SettingsList.LinkItem
-              to="/settings/key-backups"
-              label={_(msg`Key backups`)}>
-              <SettingsList.ItemIcon icon={KeyIcon} />
-              <SettingsList.ItemText>
-                <Trans>Key backups</Trans>
-              </SettingsList.ItemText>
-            </SettingsList.LinkItem>
-          )}
+          </SettingsList.LinkItem>
           <SettingsList.Divider />
           <SettingsList.Group>
             <SettingsList.ItemIcon icon={EyeSlashIcon} />

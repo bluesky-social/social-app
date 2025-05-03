@@ -1,5 +1,5 @@
-import {useCallback} from 'react'
-import {View} from 'react-native'
+import {useCallback, useEffect, useState} from 'react'
+import {TouchableOpacity, View} from 'react-native'
 import Animated, {
   FadeIn,
   FadeOut,
@@ -7,40 +7,66 @@ import Animated, {
   LinearTransition,
   StretchOutY,
 } from 'react-native-reanimated'
-import {type ComAtprotoServerListAppPasswords} from '@atproto/api'
+import * as SecureStore from 'expo-secure-store'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
-import {cleanError} from '#/lib/strings/errors'
-import {isWeb} from '#/platform/detection'
-import {
-  useAppPasswordDeleteMutation,
-  useAppPasswordsQuery,
-} from '#/state/queries/app-passwords'
+import {isNative, isWeb} from '#/platform/detection'
+import {useSession} from '#/state/session'
 import {EmptyState} from '#/view/com/util/EmptyState'
-import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import * as Toast from '#/view/com/util/Toast'
+import {type RotationKey} from '#/screens/Settings/components/types'
 import {atoms as a, useTheme} from '#/alf'
-import {Admonition, colors} from '#/components/Admonition'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {ChangeEmailDialog} from '#/components/dialogs/ChangeEmailDialog'
+import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
-import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
-import {AddAppPasswordDialog} from './components/AddAppPasswordDialog'
+import {KeyBackupDialog} from './components/KeyBackupDialog'
 import * as SettingsList from './components/SettingsList'
-
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'KeyBackups'>
+import * as Clipboard from 'expo-clipboard'
+
 export function KeyBackupsScreen({}: Props) {
   const {_} = useLingui()
-  const {data: appPasswords, error} = useAppPasswordsQuery()
-  const createAppPasswordControl = useDialogControl()
+  const {currentAccount} = useSession()
+  const backupKeyDialogControl = useDialogControl()
+  const verifyEmailDialogControl = useDialogControl()
+  const changeEmailDialogControl = useDialogControl()
+
+  const [keyBackups, setKeyBackups] = useState<RotationKey[]>([])
+
+  const onBackupKey = useCallback(() => {
+    if (!currentAccount) {
+      return
+    }
+
+    // Check if email is verified before allowing key backup
+    if (!currentAccount.emailConfirmed) {
+      verifyEmailDialogControl.open()
+      return
+    }
+
+    // Open the backup key dialog
+    backupKeyDialogControl.open()
+  }, [currentAccount, backupKeyDialogControl, verifyEmailDialogControl])
+
+  const fetchRotationKeys = async () => {
+    const rotationKeys = await SecureStore.getItemAsync('rotationKeys')
+    setKeyBackups(rotationKeys ? JSON.parse(rotationKeys) : [])
+  }
+
+  useEffect(() => {
+    fetchRotationKeys()
+  }, [])
 
   return (
     <Layout.Screen testID="KeyBackupsScreen">
@@ -54,98 +80,127 @@ export function KeyBackupsScreen({}: Props) {
         <Layout.Header.Slot />
       </Layout.Header.Outer>
       <Layout.Content>
-        {error ? (
-          <ErrorScreen
-            title={_(msg`Oops!`)}
-            message={_(msg`There was an issue fetching your app passwords`)}
-            details={cleanError(error)}
-          />
-        ) : (
-          <SettingsList.Container>
-            <SettingsList.Item>
-              <Admonition type="tip" style={[a.flex_1]}>
-                <Trans>
-                  Use app passwords to sign in to other Bluesky clients without
-                  giving full access to your account or password.
-                </Trans>
-              </Admonition>
-            </SettingsList.Item>
-            <SettingsList.Item>
-              <Button
-                label={_(msg`Add App Password`)}
-                size="large"
-                color="primary"
-                variant="solid"
-                onPress={() => createAppPasswordControl.open()}
-                style={[a.flex_1]}>
-                <ButtonIcon icon={PlusIcon} />
-                <ButtonText>
-                  <Trans>Add App Password</Trans>
-                </ButtonText>
-              </Button>
-            </SettingsList.Item>
-            <SettingsList.Divider />
-            <LayoutAnimationConfig skipEntering skipExiting>
-              {appPasswords ? (
-                appPasswords.length > 0 ? (
-                  <View style={[a.overflow_hidden]}>
-                    {appPasswords.map(appPassword => (
-                      <Animated.View
-                        key={appPassword.name}
-                        style={a.w_full}
-                        entering={FadeIn}
-                        exiting={isWeb ? FadeOut : StretchOutY}
-                        layout={LinearTransition.delay(150)}>
-                        <SettingsList.Item>
-                          <AppPasswordCard appPassword={appPassword} />
-                        </SettingsList.Item>
-                      </Animated.View>
-                    ))}
-                  </View>
+        <SettingsList.Container>
+          <SettingsList.Item>
+            <Admonition type="tip" style={[a.flex_1]}>
+              <Trans>
+                These keys can be used to recover your account if you lose your
+                password. Do not share these keys with anyone.
+              </Trans>
+            </Admonition>
+          </SettingsList.Item>
+          <SettingsList.Item>
+            <Button
+              label={_(msg`Add Key Backup`)}
+              size="large"
+              color="primary"
+              variant="solid"
+              onPress={onBackupKey}
+              style={[a.flex_1]}>
+              <ButtonIcon icon={PlusIcon} />
+              <ButtonText>
+                <Trans>Add Key Backup</Trans>
+              </ButtonText>
+            </Button>
+          </SettingsList.Item>
+          {isNative && (
+            <>
+              <SettingsList.Divider />
+              <LayoutAnimationConfig skipEntering skipExiting>
+                {keyBackups ? (
+                  keyBackups.length > 0 ? (
+                    <View style={[a.overflow_hidden]}>
+                      {keyBackups.map(keyBackup => (
+                        <Animated.View
+                          key={keyBackup.name}
+                          style={a.w_full}
+                          entering={FadeIn}
+                          exiting={isWeb ? FadeOut : StretchOutY}
+                          layout={LinearTransition.delay(150)}>
+                          <SettingsList.Item>
+                            <KeyBackupCard
+                              keyBackup={keyBackup}
+                              refreshKeyBackups={fetchRotationKeys}
+                            />
+                          </SettingsList.Item>
+                        </Animated.View>
+                      ))}
+                    </View>
+                  ) : (
+                    <EmptyState
+                      icon="growth"
+                      message={_(msg`No rotation keys found on this device`)}
+                    />
+                  )
                 ) : (
-                  <EmptyState
-                    icon="growth"
-                    message={_(msg`No app passwords yet`)}
-                  />
-                )
-              ) : (
-                <View
-                  style={[
-                    a.flex_1,
-                    a.justify_center,
-                    a.align_center,
-                    a.py_4xl,
-                  ]}>
-                  <Loader size="xl" />
-                </View>
-              )}
-            </LayoutAnimationConfig>
-          </SettingsList.Container>
-        )}
+                  <View
+                    style={[
+                      a.flex_1,
+                      a.justify_center,
+                      a.align_center,
+                      a.py_4xl,
+                    ]}>
+                    <Loader size="xl" />
+                  </View>
+                )}
+              </LayoutAnimationConfig>
+            </>
+          )}
+        </SettingsList.Container>
       </Layout.Content>
 
-      <AddAppPasswordDialog
-        control={createAppPasswordControl}
-        passwords={appPasswords?.map(p => p.name) || []}
+      <KeyBackupDialog
+        control={backupKeyDialogControl}
+        refreshKeyBackups={fetchRotationKeys}
+      />
+      <VerifyEmailDialog
+        control={verifyEmailDialogControl}
+        changeEmailControl={changeEmailDialogControl}
+        onCloseAfterVerifying={backupKeyDialogControl.open}
+        reasonText={_(
+          msg`You need to verify your email address before you can create a backup key.`,
+        )}
+      />
+      <ChangeEmailDialog
+        control={changeEmailDialogControl}
+        verifyEmailControl={verifyEmailDialogControl}
       />
     </Layout.Screen>
   )
 }
 
-function AppPasswordCard({
-  appPassword,
+const deleteKeyBackup = async (keyBackup: RotationKey) => {
+  const rotationKeys = await SecureStore.getItemAsync('rotationKeys')
+  if (!rotationKeys) {
+    throw new Error('No rotation keys found!')
+  }
+  const rotationKeysArray = JSON.parse(rotationKeys)
+  const index = rotationKeysArray.findIndex(
+    (k: RotationKey) => k.name === keyBackup.name,
+  )
+  rotationKeysArray.splice(index, 1)
+  await SecureStore.setItemAsync(
+    'rotationKeys',
+    JSON.stringify(rotationKeysArray),
+  )
+}
+
+function KeyBackupCard({
+  keyBackup,
+  refreshKeyBackups,
 }: {
-  appPassword: ComAtprotoServerListAppPasswords.AppPassword
+  keyBackup: RotationKey
+  refreshKeyBackups: () => void
 }) {
   const t = useTheme()
   const {i18n, _} = useLingui()
   const deleteControl = Prompt.usePromptControl()
-  const {mutateAsync: deleteMutation} = useAppPasswordDeleteMutation()
 
   const onDelete = useCallback(async () => {
-    await deleteMutation({name: appPassword.name})
-    Toast.show(_(msg({message: 'App password deleted', context: 'toast'})))
-  }, [deleteMutation, appPassword.name, _])
+    await deleteKeyBackup(keyBackup)
+    refreshKeyBackups()
+    Toast.show(_(msg({message: 'Key backup deleted', context: 'toast'})))
+  }, [_, refreshKeyBackups, keyBackup])
 
   return (
     <View
@@ -158,55 +213,61 @@ function AppPasswordCard({
         t.atoms.bg_contrast_25,
         t.atoms.border_contrast_low,
       ]}>
-      <View
-        style={[
-          a.flex_row,
-          a.justify_between,
-          a.align_start,
-          a.w_full,
-          a.gap_sm,
-        ]}>
-        <View style={[a.gap_xs]}>
-          <Text style={[t.atoms.text, a.text_md, a.font_bold]}>
-            {appPassword.name}
-          </Text>
-          <Text style={[t.atoms.text_contrast_medium]}>
-            <Trans>
-              Created{' '}
-              {i18n.date(appPassword.createdAt, {
-                year: 'numeric',
-                month: 'numeric',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
-            </Trans>
-          </Text>
+      <TouchableOpacity accessibilityRole="button"
+        onPress={() => {
+          let clipboardContent = `${keyBackup.did}\n${keyBackup.privateKey}`
+          Clipboard.setStringAsync(clipboardContent)
+          Toast.show(
+            _(
+              msg({
+                message: 'Key backup copied to clipboard',
+                context: 'toast',
+              }),
+            ),
+          )
+        }}>
+        <View
+          style={[
+            a.flex_row,
+            a.justify_between,
+            a.align_start,
+            a.w_full,
+            a.gap_sm,
+          ]}>
+          <View style={[a.gap_xs]}>
+            <Text style={[t.atoms.text, a.text_md, a.font_bold]}>
+              {keyBackup.name}
+            </Text>
+            <Text style={[t.atoms.text_contrast_medium]}>
+              <Trans>
+                Created{' '}
+                {i18n.date(keyBackup.createdAt, {
+                  year: 'numeric',
+                  month: 'numeric',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </Trans>
+            </Text>
+          </View>
+          <Button
+            label={_(msg`Delete key backup`)}
+            variant="ghost"
+            color="negative"
+            size="small"
+            style={[a.bg_transparent]}
+            onPress={() => deleteControl.open()}>
+            <ButtonIcon icon={TrashIcon} />
+          </Button>
         </View>
-        <Button
-          label={_(msg`Delete app password`)}
-          variant="ghost"
-          color="negative"
-          size="small"
-          style={[a.bg_transparent]}
-          onPress={() => deleteControl.open()}>
-          <ButtonIcon icon={TrashIcon} />
-        </Button>
-      </View>
-      {appPassword.privileged && (
-        <View style={[a.flex_row, a.gap_sm, a.align_center, a.mt_md]}>
-          <WarningIcon style={[{color: colors.warning[t.scheme]}]} />
-          <Text style={t.atoms.text_contrast_high}>
-            <Trans>Allows access to direct messages</Trans>
-          </Text>
-        </View>
-      )}
+      </TouchableOpacity>
 
       <Prompt.Basic
         control={deleteControl}
-        title={_(msg`Delete app password?`)}
+        title={_(msg`Delete key backup?`)}
         description={_(
-          msg`Are you sure you want to delete the app password "${appPassword.name}"?`,
+          msg`Are you sure you want to delete this key backup "${keyBackup.name}"?`,
         )}
         onConfirm={onDelete}
         confirmButtonCta={_(msg`Delete`)}

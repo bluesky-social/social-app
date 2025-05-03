@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
+import * as SecureStore from 'expo-secure-store'
 import {Secp256k1Keypair} from '@atproto/crypto'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -18,6 +19,7 @@ import * as TextField from '#/components/forms/TextField'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
+import {type RotationKey} from './types'
 
 enum Stages {
   Email,
@@ -29,9 +31,11 @@ enum Stages {
 export function KeyBackupDialog({
   control,
   onBackupComplete,
+  refreshKeyBackups,
 }: {
   control: Dialog.DialogOuterProps['control']
   onBackupComplete?: () => void
+  refreshKeyBackups: () => void
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -170,6 +174,11 @@ export function KeyBackupDialog({
       plcData.rotationKeys.push(newKeyStr)
     }
 
+    // delete the oldest keys if we have more than 10!
+    while (plcData.rotationKeys.length > 10) {
+      plcData.rotationKeys.pop()
+    }
+
     const operationInput = {...plcData}
     if (token) {
       operationInput.token = token
@@ -184,6 +193,27 @@ export function KeyBackupDialog({
     await agent.com.atproto.identity.submitPlcOperation({
       operation: signedOp.data.operation,
     })
+
+    // only on native since secure storage isn't available on web
+    if (isNative) {
+      let rotationKeysString =
+        (await SecureStore.getItemAsync('rotationKeys')) ?? ''
+      let rotationKeys: RotationKey[] = rotationKeysString
+        ? JSON.parse(rotationKeysString)
+        : []
+      rotationKeys.push({
+        did: newKeyStr,
+        privateKey: privateKey,
+        createdAt: Date.now().toString(),
+        name: 'Backup Key ' + (rotationKeys.length + 1),
+      })
+
+      await SecureStore.setItemAsync(
+        'rotationKeys',
+        JSON.stringify(rotationKeys),
+      )
+      refreshKeyBackups()
+    }
 
     return true
   }
@@ -327,7 +357,9 @@ export function KeyBackupDialog({
 
           {stage === Stages.BackupComplete && (
             <View>
-              <TouchableOpacity accessibilityRole="button" onPress={() => onPressKeys(did, privateKey)}>
+              <TouchableOpacity
+                accessibilityRole="button"
+                onPress={() => onPressKeys(did, privateKey)}>
                 <View
                   style={[
                     a.mb_md,
