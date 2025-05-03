@@ -1,7 +1,7 @@
-import {AccessibilityProps} from 'react-native'
+import {type AccessibilityProps} from 'react-native'
 
-import {DialogControlProps} from '#/components/Dialog'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {type DialogControlProps} from '#/components/Dialog'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 
 export type RootProps = {
   children?: React.ReactNode

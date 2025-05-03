@@ -5,20 +5,20 @@ import {useLingui} from '@lingui/react'
 
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {Button, ButtonIcon, ButtonText} from '../Button'
-import {useInteractionState} from '../hooks/useInteractionState'
-import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '../icons/Check'
-import {ChevronTopBottom_Stroke2_Corner0_Rounded as ChevronUpDownIcon} from '../icons/Chevron'
-import {Text} from '../Typography'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
+import {ChevronTopBottom_Stroke2_Corner0_Rounded as ChevronUpDownIcon} from '#/components/icons/Chevron'
+import {Text} from '#/components/Typography'
 import {
-  ContentProps,
-  ItemIndicatorProps,
-  ItemProps,
-  ItemTextProps,
-  RootProps,
-  TriggerProps,
-  ValueProps,
+  type ContentProps,
+  type ItemIndicatorProps,
+  type ItemProps,
+  type ItemTextProps,
+  type RootProps,
+  type TriggerProps,
+  type ValueProps,
 } from './types'
 
 type ContextType = {

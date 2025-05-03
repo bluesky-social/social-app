@@ -1,5 +1,5 @@
 import React, {useContext, useMemo} from 'react'
-import * as RadixSelect from '@radix-ui/react-select'
+import {Select as RadixSelect} from 'radix-ui'
 
 import {flatten, useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
@@ -10,13 +10,13 @@ import {
   ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
 } from '#/components/icons/Chevron'
 import {
-  ContentProps,
-  ItemIndicatorProps,
-  ItemProps,
-  RadixPassThroughTriggerProps,
-  RootProps,
-  TriggerProps,
-  ValueProps,
+  type ContentProps,
+  type ItemIndicatorProps,
+  type ItemProps,
+  type RadixPassThroughTriggerProps,
+  type RootProps,
+  type TriggerProps,
+  type ValueProps,
 } from './types'
 
 const SelectedValueContext = React.createContext<unknown>(null)
@@ -132,6 +132,20 @@ export function Icon() {
 
 export function Content<T>({items, renderItem}: ContentProps<T>) {
   const t = useTheme()
+
+  const scrollBtnStyles = [
+    a.flex,
+    {height: 25},
+    a.align_center,
+    a.justify_center,
+    t.atoms.bg,
+    a.absolute,
+    a.left_0,
+    a.right_0,
+    {opacity: 0.9},
+    a.z_10,
+  ] as const
+
   return (
     <RadixSelect.Portal>
       <RadixSelect.Content
@@ -146,27 +160,15 @@ export function Content<T>({items, renderItem}: ContentProps<T>) {
         sideOffset={5}
         className="radix-select-content">
         <RadixSelect.ScrollUpButton
-          style={flatten([
-            a.flex,
-            {height: 25},
-            a.align_center,
-            a.justify_center,
-            t.atoms.bg,
-          ])}>
-          <ChevronUpIcon style={[t.atoms.text]} />
+          style={flatten([...scrollBtnStyles, a.top_0])}>
+          <ChevronUpIcon style={[t.atoms.text]} size="xs" />
         </RadixSelect.ScrollUpButton>
         <RadixSelect.Viewport style={flatten([a.p_xs])}>
           {items.map((item, index) => renderItem(item, index))}
         </RadixSelect.Viewport>
         <RadixSelect.ScrollDownButton
-          style={flatten([
-            a.flex,
-            {height: 25},
-            a.align_center,
-            a.justify_center,
-            t.atoms.bg,
-          ])}>
-          <ChevronDownIcon style={[t.atoms.text]} />
+          style={flatten([...scrollBtnStyles, a.bottom_0])}>
+          <ChevronDownIcon style={[t.atoms.text]} size="xs" />
         </RadixSelect.ScrollDownButton>
       </RadixSelect.Content>
     </RadixSelect.Portal>
@@ -177,10 +179,12 @@ const ItemContext = React.createContext<{
   hovered: boolean
   focused: boolean
   pressed: boolean
+  selected: boolean
 }>({
   hovered: false,
   focused: false,
   pressed: false,
+  selected: false,
 })
 
 export function useItemContext() {
@@ -195,11 +199,11 @@ export const Item = React.forwardRef<HTMLDivElement, ItemProps>(
       onIn: onMouseEnter,
       onOut: onMouseLeave,
     } = useInteractionState()
-    const isSelected = useContext(SelectedValueContext) === value
+    const selected = useContext(SelectedValueContext) === value
     const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
     const ctx = useMemo(
-      () => ({hovered, focused, pressed: false}),
-      [hovered, focused],
+      () => ({hovered, focused, pressed: false, selected}),
+      [hovered, focused, selected],
     )
     return (
       <RadixSelect.Item
@@ -219,10 +223,8 @@ export const Item = React.forwardRef<HTMLDivElement, ItemProps>(
           a.py_2xs,
           a.text_sm,
           {outline: 0},
-          isSelected && [a.font_bold, {backgroundColor: t.palette.primary_50}],
-          (hovered || focused) && [
-            {backgroundColor: t.palette.primary_400, color: t.palette.white},
-          ],
+          (hovered || focused) && {backgroundColor: t.palette.primary_50},
+          selected && [a.font_bold],
           a.transition_color,
         ])}>
         <ItemContext.Provider value={ctx}>{children}</ItemContext.Provider>
@@ -236,7 +238,6 @@ export const ItemText = RadixSelect.ItemText
 
 export function ItemIndicator({icon: Icon = CheckIcon}: ItemIndicatorProps) {
   const t = useTheme()
-  const {hovered, focused} = useItemContext()
   return (
     <RadixSelect.ItemIndicator
       style={flatten([
@@ -246,10 +247,7 @@ export function ItemIndicator({icon: Icon = CheckIcon}: ItemIndicatorProps) {
         a.align_center,
         a.justify_center,
       ])}>
-      <Icon
-        size="sm"
-        fill={hovered || focused ? t.palette.white : t.palette.primary_500}
-      />
+      <Icon size="sm" fill={t.palette.primary_500} />
     </RadixSelect.ItemIndicator>
   )
 }
