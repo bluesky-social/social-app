@@ -1,4 +1,4 @@
-import React, {useContext, useMemo} from 'react'
+import {createContext, forwardRef, useContext, useMemo} from 'react'
 import {Select as RadixSelect} from 'radix-ui'
 
 import {flatten, useTheme} from '#/alf'
@@ -19,7 +19,7 @@ import {
   type ValueProps,
 } from './types'
 
-const SelectedValueContext = React.createContext<unknown>(null)
+const SelectedValueContext = createContext<string | undefined | null>(null)
 
 export function Root(props: RootProps) {
   return (
@@ -29,7 +29,7 @@ export function Root(props: RootProps) {
   )
 }
 
-const RadixTriggerPassThrough = React.forwardRef(
+const RadixTriggerPassThrough = forwardRef(
   (
     props: {
       children: (
@@ -139,12 +139,7 @@ export function Content<T>({items, renderItem}: ContentProps<T>) {
     a.align_center,
     a.justify_center,
     t.atoms.bg,
-    a.absolute,
-    a.left_0,
-    a.right_0,
-    {opacity: 0.9},
-    a.z_10,
-  ] as const
+  ]
 
   return (
     <RadixSelect.Portal>
@@ -153,21 +148,20 @@ export function Content<T>({items, renderItem}: ContentProps<T>) {
           t.atoms.bg,
           a.border,
           t.atoms.border_contrast_medium,
+          {borderColor: 'red'},
           a.rounded_sm,
           a.overflow_hidden,
         ])}
         position="popper"
         sideOffset={5}
         className="radix-select-content">
-        <RadixSelect.ScrollUpButton
-          style={flatten([...scrollBtnStyles, a.top_0])}>
+        <RadixSelect.ScrollUpButton style={flatten(scrollBtnStyles)}>
           <ChevronUpIcon style={[t.atoms.text]} size="xs" />
         </RadixSelect.ScrollUpButton>
         <RadixSelect.Viewport style={flatten([a.p_xs])}>
           {items.map((item, index) => renderItem(item, index))}
         </RadixSelect.Viewport>
-        <RadixSelect.ScrollDownButton
-          style={flatten([...scrollBtnStyles, a.bottom_0])}>
+        <RadixSelect.ScrollDownButton style={flatten(scrollBtnStyles)}>
           <ChevronDownIcon style={[t.atoms.text]} size="xs" />
         </RadixSelect.ScrollDownButton>
       </RadixSelect.Content>
@@ -175,7 +169,7 @@ export function Content<T>({items, renderItem}: ContentProps<T>) {
   )
 }
 
-const ItemContext = React.createContext<{
+const ItemContext = createContext<{
   hovered: boolean
   focused: boolean
   pressed: boolean
@@ -188,51 +182,48 @@ const ItemContext = React.createContext<{
 })
 
 export function useItemContext() {
-  return React.useContext(ItemContext)
+  return useContext(ItemContext)
 }
 
-export const Item = React.forwardRef<HTMLDivElement, ItemProps>(
-  ({value, children}, ref) => {
-    const t = useTheme()
-    const {
-      state: hovered,
-      onIn: onMouseEnter,
-      onOut: onMouseLeave,
-    } = useInteractionState()
-    const selected = useContext(SelectedValueContext) === value
-    const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
-    const ctx = useMemo(
-      () => ({hovered, focused, pressed: false, selected}),
-      [hovered, focused, selected],
-    )
-    return (
-      <RadixSelect.Item
-        ref={ref}
-        value={value}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        style={flatten([
-          a.relative,
-          a.flex,
-          {minHeight: 25, paddingLeft: 30, paddingRight: 35},
-          a.user_select_none,
-          a.align_center,
-          a.rounded_xs,
-          a.py_2xs,
-          a.text_sm,
-          {outline: 0},
-          (hovered || focused) && {backgroundColor: t.palette.primary_50},
-          selected && [a.font_bold],
-          a.transition_color,
-        ])}>
-        <ItemContext.Provider value={ctx}>{children}</ItemContext.Provider>
-      </RadixSelect.Item>
-    )
-  },
-)
-Item.displayName = 'SelectItem'
+export function Item({ref, value, children}: ItemProps) {
+  const t = useTheme()
+  const {
+    state: hovered,
+    onIn: onMouseEnter,
+    onOut: onMouseLeave,
+  } = useInteractionState()
+  const selected = useContext(SelectedValueContext) === value
+  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
+  const ctx = useMemo(
+    () => ({hovered, focused, pressed: false, selected}),
+    [hovered, focused, selected],
+  )
+  return (
+    <RadixSelect.Item
+      ref={ref}
+      value={value}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      style={flatten([
+        a.relative,
+        a.flex,
+        {minHeight: 25, paddingLeft: 30, paddingRight: 35},
+        a.user_select_none,
+        a.align_center,
+        a.rounded_xs,
+        a.py_2xs,
+        a.text_sm,
+        {outline: 0},
+        (hovered || focused) && {backgroundColor: t.palette.primary_50},
+        selected && [a.font_bold],
+        a.transition_color,
+      ])}>
+      <ItemContext.Provider value={ctx}>{children}</ItemContext.Provider>
+    </RadixSelect.Item>
+  )
+}
 
 export const ItemText = RadixSelect.ItemText
 

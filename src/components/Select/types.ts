@@ -6,7 +6,7 @@ import {type Props as SVGIconProps} from '#/components/icons/common'
 export type RootProps = {
   children?: React.ReactNode
   value?: string
-  onValueChange?(value: string): void
+  onValueChange?: (value: string) => void
   disabled?: boolean
   /**
    * @platform web
@@ -119,6 +119,7 @@ export type ContentProps<T> = {
 }
 
 export type ItemProps = {
+  ref?: React.Ref<HTMLDivElement>
   value: string
   label: string
   children: React.ReactNode
