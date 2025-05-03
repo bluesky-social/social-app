@@ -118,7 +118,7 @@ import {LazyQuoteEmbed, QuoteX} from '#/view/com/util/post-embeds/QuoteEmbed'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, native, useTheme} from '#/alf'
+import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
@@ -1266,39 +1266,41 @@ function ComposerFooter({
         a.justify_between,
       ]}>
       <View style={[a.flex_row, a.align_center]}>
-        {video && video.status !== 'done' ? (
-          <VideoUploadToolbar state={video} />
-        ) : (
-          <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
-            <SelectPhotoBtn
-              size={images.length}
-              disabled={media?.type === 'images' ? isMaxImages : !!media}
-              onAdd={onImageAdd}
-            />
-            <SelectVideoBtn
-              onSelectVideo={asset => onSelectVideo(post.id, asset)}
-              disabled={!!media}
-              setError={onError}
-            />
-            <OpenCameraBtn
-              disabled={media?.type === 'images' ? isMaxImages : !!media}
-              onAdd={onImageAdd}
-            />
-            <SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
-            {!isMobile ? (
-              <Button
-                onPress={onEmojiButtonPress}
-                style={a.p_sm}
-                label={_(msg`Open emoji picker`)}
-                accessibilityHint={_(msg`Opens emoji picker`)}
-                variant="ghost"
-                shape="round"
-                color="primary">
-                <EmojiSmile size="lg" />
-              </Button>
-            ) : null}
-          </ToolbarWrapper>
-        )}
+        <LayoutAnimationConfig skipEntering skipExiting>
+          {video && video.status !== 'done' ? (
+            <VideoUploadToolbar state={video} />
+          ) : (
+            <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <SelectPhotoBtn
+                size={images.length}
+                disabled={media?.type === 'images' ? isMaxImages : !!media}
+                onAdd={onImageAdd}
+              />
+              <SelectVideoBtn
+                onSelectVideo={asset => onSelectVideo(post.id, asset)}
+                disabled={!!media}
+                setError={onError}
+              />
+              <OpenCameraBtn
+                disabled={media?.type === 'images' ? isMaxImages : !!media}
+                onAdd={onImageAdd}
+              />
+              <SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
+              {!isMobile ? (
+                <Button
+                  onPress={onEmojiButtonPress}
+                  style={a.p_sm}
+                  label={_(msg`Open emoji picker`)}
+                  accessibilityHint={_(msg`Opens emoji picker`)}
+                  variant="ghost"
+                  shape="round"
+                  color="primary">
+                  <EmojiSmile size="lg" />
+                </Button>
+              ) : null}
+            </ToolbarWrapper>
+          )}
+        </LayoutAnimationConfig>
       </View>
       <View style={[a.flex_row, a.align_center, a.justify_between]}>
         {showAddButton && (
@@ -1515,10 +1517,10 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     marginLeft: 12,
   },
-  stickyFooterWeb: {
+  stickyFooterWeb: web({
     position: 'sticky',
     bottom: 0,
-  },
+  }),
   errorLine: {
     flexDirection: 'row',
     alignItems: 'center',
