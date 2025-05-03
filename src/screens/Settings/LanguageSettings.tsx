@@ -1,18 +1,19 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {languageName, sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {useModalControls} from '#/state/modals'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
-import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Layout from '#/components/Layout'
 import * as Select from '#/components/Select'
@@ -33,7 +34,7 @@ export function LanguageSettingsScreen({}: Props) {
   }, [openModal])
 
   const onChangePrimaryLanguage = useCallback(
-    (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {
+    (value: string) => {
       if (!value) return
       if (langPrefs.primaryLanguage !== value) {
         setLangPrefs.setPrimaryLanguage(value)
@@ -43,7 +44,7 @@ export function LanguageSettingsScreen({}: Props) {
   )
 
   const onChangeAppLanguage = useCallback(
-    (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {
+    (value: string) => {
       if (!value) return
       if (langPrefs.appLanguage !== value) {
         setLangPrefs.setAppLanguage(sanitizeAppLanguageSetting(value))
@@ -62,6 +63,13 @@ export function LanguageSettingsScreen({}: Props) {
         .join(', ')
     )
   }, [langPrefs.appLanguage, langPrefs.contentLanguages])
+
+  const currentAppLanguage = APP_LANGUAGES.find(
+    l => l.code2 === langPrefs.appLanguage,
+  )
+  const currentPrimaryLanguage = LANGUAGES.find(
+    l => l.code2 === langPrefs.primaryLanguage,
+  )
 
   return (
     <Layout.Screen testID="PreferencesLanguagesScreen">
@@ -92,13 +100,7 @@ export function LanguageSettingsScreen({}: Props) {
                 <Select.Trigger label={_(msg`Select app language`)}>
                   <Select.ValueText
                     placeholder={_(msg`Select an app language...`)}>
-                    {
-                      APP_LANGUAGES.find(
-                        l =>
-                          l.code2 ===
-                          sanitizeAppLanguageSetting(langPrefs.appLanguage),
-                      )?.name
-                    }
+                    {currentAppLanguage?.name}
                   </Select.ValueText>
                   <Select.Icon />
                 </Select.Trigger>
@@ -128,77 +130,33 @@ export function LanguageSettingsScreen({}: Props) {
                   Select your preferred language for translations in your feed.
                 </Trans>
               </Text>
-              <View style={[a.relative, web([a.w_full, {maxWidth: 400}])]}>
-                <RNPickerSelect
-                  darkTheme={t.scheme === 'dark'}
-                  placeholder={{}}
-                  value={langPrefs.primaryLanguage}
-                  onValueChange={onChangePrimaryLanguage}
+              <Select.Root
+                value={langPrefs.primaryLanguage}
+                onValueChange={onChangePrimaryLanguage}>
+                <Select.Trigger label={_(msg`Select primary language`)}>
+                  <Select.ValueText
+                    placeholder={_(msg`Select a primary language...`)}>
+                    {currentPrimaryLanguage &&
+                      languageName(
+                        currentPrimaryLanguage,
+                        langPrefs.appLanguage,
+                      )}
+                  </Select.ValueText>
+                  <Select.Icon />
+                </Select.Trigger>
+                <Select.Content
+                  renderItem={({label, value}) => (
+                    <Select.Item key={value} value={value} label={label}>
+                      <Select.ItemText>{label}</Select.ItemText>
+                      <Select.ItemIndicator />
+                    </Select.Item>
+                  )}
                   items={LANGUAGES.filter(l => Boolean(l.code2)).map(l => ({
-                    label: languageName(l, langPrefs.appLanguage),
+                    label: l.name,
                     value: l.code2,
-                    key: l.code2 + l.code3,
                   }))}
-                  style={{
-                    inputAndroid: {
-                      backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
-                      color: t.atoms.text.color,
-                      fontSize: 14,
-                      letterSpacing: 0.5,
-                      fontWeight: a.font_bold.fontWeight,
-                      paddingHorizontal: 14,
-                      paddingVertical: 8,
-                      borderRadius: a.rounded_xs.borderRadius,
-                    },
-                    inputIOS: {
-                      backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
-                      color: t.atoms.text.color,
-                      fontSize: 14,
-                      letterSpacing: 0.5,
-                      fontWeight: a.font_bold.fontWeight,
-                      paddingHorizontal: 14,
-                      paddingVertical: 8,
-                      borderRadius: a.rounded_xs.borderRadius,
-                    },
-                    inputWeb: {
-                      flex: 1,
-                      width: '100%',
-                      cursor: 'pointer',
-                      // @ts-ignore web only
-                      '-moz-appearance': 'none',
-                      '-webkit-appearance': 'none',
-                      appearance: 'none',
-                      outline: 0,
-                      borderWidth: 0,
-                      backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
-                      color: t.atoms.text.color,
-                      fontSize: 14,
-                      fontFamily: 'inherit',
-                      letterSpacing: 0.5,
-                      fontWeight: a.font_bold.fontWeight,
-                      paddingHorizontal: 14,
-                      paddingVertical: 8,
-                      borderRadius: a.rounded_xs.borderRadius,
-                    },
-                  }}
                 />
-
-                <View
-                  style={{
-                    position: 'absolute',
-                    top: 1,
-                    right: 1,
-                    bottom: 1,
-                    width: 40,
-                    backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
-                    borderRadius: a.rounded_xs.borderRadius,
-                    pointerEvents: 'none',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <ChevronDownIcon style={t.atoms.text} />
-                </View>
-              </View>
+              </Select.Root>
             </View>
           </SettingsList.Group>
           <SettingsList.Divider />
