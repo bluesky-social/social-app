@@ -107,8 +107,8 @@ export function LanguageSettingsScreen({}: Props) {
                 <Select.Content
                   renderItem={({label, value}) => (
                     <Select.Item key={value} value={value} label={label}>
-                      <Select.ItemText>{label}</Select.ItemText>
                       <Select.ItemIndicator />
+                      <Select.ItemText>{label}</Select.ItemText>
                     </Select.Item>
                   )}
                   items={APP_LANGUAGES.filter(l => Boolean(l.code2)).map(l => ({
@@ -147,8 +147,8 @@ export function LanguageSettingsScreen({}: Props) {
                 <Select.Content
                   renderItem={({label, value}) => (
                     <Select.Item key={value} value={value} label={label}>
-                      <Select.ItemText>{label}</Select.ItemText>
                       <Select.ItemIndicator />
+                      <Select.ItemText>{label}</Select.ItemText>
                     </Select.Item>
                   )}
                   items={LANGUAGES.filter(l => Boolean(l.code2)).map(l => ({

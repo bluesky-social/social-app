@@ -201,21 +201,13 @@ export function Item({children, value, label}: ItemProps) {
           <View
             style={[
               a.flex_1,
-              a.px_lg,
+              a.pl_lg,
               (focused || pressed) && t.atoms.bg_contrast_25,
+              a.flex_row,
+              a.align_center,
+              a.gap_sm,
             ]}>
-            <View
-              style={[
-                a.flex_1,
-                a.flex_row,
-                a.py_md,
-                a.justify_between,
-                a.align_center,
-                a.border_b,
-                t.atoms.border_contrast_low,
-              ]}>
-              {children}
-            </View>
+            {children}
           </View>
         </ItemContext.Provider>
       )}
@@ -224,11 +216,19 @@ export function Item({children, value, label}: ItemProps) {
 }
 
 export function ItemText({children}: ItemTextProps) {
-  return <Text style={[a.text_md]}>{children}</Text>
+  const {selected} = useItemContext()
+  const t = useTheme()
+
+  // eslint-disable-next-line bsky-internal/avoid-unwrapped-text
+  return (
+    <View style={[a.flex_1, a.py_md, a.border_b, t.atoms.border_contrast_low]}>
+      <Text style={[a.text_md, selected && a.font_bold]}>{children}</Text>
+    </View>
+  )
 }
 
 export function ItemIndicator({icon: Icon = CheckIcon}: ItemIndicatorProps) {
   const {selected} = useItemContext()
-  if (!selected) return null
-  return <Icon size="md" />
+
+  return <View style={{width: 24}}>{selected && <Icon size="md" />}</View>
 }
