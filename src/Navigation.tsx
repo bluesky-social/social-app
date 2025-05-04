@@ -324,7 +324,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="KeyBackups"
         getComponent={() => KeyBackupsScreen}
-        options={{title: title(msg`Key Backups`), requireAuth: true}}
+        options={{title: title(msg`Key Backups`), requireAuth: false}}
       />
       <Stack.Screen
         name="SavedFeeds"

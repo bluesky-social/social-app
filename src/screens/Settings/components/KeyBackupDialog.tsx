@@ -114,7 +114,7 @@ export function KeyBackupDialog({
         setError(_(msg`Invalid confirmation code. ${errMsg}`))
       } else if (errMsg.includes('max_rotation_keys')) {
         setError(
-          _(msg`You already have the maximum number of rotation keys (5).`),
+          _(msg`You already have the maximum number of rotation keys (10).`),
         )
         setStage(Stages.Warning)
       } else {
@@ -152,19 +152,24 @@ export function KeyBackupDialog({
     // Check if we already have 5 rotation keys (the maximum)
     if (
       plcData.rotationKeys &&
-      plcData.rotationKeys.length >= 5 &&
+      plcData.rotationKeys.length >= 10 &&
       !ignoreMaxRotationKeys
     ) {
       console.warn(
-        'WARNING: already have 5 rotation keys, which is the maximum',
+        'WARNING: already have 10 rotation keys, which is the maximum',
       )
       throw new Error('max_rotation_keys')
     }
 
     // Check if key already exists in rotation keys
     if (plcData.rotationKeys && plcData.rotationKeys.includes(newKeyStr)) {
-      throw new Error('Key already registered as a rotation key')
+      throw new Error('key_already_exists')
     }
+
+    // get recommended rotation keys
+    const recommended =
+      await agent.com.atproto.identity.getRecommendedDidCredentials()
+    const recommendedKeys = recommended.data.rotationKeys
 
     // add the new key
     if (insertFirst && plcData.rotationKeys) {
@@ -176,7 +181,14 @@ export function KeyBackupDialog({
 
     // delete the oldest keys if we have more than 10!
     while (plcData.rotationKeys.length > 10) {
-      plcData.rotationKeys.pop()
+      // plcData.rotationKeys.pop()
+      // go through the rotation keys backwards and pop the first one that isn't in the recommended keys
+      for (let i = plcData.rotationKeys.length - 1; i >= 0; i--) {
+        if (!recommendedKeys?.includes(plcData.rotationKeys[i])) {
+          plcData.rotationKeys.splice(i, 1)
+          break
+        }
+      }
     }
 
     const operationInput = {...plcData}
@@ -204,8 +216,7 @@ export function KeyBackupDialog({
       rotationKeys.push({
         did: newKeyStr,
         privateKey: privateKey,
-        createdAt: Date.now().toString(),
-        name: 'Backup Key ' + (rotationKeys.length + 1),
+        createdAt: Date.now(),
       })
 
       await SecureStore.setItemAsync(

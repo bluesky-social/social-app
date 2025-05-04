@@ -82,27 +82,42 @@ export function KeyBackupsScreen({}: Props) {
       <Layout.Content>
         <SettingsList.Container>
           <SettingsList.Item>
-            <Admonition type="tip" style={[a.flex_1]}>
-              <Trans>
-                These keys can be used to recover your account if you lose your
-                password. Do not share these keys with anyone.
-              </Trans>
+            <Admonition type="warning" style={[a.flex_1]}>
+              <View style={[a.flex_1, a.gap_md]}>
+                <Text style={[a.text_sm]}>
+                  <Trans>
+                    These keys can be used to recover your account if you lose
+                    your password.
+                  </Trans>
+                </Text>
+                <Text style={[a.text_sm]}>
+                  <Trans>
+                    Anyone with possession of this key can take PERMANENT and
+                    IRREVOCABLE control over your account.
+                  </Trans>
+                </Text>
+                <Text style={[a.text_sm]}>
+                  <Trans>DO NOT SHARE THESE KEYS WITH ANYONE.</Trans>
+                </Text>
+              </View>
             </Admonition>
           </SettingsList.Item>
-          <SettingsList.Item>
-            <Button
-              label={_(msg`Add Key Backup`)}
-              size="large"
-              color="primary"
-              variant="solid"
-              onPress={onBackupKey}
-              style={[a.flex_1]}>
-              <ButtonIcon icon={PlusIcon} />
-              <ButtonText>
-                <Trans>Add Key Backup</Trans>
-              </ButtonText>
-            </Button>
-          </SettingsList.Item>
+          {currentAccount && (
+            <SettingsList.Item>
+              <Button
+                label={_(msg`Add Key Backup`)}
+                size="large"
+                color="primary"
+                variant="solid"
+                onPress={onBackupKey}
+                style={[a.flex_1]}>
+                <ButtonIcon icon={PlusIcon} />
+                <ButtonText>
+                  <Trans>Add Key Backup</Trans>
+                </ButtonText>
+              </Button>
+            </SettingsList.Item>
+          )}
           {isNative && (
             <>
               <SettingsList.Divider />
@@ -112,7 +127,7 @@ export function KeyBackupsScreen({}: Props) {
                     <View style={[a.overflow_hidden]}>
                       {keyBackups.map(keyBackup => (
                         <Animated.View
-                          key={keyBackup.name}
+                          key={keyBackup.did}
                           style={a.w_full}
                           entering={FadeIn}
                           exiting={isWeb ? FadeOut : StretchOutY}
@@ -129,7 +144,7 @@ export function KeyBackupsScreen({}: Props) {
                   ) : (
                     <EmptyState
                       icon="growth"
-                      message={_(msg`No rotation keys found on this device`)}
+                      message={_(msg`No keys found on this device`)}
                     />
                   )
                 ) : (
@@ -176,7 +191,7 @@ const deleteKeyBackup = async (keyBackup: RotationKey) => {
   }
   const rotationKeysArray = JSON.parse(rotationKeys)
   const index = rotationKeysArray.findIndex(
-    (k: RotationKey) => k.name === keyBackup.name,
+    (k: RotationKey) => k.did === keyBackup.did,
   )
   rotationKeysArray.splice(index, 1)
   await SecureStore.setItemAsync(
@@ -213,7 +228,8 @@ function KeyBackupCard({
         t.atoms.bg_contrast_25,
         t.atoms.border_contrast_low,
       ]}>
-      <TouchableOpacity accessibilityRole="button"
+      <TouchableOpacity
+        accessibilityRole="button"
         onPress={() => {
           let clipboardContent = `${keyBackup.did}\n${keyBackup.privateKey}`
           Clipboard.setStringAsync(clipboardContent)
@@ -234,14 +250,14 @@ function KeyBackupCard({
             a.w_full,
             a.gap_sm,
           ]}>
-          <View style={[a.gap_xs]}>
-            <Text style={[t.atoms.text, a.text_md, a.font_bold]}>
-              {keyBackup.name}
+          <View style={[a.gap_xs, a.flex_1]}>
+            <Text style={[t.atoms.text, a.text_md, a.font_bold, a.flex_wrap]}>
+              {keyBackup.did}
             </Text>
             <Text style={[t.atoms.text_contrast_medium]}>
               <Trans>
                 Created{' '}
-                {i18n.date(keyBackup.createdAt, {
+                {i18n.date(new Date(keyBackup.createdAt), {
                   year: 'numeric',
                   month: 'numeric',
                   day: 'numeric',
@@ -266,9 +282,7 @@ function KeyBackupCard({
       <Prompt.Basic
         control={deleteControl}
         title={_(msg`Delete key backup?`)}
-        description={_(
-          msg`Are you sure you want to delete this key backup "${keyBackup.name}"?`,
-        )}
+        description={_(msg`Are you sure you want to delete this key backup?`)}
         onConfirm={onDelete}
         confirmButtonCta={_(msg`Delete`)}
         confirmButtonColor="negative"
