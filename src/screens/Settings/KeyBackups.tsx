@@ -60,6 +60,9 @@ export function KeyBackupsScreen({}: Props) {
   }, [currentAccount, backupKeyDialogControl, verifyEmailDialogControl])
 
   const fetchRotationKeys = async () => {
+    if (!isNative || !(await SecureStore.isAvailableAsync())) {
+      return
+    }
     const rotationKeys = await SecureStore.getItemAsync('rotationKeys')
     setKeyBackups(rotationKeys ? JSON.parse(rotationKeys) : [])
   }
@@ -185,6 +188,9 @@ export function KeyBackupsScreen({}: Props) {
 }
 
 const deleteKeyBackup = async (keyBackup: RotationKey) => {
+  if (!isNative || !(await SecureStore.isAvailableAsync())) {
+    return
+  }
   const rotationKeys = await SecureStore.getItemAsync('rotationKeys')
   if (!rotationKeys) {
     throw new Error('No rotation keys found!')

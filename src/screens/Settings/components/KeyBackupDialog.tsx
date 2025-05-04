@@ -207,7 +207,7 @@ export function KeyBackupDialog({
     })
 
     // only on native since secure storage isn't available on web
-    if (isNative) {
+    if (isNative && (await SecureStore.isAvailableAsync())) {
       let rotationKeysString =
         (await SecureStore.getItemAsync('rotationKeys')) ?? ''
       let rotationKeys: RotationKey[] = rotationKeysString

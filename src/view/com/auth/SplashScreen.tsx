@@ -31,6 +31,9 @@ export const SplashScreen = ({
   const [showKeyBackups, setShowKeyBackups] = useState(false)
 
   const fetchKeyBackups = async () => {
+    if (!isNative || !(await SecureStore.isAvailableAsync())) {
+      return
+    }
     let rotationKeysString =
       (await SecureStore.getItemAsync('rotationKeys')) ?? ''
     let rotationKeys: RotationKey[] = rotationKeysString
@@ -40,9 +43,7 @@ export const SplashScreen = ({
   }
 
   useEffect(() => {
-    if (isNative) {
-      fetchKeyBackups()
-    }
+    fetchKeyBackups()
   }, [])
 
   return (
