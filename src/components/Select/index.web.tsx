@@ -117,7 +117,7 @@ export function Trigger({children, label}: TriggerProps) {
   }
 }
 
-export function ValueText(props: ValueProps) {
+export function ValueText({children: _, ...props}: ValueProps) {
   return <RadixSelect.Value {...props} />
 }
 

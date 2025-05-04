@@ -64,13 +64,6 @@ export function LanguageSettingsScreen({}: Props) {
     )
   }, [langPrefs.appLanguage, langPrefs.contentLanguages])
 
-  const currentAppLanguage = APP_LANGUAGES.find(
-    l => l.code2 === langPrefs.appLanguage,
-  )
-  const currentPrimaryLanguage = LANGUAGES.find(
-    l => l.code2 === langPrefs.primaryLanguage,
-  )
-
   return (
     <Layout.Screen testID="PreferencesLanguagesScreen">
       <Layout.Header.Outer>
@@ -99,14 +92,13 @@ export function LanguageSettingsScreen({}: Props) {
                 onValueChange={onChangeAppLanguage}>
                 <Select.Trigger label={_(msg`Select app language`)}>
                   <Select.ValueText
-                    placeholder={_(msg`Select an app language...`)}>
-                    {currentAppLanguage?.name}
-                  </Select.ValueText>
+                    placeholder={_(msg`Select an app language...`)}
+                  />
                   <Select.Icon />
                 </Select.Trigger>
                 <Select.Content
                   renderItem={({label, value}) => (
-                    <Select.Item key={value} value={value} label={label}>
+                    <Select.Item value={value} label={label}>
                       <Select.ItemIndicator />
                       <Select.ItemText>{label}</Select.ItemText>
                     </Select.Item>
@@ -135,24 +127,19 @@ export function LanguageSettingsScreen({}: Props) {
                 onValueChange={onChangePrimaryLanguage}>
                 <Select.Trigger label={_(msg`Select primary language`)}>
                   <Select.ValueText
-                    placeholder={_(msg`Select a primary language...`)}>
-                    {currentPrimaryLanguage &&
-                      languageName(
-                        currentPrimaryLanguage,
-                        langPrefs.appLanguage,
-                      )}
-                  </Select.ValueText>
+                    placeholder={_(msg`Select a primary language...`)}
+                  />
                   <Select.Icon />
                 </Select.Trigger>
                 <Select.Content
                   renderItem={({label, value}) => (
-                    <Select.Item key={value} value={value} label={label}>
+                    <Select.Item value={value} label={label}>
                       <Select.ItemIndicator />
                       <Select.ItemText>{label}</Select.ItemText>
                     </Select.Item>
                   )}
                   items={LANGUAGES.filter(l => Boolean(l.code2)).map(l => ({
-                    label: l.name,
+                    label: languageName(l, langPrefs.appLanguage),
                     value: l.code2,
                   }))}
                 />

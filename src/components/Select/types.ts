@@ -104,18 +104,25 @@ export type TriggerChildProps =
     }
 
 export type ValueProps = {
-  /*
-   * Workaround for native limitation. Not needed on web
-   *
-   * @platform ios, android
+  /**
+   * Only needed for native. Extracts the label from an item. Defaults to `item => item.label`
    */
-  children?: React.ReactNode
+  children?: (value: any) => string
   placeholder?: string
 }
 
 export type ContentProps<T> = {
+  /**
+   * Items to render. Recommended to be in the form {value: string, label: string} - if not,
+   * you need to provide a `valueExtractor` function to extract the value from an item and
+   * customise the `Select.ValueText` component.
+   */
   items: T[]
   renderItem: (item: T, index: number) => React.ReactElement
+  /*
+   * Extracts the value from an item. Defaults to `item => item.value`
+   */
+  valueExtractor?: (item: T) => string
 }
 
 export type ItemProps = {

@@ -1,4 +1,11 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -25,10 +32,14 @@ type ContextType = {
   control: Dialog.DialogControlProps
 } & Pick<RootProps, 'value' | 'onValueChange' | 'disabled'>
 
-const Context = React.createContext<ContextType | null>(null)
+const Context = createContext<ContextType | null>(null)
+
+const ValueTextContext = createContext<
+  [any, React.Dispatch<React.SetStateAction<any>>]
+>([undefined, () => {}])
 
 function useSelectContext() {
-  const ctx = React.useContext(Context)
+  const ctx = useContext(Context)
   if (!ctx) {
     throw new Error('Select components must must be used within a Select.Root')
   }
@@ -37,6 +48,8 @@ function useSelectContext() {
 
 export function Root({children, value, onValueChange, disabled}: RootProps) {
   const control = Dialog.useDialogControl()
+  const valueTextCtx = useState<any>()
+
   const ctx = useMemo(
     () => ({
       control,
@@ -46,7 +59,13 @@ export function Root({children, value, onValueChange, disabled}: RootProps) {
     }),
     [control, value, onValueChange, disabled],
   )
-  return <Context.Provider value={ctx}>{children}</Context.Provider>
+  return (
+    <Context.Provider value={ctx}>
+      <ValueTextContext.Provider value={valueTextCtx}>
+        {children}
+      </ValueTextContext.Provider>
+    </Context.Provider>
+  )
 }
 
 export function Trigger({children, label}: TriggerProps) {
@@ -91,23 +110,47 @@ export function Trigger({children, label}: TriggerProps) {
   }
 }
 
-export function ValueText({placeholder, children}: ValueProps) {
+export function ValueText({
+  placeholder,
+  children = value => value.label,
+}: ValueProps) {
+  const [value] = useContext(ValueTextContext)
   const t = useTheme()
-  return (
-    <ButtonText style={[t.atoms.text]}>{children || placeholder}</ButtonText>
-  )
+
+  let text = value && children(value)
+  if (typeof text !== 'string') text = placeholder
+
+  return <ButtonText style={[t.atoms.text]}>{text}</ButtonText>
 }
 
 export function Icon() {
   return <ButtonIcon icon={ChevronUpDownIcon} />
 }
 
-export function Content<T>(props: ContentProps<T>) {
+export function Content<T>({
+  items,
+  valueExtractor = defaultItemValueExtractor,
+  ...props
+}: ContentProps<T>) {
   const {control, ...context} = useSelectContext()
+  const [, setValue] = useContext(ValueTextContext)
+
+  useLayoutEffect(() => {
+    const item = items.find(item => valueExtractor(item) === context.value)
+    if (item) {
+      setValue(item)
+    }
+  }, [items, context.value, valueExtractor, setValue])
 
   return (
     <Dialog.Outer control={control}>
-      <ContentInner control={control} {...props} {...context} />
+      <ContentInner
+        control={control}
+        items={items}
+        valueExtractor={valueExtractor}
+        {...props}
+        {...context}
+      />
     </Dialog.Outer>
   )
 }
@@ -115,13 +158,14 @@ export function Content<T>(props: ContentProps<T>) {
 function ContentInner<T>({
   items,
   renderItem,
+  valueExtractor,
   ...context
 }: ContentProps<T> & ContextType) {
   const control = Dialog.useDialogContext()
   const {_} = useLingui()
   const [headerHeight, setHeaderHeight] = useState(50)
 
-  const render = React.useCallback(
+  const render = useCallback(
     ({item, index}: {item: T; index: number}) => {
       return renderItem(item, index)
     },
@@ -159,12 +203,17 @@ function ContentInner<T>({
         headerOffset={headerHeight}
         data={items}
         renderItem={render}
+        keyExtractor={valueExtractor}
       />
     </Context.Provider>
   )
 }
 
-const ItemContext = React.createContext<{
+function defaultItemValueExtractor(item: any) {
+  return item.value
+}
+
+const ItemContext = createContext<{
   selected: boolean
   hovered: boolean
   focused: boolean
@@ -177,7 +226,7 @@ const ItemContext = React.createContext<{
 })
 
 export function useItemContext() {
-  return React.useContext(ItemContext)
+  return useContext(ItemContext)
 }
 
 export function Item({children, value, label}: ItemProps) {
