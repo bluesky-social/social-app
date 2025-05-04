@@ -1,5 +1,10 @@
-import {type AccessibilityProps} from 'react-native'
+import {
+  type AccessibilityProps,
+  type StyleProp,
+  type TextStyle,
+} from 'react-native'
 
+import {type TextStyleProp} from '#/alf'
 import {type DialogControlProps} from '#/components/Dialog'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 
@@ -109,7 +114,13 @@ export type ValueProps = {
    */
   children?: (value: any) => string
   placeholder?: string
+  style?: StyleProp<TextStyle>
 }
+
+/*
+ * `style` prop is web only
+ */
+export type IconProps = TextStyleProp
 
 export type ContentProps<T> = {
   /**

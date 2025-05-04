@@ -20,6 +20,7 @@ import {ChevronTopBottom_Stroke2_Corner0_Rounded as ChevronUpDownIcon} from '#/c
 import {Text} from '#/components/Typography'
 import {
   type ContentProps,
+  type IconProps,
   type ItemIndicatorProps,
   type ItemProps,
   type ItemTextProps,
@@ -120,10 +121,10 @@ export function ValueText({
   let text = value && children(value)
   if (typeof text !== 'string') text = placeholder
 
-  return <ButtonText style={[t.atoms.text]}>{text}</ButtonText>
+  return <ButtonText style={[t.atoms.text, a.font_normal]}>{text}</ButtonText>
 }
 
-export function Icon() {
+export function Icon({}: IconProps) {
   return <ButtonIcon icon={ChevronUpDownIcon} />
 }
 
@@ -250,7 +251,7 @@ export function Item({children, value, label}: ItemProps) {
           <View
             style={[
               a.flex_1,
-              a.pl_lg,
+              a.pl_md,
               (focused || pressed) && t.atoms.bg_contrast_25,
               a.flex_row,
               a.align_center,

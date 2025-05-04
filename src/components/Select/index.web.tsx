@@ -1,4 +1,5 @@
 import {createContext, forwardRef, useContext, useMemo} from 'react'
+import {View} from 'react-native'
 import {Select as RadixSelect} from 'radix-ui'
 
 import {flatten, useTheme} from '#/alf'
@@ -9,8 +10,10 @@ import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
   ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
 } from '#/components/icons/Chevron'
+import {Text} from '#/components/Typography'
 import {
   type ContentProps,
+  type IconProps,
   type ItemIndicatorProps,
   type ItemProps,
   type RadixPassThroughTriggerProps,
@@ -117,15 +120,19 @@ export function Trigger({children, label}: TriggerProps) {
   }
 }
 
-export function ValueText({children: _, ...props}: ValueProps) {
-  return <RadixSelect.Value {...props} />
+export function ValueText({children: _, style, ...props}: ValueProps) {
+  return (
+    <Text style={style}>
+      <RadixSelect.Value {...props} />
+    </Text>
+  )
 }
 
-export function Icon() {
+export function Icon({style}: IconProps) {
   const t = useTheme()
   return (
     <RadixSelect.Icon>
-      <ChevronDownIcon style={[t.atoms.text]} size="xs" />
+      <ChevronDownIcon style={[t.atoms.text, style]} size="xs" />
     </RadixSelect.Icon>
   )
 }
@@ -139,31 +146,33 @@ export function Content<T>({items, renderItem}: ContentProps<T>) {
     a.align_center,
     a.justify_center,
     t.atoms.bg,
+    a.rounded_sm,
   ]
 
   return (
     <RadixSelect.Portal>
       <RadixSelect.Content
-        style={flatten([
-          t.atoms.bg,
-          a.border,
-          t.atoms.border_contrast_medium,
-          {borderColor: 'red'},
-          a.rounded_sm,
-          a.overflow_hidden,
-        ])}
+        style={flatten([t.atoms.bg, a.rounded_sm, a.overflow_hidden])}
         position="popper"
         sideOffset={5}
         className="radix-select-content">
-        <RadixSelect.ScrollUpButton style={flatten(scrollBtnStyles)}>
-          <ChevronUpIcon style={[t.atoms.text]} size="xs" />
-        </RadixSelect.ScrollUpButton>
-        <RadixSelect.Viewport style={flatten([a.p_xs])}>
-          {items.map((item, index) => renderItem(item, index))}
-        </RadixSelect.Viewport>
-        <RadixSelect.ScrollDownButton style={flatten(scrollBtnStyles)}>
-          <ChevronDownIcon style={[t.atoms.text]} size="xs" />
-        </RadixSelect.ScrollDownButton>
+        <View
+          style={[
+            a.flex_1,
+            a.border,
+            t.atoms.border_contrast_low,
+            a.rounded_sm,
+          ]}>
+          <RadixSelect.ScrollUpButton style={flatten([scrollBtnStyles])}>
+            <ChevronUpIcon style={[t.atoms.text]} size="xs" />
+          </RadixSelect.ScrollUpButton>
+          <RadixSelect.Viewport style={flatten([a.p_xs])}>
+            {items.map((item, index) => renderItem(item, index))}
+          </RadixSelect.Viewport>
+          <RadixSelect.ScrollDownButton style={flatten(scrollBtnStyles)}>
+            <ChevronDownIcon style={[t.atoms.text]} size="xs" />
+          </RadixSelect.ScrollDownButton>
+        </View>
       </RadixSelect.Content>
     </RadixSelect.Portal>
   )
@@ -228,7 +237,6 @@ export function Item({ref, value, children}: ItemProps) {
 export const ItemText = RadixSelect.ItemText
 
 export function ItemIndicator({icon: Icon = CheckIcon}: ItemIndicatorProps) {
-  const t = useTheme()
   return (
     <RadixSelect.ItemIndicator
       style={flatten([
@@ -238,7 +246,7 @@ export function ItemIndicator({icon: Icon = CheckIcon}: ItemIndicatorProps) {
         a.align_center,
         a.justify_center,
       ])}>
-      <Icon size="sm" fill={t.palette.primary_500} />
+      <Icon size="sm" />
     </RadixSelect.ItemIndicator>
   )
 }
