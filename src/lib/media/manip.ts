@@ -26,11 +26,10 @@ export async function compressIfNeeded(
   img: PickerImage,
   maxSize: number = 1000000,
 ): Promise<PickerImage> {
-  const origUri = `file://${img.path}`
   if (img.size < maxSize) {
     return img
   }
-  const resizedImage = await doResize(origUri, {
+  const resizedImage = await doResize(normalizePath(img.path), {
     width: img.width,
     height: img.height,
     mode: 'stretch',
@@ -184,6 +183,7 @@ async function doResize(
   let minQualityPercentage = 0
   let maxQualityPercentage = 101 // exclusive
   let newDataUri
+  const intermediateUris = []
 
   while (maxQualityPercentage - minQualityPercentage > 1) {
     const qualityPercentage = Math.round(
@@ -197,6 +197,8 @@ async function doResize(
         compress: qualityPercentage / 100,
       },
     )
+
+    intermediateUris.push(resizeRes.uri)
 
     const fileInfo = await getInfoAsync(resizeRes.uri)
     if (!fileInfo.exists) {
@@ -217,8 +219,12 @@ async function doResize(
     } else {
       maxQualityPercentage = qualityPercentage
     }
+  }
 
-    safeDeleteAsync(resizeRes.uri)
+  for (const intermediateUri of intermediateUris) {
+    if (newDataUri?.path !== normalizePath(intermediateUri)) {
+      safeDeleteAsync(intermediateUri)
+    }
   }
 
   if (newDataUri) {
