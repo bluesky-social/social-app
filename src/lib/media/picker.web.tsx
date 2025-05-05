@@ -1,5 +1,3 @@
-/// <reference lib="dom" />
-
 import {type OpenCropperOptions} from 'expo-image-crop-tool'
 
 import {type PickerImage} from './picker.shared'
