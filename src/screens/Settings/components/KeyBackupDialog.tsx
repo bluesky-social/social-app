@@ -229,13 +229,15 @@ export function KeyBackupDialog({
     return true
   }
 
-  const handleClose = () => {
+  const handleClose = (closing: boolean = false) => {
     // reset state
     setError('')
     setConfirmationCode('')
     setBackupKey(null)
     setStage(Stages.Email)
-    control.close()
+    if (closing) {
+      control.close()
+    }
   }
 
   return (
@@ -429,7 +431,7 @@ export function KeyBackupDialog({
                   variant="solid"
                   color="secondary"
                   size={gtMobile ? 'small' : 'large'}
-                  onPress={handleClose}
+                  onPress={() => handleClose(true)}
                   label={_(msg`Close`)}>
                   <ButtonText>
                     <Trans>Close</Trans>
