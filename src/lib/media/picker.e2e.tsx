@@ -3,11 +3,10 @@ import {
   getInfoAsync,
   readDirectoryAsync,
 } from 'expo-file-system'
-import ExpoImageCropTool from 'expo-image-crop-tool'
+import ExpoImageCropTool, {type OpenCropperOptions} from 'expo-image-crop-tool'
 
 import {compressIfNeeded} from './manip'
 import {type PickerImage} from './picker.shared'
-import {type CropperOptions} from './types'
 
 async function getFile() {
   const imagesDir = documentDirectory!
@@ -43,10 +42,10 @@ export async function openCamera(): Promise<PickerImage> {
   return await getFile()
 }
 
-export async function openCropper(opts: CropperOptions) {
+export async function openCropper(opts: OpenCropperOptions) {
   const item = await ExpoImageCropTool.openCropperAsync({
     ...opts,
-    forceJpg: true, // ios only
+    format: 'jpeg',
   })
 
   return {

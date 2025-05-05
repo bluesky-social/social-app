@@ -2,13 +2,13 @@ import React, {memo, useMemo} from 'react'
 import {
   Image,
   Pressable,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
-import {ModerationUI} from '@atproto/api'
+import {type ModerationUI} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -37,12 +37,12 @@ import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 import {
   openCamera,
   openCropper,
   openPicker,
-  RNImage,
+  type RNImage,
 } from '../../../lib/media/picker'
 
 export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
@@ -346,7 +346,7 @@ let EditableUserAvatar = ({
           })
           onSelectNewAvatar(croppedImage)
         },
-        isIOS ? 500 : 0,
+        isIOS ? 500 : 500,
       )
     } catch (e: any) {
       // Don't log errors for cancelling selection to sentry on ios or android

@@ -1,12 +1,12 @@
 import {useCallback, useEffect, useState} from 'react'
 import {Dimensions, View} from 'react-native'
-import {type Image as RNImage} from 'react-native-image-crop-picker'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {urls} from '#/lib/constants'
 import {compressIfNeeded} from '#/lib/media/manip'
+import {type PickerImage} from '#/lib/media/picker.shared'
 import {cleanError} from '#/lib/strings/errors'
 import {useWarnMaxGraphemeCount} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
@@ -127,10 +127,10 @@ function DialogInner({
     profile.avatar,
   )
   const [newUserBanner, setNewUserBanner] = useState<
-    RNImage | undefined | null
+    PickerImage | undefined | null
   >()
   const [newUserAvatar, setNewUserAvatar] = useState<
-    RNImage | undefined | null
+    PickerImage | undefined | null
   >()
 
   const dirty =
@@ -144,7 +144,7 @@ function DialogInner({
   }, [dirty, setDirty])
 
   const onSelectNewAvatar = useCallback(
-    async (img: RNImage | null) => {
+    async (img: PickerImage | null) => {
       setImageError('')
       if (img === null) {
         setNewUserAvatar(null)
@@ -163,7 +163,7 @@ function DialogInner({
   )
 
   const onSelectNewBanner = useCallback(
-    async (img: RNImage | null) => {
+    async (img: PickerImage | null) => {
       setImageError('')
       if (!img) {
         setNewUserBanner(null)

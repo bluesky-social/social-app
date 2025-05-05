@@ -1,8 +1,10 @@
 /// <reference lib="dom" />
 
+import {type OpenCropperOptions} from 'expo-image-crop-tool'
+
 import {unstable__openModal} from '#/state/modals'
 import {type PickerImage} from './picker.shared'
-import {type CameraOpts, type CropperOptions} from './types'
+import {type CameraOpts} from './types'
 
 export {openPicker, type PickerImage as RNImage} from './picker.shared'
 
@@ -11,18 +13,16 @@ export async function openCamera(_opts: CameraOpts): Promise<PickerImage> {
   throw new Error('TODO')
 }
 
-export async function openCropper(opts: CropperOptions): Promise<PickerImage> {
+export async function openCropper(
+  opts: OpenCropperOptions,
+): Promise<PickerImage> {
   // TODO handle more opts
   return new Promise((resolve, reject) => {
     unstable__openModal({
       name: 'crop-image',
-      uri: opts.path,
-      dimensions:
-        opts.width && opts.height
-          ? {width: opts.width, height: opts.height}
-          : undefined,
-      aspect: opts.webAspectRatio,
-      circular: opts.webCircularCrop,
+      uri: opts.imageUri,
+      aspect: opts.aspectRatio,
+      circular: opts.shape === 'circle',
       onSelect: (img?: PickerImage) => {
         if (img) {
           resolve(img)
