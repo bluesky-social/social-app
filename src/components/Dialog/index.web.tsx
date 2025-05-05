@@ -193,7 +193,7 @@ export function Inner({
           onInteractOutside={preventDefault}
           onFocusOutside={preventDefault}
           onDismiss={close}
-          style={{display: 'flex', flexDirection: 'column'}}>
+          style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
           {header}
           <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
             {children}
@@ -227,10 +227,10 @@ export const InnerFlatList = React.forwardRef<
         web({maxHeight: '80vh'}),
         webInnerStyle,
       ]}
-      contentContainerStyle={[a.px_0, webInnerContentContainerStyle]}>
+      contentContainerStyle={[a.h_full, a.px_0, webInnerContentContainerStyle]}>
       <FlatList
         ref={ref}
-        style={[gtMobile ? a.px_2xl : a.px_xl, flatten(style)]}
+        style={[a.h_full, gtMobile ? a.px_2xl : a.px_xl, flatten(style)]}
         {...props}
       />
     </Inner>
