@@ -289,14 +289,18 @@ let UserAvatar = ({
         />
       )}
       <MediaInsetBorder style={borderStyle} />
-      {live && <LiveIndicator size={size > 26 ? 'small' : 'tiny'} />}
+      {live && size > 16 && (
+        <LiveIndicator size={size > 26 ? 'small' : 'tiny'} />
+      )}
       {alert}
     </View>
   ) : (
     <View style={containerStyle}>
       <DefaultAvatar type={type} shape={finalShape} size={size} />
       <MediaInsetBorder style={borderStyle} />
-      {live && <LiveIndicator size={size > 26 ? 'small' : 'tiny'} />}
+      {live && size > 16 && (
+        <LiveIndicator size={size > 26 ? 'small' : 'tiny'} />
+      )}
       {alert}
     </View>
   )
