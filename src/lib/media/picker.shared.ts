@@ -9,6 +9,14 @@ import {t} from '@lingui/macro'
 import * as Toast from '#/view/com/util/Toast'
 import {getDataUriSize} from './util'
 
+export type RNImage = {
+  mime: string
+  height: number
+  width: number
+  path: string
+  size: number
+}
+
 export async function openPicker(opts?: ImagePickerOptions) {
   const response = await launchImageLibraryAsync({
     exif: false,

@@ -1,8 +1,4 @@
 import {
-  Image as RNImage,
-  openCropper as openCropperFn,
-} from 'react-native-image-crop-picker'
-import {
   documentDirectory,
   getInfoAsync,
   readDirectoryAsync,
@@ -10,6 +6,8 @@ import {
 
 import {compressIfNeeded} from './manip'
 import {CropperOptions} from './types'
+import {RNImage} from './picker.shared'
+import ExpoImageCropTool from 'expo-image-crop-tool'
 
 async function getFile() {
   const imagesDir = documentDirectory!
@@ -46,7 +44,7 @@ export async function openCamera(): Promise<RNImage> {
 }
 
 export async function openCropper(opts: CropperOptions) {
-  const item = await openCropperFn({
+  const item = await ExpoImageCropTool.openCropperAsync({
     ...opts,
     forceJpg: true, // ios only
   })

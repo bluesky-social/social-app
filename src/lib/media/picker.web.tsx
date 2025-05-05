@@ -1,10 +1,10 @@
 /// <reference lib="dom" />
 
-import {Image as RNImage} from 'react-native-image-crop-picker'
-
 import {CameraOpts, CropperOptions} from './types'
-export {openPicker} from './picker.shared'
 import {unstable__openModal} from '#/state/modals'
+import {RNImage} from './picker.shared'
+
+export {openPicker, type RNImage} from './picker.shared'
 
 export async function openCamera(_opts: CameraOpts): Promise<RNImage> {
   // const mediaType = opts.mediaType || 'photo' TODO
