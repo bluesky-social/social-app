@@ -20,6 +20,11 @@ import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import * as SettingsList from './components/SettingsList'
 
+const DEDUPED_LANGUAGES = LANGUAGES.filter(
+  (lang, i, arr) =>
+    lang.code2 && arr.findIndex(l => l.code2 === lang.code2) === i,
+)
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
 export function LanguageSettingsScreen({}: Props) {
   const {_} = useLingui()
@@ -103,7 +108,7 @@ export function LanguageSettingsScreen({}: Props) {
                       <Select.ItemText>{label}</Select.ItemText>
                     </Select.Item>
                   )}
-                  items={APP_LANGUAGES.filter(l => Boolean(l.code2)).map(l => ({
+                  items={APP_LANGUAGES.map(l => ({
                     label: l.name,
                     value: l.code2,
                   }))}
@@ -138,7 +143,7 @@ export function LanguageSettingsScreen({}: Props) {
                       <Select.ItemText>{label}</Select.ItemText>
                     </Select.Item>
                   )}
-                  items={LANGUAGES.filter(l => Boolean(l.code2)).map(l => ({
+                  items={DEDUPED_LANGUAGES.map(l => ({
                     label: languageName(l, langPrefs.appLanguage),
                     value: l.code2,
                   }))}

@@ -114,6 +114,7 @@ export function Trigger({children, label}: TriggerProps) {
 export function ValueText({
   placeholder,
   children = value => value.label,
+  style,
 }: ValueProps) {
   const [value] = useContext(ValueTextContext)
   const t = useTheme()
@@ -121,7 +122,9 @@ export function ValueText({
   let text = value && children(value)
   if (typeof text !== 'string') text = placeholder
 
-  return <ButtonText style={[t.atoms.text, a.font_normal]}>{text}</ButtonText>
+  return (
+    <ButtonText style={[t.atoms.text, a.font_normal, style]}>{text}</ButtonText>
+  )
 }
 
 export function Icon({}: IconProps) {
