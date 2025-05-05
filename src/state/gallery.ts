@@ -16,7 +16,7 @@ import {POST_IMG_MAX} from '#/lib/constants'
 import {getImageDim} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
 import {getDataUriSize} from '#/lib/media/util'
-import {isIOS, isNative} from '#/platform/detection'
+import {isNative} from '#/platform/detection'
 
 export type ImageTransformation = {
   crop?: ActionCrop['crop']
@@ -122,25 +122,13 @@ export async function cropImage(img: ComposerImage): Promise<ComposerImage> {
     return img
   }
 
-  // NOTE
-  // on ios, react-native-image-crop-picker gives really bad quality
-  // without specifying width and height. on android, however, the
-  // crop stretches incorrectly if you do specify it. these are
-  // both separate bugs in the library. we deal with that by
-  // providing width & height for ios only
-  // -prf
-
   const source = img.source
-  const [w, h] = containImageRes(source.width, source.height, POST_IMG_MAX)
 
   // @todo: we're always passing the original image here, does image-cropper
   // allows for setting initial crop dimensions? -mary
   try {
     const cropped = await openCropper({
-      mediaType: 'photo',
-      path: source.path,
-      freeStyleCropEnabled: true,
-      ...(isIOS ? {width: w, height: h} : {}),
+      imageUri: source.path,
     })
 
     return {

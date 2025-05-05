@@ -2,14 +2,13 @@ import React, {memo, useMemo} from 'react'
 import {
   Image,
   Pressable,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
-import {Image as RNImage} from 'react-native-image-crop-picker'
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
-import {ModerationUI} from '@atproto/api'
+import {type ModerationUI} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -38,8 +37,13 @@ import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import * as bsky from '#/types/bsky'
-import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
+import type * as bsky from '#/types/bsky'
+import {
+  openCamera,
+  openCropper,
+  openPicker,
+  type RNImage,
+} from '../../../lib/media/picker'
 
 export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
 
@@ -312,9 +316,7 @@ let EditableUserAvatar = ({
 
     onSelectNewAvatar(
       await openCamera({
-        width: 1000,
-        height: 1000,
-        cropperCircleOverlay: true,
+        aspect: [1, 1],
       }),
     )
   }, [onSelectNewAvatar, requestCameraAccessIfNeeded])
@@ -336,15 +338,10 @@ let EditableUserAvatar = ({
 
     try {
       const croppedImage = await openCropper({
-        mediaType: 'photo',
-        cropperCircleOverlay: true,
-        height: 1000,
-        width: 1000,
-        path: item.path,
-        webAspectRatio: 1,
-        webCircularCrop: true,
+        imageUri: item.path,
+        shape: 'circle',
+        aspectRatio: 1,
       })
-
       onSelectNewAvatar(croppedImage)
     } catch (e: any) {
       // Don't log errors for cancelling selection to sentry on ios or android

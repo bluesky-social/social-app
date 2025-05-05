@@ -1,5 +1,4 @@
 import {Image as RNImage} from 'react-native'
-import {type Image} from 'react-native-image-crop-picker'
 import uuid from 'react-native-uuid'
 import {
   cacheDirectory,
@@ -20,17 +19,17 @@ import {Buffer} from 'buffer'
 import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
+import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
 
 export async function compressIfNeeded(
-  img: Image,
+  img: PickerImage,
   maxSize: number = 1000000,
-): Promise<Image> {
-  const origUri = `file://${img.path}`
+): Promise<PickerImage> {
   if (img.size < maxSize) {
     return img
   }
-  const resizedImage = await doResize(origUri, {
+  const resizedImage = await doResize(normalizePath(img.path), {
     width: img.width,
     height: img.height,
     mode: 'stretch',
@@ -130,7 +129,10 @@ interface DoResizeOpts {
   maxSize: number
 }
 
-async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
+async function doResize(
+  localUri: string,
+  opts: DoResizeOpts,
+): Promise<PickerImage> {
   // We need to get the dimensions of the image before we resize it. Previously, the library we used allowed us to enter
   // a "max size", and it would do the "best possible size" calculation for us.
   // Now instead, we have to supply the final dimensions to the manipulation function instead.
@@ -145,6 +147,7 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
   let minQualityPercentage = 0
   let maxQualityPercentage = 101 // exclusive
   let newDataUri
+  const intermediateUris = []
 
   while (maxQualityPercentage - minQualityPercentage > 1) {
     const qualityPercentage = Math.round(
@@ -158,6 +161,8 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
         compress: qualityPercentage / 100,
       },
     )
+
+    intermediateUris.push(resizeRes.uri)
 
     const fileInfo = await getInfoAsync(resizeRes.uri)
     if (!fileInfo.exists) {
@@ -178,8 +183,12 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
     } else {
       maxQualityPercentage = qualityPercentage
     }
+  }
 
-    safeDeleteAsync(resizeRes.uri)
+  for (const intermediateUri of intermediateUris) {
+    if (newDataUri?.path !== normalizePath(intermediateUri)) {
+      safeDeleteAsync(intermediateUri)
+    }
   }
 
   if (newDataUri) {

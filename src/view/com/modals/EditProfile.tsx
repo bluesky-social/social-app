@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {type Image as RNImage} from 'react-native-image-crop-picker'
 import Animated, {FadeOut} from 'react-native-reanimated'
 import {LinearGradient} from 'expo-linear-gradient'
 import {type AppBskyActorDefs} from '@atproto/api'
@@ -18,6 +17,7 @@ import {useLingui} from '@lingui/react'
 import {MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {compressIfNeeded} from '#/lib/media/manip'
+import {type PickerImage} from '#/lib/media/picker.shared'
 import {cleanError} from '#/lib/strings/errors'
 import {enforceLen} from '#/lib/strings/helpers'
 import {colors, gradients, s} from '#/lib/styles'
@@ -67,16 +67,16 @@ export function Component({
     profile.avatar,
   )
   const [newUserBanner, setNewUserBanner] = useState<
-    RNImage | undefined | null
+    PickerImage | undefined | null
   >()
   const [newUserAvatar, setNewUserAvatar] = useState<
-    RNImage | undefined | null
+    PickerImage | undefined | null
   >()
   const onPressCancel = () => {
     closeModal()
   }
   const onSelectNewAvatar = useCallback(
-    async (img: RNImage | null) => {
+    async (img: PickerImage | null) => {
       setImageError('')
       if (img === null) {
         setNewUserAvatar(null)
@@ -95,7 +95,7 @@ export function Component({
   )
 
   const onSelectNewBanner = useCallback(
-    async (img: RNImage | null) => {
+    async (img: PickerImage | null) => {
       setImageError('')
       if (!img) {
         setNewUserBanner(null)
