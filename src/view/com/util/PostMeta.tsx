@@ -21,14 +21,15 @@ import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
-import {TimeElapsed} from './TimeElapsed'
+import {FeedDate, FeedDateArchived} from '#/view/com/post-thread/PostThreadItem.tsx'
 import {PreviewableUserAvatar} from './UserAvatar'
 
 interface PostMetaOpts {
   author: AppBskyActorDefs.ProfileViewBasic
   moderation: ModerationDecision | undefined
   postHref: string
-  timestamp: string
+  indexedAt: string
+  createdAt?: string
   showAvatar?: boolean
   avatarSize?: number
   onOpenAuthor?: () => void
@@ -53,8 +54,18 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
     precacheProfile(queryClient, author)
   }, [queryClient, author])
 
-  const timestampLabel = niceDate(i18n, opts.timestamp)
   const verification = useSimpleVerificationState({profile: author})
+
+  const timestampLabel = niceDate(i18n, opts.indexedAt)
+
+  // Backdated if createdAt is 24 hours or more before indexedAt
+  const ONE_DAY = 24 * 60 * 60 * 1000
+  const isBackdated =
+        Date.parse(opts.indexedAt) - Date.parse(opts.createdAt) > ONE_DAY
+
+  const dateEl = isBackdated
+    ? <FeedDateArchived indexedAt={opts.indexedAt} createdAt={opts.createdAt} />
+    : <FeedDate timestamp={opts.indexedAt} />
 
   return (
     <View
@@ -134,8 +145,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           </View>
         </ProfileHoverCard>
 
-        <TimeElapsed timestamp={opts.timestamp}>
-          {({timeElapsed}) => (
+        <View>
             <WebOnlyInlineLinkText
               to={opts.postHref}
               label={timestampLabel}
@@ -165,10 +175,9 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                   &middot;{' '}
                 </Text>
               )}
-              {timeElapsed}
+            {dateEl}
             </WebOnlyInlineLinkText>
-          )}
-        </TimeElapsed>
+        </View>
       </View>
     </View>
   )

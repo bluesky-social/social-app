@@ -240,6 +240,11 @@ let FeedItemInner = ({
     ? rootPost.threadgate.record
     : undefined
 
+  const indexedAt = post.indexedAt
+  const createdAt: string = AppBskyFeedPost.isRecord(post.record)
+      ? post.record.createdAt
+      : post.indexedAt
+
   const [hover, setHover] = useState(false)
   return (
     <Link
@@ -397,7 +402,8 @@ let FeedItemInner = ({
           <PostMeta
             author={post.author}
             moderation={moderation}
-            timestamp={post.indexedAt}
+            indexedAt={indexedAt}
+            createdAt={createdAt}
             postHref={href}
             onOpenAuthor={onOpenAuthor}
           />

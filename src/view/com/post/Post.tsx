@@ -183,7 +183,7 @@ function PostInner({
           <PostMeta
             author={post.author}
             moderation={moderation}
-            timestamp={post.indexedAt}
+            indexedAt={post.indexedAt}
             postHref={itemHref}
           />
           {replyAuthorDid !== '' && (
