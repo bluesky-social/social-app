@@ -86,7 +86,7 @@ function DialogInner({
       header={
         <Dialog.Header renderLeft={cancelButton} renderRight={saveButton}>
           <Dialog.HeaderText>
-            <Trans>Edit Image</Trans>
+            <Trans>Edit image</Trans>
           </Dialog.HeaderText>
         </Dialog.Header>
       }>
