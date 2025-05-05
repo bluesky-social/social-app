@@ -22,7 +22,7 @@ import {
 import {makeProfileLink} from '#/lib/routes/links'
 import {colors} from '#/lib/styles'
 import {logger} from '#/logger'
-import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
+import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {precacheProfile} from '#/state/queries/profile'
 import {HighPriorityImage} from '#/view/com/util/images/Image'
 import {tokens, useTheme} from '#/alf'
@@ -337,17 +337,12 @@ let EditableUserAvatar = ({
     }
 
     try {
-      setTimeout(
-        async () => {
-          const croppedImage = await openCropper({
-            imageUri: item.path,
-            shape: 'circle',
-            aspectRatio: 1,
-          })
-          onSelectNewAvatar(croppedImage)
-        },
-        isIOS ? 500 : 500,
-      )
+      const croppedImage = await openCropper({
+        imageUri: item.path,
+        shape: 'circle',
+        aspectRatio: 1,
+      })
+      onSelectNewAvatar(croppedImage)
     } catch (e: any) {
       // Don't log errors for cancelling selection to sentry on ios or android
       if (!String(e).toLowerCase().includes('cancel')) {
