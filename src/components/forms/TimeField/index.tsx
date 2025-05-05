@@ -25,8 +25,9 @@ export function TimeField({
   accessibilityHint,
   minimumDate,
   maximumDate,
+  minuteInterval,
 }: TimeFieldProps) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogControl()
 
@@ -75,11 +76,11 @@ export function TimeField({
           <View style={a.gap_lg}>
             <View style={[a.relative, a.w_full, a.align_center]}>
               <DatePicker
-                timeZoneOffsetInMinutes={0}
                 theme={t.scheme}
                 date={new Date(toDateString(value))}
                 onDateChange={onChangeInternal}
                 mode="time"
+                locale={i18n.locale}
                 testID={`${testID}-timepicker`}
                 aria-label={label}
                 accessibilityLabel={label}
@@ -90,6 +91,7 @@ export function TimeField({
                 maximumDate={
                   maximumDate ? new Date(toDateString(maximumDate)) : undefined
                 }
+                minuteInterval={minuteInterval}
               />
             </View>
             <Button

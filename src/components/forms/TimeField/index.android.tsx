@@ -1,6 +1,7 @@
 import {useCallback, useImperativeHandle, useState} from 'react'
 import {Keyboard} from 'react-native'
 import DatePicker from 'react-native-date-picker'
+import {useLingui} from '@lingui/react'
 
 import {useTheme} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
@@ -21,7 +22,9 @@ export function TimeField({
   accessibilityHint,
   minimumDate,
   maximumDate,
+  minuteInterval,
 }: TimeFieldProps) {
+  const {i18n} = useLingui()
   const t = useTheme()
   const [open, setOpen] = useState(false)
 
@@ -70,14 +73,14 @@ export function TimeField({
       <DatePicker
         modal
         open={open}
-        timeZoneOffsetInMinutes={0}
         theme={t.scheme}
-        // @ts-ignore TODO
-        buttonColor={t.name === 'light' ? '#000000' : '#ffffff'}
+        buttonColor={t.atoms.text.color}
         date={new Date(value)}
         onConfirm={onChangeInternal}
         onCancel={onCancel}
+        locale={i18n.locale}
         mode="time"
+        is24hourSource="locale"
         testID={`${testID}-timepicker`}
         aria-label={label}
         accessibilityLabel={label}
@@ -88,6 +91,7 @@ export function TimeField({
         maximumDate={
           maximumDate ? new Date(toDateString(maximumDate)) : undefined
         }
+        minuteInterval={minuteInterval}
       />
     </>
   )

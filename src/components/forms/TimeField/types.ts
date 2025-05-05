@@ -12,4 +12,5 @@ export type TimeFieldProps = {
   accessibilityHint?: string
   maximumDate?: string | Date
   minimumDate?: string | Date
+  minuteInterval?: 1 | 2 | 3 | 4 | 6 | 15 | 30 | 5 | 12 | 10 | 20
 }
