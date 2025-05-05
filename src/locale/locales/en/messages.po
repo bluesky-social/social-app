@@ -74,8 +74,8 @@ msgstr ""
 msgid "{0, plural, one {# second} other {# seconds}}"
 msgstr ""
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:209
-#: src/view/shell/bottom-bar/BottomBar.tsx:241
+#: src/view/shell/bottom-bar/BottomBar.tsx:213
+#: src/view/shell/bottom-bar/BottomBar.tsx:245
 #: src/view/shell/Drawer.tsx:470
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr ""
@@ -446,7 +446,7 @@ msgid "A new form of verification"
 msgstr ""
 
 #: src/Navigation.tsx:401
-#: src/screens/Settings/AboutSettings.tsx:72
+#: src/screens/Settings/AboutSettings.tsx:75
 #: src/screens/Settings/Settings.tsx:224
 #: src/screens/Settings/Settings.tsx:227
 msgid "About"
@@ -621,7 +621,7 @@ msgstr ""
 msgid "Add muted words and tags"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1306
+#: src/view/com/composer/Composer.tsx:1308
 msgid "Add new post"
 msgstr ""
 
@@ -822,7 +822,7 @@ msgstr ""
 msgid "An error occurred while fetching the feed."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:336
+#: src/components/StarterPack/ProfileStarterPacks.tsx:337
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr ""
 
@@ -1119,7 +1119,7 @@ msgstr ""
 msgid "Before creating a post, you must first verify your email."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:343
+#: src/components/StarterPack/ProfileStarterPacks.tsx:344
 msgid "Before creating a starter pack, you must first verify your email."
 msgstr ""
 
@@ -1262,7 +1262,7 @@ msgstr ""
 msgid "Bluesky Social Terms of Service"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:303
+#: src/components/StarterPack/ProfileStarterPacks.tsx:304
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr ""
 
@@ -1519,7 +1519,7 @@ msgid "Changes hosting provider"
 msgstr ""
 
 #: src/Navigation.tsx:426
-#: src/view/shell/bottom-bar/BottomBar.tsx:205
+#: src/view/shell/bottom-bar/BottomBar.tsx:209
 #: src/view/shell/desktop/LeftNav.tsx:535
 #: src/view/shell/Drawer.tsx:438
 msgid "Chat"
@@ -1587,7 +1587,7 @@ msgstr ""
 msgid "Choose Feeds"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:311
+#: src/components/StarterPack/ProfileStarterPacks.tsx:312
 msgid "Choose for me"
 msgstr ""
 
@@ -1627,8 +1627,8 @@ msgstr ""
 msgid "Clear all storage data (restart after this)"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:113
-#: src/screens/Settings/AboutSettings.tsx:117
+#: src/screens/Settings/AboutSettings.tsx:116
+#: src/screens/Settings/AboutSettings.tsx:120
 msgid "Clear image cache"
 msgstr ""
 
@@ -1807,7 +1807,7 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1688
+#: src/view/com/composer/Composer.tsx:1690
 msgid "Compressing video..."
 msgstr ""
 
@@ -1958,7 +1958,7 @@ msgstr ""
 msgid "Copied"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:148
+#: src/screens/Settings/AboutSettings.tsx:151
 msgid "Copied build version to clipboard"
 msgstr ""
 
@@ -1976,7 +1976,7 @@ msgstr ""
 msgid "Copied!"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:124
+#: src/screens/Settings/AboutSettings.tsx:127
 msgid "Copies build version to clipboard"
 msgstr ""
 
@@ -2079,7 +2079,7 @@ msgstr ""
 msgid "Could not process your video"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:293
+#: src/components/StarterPack/ProfileStarterPacks.tsx:294
 msgid "Create"
 msgstr ""
 
@@ -2087,20 +2087,20 @@ msgstr ""
 msgid "Create a QR code for a starter pack"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:178
-#: src/components/StarterPack/ProfileStarterPacks.tsx:274
+#: src/components/StarterPack/ProfileStarterPacks.tsx:179
+#: src/components/StarterPack/ProfileStarterPacks.tsx:275
 #: src/Navigation.tsx:461
 msgid "Create a starter pack"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:255
+#: src/components/StarterPack/ProfileStarterPacks.tsx:256
 msgid "Create a starter pack for me"
 msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:55
 #: src/view/com/auth/SplashScreen.web.tsx:117
-#: src/view/shell/bottom-bar/BottomBar.tsx:315
-#: src/view/shell/bottom-bar/BottomBar.tsx:320
+#: src/view/shell/bottom-bar/BottomBar.tsx:319
+#: src/view/shell/bottom-bar/BottomBar.tsx:324
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:199
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:204
 #: src/view/shell/NavSignupCard.tsx:47
@@ -2126,7 +2126,7 @@ msgstr ""
 msgid "Create an avatar instead"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:185
+#: src/components/StarterPack/ProfileStarterPacks.tsx:186
 msgid "Create another"
 msgstr ""
 
@@ -2350,12 +2350,12 @@ msgstr ""
 msgid "Detach quote post?"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:137
+#: src/screens/Settings/AboutSettings.tsx:140
 msgctxt "toast"
 msgid "Developer mode disabled"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:131
+#: src/screens/Settings/AboutSettings.tsx:134
 msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr ""
@@ -2435,7 +2435,7 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1612
+#: src/view/com/composer/Composer.tsx:1614
 msgid "Dismiss error"
 msgstr ""
 
@@ -2886,7 +2886,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1697
+#: src/view/com/composer/Composer.tsx:1699
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr ""
@@ -3494,7 +3494,7 @@ msgstr ""
 msgid "Gallery"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:300
+#: src/components/StarterPack/ProfileStarterPacks.tsx:301
 msgid "Generate a starter pack"
 msgstr ""
 
@@ -3780,7 +3780,7 @@ msgstr ""
 
 #: src/Navigation.tsx:645
 #: src/Navigation.tsx:665
-#: src/view/shell/bottom-bar/BottomBar.tsx:162
+#: src/view/shell/bottom-bar/BottomBar.tsx:166
 #: src/view/shell/desktop/LeftNav.tsx:599
 #: src/view/shell/Drawer.tsx:412
 msgid "Home"
@@ -3871,12 +3871,12 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:61
+#: src/screens/Settings/AboutSettings.tsx:64
 msgid "Image cache cleared"
 msgstr ""
 
 #. Android-only toast message which includes amount of space freed using localized number formatting
-#: src/screens/Settings/AboutSettings.tsx:47
+#: src/screens/Settings/AboutSettings.tsx:50
 msgid "Image cache cleared, freed {0}"
 msgstr ""
 
@@ -3997,7 +3997,7 @@ msgstr ""
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1631
+#: src/view/com/composer/Composer.tsx:1633
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -4158,7 +4158,7 @@ msgstr ""
 msgid "left to go."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:316
+#: src/components/StarterPack/ProfileStarterPacks.tsx:317
 msgid "Let me choose"
 msgstr ""
 
@@ -4374,7 +4374,7 @@ msgstr ""
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:269
+#: src/components/StarterPack/ProfileStarterPacks.tsx:270
 msgid "Make one for me"
 msgstr ""
 
@@ -5039,7 +5039,7 @@ msgstr ""
 
 #: src/Navigation.tsx:655
 #: src/view/screens/Notifications.tsx:128
-#: src/view/shell/bottom-bar/BottomBar.tsx:236
+#: src/view/shell/bottom-bar/BottomBar.tsx:240
 #: src/view/shell/desktop/LeftNav.tsx:636
 #: src/view/shell/Drawer.tsx:465
 msgid "Notifications"
@@ -5141,8 +5141,8 @@ msgid "Oops, something went wrong!"
 msgstr ""
 
 #: src/components/Lists.tsx:173
-#: src/components/StarterPack/ProfileStarterPacks.tsx:325
-#: src/components/StarterPack/ProfileStarterPacks.tsx:334
+#: src/components/StarterPack/ProfileStarterPacks.tsx:326
+#: src/components/StarterPack/ProfileStarterPacks.tsx:335
 #: src/screens/Settings/AppPasswords.tsx:59
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:106
 #: src/screens/Settings/NotificationSettings.tsx:54
@@ -5172,7 +5172,7 @@ msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1292
+#: src/view/com/composer/Composer.tsx:1293
 msgid "Open emoji picker"
 msgstr ""
 
@@ -5185,7 +5185,7 @@ msgstr ""
 msgid "Open feed options menu"
 msgstr ""
 
-#: src/components/dms/EmojiPopup.android.tsx:28
+#: src/components/dms/EmojiPopup.android.tsx:27
 msgid "Open full emoji list"
 msgstr ""
 
@@ -5266,7 +5266,7 @@ msgstr ""
 msgid "Opens device photo gallery"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1293
+#: src/view/com/composer/Composer.tsx:1294
 msgid "Opens emoji picker"
 msgstr ""
 
@@ -5774,15 +5774,15 @@ msgid "Privacy and Security"
 msgstr ""
 
 #: src/Navigation.tsx:301
-#: src/screens/Settings/AboutSettings.tsx:89
 #: src/screens/Settings/AboutSettings.tsx:92
+#: src/screens/Settings/AboutSettings.tsx:95
 #: src/view/screens/PrivacyPolicy.tsx:31
 #: src/view/shell/Drawer.tsx:650
 #: src/view/shell/Drawer.tsx:651
 msgid "Privacy Policy"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1694
+#: src/view/com/composer/Composer.tsx:1696
 msgid "Processing video..."
 msgstr ""
 
@@ -5796,7 +5796,7 @@ msgstr ""
 msgid "profile"
 msgstr ""
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:286
+#: src/view/shell/bottom-bar/BottomBar.tsx:290
 #: src/view/shell/desktop/LeftNav.tsx:691
 #: src/view/shell/Drawer.tsx:74
 #: src/view/shell/Drawer.tsx:542
@@ -6412,7 +6412,7 @@ msgstr ""
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:110
 #: src/components/moderation/ReportDialog/index.tsx:221
-#: src/components/StarterPack/ProfileStarterPacks.tsx:339
+#: src/components/StarterPack/ProfileStarterPacks.tsx:340
 #: src/screens/Login/LoginForm.tsx:323
 #: src/screens/Login/LoginForm.tsx:330
 #: src/screens/Messages/ChatList.tsx:253
@@ -6473,7 +6473,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:608
+#: src/view/com/lightbox/ImageViewing/index.tsx:610
 #: src/view/com/modals/CreateOrEditList.tsx:325
 msgctxt "action"
 msgid "Save"
@@ -6556,7 +6556,7 @@ msgstr ""
 #: src/components/forms/SearchInput.tsx:36
 #: src/screens/Search/Shell.tsx:307
 #: src/screens/Search/Shell.tsx:464
-#: src/view/shell/bottom-bar/BottomBar.tsx:182
+#: src/view/shell/bottom-bar/BottomBar.tsx:186
 msgid "Search"
 msgstr ""
 
@@ -6884,7 +6884,7 @@ msgstr ""
 msgid "Share"
 msgstr ""
 
-#: src/view/com/lightbox/ImageViewing/index.tsx:617
+#: src/view/com/lightbox/ImageViewing/index.tsx:619
 msgctxt "action"
 msgid "Share"
 msgstr ""
@@ -7073,8 +7073,8 @@ msgstr ""
 #: src/view/com/auth/SplashScreen.tsx:69
 #: src/view/com/auth/SplashScreen.web.tsx:123
 #: src/view/com/auth/SplashScreen.web.tsx:131
-#: src/view/shell/bottom-bar/BottomBar.tsx:325
-#: src/view/shell/bottom-bar/BottomBar.tsx:330
+#: src/view/shell/bottom-bar/BottomBar.tsx:329
+#: src/view/shell/bottom-bar/BottomBar.tsx:334
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:209
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:214
 #: src/view/shell/NavSignupCard.tsx:57
@@ -7217,7 +7217,7 @@ msgstr ""
 msgid "Something wrong? Let us know."
 msgstr ""
 
-#: src/App.native.tsx:122
+#: src/App.native.tsx:121
 #: src/App.web.tsx:98
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr ""
@@ -7303,12 +7303,12 @@ msgstr ""
 msgid "Starter Packs"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:247
+#: src/components/StarterPack/ProfileStarterPacks.tsx:248
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:97
 #: src/screens/Settings/AboutSettings.tsx:100
+#: src/screens/Settings/AboutSettings.tsx:103
 msgid "Status Page"
 msgstr ""
 
@@ -7430,8 +7430,8 @@ msgstr ""
 msgid "System"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:104
 #: src/screens/Settings/AboutSettings.tsx:107
+#: src/screens/Settings/AboutSettings.tsx:110
 #: src/screens/Settings/Settings.tsx:380
 msgid "System log"
 msgstr ""
@@ -7485,8 +7485,8 @@ msgid "Terms"
 msgstr ""
 
 #: src/Navigation.tsx:306
-#: src/screens/Settings/AboutSettings.tsx:81
 #: src/screens/Settings/AboutSettings.tsx:84
+#: src/screens/Settings/AboutSettings.tsx:87
 #: src/view/screens/TermsOfService.tsx:31
 #: src/view/shell/Drawer.tsx:643
 #: src/view/shell/Drawer.tsx:645
@@ -8369,7 +8369,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1691
+#: src/view/com/composer/Composer.tsx:1693
 msgid "Uploading video..."
 msgstr ""
 
@@ -8555,8 +8555,8 @@ msgstr ""
 msgid "Verify Your Email"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:123
-#: src/screens/Settings/AboutSettings.tsx:152
+#: src/screens/Settings/AboutSettings.tsx:126
+#: src/screens/Settings/AboutSettings.tsx:155
 msgid "Version {appVersion}"
 msgstr ""
 
@@ -8599,7 +8599,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1701
+#: src/view/com/composer/Composer.tsx:1703
 msgid "Video uploaded"
 msgstr ""
 
@@ -8655,7 +8655,7 @@ msgstr ""
 msgid "View details for reporting a copyright violation"
 msgstr ""
 
-#: src/view/com/posts/ViewFullThread.tsx:56
+#: src/view/com/posts/ViewFullThread.tsx:59
 msgid "View full thread"
 msgstr ""
 
@@ -9162,7 +9162,7 @@ msgstr ""
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:244
+#: src/components/StarterPack/ProfileStarterPacks.tsx:245
 msgid "You haven't created a starter pack yet!"
 msgstr ""
 
@@ -9199,7 +9199,7 @@ msgstr ""
 msgid "You must be 13 years of age or older to create an account."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:327
+#: src/components/StarterPack/ProfileStarterPacks.tsx:328
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr ""
 
