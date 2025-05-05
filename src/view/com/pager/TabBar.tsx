@@ -317,6 +317,7 @@ export function TabBar({
       accessibilityRole="tablist">
       <BlockDrawerGesture>
         <ScrollView
+          fadingEdgeLength={300}
           testID={`${testID}-selector`}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
