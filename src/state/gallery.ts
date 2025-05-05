@@ -16,7 +16,7 @@ import {POST_IMG_MAX} from '#/lib/constants'
 import {getImageDim} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
 import {getDataUriSize} from '#/lib/media/util'
-import {isIOS, isNative} from '#/platform/detection'
+import {isNative} from '#/platform/detection'
 
 export type ImageTransformation = {
   crop?: ActionCrop['crop']
