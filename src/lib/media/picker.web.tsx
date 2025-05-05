@@ -1,17 +1,17 @@
 /// <reference lib="dom" />
 
-import {CameraOpts, CropperOptions} from './types'
 import {unstable__openModal} from '#/state/modals'
-import {RNImage} from './picker.shared'
+import {type PickerImage} from './picker.shared'
+import {type CameraOpts, type CropperOptions} from './types'
 
-export {openPicker, type RNImage} from './picker.shared'
+export {openPicker, type PickerImage as RNImage} from './picker.shared'
 
-export async function openCamera(_opts: CameraOpts): Promise<RNImage> {
+export async function openCamera(_opts: CameraOpts): Promise<PickerImage> {
   // const mediaType = opts.mediaType || 'photo' TODO
   throw new Error('TODO')
 }
 
-export async function openCropper(opts: CropperOptions): Promise<RNImage> {
+export async function openCropper(opts: CropperOptions): Promise<PickerImage> {
   // TODO handle more opts
   return new Promise((resolve, reject) => {
     unstable__openModal({
@@ -23,7 +23,7 @@ export async function openCropper(opts: CropperOptions): Promise<RNImage> {
           : undefined,
       aspect: opts.webAspectRatio,
       circular: opts.webCircularCrop,
-      onSelect: (img?: RNImage) => {
+      onSelect: (img?: PickerImage) => {
         if (img) {
           resolve(img)
         } else {

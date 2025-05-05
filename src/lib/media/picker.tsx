@@ -1,7 +1,7 @@
-import ExpoImageCropTool, {OpenCropperOptions} from 'expo-image-crop-tool'
-import {ImagePickerOptions, launchCameraAsync} from 'expo-image-picker'
+import ExpoImageCropTool, {type OpenCropperOptions} from 'expo-image-crop-tool'
+import {type ImagePickerOptions, launchCameraAsync} from 'expo-image-picker'
 
-export {openPicker, type RNImage} from './picker.shared'
+export {openPicker, type PickerImage as RNImage} from './picker.shared'
 
 export async function openCamera(customOpts: ImagePickerOptions) {
   const opts: ImagePickerOptions = {

@@ -1,5 +1,4 @@
 import {Image as RNImage, Share as RNShare} from 'react-native'
-import {Image} from 'react-native-image-crop-picker'
 import uuid from 'react-native-uuid'
 import {
   cacheDirectory,
@@ -20,12 +19,13 @@ import RNFetchBlob from 'rn-fetch-blob'
 import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
-import {Dimensions} from './types'
+import {type PickerImage} from './picker.shared'
+import {type Dimensions} from './types'
 
 export async function compressIfNeeded(
-  img: Image,
+  img: PickerImage,
   maxSize: number = 1000000,
-): Promise<Image> {
+): Promise<PickerImage> {
   const origUri = `file://${img.path}`
   if (img.size < maxSize) {
     return img
@@ -166,7 +166,10 @@ interface DoResizeOpts {
   maxSize: number
 }
 
-async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
+async function doResize(
+  localUri: string,
+  opts: DoResizeOpts,
+): Promise<PickerImage> {
   // We need to get the dimensions of the image before we resize it. Previously, the library we used allowed us to enter
   // a "max size", and it would do the "best possible size" calculation for us.
   // Now instead, we have to supply the final dimensions to the manipulation function instead.
