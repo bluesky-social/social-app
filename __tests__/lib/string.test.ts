@@ -435,6 +435,9 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     'https://www.flickr.com/groups/898944@N23/',
     'https://www.flickr.com/groups',
+
+    'https://www.tiktok.com/@maxinne.me/video/7413048848903326982',
+    'https://vm.tiktok.com/ZMhXDgKxA/',
   ]
 
   const outputs = [
@@ -807,6 +810,14 @@ describe('parseEmbedPlayerFromUrl', () => {
     },
 
     undefined,
+    undefined,
+
+    {
+      type: 'tiktok_video',
+      source: 'tiktok',
+      playerUri:
+        'https://www.tiktok.com/player/v1/7413048848903326982?autoplay=1&loop=1&rel=0',
+    },
     undefined,
   ]
 
