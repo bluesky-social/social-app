@@ -2,6 +2,7 @@ import {
   type AccessibilityProps,
   type StyleProp,
   type TextStyle,
+  type ViewStyle,
 } from 'react-native'
 
 import {type TextStyleProp} from '#/alf'
@@ -168,6 +169,7 @@ export type ItemProps = {
   value: string
   label: string
   children: React.ReactNode
+  style?: StyleProp<ViewStyle>
 }
 
 export type ItemTextProps = {

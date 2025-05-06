@@ -233,7 +233,7 @@ export function useItemContext() {
   return useContext(ItemContext)
 }
 
-export function Item({children, value, label}: ItemProps) {
+export function Item({children, value, label, style}: ItemProps) {
   const t = useTheme()
   const control = Dialog.useDialogContext()
   const {value: selected, onValueChange} = useSelectContext()
@@ -259,6 +259,7 @@ export function Item({children, value, label}: ItemProps) {
               a.flex_row,
               a.align_center,
               a.gap_sm,
+              style,
             ]}>
             {children}
           </View>

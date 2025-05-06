@@ -194,7 +194,7 @@ export function useItemContext() {
   return useContext(ItemContext)
 }
 
-export function Item({ref, value, children}: ItemProps) {
+export function Item({ref, value, style, children}: ItemProps) {
   const t = useTheme()
   const {
     state: hovered,
@@ -228,6 +228,7 @@ export function Item({ref, value, children}: ItemProps) {
         (hovered || focused) && {backgroundColor: t.palette.primary_50},
         selected && [a.font_bold],
         a.transition_color,
+        style,
       ])}>
       <ItemContext.Provider value={ctx}>{children}</ItemContext.Provider>
     </RadixSelect.Item>
