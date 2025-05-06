@@ -178,6 +178,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
     }, [enabled, scrollElRef, setScrollViewTag])
 
     const ProfileListsFooter = React.useCallback(() => {
+      if (isEmpty) return null
       return (
         <ListFooter
           hasNextPage={hasNextPage}
@@ -187,7 +188,14 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
           height={180 + headerOffset}
         />
       )
-    }, [hasNextPage, error, isFetchingNextPage, headerOffset, fetchNextPage])
+    }, [
+      hasNextPage,
+      error,
+      isFetchingNextPage,
+      headerOffset,
+      fetchNextPage,
+      isEmpty,
+    ])
 
     return (
       <View testID={testID} style={style}>
