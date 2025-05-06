@@ -108,6 +108,14 @@ export type TriggerChildProps =
       }
     }
 
+/*
+ * For use within the `Select.Trigger` component.
+ * Shows the currently selected value. You can also
+ * provide a placeholder to show when no value is selected.
+ *
+ * If you're passing items of a different shape than {value: string, label: string},
+ * you'll need to pass a function to `children` that extracts the label from an item.
+ */
 export type ValueProps = {
   /**
    * Only needed for native. Extracts the label from an item. Defaults to `item => item.label`
@@ -118,6 +126,9 @@ export type ValueProps = {
 }
 
 /*
+ * Icon for use within the `Select.Trigger` component.
+ * Changes based on platform - chevron down on web, up/down chevrons on native
+ *
  * `style` prop is web only
  */
 export type IconProps = TextStyleProp
@@ -149,6 +160,9 @@ export type ContentProps<T> = {
   valueExtractor?: (item: T) => string
 }
 
+/*
+ * An item within the select dropdown
+ */
 export type ItemProps = {
   ref?: React.Ref<HTMLDivElement>
   value: string
