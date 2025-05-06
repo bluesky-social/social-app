@@ -43,7 +43,7 @@ import {
   findAllProfilesInQueryData as findAllProfilesInFeedQueryData,
 } from './post-feed'
 
-export type PostThreadV2Options = {
+export type PostThreadV2Params = {
   view: 'tree' | 'linear'
   sort: 'hotness' | 'oldest' | 'newest' | 'most-likes' | 'random' | string
   prioritizeFollows: BskyThreadViewPreference['prioritizeFollowedUsers']
@@ -51,13 +51,16 @@ export type PostThreadV2Options = {
 
 export const getPostThreadV2QueryKeyRoot = 'getPostThreadV2' as const
 export const createGetPostThreadV2QueryKey = (
-  props: Pick<GetPostThreadV2Params, 'uri' | 'options'>,
+  props: Pick<GetPostThreadV2QueryProps, 'uri' | 'params'>,
 ) => [getPostThreadV2QueryKeyRoot, props] as const
 
-export type GetPostThreadV2Params = {
+export type GetPostThreadV2QueryProps = {
   uri?: string
   enabled?: boolean
-  options: PostThreadV2Options
+  params: PostThreadV2Params
+  state: {
+    shownHiddenReplyKinds: Set<HiddenReplyKind>
+  }
 }
 
 export type GetPostThreadV2QueryData = {
@@ -65,7 +68,7 @@ export type GetPostThreadV2QueryData = {
   threadgate?: AppBskyFeedDefs.ThreadgateView
 }
 
-export function mapSortOptionsToSortID(sort: PostThreadV2Options['sort']) {
+export function mapSortOptionsToSortID(sort: PostThreadV2Params['sort']) {
   switch (sort) {
     case 'hotness':
       return APP_BSKY_FEED.GetPostThreadV2Hotness
@@ -83,8 +86,9 @@ export function mapSortOptionsToSortID(sort: PostThreadV2Options['sort']) {
 export function useGetPostThreadV2({
   uri,
   enabled: isEnabled,
-  options,
-}: GetPostThreadV2Params) {
+  params,
+  state,
+}: GetPostThreadV2QueryProps) {
   const qc = useQueryClient()
   const agent = useAgent()
   const {hasSession} = useSession()
@@ -97,13 +101,13 @@ export function useGetPostThreadV2({
     enabled,
     queryKey: createGetPostThreadV2QueryKey({
       uri,
-      options,
+      params,
     }),
     async queryFn() {
       const {data} = await agent.app.bsky.feed.getPostThreadV2({
         uri: uri!,
         below: 10,
-        sorting: mapSortOptionsToSortID(options.sort),
+        sorting: mapSortOptionsToSortID(params.sort),
       })
       return data
     },
@@ -136,12 +140,12 @@ export function useGetPostThreadV2({
 
   const filtered = filterAndSort(query.data?.thread || [], {
     hasSession,
-    options,
+    params,
     threadgateHiddenReplies: mergeThreadgateHiddenReplies(
       query.data?.threadgate?.record,
     ),
     moderationOpts: moderationOpts!,
-    showHiddenReplies: false,
+    shownHiddenReplyKinds: state.shownHiddenReplyKinds,
   })
 
   return {
@@ -251,20 +255,24 @@ export function filterAndSort(
   thread: AppBskyFeedGetPostThreadV2.OutputSchema['thread'],
   {
     hasSession,
-    options,
+    params,
     threadgateHiddenReplies,
     moderationOpts,
-    showHiddenReplies = false,
+    shownHiddenReplyKinds,
   }: {
     hasSession: boolean
-    options: PostThreadV2Options
+    params: PostThreadV2Params
     threadgateHiddenReplies: Set<string>
     moderationOpts: ModerationOpts
-    showHiddenReplies: boolean
+    shownHiddenReplyKinds: Set<HiddenReplyKind>
   },
 ) {
-  const sorted: Slice[] = []
+  const slices: Slice[] = []
   const hidden: Slice[] = []
+  const muted: Slice[] = []
+
+  const showMuted = shownHiddenReplyKinds.has(HiddenReplyKind.Muted)
+  const showHidden = shownHiddenReplyKinds.has(HiddenReplyKind.Hidden)
 
   traversal: for (let i = 0; i < thread.length; i++) {
     const item = thread[i]
@@ -282,13 +290,13 @@ export function filterAndSort(
        */
     } else if (item.depth === 0) {
       if (AppBskyFeedDefs.isThreadItemNoUnauthenticated(item)) {
-        sorted.push(views.noUnauthenticated({item}))
+        slices.push(views.noUnauthenticated({item}))
       } else if (AppBskyFeedDefs.isThreadItemNotFound(item)) {
-        sorted.push(views.notFound({item}))
+        slices.push(views.notFound({item}))
       } else if (AppBskyFeedDefs.isThreadItemBlocked(item)) {
-        sorted.push(views.blocked({item}))
+        slices.push(views.blocked({item}))
       } else if (AppBskyFeedDefs.isThreadItemPost(item)) {
-        sorted.push(
+        slices.push(
           views.post({
             item,
             oneUp: oneUp,
@@ -298,7 +306,7 @@ export function filterAndSort(
         )
 
         if (hasSession) {
-          sorted.push({
+          slices.push({
             type: 'replyComposer',
             key: 'replyComposer',
           })
@@ -310,16 +318,16 @@ export function filterAndSort(
           const parentOneUp = thread[pi - 1]
 
           if (AppBskyFeedDefs.isThreadItemNoUnauthenticated(parent)) {
-            sorted.unshift(views.noUnauthenticated({item: parent}))
+            slices.unshift(views.noUnauthenticated({item: parent}))
             break parentTraversal
           } else if (AppBskyFeedDefs.isThreadItemNotFound(parent)) {
-            sorted.unshift(views.notFound({item: parent}))
+            slices.unshift(views.notFound({item: parent}))
             break parentTraversal
           } else if (AppBskyFeedDefs.isThreadItemBlocked(parent)) {
-            sorted.unshift(views.blocked({item: parent}))
+            slices.unshift(views.blocked({item: parent}))
             break parentTraversal
           } else if (AppBskyFeedDefs.isThreadItemPost(parent)) {
-            sorted.unshift(
+            slices.unshift(
               views.post({
                 item,
                 oneUp: parentOneUp,
@@ -347,9 +355,18 @@ export function filterAndSort(
         i = branch.end
         continue traversal
       } else if (AppBskyFeedDefs.isThreadItemPost(item)) {
+        const post = views.post({
+          item,
+          oneUp,
+          oneDown,
+          moderationOpts,
+        })
+        const modui = post.moderation.ui('contentList')
+        const isBlurred = modui.blur || modui.filter
+        const isMuted = (modui.blurs[0] || modui.filters[0])?.type === 'muted'
         const isHidden = threadgateHiddenReplies.has(item.uri)
 
-        if (isHidden) {
+        if (isHidden || isBlurred || isMuted) {
           const branch = getSubBranch(thread, i, item.depth)
 
           /*
@@ -360,30 +377,29 @@ export function filterAndSort(
               const next = thread[ci]
 
               if (AppBskyFeedDefs.isThreadItemPost(next)) {
-                hidden.push(
-                  views.post({
-                    item: next,
-                    oneUp: oneUp,
-                    oneDown: oneDown,
-                    moderationOpts,
-                  }),
-                )
+                const post = views.post({
+                  item: next,
+                  oneUp: oneUp,
+                  oneDown: oneDown,
+                  moderationOpts,
+                })
+
+                if (isMuted) {
+                  muted.push(post)
+                } else {
+                  hidden.push(post)
+                }
               } else {
                 break
               }
             }
-          } else if (showHiddenReplies) {
+          } else {
             /*
              * Nested hidden replies either filter entirely or show in situ
              */
-            sorted.push(
-              views.post({
-                item,
-                oneUp,
-                oneDown,
-                moderationOpts,
-              }),
-            )
+            if ((isMuted && showMuted) || showHidden) {
+              slices.push(post)
+            }
           }
 
           /*
@@ -395,24 +411,49 @@ export function filterAndSort(
           /*
            * Not hidden, so show it
            */
-          sorted.push(
-            views.post({
-              item,
-              oneUp,
-              oneDown,
-              moderationOpts,
-            }),
-          )
+          slices.push(post)
         }
       }
     }
   }
 
-  if (showHiddenReplies) {
-    return sorted.concat(hidden)
+  const [hiddenKind1, hiddenKind2] = Array.from(shownHiddenReplyKinds)
+
+  if (hiddenKind1 === HiddenReplyKind.Hidden) {
+    slices.push(...hidden)
+  }
+  if (hiddenKind1 === HiddenReplyKind.Muted) {
+    slices.push(...muted)
+  }
+  if (hiddenKind2 === HiddenReplyKind.Hidden) {
+    slices.push(...hidden)
+  }
+  if (hiddenKind2 === HiddenReplyKind.Muted) {
+    slices.push(...muted)
   }
 
-  return sorted
+  if (muted.length && !showMuted) {
+    slices.push({
+      type: 'showHiddenReplies',
+      key: 'showMutedReplies',
+      kind: HiddenReplyKind.Muted,
+    })
+  }
+
+  if (hidden.length && !showHidden) {
+    slices.push({
+      type: 'showHiddenReplies',
+      key: 'showHiddenReplies',
+      kind: HiddenReplyKind.Hidden,
+    })
+  }
+
+  return slices
+}
+
+export enum HiddenReplyKind {
+  Hidden = 'hidden',
+  Muted = 'muted',
 }
 
 export type Slice =
@@ -453,11 +494,7 @@ export type Slice =
   | {
       type: 'showHiddenReplies'
       key: string
-    }
-  | {
-      // TODO needed?
-      type: 'showMutedReplies'
-      key: string
+      kind: HiddenReplyKind
     }
 
 function getThreadgate(
