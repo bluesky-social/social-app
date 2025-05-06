@@ -37,6 +37,7 @@ export function GoLiveDialog({
 const DURATIONS = Array.from({length: (4 * 60) / 5 + 1}).map((_, i) => i * 5)
 
 function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
+  const control = Dialog.useDialogContext()
   const {_, i18n} = useLingui()
   const t = useTheme()
   const agent = useAgent()
@@ -183,7 +184,8 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
             </ButtonText>
           </Button>
           <Button
-            label={_(msg`Go Live`)}
+            label={_(msg`Cancel`)}
+            onPress={() => control.close()}
             size={platform({native: 'large', web: 'small'})}
             color="secondary"
             variant={platform({native: 'solid', web: 'ghost'})}>
