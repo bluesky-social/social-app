@@ -12351,10 +12351,10 @@ history@^5.3.0:
   dependencies:
     "@babel/runtime" "^7.7.6"
 
-hls.js@^1.5.11:
-  version "1.5.11"
-  resolved "https://registry.yarnpkg.com/hls.js/-/hls.js-1.5.11.tgz#3941347df454983859ae8c75fe19e8818719a826"
-  integrity sha512-q3We1izi2+qkOO+TvZdHv+dx6aFzdtk3xc1/Qesrvto4thLTT/x/1FK85c5h1qZE4MmMBNgKg+MIW8nxQfxwBw==
+hls.js@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/hls.js/-/hls.js-1.6.2.tgz#02272bea644b5f61f71741256618d6b629ae7834"
+  integrity sha512-rx+pETSCJEDThm/JCm8CuadcAC410cVjb1XVXFNDKFuylaayHk1+tFxhkjvnMDAfqsJHxZXDAJ3Uc2d5xQyWlQ==
 
 hmac-drbg@^1.0.1:
   version "1.0.1"
