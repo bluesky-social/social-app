@@ -11,6 +11,7 @@ import {
   ModerationDecision,
   AppBskyEmbedRecord,
   AppBskyFeedPost,
+  APP_BSKY_FEED,
 } from '@atproto/api'
 import {useQuery, useQueryClient, QueryClient} from '@tanstack/react-query'
 
@@ -64,6 +65,21 @@ export type GetPostThreadV2QueryData = {
   threadgate?: AppBskyFeedDefs.ThreadgateView
 }
 
+export function mapSortOptionsToSortID(sort: PostThreadV2Options['sort']) {
+  switch (sort) {
+    case 'hotness':
+      return APP_BSKY_FEED.GetPostThreadV2Hotness
+    case 'oldest':
+      return APP_BSKY_FEED.GetPostThreadV2Oldest
+    case 'newest':
+      return APP_BSKY_FEED.GetPostThreadV2Newest
+    case 'most-likes':
+      return APP_BSKY_FEED.GetPostThreadV2MostLikes
+    default:
+      return APP_BSKY_FEED.GetPostThreadV2Hotness
+  }
+}
+
 export function useGetPostThreadV2({
   uri,
   enabled: isEnabled,
@@ -77,26 +93,7 @@ export function useGetPostThreadV2({
 
   const enabled = isEnabled !== false && !!uri && !!moderationOpts
 
-  const select = useCallback(
-    (data: AppBskyFeedGetPostThreadV2.OutputSchema) => {
-      const threadgate = getThreadgate(data.threadgate)
-      return {
-        slices: buildSlices(data.thread, {
-          hasSession,
-          options,
-          threadgateHiddenReplies: mergeThreadgateHiddenReplies(threadgate),
-          moderationOpts: moderationOpts!,
-        }),
-        threadgate: {
-          ...data.threadgate,
-          record: threadgate,
-        },
-      }
-    },
-    [hasSession, options, moderationOpts, mergeThreadgateHiddenReplies],
-  )
-
-  return useQuery({
+  const query = useQuery({
     enabled,
     queryKey: createGetPostThreadV2QueryKey({
       uri,
@@ -105,7 +102,8 @@ export function useGetPostThreadV2({
     async queryFn() {
       const {data} = await agent.app.bsky.feed.getPostThreadV2({
         uri: uri!,
-        depth: 10,
+        below: 10,
+        sorting: mapSortOptionsToSortID(options.sort),
       })
       return data
     },
@@ -117,8 +115,304 @@ export function useGetPostThreadV2({
       }
       return
     },
-    select,
+    select(data) {
+      const threadgate = getThreadgate(data.threadgate)
+      return {
+        ...data,
+        threadgate: {
+          ...data.threadgate,
+          record: threadgate,
+        },
+      }
+    },
   })
+
+  // TODO map over pages, just like feeds
+  //
+  // - sort up just-posted
+  // - sort down hidden
+  // - sort down muted
+  // - sort down blurred?
+
+  const filtered = filterAndSort(query.data?.thread || [], {
+    hasSession,
+    options,
+    threadgateHiddenReplies: mergeThreadgateHiddenReplies(
+      query.data?.threadgate?.record,
+    ),
+    moderationOpts: moderationOpts!,
+    showHiddenReplies: false,
+  })
+
+  return {
+    ...query,
+    data: {
+      slices: filtered,
+      threadgate: query.data?.threadgate,
+    },
+  }
+}
+
+const views = {
+  noUnauthenticated({
+    item,
+  }: {
+    item: AppBskyFeedDefs.ThreadItemNoUnauthenticated
+  }): Extract<Slice, {type: 'threadSliceNoUnauthenticated'}> {
+    return {
+      type: 'threadSliceNoUnauthenticated',
+      key: item.uri,
+      slice: item,
+    }
+  },
+  notFound({
+    item,
+  }: {
+    item: AppBskyFeedDefs.ThreadItemNotFound
+  }): Extract<Slice, {type: 'threadSliceNotFound'}> {
+    return {
+      type: 'threadSliceNotFound',
+      key: item.uri,
+      slice: item,
+    }
+  },
+  blocked({
+    item,
+  }: {
+    item: AppBskyFeedDefs.ThreadItemBlocked
+  }): Extract<Slice, {type: 'threadSliceBlocked'}> {
+    return {
+      type: 'threadSliceBlocked',
+      key: item.uri,
+      slice: item,
+    }
+  },
+  post({
+    item,
+    oneUp,
+    oneDown,
+    moderationOpts,
+  }: {
+    item: AppBskyFeedDefs.ThreadItemPost
+    oneUp?: AppBskyFeedGetPostThreadV2.OutputSchema['thread'][number]
+    oneDown?: AppBskyFeedGetPostThreadV2.OutputSchema['thread'][number]
+    moderationOpts: ModerationOpts
+  }): Extract<Slice, {type: 'threadSlice'}> {
+    return {
+      type: 'threadSlice',
+      key: item.uri,
+      slice: {
+        ...item,
+        post: {
+          ...item.post,
+          record: item.post.record as AppBskyFeedPost.Record,
+        },
+      },
+      moderation: moderatePost(item.post, moderationOpts),
+      ui: {
+        isAnchor: item.depth === 0,
+        showParentReplyLine:
+          !!oneUp && 'depth' in oneUp && oneUp.depth < item.depth,
+        showChildReplyLine:
+          !!oneDown && 'depth' in oneDown && oneDown.depth > item.depth,
+      },
+    }
+  },
+}
+
+function getSubBranch(
+  thread: AppBskyFeedGetPostThreadV2.OutputSchema['thread'],
+  currentIndex: number,
+  depth: number,
+) {
+  let nextIndex = currentIndex
+
+  for (let ci = currentIndex + 1; ci < thread.length; ci++) {
+    const next = thread[ci]
+    // ignore unknowns
+    if (!('depth' in next)) continue
+    if (next.depth > depth) {
+      nextIndex = ci
+    } else {
+      nextIndex = ci - 1
+      break
+    }
+  }
+
+  return {
+    start: currentIndex,
+    end: nextIndex,
+    nextIndex,
+    subTreeLength: nextIndex - currentIndex,
+  }
+}
+
+export function filterAndSort(
+  thread: AppBskyFeedGetPostThreadV2.OutputSchema['thread'],
+  {
+    hasSession,
+    options,
+    threadgateHiddenReplies,
+    moderationOpts,
+    showHiddenReplies = false,
+  }: {
+    hasSession: boolean
+    options: PostThreadV2Options
+    threadgateHiddenReplies: Set<string>
+    moderationOpts: ModerationOpts
+    showHiddenReplies: boolean
+  },
+) {
+  const sorted: Slice[] = []
+  const hidden: Slice[] = []
+
+  traversal: for (let i = 0; i < thread.length; i++) {
+    const item = thread[i]
+
+    // ignore unknowns
+    if (!('depth' in item)) continue
+
+    const oneUp = thread[i - 1]
+    const oneDown = thread[i + 1]
+
+    if (item.depth < 0) {
+      /*
+       * Parents are ignored until we find the highlighted post, then we walk
+       * _up_ from there.
+       */
+    } else if (item.depth === 0) {
+      if (AppBskyFeedDefs.isThreadItemNoUnauthenticated(item)) {
+        sorted.push(views.noUnauthenticated({item}))
+      } else if (AppBskyFeedDefs.isThreadItemNotFound(item)) {
+        sorted.push(views.notFound({item}))
+      } else if (AppBskyFeedDefs.isThreadItemBlocked(item)) {
+        sorted.push(views.blocked({item}))
+      } else if (AppBskyFeedDefs.isThreadItemPost(item)) {
+        sorted.push(
+          views.post({
+            item,
+            oneUp: oneUp,
+            oneDown: oneDown,
+            moderationOpts,
+          }),
+        )
+
+        if (hasSession) {
+          sorted.push({
+            type: 'replyComposer',
+            key: 'replyComposer',
+          })
+        }
+
+        parentTraversal: for (let pi = i - 1; pi >= i * -1; pi--) {
+          const parentOneDown = thread[pi + 1]
+          const parent = thread[pi]
+          const parentOneUp = thread[pi - 1]
+
+          if (AppBskyFeedDefs.isThreadItemNoUnauthenticated(parent)) {
+            sorted.unshift(views.noUnauthenticated({item: parent}))
+            break parentTraversal
+          } else if (AppBskyFeedDefs.isThreadItemNotFound(parent)) {
+            sorted.unshift(views.notFound({item: parent}))
+            break parentTraversal
+          } else if (AppBskyFeedDefs.isThreadItemBlocked(parent)) {
+            sorted.unshift(views.blocked({item: parent}))
+            break parentTraversal
+          } else if (AppBskyFeedDefs.isThreadItemPost(parent)) {
+            sorted.unshift(
+              views.post({
+                item,
+                oneUp: parentOneUp,
+                oneDown: parentOneDown,
+                moderationOpts,
+              }),
+            )
+          }
+        }
+      }
+    } else if (item.depth > 0) {
+      /*
+       * The API does not send down any unavailable replies, so this will
+       * always be false (for now). If we ever wanted to tombstone them here,
+       * we could.
+       */
+      const shouldBreak =
+        AppBskyFeedDefs.isThreadItemNoUnauthenticated(item) ||
+        AppBskyFeedDefs.isThreadItemNotFound(item) ||
+        AppBskyFeedDefs.isThreadItemBlocked(item)
+
+      if (shouldBreak) {
+        const branch = getSubBranch(thread, i, item.depth)
+        // could insert tombstone
+        i = branch.end
+        continue traversal
+      } else if (AppBskyFeedDefs.isThreadItemPost(item)) {
+        const isHidden = threadgateHiddenReplies.has(item.uri)
+
+        if (isHidden) {
+          const branch = getSubBranch(thread, i, item.depth)
+
+          /*
+           * Top-level replies we re-sort to bottom
+           */
+          if (item.depth === 1) {
+            for (let ci = branch.start; ci <= branch.end; ci++) {
+              const next = thread[ci]
+
+              if (AppBskyFeedDefs.isThreadItemPost(next)) {
+                hidden.push(
+                  views.post({
+                    item: next,
+                    oneUp: oneUp,
+                    oneDown: oneDown,
+                    moderationOpts,
+                  }),
+                )
+              } else {
+                break
+              }
+            }
+          } else if (showHiddenReplies) {
+            /*
+             * Nested hidden replies either filter entirely or show in situ
+             */
+            sorted.push(
+              views.post({
+                item,
+                oneUp,
+                oneDown,
+                moderationOpts,
+              }),
+            )
+          }
+
+          /*
+           * Skip to next branch
+           */
+          i = branch.end
+          continue traversal
+        } else {
+          /*
+           * Not hidden, so show it
+           */
+          sorted.push(
+            views.post({
+              item,
+              oneUp,
+              oneDown,
+              moderationOpts,
+            }),
+          )
+        }
+      }
+    }
+  }
+
+  if (showHiddenReplies) {
+    return sorted.concat(hidden)
+  }
+
+  return sorted
 }
 
 export type Slice =
@@ -165,82 +459,6 @@ export type Slice =
       type: 'showMutedReplies'
       key: string
     }
-
-export function buildSlices(
-  thread: AppBskyFeedGetPostThreadV2.OutputSchema['thread'],
-  {
-    hasSession,
-    options,
-    threadgateHiddenReplies,
-    moderationOpts,
-  }: {
-    hasSession: boolean
-    options: PostThreadV2Options
-    threadgateHiddenReplies: Set<string>
-    moderationOpts: ModerationOpts
-  },
-): Slice[] {
-  const slices: Slice[] = []
-
-  for (let i = 0; i < thread.length; i++) {
-    const prev = thread[i - 1]
-    const slice = thread[i]
-    const next = thread[i + 1]
-
-    if (AppBskyFeedDefs.isThreadItemNoUnauthenticated(slice)) {
-      slices.push({
-        type: 'threadSliceNoUnauthenticated',
-        key: slice.uri,
-        slice,
-      })
-    } else if (AppBskyFeedDefs.isThreadItemNotFound(slice)) {
-      slices.push({
-        type: 'threadSliceNotFound',
-        key: slice.uri,
-        slice,
-      })
-    } else if (AppBskyFeedDefs.isThreadItemBlocked(slice)) {
-      slices.push({
-        type: 'threadSliceBlocked',
-        key: slice.uri,
-        slice,
-      })
-    } else if (AppBskyFeedDefs.isThreadItemPost(slice)) {
-      slices.push({
-        type: 'threadSlice',
-        key: slice.uri,
-        slice: {
-          ...slice,
-          post: {
-            ...slice.post,
-            record: slice.post.record as AppBskyFeedPost.Record,
-          }
-        },
-        moderation: moderatePost(slice.post, moderationOpts),
-        ui: {
-          isAnchor: slice.depth === 0,
-          showParentReplyLine:
-            !!prev &&
-            AppBskyFeedDefs.isThreadItemPost(prev) &&
-            prev.depth < slice.depth,
-          showChildReplyLine:
-            !!next &&
-            AppBskyFeedDefs.isThreadItemPost(next) &&
-            next.depth > slice.depth,
-        },
-      })
-
-      if (slice.depth === 0 && hasSession) {
-        slices.push({
-          type: 'replyComposer',
-          key: 'replyComposer',
-        })
-      }
-    }
-  }
-
-  return slices
-}
 
 function getThreadgate(
   view: AppBskyFeedGetPostThreadV2.OutputSchema['threadgate'],

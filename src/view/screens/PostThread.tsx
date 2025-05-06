@@ -139,7 +139,6 @@ export function Inner({uri}: {uri: string | undefined}) {
   const ref = useRef<ListMethods>(null)
   const layoutHeaderRef = useRef<View | null>(null)
   const anchorPostRef = useRef<View | null>(null)
-  const anchorPost = data?.slices.find(slice => slice.type === 'threadSlice' && slice.ui.isAnchor)
   // TODO
   const [justPostedUris, setJustPostedUris] = useState(
     () => new Set<string>(),
@@ -161,6 +160,7 @@ export function Inner({uri}: {uri: string | undefined}) {
 
   const {openComposer} = useComposerControls()
   const onReplyToAnchor = () => {
+    const anchorPost = data?.slices.find(slice => slice.type === 'threadSlice' && slice.ui.isAnchor)
     if (anchorPost?.type !== 'threadSlice') {
       return
     }
