@@ -15,6 +15,11 @@ type ControlsContext = {
   mutedWordsDialogControl: Control
   signinDialogControl: Control
   inAppBrowserConsentControl: StatefulControl<string>
+  linkWarningDialogControl: StatefulControl<{
+    href: string
+    displayText: string
+    share?: boolean
+  }>
 }
 
 const ControlsContext = createContext<ControlsContext | null>(null)
@@ -33,14 +38,25 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const mutedWordsDialogControl = Dialog.useDialogControl()
   const signinDialogControl = Dialog.useDialogControl()
   const inAppBrowserConsentControl = useStatefulDialogControl<string>()
+  const linkWarningDialogControl = useStatefulDialogControl<{
+    href: string
+    displayText: string
+    share?: boolean
+  }>()
 
   const ctx = useMemo<ControlsContext>(
     () => ({
       mutedWordsDialogControl,
       signinDialogControl,
       inAppBrowserConsentControl,
+      linkWarningDialogControl,
     }),
-    [mutedWordsDialogControl, signinDialogControl, inAppBrowserConsentControl],
+    [
+      mutedWordsDialogControl,
+      signinDialogControl,
+      inAppBrowserConsentControl,
+      linkWarningDialogControl,
+    ],
   )
 
   return (
