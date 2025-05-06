@@ -16,7 +16,7 @@ import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
   Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
 } from '#/components/icons/Heart2'
-import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
+import {Repost_Stroke2_Corner3_Rounded as Repost} from '#/components/icons/Repost'
 
 export function LoadingPlaceholder({
   width,

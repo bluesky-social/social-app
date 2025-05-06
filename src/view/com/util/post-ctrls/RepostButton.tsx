@@ -10,7 +10,10 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
-import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
+import {
+  Repost_Stroke2_5_Corner3_Rounded as RepostBold,
+  Repost_Stroke2_Corner3_Rounded as Repost,
+} from '#/components/icons/Repost'
 import {Text} from '#/components/Typography'
 import {formatCount} from '../numeric/format'
 
@@ -81,7 +84,11 @@ let RepostButton = ({
         variant="ghost"
         color="secondary"
         hitSlop={POST_CTRL_HITSLOP}>
-        <Repost style={color} width={big ? 22 : 18} />
+        {isReposted ? (
+          <RepostBold style={color} width={big ? 22 : 18} />
+        ) : (
+          <Repost style={color} width={big ? 22 : 18} />
+        )}
         {typeof repostCount !== 'undefined' && repostCount > 0 ? (
           <Text
             testID="repostCount"

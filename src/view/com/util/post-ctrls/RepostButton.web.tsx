@@ -8,7 +8,10 @@ import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
-import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
+import {
+  Repost_Stroke2_5_Corner3_Rounded as RepostBold,
+  Repost_Stroke2_Corner3_Rounded as Repost,
+} from '#/components/icons/Repost'
 import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
 import {EventStopper} from '../EventStopper'
@@ -129,7 +132,11 @@ const RepostInner = ({
   const {i18n} = useLingui()
   return (
     <View style={[a.flex_row, a.align_center, a.gap_xs, {padding: 5}]}>
-      <Repost style={color} width={big ? 22 : 18} />
+      {isReposted ? (
+        <RepostBold style={color} width={big ? 22 : 18} />
+      ) : (
+        <Repost style={color} width={big ? 22 : 18} />
+      )}
       {typeof repostCount !== 'undefined' && repostCount > 0 ? (
         <Text
           testID="repostCount"
