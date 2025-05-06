@@ -66,11 +66,6 @@ export interface LinkWarningModal {
   share?: boolean
 }
 
-export interface InAppBrowserConsentModal {
-  name: 'in-app-browser-consent'
-  href: string
-}
-
 export type Modal =
   // Account
   | DeleteAccountModal
@@ -96,7 +91,6 @@ export type Modal =
 
   // Generic
   | LinkWarningModal
-  | InAppBrowserConsentModal
 
 const ModalContext = React.createContext<{
   isModalActive: boolean

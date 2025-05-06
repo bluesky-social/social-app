@@ -1,17 +1,15 @@
 import React, {useImperativeHandle} from 'react'
 import {
   FlatList,
-  FlatListProps,
-  StyleProp,
+  type FlatListProps,
+  type StyleProp,
   TouchableWithoutFeedback,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
-import {useFocusGuards} from '@radix-ui/react-focus-guards'
-import {FocusScope} from '@radix-ui/react-focus-scope'
+import {DismissableLayer, FocusGuards, FocusScope} from 'radix-ui/internal'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {logger} from '#/logger'
@@ -21,9 +19,9 @@ import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {Context} from '#/components/Dialog/context'
 import {
-  DialogControlProps,
-  DialogInnerProps,
-  DialogOuterProps,
+  type DialogControlProps,
+  type DialogInnerProps,
+  type DialogOuterProps,
 } from '#/components/Dialog/types'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Portal} from '#/components/Portal'
@@ -162,9 +160,9 @@ export function Inner({
   const {close} = React.useContext(Context)
   const {gtMobile} = useBreakpoints()
   const {reduceMotionEnabled} = useA11y()
-  useFocusGuards()
+  FocusGuards.useFocusGuards()
   return (
-    <FocusScope loop asChild trapped>
+    <FocusScope.FocusScope loop asChild trapped>
       <View
         role="dialog"
         aria-role="dialog"
@@ -191,7 +189,7 @@ export function Inner({
           !reduceMotionEnabled && a.zoom_fade_in,
           style,
         ])}>
-        <DismissableLayer
+        <DismissableLayer.DismissableLayer
           onInteractOutside={preventDefault}
           onFocusOutside={preventDefault}
           onDismiss={close}
@@ -200,9 +198,9 @@ export function Inner({
           <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
             {children}
           </View>
-        </DismissableLayer>
+        </DismissableLayer.DismissableLayer>
       </View>
-    </FocusScope>
+    </FocusScope.FocusScope>
   )
 }
 

@@ -4,13 +4,12 @@
     "jsx": "react-jsx",
     "module": "esnext",
     "types": ["node", "jest"],
+    "baseUrl": ".",
     "paths": {
       "#/*": ["./src/*"],
-      "lib/*": ["./src/lib/*"],
-      "platform/*": ["./src/platform/*"],
-      "state/*": ["./src/state/*"],
-      "view/*": ["./src/view/*"],
-      "crypto": ["./src/platform/crypto.ts"]
+      "crypto": ["./src/platform/crypto.ts"],
+      "multiformats/cid": ["node_modules/multiformats/types/src/cid.d.ts"],
+      "multiformats/hashes/hasher": ["node_modules/multiformats/types/src/hashes/hasher.d.ts"]
     }
   },
   "exclude": ["bskyweb", "bskyembed", "web-build"]

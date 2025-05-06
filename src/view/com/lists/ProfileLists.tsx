@@ -12,7 +12,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
+import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {RQKEY, useProfileListsQuery} from '#/state/queries/profile-lists'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
@@ -171,7 +171,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
     )
 
     React.useEffect(() => {
-      if (enabled && scrollElRef.current) {
+      if (isIOS && enabled && scrollElRef.current) {
         const nativeTag = findNodeHandle(scrollElRef.current)
         setScrollViewTag(nativeTag)
       }
