@@ -154,7 +154,11 @@ export type ContentProps<T> = {
    * )}
    * ```
    */
-  renderItem: (item: T, index: number) => React.ReactElement
+  renderItem: (
+    item: T,
+    index: number,
+    selectedValue?: string | null,
+  ) => React.ReactElement
   /*
    * Extracts the value from an item. Defaults to `item => item.value`
    */

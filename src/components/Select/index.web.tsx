@@ -139,6 +139,7 @@ export function Icon({style}: IconProps) {
 
 export function Content<T>({items, renderItem}: ContentProps<T>) {
   const t = useTheme()
+  const selectedValue = useContext(SelectedValueContext)
 
   const scrollBtnStyles = [
     a.flex,
@@ -167,7 +168,7 @@ export function Content<T>({items, renderItem}: ContentProps<T>) {
             <ChevronUpIcon style={[t.atoms.text]} size="xs" />
           </RadixSelect.ScrollUpButton>
           <RadixSelect.Viewport style={flatten([a.p_xs])}>
-            {items.map((item, index) => renderItem(item, index))}
+            {items.map((item, index) => renderItem(item, index, selectedValue))}
           </RadixSelect.Viewport>
           <RadixSelect.ScrollDownButton style={flatten(scrollBtnStyles)}>
             <ChevronDownIcon style={[t.atoms.text]} size="xs" />
