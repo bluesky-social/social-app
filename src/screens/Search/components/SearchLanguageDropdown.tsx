@@ -27,13 +27,12 @@ export function SearchLanguageDropdown({
   const languages = useMemo(() => {
     return LANGUAGES.filter(
       (lang, index, self) =>
-        Boolean(lang.code2) && // reduce to the code2 varieties
-        index === self.findIndex(t => t.code2 === lang.code2), // remove dupes (which will happen)
+        index === self.findIndex(t => t.code === lang.code), // remove dupes (which will happen)
     )
       .map(l => ({
         label: languageName(l, appLanguage),
-        value: l.code2,
-        key: l.code2 + l.code3,
+        value: l.code,
+        key: l.code,
       }))
       .sort((a, b) => {
         // prioritize user's languages
@@ -44,14 +43,13 @@ export function SearchLanguageDropdown({
         // prioritize "common" langs in the network
         const aIsCommon = !!APP_LANGUAGES.find(
           al =>
-            // skip `ast`, because it uses a 3-letter code which conflicts with `as`
-            // it begins with `a` anyway so still is top of the list
-            al.code2 !== 'ast' && al.code2.startsWith(a.value),
+            // some app langs have regions, like `zh-Hant-TW`, so check a prefix of `zh-` too
+            al.code2 === a.value || al.code2.startsWith(a.value + '-'),
         )
         const bIsCommon = !!APP_LANGUAGES.find(
           al =>
             // ditto
-            al.code2 !== 'ast' && al.code2.startsWith(b.value),
+            al.code2 === b.value || al.code2.startsWith(b.value + '-'),
         )
         if (aIsCommon && !bIsCommon) return -1
         if (bIsCommon && !aIsCommon) return 1
