@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -7,14 +7,16 @@ import {useQuery} from '@tanstack/react-query'
 import {getLinkMeta} from '#/lib/link-meta/link-meta'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent} from '#/state/session'
-import {atoms as a, platform, useTheme, web} from '#/alf'
+import {useTickEveryMinute} from '#/state/shell'
+import {atoms as a, ios, native, platform, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
-import * as TimeField from '#/components/forms/TimeField'
 import * as ProfileCard from '#/components/ProfileCard'
+import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
+import {displayDuration} from './utils'
 
 export function GoLiveDialog({
   control,
@@ -31,23 +33,36 @@ export function GoLiveDialog({
   )
 }
 
+// Possible durations: max 4 hours, 5 minute intervals
+const DURATIONS = Array.from({length: (4 * 60) / 5 + 1}).map((_, i) => i * 5)
+
 function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
   const agent = useAgent()
   const [liveLink, setLiveLink] = useState('')
   const [liveLinkError, setLiveLinkError] = useState('')
-  const [endTime, setEndTime] = useState<Date>(() => {
-    const date = new Date()
-    date.setHours(date.getHours() + 1)
-    date.setMinutes(date.getMinutes() + 30)
-    return date
-  })
+  const [duration, setDuration] = useState(60)
   const moderationOpts = useModerationOpts()
+  const tick = useTickEveryMinute()
 
-  const minTime = new Date()
-  const maxTime = new Date()
-  maxTime.setHours(maxTime.getHours() + 3)
+  const time = useCallback(
+    (offset: number) => {
+      tick!
+
+      const date = new Date()
+      date.setMinutes(date.getMinutes() + offset)
+      return i18n
+        .date(date, {hour: 'numeric', minute: '2-digit', hour12: true})
+        .toLocaleUpperCase()
+        .replace(' ', '')
+    },
+    [tick, i18n],
+  )
+
+  const onChangeDuration = useCallback((newDuration: string) => {
+    setDuration(Number(newDuration))
+  }, [])
 
   const {} = useQuery({
     enabled: !!definitelyUrl(liveLink),
@@ -60,7 +75,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   return (
     <Dialog.ScrollableInner
       label={_(msg`Go Live`)}
-      style={web({maxWidth: 550})}>
+      style={web({maxWidth: 420})}>
       <View style={[a.gap_lg]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_bold, a.text_2xl]}>
@@ -70,7 +85,6 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
             Add a live status to your profile photo for a set time period. Your
             status will change to live as soon as you post and can be changed an
             any time.
-            {/* TODO! */} <>Learn more</>
           </Text>
         </View>
         {moderationOpts && (
@@ -107,34 +121,53 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
           </TextField.Root>
         </View>
 
-        <View
-          style={[
-            a.flex_row,
-            a.align_center,
-            a.flex_wrap,
-            a.justify_between,
-            a.w_full,
-          ]}>
-          <View style={[a.gap_2xs]}>
-            <Text style={[a.text_sm]}>
-              <Trans>How long will you be live?</Trans>
-            </Text>
-            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-              <Trans>Max 3 hours</Trans>
-            </Text>
-          </View>
+        <View>
+          <TextField.LabelText>
+            <Trans>Go live for</Trans>
+          </TextField.LabelText>
+          <Select.Root
+            value={String(duration)}
+            onValueChange={onChangeDuration}>
+            <Select.Trigger label={_(msg`Select primary language`)}>
+              <Text style={[ios(a.py_xs)]}>
+                {displayDuration(i18n, duration)}
+                {'  '}
+                <Text style={[t.atoms.text_contrast_low]}>
+                  {time(duration)}
+                </Text>
+              </Text>
 
-          <View>
-            <TimeField.TimeField
-              label={_(msg`Set when your live status will end`)}
-              value={endTime}
-              onChangeDate={date => setEndTime(new Date(date))}
-              minimumDate={minTime}
-              maximumDate={maxTime}
+              <Select.Icon />
+            </Select.Trigger>
+            <Select.Content
+              renderItem={(item, _i, selectedValue) => {
+                const label = displayDuration(i18n, item)
+                return (
+                  <Select.Item value={String(item)} label={label}>
+                    <Select.ItemIndicator />
+                    <Select.ItemText>
+                      {label}
+                      {'  '}
+                      <Text
+                        style={[
+                          native(a.text_md),
+                          web(a.ml_xs),
+                          selectedValue === String(item)
+                            ? t.atoms.text_contrast_medium
+                            : t.atoms.text_contrast_low,
+                          a.font_normal,
+                        ]}>
+                        {time(item)}
+                      </Text>
+                    </Select.ItemText>
+                  </Select.Item>
+                )
+              }}
+              items={DURATIONS}
+              valueExtractor={d => String(d)}
             />
-          </View>
+          </Select.Root>
         </View>
-
         <View
           style={platform({
             native: [a.gap_md],
