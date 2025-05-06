@@ -1,8 +1,8 @@
 import React from 'react'
-import {type Image as RNImage} from 'react-native-image-crop-picker'
 import {type AppBskyActorDefs, type AppBskyGraphDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {type PickerImage} from '#/lib/media/picker.shared'
 
 export interface EditProfileModal {
   name: 'edit-profile'
@@ -32,7 +32,7 @@ export interface CropImageModal {
   dimensions?: {width: number; height: number}
   aspect?: number
   circular?: boolean
-  onSelect: (img?: RNImage) => void
+  onSelect: (img?: PickerImage) => void
 }
 
 export interface DeleteAccountModal {

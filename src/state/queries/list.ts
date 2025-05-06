@@ -1,20 +1,20 @@
-import {Image as RNImage} from 'react-native-image-crop-picker'
 import {
-  $Typed,
-  AppBskyGraphDefs,
-  AppBskyGraphGetList,
-  AppBskyGraphList,
+  type $Typed,
+  type AppBskyGraphDefs,
+  type AppBskyGraphGetList,
+  type AppBskyGraphList,
   AtUri,
-  BskyAgent,
-  ComAtprotoRepoApplyWrites,
-  Facet,
-  Un$Typed,
+  type BskyAgent,
+  type ComAtprotoRepoApplyWrites,
+  type Facet,
+  type Un$Typed,
 } from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
+import {type PickerImage} from '#/lib/media/picker.shared'
 import {STALE} from '#/state/queries'
 import {useAgent, useSession} from '../session'
 import {invalidate as invalidateMyLists} from './my-lists'
@@ -47,7 +47,7 @@ export interface ListCreateMutateParams {
   name: string
   description: string
   descriptionFacets: Facet[] | undefined
-  avatar: RNImage | null | undefined
+  avatar: PickerImage | null | undefined
 }
 export function useListCreateMutation() {
   const {currentAccount} = useSession()
@@ -115,7 +115,7 @@ export interface ListMetadataMutateParams {
   name: string
   description: string
   descriptionFacets: Facet[] | undefined
-  avatar: RNImage | null | undefined
+  avatar: PickerImage | null | undefined
 }
 export function useListMetadataMutation() {
   const {currentAccount} = useSession()

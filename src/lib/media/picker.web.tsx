@@ -1,29 +1,29 @@
 /// <reference lib="dom" />
 
-import {Image as RNImage} from 'react-native-image-crop-picker'
+import {type OpenCropperOptions} from 'expo-image-crop-tool'
 
-import {CameraOpts, CropperOptions} from './types'
-export {openPicker} from './picker.shared'
 import {unstable__openModal} from '#/state/modals'
+import {type PickerImage} from './picker.shared'
+import {type CameraOpts} from './types'
 
-export async function openCamera(_opts: CameraOpts): Promise<RNImage> {
+export {openPicker, type PickerImage as RNImage} from './picker.shared'
+
+export async function openCamera(_opts: CameraOpts): Promise<PickerImage> {
   // const mediaType = opts.mediaType || 'photo' TODO
   throw new Error('TODO')
 }
 
-export async function openCropper(opts: CropperOptions): Promise<RNImage> {
+export async function openCropper(
+  opts: OpenCropperOptions,
+): Promise<PickerImage> {
   // TODO handle more opts
   return new Promise((resolve, reject) => {
     unstable__openModal({
       name: 'crop-image',
-      uri: opts.path,
-      dimensions:
-        opts.width && opts.height
-          ? {width: opts.width, height: opts.height}
-          : undefined,
-      aspect: opts.webAspectRatio,
-      circular: opts.webCircularCrop,
-      onSelect: (img?: RNImage) => {
+      uri: opts.imageUri,
+      aspect: opts.aspectRatio,
+      circular: opts.shape === 'circle',
+      onSelect: (img?: PickerImage) => {
         if (img) {
           resolve(img)
         } else {

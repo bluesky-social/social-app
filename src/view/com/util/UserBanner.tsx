@@ -1,8 +1,7 @@
 import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {Image as RNImage} from 'react-native-image-crop-picker'
 import {Image} from 'expo-image'
-import {ModerationUI} from '@atproto/api'
+import {type ModerationUI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -25,7 +24,12 @@ import {
 import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import * as Menu from '#/components/Menu'
-import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
+import {
+  openCamera,
+  openCropper,
+  openPicker,
+  type RNImage,
+} from '../../../lib/media/picker'
 
 export function UserBanner({
   type,
@@ -52,8 +56,7 @@ export function UserBanner({
     }
     onSelectNewBanner?.(
       await openCamera({
-        width: 3000,
-        height: 1000,
+        aspect: [3, 1],
       }),
     )
   }, [onSelectNewBanner, requestCameraAccessIfNeeded])
@@ -70,11 +73,8 @@ export function UserBanner({
     try {
       onSelectNewBanner?.(
         await openCropper({
-          mediaType: 'photo',
-          path: items[0].path,
-          width: 3000,
-          height: 1000,
-          webAspectRatio: 3,
+          imageUri: items[0].path,
+          aspectRatio: 3 / 1,
         }),
       )
     } catch (e: any) {

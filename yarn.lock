@@ -11247,6 +11247,11 @@ expo-haptics@~14.1.4:
   resolved "https://registry.yarnpkg.com/expo-haptics/-/expo-haptics-14.1.4.tgz#442f48b1bdf83484d4fcadc653445aaae6049b70"
   integrity sha512-QZdE3NMX74rTuIl82I+n12XGwpDWKb8zfs5EpwsnGi/D/n7O2Jd4tO5ivH+muEG/OCJOMq5aeaVDqqaQOhTkcA==
 
+expo-image-crop-tool@^0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/expo-image-crop-tool/-/expo-image-crop-tool-0.1.7.tgz#a84ed2192d147d922b3d352e52e29bc3a4c1e800"
+  integrity sha512-An+tszv0DKHA74Yr7uQb4mqGTxTVBwku9zu8yvhb7HzBXIUGw12hnb8M6ntHZqIFuQiLzBxaKH8DTwZgg9oAnw==
+
 expo-image-loader@~5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/expo-image-loader/-/expo-image-loader-5.1.0.tgz#f7d65f9b9a9714eaaf5d50a406cb34cb25262153"
@@ -16795,11 +16800,6 @@ react-native-get-random-values@~1.11.0:
   integrity sha512-4BTbDbRmS7iPdhYLRcz3PGFIpFJBwNZg9g42iwa2P6FOv9vZj/xJc678RZXnLNZzd0qd7Q3CCF6Yd+CU2eoXKQ==
   dependencies:
     fast-base64-decode "^1.0.0"
-
-react-native-image-crop-picker@^0.42.0:
-  version "0.42.0"
-  resolved "https://registry.yarnpkg.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.42.0.tgz#0672c080feb8ffefd65ba00a4e64bc8a1066136e"
-  integrity sha512-EOEkekPJ7g+CNf92HrWAGM4kcDJyVY02gQJUVH7MSNUOK11SHnurXVM0TnwIt410Y4T+lBkq3rfJEA1qDaDDwA==
 
 react-native-ios-context-menu@^1.15.3:
   version "1.15.3"

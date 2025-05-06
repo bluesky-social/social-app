@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {type Image as RNImage} from 'react-native-image-crop-picker'
 import {LinearGradient} from 'expo-linear-gradient'
 import {type AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -17,6 +16,7 @@ import {useLingui} from '@lingui/react'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {compressIfNeeded} from '#/lib/media/manip'
+import {type PickerImage} from '#/lib/media/picker.shared'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {enforceLen} from '#/lib/strings/helpers'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
@@ -95,7 +95,7 @@ export function Component({
   const isDescriptionOver = graphemeLength > MAX_DESCRIPTION
 
   const [avatar, setAvatar] = useState<string | undefined>(list?.avatar)
-  const [newAvatar, setNewAvatar] = useState<RNImage | undefined | null>()
+  const [newAvatar, setNewAvatar] = useState<PickerImage | undefined | null>()
 
   const onDescriptionChange = useCallback(
     (newText: string) => {
@@ -112,7 +112,7 @@ export function Component({
   }, [closeModal])
 
   const onSelectNewAvatar = useCallback(
-    async (img: RNImage | null) => {
+    async (img: PickerImage | null) => {
       if (!img) {
         setNewAvatar(null)
         setAvatar(undefined)
