@@ -86,16 +86,19 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   // listen for broadcasts
   React.useEffect(() => {
     const listener = ({data}: MessageEvent) => {
+      const unreadCount = data.event === '30+'
+            ? 30
+            : data.event === ''
+            ? 0
+            : parseInt(data.event, 10) || 1;
       cacheRef.current = {
         usableInFeed: false,
         syncedAt: new Date(),
         data: undefined,
-        unreadCount:
-          data.event === '30+'
-            ? 30
-            : data.event === ''
-            ? 0
-            : parseInt(data.event, 10) || 1,
+        unreadCount,
+      }
+      if ('setAppBadge' in navigator) {
+        navigator.setAppBadge(unreadCount)
       }
       setNumUnread(data.event)
     }
@@ -117,6 +120,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         )
 
         // update & broadcast
+        if ('setAppBadge' in navigator) {
+          navigator.setAppBadge(0)
+        }
         setNumUnread('')
         broadcast.postMessage({event: ''})
         resetBadgeCount()
@@ -181,6 +187,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           }
 
           // update & broadcast
+          if ('setAppBadge' in navigator) {
+            navigator.setAppBadge(unreadCount)
+          }
           setNumUnread(unreadCountStr)
           if (invalidate) {
             truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
