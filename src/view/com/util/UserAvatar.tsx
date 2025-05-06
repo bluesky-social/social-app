@@ -20,6 +20,7 @@ import {
 } from '#/lib/hooks/usePermissions'
 import {compressIfNeeded} from '#/lib/media/manip'
 import {openCamera, openCropper, openPicker} from '#/lib/media/picker'
+import {type PickerImage} from '#/lib/media/picker.shared'
 import {makeProfileLink} from '#/lib/routes/links'
 import {logger} from '#/logger'
 import {isAndroid, isNative, isWeb} from '#/platform/detection'
@@ -27,7 +28,6 @@ import {
   type ComposerImage,
   compressImage,
   createComposerImage,
-  type ImageMeta,
 } from '#/state/gallery'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {EditImageDialog} from '#/view/com/composer/photos/EditImageDialog'
@@ -65,7 +65,7 @@ interface UserAvatarProps extends BaseUserAvatarProps {
 }
 
 interface EditableUserAvatarProps extends BaseUserAvatarProps {
-  onSelectNewAvatar: (img: ImageMeta | null) => void
+  onSelectNewAvatar: (img: PickerImage | null) => void
 }
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {

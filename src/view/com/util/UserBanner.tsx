@@ -11,13 +11,13 @@ import {
 } from '#/lib/hooks/usePermissions'
 import {compressIfNeeded} from '#/lib/media/manip'
 import {openCamera, openCropper, openPicker} from '#/lib/media/picker'
+import {type PickerImage} from '#/lib/media/picker.shared'
 import {logger} from '#/logger'
 import {isAndroid, isNative} from '#/platform/detection'
 import {
   type ComposerImage,
   compressImage,
   createComposerImage,
-  type ImageMeta,
 } from '#/state/gallery'
 import {EditImageDialog} from '#/view/com/composer/photos/EditImageDialog'
 import {EventStopper} from '#/view/com/util/EventStopper'
@@ -41,7 +41,7 @@ export function UserBanner({
   type?: 'labeler' | 'default'
   banner?: string | null
   moderation?: ModerationUI
-  onSelectNewBanner?: (img: ImageMeta | null) => void
+  onSelectNewBanner?: (img: PickerImage | null) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()

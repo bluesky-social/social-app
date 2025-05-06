@@ -4,14 +4,11 @@ import {
 } from 'expo-image-picker'
 import {t} from '@lingui/macro'
 
+import {type ImageMeta} from '#/state/gallery'
 import * as Toast from '#/view/com/util/Toast'
 import {getDataUriSize} from './util'
 
-export type PickerImage = {
-  mime: string
-  height: number
-  width: number
-  path: string
+export type PickerImage = ImageMeta & {
   size: number
 }
 
