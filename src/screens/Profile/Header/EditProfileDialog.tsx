@@ -5,12 +5,11 @@ import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {urls} from '#/lib/constants'
-import {compressIfNeeded} from '#/lib/media/manip'
-import {type PickerImage} from '#/lib/media/picker.shared'
 import {cleanError} from '#/lib/strings/errors'
 import {useWarnMaxGraphemeCount} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
+import {type ImageMeta} from '#/state/gallery'
 import {useProfileUpdateMutation} from '#/state/queries/profile'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import * as Toast from '#/view/com/util/Toast'
@@ -18,10 +17,11 @@ import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {InlineLinkText} from '#/components/Link'
+import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {useSimpleVerificationState} from '#/components/verification'
 
@@ -127,10 +127,10 @@ function DialogInner({
     profile.avatar,
   )
   const [newUserBanner, setNewUserBanner] = useState<
-    PickerImage | undefined | null
+    ImageMeta | undefined | null
   >()
   const [newUserAvatar, setNewUserAvatar] = useState<
-    PickerImage | undefined | null
+    ImageMeta | undefined | null
   >()
 
   const dirty =
@@ -144,7 +144,7 @@ function DialogInner({
   }, [dirty, setDirty])
 
   const onSelectNewAvatar = useCallback(
-    async (img: PickerImage | null) => {
+    (img: ImageMeta | null) => {
       setImageError('')
       if (img === null) {
         setNewUserAvatar(null)
@@ -152,9 +152,8 @@ function DialogInner({
         return
       }
       try {
-        const finalImg = await compressIfNeeded(img, 1000000)
-        setNewUserAvatar(finalImg)
-        setUserAvatar(finalImg.path)
+        setNewUserAvatar(img)
+        setUserAvatar(img.path)
       } catch (e: any) {
         setImageError(cleanError(e))
       }
@@ -163,7 +162,7 @@ function DialogInner({
   )
 
   const onSelectNewBanner = useCallback(
-    async (img: PickerImage | null) => {
+    (img: ImageMeta | null) => {
       setImageError('')
       if (!img) {
         setNewUserBanner(null)
@@ -171,9 +170,8 @@ function DialogInner({
         return
       }
       try {
-        const finalImg = await compressIfNeeded(img, 1000000)
-        setNewUserBanner(finalImg)
-        setUserBanner(finalImg.path)
+        setNewUserBanner(img)
+        setUserBanner(img.path)
       } catch (e: any) {
         setImageError(cleanError(e))
       }
@@ -258,6 +256,7 @@ function DialogInner({
         <ButtonText style={[a.text_md, !dirty && t.atoms.text_contrast_low]}>
           <Trans>Save</Trans>
         </ButtonText>
+        {isUpdatingProfile && <ButtonIcon icon={Loader} />}
       </Button>
     ),
     [

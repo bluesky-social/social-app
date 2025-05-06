@@ -1,25 +1,21 @@
 import {
   type ImagePickerOptions,
   launchImageLibraryAsync,
-  MediaTypeOptions,
 } from 'expo-image-picker'
 import {t} from '@lingui/macro'
 
+import {type ImageMeta} from '#/state/gallery'
 import * as Toast from '#/view/com/util/Toast'
 import {getDataUriSize} from './util'
 
-export type PickerImage = {
-  mime: string
-  height: number
-  width: number
-  path: string
+export type PickerImage = ImageMeta & {
   size: number
 }
 
 export async function openPicker(opts?: ImagePickerOptions) {
   const response = await launchImageLibraryAsync({
     exif: false,
-    mediaTypes: MediaTypeOptions.Images,
+    mediaTypes: ['images'],
     quality: 1,
     ...opts,
     legacy: true,
