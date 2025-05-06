@@ -96,9 +96,7 @@ export function LanguageSettingsScreen({}: Props) {
                 value={sanitizeAppLanguageSetting(langPrefs.appLanguage)}
                 onValueChange={onChangeAppLanguage}>
                 <Select.Trigger label={_(msg`Select app language`)}>
-                  <Select.ValueText
-                    placeholder={_(msg`Select an app language...`)}
-                  />
+                  <Select.ValueText />
                   <Select.Icon />
                 </Select.Trigger>
                 <Select.Content
@@ -131,9 +129,7 @@ export function LanguageSettingsScreen({}: Props) {
                 value={langPrefs.primaryLanguage}
                 onValueChange={onChangePrimaryLanguage}>
                 <Select.Trigger label={_(msg`Select primary language`)}>
-                  <Select.ValueText
-                    placeholder={_(msg`Select a primary language...`)}
-                  />
+                  <Select.ValueText />
                   <Select.Icon />
                 </Select.Trigger>
                 <Select.Content
