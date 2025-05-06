@@ -142,7 +142,7 @@
     "expo-font": "~13.3.0",
     "expo-haptics": "~14.1.4",
     "expo-image": "~2.1.6",
-    "expo-image-crop-tool": "^0.1.7",
+    "expo-image-crop-tool": "^0.1.8",
     "expo-image-manipulator": "~13.1.5",
     "expo-image-picker": "~16.1.4",
     "expo-linear-gradient": "~14.1.4",

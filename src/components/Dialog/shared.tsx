@@ -1,11 +1,11 @@
-import React from 'react'
 import {
-  LayoutChangeEvent,
-  StyleProp,
-  TextStyle,
+  type LayoutChangeEvent,
+  type StyleProp,
+  type TextStyle,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
+import type React from 'react'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'

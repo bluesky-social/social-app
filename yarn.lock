@@ -11247,10 +11247,10 @@ expo-haptics@~14.1.4:
   resolved "https://registry.yarnpkg.com/expo-haptics/-/expo-haptics-14.1.4.tgz#442f48b1bdf83484d4fcadc653445aaae6049b70"
   integrity sha512-QZdE3NMX74rTuIl82I+n12XGwpDWKb8zfs5EpwsnGi/D/n7O2Jd4tO5ivH+muEG/OCJOMq5aeaVDqqaQOhTkcA==
 
-expo-image-crop-tool@^0.1.7:
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/expo-image-crop-tool/-/expo-image-crop-tool-0.1.7.tgz#a84ed2192d147d922b3d352e52e29bc3a4c1e800"
-  integrity sha512-An+tszv0DKHA74Yr7uQb4mqGTxTVBwku9zu8yvhb7HzBXIUGw12hnb8M6ntHZqIFuQiLzBxaKH8DTwZgg9oAnw==
+expo-image-crop-tool@^0.1.8:
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/expo-image-crop-tool/-/expo-image-crop-tool-0.1.8.tgz#3e9f34825cf5d7dad1ef2786615571b078ece4e7"
+  integrity sha512-UlS1zV7JewUzuZzVT9aA0vFD1+dt+pU60ILgt3ntQl4G9SeDJ9bB/+ylz9dzn6BjZecUQkGJmbCQ3H7jGZeZMA==
 
 expo-image-loader@~5.1.0:
   version "5.1.0"
