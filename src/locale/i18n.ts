@@ -13,6 +13,7 @@ import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {AppLanguage} from '#/locale/languages'
 import {messages as messagesAn} from '#/locale/locales/an/messages'
 import {messages as messagesAst} from '#/locale/locales/ast/messages'
+import {messages as messagesBr} from '#/locale/locales/br/messages'
 import {messages as messagesCa} from '#/locale/locales/ca/messages'
 import {messages as messagesCy} from '#/locale/locales/cy/messages'
 import {messages as messagesDa} from '#/locale/locales/da/messages'
@@ -73,6 +74,14 @@ export async function dynamicActivate(locale: AppLanguage) {
       ])
       break
     }
+    case AppLanguage.br: {
+      i18n.loadAndActivate({locale, messages: messagesBr})
+      await Promise.all([
+        import('@formatjs/intl-pluralrules/locale-data/br'),
+        import('@formatjs/intl-numberformat/locale-data/br'),
+      ])
+      break
+    }      
     case AppLanguage.ca: {
       i18n.loadAndActivate({locale, messages: messagesCa})
       await Promise.all([
