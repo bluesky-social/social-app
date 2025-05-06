@@ -29,7 +29,13 @@ export function ShowLessFollowup() {
           style={[t.atoms.text_contrast_low]}
           size="sm"
         />
-        <Text style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug]}>
+        <Text
+          style={[
+            a.flex_1,
+            a.text_sm,
+            t.atoms.text_contrast_medium,
+            a.leading_snug,
+          ]}>
           <Trans>
             Thank you for your feedback! It has been sent to the feed operator.
           </Trans>
