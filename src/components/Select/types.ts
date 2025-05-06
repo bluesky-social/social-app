@@ -129,6 +129,19 @@ export type ContentProps<T> = {
    * customise the `Select.ValueText` component.
    */
   items: T[]
+  /**
+   * Renders an item. You should probably use the `Select.Item` component.
+   *
+   * @example
+   * ```tsx
+   * renderItem={({label, value}) => (
+   *   <Select.Item value={value} label={label}>
+   *     <Select.ItemIndicator />
+   *     <Select.ItemText>{label}</Select.ItemText>
+   *   </Select.Item>
+   * )}
+   * ```
+   */
   renderItem: (item: T, index: number) => React.ReactElement
   /*
    * Extracts the value from an item. Defaults to `item => item.value`
