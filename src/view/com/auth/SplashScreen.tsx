@@ -78,7 +78,9 @@ export const SplashScreen = ({
             a.justify_center,
             a.align_center,
           ]}>
-          <AppLanguageDropdown />
+          <View>
+            <AppLanguageDropdown />
+          </View>
         </View>
         <View style={{height: insets.bottom}} />
       </ErrorBoundary>

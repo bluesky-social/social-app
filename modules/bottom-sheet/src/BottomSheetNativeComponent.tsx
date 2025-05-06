@@ -30,7 +30,10 @@ const NativeView: React.ComponentType<
 
 const NativeModule = requireNativeModule('BottomSheet')
 
-const isIOS15 = Platform.OS === 'ios' && Number(Platform.Version) < 16
+const isIOS15 =
+  Platform.OS === 'ios' &&
+  // semvar - can be 3 segments, so can't use Number(Platform.Version)
+  Number(Platform.Version.split('.').at(0)) < 16
 
 export class BottomSheetNativeComponent extends React.Component<
   BottomSheetViewProps,

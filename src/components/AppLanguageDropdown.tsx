@@ -1,17 +1,19 @@
 import React from 'react'
-import {View} from 'react-native'
-import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {APP_LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
 import {resetPostsFeedQueries} from '#/state/queries/post-feed'
-import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
-import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
+import {atoms as a, platform, useTheme} from '#/alf'
+import * as Select from '#/components/Select'
+import {Button} from './Button'
 
-export function AppLanguageDropdown(_props: ViewStyleProp) {
+export function AppLanguageDropdown() {
   const t = useTheme()
+  const {_} = useLingui()
 
   const queryClient = useQueryClient()
   const langPrefs = useLanguagePrefs()
@@ -19,7 +21,7 @@ export function AppLanguageDropdown(_props: ViewStyleProp) {
   const sanitizedLang = sanitizeAppLanguageSetting(langPrefs.appLanguage)
 
   const onChangeAppLanguage = React.useCallback(
-    (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {
+    (value: string) => {
       if (!value) return
       if (sanitizedLang !== value) {
         setLangPrefs.setAppLanguage(sanitizeAppLanguageSetting(value))
@@ -32,43 +34,48 @@ export function AppLanguageDropdown(_props: ViewStyleProp) {
   )
 
   return (
-    <View style={a.relative}>
-      <RNPickerSelect
-        darkTheme={t.scheme === 'dark'}
-        placeholder={{}}
-        value={sanitizedLang}
-        onValueChange={onChangeAppLanguage}
-        items={APP_LANGUAGES.filter(l => Boolean(l.code2)).map(l => ({
+    <Select.Root
+      value={sanitizeAppLanguageSetting(langPrefs.appLanguage)}
+      onValueChange={onChangeAppLanguage}>
+      <Select.Trigger label={_(msg`Change app language`)}>
+        {({props}) => (
+          <Button
+            {...props}
+            label={props.accessibilityLabel}
+            size={platform({
+              web: 'tiny',
+              native: 'small',
+            })}
+            variant="ghost"
+            color="secondary"
+            style={[
+              a.pr_xs,
+              a.pl_sm,
+              platform({
+                web: [{alignSelf: 'flex-start'}, a.gap_sm],
+                native: [a.gap_xs],
+              }),
+            ]}>
+            <Select.ValueText
+              placeholder={_(msg`Select an app language`)}
+              style={[t.atoms.text_contrast_medium]}
+            />
+            <Select.Icon style={[t.atoms.text_contrast_medium]} />
+          </Button>
+        )}
+      </Select.Trigger>
+      <Select.Content
+        renderItem={({label, value}) => (
+          <Select.Item value={value} label={label}>
+            <Select.ItemIndicator />
+            <Select.ItemText>{label}</Select.ItemText>
+          </Select.Item>
+        )}
+        items={APP_LANGUAGES.map(l => ({
           label: l.name,
           value: l.code2,
-          key: l.code2,
         }))}
-        useNativeAndroidPickerStyle={false}
-        style={{
-          inputAndroid: {
-            color: t.atoms.text_contrast_medium.color,
-            fontSize: 16,
-            paddingRight: 12 + 4,
-          },
-          inputIOS: {
-            color: t.atoms.text.color,
-            fontSize: 16,
-            paddingRight: 12 + 4,
-          },
-        }}
       />
-
-      <View
-        style={[
-          a.absolute,
-          a.inset_0,
-          {left: 'auto'},
-          {pointerEvents: 'none'},
-          a.align_center,
-          a.justify_center,
-        ]}>
-        <ChevronDown fill={t.atoms.text.color} size="xs" />
-      </View>
-    </View>
+    </Select.Root>
   )
 }
