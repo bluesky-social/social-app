@@ -171,7 +171,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
         <View
           style={platform({
             native: [a.gap_md],
-            web: [a.flex_row_reverse, a.gap_md, a.justify_end, a.align_center],
+            web: [a.flex_row_reverse, a.gap_md, a.align_center],
           })}>
           <Button
             label={_(msg`Go Live`)}
