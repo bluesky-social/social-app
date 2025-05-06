@@ -1,12 +1,13 @@
-import {Image as RNImage} from 'react-native-image-crop-picker'
+/// <reference lib="dom" />
 
-import {Dimensions} from './types'
+import {type PickerImage} from './picker.shared'
+import {type Dimensions} from './types'
 import {blobToDataUri, getDataUriSize} from './util'
 
 export async function compressIfNeeded(
-  img: RNImage,
+  img: PickerImage,
   maxSize: number,
-): Promise<RNImage> {
+): Promise<PickerImage> {
   if (img.size < maxSize) {
     return img
   }
@@ -69,7 +70,10 @@ interface DoResizeOpts {
   maxSize: number
 }
 
-async function doResize(dataUri: string, opts: DoResizeOpts): Promise<RNImage> {
+async function doResize(
+  dataUri: string,
+  opts: DoResizeOpts,
+): Promise<PickerImage> {
   let newDataUri
 
   let minQualityPercentage = 0

@@ -1,14 +1,14 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {Image as RNImage} from 'react-native-image-crop-picker'
 import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
 import {LinearGradient} from 'expo-linear-gradient'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import ReactCrop, {PercentCrop} from 'react-image-crop'
+import ReactCrop, {type PercentCrop} from 'react-image-crop'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {type PickerImage} from '#/lib/media/picker.shared'
 import {getDataUriSize} from '#/lib/media/util'
 import {gradients, s} from '#/lib/styles'
 import {useModalControls} from '#/state/modals'
@@ -25,7 +25,7 @@ export function Component({
   uri: string
   aspect?: number
   circular?: boolean
-  onSelect: (img?: RNImage) => void
+  onSelect: (img?: PickerImage) => void
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
