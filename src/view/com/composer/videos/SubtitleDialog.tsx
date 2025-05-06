@@ -1,6 +1,5 @@
 import {useCallback, useState} from 'react'
-import {Keyboard, StyleProp, View, ViewStyle} from 'react-native'
-import RNPickerSelect from 'react-native-picker-select'
+import {Keyboard, type StyleProp, View, type ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -240,19 +239,21 @@ function SubtitleFileRow({
             numberOfLines={1}>
             {file.name}
           </Text>
-          <RNPickerSelect
-            placeholder={{
-              label: _(msg`Select language...`),
-              value: '',
-            }}
+          <select
             value={language}
-            onValueChange={handleValueChange}
-            items={otherLanguages.map(lang => ({
-              label: `${lang.name} (${langCode(lang)})`,
-              value: langCode(lang),
-            }))}
-            style={{viewContainer: {maxWidth: 200, flex: 1}}}
-          />
+            onChange={evt => handleValueChange(evt.target.value)}
+            style={{maxWidth: 200, flex: 1}}>
+            <option value="" disabled selected hidden>
+              {/* eslint-disable-next-line bsky-internal/avoid-unwrapped-text */}
+              <Trans>Select language...</Trans>
+            </option>
+            {otherLanguages.map(lang => (
+              <option key={langCode(lang)} value={langCode(lang)}>
+                {/* eslint-disable-next-line bsky-internal/avoid-unwrapped-text */}
+                {`${lang.name} (${langCode(lang)})`}
+              </option>
+            ))}
+          </select>
         </View>
       </View>
 

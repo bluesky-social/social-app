@@ -20,7 +20,6 @@ import {
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
-import {type PickerImage} from '#/lib/media/picker.shared'
 import {logEvent, type LogEvents, toClout} from '#/lib/statsig/statsig'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {type Shadow} from '#/state/cache/types'
