@@ -1,4 +1,5 @@
-import {I18n} from '@lingui/core'
+import {type I18n} from '@lingui/core'
+
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 
