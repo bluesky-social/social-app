@@ -24,7 +24,7 @@ import {type Dimensions} from './types'
 
 export async function compressIfNeeded(
   img: PickerImage,
-  maxSize: number = 1000000,
+  maxSize: number = POST_IMG_MAX.size,
 ): Promise<PickerImage> {
   if (img.size < maxSize) {
     return img

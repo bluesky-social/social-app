@@ -1,3 +1,5 @@
+/// <reference lib="dom" />
+
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
 import {blobToDataUri, getDataUriSize} from './util'

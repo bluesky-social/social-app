@@ -15,6 +15,7 @@ import {nanoid} from 'nanoid/non-secure'
 import {POST_IMG_MAX} from '#/lib/constants'
 import {getImageDim} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
+import {type PickerImage} from '#/lib/media/picker.shared'
 import {getDataUriSize} from '#/lib/media/util'
 import {isNative} from '#/platform/detection'
 
@@ -194,7 +195,7 @@ export function resetImageManipulation(
   return img
 }
 
-export async function compressImage(img: ComposerImage): Promise<ImageMeta> {
+export async function compressImage(img: ComposerImage): Promise<PickerImage> {
   const source = img.transformed || img.source
 
   const [w, h] = containImageRes(source.width, source.height, POST_IMG_MAX)
@@ -219,14 +220,15 @@ export async function compressImage(img: ComposerImage): Promise<ImageMeta> {
     )
 
     const base64 = res.base64
-
-    if (base64 !== undefined && getDataUriSize(base64) <= POST_IMG_MAX.size) {
+    const size = base64 ? getDataUriSize(base64) : 0
+    if (base64 && size <= POST_IMG_MAX.size) {
       minQualityPercentage = qualityPercentage
       newDataUri = {
         path: await moveIfNecessary(res.uri),
         width: res.width,
         height: res.height,
         mime: 'image/jpeg',
+        size,
       }
     } else {
       maxQualityPercentage = qualityPercentage

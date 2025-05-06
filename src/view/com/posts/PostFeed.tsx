@@ -1,15 +1,20 @@
-import React, {memo} from 'react'
+import React, {memo, useCallback} from 'react'
 import {
   ActivityIndicator,
   AppState,
   Dimensions,
+  LayoutAnimation,
   type ListRenderItemInfo,
   type StyleProp,
   StyleSheet,
   View,
   type ViewStyle,
 } from 'react-native'
-import {type AppBskyActorDefs, AppBskyEmbedVideo} from '@atproto/api'
+import {
+  type AppBskyActorDefs,
+  AppBskyEmbedVideo,
+  type AppBskyFeedDefs,
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -51,6 +56,7 @@ import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
 import {PostFeedErrorMessage} from './PostFeedErrorMessage'
 import {PostFeedItem} from './PostFeedItem'
+import {ShowLessFollowup} from './ShowLessFollowup'
 import {ViewFullThread} from './ViewFullThread'
 
 type FeedRow =
@@ -115,6 +121,10 @@ type FeedRow =
     }
   | {
       type: 'interstitialTrendingVideos'
+      key: string
+    }
+  | {
+      type: 'showLessFollowup'
       key: string
     }
 
@@ -199,6 +209,20 @@ let PostFeed = ({
   const {gtMobile} = useBreakpoints()
   const {rightNavVisible} = useLayoutBreakpoints()
   const areVideoFeedsEnabled = isNative
+
+  const [hasPressedShowLessUris, setHasPressedShowLessUris] = React.useState(
+    () => new Set<string>(),
+  )
+  const onPressShowLess = useCallback(
+    (interaction: AppBskyFeedDefs.Interaction) => {
+      if (interaction.item) {
+        const uri = interaction.item
+        setHasPressedShowLessUris(prev => new Set([...prev, uri]))
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+      }
+    },
+    [],
+  )
 
   const feedCacheKey = feedParams?.feedCacheKey
   const opts = React.useMemo(
@@ -321,6 +345,19 @@ let PostFeed = ({
   const {trendingDisabled, trendingVideoDisabled} = useTrendingSettings()
 
   const feedItems: FeedRow[] = React.useMemo(() => {
+    // wraps a slice item, and replaces it with a showLessFollowup item
+    // if the user has pressed show less on it
+    const sliceItem = (row: Extract<FeedRow, {type: 'sliceItem'}>) => {
+      if (hasPressedShowLessUris.has(row.slice.items[row.indexInSlice]?.uri)) {
+        return {
+          type: 'showLessFollowup',
+          key: row.key,
+        } as const
+      } else {
+        return row
+      }
+    }
+
     let feedKind: 'following' | 'discover' | 'profile' | 'thevids' | undefined
     if (feedType === 'following') {
       feedKind = 'following'
@@ -450,43 +487,51 @@ let PostFeed = ({
               } else if (slice.isIncompleteThread && slice.items.length >= 3) {
                 const beforeLast = slice.items.length - 2
                 const last = slice.items.length - 1
-                arr.push({
-                  type: 'sliceItem',
-                  key: slice.items[0]._reactKey,
-                  slice: slice,
-                  indexInSlice: 0,
-                  showReplyTo: false,
-                })
+                arr.push(
+                  sliceItem({
+                    type: 'sliceItem',
+                    key: slice.items[0]._reactKey,
+                    slice: slice,
+                    indexInSlice: 0,
+                    showReplyTo: false,
+                  }),
+                )
                 arr.push({
                   type: 'sliceViewFullThread',
                   key: slice._reactKey + '-viewFullThread',
                   uri: slice.items[0].uri,
                 })
-                arr.push({
-                  type: 'sliceItem',
-                  key: slice.items[beforeLast]._reactKey,
-                  slice: slice,
-                  indexInSlice: beforeLast,
-                  showReplyTo:
-                    slice.items[beforeLast].parentAuthor?.did !==
-                    slice.items[beforeLast].post.author.did,
-                })
-                arr.push({
-                  type: 'sliceItem',
-                  key: slice.items[last]._reactKey,
-                  slice: slice,
-                  indexInSlice: last,
-                  showReplyTo: false,
-                })
+                arr.push(
+                  sliceItem({
+                    type: 'sliceItem',
+                    key: slice.items[beforeLast]._reactKey,
+                    slice: slice,
+                    indexInSlice: beforeLast,
+                    showReplyTo:
+                      slice.items[beforeLast].parentAuthor?.did !==
+                      slice.items[beforeLast].post.author.did,
+                  }),
+                )
+                arr.push(
+                  sliceItem({
+                    type: 'sliceItem',
+                    key: slice.items[last]._reactKey,
+                    slice: slice,
+                    indexInSlice: last,
+                    showReplyTo: false,
+                  }),
+                )
               } else {
                 for (let i = 0; i < slice.items.length; i++) {
-                  arr.push({
-                    type: 'sliceItem',
-                    key: slice.items[i]._reactKey,
-                    slice: slice,
-                    indexInSlice: i,
-                    showReplyTo: i === 0,
-                  })
+                  arr.push(
+                    sliceItem({
+                      type: 'sliceItem',
+                      key: slice.items[i]._reactKey,
+                      slice: slice,
+                      indexInSlice: i,
+                      showReplyTo: i === 0,
+                    }),
+                  )
                 }
               }
             }
@@ -531,6 +576,7 @@ let PostFeed = ({
     gtMobile,
     isVideoFeed,
     areVideoFeedsEnabled,
+    hasPressedShowLessUris,
   ])
 
   // events
@@ -650,6 +696,7 @@ let PostFeed = ({
             isParentNotFound={item.isParentNotFound}
             hideTopBorder={rowIndex === 0 && indexInSlice === 0}
             rootPost={slice.items[0].post}
+            onShowLess={onPressShowLess}
           />
         )
       } else if (row.type === 'sliceViewFullThread') {
@@ -684,6 +731,8 @@ let PostFeed = ({
             sourceContext={sourceContext}
           />
         )
+      } else if (row.type === 'showLessFollowup') {
+        return <ShowLessFollowup />
       } else {
         return null
       }
@@ -700,6 +749,7 @@ let PostFeed = ({
       feedUriOrActorDid,
       feedTab,
       feedCacheKey,
+      onPressShowLess,
     ],
   )
 
