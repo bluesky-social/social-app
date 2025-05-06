@@ -166,16 +166,15 @@ function ContentInner<T>({
   ...context
 }: ContentProps<T> & ContextType) {
   const control = Dialog.useDialogContext()
-  const {value: selectedValue} = useSelectContext()
 
   const {_} = useLingui()
   const [headerHeight, setHeaderHeight] = useState(50)
 
   const render = useCallback(
     ({item, index}: {item: T; index: number}) => {
-      return renderItem(item, index, selectedValue)
+      return renderItem(item, index, context.value)
     },
-    [renderItem, selectedValue],
+    [renderItem, context.value],
   )
 
   const doneButton = useCallback(
