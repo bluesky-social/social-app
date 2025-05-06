@@ -178,7 +178,9 @@ let ProfileHeaderShell = ({
           <View
             style={[
               t.atoms.bg,
+              a.rounded_full,
               {
+                borderWidth: live ? 3 : 2,
                 borderColor: live
                   ? t.palette.negative_500
                   : t.atoms.bg.backgroundColor,
@@ -189,7 +191,7 @@ let ProfileHeaderShell = ({
             <View ref={aviRef} collapsable={false}>
               <UserAvatar
                 type={profile.associated?.labeler ? 'labeler' : 'user'}
-                size={90}
+                size={live ? 88 : 90}
                 avatar={profile.avatar}
                 moderation={moderation.ui('avatar')}
               />
@@ -232,8 +234,6 @@ const styles = StyleSheet.create({
   avi: {
     width: 94,
     height: 94,
-    borderRadius: 47,
-    borderWidth: 2,
   },
   aviLabeler: {
     borderRadius: 10,
