@@ -141,13 +141,39 @@ export function Content<T>({items, renderItem}: ContentProps<T>) {
   const t = useTheme()
   const selectedValue = useContext(SelectedValueContext)
 
-  const scrollBtnStyles = [
+  const scrollBtnStyles: React.CSSProperties[] = [
+    a.absolute,
     a.flex,
-    {height: 25},
     a.align_center,
     a.justify_center,
-    t.atoms.bg,
     a.rounded_sm,
+    a.z_10,
+  ]
+  const up: React.CSSProperties[] = [
+    ...scrollBtnStyles,
+    a.pt_sm,
+    a.pb_lg,
+    {
+      top: 0,
+      left: 0,
+      right: 0,
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+      background: `linear-gradient(to bottom, ${t.atoms.bg.backgroundColor} 0%, transparent 100%)`,
+    },
+  ]
+  const down: React.CSSProperties[] = [
+    ...scrollBtnStyles,
+    a.pt_lg,
+    a.pb_sm,
+    {
+      bottom: 0,
+      left: 0,
+      right: 0,
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+      background: `linear-gradient(to top, ${t.atoms.bg.backgroundColor} 0%, transparent 100%)`,
+    },
   ]
 
   return (
@@ -164,13 +190,13 @@ export function Content<T>({items, renderItem}: ContentProps<T>) {
             t.atoms.border_contrast_low,
             a.rounded_sm,
           ]}>
-          <RadixSelect.ScrollUpButton style={flatten([scrollBtnStyles])}>
+          <RadixSelect.ScrollUpButton style={flatten(up)}>
             <ChevronUpIcon style={[t.atoms.text]} size="xs" />
           </RadixSelect.ScrollUpButton>
           <RadixSelect.Viewport style={flatten([a.p_xs])}>
             {items.map((item, index) => renderItem(item, index, selectedValue))}
           </RadixSelect.Viewport>
-          <RadixSelect.ScrollDownButton style={flatten(scrollBtnStyles)}>
+          <RadixSelect.ScrollDownButton style={flatten(down)}>
             <ChevronDownIcon style={[t.atoms.text]} size="xs" />
           </RadixSelect.ScrollDownButton>
         </View>
