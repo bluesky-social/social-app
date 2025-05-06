@@ -101,6 +101,7 @@ let PostDropdownMenuItems = ({
   richText,
   timestamp,
   threadgateRecord,
+  onShowLess,
 }: {
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -112,6 +113,7 @@ let PostDropdownMenuItems = ({
   size?: 'lg' | 'md' | 'sm'
   timestamp: string
   threadgateRecord?: AppBskyFeedThreadgate.Record
+  onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const {gtMobile} = useBreakpoints()
@@ -303,8 +305,15 @@ let PostDropdownMenuItems = ({
       item: postUri,
       feedContext: postFeedContext,
     })
-    Toast.show(_(msg({message: 'Feedback sent!', context: 'toast'})))
-  }, [feedFeedback, postUri, postFeedContext, _])
+    if (onShowLess) {
+      onShowLess({
+        item: postUri,
+        feedContext: postFeedContext,
+      })
+    } else {
+      Toast.show(_(msg({message: 'Feedback sent!', context: 'toast'})))
+    }
+  }, [feedFeedback, postUri, postFeedContext, _, onShowLess])
 
   const onSelectChatToShareTo = React.useCallback(
     (conversation: string) => {
