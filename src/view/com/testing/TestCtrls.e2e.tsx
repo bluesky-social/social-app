@@ -1,7 +1,6 @@
 import {LogBox, Pressable, View} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useModalControls} from '#/state/modals'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useOnboardingDispatch} from '#/state/shell/onboarding'
@@ -20,7 +19,6 @@ const BTN = {height: 1, width: 1, backgroundColor: 'red'}
 export function TestCtrls() {
   const queryClient = useQueryClient()
   const {logoutEveryAccount, login} = useSessionApi()
-  const {openModal} = useModalControls()
   const onboardingDispatch = useOnboardingDispatch()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const onPressSignInAlice = async () => {
@@ -98,12 +96,6 @@ export function TestCtrls() {
       <Pressable
         testID="e2eRefreshHome"
         onPress={() => queryClient.invalidateQueries({queryKey: ['post-feed']})}
-        accessibilityRole="button"
-        style={BTN}
-      />
-      <Pressable
-        testID="e2eOpenInviteCodesModal"
-        onPress={() => openModal({name: 'invite-codes'})}
         accessibilityRole="button"
         style={BTN}
       />
