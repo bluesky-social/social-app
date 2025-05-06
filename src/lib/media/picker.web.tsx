@@ -6,7 +6,6 @@ import {type CameraOpts} from './types'
 export {openPicker} from './picker.shared'
 
 export async function openCamera(_opts: CameraOpts): Promise<PickerImage> {
-  // const mediaType = opts.mediaType || 'photo' TODO
   throw new Error('openCamera is not supported on web')
 }
 
