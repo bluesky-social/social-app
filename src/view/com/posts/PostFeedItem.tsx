@@ -54,7 +54,6 @@ import {SubtleWebHover} from '#/components/SubtleWebHover'
 import * as bsky from '#/types/bsky'
 import {Link, TextLink, TextLinkOnWebOnly} from '../util/Link'
 import {AviFollowButton} from './AviFollowButton'
-import {ShowLessFollowup} from './ShowLessFollowup'
 
 interface FeedItemProps {
   record: AppBskyFeedPost.Record
@@ -91,9 +90,11 @@ export function PostFeedItem({
   isParentBlocked,
   isParentNotFound,
   rootPost,
+  onShowLess,
 }: FeedItemProps & {
   post: AppBskyFeedDefs.PostView
   rootPost: AppBskyFeedDefs.PostView
+  onShowLess: (interaction: AppBskyFeedDefs.Interaction) => void
 }): React.ReactNode {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -127,6 +128,7 @@ export function PostFeedItem({
         isParentBlocked={isParentBlocked}
         isParentNotFound={isParentNotFound}
         rootPost={rootPost}
+        onShowLess={onShowLess}
       />
     )
   }
@@ -149,10 +151,12 @@ let FeedItemInner = ({
   isParentBlocked,
   isParentNotFound,
   rootPost,
+  onShowLess,
 }: FeedItemProps & {
   richText: RichTextAPI
   post: Shadow<AppBskyFeedDefs.PostView>
   rootPost: AppBskyFeedDefs.PostView
+  onShowLess: (interaction: AppBskyFeedDefs.Interaction) => void
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
@@ -246,16 +250,6 @@ let FeedItemInner = ({
   )
     ? rootPost.threadgate.record
     : undefined
-
-  const [hasPressedShowLess, setHasPressedShowLess] = useState(false)
-
-  const onPressShowLess = useCallback(() => {
-    setHasPressedShowLess(true)
-  }, [])
-
-  if (hasPressedShowLess) {
-    return <ShowLessFollowup />
-  }
 
   return (
     <Link
@@ -443,7 +437,7 @@ let FeedItemInner = ({
             logContext="FeedItem"
             feedContext={feedContext}
             threadgateRecord={threadgateRecord}
-            onShowLess={onPressShowLess}
+            onShowLess={onShowLess}
           />
         </View>
       </View>
