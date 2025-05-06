@@ -56,7 +56,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
 
   const timestampLabel = niceDate(i18n, opts.timestamp)
   const verification = useSimpleVerificationState({profile: author})
-  const {live} = useActorStatus(author)
+  const {isActive: live} = useActorStatus(author)
 
   return (
     <View

@@ -251,7 +251,7 @@ let FeedItemInner = ({
     ? rootPost.threadgate.record
     : undefined
 
-  const {live} = useActorStatus(post.author)
+  const {isActive: live} = useActorStatus(post.author)
 
   return (
     <Link

@@ -143,7 +143,7 @@ export function Avatar({
 }) {
   const moderation = moderateProfile(profile, moderationOpts)
 
-  const {live} = useActorStatus(profile)
+  const {isActive: live} = useActorStatus(profile)
 
   return disabledPreview ? (
     <UserAvatar

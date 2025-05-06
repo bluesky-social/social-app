@@ -103,7 +103,7 @@ let ProfileHeaderShell = ({
     [currentAccount, profile],
   )
 
-  const {live} = useActorStatus(profile)
+  const {isActive: live} = useActorStatus(profile)
 
   return (
     <View style={t.atoms.bg} pointerEvents={isIOS ? 'auto' : 'box-none'}>

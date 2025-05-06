@@ -288,7 +288,7 @@ let PostThreadItemLoaded = ({
     setLimitLines(false)
   }, [setLimitLines])
 
-  const {live} = useActorStatus(post.author)
+  const {isActive: live} = useActorStatus(post.author)
 
   if (!record) {
     return <ErrorMessage message={_(msg`Invalid or unsupported post record`)} />

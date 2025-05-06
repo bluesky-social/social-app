@@ -7,7 +7,8 @@ export const LIVE_DIDS: Record<string, true> = {
 
 // TEMP: dumb gating
 export function temp__canBeLive(profile: bsky.profile.AnyProfileView) {
-  if (__DEV__) return !!DISCOVER_DEBUG_DIDS[profile.did]
+  if (__DEV__)
+    return !!DISCOVER_DEBUG_DIDS[profile.did] || !!LIVE_DIDS[profile.did]
   return !!LIVE_DIDS[profile.did]
 }
 

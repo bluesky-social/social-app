@@ -139,7 +139,7 @@ let ProfileHeaderStandard = ({
     [currentAccount, profile],
   )
 
-  const {live} = useActorStatus(profile)
+  const {isActive: live} = useActorStatus(profile)
 
   return (
     <ProfileHeaderShell
