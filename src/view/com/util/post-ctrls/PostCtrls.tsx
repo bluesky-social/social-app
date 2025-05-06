@@ -16,6 +16,7 @@ import {
 } from '@atproto/api'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
 import {IS_INTERNAL} from '#/lib/app-info'
 import {DISCOVER_DEBUG_DIDS, POST_CTRL_HITSLOP} from '#/lib/constants'
@@ -23,6 +24,7 @@ import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
 import {useHaptics} from '#/lib/haptics'
 import {makeProfileLink} from '#/lib/routes/links'
+import {NavigationProp} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {useGate} from '#/lib/statsig/statsig'
 import {toShareUrl} from '#/lib/strings/url-helpers'
@@ -83,6 +85,7 @@ let PostCtrls = ({
     post,
     logContext,
   )
+  const navigation = useNavigation<NavigationProp>()
   const requireAuth = useRequireAuth()
   const loggedOutWarningPromptControl = useDialogControl()
   const {sendInteraction} = useFeedFeedbackContext()
@@ -157,6 +160,14 @@ let PostCtrls = ({
     feedContext,
     isBlocked,
   ])
+
+  const onLongPressToggleLike = React.useCallback(async () => {
+    const urip = new AtUri(post.uri)
+    navigation.navigate('PostLikedBy', {
+      name: post.author.handle,
+      rkey: urip.rkey,
+    })
+  }, [navigation, post.author.handle, post.uri])
 
   const onRepost = useCallback(async () => {
     if (isBlocked) {
@@ -304,6 +315,7 @@ let PostCtrls = ({
           testID="likeBtn"
           style={btnStyle}
           onPress={() => requireAuth(() => onPressToggleLike())}
+          onLongPress={() => onLongPressToggleLike()}
           accessibilityRole="button"
           accessibilityLabel={
             post.viewer?.like
