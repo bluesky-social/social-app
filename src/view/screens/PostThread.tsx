@@ -16,7 +16,7 @@ import * as Layout from '#/components/Layout'
 import {useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {useGetPostThreadV2, Slice} from '#/state/queries/useGetPostThreadV2'
+import {useGetPostThreadV2, Slice, HiddenReplyKind} from '#/state/queries/useGetPostThreadV2'
 import * as Menu from '#/components/Menu'
 import {Button, ButtonIcon} from '#/components/Button'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
@@ -28,6 +28,7 @@ import {PostThreadItem} from '#/view/com/post-thread/PostThreadItem'
 import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useComposerControls} from '#/state/shell'
+import {PostThreadShowHiddenReplies} from '#/view/com/post-thread/PostThreadShowHiddenReplies'
 
 const MAINTAIN_VISIBLE_CONTENT_POSITION = {
   // We don't insert any elements before the root row while loading.
@@ -126,14 +127,20 @@ export function Inner({uri}: {uri: string | undefined}) {
     setTreeViewEnabled,
   } = useThreadPreferences()
 
+  const [showHiddenReplies, setShowHiddenReplies] = useState<HiddenReplyKind | null>(null)
+  const [shownHiddenReplyKinds, setShownHiddenReplyKinds] = useState<Set<HiddenReplyKind>>(new Set())
+
   const {isFetching, isPlaceholderData, error, data, refetch} = useGetPostThreadV2({
     uri,
     enabled: isThreadPreferencesLoaded,
-    options: {
+    params: {
       sort: sortReplies,
       view: treeViewEnabled ? 'tree' : 'linear',
       prioritizeFollows: prioritizeFollowedUsers,
     },
+    state: {
+      shownHiddenReplyKinds,
+    }
   })
 
   const ref = useRef<ListMethods>(null)
@@ -199,11 +206,9 @@ export function Inner({uri}: {uri: string | undefined}) {
             hasPrecedingItem={
               item.ui.showParentReplyLine || !!item.slice.hasUnhydratedParents
             } // !!hasUnrevealedParents // TODO
-            // overrideBlur={
-            //  hiddenRepliesState ===
-            //    HiddenRepliesState.ShowAndOverridePostHider &&
-            //  item.ctx.depth > 0
-            // }
+            overrideBlur={
+              shownHiddenReplyKinds.has(HiddenReplyKind.Muted) && item.slice.depth > 0
+            }
             onPostReply={onPostReply}
             hideTopBorder={index === 0} // && !item.slice.isParentLoading} // TODO
           />
@@ -214,6 +219,13 @@ export function Inner({uri}: {uri: string | undefined}) {
         <View>
           {gtPhone && <PostThreadComposePrompt onPressCompose={onReplyToAnchor} />}
         </View>
+      )
+    } else if (item.type === 'showHiddenReplies') {
+      return (
+        <PostThreadShowHiddenReplies
+          type={item.kind === 'muted' ? 'muted' : 'hidden'}
+          onPress={() => setShownHiddenReplyKinds(kinds => new Set([...kinds, item.kind]))}
+        />
       )
     }
     return null
