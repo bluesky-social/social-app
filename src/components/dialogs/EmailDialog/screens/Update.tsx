@@ -276,8 +276,8 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
             </View>
             <Text style={[a.leading_snug]}>
               <Trans>
-                Click on the link in the email we just sent you to verify your
-                email.
+                Please click on the link in the email we just sent you to verify
+                your email.
               </Trans>
             </Text>
           </View>
