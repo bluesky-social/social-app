@@ -363,9 +363,13 @@ export function filterAndSort(
         i = branch.end
         continue traversal
       } else if (AppBskyFeedDefs.isThreadItemPost(item)) {
+        const lastSlice = slices[slices.length - 1]
+        const isFirstReply =
+          lastSlice.type === 'replyComposer' ||
+          (lastSlice.type === 'threadSlice' && lastSlice.slice.depth === 0)
         const parent = views.post({
           item,
-          oneUp: thread[i - 1],
+          oneUp: isFirstReply ? undefined : thread[i - 1],
           oneDown: thread[i + 1],
           moderationOpts,
         })
