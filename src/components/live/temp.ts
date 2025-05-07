@@ -2,7 +2,8 @@ import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import type * as bsky from '#/types/bsky'
 
 export const LIVE_DIDS: Record<string, true> = {
-  'did:plc:7sfnardo5xxznxc6esxc5ooe': true,
+  'did:plc:7sfnardo5xxznxc6esxc5ooe': true, // nba.com
+  'did:plc:gx6fyi3jcfxd7ammq2t7mzp2': true, // rtgame.bsky.social
 }
 
 // TEMP: dumb gating
