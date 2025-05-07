@@ -298,9 +298,7 @@ export const InnerFlatList = React.forwardRef<
       <List
         keyboardShouldPersistTaps="handled"
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
-        ListFooterComponent={
-          <View style={{height: insets.bottom + a.pt_5xl.paddingTop + 50}} />
-        }
+        ListFooterComponent={<View style={{height: insets.bottom + 100}} />}
         ref={ref}
         {...props}
         style={[style]}
