@@ -317,7 +317,7 @@ export function Verify({config}: ScreenProps<ScreenID.Verify>) {
           {state.error && <Admonition type="error">{state.error}</Admonition>}
 
           <Button
-            label={_(msg`Verify`)}
+            label={_(msg`Verify code`)}
             size="large"
             variant="solid"
             color="primary"
@@ -334,9 +334,9 @@ export function Verify({config}: ScreenProps<ScreenID.Verify>) {
           <Text
             style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
             <Trans>
-              Don't have a code?{' '}
+              Don't have a code or need a new one?{' '}
               <InlineLinkText
-                label={_(msg`Enter code`)}
+                label={_(msg`Click here to restart the verification process.`)}
                 {...createStaticClick(() => {
                   dispatch({
                     type: 'setStep',
