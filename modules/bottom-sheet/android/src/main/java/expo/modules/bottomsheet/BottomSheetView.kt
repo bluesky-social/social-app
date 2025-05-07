@@ -37,7 +37,7 @@ class BottomSheetView(
       val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
       return if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else 0
   }
-  
+
   private fun getStatusBarHeight(): Int {
       val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
       return if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else 0
@@ -165,10 +165,6 @@ class BottomSheetView(
     return when {
       // Full height sheets
       contentHeight >= screenHeight -> 0.99f
-      // Medium height sheets (>50% but <100%)
-      contentHeight >= screenHeight / 2 ->
-        this.clampRatio(this.getTargetHeight() / screenHeight)
-      // Small height sheets (<50%)
       else ->
         this.clampRatio(this.getTargetHeight() / screenHeight)
     }
@@ -185,13 +181,13 @@ class BottomSheetView(
       this.isClosing = true
       this.destroy()
     }
-    
+
     // Configure dialog window for edge-to-edge mode
     dialog.window?.apply {
       // Make status bar and navigation bar transparent
       setNavigationBarColor(android.graphics.Color.TRANSPARENT)
       setStatusBarColor(android.graphics.Color.TRANSPARENT)
-      
+
       // Set FLAG_LAYOUT_NO_LIMITS to allow layout to extend beyond system UI boundaries
       // Use FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS to properly handle transparent system bars
       setFlags(
@@ -200,7 +196,7 @@ class BottomSheetView(
         android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
         android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
       )
-      
+
       // Configure system UI visibility to allow layout behind both status and navigation bars
       decorView.systemUiVisibility = android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
                                      android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
@@ -210,9 +206,9 @@ class BottomSheetView(
     val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
     bottomSheet?.let {
       it.setBackgroundColor(0)
-      
+
       it.fitsSystemWindows = false
-      
+
       // Add padding to respect the status bar but not the navigation bar
       val statusBarHeight = getStatusBarHeight()
       it.setPadding(0, statusBarHeight, 0, 0)
@@ -270,13 +266,13 @@ class BottomSheetView(
   fun updateLayout() {
     val dialog = this.dialog ?: return
     val contentHeight = this.getContentHeight()
-    
+
     // Ensure edge-to-edge mode settings are maintained
     dialog.window?.apply {
       // Maintain transparent status and navigation bars
       setNavigationBarColor(android.graphics.Color.TRANSPARENT)
       setStatusBarColor(android.graphics.Color.TRANSPARENT)
-      
+
       // Ensure layout flags are still set
       setFlags(
         android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
@@ -284,7 +280,7 @@ class BottomSheetView(
         android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
         android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
       )
-      
+
       // Re-apply system UI visibility settings
       decorView.systemUiVisibility = android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
                                      android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
@@ -294,10 +290,10 @@ class BottomSheetView(
     val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
     bottomSheet?.let {
       it.fitsSystemWindows = false
-      
+
       val statusBarHeight = getStatusBarHeight()
       it.setPadding(0, statusBarHeight, 0, 0)
-      
+
       val behavior = BottomSheetBehavior.from(it)
 
       behavior.halfExpandedRatio = getHalfExpandedRatio(contentHeight)
