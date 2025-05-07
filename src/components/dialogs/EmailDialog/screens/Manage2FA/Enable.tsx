@@ -80,7 +80,7 @@ export function Enable() {
       const {clean} = cleanError(e)
       dispatch({
         type: 'setError',
-        error: clean || _(msg`Update to email 2FA settings failed`),
+        error: clean || _(msg`Failed to update email 2FA settings`),
       })
     }
   }
