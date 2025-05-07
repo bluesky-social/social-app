@@ -1,14 +1,6 @@
 import React from 'react'
-import {type AppBskyGraphDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-
-export interface CreateOrEditListModal {
-  name: 'create-or-edit-list'
-  purpose?: string
-  list?: AppBskyGraphDefs.ListView
-  onSave?: (uri: string) => void
-}
 
 export interface UserAddRemoveListsModal {
   name: 'user-add-remove-lists'
@@ -60,7 +52,6 @@ export type Modal =
   | PostLanguagesSettingsModal
 
   // Lists
-  | CreateOrEditListModal
   | UserAddRemoveListsModal
 
   // Bluesky access
