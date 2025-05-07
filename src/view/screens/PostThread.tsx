@@ -214,6 +214,34 @@ export function Inner({uri}: {uri: string | undefined}) {
           />
         </View>
       )
+    } else if (item.type === 'threadSliceBlocked') {
+      return (
+        <View
+          style={[
+            a.p_lg,
+            index !== 0 && a.border_t,
+            t.atoms.border_contrast_low,
+            t.atoms.bg_contrast_25,
+          ]}>
+          <Text style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
+            <Trans>Blocked post.</Trans>
+          </Text>
+        </View>
+      )
+    } else if (item.type === 'threadSliceNotFound') {
+      return (
+        <View
+          style={[
+            a.p_lg,
+            index !== 0 && a.border_t,
+            t.atoms.border_contrast_low,
+            t.atoms.bg_contrast_25,
+          ]}>
+          <Text style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
+            <Trans>Deleted post.</Trans>
+          </Text>
+        </View>
+      )
     } else if (item.type === 'replyComposer') {
       return (
         <View>
