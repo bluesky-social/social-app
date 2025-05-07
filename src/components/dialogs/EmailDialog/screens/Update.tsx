@@ -277,7 +277,8 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
             <Text style={[a.leading_snug]}>
               <Trans>
                 Please click on the link in the email we just sent you to verify
-                your email.
+                your new email address. This is an important step to allow you
+                to continue enjoying all the features of Bluesky.
               </Trans>
             </Text>
           </View>
