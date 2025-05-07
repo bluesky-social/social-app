@@ -1,6 +1,7 @@
 import {AppBskyFeedGetActorFeeds, moderateFeedGenerator} from '@atproto/api'
 import {InfiniteData, QueryKey, useInfiniteQuery} from '@tanstack/react-query'
 
+import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
 import {useModerationOpts} from '../preferences/moderation-opts'
 
@@ -37,6 +38,7 @@ export function useProfileFeedgensQuery(
       })
       return res.data
     },
+    staleTime: STALE.INFINITY,
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
     enabled,
