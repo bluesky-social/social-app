@@ -101,7 +101,7 @@ export function AccountSettingsScreen({}: Props) {
             </SettingsList.PressableItem>
           )}
           <SettingsList.PressableItem
-            label={_(msg`Change email`)}
+            label={_(msg`Update email`)}
             onPress={() =>
               emailDialogControl.open({
                 id: EmailDialogScreenID.Update,
@@ -109,7 +109,7 @@ export function AccountSettingsScreen({}: Props) {
             }>
             <SettingsList.ItemIcon icon={PencilIcon} />
             <SettingsList.ItemText>
-              <Trans>Change email</Trans>
+              <Trans>Update email</Trans>
             </SettingsList.ItemText>
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
