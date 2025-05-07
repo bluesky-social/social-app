@@ -197,7 +197,7 @@ export function Verify({config}: ScreenProps<ScreenID.Verify>) {
                 <Trans>Email sent!</Trans>
               </>
             ) : (
-              <Trans>Verify email</Trans>
+              <Trans>Verify your email</Trans>
             )
           ) : (
             <Trans>Confirm email code</Trans>
