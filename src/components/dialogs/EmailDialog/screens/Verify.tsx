@@ -238,13 +238,13 @@ export function Verify({config}: ScreenProps<ScreenID.Verify>) {
                 <Span style={[a.font_bold, t.atoms.text]}>
                   {currentAccount!.email}
                 </Span>{' '}
-                containing a link. Click on it to complete the email
+                containing a link. Please click on it to complete the email
                 verification process.
               </Trans>
             )
           ) : (
             <Trans>
-              Enter the code we sent to{' '}
+              Please enter the code we sent to{' '}
               <Span style={[a.font_bold, t.atoms.text]}>
                 {currentAccount!.email}
               </Span>{' '}
