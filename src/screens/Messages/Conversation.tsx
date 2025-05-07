@@ -211,7 +211,7 @@ function InnerReady({
           id: EmailDialogScreenID.Verify,
           instructions: [
             <Trans key="pre-compose">
-              Before you may message another user, you must first verify your
+              Before you can message another user, you must first verify your
               email.
             </Trans>,
           ],

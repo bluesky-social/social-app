@@ -46,7 +46,7 @@ export function useCleanError() {
         return {
           raw,
           clean: _(
-            msg`This feature is not available while using an App Password. Please sign in with your main password.`,
+            msg`This feature is not available while using an app password. Please sign in with your main password.`,
           ),
         }
       }

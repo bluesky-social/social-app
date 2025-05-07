@@ -56,7 +56,7 @@ export function MessageProfileButton({
   const wrappedOnPress = requireEmailVerification(onPress, {
     instructions: [
       <Trans key="message">
-        Before you may message another user, you must first verify your email.
+        Before you can message another user, you must first verify your email.
       </Trans>,
     ],
   })

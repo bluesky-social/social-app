@@ -12,7 +12,8 @@ export function useOpenComposer() {
       openComposer: requireEmailVerification(openComposer, {
         instructions: [
           <Trans key="pre-compose">
-            Before creating a post, you must first verify your email.
+            Before creating a post or replying, you must first verify your
+            email.
           </Trans>,
         ],
       }),

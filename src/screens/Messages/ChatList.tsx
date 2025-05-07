@@ -330,7 +330,7 @@ function Header({newChatControl}: {newChatControl: DialogControlProps}) {
   const wrappedOpenChatControl = requireEmailVerification(openChatControl, {
     instructions: [
       <Trans key="new-chat">
-        Before you may message another user, you must first verify your email.
+        Before you can message another user, you must first verify your email.
       </Trans>,
     ],
   })
