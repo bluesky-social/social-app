@@ -181,7 +181,7 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
       const {clean} = cleanError(e)
       dispatch({
         type: 'setError',
-        error: clean || _(msg`Email updated failed, please try again.`),
+        error: clean || _(msg`Failed to update email, please try again.`),
       })
     }
   }
