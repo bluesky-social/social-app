@@ -234,7 +234,7 @@ export function Verify({config}: ScreenProps<ScreenID.Verify>) {
               </Trans>
             ) : (
               <Trans>
-                We'll send you an email to{' '}
+                We'll send an email to{' '}
                 <Span style={[a.font_bold, t.atoms.text]}>
                   {currentAccount!.email}
                 </Span>{' '}
