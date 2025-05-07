@@ -190,7 +190,7 @@ export function Inner({
                 <View style={[a.gap_sm]}>
                   <Text style={[a.text_md, a.leading_snug]}>{reasonText}</Text>
                   <Text style={[a.text_md, a.leading_snug]}>
-                    Don't have access to{' '}
+                    <Trans>Don't have access to {' '}</Trans>
                     <Text style={[a.text_md, a.leading_snug, a.font_bold]}>
                       {currentAccount?.email}
                     </Text>

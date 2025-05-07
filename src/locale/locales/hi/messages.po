@@ -2511,6 +2511,10 @@ msgstr "हाइफ़न से शुरू या अंत नहीं हो
 msgid "Domain verified!"
 msgstr "डोमेन सत्यापित!"
 
+#: src/components/dialogs/VerifyEmailDialog.tsx:155
+msgid "Don't have access to"
+msgstr ""
+
 #: src/components/dialogs/BirthDateSettings.tsx:115
 #: src/components/dialogs/BirthDateSettings.tsx:121
 #: src/components/dms/ReportDialog.tsx:314

@@ -2511,6 +2511,10 @@ msgstr "ハイフンで始まったり終ったりしない"
 msgid "Domain verified!"
 msgstr "ドメインを確認しました！"
 
+#: src/components/dialogs/VerifyEmailDialog.tsx:155
+msgid "Don't have access to"
+msgstr ""
+
 #: src/components/dialogs/BirthDateSettings.tsx:115
 #: src/components/dialogs/BirthDateSettings.tsx:121
 #: src/components/dms/ReportDialog.tsx:314

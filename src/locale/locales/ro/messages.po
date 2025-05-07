@@ -2511,6 +2511,10 @@ msgstr "Nu începe și nu se termină cu o cratimă"
 msgid "Domain verified!"
 msgstr "Adresă web verificată!"
 
+#: src/components/dialogs/VerifyEmailDialog.tsx:155
+msgid "Don't have access to"
+msgstr ""
+
 #: src/components/dialogs/BirthDateSettings.tsx:115
 #: src/components/dialogs/BirthDateSettings.tsx:121
 #: src/components/dms/ReportDialog.tsx:314
