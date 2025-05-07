@@ -224,30 +224,44 @@ const views = {
   },
 }
 
-function getSubBranch(
+/**
+ * Get the start and end index of a "branch" of the thread. A "branch" is a
+ * parent and it's children (not siblings). Returned indices are inclusive of
+ * the parent and its last child.
+ *
+ *    items[]            (index, depth)
+ *      ├── branch ───── (0, 1)
+ *      ├─┬ branch ───── (1, 1) (start)
+ *      │ ├──┬ leaf ──── (2, 2)
+ *      │ │  └── leaf ── (3, 3)
+ *      │ └── leaf ───── (4, 2) (end)
+ *      ├── branch ───── (5, 1)
+ *      ├── branch ───── (6, 1)
+ *
+ *    const { start: 1, end: 3 } = getBranch(items, 1, 1)
+ */
+function getBranch(
   thread: AppBskyFeedGetPostThreadV2.OutputSchema['thread'],
-  currentIndex: number,
-  depth: number,
+  branchStartIndex: number,
+  branchStartDepth: number,
 ) {
-  let nextIndex = currentIndex
+  let end = branchStartIndex
 
-  for (let ci = currentIndex + 1; ci < thread.length; ci++) {
+  for (let ci = branchStartIndex + 1; ci < thread.length; ci++) {
     const next = thread[ci]
     // ignore unknowns
     if (!('depth' in next)) continue
-    if (next.depth > depth) {
-      nextIndex = ci
+    if (next.depth > branchStartDepth) {
+      end = ci
     } else {
-      nextIndex = ci - 1
+      end = ci - 1
       break
     }
   }
 
   return {
-    start: currentIndex,
-    end: nextIndex,
-    nextIndex,
-    subTreeLength: nextIndex - currentIndex,
+    start: branchStartIndex,
+    end,
   }
 }
 
@@ -344,56 +358,63 @@ export function filterAndSort(
         AppBskyFeedDefs.isThreadItemBlocked(item)
 
       if (shouldBreak) {
-        const branch = getSubBranch(thread, i, item.depth)
+        const branch = getBranch(thread, i, item.depth)
         // could insert tombstone
         i = branch.end
         continue traversal
       } else if (AppBskyFeedDefs.isThreadItemPost(item)) {
-        const current = views.post({
+        const parent = views.post({
           item,
           oneUp: thread[i - 1],
           oneDown: thread[i + 1],
           moderationOpts,
         })
-        const currentMod = getModerationState(current.moderation)
-        const currentHidden = threadgateHiddenReplies.has(item.uri)
-        const currentIsTopLevelReply = item.depth === 1
-        const isModerated = currentHidden || currentMod.blurred || currentMod.muted
+        const parentMod = getModerationState(parent.moderation)
+        const parentIsHidden = threadgateHiddenReplies.has(item.uri)
+        const parentIsTopLevelReply = item.depth === 1
+        const parentIsModerated = parentIsHidden || parentMod.blurred || parentMod.muted
 
-        if (isModerated) {
-          const branch = getSubBranch(thread, i, item.depth)
-          const sortArray = currentMod.muted ? muted : hidden
+        if (!parentIsModerated) {
+          /*
+           * Not hidden, so show it
+           */
+          slices.push(parent)
+        } else {
+          const branch = getBranch(thread, i, item.depth)
+          const sortArray = parentMod.muted ? muted : hidden
 
-          if (currentIsTopLevelReply) {
-            // push sub-branch anchor into sorted array
-            sortArray.push(current)
-            // skip sub-branch anchor in sub-branch traversal
+          if (parentIsTopLevelReply) {
+            // push branch anchor into sorted array
+            sortArray.push(parent)
+            // skip branch anchor in branch traversal
             const startIndex = branch.start + 1
 
             for (let ci = startIndex; ci <= branch.end; ci++) {
-              const leaf = thread[ci]
+              const child = thread[ci]
 
-              if (AppBskyFeedDefs.isThreadItemPost(leaf)) {
-                const leafPost = views.post({
-                  item: leaf,
+              if (AppBskyFeedDefs.isThreadItemPost(child)) {
+                const childPost = views.post({
+                  item: child,
                   oneUp: thread[ci - 1],
                   oneDown: thread[ci + 1],
                   moderationOpts,
                 })
-                const leafMod = getModerationState(leafPost.moderation)
-                const leafHidden = threadgateHiddenReplies.has(leaf.uri)
+                const childMod = getModerationState(childPost.moderation)
+                const childIsHidden = threadgateHiddenReplies.has(child.uri)
 
                 /*
-                 * If a nested post is hidden in any way, drop it an its sub-branch entirely
+                 * If a child is hidden in any way, drop it an its sub-branch
+                 * entirely. To reveal these, the user must navigate to the
+                 * parent post directly.
                  */
-                if (leafMod.blurred || leafMod.muted || leafHidden) {
-                  ci = getSubBranch(thread, ci, leaf.depth).end
+                if (childMod.blurred || childMod.muted || childIsHidden) {
+                  ci = getBranch(thread, ci, child.depth).end
                 } else {
-                  sortArray.push(leafPost)
+                  sortArray.push(childPost)
                 }
               } else {
                 /*
-                 * Drop the rest of the sub-branch if we hit anything unexpected
+                 * Drop the rest of the branch if we hit anything unexpected
                  */
                 break
               }
@@ -405,79 +426,6 @@ export function filterAndSort(
            */
           i = branch.end
           continue traversal
-
-          // /*
-          //  * Top-level replies we re-sort to bottom
-          //  */
-          // if (item.depth === 1) {
-          //   for (let ci = branch.start; ci <= branch.end; ci++) {
-          //     const next = thread[ci]
-
-          //     if (AppBskyFeedDefs.isThreadItemPost(next)) {
-          //       const post = views.post({
-          //         item: next,
-          //         oneUp: oneUp,
-          //         oneDown: oneDown,
-          //         moderationOpts,
-          //       })
-
-          //       if (currentMod.muted) {
-          //         muted.push(post)
-          //       } else {
-          //         hidden.push(post)
-          //       }
-          //     } else {
-          //       /*
-          //        * Drop the rest of the branch if we hit anything unexpected
-          //        */
-          //       break
-          //     }
-          //   }
-          // } else {
-          //   /*
-          //    * Nested hidden replies either filter entirely or show in situ
-          //    */
-          //   if ((currentMod.muted && showMuted) || showHidden) {
-          //     for (let ci = branch.start; ci <= branch.end; ci++) {
-          //       const next = thread[ci]
-
-          //       if (AppBskyFeedDefs.isThreadItemPost(next)) {
-          //         const post = views.post({
-          //           item: next,
-          //           oneUp: oneUp,
-          //           oneDown: oneDown,
-          //           moderationOpts,
-          //         })
-          //         const modui = post.moderation.ui('contentList')
-          //         const isBlurred = modui.blur || modui.filter
-          //         const isMuted = (modui.blurs[0] || modui.filters[0])?.type === 'muted'
-
-          //         if (isMuted || isBlurred) {
-          //           console.log(next)
-          //           /*
-          //            * If a post is blurred, drop it and its sub-branch
-          //            */
-          //           ci = getSubBranch(thread, ci, next.depth).end
-          //         } else {
-          //           /*
-          //            * Otherwise, show the post in situ
-          //            */
-          //           slices.push(post)
-          //         }
-          //       } else {
-          //         /*
-          //          * Drop the rest of the branch if we hit anything unexpected
-          //          */
-          //         break
-          //       }
-          //     }
-          //   }
-          // }
-        } else {
-          /*
-           * Not hidden, so show it
-           */
-          slices.push(current)
         }
       }
     }
@@ -485,20 +433,6 @@ export function filterAndSort(
 
   const showMuted = shownHiddenReplyKinds.has(HiddenReplyKind.Muted)
   const showHidden = shownHiddenReplyKinds.has(HiddenReplyKind.Hidden)
-  // const [hiddenKind1, hiddenKind2] = Array.from(shownHiddenReplyKinds)
-
-  // if (hiddenKind1 === HiddenReplyKind.Hidden) {
-  //   slices.push(...hidden)
-  // }
-  // if (hiddenKind1 === HiddenReplyKind.Muted) {
-  //   slices.push(...muted)
-  // }
-  // if (hiddenKind2 === HiddenReplyKind.Hidden) {
-  //   slices.push(...hidden)
-  // }
-  // if (hiddenKind2 === HiddenReplyKind.Muted) {
-  //   slices.push(...muted)
-  // }
 
   if (hidden.length) {
     if (showHidden) {
