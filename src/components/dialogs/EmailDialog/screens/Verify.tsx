@@ -11,7 +11,10 @@ import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ResendEmailText} from '#/components/dialogs/EmailDialog/components/ResendEmailText'
-import {TokenField} from '#/components/dialogs/EmailDialog/components/TokenField'
+import {
+  isValidCode,
+  TokenField,
+} from '#/components/dialogs/EmailDialog/components/TokenField'
 import {useConfirmEmail} from '#/components/dialogs/EmailDialog/data/useConfirmEmail'
 import {useRequestEmailVerification} from '#/components/dialogs/EmailDialog/data/useRequestEmailVerification'
 import {useOnEmailVerified} from '#/components/dialogs/EmailDialog/events'
@@ -136,6 +139,14 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
   }
 
   const handleConfirmEmail = async () => {
+    if (!isValidCode(state.token)) {
+      dispatch({
+        type: 'setError',
+        error: _(msg`Please enter a valid code.`),
+      })
+      return
+    }
+
     dispatch({
       type: 'setMutationStatus',
       status: 'pending',
@@ -328,7 +339,7 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
                 value: token,
               })
             }}
-            onSubmitEditing={() => {}}
+            onSubmitEditing={handleConfirmEmail}
           />
 
           {state.error && <Admonition type="error">{state.error}</Admonition>}
@@ -339,7 +350,11 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
             variant="solid"
             color="primary"
             onPress={handleConfirmEmail}
-            disabled={!state.token || state.mutationStatus === 'pending'}>
+            disabled={
+              !state.token ||
+              state.token.length !== 11 ||
+              state.mutationStatus === 'pending'
+            }>
             <ButtonText>
               <Trans>Verify code</Trans>
             </ButtonText>

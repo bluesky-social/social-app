@@ -12,7 +12,10 @@ import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ResendEmailText} from '#/components/dialogs/EmailDialog/components/ResendEmailText'
-import {TokenField} from '#/components/dialogs/EmailDialog/components/TokenField'
+import {
+  isValidCode,
+  TokenField,
+} from '#/components/dialogs/EmailDialog/components/TokenField'
 import {useRequestEmailUpdate} from '#/components/dialogs/EmailDialog/data/useRequestEmailUpdate'
 import {useRequestEmailVerification} from '#/components/dialogs/EmailDialog/data/useRequestEmailVerification'
 import {useUpdateEmail} from '#/components/dialogs/EmailDialog/data/useUpdateEmail'
@@ -126,6 +129,14 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
   }
 
   const handleUpdateEmail = async () => {
+    if (state.step === 'token' && !isValidCode(state.token)) {
+      dispatch({
+        type: 'setError',
+        error: _(msg`Please enter a valid code.`),
+      })
+      return
+    }
+
     dispatch({
       type: 'setMutationStatus',
       status: 'pending',
@@ -202,7 +213,7 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
 
       <View style={[a.gap_md]}>
         <View>
-          <Text style={[a.pb_sm, t.atoms.text_contrast_medium]}>
+          <Text style={[a.pb_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
             <Trans>Please enter your new email address.</Trans>
           </Text>
           <TextField.Root>
@@ -231,7 +242,8 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
               <Text style={[a.text_md, a.pb_sm, a.font_bold]}>
                 <Trans>Security step required</Trans>
               </Text>
-              <Text style={[a.pb_sm, t.atoms.text_contrast_medium]}>
+              <Text
+                style={[a.pb_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
                 <Trans>
                   Please enter the security code we sent to your previous email
                   address.
@@ -292,7 +304,8 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
           onPress={handleUpdateEmail}
           disabled={
             !state.email ||
-            (state.step === 'token' && !state.token) ||
+            (state.step === 'token' &&
+              (!state.token || state.token.length !== 11)) ||
             state.mutationStatus === 'pending'
           }>
           <ButtonText>

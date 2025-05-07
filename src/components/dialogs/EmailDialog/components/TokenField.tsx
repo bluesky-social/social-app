@@ -8,7 +8,11 @@ import {Shield_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shiel
 export function normalizeCode(value: string) {
   const normalized = value.toUpperCase().replace(/[^A-Z2-7]/g, '')
   if (normalized.length <= 5) return normalized
-  return `${normalized.slice(0, 5)}-${normalized.slice(5, 10)}`
+  return `${normalized.slice(0, 5)}-${normalized.slice(5)}`
+}
+
+export function isValidCode(value?: string) {
+  return Boolean(value && /^[A-Z2-7]{5}-[A-Z2-7]{5}$/.test(value))
 }
 
 export function TokenField({
@@ -17,6 +21,7 @@ export function TokenField({
   onSubmitEditing,
 }: Pick<TextInputProps, 'value' | 'onChangeText' | 'onSubmitEditing'>) {
   const {_} = useLingui()
+  const isInvalid = Boolean(value && value.length > 10 && !isValidCode(value))
 
   const handleOnChangeText = (v: string) => {
     onChangeText?.(normalizeCode(v))
@@ -27,6 +32,7 @@ export function TokenField({
       <TextField.Root>
         <TextField.Icon icon={Shield} />
         <TextField.Input
+          isInvalid={isInvalid}
           label={_(msg`Confirmation code`)}
           placeholder="XXXXX-XXXXX"
           value={value}

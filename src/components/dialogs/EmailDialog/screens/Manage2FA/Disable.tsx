@@ -12,7 +12,10 @@ import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogContext} from '#/components/Dialog'
 import {ResendEmailText} from '#/components/dialogs/EmailDialog/components/ResendEmailText'
-import {TokenField} from '#/components/dialogs/EmailDialog/components/TokenField'
+import {
+  isValidCode,
+  TokenField,
+} from '#/components/dialogs/EmailDialog/components/TokenField'
 import {useManageEmail2FA} from '#/components/dialogs/EmailDialog/data/useManageEmail2FA'
 import {useRequestEmailUpdate} from '#/components/dialogs/EmailDialog/data/useRequestEmailUpdate'
 import {Divider} from '#/components/Divider'
@@ -122,6 +125,14 @@ export function Disable() {
   }
 
   const handleManageEmail2FA = async () => {
+    if (!isValidCode(token)) {
+      dispatch({
+        type: 'setError',
+        error: _(msg`Please enter a valid code.`),
+      })
+      return
+    }
+
     dispatch({type: 'setTokenStatus', status: 'pending'})
 
     try {
@@ -211,7 +222,7 @@ export function Disable() {
             <TokenField
               value={token}
               onChangeText={setToken}
-              onSubmitEditing={() => {}}
+              onSubmitEditing={handleManageEmail2FA}
             />
             <ResendEmailText onPress={handleSendEmail} />
           </View>
@@ -224,7 +235,9 @@ export function Disable() {
             variant="solid"
             color="primary"
             onPress={handleManageEmail2FA}
-            disabled={!token || state.tokenStatus === 'pending'}>
+            disabled={
+              !token || token.length !== 11 || state.tokenStatus === 'pending'
+            }>
             <ButtonText>
               <Trans>Disable 2FA</Trans>
             </ButtonText>
