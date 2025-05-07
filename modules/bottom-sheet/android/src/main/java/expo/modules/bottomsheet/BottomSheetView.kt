@@ -164,10 +164,6 @@ class BottomSheetView(
     when {
       // Full height sheets
       contentHeight >= screenHeight -> 0.99f
-      // Medium height sheets (>50% but <100%)
-      contentHeight >= screenHeight / 2 ->
-        this.clampRatio(this.getTargetHeight() / screenHeight)
-      // Small height sheets (<50%)
       else ->
         this.clampRatio(this.getTargetHeight() / screenHeight)
     }
