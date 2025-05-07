@@ -5149,10 +5149,9 @@
     "@babel/runtime" "^7.20.13"
     "@lingui/core" "4.14.1"
 
-"@mattermost/react-native-paste-input@^0.8.1":
+"@mattermost/react-native-paste-input@mattermost/react-native-paste-input":
   version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@mattermost/react-native-paste-input/-/react-native-paste-input-0.8.1.tgz#944ec69d0c49c3607265a02ad04103cc5b556caf"
-  integrity sha512-QHpwWORPALmX5FczCewRlJkVqtltD84mlpMpto5IGLKdHMAoHeXMiG4VJVh2XkRQvTyUhYegtrUrJzf8dkJokA==
+  resolved "https://codeload.github.com/mattermost/react-native-paste-input/tar.gz/f260447edc645a817ab1ba7b46d8341d84dba8e9"
   dependencies:
     semver "7.6.3"
 
