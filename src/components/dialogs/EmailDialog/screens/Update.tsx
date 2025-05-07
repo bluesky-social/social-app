@@ -203,7 +203,7 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
       <View style={[a.gap_md]}>
         <View>
           <Text style={[a.pb_sm, t.atoms.text_contrast_medium]}>
-            <Trans>Enter your new email address below.</Trans>
+            <Trans>Please enter your new email address.</Trans>
           </Text>
           <TextField.Root>
             <TextField.Icon icon={Envelope} />
