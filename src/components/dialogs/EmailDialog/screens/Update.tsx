@@ -232,7 +232,10 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
                 <Trans>Security step required</Trans>
               </Text>
               <Text style={[a.pb_sm, t.atoms.text_contrast_medium]}>
-                <Trans>Check your previous email for a security code.</Trans>
+                <Trans>
+                  Please enter the security code we sent to your previous email
+                  address.
+                </Trans>
               </Text>
               <TokenField
                 value={state.token}
