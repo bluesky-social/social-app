@@ -16,7 +16,7 @@ import {useConfirmEmail} from '#/components/dialogs/EmailDialog/data/useConfirmE
 import {useRequestEmailVerification} from '#/components/dialogs/EmailDialog/data/useRequestEmailVerification'
 import {useOnEmailVerified} from '#/components/dialogs/EmailDialog/events'
 import {
-  type ScreenID,
+  ScreenID,
   type ScreenProps,
 } from '#/components/dialogs/EmailDialog/types'
 import {Divider} from '#/components/Divider'
@@ -85,7 +85,7 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-export function Verify({config}: ScreenProps<ScreenID.Verify>) {
+export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
   const t = useTheme()
   const {_} = useLingui()
   const cleanError = useCleanError()
@@ -252,6 +252,23 @@ export function Verify({config}: ScreenProps<ScreenID.Verify>) {
             </Trans>
           )}
         </Text>
+
+        {state.step === 'email' && state.mutationStatus !== 'success' && (
+          <Text
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+            <Trans>
+              If you need to update your email,{' '}
+              <InlineLinkText
+                label={_(msg`Click here to update your email`)}
+                {...createStaticClick(() => {
+                  showScreen({id: ScreenID.Update})
+                })}>
+                click here
+              </InlineLinkText>
+              .
+            </Trans>
+          </Text>
+        )}
 
         {state.step === 'email' && state.mutationStatus === 'success' && (
           <ResendEmailText onPress={requestEmailVerification} />
