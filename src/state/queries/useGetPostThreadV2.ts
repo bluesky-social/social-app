@@ -320,7 +320,7 @@ export function filterAndSort(
           })
         }
 
-        parentTraversal: for (let pi = i - 1; pi >= i * -1; pi--) {
+        parentTraversal: for (let pi = i - 1; pi >= 0; pi--) {
           const parentOneDown = thread[pi + 1]
           const parent = thread[pi]
           const parentOneUp = thread[pi - 1]
@@ -337,7 +337,7 @@ export function filterAndSort(
           } else if (AppBskyFeedDefs.isThreadItemPost(parent)) {
             slices.unshift(
               views.post({
-                item,
+                item: parent,
                 oneUp: parentOneUp,
                 oneDown: parentOneDown,
                 moderationOpts,
@@ -372,7 +372,8 @@ export function filterAndSort(
         const parentMod = getModerationState(parent.moderation)
         const parentIsHidden = threadgateHiddenReplies.has(item.uri)
         const parentIsTopLevelReply = item.depth === 1
-        const parentIsModerated = parentIsHidden || parentMod.blurred || parentMod.muted
+        const parentIsModerated =
+          parentIsHidden || parentMod.blurred || parentMod.muted
 
         if (!parentIsModerated) {
           /*
@@ -471,7 +472,7 @@ export function filterAndSort(
   return slices
 }
 
-export function getModerationState(moderation: ModerationDecision){
+export function getModerationState(moderation: ModerationDecision) {
   const modui = moderation.ui('contentList')
   const blurred = modui.blur || modui.filter
   const muted = (modui.blurs[0] || modui.filters[0])?.type === 'muted'
