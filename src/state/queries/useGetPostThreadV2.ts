@@ -271,17 +271,11 @@ export function filterAndSort(
   const hidden: Slice[] = []
   const muted: Slice[] = []
 
-  const showMuted = shownHiddenReplyKinds.has(HiddenReplyKind.Muted)
-  const showHidden = shownHiddenReplyKinds.has(HiddenReplyKind.Hidden)
-
   traversal: for (let i = 0; i < thread.length; i++) {
     const item = thread[i]
 
     // ignore unknowns
     if (!('depth' in item)) continue
-
-    const oneUp = thread[i - 1]
-    const oneDown = thread[i + 1]
 
     if (item.depth < 0) {
       /*
@@ -299,8 +293,8 @@ export function filterAndSort(
         slices.push(
           views.post({
             item,
-            oneUp: oneUp,
-            oneDown: oneDown,
+            oneUp: thread[i - 1],
+            oneDown: thread[i + 1],
             moderationOpts,
           }),
         )
@@ -355,50 +349,54 @@ export function filterAndSort(
         i = branch.end
         continue traversal
       } else if (AppBskyFeedDefs.isThreadItemPost(item)) {
-        const post = views.post({
+        const current = views.post({
           item,
-          oneUp,
-          oneDown,
+          oneUp: thread[i - 1],
+          oneDown: thread[i + 1],
           moderationOpts,
         })
-        const modui = post.moderation.ui('contentList')
-        const isBlurred = modui.blur || modui.filter
-        const isMuted = (modui.blurs[0] || modui.filters[0])?.type === 'muted'
-        const isHidden = threadgateHiddenReplies.has(item.uri)
+        const currentMod = getModerationState(current.moderation)
+        const currentHidden = threadgateHiddenReplies.has(item.uri)
+        const currentIsTopLevelReply = item.depth === 1
+        const isModerated = currentHidden || currentMod.blurred || currentMod.muted
 
-        if (isHidden || isBlurred || isMuted) {
+        if (isModerated) {
           const branch = getSubBranch(thread, i, item.depth)
+          const sortArray = currentMod.muted ? muted : hidden
 
-          /*
-           * Top-level replies we re-sort to bottom
-           */
-          if (item.depth === 1) {
-            for (let ci = branch.start; ci <= branch.end; ci++) {
-              const next = thread[ci]
+          if (currentIsTopLevelReply) {
+            // push sub-branch anchor into sorted array
+            sortArray.push(current)
+            // skip sub-branch anchor in sub-branch traversal
+            const startIndex = branch.start + 1
 
-              if (AppBskyFeedDefs.isThreadItemPost(next)) {
-                const post = views.post({
-                  item: next,
-                  oneUp: oneUp,
-                  oneDown: oneDown,
+            for (let ci = startIndex; ci <= branch.end; ci++) {
+              const leaf = thread[ci]
+
+              if (AppBskyFeedDefs.isThreadItemPost(leaf)) {
+                const leafPost = views.post({
+                  item: leaf,
+                  oneUp: thread[ci - 1],
+                  oneDown: thread[ci + 1],
                   moderationOpts,
                 })
+                const leafMod = getModerationState(leafPost.moderation)
+                const leafHidden = threadgateHiddenReplies.has(leaf.uri)
 
-                if (isMuted) {
-                  muted.push(post)
+                /*
+                 * If a nested post is hidden in any way, drop it an its sub-branch entirely
+                 */
+                if (leafMod.blurred || leafMod.muted || leafHidden) {
+                  ci = getSubBranch(thread, ci, leaf.depth).end
                 } else {
-                  hidden.push(post)
+                  sortArray.push(leafPost)
                 }
               } else {
+                /*
+                 * Drop the rest of the sub-branch if we hit anything unexpected
+                 */
                 break
               }
-            }
-          } else {
-            /*
-             * Nested hidden replies either filter entirely or show in situ
-             */
-            if ((isMuted && showMuted) || showHidden) {
-              slices.push(post)
             }
           }
 
@@ -407,48 +405,146 @@ export function filterAndSort(
            */
           i = branch.end
           continue traversal
+
+          // /*
+          //  * Top-level replies we re-sort to bottom
+          //  */
+          // if (item.depth === 1) {
+          //   for (let ci = branch.start; ci <= branch.end; ci++) {
+          //     const next = thread[ci]
+
+          //     if (AppBskyFeedDefs.isThreadItemPost(next)) {
+          //       const post = views.post({
+          //         item: next,
+          //         oneUp: oneUp,
+          //         oneDown: oneDown,
+          //         moderationOpts,
+          //       })
+
+          //       if (currentMod.muted) {
+          //         muted.push(post)
+          //       } else {
+          //         hidden.push(post)
+          //       }
+          //     } else {
+          //       /*
+          //        * Drop the rest of the branch if we hit anything unexpected
+          //        */
+          //       break
+          //     }
+          //   }
+          // } else {
+          //   /*
+          //    * Nested hidden replies either filter entirely or show in situ
+          //    */
+          //   if ((currentMod.muted && showMuted) || showHidden) {
+          //     for (let ci = branch.start; ci <= branch.end; ci++) {
+          //       const next = thread[ci]
+
+          //       if (AppBskyFeedDefs.isThreadItemPost(next)) {
+          //         const post = views.post({
+          //           item: next,
+          //           oneUp: oneUp,
+          //           oneDown: oneDown,
+          //           moderationOpts,
+          //         })
+          //         const modui = post.moderation.ui('contentList')
+          //         const isBlurred = modui.blur || modui.filter
+          //         const isMuted = (modui.blurs[0] || modui.filters[0])?.type === 'muted'
+
+          //         if (isMuted || isBlurred) {
+          //           console.log(next)
+          //           /*
+          //            * If a post is blurred, drop it and its sub-branch
+          //            */
+          //           ci = getSubBranch(thread, ci, next.depth).end
+          //         } else {
+          //           /*
+          //            * Otherwise, show the post in situ
+          //            */
+          //           slices.push(post)
+          //         }
+          //       } else {
+          //         /*
+          //          * Drop the rest of the branch if we hit anything unexpected
+          //          */
+          //         break
+          //       }
+          //     }
+          //   }
+          // }
         } else {
           /*
            * Not hidden, so show it
            */
-          slices.push(post)
+          slices.push(current)
         }
       }
     }
   }
 
-  const [hiddenKind1, hiddenKind2] = Array.from(shownHiddenReplyKinds)
+  const showMuted = shownHiddenReplyKinds.has(HiddenReplyKind.Muted)
+  const showHidden = shownHiddenReplyKinds.has(HiddenReplyKind.Hidden)
+  // const [hiddenKind1, hiddenKind2] = Array.from(shownHiddenReplyKinds)
 
-  if (hiddenKind1 === HiddenReplyKind.Hidden) {
-    slices.push(...hidden)
-  }
-  if (hiddenKind1 === HiddenReplyKind.Muted) {
-    slices.push(...muted)
-  }
-  if (hiddenKind2 === HiddenReplyKind.Hidden) {
-    slices.push(...hidden)
-  }
-  if (hiddenKind2 === HiddenReplyKind.Muted) {
-    slices.push(...muted)
-  }
+  // if (hiddenKind1 === HiddenReplyKind.Hidden) {
+  //   slices.push(...hidden)
+  // }
+  // if (hiddenKind1 === HiddenReplyKind.Muted) {
+  //   slices.push(...muted)
+  // }
+  // if (hiddenKind2 === HiddenReplyKind.Hidden) {
+  //   slices.push(...hidden)
+  // }
+  // if (hiddenKind2 === HiddenReplyKind.Muted) {
+  //   slices.push(...muted)
+  // }
 
-  if (muted.length && !showMuted) {
-    slices.push({
-      type: 'showHiddenReplies',
-      key: 'showMutedReplies',
-      kind: HiddenReplyKind.Muted,
-    })
-  }
+  if (hidden.length) {
+    if (showHidden) {
+      slices.push(...hidden)
 
-  if (hidden.length && !showHidden) {
-    slices.push({
-      type: 'showHiddenReplies',
-      key: 'showHiddenReplies',
-      kind: HiddenReplyKind.Hidden,
-    })
+      if (muted.length) {
+        if (showMuted) {
+          slices.push(...muted)
+        } else {
+          slices.push({
+            type: 'showHiddenReplies',
+            key: 'showMutedReplies',
+            kind: HiddenReplyKind.Muted,
+          })
+        }
+      }
+    } else {
+      slices.push({
+        type: 'showHiddenReplies',
+        key: 'showHiddenReplies',
+        kind: HiddenReplyKind.Hidden,
+      })
+    }
+  } else if (muted.length) {
+    if (showMuted) {
+      slices.push(...muted)
+    } else {
+      slices.push({
+        type: 'showHiddenReplies',
+        key: 'showMutedReplies',
+        kind: HiddenReplyKind.Muted,
+      })
+    }
   }
 
   return slices
+}
+
+export function getModerationState(moderation: ModerationDecision){
+  const modui = moderation.ui('contentList')
+  const blurred = modui.blur || modui.filter
+  const muted = (modui.blurs[0] || modui.filters[0])?.type === 'muted'
+  return {
+    blurred,
+    muted,
+  }
 }
 
 export enum HiddenReplyKind {

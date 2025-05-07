@@ -27,7 +27,7 @@ import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {PostThreadItem} from '#/view/com/post-thread/PostThreadItem'
 import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useComposerControls} from '#/state/shell'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {PostThreadShowHiddenReplies} from '#/view/com/post-thread/PostThreadShowHiddenReplies'
 
 const MAINTAIN_VISIBLE_CONTENT_POSITION = {
@@ -165,7 +165,7 @@ export function Inner({uri}: {uri: string | undefined}) {
     [refetch],
   )
 
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const onReplyToAnchor = () => {
     const anchorPost = data?.slices.find(slice => slice.type === 'threadSlice' && slice.ui.isAnchor)
     if (anchorPost?.type !== 'threadSlice') {
