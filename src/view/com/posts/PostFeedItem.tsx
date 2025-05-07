@@ -19,6 +19,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {isReasonFeedSource, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {MAX_POST_LINES} from '#/lib/constants'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -33,7 +34,6 @@ import {
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {precacheProfile} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {useComposerControls} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {FeedNameText} from '#/view/com/util/FeedInfoText'
 import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
@@ -159,7 +159,7 @@ let FeedItemInner = ({
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
 }): React.ReactNode => {
   const queryClient = useQueryClient()
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const pal = usePalette('default')
   const {_} = useLingui()
 

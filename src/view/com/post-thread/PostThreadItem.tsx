@@ -17,6 +17,7 @@ import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {MAX_POST_LINES} from '#/lib/constants'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -36,7 +37,6 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {type ThreadPost} from '#/state/queries/post-thread'
 import {useSession} from '#/state/session'
-import {useComposerControls} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
@@ -204,7 +204,7 @@ let PostThreadItemLoaded = ({
   const pal = usePalette('default')
   const {_, i18n} = useLingui()
   const langPrefs = useLanguagePrefs()
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const [limitLines, setLimitLines] = React.useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )

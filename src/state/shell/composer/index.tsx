@@ -125,5 +125,17 @@ export function useComposerState() {
 }
 
 export function useComposerControls() {
-  return React.useContext(controlsContext)
+  const {closeComposer} = React.useContext(controlsContext)
+  return React.useMemo(() => ({closeComposer}), [closeComposer])
+}
+
+/**
+ * DO NOT USE DIRECTLY. The deprecation notice as a warning only, it's not
+ * actually deprecated.
+ *
+ * @deprecated use `#/lib/hooks/useOpenComposer` instead
+ */
+export function useOpenComposer() {
+  const {openComposer} = React.useContext(controlsContext)
+  return React.useMemo(() => ({openComposer}), [openComposer])
 }
