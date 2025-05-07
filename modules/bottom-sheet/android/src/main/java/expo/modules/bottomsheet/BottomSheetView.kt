@@ -31,8 +31,7 @@ class BottomSheetView(
   private lateinit var dialogRootViewGroup: DialogRootViewGroup
   private var eventDispatcher: EventDispatcher? = null
 
-  private val rawScreenHeight = context.resources.displayMetrics.heightPixels.toFloat()
-  private val safeScreenHeight = rawScreenHeight
+  private val screenHeight = context.resources.displayMetrics.heightPixels.toFloat()
 
   private fun getNavigationBarHeight(): Int {
       val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
@@ -72,12 +71,12 @@ class BottomSheetView(
         }
     }
 
-  var maxHeight = this.safeScreenHeight
+  var maxHeight = this.screenHeight
     set(value) {
       val px = dpToPx(value)
       field =
-        if (px > this.safeScreenHeight) {
-          this.safeScreenHeight
+        if (px > this.screenHeight) {
+          this.screenHeight
         } else {
           px
         }
@@ -165,13 +164,13 @@ class BottomSheetView(
   private fun getHalfExpandedRatio(contentHeight: Float): Float {
     return when {
       // Full height sheets
-      contentHeight >= safeScreenHeight -> 0.99f
+      contentHeight >= screenHeight -> 0.99f
       // Medium height sheets (>50% but <100%)
-      contentHeight >= safeScreenHeight / 2 ->
-        this.clampRatio(this.getTargetHeight() / safeScreenHeight)
+      contentHeight >= screenHeight / 2 ->
+        this.clampRatio(this.getTargetHeight() / screenHeight)
       // Small height sheets (<50%)
       else ->
-        this.clampRatio(this.getTargetHeight() / rawScreenHeight)
+        this.clampRatio(this.getTargetHeight() / screenHeight)
     }
   }
 
@@ -203,7 +202,7 @@ class BottomSheetView(
       )
       
       // Configure system UI visibility to allow layout behind both status and navigation bars
-      decorView.systemUiVisibility = android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE or 
+      decorView.systemUiVisibility = android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
                                      android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
                                      android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
     }
@@ -226,7 +225,7 @@ class BottomSheetView(
       behavior.isDraggable = true
       behavior.isHideable = true
 
-      if (contentHeight >= this.safeScreenHeight || this.minHeight >= this.safeScreenHeight) {
+      if (contentHeight >= this.screenHeight || this.minHeight >= this.screenHeight) {
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
         this.selectedSnapPoint = 2
       } else {
@@ -287,7 +286,7 @@ class BottomSheetView(
       )
       
       // Re-apply system UI visibility settings
-      decorView.systemUiVisibility = android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE or 
+      decorView.systemUiVisibility = android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
                                      android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
                                      android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
     }
@@ -303,9 +302,9 @@ class BottomSheetView(
 
       behavior.halfExpandedRatio = getHalfExpandedRatio(contentHeight)
 
-      if (contentHeight > this.safeScreenHeight && behavior.state != BottomSheetBehavior.STATE_EXPANDED) {
+      if (contentHeight > this.screenHeight && behavior.state != BottomSheetBehavior.STATE_EXPANDED) {
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
-      } else if (contentHeight < this.safeScreenHeight && behavior.state != BottomSheetBehavior.STATE_HALF_EXPANDED) {
+      } else if (contentHeight < this.screenHeight && behavior.state != BottomSheetBehavior.STATE_HALF_EXPANDED) {
         behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
       }
     }
