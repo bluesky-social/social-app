@@ -189,7 +189,7 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
   return (
     <View style={[a.gap_lg]}>
       <Text style={[a.text_xl, a.font_heavy]}>
-        <Trans>Update email</Trans>
+        <Trans>Update your email</Trans>
       </Text>
 
       {currentAccount?.emailAuthFactor && (
