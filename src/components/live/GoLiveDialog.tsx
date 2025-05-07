@@ -1,21 +1,27 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
+import {type AppBskyActorStatus} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useQuery} from '@tanstack/react-query'
+import {useMutation, useQuery} from '@tanstack/react-query'
 
+import {uploadBlob} from '#/lib/api'
+import {imageToThumb} from '#/lib/api/resolve'
 import {getLinkMeta} from '#/lib/link-meta/link-meta'
+import {cleanError} from '#/lib/strings/errors'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useAgent} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {useTickEveryMinute} from '#/state/shell'
 import {atoms as a, ios, native, platform, useTheme, web} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
+import {Loader} from '../Loader'
 import {displayDuration} from './utils'
 
 export function GoLiveDialog({
@@ -41,6 +47,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const {_, i18n} = useLingui()
   const t = useTheme()
   const agent = useAgent()
+  const {currentAccount} = useSession()
   const [liveLink, setLiveLink] = useState('')
   const [liveLinkError, setLiveLinkError] = useState('')
   const [duration, setDuration] = useState(60)
@@ -65,11 +72,67 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
     setDuration(Number(newDuration))
   }, [])
 
-  const {} = useQuery({
+  const {data: linkMeta, error: linkMetaError} = useQuery({
     enabled: !!definitelyUrl(liveLink),
     queryKey: ['link-meta', liveLink],
     queryFn: async () => {
       return getLinkMeta(agent, liveLink)
+    },
+  })
+
+  const hasLink = !!linkMeta
+
+  const {mutate: goLive, isPending: isGoingLive} = useMutation({
+    mutationFn: async () => {
+      if (!currentAccount) throw new Error('Not logged in')
+
+      let embed: AppBskyActorStatus.Record['embed']
+
+      if (linkMeta) {
+        let thumb
+
+        if (linkMeta.image) {
+          try {
+            const img = await imageToThumb(linkMeta.image)
+            if (img) {
+              const blob = await uploadBlob(
+                agent,
+                img.source.path,
+                img.source.mime,
+              )
+              thumb = blob.data.blob
+            }
+          } catch {}
+        }
+
+        embed = {
+          $type: 'app.bsky.embed.external',
+          external: {
+            $type: 'app.bsky.embed.external#external',
+            title: linkMeta.title ?? '',
+            description: linkMeta.description ?? '',
+            uri: linkMeta.url,
+            thumb,
+          },
+        }
+      }
+
+      await agent.app.bsky.actor.status.create(
+        {
+          repo: currentAccount.did,
+          rkey: 'self',
+        },
+        {
+          createdAt: new Date().toISOString(),
+          status: 'app.bsky.actor.status#live',
+          durationMinutes: duration,
+          embed,
+        },
+      )
+    },
+    onSuccess: () => {
+      // TODO: update shadow profile
+      control.close()
     },
   })
 
@@ -105,7 +168,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
           <TextField.LabelText>
             <Trans>Live link</Trans>
           </TextField.LabelText>
-          <TextField.Root isInvalid={!!liveLinkError}>
+          <TextField.Root isInvalid={!!liveLinkError || !!linkMetaError}>
             <TextField.Input
               label={_(msg`Live link`)}
               placeholder={_(msg`www.mylivestream.tv`)}
@@ -120,69 +183,88 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
               returnKeyType="done"
             />
           </TextField.Root>
-        </View>
-
-        <View>
-          <TextField.LabelText>
-            <Trans>Go live for</Trans>
-          </TextField.LabelText>
-          <Select.Root
-            value={String(duration)}
-            onValueChange={onChangeDuration}>
-            <Select.Trigger label={_(msg`Select primary language`)}>
-              <Text style={[ios(a.py_xs)]}>
-                {displayDuration(i18n, duration)}
-                {'  '}
-                <Text style={[t.atoms.text_contrast_low]}>
-                  {time(duration)}
-                </Text>
+          {(liveLinkError || linkMetaError) && (
+            <View style={[a.flex_row, a.gap_xs]}>
+              <WarningIcon style={{color: t.palette.negative_500}} size="xs" />
+              <Text style={[a.text_sm, a.leading_snug, a.flex_1, a.font_bold]}>
+                {liveLinkError ? (
+                  <Trans>This is not a valid link</Trans>
+                ) : (
+                  cleanError(linkMetaError)
+                )}
               </Text>
-
-              <Select.Icon />
-            </Select.Trigger>
-            <Select.Content
-              renderItem={(item, _i, selectedValue) => {
-                const label = displayDuration(i18n, item)
-                return (
-                  <Select.Item value={String(item)} label={label}>
-                    <Select.ItemIndicator />
-                    <Select.ItemText>
-                      {label}
-                      {'  '}
-                      <Text
-                        style={[
-                          native(a.text_md),
-                          web(a.ml_xs),
-                          selectedValue === String(item)
-                            ? t.atoms.text_contrast_medium
-                            : t.atoms.text_contrast_low,
-                          a.font_normal,
-                        ]}>
-                        {time(item)}
-                      </Text>
-                    </Select.ItemText>
-                  </Select.Item>
-                )
-              }}
-              items={DURATIONS}
-              valueExtractor={d => String(d)}
-            />
-          </Select.Root>
+            </View>
+          )}
         </View>
+
+        {hasLink && (
+          <View>
+            <TextField.LabelText>
+              <Trans>Go live for</Trans>
+            </TextField.LabelText>
+            <Select.Root
+              value={String(duration)}
+              onValueChange={onChangeDuration}>
+              <Select.Trigger label={_(msg`Select primary language`)}>
+                <Text style={[ios(a.py_xs)]}>
+                  {displayDuration(i18n, duration)}
+                  {'  '}
+                  <Text style={[t.atoms.text_contrast_low]}>
+                    {time(duration)}
+                  </Text>
+                </Text>
+
+                <Select.Icon />
+              </Select.Trigger>
+              <Select.Content
+                renderItem={(item, _i, selectedValue) => {
+                  const label = displayDuration(i18n, item)
+                  return (
+                    <Select.Item value={String(item)} label={label}>
+                      <Select.ItemIndicator />
+                      <Select.ItemText>
+                        {label}
+                        {'  '}
+                        <Text
+                          style={[
+                            native(a.text_md),
+                            web(a.ml_xs),
+                            selectedValue === String(item)
+                              ? t.atoms.text_contrast_medium
+                              : t.atoms.text_contrast_low,
+                            a.font_normal,
+                          ]}>
+                          {time(item)}
+                        </Text>
+                      </Select.ItemText>
+                    </Select.Item>
+                  )
+                }}
+                items={DURATIONS}
+                valueExtractor={d => String(d)}
+              />
+            </Select.Root>
+          </View>
+        )}
         <View
           style={platform({
             native: [a.gap_md],
             web: [a.flex_row_reverse, a.gap_md, a.align_center],
           })}>
-          <Button
-            label={_(msg`Go Live`)}
-            size={platform({native: 'large', web: 'small'})}
-            color="primary"
-            variant="solid">
-            <ButtonText>
-              <Trans>Go Live</Trans>
-            </ButtonText>
-          </Button>
+          {hasLink && (
+            <Button
+              label={_(msg`Go Live`)}
+              size={platform({native: 'large', web: 'small'})}
+              color="primary"
+              variant="solid"
+              onPress={() => goLive()}
+              disabled={isGoingLive}>
+              <ButtonText>
+                <Trans>Go Live</Trans>
+              </ButtonText>
+              {isGoingLive && <ButtonIcon icon={Loader} />}
+            </Button>
+          )}
           <Button
             label={_(msg`Cancel`)}
             onPress={() => control.close()}
