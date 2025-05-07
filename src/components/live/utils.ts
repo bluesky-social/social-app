@@ -1,3 +1,4 @@
+import {useEffect, useState} from 'react'
 import {type I18n} from '@lingui/core'
 import {plural} from '@lingui/macro'
 
@@ -21,4 +22,16 @@ export function displayDuration(i18n: I18n, durationInMinutes: number) {
             }),
       )
     : minutesString
+}
+
+// Trailing debounce
+export function useDebouncedValue<T>(val: T, delayMs: number): T {
+  const [prev, setPrev] = useState(val)
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setPrev(val), delayMs)
+    return () => clearTimeout(timeout)
+  }, [val, delayMs])
+
+  return prev
 }

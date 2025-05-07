@@ -1,5 +1,6 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
+import {Image} from 'expo-image'
 import {type AppBskyActorStatus} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -9,6 +10,7 @@ import {uploadBlob} from '#/lib/api'
 import {imageToThumb} from '#/lib/api/resolve'
 import {getLinkMeta} from '#/lib/link-meta/link-meta'
 import {cleanError} from '#/lib/strings/errors'
+import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent, useSession} from '#/state/session'
 import {useTickEveryMinute} from '#/state/shell'
@@ -16,13 +18,14 @@ import {atoms as a, ios, native, platform, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
+import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
-import {Loader} from '../Loader'
-import {displayDuration} from './utils'
+import {displayDuration, useDebouncedValue} from './utils'
 
 export function GoLiveDialog({
   control,
@@ -72,11 +75,15 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
     setDuration(Number(newDuration))
   }, [])
 
+  const debouncedLink = useDebouncedValue(liveLink, 500)
+
+  console.log(liveLink, debouncedLink, definitelyUrl(debouncedLink))
+
   const {data: linkMeta, error: linkMetaError} = useQuery({
-    enabled: !!definitelyUrl(liveLink),
-    queryKey: ['link-meta', liveLink],
+    enabled: !!definitelyUrl(debouncedLink),
+    queryKey: ['link-meta', debouncedLink],
     queryFn: async () => {
-      return getLinkMeta(agent, liveLink)
+      return getLinkMeta(agent, debouncedLink)
     },
   })
 
@@ -184,9 +191,19 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
             />
           </TextField.Root>
           {(liveLinkError || linkMetaError) && (
-            <View style={[a.flex_row, a.gap_xs]}>
-              <WarningIcon style={{color: t.palette.negative_500}} size="xs" />
-              <Text style={[a.text_sm, a.leading_snug, a.flex_1, a.font_bold]}>
+            <View style={[a.flex_row, a.gap_xs, a.align_center, a.mt_sm]}>
+              <WarningIcon
+                style={[{color: t.palette.negative_500}]}
+                size="sm"
+              />
+              <Text
+                style={[
+                  a.text_sm,
+                  a.leading_snug,
+                  a.flex_1,
+                  a.font_bold,
+                  {color: t.palette.negative_500},
+                ]}>
                 {liveLinkError ? (
                   <Trans>This is not a valid link</Trans>
                 ) : (
@@ -196,6 +213,55 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
             </View>
           )}
         </View>
+
+        {linkMeta && (
+          <View
+            style={[
+              a.w_full,
+              a.border,
+              t.atoms.border_contrast_low,
+              t.atoms.bg,
+              a.flex_row,
+              a.gap_sm,
+              a.rounded_sm,
+              a.overflow_hidden,
+              a.align_center,
+            ]}>
+            <View
+              style={[
+                t.atoms.bg_contrast_25,
+                a.w_full,
+                {minHeight: 64, aspectRatio: 1.91, maxHeight: '100%'},
+              ]}>
+              {linkMeta.image && (
+                <Image
+                  source={linkMeta.image}
+                  accessibilityIgnoresInvertColors
+                  transition={200}
+                  style={[a.absolute, a.inset_0]}
+                  contentFit="cover"
+                />
+              )}
+            </View>
+            <View style={[a.flex_1, a.justify_center, a.py_xs]}>
+              <Text numberOfLines={3} style={[a.leading_snug, a.font_bold]}>
+                {linkMeta.title || linkMeta.url}
+              </Text>
+              <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
+                <GlobeIcon size="xs" style={[t.atoms.text_contrast_low]} />
+                <Text
+                  numberOfLines={1}
+                  style={[
+                    a.text_xs,
+                    a.leading_snug,
+                    t.atoms.text_contrast_medium,
+                  ]}>
+                  {toNiceDomain(linkMeta.url)}
+                </Text>
+              </View>
+            </View>
+          </View>
+        )}
 
         {hasLink && (
           <View>
@@ -281,9 +347,31 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   )
 }
 
+// passes URL.parse, and has a TLD etc
 function definitelyUrl(maybeUrl: string) {
   try {
-    return new URL(maybeUrl).toString()
+    if (maybeUrl.endsWith('.')) return null
+
+    // Prepend 'https://' if the input doesn't start with a protocol
+    if (!/^https?:\/\//i.test(maybeUrl)) {
+      maybeUrl = 'https://' + maybeUrl
+    }
+
+    const url = new URL(maybeUrl)
+
+    // Extract the hostname and split it into labels
+    const hostname = url.hostname
+    const labels = hostname.split('.')
+
+    // Ensure there are at least two labels (e.g., 'example' and 'com')
+    if (labels.length < 2) return null
+
+    const tld = labels[labels.length - 1]
+
+    // Check that the TLD is at least two characters long and contains only letters
+    if (!/^[a-z]{2,}$/i.test(tld)) return null
+
+    return url.toString()
   } catch {
     return null
   }
