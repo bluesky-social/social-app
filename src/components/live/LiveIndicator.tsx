@@ -1,4 +1,4 @@
-import {View} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {Trans} from '@lingui/macro'
 
 import {atoms as a, tokens, useTheme} from '#/alf'
@@ -6,8 +6,10 @@ import {Text} from '#/components/Typography'
 
 export function LiveIndicator({
   size = 'small',
+  style,
 }: {
   size?: 'tiny' | 'small' | 'large'
+  style?: StyleProp<ViewStyle>
 }) {
   const t = useTheme()
 
@@ -25,6 +27,7 @@ export function LiveIndicator({
         a.align_center,
         a.pointer_events_none,
         {bottom: size === 'large' ? -8 : -5},
+        style,
       ]}>
       <View
         style={{

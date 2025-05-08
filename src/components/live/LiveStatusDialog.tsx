@@ -10,9 +10,10 @@ import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
+import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {unstableCacheProfileView} from '#/state/queries/profile'
-import {atoms as a, platform, useTheme} from '#/alf'
+import {atoms as a, platform, tokens, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -20,6 +21,7 @@ import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
 import {Globe_Stroke2_Corner0_Rounded} from '../icons/Globe'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRightIcon} from '../icons/SquareArrowTopRight'
+import {LiveIndicator} from './LiveIndicator'
 
 export function LiveStatusDialog({
   control,
@@ -75,6 +77,14 @@ function DialogInner({
             style={[a.absolute, a.inset_0]}
             accessibilityIgnoresInvertColors
           />
+          <LiveIndicator
+            size="large"
+            style={[
+              a.absolute,
+              {top: tokens.space.lg, left: tokens.space.lg},
+              a.align_start,
+            ]}
+          />
         </View>
       )}
       <View style={[a.gap_lg, a.pt_lg, a.px_xl]}>
@@ -101,7 +111,10 @@ function DialogInner({
           size={platform({native: 'large', web: 'small'})}
           color="primary"
           variant="solid"
-          onPress={() => openLink(embed.external.uri, false)}>
+          onPress={() => {
+            logger.metric('live:card:watch', {subject: profile.did})
+            openLink(embed.external.uri, false)
+          }}>
           <ButtonText>
             <Trans>Watch now</Trans>
           </ButtonText>
@@ -123,14 +136,15 @@ function DialogInner({
               size="small"
               color="secondary"
               variant="solid"
-              onPress={() =>
+              onPress={() => {
+                logger.metric('live:card:openProfile', {subject: profile.did})
                 control.close(() => {
                   unstableCacheProfileView(queryClient, profile)
                   navigation.push('Profile', {
                     name: profile.handle,
                   })
                 })
-              }>
+              }}>
               <ButtonText>
                 <Trans>Open profile</Trans>
               </ButtonText>

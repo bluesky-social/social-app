@@ -383,4 +383,8 @@ export type MetricEvents = {
   }
   'verification:settings:hideBadges': {}
   'verification:settings:unHideBadges': {}
+
+  'live:create': {duration: number}
+  'live:card:watch': {subject: string}
+  'live:card:openProfile': {subject: string}
 }
