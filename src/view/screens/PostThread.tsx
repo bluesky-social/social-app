@@ -165,6 +165,20 @@ export function Inner({uri}: {uri: string | undefined}) {
     [refetch],
   )
 
+  const optimisticOnPostReply = ({
+    post,
+  }: {
+    post: AppBskyFeedDefs.ThreadItemPost,
+  }) => (_: any, posts: AppBskyFeedDefs.ThreadItemPost[]) => {
+    const parentDepth = post.depth
+    if (posts.length) {
+      for (let i = 0; i < posts.length; i++) {
+        const p = posts[i]
+        p.depth = parentDepth + 1 + i
+      }
+    }
+  }
+
   const {openComposer} = useOpenComposer()
   const onReplyToAnchor = () => {
     const anchorPost = data?.slices.find(slice => slice.type === 'threadSlice' && slice.ui.isAnchor)
@@ -181,7 +195,7 @@ export function Inner({uri}: {uri: string | undefined}) {
         embed: post.embed,
         moderation: anchorPost.moderation,
       },
-      onPost: onPostReply,
+      onPost: optimisticOnPostReply({post:anchorPost.slice}),
     })
   }
 
@@ -209,7 +223,7 @@ export function Inner({uri}: {uri: string | undefined}) {
             overrideBlur={
               shownHiddenReplyKinds.has(HiddenReplyKind.Muted) && item.slice.depth > 0
             }
-            onPostReply={onPostReply}
+            onPostReply={optimisticOnPostReply({post:item.slice})}
             hideTopBorder={index === 0} // && !item.slice.isParentLoading} // TODO
           />
         </View>
