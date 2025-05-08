@@ -14,10 +14,12 @@ import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent, useSession} from '#/state/session'
 import {useTickEveryMinute} from '#/state/shell'
+import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, ios, native, platform, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {CircleX_Stroke2_Corner0_Rounded as CircleXIcon} from '#/components/icons/CircleX'
 import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {Loader} from '#/components/Loader'
@@ -43,7 +45,7 @@ export function GoLiveDialog({
 }
 
 // Possible durations: max 4 hours, 5 minute intervals
-const DURATIONS = Array.from({length: (4 * 60) / 5 + 1}).map((_, i) => i * 5)
+const DURATIONS = Array.from({length: (4 * 60) / 5}).map((_, i) => (i + 1) * 5)
 
 function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const control = Dialog.useDialogContext()
@@ -53,6 +55,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const {currentAccount} = useSession()
   const [liveLink, setLiveLink] = useState('')
   const [liveLinkError, setLiveLinkError] = useState('')
+  const [imageLoadError, setImageLoadError] = useState(false)
   const [duration, setDuration] = useState(60)
   const moderationOpts = useModerationOpts()
   const tick = useTickEveryMinute()
@@ -75,19 +78,23 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
     setDuration(Number(newDuration))
   }, [])
 
-  const debouncedLink = useDebouncedValue(liveLink, 500)
+  const liveLinkUrl = definitelyUrl(liveLink)
+  const debouncedUrl = useDebouncedValue(liveLinkUrl, 500)
+  const hasLink = !!debouncedUrl
 
-  console.log(liveLink, debouncedLink, definitelyUrl(debouncedLink))
-
-  const {data: linkMeta, error: linkMetaError} = useQuery({
-    enabled: !!definitelyUrl(debouncedLink),
-    queryKey: ['link-meta', debouncedLink],
+  const {
+    data: linkMeta,
+    isSuccess: hasValidLinkMeta,
+    isLoading: linkMetaLoading,
+    error: linkMetaError,
+  } = useQuery({
+    enabled: !!debouncedUrl,
+    queryKey: ['link-meta', debouncedUrl],
     queryFn: async () => {
-      return getLinkMeta(agent, debouncedLink)
+      if (!debouncedUrl) return null
+      return getLinkMeta(agent, debouncedUrl)
     },
   })
-
-  const hasLink = !!linkMeta
 
   const {mutate: goLive, isPending: isGoingLive} = useMutation({
     mutationFn: async () => {
@@ -188,6 +195,8 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
                 }
               }}
               returnKeyType="done"
+              autoCapitalize="none"
+              autoComplete="url"
             />
           </TextField.Root>
           {(liveLinkError || linkMetaError) && (
@@ -214,7 +223,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
           )}
         </View>
 
-        {linkMeta && (
+        {(linkMeta || linkMetaLoading) && (
           <View
             style={[
               a.w_full,
@@ -222,43 +231,60 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
               t.atoms.border_contrast_low,
               t.atoms.bg,
               a.flex_row,
-              a.gap_sm,
               a.rounded_sm,
               a.overflow_hidden,
-              a.align_center,
+              a.align_stretch,
             ]}>
             <View
               style={[
                 t.atoms.bg_contrast_25,
-                a.w_full,
-                {minHeight: 64, aspectRatio: 1.91, maxHeight: '100%'},
+                {minHeight: 64, width: 114},
+                a.justify_center,
+                a.align_center,
               ]}>
-              {linkMeta.image && (
+              {linkMeta?.image && (
                 <Image
                   source={linkMeta.image}
                   accessibilityIgnoresInvertColors
                   transition={200}
                   style={[a.absolute, a.inset_0]}
                   contentFit="cover"
+                  onLoad={() => setImageLoadError(false)}
+                  onError={() => setImageLoadError(true)}
                 />
               )}
+              {linkMeta && (!linkMeta.image || imageLoadError) && (
+                <CircleXIcon style={[t.atoms.text_contrast_low]} size="xl" />
+              )}
             </View>
-            <View style={[a.flex_1, a.justify_center, a.py_xs]}>
-              <Text numberOfLines={3} style={[a.leading_snug, a.font_bold]}>
-                {linkMeta.title || linkMeta.url}
-              </Text>
-              <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
-                <GlobeIcon size="xs" style={[t.atoms.text_contrast_low]} />
-                <Text
-                  numberOfLines={1}
-                  style={[
-                    a.text_xs,
-                    a.leading_snug,
-                    t.atoms.text_contrast_medium,
-                  ]}>
-                  {toNiceDomain(linkMeta.url)}
-                </Text>
-              </View>
+            <View
+              style={[a.flex_1, a.justify_center, a.py_xs, a.gap_xs, a.px_md]}>
+              {linkMeta ? (
+                <>
+                  <Text
+                    numberOfLines={2}
+                    style={[a.leading_snug, a.font_bold, a.text_md]}>
+                    {linkMeta.title || linkMeta.url}
+                  </Text>
+                  <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
+                    <GlobeIcon size="xs" style={[t.atoms.text_contrast_low]} />
+                    <Text
+                      numberOfLines={1}
+                      style={[
+                        a.text_xs,
+                        a.leading_snug,
+                        t.atoms.text_contrast_medium,
+                      ]}>
+                      {toNiceDomain(linkMeta.url)}
+                    </Text>
+                  </View>
+                </>
+              ) : (
+                <>
+                  <LoadingPlaceholder height={16} width={128} />
+                  <LoadingPlaceholder height={12} width={72} />
+                </>
+              )}
             </View>
           </View>
         )}
@@ -324,7 +350,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
               color="primary"
               variant="solid"
               onPress={() => goLive()}
-              disabled={isGoingLive}>
+              disabled={isGoingLive || !hasValidLinkMeta}>
               <ButtonText>
                 <Trans>Go Live</Trans>
               </ButtonText>
@@ -353,7 +379,7 @@ function definitelyUrl(maybeUrl: string) {
     if (maybeUrl.endsWith('.')) return null
 
     // Prepend 'https://' if the input doesn't start with a protocol
-    if (!/^https?:\/\//i.test(maybeUrl)) {
+    if (!maybeUrl.startsWith('https://') && !maybeUrl.startsWith('http://')) {
       maybeUrl = 'https://' + maybeUrl
     }
 
