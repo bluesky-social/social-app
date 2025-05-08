@@ -185,8 +185,8 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
           </Text>
           <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
             Add a live status to your profile photo for a set time period. Your
-            status will change to live as soon as you post and can be changed an
-            any time.
+            status will change to live immediately as you post and can be
+            changed at any time.
           </Text>
         </View>
         {moderationOpts && (
