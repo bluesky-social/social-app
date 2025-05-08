@@ -107,7 +107,7 @@ msgstr "{0, plural, one {Like} other {Likes}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "{0, plural, one {Post} other {Posts}}"
+msgstr "{0, plural, one {# Beitrag} other {# Beiträge}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:463
 msgid "{0, plural, one {quote} other {quotes}}"
