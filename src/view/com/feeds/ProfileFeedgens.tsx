@@ -182,6 +182,7 @@ export const ProfileFeedgens = React.forwardRef<
   }, [enabled, scrollElRef, setScrollViewTag])
 
   const ProfileFeedgensFooter = React.useCallback(() => {
+    if (isEmpty) return null
     return (
       <ListFooter
         hasNextPage={hasNextPage}
@@ -191,7 +192,14 @@ export const ProfileFeedgens = React.forwardRef<
         height={180 + headerOffset}
       />
     )
-  }, [hasNextPage, error, isFetchingNextPage, headerOffset, fetchNextPage])
+  }, [
+    hasNextPage,
+    error,
+    isFetchingNextPage,
+    headerOffset,
+    fetchNextPage,
+    isEmpty,
+  ])
 
   return (
     <View testID={testID} style={style}>

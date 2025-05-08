@@ -53,7 +53,9 @@ export type RadixPassThroughTriggerProps = {
   ['aria-controls']?: string
   ['aria-haspopup']?: boolean
   ['aria-expanded']?: AccessibilityProps['aria-expanded']
-  onPress: () => void
+  onClick: () => void
+  onPointerDown: () => void
+  onKeyDown: () => void
 }
 
 export type TriggerProps = {

@@ -73,6 +73,7 @@ export function Trigger({children, label}: TriggerProps) {
               },
               props: {
                 ...props,
+                onPress: props.onClick,
                 onFocus: onFocus,
                 onBlur: onBlur,
                 onMouseEnter,

@@ -22,6 +22,7 @@ import {DISCOVER_DEBUG_DIDS, POST_CTRL_HITSLOP} from '#/lib/constants'
 import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
 import {useHaptics} from '#/lib/haptics'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
 import {useGate} from '#/lib/statsig/statsig'
@@ -33,7 +34,6 @@ import {
   usePostRepostMutationQueue,
 } from '#/state/queries/post'
 import {useRequireAuth, useSession} from '#/state/session'
-import {useComposerControls} from '#/state/shell/composer'
 import {
   ProgressGuideAction,
   useProgressGuideControls,
@@ -76,7 +76,7 @@ let PostCtrls = ({
 }): React.ReactNode => {
   const t = useTheme()
   const {_, i18n} = useLingui()
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const {currentAccount} = useSession()
   const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, logContext)
   const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(
