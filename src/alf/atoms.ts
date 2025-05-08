@@ -204,6 +204,9 @@ export const atoms = {
   flex_grow: {
     flexGrow: 1,
   },
+  flex_grow_0: {
+    flexGrow: 0,
+  },
   flex_shrink: {
     flexShrink: 1,
   },
@@ -951,8 +954,8 @@ export const atoms = {
     userSelect: 'all',
   },
   outline_inset_1: {
-    outlineOffset: '-1px',
-  } as StyleProp<ViewStyle>,
+    outlineOffset: -1,
+  },
 
   /*
    * Text decoration

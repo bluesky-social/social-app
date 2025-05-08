@@ -10,6 +10,7 @@ import {
 } from '@react-navigation/native'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
@@ -25,14 +26,13 @@ import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
-import {useComposerControls} from '#/state/shell/composer'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {atoms as a, tokens, useLayoutBreakpoints, useTheme} from '#/alf'
+import {atoms as a, tokens, useLayoutBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps} from '#/components/Dialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
@@ -447,7 +447,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
 function ComposeBtn() {
   const {currentAccount} = useSession()
   const {getState} = useNavigation()
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const {_} = useLingui()
   const {leftNavMinimal} = useLayoutBreakpoints()
   const [isFetchingHandle, setIsFetchingHandle] = React.useState(false)
@@ -718,7 +718,7 @@ export function DesktopLeftNav() {
 
 const styles = StyleSheet.create({
   leftNav: {
-    position: 'fixed',
+    ...a.fixed,
     top: 0,
     paddingTop: 10,
     paddingBottom: 10,
@@ -736,7 +736,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: 86,
     alignItems: 'center',
-    overflowX: 'hidden',
+    ...web({overflowX: 'hidden'}),
   },
   backBtn: {
     position: 'absolute',

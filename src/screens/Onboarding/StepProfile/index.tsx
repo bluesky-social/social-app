@@ -182,11 +182,9 @@ export function StepProfile() {
 
     if (!isWeb) {
       image = await openCropper({
-        mediaType: 'photo',
-        cropperCircleOverlay: true,
-        height: 1000,
-        width: 1000,
-        path: image.path,
+        imageUri: image.path,
+        shape: 'circle',
+        aspectRatio: 1 / 1,
       })
     }
     image = await compressIfNeeded(image, 1000000)

@@ -139,19 +139,7 @@ class DialogRootViewGroup(
     return super.onHoverEvent(event)
   }
 
-  @Deprecated("Deprecated in Java")
-  override fun onChildStartedNativeGesture(ev: MotionEvent?) {
-    eventDispatcher?.let {
-      if (ev != null) {
-        jSTouchDispatcher.onChildStartedNativeGesture(ev, it)
-      }
-    }
-  }
-
-  override fun onChildStartedNativeGesture(
-    childView: View,
-    ev: MotionEvent,
-  ) {
+  override fun onChildStartedNativeGesture(childView: View?, ev: MotionEvent) {
     eventDispatcher?.let { jSTouchDispatcher.onChildStartedNativeGesture(ev, it) }
     jSPointerDispatcher?.onChildStartedNativeGesture(childView, ev, eventDispatcher)
   }

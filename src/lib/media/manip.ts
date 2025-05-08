@@ -1,5 +1,4 @@
 import {Image as RNImage, Share as RNShare} from 'react-native'
-import {Image} from 'react-native-image-crop-picker'
 import uuid from 'react-native-uuid'
 import {
   cacheDirectory,
@@ -20,17 +19,17 @@ import RNFetchBlob from 'rn-fetch-blob'
 import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
-import {Dimensions} from './types'
+import {type PickerImage} from './picker.shared'
+import {type Dimensions} from './types'
 
 export async function compressIfNeeded(
-  img: Image,
-  maxSize: number = 1000000,
-): Promise<Image> {
-  const origUri = `file://${img.path}`
+  img: PickerImage,
+  maxSize: number = POST_IMG_MAX.size,
+): Promise<PickerImage> {
   if (img.size < maxSize) {
     return img
   }
-  const resizedImage = await doResize(origUri, {
+  const resizedImage = await doResize(normalizePath(img.path), {
     width: img.width,
     height: img.height,
     mode: 'stretch',
@@ -166,7 +165,10 @@ interface DoResizeOpts {
   maxSize: number
 }
 
-async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
+async function doResize(
+  localUri: string,
+  opts: DoResizeOpts,
+): Promise<PickerImage> {
   // We need to get the dimensions of the image before we resize it. Previously, the library we used allowed us to enter
   // a "max size", and it would do the "best possible size" calculation for us.
   // Now instead, we have to supply the final dimensions to the manipulation function instead.
@@ -178,17 +180,25 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
     height: imageRes.height,
   })
 
-  for (let i = 0; i < 9; i++) {
-    // nearest 10th
-    const quality = Math.round((1 - 0.1 * i) * 10) / 10
+  let minQualityPercentage = 0
+  let maxQualityPercentage = 101 // exclusive
+  let newDataUri
+  const intermediateUris = []
+
+  while (maxQualityPercentage - minQualityPercentage > 1) {
+    const qualityPercentage = Math.round(
+      (maxQualityPercentage + minQualityPercentage) / 2,
+    )
     const resizeRes = await manipulateAsync(
       localUri,
       [{resize: newDimensions}],
       {
         format: SaveFormat.JPEG,
-        compress: quality,
+        compress: qualityPercentage / 100,
       },
     )
+
+    intermediateUris.push(resizeRes.uri)
 
     const fileInfo = await getInfoAsync(resizeRes.uri)
     if (!fileInfo.exists) {
@@ -198,8 +208,8 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
     }
 
     if (fileInfo.size < opts.maxSize) {
-      safeDeleteAsync(imageRes.uri)
-      return {
+      minQualityPercentage = qualityPercentage
+      newDataUri = {
         path: normalizePath(resizeRes.uri),
         mime: 'image/jpeg',
         size: fileInfo.size,
@@ -207,9 +217,21 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
         height: resizeRes.height,
       }
     } else {
-      safeDeleteAsync(resizeRes.uri)
+      maxQualityPercentage = qualityPercentage
     }
   }
+
+  for (const intermediateUri of intermediateUris) {
+    if (newDataUri?.path !== normalizePath(intermediateUri)) {
+      safeDeleteAsync(intermediateUri)
+    }
+  }
+
+  if (newDataUri) {
+    safeDeleteAsync(imageRes.uri)
+    return newDataUri
+  }
+
   throw new Error(
     `This image is too big! We couldn't compress it down to ${opts.maxSize} bytes`,
   )

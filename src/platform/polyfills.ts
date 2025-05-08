@@ -1,9 +1,6 @@
+import 'react-native-url-polyfill/auto'
 import 'fast-text-encoding'
-// @ts-ignore no decl -prf
-import findLast from 'array.prototype.findlast'
 export {}
-
-findLast.shim()
 
 /**
 https://github.com/MaxArt2501/base64-js

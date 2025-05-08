@@ -1,11 +1,11 @@
 import {RichText} from '@atproto/api'
 
-import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
+import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
 import {
   createStarterPackGooglePlayUri,
   createStarterPackLinkFromAndroidReferrer,
   parseStarterPackUri,
-} from 'lib/strings/starter-pack'
+} from '#/lib/strings/starter-pack'
 import {cleanError} from '../../src/lib/strings/errors'
 import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
 import {enforceLen} from '../../src/lib/strings/helpers'

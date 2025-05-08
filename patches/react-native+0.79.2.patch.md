@@ -11,7 +11,3 @@ in the RN repo: https://github.com/facebook/react-native/issues/43388
 Patching `RCTRefreshControl.m` and `RCTRefreshControl.h` to add a new `forwarderBeginRefreshing` method to the class.
 This method is used by `ExpoScrollForwarder` to initiate a refresh of the underlying `UIScrollView` from inside that
 module.
-
-## ScrollView centerContent fix
-
-Includes https://github.com/facebook/react-native/pull/47591 early. Delete when it's in a release.
