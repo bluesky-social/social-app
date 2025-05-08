@@ -399,6 +399,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
           </Button>
         </View>
       </View>
+      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }

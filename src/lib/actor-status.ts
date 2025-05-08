@@ -1,5 +1,9 @@
 import {useMemo} from 'react'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {
+  type $Typed,
+  type AppBskyActorDefs,
+  type AppBskyEmbedExternal,
+} from '@atproto/api'
 import {isAfter, parseISO} from 'date-fns'
 
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -20,7 +24,13 @@ export function useActorStatus(actor: bsky.profile.AnyProfileView) {
       temp__isStatusValid(shadowed.status) &&
       isStatusStillActive(shadowed.status.expiresAt)
     ) {
-      return shadowed.status
+      return {
+        isActive: true,
+        status: 'app.bsky.actor.status#live',
+        embed: shadowed.status.embed as $Typed<AppBskyEmbedExternal.View>, // temp_isStatusValid asserts this
+        expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
+        record: shadowed.status.record,
+      } satisfies AppBskyActorDefs.StatusView
     } else {
       return {
         status: '',

@@ -14,6 +14,8 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useActorStatus} from '#/lib/actor-status'
+import {isTouchDevice} from '#/lib/browser'
 import {
   useCameraPermission,
   usePhotoLibraryPermission,
@@ -22,6 +24,8 @@ import {compressIfNeeded} from '#/lib/media/manip'
 import {openCamera, openCropper, openPicker} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
 import {makeProfileLink} from '#/lib/routes/links'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {
@@ -33,6 +37,7 @@ import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {EditImageDialog} from '#/view/com/composer/photos/EditImageDialog'
 import {HighPriorityImage} from '#/view/com/util/images/Image'
 import {atoms as a, tokens, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {
@@ -43,6 +48,7 @@ import {StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon} from '#/components
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
 import {LiveIndicator} from '#/components/live/LiveIndicator'
+import {LiveStatusDialog} from '#/components/live/LiveStatusDialog'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -504,10 +510,13 @@ let PreviewableUserAvatar = ({
   disableHoverCard,
   disableNavigation,
   onBeforePress,
+  live,
   ...rest
 }: PreviewableUserAvatarProps): React.ReactNode => {
   const {_} = useLingui()
   const queryClient = useQueryClient()
+  const status = useActorStatus(profile)
+  const liveControl = useDialogControl()
 
   const onPress = React.useCallback(() => {
     onBeforePress?.()
@@ -519,6 +528,7 @@ let PreviewableUserAvatar = ({
       avatar={profile.avatar}
       moderation={moderation}
       type={profile.associated?.labeler ? 'labeler' : 'user'}
+      live={status.isActive ?? live}
       {...rest}
     />
   )
@@ -527,9 +537,32 @@ let PreviewableUserAvatar = ({
     <ProfileHoverCard did={profile.did} disable={disableHoverCard}>
       {disableNavigation ? (
         avatarEl
+      ) : status.isActive && (isNative || isTouchDevice) ? (
+        <>
+          <Button
+            label={_(
+              msg`${sanitizeDisplayName(
+                profile.displayName || sanitizeHandle(profile.handle),
+              )}'s avatar`,
+            )}
+            accessibilityHint={_(msg`Opens live status dialog`)}
+            onPress={liveControl.open}>
+            {avatarEl}
+          </Button>
+          <LiveStatusDialog
+            control={liveControl}
+            profile={profile}
+            status={status}
+            embed={status.embed}
+          />
+        </>
       ) : (
         <Link
-          label={_(msg`${profile.displayName || profile.handle}'s avatar`)}
+          label={_(
+            msg`${sanitizeDisplayName(
+              profile.displayName || sanitizeHandle(profile.handle),
+            )}'s avatar`,
+          )}
           accessibilityHint={_(msg`Opens this profile`)}
           to={makeProfileLink({
             did: profile.did,
