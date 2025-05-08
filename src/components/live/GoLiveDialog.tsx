@@ -1,17 +1,23 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {type AppBskyActorStatus, ComAtprotoRepoPutRecord} from '@atproto/api'
+import {
+  type $Typed,
+  type AppBskyActorStatus,
+  type AppBskyEmbedExternal,
+  ComAtprotoRepoPutRecord,
+} from '@atproto/api'
 import {retry} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useMutation, useQuery} from '@tanstack/react-query'
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'
 import {imageToThumb} from '#/lib/api/resolve'
 import {getLinkMeta} from '#/lib/link-meta/link-meta'
 import {cleanError} from '#/lib/strings/errors'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
+import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent, useSession} from '#/state/session'
 import {useTickEveryMinute} from '#/state/shell'
@@ -54,6 +60,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const {_, i18n} = useLingui()
   const t = useTheme()
   const agent = useAgent()
+  const queryClient = useQueryClient()
   const {currentAccount} = useSession()
   const [liveLink, setLiveLink] = useState('')
   const [liveLinkError, setLiveLinkError] = useState('')
@@ -106,7 +113,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
     mutationFn: async () => {
       if (!currentAccount) throw new Error('Not logged in')
 
-      let embed: AppBskyActorStatus.Record['embed']
+      let embed
 
       if (linkMeta) {
         let thumb
@@ -134,8 +141,16 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
             uri: linkMeta.url,
             thumb,
           },
-        }
+        } satisfies $Typed<AppBskyEmbedExternal.Main>
       }
+
+      const record = {
+        $type: 'app.bsky.actor.status',
+        createdAt: new Date().toISOString(),
+        status: 'app.bsky.actor.status#live',
+        durationMinutes: duration,
+        embed,
+      } satisfies AppBskyActorStatus.Record
 
       const upsert = async () => {
         const repo = currentAccount.did
@@ -149,28 +164,47 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
           repo,
           collection,
           rkey: 'self',
-          record: {
-            $type: 'app.bsky.actor.status',
-            createdAt: new Date().toISOString(),
-            status: 'app.bsky.actor.status#live',
-            durationMinutes: duration,
-            embed,
-          } satisfies AppBskyActorStatus.Record,
+          record,
           swapRecord: existing?.data.cid || null,
         })
       }
 
-      return retry(upsert, {
+      await retry(upsert, {
         maxRetries: 5,
         retryable: e => e instanceof ComAtprotoRepoPutRecord.InvalidSwapError,
       })
+
+      return {record, image: linkMeta?.image}
     },
     onError: err => {
       console.error(err)
     },
-    onSuccess: () => {
-      // TODO: update shadow profile
-      control.close()
+    onSuccess: ({record, image}) => {
+      control.close(() => {
+        if (!currentAccount) return
+        const expiresAt = new Date(record.createdAt)
+        expiresAt.setMinutes(expiresAt.getMinutes() + record.durationMinutes)
+        updateProfileShadow(queryClient, currentAccount.did, {
+          status: {
+            $type: 'app.bsky.actor.defs#statusView',
+            status: record.status,
+            record,
+            expiresAt: expiresAt.toISOString(),
+            isActive: true,
+            embed:
+              record.embed && image
+                ? {
+                    $type: 'app.bsky.embed.external#view',
+                    external: {
+                      ...record.embed.external,
+                      $type: 'app.bsky.embed.external#viewExternal',
+                      thumb: image,
+                    },
+                  }
+                : undefined,
+          },
+        })
+      })
     },
   })
 
