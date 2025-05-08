@@ -47,6 +47,7 @@ import {
   type AppBskyFeedGetPostThread,
   type BskyAgent,
   type RichText,
+AppBskyFeedGetPostThreadV2,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, plural, Trans} from '@lingui/macro'
@@ -56,6 +57,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import * as apilib from '#/lib/api/index'
 import {EmbeddingDisabledError} from '#/lib/api/resolve'
 import {until} from '#/lib/async/until'
+import {retry} from '#/lib/async/retry'
 import {
   MAX_GRAPHEME_LENGTH,
   SUPPORTED_MIME_TYPES,
@@ -388,7 +390,8 @@ export const ComposePost = ({
     setError('')
     setIsPublishing(true)
 
-    let postUri
+    let postUri: string | undefined
+    let posts: AppBskyFeedGetPostThreadV2.OutputSchema['thread'] = []
     try {
       postUri = (
         await apilib.post(agent, queryClient, {
@@ -399,6 +402,20 @@ export const ComposePost = ({
         })
       ).uris[0]
       try {
+        if (postUri) {
+          posts = await retry(5, _e => true, async () => {
+            const res = await agent.app.bsky.feed.getPostThreadV2({
+              uri: postUri!,
+              above: 0,
+              below: thread.posts.length - 1,
+            })
+            if (res.data.thread.length !== thread.posts.length) {
+              throw new Error(`Not ready`)
+            }
+            return res.data.thread
+          }, 1e3)
+        }
+
         await whenAppViewReady(agent, postUri, res => {
           const postedThread = res?.data?.thread
           return AppBskyFeedDefs.isThreadViewPost(postedThread)
@@ -470,7 +487,7 @@ export const ComposePost = ({
         return false
       })
     } else {
-      onPost?.(postUri)
+      onPost?.(postUri, posts)
     }
     onClose()
     Toast.show(
