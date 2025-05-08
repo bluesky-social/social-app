@@ -1,7 +1,8 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {type AppBskyActorStatus} from '@atproto/api'
+import {type AppBskyActorStatus, ComAtprotoRepoPutRecord} from '@atproto/api'
+import {retry} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQuery} from '@tanstack/react-query'
@@ -16,6 +17,7 @@ import {useAgent, useSession} from '#/state/session'
 import {useTickEveryMinute} from '#/state/shell'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, ios, native, platform, useTheme, web} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -96,7 +98,11 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
     },
   })
 
-  const {mutate: goLive, isPending: isGoingLive} = useMutation({
+  const {
+    mutate: goLive,
+    isPending: isGoingLive,
+    error: goLiveError,
+  } = useMutation({
     mutationFn: async () => {
       if (!currentAccount) throw new Error('Not logged in')
 
@@ -131,18 +137,36 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
         }
       }
 
-      await agent.app.bsky.actor.status.create(
-        {
-          repo: currentAccount.did,
+      const upsert = async () => {
+        const repo = currentAccount.did
+        const collection = 'app.bsky.actor.status'
+
+        const existing = await agent.com.atproto.repo
+          .getRecord({repo, collection, rkey: 'self'})
+          .catch(_e => undefined)
+
+        await agent.com.atproto.repo.putRecord({
+          repo,
+          collection,
           rkey: 'self',
-        },
-        {
-          createdAt: new Date().toISOString(),
-          status: 'app.bsky.actor.status#live',
-          durationMinutes: duration,
-          embed,
-        },
-      )
+          record: {
+            $type: 'app.bsky.actor.status',
+            createdAt: new Date().toISOString(),
+            status: 'app.bsky.actor.status#live',
+            durationMinutes: duration,
+            embed,
+          } satisfies AppBskyActorStatus.Record,
+          swapRecord: existing?.data.cid || null,
+        })
+      }
+
+      return retry(upsert, {
+        maxRetries: 5,
+        retryable: e => e instanceof ComAtprotoRepoPutRecord.InvalidSwapError,
+      })
+    },
+    onError: err => {
+      console.error(err)
     },
     onSuccess: () => {
       // TODO: update shadow profile
@@ -197,6 +221,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
               returnKeyType="done"
               autoCapitalize="none"
               autoComplete="url"
+              autoCorrect={false}
             />
           </TextField.Root>
           {(liveLinkError || linkMetaError) && (
@@ -338,6 +363,11 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
             </Select.Root>
           </View>
         )}
+
+        {goLiveError && (
+          <Admonition type="error">{cleanError(goLiveError)}</Admonition>
+        )}
+
         <View
           style={platform({
             native: [a.gap_md],
