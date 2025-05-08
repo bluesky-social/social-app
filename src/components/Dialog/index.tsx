@@ -334,8 +334,8 @@ export function Handle({difference = false}: {difference?: boolean}) {
                   // TODO: mixBlendMode is only available on the new architecture -sfn
                   // backgroundColor: t.palette.white,
                   // mixBlendMode: 'difference',
-                  backgroundColor: t.palette.contrast_975,
-                  opacity: 0.5,
+                  backgroundColor: t.palette.white,
+                  opacity: 0.75,
                 }
               : {
                   backgroundColor: t.palette.contrast_975,

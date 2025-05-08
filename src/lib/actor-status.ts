@@ -6,18 +6,19 @@ import {
 } from '@atproto/api'
 import {isAfter, parseISO} from 'date-fns'
 
-import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
 import {useTickEveryMinute} from '#/state/shell'
 import {temp__canBeLive, temp__isStatusValid} from '#/components/live/temp'
 import type * as bsky from '#/types/bsky'
 
-export function useActorStatus(actor: bsky.profile.AnyProfileView) {
-  const shadowed = useProfileShadow(actor)
+export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
+  const shadowed = useMaybeProfileShadow(actor)
   const tick = useTickEveryMinute()
   return useMemo(() => {
     tick! // revalidate every minute
 
     if (
+      shadowed &&
       temp__canBeLive(shadowed) &&
       'status' in shadowed &&
       shadowed.status &&

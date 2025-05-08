@@ -26,7 +26,6 @@ import {LiveIndicator} from './LiveIndicator'
 export function LiveStatusDialog({
   control,
   profile,
-  status,
   embed,
 }: {
   control: Dialog.DialogControlProps
@@ -38,12 +37,7 @@ export function LiveStatusDialog({
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle difference={!!embed.external.thumb} />
-      <DialogInner
-        profile={profile}
-        status={status}
-        embed={embed}
-        navigation={navigation}
-      />
+      <DialogInner profile={profile} embed={embed} navigation={navigation} />
     </Dialog.Outer>
   )
 }
@@ -54,21 +48,41 @@ function DialogInner({
   navigation,
 }: {
   profile: bsky.profile.AnyProfileView
-  status: AppBskyActorDefs.StatusView
   embed: AppBskyEmbedExternal.View
   navigation: NavigationProp
 }) {
-  const t = useTheme()
-  const queryClient = useQueryClient()
-  const control = Dialog.useDialogContext()
   const {_} = useLingui()
-  const openLink = useOpenLink()
-  const moderationOpts = useModerationOpts()
 
   return (
     <Dialog.ScrollableInner
       label={_(msg`${sanitizeHandle(profile.handle)} is live`)}
       contentContainerStyle={[a.pt_0, a.px_0]}>
+      <LiveStatus profile={profile} embed={embed} navigation={navigation} />
+      <Dialog.Close />
+    </Dialog.ScrollableInner>
+  )
+}
+
+export function LiveStatus({
+  profile,
+  embed,
+  navigation,
+  padding = 'xl',
+}: {
+  profile: bsky.profile.AnyProfileView
+  embed: AppBskyEmbedExternal.View
+  navigation: NavigationProp
+  padding?: 'lg' | 'xl'
+}) {
+  const {_} = useLingui()
+  const t = useTheme()
+  const queryClient = useQueryClient()
+  const control = Dialog.useDialogContext()
+  const openLink = useOpenLink()
+  const moderationOpts = useModerationOpts()
+
+  return (
+    <>
       {embed.external.thumb && (
         <View style={[t.atoms.bg_contrast_25, a.w_full, {aspectRatio: 1.91}]}>
           <Image
@@ -87,7 +101,7 @@ function DialogInner({
           />
         </View>
       )}
-      <View style={[a.gap_lg, a.pt_lg, a.px_xl]}>
+      <View style={[a.gap_lg, a.pt_lg, padding === 'xl' ? a.px_xl : a.p_lg]}>
         <View style={[a.flex_1, a.justify_center, a.gap_2xs]}>
           <Text
             numberOfLines={3}
@@ -161,7 +175,6 @@ function DialogInner({
           <Trans>Live feature is in beta testing</Trans>
         </Text>
       </View>
-      <Dialog.Close />
-    </Dialog.ScrollableInner>
+    </>
   )
 }
