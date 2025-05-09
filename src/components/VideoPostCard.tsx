@@ -110,7 +110,7 @@ export function VideoPostCard({
             t.atoms.text_contrast_medium,
           ]}
           numberOfLines={1}>
-          {sanitizeHandle(post.author.handle, '@')}
+          {sanitizeHandle(i18n, post.author.handle, '@')}
         </Text>
       </View>
     </View>
@@ -278,6 +278,7 @@ export function VideoPostCardTextPlaceholder({
 }: {
   author?: AppBskyActorDefs.ProfileViewBasic
 }) {
+  const {i18n} = useLingui()
   const t = useTheme()
 
   return (
@@ -318,7 +319,7 @@ export function VideoPostCardTextPlaceholder({
                 t.atoms.text_contrast_medium,
               ]}
               numberOfLines={1}>
-              {sanitizeHandle(author.handle, '@')}
+              {sanitizeHandle(i18n, author.handle, '@')}
             </Text>
           </View>
         ) : (

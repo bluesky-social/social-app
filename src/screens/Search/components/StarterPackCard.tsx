@@ -29,7 +29,7 @@ export function StarterPackCard({
   view: AppBskyGraphDefs.StarterPackView
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {currentAccount} = useSession()
   const {gtPhone} = useBreakpoints()
   const link = useStarterPackLink({view})
@@ -103,7 +103,13 @@ export function StarterPackCard({
                   numberOfLines={1}>
                   {view.creator?.did === currentAccount?.did
                     ? _(msg`By you`)
-                    : _(msg`By ${sanitizeHandle(view.creator.handle, '@')}`)}
+                    : _(
+                        msg`By ${sanitizeHandle(
+                          i18n,
+                          view.creator.handle,
+                          '@',
+                        )}`,
+                      )}
                 </Text>
               </View>
               <Link

@@ -2,6 +2,7 @@ import {forwardRef, useEffect, useImperativeHandle, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {ReactRenderer} from '@tiptap/react'
 import {
   type SuggestionKeyDownProps,
@@ -191,10 +192,13 @@ function AutocompleteProfileCard({
   totalItems: number
   onPress: () => void
 }) {
+  const {i18n} = useLingui()
   const pal = usePalette('default')
   const {getGraphemeString} = useGrapheme()
   const {name: displayName} = getGraphemeString(
-    sanitizeDisplayName(profile.displayName || sanitizeHandle(profile.handle)),
+    sanitizeDisplayName(
+      profile.displayName || sanitizeHandle(i18n, profile.handle),
+    ),
     30, // Heuristic value; can be modified
   )
   const state = useSimpleVerificationState({
@@ -236,7 +240,7 @@ function AutocompleteProfileCard({
       </View>
       <View>
         <Text type="xs" style={pal.textLight} numberOfLines={1}>
-          {sanitizeHandle(profile.handle, '@')}
+          {sanitizeHandle(i18n, profile.handle, '@')}
         </Text>
       </View>
     </Pressable>

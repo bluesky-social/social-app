@@ -138,7 +138,7 @@ function ListItem({
   onRemove?: (listUri: string) => void
 }) {
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {currentAccount} = useSession()
   const [isProcessing, setIsProcessing] = React.useState(false)
   const membership = React.useMemo(
@@ -212,7 +212,7 @@ function ListItem({
               <Trans>User list by you</Trans>
             ) : (
               <Trans>
-                User list by {sanitizeHandle(list.creator.handle, '@')}
+                User list by {sanitizeHandle(i18n, list.creator.handle, '@')}
               </Trans>
             ))}
           {list.purpose === 'app.bsky.graph.defs#modlist' &&
@@ -220,7 +220,8 @@ function ListItem({
               <Trans>Moderation list by you</Trans>
             ) : (
               <Trans>
-                Moderation list by {sanitizeHandle(list.creator.handle, '@')}
+                Moderation list by{' '}
+                {sanitizeHandle(i18n, list.creator.handle, '@')}
               </Trans>
             ))}
         </Text>

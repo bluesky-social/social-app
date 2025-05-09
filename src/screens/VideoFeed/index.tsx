@@ -691,7 +691,7 @@ function Overlay({
   moderation: ModerationDecision
   feedContext: string | undefined
 }) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
   const {openComposer} = useOpenComposer()
   const {currentAccount} = useSession()
@@ -715,7 +715,7 @@ function Overlay({
     text: record?.text || '',
     facets: record?.facets,
   })
-  const handle = sanitizeHandle(post.author.handle, '@')
+  const handle = sanitizeHandle(i18n, post.author.handle, '@')
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: 1 - seekingAnimationSV.get(),
@@ -1007,7 +1007,7 @@ function PlayPauseTapArea({
   post: Shadow<AppBskyFeedDefs.PostView>
   feedContext: string | undefined
 }) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const doubleTapRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const playHaptic = useHaptics()
   const [queueLike] = usePostLikeMutationQueue(post, 'ImmersiveVideo')
@@ -1050,6 +1050,7 @@ function PlayPauseTapArea({
       }
       label={_(
         `Video from ${sanitizeHandle(
+          i18n,
           post.author.handle,
           '@',
         )}. Tap to play or pause the video`,

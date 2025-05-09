@@ -87,7 +87,7 @@ function ProfileCard() {
   const profiles = data?.profiles
   const signOutPromptControl = Prompt.usePromptControl()
   const {leftNavMinimal} = useLayoutBreakpoints()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
 
   const size = 48
@@ -170,7 +170,7 @@ function ProfileCard() {
                             t.atoms.text_contrast_medium,
                           ]}
                           numberOfLines={1}>
-                          {sanitizeHandle(profile.handle, '@')}
+                          {sanitizeHandle(i18n, profile.handle, '@')}
                         </Text>
                       </View>
                       <EllipsisIcon
@@ -225,7 +225,7 @@ function SwitchMenuItems({
     | undefined
   signOutPromptControl: DialogControlProps
 }) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeEverything = useCloseAllActiveElements()
@@ -249,6 +249,7 @@ function SwitchMenuItems({
                 key={other.account.did}
                 label={_(
                   msg`Switch to ${sanitizeHandle(
+                    i18n,
                     other.profile?.handle ?? other.account.handle,
                     '@',
                   )}`,
@@ -267,6 +268,7 @@ function SwitchMenuItems({
                 </View>
                 <Menu.ItemText>
                   {sanitizeHandle(
+                    i18n,
                     other.profile?.handle ?? other.account.handle,
                     '@',
                   )}

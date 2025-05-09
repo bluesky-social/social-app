@@ -363,12 +363,12 @@ function DefaultProfileCard({
   onPress: (did: string) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const enabled = canBeMessaged(profile)
   const moderation = moderateProfile(profile, moderationOpts)
-  const handle = sanitizeHandle(profile.handle, '@')
+  const handle = sanitizeHandle(i18n, profile.handle, '@')
   const displayName = sanitizeDisplayName(
-    profile.displayName || sanitizeHandle(profile.handle),
+    profile.displayName || sanitizeHandle(i18n, profile.handle),
     moderation.ui('displayName'),
   )
 

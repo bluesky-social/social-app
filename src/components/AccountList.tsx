@@ -108,7 +108,7 @@ function AccountItem({
   isPendingAccount: boolean
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const verification = useSimpleVerificationState({profile})
 
   const onPress = useCallback(() => {
@@ -163,7 +163,7 @@ function AccountItem({
               )}
             </View>
             <Text style={[a.leading_tight, t.atoms.text_contrast_medium]}>
-              {sanitizeHandle(account.handle, '@')}
+              {sanitizeHandle(i18n, account.handle, '@')}
             </Text>
           </View>
 

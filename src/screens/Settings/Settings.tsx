@@ -280,6 +280,7 @@ function ProfilePreview({
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
+  const {i18n} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const shadow = useProfileShadow(profile)
@@ -292,7 +293,7 @@ function ProfilePreview({
 
   const moderation = moderateProfile(profile, moderationOpts)
   const displayName = sanitizeDisplayName(
-    profile.displayName || sanitizeHandle(profile.handle),
+    profile.displayName || sanitizeHandle(i18n, profile.handle),
     moderation.ui('displayName'),
   )
 
@@ -337,7 +338,7 @@ function ProfilePreview({
         )}
       </View>
       <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
-        {sanitizeHandle(profile.handle, '@')}
+        {sanitizeHandle(i18n, profile.handle, '@')}
       </Text>
     </>
   )
@@ -462,7 +463,7 @@ function AccountRow({
     logContext: 'Settings',
   ) => void
 }) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
 
   const moderationOpts = useModerationOpts()
@@ -490,7 +491,7 @@ function AccountRow({
           <View style={[{width: 28}]} />
         )}
         <SettingsList.ItemText>
-          {sanitizeHandle(account.handle, '@')}
+          {sanitizeHandle(i18n, account.handle, '@')}
         </SettingsList.ItemText>
         {pendingDid === account.did && <SettingsList.ItemIcon icon={Loader} />}
       </SettingsList.PressableItem>

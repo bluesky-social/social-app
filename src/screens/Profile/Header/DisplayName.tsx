@@ -1,5 +1,6 @@
 import {View} from 'react-native'
 import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
+import {useLingui} from '@lingui/react'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -16,6 +17,7 @@ export function ProfileHeaderDisplayName({
 }) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
+  const {i18n} = useLingui()
 
   return (
     <View pointerEvents="none">
@@ -29,7 +31,7 @@ export function ProfileHeaderDisplayName({
           a.font_heavy,
         ]}>
         {sanitizeDisplayName(
-          profile.displayName || sanitizeHandle(profile.handle),
+          profile.displayName || sanitizeHandle(i18n, profile.handle),
           moderation.ui('displayName'),
         )}
       </Text>

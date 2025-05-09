@@ -212,7 +212,7 @@ export function Explore({
   focusSearchInput: (tab: 'user' | 'profile' | 'feed') => void
   headerHeight: number
 }) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
   const {data: preferences, error: preferencesError} = usePreferencesQuery()
   const moderationOpts = useModerationOpts()
@@ -851,7 +851,7 @@ export function Explore({
                   </ModuleHeader.TitleText>
                   <ModuleHeader.SubtitleText>
                     <Trans>
-                      By {sanitizeHandle(item.feed.creator.handle, '@')}
+                      By {sanitizeHandle(i18n, item.feed.creator.handle, '@')}
                     </Trans>
                   </ModuleHeader.SubtitleText>
                 </View>
@@ -923,6 +923,7 @@ export function Explore({
       selectedInterest,
       interestsDisplayNames,
       _,
+      i18n,
       fetchNextPageFeedPreviews,
     ],
   )

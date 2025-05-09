@@ -294,7 +294,7 @@ function ProvidedHandlePage({
 }
 
 function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
   const [dnsPanel, setDNSPanel] = useState(true)
@@ -513,7 +513,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
             <Trans>
               Your current handle{' '}
               <Text style={[a.font_bold]}>
-                {sanitizeHandle(currentAccount?.handle || '', '@')}
+                {sanitizeHandle(i18n, currentAccount?.handle || '', '@')}
               </Text>{' '}
               will automatically remain reserved for you. You can switch back to
               it at any time from this account.

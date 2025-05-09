@@ -10,6 +10,7 @@ import {
   ModerationOpts,
 } from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {I18n} from '@lingui/core'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
@@ -145,7 +146,7 @@ function WizardInner({
   moderationOpts: ModerationOpts
 }) {
   const navigation = useNavigation<NavigationProp>()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const [state, dispatch] = useWizardState()
   const {currentAccount} = useSession()
@@ -174,7 +175,7 @@ function WizardInner({
   )
 
   const getDefaultName = () => {
-    const displayName = createSanitizedDisplayName(currentProfile!, true)
+    const displayName = createSanitizedDisplayName(i18n, currentProfile!, true)
     return _(msg`${displayName}'s Starter Pack`).slice(0, 50)
   }
 
@@ -365,7 +366,7 @@ function Footer({
   moderationOpts: ModerationOpts
   profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
   const [state, dispatch] = useWizardState()
   const editDialogControl = useDialogControl()
@@ -441,17 +442,17 @@ function Footer({
                   <Text style={[a.font_bold, textStyles]}>You</Text> and
                   <Text> </Text>
                   <Text style={[a.font_bold, textStyles]} emoji>
-                    {getName(items[1] /* [0] is self, skip it */)}{' '}
+                    {getName(i18n, items[1] /* [0] is self, skip it */)}{' '}
                   </Text>
                   are included in your starter pack
                 </Trans>
               ) : items.length > 2 ? (
                 <Trans context="profiles">
                   <Text style={[a.font_bold, textStyles]} emoji>
-                    {getName(items[1] /* [0] is self, skip it */)},{' '}
+                    {getName(i18n, items[1] /* [0] is self, skip it */)},{' '}
                   </Text>
                   <Text style={[a.font_bold, textStyles]} emoji>
-                    {getName(items[2])},{' '}
+                    {getName(i18n, items[2])},{' '}
                   </Text>
                   and{' '}
                   <Plural
@@ -482,29 +483,29 @@ function Footer({
                 items.length === 1 ? (
                   <Trans>
                     <Text style={[a.font_bold, textStyles]} emoji>
-                      {getName(items[0])}
+                      {getName(i18n, items[0])}
                     </Text>{' '}
                     is included in your starter pack
                   </Trans>
                 ) : items.length === 2 ? (
                   <Trans>
                     <Text style={[a.font_bold, textStyles]} emoji>
-                      {getName(items[0])}
+                      {getName(i18n, items[0])}
                     </Text>{' '}
                     and
                     <Text> </Text>
                     <Text style={[a.font_bold, textStyles]} emoji>
-                      {getName(items[1])}{' '}
+                      {getName(i18n, items[1])}{' '}
                     </Text>
                     are included in your starter pack
                   </Trans>
                 ) : items.length > 2 ? (
                   <Trans context="feeds">
                     <Text style={[a.font_bold, textStyles]} emoji>
-                      {getName(items[0])},{' '}
+                      {getName(i18n, items[0])},{' '}
                     </Text>
                     <Text style={[a.font_bold, textStyles]} emoji>
-                      {getName(items[1])},{' '}
+                      {getName(i18n, items[1])},{' '}
                     </Text>
                     and{' '}
                     <Plural
@@ -577,11 +578,11 @@ function Footer({
   )
 }
 
-function getName(item: bsky.profile.AnyProfileView | GeneratorView) {
+function getName(i18n: I18n, item: bsky.profile.AnyProfileView | GeneratorView) {
   if (typeof item.displayName === 'string') {
     return enforceLen(sanitizeDisplayName(item.displayName), 28, true)
   } else if ('handle' in item && typeof item.handle === 'string') {
-    return enforceLen(sanitizeHandle(item.handle), 28, true)
+    return enforceLen(sanitizeHandle(i18n, item.handle), 28, true)
   }
   return ''
 }

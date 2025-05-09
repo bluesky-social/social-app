@@ -133,7 +133,7 @@ export function useModerationCauseDescription(
       const strings = getLabelStrings(i18n.locale, globalLabelStrings, def)
       const labeler = labelers.find(l => l.creator.did === cause.label.src)
       let source = labeler
-        ? sanitizeHandle(labeler.creator.handle, '@')
+        ? sanitizeHandle(i18n, labeler.creator.handle, '@')
         : undefined
       let sourceDisplayName = labeler?.creator.displayName
       if (!source) {
@@ -176,7 +176,7 @@ export function useModerationCauseDescription(
     globalLabelStrings,
     cause,
     _,
-    i18n.locale,
+    i18n,
     currentAccount?.did,
   ])
 }

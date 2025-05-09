@@ -624,11 +624,12 @@ function LabelerCard({
   onSelect?: (option: AppBskyLabelerDefs.LabelerViewDetailed) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const onPress = React.useCallback(() => {
     onSelect?.(labeler)
   }, [onSelect, labeler])
   const title = getLabelingServiceTitle({
+    i18n: i18n,
     displayName: labeler.creator.displayName,
     handle: labeler.creator.handle,
   })
@@ -669,7 +670,9 @@ function LabelerCard({
                 a.leading_snug,
                 t.atoms.text_contrast_medium,
               ]}>
-              <Trans>By {sanitizeHandle(labeler.creator.handle, '@')}</Trans>
+              <Trans>
+                By {sanitizeHandle(i18n, labeler.creator.handle, '@')}
+              </Trans>
             </Text>
           </View>
         </View>

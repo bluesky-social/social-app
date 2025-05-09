@@ -477,7 +477,7 @@ function Inner({
               numberOfLines={1}
               style={[a.text_lg, a.font_bold, a.self_start]}>
               {sanitizeDisplayName(
-                profile.displayName || sanitizeHandle(profile.handle),
+                profile.displayName || sanitizeHandle(i18n, profile.handle),
                 moderation.ui('displayName'),
               )}
             </Text>

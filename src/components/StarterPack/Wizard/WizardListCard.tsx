@@ -128,6 +128,7 @@ export function WizardProfileCard({
   moderationOpts: ModerationOpts
 }) {
   const {currentAccount} = useSession()
+  const {i18n} = useLingui()
 
   const isMe = profile.did === currentAccount?.did
   const included = isMe || state.profiles.some(p => p.did === profile.did)
@@ -136,7 +137,7 @@ export function WizardProfileCard({
   const moderationUi = moderateProfile(profile, moderationOpts).ui('avatar')
   const displayName = profile.displayName
     ? sanitizeDisplayName(profile.displayName)
-    : `@${sanitizeHandle(profile.handle)}`
+    : `@${sanitizeHandle(i18n, profile.handle)}`
 
   const onPress = () => {
     if (disabled) return
@@ -156,7 +157,7 @@ export function WizardProfileCard({
       type="user"
       btnType={btnType}
       displayName={displayName}
-      subtitle={`@${sanitizeHandle(profile.handle)}`}
+      subtitle={`@${sanitizeHandle(i18n, profile.handle)}`}
       onPress={onPress}
       avatar={profile.avatar}
       included={included}
@@ -185,6 +186,7 @@ export function WizardFeedCard({
   const moderationUi = moderateFeedGenerator(generator, moderationOpts).ui(
     'avatar',
   )
+  const {i18n} = useLingui()
 
   const onPress = () => {
     if (disabled) return
@@ -202,7 +204,7 @@ export function WizardFeedCard({
       type="algo"
       btnType={btnType}
       displayName={sanitizeDisplayName(generator.displayName)}
-      subtitle={`Feed by @${sanitizeHandle(generator.creator.handle)}`}
+      subtitle={`Feed by @${sanitizeHandle(i18n, generator.creator.handle)}`}
       onPress={onPress}
       avatar={generator.avatar}
       included={included}

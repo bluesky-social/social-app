@@ -22,7 +22,7 @@ import {VerificationCheck} from '#/components/verification/VerificationCheck'
 
 export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {embed} = replyTo
 
   const [showFull, setShowFull] = useState(false)
@@ -99,7 +99,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
             emoji>
             {sanitizeDisplayName(
               replyTo.author.displayName ||
-                sanitizeHandle(replyTo.author.handle),
+                sanitizeHandle(i18n, replyTo.author.handle),
             )}
           </Text>
           {verification.showBadge && (
