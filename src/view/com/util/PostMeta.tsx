@@ -77,6 +77,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             moderation={opts.moderation?.ui('avatar')}
             type={author.associated?.labeler ? 'labeler' : 'user'}
             live={live}
+            hideLiveBadge
           />
         </View>
       )}
