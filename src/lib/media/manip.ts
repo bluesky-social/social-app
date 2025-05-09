@@ -95,6 +95,8 @@ export async function shareImageModal({uri}: {uri: string}) {
   })
 }
 
+const ALBUM_NAME = 'Bluesky'
+
 export async function saveImageToMediaLibrary({uri}: {uri: string}) {
   // download the file to cache
   // NOTE
@@ -103,8 +105,35 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
   // -prf
   const imageUri = await downloadImage(uri, createPath('png'), 5e3)
   const imagePath = await moveToPermanentPath(imageUri, '.png')
-  safeDeleteAsync(imageUri)
-  MediaLibrary.createAssetAsync(imagePath)
+  // save
+  try {
+    if (isAndroid) {
+      // android triggers an annoying permission prompt if you try and move an image
+      // between albums. therefore, we need to either create the album with the image
+      // as the starting image, or put it directly into the album
+      const album = await MediaLibrary.getAlbumAsync(ALBUM_NAME)
+      if (album) {
+        // if album exists, put the image straight in there
+        await MediaLibrary.createAssetAsync(imagePath, album)
+      } else {
+        // otherwise, create album with asset (albums must always have at least one asset)
+        await MediaLibrary.createAlbumAsync(
+          ALBUM_NAME,
+          undefined,
+          undefined,
+          imagePath,
+        )
+      }
+    } else {
+      await MediaLibrary.createAssetAsync(imagePath)
+    }
+  } catch (err) {
+    logger.error(err instanceof Error ? err : String(err), {
+      message: 'Failed to save image to media library',
+    })
+  } finally {
+    safeDeleteAsync(imagePath)
+  }
 }
 
 export function getImageDim(path: string): Promise<Dimensions> {

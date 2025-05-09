@@ -41,7 +41,7 @@ export function Lightbox() {
       }
       try {
         await saveImageToMediaLibrary({uri})
-        Toast.show(_(msg`Saved to your camera roll`))
+        Toast.show(_(msg`Image saved`))
       } catch (e: any) {
         Toast.show(_(msg`Failed to save image: ${String(e)}`), 'xmark')
       }

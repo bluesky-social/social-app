@@ -44,7 +44,7 @@ export async function shareImageModal(_opts: {uri: string}) {
   throw new Error('TODO')
 }
 
-export async function saveImageToAlbum(_opts: {uri: string; album: string}) {
+export async function saveImageToMediaLibrary(_opts: {uri: string}) {
   // TODO
   throw new Error('TODO')
 }
