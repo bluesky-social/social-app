@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {HITSLOP_20} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -40,6 +41,7 @@ import {
 } from '#/components/icons/Person'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
+import {EditLiveDialog} from '#/components/live/EditLiveDialog'
 import {GoLiveDialog} from '#/components/live/GoLiveDialog'
 import {temp__canGoLive} from '#/components/live/temp'
 import * as Menu from '#/components/Menu'
@@ -206,6 +208,8 @@ let ProfileMenu = ({
       return v.issuer === currentAccount?.did
     }) ?? []
 
+  const status = useActorStatus(profile)
+
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
@@ -298,10 +302,18 @@ let ProfileMenu = ({
                 {isSelf && temp__canGoLive(profile) && (
                   <Menu.Item
                     testID="profileHeaderDropdownListAddRemoveBtn"
-                    label={_(msg`Go live`)}
+                    label={
+                      status.isActive
+                        ? _(msg`Edit live status`)
+                        : _(msg`Go live`)
+                    }
                     onPress={goLiveDialogControl.open}>
                     <Menu.ItemText>
-                      <Trans>Go live</Trans>
+                      {status.isActive ? (
+                        <Trans>Edit live status</Trans>
+                      ) : (
+                        <Trans>Go live</Trans>
+                      )}
                     </Menu.ItemText>
                     <Menu.ItemIcon icon={LiveIcon} />
                   </Menu.Item>
@@ -473,7 +485,15 @@ let ProfileMenu = ({
         verifications={currentAccountVerifications}
       />
 
-      <GoLiveDialog control={goLiveDialogControl} profile={profile} />
+      {status.isActive ? (
+        <EditLiveDialog
+          control={goLiveDialogControl}
+          status={status}
+          embed={status.embed}
+        />
+      ) : (
+        <GoLiveDialog control={goLiveDialogControl} profile={profile} />
+      )}
     </EventStopper>
   )
 }
