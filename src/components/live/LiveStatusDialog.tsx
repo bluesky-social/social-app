@@ -14,7 +14,7 @@ import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {unstableCacheProfileView} from '#/state/queries/profile'
-import {android, atoms as a, platform, tokens, useTheme} from '#/alf'
+import {android, atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -66,7 +66,8 @@ function DialogInner({
   return (
     <Dialog.ScrollableInner
       label={_(msg`${sanitizeHandle(profile.handle)} is live`)}
-      contentContainerStyle={[a.pt_0, a.px_0]}>
+      contentContainerStyle={[a.pt_0, a.px_0]}
+      style={[web({maxWidth: 420}), a.overflow_hidden]}>
       <LiveStatus
         profile={profile}
         embed={embed}
@@ -172,10 +173,13 @@ export function LiveStatus({
               profile={profile}
               moderationOpts={moderationOpts}
             />
-            <ProfileCard.NameAndHandle
-              profile={profile}
-              moderationOpts={moderationOpts}
-            />
+            {/* Ensure wide enough on web hover */}
+            <View style={[a.flex_1, web({minWidth: 100})]}>
+              <ProfileCard.NameAndHandle
+                profile={profile}
+                moderationOpts={moderationOpts}
+              />
+            </View>
             <Button
               label={_(msg`Open profile`)}
               size="small"
