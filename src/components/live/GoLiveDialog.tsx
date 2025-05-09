@@ -8,6 +8,7 @@ import {useQuery} from '@tanstack/react-query'
 import {getLinkMeta} from '#/lib/link-meta/link-meta'
 import {cleanError} from '#/lib/strings/errors'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
+import {definitelyUrl} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent} from '#/state/session'
 import {useTickEveryMinute} from '#/state/shell'
@@ -347,34 +348,4 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )
-}
-
-// passes URL.parse, and has a TLD etc
-function definitelyUrl(maybeUrl: string) {
-  try {
-    if (maybeUrl.endsWith('.')) return null
-
-    // Prepend 'https://' if the input doesn't start with a protocol
-    if (!maybeUrl.startsWith('https://') && !maybeUrl.startsWith('http://')) {
-      maybeUrl = 'https://' + maybeUrl
-    }
-
-    const url = new URL(maybeUrl)
-
-    // Extract the hostname and split it into labels
-    const hostname = url.hostname
-    const labels = hostname.split('.')
-
-    // Ensure there are at least two labels (e.g., 'example' and 'com')
-    if (labels.length < 2) return null
-
-    const tld = labels[labels.length - 1]
-
-    // Check that the TLD is at least two characters long and contains only letters
-    if (!/^[a-z]{2,}$/i.test(tld)) return null
-
-    return url.toString()
-  } catch {
-    return null
-  }
 }
