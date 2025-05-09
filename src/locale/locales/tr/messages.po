@@ -9497,4 +9497,4 @@ msgstr "Seçtiğiniz ilgi alanları, önemsediğiniz içerikleri size sunmamıza
 
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
-msgstr ""
+msgstr "Doğrulamalarınız"
