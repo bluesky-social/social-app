@@ -14,7 +14,7 @@ import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {unstableCacheProfileView} from '#/state/queries/profile'
-import {atoms as a, platform, tokens, useTheme} from '#/alf'
+import {android, atoms as a, platform, tokens, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -97,7 +97,19 @@ export function LiveStatus({
   return (
     <>
       {embed.external.thumb && (
-        <View style={[t.atoms.bg_contrast_25, a.w_full, {aspectRatio: 1.91}]}>
+        <View
+          style={[
+            t.atoms.bg_contrast_25,
+            a.w_full,
+            {aspectRatio: 1.91},
+            android([
+              a.overflow_hidden,
+              {
+                borderTopLeftRadius: a.rounded_md.borderRadius,
+                borderTopRightRadius: a.rounded_md.borderRadius,
+              },
+            ]),
+          ]}>
           <Image
             source={embed.external.thumb}
             contentFit="cover"
