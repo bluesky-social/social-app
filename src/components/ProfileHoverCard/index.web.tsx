@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyActorDefs,
@@ -363,6 +363,14 @@ let Card = ({
 
   const status = useActorStatus(data)
 
+  const onPressOpenProfile = useCallback(() => {
+    if (!status.isActive || !data) return
+    hide()
+    navigation.push('Profile', {
+      name: data.handle,
+    })
+  }, [hide, navigation, status, data])
+
   return (
     <View
       style={[
@@ -381,8 +389,8 @@ let Card = ({
           <LiveStatus
             profile={data}
             embed={status.embed}
-            navigation={navigation}
             padding="lg"
+            onPressOpenProfile={onPressOpenProfile}
           />
         ) : (
           <Inner profile={data} moderationOpts={moderationOpts} hide={hide} />

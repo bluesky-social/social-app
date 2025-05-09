@@ -1,3 +1,4 @@
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {type AppBskyActorDefs, type AppBskyEmbedExternal} from '@atproto/api'
@@ -52,12 +53,25 @@ function DialogInner({
   navigation: NavigationProp
 }) {
   const {_} = useLingui()
+  const control = Dialog.useDialogContext()
+
+  const onPressOpenProfile = useCallback(() => {
+    control.close(() => {
+      navigation.push('Profile', {
+        name: profile.handle,
+      })
+    })
+  }, [navigation, profile.handle, control])
 
   return (
     <Dialog.ScrollableInner
       label={_(msg`${sanitizeHandle(profile.handle)} is live`)}
       contentContainerStyle={[a.pt_0, a.px_0]}>
-      <LiveStatus profile={profile} embed={embed} navigation={navigation} />
+      <LiveStatus
+        profile={profile}
+        embed={embed}
+        onPressOpenProfile={onPressOpenProfile}
+      />
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )
@@ -66,18 +80,17 @@ function DialogInner({
 export function LiveStatus({
   profile,
   embed,
-  navigation,
   padding = 'xl',
+  onPressOpenProfile,
 }: {
   profile: bsky.profile.AnyProfileView
   embed: AppBskyEmbedExternal.View
-  navigation: NavigationProp
   padding?: 'lg' | 'xl'
+  onPressOpenProfile: () => void
 }) {
   const {_} = useLingui()
   const t = useTheme()
   const queryClient = useQueryClient()
-  const control = Dialog.useDialogContext()
   const openLink = useOpenLink()
   const moderationOpts = useModerationOpts()
 
@@ -101,7 +114,13 @@ export function LiveStatus({
           />
         </View>
       )}
-      <View style={[a.gap_lg, a.pt_lg, padding === 'xl' ? a.px_xl : a.p_lg]}>
+      <View
+        style={[
+          a.gap_lg,
+          padding === 'xl'
+            ? [a.px_xl, embed.external.thumb ? a.pt_2xl : a.pt_lg]
+            : a.p_lg,
+        ]}>
         <View style={[a.flex_1, a.justify_center, a.gap_2xs]}>
           <Text
             numberOfLines={3}
@@ -152,12 +171,8 @@ export function LiveStatus({
               variant="solid"
               onPress={() => {
                 logger.metric('live:card:openProfile', {subject: profile.did})
-                control.close(() => {
-                  unstableCacheProfileView(queryClient, profile)
-                  navigation.push('Profile', {
-                    name: profile.handle,
-                  })
-                })
+                unstableCacheProfileView(queryClient, profile)
+                onPressOpenProfile()
               }}>
               <ButtonText>
                 <Trans>Open profile</Trans>

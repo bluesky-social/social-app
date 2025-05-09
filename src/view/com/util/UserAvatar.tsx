@@ -230,7 +230,8 @@ let UserAvatar = ({
       {borderRadius: aviStyle.borderRadius},
       live && {
         borderColor: t.palette.negative_500,
-        borderWidth: 1,
+        borderWidth: 2,
+        opacity: 1,
       },
     ]
   }, [aviStyle.borderRadius, live, t])
@@ -528,7 +529,7 @@ let PreviewableUserAvatar = ({
       avatar={profile.avatar}
       moderation={moderation}
       type={profile.associated?.labeler ? 'labeler' : 'user'}
-      live={status.isActive ?? live}
+      live={status.isActive || live}
       {...rest}
     />
   )
