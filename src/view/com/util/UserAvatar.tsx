@@ -233,11 +233,11 @@ let UserAvatar = ({
       {borderRadius: aviStyle.borderRadius},
       live && {
         borderColor: t.palette.negative_500,
-        borderWidth: 2,
+        borderWidth: size > 16 ? 2 : 1,
         opacity: 1,
       },
     ]
-  }, [aviStyle.borderRadius, live, t])
+  }, [aviStyle.borderRadius, live, t, size])
 
   const alert = useMemo(() => {
     if (!moderation?.alert) {
