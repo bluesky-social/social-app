@@ -27,6 +27,9 @@ export const atoms = {
   relative: {
     position: 'relative',
   },
+  static: {
+    position: 'static',
+  },
   sticky: web({
     position: 'sticky',
   }),

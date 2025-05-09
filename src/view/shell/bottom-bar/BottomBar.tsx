@@ -7,6 +7,7 @@ import {useLingui} from '@lingui/react'
 import {type BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {StackActions} from '@react-navigation/native'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {BOTTOM_BAR_AVI} from '#/lib/demo'
 import {useHaptics} from '#/lib/haptics'
@@ -127,6 +128,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   }, [accountSwitchControl, playHaptic])
 
   const [demoMode] = useDemoMode()
+  const {isActive: live} = useActorStatus(profile)
 
   return (
     <>
@@ -260,25 +262,39 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                         pal.text,
                         styles.profileIcon,
                         styles.onProfile,
-                        {borderColor: pal.text.color},
+                        {
+                          borderColor: pal.text.color,
+                          borderWidth: live ? 0 : 1,
+                        },
                       ]}>
                       <UserAvatar
                         avatar={demoMode ? BOTTOM_BAR_AVI : profile?.avatar}
-                        size={iconWidth - 3}
+                        size={iconWidth - 2}
                         // See https://github.com/bluesky-social/social-app/pull/1801:
                         usePlainRNImage={true}
                         type={profile?.associated?.labeler ? 'labeler' : 'user'}
+                        live={live}
+                        hideLiveBadge
                       />
                     </View>
                   ) : (
                     <View
-                      style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
+                      style={[
+                        styles.ctrlIcon,
+                        pal.text,
+                        styles.profileIcon,
+                        {
+                          borderWidth: live ? 0 : 1,
+                        },
+                      ]}>
                       <UserAvatar
                         avatar={demoMode ? BOTTOM_BAR_AVI : profile?.avatar}
-                        size={iconWidth - 3}
+                        size={iconWidth - 2}
                         // See https://github.com/bluesky-social/social-app/pull/1801:
                         usePlainRNImage={true}
                         type={profile?.associated?.labeler ? 'labeler' : 'user'}
+                        live={live}
+                        hideLiveBadge
                       />
                     </View>
                   )}

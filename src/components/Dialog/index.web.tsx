@@ -195,13 +195,7 @@ export function Inner({
           onDismiss={close}
           style={{display: 'flex', flexDirection: 'column'}}>
           {header}
-          <View
-            style={[
-              gtMobile ? a.p_2xl : a.p_xl,
-              a.overflow_hidden,
-              a.rounded_md,
-              contentContainerStyle,
-            ]}>
+          <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
             {children}
           </View>
         </DismissableLayer.DismissableLayer>
