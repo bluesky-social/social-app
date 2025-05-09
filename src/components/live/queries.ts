@@ -106,7 +106,7 @@ export function useUpsertLiveStatusMutation(
       control.close(() => {
         if (!currentAccount) return
 
-        const expiresAt = new Date()
+        const expiresAt = new Date(record.createdAt)
         expiresAt.setMinutes(expiresAt.getMinutes() + record.durationMinutes)
 
         updateProfileShadow(queryClient, currentAccount.did, {

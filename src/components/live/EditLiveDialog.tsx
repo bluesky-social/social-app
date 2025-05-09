@@ -86,11 +86,11 @@ function DialogInner({
     },
   })
 
-  const duration = useMemo(() => {
+  const record = useMemo(() => {
     if (!AppBskyActorStatus.isRecord(status.record)) return null
     const validation = AppBskyActorStatus.validateRecord(status.record)
     if (validation.success) {
-      return validation.value.durationMinutes ?? null
+      return validation.value
     }
     return null
   }, [status])
@@ -99,7 +99,11 @@ function DialogInner({
     mutate: goLive,
     isPending: isGoingLive,
     error: goLiveError,
-  } = useUpsertLiveStatusMutation(duration ?? 0, linkMeta)
+  } = useUpsertLiveStatusMutation(
+    record?.durationMinutes ?? 0,
+    linkMeta,
+    record?.createdAt,
+  )
 
   const {
     mutate: removeLiveStatus,
@@ -130,7 +134,7 @@ function DialogInner({
             <ClockIcon style={[t.atoms.text_contrast_high]} size="sm" />
             <Text
               style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
-              {typeof duration === 'number' ? (
+              {typeof record?.durationMinutes === 'number' ? (
                 <Trans>
                   Expires in {displayDuration(i18n, minutesUntilExpiry)} at{' '}
                   {i18n.date(expiryDateTime, {
