@@ -23,8 +23,11 @@ import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
 import {atoms as a, platform, useTheme} from '#/alf'
+import {useDialogControl} from '#/components/Dialog'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
+import {EditLiveDialog} from '#/components/live/EditLiveDialog'
 import {LiveIndicator} from '#/components/live/LiveIndicator'
+import {LiveStatusDialog} from '#/components/live/LiveStatusDialog'
 import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
 import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
 import {GrowableAvatar} from './GrowableAvatar'
@@ -51,6 +54,7 @@ let ProfileHeaderShell = ({
   const {openLightbox} = useLightboxControls()
   const navigation = useNavigation<NavigationProp>()
   const {top: topInset} = useSafeAreaInsets()
+  const liveStatusControl = useDialogControl()
 
   const aviRef = useHandleRef()
 
@@ -85,25 +89,29 @@ let ProfileHeaderShell = ({
     [openLightbox],
   )
 
-  const onPressAvi = React.useCallback(() => {
-    const modui = moderation.ui('avatar')
-    const avatar = profile.avatar
-    if (avatar && !(modui.blur && modui.noOverride)) {
-      const aviHandle = aviRef.current
-      runOnUI(() => {
-        'worklet'
-        const rect = measureHandle(aviHandle)
-        runOnJS(_openLightbox)(avatar, rect)
-      })()
-    }
-  }, [profile, moderation, _openLightbox, aviRef])
-
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )
 
-  const {isActive: live} = useActorStatus(profile)
+  const live = useActorStatus(profile)
+
+  const onPressAvi = React.useCallback(() => {
+    if (live.isActive) {
+      liveStatusControl.open()
+    } else {
+      const modui = moderation.ui('avatar')
+      const avatar = profile.avatar
+      if (avatar && !(modui.blur && modui.noOverride)) {
+        const aviHandle = aviRef.current
+        runOnUI(() => {
+          'worklet'
+          const rect = measureHandle(aviHandle)
+          runOnJS(_openLightbox)(avatar, rect)
+        })()
+      }
+    }
+  }, [profile, moderation, _openLightbox, aviRef, liveStatusControl, live])
 
   return (
     <View style={t.atoms.bg} pointerEvents={isIOS ? 'auto' : 'box-none'}>
@@ -180,8 +188,8 @@ let ProfileHeaderShell = ({
               t.atoms.bg,
               a.rounded_full,
               {
-                borderWidth: live ? 3 : 2,
-                borderColor: live
+                borderWidth: live.isActive ? 3 : 2,
+                borderColor: live.isActive
                   ? t.palette.negative_500
                   : t.atoms.bg.backgroundColor,
               },
@@ -191,15 +199,31 @@ let ProfileHeaderShell = ({
             <View ref={aviRef} collapsable={false}>
               <UserAvatar
                 type={profile.associated?.labeler ? 'labeler' : 'user'}
-                size={live ? 88 : 90}
+                size={live.isActive ? 88 : 90}
                 avatar={profile.avatar}
                 moderation={moderation.ui('avatar')}
               />
-              {live && <LiveIndicator size="large" />}
+              {live.isActive && <LiveIndicator size="large" />}
             </View>
           </View>
         </TouchableWithoutFeedback>
       </GrowableAvatar>
+
+      {live.isActive &&
+        (isMe ? (
+          <EditLiveDialog
+            control={liveStatusControl}
+            status={live}
+            embed={live.embed}
+          />
+        ) : (
+          <LiveStatusDialog
+            control={liveStatusControl}
+            status={live}
+            embed={live.embed}
+            profile={profile}
+          />
+        ))}
     </View>
   )
 }

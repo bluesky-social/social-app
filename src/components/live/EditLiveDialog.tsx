@@ -1,84 +1,76 @@
-import {useCallback, useState} from 'react'
+import {useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
+import {
+  type AppBskyActorDefs,
+  AppBskyActorStatus,
+  type AppBskyEmbedExternal,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQuery} from '@tanstack/react-query'
+import {differenceInMinutes} from 'date-fns'
 
 import {getLinkMeta} from '#/lib/link-meta/link-meta'
 import {cleanError} from '#/lib/strings/errors'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent} from '#/state/session'
 import {useTickEveryMinute} from '#/state/shell'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {atoms as a, ios, native, platform, useTheme, web} from '#/alf'
+import {atoms as a, platform, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {CircleX_Stroke2_Corner0_Rounded as CircleXIcon} from '#/components/icons/CircleX'
+import {Clock_Stroke2_Corner0_Rounded as ClockIcon} from '#/components/icons/Clock'
 import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {Loader} from '#/components/Loader'
-import * as ProfileCard from '#/components/ProfileCard'
-import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
-import type * as bsky from '#/types/bsky'
-import {useUpsertLiveStatusMutation} from './queries'
+import {
+  useRemoveLiveStatusMutation,
+  useUpsertLiveStatusMutation,
+} from './queries'
 import {displayDuration, useDebouncedValue} from './utils'
 
-export function GoLiveDialog({
+export function EditLiveDialog({
   control,
-  profile,
+  status,
+  embed,
 }: {
   control: Dialog.DialogControlProps
-  profile: bsky.profile.AnyProfileView
+  status: AppBskyActorDefs.StatusView
+  embed: AppBskyEmbedExternal.View
 }) {
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
-      <DialogInner profile={profile} />
+      <DialogInner status={status} embed={embed} />
     </Dialog.Outer>
   )
 }
 
-// Possible durations: max 4 hours, 5 minute intervals
-const DURATIONS = Array.from({length: (4 * 60) / 5}).map((_, i) => (i + 1) * 5)
-
-function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
+function DialogInner({
+  status,
+  embed,
+}: {
+  status: AppBskyActorDefs.StatusView
+  embed: AppBskyEmbedExternal.View
+}) {
   const control = Dialog.useDialogContext()
   const {_, i18n} = useLingui()
   const t = useTheme()
   const agent = useAgent()
-  const [liveLink, setLiveLink] = useState('')
+  const [liveLink, setLiveLink] = useState(embed.external.uri)
   const [liveLinkError, setLiveLinkError] = useState('')
   const [imageLoadError, setImageLoadError] = useState(false)
-  const [duration, setDuration] = useState(60)
-  const moderationOpts = useModerationOpts()
   const tick = useTickEveryMinute()
-
-  const time = useCallback(
-    (offset: number) => {
-      tick!
-
-      const date = new Date()
-      date.setMinutes(date.getMinutes() + offset)
-      return i18n
-        .date(date, {hour: 'numeric', minute: '2-digit', hour12: true})
-        .toLocaleUpperCase()
-        .replace(' ', '')
-    },
-    [tick, i18n],
-  )
-
-  const onChangeDuration = useCallback((newDuration: string) => {
-    setDuration(Number(newDuration))
-  }, [])
 
   const liveLinkUrl = definitelyUrl(liveLink)
   const debouncedUrl = useDebouncedValue(liveLinkUrl, 500)
-  const hasLink = !!debouncedUrl
+
+  const isDirty = liveLinkUrl !== embed.external.uri
 
   const {
     data: linkMeta,
@@ -94,40 +86,65 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
     },
   })
 
+  const duration = useMemo(() => {
+    if (!AppBskyActorStatus.isRecord(status.record)) return null
+    const validation = AppBskyActorStatus.validateRecord(status.record)
+    if (validation.success) {
+      return validation.value.durationMinutes ?? null
+    }
+    return null
+  }, [status])
+
   const {
     mutate: goLive,
     isPending: isGoingLive,
     error: goLiveError,
-  } = useUpsertLiveStatusMutation(duration, linkMeta)
+  } = useUpsertLiveStatusMutation(duration ?? 0, linkMeta)
+
+  const {
+    mutate: removeLiveStatus,
+    isPending: isRemovingLiveStatus,
+    error: removeLiveStatusError,
+  } = useRemoveLiveStatusMutation()
+
+  const {minutesUntilExpiry, expiryDateTime} = useMemo(() => {
+    tick!
+
+    const expiry = new Date(status.expiresAt ?? new Date())
+    return {
+      expiryDateTime: expiry,
+      minutesUntilExpiry: differenceInMinutes(expiry, new Date()),
+    }
+  }, [tick, status.expiresAt])
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`Go Live`)}
+      label={_(msg`You are Live`)}
       style={web({maxWidth: 420})}>
       <View style={[a.gap_lg]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_bold, a.text_2xl]}>
-            <Trans>Go Live</Trans>
+            <Trans>You are Live</Trans>
           </Text>
-          <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
-            Add a live status to your profile photo for a set time period. Your
-            status will change to live immediately as you post and can be
-            changed at any time.
-          </Text>
+          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+            <ClockIcon style={[t.atoms.text_contrast_high]} size="sm" />
+            <Text
+              style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
+              {typeof duration === 'number' ? (
+                <Trans>
+                  Expires in {displayDuration(i18n, minutesUntilExpiry)} at{' '}
+                  {i18n.date(expiryDateTime, {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true,
+                  })}
+                </Trans>
+              ) : (
+                <Trans>No expiry set</Trans>
+              )}
+            </Text>
+          </View>
         </View>
-        {moderationOpts && (
-          <ProfileCard.Header>
-            <ProfileCard.Avatar
-              profile={profile}
-              moderationOpts={moderationOpts}
-              liveOverride
-            />
-            <ProfileCard.NameAndHandle
-              profile={profile}
-              moderationOpts={moderationOpts}
-            />
-          </ProfileCard.Header>
-        )}
         <View style={[a.gap_sm]}>
           <View>
             <TextField.LabelText>
@@ -256,58 +273,13 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
           )}
         </View>
 
-        {hasLink && (
-          <View>
-            <TextField.LabelText>
-              <Trans>Go live for</Trans>
-            </TextField.LabelText>
-            <Select.Root
-              value={String(duration)}
-              onValueChange={onChangeDuration}>
-              <Select.Trigger label={_(msg`Select duration`)}>
-                <Text style={[ios(a.py_xs)]}>
-                  {displayDuration(i18n, duration)}
-                  {'  '}
-                  <Text style={[t.atoms.text_contrast_low]}>
-                    {time(duration)}
-                  </Text>
-                </Text>
-
-                <Select.Icon />
-              </Select.Trigger>
-              <Select.Content
-                renderItem={(item, _i, selectedValue) => {
-                  const label = displayDuration(i18n, item)
-                  return (
-                    <Select.Item value={String(item)} label={label}>
-                      <Select.ItemIndicator />
-                      <Select.ItemText>
-                        {label}
-                        {'  '}
-                        <Text
-                          style={[
-                            native(a.text_md),
-                            web(a.ml_xs),
-                            selectedValue === String(item)
-                              ? t.atoms.text_contrast_medium
-                              : t.atoms.text_contrast_low,
-                            a.font_normal,
-                          ]}>
-                          {time(item)}
-                        </Text>
-                      </Select.ItemText>
-                    </Select.Item>
-                  )
-                }}
-                items={DURATIONS}
-                valueExtractor={d => String(d)}
-              />
-            </Select.Root>
-          </View>
-        )}
-
         {goLiveError && (
           <Admonition type="error">{cleanError(goLiveError)}</Admonition>
+        )}
+        {removeLiveStatusError && (
+          <Admonition type="error">
+            {cleanError(removeLiveStatusError)}
+          </Admonition>
         )}
 
         <View
@@ -315,31 +287,47 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
             native: [a.gap_md, a.pt_lg],
             web: [a.flex_row_reverse, a.gap_md, a.align_center],
           })}>
-          {hasLink && (
+          {isDirty ? (
             <Button
-              label={_(msg`Go Live`)}
+              label={_(msg`Save`)}
               size={platform({native: 'large', web: 'small'})}
               color="primary"
               variant="solid"
               onPress={() => goLive()}
               disabled={
-                isGoingLive || !hasValidLinkMeta || debouncedUrl !== liveLinkUrl
+                isGoingLive ||
+                !hasValidLinkMeta ||
+                debouncedUrl !== liveLinkUrl ||
+                isRemovingLiveStatus
               }>
               <ButtonText>
-                <Trans>Go Live</Trans>
+                <Trans>Save</Trans>
               </ButtonText>
               {isGoingLive && <ButtonIcon icon={Loader} />}
             </Button>
+          ) : (
+            <Button
+              label={_(msg`Close`)}
+              size={platform({native: 'large', web: 'small'})}
+              color="primary"
+              variant="solid"
+              onPress={() => control.close()}>
+              <ButtonText>
+                <Trans>Close</Trans>
+              </ButtonText>
+            </Button>
           )}
           <Button
-            label={_(msg`Cancel`)}
-            onPress={() => control.close()}
+            label={_(msg`Remove live status`)}
+            onPress={() => removeLiveStatus()}
             size={platform({native: 'large', web: 'small'})}
-            color="secondary"
-            variant={platform({native: 'solid', web: 'ghost'})}>
+            color="negative"
+            variant="solid"
+            disabled={isRemovingLiveStatus || isGoingLive}>
             <ButtonText>
-              <Trans>Cancel</Trans>
+              <Trans>Remove live status</Trans>
             </ButtonText>
+            {isRemovingLiveStatus && <ButtonIcon icon={Loader} />}
           </Button>
         </View>
       </View>
