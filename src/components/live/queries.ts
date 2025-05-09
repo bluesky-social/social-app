@@ -105,8 +105,12 @@ export function useUpsertLiveStatusMutation(
         image: linkMeta?.image,
       }
     },
-    onError: err => {
-      console.error(err)
+    onError: (e: any) => {
+      logger.error(`Failed to upsert live status`, {
+        url: linkMeta?.url,
+        image: linkMeta?.image,
+        safeMessage: e,
+      })
     },
     onSuccess: ({record, image}) => {
       if (createdAt) {
