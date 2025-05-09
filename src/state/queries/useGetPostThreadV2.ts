@@ -1,4 +1,4 @@
-import {useCallback} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {
   $Typed,
   AtUri,
@@ -138,7 +138,7 @@ export function useGetPostThreadV2({
   // - sort down muted
   // - sort down blurred?
 
-  const filtered = filterAndSort(query.data?.thread || [], {
+  const {items, insertReplies} = useThread(query.data?.thread || [], {
     hasSession,
     params,
     threadgateHiddenReplies: mergeThreadgateHiddenReplies(
@@ -151,9 +151,10 @@ export function useGetPostThreadV2({
   return {
     ...query,
     data: {
-      slices: filtered,
+      slices: items,
       threadgate: query.data?.threadgate,
     },
+    insertReplies,
   }
 }
 
@@ -265,7 +266,7 @@ function getBranch(
   }
 }
 
-export function filterAndSort(
+export function useThread(
   thread: AppBskyFeedGetPostThreadV2.OutputSchema['thread'],
   {
     hasSession,
@@ -279,6 +280,136 @@ export function filterAndSort(
     threadgateHiddenReplies: Set<string>
     moderationOpts: ModerationOpts
     shownHiddenReplyKinds: Set<HiddenReplyKind>
+  },
+) {
+  const isTreeView = params.view === 'tree'
+  const [shadowSlices, setShadowSlices] = useState<
+    Map<string, AppBskyFeedDefs.ThreadItemPost[][]>
+  >(new Map())
+  const insertReplies = useCallback((belowUri: string, posts: AppBskyFeedDefs.ThreadItemPost[]) => {
+    setShadowSlices(prev => {
+      if (prev.has(belowUri)) {
+        prev.set(belowUri, [...prev.get(belowUri)!, posts])
+      } else {
+        prev.set(belowUri, [posts])
+      }
+      return prev
+    })
+  }, [setShadowSlices])
+
+  const sorted = useMemo(() => {
+    return sortThread(thread, {
+      threadgateHiddenReplies,
+      moderationOpts,
+    })
+  }, [thread, threadgateHiddenReplies, moderationOpts])
+
+  const flattened = useMemo(() => {
+    const showMuted = shownHiddenReplyKinds.has(HiddenReplyKind.Muted)
+    const showHidden = shownHiddenReplyKinds.has(HiddenReplyKind.Hidden)
+
+    if (sorted.hidden.length) {
+      if (showHidden) {
+        sorted.slices.push(...sorted.hidden)
+
+        if (sorted.muted.length) {
+          if (showMuted) {
+            sorted.slices.push(...sorted.muted)
+          } else {
+            sorted.slices.push({
+              type: 'showHiddenReplies',
+              key: 'showMutedReplies',
+              kind: HiddenReplyKind.Muted,
+            })
+          }
+        }
+      } else {
+        sorted.slices.push({
+          type: 'showHiddenReplies',
+          key: 'showHiddenReplies',
+          kind: HiddenReplyKind.Hidden,
+        })
+      }
+    } else if (sorted.muted.length) {
+      if (showMuted) {
+        sorted.slices.push(...sorted.muted)
+      } else {
+        sorted.slices.push({
+          type: 'showHiddenReplies',
+          key: 'showMutedReplies',
+          kind: HiddenReplyKind.Muted,
+        })
+      }
+    }
+    return sorted.slices
+  }, [sorted, shownHiddenReplyKinds])
+
+  const optimistic = useMemo(() => {
+    if (!shadowSlices.size) return flattened
+
+    for (let i = 0; i < flattened.length; i++) {
+      const item = flattened[i]
+      if (item.type !== 'threadSlice') continue
+      if (!shadowSlices.has(item.slice.uri)) continue
+
+      const replyThreads = shadowSlices.get(item.slice.uri)
+
+      // TODO linear view will work
+      if (!isTreeView) continue
+
+      for (const thread of replyThreads!) {
+        for (let ri = 0; ri < thread.length; ri++) {
+          const post = thread[ri]
+          post.depth = item.slice.depth + 1 + ri
+          flattened.splice(i + 1 + ri, 0, views.post({
+            item: post,
+            oneUp: undefined,
+            oneDown: undefined,
+            moderationOpts,
+          }))
+        }
+
+        i = i + thread.length
+      }
+    }
+
+    return flattened
+  }, [flattened, shadowSlices, isTreeView])
+
+  const items = useMemo(() => {
+    if (hasSession) {
+      for (let i = 0; i < optimistic.length; i++) {
+        const slice = optimistic[i]
+        if ('slice' in slice && slice.slice.depth === 0) {
+          optimistic.splice(i + 1, 0, {
+            type: 'replyComposer',
+            key: 'replyComposer',
+          })
+          break
+        }
+      }
+    }
+
+    return optimistic
+  }, [optimistic, hasSession])
+
+  return useMemo(
+    () => ({
+      items,
+      insertReplies,
+    }),
+    [items, insertReplies],
+  )
+}
+
+export function sortThread(
+  thread: AppBskyFeedGetPostThreadV2.OutputSchema['thread'],
+  {
+    threadgateHiddenReplies,
+    moderationOpts,
+  }: {
+    threadgateHiddenReplies: Set<string>
+    moderationOpts: ModerationOpts
   },
 ) {
   const slices: Slice[] = []
@@ -312,13 +443,6 @@ export function filterAndSort(
             moderationOpts,
           }),
         )
-
-        if (hasSession) {
-          slices.push({
-            type: 'replyComposer',
-            key: 'replyComposer',
-          })
-        }
 
         parentTraversal: for (let pi = i - 1; pi >= 0; pi--) {
           const parentOneDown = thread[pi + 1]
@@ -436,44 +560,11 @@ export function filterAndSort(
     }
   }
 
-  const showMuted = shownHiddenReplyKinds.has(HiddenReplyKind.Muted)
-  const showHidden = shownHiddenReplyKinds.has(HiddenReplyKind.Hidden)
-
-  if (hidden.length) {
-    if (showHidden) {
-      slices.push(...hidden)
-
-      if (muted.length) {
-        if (showMuted) {
-          slices.push(...muted)
-        } else {
-          slices.push({
-            type: 'showHiddenReplies',
-            key: 'showMutedReplies',
-            kind: HiddenReplyKind.Muted,
-          })
-        }
-      }
-    } else {
-      slices.push({
-        type: 'showHiddenReplies',
-        key: 'showHiddenReplies',
-        kind: HiddenReplyKind.Hidden,
-      })
-    }
-  } else if (muted.length) {
-    if (showMuted) {
-      slices.push(...muted)
-    } else {
-      slices.push({
-        type: 'showHiddenReplies',
-        key: 'showMutedReplies',
-        kind: HiddenReplyKind.Muted,
-      })
-    }
+  return {
+    slices,
+    hidden,
+    muted,
   }
-
-  return slices
 }
 
 export function getModerationState(moderation: ModerationDecision) {

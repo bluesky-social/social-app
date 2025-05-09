@@ -127,10 +127,9 @@ export function Inner({uri}: {uri: string | undefined}) {
     setTreeViewEnabled,
   } = useThreadPreferences()
 
-  const [showHiddenReplies, setShowHiddenReplies] = useState<HiddenReplyKind | null>(null)
   const [shownHiddenReplyKinds, setShownHiddenReplyKinds] = useState<Set<HiddenReplyKind>>(new Set())
 
-  const {isFetching, isPlaceholderData, error, data, refetch} = useGetPostThreadV2({
+  const {isFetching, isPlaceholderData, error, data, refetch, insertReplies} = useGetPostThreadV2({
     uri,
     enabled: isThreadPreferencesLoaded,
     params: {
@@ -146,36 +145,14 @@ export function Inner({uri}: {uri: string | undefined}) {
   const ref = useRef<ListMethods>(null)
   const layoutHeaderRef = useRef<View | null>(null)
   const anchorPostRef = useRef<View | null>(null)
-  // TODO
-  const [justPostedUris, setJustPostedUris] = useState(
-    () => new Set<string>(),
-  )
-
-  const onPostReply = useCallback(
-    (postUri: string | undefined) => {
-      refetch()
-      if (postUri) {
-        setJustPostedUris(set => {
-          const nextSet = new Set(set)
-          nextSet.add(postUri)
-          return nextSet
-        })
-      }
-    },
-    [refetch],
-  )
 
   const optimisticOnPostReply = ({
     post,
   }: {
     post: AppBskyFeedDefs.ThreadItemPost,
   }) => (_: any, posts: AppBskyFeedDefs.ThreadItemPost[]) => {
-    const parentDepth = post.depth
     if (posts.length) {
-      for (let i = 0; i < posts.length; i++) {
-        const p = posts[i]
-        p.depth = parentDepth + 1 + i
-      }
+      insertReplies(post.uri, posts)
     }
   }
 
@@ -195,6 +172,7 @@ export function Inner({uri}: {uri: string | undefined}) {
         embed: post.embed,
         moderation: anchorPost.moderation,
       },
+      // @ts-expect-error TODO
       onPost: optimisticOnPostReply({post:anchorPost.slice}),
     })
   }
@@ -223,6 +201,7 @@ export function Inner({uri}: {uri: string | undefined}) {
             overrideBlur={
               shownHiddenReplyKinds.has(HiddenReplyKind.Muted) && item.slice.depth > 0
             }
+            // @ts-expect-error TODO
             onPostReply={optimisticOnPostReply({post:item.slice})}
             hideTopBorder={index === 0} // && !item.slice.isParentLoading} // TODO
           />
