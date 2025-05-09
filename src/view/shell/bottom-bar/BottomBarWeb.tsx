@@ -265,7 +265,7 @@ const NavItem: React.FC<{
       {children({isActive})}
       {notificationCount ? (
         <View
-          style={styles.notificationCount}
+          style={[styles.notificationCount, styles.notificationCountWeb]}
           aria-label={_(
             msg`${plural(notificationCount, {
               one: '# unread item',
