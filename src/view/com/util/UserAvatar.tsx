@@ -63,6 +63,7 @@ interface BaseUserAvatarProps {
   size: number
   avatar?: string | null
   live?: boolean
+  hideLiveBadge?: boolean
 }
 
 interface UserAvatarProps extends BaseUserAvatarProps {
@@ -206,6 +207,7 @@ let UserAvatar = ({
   onLoad,
   style,
   live,
+  hideLiveBadge,
 }: UserAvatarProps): React.ReactNode => {
   const t = useTheme()
   const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
@@ -297,8 +299,8 @@ let UserAvatar = ({
         />
       )}
       <MediaInsetBorder style={borderStyle} />
-      {live && size > 16 && (
-        <LiveIndicator size={size > 26 ? 'small' : 'tiny'} />
+      {live && size > 16 && !hideLiveBadge && (
+        <LiveIndicator size={size > 32 ? 'small' : 'tiny'} />
       )}
       {alert}
     </View>
@@ -306,8 +308,8 @@ let UserAvatar = ({
     <View style={containerStyle}>
       <DefaultAvatar type={type} shape={finalShape} size={size} />
       <MediaInsetBorder style={borderStyle} />
-      {live && size > 16 && (
-        <LiveIndicator size={size > 26 ? 'small' : 'tiny'} />
+      {live && size > 16 && !hideLiveBadge && (
+        <LiveIndicator size={size > 32 ? 'small' : 'tiny'} />
       )}
       {alert}
     </View>
