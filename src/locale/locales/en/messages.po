@@ -3966,7 +3966,8 @@ msgid "Image cache cleared, freed {0}"
 msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:76
-msgid "Image saved to your camera roll!"
+#: src/view/com/lightbox/Lightbox.tsx:44
+msgid "Image saved"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:49
@@ -6647,10 +6648,6 @@ msgstr ""
 
 #: src/view/screens/SavedFeeds.tsx:164
 msgid "Saved Feeds"
-msgstr ""
-
-#: src/view/com/lightbox/Lightbox.tsx:44
-msgid "Saved to your camera roll"
 msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:131
