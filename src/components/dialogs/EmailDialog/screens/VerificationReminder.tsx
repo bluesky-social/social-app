@@ -45,6 +45,10 @@ export function VerificationReminder({
             a.overflow_hidden,
             a.pt_md,
             t.atoms.bg_contrast_100,
+            {
+              borderTopLeftRadius: a.rounded_md.borderRadius,
+              borderTopRightRadius: a.rounded_md.borderRadius,
+            },
           ]}>
           <GradientFill gradient={tokens.gradients.primary} />
           <ShieldIcon width={64} fill="white" style={[a.z_10]} />
