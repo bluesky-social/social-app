@@ -118,7 +118,7 @@ export function LiveStatus({
         style={[
           a.gap_lg,
           padding === 'xl'
-            ? [a.px_xl, embed.external.thumb ? a.pt_2xl : a.pt_lg]
+            ? [a.px_xl, !embed.external.thumb ? a.pt_2xl : a.pt_lg]
             : a.p_lg,
         ]}>
         <View style={[a.flex_1, a.justify_center, a.gap_2xs]}>
