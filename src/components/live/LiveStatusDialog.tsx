@@ -172,6 +172,7 @@ export function LiveStatus({
             <ProfileCard.Avatar
               profile={profile}
               moderationOpts={moderationOpts}
+              disabledPreview
             />
             {/* Ensure wide enough on web hover */}
             <View style={[a.flex_1, web({minWidth: 100})]}>
