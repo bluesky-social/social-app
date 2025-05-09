@@ -12,6 +12,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {uploadBlob} from '#/lib/api'
 import {imageToThumb} from '#/lib/api/resolve'
 import {type LinkMeta} from '#/lib/link-meta/link-meta'
+import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
@@ -102,6 +103,12 @@ export function useUpsertLiveStatusMutation(
       console.error(err)
     },
     onSuccess: ({record, image}) => {
+      if (createdAt) {
+        logger.metric('live:edit', {duration: record.durationMinutes})
+      } else {
+        logger.metric('live:create', {duration: record.durationMinutes})
+      }
+
       Toast.show(_(msg`You are now live!`))
       control.close(() => {
         if (!currentAccount) return
@@ -154,6 +161,7 @@ export function useRemoveLiveStatusMutation() {
       console.error(err)
     },
     onSuccess: () => {
+      logger.metric('live:remove', {})
       Toast.show(_(msg`You are no longer live`))
       control.close(() => {
         if (!currentAccount) return

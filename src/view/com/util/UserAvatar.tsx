@@ -16,6 +16,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {useActorStatus} from '#/lib/actor-status'
 import {isTouchDevice} from '#/lib/browser'
+import {useHaptics} from '#/lib/haptics'
 import {
   useCameraPermission,
   usePhotoLibraryPermission,
@@ -518,11 +519,18 @@ let PreviewableUserAvatar = ({
   const queryClient = useQueryClient()
   const status = useActorStatus(profile)
   const liveControl = useDialogControl()
+  const playHaptic = useHaptics()
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     onBeforePress?.()
     unstableCacheProfileView(queryClient, profile)
   }, [profile, queryClient, onBeforePress])
+
+  const onOpenLiveStatus = useCallback(() => {
+    playHaptic('Light')
+    logger.metric('live:card:open', {subject: profile.did, from: 'post'})
+    liveControl.open()
+  }, [liveControl, playHaptic, profile.did])
 
   const avatarEl = (
     <UserAvatar
@@ -547,7 +555,7 @@ let PreviewableUserAvatar = ({
               )}'s avatar`,
             )}
             accessibilityHint={_(msg`Opens live status dialog`)}
-            onPress={liveControl.open}>
+            onPress={onOpenLiveStatus}>
             {avatarEl}
           </Button>
           <LiveStatusDialog

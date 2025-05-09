@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React, {memo, useEffect} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import {
   type MeasuredDimensions,
@@ -13,8 +13,10 @@ import {useNavigation} from '@react-navigation/native'
 
 import {useActorStatus} from '#/lib/actor-status'
 import {BACK_HITSLOP} from '#/lib/constants'
+import {useHaptics} from '#/lib/haptics'
 import {measureHandle, useHandleRef} from '#/lib/hooks/useHandleRef'
 import {type NavigationProp} from '#/lib/routes/types'
+import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
 import {type Shadow} from '#/state/cache/types'
 import {useLightboxControls} from '#/state/lightbox'
@@ -54,6 +56,7 @@ let ProfileHeaderShell = ({
   const {openLightbox} = useLightboxControls()
   const navigation = useNavigation<NavigationProp>()
   const {top: topInset} = useSafeAreaInsets()
+  const playHaptic = useHaptics()
   const liveStatusControl = useDialogControl()
 
   const aviRef = useHandleRef()
@@ -96,8 +99,16 @@ let ProfileHeaderShell = ({
 
   const live = useActorStatus(profile)
 
+  useEffect(() => {
+    if (live.isActive) {
+      logger.metric('live:view:profile', {subject: profile.did})
+    }
+  }, [live.isActive, profile.did])
+
   const onPressAvi = React.useCallback(() => {
     if (live.isActive) {
+      playHaptic('Light')
+      logger.metric('live:card:open', {subject: profile.did, from: 'profile'})
       liveStatusControl.open()
     } else {
       const modui = moderation.ui('avatar')
@@ -111,7 +122,15 @@ let ProfileHeaderShell = ({
         })()
       }
     }
-  }, [profile, moderation, _openLightbox, aviRef, liveStatusControl, live])
+  }, [
+    profile,
+    moderation,
+    _openLightbox,
+    aviRef,
+    liveStatusControl,
+    live,
+    playHaptic,
+  ])
 
   return (
     <View style={t.atoms.bg} pointerEvents={isIOS ? 'auto' : 'box-none'}>
