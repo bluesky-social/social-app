@@ -49,7 +49,13 @@ export function useUpsertLiveStatusMutation(
               )
               thumb = blob.data.blob
             }
-          } catch {}
+          } catch (e: any) {
+            logger.error(`Failed to upload thumbnail for live status`, {
+              url: linkMeta.url,
+              image: linkMeta.image,
+              safeMessage: e,
+            })
+          }
         }
 
         embed = {
