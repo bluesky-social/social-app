@@ -220,9 +220,9 @@
     uint8arrays "3.0.0"
 
 "@atproto/dev-env@^0.3.129":
-  version "0.3.129"
-  resolved "https://registry.yarnpkg.com/@atproto/dev-env/-/dev-env-0.3.129.tgz#3b0036882caa7229342c73f553b3a908f84bcf30"
-  integrity sha512-1Ej30WHYLTsL/BFsz4PfMqal7wsjA67P3Bosy5s9rj/87mP4FoyB/Jnr3kYz5JmJsDgFN/NV/fhNHCE8kZfCQQ==
+  version "0.3.130"
+  resolved "https://registry.yarnpkg.com/@atproto/dev-env/-/dev-env-0.3.130.tgz#444ad315c00bdcf8bdae036d1e6a56a1808b98c6"
+  integrity sha512-xRQb+b09lpdG1vGdvMk8Yf/AnO4SDQTjKLyPO+LYYeHuOrKKjJWiBorFC8Lp/rnraoM3AcwMKmW48wdd7cOL9g==
   dependencies:
     "@atproto/api" "^0.15.6"
     "@atproto/bsky" "^0.0.148"
@@ -232,7 +232,7 @@
     "@atproto/identity" "^0.4.8"
     "@atproto/lexicon" "^0.4.11"
     "@atproto/ozone" "^0.1.109"
-    "@atproto/pds" "^0.4.135"
+    "@atproto/pds" "^0.4.136"
     "@atproto/sync" "^0.1.23"
     "@atproto/syntax" "^0.4.0"
     "@atproto/xrpc-server" "^0.7.18"
@@ -378,10 +378,10 @@
     undici "^6.14.1"
     ws "^8.12.0"
 
-"@atproto/pds@^0.4.135":
-  version "0.4.135"
-  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.4.135.tgz#6fb1d4d4a8a3b03b8b517b48bb3d23593c1bc601"
-  integrity sha512-QH5Txh46OFwyLnd5DDukbnVs2Cxs5zdycwwqtdQZVcSnAbsOjFSu0TEprIevfmCvmeUjhOEwh/+IQKpPFSFsGQ==
+"@atproto/pds@^0.4.136":
+  version "0.4.136"
+  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.4.136.tgz#53989ff7784c4d1e68d745d69721e71ba82a111d"
+  integrity sha512-sao4iq/CRWwdM0gljw7XGg/ef4OTWFc6RU2g0nNgJLvxfPO3uMG8Ze1S6tfhr9wvhIKZWVCzzPruTglrlWMEYw==
   dependencies:
     "@atproto-labs/fetch-node" "0.1.8"
     "@atproto-labs/xrpc-utils" "0.0.14"
