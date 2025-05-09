@@ -167,8 +167,10 @@ export function useRemoveLiveStatusMutation() {
         rkey: 'self',
       })
     },
-    onError: err => {
-      console.error(err)
+    onError: (e: any) => {
+      logger.error(`Failed to remove live status`, {
+        safeMessage: e,
+      })
     },
     onSuccess: () => {
       logger.metric('live:remove', {})
