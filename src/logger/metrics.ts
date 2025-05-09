@@ -391,5 +391,5 @@ export type MetricEvents = {
   'live:card:watch': {subject: string}
   'live:card:openProfile': {subject: string}
   'live:view:profile': {subject: string}
-  'live:view:post': {subject: string}
+  'live:view:post': {subject: string; feed?: string}
 }

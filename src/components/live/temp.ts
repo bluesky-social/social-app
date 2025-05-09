@@ -25,6 +25,7 @@ export function temp__canGoLive(profile: bsky.profile.AnyProfileView) {
   return !!LIVE_DIDS[profile.did]
 }
 
+// status must have a embed, and the embed must be an approved host for the status to be valid
 export function temp__isStatusValid(status: AppBskyActorDefs.StatusView) {
   if (status.status !== 'app.bsky.actor.status#live') return false
   try {

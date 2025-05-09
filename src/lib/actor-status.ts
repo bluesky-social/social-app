@@ -42,7 +42,7 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
   }, [shadowed, tick])
 }
 
-function isStatusStillActive(timeStr: string | undefined) {
+export function isStatusStillActive(timeStr: string | undefined) {
   if (!timeStr) return false
   const now = new Date()
   const expiry = parseISO(timeStr)
