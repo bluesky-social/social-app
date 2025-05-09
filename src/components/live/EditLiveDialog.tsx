@@ -122,6 +122,12 @@ function DialogInner({
     }
   }, [tick, status.expiresAt])
 
+  const submitDisabled =
+    isGoingLive ||
+    !hasValidLinkMeta ||
+    debouncedUrl !== liveLinkUrl ||
+    isRemovingLiveStatus
+
   return (
     <Dialog.ScrollableInner
       label={_(msg`You are Live`)}
@@ -171,6 +177,12 @@ function DialogInner({
                 autoCapitalize="none"
                 autoComplete="url"
                 autoCorrect={false}
+                onSubmitEditing={() => {
+                  console.log('Submit editing', isDirty, submitDisabled)
+                  if (isDirty && !submitDisabled) {
+                    goLive()
+                  }
+                }}
               />
             </TextField.Root>
           </View>
@@ -299,12 +311,7 @@ function DialogInner({
               color="primary"
               variant="solid"
               onPress={() => goLive()}
-              disabled={
-                isGoingLive ||
-                !hasValidLinkMeta ||
-                debouncedUrl !== liveLinkUrl ||
-                isRemovingLiveStatus
-              }>
+              disabled={submitDisabled}>
               <ButtonText>
                 <Trans>Save</Trans>
               </ButtonText>
