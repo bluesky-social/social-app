@@ -13,6 +13,7 @@ import {useAgent} from '#/state/session'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
 import {atoms as a, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import * as TextField from '#/components/forms/TextField'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
@@ -197,6 +198,16 @@ export function StepHandle() {
             </View>
           </View>
         )}
+        <View>
+          <Admonition type="tip">
+            <Trans>
+              <Text style={[a.font_bold]}>Did you know?</Text> Bluesky supports
+              domain name handles like @example.com. Sign up with a username
+              first and then switch to your domain name when you are ready to
+              self-verify.
+            </Trans>
+          </Admonition>
+        </View>
       </View>
       <BackNextButtons
         isLoading={isLoading}
