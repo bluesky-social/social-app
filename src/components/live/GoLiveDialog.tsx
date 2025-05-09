@@ -121,6 +121,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
               profile={profile}
               moderationOpts={moderationOpts}
               liveOverride
+              disabledPreview
             />
             <ProfileCard.NameAndHandle
               profile={profile}
