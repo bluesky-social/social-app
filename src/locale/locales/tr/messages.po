@@ -8309,7 +8309,7 @@ msgstr "{0} akışının ana sayfadan sabitlemesi kaldırıldı"
 
 #: src/view/screens/ProfileList.tsx:362
 msgid "Unpinned from your feeds"
-msgstr "Akışlarınızdan sabitlemesi kaldırıldı"
+msgstr "Sabitleme akışlarınızdan kaldırıldı"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:246
 msgid "Unsubscribe"
