@@ -104,7 +104,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
     <Dialog.ScrollableInner
       label={_(msg`Go Live`)}
       style={web({maxWidth: 420})}>
-      <View style={[a.gap_lg]}>
+      <View style={[a.gap_xl]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_bold, a.text_2xl]}>
             <Trans>Go Live</Trans>
