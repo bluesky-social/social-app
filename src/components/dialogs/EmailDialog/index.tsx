@@ -2,7 +2,7 @@ import {useCallback, useState} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useBreakpoints} from '#/alf'
+import {web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {type StatefulControl} from '#/components/dialogs/Context'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
@@ -22,7 +22,6 @@ export function useEmailDialogControl() {
 
 export function EmailDialog() {
   const {_} = useLingui()
-  const {gtMobile} = useBreakpoints()
   const emailDialogControl = useEmailDialogControl()
   const {isEmailVerified} = useAccountEmailState()
   const onClose = useCallback(() => {
@@ -40,7 +39,7 @@ export function EmailDialog() {
 
       <Dialog.ScrollableInner
         label={_(msg`Make adjustments to email settings for your account`)}
-        style={{width: gtMobile ? 400 : '100%'}}>
+        style={web({maxWidth: 400})}>
         <Inner control={emailDialogControl} />
         <Dialog.Close />
       </Dialog.ScrollableInner>
