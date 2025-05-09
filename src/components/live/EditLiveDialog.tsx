@@ -178,7 +178,6 @@ function DialogInner({
                 autoComplete="url"
                 autoCorrect={false}
                 onSubmitEditing={() => {
-                  console.log('Submit editing', isDirty, submitDisabled)
                   if (isDirty && !submitDisabled) {
                     goLive()
                   }
