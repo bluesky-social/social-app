@@ -111,9 +111,10 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
             <Trans>Go Live</Trans>
           </Text>
           <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
-            Add a live status to your profile photo for a set time period. Your
-            status will change to live immediately as you post and can be
-            changed at any time.
+            <Trans>
+              Add a temporary live status to your profile. When someone clicks
+              on your avatar, they’ll see information about your live event.
+            </Trans>
           </Text>
         </View>
         {moderationOpts && (
