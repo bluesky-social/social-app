@@ -39,10 +39,6 @@ export interface PostLanguagesSettingsModal {
   name: 'post-languages-settings'
 }
 
-export interface ChangePasswordModal {
-  name: 'change-password'
-}
-
 export interface LinkWarningModal {
   name: 'link-warning'
   text: string
@@ -53,7 +49,6 @@ export interface LinkWarningModal {
 export type Modal =
   // Account
   | DeleteAccountModal
-  | ChangePasswordModal
 
   // Curation
   | ContentLanguagesSettingsModal
