@@ -5,14 +5,14 @@
 
 import {init} from '@sentry/react-native'
 
-import {version} from '#/../package.json'
+import pkgJson from '#/../package.json'
 
 /**
  * Examples:
  * - `dev`
  * - `1.99.0`
  */
-const release = process.env.SENTRY_RELEASE || version
+const release = process.env.SENTRY_RELEASE || pkgJson.version
 
 /**
  * The latest deployed commit hash

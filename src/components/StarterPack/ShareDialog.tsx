@@ -1,7 +1,7 @@
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {requestMediaLibraryPermissionsAsync} from 'expo-image-picker'
-import {AppBskyGraphDefs} from '@atproto/api'
+import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -15,7 +15,7 @@ import {isNative, isWeb} from '#/platform/detection'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import {DialogControlProps} from '#/components/Dialog'
+import {type DialogControlProps} from '#/components/Dialog'
 import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -73,7 +73,7 @@ function ShareDialogInner({
 
     try {
       await saveImageToMediaLibrary({uri: imageUrl})
-      Toast.show(_(msg`Image saved to your camera roll!`))
+      Toast.show(_(msg`Image saved`))
       control.close()
     } catch (e: unknown) {
       Toast.show(_(msg`An error occurred while saving the QR code!`), 'xmark')

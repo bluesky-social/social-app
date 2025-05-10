@@ -69,7 +69,7 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "^0.15.5",
+    "@atproto/api": "^0.15.6",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
@@ -142,6 +142,7 @@
     "expo-font": "~13.3.0",
     "expo-haptics": "~14.1.4",
     "expo-image": "~2.1.6",
+    "expo-image-crop-tool": "^0.1.8",
     "expo-image-manipulator": "~13.1.5",
     "expo-image-picker": "~16.1.4",
     "expo-linear-gradient": "~14.1.4",
@@ -159,7 +160,7 @@
     "expo-web-browser": "~14.1.6",
     "fast-text-encoding": "^1.0.6",
     "history": "^5.3.0",
-    "hls.js": "^1.5.11",
+    "hls.js": "^1.6.2",
     "js-sha256": "^0.9.0",
     "jwt-decode": "^4.0.0",
     "lande": "^1.0.10",
@@ -188,12 +189,10 @@
     "react-native-edge-to-edge": "^1.6.0",
     "react-native-gesture-handler": "2.25.0",
     "react-native-get-random-values": "~1.11.0",
-    "react-native-image-crop-picker": "^0.42.0",
     "react-native-ios-context-menu": "^1.15.3",
     "react-native-keyboard-controller": "^1.17.1",
     "react-native-mmkv": "^2.12.2",
     "react-native-pager-view": "6.7.1",
-    "react-native-picker-select": "^9.3.1",
     "react-native-progress": "bluesky-social/react-native-progress",
     "react-native-qrcode-styled": "^0.3.3",
     "react-native-reanimated": "~3.17.5",
@@ -220,7 +219,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@atproto/dev-env": "^0.3.128",
+    "@atproto/dev-env": "^0.3.129",
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@babel/runtime": "^7.26.0",
