@@ -9785,4 +9785,3 @@ msgstr "Dyn selektearre ynteressen helpe ús, dyn ynhâld te toane, dy’t dy yn
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Dyn ferifikaasjes"
-

@@ -9785,4 +9785,3 @@ msgstr "Dine valgte interesser hjælper os med at vise dig relevant indhold."
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Dine verifikationer"
-
