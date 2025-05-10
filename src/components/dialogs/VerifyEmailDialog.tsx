@@ -190,11 +190,37 @@ export function Inner({
                 <View style={[a.gap_sm]}>
                   <Text style={[a.text_md, a.leading_snug]}>{reasonText}</Text>
                   <Text style={[a.text_md, a.leading_snug]}>
-                    Don't have access to{' '}
+                    <Trans>
+                      Don't have access to{' '}
+                      <Text style={[a.text_md, a.leading_snug, a.font_bold]}>
+                        {currentAccount?.email}
+                      </Text>
+                      ?{' '}
+                      <InlineLinkText
+                        to="#"
+                        label={_(msg`Change email address`)}
+                        style={[a.text_md, a.leading_snug]}
+                        onPress={e => {
+                          e.preventDefault()
+                          control.close(() => {
+                            changeEmailControl.open()
+                          })
+                          return false
+                        }}>
+                        Change your email address
+                      </InlineLinkText>
+                      .
+                    </Trans>
+                  </Text>
+                </View>
+              ) : (
+                <Text style={[a.text_md, a.leading_snug]}>
+                  <Trans>
+                    You'll receive an email at{' '}
                     <Text style={[a.text_md, a.leading_snug, a.font_bold]}>
                       {currentAccount?.email}
-                    </Text>
-                    ?{' '}
+                    </Text>{' '}
+                    to verify it's you.{' '}
                     <InlineLinkText
                       to="#"
                       label={_(msg`Change email address`)}
@@ -206,33 +232,9 @@ export function Inner({
                         })
                         return false
                       }}>
-                      <Trans>Change your email address</Trans>
+                      Need to change it?
                     </InlineLinkText>
-                    .
-                  </Text>
-                </View>
-              ) : (
-                <Text style={[a.text_md, a.leading_snug]}>
-                  <Trans>
-                    You'll receive an email at{' '}
-                    <Text style={[a.text_md, a.leading_snug, a.font_bold]}>
-                      {currentAccount?.email}
-                    </Text>{' '}
-                    to verify it's you.
-                  </Trans>{' '}
-                  <InlineLinkText
-                    to="#"
-                    label={_(msg`Change email address`)}
-                    style={[a.text_md, a.leading_snug]}
-                    onPress={e => {
-                      e.preventDefault()
-                      control.close(() => {
-                        changeEmailControl.open()
-                      })
-                      return false
-                    }}>
-                    <Trans>Need to change it?</Trans>
-                  </InlineLinkText>
+                  </Trans>
                 </Text>
               )}
             </View>
