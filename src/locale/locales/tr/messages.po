@@ -137,7 +137,7 @@ msgstr "{0} <0><1>metin ve etiketler</1>de</0>"
 
 #: src/components/live/LiveStatusDialog.tsx:68
 msgid "{0} is live"
-msgstr ""
+msgstr "{0} Canlı"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:223
 msgid "{0} joined this week"
@@ -154,11 +154,11 @@ msgstr "50'de {0}"
 
 #: src/components/dms/MessageItem.tsx:143
 msgid "{0} reacted {1}"
-msgstr "{0} şu tepkiyi verdi: {1}"
+msgstr "{0} şu tepkiyi verdi {1}"
 
 #: src/screens/Messages/components/ChatListItem.tsx:231
 msgid "{0} reacted {1} to {2}"
-msgstr "{0} şuna {1} tepkisi verdi: {2}"
+msgstr "{0} şuna {1} tepkisi verdi {2}"
 
 #: src/view/com/util/UserAvatar.tsx:555
 #: src/view/com/util/UserAvatar.tsx:573
@@ -195,7 +195,7 @@ msgstr "{0}sn"
 
 #: src/view/shell/desktop/LeftNav.tsx:401
 msgid "{count, plural, one {# unread item} other {# unread items}}"
-msgstr "{count, plural, other {# okunmamış öğe}}"
+msgstr "{count, plural, one {# okunmamış öğe} other {# okunmamış öğe}}"
 
 #: src/lib/generate-starterpack.ts:111
 #: src/screens/StarterPack/Wizard/index.tsx:178
@@ -341,11 +341,11 @@ msgstr "{handle} kullanıcısına mesaj gönderilemez"
 
 #: src/components/live/utils.ts:15
 msgid "{hours, plural, one {# hour {minutesString}} other {# hours {minutesString}}}"
-msgstr ""
+msgstr "{hours, plural, one {# saat {minutesString}} other {# saat {minutesString}}}"
 
 #: src/components/live/utils.ts:19
 msgid "{hours, plural, one {# hour} other {# hours}}"
-msgstr ""
+msgstr "{hours, plural, one {# saat} other {# saat}}"
 
 #. Number of users (always at least 50) who have joined Bluesky using a specific starter pack
 #: src/components/StarterPack/StarterPackCard.tsx:101
@@ -354,7 +354,7 @@ msgstr "{joinedAllTimeCount, plural, other {# kullanıcı}} katıldı!"
 
 #: src/components/live/utils.ts:10
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
-msgstr ""
+msgstr "{minutes, plural, one {# dakika} other {# dakika}}"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:270
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
@@ -583,7 +583,7 @@ msgstr "Bir içerik uyarısı ekleyin"
 
 #: src/components/live/GoLiveDialog.tsx:114
 msgid "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event."
-msgstr ""
+msgstr "Profilinize geçici bir canlı durum ekleyin. Biri avatarınıza tıkladığında, canlı etkinliğiniz hakkında bilgi görecekler."
 
 #: src/view/screens/ProfileList.tsx:924
 #: src/view/screens/ProfileList.tsx:942
@@ -819,7 +819,7 @@ msgstr "Alternatif metin, görme engelli ve düşük görme yeteneğine sahip ku
 #: src/view/com/composer/GifAltText.tsx:179
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:139
 msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} characters.}}"
-msgstr "Alt metin kırpılacaktır. {MAX_ALT_TEXT, plural, other {Sınır: {0} karakter.}}"
+msgstr "Alternatif metin kırpılacaktır. {MAX_ALT_TEXT, plural, other {Sınır: {0} karakter.}}"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:93
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
@@ -1099,7 +1099,7 @@ msgstr "Sanatsal veya erotik olmayan çıplaklık."
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:570
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:573
 msgid "Assign topic - help train Discover!"
-msgstr ""
+msgstr "Konu atayın - Discover'ı eğitmeye yardımcı olun!"
 
 #: src/screens/Signup/StepHandle.tsx:194
 msgid "At least 3 characters"
@@ -1149,7 +1149,7 @@ msgstr "Bir liste oluşturmadan önce e-posta adresinizi doğrulamanız gerekir.
 
 #: src/lib/hooks/useOpenComposer.tsx:14
 msgid "Before creating a post or replying, you must first verify your email."
-msgstr ""
+msgstr "Bir gönderi oluşturmadan önce veya yanıtlamadan önce, e-postanızı doğrulamanız gerekmektedir."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:235
 #: src/components/StarterPack/ProfileStarterPacks.tsx:245
@@ -1158,14 +1158,14 @@ msgstr "Bir başlangıç ​​paketi oluşturmadan önce e-posta adresinizi do�
 
 #: src/screens/Messages/components/RequestButtons.tsx:235
 msgid "Before you can accept this chat request, you must first verify your email."
-msgstr ""
+msgstr "Bu sohbet isteğini kabul edebilmeniz için önce e-postanızı doğrulamanız gerekir."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:54
 #: src/components/dms/MessageProfileButton.tsx:58
 #: src/screens/Messages/ChatList.tsx:332
 #: src/screens/Messages/Conversation.tsx:213
 msgid "Before you can message another user, you must first verify your email."
-msgstr ""
+msgstr ""Diğer kullanıcılara	mesaj göndermeden önce e-postanızı doğrulamanız gerekmektedir."
 
 #: src/components/dialogs/BirthDateSettings.tsx:103
 #: src/screens/Settings/AccountSettings.tsx:120
@@ -1516,7 +1516,7 @@ msgstr "Uygulama simgesini \"{0}\" olarak değiştir"
 
 #: src/components/AppLanguageDropdown.tsx:40
 msgid "Change app language"
-msgstr ""
+msgstr "Uygulama dilini değiştir"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:200
 #: src/components/dialogs/VerifyEmailDialog.tsx:225
@@ -1685,11 +1685,11 @@ msgstr "buraya tıklayın"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:371
 msgid "Click here to restart the verification process."
-msgstr ""
+msgstr "Doğrulama işlemini yeniden başlatmak için buraya tıklayın."
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:273
 msgid "Click here to update your email"
-msgstr ""
+msgstr "E-postanızı güncellemek için buraya tıklayın"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
 msgid "Click to disable quote posts of this post."
@@ -2430,11 +2430,11 @@ msgstr "Karart"
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:233
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:242
 msgid "Disable 2FA"
-msgstr ""
+msgstr "iki adımlı doğrulamayı devre dışı bırak"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:157
 msgid "Disable email 2FA"
-msgstr ""
+msgstr "E-posta ile iki adımlı doğrulamayı devre dışı bırak"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:89
 msgid "Disable Email 2FA"
@@ -2561,11 +2561,11 @@ msgstr "Alan adı doğrulandı!"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:368
 msgid "Don't have a code or need a new one? <0>Click here.</0>"
-msgstr ""
+msgstr "Kodunuz mu yok yada yeni bir taneye mi ihtiyacınız var? <0>Buraya tıklayın.</0>"
 
 #: src/components/dialogs/EmailDialog/components/ResendEmailText.tsx:37
 msgid "Don't see an email? <0>Click here to resend.</0>"
-msgstr ""
+msgstr "E-posta göremiyor musunuz? <0>Yeniden göndermek için buraya tıklayın.</0>"
 
 #: src/components/dialogs/BirthDateSettings.tsx:115
 #: src/components/dialogs/BirthDateSettings.tsx:121
@@ -2718,7 +2718,7 @@ msgstr "Liste ayrıntılarını düzenle"
 #: src/view/com/profile/ProfileMenu.tsx:307
 #: src/view/com/profile/ProfileMenu.tsx:313
 msgid "Edit live status"
-msgstr ""
+msgstr "Canlı durumu düzenle"
 
 #: src/view/com/modals/CreateOrEditList.tsx:228
 msgid "Edit Moderation List"
@@ -2811,7 +2811,7 @@ msgstr "E-posta Yeniden Yollandı"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:208
 msgid "Email sent!"
-msgstr ""
+msgstr "E-posta gönderildi!"
 
 #: src/components/dialogs/ChangeEmailDialog.tsx:63
 msgid "Email Updated!"
@@ -2819,7 +2819,7 @@ msgstr "E-posta Güncellendi!"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:182
 msgid "Email verification complete!"
-msgstr ""
+msgstr "E-posta doğrulama tamamlandı!"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:79
 msgid "Email Verified"
@@ -2860,7 +2860,7 @@ msgstr "Yetişkin içeriği etkinleştirin"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:92
 msgid "Enable email 2FA"
-msgstr ""
+msgstr "E-posta için iki adımlı doğrulama etkinleştirildi"
 
 #: src/components/dialogs/EmbedConsent.tsx:81
 #: src/components/dialogs/EmbedConsent.tsx:88
@@ -2923,7 +2923,7 @@ msgstr "Bir sözcük veya etiket girin"
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:201
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:318
 msgid "Enter code"
-msgstr ""
+msgstr "Kodu girin"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:118
 msgid "Enter Code"
@@ -3090,7 +3090,7 @@ msgstr "{0} içinde süresi doluyor"
 
 #: src/components/live/EditLiveDialog.tsx:145
 msgid "Expires in {0} at {1}"
-msgstr ""
+msgstr "{0} tarihinde {1} saatinde sona eriyor"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 #: src/lib/moderation/useGlobalLabelStrings.ts:51
@@ -3255,7 +3255,7 @@ msgstr "Gönderilemedi"
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:122
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:136
 msgid "Failed to send email, please try again."
-msgstr ""
+msgstr "E-posta gönderilemedi, lütfen tekrar deneyin."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:254
 #: src/screens/Messages/components/ChatDisabled.tsx:87
@@ -3269,11 +3269,11 @@ msgstr "Konuyu sessize alma seçeneği değiştirilemedi, lütfen tekrar deneyin
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:149
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:83
 msgid "Failed to update email 2FA settings"
-msgstr ""
+msgstr "E-posta için iki adımlı doğrulama ayarları güncellenemedi"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:195
 msgid "Failed to update email, please try again."
-msgstr ""
+msgstr "E-posta güncelleme başarısız oldu, lütfen tekrar deneyin."
 
 #: src/components/FeedCard.tsx:285
 msgid "Failed to update feeds"
@@ -3292,7 +3292,7 @@ msgstr "Video yüklenemedi"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:168
 msgid "Failed to verify email, please try again."
-msgstr ""
+msgstr "E-posta doğrulama başarısız oldu, lütfen tekrar deneyin."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:360
 msgid "Failed to verify handle. Please try again."
@@ -3677,18 +3677,18 @@ msgstr "Ana Sayfaya Git"
 #: src/view/com/profile/ProfileMenu.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:315
 msgid "Go live"
-msgstr ""
+msgstr "Canlı yayına git"
 
 #: src/components/live/GoLiveDialog.tsx:106
 #: src/components/live/GoLiveDialog.tsx:111
 #: src/components/live/GoLiveDialog.tsx:323
 #: src/components/live/GoLiveDialog.tsx:332
 msgid "Go Live"
-msgstr ""
+msgstr "Canlı yayına Git"
 
 #: src/components/live/GoLiveDialog.tsx:265
 msgid "Go live for"
-msgstr ""
+msgstr "Canlı yayın için"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:197
 msgid "Go to {firstAuthorName}'s profile"
@@ -3761,7 +3761,7 @@ msgstr "{tag} etiketi"
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:198
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:315
 msgid "Have a code? <0>Click here.</0>"
-msgstr ""
+msgstr "Kodunuz var mı? <0>Buraya tıklayın.</0>"
 
 #: src/screens/Signup/index.tsx:195
 msgid "Having trouble?"
@@ -3977,7 +3977,7 @@ msgstr "Kendi alan adınız varsa onu kullanıcı adınız olarak kullanabilirsi
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:270
 msgid "If you need to update your email, <0>click here</0>."
-msgstr ""
+msgstr "E-postanızı güncellemeniz gerekiyorsa, <0>buraya tıklayın</0>."
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:797
 msgid "If you remove this post, you won't be able to recover it."
@@ -3985,7 +3985,7 @@ msgstr "Bu gönderiyi kaldırırsanız geri getirmeniz mümkün olmayacaktır."
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:208
 msgid "If you update your email address, email 2FA will be disabled."
-msgstr ""
+msgstr "E-posta adresinizi güncellerseniz, e-posta 2FA devre dışı bırakılacaktır."
 
 #: src/view/com/modals/ChangePassword.tsx:160
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
@@ -4020,7 +4020,7 @@ msgstr "Görsel önbelleği temizlendi, {0} yer açıldı"
 #: src/components/StarterPack/ShareDialog.tsx:76
 #: src/view/com/lightbox/Lightbox.tsx:44
 msgid "Image saved"
-msgstr ""
+msgstr "Görsel kaydedildi"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:49
 #: src/lib/moderation/useReportOptions.ts:49
@@ -4455,18 +4455,18 @@ msgstr "Bu kullanıcıyı engelleyen listeler:"
 #. Live status indicator on avatar. Should be extremely short, not much space for more than 4 characters
 #: src/components/live/LiveIndicator.tsx:46
 msgid "LIVE"
-msgstr ""
+msgstr "CANLI"
 
 #: src/components/live/LiveStatusDialog.tsx:207
 msgid "Live feature is in beta testing"
-msgstr ""
+msgstr "Canlı özelliği test aşamasında"
 
 #: src/components/live/EditLiveDialog.tsx:162
 #: src/components/live/EditLiveDialog.tsx:166
 #: src/components/live/GoLiveDialog.tsx:137
 #: src/components/live/GoLiveDialog.tsx:141
 msgid "Live link"
-msgstr ""
+msgstr "Canlı link"
 
 #: src/screens/Search/Explore.tsx:87
 msgid "Load more"
@@ -4530,7 +4530,7 @@ msgstr "Görünüşe göre takip edilenler akışınız eksik. <0>Eklemek için 
 
 #: src/components/dialogs/EmailDialog/index.tsx:41
 msgid "Make adjustments to email settings for your account"
-msgstr ""
+msgstr "Hesabınız için e-posta ayarlarında ayarlamalar yapın"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Make one for me"
@@ -5377,7 +5377,7 @@ msgstr "Gönderi seçenekleri menüsünü aç"
 #: src/components/live/LiveStatusDialog.tsx:185
 #: src/components/live/LiveStatusDialog.tsx:195
 msgid "Open profile"
-msgstr ""
+msgstr "Açık profil"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:561
 msgid "Open starter pack menu"
@@ -5410,7 +5410,7 @@ msgstr "Hata ayıklama girişi için ek ayrıntıları açar"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:44
 msgid "Opens alt text dialog"
-msgstr "Alt metin diyaloğunu açar"
+msgstr "Alternatif metin diyaloğunu açar"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:71
 msgid "Opens camera on device"
@@ -5460,7 +5460,7 @@ msgstr "Davet kodu listesini açar"
 
 #: src/view/com/util/UserAvatar.tsx:559
 msgid "Opens live status dialog"
-msgstr ""
+msgstr "Canlı durum iletişim kutusunu açar"
 
 #: src/screens/Login/LoginForm.tsx:249
 msgid "Opens password reset form"
@@ -5752,7 +5752,7 @@ msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:247
 msgid "Please enter the security code we sent to your previous email address."
-msgstr ""
+msgstr "Lütfen önceki e-posta adresinize gönderdiğimiz güvenlik kodunu girin."
 
 #: src/screens/Signup/state.ts:262
 #: src/screens/Signup/StepInfo/index.tsx:91
@@ -5765,7 +5765,7 @@ msgstr "Lütfen davet kodunuzu girin."
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:217
 msgid "Please enter your new email address."
-msgstr ""
+msgstr "Lütfen yeni e-posta adresinizi girin."
 
 #: src/screens/Login/LoginForm.tsx:99
 msgid "Please enter your password"
@@ -5802,7 +5802,7 @@ msgstr "Lütfen @{0} olarak giriş yapın"
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:62
 msgid "Please verify your email"
-msgstr ""
+msgstr "Lütfen e-postanızı doğrulayın"
 
 #: src/components/dialogs/VerifyEmailDialog.tsx:108
 msgid "Please Verify Your Email"
@@ -6572,7 +6572,7 @@ msgstr "Bölgenizde zorunludur"
 
 #: src/components/dialogs/EmailDialog/components/ResendEmailText.tsx:40
 msgid "Resend"
-msgstr ""
+msgstr "Tekrar gönder"
 
 #: src/components/dialogs/ChangeEmailDialog.tsx:217
 #: src/components/dialogs/ChangeEmailDialog.tsx:227
@@ -6842,7 +6842,7 @@ msgstr "Profilleri arar"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:243
 msgid "Security step required"
-msgstr ""
+msgstr "Güvenlik adımı gerekli"
 
 #: src/components/dialogs/ChangeEmailDialog.tsx:57
 msgid "Security Step Required"
@@ -6886,7 +6886,7 @@ msgstr "Hesap seç"
 
 #: src/components/AppLanguageDropdown.tsx:60
 msgid "Select an app language"
-msgstr ""
+msgstr "Bir uygulama dili seç"
 
 #: src/screens/Onboarding/StepProfile/AvatarCircle.tsx:66
 msgid "Select an avatar"
@@ -6898,11 +6898,11 @@ msgstr "Emoji seç"
 
 #: src/components/Select/index.tsx:204
 msgid "Select an option"
-msgstr ""
+msgstr "Bir seçenek seçiniz"
 
 #: src/screens/Settings/LanguageSettings.tsx:98
 msgid "Select app language"
-msgstr ""
+msgstr "Uygulama dili seç"
 
 #: src/screens/Settings/LanguageSettings.tsx:164
 msgid "Select content languages"
@@ -6910,7 +6910,7 @@ msgstr "İçerik dillerini seç"
 
 #: src/components/live/GoLiveDialog.tsx:270
 msgid "Select duration"
-msgstr ""
+msgstr "süre seç"
 
 #: src/screens/Login/index.tsx:144
 msgid "Select from an existing account"
@@ -6946,7 +6946,7 @@ msgstr "Moderatör seç"
 
 #: src/screens/Settings/LanguageSettings.tsx:131
 msgid "Select primary language"
-msgstr ""
+msgstr "Birincil dil seç"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:59
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:66
@@ -8066,7 +8066,7 @@ msgstr "Bu sohbetin yapıldığı hesap ya silinmiş ya da devre dışı bırak�
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:156
 msgid "This email is already associated with your account."
-msgstr ""
+msgstr "Bu e-posta zaten hesabınızla ilişkilendirilmiştir."
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -8109,7 +8109,7 @@ msgstr "Bu bilgi diğer kullanıcılarla paylaşılmaz."
 #: src/components/live/EditLiveDialog.tsx:203
 #: src/components/live/GoLiveDialog.tsx:173
 msgid "This is not a valid link"
-msgstr ""
+msgstr "Bu geçerli bir bağlantı değil"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:168
 msgid "This label was applied by the author."
@@ -8576,7 +8576,7 @@ msgstr "<0>{displayName}</0> kullanıcısının listelerini düzenleyin"
 #: src/screens/Settings/AccountSettings.tsx:104
 #: src/screens/Settings/AccountSettings.tsx:112
 msgid "Update email"
-msgstr ""
+msgstr "E-posta güncelle"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:526
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:547
@@ -8585,7 +8585,7 @@ msgstr "{domain} adresine güncelle"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:203
 msgid "Update your email"
-msgstr ""
+msgstr "E-postanızı güncelleyin"
 
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:347
 msgctxt "toast"
@@ -8784,7 +8784,7 @@ msgstr "Hesabı doğrula"
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:348
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:359
 msgid "Verify code"
-msgstr ""
+msgstr "Kodu doğrula"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:528
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:549
@@ -8798,7 +8798,7 @@ msgstr "E-postayı doğrula"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:214
 msgid "Verify email code"
-msgstr ""
+msgstr "E-posta kodunu doğrula"
 
 #: src/components/dialogs/ChangeEmailDialog.tsx:122
 #: src/components/dialogs/VerifyEmailDialog.tsx:163
@@ -9029,7 +9029,7 @@ msgstr "İçeriği uyar ve akışlarda filtrele"
 #: src/components/live/LiveStatusDialog.tsx:156
 #: src/components/live/LiveStatusDialog.tsx:165
 msgid "Watch now"
-msgstr ""
+msgstr "Simdi izle"
 
 #: src/screens/Hashtag.tsx:205
 msgid "We couldn't find any results for that hashtag."
@@ -9065,7 +9065,7 @@ msgstr "En az iki ilgi alanı seçmenizi öneririz."
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:238
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
-msgstr ""
+msgstr "<0>{0}</0> adresine bir bağlantı içeren bir e-posta gönderdik. E-posta doğrulama işlemini tamamlamak için lütfen tıklayın."
 
 #: src/view/com/composer/state/video.ts:417
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
@@ -9254,7 +9254,7 @@ msgstr "Sunucudan yanlış DID döndürüldü. Alınan: {0}"
 #: src/components/live/EditLiveDialog.tsx:167
 #: src/components/live/GoLiveDialog.tsx:142
 msgid "www.mylivestream.tv"
-msgstr ""
+msgstr "www.benimcanliyayinim.tv"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:86
 msgid "Yes"
@@ -9304,11 +9304,11 @@ msgstr "Sıradasınız."
 #: src/components/live/EditLiveDialog.tsx:133
 #: src/components/live/EditLiveDialog.tsx:138
 msgid "You are Live"
-msgstr ""
+msgstr "Canlı yayındasın"
 
 #: src/components/live/queries.ts:177
 msgid "You are no longer live"
-msgstr ""
+msgstr "Artık canlı yayında değilsin"
 
 #: src/view/com/composer/state/video.ts:410
 msgid "You are not allowed to upload videos."
@@ -9320,7 +9320,7 @@ msgstr "Kimseyi takip etmiyorsunuz."
 
 #: src/components/live/queries.ts:122
 msgid "You are now live!"
-msgstr ""
+msgstr "Şimdi canlı yayındasınız."
 
 #: src/components/verification/VerificationsDialog.tsx:64
 msgid "You are verified"
@@ -9460,7 +9460,7 @@ msgstr "Sonuna ulaştınız"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:187
 msgid "You have successfully verified your email address. You can close this dialog."
-msgstr ""
+msgstr "E-posta adresinizi başarıyla doğruladınız. Bu iletişim kutusunu kapatabilirsiniz."
 
 #: src/lib/media/video/upload.shared.ts:56
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
@@ -9620,7 +9620,7 @@ msgstr "Akışınızın sonuna ulaştınız! Takip edebileceğiniz daha fazla he
 
 #: src/lib/hooks/useCleanError.ts:58
 msgid "You've reached the maximum number of requests allowed. Please try again later."
-msgstr ""
+msgstr "İzin verilen maksimum istek sayısına ulaştınız. Lütfen daha sonra tekrar deneyin."
 
 #: src/view/com/composer/state/video.ts:421
 msgid "You've reached your daily limit for video uploads (too many bytes)"
