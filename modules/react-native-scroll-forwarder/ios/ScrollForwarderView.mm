@@ -79,6 +79,10 @@ static const CGFloat kMinimumVelocity = 5.0;
   [self stopAnimation];
   [self removeCancelGestureRecognizers];
   _svcv = nil;
+  
+  for (UIGestureRecognizer *gr in self.gestureRecognizers) {
+    gr.delegate = nil;
+  }
 }
 
 - (void)prepareForRecycle
@@ -172,10 +176,8 @@ static const CGFloat kMinimumVelocity = 5.0;
 - (void)stopAnimation
 {
   [self disableCancelGestureRecognizers];
-  if (_displayLink) {
-    [_displayLink invalidate];
-    _displayLink = nil;
-  }
+  [_displayLink invalidate];
+  _displayLink = nil;
 }
 
 - (void)handlePan:(UIPanGestureRecognizer *)gesture {
@@ -186,6 +188,8 @@ static const CGFloat kMinimumVelocity = 5.0;
   CGPoint translation = [gesture translationInView:self];
   
   if (gesture.state == UIGestureRecognizerStateBegan) {
+    _didImpact = false;
+    
     if (sv.contentOffset.y < 0) {
       CGPoint newOffset = CGPointMake(sv.contentOffset.x, 0);
       sv.contentOffset = newOffset;
@@ -207,8 +211,7 @@ static const CGFloat kMinimumVelocity = 5.0;
   
   if (gesture.state == UIGestureRecognizerStateEnded) {
     CGPoint velocity = [gesture velocityInView:self];
-    _didImpact = false;
-    
+
     if (sv.contentOffset.y <= -kPullThreshold) {
       [self refresh];
       return;
