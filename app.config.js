@@ -79,6 +79,7 @@ module.exports = function (_config) {
             'eu',
             'fi',
             'fr',
+            'fy',
             'ga',
             'gd',
             'gl',

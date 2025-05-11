@@ -16,6 +16,7 @@ import {
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
@@ -287,6 +288,8 @@ let PostThreadItemLoaded = ({
     setLimitLines(false)
   }, [setLimitLines])
 
+  const {isActive: live} = useActorStatus(post.author)
+
   if (!record) {
     return <ErrorMessage message={_(msg`Invalid or unsupported post record`)} />
   }
@@ -330,6 +333,7 @@ let PostThreadItemLoaded = ({
               profile={post.author}
               moderation={moderation.ui('avatar')}
               type={post.author.associated?.labeler ? 'labeler' : 'user'}
+              live={live}
             />
             <View style={[a.flex_1]}>
               <View style={[a.flex_row, a.align_center]}>
@@ -575,6 +579,7 @@ let PostThreadItemLoaded = ({
                   profile={post.author}
                   moderation={moderation.ui('avatar')}
                   type={post.author.associated?.labeler ? 'labeler' : 'user'}
+                  live={live}
                 />
 
                 {showChildReplyLine && (

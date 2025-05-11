@@ -307,7 +307,7 @@ export const InnerFlatList = React.forwardRef<
   )
 })
 
-export function Handle() {
+export function Handle({difference = false}: {difference?: boolean}) {
   const t = useTheme()
   const {_} = useLingui()
   const {screenReaderEnabled} = useA11y()
@@ -328,9 +328,19 @@ export function Handle() {
               width: 35,
               height: 5,
               alignSelf: 'center',
-              backgroundColor: t.palette.contrast_975,
-              opacity: 0.5,
             },
+            difference
+              ? {
+                  // TODO: mixBlendMode is only available on the new architecture -sfn
+                  // backgroundColor: t.palette.white,
+                  // mixBlendMode: 'difference',
+                  backgroundColor: t.palette.white,
+                  opacity: 0.75,
+                }
+              : {
+                  backgroundColor: t.palette.contrast_975,
+                  opacity: 0.5,
+                },
           ]}
         />
       </Pressable>

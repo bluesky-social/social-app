@@ -27,7 +27,6 @@ import {
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {precacheProfile} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {AviFollowButton} from '#/view/com/posts/AviFollowButton'
 import {atoms as a} from '#/alf'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
@@ -174,14 +173,12 @@ function PostInner({
       {showReplyLine && <View style={styles.replyLine} />}
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <AviFollowButton author={post.author} moderation={moderation}>
-            <PreviewableUserAvatar
-              size={42}
-              profile={post.author}
-              moderation={moderation.ui('avatar')}
-              type={post.author.associated?.labeler ? 'labeler' : 'user'}
-            />
-          </AviFollowButton>
+          <PreviewableUserAvatar
+            size={42}
+            profile={post.author}
+            moderation={moderation.ui('avatar')}
+            type={post.author.associated?.labeler ? 'labeler' : 'user'}
+          />
         </View>
         <View style={styles.layoutContent}>
           <PostMeta

@@ -2,6 +2,7 @@ import {useCallback, useState} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {type StatefulControl} from '#/components/dialogs/Context'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
@@ -38,7 +39,7 @@ export function EmailDialog() {
 
       <Dialog.ScrollableInner
         label={_(msg`Make adjustments to email settings for your account`)}
-        style={[{maxWidth: 400}]}>
+        style={web({maxWidth: 400})}>
         <Inner control={emailDialogControl} />
         <Dialog.Close />
       </Dialog.ScrollableInner>
