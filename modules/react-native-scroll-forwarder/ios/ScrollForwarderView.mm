@@ -77,6 +77,7 @@ static const CGFloat kMinimumVelocity = 5.0;
 - (void)dealloc
 {
   [self stopAnimation];
+  [self removeCancelGestureRecognizers];
   _svcv = nil;
 }
 
@@ -84,6 +85,7 @@ static const CGFloat kMinimumVelocity = 5.0;
 {
   [super prepareForRecycle];
   [self stopAnimation];
+  [self removeCancelGestureRecognizers];
   _svcv = nil;
 }
 
@@ -209,10 +211,6 @@ static const CGFloat kMinimumVelocity = 5.0;
     
     if (sv.contentOffset.y <= -kPullThreshold) {
       [self refresh];
-//      if ([_svcv.scrollView.refreshControl isKindOfClass:[RCTRefreshControl class]]) {
-//        RCTRefreshControl *refreshCtrl = (RCTRefreshControl *) _svcv.scrollView.refreshControl;
-//        [refreshCtrl forwarderBeginRefreshing];
-//      }
       return;
     }
     
@@ -353,12 +351,9 @@ static const CGFloat kMinimumVelocity = 5.0;
   return nil;
 }
 
-- (void) refresh
+- (void)refresh
 {
-//  if ([_svcv.scrollView.refreshControl isKindOfClass:[RCTPullToRefreshViewComponentView class]]) {
-//    RCTPullToRefreshViewComponentView *refreshView = (RCTPullToRefreshViewComponentView *) _svcv.scrollView.refreshControl;
-//    [refreshView beginRefreshingProgrammatically];
-//  }
+  // TODO: implement
 }
 
 Class<RCTComponentViewProtocol> ScrollForwarderViewCls(void)
@@ -367,35 +362,3 @@ Class<RCTComponentViewProtocol> ScrollForwarderViewCls(void)
 }
 
 @end
-
-
-//- (void)forwarderBeginRefreshing
-//{
-//  _refreshingProgrammatically = NO;
-//
-//  [self sizeToFit];
-//
-//  if (!self.scrollView) {
-//    return;
-//  }
-//
-//  UIScrollView *scrollView = (UIScrollView *)self.scrollView;
-//
-//  [UIView animateWithDuration:0.3
-//    delay:0
-//    options:UIViewAnimationOptionBeginFromCurrentState
-//    animations:^(void) {
-//      // Whenever we call this method, the scrollview will always be at a position of
-//      // -130 or less. Scrolling back to -65 simulates the default behavior of RCTRefreshControl
-//      [scrollView setContentOffset:CGPointMake(0, -65)];
-//    }
-//    completion:^(__unused BOOL finished) {
-//      [super beginRefreshing];
-//      [self setCurrentRefreshingState:super.refreshing];
-//
-//      if (self->_onRefresh) {
-//        self->_onRefresh(nil);
-//      }
-//    }
-//  ];
-//}
