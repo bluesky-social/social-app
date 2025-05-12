@@ -1,10 +1,12 @@
 import {
   default as NativeScrollForwarderView,
-  NativeProps,
+  type NativeProps,
 } from './ScrollForwarderViewNativeComponent'
 
 export function ScrollForwarderView({children, ...rest}: NativeProps) {
   return (
-    <NativeScrollForwarderView {...rest}>{children}</NativeScrollForwarderView>
+    <NativeScrollForwarderView {...rest} style={{flex: 1}}>
+      {children}
+    </NativeScrollForwarderView>
   )
 }

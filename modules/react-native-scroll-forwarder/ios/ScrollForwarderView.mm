@@ -2,8 +2,6 @@
 
 #import <React/RCTEnhancedScrollView.h>
 #import <React/RCTScrollViewComponentView.h>
-#import <React/RCTRefreshControl.h>
-#import <React/RCTPullToRefreshViewComponentView.h>
 #import <react/renderer/components/ScrollForwarderViewSpec/ComponentDescriptors.h>
 #import <react/renderer/components/ScrollForwarderViewSpec/EventEmitters.h>
 #import <react/renderer/components/ScrollForwarderViewSpec/Props.h>
@@ -13,10 +11,14 @@
 
 using namespace facebook::react;
 
+// How far down a pull needs to be to trigger a refresh
 static const CGFloat kPullThreshold = 130.0;
 static const CGFloat kDampingFactor = 0.55;
+// The top speed that free scrolling can have
 static const CGFloat kMaxVelocity = 5000.0;
+// Free scrolling decay. This seems to be close to the default iOS value
 static const CGFloat kVelocityDecay = 0.9875;
+// What scroll release velocity will actually trigger free scrolling
 static const CGFloat kMinimumVelocity = 5.0;
 
 @interface ScrollForwarderView () <RCTScrollForwarderViewViewProtocol, UIGestureRecognizerDelegate>
@@ -24,8 +26,6 @@ static const CGFloat kMinimumVelocity = 5.0;
 @end
 
 @implementation ScrollForwarderView {
-  UIView * _view;
-  
   NSArray<UIGestureRecognizer *> * _cancelGestureRecognizers;
   RCTScrollViewComponentView * _svcv;
   CGPoint _initialOffset;
@@ -34,6 +34,7 @@ static const CGFloat kMinimumVelocity = 5.0;
   CGFloat _currentVelocity;
   CGFloat _accumulatedTranslation;
   
+  bool _refreshing;
   bool _didImpact;
 }
 
@@ -47,26 +48,23 @@ static const CGFloat kMinimumVelocity = 5.0;
   if (self = [super initWithFrame:frame]) {
     static const auto defaultProps = std::make_shared<const ScrollForwarderViewProps>();
     _props = defaultProps;
-
-    _view = [[UIView alloc] init];
     
     UIPanGestureRecognizer *pg = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
     pg.delegate = self;
+    pg.cancelsTouchesInView = false;
     [self addGestureRecognizer:pg];
     
     UITapGestureRecognizer *tg = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    [tg setEnabled:true];
+    [tg setEnabled:false];
     tg.delegate = self;
     
     UILongPressGestureRecognizer *lpg = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
     [lpg setMinimumPressDuration:0.01];
-    [lpg setEnabled:true];
+    [lpg setEnabled:false];
     lpg.delegate = self;
     
     NSArray<UIGestureRecognizer *> *cancelGestureRecognizers = [NSArray arrayWithObjects:lpg, tg, nil];
     _cancelGestureRecognizers = cancelGestureRecognizers;
-    
-    self.contentView = _view;
   }
 
   return self;
@@ -80,7 +78,7 @@ static const CGFloat kMinimumVelocity = 5.0;
   [self removeCancelGestureRecognizers];
   _svcv = nil;
   
-  for (UIGestureRecognizer *gr in self.gestureRecognizers) {
+  for (UIGestureRecognizer *gr in _cancelGestureRecognizers) {
     gr.delegate = nil;
   }
 }
@@ -133,6 +131,7 @@ static const CGFloat kMinimumVelocity = 5.0;
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
   [self stopAnimation];
+  [super touchesBegan:touches withEvent:event];
 }
 
 // MARK: - Scroll Forwarding
@@ -212,10 +211,11 @@ static const CGFloat kMinimumVelocity = 5.0;
   if (gesture.state == UIGestureRecognizerStateEnded) {
     CGPoint velocity = [gesture velocityInView:self];
 
-    if (sv.contentOffset.y <= -kPullThreshold) {
-      [self refresh];
-      return;
-    }
+    // TODO: enable this again
+//    if (sv.contentOffset.y <= -kPullThreshold) {
+//      [self refresh];
+//      return;
+//    }
     
     if (sv.contentOffset.y < 0) {
       CGPoint newOffset = CGPointMake(sv.contentOffset.x, 0);
@@ -356,7 +356,25 @@ static const CGFloat kMinimumVelocity = 5.0;
 
 - (void)refresh
 {
-  // TODO: implement
+  if (!_svcv) return;
+  
+  UIScrollView *sv = _svcv.scrollView;
+  UIRefreshControl *rc = sv.refreshControl;
+  
+  if (!rc) return;
+
+  [UIView animateWithDuration:0.3
+    delay:0
+    options:UIViewAnimationOptionBeginFromCurrentState
+    animations:^(void) {
+      // Whenever we call this method, the scrollview will always be at a position of
+      // -130 or less. Scrolling back to -65 simulates the default behavior of RCTRefreshControl
+      [sv setContentOffset:CGPointMake(0, -65)];
+    }
+    completion:^(__unused BOOL finished) {
+      [rc beginRefreshing];
+    }
+  ];
 }
 
 Class<RCTComponentViewProtocol> ScrollForwarderViewCls(void)

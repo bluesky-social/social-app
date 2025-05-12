@@ -1,9 +1,16 @@
+import  {type ViewProps} from 'react-native'
+import {
+  type BubblingEventHandler,
+  type Int32,
+} from 'react-native/Libraries/Types/CodegenTypes'
 import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent'
-import type {ViewProps} from 'react-native'
-import {Int32} from 'react-native/Libraries/Types/CodegenTypes'
+
+type OnRefreshEvent = {}
 
 export interface NativeProps extends ViewProps {
   scrollViewTag?: Int32
+  onRefresh?: BubblingEventHandler<OnRefreshEvent>
+  refreshing?: boolean
 }
 
 export default codegenNativeComponent<NativeProps>('ScrollForwarderView')
