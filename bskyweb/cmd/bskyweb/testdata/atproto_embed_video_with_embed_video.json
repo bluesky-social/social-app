@@ -1,0 +1,128 @@
+
+{
+  "post": {
+    "uri": "at://did:plc:d4yzg3vadl536rkihgygkvv6/app.bsky.feed.post/3lmnja4gcrs25",
+    "cid": "bafyreielaoofchm2vtensdxp5mcbephufayq5mgv2ylflqzkmqjdpra5ai",
+    "author": {
+      "did": "did:plc:d4yzg3vadl536rkihgygkvv6",
+      "handle": "jason.mischievous.org",
+      "displayName": "Jason Culverhouse",
+      "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:d4yzg3vadl536rkihgygkvv6/bafkreiegqvxwt5fpn4l5m274bdfx5c4q6bozeoly43523n7shg25xaczly@jpeg",
+      "associated": {
+        "chat": {
+          "allowIncoming": "all"
+        }
+      },
+      "labels": [],
+      "createdAt": "2023-04-27T21:34:52.520Z"
+    },
+    "record": {
+      "$type": "app.bsky.feed.post",
+      "createdAt": "2025-04-12T21:49:46.635Z",
+      "embed": {
+        "$type": "app.bsky.embed.recordWithMedia",
+        "media": {
+          "$type": "app.bsky.embed.video",
+          "aspectRatio": {
+            "height": 1920,
+            "width": 1080
+          },
+          "video": {
+            "$type": "blob",
+            "ref": {
+              "$link": "bafkreifln2xsbd5e4p76ey5vlwxr4ubkmoiacdmev2fjbggu3i33ysqyla"
+            },
+            "mimeType": "video/mp4",
+            "size": 5737252
+          }
+        },
+        "record": {
+          "$type": "app.bsky.embed.record",
+          "record": {
+            "cid": "bafyreid765sczbrxsjpwt6tn6izxr4eqdqtd2ahitry2mcnrov5wtruv44",
+            "uri": "at://did:plc:dxzr73axceii3uo3iz3whby4/app.bsky.feed.post/3lmmyxklxhc2a"
+          }
+        }
+      },
+      "langs": [
+        "en"
+      ],
+      "text": "Real.  In Redwood City."
+    },
+    "embed": {
+      "$type": "app.bsky.embed.recordWithMedia#view",
+      "media": {
+        "$type": "app.bsky.embed.video#view",
+        "cid": "bafkreifln2xsbd5e4p76ey5vlwxr4ubkmoiacdmev2fjbggu3i33ysqyla",
+        "playlist": "https://video.bsky.app/watch/did%3Aplc%3Ad4yzg3vadl536rkihgygkvv6/bafkreifln2xsbd5e4p76ey5vlwxr4ubkmoiacdmev2fjbggu3i33ysqyla/playlist.m3u8",
+        "thumbnail": "https://video.bsky.app/watch/did%3Aplc%3Ad4yzg3vadl536rkihgygkvv6/bafkreifln2xsbd5e4p76ey5vlwxr4ubkmoiacdmev2fjbggu3i33ysqyla/thumbnail.jpg",
+        "aspectRatio": {
+          "height": 1920,
+          "width": 1080
+        }
+      },
+      "record": {
+        "record": {
+          "$type": "app.bsky.embed.record#viewRecord",
+          "uri": "at://did:plc:dxzr73axceii3uo3iz3whby4/app.bsky.feed.post/3lmmyxklxhc2a",
+          "cid": "bafyreid765sczbrxsjpwt6tn6izxr4eqdqtd2ahitry2mcnrov5wtruv44",
+          "author": {
+            "did": "did:plc:dxzr73axceii3uo3iz3whby4",
+            "handle": "mckenzielockett.bsky.social",
+            "displayName": "McKenzie Lockett (she/her)",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:dxzr73axceii3uo3iz3whby4/bafkreihpvzi4nuupyhrfe4vwnthovu7syfibod76v53ltmwuxhv24qhbgq@jpeg",
+            "labels": [],
+            "createdAt": "2023-09-26T20:41:18.703Z"
+          },
+          "value": {
+            "$type": "app.bsky.feed.post",
+            "createdAt": "2025-04-12T16:58:39.641Z",
+            "embed": {
+              "$type": "app.bsky.embed.video",
+              "aspectRatio": {
+                "height": 1280,
+                "width": 720
+              },
+              "video": {
+                "$type": "blob",
+                "ref": {
+                  "$link": "bafkreifmt7bezwb2y7blz6r6zxdogv2tvcgboz73mzijslkfal6kop4j6m"
+                },
+                "mimeType": "video/mp4",
+                "size": 3300411
+              }
+            },
+            "langs": [
+              "en"
+            ],
+            "text": "Just Bay Area things: crosswalks in Redwood City are playing a prescient message from AI Mark Zuckerberg"
+          },
+          "labels": [],
+          "likeCount": 7,
+          "replyCount": 1,
+          "repostCount": 0,
+          "quoteCount": 1,
+          "indexedAt": "2025-04-12T16:58:40.688Z",
+          "embeds": [
+            {
+              "$type": "app.bsky.embed.video#view",
+              "cid": "bafkreifmt7bezwb2y7blz6r6zxdogv2tvcgboz73mzijslkfal6kop4j6m",
+              "playlist": "https://video.bsky.app/watch/did%3Aplc%3Adxzr73axceii3uo3iz3whby4/bafkreifmt7bezwb2y7blz6r6zxdogv2tvcgboz73mzijslkfal6kop4j6m/playlist.m3u8",
+              "thumbnail": "https://video.bsky.app/watch/did%3Aplc%3Adxzr73axceii3uo3iz3whby4/bafkreifmt7bezwb2y7blz6r6zxdogv2tvcgboz73mzijslkfal6kop4j6m/thumbnail.jpg",
+              "aspectRatio": {
+                "height": 1280,
+                "width": 720
+              }
+            }
+          ]
+        }
+      }
+    },
+    "replyCount": 0,
+    "repostCount": 1,
+    "likeCount": 2,
+    "quoteCount": 0,
+    "indexedAt": "2025-04-12T21:49:47.384Z",
+    "labels": []
+  }
+}
