@@ -34,7 +34,6 @@ static const CGFloat kMinimumVelocity = 5.0;
   CGFloat _currentVelocity;
   CGFloat _accumulatedTranslation;
   
-  bool _refreshing;
   bool _didImpact;
 }
 
@@ -100,6 +99,12 @@ static const CGFloat kMinimumVelocity = 5.0;
 
   if (oldViewProps.scrollViewTag != newViewProps.scrollViewTag) {
     [self tryFindScrollView];
+  }
+  
+  if (oldViewProps.refreshing != newViewProps.refreshing) {
+    if (!newViewProps.refreshing) {
+      [self endRefreshing];
+    }
   }
   
   [super updateProps:props oldProps:oldProps];
@@ -211,11 +216,10 @@ static const CGFloat kMinimumVelocity = 5.0;
   if (gesture.state == UIGestureRecognizerStateEnded) {
     CGPoint velocity = [gesture velocityInView:self];
 
-    // TODO: enable this again
-//    if (sv.contentOffset.y <= -kPullThreshold) {
-//      [self refresh];
-//      return;
-//    }
+    if (sv.contentOffset.y <= -kPullThreshold) {
+      [self refresh];
+      return;
+    }
     
     if (sv.contentOffset.y < 0) {
       CGPoint newOffset = CGPointMake(sv.contentOffset.x, 0);
@@ -354,27 +358,49 @@ static const CGFloat kMinimumVelocity = 5.0;
   return nil;
 }
 
+- (UIRefreshControl *)refreshContorl
+{
+  if (!_svcv) return nil;
+  return _svcv.scrollView.refreshControl;
+}
+
 - (void)refresh
 {
-  if (!_svcv) return;
+  __weak ScrollForwarderView *weakSelf = self;
   
-  UIScrollView *sv = _svcv.scrollView;
-  UIRefreshControl *rc = sv.refreshControl;
+  [_svcv.scrollView.refreshControl beginRefreshing];
   
-  if (!rc) return;
-
   [UIView animateWithDuration:0.3
     delay:0
     options:UIViewAnimationOptionBeginFromCurrentState
     animations:^(void) {
+      if (!weakSelf) return;
+    
+      __strong ScrollForwarderView *self = weakSelf;
+    
       // Whenever we call this method, the scrollview will always be at a position of
-      // -130 or less. Scrolling back to -65 simulates the default behavior of RCTRefreshControl
-      [sv setContentOffset:CGPointMake(0, -65)];
+      // -130 or less. Scrolling back to -80 simulates the default behavior of RCTRefreshControl
+      [self->_svcv.scrollView setContentOffset:CGPointMake(0, -65)];
     }
     completion:^(__unused BOOL finished) {
-      [rc beginRefreshing];
+      __strong ScrollForwarderView *self = weakSelf;
+
+      if (self->_eventEmitter != nullptr) {
+        std::dynamic_pointer_cast<const facebook::react::ScrollForwarderViewEventEmitter>(self->_eventEmitter)
+        ->onRefresh(facebook::react::ScrollForwarderViewEventEmitter::OnRefresh{});
+      }
     }
   ];
+}
+
+- (void)endRefreshing
+{
+  UIRefreshControl *rc = [self refreshContorl];
+  
+  CGPoint newOffset = CGPointMake(_svcv.scrollView.contentOffset.x, 0.0);
+  [self scrollToOffset:newOffset animated:true];
+  
+  [rc endRefreshing];
 }
 
 Class<RCTComponentViewProtocol> ScrollForwarderViewCls(void)

@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react'
+import React, {useCallback, useMemo, useRef, useState} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {
@@ -46,8 +46,8 @@ import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
 import {navigate} from '#/Navigation'
-import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
 import {ScrollForwarderView} from 'modules/react-native-scroll-forwarder/src'
+import {PostFeedRef} from '../com/posts/PostFeed'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -179,6 +179,7 @@ function ProfileScreenLoaded({
     enabled: !!profile.associated?.labeler,
   })
   const [currentPage, setCurrentPage] = React.useState(0)
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const {_} = useLingui()
 
   const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
@@ -335,6 +336,14 @@ function ProfileScreenLoaded({
     scrollSectionToTop(index)
   }
 
+  const postFeedRef = useRef<PostFeedRef>()
+
+  const onRefresh = async () => {
+    setIsRefreshing(true)
+    await postFeedRef.current?.refreshFeed()
+    setIsRefreshing(false)
+  }
+
   // rendering
   // =
 
@@ -344,7 +353,10 @@ function ProfileScreenLoaded({
     setMinimumHeight: (height: number) => void
   }) => {
     return (
-      <ScrollForwarderView scrollViewTag={scrollViewTag}>
+      <ScrollForwarderView
+        scrollViewTag={scrollViewTag}
+        refreshing={isRefreshing}
+        onRefresh={onRefresh}>
         <ProfileHeader
           profile={profile}
           labeler={labelerInfo}
@@ -409,6 +421,7 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                postFeedRef={postFeedRef}
               />
             )
           : null}
