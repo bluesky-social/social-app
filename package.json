@@ -216,7 +216,8 @@
     "tlds": "^1.234.0",
     "tldts": "^6.1.46",
     "zeego": "^1.6.2",
-    "zod": "^3.20.2"
+    "zod": "^3.20.2",
+    "react-native-scroll-forwarder": "link:./modules/react-native-scroll-forwarder"
   },
   "devDependencies": {
     "@atproto/dev-env": "^0.3.144",

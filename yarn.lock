@@ -16911,6 +16911,10 @@ react-native-screens@^4.11.1:
     react-native-is-edge-to-edge "^1.1.7"
     warn-once "^0.1.0"
 
+"react-native-scroll-forwarder@link:./modules/react-native-scroll-forwarder":
+  version "0.0.0"
+  uid ""
+
 react-native-svg@15.12.0:
   version "15.12.0"
   resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-15.12.0.tgz#0e2d476961e8b07f8c549fe4489c99b5130dc150"
