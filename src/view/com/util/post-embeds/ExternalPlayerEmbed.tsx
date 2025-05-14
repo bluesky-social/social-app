@@ -88,7 +88,6 @@ function Player({
         event.url.includes('www.youtube.com')),
     [params.playerUri, params.source],
   )
-
   // Don't show the player until it is active
   if (!isPlayerActive) return null
 
@@ -128,6 +127,7 @@ export function ExternalPlayer({
 
   const [isPlayerActive, setPlayerActive] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
+  const [userActivated, setUserActivated] = React.useState(false)
 
   const aspect = React.useMemo(() => {
     return getPlayerAspect({
@@ -139,6 +139,8 @@ export function ExternalPlayer({
 
   const viewRef = useAnimatedRef()
   const frameCallback = useFrameCallback(() => {
+    if (userActivated) return
+
     const measurement = measure(viewRef)
     if (!measurement) return
 
@@ -162,15 +164,16 @@ export function ExternalPlayer({
     }
   }, false) // False here disables autostarting the callback
 
-  // watch for leaving the viewport due to scrolling
   React.useEffect(() => {
-    // We don't want to do anything if the player isn't active
     if (!isPlayerActive) return
+
+    if (userActivated) return
 
     // Interval for scrolling works in most cases, However, for twitch embeds, if we navigate away from the screen the webview will
     // continue playing. We need to watch for the blur event
     const unsubscribe = navigation.addListener('blur', () => {
       setPlayerActive(false)
+      setUserActivated(false)
     })
 
     // Start watching for changes
@@ -180,7 +183,7 @@ export function ExternalPlayer({
       unsubscribe()
       frameCallback.setActive(false)
     }
-  }, [navigation, isPlayerActive, frameCallback])
+  }, [navigation, isPlayerActive, frameCallback, userActivated])
 
   const onLoad = React.useCallback(() => {
     setIsLoading(false)
@@ -196,12 +199,14 @@ export function ExternalPlayer({
         return
       }
 
+      setUserActivated(true)
       setPlayerActive(true)
     },
     [externalEmbedsPrefs, consentDialogControl, params.source],
   )
 
   const onAcceptConsent = React.useCallback(() => {
+    setUserActivated(true)
     setPlayerActive(true)
   }, [])
 
