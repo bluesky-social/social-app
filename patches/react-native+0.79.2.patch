@@ -12,21 +12,10 @@ index 914a249..0deac55 100644
  
  NS_ASSUME_NONNULL_END
 diff --git a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-index d029337..2a2a35a 100644
+index d029337..0f63ea3 100644
 --- a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
 +++ b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-@@ -599,6 +599,10 @@ - (void)prepareForRecycle
-   _contentView = nil;
-   _prevFirstVisibleFrame = CGRectZero;
-   _firstVisibleView = nil;
-+  // We want to make sure the content insets get reset, otherwise we might hold
-+  // onto strange insets that are modified by e.g. reanimated which will be applied
-+  // to the next scrollview that we render
-+  _scrollView.contentInset = RCTUIEdgeInsetsFromEdgeInsets(props.contentInset);
- }
- 
- #pragma mark - UIScrollViewDelegate
-@@ -1003,6 +1007,11 @@ - (void)_adjustForMaintainVisibleContentPosition
+@@ -1003,6 +1003,11 @@ - (void)_adjustForMaintainVisibleContentPosition
    }
  }
  
