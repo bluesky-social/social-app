@@ -1,5 +1,18 @@
+diff --git a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h
+index 914a249..0deac55 100644
+--- a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h
++++ b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h
+@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
+  */
+ @interface RCTPullToRefreshViewComponentView : RCTViewComponentView <RCTCustomPullToRefreshViewProtocol>
+ 
++- (void)beginRefreshingProgrammatically;
++
+ @end
+ 
+ NS_ASSUME_NONNULL_END
 diff --git a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-index d029337..40b6d76 100644
+index d029337..2a2a35a 100644
 --- a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
 +++ b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
 @@ -599,6 +599,10 @@ - (void)prepareForRecycle
@@ -13,6 +26,18 @@ index d029337..40b6d76 100644
  }
  
  #pragma mark - UIScrollViewDelegate
+@@ -1003,6 +1007,11 @@ - (void)_adjustForMaintainVisibleContentPosition
+   }
+ }
+ 
+++ (BOOL)shouldBeRecycled
++{
++  return NO;
++}
++
+ @end
+ 
+ Class<RCTComponentViewProtocol> RCTScrollViewCls(void)
 diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
 index e9b330f..ec5f58c 100644
 --- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
