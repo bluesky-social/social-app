@@ -1,20 +1,20 @@
-import React, {ComponentProps, memo, useMemo} from 'react'
+import React, {type ComponentProps, type JSX, memo, useMemo} from 'react'
 import {
-  GestureResponderEvent,
+  type GestureResponderEvent,
   Platform,
   Pressable,
-  StyleProp,
-  TextProps,
-  TextStyle,
-  TouchableOpacity,
+  type StyleProp,
+  type TextProps,
+  type TextStyle,
+  type TouchableOpacity,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions, useLinkProps} from '@react-navigation/native'
 
 import {
-  DebouncedNavigationProp,
+  type DebouncedNavigationProp,
   useNavigationDeduped,
 } from '#/lib/hooks/useNavigationDeduped'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
@@ -24,7 +24,7 @@ import {
   isExternalUrl,
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
-import {TypographyVariant} from '#/lib/ThemeContext'
+import {type TypographyVariant} from '#/lib/ThemeContext'
 import {isAndroid, isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {useModalControls} from '#/state/modals'

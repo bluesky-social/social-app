@@ -1,6 +1,6 @@
 import React, {useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {AppBskyEmbedVideo} from '@atproto/api'
+import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type * as HlsTypes from 'hls.js'
@@ -138,7 +138,7 @@ function useHLS({
   playlist: string
   setHasSubtitleTrack: (v: boolean) => void
   setError: (v: Error | null) => void
-  videoRef: React.RefObject<HTMLVideoElement>
+  videoRef: React.RefObject<HTMLVideoElement | null>
   setHlsLoading: (v: boolean) => void
 }) {
   const [Hls, setHls] = useState<typeof HlsTypes.default | undefined>(
