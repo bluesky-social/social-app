@@ -412,6 +412,10 @@ export const ComposePost = ({
             if (res.data.thread.length !== thread.posts.length) {
               throw new Error(`Not ready`)
             }
+            const anchor = res.data.thread.at(0)
+            if (!AppBskyFeedDefs.isThreadItemPost(anchor)) {
+              throw new Error(`Not ready`)
+            }
             return res.data.thread
           }, 1e3)
         }
