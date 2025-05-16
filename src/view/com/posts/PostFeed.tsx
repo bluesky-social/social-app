@@ -1,4 +1,4 @@
-import React, {memo, useCallback} from 'react'
+import React, {memo, useCallback, useRef} from 'react'
 import {
   ActivityIndicator,
   AppState,
@@ -19,6 +19,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {isStatusStillActive} from '#/lib/actor-status'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {logEvent} from '#/lib/statsig/statsig'
@@ -52,6 +53,7 @@ import {
 } from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
+import {temp__canBeLive, temp__isStatusValid} from '#/components/live/temp'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
 import {PostFeedErrorMessage} from './PostFeedErrorMessage'
@@ -775,6 +777,31 @@ let PostFeed = ({
     )
   }, [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed, headerOffset])
 
+  const seenActorWithStatusRef = useRef<Set<string>>(new Set())
+  const onItemSeen = useCallback(
+    (item: FeedRow) => {
+      feedFeedback.onItemSeen(item)
+      if (item.type === 'sliceItem') {
+        const actor = item.slice.items[item.indexInSlice].post.author
+        if (
+          actor.status &&
+          temp__canBeLive(actor) &&
+          temp__isStatusValid(actor.status) &&
+          isStatusStillActive(actor.status.expiresAt)
+        ) {
+          if (!seenActorWithStatusRef.current.has(actor.did)) {
+            seenActorWithStatusRef.current.add(actor.did)
+            logger.metric('live:view:post', {
+              subject: actor.did,
+              feed,
+            })
+          }
+        }
+      }
+    },
+    [feedFeedback, feed],
+  )
+
   return (
     <View testID={testID} style={style}>
       <List
@@ -797,7 +824,6 @@ let PostFeed = ({
         onEndReachedThreshold={2} // number of posts left to trigger load more
         removeClippedSubviews={true}
         extraData={extraData}
-        // @ts-ignore our .web version only -prf
         desktopFixedHeight={
           desktopFixedHeightOffset ? desktopFixedHeightOffset : true
         }
@@ -805,7 +831,7 @@ let PostFeed = ({
         windowSize={9}
         maxToRenderPerBatch={isIOS ? 5 : 1}
         updateCellsBatchingPeriod={40}
-        onItemSeen={feedFeedback.onItemSeen}
+        onItemSeen={onItemSeen}
       />
     </View>
   )

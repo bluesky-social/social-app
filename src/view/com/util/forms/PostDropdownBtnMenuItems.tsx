@@ -558,22 +558,23 @@ let PostDropdownMenuItems = ({
                 <Menu.ItemText>{_(msg`Show less like this`)}</Menu.ItemText>
                 <Menu.ItemIcon icon={EmojiSad} position="right" />
               </Menu.Item>
-
-              {IS_INTERNAL &&
-                DISCOVER_DEBUG_DIDS[currentAccount?.did ?? ''] && (
-                  <Menu.Item
-                    testID="postDropdownReportMisclassificationBtn"
-                    label={_(msg`Report topic misclassification`)}
-                    onPress={onReportMisclassification}>
-                    <Menu.ItemText>
-                      {_(msg`Report topic misclassification`)}
-                    </Menu.ItemText>
-                    <Menu.ItemIcon icon={AtomIcon} position="right" />
-                  </Menu.Item>
-                )}
             </Menu.Group>
           </>
         )}
+
+        {hasSession &&
+          IS_INTERNAL &&
+          DISCOVER_DEBUG_DIDS[currentAccount?.did ?? ''] && (
+            <Menu.Item
+              testID="postDropdownReportMisclassificationBtn"
+              label={_(msg`Assign topic - help train Discover!`)}
+              onPress={onReportMisclassification}>
+              <Menu.ItemText>
+                {_(msg`Assign topic - help train Discover!`)}
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={AtomIcon} position="right" />
+            </Menu.Item>
+          )}
 
         {hasSession && (
           <>

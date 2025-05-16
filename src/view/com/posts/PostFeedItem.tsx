@@ -17,6 +17,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {isReasonFeedSource, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -53,7 +54,6 @@ import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import * as bsky from '#/types/bsky'
 import {Link, TextLink, TextLinkOnWebOnly} from '../util/Link'
-import {AviFollowButton} from './AviFollowButton'
 
 interface FeedItemProps {
   record: AppBskyFeedPost.Record
@@ -251,6 +251,8 @@ let FeedItemInner = ({
     ? rootPost.threadgate.record
     : undefined
 
+  const {isActive: live} = useActorStatus(post.author)
+
   return (
     <Link
       testID={`feedItem-by-${post.author.handle}`}
@@ -381,15 +383,14 @@ let FeedItemInner = ({
 
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <AviFollowButton author={post.author} moderation={moderation}>
-            <PreviewableUserAvatar
-              size={42}
-              profile={post.author}
-              moderation={moderation.ui('avatar')}
-              type={post.author.associated?.labeler ? 'labeler' : 'user'}
-              onBeforePress={onOpenAuthor}
-            />
-          </AviFollowButton>
+          <PreviewableUserAvatar
+            size={42}
+            profile={post.author}
+            moderation={moderation.ui('avatar')}
+            type={post.author.associated?.labeler ? 'labeler' : 'user'}
+            onBeforePress={onOpenAuthor}
+            live={live}
+          />
           {isThreadParent && (
             <View
               style={[
@@ -397,7 +398,7 @@ let FeedItemInner = ({
                 {
                   flexGrow: 1,
                   backgroundColor: pal.colors.replyLine,
-                  marginTop: 4,
+                  marginTop: live ? 8 : 4,
                 },
               ]}
             />
