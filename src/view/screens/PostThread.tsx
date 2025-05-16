@@ -152,6 +152,7 @@ export function Inner({uri}: {uri: string | undefined}) {
     post: AppBskyFeedDefs.ThreadItemPost,
   }) => (_: any, posts: AppBskyFeedDefs.ThreadItemPost[]) => {
     if (posts.length) {
+      // TODO get parent and update reply count?
       insertReplies(post.uri, posts)
     }
   }
