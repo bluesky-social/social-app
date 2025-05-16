@@ -26,6 +26,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
+import {useLiveNowConfig} from './config'
 import {useUpsertLiveStatusMutation} from './queries'
 import {displayDuration, useDebouncedValue} from './utils'
 
@@ -58,6 +59,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const [duration, setDuration] = useState(60)
   const moderationOpts = useModerationOpts()
   const tick = useTickEveryMinute()
+  const liveNowConfig = useLiveNowConfig()
 
   const time = useCallback(
     (offset: number) => {
@@ -79,7 +81,6 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
 
   const liveLinkUrl = definitelyUrl(liveLink)
   const debouncedUrl = useDebouncedValue(liveLinkUrl, 500)
-  const hasLink = !!debouncedUrl
 
   const {
     data: linkMeta,
@@ -91,6 +92,12 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
     queryKey: ['link-meta', debouncedUrl],
     queryFn: async () => {
       if (!debouncedUrl) return null
+
+      const urlp = new URL(debouncedUrl)
+      if (!liveNowConfig.domains.includes(urlp.hostname)) {
+        throw new Error(_(msg`${urlp.hostname} is not a valid URL`))
+      }
+
       return getLinkMeta(agent, debouncedUrl)
     },
   })
@@ -100,6 +107,10 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
     isPending: isGoingLive,
     error: goLiveError,
   } = useUpsertLiveStatusMutation(duration, linkMeta)
+
+  const isSourceInvalid = !!liveLinkError || !!linkMetaError
+
+  const hasLink = !!debouncedUrl && !isSourceInvalid
 
   return (
     <Dialog.ScrollableInner
@@ -136,7 +147,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
             <TextField.LabelText>
               <Trans>Live link</Trans>
             </TextField.LabelText>
-            <TextField.Root isInvalid={!!liveLinkError || !!linkMetaError}>
+            <TextField.Root isInvalid={isSourceInvalid}>
               <TextField.Input
                 label={_(msg`Live link`)}
                 placeholder={_(msg`www.mylivestream.tv`)}
