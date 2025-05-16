@@ -83,7 +83,10 @@ export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.ne, name: 'नेपाली – Nepali'},
   {code2: AppLanguage.nl, name: 'Nederlands – Dutch'},
   {code2: AppLanguage.pl, name: 'Polski – Polish'},
-  {code2: AppLanguage.pt_BR, name: 'português do Brasil – Brazilian Portuguese'},
+  {
+    code2: AppLanguage.pt_BR,
+    name: 'português do Brasil – Brazilian Portuguese',
+  },
   {code2: AppLanguage.pt_PT, name: 'português europeu – European Portuguese'},
   {code2: AppLanguage.ro, name: 'Română – Romanian'},
   {code2: AppLanguage.ru, name: 'Русский – Russian'},
