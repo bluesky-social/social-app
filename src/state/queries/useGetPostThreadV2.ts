@@ -106,6 +106,7 @@ export function useGetPostThreadV2({
     async queryFn() {
       const {data} = await agent.app.bsky.feed.getPostThreadV2({
         uri: uri!,
+        branchingFactor: params.view === 'linear' ? 1 : 10,
         below: 10,
         sorting: mapSortOptionsToSortID(params.sort),
       })
@@ -284,14 +285,15 @@ export function useThread(
 ) {
   const isTreeView = params.view === 'tree'
   const [shadowSlices, setShadowSlices] = useState<
-    Map<string, AppBskyFeedDefs.ThreadItemPost[][]>
-  >(new Map())
+    Record<string, AppBskyFeedDefs.ThreadItemPost[][]>
+  >({})
   const insertReplies = useCallback((belowUri: string, posts: AppBskyFeedDefs.ThreadItemPost[]) => {
-    setShadowSlices(prev => {
-      if (prev.has(belowUri)) {
-        prev.set(belowUri, [...prev.get(belowUri)!, posts])
+    setShadowSlices(p => {
+      const prev = {...p}
+      if (belowUri in prev) {
+        prev[belowUri] = [posts, ...(prev[belowUri] || {})]
       } else {
-        prev.set(belowUri, [posts])
+        prev[belowUri] = [posts]
       }
       return prev
     })
@@ -344,15 +346,14 @@ export function useThread(
     return sorted.slices
   }, [sorted, shownHiddenReplyKinds])
 
+  // TODO should probably done in query cache so deletes flow through the same way
   const optimistic = useMemo(() => {
-    if (!shadowSlices.size) return flattened
-
     for (let i = 0; i < flattened.length; i++) {
       const item = flattened[i]
       if (item.type !== 'threadSlice') continue
-      if (!shadowSlices.has(item.slice.uri)) continue
+      if (!(item.slice.uri in shadowSlices)) continue
 
-      const replyThreads = shadowSlices.get(item.slice.uri)
+      const replyThreads = shadowSlices[item.slice.uri]
 
       // TODO linear view will work
       if (!isTreeView) continue
@@ -361,19 +362,34 @@ export function useThread(
         for (let ri = 0; ri < thread.length; ri++) {
           const post = thread[ri]
           post.depth = item.slice.depth + 1 + ri
-          flattened.splice(i + 1 + ri, 0, views.post({
+          const view = views.post({
             item: post,
             oneUp: undefined,
             oneDown: undefined,
             moderationOpts,
-          }))
+          })
+          const insertIndex = i + 1 + ri
+          flattened.splice(
+            insertIndex,
+            // if same post, replace in situ
+            flattened[insertIndex]?.key === view.key ? 1 : 0,
+            view
+          )
+          // console.log('insert', {
+          //   post: post.post.record?.text,
+          //   depth: item.slice.depth + 1 + ri,
+          //   ri,
+          //   spliceIndex: i + 1 + ri,
+          // })
+          // console.log(flattened.map(f => f.slice?.post?.record?.text))
         }
 
+        // TODO may not need since inserts will be looped and ignored
         i = i + thread.length
       }
     }
 
-    return flattened
+    return [...flattened]
   }, [flattened, shadowSlices, isTreeView])
 
   const items = useMemo(() => {
