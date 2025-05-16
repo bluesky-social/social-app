@@ -8,7 +8,7 @@ import type * as HlsTypes from 'hls.js'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
-import {useBandwidthEstimate} from '../BandwidthEstimateContext'
+import * as BandwidthEstimate from './bandwidth-estimate'
 import {Controls} from './web-controls/VideoControls'
 
 export function VideoEmbedInnerWeb({
@@ -142,7 +142,6 @@ function useHLS({
   videoRef: React.RefObject<HTMLVideoElement>
   setHlsLoading: (v: boolean) => void
 }) {
-  const bandwidthEstimate = useBandwidthEstimate()
   const [Hls, setHls] = useState<typeof HlsTypes.default | undefined>(
     () => promiseForHls.value,
   )
@@ -233,7 +232,7 @@ function useHLS({
     })
     hlsRef.current = hls
 
-    const latestEstimate = bandwidthEstimate.getBandwidthEstimate()
+    const latestEstimate = BandwidthEstimate.get()
     if (latestEstimate !== undefined) {
       hls.bandwidthEstimate = latestEstimate
     }
@@ -256,10 +255,7 @@ function useHLS({
     )
 
     hls.on(Hls.Events.FRAG_LOADED, () => {
-      const estimate = hls.bandwidthEstimate
-      if (!isNaN(estimate)) {
-        bandwidthEstimate.setLatestEstimate(estimate)
-      }
+      BandwidthEstimate.set(hls.bandwidthEstimate)
     })
 
     hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (_event, data) => {
@@ -305,7 +301,6 @@ function useHLS({
     handleFragChange,
     flushOnLoop,
     Hls,
-    bandwidthEstimate,
   ])
 
   return hlsRef
