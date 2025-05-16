@@ -10,7 +10,8 @@ import {cleanError} from '#/lib/strings/errors'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {definitelyUrl} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useAgent} from '#/state/session'
+import {useLiveNowConfig} from '#/state/service-config'
+import {useAgent, useSession} from '#/state/session'
 import {useTickEveryMinute} from '#/state/shell'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, ios, native, platform, useTheme, web} from '#/alf'
@@ -58,6 +59,10 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const [duration, setDuration] = useState(60)
   const moderationOpts = useModerationOpts()
   const tick = useTickEveryMinute()
+  const liveNowConfig = useLiveNowConfig()
+  const {currentAccount} = useSession()
+
+  const config = liveNowConfig.find(cfg => cfg.did === currentAccount?.did)
 
   const time = useCallback(
     (offset: number) => {
@@ -79,7 +84,6 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
 
   const liveLinkUrl = definitelyUrl(liveLink)
   const debouncedUrl = useDebouncedValue(liveLinkUrl, 500)
-  const hasLink = !!debouncedUrl
 
   const {
     data: linkMeta,
@@ -91,6 +95,13 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
     queryKey: ['link-meta', debouncedUrl],
     queryFn: async () => {
       if (!debouncedUrl) return null
+      if (!config) throw new Error(_(msg`You are not allowed to go live`))
+
+      const urlp = new URL(debouncedUrl)
+      if (!config.domains.includes(urlp.hostname)) {
+        throw new Error(_(msg`${urlp.hostname} is not a valid URL`))
+      }
+
       return getLinkMeta(agent, debouncedUrl)
     },
   })
@@ -100,6 +111,10 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
     isPending: isGoingLive,
     error: goLiveError,
   } = useUpsertLiveStatusMutation(duration, linkMeta)
+
+  const isSourceInvalid = !!liveLinkError || !!linkMetaError
+
+  const hasLink = !!debouncedUrl && !isSourceInvalid
 
   return (
     <Dialog.ScrollableInner
@@ -136,7 +151,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
             <TextField.LabelText>
               <Trans>Live link</Trans>
             </TextField.LabelText>
-            <TextField.Root isInvalid={!!liveLinkError || !!linkMetaError}>
+            <TextField.Root isInvalid={isSourceInvalid}>
               <TextField.Input
                 label={_(msg`Live link`)}
                 placeholder={_(msg`www.mylivestream.tv`)}

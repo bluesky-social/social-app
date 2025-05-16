@@ -19,7 +19,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {isStatusStillActive} from '#/lib/actor-status'
+import {isStatusStillActive, validateStatus} from '#/lib/actor-status'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {logEvent} from '#/lib/statsig/statsig'
@@ -39,6 +39,7 @@ import {
   RQKEY,
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
+import {useLiveNowConfig} from '#/state/service-config'
 import {useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
 import {List, type ListRef} from '#/view/com/util/List'
@@ -53,7 +54,6 @@ import {
 } from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
-import {temp__canBeLive, temp__isStatusValid} from '#/components/live/temp'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
 import {PostFeedErrorMessage} from './PostFeedErrorMessage'
@@ -777,16 +777,18 @@ let PostFeed = ({
     )
   }, [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed, headerOffset])
 
+  const liveNowConfig = useLiveNowConfig()
+
   const seenActorWithStatusRef = useRef<Set<string>>(new Set())
   const onItemSeen = useCallback(
     (item: FeedRow) => {
       feedFeedback.onItemSeen(item)
       if (item.type === 'sliceItem') {
         const actor = item.slice.items[item.indexInSlice].post.author
+
         if (
           actor.status &&
-          temp__canBeLive(actor) &&
-          temp__isStatusValid(actor.status) &&
+          validateStatus(actor.did, actor.status, liveNowConfig) &&
           isStatusStillActive(actor.status.expiresAt)
         ) {
           if (!seenActorWithStatusRef.current.has(actor.did)) {
@@ -799,7 +801,7 @@ let PostFeed = ({
         }
       }
     },
-    [feedFeedback, feed],
+    [feedFeedback, feed, liveNowConfig],
   )
 
   return (
