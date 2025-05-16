@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {type JSX, useCallback} from 'react'
 import {Dimensions, type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {type JSX} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'

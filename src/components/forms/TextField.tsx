@@ -1,12 +1,12 @@
 import React from 'react'
 import {
-  AccessibilityProps,
+  type AccessibilityProps,
   StyleSheet,
   TextInput,
-  TextInputProps,
-  TextStyle,
+  type TextInputProps,
+  type TextStyle,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 
 import {HITSLOP_20} from '#/lib/constants'
@@ -16,17 +16,17 @@ import {
   applyFonts,
   atoms as a,
   ios,
-  TextStyleProp,
+  type TextStyleProp,
   useAlf,
   useTheme,
   web,
 } from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
 const Context = React.createContext<{
-  inputRef: React.RefObject<TextInput> | null
+  inputRef: React.RefObject<TextInput | null> | null
   isInvalid: boolean
   hovered: boolean
   onHoverIn: () => void
@@ -140,7 +140,7 @@ export type InputProps = Omit<TextInputProps, 'value' | 'onChangeText'> & {
   value?: string
   onChangeText?: (value: string) => void
   isInvalid?: boolean
-  inputRef?: React.RefObject<TextInput> | React.ForwardedRef<TextInput>
+  inputRef?: React.RefObject<TextInput | null> | React.ForwardedRef<TextInput>
 }
 
 export function createInput(Component: typeof TextInput) {

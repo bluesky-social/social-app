@@ -1,17 +1,17 @@
 import * as React from 'react'
 import {
-  LayoutChangeEvent,
-  NativeScrollEvent,
-  ScrollView,
+  type LayoutChangeEvent,
+  type NativeScrollEvent,
+  type ScrollView,
   StyleSheet,
   View,
 } from 'react-native'
 import Animated, {
-  AnimatedRef,
+  type AnimatedRef,
   runOnJS,
   runOnUI,
   scrollTo,
-  SharedValue,
+  type SharedValue,
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
@@ -20,9 +20,13 @@ import Animated, {
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {isIOS} from '#/platform/detection'
-import {Pager, PagerRef, RenderTabBarFnProps} from '#/view/com/pager/Pager'
+import {
+  Pager,
+  type PagerRef,
+  type RenderTabBarFnProps,
+} from '#/view/com/pager/Pager'
 import {useTheme} from '#/alf'
-import {ListMethods} from '../util/List'
+import {type ListMethods} from '../util/List'
 import {PagerHeaderProvider} from './PagerHeaderContext'
 import {TabBar} from './TabBar'
 
@@ -35,15 +39,15 @@ export interface PagerWithHeaderChildParams {
 export interface PagerWithHeaderProps {
   testID?: string
   children:
-    | (((props: PagerWithHeaderChildParams) => JSX.Element) | null)[]
-    | ((props: PagerWithHeaderChildParams) => JSX.Element)
+    | (((props: PagerWithHeaderChildParams) => React.JSX.Element) | null)[]
+    | ((props: PagerWithHeaderChildParams) => React.JSX.Element)
   items: string[]
   isHeaderReady: boolean
   renderHeader?: ({
     setMinimumHeight,
   }: {
     setMinimumHeight: (height: number) => void
-  }) => JSX.Element
+  }) => React.JSX.Element
   initialPage?: number
   onPageSelected?: (index: number) => void
   onCurrentPageSelected?: (index: number) => void
