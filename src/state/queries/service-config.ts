@@ -25,7 +25,6 @@ export function useServiceConfigQuery() {
           checkEmailConfirmed: Boolean(data.checkEmailConfirmed),
           // @ts-expect-error not included in types atm
           topicsEnabled: Boolean(data.topicsEnabled),
-          // @ts-expect-error not included in types atm
           liveNow: data.liveNow ?? [],
         }
       } catch (e) {
