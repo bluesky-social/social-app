@@ -258,7 +258,7 @@ function useHLS({
     hls.on(Hls.Events.FRAG_LOADED, () => {
       const estimate = hls.bandwidthEstimate
       if (!isNaN(estimate)) {
-        bandwidthEstimate.setLastestEstimate(estimate)
+        bandwidthEstimate.setLatestEstimate(estimate)
       }
     })
 

@@ -1,6 +1,6 @@
 type BandwidthEstimateContext = {
   getBandwidthEstimate: () => number | undefined
-  setLastestEstimate: (estimate: number) => void
+  setLatestEstimate: (estimate: number) => void
 }
 
 export function Provider({children}: {children: React.ReactNode}) {

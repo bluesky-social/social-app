@@ -2,7 +2,7 @@ import {createContext, useContext, useMemo, useRef} from 'react'
 
 type BandwidthEstimateContext = {
   getBandwidthEstimate: () => number | undefined
-  setLastestEstimate: (estimate: number) => void
+  setLatestEstimate: (estimate: number) => void
 }
 
 const Context = createContext<BandwidthEstimateContext | null>(null)
@@ -13,7 +13,7 @@ export function Provider({children}: {children: React.ReactNode}) {
   const value = useMemo(
     () => ({
       getBandwidthEstimate: () => bandwidthEstimateRef.current,
-      setLastestEstimate: (estimate: number) => {
+      setLatestEstimate: (estimate: number) => {
         bandwidthEstimateRef.current = estimate
       },
     }),
