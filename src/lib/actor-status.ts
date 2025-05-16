@@ -21,10 +21,9 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
 
     if (
       shadowed &&
-      config.dids.includes(shadowed.did) &&
       'status' in shadowed &&
       shadowed.status &&
-      validateStatus(shadowed.status, config.domains) &&
+      validateStatus(shadowed.did, shadowed.status, config) &&
       isStatusStillActive(shadowed.status.expiresAt)
     ) {
       return {
@@ -53,14 +52,19 @@ export function isStatusStillActive(timeStr: string | undefined) {
 }
 
 export function validateStatus(
+  did: string,
   status: AppBskyActorDefs.StatusView,
-  sources: string[],
+  config: {did: string; domains: string[]}[],
 ) {
   if (status.status !== 'app.bsky.actor.status#live') return false
+  const sources = config.find(cfg => cfg.did === did)
+  if (!sources) {
+    return false
+  }
   try {
     if (AppBskyEmbedExternal.isView(status.embed)) {
       const url = new URL(status.embed.external.uri)
-      return sources.includes(url.hostname)
+      return sources.domains.includes(url.hostname)
     } else {
       return false
     }

@@ -8,14 +8,16 @@ type TrendingContext = {
   enabled: boolean
 }
 
+type LiveNowContext = {
+  did: string
+  domains: string[]
+}[]
+
 const TrendingContext = createContext<TrendingContext>({
   enabled: false,
 })
 
-const LiveNowContext = createContext<{
-  dids: string[]
-  domains: string[]
-} | null>(null)
+const LiveNowContext = createContext<LiveNowContext | null>(null)
 
 export function Provider({children}: {children: React.ReactNode}) {
   const langPrefs = useLanguagePrefs()
@@ -55,14 +57,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     return {enabled}
   }, [isInitialLoad, config, langPrefs.contentLanguages])
 
-  const liveNow = useMemo(
-    () =>
-      config?.liveNow ?? {
-        dids: [],
-        domains: [],
-      },
-    [config],
-  )
+  const liveNow = useMemo<LiveNowContext>(() => config?.liveNow ?? [], [config])
 
   return (
     <TrendingContext.Provider value={trending}>
@@ -88,6 +83,6 @@ export function useLiveNowConfig() {
 }
 
 export function useCanGoLive(did?: string) {
-  const {dids} = useLiveNowConfig()
-  return dids.includes(did ?? 'pwi')
+  const config = useLiveNowConfig()
+  return !!config.find(cfg => cfg.did === did)
 }

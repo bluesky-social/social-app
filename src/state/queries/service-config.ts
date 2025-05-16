@@ -7,9 +7,9 @@ type ServiceConfig = {
   checkEmailConfirmed: boolean
   topicsEnabled: boolean
   liveNow: {
-    dids: string[]
+    did: string
     domains: string[]
-  }
+  }[]
 }
 
 export function useServiceConfigQuery() {
@@ -26,19 +26,13 @@ export function useServiceConfigQuery() {
           // @ts-expect-error not included in types atm
           topicsEnabled: Boolean(data.topicsEnabled),
           // @ts-expect-error not included in types atm
-          liveNow: data.liveNow ?? {
-            dids: [],
-            domains: [],
-          },
+          liveNow: data.liveNow ?? [],
         }
       } catch (e) {
         return {
           checkEmailConfirmed: false,
           topicsEnabled: false,
-          liveNow: {
-            dids: [],
-            domains: [],
-          },
+          liveNow: [],
         }
       }
     },

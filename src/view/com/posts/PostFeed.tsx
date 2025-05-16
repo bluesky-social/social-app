@@ -788,8 +788,7 @@ let PostFeed = ({
 
         if (
           actor.status &&
-          liveNowConfig.dids.includes(actor.did) &&
-          validateStatus(actor.status, liveNowConfig.domains) &&
+          validateStatus(actor.did, actor.status, liveNowConfig) &&
           isStatusStillActive(actor.status.expiresAt)
         ) {
           if (!seenActorWithStatusRef.current.has(actor.did)) {

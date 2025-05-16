@@ -11,7 +11,7 @@ import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {definitelyUrl} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useLiveNowConfig} from '#/state/service-config'
-import {useAgent} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {useTickEveryMinute} from '#/state/shell'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, ios, native, platform, useTheme, web} from '#/alf'
@@ -60,6 +60,9 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const moderationOpts = useModerationOpts()
   const tick = useTickEveryMinute()
   const liveNowConfig = useLiveNowConfig()
+  const {currentAccount} = useSession()
+
+  const config = liveNowConfig.find(cfg => cfg.did === currentAccount?.did)
 
   const time = useCallback(
     (offset: number) => {
@@ -92,9 +95,10 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
     queryKey: ['link-meta', debouncedUrl],
     queryFn: async () => {
       if (!debouncedUrl) return null
+      if (!config) throw new Error(_(msg`You are not allowed to go live`))
 
       const urlp = new URL(debouncedUrl)
-      if (!liveNowConfig.domains.includes(urlp.hostname)) {
+      if (!config.domains.includes(urlp.hostname)) {
         throw new Error(_(msg`${urlp.hostname} is not a valid URL`))
       }
 
