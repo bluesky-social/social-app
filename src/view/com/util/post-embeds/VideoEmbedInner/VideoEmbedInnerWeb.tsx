@@ -1,6 +1,6 @@
 import React, {useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {AppBskyEmbedVideo} from '@atproto/api'
+import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type * as HlsTypes from 'hls.js'
@@ -8,6 +8,7 @@ import type * as HlsTypes from 'hls.js'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
+import {useBandwidthEstimate} from '../BandwidthEstimateContext'
 import {Controls} from './web-controls/VideoControls'
 
 export function VideoEmbedInnerWeb({
@@ -141,6 +142,7 @@ function useHLS({
   videoRef: React.RefObject<HTMLVideoElement>
   setHlsLoading: (v: boolean) => void
 }) {
+  const bandwidthEstimate = useBandwidthEstimate()
   const [Hls, setHls] = useState<typeof HlsTypes.default | undefined>(
     () => promiseForHls.value,
   )
@@ -231,6 +233,11 @@ function useHLS({
     })
     hlsRef.current = hls
 
+    const latestEstimate = bandwidthEstimate.getBandwidthEstimate()
+    if (latestEstimate !== undefined) {
+      hls.bandwidthEstimate = latestEstimate
+    }
+
     hls.attachMedia(videoRef.current)
     hls.loadSource(playlist)
 
@@ -247,6 +254,13 @@ function useHLS({
       },
       {signal},
     )
+
+    hls.on(Hls.Events.FRAG_LOADED, () => {
+      const estimate = hls.bandwidthEstimate
+      if (!isNaN(estimate)) {
+        bandwidthEstimate.setLastestEstimate(estimate)
+      }
+    })
 
     hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (_event, data) => {
       if (data.subtitleTracks.length > 0) {
@@ -291,6 +305,7 @@ function useHLS({
     handleFragChange,
     flushOnLoop,
     Hls,
+    bandwidthEstimate,
   ])
 
   return hlsRef
