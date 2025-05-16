@@ -39,6 +39,7 @@ import {
   RQKEY,
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
+import {useLiveNowConfig} from '#/state/service-config'
 import {useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
 import {List, type ListRef} from '#/view/com/util/List'
@@ -53,7 +54,6 @@ import {
 } from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
-import {useLiveNowConfig} from '#/components/live/config'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
 import {PostFeedErrorMessage} from './PostFeedErrorMessage'

@@ -20,6 +20,7 @@ import {
   useProfileFollowMutationQueue,
   useProfileMuteMutationQueue,
 } from '#/state/queries/profile'
+import {useCanGoLive} from '#/state/service-config'
 import {useSession} from '#/state/session'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import * as Toast from '#/view/com/util/Toast'
@@ -41,7 +42,6 @@ import {
 } from '#/components/icons/Person'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
-import {useCanGoLive} from '#/components/live/config'
 import {EditLiveDialog} from '#/components/live/EditLiveDialog'
 import {GoLiveDialog} from '#/components/live/GoLiveDialog'
 import * as Menu from '#/components/Menu'
