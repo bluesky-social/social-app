@@ -13,8 +13,8 @@ export class GifView extends React.PureComponent<GifViewProps> {
   }
 
   componentDidUpdate(prevProps: Readonly<GifViewProps>) {
-    if (prevProps.autoplay !== this.props.autoplay) {
-      if (this.props.autoplay) {
+    if (prevProps.autoplayGif !== this.props.autoplayGif) {
+      if (this.props.autoplayGif) {
         this.playAsync()
       } else {
         this.pauseAsync()
@@ -65,8 +65,8 @@ export class GifView extends React.PureComponent<GifViewProps> {
     return (
       <video
         src={this.props.source}
-        autoPlay={this.props.autoplay ? 'autoplay' : undefined}
-        preload={this.props.autoplay ? 'auto' : undefined}
+        autoPlay={this.props.autoplayGif ? 'autoplayGif' : undefined}
+        preload={this.props.autoplayGif ? 'auto' : undefined}
         playsInline={true}
         loop="loop"
         muted="muted"
