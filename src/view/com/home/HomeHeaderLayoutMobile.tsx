@@ -1,4 +1,4 @@
-import React from 'react'
+import {type JSX} from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {msg} from '@lingui/macro'

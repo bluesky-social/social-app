@@ -485,7 +485,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
  */
 function TabsNavigator() {
   const tabBar = React.useCallback(
-    (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
+    (props: React.JSX.IntrinsicAttributes & BottomTabBarProps) => (
       <BottomBar {...props} />
     ),
     [],

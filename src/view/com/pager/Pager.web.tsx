@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {type JSX} from 'react'
 import {View} from 'react-native'
 import {flushSync} from 'react-dom'
 

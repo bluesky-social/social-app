@@ -68,7 +68,7 @@ function Toast({
     }, 1e3)
   }
 
-  const destroyTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
+  const destroyTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
   const hideAndDestroyAfterTimeout = useNonReactiveCallback(() => {
     clearTimeout(destroyTimeoutRef.current)
     destroyTimeoutRef.current = setTimeout(hideAndDestroyImmediately, TIMEOUT)

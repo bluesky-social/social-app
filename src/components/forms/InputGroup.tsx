@@ -21,11 +21,14 @@ export function InputGroup(props: React.PropsWithChildren<{}>) {
               />
             ) : null}
             {React.cloneElement(child, {
-              // @ts-ignore
+              // @ts-expect-error
               style: [
+                // @ts-expect-error
                 ...(Array.isArray(child.props?.style)
-                  ? child.props.style
-                  : [child.props.style || {}]),
+                  ? // @ts-expect-error
+                    child.props.style
+                  : // @ts-expect-error
+                    [child.props.style || {}]),
                 {
                   borderTopLeftRadius: i > 0 ? 0 : undefined,
                   borderTopRightRadius: i > 0 ? 0 : undefined,
