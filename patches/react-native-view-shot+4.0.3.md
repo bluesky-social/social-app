@@ -1,3 +1,3 @@
 ## react-native-view-shot patch
 
-Temporary patch for web, where `view` is no longer `object` but rather `number`.
+Temporary patch for web, where `view`'s type has changed.
