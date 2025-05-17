@@ -7,7 +7,6 @@ import {logger} from '#/logger'
 import {useAgent, useSessionApi} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {DialogOuterProps} from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Loader} from '#/components/Loader'
@@ -17,7 +16,7 @@ import {Text} from '#/components/Typography'
 export function DeactivateAccountDialog({
   control,
 }: {
-  control: DialogOuterProps['control']
+  control: Prompt.PromptControlProps
 }) {
   return (
     <Prompt.Outer control={control}>
@@ -29,7 +28,7 @@ export function DeactivateAccountDialog({
 function DeactivateAccountDialogInner({
   control,
 }: {
-  control: DialogOuterProps['control']
+  control: Prompt.PromptControlProps
 }) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
