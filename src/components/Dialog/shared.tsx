@@ -5,7 +5,6 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import type React from 'react'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
