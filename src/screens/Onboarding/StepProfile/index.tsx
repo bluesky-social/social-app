@@ -2,7 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {Image as ExpoImage} from 'expo-image'
 import {
-  ImagePickerOptions,
+  type ImagePickerOptions,
   launchImageLibraryAsync,
   MediaTypeOptions,
 } from 'expo-image-picker'
@@ -27,7 +27,7 @@ import {AvatarCreatorCircle} from '#/screens/Onboarding/StepProfile/AvatarCreato
 import {AvatarCreatorItems} from '#/screens/Onboarding/StepProfile/AvatarCreatorItems'
 import {
   PlaceholderCanvas,
-  PlaceholderCanvasRef,
+  type PlaceholderCanvasRef,
 } from '#/screens/Onboarding/StepProfile/PlaceholderCanvas'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -38,7 +38,7 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components
 import {CircleInfo_Stroke2_Corner0_Rounded} from '#/components/icons/CircleInfo'
 import {StreamingLive_Stroke2_Corner0_Rounded as StreamingLive} from '#/components/icons/StreamingLive'
 import {Text} from '#/components/Typography'
-import {AvatarColor, avatarColors, Emoji, emojiItems} from './types'
+import {type AvatarColor, avatarColors, type Emoji, emojiItems} from './types'
 
 export interface Avatar {
   image?: {

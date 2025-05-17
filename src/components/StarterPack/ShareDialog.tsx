@@ -76,8 +76,8 @@ function ShareDialogInner({
       Toast.show(_(msg`Image saved`))
       control.close()
     } catch (e: unknown) {
-      Toast.show(_(msg`An error occurred while saving the QR code!`), 'xmark')
-      logger.error('Failed to save QR code', {error: e})
+      Toast.show(_(msg`An error occurred while saving the image!`), 'xmark')
+      logger.error('Failed to save starter pack image', {error: e})
       return
     }
   }
