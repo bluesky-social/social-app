@@ -500,7 +500,6 @@ export function PostThread({uri}: {uri: string | undefined}) {
             prevPost={prev}
             nextPost={next}
             isHighlightedPost={item.ctx.isHighlightedPost}
-            hasMore={item.ctx.hasMore}
             showChildReplyLine={showChildReplyLine}
             showParentReplyLine={showParentReplyLine}
             hasPrecedingItem={showParentReplyLine || !!hasUnrevealedParents}
