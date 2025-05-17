@@ -1,7 +1,7 @@
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {getThreadPlaceholder} from '#/state/queries/usePostThread/queryCache'
+import {getThreadPlaceholder, createCacheMutator} from '#/state/queries/usePostThread/queryCache'
 import {flatten,sort} from '#/state/queries/usePostThread/traversal'
 import {
   createPostThreadQueryKey,
@@ -30,13 +30,14 @@ export function usePostThread({
   const mergeThreadgateHiddenReplies = useMergeThreadgateHiddenReplies()
 
   const enabled = isEnabled !== false && !!uri && !!moderationOpts
+  const queryKey = createPostThreadQueryKey({
+      uri,
+      params,
+    })
 
   const query = useQuery({
     enabled,
-    queryKey: createPostThreadQueryKey({
-      uri,
-      params,
-    }),
+    queryKey,
     async queryFn() {
       const {data} = await agent.app.bsky.unspecced.getPostThreadV2({
         uri: uri!,
@@ -82,12 +83,17 @@ export function usePostThread({
     },
   )
 
+  const mutator = createCacheMutator({
+    queryKey,
+    queryClient: qc,
+  })
+
   return {
     ...query,
     data: {
       slices: items,
       threadgate: query.data?.threadgate,
     },
-    insertReplies: () => {},
+    insertReplies: mutator.insertReplies,
   }
 }

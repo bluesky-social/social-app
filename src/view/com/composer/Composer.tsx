@@ -407,15 +407,15 @@ export const ComposePost = ({
           posts = await retry(5, _e => true, async () => {
             const res = await agent.app.bsky.unspecced.getPostThreadV2({
               uri: postUri!,
-              above: 0,
+              above: 1,
               below: thread.posts.length - 1,
               branchingFactor: 1,
             })
-            if (res.data.thread.length !== thread.posts.length) {
+            const parent = res.data.thread.at(0)
+            if (!AppBskyUnspeccedDefs.isThreadItemPost(parent)) {
               throw new Error(`Not ready`)
             }
-            const anchor = res.data.thread.at(0)
-            if (!AppBskyUnspeccedDefs.isThreadItemPost(anchor)) {
+            if (res.data.thread.length !== thread.posts.length + 1) {
               throw new Error(`Not ready`)
             }
             return res.data.thread
