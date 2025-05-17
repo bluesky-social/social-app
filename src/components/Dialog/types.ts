@@ -5,7 +5,6 @@ import {
 } from 'react-native'
 import {type ViewStyle} from 'react-native'
 import {type StyleProp} from 'react-native'
-import type React from 'react'
 
 import {type ViewStyleProp} from '#/alf'
 import {type BottomSheetViewProps} from '../../../modules/bottom-sheet'
