@@ -1,4 +1,4 @@
-import * as React from 'react'
+import {type JSX, useCallback, useRef} from 'react'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {
@@ -484,8 +484,8 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
  * in 3 distinct tab-stacks with a different root screen on each.
  */
 function TabsNavigator() {
-  const tabBar = React.useCallback(
-    (props: React.JSX.IntrinsicAttributes & BottomTabBarProps) => (
+  const tabBar = useCallback(
+    (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
       <BottomBar {...props} />
     ),
     [],
@@ -712,7 +712,7 @@ const LINKING = {
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
   const {currentAccount} = useSession()
-  const prevLoggedRouteName = React.useRef<string | undefined>(undefined)
+  const prevLoggedRouteName = useRef<string | undefined>(undefined)
   const emailDialogControl = useEmailDialogControl()
 
   function onReady() {

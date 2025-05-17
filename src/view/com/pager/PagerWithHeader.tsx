@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, {type JSX} from 'react'
 import {
   type LayoutChangeEvent,
   type NativeScrollEvent,
@@ -39,15 +39,15 @@ export interface PagerWithHeaderChildParams {
 export interface PagerWithHeaderProps {
   testID?: string
   children:
-    | (((props: PagerWithHeaderChildParams) => React.JSX.Element) | null)[]
-    | ((props: PagerWithHeaderChildParams) => React.JSX.Element)
+    | (((props: PagerWithHeaderChildParams) => JSX.Element) | null)[]
+    | ((props: PagerWithHeaderChildParams) => JSX.Element)
   items: string[]
   isHeaderReady: boolean
   renderHeader?: ({
     setMinimumHeight,
   }: {
     setMinimumHeight: (height: number) => void
-  }) => React.JSX.Element
+  }) => JSX.Element
   initialPage?: number
   onPageSelected?: (index: number) => void
   onCurrentPageSelected?: (index: number) => void
