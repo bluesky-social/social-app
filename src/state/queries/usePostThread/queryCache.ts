@@ -11,12 +11,72 @@ import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '#/state/
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '#/state/queries/post-feed'
 import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '#/state/queries/search-posts'
-import {postThreadQueryKeyRoot} from '#/state/queries/usePostThread/types'
+import {
+  postThreadQueryKeyRoot,
+  createPostThreadQueryKey,
+} from '#/state/queries/usePostThread/types'
 import {
   embedViewToThreadPlaceholder,
   postViewToThreadPlaceholder,
 } from '#/state/queries/usePostThread/views'
 import {didOrHandleUriMatches, getEmbeddedPost} from '#/state/queries/util'
+
+export function createCacheMutator({
+  queryKey,
+  queryClient,
+}: {
+  queryKey: ReturnType<typeof createPostThreadQueryKey>
+  queryClient: QueryClient
+}) {
+  return {
+    insertReplies(
+      parent: AppBskyUnspeccedDefs.ThreadItemPost,
+      replies: AppBskyUnspeccedDefs.ThreadItemPost[],
+    ) {
+      queryClient.setQueryData<AppBskyUnspeccedGetPostThreadV2.OutputSchema>(
+        queryKey,
+        queryData => {
+          if (!queryData) return
+
+          const thread = [...queryData.thread]
+
+          for (let i = 0; i < thread.length; i++) {
+            const anchor = thread[i]
+            if (!AppBskyUnspeccedDefs.isThreadItemPost(anchor)) continue
+            if (anchor.uri !== parent.uri) continue
+
+            /*
+             * Update parent data
+             */
+            anchor.post = {
+              ...anchor.post,
+              replyCount: parent.post.replyCount,
+            }
+
+            /*
+             * Splice in new replies
+             */
+            for (let ri = 0; ri < replies.length; ri++) {
+              const reply = replies[ri]
+              reply.depth = anchor.depth + 1 + ri
+              const insertIndex = i + 1 + ri
+              thread.splice(insertIndex, 0, {
+                $type: 'app.bsky.unspecced.defs#threadItemPost',
+                ...reply,
+              })
+            }
+          }
+
+          return {
+            ...queryData,
+            thread,
+          }
+        },
+      )
+    },
+    deletePost(post: AppBskyUnspeccedDefs.ThreadItemPost) {},
+  }
+}
 
 export function getThreadPlaceholder(
   queryClient: QueryClient,
