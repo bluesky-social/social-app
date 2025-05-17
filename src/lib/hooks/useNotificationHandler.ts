@@ -5,7 +5,6 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {type NavigationProp} from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
 import {Logger} from '#/logger'
 import {isAndroid} from '#/platform/detection'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
@@ -17,7 +16,7 @@ import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {resetToTab} from '#/Navigation'
 
-type NotificationReason =
+export type NotificationReason =
   | 'like'
   | 'repost'
   | 'follow'
@@ -229,15 +228,18 @@ export function useNotificationsHandler() {
           'type' in e.notification.request.trigger &&
           e.notification.request.trigger.type === 'push'
         ) {
+          const payload = e.notification.request.trigger
+            .payload as NotificationPayload
+
           logger.debug(
             'User pressed a notification, opening notifications tab',
             {},
           )
-          logEvent('notifications:openApp', {})
+          logger.metric('notifications:openApp', {reason: payload.reason})
+
           invalidateCachedUnreadPage()
-          const payload = e.notification.request.trigger
-            .payload as NotificationPayload
           truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
+
           if (
             payload.reason === 'mention' ||
             payload.reason === 'quote' ||
@@ -245,10 +247,12 @@ export function useNotificationsHandler() {
           ) {
             truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
           }
+
           logger.debug('Notifications: handleNotification', {
             content: e.notification.request.content,
             payload: e.notification.request.trigger.payload,
           })
+
           handleNotification(payload)
           Notifications.dismissAllNotificationsAsync()
         }
