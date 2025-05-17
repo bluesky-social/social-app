@@ -1,24 +1,23 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {ChatBskyConvoDefs, ChatBskyConvoListConvos} from '@atproto/api'
+import {type ChatBskyConvoDefs, type ChatBskyConvoListConvos} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
+import {type InfiniteData, type UseInfiniteQueryResult} from '@tanstack/react-query'
 
 import {useAppState} from '#/lib/hooks/useAppState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {
-  CommonNavigatorParams,
-  NativeStackScreenProps,
-  NavigationProp,
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+  type NavigationProp,
 } from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
-import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useUpdateAllRead} from '#/state/queries/messages/update-all-read'
 import {FAB} from '#/view/com/util/fab/FAB'
@@ -45,19 +44,13 @@ export function MessagesInboxScreen({}: Props) {
   const listConvosQuery = useListConvosQuery({status: 'request'})
   const {data} = listConvosQuery
 
-  const leftConvos = useLeftConvos()
-
   const conversations = useMemo(() => {
     if (data?.pages) {
-      const convos = data.pages
-        .flatMap(page => page.convos)
-        // filter out convos that are actively being left
-        .filter(convo => !leftConvos.includes(convo.id))
-
+      const convos = data.pages.flatMap(page => page.convos)
       return convos
     }
     return []
-  }, [data, leftConvos])
+  }, [data])
 
   const hasUnreadConvos = useMemo(() => {
     return conversations.some(
