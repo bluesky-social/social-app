@@ -3,15 +3,16 @@ import {
   $Typed,
   AtUri,
   AppBskyFeedDefs,
+  AppBskyUnspeccedDefs,
   AppBskyFeedThreadgate,
-  AppBskyFeedGetPostThreadV2,
+  AppBskyUnspeccedGetPostThreadV2,
   ModerationOpts,
   BskyThreadViewPreference,
   moderatePost,
   ModerationDecision,
   AppBskyEmbedRecord,
   AppBskyFeedPost,
-  APP_BSKY_FEED,
+  APP_BSKY_UNSPECCED,
 } from '@atproto/api'
 import {useQuery, useQueryClient, QueryClient} from '@tanstack/react-query'
 
@@ -71,15 +72,15 @@ export type GetPostThreadV2QueryData = {
 export function mapSortOptionsToSortID(sort: PostThreadV2Params['sort']) {
   switch (sort) {
     case 'hotness':
-      return APP_BSKY_FEED.GetPostThreadV2Hotness
+      return APP_BSKY_UNSPECCED.GetPostThreadV2Hotness
     case 'oldest':
-      return APP_BSKY_FEED.GetPostThreadV2Oldest
+      return APP_BSKY_UNSPECCED.GetPostThreadV2Oldest
     case 'newest':
-      return APP_BSKY_FEED.GetPostThreadV2Newest
+      return APP_BSKY_UNSPECCED.GetPostThreadV2Newest
     case 'most-likes':
-      return APP_BSKY_FEED.GetPostThreadV2MostLikes
+      return APP_BSKY_UNSPECCED.GetPostThreadV2MostLikes
     default:
-      return APP_BSKY_FEED.GetPostThreadV2Hotness
+      return APP_BSKY_UNSPECCED.GetPostThreadV2Hotness
   }
 }
 
@@ -104,7 +105,7 @@ export function useGetPostThreadV2({
       params,
     }),
     async queryFn() {
-      const {data} = await agent.app.bsky.feed.getPostThreadV2({
+      const {data} = await agent.app.bsky.unspecced.getPostThreadV2({
         uri: uri!,
         branchingFactor: params.view === 'linear' ? 1 : 10,
         below: 10,
@@ -163,7 +164,7 @@ const views = {
   noUnauthenticated({
     item,
   }: {
-    item: AppBskyFeedDefs.ThreadItemNoUnauthenticated
+    item: AppBskyUnspeccedDefs.ThreadItemNoUnauthenticated
   }): Extract<Slice, {type: 'threadSliceNoUnauthenticated'}> {
     return {
       type: 'threadSliceNoUnauthenticated',
@@ -174,7 +175,7 @@ const views = {
   notFound({
     item,
   }: {
-    item: AppBskyFeedDefs.ThreadItemNotFound
+    item: AppBskyUnspeccedDefs.ThreadItemNotFound
   }): Extract<Slice, {type: 'threadSliceNotFound'}> {
     return {
       type: 'threadSliceNotFound',
@@ -185,7 +186,7 @@ const views = {
   blocked({
     item,
   }: {
-    item: AppBskyFeedDefs.ThreadItemBlocked
+    item: AppBskyUnspeccedDefs.ThreadItemBlocked
   }): Extract<Slice, {type: 'threadSliceBlocked'}> {
     return {
       type: 'threadSliceBlocked',
@@ -199,9 +200,9 @@ const views = {
     oneDown,
     moderationOpts,
   }: {
-    item: AppBskyFeedDefs.ThreadItemPost
-    oneUp?: AppBskyFeedGetPostThreadV2.OutputSchema['thread'][number]
-    oneDown?: AppBskyFeedGetPostThreadV2.OutputSchema['thread'][number]
+    item: AppBskyUnspeccedDefs.ThreadItemPost
+    oneUp?: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'][number]
+    oneDown?: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'][number]
     moderationOpts: ModerationOpts
   }): Extract<Slice, {type: 'threadSlice'}> {
     return {
@@ -243,7 +244,7 @@ const views = {
  *    const { start: 1, end: 3 } = getBranch(items, 1, 1)
  */
 function getBranch(
-  thread: AppBskyFeedGetPostThreadV2.OutputSchema['thread'],
+  thread: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'],
   branchStartIndex: number,
   branchStartDepth: number,
 ) {
@@ -268,7 +269,7 @@ function getBranch(
 }
 
 export function useThread(
-  thread: AppBskyFeedGetPostThreadV2.OutputSchema['thread'],
+  thread: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'],
   {
     hasSession,
     params,
@@ -285,9 +286,9 @@ export function useThread(
 ) {
   const isTreeView = params.view === 'tree'
   const [shadowSlices, setShadowSlices] = useState<
-    Record<string, AppBskyFeedDefs.ThreadItemPost[][]>
+    Record<string, AppBskyUnspeccedDefs.ThreadItemPost[][]>
   >({})
-  const insertReplies = useCallback((belowUri: string, posts: AppBskyFeedDefs.ThreadItemPost[]) => {
+  const insertReplies = useCallback((belowUri: string, posts: AppBskyUnspeccedDefs.ThreadItemPost[]) => {
     setShadowSlices(p => {
       const prev = {...p}
       if (belowUri in prev) {
@@ -354,6 +355,7 @@ export function useThread(
       if (!(item.slice.uri in shadowSlices)) continue
 
       const replyThreads = shadowSlices[item.slice.uri]
+      console.log(replyThreads)
 
       // TODO linear view will work
       if (!isTreeView) continue
@@ -375,17 +377,19 @@ export function useThread(
             flattened[insertIndex]?.key === view.key ? 1 : 0,
             view
           )
-          // console.log('insert', {
-          //   post: post.post.record?.text,
-          //   depth: item.slice.depth + 1 + ri,
-          //   ri,
-          //   spliceIndex: i + 1 + ri,
-          // })
-          // console.log(flattened.map(f => f.slice?.post?.record?.text))
+          console.log('insert', {
+            post: post.post.record?.text,
+            depth: item.slice.depth + 1 + ri,
+            ri,
+            spliceIndex: i + 1 + ri,
+            tree: flattened.map(f => f.slice?.post?.record?.text),
+          })
         }
 
         // TODO may not need since inserts will be looped and ignored
-        i = i + thread.length
+        // console.log('prev', i)
+        // i = i - thread.length
+        // console.log('next', i)
       }
     }
 
@@ -419,7 +423,7 @@ export function useThread(
 }
 
 export function sortThread(
-  thread: AppBskyFeedGetPostThreadV2.OutputSchema['thread'],
+  thread: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'],
   {
     threadgateHiddenReplies,
     moderationOpts,
@@ -444,13 +448,13 @@ export function sortThread(
        * _up_ from there.
        */
     } else if (item.depth === 0) {
-      if (AppBskyFeedDefs.isThreadItemNoUnauthenticated(item)) {
+      if (AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(item)) {
         slices.push(views.noUnauthenticated({item}))
-      } else if (AppBskyFeedDefs.isThreadItemNotFound(item)) {
+      } else if (AppBskyUnspeccedDefs.isThreadItemNotFound(item)) {
         slices.push(views.notFound({item}))
-      } else if (AppBskyFeedDefs.isThreadItemBlocked(item)) {
+      } else if (AppBskyUnspeccedDefs.isThreadItemBlocked(item)) {
         slices.push(views.blocked({item}))
-      } else if (AppBskyFeedDefs.isThreadItemPost(item)) {
+      } else if (AppBskyUnspeccedDefs.isThreadItemPost(item)) {
         slices.push(
           views.post({
             item,
@@ -465,16 +469,16 @@ export function sortThread(
           const parent = thread[pi]
           const parentOneUp = thread[pi - 1]
 
-          if (AppBskyFeedDefs.isThreadItemNoUnauthenticated(parent)) {
+          if (AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(parent)) {
             slices.unshift(views.noUnauthenticated({item: parent}))
             break parentTraversal
-          } else if (AppBskyFeedDefs.isThreadItemNotFound(parent)) {
+          } else if (AppBskyUnspeccedDefs.isThreadItemNotFound(parent)) {
             slices.unshift(views.notFound({item: parent}))
             break parentTraversal
-          } else if (AppBskyFeedDefs.isThreadItemBlocked(parent)) {
+          } else if (AppBskyUnspeccedDefs.isThreadItemBlocked(parent)) {
             slices.unshift(views.blocked({item: parent}))
             break parentTraversal
-          } else if (AppBskyFeedDefs.isThreadItemPost(parent)) {
+          } else if (AppBskyUnspeccedDefs.isThreadItemPost(parent)) {
             slices.unshift(
               views.post({
                 item: parent,
@@ -493,16 +497,16 @@ export function sortThread(
        * we could.
        */
       const shouldBreak =
-        AppBskyFeedDefs.isThreadItemNoUnauthenticated(item) ||
-        AppBskyFeedDefs.isThreadItemNotFound(item) ||
-        AppBskyFeedDefs.isThreadItemBlocked(item)
+        AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(item) ||
+        AppBskyUnspeccedDefs.isThreadItemNotFound(item) ||
+        AppBskyUnspeccedDefs.isThreadItemBlocked(item)
 
       if (shouldBreak) {
         const branch = getBranch(thread, i, item.depth)
         // could insert tombstone
         i = branch.end
         continue traversal
-      } else if (AppBskyFeedDefs.isThreadItemPost(item)) {
+      } else if (AppBskyUnspeccedDefs.isThreadItemPost(item)) {
         const lastSlice = slices[slices.length - 1]
         const isFirstReply =
           lastSlice.type === 'replyComposer' ||
@@ -537,7 +541,7 @@ export function sortThread(
             for (let ci = startIndex; ci <= branch.end; ci++) {
               const child = thread[ci]
 
-              if (AppBskyFeedDefs.isThreadItemPost(child)) {
+              if (AppBskyUnspeccedDefs.isThreadItemPost(child)) {
                 const childPost = views.post({
                   item: child,
                   oneUp: thread[ci - 1],
@@ -602,7 +606,7 @@ export type Slice =
   | {
       type: 'threadSlice'
       key: string
-      slice: Omit<AppBskyFeedDefs.ThreadItemPost, 'post'> & {
+      slice: Omit<AppBskyUnspeccedDefs.ThreadItemPost, 'post'> & {
         post: Omit<AppBskyFeedDefs.PostView, 'record'> & {
           record: AppBskyFeedPost.Record
         }
@@ -617,17 +621,17 @@ export type Slice =
   | {
       type: 'threadSliceNoUnauthenticated'
       key: string
-      slice: AppBskyFeedDefs.ThreadItemNoUnauthenticated
+      slice: AppBskyUnspeccedDefs.ThreadItemNoUnauthenticated
     }
   | {
       type: 'threadSliceNotFound'
       key: string
-      slice: AppBskyFeedDefs.ThreadItemNotFound
+      slice: AppBskyUnspeccedDefs.ThreadItemNotFound
     }
   | {
       type: 'threadSliceBlocked'
       key: string
-      slice: AppBskyFeedDefs.ThreadItemBlocked
+      slice: AppBskyUnspeccedDefs.ThreadItemBlocked
     }
   | {
       type: 'replyComposer'
@@ -640,7 +644,7 @@ export type Slice =
     }
 
 function getThreadgate(
-  view: AppBskyFeedGetPostThreadV2.OutputSchema['threadgate'],
+  view: AppBskyUnspeccedGetPostThreadV2.OutputSchema['threadgate'],
 ) {
   return bsky.dangerousIsType<AppBskyFeedThreadgate.Record>(
     view?.record,
@@ -653,7 +657,7 @@ function getThreadgate(
 function getSlicePlaceholder(
   queryClient: QueryClient,
   uri: string,
-): $Typed<AppBskyFeedDefs.ThreadItemPost> | void {
+): $Typed<AppBskyUnspeccedDefs.ThreadItemPost> | void {
   let partial
   for (let item of yieldPlaceholdersFromQueryCache(queryClient, uri)) {
     /*
@@ -678,7 +682,7 @@ function getSlicePlaceholder(
 export function* yieldPlaceholdersFromQueryCache(
   queryClient: QueryClient,
   uri: string,
-): Generator<$Typed<AppBskyFeedDefs.ThreadItemPost>, void> {
+): Generator<$Typed<AppBskyUnspeccedDefs.ThreadItemPost>, void> {
   const atUri = new AtUri(uri)
 
   /*
@@ -686,7 +690,7 @@ export function* yieldPlaceholdersFromQueryCache(
    * TODO extract just this for shadowing
    */
   const queryDatas =
-    queryClient.getQueriesData<AppBskyFeedGetPostThreadV2.OutputSchema>({
+    queryClient.getQueriesData<AppBskyUnspeccedGetPostThreadV2.OutputSchema>({
       queryKey: [getPostThreadV2QueryKeyRoot],
     })
   for (const [_queryKey, queryData] of queryDatas) {
@@ -695,7 +699,7 @@ export function* yieldPlaceholdersFromQueryCache(
     const {thread} = queryData
 
     for (const item of thread) {
-      if (AppBskyFeedDefs.isThreadItemPost(item)) {
+      if (AppBskyUnspeccedDefs.isThreadItemPost(item)) {
         if (didOrHandleUriMatches(atUri, item.post)) {
           yield {
             ...item,
@@ -739,9 +743,9 @@ export function* yieldPlaceholdersFromQueryCache(
 
 function postViewToSlicePlaceholder(
   post: AppBskyFeedDefs.PostView,
-): $Typed<AppBskyFeedDefs.ThreadItemPost> {
+): $Typed<AppBskyUnspeccedDefs.ThreadItemPost> {
   return {
-    $type: 'app.bsky.feed.defs#threadItemPost',
+    $type: 'app.bsky.unspecced.defs#threadItemPost',
     uri: post.uri,
     post,
     depth: 0, // reset to 0 for highlighted post
@@ -755,9 +759,9 @@ function postViewToSlicePlaceholder(
 
 function embedViewToSlicePlaceholder(
   record: AppBskyEmbedRecord.ViewRecord,
-): $Typed<AppBskyFeedDefs.ThreadItemPost> {
+): $Typed<AppBskyUnspeccedDefs.ThreadItemPost> {
   return {
-    $type: 'app.bsky.feed.defs#threadItemPost',
+    $type: 'app.bsky.unspecced.defs#threadItemPost',
     uri: record.uri,
     post: embedViewRecordToPostView(record),
     depth: 0, // reset to 0 for highlighted post
