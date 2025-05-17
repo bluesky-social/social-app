@@ -25,6 +25,7 @@ import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
 import {atoms as a, platform, useTheme} from '#/alf'
+import {BirthdayCard} from '#/components/delight/BirthdayCard'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
 import {EditLiveDialog} from '#/components/live/EditLiveDialog'
@@ -194,6 +195,8 @@ let ProfileHeaderShell = ({
           )}
         </View>
       )}
+
+      <BirthdayCard />
 
       <GrowableAvatar style={styles.aviPosition}>
         <TouchableWithoutFeedback

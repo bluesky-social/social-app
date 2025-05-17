@@ -16,4 +16,5 @@ export type Device = {
 export type Account = {
   searchTermHistory?: string[]
   searchAccountHistory?: string[]
+  birthdayDismissYear?: number
 }
