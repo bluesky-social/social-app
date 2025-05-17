@@ -18,18 +18,18 @@ import {useNavigation} from '@react-navigation/native'
 
 import {useGenerateStarterPackMutation} from '#/lib/generate-starterpack'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
-import {useEmail} from '#/lib/hooks/useEmail'
+import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type NavigationProp} from '#/lib/routes/types'
 import {parseStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
+import {isIOS} from '#/platform/detection'
 import {useActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
 import {List, type ListRef} from '#/view/com/util/List'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, ios, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Loader} from '#/components/Loader'
@@ -111,7 +111,7 @@ export const ProfileStarterPacks = React.forwardRef<
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
   useEffect(() => {
-    if (enabled && scrollElRef.current) {
+    if (isIOS && enabled && scrollElRef.current) {
       const nativeTag = findNodeHandle(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }
@@ -196,9 +196,7 @@ function Empty() {
   const confirmDialogControl = useDialogControl()
   const followersDialogControl = useDialogControl()
   const errorDialogControl = useDialogControl()
-
-  const {needsEmailVerification} = useEmail()
-  const verifyEmailControl = useDialogControl()
+  const requireEmailVerification = useRequireEmailVerification()
 
   const [isGenerating, setIsGenerating] = useState(false)
 
@@ -229,6 +227,27 @@ function Empty() {
     generateStarterPack()
   }
 
+  const openConfirmDialog = useCallback(() => {
+    confirmDialogControl.open()
+  }, [confirmDialogControl])
+  const wrappedOpenConfirmDialog = requireEmailVerification(openConfirmDialog, {
+    instructions: [
+      <Trans key="confirm">
+        Before creating a starter pack, you must first verify your email.
+      </Trans>,
+    ],
+  })
+  const navToWizard = useCallback(() => {
+    navigation.navigate('StarterPackWizard')
+  }, [navigation])
+  const wrappedNavToWizard = requireEmailVerification(navToWizard, {
+    instructions: [
+      <Trans key="nav">
+        Before creating a starter pack, you must first verify your email.
+      </Trans>,
+    ],
+  })
+
   return (
     <LinearGradientBackground
       style={[
@@ -257,13 +276,7 @@ function Empty() {
           color="primary"
           size="small"
           disabled={isGenerating}
-          onPress={() => {
-            if (needsEmailVerification) {
-              verifyEmailControl.open()
-            } else {
-              confirmDialogControl.open()
-            }
-          }}
+          onPress={wrappedOpenConfirmDialog}
           style={{backgroundColor: 'transparent'}}>
           <ButtonText style={{color: 'white'}}>
             <Trans>Make one for me</Trans>
@@ -276,13 +289,7 @@ function Empty() {
           color="primary"
           size="small"
           disabled={isGenerating}
-          onPress={() => {
-            if (needsEmailVerification) {
-              verifyEmailControl.open()
-            } else {
-              navigation.navigate('StarterPackWizard')
-            }
-          }}
+          onPress={wrappedNavToWizard}
           style={{
             backgroundColor: 'white',
             borderColor: 'white',
@@ -337,12 +344,6 @@ function Empty() {
         )}
         onConfirm={generate}
         confirmButtonCta={_(msg`Retry`)}
-      />
-      <VerifyEmailDialog
-        reasonText={_(
-          msg`Before creating a starter pack, you must first verify your email.`,
-        )}
-        control={verifyEmailControl}
       />
     </LinearGradientBackground>
   )

@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useRef} from 'react'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {type ScrollView, StyleSheet, View} from 'react-native'
 
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Text} from '#/components/Typography'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {DraggableScrollView} from './DraggableScrollView'
@@ -161,7 +161,7 @@ const desktopStyles = StyleSheet.create({
   },
   itemInner: {
     alignItems: 'center',
-    overflowX: 'hidden',
+    ...web({overflowX: 'hidden'}),
   },
   itemText: {
     textAlign: 'center',
@@ -204,7 +204,7 @@ const mobileStyles = StyleSheet.create({
   itemInner: {
     flexGrow: 1,
     alignItems: 'center',
-    overflowX: 'hidden',
+    ...web({overflowX: 'hidden'}),
   },
   itemText: {
     textAlign: 'center',

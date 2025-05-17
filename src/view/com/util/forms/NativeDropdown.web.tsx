@@ -239,7 +239,6 @@ const getKey = (label: string, index: number, id?: string) => {
   return `${label}_${index}`
 }
 
-// @ts-expect-error - web only styles. the only style that should be broken here is `outline`
 const styles = StyleSheet.create({
   separator: {
     height: 1,
@@ -264,7 +263,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     columnGap: 20,
-    // @ts-ignore -web
     cursor: 'pointer',
     paddingTop: 8,
     paddingBottom: 8,
@@ -273,6 +271,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     fontFamily:
       '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Liberation Sans", Helvetica, Arial, sans-serif',
+    // @ts-expect-error web only
     outline: 0,
     border: 0,
   },

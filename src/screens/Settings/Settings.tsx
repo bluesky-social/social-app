@@ -8,6 +8,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {IS_INTERNAL} from '#/lib/app-info'
 import {HELP_DESK_URL} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
@@ -287,6 +288,7 @@ function ProfilePreview({
   const verificationState = useFullVerificationState({
     profile: shadow,
   })
+  const {isActive: live} = useActorStatus(profile)
 
   if (!moderationOpts) return null
 
@@ -303,6 +305,7 @@ function ProfilePreview({
         avatar={shadow.avatar}
         moderation={moderation.ui('avatar')}
         type={shadow.associated?.labeler ? 'labeler' : 'user'}
+        live={live}
       />
 
       <View
@@ -468,6 +471,7 @@ function AccountRow({
   const moderationOpts = useModerationOpts()
   const removePromptControl = Prompt.usePromptControl()
   const {removeAccount} = useSessionApi()
+  const {isActive: live} = useActorStatus(profile)
 
   const onSwitchAccount = () => {
     if (pendingDid) return
@@ -485,6 +489,8 @@ function AccountRow({
             avatar={profile.avatar}
             moderation={moderateProfile(profile, moderationOpts).ui('avatar')}
             type={profile.associated?.labeler ? 'labeler' : 'user'}
+            live={live}
+            hideLiveBadge
           />
         ) : (
           <View style={[{width: 28}]} />

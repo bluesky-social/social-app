@@ -5,7 +5,7 @@ import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   AppBskyFeedDefs,
-  AppBskyFeedThreadgate,
+  type AppBskyFeedThreadgate,
   moderatePost,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -14,6 +14,7 @@ import {useLingui} from '@lingui/react'
 import {HITSLOP_10} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
@@ -25,19 +26,18 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   fillThreadModerationCache,
   sortThread,
-  ThreadBlocked,
-  ThreadModerationCache,
-  ThreadNode,
-  ThreadNotFound,
-  ThreadPost,
+  type ThreadBlocked,
+  type ThreadModerationCache,
+  type ThreadNode,
+  type ThreadNotFound,
+  type ThreadPost,
   usePostThreadQuery,
 } from '#/state/queries/post-thread'
 import {useSetThreadViewPreferencesMutation} from '#/state/queries/preferences'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
-import {useComposerControls} from '#/state/shell'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {List, ListMethods} from '#/view/com/util/List'
+import {List, type ListMethods} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
@@ -394,7 +394,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     [refetch],
   )
 
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const onPressReply = React.useCallback(() => {
     if (thread?.type !== 'post') {
       return

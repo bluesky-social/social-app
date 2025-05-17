@@ -79,6 +79,7 @@ module.exports = function (_config) {
             'eu',
             'fi',
             'fr',
+            'fy',
             'ga',
             'gd',
             'gl',
@@ -193,6 +194,7 @@ module.exports = function (_config) {
       plugins: [
         'expo-video',
         'expo-localization',
+        'expo-web-browser',
         [
           'react-native-edge-to-edge',
           {android: {enforceNavigationBarContrast: false}},
@@ -242,10 +244,8 @@ module.exports = function (_config) {
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidDayNightThemePlugin.js',
         './plugins/withAndroidNoJitpackPlugin.js',
-        './plugins/withNoBundleCompression.js',
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
-        './plugins/withAppDelegateReferrer.js',
         [
           'expo-font',
           {

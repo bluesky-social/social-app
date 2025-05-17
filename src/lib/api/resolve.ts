@@ -1,10 +1,10 @@
 import {
-  AppBskyFeedDefs,
-  AppBskyGraphDefs,
-  ComAtprotoRepoStrongRef,
+  type AppBskyFeedDefs,
+  type AppBskyGraphDefs,
+  type ComAtprotoRepoStrongRef,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {BskyAgent} from '@atproto/api'
+import {type BskyAgent} from '@atproto/api'
 
 import {POST_IMG_MAX} from '#/lib/constants'
 import {getLinkMeta} from '#/lib/link-meta/link-meta'
@@ -22,9 +22,9 @@ import {
   isBskyStartUrl,
   isShortLink,
 } from '#/lib/strings/url-helpers'
-import {ComposerImage} from '#/state/gallery'
+import {type ComposerImage} from '#/state/gallery'
 import {createComposerImage} from '#/state/gallery'
-import {Gif} from '#/state/queries/tenor'
+import {type Gif} from '#/state/queries/tenor'
 import {createGIFDescription} from '../gif-alt-text'
 import {convertBskyAppUrlIfNeeded, makeRecordUri} from '../strings/url-helpers'
 
@@ -213,7 +213,7 @@ async function resolveExternal(
   }
 }
 
-async function imageToThumb(
+export async function imageToThumb(
   imageUri: string,
 ): Promise<ComposerImage | undefined> {
   try {

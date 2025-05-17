@@ -15,7 +15,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {type ComposerOptsPostRef} from '#/state/shell/composer'
 import {MaybeQuoteEmbed} from '#/view/com/util/post-embeds/QuoteEmbed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
@@ -76,7 +76,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         a.mx_lg,
         a.border_b,
         t.atoms.border_contrast_medium,
-        a.user_select_text,
+        web(a.user_select_text),
       ]}
       onPress={onPress}
       accessibilityRole="button"
@@ -94,7 +94,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
       <View style={[a.flex_1, a.pl_md, a.pr_sm, a.gap_2xs]}>
         <View style={[a.flex_row, a.align_center, a.pr_xs]}>
           <Text
-            style={[a.font_bold, a.text_md, a.flex_shrink]}
+            style={[a.font_bold, a.text_md, a.leading_snug, a.flex_shrink]}
             numberOfLines={1}
             emoji>
             {sanitizeDisplayName(

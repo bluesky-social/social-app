@@ -1,4 +1,14 @@
-import React from 'react'
+import {
+  createContext,
+  Fragment,
+  useCallback,
+  useContext,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 type Component = React.ReactElement
 
@@ -9,32 +19,32 @@ type ContextType = {
 }
 
 type ComponentMap = {
-  [id: string]: Component
+  [id: string]: Component | null
 }
 
 export function createPortalGroup() {
-  const Context = React.createContext<ContextType>({
+  const Context = createContext<ContextType>({
     outlet: null,
     append: () => {},
     remove: () => {},
   })
 
   function Provider(props: React.PropsWithChildren<{}>) {
-    const map = React.useRef<ComponentMap>({})
-    const [outlet, setOutlet] = React.useState<ContextType['outlet']>(null)
+    const map = useRef<ComponentMap>({})
+    const [outlet, setOutlet] = useState<ContextType['outlet']>(null)
 
-    const append = React.useCallback<ContextType['append']>((id, component) => {
+    const append = useCallback<ContextType['append']>((id, component) => {
       if (map.current[id]) return
-      map.current[id] = <React.Fragment key={id}>{component}</React.Fragment>
+      map.current[id] = <Fragment key={id}>{component}</Fragment>
       setOutlet(<>{Object.values(map.current)}</>)
     }, [])
 
-    const remove = React.useCallback<ContextType['remove']>(id => {
-      delete map.current[id]
+    const remove = useCallback<ContextType['remove']>(id => {
+      map.current[id] = null
       setOutlet(<>{Object.values(map.current)}</>)
     }, [])
 
-    const contextValue = React.useMemo(
+    const contextValue = useMemo(
       () => ({
         outlet,
         append,
@@ -49,14 +59,14 @@ export function createPortalGroup() {
   }
 
   function Outlet() {
-    const ctx = React.useContext(Context)
+    const ctx = useContext(Context)
     return ctx.outlet
   }
 
   function Portal({children}: React.PropsWithChildren<{}>) {
-    const {append, remove} = React.useContext(Context)
-    const id = React.useId()
-    React.useEffect(() => {
+    const {append, remove} = useContext(Context)
+    const id = useId()
+    useEffect(() => {
       append(id, children as Component)
       return () => remove(id)
     }, [id, children, append, remove])

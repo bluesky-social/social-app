@@ -16,6 +16,7 @@ import {InitialVerificationAnnouncement} from '#/components/dialogs/nuxs/Initial
  * NUXs
  */
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
+import {isDaysOld} from '#/components/dialogs/nuxs/utils'
 
 type Context = {
   activeNux: Nux | undefined
@@ -33,7 +34,9 @@ const queuedNuxs: {
 }[] = [
   {
     id: Nux.InitialVerificationAnnouncement,
-    enabled: () => true,
+    enabled: ({currentProfile}) => {
+      return isDaysOld(2, currentProfile.createdAt)
+    },
   },
 ]
 

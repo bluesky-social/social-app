@@ -15,7 +15,7 @@ appId: xyz.blueskyweb.app
 - tapOn:
     point: "50%,22%"
 - waitForAnimationToEnd
-- tapOn: "Choose"
+- tapOn: "Done"
 - waitForAnimationToEnd
 - tapOn: "Continue to next step"
 - assertVisible: "What are your interests?"

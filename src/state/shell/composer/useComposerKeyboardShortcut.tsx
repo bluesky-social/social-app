@@ -1,11 +1,11 @@
 import React from 'react'
 
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useDialogStateContext} from '#/state/dialogs'
 import {useLightbox} from '#/state/lightbox'
 import {useModals} from '#/state/modals'
 import {useSession} from '#/state/session'
 import {useIsDrawerOpen} from '#/state/shell/drawer-open'
-import {useComposerControls} from './'
 
 /**
  * Based on {@link https://github.com/jaywcjlove/hotkeys-js/blob/b0038773f3b902574f22af747f3bb003a850f1da/src/index.js#L51C1-L64C2}
@@ -39,7 +39,7 @@ function shouldIgnore(event: KeyboardEvent) {
 }
 
 export function useComposerKeyboardShortcut() {
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const {openDialogs} = useDialogStateContext()
   const {isModalActive} = useModals()
   const {activeLightbox} = useLightbox()

@@ -3,7 +3,13 @@ import {type GestureResponderEvent, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
+import {
+  atoms as a,
+  useBreakpoints,
+  useTheme,
+  type ViewStyleProp,
+  web,
+} from '#/alf'
 import {Button, type ButtonColor, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Text} from '#/components/Typography'
@@ -32,7 +38,6 @@ export function Outer({
   testID?: string
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
 }>) {
-  const {gtMobile} = useBreakpoints()
   const titleId = React.useId()
   const descriptionId = React.useId()
 
@@ -52,7 +57,7 @@ export function Outer({
         <Dialog.ScrollableInner
           accessibilityLabelledBy={titleId}
           accessibilityDescribedBy={descriptionId}
-          style={[gtMobile ? {width: 400} : a.w_full]}>
+          style={web({maxWidth: 400})}>
           {children}
         </Dialog.ScrollableInner>
       </Context.Provider>

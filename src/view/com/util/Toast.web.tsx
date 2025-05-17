@@ -2,13 +2,14 @@
  * Note: the dataSet properties are used to leverage custom CSS in public/index.html
  */
 
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {Pressable, StyleSheet, Text, View} from 'react-native'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
-  Props as FontAwesomeProps,
+  type FontAwesomeIconStyle,
+  type Props as FontAwesomeProps,
 } from '@fortawesome/react-native-fontawesome'
+import type React from 'react'
 
 const DURATION = 3500
 

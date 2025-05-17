@@ -1,5 +1,4 @@
 import {useCallback} from 'react'
-import {type Image as RNImage} from 'react-native-image-crop-picker'
 import {
   type AppBskyActorDefs,
   type AppBskyActorGetProfile,
@@ -22,7 +21,9 @@ import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {logEvent, type LogEvents, toClout} from '#/lib/statsig/statsig'
+import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {type Shadow} from '#/state/cache/types'
+import {type ImageMeta} from '#/state/gallery'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {
@@ -30,10 +31,9 @@ import {
   useUnstableProfileViewCache,
 } from '#/state/queries/unstable-profile-cache'
 import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
+import {useAgent, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import type * as bsky from '#/types/bsky'
-import {updateProfileShadow} from '../cache/profile-shadow'
-import {useAgent, useSession} from '../session'
 import {
   ProgressGuideAction,
   useProgressGuideControls,
@@ -131,8 +131,8 @@ interface ProfileUpdateParams {
     | ((
         existing: Un$Typed<AppBskyActorProfile.Record>,
       ) => Un$Typed<AppBskyActorProfile.Record>)
-  newUserAvatar?: RNImage | undefined | null
-  newUserBanner?: RNImage | undefined | null
+  newUserAvatar?: ImageMeta | undefined | null
+  newUserBanner?: ImageMeta | undefined | null
   checkCommitted?: (res: AppBskyActorGetProfile.Response) => boolean
 }
 export function useProfileUpdateMutation() {

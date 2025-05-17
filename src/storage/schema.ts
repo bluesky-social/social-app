@@ -10,6 +10,7 @@ export type Device = {
   }
   trendingBetaEnabled: boolean
   devMode: boolean
+  demoMode: boolean
 }
 
 export type Account = {

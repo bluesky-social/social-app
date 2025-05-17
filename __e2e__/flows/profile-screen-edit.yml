@@ -78,13 +78,13 @@ appId: xyz.blueskyweb.app
     id: "changeBannerBtn"
 - tapOn: "Upload from Library"
 - waitForAnimationToEnd
-- tapOn: "Choose"
+- tapOn: "Done"
 - waitForAnimationToEnd
 - tapOn:
     id: "changeAvatarBtn"
 - tapOn: "Upload from Library"
 - waitForAnimationToEnd
-- tapOn: "Choose"
+- tapOn: "Done"
 - waitForAnimationToEnd
 - tapOn:
     id: "editProfileSaveBtn"

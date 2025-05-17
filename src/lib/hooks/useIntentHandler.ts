@@ -1,10 +1,10 @@
 import React from 'react'
 import * as Linking from 'expo-linking'
 
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {logEvent} from '#/lib/statsig/statsig'
 import {isNative} from '#/platform/detection'
 import {useSession} from '#/state/session'
-import {useComposerControls} from '#/state/shell'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
@@ -83,7 +83,7 @@ export function useIntentHandler() {
 
 export function useComposeIntent() {
   const closeAllActiveElements = useCloseAllActiveElements()
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const {hasSession} = useSession()
 
   return React.useCallback(

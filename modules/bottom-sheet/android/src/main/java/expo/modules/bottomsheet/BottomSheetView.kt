@@ -317,6 +317,9 @@ class BottomSheetView(
   // View overrides to pass to DialogRootViewGroup instead
 
   override fun dispatchProvideStructure(structure: ViewStructure?) {
+    if (structure == null) {
+      return
+    }
     dialogRootViewGroup.dispatchProvideStructure(structure)
   }
 

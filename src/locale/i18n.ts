@@ -25,6 +25,7 @@ import {messages as messagesEs} from '#/locale/locales/es/messages'
 import {messages as messagesEu} from '#/locale/locales/eu/messages'
 import {messages as messagesFi} from '#/locale/locales/fi/messages'
 import {messages as messagesFr} from '#/locale/locales/fr/messages'
+import {messages as messagesFy} from '#/locale/locales/fy/messages'
 import {messages as messagesGa} from '#/locale/locales/ga/messages'
 import {messages as messagesGd} from '#/locale/locales/gd/messages'
 import {messages as messagesGl} from '#/locale/locales/gl/messages'
@@ -158,6 +159,14 @@ export async function dynamicActivate(locale: AppLanguage) {
       await Promise.all([
         import('@formatjs/intl-pluralrules/locale-data/fr'),
         import('@formatjs/intl-numberformat/locale-data/fr'),
+      ])
+      break
+    }
+    case AppLanguage.fy: {
+      i18n.loadAndActivate({locale, messages: messagesFy})
+      await Promise.all([
+        import('@formatjs/intl-pluralrules/locale-data/fy'),
+        import('@formatjs/intl-numberformat/locale-data/fy'),
       ])
       break
     }

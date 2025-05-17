@@ -1,4 +1,4 @@
-import React from 'react'
+import type React from 'react'
 
 import {Provider as ColorModeProvider} from './color-mode'
 import {Provider as DrawerOpenProvider} from './drawer-open'
@@ -9,7 +9,6 @@ import {Provider as ShellLayoutProvder} from './shell-layout'
 import {Provider as TickEveryMinuteProvider} from './tick-every-minute'
 
 export {useSetThemePrefs, useThemePrefs} from './color-mode'
-export {useComposerControls, useComposerState} from './composer'
 export {useIsDrawerOpen, useSetDrawerOpen} from './drawer-open'
 export {
   useIsDrawerSwipeDisabled,

@@ -1,22 +1,29 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {languageName, sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {useModalControls} from '#/state/modals'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
-import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Layout from '#/components/Layout'
+import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import * as SettingsList from './components/SettingsList'
+
+const DEDUPED_LANGUAGES = LANGUAGES.filter(
+  (lang, i, arr) =>
+    lang.code2 && arr.findIndex(l => l.code2 === lang.code2) === i,
+)
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
 export function LanguageSettingsScreen({}: Props) {
@@ -32,7 +39,7 @@ export function LanguageSettingsScreen({}: Props) {
   }, [openModal])
 
   const onChangePrimaryLanguage = useCallback(
-    (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {
+    (value: string) => {
       if (!value) return
       if (langPrefs.primaryLanguage !== value) {
         setLangPrefs.setPrimaryLanguage(value)
@@ -42,7 +49,7 @@ export function LanguageSettingsScreen({}: Props) {
   )
 
   const onChangeAppLanguage = useCallback(
-    (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {
+    (value: string) => {
       if (!value) return
       if (langPrefs.appLanguage !== value) {
         setLangPrefs.setAppLanguage(sanitizeAppLanguageSetting(value))
@@ -85,79 +92,26 @@ export function LanguageSettingsScreen({}: Props) {
                   Select which language to use for the app's user interface.
                 </Trans>
               </Text>
-              <View style={[a.relative, web([a.w_full, {maxWidth: 400}])]}>
-                <RNPickerSelect
-                  darkTheme={t.scheme === 'dark'}
-                  placeholder={{}}
-                  value={sanitizeAppLanguageSetting(langPrefs.appLanguage)}
-                  onValueChange={onChangeAppLanguage}
-                  items={APP_LANGUAGES.filter(l => Boolean(l.code2)).map(l => ({
+              <Select.Root
+                value={sanitizeAppLanguageSetting(langPrefs.appLanguage)}
+                onValueChange={onChangeAppLanguage}>
+                <Select.Trigger label={_(msg`Select app language`)}>
+                  <Select.ValueText />
+                  <Select.Icon />
+                </Select.Trigger>
+                <Select.Content
+                  renderItem={({label, value}) => (
+                    <Select.Item value={value} label={label}>
+                      <Select.ItemIndicator />
+                      <Select.ItemText>{label}</Select.ItemText>
+                    </Select.Item>
+                  )}
+                  items={APP_LANGUAGES.map(l => ({
                     label: l.name,
                     value: l.code2,
-                    key: l.code2,
                   }))}
-                  style={{
-                    inputAndroid: {
-                      backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
-                      color: t.atoms.text.color,
-                      fontSize: 14,
-                      letterSpacing: 0.5,
-                      fontWeight: a.font_bold.fontWeight,
-                      paddingHorizontal: 14,
-                      paddingVertical: 8,
-                      borderRadius: a.rounded_xs.borderRadius,
-                    },
-                    inputIOS: {
-                      backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
-                      color: t.atoms.text.color,
-                      fontSize: 14,
-                      letterSpacing: 0.5,
-                      fontWeight: a.font_bold.fontWeight,
-                      paddingHorizontal: 14,
-                      paddingVertical: 8,
-                      borderRadius: a.rounded_xs.borderRadius,
-                    },
-                    inputWeb: {
-                      flex: 1,
-                      width: '100%',
-                      cursor: 'pointer',
-                      // @ts-ignore web only
-                      '-moz-appearance': 'none',
-                      '-webkit-appearance': 'none',
-                      appearance: 'none',
-                      outline: 0,
-                      borderWidth: 0,
-                      backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
-                      color: t.atoms.text.color,
-                      fontSize: 14,
-                      fontFamily: 'inherit',
-                      letterSpacing: 0.5,
-                      fontWeight: a.font_bold.fontWeight,
-                      paddingHorizontal: 14,
-                      paddingVertical: 8,
-                      borderRadius: a.rounded_xs.borderRadius,
-                    },
-                  }}
                 />
-
-                <View
-                  style={[
-                    a.absolute,
-                    t.atoms.bg_contrast_25,
-                    a.rounded_xs,
-                    a.pointer_events_none,
-                    a.align_center,
-                    a.justify_center,
-                    {
-                      top: 1,
-                      right: 1,
-                      bottom: 1,
-                      width: 40,
-                    },
-                  ]}>
-                  <ChevronDownIcon style={[t.atoms.text]} />
-                </View>
-              </View>
+              </Select.Root>
             </View>
           </SettingsList.Group>
           <SettingsList.Divider />
@@ -171,77 +125,26 @@ export function LanguageSettingsScreen({}: Props) {
                   Select your preferred language for translations in your feed.
                 </Trans>
               </Text>
-              <View style={[a.relative, web([a.w_full, {maxWidth: 400}])]}>
-                <RNPickerSelect
-                  darkTheme={t.scheme === 'dark'}
-                  placeholder={{}}
-                  value={langPrefs.primaryLanguage}
-                  onValueChange={onChangePrimaryLanguage}
-                  items={LANGUAGES.filter(l => Boolean(l.code2)).map(l => ({
+              <Select.Root
+                value={langPrefs.primaryLanguage}
+                onValueChange={onChangePrimaryLanguage}>
+                <Select.Trigger label={_(msg`Select primary language`)}>
+                  <Select.ValueText />
+                  <Select.Icon />
+                </Select.Trigger>
+                <Select.Content
+                  renderItem={({label, value}) => (
+                    <Select.Item value={value} label={label}>
+                      <Select.ItemIndicator />
+                      <Select.ItemText>{label}</Select.ItemText>
+                    </Select.Item>
+                  )}
+                  items={DEDUPED_LANGUAGES.map(l => ({
                     label: languageName(l, langPrefs.appLanguage),
                     value: l.code2,
-                    key: l.code2 + l.code3,
                   }))}
-                  style={{
-                    inputAndroid: {
-                      backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
-                      color: t.atoms.text.color,
-                      fontSize: 14,
-                      letterSpacing: 0.5,
-                      fontWeight: a.font_bold.fontWeight,
-                      paddingHorizontal: 14,
-                      paddingVertical: 8,
-                      borderRadius: a.rounded_xs.borderRadius,
-                    },
-                    inputIOS: {
-                      backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
-                      color: t.atoms.text.color,
-                      fontSize: 14,
-                      letterSpacing: 0.5,
-                      fontWeight: a.font_bold.fontWeight,
-                      paddingHorizontal: 14,
-                      paddingVertical: 8,
-                      borderRadius: a.rounded_xs.borderRadius,
-                    },
-                    inputWeb: {
-                      flex: 1,
-                      width: '100%',
-                      cursor: 'pointer',
-                      // @ts-ignore web only
-                      '-moz-appearance': 'none',
-                      '-webkit-appearance': 'none',
-                      appearance: 'none',
-                      outline: 0,
-                      borderWidth: 0,
-                      backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
-                      color: t.atoms.text.color,
-                      fontSize: 14,
-                      fontFamily: 'inherit',
-                      letterSpacing: 0.5,
-                      fontWeight: a.font_bold.fontWeight,
-                      paddingHorizontal: 14,
-                      paddingVertical: 8,
-                      borderRadius: a.rounded_xs.borderRadius,
-                    },
-                  }}
                 />
-
-                <View
-                  style={{
-                    position: 'absolute',
-                    top: 1,
-                    right: 1,
-                    bottom: 1,
-                    width: 40,
-                    backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
-                    borderRadius: a.rounded_xs.borderRadius,
-                    pointerEvents: 'none',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <ChevronDownIcon style={t.atoms.text} />
-                </View>
-              </View>
+              </Select.Root>
             </View>
           </SettingsList.Group>
           <SettingsList.Divider />

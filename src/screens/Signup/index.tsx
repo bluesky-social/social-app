@@ -184,10 +184,14 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
             <Divider />
 
             <View
-              style={[a.w_full, a.py_lg, a.flex_row, a.gap_lg, a.align_center]}>
+              style={[a.w_full, a.py_lg, a.flex_row, a.gap_md, a.align_center]}>
               <AppLanguageDropdown />
               <Text
-                style={[t.atoms.text_contrast_medium, !gtMobile && a.text_md]}>
+                style={[
+                  a.flex_1,
+                  t.atoms.text_contrast_medium,
+                  !gtMobile && a.text_md,
+                ]}>
                 <Trans>Having trouble?</Trans>{' '}
                 <InlineLinkText
                   label={_(msg`Contact support`)}

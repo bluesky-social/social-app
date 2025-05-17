@@ -26,6 +26,7 @@ export type ButtonColor =
   | 'secondary'
   | 'secondary_inverted'
   | 'negative'
+  | 'negative_secondary'
   | 'gradient_primary'
   | 'gradient_sky'
   | 'gradient_midnight'
@@ -356,6 +357,57 @@ export const Button = React.forwardRef<View, ButtonProps>(
             })
           }
         }
+      } else if (color === 'negative_secondary') {
+        if (variant === 'solid') {
+          if (!disabled) {
+            baseStyles.push({
+              backgroundColor: select(t.name, {
+                light: t.palette.negative_50,
+                dim: t.palette.negative_100,
+                dark: t.palette.negative_100,
+              }),
+            })
+            hoverStyles.push({
+              backgroundColor: select(t.name, {
+                light: t.palette.negative_100,
+                dim: t.palette.negative_200,
+                dark: t.palette.negative_200,
+              }),
+            })
+          } else {
+            baseStyles.push({
+              backgroundColor: select(t.name, {
+                light: t.palette.negative_100,
+                dim: t.palette.negative_50,
+                dark: t.palette.negative_50,
+              }),
+            })
+          }
+        } else if (variant === 'outline') {
+          baseStyles.push(a.border, t.atoms.bg, {
+            borderWidth: 1,
+          })
+
+          if (!disabled) {
+            baseStyles.push(a.border, {
+              borderColor: t.palette.negative_500,
+            })
+            hoverStyles.push(a.border, {
+              backgroundColor: t.palette.negative_50,
+            })
+          } else {
+            baseStyles.push(a.border, {
+              borderColor: t.palette.negative_200,
+            })
+          }
+        } else if (variant === 'ghost') {
+          if (!disabled) {
+            baseStyles.push(t.atoms.bg)
+            hoverStyles.push({
+              backgroundColor: t.palette.negative_100,
+            })
+          }
+        }
       }
 
       if (shape === 'default') {
@@ -425,6 +477,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
         secondary: tokens.gradients.sky,
         secondary_inverted: tokens.gradients.sky,
         negative: tokens.gradients.sky,
+        negative_secondary: tokens.gradients.sky,
         gradient_primary: tokens.gradients.primary,
         gradient_sky: tokens.gradients.sky,
         gradient_midnight: tokens.gradients.midnight,
@@ -631,6 +684,39 @@ export function useSharedButtonTextStyles() {
           baseStyles.push({color: t.palette.white})
         } else {
           baseStyles.push({color: t.palette.white, opacity: 0.5})
+        }
+      } else if (variant === 'outline') {
+        if (!disabled) {
+          baseStyles.push({color: t.palette.negative_400})
+        } else {
+          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+        }
+      } else if (variant === 'ghost') {
+        if (!disabled) {
+          baseStyles.push({color: t.palette.negative_400})
+        } else {
+          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+        }
+      }
+    } else if (color === 'negative_secondary') {
+      if (variant === 'solid' || variant === 'gradient') {
+        if (!disabled) {
+          baseStyles.push({
+            color: select(t.name, {
+              light: t.palette.negative_500,
+              dim: t.palette.negative_950,
+              dark: t.palette.negative_900,
+            }),
+          })
+        } else {
+          baseStyles.push({
+            color: select(t.name, {
+              light: t.palette.negative_500,
+              dim: t.palette.negative_700,
+              dark: t.palette.negative_700,
+            }),
+            opacity: 0.5,
+          })
         }
       } else if (variant === 'outline') {
         if (!disabled) {

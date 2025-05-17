@@ -4,6 +4,7 @@ import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfilesQuery} from '#/state/queries/profile'
@@ -110,6 +111,7 @@ function AccountItem({
   const t = useTheme()
   const {_} = useLingui()
   const verification = useSimpleVerificationState({profile})
+  const {isActive: live} = useActorStatus(profile)
 
   const onPress = useCallback(() => {
     onSelect(account)
@@ -141,6 +143,8 @@ function AccountItem({
             avatar={profile?.avatar}
             size={36}
             type={profile?.associated?.labeler ? 'labeler' : 'user'}
+            live={live}
+            hideLiveBadge
           />
 
           <View style={[a.flex_1, a.gap_2xs, a.pr_2xl]}>

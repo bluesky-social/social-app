@@ -17,6 +17,8 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
+import {IS_INTERNAL} from '#/lib/app-info'
+import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -60,6 +62,7 @@ import {
 } from '#/components/dialogs/PostInteractionSettingsDialog'
 import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBrackets} from '#/components/icons/CodeBrackets'
@@ -98,6 +101,7 @@ let PostDropdownMenuItems = ({
   richText,
   timestamp,
   threadgateRecord,
+  onShowLess,
 }: {
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -109,6 +113,7 @@ let PostDropdownMenuItems = ({
   size?: 'lg' | 'md' | 'sm'
   timestamp: string
   threadgateRecord?: AppBskyFeedThreadgate.Record
+  onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const {gtMobile} = useBreakpoints()
@@ -300,8 +305,15 @@ let PostDropdownMenuItems = ({
       item: postUri,
       feedContext: postFeedContext,
     })
-    Toast.show(_(msg({message: 'Feedback sent!', context: 'toast'})))
-  }, [feedFeedback, postUri, postFeedContext, _])
+    if (onShowLess) {
+      onShowLess({
+        item: postUri,
+        feedContext: postFeedContext,
+      })
+    } else {
+      Toast.show(_(msg({message: 'Feedback sent!', context: 'toast'})))
+    }
+  }, [feedFeedback, postUri, postFeedContext, _, onShowLess])
 
   const onSelectChatToShareTo = React.useCallback(
     (conversation: string) => {
@@ -430,6 +442,13 @@ let PostDropdownMenuItems = ({
     shareText(postAuthor.did)
   }, [postAuthor.did])
 
+  const onReportMisclassification = useCallback(() => {
+    const url = `https://docs.google.com/forms/d/e/1FAIpQLSd0QPqhNFksDQf1YyOos7r1ofCLvmrKAH1lU042TaS3GAZaWQ/viewform?entry.1756031717=${toShareUrl(
+      href,
+    )}`
+    openLink(url)
+  }, [href, openLink])
+
   return (
     <>
       <Menu.Outer>
@@ -542,6 +561,20 @@ let PostDropdownMenuItems = ({
             </Menu.Group>
           </>
         )}
+
+        {hasSession &&
+          IS_INTERNAL &&
+          DISCOVER_DEBUG_DIDS[currentAccount?.did ?? ''] && (
+            <Menu.Item
+              testID="postDropdownReportMisclassificationBtn"
+              label={_(msg`Assign topic - help train Discover!`)}
+              onPress={onReportMisclassification}>
+              <Menu.ItemText>
+                {_(msg`Assign topic - help train Discover!`)}
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={AtomIcon} position="right" />
+            </Menu.Item>
+          )}
 
         {hasSession && (
           <>

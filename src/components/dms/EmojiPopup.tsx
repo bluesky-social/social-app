@@ -1,1 +1,1 @@
-export {EmojiPopup} from 'react-native-emoji-popup'
+export {EmojiPicker as EmojiPopup} from '../../../modules/expo-emoji-picker'

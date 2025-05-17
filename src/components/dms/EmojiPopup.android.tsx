@@ -1,15 +1,14 @@
 import {useState} from 'react'
 import {Modal, Pressable, View} from 'react-native'
-// @ts-expect-error internal component, not supposed to be used directly
-// waiting on more customisability: https://github.com/okwasniewski/react-native-emoji-popup/issues/1#issuecomment-2737463753
-import EmojiPopupView from 'react-native-emoji-popup/src/EmojiPopupViewNativeComponent'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
-import {TimesLarge_Stroke2_Corner0_Rounded} from '#/components/icons/Times'
+import {TimesLarge_Stroke2_Corner0_Rounded as CloseIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
+import {EmojiPicker} from '../../../modules/expo-emoji-picker'
 
 export function EmojiPopup({
   children,
@@ -34,13 +33,14 @@ export function EmojiPopup({
 
       <Modal
         animationType="slide"
-        transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}>
-        <View style={[a.flex_1, {backgroundColor: t.palette.white}]}>
+        onRequestClose={() => setModalVisible(false)}
+        transparent
+        statusBarTranslucent
+        navigationBarTranslucent>
+        <SafeAreaView style={[a.flex_1, t.atoms.bg]}>
           <View
             style={[
-              t.atoms.bg,
               a.pl_lg,
               a.pr_md,
               a.py_sm,
@@ -61,21 +61,16 @@ export function EmojiPopup({
               variant="ghost"
               color="secondary"
               shape="round">
-              <ButtonIcon icon={TimesLarge_Stroke2_Corner0_Rounded} />
+              <ButtonIcon icon={CloseIcon} />
             </Button>
           </View>
-          <EmojiPopupView
-            onEmojiSelected={({
-              nativeEvent: {emoji},
-            }: {
-              nativeEvent: {emoji: string}
-            }) => {
+          <EmojiPicker
+            onEmojiSelected={emoji => {
               setModalVisible(false)
               onEmojiSelected(emoji)
             }}
-            style={[a.flex_1, a.w_full]}
           />
-        </View>
+        </SafeAreaView>
       </Modal>
     </>
   )

@@ -137,7 +137,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
 
       {!hasSession && leftNavMinimal && (
         <View style={[a.w_full, {height: 32}]}>
-          <AppLanguageDropdown style={{marginTop: 0}} />
+          <AppLanguageDropdown />
         </View>
       )}
     </View>

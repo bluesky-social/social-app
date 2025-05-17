@@ -16,6 +16,7 @@ import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useHaptics} from '#/lib/haptics'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -54,7 +55,6 @@ import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {useComposerControls} from '#/state/shell/composer'
 import {ListMembers} from '#/view/com/lists/ListMembers'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {PostFeed} from '#/view/com/posts/PostFeed'
@@ -155,7 +155,7 @@ function ProfileListScreenLoaded({
 }) {
   const {_} = useLingui()
   const queryClient = useQueryClient()
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {currentAccount} = useSession()
   const {rkey} = route.params

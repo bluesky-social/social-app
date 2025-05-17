@@ -1,9 +1,10 @@
 import {useCallback, useImperativeHandle, useState} from 'react'
 import {Keyboard} from 'react-native'
 import DatePicker from 'react-native-date-picker'
+import {useLingui} from '@lingui/react'
 
 import {useTheme} from '#/alf'
-import {DateFieldProps} from '#/components/forms/DateField/types'
+import {type DateFieldProps} from '#/components/forms/DateField/types'
 import {toSimpleDateString} from '#/components/forms/DateField/utils'
 import * as TextField from '#/components/forms/TextField'
 import {DateFieldButton} from './index.shared'
@@ -21,6 +22,7 @@ export function DateField({
   accessibilityHint,
   maximumDate,
 }: DateFieldProps) {
+  const {i18n} = useLingui()
   const t = useTheme()
   const [open, setOpen] = useState(false)
 
@@ -80,6 +82,8 @@ export function DateField({
           onConfirm={onChangeInternal}
           onCancel={onCancel}
           mode="date"
+          locale={i18n.locale}
+          is24hourSource="locale"
           testID={`${testID}-datepicker`}
           aria-label={label}
           accessibilityLabel={label}

@@ -31,6 +31,7 @@ export interface ProfileShadow {
   muted: boolean | undefined
   blockingUri: string | undefined
   verification: AppBskyActorDefs.VerificationState
+  status: AppBskyActorDefs.StatusView | undefined
 }
 
 const shadows: WeakMap<
@@ -138,6 +139,12 @@ function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
     },
     verification:
       'verification' in shadow ? shadow.verification : profile.verification,
+    status:
+      'status' in shadow
+        ? shadow.status
+        : 'status' in profile
+        ? profile.status
+        : undefined,
   })
 }
 

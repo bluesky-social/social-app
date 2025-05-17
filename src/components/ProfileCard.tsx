@@ -8,6 +8,7 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {getModerationCauseKey} from '#/lib/moderation'
 import {type LogEvents} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -132,13 +133,17 @@ export function Avatar({
   moderationOpts,
   onPress,
   disabledPreview,
+  liveOverride,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   onPress?: () => void
   disabledPreview?: boolean
+  liveOverride?: boolean
 }) {
   const moderation = moderateProfile(profile, moderationOpts)
+
+  const {isActive: live} = useActorStatus(profile)
 
   return disabledPreview ? (
     <UserAvatar
@@ -146,6 +151,7 @@ export function Avatar({
       avatar={profile.avatar}
       type={profile.associated?.labeler ? 'labeler' : 'user'}
       moderation={moderation.ui('avatar')}
+      live={liveOverride ?? live}
     />
   ) : (
     <PreviewableUserAvatar
@@ -153,6 +159,7 @@ export function Avatar({
       profile={profile}
       moderation={moderation.ui('avatar')}
       onBeforePress={onPress}
+      live={liveOverride ?? live}
     />
   )
 }

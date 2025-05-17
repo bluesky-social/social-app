@@ -14,7 +14,7 @@ import {useLingui} from '@lingui/react'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {isLabelerSubscribed, lookupLabelValueDefinition} from '#/lib/moderation'
 import {useScrollHandlers} from '#/lib/ScrollContext'
-import {isNative} from '#/platform/detection'
+import {isIOS, isNative} from '#/platform/detection'
 import {type ListRef} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
@@ -92,7 +92,7 @@ export const ProfileLabelsSection = React.forwardRef<
   }))
 
   React.useEffect(() => {
-    if (isFocused && scrollElRef.current) {
+    if (isIOS && isFocused && scrollElRef.current) {
       const nativeTag = findNodeHandle(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }

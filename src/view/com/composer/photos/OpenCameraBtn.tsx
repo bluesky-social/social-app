@@ -35,9 +35,7 @@ export function OpenCameraBtn({disabled, onAdd}: Props) {
       }
 
       const img = await openCamera({
-        width: POST_IMG_MAX.width,
-        height: POST_IMG_MAX.height,
-        freeStyleCropEnabled: true,
+        aspect: [POST_IMG_MAX.width, POST_IMG_MAX.height],
       })
 
       // If we don't have permissions it's fine, we just wont save it. The post itself will still have access to

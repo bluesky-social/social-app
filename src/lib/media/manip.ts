@@ -1,5 +1,4 @@
 import {Image as RNImage, Share as RNShare} from 'react-native'
-import {Image} from 'react-native-image-crop-picker'
 import uuid from 'react-native-uuid'
 import {
   cacheDirectory,
@@ -20,17 +19,17 @@ import RNFetchBlob from 'rn-fetch-blob'
 import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
-import {Dimensions} from './types'
+import {type PickerImage} from './picker.shared'
+import {type Dimensions} from './types'
 
 export async function compressIfNeeded(
-  img: Image,
-  maxSize: number = 1000000,
-): Promise<Image> {
-  const origUri = `file://${img.path}`
+  img: PickerImage,
+  maxSize: number = POST_IMG_MAX.size,
+): Promise<PickerImage> {
   if (img.size < maxSize) {
     return img
   }
-  const resizedImage = await doResize(origUri, {
+  const resizedImage = await doResize(normalizePath(img.path), {
     width: img.width,
     height: img.height,
     mode: 'stretch',
@@ -127,6 +126,8 @@ export async function shareImageModal({uri}: {uri: string}) {
   safeDeleteAsync(imagePath)
 }
 
+const ALBUM_NAME = 'Bluesky'
+
 export async function saveImageToMediaLibrary({uri}: {uri: string}) {
   // download the file to cache
   // NOTE
@@ -140,8 +141,34 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
   imagePath = normalizePath(await moveToPermanentPath(imagePath, '.png'), true)
 
   // save
-  await MediaLibrary.createAssetAsync(imagePath)
-  safeDeleteAsync(imagePath)
+  try {
+    if (isAndroid) {
+      // android triggers an annoying permission prompt if you try and move an image
+      // between albums. therefore, we need to either create the album with the image
+      // as the starting image, or put it directly into the album
+      const album = await MediaLibrary.getAlbumAsync(ALBUM_NAME)
+      if (album) {
+        // if album exists, put the image straight in there
+        await MediaLibrary.createAssetAsync(imagePath, album)
+      } else {
+        // otherwise, create album with asset (albums must always have at least one asset)
+        await MediaLibrary.createAlbumAsync(
+          ALBUM_NAME,
+          undefined,
+          undefined,
+          imagePath,
+        )
+      }
+    } else {
+      await MediaLibrary.createAssetAsync(imagePath)
+    }
+  } catch (err) {
+    logger.error(err instanceof Error ? err : String(err), {
+      message: 'Failed to save image to media library',
+    })
+  } finally {
+    safeDeleteAsync(imagePath)
+  }
 }
 
 export function getImageDim(path: string): Promise<Dimensions> {
@@ -166,7 +193,10 @@ interface DoResizeOpts {
   maxSize: number
 }
 
-async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
+async function doResize(
+  localUri: string,
+  opts: DoResizeOpts,
+): Promise<PickerImage> {
   // We need to get the dimensions of the image before we resize it. Previously, the library we used allowed us to enter
   // a "max size", and it would do the "best possible size" calculation for us.
   // Now instead, we have to supply the final dimensions to the manipulation function instead.
@@ -181,6 +211,7 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
   let minQualityPercentage = 0
   let maxQualityPercentage = 101 // exclusive
   let newDataUri
+  const intermediateUris = []
 
   while (maxQualityPercentage - minQualityPercentage > 1) {
     const qualityPercentage = Math.round(
@@ -194,6 +225,8 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
         compress: qualityPercentage / 100,
       },
     )
+
+    intermediateUris.push(resizeRes.uri)
 
     const fileInfo = await getInfoAsync(resizeRes.uri)
     if (!fileInfo.exists) {
@@ -214,8 +247,12 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
     } else {
       maxQualityPercentage = qualityPercentage
     }
+  }
 
-    safeDeleteAsync(resizeRes.uri)
+  for (const intermediateUri of intermediateUris) {
+    if (newDataUri?.path !== normalizePath(intermediateUri)) {
+      safeDeleteAsync(intermediateUri)
+    }
   }
 
   if (newDataUri) {

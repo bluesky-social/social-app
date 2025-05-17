@@ -1,4 +1,3 @@
-import 'react-native-url-polyfill/auto'
 import '#/logger/sentry/setup'
 import '#/logger/bitdrift/setup'
 import '#/view/icons'
@@ -44,6 +43,7 @@ import {Provider as PrefsStateProvider} from '#/state/preferences'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
 import {Provider as UnreadNotifsProvider} from '#/state/queries/notifications/unread'
+import {Provider as ServiceAccountManager} from '#/state/service-config'
 import {
   Provider as SessionProvider,
   type SessionAccount,
@@ -58,7 +58,6 @@ import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
-import {Provider as TrendingConfigProvider} from '#/state/trending-config'
 import {TestCtrls} from '#/view/com/testing/TestCtrls'
 import {Provider as VideoVolumeProvider} from '#/view/com/util/post-embeds/VideoVolumeContext'
 import * as Toast from '#/view/com/util/Toast'
@@ -150,7 +149,7 @@ function InnerApp() {
                                         <BackgroundNotificationPreferencesProvider>
                                           <MutedThreadsProvider>
                                             <ProgressGuideProvider>
-                                              <TrendingConfigProvider>
+                                              <ServiceAccountManager>
                                                 <GestureHandlerRootView
                                                   style={s.h100pct}>
                                                   <IntentDialogProvider>
@@ -159,7 +158,7 @@ function InnerApp() {
                                                     <NuxDialogs />
                                                   </IntentDialogProvider>
                                                 </GestureHandlerRootView>
-                                              </TrendingConfigProvider>
+                                              </ServiceAccountManager>
                                             </ProgressGuideProvider>
                                           </MutedThreadsProvider>
                                         </BackgroundNotificationPreferencesProvider>
