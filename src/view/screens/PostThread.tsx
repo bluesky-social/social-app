@@ -1,34 +1,39 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
-import {StyleSheet, useWindowDimensions, View} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
+import {useWindowDimensions, View} from 'react-native'
+import {type AppBskyUnspeccedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {AppBskyUnspeccedDefs} from '@atproto/api'
+import {useFocusEffect} from '@react-navigation/native'
 
-import {isNative} from '#/platform/detection'
-import {cleanError} from '#/lib/strings/errors'
 import {HITSLOP_10} from '#/lib/constants'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {type CommonNavigatorParams, type NativeStackScreenProps} from '#/lib/routes/types'
+import {cleanError} from '#/lib/strings/errors'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
+import {isNative} from '#/platform/detection'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {PostThread as PostThreadComponent} from '#/view/com/post-thread/PostThread'
-import * as Layout from '#/components/Layout'
-import {useSession} from '#/state/session'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+{
+  /* import {PostThread as PostThreadComponent} from '#/view/com/post-thread/PostThread' */
+}
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {useGetPostThreadV2, Slice, HiddenReplyKind} from '#/state/queries/useGetPostThreadV2'
-import * as Menu from '#/components/Menu'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {ScrollProvider} from '#/lib/ScrollContext'
+import {usePreferencesQuery} from '#/state/queries/preferences'
+import {
+  HiddenReplyKind,
+  type Slice,
+  usePostThread,
+} from '#/state/queries/usePostThread'
+import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
+import {PostThreadItem} from '#/view/com/post-thread/PostThreadItem'
+import {PostThreadShowHiddenReplies} from '#/view/com/post-thread/PostThreadShowHiddenReplies'
+import {List, type ListMethods} from '#/view/com/util/List'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
+import * as Layout from '#/components/Layout'
+import {ListFooter} from '#/components/Lists'
+import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
-import {ScrollProvider} from '#/lib/ScrollContext'
-import {List, ListMethods} from '#/view/com/util/List'
-import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
-import {PostThreadItem} from '#/view/com/post-thread/PostThreadItem'
-import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {PostThreadShowHiddenReplies} from '#/view/com/post-thread/PostThreadShowHiddenReplies'
 
 const MAINTAIN_VISIBLE_CONTENT_POSITION = {
   // We don't insert any elements before the root row while loading.
@@ -91,23 +96,26 @@ function useThreadPreferences() {
 
   const isLoaded = !!prevServerPrefs
 
-  return useMemo(() => ({
-    isLoaded,
-    sortReplies,
-    setSortReplies,
-    prioritizeFollowedUsers,
-    setPrioritizeFollowedUsers,
-    treeViewEnabled,
-    setTreeViewEnabled,
-  }), [
-    isLoaded,
-    sortReplies,
-    setSortReplies,
-    prioritizeFollowedUsers,
-    setPrioritizeFollowedUsers,
-    treeViewEnabled,
-    setTreeViewEnabled,
-  ])
+  return useMemo(
+    () => ({
+      isLoaded,
+      sortReplies,
+      setSortReplies,
+      prioritizeFollowedUsers,
+      setPrioritizeFollowedUsers,
+      treeViewEnabled,
+      setTreeViewEnabled,
+    }),
+    [
+      isLoaded,
+      sortReplies,
+      setSortReplies,
+      prioritizeFollowedUsers,
+      setPrioritizeFollowedUsers,
+      treeViewEnabled,
+      setTreeViewEnabled,
+    ],
+  )
 }
 
 export function Inner({uri}: {uri: string | undefined}) {
@@ -127,39 +135,42 @@ export function Inner({uri}: {uri: string | undefined}) {
     setTreeViewEnabled,
   } = useThreadPreferences()
 
-  const [shownHiddenReplyKinds, setShownHiddenReplyKinds] = useState<Set<HiddenReplyKind>>(new Set())
+  const [shownHiddenReplyKinds, setShownHiddenReplyKinds] = useState<
+    Set<HiddenReplyKind>
+  >(new Set())
 
-  const {isFetching, isPlaceholderData, error, data, refetch, insertReplies} = useGetPostThreadV2({
-    uri,
-    enabled: isThreadPreferencesLoaded,
-    params: {
-      sort: sortReplies,
-      view: treeViewEnabled ? 'tree' : 'linear',
-      prioritizeFollows: prioritizeFollowedUsers,
-    },
-    state: {
-      shownHiddenReplyKinds,
-    }
-  })
+  const {isFetching, isPlaceholderData, error, data, refetch, insertReplies} =
+    usePostThread({
+      uri,
+      enabled: isThreadPreferencesLoaded,
+      params: {
+        sort: sortReplies,
+        view: treeViewEnabled ? 'tree' : 'linear',
+        prioritizeFollows: prioritizeFollowedUsers,
+      },
+      state: {
+        shownHiddenReplyKinds,
+      },
+    })
 
   const ref = useRef<ListMethods>(null)
   const layoutHeaderRef = useRef<View | null>(null)
   const anchorPostRef = useRef<View | null>(null)
 
-  const optimisticOnPostReply = ({
-    post,
-  }: {
-    post: AppBskyUnspeccedDefs.ThreadItemPost,
-  }) => (_: any, posts: AppBskyUnspeccedDefs.ThreadItemPost[]) => {
-    if (posts.length) {
-      // TODO get parent and update reply count?
-      insertReplies(post.uri, posts)
+  const optimisticOnPostReply =
+    ({post}: {post: AppBskyUnspeccedDefs.ThreadItemPost}) =>
+    (_: any, posts: AppBskyUnspeccedDefs.ThreadItemPost[]) => {
+      if (posts.length) {
+        // TODO get parent and update reply count?
+        insertReplies(post.uri, posts)
+      }
     }
-  }
 
   const {openComposer} = useOpenComposer()
   const onReplyToAnchor = () => {
-    const anchorPost = data?.slices.find(slice => slice.type === 'threadSlice' && slice.ui.isAnchor)
+    const anchorPost = data?.slices.find(
+      slice => slice.type === 'threadSlice' && slice.ui.isAnchor,
+    )
     if (anchorPost?.type !== 'threadSlice') {
       return
     }
@@ -174,7 +185,7 @@ export function Inner({uri}: {uri: string | undefined}) {
         moderation: anchorPost.moderation,
       },
       // @ts-expect-error TODO
-      onPost: optimisticOnPostReply({post:anchorPost.slice}),
+      onPost: optimisticOnPostReply({post: anchorPost.slice}),
     })
   }
 
@@ -200,10 +211,11 @@ export function Inner({uri}: {uri: string | undefined}) {
               item.ui.showParentReplyLine || !!item.slice.hasUnhydratedParents
             } // !!hasUnrevealedParents // TODO
             overrideBlur={
-              shownHiddenReplyKinds.has(HiddenReplyKind.Muted) && item.slice.depth > 0
+              shownHiddenReplyKinds.has(HiddenReplyKind.Muted) &&
+              item.slice.depth > 0
             }
             // @ts-expect-error TODO
-            onPostReply={optimisticOnPostReply({post:item.slice})}
+            onPostReply={optimisticOnPostReply({post: item.slice})}
             hideTopBorder={index === 0} // && !item.slice.isParentLoading} // TODO
           />
         </View>
@@ -239,14 +251,18 @@ export function Inner({uri}: {uri: string | undefined}) {
     } else if (item.type === 'replyComposer') {
       return (
         <View>
-          {gtPhone && <PostThreadComposePrompt onPressCompose={onReplyToAnchor} />}
+          {gtPhone && (
+            <PostThreadComposePrompt onPressCompose={onReplyToAnchor} />
+          )}
         </View>
       )
     } else if (item.type === 'showHiddenReplies') {
       return (
         <PostThreadShowHiddenReplies
           type={item.kind === 'muted' ? 'muted' : 'hidden'}
-          onPress={() => setShownHiddenReplyKinds(kinds => new Set([...kinds, item.kind]))}
+          onPress={() =>
+            setShownHiddenReplyKinds(kinds => new Set([...kinds, item.kind]))
+          }
         />
       )
     }
@@ -324,9 +340,9 @@ export function Inner({uri}: {uri: string | undefined}) {
              * @see https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition
              */
             maintainVisibleContentPosition={
-             isNative // && hasParents // TODO not sure we need this
-               ? MAINTAIN_VISIBLE_CONTENT_POSITION
-               : undefined
+              isNative // && hasParents // TODO not sure we need this
+                ? MAINTAIN_VISIBLE_CONTENT_POSITION
+                : undefined
             }
             desktopFixedHeight
             // removeClippedSubviews={isAndroid ? false : undefined}
@@ -361,7 +377,7 @@ function PostThreadError({error}: {error: Error}) {
   const {_} = useLingui()
 
   // TODO use new cleanError hook
-  const {title, message} = useMemo(() => {
+  const {title: _title, message: _message} = useMemo(() => {
     let title = _(msg`An error occurred`)
     let message = cleanError(error)
 
