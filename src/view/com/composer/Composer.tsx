@@ -44,6 +44,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
   AppBskyFeedDefs,
+  AppBskyUnspeccedDefs,
   type AppBskyFeedGetPostThread,
   type BskyAgent,
   type RichText,
@@ -404,16 +405,17 @@ export const ComposePost = ({
       try {
         if (postUri) {
           posts = await retry(5, _e => true, async () => {
-            const res = await agent.app.bsky.feed.getPostThreadV2({
+            const res = await agent.app.bsky.unspecced.getPostThreadV2({
               uri: postUri!,
               above: 0,
               below: thread.posts.length - 1,
+              branchingFactor: 1,
             })
             if (res.data.thread.length !== thread.posts.length) {
               throw new Error(`Not ready`)
             }
             const anchor = res.data.thread.at(0)
-            if (!AppBskyFeedDefs.isThreadItemPost(anchor)) {
+            if (!AppBskyUnspeccedDefs.isThreadItemPost(anchor)) {
               throw new Error(`Not ready`)
             }
             return res.data.thread

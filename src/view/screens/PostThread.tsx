@@ -3,7 +3,7 @@ import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {AppBskyFeedDefs} from '@atproto/api'
+import {AppBskyUnspeccedDefs} from '@atproto/api'
 
 import {isNative} from '#/platform/detection'
 import {cleanError} from '#/lib/strings/errors'
@@ -149,8 +149,8 @@ export function Inner({uri}: {uri: string | undefined}) {
   const optimisticOnPostReply = ({
     post,
   }: {
-    post: AppBskyFeedDefs.ThreadItemPost,
-  }) => (_: any, posts: AppBskyFeedDefs.ThreadItemPost[]) => {
+    post: AppBskyUnspeccedDefs.ThreadItemPost,
+  }) => (_: any, posts: AppBskyUnspeccedDefs.ThreadItemPost[]) => {
     if (posts.length) {
       // TODO get parent and update reply count?
       insertReplies(post.uri, posts)
