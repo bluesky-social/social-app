@@ -161,8 +161,12 @@ export function Inner({uri}: {uri: string | undefined}) {
     ({post}: {post: AppBskyUnspeccedDefs.ThreadItemPost}) =>
     (_: any, posts: AppBskyUnspeccedDefs.ThreadItemPost[]) => {
       if (posts.length) {
-        // TODO get parent and update reply count?
-        insertReplies(post.uri, posts)
+        console.log('insert', posts)
+        const parent = posts.at(0)
+        const replies = posts.slice(1)
+        if (parent && replies.length) {
+          insertReplies(parent, replies)
+        }
       }
     }
 
