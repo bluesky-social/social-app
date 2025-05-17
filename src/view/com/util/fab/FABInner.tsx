@@ -1,5 +1,5 @@
-import {ComponentProps} from 'react'
-import {StyleSheet, TouchableWithoutFeedback} from 'react-native'
+import {type ComponentProps, type JSX} from 'react'
+import {StyleSheet, type TouchableWithoutFeedback} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'

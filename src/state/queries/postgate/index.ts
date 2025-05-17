@@ -2,10 +2,10 @@ import React from 'react'
 import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPostgate,
   AtUri,
-  BskyAgent,
+  type BskyAgent,
 } from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
@@ -173,7 +173,7 @@ export function useToggleQuoteDetachmentMutation() {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const getPosts = useGetPosts()
-  const prevEmbed = React.useRef<AppBskyFeedDefs.PostView['embed']>()
+  const prevEmbed = React.useRef<AppBskyFeedDefs.PostView['embed']>(undefined)
 
   return useMutation({
     mutationFn: async ({
