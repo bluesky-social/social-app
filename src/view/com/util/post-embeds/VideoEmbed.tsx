@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {ImageBackground} from 'expo-image'
-import {AppBskyEmbedVideo} from '@atproto/api'
+import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

@@ -1,5 +1,4 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
-import type React from 'react';
 
 import {isSafari} from '#/lib/browser'
 import {useVideoVolumeState} from '../../VideoVolumeContext'

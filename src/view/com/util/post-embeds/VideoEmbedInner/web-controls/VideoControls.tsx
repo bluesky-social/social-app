@@ -3,7 +3,6 @@ import {Pressable, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type Hls from 'hls.js'
-import type React from 'react';
 
 import {isTouchDevice} from '#/lib/browser'
 import {clamp} from '#/lib/numbers'
