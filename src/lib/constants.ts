@@ -31,6 +31,7 @@ export const DISCOVER_DEBUG_DIDS: Record<string, true> = {
   'did:plc:3jpt2mvvsumj2r7eqk4gzzjz': true, // esb.lol
   'did:plc:vjug55kidv6sye7ykr5faxxn': true, // emilyliu.me
   'did:plc:tgqseeot47ymot4zro244fj3': true, // iwsmith.bsky.social
+  'did:plc:2dzyut5lxna5ljiaasgeuffz': true, // mrnuma.bsky.social
 }
 
 const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
@@ -192,3 +193,11 @@ export const SUPPORTED_MIME_TYPES = [
 export type SupportedMimeTypes = (typeof SUPPORTED_MIME_TYPES)[number]
 
 export const EMOJI_REACTION_LIMIT = 5
+
+export const urls = {
+  website: {
+    blog: {
+      initialVerificationAnnouncement: `https://bsky.social/about/blog/04-21-2025-verification`,
+    },
+  },
+}

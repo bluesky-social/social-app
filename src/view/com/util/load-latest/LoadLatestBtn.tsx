@@ -12,9 +12,8 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
 import {useGate} from '#/lib/statsig/statsig'
 import {colors} from '#/lib/styles'
-import {isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
-import {useLayoutBreakpoints} from '#/alf'
+import {atoms as a, useLayoutBreakpoints} from '#/alf'
 
 export function LoadLatestBtn({
   onPress,
@@ -80,7 +79,7 @@ export function LoadLatestBtn({
 const styles = StyleSheet.create({
   loadLatest: {
     zIndex: 20,
-    position: isWeb ? 'fixed' : 'absolute',
+    ...a.fixed,
     left: 18,
     borderWidth: StyleSheet.hairlineWidth,
     width: 52,

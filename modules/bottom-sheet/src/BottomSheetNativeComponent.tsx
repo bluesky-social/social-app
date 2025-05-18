@@ -1,18 +1,21 @@
 import * as React from 'react'
 import {
   Dimensions,
-  LayoutChangeEvent,
-  NativeSyntheticEvent,
+  type LayoutChangeEvent,
+  type NativeSyntheticEvent,
   Platform,
-  StyleProp,
+  type StyleProp,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
 import {isIOS} from '#/platform/detection'
-import {BottomSheetState, BottomSheetViewProps} from './BottomSheet.types'
+import {
+  type BottomSheetState,
+  type BottomSheetViewProps,
+} from './BottomSheet.types'
 import {BottomSheetPortalProvider} from './BottomSheetPortal'
 import {Context as PortalContext} from './BottomSheetPortal'
 
@@ -27,7 +30,10 @@ const NativeView: React.ComponentType<
 
 const NativeModule = requireNativeModule('BottomSheet')
 
-const isIOS15 = Platform.OS === 'ios' && Number(Platform.Version) < 16
+const isIOS15 =
+  Platform.OS === 'ios' &&
+  // semvar - can be 3 segments, so can't use Number(Platform.Version)
+  Number(Platform.Version.split('.').at(0)) < 16
 
 export class BottomSheetNativeComponent extends React.Component<
   BottomSheetViewProps,

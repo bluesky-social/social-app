@@ -1,4 +1,5 @@
 import {useEffect, useMemo, useState} from 'react'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
@@ -29,6 +30,8 @@ export interface ProfileShadow {
   followingUri: string | undefined
   muted: boolean | undefined
   blockingUri: string | undefined
+  verification: AppBskyActorDefs.VerificationState
+  status: AppBskyActorDefs.StatusView | undefined
 }
 
 const shadows: WeakMap<
@@ -134,6 +137,14 @@ function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
       blocking:
         'blockingUri' in shadow ? shadow.blockingUri : profile.viewer?.blocking,
     },
+    verification:
+      'verification' in shadow ? shadow.verification : profile.verification,
+    status:
+      'status' in shadow
+        ? shadow.status
+        : 'status' in profile
+        ? profile.status
+        : undefined,
   })
 }
 

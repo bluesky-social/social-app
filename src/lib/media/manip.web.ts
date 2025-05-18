@@ -1,12 +1,13 @@
-import {Image as RNImage} from 'react-native-image-crop-picker'
+/// <reference lib="dom" />
 
-import {Dimensions} from './types'
+import {type PickerImage} from './picker.shared'
+import {type Dimensions} from './types'
 import {blobToDataUri, getDataUriSize} from './util'
 
 export async function compressIfNeeded(
-  img: RNImage,
+  img: PickerImage,
   maxSize: number,
-): Promise<RNImage> {
+): Promise<PickerImage> {
   if (img.size < maxSize) {
     return img
   }
@@ -43,7 +44,7 @@ export async function shareImageModal(_opts: {uri: string}) {
   throw new Error('TODO')
 }
 
-export async function saveImageToAlbum(_opts: {uri: string; album: string}) {
+export async function saveImageToMediaLibrary(_opts: {uri: string}) {
   // TODO
   throw new Error('TODO')
 }
@@ -69,20 +70,34 @@ interface DoResizeOpts {
   maxSize: number
 }
 
-async function doResize(dataUri: string, opts: DoResizeOpts): Promise<RNImage> {
+async function doResize(
+  dataUri: string,
+  opts: DoResizeOpts,
+): Promise<PickerImage> {
   let newDataUri
 
-  for (let i = 0; i <= 10; i++) {
-    newDataUri = await createResizedImage(dataUri, {
+  let minQualityPercentage = 0
+  let maxQualityPercentage = 101 //exclusive
+
+  while (maxQualityPercentage - minQualityPercentage > 1) {
+    const qualityPercentage = Math.round(
+      (maxQualityPercentage + minQualityPercentage) / 2,
+    )
+    const tempDataUri = await createResizedImage(dataUri, {
       width: opts.width,
       height: opts.height,
-      quality: 1 - i * 0.1,
+      quality: qualityPercentage / 100,
       mode: opts.mode,
     })
-    if (getDataUriSize(newDataUri) < opts.maxSize) {
-      break
+
+    if (getDataUriSize(tempDataUri) < opts.maxSize) {
+      minQualityPercentage = qualityPercentage
+      newDataUri = tempDataUri
+    } else {
+      maxQualityPercentage = qualityPercentage
     }
   }
+
   if (!newDataUri) {
     throw new Error('Failed to compress image')
   }

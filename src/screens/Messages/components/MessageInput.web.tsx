@@ -15,9 +15,9 @@ import {
 } from '#/state/messages/message-drafts'
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {
-  Emoji,
-  EmojiPickerPosition,
-} from '#/view/com/composer/text-input/web/EmojiPicker.web'
+  type Emoji,
+  type EmojiPickerPosition,
+} from '#/view/com/composer/text-input/web/EmojiPicker'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
