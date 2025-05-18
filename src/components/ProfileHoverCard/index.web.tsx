@@ -1,13 +1,20 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
+import {
+  type AppBskyActorDefs,
+  moderateProfile,
+  type ModerationOpts,
+} from '@atproto/api'
 import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {isTouchDevice} from '#/lib/browser'
 import {getModerationCauseKey} from '#/lib/moderation'
 import {makeProfileLink} from '#/lib/routes/links'
+import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -28,12 +35,15 @@ import {
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
 import {InlineLinkText, Link} from '#/components/Link'
+import {LiveStatus} from '#/components/live/LiveStatusDialog'
 import {Loader} from '#/components/Loader'
 import * as Pills from '#/components/Pills'
 import {Portal} from '#/components/Portal'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {ProfileHoverCardProps} from './types'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {type ProfileHoverCardProps} from './types'
 
 const floatingMiddlewares = [
   offset(4),
@@ -99,6 +109,8 @@ const HIDE_DELAY = 150
 const HIDE_DURATION = 200
 
 export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
+  const navigation = useNavigation<NavigationProp>()
+
   const {refs, floatingStyles} = useFloating({
     middleware: floatingMiddlewares,
   })
@@ -324,7 +336,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
             onPointerEnter={onPointerEnterCard}
             onPointerLeave={onPointerLeaveCard}>
             <div style={{willChange: 'transform', ...animationStyle}}>
-              <Card did={props.did} hide={onPress} />
+              <Card did={props.did} hide={onPress} navigation={navigation} />
             </div>
           </div>
         </Portal>
@@ -333,7 +345,15 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   )
 }
 
-let Card = ({did, hide}: {did: string; hide: () => void}): React.ReactNode => {
+let Card = ({
+  did,
+  hide,
+  navigation,
+}: {
+  did: string
+  hide: () => void
+  navigation: NavigationProp
+}): React.ReactNode => {
   const t = useTheme()
 
   const profile = useProfileQuery({did})
@@ -341,24 +361,42 @@ let Card = ({did, hide}: {did: string; hide: () => void}): React.ReactNode => {
 
   const data = profile.data
 
+  const status = useActorStatus(data)
+
+  const onPressOpenProfile = useCallback(() => {
+    if (!status.isActive || !data) return
+    hide()
+    navigation.push('Profile', {
+      name: data.handle,
+    })
+  }, [hide, navigation, status, data])
+
   return (
     <View
       style={[
-        a.p_lg,
+        !status.isActive && a.p_lg,
         a.border,
         a.rounded_md,
         a.overflow_hidden,
         t.atoms.bg,
         t.atoms.border_contrast_low,
         t.atoms.shadow_lg,
-        {
-          width: 300,
-        },
+        a.w_full,
+        {maxWidth: status.isActive ? 500 : 300},
       ]}>
       {data && moderationOpts ? (
-        <Inner profile={data} moderationOpts={moderationOpts} hide={hide} />
+        status.isActive ? (
+          <LiveStatus
+            profile={data}
+            embed={status.embed}
+            padding="lg"
+            onPressOpenProfile={onPressOpenProfile}
+          />
+        ) : (
+          <Inner profile={data} moderationOpts={moderationOpts} hide={hide} />
+        )
       ) : (
-        <View style={[a.justify_center]}>
+        <View style={[a.justify_center, a.align_center, {minHeight: 200}]}>
           <Loader size="xl" />
         </View>
       )}
@@ -412,6 +450,7 @@ function Inner({
     [currentAccount, profile],
   )
   const isLabeler = profile.associated?.labeler
+  const verification = useSimpleVerificationState({profile})
 
   return (
     <View>
@@ -465,13 +504,30 @@ function Inner({
 
       <Link to={profileURL} label={_(msg`View profile`)} onPress={hide}>
         <View style={[a.pb_sm, a.flex_1]}>
-          <Text
-            style={[a.pt_md, a.pb_xs, a.text_lg, a.font_bold, a.self_start]}>
-            {sanitizeDisplayName(
-              profile.displayName || sanitizeHandle(profile.handle),
-              moderation.ui('displayName'),
+          <View style={[a.flex_row, a.align_center, a.pt_md, a.pb_xs]}>
+            <Text
+              numberOfLines={1}
+              style={[a.text_lg, a.font_bold, a.self_start]}>
+              {sanitizeDisplayName(
+                profile.displayName || sanitizeHandle(profile.handle),
+                moderation.ui('displayName'),
+              )}
+            </Text>
+            {verification.showBadge && (
+              <View
+                style={[
+                  a.pl_xs,
+                  {
+                    marginTop: -2,
+                  },
+                ]}>
+                <VerificationCheck
+                  width={16}
+                  verifier={verification.role === 'verifier'}
+                />
+              </View>
             )}
-          </Text>
+          </View>
 
           <ProfileHeaderHandle profile={profileShadow} disableTaps />
         </View>

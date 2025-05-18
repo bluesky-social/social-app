@@ -1,20 +1,20 @@
 import React, {useImperativeHandle} from 'react'
 import {
-  NativeScrollEvent,
-  NativeSyntheticEvent,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
   Pressable,
-  ScrollView,
-  StyleProp,
+  type ScrollView,
+  type StyleProp,
   TextInput,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {
   KeyboardAwareScrollView,
   useKeyboardHandler,
 } from 'react-native-keyboard-controller'
 import {runOnJS} from 'react-native-reanimated'
-import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
+import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -25,22 +25,22 @@ import {logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
-import {List, ListMethods, ListProps} from '#/view/com/util/List'
+import {List, type ListMethods, type ListProps} from '#/view/com/util/List'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {useThemeName} from '#/alf/util/useColorModeTheme'
 import {Context, useDialogContext} from '#/components/Dialog/context'
 import {
-  DialogControlProps,
-  DialogInnerProps,
-  DialogOuterProps,
+  type DialogControlProps,
+  type DialogInnerProps,
+  type DialogOuterProps,
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
 import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
 import {
-  BottomSheetSnapPointChangeEvent,
-  BottomSheetStateChangeEvent,
+  type BottomSheetSnapPointChangeEvent,
+  type BottomSheetStateChangeEvent,
 } from '../../../modules/bottom-sheet/src/BottomSheet.types'
-import {BottomSheetNativeComponent} from '../../../modules/bottom-sheet/src/BottomSheetNativeComponent'
+import {type BottomSheetNativeComponent} from '../../../modules/bottom-sheet/src/BottomSheetNativeComponent'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/shared'
@@ -298,9 +298,7 @@ export const InnerFlatList = React.forwardRef<
       <List
         keyboardShouldPersistTaps="handled"
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
-        ListFooterComponent={
-          <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
-        }
+        ListFooterComponent={<View style={{height: insets.bottom + 100}} />}
         ref={ref}
         {...props}
         style={[style]}
@@ -309,7 +307,7 @@ export const InnerFlatList = React.forwardRef<
   )
 })
 
-export function Handle() {
+export function Handle({difference = false}: {difference?: boolean}) {
   const t = useTheme()
   const {_} = useLingui()
   const {screenReaderEnabled} = useA11y()
@@ -330,9 +328,19 @@ export function Handle() {
               width: 35,
               height: 5,
               alignSelf: 'center',
-              backgroundColor: t.palette.contrast_975,
-              opacity: 0.5,
             },
+            difference
+              ? {
+                  // TODO: mixBlendMode is only available on the new architecture -sfn
+                  // backgroundColor: t.palette.white,
+                  // mixBlendMode: 'difference',
+                  backgroundColor: t.palette.white,
+                  opacity: 0.75,
+                }
+              : {
+                  backgroundColor: t.palette.contrast_975,
+                  opacity: 0.5,
+                },
           ]}
         />
       </Pressable>

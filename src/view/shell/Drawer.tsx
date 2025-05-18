@@ -1,15 +1,16 @@
-import React, {ComponentProps} from 'react'
+import React, {type ComponentProps} from 'react'
 import {Linking, ScrollView, TouchableOpacity, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Plural, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
-import {PressableScale} from '#/lib/custom-animations/PressableScale'
+import {type PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {getTabState, TabState} from '#/lib/routes/helpers'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {colors} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
@@ -17,7 +18,7 @@ import {emitSoftReset} from '#/state/events'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
-import {SessionAccount, useSession} from '#/state/session'
+import {type SessionAccount, useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -51,6 +52,8 @@ import {
 } from '#/components/icons/UserCircle'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
 
 const iconWidth = 26
 
@@ -64,6 +67,8 @@ let DrawerProfileCard = ({
   const {_, i18n} = useLingui()
   const t = useTheme()
   const {data: profile} = useProfileQuery({did: account.did})
+  const verification = useSimpleVerificationState({profile})
+  const {isActive: live} = useActorStatus(profile)
 
   return (
     <TouchableOpacity
@@ -71,21 +76,35 @@ let DrawerProfileCard = ({
       accessibilityLabel={_(msg`Profile`)}
       accessibilityHint={_(msg`Navigates to your profile`)}
       onPress={onPressProfile}
-      style={[a.gap_sm]}>
+      style={[a.gap_sm, a.pr_lg]}>
       <UserAvatar
         size={52}
         avatar={profile?.avatar}
         // See https://github.com/bluesky-social/social-app/pull/1801:
         usePlainRNImage={true}
         type={profile?.associated?.labeler ? 'labeler' : 'user'}
+        live={live}
       />
       <View style={[a.gap_2xs]}>
-        <Text
-          emoji
-          style={[a.font_heavy, a.text_xl, a.mt_2xs, a.leading_tight]}
-          numberOfLines={1}>
-          {profile?.displayName || account.handle}
-        </Text>
+        <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
+          <Text
+            emoji
+            style={[a.font_heavy, a.text_xl, a.mt_2xs, a.leading_tight]}
+            numberOfLines={1}>
+            {profile?.displayName || account.handle}
+          </Text>
+          {verification.showBadge && (
+            <View
+              style={{
+                top: 0,
+              }}>
+              <VerificationCheck
+                width={16}
+                verifier={verification.role === 'verifier'}
+              />
+            </View>
+          )}
+        </View>
         <Text
           emoji
           style={[t.atoms.text_contrast_medium, a.text_md, a.leading_tight]}
@@ -367,7 +386,7 @@ let SearchMenuItem = ({
           <MagnifyingGlass style={[t.atoms.text]} width={iconWidth} />
         )
       }
-      label={_(msg`Search`)}
+      label={_(msg`Explore`)}
       bold={isActive}
       onPress={onPress}
     />

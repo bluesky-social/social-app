@@ -1,0 +1,119 @@
+diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
+index e9b330f..ec5f58c 100644
+--- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
++++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
+@@ -15,5 +15,8 @@
+ @property (nonatomic, copy) NSString *title;
+ @property (nonatomic, copy) RCTDirectEventBlock onRefresh;
+ @property (nonatomic, weak) UIScrollView *scrollView;
++@property (nonatomic, copy) UIColor *customTintColor;
++
++- (void)forwarderBeginRefreshing;
+ 
+ @end
+diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
+index 53bfd04..ff1b1ed 100644
+--- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
++++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
+@@ -23,6 +23,7 @@
+   UIColor *_titleColor;
+   CGFloat _progressViewOffset;
+   BOOL _hasMovedToWindow;
++  UIColor *_customTintColor;
+ }
+ 
+ - (instancetype)init
+@@ -58,6 +59,12 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder : (NSCoder *)aDecoder)
+   _isInitialRender = false;
+ }
+ 
++- (void)didMoveToSuperview
++{
++  [super didMoveToSuperview];
++  [self setTintColor:_customTintColor];
++}
++
+ - (void)didMoveToWindow
+ {
+   [super didMoveToWindow];
+@@ -221,4 +228,50 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder : (NSCoder *)aDecoder)
+   }
+ }
+ 
++// Fix for https://github.com/facebook/react-native/issues/43388
++// A bug in iOS 17.4 causes the haptic to not play when refreshing if the tintColor
++// is set before the refresh control gets added to the scrollview. We'll call this
++// function whenever the superview changes. We'll also call it if the value of customTintColor
++// changes.
++- (void)setTintColor:(UIColor *)tintColor
++{
++  if ([self.superview isKindOfClass:[UIScrollView class]] && self.tintColor != tintColor) {
++    [super setTintColor:tintColor];
++  }
++}
++
++// This method is used by Bluesky's ExpoScrollForwarder. This allows other React Native
++// libraries to perform a refresh of a scrollview and access the refresh control's onRefresh
++// function.
++- (void)forwarderBeginRefreshing
++{
++  _refreshingProgrammatically = NO;
++
++  [self sizeToFit];
++
++  if (!self.scrollView) {
++    return;
++  }
++
++  UIScrollView *scrollView = (UIScrollView *)self.scrollView;
++
++  [UIView animateWithDuration:0.3
++    delay:0
++    options:UIViewAnimationOptionBeginFromCurrentState
++    animations:^(void) {
++      // Whenever we call this method, the scrollview will always be at a position of
++      // -130 or less. Scrolling back to -65 simulates the default behavior of RCTRefreshControl
++      [scrollView setContentOffset:CGPointMake(0, -65)];
++    }
++    completion:^(__unused BOOL finished) {
++      [super beginRefreshing];
++      [self setCurrentRefreshingState:super.refreshing];
++
++      if (self->_onRefresh) {
++        self->_onRefresh(nil);
++      }
++    }
++  ];
++}
++
+ @end
+diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m
+index 40aaf9c..1c60164 100644
+--- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m
++++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m
+@@ -22,11 +22,12 @@ RCT_EXPORT_MODULE()
+ 
+ RCT_EXPORT_VIEW_PROPERTY(onRefresh, RCTDirectEventBlock)
+ RCT_EXPORT_VIEW_PROPERTY(refreshing, BOOL)
+-RCT_EXPORT_VIEW_PROPERTY(tintColor, UIColor)
+ RCT_EXPORT_VIEW_PROPERTY(title, NSString)
+ RCT_EXPORT_VIEW_PROPERTY(titleColor, UIColor)
+ RCT_EXPORT_VIEW_PROPERTY(progressViewOffset, CGFloat)
+ 
++RCT_REMAP_VIEW_PROPERTY(tintColor, customTintColor, UIColor)
++
+ RCT_EXPORT_METHOD(setNativeRefreshing : (nonnull NSNumber *)viewTag toRefreshing : (BOOL)refreshing)
+ {
+   [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
+diff --git a/node_modules/react-native/React/Views/ScrollView/RCTScrollViewManager.m b/node_modules/react-native/React/Views/ScrollView/RCTScrollViewManager.m
+index cd1e7eb..c1d0172 100644
+--- a/node_modules/react-native/React/Views/ScrollView/RCTScrollViewManager.m
++++ b/node_modules/react-native/React/Views/ScrollView/RCTScrollViewManager.m
+@@ -83,6 +83,7 @@ RCT_EXPORT_VIEW_PROPERTY(showsVerticalScrollIndicator, BOOL)
+ RCT_EXPORT_VIEW_PROPERTY(scrollEventThrottle, NSTimeInterval)
+ RCT_EXPORT_VIEW_PROPERTY(zoomScale, CGFloat)
+ RCT_EXPORT_VIEW_PROPERTY(contentInset, UIEdgeInsets)
++RCT_EXPORT_VIEW_PROPERTY(scrollIndicatorInsets, UIEdgeInsets)
+ RCT_EXPORT_VIEW_PROPERTY(verticalScrollIndicatorInsets, UIEdgeInsets)
+ RCT_EXPORT_VIEW_PROPERTY(scrollToOverflowEnabled, BOOL)
+ RCT_EXPORT_VIEW_PROPERTY(snapToInterval, int)

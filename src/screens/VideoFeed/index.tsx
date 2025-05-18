@@ -1,17 +1,18 @@
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
   LayoutAnimation,
-  ListRenderItem,
+  type ListRenderItem,
   Pressable,
   ScrollView,
   View,
-  ViewabilityConfig,
-  ViewToken,
+  type ViewabilityConfig,
+  type ViewToken,
 } from 'react-native'
+import {SystemBars} from 'react-native-edge-to-edge'
 import {
   Gesture,
   GestureDetector,
-  NativeGesture,
+  type NativeGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
   useAnimatedStyle,
@@ -23,38 +24,46 @@ import {
 } from 'react-native-safe-area-context'
 import {useEvent} from 'expo'
 import {useEventListener} from 'expo'
-import {Image, ImageStyle} from 'expo-image'
+import {Image, type ImageStyle} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
-import {createVideoPlayer, VideoPlayer, VideoView} from 'expo-video'
+import {createVideoPlayer, type VideoPlayer, VideoView} from 'expo-video'
 import {
   AppBskyEmbedVideo,
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
-  ModerationDecision,
+  type ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
-  RouteProp,
+  type RouteProp,
   useFocusEffect,
   useIsFocused,
   useNavigation,
   useRoute,
 } from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isAndroid} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
-import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {
+  POST_TOMBSTONE,
+  type Shadow,
+  usePostShadow,
+} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {
   FeedFeedbackProvider,
@@ -63,13 +72,13 @@ import {
 import {useFeedFeedback} from '#/state/feed-feedback'
 import {usePostLikeMutationQueue} from '#/state/queries/post'
 import {
-  AuthorFilter,
-  FeedPostSliceItem,
+  type AuthorFilter,
+  type FeedPostSliceItem,
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {useComposerControls, useSetMinimalShellMode} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
 import {List} from '#/view/com/util/List'
@@ -77,7 +86,7 @@ import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Header} from '#/screens/VideoFeed/components/Header'
 import {atoms as a, ios, platform, ThemeProvider, useTheme} from '#/alf'
-import {setNavigationBar} from '#/alf/util/navigationBar'
+import {setSystemUITheme} from '#/alf/util/systemUI'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
@@ -126,10 +135,10 @@ export function VideoFeed({}: NativeStackScreenProps<
   useFocusEffect(
     useCallback(() => {
       setMinShellMode(true)
-      setNavigationBar('lightbox', t)
+      setSystemUITheme('lightbox', t)
       return () => {
         setMinShellMode(false)
-        setNavigationBar('theme', t)
+        setSystemUITheme('theme', t)
       }
     }, [setMinShellMode, t]),
   )
@@ -140,6 +149,7 @@ export function VideoFeed({}: NativeStackScreenProps<
   return (
     <ThemeProvider theme="dark">
       <Layout.Screen noInsetTop style={{backgroundColor: 'black'}}>
+        <SystemBars style={{statusBar: 'light', navigationBar: 'light'}} />
         <View
           style={[
             a.absolute,
@@ -683,7 +693,7 @@ function Overlay({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const {currentAccount} = useSession()
   const navigation = useNavigation<NavigationProp>()
   const seekingAnimationSV = useSharedValue(0)

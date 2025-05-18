@@ -1,20 +1,21 @@
 import React, {memo, useMemo} from 'react'
 import {View} from 'react-native'
 import {
-  AppBskyActorDefs,
+  type AppBskyActorDefs,
   moderateProfile,
-  ModerationOpts,
-  RichText as RichTextAPI,
+  type ModerationOpts,
+  type RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {isIOS, isWeb} from '#/platform/detection'
+import {isIOS} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {Shadow} from '#/state/cache/types'
-import {useModalControls} from '#/state/modals'
+import {type Shadow} from '#/state/cache/types'
 import {
   useProfileBlockMutationQueue,
   useProfileFollowMutationQueue,
@@ -22,11 +23,10 @@ import {
 import {useRequireAuth, useSession} from '#/state/session'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a} from '#/alf'
+import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {
   KnownFollowers,
@@ -34,7 +34,8 @@ import {
 } from '#/components/KnownFollowers'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
-import {ProfileHeaderDisplayName} from './DisplayName'
+import {Text} from '#/components/Typography'
+import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
@@ -55,6 +56,8 @@ let ProfileHeaderStandard = ({
   hideBackButton = false,
   isPlaceholderProfile,
 }: Props): React.ReactNode => {
+  const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
   const {currentAccount, hasSession} = useSession()
@@ -75,19 +78,7 @@ let ProfileHeaderStandard = ({
     profile.viewer?.blockedBy ||
     profile.viewer?.blockingByList
 
-  const {openModal} = useModalControls()
   const editProfileControl = useDialogControl()
-  const onPressEditProfile = React.useCallback(() => {
-    if (isWeb) {
-      // temp, while we figure out the nested dialog bug
-      openModal({
-        name: 'edit-profile',
-        profile,
-      })
-    } else {
-      editProfileControl.open()
-    }
-  }, [editProfileControl, openModal, profile])
 
   const onPressFollow = () => {
     requireAuth(async () => {
@@ -148,6 +139,8 @@ let ProfileHeaderStandard = ({
     [currentAccount, profile],
   )
 
+  const {isActive: live} = useActorStatus(profile)
+
   return (
     <ProfileHeaderShell
       profile={profile}
@@ -175,7 +168,7 @@ let ProfileHeaderStandard = ({
                 size="small"
                 color="secondary"
                 variant="solid"
-                onPress={onPressEditProfile}
+                onPress={editProfileControl.open}
                 label={_(msg`Edit profile`)}
                 style={[a.rounded_full]}>
                 <ButtonText>
@@ -221,10 +214,9 @@ let ProfileHeaderStandard = ({
                   profile.viewer?.following ? onPressUnfollow : onPressFollow
                 }
                 style={[a.rounded_full]}>
-                <ButtonIcon
-                  position="left"
-                  icon={profile.viewer?.following ? Check : Plus}
-                />
+                {!profile.viewer?.following && (
+                  <ButtonIcon position="left" icon={Plus} />
+                )}
                 <ButtonText>
                   {profile.viewer?.following ? (
                     <Trans>Following</Trans>
@@ -239,8 +231,33 @@ let ProfileHeaderStandard = ({
           ) : null}
           <ProfileMenu profile={profile} />
         </View>
-        <View style={[a.flex_col, a.gap_2xs, a.pt_2xs, a.pb_sm]}>
-          <ProfileHeaderDisplayName profile={profile} moderation={moderation} />
+        <View
+          style={[a.flex_col, a.gap_2xs, a.pb_sm, live ? a.pt_sm : a.pt_2xs]}>
+          <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
+            <Text
+              emoji
+              testID="profileHeaderDisplayName"
+              style={[
+                t.atoms.text,
+                gtMobile ? a.text_4xl : a.text_3xl,
+                a.self_start,
+                a.font_heavy,
+              ]}>
+              {sanitizeDisplayName(
+                profile.displayName || sanitizeHandle(profile.handle),
+                moderation.ui('displayName'),
+              )}
+              <View
+                style={[
+                  a.pl_xs,
+                  {
+                    marginTop: platform({ios: 2}),
+                  },
+                ]}>
+                <VerificationCheckButton profile={profile} size="lg" />
+              </View>
+            </Text>
+          </View>
           <ProfileHeaderHandle profile={profile} />
         </View>
         {!isPlaceholderProfile && !isBlockedUser && (

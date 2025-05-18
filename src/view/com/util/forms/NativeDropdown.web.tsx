@@ -1,9 +1,15 @@
 import React from 'react'
-import {Pressable, StyleSheet, Text, View, ViewStyle} from 'react-native'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  type View,
+  type ViewStyle,
+} from 'react-native'
+import {type IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
+import {DropdownMenu} from 'radix-ui'
+import {type MenuItemCommonProps} from 'zeego/lib/typescript/menu'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -233,7 +239,6 @@ const getKey = (label: string, index: number, id?: string) => {
   return `${label}_${index}`
 }
 
-// @ts-expect-error - web only styles. the only style that should be broken here is `outline`
 const styles = StyleSheet.create({
   separator: {
     height: 1,
@@ -258,7 +263,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     columnGap: 20,
-    // @ts-ignore -web
     cursor: 'pointer',
     paddingTop: 8,
     paddingBottom: 8,
@@ -267,6 +271,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     fontFamily:
       '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Liberation Sans", Helvetica, Arial, sans-serif',
+    // @ts-expect-error web only
     outline: 0,
     border: 0,
   },

@@ -3,7 +3,7 @@ import {AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isInvalidHandle} from '#/lib/strings/handles'
+import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
 import {isIOS} from '#/platform/detection'
 import {Shadow} from '#/state/cache/types'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -49,7 +49,9 @@ export function ProfileHeaderHandle({
             : [a.text_md, a.leading_snug, t.atoms.text_contrast_medium],
           web({wordBreak: 'break-all'}),
         ]}>
-        {invalidHandle ? _(msg`⚠Invalid Handle`) : `@${profile.handle}`}
+        {invalidHandle
+          ? _(msg`⚠Invalid Handle`)
+          : sanitizeHandle(profile.handle, '@')}
       </Text>
     </View>
   )

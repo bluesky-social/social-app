@@ -17,7 +17,7 @@ import {useAgent} from '#/state/session'
 const RQKEY_ROOT = 'actor-search'
 export const RQKEY = (query: string) => [RQKEY_ROOT, query]
 
-const RQKEY_ROOT_PAGINATED = `${RQKEY_ROOT}_paginated`
+export const RQKEY_ROOT_PAGINATED = `${RQKEY_ROOT}_paginated`
 export const RQKEY_PAGINATED = (query: string, limit?: number) => [
   RQKEY_ROOT_PAGINATED,
   query,

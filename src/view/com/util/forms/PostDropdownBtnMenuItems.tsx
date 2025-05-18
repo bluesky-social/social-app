@@ -7,20 +7,25 @@ import {
 } from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
-  AppBskyFeedThreadgate,
+  type AppBskyFeedThreadgate,
   AtUri,
-  RichText as RichTextAPI,
+  type RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
+import {IS_INTERNAL} from '#/lib/app-info'
+import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
-import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
 import {logEvent} from '#/lib/statsig/statsig'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
@@ -28,12 +33,11 @@ import {toShareUrl} from '#/lib/strings/url-helpers'
 import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
-import {Shadow} from '#/state/cache/post-shadow'
+import {type Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
-import {useDevModeEnabled} from '#/state/preferences/dev-mode'
 import {usePinnedPostMutation} from '#/state/queries/pinned-post'
 import {
   usePostDeleteMutation,
@@ -58,6 +62,7 @@ import {
 } from '#/components/dialogs/PostInteractionSettingsDialog'
 import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBrackets} from '#/components/icons/CodeBrackets'
@@ -85,6 +90,8 @@ import {
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
+import {useDevMode} from '#/storage/hooks/dev-mode'
+import * as bsky from '#/types/bsky'
 import * as Toast from '../Toast'
 
 let PostDropdownMenuItems = ({
@@ -94,6 +101,7 @@ let PostDropdownMenuItems = ({
   richText,
   timestamp,
   threadgateRecord,
+  onShowLess,
 }: {
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -105,6 +113,7 @@ let PostDropdownMenuItems = ({
   size?: 'lg' | 'md' | 'sm'
   timestamp: string
   threadgateRecord?: AppBskyFeedThreadgate.Record
+  onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const {gtMobile} = useBreakpoints()
@@ -131,7 +140,7 @@ let PostDropdownMenuItems = ({
   const hideReplyConfirmControl = useDialogControl()
   const {mutateAsync: toggleReplyVisibility} =
     useToggleReplyVisibilityMutation()
-  const [devModeEnabled] = useDevModeEnabled()
+  const [devModeEnabled] = useDevMode()
 
   const postUri = post.uri
   const postCid = post.cid
@@ -248,7 +257,20 @@ let PostDropdownMenuItems = ({
 
   const onPressTranslate = React.useCallback(async () => {
     await openLink(translatorUrl, true)
-  }, [openLink, translatorUrl])
+
+    if (
+      bsky.dangerousIsType<AppBskyFeedPost.Record>(
+        post.record,
+        AppBskyFeedPost.isRecord,
+      )
+    ) {
+      logger.metric('translate', {
+        sourceLanguages: post.record.langs ?? [],
+        targetLanguage: langPrefs.primaryLanguage,
+        textLength: post.record.text.length,
+      })
+    }
+  }, [openLink, translatorUrl, langPrefs, post])
 
   const onHidePost = React.useCallback(() => {
     hidePost({uri: postUri})
@@ -283,8 +305,15 @@ let PostDropdownMenuItems = ({
       item: postUri,
       feedContext: postFeedContext,
     })
-    Toast.show(_(msg({message: 'Feedback sent!', context: 'toast'})))
-  }, [feedFeedback, postUri, postFeedContext, _])
+    if (onShowLess) {
+      onShowLess({
+        item: postUri,
+        feedContext: postFeedContext,
+      })
+    } else {
+      Toast.show(_(msg({message: 'Feedback sent!', context: 'toast'})))
+    }
+  }, [feedFeedback, postUri, postFeedContext, _, onShowLess])
 
   const onSelectChatToShareTo = React.useCallback(
     (conversation: string) => {
@@ -413,6 +442,13 @@ let PostDropdownMenuItems = ({
     shareText(postAuthor.did)
   }, [postAuthor.did])
 
+  const onReportMisclassification = useCallback(() => {
+    const url = `https://docs.google.com/forms/d/e/1FAIpQLSd0QPqhNFksDQf1YyOos7r1ofCLvmrKAH1lU042TaS3GAZaWQ/viewform?entry.1756031717=${toShareUrl(
+      href,
+    )}`
+    openLink(url)
+  }, [href, openLink])
+
   return (
     <>
       <Menu.Outer>
@@ -525,6 +561,20 @@ let PostDropdownMenuItems = ({
             </Menu.Group>
           </>
         )}
+
+        {hasSession &&
+          IS_INTERNAL &&
+          DISCOVER_DEBUG_DIDS[currentAccount?.did ?? ''] && (
+            <Menu.Item
+              testID="postDropdownReportMisclassificationBtn"
+              label={_(msg`Assign topic - help train Discover!`)}
+              onPress={onReportMisclassification}>
+              <Menu.ItemText>
+                {_(msg`Assign topic - help train Discover!`)}
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={AtomIcon} position="right" />
+            </Menu.Item>
+          )}
 
         {hasSession && (
           <>

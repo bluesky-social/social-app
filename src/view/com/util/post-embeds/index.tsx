@@ -1,12 +1,16 @@
 import React from 'react'
 import {
   InteractionManager,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
-import {MeasuredDimensions, runOnJS, runOnUI} from 'react-native-reanimated'
+import {
+  type MeasuredDimensions,
+  runOnJS,
+  runOnUI,
+} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {
   AppBskyEmbedExternal,
@@ -18,10 +22,10 @@ import {
   AppBskyGraphDefs,
   moderateFeedGenerator,
   moderateUserList,
-  ModerationDecision,
+  type ModerationDecision,
 } from '@atproto/api'
 
-import {HandleRef, measureHandle} from '#/lib/hooks/useHandleRef'
+import {type HandleRef, measureHandle} from '#/lib/hooks/useHandleRef'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useLightboxControls} from '#/state/lightbox'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -30,7 +34,7 @@ import {atoms as a, useTheme} from '#/alf'
 import * as ListCard from '#/components/ListCard'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
-import {Dimensions} from '../../lightbox/ImageViewing/@types'
+import {type Dimensions} from '../../lightbox/ImageViewing/@types'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'

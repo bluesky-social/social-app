@@ -4,7 +4,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {toNiceDomain} from '#/lib/strings/url-helpers'
-import {isAndroid} from '#/platform/detection'
 import {ServerInputDialog} from '#/view/com/auth/server-input'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -41,25 +40,27 @@ export function HostingProvider({
         onSelect={onSelectServiceUrl}
       />
       {minimal ? (
-        <View style={[a.flex_row, a.align_center, a.flex_wrap]}>
+        <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_xs]}>
           <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-            <Trans>
-              You are creating an account on{' '}
-              <Button
-                label={toNiceDomain(serviceUrl)}
-                accessibilityHint={_(msg`Changes hosting provider`)}
-                onPress={onPressSelectService}
-                variant="ghost"
-                color="secondary"
-                size="tiny"
-                style={[a.px_xs, {margin: tokens.space.xs * -1}]}>
-                <ButtonText style={[a.text_sm]}>
-                  {toNiceDomain(serviceUrl)}
-                </ButtonText>
-                <ButtonIcon icon={PencilIcon} />
-              </Button>
-            </Trans>
+            <Trans>You are creating an account on</Trans>
           </Text>
+          <Button
+            label={toNiceDomain(serviceUrl)}
+            accessibilityHint={_(msg`Changes hosting provider`)}
+            onPress={onPressSelectService}
+            variant="ghost"
+            color="secondary"
+            size="tiny"
+            style={[
+              a.px_xs,
+              {marginHorizontal: tokens.space.xs * -1},
+              {paddingVertical: 0},
+            ]}>
+            <ButtonText style={[a.text_sm]}>
+              {toNiceDomain(serviceUrl)}
+            </ButtonText>
+            <ButtonIcon icon={PencilIcon} />
+          </Button>
         </View>
       ) : (
         <Button
@@ -73,10 +74,10 @@ export function HostingProvider({
             a.flex_row,
             a.align_center,
             a.rounded_sm,
+            a.py_sm,
             a.pl_md,
             a.pr_sm,
             a.gap_xs,
-            {paddingVertical: isAndroid ? 14 : 8},
           ]}
           onPress={onPressSelectService}>
           {({hovered, pressed}) => {

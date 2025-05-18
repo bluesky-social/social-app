@@ -1,15 +1,16 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
-import {ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatBskyActorDefs, type ChatBskyConvoDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useAppState} from '#/lib/hooks/useAppState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {MessagesTabNavigatorParams} from '#/lib/routes/types'
+import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
+import {type MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
@@ -19,18 +20,18 @@ import {useMessagesEventBus} from '#/state/messages/events'
 import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useSession} from '#/state/session'
-import {List, ListRef} from '#/view/com/util/List'
+import {List, type ListRef} from '#/view/com/util/List'
 import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {DialogControlProps, useDialogControl} from '#/components/Dialog'
+import {type DialogControlProps, useDialogControl} from '#/components/Dialog'
 import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
-import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Retry} from '#/components/icons/ArrowRotateCounterClockwise'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {Message_Stroke2_Corner0_Rounded as Message} from '#/components/icons/Message'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
+import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotateCounterClockwise'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
+import {Message_Stroke2_Corner0_Rounded as MessageIcon} from '#/components/icons/Message'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
@@ -223,7 +224,7 @@ export function MessagesScreen({navigation, route}: Props) {
               {isError ? (
                 <>
                   <View style={[a.pt_3xl, a.align_center]}>
-                    <CircleInfo
+                    <CircleInfoIcon
                       width={48}
                       fill={t.atoms.text_contrast_low.color}
                     />
@@ -252,14 +253,14 @@ export function MessagesScreen({navigation, route}: Props) {
                       <ButtonText>
                         <Trans>Retry</Trans>
                       </ButtonText>
-                      <ButtonIcon icon={Retry} position="right" />
+                      <ButtonIcon icon={RetryIcon} position="right" />
                     </Button>
                   </View>
                 </>
               ) : (
                 <>
                   <View style={[a.pt_3xl, a.align_center]}>
-                    <Message width={48} fill={t.palette.primary_500} />
+                    <MessageIcon width={48} fill={t.palette.primary_500} />
                     <Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_bold]}>
                       <Trans>Nothing here</Trans>
                     </Text>
@@ -321,6 +322,18 @@ export function MessagesScreen({navigation, route}: Props) {
 function Header({newChatControl}: {newChatControl: DialogControlProps}) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
+  const requireEmailVerification = useRequireEmailVerification()
+
+  const openChatControl = useCallback(() => {
+    newChatControl.open()
+  }, [newChatControl])
+  const wrappedOpenChatControl = requireEmailVerification(openChatControl, {
+    instructions: [
+      <Trans key="new-chat">
+        Before you can message another user, you must first verify your email.
+      </Trans>,
+    ],
+  })
 
   const settingsLink = (
     <Link
@@ -329,9 +342,9 @@ function Header({newChatControl}: {newChatControl: DialogControlProps}) {
       size="small"
       variant="ghost"
       color="secondary"
-      shape="square"
+      shape="round"
       style={[a.justify_center]}>
-      <ButtonIcon icon={SettingsSlider} size="md" />
+      <ButtonIcon icon={SettingsIcon} size="lg" />
     </Link>
   )
 
@@ -352,8 +365,8 @@ function Header({newChatControl}: {newChatControl: DialogControlProps}) {
               color="primary"
               size="small"
               variant="solid"
-              onPress={newChatControl.open}>
-              <ButtonIcon icon={Plus} position="left" />
+              onPress={wrappedOpenChatControl}>
+              <ButtonIcon icon={PlusIcon} position="left" />
               <ButtonText>
                 <Trans>New chat</Trans>
               </ButtonText>
