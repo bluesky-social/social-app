@@ -1,21 +1,28 @@
-import React from 'react'
+import {createContext, useContext, useMemo} from 'react'
 
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useServiceConfigQuery} from '#/state/queries/service-config'
 import {device} from '#/storage'
 
-type Context = {
+type TrendingContext = {
   enabled: boolean
 }
 
-const Context = React.createContext<Context>({
+type LiveNowContext = {
+  did: string
+  domains: string[]
+}[]
+
+const TrendingContext = createContext<TrendingContext>({
   enabled: false,
 })
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
+const LiveNowContext = createContext<LiveNowContext | null>(null)
+
+export function Provider({children}: {children: React.ReactNode}) {
   const langPrefs = useLanguagePrefs()
   const {data: config, isLoading: isInitialLoad} = useServiceConfigQuery()
-  const ctx = React.useMemo<Context>(() => {
+  const trending = useMemo<TrendingContext>(() => {
     if (__DEV__) {
       return {enabled: true}
     }
@@ -49,9 +56,33 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
     return {enabled}
   }, [isInitialLoad, config, langPrefs.contentLanguages])
-  return <Context.Provider value={ctx}>{children}</Context.Provider>
+
+  const liveNow = useMemo<LiveNowContext>(() => config?.liveNow ?? [], [config])
+
+  return (
+    <TrendingContext.Provider value={trending}>
+      <LiveNowContext.Provider value={liveNow}>
+        {children}
+      </LiveNowContext.Provider>
+    </TrendingContext.Provider>
+  )
 }
 
 export function useTrendingConfig() {
-  return React.useContext(Context)
+  return useContext(TrendingContext)
+}
+
+export function useLiveNowConfig() {
+  const ctx = useContext(LiveNowContext)
+  if (!ctx) {
+    throw new Error(
+      'useLiveNowConfig must be used within a LiveNowConfigProvider',
+    )
+  }
+  return ctx
+}
+
+export function useCanGoLive(did?: string) {
+  const config = useLiveNowConfig()
+  return !!config.find(cfg => cfg.did === did)
 }

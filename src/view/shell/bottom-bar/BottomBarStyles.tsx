@@ -30,6 +30,11 @@ export const styles = StyleSheet.create({
     borderRadius: 6,
     zIndex: 1,
   },
+  notificationCountWeb: {
+    paddingTop: 3,
+    paddingBottom: 3,
+    borderRadius: 12,
+  },
   notificationCountLight: {
     borderColor: colors.white,
   },

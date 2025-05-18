@@ -6,10 +6,11 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {ComposeIcon2} from '#/lib/icons'
 import {
-  NativeStackScreenProps,
-  NotificationsTabNavigatorParams,
+  type NativeStackScreenProps,
+  type NotificationsTabNavigatorParams,
 } from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
@@ -22,12 +23,11 @@ import {
 } from '#/state/queries/notifications/unread'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {useComposerControls} from '#/state/shell/composer'
 import {NotificationFeed} from '#/view/com/notifications/NotificationFeed'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {FAB} from '#/view/com/util/fab/FAB'
-import {ListMethods} from '#/view/com/util/List'
+import {type ListMethods} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
 import {atoms as a} from '#/alf'
@@ -49,7 +49,7 @@ type Props = NativeStackScreenProps<
 >
 export function NotificationsScreen({}: Props) {
   const {_} = useLingui()
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const unreadNotifs = useUnreadNotifications()
   const hasNew = !!unreadNotifs
   const {checkUnread: checkUnreadAll} = useUnreadNotificationsApi()

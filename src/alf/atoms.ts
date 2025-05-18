@@ -27,6 +27,9 @@ export const atoms = {
   relative: {
     position: 'relative',
   },
+  static: {
+    position: 'static',
+  },
   sticky: web({
     position: 'sticky',
   }),
@@ -203,6 +206,9 @@ export const atoms = {
   },
   flex_grow: {
     flexGrow: 1,
+  },
+  flex_grow_0: {
+    flexGrow: 0,
   },
   flex_shrink: {
     flexShrink: 1,

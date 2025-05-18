@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {HITSLOP_20} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -19,16 +20,19 @@ import {
   useProfileFollowMutationQueue,
   useProfileMuteMutationQueue,
 } from '#/state/queries/profile'
+import {useCanGoLive} from '#/state/service-config'
 import {useSession} from '#/state/session'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import * as Toast from '#/view/com/util/Toast'
 import {Button, ButtonIcon} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheck} from '#/components/icons/CircleCheck'
 import {CircleX_Stroke2_Corner0_Rounded as CircleX} from '#/components/icons/CircleX'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
+import {Live_Stroke2_Corner0_Rounded as LiveIcon} from '#/components/icons/Live'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {PeopleRemove2_Stroke2_Corner0_Rounded as UserMinus} from '#/components/icons/PeopleRemove2'
@@ -38,6 +42,8 @@ import {
 } from '#/components/icons/Person'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
+import {EditLiveDialog} from '#/components/live/EditLiveDialog'
+import {GoLiveDialog} from '#/components/live/GoLiveDialog'
 import * as Menu from '#/components/Menu'
 import {
   ReportDialog,
@@ -67,6 +73,7 @@ let ProfileMenu = ({
   const isLabelerAndNotBlocked = !!profile.associated?.labeler && !isBlocked
   const [devModeEnabled] = useDevMode()
   const verification = useFullVerificationState({profile})
+  const canGoLive = useCanGoLive(currentAccount?.did)
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
@@ -77,6 +84,7 @@ let ProfileMenu = ({
 
   const blockPromptControl = Prompt.usePromptControl()
   const loggedOutWarningPromptControl = Prompt.usePromptControl()
+  const goLiveDialogControl = useDialogControl()
 
   const showLoggedOutWarning = React.useMemo(() => {
     return (
@@ -201,6 +209,8 @@ let ProfileMenu = ({
       return v.issuer === currentAccount?.did
     }) ?? []
 
+  const status = useActorStatus(profile)
+
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
@@ -290,6 +300,25 @@ let ProfileMenu = ({
                   </Menu.ItemText>
                   <Menu.ItemIcon icon={List} />
                 </Menu.Item>
+                {isSelf && canGoLive && (
+                  <Menu.Item
+                    testID="profileHeaderDropdownListAddRemoveBtn"
+                    label={
+                      status.isActive
+                        ? _(msg`Edit live status`)
+                        : _(msg`Go live`)
+                    }
+                    onPress={goLiveDialogControl.open}>
+                    <Menu.ItemText>
+                      {status.isActive ? (
+                        <Trans>Edit live status</Trans>
+                      ) : (
+                        <Trans>Go live</Trans>
+                      )}
+                    </Menu.ItemText>
+                    <Menu.ItemIcon icon={LiveIcon} />
+                  </Menu.Item>
+                )}
                 {verification.viewer.role === 'verifier' &&
                   !verification.profile.isViewer &&
                   (verification.viewer.hasIssuedVerification ? (
@@ -456,6 +485,16 @@ let ProfileMenu = ({
         profile={profile}
         verifications={currentAccountVerifications}
       />
+
+      {status.isActive ? (
+        <EditLiveDialog
+          control={goLiveDialogControl}
+          status={status}
+          embed={status.embed}
+        />
+      ) : (
+        <GoLiveDialog control={goLiveDialogControl} profile={profile} />
+      )}
     </EventStopper>
   )
 }

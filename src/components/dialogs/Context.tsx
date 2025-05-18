@@ -1,6 +1,7 @@
 import {createContext, useContext, useMemo, useState} from 'react'
 
 import * as Dialog from '#/components/Dialog'
+import {type Screen} from '#/components/dialogs/EmailDialog/types'
 
 type Control = Dialog.DialogControlProps
 
@@ -15,6 +16,7 @@ type ControlsContext = {
   mutedWordsDialogControl: Control
   signinDialogControl: Control
   inAppBrowserConsentControl: StatefulControl<string>
+  emailDialogControl: StatefulControl<Screen>
 }
 
 const ControlsContext = createContext<ControlsContext | null>(null)
@@ -33,14 +35,21 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const mutedWordsDialogControl = Dialog.useDialogControl()
   const signinDialogControl = Dialog.useDialogControl()
   const inAppBrowserConsentControl = useStatefulDialogControl<string>()
+  const emailDialogControl = useStatefulDialogControl<Screen>()
 
   const ctx = useMemo<ControlsContext>(
     () => ({
       mutedWordsDialogControl,
       signinDialogControl,
       inAppBrowserConsentControl,
+      emailDialogControl,
     }),
-    [mutedWordsDialogControl, signinDialogControl, inAppBrowserConsentControl],
+    [
+      mutedWordsDialogControl,
+      signinDialogControl,
+      inAppBrowserConsentControl,
+      emailDialogControl,
+    ],
   )
 
   return (
@@ -48,7 +57,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-function useStatefulDialogControl<T>(initialValue?: T): StatefulControl<T> {
+export function useStatefulDialogControl<T>(
+  initialValue?: T,
+): StatefulControl<T> {
   const [value, setValue] = useState(initialValue)
   const control = Dialog.useDialogControl()
   return useMemo(

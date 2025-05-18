@@ -98,20 +98,13 @@ appId: xyz.blueskyweb.app
 - tapOn: "People"
 
 - tapOn: "Start adding people"
-- assertVisible:
-    id: "listAddUserModal"
-- tapOn:
-    id: "searchInput"
+- tapOn: "Search"
 - inputText: "b"
 - pressKey: Enter
-- tapOn:
-    id: "user-bob.test-addBtn"
-- tapOn:
-    id: "doneBtn"
-- assertNotVisible:
-    id: "listAddUserModal"
-- assertVisible:
-    id: "user-bob.test"
+- tapOn: "Add user to list"
+- swipe:
+    direction: DOWN
+- assertVisible: "View Bob's profile"
 
 - tapOn: "Posts"
 - assertVisible:
@@ -142,23 +135,16 @@ appId: xyz.blueskyweb.app
     id: "e2eGotoLists"
 - tapOn: "Good Ppl"
 
-- tapOn: "People"
-- assertVisible:
-    label: "Removes users on curatelists from the list"
-    id: "user-bob.test"
+# - tapOn: "People"
+- assertVisible: "View Bob's profile"
 - tapOn:
     point: "90%,43%"
-- assertVisible:
-    id: "userAddRemoveListsModal"
 - tapOn:
     id: "user-bob.test-addBtn"
 - tapOn:
     id: "doneBtn"
-- assertNotVisible:
-    id: "userAddRemoveListsModal"
 
 - tapOn:
-    label: "Adds and removes users on curatelists from the profile"
     id: "bottomBarSearchBtn"
 - tapOn: "Search for posts, users, or feeds"
 - inputText: "bob"
