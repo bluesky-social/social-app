@@ -1,3 +1,4 @@
+import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 
 export type MetricEvents = {
@@ -23,7 +24,9 @@ export type MetricEvents = {
       | 'Takendown'
     scope: 'current' | 'every'
   }
-  'notifications:openApp': {}
+  'notifications:openApp': {
+    reason: NotificationReason
+  }
   'notifications:request': {
     context: 'StartOnboarding' | 'AfterOnboarding' | 'Login' | 'Home'
     status: 'granted' | 'denied' | 'undetermined'
