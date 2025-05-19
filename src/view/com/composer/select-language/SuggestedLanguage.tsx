@@ -65,7 +65,8 @@ export function SuggestedLanguage({text}: {text: string}) {
           a.rounded_sm,
           a.px_lg,
           a.py_md,
-          a.m_md,
+          a.mx_md,
+          a.my_sm,
           t.atoms.bg,
         ]}>
         <EarthIcon />
