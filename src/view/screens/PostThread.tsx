@@ -1,12 +1,15 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import {type AppBskyUnspeccedDefs} from '@atproto/api'
+import {type AppBskyUnspeccedGetPostThreadV2} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {HITSLOP_10} from '#/lib/constants'
-import {type CommonNavigatorParams, type NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
@@ -157,31 +160,31 @@ export function Inner({uri}: {uri: string | undefined}) {
   const layoutHeaderRef = useRef<View | null>(null)
   const anchorPostRef = useRef<View | null>(null)
 
-  const optimisticOnPostReply =
-    ({post}: {post: AppBskyUnspeccedDefs.ThreadItemPost}) =>
-    (_: any, posts: AppBskyUnspeccedDefs.ThreadItemPost[]) => {
-      if (posts.length) {
-        console.log('insert', posts)
-        const parent = posts.at(0)
-        const replies = posts.slice(1)
-        if (parent && replies.length) {
-          insertReplies(parent, replies)
-        }
+  const optimisticOnPostReply = (
+    _: any,
+    posts: AppBskyUnspeccedGetPostThreadV2.ThreadItem[],
+  ) => {
+    if (posts.length) {
+      const parent = posts.at(0)
+      const replies = posts.slice(1)
+      if (parent && replies.length) {
+        insertReplies(parent, replies)
       }
     }
+  }
 
   const {openComposer} = useOpenComposer()
   const onReplyToAnchor = () => {
-    const anchorPost = data?.slices.find(
-      slice => slice.type === 'threadSlice' && slice.ui.isAnchor,
+    const anchorPost = data?.items.find(
+      slice => slice.type === 'threadPost' && slice.ui.isAnchor,
     )
-    if (anchorPost?.type !== 'threadSlice') {
+    if (anchorPost?.type !== 'threadPost') {
       return
     }
-    const post = anchorPost.slice.post
+    const post = anchorPost.value.post
     openComposer({
       replyTo: {
-        uri: anchorPost.slice.uri,
+        uri: anchorPost.uri,
         cid: post.cid,
         text: post.record.text,
         author: post.author,
@@ -189,42 +192,43 @@ export function Inner({uri}: {uri: string | undefined}) {
         moderation: anchorPost.moderation,
       },
       // @ts-expect-error TODO
-      onPost: optimisticOnPostReply({post: anchorPost.slice}),
+      onPost: optimisticOnPostReply,
     })
   }
 
   const renderItem = ({item, index}: {item: Slice; index: number}) => {
-    if (item.type === 'threadSlice') {
+    if (item.type === 'threadPost') {
       return (
         <View ref={item.ui.isAnchor ? anchorPostRef : undefined}>
           <PostThreadItem
-            post={item.slice.post}
-            record={item.slice.post.record}
+            post={item.value.post}
+            record={item.value.post.record}
             threadgateRecord={data?.threadgate?.record ?? undefined}
             moderation={item.moderation}
             treeView={treeViewEnabled}
-            depth={item.slice.depth}
+            depth={item.depth}
             // TODO
             // prevPost={prev}
             // nextPost={next}
             isHighlightedPost={item.ui.isAnchor}
-            hasMore={item.slice.hasUnhydratedReplies}
+            // @ts-expect-error
+            hasMore={item.value.hasUnhydratedReplies}
             showChildReplyLine={item.ui.showChildReplyLine}
             showParentReplyLine={item.ui.showParentReplyLine}
             hasPrecedingItem={
-              item.ui.showParentReplyLine || !!item.slice.hasUnhydratedParents
+              // @ts-expect-error
+              item.ui.showParentReplyLine || !!item.value.hasUnhydratedParents
             } // !!hasUnrevealedParents // TODO
             overrideBlur={
-              shownHiddenReplyKinds.has(HiddenReplyKind.Muted) &&
-              item.slice.depth > 0
+              shownHiddenReplyKinds.has(HiddenReplyKind.Muted) && item.depth > 0
             }
             // @ts-expect-error TODO
-            onPostReply={optimisticOnPostReply({post: item.slice})}
-            hideTopBorder={index === 0} // && !item.slice.isParentLoading} // TODO
+            onPostReply={optimisticOnPostReply}
+            hideTopBorder={index === 0} // && !item.isParentLoading} // TODO
           />
         </View>
       )
-    } else if (item.type === 'threadSliceBlocked') {
+    } else if (item.type === 'threadPostBlocked') {
       return (
         <View
           style={[
@@ -238,7 +242,7 @@ export function Inner({uri}: {uri: string | undefined}) {
           </Text>
         </View>
       )
-    } else if (item.type === 'threadSliceNotFound') {
+    } else if (item.type === 'threadPostNotFound') {
       return (
         <View
           style={[
@@ -332,7 +336,7 @@ export function Inner({uri}: {uri: string | undefined}) {
         >
           <List
             ref={ref}
-            data={data?.slices ?? []}
+            data={data?.items ?? []}
             renderItem={renderItem}
             keyExtractor={keyExtractor}
             onContentSizeChange={isNative ? undefined : onContentSizeChangeWeb}

@@ -1,9 +1,4 @@
-import {
-  type $Typed,
-  AppBskyUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadV2,
-  AtUri,
-} from '@atproto/api'
+import {type $Typed, AppBskyUnspeccedGetPostThreadV2, AtUri} from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
 
 import {findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData} from '#/state/queries/explore-feed-previews'
@@ -12,8 +7,8 @@ import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '#/state/qu
 import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '#/state/queries/search-posts'
 import {
+  type createPostThreadQueryKey,
   postThreadQueryKeyRoot,
-  createPostThreadQueryKey,
 } from '#/state/queries/usePostThread/types'
 import {
   embedViewToThreadPlaceholder,
@@ -30,8 +25,8 @@ export function createCacheMutator({
 }) {
   return {
     insertReplies(
-      parent: AppBskyUnspeccedDefs.ThreadItemPost,
-      replies: AppBskyUnspeccedDefs.ThreadItemPost[],
+      parent: AppBskyUnspeccedGetPostThreadV2.ThreadItem,
+      replies: AppBskyUnspeccedGetPostThreadV2.ThreadItem[],
     ) {
       queryClient.setQueryData<AppBskyUnspeccedGetPostThreadV2.OutputSchema>(
         queryKey,
@@ -41,16 +36,23 @@ export function createCacheMutator({
           const thread = [...queryData.thread]
 
           for (let i = 0; i < thread.length; i++) {
-            const anchor = thread[i]
-            if (!AppBskyUnspeccedDefs.isThreadItemPost(anchor)) continue
-            if (anchor.uri !== parent.uri) continue
+            const existingParent = thread[i]
+            if (
+              !AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(
+                existingParent.value,
+              )
+            )
+              continue
+            if (!AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(parent.value))
+              continue
+            if (existingParent.uri !== parent.uri) continue
 
             /*
              * Update parent data
              */
-            anchor.post = {
-              ...anchor.post,
-              replyCount: parent.post.replyCount,
+            existingParent.value.post = {
+              ...existingParent.value.post,
+              replyCount: parent.value.post.replyCount,
             }
 
             /*
@@ -58,11 +60,14 @@ export function createCacheMutator({
              */
             for (let ri = 0; ri < replies.length; ri++) {
               const reply = replies[ri]
-              reply.depth = anchor.depth + 1 + ri
+              if (
+                !AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(reply.value)
+              )
+                continue
               const insertIndex = i + 1 + ri
               thread.splice(insertIndex, 0, {
-                $type: 'app.bsky.unspecced.defs#threadItemPost',
                 ...reply,
+                depth: existingParent.depth + 1 + ri,
               })
             }
           }
@@ -74,14 +79,14 @@ export function createCacheMutator({
         },
       )
     },
-    deletePost(post: AppBskyUnspeccedDefs.ThreadItemPost) {},
+    deletePost(_post: AppBskyUnspeccedGetPostThreadV2.ThreadItem) {},
   }
 }
 
 export function getThreadPlaceholder(
   queryClient: QueryClient,
   uri: string,
-): $Typed<AppBskyUnspeccedDefs.ThreadItemPost> | void {
+): $Typed<AppBskyUnspeccedGetPostThreadV2.ThreadItem> | void {
   let partial
   for (let item of getThreadPlaceholderCandidates(queryClient, uri)) {
     /*
@@ -92,7 +97,7 @@ export function getThreadPlaceholder(
      *
      * TODO can we send in feeds and quotes?
      */
-    const hasAllInfo = item.post.likeCount != null
+    const hasAllInfo = item.value.post.likeCount != null
     if (hasAllInfo) {
       return item
     } else {
@@ -106,7 +111,14 @@ export function getThreadPlaceholder(
 export function* getThreadPlaceholderCandidates(
   queryClient: QueryClient,
   uri: string,
-): Generator<$Typed<AppBskyUnspeccedDefs.ThreadItemPost>, void> {
+): Generator<
+  $Typed<
+    Omit<AppBskyUnspeccedGetPostThreadV2.ThreadItem, 'value'> & {
+      value: $Typed<AppBskyUnspeccedGetPostThreadV2.ThreadItemPost>
+    }
+  >,
+  void
+> {
   const atUri = new AtUri(uri)
 
   /*
@@ -123,15 +135,17 @@ export function* getThreadPlaceholderCandidates(
     const {thread} = queryData
 
     for (const item of thread) {
-      if (AppBskyUnspeccedDefs.isThreadItemPost(item)) {
-        if (didOrHandleUriMatches(atUri, item.post)) {
+      if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
+        if (didOrHandleUriMatches(atUri, item.value.post)) {
           yield {
+            $type: 'app.bsky.unspecced.getPostThreadV2#threadItem',
             ...item,
             depth: 0,
+            value: item.value,
           }
         }
 
-        const qp = getEmbeddedPost(item.post.embed)
+        const qp = getEmbeddedPost(item.value.post.embed)
         if (qp && didOrHandleUriMatches(atUri, qp)) {
           yield embedViewToThreadPlaceholder(qp)
         }
