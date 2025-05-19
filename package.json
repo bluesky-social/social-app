@@ -215,8 +215,7 @@
     "tlds": "^1.234.0",
     "tldts": "^6.1.46",
     "zeego": "^1.6.2",
-    "zod": "^3.20.2",
-    "react-native-scroll-forwarder": "link:./modules/react-native-scroll-forwarder"
+    "zod": "^3.20.2"
   },
   "devDependencies": {
     "@atproto/dev-env": "^0.3.133",
@@ -230,7 +229,6 @@
     "@react-native/babel-preset": "0.79.2",
     "@react-native/eslint-config": "^0.79.2",
     "@react-native/typescript-config": "^0.79.2",
-    "@react-native/babel-preset": "0.79.2",
     "@sentry/webpack-plugin": "^3.2.2",
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^13.2.0",

@@ -1,12 +1,4 @@
-import {
-  memo,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
   ActivityIndicator,
   AppState,
@@ -163,10 +155,6 @@ export function getItemsForFeedback(feedRow: FeedRow):
   }
 }
 
-export type PostFeedRef = {
-  refreshFeed: () => Promise<void>
-}
-
 // DISABLED need to check if this is causing random feed refreshes -prf
 // const REFRESH_AFTER = STALE.HOURS.ONE
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
@@ -193,7 +181,6 @@ let PostFeed = ({
   savedFeedConfig,
   initialNumToRender: initialNumToRenderOverride,
   isVideoFeed = false,
-  ref,
 }: {
   feed: FeedDescriptor
   feedParams?: FeedParams
@@ -216,7 +203,6 @@ let PostFeed = ({
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
   initialNumToRender?: number
   isVideoFeed?: boolean
-  ref?: React.ForwardedRef<PostFeedRef>
 }): React.ReactNode => {
   const {_} = useLingui()
   const queryClient = useQueryClient()
@@ -599,31 +585,22 @@ let PostFeed = ({
 
   // events
   // =
-  //
 
-  const refreshFeed = async () => {
+  const onRefresh = React.useCallback(async () => {
     logEvent('feed:refresh', {
       feedType: feedType,
       feedUrl: feed,
       reason: 'pull-to-refresh',
     })
+    setIsPTRing(true)
     try {
       await refetch()
       onHasNew?.(false)
     } catch (err) {
       logger.error('Failed to refresh posts feed', {message: err})
     }
-  }
-
-  const onRefresh = async () => {
-    setIsPTRing(true)
-    await refreshFeed()
     setIsPTRing(false)
-  }
-
-  useImperativeHandle(ref, () => ({
-    refreshFeed,
-  }))
+  }, [refetch, setIsPTRing, onHasNew, feed, feedType])
 
   const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
