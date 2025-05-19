@@ -212,12 +212,13 @@ module.exports = function (_config) {
           {
             ios: {
               deploymentTarget: '15.1',
-              newArchEnabled: true,
+              newArchEnabled: false,
             },
             android: {
               compileSdkVersion: 35,
               targetSdkVersion: 35,
               buildToolsVersion: '35.0.0',
+              newArchEnabled: true,
             },
           },
         ],
