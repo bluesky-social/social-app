@@ -1,6 +1,5 @@
 import {
-  AppBskyUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadV2,
+  AppBskyUnspeccedGetPostThreadV2,
   type ModerationDecision,
   type ModerationOpts,
 } from '@atproto/api'
@@ -20,7 +19,7 @@ export function flatten(
     showHidden: boolean
   },
 ) {
-  const flattened: Slice[] = sorted.slices
+  const flattened: Slice[] = sorted.items
 
   if (sorted.hidden.length) {
     if (showHidden) {
@@ -58,8 +57,8 @@ export function flatten(
 
   if (hasSession) {
     for (let i = 0; i < flattened.length; i++) {
-      const slice = flattened[i]
-      if ('slice' in slice && slice.slice.depth === 0) {
+      const item = flattened[i]
+      if ('depth' in item && item.depth === 0) {
         flattened.splice(i + 1, 0, {
           type: 'replyComposer',
           key: 'replyComposer',
@@ -82,15 +81,12 @@ export function sort(
     moderationOpts: ModerationOpts
   },
 ) {
-  const slices: Slice[] = []
+  const items: Slice[] = []
   const hidden: Slice[] = []
   const muted: Slice[] = []
 
   traversal: for (let i = 0; i < thread.length; i++) {
     const item = thread[i]
-
-    // ignore unknowns
-    if (!('depth' in item)) continue
 
     if (item.depth < 0) {
       /*
@@ -98,16 +94,26 @@ export function sort(
        * _up_ from there.
        */
     } else if (item.depth === 0) {
-      if (AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(item)) {
-        slices.push(views.noUnauthenticated({item}))
-      } else if (AppBskyUnspeccedDefs.isThreadItemNotFound(item)) {
-        slices.push(views.notFound({item}))
-      } else if (AppBskyUnspeccedDefs.isThreadItemBlocked(item)) {
-        slices.push(views.blocked({item}))
-      } else if (AppBskyUnspeccedDefs.isThreadItemPost(item)) {
-        slices.push(
-          views.post({
-            item,
+      if (
+        AppBskyUnspeccedGetPostThreadV2.isThreadItemNoUnauthenticated(
+          item.value,
+        )
+      ) {
+        items.push(views.threadPostNoUnauthenticated(item))
+      } else if (
+        AppBskyUnspeccedGetPostThreadV2.isThreadItemNotFound(item.value)
+      ) {
+        items.push(views.threadPostNotFound(item))
+      } else if (
+        AppBskyUnspeccedGetPostThreadV2.isThreadItemBlocked(item.value)
+      ) {
+        items.push(views.threadPostBlocked(item))
+      } else if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
+        items.push(
+          views.threadPost({
+            uri: item.uri,
+            depth: item.depth,
+            value: item.value,
             oneUp: thread[i - 1],
             oneDown: thread[i + 1],
             moderationOpts,
@@ -119,19 +125,31 @@ export function sort(
           const parent = thread[pi]
           const parentOneUp = thread[pi - 1]
 
-          if (AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(parent)) {
-            slices.unshift(views.noUnauthenticated({item: parent}))
+          if (
+            AppBskyUnspeccedGetPostThreadV2.isThreadItemNoUnauthenticated(
+              parent.value,
+            )
+          ) {
+            items.unshift(views.threadPostNoUnauthenticated(parent))
             break parentTraversal
-          } else if (AppBskyUnspeccedDefs.isThreadItemNotFound(parent)) {
-            slices.unshift(views.notFound({item: parent}))
+          } else if (
+            AppBskyUnspeccedGetPostThreadV2.isThreadItemNotFound(parent.value)
+          ) {
+            items.unshift(views.threadPostNotFound(parent))
             break parentTraversal
-          } else if (AppBskyUnspeccedDefs.isThreadItemBlocked(parent)) {
-            slices.unshift(views.blocked({item: parent}))
+          } else if (
+            AppBskyUnspeccedGetPostThreadV2.isThreadItemBlocked(parent.value)
+          ) {
+            items.unshift(views.threadPostBlocked(parent))
             break parentTraversal
-          } else if (AppBskyUnspeccedDefs.isThreadItemPost(parent)) {
-            slices.unshift(
-              views.post({
-                item: parent,
+          } else if (
+            AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(parent.value)
+          ) {
+            items.unshift(
+              views.threadPost({
+                uri: parent.uri,
+                depth: parent.depth,
+                value: parent.value,
                 oneUp: parentOneUp,
                 oneDown: parentOneDown,
                 moderationOpts,
@@ -147,22 +165,26 @@ export function sort(
        * we could.
        */
       const shouldBreak =
-        AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(item) ||
-        AppBskyUnspeccedDefs.isThreadItemNotFound(item) ||
-        AppBskyUnspeccedDefs.isThreadItemBlocked(item)
+        AppBskyUnspeccedGetPostThreadV2.isThreadItemNoUnauthenticated(
+          item.value,
+        ) ||
+        AppBskyUnspeccedGetPostThreadV2.isThreadItemNotFound(item.value) ||
+        AppBskyUnspeccedGetPostThreadV2.isThreadItemBlocked(item.value)
 
       if (shouldBreak) {
         const branch = getBranch(thread, i, item.depth)
         // could insert tombstone
         i = branch.end
         continue traversal
-      } else if (AppBskyUnspeccedDefs.isThreadItemPost(item)) {
-        const lastSlice = slices[slices.length - 1]
+      } else if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
+        const lastSlice = items[items.length - 1]
         const isFirstReply =
           lastSlice.type === 'replyComposer' ||
-          (lastSlice.type === 'threadSlice' && lastSlice.slice.depth === 0)
-        const parent = views.post({
-          item,
+          (lastSlice.type === 'threadPost' && lastSlice.depth === 0)
+        const parent = views.threadPost({
+          uri: item.uri,
+          depth: item.depth,
+          value: item.value,
           oneUp: isFirstReply ? undefined : thread[i - 1],
           oneDown: thread[i + 1],
           moderationOpts,
@@ -177,7 +199,7 @@ export function sort(
           /*
            * Not hidden, so show it
            */
-          slices.push(parent)
+          items.push(parent)
         } else {
           const branch = getBranch(thread, i, item.depth)
           const sortArray = parentMod.muted ? muted : hidden
@@ -191,9 +213,13 @@ export function sort(
             for (let ci = startIndex; ci <= branch.end; ci++) {
               const child = thread[ci]
 
-              if (AppBskyUnspeccedDefs.isThreadItemPost(child)) {
-                const childPost = views.post({
-                  item: child,
+              if (
+                AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(child.value)
+              ) {
+                const childPost = views.threadPost({
+                  uri: child.uri,
+                  depth: child.depth,
+                  value: child.value,
                   oneUp: thread[ci - 1],
                   oneDown: thread[ci + 1],
                   moderationOpts,
@@ -231,7 +257,7 @@ export function sort(
   }
 
   return {
-    slices,
+    items,
     hidden,
     muted,
   }
@@ -262,8 +288,6 @@ function getBranch(
 
   for (let ci = branchStartIndex + 1; ci < thread.length; ci++) {
     const next = thread[ci]
-    // ignore unknowns
-    if (!('depth' in next)) continue
     if (next.depth > branchStartDepth) {
       end = ci
     } else {
