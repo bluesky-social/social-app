@@ -20,6 +20,7 @@ import {
   useProfileFollowMutationQueue,
   useProfileMuteMutationQueue,
 } from '#/state/queries/profile'
+import {useCanGoLive} from '#/state/service-config'
 import {useSession} from '#/state/session'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import * as Toast from '#/view/com/util/Toast'
@@ -43,7 +44,6 @@ import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import {EditLiveDialog} from '#/components/live/EditLiveDialog'
 import {GoLiveDialog} from '#/components/live/GoLiveDialog'
-import {temp__canGoLive} from '#/components/live/temp'
 import * as Menu from '#/components/Menu'
 import {
   ReportDialog,
@@ -73,6 +73,7 @@ let ProfileMenu = ({
   const isLabelerAndNotBlocked = !!profile.associated?.labeler && !isBlocked
   const [devModeEnabled] = useDevMode()
   const verification = useFullVerificationState({profile})
+  const canGoLive = useCanGoLive(currentAccount?.did)
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
@@ -299,7 +300,7 @@ let ProfileMenu = ({
                   </Menu.ItemText>
                   <Menu.ItemIcon icon={List} />
                 </Menu.Item>
-                {isSelf && temp__canGoLive(profile) && (
+                {isSelf && canGoLive && (
                   <Menu.Item
                     testID="profileHeaderDropdownListAddRemoveBtn"
                     label={

@@ -134,6 +134,10 @@ msgstr ""
 msgid "{0} is live"
 msgstr ""
 
+#: src/components/live/GoLiveDialog.tsx:102
+msgid "{0} is not a valid URL"
+msgstr ""
+
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:223
 msgid "{0} joined this week"
 msgstr ""
@@ -502,18 +506,18 @@ msgid "Account"
 msgstr ""
 
 #: src/screens/Messages/components/RequestButtons.tsx:91
-#: src/view/com/profile/ProfileMenu.tsx:154
+#: src/view/com/profile/ProfileMenu.tsx:155
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:404
 msgctxt "toast"
 msgid "Account blocked"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:167
+#: src/view/com/profile/ProfileMenu.tsx:168
 msgctxt "toast"
 msgid "Account followed"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:130
+#: src/view/com/profile/ProfileMenu.tsx:131
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:427
 msgctxt "toast"
 msgid "Account muted"
@@ -537,17 +541,17 @@ msgid "Account removed from quick access"
 msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:128
-#: src/view/com/profile/ProfileMenu.tsx:144
+#: src/view/com/profile/ProfileMenu.tsx:145
 msgctxt "toast"
 msgid "Account unblocked"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:179
+#: src/view/com/profile/ProfileMenu.tsx:180
 msgctxt "toast"
 msgid "Account unfollowed"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:120
+#: src/view/com/profile/ProfileMenu.tsx:121
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:417
 msgctxt "toast"
 msgid "Account unmuted"
@@ -576,7 +580,7 @@ msgstr ""
 msgid "Add a content warning"
 msgstr ""
 
-#: src/components/live/GoLiveDialog.tsx:114
+#: src/components/live/GoLiveDialog.tsx:129
 msgid "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event."
 msgstr ""
 
@@ -679,8 +683,8 @@ msgstr ""
 msgid "Add this feed to your feeds"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:295
-#: src/view/com/profile/ProfileMenu.tsx:298
+#: src/view/com/profile/ProfileMenu.tsx:296
+#: src/view/com/profile/ProfileMenu.tsx:299
 msgid "Add to lists"
 msgstr ""
 
@@ -1168,7 +1172,7 @@ msgid "Birthday"
 msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:300
-#: src/view/com/profile/ProfileMenu.tsx:463
+#: src/view/com/profile/ProfileMenu.tsx:464
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:882
 msgid "Block"
 msgstr ""
@@ -1177,14 +1181,14 @@ msgstr ""
 #: src/components/dms/ConvoMenu.tsx:250
 #: src/screens/Messages/components/RequestButtons.tsx:144
 #: src/screens/Messages/components/RequestButtons.tsx:146
-#: src/view/com/profile/ProfileMenu.tsx:374
-#: src/view/com/profile/ProfileMenu.tsx:381
+#: src/view/com/profile/ProfileMenu.tsx:375
+#: src/view/com/profile/ProfileMenu.tsx:382
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:719
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:721
 msgid "Block account"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:446
+#: src/view/com/profile/ProfileMenu.tsx:447
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:877
 msgid "Block Account?"
 msgstr ""
@@ -1235,7 +1239,7 @@ msgstr ""
 msgid "Blocked Accounts"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:458
+#: src/view/com/profile/ProfileMenu.tsx:459
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:879
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr ""
@@ -1256,7 +1260,7 @@ msgstr ""
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:455
+#: src/view/com/profile/ProfileMenu.tsx:456
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
 msgstr ""
 
@@ -1412,8 +1416,8 @@ msgstr ""
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:131
 #: src/components/dialogs/InAppBrowserConsent.tsx:98
 #: src/components/dialogs/InAppBrowserConsent.tsx:104
-#: src/components/live/GoLiveDialog.tsx:338
-#: src/components/live/GoLiveDialog.tsx:344
+#: src/components/live/GoLiveDialog.tsx:353
+#: src/components/live/GoLiveDialog.tsx:359
 #: src/components/Menu/index.tsx:306
 #: src/components/Prompt.tsx:143
 #: src/components/Prompt.tsx:145
@@ -2037,8 +2041,8 @@ msgstr ""
 msgid "Copy App Password"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:411
-#: src/view/com/profile/ProfileMenu.tsx:414
+#: src/view/com/profile/ProfileMenu.tsx:412
+#: src/view/com/profile/ProfileMenu.tsx:415
 msgid "Copy at:// URI"
 msgstr ""
 
@@ -2053,8 +2057,8 @@ msgid "Copy code"
 msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:491
-#: src/view/com/profile/ProfileMenu.tsx:420
-#: src/view/com/profile/ProfileMenu.tsx:423
+#: src/view/com/profile/ProfileMenu.tsx:421
+#: src/view/com/profile/ProfileMenu.tsx:424
 msgid "Copy DID"
 msgstr ""
 
@@ -2710,8 +2714,8 @@ msgstr ""
 msgid "Edit list details"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:307
-#: src/view/com/profile/ProfileMenu.tsx:313
+#: src/view/com/profile/ProfileMenu.tsx:308
+#: src/view/com/profile/ProfileMenu.tsx:314
 msgid "Edit live status"
 msgstr ""
 
@@ -3447,8 +3451,8 @@ msgstr ""
 msgid "Follow 7 accounts"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:274
-#: src/view/com/profile/ProfileMenu.tsx:285
+#: src/view/com/profile/ProfileMenu.tsx:275
+#: src/view/com/profile/ProfileMenu.tsx:286
 msgid "Follow account"
 msgstr ""
 
@@ -3669,19 +3673,19 @@ msgstr ""
 msgid "Go Home"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:308
-#: src/view/com/profile/ProfileMenu.tsx:315
+#: src/view/com/profile/ProfileMenu.tsx:309
+#: src/view/com/profile/ProfileMenu.tsx:316
 msgid "Go live"
 msgstr ""
 
-#: src/components/live/GoLiveDialog.tsx:106
-#: src/components/live/GoLiveDialog.tsx:111
-#: src/components/live/GoLiveDialog.tsx:323
-#: src/components/live/GoLiveDialog.tsx:332
+#: src/components/live/GoLiveDialog.tsx:121
+#: src/components/live/GoLiveDialog.tsx:126
+#: src/components/live/GoLiveDialog.tsx:338
+#: src/components/live/GoLiveDialog.tsx:347
 msgid "Go Live"
 msgstr ""
 
-#: src/components/live/GoLiveDialog.tsx:265
+#: src/components/live/GoLiveDialog.tsx:280
 msgid "Go live for"
 msgstr ""
 
@@ -4458,8 +4462,8 @@ msgstr ""
 
 #: src/components/live/EditLiveDialog.tsx:162
 #: src/components/live/EditLiveDialog.tsx:166
-#: src/components/live/GoLiveDialog.tsx:137
-#: src/components/live/GoLiveDialog.tsx:141
+#: src/components/live/GoLiveDialog.tsx:152
+#: src/components/live/GoLiveDialog.tsx:156
 msgid "Live link"
 msgstr ""
 
@@ -4718,8 +4722,8 @@ msgstr ""
 msgid "More feeds"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:216
-#: src/view/com/profile/ProfileMenu.tsx:222
+#: src/view/com/profile/ProfileMenu.tsx:217
+#: src/view/com/profile/ProfileMenu.tsx:223
 #: src/view/screens/ProfileList.tsx:750
 msgid "More options"
 msgstr ""
@@ -4753,8 +4757,8 @@ msgstr ""
 msgid "Mute {tag}"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:353
-#: src/view/com/profile/ProfileMenu.tsx:360
+#: src/view/com/profile/ProfileMenu.tsx:354
+#: src/view/com/profile/ProfileMenu.tsx:361
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:702
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:708
 msgid "Mute account"
@@ -5162,7 +5166,7 @@ msgstr ""
 msgid "Not Found"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:470
+#: src/view/com/profile/ProfileMenu.tsx:471
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:824
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:363
 msgid "Note about sharing"
@@ -6284,8 +6288,8 @@ msgstr ""
 
 #: src/components/verification/VerificationRemovePrompt.tsx:46
 #: src/components/verification/VerificationsDialog.tsx:243
-#: src/view/com/profile/ProfileMenu.tsx:326
-#: src/view/com/profile/ProfileMenu.tsx:329
+#: src/view/com/profile/ProfileMenu.tsx:327
+#: src/view/com/profile/ProfileMenu.tsx:330
 msgid "Remove verification"
 msgstr ""
 
@@ -6413,8 +6417,8 @@ msgstr ""
 msgid "Report"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:393
-#: src/view/com/profile/ProfileMenu.tsx:396
+#: src/view/com/profile/ProfileMenu.tsx:394
+#: src/view/com/profile/ProfileMenu.tsx:397
 msgid "Report account"
 msgstr ""
 
@@ -6812,8 +6816,8 @@ msgstr ""
 msgid "Search my posts"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:253
-#: src/view/com/profile/ProfileMenu.tsx:256
+#: src/view/com/profile/ProfileMenu.tsx:254
+#: src/view/com/profile/ProfileMenu.tsx:257
 msgid "Search posts"
 msgstr ""
 
@@ -6903,7 +6907,7 @@ msgstr ""
 msgid "Select content languages"
 msgstr ""
 
-#: src/components/live/GoLiveDialog.tsx:270
+#: src/components/live/GoLiveDialog.tsx:285
 msgid "Select duration"
 msgstr ""
 
@@ -7105,8 +7109,8 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:428
 #: src/screens/StarterPack/StarterPackScreen.tsx:603
 #: src/screens/Topic.tsx:102
-#: src/view/com/profile/ProfileMenu.tsx:238
-#: src/view/com/profile/ProfileMenu.tsx:247
+#: src/view/com/profile/ProfileMenu.tsx:239
+#: src/view/com/profile/ProfileMenu.tsx:248
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:517
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:526
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:352
@@ -7127,7 +7131,7 @@ msgstr ""
 msgid "Share a fun fact!"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:475
+#: src/view/com/profile/ProfileMenu.tsx:476
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:829
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:368
 msgid "Share anyway"
@@ -7791,7 +7795,7 @@ msgid "That's everything!"
 msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:296
-#: src/view/com/profile/ProfileMenu.tsx:451
+#: src/view/com/profile/ProfileMenu.tsx:452
 msgid "The account will be able to interact with you after unblocking."
 msgstr ""
 
@@ -7962,12 +7966,12 @@ msgstr ""
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:132
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:90
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:101
-#: src/view/com/profile/ProfileMenu.tsx:124
-#: src/view/com/profile/ProfileMenu.tsx:134
-#: src/view/com/profile/ProfileMenu.tsx:148
-#: src/view/com/profile/ProfileMenu.tsx:158
-#: src/view/com/profile/ProfileMenu.tsx:171
-#: src/view/com/profile/ProfileMenu.tsx:183
+#: src/view/com/profile/ProfileMenu.tsx:125
+#: src/view/com/profile/ProfileMenu.tsx:135
+#: src/view/com/profile/ProfileMenu.tsx:149
+#: src/view/com/profile/ProfileMenu.tsx:159
+#: src/view/com/profile/ProfileMenu.tsx:172
+#: src/view/com/profile/ProfileMenu.tsx:184
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:408
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:421
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:431
@@ -8102,7 +8106,7 @@ msgid "This information is not shared with other users."
 msgstr ""
 
 #: src/components/live/EditLiveDialog.tsx:203
-#: src/components/live/GoLiveDialog.tsx:173
+#: src/components/live/GoLiveDialog.tsx:188
 msgid "This is not a valid link"
 msgstr ""
 
@@ -8163,7 +8167,7 @@ msgstr ""
 msgid "This post's author has disabled quote posts."
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:472
+#: src/view/com/profile/ProfileMenu.tsx:473
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
@@ -8377,7 +8381,7 @@ msgstr ""
 #: src/components/dms/MessagesListBlockedFooter.tsx:119
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:190
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:300
-#: src/view/com/profile/ProfileMenu.tsx:463
+#: src/view/com/profile/ProfileMenu.tsx:464
 #: src/view/screens/ProfileList.tsx:723
 msgid "Unblock"
 msgstr ""
@@ -8389,13 +8393,13 @@ msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:247
 #: src/components/dms/ConvoMenu.tsx:250
-#: src/view/com/profile/ProfileMenu.tsx:373
-#: src/view/com/profile/ProfileMenu.tsx:379
+#: src/view/com/profile/ProfileMenu.tsx:374
+#: src/view/com/profile/ProfileMenu.tsx:380
 msgid "Unblock account"
 msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:294
-#: src/view/com/profile/ProfileMenu.tsx:445
+#: src/view/com/profile/ProfileMenu.tsx:446
 msgid "Unblock Account?"
 msgstr ""
 
@@ -8421,8 +8425,8 @@ msgstr ""
 msgid "Unfollow {0}"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:273
-#: src/view/com/profile/ProfileMenu.tsx:283
+#: src/view/com/profile/ProfileMenu.tsx:274
+#: src/view/com/profile/ProfileMenu.tsx:284
 msgid "Unfollow account"
 msgstr ""
 
@@ -8461,8 +8465,8 @@ msgstr ""
 msgid "Unmute {tag}"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:352
-#: src/view/com/profile/ProfileMenu.tsx:358
+#: src/view/com/profile/ProfileMenu.tsx:353
+#: src/view/com/profile/ProfileMenu.tsx:359
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:701
 #: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:707
 msgid "Unmute account"
@@ -8771,8 +8775,8 @@ msgstr ""
 
 #: src/components/verification/VerificationCreatePrompt.tsx:84
 #: src/components/verification/VerificationCreatePrompt.tsx:86
-#: src/view/com/profile/ProfileMenu.tsx:336
-#: src/view/com/profile/ProfileMenu.tsx:339
+#: src/view/com/profile/ProfileMenu.tsx:337
+#: src/view/com/profile/ProfileMenu.tsx:340
 msgid "Verify account"
 msgstr ""
 
@@ -9247,7 +9251,7 @@ msgid "Wrong DID returned from server. Received: {0}"
 msgstr ""
 
 #: src/components/live/EditLiveDialog.tsx:167
-#: src/components/live/GoLiveDialog.tsx:142
+#: src/components/live/GoLiveDialog.tsx:157
 msgid "www.mylivestream.tv"
 msgstr ""
 
@@ -9303,6 +9307,10 @@ msgstr ""
 
 #: src/components/live/queries.ts:177
 msgid "You are no longer live"
+msgstr ""
+
+#: src/components/live/GoLiveDialog.tsx:98
+msgid "You are not allowed to go live"
 msgstr ""
 
 #: src/view/com/composer/state/video.ts:410

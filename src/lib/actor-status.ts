@@ -2,27 +2,28 @@ import {useMemo} from 'react'
 import {
   type $Typed,
   type AppBskyActorDefs,
-  type AppBskyEmbedExternal,
+  AppBskyEmbedExternal,
 } from '@atproto/api'
 import {isAfter, parseISO} from 'date-fns'
 
 import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
+import {useLiveNowConfig} from '#/state/service-config'
 import {useTickEveryMinute} from '#/state/shell'
-import {temp__canBeLive, temp__isStatusValid} from '#/components/live/temp'
 import type * as bsky from '#/types/bsky'
 
 export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
   const shadowed = useMaybeProfileShadow(actor)
   const tick = useTickEveryMinute()
+  const config = useLiveNowConfig()
+
   return useMemo(() => {
     tick! // revalidate every minute
 
     if (
       shadowed &&
-      temp__canBeLive(shadowed) &&
       'status' in shadowed &&
       shadowed.status &&
-      temp__isStatusValid(shadowed.status) &&
+      validateStatus(shadowed.did, shadowed.status, config) &&
       isStatusStillActive(shadowed.status.expiresAt)
     ) {
       return {
@@ -39,7 +40,7 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
         record: {},
       } satisfies AppBskyActorDefs.StatusView
     }
-  }, [shadowed, tick])
+  }, [shadowed, config, tick])
 }
 
 export function isStatusStillActive(timeStr: string | undefined) {
@@ -48,4 +49,26 @@ export function isStatusStillActive(timeStr: string | undefined) {
   const expiry = parseISO(timeStr)
 
   return isAfter(expiry, now)
+}
+
+export function validateStatus(
+  did: string,
+  status: AppBskyActorDefs.StatusView,
+  config: {did: string; domains: string[]}[],
+) {
+  if (status.status !== 'app.bsky.actor.status#live') return false
+  const sources = config.find(cfg => cfg.did === did)
+  if (!sources) {
+    return false
+  }
+  try {
+    if (AppBskyEmbedExternal.isView(status.embed)) {
+      const url = new URL(status.embed.external.uri)
+      return sources.domains.includes(url.hostname)
+    } else {
+      return false
+    }
+  } catch {
+    return false
+  }
 }

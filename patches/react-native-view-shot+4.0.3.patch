@@ -1,0 +1,28 @@
+diff --git a/node_modules/react-native-view-shot/src/index.js b/node_modules/react-native-view-shot/src/index.js
+index fa76d7e..018b686 100644
+--- a/node_modules/react-native-view-shot/src/index.js
++++ b/node_modules/react-native-view-shot/src/index.js
+@@ -125,13 +125,17 @@ export function captureRef<T: React$ElementType>(
+     }
+   }
+   if (typeof view !== "number") {
+-    const node = findNodeHandle(view);
+-    if (!node) {
+-      return Promise.reject(
+-        new Error("findNodeHandle failed to resolve view=" + String(view))
+-      );
++    if (Platform.OS == 'web') {
++      view = view;
++    } else {
++      const node = findNodeHandle(view);
++      if (!node) {
++        return Promise.reject(
++          new Error("findNodeHandle failed to resolve view=" + String(view))
++        );
++      }
++      view = node;
+     }
+-    view = node;
+   }
+   const { options, errors } = validateOptions(optionsObject);
+   if (__DEV__ && errors.length > 0) {
