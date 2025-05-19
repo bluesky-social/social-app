@@ -1,8 +1,11 @@
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {getThreadPlaceholder, createCacheMutator} from '#/state/queries/usePostThread/queryCache'
-import {flatten,sort} from '#/state/queries/usePostThread/traversal'
+import {
+  createCacheMutator,
+  getThreadPlaceholder,
+} from '#/state/queries/usePostThread/queryCache'
+import {flatten, sort} from '#/state/queries/usePostThread/traversal'
 import {
   createPostThreadQueryKey,
   HiddenReplyKind,
@@ -31,9 +34,9 @@ export function usePostThread({
 
   const enabled = isEnabled !== false && !!uri && !!moderationOpts
   const queryKey = createPostThreadQueryKey({
-      uri,
-      params,
-    })
+    uri,
+    params,
+  })
 
   const query = useQuery({
     enabled,
@@ -41,7 +44,7 @@ export function usePostThread({
     async queryFn() {
       const {data} = await agent.app.bsky.unspecced.getPostThreadV2({
         uri: uri!,
-        branchingFactor: params.view === 'linear' ? 1 : 10,
+        nestedBranchingFactor: params.view === 'linear' ? 1 : 10,
         below: 10,
         sorting: mapSortOptionsToSortID(params.sort),
       })
@@ -91,7 +94,7 @@ export function usePostThread({
   return {
     ...query,
     data: {
-      slices: items,
+      items,
       threadgate: query.data?.threadgate,
     },
     insertReplies: mutator.insertReplies,

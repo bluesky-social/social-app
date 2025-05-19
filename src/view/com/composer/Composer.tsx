@@ -44,11 +44,10 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
   AppBskyFeedDefs,
-  AppBskyUnspeccedDefs,
   type AppBskyFeedGetPostThread,
+  type AppBskyUnspeccedGetPostThreadV2,
   type BskyAgent,
   type RichText,
-AppBskyFeedGetPostThreadV2,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, plural, Trans} from '@lingui/macro'
@@ -57,8 +56,8 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
 import {EmbeddingDisabledError} from '#/lib/api/resolve'
-import {until} from '#/lib/async/until'
 import {retry} from '#/lib/async/retry'
+import {until} from '#/lib/async/until'
 import {
   MAX_GRAPHEME_LENGTH,
   SUPPORTED_MIME_TYPES,
@@ -392,7 +391,7 @@ export const ComposePost = ({
     setIsPublishing(true)
 
     let postUri: string | undefined
-    let posts: AppBskyFeedGetPostThreadV2.OutputSchema['thread'] = []
+    let posts: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'] = []
     try {
       postUri = (
         await apilib.post(agent, queryClient, {
@@ -404,22 +403,27 @@ export const ComposePost = ({
       ).uris[0]
       try {
         if (postUri) {
-          posts = await retry(5, _e => true, async () => {
-            const res = await agent.app.bsky.unspecced.getPostThreadV2({
-              uri: postUri!,
-              above: 1,
-              below: thread.posts.length - 1,
-              branchingFactor: 1,
-            })
-            const parent = res.data.thread.at(0)
-            if (!AppBskyUnspeccedDefs.isThreadItemPost(parent)) {
-              throw new Error(`Not ready`)
-            }
-            if (res.data.thread.length !== thread.posts.length + 1) {
-              throw new Error(`Not ready`)
-            }
-            return res.data.thread
-          }, 1e3)
+          posts = await retry(
+            5,
+            _e => true,
+            async () => {
+              const res = await agent.app.bsky.unspecced.getPostThreadV2({
+                uri: postUri!,
+                above: 1,
+                below: thread.posts.length - 1,
+                nestedBranchingFactor: 1,
+              })
+              const parent = res.data.thread.at(0)
+              if (!parent) {
+                throw new Error(`Not ready`)
+              }
+              if (res.data.thread.length !== thread.posts.length + 1) {
+                throw new Error(`Not ready`)
+              }
+              return res.data.thread
+            },
+            1e3,
+          )
         }
 
         await whenAppViewReady(agent, postUri, res => {

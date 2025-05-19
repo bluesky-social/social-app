@@ -3,7 +3,6 @@ import {
   type AppBskyEmbedRecord,
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
-  type AppBskyUnspeccedDefs,
   type AppBskyUnspeccedGetPostThreadV2,
   moderatePost,
   type ModerationOpts,
@@ -12,102 +11,137 @@ import {
 import {type Slice} from '#/state/queries/usePostThread/types'
 import {embedViewRecordToPostView} from '#/state/queries/util'
 
-export function noUnauthenticated({
-  item,
-}: {
-  item: AppBskyUnspeccedDefs.ThreadItemNoUnauthenticated
-}): Extract<Slice, {type: 'threadSliceNoUnauthenticated'}> {
+export function threadPostNoUnauthenticated({
+  uri,
+  depth,
+  value,
+}: AppBskyUnspeccedGetPostThreadV2.ThreadItem): Extract<
+  Slice,
+  {type: 'threadPostNoUnauthenticated'}
+> {
   return {
-    type: 'threadSliceNoUnauthenticated',
-    key: item.uri,
-    slice: item,
+    type: 'threadPostNoUnauthenticated',
+    key: uri,
+    uri,
+    depth,
+    value: value as AppBskyUnspeccedGetPostThreadV2.ThreadItemNoUnauthenticated,
   }
 }
 
-export function notFound({
-  item,
-}: {
-  item: AppBskyUnspeccedDefs.ThreadItemNotFound
-}): Extract<Slice, {type: 'threadSliceNotFound'}> {
+export function threadPostNotFound({
+  uri,
+  depth,
+  value,
+}: AppBskyUnspeccedGetPostThreadV2.ThreadItem): Extract<
+  Slice,
+  {type: 'threadPostNotFound'}
+> {
   return {
-    type: 'threadSliceNotFound',
-    key: item.uri,
-    slice: item,
+    type: 'threadPostNotFound',
+    key: uri,
+    uri,
+    depth,
+    value: value as AppBskyUnspeccedGetPostThreadV2.ThreadItemNotFound,
   }
 }
 
-export function blocked({
-  item,
-}: {
-  item: AppBskyUnspeccedDefs.ThreadItemBlocked
-}): Extract<Slice, {type: 'threadSliceBlocked'}> {
+export function threadPostBlocked({
+  uri,
+  depth,
+  value,
+}: AppBskyUnspeccedGetPostThreadV2.ThreadItem): Extract<
+  Slice,
+  {type: 'threadPostBlocked'}
+> {
   return {
-    type: 'threadSliceBlocked',
-    key: item.uri,
-    slice: item,
+    type: 'threadPostBlocked',
+    key: uri,
+    uri,
+    depth,
+    value: value as AppBskyUnspeccedGetPostThreadV2.ThreadItemBlocked,
   }
 }
 
-export function post({
-  item,
+export function threadPost({
+  uri,
+  depth,
+  value,
   oneUp,
   oneDown,
   moderationOpts,
 }: {
-  item: AppBskyUnspeccedDefs.ThreadItemPost
+  uri: string
+  depth: number
+  value: $Typed<AppBskyUnspeccedGetPostThreadV2.ThreadItemPost>
   oneUp?: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'][number]
   oneDown?: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'][number]
   moderationOpts: ModerationOpts
-}): Extract<Slice, {type: 'threadSlice'}> {
+}): Extract<Slice, {type: 'threadPost'}> {
   return {
-    type: 'threadSlice',
-    key: item.uri,
-    slice: {
-      ...item,
+    type: 'threadPost',
+    key: uri,
+    uri,
+    depth,
+    value: {
+      ...value,
       post: {
-        ...item.post,
-        record: item.post.record as AppBskyFeedPost.Record,
+        ...value.post,
+        record: value.post.record as AppBskyFeedPost.Record,
       },
     },
-    moderation: moderatePost(item.post, moderationOpts),
+    moderation: moderatePost(value.post, moderationOpts),
     ui: {
-      isAnchor: item.depth === 0,
-      showParentReplyLine:
-        !!oneUp && 'depth' in oneUp && oneUp.depth < item.depth,
-      showChildReplyLine:
-        !!oneDown && 'depth' in oneDown && oneDown.depth > item.depth,
+      isAnchor: depth === 0,
+      showParentReplyLine: !!oneUp && oneUp.depth < depth,
+      showChildReplyLine: !!oneDown && oneDown.depth > depth,
     },
   }
 }
 
 export function postViewToThreadPlaceholder(
   post: AppBskyFeedDefs.PostView,
-): $Typed<AppBskyUnspeccedDefs.ThreadItemPost> {
+): $Typed<
+  Omit<AppBskyUnspeccedGetPostThreadV2.ThreadItem, 'value'> & {
+    value: $Typed<AppBskyUnspeccedGetPostThreadV2.ThreadItemPost>
+  }
+> {
   return {
-    $type: 'app.bsky.unspecced.defs#threadItemPost',
+    $type: 'app.bsky.unspecced.getPostThreadV2#threadItem',
     uri: post.uri,
-    post,
     depth: 0, // reset to 0 for highlighted post
-    isOPThread: false, // unknown
-    hasOPLike: false, // unknown
-    hasUnhydratedReplies: false, // unknown
-    // TODO test
-    hasUnhydratedParents: !!(post.record as AppBskyFeedPost.Record).reply, // unknown
+    value: {
+      $type: 'app.bsky.unspecced.getPostThreadV2#threadItemPost',
+      post,
+      isOPThread: false, // unknown
+      hasOPLike: false, // unknown
+      // @ts-expect-error
+      hasUnhydratedReplies: false, // unknown
+      // TODO test
+      hasUnhydratedParents: !!(post.record as AppBskyFeedPost.Record).reply, // unknown
+    },
   }
 }
 
 export function embedViewToThreadPlaceholder(
   record: AppBskyEmbedRecord.ViewRecord,
-): $Typed<AppBskyUnspeccedDefs.ThreadItemPost> {
+): $Typed<
+  Omit<AppBskyUnspeccedGetPostThreadV2.ThreadItem, 'value'> & {
+    value: $Typed<AppBskyUnspeccedGetPostThreadV2.ThreadItemPost>
+  }
+> {
   return {
-    $type: 'app.bsky.unspecced.defs#threadItemPost',
+    $type: 'app.bsky.unspecced.getPostThreadV2#threadItem',
     uri: record.uri,
-    post: embedViewRecordToPostView(record),
     depth: 0, // reset to 0 for highlighted post
-    isOPThread: false, // unknown
-    hasOPLike: false, // unknown
-    hasUnhydratedReplies: false, // unknown
-    // TODO test
-    hasUnhydratedParents: !!(record.value as AppBskyFeedPost.Record).reply, // unknown
+    value: {
+      $type: 'app.bsky.unspecced.getPostThreadV2#threadItemPost',
+      post: embedViewRecordToPostView(record),
+      isOPThread: false, // unknown
+      hasOPLike: false, // unknown
+      // @ts-expect-error
+      hasUnhydratedReplies: false, // unknown
+      // TODO test
+      hasUnhydratedParents: !!(record.value as AppBskyFeedPost.Record).reply, // unknown
+    },
   }
 }
