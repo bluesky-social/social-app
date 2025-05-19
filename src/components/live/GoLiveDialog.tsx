@@ -1,28 +1,24 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {Image} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
-import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {definitelyUrl} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useTickEveryMinute} from '#/state/shell'
-import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, ios, native, platform, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
-import {CircleX_Stroke2_Corner0_Rounded as CircleXIcon} from '#/components/icons/CircleX'
-import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
+import {LinkPreview} from './LinkPreview'
 import {useLiveLinkMetaQuery, useUpsertLiveStatusMutation} from './queries'
 import {displayDuration, useDebouncedValue} from './utils'
 
@@ -50,7 +46,6 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const t = useTheme()
   const [liveLink, setLiveLink] = useState('')
   const [liveLinkError, setLiveLinkError] = useState('')
-  const [imageLoadError, setImageLoadError] = useState(false)
   const [duration, setDuration] = useState(60)
   const moderationOpts = useModerationOpts()
   const tick = useTickEveryMinute()
@@ -170,85 +165,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
             </View>
           )}
 
-          {(linkMeta || linkMetaLoading) && (
-            <View
-              style={[
-                a.w_full,
-                a.border,
-                t.atoms.border_contrast_low,
-                t.atoms.bg,
-                a.flex_row,
-                a.rounded_sm,
-                a.overflow_hidden,
-                a.align_stretch,
-              ]}>
-              {(!linkMeta || linkMeta.image) && (
-                <View
-                  style={[
-                    t.atoms.bg_contrast_25,
-                    {minHeight: 64, width: 114},
-                    a.justify_center,
-                    a.align_center,
-                  ]}>
-                  {linkMeta?.image && (
-                    <Image
-                      source={linkMeta.image}
-                      accessibilityIgnoresInvertColors
-                      transition={200}
-                      style={[a.absolute, a.inset_0]}
-                      contentFit="cover"
-                      onLoad={() => setImageLoadError(false)}
-                      onError={() => setImageLoadError(true)}
-                    />
-                  )}
-                  {linkMeta && imageLoadError && (
-                    <CircleXIcon
-                      style={[t.atoms.text_contrast_low]}
-                      size="xl"
-                    />
-                  )}
-                </View>
-              )}
-              <View
-                style={[
-                  a.flex_1,
-                  a.justify_center,
-                  a.py_sm,
-                  a.gap_xs,
-                  a.px_md,
-                ]}>
-                {linkMeta ? (
-                  <>
-                    <Text
-                      numberOfLines={2}
-                      style={[a.leading_snug, a.font_bold, a.text_md]}>
-                      {linkMeta.title || linkMeta.url}
-                    </Text>
-                    <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
-                      <GlobeIcon
-                        size="xs"
-                        style={[t.atoms.text_contrast_low]}
-                      />
-                      <Text
-                        numberOfLines={1}
-                        style={[
-                          a.text_xs,
-                          a.leading_snug,
-                          t.atoms.text_contrast_medium,
-                        ]}>
-                        {toNiceDomain(linkMeta.url)}
-                      </Text>
-                    </View>
-                  </>
-                ) : (
-                  <>
-                    <LoadingPlaceholder height={16} width={128} />
-                    <LoadingPlaceholder height={12} width={72} />
-                  </>
-                )}
-              </View>
-            </View>
-          )}
+          <LinkPreview linkMeta={linkMeta} loading={linkMetaLoading} />
         </View>
 
         {hasLink && (

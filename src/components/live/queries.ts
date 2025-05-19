@@ -29,7 +29,7 @@ export function useLiveLinkMetaQuery(url: string | null) {
     enabled: !!url,
     queryKey: ['link-meta', url],
     queryFn: async () => {
-      if (!url) return null
+      if (!url) return undefined
       const config = liveNowConfig.find(cfg => cfg.did === currentAccount?.did)
 
       if (!config) throw new Error(_(msg`You are not allowed to go live`))
