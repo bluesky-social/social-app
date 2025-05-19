@@ -9,7 +9,7 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
     }
   }
 
-  private var scrollView: UIScrollView?
+  private var rctScrollView: RCTScrollView?
   private var rctRefreshCtrl: RCTRefreshControl?
   private var cancelGestureRecognizers: [UIGestureRecognizer]?
   private var animTimer: Timer?
@@ -68,7 +68,7 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
   }
 
   @IBAction func callOnPan(_ sender: UIPanGestureRecognizer) {
-    guard let sv = self.scrollView else {
+    guard let rctsv = self.rctScrollView, let sv = rctsv.scrollView else {
       return
     }
 
@@ -113,7 +113,7 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
   }
 
   func startDecayAnimation(_ translation: CGFloat, _ velocity: CGFloat) {
-    guard let sv = self.scrollView else {
+    guard let sv = self.rctScrollView?.scrollView else {
       return
     }
 
@@ -160,49 +160,32 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
 
     return offset
   }
-  
-  private func findScrollView(in view: UIView, foundCount: Int) -> UIScrollView? {
-    var foundCount = foundCount
-    if let sv = view as? UIScrollView { return sv }
-    for child in view.subviews {
-      if let found = findScrollView(in: child, foundCount: foundCount) {
-        if foundCount == 1 {
-          print("found sv: \(found)")
-//          return found
-        } else {
-          print("found sv: \(found)")
-          foundCount += 1
-        }
-      }
-    }
-    return nil
-  }
 
   func tryFindScrollView() {
-    // Before we switch to a different scrollview, we always want to remove the cancel gesture recognizer.
-    // Otherwise we might end up with duplicates when we switch back to that scrollview.
-    self.removeCancelGestureRecognizers()
-    
-    guard let sv = self.findScrollView(in: self.superview!.superview!.superview!, foundCount: 0) else {
-      print("⚠️ ExpoScrollForwarder: couldn’t find UIScrollView under tag \(tag)")
+    guard let scrollViewTag = scrollViewTag else {
       return
     }
 
-    self.scrollView = sv
-    self.rctRefreshCtrl = sv.refreshControl as? RCTRefreshControl
+    // Before we switch to a different scrollview, we always want to remove the cancel gesture recognizer.
+    // Otherwise we might end up with duplicates when we switch back to that scrollview.
+    self.removeCancelGestureRecognizers()
+
+    self.rctScrollView = self.appContext?
+      .findView(withTag: scrollViewTag, ofType: RCTScrollView.self)
+    self.rctRefreshCtrl = self.rctScrollView?.scrollView.refreshControl as? RCTRefreshControl
 
     self.addCancelGestureRecognizers()
   }
 
   func addCancelGestureRecognizers() {
     self.cancelGestureRecognizers?.forEach { r in
-      self.scrollView?.addGestureRecognizer(r)
+      self.rctScrollView?.scrollView?.addGestureRecognizer(r)
     }
   }
 
   func removeCancelGestureRecognizers() {
     self.cancelGestureRecognizers?.forEach { r in
-      self.scrollView?.removeGestureRecognizer(r)
+      self.rctScrollView?.scrollView?.removeGestureRecognizer(r)
     }
   }
 
@@ -219,7 +202,7 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
   }
 
   func scrollToOffset(_ offset: Int, animated: Bool = true) {
-    self.scrollView?.scrollRectToVisible(CGRect(x: 0, y: offset, width: 0, height:  0), animated: animated)
+    self.rctScrollView?.scroll(toOffset: CGPoint(x: 0, y: offset), animated: animated)
   }
 
   func stopTimer() {
