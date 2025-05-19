@@ -1,7 +1,7 @@
 import {
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
-  type AppBskyUnspeccedDefs,
+  type AppBskyUnspeccedGetPostThreadV2,
   type BskyThreadViewPreference,
   type ModerationDecision,
 } from '@atproto/api'
@@ -34,9 +34,11 @@ export enum HiddenReplyKind {
 
 export type Slice =
   | {
-      type: 'threadSlice'
+      type: 'threadPost'
       key: string
-      slice: Omit<AppBskyUnspeccedDefs.ThreadItemPost, 'post'> & {
+      uri: string
+      depth: number
+      value: Omit<AppBskyUnspeccedGetPostThreadV2.ThreadItemPost, 'post'> & {
         post: Omit<AppBskyFeedDefs.PostView, 'record'> & {
           record: AppBskyFeedPost.Record
         }
@@ -49,19 +51,25 @@ export type Slice =
       }
     }
   | {
-      type: 'threadSliceNoUnauthenticated'
+      type: 'threadPostNoUnauthenticated'
       key: string
-      slice: AppBskyUnspeccedDefs.ThreadItemNoUnauthenticated
+      uri: string
+      depth: number
+      value: AppBskyUnspeccedGetPostThreadV2.ThreadItemNoUnauthenticated
     }
   | {
-      type: 'threadSliceNotFound'
+      type: 'threadPostNotFound'
       key: string
-      slice: AppBskyUnspeccedDefs.ThreadItemNotFound
+      uri: string
+      depth: number
+      value: AppBskyUnspeccedGetPostThreadV2.ThreadItemNotFound
     }
   | {
-      type: 'threadSliceBlocked'
+      type: 'threadPostBlocked'
       key: string
-      slice: AppBskyUnspeccedDefs.ThreadItemBlocked
+      uri: string
+      depth: number
+      value: AppBskyUnspeccedGetPostThreadV2.ThreadItemBlocked
     }
   | {
       type: 'replyComposer'
