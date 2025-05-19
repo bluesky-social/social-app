@@ -8,14 +8,11 @@ import {
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useQuery} from '@tanstack/react-query'
 import {differenceInMinutes} from 'date-fns'
 
-import {getLinkMeta} from '#/lib/link-meta/link-meta'
 import {cleanError} from '#/lib/strings/errors'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {definitelyUrl} from '#/lib/strings/url-helpers'
-import {useAgent} from '#/state/session'
 import {useTickEveryMinute} from '#/state/shell'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, platform, useTheme, web} from '#/alf'
@@ -30,6 +27,7 @@ import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {
+  useLiveLinkMetaQuery,
   useRemoveLiveStatusMutation,
   useUpsertLiveStatusMutation,
 } from './queries'
@@ -62,7 +60,7 @@ function DialogInner({
   const control = Dialog.useDialogContext()
   const {_, i18n} = useLingui()
   const t = useTheme()
-  const agent = useAgent()
+
   const [liveLink, setLiveLink] = useState(embed.external.uri)
   const [liveLinkError, setLiveLinkError] = useState('')
   const [imageLoadError, setImageLoadError] = useState(false)
@@ -78,14 +76,7 @@ function DialogInner({
     isSuccess: hasValidLinkMeta,
     isLoading: linkMetaLoading,
     error: linkMetaError,
-  } = useQuery({
-    enabled: !!debouncedUrl,
-    queryKey: ['link-meta', debouncedUrl],
-    queryFn: async () => {
-      if (!debouncedUrl) return null
-      return getLinkMeta(agent, debouncedUrl)
-    },
-  })
+  } = useLiveLinkMetaQuery(debouncedUrl)
 
   const record = useMemo(() => {
     if (!AppBskyActorStatus.isRecord(status.record)) return null

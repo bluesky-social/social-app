@@ -3,15 +3,11 @@ import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useQuery} from '@tanstack/react-query'
 
-import {getLinkMeta} from '#/lib/link-meta/link-meta'
 import {cleanError} from '#/lib/strings/errors'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {definitelyUrl} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useLiveNowConfig} from '#/state/service-config'
-import {useAgent, useSession} from '#/state/session'
 import {useTickEveryMinute} from '#/state/shell'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, ios, native, platform, useTheme, web} from '#/alf'
@@ -27,7 +23,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
-import {useUpsertLiveStatusMutation} from './queries'
+import {useLiveLinkMetaQuery, useUpsertLiveStatusMutation} from './queries'
 import {displayDuration, useDebouncedValue} from './utils'
 
 export function GoLiveDialog({
@@ -52,17 +48,12 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const control = Dialog.useDialogContext()
   const {_, i18n} = useLingui()
   const t = useTheme()
-  const agent = useAgent()
   const [liveLink, setLiveLink] = useState('')
   const [liveLinkError, setLiveLinkError] = useState('')
   const [imageLoadError, setImageLoadError] = useState(false)
   const [duration, setDuration] = useState(60)
   const moderationOpts = useModerationOpts()
   const tick = useTickEveryMinute()
-  const liveNowConfig = useLiveNowConfig()
-  const {currentAccount} = useSession()
-
-  const config = liveNowConfig.find(cfg => cfg.did === currentAccount?.did)
 
   const time = useCallback(
     (offset: number) => {
@@ -90,21 +81,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
     isSuccess: hasValidLinkMeta,
     isLoading: linkMetaLoading,
     error: linkMetaError,
-  } = useQuery({
-    enabled: !!debouncedUrl,
-    queryKey: ['link-meta', debouncedUrl],
-    queryFn: async () => {
-      if (!debouncedUrl) return null
-      if (!config) throw new Error(_(msg`You are not allowed to go live`))
-
-      const urlp = new URL(debouncedUrl)
-      if (!config.domains.includes(urlp.hostname)) {
-        throw new Error(_(msg`${urlp.hostname} is not a valid URL`))
-      }
-
-      return getLinkMeta(agent, debouncedUrl)
-    },
-  })
+  } = useLiveLinkMetaQuery(debouncedUrl)
 
   const {
     mutate: goLive,
