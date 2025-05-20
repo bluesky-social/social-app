@@ -80,3 +80,8 @@ export type Slice =
       key: string
       kind: HiddenReplyKind
     }
+  | {
+      type: 'threadPostNoOp'
+      key: string
+      comment: string
+    }

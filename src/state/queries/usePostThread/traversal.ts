@@ -1,10 +1,11 @@
 import {
+  AtUri,
   AppBskyUnspeccedGetPostThreadV2,
   type ModerationDecision,
   type ModerationOpts,
 } from '@atproto/api'
 
-import {HiddenReplyKind,type Slice} from '#/state/queries/usePostThread/types'
+import {HiddenReplyKind, type PostThreadParams, type Slice} from '#/state/queries/usePostThread/types'
 import * as views from '#/state/queries/usePostThread/views'
 
 export function flatten(
@@ -58,12 +59,13 @@ export function flatten(
   if (hasSession) {
     for (let i = 0; i < flattened.length; i++) {
       const item = flattened[i]
-      if ('depth' in item && item.depth === 0) {
+
+      // TODO should not insert if not found post etc
+      if (item.type === 'threadPost' && item.depth === 0) {
         flattened.splice(i + 1, 0, {
           type: 'replyComposer',
           key: 'replyComposer',
         })
-        break
       }
     }
   }
@@ -74,9 +76,11 @@ export function flatten(
 export function sort(
   thread: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'],
   {
+    view,
     threadgateHiddenReplies,
     moderationOpts,
   }: {
+    view: PostThreadParams['view']
     threadgateHiddenReplies: Set<string>
     moderationOpts: ModerationOpts
   },
@@ -181,28 +185,96 @@ export function sort(
         const isFirstReply =
           lastSlice.type === 'replyComposer' ||
           (lastSlice.type === 'threadPost' && lastSlice.depth === 0)
-        const parent = views.threadPost({
+        const oneUp = isFirstReply ? undefined : thread.at(i - 1)
+        const oneDown = thread.at(i + 1)
+        const post = views.threadPost({
           uri: item.uri,
           depth: item.depth,
           value: item.value,
-          oneUp: isFirstReply ? undefined : thread[i - 1],
-          oneDown: thread[i + 1],
+          oneUp,
+          oneDown,
           moderationOpts,
         })
-        const parentMod = getModerationState(parent.moderation)
-        const parentIsHidden = threadgateHiddenReplies.has(item.uri)
-        const parentIsTopLevelReply = item.depth === 1
-        const parentIsModerated =
-          parentIsHidden || parentMod.blurred || parentMod.muted
+        const postMod = getModerationState(post.moderation)
+        const postIsHidden = threadgateHiddenReplies.has(item.uri)
+        const postIsModerated =
+          postIsHidden || postMod.blurred || postMod.muted
 
-        if (!parentIsModerated) {
+        if (!postIsModerated) {
           /*
-           * Not hidden, so show it
+           * Not moderated, probably need to insert it
            */
-          items.push(parent)
+          // items.push(post)
+          if (view === 'tree') {
+            items.push(post)
+          } else {
+            if (post.depth > 1) {
+              const maybeNextSiblingIndex = getBranch(thread, i, post.depth).end + 1
+              const maybeNextSibling = thread.at(maybeNextSiblingIndex)
+
+              /*
+               * If we've got two replies at the same depth, we need to decide
+               * which one to show.
+               */
+              if (post.depth === maybeNextSibling?.depth) {
+                // continue with next sibling
+                i = maybeNextSiblingIndex - 1
+                debugger;
+                continue traversal
+              } else {
+                const maybePrevSiblingIndex = getBranchUp(thread, i - 1, post.depth).end
+                const maybePrevSibling = thread.at(maybePrevSiblingIndex)
+
+                if (post.depth === maybePrevSibling?.depth) {
+                  const post = views.threadPost({
+                    uri: item.uri,
+                    depth: item.depth,
+                    value: item.value,
+                    oneUp: thread.at(maybePrevSiblingIndex - 1),
+                    oneDown,
+                    moderationOpts,
+                  })
+                  debugger;
+                  items.push(post)
+                } else {
+                  items.push(post)
+                }
+              }
+
+              /*
+              if (post.depth === oneDown?.depth) {
+                const opDid = new AtUri(post.value.post.record.reply?.root?.uri).host
+                const postAuthorDid = new AtUri(post.uri).host
+                debugger;
+                if (postAuthorDid === opDid) {
+                  // prioritize OP optimistic reply
+                  items.push(post)
+                  // skip next reply
+                  i = getBranch(thread, i, oneDown.depth).end
+                  debugger;
+                  continue traversal
+                } else {
+                  i = getBranch(thread, i, post.depth).end
+                  debugger;
+                  continue traversal
+                }
+              }
+              */
+            } else {
+              items.push(post)
+            }
+          }
         } else {
-          const branch = getBranch(thread, i, item.depth)
+          /*
+           * Moderated in some way, we're going to walk children
+           */
+          const parent = post
+          const parentMod = postMod
+          const parentIsTopLevelReply = parent.depth === 1
           const sortArray = parentMod.muted ? muted : hidden
+
+          // get sub tree
+          const branch = getBranch(thread, i, item.depth)
 
           if (parentIsTopLevelReply) {
             // push branch anchor into sorted array
@@ -299,6 +371,29 @@ function getBranch(
   return {
     start: branchStartIndex,
     end,
+  }
+}
+
+function getBranchUp(
+  thread: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'],
+  branchStartIndex: number,
+  branchEndDepth: number,
+) {
+  let start = branchStartIndex
+
+  for (let ci = branchStartIndex; ci >= 0; ci--) {
+    const next = thread[ci]
+    if (next.depth > branchEndDepth) {
+      start = ci
+    } else {
+      start = ci
+      break
+    }
+  }
+
+  return {
+    start,
+    end: branchStartIndex,
   }
 }
 
