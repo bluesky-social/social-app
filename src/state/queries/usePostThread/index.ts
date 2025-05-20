@@ -74,6 +74,7 @@ export function usePostThread({
 
   const items = flatten(
     sort(query.data?.thread || [], {
+      view: params.view,
       threadgateHiddenReplies: mergeThreadgateHiddenReplies(
         query.data?.threadgate?.record,
       ),
@@ -85,6 +86,7 @@ export function usePostThread({
       showHidden: state.shownHiddenReplyKinds.has(HiddenReplyKind.Hidden),
     },
   )
+  console.log(items)
 
   const mutator = createCacheMutator({
     queryKey,
