@@ -26,7 +26,6 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {shareText} from '#/lib/sharing'
 import {logEvent} from '#/lib/statsig/statsig'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
@@ -58,7 +57,6 @@ import {
   PostInteractionSettingsDialog,
   usePrefetchPostInteractionSettings,
 } from '#/components/dialogs/PostInteractionSettingsDialog'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
@@ -85,7 +83,6 @@ import {
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
-import {useDevMode} from '#/storage/hooks/dev-mode'
 import * as bsky from '#/types/bsky'
 
 let PostMenuItems = ({
@@ -131,7 +128,6 @@ let PostMenuItems = ({
   const hideReplyConfirmControl = useDialogControl()
   const {mutateAsync: toggleReplyVisibility} =
     useToggleReplyVisibilityMutation()
-  const [devModeEnabled] = useDevMode()
 
   const postUri = post.uri
   const postCid = post.cid
@@ -390,14 +386,6 @@ let PostMenuItems = ({
     }
   }
 
-  const onShareATURI = () => {
-    shareText(postUri)
-  }
-
-  const onShareAuthorDID = () => {
-    shareText(postAuthor.did)
-  }
-
   const onReportMisclassification = () => {
     const url = `https://docs.google.com/forms/d/e/1FAIpQLSd0QPqhNFksDQf1YyOos7r1ofCLvmrKAH1lU042TaS3GAZaWQ/viewform?entry.1756031717=${toShareUrl(
       href,
@@ -485,11 +473,9 @@ let PostMenuItems = ({
           DISCOVER_DEBUG_DIDS[currentAccount?.did ?? ''] && (
             <Menu.Item
               testID="postDropdownReportMisclassificationBtn"
-              label={_(msg`Assign topic - help train Discover!`)}
+              label={_(msg`Assign topic for algo`)}
               onPress={onReportMisclassification}>
-              <Menu.ItemText>
-                {_(msg`Assign topic - help train Discover!`)}
-              </Menu.ItemText>
+              <Menu.ItemText>{_(msg`Assign topic for algo`)}</Menu.ItemText>
               <Menu.ItemIcon icon={AtomIcon} position="right" />
             </Menu.Item>
           )}
@@ -682,28 +668,6 @@ let PostMenuItems = ({
                 </>
               )}
             </Menu.Group>
-
-            {devModeEnabled ? (
-              <>
-                <Menu.Divider />
-                <Menu.Group>
-                  <Menu.Item
-                    testID="postAtUriShareBtn"
-                    label={_(msg`Copy post at:// URI`)}
-                    onPress={onShareATURI}>
-                    <Menu.ItemText>{_(msg`Copy post at:// URI`)}</Menu.ItemText>
-                    <Menu.ItemIcon icon={Share} position="right" />
-                  </Menu.Item>
-                  <Menu.Item
-                    testID="postAuthorDIDShareBtn"
-                    label={_(msg`Copy author DID`)}
-                    onPress={onShareAuthorDID}>
-                    <Menu.ItemText>{_(msg`Copy author DID`)}</Menu.ItemText>
-                    <Menu.ItemIcon icon={Share} position="right" />
-                  </Menu.Item>
-                </Menu.Group>
-              </>
-            ) : null}
           </>
         )}
       </Menu.Outer>
