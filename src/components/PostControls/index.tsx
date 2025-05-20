@@ -1,6 +1,5 @@
 import {memo, useState} from 'react'
-import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
-import * as Clipboard from 'expo-clipboard'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
@@ -10,28 +9,24 @@ import {
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {IS_INTERNAL} from '#/lib/app-info'
-import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
 import {useHaptics} from '#/lib/haptics'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {useGate} from '#/lib/statsig/statsig'
 import {type Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {
   usePostLikeMutationQueue,
   usePostRepostMutationQueue,
 } from '#/state/queries/post'
-import {useRequireAuth, useSession} from '#/state/session'
+import {useRequireAuth} from '#/state/session'
 import {
   ProgressGuideAction,
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
 import {formatCount} from '#/view/com/util/numeric/format'
-import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
 import {
   PostControlButton,
@@ -69,11 +64,9 @@ let PostControls = ({
   threadgateRecord?: AppBskyFeedThreadgate.Record
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
 }): React.ReactNode => {
-  const t = useTheme()
-  const {gtMobile} = useBreakpoints()
   const {_, i18n} = useLingui()
+  const {gtMobile} = useBreakpoints()
   const {openComposer} = useOpenComposer()
-  const {currentAccount} = useSession()
   const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, logContext)
   const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(
     post,
@@ -83,11 +76,6 @@ let PostControls = ({
   const {sendInteraction} = useFeedFeedbackContext()
   const {captureAction} = useProgressGuideControls()
   const playHaptic = useHaptics()
-  const gate = useGate()
-  const isDiscoverDebugUser =
-    IS_INTERNAL ||
-    DISCOVER_DEBUG_DIDS[currentAccount?.did || ''] ||
-    gate('debug_show_feedcontext')
   const isBlocked = Boolean(
     post.author.viewer?.blocking ||
       post.author.viewer?.blockedBy ||
@@ -268,10 +256,7 @@ let PostControls = ({
           />
         </PostControlButton>
       </View>
-      <View
-        style={
-          big ? a.align_center : [gtMobile ? a.mr_sm : a.mr_xs, a.align_start]
-        }>
+      <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
         <ShareMenuButton
           testID="postShareBtn"
           post={post}
@@ -283,7 +268,8 @@ let PostControls = ({
           onShare={onShare}
         />
       </View>
-      <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
+      <View
+        style={big ? a.align_center : [gtMobile && a.flex_1, a.align_start]}>
         <PostMenuButton
           testID="postDropdownBtn"
           post={post}
@@ -297,31 +283,6 @@ let PostControls = ({
           onShowLess={onShowLess}
         />
       </View>
-      {isDiscoverDebugUser && feedContext && (
-        <Pressable
-          accessible={false}
-          style={{
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            right: 0,
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-          onPress={e => {
-            e.stopPropagation()
-            Clipboard.setStringAsync(feedContext)
-            Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
-          }}>
-          <Text
-            style={{
-              color: t.palette.contrast_400,
-              fontSize: 7,
-            }}>
-            {feedContext}
-          </Text>
-        </Pressable>
-      )}
     </View>
   )
 }

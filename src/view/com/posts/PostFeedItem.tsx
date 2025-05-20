@@ -50,6 +50,7 @@ import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
 import {PostControls} from '#/components/PostControls'
+import {DiscoverDebug} from '#/components/PostControls/DiscoverDebug'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
@@ -451,6 +452,8 @@ let FeedItemInner = ({
             onShowLess={onShowLess}
           />
         </View>
+
+        <DiscoverDebug feedContext={feedContext} />
       </View>
     </Link>
   )
