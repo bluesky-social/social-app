@@ -1,11 +1,10 @@
 import {
-  AtUri,
   AppBskyUnspeccedGetPostThreadV2,
   type ModerationDecision,
   type ModerationOpts,
 } from '@atproto/api'
 
-import {HiddenReplyKind, type PostThreadParams, type Slice} from '#/state/queries/usePostThread/types'
+import {HiddenReplyKind, type Slice} from '#/state/queries/usePostThread/types'
 import * as views from '#/state/queries/usePostThread/views'
 
 export function flatten(
@@ -76,11 +75,9 @@ export function flatten(
 export function sort(
   thread: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'],
   {
-    view,
     threadgateHiddenReplies,
     moderationOpts,
   }: {
-    view: PostThreadParams['view']
     threadgateHiddenReplies: Set<string>
     moderationOpts: ModerationOpts
   },
@@ -197,73 +194,13 @@ export function sort(
         })
         const postMod = getModerationState(post.moderation)
         const postIsHidden = threadgateHiddenReplies.has(item.uri)
-        const postIsModerated =
-          postIsHidden || postMod.blurred || postMod.muted
+        const postIsModerated = postIsHidden || postMod.blurred || postMod.muted
 
         if (!postIsModerated) {
           /*
            * Not moderated, probably need to insert it
            */
           items.push(post)
-          // if (view === 'tree') {
-          //   items.push(post)
-          // } else {
-          //   if (post.depth > 1) {
-          //     const maybeNextSiblingIndex = getBranch(thread, i, post.depth).end + 1
-          //     const maybeNextSibling = thread.at(maybeNextSiblingIndex)
-
-          //     /*
-          //      * If we've got two replies at the same depth, we need to decide
-          //      * which one to show.
-          //      */
-          //     if (post.depth === maybeNextSibling?.depth) {
-          //       // continue with next sibling
-          //       i = maybeNextSiblingIndex - 1
-          //       debugger;
-          //       continue traversal
-          //     } else {
-          //       const maybePrevSiblingIndex = getBranchUp(thread, i - 1, post.depth).end
-          //       const maybePrevSibling = thread.at(maybePrevSiblingIndex)
-
-          //       if (post.depth === maybePrevSibling?.depth) {
-          //         const post = views.threadPost({
-          //           uri: item.uri,
-          //           depth: item.depth,
-          //           value: item.value,
-          //           oneUp: thread.at(maybePrevSiblingIndex - 1),
-          //           oneDown,
-          //           moderationOpts,
-          //         })
-          //         debugger;
-          //         items.push(post)
-          //       } else {
-          //         items.push(post)
-          //       }
-          //     }
-
-          //     /*
-          //     if (post.depth === oneDown?.depth) {
-          //       const opDid = new AtUri(post.value.post.record.reply?.root?.uri).host
-          //       const postAuthorDid = new AtUri(post.uri).host
-          //       debugger;
-          //       if (postAuthorDid === opDid) {
-          //         // prioritize OP optimistic reply
-          //         items.push(post)
-          //         // skip next reply
-          //         i = getBranch(thread, i, oneDown.depth).end
-          //         debugger;
-          //         continue traversal
-          //       } else {
-          //         i = getBranch(thread, i, post.depth).end
-          //         debugger;
-          //         continue traversal
-          //       }
-          //     }
-          //     */
-          //   } else {
-          //     items.push(post)
-          //   }
-          // }
         } else {
           /*
            * Moderated in some way, we're going to walk children
@@ -351,7 +288,7 @@ export function sort(
  *
  *    const { start: 1, end: 3 } = getBranch(items, 1, 1)
  */
-function getBranch(
+export function getBranch(
   thread: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'],
   branchStartIndex: number,
   branchStartDepth: number,
@@ -371,29 +308,7 @@ function getBranch(
   return {
     start: branchStartIndex,
     end,
-  }
-}
-
-function getBranchUp(
-  thread: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'],
-  branchStartIndex: number,
-  branchEndDepth: number,
-) {
-  let start = branchStartIndex
-
-  for (let ci = branchStartIndex; ci >= 0; ci--) {
-    const next = thread[ci]
-    if (next.depth > branchEndDepth) {
-      start = ci
-    } else {
-      start = ci
-      break
-    }
-  }
-
-  return {
-    start,
-    end: branchStartIndex,
+    length: end - branchStartIndex,
   }
 }
 
