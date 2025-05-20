@@ -1,7 +1,10 @@
 import {
   APP_BSKY_UNSPECCED,
+  type AppBskyFeedDefs,
+  AppBskyFeedPost,
   AppBskyFeedThreadgate,
   type AppBskyUnspeccedGetPostThreadV2,
+  AtUri,
 } from '@atproto/api'
 
 import {type PostThreadParams} from '#/state/queries/usePostThread/types'
@@ -31,4 +34,17 @@ export function getThreadgateRecord(
   )
     ? view?.record
     : undefined
+}
+
+export function getRootPostAtUri(post: AppBskyFeedDefs.PostView) {
+  if (
+    bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      post.record,
+      AppBskyFeedPost.isRecord,
+    )
+  ) {
+    if (post.record.reply?.root?.uri) {
+      return new AtUri(post.record.reply.root.uri)
+    }
+  }
 }

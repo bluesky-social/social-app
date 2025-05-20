@@ -6,11 +6,13 @@ import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '#/state/
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '#/state/queries/post-feed'
 import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '#/state/queries/search-posts'
+import {getBranch} from '#/state/queries/usePostThread/traversal'
 import {
   type createPostThreadQueryKey,
-  postThreadQueryKeyRoot,
   type PostThreadParams,
+  postThreadQueryKeyRoot,
 } from '#/state/queries/usePostThread/types'
+import {getRootPostAtUri} from '#/state/queries/usePostThread/utils'
 import {
   embedViewToThreadPlaceholder,
   postViewToThreadPlaceholder,
@@ -58,31 +60,49 @@ export function createCacheMutator({
               replyCount: parent.value.post.replyCount,
             }
 
+            const opDid = getRootPostAtUri(existingParent.value.post)?.host
             const nextItem = thread.at(i + 1)
             const isReplyToRoot = existingParent.depth === 0
             const isEndOfReplyChain =
               !nextItem || nextItem.depth <= existingParent.depth
-            const shouldInsertReplies =
+            const firstReply = replies.at(0)
+            const opIsReplier =
+              AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(
+                firstReply?.value,
+              )
+                ? opDid === firstReply.value.post.author.did
+                : false
+
+            /*
+             * Always insert replies if the following conditions are met.
+             */
+            const shouldAlwaysInsertReplies =
               isReplyToRoot ||
               params.view === 'tree' ||
               (params.view === 'linear' && isEndOfReplyChain)
+            /*
+             * Maybe insert replies if the replier is the OP and certain conditions are met
+             */
+            const shouldReplaceWithOPReplies =
+              !isReplyToRoot && params.view === 'linear' && opIsReplier
 
-            if (shouldInsertReplies) {
+            if (shouldAlwaysInsertReplies || shouldReplaceWithOPReplies) {
+              const branch = getBranch(thread, i, existingParent.depth)
               /*
-               * Splice in new replies
+               * OP insertions replace other replies _in linear view_.
                */
-              for (let ri = 0; ri < replies.length; ri++) {
-                const reply = replies[ri]
-                if (
-                  !AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(reply.value)
-                )
-                  continue
-                const insertIndex = i + 1 + ri
-                thread.splice(insertIndex, 0, {
-                  ...reply,
-                  depth: existingParent.depth + 1 + ri,
-                })
-              }
+              const itemsToRemove = shouldReplaceWithOPReplies
+                ? branch.length
+                : 0
+
+              thread.splice(
+                i + 1,
+                itemsToRemove,
+                ...replies.map((r, ri) => {
+                  r.depth = existingParent.depth + 1 + ri
+                  return r
+                }),
+              )
             }
           }
 
