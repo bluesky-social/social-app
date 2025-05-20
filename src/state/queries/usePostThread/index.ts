@@ -86,9 +86,9 @@ export function usePostThread({
       showHidden: state.shownHiddenReplyKinds.has(HiddenReplyKind.Hidden),
     },
   )
-  console.log(items)
 
   const mutator = createCacheMutator({
+    params,
     queryKey,
     queryClient: qc,
   })

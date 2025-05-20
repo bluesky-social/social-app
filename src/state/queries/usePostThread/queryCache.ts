@@ -9,6 +9,7 @@ import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '#/state/
 import {
   type createPostThreadQueryKey,
   postThreadQueryKeyRoot,
+  type PostThreadParams,
 } from '#/state/queries/usePostThread/types'
 import {
   embedViewToThreadPlaceholder,
@@ -17,9 +18,11 @@ import {
 import {didOrHandleUriMatches, getEmbeddedPost} from '#/state/queries/util'
 
 export function createCacheMutator({
+  params,
   queryKey,
   queryClient,
 }: {
+  params: PostThreadParams
   queryKey: ReturnType<typeof createPostThreadQueryKey>
   queryClient: QueryClient
 }) {
@@ -55,20 +58,31 @@ export function createCacheMutator({
               replyCount: parent.value.post.replyCount,
             }
 
-            /*
-             * Splice in new replies
-             */
-            for (let ri = 0; ri < replies.length; ri++) {
-              const reply = replies[ri]
-              if (
-                !AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(reply.value)
-              )
-                continue
-              const insertIndex = i + 1 + ri
-              thread.splice(insertIndex, 0, {
-                ...reply,
-                depth: existingParent.depth + 1 + ri,
-              })
+            const nextItem = thread.at(i + 1)
+            const isReplyToRoot = existingParent.depth === 0
+            const isEndOfReplyChain =
+              !nextItem || nextItem.depth <= existingParent.depth
+            const shouldInsertReplies =
+              isReplyToRoot ||
+              params.view === 'tree' ||
+              (params.view === 'linear' && isEndOfReplyChain)
+
+            if (shouldInsertReplies) {
+              /*
+               * Splice in new replies
+               */
+              for (let ri = 0; ri < replies.length; ri++) {
+                const reply = replies[ri]
+                if (
+                  !AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(reply.value)
+                )
+                  continue
+                const insertIndex = i + 1 + ri
+                thread.splice(insertIndex, 0, {
+                  ...reply,
+                  depth: existingParent.depth + 1 + ri,
+                })
+              }
             }
           }
 
