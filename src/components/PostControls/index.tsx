@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import {memo, useState} from 'react'
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {
@@ -95,8 +95,7 @@ let PostControls = ({
   )
   const replyDisabled = post.viewer?.replyDisabled
 
-  const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] =
-    React.useState(false)
+  const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] = useState(false)
 
   const onPressToggleLike = async () => {
     if (isBlocked) {
