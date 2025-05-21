@@ -74,7 +74,6 @@ export function usePostThread({
 
   const items = flatten(
     sort(query.data?.thread || [], {
-      view: params.view,
       threadgateHiddenReplies: mergeThreadgateHiddenReplies(
         query.data?.threadgate?.record,
       ),
