@@ -1,4 +1,3 @@
-import {useCallback} from 'react'
 import {Image as RNImage, Share as RNShare} from 'react-native'
 import uuid from 'react-native-uuid'
 import {
@@ -14,14 +13,12 @@ import {
 import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
-import {t} from '@lingui/macro'
 import {Buffer} from 'buffer'
 import RNFetchBlob from 'rn-fetch-blob'
 
 import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
-import * as Toast from '#/view/com/util/Toast'
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
 
@@ -172,54 +169,6 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
   } finally {
     safeDeleteAsync(imagePath)
   }
-}
-
-/**
- * Same as `saveImageToMediaLibrary`, but also handles permissions and toasts
- */
-export function useSaveImageToMediaLibrary() {
-  const [permissionResponse, requestPermission, getPermission] =
-    MediaLibrary.usePermissions({
-      granularPermissions: ['photo'],
-    })
-  return useCallback(
-    async (uri: string) => {
-      async function save() {
-        try {
-          await saveImageToMediaLibrary({uri})
-          Toast.show(t`Image saved`)
-        } catch (e: any) {
-          Toast.show(t`Failed to save image: ${String(e)}`, 'xmark')
-        }
-      }
-
-      const permission = permissionResponse ?? (await getPermission())
-
-      if (permission.granted) {
-        await save()
-      } else {
-        if (permission.canAskAgain) {
-          // request again once
-          const askAgain = await requestPermission()
-          if (askAgain.granted) {
-            await save()
-          } else {
-            // since we've been explicitly denied, show a toast.
-            Toast.show(
-              t`Images cannot be saved unless permission is granted to access the camera roll.`,
-              'xmark',
-            )
-          }
-        } else {
-          Toast.show(
-            t`Permission to access camera roll was denied. Please enable it in your system settings.`,
-            'xmark',
-          )
-        }
-      }
-    },
-    [permissionResponse, requestPermission, getPermission],
-  )
 }
 
 export function getImageDim(path: string): Promise<Dimensions> {

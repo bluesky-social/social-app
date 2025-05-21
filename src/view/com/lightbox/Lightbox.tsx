@@ -1,6 +1,7 @@
 import {useCallback} from 'react'
 
-import {shareImageModal, useSaveImageToMediaLibrary} from '#/lib/media/manip'
+import {shareImageModal} from '#/lib/media/manip'
+import {useSaveImageToMediaLibrary} from '#/lib/media/save-image'
 import {useLightbox, useLightboxControls} from '#/state/lightbox'
 import ImageView from './ImageViewing'
 
