@@ -1,6 +1,5 @@
 import {
   type $Typed,
-  type AppBskyEmbedRecord,
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
   type AppBskyUnspeccedGetPostThreadV2,
@@ -9,7 +8,6 @@ import {
 } from '@atproto/api'
 
 import {type Slice} from '#/state/queries/usePostThread/types'
-import {embedViewRecordToPostView} from '#/state/queries/util'
 
 export function threadPostNoUnauthenticated({
   uri,
@@ -84,9 +82,12 @@ export function threadPost({
     depth,
     value: {
       ...value,
-      post: {
-        ...value.post,
-        record: value.post.record as AppBskyFeedPost.Record,
+      /*
+       * Do not spread anything here, load bearing for post shadow strict
+       * equality checks.
+       */
+      post: value.post as Omit<AppBskyFeedDefs.PostView, 'record'> & {
+        record: AppBskyFeedPost.Record
       },
     },
     moderation: moderatePost(value.post, moderationOpts),
@@ -120,30 +121,6 @@ export function postViewToThreadPlaceholder(
       hasUnhydratedReplies: false, // unknown
       // TODO test
       hasUnhydratedParents: !!(post.record as AppBskyFeedPost.Record).reply, // unknown
-    },
-  }
-}
-
-export function embedViewToThreadPlaceholder(
-  record: AppBskyEmbedRecord.ViewRecord,
-): $Typed<
-  Omit<AppBskyUnspeccedGetPostThreadV2.ThreadItem, 'value'> & {
-    value: $Typed<AppBskyUnspeccedGetPostThreadV2.ThreadItemPost>
-  }
-> {
-  return {
-    $type: 'app.bsky.unspecced.getPostThreadV2#threadItem',
-    uri: record.uri,
-    depth: 0, // reset to 0 for highlighted post
-    value: {
-      $type: 'app.bsky.unspecced.getPostThreadV2#threadItemPost',
-      post: embedViewRecordToPostView(record),
-      isOPThread: false, // unknown
-      hasOPLike: false, // unknown
-      // @ts-expect-error
-      hasUnhydratedReplies: false, // unknown
-      // TODO test
-      hasUnhydratedParents: !!(record.value as AppBskyFeedPost.Record).reply, // unknown
     },
   }
 }

@@ -1,4 +1,9 @@
-import {type $Typed, AppBskyUnspeccedGetPostThreadV2, AtUri} from '@atproto/api'
+import {
+  type $Typed,
+  type AppBskyFeedDefs,
+  AppBskyUnspeccedGetPostThreadV2,
+  AtUri,
+} from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
 
 import {findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData} from '#/state/queries/explore-feed-previews'
@@ -13,11 +18,9 @@ import {
   postThreadQueryKeyRoot,
 } from '#/state/queries/usePostThread/types'
 import {getRootPostAtUri} from '#/state/queries/usePostThread/utils'
-import {
-  embedViewToThreadPlaceholder,
-  postViewToThreadPlaceholder,
-} from '#/state/queries/usePostThread/views'
+import {postViewToThreadPlaceholder} from '#/state/queries/usePostThread/views'
 import {didOrHandleUriMatches, getEmbeddedPost} from '#/state/queries/util'
+import {embedViewRecordToPostView} from '#/state/queries/util'
 
 export function createCacheMutator({
   params,
@@ -113,7 +116,37 @@ export function createCacheMutator({
         },
       )
     },
-    deletePost(_post: AppBskyUnspeccedGetPostThreadV2.ThreadItem) {},
+    /**
+     * Unused atm, post shadow does the trick, but it would be nice to clean up
+     * the whole sub-tree on deletes.
+     */
+    deletePost(post: AppBskyUnspeccedGetPostThreadV2.ThreadItem) {
+      queryClient.setQueryData<AppBskyUnspeccedGetPostThreadV2.OutputSchema>(
+        queryKey,
+        queryData => {
+          if (!queryData) return
+
+          const thread = [...queryData.thread]
+
+          for (let i = 0; i < thread.length; i++) {
+            const existingPost = thread[i]
+            if (!AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(post.value))
+              continue
+
+            if (existingPost.uri === post.uri) {
+              const branch = getBranch(thread, i, existingPost.depth)
+              thread.splice(branch.start, branch.length)
+              break
+            }
+          }
+
+          return {
+            ...queryData,
+            thread,
+          }
+        },
+      )
+    },
   }
 }
 
@@ -153,38 +186,11 @@ export function* getThreadPlaceholderCandidates(
   >,
   void
 > {
-  const atUri = new AtUri(uri)
-
   /*
-   * Check this thread in the cache first.
-   * TODO extract just this for shadowing
+   * Check post thread queries first
    */
-  const queryDatas =
-    queryClient.getQueriesData<AppBskyUnspeccedGetPostThreadV2.OutputSchema>({
-      queryKey: [postThreadQueryKeyRoot],
-    })
-  for (const [_queryKey, queryData] of queryDatas) {
-    if (!queryData) continue
-
-    const {thread} = queryData
-
-    for (const item of thread) {
-      if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
-        if (didOrHandleUriMatches(atUri, item.value.post)) {
-          yield {
-            $type: 'app.bsky.unspecced.getPostThreadV2#threadItem',
-            ...item,
-            depth: 0,
-            value: item.value,
-          }
-        }
-
-        const qp = getEmbeddedPost(item.value.post.embed)
-        if (qp && didOrHandleUriMatches(atUri, qp)) {
-          yield embedViewToThreadPlaceholder(qp)
-        }
-      }
-    }
+  for (const post of findAllPostsInQueryData(queryClient, uri)) {
+    yield postViewToThreadPlaceholder(post)
   }
 
   /*
@@ -210,5 +216,35 @@ export function* getThreadPlaceholderCandidates(
     uri,
   )) {
     yield postViewToThreadPlaceholder(post)
+  }
+}
+
+export function* findAllPostsInQueryData(
+  queryClient: QueryClient,
+  uri: string,
+): Generator<AppBskyFeedDefs.PostView, void> {
+  const atUri = new AtUri(uri)
+  const queryDatas =
+    queryClient.getQueriesData<AppBskyUnspeccedGetPostThreadV2.OutputSchema>({
+      queryKey: [postThreadQueryKeyRoot],
+    })
+
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData) continue
+
+    const {thread} = queryData
+
+    for (const item of thread) {
+      if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
+        if (didOrHandleUriMatches(atUri, item.value.post)) {
+          yield item.value.post
+        }
+
+        const qp = getEmbeddedPost(item.value.post.embed)
+        if (qp && didOrHandleUriMatches(atUri, qp)) {
+          yield embedViewRecordToPostView(qp)
+        }
+      }
+    }
   }
 }
