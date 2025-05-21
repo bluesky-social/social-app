@@ -1,18 +1,15 @@
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {requestMediaLibraryPermissionsAsync} from 'expo-image-picker'
 import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {saveImageToMediaLibrary} from '#/lib/media/manip'
+import {useSaveImageToMediaLibrary} from '#/lib/media/save-image'
 import {shareUrl} from '#/lib/sharing'
 import {logEvent} from '#/lib/statsig/statsig'
 import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
-import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {type DialogControlProps} from '#/components/Dialog'
@@ -60,26 +57,10 @@ function ShareDialogInner({
     control.close()
   }
 
+  const saveImageToAlbum = useSaveImageToMediaLibrary()
+
   const onSave = async () => {
-    const res = await requestMediaLibraryPermissionsAsync()
-
-    if (!res) {
-      Toast.show(
-        _(msg`You must grant access to your photo library to save the image.`),
-        'xmark',
-      )
-      return
-    }
-
-    try {
-      await saveImageToMediaLibrary({uri: imageUrl})
-      Toast.show(_(msg`Image saved`))
-      control.close()
-    } catch (e: unknown) {
-      Toast.show(_(msg`An error occurred while saving the QR code!`), 'xmark')
-      logger.error('Failed to save QR code', {error: e})
-      return
-    }
+    await saveImageToAlbum(imageUrl)
   }
 
   return (
@@ -161,6 +142,7 @@ function ShareDialogInner({
             </View>
           </View>
         )}
+        <Dialog.Close />
       </Dialog.ScrollableInner>
     </>
   )
