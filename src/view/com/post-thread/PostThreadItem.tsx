@@ -38,6 +38,7 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {type ThreadPost} from '#/state/queries/post-thread'
 import {useSession} from '#/state/session'
+import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
@@ -83,6 +84,7 @@ export function PostThreadItem({
   hasPrecedingItem,
   overrideBlur,
   onPostReply,
+  onPostSuccess,
   hideTopBorder,
   threadgateRecord,
 }: {
@@ -100,6 +102,7 @@ export function PostThreadItem({
   hasPrecedingItem: boolean
   overrideBlur: boolean
   onPostReply: (postUri: string | undefined) => void
+  onPostSuccess?: (data: OnPostSuccessData) => void
   hideTopBorder?: boolean
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }) {
@@ -135,6 +138,7 @@ export function PostThreadItem({
         hasPrecedingItem={hasPrecedingItem}
         overrideBlur={overrideBlur}
         onPostReply={onPostReply}
+        onPostSuccess={onPostSuccess}
         hideTopBorder={hideTopBorder}
         threadgateRecord={threadgateRecord}
       />
@@ -180,6 +184,7 @@ let PostThreadItemLoaded = ({
   hasPrecedingItem,
   overrideBlur,
   onPostReply,
+  onPostSuccess,
   hideTopBorder,
   threadgateRecord,
 }: {
@@ -198,6 +203,7 @@ let PostThreadItemLoaded = ({
   hasPrecedingItem: boolean
   overrideBlur: boolean
   onPostReply: (postUri: string | undefined) => void
+  onPostSuccess?: (data: OnPostSuccessData) => void
   hideTopBorder?: boolean
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
@@ -281,8 +287,9 @@ let PostThreadItemLoaded = ({
         moderation,
       },
       onPost: onPostReply,
+      onPostSuccess: onPostSuccess,
     })
-  }, [openComposer, post, record, onPostReply, moderation])
+  }, [openComposer, post, record, onPostReply, onPostSuccess, moderation])
 
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)

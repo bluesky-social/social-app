@@ -45,7 +45,6 @@ import {type ImagePickerAsset} from 'expo-image-picker'
 import {
   AppBskyFeedDefs,
   type AppBskyFeedGetPostThread,
-  type AppBskyUnspeccedGetPostThreadV2,
   type BskyAgent,
   type RichText,
 } from '@atproto/api'
@@ -89,7 +88,7 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {type Gif} from '#/state/queries/tenor'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
-import {type ComposerOpts} from '#/state/shell/composer'
+import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {ComposerReplyTo} from '#/view/com/composer/ComposerReplyTo'
 import {
@@ -154,6 +153,7 @@ type Props = ComposerOpts
 export const ComposePost = ({
   replyTo,
   onPost,
+  onPostSuccess,
   quote: initQuote,
   mention: initMention,
   openEmojiPicker,
@@ -391,7 +391,7 @@ export const ComposePost = ({
     setIsPublishing(true)
 
     let postUri: string | undefined
-    let posts: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'] = []
+    let postSuccessData: OnPostSuccessData
     try {
       postUri = (
         await apilib.post(agent, queryClient, {
@@ -403,7 +403,7 @@ export const ComposePost = ({
       ).uris[0]
       try {
         if (postUri) {
-          posts = await retry(
+          const [maybeParent, maybeReply, ...posts] = await retry(
             5,
             _e => true,
             async () => {
@@ -424,12 +424,19 @@ export const ComposePost = ({
             },
             1e3,
           )
+          if (maybeReply && maybeReply.uri === postUri) {
+            postSuccessData = {
+              type: 'reply',
+              parent: maybeParent,
+              replies: [maybeReply, ...posts],
+            }
+          } else {
+            postSuccessData = {
+              type: 'post',
+              posts: [maybeParent, maybeReply, ...posts].filter(Boolean),
+            }
+          }
         }
-
-        await whenAppViewReady(agent, postUri, res => {
-          const postedThread = res?.data?.thread
-          return AppBskyFeedDefs.isThreadViewPost(postedThread)
-        })
       } catch (waitErr: any) {
         logger.error(waitErr, {
           message: `Waiting for app view failed`,
@@ -492,12 +499,14 @@ export const ComposePost = ({
           quotedThread.post.quoteCount !== initQuote.quoteCount
         ) {
           onPost?.(postUri)
+          onPostSuccess?.(postSuccessData)
           return true
         }
         return false
       })
     } else {
-      onPost?.(postUri, posts)
+      onPost?.(postUri)
+      onPostSuccess?.(postSuccessData)
     }
     onClose()
     Toast.show(
@@ -516,6 +525,7 @@ export const ComposePost = ({
     langPrefs.postLanguage,
     onClose,
     onPost,
+    onPostSuccess,
     initQuote,
     replyTo,
     setLangPrefs,

@@ -105,6 +105,7 @@ function Inner({state}: {state: ComposerOpts}) {
             replyTo={state.replyTo}
             quote={state.quote}
             onPost={state.onPost}
+            onPostSuccess={state.onPostSuccess}
             mention={state.mention}
             openEmojiPicker={onOpenPicker}
             text={state.text}
