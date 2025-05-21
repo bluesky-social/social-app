@@ -178,6 +178,7 @@ type VideoItem = {
   post: AppBskyFeedDefs.PostView
   video: AppBskyEmbedVideo.View
   feedContext: string | undefined
+  reqId: string | undefined
 }
 
 function Feed() {
@@ -216,6 +217,7 @@ function Feed() {
           post: AppBskyFeedDefs.PostView
           video: AppBskyEmbedVideo.View
           feedContext: string | undefined
+          reqId: string | undefined
         }[] = []
         for (const slice of page.slices) {
           const feedPost = slice.items.find(
@@ -228,6 +230,7 @@ function Feed() {
               post: feedPost.post,
               video: feedPost.post.embed,
               feedContext: slice.feedContext,
+              reqId: slice.reqId,
             })
           }
         }
@@ -274,6 +277,7 @@ function Feed() {
           moderation={item.moderation}
           scrollGesture={scrollGesture}
           feedContext={item.feedContext}
+          reqId={item.reqId}
         />
       )
     },
@@ -470,6 +474,7 @@ let VideoItem = ({
   scrollGesture,
   moderation,
   feedContext,
+  reqId,
 }: {
   player?: VideoPlayer
   post: AppBskyFeedDefs.PostView
@@ -479,6 +484,7 @@ let VideoItem = ({
   scrollGesture: NativeGesture
   moderation?: ModerationDecision
   feedContext: string | undefined
+  reqId: string | undefined
 }): React.ReactNode => {
   const postShadow = usePostShadow(post)
   const {width, height} = useSafeAreaFrame()
@@ -490,9 +496,10 @@ let VideoItem = ({
         item: post.uri,
         event: 'app.bsky.feed.defs#interactionSeen',
         feedContext,
+        reqId,
       })
     }
-  }, [active, post.uri, feedContext, sendInteraction])
+  }, [active, post.uri, feedContext, reqId, sendInteraction])
 
   // TODO: high-performance android phones should also
   // be capable of rendering 3 video players, but currently
@@ -537,6 +544,7 @@ let VideoItem = ({
               scrollGesture={scrollGesture}
               moderation={moderation}
               feedContext={feedContext}
+              reqId={reqId}
             />
           )}
         </>
@@ -682,6 +690,7 @@ function Overlay({
   scrollGesture,
   moderation,
   feedContext,
+  reqId,
 }: {
   player?: VideoPlayer
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -690,6 +699,7 @@ function Overlay({
   scrollGesture: NativeGesture
   moderation: ModerationDecision
   feedContext: string | undefined
+  reqId: string | undefined
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -760,6 +770,7 @@ function Overlay({
                 player={player}
                 post={post}
                 feedContext={feedContext}
+                reqId={reqId}
               />
             )}
           </View>
@@ -1002,10 +1013,12 @@ function PlayPauseTapArea({
   player,
   post,
   feedContext,
+  reqId,
 }: {
   player: VideoPlayer
   post: Shadow<AppBskyFeedDefs.PostView>
   feedContext: string | undefined
+  reqId: string | undefined
 }) {
   const {_} = useLingui()
   const doubleTapRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -1036,6 +1049,7 @@ function PlayPauseTapArea({
         item: post.uri,
         event: 'app.bsky.feed.defs#interactionLike',
         feedContext,
+        reqId,
       })
     } else {
       doubleTapRef.current = setTimeout(togglePlayPause, 200)
