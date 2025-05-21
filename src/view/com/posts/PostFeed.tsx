@@ -103,6 +103,7 @@ type FeedRow =
       items: FeedPostSliceItem[]
       sourceFeedUri: string
       feedContexts: (string | undefined)[]
+      reqIds: (string | undefined)[]
     }
   | {
       type: 'sliceViewFullThread'
@@ -134,16 +135,19 @@ export function getItemsForFeedback(feedRow: FeedRow):
   | {
       item: FeedPostSliceItem
       feedContext: string | undefined
+      reqId: string | undefined
     }[] {
   if (feedRow.type === 'sliceItem') {
     return feedRow.slice.items.map(item => ({
       item,
       feedContext: feedRow.slice.feedContext,
+      reqId: feedRow.slice.reqId,
     }))
   } else if (feedRow.type === 'videoGridRow') {
     return feedRow.items.map((item, i) => ({
       item,
       feedContext: feedRow.feedContexts[i],
+      reqId: feedRow.reqIds[i],
     }))
   } else {
     return []
@@ -398,6 +402,7 @@ let PostFeed = ({
           const videos: {
             item: FeedPostSliceItem
             feedContext: string | undefined
+            reqId: string | undefined
           }[] = []
           for (const page of data.pages) {
             for (const slice of page.slices) {
@@ -405,7 +410,11 @@ let PostFeed = ({
                 item => item.uri === slice.feedPostUri,
               )
               if (item && AppBskyEmbedVideo.isView(item.post.embed)) {
-                videos.push({item, feedContext: slice.feedContext})
+                videos.push({
+                  item,
+                  feedContext: slice.feedContext,
+                  reqId: slice.reqId,
+                })
               }
             }
           }
@@ -413,12 +422,17 @@ let PostFeed = ({
           const rows: {
             item: FeedPostSliceItem
             feedContext: string | undefined
+            reqId: string | undefined
           }[][] = []
           for (let i = 0; i < videos.length; i++) {
             const video = videos[i]
             const item = video.item
             const cols = gtMobile ? 3 : 2
-            const rowItem = {item, feedContext: video.feedContext}
+            const rowItem = {
+              item,
+              feedContext: video.feedContext,
+              reqId: video.reqId,
+            }
             if (i % cols === 0) {
               rows.push([rowItem])
             } else {
@@ -434,6 +448,7 @@ let PostFeed = ({
               items: row.map(r => r.item),
               sourceFeedUri: feedUriOrActorDid,
               feedContexts: row.map(r => r.feedContext),
+              reqIds: row.map(r => r.reqId),
             })
           }
         } else {
@@ -685,6 +700,7 @@ let PostFeed = ({
             record={item.record}
             reason={indexInSlice === 0 ? slice.reason : undefined}
             feedContext={slice.feedContext}
+            reqId={slice.reqId}
             moderation={item.moderation}
             parentAuthor={item.parentAuthor}
             showReplyTo={row.showReplyTo}

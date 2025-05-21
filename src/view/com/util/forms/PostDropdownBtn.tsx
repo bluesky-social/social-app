@@ -28,6 +28,7 @@ let PostDropdownBtn = ({
   testID,
   post,
   postFeedContext,
+  postReqId,
   record,
   richText,
   style,
@@ -40,6 +41,7 @@ let PostDropdownBtn = ({
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
   postFeedContext: string | undefined
+  postReqId: string | undefined
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
   style?: StyleProp<ViewStyle>
@@ -99,6 +101,7 @@ let PostDropdownBtn = ({
             testID={testID}
             post={post}
             postFeedContext={postFeedContext}
+            postReqId={postReqId}
             record={record}
             richText={richText}
             timestamp={timestamp}
