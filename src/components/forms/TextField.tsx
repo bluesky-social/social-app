@@ -1,12 +1,12 @@
 import React from 'react'
 import {
-  AccessibilityProps,
+  type AccessibilityProps,
   StyleSheet,
   TextInput,
-  TextInputProps,
-  TextStyle,
+  type TextInputProps,
+  type TextStyle,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 
 import {HITSLOP_20} from '#/lib/constants'
@@ -16,13 +16,13 @@ import {
   applyFonts,
   atoms as a,
   ios,
-  TextStyleProp,
+  type TextStyleProp,
   useAlf,
   useTheme,
   web,
 } from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
 const Context = React.createContext<{
@@ -196,7 +196,7 @@ export function createInput(Component: typeof TextInput) {
         minWidth: 0,
       },
       ios({paddingTop: 12, paddingBottom: 13}),
-      android(a.py_sm),
+      android(a.py_md),
       // fix for autofill styles covering border
       web({
         paddingTop: 10,
