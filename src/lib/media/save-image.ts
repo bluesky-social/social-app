@@ -42,7 +42,7 @@ export function useSaveImageToMediaLibrary() {
           } else {
             // since we've been explicitly denied, show a toast.
             Toast.show(
-              t`Images cannot be saved unless permission is granted to access the camera roll.`,
+              t`Images cannot be saved unless permission is granted to access your photo library.`,
               'xmark',
             )
           }
