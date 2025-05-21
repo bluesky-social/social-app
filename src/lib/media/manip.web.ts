@@ -1,5 +1,7 @@
 /// <reference lib="dom" />
 
+import {useCallback} from 'react'
+
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
 import {blobToDataUri, getDataUriSize} from './util'
@@ -47,6 +49,10 @@ export async function shareImageModal(_opts: {uri: string}) {
 export async function saveImageToMediaLibrary(_opts: {uri: string}) {
   // TODO
   throw new Error('TODO')
+}
+
+export async function useSaveImageToMediaLibrary() {
+  return useCallback((uri: string) => saveImageToMediaLibrary({uri}), [])
 }
 
 export async function getImageDim(path: string): Promise<Dimensions> {
