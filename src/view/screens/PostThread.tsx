@@ -121,6 +121,56 @@ function useThreadPreferences() {
   )
 }
 
+export function useControlledListScrolling({
+  isResetting,
+}: {
+  isResetting: boolean
+}) {
+  const ref = useRef<ListMethods>(null)
+  const layoutHeaderRef = useRef<View | null>(null)
+  const anchorPostRef = useRef<View | null>(null)
+
+  const didAdjustScrollWeb = useRef<boolean>(false)
+  if (didAdjustScrollWeb.current && isResetting) {
+    ref.current?.scrollToOffset({
+      animated: false,
+      offset: 0,
+    })
+    didAdjustScrollWeb.current = false
+  }
+
+  return {
+    listRef: ref,
+    headerRef: layoutHeaderRef,
+    anchorRef: anchorPostRef,
+    handleScrollReset() {
+      // only run once
+      // TODO need to handle this any time the query changes
+      if (didAdjustScrollWeb.current) {
+        return
+      }
+      if (!isResetting) {
+        // Measure synchronously to avoid a layout jump.
+        const anchorPost = anchorPostRef.current as any as Element
+        const headerNode = layoutHeaderRef.current as any as Element
+        if (anchorPost && headerNode) {
+          // get new scroll position
+          let pageY = anchorPost.getBoundingClientRect().top
+          // subtract header height
+          pageY -= headerNode.getBoundingClientRect().height
+          // don't scroll past 0
+          pageY = Math.max(0, pageY)
+          ref.current?.scrollToOffset({
+            animated: false,
+            offset: pageY,
+          })
+          didAdjustScrollWeb.current = true
+        }
+      }
+    }
+  }
+}
+
 export function Inner({uri}: {uri: string | undefined}) {
   const t = useTheme()
   const {_} = useLingui()
@@ -142,7 +192,7 @@ export function Inner({uri}: {uri: string | undefined}) {
     Set<HiddenReplyKind>
   >(new Set())
 
-  const {isFetching, isPlaceholderData, error, data, refetch, insertReplies} =
+  const {isFetching, isPlaceholderData, error, data, refetch, insertReplies, ...rest} =
     usePostThread({
       uri,
       enabled: isThreadPreferencesLoaded,
@@ -154,6 +204,11 @@ export function Inner({uri}: {uri: string | undefined}) {
       state: {
         shownHiddenReplyKinds,
       },
+    })
+    console.log({
+      isFetching,
+      isPlaceholderData,
+      rest,
     })
 
   const ref = useRef<ListMethods>(null)
@@ -286,10 +341,23 @@ export function Inner({uri}: {uri: string | undefined}) {
    * list.
    */
   const didAdjustScrollWeb = useRef<boolean>(false)
+  /*
+  if (didAdjustScrollWeb.current && rest.fetchStatus === 'fetching') {
+    ref.current?.scrollToOffset({
+      animated: false,
+      offset: 0,
+    })
+    didAdjustScrollWeb.current = false
+  }
+   */
   const onContentSizeChangeWeb = () => {
+    return
     // only run once
-    if (didAdjustScrollWeb.current) return
-    if (!isPlaceholderData) {
+    // TODO need to handle this any time the query changes
+    if (didAdjustScrollWeb.current) {
+      return
+    }
+    if (rest.fetchStatus === 'idle') {
       // Measure synchronously to avoid a layout jump.
       const anchorPost = anchorPostRef.current as any as Element
       const headerNode = layoutHeaderRef.current as any as Element
@@ -306,6 +374,36 @@ export function Inner({uri}: {uri: string | undefined}) {
         })
         didAdjustScrollWeb.current = true
       }
+    }
+  }
+
+  /**
+   * This works AFTER the data is in the cache, but not on initial loads
+   */
+  const lastUpdate = useRef<number>(rest.dataUpdatedAt)
+  if (rest.dataUpdatedAt && rest.dataUpdatedAt !== lastUpdate.current) {
+    lastUpdate.current = rest.dataUpdatedAt
+
+    ref.current?.scrollToOffset({
+      animated: false,
+      offset: 0,
+    })
+
+    // Measure synchronously to avoid a layout jump.
+    const anchorPost = anchorPostRef.current as any as Element
+    const headerNode = layoutHeaderRef.current as any as Element
+    if (anchorPost && headerNode) {
+      // get new scroll position
+      let pageY = anchorPost.getBoundingClientRect().top
+      // subtract header height
+      pageY -= headerNode.getBoundingClientRect().height
+      // don't scroll past 0
+      pageY = Math.max(0, pageY)
+      ref.current?.scrollToOffset({
+        animated: false,
+        offset: pageY,
+      })
+      didAdjustScrollWeb.current = true
     }
   }
 
