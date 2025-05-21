@@ -30,7 +30,7 @@ import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposeP
 import {PostThreadItem} from '#/view/com/post-thread/PostThreadItem'
 import {PostThreadShowHiddenReplies} from '#/view/com/post-thread/PostThreadShowHiddenReplies'
 import {List, type ListMethods} from '#/view/com/util/List'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
 import * as Layout from '#/components/Layout'
@@ -121,56 +121,6 @@ function useThreadPreferences() {
   )
 }
 
-export function useControlledListScrolling({
-  isResetting,
-}: {
-  isResetting: boolean
-}) {
-  const ref = useRef<ListMethods>(null)
-  const layoutHeaderRef = useRef<View | null>(null)
-  const anchorPostRef = useRef<View | null>(null)
-
-  const didAdjustScrollWeb = useRef<boolean>(false)
-  if (didAdjustScrollWeb.current && isResetting) {
-    ref.current?.scrollToOffset({
-      animated: false,
-      offset: 0,
-    })
-    didAdjustScrollWeb.current = false
-  }
-
-  return {
-    listRef: ref,
-    headerRef: layoutHeaderRef,
-    anchorRef: anchorPostRef,
-    handleScrollReset() {
-      // only run once
-      // TODO need to handle this any time the query changes
-      if (didAdjustScrollWeb.current) {
-        return
-      }
-      if (!isResetting) {
-        // Measure synchronously to avoid a layout jump.
-        const anchorPost = anchorPostRef.current as any as Element
-        const headerNode = layoutHeaderRef.current as any as Element
-        if (anchorPost && headerNode) {
-          // get new scroll position
-          let pageY = anchorPost.getBoundingClientRect().top
-          // subtract header height
-          pageY -= headerNode.getBoundingClientRect().height
-          // don't scroll past 0
-          pageY = Math.max(0, pageY)
-          ref.current?.scrollToOffset({
-            animated: false,
-            offset: pageY,
-          })
-          didAdjustScrollWeb.current = true
-        }
-      }
-    }
-  }
-}
-
 export function Inner({uri}: {uri: string | undefined}) {
   const t = useTheme()
   const {_} = useLingui()
@@ -192,23 +142,18 @@ export function Inner({uri}: {uri: string | undefined}) {
     Set<HiddenReplyKind>
   >(new Set())
 
-  const {isFetching, isPlaceholderData, error, data, refetch, insertReplies, ...rest} =
-    usePostThread({
-      uri,
-      enabled: isThreadPreferencesLoaded,
-      params: {
-        sort: sortReplies,
-        view: treeViewEnabled ? 'tree' : 'linear',
-        prioritizeFollows: prioritizeFollowedUsers,
-      },
-      state: {
-        shownHiddenReplyKinds,
-      },
-    })
-
-  const ref = useRef<ListMethods>(null)
-  const layoutHeaderRef = useRef<View | null>(null)
-  const anchorPostRef = useRef<View | null>(null)
+  const {isFetching, error, data, refetch, insertReplies} = usePostThread({
+    uri,
+    enabled: isThreadPreferencesLoaded,
+    params: {
+      sort: sortReplies,
+      view: treeViewEnabled ? 'tree' : 'linear',
+      prioritizeFollows: prioritizeFollowedUsers,
+    },
+    state: {
+      shownHiddenReplyKinds,
+    },
+  })
 
   const optimisticOnPostReply = (
     _: any,
@@ -246,10 +191,41 @@ export function Inner({uri}: {uri: string | undefined}) {
     })
   }
 
+  const listRef = useRef<ListMethods>(null)
+  const headerRef = useRef<View | null>(null)
+  const anchorRef = useRef<View | null>(null)
+  /**
+   * WEB ONLY
+   *
+   * Fires any time the content of the list changes. If user switches back to a
+   * sort that was rendered previously, this does NOT fire. Therefore, scroll
+   * is only reset to the anchor on initial render, or fresh data.
+   *
+   * When this fires, the `List` is scrolled all the way to the top, so
+   * measurements taken from `top` correspond to the top of the screen. This
+   * handler scrolls the `List` to the top of the highlighted post, minus any
+   * fixed elements.
+   */
+  const onContentSizeChangeWebOnly = web(() => {
+    const anchorElement = anchorRef.current as any as Element
+    const headerElement = headerRef.current as any as Element
+    if (anchorElement && headerElement) {
+      // distance from top of the list (screen)
+      const anchorOffsetTop = anchorElement.getBoundingClientRect().top
+      const headerHeight = headerElement.getBoundingClientRect().height
+      // don't scroll past 0
+      const scrollPosition = Math.max(0, anchorOffsetTop - headerHeight)
+      listRef.current?.scrollToOffset({
+        animated: false,
+        offset: scrollPosition,
+      })
+    }
+  })
+
   const renderItem = ({item, index}: {item: Slice; index: number}) => {
     if (item.type === 'threadPost') {
       return (
-        <View ref={item.ui.isAnchor ? anchorPostRef : undefined}>
+        <View ref={item.ui.isAnchor ? anchorRef : undefined}>
           <PostThreadItem
             post={item.value.post}
             record={item.value.post.record}
@@ -327,75 +303,9 @@ export function Inner({uri}: {uri: string | undefined}) {
     return null
   }
 
-  const controlScroll = () => {
-    // Measure synchronously to avoid a layout jump.
-    const anchorPost = anchorPostRef.current as any as Element
-    const headerNode = layoutHeaderRef.current as any as Element
-    if (anchorPost && headerNode) {
-      // get new scroll position
-      let pageY = anchorPost.getBoundingClientRect().top
-      console.log('anchor top', pageY)
-      // subtract header height
-      pageY -= headerNode.getBoundingClientRect().height
-      console.log('anchor top minus header', pageY)
-      // don't scroll past 0
-      pageY = Math.max(0, pageY)
-      ref.current?.scrollToOffset({
-        animated: false,
-        offset: pageY,
-      })
-      // didAdjustScrollWeb.current = true
-    }
-  }
-
-  /*
-   * This is only used on the web to keep the post in view when its parents
-   * load. On native, we rely on `maintainVisibleContentPosition` instead.
-   *
-   * This runs synchronously before layout, meaning by the time the page
-   * paints, we've already measured and adjusted the scroll position of the
-   * list.
-   */
-  const didAdjustScrollWeb = useRef<boolean>(false)
-  /*
-  if (didAdjustScrollWeb.current && rest.fetchStatus === 'fetching') {
-    ref.current?.scrollToOffset({
-      animated: false,
-      offset: 0,
-    })
-    didAdjustScrollWeb.current = false
-  }
-   */
-  const contentSizeChanged = useRef<boolean>(false)
-  const onContentSizeChangeWeb = () => {
-    if (!contentSizeChanged.current) {
-      console.log('content size changed')
-      controlScroll()
-      contentSizeChanged.current = true
-    }
-    return
-  }
-
-  /**
-   * This works AFTER the data is in the cache, but not on initial loads
-   */
-  const lastDataUpdate = useRef<number>(rest.dataUpdatedAt)
-  if (rest.dataUpdatedAt && rest.dataUpdatedAt !== lastDataUpdate.current) {
-    lastDataUpdate.current = rest.dataUpdatedAt
-
-    console.log('data updated, reset scroll')
-
-    ref.current?.scrollToOffset({
-      animated: false,
-      offset: 0,
-    })
-    contentSizeChanged.current = false
-    controlScroll()
-  }
-
   return (
     <>
-      <Layout.Header.Outer headerRef={layoutHeaderRef}>
+      <Layout.Header.Outer headerRef={headerRef}>
         <Layout.Header.BackButton />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
@@ -419,11 +329,11 @@ export function Inner({uri}: {uri: string | undefined}) {
         // onMomentumEnd={onMomentumEnd}
         >
           <List
-            ref={ref}
+            ref={listRef}
             data={data?.items ?? []}
             renderItem={renderItem}
             keyExtractor={keyExtractor}
-            onContentSizeChange={isNative ? undefined : onContentSizeChangeWeb}
+            onContentSizeChange={onContentSizeChangeWebOnly}
             // onStartReached={onStartReached}
             // onEndReached={onEndReached}
             onEndReachedThreshold={2}
