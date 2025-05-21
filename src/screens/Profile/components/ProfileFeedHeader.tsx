@@ -94,9 +94,8 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
   const {data: preferences} = usePreferencesQuery()
 
   const [likeUri, setLikeUri] = React.useState(info.likeUri || '')
-  const isLiked = !!likeUri
   const likeCount =
-    isLiked && likeUri ? (info.likeCount || 0) + 1 : info.likeCount || 0
+    (info.likeCount || 0) + (likeUri && !info.likeUri ? 1 : !likeUri && info.likeUri ? -1 : 0)
 
   const {mutateAsync: addSavedFeeds, isPending: isAddSavedFeedPending} =
     useAddSavedFeedsMutation()
