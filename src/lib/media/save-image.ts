@@ -48,7 +48,7 @@ export function useSaveImageToMediaLibrary() {
           }
         } else {
           Toast.show(
-            t`Permission to access camera roll was denied. Please enable it in your system settings.`,
+            t`Permission to access your photo library was denied. Please enable it in your system settings.`,
             'xmark',
           )
         }
