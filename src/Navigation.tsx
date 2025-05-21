@@ -110,6 +110,7 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import {PushNotificationSettingsScreen} from './screens/Settings/PushNotificationSettings'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -385,6 +386,14 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => ContentAndMediaSettingsScreen}
         options={{
           title: title(msg`Content and Media`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="PushNotificationSettings"
+        getComponent={() => PushNotificationSettingsScreen}
+        options={{
+          title: title(msg`Push notifications`),
           requireAuth: true,
         }}
       />

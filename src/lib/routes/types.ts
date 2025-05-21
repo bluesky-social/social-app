@@ -52,6 +52,7 @@ export type CommonNavigatorParams = {
   AccountSettings: undefined
   PrivacyAndSecuritySettings: undefined
   ContentAndMediaSettings: undefined
+  PushNotificationSettings: undefined
   SettingsInterests: undefined
   AboutSettings: undefined
   AppIconSettings: undefined

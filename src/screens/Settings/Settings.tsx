@@ -18,6 +18,7 @@ import {
 } from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import * as persisted from '#/state/persisted'
 import {clearStorage} from '#/state/persisted'
@@ -50,6 +51,7 @@ import {
   PersonPlus_Stroke2_Corner2_Rounded as PersonPlusIcon,
   PersonX_Stroke2_Corner0_Rounded as PersonXIcon,
 } from '#/components/icons/Person'
+import {PhoneHaptic_Stroke2_Corner2_Rounded as PhoneHapticIcon} from '#/components/icons/Phone'
 import {RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon} from '#/components/icons/RaisingHand'
 import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/Window'
 import * as Layout from '#/components/Layout'
@@ -212,6 +214,16 @@ export function SettingsScreen({}: Props) {
               <Trans>Languages</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
+          {isNative && (
+            <SettingsList.LinkItem
+              to="/settings/push-notifications"
+              label={_(msg`Push notifications`)}>
+              <SettingsList.ItemIcon icon={PhoneHapticIcon} />
+              <SettingsList.ItemText>
+                <Trans>Push notifications</Trans>
+              </SettingsList.ItemText>
+            </SettingsList.LinkItem>
+          )}
           <SettingsList.PressableItem
             onPress={() => Linking.openURL(HELP_DESK_URL)}
             label={_(msg`Help`)}
