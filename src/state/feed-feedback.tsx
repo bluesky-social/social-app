@@ -1,12 +1,15 @@
 import React from 'react'
-import {AppState, AppStateStatus} from 'react-native'
-import {AppBskyFeedDefs} from '@atproto/api'
+import {AppState, type AppStateStatus} from 'react-native'
+import {type AppBskyFeedDefs} from '@atproto/api'
 import throttle from 'lodash.throttle'
 
 import {FEEDBACK_FEEDS, STAGING_FEEDS} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {FeedDescriptor, FeedPostSliceItem} from '#/state/queries/post-feed'
+import {
+  type FeedDescriptor,
+  type FeedPostSliceItem,
+} from '#/state/queries/post-feed'
 import {getItemsForFeedback} from '#/view/com/posts/PostFeed'
 import {useAgent} from './session'
 
@@ -103,7 +106,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
         return
       }
       const items = getItemsForFeedback(feedItem)
-      for (const {item: postItem, feedContext} of items) {
+      for (const {item: postItem, feedContext, reqId} of items) {
         if (!history.current.has(postItem)) {
           history.current.add(postItem)
           queue.current.add(
@@ -111,6 +114,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
               item: postItem.uri,
               event: 'app.bsky.feed.defs#interactionSeen',
               feedContext,
+              reqId,
             }),
           )
           sendToFeed()
@@ -164,12 +168,12 @@ function isDiscoverFeed(feed: FeedDescriptor) {
 function toString(interaction: AppBskyFeedDefs.Interaction): string {
   return `${interaction.item}|${interaction.event}|${
     interaction.feedContext || ''
-  }`
+  }|${interaction.reqId || ''}`
 }
 
 function toInteraction(str: string): AppBskyFeedDefs.Interaction {
-  const [item, event, feedContext] = str.split('|')
-  return {item, event, feedContext}
+  const [item, event, feedContext, reqId] = str.split('|')
+  return {item, event, feedContext, reqId}
 }
 
 type AggregatedStats = {

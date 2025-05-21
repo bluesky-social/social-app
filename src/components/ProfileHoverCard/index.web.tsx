@@ -381,8 +381,8 @@ let Card = ({
         t.atoms.bg,
         t.atoms.border_contrast_low,
         t.atoms.shadow_lg,
-        a.w_full,
-        {maxWidth: status.isActive ? 500 : 300},
+        {width: status.isActive ? 350 : 300},
+        a.max_w_full,
       ]}>
       {data && moderationOpts ? (
         status.isActive ? (
@@ -396,7 +396,13 @@ let Card = ({
           <Inner profile={data} moderationOpts={moderationOpts} hide={hide} />
         )
       ) : (
-        <View style={[a.justify_center, a.align_center, {minHeight: 200}]}>
+        <View
+          style={[
+            a.justify_center,
+            a.align_center,
+            {minHeight: 200},
+            a.w_full,
+          ]}>
           <Loader size="xl" />
         </View>
       )}
