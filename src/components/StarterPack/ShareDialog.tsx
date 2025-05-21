@@ -142,6 +142,7 @@ function ShareDialogInner({
             </View>
           </View>
         )}
+        <Dialog.Close />
       </Dialog.ScrollableInner>
     </>
   )
