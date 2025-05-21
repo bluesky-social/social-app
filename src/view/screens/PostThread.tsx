@@ -1,6 +1,5 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import {type AppBskyUnspeccedGetPostThreadV2} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
@@ -26,6 +25,7 @@ import {
   type Slice,
   usePostThread,
 } from '#/state/queries/usePostThread'
+import {type OnPostSuccessData} from '#/state/shell/composer'
 import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
 import {PostThreadItem} from '#/view/com/post-thread/PostThreadItem'
 import {PostThreadShowHiddenReplies} from '#/view/com/post-thread/PostThreadShowHiddenReplies'
@@ -155,13 +155,9 @@ export function Inner({uri}: {uri: string | undefined}) {
     },
   })
 
-  const optimisticOnPostReply = (
-    _: any,
-    posts: AppBskyUnspeccedGetPostThreadV2.ThreadItem[],
-  ) => {
-    if (posts.length) {
-      const parent = posts.at(0)
-      const replies = posts.slice(1)
+  const optimisticOnPostReply = (data: OnPostSuccessData) => {
+    if (data && data.type === 'reply') {
+      const {parent, replies} = data
       if (parent && replies.length) {
         insertReplies(parent, replies)
       }
@@ -186,8 +182,7 @@ export function Inner({uri}: {uri: string | undefined}) {
         embed: post.embed,
         moderation: anchorPost.moderation,
       },
-      // @ts-expect-error TODO
-      onPost: optimisticOnPostReply,
+      onPostSuccess: optimisticOnPostReply,
     })
   }
 
@@ -248,8 +243,7 @@ export function Inner({uri}: {uri: string | undefined}) {
             overrideBlur={
               shownHiddenReplyKinds.has(HiddenReplyKind.Muted) && item.depth > 0
             }
-            // @ts-expect-error TODO
-            onPostReply={optimisticOnPostReply}
+            onPostSuccess={optimisticOnPostReply}
             hideTopBorder={index === 0} // && !item.isParentLoading} // TODO
           />
         </View>

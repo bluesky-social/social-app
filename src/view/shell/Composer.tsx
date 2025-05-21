@@ -49,6 +49,7 @@ export function Composer({winHeight}: {winHeight: number}) {
       <ComposePost
         replyTo={state.replyTo}
         onPost={state.onPost}
+        onPostSuccess={state.onPostSuccess}
         quote={state.quote}
         mention={state.mention}
         text={state.text}
