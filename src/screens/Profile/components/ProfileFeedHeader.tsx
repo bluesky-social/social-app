@@ -12,7 +12,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
-import {FeedSourceFeedInfo} from '#/state/queries/feed'
+import {type FeedSourceFeedInfo} from '#/state/queries/feed'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {
   useAddSavedFeedsMutation,
@@ -94,9 +94,9 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
   const {data: preferences} = usePreferencesQuery()
 
   const [likeUri, setLikeUri] = React.useState(info.likeUri || '')
-  const isLiked = !!likeUri
   const likeCount =
-    isLiked && likeUri ? (info.likeCount || 0) + 1 : info.likeCount || 0
+    (info.likeCount || 0) +
+    (likeUri && !info.likeUri ? 1 : !likeUri && info.likeUri ? -1 : 0)
 
   const {mutateAsync: addSavedFeeds, isPending: isAddSavedFeedPending} =
     useAddSavedFeedsMutation()
