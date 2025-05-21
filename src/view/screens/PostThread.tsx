@@ -205,11 +205,6 @@ export function Inner({uri}: {uri: string | undefined}) {
         shownHiddenReplyKinds,
       },
     })
-    console.log({
-      isFetching,
-      isPlaceholderData,
-      rest,
-    })
 
   const ref = useRef<ListMethods>(null)
   const layoutHeaderRef = useRef<View | null>(null)
@@ -332,6 +327,27 @@ export function Inner({uri}: {uri: string | undefined}) {
     return null
   }
 
+  const controlScroll = () => {
+    // Measure synchronously to avoid a layout jump.
+    const anchorPost = anchorPostRef.current as any as Element
+    const headerNode = layoutHeaderRef.current as any as Element
+    if (anchorPost && headerNode) {
+      // get new scroll position
+      let pageY = anchorPost.getBoundingClientRect().top
+      console.log('anchor top', pageY)
+      // subtract header height
+      pageY -= headerNode.getBoundingClientRect().height
+      console.log('anchor top minus header', pageY)
+      // don't scroll past 0
+      pageY = Math.max(0, pageY)
+      ref.current?.scrollToOffset({
+        animated: false,
+        offset: pageY,
+      })
+      // didAdjustScrollWeb.current = true
+    }
+  }
+
   /*
    * This is only used on the web to keep the post in view when its parents
    * load. On native, we rely on `maintainVisibleContentPosition` instead.
@@ -350,61 +366,31 @@ export function Inner({uri}: {uri: string | undefined}) {
     didAdjustScrollWeb.current = false
   }
    */
+  const contentSizeChanged = useRef<boolean>(false)
   const onContentSizeChangeWeb = () => {
+    if (!contentSizeChanged.current) {
+      console.log('content size changed')
+      controlScroll()
+      contentSizeChanged.current = true
+    }
     return
-    // only run once
-    // TODO need to handle this any time the query changes
-    if (didAdjustScrollWeb.current) {
-      return
-    }
-    if (rest.fetchStatus === 'idle') {
-      // Measure synchronously to avoid a layout jump.
-      const anchorPost = anchorPostRef.current as any as Element
-      const headerNode = layoutHeaderRef.current as any as Element
-      if (anchorPost && headerNode) {
-        // get new scroll position
-        let pageY = anchorPost.getBoundingClientRect().top
-        // subtract header height
-        pageY -= headerNode.getBoundingClientRect().height
-        // don't scroll past 0
-        pageY = Math.max(0, pageY)
-        ref.current?.scrollToOffset({
-          animated: false,
-          offset: pageY,
-        })
-        didAdjustScrollWeb.current = true
-      }
-    }
   }
 
   /**
    * This works AFTER the data is in the cache, but not on initial loads
    */
-  const lastUpdate = useRef<number>(rest.dataUpdatedAt)
-  if (rest.dataUpdatedAt && rest.dataUpdatedAt !== lastUpdate.current) {
-    lastUpdate.current = rest.dataUpdatedAt
+  const lastDataUpdate = useRef<number>(rest.dataUpdatedAt)
+  if (rest.dataUpdatedAt && rest.dataUpdatedAt !== lastDataUpdate.current) {
+    lastDataUpdate.current = rest.dataUpdatedAt
+
+    console.log('data updated, reset scroll')
 
     ref.current?.scrollToOffset({
       animated: false,
       offset: 0,
     })
-
-    // Measure synchronously to avoid a layout jump.
-    const anchorPost = anchorPostRef.current as any as Element
-    const headerNode = layoutHeaderRef.current as any as Element
-    if (anchorPost && headerNode) {
-      // get new scroll position
-      let pageY = anchorPost.getBoundingClientRect().top
-      // subtract header height
-      pageY -= headerNode.getBoundingClientRect().height
-      // don't scroll past 0
-      pageY = Math.max(0, pageY)
-      ref.current?.scrollToOffset({
-        animated: false,
-        offset: pageY,
-      })
-      didAdjustScrollWeb.current = true
-    }
+    contentSizeChanged.current = false
+    controlScroll()
   }
 
   return (
