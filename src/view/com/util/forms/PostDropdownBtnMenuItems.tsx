@@ -1,4 +1,4 @@
-import React, {memo, useCallback} from 'react'
+import React, {memo} from 'react'
 import {
   Platform,
   type PressableProps,
@@ -97,6 +97,7 @@ import * as Toast from '../Toast'
 let PostDropdownMenuItems = ({
   post,
   postFeedContext,
+  postReqId,
   record,
   richText,
   timestamp,
@@ -106,6 +107,7 @@ let PostDropdownMenuItems = ({
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
   postFeedContext: string | undefined
+  postReqId: string | undefined
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
   style?: StyleProp<ViewStyle>
@@ -189,7 +191,7 @@ let PostDropdownMenuItems = ({
     langPrefs.primaryLanguage,
   )
 
-  const onDeletePost = React.useCallback(() => {
+  const onDeletePost = () => {
     deletePostMutate({uri: postUri}).then(
       () => {
         Toast.show(_(msg({message: 'Post deleted', context: 'toast'})))
@@ -215,18 +217,9 @@ let PostDropdownMenuItems = ({
         Toast.show(_(msg`Failed to delete post, please try again`), 'xmark')
       },
     )
-  }, [
-    navigation,
-    postUri,
-    deletePostMutate,
-    postAuthor,
-    currentAccount,
-    isAuthor,
-    href,
-    _,
-  ])
+  }
 
-  const onToggleThreadMute = React.useCallback(() => {
+  const onToggleThreadMute = () => {
     try {
       if (isThreadMuted) {
         unmuteThread()
@@ -246,16 +239,16 @@ let PostDropdownMenuItems = ({
         )
       }
     }
-  }, [isThreadMuted, unmuteThread, _, muteThread])
+  }
 
-  const onCopyPostText = React.useCallback(() => {
+  const onCopyPostText = () => {
     const str = richTextToString(richText, true)
 
     Clipboard.setStringAsync(str)
     Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
-  }, [_, richText])
+  }
 
-  const onPressTranslate = React.useCallback(async () => {
+  const onPressTranslate = async () => {
     await openLink(translatorUrl, true)
 
     if (
@@ -270,40 +263,40 @@ let PostDropdownMenuItems = ({
         textLength: post.record.text.length,
       })
     }
-  }, [openLink, translatorUrl, langPrefs, post])
+  }
 
-  const onHidePost = React.useCallback(() => {
+  const onHidePost = () => {
     hidePost({uri: postUri})
-  }, [postUri, hidePost])
+  }
 
-  const hideInPWI = React.useMemo(() => {
-    return !!postAuthor.labels?.find(
-      label => label.val === '!no-unauthenticated',
-    )
-  }, [postAuthor])
+  const hideInPWI = !!postAuthor.labels?.find(
+    label => label.val === '!no-unauthenticated',
+  )
 
   const showLoggedOutWarning =
     postAuthor.did !== currentAccount?.did && hideInPWI
 
-  const onSharePost = React.useCallback(() => {
+  const onSharePost = () => {
     const url = toShareUrl(href)
     shareUrl(url)
-  }, [href])
+  }
 
-  const onPressShowMore = React.useCallback(() => {
+  const onPressShowMore = () => {
     feedFeedback.sendInteraction({
       event: 'app.bsky.feed.defs#requestMore',
       item: postUri,
       feedContext: postFeedContext,
+      reqId: postReqId,
     })
     Toast.show(_(msg({message: 'Feedback sent!', context: 'toast'})))
-  }, [feedFeedback, postUri, postFeedContext, _])
+  }
 
-  const onPressShowLess = React.useCallback(() => {
+  const onPressShowLess = () => {
     feedFeedback.sendInteraction({
       event: 'app.bsky.feed.defs#requestLess',
       item: postUri,
       feedContext: postFeedContext,
+      reqId: postReqId,
     })
     if (onShowLess) {
       onShowLess({
@@ -313,19 +306,16 @@ let PostDropdownMenuItems = ({
     } else {
       Toast.show(_(msg({message: 'Feedback sent!', context: 'toast'})))
     }
-  }, [feedFeedback, postUri, postFeedContext, _, onShowLess])
+  }
 
-  const onSelectChatToShareTo = React.useCallback(
-    (conversation: string) => {
-      navigation.navigate('MessagesConversation', {
-        conversation,
-        embed: postUri,
-      })
-    },
-    [navigation, postUri],
-  )
+  const onSelectChatToShareTo = (conversation: string) => {
+    navigation.navigate('MessagesConversation', {
+      conversation,
+      embed: postUri,
+    })
+  }
 
-  const onToggleQuotePostAttachment = React.useCallback(async () => {
+  const onToggleQuotePostAttachment = async () => {
     if (!quoteEmbed) return
 
     const action = quoteEmbed.isDetached ? 'reattach' : 'detach'
@@ -348,7 +338,7 @@ let PostDropdownMenuItems = ({
       )
       logger.error(`Failed to ${action} quote`, {safeMessage: e.message})
     }
-  }, [_, quoteEmbed, post, toggleQuoteDetachment])
+  }
 
   const canHidePostForMe = !isAuthor && !isPostHidden
   const canEmbed = isWeb && gtMobile && !hideInPWI
@@ -356,7 +346,7 @@ let PostDropdownMenuItems = ({
     !isAuthor && isRootPostAuthor && !isPostHidden && isReply
   const canDetachQuote = quoteEmbed && quoteEmbed.isOwnedByViewer
 
-  const onToggleReplyVisibility = React.useCallback(async () => {
+  const onToggleReplyVisibility = async () => {
     // TODO no threadgate?
     if (!canHideReplyForEveryone) return
 
@@ -380,25 +370,18 @@ let PostDropdownMenuItems = ({
       )
       logger.error(`Failed to ${action} reply`, {safeMessage: e.message})
     }
-  }, [
-    _,
-    isReplyHiddenByThreadgate,
-    rootUri,
-    postUri,
-    canHideReplyForEveryone,
-    toggleReplyVisibility,
-  ])
+  }
 
-  const onPressPin = useCallback(() => {
+  const onPressPin = () => {
     logEvent(isPinned ? 'post:unpin' : 'post:pin', {})
     pinPostMutate({
       postUri,
       postCid,
       action: isPinned ? 'unpin' : 'pin',
     })
-  }, [isPinned, pinPostMutate, postCid, postUri])
+  }
 
-  const onBlockAuthor = useCallback(async () => {
+  const onBlockAuthor = async () => {
     try {
       await queueBlock()
       Toast.show(_(msg({message: 'Account blocked', context: 'toast'})))
@@ -408,9 +391,9 @@ let PostDropdownMenuItems = ({
         Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
       }
     }
-  }, [_, queueBlock])
+  }
 
-  const onMuteAuthor = useCallback(async () => {
+  const onMuteAuthor = async () => {
     if (postAuthor.viewer?.muted) {
       try {
         await queueUnmute()
@@ -432,22 +415,22 @@ let PostDropdownMenuItems = ({
         }
       }
     }
-  }, [_, queueMute, queueUnmute, postAuthor.viewer?.muted])
+  }
 
-  const onShareATURI = useCallback(() => {
+  const onShareATURI = () => {
     shareText(postUri)
-  }, [postUri])
+  }
 
-  const onShareAuthorDID = useCallback(() => {
+  const onShareAuthorDID = () => {
     shareText(postAuthor.did)
-  }, [postAuthor.did])
+  }
 
-  const onReportMisclassification = useCallback(() => {
+  const onReportMisclassification = () => {
     const url = `https://docs.google.com/forms/d/e/1FAIpQLSd0QPqhNFksDQf1YyOos7r1ofCLvmrKAH1lU042TaS3GAZaWQ/viewform?entry.1756031717=${toShareUrl(
       href,
     )}`
     openLink(url)
-  }, [href, openLink])
+  }
 
   return (
     <>

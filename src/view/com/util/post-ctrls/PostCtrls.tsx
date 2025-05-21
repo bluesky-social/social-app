@@ -1,4 +1,4 @@
-import React, {memo, useCallback} from 'react'
+import React, {memo} from 'react'
 import {
   Pressable,
   type PressableStateCallbackType,
@@ -55,6 +55,7 @@ let PostCtrls = ({
   record,
   richText,
   feedContext,
+  reqId,
   style,
   onPressReply,
   onPostReply,
@@ -67,6 +68,7 @@ let PostCtrls = ({
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
   feedContext?: string | undefined
+  reqId?: string | undefined
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
   onPostReply?: (postUri: string | undefined) => void
@@ -117,7 +119,7 @@ let PostCtrls = ({
   const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] =
     React.useState(false)
 
-  const onPressToggleLike = React.useCallback(async () => {
+  const onPressToggleLike = async () => {
     if (isBlocked) {
       Toast.show(
         _(msg`Cannot interact with a blocked user`),
@@ -134,6 +136,7 @@ let PostCtrls = ({
           item: post.uri,
           event: 'app.bsky.feed.defs#interactionLike',
           feedContext,
+          reqId,
         })
         captureAction(ProgressGuideAction.Like)
         await queueLike()
@@ -145,20 +148,9 @@ let PostCtrls = ({
         throw e
       }
     }
-  }, [
-    _,
-    playHaptic,
-    post.uri,
-    post.viewer?.like,
-    queueLike,
-    queueUnlike,
-    sendInteraction,
-    captureAction,
-    feedContext,
-    isBlocked,
-  ])
+  }
 
-  const onRepost = useCallback(async () => {
+  const onRepost = async () => {
     if (isBlocked) {
       Toast.show(
         _(msg`Cannot interact with a blocked user`),
@@ -173,6 +165,7 @@ let PostCtrls = ({
           item: post.uri,
           event: 'app.bsky.feed.defs#interactionRepost',
           feedContext,
+          reqId,
         })
         await queueRepost()
       } else {
@@ -183,18 +176,9 @@ let PostCtrls = ({
         throw e
       }
     }
-  }, [
-    _,
-    post.uri,
-    post.viewer?.repost,
-    queueRepost,
-    queueUnrepost,
-    sendInteraction,
-    feedContext,
-    isBlocked,
-  ])
+  }
 
-  const onQuote = useCallback(() => {
+  const onQuote = () => {
     if (isBlocked) {
       Toast.show(
         _(msg`Cannot interact with a blocked user`),
@@ -207,22 +191,15 @@ let PostCtrls = ({
       item: post.uri,
       event: 'app.bsky.feed.defs#interactionQuote',
       feedContext,
+      reqId,
     })
     openComposer({
       quote: post,
       onPost: onPostReply,
     })
-  }, [
-    _,
-    sendInteraction,
-    post,
-    feedContext,
-    openComposer,
-    onPostReply,
-    isBlocked,
-  ])
+  }
 
-  const onShare = useCallback(() => {
+  const onShare = () => {
     const urip = new AtUri(post.uri)
     const href = makeProfileLink(post.author, 'post', urip.rkey)
     const url = toShareUrl(href)
@@ -231,8 +208,9 @@ let PostCtrls = ({
       item: post.uri,
       event: 'app.bsky.feed.defs#interactionShare',
       feedContext,
+      reqId,
     })
-  }, [post.uri, post.author, sendInteraction, feedContext])
+  }
 
   const btnStyle = React.useCallback(
     ({pressed, hovered}: PressableStateCallbackType) => [
@@ -374,6 +352,7 @@ let PostCtrls = ({
           testID="postDropdownBtn"
           post={post}
           postFeedContext={feedContext}
+          postReqId={reqId}
           record={record}
           richText={richText}
           style={{padding: 5}}
