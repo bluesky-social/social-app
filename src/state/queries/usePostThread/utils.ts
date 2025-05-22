@@ -12,16 +12,14 @@ import * as bsky from '#/types/bsky'
 
 export function mapSortOptionsToSortID(sort: PostThreadParams['sort']) {
   switch (sort) {
-    case 'hotness':
-      return APP_BSKY_UNSPECCED.GetPostThreadV2Hotness
+    case 'top':
+      return APP_BSKY_UNSPECCED.GetPostThreadV2Top
     case 'oldest':
       return APP_BSKY_UNSPECCED.GetPostThreadV2Oldest
     case 'newest':
       return APP_BSKY_UNSPECCED.GetPostThreadV2Newest
-    case 'most-likes':
-      return APP_BSKY_UNSPECCED.GetPostThreadV2MostLikes
     default:
-      return APP_BSKY_UNSPECCED.GetPostThreadV2Hotness
+      return APP_BSKY_UNSPECCED.GetPostThreadV2Top
   }
 }
 
