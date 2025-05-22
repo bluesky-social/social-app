@@ -12,12 +12,14 @@ import type React from 'react'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
+import {useGate} from '#/lib/statsig/statsig'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import {native} from '#/alf'
 import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
+import {ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon} from '#/components/icons/ArrowShareRight'
 import {useMenuControl} from '#/components/Menu'
 import * as Menu from '#/components/Menu'
 import {PostControlButton, PostControlButtonIcon} from '../PostControlButton'
@@ -43,6 +45,11 @@ let ShareMenuButton = ({
   onShare: () => void
 }): React.ReactNode => {
   const {_} = useLingui()
+  const gate = useGate()
+
+  const ShareIcon = gate('alt_share_icon')
+    ? ArrowShareRightIcon
+    : ArrowOutOfBoxIcon
 
   const menuControl = useMenuControl()
   const [hasBeenOpen, setHasBeenOpen] = useState(false)
@@ -86,7 +93,7 @@ let ShareMenuButton = ({
                 label={props.accessibilityLabel}
                 {...props}
                 onLongPress={native(onNativeLongPress)}>
-                <PostControlButtonIcon icon={ArrowOutOfBoxIcon} />
+                <PostControlButtonIcon icon={ShareIcon} />
               </PostControlButton>
             )
           }}
