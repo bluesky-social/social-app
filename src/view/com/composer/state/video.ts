@@ -1,7 +1,6 @@
-import {ImagePickerAsset} from 'expo-image-picker'
-import {AppBskyVideoDefs, BlobRef, BskyAgent} from '@atproto/api'
-import {JobStatus} from '@atproto/api/dist/client/types/app/bsky/video/defs'
-import {I18n} from '@lingui/core'
+import {type ImagePickerAsset} from 'expo-image-picker'
+import {type AppBskyVideoDefs, type BlobRef, type BskyAgent} from '@atproto/api'
+import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 
 import {AbortError} from '#/lib/async/cancelable'
@@ -11,7 +10,7 @@ import {
   UploadLimitError,
   VideoTooLargeError,
 } from '#/lib/media/video/errors'
-import {CompressedVideo} from '#/lib/media/video/types'
+import {type CompressedVideo} from '#/lib/media/video/types'
 import {uploadVideo} from '#/lib/media/video/upload'
 import {createVideoAgent} from '#/lib/media/video/util'
 import {logger} from '#/logger'
@@ -328,7 +327,7 @@ export async function processVideo(
     }
 
     const videoAgent = createVideoAgent()
-    let status: JobStatus | undefined
+    let status: AppBskyVideoDefs.JobStatus | undefined
     let blob: BlobRef | undefined
     try {
       const response = await videoAgent.app.bsky.video.getJobStatus({jobId})
