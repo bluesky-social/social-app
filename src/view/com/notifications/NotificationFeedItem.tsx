@@ -223,7 +223,7 @@ let NotificationFeedItem = ({
     : ''
 
   let a11yLabel = ''
-  let notificationContent: ReactElement
+  let notificationContent: ReactElement<any>
   let icon = (
     <HeartIconFilled
       size="xl"

@@ -13,7 +13,6 @@ import {
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
 
 import {useTheme} from '#/lib/ThemeContext'
 import {type Shadow} from '#/state/cache/post-shadow'
