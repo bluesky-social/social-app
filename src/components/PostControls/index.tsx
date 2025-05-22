@@ -257,16 +257,18 @@ let PostControls = ({
         </PostControlButton>
       </View>
       <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
-        <ShareMenuButton
-          testID="postShareBtn"
-          post={post}
-          big={big}
-          record={record}
-          richText={richText}
-          timestamp={post.indexedAt}
-          threadgateRecord={threadgateRecord}
-          onShare={onShare}
-        />
+        <View style={[!big && a.ml_sm]}>
+          <ShareMenuButton
+            testID="postShareBtn"
+            post={post}
+            big={big}
+            record={record}
+            richText={richText}
+            timestamp={post.indexedAt}
+            threadgateRecord={threadgateRecord}
+            onShare={onShare}
+          />
+        </View>
       </View>
       <View
         style={big ? a.align_center : [gtMobile && a.flex_1, a.align_start]}>
