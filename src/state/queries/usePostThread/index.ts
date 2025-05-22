@@ -43,8 +43,8 @@ export function usePostThread({
     queryKey,
     async queryFn() {
       const {data} = await agent.app.bsky.unspecced.getPostThreadV2({
-        uri: uri!,
-        nestedBranchingFactor: params.view === 'linear' ? 1 : 10,
+        anchor: uri!,
+        branchingFactor: params.view === 'linear' ? 1 : 10,
         below: 10,
         sorting: mapSortOptionsToSortID(params.sort),
       })

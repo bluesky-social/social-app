@@ -1,4 +1,6 @@
 import {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  type APP_BSKY_UNSPECCED,
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
   type AppBskyUnspeccedGetPostThreadV2,
@@ -14,7 +16,7 @@ export const createPostThreadQueryKey = (
 
 export type PostThreadParams = {
   view: 'tree' | 'linear'
-  sort: 'hotness' | 'oldest' | 'newest' | 'most-likes' | 'random' | string
+  sort: 'top' | 'oldest' | 'newest' | string
   prioritizeFollows: BskyThreadViewPreference['prioritizeFollowedUsers']
 }
 
@@ -44,6 +46,12 @@ export type Slice =
         }
       }
       moderation: ModerationDecision
+      /**
+       * Reference via {@link APP_BSKY_UNSPECCED}
+       */
+      annotations: Set<
+        AppBskyUnspeccedGetPostThreadV2.ThreadItemPost['annotations'][number]
+      >
       ui: {
         isAnchor: boolean
         showParentReplyLine: boolean
