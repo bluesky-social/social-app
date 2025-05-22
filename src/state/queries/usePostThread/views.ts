@@ -90,6 +90,7 @@ export function threadPost({
         record: AppBskyFeedPost.Record
       },
     },
+    annotations: new Set(value.annotations),
     moderation: moderatePost(value.post, moderationOpts),
     ui: {
       isAnchor: depth === 0,
@@ -98,8 +99,6 @@ export function threadPost({
     },
   }
 }
-
-// export function threadPostNoOp({ })
 
 export function postViewToThreadPlaceholder(
   post: AppBskyFeedDefs.PostView,
@@ -115,12 +114,7 @@ export function postViewToThreadPlaceholder(
     value: {
       $type: 'app.bsky.unspecced.getPostThreadV2#threadItemPost',
       post,
-      isOPThread: false, // unknown
-      hasOPLike: false, // unknown
-      // @ts-expect-error
-      hasUnhydratedReplies: false, // unknown
-      // TODO test
-      hasUnhydratedParents: !!(post.record as AppBskyFeedPost.Record).reply, // unknown
+      annotations: [],
     },
   }
 }
