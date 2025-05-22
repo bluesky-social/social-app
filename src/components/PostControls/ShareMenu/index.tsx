@@ -13,6 +13,7 @@ import type React from 'react'
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
+import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import {native} from '#/alf'
@@ -53,12 +54,19 @@ let ShareMenuButton = ({
         // HACK. We need the state update to be flushed by the time
         // menuControl.open() fires but RN doesn't expose flushSync.
         setTimeout(menuControl.open)
+
+        logger.metric(
+          'share:open',
+          {context: big ? 'thread' : 'feed'},
+          {statsig: true},
+        )
       },
     }),
-    [menuControl, setHasBeenOpen],
+    [menuControl, setHasBeenOpen, big],
   )
 
   const onNativeLongPress = () => {
+    logger.metric('share:press:nativeShare', {}, {statsig: true})
     const urip = new AtUri(post.uri)
     const href = makeProfileLink(post.author, 'post', urip.rkey)
     const url = toShareUrl(href)

@@ -7,6 +7,7 @@ import {useNavigation} from '@react-navigation/native'
 import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useSession} from '#/state/session'
@@ -30,6 +31,7 @@ export function RecentChats({postUri}: {postUri: string}) {
 
   const onSelectChat = (convoId: string) => {
     control.close(() => {
+      logger.metric('share:press:recentDm', {}, {statsig: true})
       navigation.navigate('MessagesConversation', {
         conversation: convoId,
         embed: postUri,
