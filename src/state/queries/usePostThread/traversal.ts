@@ -193,8 +193,9 @@ export function sort(
           moderationOpts,
         })
         const postMod = getModerationState(post.moderation)
-        const postIsHidden = threadgateHiddenReplies.has(item.uri)
-        const postIsModerated = postIsHidden || postMod.blurred || postMod.muted
+        const postIsHiddenByThreadgate = threadgateHiddenReplies.has(item.uri)
+        const postIsModerated =
+          postIsHiddenByThreadgate || postMod.blurred || postMod.muted
 
         if (!postIsModerated) {
           /*
@@ -233,15 +234,20 @@ export function sort(
                   oneDown: thread[ci + 1],
                   moderationOpts,
                 })
-                const childMod = getModerationState(childPost.moderation)
-                const childIsHidden = threadgateHiddenReplies.has(child.uri)
+                const childPostMod = getModerationState(childPost.moderation)
+                const childPostIsHiddenByThreadgate =
+                  threadgateHiddenReplies.has(child.uri)
 
                 /*
                  * If a child is hidden in any way, drop it an its sub-branch
                  * entirely. To reveal these, the user must navigate to the
                  * parent post directly.
                  */
-                if (childMod.blurred || childMod.muted || childIsHidden) {
+                if (
+                  childPostMod.blurred ||
+                  childPostMod.muted ||
+                  childPostIsHiddenByThreadgate
+                ) {
                   ci = getBranch(thread, ci, child.depth).end
                 } else {
                   sortArray.push(childPost)

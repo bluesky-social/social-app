@@ -447,14 +447,14 @@ function ThreadMenu({
         </Menu.LabelText>
         <Menu.Group>
           <Menu.Item
-            label={_(msg`Hot replies first`)}
+            label={_(msg`Top replies first`)}
             onPress={() => {
-              setSortReplies('hotness')
+              setSortReplies('top')
             }}>
             <Menu.ItemText>
-              <Trans>Hot replies first</Trans>
+              <Trans>Top replies first</Trans>
             </Menu.ItemText>
-            <Menu.ItemRadio selected={sortReplies === 'hotness'} />
+            <Menu.ItemRadio selected={sortReplies === 'top'} />
           </Menu.Item>
           <Menu.Item
             label={_(msg`Oldest replies first`)}
@@ -475,26 +475,6 @@ function ThreadMenu({
               <Trans>Newest replies first</Trans>
             </Menu.ItemText>
             <Menu.ItemRadio selected={sortReplies === 'newest'} />
-          </Menu.Item>
-          <Menu.Item
-            label={_(msg`Most-liked replies first`)}
-            onPress={() => {
-              setSortReplies('most-likes')
-            }}>
-            <Menu.ItemText>
-              <Trans>Most-liked replies first</Trans>
-            </Menu.ItemText>
-            <Menu.ItemRadio selected={sortReplies === 'most-likes'} />
-          </Menu.Item>
-          <Menu.Item
-            label={_(msg`Random (aka "Poster's Roulette")`)}
-            onPress={() => {
-              setSortReplies('random')
-            }}>
-            <Menu.ItemText>
-              <Trans>Random (aka "Poster's Roulette")</Trans>
-            </Menu.ItemText>
-            <Menu.ItemRadio selected={sortReplies === 'random'} />
           </Menu.Item>
         </Menu.Group>
       </Menu.Outer>
